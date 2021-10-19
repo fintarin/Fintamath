@@ -34,7 +34,7 @@ bool isConstant(const std::string &inStr) {
 }
 } // namespace isType
 
-const Fraction Constant::toFraction() const {
+Fraction Constant::toFraction() const {
   if (this->constant == "e") {
     return functions::getE(PRECISION_OF_CONSTANTS);
   }
@@ -44,10 +44,10 @@ const Fraction Constant::toFraction() const {
   throw IncorrectInput("Constant");
 }
 
-const std::string Constant::toString() const {
+std::string Constant::toString() const {
   return this->toFraction().toString(PRECISION + ROUND_CONST / 2);
 }
 
-const std::string Constant::getTypeName() const {
+std::string Constant::getTypeName() const {
   return "Constant";
 }

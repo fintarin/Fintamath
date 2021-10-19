@@ -26,11 +26,11 @@ void cutSpaces(std::string &str) {
   }
 }
 
-bool isDigit(const char ch) {
+bool isDigit(char ch) {
   return (ch >= '0' && ch <= '9');
 }
 
-bool isLetter(const char ch) {
+bool isLetter(char ch) {
   return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
 
@@ -63,7 +63,7 @@ void addUnaryOperator(std::vector<std::string> &vect) {
   }
 }
 
-void addOperator(std::vector<std::string> &vect, const char ch) {
+void addOperator(std::vector<std::string> &vect, char ch) {
   vect.push_back(std::string(1, ch));
   if (vect.size() == 1) {
     addUnaryOperator(vect);
@@ -195,7 +195,7 @@ void addBinaryFunctions(std::vector<std::string> &vect) {
             vect.insert(vect.begin() + j, {")", func, "("});
 
             std::transform(numOfAdded.begin(), numOfAdded.end(), numOfAdded.begin(),
-                           [j](const size_t &num) { return (num > j) ? num + 1 : num; });
+                           [j](size_t num) { return (num > j) ? num + 1 : num; });
             numOfAdded.push_back(j + 1);
 
             find = true;
@@ -252,10 +252,10 @@ void addValue(const std::string &inStr, std::shared_ptr<Tree::Node> &root) {
   }
 }
 
-void makeTreeRec(const std::vector<std::string> &, std::shared_ptr<Tree::Node> &, const size_t, const size_t);
+void makeTreeRec(const std::vector<std::string> &, std::shared_ptr<Tree::Node> &, size_t, size_t);
 
-bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, const size_t begin,
-             const size_t end, const std::string &oper1, const std::string &oper2) {
+bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+             const std::string &oper1, const std::string &oper2) {
   size_t numOfBrackets = 0;
 
   for (size_t i = begin; i <= end; ++i) {
@@ -285,13 +285,13 @@ bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree
   return false;
 }
 
-bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, const size_t begin,
-             const size_t end, const std::string &oper) {
+bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+             const std::string &oper) {
   return descent(vectIOfTokens, root, begin, end, oper, "");
 }
 
-bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, const size_t begin,
-             const size_t end) {
+bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin,
+             size_t end) {
   if (isType::isFunction(vectIOfTokens[end])) {
     root->info = std::shared_ptr<Function>(new Function(vectIOfTokens[end]));
     makeTreeRec(vectIOfTokens, root->right, begin, end - 1);
@@ -300,8 +300,8 @@ bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree
   return false;
 }
 
-void makeTreeRec(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, const size_t first,
-                 const size_t last) {
+void makeTreeRec(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t first,
+                 size_t last) {
   if (first > last) {
     throw IncorrectInput("Parser");
   }

@@ -39,11 +39,11 @@ char Variable::getName() const {
   return this->name;
 }
 
-const std::string Variable::getTypeName() const {
+std::string Variable::getTypeName() const {
   return "Variable";
 }
 
-const std::string Variable::toString() const {
+std::string Variable::toString() const {
   std::string res;
   res += this->name;
   return res;

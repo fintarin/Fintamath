@@ -140,10 +140,10 @@ Fraction Function::solve(const Fraction &base, const Fraction &frac) const {
   throw IncorrectInput("Function");
 }
 
-const std::string Function::getTypeName() const {
+std::string Function::getTypeName() const {
   return "Function";
 }
 
-const std::string Function::toString() const {
+std::string Function::toString() const {
   return this->func;
 }

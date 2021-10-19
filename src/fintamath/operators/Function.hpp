@@ -15,8 +15,8 @@ public:
   Fraction solve(const Fraction &) const;
   Fraction solve(const Fraction &, const Fraction &) const;
 
-  const std::string getTypeName() const override;
-  const std::string toString() const override;
+  std::string getTypeName() const override;
+  std::string toString() const override;
 
 public:
   std::string func;

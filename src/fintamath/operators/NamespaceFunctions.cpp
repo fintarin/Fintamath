@@ -8,12 +8,12 @@
 constexpr int64_t PRECISION_OF_FUNCTIONS = PRECISION + ROUND_CONST;
 
 // Округление
-void round(Fraction &a, const size_t precision) {
+void round(Fraction &a, size_t precision) {
   a.round(PRECISION_OF_FUNCTIONS);
 }
 
 // Получение значения погрешности
-Fraction getPrecisionFrac(const size_t precision) {
+Fraction getPrecisionFrac(size_t precision) {
   std::string precStr(PRECISION_OF_FUNCTIONS + 1, '0');
   precStr.front() = '1';
   return (Fraction(1, BigInteger(precStr)));
@@ -80,7 +80,7 @@ Fraction naturalPow(const Fraction &inA, const BigInteger &inN) {
 }
 
 // Вычисление квадратного корня, используется функция для длинного числа
-Fraction functions::sqrt(const Fraction &a, const size_t precision) {
+Fraction functions::sqrt(const Fraction &a, size_t precision) {
   if (a < 0) {
     throw OutOfRange("square root");
   }
@@ -105,7 +105,7 @@ Fraction functions::sqrt(const Fraction &a, const size_t precision) {
   требуемуму виду. После расчета логарифма получившегося числа, результат домножается на 2^n, где n — количество
   опреаций взятия корня.
 */
-Fraction lnReduce(const Fraction &a, BigInteger &multiplier, const size_t precision) {
+Fraction lnReduce(const Fraction &a, BigInteger &multiplier, size_t precision) {
   Fraction res = a;
   round(res, precision);
   Fraction prec("0.01");
@@ -122,7 +122,7 @@ Fraction lnReduce(const Fraction &a, BigInteger &multiplier, const size_t precis
 }
 
 // Логарифм по произвольному основанию. Используется формула: log(a, b) = ln(b) / ln(a).
-Fraction functions::log(const Fraction &a, const Fraction &b, const size_t precision) {
+Fraction functions::log(const Fraction &a, const Fraction &b, size_t precision) {
   try {
     return ln(b, precision) / ln(a, precision);
   } catch (...) {
@@ -131,7 +131,7 @@ Fraction functions::log(const Fraction &a, const Fraction &b, const size_t preci
 }
 
 // Вычисление натурального ln(a), используется ряд Тейлора: ln(a) = sum_{k=0}^{inf} (2/(2k+1)) * ((a-1)/(a+1))^(2k+1)
-Fraction functions::ln(const Fraction &inA, const size_t precision) {
+Fraction functions::ln(const Fraction &inA, size_t precision) {
   if (inA <= 0) {
     throw OutOfRange("ln");
   }
@@ -162,7 +162,7 @@ Fraction functions::ln(const Fraction &inA, const size_t precision) {
 }
 
 // log2(a)
-Fraction functions::lb(const Fraction &a, const size_t precision) {
+Fraction functions::lb(const Fraction &a, size_t precision) {
   try {
     return log(2, a, precision);
   } catch (...) {
@@ -171,7 +171,7 @@ Fraction functions::lb(const Fraction &a, const size_t precision) {
 }
 
 // log10(a)
-Fraction functions::lg(const Fraction &a, const size_t precision) {
+Fraction functions::lg(const Fraction &a, size_t precision) {
   try {
     return log(10, a, precision);
   } catch (...) {
@@ -184,7 +184,7 @@ Fraction functions::lg(const Fraction &a, const size_t precision) {
   n_int + n_float, где |n_float| <= 1, тогда a^n = a^n_int * a^n_float. Для вычисления a^n_float, используется ряд
   Тейлора: a^n = 1 + sum_{k=1}^{inf} (n * ln(a))^k / k! при |n| <= 1.
 */
-Fraction functions::pow(const Fraction &inA, const Fraction &n, const size_t precision) {
+Fraction functions::pow(const Fraction &inA, const Fraction &n, size_t precision) {
   if (inA == 0 && n == 0) {
     throw ZeroPowZero("power");
   }
@@ -230,7 +230,7 @@ Fraction functions::pow(const Fraction &inA, const Fraction &n, const size_t pre
   return res;
 }
 
-Fraction functions::exp(const Fraction &inFrac, const size_t precision) {
+Fraction functions::exp(const Fraction &inFrac, size_t precision) {
   Fraction e = getE(PRECISION_OF_CONSTANTS);
   return pow(e, inFrac, precision);
 }
@@ -240,7 +240,7 @@ Fraction functions::exp(const Fraction &inFrac, const size_t precision) {
   них верно следующее: f(a) = f(b + k*p) = f(b), где k — натуральное число, p - период функции. Тогда b = a - k*period,
   k = a div p.
 */
-Fraction trigonometryReduce(const Fraction &a, const size_t &pMultiplier, const size_t precision) {
+Fraction trigonometryReduce(const Fraction &a, size_t pMultiplier, size_t precision) {
   Fraction p = pMultiplier * functions::getPi(precision + a.getInteger().size());
   BigInteger k = (a / p).getInteger();
   Fraction res = a - k * p;
@@ -255,7 +255,7 @@ Fraction trigonometryReduce(const Fraction &a, const size_t &pMultiplier, const 
   Вычисление sin(a), используется ряд Тейлора: sin(a) = sum_{k=0}^{k=1} (-1)^k * x^(2k+1) / (2k+1)! Для большего
   сокращения a используются формулы приведения.
 */
-Fraction functions::sin(const Fraction &inA, const size_t precision) {
+Fraction functions::sin(const Fraction &inA, size_t precision) {
   Fraction pi = functions::getPi(PRECISION_OF_FUNCTIONS);
   Fraction piMult2 = pi * 2;
   Fraction piDiv2 = pi / 2;
@@ -307,7 +307,7 @@ Fraction functions::sin(const Fraction &inA, const size_t precision) {
   Вычисление cos(a), используется ряд Тейлора: sin(a) = sum_{k=0}^{k=1} (-1)^k * x^(2k) / (2k)! Для большего сокращения
   a используются формулы приведения.
 */
-Fraction functions::cos(const Fraction &inA, const size_t precision) {
+Fraction functions::cos(const Fraction &inA, size_t precision) {
   if (inA == 0) {
     return 1;
   }
@@ -356,7 +356,7 @@ Fraction functions::cos(const Fraction &inA, const size_t precision) {
 }
 
 // Вычисление tan(a) = sin(a) / cos(a). Для большего сокращения a используются формулы приведения.
-Fraction functions::tan(const Fraction &inA, const size_t precision) {
+Fraction functions::tan(const Fraction &inA, size_t precision) {
   Fraction pi = functions::getPi(PRECISION_OF_FUNCTIONS);
   Fraction piDiv2 = pi / 2;
 
@@ -394,7 +394,7 @@ Fraction functions::tan(const Fraction &inA, const size_t precision) {
 }
 
 // Вычисление cot(a) = cos(a) / sin(a). Для большего сокращения a используются формулы приведения.
-Fraction functions::cot(const Fraction &inA, const size_t precision) {
+Fraction functions::cot(const Fraction &inA, size_t precision) {
   Fraction pi = functions::getPi(PRECISION_OF_FUNCTIONS);
   Fraction piDiv2 = pi / 2;
 
@@ -432,7 +432,7 @@ Fraction functions::cot(const Fraction &inA, const size_t precision) {
 }
 
 // Вычисление asin(x) = pi/2 - acos(x)
-Fraction functions::asin(const Fraction &a, const size_t precision) {
+Fraction functions::asin(const Fraction &a, size_t precision) {
   if (abs(a) > 1) {
     throw OutOfRange("asin");
   }
@@ -450,7 +450,7 @@ Fraction functions::asin(const Fraction &a, const size_t precision) {
 
   При других значениях используется формула: acos(a) = 2atan(sqrt((1-x)/(1+x))).
 */
-Fraction functions::acos(const Fraction &inA, const size_t precision) {
+Fraction functions::acos(const Fraction &inA, size_t precision) {
   if (abs(inA) > 1) {
     throw OutOfRange("acos");
   }
@@ -512,7 +512,7 @@ Fraction functions::acos(const Fraction &inA, const size_t precision) {
 
   При других значениях используется формула: acos(a) = acos(1 / sqrt(1 + x^2)).
 */
-Fraction functions::atan(const Fraction &inA, const size_t precision) {
+Fraction functions::atan(const Fraction &inA, size_t precision) {
   if (inA == 0) {
     return Fraction(0);
   }
@@ -557,7 +557,7 @@ Fraction functions::atan(const Fraction &inA, const size_t precision) {
 }
 
 // Вычисление acot(x) = pi/2 - atan(x)
-Fraction functions::acot(const Fraction &a, const size_t precision) {
+Fraction functions::acot(const Fraction &a, size_t precision) {
   Fraction res = (getPi(PRECISION_OF_FUNCTIONS) / 2 - functions::atan(a, precision));
   round(res, precision);
   return res;
@@ -603,7 +603,7 @@ Fraction functions::doubleFactorial(const Fraction &a) {
 }
 
 // Вычисление значения e через ряд Тейлора: e = sum_{k=0}^{inf} 1/n!
-Fraction functions::getE(const size_t precision) {
+Fraction functions::getE(size_t precision) {
   if (precision <= PRECISION_OF_CONSTANTS) {
     return Calculator::getE();
   }
@@ -635,7 +635,7 @@ Fraction functions::getE(const size_t precision) {
   t_{n+1} = t_n - p_n * (a_n - a_{n+1})^2,
   p_{n+1} = 2*p_n.
 */
-Fraction functions::getPi(const size_t precision) {
+Fraction functions::getPi(size_t precision) {
   if (precision <= PRECISION_OF_CONSTANTS) {
     return Calculator::getPi();
   }

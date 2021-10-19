@@ -10,7 +10,7 @@
 #include "calculator/ExceptionClasses.hpp"
 
 // Наибольший общий делитель, используется алгоритм Евклида
-const BigInteger GCD(const BigInteger &inA, const BigInteger &inB) {
+BigInteger GCD(const BigInteger &inA, const BigInteger &inB) {
   BigInteger a = inA, b = inB;
   while (b != 0) {
     BigInteger buff = a % b;
@@ -21,7 +21,7 @@ const BigInteger GCD(const BigInteger &inA, const BigInteger &inB) {
 }
 
 // Наименьшее общее кратное, используется формула НОК(a, b) = a * b / НОД(a, b)
-const BigInteger LCM(const BigInteger &a, const BigInteger &b) {
+BigInteger LCM(const BigInteger &a, const BigInteger &b) {
   return a * b / GCD(a, b);
 }
 
@@ -98,7 +98,7 @@ Fraction::Fraction(const BigInteger &inNumerator, const BigInteger &inDenominato
   this->toIrreducibleFraction();
 }
 
-Fraction::Fraction(const double inNum) {
+Fraction::Fraction(double inNum) {
   this->toFraction(inNum);
 }
 
@@ -118,7 +118,7 @@ Fraction &Fraction::operator=(const BigInteger &inLnum) {
   return *this;
 }
 
-Fraction &Fraction::operator=(const double inNum) {
+Fraction &Fraction::operator=(double inNum) {
   *this = Fraction(inNum);
   return *this;
 }
@@ -135,7 +135,7 @@ Fraction &Fraction::operator+=(const BigInteger &inLnum) {
   return *this += Fraction(inLnum);
 }
 
-Fraction &Fraction::operator+=(const int64_t inNum) {
+Fraction &Fraction::operator+=(int64_t inNum) {
   return *this += Fraction(inNum);
 }
 
@@ -152,11 +152,11 @@ Fraction operator+(const BigInteger &inLnum, const Fraction &other) {
   return Fraction(inLnum) + other;
 }
 
-Fraction operator+(const Fraction &other, const int64_t inNum) {
+Fraction operator+(const Fraction &other, int64_t inNum) {
   return other + Fraction(inNum);
 }
 
-Fraction operator+(const int64_t inNum, const Fraction &other) {
+Fraction operator+(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) + other;
 }
 
@@ -172,7 +172,7 @@ Fraction &Fraction::operator-=(const BigInteger &inLnum) {
   return this->operator+=(inLnum * -1);
 }
 
-Fraction &Fraction::operator-=(const int64_t inNum) {
+Fraction &Fraction::operator-=(int64_t inNum) {
   return *this -= Fraction(inNum);
 }
 
@@ -189,11 +189,11 @@ Fraction operator-(const BigInteger &inLnum, const Fraction &other) {
   return Fraction(inLnum) - other;
 }
 
-Fraction operator-(const Fraction &other, const int64_t inNum) {
+Fraction operator-(const Fraction &other, int64_t inNum) {
   return other - Fraction(inNum);
 }
 
-Fraction operator-(const int64_t inNum, const Fraction &other) {
+Fraction operator-(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) - other;
 }
 
@@ -209,7 +209,7 @@ Fraction &Fraction::operator*=(const BigInteger &inLnum) {
   return *this *= Fraction(inLnum);
 }
 
-Fraction &Fraction::operator*=(const int64_t inNum) {
+Fraction &Fraction::operator*=(int64_t inNum) {
   return *this *= Fraction(inNum);
 }
 
@@ -226,11 +226,11 @@ Fraction operator*(const BigInteger &inLnum, const Fraction &other) {
   return Fraction(inLnum) * other;
 }
 
-Fraction operator*(const Fraction &other, const int64_t inNum) {
+Fraction operator*(const Fraction &other, int64_t inNum) {
   return other * Fraction(inNum);
 }
 
-Fraction operator*(const int64_t inNum, const Fraction &other) {
+Fraction operator*(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) * other;
 }
 
@@ -246,7 +246,7 @@ Fraction &Fraction::operator/=(const BigInteger &inLnum) {
   return *this /= Fraction(inLnum);
 }
 
-Fraction &Fraction::operator/=(const int64_t inNum) {
+Fraction &Fraction::operator/=(int64_t inNum) {
   return *this /= Fraction(inNum);
 }
 
@@ -263,11 +263,11 @@ Fraction operator/(const BigInteger &inLnum, const Fraction &other) {
   return Fraction(inLnum) / other;
 }
 
-Fraction operator/(const Fraction &other, const int64_t inNum) {
+Fraction operator/(const Fraction &other, int64_t inNum) {
   return other / Fraction(inNum);
 }
 
-Fraction operator/(const int64_t inNum, const Fraction &other) {
+Fraction operator/(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) / other;
 }
 
@@ -303,11 +303,11 @@ bool operator==(const BigInteger &inLnum, const Fraction &other) {
   return (other == Fraction(inLnum));
 }
 
-bool operator==(const Fraction &other, const int64_t inNum) {
+bool operator==(const Fraction &other, int64_t inNum) {
   return other == Fraction(inNum);
 }
 
-bool operator==(const int64_t inNum, const Fraction &other) {
+bool operator==(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) == other;
 }
 
@@ -323,11 +323,11 @@ bool operator!=(const BigInteger &inLnum, const Fraction &other) {
   return !(other == Fraction(inLnum));
 }
 
-bool operator!=(const Fraction &other, const int64_t inNum) {
+bool operator!=(const Fraction &other, int64_t inNum) {
   return other != Fraction(inNum);
 }
 
-bool operator!=(const int64_t inNum, const Fraction &other) {
+bool operator!=(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) != other;
 }
 
@@ -345,11 +345,11 @@ bool operator>(const BigInteger &inLnum, const Fraction &other) {
   return (Fraction(inLnum) > other);
 }
 
-bool operator>(const Fraction &other, const int64_t inNum) {
+bool operator>(const Fraction &other, int64_t inNum) {
   return other > Fraction(inNum);
 }
 
-bool operator>(const int64_t inNum, const Fraction &other) {
+bool operator>(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) > other;
 }
 
@@ -365,11 +365,11 @@ bool operator>=(const BigInteger &inLnum, const Fraction &other) {
   return (Fraction(inLnum) >= other);
 }
 
-bool operator>=(const Fraction &other, const int64_t inNum) {
+bool operator>=(const Fraction &other, int64_t inNum) {
   return other >= Fraction(inNum);
 }
 
-bool operator>=(const int64_t inNum, const Fraction &other) {
+bool operator>=(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) >= other;
 }
 
@@ -385,11 +385,11 @@ bool operator<(const BigInteger &inLnum, const Fraction &other) {
   return !(Fraction(inLnum) >= other);
 }
 
-bool operator<(const Fraction &other, const int64_t inNum) {
+bool operator<(const Fraction &other, int64_t inNum) {
   return other < Fraction(inNum);
 }
 
-bool operator<(const int64_t inNum, const Fraction &other) {
+bool operator<(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) < other;
 }
 
@@ -405,11 +405,11 @@ bool operator<=(const BigInteger &inLnum, const Fraction &other) {
   return !(Fraction(inLnum) > other);
 }
 
-bool operator<=(const Fraction &other, const int64_t inNum) {
+bool operator<=(const Fraction &other, int64_t inNum) {
   return other <= Fraction(inNum);
 }
 
-bool operator<=(const int64_t inNum, const Fraction &other) {
+bool operator<=(int64_t inNum, const Fraction &other) {
   return Fraction(inNum) <= other;
 }
 
@@ -474,11 +474,11 @@ Fraction &Fraction::toFraction(const BigInteger &inLnum) {
   return *this;
 }
 
-Fraction &Fraction::toFraction(const double inNum) {
+Fraction &Fraction::toFraction(double inNum) {
   return this->toFraction(std::to_string(inNum));
 }
 
-const std::string Fraction::toString(const size_t precision) const {
+std::string Fraction::toString(size_t precision) const {
   std::string precStr(precision + 2, '0');
   precStr.front() = '1';
 
@@ -511,11 +511,11 @@ const std::string Fraction::toString(const size_t precision) const {
   return res;
 }
 
-Fraction &Fraction::round(const size_t precision) {
+Fraction &Fraction::round(size_t precision) {
   return this->toFraction(this->toString(precision));
 }
 
-bool Fraction::equal(const double inNum) const {
+bool Fraction::equal(double inNum) const {
   std::string str;
 
   if (inNum == 0) {
@@ -547,10 +547,10 @@ std::ostream &operator<<(std::ostream &out, const Fraction &other) {
   return out;
 }
 
-const std::string Fraction::getTypeName() const {
+std::string Fraction::getTypeName() const {
   return "Fraction";
 }
 
-const std::string Fraction::toString() const {
+std::string Fraction::toString() const {
   return this->toString(PRECISION);
 }

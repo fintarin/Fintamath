@@ -12,9 +12,9 @@ public:
   explicit Constant(const std::string &);
   Constant &operator=(const Constant &);
 
-  const Fraction toFraction() const;
-  const std::string toString() const override;
-  const std::string getTypeName() const override;
+  Fraction toFraction() const;
+  std::string toString() const override;
+  std::string getTypeName() const override;
 
 private:
   std::string constant;

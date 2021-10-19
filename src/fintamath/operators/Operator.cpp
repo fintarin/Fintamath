@@ -69,10 +69,10 @@ Fraction Operator::solve(const Fraction &thisNumber, const Fraction &otherNumber
   throw IncorrectInput("Operator");
 }
 
-const std::string Operator::getTypeName() const {
+std::string Operator::getTypeName() const {
   return "Operator";
 }
 
-const std::string Operator::toString() const {
+std::string Operator::toString() const {
   return {this->oper};
 }

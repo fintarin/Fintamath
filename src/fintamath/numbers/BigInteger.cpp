@@ -40,7 +40,7 @@ size_t numOfFirstZeros(const Vector &A) {
 }
 
 // Если число в данном разряде >= BASE, излишек прибавляется к следующему разряду
-void toBasePositive(Vector &A, const size_t i) {
+void toBasePositive(Vector &A, size_t i) {
   if (A[i] >= BigInteger::getBase()) {
     A[i + 1] += A[i] / BigInteger::getBase();
     A[i] %= BigInteger::getBase();
@@ -48,7 +48,7 @@ void toBasePositive(Vector &A, const size_t i) {
 }
 
 // Если число в данном разряде < 0, недостаток вычитается из следующего разряда
-void toBaseNegative(Vector &A, const size_t i) {
+void toBaseNegative(Vector &A, size_t i) {
   if (A[i] < 0) {
     --A[i + 1];
     A[i] += BigInteger::getBase();
@@ -134,7 +134,7 @@ Vector substract(const Vector &A, const Vector &B) {
 }
 
 // Умножение на короткое число
-Vector shortMultiply(const Vector &A, const int64_t num) {
+Vector shortMultiply(const Vector &A, int64_t num) {
   Vector res;
   res.resize(A.size() + 1, 0);
 
@@ -247,7 +247,7 @@ Vector multiply(const Vector &inA, const Vector &inB) {
 }
 
 // Деление на короткое
-Vector shortDivide(const Vector &A, const int64_t num) {
+Vector shortDivide(const Vector &A, int64_t num) {
   Vector res = A;
 
   for (size_t i = res.size() - 1; i > 0; --i) {
@@ -262,7 +262,7 @@ Vector shortDivide(const Vector &A, const int64_t num) {
 }
 
 // Деление на короткое с получением остатка
-Vector shortDivide(const Vector &A, const int64_t num, Vector &mod) {
+Vector shortDivide(const Vector &A, int64_t num, Vector &mod) {
   Vector res = A;
 
   for (size_t i = res.size() - 1; i > 0; --i) {
@@ -447,7 +447,7 @@ BigInteger::BigInteger(const BigInteger &other) {
   *this = other;
 }
 
-BigInteger::BigInteger(const int64_t inNum) {
+BigInteger::BigInteger(int64_t inNum) {
   *this = inNum;
 }
 
@@ -461,7 +461,7 @@ BigInteger &BigInteger::operator=(const BigInteger &other) {
   return *this;
 }
 
-BigInteger &BigInteger::operator=(const int64_t inNum) {
+BigInteger &BigInteger::operator=(int64_t inNum) {
   this->toLongNumber(inNum);
   return *this;
 }
@@ -490,7 +490,7 @@ BigInteger &BigInteger::operator+=(const BigInteger &other) {
   return *this;
 }
 
-BigInteger &BigInteger::operator+=(const int64_t inNum) {
+BigInteger &BigInteger::operator+=(int64_t inNum) {
   return *this += BigInteger(inNum);
 }
 
@@ -499,11 +499,11 @@ BigInteger BigInteger::operator+(const BigInteger &other) const {
   return thisNum += other;
 }
 
-BigInteger operator+(const BigInteger &other, const int64_t inNum) {
+BigInteger operator+(const BigInteger &other, int64_t inNum) {
   return BigInteger(inNum) + other;
 }
 
-BigInteger operator+(const int64_t inNum, const BigInteger &other) {
+BigInteger operator+(int64_t inNum, const BigInteger &other) {
   return BigInteger(inNum) + other;
 }
 
@@ -513,7 +513,7 @@ BigInteger &BigInteger::operator-=(const BigInteger &other) {
   return *this += otherNum;
 }
 
-BigInteger &BigInteger::operator-=(const int64_t inNum) {
+BigInteger &BigInteger::operator-=(int64_t inNum) {
   return *this -= BigInteger(inNum);
 }
 
@@ -522,11 +522,11 @@ BigInteger BigInteger::operator-(const BigInteger &other) const {
   return thisNum -= other;
 }
 
-BigInteger operator-(const BigInteger &other, const int64_t inNum) {
+BigInteger operator-(const BigInteger &other, int64_t inNum) {
   return other - BigInteger(inNum);
 }
 
-BigInteger operator-(const int64_t inNum, const BigInteger &other) {
+BigInteger operator-(int64_t inNum, const BigInteger &other) {
   return BigInteger(inNum) - other;
 }
 
@@ -537,7 +537,7 @@ BigInteger &BigInteger::operator*=(const BigInteger &other) {
   return *this;
 }
 
-BigInteger &BigInteger::operator*=(const int64_t inNum) {
+BigInteger &BigInteger::operator*=(int64_t inNum) {
   return *this *= BigInteger(inNum);
 }
 
@@ -546,11 +546,11 @@ BigInteger BigInteger::operator*(const BigInteger &other) const {
   return thisNum *= other;
 }
 
-BigInteger operator*(const BigInteger &other, const int64_t inNum) {
+BigInteger operator*(const BigInteger &other, int64_t inNum) {
   return BigInteger(inNum) * other;
 }
 
-BigInteger operator*(const int64_t inNum, const BigInteger &other) {
+BigInteger operator*(int64_t inNum, const BigInteger &other) {
   return BigInteger(inNum) * other;
 }
 
@@ -574,7 +574,7 @@ BigInteger &BigInteger::operator/=(const BigInteger &other) {
   return *this;
 }
 
-BigInteger &BigInteger::operator/=(const int64_t inNum) {
+BigInteger &BigInteger::operator/=(int64_t inNum) {
   return *this /= BigInteger(inNum);
 }
 
@@ -583,11 +583,11 @@ BigInteger BigInteger::operator/(const BigInteger &other) const {
   return thisNum /= other;
 }
 
-BigInteger operator/(const BigInteger &other, const int64_t inNum) {
+BigInteger operator/(const BigInteger &other, int64_t inNum) {
   return other / BigInteger(inNum);
 }
 
-BigInteger operator/(const int64_t inNum, const BigInteger &other) {
+BigInteger operator/(int64_t inNum, const BigInteger &other) {
   return BigInteger(inNum) / other;
 }
 
@@ -608,7 +608,7 @@ BigInteger &BigInteger::operator%=(const BigInteger &other) {
   return *this;
 }
 
-BigInteger &BigInteger::operator%=(const int64_t inNum) {
+BigInteger &BigInteger::operator%=(int64_t inNum) {
   return *this %= BigInteger(inNum);
 }
 
@@ -617,11 +617,11 @@ BigInteger BigInteger::operator%(const BigInteger &other) const {
   return thisNum %= other;
 }
 
-BigInteger operator%(const BigInteger &other, const int64_t inNum) {
+BigInteger operator%(const BigInteger &other, int64_t inNum) {
   return other % BigInteger(inNum);
 }
 
-BigInteger operator%(const int64_t inNum, const BigInteger &other) {
+BigInteger operator%(int64_t inNum, const BigInteger &other) {
   return BigInteger(inNum) % other;
 }
 
@@ -652,11 +652,11 @@ bool BigInteger::operator==(const BigInteger &other) const {
   return equal(this->vectNum, other.vectNum);
 }
 
-bool operator==(const BigInteger &other, const int64_t inNum) {
+bool operator==(const BigInteger &other, int64_t inNum) {
   return (other == BigInteger(inNum));
 }
 
-bool operator==(const int64_t inNum, const BigInteger &other) {
+bool operator==(int64_t inNum, const BigInteger &other) {
   return (other == BigInteger(inNum));
 }
 
@@ -664,11 +664,11 @@ bool BigInteger::operator!=(const BigInteger &other) const {
   return !(*this == other);
 }
 
-bool operator!=(const BigInteger &other, const int64_t inNum) {
+bool operator!=(const BigInteger &other, int64_t inNum) {
   return (other != BigInteger(inNum));
 }
 
-bool operator!=(const int64_t inNum, const BigInteger &other) {
+bool operator!=(int64_t inNum, const BigInteger &other) {
   return (other != BigInteger(inNum));
 }
 
@@ -687,11 +687,11 @@ bool BigInteger::operator>(const BigInteger &other) const {
   return greater(this->vectNum, other.vectNum);
 }
 
-bool operator>(const BigInteger &other, const int64_t inNum) {
+bool operator>(const BigInteger &other, int64_t inNum) {
   return (other > BigInteger(inNum));
 }
 
-bool operator>(const int64_t inNum, const BigInteger &other) {
+bool operator>(int64_t inNum, const BigInteger &other) {
   return (BigInteger(inNum) > other);
 }
 
@@ -699,11 +699,11 @@ bool BigInteger::operator>=(const BigInteger &other) const {
   return (*this == other || *this > other);
 }
 
-bool operator>=(const BigInteger &other, const int64_t inNum) {
+bool operator>=(const BigInteger &other, int64_t inNum) {
   return (other >= BigInteger(inNum));
 }
 
-bool operator>=(const int64_t inNum, const BigInteger &other) {
+bool operator>=(int64_t inNum, const BigInteger &other) {
   return (BigInteger(inNum) >= other);
 }
 
@@ -711,11 +711,11 @@ bool BigInteger::operator<(const BigInteger &other) const {
   return !(*this >= other);
 }
 
-bool operator<(const BigInteger &other, const int64_t inNum) {
+bool operator<(const BigInteger &other, int64_t inNum) {
   return !(other >= BigInteger(inNum));
 }
 
-bool operator<(const int64_t inNum, const BigInteger &other) {
+bool operator<(int64_t inNum, const BigInteger &other) {
   return !(BigInteger(inNum) >= other);
 }
 
@@ -723,11 +723,11 @@ bool BigInteger::operator<=(const BigInteger &other) const {
   return !(*this > other);
 }
 
-bool operator<=(const BigInteger &other, const int64_t inNum) {
+bool operator<=(const BigInteger &other, int64_t inNum) {
   return !(other > BigInteger(inNum));
 }
 
-bool operator<=(const int64_t inNum, const BigInteger &other) {
+bool operator<=(int64_t inNum, const BigInteger &other) {
   return !(BigInteger(inNum) > other);
 }
 
@@ -758,8 +758,8 @@ BigInteger &BigInteger::toLongNumber(const std::string &inStr) {
   }
 
   {
-    auto iter = std::find_if(inStr.begin() + first, inStr.end(),
-                             [](const char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
+    auto iter =
+        std::find_if(inStr.begin() + first, inStr.end(), [](char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
     if (iter != inStr.end()) {
       throw IncorrectInput("BigInteger");
     }
@@ -775,7 +775,7 @@ BigInteger &BigInteger::toLongNumber(const std::string &inStr) {
   return *this;
 }
 
-BigInteger &BigInteger::toLongNumber(const int64_t inNum) {
+BigInteger &BigInteger::toLongNumber(int64_t inNum) {
   return this->toLongNumber(std::to_string(inNum));
 }
 
@@ -791,7 +791,7 @@ std::ostream &operator<<(std::ostream &out, const BigInteger &other) {
   return out;
 }
 
-const std::string BigInteger::toString() const {
+std::string BigInteger::toString() const {
   std::string str;
 
   for (size_t i = this->vectNum.size() - 1; i != SIZE_MAX; --i) {

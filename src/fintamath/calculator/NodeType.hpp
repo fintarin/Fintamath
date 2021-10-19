@@ -5,8 +5,8 @@
 
 class NodeType {
 public:
-  const virtual std::string getTypeName() const = 0;
-  const virtual std::string toString() const = 0;
+  virtual std::string getTypeName() const = 0;
+  virtual std::string toString() const = 0;
 };
 
 #endif // NODETYPE_HPP

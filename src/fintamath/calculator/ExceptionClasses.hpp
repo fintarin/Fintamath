@@ -10,7 +10,7 @@ public:
     this->error += " : Incorrect input";
   }
 
-  const std::string getError() const {
+  std::string getError() const {
     return this->error;
   }
 
@@ -25,7 +25,7 @@ public:
     this->error += " : Divided by zero";
   }
 
-  const std::string getError() const {
+  std::string getError() const {
     return this->error;
   }
 
@@ -40,7 +40,7 @@ public:
     this->error += " : Zero to the power of zero";
   }
 
-  const std::string getError() const {
+  std::string getError() const {
     return this->error;
   }
 
@@ -55,7 +55,7 @@ public:
     this->error += " : Out of range";
   }
 
-  const std::string getError() const {
+  std::string getError() const {
     return this->error;
   }
 
@@ -70,7 +70,7 @@ public:
     this->error += " : Undefined";
   }
 
-  const std::string getError() const {
+  std::string getError() const {
     return this->error;
   }
 
