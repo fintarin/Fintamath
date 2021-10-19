@@ -1,9 +1,9 @@
-#include "NamespaceFunctions.hpp"
+#include "operators/NamespaceFunctions.hpp"
 
 #include <string>
 
-#include "../calculator/Calculator.hpp"
-#include "../calculator/ExceptionClasses.hpp"
+#include "calculator/Calculator.hpp"
+#include "calculator/ExceptionClasses.hpp"
 
 constexpr long long PRECISION_OF_FUNCTIONS = PRECISION + ROUND_CONST;
 

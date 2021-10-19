@@ -1,14 +1,14 @@
 /*
   Длинное число хранится в виде вектора, где разряды идут от младших к старшим. База системы (BASE) = 10^9.
 */
-#include "BigInteger.hpp"
+#include "numbers/BigInteger.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <string>
 #include <vector>
 
-#include "../calculator/ExceptionClasses.hpp"
+#include "calculator/ExceptionClasses.hpp"
 
 typedef std::vector<long long> Vector;
 

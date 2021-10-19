@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "../numbers/Fraction.hpp"
-#include "Tree.hpp"
+#include "calculator/Tree.hpp"
+#include "numbers/Fraction.hpp"
 
 struct Param {
   std::string name;

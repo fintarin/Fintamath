@@ -1,16 +1,16 @@
-#include "Solver.hpp"
+#include "calculator/Solver.hpp"
 
 #include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "../numbers/Constant.hpp"
-#include "../numbers/Variable.hpp"
-#include "../operators/Function.hpp"
-#include "../operators/Operator.hpp"
-#include "Calculator.hpp"
-#include "ExceptionClasses.hpp"
+#include "calculator/Calculator.hpp"
+#include "calculator/ExceptionClasses.hpp"
+#include "numbers/Constant.hpp"
+#include "numbers/Variable.hpp"
+#include "operators/Function.hpp"
+#include "operators/Operator.hpp"
 
 Fraction Solver::toFrac(const std::shared_ptr<Tree::Node> &root) const {
   if (root->info == nullptr) {

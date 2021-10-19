@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "../calculator/NodeType.hpp"
-#include "../numbers/Fraction.hpp"
+#include "calculator/NodeType.hpp"
+#include "numbers/Fraction.hpp"
 
 class Operator : public NodeType {
 public:

@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "../calculator/NodeType.hpp"
-#include "Fraction.hpp"
+#include "calculator/NodeType.hpp"
+#include "numbers/Fraction.hpp"
 
 class Constant : public NodeType {
 public:

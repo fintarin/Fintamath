@@ -1,13 +1,13 @@
 /*
   Дробь хранится в виде несократимой дроби (числитель / знаменатель).
 */
-#include "Fraction.hpp"
+#include "numbers/Fraction.hpp"
 
 #include <algorithm>
 #include <string>
 
-#include "../calculator/Calculator.hpp"
-#include "../calculator/ExceptionClasses.hpp"
+#include "calculator/Calculator.hpp"
+#include "calculator/ExceptionClasses.hpp"
 
 // Наибольший общий делитель, используется алгоритм Евклида
 const BigInteger GCD(const BigInteger &inA, const BigInteger &inB) {

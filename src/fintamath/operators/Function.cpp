@@ -1,10 +1,10 @@
-#include "Function.hpp"
+#include "operators/Function.hpp"
 
 #include <string>
 
-#include "../calculator/Calculator.hpp"
-#include "../calculator/ExceptionClasses.hpp"
-#include "NamespaceFunctions.hpp"
+#include "calculator/Calculator.hpp"
+#include "calculator/ExceptionClasses.hpp"
+#include "operators/NamespaceFunctions.hpp"
 
 Function::Function(const Function &other) {
   this->func = other.func;

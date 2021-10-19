@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../calculator/NodeType.hpp"
+#include "calculator/NodeType.hpp"
 
 class Variable : public NodeType {
 public:

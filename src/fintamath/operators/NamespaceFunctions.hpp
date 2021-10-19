@@ -1,7 +1,7 @@
 #ifndef NAMESPACEFUNCTIONS_HPP
 #define NAMESPACEFUNCTIONS_HPP
 
-#include "../numbers/Fraction.hpp"
+#include "numbers/Fraction.hpp"
 
 namespace functions {
 Fraction getE(const size_t);

@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "../calculator/NodeType.hpp"
-#include "BigInteger.hpp"
+#include "calculator/NodeType.hpp"
+#include "numbers/BigInteger.hpp"
 
 class Fraction : public NodeType {
 private:

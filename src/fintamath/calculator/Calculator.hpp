@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "../numbers/Fraction.hpp"
-#include "Parser.hpp"
-#include "Solver.hpp"
+#include "calculator/Parser.hpp"
+#include "calculator/Solver.hpp"
+#include "numbers/Fraction.hpp"
 
 constexpr long long PRECISION = 36;
 constexpr long long ROUND_CONST = 9;

@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "NodeType.hpp"
+#include "calculator/NodeType.hpp"
 
 struct Tree {
   struct Node {

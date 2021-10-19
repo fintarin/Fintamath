@@ -1,8 +1,8 @@
-#include "Variable.hpp"
+#include "numbers/Variable.hpp"
 
 #include <string>
 
-#include "../calculator/ExceptionClasses.hpp"
+#include "calculator/ExceptionClasses.hpp"
 
 Variable::Variable(const Variable &other) {
   this->name = other.name;

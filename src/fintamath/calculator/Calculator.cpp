@@ -1,10 +1,10 @@
-#include "Calculator.hpp"
+#include "calculator/Calculator.hpp"
 
 #include <algorithm>
 #include <string>
 #include <vector>
 
-#include "../operators/NamespaceFunctions.hpp"
+#include "operators/NamespaceFunctions.hpp"
 
 Fraction Calculator::E = functions::getE(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);
 Fraction Calculator::PI = functions::getPi(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);

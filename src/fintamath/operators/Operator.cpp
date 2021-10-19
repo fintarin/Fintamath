@@ -1,10 +1,10 @@
-#include "Operator.hpp"
+#include "operators/Operator.hpp"
 
 #include <string>
 
-#include "../calculator/Calculator.hpp"
-#include "../calculator/ExceptionClasses.hpp"
-#include "NamespaceFunctions.hpp"
+#include "calculator/Calculator.hpp"
+#include "calculator/ExceptionClasses.hpp"
+#include "operators/NamespaceFunctions.hpp"
 
 Operator::Operator(const Operator &inOper) {
   this->oper = inOper.oper;

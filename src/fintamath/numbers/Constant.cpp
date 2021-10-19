@@ -1,10 +1,10 @@
-#include "Constant.hpp"
+#include "numbers/Constant.hpp"
 
 #include <string>
 
-#include "../calculator/Calculator.hpp"
-#include "../calculator/ExceptionClasses.hpp"
-#include "../operators/NamespaceFunctions.hpp"
+#include "calculator/Calculator.hpp"
+#include "calculator/ExceptionClasses.hpp"
+#include "operators/NamespaceFunctions.hpp"
 
 Constant::Constant(const Constant &other) {
   this->constant = other.constant;

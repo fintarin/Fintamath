@@ -1,15 +1,15 @@
-#include "Parser.hpp"
+#include "calculator/Parser.hpp"
 
 #include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "../numbers/Constant.hpp"
-#include "../numbers/Variable.hpp"
-#include "../operators/Function.hpp"
-#include "../operators/Operator.hpp"
-#include "ExceptionClasses.hpp"
+#include "calculator/ExceptionClasses.hpp"
+#include "numbers/Constant.hpp"
+#include "numbers/Variable.hpp"
+#include "operators/Function.hpp"
+#include "operators/Operator.hpp"
 
 void cutSpaces(std::string &str) {
   while (!str.empty()) {
