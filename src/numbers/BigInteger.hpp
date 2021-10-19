@@ -11,7 +11,7 @@ private:
 public:
     BigInteger();
     BigInteger(const BigInteger &);
-    BigInteger(const long long);
+ BigInteger(const long long);
     explicit BigInteger(const std::string &);
 
     BigInteger &operator=(const BigInteger &);

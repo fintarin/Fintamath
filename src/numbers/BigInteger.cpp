@@ -22,131 +22,131 @@ long long BigInteger::base = PRIMARY_BASE;
 
 //  Приведение к значимым цифрам
 void toSignificantDigits(Vector &A) {
-    size_t i = A.size() - 1;
-    for (; i > 0; --i) {
-        if (A[i] != 0) {
-            break;
-        }
+  size_t i = A.size() - 1;
+  for (; i > 0; --i) {
+    if (A[i] != 0) {
+      break;
     }
-    A.resize(i + 1);
+  }
+  A.resize(i + 1);
 }
 
 //  Нахождение разряда перед первым ненулевым, начиная с младших разрядов
 size_t numOfFirstZeros(const Vector &A) {
-    size_t i = 0;
-    while (A[i] == 0) {
-        ++i;
-    }
-    return i;
+  size_t i = 0;
+  while (A[i] == 0) {
+    ++i;
+  }
+  return i;
 }
 
 //  Если число в данном разряде >= BASE, излишек прибавляется к следующему
 //  разряду
 void toBasePositive(Vector &A, const size_t i) {
-    if (A[i] >= BigInteger::getBase()) {
-        A[i + 1] += A[i] / BigInteger::getBase();
-        A[i] %= BigInteger::getBase();
-    }
+  if (A[i] >= BigInteger::getBase()) {
+    A[i + 1] += A[i] / BigInteger::getBase();
+    A[i] %= BigInteger::getBase();
+  }
 }
 
 //  Если число в данном разряде < 0, недостаток вычитается из следующего разряда
 void toBaseNegative(Vector &A, const size_t i) {
-    if (A[i] < 0) {
-        --A[i + 1];
-        A[i] += BigInteger::getBase();
-    }
+  if (A[i] < 0) {
+    --A[i + 1];
+    A[i] += BigInteger::getBase();
+  }
 }
 
 //  Последовательное сравнение разрядов двух чисел (от старших к младшим)
 bool equal(const Vector &A, const Vector &B) {
-    if (A.size() != B.size()) {
-        return false;
-    }
+  if (A.size() != B.size()) {
+    return false;
+  }
 
-    for (size_t i = A.size() - 1; i != SIZE_MAX; --i) {
-        if (A[i] != B[i]) {
-            return false;
-        }
+  for (size_t i = A.size() - 1; i != SIZE_MAX; --i) {
+    if (A[i] != B[i]) {
+      return false;
     }
+  }
 
-    return true;
+  return true;
 }
 
 //  Последовательное сравнение разрядов двух чисел (от старших к младшим)
 bool greater(const Vector &A, const Vector &B) {
-    if (A.size() > B.size()) {
-        return true;
-    }
-    if (A.size() < B.size()) {
-        return false;
-    }
-
-    for (size_t i = A.size() - 1; i != SIZE_MAX; --i) {
-        if (A[i] > B[i]) {
-            return true;
-        }
-        if (A[i] < B[i]) {
-            return false;
-        }
-    }
-
+  if (A.size() > B.size()) {
+    return true;
+  }
+  if (A.size() < B.size()) {
     return false;
+  }
+
+  for (size_t i = A.size() - 1; i != SIZE_MAX; --i) {
+    if (A[i] > B[i]) {
+      return true;
+    }
+    if (A[i] < B[i]) {
+      return false;
+    }
+  }
+
+  return false;
 }
 
 //  Сложение в столбик, не приводит к значимым числам
 Vector add(const Vector &A, const Vector &B) {
-    Vector res = A;
-    if (B.size() > res.size()) {
-        res.resize(B.size(), 0);
-    }
-    res.push_back(0);
+  Vector res = A;
+  if (B.size() > res.size()) {
+    res.resize(B.size(), 0);
+  }
+  res.push_back(0);
 
-    for (size_t i = 0; i < B.size(); ++i) {
-        res[i] += B[i];
-        toBasePositive(res, i);
-    }
-    for (size_t i = B.size(); i < res.size(); ++i) {
-        toBasePositive(res, i);
-    }
+  for (size_t i = 0; i < B.size(); ++i) {
+    res[i] += B[i];
+    toBasePositive(res, i);
+  }
+  for (size_t i = B.size(); i < res.size(); ++i) {
+    toBasePositive(res, i);
+  }
 
-    return res;
+  return res;
 }
 
 //  Сложение с приведением к значимым цифрам
 Vector addCut(const Vector &A, const Vector &B) {
-    Vector res = add(A, B);
-    toSignificantDigits(res);
-    return res;
+  Vector res = add(A, B);
+  toSignificantDigits(res);
+  return res;
 }
 
 //  Вычитание в столбик
 Vector substract(const Vector &A, const Vector &B) {
-    Vector res = A;
+  Vector res = A;
 
-    for (size_t i = 0; i < B.size(); ++i) {
-        res[i] -= B[i];
-        toBaseNegative(res, i);
-    }
-    for (size_t i = B.size(); i < res.size(); ++i) {
-        toBaseNegative(res, i);
-    }
+  for (size_t i = 0; i < B.size(); ++i) {
+    res[i] -= B[i];
+    toBaseNegative(res, i);
+  }
+  for (size_t i = B.size(); i < res.size(); ++i) {
+    toBaseNegative(res, i);
+  }
 
-    toSignificantDigits(res);
-    return res;
+  toSignificantDigits(res);
+  return res;
 }
 
 //  Умножение на короткое число
 Vector shortMultiply(const Vector &A, const long long num) {
-    Vector res;
-    res.resize(A.size() + 1, 0);
+  Vector res;
+  res.resize(A.size() + 1, 0);
 
-    for (size_t i = 0; i < A.size(); ++i) {
-        res[i] += A[i] * num;
-        toBasePositive(res, i);
-    }
+  for (size_t i = 0; i < A.size(); ++i) {
+    res[i] += A[i] * num;
+    toBasePositive(res, i);
+  }
 
-    toSignificantDigits(res);
-    return res;
+  toSignificantDigits(res);
+  return res;
 }
 
 /*
@@ -155,17 +155,17 @@ Vector shortMultiply(const Vector &A, const long long num) {
     Не приводит к значимым числам.
 */
 Vector polynomialMultiply(const Vector &A, const Vector &B) {
-    Vector res;
-    res.resize(A.size() + B.size(), 0);
+  Vector res;
+  res.resize(A.size() + B.size(), 0);
 
-    for (size_t i = 0; i < A.size(); ++i) {
-        for (size_t j = 0; j < B.size(); ++j) {
-            res[i + j] += A[i] * B[j];
-            toBasePositive(res, i + j);
-        }
+  for (size_t i = 0; i < A.size(); ++i) {
+    for (size_t j = 0; j < B.size(); ++j) {
+      res[i + j] += A[i] * B[j];
+      toBasePositive(res, i + j);
     }
+  }
 
-    return res;
+  return res;
 }
 
 /*
@@ -182,138 +182,138 @@ Vector polynomialMultiply(const Vector &A, const Vector &B) {
     A1 и B1 - вторые половины соответсвующих чисел (разряды m — 2m).
 */
 Vector karatsubaMultiply(const Vector &A, const Vector &B) {
-    if (A.size() < KARATSUBA_CUTOFF || B.size() < KARATSUBA_CUTOFF) {
-        return polynomialMultiply(A, B);
-    }
+  if (A.size() < KARATSUBA_CUTOFF || B.size() < KARATSUBA_CUTOFF) {
+    return polynomialMultiply(A, B);
+  }
 
-    size_t len = A.size() >> 1;
+  size_t len = A.size() >> 1;
 
-    Vector A0(A.begin(), A.begin() + len);
-    Vector A1(A.begin() + len, A.end());
+  Vector A0(A.begin(), A.begin() + len);
+  Vector A1(A.begin() + len, A.end());
 
-    Vector B0(B.begin(), B.begin() + len);
-    Vector B1(B.begin() + len, B.end());
+  Vector B0(B.begin(), B.begin() + len);
+  Vector B1(B.begin() + len, B.end());
 
-    Vector p0 = karatsubaMultiply(A0, B0);
-    Vector p1 = karatsubaMultiply(add(A0, A1), add(B0, B1));
-    Vector p2 = karatsubaMultiply(A1, B1);
+  Vector p0 = karatsubaMultiply(A0, B0);
+  Vector p1 = karatsubaMultiply(add(A0, A1), add(B0, B1));
+  Vector p2 = karatsubaMultiply(A1, B1);
 
-    p1 = substract(p1, add(p2, p0));
+  p1 = substract(p1, add(p2, p0));
 
-    p1.insert(p1.begin(), len, 0);
-    p2.insert(p2.begin(), len << 1, 0);
+  p1.insert(p1.begin(), len, 0);
+  p2.insert(p2.begin(), len << 1, 0);
 
-    return add(add(p2, p1), p0);
+  return add(add(p2, p1), p0);
 }
 
 //  Умножение нулевый разрядов чисел
 size_t multiplyZeros(Vector &A, Vector &B) {
-    size_t numOfZerosA = numOfFirstZeros(A);
-    size_t numOfZerosB = numOfFirstZeros(B);
+  size_t numOfZerosA = numOfFirstZeros(A);
+  size_t numOfZerosB = numOfFirstZeros(B);
 
-    if (A.size() != 1) {
-        A.erase(A.begin(), A.begin() + numOfZerosA);
-    }
-    if (B.size() != 1) {
-        B.erase(B.begin(), B.begin() + numOfZerosB);
-    }
+  if (A.size() != 1) {
+    A.erase(A.begin(), A.begin() + numOfZerosA);
+  }
+  if (B.size() != 1) {
+    B.erase(B.begin(), B.begin() + numOfZerosB);
+  }
 
-    return numOfZerosA + numOfZerosB;
+  return numOfZerosA + numOfZerosB;
 }
 
 //  Обертка над умножением Карацубы, добавление лидирующих нулей для приведения
 //  чисел к виду, требуемому алгоритмом
 Vector multiply(const Vector &inA, const Vector &inB) {
-    Vector A = inA, B = inB;
-    size_t numOfZeros = multiplyZeros(A, B);
+  Vector A = inA, B = inB;
+  size_t numOfZeros = multiplyZeros(A, B);
 
-    if (A.size() < KARATSUBA_CUTOFF || B.size() < KARATSUBA_CUTOFF) {
-        Vector res = polynomialMultiply(A, B);
-        res.insert(res.begin(), numOfZeros, 0);
-        toSignificantDigits(res);
-        return res;
-    }
-
-    size_t len = std::max(A.size(), B.size());
-    if (len % 2 == 1) {
-        ++len;
-    }
-    A.resize(len, 0);
-    B.resize(len, 0);
-    len >>= 1;
-
-    Vector res = karatsubaMultiply(A, B);
+  if (A.size() < KARATSUBA_CUTOFF || B.size() < KARATSUBA_CUTOFF) {
+    Vector res = polynomialMultiply(A, B);
     res.insert(res.begin(), numOfZeros, 0);
-
     toSignificantDigits(res);
     return res;
+  }
+
+  size_t len = std::max(A.size(), B.size());
+  if (len % 2 == 1) {
+    ++len;
+  }
+  A.resize(len, 0);
+  B.resize(len, 0);
+  len >>= 1;
+
+  Vector res = karatsubaMultiply(A, B);
+  res.insert(res.begin(), numOfZeros, 0);
+
+  toSignificantDigits(res);
+  return res;
 }
 
 //  Деление на короткое
 Vector shortDivide(const Vector &A, const long long num) {
-    Vector res = A;
+  Vector res = A;
 
-    for (size_t i = res.size() - 1; i > 0; --i) {
-        res[i - 1] += (res[i] % num) * BigInteger::getBase();
-        res[i] /= num;
-    }
+  for (size_t i = res.size() - 1; i > 0; --i) {
+    res[i - 1] += (res[i] % num) * BigInteger::getBase();
+    res[i] /= num;
+  }
 
-    res.front() /= num;
+  res.front() /= num;
 
-    toSignificantDigits(res);
-    return res;
+  toSignificantDigits(res);
+  return res;
 }
 
 //  Деление на короткое с получением остатка
 Vector shortDivide(const Vector &A, const long long num, Vector &mod) {
-    Vector res = A;
+  Vector res = A;
 
-    for (size_t i = res.size() - 1; i > 0; --i) {
-        res[i - 1] += (res[i] % num) * BigInteger::getBase();
-        res[i] /= num;
-    }
+  for (size_t i = res.size() - 1; i > 0; --i) {
+    res[i - 1] += (res[i] % num) * BigInteger::getBase();
+    res[i] /= num;
+  }
 
-    mod = Vector{res.front() % num};
-    res.front() /= num;
+  mod = Vector{res.front() % num};
+  res.front() /= num;
 
-    toSignificantDigits(res);
-    return res;
+  toSignificantDigits(res);
+  return res;
 }
 
 //  Сокращение нулевые разрядов чисел
 void divideZeros(Vector &A, Vector &B) {
-    size_t numOfZeros = std::min(numOfFirstZeros(A), numOfFirstZeros(B));
-    if (A.size() != 1 && B.size() != 1 && numOfZeros != 0) {
-        A.erase(A.begin(), A.begin() + numOfZeros);
-        B.erase(B.begin(), B.begin() + numOfZeros);
-    }
+  size_t numOfZeros = std::min(numOfFirstZeros(A), numOfFirstZeros(B));
+  if (A.size() != 1 && B.size() != 1 && numOfZeros != 0) {
+    A.erase(A.begin(), A.begin() + numOfZeros);
+    B.erase(B.begin(), B.begin() + numOfZeros);
+  }
 }
 
 //  Деление A на B с помощью бинарного поиска
 Vector binsearchDivide(const Vector &A, const Vector &B, Vector &left, Vector &right) {
-    Vector mid, one = Vector{1};
-    while (greater(substract(right, left), one)) {
-        mid = shortDivide(addCut(left, right), 2);
-        Vector mult = multiply(B, mid);
-        if (greater(mult, A)) {
-            right = mid;
-        } else {
-            left = mid;
-        }
-    }
-
-    if (greater(left, right)) {
-        std::swap(left, right);
-    }
-
-    Vector res, mult = multiply(B, right);
-    if (greater(A, mult) || equal(A, mult)) {
-        res = right;
+  Vector mid, one = Vector{1};
+  while (greater(substract(right, left), one)) {
+    mid = shortDivide(addCut(left, right), 2);
+    Vector mult = multiply(B, mid);
+    if (greater(mult, A)) {
+      right = mid;
     } else {
-        res = left;
+      left = mid;
     }
+  }
 
-    return res;
+  if (greater(left, right)) {
+    std::swap(left, right);
+  }
+
+  Vector res, mult = multiply(B, right);
+  if (greater(A, mult) || equal(A, mult)) {
+    res = right;
+  } else {
+    res = left;
+  }
+
+  return res;
 }
 
 /*
@@ -323,36 +323,36 @@ Vector binsearchDivide(const Vector &A, const Vector &B, Vector &left, Vector &r
    отбрасываются (N.size() + B.size()) первых разрядов.
 */
 Vector divide(const Vector &inA, const Vector &inB, Vector &mod) {
-    if (inB.size() == 1) {
-        return shortDivide(inA, inB.front(), mod);
-    }
+  if (inB.size() == 1) {
+    return shortDivide(inA, inB.front(), mod);
+  }
 
-    Vector A = inA;
-    Vector B = inB;
-    divideZeros(A, B);
+  Vector A = inA;
+  Vector B = inB;
+  divideZeros(A, B);
 
-    Vector left, right;
-    left = shortDivide(A, B.back() + 1);
+  Vector left, right;
+  left = shortDivide(A, B.back() + 1);
 
-    if (B.back() != 1) {
-        right = shortDivide(A, B.back() - 1);
-    } else {
-        right = A;
-        right.back() = BigInteger::getBase() - 1;
-    }
+  if (B.back() != 1) {
+    right = shortDivide(A, B.back() - 1);
+  } else {
+    right = A;
+    right.back() = BigInteger::getBase() - 1;
+  }
 
-    left.erase(left.begin(), left.begin() + B.size() - 1);
-    right.erase(right.begin(), right.begin() + B.size() - 1);
+  left.erase(left.begin(), left.begin() + B.size() - 1);
+  right.erase(right.begin(), right.begin() + B.size() - 1);
 
-    if (equal(right, left)) {
-        mod = substract(inA, multiply(inB, left));
-        return left;
-    }
+  if (equal(right, left)) {
+    mod = substract(inA, multiply(inB, left));
+    return left;
+  }
 
-    Vector res = binsearchDivide(A, B, left, right);
-    mod = substract(inA, multiply(inB, res));
+  Vector res = binsearchDivide(A, B, left, right);
+  mod = substract(inA, multiply(inB, res));
 
-    return res;
+  return res;
 }
 
 /*
@@ -378,79 +378,79 @@ Vector divide(const Vector &inA, const Vector &inB, Vector &mod) {
    алгоритму.
 */
 Vector sqrt(const Vector &A) {
-    Vector res, diff;
-    res.push_back((long long)std::sqrt(A.back()));
+  Vector res, diff;
+  res.push_back((long long)std::sqrt(A.back()));
 
-    {
-        long long num = A.back() - res.front() * res.front();
-        diff.push_back(num % 10);
-        if (num >= 10) {
-            diff.push_back(num / 10);
-        }
+  {
+    long long num = A.back() - res.front() * res.front();
+    diff.push_back(num % 10);
+    if (num >= 10) {
+      diff.push_back(num / 10);
+    }
+  }
+
+  for (size_t i = A.size() - 2; i != SIZE_MAX; --i) {
+    Vector mod;
+    mod.push_back(A[i] % 10);
+    mod.push_back(A[i] / 10);
+    mod.insert(mod.end(), diff.begin(), diff.end());
+    toSignificantDigits(mod);
+
+    Vector resI{0};
+    Vector doubledRes = shortMultiply(res, 2);
+    resI.insert(resI.end(), doubledRes.begin(), doubledRes.end());
+
+    long long left = 0, right = 10;
+
+    while (left < right) {
+      resI.front() = (left + right) >> 1;
+      doubledRes = shortMultiply(resI, resI.front());
+
+      if (greater(doubledRes, mod)) {
+        right = resI.front();
+      }
+
+      else {
+        left = resI.front() + 1;
+      }
     }
 
-    for (size_t i = A.size() - 2; i != SIZE_MAX; --i) {
-        Vector mod;
-        mod.push_back(A[i] % 10);
-        mod.push_back(A[i] / 10);
-        mod.insert(mod.end(), diff.begin(), diff.end());
-        toSignificantDigits(mod);
+    resI.front() = right - 1;
 
-        Vector resI{0};
-        Vector doubledRes = shortMultiply(res, 2);
-        resI.insert(resI.end(), doubledRes.begin(), doubledRes.end());
+    diff = substract(mod, shortMultiply(resI, resI.front()));
+    res.insert(res.begin(), resI.front());
+  }
 
-        long long left = 0, right = 10;
-
-        while (left < right) {
-            resI.front() = (left + right) >> 1;
-            doubledRes = shortMultiply(resI, resI.front());
-
-            if (greater(doubledRes, mod)) {
-                right = resI.front();
-            }
-
-            else {
-                left = resI.front() + 1;
-            }
-        }
-
-        resI.front() = right - 1;
-
-        diff = substract(mod, shortMultiply(resI, resI.front()));
-        res.insert(res.begin(), resI.front());
-    }
-
-    return res;
+  return res;
 }
 
 //  Обертка над квадратным корнем в столбик, изменяет базу системы, в
 //  соответстие с алгоритмом
 BigInteger sqrt(const BigInteger &inLnum) {
-    if (inLnum < 0) {
-        throw OutOfRange("square root");
-    }
+  if (inLnum < 0) {
+    throw OutOfRange("square root");
+  }
 
-    std::string str = inLnum.toString();
-    BigInteger::baseSize = 2;
-    BigInteger::base = 100;
-    BigInteger lnum = BigInteger(str);
+  std::string str = inLnum.toString();
+  BigInteger::baseSize = 2;
+  BigInteger::base = 100;
+  BigInteger lnum = BigInteger(str);
 
-    BigInteger::baseSize = 1;
-    BigInteger::base = 10;
-    BigInteger res;
-    res.vectNum = sqrt(lnum.vectNum);
+  BigInteger::baseSize = 1;
+  BigInteger::base = 10;
+  BigInteger res;
+  res.vectNum = sqrt(lnum.vectNum);
 
-    str = res.toString();
-    BigInteger::baseSize = PRIMARY_BASE_SIZE;
-    BigInteger::base = PRIMARY_BASE;
+  str = res.toString();
+  BigInteger::baseSize = PRIMARY_BASE_SIZE;
+  BigInteger::base = PRIMARY_BASE;
 
-    return BigInteger(str);
+  return BigInteger(str);
 }
 
 BigInteger::BigInteger() {
-    this->sign = false;
-    this->vectNum.push_back(0);
+  this->sign = false;
+  this->vectNum.push_back(0);
 }
 
 BigInteger::BigInteger(const BigInteger &other) { *this = other; }
@@ -460,45 +460,45 @@ BigInteger::BigInteger(const long long inNum) { *this = inNum; }
 BigInteger::BigInteger(const std::string &inStr) { this->toLongNumber(inStr); }
 
 BigInteger &BigInteger::operator=(const BigInteger &other) {
-    this->sign = other.sign;
-    this->vectNum = other.vectNum;
-    return *this;
+  this->sign = other.sign;
+  this->vectNum = other.vectNum;
+  return *this;
 }
 
 BigInteger &BigInteger::operator=(const long long inNum) {
-    this->toLongNumber(inNum);
-    return *this;
+  this->toLongNumber(inNum);
+  return *this;
 }
 
 void BigInteger::changeZeroSign() {
-    if (this->vectNum.size() == 1 && this->vectNum.front() == 0) {
-        this->sign = false;
-    }
+  if (this->vectNum.size() == 1 && this->vectNum.front() == 0) {
+    this->sign = false;
+  }
 }
 
 BigInteger &BigInteger::operator+=(const BigInteger &other) {
-    if ((!this->sign && !other.sign) || (this->sign && other.sign)) {
-        this->vectNum = addCut(this->vectNum, other.vectNum);
-    }
+  if ((!this->sign && !other.sign) || (this->sign && other.sign)) {
+    this->vectNum = addCut(this->vectNum, other.vectNum);
+  }
 
-    else {
-        if (greater(this->vectNum, other.vectNum)) {
-            this->vectNum = substract(this->vectNum, other.vectNum);
-        } else {
-            this->sign = !this->sign;
-            this->vectNum = substract(other.vectNum, this->vectNum);
-        }
+  else {
+    if (greater(this->vectNum, other.vectNum)) {
+      this->vectNum = substract(this->vectNum, other.vectNum);
+    } else {
+      this->sign = !this->sign;
+      this->vectNum = substract(other.vectNum, this->vectNum);
     }
+  }
 
-    this->changeZeroSign();
-    return *this;
+  this->changeZeroSign();
+  return *this;
 }
 
 BigInteger &BigInteger::operator+=(const long long inNum) { return *this += BigInteger(inNum); }
 
 BigInteger BigInteger::operator+(const BigInteger &other) const {
-    BigInteger thisNum = *this;
-    return thisNum += other;
+  BigInteger thisNum = *this;
+  return thisNum += other;
 }
 
 BigInteger operator+(const BigInteger &other, const long long inNum) { return BigInteger(inNum) + other; }
@@ -506,16 +506,16 @@ BigInteger operator+(const BigInteger &other, const long long inNum) { return Bi
 BigInteger operator+(const long long inNum, const BigInteger &other) { return BigInteger(inNum) + other; }
 
 BigInteger &BigInteger::operator-=(const BigInteger &other) {
-    BigInteger otherNum = other;
-    otherNum.sign = !otherNum.sign;
-    return *this += otherNum;
+  BigInteger otherNum = other;
+  otherNum.sign = !otherNum.sign;
+  return *this += otherNum;
 }
 
 BigInteger &BigInteger::operator-=(const long long inNum) { return *this -= BigInteger(inNum); }
 
 BigInteger BigInteger::operator-(const BigInteger &other) const {
-    BigInteger thisNum = *this;
-    return thisNum -= other;
+  BigInteger thisNum = *this;
+  return thisNum -= other;
 }
 
 BigInteger operator-(const BigInteger &other, const long long inNum) { return other - BigInteger(inNum); }
@@ -523,17 +523,17 @@ BigInteger operator-(const BigInteger &other, const long long inNum) { return ot
 BigInteger operator-(const long long inNum, const BigInteger &other) { return BigInteger(inNum) - other; }
 
 BigInteger &BigInteger::operator*=(const BigInteger &other) {
-    this->vectNum = multiply(this->vectNum, other.vectNum);
-    this->sign = !((this->sign && other.sign) || (!this->sign && !other.sign));
-    this->changeZeroSign();
-    return *this;
+  this->vectNum = multiply(this->vectNum, other.vectNum);
+  this->sign = !((this->sign && other.sign) || (!this->sign && !other.sign));
+  this->changeZeroSign();
+  return *this;
 }
 
 BigInteger &BigInteger::operator*=(const long long inNum) { return *this *= BigInteger(inNum); }
 
 BigInteger BigInteger::operator*(const BigInteger &other) const {
-    BigInteger thisNum = *this;
-    return thisNum *= other;
+  BigInteger thisNum = *this;
+  return thisNum *= other;
 }
 
 BigInteger operator*(const BigInteger &other, const long long inNum) { return BigInteger(inNum) * other; }
@@ -541,30 +541,30 @@ BigInteger operator*(const BigInteger &other, const long long inNum) { return Bi
 BigInteger operator*(const long long inNum, const BigInteger &other) { return BigInteger(inNum) * other; }
 
 BigInteger &BigInteger::operator/=(const BigInteger &other) {
-    if (other == 0) {
-        throw DividedByZero("div||mod");
-    }
-    if (*this == 0) {
-        return *this;
-    }
-    if (greater(other.vectNum, this->vectNum)) {
-        *this = 0;
-        return *this;
-    }
-
-    Vector mod;
-    this->vectNum = divide(this->vectNum, other.vectNum, mod);
-    this->sign = !((this->sign && other.sign) || (!this->sign && !other.sign));
-
-    this->changeZeroSign();
+  if (other == 0) {
+    throw DividedByZero("div||mod");
+  }
+  if (*this == 0) {
     return *this;
+  }
+  if (greater(other.vectNum, this->vectNum)) {
+    *this = 0;
+    return *this;
+  }
+
+  Vector mod;
+  this->vectNum = divide(this->vectNum, other.vectNum, mod);
+  this->sign = !((this->sign && other.sign) || (!this->sign && !other.sign));
+
+  this->changeZeroSign();
+  return *this;
 }
 
 BigInteger &BigInteger::operator/=(const long long inNum) { return *this /= BigInteger(inNum); }
 
 BigInteger BigInteger::operator/(const BigInteger &other) const {
-    BigInteger thisNum = *this;
-    return thisNum /= other;
+  BigInteger thisNum = *this;
+  return thisNum /= other;
 }
 
 BigInteger operator/(const BigInteger &other, const long long inNum) { return other / BigInteger(inNum); }
@@ -572,27 +572,27 @@ BigInteger operator/(const BigInteger &other, const long long inNum) { return ot
 BigInteger operator/(const long long inNum, const BigInteger &other) { return BigInteger(inNum) / other; }
 
 BigInteger &BigInteger::operator%=(const BigInteger &other) {
-    if (other == 0) {
-        throw DividedByZero("div||mod");
-    }
-    if (*this == 0) {
-        return *this;
-    }
-    if (greater(other.vectNum, this->vectNum)) {
-        return *this;
-    }
-
-    divide(this->vectNum, other.vectNum, this->vectNum);
-
-    this->changeZeroSign();
+  if (other == 0) {
+    throw DividedByZero("div||mod");
+  }
+  if (*this == 0) {
     return *this;
+  }
+  if (greater(other.vectNum, this->vectNum)) {
+    return *this;
+  }
+
+  divide(this->vectNum, other.vectNum, this->vectNum);
+
+  this->changeZeroSign();
+  return *this;
 }
 
 BigInteger &BigInteger::operator%=(const long long inNum) { return *this %= BigInteger(inNum); }
 
 BigInteger BigInteger::operator%(const BigInteger &other) const {
-    BigInteger thisNum = *this;
-    return thisNum %= other;
+  BigInteger thisNum = *this;
+  return thisNum %= other;
 }
 
 BigInteger operator%(const BigInteger &other, const long long inNum) { return other % BigInteger(inNum); }
@@ -602,26 +602,26 @@ BigInteger operator%(const long long inNum, const BigInteger &other) { return Bi
 BigInteger &BigInteger::operator++() { return *this += 1; }
 
 BigInteger &BigInteger::operator++(int) {
-    *this += 1;
-    return *this;
+  *this += 1;
+  return *this;
 }
 
 BigInteger &BigInteger::operator--() {
-    *this -= 1;
-    return *this;
+  *this -= 1;
+  return *this;
 }
 
 BigInteger &BigInteger::operator--(int) {
-    *this -= 1;
-    return *this;
+  *this -= 1;
+  return *this;
 }
 
 bool BigInteger::operator==(const BigInteger &other) const {
-    if (this->sign != other.sign) {
-        return false;
-    }
+  if (this->sign != other.sign) {
+    return false;
+  }
 
-    return equal(this->vectNum, other.vectNum);
+  return equal(this->vectNum, other.vectNum);
 }
 
 bool operator==(const BigInteger &other, const long long inNum) { return (other == BigInteger(inNum)); }
@@ -635,18 +635,18 @@ bool operator!=(const BigInteger &other, const long long inNum) { return (other 
 bool operator!=(const long long inNum, const BigInteger &other) { return (other != BigInteger(inNum)); }
 
 bool BigInteger::operator>(const BigInteger &other) const {
-    if (!this->sign && other.sign) {
-        return true;
-    }
-    if (this->sign && !other.sign) {
-        return false;
-    }
+  if (!this->sign && other.sign) {
+    return true;
+  }
+  if (this->sign && !other.sign) {
+    return false;
+  }
 
-    if (this->sign && other.sign) {
-        return greater(other.vectNum, this->vectNum);
-    }
+  if (this->sign && other.sign) {
+    return greater(other.vectNum, this->vectNum);
+  }
 
-    return greater(this->vectNum, other.vectNum);
+  return greater(this->vectNum, other.vectNum);
 }
 
 bool operator>(const BigInteger &other, const long long inNum) { return (other > BigInteger(inNum)); }
@@ -672,7 +672,7 @@ bool operator<=(const BigInteger &other, const long long inNum) { return !(other
 bool operator<=(const long long inNum, const BigInteger &other) { return !(BigInteger(inNum) > other); }
 
 size_t BigInteger::size() const {
-    return (this->vectNum.size() - 1) * 9 + (std::to_string(this->vectNum.back())).size();
+  return (this->vectNum.size() - 1) * 9 + (std::to_string(this->vectNum.back())).size();
 }
 
 long long BigInteger::getBaseSize() { return BigInteger::baseSize; }
@@ -680,69 +680,69 @@ long long BigInteger::getBaseSize() { return BigInteger::baseSize; }
 long long BigInteger::getBase() { return BigInteger::base; }
 
 BigInteger &BigInteger::toLongNumber(const std::string &inStr) {
-    if (inStr == "") {
-        throw IncorrectInput("BigInteger");
+  if (inStr == "") {
+    throw IncorrectInput("BigInteger");
+  }
+
+  this->vectNum.clear();
+  this->sign = false;
+
+  size_t first = 0;
+  if (inStr.front() == '-') {
+    this->sign = true;
+    ++first;
+  }
+
+  {
+    auto iter = std::find_if(inStr.begin() + first, inStr.end(),
+                             [](const char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
+    if (iter != inStr.end()) {
+      throw IncorrectInput("BigInteger");
     }
+  }
 
-    this->vectNum.clear();
-    this->sign = false;
+  auto iter = inStr.end();
+  for (; std::distance(inStr.begin(), iter) > baseSize; iter -= baseSize) {
+    this->vectNum.push_back(std::stoll(std::string(iter - baseSize, iter)));
+  }
+  this->vectNum.push_back(std::stoll(std::string(inStr.begin() + first, iter)));
 
-    size_t first = 0;
-    if (inStr.front() == '-') {
-        this->sign = true;
-        ++first;
-    }
-
-    {
-        auto iter = std::find_if(inStr.begin() + first, inStr.end(),
-                                 [](const char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
-        if (iter != inStr.end()) {
-            throw IncorrectInput("BigInteger");
-        }
-    }
-
-    auto iter = inStr.end();
-    for (; std::distance(inStr.begin(), iter) > baseSize; iter -= baseSize) {
-        this->vectNum.push_back(std::stoll(std::string(iter - baseSize, iter)));
-    }
-    this->vectNum.push_back(std::stoll(std::string(inStr.begin() + first, iter)));
-
-    toSignificantDigits(this->vectNum);
-    return *this;
+  toSignificantDigits(this->vectNum);
+  return *this;
 }
 
 BigInteger &BigInteger::toLongNumber(const long long inNum) { return this->toLongNumber(std::to_string(inNum)); }
 
 std::istream &operator>>(std::istream &in, BigInteger &other) {
-    std::string str;
-    in >> str;
-    other = BigInteger(str);
-    return in;
+  std::string str;
+  in >> str;
+  other = BigInteger(str);
+  return in;
 }
 
 std::ostream &operator<<(std::ostream &out, const BigInteger &other) {
-    out << other.toString();
-    return out;
+  out << other.toString();
+  return out;
 }
 
 const std::string BigInteger::toString() const {
-    std::string str;
+  std::string str;
 
-    for (size_t i = this->vectNum.size() - 1; i != SIZE_MAX; --i) {
-        std::string tmp = std::to_string(this->vectNum[i]);
-        tmp.insert(0, baseSize - tmp.size(), '0');
-        str.insert(str.size(), tmp);
-    }
+  for (size_t i = this->vectNum.size() - 1; i != SIZE_MAX; --i) {
+    std::string tmp = std::to_string(this->vectNum[i]);
+    tmp.insert(0, baseSize - tmp.size(), '0');
+    str.insert(str.size(), tmp);
+  }
 
-    while (str.front() == '0') {
-        str.erase(0, 1);
-    }
+  while (str.front() == '0') {
+    str.erase(0, 1);
+  }
 
-    if (str.empty()) {
-        str = "0";
-    } else if (this->sign) {
-        str.insert(0, 1, '-');
-    }
+  if (str.empty()) {
+    str = "0";
+  } else if (this->sign) {
+    str.insert(0, 1, '-');
+  }
 
-    return str;
+  return str;
 }
