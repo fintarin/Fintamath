@@ -13,17 +13,17 @@ constexpr long long PRECISION_OF_CONSTANTS = PRECISION + ROUND_CONST * 2;
 
 class Calculator {
 public:
-    static Fraction &getE();
-    static Fraction &getPi();
+  static Fraction &getE();
+  static Fraction &getPi();
 
-    std::string calculate(const std::string &);
+  std::string calculate(const std::string &);
 
 private:
-    Parser parser;
-    Solver solver;
+  Parser parser;
+  Solver solver;
 
-    static Fraction E;
-    static Fraction PI;
+  static Fraction E;
+  static Fraction PI;
 };
 
 #endif // CALCULATOR_HPP

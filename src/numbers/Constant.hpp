@@ -8,16 +8,16 @@
 
 class Constant : public NodeType {
 public:
-    Constant(const Constant &);
-    explicit Constant(const std::string &);
-    Constant &operator=(const Constant &);
+  Constant(const Constant &);
+  explicit Constant(const std::string &);
+  Constant &operator=(const Constant &);
 
-    const Fraction toFraction() const;
-    const std::string toString() const override;
-    const std::string getTypeName() const override;
+  const Fraction toFraction() const;
+  const std::string toString() const override;
+  const std::string getTypeName() const override;
 
 private:
-    std::string constant;
+  std::string constant;
 };
 
 namespace isType {

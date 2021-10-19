@@ -8,18 +8,18 @@
 
 class Function : public NodeType {
 public:
-    Function(const Function &);
-    explicit Function(const std::string &);
-    Function &operator=(const Function &);
+  Function(const Function &);
+  explicit Function(const std::string &);
+  Function &operator=(const Function &);
 
-    Fraction solve(const Fraction &) const;
-    Fraction solve(const Fraction &, const Fraction &) const;
+  Fraction solve(const Fraction &) const;
+  Fraction solve(const Fraction &, const Fraction &) const;
 
-    const std::string getTypeName() const override;
-    const std::string toString() const override;
+  const std::string getTypeName() const override;
+  const std::string toString() const override;
 
 public:
-    std::string func;
+  std::string func;
 };
 
 namespace isType {
