@@ -1,8 +1,9 @@
-# Algebra-Calculator
+# Fintamath
 
-Calculator for solving various algebra problems. There is Arbitrary-precision arithmetic now.
+Fintamath is an application for solving mathematical problems.
 
-# Completed
+## Completed
+
 * BigInteger
 * Fraction
 * x + y, x - y, x * y, x / y, x ^ y
@@ -15,7 +16,8 @@ Calculator for solving various algebra problems. There is Arbitrary-precision ar
 * asin(x), acos(x), atan(x), acot(x)
 * x!, x!!
 
-# Planned
+## Planned
+
 * BigDecimal & increase precision
 * pow(x, y), x mod y, x \ y
 * |x|
