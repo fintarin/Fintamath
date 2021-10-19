@@ -1,0 +1,10 @@
+Checks: >-
+  *,
+  -fuchsia-*,
+  -google-*,
+  -zircon-*,
+  -abseil-*,
+  -llvm*,
+  -cert-dcl21-cpp,
+  -modernize-use-trailing-return-type,
+  -altera-struct-pack-align
