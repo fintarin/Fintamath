@@ -12,6 +12,8 @@
 #include "operators/Function.hpp"
 #include "operators/Operator.hpp"
 
+void rootReset(const std::shared_ptr<Tree::Node> &root, const Fraction &inFrac);
+
 Fraction Solver::toFrac(const std::shared_ptr<Tree::Node> &root) const {
   if (root->info == nullptr) {
     throw IncorrectInput("Parser");
@@ -33,12 +35,6 @@ Fraction Solver::toFrac(const std::shared_ptr<Tree::Node> &root) const {
       throw Undefined("Solver");
     }
   }
-}
-
-void rootReset(const std::shared_ptr<Tree::Node> &root, const Fraction &inFrac) {
-  root->info.reset(new Fraction(inFrac));
-  root->right.reset();
-  root->left.reset();
 }
 
 void Solver::solveRec(std::shared_ptr<Tree::Node> &root) {
@@ -125,4 +121,10 @@ void Solver::solveEquals(const std::vector<std::string> &vectIOfTokens, const Fr
       }
     }
   }
+}
+
+inline void rootReset(const std::shared_ptr<Tree::Node> &root, const Fraction &inFrac) {
+  root->info.reset(new Fraction(inFrac));
+  root->right.reset();
+  root->left.reset();
 }

@@ -6,6 +6,8 @@
 
 #include "operators/NamespaceFunctions.hpp"
 
+static void addPoint(std::string &str);
+
 Fraction Calculator::E = functions::getE(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);
 Fraction Calculator::PI = functions::getPi(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);
 
@@ -15,12 +17,6 @@ Fraction &Calculator::getE() {
 
 Fraction &Calculator::getPi() {
   return Calculator::PI;
-}
-
-void addPoint(std::string &str) {
-  str.insert(str.begin() + 1, '.');
-  str += '0';
-  str = Fraction(str).toString();
 }
 
 size_t cutZeros(std::string &str) {
@@ -87,4 +83,10 @@ std::string Calculator::calculate(const std::string &inStr) {
   std::string resStr = res.toString(PRECISION);
   toFloatingPoint(resStr);
   return resStr;
+}
+
+inline void addPoint(std::string &str) {
+  str.insert(str.begin() + 1, '.');
+  str += '0';
+  str = Fraction(str).toString();
 }

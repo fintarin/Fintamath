@@ -5,78 +5,23 @@
 #include "calculator/Calculator.hpp"
 #include "calculator/ExceptionClasses.hpp"
 
-constexpr int64_t PRECISION_OF_FUNCTIONS = PRECISION + ROUND_CONST;
+constexpr uint64_t PRECISION_OF_FUNCTIONS = PRECISION + ROUND_CONST;
 
-// Округление
-void round(Fraction &a, size_t precision) {
-  a.round(PRECISION_OF_FUNCTIONS);
-}
+void round(Fraction &a, size_t precision);
+Fraction getPrecisionFrac(size_t precision);
 
-// Получение значения погрешности
-Fraction getPrecisionFrac(size_t precision) {
-  std::string precStr(PRECISION_OF_FUNCTIONS + 1, '0');
-  precStr.front() = '1';
-  return (Fraction(1, BigInteger(precStr)));
-}
-
-BigInteger abs(const BigInteger &a) {
-  if (a < 0) {
-    return BigInteger(a * -1);
-  }
-  return a;
-}
+BigInteger abs(const BigInteger &a);
+Fraction lnReduce(const Fraction &a, BigInteger &multiplier, size_t precision);
+BigInteger naturalPow(const BigInteger &inA, const BigInteger &inN);
+Fraction naturalPow(const Fraction &inA, const BigInteger &inN);
+Fraction trigonometryReduce(const Fraction &a, size_t pMultiplier, size_t precision);
+BigInteger factorialTree(const BigInteger &left, const BigInteger &right);
 
 Fraction functions::abs(const Fraction &a) {
   if (a < 0) {
     return Fraction(a * -1);
   }
   return a;
-}
-
-/*
-  Бинарное возведение длинного числа a в натуральную степень n:
-  (n mod 2 = 0) -> a^n = a^(n/2) * a^(n/2),
-  (n mod 2 = 1) -> a^n = a^(n-1) * a.
-  Применяется, пока n != 0
-*/
-BigInteger naturalPow(const BigInteger &inA, const BigInteger &inN) {
-  BigInteger res = 1;
-  BigInteger a = inA;
-  BigInteger n = abs(inN);
-
-  while (n != 0) {
-    if ((*(n.toString().end() - 1) - '0') % 2 == 0) {
-      n /= 2;
-      a *= a;
-    } else {
-      --n;
-      res *= a;
-    }
-  }
-
-  return res;
-}
-
-/*
-  Бинарное возведение действительного a в натуральную степень n.
-  Алгоритм аналогичен возведению длинного числа в натуральную степень.
-*/
-Fraction naturalPow(const Fraction &inA, const BigInteger &inN) {
-  Fraction res = 1;
-  Fraction a = inA;
-  BigInteger n = abs(inN);
-
-  while (n != 0) {
-    if ((*(n.toString().end() - 1) - '0') % 2 == 0) {
-      n /= 2;
-      a *= a;
-    } else {
-      --n;
-      res *= a;
-    }
-  }
-
-  return res;
 }
 
 // Вычисление квадратного корня, используется функция для длинного числа
@@ -94,28 +39,6 @@ Fraction functions::sqrt(const Fraction &a, size_t precision) {
   shiftPow2.insert(shiftPow2.begin(), '1');
 
   Fraction res(sqrt((a * BigInteger(shiftPow2)).getInteger()), BigInteger(shift));
-
-  round(res, precision);
-  return res;
-}
-
-/*
-  Уменьшение значение a под логарифмом так, чтобы a -> 1, поскольку в окрестности данной точке ряд Тейлора быстро
-  сходится. Используя формулу log(a^n) = n*log, путем множественного взятия квадратного корня, число приводится к
-  требуемуму виду. После расчета логарифма получившегося числа, результат домножается на 2^n, где n — количество
-  опреаций взятия корня.
-*/
-Fraction lnReduce(const Fraction &a, BigInteger &multiplier, size_t precision) {
-  Fraction res = a;
-  round(res, precision);
-  Fraction prec("0.01");
-  multiplier = 1;
-
-  while (functions::abs(res - 1) > prec) {
-    multiplier *= 2;
-    round(res, precision);
-    res = functions::sqrt(res, precision);
-  }
 
   round(res, precision);
   return res;
@@ -233,22 +156,6 @@ Fraction functions::pow(const Fraction &inA, const Fraction &n, size_t precision
 Fraction functions::exp(const Fraction &inFrac, size_t precision) {
   Fraction e = getE(PRECISION_OF_CONSTANTS);
   return pow(e, inFrac, precision);
-}
-
-/*
-  Уменьшение значения a под тригонометрической функцией. Т.к. тригонометрические функции являются периодическими, для
-  них верно следующее: f(a) = f(b + k*p) = f(b), где k — натуральное число, p - период функции. Тогда b = a - k*period,
-  k = a div p.
-*/
-Fraction trigonometryReduce(const Fraction &a, size_t pMultiplier, size_t precision) {
-  Fraction p = pMultiplier * functions::getPi(precision + a.getInteger().size());
-  BigInteger k = (a / p).getInteger();
-  Fraction res = a - k * p;
-  if (res >= p) {
-    k = (res / p).getInteger();
-    res -= k * p;
-  }
-  return res;
 }
 
 /*
@@ -563,22 +470,6 @@ Fraction functions::acot(const Fraction &a, size_t precision) {
   return res;
 }
 
-/*
-  Вычисление факториала через разложение множителей в дерево. Такое вычисление факториала быстрее, чем наивный алгоритм,
-  т.к. умножать большие числа примерно равной длины гораздо быстрее, чем большие числа на маленькие. Это обусловлено
-  использованием алгоритма Карацубы.
-*/
-BigInteger factorialTree(const BigInteger &left, const BigInteger &right) {
-  if (left == right) {
-    return left;
-  }
-  if (right - left == 1) {
-    return left * right;
-  }
-  BigInteger mid = (left + right) / 2;
-  return factorialTree(left, mid) * factorialTree(mid + 1, right);
-}
-
 // Обертка над вычислением факториала через дерево
 Fraction functions::factorial(const Fraction &a) {
   if (a < 0 || a.getNumerator() != 0) {
@@ -657,4 +548,123 @@ Fraction functions::getPi(size_t precision) {
   Fraction res = (a + b) * (a + b) / (4 * t);
   round(res, precision);
   return res;
+}
+
+// Округление
+inline void round(Fraction &a, size_t precision) {
+  a.round(PRECISION_OF_FUNCTIONS);
+}
+
+// Получение значения погрешности
+inline Fraction getPrecisionFrac(size_t precision) {
+  std::string precStr(PRECISION_OF_FUNCTIONS + 1, '0');
+  precStr.front() = '1';
+  return (Fraction(1, BigInteger(precStr)));
+}
+
+inline BigInteger abs(const BigInteger &a) {
+  if (a < 0) {
+    return BigInteger(a * -1);
+  }
+  return a;
+}
+
+/*
+  Уменьшение значение a под логарифмом так, чтобы a -> 1, поскольку в окрестности данной точке ряд Тейлора быстро
+  сходится. Используя формулу log(a^n) = n*log, путем множественного взятия квадратного корня, число приводится к
+  требуемуму виду. После расчета логарифма получившегося числа, результат домножается на 2^n, где n — количество
+  опреаций взятия корня.
+*/
+inline Fraction lnReduce(const Fraction &a, BigInteger &multiplier, size_t precision) {
+  Fraction res = a;
+  round(res, precision);
+  Fraction prec("0.01");
+  multiplier = 1;
+
+  while (functions::abs(res - 1) > prec) {
+    multiplier *= 2;
+    round(res, precision);
+    res = functions::sqrt(res, precision);
+  }
+
+  round(res, precision);
+  return res;
+}
+
+/*
+  Бинарное возведение длинного числа a в натуральную степень n:
+  (n mod 2 = 0) -> a^n = a^(n/2) * a^(n/2),
+  (n mod 2 = 1) -> a^n = a^(n-1) * a.
+  Применяется, пока n != 0
+*/
+inline BigInteger naturalPow(const BigInteger &inA, const BigInteger &inN) {
+  BigInteger res = 1;
+  BigInteger a = inA;
+  BigInteger n = abs(inN);
+
+  while (n != 0) {
+    if ((*(n.toString().end() - 1) - '0') % 2 == 0) {
+      n /= 2;
+      a *= a;
+    } else {
+      --n;
+      res *= a;
+    }
+  }
+
+  return res;
+}
+
+/*
+  Бинарное возведение действительного a в натуральную степень n.
+  Алгоритм аналогичен возведению длинного числа в натуральную степень.
+*/
+inline Fraction naturalPow(const Fraction &inA, const BigInteger &inN) {
+  Fraction res = 1;
+  Fraction a = inA;
+  BigInteger n = abs(inN);
+
+  while (n != 0) {
+    if ((*(n.toString().end() - 1) - '0') % 2 == 0) {
+      n /= 2;
+      a *= a;
+    } else {
+      --n;
+      res *= a;
+    }
+  }
+
+  return res;
+}
+
+/*
+  Уменьшение значения a под тригонометрической функцией. Т.к. тригонометрические функции являются периодическими, для
+  них верно следующее: f(a) = f(b + k*p) = f(b), где k — натуральное число, p - период функции. Тогда b = a - k*period,
+  k = a div p.
+*/
+inline Fraction trigonometryReduce(const Fraction &a, size_t pMultiplier, size_t precision) {
+  Fraction p = pMultiplier * functions::getPi(precision + a.getInteger().size());
+  BigInteger k = (a / p).getInteger();
+  Fraction res = a - k * p;
+  if (res >= p) {
+    k = (res / p).getInteger();
+    res -= k * p;
+  }
+  return res;
+}
+
+/*
+  Вычисление факториала через разложение множителей в дерево. Такое вычисление факториала быстрее, чем наивный алгоритм,
+  т.к. умножать большие числа примерно равной длины гораздо быстрее, чем большие числа на маленькие. Это обусловлено
+  использованием алгоритма Карацубы.
+*/
+inline BigInteger factorialTree(const BigInteger &left, const BigInteger &right) {
+  if (left == right) {
+    return left;
+  }
+  if (right - left == 1) {
+    return left * right;
+  }
+  BigInteger mid = (left + right) / 2;
+  return factorialTree(left, mid) * factorialTree(mid + 1, right);
 }

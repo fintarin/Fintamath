@@ -9,21 +9,8 @@
 #include "calculator/Calculator.hpp"
 #include "calculator/ExceptionClasses.hpp"
 
-// Наибольший общий делитель, используется алгоритм Евклида
-BigInteger GCD(const BigInteger &inA, const BigInteger &inB) {
-  BigInteger a = inA, b = inB;
-  while (b != 0) {
-    BigInteger buff = a % b;
-    a = b;
-    b = buff;
-  }
-  return a;
-}
-
-// Наименьшее общее кратное, используется формула НОК(a, b) = a * b / НОД(a, b)
-BigInteger LCM(const BigInteger &a, const BigInteger &b) {
-  return a * b / GCD(a, b);
-}
+static BigInteger GCD(const BigInteger &inA, const BigInteger &inB);
+static BigInteger LCM(const BigInteger &a, const BigInteger &b);
 
 void Fraction::checkZero() {
   if (this->numerator == 0) {
@@ -553,4 +540,20 @@ std::string Fraction::getTypeName() const {
 
 std::string Fraction::toString() const {
   return this->toString(PRECISION);
+}
+
+// Наибольший общий делитель, используется алгоритм Евклида
+inline BigInteger GCD(const BigInteger &inA, const BigInteger &inB) {
+  BigInteger a = inA, b = inB;
+  while (b != 0) {
+    BigInteger buff = a % b;
+    a = b;
+    b = buff;
+  }
+  return a;
+}
+
+// Наименьшее общее кратное, используется формула НОК(a, b) = a * b / НОД(a, b)
+inline BigInteger LCM(const BigInteger &a, const BigInteger &b) {
+  return a * b / GCD(a, b);
 }
