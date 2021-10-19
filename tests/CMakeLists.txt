@@ -1,8 +1,10 @@
+add_definitions(-DRESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
+
 file(
   GLOB_RECURSE
   SRC_LIST
   CONFIGURE_DEPENDS
-  "*.cpp")
+  "src/*.cpp")
 
 add_executable(${PROJECT_NAME}_tests ${SRC_LIST})
 
