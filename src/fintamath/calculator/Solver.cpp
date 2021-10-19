@@ -23,19 +23,21 @@ Fraction Solver::toFrac(const shared_ptr<Tree::Node> &root) const {
 
   if (root->info->getTypeName() == "Constant") {
     return Fraction(root->info->toString());
-  } else if (root->info->getTypeName() == "Variable") {
+  }
+
+  if (root->info->getTypeName() == "Variable") {
     string str = root->info->toString();
     auto iter = find_if(this->params.begin(), this->params.end(), [str](const Param &p) { return p.name == str; });
     if (iter == this->params.end()) {
       throw invalid_argument("Solver invalid input");
     }
     return iter->value;
-  } else {
-    try {
-      return *dynamic_pointer_cast<Fraction>(root->info);
-    } catch (const invalid_argument &) {
-      throw invalid_argument("Solver invalid input");
-    }
+  }
+
+  try {
+    return *dynamic_pointer_cast<Fraction>(root->info);
+  } catch (const invalid_argument &) {
+    throw invalid_argument("Solver invalid input");
   }
 }
 
@@ -68,7 +70,7 @@ void Solver::solveRec(shared_ptr<Tree::Node> &root) {
   if (root->info->getTypeName() == "Function") {
     Function func(root->info->toString());
     Fraction frac;
-    if (isType::isBinaryFunction(func.func)) {
+    if (isType::isBinaryFunction(func.toString())) {
       frac = func.solve(toFrac(root->right), toFrac(root->left)).round(PRECISION + ROUND_CONST / 2);
     } else {
       frac = func.solve(toFrac(root->right)).round(PRECISION + ROUND_CONST / 2);
@@ -126,7 +128,7 @@ void Solver::solveEquals(const vector<string> &vectIOfTokens, const Fraction &in
 }
 
 inline void rootReset(const shared_ptr<Tree::Node> &root, const Fraction &inFrac) {
-  root->info.reset(new Fraction(inFrac));
+  root->info = make_shared<Fraction>(inFrac);
   root->right.reset();
   root->left.reset();
 }

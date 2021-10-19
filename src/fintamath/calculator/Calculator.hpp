@@ -19,11 +19,10 @@ public:
   std::string calculate(const std::string &);
 
 private:
-  Parser parser;
   Solver solver;
 
-  static Fraction E;
-  static Fraction PI;
+  static Fraction E;  // NOLINT
+  static Fraction PI; // NOLINT
 };
 
 #endif // CALCULATOR_HPP

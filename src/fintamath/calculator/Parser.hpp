@@ -8,8 +8,8 @@
 
 class Parser {
 public:
-  std::vector<std::string> makeVectOfTokens(const std::string &) const;
-  Tree makeTree(const std::vector<std::string> &) const;
+  static std::vector<std::string> makeVectOfTokens(const std::string &);
+  static Tree makeTree(const std::vector<std::string> &);
 };
 
 #endif // PARSER_HPP

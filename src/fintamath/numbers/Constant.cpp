@@ -8,20 +8,11 @@
 
 using namespace std;
 
-Constant::Constant(const Constant &other) {
-  this->constant = other.constant;
-}
-
 Constant::Constant(const string &inStr) {
   if (!isType::isConstant(inStr)) {
     throw invalid_argument("Constant invalid input");
   }
   this->constant = inStr;
-}
-
-Constant &Constant::operator=(const Constant &other) {
-  this->constant = other.constant;
-  return *this;
 }
 
 namespace isType {

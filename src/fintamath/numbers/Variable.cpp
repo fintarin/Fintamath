@@ -5,20 +5,11 @@
 
 using namespace std;
 
-Variable::Variable(const Variable &other) {
-  this->name = other.name;
-}
-
 Variable::Variable(const string &inStr) {
   if (!isType::isVariable(inStr)) {
     throw invalid_argument("Variable invalid input");
   }
   this->name = *inStr.begin();
-}
-
-Variable &Variable::operator=(const Variable &other) {
-  this->name = other.name;
-  return *this;
 }
 
 namespace isType {

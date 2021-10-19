@@ -36,7 +36,7 @@ static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> 
 static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end);
 static void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t first, size_t last);
 
-vector<string> Parser::makeVectOfTokens(const string &inStr) const {
+vector<string> Parser::makeVectOfTokens(const string &inStr) {
   string str = inStr;
   cutSpaces(str);
   vector<string> vect;
@@ -63,13 +63,13 @@ vector<string> Parser::makeVectOfTokens(const string &inStr) const {
   return vect;
 }
 
-Tree Parser::makeTree(const vector<string> &vectIOfTokens) const {
+Tree Parser::makeTree(const vector<string> &vectIOfTokens) {
   if (vectIOfTokens.empty()) {
     throw invalid_argument("Parser invalid input");
   }
 
   Tree tree;
-  tree.root = shared_ptr<Tree::Node>(new Tree::Node);
+  tree.root = std::make_shared<Tree::Node>();
   makeTreeRec(vectIOfTokens, tree.root->right, 0, vectIOfTokens.size() - 1);
 
   if (tree.root->right == nullptr) {
@@ -103,7 +103,7 @@ inline bool isLetter(char ch) {
 }
 
 inline void addMultiply(vector<string> &vect) {
-  if (vect.size() < 1) {
+  if (vect.empty()) {
     return;
   }
   if (vect.back() != "," && vect.back() != "(" && !isType::isOperator(vect.back()) &&
@@ -113,12 +113,12 @@ inline void addMultiply(vector<string> &vect) {
 }
 
 inline void addClosingBracket(vector<string> &vect) {
-  vect.push_back(")");
+  vect.emplace_back(")");
 }
 
 inline void addOpenBracket(vector<string> &vect) {
   addMultiply(vect);
-  vect.push_back("(");
+  vect.emplace_back("(");
 }
 
 inline void addUnaryOperator(vector<string> &vect) {
@@ -126,13 +126,13 @@ inline void addUnaryOperator(vector<string> &vect) {
     vect.pop_back();
   } else if (vect.back() == "-") {
     vect.pop_back();
-    vect.push_back("-1");
-    vect.push_back("*");
+    vect.emplace_back("-1");
+    vect.emplace_back("*");
   }
 }
 
 inline void addOperator(vector<string> &vect, char ch) {
-  vect.push_back(string(1, ch));
+  vect.emplace_back(1, ch);
   if (vect.size() == 1) {
     addUnaryOperator(vect);
     return;
@@ -161,7 +161,7 @@ inline void addFrac(vector<string> &vect, const string &str, size_t &pos) {
 }
 
 inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
-  if (vect.size() < 1) {
+  if (vect.empty()) {
     throw invalid_argument("Parser invalid input");
   }
   if (vect.front() == "!" || vect.front() == "!!") {
@@ -169,11 +169,12 @@ inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
   }
 
   string factor = "!";
-  if (pos != str.size() - 1)
+  if (pos != str.size() - 1) {
     if (str[pos + 1] == '!') {
       factor += '!';
       ++pos;
     }
+  }
 
   size_t numOfBrackets = 0;
 
@@ -190,7 +191,7 @@ inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
       if (isType::isFunction(vect[i - 1])) {
         throw invalid_argument("Parser invalid input");
       }
-      vect.insert(vect.begin() + i, factor);
+      vect.insert(vect.begin() + (int64_t)i, factor);
       return;
     }
   }
@@ -214,7 +215,7 @@ inline void addConstVariableFunction(vector<string> &vect, const string &str, si
     return;
   }
   if (str[pos] == ',') {
-    vect.push_back(",");
+    vect.emplace_back(",");
     return;
   }
 
@@ -239,14 +240,14 @@ inline void addConstVariableFunction(vector<string> &vect, const string &str, si
   }
 }
 
-inline void addBinaryFunctions(vector<string> &vect) {
+inline void addBinaryFunctions(vector<string> &vect) { // NOLINT
   vector<size_t> numOfAdded;
 
   for (size_t i = 0; i < vect.size(); ++i) {
     if (isType::isBinaryFunction(vect[i])) {
       if (find(numOfAdded.begin(), numOfAdded.end(), i) == numOfAdded.end()) {
         string func = vect[i];
-        vect.erase(vect.begin() + i);
+        vect.erase(vect.begin() + (int64_t)i);
         size_t numOfBrackets = 1;
         bool find = false;
 
@@ -259,8 +260,8 @@ inline void addBinaryFunctions(vector<string> &vect) {
           } else if (vect[j] == ")") {
             --numOfBrackets;
           } else if (numOfBrackets == 1 && vect[j] == ",") {
-            vect.erase(vect.begin() + j);
-            vect.insert(vect.begin() + j, {")", func, "("});
+            vect.erase(vect.begin() + (int64_t)j);
+            vect.insert(vect.begin() + (int64_t)j, {")", func, "("});
 
             transform(numOfAdded.begin(), numOfAdded.end(), numOfAdded.begin(),
                       [j](size_t num) { return (num > j) ? num + 1 : num; });
@@ -281,12 +282,12 @@ inline void addBinaryFunctions(vector<string> &vect) {
 
 inline void addValue(const string &inStr, shared_ptr<Tree::Node> &root) {
   if (isType::isConstant(inStr)) {
-    root->info = shared_ptr<Constant>(new Constant(inStr));
+    root->info = std::make_shared<Constant>(inStr);
   } else if (isType::isVariable(inStr)) {
-    root->info = shared_ptr<Variable>(new Variable(inStr));
+    root->info = std::make_shared<Variable>(inStr);
   } else {
     try {
-      root->info = shared_ptr<Fraction>(new Fraction(inStr));
+      root->info = std::make_shared<Fraction>(inStr);
     } catch (const invalid_argument &) {
       throw invalid_argument("Parser invalid input");
     }
@@ -310,9 +311,9 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> 
     if (numOfBrackets == 0) {
       if (vectIOfTokens[i] == oper1 || vectIOfTokens[i] == oper2) {
         if (isType::isBinaryFunction(oper1)) {
-          root->info = shared_ptr<Function>(new Function(vectIOfTokens[i]));
+          root->info = std::make_shared<Function>(vectIOfTokens[i]);
         } else {
-          root->info = shared_ptr<Operator>(new Operator(vectIOfTokens[i]));
+          root->info = std::make_shared<Operator>(vectIOfTokens[i]);
         }
         makeTreeRec(vectIOfTokens, root->right, i + 1, end);
         makeTreeRec(vectIOfTokens, root->left, begin, i - 1);
@@ -331,7 +332,7 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> 
 
 inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end) {
   if (isType::isFunction(vectIOfTokens[end])) {
-    root->info = shared_ptr<Function>(new Function(vectIOfTokens[end]));
+    root->info = std::make_shared<Function>(vectIOfTokens[end]);
     makeTreeRec(vectIOfTokens, root->right, begin, end - 1);
     return true;
   }
@@ -347,7 +348,7 @@ inline void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Tree::No
   }
 
   if (root == nullptr) {
-    root = shared_ptr<Tree::Node>(new Tree::Node);
+    root = std::make_shared<Tree::Node>();
   }
 
   size_t begin = first;

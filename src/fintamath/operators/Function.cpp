@@ -8,20 +8,11 @@
 
 using namespace std;
 
-Function::Function(const Function &other) {
-  this->func = other.func;
-}
-
 Function::Function(const string &inStr) {
   if (!isType::isFunction(inStr)) {
     throw invalid_argument("Function invalid input");
   }
   this->func = inStr;
-}
-
-Function &Function::operator=(const Function &other) {
-  this->func = other.func;
-  return *this;
 }
 
 bool isType::isFunction(const string &inStr) {

@@ -98,7 +98,7 @@ public:
 
 private:
   std::vector<int64_t> vectNum;
-  bool sign;
+  bool sign{};
 
   static int64_t baseSize;
   static int64_t base;

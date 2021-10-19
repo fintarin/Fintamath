@@ -8,9 +8,7 @@
 
 class Constant : public NodeType {
 public:
-  Constant(const Constant &);
   explicit Constant(const std::string &);
-  Constant &operator=(const Constant &);
 
   Fraction toFraction() const;
   std::string toString() const override;

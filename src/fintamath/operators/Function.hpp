@@ -8,9 +8,7 @@
 
 class Function : public NodeType {
 public:
-  Function(const Function &);
   explicit Function(const std::string &);
-  Function &operator=(const Function &);
 
   Fraction solve(const Fraction &) const;
   Fraction solve(const Fraction &, const Fraction &) const;
@@ -18,7 +16,7 @@ public:
   std::string getTypeName() const override;
   std::string toString() const override;
 
-public:
+private:
   std::string func;
 };
 

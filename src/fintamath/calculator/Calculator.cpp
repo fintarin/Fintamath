@@ -10,8 +10,8 @@ using namespace std;
 
 static void addPoint(string &str);
 
-Fraction Calculator::E = functions::getE(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);
-Fraction Calculator::PI = functions::getPi(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);
+Fraction Calculator::E = functions::getE(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);   // NOLINT
+Fraction Calculator::PI = functions::getPi(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS); // NOLINT
 
 Fraction &Calculator::getE() {
   return Calculator::E;
@@ -73,10 +73,10 @@ void toFloatingPoint(string &str) {
 }
 
 string Calculator::calculate(const string &inStr) {
-  vector<string> vectIOfTokens = this->parser.makeVectOfTokens(inStr);
+  vector<string> vectIOfTokens = Parser::makeVectOfTokens(inStr);
   auto firstEqual = find(begin(vectIOfTokens), end(vectIOfTokens), "=");
 
-  Tree tree = this->parser.makeTree(vector<string>(vectIOfTokens.begin(), firstEqual));
+  Tree tree = Parser::makeTree(vector<string>(vectIOfTokens.begin(), firstEqual));
   Fraction res = this->solver.solve(tree);
   if (firstEqual != vectIOfTokens.end()) {
     this->solver.solveEquals(vector<string>(firstEqual, vectIOfTokens.end()), res);

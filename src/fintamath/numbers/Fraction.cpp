@@ -321,7 +321,8 @@ bool operator!=(int64_t inNum, const Fraction &other) {
 }
 
 bool Fraction::operator>(const Fraction &other) const {
-  Fraction thisNum = *this, otherNum = other;
+  Fraction thisNum = *this;
+  Fraction otherNum = other;
   thisNum.toCommonDenominators(otherNum);
   return (thisNum.numerator > otherNum.numerator);
 }
@@ -415,7 +416,7 @@ BigInteger Fraction::getDenominator() const {
 }
 
 Fraction &Fraction::toFraction(const string &inStr) {
-  if (inStr == "") {
+  if (inStr.empty()) {
     throw invalid_argument("Fraction invalid input");
   }
 
@@ -481,7 +482,7 @@ string Fraction::toString(size_t precision) const {
   if (res.size() <= precision) {
     res.insert(res.begin(), precision + 1 - res.size(), '0');
   }
-  res.insert(res.end() - precision, '.');
+  res.insert(res.end() - (int64_t)precision, '.');
 
   while (!res.empty() && res.back() == '0') {
     res.pop_back();
@@ -546,7 +547,8 @@ string Fraction::toString() const {
 
 // Наибольший общий делитель, используется алгоритм Евклида
 inline BigInteger GCD(const BigInteger &inA, const BigInteger &inB) {
-  BigInteger a = inA, b = inB;
+  BigInteger a = inA;
+  BigInteger b = inB;
   while (b != 0) {
     BigInteger buff = a % b;
     a = b;

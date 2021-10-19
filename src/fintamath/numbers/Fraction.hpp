@@ -129,7 +129,7 @@ public:
 private:
   BigInteger numerator;
   BigInteger denominator;
-  bool sign;
+  bool sign{};
 };
 
 #endif // FRACTION_HPP

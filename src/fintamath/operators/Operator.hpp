@@ -8,9 +8,7 @@
 
 class Operator : public NodeType {
 public:
-  Operator(const Operator &);
   explicit Operator(const std::string &);
-  Operator &operator=(const Operator &);
 
   bool isEqualSign() const;
   Fraction solve(const Fraction &, const Fraction &) const;

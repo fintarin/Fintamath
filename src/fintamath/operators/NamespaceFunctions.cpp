@@ -67,8 +67,10 @@ Fraction functions::ln(const Fraction &inA, size_t precision) {
   round(a, precision);
 
   BigInteger k = 1;
-  Fraction a_i, res = a;
-  Fraction aPow2kPlus1 = a, aPow2 = a * a;
+  Fraction a_i;
+  Fraction res = a;
+  Fraction aPow2kPlus1 = a;
+  Fraction aPow2 = a * a;
   Fraction precisionFrac = getPrecisionFrac(precision);
 
   do {
@@ -138,7 +140,8 @@ Fraction functions::pow(const Fraction &inA, const Fraction &n, size_t precision
   }
 
   BigInteger k = 1;
-  Fraction a_i = 1, aPowFloat = 1;
+  Fraction a_i = 1;
+  Fraction aPowFloat = 1;
   Fraction precisionFrac = getPrecisionFrac(precision);
 
   do {
@@ -193,7 +196,9 @@ Fraction functions::sin(const Fraction &inA, size_t precision) {
   round(a, precision);
 
   BigInteger k = 2;
-  Fraction a_i = a, res = a, aPow2 = a * a;
+  Fraction a_i = a;
+  Fraction res = a;
+  Fraction aPow2 = a * a;
   Fraction precisionFrac = getPrecisionFrac(precision);
 
   do {
@@ -244,7 +249,9 @@ Fraction functions::cos(const Fraction &inA, size_t precision) {
   round(a, precision);
 
   BigInteger k = 2;
-  Fraction a_i = 1, res = 1, aPow2 = a * a;
+  Fraction a_i = 1;
+  Fraction res = 1;
+  Fraction aPow2 = a * a;
   round(aPow2, precision);
   Fraction precisionFrac = getPrecisionFrac(precision);
 
@@ -382,7 +389,10 @@ Fraction functions::acos(const Fraction &inA, size_t precision) {
 
   if (a <= Fraction(1, 5)) {
     BigInteger k = 1;
-    Fraction a_i, f_a = a, res = a, aPow2 = a * a;
+    Fraction a_i;
+    Fraction f_a = a;
+    Fraction res = a;
+    Fraction aPow2 = a * a;
     Fraction precisionFrac = getPrecisionFrac(precision);
 
     do {
@@ -436,7 +446,10 @@ Fraction functions::atan(const Fraction &inA, size_t precision) {
 
   if (a <= Fraction(1, 5)) {
     BigInteger k = 2;
-    Fraction a_i, f_a = a, res = a, aPow2 = a * a;
+    Fraction a_i;
+    Fraction f_a = a;
+    Fraction res = a;
+    Fraction aPow2 = a * a;
     Fraction precisionFrac = getPrecisionFrac(precision);
 
     do {
@@ -502,7 +515,8 @@ Fraction functions::getE(size_t precision) {
   }
 
   BigInteger k = 1;
-  Fraction a_i = 1, res = 1;
+  Fraction a_i = 1;
+  Fraction res = 1;
   Fraction precisionFrac = getPrecisionFrac(precision);
 
   do {
@@ -533,12 +547,16 @@ Fraction functions::getPi(size_t precision) {
     return Calculator::getPi();
   }
 
-  BigInteger numOfIterations = functions::lb(precision, PRECISION).getInteger() + 1;
+  BigInteger numOfIterations = functions::lb((double)precision, PRECISION).getInteger() + 1;
   BigInteger p = 1;
-  Fraction a = 1, b = 1 / functions::sqrt(2, precision), t = Fraction(1, 4);
+  Fraction a = 1;
+  Fraction b = 1 / functions::sqrt(2, precision);
+  Fraction t = Fraction(1, 4);
 
   for (BigInteger i = 0; i < numOfIterations; ++i) {
-    Fraction prevA = a, prevB = b, prevT = t;
+    Fraction prevA = a;
+    Fraction prevB = b;
+    Fraction prevT = t;
     a = (prevA + prevB) / 2;
     b = functions::sqrt(prevA * prevB, precision);
     Fraction diff = (prevA - a);
@@ -645,7 +663,7 @@ inline Fraction naturalPow(const Fraction &inA, const BigInteger &inN) {
   k = a div p.
 */
 inline Fraction trigonometryReduce(const Fraction &a, size_t pMultiplier, size_t precision) {
-  Fraction p = pMultiplier * functions::getPi(precision + a.getInteger().size());
+  Fraction p = (int64_t)pMultiplier * functions::getPi(precision + a.getInteger().size());
   BigInteger k = (a / p).getInteger();
   Fraction res = a - k * p;
   if (res >= p) {

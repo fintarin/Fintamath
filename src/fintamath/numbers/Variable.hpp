@@ -7,15 +7,13 @@
 
 class Variable : public NodeType {
 public:
-  Variable(const Variable &);
   explicit Variable(const std::string &);
-  Variable &operator=(const Variable &);
   char getName() const;
   std::string getTypeName() const override;
   std::string toString() const override;
 
 private:
-  char name;
+  char name{};
 };
 
 namespace isType {

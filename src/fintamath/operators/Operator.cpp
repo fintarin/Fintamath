@@ -8,20 +8,11 @@
 
 using namespace std;
 
-Operator::Operator(const Operator &inOper) {
-  this->oper = inOper.oper;
-}
-
 Operator::Operator(const string &inStr) {
   if (!isType::isOperator(inStr)) {
     throw invalid_argument("Operator invalid input");
   }
   this->oper = *inStr.begin();
-}
-
-Operator &Operator::operator=(const Operator &other) {
-  this->oper = other.oper;
-  return *this;
 }
 
 namespace isType {

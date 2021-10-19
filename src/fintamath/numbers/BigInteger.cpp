@@ -352,7 +352,7 @@ int64_t BigInteger::getBase() {
 }
 
 BigInteger &BigInteger::toLongNumber(const string &inStr) {
-  if (inStr == "") {
+  if (inStr.empty()) {
     throw invalid_argument("BigInteger invalid input");
   }
 
@@ -366,7 +366,8 @@ BigInteger &BigInteger::toLongNumber(const string &inStr) {
   }
 
   {
-    auto iter = find_if(inStr.begin() + first, inStr.end(), [](char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
+    auto iter =
+        find_if(inStr.begin() + (int64_t)first, inStr.end(), [](char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
     if (iter != inStr.end()) {
       throw invalid_argument("BigInteger invalid input");
     }
@@ -376,7 +377,7 @@ BigInteger &BigInteger::toLongNumber(const string &inStr) {
   for (; distance(inStr.begin(), iter) > baseSize; iter -= baseSize) {
     this->vectNum.push_back(stoll(string(iter - baseSize, iter)));
   }
-  this->vectNum.push_back(stoll(string(inStr.begin() + first, iter)));
+  this->vectNum.push_back(stoll(string(inStr.begin() + (int64_t)first, iter)));
 
   toSignificantDigits(this->vectNum);
   return *this;
@@ -608,13 +609,13 @@ inline NumVector karatsubaMultiply(const NumVector &A, const NumVector &B) {
     return polynomialMultiply(A, B);
   }
 
-  size_t len = A.size() >> 1;
+  size_t len = A.size() / 2;
 
-  NumVector A0(A.begin(), A.begin() + len);
-  NumVector A1(A.begin() + len, A.end());
+  NumVector A0(A.begin(), A.begin() + (int64_t)len);
+  NumVector A1(A.begin() + (int64_t)len, A.end());
 
-  NumVector B0(B.begin(), B.begin() + len);
-  NumVector B1(B.begin() + len, B.end());
+  NumVector B0(B.begin(), B.begin() + (int64_t)len);
+  NumVector B1(B.begin() + (int64_t)len, B.end());
 
   NumVector p0 = karatsubaMultiply(A0, B0);
   NumVector p1 = karatsubaMultiply(add(A0, A1), add(B0, B1));
@@ -623,7 +624,7 @@ inline NumVector karatsubaMultiply(const NumVector &A, const NumVector &B) {
   p1 = substract(p1, add(p2, p0));
 
   p1.insert(p1.begin(), len, 0);
-  p2.insert(p2.begin(), len << 1, 0);
+  p2.insert(p2.begin(), len * 2, 0);
 
   return add(add(p2, p1), p0);
 }
@@ -634,10 +635,10 @@ inline size_t multiplyZeros(NumVector &A, NumVector &B) {
   size_t numOfZerosB = numOfFirstZeros(B);
 
   if (A.size() != 1) {
-    A.erase(A.begin(), A.begin() + numOfZerosA);
+    A.erase(A.begin(), A.begin() + (int64_t)numOfZerosA);
   }
   if (B.size() != 1) {
-    B.erase(B.begin(), B.begin() + numOfZerosB);
+    B.erase(B.begin(), B.begin() + (int64_t)numOfZerosB);
   }
 
   return numOfZerosA + numOfZerosB;
@@ -645,7 +646,8 @@ inline size_t multiplyZeros(NumVector &A, NumVector &B) {
 
 // Обертка над умножением Карацубы, добавление лидирующих нулей для приведения чисел к виду, требуемому алгоритмом
 inline NumVector multiply(const NumVector &inA, const NumVector &inB) {
-  NumVector A = inA, B = inB;
+  NumVector A = inA;
+  NumVector B = inB;
   size_t numOfZeros = multiplyZeros(A, B);
 
   if (A.size() < KARATSUBA_CUTOFF || B.size() < KARATSUBA_CUTOFF) {
@@ -661,7 +663,7 @@ inline NumVector multiply(const NumVector &inA, const NumVector &inB) {
   }
   A.resize(len, 0);
   B.resize(len, 0);
-  len >>= 1;
+  len /= 2;
 
   NumVector res = karatsubaMultiply(A, B);
   res.insert(res.begin(), numOfZeros, 0);
@@ -705,14 +707,15 @@ inline NumVector shortDivide(const NumVector &A, int64_t num, NumVector &mod) {
 inline void divideZeros(NumVector &A, NumVector &B) {
   size_t numOfZeros = min(numOfFirstZeros(A), numOfFirstZeros(B));
   if (A.size() != 1 && B.size() != 1 && numOfZeros != 0) {
-    A.erase(A.begin(), A.begin() + numOfZeros);
-    B.erase(B.begin(), B.begin() + numOfZeros);
+    A.erase(A.begin(), A.begin() + (int64_t)numOfZeros);
+    B.erase(B.begin(), B.begin() + (int64_t)numOfZeros);
   }
 }
 
 // Деление A на B с помощью бинарного поиска
 inline NumVector binsearchDivide(const NumVector &A, const NumVector &B, NumVector &left, NumVector &right) {
-  NumVector mid, one = NumVector{1};
+  NumVector mid;
+  NumVector one = NumVector{1};
   while (::greater(substract(right, left), one)) {
     mid = shortDivide(addCut(left, right), 2);
     NumVector mult = multiply(B, mid);
@@ -727,7 +730,8 @@ inline NumVector binsearchDivide(const NumVector &A, const NumVector &B, NumVect
     swap(left, right);
   }
 
-  NumVector res, mult = multiply(B, right);
+  NumVector res;
+  NumVector mult = multiply(B, right);
   if (::greater(A, mult) || equal(A, mult)) {
     res = right;
   } else {
@@ -751,7 +755,8 @@ inline NumVector divide(const NumVector &inA, const NumVector &inB, NumVector &m
   NumVector B = inB;
   divideZeros(A, B);
 
-  NumVector left, right;
+  NumVector left;
+  NumVector right;
   left = shortDivide(A, B.back() + 1);
 
   if (B.back() != 1) {
@@ -761,8 +766,8 @@ inline NumVector divide(const NumVector &inA, const NumVector &inB, NumVector &m
     right.back() = BigInteger::getBase() - 1;
   }
 
-  left.erase(left.begin(), left.begin() + B.size() - 1);
-  right.erase(right.begin(), right.begin() + B.size() - 1);
+  left.erase(left.begin(), left.begin() + (int64_t)B.size() - 1);
+  right.erase(right.begin(), right.begin() + (int64_t)B.size() - 1);
 
   if (equal(right, left)) {
     mod = substract(inA, multiply(inB, left));
@@ -793,7 +798,8 @@ inline NumVector divide(const NumVector &inA, const NumVector &inB, NumVector &m
   5.К получившейся разности сносим следующую грань и выполняем действия по алгоритму.
 */
 inline NumVector sqrt(const NumVector &A) {
-  NumVector res, diff;
+  NumVector res;
+  NumVector diff;
   res.push_back((int64_t)sqrt(A.back()));
 
   {
@@ -815,10 +821,11 @@ inline NumVector sqrt(const NumVector &A) {
     NumVector doubledRes = shortMultiply(res, 2);
     resI.insert(resI.end(), doubledRes.begin(), doubledRes.end());
 
-    int64_t left = 0, right = 10;
+    int64_t left = 0;
+    int64_t right = 10;
 
     while (left < right) {
-      resI.front() = (left + right) >> 1;
+      resI.front() = (left + right) / 2;
       doubledRes = shortMultiply(resI, resI.front());
 
       if (::greater(doubledRes, mod)) {
