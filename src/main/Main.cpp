@@ -4,15 +4,17 @@
 #include "calculator/Calculator.hpp"
 #include "calculator/ExceptionClasses.hpp"
 
+using namespace std;
+
 int main() {
   Calculator calc;
 
   while (true) {
-    std::string str;
-    std::string res;
-    std::cout << ">> ";
-    std::getline(std::cin, str);
-    std::cout << "<< ";
+    string str;
+    string res;
+    cout << ">> ";
+    getline(cin, str);
+    cout << "<< ";
 
     try {
       res = calc.calculate(str);
@@ -28,6 +30,6 @@ int main() {
       res = exception.getError();
     }
 
-    std::cout << res << "\n\n";
+    cout << res << "\n\n";
   }
 }

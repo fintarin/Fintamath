@@ -2,22 +2,24 @@
 #include <fstream>
 #include <gtest/gtest.h>
 
+using namespace std;
+
 TEST(CalculatorTests, positiveTets) {
-  std::ifstream testsIn(RESOURCES_DIR "positive_tests.txt");
+  ifstream testsIn(RESOURCES_DIR "positive_tests.txt");
   Calculator calc;
-  for (std::string input, output; std::getline(testsIn, input) && std::getline(testsIn, output);) {
-    std::cout << input << '\n' << output << "\n\n";
+  for (string input, output; getline(testsIn, input) && getline(testsIn, output);) {
+    cout << input << '\n' << output << "\n\n";
     EXPECT_EQ(calc.calculate(input), output);
-    std::getline(testsIn, input);
+    getline(testsIn, input);
   }
 }
 
 TEST(CalculatorTests, negativeTets) {
-  std::ifstream testsIn(RESOURCES_DIR "negative_tests.txt");
+  ifstream testsIn(RESOURCES_DIR "negative_tests.txt");
   Calculator calc;
-  for (std::string input, output; std::getline(testsIn, input);) {
-    std::cout << input << '\n' << output << "\n\n";
+  for (string input, output; getline(testsIn, input);) {
+    cout << input << '\n' << output << "\n\n";
     EXPECT_ANY_THROW(calc.calculate(input));
-    std::getline(testsIn, input);
+    getline(testsIn, input);
   }
 }

@@ -5,6 +5,8 @@
 #include "calculator/Calculator.hpp"
 #include "calculator/ExceptionClasses.hpp"
 
+using namespace std;
+
 constexpr uint64_t PRECISION_OF_FUNCTIONS = PRECISION + ROUND_CONST;
 
 void round(Fraction &a, size_t precision);
@@ -33,8 +35,8 @@ Fraction functions::sqrt(const Fraction &a, size_t precision) {
     return Fraction(0);
   }
 
-  std::string shift((PRECISION_OF_FUNCTIONS), '0');
-  std::string shiftPow2(2 * (PRECISION_OF_FUNCTIONS), '0');
+  string shift((PRECISION_OF_FUNCTIONS), '0');
+  string shiftPow2(2 * (PRECISION_OF_FUNCTIONS), '0');
   shift.insert(shift.begin(), '1');
   shiftPow2.insert(shiftPow2.begin(), '1');
 
@@ -557,7 +559,7 @@ inline void round(Fraction &a, size_t precision) {
 
 // Получение значения погрешности
 inline Fraction getPrecisionFrac(size_t precision) {
-  std::string precStr(PRECISION_OF_FUNCTIONS + 1, '0');
+  string precStr(PRECISION_OF_FUNCTIONS + 1, '0');
   precStr.front() = '1';
   return (Fraction(1, BigInteger(precStr)));
 }

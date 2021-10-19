@@ -6,11 +6,13 @@
 #include "calculator/ExceptionClasses.hpp"
 #include "operators/NamespaceFunctions.hpp"
 
+using namespace std;
+
 Function::Function(const Function &other) {
   this->func = other.func;
 }
 
-Function::Function(const std::string &inStr) {
+Function::Function(const string &inStr) {
   if (!isType::isFunction(inStr)) {
     throw IncorrectInput("Function");
   }
@@ -22,7 +24,7 @@ Function &Function::operator=(const Function &other) {
   return *this;
 }
 
-bool isType::isFunction(const std::string &inStr) {
+bool isType::isFunction(const string &inStr) {
   if (inStr == "sqrt") {
     return true;
   }
@@ -77,7 +79,7 @@ bool isType::isFunction(const std::string &inStr) {
   return false;
 }
 
-bool isType::isBinaryFunction(const std::string &inStr) {
+bool isType::isBinaryFunction(const string &inStr) {
   return (inStr == "log");
 }
 
@@ -140,10 +142,10 @@ Fraction Function::solve(const Fraction &base, const Fraction &frac) const {
   throw IncorrectInput("Function");
 }
 
-std::string Function::getTypeName() const {
+string Function::getTypeName() const {
   return "Function";
 }
 
-std::string Function::toString() const {
+string Function::toString() const {
   return this->func;
 }

@@ -12,9 +12,11 @@
 #include "operators/Function.hpp"
 #include "operators/Operator.hpp"
 
-void rootReset(const std::shared_ptr<Tree::Node> &root, const Fraction &inFrac);
+using namespace std;
 
-Fraction Solver::toFrac(const std::shared_ptr<Tree::Node> &root) const {
+void rootReset(const shared_ptr<Tree::Node> &root, const Fraction &inFrac);
+
+Fraction Solver::toFrac(const shared_ptr<Tree::Node> &root) const {
   if (root->info == nullptr) {
     throw IncorrectInput("Parser");
   }
@@ -22,22 +24,22 @@ Fraction Solver::toFrac(const std::shared_ptr<Tree::Node> &root) const {
   if (root->info->getTypeName() == "Constant") {
     return Fraction(root->info->toString());
   } else if (root->info->getTypeName() == "Variable") {
-    std::string str = root->info->toString();
-    auto iter = std::find_if(this->params.begin(), this->params.end(), [str](const Param &p) { return p.name == str; });
+    string str = root->info->toString();
+    auto iter = find_if(this->params.begin(), this->params.end(), [str](const Param &p) { return p.name == str; });
     if (iter == this->params.end()) {
       throw Undefined("Solver");
     }
     return iter->value;
   } else {
     try {
-      return *std::dynamic_pointer_cast<Fraction>(root->info);
+      return *dynamic_pointer_cast<Fraction>(root->info);
     } catch (IncorrectInput) {
       throw Undefined("Solver");
     }
   }
 }
 
-void Solver::solveRec(std::shared_ptr<Tree::Node> &root) {
+void Solver::solveRec(shared_ptr<Tree::Node> &root) {
   if (root->info == nullptr) {
     throw IncorrectInput("Parser");
   }
@@ -81,10 +83,10 @@ Fraction Solver::solve(Tree &tree) {
     return Fraction(toFrac(tree.root->right).toString());
   }
   solveRec(tree.root->right);
-  return *std::dynamic_pointer_cast<Fraction>(tree.root->right->info);
+  return *dynamic_pointer_cast<Fraction>(tree.root->right->info);
 }
 
-void Solver::solveEquals(const std::vector<std::string> &vectIOfTokens, const Fraction &inFrac) {
+void Solver::solveEquals(const vector<string> &vectIOfTokens, const Fraction &inFrac) {
   if (vectIOfTokens.size() < 2) {
     throw IncorrectInput("Parser");
   }
@@ -123,7 +125,7 @@ void Solver::solveEquals(const std::vector<std::string> &vectIOfTokens, const Fr
   }
 }
 
-inline void rootReset(const std::shared_ptr<Tree::Node> &root, const Fraction &inFrac) {
+inline void rootReset(const shared_ptr<Tree::Node> &root, const Fraction &inFrac) {
   root->info.reset(new Fraction(inFrac));
   root->right.reset();
   root->left.reset();

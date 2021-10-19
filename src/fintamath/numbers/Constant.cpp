@@ -6,11 +6,13 @@
 #include "calculator/ExceptionClasses.hpp"
 #include "operators/NamespaceFunctions.hpp"
 
+using namespace std;
+
 Constant::Constant(const Constant &other) {
   this->constant = other.constant;
 }
 
-Constant::Constant(const std::string &inStr) {
+Constant::Constant(const string &inStr) {
   if (!isType::isConstant(inStr)) {
     throw IncorrectInput("Constant");
   }
@@ -23,7 +25,7 @@ Constant &Constant::operator=(const Constant &other) {
 }
 
 namespace isType {
-bool isConstant(const std::string &inStr) {
+bool isConstant(const string &inStr) {
   if (inStr == "e") {
     return true;
   }
@@ -44,10 +46,10 @@ Fraction Constant::toFraction() const {
   throw IncorrectInput("Constant");
 }
 
-std::string Constant::toString() const {
+string Constant::toString() const {
   return this->toFraction().toString(PRECISION + ROUND_CONST / 2);
 }
 
-std::string Constant::getTypeName() const {
+string Constant::getTypeName() const {
   return "Constant";
 }

@@ -11,42 +11,42 @@
 #include "operators/Function.hpp"
 #include "operators/Operator.hpp"
 
-static void cutSpaces(std::string &str);
+using namespace std;
+
+static void cutSpaces(string &str);
 
 static bool isDigit(char ch);
 static bool isLetter(char ch);
 
-static void addMultiply(std::vector<std::string> &vect);
-static void addClosingBracket(std::vector<std::string> &vect);
-static void addOpenBracket(std::vector<std::string> &vect);
-static void addUnaryOperator(std::vector<std::string> &vect);
-static void addOperator(std::vector<std::string> &vect, char ch);
-static void addFrac(std::vector<std::string> &vect, const std::string &str, size_t &pos);
-static void addFactorial(std::vector<std::string> &vect, const std::string &str, size_t &pos);
-static void addConstVariableFunction(std::vector<std::string> &vect, const std::string &str, size_t &pos);
-static void addBinaryFunctions(std::vector<std::string> &vect);
-static void addValue(const std::string &inStr, std::shared_ptr<Tree::Node> &root);
+static void addMultiply(vector<string> &vect);
+static void addClosingBracket(vector<string> &vect);
+static void addOpenBracket(vector<string> &vect);
+static void addUnaryOperator(vector<string> &vect);
+static void addOperator(vector<string> &vect, char ch);
+static void addFrac(vector<string> &vect, const string &str, size_t &pos);
+static void addFactorial(vector<string> &vect, const string &str, size_t &pos);
+static void addConstVariableFunction(vector<string> &vect, const string &str, size_t &pos);
+static void addBinaryFunctions(vector<string> &vect);
+static void addValue(const string &inStr, shared_ptr<Tree::Node> &root);
 
-static bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin,
-                    size_t end, const std::string &oper1, const std::string &oper2);
-static bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin,
-                    size_t end, const std::string &oper);
-static bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin,
-                    size_t end);
-static void makeTreeRec(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t first,
-                        size_t last);
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+                    const string &oper1, const string &oper2);
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+                    const string &oper);
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end);
+static void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t first, size_t last);
 
-std::vector<std::string> Parser::makeVectOfTokens(const std::string &inStr) const {
-  std::string str = inStr;
+vector<string> Parser::makeVectOfTokens(const string &inStr) const {
+  string str = inStr;
   cutSpaces(str);
-  std::vector<std::string> vect;
+  vector<string> vect;
 
   for (size_t i = 0; i < str.size(); ++i) {
     if (str[i] == ')') {
       addClosingBracket(vect);
     } else if (str[i] == '(') {
       addOpenBracket(vect);
-    } else if (isType::isOperator(std::string(1, str[i]))) {
+    } else if (isType::isOperator(string(1, str[i]))) {
       addOperator(vect, str[i]);
     } else if (str[i] == '!') {
       addFactorial(vect, str, i);
@@ -58,18 +58,18 @@ std::vector<std::string> Parser::makeVectOfTokens(const std::string &inStr) cons
   }
 
   addBinaryFunctions(vect);
-  std::reverse(vect.begin(), vect.end());
+  reverse(vect.begin(), vect.end());
 
   return vect;
 }
 
-Tree Parser::makeTree(const std::vector<std::string> &vectIOfTokens) const {
+Tree Parser::makeTree(const vector<string> &vectIOfTokens) const {
   if (vectIOfTokens.empty()) {
     throw IncorrectInput("Parser");
   }
 
   Tree tree;
-  tree.root = std::shared_ptr<Tree::Node>(new Tree::Node);
+  tree.root = shared_ptr<Tree::Node>(new Tree::Node);
   makeTreeRec(vectIOfTokens, tree.root->right, 0, vectIOfTokens.size() - 1);
 
   if (tree.root->right == nullptr) {
@@ -79,7 +79,7 @@ Tree Parser::makeTree(const std::vector<std::string> &vectIOfTokens) const {
   return tree;
 }
 
-inline void cutSpaces(std::string &str) {
+inline void cutSpaces(string &str) {
   while (!str.empty()) {
     if (str.front() != ' ') {
       break;
@@ -102,7 +102,7 @@ inline bool isLetter(char ch) {
   return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
 
-inline void addMultiply(std::vector<std::string> &vect) {
+inline void addMultiply(vector<string> &vect) {
   if (vect.size() < 1) {
     return;
   }
@@ -112,16 +112,16 @@ inline void addMultiply(std::vector<std::string> &vect) {
   }
 }
 
-inline void addClosingBracket(std::vector<std::string> &vect) {
+inline void addClosingBracket(vector<string> &vect) {
   vect.push_back(")");
 }
 
-inline void addOpenBracket(std::vector<std::string> &vect) {
+inline void addOpenBracket(vector<string> &vect) {
   addMultiply(vect);
   vect.push_back("(");
 }
 
-inline void addUnaryOperator(std::vector<std::string> &vect) {
+inline void addUnaryOperator(vector<string> &vect) {
   if (vect.back() == "+") {
     vect.pop_back();
   } else if (vect.back() == "-") {
@@ -131,8 +131,8 @@ inline void addUnaryOperator(std::vector<std::string> &vect) {
   }
 }
 
-inline void addOperator(std::vector<std::string> &vect, char ch) {
-  vect.push_back(std::string(1, ch));
+inline void addOperator(vector<string> &vect, char ch) {
+  vect.push_back(string(1, ch));
   if (vect.size() == 1) {
     addUnaryOperator(vect);
     return;
@@ -142,10 +142,10 @@ inline void addOperator(std::vector<std::string> &vect, char ch) {
   }
 }
 
-inline void addFrac(std::vector<std::string> &vect, const std::string &str, size_t &pos) {
+inline void addFrac(vector<string> &vect, const string &str, size_t &pos) {
   addMultiply(vect);
 
-  std::string fracStr;
+  string fracStr;
   while (pos < str.size()) {
     fracStr += str[pos];
     ++pos;
@@ -160,7 +160,7 @@ inline void addFrac(std::vector<std::string> &vect, const std::string &str, size
   vect.push_back(fracStr);
 }
 
-inline void addFactorial(std::vector<std::string> &vect, const std::string &str, size_t &pos) {
+inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
   if (vect.size() < 1) {
     throw IncorrectInput("Parser");
   }
@@ -168,7 +168,7 @@ inline void addFactorial(std::vector<std::string> &vect, const std::string &str,
     throw IncorrectInput("Parser");
   }
 
-  std::string factor = "!";
+  string factor = "!";
   if (pos != str.size() - 1)
     if (str[pos + 1] == '!') {
       factor += '!';
@@ -208,7 +208,7 @@ inline void addFactorial(std::vector<std::string> &vect, const std::string &str,
   vect.insert(vect.begin(), factor);
 }
 
-inline void addConstVariableFunction(std::vector<std::string> &vect, const std::string &str, size_t &pos) {
+inline void addConstVariableFunction(vector<string> &vect, const string &str, size_t &pos) {
   if (str[pos] == '!') {
     addFactorial(vect, str, pos);
     return;
@@ -220,7 +220,7 @@ inline void addConstVariableFunction(std::vector<std::string> &vect, const std::
 
   addMultiply(vect);
 
-  std::string word;
+  string word;
   while (pos < str.size()) {
     word += str[pos];
     ++pos;
@@ -239,13 +239,13 @@ inline void addConstVariableFunction(std::vector<std::string> &vect, const std::
   }
 }
 
-inline void addBinaryFunctions(std::vector<std::string> &vect) {
-  std::vector<size_t> numOfAdded;
+inline void addBinaryFunctions(vector<string> &vect) {
+  vector<size_t> numOfAdded;
 
   for (size_t i = 0; i < vect.size(); ++i) {
     if (isType::isBinaryFunction(vect[i])) {
-      if (std::find(numOfAdded.begin(), numOfAdded.end(), i) == numOfAdded.end()) {
-        std::string func = vect[i];
+      if (find(numOfAdded.begin(), numOfAdded.end(), i) == numOfAdded.end()) {
+        string func = vect[i];
         vect.erase(vect.begin() + i);
         size_t numOfBrackets = 1;
         bool find = false;
@@ -262,8 +262,8 @@ inline void addBinaryFunctions(std::vector<std::string> &vect) {
             vect.erase(vect.begin() + j);
             vect.insert(vect.begin() + j, {")", func, "("});
 
-            std::transform(numOfAdded.begin(), numOfAdded.end(), numOfAdded.begin(),
-                           [j](size_t num) { return (num > j) ? num + 1 : num; });
+            transform(numOfAdded.begin(), numOfAdded.end(), numOfAdded.begin(),
+                      [j](size_t num) { return (num > j) ? num + 1 : num; });
             numOfAdded.push_back(j + 1);
 
             find = true;
@@ -279,22 +279,22 @@ inline void addBinaryFunctions(std::vector<std::string> &vect) {
   }
 }
 
-inline void addValue(const std::string &inStr, std::shared_ptr<Tree::Node> &root) {
+inline void addValue(const string &inStr, shared_ptr<Tree::Node> &root) {
   if (isType::isConstant(inStr)) {
-    root->info = std::shared_ptr<Constant>(new Constant(inStr));
+    root->info = shared_ptr<Constant>(new Constant(inStr));
   } else if (isType::isVariable(inStr)) {
-    root->info = std::shared_ptr<Variable>(new Variable(inStr));
+    root->info = shared_ptr<Variable>(new Variable(inStr));
   } else {
     try {
-      root->info = std::shared_ptr<Fraction>(new Fraction(inStr));
+      root->info = shared_ptr<Fraction>(new Fraction(inStr));
     } catch (IncorrectInput) {
       throw IncorrectInput("Parser");
     }
   }
 }
 
-inline bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin,
-                    size_t end, const std::string &oper1, const std::string &oper2) {
+inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+                    const string &oper1, const string &oper2) {
   size_t numOfBrackets = 0;
 
   for (size_t i = begin; i <= end; ++i) {
@@ -310,9 +310,9 @@ inline bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_p
     if (numOfBrackets == 0) {
       if (vectIOfTokens[i] == oper1 || vectIOfTokens[i] == oper2) {
         if (isType::isBinaryFunction(oper1)) {
-          root->info = std::shared_ptr<Function>(new Function(vectIOfTokens[i]));
+          root->info = shared_ptr<Function>(new Function(vectIOfTokens[i]));
         } else {
-          root->info = std::shared_ptr<Operator>(new Operator(vectIOfTokens[i]));
+          root->info = shared_ptr<Operator>(new Operator(vectIOfTokens[i]));
         }
         makeTreeRec(vectIOfTokens, root->right, i + 1, end);
         makeTreeRec(vectIOfTokens, root->left, begin, i - 1);
@@ -324,23 +324,21 @@ inline bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_p
   return false;
 }
 
-inline bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin,
-                    size_t end, const std::string &oper) {
+inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+                    const string &oper) {
   return descent(vectIOfTokens, root, begin, end, oper, "");
 }
 
-inline bool descent(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t begin,
-                    size_t end) {
+inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end) {
   if (isType::isFunction(vectIOfTokens[end])) {
-    root->info = std::shared_ptr<Function>(new Function(vectIOfTokens[end]));
+    root->info = shared_ptr<Function>(new Function(vectIOfTokens[end]));
     makeTreeRec(vectIOfTokens, root->right, begin, end - 1);
     return true;
   }
   return false;
 }
 
-inline void makeTreeRec(const std::vector<std::string> &vectIOfTokens, std::shared_ptr<Tree::Node> &root, size_t first,
-                        size_t last) {
+inline void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t first, size_t last) {
   if (first > last) {
     throw IncorrectInput("Parser");
   }
@@ -349,7 +347,7 @@ inline void makeTreeRec(const std::vector<std::string> &vectIOfTokens, std::shar
   }
 
   if (root == nullptr) {
-    root = std::shared_ptr<Tree::Node>(new Tree::Node);
+    root = shared_ptr<Tree::Node>(new Tree::Node);
   }
 
   size_t begin = first;

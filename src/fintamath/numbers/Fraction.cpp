@@ -9,6 +9,8 @@
 #include "calculator/Calculator.hpp"
 #include "calculator/ExceptionClasses.hpp"
 
+using namespace std;
+
 static BigInteger GCD(const BigInteger &inA, const BigInteger &inB);
 static BigInteger LCM(const BigInteger &a, const BigInteger &b);
 
@@ -89,7 +91,7 @@ Fraction::Fraction(double inNum) {
   this->toFraction(inNum);
 }
 
-Fraction::Fraction(const std::string &inStr) : Fraction() {
+Fraction::Fraction(const string &inStr) : Fraction() {
   this->toFraction(inStr);
 }
 
@@ -412,7 +414,7 @@ BigInteger Fraction::getDenominator() const {
   return this->denominator;
 }
 
-Fraction &Fraction::toFraction(const std::string &inStr) {
+Fraction &Fraction::toFraction(const string &inStr) {
   if (inStr == "") {
     throw IncorrectInput("Fraction");
   }
@@ -420,7 +422,7 @@ Fraction &Fraction::toFraction(const std::string &inStr) {
   *this = Fraction();
 
   size_t first = 0;
-  size_t last = std::distance(inStr.begin(), std::find(inStr.begin(), inStr.end(), '.'));
+  size_t last = distance(inStr.begin(), find(inStr.begin(), inStr.end(), '.'));
 
   bool minus = false;
   if (*inStr.begin() == '-') {
@@ -437,8 +439,8 @@ Fraction &Fraction::toFraction(const std::string &inStr) {
 
   if (last != inStr.size()) {
     try {
-      std::string numeratorStr = inStr.substr(last + 1);
-      std::string denominatorStr(numeratorStr.size() + 1, '0');
+      string numeratorStr = inStr.substr(last + 1);
+      string denominatorStr(numeratorStr.size() + 1, '0');
       denominatorStr.front() = '1';
       this->numerator = BigInteger(numeratorStr);
       this->denominator = BigInteger(denominatorStr);
@@ -462,11 +464,11 @@ Fraction &Fraction::toFraction(const BigInteger &inLnum) {
 }
 
 Fraction &Fraction::toFraction(double inNum) {
-  return this->toFraction(std::to_string(inNum));
+  return this->toFraction(to_string(inNum));
 }
 
-std::string Fraction::toString(size_t precision) const {
-  std::string precStr(precision + 2, '0');
+string Fraction::toString(size_t precision) const {
+  string precStr(precision + 2, '0');
   precStr.front() = '1';
 
   BigInteger lnum = this->numerator * BigInteger(precStr) / this->denominator;
@@ -475,7 +477,7 @@ std::string Fraction::toString(size_t precision) const {
   }
   lnum /= 10;
 
-  std::string res = lnum.toString();
+  string res = lnum.toString();
   if (res.size() <= precision) {
     res.insert(res.begin(), precision + 1 - res.size(), '0');
   }
@@ -503,12 +505,12 @@ Fraction &Fraction::round(size_t precision) {
 }
 
 bool Fraction::equal(double inNum) const {
-  std::string str;
+  string str;
 
   if (inNum == 0) {
     str = '0';
   } else {
-    str = std::to_string(inNum);
+    str = to_string(inNum);
 
     while (*(str.end() - 1) == '0') {
       str.pop_back();
@@ -522,23 +524,23 @@ bool Fraction::equal(double inNum) const {
   return (this->toString(6) == str);
 }
 
-std::istream &operator>>(std::istream &in, Fraction &other) {
-  std::string str;
+istream &operator>>(istream &in, Fraction &other) {
+  string str;
   in >> str;
   other = Fraction(str);
   return in;
 }
 
-std::ostream &operator<<(std::ostream &out, const Fraction &other) {
+ostream &operator<<(ostream &out, const Fraction &other) {
   out << other.toString();
   return out;
 }
 
-std::string Fraction::getTypeName() const {
+string Fraction::getTypeName() const {
   return "Fraction";
 }
 
-std::string Fraction::toString() const {
+string Fraction::toString() const {
   return this->toString(PRECISION);
 }
 

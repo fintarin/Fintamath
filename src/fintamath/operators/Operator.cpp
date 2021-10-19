@@ -6,11 +6,13 @@
 #include "calculator/ExceptionClasses.hpp"
 #include "operators/NamespaceFunctions.hpp"
 
+using namespace std;
+
 Operator::Operator(const Operator &inOper) {
   this->oper = inOper.oper;
 }
 
-Operator::Operator(const std::string &inStr) {
+Operator::Operator(const string &inStr) {
   if (!isType::isOperator(inStr)) {
     throw IncorrectInput("Operator");
   }
@@ -23,7 +25,7 @@ Operator &Operator::operator=(const Operator &other) {
 }
 
 namespace isType {
-bool isOperator(const std::string &inStr) {
+bool isOperator(const string &inStr) {
   if (inStr.size() != 1) {
     return false;
   }
@@ -69,10 +71,10 @@ Fraction Operator::solve(const Fraction &thisNumber, const Fraction &otherNumber
   throw IncorrectInput("Operator");
 }
 
-std::string Operator::getTypeName() const {
+string Operator::getTypeName() const {
   return "Operator";
 }
 
-std::string Operator::toString() const {
+string Operator::toString() const {
   return {this->oper};
 }

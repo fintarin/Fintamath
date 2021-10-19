@@ -10,7 +10,8 @@
 
 #include "calculator/ExceptionClasses.hpp"
 
-typedef std::vector<int64_t> Vector;
+using namespace std;
+using NumVector = vector<int64_t>;
 
 constexpr uint8_t PRIMARY_BASE_SIZE = 9;
 constexpr uint64_t PRIMARY_BASE = 1000000000;
@@ -19,32 +20,32 @@ constexpr uint64_t KARATSUBA_CUTOFF = 64;
 int64_t BigInteger::baseSize = PRIMARY_BASE_SIZE;
 int64_t BigInteger::base = PRIMARY_BASE;
 
-static void toSignificantDigits(Vector &A);
-static size_t numOfFirstZeros(const Vector &A);
-static void toBasePositive(Vector &A, size_t i);
-static void toBaseNegative(Vector &A, size_t i);
+static void toSignificantDigits(NumVector &A);
+static size_t numOfFirstZeros(const NumVector &A);
+static void toBasePositive(NumVector &A, size_t i);
+static void toBaseNegative(NumVector &A, size_t i);
 
-static bool equal(const Vector &A, const Vector &B);
-static bool greater(const Vector &A, const Vector &B);
+static bool equal(const NumVector &A, const NumVector &B);
+static bool greater(const NumVector &A, const NumVector &B);
 
-static Vector add(const Vector &A, const Vector &B);
-static Vector addCut(const Vector &A, const Vector &B);
+static NumVector add(const NumVector &A, const NumVector &B);
+static NumVector addCut(const NumVector &A, const NumVector &B);
 
-static Vector substract(const Vector &A, const Vector &B);
+static NumVector substract(const NumVector &A, const NumVector &B);
 
-static Vector shortMultiply(const Vector &A, int64_t num);
-static Vector polynomialMultiply(const Vector &A, const Vector &B);
-static Vector karatsubaMultiply(const Vector &A, const Vector &B);
-static size_t multiplyZeros(Vector &A, Vector &B);
-static Vector multiply(const Vector &inA, const Vector &inB);
+static NumVector shortMultiply(const NumVector &A, int64_t num);
+static NumVector polynomialMultiply(const NumVector &A, const NumVector &B);
+static NumVector karatsubaMultiply(const NumVector &A, const NumVector &B);
+static size_t multiplyZeros(NumVector &A, NumVector &B);
+static NumVector multiply(const NumVector &inA, const NumVector &inB);
 
-static Vector shortDivide(const Vector &A, int64_t num);
-static Vector shortDivide(const Vector &A, int64_t num, Vector &mod);
-static void divideZeros(Vector &A, Vector &B);
-static Vector binsearchDivide(const Vector &A, const Vector &B, Vector &left, Vector &right);
-static Vector divide(const Vector &inA, const Vector &inB, Vector &mod);
+static NumVector shortDivide(const NumVector &A, int64_t num);
+static NumVector shortDivide(const NumVector &A, int64_t num, NumVector &mod);
+static void divideZeros(NumVector &A, NumVector &B);
+static NumVector binsearchDivide(const NumVector &A, const NumVector &B, NumVector &left, NumVector &right);
+static NumVector divide(const NumVector &inA, const NumVector &inB, NumVector &mod);
 
-Vector sqrt(const Vector &A);
+NumVector sqrt(const NumVector &A);
 
 BigInteger::BigInteger() {
   this->sign = false;
@@ -59,7 +60,7 @@ BigInteger::BigInteger(int64_t inNum) {
   *this = inNum;
 }
 
-BigInteger::BigInteger(const std::string &inStr) {
+BigInteger::BigInteger(const string &inStr) {
   this->toLongNumber(inStr);
 }
 
@@ -86,7 +87,7 @@ BigInteger &BigInteger::operator+=(const BigInteger &other) {
   }
 
   else {
-    if (greater(this->vectNum, other.vectNum)) {
+    if (::greater(this->vectNum, other.vectNum)) {
       this->vectNum = substract(this->vectNum, other.vectNum);
     } else {
       this->sign = !this->sign;
@@ -169,12 +170,12 @@ BigInteger &BigInteger::operator/=(const BigInteger &other) {
   if (*this == 0) {
     return *this;
   }
-  if (greater(other.vectNum, this->vectNum)) {
+  if (::greater(other.vectNum, this->vectNum)) {
     *this = 0;
     return *this;
   }
 
-  Vector mod;
+  NumVector mod;
   this->vectNum = divide(this->vectNum, other.vectNum, mod);
   this->sign = !((this->sign && other.sign) || (!this->sign && !other.sign));
 
@@ -206,7 +207,7 @@ BigInteger &BigInteger::operator%=(const BigInteger &other) {
   if (*this == 0) {
     return *this;
   }
-  if (greater(other.vectNum, this->vectNum)) {
+  if (::greater(other.vectNum, this->vectNum)) {
     return *this;
   }
 
@@ -289,10 +290,10 @@ bool BigInteger::operator>(const BigInteger &other) const {
   }
 
   if (this->sign && other.sign) {
-    return greater(other.vectNum, this->vectNum);
+    return ::greater(other.vectNum, this->vectNum);
   }
 
-  return greater(this->vectNum, other.vectNum);
+  return ::greater(this->vectNum, other.vectNum);
 }
 
 bool operator>(const BigInteger &other, int64_t inNum) {
@@ -340,7 +341,7 @@ bool operator<=(int64_t inNum, const BigInteger &other) {
 }
 
 size_t BigInteger::size() const {
-  return (this->vectNum.size() - 1) * 9 + (std::to_string(this->vectNum.back())).size();
+  return (this->vectNum.size() - 1) * 9 + (to_string(this->vectNum.back())).size();
 }
 
 int64_t BigInteger::getBaseSize() {
@@ -351,7 +352,7 @@ int64_t BigInteger::getBase() {
   return BigInteger::base;
 }
 
-BigInteger &BigInteger::toLongNumber(const std::string &inStr) {
+BigInteger &BigInteger::toLongNumber(const string &inStr) {
   if (inStr == "") {
     throw IncorrectInput("BigInteger");
   }
@@ -366,44 +367,43 @@ BigInteger &BigInteger::toLongNumber(const std::string &inStr) {
   }
 
   {
-    auto iter =
-        std::find_if(inStr.begin() + first, inStr.end(), [](char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
+    auto iter = find_if(inStr.begin() + first, inStr.end(), [](char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
     if (iter != inStr.end()) {
       throw IncorrectInput("BigInteger");
     }
   }
 
   auto iter = inStr.end();
-  for (; std::distance(inStr.begin(), iter) > baseSize; iter -= baseSize) {
-    this->vectNum.push_back(std::stoll(std::string(iter - baseSize, iter)));
+  for (; distance(inStr.begin(), iter) > baseSize; iter -= baseSize) {
+    this->vectNum.push_back(stoll(string(iter - baseSize, iter)));
   }
-  this->vectNum.push_back(std::stoll(std::string(inStr.begin() + first, iter)));
+  this->vectNum.push_back(stoll(string(inStr.begin() + first, iter)));
 
   toSignificantDigits(this->vectNum);
   return *this;
 }
 
 BigInteger &BigInteger::toLongNumber(int64_t inNum) {
-  return this->toLongNumber(std::to_string(inNum));
+  return this->toLongNumber(to_string(inNum));
 }
 
-std::istream &operator>>(std::istream &in, BigInteger &other) {
-  std::string str;
+istream &operator>>(istream &in, BigInteger &other) {
+  string str;
   in >> str;
   other = BigInteger(str);
   return in;
 }
 
-std::ostream &operator<<(std::ostream &out, const BigInteger &other) {
+ostream &operator<<(ostream &out, const BigInteger &other) {
   out << other.toString();
   return out;
 }
 
-std::string BigInteger::toString() const {
-  std::string str;
+string BigInteger::toString() const {
+  string str;
 
   for (size_t i = this->vectNum.size() - 1; i != SIZE_MAX; --i) {
-    std::string tmp = std::to_string(this->vectNum[i]);
+    string tmp = to_string(this->vectNum[i]);
     tmp.insert(0, baseSize - tmp.size(), '0');
     str.insert(str.size(), tmp);
   }
@@ -427,7 +427,7 @@ BigInteger sqrt(const BigInteger &inLnum) {
     throw OutOfRange("square root");
   }
 
-  std::string str = inLnum.toString();
+  string str = inLnum.toString();
   BigInteger::baseSize = 2;
   BigInteger::base = 100;
   BigInteger lnum = BigInteger(str);
@@ -445,7 +445,7 @@ BigInteger sqrt(const BigInteger &inLnum) {
 }
 
 // Приведение к значимым цифрам
-inline void toSignificantDigits(Vector &A) {
+inline void toSignificantDigits(NumVector &A) {
   size_t i = A.size() - 1;
   for (; i > 0; --i) {
     if (A[i] != 0) {
@@ -456,7 +456,7 @@ inline void toSignificantDigits(Vector &A) {
 }
 
 // Нахождение разряда перед первым ненулевым, начиная с младших разрядов
-inline size_t numOfFirstZeros(const Vector &A) {
+inline size_t numOfFirstZeros(const NumVector &A) {
   size_t i = 0;
   while (A[i] == 0) {
     ++i;
@@ -465,7 +465,7 @@ inline size_t numOfFirstZeros(const Vector &A) {
 }
 
 // Если число в данном разряде >= BASE, излишек прибавляется к следующему разряду
-inline void toBasePositive(Vector &A, size_t i) {
+inline void toBasePositive(NumVector &A, size_t i) {
   if (A[i] >= BigInteger::getBase()) {
     A[i + 1] += A[i] / BigInteger::getBase();
     A[i] %= BigInteger::getBase();
@@ -473,7 +473,7 @@ inline void toBasePositive(Vector &A, size_t i) {
 }
 
 // Если число в данном разряде < 0, недостаток вычитается из следующего разряда
-inline void toBaseNegative(Vector &A, size_t i) {
+inline void toBaseNegative(NumVector &A, size_t i) {
   if (A[i] < 0) {
     --A[i + 1];
     A[i] += BigInteger::getBase();
@@ -481,7 +481,7 @@ inline void toBaseNegative(Vector &A, size_t i) {
 }
 
 // Последовательное сравнение разрядов двух чисел (от старших к младшим)
-inline bool equal(const Vector &A, const Vector &B) {
+inline bool equal(const NumVector &A, const NumVector &B) {
   if (A.size() != B.size()) {
     return false;
   }
@@ -496,7 +496,7 @@ inline bool equal(const Vector &A, const Vector &B) {
 }
 
 // Последовательное сравнение разрядов двух чисел (от старших к младшим)
-inline bool greater(const Vector &A, const Vector &B) {
+inline bool greater(const NumVector &A, const NumVector &B) {
   if (A.size() > B.size()) {
     return true;
   }
@@ -517,8 +517,8 @@ inline bool greater(const Vector &A, const Vector &B) {
 }
 
 // Сложение в столбик, не приводит к значимым числам
-inline Vector add(const Vector &A, const Vector &B) {
-  Vector res = A;
+inline NumVector add(const NumVector &A, const NumVector &B) {
+  NumVector res = A;
   if (B.size() > res.size()) {
     res.resize(B.size(), 0);
   }
@@ -536,15 +536,15 @@ inline Vector add(const Vector &A, const Vector &B) {
 }
 
 // Сложение с приведением к значимым цифрам
-inline Vector addCut(const Vector &A, const Vector &B) {
-  Vector res = add(A, B);
+inline NumVector addCut(const NumVector &A, const NumVector &B) {
+  NumVector res = add(A, B);
   toSignificantDigits(res);
   return res;
 }
 
 // Вычитание в столбик
-inline Vector substract(const Vector &A, const Vector &B) {
-  Vector res = A;
+inline NumVector substract(const NumVector &A, const NumVector &B) {
+  NumVector res = A;
 
   for (size_t i = 0; i < B.size(); ++i) {
     res[i] -= B[i];
@@ -559,8 +559,8 @@ inline Vector substract(const Vector &A, const Vector &B) {
 }
 
 // Умножение на короткое число
-inline Vector shortMultiply(const Vector &A, int64_t num) {
-  Vector res;
+inline NumVector shortMultiply(const NumVector &A, int64_t num) {
+  NumVector res;
   res.resize(A.size() + 1, 0);
 
   for (size_t i = 0; i < A.size(); ++i) {
@@ -577,8 +577,8 @@ inline Vector shortMultiply(const Vector &A, int64_t num) {
   Каждый разряд первого числа умножается на каждый разряд второго числа.
   Не приводит к значимым числам.
 */
-inline Vector polynomialMultiply(const Vector &A, const Vector &B) {
-  Vector res;
+inline NumVector polynomialMultiply(const NumVector &A, const NumVector &B) {
+  NumVector res;
   res.resize(A.size() + B.size(), 0);
 
   for (size_t i = 0; i < A.size(); ++i) {
@@ -604,22 +604,22 @@ inline Vector polynomialMultiply(const Vector &A, const Vector &B) {
   A0 и B0 - первые половины соответсвующих чисел (разряды 0 — m),
   A1 и B1 - вторые половины соответсвующих чисел (разряды m — 2m).
 */
-inline Vector karatsubaMultiply(const Vector &A, const Vector &B) {
+inline NumVector karatsubaMultiply(const NumVector &A, const NumVector &B) {
   if (A.size() < KARATSUBA_CUTOFF || B.size() < KARATSUBA_CUTOFF) {
     return polynomialMultiply(A, B);
   }
 
   size_t len = A.size() >> 1;
 
-  Vector A0(A.begin(), A.begin() + len);
-  Vector A1(A.begin() + len, A.end());
+  NumVector A0(A.begin(), A.begin() + len);
+  NumVector A1(A.begin() + len, A.end());
 
-  Vector B0(B.begin(), B.begin() + len);
-  Vector B1(B.begin() + len, B.end());
+  NumVector B0(B.begin(), B.begin() + len);
+  NumVector B1(B.begin() + len, B.end());
 
-  Vector p0 = karatsubaMultiply(A0, B0);
-  Vector p1 = karatsubaMultiply(add(A0, A1), add(B0, B1));
-  Vector p2 = karatsubaMultiply(A1, B1);
+  NumVector p0 = karatsubaMultiply(A0, B0);
+  NumVector p1 = karatsubaMultiply(add(A0, A1), add(B0, B1));
+  NumVector p2 = karatsubaMultiply(A1, B1);
 
   p1 = substract(p1, add(p2, p0));
 
@@ -630,7 +630,7 @@ inline Vector karatsubaMultiply(const Vector &A, const Vector &B) {
 }
 
 // Умножение нулевый разрядов чисел
-inline size_t multiplyZeros(Vector &A, Vector &B) {
+inline size_t multiplyZeros(NumVector &A, NumVector &B) {
   size_t numOfZerosA = numOfFirstZeros(A);
   size_t numOfZerosB = numOfFirstZeros(B);
 
@@ -645,18 +645,18 @@ inline size_t multiplyZeros(Vector &A, Vector &B) {
 }
 
 // Обертка над умножением Карацубы, добавление лидирующих нулей для приведения чисел к виду, требуемому алгоритмом
-inline Vector multiply(const Vector &inA, const Vector &inB) {
-  Vector A = inA, B = inB;
+inline NumVector multiply(const NumVector &inA, const NumVector &inB) {
+  NumVector A = inA, B = inB;
   size_t numOfZeros = multiplyZeros(A, B);
 
   if (A.size() < KARATSUBA_CUTOFF || B.size() < KARATSUBA_CUTOFF) {
-    Vector res = polynomialMultiply(A, B);
+    NumVector res = polynomialMultiply(A, B);
     res.insert(res.begin(), numOfZeros, 0);
     toSignificantDigits(res);
     return res;
   }
 
-  size_t len = std::max(A.size(), B.size());
+  size_t len = max(A.size(), B.size());
   if (len % 2 == 1) {
     ++len;
   }
@@ -664,7 +664,7 @@ inline Vector multiply(const Vector &inA, const Vector &inB) {
   B.resize(len, 0);
   len >>= 1;
 
-  Vector res = karatsubaMultiply(A, B);
+  NumVector res = karatsubaMultiply(A, B);
   res.insert(res.begin(), numOfZeros, 0);
 
   toSignificantDigits(res);
@@ -672,8 +672,8 @@ inline Vector multiply(const Vector &inA, const Vector &inB) {
 }
 
 // Деление на короткое
-inline Vector shortDivide(const Vector &A, int64_t num) {
-  Vector res = A;
+inline NumVector shortDivide(const NumVector &A, int64_t num) {
+  NumVector res = A;
 
   for (size_t i = res.size() - 1; i > 0; --i) {
     res[i - 1] += (res[i] % num) * BigInteger::getBase();
@@ -687,15 +687,15 @@ inline Vector shortDivide(const Vector &A, int64_t num) {
 }
 
 // Деление на короткое с получением остатка
-inline Vector shortDivide(const Vector &A, int64_t num, Vector &mod) {
-  Vector res = A;
+inline NumVector shortDivide(const NumVector &A, int64_t num, NumVector &mod) {
+  NumVector res = A;
 
   for (size_t i = res.size() - 1; i > 0; --i) {
     res[i - 1] += (res[i] % num) * BigInteger::getBase();
     res[i] /= num;
   }
 
-  mod = Vector{res.front() % num};
+  mod = NumVector{res.front() % num};
   res.front() /= num;
 
   toSignificantDigits(res);
@@ -703,8 +703,8 @@ inline Vector shortDivide(const Vector &A, int64_t num, Vector &mod) {
 }
 
 // Сокращение нулевые разрядов чисел
-inline void divideZeros(Vector &A, Vector &B) {
-  size_t numOfZeros = std::min(numOfFirstZeros(A), numOfFirstZeros(B));
+inline void divideZeros(NumVector &A, NumVector &B) {
+  size_t numOfZeros = min(numOfFirstZeros(A), numOfFirstZeros(B));
   if (A.size() != 1 && B.size() != 1 && numOfZeros != 0) {
     A.erase(A.begin(), A.begin() + numOfZeros);
     B.erase(B.begin(), B.begin() + numOfZeros);
@@ -712,24 +712,24 @@ inline void divideZeros(Vector &A, Vector &B) {
 }
 
 // Деление A на B с помощью бинарного поиска
-inline Vector binsearchDivide(const Vector &A, const Vector &B, Vector &left, Vector &right) {
-  Vector mid, one = Vector{1};
-  while (greater(substract(right, left), one)) {
+inline NumVector binsearchDivide(const NumVector &A, const NumVector &B, NumVector &left, NumVector &right) {
+  NumVector mid, one = NumVector{1};
+  while (::greater(substract(right, left), one)) {
     mid = shortDivide(addCut(left, right), 2);
-    Vector mult = multiply(B, mid);
-    if (greater(mult, A)) {
+    NumVector mult = multiply(B, mid);
+    if (::greater(mult, A)) {
       right = mid;
     } else {
       left = mid;
     }
   }
 
-  if (greater(left, right)) {
-    std::swap(left, right);
+  if (::greater(left, right)) {
+    swap(left, right);
   }
 
-  Vector res, mult = multiply(B, right);
-  if (greater(A, mult) || equal(A, mult)) {
+  NumVector res, mult = multiply(B, right);
+  if (::greater(A, mult) || equal(A, mult)) {
     res = right;
   } else {
     res = left;
@@ -743,16 +743,16 @@ inline Vector binsearchDivide(const Vector &A, const Vector &B, Vector &left, Ve
   Нижняя и верхняя границы определяются следующим образом: N = A/(B.back() +- 1). N - соответсвующая граница B.back() —
   старший разряд числа B. Затем отбрасываются (N.size() + B.size()) первых разрядов.
 */
-inline Vector divide(const Vector &inA, const Vector &inB, Vector &mod) {
+inline NumVector divide(const NumVector &inA, const NumVector &inB, NumVector &mod) {
   if (inB.size() == 1) {
     return shortDivide(inA, inB.front(), mod);
   }
 
-  Vector A = inA;
-  Vector B = inB;
+  NumVector A = inA;
+  NumVector B = inB;
   divideZeros(A, B);
 
-  Vector left, right;
+  NumVector left, right;
   left = shortDivide(A, B.back() + 1);
 
   if (B.back() != 1) {
@@ -770,7 +770,7 @@ inline Vector divide(const Vector &inA, const Vector &inB, Vector &mod) {
     return left;
   }
 
-  Vector res = binsearchDivide(A, B, left, right);
+  NumVector res = binsearchDivide(A, B, left, right);
   mod = substract(inA, multiply(inB, res));
 
   return res;
@@ -793,9 +793,9 @@ inline Vector divide(const Vector &inA, const Vector &inB, Vector &mod) {
 
   5.К получившейся разности сносим следующую грань и выполняем действия по алгоритму.
 */
-inline Vector sqrt(const Vector &A) {
-  Vector res, diff;
-  res.push_back((int64_t)std::sqrt(A.back()));
+inline NumVector sqrt(const NumVector &A) {
+  NumVector res, diff;
+  res.push_back((int64_t)sqrt(A.back()));
 
   {
     int64_t num = A.back() - res.front() * res.front();
@@ -806,14 +806,14 @@ inline Vector sqrt(const Vector &A) {
   }
 
   for (size_t i = A.size() - 2; i != SIZE_MAX; --i) {
-    Vector mod;
+    NumVector mod;
     mod.push_back(A[i] % 10);
     mod.push_back(A[i] / 10);
     mod.insert(mod.end(), diff.begin(), diff.end());
     toSignificantDigits(mod);
 
-    Vector resI{0};
-    Vector doubledRes = shortMultiply(res, 2);
+    NumVector resI{0};
+    NumVector doubledRes = shortMultiply(res, 2);
     resI.insert(resI.end(), doubledRes.begin(), doubledRes.end());
 
     int64_t left = 0, right = 10;
@@ -822,7 +822,7 @@ inline Vector sqrt(const Vector &A) {
       resI.front() = (left + right) >> 1;
       doubledRes = shortMultiply(resI, resI.front());
 
-      if (greater(doubledRes, mod)) {
+      if (::greater(doubledRes, mod)) {
         right = resI.front();
       }
 

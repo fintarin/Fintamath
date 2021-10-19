@@ -4,11 +4,13 @@
 
 #include "calculator/ExceptionClasses.hpp"
 
+using namespace std;
+
 Variable::Variable(const Variable &other) {
   this->name = other.name;
 }
 
-Variable::Variable(const std::string &inStr) {
+Variable::Variable(const string &inStr) {
   if (!isType::isVariable(inStr)) {
     throw IncorrectInput("Variable");
   }
@@ -21,7 +23,7 @@ Variable &Variable::operator=(const Variable &other) {
 }
 
 namespace isType {
-bool isVariable(const std::string &inStr) {
+bool isVariable(const string &inStr) {
   if (inStr.size() != 1) {
     return false;
   }
@@ -39,12 +41,12 @@ char Variable::getName() const {
   return this->name;
 }
 
-std::string Variable::getTypeName() const {
+string Variable::getTypeName() const {
   return "Variable";
 }
 
-std::string Variable::toString() const {
-  std::string res;
+string Variable::toString() const {
+  string res;
   res += this->name;
   return res;
 }
