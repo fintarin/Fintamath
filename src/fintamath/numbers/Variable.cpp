@@ -1,8 +1,7 @@
 #include "numbers/Variable.hpp"
 
+#include <stdexcept>
 #include <string>
-
-#include "calculator/ExceptionClasses.hpp"
 
 using namespace std;
 
@@ -12,7 +11,7 @@ Variable::Variable(const Variable &other) {
 
 Variable::Variable(const string &inStr) {
   if (!isType::isVariable(inStr)) {
-    throw IncorrectInput("Variable");
+    throw invalid_argument("Variable invalid input");
   }
   this->name = *inStr.begin();
 }

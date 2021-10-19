@@ -1,9 +1,9 @@
 #include "numbers/Constant.hpp"
 
+#include <stdexcept>
 #include <string>
 
 #include "calculator/Calculator.hpp"
-#include "calculator/ExceptionClasses.hpp"
 #include "operators/NamespaceFunctions.hpp"
 
 using namespace std;
@@ -14,7 +14,7 @@ Constant::Constant(const Constant &other) {
 
 Constant::Constant(const string &inStr) {
   if (!isType::isConstant(inStr)) {
-    throw IncorrectInput("Constant");
+    throw invalid_argument("Constant invalid input");
   }
   this->constant = inStr;
 }
@@ -43,7 +43,7 @@ Fraction Constant::toFraction() const {
   if (this->constant == "pi") {
     return functions::getPi(PRECISION_OF_CONSTANTS);
   }
-  throw IncorrectInput("Constant");
+  throw invalid_argument("Constant invalid input");
 }
 
 string Constant::toString() const {

@@ -1,9 +1,9 @@
 #include "operators/NamespaceFunctions.hpp"
 
+#include <stdexcept>
 #include <string>
 
 #include "calculator/Calculator.hpp"
-#include "calculator/ExceptionClasses.hpp"
 
 using namespace std;
 
@@ -29,7 +29,7 @@ Fraction functions::abs(const Fraction &a) {
 // Вычисление квадратного корня, используется функция для длинного числа
 Fraction functions::sqrt(const Fraction &a, size_t precision) {
   if (a < 0) {
-    throw OutOfRange("square root");
+    throw domain_error("sqrt out of range");
   }
   if (a == 0) {
     return Fraction(0);
@@ -50,15 +50,15 @@ Fraction functions::sqrt(const Fraction &a, size_t precision) {
 Fraction functions::log(const Fraction &a, const Fraction &b, size_t precision) {
   try {
     return ln(b, precision) / ln(a, precision);
-  } catch (...) {
-    throw OutOfRange("log");
+  } catch (const domain_error &) {
+    throw domain_error("log out of range");
   }
 }
 
 // Вычисление натурального ln(a), используется ряд Тейлора: ln(a) = sum_{k=0}^{inf} (2/(2k+1)) * ((a-1)/(a+1))^(2k+1)
 Fraction functions::ln(const Fraction &inA, size_t precision) {
   if (inA <= 0) {
-    throw OutOfRange("ln");
+    throw domain_error("ln out of range");
   }
 
   BigInteger multiplier;
@@ -90,8 +90,8 @@ Fraction functions::ln(const Fraction &inA, size_t precision) {
 Fraction functions::lb(const Fraction &a, size_t precision) {
   try {
     return log(2, a, precision);
-  } catch (...) {
-    throw OutOfRange("lb");
+  } catch (const domain_error &) {
+    throw domain_error("lb out of range");
   }
 }
 
@@ -99,8 +99,8 @@ Fraction functions::lb(const Fraction &a, size_t precision) {
 Fraction functions::lg(const Fraction &a, size_t precision) {
   try {
     return log(10, a, precision);
-  } catch (...) {
-    throw OutOfRange("lg");
+  } catch (const domain_error &) {
+    throw domain_error("lg out of range");
   }
 }
 
@@ -111,10 +111,10 @@ Fraction functions::lg(const Fraction &a, size_t precision) {
 */
 Fraction functions::pow(const Fraction &inA, const Fraction &n, size_t precision) {
   if (inA == 0 && n == 0) {
-    throw ZeroPowZero("power");
+    throw domain_error("Zero pow zero");
   }
   if (inA < 0 && n.getNumerator() != 0) {
-    throw OutOfRange("power");
+    throw domain_error("pow out of range");
   }
   if (n == 0) {
     return 1;
@@ -133,8 +133,8 @@ Fraction functions::pow(const Fraction &inA, const Fraction &n, size_t precision
   Fraction nLna;
   try {
     nLna = Fraction(n.getNumerator(), n.getDenominator()) * ln(a, precision);
-  } catch (OutOfRange) {
-    throw OutOfRange("power");
+  } catch (const domain_error &) {
+    throw domain_error("pow out of range");
   }
 
   BigInteger k = 1;
@@ -290,7 +290,7 @@ Fraction functions::tan(const Fraction &inA, size_t precision) {
 
   Fraction cosFrac = cos(a, precision);
   if (Fraction(cosFrac).round(PRECISION) == 0) {
-    throw OutOfRange("tan");
+    throw domain_error("tan out of range");
   }
 
   Fraction res = sqrt(1 - cosFrac * cosFrac, precision) / cosFrac;
@@ -328,7 +328,7 @@ Fraction functions::cot(const Fraction &inA, size_t precision) {
 
   Fraction sinFrac = sin(a, precision);
   if (Fraction(sinFrac).round(PRECISION) == 0) {
-    throw OutOfRange("cot");
+    throw domain_error("cot out of range");
   }
 
   Fraction res = sqrt(1 - sinFrac * sinFrac, precision) / sinFrac;
@@ -343,7 +343,7 @@ Fraction functions::cot(const Fraction &inA, size_t precision) {
 // Вычисление asin(x) = pi/2 - acos(x)
 Fraction functions::asin(const Fraction &a, size_t precision) {
   if (abs(a) > 1) {
-    throw OutOfRange("asin");
+    throw domain_error("asin out of range");
   }
 
   Fraction res = (functions::getPi(PRECISION_OF_FUNCTIONS) / 2 - functions::acos(a, precision));
@@ -361,7 +361,7 @@ Fraction functions::asin(const Fraction &a, size_t precision) {
 */
 Fraction functions::acos(const Fraction &inA, size_t precision) {
   if (abs(inA) > 1) {
-    throw OutOfRange("acos");
+    throw domain_error("acos out of range");
   }
   if (inA == 1) {
     return Fraction(0);
@@ -475,7 +475,7 @@ Fraction functions::acot(const Fraction &a, size_t precision) {
 // Обертка над вычислением факториала через дерево
 Fraction functions::factorial(const Fraction &a) {
   if (a < 0 || a.getNumerator() != 0) {
-    throw OutOfRange("factorial");
+    throw domain_error("factorial out of range");
   }
   if (a < 2) {
     return 1;
@@ -486,7 +486,7 @@ Fraction functions::factorial(const Fraction &a) {
 // Вычисление двойного факториала (наивный алгоритм)
 Fraction functions::doubleFactorial(const Fraction &a) {
   if (a < 0 || a.getNumerator() != 0) {
-    throw OutOfRange("factorial");
+    throw domain_error("factorial out of range");
   }
   BigInteger res = 1;
   for (BigInteger i = a.getInteger(); i > 0; i -= 2) {

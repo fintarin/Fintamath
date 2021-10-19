@@ -2,10 +2,10 @@
 
 #include <algorithm>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
-#include "calculator/ExceptionClasses.hpp"
 #include "numbers/Constant.hpp"
 #include "numbers/Variable.hpp"
 #include "operators/Function.hpp"
@@ -65,7 +65,7 @@ vector<string> Parser::makeVectOfTokens(const string &inStr) const {
 
 Tree Parser::makeTree(const vector<string> &vectIOfTokens) const {
   if (vectIOfTokens.empty()) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
 
   Tree tree;
@@ -73,7 +73,7 @@ Tree Parser::makeTree(const vector<string> &vectIOfTokens) const {
   makeTreeRec(vectIOfTokens, tree.root->right, 0, vectIOfTokens.size() - 1);
 
   if (tree.root->right == nullptr) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
 
   return tree;
@@ -162,10 +162,10 @@ inline void addFrac(vector<string> &vect, const string &str, size_t &pos) {
 
 inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
   if (vect.size() < 1) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
   if (vect.front() == "!" || vect.front() == "!!") {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
 
   string factor = "!";
@@ -182,13 +182,13 @@ inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
       ++numOfBrackets;
     } else if (vect[i] == "(") {
       if (numOfBrackets == 0) {
-        throw IncorrectInput("Parser");
+        throw invalid_argument("Parser invalid input");
       }
       --numOfBrackets;
     }
     if (numOfBrackets == 0) {
       if (isType::isFunction(vect[i - 1])) {
-        throw IncorrectInput("Parser");
+        throw invalid_argument("Parser invalid input");
       }
       vect.insert(vect.begin() + i, factor);
       return;
@@ -197,12 +197,12 @@ inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
 
   if (vect.front() == "(") {
     if (numOfBrackets == 0) {
-      throw IncorrectInput("Parser");
+      throw invalid_argument("Parser invalid input");
     }
     --numOfBrackets;
   }
   if (numOfBrackets != 0) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
 
   vect.insert(vect.begin(), factor);
@@ -235,7 +235,7 @@ inline void addConstVariableFunction(vector<string> &vect, const string &str, si
   if (isType::isConstant(word) || isType::isVariable(word) || isType::isFunction(word)) {
     vect.push_back(word);
   } else {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
 }
 
@@ -252,7 +252,7 @@ inline void addBinaryFunctions(vector<string> &vect) {
 
         for (size_t j = i + 1; j < vect.size(); ++j) {
           if (numOfBrackets == 0) {
-            throw IncorrectInput("Parser");
+            throw invalid_argument("Parser invalid input");
           }
           if (vect[j] == "(") {
             ++numOfBrackets;
@@ -272,7 +272,7 @@ inline void addBinaryFunctions(vector<string> &vect) {
         }
 
         if (!find) {
-          throw IncorrectInput("Parser");
+          throw invalid_argument("Parser invalid input");
         }
       }
     }
@@ -287,8 +287,8 @@ inline void addValue(const string &inStr, shared_ptr<Tree::Node> &root) {
   } else {
     try {
       root->info = shared_ptr<Fraction>(new Fraction(inStr));
-    } catch (IncorrectInput) {
-      throw IncorrectInput("Parser");
+    } catch (const invalid_argument &) {
+      throw invalid_argument("Parser invalid input");
     }
   }
 }
@@ -302,7 +302,7 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> 
       ++numOfBrackets;
     } else if (vectIOfTokens[i] == "(") {
       if (numOfBrackets == 0) {
-        throw IncorrectInput("Parser");
+        throw invalid_argument("Parser invalid input");
       }
       --numOfBrackets;
     }
@@ -340,10 +340,10 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> 
 
 inline void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t first, size_t last) {
   if (first > last) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
   if (first == SIZE_MAX || last == SIZE_MAX) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
 
   if (root == nullptr) {

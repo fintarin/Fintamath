@@ -1,9 +1,9 @@
 #include "operators/Operator.hpp"
 
+#include <stdexcept>
 #include <string>
 
 #include "calculator/Calculator.hpp"
-#include "calculator/ExceptionClasses.hpp"
 #include "operators/NamespaceFunctions.hpp"
 
 using namespace std;
@@ -14,7 +14,7 @@ Operator::Operator(const Operator &inOper) {
 
 Operator::Operator(const string &inStr) {
   if (!isType::isOperator(inStr)) {
-    throw IncorrectInput("Operator");
+    throw invalid_argument("Operator invalid input");
   }
   this->oper = *inStr.begin();
 }
@@ -68,7 +68,7 @@ Fraction Operator::solve(const Fraction &thisNumber, const Fraction &otherNumber
   case '^':
     return functions::pow(thisNumber, otherNumber, PRECISION);
   }
-  throw IncorrectInput("Operator");
+  throw invalid_argument("Operator invalid input");
 }
 
 string Operator::getTypeName() const {

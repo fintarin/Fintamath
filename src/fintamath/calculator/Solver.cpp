@@ -2,11 +2,11 @@
 
 #include <algorithm>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "calculator/Calculator.hpp"
-#include "calculator/ExceptionClasses.hpp"
 #include "numbers/Constant.hpp"
 #include "numbers/Variable.hpp"
 #include "operators/Function.hpp"
@@ -18,7 +18,7 @@ void rootReset(const shared_ptr<Tree::Node> &root, const Fraction &inFrac);
 
 Fraction Solver::toFrac(const shared_ptr<Tree::Node> &root) const {
   if (root->info == nullptr) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
 
   if (root->info->getTypeName() == "Constant") {
@@ -27,25 +27,25 @@ Fraction Solver::toFrac(const shared_ptr<Tree::Node> &root) const {
     string str = root->info->toString();
     auto iter = find_if(this->params.begin(), this->params.end(), [str](const Param &p) { return p.name == str; });
     if (iter == this->params.end()) {
-      throw Undefined("Solver");
+      throw invalid_argument("Solver invalid input");
     }
     return iter->value;
   } else {
     try {
       return *dynamic_pointer_cast<Fraction>(root->info);
-    } catch (IncorrectInput) {
-      throw Undefined("Solver");
+    } catch (const invalid_argument &) {
+      throw invalid_argument("Solver invalid input");
     }
   }
 }
 
 void Solver::solveRec(shared_ptr<Tree::Node> &root) {
   if (root->info == nullptr) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
   if (root->right != nullptr) {
     if (root->right->info == nullptr) {
-      throw IncorrectInput("Parser");
+      throw invalid_argument("Parser invalid input");
     }
     if (root->right->info->getTypeName() == "Operator" || root->right->info->getTypeName() == "Function") {
       solveRec(root->right);
@@ -53,7 +53,7 @@ void Solver::solveRec(shared_ptr<Tree::Node> &root) {
   }
   if (root->left != nullptr) {
     if (root->left->info == nullptr) {
-      throw IncorrectInput("Parser");
+      throw invalid_argument("Parser invalid input");
     }
     if (root->left->info->getTypeName() == "Operator" || root->left->info->getTypeName() == "Function") {
       solveRec(root->left);
@@ -88,23 +88,23 @@ Fraction Solver::solve(Tree &tree) {
 
 void Solver::solveEquals(const vector<string> &vectIOfTokens, const Fraction &inFrac) {
   if (vectIOfTokens.size() < 2) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
   if (!(isType::isVariable(*(vectIOfTokens.end() - 1)))) {
-    throw IncorrectInput("Parser");
+    throw invalid_argument("Parser invalid input");
   }
 
   for (size_t i = 1; i < vectIOfTokens.size(); ++i) {
     if (vectIOfTokens[i] == "=" && !isType::isVariable(vectIOfTokens[i + 1])) {
-      throw IncorrectInput("Parser");
+      throw invalid_argument("Parser invalid input");
     }
 
     if (isType::isVariable(vectIOfTokens[i])) {
       if (!(vectIOfTokens[i - 1] == "=")) {
-        throw IncorrectInput("Parser");
+        throw invalid_argument("Parser invalid input");
       }
       if (isType::isConstant(vectIOfTokens[i]) || isType::isFunction(vectIOfTokens[i])) {
-        throw Undefined("Solver");
+        throw invalid_argument("Solver invalid input");
       }
 
       size_t j = 0;

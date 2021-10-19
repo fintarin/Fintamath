@@ -2,7 +2,6 @@
 #include <string>
 
 #include "calculator/Calculator.hpp"
-#include "calculator/ExceptionClasses.hpp"
 
 using namespace std;
 
@@ -18,16 +17,8 @@ int main() {
 
     try {
       res = calc.calculate(str);
-    } catch (IncorrectInput &exception) {
-      res = exception.getError();
-    } catch (DividedByZero &exception) {
-      res = exception.getError();
-    } catch (ZeroPowZero &exception) {
-      res = exception.getError();
-    } catch (OutOfRange &exception) {
-      res = exception.getError();
-    } catch (Undefined &exception) {
-      res = exception.getError();
+    } catch (exception &exc) {
+      res = exc.what();
     }
 
     cout << res << "\n\n";

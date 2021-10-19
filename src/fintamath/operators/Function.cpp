@@ -1,9 +1,9 @@
 #include "operators/Function.hpp"
 
+#include <stdexcept>
 #include <string>
 
 #include "calculator/Calculator.hpp"
-#include "calculator/ExceptionClasses.hpp"
 #include "operators/NamespaceFunctions.hpp"
 
 using namespace std;
@@ -14,7 +14,7 @@ Function::Function(const Function &other) {
 
 Function::Function(const string &inStr) {
   if (!isType::isFunction(inStr)) {
-    throw IncorrectInput("Function");
+    throw invalid_argument("Function invalid input");
   }
   this->func = inStr;
 }
@@ -132,14 +132,14 @@ Fraction Function::solve(const Fraction &frac) const {
   if (this->func == "!!") {
     return functions::doubleFactorial(frac);
   }
-  throw IncorrectInput("Function");
+  throw invalid_argument("Function invalid input");
 }
 
 Fraction Function::solve(const Fraction &base, const Fraction &frac) const {
   if (this->func == "log") {
     return functions::log(base, frac, PRECISION);
   }
-  throw IncorrectInput("Function");
+  throw invalid_argument("Function invalid input");
 }
 
 string Function::getTypeName() const {

@@ -4,10 +4,10 @@
 #include "numbers/Fraction.hpp"
 
 #include <algorithm>
+#include <stdexcept>
 #include <string>
 
 #include "calculator/Calculator.hpp"
-#include "calculator/ExceptionClasses.hpp"
 
 using namespace std;
 
@@ -36,7 +36,7 @@ void Fraction::checkMinus() {
 // Сокращение дроби
 Fraction &Fraction::toIrreducibleFraction() {
   if (this->denominator == 0) {
-    throw DividedByZero("div||mod");
+    throw domain_error("Div by zero");
   }
 
   this->checkMinus();
@@ -416,7 +416,7 @@ BigInteger Fraction::getDenominator() const {
 
 Fraction &Fraction::toFraction(const string &inStr) {
   if (inStr == "") {
-    throw IncorrectInput("Fraction");
+    throw invalid_argument("Fraction invalid input");
   }
 
   *this = Fraction();
@@ -433,8 +433,8 @@ Fraction &Fraction::toFraction(const string &inStr) {
   BigInteger intPart;
   try {
     intPart = BigInteger(inStr.substr(first, last - first));
-  } catch (IncorrectInput) {
-    throw IncorrectInput("Fraction");
+  } catch (const invalid_argument &) {
+    throw invalid_argument("Fraction invalid input");
   }
 
   if (last != inStr.size()) {
@@ -444,8 +444,8 @@ Fraction &Fraction::toFraction(const string &inStr) {
       denominatorStr.front() = '1';
       this->numerator = BigInteger(numeratorStr);
       this->denominator = BigInteger(denominatorStr);
-    } catch (IncorrectInput) {
-      throw IncorrectInput("Fraction");
+    } catch (const invalid_argument &) {
+      throw invalid_argument("Fraction invalid input");
     }
   }
 

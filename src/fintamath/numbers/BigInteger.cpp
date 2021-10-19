@@ -5,10 +5,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 #include <string>
 #include <vector>
-
-#include "calculator/ExceptionClasses.hpp"
 
 using namespace std;
 using NumVector = vector<int64_t>;
@@ -165,7 +164,7 @@ BigInteger operator*(int64_t inNum, const BigInteger &other) {
 
 BigInteger &BigInteger::operator/=(const BigInteger &other) {
   if (other == 0) {
-    throw DividedByZero("div||mod");
+    throw domain_error("Div by zero");
   }
   if (*this == 0) {
     return *this;
@@ -202,7 +201,7 @@ BigInteger operator/(int64_t inNum, const BigInteger &other) {
 
 BigInteger &BigInteger::operator%=(const BigInteger &other) {
   if (other == 0) {
-    throw DividedByZero("div||mod");
+    throw domain_error("Div by zero");
   }
   if (*this == 0) {
     return *this;
@@ -354,7 +353,7 @@ int64_t BigInteger::getBase() {
 
 BigInteger &BigInteger::toLongNumber(const string &inStr) {
   if (inStr == "") {
-    throw IncorrectInput("BigInteger");
+    throw invalid_argument("BigInteger invalid input");
   }
 
   this->vectNum.clear();
@@ -369,7 +368,7 @@ BigInteger &BigInteger::toLongNumber(const string &inStr) {
   {
     auto iter = find_if(inStr.begin() + first, inStr.end(), [](char ch) { return !(ch - '0' >= 0 && ch - '0' <= 9); });
     if (iter != inStr.end()) {
-      throw IncorrectInput("BigInteger");
+      throw invalid_argument("BigInteger invalid input");
     }
   }
 
@@ -424,7 +423,7 @@ string BigInteger::toString() const {
 // Обертка над квадратным корнем в столбик, изменяет базу системы, в соответстие с алгоритмом
 BigInteger sqrt(const BigInteger &inLnum) {
   if (inLnum < 0) {
-    throw OutOfRange("square root");
+    throw domain_error("sqrt out of range");
   }
 
   string str = inLnum.toString();
