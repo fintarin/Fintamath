@@ -5,7 +5,7 @@
 #include "calculator/Calculator.hpp"
 #include "calculator/ExceptionClasses.hpp"
 
-constexpr long long PRECISION_OF_FUNCTIONS = PRECISION + ROUND_CONST;
+constexpr int64_t PRECISION_OF_FUNCTIONS = PRECISION + ROUND_CONST;
 
 // Округление
 void round(Fraction &a, const size_t precision) {

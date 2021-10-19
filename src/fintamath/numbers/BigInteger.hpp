@@ -11,46 +11,46 @@ private:
 public:
   BigInteger();
   BigInteger(const BigInteger &);
-  BigInteger(const long long);
+  BigInteger(const int64_t);
   explicit BigInteger(const std::string &);
 
   BigInteger &operator=(const BigInteger &);
-  BigInteger &operator=(const long long);
+  BigInteger &operator=(const int64_t);
 
   BigInteger &operator+=(const BigInteger &);
-  BigInteger &operator+=(const long long);
+  BigInteger &operator+=(const int64_t);
 
   BigInteger operator+(const BigInteger &) const;
-  friend BigInteger operator+(const BigInteger &, const long long);
-  friend BigInteger operator+(const long long, const BigInteger &);
+  friend BigInteger operator+(const BigInteger &, const int64_t);
+  friend BigInteger operator+(const int64_t, const BigInteger &);
 
   BigInteger &operator-=(const BigInteger &);
-  BigInteger &operator-=(const long long);
+  BigInteger &operator-=(const int64_t);
 
   BigInteger operator-(const BigInteger &) const;
-  friend BigInteger operator-(const BigInteger &, const long long);
-  friend BigInteger operator-(const long long, const BigInteger &);
+  friend BigInteger operator-(const BigInteger &, const int64_t);
+  friend BigInteger operator-(const int64_t, const BigInteger &);
 
   BigInteger &operator*=(const BigInteger &);
-  BigInteger &operator*=(const long long);
+  BigInteger &operator*=(const int64_t);
 
   BigInteger operator*(const BigInteger &) const;
-  friend BigInteger operator*(const BigInteger &, const long long);
-  friend BigInteger operator*(const long long, const BigInteger &);
+  friend BigInteger operator*(const BigInteger &, const int64_t);
+  friend BigInteger operator*(const int64_t, const BigInteger &);
 
   BigInteger &operator/=(const BigInteger &);
-  BigInteger &operator/=(const long long);
+  BigInteger &operator/=(const int64_t);
 
   BigInteger operator/(const BigInteger &) const;
-  friend BigInteger operator/(const BigInteger &, const long long);
-  friend BigInteger operator/(const long long, const BigInteger &);
+  friend BigInteger operator/(const BigInteger &, const int64_t);
+  friend BigInteger operator/(const int64_t, const BigInteger &);
 
   BigInteger &operator%=(const BigInteger &);
-  BigInteger &operator%=(const long long);
+  BigInteger &operator%=(const int64_t);
 
   BigInteger operator%(const BigInteger &) const;
-  friend BigInteger operator%(const BigInteger &, const long long);
-  friend BigInteger operator%(const long long, const BigInteger &);
+  friend BigInteger operator%(const BigInteger &, const int64_t);
+  friend BigInteger operator%(const int64_t, const BigInteger &);
 
   BigInteger &operator++();
   BigInteger &operator++(int);
@@ -59,35 +59,35 @@ public:
   BigInteger &operator--(int);
 
   bool operator==(const BigInteger &) const;
-  friend bool operator==(const BigInteger &, const long long);
-  friend bool operator==(const long long, const BigInteger &);
+  friend bool operator==(const BigInteger &, const int64_t);
+  friend bool operator==(const int64_t, const BigInteger &);
 
   bool operator!=(const BigInteger &) const;
-  friend bool operator!=(const BigInteger &, const long long);
-  friend bool operator!=(const long long, const BigInteger &);
+  friend bool operator!=(const BigInteger &, const int64_t);
+  friend bool operator!=(const int64_t, const BigInteger &);
 
   bool operator>(const BigInteger &) const;
-  friend bool operator>(const BigInteger &, const long long);
-  friend bool operator>(const long long, const BigInteger &);
+  friend bool operator>(const BigInteger &, const int64_t);
+  friend bool operator>(const int64_t, const BigInteger &);
 
   bool operator>=(const BigInteger &) const;
-  friend bool operator>=(const BigInteger &, const long long);
-  friend bool operator>=(const long long, const BigInteger &);
+  friend bool operator>=(const BigInteger &, const int64_t);
+  friend bool operator>=(const int64_t, const BigInteger &);
 
   bool operator<(const BigInteger &) const;
-  friend bool operator<(const BigInteger &, const long long);
-  friend bool operator<(const long long, const BigInteger &);
+  friend bool operator<(const BigInteger &, const int64_t);
+  friend bool operator<(const int64_t, const BigInteger &);
 
   bool operator<=(const BigInteger &) const;
-  friend bool operator<=(const BigInteger &, const long long);
-  friend bool operator<=(const long long, const BigInteger &);
+  friend bool operator<=(const BigInteger &, const int64_t);
+  friend bool operator<=(const int64_t, const BigInteger &);
 
   BigInteger &toLongNumber(const std::string &);
-  BigInteger &toLongNumber(const long long);
+  BigInteger &toLongNumber(const int64_t);
 
   size_t size() const;
-  static long long getBaseSize();
-  static long long getBase();
+  static int64_t getBaseSize();
+  static int64_t getBase();
 
   friend std::istream &operator>>(std::istream &, BigInteger &);
   friend std::ostream &operator<<(std::ostream &, const BigInteger &);
@@ -97,11 +97,11 @@ public:
   friend BigInteger sqrt(const BigInteger &);
 
 private:
-  std::vector<long long> vectNum;
+  std::vector<int64_t> vectNum;
   bool sign;
 
-  static long long baseSize;
-  static long long base;
+  static int64_t baseSize;
+  static int64_t base;
 };
 
 #endif // BIGINTEGER_HPP

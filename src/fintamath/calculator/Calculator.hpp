@@ -7,9 +7,9 @@
 #include "calculator/Solver.hpp"
 #include "numbers/Fraction.hpp"
 
-constexpr long long PRECISION = 36;
-constexpr long long ROUND_CONST = 9;
-constexpr long long PRECISION_OF_CONSTANTS = PRECISION + ROUND_CONST * 2;
+constexpr int64_t PRECISION = 36;
+constexpr int64_t ROUND_CONST = 9;
+constexpr int64_t PRECISION_OF_CONSTANTS = PRECISION + ROUND_CONST * 2;
 
 class Calculator {
 public:

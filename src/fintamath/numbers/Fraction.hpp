@@ -27,43 +27,43 @@ public:
 
   Fraction &operator+=(const Fraction &);
   Fraction &operator+=(const BigInteger &);
-  Fraction &operator+=(const long long);
+  Fraction &operator+=(const int64_t);
 
   Fraction operator+(const Fraction &) const;
   friend Fraction operator+(const Fraction &, const BigInteger &);
   friend Fraction operator+(const BigInteger &, const Fraction &);
-  friend Fraction operator+(const Fraction &, const long long);
-  friend Fraction operator+(const long long, const Fraction &);
+  friend Fraction operator+(const Fraction &, const int64_t);
+  friend Fraction operator+(const int64_t, const Fraction &);
 
   Fraction &operator-=(const Fraction &);
   Fraction &operator-=(const BigInteger &);
-  Fraction &operator-=(const long long);
+  Fraction &operator-=(const int64_t);
 
   Fraction operator-(const Fraction &) const;
   friend Fraction operator-(const Fraction &, const BigInteger &);
   friend Fraction operator-(const BigInteger &, const Fraction &);
-  friend Fraction operator-(const Fraction &, const long long);
-  friend Fraction operator-(const long long, const Fraction &);
+  friend Fraction operator-(const Fraction &, const int64_t);
+  friend Fraction operator-(const int64_t, const Fraction &);
 
   Fraction &operator*=(const Fraction &);
   Fraction &operator*=(const BigInteger &);
-  Fraction &operator*=(const long long);
+  Fraction &operator*=(const int64_t);
 
   Fraction operator*(const Fraction &) const;
   friend Fraction operator*(const Fraction &, const BigInteger &);
   friend Fraction operator*(const BigInteger &, const Fraction &);
-  friend Fraction operator*(const Fraction &, const long long);
-  friend Fraction operator*(const long long, const Fraction &);
+  friend Fraction operator*(const Fraction &, const int64_t);
+  friend Fraction operator*(const int64_t, const Fraction &);
 
   Fraction &operator/=(const Fraction &);
   Fraction &operator/=(const BigInteger &);
-  Fraction &operator/=(const long long);
+  Fraction &operator/=(const int64_t);
 
   Fraction operator/(const Fraction &) const;
   friend Fraction operator/(const Fraction &, const BigInteger &);
   friend Fraction operator/(const BigInteger &, const Fraction &);
-  friend Fraction operator/(const Fraction &, const long long);
-  friend Fraction operator/(const long long, const Fraction &);
+  friend Fraction operator/(const Fraction &, const int64_t);
+  friend Fraction operator/(const int64_t, const Fraction &);
 
   Fraction &operator++();
   Fraction &operator++(int);
@@ -74,38 +74,38 @@ public:
   bool operator==(const Fraction &) const;
   friend bool operator==(const Fraction &, const BigInteger &);
   friend bool operator==(const BigInteger &, const Fraction &);
-  friend bool operator==(const Fraction &, const long long);
-  friend bool operator==(const long long, const Fraction &);
+  friend bool operator==(const Fraction &, const int64_t);
+  friend bool operator==(const int64_t, const Fraction &);
 
   bool operator!=(const Fraction &) const;
   friend bool operator!=(const Fraction &, const BigInteger &);
   friend bool operator!=(const BigInteger &, const Fraction &);
-  friend bool operator!=(const Fraction &, const long long);
-  friend bool operator!=(const long long, const Fraction &);
+  friend bool operator!=(const Fraction &, const int64_t);
+  friend bool operator!=(const int64_t, const Fraction &);
 
   bool operator>(const Fraction &) const;
   friend bool operator>(const Fraction &, const BigInteger &);
   friend bool operator>(const BigInteger &, const Fraction &);
-  friend bool operator>(const Fraction &, const long long);
-  friend bool operator>(const long long, const Fraction &);
+  friend bool operator>(const Fraction &, const int64_t);
+  friend bool operator>(const int64_t, const Fraction &);
 
   bool operator>=(const Fraction &) const;
   friend bool operator>=(const Fraction &, const BigInteger &);
   friend bool operator>=(const BigInteger &, const Fraction &);
-  friend bool operator>=(const Fraction &, const long long);
-  friend bool operator>=(const long long, const Fraction &);
+  friend bool operator>=(const Fraction &, const int64_t);
+  friend bool operator>=(const int64_t, const Fraction &);
 
   bool operator<(const Fraction &) const;
   friend bool operator<(const Fraction &, const BigInteger &);
   friend bool operator<(const BigInteger &, const Fraction &);
-  friend bool operator<(const Fraction &, const long long);
-  friend bool operator<(const long long, const Fraction &);
+  friend bool operator<(const Fraction &, const int64_t);
+  friend bool operator<(const int64_t, const Fraction &);
 
   bool operator<=(const Fraction &) const;
   friend bool operator<=(const Fraction &, const BigInteger &);
   friend bool operator<=(const BigInteger &, const Fraction &);
-  friend bool operator<=(const Fraction &, const long long);
-  friend bool operator<=(const long long, const Fraction &);
+  friend bool operator<=(const Fraction &, const int64_t);
+  friend bool operator<=(const int64_t, const Fraction &);
 
   BigInteger getInteger() const;
   BigInteger getNumerator() const;
