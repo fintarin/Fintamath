@@ -1,3 +1,11 @@
+.cache/*
+.vscode/*
+[Bb]uild/*
+[Dd]ocs/*
+CMakeCache.*
+CMakeFiles/*
+[Tt]esting/*
+
 # Prerequisites
 *.d
 
@@ -30,7 +38,3 @@
 *.exe
 *.out
 *.app
-
-# Folders
-.vscode
-build
