@@ -7,12 +7,6 @@
 #include "numbers/BigInteger.hpp"
 
 class Fraction : public NodeType {
-private:
-  void checkMinus();
-  void checkZero();
-  Fraction &toIrreducibleFraction();
-  void toCommonDenominators(Fraction &);
-
 public:
   Fraction();
   Fraction(const Fraction &);
@@ -130,6 +124,11 @@ private:
   BigInteger numerator;
   BigInteger denominator;
   bool sign{};
+
+  void checkMinus();
+  void checkZero();
+  Fraction &toIrreducibleFraction();
+  void toCommonDenominators(Fraction &);
 };
 
 #endif // FRACTION_HPP

@@ -14,17 +14,15 @@ struct Param {
 };
 
 class Solver {
-private:
-  Fraction toFrac(const std::shared_ptr<Tree::Node> &) const;
-  void solveRec(std::shared_ptr<Tree::Node> &);
-
 public:
   Fraction solve(Tree &);
   void solveEquals(const std::vector<std::string> &, const Fraction &);
-  std::vector<Param> getParams();
 
 private:
   std::vector<Param> params;
+
+  Fraction toFrac(const std::shared_ptr<Tree::Node> &) const;
+  void solveRec(std::shared_ptr<Tree::Node> &);
 };
 
 #endif // SOLVER_HPP

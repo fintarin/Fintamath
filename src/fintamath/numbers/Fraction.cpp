@@ -14,58 +14,6 @@ using namespace std;
 static BigInteger GCD(const BigInteger &inA, const BigInteger &inB);
 static BigInteger LCM(const BigInteger &a, const BigInteger &b);
 
-void Fraction::checkZero() {
-  if (this->numerator == 0) {
-    this->sign = false;
-    this->denominator = 1;
-    return;
-  }
-}
-
-void Fraction::checkMinus() {
-  if (this->numerator < 0) {
-    this->numerator *= -1;
-    this->sign = !this->sign;
-  }
-  if (this->denominator < 0) {
-    this->denominator *= -1;
-    this->sign = !this->sign;
-  }
-}
-
-// Сокращение дроби
-Fraction &Fraction::toIrreducibleFraction() {
-  if (this->denominator == 0) {
-    throw domain_error("Div by zero");
-  }
-
-  this->checkMinus();
-  BigInteger gcd = GCD(this->numerator, this->denominator);
-  this->numerator /= gcd;
-  this->denominator /= gcd;
-  this->checkZero();
-  return *this;
-}
-
-// Приведение двух дробей к общему знаменателю
-void Fraction::toCommonDenominators(Fraction &other) {
-  BigInteger lcm = LCM(this->denominator, other.denominator);
-
-  if (this->sign) {
-    this->numerator *= -1;
-  }
-  this->numerator *= (lcm / this->denominator);
-  this->denominator = lcm;
-  this->sign = false;
-
-  if (other.sign) {
-    other.numerator *= -1;
-  }
-  other.numerator *= (lcm / other.denominator);
-  other.denominator = lcm;
-  other.sign = false;
-}
-
 Fraction::Fraction() {
   this->sign = false;
   this->numerator = 0;
@@ -543,6 +491,58 @@ string Fraction::getTypeName() const {
 
 string Fraction::toString() const {
   return this->toString(PRECISION);
+}
+
+void Fraction::checkZero() {
+  if (this->numerator == 0) {
+    this->sign = false;
+    this->denominator = 1;
+    return;
+  }
+}
+
+void Fraction::checkMinus() {
+  if (this->numerator < 0) {
+    this->numerator *= -1;
+    this->sign = !this->sign;
+  }
+  if (this->denominator < 0) {
+    this->denominator *= -1;
+    this->sign = !this->sign;
+  }
+}
+
+// Сокращение дроби
+Fraction &Fraction::toIrreducibleFraction() {
+  if (this->denominator == 0) {
+    throw domain_error("Div by zero");
+  }
+
+  this->checkMinus();
+  BigInteger gcd = GCD(this->numerator, this->denominator);
+  this->numerator /= gcd;
+  this->denominator /= gcd;
+  this->checkZero();
+  return *this;
+}
+
+// Приведение двух дробей к общему знаменателю
+void Fraction::toCommonDenominators(Fraction &other) {
+  BigInteger lcm = LCM(this->denominator, other.denominator);
+
+  if (this->sign) {
+    this->numerator *= -1;
+  }
+  this->numerator *= (lcm / this->denominator);
+  this->denominator = lcm;
+  this->sign = false;
+
+  if (other.sign) {
+    other.numerator *= -1;
+  }
+  other.numerator *= (lcm / other.denominator);
+  other.denominator = lcm;
+  other.sign = false;
 }
 
 // Наибольший общий делитель, используется алгоритм Евклида

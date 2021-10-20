@@ -74,12 +74,6 @@ BigInteger &BigInteger::operator=(int64_t inNum) {
   return *this;
 }
 
-void BigInteger::changeZeroSign() {
-  if (this->vectNum.size() == 1 && this->vectNum.front() == 0) {
-    this->sign = false;
-  }
-}
-
 BigInteger &BigInteger::operator+=(const BigInteger &other) {
   if ((!this->sign && !other.sign) || (this->sign && other.sign)) {
     this->vectNum = addCut(this->vectNum, other.vectNum);
@@ -442,6 +436,12 @@ BigInteger sqrt(const BigInteger &inLnum) {
   BigInteger::base = PRIMARY_BASE;
 
   return BigInteger(str);
+}
+
+void BigInteger::changeZeroSign() {
+  if (this->vectNum.size() == 1 && this->vectNum.front() == 0) {
+    this->sign = false;
+  }
 }
 
 // Приведение к значимым цифрам

@@ -5,9 +5,6 @@
 #include <vector>
 
 class BigInteger {
-private:
-  void changeZeroSign();
-
 public:
   BigInteger();
   BigInteger(const BigInteger &);
@@ -102,6 +99,8 @@ private:
 
   static int64_t baseSize;
   static int64_t base;
+  
+  void changeZeroSign();
 };
 
 #endif // BIGINTEGER_HPP
