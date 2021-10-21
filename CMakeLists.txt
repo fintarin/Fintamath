@@ -11,6 +11,7 @@ add_subdirectory(third_party)
 add_subdirectory(src)
 
 if(ENABLE_TESTING)
+  include(GoogleTest)
   enable_testing()
   add_subdirectory(tests)
 endif()
