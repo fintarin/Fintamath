@@ -4,8 +4,7 @@ Fintamath is an application for solving mathematical problems.
 
 ## Completed
 
-* BigInteger
-* Fraction
+* Integer & Rational
 * x + y, x - y, x * y, x / y, x ^ y
 * -x
 * e, pi
@@ -18,7 +17,8 @@ Fintamath is an application for solving mathematical problems.
 
 ## Planned
 
-* BigDecimal & increase precision
+* Real
+* increase speed & precision
 * pow(x, y), x mod y, x \ y
 * |x|
 * change differentiation of math operators
