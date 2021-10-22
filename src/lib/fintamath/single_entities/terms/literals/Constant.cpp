@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "calculator/Calculator.hpp"
 #include "single_entities/operators/NamespaceFunctions.hpp"
 
 using namespace std;
@@ -27,18 +26,18 @@ bool isConstant(const string &inStr) {
 }
 } // namespace isType
 
-Rational Constant::toRational() const {
+Rational Constant::toRational(int64_t precision) const {
   if (this->constant == "e") {
-    return functions::getE(PRECISION_OF_CONSTANTS);
+    return functions::getE(precision);
   }
   if (this->constant == "pi") {
-    return functions::getPi(PRECISION_OF_CONSTANTS);
+    return functions::getPi(precision);
   }
   throw invalid_argument("Constant invalid input");
 }
 
 string Constant::toString() const {
-  return this->toRational().toString(PRECISION + ROUND_CONST / 2);
+  return this->constant;
 }
 
 string Constant::getTypeName() const {

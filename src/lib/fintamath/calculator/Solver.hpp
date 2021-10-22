@@ -18,11 +18,20 @@ public:
   Rational solve(Expression &);
   void solveEquals(const std::vector<std::string> &, const Rational &);
 
+  int64_t getPrecision() const;
+  void setPrecision(int64_t precision);
+
 private:
+  const int64_t initialPrecision = 36;
+
   std::vector<Param> params;
+  int64_t precision = initialPrecision;
 
   Rational toFrac(const std::shared_ptr<Expression::Elem> &) const;
   void solveRec(std::shared_ptr<Expression::Elem> &);
+
+  int64_t getNewPrecision() const;
+  int64_t getNewRoundPrecision() const;
 };
 
 #endif // SOLVER_HPP

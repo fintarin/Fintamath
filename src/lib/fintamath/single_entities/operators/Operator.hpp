@@ -11,7 +11,7 @@ public:
   explicit Operator(const std::string &);
 
   bool isEqualSign() const;
-  Rational solve(const Rational &, const Rational &) const;
+  Rational solve(const Rational &, const Rational &, int64_t) const;
 
   std::string getTypeName() const override;
   std::string toString() const override;

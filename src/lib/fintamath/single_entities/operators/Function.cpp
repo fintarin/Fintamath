@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "calculator/Calculator.hpp"
 #include "single_entities/operators/NamespaceFunctions.hpp"
 
 using namespace std;
@@ -74,45 +73,45 @@ bool isType::isBinaryFunction(const string &inStr) {
   return (inStr == "log");
 }
 
-Rational Function::solve(const Rational &frac) const {
+Rational Function::solve(const Rational &frac, int64_t precision) const {
   if (this->func == "sqrt") {
-    return functions::sqrt(frac, PRECISION);
+    return functions::sqrt(frac, precision);
   }
   if (this->func == "exp") {
-    return functions::exp(frac, PRECISION);
+    return functions::exp(frac, precision);
   }
   if (this->func == "ln") {
-    return functions::ln(frac, PRECISION);
+    return functions::ln(frac, precision);
   }
   if (this->func == "lb") {
-    return functions::lb(frac, PRECISION);
+    return functions::lb(frac, precision);
   }
   if (this->func == "lg") {
-    return functions::lg(frac, PRECISION);
+    return functions::lg(frac, precision);
   }
   if (this->func == "sin") {
-    return functions::sin(frac, PRECISION);
+    return functions::sin(frac, precision);
   }
   if (this->func == "cos") {
-    return functions::cos(frac, PRECISION);
+    return functions::cos(frac, precision);
   }
   if (this->func == "tan") {
-    return functions::tan(frac, PRECISION);
+    return functions::tan(frac, precision);
   }
   if (this->func == "cot") {
-    return functions::cot(frac, PRECISION);
+    return functions::cot(frac, precision);
   }
   if (this->func == "asin") {
-    return functions::asin(frac, PRECISION);
+    return functions::asin(frac, precision);
   }
   if (this->func == "acos") {
-    return functions::acos(frac, PRECISION);
+    return functions::acos(frac, precision);
   }
   if (this->func == "atan") {
-    return functions::atan(frac, PRECISION);
+    return functions::atan(frac, precision);
   }
   if (this->func == "acot") {
-    return functions::acot(frac, PRECISION);
+    return functions::acot(frac, precision);
   }
   if (this->func == "abs") {
     return functions::abs(frac);
@@ -126,9 +125,9 @@ Rational Function::solve(const Rational &frac) const {
   throw invalid_argument("Function invalid input");
 }
 
-Rational Function::solve(const Rational &base, const Rational &frac) const {
+Rational Function::solve(const Rational &base, const Rational &frac, int64_t precision) const {
   if (this->func == "log") {
-    return functions::log(base, frac, PRECISION);
+    return functions::log(base, frac, precision);
   }
   throw invalid_argument("Function invalid input");
 }

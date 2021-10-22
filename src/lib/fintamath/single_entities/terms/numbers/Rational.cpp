@@ -9,6 +9,8 @@
 
 #include "calculator/Calculator.hpp"
 
+constexpr int64_t INITIAL_PRECISION = 36;
+
 using namespace std;
 
 static Integer GCD(const Integer &inA, const Integer &inB);
@@ -490,7 +492,7 @@ string Rational::getTypeName() const {
 }
 
 string Rational::toString() const {
-  return this->toString(PRECISION);
+  return this->toString(INITIAL_PRECISION);
 }
 
 void Rational::checkZero() {

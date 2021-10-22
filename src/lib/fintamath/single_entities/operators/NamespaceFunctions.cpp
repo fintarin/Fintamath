@@ -1,23 +1,29 @@
 #include "single_entities/operators/NamespaceFunctions.hpp"
 
+#include <cmath>
 #include <stdexcept>
 #include <string>
 
-#include "calculator/Calculator.hpp"
-
 using namespace std;
 
-constexpr uint64_t PRECISION_OF_FUNCTIONS = PRECISION + ROUND_CONST;
+// NOLINTNEXTLINE
+const Rational E_CONST("2.71828182845904523536028747135266249775724709369995957496696762772407663035354759");
+const int64_t E_INITIAL_PRECISION = 72;
 
-void round(Rational &a, size_t precision);
-Rational getPrecisionFrac(size_t precision);
+// NOLINTNEXTLINE
+const Rational PI_CONST("3.14159265358979323846264338327950288419716939937510582097494459230781640628620899");
+const int64_t PI_INITIAL_PRECISION = 72;
 
-Integer abs(const Integer &a);
-Rational lnReduce(const Rational &a, Integer &multiplier, size_t precision);
-Integer naturalPow(const Integer &inA, const Integer &inN);
-Rational naturalPow(const Rational &inA, const Integer &inN);
-Rational trigonometryReduce(const Rational &a, size_t pMultiplier, size_t precision);
-Integer factorialTree(const Integer &left, const Integer &right);
+static size_t getNewPrecision(size_t precision);
+static Rational getPrecisionFrac(size_t precision);
+static void round(Rational &a, size_t precision);
+
+static Integer abs(const Integer &a);
+static Rational lnReduce(const Rational &a, Integer &multiplier, size_t precision);
+static Integer naturalPow(const Integer &inA, const Integer &inN);
+static Rational naturalPow(const Rational &inA, const Integer &inN);
+static Rational trigonometryReduce(const Rational &a, size_t pMultiplier, size_t precision);
+static Integer factorialTree(const Integer &left, const Integer &right);
 
 Rational functions::abs(const Rational &a) {
   if (a < 0) {
@@ -35,8 +41,8 @@ Rational functions::sqrt(const Rational &a, size_t precision) {
     return Rational(0);
   }
 
-  string shift((PRECISION_OF_FUNCTIONS), '0');
-  string shiftPow2(2 * (PRECISION_OF_FUNCTIONS), '0');
+  string shift(precision, '0');
+  string shiftPow2(precision * 2, '0');
   shift.insert(shift.begin(), '1');
   shiftPow2.insert(shiftPow2.begin(), '1');
 
@@ -64,19 +70,19 @@ Rational functions::ln(const Rational &inA, size_t precision) {
   Integer multiplier;
   Rational a = lnReduce(inA, multiplier, precision);
   a = (a - 1) / (a + 1);
-  round(a, precision);
+  round(a, getNewPrecision(precision));
 
   Integer k = 1;
   Rational a_i;
   Rational res = a;
   Rational aPow2kPlus1 = a;
   Rational aPow2 = a * a;
-  Rational precisionFrac = getPrecisionFrac(precision);
+  Rational precisionFrac = getPrecisionFrac(getNewPrecision(precision));
 
   do {
     aPow2kPlus1 *= aPow2;
     a_i = aPow2kPlus1;
-    round(a_i, precision);
+    round(a_i, getNewPrecision(precision));
     a_i /= (2 * k + 1);
     res += a_i;
     ++k;
@@ -90,8 +96,9 @@ Rational functions::ln(const Rational &inA, size_t precision) {
 
 // log2(a)
 Rational functions::lb(const Rational &a, size_t precision) {
+  const int64_t logBase = 2;
   try {
-    return log(2, a, precision);
+    return log(logBase, a, precision);
   } catch (const domain_error &) {
     throw domain_error("lb out of range");
   }
@@ -99,8 +106,9 @@ Rational functions::lb(const Rational &a, size_t precision) {
 
 // log10(a)
 Rational functions::lg(const Rational &a, size_t precision) {
+  const int64_t logBase = 10;
   try {
-    return log(10, a, precision);
+    return log(logBase, a, precision);
   } catch (const domain_error &) {
     throw domain_error("lg out of range");
   }
@@ -142,11 +150,11 @@ Rational functions::pow(const Rational &inA, const Rational &n, size_t precision
   Integer k = 1;
   Rational a_i = 1;
   Rational aPowFloat = 1;
-  Rational precisionFrac = getPrecisionFrac(precision);
+  Rational precisionFrac = getPrecisionFrac(getNewPrecision(precision));
 
   do {
     a_i *= nLna;
-    round(a_i, precision);
+    round(a_i, getNewPrecision(precision));
     a_i /= k;
     aPowFloat += a_i;
     ++k;
@@ -159,7 +167,7 @@ Rational functions::pow(const Rational &inA, const Rational &n, size_t precision
 }
 
 Rational functions::exp(const Rational &inFrac, size_t precision) {
-  Rational e = getE(PRECISION_OF_CONSTANTS);
+  Rational e = getE(precision);
   return pow(e, inFrac, precision);
 }
 
@@ -168,7 +176,7 @@ Rational functions::exp(const Rational &inFrac, size_t precision) {
   сокращения a используются формулы приведения.
 */
 Rational functions::sin(const Rational &inA, size_t precision) {
-  Rational pi = functions::getPi(PRECISION_OF_FUNCTIONS);
+  Rational pi = functions::getPi(precision);
   Rational piMult2 = pi * 2;
   Rational piDiv2 = pi / 2;
 
@@ -193,17 +201,17 @@ Rational functions::sin(const Rational &inA, size_t precision) {
     }
     return a;
   }
-  round(a, precision);
+  round(a, getNewPrecision(precision));
 
   Integer k = 2;
   Rational a_i = a;
   Rational res = a;
   Rational aPow2 = a * a;
-  Rational precisionFrac = getPrecisionFrac(precision);
+  Rational precisionFrac = getPrecisionFrac(getNewPrecision(precision));
 
   do {
     a_i *= -1 * aPow2;
-    round(a_i, precision);
+    round(a_i, getNewPrecision(precision));
     a_i /= (k * (k + 1));
     res += a_i;
     k += 2;
@@ -226,7 +234,7 @@ Rational functions::cos(const Rational &inA, size_t precision) {
     return 1;
   }
 
-  Rational pi = functions::getPi(PRECISION_OF_FUNCTIONS);
+  Rational pi = functions::getPi(precision);
   Rational piMult2 = pi * 2;
   Rational piDiv2 = pi / 2;
 
@@ -246,18 +254,18 @@ Rational functions::cos(const Rational &inA, size_t precision) {
   if (a >= piDiv2) {
     return sin(a - piDiv2, precision) * -1;
   }
-  round(a, precision);
+  round(a, getNewPrecision(precision));
 
   Integer k = 2;
   Rational a_i = 1;
   Rational res = 1;
   Rational aPow2 = a * a;
-  round(aPow2, precision);
-  Rational precisionFrac = getPrecisionFrac(precision);
+  round(aPow2, getNewPrecision(precision));
+  Rational precisionFrac = getPrecisionFrac(getNewPrecision(precision));
 
   do {
     a_i *= -1 * aPow2;
-    round(a_i, precision);
+    round(a_i, getNewPrecision(precision));
     a_i /= (k * (k - 1));
     res += a_i;
     k += 2;
@@ -273,7 +281,7 @@ Rational functions::cos(const Rational &inA, size_t precision) {
 
 // Вычисление tan(a) = sin(a) / cos(a). Для большего сокращения a используются формулы приведения.
 Rational functions::tan(const Rational &inA, size_t precision) {
-  Rational pi = functions::getPi(PRECISION_OF_FUNCTIONS);
+  Rational pi = functions::getPi(precision);
   Rational piDiv2 = pi / 2;
 
   Rational a = inA;
@@ -293,10 +301,10 @@ Rational functions::tan(const Rational &inA, size_t precision) {
     }
     return a;
   }
-  round(a, precision);
+  round(a, getNewPrecision(precision));
 
   Rational cosFrac = cos(a, precision);
-  if (Rational(cosFrac).round(PRECISION) == 0) {
+  if (Rational(cosFrac).round(getNewPrecision(precision)) == 0) {
     throw domain_error("tan out of range");
   }
 
@@ -311,7 +319,7 @@ Rational functions::tan(const Rational &inA, size_t precision) {
 
 // Вычисление cot(a) = cos(a) / sin(a). Для большего сокращения a используются формулы приведения.
 Rational functions::cot(const Rational &inA, size_t precision) {
-  Rational pi = functions::getPi(PRECISION_OF_FUNCTIONS);
+  Rational pi = functions::getPi(precision);
   Rational piDiv2 = pi / 2;
 
   Rational a = inA;
@@ -331,10 +339,10 @@ Rational functions::cot(const Rational &inA, size_t precision) {
     }
     return a;
   }
-  round(a, precision);
+  round(a, getNewPrecision(precision));
 
   Rational sinFrac = sin(a, precision);
-  if (Rational(sinFrac).round(PRECISION) == 0) {
+  if (Rational(sinFrac).round(getNewPrecision(precision)) == 0) {
     throw domain_error("cot out of range");
   }
 
@@ -353,7 +361,7 @@ Rational functions::asin(const Rational &a, size_t precision) {
     throw domain_error("asin out of range");
   }
 
-  Rational res = (functions::getPi(PRECISION_OF_FUNCTIONS) / 2 - functions::acos(a, precision));
+  Rational res = (functions::getPi(precision) / 2 - functions::acos(a, precision));
   round(res, precision);
   return res;
 }
@@ -374,32 +382,34 @@ Rational functions::acos(const Rational &inA, size_t precision) {
     return Rational(0);
   }
   if (inA == -1) {
-    return functions::getPi(PRECISION_OF_FUNCTIONS);
+    return functions::getPi(precision);
   }
 
   Rational a = inA;
-  round(a, precision);
+  round(a, getNewPrecision(precision));
   bool minus = false;
   if (a < 0) {
     minus = true;
     a *= -1;
   }
 
-  Rational pi = functions::getPi(PRECISION_OF_FUNCTIONS);
+  Rational pi = functions::getPi(precision);
 
-  if (a <= Rational(1, 5)) {
+  const Rational maxNumberToReduce(1, 5);
+
+  if (a <= maxNumberToReduce) {
     Integer k = 1;
     Rational a_i;
     Rational f_a = a;
     Rational res = a;
     Rational aPow2 = a * a;
-    Rational precisionFrac = getPrecisionFrac(precision);
+    Rational precisionFrac = getPrecisionFrac(getNewPrecision(precision));
 
     do {
       f_a *= ((2 * k - 1)) * aPow2;
-      round(f_a, precision);
+      round(f_a, getNewPrecision(precision));
       f_a /= (2 * k);
-      round(f_a, precision);
+      round(f_a, getNewPrecision(precision));
       a_i = f_a / (2 * k + 1);
       res += a_i;
       ++k;
@@ -410,7 +420,7 @@ Rational functions::acos(const Rational &inA, size_t precision) {
       res = pi - res;
     }
 
-    round(res, precision);
+    round(res, getNewPrecision(precision));
     return res;
   }
 
@@ -437,26 +447,28 @@ Rational functions::atan(const Rational &inA, size_t precision) {
   }
 
   Rational a = inA;
-  round(a, precision);
+  round(a, getNewPrecision(precision));
   bool minus = false;
   if (a < 0) {
     minus = true;
     a *= -1;
   }
 
-  if (a <= Rational(1, 5)) {
+  const Rational maxNumberToReduce(1, 5);
+
+  if (a <= maxNumberToReduce) {
     Integer k = 2;
     Rational a_i;
     Rational f_a = a;
     Rational res = a;
     Rational aPow2 = a * a;
-    Rational precisionFrac = getPrecisionFrac(precision);
+    Rational precisionFrac = getPrecisionFrac(getNewPrecision(precision));
 
     do {
       f_a *= -1 * aPow2;
-      round(f_a, precision);
+      round(f_a, getNewPrecision(precision));
       a_i = f_a / (2 * k - 1);
-      round(a_i, precision);
+      round(a_i, getNewPrecision(precision));
       res += a_i;
       k += 1;
     } while (abs(a_i) > precisionFrac);
@@ -480,7 +492,7 @@ Rational functions::atan(const Rational &inA, size_t precision) {
 
 // Вычисление acot(x) = pi/2 - atan(x)
 Rational functions::acot(const Rational &a, size_t precision) {
-  Rational res = (getPi(PRECISION_OF_FUNCTIONS) / 2 - functions::atan(a, precision));
+  Rational res = (getPi(precision) / 2 - functions::atan(a, precision));
   round(res, precision);
   return res;
 }
@@ -510,8 +522,8 @@ Rational functions::doubleFactorial(const Rational &a) {
 
 // Вычисление значения e через ряд Тейлора: e = sum_{k=0}^{inf} 1/n!
 Rational functions::getE(size_t precision) {
-  if (precision <= PRECISION_OF_CONSTANTS) {
-    return Calculator::getE();
+  if (precision <= E_INITIAL_PRECISION) {
+    return E_CONST;
   }
 
   Integer k = 1;
@@ -526,6 +538,7 @@ Rational functions::getE(size_t precision) {
     ++k;
   } while (abs(a_i) > precisionFrac);
 
+  round(res, precision);
   return res;
 }
 
@@ -543,11 +556,11 @@ Rational functions::getE(size_t precision) {
   p_{n+1} = 2*p_n.
 */
 Rational functions::getPi(size_t precision) {
-  if (precision <= PRECISION_OF_CONSTANTS) {
-    return Calculator::getPi();
+  if (precision <= PI_INITIAL_PRECISION) {
+    return PI_CONST;
   }
 
-  Integer numOfIterations = functions::lb((double)precision, PRECISION).getInteger() + 1;
+  Integer numOfIterations = functions::lb((int64_t)precision, precision).getInteger() + 1;
   Integer p = 1;
   Rational a = 1;
   Rational b = 1 / functions::sqrt(2, precision);
@@ -570,16 +583,20 @@ Rational functions::getPi(size_t precision) {
   return res;
 }
 
-// Округление
-inline void round(Rational &a, size_t precision) {
-  a.round(PRECISION_OF_FUNCTIONS);
+inline size_t getNewPrecision(size_t precision) {
+  return precision + (int64_t)std::sqrt(precision);
 }
 
 // Получение значения погрешности
 inline Rational getPrecisionFrac(size_t precision) {
-  string precStr(PRECISION_OF_FUNCTIONS + 1, '0');
+  string precStr(precision + 1, '0');
   precStr.front() = '1';
   return (Rational(1, Integer(precStr)));
+}
+
+// Округление
+inline void round(Rational &a, size_t precision) {
+  a = a.round(precision);
 }
 
 inline Integer abs(const Integer &a) {
@@ -597,14 +614,14 @@ inline Integer abs(const Integer &a) {
 */
 inline Rational lnReduce(const Rational &a, Integer &multiplier, size_t precision) {
   Rational res = a;
-  round(res, precision);
+  round(res, getNewPrecision(precision));
   Rational prec("0.01");
   multiplier = 1;
 
   while (functions::abs(res - 1) > prec) {
     multiplier *= 2;
-    round(res, precision);
-    res = functions::sqrt(res, precision);
+    round(res, getNewPrecision(precision));
+    res = functions::sqrt(res, getNewPrecision(precision));
   }
 
   round(res, precision);
@@ -663,7 +680,7 @@ inline Rational naturalPow(const Rational &inA, const Integer &inN) {
   k = a div p.
 */
 inline Rational trigonometryReduce(const Rational &a, size_t pMultiplier, size_t precision) {
-  Rational p = (int64_t)pMultiplier * functions::getPi(precision + a.getInteger().size());
+  Rational p = (int64_t)pMultiplier * functions::getPi(getNewPrecision(precision) + a.getInteger().size());
   Integer k = (a / p).getInteger();
   Rational res = a - k * p;
   if (res >= p) {

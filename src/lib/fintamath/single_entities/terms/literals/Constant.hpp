@@ -3,14 +3,13 @@
 
 #include <string>
 
-#include "single_entities/ISingleEntity.hpp"
 #include "single_entities/terms/numbers/Rational.hpp"
 
 class Constant : public ISingleEntity {
 public:
   explicit Constant(const std::string &);
 
-  Rational toRational() const;
+  Rational toRational(int64_t) const;
   std::string toString() const override;
   std::string getTypeName() const override;
 

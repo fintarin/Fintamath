@@ -10,8 +10,8 @@ class Function : public ISingleEntity {
 public:
   explicit Function(const std::string &);
 
-  Rational solve(const Rational &) const;
-  Rational solve(const Rational &, const Rational &) const;
+  Rational solve(const Rational &frac, int64_t precision) const;
+  Rational solve(const Rational &base, const Rational &frac, int64_t precision) const;
 
   std::string getTypeName() const override;
   std::string toString() const override;

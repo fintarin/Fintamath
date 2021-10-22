@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "calculator/Calculator.hpp"
 #include "single_entities/operators/NamespaceFunctions.hpp"
 
 using namespace std;
@@ -46,7 +45,7 @@ bool Operator::isEqualSign() const {
   return this->oper == '=';
 }
 
-Rational Operator::solve(const Rational &thisNumber, const Rational &otherNumber) const {
+Rational Operator::solve(const Rational &thisNumber, const Rational &otherNumber, int64_t precision) const {
   switch (this->oper) {
   case '+':
     return thisNumber + otherNumber;
@@ -57,7 +56,7 @@ Rational Operator::solve(const Rational &thisNumber, const Rational &otherNumber
   case '/':
     return thisNumber / otherNumber;
   case '^':
-    return functions::pow(thisNumber, otherNumber, PRECISION);
+    return functions::pow(thisNumber, otherNumber, precision);
   }
   throw invalid_argument("Operator invalid input");
 }

@@ -10,17 +10,6 @@ using namespace std;
 
 static void addPoint(string &str);
 
-Rational Calculator::E = functions::getE(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);   // NOLINT
-Rational Calculator::PI = functions::getPi(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS); // NOLINT
-
-Rational &Calculator::getE() {
-  return Calculator::E;
-}
-
-Rational &Calculator::getPi() {
-  return Calculator::PI;
-}
-
 size_t cutZeros(string &str) {
   size_t order = 0;
   while (*str.begin() == '0') {
@@ -30,7 +19,7 @@ size_t cutZeros(string &str) {
   return order;
 }
 
-void toFloatingPoint(string &str) {
+void Calculator::toFloatingPoint(string &str) {
   bool minus = (*str.begin() == '-');
   if (minus) {
     str.erase(0, 1);
@@ -41,8 +30,8 @@ void toFloatingPoint(string &str) {
   }
   if (*str.begin() == '0') {
     str.erase(str.begin() + 1);
-    if (str.size() > PRECISION + 1) {
-      str.erase(PRECISION + 2);
+    if (str.size() > 1 && str.size() > solver.getPrecision() + 2) {
+      str.erase(solver.getPrecision() + 2);
     }
 
     size_t order = cutZeros(str);
@@ -55,8 +44,8 @@ void toFloatingPoint(string &str) {
     if (order != str.size()) {
       str.erase(order, 1);
     }
-    if (str.size() > PRECISION + 1) {
-      str.erase(PRECISION + 2);
+    if (str.size() > solver.getPrecision() + 1) {
+      str.erase(solver.getPrecision() + 2);
     }
 
     addPoint(str);
@@ -82,7 +71,7 @@ string Calculator::calculate(const string &inStr) {
     this->solver.solveEquals(vector<string>(firstEqual, vectIOfTokens.end()), res);
   }
 
-  string resStr = res.toString(PRECISION);
+  string resStr = res.toString(solver.getPrecision());
   toFloatingPoint(resStr);
   return resStr;
 }
@@ -91,4 +80,8 @@ inline void addPoint(string &str) {
   str.insert(str.begin() + 1, '.');
   str += '0';
   str = Rational(str).toString();
+}
+
+void Calculator::setPrecision(int64_t precision) {
+  solver.setPrecision(precision);
 }

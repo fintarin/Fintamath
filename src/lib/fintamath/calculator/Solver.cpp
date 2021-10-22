@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-#include "calculator/Calculator.hpp"
 #include "single_entities/operators/Function.hpp"
 #include "single_entities/operators/Operator.hpp"
 #include "single_entities/terms/literals/Constant.hpp"
@@ -63,13 +62,21 @@ void Solver::solveEquals(const vector<string> &vectIOfTokens, const Rational &in
   }
 }
 
+int64_t Solver::getPrecision() const {
+  return precision;
+}
+
+void Solver::setPrecision(int64_t precision) {
+  this->precision = precision;
+}
+
 Rational Solver::toFrac(const shared_ptr<Expression::Elem> &root) const {
   if (root->info == nullptr) {
     throw invalid_argument("Parser invalid input");
   }
 
   if (root->info->getTypeName() == "Constant") {
-    return Rational(root->info->toString());
+    return Constant(root->info->toString()).toRational(getNewPrecision());
   }
 
   if (root->info->getTypeName() == "Variable") {
@@ -110,7 +117,8 @@ void Solver::solveRec(shared_ptr<Expression::Elem> &root) {
   }
   if (root->info->getTypeName() == "Operator") {
     Operator oper(root->info->toString());
-    Rational frac = oper.solve(toFrac(root->right), toFrac(root->left));
+    Rational frac(
+        oper.solve(toFrac(root->right), toFrac(root->left), getNewPrecision()).toString(getNewRoundPrecision()));
     rootReset(root, frac);
     return;
   }
@@ -118,13 +126,23 @@ void Solver::solveRec(shared_ptr<Expression::Elem> &root) {
     Function func(root->info->toString());
     Rational frac;
     if (isType::isBinaryFunction(func.toString())) {
-      frac = func.solve(toFrac(root->right), toFrac(root->left)).round(PRECISION + ROUND_CONST / 2);
+      frac = Rational(
+          func.solve(toFrac(root->right), toFrac(root->left), getNewPrecision()).toString(getNewRoundPrecision()));
     } else {
-      frac = func.solve(toFrac(root->right)).round(PRECISION + ROUND_CONST / 2);
+      frac = Rational(func.solve(toFrac(root->right), getNewPrecision()).toString(getNewRoundPrecision()));
     }
     rootReset(root, frac);
     return;
   }
+}
+
+int64_t Solver::getNewPrecision() const {
+  const int64_t PRECISION_INCREASER = 9;
+  return precision + PRECISION_INCREASER;
+}
+
+int64_t Solver::getNewRoundPrecision() const {
+  return getNewPrecision() - 1;
 }
 
 inline void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac) {
