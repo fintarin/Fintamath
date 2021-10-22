@@ -83,8 +83,6 @@ public:
   Integer &toLongNumber(int64_t);
 
   size_t size() const;
-  static int64_t getBaseSize();
-  static int64_t getBase();
 
   friend std::istream &operator>>(std::istream &, Integer &);
   friend std::ostream &operator<<(std::ostream &, const Integer &);
@@ -96,9 +94,6 @@ public:
 private:
   std::vector<int64_t> vectNum;
   bool sign{};
-
-  static int64_t baseSize;
-  static int64_t base;
 
   void changeZeroSign();
 };
