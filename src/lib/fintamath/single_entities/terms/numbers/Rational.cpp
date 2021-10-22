@@ -1,7 +1,7 @@
 /*
   Дробь хранится в виде несократимой дроби (числитель / знаменатель).
 */
-#include "numbers/Rational.hpp"
+#include "single_entities/terms/numbers/Rational.hpp"
 
 #include <algorithm>
 #include <stdexcept>

@@ -1,10 +1,10 @@
-#include "operators/Operator.hpp"
+#include "single_entities/operators/Operator.hpp"
 
 #include <stdexcept>
 #include <string>
 
 #include "calculator/Calculator.hpp"
-#include "operators/NamespaceFunctions.hpp"
+#include "single_entities/operators/NamespaceFunctions.hpp"
 
 using namespace std;
 

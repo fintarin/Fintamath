@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "calculator/ISingleEntity.hpp"
+#include "single_entities/ISingleEntity.hpp"
 
 class Variable : public ISingleEntity {
 public:

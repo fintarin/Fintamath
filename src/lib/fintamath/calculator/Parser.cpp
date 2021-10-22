@@ -6,10 +6,11 @@
 #include <string>
 #include <vector>
 
-#include "numbers/Constant.hpp"
-#include "numbers/Variable.hpp"
-#include "operators/Function.hpp"
-#include "operators/Operator.hpp"
+#include "expressions/Expression.hpp"
+#include "single_entities/operators/Function.hpp"
+#include "single_entities/operators/Operator.hpp"
+#include "single_entities/terms/literals/Constant.hpp"
+#include "single_entities/terms/literals/Variable.hpp"
 
 using namespace std;
 

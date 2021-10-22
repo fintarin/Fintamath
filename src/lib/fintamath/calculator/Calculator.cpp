@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "operators/NamespaceFunctions.hpp"
+#include "single_entities/operators/NamespaceFunctions.hpp"
 
 using namespace std;
 

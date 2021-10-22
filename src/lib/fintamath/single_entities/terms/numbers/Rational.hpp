@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "calculator/ISingleEntity.hpp"
-#include "numbers/Integer.hpp"
+#include "single_entities/ISingleEntity.hpp"
+#include "single_entities/terms/numbers/Integer.hpp"
 
 class Rational : public ISingleEntity {
 public:

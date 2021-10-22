@@ -1,4 +1,4 @@
-#include "operators/NamespaceFunctions.hpp"
+#include "single_entities/operators/NamespaceFunctions.hpp"
 
 #include <stdexcept>
 #include <string>

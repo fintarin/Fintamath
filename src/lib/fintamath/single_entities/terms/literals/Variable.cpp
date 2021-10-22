@@ -1,4 +1,4 @@
-#include "numbers/Variable.hpp"
+#include "single_entities/terms/literals/Variable.hpp"
 
 #include <stdexcept>
 #include <string>

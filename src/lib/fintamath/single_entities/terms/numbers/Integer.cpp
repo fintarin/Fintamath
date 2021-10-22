@@ -1,7 +1,7 @@
 /*
   Длинное число хранится в виде вектора, где разряды идут от младших к старшим. База системы (BASE) = 10^9.
 */
-#include "numbers/Integer.hpp"
+#include "single_entities/terms/numbers/Integer.hpp"
 
 #include <algorithm>
 #include <cmath>

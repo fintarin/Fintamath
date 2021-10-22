@@ -7,11 +7,10 @@ project(
 
 option(ENABLE_TESTING "Enable Test Builds" ON)
 
-add_subdirectory(third_party)
-add_subdirectory(src)
-
 if(ENABLE_TESTING)
   include(GoogleTest)
   enable_testing()
-  add_subdirectory(tests)
 endif()
+
+add_subdirectory(third_party)
+add_subdirectory(src)

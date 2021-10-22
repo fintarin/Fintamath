@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "calculator/ISingleEntity.hpp"
+#include "single_entities/ISingleEntity.hpp"
 
 struct Expression {
   struct Elem {

@@ -1,7 +1,7 @@
 #ifndef NAMESPACEFUNCTIONS_HPP
 #define NAMESPACEFUNCTIONS_HPP
 
-#include "numbers/Rational.hpp"
+#include "single_entities/terms/numbers/Rational.hpp"
 
 namespace functions {
 Rational getE(size_t);

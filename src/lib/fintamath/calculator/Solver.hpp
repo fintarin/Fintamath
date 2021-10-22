@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "calculator/Expression.hpp"
-#include "numbers/Rational.hpp"
+#include "expressions/Expression.hpp"
+#include "single_entities/terms/numbers/Rational.hpp"
 
 struct Param {
   std::string name;

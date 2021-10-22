@@ -5,7 +5,7 @@
 
 #include "calculator/Parser.hpp"
 #include "calculator/Solver.hpp"
-#include "numbers/Rational.hpp"
+#include "single_entities/terms/numbers/Rational.hpp"
 
 constexpr int64_t PRECISION = 36;
 constexpr int64_t ROUND_CONST = 9;
