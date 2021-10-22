@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "calculator/Parser.hpp"
 #include "calculator/Solver.hpp"
 
 class Calculator {

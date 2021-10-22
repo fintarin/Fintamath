@@ -7,207 +7,231 @@
 #include <stdexcept>
 #include <string>
 
-#include "calculator/Calculator.hpp"
-
-constexpr int64_t INITIAL_PRECISION = 36;
+constexpr int64_t STANDARD_PRECISION = 36;
 
 using namespace std;
 
-static Integer GCD(const Integer &inA, const Integer &inB);
-static Integer LCM(const Integer &a, const Integer &b);
+static Integer gcd(const Integer &lhs, const Integer &rhs);
+static Integer lcm(const Integer &lhs, const Integer &rhs);
 
-Rational::Rational() {
-  this->sign = false;
-  this->numerator = 0;
-  this->denominator = 1;
+Rational::Rational(const string &strVal) {
+  if (strVal.empty()) {
+    throw invalid_argument("Rational invalid input");
+  }
+
+  *this = Rational();
+
+  size_t firstDigitNum = 0;
+  size_t dotNum = distance(strVal.begin(), find(strVal.begin(), strVal.end(), '.'));
+
+  bool isNegative = false;
+  if (*strVal.begin() == '-') {
+    isNegative = true;
+    ++firstDigitNum;
+  }
+
+  Integer intPart;
+  try {
+    intPart = Integer(strVal.substr(firstDigitNum, dotNum - firstDigitNum));
+  } catch (const invalid_argument &) {
+    throw invalid_argument("Rational invalid input");
+  }
+
+  if (dotNum != strVal.size()) {
+    try {
+      string numeratorStr = strVal.substr(dotNum + 1);
+      string denominatorStr(numeratorStr.size() + 1, '0');
+      denominatorStr.front() = '1';
+      this->numerator = Integer(numeratorStr);
+      this->denominator = Integer(denominatorStr);
+    } catch (const invalid_argument &) {
+      throw invalid_argument("Rational invalid input");
+    }
+  }
+
+  this->toIrreducibleRational();
+  this->numerator += intPart * this->denominator;
+  if (this->numerator != 0) {
+    this->sign = isNegative;
+  }
 }
 
-Rational::Rational(const Rational &other) {
-  *this = other;
-}
-
-Rational::Rational(const Integer &inLnum) : Rational() {
-  this->numerator = inLnum;
+Rational::Rational(const Integer &val) {
+  this->numerator = val;
   this->checkMinus();
 }
 
-Rational::Rational(const Integer &inNumerator, const Integer &inDenominator) : Rational() {
+Rational::Rational(int64_t val) {
+  this->numerator = val;
+  this->checkMinus();
+}
+
+Rational::Rational(const Integer &inNumerator, const Integer &inDenominator) {
   this->numerator = inNumerator;
   this->denominator = inDenominator;
   this->toIrreducibleRational();
 }
 
-Rational::Rational(double inNum) {
-  this->toRational(inNum);
+Rational::Rational(int64_t inNumerator, int64_t inDenominator) {
+  this->numerator = inNumerator;
+  this->denominator = inDenominator;
+  this->toIrreducibleRational();
 }
 
-Rational::Rational(const string &inStr) : Rational() {
-  this->toRational(inStr);
+Rational &Rational::operator=(const Integer &rhs) {
+  return *this = Integer(rhs);
 }
 
-Rational &Rational::operator=(const Rational &other) {
-  this->sign = other.sign;
-  this->numerator = other.numerator;
-  this->denominator = other.denominator;
-  return *this;
+Rational &Rational::operator=(int64_t rhs) {
+  return *this = Integer(rhs);
 }
 
-Rational &Rational::operator=(const Integer &inLnum) {
-  *this = Rational(inLnum);
-  return *this;
-}
-
-Rational &Rational::operator=(double inNum) {
-  *this = Rational(inNum);
-  return *this;
-}
-
-Rational &Rational::operator+=(const Rational &other) {
-  Rational otherNum = other;
-  this->toCommonDenominators(otherNum);
+Rational &Rational::operator+=(const Rational &rhs) {
+  Rational otherNum = rhs;
+  toCommonDenominators(*this, otherNum);
   this->numerator += otherNum.numerator;
   this->toIrreducibleRational();
   return *this;
 }
 
-Rational &Rational::operator+=(const Integer &inLnum) {
-  return *this += Rational(inLnum);
+Rational &Rational::operator+=(const Integer &rhs) {
+  return *this += Rational(rhs);
 }
 
-Rational &Rational::operator+=(int64_t inNum) {
-  return *this += Rational(inNum);
+Rational &Rational::operator+=(int64_t rhs) {
+  return *this += Rational(rhs);
 }
 
-Rational Rational::operator+(const Rational &other) const {
+Rational Rational::operator+(const Rational &rhs) const {
   Rational thisNum = *this;
-  return thisNum += other;
+  return thisNum += rhs;
 }
 
-Rational operator+(const Rational &other, const Integer &inLnum) {
-  return other + Rational(inLnum);
+Rational Rational::operator+(const Integer &rhs) const {
+  return *this + Rational(rhs);
 }
 
-Rational operator+(const Integer &inLnum, const Rational &other) {
-  return Rational(inLnum) + other;
+Rational Rational::operator+(int64_t rhs) const {
+  return *this + Rational(rhs);
 }
 
-Rational operator+(const Rational &other, int64_t inNum) {
-  return other + Rational(inNum);
+Rational operator+(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) + rhs;
 }
 
-Rational operator+(int64_t inNum, const Rational &other) {
-  return Rational(inNum) + other;
+Rational operator+(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) + rhs;
 }
 
-Rational &Rational::operator-=(const Rational &other) {
-  Rational otherNum = other;
-  this->toCommonDenominators(otherNum);
+Rational &Rational::operator-=(const Rational &rhs) {
+  Rational otherNum = rhs;
+  toCommonDenominators(*this, otherNum);
   this->numerator -= otherNum.numerator;
   this->toIrreducibleRational();
   return *this;
 }
 
-Rational &Rational::operator-=(const Integer &inLnum) {
-  return this->operator+=(inLnum * -1);
+Rational &Rational::operator-=(const Integer &rhs) {
+  return *this -= Rational(rhs);
 }
 
-Rational &Rational::operator-=(int64_t inNum) {
-  return *this -= Rational(inNum);
+Rational &Rational::operator-=(int64_t rhs) {
+  return *this -= Rational(rhs);
 }
 
-Rational Rational::operator-(const Rational &other) const {
+Rational Rational::operator-(const Rational &rhs) const {
   Rational thisNum = *this;
-  return thisNum -= other;
+  return thisNum -= rhs;
 }
 
-Rational operator-(const Rational &other, const Integer &inLnum) {
-  return other - Rational(inLnum);
+Rational Rational::operator-(const Integer &rhs) const {
+  return *this - Rational(rhs);
 }
 
-Rational operator-(const Integer &inLnum, const Rational &other) {
-  return Rational(inLnum) - other;
+Rational Rational::operator-(int64_t rhs) const {
+  return *this - Rational(rhs);
 }
 
-Rational operator-(const Rational &other, int64_t inNum) {
-  return other - Rational(inNum);
+Rational operator-(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) - rhs;
 }
 
-Rational operator-(int64_t inNum, const Rational &other) {
-  return Rational(inNum) - other;
+Rational operator-(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) - rhs;
 }
 
-Rational &Rational::operator*=(const Rational &other) {
-  this->numerator *= other.numerator;
-  this->denominator *= other.denominator;
-  this->sign = !((this->sign && other.sign) || (!this->sign && !other.sign));
+Rational &Rational::operator*=(const Rational &rhs) {
+  this->numerator *= rhs.numerator;
+  this->denominator *= rhs.denominator;
+  this->sign = !((this->sign && rhs.sign) || (!this->sign && !rhs.sign));
   this->toIrreducibleRational();
   return *this;
 }
 
-Rational &Rational::operator*=(const Integer &inLnum) {
-  return *this *= Rational(inLnum);
+Rational &Rational::operator*=(const Integer &rhs) {
+  return *this *= Rational(rhs);
 }
 
-Rational &Rational::operator*=(int64_t inNum) {
-  return *this *= Rational(inNum);
+Rational &Rational::operator*=(int64_t rhs) {
+  return *this *= Rational(rhs);
 }
 
-Rational Rational::operator*(const Rational &other) const {
+Rational Rational::operator*(const Rational &rhs) const {
   Rational thisNum = *this;
-  return thisNum *= other;
+  return thisNum *= rhs;
 }
 
-Rational operator*(const Rational &other, const Integer &inLnum) {
-  return other * Rational(inLnum);
+Rational Rational::operator*(const Integer &rhs) const {
+  return *this * Rational(rhs);
 }
 
-Rational operator*(const Integer &inLnum, const Rational &other) {
-  return Rational(inLnum) * other;
+Rational Rational::operator*(int64_t rhs) const {
+  return *this * Rational(rhs);
 }
 
-Rational operator*(const Rational &other, int64_t inNum) {
-  return other * Rational(inNum);
+Rational operator*(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) * rhs;
 }
 
-Rational operator*(int64_t inNum, const Rational &other) {
-  return Rational(inNum) * other;
+Rational operator*(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) * rhs;
 }
 
-Rational &Rational::operator/=(const Rational &other) {
-  this->numerator *= other.denominator;
-  this->denominator *= other.numerator;
-  this->sign = !((this->sign && other.sign) || (!this->sign && !other.sign));
+Rational &Rational::operator/=(const Rational &rhs) {
+  this->numerator *= rhs.denominator;
+  this->denominator *= rhs.numerator;
+  this->sign = !((this->sign && rhs.sign) || (!this->sign && !rhs.sign));
   this->toIrreducibleRational();
   return *this;
 }
 
-Rational &Rational::operator/=(const Integer &inLnum) {
-  return *this /= Rational(inLnum);
+Rational &Rational::operator/=(const Integer &rhs) {
+  return *this /= Rational(rhs);
 }
 
-Rational &Rational::operator/=(int64_t inNum) {
-  return *this /= Rational(inNum);
+Rational &Rational::operator/=(int64_t rhs) {
+  return *this /= Rational(rhs);
 }
 
-Rational Rational::operator/(const Rational &other) const {
+Rational Rational::operator/(const Rational &rhs) const {
   Rational thisNum = *this;
-  return thisNum /= other;
+  return thisNum /= rhs;
 }
 
-Rational operator/(const Rational &other, const Integer &inLnum) {
-  return other / Rational(inLnum);
+Rational Rational::operator/(const Integer &rhs) const {
+  return *this / Rational(rhs);
 }
 
-Rational operator/(const Integer &inLnum, const Rational &other) {
-  return Rational(inLnum) / other;
+Rational Rational::operator/(int64_t rhs) const {
+  return *this / Rational(rhs);
 }
 
-Rational operator/(const Rational &other, int64_t inNum) {
-  return other / Rational(inNum);
+Rational operator/(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) / rhs;
 }
 
-Rational operator/(int64_t inNum, const Rational &other) {
-  return Rational(inNum) / other;
+Rational operator/(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) / rhs;
 }
 
 Rational &Rational::operator++() {
@@ -215,9 +239,10 @@ Rational &Rational::operator++() {
   return *this;
 }
 
-Rational &Rational::operator++(int) {
+Rational Rational::operator++(int) {
+  Rational num = *this;
   *this += 1;
-  return *this;
+  return num;
 }
 
 Rational &Rational::operator--() {
@@ -225,132 +250,164 @@ Rational &Rational::operator--() {
   return *this;
 }
 
-Rational &Rational::operator--(int) {
+Rational Rational::operator--(int) {
+  Rational num = *this;
   *this -= 1;
+  return num;
+}
+
+Rational Rational::operator+() const {
   return *this;
 }
 
-bool Rational::operator==(const Rational &other) const {
-  return (this->sign == other.sign && this->numerator == other.numerator && this->denominator == other.denominator);
+Rational Rational::operator-() const {
+  Rational num = *this;
+  num.sign = !num.sign;
+  return *this;
 }
 
-bool operator==(const Rational &other, const Integer &inLnum) {
-  return (other == Rational(inLnum));
+bool Rational::operator==(const Rational &rhs) const {
+  return (this->sign == rhs.sign && this->numerator == rhs.numerator && this->denominator == rhs.denominator);
 }
 
-bool operator==(const Integer &inLnum, const Rational &other) {
-  return (other == Rational(inLnum));
+bool Rational::operator==(const Integer &rhs) const {
+  return *this == Rational(rhs);
 }
 
-bool operator==(const Rational &other, int64_t inNum) {
-  return other == Rational(inNum);
+bool Rational::Rational::operator==(int64_t rhs) const {
+  return *this == Rational(rhs);
 }
 
-bool operator==(int64_t inNum, const Rational &other) {
-  return Rational(inNum) == other;
+bool operator==(const Rational &lhs, int64_t rhs) {
+  return lhs == Rational(rhs);
 }
 
-bool Rational::operator!=(const Rational &other) const {
-  return !(*this == other);
+bool operator==(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) == rhs;
 }
 
-bool operator!=(const Rational &other, const Integer &inLnum) {
-  return !(other == Rational(inLnum));
+bool Rational::operator!=(const Rational &rhs) const {
+  return !(*this == rhs);
 }
 
-bool operator!=(const Integer &inLnum, const Rational &other) {
-  return !(other == Rational(inLnum));
+bool Rational::operator!=(const Integer &rhs) const {
+  return *this != Rational(rhs);
 }
 
-bool operator!=(const Rational &other, int64_t inNum) {
-  return other != Rational(inNum);
+bool Rational::Rational::operator!=(int64_t rhs) const {
+  return *this != Rational(rhs);
 }
 
-bool operator!=(int64_t inNum, const Rational &other) {
-  return Rational(inNum) != other;
+bool operator!=(const Rational &lhs, int64_t rhs) {
+  return lhs != Rational(rhs);
 }
 
-bool Rational::operator>(const Rational &other) const {
+bool operator!=(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) != rhs;
+}
+
+bool Rational::operator<(const Rational &rhs) const {
   Rational thisNum = *this;
-  Rational otherNum = other;
-  thisNum.toCommonDenominators(otherNum);
+  Rational otherNum = rhs;
+  toCommonDenominators(thisNum, otherNum);
+  return (thisNum.numerator < otherNum.numerator);
+}
+
+bool Rational::operator<(const Integer &rhs) const {
+  return *this < Rational(rhs);
+}
+
+bool Rational::Rational::operator<(int64_t rhs) const {
+  return *this < Rational(rhs);
+}
+
+bool operator<(const Rational &lhs, int64_t rhs) {
+  return lhs < Rational(rhs);
+}
+
+bool operator<(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) < rhs;
+}
+
+bool Rational::operator>(const Rational &rhs) const {
+  Rational thisNum = *this;
+  Rational otherNum = rhs;
+  toCommonDenominators(thisNum, otherNum);
   return (thisNum.numerator > otherNum.numerator);
 }
 
-bool operator>(const Rational &other, const Integer &inLnum) {
-  return (other > Rational(inLnum));
+bool Rational::operator>(const Integer &rhs) const {
+  return *this > Rational(rhs);
 }
 
-bool operator>(const Integer &inLnum, const Rational &other) {
-  return (Rational(inLnum) > other);
+bool Rational::Rational::operator>(int64_t rhs) const {
+  return *this > Rational(rhs);
 }
 
-bool operator>(const Rational &other, int64_t inNum) {
-  return other > Rational(inNum);
+bool operator>(const Rational &lhs, int64_t rhs) {
+  return lhs > Rational(rhs);
 }
 
-bool operator>(int64_t inNum, const Rational &other) {
-  return Rational(inNum) > other;
+bool operator>(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) > rhs;
 }
 
-bool Rational::operator>=(const Rational &other) const {
-  return (*this == other || *this > other);
+bool Rational::operator<=(const Rational &rhs) const {
+  Rational thisNum = *this;
+  Rational otherNum = rhs;
+  toCommonDenominators(thisNum, otherNum);
+  return (thisNum.numerator <= otherNum.numerator);
 }
 
-bool operator>=(const Rational &other, const Integer &inLnum) {
-  return (other >= Rational(inLnum));
+bool Rational::operator<=(const Integer &rhs) const {
+  return *this <= Rational(rhs);
 }
 
-bool operator>=(const Integer &inLnum, const Rational &other) {
-  return (Rational(inLnum) >= other);
+bool Rational::Rational::operator<=(int64_t rhs) const {
+  return *this <= Rational(rhs);
 }
 
-bool operator>=(const Rational &other, int64_t inNum) {
-  return other >= Rational(inNum);
+bool operator<=(const Rational &lhs, int64_t rhs) {
+  return lhs <= Rational(rhs);
 }
 
-bool operator>=(int64_t inNum, const Rational &other) {
-  return Rational(inNum) >= other;
+bool operator<=(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) <= rhs;
 }
 
-bool Rational::operator<(const Rational &other) const {
-  return !(*this >= other);
+bool Rational::operator>=(const Rational &rhs) const {
+  Rational thisNum = *this;
+  Rational otherNum = rhs;
+  toCommonDenominators(thisNum, otherNum);
+  return (thisNum.numerator >= otherNum.numerator);
 }
 
-bool operator<(const Rational &other, const Integer &inLnum) {
-  return !(other >= Rational(inLnum));
+bool Rational::operator>=(const Integer &rhs) const {
+  return *this >= Rational(rhs);
 }
 
-bool operator<(const Integer &inLnum, const Rational &other) {
-  return !(Rational(inLnum) >= other);
+bool Rational::Rational::operator>=(int64_t rhs) const {
+  return *this >= Rational(rhs);
 }
 
-bool operator<(const Rational &other, int64_t inNum) {
-  return other < Rational(inNum);
+bool operator>=(const Rational &lhs, int64_t rhs) {
+  return lhs >= Rational(rhs);
 }
 
-bool operator<(int64_t inNum, const Rational &other) {
-  return Rational(inNum) < other;
+bool operator>=(int64_t lhs, const Rational &rhs) {
+  return Rational(lhs) >= rhs;
 }
 
-bool Rational::operator<=(const Rational &other) const {
-  return !(*this > other);
+istream &operator>>(istream &in, Rational &rhs) {
+  string str;
+  in >> str;
+  rhs = Rational(str);
+  return in;
 }
 
-bool operator<=(const Rational &other, const Integer &inLnum) {
-  return !(other > Rational(inLnum));
-}
-
-bool operator<=(const Integer &inLnum, const Rational &other) {
-  return !(Rational(inLnum) > other);
-}
-
-bool operator<=(const Rational &other, int64_t inNum) {
-  return other <= Rational(inNum);
-}
-
-bool operator<=(int64_t inNum, const Rational &other) {
-  return Rational(inNum) <= other;
+ostream &operator<<(ostream &out, const Rational &rhs) {
+  out << rhs.toString();
+  return out;
 }
 
 Integer Rational::getInteger() const {
@@ -365,68 +422,18 @@ Integer Rational::getDenominator() const {
   return this->denominator;
 }
 
-Rational &Rational::toRational(const string &inStr) {
-  if (inStr.empty()) {
-    throw invalid_argument("Rational invalid input");
-  }
-
-  *this = Rational();
-
-  size_t first = 0;
-  size_t last = distance(inStr.begin(), find(inStr.begin(), inStr.end(), '.'));
-
-  bool minus = false;
-  if (*inStr.begin() == '-') {
-    minus = true;
-    ++first;
-  }
-
-  Integer intPart;
-  try {
-    intPart = Integer(inStr.substr(first, last - first));
-  } catch (const invalid_argument &) {
-    throw invalid_argument("Rational invalid input");
-  }
-
-  if (last != inStr.size()) {
-    try {
-      string numeratorStr = inStr.substr(last + 1);
-      string denominatorStr(numeratorStr.size() + 1, '0');
-      denominatorStr.front() = '1';
-      this->numerator = Integer(numeratorStr);
-      this->denominator = Integer(denominatorStr);
-    } catch (const invalid_argument &) {
-      throw invalid_argument("Rational invalid input");
-    }
-  }
-
-  this->toIrreducibleRational();
-  this->numerator += intPart * this->denominator;
-  if (this->numerator != 0) {
-    this->sign = minus;
-  }
-
-  return *this;
-}
-
-Rational &Rational::toRational(const Integer &inLnum) {
-  *this = inLnum;
-  return *this;
-}
-
-Rational &Rational::toRational(double inNum) {
-  return this->toRational(to_string(inNum));
-}
-
 string Rational::toString(size_t precision) const {
+  const int64_t base = 10;
+  const int64_t roundUp = 5;
+
   string precStr(precision + 2, '0');
   precStr.front() = '1';
 
   Integer lnum = this->numerator * Integer(precStr) / this->denominator;
-  if (lnum % 10 >= 5) {
-    lnum += 10;
+  if (lnum % base >= roundUp) {
+    lnum += base;
   }
-  lnum /= 10;
+  lnum /= base;
 
   string res = lnum.toString();
   if (res.size() <= precision) {
@@ -451,40 +458,8 @@ string Rational::toString(size_t precision) const {
   return res;
 }
 
-Rational &Rational::round(size_t precision) {
-  return this->toRational(this->toString(precision));
-}
-
-bool Rational::equal(double inNum) const {
-  string str;
-
-  if (inNum == 0) {
-    str = '0';
-  } else {
-    str = to_string(inNum);
-
-    while (*(str.end() - 1) == '0') {
-      str.pop_back();
-    }
-
-    if (*(str.end() - 1) == '.') {
-      str.pop_back();
-    }
-  }
-
-  return (this->toString(6) == str);
-}
-
-istream &operator>>(istream &in, Rational &other) {
-  string str;
-  in >> str;
-  other = Rational(str);
-  return in;
-}
-
-ostream &operator<<(ostream &out, const Rational &other) {
-  out << other.toString();
-  return out;
+Rational Rational::round(size_t precision) const {
+  return Rational(this->toString(precision));
 }
 
 string Rational::getTypeName() const {
@@ -492,7 +467,7 @@ string Rational::getTypeName() const {
 }
 
 string Rational::toString() const {
-  return this->toString(INITIAL_PRECISION);
+  return this->toString(STANDARD_PRECISION);
 }
 
 void Rational::checkZero() {
@@ -514,52 +489,49 @@ void Rational::checkMinus() {
   }
 }
 
-// Сокращение дроби
-Rational &Rational::toIrreducibleRational() {
+void Rational::toIrreducibleRational() {
   if (this->denominator == 0) {
     throw domain_error("Div by zero");
   }
 
   this->checkMinus();
-  Integer gcd = GCD(this->numerator, this->denominator);
-  this->numerator /= gcd;
-  this->denominator /= gcd;
+  Integer gcdVal = gcd(this->numerator, this->denominator);
+  this->numerator /= gcdVal;
+  this->denominator /= gcdVal;
   this->checkZero();
-  return *this;
 }
 
-// Приведение двух дробей к общему знаменателю
-void Rational::toCommonDenominators(Rational &other) {
-  Integer lcm = LCM(this->denominator, other.denominator);
+void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {
+  Integer lcmVal = lcm(lhs.denominator, rhs.denominator);
 
-  if (this->sign) {
-    this->numerator *= -1;
+  if (lhs.sign) {
+    lhs.numerator *= -1;
   }
-  this->numerator *= (lcm / this->denominator);
-  this->denominator = lcm;
-  this->sign = false;
+  lhs.numerator *= (lcmVal / lhs.denominator);
+  lhs.denominator = lcmVal;
+  lhs.sign = false;
 
-  if (other.sign) {
-    other.numerator *= -1;
+  if (rhs.sign) {
+    rhs.numerator *= -1;
   }
-  other.numerator *= (lcm / other.denominator);
-  other.denominator = lcm;
-  other.sign = false;
+  rhs.numerator *= (lcmVal / rhs.denominator);
+  rhs.denominator = lcmVal;
+  rhs.sign = false;
 }
 
 // Наибольший общий делитель, используется алгоритм Евклида
-inline Integer GCD(const Integer &inA, const Integer &inB) {
-  Integer a = inA;
-  Integer b = inB;
-  while (b != 0) {
-    Integer buff = a % b;
-    a = b;
-    b = buff;
+inline Integer gcd(const Integer &lhs, const Integer &rhs) {
+  Integer tmpLhs = lhs;
+  Integer tmpRhs = rhs;
+  while (tmpRhs != 0) {
+    Integer buff = tmpLhs % tmpRhs;
+    tmpLhs = tmpRhs;
+    tmpRhs = buff;
   }
-  return a;
+  return tmpLhs;
 }
 
 // Наименьшее общее кратное, используется формула НОК(a, b) = a * b / НОД(a, b)
-inline Integer LCM(const Integer &a, const Integer &b) {
-  return a * b / GCD(a, b);
+inline Integer lcm(const Integer &lhs, const Integer &rhs) {
+  return lhs * rhs / gcd(lhs, rhs);
 }

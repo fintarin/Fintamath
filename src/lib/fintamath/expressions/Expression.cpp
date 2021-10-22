@@ -1,4 +1,4 @@
-#include "calculator/Parser.hpp"
+#include "expressions/Expression.hpp"
 
 #include <algorithm>
 #include <memory>
@@ -6,13 +6,15 @@
 #include <string>
 #include <vector>
 
-#include "expressions/Expression.hpp"
 #include "single_entities/operators/Function.hpp"
 #include "single_entities/operators/Operator.hpp"
 #include "single_entities/terms/literals/Constant.hpp"
 #include "single_entities/terms/literals/Variable.hpp"
 
 using namespace std;
+
+vector<string> makeVectOfTokens(const string &inStr);
+Expression makeExpression(const vector<string> &vectIOfTokens);
 
 static void cutSpaces(string &str);
 
@@ -35,10 +37,18 @@ static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::
 static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
                     const string &oper);
 static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end);
-static void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
-                        size_t last);
+static void makeExpressionRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
+                              size_t last);
 
-vector<string> Parser::makeVectOfTokens(const string &inStr) {
+Expression::Expression(const std::string &strExpr) {
+  *this = makeExpression(makeVectOfTokens(strExpr));
+}
+
+std::shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
+  return root;
+}
+
+inline vector<string> makeVectOfTokens(const string &inStr) {
   string str = inStr;
   cutSpaces(str);
   vector<string> vect;
@@ -65,16 +75,15 @@ vector<string> Parser::makeVectOfTokens(const string &inStr) {
   return vect;
 }
 
-Expression Parser::makeTree(const vector<string> &vectIOfTokens) {
+inline Expression makeExpression(const vector<string> &vectIOfTokens) {
   if (vectIOfTokens.empty()) {
     throw invalid_argument("Parser invalid input");
   }
 
   Expression Expression;
-  Expression.root = std::make_shared<Expression::Elem>();
-  makeTreeRec(vectIOfTokens, Expression.root->right, 0, vectIOfTokens.size() - 1);
+  makeExpressionRec(vectIOfTokens, Expression.getRootModifiable()->right, 0, vectIOfTokens.size() - 1);
 
-  if (Expression.root->right == nullptr) {
+  if (Expression.getRootModifiable()->right == nullptr) {
     throw invalid_argument("Parser invalid input");
   }
 
@@ -317,8 +326,8 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::
         } else {
           root->info = std::make_shared<Operator>(vectIOfTokens[i]);
         }
-        makeTreeRec(vectIOfTokens, root->right, i + 1, end);
-        makeTreeRec(vectIOfTokens, root->left, begin, i - 1);
+        makeExpressionRec(vectIOfTokens, root->right, i + 1, end);
+        makeExpressionRec(vectIOfTokens, root->left, begin, i - 1);
         return true;
       }
     }
@@ -335,14 +344,14 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::
 inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end) {
   if (isType::isFunction(vectIOfTokens[end])) {
     root->info = std::make_shared<Function>(vectIOfTokens[end]);
-    makeTreeRec(vectIOfTokens, root->right, begin, end - 1);
+    makeExpressionRec(vectIOfTokens, root->right, begin, end - 1);
     return true;
   }
   return false;
 }
 
-inline void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
-                        size_t last) {
+inline void makeExpressionRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
+                              size_t last) {
   if (first > last) {
     throw invalid_argument("Parser invalid input");
   }
@@ -381,6 +390,6 @@ inline void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Expressi
     return;
   }
   if (vectIOfTokens[begin] == ")" && vectIOfTokens[end] == "(") {
-    makeTreeRec(vectIOfTokens, root, begin + 1, end - 1);
+    makeExpressionRec(vectIOfTokens, root, begin + 1, end - 1);
   }
 }

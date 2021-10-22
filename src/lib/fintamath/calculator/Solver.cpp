@@ -16,50 +16,12 @@ using namespace std;
 void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac);
 
 Rational Solver::solve(Expression &Expression) {
-  if (Expression.root->right->right == nullptr && Expression.root->right->left == nullptr) {
-    return Rational(toFrac(Expression.root->right).toString());
+  if (Expression.getRootModifiable()->right->right == nullptr &&
+      Expression.getRootModifiable()->right->left == nullptr) {
+    return Rational(toFrac(Expression.getRootModifiable()->right).toString());
   }
-  solveRec(Expression.root->right);
-  return *dynamic_pointer_cast<Rational>(Expression.root->right->info);
-}
-
-void Solver::solveEquals(const vector<string> &vectIOfTokens, const Rational &inFrac) {
-  if (vectIOfTokens.size() < 2) {
-    throw invalid_argument("Parser invalid input");
-  }
-  if (!(isType::isVariable(*(vectIOfTokens.end() - 1)))) {
-    throw invalid_argument("Parser invalid input");
-  }
-
-  for (size_t i = 1; i < vectIOfTokens.size(); ++i) {
-    if (vectIOfTokens[i] == "=" && !isType::isVariable(vectIOfTokens[i + 1])) {
-      throw invalid_argument("Parser invalid input");
-    }
-
-    if (isType::isVariable(vectIOfTokens[i])) {
-      if (!(vectIOfTokens[i - 1] == "=")) {
-        throw invalid_argument("Parser invalid input");
-      }
-      if (isType::isConstant(vectIOfTokens[i]) || isType::isFunction(vectIOfTokens[i])) {
-        throw invalid_argument("Solver invalid input");
-      }
-
-      size_t j = 0;
-      for (; j < this->params.size(); ++j) {
-        if (this->params[j].name == vectIOfTokens[i]) {
-          this->params[j].value = inFrac;
-          break;
-        }
-      }
-
-      if (j == this->params.size()) {
-        Param par;
-        par.name = vectIOfTokens[i];
-        par.value = inFrac;
-        this->params.push_back(par);
-      }
-    }
-  }
+  solveRec(Expression.getRootModifiable()->right);
+  return *dynamic_pointer_cast<Rational>(Expression.getRootModifiable()->right->info);
 }
 
 int64_t Solver::getPrecision() const {

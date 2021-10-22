@@ -62,15 +62,8 @@ void Calculator::toFloatingPoint(string &str) {
 }
 
 string Calculator::calculate(const string &inStr) {
-  vector<string> vectIOfTokens = Parser::makeVectOfTokens(inStr);
-  auto firstEqual = find(begin(vectIOfTokens), end(vectIOfTokens), "=");
-
-  Expression Expression = Parser::makeTree(vector<string>(vectIOfTokens.begin(), firstEqual));
+  Expression Expression(inStr);
   Rational res = this->solver.solve(Expression);
-  if (firstEqual != vectIOfTokens.end()) {
-    this->solver.solveEquals(vector<string>(firstEqual, vectIOfTokens.end()), res);
-  }
-
   string resStr = res.toString(solver.getPrecision());
   toFloatingPoint(resStr);
   return resStr;

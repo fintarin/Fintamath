@@ -16,7 +16,6 @@ struct Param {
 class Solver {
 public:
   Rational solve(Expression &);
-  void solveEquals(const std::vector<std::string> &, const Rational &);
 
   int64_t getPrecision() const;
   void setPrecision(int64_t precision);
