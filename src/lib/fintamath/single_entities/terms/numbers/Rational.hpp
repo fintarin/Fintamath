@@ -108,9 +108,10 @@ public:
   Integer getNumerator() const;
   Integer getDenominator() const;
 
-  Rational round(size_t) const;
-  std::string toString(size_t) const;
+  Rational round(size_t precision) const;
+
   std::string toString() const override;
+  std::string toString(size_t precision) const;
   std::string getTypeName() const override;
 
 private:
@@ -118,10 +119,10 @@ private:
   Integer denominator = 1;
   bool sign{};
 
-  void checkMinus();
-  void checkZero();
+  void fixNegative();
+  void fixZero();
   void toIrreducibleRational();
-  static void toCommonDenominators(Rational &, Rational &);
+  static void toCommonDenominators(Rational &lhs, Rational &rhs);
 };
 
 #endif // RATIONAL_HPP

@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 
-constexpr int64_t STANDARD_PRECISION = 36;
+constexpr int64_t INITIAL_PRECISION = 36;
 
 using namespace std;
 
@@ -19,27 +19,25 @@ Rational::Rational(const string &strVal) {
     throw invalid_argument("Rational invalid input");
   }
 
-  *this = Rational();
-
   size_t firstDigitNum = 0;
-  size_t dotNum = distance(strVal.begin(), find(strVal.begin(), strVal.end(), '.'));
+  size_t firstDotNum = distance(strVal.begin(), find(strVal.begin(), strVal.end(), '.'));
 
   bool isNegative = false;
-  if (*strVal.begin() == '-') {
+  if (strVal.front() == '-') {
     isNegative = true;
     ++firstDigitNum;
   }
 
   Integer intPart;
   try {
-    intPart = Integer(strVal.substr(firstDigitNum, dotNum - firstDigitNum));
+    intPart = Integer(strVal.substr(firstDigitNum, firstDotNum - firstDigitNum));
   } catch (const invalid_argument &) {
     throw invalid_argument("Rational invalid input");
   }
 
-  if (dotNum != strVal.size()) {
+  if (firstDotNum != strVal.size()) {
     try {
-      string numeratorStr = strVal.substr(dotNum + 1);
+      string numeratorStr = strVal.substr(firstDotNum + 1);
       string denominatorStr(numeratorStr.size() + 1, '0');
       denominatorStr.front() = '1';
       this->numerator = Integer(numeratorStr);
@@ -58,38 +56,35 @@ Rational::Rational(const string &strVal) {
 
 Rational::Rational(const Integer &val) {
   this->numerator = val;
-  this->checkMinus();
+  this->fixNegative();
 }
 
 Rational::Rational(int64_t val) {
   this->numerator = val;
-  this->checkMinus();
+  this->fixNegative();
 }
 
-Rational::Rational(const Integer &inNumerator, const Integer &inDenominator) {
-  this->numerator = inNumerator;
-  this->denominator = inDenominator;
+Rational::Rational(const Integer &numerator, const Integer &denominator) {
+  this->numerator = numerator;
+  this->denominator = denominator;
   this->toIrreducibleRational();
 }
 
-Rational::Rational(int64_t inNumerator, int64_t inDenominator) {
-  this->numerator = inNumerator;
-  this->denominator = inDenominator;
-  this->toIrreducibleRational();
+Rational::Rational(int64_t numerator, int64_t denominator) : Rational(Integer(numerator), Integer(denominator)) {
 }
 
 Rational &Rational::operator=(const Integer &rhs) {
-  return *this = Integer(rhs);
+  return *this = Rational(rhs);
 }
 
 Rational &Rational::operator=(int64_t rhs) {
-  return *this = Integer(rhs);
+  return *this = Rational(rhs);
 }
 
 Rational &Rational::operator+=(const Rational &rhs) {
-  Rational otherNum = rhs;
-  toCommonDenominators(*this, otherNum);
-  this->numerator += otherNum.numerator;
+  Rational tmpRhs = rhs;
+  toCommonDenominators(*this, tmpRhs);
+  this->numerator += tmpRhs.numerator;
   this->toIrreducibleRational();
   return *this;
 }
@@ -103,8 +98,8 @@ Rational &Rational::operator+=(int64_t rhs) {
 }
 
 Rational Rational::operator+(const Rational &rhs) const {
-  Rational thisNum = *this;
-  return thisNum += rhs;
+  Rational lhs = *this;
+  return lhs += rhs;
 }
 
 Rational Rational::operator+(const Integer &rhs) const {
@@ -124,9 +119,9 @@ Rational operator+(int64_t lhs, const Rational &rhs) {
 }
 
 Rational &Rational::operator-=(const Rational &rhs) {
-  Rational otherNum = rhs;
-  toCommonDenominators(*this, otherNum);
-  this->numerator -= otherNum.numerator;
+  Rational tmpRhs = rhs;
+  toCommonDenominators(*this, tmpRhs);
+  this->numerator -= tmpRhs.numerator;
   this->toIrreducibleRational();
   return *this;
 }
@@ -140,8 +135,8 @@ Rational &Rational::operator-=(int64_t rhs) {
 }
 
 Rational Rational::operator-(const Rational &rhs) const {
-  Rational thisNum = *this;
-  return thisNum -= rhs;
+  Rational lhs = *this;
+  return lhs -= rhs;
 }
 
 Rational Rational::operator-(const Integer &rhs) const {
@@ -177,8 +172,8 @@ Rational &Rational::operator*=(int64_t rhs) {
 }
 
 Rational Rational::operator*(const Rational &rhs) const {
-  Rational thisNum = *this;
-  return thisNum *= rhs;
+  Rational lhs = *this;
+  return lhs *= rhs;
 }
 
 Rational Rational::operator*(const Integer &rhs) const {
@@ -214,8 +209,8 @@ Rational &Rational::operator/=(int64_t rhs) {
 }
 
 Rational Rational::operator/(const Rational &rhs) const {
-  Rational thisNum = *this;
-  return thisNum /= rhs;
+  Rational lhs = *this;
+  return lhs /= rhs;
 }
 
 Rational Rational::operator/(const Integer &rhs) const {
@@ -240,9 +235,9 @@ Rational &Rational::operator++() {
 }
 
 Rational Rational::operator++(int) {
-  Rational num = *this;
+  Rational val = *this;
   *this += 1;
-  return num;
+  return val;
 }
 
 Rational &Rational::operator--() {
@@ -251,9 +246,9 @@ Rational &Rational::operator--() {
 }
 
 Rational Rational::operator--(int) {
-  Rational num = *this;
+  Rational val = *this;
   *this -= 1;
-  return num;
+  return val;
 }
 
 Rational Rational::operator+() const {
@@ -261,8 +256,8 @@ Rational Rational::operator+() const {
 }
 
 Rational Rational::operator-() const {
-  Rational num = *this;
-  num.sign = !num.sign;
+  Rational val = *this;
+  val.sign = !val.sign;
   return *this;
 }
 
@@ -307,10 +302,10 @@ bool operator!=(int64_t lhs, const Rational &rhs) {
 }
 
 bool Rational::operator<(const Rational &rhs) const {
-  Rational thisNum = *this;
-  Rational otherNum = rhs;
-  toCommonDenominators(thisNum, otherNum);
-  return (thisNum.numerator < otherNum.numerator);
+  Rational lhs = *this;
+  Rational tmpRhs = rhs;
+  toCommonDenominators(lhs, tmpRhs);
+  return (lhs.numerator < tmpRhs.numerator);
 }
 
 bool Rational::operator<(const Integer &rhs) const {
@@ -330,10 +325,10 @@ bool operator<(int64_t lhs, const Rational &rhs) {
 }
 
 bool Rational::operator>(const Rational &rhs) const {
-  Rational thisNum = *this;
-  Rational otherNum = rhs;
-  toCommonDenominators(thisNum, otherNum);
-  return (thisNum.numerator > otherNum.numerator);
+  Rational lhs = *this;
+  Rational tmpRhs = rhs;
+  toCommonDenominators(lhs, tmpRhs);
+  return (lhs.numerator > tmpRhs.numerator);
 }
 
 bool Rational::operator>(const Integer &rhs) const {
@@ -353,10 +348,10 @@ bool operator>(int64_t lhs, const Rational &rhs) {
 }
 
 bool Rational::operator<=(const Rational &rhs) const {
-  Rational thisNum = *this;
-  Rational otherNum = rhs;
-  toCommonDenominators(thisNum, otherNum);
-  return (thisNum.numerator <= otherNum.numerator);
+  Rational lhs = *this;
+  Rational tmpRhs = rhs;
+  toCommonDenominators(lhs, tmpRhs);
+  return (lhs.numerator <= tmpRhs.numerator);
 }
 
 bool Rational::operator<=(const Integer &rhs) const {
@@ -376,10 +371,10 @@ bool operator<=(int64_t lhs, const Rational &rhs) {
 }
 
 bool Rational::operator>=(const Rational &rhs) const {
-  Rational thisNum = *this;
-  Rational otherNum = rhs;
-  toCommonDenominators(thisNum, otherNum);
-  return (thisNum.numerator >= otherNum.numerator);
+  Rational lhs = *this;
+  Rational tmpRhs = rhs;
+  toCommonDenominators(lhs, tmpRhs);
+  return (lhs.numerator >= tmpRhs.numerator);
 }
 
 bool Rational::operator>=(const Integer &rhs) const {
@@ -399,15 +394,14 @@ bool operator>=(int64_t lhs, const Rational &rhs) {
 }
 
 istream &operator>>(istream &in, Rational &rhs) {
-  string str;
-  in >> str;
-  rhs = Rational(str);
+  string strVal;
+  in >> strVal;
+  rhs = Rational(strVal);
   return in;
 }
 
 ostream &operator<<(ostream &out, const Rational &rhs) {
-  out << rhs.toString();
-  return out;
+  return out << rhs.toString();
 }
 
 Integer Rational::getInteger() const {
@@ -426,36 +420,36 @@ string Rational::toString(size_t precision) const {
   const int64_t base = 10;
   const int64_t roundUp = 5;
 
-  string precStr(precision + 2, '0');
-  precStr.front() = '1';
+  string precisionStr(precision + 2, '0');
+  precisionStr.front() = '1';
 
-  Integer lnum = this->numerator * Integer(precStr) / this->denominator;
-  if (lnum % base >= roundUp) {
-    lnum += base;
+  Integer val = this->numerator * Integer(precisionStr) / this->denominator;
+  if (val % base >= roundUp) {
+    val += base;
   }
-  lnum /= base;
+  val /= base;
 
-  string res = lnum.toString();
-  if (res.size() <= precision) {
-    res.insert(res.begin(), precision + 1 - res.size(), '0');
+  string strVal = val.toString();
+  if (strVal.size() <= precision) {
+    strVal.insert(strVal.begin(), precision + 1 - strVal.size(), '0');
   }
-  res.insert(res.end() - (int64_t)precision, '.');
+  strVal.insert(strVal.end() - (int64_t)precision, '.');
 
-  while (!res.empty() && res.back() == '0') {
-    res.pop_back();
+  while (!strVal.empty() && strVal.back() == '0') {
+    strVal.pop_back();
   }
-  while (res[0] == '0' && res[1] != '.') {
-    res.erase(res.begin());
+  while (strVal[0] == '0' && strVal[1] != '.') {
+    strVal.erase(strVal.begin());
   }
-  if (res.back() == '.') {
-    res.pop_back();
+  if (strVal.back() == '.') {
+    strVal.pop_back();
   }
 
   if (this->sign) {
-    res.insert(res.begin(), '-');
+    strVal.insert(strVal.begin(), '-');
   }
 
-  return res;
+  return strVal;
 }
 
 Rational Rational::round(size_t precision) const {
@@ -467,18 +461,17 @@ string Rational::getTypeName() const {
 }
 
 string Rational::toString() const {
-  return this->toString(STANDARD_PRECISION);
+  return this->toString(INITIAL_PRECISION);
 }
 
-void Rational::checkZero() {
+void Rational::fixZero() {
   if (this->numerator == 0) {
     this->sign = false;
     this->denominator = 1;
-    return;
   }
 }
 
-void Rational::checkMinus() {
+void Rational::fixNegative() {
   if (this->numerator < 0) {
     this->numerator *= -1;
     this->sign = !this->sign;
@@ -493,12 +486,11 @@ void Rational::toIrreducibleRational() {
   if (this->denominator == 0) {
     throw domain_error("Div by zero");
   }
-
-  this->checkMinus();
+  this->fixNegative();
   Integer gcdVal = gcd(this->numerator, this->denominator);
   this->numerator /= gcdVal;
   this->denominator /= gcdVal;
-  this->checkZero();
+  this->fixZero();
 }
 
 void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {
