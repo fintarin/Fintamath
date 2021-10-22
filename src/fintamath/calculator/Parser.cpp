@@ -27,14 +27,15 @@ static void addFrac(vector<string> &vect, const string &str, size_t &pos);
 static void addFactorial(vector<string> &vect, const string &str, size_t &pos);
 static void addConstVariableFunction(vector<string> &vect, const string &str, size_t &pos);
 static void addBinaryFunctions(vector<string> &vect);
-static void addValue(const string &inStr, shared_ptr<Tree::Node> &root);
+static void addValue(const string &inStr, shared_ptr<Expression::Elem> &root);
 
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
                     const string &oper1, const string &oper2);
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
                     const string &oper);
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end);
-static void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t first, size_t last);
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end);
+static void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
+                        size_t last);
 
 vector<string> Parser::makeVectOfTokens(const string &inStr) {
   string str = inStr;
@@ -63,20 +64,20 @@ vector<string> Parser::makeVectOfTokens(const string &inStr) {
   return vect;
 }
 
-Tree Parser::makeTree(const vector<string> &vectIOfTokens) {
+Expression Parser::makeTree(const vector<string> &vectIOfTokens) {
   if (vectIOfTokens.empty()) {
     throw invalid_argument("Parser invalid input");
   }
 
-  Tree tree;
-  tree.root = std::make_shared<Tree::Node>();
-  makeTreeRec(vectIOfTokens, tree.root->right, 0, vectIOfTokens.size() - 1);
+  Expression Expression;
+  Expression.root = std::make_shared<Expression::Elem>();
+  makeTreeRec(vectIOfTokens, Expression.root->right, 0, vectIOfTokens.size() - 1);
 
-  if (tree.root->right == nullptr) {
+  if (Expression.root->right == nullptr) {
     throw invalid_argument("Parser invalid input");
   }
 
-  return tree;
+  return Expression;
 }
 
 inline void cutSpaces(string &str) {
@@ -280,21 +281,21 @@ inline void addBinaryFunctions(vector<string> &vect) { // NOLINT
   }
 }
 
-inline void addValue(const string &inStr, shared_ptr<Tree::Node> &root) {
+inline void addValue(const string &inStr, shared_ptr<Expression::Elem> &root) {
   if (isType::isConstant(inStr)) {
     root->info = std::make_shared<Constant>(inStr);
   } else if (isType::isVariable(inStr)) {
     root->info = std::make_shared<Variable>(inStr);
   } else {
     try {
-      root->info = std::make_shared<Fraction>(inStr);
+      root->info = std::make_shared<Rational>(inStr);
     } catch (const invalid_argument &) {
       throw invalid_argument("Parser invalid input");
     }
   }
 }
 
-inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
                     const string &oper1, const string &oper2) {
   size_t numOfBrackets = 0;
 
@@ -325,12 +326,12 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> 
   return false;
 }
 
-inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end,
+inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
                     const string &oper) {
   return descent(vectIOfTokens, root, begin, end, oper, "");
 }
 
-inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t begin, size_t end) {
+inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end) {
   if (isType::isFunction(vectIOfTokens[end])) {
     root->info = std::make_shared<Function>(vectIOfTokens[end]);
     makeTreeRec(vectIOfTokens, root->right, begin, end - 1);
@@ -339,7 +340,8 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> 
   return false;
 }
 
-inline void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Tree::Node> &root, size_t first, size_t last) {
+inline void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
+                        size_t last) {
   if (first > last) {
     throw invalid_argument("Parser invalid input");
   }
@@ -348,7 +350,7 @@ inline void makeTreeRec(const vector<string> &vectIOfTokens, shared_ptr<Tree::No
   }
 
   if (root == nullptr) {
-    root = std::make_shared<Tree::Node>();
+    root = std::make_shared<Expression::Elem>();
   }
 
   size_t begin = first;

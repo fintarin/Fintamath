@@ -74,7 +74,7 @@ bool isType::isBinaryFunction(const string &inStr) {
   return (inStr == "log");
 }
 
-Fraction Function::solve(const Fraction &frac) const {
+Rational Function::solve(const Rational &frac) const {
   if (this->func == "sqrt") {
     return functions::sqrt(frac, PRECISION);
   }
@@ -126,7 +126,7 @@ Fraction Function::solve(const Fraction &frac) const {
   throw invalid_argument("Function invalid input");
 }
 
-Fraction Function::solve(const Fraction &base, const Fraction &frac) const {
+Rational Function::solve(const Rational &base, const Rational &frac) const {
   if (this->func == "log") {
     return functions::log(base, frac, PRECISION);
   }

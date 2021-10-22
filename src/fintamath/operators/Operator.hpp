@@ -3,15 +3,15 @@
 
 #include <string>
 
-#include "calculator/NodeType.hpp"
-#include "numbers/Fraction.hpp"
+#include "calculator/ISingleEntity.hpp"
+#include "numbers/Rational.hpp"
 
-class Operator : public NodeType {
+class Operator : public ISingleEntity {
 public:
   explicit Operator(const std::string &);
 
   bool isEqualSign() const;
-  Fraction solve(const Fraction &, const Fraction &) const;
+  Rational solve(const Rational &, const Rational &) const;
 
   std::string getTypeName() const override;
   std::string toString() const override;

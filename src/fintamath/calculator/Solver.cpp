@@ -14,17 +14,17 @@
 
 using namespace std;
 
-void rootReset(const shared_ptr<Tree::Node> &root, const Fraction &inFrac);
+void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac);
 
-Fraction Solver::solve(Tree &tree) {
-  if (tree.root->right->right == nullptr && tree.root->right->left == nullptr) {
-    return Fraction(toFrac(tree.root->right).toString());
+Rational Solver::solve(Expression &Expression) {
+  if (Expression.root->right->right == nullptr && Expression.root->right->left == nullptr) {
+    return Rational(toFrac(Expression.root->right).toString());
   }
-  solveRec(tree.root->right);
-  return *dynamic_pointer_cast<Fraction>(tree.root->right->info);
+  solveRec(Expression.root->right);
+  return *dynamic_pointer_cast<Rational>(Expression.root->right->info);
 }
 
-void Solver::solveEquals(const vector<string> &vectIOfTokens, const Fraction &inFrac) {
+void Solver::solveEquals(const vector<string> &vectIOfTokens, const Rational &inFrac) {
   if (vectIOfTokens.size() < 2) {
     throw invalid_argument("Parser invalid input");
   }
@@ -63,13 +63,13 @@ void Solver::solveEquals(const vector<string> &vectIOfTokens, const Fraction &in
   }
 }
 
-Fraction Solver::toFrac(const shared_ptr<Tree::Node> &root) const {
+Rational Solver::toFrac(const shared_ptr<Expression::Elem> &root) const {
   if (root->info == nullptr) {
     throw invalid_argument("Parser invalid input");
   }
 
   if (root->info->getTypeName() == "Constant") {
-    return Fraction(root->info->toString());
+    return Rational(root->info->toString());
   }
 
   if (root->info->getTypeName() == "Variable") {
@@ -82,13 +82,13 @@ Fraction Solver::toFrac(const shared_ptr<Tree::Node> &root) const {
   }
 
   try {
-    return *dynamic_pointer_cast<Fraction>(root->info);
+    return *dynamic_pointer_cast<Rational>(root->info);
   } catch (const invalid_argument &) {
     throw invalid_argument("Solver invalid input");
   }
 }
 
-void Solver::solveRec(shared_ptr<Tree::Node> &root) {
+void Solver::solveRec(shared_ptr<Expression::Elem> &root) {
   if (root->info == nullptr) {
     throw invalid_argument("Parser invalid input");
   }
@@ -110,13 +110,13 @@ void Solver::solveRec(shared_ptr<Tree::Node> &root) {
   }
   if (root->info->getTypeName() == "Operator") {
     Operator oper(root->info->toString());
-    Fraction frac = oper.solve(toFrac(root->right), toFrac(root->left));
+    Rational frac = oper.solve(toFrac(root->right), toFrac(root->left));
     rootReset(root, frac);
     return;
   }
   if (root->info->getTypeName() == "Function") {
     Function func(root->info->toString());
-    Fraction frac;
+    Rational frac;
     if (isType::isBinaryFunction(func.toString())) {
       frac = func.solve(toFrac(root->right), toFrac(root->left)).round(PRECISION + ROUND_CONST / 2);
     } else {
@@ -127,8 +127,8 @@ void Solver::solveRec(shared_ptr<Tree::Node> &root) {
   }
 }
 
-inline void rootReset(const shared_ptr<Tree::Node> &root, const Fraction &inFrac) {
-  root->info = make_shared<Fraction>(inFrac);
+inline void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac) {
+  root->info = make_shared<Rational>(inFrac);
   root->right.reset();
   root->left.reset();
 }

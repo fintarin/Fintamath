@@ -1,35 +1,35 @@
 #ifndef NAMESPACEFUNCTIONS_HPP
 #define NAMESPACEFUNCTIONS_HPP
 
-#include "numbers/Fraction.hpp"
+#include "numbers/Rational.hpp"
 
 namespace functions {
-Fraction getE(size_t);
-Fraction getPi(size_t);
+Rational getE(size_t);
+Rational getPi(size_t);
 
-Fraction abs(const Fraction &);
+Rational abs(const Rational &);
 
-Fraction sqrt(const Fraction &, size_t);
-Fraction pow(const Fraction &, const Fraction &, size_t);
-Fraction exp(const Fraction &, size_t);
+Rational sqrt(const Rational &, size_t);
+Rational pow(const Rational &, const Rational &, size_t);
+Rational exp(const Rational &, size_t);
 
-Fraction log(const Fraction &, const Fraction &, size_t);
-Fraction ln(const Fraction &, size_t);
-Fraction lb(const Fraction &, size_t);
-Fraction lg(const Fraction &, size_t);
+Rational log(const Rational &, const Rational &, size_t);
+Rational ln(const Rational &, size_t);
+Rational lb(const Rational &, size_t);
+Rational lg(const Rational &, size_t);
 
-Fraction sin(const Fraction &, size_t);
-Fraction cos(const Fraction &, size_t);
-Fraction tan(const Fraction &, size_t);
-Fraction cot(const Fraction &, size_t);
+Rational sin(const Rational &, size_t);
+Rational cos(const Rational &, size_t);
+Rational tan(const Rational &, size_t);
+Rational cot(const Rational &, size_t);
 
-Fraction asin(const Fraction &, size_t);
-Fraction acos(const Fraction &, size_t);
-Fraction atan(const Fraction &, size_t);
-Fraction acot(const Fraction &, size_t);
+Rational asin(const Rational &, size_t);
+Rational acos(const Rational &, size_t);
+Rational atan(const Rational &, size_t);
+Rational acot(const Rational &, size_t);
 
-Fraction factorial(const Fraction &);
-Fraction doubleFactorial(const Fraction &);
+Rational factorial(const Rational &);
+Rational doubleFactorial(const Rational &);
 } // namespace functions
 
 #endif // NAMESPACEFUNCTIONS_HPP

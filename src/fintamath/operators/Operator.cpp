@@ -46,7 +46,7 @@ bool Operator::isEqualSign() const {
   return this->oper == '=';
 }
 
-Fraction Operator::solve(const Fraction &thisNumber, const Fraction &otherNumber) const {
+Rational Operator::solve(const Rational &thisNumber, const Rational &otherNumber) const {
   switch (this->oper) {
   case '+':
     return thisNumber + otherNumber;

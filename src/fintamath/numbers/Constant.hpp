@@ -3,14 +3,14 @@
 
 #include <string>
 
-#include "calculator/NodeType.hpp"
-#include "numbers/Fraction.hpp"
+#include "calculator/ISingleEntity.hpp"
+#include "numbers/Rational.hpp"
 
-class Constant : public NodeType {
+class Constant : public ISingleEntity {
 public:
   explicit Constant(const std::string &);
 
-  Fraction toFraction() const;
+  Rational toRational() const;
   std::string toString() const override;
   std::string getTypeName() const override;
 

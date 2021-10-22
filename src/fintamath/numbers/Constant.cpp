@@ -27,7 +27,7 @@ bool isConstant(const string &inStr) {
 }
 } // namespace isType
 
-Fraction Constant::toFraction() const {
+Rational Constant::toRational() const {
   if (this->constant == "e") {
     return functions::getE(PRECISION_OF_CONSTANTS);
   }
@@ -38,7 +38,7 @@ Fraction Constant::toFraction() const {
 }
 
 string Constant::toString() const {
-  return this->toFraction().toString(PRECISION + ROUND_CONST / 2);
+  return this->toRational().toString(PRECISION + ROUND_CONST / 2);
 }
 
 string Constant::getTypeName() const {

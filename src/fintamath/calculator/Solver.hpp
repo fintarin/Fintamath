@@ -5,24 +5,24 @@
 #include <string>
 #include <vector>
 
-#include "calculator/Tree.hpp"
-#include "numbers/Fraction.hpp"
+#include "calculator/Expression.hpp"
+#include "numbers/Rational.hpp"
 
 struct Param {
   std::string name;
-  Fraction value;
+  Rational value;
 };
 
 class Solver {
 public:
-  Fraction solve(Tree &);
-  void solveEquals(const std::vector<std::string> &, const Fraction &);
+  Rational solve(Expression &);
+  void solveEquals(const std::vector<std::string> &, const Rational &);
 
 private:
   std::vector<Param> params;
 
-  Fraction toFrac(const std::shared_ptr<Tree::Node> &) const;
-  void solveRec(std::shared_ptr<Tree::Node> &);
+  Rational toFrac(const std::shared_ptr<Expression::Elem> &) const;
+  void solveRec(std::shared_ptr<Expression::Elem> &);
 };
 
 #endif // SOLVER_HPP

@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "calculator/NodeType.hpp"
+#include "calculator/ISingleEntity.hpp"
 
-class Variable : public NodeType {
+class Variable : public ISingleEntity {
 public:
   explicit Variable(const std::string &);
   char getName() const;

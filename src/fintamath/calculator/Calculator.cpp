@@ -10,14 +10,14 @@ using namespace std;
 
 static void addPoint(string &str);
 
-Fraction Calculator::E = functions::getE(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);   // NOLINT
-Fraction Calculator::PI = functions::getPi(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS); // NOLINT
+Rational Calculator::E = functions::getE(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS);   // NOLINT
+Rational Calculator::PI = functions::getPi(PRECISION_OF_CONSTANTS + 1).round(PRECISION_OF_CONSTANTS); // NOLINT
 
-Fraction &Calculator::getE() {
+Rational &Calculator::getE() {
   return Calculator::E;
 }
 
-Fraction &Calculator::getPi() {
+Rational &Calculator::getPi() {
   return Calculator::PI;
 }
 
@@ -76,8 +76,8 @@ string Calculator::calculate(const string &inStr) {
   vector<string> vectIOfTokens = Parser::makeVectOfTokens(inStr);
   auto firstEqual = find(begin(vectIOfTokens), end(vectIOfTokens), "=");
 
-  Tree tree = Parser::makeTree(vector<string>(vectIOfTokens.begin(), firstEqual));
-  Fraction res = this->solver.solve(tree);
+  Expression Expression = Parser::makeTree(vector<string>(vectIOfTokens.begin(), firstEqual));
+  Rational res = this->solver.solve(Expression);
   if (firstEqual != vectIOfTokens.end()) {
     this->solver.solveEquals(vector<string>(firstEqual, vectIOfTokens.end()), res);
   }
@@ -90,5 +90,5 @@ string Calculator::calculate(const string &inStr) {
 inline void addPoint(string &str) {
   str.insert(str.begin() + 1, '.');
   str += '0';
-  str = Fraction(str).toString();
+  str = Rational(str).toString();
 }

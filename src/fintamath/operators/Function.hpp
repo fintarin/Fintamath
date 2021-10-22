@@ -3,15 +3,15 @@
 
 #include <string>
 
-#include "calculator/NodeType.hpp"
-#include "numbers/Fraction.hpp"
+#include "calculator/ISingleEntity.hpp"
+#include "numbers/Rational.hpp"
 
-class Function : public NodeType {
+class Function : public ISingleEntity {
 public:
   explicit Function(const std::string &);
 
-  Fraction solve(const Fraction &) const;
-  Fraction solve(const Fraction &, const Fraction &) const;
+  Rational solve(const Rational &) const;
+  Rational solve(const Rational &, const Rational &) const;
 
   std::string getTypeName() const override;
   std::string toString() const override;

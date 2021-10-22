@@ -1,12 +1,12 @@
-#ifndef NODETYPE_HPP
-#define NODETYPE_HPP
+#ifndef ISINGLEENTITY_HPP
+#define ISINGLEENTITY_HPP
 
 #include <string>
 
-class NodeType {
+class ISingleEntity {
 public:
   virtual std::string getTypeName() const = 0;
   virtual std::string toString() const = 0;
 };
 
-#endif // NODETYPE_HPP
+#endif // ISINGLEENTITY_HPP
