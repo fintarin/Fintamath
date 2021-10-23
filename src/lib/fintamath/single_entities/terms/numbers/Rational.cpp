@@ -68,7 +68,8 @@ Rational::Rational(Integer numerator, Integer denominator)
   this->toIrreducibleRational();
 }
 
-Rational::Rational(int64_t numerator, int64_t denominator) : Rational(Integer(numerator), Integer(denominator)) {
+Rational::Rational(int64_t numerator, int64_t denominator) : numerator(numerator), denominator(denominator) {
+  this->toIrreducibleRational();
 }
 
 Rational &Rational::operator=(const Integer &rhs) {
@@ -256,7 +257,7 @@ Rational Rational::operator+() const {
 Rational Rational::operator-() const {
   Rational val = *this;
   val.sign = !val.sign;
-  return *this;
+  return val;
 }
 
 bool Rational::operator==(const Rational &rhs) const {
