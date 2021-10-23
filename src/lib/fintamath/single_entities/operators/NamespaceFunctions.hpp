@@ -4,32 +4,32 @@
 #include "single_entities/terms/numbers/Rational.hpp"
 
 namespace functions {
-Rational getE(size_t);
-Rational getPi(size_t);
+Rational getE(size_t precision);
+Rational getPi(size_t precision);
 
-Rational abs(const Rational &);
+Rational abs(const Rational &rhs);
 
-Rational sqrt(const Rational &, size_t);
-Rational pow(const Rational &, const Rational &, size_t);
-Rational exp(const Rational &, size_t);
+Rational sqrt(const Rational &rhs, size_t precision);
+Rational pow(const Rational &lhs, const Rational &rhs, size_t precision);
+Rational exp(const Rational &rhs, size_t precision);
 
-Rational log(const Rational &, const Rational &, size_t);
-Rational ln(const Rational &, size_t);
-Rational lb(const Rational &, size_t);
-Rational lg(const Rational &, size_t);
+Rational log(const Rational &lhs, const Rational &rhs, size_t precision);
+Rational ln(const Rational &rhs, size_t precision);
+Rational lb(const Rational &rhs, size_t precision);
+Rational lg(const Rational &rhs, size_t precision);
 
-Rational sin(const Rational &, size_t);
-Rational cos(const Rational &, size_t);
-Rational tan(const Rational &, size_t);
-Rational cot(const Rational &, size_t);
+Rational sin(const Rational &rhs, size_t precision);
+Rational cos(const Rational &rhs, size_t precision);
+Rational tan(const Rational &rhs, size_t precision);
+Rational cot(const Rational &rhs, size_t precision);
 
-Rational asin(const Rational &, size_t);
-Rational acos(const Rational &, size_t);
-Rational atan(const Rational &, size_t);
-Rational acot(const Rational &, size_t);
+Rational asin(const Rational &rhs, size_t precision);
+Rational acos(const Rational &rhs, size_t precision);
+Rational atan(const Rational &rhs, size_t precision);
+Rational acot(const Rational &rhs, size_t precision);
 
-Rational factorial(const Rational &);
-Rational doubleFactorial(const Rational &);
+Rational factorial(const Rational &rhs);
+Rational doubleFactorial(const Rational &rhs);
 } // namespace functions
 
 #endif // NAMESPACEFUNCTIONS_HPP
