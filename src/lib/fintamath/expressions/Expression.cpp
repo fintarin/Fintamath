@@ -12,31 +12,32 @@
 
 using namespace std;
 
-static vector<string> makeVectOfTokens(const string &inStr);
-static Expression makeExpression(const vector<string> &vectIOfTokens);
+static vector<string> makeVectOfTokens(const string &strExpr);
+static Expression makeExpression(const vector<string> &tokensVect);
 
-static void cutSpaces(string &str);
+static void cutSpaces(string &strExpr);
 
 static bool isDigit(char ch);
 static bool isLetter(char ch);
 
-static void addMultiply(vector<string> &vect);
-static void addClosingBracket(vector<string> &vect);
-static void addOpenBracket(vector<string> &vect);
-static void addUnaryOperator(vector<string> &vect);
-static void addOperator(vector<string> &vect, char ch);
-static void addFrac(vector<string> &vect, const string &str, size_t &pos);
-static void addFactorial(vector<string> &vect, const string &str, size_t &pos);
-static void addConstOrFunction(vector<string> &vect, const string &str, size_t &pos);
-static void addBinaryFunctions(vector<string> &vect);
-static void addValue(const string &inStr, shared_ptr<Expression::Elem> &root);
+static void addMultiply(vector<string> &tokensVect);
+static void addClosingBracket(vector<string> &tokensVect);
+static void addOpenBracket(vector<string> &tokensVect);
+static void addUnaryOperator(vector<string> &tokensVect);
+static void addOperator(vector<string> &tokensVect, char token);
+static void addRational(vector<string> &tokensVect, const string &token, size_t &pos);
+static void addFactorial(vector<string> &tokensVect, const string &token, size_t &pos);
+static void addConstVariableFunction(vector<string> &tokensVect, const string &token, size_t &pos);
+static void addBinaryFunctions(vector<string> &tokensVect);
+static void addValue(shared_ptr<Expression::Elem> &elem, const string &token);
 
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
+static bool descent(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t begin, size_t end,
                     const string &oper1, const string &oper2);
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
+static bool descent(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t begin, size_t end,
                     const string &oper);
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end);
-static void makeExpressionRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
+static bool descent(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t begin, size_t end);
+
+static void makeExpressionRec(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t first,
                               size_t last);
 
 Expression::Expression(const std::string &strExpr) {
@@ -47,58 +48,59 @@ std::shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
   return root;
 }
 
-static vector<string> makeVectOfTokens(const string &inStr) {
-  string str = inStr;
-  cutSpaces(str);
-  vector<string> vect;
+static vector<string> makeVectOfTokens(const string &strExpr) {
+  string tmpStrExpr = strExpr;
+  cutSpaces(tmpStrExpr);
+  vector<string> tokensVect;
 
-  for (size_t i = 0; i < str.size(); ++i) {
-    if (str[i] == ')') {
-      addClosingBracket(vect);
-    } else if (str[i] == '(') {
-      addOpenBracket(vect);
-    } else if (types::isOperator(string(1, str[i]))) {
-      addOperator(vect, str[i]);
-    } else if (str[i] == '!') {
-      addFactorial(vect, str, i);
-    } else if (isDigit(str[i])) {
-      addFrac(vect, str, i);
+  for (size_t i = 0; i < tmpStrExpr.size(); ++i) {
+    if (tmpStrExpr[i] == ')') {
+      addClosingBracket(tokensVect);
+    } else if (tmpStrExpr[i] == '(') {
+      addOpenBracket(tokensVect);
+    } else if (types::isOperator(string(1, tmpStrExpr[i]))) {
+      addOperator(tokensVect, tmpStrExpr[i]);
+    } else if (tmpStrExpr[i] == '!') {
+      addFactorial(tokensVect, tmpStrExpr, i);
+    } else if (isDigit(tmpStrExpr[i])) {
+      addRational(tokensVect, tmpStrExpr, i);
     } else {
-      addConstOrFunction(vect, str, i);
+      addConstVariableFunction(tokensVect, tmpStrExpr, i);
     }
   }
 
-  addBinaryFunctions(vect);
-  reverse(vect.begin(), vect.end());
+  addBinaryFunctions(tokensVect);
+  reverse(tokensVect.begin(), tokensVect.end());
 
-  return vect;
+  return tokensVect;
 }
 
-static Expression makeExpression(const vector<string> &vectIOfTokens) {
-  if (vectIOfTokens.empty()) {
+static Expression makeExpression(const vector<string> &tokensVect) {
+  if (tokensVect.empty()) {
     throw invalid_argument("Parser invalid input");
   }
 
-  Expression Expression;
-  makeExpressionRec(vectIOfTokens, Expression.getRootModifiable()->right, 0, vectIOfTokens.size() - 1);
+  Expression expr;
+  expr.getRootModifiable() = std::make_shared<Expression::Elem>();
+  makeExpressionRec(tokensVect, expr.getRootModifiable()->right, 0, tokensVect.size() - 1);
 
-  if (Expression.getRootModifiable()->right == nullptr) {
+  if (expr.getRootModifiable()->right == nullptr) {
     throw invalid_argument("Parser invalid input");
   }
 
-  return Expression;
+  return expr;
 }
 
-static void cutSpaces(string &str) {
-  while (!str.empty()) {
-    if (str.front() != ' ') {
+static void cutSpaces(string &strExpr) {
+  while (!strExpr.empty()) {
+    if (strExpr.front() != ' ') {
       break;
     }
-    str.erase(str.begin());
+    strExpr.erase(strExpr.begin());
   }
-  for (size_t i = 0; i < str.size(); ++i) {
-    if (str[i] == ' ') {
-      str.erase(i, 1);
+  for (size_t i = 0; i < strExpr.size(); ++i) {
+    if (strExpr[i] == ' ') {
+      strExpr.erase(i, 1);
       --i;
     }
   }
@@ -112,53 +114,54 @@ static bool isLetter(char ch) {
   return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
 
-static void addMultiply(vector<string> &vect) {
-  if (vect.empty()) {
+static void addMultiply(vector<string> &tokensVect) {
+  if (tokensVect.empty()) {
     return;
   }
-  if (vect.back() != "," && vect.back() != "(" && !types::isOperator(vect.back()) && !types::isFunction(vect.back())) {
-    vect.insert(vect.end(), "*");
+  if (tokensVect.back() != "," && tokensVect.back() != "(" && !types::isOperator(tokensVect.back()) &&
+      !types::isFunction(tokensVect.back())) {
+    tokensVect.insert(tokensVect.end(), "*");
   }
 }
 
-static void addClosingBracket(vector<string> &vect) {
-  vect.emplace_back(")");
+static void addClosingBracket(vector<string> &tokensVect) {
+  tokensVect.emplace_back(")");
 }
 
-static void addOpenBracket(vector<string> &vect) {
-  addMultiply(vect);
-  vect.emplace_back("(");
+static void addOpenBracket(vector<string> &tokensVect) {
+  addMultiply(tokensVect);
+  tokensVect.emplace_back("(");
 }
 
-static void addUnaryOperator(vector<string> &vect) {
-  if (vect.back() == "+") {
-    vect.pop_back();
-  } else if (vect.back() == "-") {
-    vect.pop_back();
-    vect.emplace_back("-1");
-    vect.emplace_back("*");
+static void addUnaryOperator(vector<string> &tokensVect) {
+  if (tokensVect.back() == "+") {
+    tokensVect.pop_back();
+  } else if (tokensVect.back() == "-") {
+    tokensVect.pop_back();
+    tokensVect.emplace_back("-1");
+    tokensVect.emplace_back("*");
   }
 }
 
-static void addOperator(vector<string> &vect, char ch) {
-  vect.emplace_back(1, ch);
-  if (vect.size() == 1) {
-    addUnaryOperator(vect);
+static void addOperator(vector<string> &tokensVect, char token) {
+  tokensVect.emplace_back(1, token);
+  if (tokensVect.size() == 1) {
+    addUnaryOperator(tokensVect);
     return;
   }
-  if (*(vect.end() - 2) == "(") {
-    addUnaryOperator(vect);
+  if (*(tokensVect.end() - 2) == "(") {
+    addUnaryOperator(tokensVect);
   }
 }
 
-static void addFrac(vector<string> &vect, const string &str, size_t &pos) {
-  addMultiply(vect);
+static void addRational(vector<string> &tokensVect, const string &token, size_t &pos) {
+  addMultiply(tokensVect);
 
-  string fracStr;
-  while (pos < str.size()) {
-    fracStr += str[pos];
+  string strVal;
+  while (pos < token.size()) {
+    strVal += token[pos];
     ++pos;
-    if (!isDigit(str[pos]) && !(str[pos] == '.')) {
+    if (!isDigit(token[pos]) && !(token[pos] == '.')) {
       break;
     }
   }
@@ -166,75 +169,75 @@ static void addFrac(vector<string> &vect, const string &str, size_t &pos) {
     --pos;
   }
 
-  vect.push_back(fracStr);
+  tokensVect.push_back(strVal);
 }
 
-static void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
-  if (vect.empty()) {
+static void addFactorial(vector<string> &tokensVect, const string &token, size_t &pos) {
+  if (tokensVect.empty()) {
     throw invalid_argument("Parser invalid input");
   }
-  if (vect.front() == "!" || vect.front() == "!!") {
+  if (tokensVect.front() == "!" || tokensVect.front() == "!!") {
     throw invalid_argument("Parser invalid input");
   }
 
-  string factor = "!";
-  if (pos != str.size() - 1) {
-    if (str[pos + 1] == '!') {
-      factor += '!';
+  string factorialFunc = "!";
+  if (pos != token.size() - 1) {
+    if (token[pos + 1] == '!') {
+      factorialFunc += '!';
       ++pos;
     }
   }
 
-  size_t numOfBrackets = 0;
+  size_t bracketsNum = 0;
 
-  for (size_t i = vect.size() - 1; i > 0; --i) {
-    if (vect[i] == ")") {
-      ++numOfBrackets;
-    } else if (vect[i] == "(") {
-      if (numOfBrackets == 0) {
+  for (size_t i = tokensVect.size() - 1; i > 0; --i) {
+    if (tokensVect[i] == ")") {
+      ++bracketsNum;
+    } else if (tokensVect[i] == "(") {
+      if (bracketsNum == 0) {
         throw invalid_argument("Parser invalid input");
       }
-      --numOfBrackets;
+      --bracketsNum;
     }
-    if (numOfBrackets == 0) {
-      if (types::isFunction(vect[i - 1])) {
+    if (bracketsNum == 0) {
+      if (types::isFunction(tokensVect[i - 1])) {
         throw invalid_argument("Parser invalid input");
       }
-      vect.insert(vect.begin() + (int64_t)i, factor);
+      tokensVect.insert(tokensVect.begin() + (int64_t)i, factorialFunc);
       return;
     }
   }
 
-  if (vect.front() == "(") {
-    if (numOfBrackets == 0) {
+  if (tokensVect.front() == "(") {
+    if (bracketsNum == 0) {
       throw invalid_argument("Parser invalid input");
     }
-    --numOfBrackets;
+    --bracketsNum;
   }
-  if (numOfBrackets != 0) {
+  if (bracketsNum != 0) {
     throw invalid_argument("Parser invalid input");
   }
 
-  vect.insert(vect.begin(), factor);
+  tokensVect.insert(tokensVect.begin(), factorialFunc);
 }
 
-static void addConstOrFunction(vector<string> &vect, const string &str, size_t &pos) {
-  if (str[pos] == '!') {
-    addFactorial(vect, str, pos);
+static void addConstVariableFunction(vector<string> &tokensVect, const string &token, size_t &pos) {
+  if (token[pos] == '!') {
+    addFactorial(tokensVect, token, pos);
     return;
   }
-  if (str[pos] == ',') {
-    vect.emplace_back(",");
+  if (token[pos] == ',') {
+    tokensVect.emplace_back(",");
     return;
   }
 
-  addMultiply(vect);
+  addMultiply(tokensVect);
 
-  string word;
-  while (pos < str.size()) {
-    word += str[pos];
+  string literalExpr;
+  while (pos < token.size()) {
+    literalExpr += token[pos];
     ++pos;
-    if (!isLetter(str[pos])) {
+    if (!isLetter(token[pos])) {
       break;
     }
   }
@@ -242,46 +245,46 @@ static void addConstOrFunction(vector<string> &vect, const string &str, size_t &
     --pos;
   }
 
-  if (types::isConstant(word) || types::isFunction(word)) {
-    vect.push_back(word);
+  if (types::isConstant(literalExpr) || types::isFunction(literalExpr)) {
+    tokensVect.push_back(literalExpr);
   } else {
     throw invalid_argument("Parser invalid input");
   }
 }
 
-static void addBinaryFunctions(vector<string> &vect) { // NOLINT
-  vector<size_t> numOfAdded;
+static void addBinaryFunctions(vector<string> &tokensVect) { // NOLINT
+  vector<size_t> placementsVect;
 
-  for (size_t i = 0; i < vect.size(); ++i) {
-    if (types::isBinaryFunction(vect[i])) {
-      if (find(numOfAdded.begin(), numOfAdded.end(), i) == numOfAdded.end()) {
-        string func = vect[i];
-        vect.erase(vect.begin() + (int64_t)i);
-        size_t numOfBrackets = 1;
-        bool find = false;
+  for (size_t i = 0; i < tokensVect.size(); ++i) {
+    if (types::isBinaryFunction(tokensVect[i])) {
+      if (find(placementsVect.begin(), placementsVect.end(), i) == placementsVect.end()) {
+        string token = tokensVect[i];
+        tokensVect.erase(tokensVect.begin() + (int64_t)i);
+        size_t bracketsNum = 1;
+        bool isFind = false;
 
-        for (size_t j = i + 1; j < vect.size(); ++j) {
-          if (numOfBrackets == 0) {
+        for (size_t j = i + 1; j < tokensVect.size(); ++j) {
+          if (bracketsNum == 0) {
             throw invalid_argument("Parser invalid input");
           }
-          if (vect[j] == "(") {
-            ++numOfBrackets;
-          } else if (vect[j] == ")") {
-            --numOfBrackets;
-          } else if (numOfBrackets == 1 && vect[j] == ",") {
-            vect.erase(vect.begin() + (int64_t)j);
-            vect.insert(vect.begin() + (int64_t)j, {")", func, "("});
+          if (tokensVect[j] == "(") {
+            ++bracketsNum;
+          } else if (tokensVect[j] == ")") {
+            --bracketsNum;
+          } else if (bracketsNum == 1 && tokensVect[j] == ",") {
+            tokensVect.erase(tokensVect.begin() + (int64_t)j);
+            tokensVect.insert(tokensVect.begin() + (int64_t)j, {")", token, "("});
 
-            transform(numOfAdded.begin(), numOfAdded.end(), numOfAdded.begin(),
-                      [j](size_t num) { return (num > j) ? num + 1 : num; });
-            numOfAdded.push_back(j + 1);
+            transform(placementsVect.begin(), placementsVect.end(), placementsVect.begin(),
+                      [j](size_t k) { return (k > j) ? k + 1 : k; });
+            placementsVect.push_back(j + 1);
 
-            find = true;
+            isFind = true;
             break;
           }
         }
 
-        if (!find) {
+        if (!isFind) {
           throw invalid_argument("Parser invalid input");
         }
       }
@@ -289,41 +292,41 @@ static void addBinaryFunctions(vector<string> &vect) { // NOLINT
   }
 }
 
-static void addValue(const string &inStr, shared_ptr<Expression::Elem> &root) {
-  if (types::isConstant(inStr)) {
-    root->info = std::make_shared<Constant>(inStr);
+static void addValue(shared_ptr<Expression::Elem> &elem, const string &token) {
+  if (types::isConstant(token)) {
+    elem->info = std::make_shared<Constant>(token);
   } else {
     try {
-      root->info = std::make_shared<Rational>(inStr);
+      elem->info = std::make_shared<Rational>(token);
     } catch (const invalid_argument &) {
       throw invalid_argument("Parser invalid input");
     }
   }
 }
 
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
+static bool descent(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t begin, size_t end,
                     const string &oper1, const string &oper2) {
-  size_t numOfBrackets = 0;
+  size_t bracketsNum = 0;
 
   for (size_t i = begin; i <= end; ++i) {
-    if (vectIOfTokens[i] == ")") {
-      ++numOfBrackets;
-    } else if (vectIOfTokens[i] == "(") {
-      if (numOfBrackets == 0) {
+    if (tokensVect[i] == ")") {
+      ++bracketsNum;
+    } else if (tokensVect[i] == "(") {
+      if (bracketsNum == 0) {
         throw invalid_argument("Parser invalid input");
       }
-      --numOfBrackets;
+      --bracketsNum;
     }
 
-    if (numOfBrackets == 0) {
-      if (vectIOfTokens[i] == oper1 || vectIOfTokens[i] == oper2) {
+    if (bracketsNum == 0) {
+      if (tokensVect[i] == oper1 || tokensVect[i] == oper2) {
         if (types::isBinaryFunction(oper1)) {
-          root->info = std::make_shared<Function>(vectIOfTokens[i]);
+          elem->info = std::make_shared<Function>(tokensVect[i]);
         } else {
-          root->info = std::make_shared<Operator>(vectIOfTokens[i]);
+          elem->info = std::make_shared<Operator>(tokensVect[i]);
         }
-        makeExpressionRec(vectIOfTokens, root->right, i + 1, end);
-        makeExpressionRec(vectIOfTokens, root->left, begin, i - 1);
+        makeExpressionRec(tokensVect, elem->right, i + 1, end);
+        makeExpressionRec(tokensVect, elem->left, begin, i - 1);
         return true;
       }
     }
@@ -332,21 +335,21 @@ static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::
   return false;
 }
 
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
+static bool descent(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t begin, size_t end,
                     const string &oper) {
-  return descent(vectIOfTokens, root, begin, end, oper, "");
+  return descent(tokensVect, elem, begin, end, oper, "");
 }
 
-static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end) {
-  if (types::isFunction(vectIOfTokens[end])) {
-    root->info = std::make_shared<Function>(vectIOfTokens[end]);
-    makeExpressionRec(vectIOfTokens, root->right, begin, end - 1);
+static bool descent(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t begin, size_t end) {
+  if (types::isFunction(tokensVect[end])) {
+    elem->info = std::make_shared<Function>(tokensVect[end]);
+    makeExpressionRec(tokensVect, elem->right, begin, end - 1);
     return true;
   }
   return false;
 }
 
-static void makeExpressionRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
+static void makeExpressionRec(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t first,
                               size_t last) {
   if (first > last) {
     throw invalid_argument("Parser invalid input");
@@ -355,37 +358,34 @@ static void makeExpressionRec(const vector<string> &vectIOfTokens, shared_ptr<Ex
     throw invalid_argument("Parser invalid input");
   }
 
-  if (root == nullptr) {
-    root = std::make_shared<Expression::Elem>();
+  if (elem == nullptr) {
+    elem = std::make_shared<Expression::Elem>();
   }
 
-  size_t begin = first;
-  size_t end = last;
-
-  if (begin == end) {
-    addValue(vectIOfTokens[begin], root);
+  if (first == last) {
+    addValue(elem, tokensVect[first]);
     return;
   }
 
-  if (descent(vectIOfTokens, root, begin, end, "+", "-")) {
+  if (descent(tokensVect, elem, first, last, "+", "-")) {
     return;
   }
-  if (descent(vectIOfTokens, root, begin, end, "*", "/")) {
+  if (descent(tokensVect, elem, first, last, "*", "/")) {
     return;
   }
-  if (descent(vectIOfTokens, root, begin, end, "^")) {
+  if (descent(tokensVect, elem, first, last, "^")) {
     return;
   }
-  if (descent(vectIOfTokens, root, begin, end, "^")) {
+  if (descent(tokensVect, elem, first, last, "^")) {
     return;
   }
-  if (descent(vectIOfTokens, root, begin, end, "log")) {
+  if (descent(tokensVect, elem, first, last, "log")) {
     return;
   }
-  if (descent(vectIOfTokens, root, begin, end)) {
+  if (descent(tokensVect, elem, first, last)) {
     return;
   }
-  if (vectIOfTokens[begin] == ")" && vectIOfTokens[end] == "(") {
-    makeExpressionRec(vectIOfTokens, root, begin + 1, end - 1);
+  if (tokensVect[first] == ")" && tokensVect[last] == "(") {
+    makeExpressionRec(tokensVect, elem, first + 1, last - 1);
   }
 }
