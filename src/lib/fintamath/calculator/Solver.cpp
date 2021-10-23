@@ -1,11 +1,10 @@
 #include "calculator/Solver.hpp"
 
-#include <algorithm>
+#include <iosfwd>
 #include <memory>
-#include <stdexcept>
 #include <string>
-#include <vector>
 
+#include "single_entities/ISingleEntity.hpp"
 #include "single_entities/operators/Function.hpp"
 #include "single_entities/operators/Operator.hpp"
 #include "single_entities/terms/literals/Constant.hpp"

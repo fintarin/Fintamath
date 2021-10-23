@@ -1,6 +1,9 @@
-#include <calculator/Calculator.hpp>
-#include <fstream>
 #include <gtest/gtest.h>
+
+#include <fstream>
+#include <iostream>
+
+#include "calculator/Calculator.hpp"
 
 using namespace std;
 

@@ -1,10 +1,12 @@
 #include "calculator/Calculator.hpp"
 
 #include <algorithm>
+#include <cstddef>
+#include <iterator>
 #include <string>
-#include <vector>
 
-#include "single_entities/operators/NamespaceFunctions.hpp"
+#include "expressions/Expression.hpp"
+#include "single_entities/terms/numbers/Rational.hpp"
 
 using namespace std;
 

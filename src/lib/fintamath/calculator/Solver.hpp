@@ -1,12 +1,13 @@
 #ifndef SOLVER_HPP
 #define SOLVER_HPP
 
+#include "expressions/Expression.hpp"
+#include "single_entities/terms/numbers/Rational.hpp"
+
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "expressions/Expression.hpp"
-#include "single_entities/terms/numbers/Rational.hpp"
 
 struct Param {
   std::string name;

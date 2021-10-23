@@ -1,6 +1,7 @@
 #ifndef CALCULATOR_HPP
 #define CALCULATOR_HPP
 
+#include <cstdint>
 #include <string>
 
 #include "calculator/Solver.hpp"

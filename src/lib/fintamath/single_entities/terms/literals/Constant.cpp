@@ -1,5 +1,6 @@
 #include "single_entities/terms/literals/Constant.hpp"
 
+#include <iosfwd>
 #include <stdexcept>
 #include <string>
 

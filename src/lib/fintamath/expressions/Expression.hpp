@@ -2,8 +2,9 @@
 #define EXPRESSION_HPP
 
 #include <memory>
+#include <string>
 
-#include "single_entities/ISingleEntity.hpp"
+class ISingleEntity;
 
 class Expression {
 public:

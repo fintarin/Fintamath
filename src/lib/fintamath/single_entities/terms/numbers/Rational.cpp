@@ -4,6 +4,7 @@
 #include "single_entities/terms/numbers/Rational.hpp"
 
 #include <algorithm>
+#include <iterator>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -55,7 +56,7 @@ Rational::Rational(const string &strVal) {
   }
 }
 
-Rational::Rational(Integer val) : numerator(std::move(val)) {
+Rational::Rational(Integer val) : numerator(move(val)) {
   fixNegative();
 }
 
@@ -64,7 +65,7 @@ Rational::Rational(int64_t val) : numerator(val) {
 }
 
 Rational::Rational(Integer numerator, Integer denominator)
-    : numerator(std::move(numerator)), denominator(std::move(denominator)) {
+    : numerator(move(numerator)), denominator(move(denominator)) {
   toIrreducibleRational();
 }
 

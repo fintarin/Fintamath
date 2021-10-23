@@ -1,6 +1,8 @@
 #ifndef NAMESPACEFUNCTIONS_HPP
 #define NAMESPACEFUNCTIONS_HPP
 
+#include <cstddef>
+
 #include "single_entities/terms/numbers/Rational.hpp"
 
 namespace functions {

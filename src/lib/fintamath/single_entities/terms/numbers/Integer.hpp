@@ -1,6 +1,9 @@
 #ifndef INTEGER_HPP
 #define INTEGER_HPP
 
+#include <cstddef>
+#include <cstdint>
+#include <iosfwd>
 #include <string>
 #include <vector>
 

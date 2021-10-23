@@ -1,6 +1,9 @@
 #include "expressions/Expression.hpp"
 
 #include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <ext/alloc_traits.h>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -9,6 +12,7 @@
 #include "single_entities/operators/Function.hpp"
 #include "single_entities/operators/Operator.hpp"
 #include "single_entities/terms/literals/Constant.hpp"
+#include "single_entities/terms/numbers/Rational.hpp"
 
 using namespace std;
 
@@ -41,11 +45,11 @@ static bool descent(const vector<string> &tokensVect, const shared_ptr<Expressio
 static void makeExpressionRec(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t first,
                               size_t last);
 
-Expression::Expression(const std::string &strExpr) {
+Expression::Expression(const string &strExpr) {
   *this = makeExpression(makeVectOfTokens(strExpr));
 }
 
-std::shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
+shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
   return root;
 }
 
@@ -82,7 +86,7 @@ static Expression makeExpression(const vector<string> &tokensVect) {
   }
 
   Expression expr;
-  expr.getRootModifiable() = std::make_shared<Expression::Elem>();
+  expr.getRootModifiable() = make_shared<Expression::Elem>();
   makeExpressionRec(tokensVect, expr.getRootModifiable()->right, 0, tokensVect.size() - 1);
 
   if (expr.getRootModifiable()->right == nullptr) {
@@ -292,10 +296,10 @@ static void addBinaryFunctions(vector<string> &tokensVect) { // NOLINT
 
 static void addValue(const shared_ptr<Expression::Elem> &elem, const string &token) {
   if (types::isConstant(token)) {
-    elem->info = std::make_shared<Constant>(token);
+    elem->info = make_shared<Constant>(token);
   } else {
     try {
-      elem->info = std::make_shared<Rational>(token);
+      elem->info = make_shared<Rational>(token);
     } catch (const invalid_argument &) {
       throw invalid_argument("Expression invalid input");
     }
@@ -318,9 +322,9 @@ static bool descent(const vector<string> &tokensVect, const shared_ptr<Expressio
 
     if (bracketsNum == 0 && (tokensVect[i] == oper1 || tokensVect[i] == oper2)) {
       if (types::isBinaryFunction(oper1)) {
-        elem->info = std::make_shared<Function>(tokensVect[i]);
+        elem->info = make_shared<Function>(tokensVect[i]);
       } else {
-        elem->info = std::make_shared<Operator>(tokensVect[i]);
+        elem->info = make_shared<Operator>(tokensVect[i]);
       }
       makeExpressionRec(tokensVect, elem->right, i + 1, end);
       makeExpressionRec(tokensVect, elem->left, begin, i - 1);
@@ -339,7 +343,7 @@ static bool descent(const vector<string> &tokensVect, const shared_ptr<Expressio
 static bool descent(const vector<string> &tokensVect, const shared_ptr<Expression::Elem> &elem, size_t begin,
                     size_t end) {
   if (types::isFunction(tokensVect[end])) {
-    elem->info = std::make_shared<Function>(tokensVect[end]);
+    elem->info = make_shared<Function>(tokensVect[end]);
     makeExpressionRec(tokensVect, elem->right, begin, end - 1);
     return true;
   }
@@ -356,7 +360,7 @@ static void makeExpressionRec(const vector<string> &tokensVect, shared_ptr<Expre
   }
 
   if (elem == nullptr) {
-    elem = std::make_shared<Expression::Elem>();
+    elem = make_shared<Expression::Elem>();
   }
 
   if (first == last) {

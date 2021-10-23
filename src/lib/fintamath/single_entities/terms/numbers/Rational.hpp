@@ -1,6 +1,9 @@
 #ifndef RATIONAL_HPP
 #define RATIONAL_HPP
 
+#include <cstddef>
+#include <cstdint>
+#include <iosfwd>
 #include <string>
 
 #include "single_entities/ISingleEntity.hpp"

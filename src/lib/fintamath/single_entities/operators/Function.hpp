@@ -1,10 +1,11 @@
 #ifndef FUNCTION_HPP
 #define FUNCTION_HPP
 
-#include <string>
-
 #include "single_entities/ISingleEntity.hpp"
 #include "single_entities/terms/numbers/Rational.hpp"
+
+#include <cstdint>
+#include <string>
 
 class Function : public ISingleEntity {
 public:

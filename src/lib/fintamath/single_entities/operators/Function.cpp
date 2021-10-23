@@ -1,8 +1,10 @@
 #include "single_entities/operators/Function.hpp"
 
+#include <iosfwd>
 #include <regex>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include "single_entities/operators/NamespaceFunctions.hpp"
 

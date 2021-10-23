@@ -1,8 +1,10 @@
 #ifndef CONSTANT_HPP
 #define CONSTANT_HPP
 
+#include <cstdint>
 #include <string>
 
+#include "single_entities/ISingleEntity.hpp"
 #include "single_entities/terms/numbers/Rational.hpp"
 
 class Constant : public ISingleEntity {

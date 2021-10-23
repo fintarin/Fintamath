@@ -5,6 +5,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
+#include <cstdint>
+#include <ext/alloc_traits.h>
+#include <iterator>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -17,7 +21,7 @@ constexpr int64_t INT_BASE = 1000000000;
 constexpr int64_t KARATSUBA_CUTOFF = 64;
 
 static IntVector toIntVector(const string &strVal, int64_t baseSize);
-static bool canConvert(const std::string &strVal);
+static bool canConvert(const string &strVal);
 static string toString(const IntVector &intVect, int64_t baseSize);
 
 static int64_t firstZeroNum(const IntVector &rhs);
@@ -407,7 +411,7 @@ string Integer::toString() const {
   return strVal;
 }
 
-std::string Integer::getTypeName() const {
+string Integer::getTypeName() const {
   return "Integer";
 }
 
@@ -437,7 +441,7 @@ static IntVector toIntVector(const string &strVal, int64_t baseSize) {
   return intVect;
 }
 
-static bool canConvert(const std::string &strVal) {
+static bool canConvert(const string &strVal) {
   const int64_t firstDigit = 0;
   const int64_t lastDigit = 9;
   return all_of(strVal.begin(), strVal.end(), [](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });

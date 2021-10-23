@@ -1,8 +1,12 @@
 #include "single_entities/operators/NamespaceFunctions.hpp"
 
 #include <cmath>
+#include <cstddef>
+#include <cstdint>
 #include <stdexcept>
 #include <string>
+
+#include "single_entities/terms/numbers/Integer.hpp"
 
 using namespace std;
 
@@ -529,7 +533,7 @@ Rational getPi(size_t precision) {
 } // namespace functions
 
 static int64_t getNewPrecision(size_t precision) {
-  return (int64_t)precision + (int64_t)std::sqrt(precision);
+  return (int64_t)precision + (int64_t)sqrt(precision);
 }
 
 // Получение значения погрешности

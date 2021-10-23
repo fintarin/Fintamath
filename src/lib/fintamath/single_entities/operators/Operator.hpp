@@ -1,6 +1,7 @@
 #ifndef OPERATOR_HPP
 #define OPERATOR_HPP
 
+#include <cstdint>
 #include <string>
 
 #include "single_entities/ISingleEntity.hpp"
