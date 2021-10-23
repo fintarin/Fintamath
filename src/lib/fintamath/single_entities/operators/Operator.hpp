@@ -8,20 +8,19 @@
 
 class Operator : public ISingleEntity {
 public:
-  explicit Operator(const std::string &);
+  explicit Operator(const std::string &strOper);
 
-  bool isEqualSign() const;
-  Rational solve(const Rational &, const Rational &, int64_t) const;
+  Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
 
   std::string getTypeName() const override;
   std::string toString() const override;
 
 private:
-  char oper;
+  char name;
 };
 
 namespace types {
-bool isOperator(const std::string &);
+bool isOperator(const std::string &str);
 }
 
 #endif // OPERATOR_HPP

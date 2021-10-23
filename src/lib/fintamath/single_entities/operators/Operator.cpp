@@ -1,5 +1,6 @@
 #include "single_entities/operators/Operator.hpp"
 
+#include <regex>
 #include <stdexcept>
 #include <string>
 
@@ -7,58 +8,28 @@
 
 using namespace std;
 
-Operator::Operator(const string &inStr) {
-  if (!types::isOperator(inStr)) {
+Operator::Operator(const string &strOper) {
+  if (!types::isOperator(strOper)) {
     throw invalid_argument("Operator invalid input");
   }
-  this->oper = *inStr.begin();
+  this->name = *strOper.begin();
 }
 
-namespace types {
-bool isOperator(const string &inStr) {
-  if (inStr.size() != 1) {
-    return false;
-  }
-  if (*inStr.begin() == '+') {
-    return true;
-  }
-  if (*inStr.begin() == '-') {
-    return true;
-  }
-  if (*inStr.begin() == '*') {
-    return true;
-  }
-  if (*inStr.begin() == '/') {
-    return true;
-  }
-  if (*inStr.begin() == '^') {
-    return true;
-  }
-  if (*inStr.begin() == '=') {
-    return true;
-  }
-  return false;
-}
-} // namespace types
-
-bool Operator::isEqualSign() const {
-  return this->oper == '=';
-}
-
-Rational Operator::solve(const Rational &thisNumber, const Rational &otherNumber, int64_t precision) const {
-  switch (this->oper) {
+Rational Operator::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
+  switch (this->name) {
   case '+':
-    return thisNumber + otherNumber;
+    return lhs + rhs;
   case '-':
-    return thisNumber - otherNumber;
+    return lhs - rhs;
   case '*':
-    return thisNumber * otherNumber;
+    return lhs * rhs;
   case '/':
-    return thisNumber / otherNumber;
+    return lhs / rhs;
   case '^':
-    return functions::pow(thisNumber, otherNumber, precision);
+    return functions::pow(lhs, rhs, precision);
+  default:
+    throw invalid_argument("Operator invalid input");
   }
-  throw invalid_argument("Operator invalid input");
 }
 
 string Operator::getTypeName() const {
@@ -66,5 +37,12 @@ string Operator::getTypeName() const {
 }
 
 string Operator::toString() const {
-  return {this->oper};
+  return string(1, this->name);
 }
+
+namespace types {
+bool isOperator(const string &str) {
+  regex funcRegex(R"(\+|\-|\*|\/|\^)");
+  return regex_search(str, funcRegex);
+}
+} // namespace types
