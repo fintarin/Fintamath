@@ -32,7 +32,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_TESTS:BOOL=TRUE
+        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_TESTS:BOOL=TRUE -D BUILD_APP:BOOL=TRUE
         env:
           CC: ${{matrix.config.cc}}
           CXX: ${{matrix.config.cxx}}

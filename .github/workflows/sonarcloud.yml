@@ -49,7 +49,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_TESTS:BOOL=FALSE
+        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_APP=FALSE -D BUILD_TESTS:BOOL=FALSE
         env:
           CC: gcc
           CXX: g++
