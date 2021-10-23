@@ -9,7 +9,6 @@
 #include "single_entities/operators/Function.hpp"
 #include "single_entities/operators/Operator.hpp"
 #include "single_entities/terms/literals/Constant.hpp"
-#include "single_entities/terms/literals/Variable.hpp"
 
 using namespace std;
 
@@ -28,7 +27,7 @@ static void addUnaryOperator(vector<string> &vect);
 static void addOperator(vector<string> &vect, char ch);
 static void addFrac(vector<string> &vect, const string &str, size_t &pos);
 static void addFactorial(vector<string> &vect, const string &str, size_t &pos);
-static void addConstVariableFunction(vector<string> &vect, const string &str, size_t &pos);
+static void addConstOrFunction(vector<string> &vect, const string &str, size_t &pos);
 static void addBinaryFunctions(vector<string> &vect);
 static void addValue(const string &inStr, shared_ptr<Expression::Elem> &root);
 
@@ -65,7 +64,7 @@ inline vector<string> makeVectOfTokens(const string &inStr) {
     } else if (isDigit(str[i])) {
       addFrac(vect, str, i);
     } else {
-      addConstVariableFunction(vect, str, i);
+      addConstOrFunction(vect, str, i);
     }
   }
 
@@ -220,7 +219,7 @@ inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
   vect.insert(vect.begin(), factor);
 }
 
-inline void addConstVariableFunction(vector<string> &vect, const string &str, size_t &pos) {
+inline void addConstOrFunction(vector<string> &vect, const string &str, size_t &pos) {
   if (str[pos] == '!') {
     addFactorial(vect, str, pos);
     return;
@@ -244,7 +243,7 @@ inline void addConstVariableFunction(vector<string> &vect, const string &str, si
     --pos;
   }
 
-  if (isType::isConstant(word) || isType::isVariable(word) || isType::isFunction(word)) {
+  if (isType::isConstant(word) || isType::isFunction(word)) {
     vect.push_back(word);
   } else {
     throw invalid_argument("Parser invalid input");
@@ -294,8 +293,6 @@ inline void addBinaryFunctions(vector<string> &vect) { // NOLINT
 inline void addValue(const string &inStr, shared_ptr<Expression::Elem> &root) {
   if (isType::isConstant(inStr)) {
     root->info = std::make_shared<Constant>(inStr);
-  } else if (isType::isVariable(inStr)) {
-    root->info = std::make_shared<Variable>(inStr);
   } else {
     try {
       root->info = std::make_shared<Rational>(inStr);

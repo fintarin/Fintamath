@@ -9,7 +9,6 @@
 #include "single_entities/operators/Function.hpp"
 #include "single_entities/operators/Operator.hpp"
 #include "single_entities/terms/literals/Constant.hpp"
-#include "single_entities/terms/literals/Variable.hpp"
 
 using namespace std;
 
@@ -39,15 +38,6 @@ Rational Solver::toFrac(const shared_ptr<Expression::Elem> &root) const {
 
   if (root->info->getTypeName() == "Constant") {
     return Constant(root->info->toString()).toRational(getNewPrecision());
-  }
-
-  if (root->info->getTypeName() == "Variable") {
-    string str = root->info->toString();
-    auto iter = find_if(this->params.begin(), this->params.end(), [str](const Param &p) { return p.name == str; });
-    if (iter == this->params.end()) {
-      throw invalid_argument("Solver invalid input");
-    }
-    return iter->value;
   }
 
   try {
