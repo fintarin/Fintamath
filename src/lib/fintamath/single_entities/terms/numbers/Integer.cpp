@@ -406,6 +406,10 @@ string Integer::toString() const {
   return strVal;
 }
 
+std::string Integer::getTypeName() const {
+  return "Integer";
+}
+
 // Обертка над квадратным корнем в столбик, изменяет базу системы, в соответстие с алгоритмом
 Integer sqrt(const Integer &rhs) {
   if (rhs < 0) {

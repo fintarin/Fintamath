@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 
-class Integer {
+#include "single_entities/ISingleEntity.hpp"
+
+class Integer : public ISingleEntity {
 public:
   Integer() = default;
   explicit Integer(const std::string &strVal);
@@ -80,7 +82,8 @@ public:
   friend std::ostream &operator<<(std::ostream &out, const Integer &rhs);
 
   size_t size() const;
-  std::string toString() const;
+  std::string toString() const override;
+  std::string getTypeName() const override;
 
   friend Integer sqrt(const Integer &);
 
