@@ -8,13 +8,13 @@
 using namespace std;
 
 Function::Function(const string &inStr) {
-  if (!isType::isFunction(inStr)) {
+  if (!types::isFunction(inStr)) {
     throw invalid_argument("Function invalid input");
   }
   this->func = inStr;
 }
 
-bool isType::isFunction(const string &inStr) {
+bool types::isFunction(const string &inStr) {
   if (inStr == "sqrt") {
     return true;
   }
@@ -69,7 +69,7 @@ bool isType::isFunction(const string &inStr) {
   return false;
 }
 
-bool isType::isBinaryFunction(const string &inStr) {
+bool types::isBinaryFunction(const string &inStr) {
   return (inStr == "log");
 }
 

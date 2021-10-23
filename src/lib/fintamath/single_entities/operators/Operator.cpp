@@ -8,13 +8,13 @@
 using namespace std;
 
 Operator::Operator(const string &inStr) {
-  if (!isType::isOperator(inStr)) {
+  if (!types::isOperator(inStr)) {
     throw invalid_argument("Operator invalid input");
   }
   this->oper = *inStr.begin();
 }
 
-namespace isType {
+namespace types {
 bool isOperator(const string &inStr) {
   if (inStr.size() != 1) {
     return false;
@@ -39,7 +39,7 @@ bool isOperator(const string &inStr) {
   }
   return false;
 }
-} // namespace isType
+} // namespace types
 
 bool Operator::isEqualSign() const {
   return this->oper == '=';

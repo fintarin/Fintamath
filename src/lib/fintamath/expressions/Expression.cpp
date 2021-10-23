@@ -57,7 +57,7 @@ static vector<string> makeVectOfTokens(const string &inStr) {
       addClosingBracket(vect);
     } else if (str[i] == '(') {
       addOpenBracket(vect);
-    } else if (isType::isOperator(string(1, str[i]))) {
+    } else if (types::isOperator(string(1, str[i]))) {
       addOperator(vect, str[i]);
     } else if (str[i] == '!') {
       addFactorial(vect, str, i);
@@ -116,8 +116,7 @@ static void addMultiply(vector<string> &vect) {
   if (vect.empty()) {
     return;
   }
-  if (vect.back() != "," && vect.back() != "(" && !isType::isOperator(vect.back()) &&
-      !isType::isFunction(vect.back())) {
+  if (vect.back() != "," && vect.back() != "(" && !types::isOperator(vect.back()) && !types::isFunction(vect.back())) {
     vect.insert(vect.end(), "*");
   }
 }
@@ -198,7 +197,7 @@ static void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
       --numOfBrackets;
     }
     if (numOfBrackets == 0) {
-      if (isType::isFunction(vect[i - 1])) {
+      if (types::isFunction(vect[i - 1])) {
         throw invalid_argument("Parser invalid input");
       }
       vect.insert(vect.begin() + (int64_t)i, factor);
@@ -243,7 +242,7 @@ static void addConstOrFunction(vector<string> &vect, const string &str, size_t &
     --pos;
   }
 
-  if (isType::isConstant(word) || isType::isFunction(word)) {
+  if (types::isConstant(word) || types::isFunction(word)) {
     vect.push_back(word);
   } else {
     throw invalid_argument("Parser invalid input");
@@ -254,7 +253,7 @@ static void addBinaryFunctions(vector<string> &vect) { // NOLINT
   vector<size_t> numOfAdded;
 
   for (size_t i = 0; i < vect.size(); ++i) {
-    if (isType::isBinaryFunction(vect[i])) {
+    if (types::isBinaryFunction(vect[i])) {
       if (find(numOfAdded.begin(), numOfAdded.end(), i) == numOfAdded.end()) {
         string func = vect[i];
         vect.erase(vect.begin() + (int64_t)i);
@@ -291,7 +290,7 @@ static void addBinaryFunctions(vector<string> &vect) { // NOLINT
 }
 
 static void addValue(const string &inStr, shared_ptr<Expression::Elem> &root) {
-  if (isType::isConstant(inStr)) {
+  if (types::isConstant(inStr)) {
     root->info = std::make_shared<Constant>(inStr);
   } else {
     try {
@@ -318,7 +317,7 @@ static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::
 
     if (numOfBrackets == 0) {
       if (vectIOfTokens[i] == oper1 || vectIOfTokens[i] == oper2) {
-        if (isType::isBinaryFunction(oper1)) {
+        if (types::isBinaryFunction(oper1)) {
           root->info = std::make_shared<Function>(vectIOfTokens[i]);
         } else {
           root->info = std::make_shared<Operator>(vectIOfTokens[i]);
@@ -339,7 +338,7 @@ static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::
 }
 
 static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end) {
-  if (isType::isFunction(vectIOfTokens[end])) {
+  if (types::isFunction(vectIOfTokens[end])) {
     root->info = std::make_shared<Function>(vectIOfTokens[end]);
     makeExpressionRec(vectIOfTokens, root->right, begin, end - 1);
     return true;

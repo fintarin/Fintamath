@@ -17,7 +17,7 @@ private:
   std::string constant;
 };
 
-namespace isType {
+namespace types {
 bool isConstant(const std::string &);
 }
 

@@ -8,13 +8,13 @@
 using namespace std;
 
 Constant::Constant(const string &inStr) {
-  if (!isType::isConstant(inStr)) {
+  if (!types::isConstant(inStr)) {
     throw invalid_argument("Constant invalid input");
   }
   this->constant = inStr;
 }
 
-namespace isType {
+namespace types {
 bool isConstant(const string &inStr) {
   if (inStr == "e") {
     return true;
@@ -24,7 +24,7 @@ bool isConstant(const string &inStr) {
   }
   return false;
 }
-} // namespace isType
+} // namespace types
 
 Rational Constant::toRational(int64_t precision) const {
   if (this->constant == "e") {

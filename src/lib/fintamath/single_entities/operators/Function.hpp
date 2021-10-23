@@ -20,9 +20,9 @@ private:
   std::string func;
 };
 
-namespace isType {
+namespace types {
 bool isFunction(const std::string &);
 bool isBinaryFunction(const std::string &);
-} // namespace isType
+} // namespace types
 
 #endif // FUNCTION_HPP

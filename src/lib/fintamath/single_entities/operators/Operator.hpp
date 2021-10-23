@@ -20,7 +20,7 @@ private:
   char oper;
 };
 
-namespace isType {
+namespace types {
 bool isOperator(const std::string &);
 }
 

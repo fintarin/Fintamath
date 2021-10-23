@@ -77,7 +77,7 @@ void Solver::solveRec(shared_ptr<Expression::Elem> &root) {
   if (root->info->getTypeName() == "Function") {
     Function func(root->info->toString());
     Rational frac;
-    if (isType::isBinaryFunction(func.toString())) {
+    if (types::isBinaryFunction(func.toString())) {
       frac = Rational(
           func.solve(toFrac(root->right), toFrac(root->left), getNewPrecision()).toString(getNewRoundPrecision()));
     } else {
