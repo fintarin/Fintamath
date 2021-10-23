@@ -3,10 +3,3 @@ tab_size: 2
 separate_fn_name_with_space: false
 dangle_parens: false
 max_pargs_hwrap: 3
-
-additional_commands:
-  target_sources_glob:
-    kwargs:
-      INTERFACE: "*"
-      PRIVATE: "*"
-      PUBLIC: "*"
