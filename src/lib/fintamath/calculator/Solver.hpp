@@ -15,10 +15,10 @@ struct Param {
 
 class Solver {
 public:
-  Rational solve(Expression &);
+  Rational solve(Expression &expr);
 
   int64_t getPrecision() const;
-  void setPrecision(int64_t precision);
+  void setPrecision(int64_t precision_);
 
 private:
   const int64_t initialPrecision = 36;
@@ -26,8 +26,8 @@ private:
   std::vector<Param> params;
   int64_t precision = initialPrecision;
 
-  Rational toFrac(const std::shared_ptr<Expression::Elem> &) const;
-  void solveRec(std::shared_ptr<Expression::Elem> &);
+  Rational toRational(const std::shared_ptr<Expression::Elem> &elem) const;
+  void solveRec(std::shared_ptr<Expression::Elem> &elem);
 
   int64_t getNewPrecision() const;
   int64_t getNewRoundPrecision() const;

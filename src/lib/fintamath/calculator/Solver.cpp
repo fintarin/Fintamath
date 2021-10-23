@@ -12,78 +12,81 @@
 
 using namespace std;
 
-static void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac);
+static void elemReset(const shared_ptr<Expression::Elem> &elem, const Rational &val);
 
-Rational Solver::solve(Expression &Expression) {
-  if (Expression.getRootModifiable()->right->right == nullptr &&
-      Expression.getRootModifiable()->right->left == nullptr) {
-    return Rational(toFrac(Expression.getRootModifiable()->right).toString());
+Rational Solver::solve(Expression &expr) {
+  if (expr.getRootModifiable()->right->right == nullptr && expr.getRootModifiable()->right->left == nullptr) {
+    return Rational(toRational(expr.getRootModifiable()->right).toString());
   }
-  solveRec(Expression.getRootModifiable()->right);
-  return *dynamic_pointer_cast<Rational>(Expression.getRootModifiable()->right->info);
+  solveRec(expr.getRootModifiable()->right);
+  return *dynamic_pointer_cast<Rational>(expr.getRootModifiable()->right->info);
 }
 
 int64_t Solver::getPrecision() const {
   return precision;
 }
 
-void Solver::setPrecision(int64_t precision) {
-  this->precision = precision;
+void Solver::setPrecision(int64_t precision_) {
+  this->precision = precision_;
 }
 
-Rational Solver::toFrac(const shared_ptr<Expression::Elem> &root) const {
-  if (root->info == nullptr) {
+Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {
+  if (elem->info == nullptr) {
     throw invalid_argument("Parser invalid input");
   }
 
-  if (root->info->getTypeName() == "Constant") {
-    return Constant(root->info->toString()).toRational(getNewPrecision());
+  if (elem->info->getTypeName() == "Constant") {
+    return Constant(elem->info->toString()).toRational(getNewPrecision());
   }
 
   try {
-    return *dynamic_pointer_cast<Rational>(root->info);
+    return *dynamic_pointer_cast<Rational>(elem->info);
   } catch (const invalid_argument &) {
     throw invalid_argument("Solver invalid input");
   }
 }
 
-void Solver::solveRec(shared_ptr<Expression::Elem> &root) {
-  if (root->info == nullptr) {
+void Solver::solveRec(shared_ptr<Expression::Elem> &elem) {
+  if (elem->info == nullptr) {
     throw invalid_argument("Parser invalid input");
   }
-  if (root->right != nullptr) {
-    if (root->right->info == nullptr) {
+
+  if (elem->right != nullptr) {
+    if (elem->right->info == nullptr) {
       throw invalid_argument("Parser invalid input");
     }
-    if (root->right->info->getTypeName() == "Operator" || root->right->info->getTypeName() == "Function") {
-      solveRec(root->right);
+    if (elem->right->info->getTypeName() == "Operator" || elem->right->info->getTypeName() == "Function") {
+      solveRec(elem->right);
     }
   }
-  if (root->left != nullptr) {
-    if (root->left->info == nullptr) {
+
+  if (elem->left != nullptr) {
+    if (elem->left->info == nullptr) {
       throw invalid_argument("Parser invalid input");
     }
-    if (root->left->info->getTypeName() == "Operator" || root->left->info->getTypeName() == "Function") {
-      solveRec(root->left);
+    if (elem->left->info->getTypeName() == "Operator" || elem->left->info->getTypeName() == "Function") {
+      solveRec(elem->left);
     }
   }
-  if (root->info->getTypeName() == "Operator") {
-    Operator oper(root->info->toString());
-    Rational frac(
-        oper.solve(toFrac(root->right), toFrac(root->left), getNewPrecision()).toString(getNewRoundPrecision()));
-    rootReset(root, frac);
+
+  if (elem->info->getTypeName() == "Operator") {
+    Operator oper(elem->info->toString());
+    Rational val(oper.solve(toRational(elem->right), toRational(elem->left), getNewPrecision())
+                     .toString(getNewRoundPrecision()));
+    elemReset(elem, val);
     return;
   }
-  if (root->info->getTypeName() == "Function") {
-    Function func(root->info->toString());
-    Rational frac;
+
+  if (elem->info->getTypeName() == "Function") {
+    Function func(elem->info->toString());
+    Rational val;
     if (types::isBinaryFunction(func.toString())) {
-      frac = Rational(
-          func.solve(toFrac(root->right), toFrac(root->left), getNewPrecision()).toString(getNewRoundPrecision()));
+      val = Rational(func.solve(toRational(elem->right), toRational(elem->left), getNewPrecision())
+                         .toString(getNewRoundPrecision()));
     } else {
-      frac = Rational(func.solve(toFrac(root->right), getNewPrecision()).toString(getNewRoundPrecision()));
+      val = Rational(func.solve(toRational(elem->right), getNewPrecision()).toString(getNewRoundPrecision()));
     }
-    rootReset(root, frac);
+    elemReset(elem, val);
     return;
   }
 }
@@ -97,8 +100,8 @@ int64_t Solver::getNewRoundPrecision() const {
   return getNewPrecision() - 1;
 }
 
-static void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac) {
-  root->info = make_shared<Rational>(inFrac);
-  root->right.reset();
-  root->left.reset();
+static void elemReset(const shared_ptr<Expression::Elem> &elem, const Rational &val) {
+  elem->info = make_shared<Rational>(val);
+  elem->right.reset();
+  elem->left.reset();
 }
