@@ -54,7 +54,7 @@ static vector<string> makeVectOfTokens(const string &strExpr) {
   cutSpaces(tmpStrExpr);
   vector<string> tokensVect;
 
-  for (size_t i = 0; i < tmpStrExpr.size(); ++i) {
+  for (size_t i = 0; i < tmpStrExpr.size(); i++) {
     if (tmpStrExpr[i] == ')') {
       addClosingBracket(tokensVect);
     } else if (tmpStrExpr[i] == '(') {
@@ -99,10 +99,10 @@ static void cutSpaces(string &strExpr) {
     }
     strExpr.erase(strExpr.begin());
   }
-  for (size_t i = 0; i < strExpr.size(); ++i) {
+  for (size_t i = 0; i < strExpr.size(); i++) {
     if (strExpr[i] == ' ') {
       strExpr.erase(i, 1);
-      --i;
+      i--;
     }
   }
 }
@@ -161,13 +161,13 @@ static void addRational(vector<string> &tokensVect, const string &token, size_t 
   string strVal;
   while (pos < token.size()) {
     strVal += token[pos];
-    ++pos;
+    pos++;
     if (!isDigit(token[pos]) && !(token[pos] == '.')) {
       break;
     }
   }
   if (pos != 0) {
-    --pos;
+    pos--;
   }
 
   tokensVect.push_back(strVal);
@@ -184,19 +184,19 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
   string factorialFunc = "!";
   if (pos != token.size() - 1 && token[pos + 1] == '!') {
     factorialFunc += '!';
-    ++pos;
+    pos++;
   }
 
   size_t bracketsNum = 0;
 
-  for (size_t i = tokensVect.size() - 1; i > 0; --i) {
+  for (size_t i = tokensVect.size() - 1; i > 0; i--) {
     if (tokensVect[i] == ")") {
-      ++bracketsNum;
+      bracketsNum++;
     } else if (tokensVect[i] == "(") {
       if (bracketsNum == 0) {
         throw invalid_argument("Expression invalid input");
       }
-      --bracketsNum;
+      bracketsNum--;
     }
     if (bracketsNum == 0) {
       if (types::isFunction(tokensVect[i - 1])) {
@@ -211,7 +211,7 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
     if (bracketsNum == 0) {
       throw invalid_argument("Expression invalid input");
     }
-    --bracketsNum;
+    bracketsNum--;
   }
   if (bracketsNum != 0) {
     throw invalid_argument("Expression invalid input");
@@ -235,13 +235,13 @@ static void addConstVariableFunction(vector<string> &tokensVect, const string &t
   string literalExpr;
   while (pos < token.size()) {
     literalExpr += token[pos];
-    ++pos;
+    pos++;
     if (!isLetter(token[pos])) {
       break;
     }
   }
   if (pos != 0) {
-    --pos;
+    pos--;
   }
 
   if (types::isConstant(literalExpr) || types::isFunction(literalExpr)) {
@@ -254,7 +254,7 @@ static void addConstVariableFunction(vector<string> &tokensVect, const string &t
 static void addBinaryFunctions(vector<string> &tokensVect) { // NOLINT
   vector<size_t> placementsVect;
 
-  for (size_t i = 0; i < tokensVect.size(); ++i) {
+  for (size_t i = 0; i < tokensVect.size(); i++) {
     if (types::isBinaryFunction(tokensVect[i]) &&
         find(placementsVect.begin(), placementsVect.end(), i) == placementsVect.end()) {
       string token = tokensVect[i];
@@ -262,14 +262,14 @@ static void addBinaryFunctions(vector<string> &tokensVect) { // NOLINT
       size_t bracketsNum = 1;
       bool isFind = false;
 
-      for (size_t j = i + 1; j < tokensVect.size(); ++j) {
+      for (size_t j = i + 1; j < tokensVect.size(); j++) {
         if (bracketsNum == 0) {
           throw invalid_argument("Expression invalid input");
         }
         if (tokensVect[j] == "(") {
-          ++bracketsNum;
+          bracketsNum++;
         } else if (tokensVect[j] == ")") {
-          --bracketsNum;
+          bracketsNum--;
         } else if (bracketsNum == 1 && tokensVect[j] == ",") {
           tokensVect.erase(tokensVect.begin() + (int64_t)j);
           tokensVect.insert(tokensVect.begin() + (int64_t)j, {")", token, "("});
@@ -306,14 +306,14 @@ static bool descent(const vector<string> &tokensVect, const shared_ptr<Expressio
                     size_t end, const string &oper1, const string &oper2) {
   size_t bracketsNum = 0;
 
-  for (size_t i = begin; i <= end; ++i) {
+  for (size_t i = begin; i <= end; i++) {
     if (tokensVect[i] == ")") {
-      ++bracketsNum;
+      bracketsNum++;
     } else if (tokensVect[i] == "(") {
       if (bracketsNum == 0) {
         throw invalid_argument("Expression invalid input");
       }
-      --bracketsNum;
+      bracketsNum--;
     }
 
     if (bracketsNum == 0 && (tokensVect[i] == oper1 || tokensVect[i] == oper2)) {

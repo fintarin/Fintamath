@@ -64,7 +64,7 @@ Integer::Integer(const string &strVal) {
   int64_t firstDigitNum = 0;
   if (strVal.front() == '-') {
     this->sign = true;
-    ++firstDigitNum;
+    firstDigitNum++;
   }
 
   if (!canConvert(strVal.substr(firstDigitNum))) {
@@ -445,7 +445,7 @@ static bool canConvert(const std::string &strVal) {
 
 static string toString(const IntVector &intVect, int64_t baseSize) {
   string strVal;
-  for (size_t i = intVect.size() - 1; i != SIZE_MAX; --i) {
+  for (size_t i = intVect.size() - 1; i != SIZE_MAX; i--) {
     string tmp = to_string(intVect[i]);
     tmp.insert(0, baseSize - tmp.size(), '0');
     strVal.insert(strVal.size(), tmp);
@@ -457,7 +457,7 @@ static string toString(const IntVector &intVect, int64_t baseSize) {
 static int64_t firstZeroNum(const IntVector &rhs) {
   int64_t num = 0;
   while (num < rhs.size() && rhs[num] == 0) {
-    ++num;
+    num++;
   }
   return num;
 }
@@ -465,7 +465,7 @@ static int64_t firstZeroNum(const IntVector &rhs) {
 // Приведение к значимым цифрам
 static void toSignificantDigits(IntVector &rhs) {
   size_t i = rhs.size() - 1;
-  for (; i > 0; --i) {
+  for (; i > 0; i--) {
     if (rhs[i] != 0) {
       break;
     }
@@ -484,7 +484,7 @@ static void toBasePositive(IntVector &rhs, size_t pos, int64_t base) {
 // Если число в данном разряде < 0, недостаток вычитается из следующего разряда
 static void toBaseNegative(IntVector &rhs, size_t pos, int64_t base) {
   if (rhs[pos] < 0) {
-    --rhs[pos + 1];
+    rhs[pos + 1]--;
     rhs[pos] += base;
   }
 }
@@ -495,7 +495,7 @@ static bool equal(const IntVector &lhs, const IntVector &rhs) {
     return false;
   }
 
-  for (size_t i = lhs.size() - 1; i != SIZE_MAX; --i) {
+  for (size_t i = lhs.size() - 1; i != SIZE_MAX; i--) {
     if (lhs[i] != rhs[i]) {
       return false;
     }
@@ -512,7 +512,7 @@ static bool less(const IntVector &lhs, const IntVector &rhs) {
     return true;
   }
 
-  for (size_t i = lhs.size() - 1; i != SIZE_MAX; --i) {
+  for (size_t i = lhs.size() - 1; i != SIZE_MAX; i--) {
     if (lhs[i] > rhs[i]) {
       return false;
     }
@@ -532,7 +532,7 @@ static bool greater(const IntVector &lhs, const IntVector &rhs) {
     return false;
   }
 
-  for (size_t i = lhs.size() - 1; i != SIZE_MAX; --i) {
+  for (size_t i = lhs.size() - 1; i != SIZE_MAX; i--) {
     if (lhs[i] > rhs[i]) {
       return true;
     }
@@ -552,7 +552,7 @@ static bool lessEqual(const IntVector &lhs, const IntVector &rhs) {
     return true;
   }
 
-  for (size_t i = lhs.size() - 1; i != SIZE_MAX; --i) {
+  for (size_t i = lhs.size() - 1; i != SIZE_MAX; i--) {
     if (lhs[i] > rhs[i]) {
       return false;
     }
@@ -572,7 +572,7 @@ static bool greaterEqual(const IntVector &lhs, const IntVector &rhs) {
     return false;
   }
 
-  for (size_t i = lhs.size() - 1; i != SIZE_MAX; --i) {
+  for (size_t i = lhs.size() - 1; i != SIZE_MAX; i--) {
     if (lhs[i] > rhs[i]) {
       return true;
     }
@@ -592,11 +592,11 @@ static IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   }
   val.push_back(0);
 
-  for (size_t i = 0; i < rhs.size(); ++i) {
+  for (size_t i = 0; i < rhs.size(); i++) {
     val[i] += rhs[i];
     toBasePositive(val, i, base);
   }
-  for (size_t i = rhs.size(); i < val.size(); ++i) {
+  for (size_t i = rhs.size(); i < val.size(); i++) {
     toBasePositive(val, i, base);
   }
 
@@ -614,11 +614,11 @@ static IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &r
 static IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector val = lhs;
 
-  for (size_t i = 0; i < rhs.size(); ++i) {
+  for (size_t i = 0; i < rhs.size(); i++) {
     val[i] -= rhs[i];
     toBaseNegative(val, i, base);
   }
-  for (size_t i = rhs.size(); i < val.size(); ++i) {
+  for (size_t i = rhs.size(); i < val.size(); i++) {
     toBaseNegative(val, i, base);
   }
 
@@ -631,7 +631,7 @@ static IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base) 
   IntVector val;
   val.resize(lhs.size() + 1, 0);
 
-  for (size_t i = 0; i < lhs.size(); ++i) {
+  for (size_t i = 0; i < lhs.size(); i++) {
     val[i] += lhs[i] * rhs;
     toBasePositive(val, i, base);
   }
@@ -649,8 +649,8 @@ static IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, 
   IntVector res;
   res.resize(lhs.size() + rhs.size(), 0);
 
-  for (size_t i = 0; i < lhs.size(); ++i) {
-    for (size_t j = 0; j < rhs.size(); ++j) {
+  for (size_t i = 0; i < lhs.size(); i++) {
+    for (size_t j = 0; j < rhs.size(); j++) {
       res[i + j] += lhs[i] * rhs[j];
       toBasePositive(res, i + j, base);
     }
@@ -727,7 +727,7 @@ static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t ba
 
   size_t maxSize = max(tmpLhs.size(), tmpRhs.size());
   if (maxSize % 2 == 1) {
-    ++maxSize;
+    maxSize++;
   }
   tmpLhs.resize(maxSize, 0);
   tmpRhs.resize(maxSize, 0);
@@ -743,7 +743,7 @@ static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t ba
 static IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
   IntVector val = lhs;
 
-  for (size_t i = val.size() - 1; i > 0; --i) {
+  for (size_t i = val.size() - 1; i > 0; i--) {
     val[i - 1] += (val[i] % rhs) * base;
     val[i] /= rhs;
   }
@@ -757,7 +757,7 @@ static IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
 static IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVal, int64_t base) {
   IntVector val = lhs;
 
-  for (size_t i = val.size() - 1; i > 0; --i) {
+  for (size_t i = val.size() - 1; i > 0; i--) {
     val[i - 1] += (val[i] % rhs) * base;
     val[i] /= rhs;
   }
@@ -871,7 +871,7 @@ static IntVector sqrt(const IntVector &rhs) {
 
   getSqrtDiff(rhs, base, val, diff);
 
-  for (size_t i = rhs.size() - 2; i != SIZE_MAX; --i) {
+  for (size_t i = rhs.size() - 2; i != SIZE_MAX; i--) {
     IntVector modVal;
     modVal.push_back(rhs[i] % base);
     modVal.push_back(rhs[i] / base);

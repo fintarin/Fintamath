@@ -78,7 +78,7 @@ Rational ln(const Rational &rhs, size_t precision) {
     rhsStep = powRhs / (step * 2 + 1);
     rhsStep = rhsStep.round(getNewPrecision(precision));
     res += rhsStep;
-    ++step;
+    step++;
   } while (abs(rhsStep) > precisionVal);
 
   return (res * multiplier * 2).round(precision);
@@ -141,7 +141,7 @@ Rational pow(const Rational &lhs, const Rational &rhs, size_t precision) {
     rhsStep /= step;
     rhsStep = rhsStep.round(getNewPrecision(precision));
     lhsPowFloatRhs += rhsStep;
-    ++step;
+    step++;
   } while (abs(rhsStep) > precisionVal);
 
   return (lhsPowFloatRhs * lhsPowIntRhs).round(precision);
@@ -373,7 +373,7 @@ Rational acos(const Rational &rhs, size_t precision) {
       rhsStep = val / (step * 2 + 1);
       rhsStep = rhsStep.round(getNewPrecision(precision));
       res += rhsStep;
-      ++step;
+      step++;
     } while (abs(rhsStep) > precisionVal);
 
     res = pi / 2 - res;
@@ -421,7 +421,7 @@ Rational atan(const Rational &rhs, size_t precision) {
       rhsStep = val / (step * 2 - 1);
       rhsStep = rhsStep.round(getNewPrecision(precision));
       res += rhsStep;
-      ++step;
+      step++;
     } while (abs(rhsStep) > precisionVal);
 
     if (isNegative) {
@@ -483,7 +483,7 @@ Rational getE(size_t precision) {
   do {
     stepVal /= step;
     res += stepVal;
-    ++step;
+    step++;
   } while (abs(stepVal) > precisionVal);
 
   return res.round(precision);

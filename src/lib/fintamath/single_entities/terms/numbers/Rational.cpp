@@ -26,7 +26,7 @@ Rational::Rational(const string &strVal) {
   bool isNegative = false;
   if (strVal.front() == '-') {
     isNegative = true;
-    ++firstDigitNum;
+    firstDigitNum++;
   }
 
   Integer intPart;

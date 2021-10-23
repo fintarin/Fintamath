@@ -14,7 +14,7 @@ size_t cutZeros(string &strVal) {
   size_t order = 0;
   while (*strVal.begin() == '0') {
     strVal.erase(strVal.begin());
-    ++order;
+    order++;
   }
   return order;
 }
