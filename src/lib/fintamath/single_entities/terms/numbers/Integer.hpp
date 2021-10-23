@@ -6,96 +6,89 @@
 
 class Integer {
 public:
-  Integer();
-  Integer(const Integer &);
-  Integer(int64_t);
-  explicit Integer(const std::string &);
+  Integer() = default;
+  explicit Integer(const std::string &strVal);
+  // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE
+  Integer(int64_t val);
 
-  Integer &operator=(const Integer &);
-  Integer &operator=(int64_t);
+  Integer &operator=(int64_t rhs);
 
-  Integer &operator+=(const Integer &);
-  Integer &operator+=(int64_t);
+  Integer &operator+=(const Integer &rhs);
+  Integer &operator+=(int64_t rhs);
+  Integer operator+(const Integer &rhs) const;
+  Integer operator+(int64_t rhs) const;
+  friend Integer operator+(int64_t lhs, const Integer &rhs);
 
-  Integer operator+(const Integer &) const;
-  friend Integer operator+(const Integer &, int64_t);
-  friend Integer operator+(int64_t, const Integer &);
+  Integer &operator-=(const Integer &rhs);
+  Integer &operator-=(int64_t rhs);
+  Integer operator-(const Integer &rhs) const;
+  Integer operator-(int64_t rhs) const;
+  friend Integer operator-(int64_t lhs, const Integer &rhs);
 
-  Integer &operator-=(const Integer &);
-  Integer &operator-=(int64_t);
+  Integer &operator*=(const Integer &rhs);
+  Integer &operator*=(int64_t rhs);
+  Integer operator*(const Integer &rhs) const;
+  Integer operator*(int64_t rhs) const;
+  friend Integer operator*(int64_t lhs, const Integer &rhs);
 
-  Integer operator-(const Integer &) const;
-  friend Integer operator-(const Integer &, int64_t);
-  friend Integer operator-(int64_t, const Integer &);
+  Integer &operator/=(const Integer &rhs);
+  Integer &operator/=(int64_t rhs);
+  Integer operator/(const Integer &rhs) const;
+  Integer operator/(int64_t rhs) const;
+  friend Integer operator/(int64_t lhs, const Integer &rhs);
 
-  Integer &operator*=(const Integer &);
-  Integer &operator*=(int64_t);
-
-  Integer operator*(const Integer &) const;
-  friend Integer operator*(const Integer &, int64_t);
-  friend Integer operator*(int64_t, const Integer &);
-
-  Integer &operator/=(const Integer &);
-  Integer &operator/=(int64_t);
-
-  Integer operator/(const Integer &) const;
-  friend Integer operator/(const Integer &, int64_t);
-  friend Integer operator/(int64_t, const Integer &);
-
-  Integer &operator%=(const Integer &);
-  Integer &operator%=(int64_t);
-
-  Integer operator%(const Integer &) const;
-  friend Integer operator%(const Integer &, int64_t);
-  friend Integer operator%(int64_t, const Integer &);
+  Integer &operator%=(const Integer &rhs);
+  Integer &operator%=(int64_t rhs);
+  Integer operator%(const Integer &rhs) const;
+  Integer operator%(int64_t rhs) const;
+  friend Integer operator%(int64_t lhs, const Integer &rhs);
 
   Integer &operator++();
-  Integer &operator++(int);
+  Integer operator++(int);
 
   Integer &operator--();
-  Integer &operator--(int);
+  Integer operator--(int);
 
-  bool operator==(const Integer &) const;
-  friend bool operator==(const Integer &, int64_t);
-  friend bool operator==(int64_t, const Integer &);
+  Integer operator+() const;
+  Integer operator-() const;
 
-  bool operator!=(const Integer &) const;
-  friend bool operator!=(const Integer &, int64_t);
-  friend bool operator!=(int64_t, const Integer &);
+  bool operator==(const Integer &rhs) const;
+  bool operator==(int64_t rhs) const;
+  friend bool operator==(int64_t lhs, const Integer &rhs);
 
-  bool operator>(const Integer &) const;
-  friend bool operator>(const Integer &, int64_t);
-  friend bool operator>(int64_t, const Integer &);
+  bool operator!=(const Integer &rhs) const;
+  bool operator!=(int64_t rhs) const;
+  friend bool operator!=(int64_t lhs, const Integer &rhs);
 
-  bool operator>=(const Integer &) const;
-  friend bool operator>=(const Integer &, int64_t);
-  friend bool operator>=(int64_t, const Integer &);
+  bool operator<(const Integer &rhs) const;
+  bool operator<(int64_t rhs) const;
+  friend bool operator<(int64_t lhs, const Integer &rhs);
 
-  bool operator<(const Integer &) const;
-  friend bool operator<(const Integer &, int64_t);
-  friend bool operator<(int64_t, const Integer &);
+  bool operator>(const Integer &rhs) const;
+  bool operator>(int64_t rhs) const;
+  friend bool operator>(int64_t lhs, const Integer &rhs);
 
-  bool operator<=(const Integer &) const;
-  friend bool operator<=(const Integer &, int64_t);
-  friend bool operator<=(int64_t, const Integer &);
+  bool operator<=(const Integer &rhs) const;
+  bool operator<=(int64_t rhs) const;
+  friend bool operator<=(int64_t lhs, const Integer &rhs);
 
-  Integer &toLongNumber(const std::string &);
-  Integer &toLongNumber(int64_t);
+  bool operator>=(const Integer &rhs) const;
+  bool operator>=(int64_t rhs) const;
+  friend bool operator>=(int64_t lhs, const Integer &rhs);
+
+  friend std::istream &operator>>(std::istream &in, Integer &rhs);
+  friend std::ostream &operator<<(std::ostream &out, const Integer &rhs);
 
   size_t size() const;
-
-  friend std::istream &operator>>(std::istream &, Integer &);
-  friend std::ostream &operator<<(std::ostream &, const Integer &);
-
   std::string toString() const;
 
   friend Integer sqrt(const Integer &);
 
 private:
-  std::vector<int64_t> vectNum;
+  std::vector<int64_t> intVect;
   bool sign{};
 
-  void changeZeroSign();
+  void fixZero();
 };
 
 #endif // INTEGER_HPP
