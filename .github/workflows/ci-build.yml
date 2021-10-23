@@ -1,0 +1,46 @@
+name: CI build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ${{matrix.config.os}}
+
+    strategy:
+      matrix:
+        config:
+          - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
+          - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}
+        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_TESTS:BOOL=TRUE
+        env:
+          CC: ${{matrix.config.cc}}
+          CXX: ${{matrix.config.cxx}}
+
+      - name: Build
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{env.BUILD_TYPE}}

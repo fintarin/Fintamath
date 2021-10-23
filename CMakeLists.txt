@@ -5,9 +5,15 @@ project(
   LANGUAGES CXX
   VERSION 1.0)
 
-option(ENABLE_TESTING "Enable Test Builds" ON)
+option(BUILD_APP "Enable Test Builds" ON)
+option(BUILD_TESTS "Enable Test Builds" ON)
 
-if(ENABLE_TESTING)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+
+include(cmake/Coverage.cmake)
+include(cmake/Sanitizers.cmake)
+
+if(BUILD_TESTS)
   include(GoogleTest)
   enable_testing()
 endif()

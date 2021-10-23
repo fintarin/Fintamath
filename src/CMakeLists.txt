@@ -1,6 +1,9 @@
 add_subdirectory(lib)
-add_subdirectory(app)
 
-if(ENABLE_TESTING)
+if(BUILD_APP)
+  add_subdirectory(app)
+endif()
+
+if(BUILD_TESTS)
   add_subdirectory(tests)
 endif()
