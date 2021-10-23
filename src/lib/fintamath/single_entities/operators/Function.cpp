@@ -12,63 +12,63 @@ Function::Function(const string &strFunc) {
   if (!types::isFunction(strFunc)) {
     throw invalid_argument("Function invalid input");
   }
-  this->name = strFunc;
+  name = strFunc;
 }
 
 Rational Function::solve(const Rational &rhs, int64_t precision) const {
-  if (this->name == "sqrt") {
+  if (name == "sqrt") {
     return functions::sqrt(rhs, precision);
   }
-  if (this->name == "exp") {
+  if (name == "exp") {
     return functions::exp(rhs, precision);
   }
-  if (this->name == "ln") {
+  if (name == "ln") {
     return functions::ln(rhs, precision);
   }
-  if (this->name == "lb") {
+  if (name == "lb") {
     return functions::lb(rhs, precision);
   }
-  if (this->name == "lg") {
+  if (name == "lg") {
     return functions::lg(rhs, precision);
   }
-  if (this->name == "sin") {
+  if (name == "sin") {
     return functions::sin(rhs, precision);
   }
-  if (this->name == "cos") {
+  if (name == "cos") {
     return functions::cos(rhs, precision);
   }
-  if (this->name == "tan") {
+  if (name == "tan") {
     return functions::tan(rhs, precision);
   }
-  if (this->name == "cot") {
+  if (name == "cot") {
     return functions::cot(rhs, precision);
   }
-  if (this->name == "asin") {
+  if (name == "asin") {
     return functions::asin(rhs, precision);
   }
-  if (this->name == "acos") {
+  if (name == "acos") {
     return functions::acos(rhs, precision);
   }
-  if (this->name == "atan") {
+  if (name == "atan") {
     return functions::atan(rhs, precision);
   }
-  if (this->name == "acot") {
+  if (name == "acot") {
     return functions::acot(rhs, precision);
   }
-  if (this->name == "abs") {
+  if (name == "abs") {
     return functions::abs(rhs);
   }
-  if (this->name == "!") {
+  if (name == "!") {
     return functions::factorial(rhs);
   }
-  if (this->name == "!!") {
+  if (name == "!!") {
     return functions::doubleFactorial(rhs);
   }
   throw invalid_argument("Function invalid input");
 }
 
 Rational Function::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
-  if (this->name == "log") {
+  if (name == "log") {
     return functions::log(lhs, rhs, precision);
   }
   throw invalid_argument("Function invalid input");
@@ -79,7 +79,7 @@ string Function::getTypeName() const {
 }
 
 string Function::toString() const {
-  return this->name;
+  return name;
 }
 
 namespace types {

@@ -27,7 +27,7 @@ int64_t Solver::getPrecision() const {
 }
 
 void Solver::setPrecision(int64_t precision_) {
-  this->precision = precision_ <= 0 ? 1 : precision_;
+  precision = precision_ <= 0 ? 1 : precision_;
 }
 
 Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {

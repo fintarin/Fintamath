@@ -58,12 +58,12 @@ Integer::Integer(const string &strVal) {
     throw invalid_argument("Integer invalid input");
   }
 
-  this->intVect.clear();
-  this->sign = false;
+  intVect.clear();
+  sign = false;
 
   int64_t firstDigitNum = 0;
   if (strVal.front() == '-') {
-    this->sign = true;
+    sign = true;
     firstDigitNum++;
   }
 
@@ -71,7 +71,7 @@ Integer::Integer(const string &strVal) {
     throw invalid_argument("Integer invalid input");
   }
 
-  this->intVect = toIntVector(strVal.substr(firstDigitNum), INT_BASE_SIZE);
+  intVect = toIntVector(strVal.substr(firstDigitNum), INT_BASE_SIZE);
 }
 
 Integer::Integer(int64_t val) : Integer(to_string(val)) {
@@ -82,20 +82,20 @@ Integer &Integer::operator=(int64_t rhs) {
 }
 
 Integer &Integer::operator+=(const Integer &rhs) {
-  if ((!this->sign && !rhs.sign) || (this->sign && rhs.sign)) {
-    this->intVect = addToSignificantDigits(this->intVect, rhs.intVect, INT_BASE);
+  if ((!sign && !rhs.sign) || (sign && rhs.sign)) {
+    intVect = addToSignificantDigits(intVect, rhs.intVect, INT_BASE);
   }
 
   else {
-    if (::greater(this->intVect, rhs.intVect)) {
-      this->intVect = substract(this->intVect, rhs.intVect, INT_BASE);
+    if (::greater(intVect, rhs.intVect)) {
+      intVect = substract(intVect, rhs.intVect, INT_BASE);
     } else {
-      this->sign = !this->sign;
-      this->intVect = substract(rhs.intVect, this->intVect, INT_BASE);
+      sign = !sign;
+      intVect = substract(rhs.intVect, intVect, INT_BASE);
     }
   }
 
-  this->fixZero();
+  fixZero();
   return *this;
 }
 
@@ -140,9 +140,9 @@ Integer operator-(int64_t lhs, const Integer &rhs) {
 }
 
 Integer &Integer::operator*=(const Integer &rhs) {
-  this->intVect = multiply(this->intVect, rhs.intVect, INT_BASE);
-  this->sign = !((this->sign && rhs.sign) || (!this->sign && !rhs.sign));
-  this->fixZero();
+  intVect = multiply(intVect, rhs.intVect, INT_BASE);
+  sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
+  fixZero();
   return *this;
 }
 
@@ -170,16 +170,16 @@ Integer &Integer::operator/=(const Integer &rhs) {
   if (*this == 0) {
     return *this;
   }
-  if (::greater(rhs.intVect, this->intVect)) {
+  if (::greater(rhs.intVect, intVect)) {
     *this = 0;
     return *this;
   }
 
   IntVector modVal;
-  this->intVect = divide(this->intVect, rhs.intVect, modVal, INT_BASE);
-  this->sign = !((this->sign && rhs.sign) || (!this->sign && !rhs.sign));
+  intVect = divide(intVect, rhs.intVect, modVal, INT_BASE);
+  sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
 
-  this->fixZero();
+  fixZero();
   return *this;
 }
 
@@ -207,13 +207,13 @@ Integer &Integer::operator%=(const Integer &rhs) {
   if (*this == 0) {
     return *this;
   }
-  if (::greater(rhs.intVect, this->intVect)) {
+  if (::greater(rhs.intVect, intVect)) {
     return *this;
   }
 
-  divide(this->intVect, rhs.intVect, this->intVect, INT_BASE);
+  divide(intVect, rhs.intVect, intVect, INT_BASE);
 
-  this->fixZero();
+  fixZero();
   return *this;
 }
 
@@ -266,10 +266,10 @@ Integer Integer::operator-() const {
 }
 
 bool Integer::operator==(const Integer &rhs) const {
-  if (this->sign != rhs.sign) {
+  if (sign != rhs.sign) {
     return false;
   }
-  return equal(this->intVect, rhs.intVect);
+  return equal(intVect, rhs.intVect);
 }
 
 bool Integer::operator==(int64_t rhs) const {
@@ -293,18 +293,18 @@ bool operator!=(int64_t lhs, const Integer &rhs) {
 }
 
 bool Integer::operator<(const Integer &rhs) const {
-  if (!this->sign && rhs.sign) {
+  if (!sign && rhs.sign) {
     return false;
   }
-  if (this->sign && !rhs.sign) {
+  if (sign && !rhs.sign) {
     return true;
   }
 
-  if (this->sign && rhs.sign) {
-    return ::less(rhs.intVect, this->intVect);
+  if (sign && rhs.sign) {
+    return ::less(rhs.intVect, intVect);
   }
 
-  return ::less(this->intVect, rhs.intVect);
+  return ::less(intVect, rhs.intVect);
 }
 
 bool Integer::operator<(int64_t rhs) const {
@@ -316,18 +316,18 @@ bool operator<(int64_t lhs, const Integer &rhs) {
 }
 
 bool Integer::operator>(const Integer &rhs) const {
-  if (!this->sign && rhs.sign) {
+  if (!sign && rhs.sign) {
     return true;
   }
-  if (this->sign && !rhs.sign) {
+  if (sign && !rhs.sign) {
     return false;
   }
 
-  if (this->sign && rhs.sign) {
-    return ::greater(rhs.intVect, this->intVect);
+  if (sign && rhs.sign) {
+    return ::greater(rhs.intVect, intVect);
   }
 
-  return ::greater(this->intVect, rhs.intVect);
+  return ::greater(intVect, rhs.intVect);
 }
 
 bool Integer::operator>(int64_t rhs) const {
@@ -339,18 +339,18 @@ bool operator>(int64_t lhs, const Integer &rhs) {
 }
 
 bool Integer::operator<=(const Integer &rhs) const {
-  if (!this->sign && rhs.sign) {
+  if (!sign && rhs.sign) {
     return false;
   }
-  if (this->sign && !rhs.sign) {
+  if (sign && !rhs.sign) {
     return true;
   }
 
-  if (this->sign && rhs.sign) {
-    return ::lessEqual(rhs.intVect, this->intVect);
+  if (sign && rhs.sign) {
+    return ::lessEqual(rhs.intVect, intVect);
   }
 
-  return ::lessEqual(this->intVect, rhs.intVect);
+  return ::lessEqual(intVect, rhs.intVect);
 }
 
 bool Integer::operator<=(int64_t rhs) const {
@@ -362,18 +362,18 @@ bool operator<=(int64_t lhs, const Integer &rhs) {
 }
 
 bool Integer::operator>=(const Integer &rhs) const {
-  if (!this->sign && rhs.sign) {
+  if (!sign && rhs.sign) {
     return true;
   }
-  if (this->sign && !rhs.sign) {
+  if (sign && !rhs.sign) {
     return false;
   }
 
-  if (this->sign && rhs.sign) {
-    return ::greaterEqual(rhs.intVect, this->intVect);
+  if (sign && rhs.sign) {
+    return ::greaterEqual(rhs.intVect, intVect);
   }
 
-  return ::greaterEqual(this->intVect, rhs.intVect);
+  return ::greaterEqual(intVect, rhs.intVect);
 }
 
 bool Integer::operator>=(int64_t rhs) const {
@@ -396,12 +396,12 @@ ostream &operator<<(ostream &out, const Integer &rhs) {
 }
 
 size_t Integer::size() const {
-  return (this->intVect.size() - 1) * INT_BASE_SIZE + (to_string(this->intVect.back())).size();
+  return (intVect.size() - 1) * INT_BASE_SIZE + (to_string(intVect.back())).size();
 }
 
 string Integer::toString() const {
-  string strVal = ::toString(this->intVect, INT_BASE_SIZE);
-  if (strVal != "0" && this->sign) {
+  string strVal = ::toString(intVect, INT_BASE_SIZE);
+  if (strVal != "0" && sign) {
     strVal.insert(0, 1, '-');
   }
   return strVal;
@@ -421,8 +421,8 @@ Integer sqrt(const Integer &rhs) {
 }
 
 void Integer::fixZero() {
-  if (this->intVect.size() == 1 && this->intVect.front() == 0) {
-    this->sign = false;
+  if (intVect.size() == 1 && intVect.front() == 0) {
+    sign = false;
   }
 }
 

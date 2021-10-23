@@ -12,11 +12,11 @@ Operator::Operator(const string &strOper) {
   if (!types::isOperator(strOper)) {
     throw invalid_argument("Operator invalid input");
   }
-  this->name = *strOper.begin();
+  name = *strOper.begin();
 }
 
 Rational Operator::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
-  switch (this->name) {
+  switch (name) {
   case '+':
     return lhs + rhs;
   case '-':
@@ -37,7 +37,7 @@ string Operator::getTypeName() const {
 }
 
 string Operator::toString() const {
-  return string(1, this->name);
+  return string(1, name);
 }
 
 namespace types {

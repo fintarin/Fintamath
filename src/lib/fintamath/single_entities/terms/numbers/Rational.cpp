@@ -41,35 +41,35 @@ Rational::Rational(const string &strVal) {
       string numeratorStr = strVal.substr(firstDotNum + 1);
       string denominatorStr(numeratorStr.size() + 1, '0');
       denominatorStr.front() = '1';
-      this->numerator = Integer(numeratorStr);
-      this->denominator = Integer(denominatorStr);
+      numerator = Integer(numeratorStr);
+      denominator = Integer(denominatorStr);
     } catch (const invalid_argument &) {
       throw invalid_argument("Rational invalid input");
     }
   }
 
-  this->toIrreducibleRational();
-  this->numerator += intPart * this->denominator;
-  if (this->numerator != 0) {
-    this->sign = isNegative;
+  toIrreducibleRational();
+  numerator += intPart * denominator;
+  if (numerator != 0) {
+    sign = isNegative;
   }
 }
 
 Rational::Rational(Integer val) : numerator(std::move(val)) {
-  this->fixNegative();
+  fixNegative();
 }
 
 Rational::Rational(int64_t val) : numerator(val) {
-  this->fixNegative();
+  fixNegative();
 }
 
 Rational::Rational(Integer numerator, Integer denominator)
     : numerator(std::move(numerator)), denominator(std::move(denominator)) {
-  this->toIrreducibleRational();
+  toIrreducibleRational();
 }
 
 Rational::Rational(int64_t numerator, int64_t denominator) : numerator(numerator), denominator(denominator) {
-  this->toIrreducibleRational();
+  toIrreducibleRational();
 }
 
 Rational &Rational::operator=(const Integer &rhs) {
@@ -83,8 +83,8 @@ Rational &Rational::operator=(int64_t rhs) {
 Rational &Rational::operator+=(const Rational &rhs) {
   Rational tmpRhs = rhs;
   toCommonDenominators(*this, tmpRhs);
-  this->numerator += tmpRhs.numerator;
-  this->toIrreducibleRational();
+  numerator += tmpRhs.numerator;
+  toIrreducibleRational();
   return *this;
 }
 
@@ -120,8 +120,8 @@ Rational operator+(int64_t lhs, const Rational &rhs) {
 Rational &Rational::operator-=(const Rational &rhs) {
   Rational tmpRhs = rhs;
   toCommonDenominators(*this, tmpRhs);
-  this->numerator -= tmpRhs.numerator;
-  this->toIrreducibleRational();
+  numerator -= tmpRhs.numerator;
+  toIrreducibleRational();
   return *this;
 }
 
@@ -155,10 +155,10 @@ Rational operator-(int64_t lhs, const Rational &rhs) {
 }
 
 Rational &Rational::operator*=(const Rational &rhs) {
-  this->numerator *= rhs.numerator;
-  this->denominator *= rhs.denominator;
-  this->sign = !((this->sign && rhs.sign) || (!this->sign && !rhs.sign));
-  this->toIrreducibleRational();
+  numerator *= rhs.numerator;
+  denominator *= rhs.denominator;
+  sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
+  toIrreducibleRational();
   return *this;
 }
 
@@ -192,10 +192,10 @@ Rational operator*(int64_t lhs, const Rational &rhs) {
 }
 
 Rational &Rational::operator/=(const Rational &rhs) {
-  this->numerator *= rhs.denominator;
-  this->denominator *= rhs.numerator;
-  this->sign = !((this->sign && rhs.sign) || (!this->sign && !rhs.sign));
-  this->toIrreducibleRational();
+  numerator *= rhs.denominator;
+  denominator *= rhs.numerator;
+  sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
+  toIrreducibleRational();
   return *this;
 }
 
@@ -261,7 +261,7 @@ Rational Rational::operator-() const {
 }
 
 bool Rational::operator==(const Rational &rhs) const {
-  return (this->sign == rhs.sign && this->numerator == rhs.numerator && this->denominator == rhs.denominator);
+  return (sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator);
 }
 
 bool Rational::operator==(const Integer &rhs) const {
@@ -404,15 +404,15 @@ ostream &operator<<(ostream &out, const Rational &rhs) {
 }
 
 Integer Rational::getInteger() const {
-  return this->numerator / this->denominator;
+  return numerator / denominator;
 }
 
 Integer Rational::getNumerator() const {
-  return this->numerator % this->denominator;
+  return numerator % denominator;
 }
 
 Integer Rational::getDenominator() const {
-  return this->denominator;
+  return denominator;
 }
 
 string Rational::toString(size_t precision) const {
@@ -422,7 +422,7 @@ string Rational::toString(size_t precision) const {
   string precisionStr(precision + 2, '0');
   precisionStr.front() = '1';
 
-  Integer val = this->numerator * Integer(precisionStr) / this->denominator;
+  Integer val = numerator * Integer(precisionStr) / denominator;
   if (val % base >= roundUp) {
     val += base;
   }
@@ -444,7 +444,7 @@ string Rational::toString(size_t precision) const {
     strVal.pop_back();
   }
 
-  if (this->sign) {
+  if (sign) {
     strVal.insert(strVal.begin(), '-');
   }
 
@@ -452,7 +452,7 @@ string Rational::toString(size_t precision) const {
 }
 
 Rational Rational::round(size_t precision) const {
-  return Rational(this->toString(precision));
+  return Rational(toString(precision));
 }
 
 string Rational::getTypeName() const {
@@ -460,36 +460,36 @@ string Rational::getTypeName() const {
 }
 
 string Rational::toString() const {
-  return this->toString(INITIAL_PRECISION);
+  return toString(INITIAL_PRECISION);
 }
 
 void Rational::fixZero() {
-  if (this->numerator == 0) {
-    this->sign = false;
-    this->denominator = 1;
+  if (numerator == 0) {
+    sign = false;
+    denominator = 1;
   }
 }
 
 void Rational::fixNegative() {
-  if (this->numerator < 0) {
-    this->numerator *= -1;
-    this->sign = !this->sign;
+  if (numerator < 0) {
+    numerator *= -1;
+    sign = !sign;
   }
-  if (this->denominator < 0) {
-    this->denominator *= -1;
-    this->sign = !this->sign;
+  if (denominator < 0) {
+    denominator *= -1;
+    sign = !sign;
   }
 }
 
 void Rational::toIrreducibleRational() {
-  if (this->denominator == 0) {
+  if (denominator == 0) {
     throw domain_error("Div by zero");
   }
-  this->fixNegative();
-  Integer gcdVal = gcd(this->numerator, this->denominator);
-  this->numerator /= gcdVal;
-  this->denominator /= gcdVal;
-  this->fixZero();
+  fixNegative();
+  Integer gcdVal = gcd(numerator, denominator);
+  numerator /= gcdVal;
+  denominator /= gcdVal;
+  fixZero();
 }
 
 void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {

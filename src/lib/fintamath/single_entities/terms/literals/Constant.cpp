@@ -11,21 +11,21 @@ Constant::Constant(const string &strConst) {
   if (!types::isConstant(strConst)) {
     throw invalid_argument("Constant invalid input");
   }
-  this->name = strConst;
+  name = strConst;
 }
 
 Rational Constant::toRational(int64_t precision) const {
-  if (this->name == "e") {
+  if (name == "e") {
     return functions::getE(precision);
   }
-  if (this->name == "pi") {
+  if (name == "pi") {
     return functions::getPi(precision);
   }
   throw invalid_argument("Constant invalid input");
 }
 
 string Constant::toString() const {
-  return this->name;
+  return name;
 }
 
 string Constant::getTypeName() const {

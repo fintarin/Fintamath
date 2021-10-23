@@ -59,7 +59,7 @@ void Calculator::toShortForm(string &strVal) const {
 
 string Calculator::calculate(const string &strExpr) {
   Expression expr(strExpr);
-  Rational val = this->solver.solve(expr);
+  Rational val = solver.solve(expr);
   string valStr = val.toString(solver.getPrecision());
   toShortForm(valStr);
   return valStr;
