@@ -12,8 +12,8 @@
 
 using namespace std;
 
-vector<string> makeVectOfTokens(const string &inStr);
-Expression makeExpression(const vector<string> &vectIOfTokens);
+static vector<string> makeVectOfTokens(const string &inStr);
+static Expression makeExpression(const vector<string> &vectIOfTokens);
 
 static void cutSpaces(string &str);
 
@@ -47,7 +47,7 @@ std::shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
   return root;
 }
 
-inline vector<string> makeVectOfTokens(const string &inStr) {
+static vector<string> makeVectOfTokens(const string &inStr) {
   string str = inStr;
   cutSpaces(str);
   vector<string> vect;
@@ -74,7 +74,7 @@ inline vector<string> makeVectOfTokens(const string &inStr) {
   return vect;
 }
 
-inline Expression makeExpression(const vector<string> &vectIOfTokens) {
+static Expression makeExpression(const vector<string> &vectIOfTokens) {
   if (vectIOfTokens.empty()) {
     throw invalid_argument("Parser invalid input");
   }
@@ -89,7 +89,7 @@ inline Expression makeExpression(const vector<string> &vectIOfTokens) {
   return Expression;
 }
 
-inline void cutSpaces(string &str) {
+static void cutSpaces(string &str) {
   while (!str.empty()) {
     if (str.front() != ' ') {
       break;
@@ -104,15 +104,15 @@ inline void cutSpaces(string &str) {
   }
 }
 
-inline bool isDigit(char ch) {
+static bool isDigit(char ch) {
   return (ch >= '0' && ch <= '9');
 }
 
-inline bool isLetter(char ch) {
+static bool isLetter(char ch) {
   return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
 
-inline void addMultiply(vector<string> &vect) {
+static void addMultiply(vector<string> &vect) {
   if (vect.empty()) {
     return;
   }
@@ -122,16 +122,16 @@ inline void addMultiply(vector<string> &vect) {
   }
 }
 
-inline void addClosingBracket(vector<string> &vect) {
+static void addClosingBracket(vector<string> &vect) {
   vect.emplace_back(")");
 }
 
-inline void addOpenBracket(vector<string> &vect) {
+static void addOpenBracket(vector<string> &vect) {
   addMultiply(vect);
   vect.emplace_back("(");
 }
 
-inline void addUnaryOperator(vector<string> &vect) {
+static void addUnaryOperator(vector<string> &vect) {
   if (vect.back() == "+") {
     vect.pop_back();
   } else if (vect.back() == "-") {
@@ -141,7 +141,7 @@ inline void addUnaryOperator(vector<string> &vect) {
   }
 }
 
-inline void addOperator(vector<string> &vect, char ch) {
+static void addOperator(vector<string> &vect, char ch) {
   vect.emplace_back(1, ch);
   if (vect.size() == 1) {
     addUnaryOperator(vect);
@@ -152,7 +152,7 @@ inline void addOperator(vector<string> &vect, char ch) {
   }
 }
 
-inline void addFrac(vector<string> &vect, const string &str, size_t &pos) {
+static void addFrac(vector<string> &vect, const string &str, size_t &pos) {
   addMultiply(vect);
 
   string fracStr;
@@ -170,7 +170,7 @@ inline void addFrac(vector<string> &vect, const string &str, size_t &pos) {
   vect.push_back(fracStr);
 }
 
-inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
+static void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
   if (vect.empty()) {
     throw invalid_argument("Parser invalid input");
   }
@@ -219,7 +219,7 @@ inline void addFactorial(vector<string> &vect, const string &str, size_t &pos) {
   vect.insert(vect.begin(), factor);
 }
 
-inline void addConstOrFunction(vector<string> &vect, const string &str, size_t &pos) {
+static void addConstOrFunction(vector<string> &vect, const string &str, size_t &pos) {
   if (str[pos] == '!') {
     addFactorial(vect, str, pos);
     return;
@@ -250,7 +250,7 @@ inline void addConstOrFunction(vector<string> &vect, const string &str, size_t &
   }
 }
 
-inline void addBinaryFunctions(vector<string> &vect) { // NOLINT
+static void addBinaryFunctions(vector<string> &vect) { // NOLINT
   vector<size_t> numOfAdded;
 
   for (size_t i = 0; i < vect.size(); ++i) {
@@ -290,7 +290,7 @@ inline void addBinaryFunctions(vector<string> &vect) { // NOLINT
   }
 }
 
-inline void addValue(const string &inStr, shared_ptr<Expression::Elem> &root) {
+static void addValue(const string &inStr, shared_ptr<Expression::Elem> &root) {
   if (isType::isConstant(inStr)) {
     root->info = std::make_shared<Constant>(inStr);
   } else {
@@ -302,7 +302,7 @@ inline void addValue(const string &inStr, shared_ptr<Expression::Elem> &root) {
   }
 }
 
-inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
                     const string &oper1, const string &oper2) {
   size_t numOfBrackets = 0;
 
@@ -333,12 +333,12 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::
   return false;
 }
 
-inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end,
                     const string &oper) {
   return descent(vectIOfTokens, root, begin, end, oper, "");
 }
 
-inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end) {
+static bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t begin, size_t end) {
   if (isType::isFunction(vectIOfTokens[end])) {
     root->info = std::make_shared<Function>(vectIOfTokens[end]);
     makeExpressionRec(vectIOfTokens, root->right, begin, end - 1);
@@ -347,7 +347,7 @@ inline bool descent(const vector<string> &vectIOfTokens, shared_ptr<Expression::
   return false;
 }
 
-inline void makeExpressionRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
+static void makeExpressionRec(const vector<string> &vectIOfTokens, shared_ptr<Expression::Elem> &root, size_t first,
                               size_t last) {
   if (first > last) {
     throw invalid_argument("Parser invalid input");

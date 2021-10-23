@@ -583,23 +583,23 @@ Rational functions::getPi(size_t precision) {
   return res;
 }
 
-inline size_t getNewPrecision(size_t precision) {
+static size_t getNewPrecision(size_t precision) {
   return precision + (int64_t)std::sqrt(precision);
 }
 
 // Получение значения погрешности
-inline Rational getPrecisionFrac(size_t precision) {
+static Rational getPrecisionFrac(size_t precision) {
   string precStr(precision + 1, '0');
   precStr.front() = '1';
   return (Rational(1, Integer(precStr)));
 }
 
 // Округление
-inline void round(Rational &a, size_t precision) {
+static void round(Rational &a, size_t precision) {
   a = a.round(precision);
 }
 
-inline Integer abs(const Integer &a) {
+static Integer abs(const Integer &a) {
   if (a < 0) {
     return Integer(a * -1);
   }
@@ -612,7 +612,7 @@ inline Integer abs(const Integer &a) {
   требуемуму виду. После расчета логарифма получившегося числа, результат домножается на 2^n, где n — количество
   опреаций взятия корня.
 */
-inline Rational lnReduce(const Rational &a, Integer &multiplier, size_t precision) {
+static Rational lnReduce(const Rational &a, Integer &multiplier, size_t precision) {
   Rational res = a;
   round(res, getNewPrecision(precision));
   Rational prec("0.01");
@@ -634,7 +634,7 @@ inline Rational lnReduce(const Rational &a, Integer &multiplier, size_t precisio
   (n mod 2 = 1) -> a^n = a^(n-1) * a.
   Применяется, пока n != 0
 */
-inline Integer naturalPow(const Integer &inA, const Integer &inN) {
+static Integer naturalPow(const Integer &inA, const Integer &inN) {
   Integer res = 1;
   Integer a = inA;
   Integer n = abs(inN);
@@ -656,7 +656,7 @@ inline Integer naturalPow(const Integer &inA, const Integer &inN) {
   Бинарное возведение действительного a в натуральную степень n.
   Алгоритм аналогичен возведению длинного числа в натуральную степень.
 */
-inline Rational naturalPow(const Rational &inA, const Integer &inN) {
+static Rational naturalPow(const Rational &inA, const Integer &inN) {
   Rational res = 1;
   Rational a = inA;
   Integer n = abs(inN);
@@ -679,7 +679,7 @@ inline Rational naturalPow(const Rational &inA, const Integer &inN) {
   них верно следующее: f(a) = f(b + k*p) = f(b), где k — натуральное число, p - период функции. Тогда b = a - k*period,
   k = a div p.
 */
-inline Rational trigonometryReduce(const Rational &a, size_t pMultiplier, size_t precision) {
+static Rational trigonometryReduce(const Rational &a, size_t pMultiplier, size_t precision) {
   Rational p = (int64_t)pMultiplier * functions::getPi(getNewPrecision(precision) + a.getInteger().size());
   Integer k = (a / p).getInteger();
   Rational res = a - k * p;
@@ -695,7 +695,7 @@ inline Rational trigonometryReduce(const Rational &a, size_t pMultiplier, size_t
   т.к. умножать большие числа примерно равной длины гораздо быстрее, чем большие числа на маленькие. Это обусловлено
   использованием алгоритма Карацубы.
 */
-inline Integer factorialTree(const Integer &left, const Integer &right) {
+static Integer factorialTree(const Integer &left, const Integer &right) {
   if (left == right) {
     return left;
   }

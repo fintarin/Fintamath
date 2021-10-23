@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac);
+static void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac);
 
 Rational Solver::solve(Expression &Expression) {
   if (Expression.getRootModifiable()->right->right == nullptr &&
@@ -97,7 +97,7 @@ int64_t Solver::getNewRoundPrecision() const {
   return getNewPrecision() - 1;
 }
 
-inline void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac) {
+static void rootReset(const shared_ptr<Expression::Elem> &root, const Rational &inFrac) {
   root->info = make_shared<Rational>(inFrac);
   root->right.reset();
   root->left.reset();

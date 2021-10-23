@@ -50,7 +50,7 @@ static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, Int
                                  int64_t base);
 static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base);
 
-IntVector sqrt(const IntVector &rhs);
+static IntVector sqrt(const IntVector &rhs);
 
 Integer::Integer(const string &strVal) {
   if (strVal.empty()) {
@@ -421,7 +421,7 @@ void Integer::fixZero() {
   }
 }
 
-inline IntVector toIntVector(const string &strVal, int64_t baseSize) {
+static IntVector toIntVector(const string &strVal, int64_t baseSize) {
   IntVector intVect;
   auto iter = strVal.end();
   for (; distance(strVal.begin(), iter) > baseSize; iter -= baseSize) {
@@ -432,13 +432,13 @@ inline IntVector toIntVector(const string &strVal, int64_t baseSize) {
   return intVect;
 }
 
-inline bool canConvert(const std::string &strVal) {
+static bool canConvert(const std::string &strVal) {
   const int64_t firstDigit = 0;
   const int64_t lastDigit = 9;
   return all_of(strVal.begin(), strVal.end(), [](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
 }
 
-inline string toString(const IntVector &intVect, int64_t baseSize) {
+static string toString(const IntVector &intVect, int64_t baseSize) {
   string strVal;
   for (size_t i = intVect.size() - 1; i != SIZE_MAX; --i) {
     string tmp = to_string(intVect[i]);
@@ -449,7 +449,7 @@ inline string toString(const IntVector &intVect, int64_t baseSize) {
 }
 
 // Нахождение разряда перед первым ненулевым, начиная с младших разрядов
-inline int64_t firstZeroNum(const IntVector &rhs) {
+static int64_t firstZeroNum(const IntVector &rhs) {
   int64_t num = 0;
   while (rhs[num] == 0) {
     ++num;
@@ -458,7 +458,7 @@ inline int64_t firstZeroNum(const IntVector &rhs) {
 }
 
 // Приведение к значимым цифрам
-inline void toSignificantDigits(IntVector &rhs) {
+static void toSignificantDigits(IntVector &rhs) {
   size_t i = rhs.size() - 1;
   for (; i > 0; --i) {
     if (rhs[i] != 0) {
@@ -469,7 +469,7 @@ inline void toSignificantDigits(IntVector &rhs) {
 }
 
 // Если число в данном разряде >= INT_BASE, излишек прибавляется к следующему разряду
-inline void toBasePositive(IntVector &rhs, size_t index, int64_t base) {
+static void toBasePositive(IntVector &rhs, size_t index, int64_t base) {
   if (rhs[index] >= base) {
     rhs[index + 1] += rhs[index] / base;
     rhs[index] %= base;
@@ -477,7 +477,7 @@ inline void toBasePositive(IntVector &rhs, size_t index, int64_t base) {
 }
 
 // Если число в данном разряде < 0, недостаток вычитается из следующего разряда
-inline void toBaseNegative(IntVector &rhs, size_t index, int64_t base) {
+static void toBaseNegative(IntVector &rhs, size_t index, int64_t base) {
   if (rhs[index] < 0) {
     --rhs[index + 1];
     rhs[index] += base;
@@ -485,7 +485,7 @@ inline void toBaseNegative(IntVector &rhs, size_t index, int64_t base) {
 }
 
 // Последовательное сравнение разрядов двух чисел (от старших к младшим)
-inline bool equal(const IntVector &lhs, const IntVector &rhs) {
+static bool equal(const IntVector &lhs, const IntVector &rhs) {
   if (lhs.size() != rhs.size()) {
     return false;
   }
@@ -499,7 +499,7 @@ inline bool equal(const IntVector &lhs, const IntVector &rhs) {
   return true;
 }
 
-inline bool less(const IntVector &lhs, const IntVector &rhs) {
+static bool less(const IntVector &lhs, const IntVector &rhs) {
   if (lhs.size() > rhs.size()) {
     return false;
   }
@@ -519,7 +519,7 @@ inline bool less(const IntVector &lhs, const IntVector &rhs) {
   return false;
 }
 
-inline bool greater(const IntVector &lhs, const IntVector &rhs) {
+static bool greater(const IntVector &lhs, const IntVector &rhs) {
   if (lhs.size() > rhs.size()) {
     return true;
   }
@@ -539,7 +539,7 @@ inline bool greater(const IntVector &lhs, const IntVector &rhs) {
   return false;
 }
 
-inline bool lessEqual(const IntVector &lhs, const IntVector &rhs) {
+static bool lessEqual(const IntVector &lhs, const IntVector &rhs) {
   if (lhs.size() > rhs.size()) {
     return false;
   }
@@ -559,7 +559,7 @@ inline bool lessEqual(const IntVector &lhs, const IntVector &rhs) {
   return true;
 }
 
-inline bool greaterEqual(const IntVector &lhs, const IntVector &rhs) {
+static bool greaterEqual(const IntVector &lhs, const IntVector &rhs) {
   if (lhs.size() > rhs.size()) {
     return true;
   }
@@ -580,7 +580,7 @@ inline bool greaterEqual(const IntVector &lhs, const IntVector &rhs) {
 }
 
 // Сложение в столбик, не приводит к значимым числам
-inline IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+static IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector val = lhs;
   if (rhs.size() > val.size()) {
     val.resize(rhs.size(), 0);
@@ -599,14 +599,14 @@ inline IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
 }
 
 // Сложение с приведением к значимым цифрам
-inline IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+static IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector val = add(lhs, rhs, base);
   toSignificantDigits(val);
   return val;
 }
 
 // Вычитание в столбик
-inline IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+static IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector val = lhs;
 
   for (size_t i = 0; i < rhs.size(); ++i) {
@@ -622,7 +622,7 @@ inline IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t b
 }
 
 // Умножение на короткое число
-inline IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base) {
+static IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base) {
   IntVector val;
   val.resize(lhs.size() + 1, 0);
 
@@ -640,7 +640,7 @@ inline IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base) 
   Каждый разряд первого числа умножается на каждый разряд второго числа.
   Не приводит к значимым числам.
 */
-inline IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+static IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector res;
   res.resize(lhs.size() + rhs.size(), 0);
 
@@ -667,7 +667,7 @@ inline IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, 
   A0 и B0 - первые половины соответсвующих чисел (разряды 0 — m),
   A1 и B1 - вторые половины соответсвующих чисел (разряды m — 2m).
 */
-inline IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+static IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   if (lhs.size() < KARATSUBA_CUTOFF || rhs.size() < KARATSUBA_CUTOFF) {
     return polynomialMultiply(lhs, rhs, base);
   }
@@ -693,7 +693,7 @@ inline IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, i
 }
 
 // Умножение нулевый разрядов чисел
-inline size_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
+static size_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
   int64_t lhsZerosNum = firstZeroNum(lhs);
   int64_t rhsZerosNum = firstZeroNum(rhs);
 
@@ -708,7 +708,7 @@ inline size_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
 }
 
 // Обертка над умножением Карацубы, добавление лидирующих нулей для приведения чисел к виду, требуемому алгоритмом
-inline IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector tmpLhs = lhs;
   IntVector tmpRhs = rhs;
   size_t zerosNum = zerosMultiply(tmpLhs, tmpRhs);
@@ -736,7 +736,7 @@ inline IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t ba
 }
 
 // Деление на короткое
-inline IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
+static IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
   IntVector val = lhs;
 
   for (size_t i = val.size() - 1; i > 0; --i) {
@@ -750,7 +750,7 @@ inline IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
 }
 
 // Деление на короткое с получением остатка
-inline IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVal, int64_t base) {
+static IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVal, int64_t base) {
   IntVector val = lhs;
 
   for (size_t i = val.size() - 1; i > 0; --i) {
@@ -765,7 +765,7 @@ inline IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVa
 }
 
 // Сокращение нулевые разрядов чисел
-inline void zerosDivide(IntVector &lhs, IntVector &rhs) {
+static void zerosDivide(IntVector &lhs, IntVector &rhs) {
   int64_t zerosNum = min(firstZeroNum(lhs), firstZeroNum(rhs));
   if (lhs.size() != 1 && rhs.size() != 1 && zerosNum != 0) {
     lhs.erase(lhs.begin(), lhs.begin() + zerosNum);
@@ -774,7 +774,7 @@ inline void zerosDivide(IntVector &lhs, IntVector &rhs) {
 }
 
 // Деление A на B с помощью бинарного поиска
-inline IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, IntVector &left, IntVector &right,
+static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, IntVector &left, IntVector &right,
                                  int64_t base) {
   IntVector mid;
   while (::greater(substract(right, left, base), IntVector{1})) {
@@ -808,7 +808,7 @@ inline IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, Int
   Нижняя и верхняя границы определяются следующим образом: N = A/(B.back() +- 1). N - соответсвующая граница B.back() —
   старший разряд числа B. Затем отбрасываются (N.size() + B.size()) первых разрядов.
 */
-inline IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base) {
+static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base) {
   if (rhs.size() == 1) {
     return shortDivide(lhs, rhs.front(), modVal, base);
   }
@@ -858,7 +858,7 @@ inline IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &m
 
   5.К получившейся разности сносим следующую грань и выполняем действия по алгоритму.
 */
-inline IntVector sqrt(const IntVector &rhs) {
+static IntVector sqrt(const IntVector &rhs) {
   const int64_t base = 10;
 
   IntVector val;

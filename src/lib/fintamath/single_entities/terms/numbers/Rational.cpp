@@ -512,7 +512,7 @@ void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {
 }
 
 // Наибольший общий делитель, используется алгоритм Евклида
-inline Integer gcd(const Integer &lhs, const Integer &rhs) {
+static Integer gcd(const Integer &lhs, const Integer &rhs) {
   Integer tmpLhs = lhs;
   Integer tmpRhs = rhs;
   while (tmpRhs != 0) {
@@ -524,6 +524,6 @@ inline Integer gcd(const Integer &lhs, const Integer &rhs) {
 }
 
 // Наименьшее общее кратное, используется формула НОК(a, b) = a * b / НОД(a, b)
-inline Integer lcm(const Integer &lhs, const Integer &rhs) {
+static Integer lcm(const Integer &lhs, const Integer &rhs) {
   return lhs * rhs / gcd(lhs, rhs);
 }
