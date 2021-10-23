@@ -7,18 +7,18 @@
 
 class Constant : public ISingleEntity {
 public:
-  explicit Constant(const std::string &);
+  explicit Constant(const std::string &strConst);
 
-  Rational toRational(int64_t) const;
+  Rational toRational(int64_t precision) const;
   std::string toString() const override;
   std::string getTypeName() const override;
 
 private:
-  std::string constant;
+  std::string name;
 };
 
 namespace types {
-bool isConstant(const std::string &);
+bool isConstant(const std::string &str);
 }
 
 #endif // CONSTANT_HPP
