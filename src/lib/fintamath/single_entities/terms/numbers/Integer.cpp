@@ -23,8 +23,8 @@ static string toString(const IntVector &intVect, int64_t baseSize);
 static int64_t firstZeroNum(const IntVector &rhs);
 
 static void toSignificantDigits(IntVector &rhs);
-static void toBasePositive(IntVector &rhs, size_t index, int64_t base);
-static void toBaseNegative(IntVector &rhs, size_t index, int64_t base);
+static void toBasePositive(IntVector &rhs, size_t pos, int64_t base);
+static void toBaseNegative(IntVector &rhs, size_t pos, int64_t base);
 
 static bool equal(const IntVector &lhs, const IntVector &rhs);
 static bool less(const IntVector &lhs, const IntVector &rhs);
@@ -474,18 +474,18 @@ static void toSignificantDigits(IntVector &rhs) {
 }
 
 // Если число в данном разряде >= INT_BASE, излишек прибавляется к следующему разряду
-static void toBasePositive(IntVector &rhs, size_t index, int64_t base) {
-  if (rhs[index] >= base) {
-    rhs[index + 1] += rhs[index] / base;
-    rhs[index] %= base;
+static void toBasePositive(IntVector &rhs, size_t pos, int64_t base) {
+  if (rhs[pos] >= base) {
+    rhs[pos + 1] += rhs[pos] / base;
+    rhs[pos] %= base;
   }
 }
 
 // Если число в данном разряде < 0, недостаток вычитается из следующего разряда
-static void toBaseNegative(IntVector &rhs, size_t index, int64_t base) {
-  if (rhs[index] < 0) {
-    --rhs[index + 1];
-    rhs[index] += base;
+static void toBaseNegative(IntVector &rhs, size_t pos, int64_t base) {
+  if (rhs[pos] < 0) {
+    --rhs[pos + 1];
+    rhs[pos] += base;
   }
 }
 
