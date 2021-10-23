@@ -1,12 +1,12 @@
-# Fintamath
+# Fintamath-arb-prec
 
-[![CI build](https://github.com/fintarin/old-Fintamath/actions/workflows/ci-build.yml/badge.svg)](https://github.com/fintarin/old-Fintamath/actions/workflows/ci-build.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fintarin_old-Fintamath&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fintarin_old-Fintamath)
-[![codecov](https://codecov.io/gh/fintarin/old-Fintamath/branch/master/graph/badge.svg?token=JL6F07XOK7)](https://codecov.io/gh/fintarin/old-Fintamath)
+[![CI build](https://github.com/fintarin/fintamath-arb-prec/actions/workflows/ci-build.yml/badge.svg)](https://github.com/fintarin/fintamath-arb-prec/actions/workflows/ci-build.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fintarin_fintamath-arb-prec&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fintarin_fintamath-arb-prec)
+[![codecov](https://codecov.io/gh/fintarin/fintamath-arb-prec/branch/master/graph/badge.svg?token=JL6F07XOK7)](https://codecov.io/gh/fintarin/fintamath-arb-prec)
 
-Fintamath is an application for solving mathematical problems.
+Fintamath-arb-prec is an application for solving mathematical expressions with arbitrary precision.
 
-## Completed
+## Features
 
 * Integer & Rational
 * x + y, x - y, x * y, x / y, x ^ y
@@ -19,7 +19,7 @@ Fintamath is an application for solving mathematical problems.
 * asin(x), acos(x), atan(x), acot(x)
 * x!, x!!
 
-## Planned
+## Planned features
 
 * Real
 * increase speed & precision
