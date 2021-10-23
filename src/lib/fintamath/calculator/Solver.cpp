@@ -46,7 +46,7 @@ Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {
   }
 }
 
-void Solver::solveRec(shared_ptr<Expression::Elem> &elem) {
+void Solver::solveRec(const shared_ptr<Expression::Elem> &elem) {
   if (elem->info == nullptr) {
     throw invalid_argument("Parser invalid input");
   }

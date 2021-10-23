@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 constexpr int64_t INITIAL_PRECISION = 36;
 
@@ -54,19 +55,16 @@ Rational::Rational(const string &strVal) {
   }
 }
 
-Rational::Rational(const Integer &val) {
-  this->numerator = val;
+Rational::Rational(Integer val) : numerator(std::move(val)) {
   this->fixNegative();
 }
 
-Rational::Rational(int64_t val) {
-  this->numerator = val;
+Rational::Rational(int64_t val) : numerator(val) {
   this->fixNegative();
 }
 
-Rational::Rational(const Integer &numerator, const Integer &denominator) {
-  this->numerator = numerator;
-  this->denominator = denominator;
+Rational::Rational(Integer numerator, Integer denominator)
+    : numerator(std::move(numerator)), denominator(std::move(denominator)) {
   this->toIrreducibleRational();
 }
 

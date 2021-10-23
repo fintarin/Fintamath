@@ -20,7 +20,6 @@ static void round(Rational &a, size_t precision);
 
 static Integer abs(const Integer &a);
 static Rational lnReduce(const Rational &a, Integer &multiplier, size_t precision);
-static Integer naturalPow(const Integer &inA, const Integer &inN);
 static Rational naturalPow(const Rational &inA, const Integer &inN);
 static Rational trigonometryReduce(const Rational &a, size_t pMultiplier, size_t precision);
 static Integer factorialTree(const Integer &left, const Integer &right);
@@ -406,7 +405,7 @@ Rational functions::acos(const Rational &inA, size_t precision) {
     Rational precisionFrac = getPrecisionFrac(getNewPrecision(precision));
 
     do {
-      f_a *= ((2 * k - 1)) * aPow2;
+      f_a *= (2 * k - 1) * aPow2;
       round(f_a, getNewPrecision(precision));
       f_a /= (2 * k);
       round(f_a, getNewPrecision(precision));
@@ -564,7 +563,7 @@ Rational functions::getPi(size_t precision) {
   Integer p = 1;
   Rational a = 1;
   Rational b = 1 / functions::sqrt(2, precision);
-  Rational t = Rational(1, 4);
+  auto t = Rational(1, 4);
 
   for (Integer i = 0; i < numOfIterations; ++i) {
     Rational prevA = a;
@@ -625,30 +624,6 @@ static Rational lnReduce(const Rational &a, Integer &multiplier, size_t precisio
   }
 
   round(res, precision);
-  return res;
-}
-
-/*
-  Бинарное возведение длинного числа a в натуральную степень n:
-  (n mod 2 = 0) -> a^n = a^(n/2) * a^(n/2),
-  (n mod 2 = 1) -> a^n = a^(n-1) * a.
-  Применяется, пока n != 0
-*/
-static Integer naturalPow(const Integer &inA, const Integer &inN) {
-  Integer res = 1;
-  Integer a = inA;
-  Integer n = abs(inN);
-
-  while (n != 0) {
-    if ((*(n.toString().end() - 1) - '0') % 2 == 0) {
-      n /= 2;
-      a *= a;
-    } else {
-      --n;
-      res *= a;
-    }
-  }
-
   return res;
 }
 

@@ -51,6 +51,7 @@ static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, Int
 static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base);
 
 static IntVector sqrt(const IntVector &rhs);
+static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff);
 
 Integer::Integer(const string &strVal) {
   if (strVal.empty()) {
@@ -730,7 +731,6 @@ static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t ba
   }
   tmpLhs.resize(maxSize, 0);
   tmpRhs.resize(maxSize, 0);
-  maxSize /= 2;
 
   IntVector val = karatsubaMultiply(tmpLhs, tmpRhs, base);
   val.insert(val.begin(), zerosNum, 0);
@@ -869,13 +869,7 @@ static IntVector sqrt(const IntVector &rhs) {
   IntVector diff;
   val.push_back((int64_t)sqrt(rhs.back()));
 
-  {
-    int64_t tmpVal = rhs.back() - val.front() * val.front();
-    diff.push_back(tmpVal % base);
-    if (tmpVal >= base) {
-      diff.push_back(tmpVal / base);
-    }
-  }
+  getSqrtDiff(rhs, base, val, diff);
 
   for (size_t i = rhs.size() - 2; i != SIZE_MAX; --i) {
     IntVector modVal;
@@ -911,4 +905,12 @@ static IntVector sqrt(const IntVector &rhs) {
   }
 
   return val;
+}
+
+static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff) {
+  int64_t tmpVal = rhs.back() - val.front() * val.front();
+  diff.push_back(tmpVal % base);
+  if (tmpVal >= base) {
+    diff.push_back(tmpVal / base);
+  }
 }

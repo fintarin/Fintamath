@@ -27,7 +27,7 @@ private:
   int64_t precision = initialPrecision;
 
   Rational toRational(const std::shared_ptr<Expression::Elem> &elem) const;
-  void solveRec(std::shared_ptr<Expression::Elem> &elem);
+  void solveRec(const std::shared_ptr<Expression::Elem> &elem);
 
   int64_t getNewPrecision() const;
   int64_t getNewRoundPrecision() const;

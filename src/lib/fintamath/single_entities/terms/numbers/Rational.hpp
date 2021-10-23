@@ -11,10 +11,10 @@ public:
   Rational() = default;
   explicit Rational(const std::string &strVal);
   // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE
-  Rational(const Integer &val);
+  Rational(Integer val);
   // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE
   Rational(int64_t val);
-  Rational(const Integer &numerator, const Integer &denominator);
+  Rational(Integer numerator, Integer denominator);
   Rational(int64_t numerator, int64_t denominator);
 
   Rational &operator=(const Integer &rhs);
