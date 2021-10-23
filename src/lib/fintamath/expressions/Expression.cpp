@@ -78,7 +78,7 @@ static vector<string> makeVectOfTokens(const string &strExpr) {
 
 static Expression makeExpression(const vector<string> &tokensVect) {
   if (tokensVect.empty()) {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Expression invalid input");
   }
 
   Expression expr;
@@ -86,7 +86,7 @@ static Expression makeExpression(const vector<string> &tokensVect) {
   makeExpressionRec(tokensVect, expr.getRootModifiable()->right, 0, tokensVect.size() - 1);
 
   if (expr.getRootModifiable()->right == nullptr) {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Expression invalid input");
   }
 
   return expr;
@@ -175,10 +175,10 @@ static void addRational(vector<string> &tokensVect, const string &token, size_t 
 
 static void addFactorial(vector<string> &tokensVect, const string &token, size_t &pos) {
   if (tokensVect.empty()) {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Expression invalid input");
   }
   if (tokensVect.front() == "!" || tokensVect.front() == "!!") {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Expression invalid input");
   }
 
   string factorialFunc = "!";
@@ -194,13 +194,13 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
       ++bracketsNum;
     } else if (tokensVect[i] == "(") {
       if (bracketsNum == 0) {
-        throw invalid_argument("Parser invalid input");
+        throw invalid_argument("Expression invalid input");
       }
       --bracketsNum;
     }
     if (bracketsNum == 0) {
       if (types::isFunction(tokensVect[i - 1])) {
-        throw invalid_argument("Parser invalid input");
+        throw invalid_argument("Expression invalid input");
       }
       tokensVect.insert(tokensVect.begin() + (int64_t)i, factorialFunc);
       return;
@@ -209,12 +209,12 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
 
   if (tokensVect.front() == "(") {
     if (bracketsNum == 0) {
-      throw invalid_argument("Parser invalid input");
+      throw invalid_argument("Expression invalid input");
     }
     --bracketsNum;
   }
   if (bracketsNum != 0) {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Expression invalid input");
   }
 
   tokensVect.insert(tokensVect.begin(), factorialFunc);
@@ -247,7 +247,7 @@ static void addConstVariableFunction(vector<string> &tokensVect, const string &t
   if (types::isConstant(literalExpr) || types::isFunction(literalExpr)) {
     tokensVect.push_back(literalExpr);
   } else {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Expression invalid input");
   }
 }
 
@@ -264,7 +264,7 @@ static void addBinaryFunctions(vector<string> &tokensVect) { // NOLINT
 
       for (size_t j = i + 1; j < tokensVect.size(); ++j) {
         if (bracketsNum == 0) {
-          throw invalid_argument("Parser invalid input");
+          throw invalid_argument("Expression invalid input");
         }
         if (tokensVect[j] == "(") {
           ++bracketsNum;
@@ -284,7 +284,7 @@ static void addBinaryFunctions(vector<string> &tokensVect) { // NOLINT
       }
 
       if (!isFind) {
-        throw invalid_argument("Parser invalid input");
+        throw invalid_argument("Expression invalid input");
       }
     }
   }
@@ -297,7 +297,7 @@ static void addValue(const shared_ptr<Expression::Elem> &elem, const string &tok
     try {
       elem->info = std::make_shared<Rational>(token);
     } catch (const invalid_argument &) {
-      throw invalid_argument("Parser invalid input");
+      throw invalid_argument("Expression invalid input");
     }
   }
 }
@@ -311,7 +311,7 @@ static bool descent(const vector<string> &tokensVect, const shared_ptr<Expressio
       ++bracketsNum;
     } else if (tokensVect[i] == "(") {
       if (bracketsNum == 0) {
-        throw invalid_argument("Parser invalid input");
+        throw invalid_argument("Expression invalid input");
       }
       --bracketsNum;
     }
@@ -349,10 +349,10 @@ static bool descent(const vector<string> &tokensVect, const shared_ptr<Expressio
 static void makeExpressionRec(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t first,
                               size_t last) {
   if (first > last) {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Expression invalid input");
   }
   if (first == SIZE_MAX || last == SIZE_MAX) {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Expression invalid input");
   }
 
   if (elem == nullptr) {

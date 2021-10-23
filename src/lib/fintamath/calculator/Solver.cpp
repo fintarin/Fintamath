@@ -32,7 +32,7 @@ void Solver::setPrecision(int64_t precision_) {
 
 Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {
   if (elem->info == nullptr) {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Solver invalid input");
   }
 
   if (elem->info->getTypeName() == "Constant") {
@@ -48,12 +48,12 @@ Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {
 
 void Solver::solveRec(const shared_ptr<Expression::Elem> &elem) {
   if (elem->info == nullptr) {
-    throw invalid_argument("Parser invalid input");
+    throw invalid_argument("Solver invalid input");
   }
 
   if (elem->right != nullptr) {
     if (elem->right->info == nullptr) {
-      throw invalid_argument("Parser invalid input");
+      throw invalid_argument("Solver invalid input");
     }
     if (elem->right->info->getTypeName() == "Operator" || elem->right->info->getTypeName() == "Function") {
       solveRec(elem->right);
@@ -62,7 +62,7 @@ void Solver::solveRec(const shared_ptr<Expression::Elem> &elem) {
 
   if (elem->left != nullptr) {
     if (elem->left->info == nullptr) {
-      throw invalid_argument("Parser invalid input");
+      throw invalid_argument("Solver invalid input");
     }
     if (elem->left->info->getTypeName() == "Operator" || elem->left->info->getTypeName() == "Function") {
       solveRec(elem->left);
