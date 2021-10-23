@@ -8,6 +8,7 @@
 class Calculator {
 public:
   std::string calculate(const std::string &);
+  int64_t getPrecision();
   void setPrecision(int64_t);
 
 private:

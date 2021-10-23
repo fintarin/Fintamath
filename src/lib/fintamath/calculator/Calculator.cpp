@@ -69,6 +69,10 @@ string Calculator::calculate(const string &inStr) {
   return resStr;
 }
 
+int64_t Calculator::getPrecision() {
+  return solver.getPrecision();
+}
+
 inline void addPoint(string &str) {
   str.insert(str.begin() + 1, '.');
   str += '0';
