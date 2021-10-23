@@ -23,4 +23,4 @@ target_include_directories(${PROJECT_NAME} PRIVATE fintamath)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_lib Qt5::Widgets)
 
-add_definitions("-DFINTAMATH_CONSOLE_EXE")
+add_definitions(-DFINTAMATH_CONSOLE_EXE="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}_console")

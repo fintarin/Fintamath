@@ -1,26 +1,18 @@
 #include <iostream>
+#include <stdexcept>
 #include <string>
 
 #include "calculator/Calculator.hpp"
 
 using namespace std;
 
-int main() {
+int main(int /*argc*/, char *argv[]) {
   Calculator calc;
-
-  while (true) {
-    string str;
-    string res;
-    cout << ">> ";
-    getline(cin, str);
-    cout << "<< ";
-
-    try {
-      res = calc.calculate(str);
-    } catch (exception &exc) {
-      res = exc.what();
-    }
-
-    cout << res << "\n\n";
+  try {
+    cout << calc.calculate(string(argv[1])); // NOLINT
+  } catch (const domain_error &exc) {
+    cout << exc.what();
+  } catch (const invalid_argument &) {
+    cout << "Sorry, we cannot solve this expression";
   }
 }
