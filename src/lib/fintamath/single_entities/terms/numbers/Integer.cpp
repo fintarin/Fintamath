@@ -456,7 +456,7 @@ static string toString(const IntVector &intVect, int64_t baseSize) {
 // Нахождение разряда перед первым ненулевым, начиная с младших разрядов
 static int64_t firstZeroNum(const IntVector &rhs) {
   int64_t num = 0;
-  while (rhs[num] == 0) {
+  while (num < rhs.size() && rhs[num] == 0) {
     ++num;
   }
   return num;
