@@ -8,77 +8,78 @@
 
 using namespace std;
 
-static void addPoint(string &str);
+static void insertFloatingPoint(string &strVal);
 
-size_t cutZeros(string &str) {
+size_t cutZeros(string &strVal) {
   size_t order = 0;
-  while (*str.begin() == '0') {
-    str.erase(str.begin());
+  while (*strVal.begin() == '0') {
+    strVal.erase(strVal.begin());
     ++order;
   }
   return order;
 }
 
-void Calculator::toFloatingPoint(string &str) {
-  bool minus = (*str.begin() == '-');
-  if (minus) {
-    str.erase(0, 1);
+void Calculator::toShortForm(string &strVal) const {
+  bool isNegative = (*strVal.begin() == '-');
+  if (isNegative) {
+    strVal.erase(0, 1);
   }
 
-  if (str == "0") {
+  if (strVal == "0") {
     return;
   }
-  if (*str.begin() == '0') {
-    str.erase(str.begin() + 1);
-    if (str.size() > 1 && str.size() > solver.getPrecision() + 2) {
-      str.erase(solver.getPrecision() + 2);
+
+  if (*strVal.begin() == '0') {
+    strVal.erase(strVal.begin() + 1);
+    if (strVal.size() > 1 && strVal.size() > solver.getPrecision() + 2) {
+      strVal.erase(solver.getPrecision() + 2);
     }
 
-    size_t order = cutZeros(str);
-    addPoint(str);
+    size_t order = cutZeros(strVal);
+    insertFloatingPoint(strVal);
 
-    str += "*10^(-";
-    str += to_string(order) + ')';
+    strVal += "*10^(-";
+    strVal += to_string(order) + ')';
   } else {
-    size_t order = distance(begin(str), find(begin(str), end(str), '.'));
-    if (order != str.size()) {
-      str.erase(order, 1);
+    size_t order = distance(begin(strVal), find(begin(strVal), end(strVal), '.'));
+    if (order != strVal.size()) {
+      strVal.erase(order, 1);
     }
-    if (str.size() > solver.getPrecision() + 1) {
-      str.erase(solver.getPrecision() + 2);
+    if (strVal.size() > solver.getPrecision() + 1) {
+      strVal.erase(solver.getPrecision() + 2);
     }
 
-    addPoint(str);
+    insertFloatingPoint(strVal);
 
     if (order > 1) {
-      str += "*10^";
-      str += to_string(order - 1);
+      strVal += "*10^";
+      strVal += to_string(order - 1);
     }
   }
 
-  if (minus) {
-    str.insert(str.begin(), '-');
+  if (isNegative) {
+    strVal.insert(strVal.begin(), '-');
   }
 }
 
-string Calculator::calculate(const string &inStr) {
-  Expression Expression(inStr);
-  Rational res = this->solver.solve(Expression);
-  string resStr = res.toString(solver.getPrecision());
-  toFloatingPoint(resStr);
-  return resStr;
+string Calculator::calculate(const string &strExpr) {
+  Expression expr(strExpr);
+  Rational val = this->solver.solve(expr);
+  string valStr = val.toString(solver.getPrecision());
+  toShortForm(valStr);
+  return valStr;
 }
 
-int64_t Calculator::getPrecision() {
+int64_t Calculator::getPrecision() const {
   return solver.getPrecision();
-}
-
-static void addPoint(string &str) {
-  str.insert(str.begin() + 1, '.');
-  str += '0';
-  str = Rational(str).toString();
 }
 
 void Calculator::setPrecision(int64_t precision) {
   solver.setPrecision(precision);
+}
+
+static void insertFloatingPoint(string &strVal) {
+  strVal.insert(strVal.begin() + 1, '.');
+  strVal += '0';
+  strVal = Rational(strVal).toString();
 }
