@@ -1,5 +1,6 @@
 #include "single_entities/operators/Function.hpp"
 
+#include <regex>
 #include <stdexcept>
 #include <string>
 
@@ -7,127 +8,68 @@
 
 using namespace std;
 
-Function::Function(const string &inStr) {
-  if (!types::isFunction(inStr)) {
+Function::Function(const string &strFunc) {
+  if (!types::isFunction(strFunc)) {
     throw invalid_argument("Function invalid input");
   }
-  this->func = inStr;
+  this->name = strFunc;
 }
 
-bool types::isFunction(const string &inStr) {
-  if (inStr == "sqrt") {
-    return true;
+Rational Function::solve(const Rational &rhs, int64_t precision) const {
+  if (this->name == "sqrt") {
+    return functions::sqrt(rhs, precision);
   }
-  if (inStr == "exp") {
-    return true;
+  if (this->name == "exp") {
+    return functions::exp(rhs, precision);
   }
-  if (inStr == "log") {
-    return true;
+  if (this->name == "ln") {
+    return functions::ln(rhs, precision);
   }
-  if (inStr == "ln") {
-    return true;
+  if (this->name == "lb") {
+    return functions::lb(rhs, precision);
   }
-  if (inStr == "lb") {
-    return true;
+  if (this->name == "lg") {
+    return functions::lg(rhs, precision);
   }
-  if (inStr == "lg") {
-    return true;
+  if (this->name == "sin") {
+    return functions::sin(rhs, precision);
   }
-  if (inStr == "sin") {
-    return true;
+  if (this->name == "cos") {
+    return functions::cos(rhs, precision);
   }
-  if (inStr == "cos") {
-    return true;
+  if (this->name == "tan") {
+    return functions::tan(rhs, precision);
   }
-  if (inStr == "tan") {
-    return true;
+  if (this->name == "cot") {
+    return functions::cot(rhs, precision);
   }
-  if (inStr == "cot") {
-    return true;
+  if (this->name == "asin") {
+    return functions::asin(rhs, precision);
   }
-  if (inStr == "asin") {
-    return true;
+  if (this->name == "acos") {
+    return functions::acos(rhs, precision);
   }
-  if (inStr == "acos") {
-    return true;
+  if (this->name == "atan") {
+    return functions::atan(rhs, precision);
   }
-  if (inStr == "atan") {
-    return true;
+  if (this->name == "acot") {
+    return functions::acot(rhs, precision);
   }
-  if (inStr == "acot") {
-    return true;
+  if (this->name == "abs") {
+    return functions::abs(rhs);
   }
-  if (inStr == "abs") {
-    return true;
+  if (this->name == "!") {
+    return functions::factorial(rhs);
   }
-  if (inStr == "!") {
-    return true;
-  }
-  if (inStr == "!!") {
-    return true;
-  }
-  return false;
-}
-
-bool types::isBinaryFunction(const string &inStr) {
-  return (inStr == "log");
-}
-
-Rational Function::solve(const Rational &frac, int64_t precision) const {
-  if (this->func == "sqrt") {
-    return functions::sqrt(frac, precision);
-  }
-  if (this->func == "exp") {
-    return functions::exp(frac, precision);
-  }
-  if (this->func == "ln") {
-    return functions::ln(frac, precision);
-  }
-  if (this->func == "lb") {
-    return functions::lb(frac, precision);
-  }
-  if (this->func == "lg") {
-    return functions::lg(frac, precision);
-  }
-  if (this->func == "sin") {
-    return functions::sin(frac, precision);
-  }
-  if (this->func == "cos") {
-    return functions::cos(frac, precision);
-  }
-  if (this->func == "tan") {
-    return functions::tan(frac, precision);
-  }
-  if (this->func == "cot") {
-    return functions::cot(frac, precision);
-  }
-  if (this->func == "asin") {
-    return functions::asin(frac, precision);
-  }
-  if (this->func == "acos") {
-    return functions::acos(frac, precision);
-  }
-  if (this->func == "atan") {
-    return functions::atan(frac, precision);
-  }
-  if (this->func == "acot") {
-    return functions::acot(frac, precision);
-  }
-  if (this->func == "abs") {
-    return functions::abs(frac);
-  }
-  if (this->func == "!") {
-    return functions::factorial(frac);
-  }
-  if (this->func == "!!") {
-    return functions::doubleFactorial(frac);
+  if (this->name == "!!") {
+    return functions::doubleFactorial(rhs);
   }
   throw invalid_argument("Function invalid input");
 }
 
-Rational Function::solve(const Rational &base, const Rational &frac, int64_t precision) const {
-  if (this->func == "log") {
-    return functions::log(base, frac, precision);
+Rational Function::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
+  if (this->name == "log") {
+    return functions::log(lhs, rhs, precision);
   }
   throw invalid_argument("Function invalid input");
 }
@@ -137,5 +79,16 @@ string Function::getTypeName() const {
 }
 
 string Function::toString() const {
-  return this->func;
+  return this->name;
 }
+
+namespace types {
+bool isFunction(const string &str) {
+  regex funcRegex(R"(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs|!|!!)");
+  return regex_search(str, funcRegex);
+}
+
+bool isBinaryFunction(const string &str) {
+  return (str == "log");
+}
+} // namespace types

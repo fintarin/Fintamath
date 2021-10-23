@@ -8,21 +8,21 @@
 
 class Function : public ISingleEntity {
 public:
-  explicit Function(const std::string &);
+  explicit Function(const std::string &strFunc);
 
-  Rational solve(const Rational &frac, int64_t precision) const;
-  Rational solve(const Rational &base, const Rational &frac, int64_t precision) const;
+  Rational solve(const Rational &rhs, int64_t precision) const;
+  Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
 
   std::string getTypeName() const override;
   std::string toString() const override;
 
 private:
-  std::string func;
+  std::string name;
 };
 
 namespace types {
-bool isFunction(const std::string &);
-bool isBinaryFunction(const std::string &);
+bool isFunction(const std::string &str);
+bool isBinaryFunction(const std::string &str);
 } // namespace types
 
 #endif // FUNCTION_HPP
