@@ -8,7 +8,7 @@
 
 using namespace std;
 
-static void insertFloatingPoint(string &strVal);
+static void insertFloatingPoint(string &strVal, int64_t precision);
 
 size_t cutZeros(string &strVal) {
   size_t order = 0;
@@ -31,13 +31,8 @@ void Calculator::toShortForm(string &strVal) const {
 
   if (*strVal.begin() == '0') {
     strVal.erase(strVal.begin() + 1);
-    if (strVal.size() > 1 && strVal.size() > solver.getPrecision() + 2) {
-      strVal.erase(solver.getPrecision() + 2);
-    }
-
     size_t order = cutZeros(strVal);
-    insertFloatingPoint(strVal);
-
+    insertFloatingPoint(strVal, solver.getPrecision());
     strVal += "*10^(-";
     strVal += to_string(order) + ')';
   } else {
@@ -49,7 +44,7 @@ void Calculator::toShortForm(string &strVal) const {
       strVal.erase(solver.getPrecision() + 2);
     }
 
-    insertFloatingPoint(strVal);
+    insertFloatingPoint(strVal, solver.getPrecision());
 
     if (order > 1) {
       strVal += "*10^";
@@ -78,8 +73,8 @@ void Calculator::setPrecision(int64_t precision) {
   solver.setPrecision(precision);
 }
 
-static void insertFloatingPoint(string &strVal) {
+static void insertFloatingPoint(string &strVal, int64_t precision) {
   strVal.insert(strVal.begin() + 1, '.');
   strVal += '0';
-  strVal = Rational(strVal).toString();
+  strVal = Rational(strVal).toString(precision);
 }

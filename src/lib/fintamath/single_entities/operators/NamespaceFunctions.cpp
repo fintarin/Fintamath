@@ -17,7 +17,6 @@ const int64_t PI_INITIAL_PRECISION = 72;
 static int64_t getNewPrecision(size_t precision);
 static Rational getInversedPrecisionVal(size_t precision);
 
-static Integer abs(const Integer &rhs);
 static Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision);
 static Rational naturalPow(const Rational &lhs, const Integer &rhs);
 static Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision);
@@ -37,7 +36,7 @@ Rational sqrt(const Rational &rhs, size_t precision) {
     throw domain_error("sqrt out of range");
   }
   if (rhs == 0) {
-    return Rational(0);
+    return 0;
   }
 
   string shift(precision, '0');
@@ -52,7 +51,7 @@ Rational sqrt(const Rational &rhs, size_t precision) {
 // Логарифм по произвольному основанию. Используется формула: log(a, b) = ln(b) / ln(a).
 Rational log(const Rational &lhs, const Rational &rhs, size_t precision) {
   try {
-    return ln(rhs, precision) / ln(lhs, precision);
+    return (ln(rhs, precision) / ln(lhs, precision)).round(precision);
   } catch (const domain_error &) {
     throw domain_error("log out of range");
   }
@@ -131,12 +130,7 @@ Rational pow(const Rational &lhs, const Rational &rhs, size_t precision) {
     return lhsPowIntRhs;
   }
 
-  Rational rhsMultLnRhs;
-  try {
-    rhsMultLnRhs = Rational(rhs.getNumerator(), rhs.getDenominator()) * ln(rhsStep, precision);
-  } catch (const domain_error &) {
-    throw domain_error("pow out of range");
-  }
+  auto rhsMultLnRhs = Rational(rhs.getNumerator(), rhs.getDenominator()) * ln(rhsStep, precision);
 
   Integer step = 1;
   Rational precisionVal = getInversedPrecisionVal(getNewPrecision(precision));
@@ -183,9 +177,9 @@ Rational sin(const Rational &rhs, size_t precision) {
   if (rhsStep >= piDiv2) {
     rhsStep = cos(rhsStep - piDiv2, precision);
     if (isNegative) {
-      rhsStep *= -rhsStep;
+      rhsStep = -rhsStep;
     }
-    return rhsStep;
+    return rhsStep.round(precision);
   }
   rhsStep = rhsStep.round(getNewPrecision(precision));
 
@@ -213,10 +207,6 @@ Rational sin(const Rational &rhs, size_t precision) {
   a используются формулы приведения.
 */
 Rational cos(const Rational &rhs, size_t precision) {
-  if (rhs == 0) {
-    return 1;
-  }
-
   Rational pi = getPi(precision);
   Rational piMult2 = pi * 2;
   Rational piDiv2 = pi / 2;
@@ -270,23 +260,25 @@ Rational tan(const Rational &rhs, size_t precision) {
 
   if (val < 0) {
     isNegative = true;
-    val *= -val;
+    val = -val;
   }
   if (val >= pi) {
     val = trigonometryReduce(val, 2, precision);
   }
   if (val >= piDiv2) {
-    val = -cot(val - piDiv2, precision);
+    try {
+      val = -cot(val - piDiv2, precision);
+    } catch (const domain_error &) {
+      throw domain_error("tan out of range");
+    }
+
     if (isNegative) {
       val = -val;
     }
     return val;
   }
 
-  val = cos(val.round(getNewPrecision(precision)), precision);
-  if (Rational(val).round(precision) == 0) {
-    throw domain_error("tan out of range");
-  }
+  val = cos(val, precision);
 
   Rational res = sqrt(1 - val * val, precision) / val;
   if (isNegative) {
@@ -311,22 +303,26 @@ Rational cot(const Rational &rhs, size_t precision) {
     val = trigonometryReduce(val, 2, precision);
   }
   if (val >= piDiv2) {
-    val = -tan(val - piDiv2, precision);
+    try {
+      val = -tan(val - piDiv2, precision);
+    } catch (const domain_error &) {
+      throw domain_error("cot out of range");
+    }
+
     if (isNegative) {
       val = -val;
     }
     return val;
   }
-  val = val.round(getNewPrecision(precision));
 
   Rational sinVal = sin(val, precision);
-  if (Rational(sinVal).round(getNewPrecision(precision)) == 0) {
+  if (sinVal.round(precision - 1) == 0) {
     throw domain_error("cot out of range");
   }
 
   Rational res = sqrt(1 - sinVal * sinVal, precision) / sinVal;
   if (isNegative) {
-    res *= -res;
+    res = -res;
   }
   return res.round(precision);
 }
@@ -351,12 +347,6 @@ Rational asin(const Rational &rhs, size_t precision) {
 Rational acos(const Rational &rhs, size_t precision) {
   if (abs(rhs) > 1) {
     throw domain_error("acos out of range");
-  }
-  if (rhs == 1) {
-    return Rational(0);
-  }
-  if (rhs == -1) {
-    return getPi(precision);
   }
 
   Rational rhsStep = rhs.round(getNewPrecision(precision));
@@ -409,10 +399,6 @@ Rational acos(const Rational &rhs, size_t precision) {
   При других значениях используется формула: acos(a) = acos(1 / sqrt(1 + x^2)).
 */
 Rational atan(const Rational &rhs, size_t precision) {
-  if (rhs == 0) {
-    return Rational(0);
-  }
-
   Rational rhsStep = rhs.round(getNewPrecision(precision));
   bool isNegative = false;
   if (rhsStep < 0) {
@@ -453,7 +439,11 @@ Rational atan(const Rational &rhs, size_t precision) {
 
 // Вычисление acot(x) = pi/2 - atan(x)
 Rational acot(const Rational &rhs, size_t precision) {
-  return (getPi(precision) / 2 - atan(rhs, precision)).round(precision);
+  Rational res = getPi(precision) / 2;
+  if (rhs < 0) {
+    res = -res;
+  }
+  return (res - atan(rhs, precision)).round(precision);
 }
 
 // Обертка над вычислением факториала через дерево
@@ -492,7 +482,6 @@ Rational getE(size_t precision) {
 
   do {
     stepVal /= step;
-    stepVal = stepVal.round(getNewPrecision(precision));
     res += stepVal;
     ++step;
   } while (abs(stepVal) > precisionVal);
@@ -531,7 +520,7 @@ Rational getPi(size_t precision) {
     a = (prevA + prevB) / 2;
     b = sqrt(prevA * prevB, precision);
     Rational diff = (prevA - a);
-    t = (prevT - p * diff * diff).round(getNewPrecision(precision));
+    t = (prevT - p * diff * diff).round(precision);
     p *= 2;
   }
 
@@ -550,13 +539,6 @@ static Rational getInversedPrecisionVal(size_t precision) {
   return (Rational(1, Integer(precStr)));
 }
 
-static Integer abs(const Integer &rhs) {
-  if (rhs < 0) {
-    return -rhs;
-  }
-  return rhs;
-}
-
 /*
   Уменьшение значение a под логарифмом так, чтобы a -> 1, поскольку в окрестности данной точке ряд Тейлора быстро
   сходится. Используя формулу log(a^n) = n*log, путем множественного взятия квадратного корня, число приводится к
@@ -570,7 +552,7 @@ static Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precis
 
   while (functions::abs(res - 1) > maxRedusedVal) {
     multiplier *= 2;
-    res = functions::sqrt(res, getNewPrecision(precision));
+    res = functions::sqrt(res, precision);
   }
 
   return res.round(precision);
@@ -585,7 +567,7 @@ static Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precis
 static Rational naturalPow(const Rational &lhs, const Integer &rhs) {
   Rational res = 1;
   Rational tmpLhs = lhs;
-  Integer tmpRhs = abs(rhs);
+  Integer tmpRhs = rhs;
 
   while (tmpRhs != 0) {
     if ((*(tmpRhs.toString().end() - 1) - '0') % 2 == 0) {
@@ -609,10 +591,6 @@ static Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_
   Rational period = (int64_t)multiplier * functions::getPi(getNewPrecision(precision) + rhs.getInteger().size());
   Integer perionMultiplier = (rhs / period).getInteger();
   Rational res = rhs - perionMultiplier * period;
-  if (res >= period) {
-    perionMultiplier = (res / period).getInteger();
-    res -= perionMultiplier * period;
-  }
   return res;
 }
 

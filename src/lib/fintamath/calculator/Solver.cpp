@@ -16,7 +16,7 @@ static void elemReset(const shared_ptr<Expression::Elem> &elem, const Rational &
 
 Rational Solver::solve(Expression &expr) {
   if (expr.getRootModifiable()->right->right == nullptr && expr.getRootModifiable()->right->left == nullptr) {
-    return Rational(toRational(expr.getRootModifiable()->right).toString());
+    return Rational(toRational(expr.getRootModifiable()->right).toString(precision));
   }
   solveRec(expr.getRootModifiable()->right);
   return *dynamic_pointer_cast<Rational>(expr.getRootModifiable()->right->info);
@@ -27,46 +27,25 @@ int64_t Solver::getPrecision() const {
 }
 
 void Solver::setPrecision(int64_t precision_) {
-  this->precision = precision_;
+  this->precision = precision_ <= 0 ? 1 : precision_;
 }
 
 Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {
-  if (elem->info == nullptr) {
-    throw invalid_argument("Solver invalid input");
-  }
-
   if (elem->info->getTypeName() == "Constant") {
     return Constant(elem->info->toString()).toRational(getNewPrecision());
   }
-
-  try {
-    return *dynamic_pointer_cast<Rational>(elem->info);
-  } catch (const invalid_argument &) {
-    throw invalid_argument("Solver invalid input");
-  }
+  return *dynamic_pointer_cast<Rational>(elem->info);
 }
 
 void Solver::solveRec(const shared_ptr<Expression::Elem> &elem) {
-  if (elem->info == nullptr) {
-    throw invalid_argument("Solver invalid input");
+  if (elem->right != nullptr &&
+      (elem->right->info->getTypeName() == "Operator" || elem->right->info->getTypeName() == "Function")) {
+    solveRec(elem->right);
   }
 
-  if (elem->right != nullptr) {
-    if (elem->right->info == nullptr) {
-      throw invalid_argument("Solver invalid input");
-    }
-    if (elem->right->info->getTypeName() == "Operator" || elem->right->info->getTypeName() == "Function") {
-      solveRec(elem->right);
-    }
-  }
-
-  if (elem->left != nullptr) {
-    if (elem->left->info == nullptr) {
-      throw invalid_argument("Solver invalid input");
-    }
-    if (elem->left->info->getTypeName() == "Operator" || elem->left->info->getTypeName() == "Function") {
-      solveRec(elem->left);
-    }
+  if (elem->left != nullptr &&
+      (elem->left->info->getTypeName() == "Operator" || elem->left->info->getTypeName() == "Function")) {
+    solveRec(elem->left);
   }
 
   if (elem->info->getTypeName() == "Operator") {
