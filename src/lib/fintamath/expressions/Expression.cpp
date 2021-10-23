@@ -33,6 +33,7 @@ static void addRational(vector<string> &tokensVect, const string &token, size_t 
 static void addFactorial(vector<string> &tokensVect, const string &token, size_t &pos);
 static void addConstVariableFunction(vector<string> &tokensVect, const string &token, size_t &pos);
 static void addBinaryFunctions(vector<string> &tokensVect);
+static void addBinaryFunction(vector<string> &tokensVect, vector<size_t> &placementsVect, size_t num);
 static void addValue(const shared_ptr<Expression::Elem> &elem, const string &token);
 
 static bool descent(const vector<string> &tokensVect, const shared_ptr<Expression::Elem> &elem, size_t begin,
@@ -255,43 +256,42 @@ static void addConstVariableFunction(vector<string> &tokensVect, const string &t
   }
 }
 
-static void addBinaryFunctions(vector<string> &tokensVect) { // NOLINT
+static void addBinaryFunctions(vector<string> &tokensVect) {
   vector<size_t> placementsVect;
-
   for (size_t i = 0; i < tokensVect.size(); i++) {
     if (types::isBinaryFunction(tokensVect[i]) &&
         find(placementsVect.begin(), placementsVect.end(), i) == placementsVect.end()) {
-      string token = tokensVect[i];
-      tokensVect.erase(tokensVect.begin() + (int64_t)i);
-      size_t bracketsNum = 1;
-      bool isFind = false;
-
-      for (size_t j = i + 1; j < tokensVect.size(); j++) {
-        if (bracketsNum == 0) {
-          throw invalid_argument("Expression invalid input");
-        }
-        if (tokensVect[j] == "(") {
-          bracketsNum++;
-        } else if (tokensVect[j] == ")") {
-          bracketsNum--;
-        } else if (bracketsNum == 1 && tokensVect[j] == ",") {
-          tokensVect.erase(tokensVect.begin() + (int64_t)j);
-          tokensVect.insert(tokensVect.begin() + (int64_t)j, {")", token, "("});
-
-          transform(placementsVect.begin(), placementsVect.end(), placementsVect.begin(),
-                    [j](size_t k) { return (k > j) ? k + 1 : k; });
-          placementsVect.push_back(j + 1);
-
-          isFind = true;
-          break;
-        }
-      }
-
-      if (!isFind) {
-        throw invalid_argument("Expression invalid input");
-      }
+      addBinaryFunction(tokensVect, placementsVect, i);
     }
   }
+}
+
+static void addBinaryFunction(vector<string> &tokensVect, vector<size_t> &placementsVect, size_t num) {
+  string token = tokensVect[num];
+  tokensVect.erase(tokensVect.begin() + (int64_t)num);
+  size_t bracketsNum = 1;
+
+  for (size_t i = num + 1; i < tokensVect.size(); i++) {
+    if (bracketsNum == 0) {
+      throw invalid_argument("Expression invalid input");
+    }
+    if (tokensVect[i] == "(") {
+      bracketsNum++;
+    } else if (tokensVect[i] == ")") {
+      bracketsNum--;
+    } else if (bracketsNum == 1 && tokensVect[i] == ",") {
+      tokensVect.erase(tokensVect.begin() + (int64_t)i);
+      tokensVect.insert(tokensVect.begin() + (int64_t)i, {")", token, "("});
+
+      transform(placementsVect.begin(), placementsVect.end(), placementsVect.begin(),
+                [i](size_t k) { return (k > i) ? k + 1 : k; });
+      placementsVect.push_back(i + 1);
+
+      return;
+    }
+  }
+
+  throw invalid_argument("Expression invalid input");
 }
 
 static void addValue(const shared_ptr<Expression::Elem> &elem, const string &token) {
@@ -372,9 +372,6 @@ static void makeExpressionRec(const vector<string> &tokensVect, shared_ptr<Expre
     return;
   }
   if (descent(tokensVect, elem, first, last, "*", "/")) {
-    return;
-  }
-  if (descent(tokensVect, elem, first, last, "^")) {
     return;
   }
   if (descent(tokensVect, elem, first, last, "^")) {
