@@ -511,7 +511,7 @@ void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {
   rhs.sign = false;
 }
 
-// Наибольший общий делитель, используется алгоритм Евклида
+// Using Euclid's algorithm
 static Integer gcd(const Integer &lhs, const Integer &rhs) {
   Integer tmpLhs = lhs;
   Integer tmpRhs = rhs;
@@ -523,7 +523,7 @@ static Integer gcd(const Integer &lhs, const Integer &rhs) {
   return tmpLhs;
 }
 
-// Наименьшее общее кратное, используется формула НОК(a, b) = a * b / НОД(a, b)
+// Using the formula lcm(a, b) = a * b / gcd(a, b)
 static Integer lcm(const Integer &lhs, const Integer &rhs) {
   return lhs * rhs / gcd(lhs, rhs);
 }

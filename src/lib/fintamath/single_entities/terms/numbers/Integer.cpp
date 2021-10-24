@@ -1,5 +1,5 @@
 /*
-  Длинное число хранится в виде вектора, где разряды идут от младших к старшим. База системы (INT_BASE) = 10^9.
+  Integer is stored as a vector with bits going from low to high
 */
 #include "single_entities/terms/numbers/Integer.hpp"
 
@@ -415,7 +415,7 @@ string Integer::getTypeName() const {
   return "Integer";
 }
 
-// Обертка над квадратным корнем в столбик, изменяет базу системы, в соответстие с алгоритмом
+// Changing the number base to solve sqrt
 Integer sqrt(const Integer &rhs) {
   if (rhs < 0) {
     throw domain_error("sqrt out of range");
@@ -457,7 +457,7 @@ static string toString(const IntVector &intVect, int64_t baseSize) {
   return strVal;
 }
 
-// Нахождение разряда перед первым ненулевым, начиная с младших разрядов
+// Finding a digit before the first non-zero digit, starting with the lowest digits
 static int64_t firstZeroNum(const IntVector &rhs) {
   int64_t num = 0;
   while (num < rhs.size() && rhs[num] == 0) {
@@ -466,7 +466,6 @@ static int64_t firstZeroNum(const IntVector &rhs) {
   return num;
 }
 
-// Приведение к значимым цифрам
 static void toSignificantDigits(IntVector &rhs) {
   size_t i = rhs.size() - 1;
   for (; i > 0; i--) {
@@ -477,7 +476,7 @@ static void toSignificantDigits(IntVector &rhs) {
   rhs.resize(i + 1);
 }
 
-// Если число в данном разряде >= INT_BASE, излишек прибавляется к следующему разряду
+// If the value in the given digit >= INT_BASE, the surplus is added to the next digit
 static void toBasePositive(IntVector &rhs, size_t pos, int64_t base) {
   if (rhs[pos] >= base) {
     rhs[pos + 1] += rhs[pos] / base;
@@ -485,7 +484,7 @@ static void toBasePositive(IntVector &rhs, size_t pos, int64_t base) {
   }
 }
 
-// Если число в данном разряде < 0, недостаток вычитается из следующего разряда
+// If the value in the given digit < 0, then the deficiency is subtracted from the next digit
 static void toBaseNegative(IntVector &rhs, size_t pos, int64_t base) {
   if (rhs[pos] < 0) {
     rhs[pos + 1]--;
@@ -493,7 +492,6 @@ static void toBaseNegative(IntVector &rhs, size_t pos, int64_t base) {
   }
 }
 
-// Последовательное сравнение разрядов двух чисел (от старших к младшим)
 static bool equal(const IntVector &lhs, const IntVector &rhs) {
   if (lhs.size() != rhs.size()) {
     return false;
@@ -588,7 +586,7 @@ static bool greaterEqual(const IntVector &lhs, const IntVector &rhs) {
   return true;
 }
 
-// Сложение в столбик, не приводит к значимым числам
+// Column addition without reduction to significant digits
 static IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector val = lhs;
   if (rhs.size() > val.size()) {
@@ -607,14 +605,14 @@ static IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   return val;
 }
 
-// Сложение с приведением к значимым цифрам
+// Column addition with reduction to significant digits
 static IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector val = add(lhs, rhs, base);
   toSignificantDigits(val);
   return val;
 }
 
-// Вычитание в столбик
+// Column substraction
 static IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector val = lhs;
 
@@ -630,7 +628,7 @@ static IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t b
   return val;
 }
 
-// Умножение на короткое число
+// Multiplication by a short number
 static IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base) {
   IntVector val;
   val.resize(lhs.size() + 1, 0);
@@ -645,9 +643,7 @@ static IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base) 
 }
 
 /*
-  Умножение чисел в качестве многочленов.
-  Каждый разряд первого числа умножается на каждый разряд второго числа.
-  Не приводит к значимым числам.
+  Multiplication of numbers in the form of polynomials without reduction to significant digits
 */
 static IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector res;
@@ -664,17 +660,17 @@ static IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, 
 }
 
 /*
-  Умножение чисел A на B методом Карацубы. Рекурсивно применяется, пока размер
-  одного из чисел не станет равен KARATSUBA_CONST.
+  Multiplication of numbers A by B by Karatsuba's method. Recursively applied until the size of of one of the numbers is
+  equal to KARATSUBA_CUTOFF
 
-  A * B = p0 + p1 * INT_BASE^m + p2 * INT_BASE^2m,
+  A * B = p0 + p1 * INT_BASE^m + p2 * INT_BASE^2m
 
-  p0 = A0 * B0,
-  p1 = (A0 + A1)(B0 + B1) - (p1 + p2),
-  p2 = A1 * B1.
+  p0 = A0 * B0
+  p1 = (A0 + A1)(B0 + B1) - (p1 + p2)
+  p2 = A1 * B1
 
-  A0 и B0 - первые половины соответсвующих чисел (разряды 0 — m),
-  A1 и B1 - вторые половины соответсвующих чисел (разряды m — 2m).
+  A0 и B0 - the first halves of numbers
+  A1 и B1 - the second halves of numbers
 */
 static IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   if (lhs.size() < KARATSUBA_CUTOFF || rhs.size() < KARATSUBA_CUTOFF) {
@@ -701,7 +697,7 @@ static IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, i
   return add(add(coeff3, coeff2, base), coeff1, base);
 }
 
-// Умножение нулевый разрядов чисел
+// Multiplication of zero digits
 static size_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
   int64_t lhsZerosNum = firstZeroNum(lhs);
   int64_t rhsZerosNum = firstZeroNum(rhs);
@@ -716,7 +712,7 @@ static size_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
   return lhsZerosNum + rhsZerosNum;
 }
 
-// Обертка над умножением Карацубы, добавление лидирующих нулей для приведения чисел к виду, требуемому алгоритмом
+// Adding leading zeros to bring the numbers to the required form
 static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   IntVector tmpLhs = lhs;
   IntVector tmpRhs = rhs;
@@ -743,7 +739,7 @@ static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t ba
   return val;
 }
 
-// Деление на короткое
+// Dividing by a short number
 static IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
   IntVector val = lhs;
 
@@ -757,7 +753,7 @@ static IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
   return val;
 }
 
-// Деление на короткое с получением остатка
+// Dividing by short number with a remainder
 static IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVal, int64_t base) {
   IntVector val = lhs;
 
@@ -772,7 +768,7 @@ static IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVa
   return val;
 }
 
-// Сокращение нулевые разрядов чисел
+// Reduction of zero digits of numbers
 static void zerosDivide(IntVector &lhs, IntVector &rhs) {
   int64_t zerosNum = min(firstZeroNum(lhs), firstZeroNum(rhs));
   if (lhs.size() != 1 && rhs.size() != 1 && zerosNum != 0) {
@@ -781,7 +777,6 @@ static void zerosDivide(IntVector &lhs, IntVector &rhs) {
   }
 }
 
-// Деление A на B с помощью бинарного поиска
 static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, IntVector &left, IntVector &right,
                                  int64_t base) {
   IntVector mid;
@@ -812,9 +807,9 @@ static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, Int
 }
 
 /*
-  Обертка над делением бинарным поиском.
-  Нижняя и верхняя границы определяются следующим образом: N = A/(B.back() +- 1). N - соответсвующая граница B.back() —
-  старший разряд числа B. Затем отбрасываются (N.size() + B.size()) первых разрядов.
+  The lower and upper bounds for binsearch division are defined as follows: N = A/(B.back() +- 1). N is the
+  corresponding bound of B.back() - the most significant digit of B. Then (N.size() + B.size()) of the first digits
+  are discarded.
 */
 static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base) {
   if (rhs.size() == 1) {
@@ -850,21 +845,21 @@ static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &m
 }
 
 /*
-  Вычисление квадратного корня A в столбик.
+  Calculating the square root of A in a column.
 
-  1. Делим число A на грани по две цифры в каждой грани справа налево (от младших разрядов к старшим).
+  1. Divide number A into faces, two digits in each face from right to left (from lowest to highest digits).
 
-  2. Извлечение начинается слева направо. Подбираем число, квадрат которого не превосходит числа, стоящего в первой
-  грани. Это число возводим в квадрат и записывает под числом, стоящим в первой грани.
+  Extraction starts from left to right. Choose a number, the square of which does not exceed the number in the first
+  facet. This number is squared and written under the number in the first face. 3.
 
-  3. Находим разность между числом, стоящим в первой грани, и квадратом подобранного первого числа.
+  Find the difference between the number in the first face and the square of the first selected number.
 
-  4. К получившейся разности сносим следующую грань, полученное число будет делимым. Образовываем делитель. Первую
-  подобранную цифру ответа умножаем на 2, получаем число десятков делителя, а число единиц должно быть таким, чтобы его
-  произведение на весь делитель не превосходило делимого. Подобранную цифру записываем в ответ. Подбор осуществляется с
-  помощью бинарного поиска.
+  4. To the resulting difference, add the next face, and the resulting number will be divisible. Form the divisor. The
+  first answer choice should be multiplied by 2, we get the number of tens of the divisor, and the number of units
+  should be such that its product of the whole divisor does not exceed the divisor. Write the selected digit in the
+  answer. Use binary search for selection.
 
-  5.К получившейся разности сносим следующую грань и выполняем действия по алгоритму.
+  5.To the resulting difference carry the next facet and follow the algorithm.
 */
 static IntVector sqrt(const IntVector &rhs) {
   const int64_t base = 10;

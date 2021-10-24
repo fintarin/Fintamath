@@ -34,7 +34,6 @@ Rational abs(const Rational &rhs) {
   return rhs;
 }
 
-// Вычисление квадратного корня, используется функция для длинного числа
 Rational sqrt(const Rational &rhs, size_t precision) {
   if (rhs < 0) {
     throw domain_error("sqrt out of range");
@@ -52,7 +51,7 @@ Rational sqrt(const Rational &rhs, size_t precision) {
   return val.round(precision);
 }
 
-// Логарифм по произвольному основанию. Используется формула: log(a, b) = ln(b) / ln(a).
+// Using formula: log(a, b) = ln(b) / ln(a).
 Rational log(const Rational &lhs, const Rational &rhs, size_t precision) {
   try {
     return (ln(rhs, precision) / ln(lhs, precision)).round(precision);
@@ -61,7 +60,7 @@ Rational log(const Rational &lhs, const Rational &rhs, size_t precision) {
   }
 }
 
-// Вычисление натурального ln(a), используется ряд Тейлора: ln(a) = sum_{k=0}^{inf} (2/(2k+1)) * ((a-1)/(a+1))^(2k+1)
+// Using Taylor series: ln(a) = sum_{k=0}^{inf} (2/(2k+1)) * ((a-1)/(a+1))^(2k+1)
 Rational ln(const Rational &rhs, size_t precision) {
   if (rhs <= 0) {
     throw domain_error("ln out of range");
@@ -109,9 +108,9 @@ Rational lg(const Rational &rhs, size_t precision) {
 }
 
 /*
-  Возведение действительного a в действительную степень n. n можно представить в виде
-  n_int + n_float, где |n_float| <= 1, тогда a^n = a^n_int * a^n_float. Для вычисления a^n_float, используется ряд
-  Тейлора: a^n = 1 + sum_{k=1}^{inf} (n * ln(a))^k / k! при |n| <= 1.
+  The power of the real a to the real degree n. n can be represented as
+  n_int + n_float, where |n_float| <= 1, then a^n = a^n_int * a^n_float. Using Taylor series for solving a^n_float:
+  a^n = 1 + sum_{k=1}^{inf} (n * ln(a))^k / k! where |n| <= 1.
 */
 Rational pow(const Rational &lhs, const Rational &rhs, size_t precision) {
   if (lhs == 0 && rhs == 0) {
@@ -155,10 +154,7 @@ Rational exp(const Rational &rhs, size_t precision) {
   return pow(getE(precision), rhs, precision);
 }
 
-/*
-  Вычисление sin(a), используется ряд Тейлора: sin(a) = sum_{k=0}^{k=1} (-1)^k * x^(2k+1) / (2k+1)! Для большего
-  сокращения a используются формулы приведения.
-*/
+// Using reduction formulas and Taylor series: sin(a) = sum_{k=0}^{k=1} (-1)^k * x^(2k+1) / (2k+1)!
 Rational sin(const Rational &rhs, size_t precision) {
   Rational pi = getPi(precision);
   Rational piMult2 = pi * 2;
@@ -207,8 +203,7 @@ Rational sin(const Rational &rhs, size_t precision) {
 }
 
 /*
-  Вычисление cos(a), используется ряд Тейлора: sin(a) = sum_{k=0}^{k=1} (-1)^k * x^(2k) / (2k)! Для большего сокращения
-  a используются формулы приведения.
+  Using Taylor series: cos(a) = sum_{k=0}^{k=1} (-1)^k * x^(2k) / (2k)
 */
 Rational cos(const Rational &rhs, size_t precision) {
   Rational pi = getPi(precision);
@@ -254,7 +249,7 @@ Rational cos(const Rational &rhs, size_t precision) {
   return res.round(precision);
 }
 
-// Вычисление tan(a) = sin(a) / cos(a). Для большего сокращения a используются формулы приведения.
+// tan(a) = sin(a) / cos(a)
 Rational tan(const Rational &rhs, size_t precision) {
   Rational pi = getPi(precision);
   Rational piDiv2 = pi / 2;
@@ -291,7 +286,7 @@ Rational tan(const Rational &rhs, size_t precision) {
   return res.round(precision);
 }
 
-// Вычисление cot(a) = cos(a) / sin(a). Для большего сокращения a используются формулы приведения.
+// cot(a) = cos(a) / sin(a)
 Rational cot(const Rational &rhs, size_t precision) {
   Rational pi = getPi(precision);
   Rational piDiv2 = pi / 2;
@@ -341,12 +336,8 @@ Rational asin(const Rational &rhs, size_t precision) {
 }
 
 /*
-  Вычисление acos(a).
-
-  При |a| <= 1/5 используется ряд Тейлора (при данных значениях он быстро сходится):
-  acos(a) = pi/2 - sum_{k=0}^{inf}((2k)! * a^(2k+1) / (4^k * (k!)^2 * (2k+1)).
-
-  При других значениях используется формула: acos(a) = 2atan(sqrt((1-x)/(1+x))).
+  If |a| <= 1/5, using Taylor series: acos(a) = pi/2 - sum_{k=0}^{inf}((2k)! * a^(2k+1) / (4^k * (k!)^2 * (2k+1)).
+  Else using the formula: acos(a) = pi/2 - sum_{k=0}^{inf}((2k)! * a^(2k+1) / (4^k * (k!)^2 * (2k+1)).
 */
 Rational acos(const Rational &rhs, size_t precision) {
   if (abs(rhs) > 1) {
@@ -395,12 +386,8 @@ Rational acos(const Rational &rhs, size_t precision) {
 }
 
 /*
-  Вычисление atan(a).
-
-  При |a| <= 1/5 используется ряд Тейлора (при данных значениях он быстро сходится): acos(a) = sum_{k=1}^{inf}
-  ((-1)^(k-1) * a^(2k-1)) / ((2k-1)).
-
-  При других значениях используется формула: acos(a) = acos(1 / sqrt(1 + x^2)).
+  If |a| <= 1/5, using Taylor series: atan(a) = sum_{k=1}^{inf} ((-1)^(k-1) * a^(2k-1)) / ((2k-1)).
+  Else using the formula: atan(a) = acos(1 / sqrt(1 + x^2)).
 */
 Rational atan(const Rational &rhs, size_t precision) {
   Rational rhsStep = rhs.round(getNewPrecision(precision));
@@ -441,7 +428,7 @@ Rational atan(const Rational &rhs, size_t precision) {
   return res.round(precision);
 }
 
-// Вычисление acot(x) = pi/2 - atan(x)
+// acot(x) = pi/2 - atan(x)
 Rational acot(const Rational &rhs, size_t precision) {
   Rational res = getPi(precision) / 2;
   if (rhs < 0) {
@@ -450,7 +437,6 @@ Rational acot(const Rational &rhs, size_t precision) {
   return (res - atan(rhs, precision)).round(precision);
 }
 
-// Обертка над вычислением факториала через дерево
 Rational factorial(const Rational &rhs) {
   if (rhs < 0 || rhs.getNumerator() != 0) {
     throw domain_error("factorial out of range");
@@ -461,7 +447,6 @@ Rational factorial(const Rational &rhs) {
   return factorialRec(2, rhs.getInteger());
 }
 
-// Вычисление двойного факториала (наивный алгоритм)
 Rational doubleFactorial(const Rational &rhs) {
   if (rhs < 0 || rhs.getNumerator() != 0) {
     throw domain_error("factorial out of range");
@@ -473,7 +458,7 @@ Rational doubleFactorial(const Rational &rhs) {
   return res;
 }
 
-// Вычисление значения e через ряд Тейлора: e = sum_{k=0}^{inf} 1/n!
+// Using Taylor series: e = sum_{k=0}^{inf} 1/n!
 Rational getE(size_t precision) {
   if (precision <= E_INITIAL_PRECISION) {
     return E_CONST;
@@ -494,7 +479,7 @@ Rational getE(size_t precision) {
 }
 
 /*
-  Вычисление значения pi по алгоритму Брента — Саламина:
+  Using Brent-Salamin algorithm
 
   a0 = 1,
   b0 = 1/sqrt2,
@@ -505,6 +490,8 @@ Rational getE(size_t precision) {
   b_{n+1} = sqrt(a_n * b_n),
   t_{n+1} = t_n - p_n * (a_n - a_{n+1})^2,
   p_{n+1} = 2*p_n.
+
+  pi = (a + b)^2 / (4 * t)
 */
 Rational getPi(size_t precision) {
   if (precision <= PI_INITIAL_PRECISION) {
@@ -536,7 +523,6 @@ static int64_t getNewPrecision(size_t precision) {
   return (int64_t)precision + (int64_t)sqrt(precision);
 }
 
-// Получение значения погрешности
 static Rational getInversedPrecisionVal(size_t precision) {
   string precStr(precision + 1, '0');
   precStr.front() = '1';
@@ -544,10 +530,8 @@ static Rational getInversedPrecisionVal(size_t precision) {
 }
 
 /*
-  Уменьшение значение a под логарифмом так, чтобы a -> 1, поскольку в окрестности данной точке ряд Тейлора быстро
-  сходится. Используя формулу log(a^n) = n*log, путем множественного взятия квадратного корня, число приводится к
-  требуемуму виду. После расчета логарифма получившегося числа, результат домножается на 2^n, где n — количество
-  опреаций взятия корня.
+  Decrease the value of a under the logarithm so that a -> 1. Using the formula log(a^n) = n*log, by taking a multiple
+  square root, the number is reduced to to the desired form.
 */
 static Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision) {
   const Rational maxRedusedVal("0.01");
@@ -563,10 +547,9 @@ static Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precis
 }
 
 /*
-  Бинарное возведение длинного числа a в натуральную степень n:
   (n mod 2 = 0) -> a^n = a^(n/2) * a^(n/2),
   (n mod 2 = 1) -> a^n = a^(n-1) * a.
-  Применяется, пока n != 0
+  While n != 0.
 */
 static Rational naturalPow(const Rational &lhs, const Integer &rhs) {
   Rational res = 1;
@@ -587,8 +570,7 @@ static Rational naturalPow(const Rational &lhs, const Integer &rhs) {
 }
 
 /*
-  Уменьшение значения a под тригонометрической функцией. Т.к. тригонометрические функции являются периодическими, для
-  них верно следующее: f(a) = f(b + k*p) = f(b), где k — натуральное число, p - период функции. Тогда b = a - k*period,
+  Trigonometry functions reduction: f(a) = f(b + k*p) = f(b), where k is natural, p is perion. Then b = a - k * p,
   k = a div p.
 */
 static Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision) {
@@ -598,11 +580,7 @@ static Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_
   return res;
 }
 
-/*
-  Вычисление факториала через разложение множителей в дерево. Такое вычисление факториала быстрее, чем наивный алгоритм,
-  т.к. умножать большие числа примерно равной длины гораздо быстрее, чем большие числа на маленькие. Это обусловлено
-  использованием алгоритма Карацубы.
-*/
+// Calculation of the factorial through multipliers decomposition in a tree
 static Integer factorialRec(const Integer &left, const Integer &right) {
   if (left == right) {
     return left;
