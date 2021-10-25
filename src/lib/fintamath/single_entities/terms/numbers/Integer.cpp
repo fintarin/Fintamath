@@ -249,8 +249,7 @@ Integer Integer::operator++(int) {
 }
 
 Integer &Integer::operator--() {
-  *this -= 1;
-  return *this;
+  return *this -= 1;
 }
 
 Integer Integer::operator--(int) {
@@ -448,8 +447,11 @@ static bool canConvert(const string &strVal) {
 }
 
 static string toString(const IntVector &intVect, int64_t baseSize) {
-  string strVal;
-  for (size_t i = intVect.size() - 1; i != SIZE_MAX; i--) {
+  string strVal = to_string(intVect.back());
+  if (intVect.size() == 1) {
+    return strVal;
+  }
+  for (size_t i = intVect.size() - 2; i != SIZE_MAX; i--) {
     string tmp = to_string(intVect[i]);
     tmp.insert(0, baseSize - tmp.size(), '0');
     strVal.insert(strVal.size(), tmp);
@@ -790,12 +792,7 @@ static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, Int
     }
   }
 
-  if (::greater(left, right)) {
-    swap(left, right);
-  }
-
   IntVector val;
-
   IntVector multVal = multiply(rhs, right, base);
   if (::greater(lhs, multVal) || equal(lhs, multVal)) {
     val = right;

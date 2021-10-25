@@ -230,8 +230,7 @@ Rational operator/(int64_t lhs, const Rational &rhs) {
 }
 
 Rational &Rational::operator++() {
-  *this += 1;
-  return *this;
+  return *this += 1;
 }
 
 Rational Rational::operator++(int) {
@@ -241,8 +240,7 @@ Rational Rational::operator++(int) {
 }
 
 Rational &Rational::operator--() {
-  *this -= 1;
-  return *this;
+  return *this -= 1;
 }
 
 Rational Rational::operator--(int) {
@@ -273,8 +271,8 @@ bool Rational::Rational::operator==(int64_t rhs) const {
   return *this == Rational(rhs);
 }
 
-bool operator==(const Rational &lhs, int64_t rhs) {
-  return lhs == Rational(rhs);
+bool operator==(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) == rhs;
 }
 
 bool operator==(int64_t lhs, const Rational &rhs) {
@@ -293,8 +291,8 @@ bool Rational::Rational::operator!=(int64_t rhs) const {
   return *this != Rational(rhs);
 }
 
-bool operator!=(const Rational &lhs, int64_t rhs) {
-  return lhs != Rational(rhs);
+bool operator!=(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) != rhs;
 }
 
 bool operator!=(int64_t lhs, const Rational &rhs) {
@@ -316,8 +314,8 @@ bool Rational::Rational::operator<(int64_t rhs) const {
   return *this < Rational(rhs);
 }
 
-bool operator<(const Rational &lhs, int64_t rhs) {
-  return lhs < Rational(rhs);
+bool operator<(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) < rhs;
 }
 
 bool operator<(int64_t lhs, const Rational &rhs) {
@@ -339,8 +337,8 @@ bool Rational::Rational::operator>(int64_t rhs) const {
   return *this > Rational(rhs);
 }
 
-bool operator>(const Rational &lhs, int64_t rhs) {
-  return lhs > Rational(rhs);
+bool operator>(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) > rhs;
 }
 
 bool operator>(int64_t lhs, const Rational &rhs) {
@@ -362,8 +360,8 @@ bool Rational::Rational::operator<=(int64_t rhs) const {
   return *this <= Rational(rhs);
 }
 
-bool operator<=(const Rational &lhs, int64_t rhs) {
-  return lhs <= Rational(rhs);
+bool operator<=(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) <= rhs;
 }
 
 bool operator<=(int64_t lhs, const Rational &rhs) {
@@ -385,8 +383,8 @@ bool Rational::Rational::operator>=(int64_t rhs) const {
   return *this >= Rational(rhs);
 }
 
-bool operator>=(const Rational &lhs, int64_t rhs) {
-  return lhs >= Rational(rhs);
+bool operator>=(const Integer &lhs, const Rational &rhs) {
+  return Rational(lhs) >= rhs;
 }
 
 bool operator>=(int64_t lhs, const Rational &rhs) {
@@ -437,9 +435,6 @@ string Rational::toString(size_t precision) const {
 
   while (!strVal.empty() && strVal.back() == '0') {
     strVal.pop_back();
-  }
-  while (strVal[0] == '0' && strVal[1] != '.') {
-    strVal.erase(strVal.begin());
   }
   if (strVal.back() == '.') {
     strVal.pop_back();

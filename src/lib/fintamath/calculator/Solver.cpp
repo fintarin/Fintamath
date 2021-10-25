@@ -2,6 +2,7 @@
 
 #include <iosfwd>
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 #include "single_entities/ISingleEntity.hpp"
@@ -30,21 +31,42 @@ void Solver::setPrecision(int64_t precision_) {
 }
 
 Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {
+  if (elem->info == nullptr) {
+    throw invalid_argument("Solver invalid input");
+  }
+
   if (elem->info->getTypeName() == "Constant") {
     return Constant(elem->info->toString()).toRational(getNewPrecision());
   }
-  return *dynamic_pointer_cast<Rational>(elem->info);
+
+  try {
+    return *dynamic_pointer_cast<Rational>(elem->info);
+  } catch (const invalid_argument &) {
+    throw invalid_argument("Solver invalid input");
+  }
 }
 
 void Solver::solveRec(const shared_ptr<Expression::Elem> &elem) {
-  if (elem->right != nullptr &&
-      (elem->right->info->getTypeName() == "Operator" || elem->right->info->getTypeName() == "Function")) {
-    solveRec(elem->right);
+  if (elem->info == nullptr) {
+    throw invalid_argument("Solver invalid input");
   }
 
-  if (elem->left != nullptr &&
-      (elem->left->info->getTypeName() == "Operator" || elem->left->info->getTypeName() == "Function")) {
-    solveRec(elem->left);
+  if (elem->right != nullptr) {
+    if (elem->right->info == nullptr) {
+      throw invalid_argument("Solver invalid input");
+    }
+    if (elem->right->info->getTypeName() == "Operator" || elem->right->info->getTypeName() == "Function") {
+      solveRec(elem->right);
+    }
+  }
+
+  if (elem->left != nullptr) {
+    if (elem->left->info == nullptr) {
+      throw invalid_argument("Solver invalid input");
+    }
+    if (elem->left->info->getTypeName() == "Operator" || elem->left->info->getTypeName() == "Function") {
+      solveRec(elem->left);
+    }
   }
 
   if (elem->info->getTypeName() == "Operator") {

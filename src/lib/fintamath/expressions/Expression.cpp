@@ -31,7 +31,7 @@ static void addUnaryOperator(vector<string> &tokensVect);
 static void addOperator(vector<string> &tokensVect, char token);
 static void addRational(vector<string> &tokensVect, const string &token, size_t &pos);
 static void addFactorial(vector<string> &tokensVect, const string &token, size_t &pos);
-static void addConstVariableFunction(vector<string> &tokensVect, const string &token, size_t &pos);
+static void addConstOrFunction(vector<string> &tokensVect, const string &token, size_t &pos);
 static void addBinaryFunctions(vector<string> &tokensVect);
 static void addBinaryFunction(vector<string> &tokensVect, vector<size_t> &placementsVect, size_t num);
 static void addValue(const shared_ptr<Expression::Elem> &elem, const string &token);
@@ -71,7 +71,7 @@ static vector<string> makeVectOfTokens(const string &strExpr) {
     } else if (isDigit(tmpStrExpr[i])) {
       addRational(tokensVect, tmpStrExpr, i);
     } else {
-      addConstVariableFunction(tokensVect, tmpStrExpr, i);
+      addConstOrFunction(tokensVect, tmpStrExpr, i);
     }
   }
 
@@ -85,15 +85,9 @@ static Expression makeExpression(const vector<string> &tokensVect) {
   if (tokensVect.empty()) {
     throw invalid_argument("Expression invalid input");
   }
-
   Expression expr;
   expr.getRootModifiable() = make_shared<Expression::Elem>();
   makeExpressionRec(tokensVect, expr.getRootModifiable()->right, 0, tokensVect.size() - 1);
-
-  if (expr.getRootModifiable()->right == nullptr) {
-    throw invalid_argument("Expression invalid input");
-  }
-
   return expr;
 }
 
@@ -182,9 +176,6 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
   if (tokensVect.empty()) {
     throw invalid_argument("Expression invalid input");
   }
-  if (tokensVect.front() == "!" || tokensVect.front() == "!!") {
-    throw invalid_argument("Expression invalid input");
-  }
 
   string factorialFunc = "!";
   if (pos != token.size() - 1 && token[pos + 1] == '!') {
@@ -205,7 +196,7 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
     }
     if (bracketsNum == 0) {
       if (types::isFunction(tokensVect[i - 1])) {
-        throw invalid_argument("Expression invalid input");
+        tokensVect.insert(tokensVect.begin() + (int64_t)i - 1, factorialFunc);
       }
       tokensVect.insert(tokensVect.begin() + (int64_t)i, factorialFunc);
       return;
@@ -225,7 +216,7 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
   tokensVect.insert(tokensVect.begin(), factorialFunc);
 }
 
-static void addConstVariableFunction(vector<string> &tokensVect, const string &token, size_t &pos) {
+static void addConstOrFunction(vector<string> &tokensVect, const string &token, size_t &pos) {
   if (token[pos] == '!') {
     addFactorial(tokensVect, token, pos);
     return;
