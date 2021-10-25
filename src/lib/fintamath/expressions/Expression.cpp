@@ -59,7 +59,8 @@ static vector<string> makeVectOfTokens(const string &strExpr) {
   cutSpaces(tmpStrExpr);
   vector<string> tokensVect;
 
-  for (size_t i = 0; i < tmpStrExpr.size(); i++) {
+  size_t i = 0;
+  while (i < tmpStrExpr.size()) {
     if (tmpStrExpr[i] == ')') {
       addClosingBracket(tokensVect);
     } else if (tmpStrExpr[i] == '(') {
@@ -73,6 +74,8 @@ static vector<string> makeVectOfTokens(const string &strExpr) {
     } else {
       addConstOrFunction(tokensVect, tmpStrExpr, i);
     }
+
+    i++;
   }
 
   addBinaryFunctions(tokensVect);
@@ -98,11 +101,14 @@ static void cutSpaces(string &strExpr) {
     }
     strExpr.erase(strExpr.begin());
   }
-  for (size_t i = 0; i < strExpr.size(); i++) {
+
+  int64_t i = 0;
+  while (i < strExpr.size()) {
     if (strExpr[i] == ' ') {
       strExpr.erase(i, 1);
       i--;
     }
+    i++;
   }
 }
 
@@ -249,11 +255,13 @@ static void addConstOrFunction(vector<string> &tokensVect, const string &token, 
 
 static void addBinaryFunctions(vector<string> &tokensVect) {
   vector<size_t> placementsVect;
-  for (size_t i = 0; i < tokensVect.size(); i++) {
+  size_t i = 0;
+  while (i < tokensVect.size()) {
     if (types::isBinaryFunction(tokensVect[i]) &&
         find(placementsVect.begin(), placementsVect.end(), i) == placementsVect.end()) {
       addBinaryFunction(tokensVect, placementsVect, i);
     }
+    i++;
   }
 }
 
@@ -262,10 +270,12 @@ static void addBinaryFunction(vector<string> &tokensVect, vector<size_t> &placem
   tokensVect.erase(tokensVect.begin() + (int64_t)num);
   size_t bracketsNum = 1;
 
-  for (size_t i = num + 1; i < tokensVect.size(); i++) {
+  size_t i = num + 1;
+  while (i < tokensVect.size()) {
     if (bracketsNum == 0) {
       throw invalid_argument("Expression invalid input");
     }
+
     if (tokensVect[i] == "(") {
       bracketsNum++;
     } else if (tokensVect[i] == ")") {
@@ -280,6 +290,8 @@ static void addBinaryFunction(vector<string> &tokensVect, vector<size_t> &placem
 
       return;
     }
+
+    i++;
   }
 
   throw invalid_argument("Expression invalid input");
