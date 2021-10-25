@@ -2,6 +2,7 @@
 #define FINTAMATHWINDOW_HPP
 
 #include <QMainWindow>
+#include <QSharedPointer>
 #include <QString>
 
 #include "models/CalculatorHandler.hpp"
