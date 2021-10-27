@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 project(
   fintamath
   LANGUAGES CXX
-  VERSION 1.0)
+  VERSION 0.1)
 
 option(BUILD_APP "Enable Test Builds" ON)
 option(BUILD_TESTS "Enable Test Builds" ON)
