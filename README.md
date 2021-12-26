@@ -5,16 +5,16 @@
 ---
 
 <p align="center">
-  <a href="https://github.com/fintarin/fintamath-arb-prec/actions/workflows/ci-build.yml">
-    <img src="https://github.com/fintarin/fintamath-arb-prec/actions/workflows/ci-build.yml/badge.svg"/>
+  <a href="https://github.com/fintarin/Fintamath/actions/workflows/ci-build.yml">
+    <img src="https://github.com/fintarin/Fintamath/actions/workflows/ci-build.yml/badge.svg"/>
   </a>
 
-  <a href="https://sonarcloud.io/summary/new_code?id=fintarin_fintamath-arb-prec">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_fintamath-arb-prec&metric=alert_status"/>
+  <a href="https://sonarcloud.io/summary/new_code?id=fintarin_Fintamath">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/>
   </a>
 
-  <a href="https://codecov.io/gh/fintarin/fintamath-arb-prec">
-    <img src="https://codecov.io/gh/fintarin/fintamath-arb-prec/branch/master/graph/badge.svg?token=JL6F07XOK7"/>
+  <a href="https://codecov.io/gh/fintarin/Fintamath">
+    <img src="https://codecov.io/gh/fintarin/Fintamath/branch/master/graph/badge.svg?token=JL6F07XOK7"/>
   </a>
 </p>
 
@@ -49,8 +49,8 @@ sudo apt-get install qt5-default
 ### Clone repository
 
 ```sh
-git clone https://github.com/fintarin/fintamath-arb-prec.git
-cd fintamath-arb-prec
+git clone https://github.com/fintarin/Fintamath.git
+cd Fintamath
 git submodule update --init
 ```
 
