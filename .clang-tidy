@@ -7,4 +7,13 @@ Checks: >-
   -llvm*,
   -cert-dcl21-cpp,
   -modernize-use-trailing-return-type,
-  -altera-struct-pack-align
+  -altera-struct-pack-align,
+  -altera-unroll-loops,
+  -hicpp-special-member-functions,
+  -cppcoreguidelines-special-member-functions,
+  -readability-redundant-access-specifiers,
+  -altera-id-dependent-backward-branch,
+  -misc-no-recursion,
+  -readability-suspicious-call-argument,
+  -bugprone-easily-swappable-parameters,
+  -modernize-return-braced-init-list
