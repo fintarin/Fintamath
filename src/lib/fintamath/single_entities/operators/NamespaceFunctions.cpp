@@ -518,7 +518,7 @@ Rational getPi(size_t precision) {
 } // namespace functions
 
 static int64_t getNewPrecision(size_t precision) {
-  return (int64_t)precision + (int64_t)sqrt(precision);
+  return (int64_t)precision + (int64_t)sqrt((double)precision);
 }
 
 static Rational getInversedPrecisionVal(size_t precision) {
