@@ -6,11 +6,9 @@
 
 #include "single_entities/operators/NamespaceFunctions.hpp"
 
-using namespace std;
-
-Constant::Constant(const string &strConst) {
+Constant::Constant(const std::string &strConst) {
   if (!types::isConstant(strConst)) {
-    throw invalid_argument("Constant invalid input");
+    throw std::invalid_argument("Constant invalid input");
   }
   name = strConst;
 }
@@ -22,19 +20,19 @@ Rational Constant::toRational(int64_t precision) const {
   if (name == "pi") {
     return functions::getPi(precision);
   }
-  throw invalid_argument("Constant invalid input");
+  throw std::invalid_argument("Constant invalid input");
 }
 
-string Constant::toString() const {
+std::string Constant::toString() const {
   return name;
 }
 
-string Constant::getTypeName() const {
+std::string Constant::getTypeName() const {
   return "Constant";
 }
 
 namespace types {
-bool isConstant(const string &str) {
+bool isConstant(const std::string &str) {
   if (str == "e") {
     return true;
   }

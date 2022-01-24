@@ -4,8 +4,6 @@
 
 #include "single_entities/terms/numbers/Integer.hpp"
 
-using namespace std;
-
 TEST(IntegerTests, plusAssignmentOperatorsTest) {
   Integer val;
   EXPECT_EQ(val += 2, 2);
@@ -158,12 +156,12 @@ TEST(IntegerTests, divisionModuloNegativeTest) {
   Integer val(2);
   EXPECT_EQ(0 / val, 0);
   EXPECT_EQ(0 % val, 0);
-  EXPECT_THROW(val / 0, domain_error);
-  EXPECT_THROW(val % 0, domain_error);
+  EXPECT_THROW(val / 0, std::domain_error);
+  EXPECT_THROW(val % 0, std::domain_error);
 }
 
 TEST(IntegerTests, sqrtNegativeTest) {
-  EXPECT_THROW(sqrt(Integer(-2)), domain_error);
+  EXPECT_THROW(sqrt(Integer(-2)), std::domain_error);
 }
 
 TEST(IntegerTests, getTypenameTest) {

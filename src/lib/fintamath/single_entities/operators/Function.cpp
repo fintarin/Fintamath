@@ -8,11 +8,9 @@
 
 #include "single_entities/operators/NamespaceFunctions.hpp"
 
-using namespace std;
-
-Function::Function(const string &strFunc) {
+Function::Function(const std::string &strFunc) {
   if (!types::isFunction(strFunc)) {
-    throw invalid_argument("Function invalid input");
+    throw std::invalid_argument("Function invalid input");
   }
   name = strFunc;
 }
@@ -66,31 +64,31 @@ Rational Function::solve(const Rational &rhs, int64_t precision) const {
   if (name == "!!") {
     return functions::doubleFactorial(rhs);
   }
-  throw invalid_argument("Function invalid input");
+  throw std::invalid_argument("Function invalid input");
 }
 
 Rational Function::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
   if (name == "log") {
     return functions::log(lhs, rhs, precision);
   }
-  throw invalid_argument("Function invalid input");
+  throw std::invalid_argument("Function invalid input");
 }
 
-string Function::getTypeName() const {
+std::string Function::getTypeName() const {
   return "Function";
 }
 
-string Function::toString() const {
+std::string Function::toString() const {
   return name;
 }
 
 namespace types {
-bool isFunction(const string &str) {
-  regex funcRegex(R"(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs|!|!!)");
+bool isFunction(const std::string &str) {
+  std::regex funcRegex(R"(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs|!|!!)");
   return regex_search(str, funcRegex);
 }
 
-bool isBinaryFunction(const string &str) {
+bool isBinaryFunction(const std::string &str) {
   return (str == "log");
 }
 } // namespace types

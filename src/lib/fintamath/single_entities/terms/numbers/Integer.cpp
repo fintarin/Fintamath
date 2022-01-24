@@ -1,5 +1,5 @@
 /*
-  Integer is stored as a vector with bits going from low to high
+  Integer is stored as a std::vector with bits going from low to high
 */
 #include "single_entities/terms/numbers/Integer.hpp"
 
@@ -13,16 +13,15 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-using IntVector = vector<int64_t>;
+using IntVector = std::vector<int64_t>;
 
 constexpr int8_t INT_BASE_SIZE = 9;
 constexpr int64_t INT_BASE = 1000000000;
 constexpr int64_t KARATSUBA_CUTOFF = 64;
 
-static IntVector toIntVector(const string &strVal, int64_t baseSize);
-static bool canConvert(const string &strVal);
-static string toString(const IntVector &intVect, int64_t baseSize);
+static IntVector toIntVector(const std::string &strVal, int64_t baseSize);
+static bool canConvert(const std::string &strVal);
+static std::string toString(const IntVector &intVect, int64_t baseSize);
 
 static int64_t firstZeroNum(const IntVector &rhs);
 
@@ -57,9 +56,9 @@ static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &m
 static IntVector sqrt(const IntVector &rhs);
 static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff);
 
-Integer::Integer(const string &strVal) {
+Integer::Integer(const std::string &strVal) {
   if (strVal.empty()) {
-    throw invalid_argument("Integer invalid input");
+    throw std::invalid_argument("Integer invalid input");
   }
 
   intVect.clear();
@@ -72,13 +71,13 @@ Integer::Integer(const string &strVal) {
   }
 
   if (!canConvert(strVal.substr(firstDigitNum))) {
-    throw invalid_argument("Integer invalid input");
+    throw std::invalid_argument("Integer invalid input");
   }
 
   intVect = toIntVector(strVal.substr(firstDigitNum), INT_BASE_SIZE);
 }
 
-Integer::Integer(int64_t val) : Integer(to_string(val)) {
+Integer::Integer(int64_t val) : Integer(std::to_string(val)) {
 }
 
 Integer &Integer::operator=(int64_t rhs) {
@@ -169,7 +168,7 @@ Integer operator*(int64_t lhs, const Integer &rhs) {
 
 Integer &Integer::operator/=(const Integer &rhs) {
   if (rhs == 0) {
-    throw domain_error("Div by zero");
+    throw std::domain_error("Div by zero");
   }
   if (*this == 0) {
     return *this;
@@ -206,7 +205,7 @@ Integer operator/(int64_t lhs, const Integer &rhs) {
 
 Integer &Integer::operator%=(const Integer &rhs) {
   if (rhs == 0) {
-    throw domain_error("Div by zero");
+    throw std::domain_error("Div by zero");
   }
   if (*this == 0) {
     return *this;
@@ -387,37 +386,37 @@ bool operator>=(int64_t lhs, const Integer &rhs) {
   return Integer(lhs) >= rhs;
 }
 
-istream &operator>>(istream &in, Integer &rhs) {
-  string strVal;
+std::istream &operator>>(std::istream &in, Integer &rhs) {
+  std::string strVal;
   in >> strVal;
   rhs = Integer(strVal);
   return in;
 }
 
-ostream &operator<<(ostream &out, const Integer &rhs) {
+std::ostream &operator<<(std::ostream &out, const Integer &rhs) {
   return out << rhs.toString();
 }
 
 size_t Integer::size() const {
-  return (intVect.size() - 1) * INT_BASE_SIZE + (to_string(intVect.back())).size();
+  return (intVect.size() - 1) * INT_BASE_SIZE + (std::to_string(intVect.back())).size();
 }
 
-string Integer::toString() const {
-  string strVal = ::toString(intVect, INT_BASE_SIZE);
+std::string Integer::toString() const {
+  std::string strVal = ::toString(intVect, INT_BASE_SIZE);
   if (strVal != "0" && sign) {
     strVal.insert(0, 1, '-');
   }
   return strVal;
 }
 
-string Integer::getTypeName() const {
+std::string Integer::getTypeName() const {
   return "Integer";
 }
 
 // Changing the number base to solve sqrt
 Integer sqrt(const Integer &rhs) {
   if (rhs < 0) {
-    throw domain_error("sqrt out of range");
+    throw std::domain_error("sqrt out of range");
   }
   auto intVect = toIntVector(rhs.toString(), 2);
   return Integer(toString(sqrt(intVect), 1));
@@ -429,30 +428,30 @@ void Integer::fixZero() {
   }
 }
 
-static IntVector toIntVector(const string &strVal, int64_t baseSize) {
+static IntVector toIntVector(const std::string &strVal, int64_t baseSize) {
   IntVector intVect;
   auto iter = strVal.end();
   for (; distance(strVal.begin(), iter) > baseSize; iter -= baseSize) {
-    intVect.push_back(stoll(string(iter - baseSize, iter)));
+    intVect.push_back(stoll(std::string(iter - baseSize, iter)));
   }
-  intVect.push_back(stoll(string(strVal.begin(), iter)));
+  intVect.push_back(stoll(std::string(strVal.begin(), iter)));
   toSignificantDigits(intVect);
   return intVect;
 }
 
-static bool canConvert(const string &strVal) {
+static bool canConvert(const std::string &strVal) {
   const int64_t firstDigit = 0;
   const int64_t lastDigit = 9;
   return all_of(strVal.begin(), strVal.end(), [](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
 }
 
-static string toString(const IntVector &intVect, int64_t baseSize) {
-  string strVal = to_string(intVect.back());
+static std::string toString(const IntVector &intVect, int64_t baseSize) {
+  std::string strVal = std::to_string(intVect.back());
   if (intVect.size() == 1) {
     return strVal;
   }
   for (size_t i = intVect.size() - 2; i != SIZE_MAX; i--) {
-    string tmp = to_string(intVect[i]);
+    std::string tmp = std::to_string(intVect[i]);
     tmp.insert(0, baseSize - tmp.size(), '0');
     strVal.insert(strVal.size(), tmp);
   }
@@ -727,7 +726,7 @@ static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t ba
     return val;
   }
 
-  size_t maxSize = max(tmpLhs.size(), tmpRhs.size());
+  size_t maxSize = std::max(tmpLhs.size(), tmpRhs.size());
   if (maxSize % 2 == 1) {
     maxSize++;
   }
@@ -772,7 +771,7 @@ static IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVa
 
 // Reduction of zero digits of numbers
 static void zerosDivide(IntVector &lhs, IntVector &rhs) {
-  int64_t zerosNum = min(firstZeroNum(lhs), firstZeroNum(rhs));
+  int64_t zerosNum = std::min(firstZeroNum(lhs), firstZeroNum(rhs));
   if (lhs.size() != 1 && rhs.size() != 1 && zerosNum != 0) {
     lhs.erase(lhs.begin(), lhs.begin() + zerosNum);
     rhs.erase(rhs.begin(), rhs.begin() + zerosNum);

@@ -4,15 +4,13 @@
 
 #include "calculator/Calculator.hpp"
 
-using namespace std;
-
 int main(int /*argc*/, char *argv[]) {
   Calculator calc;
   try {
-    cout << calc.calculate(string(argv[1])); // NOLINT
-  } catch (const domain_error &exc) {
-    cout << exc.what();
-  } catch (const invalid_argument &) {
-    cout << "Sorry, we cannot solve this expression";
+    std::cout << calc.calculate(std::string(argv[1])); // NOLINT
+  } catch (const std::domain_error &exc) {
+    std::cout << exc.what();
+  } catch (const std::invalid_argument &) {
+    std::cout << "Sorry, we cannot solve this expression";
   }
 }

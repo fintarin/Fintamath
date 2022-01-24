@@ -8,8 +8,6 @@
 
 #include "single_entities/terms/numbers/Integer.hpp"
 
-using namespace std;
-
 // NOLINTNEXTLINE
 const Rational E_CONST("2.71828182845904523536028747135266249775724709369995957496696762772407663035354759");
 const int64_t E_INITIAL_PRECISION = 72;
@@ -36,14 +34,14 @@ Rational abs(const Rational &rhs) {
 
 Rational sqrt(const Rational &rhs, size_t precision) {
   if (rhs < 0) {
-    throw domain_error("sqrt out of range");
+    throw std::domain_error("sqrt out of range");
   }
   if (rhs == 0) {
     return 0;
   }
 
-  string shift(precision, '0');
-  string shiftMult2(precision * 2, '0');
+  std::string shift(precision, '0');
+  std::string shiftMult2(precision * 2, '0');
   shift.insert(shift.begin(), '1');
   shiftMult2.insert(shiftMult2.begin(), '1');
 
@@ -55,15 +53,15 @@ Rational sqrt(const Rational &rhs, size_t precision) {
 Rational log(const Rational &lhs, const Rational &rhs, size_t precision) {
   try {
     return (ln(rhs, precision) / ln(lhs, precision)).round(precision);
-  } catch (const domain_error &) {
-    throw domain_error("log out of range");
+  } catch (const std::domain_error &) {
+    throw std::domain_error("log out of range");
   }
 }
 
 // Using Taylor series: ln(a) = sum_{k=0}^{inf} (2/(2k+1)) * ((a-1)/(a+1))^(2k+1)
 Rational ln(const Rational &rhs, size_t precision) {
   if (rhs <= 0) {
-    throw domain_error("ln out of range");
+    throw std::domain_error("ln out of range");
   }
 
   Integer multiplier;
@@ -92,8 +90,8 @@ Rational lb(const Rational &rhs, size_t precision) {
   const int64_t logBase = 2;
   try {
     return log(logBase, rhs, precision);
-  } catch (const domain_error &) {
-    throw domain_error("lb out of range");
+  } catch (const std::domain_error &) {
+    throw std::domain_error("lb out of range");
   }
 }
 
@@ -102,8 +100,8 @@ Rational lg(const Rational &rhs, size_t precision) {
   const int64_t logBase = 10;
   try {
     return log(logBase, rhs, precision);
-  } catch (const domain_error &) {
-    throw domain_error("lg out of range");
+  } catch (const std::domain_error &) {
+    throw std::domain_error("lg out of range");
   }
 }
 
@@ -114,10 +112,10 @@ Rational lg(const Rational &rhs, size_t precision) {
 */
 Rational pow(const Rational &lhs, const Rational &rhs, size_t precision) {
   if (lhs == 0 && rhs == 0) {
-    throw domain_error("Zero pow zero");
+    throw std::domain_error("Zero pow zero");
   }
   if (lhs < 0 && rhs.getNumerator() != 0) {
-    throw domain_error("pow out of range");
+    throw std::domain_error("pow out of range");
   }
   if (rhs == 0) {
     return 1;
@@ -267,8 +265,8 @@ Rational tan(const Rational &rhs, size_t precision) {
   if (val >= piDiv2) {
     try {
       val = -cot(val - piDiv2, precision);
-    } catch (const domain_error &) {
-      throw domain_error("tan out of range");
+    } catch (const std::domain_error &) {
+      throw std::domain_error("tan out of range");
     }
 
     if (isNegative) {
@@ -304,8 +302,8 @@ Rational cot(const Rational &rhs, size_t precision) {
   if (val >= piDiv2) {
     try {
       val = -tan(val - piDiv2, precision);
-    } catch (const domain_error &) {
-      throw domain_error("cot out of range");
+    } catch (const std::domain_error &) {
+      throw std::domain_error("cot out of range");
     }
 
     if (isNegative) {
@@ -316,7 +314,7 @@ Rational cot(const Rational &rhs, size_t precision) {
 
   Rational sinVal = sin(val, precision);
   if (sinVal.round(precision - 1) == 0) {
-    throw domain_error("cot out of range");
+    throw std::domain_error("cot out of range");
   }
 
   Rational res = sqrt(1 - sinVal * sinVal, precision) / sinVal;
@@ -329,7 +327,7 @@ Rational cot(const Rational &rhs, size_t precision) {
 // Вычисление asin(x) = pi/2 - acos(x)
 Rational asin(const Rational &rhs, size_t precision) {
   if (abs(rhs) > 1) {
-    throw domain_error("asin out of range");
+    throw std::domain_error("asin out of range");
   }
   Rational res = (getPi(precision) / 2 - acos(rhs, precision));
   return res.round(precision);
@@ -341,7 +339,7 @@ Rational asin(const Rational &rhs, size_t precision) {
 */
 Rational acos(const Rational &rhs, size_t precision) {
   if (abs(rhs) > 1) {
-    throw domain_error("acos out of range");
+    throw std::domain_error("acos out of range");
   }
 
   Rational rhsStep = rhs.round(getNewPrecision(precision));
@@ -439,7 +437,7 @@ Rational acot(const Rational &rhs, size_t precision) {
 
 Rational factorial(const Rational &rhs) {
   if (rhs < 0 || rhs.getNumerator() != 0) {
-    throw domain_error("factorial out of range");
+    throw std::domain_error("factorial out of range");
   }
   if (rhs < 2) {
     return 1;
@@ -449,7 +447,7 @@ Rational factorial(const Rational &rhs) {
 
 Rational doubleFactorial(const Rational &rhs) {
   if (rhs < 0 || rhs.getNumerator() != 0) {
-    throw domain_error("factorial out of range");
+    throw std::domain_error("factorial out of range");
   }
   Integer res = 1;
   for (Integer i = rhs.getInteger(); i > 0; i -= 2) {
@@ -524,7 +522,7 @@ static int64_t getNewPrecision(size_t precision) {
 }
 
 static Rational getInversedPrecisionVal(size_t precision) {
-  string precStr(precision + 1, '0');
+  std::string precStr(precision + 1, '0');
   precStr.front() = '1';
   return (Rational(1, Integer(precStr)));
 }

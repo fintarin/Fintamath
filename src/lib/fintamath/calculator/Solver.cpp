@@ -10,16 +10,14 @@
 #include "single_entities/operators/Operator.hpp"
 #include "single_entities/terms/literals/Constant.hpp"
 
-using namespace std;
-
-static void elemReset(const shared_ptr<Expression::Elem> &elem, const Rational &val);
+static void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
 
 Rational Solver::solve(Expression &expr) {
   if (expr.getRootModifiable()->right->right == nullptr && expr.getRootModifiable()->right->left == nullptr) {
     return Rational(toRational(expr.getRootModifiable()->right).toString(precision));
   }
   solveRec(expr.getRootModifiable()->right);
-  return *dynamic_pointer_cast<Rational>(expr.getRootModifiable()->right->info);
+  return *std::dynamic_pointer_cast<Rational>(expr.getRootModifiable()->right->info);
 }
 
 int64_t Solver::getPrecision() const {
@@ -30,9 +28,9 @@ void Solver::setPrecision(int64_t precision_) {
   precision = precision_ <= 0 ? 1 : precision_;
 }
 
-Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {
+Rational Solver::toRational(const std::shared_ptr<Expression::Elem> &elem) const {
   if (elem->info == nullptr) {
-    throw invalid_argument("Solver invalid input");
+    throw std::invalid_argument("Solver invalid input");
   }
 
   if (elem->info->getTypeName() == "Constant") {
@@ -40,20 +38,20 @@ Rational Solver::toRational(const shared_ptr<Expression::Elem> &elem) const {
   }
 
   try {
-    return *dynamic_pointer_cast<Rational>(elem->info);
-  } catch (const invalid_argument &) {
-    throw invalid_argument("Solver invalid input");
+    return *std::dynamic_pointer_cast<Rational>(elem->info);
+  } catch (const std::invalid_argument &) {
+    throw std::invalid_argument("Solver invalid input");
   }
 }
 
-void Solver::solveRec(const shared_ptr<Expression::Elem> &elem) {
+void Solver::solveRec(const std::shared_ptr<Expression::Elem> &elem) {
   if (elem->info == nullptr) {
-    throw invalid_argument("Solver invalid input");
+    throw std::invalid_argument("Solver invalid input");
   }
 
   if (elem->right != nullptr) {
     if (elem->right->info == nullptr) {
-      throw invalid_argument("Solver invalid input");
+      throw std::invalid_argument("Solver invalid input");
     }
     if (elem->right->info->getTypeName() == "Operator" || elem->right->info->getTypeName() == "Function") {
       solveRec(elem->right);
@@ -62,7 +60,7 @@ void Solver::solveRec(const shared_ptr<Expression::Elem> &elem) {
 
   if (elem->left != nullptr) {
     if (elem->left->info == nullptr) {
-      throw invalid_argument("Solver invalid input");
+      throw std::invalid_argument("Solver invalid input");
     }
     if (elem->left->info->getTypeName() == "Operator" || elem->left->info->getTypeName() == "Function") {
       solveRec(elem->left);
@@ -100,8 +98,8 @@ int64_t Solver::getNewRoundPrecision() const {
   return getNewPrecision() - 1;
 }
 
-static void elemReset(const shared_ptr<Expression::Elem> &elem, const Rational &val) {
-  elem->info = make_shared<Rational>(val);
+static void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val) {
+  elem->info = std::make_shared<Rational>(val);
   elem->right.reset();
   elem->left.reset();
 }

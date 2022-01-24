@@ -14,50 +14,48 @@
 #include "single_entities/terms/literals/Constant.hpp"
 #include "single_entities/terms/numbers/Rational.hpp"
 
-using namespace std;
+static std::vector<std::string> makeVectOfTokens(const std::string &strExpr);
+static Expression makeExpression(const std::vector<std::string> &tokensVect);
 
-static vector<string> makeVectOfTokens(const string &strExpr);
-static Expression makeExpression(const vector<string> &tokensVect);
-
-static void cutSpaces(string &strExpr);
+static void cutSpaces(std::string &strExpr);
 
 static bool isDigit(char ch);
 static bool isLetter(char ch);
 
-static void addMultiply(vector<string> &tokensVect);
-static void addClosingBracket(vector<string> &tokensVect);
-static void addOpenBracket(vector<string> &tokensVect);
-static void addUnaryOperator(vector<string> &tokensVect);
-static void addOperator(vector<string> &tokensVect, char token);
-static void addRational(vector<string> &tokensVect, const string &token, size_t &pos);
-static void addFactorial(vector<string> &tokensVect, const string &token, size_t &pos);
-static void addConstOrFunction(vector<string> &tokensVect, const string &token, size_t &pos);
-static void addBinaryFunctions(vector<string> &tokensVect);
-static void addBinaryFunction(vector<string> &tokensVect, vector<size_t> &placementsVect, size_t num);
-static void addValue(const shared_ptr<Expression::Elem> &elem, const string &token);
+static void addMultiply(std::vector<std::string> &tokensVect);
+static void addClosingBracket(std::vector<std::string> &tokensVect);
+static void addOpenBracket(std::vector<std::string> &tokensVect);
+static void addUnaryOperator(std::vector<std::string> &tokensVect);
+static void addOperator(std::vector<std::string> &tokensVect, char token);
+static void addRational(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
+static void addFactorial(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
+static void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
+static void addBinaryFunctions(std::vector<std::string> &tokensVect);
+static void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num);
+static void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token);
 
-static bool descent(const vector<string> &tokensVect, const shared_ptr<Expression::Elem> &elem, size_t begin,
-                    size_t end, const string &oper1, const string &oper2);
-static bool descent(const vector<string> &tokensVect, const shared_ptr<Expression::Elem> &elem, size_t begin,
-                    size_t end, const string &oper);
-static bool descent(const vector<string> &tokensVect, const shared_ptr<Expression::Elem> &elem, size_t begin,
-                    size_t end);
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
+                    size_t begin, size_t end, const std::string &oper1, const std::string &oper2);
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
+                    size_t begin, size_t end, const std::string &oper);
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
+                    size_t begin, size_t end);
 
-static void makeExpressionRec(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t first,
-                              size_t last);
+static void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
+                              size_t first, size_t last);
 
-Expression::Expression(const string &strExpr) {
+Expression::Expression(const std::string &strExpr) {
   *this = makeExpression(makeVectOfTokens(strExpr));
 }
 
-shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
+std::shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
   return root;
 }
 
-static vector<string> makeVectOfTokens(const string &strExpr) {
-  string tmpStrExpr = strExpr;
+static std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
+  std::string tmpStrExpr = strExpr;
   cutSpaces(tmpStrExpr);
-  vector<string> tokensVect;
+  std::vector<std::string> tokensVect;
 
   size_t i = 0;
   while (i < tmpStrExpr.size()) {
@@ -65,7 +63,7 @@ static vector<string> makeVectOfTokens(const string &strExpr) {
       addClosingBracket(tokensVect);
     } else if (tmpStrExpr[i] == '(') {
       addOpenBracket(tokensVect);
-    } else if (types::isOperator(string(1, tmpStrExpr[i]))) {
+    } else if (types::isOperator(std::string(1, tmpStrExpr[i]))) {
       addOperator(tokensVect, tmpStrExpr[i]);
     } else if (tmpStrExpr[i] == '!') {
       addFactorial(tokensVect, tmpStrExpr, i);
@@ -84,17 +82,17 @@ static vector<string> makeVectOfTokens(const string &strExpr) {
   return tokensVect;
 }
 
-static Expression makeExpression(const vector<string> &tokensVect) {
+static Expression makeExpression(const std::vector<std::string> &tokensVect) {
   if (tokensVect.empty()) {
-    throw invalid_argument("Expression invalid input");
+    throw std::invalid_argument("Expression invalid input");
   }
   Expression expr;
-  expr.getRootModifiable() = make_shared<Expression::Elem>();
+  expr.getRootModifiable() = std::make_shared<Expression::Elem>();
   makeExpressionRec(tokensVect, expr.getRootModifiable()->right, 0, tokensVect.size() - 1);
   return expr;
 }
 
-static void cutSpaces(string &strExpr) {
+static void cutSpaces(std::string &strExpr) {
   while (!strExpr.empty()) {
     if (strExpr.front() != ' ') {
       break;
@@ -120,7 +118,7 @@ static bool isLetter(char ch) {
   return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
 
-static void addMultiply(vector<string> &tokensVect) {
+static void addMultiply(std::vector<std::string> &tokensVect) {
   if (tokensVect.empty()) {
     return;
   }
@@ -130,16 +128,16 @@ static void addMultiply(vector<string> &tokensVect) {
   }
 }
 
-static void addClosingBracket(vector<string> &tokensVect) {
+static void addClosingBracket(std::vector<std::string> &tokensVect) {
   tokensVect.emplace_back(")");
 }
 
-static void addOpenBracket(vector<string> &tokensVect) {
+static void addOpenBracket(std::vector<std::string> &tokensVect) {
   addMultiply(tokensVect);
   tokensVect.emplace_back("(");
 }
 
-static void addUnaryOperator(vector<string> &tokensVect) {
+static void addUnaryOperator(std::vector<std::string> &tokensVect) {
   if (tokensVect.back() == "+") {
     tokensVect.pop_back();
   } else if (tokensVect.back() == "-") {
@@ -149,7 +147,7 @@ static void addUnaryOperator(vector<string> &tokensVect) {
   }
 }
 
-static void addOperator(vector<string> &tokensVect, char token) {
+static void addOperator(std::vector<std::string> &tokensVect, char token) {
   tokensVect.emplace_back(1, token);
   if (tokensVect.size() == 1) {
     addUnaryOperator(tokensVect);
@@ -160,10 +158,10 @@ static void addOperator(vector<string> &tokensVect, char token) {
   }
 }
 
-static void addRational(vector<string> &tokensVect, const string &token, size_t &pos) {
+static void addRational(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
   addMultiply(tokensVect);
 
-  string strVal;
+  std::string strVal;
   while (pos < token.size()) {
     strVal += token[pos];
     pos++;
@@ -178,12 +176,12 @@ static void addRational(vector<string> &tokensVect, const string &token, size_t 
   tokensVect.push_back(strVal);
 }
 
-static void addFactorial(vector<string> &tokensVect, const string &token, size_t &pos) {
+static void addFactorial(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
   if (tokensVect.empty()) {
-    throw invalid_argument("Expression invalid input");
+    throw std::invalid_argument("Expression invalid input");
   }
 
-  string factorialFunc = "!";
+  std::string factorialFunc = "!";
   if (pos != token.size() - 1 && token[pos + 1] == '!') {
     factorialFunc += '!';
     pos++;
@@ -196,7 +194,7 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
       bracketsNum++;
     } else if (tokensVect[i] == "(") {
       if (bracketsNum == 0) {
-        throw invalid_argument("Expression invalid input");
+        throw std::invalid_argument("Expression invalid input");
       }
       bracketsNum--;
     }
@@ -211,18 +209,18 @@ static void addFactorial(vector<string> &tokensVect, const string &token, size_t
 
   if (tokensVect.front() == "(") {
     if (bracketsNum == 0) {
-      throw invalid_argument("Expression invalid input");
+      throw std::invalid_argument("Expression invalid input");
     }
     bracketsNum--;
   }
   if (bracketsNum != 0) {
-    throw invalid_argument("Expression invalid input");
+    throw std::invalid_argument("Expression invalid input");
   }
 
   tokensVect.insert(tokensVect.begin(), factorialFunc);
 }
 
-static void addConstOrFunction(vector<string> &tokensVect, const string &token, size_t &pos) {
+static void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
   if (token[pos] == '!') {
     addFactorial(tokensVect, token, pos);
     return;
@@ -234,7 +232,7 @@ static void addConstOrFunction(vector<string> &tokensVect, const string &token, 
 
   addMultiply(tokensVect);
 
-  string literalExpr;
+  std::string literalExpr;
   while (pos < token.size()) {
     literalExpr += token[pos];
     pos++;
@@ -249,12 +247,12 @@ static void addConstOrFunction(vector<string> &tokensVect, const string &token, 
   if (types::isConstant(literalExpr) || types::isFunction(literalExpr)) {
     tokensVect.push_back(literalExpr);
   } else {
-    throw invalid_argument("Expression invalid input");
+    throw std::invalid_argument("Expression invalid input");
   }
 }
 
-static void addBinaryFunctions(vector<string> &tokensVect) {
-  vector<size_t> placementsVect;
+static void addBinaryFunctions(std::vector<std::string> &tokensVect) {
+  std::vector<size_t> placementsVect;
   size_t i = 0;
   while (i < tokensVect.size()) {
     if (types::isBinaryFunction(tokensVect[i]) &&
@@ -265,15 +263,15 @@ static void addBinaryFunctions(vector<string> &tokensVect) {
   }
 }
 
-static void addBinaryFunction(vector<string> &tokensVect, vector<size_t> &placementsVect, size_t num) {
-  string token = tokensVect[num];
+static void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num) {
+  std::string token = tokensVect[num];
   tokensVect.erase(tokensVect.begin() + (int64_t)num);
   size_t bracketsNum = 1;
 
   size_t i = num + 1;
   while (i < tokensVect.size()) {
     if (bracketsNum == 0) {
-      throw invalid_argument("Expression invalid input");
+      throw std::invalid_argument("Expression invalid input");
     }
 
     if (tokensVect[i] == "(") {
@@ -294,23 +292,23 @@ static void addBinaryFunction(vector<string> &tokensVect, vector<size_t> &placem
     i++;
   }
 
-  throw invalid_argument("Expression invalid input");
+  throw std::invalid_argument("Expression invalid input");
 }
 
-static void addValue(const shared_ptr<Expression::Elem> &elem, const string &token) {
+static void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token) {
   if (types::isConstant(token)) {
-    elem->info = make_shared<Constant>(token);
+    elem->info = std::make_shared<Constant>(token);
   } else {
     try {
-      elem->info = make_shared<Rational>(token);
-    } catch (const invalid_argument &) {
-      throw invalid_argument("Expression invalid input");
+      elem->info = std::make_shared<Rational>(token);
+    } catch (const std::invalid_argument &) {
+      throw std::invalid_argument("Expression invalid input");
     }
   }
 }
 
-static bool descent(const vector<string> &tokensVect, const shared_ptr<Expression::Elem> &elem, size_t begin,
-                    size_t end, const string &oper1, const string &oper2) {
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
+                    size_t begin, size_t end, const std::string &oper1, const std::string &oper2) {
   size_t bracketsNum = 0;
 
   for (size_t i = begin; i <= end; i++) {
@@ -318,16 +316,16 @@ static bool descent(const vector<string> &tokensVect, const shared_ptr<Expressio
       bracketsNum++;
     } else if (tokensVect[i] == "(") {
       if (bracketsNum == 0) {
-        throw invalid_argument("Expression invalid input");
+        throw std::invalid_argument("Expression invalid input");
       }
       bracketsNum--;
     }
 
     if (bracketsNum == 0 && (tokensVect[i] == oper1 || tokensVect[i] == oper2)) {
       if (types::isBinaryFunction(oper1)) {
-        elem->info = make_shared<Function>(tokensVect[i]);
+        elem->info = std::make_shared<Function>(tokensVect[i]);
       } else {
-        elem->info = make_shared<Operator>(tokensVect[i]);
+        elem->info = std::make_shared<Operator>(tokensVect[i]);
       }
       makeExpressionRec(tokensVect, elem->right, i + 1, end);
       makeExpressionRec(tokensVect, elem->left, begin, i - 1);
@@ -338,32 +336,32 @@ static bool descent(const vector<string> &tokensVect, const shared_ptr<Expressio
   return false;
 }
 
-static bool descent(const vector<string> &tokensVect, const shared_ptr<Expression::Elem> &elem, size_t begin,
-                    size_t end, const string &oper) {
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
+                    size_t begin, size_t end, const std::string &oper) {
   return descent(tokensVect, elem, begin, end, oper, "");
 }
 
-static bool descent(const vector<string> &tokensVect, const shared_ptr<Expression::Elem> &elem, size_t begin,
-                    size_t end) {
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
+                    size_t begin, size_t end) {
   if (types::isFunction(tokensVect[end])) {
-    elem->info = make_shared<Function>(tokensVect[end]);
+    elem->info = std::make_shared<Function>(tokensVect[end]);
     makeExpressionRec(tokensVect, elem->right, begin, end - 1);
     return true;
   }
   return false;
 }
 
-static void makeExpressionRec(const vector<string> &tokensVect, shared_ptr<Expression::Elem> &elem, size_t first,
-                              size_t last) {
+static void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
+                              size_t first, size_t last) {
   if (first > last) {
-    throw invalid_argument("Expression invalid input");
+    throw std::invalid_argument("Expression invalid input");
   }
   if (first == SIZE_MAX || last == SIZE_MAX) {
-    throw invalid_argument("Expression invalid input");
+    throw std::invalid_argument("Expression invalid input");
   }
 
   if (elem == nullptr) {
-    elem = make_shared<Expression::Elem>();
+    elem = std::make_shared<Expression::Elem>();
   }
 
   if (first == last) {

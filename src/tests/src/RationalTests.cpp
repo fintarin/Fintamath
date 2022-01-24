@@ -2,8 +2,6 @@
 
 #include "single_entities/terms/numbers/Rational.hpp"
 
-using namespace std;
-
 TEST(RationalTests, integerAssignmentOperatorsTest) {
   Rational ratVal;
   ratVal = Integer(2);

@@ -11,14 +11,12 @@
 
 constexpr int64_t INITIAL_PRECISION = 36;
 
-using namespace std;
-
 static Integer gcd(const Integer &lhs, const Integer &rhs);
 static Integer lcm(const Integer &lhs, const Integer &rhs);
 
-Rational::Rational(const string &strVal) {
+Rational::Rational(const std::string &strVal) {
   if (strVal.empty()) {
-    throw invalid_argument("Rational invalid input");
+    throw std::invalid_argument("Rational invalid input");
   }
 
   size_t firstDigitNum = 0;
@@ -33,19 +31,19 @@ Rational::Rational(const string &strVal) {
   Integer intPart;
   try {
     intPart = Integer(strVal.substr(firstDigitNum, firstDotNum - firstDigitNum));
-  } catch (const invalid_argument &) {
-    throw invalid_argument("Rational invalid input");
+  } catch (const std::invalid_argument &) {
+    throw std::invalid_argument("Rational invalid input");
   }
 
   if (firstDotNum != strVal.size()) {
     try {
-      string numeratorStr = strVal.substr(firstDotNum + 1);
-      string denominatorStr(numeratorStr.size() + 1, '0');
+      std::string numeratorStr = strVal.substr(firstDotNum + 1);
+      std::string denominatorStr(numeratorStr.size() + 1, '0');
       denominatorStr.front() = '1';
       numerator = Integer(numeratorStr);
       denominator = Integer(denominatorStr);
-    } catch (const invalid_argument &) {
-      throw invalid_argument("Rational invalid input");
+    } catch (const std::invalid_argument &) {
+      throw std::invalid_argument("Rational invalid input");
     }
   }
 
@@ -56,7 +54,7 @@ Rational::Rational(const string &strVal) {
   }
 }
 
-Rational::Rational(Integer val) : numerator(move(val)) {
+Rational::Rational(Integer val) : numerator(std::move(val)) {
   fixNegative();
 }
 
@@ -65,7 +63,7 @@ Rational::Rational(int64_t val) : numerator(val) {
 }
 
 Rational::Rational(Integer numerator, Integer denominator)
-    : numerator(move(numerator)), denominator(move(denominator)) {
+    : numerator(std::move(numerator)), denominator(std::move(denominator)) {
   toIrreducibleRational();
 }
 
@@ -391,14 +389,14 @@ bool operator>=(int64_t lhs, const Rational &rhs) {
   return Rational(lhs) >= rhs;
 }
 
-istream &operator>>(istream &in, Rational &rhs) {
-  string strVal;
+std::istream &operator>>(std::istream &in, Rational &rhs) {
+  std::string strVal;
   in >> strVal;
   rhs = Rational(strVal);
   return in;
 }
 
-ostream &operator<<(ostream &out, const Rational &rhs) {
+std::ostream &operator<<(std::ostream &out, const Rational &rhs) {
   return out << rhs.toString();
 }
 
@@ -414,11 +412,11 @@ Integer Rational::getDenominator() const {
   return denominator;
 }
 
-string Rational::toString(size_t precision) const {
+std::string Rational::toString(size_t precision) const {
   const int64_t base = 10;
   const int64_t roundUp = 5;
 
-  string precisionStr(precision + 2, '0');
+  std::string precisionStr(precision + 2, '0');
   precisionStr.front() = '1';
 
   Integer val = numerator * Integer(precisionStr) / denominator;
@@ -427,7 +425,7 @@ string Rational::toString(size_t precision) const {
   }
   val /= base;
 
-  string strVal = val.toString();
+  std::string strVal = val.toString();
   if (strVal.size() <= precision) {
     strVal.insert(strVal.begin(), precision + 1 - strVal.size(), '0');
   }
@@ -451,11 +449,11 @@ Rational Rational::round(size_t precision) const {
   return Rational(toString(precision));
 }
 
-string Rational::getTypeName() const {
+std::string Rational::getTypeName() const {
   return "Rational";
 }
 
-string Rational::toString() const {
+std::string Rational::toString() const {
   return toString(INITIAL_PRECISION);
 }
 
@@ -479,7 +477,7 @@ void Rational::fixNegative() {
 
 void Rational::toIrreducibleRational() {
   if (denominator == 0) {
-    throw domain_error("Div by zero");
+    throw std::domain_error("Div by zero");
   }
   fixNegative();
   Integer gcdVal = gcd(numerator, denominator);
