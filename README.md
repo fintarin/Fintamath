@@ -1,7 +1,9 @@
 <p align="center">
   <img src="./docs/images/logo.png" alt="drawing" width="250"/>
 </p>
-
+<p align="center">
+  <img src="./docs/images/fantomas.png" alt="drawing" width="250"/>
+</p>
 ---
 
 <p align="center">
