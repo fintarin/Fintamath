@@ -5,14 +5,15 @@
 ---
 
 <p align="center">
-  <a href="https://github.com/fintarin/Fintamath/actions/workflows/ci-build.yml">
-    <img src="https://github.com/fintarin/Fintamath/actions/workflows/ci-build.yml/badge.svg"/>
+  <a href="https://github.com/fintarin/Fintamath/actions/workflows/build.yml">
+    <img src="https://github.com/fintarin/Fintamath/actions/workflows/build.yml/badge.svg"/>
   </a>
-
+  <a href="https://github.com/fintarin/Fintamath/actions/workflows/test.yml">
+    <img src="https://github.com/fintarin/Fintamath/actions/workflows/test.yml/badge.svg"/>
+  </a>
   <a href="https://sonarcloud.io/summary/new_code?id=fintarin_Fintamath">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/>
   </a>
-
   <a href="https://codecov.io/gh/fintarin/Fintamath">
     <img src="https://codecov.io/gh/fintarin/Fintamath/branch/master/graph/badge.svg?token=JL6F07XOK7"/>
   </a>
@@ -33,7 +34,6 @@ Fintamath is an application for solving mathematical expressions with arbitrary 
 <p align="center">
   <img src="./docs/images/example.png" alt="drawing""/>
 </p>
-
 
 ## Installation
 
@@ -73,5 +73,4 @@ cmake --build build
 * Supporting variables
 * Supporting equations
 * Increasing speed & precision
-* Protting graphics
 * LaTex inputting and outputting
