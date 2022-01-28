@@ -1,6 +1,3 @@
-/*
-  Integer is stored as a std::vector with bits going from low to high
-*/
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
 
 #include <algorithm>
@@ -670,8 +667,8 @@ static IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, 
   p1 = (A0 + A1)(B0 + B1) - (p1 + p2)
   p2 = A1 * B1
 
-  A0 и B0 - the first halves of numbers
-  A1 и B1 - the second halves of numbers
+  A0 and B0 - the first halves of numbers
+  A1 and B1 - the second halves of numbers
 */
 static IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
   if (lhs.size() < KARATSUBA_CUTOFF || rhs.size() < KARATSUBA_CUTOFF) {
