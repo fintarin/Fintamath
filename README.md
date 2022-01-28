@@ -73,5 +73,4 @@ cmake --build build
 * Supporting variables
 * Supporting equations
 * Increasing speed & precision
-* Protting graphics
 * LaTex inputting and outputting
