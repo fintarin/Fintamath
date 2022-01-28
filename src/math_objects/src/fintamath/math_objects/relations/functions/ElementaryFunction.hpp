@@ -23,7 +23,7 @@ private:
 
 namespace types {
 bool isFunction(const std::string &str);
-bool isBinaryFunction(const std::string &str);
+bool isBinaryFunction(const std::string_view &str);
 } // namespace types
 
 #endif // ELEMENTARYFUNCTION_HPP

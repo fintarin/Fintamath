@@ -11,13 +11,13 @@ constexpr int64_t INITIAL_PRECISION = 36;
 static Integer gcd(const Integer &lhs, const Integer &rhs);
 static Integer lcm(const Integer &lhs, const Integer &rhs);
 
-Rational::Rational(const std::string &strVal) {
+Rational::Rational(const std::string_view &strVal) {
   if (strVal.empty()) {
     throw std::invalid_argument("Rational invalid input");
   }
 
   size_t firstDigitNum = 0;
-  size_t firstDotNum = distance(strVal.begin(), find(strVal.begin(), strVal.end(), '.'));
+  size_t firstDotNum = std::distance(strVal.begin(), std::find(strVal.begin(), strVal.end(), '.'));
 
   bool isNegative = false;
   if (strVal.front() == '-') {
@@ -34,7 +34,7 @@ Rational::Rational(const std::string &strVal) {
 
   if (firstDotNum != strVal.size()) {
     try {
-      std::string numeratorStr = strVal.substr(firstDotNum + 1);
+      auto numeratorStr = strVal.substr(firstDotNum + 1);
       std::string denominatorStr(numeratorStr.size() + 1, '0');
       denominatorStr.front() = '1';
       numerator = Integer(numeratorStr);

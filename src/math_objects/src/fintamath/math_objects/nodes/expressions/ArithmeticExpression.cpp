@@ -35,7 +35,7 @@ static void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<
 static void addValue(const std::shared_ptr<ArithmeticExpression::Elem> &elem, const std::string &token);
 
 static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
-                    size_t begin, size_t end, const std::string &oper1, const std::string &oper2);
+                    size_t begin, size_t end, const std::string &oper1, const std::string_view &oper2);
 static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
                     size_t begin, size_t end, const std::string &oper);
 static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
@@ -308,7 +308,7 @@ static void addValue(const std::shared_ptr<ArithmeticExpression::Elem> &elem, co
 }
 
 static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
-                    size_t begin, size_t end, const std::string &oper1, const std::string &oper2) {
+                    size_t begin, size_t end, const std::string &oper1, const std::string_view &oper2) {
   size_t bracketsNum = 0;
 
   for (size_t i = begin; i <= end; i++) {

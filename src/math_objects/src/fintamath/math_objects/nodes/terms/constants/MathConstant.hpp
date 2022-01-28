@@ -20,7 +20,7 @@ private:
 };
 
 namespace types {
-bool isConstant(const std::string &str);
+bool isConstant(const std::string_view &str);
 }
 
 #endif // MATHCONSTANT_HPP

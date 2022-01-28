@@ -32,7 +32,7 @@ std::string MathConstant::getTypeName() const {
 }
 
 namespace types {
-bool isConstant(const std::string &str) {
+bool isConstant(const std::string_view &str) {
   if (str == "e") {
     return true;
   }

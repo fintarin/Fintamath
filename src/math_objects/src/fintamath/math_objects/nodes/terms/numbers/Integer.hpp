@@ -12,7 +12,7 @@
 class Integer : public Number {
 public:
   Integer() = default;
-  explicit Integer(const std::string &strVal);
+  explicit Integer(const std::string_view &strVal);
   // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE
   Integer(int64_t val);
 

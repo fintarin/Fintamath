@@ -350,9 +350,8 @@ Rational acos(const Rational &rhs, size_t precision) {
   }
 
   Rational pi = getPi(precision);
-  const Rational maxRedusedVal(1, 5);
 
-  if (rhsStep <= maxRedusedVal) {
+  if (const Rational maxRedusedVal(1, 5); rhsStep <= maxRedusedVal) {
     Integer step = 1;
     Rational precisionVal = getInversedPrecisionVal(getNewPrecision(precision));
     Rational val = rhsStep;
@@ -395,9 +394,7 @@ Rational atan(const Rational &rhs, size_t precision) {
     rhsStep = -rhsStep;
   }
 
-  const Rational maxNumberToReduce(1, 5);
-
-  if (rhsStep <= maxNumberToReduce) {
+  if (const Rational maxRedusedVal(1, 5); rhsStep <= maxRedusedVal) {
     Integer step = 2;
     Rational precisionVal = getInversedPrecisionVal(getNewPrecision(precision));
     Rational val = rhsStep;

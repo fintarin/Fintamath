@@ -12,7 +12,7 @@
 class Rational : public Number {
 public:
   Rational() = default;
-  explicit Rational(const std::string &strVal);
+  explicit Rational(const std::string_view &strVal);
   // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE
   Rational(Integer val);
   // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE

@@ -17,4 +17,5 @@ Checks: >-
   -readability-suspicious-call-argument,
   -bugprone-easily-swappable-parameters,
   -modernize-return-braced-init-list,
-  -modernize-use-nodiscard
+  -modernize-use-nodiscard,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic

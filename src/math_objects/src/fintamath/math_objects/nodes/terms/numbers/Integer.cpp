@@ -16,8 +16,8 @@ constexpr int8_t INT_BASE_SIZE = 9;
 constexpr int64_t INT_BASE = 1000000000;
 constexpr int64_t KARATSUBA_CUTOFF = 64;
 
-static IntVector toIntVector(const std::string &strVal, int64_t baseSize);
-static bool canConvert(const std::string &strVal);
+static IntVector toIntVector(const std::string_view &strVal, int64_t baseSize);
+static bool canConvert(const std::string_view &strVal);
 static std::string toString(const IntVector &intVect, int64_t baseSize);
 
 static int64_t firstZeroNum(const IntVector &rhs);
@@ -53,7 +53,7 @@ static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &m
 static IntVector sqrt(const IntVector &rhs);
 static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff);
 
-Integer::Integer(const std::string &strVal) {
+Integer::Integer(const std::string_view &strVal) {
   if (strVal.empty()) {
     throw std::invalid_argument("Integer invalid input");
   }
@@ -425,10 +425,10 @@ void Integer::fixZero() {
   }
 }
 
-static IntVector toIntVector(const std::string &strVal, int64_t baseSize) {
+static IntVector toIntVector(const std::string_view &strVal, int64_t baseSize) {
   IntVector intVect;
-  auto iter = strVal.end();
-  for (; distance(strVal.begin(), iter) > baseSize; iter -= baseSize) {
+  const auto *iter = strVal.end();
+  for (; std::distance(strVal.begin(), iter) > baseSize; iter -= baseSize) {
     intVect.push_back(stoll(std::string(iter - baseSize, iter)));
   }
   intVect.push_back(stoll(std::string(strVal.begin(), iter)));
@@ -436,10 +436,11 @@ static IntVector toIntVector(const std::string &strVal, int64_t baseSize) {
   return intVect;
 }
 
-static bool canConvert(const std::string &strVal) {
+static bool canConvert(const std::string_view &strVal) {
   const int64_t firstDigit = 0;
   const int64_t lastDigit = 9;
-  return all_of(strVal.begin(), strVal.end(), [](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
+  return std::all_of(strVal.begin(), strVal.end(),
+                     [](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
 }
 
 static std::string toString(const IntVector &intVect, int64_t baseSize) {
@@ -789,8 +790,7 @@ static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, Int
   }
 
   IntVector val;
-  IntVector multVal = multiply(rhs, right, base);
-  if (::greater(lhs, multVal) || equal(lhs, multVal)) {
+  if (IntVector multVal = multiply(rhs, right, base); ::greater(lhs, multVal) || equal(lhs, multVal)) {
     val = right;
   } else {
     val = left;
@@ -859,7 +859,7 @@ static IntVector sqrt(const IntVector &rhs) {
 
   IntVector val;
   IntVector diff;
-  val.push_back((int64_t)sqrt(rhs.back()));
+  val.push_back((int64_t)sqrt((double)rhs.back()));
 
   getSqrtDiff(rhs, base, val, diff);
 

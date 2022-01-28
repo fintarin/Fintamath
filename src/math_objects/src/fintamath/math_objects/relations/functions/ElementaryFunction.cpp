@@ -88,7 +88,7 @@ bool isFunction(const std::string &str) {
   return regex_search(str, funcRegex);
 }
 
-bool isBinaryFunction(const std::string &str) {
+bool isBinaryFunction(const std::string_view &str) {
   return (str == "log");
 }
 } // namespace types
