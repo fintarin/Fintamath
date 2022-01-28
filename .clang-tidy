@@ -16,4 +16,5 @@ Checks: >-
   -misc-no-recursion,
   -readability-suspicious-call-argument,
   -bugprone-easily-swappable-parameters,
-  -modernize-return-braced-init-list
+  -modernize-return-braced-init-list,
+  -modernize-use-nodiscard
