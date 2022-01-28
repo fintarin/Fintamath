@@ -2,7 +2,6 @@
 #define CALCULATORHANDLER_HPP
 
 #include <QObject>
-#include <QString>
 
 class CalculatorHandler : public QObject {
   Q_OBJECT

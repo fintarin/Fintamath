@@ -4,11 +4,6 @@
 #include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
-#include <cstdint>
-#include <memory>
-#include <string>
-#include <vector>
-
 struct Param {
   std::string name;
   Rational value;

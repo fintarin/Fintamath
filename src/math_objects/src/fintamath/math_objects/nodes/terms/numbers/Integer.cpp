@@ -2,13 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
-#include <cstddef>
-#include <cstdint>
-#include <ext/alloc_traits.h>
-#include <iterator>
 #include <stdexcept>
-#include <string>
-#include <vector>
 
 using IntVector = std::vector<int64_t>;
 

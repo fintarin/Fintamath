@@ -1,9 +1,6 @@
 #ifndef MATHCONSTANT_HPP
 #define MATHCONSTANT_HPP
 
-#include <cstdint>
-#include <string>
-
 #include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 

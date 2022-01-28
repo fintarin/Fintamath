@@ -1,9 +1,6 @@
 #ifndef ARITHMETICOPERATOR_HPP
 #define ARITHMETICOPERATOR_HPP
 
-#include <cstdint>
-#include <string>
-
 #include "fintamath/math_objects/relations/operators/Operator.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 

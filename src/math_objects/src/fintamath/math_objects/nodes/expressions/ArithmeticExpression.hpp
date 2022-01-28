@@ -2,7 +2,6 @@
 #define ARITHMETICEXPRESSION_HPP
 
 #include <memory>
-#include <string>
 
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 

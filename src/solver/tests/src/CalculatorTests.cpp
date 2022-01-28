@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <fstream>
-#include <iostream>
 
 #include "fintamath/solver/Calculator.hpp"
 

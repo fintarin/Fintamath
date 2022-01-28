@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <stdexcept>
-
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
 
 TEST(IntegerTests, plusAssignmentOperatorsTest) {

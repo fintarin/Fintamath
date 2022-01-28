@@ -1,10 +1,6 @@
 #ifndef FINTAMATHWINDOW_HPP
 #define FINTAMATHWINDOW_HPP
 
-#include <QMainWindow>
-#include <QSharedPointer>
-#include <QString>
-
 #include "fintamath/ui/models/CalculatorHandler.hpp"
 #include "ui/ui_FintamathMainWindow.h"
 

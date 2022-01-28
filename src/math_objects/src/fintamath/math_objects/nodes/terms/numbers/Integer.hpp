@@ -1,10 +1,6 @@
 #ifndef INTEGER_HPP
 #define INTEGER_HPP
 
-#include <cstddef>
-#include <cstdint>
-#include <iosfwd>
-#include <string>
 #include <vector>
 
 #include "fintamath/math_objects/nodes/terms/numbers/Number.hpp"

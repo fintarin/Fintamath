@@ -4,7 +4,6 @@
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 #include "fintamath/math_objects/relations/functions/Function.hpp"
 
-#include <cstdint>
 #include <string>
 
 class ElementaryFunction : public Function {

@@ -1,10 +1,7 @@
 #include "fintamath/math_objects/relations/functions/NamespaceFunctions.hpp"
 
 #include <cmath>
-#include <cstddef>
-#include <cstdint>
 #include <stdexcept>
-#include <string>
 
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 

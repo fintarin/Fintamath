@@ -1,9 +1,6 @@
 #ifndef CALCULATOR_HPP
 #define CALCULATOR_HPP
 
-#include <cstdint>
-#include <string>
-
 #include "fintamath/solver/Solver.hpp"
 
 class Calculator {

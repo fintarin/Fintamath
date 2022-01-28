@@ -1,9 +1,6 @@
 #include "fintamath/solver/Calculator.hpp"
 
 #include <algorithm>
-#include <cstddef>
-#include <iterator>
-#include <string>
 
 #include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"

@@ -1,11 +1,6 @@
 #ifndef RATIONAL_HPP
 #define RATIONAL_HPP
 
-#include <cstddef>
-#include <cstdint>
-#include <iosfwd>
-#include <string>
-
 #include "fintamath/math_objects/nodes/terms/numbers/Number.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
 

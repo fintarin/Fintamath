@@ -1,13 +1,9 @@
 #include "fintamath/solver/Solver.hpp"
 
-#include <iosfwd>
-#include <memory>
 #include <stdexcept>
-#include <string>
 
 #include "fintamath/math_objects/nodes/terms/constants/MathConstant.hpp"
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
-#include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 
 static void elemReset(const std::shared_ptr<ArithmeticExpression::Elem> &elem, const Rational &val);

@@ -1,16 +1,9 @@
 #include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
 
 #include <algorithm>
-#include <cstddef>
-#include <cstdint>
-#include <ext/alloc_traits.h>
-#include <memory>
 #include <stdexcept>
-#include <string>
-#include <vector>
 
 #include "fintamath/math_objects/nodes/terms/constants/MathConstant.hpp"
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 

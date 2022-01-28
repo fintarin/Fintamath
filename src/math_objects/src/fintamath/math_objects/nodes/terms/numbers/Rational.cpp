@@ -1,10 +1,7 @@
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
 #include <algorithm>
-#include <iterator>
 #include <stdexcept>
-#include <string>
-#include <utility>
 
 constexpr int64_t INITIAL_PRECISION = 36;
 

@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <stdexcept>
-
 #include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"

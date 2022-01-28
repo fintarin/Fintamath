@@ -1,8 +1,6 @@
 #ifndef NAMESPACEFUNCTIONS_HPP
 #define NAMESPACEFUNCTIONS_HPP
 
-#include <cstddef>
-
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
 namespace functions {

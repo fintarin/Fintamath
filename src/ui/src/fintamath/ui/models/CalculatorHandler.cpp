@@ -1,9 +1,5 @@
 #include "fintamath/ui/models/CalculatorHandler.hpp"
 
-#include <QDebug>
-#include <QProcess>
-#include <QString>
-#include <QThread>
 #include <QtConcurrent/QtConcurrent>
 
 constexpr int64_t WAITING_TIME = 10;
