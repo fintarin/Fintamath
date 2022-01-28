@@ -1,9 +1,7 @@
-add_subdirectory(lib)
+add_subdirectory(math_objects)
+add_subdirectory(solver)
 
 if(BUILD_APP)
-  add_subdirectory(app)
-endif()
-
-if(BUILD_TESTS)
-  add_subdirectory(tests)
+  add_subdirectory(presenter)
+  add_subdirectory(ui)
 endif()
