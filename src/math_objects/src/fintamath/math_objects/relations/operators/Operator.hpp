@@ -5,9 +5,7 @@
 
 class Operator : public Relation {
 public:
-  ~Operator() override = 0;
+  ~Operator() override = default;
 };
-
-inline Operator::~Operator() = default;
 
 #endif // OPERATOR_HPP

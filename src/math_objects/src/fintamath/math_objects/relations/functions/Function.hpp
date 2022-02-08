@@ -5,9 +5,7 @@
 
 class Function : public Relation {
 public:
-  ~Function() override = 0;
+  ~Function() override = default;
 };
-
-inline Function::~Function() = default;
 
 #endif // FUNCTION_HPP

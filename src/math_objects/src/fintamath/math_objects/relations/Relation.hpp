@@ -5,9 +5,7 @@
 
 class Relation : public MathObject {
 public:
-  ~Relation() override = 0;
+  ~Relation() override = default;
 };
-
-inline Relation::~Relation() = default;
 
 #endif // RELATION_HPP

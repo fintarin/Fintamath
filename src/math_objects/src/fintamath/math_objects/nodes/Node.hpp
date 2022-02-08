@@ -5,9 +5,7 @@
 
 class Node : public MathObject {
 public:
-  ~Node() override = 0;
+  ~Node() override = default;
 };
-
-inline Node::~Node() = default;
 
 #endif // NODE_HPP

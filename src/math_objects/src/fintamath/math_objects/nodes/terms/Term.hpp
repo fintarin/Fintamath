@@ -5,9 +5,7 @@
 
 class Term : public Node {
 public:
-  ~Term() override = 0;
+  ~Term() override = default;
 };
-
-inline Term::~Term() = default;
 
 #endif // TERM_HPP
