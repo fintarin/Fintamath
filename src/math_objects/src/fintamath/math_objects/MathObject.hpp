@@ -6,7 +6,6 @@
 class MathObject {
 public:
   virtual std::string toString() const = 0;
-  virtual std::string getTypeName() const = 0;
   virtual ~MathObject() = 0;
 };
 

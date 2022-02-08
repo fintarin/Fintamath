@@ -443,10 +443,6 @@ Rational Rational::round(size_t precision) const {
   return Rational(toString(precision));
 }
 
-std::string Rational::getTypeName() const {
-  return "Rational";
-}
-
 std::string Rational::toString() const {
   return toString(INITIAL_PRECISION);
 }
