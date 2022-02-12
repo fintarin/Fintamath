@@ -2,165 +2,80 @@
 
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
-TEST(RationalTests, integerAssignmentOperatorsTest) {
-  Rational ratVal;
-  ratVal = Integer(2);
-  EXPECT_EQ(ratVal, 2);
+TEST(RationalTests, stringConstructorTest) {
 }
 
-TEST(RationalTests, plusAssignmentOperatorsTest) {
-  Rational ratVal;
-  Integer intVal(2);
-  EXPECT_EQ(ratVal += intVal, 2);
-  EXPECT_EQ(ratVal += 2, 4);
+TEST(RationalTests, integerConstructorTest) {
 }
 
-TEST(RationalTests, plusOperatorsTest) {
-  Rational ratVal;
-  Integer intVal(2);
-  EXPECT_EQ(ratVal + intVal, 2);
-  EXPECT_EQ(intVal + ratVal, 2);
-  EXPECT_EQ(ratVal + 2, 2);
-  EXPECT_EQ(2 + ratVal, 2);
+TEST(RationalTests, intConstructorTest) {
 }
 
-TEST(RationalTests, minusAssignmentOperatorsTest) {
-  Rational ratVal;
-  Integer intVal(2);
-  EXPECT_EQ(ratVal -= intVal, -2);
-  EXPECT_EQ(ratVal -= 2, -4);
+TEST(RationalTests, integer2ConstructorTest) {
 }
 
-TEST(RationalTests, minusOperatorsTest) {
-  Rational ratVal;
-  Integer intVal(2);
-  EXPECT_EQ(ratVal - intVal, -2);
-  EXPECT_EQ(intVal - ratVal, 2);
-  EXPECT_EQ(ratVal - 2, -2);
-  EXPECT_EQ(2 - ratVal, 2);
+TEST(RationalTests, int2ConstructorTest) {
 }
 
-TEST(RationalTests, multiplyAssignmentOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(2);
-  EXPECT_EQ(ratVal *= intVal, 4);
-  EXPECT_EQ(ratVal *= 2, 8);
+TEST(RationalTests, plusAssignmentOperatorTest) {
 }
 
-TEST(RationalTests, multiplyOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(2);
-  EXPECT_EQ(ratVal * intVal, 4);
-  EXPECT_EQ(intVal * ratVal, 4);
-  EXPECT_EQ(ratVal * 2, 4);
-  EXPECT_EQ(2 * ratVal, 4);
+TEST(RationalTests, plusOperatorTest) {
 }
 
-TEST(RationalTests, divideAssignmentOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(2);
-  EXPECT_EQ(ratVal /= intVal, 1);
-  EXPECT_EQ(ratVal /= 2, Rational(1, 2));
+TEST(RationalTests, minusAssignmentOperatorTest) {
 }
 
-TEST(RationalTests, divideOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(2);
-  EXPECT_EQ(ratVal / intVal, 1);
-  EXPECT_EQ(intVal / ratVal, 1);
-  EXPECT_EQ(ratVal / 2, 1);
-  EXPECT_EQ(2 / ratVal, 1);
+TEST(RationalTests, minusOperatorTest) {
 }
 
-TEST(RationalTests, incrementDecrementOperatorsTest) {
-  Rational ratVal;
-  EXPECT_EQ(++ratVal, 1);
-  EXPECT_EQ(ratVal++, 1);
-  EXPECT_EQ(ratVal, 2);
-  EXPECT_EQ(--ratVal, 1);
-  EXPECT_EQ(ratVal--, 1);
-  EXPECT_EQ(ratVal, 0);
+TEST(RationalTests, multiplyAssignmentOperatorTest) {
 }
 
-TEST(RationalTests, unaryMinusPlusOperatorsTest) {
-  Rational ratVal(2);
-  EXPECT_EQ(+ratVal, 2);
-  EXPECT_EQ(-ratVal, -2);
+TEST(RationalTests, multiplyOperatorTest) {
 }
 
-TEST(RationalTests, equalOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(2);
-  EXPECT_EQ(ratVal == intVal, true);
-  EXPECT_EQ(intVal == ratVal, true);
-  EXPECT_EQ(ratVal == 2, true);
-  EXPECT_EQ(2 == ratVal, true);
+TEST(RationalTests, divideAssignmentOperatorTest) {
 }
 
-TEST(RationalTests, notEqualOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(1);
-  EXPECT_EQ(ratVal != intVal, true);
-  EXPECT_EQ(intVal != ratVal, true);
-  EXPECT_EQ(ratVal != 1, true);
-  EXPECT_EQ(1 != ratVal, true);
+TEST(RationalTests, divideOperatorTest) {
 }
 
-TEST(RationalTests, lessOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(1);
-  EXPECT_EQ(ratVal < intVal, false);
-  EXPECT_EQ(intVal < ratVal, true);
-  EXPECT_EQ(ratVal < 2, false);
-  EXPECT_EQ(2 < ratVal, false);
+TEST(RationalTests, preIncrementOperatorTest) {
 }
 
-TEST(RationalTests, moreOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(1);
-  EXPECT_EQ(ratVal > intVal, true);
-  EXPECT_EQ(intVal > ratVal, false);
-  EXPECT_EQ(ratVal > 1, true);
-  EXPECT_EQ(1 > ratVal, false);
+TEST(RationalTests, postIncrementOperatorTest) {
 }
 
-TEST(RationalTests, lessEqualOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(1);
-  EXPECT_EQ(ratVal <= intVal, false);
-  EXPECT_EQ(intVal <= ratVal, true);
-  EXPECT_EQ(ratVal <= 1, false);
-  EXPECT_EQ(1 <= ratVal, true);
+TEST(RationalTests, preDecrementOperatorTest) {
 }
 
-TEST(RationalTests, moreEqualOperatorsTest) {
-  Rational ratVal(2);
-  Integer intVal(1);
-  EXPECT_EQ(ratVal >= intVal, true);
-  EXPECT_EQ(intVal >= ratVal, false);
-  EXPECT_EQ(ratVal >= 1, true);
-  EXPECT_EQ(1 >= ratVal, false);
+TEST(RationalTests, postDecrementOperatorTest) {
 }
 
-TEST(RationalTests, inOperatorsTest) {
-  Rational ratVal;
-  std::stringstream in;
-  in << 2;
-  in >> ratVal;
-  EXPECT_EQ(ratVal, 2);
+TEST(RationalTests, unaryPlusOperatorTest) {
 }
 
-TEST(RationalTests, outOperatorsTest) {
-  Rational ratVal(2);
-  std::stringstream out;
-  out << ratVal;
-  EXPECT_EQ(out.str(), "2");
+TEST(RationalTests, unaryMinusOperatorTest) {
 }
 
-TEST(RationalTests, getDenominatorTest) {
-  EXPECT_EQ(Rational(1, -2).getDenominator().toString(), "2");
+TEST(RationalTests, equalOperatorTest) {
 }
 
-TEST(RationalTests, negativeDenominatorTest) {
-  EXPECT_EQ(Rational(1, -2).toString(), "-0.5");
+TEST(RationalTests, notEqualOperatorTest) {
+}
+
+TEST(RationalTests, lessOperatorTest) {
+}
+
+TEST(RationalTests, moreOperatorTest) {
+}
+
+TEST(RationalTests, lessEqualOperatorTest) {
+}
+
+TEST(RationalTests, moreEqualOperatorTest) {
+}
+
+TEST(RationalTests, toStringTest) {
 }
