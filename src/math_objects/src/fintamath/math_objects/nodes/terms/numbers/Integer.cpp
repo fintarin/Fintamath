@@ -49,8 +49,8 @@ static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &m
 static IntVector sqrt(const IntVector &rhs);
 static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff);
 
-Integer::Integer(const std::string_view &strVal) {
-  if (strVal.empty()) {
+Integer::Integer(const std::string_view &str) {
+  if (str.empty()) {
     throw std::invalid_argument("Integer invalid input");
   }
 
@@ -58,31 +58,25 @@ Integer::Integer(const std::string_view &strVal) {
   sign = false;
 
   int64_t firstDigitNum = 0;
-  if (strVal.front() == '-') {
+  if (str.front() == '-') {
     sign = true;
     firstDigitNum++;
   }
 
-  if (!canConvert(strVal.substr(firstDigitNum))) {
+  if (!canConvert(str.substr(firstDigitNum))) {
     throw std::invalid_argument("Integer invalid input");
   }
 
-  intVect = toIntVector(strVal.substr(firstDigitNum), INT_BASE_SIZE);
+  intVect = toIntVector(str.substr(firstDigitNum), INT_BASE_SIZE);
 }
 
-Integer::Integer(int64_t val) : Integer(std::to_string(val)) {
-}
-
-Integer &Integer::operator=(int64_t rhs) {
-  return *this = Integer(rhs);
+Integer::Integer(int64_t rhs) : Integer(std::to_string(rhs)) {
 }
 
 Integer &Integer::operator+=(const Integer &rhs) {
   if ((!sign && !rhs.sign) || (sign && rhs.sign)) {
     intVect = addToSignificantDigits(intVect, rhs.intVect, INT_BASE);
-  }
-
-  else {
+  } else {
     if (::greater(intVect, rhs.intVect)) {
       intVect = substract(intVect, rhs.intVect, INT_BASE);
     } else {
@@ -95,21 +89,9 @@ Integer &Integer::operator+=(const Integer &rhs) {
   return *this;
 }
 
-Integer &Integer::operator+=(int64_t rhs) {
-  return *this += Integer(rhs);
-}
-
 Integer Integer::operator+(const Integer &rhs) const {
   Integer lhs = *this;
   return lhs += rhs;
-}
-
-Integer Integer::operator+(int64_t rhs) const {
-  return *this + Integer(rhs);
-}
-
-Integer operator+(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) + rhs;
 }
 
 Integer &Integer::operator-=(const Integer &rhs) {
@@ -118,21 +100,9 @@ Integer &Integer::operator-=(const Integer &rhs) {
   return *this += tmpRhs;
 }
 
-Integer &Integer::operator-=(int64_t rhs) {
-  return *this -= Integer(rhs);
-}
-
 Integer Integer::operator-(const Integer &rhs) const {
   Integer lhs = *this;
   return lhs -= rhs;
-}
-
-Integer Integer::operator-(int64_t rhs) const {
-  return *this - Integer(rhs);
-}
-
-Integer operator-(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) - rhs;
 }
 
 Integer &Integer::operator*=(const Integer &rhs) {
@@ -142,32 +112,20 @@ Integer &Integer::operator*=(const Integer &rhs) {
   return *this;
 }
 
-Integer &Integer::operator*=(int64_t rhs) {
-  return *this *= Integer(rhs);
-}
-
 Integer Integer::operator*(const Integer &rhs) const {
   Integer lhs = *this;
   return lhs *= rhs;
 }
 
-Integer Integer::operator*(int64_t rhs) const {
-  return *this * Integer(rhs);
-}
-
-Integer operator*(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) * rhs;
-}
-
 Integer &Integer::operator/=(const Integer &rhs) {
-  if (rhs == 0) {
-    throw std::domain_error("Div by zero");
+  if (rhs == Integer(0)) {
+    throw std::domain_error("Division by zero");
   }
-  if (*this == 0) {
+  if (*this == Integer(0)) {
     return *this;
   }
   if (::greater(rhs.intVect, intVect)) {
-    *this = 0;
+    *this = Integer(0);
     return *this;
   }
 
@@ -179,28 +137,16 @@ Integer &Integer::operator/=(const Integer &rhs) {
   return *this;
 }
 
-Integer &Integer::operator/=(int64_t rhs) {
-  return *this /= Integer(rhs);
-}
-
 Integer Integer::operator/(const Integer &rhs) const {
   Integer lhs = *this;
   return lhs /= rhs;
 }
 
-Integer Integer::operator/(int64_t rhs) const {
-  return *this / Integer(rhs);
-}
-
-Integer operator/(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) / rhs;
-}
-
 Integer &Integer::operator%=(const Integer &rhs) {
-  if (rhs == 0) {
-    throw std::domain_error("Div by zero");
+  if (rhs == Integer(0)) {
+    throw std::domain_error("Division by zero");
   }
-  if (*this == 0) {
+  if (*this == Integer(0)) {
     return *this;
   }
   if (::greater(rhs.intVect, intVect)) {
@@ -213,40 +159,28 @@ Integer &Integer::operator%=(const Integer &rhs) {
   return *this;
 }
 
-Integer &Integer::operator%=(int64_t rhs) {
-  return *this %= Integer(rhs);
-}
-
 Integer Integer::operator%(const Integer &rhs) const {
   Integer lhs = *this;
   return lhs %= rhs;
 }
 
-Integer Integer::operator%(int64_t rhs) const {
-  return *this % Integer(rhs);
-}
-
-Integer operator%(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) % rhs;
-}
-
 Integer &Integer::operator++() {
-  return *this += 1;
+  return *this += Integer(1);
 }
 
 Integer Integer::operator++(int) {
   Integer val = *this;
-  *this += 1;
+  *this += Integer(1);
   return val;
 }
 
 Integer &Integer::operator--() {
-  return *this -= 1;
+  return *this -= Integer(1);
 }
 
 Integer Integer::operator--(int) {
   Integer val = *this;
-  *this -= 1;
+  *this -= Integer(1);
   return val;
 }
 
@@ -267,24 +201,8 @@ bool Integer::operator==(const Integer &rhs) const {
   return equal(intVect, rhs.intVect);
 }
 
-bool Integer::operator==(int64_t rhs) const {
-  return *this == Integer(rhs);
-}
-
-bool operator==(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) == rhs;
-}
-
 bool Integer::operator!=(const Integer &rhs) const {
   return !(*this == rhs);
-}
-
-bool Integer::operator!=(int64_t rhs) const {
-  return !(*this == rhs);
-}
-
-bool operator!=(int64_t lhs, const Integer &rhs) {
-  return !(lhs == rhs);
 }
 
 bool Integer::operator<(const Integer &rhs) const {
@@ -302,14 +220,6 @@ bool Integer::operator<(const Integer &rhs) const {
   return ::less(intVect, rhs.intVect);
 }
 
-bool Integer::operator<(int64_t rhs) const {
-  return *this < Integer(rhs);
-}
-
-bool operator<(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) < rhs;
-}
-
 bool Integer::operator>(const Integer &rhs) const {
   if (!sign && rhs.sign) {
     return true;
@@ -323,14 +233,6 @@ bool Integer::operator>(const Integer &rhs) const {
   }
 
   return ::greater(intVect, rhs.intVect);
-}
-
-bool Integer::operator>(int64_t rhs) const {
-  return *this > Integer(rhs);
-}
-
-bool operator>(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) > rhs;
 }
 
 bool Integer::operator<=(const Integer &rhs) const {
@@ -348,14 +250,6 @@ bool Integer::operator<=(const Integer &rhs) const {
   return ::lessEqual(intVect, rhs.intVect);
 }
 
-bool Integer::operator<=(int64_t rhs) const {
-  return *this <= Integer(rhs);
-}
-
-bool operator<=(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) <= rhs;
-}
-
 bool Integer::operator>=(const Integer &rhs) const {
   if (!sign && rhs.sign) {
     return true;
@@ -371,27 +265,19 @@ bool Integer::operator>=(const Integer &rhs) const {
   return ::greaterEqual(intVect, rhs.intVect);
 }
 
-bool Integer::operator>=(int64_t rhs) const {
-  return *this >= Integer(rhs);
+// Changing the number base to solve sqrt
+Integer Integer::sqrt() const {
+  if (*this < Integer(0)) {
+    throw std::domain_error("Square root out of range");
+  }
+  auto intVectVal = toIntVector(this->toString(), 2);
+  return Integer(::toString(::sqrt(intVectVal), 1));
 }
 
-bool operator>=(int64_t lhs, const Integer &rhs) {
-  return Integer(lhs) >= rhs;
-}
-
-std::istream &operator>>(std::istream &in, Integer &rhs) {
-  std::string strVal;
-  in >> strVal;
-  rhs = Integer(strVal);
-  return in;
-}
-
-std::ostream &operator<<(std::ostream &out, const Integer &rhs) {
-  return out << rhs.toString();
-}
-
-size_t Integer::size() const {
-  return (intVect.size() - 1) * INT_BASE_SIZE + (std::to_string(intVect.back())).size();
+void Integer::fixZero() {
+  if (intVect.size() == 1 && intVect.front() == 0) {
+    sign = false;
+  }
 }
 
 std::string Integer::toString() const {
@@ -400,21 +286,6 @@ std::string Integer::toString() const {
     strVal.insert(0, 1, '-');
   }
   return strVal;
-}
-
-// Changing the number base to solve sqrt
-Integer sqrt(const Integer &rhs) {
-  if (rhs < 0) {
-    throw std::domain_error("sqrt out of range");
-  }
-  auto intVect = toIntVector(rhs.toString(), 2);
-  return Integer(toString(sqrt(intVect), 1));
-}
-
-void Integer::fixZero() {
-  if (intVect.size() == 1 && intVect.front() == 0) {
-    sign = false;
-  }
 }
 
 static IntVector toIntVector(const std::string_view &strVal, int64_t baseSize) {
