@@ -2,6 +2,8 @@
 
 #include <QtConcurrent/QtConcurrent>
 
+using namespace fintamath;
+
 constexpr int64_t WAITING_TIME = 10;
 
 void CalculatorHandler::onStartCalculation(const QString &str) {

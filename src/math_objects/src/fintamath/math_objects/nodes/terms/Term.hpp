@@ -2,7 +2,9 @@
 
 #include "fintamath/math_objects/nodes/Node.hpp"
 
-class Term : public Node {
-public:
-  ~Term() override = default;
-};
+namespace fintamath {
+  class Term : public Node {
+  public:
+    ~Term() override = default;
+  };
+}

@@ -2,6 +2,8 @@
 
 #include "fintamath/solver/Calculator.hpp"
 
+using namespace fintamath;
+
 int main(int /*argc*/, char *argv[]) {
   Calculator calc;
   try {

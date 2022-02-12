@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <stdexcept>
 
+using namespace fintamath;
+
 constexpr int64_t INITIAL_PRECISION = 36;
 
 static Integer gcd(const Integer &lhs, const Integer &rhs);
