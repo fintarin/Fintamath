@@ -1,4 +1,4 @@
-name: SonarCloud
+name: sonarcloud
 
 on:
   push:
@@ -11,7 +11,7 @@ defaults:
     shell: bash
 
 env:
-  BUILD_TYPE: RelWithDebInfo
+  BUILD_TYPE: Release
 
 jobs:
   analyze:
@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Install Qt
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install qt5-default
@@ -54,7 +54,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_TESTS:BOOL=FALSE
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_APP=ON -DBUILD_TESTS=OFF
         env:
           CC: gcc
           CXX: g++

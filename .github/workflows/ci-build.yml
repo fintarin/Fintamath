@@ -1,4 +1,4 @@
-name: CI build
+name: ci-build
 
 on:
   push:
@@ -30,14 +30,14 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Qt
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install qt5-default
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_TESTS:BOOL=TRUE -D BUILD_APP:BOOL=TRUE
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_APP=ON -DBUILD_TESTS=ON
         env:
           CC: ${{matrix.config.cc}}
           CXX: ${{matrix.config.cxx}}
@@ -48,4 +48,4 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}}
+        run: ctest -C${{env.BUILD_TYPE}}
