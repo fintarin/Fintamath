@@ -79,3 +79,6 @@ TEST(RationalTests, moreEqualOperatorTest) {
 
 TEST(RationalTests, toStringTest) {
 }
+
+TEST(RationalTests, minimizeTest) {
+}

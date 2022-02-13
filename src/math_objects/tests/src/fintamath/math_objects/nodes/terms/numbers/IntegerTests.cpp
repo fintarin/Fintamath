@@ -79,3 +79,6 @@ TEST(IntegerTests, sqrtTest) {
 
 TEST(IntegerTests, toStringTest) {
 }
+
+TEST(IntegerTests, minimizeTest) {
+}

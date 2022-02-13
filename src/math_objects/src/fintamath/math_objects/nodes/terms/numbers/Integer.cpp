@@ -769,3 +769,7 @@ static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &va
     diff.push_back(tmpVal / base);
   }
 }
+
+NodePtr fintamath::Integer::minimize() const {
+  return std::make_shared<Integer>(*this);
+}

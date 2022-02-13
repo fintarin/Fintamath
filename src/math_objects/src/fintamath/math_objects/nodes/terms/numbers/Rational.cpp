@@ -250,3 +250,10 @@ static Integer gcd(const Integer &lhs, const Integer &rhs) {
 static Integer lcm(const Integer &lhs, const Integer &rhs) {
   return lhs * rhs / gcd(lhs, rhs);
 }
+
+NodePtr fintamath::Rational::minimize() const {
+  if (denominator == Integer(1)) {
+    return std::make_shared<Integer>(numerator);
+  }
+  return std::make_shared<Rational>(*this);
+}

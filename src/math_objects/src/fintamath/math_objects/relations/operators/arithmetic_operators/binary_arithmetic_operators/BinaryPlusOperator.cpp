@@ -37,6 +37,5 @@ std::string BinaryPlusOperator::toString() const {
 }
 
 template <typename T1, typename T2> static NodePtr add(const T1 &lhs, const T2 &rhs) {
-  auto res = lhs + rhs;
-  return std::make_shared<decltype(res)>(res);
+  return (lhs + rhs).minimize();
 }
