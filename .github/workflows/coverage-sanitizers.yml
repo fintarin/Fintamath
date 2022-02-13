@@ -26,7 +26,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_APP=FALSE -D BUILD_TESTS:BOOL=TRUE -D ENABLE_COVERAGE:BOOL=TRUE -D ENABLE_SANITIZERS:BOOL=TRUE
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_APP=OFF -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON -DENABLE_SANITIZERS=ON
         env:
           CC: gcc
           CXX: g++
@@ -37,7 +37,7 @@ jobs:
 
       - name: Test, get coverage reports and run sanitizers
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}}
+        run: ctest -C${{env.BUILD_TYPE}}
 
       - name: Upload coverage reports to CodeCov
         working-directory: ${{github.workspace}}/build
