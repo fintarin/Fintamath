@@ -7,7 +7,7 @@
 
 using namespace fintamath;
 
-MathObjectPtr MathObjectParser::parse(const std::string_view &str) {
+std::unique_ptr<MathObject> MathObjectParser::parse(const std::string_view &str) {
   auto res = RelationParser::parse(str);
   if (res) {
     return res;

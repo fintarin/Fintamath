@@ -8,8 +8,8 @@ namespace fintamath {
   public:
     Set operator()(const Set &set, int64_t precision = 0) const override;
 
-    NodePtr operator()(const Integer &rhs) const;
-    NodePtr operator()(const Rational &rhs) const;
+    std::unique_ptr<Node> operator()(const Integer &rhs) const;
+    std::unique_ptr<Node> operator()(const Rational &rhs) const;
 
     std::string toString() const override;
   };

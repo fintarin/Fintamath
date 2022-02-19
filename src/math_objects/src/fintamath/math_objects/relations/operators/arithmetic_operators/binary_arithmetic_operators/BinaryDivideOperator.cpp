@@ -6,7 +6,7 @@
 
 using namespace fintamath;
 
-template <typename T1, typename T2> static NodePtr divide(const T1 &lhs, const T2 &rhs);
+template <typename T1, typename T2> static std::unique_ptr<Node> divide(const T1 &lhs, const T2 &rhs);
 
 Set BinaryDivideOperator::operator()(const Set &set, int64_t /*precision*/) const {
   INJECT_BINARY_RELATION(Integer, Integer, set)
@@ -16,19 +16,19 @@ Set BinaryDivideOperator::operator()(const Set &set, int64_t /*precision*/) cons
   throw std::invalid_argument("");
 }
 
-NodePtr BinaryDivideOperator::operator()(const Integer &lhs, const Integer &rhs) const {
+std::unique_ptr<Node> BinaryDivideOperator::operator()(const Integer &lhs, const Integer &rhs) const {
   return divide(lhs, rhs);
 }
 
-NodePtr BinaryDivideOperator::operator()(const Rational &lhs, const Rational &rhs) const {
+std::unique_ptr<Node> BinaryDivideOperator::operator()(const Rational &lhs, const Rational &rhs) const {
   return divide(lhs, rhs);
 }
 
-NodePtr BinaryDivideOperator::operator()(const Integer &lhs, const Rational &rhs) const {
+std::unique_ptr<Node> BinaryDivideOperator::operator()(const Integer &lhs, const Rational &rhs) const {
   return divide(Rational(lhs), rhs);
 }
 
-NodePtr BinaryDivideOperator::operator()(const Rational &lhs, const Integer &rhs) const {
+std::unique_ptr<Node> BinaryDivideOperator::operator()(const Rational &lhs, const Integer &rhs) const {
   return divide(lhs, Rational(rhs));
 }
 
@@ -36,6 +36,6 @@ std::string BinaryDivideOperator::toString() const {
   return "/";
 }
 
-template <typename T1, typename T2> static NodePtr divide(const T1 &lhs, const T2 &rhs) {
+template <typename T1, typename T2> static std::unique_ptr<Node> divide(const T1 &lhs, const T2 &rhs) {
   return (lhs / rhs).minimize();
 }

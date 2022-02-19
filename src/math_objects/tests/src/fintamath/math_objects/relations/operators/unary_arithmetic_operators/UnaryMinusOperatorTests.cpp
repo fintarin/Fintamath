@@ -7,8 +7,8 @@ using namespace fintamath;
 const UnaryMinusOperator oper;
 
 TEST(UnaryMinusOperatorTests, callOperatorTest) {
-  EXPECT_EQ(*oper({std::make_shared<Integer>(20)}).at(0), Integer(-20));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3)}).at(0), Rational(-2, 3));
+  EXPECT_EQ(*oper({std::make_unique<Integer>(20)}).at(0), Integer(-20));
+  EXPECT_EQ(*oper({std::make_unique<Rational>(2, 3)}).at(0), Rational(-2, 3));
 
   auto s = std::make_shared<Set>();
   EXPECT_THROW(oper({s}), std::invalid_argument);

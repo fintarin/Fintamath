@@ -6,7 +6,7 @@
 
 using namespace fintamath;
 
-template <typename T> static NodePtr negate(const T &rhs);
+template <typename T> static std::unique_ptr<Node> negate(const T &rhs);
 
 Set UnaryMinusOperator::operator()(const Set &set, int64_t /*precision*/) const {
   INJECT_UNARY_RELATION(Integer, set)
@@ -14,11 +14,11 @@ Set UnaryMinusOperator::operator()(const Set &set, int64_t /*precision*/) const 
   throw std::invalid_argument("");
 }
 
-NodePtr UnaryMinusOperator::operator()(const Integer &rhs) const {
+std::unique_ptr<Node> UnaryMinusOperator::operator()(const Integer &rhs) const {
   return negate(rhs);
 }
 
-NodePtr UnaryMinusOperator::operator()(const Rational &rhs) const {
+std::unique_ptr<Node> UnaryMinusOperator::operator()(const Rational &rhs) const {
   return negate(rhs);
 }
 
@@ -26,6 +26,6 @@ std::string UnaryMinusOperator::toString() const {
   return "-";
 }
 
-template <typename T> static NodePtr negate(const T &rhs) {
-  return std::make_shared<T>(-rhs);
+template <typename T> static std::unique_ptr<Node> negate(const T &rhs) {
+  return std::make_unique<T>(-rhs);
 }

@@ -7,6 +7,6 @@ namespace fintamath {
   public:
     TermParser() = delete;
 
-    static NodePtr parse(const std::string_view &str);
+    static std::unique_ptr<Node> parse(const std::string_view &str);
   };
 }

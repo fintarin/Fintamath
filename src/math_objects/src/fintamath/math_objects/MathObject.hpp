@@ -13,6 +13,4 @@ namespace fintamath {
 
     virtual std::string toString() const = 0;
   };
-
-  using MathObjectPtr = std::shared_ptr<MathObject>;
 }

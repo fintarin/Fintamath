@@ -6,15 +6,15 @@
 
 using namespace fintamath;
 
-NodePtr NumberParser::parse(const std::string_view &str) {
+std::unique_ptr<Node> NumberParser::parse(const std::string_view &str) {
   try {
-    return std::make_shared<Integer>(str);
+    return std::make_unique<Integer>(str);
   } catch (const std::invalid_argument &) {
     // do nothing
   }
 
   try {
-    return std::make_shared<Rational>(str);
+    return std::make_unique<Rational>(str);
   } catch (const std::invalid_argument &) {
     // do nothing
   }

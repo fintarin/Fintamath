@@ -649,6 +649,6 @@ TEST(IntegerTests, toStringTest) {
 }
 
 TEST(IntegerTests, minimizeTest) {
-  auto a = std::make_shared<Integer>(100);
+  auto a = std::make_unique<Integer>(100);
   EXPECT_EQ(a->toString(), a->minimize()->toString());
 }

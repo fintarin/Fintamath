@@ -7,10 +7,10 @@ using namespace fintamath;
 const BinaryMultiplyOperator oper;
 
 TEST(BinaryMultiplyOperatorTests, callOperatorTest) {
-  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}).at(0), Integer(200));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}).at(0), Rational(1, 2));
-  EXPECT_EQ(*oper({std::make_shared<Integer>(21), std::make_shared<Rational>(3, 4)}).at(0), Rational(63, 4));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}).at(0), Rational(20, 3));
+  EXPECT_EQ(*oper({std::make_unique<Integer>(20), std::make_unique<Integer>(10)}).at(0), Integer(200));
+  EXPECT_EQ(*oper({std::make_unique<Rational>(2, 3), std::make_unique<Rational>(3, 4)}).at(0), Rational(1, 2));
+  EXPECT_EQ(*oper({std::make_unique<Integer>(21), std::make_unique<Rational>(3, 4)}).at(0), Rational(63, 4));
+  EXPECT_EQ(*oper({std::make_unique<Rational>(2, 3), std::make_unique<Integer>(10)}).at(0), Rational(20, 3));
 
   auto s = std::make_shared<Set>();
   EXPECT_THROW(oper({s, s}), std::invalid_argument);

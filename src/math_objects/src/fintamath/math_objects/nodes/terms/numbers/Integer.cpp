@@ -770,6 +770,6 @@ static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &va
   }
 }
 
-NodePtr fintamath::Integer::minimize() const {
-  return std::make_shared<Integer>(*this);
+std::unique_ptr<Number> fintamath::Integer::minimize() const {
+  return std::make_unique<Integer>(*this);
 }

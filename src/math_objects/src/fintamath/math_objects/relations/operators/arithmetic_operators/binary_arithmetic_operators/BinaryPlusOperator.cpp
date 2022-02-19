@@ -6,7 +6,7 @@
 
 using namespace fintamath;
 
-template <typename T1, typename T2> static NodePtr add(const T1 &lhs, const T2 &rhs);
+template <typename T1, typename T2> static std::unique_ptr<Node> add(const T1 &lhs, const T2 &rhs);
 
 Set BinaryPlusOperator::operator()(const Set &set, int64_t /*precision*/) const {
   INJECT_BINARY_RELATION(Integer, Integer, set)
@@ -16,19 +16,19 @@ Set BinaryPlusOperator::operator()(const Set &set, int64_t /*precision*/) const 
   throw std::invalid_argument("");
 }
 
-NodePtr BinaryPlusOperator::operator()(const Integer &lhs, const Integer &rhs) const {
+std::unique_ptr<Node> BinaryPlusOperator::operator()(const Integer &lhs, const Integer &rhs) const {
   return add(lhs, rhs);
 }
 
-NodePtr BinaryPlusOperator::operator()(const Rational &lhs, const Rational &rhs) const {
+std::unique_ptr<Node> BinaryPlusOperator::operator()(const Rational &lhs, const Rational &rhs) const {
   return add(lhs, rhs);
 }
 
-NodePtr BinaryPlusOperator::operator()(const Integer &lhs, const Rational &rhs) const {
+std::unique_ptr<Node> BinaryPlusOperator::operator()(const Integer &lhs, const Rational &rhs) const {
   return add(Rational(lhs), rhs);
 }
 
-NodePtr BinaryPlusOperator::operator()(const Rational &lhs, const Integer &rhs) const {
+std::unique_ptr<Node> BinaryPlusOperator::operator()(const Rational &lhs, const Integer &rhs) const {
   return add(lhs, Rational(rhs));
 }
 
@@ -36,6 +36,6 @@ std::string BinaryPlusOperator::toString() const {
   return "+";
 }
 
-template <typename T1, typename T2> static NodePtr add(const T1 &lhs, const T2 &rhs) {
+template <typename T1, typename T2> static std::unique_ptr<Node> add(const T1 &lhs, const T2 &rhs) {
   return (lhs + rhs).minimize();
 }

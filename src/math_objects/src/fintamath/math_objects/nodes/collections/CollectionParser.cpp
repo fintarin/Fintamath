@@ -6,9 +6,9 @@
 
 using namespace fintamath;
 
-NodePtr CollectionParser::parse(const std::string_view &str) {
+std::unique_ptr<Node> CollectionParser::parse(const std::string_view &str) {
   try {
-    return std::make_shared<Set>(str);
+    return std::make_unique<Set>(str);
   } catch (const std::invalid_argument &) {
     // do nothing
   }
