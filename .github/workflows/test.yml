@@ -1,4 +1,4 @@
-name: ci-build
+name: test
 
 on:
   push:
@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    name: Build and Test
+    name: Test
     runs-on: ${{matrix.config.os}}
 
     strategy:
@@ -37,7 +37,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_APP=ON -DBUILD_TESTS=ON
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_APP=OFF -DBUILD_TESTS=ON -DENABLE_SANITIZERS=ON
         env:
           CC: ${{matrix.config.cc}}
           CXX: ${{matrix.config.cxx}}
