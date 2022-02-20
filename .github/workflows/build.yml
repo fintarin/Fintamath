@@ -1,0 +1,47 @@
+name: build
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [dev]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{matrix.config.os}}
+
+    strategy:
+      matrix:
+        config:
+          - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
+          - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install qt5-default
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_APP=ON -DBUILD_TESTS=OFF
+        env:
+          CC: ${{matrix.config.cc}}
+          CXX: ${{matrix.config.cxx}}
+
+      - name: Build
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
