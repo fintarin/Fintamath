@@ -7,7 +7,7 @@
 namespace fintamath {
   template <typename T1, typename T2> static std::unique_ptr<Node> add(const T1 &lhs, const T2 &rhs);
 
-  Set BinaryPlusOperator::operator()(const Set &set, int64_t /*precision*/) const {
+  Set BinaryPlusOperator::operator()(const Set &set) const {
     INJECT_BINARY_RELATION(Integer, Integer, set)
     INJECT_BINARY_RELATION(Rational, Rational, set)
     INJECT_BINARY_RELATION(Integer, Rational, set)

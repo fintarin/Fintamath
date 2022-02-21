@@ -6,7 +6,7 @@
 namespace fintamath {
   class BinaryMinusOperator : public BinaryArithmeticOperator {
   public:
-    Set operator()(const Set &set, int64_t precision = 0) const override;
+    Set operator()(const Set &set) const override;
 
     std::unique_ptr<Node> operator()(const Integer &lhs, const Integer &rhs) const;
     std::unique_ptr<Node> operator()(const Rational &lhs, const Rational &rhs) const;
