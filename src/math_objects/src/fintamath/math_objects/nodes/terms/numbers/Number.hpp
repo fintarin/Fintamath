@@ -5,9 +5,7 @@
 
 class Number : public Term {
 public:
-  ~Number() override = 0;
+  ~Number() override = default;
 };
-
-inline Number::~Number() = default;
 
 #endif // NUMBER_HPP
