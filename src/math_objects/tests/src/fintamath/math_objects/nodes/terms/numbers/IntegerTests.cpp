@@ -2,6 +2,8 @@
 
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
 
+using namespace fintamath;
+
 TEST(IntegerTests, plusAssignmentOperatorsTest) {
   Integer val;
   EXPECT_EQ(val += 2, 2);
@@ -144,7 +146,7 @@ TEST(IntegerTests, divisionModuloNegativeTest) {
 }
 
 TEST(IntegerTests, sqrtNegativeTest) {
-  EXPECT_THROW(sqrt(Integer(-2)), std::domain_error);
+  EXPECT_THROW(Integer(-2).sqrt(), std::domain_error);
 }
 
 TEST(IntegerTests, negativeToStringTest) {

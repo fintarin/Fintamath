@@ -8,9 +8,8 @@ namespace fintamath {
   class Integer : public Number {
   public:
     Integer() = default;
-    explicit Integer(const std::string_view &strVal);
-    // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE
-    Integer(int64_t val);
+    explicit Integer(const std::string_view &str);
+    Integer(int64_t val); // NOLINT
 
     Integer &operator=(int64_t rhs);
 
@@ -77,10 +76,9 @@ namespace fintamath {
     bool operator>=(int64_t rhs) const;
     friend bool operator>=(int64_t lhs, const Integer &rhs);
 
-    size_t size() const;
-    std::string toString() const override;
+    Integer sqrt() const;
 
-    friend Integer sqrt(const Integer &);
+    std::string toString() const override;
 
   private:
     std::vector<int64_t> intVect;
