@@ -6,8 +6,12 @@
 namespace fintamath {
   class MathObject {
   public:
-    virtual std::string toString() const = 0;
     virtual ~MathObject() = default;
+
+    bool operator==(const MathObject &rhs) const;
+    bool operator!=(const MathObject &rhs) const;
+
+    virtual std::string toString() const = 0;
   };
 
   using MathObjectPtr = std::shared_ptr<MathObject>;
