@@ -389,10 +389,6 @@ std::string Integer::toString() const {
   return strVal;
 }
 
-std::string Integer::getTypeName() const {
-  return "Integer";
-}
-
 // Changing the number base to solve sqrt
 Integer sqrt(const Integer &rhs) {
   if (rhs < 0) {

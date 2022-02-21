@@ -147,10 +147,6 @@ TEST(IntegerTests, sqrtNegativeTest) {
   EXPECT_THROW(sqrt(Integer(-2)), std::domain_error);
 }
 
-TEST(IntegerTests, getTypenameTest) {
-  EXPECT_EQ(Integer().getTypeName(), "Integer");
-}
-
 TEST(IntegerTests, negativeToStringTest) {
   EXPECT_EQ(Integer(-1).toString(), "-1");
 }

@@ -79,7 +79,6 @@ public:
 
   size_t size() const;
   std::string toString() const override;
-  std::string getTypeName() const override;
 
   friend Integer sqrt(const Integer &);
 

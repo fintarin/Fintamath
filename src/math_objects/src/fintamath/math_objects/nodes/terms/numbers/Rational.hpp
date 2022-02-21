@@ -107,7 +107,6 @@ public:
 
   std::string toString() const override;
   std::string toString(size_t precision) const;
-  std::string getTypeName() const override;
 
 private:
   Integer numerator = 0;
