@@ -6,7 +6,7 @@
 
 using namespace fintamath;
 
-template <typename T1, typename T2> static NodePtr substract(const T1 &lhs, const T2 &rhs);
+template <typename T1, typename T2> static std::unique_ptr<Node> substract(const T1 &lhs, const T2 &rhs);
 
 Set BinaryMinusOperator::operator()(const Set &set, int64_t /*precision*/) const {
   INJECT_BINARY_RELATION(Integer, Integer, set)
@@ -16,19 +16,19 @@ Set BinaryMinusOperator::operator()(const Set &set, int64_t /*precision*/) const
   throw std::invalid_argument("");
 }
 
-NodePtr BinaryMinusOperator::operator()(const Integer &lhs, const Integer &rhs) const {
+std::unique_ptr<Node> BinaryMinusOperator::operator()(const Integer &lhs, const Integer &rhs) const {
   return substract(lhs, rhs);
 }
 
-NodePtr BinaryMinusOperator::operator()(const Rational &lhs, const Rational &rhs) const {
+std::unique_ptr<Node> BinaryMinusOperator::operator()(const Rational &lhs, const Rational &rhs) const {
   return substract(lhs, rhs);
 }
 
-NodePtr BinaryMinusOperator::operator()(const Integer &lhs, const Rational &rhs) const {
+std::unique_ptr<Node> BinaryMinusOperator::operator()(const Integer &lhs, const Rational &rhs) const {
   return substract(lhs, rhs);
 }
 
-NodePtr BinaryMinusOperator::operator()(const Rational &lhs, const Integer &rhs) const {
+std::unique_ptr<Node> BinaryMinusOperator::operator()(const Rational &lhs, const Integer &rhs) const {
   return substract(lhs, rhs);
 }
 
@@ -36,6 +36,6 @@ std::string BinaryMinusOperator::toString() const {
   return "-";
 }
 
-template <typename T1, typename T2> static NodePtr substract(const T1 &lhs, const T2 &rhs) {
+template <typename T1, typename T2> static std::unique_ptr<Node> substract(const T1 &lhs, const T2 &rhs) {
   return (lhs - rhs).minimize();
 }

@@ -294,11 +294,11 @@ namespace fintamath {
     return (sign ? "-" : "") + numerator.toString() + "/" + denominator.toString();
   }
 
-  NodePtr fintamath::Rational::minimize() const {
+  std::unique_ptr<Number> fintamath::Rational::minimize() const {
     if (denominator == Integer(1)) {
-      return std::make_shared<Integer>(numerator);
+      return std::make_unique<Integer>(numerator);
     }
-    return std::make_shared<Rational>(*this);
+    return std::make_unique<Rational>(*this);
   }
 
   void Rational::fixZero() {

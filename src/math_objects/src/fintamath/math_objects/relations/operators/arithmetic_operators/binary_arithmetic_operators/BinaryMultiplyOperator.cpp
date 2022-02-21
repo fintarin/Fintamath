@@ -6,7 +6,7 @@
 
 using namespace fintamath;
 
-template <typename T1, typename T2> static NodePtr multiply(const T1 &lhs, const T2 &rhs);
+template <typename T1, typename T2> static std::unique_ptr<Node> multiply(const T1 &lhs, const T2 &rhs);
 
 Set BinaryMultiplyOperator::operator()(const Set &set, int64_t /*precision*/) const {
   INJECT_BINARY_RELATION(Integer, Integer, set)
@@ -16,19 +16,19 @@ Set BinaryMultiplyOperator::operator()(const Set &set, int64_t /*precision*/) co
   throw std::invalid_argument("");
 }
 
-NodePtr BinaryMultiplyOperator::operator()(const Integer &lhs, const Integer &rhs) const {
+std::unique_ptr<Node> BinaryMultiplyOperator::operator()(const Integer &lhs, const Integer &rhs) const {
   return multiply(lhs, rhs);
 }
 
-NodePtr BinaryMultiplyOperator::operator()(const Rational &lhs, const Rational &rhs) const {
+std::unique_ptr<Node> BinaryMultiplyOperator::operator()(const Rational &lhs, const Rational &rhs) const {
   return multiply(lhs, rhs);
 }
 
-NodePtr BinaryMultiplyOperator::operator()(const Integer &lhs, const Rational &rhs) const {
+std::unique_ptr<Node> BinaryMultiplyOperator::operator()(const Integer &lhs, const Rational &rhs) const {
   return multiply(lhs, rhs);
 }
 
-NodePtr BinaryMultiplyOperator::operator()(const Rational &lhs, const Integer &rhs) const {
+std::unique_ptr<Node> BinaryMultiplyOperator::operator()(const Rational &lhs, const Integer &rhs) const {
   return multiply(lhs, rhs);
 }
 
@@ -36,6 +36,6 @@ std::string BinaryMultiplyOperator::toString() const {
   return "*";
 }
 
-template <typename T1, typename T2> static NodePtr multiply(const T1 &lhs, const T2 &rhs) {
+template <typename T1, typename T2> static std::unique_ptr<Node> multiply(const T1 &lhs, const T2 &rhs) {
   return (lhs * rhs).minimize();
 }

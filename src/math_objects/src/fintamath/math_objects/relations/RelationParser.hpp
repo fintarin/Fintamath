@@ -9,6 +9,6 @@ namespace fintamath {
   public:
     RelationParser() = delete;
 
-    static RelationPtr parse(const std::string_view &str);
+    static std::unique_ptr<Relation> parse(const std::string_view &str);
   };
 }

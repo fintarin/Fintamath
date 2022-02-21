@@ -8,7 +8,7 @@
 
 using namespace fintamath;
 
-NodePtr NodeParser::parse(const std::string_view &str) {
+std::unique_ptr<Node> NodeParser::parse(const std::string_view &str) {
   if (auto res = TermParser::parse(str); res) {
     return res;
   }
