@@ -7,7 +7,7 @@
 namespace fintamath {
   template <typename T> static std::unique_ptr<Node> convert(const T &rhs);
 
-  Set UnaryPlusOperator::operator()(const Set &set, int64_t /*precision*/) const {
+  Set UnaryPlusOperator::operator()(const Set &set) const {
     INJECT_UNARY_RELATION(Integer, set)
     INJECT_UNARY_RELATION(Rational, set)
     throw std::invalid_argument("");
