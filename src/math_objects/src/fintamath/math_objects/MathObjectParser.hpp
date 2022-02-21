@@ -9,6 +9,6 @@ namespace fintamath {
   public:
     MathObjectParser() = delete;
 
-    static MathObjectPtr parse(const std::string_view &str);
+    static std::unique_ptr<MathObject> parse(const std::string_view &str);
   };
 }

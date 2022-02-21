@@ -6,9 +6,9 @@
 
 using namespace fintamath;
 
-NodePtr ExpressionParser::parse(const std::string_view &str) {
+std::unique_ptr<Node> ExpressionParser::parse(const std::string_view &str) {
   try {
-    return std::make_shared<Expression>(str);
+    return std::make_unique<Expression>(str);
   } catch (const std::invalid_argument &) {
     // do nothing
   }

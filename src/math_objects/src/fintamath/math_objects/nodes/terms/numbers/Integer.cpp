@@ -401,8 +401,8 @@ namespace fintamath {
     return str;
   }
 
-  NodePtr fintamath::Integer::minimize() const {
-    return std::make_shared<Integer>(*this);
+  std::unique_ptr<Number> fintamath::Integer::minimize() const {
+    return std::make_unique<Integer>(*this);
   }
 
   static IntVector toIntVector(const std::string_view &str, int64_t baseSize) {

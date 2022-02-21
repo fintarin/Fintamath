@@ -7,6 +7,4 @@ namespace fintamath {
   public:
     ~Node() override = default;
   };
-
-  using NodePtr = std::shared_ptr<Node>;
 }

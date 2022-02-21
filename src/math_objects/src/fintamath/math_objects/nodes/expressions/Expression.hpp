@@ -12,7 +12,7 @@ namespace fintamath {
     std::string toString() const override;
 
   private:
-    RelationPtr relation;
+    std::unique_ptr<Relation> relation;
     Set set;
   };
 }

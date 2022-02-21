@@ -6,7 +6,7 @@
 
 using namespace fintamath;
 
-template <typename T> static NodePtr convert(const T &rhs);
+template <typename T> static std::unique_ptr<Node> convert(const T &rhs);
 
 Set UnaryPlusOperator::operator()(const Set &set, int64_t /*precision*/) const {
   INJECT_UNARY_RELATION(Integer, set)
@@ -14,11 +14,11 @@ Set UnaryPlusOperator::operator()(const Set &set, int64_t /*precision*/) const {
   throw std::invalid_argument("");
 }
 
-NodePtr UnaryPlusOperator::operator()(const Integer &rhs) const {
+std::unique_ptr<Node> UnaryPlusOperator::operator()(const Integer &rhs) const {
   return convert(rhs);
 }
 
-NodePtr UnaryPlusOperator::operator()(const Rational &rhs) const {
+std::unique_ptr<Node> UnaryPlusOperator::operator()(const Rational &rhs) const {
   return convert(rhs);
 }
 
@@ -26,6 +26,6 @@ std::string UnaryPlusOperator::toString() const {
   return "+";
 }
 
-template <typename T> static NodePtr convert(const T &rhs) {
-  return std::make_shared<T>(+rhs);
+template <typename T> static std::unique_ptr<Node> convert(const T &rhs) {
+  return std::make_unique<T>(+rhs);
 }

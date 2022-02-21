@@ -9,6 +9,4 @@ namespace fintamath {
     virtual Set operator()(const Set &set, int64_t precision = 0) const = 0;
     ~Relation() override = default;
   };
-
-  using RelationPtr = std::shared_ptr<Relation>;
 }
