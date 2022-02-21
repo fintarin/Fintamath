@@ -2,6 +2,8 @@
 
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
+using namespace fintamath;
+
 TEST(RationalTests, integerAssignmentOperatorsTest) {
   Rational ratVal;
   ratVal = Integer(2);
@@ -142,25 +144,10 @@ TEST(RationalTests, moreEqualOperatorsTest) {
   EXPECT_EQ(1 >= ratVal, false);
 }
 
-TEST(RationalTests, inOperatorsTest) {
-  Rational ratVal;
-  std::stringstream in;
-  in << 2;
-  in >> ratVal;
-  EXPECT_EQ(ratVal, 2);
-}
-
-TEST(RationalTests, outOperatorsTest) {
-  Rational ratVal(2);
-  std::stringstream out;
-  out << ratVal;
-  EXPECT_EQ(out.str(), "2");
-}
-
 TEST(RationalTests, getDenominatorTest) {
-  EXPECT_EQ(Rational(1, -2).getDenominator().toString(), "2");
+  EXPECT_EQ(Rational(1, -2).getDenominator(), 2);
 }
 
 TEST(RationalTests, negativeDenominatorTest) {
-  EXPECT_EQ(Rational(1, -2).toString(), "-0.5");
+  EXPECT_EQ(Rational(1, -2).toString(), "-1/2");
 }
