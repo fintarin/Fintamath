@@ -1,5 +1,7 @@
 #include "fintamath/ui/widgets/FintamathWindow.hpp"
 
+using namespace fintamath;
+
 FintamathMainWindow::FintamathMainWindow(QWidget *parent) : QMainWindow(parent) {
   ui->setupUi(this);
 
