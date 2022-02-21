@@ -1,5 +1,4 @@
-#ifndef CALCULATORHANDLER_HPP
-#define CALCULATORHANDLER_HPP
+#pragma once
 
 #include <QObject>
 
@@ -14,5 +13,3 @@ signals:
   void solved(const QString &str);
   void terminateCalculation();
 };
-
-#endif // CALCULATORHANDLER_HPP

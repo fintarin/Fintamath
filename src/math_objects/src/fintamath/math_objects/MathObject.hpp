@@ -1,5 +1,4 @@
-#ifndef MATHOBJECT_HPP
-#define MATHOBJECT_HPP
+#pragma once
 
 #include <string>
 
@@ -8,5 +7,3 @@ public:
   virtual std::string toString() const = 0;
   virtual ~MathObject() = default;
 };
-
-#endif // MATHOBJECT_HPP
