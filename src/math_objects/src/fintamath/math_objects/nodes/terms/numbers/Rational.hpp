@@ -75,6 +75,7 @@ namespace fintamath {
     Integer getDenominator() const;
 
     std::string toString() const override;
+    NodePtr minimize() const override;
 
   private:
     Integer numerator = 0;

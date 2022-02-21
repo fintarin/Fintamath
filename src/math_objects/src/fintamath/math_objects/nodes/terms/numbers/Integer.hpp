@@ -79,6 +79,7 @@ namespace fintamath {
     Integer sqrt() const;
 
     std::string toString() const override;
+    NodePtr minimize() const override;
 
   private:
     std::vector<int64_t> intVect;

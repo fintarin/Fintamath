@@ -401,6 +401,10 @@ namespace fintamath {
     return str;
   }
 
+  NodePtr fintamath::Integer::minimize() const {
+    return std::make_shared<Integer>(*this);
+  }
+
   static IntVector toIntVector(const std::string_view &str, int64_t baseSize) {
     IntVector intVect;
     const auto *iter = str.end();
