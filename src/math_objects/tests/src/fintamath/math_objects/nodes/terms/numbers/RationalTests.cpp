@@ -151,3 +151,6 @@ TEST(RationalTests, getDenominatorTest) {
 TEST(RationalTests, negativeDenominatorTest) {
   EXPECT_EQ(Rational(1, -2).toString(), "-1/2");
 }
+
+TEST(RationalTests, minimizeTest) {
+}

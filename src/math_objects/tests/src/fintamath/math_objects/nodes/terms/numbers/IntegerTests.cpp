@@ -152,3 +152,6 @@ TEST(IntegerTests, sqrtNegativeTest) {
 TEST(IntegerTests, negativeToStringTest) {
   EXPECT_EQ(Integer(-1).toString(), "-1");
 }
+
+TEST(IntegerTests, minimizeTest) {
+}
