@@ -5,9 +5,7 @@
 
 class Constant : public Term {
 public:
-  ~Constant() override = 0;
+  ~Constant() override = default;
 };
-
-inline Constant::~Constant() = default;
 
 #endif // CONSTANT_HPP
