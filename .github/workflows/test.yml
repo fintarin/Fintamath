@@ -16,13 +16,7 @@ env:
 jobs:
   build:
     name: Test
-    runs-on: ${{matrix.config.os}}
-
-    strategy:
-      matrix:
-        config:
-          - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
-          - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -30,17 +24,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install qt5-default
-
       - name: Configure CMake
         working-directory: ${{github.workspace}}
         run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_APP=OFF -DBUILD_TESTS=ON -DENABLE_SANITIZERS=ON
         env:
-          CC: ${{matrix.config.cc}}
-          CXX: ${{matrix.config.cxx}}
+          CC: gcc
+          CXX: g++
 
       - name: Build
         working-directory: ${{github.workspace}}
