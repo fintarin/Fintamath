@@ -5,11 +5,11 @@
 #include "fintamath/math_objects/nodes/NodeParser.hpp"
 #include "fintamath/math_objects/relations/RelationParser.hpp"
 
-using namespace fintamath;
-
-std::unique_ptr<MathObject> MathObjectParser::parse(const std::string_view &str) {
-  if (auto res = RelationParser::parse(str); res) {
-    return res;
+namespace fintamath {
+  std::unique_ptr<MathObject> MathObjectParser::parse(const std::string_view &str) {
+    if (auto res = RelationParser::parse(str); res) {
+      return res;
+    }
+    return NodeParser::parse(str);
   }
-  return NodeParser::parse(str);
 }
