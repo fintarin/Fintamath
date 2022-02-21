@@ -18,4 +18,5 @@ Checks: >-
   -bugprone-easily-swappable-parameters,
   -modernize-return-braced-init-list,
   -modernize-use-nodiscard,
-  -cppcoreguidelines-pro-bounds-pointer-arithmetic
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-macro-usage
