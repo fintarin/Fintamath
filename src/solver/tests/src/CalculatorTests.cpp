@@ -4,6 +4,8 @@
 
 #include "fintamath/solver/Calculator.hpp"
 
+using namespace fintamath;
+
 TEST(CalculatorTests, calculationPositiveTests) {
   std::ifstream testsIn(RESOURCES_DIR "positive_tests.txt");
   Calculator calc;

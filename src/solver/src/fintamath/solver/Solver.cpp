@@ -6,6 +6,8 @@
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 
+using namespace fintamath;
+
 static void elemReset(const std::shared_ptr<ArithmeticExpression::Elem> &elem, const Rational &val);
 
 Rational Solver::solve(ArithmeticExpression &expr) {

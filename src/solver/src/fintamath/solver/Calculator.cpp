@@ -5,6 +5,8 @@
 #include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
+using namespace fintamath;
+
 static void insertFloatingPoint(std::string &strVal, int64_t precision);
 
 size_t cutZeros(std::string &strVal) {

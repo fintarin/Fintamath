@@ -4,6 +4,8 @@
 #include <cmath>
 #include <stdexcept>
 
+using namespace fintamath;
+
 using IntVector = std::vector<int64_t>;
 
 constexpr int8_t INT_BASE_SIZE = 9;

@@ -3,10 +3,12 @@
 #include <memory>
 #include <string>
 
-class MathObject {
-public:
-  virtual std::string toString() const = 0;
-  virtual ~MathObject() = default;
-};
+namespace fintamath {
+  class MathObject {
+  public:
+    virtual std::string toString() const = 0;
+    virtual ~MathObject() = default;
+  };
 
-using MathObjectPtr = std::shared_ptr<MathObject>;
+  using MathObjectPtr = std::shared_ptr<MathObject>;
+}
