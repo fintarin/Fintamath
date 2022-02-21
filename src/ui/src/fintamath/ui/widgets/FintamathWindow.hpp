@@ -1,5 +1,4 @@
-#ifndef FINTAMATHWINDOW_HPP
-#define FINTAMATHWINDOW_HPP
+#pragma once
 
 #include "fintamath/ui/models/CalculatorHandler.hpp"
 #include "ui/ui_FintamathMainWindow.h"
@@ -23,5 +22,3 @@ private:
   QSharedPointer<Ui::FintamathMainWindow> ui = QSharedPointer<Ui::FintamathMainWindow>(new Ui::FintamathMainWindow);
   QSharedPointer<CalculatorHandler> calculatorHandler = QSharedPointer<CalculatorHandler>(new CalculatorHandler);
 };
-
-#endif // FINTAMATHWINDOW_HPP

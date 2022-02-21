@@ -1,5 +1,4 @@
-#ifndef INTEGER_HPP
-#define INTEGER_HPP
+#pragma once
 
 #include <vector>
 
@@ -88,5 +87,3 @@ private:
 
   void fixZero();
 };
-
-#endif // INTEGER_HPP

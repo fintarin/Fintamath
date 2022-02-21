@@ -1,5 +1,4 @@
-#ifndef RATIONAL_HPP
-#define RATIONAL_HPP
+#pragma once
 
 #include "fintamath/math_objects/nodes/terms/numbers/Number.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
@@ -118,5 +117,3 @@ private:
   void toIrreducibleRational();
   static void toCommonDenominators(Rational &lhs, Rational &rhs);
 };
-
-#endif // RATIONAL_HPP

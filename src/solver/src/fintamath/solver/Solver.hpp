@@ -1,5 +1,4 @@
-#ifndef SOLVER_HPP
-#define SOLVER_HPP
+#pragma once
 
 #include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
@@ -28,5 +27,3 @@ private:
   int64_t getNewPrecision() const;
   int64_t getNewRoundPrecision() const;
 };
-
-#endif // SOLVER_HPP
