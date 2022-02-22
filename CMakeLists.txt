@@ -5,7 +5,7 @@ project(
   LANGUAGES CXX
   VERSION 0.1)
 
-option(BUILD_TESTS "Enable Test Builds" ON)
+option(BUILD_TESTS "Enable Test Builds" OFF)
 
 include(cmake/PreventInSourceBuilds.cmake)
 include(cmake/Cache.cmake)
