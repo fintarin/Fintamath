@@ -26,7 +26,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_APP=OFF -DBUILD_TESTS=ON -DENABLE_SANITIZERS=ON
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTS=ON -DENABLE_SANITIZERS=ON
         env:
           CC: gcc
           CXX: g++
