@@ -1,12 +1,12 @@
 #pragma once
 
-#include "fintamath/math_objects/nodes/Node.hpp"
+#include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 
 namespace fintamath {
   class ExpressionParser final {
   public:
     ExpressionParser() = delete;
 
-    static std::unique_ptr<Node> parse(const std::string_view &str);
+    static std::unique_ptr<Expression> parse(const std::string_view &str);
   };
 }

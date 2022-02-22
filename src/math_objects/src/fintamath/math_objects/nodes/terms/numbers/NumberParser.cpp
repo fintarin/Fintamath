@@ -5,7 +5,7 @@
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
 namespace fintamath {
-  std::unique_ptr<Node> NumberParser::parse(const std::string_view &str) {
+  std::unique_ptr<Number> NumberParser::parse(const std::string_view &str) {
     try {
       return std::make_unique<Integer>(str);
     } catch (const std::invalid_argument &) {
