@@ -407,7 +407,7 @@ namespace fintamath {
 
   static IntVector toIntVector(const std::string_view &str, int64_t baseSize) {
     IntVector intVect;
-    const auto *iter = str.end();
+    std::basic_string_view<char>::const_iterator iter = str.end();
     for (; std::distance(str.begin(), iter) > baseSize; iter -= baseSize) {
       intVect.push_back(stoll(std::string(iter - baseSize, iter)));
     }
@@ -419,7 +419,8 @@ namespace fintamath {
   static bool canConvert(const std::string_view &str) {
     const int64_t firstDigit = 0;
     const int64_t lastDigit = 9;
-    return std::all_of(str.begin(), str.end(), [](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
+    return std::all_of(str.begin(), str.end(),
+                       [&](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
   }
 
   static std::string toString(const IntVector &intVect, int64_t baseSize) {
