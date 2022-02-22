@@ -8,9 +8,6 @@
   <a href="https://github.com/fintarin/Fintamath/actions/workflows/build.yml">
     <img src="https://github.com/fintarin/Fintamath/actions/workflows/build.yml/badge.svg"/>
   </a>
-  <a href="https://github.com/fintarin/Fintamath/actions/workflows/test.yml">
-    <img src="https://github.com/fintarin/Fintamath/actions/workflows/test.yml/badge.svg"/>
-  </a>
   <a href="https://sonarcloud.io/summary/new_code?id=fintarin_Fintamath">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/>
   </a>
@@ -19,34 +16,26 @@
   </a>
 </p>
 
-Fintamath is an application for solving mathematical expressions with arbitrary precision.
+Fintamath is an algebra & analysis library written in pure C++.
 
-## Features
+## Requirements
 
-* Supports integers & rationals
-* Supports basic math operators
-* Supports most of the elementary mathematical functions list
-* Supports factorials
-* Supports mathematical constants
+* C++ 17
+* CMake 3.16 or higher
+* C++ Compiler:
+  * GCC 9 or higher
+  * Clang 11 or higher
+  * MSVC 14 or higher
+* OS:
+  * Linux
+  * Windows
+  * macOS
 
-## Examples
+## Build
 
-<p align="center">
-  <img src="./docs/images/example.png" alt="drawing""/>
-</p>
+### Standalone Project
 
-## Installation
-
-Tested on Ubuntu 20.04.
-
-### Install dependencies
-
-```sh
-sudo apt-get update
-sudo apt-get install qt5-default
-```
-
-### Clone repository
+Clone repository
 
 ```sh
 git clone https://github.com/fintarin/Fintamath.git
@@ -54,23 +43,20 @@ cd Fintamath
 git submodule update --init
 ```
 
-### Build
+Build
 
 ```sh
-cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-### Run
+### Incorporating Into An Existing CMake Project
 
-```sh
-./build/bin/fintamath
+Add to your CMakeLists.txt:
+
+```cmake
+add_subdirectory(Fintamath)
+
+add_executable(example example.cpp)
+target_link_libraries(example fintamath)
 ```
-
-## Planned features
-
-* Supporting reals
-* Supporting variables
-* Supporting equations
-* Increasing speed & precision
-* LaTex inputting and outputting
