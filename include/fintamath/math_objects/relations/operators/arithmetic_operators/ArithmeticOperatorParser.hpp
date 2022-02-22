@@ -2,6 +2,7 @@
 
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/relations/operators/arithmetic_operators/ArithmeticOperator.hpp"
+#include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 
 namespace fintamath {
   class ArithmeticOperatorParser final {
