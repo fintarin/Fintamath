@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 namespace fintamath {
-  std::unique_ptr<BinaryArithmeticOperator> BinaryArithmeticOperatorParser::parse(const std::string_view &str) {
+  std::unique_ptr<Expression> BinaryArithmeticOperatorParser::parse(const std::string_view &str) {
     return nullptr;
   }
 }

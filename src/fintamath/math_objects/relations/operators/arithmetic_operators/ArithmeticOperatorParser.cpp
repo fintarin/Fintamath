@@ -7,7 +7,7 @@
 
 namespace fintamath {
   std::unique_ptr<Expression> ArithmeticOperatorParser::parse(const std::string_view &str) {
-    if (auto res = BinaryArithmeticOperatorParser::parse(str); res) {
+    if(auto res = BinaryArithmeticOperatorParser::parse(str);res){
       return res;
     }
     return UnaryArithmeticOperatorParser::parse(str);
