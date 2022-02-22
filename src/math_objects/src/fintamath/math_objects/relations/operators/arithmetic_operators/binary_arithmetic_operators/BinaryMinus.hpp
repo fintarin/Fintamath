@@ -4,7 +4,7 @@
 #include "fintamath/math_objects/relations/operators/arithmetic_operators/binary_arithmetic_operators/BinaryArithmeticOperator.hpp"
 
 namespace fintamath {
-  class BinaryMultiplyOperator : public BinaryArithmeticOperator {
+  class BinaryMinus : public BinaryArithmeticOperator {
   public:
     Set operator()(const Set &set) const override;
 
