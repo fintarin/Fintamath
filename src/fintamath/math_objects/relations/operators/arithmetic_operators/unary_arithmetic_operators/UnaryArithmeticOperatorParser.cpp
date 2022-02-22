@@ -2,8 +2,9 @@
 
 #include <stdexcept>
 
+
 namespace fintamath {
-  std::unique_ptr<UnaryArithmeticOperator> UnaryArithmeticOperatorParser::parse(const std::string_view &str) {
+  std::unique_ptr<Expression> UnaryArithmeticOperatorParser::parse(const std::string_view &str) {
     return nullptr;
   }
 }
