@@ -8,11 +8,11 @@ namespace fintamath {
   public:
     Expression() = default;
     explicit Expression(const std::string_view &str);
-
+    explicit Expression(Set set, std::shared_ptr<Relation> relation);
     std::string toString() const override;
 
   private:
-    std::unique_ptr<Relation> relation;
+    std::shared_ptr<Relation> relation;
     Set set;
   };
 }
