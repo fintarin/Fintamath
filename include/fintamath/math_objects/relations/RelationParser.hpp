@@ -1,7 +1,6 @@
 #pragma once
 
-#include <string>
-
+#include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/relations/Relation.hpp"
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 

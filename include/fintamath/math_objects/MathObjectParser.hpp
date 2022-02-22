@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "fintamath/math_objects/MathObject.hpp"
 
 namespace fintamath {
