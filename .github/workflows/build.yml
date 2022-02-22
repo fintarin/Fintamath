@@ -23,6 +23,11 @@ jobs:
         config:
           - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
           - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
+          - { name: macOS GCC, os: macOS-latest, cc: gcc, cxx: g++ }
+          - { name: macOS Clang, os: macOS-latest, cc: clang, cxx: clang++ }
+          - { name: Windows GCC, os: windows-latest, cc: gcc, cxx: g++ }
+          - { name: Windows Clang, os: windows-latest, cc: clang, cxx: clang++ }
+          - { name: Windows MSVC, os: windows-latest, cc: msvc, cxx: msvc }
 
     steps:
       - name: Checkout
@@ -32,7 +37,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTS=OFF
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTS=ON
         env:
           CC: ${{matrix.config.cc}}
           CXX: ${{matrix.config.cxx}}
@@ -40,3 +45,7 @@ jobs:
       - name: Build
         working-directory: ${{github.workspace}}
         run: cmake --build build --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C${{env.BUILD_TYPE}}
