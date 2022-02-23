@@ -4,10 +4,17 @@
 
 using namespace fintamath;
 
-TEST(BinaryArithmeticOperatorParserTest, parseTest) {
+TEST(BinaryArithmeticOperatorParserTests, parseTest) {
+  EXPECT_EQ(BinaryArithmeticOperatorParser::parse(""), nullptr);
+
   EXPECT_EQ(BinaryArithmeticOperatorParser::parse("10"), nullptr);
   EXPECT_EQ(BinaryArithmeticOperatorParser::parse("+10"), nullptr);
   EXPECT_EQ(BinaryArithmeticOperatorParser::parse("-10"), nullptr);
+
+  EXPECT_EQ(BinaryArithmeticOperatorParser::parse("+(10+10)"), nullptr);
+  EXPECT_EQ(BinaryArithmeticOperatorParser::parse("-(10-10)"), nullptr);
+  EXPECT_EQ(BinaryArithmeticOperatorParser::parse("+(10*10)"), nullptr);
+  EXPECT_EQ(BinaryArithmeticOperatorParser::parse("-(10/10)"), nullptr);
 
   EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10+"), std::invalid_argument);
   EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10-"), std::invalid_argument);
@@ -15,4 +22,14 @@ TEST(BinaryArithmeticOperatorParserTest, parseTest) {
   EXPECT_THROW(BinaryArithmeticOperatorParser::parse("/10"), std::invalid_argument);
   EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10*"), std::invalid_argument);
   EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10/"), std::invalid_argument);
+
+  EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10+*10"), std::invalid_argument);
+  EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10+/10"), std::invalid_argument);
+  EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10-*10"), std::invalid_argument);
+  EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10-/10"), std::invalid_argument);
+  EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10**10"), std::invalid_argument);
+  EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10*/10"), std::invalid_argument);
+  EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10/*10"), std::invalid_argument);
+  EXPECT_THROW(BinaryArithmeticOperatorParser::parse("10//10"), std::invalid_argument);
+
 }
