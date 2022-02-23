@@ -11,7 +11,6 @@ namespace fintamath {
     static std::unique_ptr<Expression> parse(const std::string_view &str);
 
   private:
-    static std::unique_ptr<Expression> createExpression(const std::string_view &str, int splitPosition,
-                                                        const std::shared_ptr<Relation> &relation);
+    static Set createSet(const std::string_view &str, int splitPosition);
   };
 }
