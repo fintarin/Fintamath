@@ -6,5 +6,7 @@ namespace fintamath {
   class Operator : public Relation {
   public:
     ~Operator() override = default;
+
+    virtual int getPriority() const = 0;
   };
 }

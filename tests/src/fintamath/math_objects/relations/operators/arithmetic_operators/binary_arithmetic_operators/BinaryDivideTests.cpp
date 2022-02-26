@@ -36,3 +36,7 @@ TEST(BinaryDivideTests, ratIntCallOperatorTest) {
 TEST(BinaryDivideTests, toStringTest) {
   EXPECT_EQ(oper.toString(), "/");
 }
+
+TEST(BinaryDivideTests, getPriorityTest) {
+  EXPECT_EQ(oper.getPriority(), 2);
+}
