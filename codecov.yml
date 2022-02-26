@@ -3,6 +3,9 @@ coverage:
     project:
       default:
         target: 98%
-        threshold: null
+        threshold: 0%
     patch: false
     changes: false
+
+ignore:
+  - "third_party"
