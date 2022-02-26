@@ -35,6 +35,10 @@ namespace fintamath {
     return "-";
   }
 
+  int BinaryMinus::getPriority() const {
+    return 3;
+  }
+
   template <typename T1, typename T2> static std::unique_ptr<Node> substract(const T1 &lhs, const T2 &rhs) {
     return (lhs - rhs).minimize();
   }
