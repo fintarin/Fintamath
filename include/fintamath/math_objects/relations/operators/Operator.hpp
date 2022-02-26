@@ -8,5 +8,6 @@ namespace fintamath {
     ~Operator() override = default;
 
     virtual int getPriority() const = 0;
+    virtual bool isAssociative() const = 0;
   };
 }

@@ -40,6 +40,9 @@ namespace fintamath {
   int BinaryPlus::getPriority() const {
     return 3;
   }
+  bool BinaryPlus::isAssociative() const {
+    return true;
+  }
 
   template <typename T1, typename T2> static std::unique_ptr<Node> add(const T1 &lhs, const T2 &rhs) {
     return (lhs + rhs).minimize();
