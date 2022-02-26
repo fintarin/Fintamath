@@ -34,6 +34,8 @@ target_include_directories(
   PUBLIC include
   PRIVATE src)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_json)
+
 if(BUILD_TESTS)
   include(GoogleTest)
   enable_testing()
