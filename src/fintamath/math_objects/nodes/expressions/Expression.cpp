@@ -4,15 +4,15 @@
 #include <utility>
 
 namespace fintamath {
-  Expression::Expression(const std::string_view &str) {
-    throw std::invalid_argument("Expression invalid argument");
+  Expression::Expression(const std::string_view & /*str*/) {
+    throw std::invalid_argument("Expression invalid input");
   }
 
   std::string Expression::toString() const {
     return "expression";
   }
-  Expression::Expression(const Set &set, const std::shared_ptr<Relation> &relation)
-      : set(set), relation(relation){
+  Expression::Expression(Set set, std::shared_ptr<Relation> relation)
+      : set(std::move(set)), relation(std::move(relation)) {
   }
 
 }

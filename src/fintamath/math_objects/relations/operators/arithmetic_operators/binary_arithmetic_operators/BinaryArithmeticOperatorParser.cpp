@@ -9,7 +9,7 @@
 #include "fintamath/math_objects/relations/operators/arithmetic_operators/binary_arithmetic_operators/BinaryPlus.hpp"
 
 namespace fintamath {
-  void BinaryArithmeticOperatorParser::ignoreBrackets(const std::string_view &str, int &position) {
+  static void ignoreBrackets(const std::string_view &str, int &position) {
     position--;
     int leftBracket = 0;
     int rightBracket = 1;
@@ -31,51 +31,33 @@ namespace fintamath {
   std::unique_ptr<Expression>
   BinaryArithmeticOperatorParser::createExpression(const std::string_view &str, int splitPosition,
                                                    const std::shared_ptr<Relation> &relation) {
-    auto firstOperandStr = str.substr(0, splitPosition);
-    auto secondOperandStr = str.substr(splitPosition + 1);
-
-    std::shared_ptr<MathObject> firstOperandMathObject = MathObjectParser::parse(firstOperandStr);
-    std::shared_ptr<MathObject> secondOperandMathObject = MathObjectParser::parse(secondOperandStr);
-
+    std::shared_ptr<MathObject> firstOperandMathObject = MathObjectParser::parse(str.substr(0, splitPosition));
+    std::shared_ptr<MathObject> secondOperandMathObject = MathObjectParser::parse(str.substr(splitPosition + 1));
     auto firstOperand = std::dynamic_pointer_cast<Node>(firstOperandMathObject);
     auto secondOperand = std::dynamic_pointer_cast<Node>(secondOperandMathObject);
-    Set set{firstOperand, secondOperand};
 
-    return std::make_unique<Expression>(set, relation);
+    return std::make_unique<Expression>((Set){firstOperand, secondOperand}, relation);
   }
   std::unique_ptr<Expression> BinaryArithmeticOperatorParser::parse(const std::string_view &str) {
-    auto plusSign = BinaryPlus().toString();
-    auto minusSign = BinaryMinus().toString();
-    auto multiplySign = BinaryMultiply().toString();
-    auto divideSign = BinaryDivide().toString();
+    auto plusSign = BinaryPlus().toString()[0];
+    auto minusSign = BinaryMinus().toString()[0];
+    auto multiplySign = BinaryMultiply().toString()[0];
+    auto divideSign = BinaryDivide().toString()[0];
 
-    for (int i = str.size() - 1; i >= 0; i--) {
-      if (str[i] == plusSign[0] || str[i] == minusSign[0]) {
-        if (i == 0) {
-          continue;
-        }
-        if (str[i - 1] == plusSign[0]) {
-          continue;
-        }
-        if (str[i - 1] == minusSign[0]) {
-          continue;
-        }
-        if (str[i - 1] == divideSign[0]) {
-          continue;
-        }
-        if (str[i - 1] == multiplySign[0]) {
+    for (int i = (int)str.size() - 1; i > 0; i--) {
+      if (str[i] == plusSign || str[i] == minusSign) {
+        if (str[i - 1] == plusSign || str[i - 1] == minusSign || str[i - 1] == divideSign ||
+            str[i - 1] == multiplySign) {
           continue;
         }
         if (i == str.size() - 1) {
           throw std::invalid_argument("Expression invalid input");
         }
-
         std::shared_ptr<Relation> relation;
-
-        if (str[i] == plusSign[0]) {
+        if (str[i] == plusSign) {
           relation = std::make_shared<BinaryPlus>();
         }
-        if (str[i] == minusSign[0]) {
+        if (str[i] == minusSign) {
           relation = std::make_shared<BinaryMinus>();
         }
 
@@ -86,33 +68,20 @@ namespace fintamath {
       }
     }
 
-    for (int i = str.size() - 1; i >= 0; i--) {
-      if (str[i] == multiplySign[0] || str[i] == divideSign[0]) {
-        if (i == 0) {
-          throw std::invalid_argument("Expression invalid input");
-        }
-        if (str[i - 1] == plusSign[0]) {
-          throw std::invalid_argument("Expression invalid input");
-        }
-        if (str[i - 1] == minusSign[0]) {
-          throw std::invalid_argument("Expression invalid input");
-        }
-        if (str[i - 1] == divideSign[0]) {
-          throw std::invalid_argument("Expression invalid input");
-        }
-        if (str[i - 1] == multiplySign[0]) {
-          throw std::invalid_argument("Expression invalid input");
-        }
+    for (int i = (int)str.size() - 1; i >= 0; i--) {
+      if (str[i] == multiplySign || str[i] == divideSign) {
         if (i == str.size() - 1) {
           throw std::invalid_argument("Expression invalid input");
         }
-
+        if (str[i - 1] == plusSign || str[i - 1] == minusSign || str[i - 1] == divideSign ||
+            str[i - 1] == multiplySign) {
+          throw std::invalid_argument("Expression invalid input");
+        }
         std::shared_ptr<Relation> relation;
-
-        if (str[i] == multiplySign[0]) {
+        if (str[i] == multiplySign) {
           relation = std::make_shared<BinaryMultiply>();
         }
-        if (str[i] == divideSign[0]) {
+        if (str[i] == divideSign) {
           relation = std::make_shared<BinaryDivide>();
         }
 

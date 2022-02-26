@@ -19,8 +19,7 @@ namespace fintamath {
       }
       if (str[position] == ')') {
         rightBracket++;
-      }
-      if (leftBracket == rightBracket) {
+      } else if (leftBracket == rightBracket) {
         break;
       }
       position++;
@@ -34,7 +33,7 @@ namespace fintamath {
     return str;
   }
   std::unique_ptr<MathObject> MathObjectParser::parse(const std::string_view &str) {
-    std::string_view strForParsing = deleteOpenAndCloseBracket(str);
+    auto strForParsing = deleteOpenAndCloseBracket(str);
     if (auto res = RelationParser::parse(strForParsing); res) {
       return res;
     }

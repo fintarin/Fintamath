@@ -8,10 +8,13 @@
 
 namespace fintamath {
   std::unique_ptr<Expression> UnaryArithmeticOperatorParser::parse(const std::string_view &str) {
-    if (str.size() == 0) {
+    if (str.empty()) {
       throw std::invalid_argument("a");
     }
-    if (str[0] == UnaryMinus().toString().at(0) || str[0] == UnaryPlus().toString().at(0)) {
+    auto plusSign = UnaryPlus().toString()[0];
+    auto minusSign = UnaryMinus().toString()[0];
+
+    if (str[0] == plusSign || str[0] == minusSign) {
       auto operandStr = str.substr(1, str.size() - 1);
       std::shared_ptr<MathObject> operandMathObject = MathObjectParser::parse(operandStr);
       auto operand = std::dynamic_pointer_cast<Node>(operandMathObject);
@@ -20,10 +23,10 @@ namespace fintamath {
 
       std::shared_ptr<Relation> relation;
 
-      if (str[0] == UnaryMinus().toString().at(0)) {
+      if (str[0] == minusSign) {
         relation = std::make_shared<UnaryMinus>();
       }
-      if (str[0] == UnaryPlus().toString().at(0)) {
+      if (str[0] == plusSign) {
         relation = std::make_shared<UnaryPlus>();
       }
       return std::make_unique<Expression>(set, relation);
