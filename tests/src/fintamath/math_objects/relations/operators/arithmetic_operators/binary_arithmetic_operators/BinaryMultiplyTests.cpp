@@ -37,3 +37,7 @@ TEST(BinaryMultiplyTests, ratIntCallOperatorTest) {
 TEST(BinaryMultiplyTests, toStringTest) {
   EXPECT_EQ(oper.toString(), "*");
 }
+
+TEST(BinaryMultiplyTests, getPriorityTest) {
+  EXPECT_EQ(oper.getPriority(), 2);
+}

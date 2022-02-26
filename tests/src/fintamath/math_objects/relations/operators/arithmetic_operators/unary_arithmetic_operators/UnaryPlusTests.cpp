@@ -25,3 +25,7 @@ TEST(UnaryPlusTests, ratCallOperatorTest) {
 TEST(UnaryPlusTests, toStringTest) {
   EXPECT_EQ(oper.toString(), "+");
 }
+
+TEST(UnaryPlusTests, getPriorityTest) {
+  EXPECT_EQ(oper.getPriority(), 0);
+}
