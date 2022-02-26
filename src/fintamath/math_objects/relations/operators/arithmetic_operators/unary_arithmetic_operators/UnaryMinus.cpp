@@ -25,6 +25,10 @@ namespace fintamath {
     return "-";
   }
 
+  int UnaryMinus::getPriority() const {
+    return 0;
+  }
+
   template <typename T> static std::unique_ptr<Node> negate(const T &rhs) {
     return std::make_unique<T>(-rhs);
   }

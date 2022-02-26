@@ -35,6 +35,10 @@ namespace fintamath {
     return "/";
   }
 
+  int BinaryDivide::getPriority() const {
+    return 2;
+  }
+
   template <typename T1, typename T2> static std::unique_ptr<Node> divide(const T1 &lhs, const T2 &rhs) {
     return (lhs / rhs).minimize();
   }

@@ -12,5 +12,6 @@ namespace fintamath {
     std::unique_ptr<Node> operator()(const Rational &rhs) const;
 
     std::string toString() const override;
+    int getPriority() const override;
   };
 }
