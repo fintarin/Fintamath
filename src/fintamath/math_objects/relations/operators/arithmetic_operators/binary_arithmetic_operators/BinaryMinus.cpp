@@ -39,6 +39,10 @@ namespace fintamath {
     return 3;
   }
 
+  bool BinaryMinus::isAssociative() const {
+    return false;
+  }
+
   template <typename T1, typename T2> static std::unique_ptr<Node> substract(const T1 &lhs, const T2 &rhs) {
     return (lhs - rhs).minimize();
   }

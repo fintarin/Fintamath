@@ -25,6 +25,14 @@ namespace fintamath {
     return "+";
   }
 
+  int UnaryPlus::getPriority() const {
+    return 0;
+  }
+
+  bool UnaryPlus::isAssociative() const {
+    return true;
+  }
+
   template <typename T> static std::unique_ptr<Node> convert(const T &rhs) {
     return std::make_unique<T>(+rhs);
   }
