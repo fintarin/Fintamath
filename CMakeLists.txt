@@ -38,7 +38,7 @@ target_include_directories(
   PUBLIC include
   PRIVATE src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_json)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 if(BUILD_TESTS)
   include(GoogleTest)
