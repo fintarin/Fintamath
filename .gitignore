@@ -1,5 +1,4 @@
-.cache/*
-.vscode/*
+# Build files
 [Bb]uild/*
 CMakeCache.*
 CMakeFiles/*
@@ -37,3 +36,12 @@ CMakeFiles/*
 *.exe
 *.out
 *.app
+
+# Cache
+.cache/*
+
+# Visual Studio Code config
+.vscode/*
+
+# IDEA config
+.idea/*
