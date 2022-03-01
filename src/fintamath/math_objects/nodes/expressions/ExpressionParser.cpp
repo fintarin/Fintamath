@@ -2,14 +2,11 @@
 
 #include <stdexcept>
 
+#include "fintamath/math_objects/ParserInjector.hpp"
+
 namespace fintamath {
   std::unique_ptr<Expression> ExpressionParser::parse(const std::string_view &str) {
-    try {
-      return std::make_unique<Expression>(str);
-    } catch (const std::invalid_argument &) {
-      // do nothing
-    }
-
+    INJECT_CONSTRUCTOR(Expression, str)
     return nullptr;
   }
 }

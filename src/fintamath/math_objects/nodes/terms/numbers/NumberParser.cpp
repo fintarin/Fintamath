@@ -2,20 +2,13 @@
 
 #include <stdexcept>
 
+#include "fintamath/math_objects/ParserInjector.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
 namespace fintamath {
   std::unique_ptr<Number> NumberParser::parse(const std::string_view &str) {
-    try {
-      return std::make_unique<Integer>(str);
-    } catch (const std::invalid_argument &) {
-      // do nothing
-    }
-    try {
-      return std::make_unique<Rational>(str);
-    } catch (const std::invalid_argument &) {
-      // do nothing
-    }
+    INJECT_CONSTRUCTOR(Integer, str)
+    INJECT_CONSTRUCTOR(Rational, str)
     return nullptr;
   }
 }
