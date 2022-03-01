@@ -1,8 +1,8 @@
 #pragma once
 
-#define INJECT_UNARY_RELATION(TYPE, SET)                                                                               \
+#define INJECT_UNARY_RELATION(RHS_TYPE, SET)                                                                           \
   {                                                                                                                    \
-    auto rhs = std::dynamic_pointer_cast<TYPE>((SET).at(0));                                                           \
+    auto rhs = std::dynamic_pointer_cast<RHS_TYPE>((SET).at(0));                                                       \
     if (rhs) {                                                                                                         \
       return {(*this)(*rhs)};                                                                                          \
     }                                                                                                                  \
