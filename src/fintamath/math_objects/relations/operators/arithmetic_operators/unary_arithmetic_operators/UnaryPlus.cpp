@@ -35,6 +35,10 @@ namespace fintamath {
     return true;
   }
 
+  std::unique_ptr<MathObject> UnaryPlus::clone() const{
+    return std::make_unique<UnaryPlus>(*this);
+  }
+
   template <typename T> static std::unique_ptr<Node> convert(const T &rhs) {
     return std::make_unique<T>(+rhs);
   }

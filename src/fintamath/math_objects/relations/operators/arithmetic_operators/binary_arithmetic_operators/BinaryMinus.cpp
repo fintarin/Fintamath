@@ -45,6 +45,9 @@ namespace fintamath {
     return false;
   }
 
+  std::unique_ptr<MathObject> BinaryMinus::clone() const{
+    return std::make_unique<BinaryMinus>(*this);
+  }
   template <typename T1, typename T2> static std::unique_ptr<Node> substract(const T1 &lhs, const T2 &rhs) {
     return (lhs - rhs).minimize();
   }

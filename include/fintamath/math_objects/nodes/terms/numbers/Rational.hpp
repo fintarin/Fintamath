@@ -76,7 +76,7 @@ namespace fintamath {
 
     std::string toString() const override;
     std::unique_ptr<Number> minimize() const override;
-
+    std::unique_ptr<MathObject> clone() const override;
   private:
     Integer numerator = 0;
     Integer denominator = 1;

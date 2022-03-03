@@ -344,6 +344,9 @@ namespace fintamath {
     rhs.sign = false;
   }
 
+  std::unique_ptr<MathObject> Rational::clone() const{
+    return std::make_unique<Rational>(*this);
+  }
   // Using Euclid's algorithm
   static Integer gcd(const Integer &lhs, const Integer &rhs) {
     Integer tmpLhs = lhs;

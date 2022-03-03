@@ -44,6 +44,9 @@ namespace fintamath {
     return true;
   }
 
+  std::unique_ptr<MathObject> BinaryMultiply::clone() const{
+    return std::make_unique<BinaryMultiply>(*this);
+  }
   template <typename T1, typename T2> static std::unique_ptr<Node> multiply(const T1 &lhs, const T2 &rhs) {
     return (lhs * rhs).minimize();
   }

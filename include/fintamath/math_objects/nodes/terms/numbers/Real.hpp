@@ -74,7 +74,7 @@ namespace fintamath {
 
     std::string toString() const override;
     std::unique_ptr<Number> minimize() const override;
-
+    std::unique_ptr<MathObject> clone() const override;
   private:
     Integer intVal;
     int64_t scale{};
