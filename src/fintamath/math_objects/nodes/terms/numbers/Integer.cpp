@@ -294,7 +294,7 @@ namespace fintamath {
       return true;
     }
 
-    if (sign && rhs.sign) {
+    if (sign) {
       return less(rhs.intVect, intVect);
     }
 
@@ -316,11 +316,9 @@ namespace fintamath {
     if (sign && !rhs.sign) {
       return false;
     }
-
-    if (sign && rhs.sign) {
+    if (sign) {
       return greater(rhs.intVect, intVect);
     }
-
     return greater(intVect, rhs.intVect);
   }
 
@@ -339,11 +337,9 @@ namespace fintamath {
     if (sign && !rhs.sign) {
       return true;
     }
-
-    if (sign && rhs.sign) {
+    if (sign) {
       return lessEqual(rhs.intVect, intVect);
     }
-
     return lessEqual(intVect, rhs.intVect);
   }
 
@@ -362,11 +358,9 @@ namespace fintamath {
     if (sign && !rhs.sign) {
       return false;
     }
-
-    if (sign && rhs.sign) {
+    if (sign) {
       return greaterEqual(rhs.intVect, intVect);
     }
-
     return greaterEqual(intVect, rhs.intVect);
   }
 
@@ -652,7 +646,7 @@ namespace fintamath {
     A1 and B1 - the second halves of numbers
   */
   static IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
-    if (lhs.size() < KARATSUBA_CUTOFF || rhs.size() < KARATSUBA_CUTOFF) {
+    if (lhs.size() < KARATSUBA_CUTOFF) {
       return polynomialMultiply(lhs, rhs, base);
     }
 
@@ -695,27 +689,25 @@ namespace fintamath {
   static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
     IntVector tmpLhs = lhs;
     IntVector tmpRhs = rhs;
+    IntVector res;
     size_t zerosNum = zerosMultiply(tmpLhs, tmpRhs);
 
     if (tmpLhs.size() < KARATSUBA_CUTOFF || tmpRhs.size() < KARATSUBA_CUTOFF) {
-      IntVector val = polynomialMultiply(tmpLhs, tmpRhs, base);
-      val.insert(val.begin(), zerosNum, 0);
-      toSignificantDigits(val);
-      return val;
+      res = polynomialMultiply(tmpLhs, tmpRhs, base);
+    } else {
+      size_t maxSize = std::max(tmpLhs.size(), tmpRhs.size());
+      if (maxSize % 2 == 1) {
+        maxSize++;
+      }
+      tmpLhs.resize(maxSize, 0);
+      tmpRhs.resize(maxSize, 0);
+
+      res = karatsubaMultiply(tmpLhs, tmpRhs, base);
     }
 
-    size_t maxSize = std::max(tmpLhs.size(), tmpRhs.size());
-    if (maxSize % 2 == 1) {
-      maxSize++;
-    }
-    tmpLhs.resize(maxSize, 0);
-    tmpRhs.resize(maxSize, 0);
-
-    IntVector val = karatsubaMultiply(tmpLhs, tmpRhs, base);
-    val.insert(val.begin(), zerosNum, 0);
-
-    toSignificantDigits(val);
-    return val;
+    res.insert(res.begin(), zerosNum, 0);
+    toSignificantDigits(res);
+    return res;
   }
 
   // Dividing by a short number
@@ -750,7 +742,7 @@ namespace fintamath {
   // Reduction of zero digits of numbers
   static void zerosDivide(IntVector &lhs, IntVector &rhs) {
     int64_t zerosNum = std::min(firstZeroNum(lhs), firstZeroNum(rhs));
-    if (lhs.size() != 1 && rhs.size() != 1 && zerosNum != 0) {
+    if (zerosNum != 0) {
       lhs.erase(lhs.begin(), lhs.begin() + zerosNum);
       rhs.erase(rhs.begin(), rhs.begin() + zerosNum);
     }
