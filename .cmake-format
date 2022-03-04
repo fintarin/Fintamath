@@ -3,12 +3,3 @@ tab_size: 2
 separate_fn_name_with_space: false
 dangle_parens: false
 max_pargs_hwrap: 3
-
-additional_commands:
-  setup_target_for_coverage_gcovr_xml:
-    kwargs:
-      NAME: "*"
-      EXECUTABLES: "*"
-      DEPENDENCIES: "*"
-      BASE_DIRECTORY: "*"
-      EXCLUDE: "*"
