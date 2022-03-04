@@ -14,6 +14,18 @@ TEST(RationalTests, stringConstructorTest) {
   EXPECT_THROW(Rational(""), std::invalid_argument);
   EXPECT_THROW(Rational("+"), std::invalid_argument);
   EXPECT_THROW(Rational("939849.0-0023"), std::invalid_argument);
+  EXPECT_THROW(Rational("a"), std::invalid_argument);
+  EXPECT_THROW(Rational("a.1"), std::invalid_argument);
+  EXPECT_THROW(Rational("1.a"), std::invalid_argument);
+  EXPECT_THROW(Rational("1a.1"), std::invalid_argument);
+  EXPECT_THROW(Rational("1.1a"), std::invalid_argument);
+  EXPECT_THROW(Rational(".1"), std::invalid_argument);
+  EXPECT_THROW(Rational("1."), std::invalid_argument);
+  EXPECT_THROW(Rational("--10.-1"), std::invalid_argument);
+  EXPECT_THROW(Rational("10.-1"), std::invalid_argument);
+  EXPECT_THROW(Rational("1-0.1"), std::invalid_argument);
+  EXPECT_THROW(Rational("10-.1"), std::invalid_argument);
+  EXPECT_THROW(Rational("10.--1"), std::invalid_argument);
 }
 
 TEST(RationalTests, integerIntegerConstructorTest) {
@@ -197,9 +209,12 @@ TEST(RationalTests, unaryMinusOperatorTest) {
 }
 
 TEST(RationalTests, equalOperatorTest) {
+  EXPECT_TRUE(Rational(1, 2) == Rational(1, 2));
   EXPECT_TRUE(Rational(5, 10) == Rational(1, 2));
   EXPECT_TRUE(Rational(5, -10) == Rational(-5, 10));
 
+  EXPECT_FALSE(Rational(1, 2) == Rational(1, 3));
+  EXPECT_FALSE(Rational(3, 2) == Rational(1, 3));
   EXPECT_FALSE(Rational(55, 10) == Rational(-1, 10));
 }
 
