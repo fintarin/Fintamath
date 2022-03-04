@@ -8,10 +8,6 @@ namespace fintamath {
   static Integer lcm(const Integer &lhs, const Integer &rhs);
 
   Rational::Rational(const std::string_view &str) {
-    if (str.empty()) {
-      throw std::invalid_argument("Rational invalid input");
-    }
-
     size_t firstDigitNum = 0;
     size_t firstDotNum = std::distance(str.begin(), std::find(str.begin(), str.end(), '.'));
 
@@ -40,7 +36,7 @@ namespace fintamath {
       }
     }
 
-    if (intPart < 0 || numerator < 0 || denominator < 0) {
+    if (intPart < 0 || numerator < 0) {
       throw std::invalid_argument("Rational invalid input");
     }
 
