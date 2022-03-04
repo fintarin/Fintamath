@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
 
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
@@ -88,6 +89,11 @@ TEST(IntegerTests, multiplyAssignmentOperatorTest) {
   EXPECT_EQ(Integer(5) *= Integer("-12"), -60);
   EXPECT_EQ(Integer(190) *= Integer(100), 19000);
 
+  EXPECT_EQ(Integer(2) *= Integer(2), 4);
+  EXPECT_EQ(Integer(2) *= Integer(-2), -4);
+  EXPECT_EQ(Integer(-2) *= Integer(2), -4);
+  EXPECT_EQ(Integer(-2) *= Integer(-2), 4);
+
   for (const auto &iter : getTestJson().find("multiply_tests").value()) {
     auto lhs = Integer(iter.find("lhs").value().get<std::string>());
     auto rhs = Integer(iter.find("rhs").value().get<std::string>());
@@ -121,6 +127,11 @@ TEST(IntegerTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(Integer(-20) /= Integer(-20), 1);
   EXPECT_EQ(Integer(-29829920) /= Integer(1), -29829920);
   EXPECT_EQ(Integer(150067278) / Integer(100000), 1500);
+
+  EXPECT_EQ(Integer(2) /= Integer(2), 1);
+  EXPECT_EQ(Integer(2) /= Integer(-2), -1);
+  EXPECT_EQ(Integer(-2) /= Integer(2), -1);
+  EXPECT_EQ(Integer(-2) /= Integer(-2), 1);
 
   for (const auto &iter : getTestJson().find("divide_tests").value()) {
     auto lhs = Integer(iter.find("lhs").value().get<std::string>());
@@ -263,6 +274,7 @@ TEST(IntegerTests, friendIntNotEqualOperatorTest) {
 TEST(IntegerTests, lessOperatorTest) {
   EXPECT_TRUE(Integer("-724627382732") < Integer("643864837483437378342"));
   EXPECT_TRUE(Integer("7236") < Integer("748274299"));
+  EXPECT_TRUE(Integer("1") < Integer("10000000000000000000000000000000000"));
 
   EXPECT_FALSE(Integer("-7236726372") < Integer("-64283827387283728"));
   EXPECT_FALSE(Integer("7236726372") < Integer("-62736"));
@@ -282,6 +294,7 @@ TEST(IntegerTests, moreOperatorTest) {
   EXPECT_TRUE(Integer("7236") > Integer("483"));
 
   EXPECT_FALSE(Integer("-724627382732") > Integer("643864837483437378342"));
+  EXPECT_FALSE(Integer("1") > Integer("10000000000000000000000000000000000"));
 }
 
 TEST(IntegerTests, intMoreOperatorTest) {
@@ -295,6 +308,7 @@ TEST(IntegerTests, friendIntMoreOperatorTest) {
 TEST(IntegerTests, lessEqualOperatorTest) {
   EXPECT_TRUE(Integer("-724627382732") <= Integer("643864837483437378342"));
   EXPECT_TRUE(Integer("-7246") <= Integer("-7246"));
+  EXPECT_TRUE(Integer("1") <= Integer("10000000000000000000000000000000000"));
 
   EXPECT_FALSE(Integer("-7236726372") <= Integer("-64283827387283728"));
   EXPECT_FALSE(Integer("7236726372") <= Integer("0"));
@@ -316,6 +330,7 @@ TEST(IntegerTests, moreEqualOperatorTest) {
   EXPECT_TRUE(Integer("7236") >= Integer("-748274299"));
 
   EXPECT_FALSE(Integer("-724627382732") >= Integer("643864837483437378342"));
+  EXPECT_FALSE(Integer("1") >= Integer("10000000000000000000000000000000000"));
 }
 
 TEST(IntegerTests, intMoreEqualOperatorTest) {
