@@ -11,7 +11,7 @@ defaults:
     shell: bash
 
 env:
-  BUILD_TYPE: Release
+  BUILD_TYPE: Debug
 
 jobs:
   analyze:
@@ -29,6 +29,9 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - name: Install gcovr
+        run: sudo pip3 install gcovr
 
       - name: Install sonar-scanner
         env:
@@ -49,7 +52,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTS=OFF
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON
         env:
           CC: gcc
           CXX: g++
@@ -57,6 +60,10 @@ jobs:
       - name: Build with build-wrapper
         working-directory: ${{github.workspace}}
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build --config ${{env.BUILD_TYPE}}
+
+      - name: Collect coverage report
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}} --target fintamath_coverage
 
       - name: Perform SonarCloud analysis
         working-directory: ${{github.workspace}}
