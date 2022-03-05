@@ -5,7 +5,7 @@ project(
   LANGUAGES CXX
   VERSION 0.1)
 
-option(BUILD_TESTS "Enable Test Builds" OFF)
+option(${PROJECT_NAME}_enable_tests "Enable Test Builds" OFF)
 
 include(cmake/PreventInSourceBuilds.cmake)
 include(cmake/Cache.cmake)
@@ -40,7 +40,7 @@ target_include_directories(
 
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
-if(BUILD_TESTS)
+if(${PROJECT_NAME}_enable_tests)
   include(GoogleTest)
   enable_testing()
   add_subdirectory(tests)
