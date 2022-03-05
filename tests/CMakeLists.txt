@@ -6,7 +6,7 @@ file(
 
 add_executable(${PROJECT_NAME}_tests ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${PROJECT_NAME} GTest::gtest_main nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${PROJECT_NAME} gtest_main nlohmann_json::nlohmann_json)
 
 gtest_discover_tests(${PROJECT_NAME}_tests)
 
