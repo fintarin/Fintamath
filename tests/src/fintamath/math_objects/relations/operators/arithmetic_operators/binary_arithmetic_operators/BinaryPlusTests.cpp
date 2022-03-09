@@ -14,6 +14,10 @@ TEST(BinaryPlusTests, callOperatorTest) {
 
   auto s = std::make_shared<Set>();
   EXPECT_THROW(oper({s, s}), std::invalid_argument);
+  EXPECT_THROW(oper({s, std::make_shared<Integer>(20)}), std::invalid_argument);
+  EXPECT_THROW(oper({s, std::make_shared<Rational>(20)}), std::invalid_argument);
+  EXPECT_THROW(oper({std::make_shared<Integer>(20), s}), std::invalid_argument);
+  EXPECT_THROW(oper({std::make_shared<Rational>(20), s}), std::invalid_argument);
 }
 
 TEST(BinaryPlusTests, intIntCallOperatorTest) {
