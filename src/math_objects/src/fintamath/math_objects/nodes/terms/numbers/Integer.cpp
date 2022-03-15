@@ -377,17 +377,6 @@ bool operator>=(int64_t lhs, const Integer &rhs) {
   return Integer(lhs) >= rhs;
 }
 
-std::istream &operator>>(std::istream &in, Integer &rhs) {
-  std::string strVal;
-  in >> strVal;
-  rhs = Integer(strVal);
-  return in;
-}
-
-std::ostream &operator<<(std::ostream &out, const Integer &rhs) {
-  return out << rhs.toString();
-}
-
 size_t Integer::size() const {
   return (intVect.size() - 1) * INT_BASE_SIZE + (std::to_string(intVect.back())).size();
 }

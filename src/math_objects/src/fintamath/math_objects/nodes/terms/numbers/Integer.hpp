@@ -77,9 +77,6 @@ public:
   bool operator>=(int64_t rhs) const;
   friend bool operator>=(int64_t lhs, const Integer &rhs);
 
-  friend std::istream &operator>>(std::istream &in, Integer &rhs);
-  friend std::ostream &operator<<(std::ostream &out, const Integer &rhs);
-
   size_t size() const;
   std::string toString() const override;
   std::string getTypeName() const override;

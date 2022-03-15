@@ -383,17 +383,6 @@ bool operator>=(int64_t lhs, const Rational &rhs) {
   return Rational(lhs) >= rhs;
 }
 
-std::istream &operator>>(std::istream &in, Rational &rhs) {
-  std::string strVal;
-  in >> strVal;
-  rhs = Rational(strVal);
-  return in;
-}
-
-std::ostream &operator<<(std::ostream &out, const Rational &rhs) {
-  return out << rhs.toString();
-}
-
 Integer Rational::getInteger() const {
   return numerator / denominator;
 }

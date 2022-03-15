@@ -99,9 +99,6 @@ public:
   friend bool operator>=(const Integer &lhs, const Rational &rhs);
   friend bool operator>=(int64_t lhs, const Rational &rhs);
 
-  friend std::istream &operator>>(std::istream &in, Rational &rhs);
-  friend std::ostream &operator<<(std::ostream &out, const Rational &rhs);
-
   Integer getInteger() const;
   Integer getNumerator() const;
   Integer getDenominator() const;
