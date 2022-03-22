@@ -17,6 +17,7 @@ namespace fintamath {
     void setSet(const Set &operSet);
 
     std::unique_ptr<MathObject> clone() const override;
+    std::shared_ptr<Node> calculate() const;
   private:
     std::shared_ptr<Relation> relation;
     Set set;

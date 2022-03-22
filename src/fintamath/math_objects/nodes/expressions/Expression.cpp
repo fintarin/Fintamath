@@ -1,20 +1,14 @@
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 
 #include <stdexcept>
-#include <utility>
 
-#include "fintamath/math_objects/MathObjectParser.hpp"
-#include "fintamath/math_objects/nodes/Node.hpp"
-#include "fintamath/math_objects/nodes/NodeParser.hpp"
+#include "fintamath/math_objects/nodes/collections/CollectionParser.hpp"
+#include "fintamath/math_objects/nodes/terms/TermParser.hpp"
 #include "fintamath/math_objects/relations/RelationParser.hpp"
 #include "fintamath/math_objects/relations/operators/arithmetic_operators/binary_arithmetic_operators/BinaryDivide.hpp"
 #include "fintamath/math_objects/relations/operators/arithmetic_operators/binary_arithmetic_operators/BinaryMinus.hpp"
-#include "fintamath/math_objects/relations/operators/arithmetic_operators/binary_arithmetic_operators/BinaryMultiply.hpp"
 #include "fintamath/math_objects/relations/operators/arithmetic_operators/binary_arithmetic_operators/BinaryPlus.hpp"
 #include "fintamath/math_objects/relations/operators/arithmetic_operators/unary_arithmetic_operators/UnaryMinus.hpp"
-#include "fintamath/math_objects/relations/operators/arithmetic_operators/unary_arithmetic_operators/UnaryPlus.hpp"
-#include "fintamath/math_objects/nodes/terms/TermParser.hpp"
-#include "fintamath/math_objects/nodes/collections/CollectionParser.hpp"
 
 namespace fintamath {
   static std::string_view deleteOpenAndCloseBracket(const std::string_view &str) {
@@ -142,5 +136,18 @@ namespace fintamath {
 
   std::unique_ptr<MathObject> Expression::clone() const {
     return std::make_unique<Expression>(*this);
+  }
+
+  std::shared_ptr<Node> Expression::calculate() const {
+    auto copySet = set;
+    for (int i = 0; i < copySet.size(); i++) {
+      if (auto expr = std::dynamic_pointer_cast<Expression>(copySet.at(i)); expr) {
+        copySet.at(i) = expr->calculate();
+      }
+    }
+    if (relation == nullptr) {
+      return set.at(0);
+    }
+    return (*relation)(copySet);
   }
 }
