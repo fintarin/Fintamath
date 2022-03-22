@@ -7,10 +7,15 @@ using namespace fintamath;
 const BinaryPlus oper;
 
 TEST(BinaryPlusTests, callOperatorTest) {
-  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}).at(0), Integer(30));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}).at(0), Rational(17, 12));
-  EXPECT_EQ(*oper({std::make_shared<Integer>(21), std::make_shared<Rational>(3, 4)}).at(0), Rational(87, 4));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}).at(0), Rational(32, 3));
+  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}), Integer(30));
+  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}), Rational(17, 12));
+  EXPECT_EQ(*oper({std::make_shared<Integer>(21), std::make_shared<Rational>(3, 4)}), Rational(87, 4));
+  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}), Rational(32, 3));
+
+  EXPECT_NE(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}), Integer(32));
+  EXPECT_NE(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}), Rational(173, 12));
+  EXPECT_NE(*oper({std::make_shared<Integer>(21), std::make_shared<Rational>(3, 4)}), Rational(87, -4));
+  EXPECT_NE(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}), Rational(32, -3));
 
   auto s = std::make_shared<Set>();
   EXPECT_THROW(oper({s, s}), std::invalid_argument);
@@ -18,6 +23,10 @@ TEST(BinaryPlusTests, callOperatorTest) {
   EXPECT_THROW(oper({s, std::make_shared<Rational>(20)}), std::invalid_argument);
   EXPECT_THROW(oper({std::make_shared<Integer>(20), s}), std::invalid_argument);
   EXPECT_THROW(oper({std::make_shared<Rational>(20), s}), std::invalid_argument);
+
+  EXPECT_THROW(oper(Set{}), std::invalid_argument);
+  EXPECT_THROW(oper({std::make_shared<Integer>(20), std::make_shared<Integer>(20), std::make_shared<Integer>(20)}),
+               std::invalid_argument);
 }
 
 TEST(BinaryPlusTests, intIntCallOperatorTest) {

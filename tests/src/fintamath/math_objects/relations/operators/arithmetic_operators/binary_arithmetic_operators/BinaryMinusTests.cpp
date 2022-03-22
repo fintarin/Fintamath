@@ -7,10 +7,15 @@ using namespace fintamath;
 const BinaryMinus oper;
 
 TEST(BinaryMinusTests, callOperatorTest) {
-  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}).at(0), Integer(10));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}).at(0), Rational(-1, 12));
-  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Rational>(3, 4)}).at(0), Rational(77, 4));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}).at(0), Rational(-28, 3));
+  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}), Integer(10));
+  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}), Rational(-1, 12));
+  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Rational>(3, 4)}), Rational(77, 4));
+  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}), Rational(-28, 3));
+
+  EXPECT_NE(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}), Integer(11));
+  EXPECT_NE(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}), Rational(1, 12));
+  EXPECT_NE(*oper({std::make_shared<Integer>(20), std::make_shared<Rational>(3, 4)}), Rational(77, 24));
+  EXPECT_NE(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}), Rational(-28, 563));
 
   auto s = std::make_shared<Set>();
   EXPECT_THROW(oper({s, s}), std::invalid_argument);
@@ -18,6 +23,10 @@ TEST(BinaryMinusTests, callOperatorTest) {
   EXPECT_THROW(oper({s, std::make_shared<Rational>(20)}), std::invalid_argument);
   EXPECT_THROW(oper({std::make_shared<Integer>(20), s}), std::invalid_argument);
   EXPECT_THROW(oper({std::make_shared<Rational>(20), s}), std::invalid_argument);
+
+  EXPECT_THROW(oper(Set{}), std::invalid_argument);
+  EXPECT_THROW(oper({std::make_shared<Integer>(20), std::make_shared<Integer>(20), std::make_shared<Integer>(20)}),
+               std::invalid_argument);
 }
 
 TEST(BinaryMinusTests, intIntCallOperatorTest) {

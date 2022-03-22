@@ -7,11 +7,17 @@ using namespace fintamath;
 const UnaryPlus oper;
 
 TEST(UnaryPlusTests, callOperatorTest) {
-  EXPECT_EQ(*oper({std::make_shared<Integer>(20)}).at(0), Integer(20));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3)}).at(0), Rational(2, 3));
+  EXPECT_EQ(*oper({std::make_shared<Integer>(20)}), Integer(20));
+  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3)}), Rational(2, 3));
+
+  EXPECT_NE(*oper({std::make_shared<Integer>(20)}), Integer(21));
+  EXPECT_NE(*oper({std::make_shared<Rational>(2, 3)}), Rational(2, 5));
 
   auto s = std::make_shared<Set>();
   EXPECT_THROW(oper({s}), std::invalid_argument);
+
+  EXPECT_THROW(oper(Set{}), std::invalid_argument);
+  EXPECT_THROW(oper({std::make_shared<Integer>(20), std::make_shared<Integer>(20)}), std::invalid_argument);
 }
 
 TEST(UnaryPlusTests, intCallOperatorTest) {

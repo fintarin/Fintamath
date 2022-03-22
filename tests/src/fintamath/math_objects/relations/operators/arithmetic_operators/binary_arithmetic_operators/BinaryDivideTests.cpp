@@ -7,10 +7,15 @@ using namespace fintamath;
 const BinaryDivide oper;
 
 TEST(BinaryDivideTests, callOperatorTest) {
-  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}).at(0), Integer(2));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}).at(0), Rational(8, 9));
-  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Rational>(3, 4)}).at(0), Rational(80, 3));
-  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}).at(0), Rational(1, 15));
+  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}), Integer(2));
+  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}), Rational(8, 9));
+  EXPECT_EQ(*oper({std::make_shared<Integer>(20), std::make_shared<Rational>(3, 4)}), Rational(80, 3));
+  EXPECT_EQ(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}), Rational(1, 15));
+
+  EXPECT_NE(*oper({std::make_shared<Integer>(20), std::make_shared<Integer>(10)}), Integer(3));
+  EXPECT_NE(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Rational>(3, 4)}), Rational(1, 9));
+  EXPECT_NE(*oper({std::make_shared<Integer>(20), std::make_shared<Rational>(3, 4)}), Rational(81, 3));
+  EXPECT_NE(*oper({std::make_shared<Rational>(2, 3), std::make_shared<Integer>(10)}), Rational(143, 15));
 
   auto s = std::make_shared<Set>();
   EXPECT_THROW(oper({s, s}), std::invalid_argument);
@@ -18,6 +23,10 @@ TEST(BinaryDivideTests, callOperatorTest) {
   EXPECT_THROW(oper({s, std::make_shared<Rational>(20)}), std::invalid_argument);
   EXPECT_THROW(oper({std::make_shared<Integer>(20), s}), std::invalid_argument);
   EXPECT_THROW(oper({std::make_shared<Rational>(20), s}), std::invalid_argument);
+
+  EXPECT_THROW(oper(Set{}), std::invalid_argument);
+  EXPECT_THROW(oper({std::make_shared<Integer>(20), std::make_shared<Integer>(20), std::make_shared<Integer>(20)}),
+               std::invalid_argument);
 }
 
 TEST(BinaryDivideTests, intIntCallOperatorTest) {
