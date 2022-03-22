@@ -2,7 +2,7 @@
 
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
-
+#include "fintamath/math_objects/relations/operators/arithmetic_operators/binary_arithmetic_operators/BinaryPlus.hpp"
 
 using namespace fintamath;
 
@@ -30,6 +30,19 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(10+20)*(10+40)").toString(), "(10+20)*(10+40)");
 }
 
-TEST(ExpressionTests, getSetTest){
+TEST(ExpressionTests, calculateTest) {
+  EXPECT_EQ(*Expression("10+20").calculate(), Integer(30));
+  EXPECT_EQ(*Expression("5*4+(10/2)-3").calculate(), Integer(22));
+  EXPECT_EQ(*Expression("(((55+25)))").calculate(), Integer(80));
+  EXPECT_EQ(*Expression("(((55)))").calculate(), Integer(55));
+}
+
+TEST(ExpressionTests, getSetTest) {
   EXPECT_EQ(Expression("10").getSet(), Set{std::make_shared<Integer>(10)});
+}
+
+TEST(ExpressionTests, setRelationConstructorTest) {
+  EXPECT_EQ(Expression({std::make_shared<Integer>(10), std::make_shared<Integer>(10)}, std::make_shared<BinaryPlus>())
+                .toString(),
+            "10+10");
 }
