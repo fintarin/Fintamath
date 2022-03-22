@@ -6,7 +6,7 @@
 namespace fintamath {
   class BinaryDivide : public BinaryArithmeticOperator {
   public:
-    Set operator()(const Set &set) const override;
+    std::unique_ptr<Node> operator()(const Set &set) const override;
 
     std::unique_ptr<Node> operator()(const Integer &lhs, const Integer &rhs) const;
     std::unique_ptr<Node> operator()(const Rational &lhs, const Rational &rhs) const;

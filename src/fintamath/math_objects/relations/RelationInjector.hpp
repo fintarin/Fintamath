@@ -4,8 +4,7 @@
   {                                                                                                                    \
     auto rhs = std::dynamic_pointer_cast<RHS_TYPE>((SET).at(0));                                                       \
     if (rhs) {                                                                                                         \
-      Set res = {(*this)(*rhs)};                                                                                       \
-      return res;                                                                                                      \
+      return (*this)(*rhs);                                                                                            \
     }                                                                                                                  \
   }
 
@@ -14,7 +13,6 @@
     auto lhs = std::dynamic_pointer_cast<LHS_TYPE>((SET).at(0));                                                       \
     auto rhs = std::dynamic_pointer_cast<RHS_TYPE>((SET).at(1));                                                       \
     if (lhs && rhs) {                                                                                                  \
-      Set res = {(*this)(*lhs, *rhs)};                                                                                 \
-      return res;                                                                                                      \
+      return (*this)(*lhs, *rhs);                                                                                      \
     }                                                                                                                  \
   }

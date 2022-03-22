@@ -6,7 +6,7 @@
 namespace fintamath {
   class UnaryMinus : public UnaryArithmeticOperator {
   public:
-    Set operator()(const Set &set) const override;
+    std::unique_ptr<Node> operator()(const Set &set) const override;
 
     std::unique_ptr<Node> operator()(const Integer &rhs) const;
     std::unique_ptr<Node> operator()(const Rational &rhs) const;
