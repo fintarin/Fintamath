@@ -8,10 +8,12 @@ namespace fintamath {
   template <typename T1, typename T2> static std::unique_ptr<Node> add(const T1 &lhs, const T2 &rhs);
 
   std::unique_ptr<Node> BinaryPlus::operator()(const Set &set) const {
-    INJECT_BINARY_RELATION(Integer, Integer, set)
-    INJECT_BINARY_RELATION(Rational, Rational, set)
-    INJECT_BINARY_RELATION(Integer, Rational, set)
-    INJECT_BINARY_RELATION(Rational, Integer, set)
+    if (set.size() == 2) {
+      INJECT_BINARY_RELATION(Integer, Integer, set)
+      INJECT_BINARY_RELATION(Rational, Rational, set)
+      INJECT_BINARY_RELATION(Integer, Rational, set)
+      INJECT_BINARY_RELATION(Rational, Integer, set)
+    }
     throw std::invalid_argument("");
   }
 

@@ -8,8 +8,10 @@ namespace fintamath {
   template <typename T> static std::unique_ptr<Node> negate(const T &rhs);
 
   std::unique_ptr<Node> UnaryMinus::operator()(const Set &set) const {
-    INJECT_UNARY_RELATION(Integer, set)
-    INJECT_UNARY_RELATION(Rational, set)
+    if (set.size() == 1) {
+      INJECT_UNARY_RELATION(Integer, set)
+      INJECT_UNARY_RELATION(Rational, set)
+    }
     throw std::invalid_argument("");
   }
 
