@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include<iostream>
 
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
@@ -47,7 +48,6 @@ TEST(ExpressionTests, setRelationConstructorTest) {
             "10+10");
 }
 TEST(ExpressionTests, cloneTest){
-  auto a = Expression("10+20");
-  Expression b = std::move(a);
+  auto a = std::make_shared<Expression>(Set{std::make_shared<Integer>(10), std::make_shared<Integer>(10)}, std::make_shared<BinaryPlus>());
   EXPECT_EQ(1,1);
 }

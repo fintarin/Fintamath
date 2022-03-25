@@ -360,3 +360,9 @@ TEST(RationalTests, minimizeTest) {
   auto b = std::make_shared<Rational>(2);
   EXPECT_EQ(b->minimize()->toString(), "2");
 }
+
+TEST(RationalTests, cloneTest){
+  auto a = std::make_shared<Rational>(2,3);
+  auto b = a->clone();
+  EXPECT_EQ(b->toString(), "2/3");
+}
