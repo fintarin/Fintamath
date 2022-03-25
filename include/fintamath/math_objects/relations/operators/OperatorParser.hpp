@@ -1,13 +1,13 @@
 #pragma once
 
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
-#include "fintamath/math_objects/relations/Relation.hpp"
+#include "fintamath/math_objects/relations/operators/Operator.hpp"
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 
 namespace fintamath {
-  class RelationParser final {
+  class OperatorParser final {
   public:
-    RelationParser() = delete;
+    OperatorParser() = delete;
 
     static std::unique_ptr<Expression> parse(const std::string_view &str);
   };

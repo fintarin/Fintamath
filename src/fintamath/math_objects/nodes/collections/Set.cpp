@@ -9,7 +9,6 @@ namespace fintamath {
 
   Set::Set(const std::initializer_list<std::shared_ptr<Node>> &list) : std::vector<std::shared_ptr<Node>>(list) {
   }
-
   std::string Set::toString() const {
     std::string res = "{";
     for (const auto &node : *this) {
@@ -17,5 +16,9 @@ namespace fintamath {
     }
     res.erase(res.size() - 1);
     return res + "}";
+  }
+
+  std::unique_ptr<MathObject> Set::clone() const{
+    return std::make_unique<Set>(*this);
   }
 }

@@ -27,6 +27,17 @@ namespace fintamath {
     return "-";
   }
 
+  int UnaryMinus::getPriority() const {
+    return 0;
+  }
+
+  bool UnaryMinus::isAssociative() const {
+    return false;
+  }
+
+  std::unique_ptr<MathObject> UnaryMinus::clone() const{
+    return std::make_unique<UnaryMinus>(*this);
+  }
   template <typename T> static std::unique_ptr<Node> negate(const T &rhs) {
     return std::make_unique<T>(-rhs);
   }

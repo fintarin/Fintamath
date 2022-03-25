@@ -10,7 +10,8 @@ namespace fintamath {
     Set() = default;
     explicit Set(const std::string_view &str);
     Set(const std::initializer_list<std::shared_ptr<Node>> &list);
-
     std::string toString() const override;
+
+    std::unique_ptr<MathObject> clone() const override;
   };
 }

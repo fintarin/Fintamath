@@ -12,5 +12,6 @@ namespace fintamath {
     bool operator!=(const MathObject &rhs) const;
 
     virtual std::string toString() const = 0;
+    virtual std::unique_ptr<MathObject> clone() const = 0;
   };
 }

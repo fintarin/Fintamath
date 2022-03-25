@@ -395,10 +395,13 @@ namespace fintamath {
     return str;
   }
 
-  std::unique_ptr<Number> fintamath::Integer::minimize() const {
+  std::unique_ptr<MathObject> Integer::clone() const{
     return std::make_unique<Integer>(*this);
   }
 
+  std::unique_ptr<Number> fintamath::Integer::minimize() const {
+    return std::make_unique<Integer>(*this);
+  }
   static IntVector toIntVector(const std::string_view &str, int64_t baseSize) {
     IntVector intVect;
     std::basic_string_view<char>::const_iterator iter = str.end();

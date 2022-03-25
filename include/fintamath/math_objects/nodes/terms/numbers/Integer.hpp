@@ -80,7 +80,7 @@ namespace fintamath {
 
     std::string toString() const override;
     std::unique_ptr<Number> minimize() const override;
-
+    std::unique_ptr<MathObject> clone() const override;
   private:
     std::vector<int64_t> intVect;
     bool sign{};
