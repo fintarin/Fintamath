@@ -46,3 +46,8 @@ TEST(ExpressionTests, setRelationConstructorTest) {
                 .toString(),
             "10+10");
 }
+TEST(ExpressionTests, cloneTest){
+  auto a = Expression("10+20");
+  Expression b = std::move(a);
+  EXPECT_EQ(1,1);
+}

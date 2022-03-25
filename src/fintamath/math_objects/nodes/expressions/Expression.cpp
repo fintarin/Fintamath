@@ -90,6 +90,35 @@ namespace fintamath {
     str.insert(str.end(), ')');
   }
 
+  Expression::Expression(const Expression &expr): set(expr.set) {
+    std::shared_ptr<MathObject> relMathObj = expr.relation->clone();
+    relation = std::dynamic_pointer_cast<Relation>(relMathObj);
+  }
+
+  Expression::Expression(Expression &&expr)noexcept: set(std::move(expr.set)), relation(std::move(expr.relation)){
+    expr.relation = nullptr;
+    expr.set = Set();
+  }
+
+  Expression &Expression::operator=(Expression &&expr)  noexcept {
+    relation = expr.relation;
+    set = expr.set;
+
+    expr.relation = nullptr;
+    expr.set = Set();
+    return *this;
+  }
+
+  Expression& Expression::operator=(const Expression &expr) {
+    if(&expr==this) {
+      return *this;
+    }
+    std::shared_ptr<MathObject> relMathObj = expr.relation->clone();
+    relation = std::dynamic_pointer_cast<Relation>(relMathObj);
+    set = expr.set;
+    return *this;
+  }
+
   std::string Expression::toString() const {
     if (relation == nullptr) {
       return set.at(0)->toString();
