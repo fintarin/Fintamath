@@ -1,17 +1,17 @@
-name: SonarCloud
+name: analysis
 
 on:
   push:
-    branches: [master]
+    branches: [master, dev]
   pull_request:
-    branches: [master]
+    branches: [master, dev]
 
 defaults:
   run:
     shell: bash
 
 env:
-  BUILD_TYPE: RelWithDebInfo
+  BUILD_TYPE: Debug
 
 jobs:
   analyze:
@@ -30,10 +30,8 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Install Qt
-        run: |
-          sudo apt-get update
-          sudo apt-get install qt5-default
+      - name: Install gcovr
+        run: sudo apt-get install gcovr
 
       - name: Install sonar-scanner
         env:
@@ -54,7 +52,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_TESTS:BOOL=FALSE
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON -Dfintamath_enable_coverage=ON
         env:
           CC: gcc
           CXX: g++
@@ -62,6 +60,10 @@ jobs:
       - name: Build with build-wrapper
         working-directory: ${{github.workspace}}
         run: build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build --config ${{env.BUILD_TYPE}}
+
+      - name: Collect coverage report
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}} --target fintamath_coverage
 
       - name: Perform SonarCloud analysis
         working-directory: ${{github.workspace}}
