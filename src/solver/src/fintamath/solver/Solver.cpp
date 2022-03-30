@@ -7,7 +7,7 @@
 #include "fintamath/math_objects/relations/operators/Operator.hpp"
 
 namespace fintamath {
-  static void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
+  void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
 
   Rational Solver::solve(Expression &expr) {
     if (expr.getRootModifiable()->right->right == nullptr && expr.getRootModifiable()->right->left == nullptr) {
@@ -95,7 +95,7 @@ namespace fintamath {
     return getNewPrecision() - 1;
   }
 
-  static void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val) {
+  void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val) {
     elem->info = std::make_shared<Rational>(val);
     elem->right.reset();
     elem->left.reset();

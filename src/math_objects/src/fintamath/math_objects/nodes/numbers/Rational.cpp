@@ -6,8 +6,8 @@
 namespace fintamath {
   constexpr int64_t INITIAL_PRECISION = 36;
 
-  static Integer gcd(const Integer &lhs, const Integer &rhs);
-  static Integer lcm(const Integer &lhs, const Integer &rhs);
+  Integer gcd(const Integer &lhs, const Integer &rhs);
+  Integer lcm(const Integer &lhs, const Integer &rhs);
 
   Rational::Rational(const std::string_view &strVal) {
     if (strVal.empty()) {
@@ -496,7 +496,7 @@ namespace fintamath {
   }
 
   // Using Euclid's algorithm
-  static Integer gcd(const Integer &lhs, const Integer &rhs) {
+  Integer gcd(const Integer &lhs, const Integer &rhs) {
     Integer tmpLhs = lhs;
     Integer tmpRhs = rhs;
     while (tmpRhs != 0) {
@@ -508,7 +508,7 @@ namespace fintamath {
   }
 
   // Using the formula lcm(a, b) = a * b / gcd(a, b)
-  static Integer lcm(const Integer &lhs, const Integer &rhs) {
+  Integer lcm(const Integer &lhs, const Integer &rhs) {
     return lhs * rhs / gcd(lhs, rhs);
   }
 }

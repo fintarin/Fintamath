@@ -8,35 +8,35 @@
 #include "fintamath/math_objects/relations/operators/Operator.hpp"
 
 namespace fintamath {
-  static std::vector<std::string> makeVectOfTokens(const std::string &strExpr);
-  static Expression makeExpression(const std::vector<std::string> &tokensVect);
+  std::vector<std::string> makeVectOfTokens(const std::string &strExpr);
+  Expression makeExpression(const std::vector<std::string> &tokensVect);
 
-  static void cutSpaces(std::string &strExpr);
+  void cutSpaces(std::string &strExpr);
 
-  static bool isDigit(char ch);
-  static bool isLetter(char ch);
+  bool isDigit(char ch);
+  bool isLetter(char ch);
 
-  static void addMultiply(std::vector<std::string> &tokensVect);
-  static void addClosingBracket(std::vector<std::string> &tokensVect);
-  static void addOpenBracket(std::vector<std::string> &tokensVect);
-  static void addUnaryOperator(std::vector<std::string> &tokensVect);
-  static void addOperator(std::vector<std::string> &tokensVect, char token);
-  static void addRational(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
-  static void addFactorial(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
-  static void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
-  static void addBinaryFunctions(std::vector<std::string> &tokensVect);
-  static void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num);
-  static void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token);
+  void addMultiply(std::vector<std::string> &tokensVect);
+  void addClosingBracket(std::vector<std::string> &tokensVect);
+  void addOpenBracket(std::vector<std::string> &tokensVect);
+  void addUnaryOperator(std::vector<std::string> &tokensVect);
+  void addOperator(std::vector<std::string> &tokensVect, char token);
+  void addRational(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
+  void addFactorial(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
+  void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
+  void addBinaryFunctions(std::vector<std::string> &tokensVect);
+  void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num);
+  void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token);
 
-  static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
-                      size_t begin, size_t end, const std::string &oper1, const std::string_view &oper2);
-  static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
-                      size_t begin, size_t end, const std::string &oper);
-  static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
-                      size_t begin, size_t end);
+  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
+               size_t end, const std::string &oper1, const std::string_view &oper2);
+  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
+               size_t end, const std::string &oper);
+  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
+               size_t end);
 
-  static void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
-                                size_t first, size_t last);
+  void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
+                         size_t first, size_t last);
 
   Expression::Expression(const std::string &strExpr) {
     *this = makeExpression(makeVectOfTokens(strExpr));
@@ -50,7 +50,7 @@ namespace fintamath {
     return root;
   }
 
-  static std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
+  std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
     std::string tmpStrExpr = strExpr;
     cutSpaces(tmpStrExpr);
     std::vector<std::string> tokensVect;
@@ -80,7 +80,7 @@ namespace fintamath {
     return tokensVect;
   }
 
-  static Expression makeExpression(const std::vector<std::string> &tokensVect) {
+  Expression makeExpression(const std::vector<std::string> &tokensVect) {
     if (tokensVect.empty()) {
       throw std::invalid_argument("Expression invalid input");
     }
@@ -90,7 +90,7 @@ namespace fintamath {
     return expr;
   }
 
-  static void cutSpaces(std::string &strExpr) {
+  void cutSpaces(std::string &strExpr) {
     while (!strExpr.empty()) {
       if (strExpr.front() != ' ') {
         break;
@@ -108,15 +108,15 @@ namespace fintamath {
     }
   }
 
-  static bool isDigit(char ch) {
+  bool isDigit(char ch) {
     return (ch >= '0' && ch <= '9');
   }
 
-  static bool isLetter(char ch) {
+  bool isLetter(char ch) {
     return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
   }
 
-  static void addMultiply(std::vector<std::string> &tokensVect) {
+  void addMultiply(std::vector<std::string> &tokensVect) {
     if (tokensVect.empty()) {
       return;
     }
@@ -126,16 +126,16 @@ namespace fintamath {
     }
   }
 
-  static void addClosingBracket(std::vector<std::string> &tokensVect) {
+  void addClosingBracket(std::vector<std::string> &tokensVect) {
     tokensVect.emplace_back(")");
   }
 
-  static void addOpenBracket(std::vector<std::string> &tokensVect) {
+  void addOpenBracket(std::vector<std::string> &tokensVect) {
     addMultiply(tokensVect);
     tokensVect.emplace_back("(");
   }
 
-  static void addUnaryOperator(std::vector<std::string> &tokensVect) {
+  void addUnaryOperator(std::vector<std::string> &tokensVect) {
     if (tokensVect.back() == "+") {
       tokensVect.pop_back();
     } else if (tokensVect.back() == "-") {
@@ -145,7 +145,7 @@ namespace fintamath {
     }
   }
 
-  static void addOperator(std::vector<std::string> &tokensVect, char token) {
+  void addOperator(std::vector<std::string> &tokensVect, char token) {
     tokensVect.emplace_back(1, token);
     if (tokensVect.size() == 1) {
       addUnaryOperator(tokensVect);
@@ -156,7 +156,7 @@ namespace fintamath {
     }
   }
 
-  static void addRational(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
+  void addRational(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
     addMultiply(tokensVect);
 
     std::string strVal;
@@ -174,7 +174,7 @@ namespace fintamath {
     tokensVect.push_back(strVal);
   }
 
-  static void addFactorial(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
+  void addFactorial(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
     if (tokensVect.empty()) {
       throw std::invalid_argument("Expression invalid input");
     }
@@ -218,7 +218,7 @@ namespace fintamath {
     tokensVect.insert(tokensVect.begin(), factorialFunc);
   }
 
-  static void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
+  void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
     if (token[pos] == '!') {
       addFactorial(tokensVect, token, pos);
       return;
@@ -249,7 +249,7 @@ namespace fintamath {
     }
   }
 
-  static void addBinaryFunctions(std::vector<std::string> &tokensVect) {
+  void addBinaryFunctions(std::vector<std::string> &tokensVect) {
     std::vector<size_t> placementsVect;
     size_t i = 0;
     while (i < tokensVect.size()) {
@@ -261,7 +261,7 @@ namespace fintamath {
     }
   }
 
-  static void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num) {
+  void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num) {
     std::string token = tokensVect[num];
     tokensVect.erase(tokensVect.begin() + (int64_t)num);
     size_t bracketsNum = 1;
@@ -293,7 +293,7 @@ namespace fintamath {
     throw std::invalid_argument("Expression invalid input");
   }
 
-  static void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token) {
+  void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token) {
     if (types::isConstant(token)) {
       elem->info = std::make_shared<Constant>(token);
     } else {
@@ -305,8 +305,8 @@ namespace fintamath {
     }
   }
 
-  static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
-                      size_t begin, size_t end, const std::string &oper1, const std::string_view &oper2) {
+  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
+               size_t end, const std::string &oper1, const std::string_view &oper2) {
     size_t bracketsNum = 0;
 
     for (size_t i = begin; i <= end; i++) {
@@ -334,13 +334,13 @@ namespace fintamath {
     return false;
   }
 
-  static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
-                      size_t begin, size_t end, const std::string &oper) {
+  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
+               size_t end, const std::string &oper) {
     return descent(tokensVect, elem, begin, end, oper, "");
   }
 
-  static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
-                      size_t begin, size_t end) {
+  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
+               size_t end) {
     if (types::isFunction(tokensVect[end])) {
       elem->info = std::make_shared<Function>(tokensVect[end]);
       makeExpressionRec(tokensVect, elem->right, begin, end - 1);
@@ -349,8 +349,8 @@ namespace fintamath {
     return false;
   }
 
-  static void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
-                                size_t first, size_t last) {
+  void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
+                         size_t first, size_t last) {
     if (first > last) {
       throw std::invalid_argument("Expression invalid input");
     }

@@ -14,13 +14,13 @@ namespace fintamath {
   const Rational PI_CONST("3.14159265358979323846264338327950288419716939937510582097494459230781640628620899");
   const int64_t PI_INITIAL_PRECISION = 72;
 
-  static int64_t getNewPrecision(size_t precision);
-  static Rational getInversedPrecisionVal(size_t precision);
+  int64_t getNewPrecision(size_t precision);
+  Rational getInversedPrecisionVal(size_t precision);
 
-  static Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision);
-  static Rational naturalPow(const Rational &lhs, const Integer &rhs);
-  static Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision);
-  static Integer factorialRec(const Integer &left, const Integer &right);
+  Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision);
+  Rational naturalPow(const Rational &lhs, const Integer &rhs);
+  Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision);
+  Integer factorialRec(const Integer &left, const Integer &right);
 
   namespace functions {
     Rational abs(const Rational &rhs) {
@@ -512,11 +512,11 @@ namespace fintamath {
     }
   } // namespace functions
 
-  static int64_t getNewPrecision(size_t precision) {
+  int64_t getNewPrecision(size_t precision) {
     return (int64_t)precision + (int64_t)sqrt((double)precision);
   }
 
-  static Rational getInversedPrecisionVal(size_t precision) {
+  Rational getInversedPrecisionVal(size_t precision) {
     std::string precStr(precision + 1, '0');
     precStr.front() = '1';
     return (Rational(1, Integer(precStr)));
@@ -526,7 +526,7 @@ namespace fintamath {
     Decrease the value of a under the logarithm so that a -> 1. Using the formula log(a^n) = n*log, by taking a multiple
     square root, the number is reduced to to the desired form.
   */
-  static Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision) {
+  Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision) {
     const Rational maxRedusedVal("0.01");
     Rational res = rhs.round(getNewPrecision(precision));
     multiplier = 1;
@@ -544,7 +544,7 @@ namespace fintamath {
     (n mod 2 = 1) -> a^n = a^(n-1) * a.
     While n != 0.
   */
-  static Rational naturalPow(const Rational &lhs, const Integer &rhs) {
+  Rational naturalPow(const Rational &lhs, const Integer &rhs) {
     Rational res = 1;
     Rational tmpLhs = lhs;
     Integer tmpRhs = rhs;
@@ -566,7 +566,7 @@ namespace fintamath {
     Trigonometry functions reduction: f(a) = f(b + k*p) = f(b), where k is natural, p is perion. Then b = a - k * p,
     k = a div p.
   */
-  static Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision) {
+  Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision) {
     Rational period = (int64_t)multiplier * functions::getPi(getNewPrecision(precision) + rhs.getInteger().size());
     Integer perionMultiplier = (rhs / period).getInteger();
     Rational res = rhs - perionMultiplier * period;
@@ -574,7 +574,7 @@ namespace fintamath {
   }
 
   // Calculation of the factorial through multipliers decomposition in a tree
-  static Integer factorialRec(const Integer &left, const Integer &right) {
+  Integer factorialRec(const Integer &left, const Integer &right) {
     if (left == right) {
       return left;
     }

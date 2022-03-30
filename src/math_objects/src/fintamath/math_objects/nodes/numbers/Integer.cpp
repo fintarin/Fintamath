@@ -11,42 +11,42 @@ namespace fintamath {
   constexpr int64_t INT_BASE = 1000000000;
   constexpr int64_t KARATSUBA_CUTOFF = 64;
 
-  static IntVector toIntVector(const std::string_view &strVal, int64_t baseSize);
-  static bool canConvert(const std::string_view &strVal);
-  static std::string toString(const IntVector &intVect, int64_t baseSize);
+  IntVector toIntVector(const std::string_view &strVal, int64_t baseSize);
+  bool canConvert(const std::string_view &strVal);
+  std::string toString(const IntVector &intVect, int64_t baseSize);
 
-  static int64_t firstZeroNum(const IntVector &rhs);
+  int64_t firstZeroNum(const IntVector &rhs);
 
-  static void toSignificantDigits(IntVector &rhs);
-  static void toBasePositive(IntVector &rhs, size_t pos, int64_t base);
-  static void toBaseNegative(IntVector &rhs, size_t pos, int64_t base);
+  void toSignificantDigits(IntVector &rhs);
+  void toBasePositive(IntVector &rhs, size_t pos, int64_t base);
+  void toBaseNegative(IntVector &rhs, size_t pos, int64_t base);
 
-  static bool equal(const IntVector &lhs, const IntVector &rhs);
-  static bool less(const IntVector &lhs, const IntVector &rhs);
-  static bool greater(const IntVector &lhs, const IntVector &rhs);
-  static bool lessEqual(const IntVector &lhs, const IntVector &rhs);
-  static bool greaterEqual(const IntVector &lhs, const IntVector &rhs);
+  bool equal(const IntVector &lhs, const IntVector &rhs);
+  bool less(const IntVector &lhs, const IntVector &rhs);
+  bool greater(const IntVector &lhs, const IntVector &rhs);
+  bool lessEqual(const IntVector &lhs, const IntVector &rhs);
+  bool greaterEqual(const IntVector &lhs, const IntVector &rhs);
 
-  static IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base);
-  static IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &rhs, int64_t base);
+  IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base);
+  IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &rhs, int64_t base);
 
-  static IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t base);
+  IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t base);
 
-  static IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base);
-  static IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
-  static IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
-  static size_t zerosMultiply(IntVector &lhs, IntVector &rhs);
-  static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
+  IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base);
+  IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
+  IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
+  size_t zerosMultiply(IntVector &lhs, IntVector &rhs);
+  IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
 
-  static IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base);
-  static IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVal, int64_t base);
-  static void zerosDivide(IntVector &lhs, IntVector &rhs);
-  static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, IntVector &left, IntVector &right,
-                                   int64_t base);
-  static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base);
+  IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base);
+  IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVal, int64_t base);
+  void zerosDivide(IntVector &lhs, IntVector &rhs);
+  IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, IntVector &left, IntVector &right,
+                            int64_t base);
+  IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base);
 
-  static IntVector sqrt(const IntVector &rhs);
-  static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff);
+  IntVector sqrt(const IntVector &rhs);
+  void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff);
 
   Integer::Integer(const std::string_view &strVal) {
     if (strVal.empty()) {
@@ -416,7 +416,7 @@ namespace fintamath {
     }
   }
 
-  static IntVector toIntVector(const std::string_view &strVal, int64_t baseSize) {
+  IntVector toIntVector(const std::string_view &strVal, int64_t baseSize) {
     IntVector intVect;
     const auto *iter = strVal.end();
     for (; std::distance(strVal.begin(), iter) > baseSize; iter -= baseSize) {
@@ -427,14 +427,14 @@ namespace fintamath {
     return intVect;
   }
 
-  static bool canConvert(const std::string_view &strVal) {
+  bool canConvert(const std::string_view &strVal) {
     const int64_t firstDigit = 0;
     const int64_t lastDigit = 9;
     return std::all_of(strVal.begin(), strVal.end(),
                        [](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
   }
 
-  static std::string toString(const IntVector &intVect, int64_t baseSize) {
+  std::string toString(const IntVector &intVect, int64_t baseSize) {
     std::string strVal = std::to_string(intVect.back());
     if (intVect.size() == 1) {
       return strVal;
@@ -448,7 +448,7 @@ namespace fintamath {
   }
 
   // Finding a digit before the first non-zero digit, starting with the lowest digits
-  static int64_t firstZeroNum(const IntVector &rhs) {
+  int64_t firstZeroNum(const IntVector &rhs) {
     int64_t num = 0;
     while (num < rhs.size() && rhs[num] == 0) {
       num++;
@@ -456,7 +456,7 @@ namespace fintamath {
     return num;
   }
 
-  static void toSignificantDigits(IntVector &rhs) {
+  void toSignificantDigits(IntVector &rhs) {
     size_t i = rhs.size() - 1;
     for (; i > 0; i--) {
       if (rhs[i] != 0) {
@@ -467,7 +467,7 @@ namespace fintamath {
   }
 
   // If the value in the given digit >= INT_BASE, the surplus is added to the next digit
-  static void toBasePositive(IntVector &rhs, size_t pos, int64_t base) {
+  void toBasePositive(IntVector &rhs, size_t pos, int64_t base) {
     if (rhs[pos] >= base) {
       rhs[pos + 1] += rhs[pos] / base;
       rhs[pos] %= base;
@@ -475,14 +475,14 @@ namespace fintamath {
   }
 
   // If the value in the given digit < 0, then the deficiency is subtracted from the next digit
-  static void toBaseNegative(IntVector &rhs, size_t pos, int64_t base) {
+  void toBaseNegative(IntVector &rhs, size_t pos, int64_t base) {
     if (rhs[pos] < 0) {
       rhs[pos + 1]--;
       rhs[pos] += base;
     }
   }
 
-  static bool equal(const IntVector &lhs, const IntVector &rhs) {
+  bool equal(const IntVector &lhs, const IntVector &rhs) {
     if (lhs.size() != rhs.size()) {
       return false;
     }
@@ -496,7 +496,7 @@ namespace fintamath {
     return true;
   }
 
-  static bool less(const IntVector &lhs, const IntVector &rhs) {
+  bool less(const IntVector &lhs, const IntVector &rhs) {
     if (lhs.size() > rhs.size()) {
       return false;
     }
@@ -516,7 +516,7 @@ namespace fintamath {
     return false;
   }
 
-  static bool greater(const IntVector &lhs, const IntVector &rhs) {
+  bool greater(const IntVector &lhs, const IntVector &rhs) {
     if (lhs.size() > rhs.size()) {
       return true;
     }
@@ -536,7 +536,7 @@ namespace fintamath {
     return false;
   }
 
-  static bool lessEqual(const IntVector &lhs, const IntVector &rhs) {
+  bool lessEqual(const IntVector &lhs, const IntVector &rhs) {
     if (lhs.size() > rhs.size()) {
       return false;
     }
@@ -556,7 +556,7 @@ namespace fintamath {
     return true;
   }
 
-  static bool greaterEqual(const IntVector &lhs, const IntVector &rhs) {
+  bool greaterEqual(const IntVector &lhs, const IntVector &rhs) {
     if (lhs.size() > rhs.size()) {
       return true;
     }
@@ -577,7 +577,7 @@ namespace fintamath {
   }
 
   // Column addition without reduction to significant digits
-  static IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+  IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
     IntVector val = lhs;
     if (rhs.size() > val.size()) {
       val.resize(rhs.size(), 0);
@@ -596,14 +596,14 @@ namespace fintamath {
   }
 
   // Column addition with reduction to significant digits
-  static IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+  IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &rhs, int64_t base) {
     IntVector val = add(lhs, rhs, base);
     toSignificantDigits(val);
     return val;
   }
 
   // Column substraction
-  static IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+  IntVector substract(const IntVector &lhs, const IntVector &rhs, int64_t base) {
     IntVector val = lhs;
 
     for (size_t i = 0; i < rhs.size(); i++) {
@@ -619,7 +619,7 @@ namespace fintamath {
   }
 
   // Multiplication by a short number
-  static IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base) {
+  IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base) {
     IntVector val;
     val.resize(lhs.size() + 1, 0);
 
@@ -635,7 +635,7 @@ namespace fintamath {
   /*
     Multiplication of numbers in the form of polynomials without reduction to significant digits
   */
-  static IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+  IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
     IntVector res;
     res.resize(lhs.size() + rhs.size(), 0);
 
@@ -662,7 +662,7 @@ namespace fintamath {
     A0 and B0 - the first halves of numbers
     A1 and B1 - the second halves of numbers
   */
-  static IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+  IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
     if (lhs.size() < KARATSUBA_CUTOFF || rhs.size() < KARATSUBA_CUTOFF) {
       return polynomialMultiply(lhs, rhs, base);
     }
@@ -688,7 +688,7 @@ namespace fintamath {
   }
 
   // Multiplication of zero digits
-  static size_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
+  size_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
     int64_t lhsZerosNum = firstZeroNum(lhs);
     int64_t rhsZerosNum = firstZeroNum(rhs);
 
@@ -703,7 +703,7 @@ namespace fintamath {
   }
 
   // Adding leading zeros to bring the numbers to the required form
-  static IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
+  IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base) {
     IntVector tmpLhs = lhs;
     IntVector tmpRhs = rhs;
     size_t zerosNum = zerosMultiply(tmpLhs, tmpRhs);
@@ -730,7 +730,7 @@ namespace fintamath {
   }
 
   // Dividing by a short number
-  static IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
+  IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base) {
     IntVector val = lhs;
 
     for (size_t i = val.size() - 1; i > 0; i--) {
@@ -744,7 +744,7 @@ namespace fintamath {
   }
 
   // Dividing by short number with a remainder
-  static IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVal, int64_t base) {
+  IntVector shortDivide(const IntVector &lhs, int64_t rhs, IntVector &modVal, int64_t base) {
     IntVector val = lhs;
 
     for (size_t i = val.size() - 1; i > 0; i--) {
@@ -759,7 +759,7 @@ namespace fintamath {
   }
 
   // Reduction of zero digits of numbers
-  static void zerosDivide(IntVector &lhs, IntVector &rhs) {
+  void zerosDivide(IntVector &lhs, IntVector &rhs) {
     int64_t zerosNum = std::min(firstZeroNum(lhs), firstZeroNum(rhs));
     if (lhs.size() != 1 && rhs.size() != 1 && zerosNum != 0) {
       lhs.erase(lhs.begin(), lhs.begin() + zerosNum);
@@ -767,8 +767,8 @@ namespace fintamath {
     }
   }
 
-  static IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, IntVector &left, IntVector &right,
-                                   int64_t base) {
+  IntVector binsearchDivide(const IntVector &lhs, const IntVector &rhs, IntVector &left, IntVector &right,
+                            int64_t base) {
     IntVector mid;
     while (fintamath::greater(substract(right, left, base), IntVector{1})) {
       mid = shortDivide(addToSignificantDigits(left, right, base), 2, base);
@@ -795,7 +795,7 @@ namespace fintamath {
     corresponding bound of B.back() - the most significant digit of B. Then (N.size() + B.size()) of the first digits
     are discarded.
   */
-  static IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base) {
+  IntVector divide(const IntVector &lhs, const IntVector &rhs, IntVector &modVal, int64_t base) {
     if (rhs.size() == 1) {
       return shortDivide(lhs, rhs.front(), modVal, base);
     }
@@ -845,7 +845,7 @@ namespace fintamath {
 
     5.To the resulting difference carry the next facet and follow the algorithm.
   */
-  static IntVector sqrt(const IntVector &rhs) {
+  IntVector sqrt(const IntVector &rhs) {
     const int64_t base = 10;
 
     IntVector val;
@@ -890,7 +890,7 @@ namespace fintamath {
     return val;
   }
 
-  static void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff) {
+  void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff) {
     int64_t tmpVal = rhs.back() - val.front() * val.front();
     diff.push_back(tmpVal % base);
     if (tmpVal >= base) {

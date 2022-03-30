@@ -6,7 +6,7 @@
 #include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
 namespace fintamath {
-  static void insertFloatingPoint(std::string &strVal, int64_t precision);
+  void insertFloatingPoint(std::string &strVal, int64_t precision);
 
   size_t cutZeros(std::string &strVal) {
     size_t order = 0;
@@ -71,7 +71,7 @@ namespace fintamath {
     solver.setPrecision(precision);
   }
 
-  static void insertFloatingPoint(std::string &strVal, int64_t precision) {
+  void insertFloatingPoint(std::string &strVal, int64_t precision) {
     strVal.insert(strVal.begin() + 1, '.');
     strVal += '0';
     strVal = Rational(strVal).toString(precision);
