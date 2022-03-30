@@ -3,10 +3,11 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 project(
   fintamath
   LANGUAGES CXX
-  VERSION 0.1)
+  VERSION 0.2)
 
-option(BUILD_TESTS "Enable Test Builds" ON)
+option(${PROJECT_NAME}_build_tests "Build tests" OFF)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -18,8 +19,7 @@ include(cmake/FetchDependencies.cmake)
 include(cmake/Coverage.cmake)
 include(cmake/Sanitizers.cmake)
 
-if(BUILD_TESTS)
-  include(GoogleTest)
+if(${PROJECT_NAME}_build_tests)
   enable_testing()
 endif()
 
