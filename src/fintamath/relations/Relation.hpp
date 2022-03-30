@@ -1,9 +1,9 @@
 #pragma once
 
-#include "fintamath/MathObject.hpp"
+#include "fintamath/Object.hpp"
 
 namespace fintamath {
-  class Relation : public MathObject {
+  class Relation : public Object {
   public:
     ~Relation() override = default;
   };

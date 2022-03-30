@@ -9,7 +9,7 @@ namespace fintamath {
   class Expression : public Node {
   public:
     struct Elem {
-      std::shared_ptr<MathObject> info;
+      std::shared_ptr<Object> info;
       std::shared_ptr<Elem> left;
       std::shared_ptr<Elem> right;
     };

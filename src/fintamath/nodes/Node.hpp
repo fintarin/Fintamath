@@ -1,9 +1,9 @@
 #pragma once
 
-#include "fintamath/MathObject.hpp"
+#include "fintamath/Object.hpp"
 
 namespace fintamath {
-  class Node : public MathObject {
+  class Node : public Object {
   public:
     ~Node() override = default;
   };

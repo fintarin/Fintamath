@@ -4,9 +4,9 @@
 #include <string>
 
 namespace fintamath {
-  class MathObject {
+  class Object {
   public:
-    virtual ~MathObject() = default;
+    virtual ~Object() = default;
 
     virtual std::string toString() const = 0;
 
@@ -18,12 +18,12 @@ namespace fintamath {
   };
 
   template <typename T>
-  inline T MathObject::to() const {
+  inline T Object::to() const {
     return dynamic_cast<const T &>(*this);
   }
 
   template <typename T>
-  inline bool MathObject::is() const {
+  inline bool Object::is() const {
     try {
       to<T>();
     } catch (const std::bad_cast &) {
