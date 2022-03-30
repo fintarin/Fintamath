@@ -1,10 +1,10 @@
-name: CI build
+name: build
 
 on:
   push:
-    branches: [master]
+    branches: [master, dev]
   pull_request:
-    branches: [master]
+    branches: [master, dev]
 
 defaults:
   run:
@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    name: Build and Test
+    name: Build
     runs-on: ${{matrix.config.os}}
 
     strategy:
@@ -23,6 +23,11 @@ jobs:
         config:
           - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
           - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
+          - { name: macOS GCC, os: macOS-latest, cc: gcc, cxx: g++ }
+          - { name: macOS Clang, os: macOS-latest, cc: clang, cxx: clang++ }
+          - { name: Windows GCC, os: windows-latest, cc: gcc, cxx: g++ }
+          - { name: Windows Clang, os: windows-latest, cc: clang, cxx: clang++ }
+          - { name: Windows MSVC, os: windows-latest, cc: msvc, cxx: msvc }
 
     steps:
       - name: Checkout
@@ -30,14 +35,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Qt
-        run: |
-          sudo apt-get update
-          sudo apt-get install qt5-default
-
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -B build -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D BUILD_TESTS:BOOL=TRUE -D BUILD_APP:BOOL=TRUE
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON
         env:
           CC: ${{matrix.config.cc}}
           CXX: ${{matrix.config.cxx}}
@@ -48,4 +48,4 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}}
+        run: ctest -C${{env.BUILD_TYPE}}
