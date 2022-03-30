@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
-#include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
+#include "fintamath/math_objects/relations/functions/Function.hpp"
 #include "fintamath/math_objects/relations/operators/Operator.hpp"
 
 static void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
@@ -49,7 +49,7 @@ void Solver::solveRec(const std::shared_ptr<Expression::Elem> &elem) {
     if (elem->right->info == nullptr) {
       throw std::invalid_argument("Solver invalid input");
     }
-    if (elem->right->info->is<Operator>() || elem->right->info->is<ElementaryFunction>()) {
+    if (elem->right->info->is<Operator>() || elem->right->info->is<Function>()) {
       solveRec(elem->right);
     }
   }
@@ -58,7 +58,7 @@ void Solver::solveRec(const std::shared_ptr<Expression::Elem> &elem) {
     if (elem->left->info == nullptr) {
       throw std::invalid_argument("Solver invalid input");
     }
-    if (elem->left->info->is<Operator>() || elem->left->info->is<ElementaryFunction>()) {
+    if (elem->left->info->is<Operator>() || elem->left->info->is<Function>()) {
       solveRec(elem->left);
     }
   }
@@ -71,8 +71,8 @@ void Solver::solveRec(const std::shared_ptr<Expression::Elem> &elem) {
     return;
   }
 
-  if (elem->info->is<ElementaryFunction>()) {
-    ElementaryFunction func(elem->info->toString());
+  if (elem->info->is<Function>()) {
+    Function func(elem->info->toString());
     Rational val;
     if (types::isBinaryFunction(func.toString())) {
       val = Rational(func.solve(toRational(elem->right), toRational(elem->left), getNewPrecision())

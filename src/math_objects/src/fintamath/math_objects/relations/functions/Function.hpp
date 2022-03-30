@@ -1,13 +1,27 @@
-#ifndef FUNCTION_HPP
-#define FUNCTION_HPP
+#ifndef ELEMENTARYFUNCTION_HPP
+#define ELEMENTARYFUNCTION_HPP
 
+#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 #include "fintamath/math_objects/relations/Relation.hpp"
+
+#include <string>
 
 class Function : public Relation {
 public:
-  ~Function() override = 0;
+  explicit Function(const std::string &strFunc);
+
+  Rational solve(const Rational &rhs, int64_t precision) const;
+  Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
+
+  std::string toString() const override;
+
+private:
+  std::string name;
 };
 
-inline Function::~Function() = default;
+namespace types {
+bool isFunction(const std::string &str);
+bool isBinaryFunction(const std::string_view &str);
+} // namespace types
 
-#endif // FUNCTION_HPP
+#endif // ELEMENTARYFUNCTION_HPP

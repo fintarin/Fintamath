@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
-#include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
+#include "fintamath/math_objects/relations/functions/Function.hpp"
 #include "fintamath/math_objects/relations/operators/Operator.hpp"
 
 static std::vector<std::string> makeVectOfTokens(const std::string &strExpr);
@@ -320,7 +320,7 @@ static bool descent(const std::vector<std::string> &tokensVect, const std::share
 
     if (bracketsNum == 0 && (tokensVect[i] == oper1 || tokensVect[i] == oper2)) {
       if (types::isBinaryFunction(oper1)) {
-        elem->info = std::make_shared<ElementaryFunction>(tokensVect[i]);
+        elem->info = std::make_shared<Function>(tokensVect[i]);
       } else {
         elem->info = std::make_shared<Operator>(tokensVect[i]);
       }
@@ -341,7 +341,7 @@ static bool descent(const std::vector<std::string> &tokensVect, const std::share
 static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
                     size_t begin, size_t end) {
   if (types::isFunction(tokensVect[end])) {
-    elem->info = std::make_shared<ElementaryFunction>(tokensVect[end]);
+    elem->info = std::make_shared<Function>(tokensVect[end]);
     makeExpressionRec(tokensVect, elem->right, begin, end - 1);
     return true;
   }

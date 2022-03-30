@@ -1,17 +1,17 @@
-#include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
+#include "fintamath/math_objects/relations/functions/Function.hpp"
 
 #include <regex>
 
 #include "fintamath/math_objects/relations/functions/NamespaceFunctions.hpp"
 
-ElementaryFunction::ElementaryFunction(const std::string &strFunc) {
+Function::Function(const std::string &strFunc) {
   if (!types::isFunction(strFunc)) {
     throw std::invalid_argument("Function invalid input");
   }
   name = strFunc;
 }
 
-Rational ElementaryFunction::solve(const Rational &rhs, int64_t precision) const {
+Rational Function::solve(const Rational &rhs, int64_t precision) const {
   if (name == "sqrt") {
     return functions::sqrt(rhs, precision);
   }
@@ -63,14 +63,14 @@ Rational ElementaryFunction::solve(const Rational &rhs, int64_t precision) const
   throw std::invalid_argument("Function invalid input");
 }
 
-Rational ElementaryFunction::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
+Rational Function::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
   if (name == "log") {
     return functions::log(lhs, rhs, precision);
   }
   throw std::invalid_argument("Function invalid input");
 }
 
-std::string ElementaryFunction::toString() const {
+std::string Function::toString() const {
   return name;
 }
 
