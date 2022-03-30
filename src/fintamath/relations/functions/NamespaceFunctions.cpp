@@ -43,7 +43,7 @@ namespace fintamath {
       shift.insert(shift.begin(), '1');
       shiftMult2.insert(shiftMult2.begin(), '1');
 
-      Rational val(sqrt((rhs * Integer(shiftMult2)).getInteger()), Integer(shift));
+      Rational val((rhs * Integer(shiftMult2)).getInteger().sqrt(), Integer(shift));
       return val.round(precision);
     }
 
