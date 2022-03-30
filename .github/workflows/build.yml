@@ -1,0 +1,51 @@
+name: build
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{matrix.config.os}}
+
+    strategy:
+      matrix:
+        config:
+          - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
+          - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
+          - { name: macOS GCC, os: macOS-latest, cc: gcc, cxx: g++ }
+          - { name: macOS Clang, os: macOS-latest, cc: clang, cxx: clang++ }
+          - { name: Windows GCC, os: windows-latest, cc: gcc, cxx: g++ }
+          - { name: Windows Clang, os: windows-latest, cc: clang, cxx: clang++ }
+          - { name: Windows MSVC, os: windows-latest, cc: msvc, cxx: msvc }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON
+        env:
+          CC: ${{matrix.config.cc}}
+          CXX: ${{matrix.config.cxx}}
+
+      - name: Build
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C${{env.BUILD_TYPE}}

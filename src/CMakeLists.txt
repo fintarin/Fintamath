@@ -1,7 +1,10 @@
-add_subdirectory(math_objects)
-add_subdirectory(solver)
+file(
+  GLOB_RECURSE
+  SOURCES
+  CONFIGURE_DEPENDS
+  "*.cpp"
+  "*.hpp")
 
-if(BUILD_APP)
-  add_subdirectory(presenter)
-  add_subdirectory(ui)
-endif()
+add_library(${PROJECT_NAME} ${SOURCES})
+
+target_include_directories(${PROJECT_NAME} PUBLIC .)
