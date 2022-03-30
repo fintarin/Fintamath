@@ -75,6 +75,12 @@ namespace fintamath {
     makeExpressionRec(tokensVect, root, 0, tokensVect.size() - 1);
   }
 
+  std::shared_ptr<Object> Expression::clone() const {
+    auto newExpression = std::make_shared<Expression>();
+    newExpression->root = this->root->clone();
+    return newExpression;
+  }
+
   std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
     std::string tmpStrExpr = strExpr;
     cutSpaces(tmpStrExpr);
@@ -519,5 +525,21 @@ namespace fintamath {
       order++;
     }
     return order;
+  }
+
+  std::shared_ptr<Expression::Elem> Expression::Elem::clone() {
+    auto cloneElem = std::make_shared<Elem>();
+    if (left == nullptr) {
+      cloneElem->left = nullptr;
+    } else {
+      cloneElem->left = left->clone();
+    }
+    if (right == nullptr) {
+      cloneElem->right = nullptr;
+    } else {
+      cloneElem->right = right->clone();
+    }
+    cloneElem->info = info->clone();
+    return cloneElem;
   }
 }

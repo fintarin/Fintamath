@@ -77,6 +77,7 @@ namespace fintamath {
 
     std::string toString() const override;
     std::string toString(size_t precision) const;
+    std::shared_ptr<Object> clone() const override;
 
   private:
     Integer numerator = 0;

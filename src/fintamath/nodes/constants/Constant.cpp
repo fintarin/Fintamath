@@ -22,6 +22,9 @@ namespace fintamath {
     throw std::invalid_argument("Constant invalid input");
   }
 
+  std::shared_ptr<Object> Constant::clone() const {
+    return std::make_shared<Constant>(*this);
+  }
   std::string Constant::toString() const {
     return name;
   }

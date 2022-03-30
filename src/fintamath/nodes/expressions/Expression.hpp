@@ -12,6 +12,8 @@ namespace fintamath {
       std::shared_ptr<Object> info;
       std::shared_ptr<Elem> left;
       std::shared_ptr<Elem> right;
+
+      std::shared_ptr<Elem> clone();
     };
 
     Expression() = default;
@@ -20,6 +22,8 @@ namespace fintamath {
     std::string toString() const override;
 
     std::string solve();
+
+    std::shared_ptr<Object> clone() const override;
 
   private:
     std::shared_ptr<Elem> root;

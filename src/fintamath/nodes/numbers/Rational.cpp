@@ -373,6 +373,9 @@ namespace fintamath {
     rhs.denominator = lcmVal;
     rhs.sign = false;
   }
+  std::shared_ptr<Object> Rational::clone() const {
+    return std::make_shared<Rational>(*this);
+  }
 
   // Using Euclid's algorithm
   static Integer gcd(const Integer &lhs, const Integer &rhs) {

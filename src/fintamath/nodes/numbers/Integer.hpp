@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "fintamath/nodes/Node.hpp"
 
@@ -79,7 +80,7 @@ namespace fintamath {
     size_t size() const;
     Integer sqrt() const;
     std::string toString() const override;
-
+    std::shared_ptr<Object> clone() const override;
   private:
     std::vector<int64_t> intVect;
     bool sign{};

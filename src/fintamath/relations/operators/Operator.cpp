@@ -33,6 +33,10 @@ namespace fintamath {
     return std::string(1, name);
   }
 
+  std::shared_ptr<Object> Operator::clone() const {
+    return std::make_shared<Operator>(*this);
+  }
+
   namespace types {
     bool isOperator(const std::string &str) {
       std::regex funcRegex(R"(\+|\-|\*|\/|\^)");

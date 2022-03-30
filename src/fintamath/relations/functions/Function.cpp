@@ -75,6 +75,10 @@ namespace fintamath {
     return name;
   }
 
+  std::shared_ptr<Object> Function::clone() const {
+    return std::make_shared<Function>(*this);
+  }
+
   namespace types {
     bool isFunction(const std::string &str) {
       std::regex funcRegex(R"(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs|!|!!)");

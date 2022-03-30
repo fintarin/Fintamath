@@ -399,6 +399,10 @@ namespace fintamath {
     }
   }
 
+  std::shared_ptr<Object> Integer::clone() const {
+    return std::make_shared<Integer>(*this);
+  }
+
   IntVector toIntVector(const std::string_view &str, int64_t baseSize) {
     IntVector intVect;
     std::basic_string_view<char>::const_iterator iter = str.end();
