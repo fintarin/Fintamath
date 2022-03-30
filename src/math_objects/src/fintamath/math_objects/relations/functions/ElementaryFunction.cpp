@@ -70,10 +70,6 @@ Rational ElementaryFunction::solve(const Rational &lhs, const Rational &rhs, int
   throw std::invalid_argument("Function invalid input");
 }
 
-std::string ElementaryFunction::getTypeName() const {
-  return "Function";
-}
-
 std::string ElementaryFunction::toString() const {
   return name;
 }

@@ -25,10 +25,6 @@ std::string MathConstant::toString() const {
   return name;
 }
 
-std::string MathConstant::getTypeName() const {
-  return "Constant";
-}
-
 namespace types {
 bool isConstant(const std::string_view &str) {
   if (str == "e") {

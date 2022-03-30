@@ -13,7 +13,6 @@ public:
   Rational solve(const Rational &rhs, int64_t precision) const;
   Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
 
-  std::string getTypeName() const override;
   std::string toString() const override;
 
 private:

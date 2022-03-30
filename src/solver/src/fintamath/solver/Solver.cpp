@@ -29,7 +29,7 @@ Rational Solver::toRational(const std::shared_ptr<ArithmeticExpression::Elem> &e
     throw std::invalid_argument("Solver invalid input");
   }
 
-  if (elem->info->getTypeName() == "Constant") {
+  if (elem->info->is<MathConstant>()) {
     return MathConstant(elem->info->toString()).toRational(getNewPrecision());
   }
 
@@ -49,7 +49,7 @@ void Solver::solveRec(const std::shared_ptr<ArithmeticExpression::Elem> &elem) {
     if (elem->right->info == nullptr) {
       throw std::invalid_argument("Solver invalid input");
     }
-    if (elem->right->info->getTypeName() == "Operator" || elem->right->info->getTypeName() == "Function") {
+    if (elem->right->info->is<ArithmeticOperator>() || elem->right->info->is<ElementaryFunction>()) {
       solveRec(elem->right);
     }
   }
@@ -58,12 +58,12 @@ void Solver::solveRec(const std::shared_ptr<ArithmeticExpression::Elem> &elem) {
     if (elem->left->info == nullptr) {
       throw std::invalid_argument("Solver invalid input");
     }
-    if (elem->left->info->getTypeName() == "Operator" || elem->left->info->getTypeName() == "Function") {
+    if (elem->left->info->is<ArithmeticOperator>() || elem->left->info->is<ElementaryFunction>()) {
       solveRec(elem->left);
     }
   }
 
-  if (elem->info->getTypeName() == "Operator") {
+  if (elem->info->is<ArithmeticOperator>()) {
     ArithmeticOperator oper(elem->info->toString());
     Rational val(oper.solve(toRational(elem->right), toRational(elem->left), getNewPrecision())
                      .toString(getNewRoundPrecision()));
@@ -71,7 +71,7 @@ void Solver::solveRec(const std::shared_ptr<ArithmeticExpression::Elem> &elem) {
     return;
   }
 
-  if (elem->info->getTypeName() == "Function") {
+  if (elem->info->is<ElementaryFunction>()) {
     ElementaryFunction func(elem->info->toString());
     Rational val;
     if (types::isBinaryFunction(func.toString())) {

@@ -28,10 +28,6 @@ Rational ArithmeticOperator::solve(const Rational &lhs, const Rational &rhs, int
   }
 }
 
-std::string ArithmeticOperator::getTypeName() const {
-  return "Operator";
-}
-
 std::string ArithmeticOperator::toString() const {
   return std::string(1, name);
 }

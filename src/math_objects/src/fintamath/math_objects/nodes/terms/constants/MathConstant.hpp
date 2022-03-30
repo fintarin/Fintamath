@@ -10,7 +10,6 @@ public:
 
   Rational toRational(int64_t precision) const;
   std::string toString() const override;
-  std::string getTypeName() const override;
 
 private:
   std::string name;
