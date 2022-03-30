@@ -1,17 +1,17 @@
-#include "fintamath/math_objects/nodes/terms/constants/MathConstant.hpp"
+#include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
 
 #include <stdexcept>
 
 #include "fintamath/math_objects/relations/functions/NamespaceFunctions.hpp"
 
-MathConstant::MathConstant(const std::string &strConst) {
+Constant::Constant(const std::string &strConst) {
   if (!types::isConstant(strConst)) {
     throw std::invalid_argument("Constant invalid input");
   }
   name = strConst;
 }
 
-Rational MathConstant::toRational(int64_t precision) const {
+Rational Constant::toRational(int64_t precision) const {
   if (name == "e") {
     return functions::getE(precision);
   }
@@ -21,7 +21,7 @@ Rational MathConstant::toRational(int64_t precision) const {
   throw std::invalid_argument("Constant invalid input");
 }
 
-std::string MathConstant::toString() const {
+std::string Constant::toString() const {
   return name;
 }
 

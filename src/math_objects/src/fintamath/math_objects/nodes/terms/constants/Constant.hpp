@@ -1,13 +1,21 @@
-#ifndef CONSTANT_HPP
-#define CONSTANT_HPP
+#ifndef MATHCONSTANT_HPP
+#define MATHCONSTANT_HPP
 
-#include "fintamath/math_objects/nodes/terms/Term.hpp"
+#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
-class Constant : public Term {
+class Constant : public Node {
 public:
-  ~Constant() override = 0;
+  explicit Constant(const std::string &strConst);
+
+  Rational toRational(int64_t precision) const;
+  std::string toString() const override;
+
+private:
+  std::string name;
 };
 
-inline Constant::~Constant() = default;
+namespace types {
+bool isConstant(const std::string_view &str);
+}
 
-#endif // CONSTANT_HPP
+#endif // MATHCONSTANT_HPP

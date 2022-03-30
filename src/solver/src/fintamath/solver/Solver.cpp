@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "fintamath/math_objects/nodes/terms/constants/MathConstant.hpp"
+#include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 
@@ -29,8 +29,8 @@ Rational Solver::toRational(const std::shared_ptr<ArithmeticExpression::Elem> &e
     throw std::invalid_argument("Solver invalid input");
   }
 
-  if (elem->info->is<MathConstant>()) {
-    return MathConstant(elem->info->toString()).toRational(getNewPrecision());
+  if (elem->info->is<Constant>()) {
+    return Constant(elem->info->toString()).toRational(getNewPrecision());
   }
 
   try {

@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "fintamath/math_objects/nodes/terms/constants/MathConstant.hpp"
+#include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 
@@ -290,7 +290,7 @@ static void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<
 
 static void addValue(const std::shared_ptr<ArithmeticExpression::Elem> &elem, const std::string &token) {
   if (types::isConstant(token)) {
-    elem->info = std::make_shared<MathConstant>(token);
+    elem->info = std::make_shared<Constant>(token);
   } else {
     try {
       elem->info = std::make_shared<Rational>(token);
