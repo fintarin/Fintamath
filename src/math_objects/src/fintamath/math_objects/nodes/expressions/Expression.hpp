@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "fintamath/math_objects/nodes/Node.hpp"
 
@@ -18,9 +19,11 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::shared_ptr<Elem> &getRootModifiable();
+    std::string solve();
 
   private:
-    std::shared_ptr<Elem> root = std::make_shared<Elem>();
+    std::shared_ptr<Elem> root;
+
+    void makeExpression(const std::vector<std::string> &tokensVect);
   };
 }

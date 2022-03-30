@@ -8,6 +8,11 @@
 #include "fintamath/math_objects/relations/operators/Operator.hpp"
 
 namespace fintamath {
+  constexpr int64_t INITIAL_PRECISION = 36;
+  constexpr int64_t PRECISION_INCREASER = 9;
+  constexpr int64_t NEW_PRECISION = INITIAL_PRECISION + PRECISION_INCREASER;
+  constexpr int64_t NEW_ROUND_PRECISION = NEW_PRECISION - 1;
+
   std::vector<std::string> makeVectOfTokens(const std::string &strExpr);
   Expression makeExpression(const std::vector<std::string> &tokensVect);
 
@@ -26,7 +31,7 @@ namespace fintamath {
   void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
   void addBinaryFunctions(std::vector<std::string> &tokensVect);
   void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num);
-  void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token);
+  void addValue(std::shared_ptr<Expression::Elem> &elem, const std::string &token);
 
   bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
                size_t end, const std::string &oper1, const std::string_view &oper2);
@@ -38,16 +43,36 @@ namespace fintamath {
   void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
                          size_t first, size_t last);
 
+  Rational toRational(const std::shared_ptr<Expression::Elem> &elem);
+
+  void solveRec(const std::shared_ptr<Expression::Elem> &elem);
+  void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
+
+  void toShortForm(std::string &strVal);
+  void insertFloatingPoint(std::string &strVal, int64_t precision);
+  size_t cutZeros(std::string &strVal);
+
   Expression::Expression(const std::string &strExpr) {
-    *this = makeExpression(makeVectOfTokens(strExpr));
+    makeExpression(makeVectOfTokens(strExpr));
   }
 
   std::string Expression::toString() const {
     throw std::invalid_argument("Not implemented"); // TODO not implemented
   }
 
-  std::shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
-    return root;
+  std::string Expression::solve() {
+    solveRec(root);
+    auto resVal = toRational(root);
+    auto valStr = resVal.toString(INITIAL_PRECISION);
+    toShortForm(valStr);
+    return valStr;
+  }
+
+  void Expression::makeExpression(const std::vector<std::string> &tokensVect) {
+    if (tokensVect.empty()) {
+      throw std::invalid_argument("Expression invalid input");
+    }
+    makeExpressionRec(tokensVect, root, 0, tokensVect.size() - 1);
   }
 
   std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
@@ -78,16 +103,6 @@ namespace fintamath {
     reverse(tokensVect.begin(), tokensVect.end());
 
     return tokensVect;
-  }
-
-  Expression makeExpression(const std::vector<std::string> &tokensVect) {
-    if (tokensVect.empty()) {
-      throw std::invalid_argument("Expression invalid input");
-    }
-    Expression expr;
-    expr.getRootModifiable() = std::make_shared<Expression::Elem>();
-    makeExpressionRec(tokensVect, expr.getRootModifiable()->right, 0, tokensVect.size() - 1);
-    return expr;
   }
 
   void cutSpaces(std::string &strExpr) {
@@ -293,7 +308,7 @@ namespace fintamath {
     throw std::invalid_argument("Expression invalid input");
   }
 
-  void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token) {
+  void addValue(std::shared_ptr<Expression::Elem> &elem, const std::string &token) {
     if (types::isConstant(token)) {
       elem->info = std::make_shared<Constant>(token);
     } else {
@@ -385,5 +400,124 @@ namespace fintamath {
     if (tokensVect[first] == ")" && tokensVect[last] == "(") {
       makeExpressionRec(tokensVect, elem, first + 1, last - 1);
     }
+  }
+
+  Rational toRational(const std::shared_ptr<Expression::Elem> &elem) {
+    if (elem->info == nullptr) {
+      throw std::invalid_argument("Solver invalid input");
+    }
+
+    if (elem->info->is<Constant>()) {
+      return Constant(elem->info->toString()).toRational(NEW_PRECISION);
+    }
+
+    try {
+      return *std::dynamic_pointer_cast<Rational>(elem->info);
+    } catch (const std::invalid_argument &) {
+      throw std::invalid_argument("Solver invalid input");
+    }
+  }
+
+  void solveRec(const std::shared_ptr<Expression::Elem> &elem) {
+    if (elem->info == nullptr) {
+      throw std::invalid_argument("Solver invalid input");
+    }
+
+    if (elem->right != nullptr) {
+      if (elem->right->info == nullptr) {
+        throw std::invalid_argument("Solver invalid input");
+      }
+      if (elem->right->info->is<Operator>() || elem->right->info->is<Function>()) {
+        solveRec(elem->right);
+      }
+    }
+
+    if (elem->left != nullptr) {
+      if (elem->left->info == nullptr) {
+        throw std::invalid_argument("Solver invalid input");
+      }
+      if (elem->left->info->is<Operator>() || elem->left->info->is<Function>()) {
+        solveRec(elem->left);
+      }
+    }
+
+    if (elem->info->is<Operator>()) {
+      Operator oper(elem->info->toString());
+      Rational val(oper.solve(toRational(elem->right), toRational(elem->left), NEW_PRECISION).toString(NEW_PRECISION));
+      elemReset(elem, val);
+      return;
+    }
+
+    if (elem->info->is<Function>()) {
+      Function func(elem->info->toString());
+      Rational val;
+      if (types::isBinaryFunction(func.toString())) {
+        val = Rational(
+            func.solve(toRational(elem->right), toRational(elem->left), NEW_PRECISION).toString(NEW_ROUND_PRECISION));
+      } else {
+        val = Rational(func.solve(toRational(elem->right), NEW_PRECISION).toString(NEW_ROUND_PRECISION));
+      }
+      elemReset(elem, val);
+      return;
+    }
+  }
+
+  void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val) {
+    elem->info = std::make_shared<Rational>(val);
+    elem->right.reset();
+    elem->left.reset();
+  }
+
+  void toShortForm(std::string &strVal) {
+    bool isNegative = (*strVal.begin() == '-');
+    if (isNegative) {
+      strVal.erase(0, 1);
+    }
+
+    if (strVal == "0") {
+      return;
+    }
+
+    if (*strVal.begin() == '0') {
+      strVal.erase(strVal.begin() + 1);
+      size_t order = cutZeros(strVal);
+      insertFloatingPoint(strVal, INITIAL_PRECISION);
+      strVal += "*10^(-";
+      strVal += std::to_string(order) + ')';
+    } else {
+      size_t order = distance(begin(strVal), find(begin(strVal), end(strVal), '.'));
+      if (order != strVal.size()) {
+        strVal.erase(order, 1);
+      }
+      if (strVal.size() > INITIAL_PRECISION + 1) {
+        strVal.erase(INITIAL_PRECISION + 2);
+      }
+
+      insertFloatingPoint(strVal, INITIAL_PRECISION);
+
+      if (order > 1) {
+        strVal += "*10^";
+        strVal += std::to_string(order - 1);
+      }
+    }
+
+    if (isNegative) {
+      strVal.insert(strVal.begin(), '-');
+    }
+  }
+
+  void insertFloatingPoint(std::string &strVal, int64_t precision) {
+    strVal.insert(strVal.begin() + 1, '.');
+    strVal += '0';
+    strVal = Rational(strVal).toString(precision);
+  }
+
+  size_t cutZeros(std::string &strVal) {
+    size_t order = 0;
+    while (*strVal.begin() == '0') {
+      strVal.erase(strVal.begin());
+      order++;
+    }
+    return order;
   }
 }
