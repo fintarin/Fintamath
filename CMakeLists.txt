@@ -5,6 +5,8 @@ project(
   LANGUAGES CXX
   VERSION 0.2)
 
+include(cmake/PreventInSourceBuilds.cmake)
+
 option(${PROJECT_NAME}_build_tests "Build tests" OFF)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
