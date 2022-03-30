@@ -5,7 +5,6 @@ project(
   LANGUAGES CXX
   VERSION 0.1)
 
-option(BUILD_APP "Enable Test Builds" ON)
 option(BUILD_TESTS "Enable Test Builds" ON)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
