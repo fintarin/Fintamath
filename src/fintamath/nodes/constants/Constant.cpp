@@ -22,11 +22,15 @@ namespace fintamath {
     throw std::invalid_argument("Constant invalid input");
   }
 
-  std::shared_ptr<Object> Constant::clone() const {
-    return std::make_shared<Constant>(*this);
+  std::unique_ptr<Object> Constant::clone() const {
+    return std::make_unique<Constant>(*this);
   }
   std::string Constant::toString() const {
     return name;
+  }
+
+  bool Constant::equals(const Object &rhs) const {
+    return rhs.is<Constant>() && (this->name == rhs.to<Constant>().name);
   }
 
   namespace types {

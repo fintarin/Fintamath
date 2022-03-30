@@ -11,7 +11,8 @@ namespace fintamath {
     Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
 
     std::string toString() const override;
-    std::shared_ptr<Object> clone() const override;
+    std::unique_ptr<Object> clone() const override;
+    bool equals(const Object &rhs) const override;
 
   private:
     char name;

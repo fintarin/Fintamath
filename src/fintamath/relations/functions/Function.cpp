@@ -75,8 +75,11 @@ namespace fintamath {
     return name;
   }
 
-  std::shared_ptr<Object> Function::clone() const {
-    return std::make_shared<Function>(*this);
+  std::unique_ptr<Object> Function::clone() const {
+    return std::make_unique<Function>(*this);
+  }
+  bool Function::equals(const Object &rhs) const {
+    return rhs.is<Function>() && (this->name == rhs.to<Function>().name);
   }
 
   namespace types {

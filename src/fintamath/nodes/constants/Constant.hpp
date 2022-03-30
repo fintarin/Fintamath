@@ -1,6 +1,6 @@
 #pragma once
 
-#include<memory>
+#include <memory>
 
 #include "fintamath/nodes/Node.hpp"
 #include "fintamath/nodes/numbers/Rational.hpp"
@@ -13,7 +13,10 @@ namespace fintamath {
     Rational toRational(int64_t precision) const;
     std::string toString() const override;
 
-    std::shared_ptr<Object> clone() const override;
+    std::unique_ptr<Object> clone() const override;
+
+    bool equals(const Object &rhs) const override;
+
   private:
     std::string name;
   };

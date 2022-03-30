@@ -81,6 +81,15 @@ namespace fintamath {
     return newExpression;
   }
 
+  bool Expression::equals(const Object &rhs) const {
+    if (rhs.is<Expression>()){
+      if (this->root->equals(rhs.to<Expression>().root)){
+        return true;
+      }
+    }
+    return false;
+  }
+
   std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
     std::string tmpStrExpr = strExpr;
     cutSpaces(tmpStrExpr);
@@ -541,5 +550,30 @@ namespace fintamath {
     }
     cloneElem->info = info->clone();
     return cloneElem;
+  }
+
+  bool Expression::Elem::equals(const std::shared_ptr<Elem> &rhs) const {
+    if (!this->info->equals(*(rhs->info))){
+      return false;
+    }
+    if(this->right != nullptr){
+      if(rhs->right != nullptr){
+        if (!this->right->equals(rhs->right)){
+          return false;
+        }
+      } else return false;
+    } else if (rhs->right != nullptr){
+      return false;
+    }
+    if(this->left != nullptr){
+      if(rhs->left != nullptr){
+        if (!this->left->equals(rhs->left)){
+          return false;
+        }
+      } else return false;
+    } else if (rhs->left != nullptr){
+      return false;
+    }
+    return true;
   }
 }
