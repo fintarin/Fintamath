@@ -1,4 +1,4 @@
-#include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
+#include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 
 #include <algorithm>
 #include <stdexcept>
@@ -8,7 +8,7 @@
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 
 static std::vector<std::string> makeVectOfTokens(const std::string &strExpr);
-static ArithmeticExpression makeExpression(const std::vector<std::string> &tokensVect);
+static Expression makeExpression(const std::vector<std::string> &tokensVect);
 
 static void cutSpaces(std::string &strExpr);
 
@@ -25,23 +25,27 @@ static void addFactorial(std::vector<std::string> &tokensVect, const std::string
 static void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
 static void addBinaryFunctions(std::vector<std::string> &tokensVect);
 static void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num);
-static void addValue(const std::shared_ptr<ArithmeticExpression::Elem> &elem, const std::string &token);
+static void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token);
 
-static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
                     size_t begin, size_t end, const std::string &oper1, const std::string_view &oper2);
-static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
                     size_t begin, size_t end, const std::string &oper);
-static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
                     size_t begin, size_t end);
 
 static void makeExpressionRec(const std::vector<std::string> &tokensVect,
-                              std::shared_ptr<ArithmeticExpression::Elem> &elem, size_t first, size_t last);
+                              std::shared_ptr<Expression::Elem> &elem, size_t first, size_t last);
 
-ArithmeticExpression::ArithmeticExpression(const std::string &strExpr) {
+Expression::Expression(const std::string &strExpr) {
   *this = makeExpression(makeVectOfTokens(strExpr));
 }
 
-std::shared_ptr<ArithmeticExpression::Elem> &ArithmeticExpression::getRootModifiable() {
+std::string Expression::toString() const {
+  throw std::invalid_argument("Not implemented"); // TODO not implemented
+}
+
+std::shared_ptr<Expression::Elem> &Expression::getRootModifiable() {
   return root;
 }
 
@@ -75,12 +79,12 @@ static std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
   return tokensVect;
 }
 
-static ArithmeticExpression makeExpression(const std::vector<std::string> &tokensVect) {
+static Expression makeExpression(const std::vector<std::string> &tokensVect) {
   if (tokensVect.empty()) {
     throw std::invalid_argument("Expression invalid input");
   }
-  ArithmeticExpression expr;
-  expr.getRootModifiable() = std::make_shared<ArithmeticExpression::Elem>();
+  Expression expr;
+  expr.getRootModifiable() = std::make_shared<Expression::Elem>();
   makeExpressionRec(tokensVect, expr.getRootModifiable()->right, 0, tokensVect.size() - 1);
   return expr;
 }
@@ -288,7 +292,7 @@ static void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<
   throw std::invalid_argument("Expression invalid input");
 }
 
-static void addValue(const std::shared_ptr<ArithmeticExpression::Elem> &elem, const std::string &token) {
+static void addValue(const std::shared_ptr<Expression::Elem> &elem, const std::string &token) {
   if (types::isConstant(token)) {
     elem->info = std::make_shared<Constant>(token);
   } else {
@@ -300,7 +304,7 @@ static void addValue(const std::shared_ptr<ArithmeticExpression::Elem> &elem, co
   }
 }
 
-static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
                     size_t begin, size_t end, const std::string &oper1, const std::string_view &oper2) {
   size_t bracketsNum = 0;
 
@@ -329,12 +333,12 @@ static bool descent(const std::vector<std::string> &tokensVect, const std::share
   return false;
 }
 
-static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
                     size_t begin, size_t end, const std::string &oper) {
   return descent(tokensVect, elem, begin, end, oper, "");
 }
 
-static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<ArithmeticExpression::Elem> &elem,
+static bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem,
                     size_t begin, size_t end) {
   if (types::isFunction(tokensVect[end])) {
     elem->info = std::make_shared<ElementaryFunction>(tokensVect[end]);
@@ -345,7 +349,7 @@ static bool descent(const std::vector<std::string> &tokensVect, const std::share
 }
 
 static void makeExpressionRec(const std::vector<std::string> &tokensVect,
-                              std::shared_ptr<ArithmeticExpression::Elem> &elem, size_t first, size_t last) {
+                              std::shared_ptr<Expression::Elem> &elem, size_t first, size_t last) {
   if (first > last) {
     throw std::invalid_argument("Expression invalid input");
   }
@@ -354,7 +358,7 @@ static void makeExpressionRec(const std::vector<std::string> &tokensVect,
   }
 
   if (elem == nullptr) {
-    elem = std::make_shared<ArithmeticExpression::Elem>();
+    elem = std::make_shared<Expression::Elem>();
   }
 
   if (first == last) {

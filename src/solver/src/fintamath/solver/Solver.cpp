@@ -6,9 +6,9 @@
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 
-static void elemReset(const std::shared_ptr<ArithmeticExpression::Elem> &elem, const Rational &val);
+static void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
 
-Rational Solver::solve(ArithmeticExpression &expr) {
+Rational Solver::solve(Expression &expr) {
   if (expr.getRootModifiable()->right->right == nullptr && expr.getRootModifiable()->right->left == nullptr) {
     return Rational(toRational(expr.getRootModifiable()->right).toString(precision));
   }
@@ -24,7 +24,7 @@ void Solver::setPrecision(int64_t precision_) {
   precision = precision_ <= 0 ? 1 : precision_;
 }
 
-Rational Solver::toRational(const std::shared_ptr<ArithmeticExpression::Elem> &elem) const {
+Rational Solver::toRational(const std::shared_ptr<Expression::Elem> &elem) const {
   if (elem->info == nullptr) {
     throw std::invalid_argument("Solver invalid input");
   }
@@ -40,7 +40,7 @@ Rational Solver::toRational(const std::shared_ptr<ArithmeticExpression::Elem> &e
   }
 }
 
-void Solver::solveRec(const std::shared_ptr<ArithmeticExpression::Elem> &elem) {
+void Solver::solveRec(const std::shared_ptr<Expression::Elem> &elem) {
   if (elem->info == nullptr) {
     throw std::invalid_argument("Solver invalid input");
   }
@@ -94,7 +94,7 @@ int64_t Solver::getNewRoundPrecision() const {
   return getNewPrecision() - 1;
 }
 
-static void elemReset(const std::shared_ptr<ArithmeticExpression::Elem> &elem, const Rational &val) {
+static void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val) {
   elem->info = std::make_shared<Rational>(val);
   elem->right.reset();
   elem->left.reset();

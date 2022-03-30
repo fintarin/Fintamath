@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
+#include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
 static void insertFloatingPoint(std::string &strVal, int64_t precision);
@@ -55,7 +55,7 @@ void Calculator::toShortForm(std::string &strVal) const {
 }
 
 std::string Calculator::calculate(const std::string &strExpr) {
-  ArithmeticExpression expr(strExpr);
+  Expression expr(strExpr);
   Rational val = solver.solve(expr);
   std::string valStr = val.toString(solver.getPrecision());
   toShortForm(valStr);

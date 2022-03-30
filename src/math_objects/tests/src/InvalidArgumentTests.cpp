@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
+#include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
 #include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
 #include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
@@ -20,8 +20,8 @@ TEST(InvalidArgumentTests, constantTest) {
 }
 
 TEST(InvalidArgumentTests, expressionTest) {
-  EXPECT_THROW(ArithmeticExpression(""), std::invalid_argument);
-  EXPECT_THROW(ArithmeticExpression("    "), std::invalid_argument);
+  EXPECT_THROW(Expression(""), std::invalid_argument);
+  EXPECT_THROW(Expression("    "), std::invalid_argument);
 }
 
 TEST(InvalidArgumentTests, integerTest) {

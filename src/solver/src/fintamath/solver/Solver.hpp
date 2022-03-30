@@ -1,7 +1,7 @@
 #ifndef SOLVER_HPP
 #define SOLVER_HPP
 
-#include "fintamath/math_objects/nodes/expressions/ArithmeticExpression.hpp"
+#include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 
 struct Param {
@@ -11,7 +11,7 @@ struct Param {
 
 class Solver {
 public:
-  Rational solve(ArithmeticExpression &expr);
+  Rational solve(Expression &expr);
 
   int64_t getPrecision() const;
   void setPrecision(int64_t precision_);
@@ -22,8 +22,8 @@ private:
   std::vector<Param> params;
   int64_t precision = initialPrecision;
 
-  Rational toRational(const std::shared_ptr<ArithmeticExpression::Elem> &elem) const;
-  void solveRec(const std::shared_ptr<ArithmeticExpression::Elem> &elem);
+  Rational toRational(const std::shared_ptr<Expression::Elem> &elem) const;
+  void solveRec(const std::shared_ptr<Expression::Elem> &elem);
 
   int64_t getNewPrecision() const;
   int64_t getNewRoundPrecision() const;
