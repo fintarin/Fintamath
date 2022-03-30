@@ -4,35 +4,29 @@
 #include <stdexcept>
 
 namespace fintamath {
-  constexpr int64_t INITIAL_PRECISION = 36;
+  static Integer gcd(const Integer &lhs, const Integer &rhs);
+  static Integer lcm(const Integer &lhs, const Integer &rhs);
 
-  Integer gcd(const Integer &lhs, const Integer &rhs);
-  Integer lcm(const Integer &lhs, const Integer &rhs);
-
-  Rational::Rational(const std::string_view &strVal) {
-    if (strVal.empty()) {
-      throw std::invalid_argument("Rational invalid input");
-    }
-
+  Rational::Rational(const std::string_view &str) {
     size_t firstDigitNum = 0;
-    size_t firstDotNum = std::distance(strVal.begin(), std::find(strVal.begin(), strVal.end(), '.'));
+    size_t firstDotNum = std::distance(str.begin(), std::find(str.begin(), str.end(), '.'));
 
     bool isNegative = false;
-    if (strVal.front() == '-') {
+    if (str.front() == '-') {
       isNegative = true;
       firstDigitNum++;
     }
 
     Integer intPart;
     try {
-      intPart = Integer(strVal.substr(firstDigitNum, firstDotNum - firstDigitNum));
+      intPart = Integer(str.substr(firstDigitNum, firstDotNum - firstDigitNum));
     } catch (const std::invalid_argument &) {
       throw std::invalid_argument("Rational invalid input");
     }
 
-    if (firstDotNum != strVal.size()) {
+    if (firstDotNum != str.size()) {
       try {
-        auto numeratorStr = strVal.substr(firstDotNum + 1);
+        auto numeratorStr = str.substr(firstDotNum + 1);
         std::string denominatorStr(numeratorStr.size() + 1, '0');
         denominatorStr.front() = '1';
         numerator = Integer(numeratorStr);
@@ -42,6 +36,10 @@ namespace fintamath {
       }
     }
 
+    if (intPart < 0 || numerator < 0) {
+      throw std::invalid_argument("Rational invalid input");
+    }
+
     toIrreducibleRational();
     numerator += intPart * denominator;
     if (numerator != 0) {
@@ -49,28 +47,16 @@ namespace fintamath {
     }
   }
 
-  Rational::Rational(Integer val) : numerator(std::move(val)) {
-    fixNegative();
-  }
-
-  Rational::Rational(int64_t val) : numerator(val) {
-    fixNegative();
-  }
-
   Rational::Rational(Integer numerator, Integer denominator)
       : numerator(std::move(numerator)), denominator(std::move(denominator)) {
     toIrreducibleRational();
   }
 
-  Rational::Rational(int64_t numerator, int64_t denominator) : numerator(numerator), denominator(denominator) {
-    toIrreducibleRational();
+  Rational::Rational(Integer rhs) : numerator(std::move(rhs)) {
+    fixNegative();
   }
 
   Rational &Rational::operator=(const Integer &rhs) {
-    return *this = Rational(rhs);
-  }
-
-  Rational &Rational::operator=(int64_t rhs) {
     return *this = Rational(rhs);
   }
 
@@ -86,10 +72,6 @@ namespace fintamath {
     return *this += Rational(rhs);
   }
 
-  Rational &Rational::operator+=(int64_t rhs) {
-    return *this += Rational(rhs);
-  }
-
   Rational Rational::operator+(const Rational &rhs) const {
     Rational lhs = *this;
     return lhs += rhs;
@@ -99,15 +81,7 @@ namespace fintamath {
     return *this + Rational(rhs);
   }
 
-  Rational Rational::operator+(int64_t rhs) const {
-    return *this + Rational(rhs);
-  }
-
   Rational operator+(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) + rhs;
-  }
-
-  Rational operator+(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) + rhs;
   }
 
@@ -123,10 +97,6 @@ namespace fintamath {
     return *this -= Rational(rhs);
   }
 
-  Rational &Rational::operator-=(int64_t rhs) {
-    return *this -= Rational(rhs);
-  }
-
   Rational Rational::operator-(const Rational &rhs) const {
     Rational lhs = *this;
     return lhs -= rhs;
@@ -136,15 +106,7 @@ namespace fintamath {
     return *this - Rational(rhs);
   }
 
-  Rational Rational::operator-(int64_t rhs) const {
-    return *this - Rational(rhs);
-  }
-
   Rational operator-(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) - rhs;
-  }
-
-  Rational operator-(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) - rhs;
   }
 
@@ -160,10 +122,6 @@ namespace fintamath {
     return *this *= Rational(rhs);
   }
 
-  Rational &Rational::operator*=(int64_t rhs) {
-    return *this *= Rational(rhs);
-  }
-
   Rational Rational::operator*(const Rational &rhs) const {
     Rational lhs = *this;
     return lhs *= rhs;
@@ -173,15 +131,7 @@ namespace fintamath {
     return *this * Rational(rhs);
   }
 
-  Rational Rational::operator*(int64_t rhs) const {
-    return *this * Rational(rhs);
-  }
-
   Rational operator*(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) * rhs;
-  }
-
-  Rational operator*(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) * rhs;
   }
 
@@ -197,10 +147,6 @@ namespace fintamath {
     return *this /= Rational(rhs);
   }
 
-  Rational &Rational::operator/=(int64_t rhs) {
-    return *this /= Rational(rhs);
-  }
-
   Rational Rational::operator/(const Rational &rhs) const {
     Rational lhs = *this;
     return lhs /= rhs;
@@ -210,15 +156,7 @@ namespace fintamath {
     return *this / Rational(rhs);
   }
 
-  Rational Rational::operator/(int64_t rhs) const {
-    return *this / Rational(rhs);
-  }
-
   Rational operator/(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) / rhs;
-  }
-
-  Rational operator/(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) / rhs;
   }
 
@@ -260,15 +198,7 @@ namespace fintamath {
     return *this == Rational(rhs);
   }
 
-  bool Rational::Rational::operator==(int64_t rhs) const {
-    return *this == Rational(rhs);
-  }
-
   bool operator==(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) == rhs;
-  }
-
-  bool operator==(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) == rhs;
   }
 
@@ -280,15 +210,7 @@ namespace fintamath {
     return *this != Rational(rhs);
   }
 
-  bool Rational::Rational::operator!=(int64_t rhs) const {
-    return *this != Rational(rhs);
-  }
-
   bool operator!=(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) != rhs;
-  }
-
-  bool operator!=(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) != rhs;
   }
 
@@ -303,15 +225,7 @@ namespace fintamath {
     return *this < Rational(rhs);
   }
 
-  bool Rational::Rational::operator<(int64_t rhs) const {
-    return *this < Rational(rhs);
-  }
-
   bool operator<(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) < rhs;
-  }
-
-  bool operator<(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) < rhs;
   }
 
@@ -326,15 +240,7 @@ namespace fintamath {
     return *this > Rational(rhs);
   }
 
-  bool Rational::Rational::operator>(int64_t rhs) const {
-    return *this > Rational(rhs);
-  }
-
   bool operator>(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) > rhs;
-  }
-
-  bool operator>(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) > rhs;
   }
 
@@ -349,15 +255,7 @@ namespace fintamath {
     return *this <= Rational(rhs);
   }
 
-  bool Rational::Rational::operator<=(int64_t rhs) const {
-    return *this <= Rational(rhs);
-  }
-
   bool operator<=(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) <= rhs;
-  }
-
-  bool operator<=(int64_t lhs, const Rational &rhs) {
     return Rational(lhs) <= rhs;
   }
 
@@ -372,27 +270,8 @@ namespace fintamath {
     return *this >= Rational(rhs);
   }
 
-  bool Rational::Rational::operator>=(int64_t rhs) const {
-    return *this >= Rational(rhs);
-  }
-
   bool operator>=(const Integer &lhs, const Rational &rhs) {
     return Rational(lhs) >= rhs;
-  }
-
-  bool operator>=(int64_t lhs, const Rational &rhs) {
-    return Rational(lhs) >= rhs;
-  }
-
-  std::istream &operator>>(std::istream &in, Rational &rhs) {
-    std::string strVal;
-    in >> strVal;
-    rhs = Rational(strVal);
-    return in;
-  }
-
-  std::ostream &operator<<(std::ostream &out, const Rational &rhs) {
-    return out << rhs.toString();
   }
 
   Integer Rational::getInteger() const {
@@ -405,6 +284,14 @@ namespace fintamath {
 
   Integer Rational::getDenominator() const {
     return denominator;
+  }
+
+  Rational Rational::round(size_t precision) const {
+    return Rational(toString(precision));
+  }
+
+  std::string Rational::toString() const {
+    return (sign ? "-" : "") + numerator.toString() + "/" + denominator.toString();
   }
 
   std::string Rational::toString(size_t precision) const {
@@ -438,14 +325,6 @@ namespace fintamath {
     }
 
     return strVal;
-  }
-
-  Rational Rational::round(size_t precision) const {
-    return Rational(toString(precision));
-  }
-
-  std::string Rational::toString() const {
-    return toString(INITIAL_PRECISION);
   }
 
   void Rational::fixZero() {
@@ -496,7 +375,7 @@ namespace fintamath {
   }
 
   // Using Euclid's algorithm
-  Integer gcd(const Integer &lhs, const Integer &rhs) {
+  static Integer gcd(const Integer &lhs, const Integer &rhs) {
     Integer tmpLhs = lhs;
     Integer tmpRhs = rhs;
     while (tmpRhs != 0) {
@@ -508,7 +387,7 @@ namespace fintamath {
   }
 
   // Using the formula lcm(a, b) = a * b / gcd(a, b)
-  Integer lcm(const Integer &lhs, const Integer &rhs) {
+  static Integer lcm(const Integer &lhs, const Integer &rhs) {
     return lhs * rhs / gcd(lhs, rhs);
   }
 }

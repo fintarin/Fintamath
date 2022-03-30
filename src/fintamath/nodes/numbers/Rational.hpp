@@ -6,52 +6,35 @@ namespace fintamath {
   class Rational : public Node {
   public:
     Rational() = default;
-    explicit Rational(const std::string_view &strVal);
-    // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE
-    Rational(Integer val);
-    // cppcheck-suppress noExplicitConstructor // NOLINTNEXTLINE
-    Rational(int64_t val);
-    Rational(Integer numerator, Integer denominator);
-    Rational(int64_t numerator, int64_t denominator);
+    explicit Rational(const std::string_view &str);
+    explicit Rational(Integer numerator, Integer denominator);
+    Rational(Integer rhs); // NOLINT
 
     Rational &operator=(const Integer &rhs);
-    Rational &operator=(int64_t rhs);
 
     Rational &operator+=(const Rational &rhs);
     Rational &operator+=(const Integer &rhs);
-    Rational &operator+=(int64_t rhs);
     Rational operator+(const Rational &rhs) const;
     Rational operator+(const Integer &rhs) const;
-    Rational operator+(int64_t rhs) const;
     friend Rational operator+(const Integer &lhs, const Rational &rhs);
-    friend Rational operator+(int64_t lhs, const Rational &rhs);
 
     Rational &operator-=(const Rational &rhs);
     Rational &operator-=(const Integer &rhs);
-    Rational &operator-=(int64_t rhs);
     Rational operator-(const Rational &rhs) const;
     Rational operator-(const Integer &rhs) const;
-    Rational operator-(int64_t rhs) const;
     friend Rational operator-(const Integer &lhs, const Rational &rhs);
-    friend Rational operator-(int64_t lhs, const Rational &rhs);
 
     Rational &operator*=(const Rational &rhs);
     Rational &operator*=(const Integer &rhs);
-    Rational &operator*=(int64_t rhs);
     Rational operator*(const Rational &rhs) const;
     Rational operator*(const Integer &rhs) const;
-    Rational operator*(int64_t rhs) const;
     friend Rational operator*(const Integer &lhs, const Rational &rhs);
-    friend Rational operator*(int64_t lhs, const Rational &rhs);
 
     Rational &operator/=(const Rational &rhs);
     Rational &operator/=(const Integer &rhs);
-    Rational &operator/=(int64_t rhs);
     Rational operator/(const Rational &rhs) const;
     Rational operator/(const Integer &rhs) const;
-    Rational operator/(int64_t rhs) const;
     friend Rational operator/(const Integer &lhs, const Rational &rhs);
-    friend Rational operator/(int64_t lhs, const Rational &rhs);
 
     Rational &operator++();
     Rational operator++(int);
@@ -64,42 +47,27 @@ namespace fintamath {
 
     bool operator==(const Rational &rhs) const;
     bool operator==(const Integer &rhs) const;
-    bool operator==(int64_t rhs) const;
     friend bool operator==(const Integer &lhs, const Rational &rhs);
-    friend bool operator==(int64_t lhs, const Rational &rhs);
 
     bool operator!=(const Rational &rhs) const;
     bool operator!=(const Integer &rhs) const;
-    bool operator!=(int64_t rhs) const;
     friend bool operator!=(const Integer &lhs, const Rational &rhs);
-    friend bool operator!=(int64_t lhs, const Rational &rhs);
 
     bool operator<(const Rational &rhs) const;
     bool operator<(const Integer &rhs) const;
-    bool operator<(int64_t rhs) const;
     friend bool operator<(const Integer &lhs, const Rational &rhs);
-    friend bool operator<(int64_t lhs, const Rational &rhs);
 
     bool operator>(const Rational &rhs) const;
     bool operator>(const Integer &rhs) const;
-    bool operator>(int64_t rhs) const;
     friend bool operator>(const Integer &lhs, const Rational &rhs);
-    friend bool operator>(int64_t lhs, const Rational &rhs);
 
     bool operator<=(const Rational &rhs) const;
     bool operator<=(const Integer &rhs) const;
-    bool operator<=(int64_t rhs) const;
     friend bool operator<=(const Integer &lhs, const Rational &rhs);
-    friend bool operator<=(int64_t lhs, const Rational &rhs);
 
     bool operator>=(const Rational &rhs) const;
     bool operator>=(const Integer &rhs) const;
-    bool operator>=(int64_t rhs) const;
     friend bool operator>=(const Integer &lhs, const Rational &rhs);
-    friend bool operator>=(int64_t lhs, const Rational &rhs);
-
-    friend std::istream &operator>>(std::istream &in, Rational &rhs);
-    friend std::ostream &operator<<(std::ostream &out, const Rational &rhs);
 
     Integer getInteger() const;
     Integer getNumerator() const;

@@ -35,7 +35,7 @@ namespace fintamath {
         throw std::domain_error("sqrt out of range");
       }
       if (rhs == 0) {
-        return 0;
+        return Integer(0);
       }
 
       std::string shift(precision, '0');
@@ -87,7 +87,7 @@ namespace fintamath {
     Rational lb(const Rational &rhs, size_t precision) {
       const int64_t logBase = 2;
       try {
-        return log(logBase, rhs, precision);
+        return log(Integer(logBase), rhs, precision);
       } catch (const std::domain_error &) {
         throw std::domain_error("lb out of range");
       }
@@ -97,7 +97,7 @@ namespace fintamath {
     Rational lg(const Rational &rhs, size_t precision) {
       const int64_t logBase = 10;
       try {
-        return log(logBase, rhs, precision);
+        return log(Integer(logBase), rhs, precision);
       } catch (const std::domain_error &) {
         throw std::domain_error("lg out of range");
       }
@@ -116,7 +116,7 @@ namespace fintamath {
         throw std::domain_error("pow out of range");
       }
       if (rhs == 0) {
-        return 1;
+        return Integer(1);
       }
 
       Rational rhsStep = lhs;
@@ -133,7 +133,7 @@ namespace fintamath {
 
       Integer step = 1;
       Rational precisionVal = getInversedPrecisionVal(getNewPrecision(precision));
-      Rational lhsPowFloatRhs = 1;
+      Rational lhsPowFloatRhs = Integer(1);
 
       do {
         rhsStep *= rhsMultLnRhs;
@@ -227,7 +227,7 @@ namespace fintamath {
       Integer step = 2;
       Rational precisionVal = getInversedPrecisionVal(getNewPrecision(precision));
       Rational rhsSqr = (rhsStep * rhsStep).round(getNewPrecision(precision));
-      Rational res = 1;
+      Rational res = Integer(1);
       rhsStep = 1;
 
       do {
@@ -435,7 +435,7 @@ namespace fintamath {
         throw std::domain_error("factorial out of range");
       }
       if (rhs < 2) {
-        return 1;
+        return Integer(1);
       }
       return factorialRec(2, rhs.getInteger());
     }
@@ -459,8 +459,8 @@ namespace fintamath {
 
       Integer step = 1;
       Rational precisionVal = getInversedPrecisionVal(getNewPrecision(precision));
-      Rational stepVal = 1;
-      Rational res = 1;
+      Rational stepVal = Integer(1);
+      Rational res = Integer(1);
 
       do {
         stepVal /= step;
@@ -491,10 +491,10 @@ namespace fintamath {
         return PI_CONST;
       }
 
-      Integer step = lb((int64_t)precision, precision).getInteger() + 1;
+      Integer step = lb(Integer((int64_t)precision), precision).getInteger() + 1;
       Integer p = 1;
-      Rational a = 1;
-      Rational b = 1 / functions::sqrt(2, precision);
+      Rational a = Integer(1);
+      Rational b = 1 / functions::sqrt(Integer(2), precision);
       auto t = Rational(1, 4);
 
       for (Integer i = 0; i < step; ++i) {
@@ -545,7 +545,7 @@ namespace fintamath {
     While n != 0.
   */
   Rational naturalPow(const Rational &lhs, const Integer &rhs) {
-    Rational res = 1;
+    Rational res = Integer(1);
     Rational tmpLhs = lhs;
     Integer tmpRhs = rhs;
 
