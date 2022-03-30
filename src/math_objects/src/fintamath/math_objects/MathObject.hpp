@@ -5,7 +5,7 @@
 
 class MathObject {
 public:
-  virtual ~MathObject() = 0;
+  virtual ~MathObject() = default;
 
   virtual std::string toString() const = 0;
 
@@ -15,8 +15,6 @@ public:
   template <typename T>
   bool is() const;
 };
-
-inline MathObject::~MathObject() = default;
 
 template <typename T>
 inline T MathObject::to() const {

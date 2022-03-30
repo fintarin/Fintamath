@@ -4,7 +4,5 @@
 
 class Number : public Node {
 public:
-  ~Number() override = 0;
+  ~Number() override = default;
 };
-
-inline Number::~Number() = default;
