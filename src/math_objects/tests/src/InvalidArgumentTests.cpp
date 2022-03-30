@@ -2,7 +2,7 @@
 
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
-#include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
+#include "fintamath/math_objects/relations/operators/Operator.hpp"
 #include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
 #include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
@@ -12,7 +12,7 @@ TEST(InvalidArgumentTests, functionTest) {
 }
 
 TEST(InvalidArgumentTests, operatorTest) {
-  EXPECT_THROW(ArithmeticOperator("a"), std::invalid_argument);
+  EXPECT_THROW(Operator("a"), std::invalid_argument);
 }
 
 TEST(InvalidArgumentTests, constantTest) {

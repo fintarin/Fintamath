@@ -1,17 +1,17 @@
-#include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
+#include "fintamath/math_objects/relations/operators/Operator.hpp"
 
 #include <regex>
 
 #include "fintamath/math_objects/relations/functions/NamespaceFunctions.hpp"
 
-ArithmeticOperator::ArithmeticOperator(const std::string &strOper) {
+Operator::Operator(const std::string &strOper) {
   if (!types::isOperator(strOper)) {
     throw std::invalid_argument("Operator invalid input");
   }
   name = *strOper.begin();
 }
 
-Rational ArithmeticOperator::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
+Rational Operator::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
   switch (name) {
   case '+':
     return lhs + rhs;
@@ -28,7 +28,7 @@ Rational ArithmeticOperator::solve(const Rational &lhs, const Rational &rhs, int
   }
 }
 
-std::string ArithmeticOperator::toString() const {
+std::string Operator::toString() const {
   return std::string(1, name);
 }
 

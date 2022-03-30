@@ -1,13 +1,23 @@
-#ifndef OPERATOR_HPP
-#define OPERATOR_HPP
+#ifndef ARITHMETICOPERATOR_HPP
+#define ARITHMETICOPERATOR_HPP
 
+#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
 #include "fintamath/math_objects/relations/Relation.hpp"
 
 class Operator : public Relation {
 public:
-  ~Operator() override = 0;
+  explicit Operator(const std::string &strOper);
+
+  Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
+
+  std::string toString() const override;
+
+private:
+  char name;
 };
 
-inline Operator::~Operator() = default;
+namespace types {
+bool isOperator(const std::string &str);
+}
 
-#endif // OPERATOR_HPP
+#endif // ARITHMETICOPERATOR_HPP

@@ -4,7 +4,7 @@
 
 #include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
 #include "fintamath/math_objects/relations/functions/ElementaryFunction.hpp"
-#include "fintamath/math_objects/relations/operators/ArithmeticOperator.hpp"
+#include "fintamath/math_objects/relations/operators/Operator.hpp"
 
 static void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
 
@@ -49,7 +49,7 @@ void Solver::solveRec(const std::shared_ptr<Expression::Elem> &elem) {
     if (elem->right->info == nullptr) {
       throw std::invalid_argument("Solver invalid input");
     }
-    if (elem->right->info->is<ArithmeticOperator>() || elem->right->info->is<ElementaryFunction>()) {
+    if (elem->right->info->is<Operator>() || elem->right->info->is<ElementaryFunction>()) {
       solveRec(elem->right);
     }
   }
@@ -58,13 +58,13 @@ void Solver::solveRec(const std::shared_ptr<Expression::Elem> &elem) {
     if (elem->left->info == nullptr) {
       throw std::invalid_argument("Solver invalid input");
     }
-    if (elem->left->info->is<ArithmeticOperator>() || elem->left->info->is<ElementaryFunction>()) {
+    if (elem->left->info->is<Operator>() || elem->left->info->is<ElementaryFunction>()) {
       solveRec(elem->left);
     }
   }
 
-  if (elem->info->is<ArithmeticOperator>()) {
-    ArithmeticOperator oper(elem->info->toString());
+  if (elem->info->is<Operator>()) {
+    Operator oper(elem->info->toString());
     Rational val(oper.solve(toRational(elem->right), toRational(elem->left), getNewPrecision())
                      .toString(getNewRoundPrecision()));
     elemReset(elem, val);
