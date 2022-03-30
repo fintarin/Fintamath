@@ -19,8 +19,9 @@ include(cmake/FetchDependencies.cmake)
 include(cmake/Coverage.cmake)
 include(cmake/Sanitizers.cmake)
 
+add_subdirectory(src)
+
 if(${PROJECT_NAME}_build_tests)
   enable_testing()
+  add_subdirectory(tests)
 endif()
-
-add_subdirectory(src)

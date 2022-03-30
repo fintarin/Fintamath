@@ -8,7 +8,3 @@ file(
 add_library(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC src)
-
-if(${PROJECT_NAME}_build_tests)
-  add_subdirectory(tests)
-endif()
