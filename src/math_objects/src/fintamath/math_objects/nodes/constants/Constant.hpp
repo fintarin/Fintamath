@@ -1,5 +1,4 @@
-#ifndef MATHCONSTANT_HPP
-#define MATHCONSTANT_HPP
+#pragma once
 
 #include "fintamath/math_objects/nodes/Node.hpp"
 #include "fintamath/math_objects/nodes/numbers/Rational.hpp"
@@ -18,5 +17,3 @@ private:
 namespace types {
 bool isConstant(const std::string_view &str);
 }
-
-#endif // MATHCONSTANT_HPP

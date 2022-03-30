@@ -1,5 +1,4 @@
-#ifndef ELEMENTARYFUNCTION_HPP
-#define ELEMENTARYFUNCTION_HPP
+#pragma once
 
 #include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 #include "fintamath/math_objects/relations/Relation.hpp"
@@ -23,5 +22,3 @@ namespace types {
 bool isFunction(const std::string &str);
 bool isBinaryFunction(const std::string_view &str);
 } // namespace types
-
-#endif // ELEMENTARYFUNCTION_HPP

@@ -1,5 +1,4 @@
-#ifndef ARITHMETICEXPRESSION_HPP
-#define ARITHMETICEXPRESSION_HPP
+#pragma once
 
 #include <memory>
 
@@ -23,5 +22,3 @@ public:
 private:
   std::shared_ptr<Elem> root = std::make_shared<Elem>();
 };
-
-#endif // ARITHMETICEXPRESSION_HPP

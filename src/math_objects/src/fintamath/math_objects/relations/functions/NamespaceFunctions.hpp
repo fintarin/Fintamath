@@ -1,5 +1,4 @@
-#ifndef NAMESPACEFUNCTIONS_HPP
-#define NAMESPACEFUNCTIONS_HPP
+#pragma once
 
 #include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
@@ -31,5 +30,3 @@ Rational acot(const Rational &rhs, size_t precision);
 Rational factorial(const Rational &rhs);
 Rational doubleFactorial(const Rational &rhs);
 } // namespace functions
-
-#endif // NAMESPACEFUNCTIONS_HPP

@@ -1,5 +1,4 @@
-#ifndef NUMBER_HPP
-#define NUMBER_HPP
+#pragma once
 
 #include "fintamath/math_objects/nodes/Node.hpp"
 
@@ -9,5 +8,3 @@ public:
 };
 
 inline Number::~Number() = default;
-
-#endif // NUMBER_HPP

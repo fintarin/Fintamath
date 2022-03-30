@@ -1,5 +1,4 @@
-#ifndef MATHOBJECT_HPP
-#define MATHOBJECT_HPP
+#pragma once
 
 #include <sstream>
 #include <string>
@@ -33,5 +32,3 @@ inline bool MathObject::is() const {
   }
   return true;
 }
-
-#endif // MATHOBJECT_HPP

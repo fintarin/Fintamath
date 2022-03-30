@@ -1,5 +1,4 @@
-#ifndef NODE_HPP
-#define NODE_HPP
+#pragma once
 
 #include "fintamath/math_objects/MathObject.hpp"
 
@@ -9,5 +8,3 @@ public:
 };
 
 inline Node::~Node() = default;
-
-#endif // NODE_HPP

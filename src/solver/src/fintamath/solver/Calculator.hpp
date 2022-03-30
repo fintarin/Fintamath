@@ -1,5 +1,4 @@
-#ifndef CALCULATOR_HPP
-#define CALCULATOR_HPP
+#pragma once
 
 #include "fintamath/solver/Solver.hpp"
 
@@ -15,5 +14,3 @@ private:
 
   void toShortForm(std::string &strVal) const;
 };
-
-#endif // CALCULATOR_HPP

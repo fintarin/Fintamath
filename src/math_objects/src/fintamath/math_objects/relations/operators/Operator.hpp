@@ -1,5 +1,4 @@
-#ifndef ARITHMETICOPERATOR_HPP
-#define ARITHMETICOPERATOR_HPP
+#pragma once
 
 #include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 #include "fintamath/math_objects/relations/Relation.hpp"
@@ -19,5 +18,3 @@ private:
 namespace types {
 bool isOperator(const std::string &str);
 }
-
-#endif // ARITHMETICOPERATOR_HPP
