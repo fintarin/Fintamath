@@ -2,10 +2,10 @@
 
 #include <vector>
 
-#include "fintamath/math_objects/nodes/numbers/Number.hpp"
+#include "fintamath/math_objects/nodes/Node.hpp"
 
 namespace fintamath {
-  class Integer : public Number {
+  class Integer : public Node {
   public:
     Integer() = default;
     explicit Integer(const std::string_view &strVal);

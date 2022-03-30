@@ -1,10 +1,9 @@
 #pragma once
 
 #include "fintamath/math_objects/nodes/numbers/Integer.hpp"
-#include "fintamath/math_objects/nodes/numbers/Number.hpp"
 
 namespace fintamath {
-  class Rational : public Number {
+  class Rational : public Node {
   public:
     Rational() = default;
     explicit Rational(const std::string_view &strVal);
