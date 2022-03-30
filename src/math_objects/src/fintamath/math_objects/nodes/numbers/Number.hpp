@@ -2,7 +2,9 @@
 
 #include "fintamath/math_objects/nodes/Node.hpp"
 
-class Number : public Node {
-public:
-  ~Number() override = default;
-};
+namespace fintamath {
+  class Number : public Node {
+  public:
+    ~Number() override = default;
+  };
+}

@@ -2,6 +2,8 @@
 
 #include "fintamath/math_objects/nodes/numbers/Integer.hpp"
 
+using namespace fintamath;
+
 TEST(IntegerTests, plusAssignmentOperatorsTest) {
   Integer val;
   EXPECT_EQ(val += 2, 2);

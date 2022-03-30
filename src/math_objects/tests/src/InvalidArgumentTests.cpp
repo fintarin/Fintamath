@@ -7,6 +7,8 @@
 #include "fintamath/math_objects/nodes/numbers/Integer.hpp"
 #include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
+using namespace fintamath;
+
 TEST(InvalidArgumentTests, functionTest) {
   EXPECT_THROW(Function("a"), std::invalid_argument);
 }

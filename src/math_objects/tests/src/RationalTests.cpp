@@ -2,6 +2,8 @@
 
 #include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
+using namespace fintamath;
+
 TEST(RationalTests, integerAssignmentOperatorsTest) {
   Rational ratVal;
   ratVal = Integer(2);
