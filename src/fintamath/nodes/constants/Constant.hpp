@@ -1,7 +1,7 @@
 #pragma once
 
-#include "fintamath/math_objects/nodes/Node.hpp"
-#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
+#include "fintamath/nodes/Node.hpp"
+#include "fintamath/nodes/numbers/Rational.hpp"
 
 namespace fintamath {
   class Constant : public Node {

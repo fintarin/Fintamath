@@ -1,8 +1,8 @@
-#include "fintamath/math_objects/relations/functions/Function.hpp"
+#include "fintamath/relations/functions/Function.hpp"
 
 #include <regex>
 
-#include "fintamath/math_objects/relations/functions/NamespaceFunctions.hpp"
+#include "fintamath/relations/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
   Function::Function(const std::string &strFunc) {

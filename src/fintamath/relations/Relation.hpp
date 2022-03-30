@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/math_objects/MathObject.hpp"
+#include "fintamath/MathObject.hpp"
 
 namespace fintamath {
   class Relation : public MathObject {

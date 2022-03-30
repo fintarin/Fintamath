@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
+#include "fintamath/nodes/numbers/Rational.hpp"
 
 using namespace fintamath;
 

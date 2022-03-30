@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/math_objects/nodes/numbers/Integer.hpp"
+#include "fintamath/nodes/numbers/Integer.hpp"
 
 using namespace fintamath;
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
-#include "fintamath/math_objects/relations/Relation.hpp"
+#include "fintamath/nodes/numbers/Rational.hpp"
+#include "fintamath/relations/Relation.hpp"
 
 namespace fintamath {
   class Operator : public Relation {

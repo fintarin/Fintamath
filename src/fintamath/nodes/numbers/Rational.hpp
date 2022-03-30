@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/math_objects/nodes/numbers/Integer.hpp"
+#include "fintamath/nodes/numbers/Integer.hpp"
 
 namespace fintamath {
   class Rational : public Node {

@@ -1,8 +1,8 @@
-#include "fintamath/math_objects/relations/operators/Operator.hpp"
+#include "fintamath/relations/operators/Operator.hpp"
 
 #include <regex>
 
-#include "fintamath/math_objects/relations/functions/NamespaceFunctions.hpp"
+#include "fintamath/relations/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
   Operator::Operator(const std::string &strOper) {

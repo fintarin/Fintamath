@@ -1,11 +1,11 @@
-#include "fintamath/math_objects/nodes/expressions/Expression.hpp"
+#include "fintamath/nodes/expressions/Expression.hpp"
 
 #include <algorithm>
 #include <stdexcept>
 
-#include "fintamath/math_objects/nodes/constants/Constant.hpp"
-#include "fintamath/math_objects/relations/functions/Function.hpp"
-#include "fintamath/math_objects/relations/operators/Operator.hpp"
+#include "fintamath/nodes/constants/Constant.hpp"
+#include "fintamath/relations/functions/Function.hpp"
+#include "fintamath/relations/operators/Operator.hpp"
 
 namespace fintamath {
   constexpr int64_t INITIAL_PRECISION = 36;

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "fintamath/math_objects/nodes/Node.hpp"
+#include "fintamath/nodes/Node.hpp"
 
 namespace fintamath {
   class Integer : public Node {
