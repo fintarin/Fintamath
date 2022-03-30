@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "fintamath/math_objects/nodes/terms/numbers/Number.hpp"
+#include "fintamath/math_objects/nodes/numbers/Number.hpp"
 
 class Integer : public Number {
 public:

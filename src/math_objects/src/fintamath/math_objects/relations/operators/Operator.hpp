@@ -1,7 +1,7 @@
 #ifndef ARITHMETICOPERATOR_HPP
 #define ARITHMETICOPERATOR_HPP
 
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 #include "fintamath/math_objects/relations/Relation.hpp"
 
 class Operator : public Relation {

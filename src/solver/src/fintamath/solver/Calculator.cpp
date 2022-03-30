@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
 static void insertFloatingPoint(std::string &strVal, int64_t precision);
 

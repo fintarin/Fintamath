@@ -1,9 +1,9 @@
 #ifndef NUMBER_HPP
 #define NUMBER_HPP
 
-#include "fintamath/math_objects/nodes/terms/Term.hpp"
+#include "fintamath/math_objects/nodes/Node.hpp"
 
-class Number : public Term {
+class Number : public Node {
 public:
   ~Number() override = 0;
 };

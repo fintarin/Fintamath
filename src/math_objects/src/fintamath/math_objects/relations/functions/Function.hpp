@@ -1,7 +1,7 @@
 #ifndef ELEMENTARYFUNCTION_HPP
 #define ELEMENTARYFUNCTION_HPP
 
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 #include "fintamath/math_objects/relations/Relation.hpp"
 
 #include <string>

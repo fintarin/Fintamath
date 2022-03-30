@@ -3,9 +3,9 @@
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
 #include "fintamath/math_objects/relations/functions/Function.hpp"
 #include "fintamath/math_objects/relations/operators/Operator.hpp"
-#include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
-#include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/constants/Constant.hpp"
+#include "fintamath/math_objects/nodes/numbers/Integer.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
 TEST(InvalidArgumentTests, functionTest) {
   EXPECT_THROW(Function("a"), std::invalid_argument);

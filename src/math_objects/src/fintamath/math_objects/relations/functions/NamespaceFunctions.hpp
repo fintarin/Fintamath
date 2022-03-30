@@ -1,7 +1,7 @@
 #ifndef NAMESPACEFUNCTIONS_HPP
 #define NAMESPACEFUNCTIONS_HPP
 
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
 namespace functions {
 Rational getE(size_t precision);

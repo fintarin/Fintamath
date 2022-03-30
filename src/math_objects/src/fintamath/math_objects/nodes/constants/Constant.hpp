@@ -1,7 +1,8 @@
 #ifndef MATHCONSTANT_HPP
 #define MATHCONSTANT_HPP
 
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/Node.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
 class Constant : public Node {
 public:

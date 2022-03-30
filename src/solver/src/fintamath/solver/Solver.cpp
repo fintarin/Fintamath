@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
+#include "fintamath/math_objects/nodes/constants/Constant.hpp"
 #include "fintamath/math_objects/relations/functions/Function.hpp"
 #include "fintamath/math_objects/relations/operators/Operator.hpp"
 

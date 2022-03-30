@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
+#include "fintamath/math_objects/nodes/numbers/Integer.hpp"
 
 TEST(IntegerTests, plusAssignmentOperatorsTest) {
   Integer val;

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
 TEST(RationalTests, integerAssignmentOperatorsTest) {
   Rational ratVal;

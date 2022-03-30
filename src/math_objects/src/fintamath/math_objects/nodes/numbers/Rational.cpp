@@ -1,4 +1,4 @@
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
 #include <algorithm>
 #include <stdexcept>

@@ -2,7 +2,7 @@
 #define SOLVER_HPP
 
 #include "fintamath/math_objects/nodes/expressions/Expression.hpp"
-#include "fintamath/math_objects/nodes/terms/numbers/Rational.hpp"
+#include "fintamath/math_objects/nodes/numbers/Rational.hpp"
 
 struct Param {
   std::string name;

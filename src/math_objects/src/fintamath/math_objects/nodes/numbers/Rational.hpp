@@ -1,8 +1,8 @@
 #ifndef RATIONAL_HPP
 #define RATIONAL_HPP
 
-#include "fintamath/math_objects/nodes/terms/numbers/Number.hpp"
-#include "fintamath/math_objects/nodes/terms/numbers/Integer.hpp"
+#include "fintamath/math_objects/nodes/numbers/Number.hpp"
+#include "fintamath/math_objects/nodes/numbers/Integer.hpp"
 
 class Rational : public Number {
 public:

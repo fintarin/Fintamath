@@ -1,4 +1,4 @@
-#include "fintamath/math_objects/nodes/terms/constants/Constant.hpp"
+#include "fintamath/math_objects/nodes/constants/Constant.hpp"
 
 #include <stdexcept>
 
