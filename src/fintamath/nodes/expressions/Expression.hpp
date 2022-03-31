@@ -15,6 +15,7 @@ namespace fintamath {
 
       std::shared_ptr<Elem> clone();
       bool equals(const std::shared_ptr<Elem> &rhs) const;
+      std::string toString() const;
     };
 
     Expression() = default;
@@ -24,9 +25,9 @@ namespace fintamath {
 
     std::string solve();
 
-    std::shared_ptr<Object> clone() const override;
+    std::unique_ptr<Object> clone() const override;
 
-    bool equals(const Object& rhs) const override;
+    bool equals(const Object &rhs) const override;
 
   private:
     std::shared_ptr<Elem> root;

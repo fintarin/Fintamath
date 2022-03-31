@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "fintamath/nodes/constants/Constant.hpp"
+#include "fintamath/nodes/variables/Variable.hpp"
 #include "fintamath/relations/functions/Function.hpp"
 #include "fintamath/relations/operators/Operator.hpp"
 
@@ -32,6 +33,7 @@ namespace fintamath {
   void addBinaryFunctions(std::vector<std::string> &tokensVect);
   void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num);
   void addValue(std::shared_ptr<Expression::Elem> &elem, const std::string &token);
+  void addVariable(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
 
   bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
                size_t end, const std::string &oper1, const std::string_view &oper2);
@@ -54,10 +56,11 @@ namespace fintamath {
 
   Expression::Expression(const std::string &strExpr) {
     makeExpression(makeVectOfTokens(strExpr));
+    // solveRec(root);
   }
 
   std::string Expression::toString() const {
-    throw std::invalid_argument("Not implemented"); // TODO not implemented
+    return root->toString();
   }
 
   std::string Expression::solve() {
@@ -75,15 +78,15 @@ namespace fintamath {
     makeExpressionRec(tokensVect, root, 0, tokensVect.size() - 1);
   }
 
-  std::shared_ptr<Object> Expression::clone() const {
-    auto newExpression = std::make_shared<Expression>();
+  std::unique_ptr<Object> Expression::clone() const {
+    auto newExpression = std::make_unique<Expression>();
     newExpression->root = this->root->clone();
     return newExpression;
   }
 
   bool Expression::equals(const Object &rhs) const {
-    if (rhs.is<Expression>()){
-      if (this->root->equals(rhs.to<Expression>().root)){
+    if (rhs.is<Expression>()) {
+      if (this->root->equals(rhs.to<Expression>().root)) {
         return true;
       }
     }
@@ -108,9 +111,12 @@ namespace fintamath {
       } else if (isDigit(tmpStrExpr[i])) {
         addRational(tokensVect, tmpStrExpr, i);
       } else {
-        addConstOrFunction(tokensVect, tmpStrExpr, i);
+        try {
+          addConstOrFunction(tokensVect, tmpStrExpr, i);
+        } catch (const std::invalid_argument &e) {
+          addVariable(tokensVect, tmpStrExpr, i);
+        }
       }
-
       i++;
     }
 
@@ -193,7 +199,7 @@ namespace fintamath {
     while (pos < token.size()) {
       strVal += token[pos];
       pos++;
-      if (!isDigit(token[pos]) && !(token[pos] == '.')) {
+      if (!isDigit(token[pos]) && token[pos] != '.') {
         break;
       }
     }
@@ -258,21 +264,22 @@ namespace fintamath {
       return;
     }
 
-    addMultiply(tokensVect);
-
     std::string literalExpr;
-    while (pos < token.size()) {
-      literalExpr += token[pos];
-      pos++;
-      if (!isLetter(token[pos])) {
+    int tPos = pos;
+    while (tPos < token.size()) {
+      literalExpr += token[tPos];
+      tPos++;
+      if (!isLetter(token[tPos])) {
         break;
       }
     }
-    if (pos != 0) {
-      pos--;
+    if (tPos != 0) {
+      tPos--;
     }
 
     if (types::isConstant(literalExpr) || types::isFunction(literalExpr)) {
+      pos = tPos;
+      addMultiply(tokensVect);
       tokensVect.push_back(literalExpr);
     } else {
       throw std::invalid_argument("Expression invalid input");
@@ -323,9 +330,20 @@ namespace fintamath {
     throw std::invalid_argument("Expression invalid input");
   }
 
+  void addVariable(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
+    if (types::isVariable(std::string(1, token[pos]))) {
+      addMultiply(tokensVect);
+      tokensVect.emplace_back(1, token[pos]);
+    } else {
+      throw std::invalid_argument("Expression invalid input");
+    }
+  }
+
   void addValue(std::shared_ptr<Expression::Elem> &elem, const std::string &token) {
     if (types::isConstant(token)) {
       elem->info = std::make_shared<Constant>(token);
+    } else if (types::isVariable(token)) {
+      elem->info = std::make_shared<Variable>(token);
     } else {
       try {
         elem->info = std::make_shared<Rational>(token);
@@ -553,27 +571,42 @@ namespace fintamath {
   }
 
   bool Expression::Elem::equals(const std::shared_ptr<Elem> &rhs) const {
-    if (!this->info->equals(*(rhs->info))){
+    if (!this->info->equals(*(rhs->info))) {
       return false;
     }
-    if(this->right != nullptr){
-      if(rhs->right != nullptr){
-        if (!this->right->equals(rhs->right)){
+    if (this->right != nullptr) {
+      if (rhs->right != nullptr) {
+        if (!this->right->equals(rhs->right)) {
           return false;
         }
-      } else return false;
-    } else if (rhs->right != nullptr){
+      } else {
+        return false;
+      }
+    } else if (rhs->right != nullptr) {
       return false;
     }
-    if(this->left != nullptr){
-      if(rhs->left != nullptr){
-        if (!this->left->equals(rhs->left)){
+    if (this->left != nullptr) {
+      if (rhs->left != nullptr) {
+        if (!this->left->equals(rhs->left)) {
           return false;
         }
-      } else return false;
-    } else if (rhs->left != nullptr){
+      } else {
+        return false;
+      }
+    } else if (rhs->left != nullptr) {
       return false;
     }
     return true;
+  }
+  std::string Expression::Elem::toString() const {
+    std::string result;
+    if (right != nullptr) {
+      result += ("(" + right->toString() + ")");
+    }
+    result += info->toString();
+    if (left != nullptr) {
+      result += ("(" + left->toString() + ")");
+    }
+    return result;
   }
 }
