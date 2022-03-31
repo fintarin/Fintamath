@@ -399,6 +399,17 @@ namespace fintamath {
     }
   }
 
+  std::unique_ptr<Object> Integer::clone() const {
+    return std::make_unique<Integer>(*this);
+  }
+
+  bool Integer::equals(const Object &rhs) const {
+    if (rhs.is<Integer>() && (this->sign == rhs.to<Integer>().sign) && (this->intVect == rhs.to<Integer>().intVect)) {
+      return true;
+    }
+    return false;
+  }
+
   IntVector toIntVector(const std::string_view &str, int64_t baseSize) {
     IntVector intVect;
     std::basic_string_view<char>::const_iterator iter = str.end();

@@ -373,6 +373,16 @@ namespace fintamath {
     rhs.denominator = lcmVal;
     rhs.sign = false;
   }
+  std::unique_ptr<Object> Rational::clone() const {
+    return std::make_unique<Rational>(*this);
+  }
+  bool Rational::equals(const Object &rhs) const {
+    if (rhs.is<Rational>() && (this->sign == rhs.to<Rational>().sign) &&
+        (this->numerator == rhs.to<Rational>().numerator) && (this->denominator == rhs.to<Rational>().denominator)) {
+      return true;
+    }
+    return false;
+  }
 
   // Using Euclid's algorithm
   static Integer gcd(const Integer &lhs, const Integer &rhs) {

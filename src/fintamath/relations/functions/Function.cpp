@@ -75,6 +75,13 @@ namespace fintamath {
     return name;
   }
 
+  std::unique_ptr<Object> Function::clone() const {
+    return std::make_unique<Function>(*this);
+  }
+  bool Function::equals(const Object &rhs) const {
+    return rhs.is<Function>() && (this->name == rhs.to<Function>().name);
+  }
+
   namespace types {
     bool isFunction(const std::string &str) {
       std::regex funcRegex(R"(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs|!|!!)");

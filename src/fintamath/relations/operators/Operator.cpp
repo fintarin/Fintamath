@@ -33,6 +33,13 @@ namespace fintamath {
     return std::string(1, name);
   }
 
+  std::unique_ptr<Object> Operator::clone() const {
+    return std::make_unique<Operator>(*this);
+  }
+  bool Operator::equals(const Object &rhs) const {
+    return rhs.is<Operator>() && (this->name == rhs.to<Operator>().name);
+  }
+
   namespace types {
     bool isOperator(const std::string &str) {
       std::regex funcRegex(R"(\+|\-|\*|\/|\^)");

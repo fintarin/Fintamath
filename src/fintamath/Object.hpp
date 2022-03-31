@@ -15,6 +15,10 @@ namespace fintamath {
 
     template <typename T>
     bool is() const;
+
+    virtual std::unique_ptr<Object> clone() const = 0;
+
+    virtual bool equals(const Object &rhs) const = 0;
   };
 
   template <typename T>
