@@ -1,4 +1,4 @@
-#include "fintamath/operators/Operator.hpp"
+#include "fintamath/functions/Operator.hpp"
 
 #include <regex>
 

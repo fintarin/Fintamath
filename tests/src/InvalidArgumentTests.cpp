@@ -2,7 +2,7 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/Function.hpp"
-#include "fintamath/operators/Operator.hpp"
+#include "fintamath/functions/Operator.hpp"
 #include "fintamath/constants/Constant.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"

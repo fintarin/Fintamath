@@ -6,7 +6,7 @@
 #include "fintamath/constants/Constant.hpp"
 #include "fintamath/variables/Variable.hpp"
 #include "fintamath/functions/Function.hpp"
-#include "fintamath/operators/Operator.hpp"
+#include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
   constexpr int64_t INITIAL_PRECISION = 36;
