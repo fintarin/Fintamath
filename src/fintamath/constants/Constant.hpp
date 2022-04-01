@@ -2,11 +2,10 @@
 
 #include <memory>
 
-#include "fintamath/nodes/Node.hpp"
-#include "fintamath/nodes/numbers/Rational.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  class Constant : public Node {
+  class Constant : public Object {
   public:
     explicit Constant(const std::string &strConst);
 

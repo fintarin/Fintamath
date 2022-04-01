@@ -1,9 +1,9 @@
-#include "fintamath/relations/functions/NamespaceFunctions.hpp"
+#include "fintamath/functions/NamespaceFunctions.hpp"
 
 #include <cmath>
 #include <stdexcept>
 
-#include "fintamath/nodes/numbers/Rational.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
   // NOLINTNEXTLINE

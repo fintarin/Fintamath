@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/nodes/Node.hpp"
+#include "fintamath/Object.hpp"
 
 namespace fintamath {
-  class Expression : public Node {
+  class Expression : public Object {
   public:
     struct Elem {
       std::shared_ptr<Object> info;

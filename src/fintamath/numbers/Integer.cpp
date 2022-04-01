@@ -1,4 +1,4 @@
-#include "fintamath/nodes/numbers/Integer.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 #include <algorithm>
 #include <cmath>

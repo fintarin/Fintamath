@@ -1,12 +1,11 @@
 #pragma once
 
-#include "fintamath/nodes/numbers/Rational.hpp"
-#include "fintamath/relations/Relation.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 #include <string>
 
 namespace fintamath {
-  class Function : public Relation {
+  class Function : public Object {
   public:
     explicit Function(const std::string &strFunc);
 

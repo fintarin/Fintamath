@@ -3,20 +3,20 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/nodes/expressions/Expression.hpp"
+#include "fintamath/expressions/Expression.hpp"
 
 namespace fintamath {
-  class Variable : public Node {
+  class Variable : public Object {
   public:
     explicit Variable(const std::string &strVariable);
     std::string toString() const override;
 
-    Expression operator+(const Node &rhs) const;
-    Expression operator-(const Node &rhs) const;
-    Expression operator*(const Node &rhs) const;
-    Expression operator/(const Node &rhs) const;
-    bool operator==(const Node &rhs) const;
-    bool operator!=(const Node &rhs) const;
+    Expression operator+(const Object &rhs) const;
+    Expression operator-(const Object &rhs) const;
+    Expression operator*(const Object &rhs) const;
+    Expression operator/(const Object &rhs) const;
+    bool operator==(const Object &rhs) const;
+    bool operator!=(const Object &rhs) const;
 
     std::unique_ptr<Object> clone() const override;
 

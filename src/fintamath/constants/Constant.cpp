@@ -1,8 +1,8 @@
-#include "fintamath/nodes/constants/Constant.hpp"
+#include "fintamath/constants/Constant.hpp"
 
 #include <stdexcept>
 
-#include "fintamath/relations/functions/NamespaceFunctions.hpp"
+#include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
   Constant::Constant(const std::string &strConst) {

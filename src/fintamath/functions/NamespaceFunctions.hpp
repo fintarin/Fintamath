@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/nodes/numbers/Rational.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath::functions {
   Rational getE(size_t precision);

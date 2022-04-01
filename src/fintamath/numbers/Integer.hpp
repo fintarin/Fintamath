@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/nodes/Node.hpp"
+#include "fintamath/Object.hpp"
 
 namespace fintamath {
-  class Integer : public Node {
+  class Integer : public Object {
   public:
     Integer() = default;
     explicit Integer(const std::string_view &str);

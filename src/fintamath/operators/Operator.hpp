@@ -1,10 +1,9 @@
 #pragma once
 
-#include "fintamath/nodes/numbers/Rational.hpp"
-#include "fintamath/relations/Relation.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  class Operator : public Relation {
+  class Operator : public Object {
   public:
     explicit Operator(const std::string &strOper);
 

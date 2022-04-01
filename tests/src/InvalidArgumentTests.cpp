@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/nodes/expressions/Expression.hpp"
-#include "fintamath/relations/functions/Function.hpp"
-#include "fintamath/relations/operators/Operator.hpp"
-#include "fintamath/nodes/constants/Constant.hpp"
-#include "fintamath/nodes/numbers/Integer.hpp"
-#include "fintamath/nodes/numbers/Rational.hpp"
+#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/Function.hpp"
+#include "fintamath/operators/Operator.hpp"
+#include "fintamath/constants/Constant.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 

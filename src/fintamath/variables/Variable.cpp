@@ -22,27 +22,27 @@ namespace fintamath {
     return rhs.is<Variable>() && (this->name == rhs.to<Variable>().name);
   }
 
-  Expression Variable::operator+(const Node &rhs) const {
+  Expression Variable::operator+(const Object &rhs) const {
     return Expression(this->name + "+" + rhs.toString());
   }
 
-  Expression Variable::operator-(const Node &rhs) const {
+  Expression Variable::operator-(const Object &rhs) const {
     return Expression(this->name + "-" + rhs.toString());
   }
 
-  Expression Variable::operator*(const Node &rhs) const {
+  Expression Variable::operator*(const Object &rhs) const {
     return Expression(this->name + "*" + rhs.toString());
   }
 
-  Expression Variable::operator/(const Node &rhs) const {
+  Expression Variable::operator/(const Object &rhs) const {
     return Expression(this->name + "/" + rhs.toString());
   }
 
-  bool Variable::operator==(const Node &rhs) const {
+  bool Variable::operator==(const Object &rhs) const {
     return this->equals(rhs);
   }
 
-  bool Variable::operator!=(const Node &rhs) const {
+  bool Variable::operator!=(const Object &rhs) const {
     return !this->equals(rhs);
   }
 
