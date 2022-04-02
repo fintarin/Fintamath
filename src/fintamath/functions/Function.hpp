@@ -5,7 +5,7 @@
 #include <string>
 
 namespace fintamath {
-  class Function : public Object {
+  class Function : public MathObject {
   public:
     explicit Function(const std::string &strFunc);
 
@@ -13,8 +13,8 @@ namespace fintamath {
     Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
 
     std::string toString() const override;
-    std::unique_ptr<Object> clone() const override;
-    bool equals(const Object &rhs) const override;
+    std::unique_ptr<MathObject> clone() const override;
+    bool equals(const MathObject &rhs) const override;
 
   private:
     std::string name;

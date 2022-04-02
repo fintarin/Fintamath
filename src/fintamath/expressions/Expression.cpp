@@ -78,13 +78,13 @@ namespace fintamath {
     makeExpressionRec(tokensVect, root, 0, tokensVect.size() - 1);
   }
 
-  std::unique_ptr<Object> Expression::clone() const {
+  std::unique_ptr<MathObject> Expression::clone() const {
     auto newExpression = std::make_unique<Expression>();
     newExpression->root = this->root->clone();
     return newExpression;
   }
 
-  bool Expression::equals(const Object &rhs) const {
+  bool Expression::equals(const MathObject &rhs) const {
     if (rhs.is<Expression>()) {
       if (this->root->equals(rhs.to<Expression>().root)) {
         return true;

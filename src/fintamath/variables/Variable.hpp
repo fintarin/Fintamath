@@ -6,21 +6,21 @@
 #include "fintamath/expressions/Expression.hpp"
 
 namespace fintamath {
-  class Variable : public Object {
+  class Variable : public MathObject {
   public:
     explicit Variable(const std::string &strVariable);
     std::string toString() const override;
 
-    Expression operator+(const Object &rhs) const;
-    Expression operator-(const Object &rhs) const;
-    Expression operator*(const Object &rhs) const;
-    Expression operator/(const Object &rhs) const;
-    bool operator==(const Object &rhs) const;
-    bool operator!=(const Object &rhs) const;
+    Expression operator+(const MathObject &rhs) const;
+    Expression operator-(const MathObject &rhs) const;
+    Expression operator*(const MathObject &rhs) const;
+    Expression operator/(const MathObject &rhs) const;
+    bool operator==(const MathObject &rhs) const;
+    bool operator!=(const MathObject &rhs) const;
 
-    std::unique_ptr<Object> clone() const override;
+    std::unique_ptr<MathObject> clone() const override;
 
-    bool equals(const Object &rhs) const override;
+    bool equals(const MathObject &rhs) const override;
 
   private:
     std::string name;

@@ -3,13 +3,13 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/Object.hpp"
+#include "fintamath/MathObject.hpp"
 
 namespace fintamath {
-  class Expression : public Object {
+  class Expression : public MathObject {
   public:
     struct Elem {
-      std::shared_ptr<Object> info;
+      std::shared_ptr<MathObject> info;
       std::shared_ptr<Elem> left;
       std::shared_ptr<Elem> right;
 
@@ -25,9 +25,9 @@ namespace fintamath {
 
     std::string solve();
 
-    std::unique_ptr<Object> clone() const override;
+    std::unique_ptr<MathObject> clone() const override;
 
-    bool equals(const Object &rhs) const override;
+    bool equals(const MathObject &rhs) const override;
 
   private:
     std::shared_ptr<Elem> root;

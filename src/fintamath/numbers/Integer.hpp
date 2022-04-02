@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/Object.hpp"
+#include "fintamath/MathObject.hpp"
 
 namespace fintamath {
-  class Integer : public Object {
+  class Integer : public MathObject {
   public:
     Integer() = default;
     explicit Integer(const std::string_view &str);
@@ -80,8 +80,8 @@ namespace fintamath {
     size_t size() const;
     Integer sqrt() const;
     std::string toString() const override;
-    std::unique_ptr<Object> clone() const override;
-    bool equals(const Object &rhs) const override;
+    std::unique_ptr<MathObject> clone() const override;
+    bool equals(const MathObject &rhs) const override;
 
   private:
     std::vector<int64_t> intVect;

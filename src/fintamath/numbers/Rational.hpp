@@ -3,7 +3,7 @@
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  class Rational : public Object {
+  class Rational : public MathObject {
   public:
     Rational() = default;
     explicit Rational(const std::string_view &str);
@@ -77,8 +77,8 @@ namespace fintamath {
 
     std::string toString() const override;
     std::string toString(size_t precision) const;
-    std::unique_ptr<Object> clone() const override;
-    bool equals(const Object &rhs) const override;
+    std::unique_ptr<MathObject> clone() const override;
+    bool equals(const MathObject &rhs) const override;
 
   private:
     Integer numerator = 0;

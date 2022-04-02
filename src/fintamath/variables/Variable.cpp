@@ -14,35 +14,35 @@ namespace fintamath {
     return name;
   }
 
-  std::unique_ptr<Object> Variable::clone() const {
+  std::unique_ptr<MathObject> Variable::clone() const {
     return std::make_unique<Variable>(*this);
   }
 
-  bool Variable::equals(const Object &rhs) const {
+  bool Variable::equals(const MathObject &rhs) const {
     return rhs.is<Variable>() && (this->name == rhs.to<Variable>().name);
   }
 
-  Expression Variable::operator+(const Object &rhs) const {
+  Expression Variable::operator+(const MathObject &rhs) const {
     return Expression(this->name + "+" + rhs.toString());
   }
 
-  Expression Variable::operator-(const Object &rhs) const {
+  Expression Variable::operator-(const MathObject &rhs) const {
     return Expression(this->name + "-" + rhs.toString());
   }
 
-  Expression Variable::operator*(const Object &rhs) const {
+  Expression Variable::operator*(const MathObject &rhs) const {
     return Expression(this->name + "*" + rhs.toString());
   }
 
-  Expression Variable::operator/(const Object &rhs) const {
+  Expression Variable::operator/(const MathObject &rhs) const {
     return Expression(this->name + "/" + rhs.toString());
   }
 
-  bool Variable::operator==(const Object &rhs) const {
+  bool Variable::operator==(const MathObject &rhs) const {
     return this->equals(rhs);
   }
 
-  bool Variable::operator!=(const Object &rhs) const {
+  bool Variable::operator!=(const MathObject &rhs) const {
     return !this->equals(rhs);
   }
 

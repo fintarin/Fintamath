@@ -399,11 +399,11 @@ namespace fintamath {
     }
   }
 
-  std::unique_ptr<Object> Integer::clone() const {
+  std::unique_ptr<MathObject> Integer::clone() const {
     return std::make_unique<Integer>(*this);
   }
 
-  bool Integer::equals(const Object &rhs) const {
+  bool Integer::equals(const MathObject &rhs) const {
     if (rhs.is<Integer>() && (this->sign == rhs.to<Integer>().sign) && (this->intVect == rhs.to<Integer>().intVect)) {
       return true;
     }

@@ -22,14 +22,14 @@ namespace fintamath {
     throw std::invalid_argument("Constant invalid input");
   }
 
-  std::unique_ptr<Object> Constant::clone() const {
+  std::unique_ptr<MathObject> Constant::clone() const {
     return std::make_unique<Constant>(*this);
   }
   std::string Constant::toString() const {
     return name;
   }
 
-  bool Constant::equals(const Object &rhs) const {
+  bool Constant::equals(const MathObject &rhs) const {
     return rhs.is<Constant>() && (this->name == rhs.to<Constant>().name);
   }
 

@@ -75,10 +75,10 @@ namespace fintamath {
     return name;
   }
 
-  std::unique_ptr<Object> Function::clone() const {
+  std::unique_ptr<MathObject> Function::clone() const {
     return std::make_unique<Function>(*this);
   }
-  bool Function::equals(const Object &rhs) const {
+  bool Function::equals(const MathObject &rhs) const {
     return rhs.is<Function>() && (this->name == rhs.to<Function>().name);
   }
 
