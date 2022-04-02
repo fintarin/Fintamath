@@ -3,90 +3,73 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/MathObject.hpp"
+#include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
-  class Integer : public MathObject {
+  class Integer : public Number<Integer> {
   public:
     Integer() = default;
+
     explicit Integer(const std::string_view &str);
-    Integer(int64_t val); // NOLINT
 
-    Integer &operator=(int64_t rhs);
+    Integer(int64_t val);
 
-    Integer &operator+=(const Integer &rhs);
-    Integer &operator+=(int64_t rhs);
-    Integer operator+(const Integer &rhs) const;
-    Integer operator+(int64_t rhs) const;
-    friend Integer operator+(int64_t lhs, const Integer &rhs);
+    std::string toString() const override;
 
-    Integer &operator-=(const Integer &rhs);
-    Integer &operator-=(int64_t rhs);
-    Integer operator-(const Integer &rhs) const;
-    Integer operator-(int64_t rhs) const;
-    friend Integer operator-(int64_t lhs, const Integer &rhs);
+    std::unique_ptr<MathObjectBase> clone() const override;
 
-    Integer &operator*=(const Integer &rhs);
-    Integer &operator*=(int64_t rhs);
-    Integer operator*(const Integer &rhs) const;
-    Integer operator*(int64_t rhs) const;
-    friend Integer operator*(int64_t lhs, const Integer &rhs);
+    bool equals(const Integer &rhs) const override;
 
-    Integer &operator/=(const Integer &rhs);
-    Integer &operator/=(int64_t rhs);
-    Integer operator/(const Integer &rhs) const;
-    Integer operator/(int64_t rhs) const;
-    friend Integer operator/(int64_t lhs, const Integer &rhs);
+    bool less(const Integer &rhs) const override;
+
+    bool more(const Integer &rhs) const override;
+
+    Integer &add(const Integer &rhs) override;
+
+    Integer &sub(const Integer &rhs) override;
+
+    Integer &neg() override;
+
+    Integer &mul(const Integer &rhs) override;
+
+    Integer &div(const Integer &rhs) override;
+
+    Integer &inc() override;
+
+    Integer &dec() override;
+
+    Integer &mod(const Integer &rhs);
+
+    Integer &sqrt();
+
+    size_t getSize() const;
 
     Integer &operator%=(const Integer &rhs);
-    Integer &operator%=(int64_t rhs);
+
     Integer operator%(const Integer &rhs) const;
-    Integer operator%(int64_t rhs) const;
-    friend Integer operator%(int64_t lhs, const Integer &rhs);
-
-    Integer &operator++();
-    Integer operator++(int);
-
-    Integer &operator--();
-    Integer operator--(int);
-
-    Integer operator+() const;
-    Integer operator-() const;
-
-    bool operator==(const Integer &rhs) const;
-    bool operator==(int64_t rhs) const;
-    friend bool operator==(int64_t lhs, const Integer &rhs);
-
-    bool operator!=(const Integer &rhs) const;
-    bool operator!=(int64_t rhs) const;
-    friend bool operator!=(int64_t lhs, const Integer &rhs);
-
-    bool operator<(const Integer &rhs) const;
-    bool operator<(int64_t rhs) const;
-    friend bool operator<(int64_t lhs, const Integer &rhs);
-
-    bool operator>(const Integer &rhs) const;
-    bool operator>(int64_t rhs) const;
-    friend bool operator>(int64_t lhs, const Integer &rhs);
-
-    bool operator<=(const Integer &rhs) const;
-    bool operator<=(int64_t rhs) const;
-    friend bool operator<=(int64_t lhs, const Integer &rhs);
-
-    bool operator>=(const Integer &rhs) const;
-    bool operator>=(int64_t rhs) const;
-    friend bool operator>=(int64_t lhs, const Integer &rhs);
-
-    size_t size() const;
-    Integer sqrt() const;
-    std::string toString() const override;
-    std::unique_ptr<MathObject> clone() const override;
-    bool equals(const MathObject &rhs) const override;
 
   private:
+    void fixZero();
+
     std::vector<int64_t> intVect;
     bool sign{};
-
-    void fixZero();
   };
+
+  template <typename RhsType,
+            typename = std::enable_if_t<std::is_convertible_v<RhsType, Integer> && !std::is_same_v<Integer, RhsType>>>
+  Integer &operator%=(Integer &lhs, const RhsType &rhs) {
+    return lhs.mod(LhsType(rhs));
+  }
+
+  template <typename RhsType,
+            typename = std::enable_if_t<std::is_convertible_v<RhsType, Integer> && !std::is_same_v<Integer, RhsType>>>
+  Integer operator%(const Integer &lhs, const RhsType &rhs) {
+    return Integer(lhs).mod(Integer(rhs));
+  }
+
+  template <typename LhsType,
+            typename = std::enable_if_t<std::is_convertible_v<LhsType, Integer> && !std::is_same_v<LhsType, Integer>>>
+  Integer operator%(const LhsType &lhs, const Integer &rhs) {
+    return Integer(lhs).mod(rhs);
+  }
 }

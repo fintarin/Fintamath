@@ -24,8 +24,6 @@ namespace fintamath {
   bool equal(const IntVector &lhs, const IntVector &rhs);
   bool less(const IntVector &lhs, const IntVector &rhs);
   bool greater(const IntVector &lhs, const IntVector &rhs);
-  bool lessEqual(const IntVector &lhs, const IntVector &rhs);
-  bool greaterEqual(const IntVector &lhs, const IntVector &rhs);
 
   IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base);
   IntVector addToSignificantDigits(const IntVector &lhs, const IntVector &rhs, int64_t base);
@@ -72,11 +70,62 @@ namespace fintamath {
   Integer::Integer(int64_t val) : Integer(std::to_string(val)) {
   }
 
-  Integer &Integer::operator=(int64_t rhs) {
-    return *this = Integer(rhs);
+  size_t Integer::getSize() const {
+    return (intVect.size() - 1) * INT_BASE_SIZE + (std::to_string(intVect.back())).size();
   }
 
-  Integer &Integer::operator+=(const Integer &rhs) {
+  // Changing the number base to solve sqrt
+  Integer &Integer::sqrt() {
+    if (*this < 0) {
+      throw std::domain_error("sqrt out of range");
+    }
+    auto vect = toIntVector(toString(), 2);
+    return *this = Integer(fintamath::toString(fintamath::sqrt(vect), 1));
+  }
+
+  std::string Integer::toString() const {
+    std::string str = fintamath::toString(intVect, INT_BASE_SIZE);
+    if (str != "0" && sign) {
+      str.insert(0, 1, '-');
+    }
+    return str;
+  }
+
+  std::unique_ptr<MathObjectBase> Integer::clone() const {
+    return std::make_unique<Integer>(*this);
+  }
+
+  bool Integer::equals(const Integer &rhs) const {
+    return sign == rhs.sign && equal(intVect, rhs.intVect);
+  }
+
+  bool Integer::less(const Integer &rhs) const {
+    if (!sign && rhs.sign) {
+      return false;
+    }
+    if (sign && !rhs.sign) {
+      return true;
+    }
+    if (sign) {
+      return fintamath::less(rhs.intVect, intVect);
+    }
+    return fintamath::less(intVect, rhs.intVect);
+  }
+
+  bool Integer::more(const Integer &rhs) const {
+    if (!sign && rhs.sign) {
+      return true;
+    }
+    if (sign && !rhs.sign) {
+      return false;
+    }
+    if (sign) {
+      return greater(rhs.intVect, intVect);
+    }
+    return greater(intVect, rhs.intVect);
+  }
+
+  Integer &Integer::add(const Integer &rhs) {
     if ((!sign && !rhs.sign) || (sign && rhs.sign)) {
       intVect = addToSignificantDigits(intVect, rhs.intVect, INT_BASE);
     }
@@ -94,71 +143,25 @@ namespace fintamath {
     return *this;
   }
 
-  Integer &Integer::operator+=(int64_t rhs) {
-    return *this += Integer(rhs);
-  }
-
-  Integer Integer::operator+(const Integer &rhs) const {
-    Integer lhs = *this;
-    return lhs += rhs;
-  }
-
-  Integer Integer::operator+(int64_t rhs) const {
-    return *this + Integer(rhs);
-  }
-
-  Integer operator+(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) + rhs;
-  }
-
-  Integer &Integer::operator-=(const Integer &rhs) {
+  Integer &Integer::sub(const Integer &rhs) {
     Integer tmpRhs = rhs;
     tmpRhs.sign = !tmpRhs.sign;
     return *this += tmpRhs;
   }
 
-  Integer &Integer::operator-=(int64_t rhs) {
-    return *this -= Integer(rhs);
+  Integer &Integer::neg() {
+    sign = !sign;
+    return *this;
   }
 
-  Integer Integer::operator-(const Integer &rhs) const {
-    Integer lhs = *this;
-    return lhs -= rhs;
-  }
-
-  Integer Integer::operator-(int64_t rhs) const {
-    return *this - Integer(rhs);
-  }
-
-  Integer operator-(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) - rhs;
-  }
-
-  Integer &Integer::operator*=(const Integer &rhs) {
+  Integer &Integer::mul(const Integer &rhs) {
     intVect = multiply(intVect, rhs.intVect, INT_BASE);
     sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
     fixZero();
     return *this;
   }
 
-  Integer &Integer::operator*=(int64_t rhs) {
-    return *this *= Integer(rhs);
-  }
-
-  Integer Integer::operator*(const Integer &rhs) const {
-    Integer lhs = *this;
-    return lhs *= rhs;
-  }
-
-  Integer Integer::operator*(int64_t rhs) const {
-    return *this * Integer(rhs);
-  }
-
-  Integer operator*(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) * rhs;
-  }
-
-  Integer &Integer::operator/=(const Integer &rhs) {
+  Integer &Integer::div(const Integer &rhs) {
     if (rhs == 0) {
       throw std::domain_error("Div by zero");
     }
@@ -178,24 +181,15 @@ namespace fintamath {
     return *this;
   }
 
-  Integer &Integer::operator/=(int64_t rhs) {
-    return *this /= Integer(rhs);
+  Integer &Integer::inc() {
+    return *this += 1;
   }
 
-  Integer Integer::operator/(const Integer &rhs) const {
-    Integer lhs = *this;
-    return lhs /= rhs;
+  Integer &Integer::dec() {
+    return *this -= 1;
   }
 
-  Integer Integer::operator/(int64_t rhs) const {
-    return *this / Integer(rhs);
-  }
-
-  Integer operator/(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) / rhs;
-  }
-
-  Integer &Integer::operator%=(const Integer &rhs) {
+  Integer &Integer::mod(const Integer &rhs) {
     if (rhs == 0) {
       throw std::domain_error("Div by zero");
     }
@@ -212,202 +206,18 @@ namespace fintamath {
     return *this;
   }
 
-  Integer &Integer::operator%=(int64_t rhs) {
-    return *this %= Integer(rhs);
+  Integer &Integer::operator%=(const Integer &rhs) {
+    return mod(rhs);
   }
 
   Integer Integer::operator%(const Integer &rhs) const {
-    Integer lhs = *this;
-    return lhs %= rhs;
-  }
-
-  Integer Integer::operator%(int64_t rhs) const {
-    return *this % Integer(rhs);
-  }
-
-  Integer operator%(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) % rhs;
-  }
-
-  Integer &Integer::operator++() {
-    return *this += 1;
-  }
-
-  Integer Integer::operator++(int) {
-    Integer val = *this;
-    *this += 1;
-    return val;
-  }
-
-  Integer &Integer::operator--() {
-    return *this -= 1;
-  }
-
-  Integer Integer::operator--(int) {
-    Integer val = *this;
-    *this -= 1;
-    return val;
-  }
-
-  Integer Integer::operator+() const {
-    return *this;
-  }
-
-  Integer Integer::operator-() const {
-    Integer val = *this;
-    val.sign = !val.sign;
-    return val;
-  }
-
-  bool Integer::operator==(const Integer &rhs) const {
-    if (sign != rhs.sign) {
-      return false;
-    }
-    return equal(intVect, rhs.intVect);
-  }
-
-  bool Integer::operator==(int64_t rhs) const {
-    return *this == Integer(rhs);
-  }
-
-  bool operator==(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) == rhs;
-  }
-
-  bool Integer::operator!=(const Integer &rhs) const {
-    return !(*this == rhs);
-  }
-
-  bool Integer::operator!=(int64_t rhs) const {
-    return !(*this == rhs);
-  }
-
-  bool operator!=(int64_t lhs, const Integer &rhs) {
-    return !(lhs == rhs);
-  }
-
-  bool Integer::operator<(const Integer &rhs) const {
-    if (!sign && rhs.sign) {
-      return false;
-    }
-    if (sign && !rhs.sign) {
-      return true;
-    }
-
-    if (sign) {
-      return less(rhs.intVect, intVect);
-    }
-
-    return less(intVect, rhs.intVect);
-  }
-
-  bool Integer::operator<(int64_t rhs) const {
-    return *this < Integer(rhs);
-  }
-
-  bool operator<(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) < rhs;
-  }
-
-  bool Integer::operator>(const Integer &rhs) const {
-    if (!sign && rhs.sign) {
-      return true;
-    }
-    if (sign && !rhs.sign) {
-      return false;
-    }
-    if (sign) {
-      return greater(rhs.intVect, intVect);
-    }
-    return greater(intVect, rhs.intVect);
-  }
-
-  bool Integer::operator>(int64_t rhs) const {
-    return *this > Integer(rhs);
-  }
-
-  bool operator>(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) > rhs;
-  }
-
-  bool Integer::operator<=(const Integer &rhs) const {
-    if (!sign && rhs.sign) {
-      return false;
-    }
-    if (sign && !rhs.sign) {
-      return true;
-    }
-    if (sign) {
-      return lessEqual(rhs.intVect, intVect);
-    }
-    return lessEqual(intVect, rhs.intVect);
-  }
-
-  bool Integer::operator<=(int64_t rhs) const {
-    return *this <= Integer(rhs);
-  }
-
-  bool operator<=(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) <= rhs;
-  }
-
-  bool Integer::operator>=(const Integer &rhs) const {
-    if (!sign && rhs.sign) {
-      return true;
-    }
-    if (sign && !rhs.sign) {
-      return false;
-    }
-    if (sign) {
-      return greaterEqual(rhs.intVect, intVect);
-    }
-    return greaterEqual(intVect, rhs.intVect);
-  }
-
-  bool Integer::operator>=(int64_t rhs) const {
-    return *this >= Integer(rhs);
-  }
-
-  bool operator>=(int64_t lhs, const Integer &rhs) {
-    return Integer(lhs) >= rhs;
-  }
-
-  size_t Integer::size() const {
-    return (intVect.size() - 1) * INT_BASE_SIZE + (std::to_string(intVect.back())).size();
-  }
-
-  // Changing the number base to solve sqrt
-  Integer Integer::sqrt() const {
-    if (*this < 0) {
-      throw std::domain_error("sqrt out of range");
-    }
-    auto vect = toIntVector(this->toString(), 2);
-    return Integer(fintamath::toString(fintamath::sqrt(vect), 1));
-  }
-
-  std::string Integer::toString() const {
-    std::string str = fintamath::toString(intVect, INT_BASE_SIZE);
-    if (str != "0" && sign) {
-      str.insert(0, 1, '-');
-    }
-    return str;
+    return Integer(*this).mod(rhs);
   }
 
   void Integer::fixZero() {
     if (intVect.size() == 1 && intVect.front() == 0) {
       sign = false;
     }
-  }
-
-  std::unique_ptr<MathObject> Integer::clone() const {
-    return std::make_unique<Integer>(*this);
-  }
-
-  bool Integer::equals(const MathObject &rhs) const {
-    if (rhs.is<Integer>() && (this->sign == rhs.to<Integer>().sign) && (this->intVect == rhs.to<Integer>().intVect)) {
-      return true;
-    }
-    return false;
   }
 
   IntVector toIntVector(const std::string_view &str, int64_t baseSize) {
@@ -530,46 +340,6 @@ namespace fintamath {
     return false;
   }
 
-  bool lessEqual(const IntVector &lhs, const IntVector &rhs) {
-    if (lhs.size() > rhs.size()) {
-      return false;
-    }
-    if (lhs.size() < rhs.size()) {
-      return true;
-    }
-
-    for (size_t i = lhs.size() - 1; i != SIZE_MAX; i--) {
-      if (lhs[i] > rhs[i]) {
-        return false;
-      }
-      if (lhs[i] < rhs[i]) {
-        return true;
-      }
-    }
-
-    return true;
-  }
-
-  bool greaterEqual(const IntVector &lhs, const IntVector &rhs) {
-    if (lhs.size() > rhs.size()) {
-      return true;
-    }
-    if (lhs.size() < rhs.size()) {
-      return false;
-    }
-
-    for (size_t i = lhs.size() - 1; i != SIZE_MAX; i--) {
-      if (lhs[i] > rhs[i]) {
-        return true;
-      }
-      if (lhs[i] < rhs[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   // Column addition without reduction to significant digits
   IntVector add(const IntVector &lhs, const IntVector &rhs, int64_t base) {
     IntVector val = lhs;
@@ -644,8 +414,8 @@ namespace fintamath {
   }
 
   /*
-    Multiplication of numbers A by B by Karatsuba's method. Recursively applied until the size of of one of the numbers
-    is equal to KARATSUBA_CUTOFF
+    Multiplication of numbers A by B by Karatsuba's method. Recursively applied until the size of of one of the
+    numbers is equal to KARATSUBA_CUTOFF
 
     A * B = p0 + p1 * INT_BASE^m + p2 * INT_BASE^2m
 
@@ -703,7 +473,7 @@ namespace fintamath {
     IntVector res;
     size_t zerosNum = zerosMultiply(tmpLhs, tmpRhs);
 
-    if (tmpLhs.size() < KARATSUBA_CUTOFF || tmpRhs.size() < KARATSUBA_CUTOFF) {
+    if (tmpRhs.size() < KARATSUBA_CUTOFF) {
       res = polynomialMultiply(tmpLhs, tmpRhs, base);
     } else {
       size_t maxSize = std::max(tmpLhs.size(), tmpRhs.size());
@@ -826,10 +596,10 @@ namespace fintamath {
 
     Find the difference between the number in the first face and the square of the first selected number.
 
-    4. To the resulting difference, add the next face, and the resulting number will be divisible. Form the divisor. The
-    first answer choice should be multiplied by 2, we get the number of tens of the divisor, and the number of units
-    should be such that its product of the whole divisor does not exceed the divisor. Write the selected digit in the
-    answer. Use binary search for selection.
+    4. To the resulting difference, add the next face, and the resulting number will be divisible. Form the divisor.
+    The first answer choice should be multiplied by 2, we get the number of tens of the divisor, and the number of
+    units should be such that its product of the whole divisor does not exceed the divisor. Write the selected digit
+    in the answer. Use binary search for selection.
 
     5.To the resulting difference carry the next facet and follow the algorithm.
   */
