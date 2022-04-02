@@ -11,13 +11,6 @@ namespace fintamath {
     explicit Variable(const std::string &strVariable);
     std::string toString() const override;
 
-    Expression operator+(const MathObject &rhs) const;
-    Expression operator-(const MathObject &rhs) const;
-    Expression operator*(const MathObject &rhs) const;
-    Expression operator/(const MathObject &rhs) const;
-    bool operator==(const MathObject &rhs) const;
-    bool operator!=(const MathObject &rhs) const;
-
     std::unique_ptr<MathObject> clone() const override;
 
     bool equals(const MathObject &rhs) const override;

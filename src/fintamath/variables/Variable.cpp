@@ -22,30 +22,6 @@ namespace fintamath {
     return rhs.is<Variable>() && (this->name == rhs.to<Variable>().name);
   }
 
-  Expression Variable::operator+(const MathObject &rhs) const {
-    return Expression(this->name + "+" + rhs.toString());
-  }
-
-  Expression Variable::operator-(const MathObject &rhs) const {
-    return Expression(this->name + "-" + rhs.toString());
-  }
-
-  Expression Variable::operator*(const MathObject &rhs) const {
-    return Expression(this->name + "*" + rhs.toString());
-  }
-
-  Expression Variable::operator/(const MathObject &rhs) const {
-    return Expression(this->name + "/" + rhs.toString());
-  }
-
-  bool Variable::operator==(const MathObject &rhs) const {
-    return this->equals(rhs);
-  }
-
-  bool Variable::operator!=(const MathObject &rhs) const {
-    return !this->equals(rhs);
-  }
-
   namespace types {
     bool isVariable(const std::string &str) {
       return str.size() == 1 && ((str[0] >= 'A' && str[0] <= 'Z') || (str[0] >= 'a' && str[0] <= 'z')) &&
