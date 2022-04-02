@@ -56,242 +56,24 @@ namespace fintamath {
     fixNegative();
   }
 
-  Rational &Rational::operator=(const Integer &rhs) {
-    return *this = Rational(rhs);
+  Rational::Rational(int64_t rhs) : numerator(rhs) {
+    fixNegative();
   }
 
-  Rational &Rational::operator+=(const Rational &rhs) {
-    Rational tmpRhs = rhs;
-    toCommonDenominators(*this, tmpRhs);
-    numerator += tmpRhs.numerator;
-    toIrreducibleRational();
-    return *this;
-  }
-
-  Rational &Rational::operator+=(const Integer &rhs) {
-    return *this += Rational(rhs);
-  }
-
-  Rational Rational::operator+(const Rational &rhs) const {
-    Rational lhs = *this;
-    return lhs += rhs;
-  }
-
-  Rational Rational::operator+(const Integer &rhs) const {
-    return *this + Rational(rhs);
-  }
-
-  Rational operator+(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) + rhs;
-  }
-
-  Rational &Rational::operator-=(const Rational &rhs) {
-    Rational tmpRhs = rhs;
-    toCommonDenominators(*this, tmpRhs);
-    numerator -= tmpRhs.numerator;
-    toIrreducibleRational();
-    return *this;
-  }
-
-  Rational &Rational::operator-=(const Integer &rhs) {
-    return *this -= Rational(rhs);
-  }
-
-  Rational Rational::operator-(const Rational &rhs) const {
-    Rational lhs = *this;
-    return lhs -= rhs;
-  }
-
-  Rational Rational::operator-(const Integer &rhs) const {
-    return *this - Rational(rhs);
-  }
-
-  Rational operator-(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) - rhs;
-  }
-
-  Rational &Rational::operator*=(const Rational &rhs) {
-    numerator *= rhs.numerator;
-    denominator *= rhs.denominator;
-    sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
-    toIrreducibleRational();
-    return *this;
-  }
-
-  Rational &Rational::operator*=(const Integer &rhs) {
-    return *this *= Rational(rhs);
-  }
-
-  Rational Rational::operator*(const Rational &rhs) const {
-    Rational lhs = *this;
-    return lhs *= rhs;
-  }
-
-  Rational Rational::operator*(const Integer &rhs) const {
-    return *this * Rational(rhs);
-  }
-
-  Rational operator*(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) * rhs;
-  }
-
-  Rational &Rational::operator/=(const Rational &rhs) {
-    numerator *= rhs.denominator;
-    denominator *= rhs.numerator;
-    sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
-    toIrreducibleRational();
-    return *this;
-  }
-
-  Rational &Rational::operator/=(const Integer &rhs) {
-    return *this /= Rational(rhs);
-  }
-
-  Rational Rational::operator/(const Rational &rhs) const {
-    Rational lhs = *this;
-    return lhs /= rhs;
-  }
-
-  Rational Rational::operator/(const Integer &rhs) const {
-    return *this / Rational(rhs);
-  }
-
-  Rational operator/(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) / rhs;
-  }
-
-  Rational &Rational::operator++() {
-    return *this += 1;
-  }
-
-  Rational Rational::operator++(int) {
-    Rational val = *this;
-    *this += 1;
-    return val;
-  }
-
-  Rational &Rational::operator--() {
-    return *this -= 1;
-  }
-
-  Rational Rational::operator--(int) {
-    Rational val = *this;
-    *this -= 1;
-    return val;
-  }
-
-  Rational Rational::operator+() const {
-    return *this;
-  }
-
-  Rational Rational::operator-() const {
-    Rational val = *this;
-    val.sign = !val.sign;
-    return val;
-  }
-
-  bool Rational::operator==(const Rational &rhs) const {
-    return (sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator);
-  }
-
-  bool Rational::operator==(const Integer &rhs) const {
-    return *this == Rational(rhs);
-  }
-
-  bool operator==(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) == rhs;
-  }
-
-  bool Rational::operator!=(const Rational &rhs) const {
-    return !(*this == rhs);
-  }
-
-  bool Rational::operator!=(const Integer &rhs) const {
-    return *this != Rational(rhs);
-  }
-
-  bool operator!=(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) != rhs;
-  }
-
-  bool Rational::operator<(const Rational &rhs) const {
-    Rational lhs = *this;
-    Rational tmpRhs = rhs;
-    toCommonDenominators(lhs, tmpRhs);
-    return (lhs.numerator < tmpRhs.numerator);
-  }
-
-  bool Rational::operator<(const Integer &rhs) const {
-    return *this < Rational(rhs);
-  }
-
-  bool operator<(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) < rhs;
-  }
-
-  bool Rational::operator>(const Rational &rhs) const {
-    Rational lhs = *this;
-    Rational tmpRhs = rhs;
-    toCommonDenominators(lhs, tmpRhs);
-    return (lhs.numerator > tmpRhs.numerator);
-  }
-
-  bool Rational::operator>(const Integer &rhs) const {
-    return *this > Rational(rhs);
-  }
-
-  bool operator>(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) > rhs;
-  }
-
-  bool Rational::operator<=(const Rational &rhs) const {
-    Rational lhs = *this;
-    Rational tmpRhs = rhs;
-    toCommonDenominators(lhs, tmpRhs);
-    return (lhs.numerator <= tmpRhs.numerator);
-  }
-
-  bool Rational::operator<=(const Integer &rhs) const {
-    return *this <= Rational(rhs);
-  }
-
-  bool operator<=(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) <= rhs;
-  }
-
-  bool Rational::operator>=(const Rational &rhs) const {
-    Rational lhs = *this;
-    Rational tmpRhs = rhs;
-    toCommonDenominators(lhs, tmpRhs);
-    return (lhs.numerator >= tmpRhs.numerator);
-  }
-
-  bool Rational::operator>=(const Integer &rhs) const {
-    return *this >= Rational(rhs);
-  }
-
-  bool operator>=(const Integer &lhs, const Rational &rhs) {
-    return Rational(lhs) >= rhs;
+  Rational &Rational::round(size_t precision) {
+    return *this = Rational(toString(precision));
   }
 
   Integer Rational::getInteger() const {
     return numerator / denominator;
   }
 
-  Integer Rational::getNumerator() const {
+   Integer Rational::getNumerator() const {
     return numerator % denominator;
   }
 
   Integer Rational::getDenominator() const {
     return denominator;
-  }
-
-  Rational Rational::round(size_t precision) const {
-    return Rational(toString(precision));
-  }
-
-  std::string Rational::toString() const {
-    return (sign ? "-" : "") + numerator.toString() + "/" + denominator.toString();
   }
 
   std::string Rational::toString(size_t precision) const {
@@ -327,11 +109,82 @@ namespace fintamath {
     return strVal;
   }
 
+  std::string Rational::toString() const {
+    return (sign ? "-" : "") + numerator.toString() + "/" + denominator.toString();
+  }
+
   void Rational::fixZero() {
     if (numerator == 0) {
       sign = false;
       denominator = 1;
     }
+  }
+
+  std::unique_ptr<MathObjectBase> Rational::clone() const {
+    return std::make_unique<Rational>(*this);
+  }
+
+  bool Rational::equals(const Rational &rhs) const {
+    return sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator;
+  }
+
+  bool Rational::less(const Rational &rhs) const {
+    Rational lhs = *this;
+    Rational tmpRhs = rhs;
+    toCommonDenominators(lhs, tmpRhs);
+    return (lhs.numerator < tmpRhs.numerator);
+  }
+
+  bool Rational::more(const Rational &rhs) const {
+    Rational lhs = *this;
+    Rational tmpRhs = rhs;
+    toCommonDenominators(lhs, tmpRhs);
+    return (lhs.numerator > tmpRhs.numerator);
+  }
+
+  Rational &Rational::add(const Rational &rhs) {
+    Rational tmpRhs = rhs;
+    toCommonDenominators(*this, tmpRhs);
+    numerator += tmpRhs.numerator;
+    toIrreducibleRational();
+    return *this;
+  }
+
+  Rational &Rational::sub(const Rational &rhs) {
+    Rational tmpRhs = rhs;
+    toCommonDenominators(*this, tmpRhs);
+    numerator -= tmpRhs.numerator;
+    toIrreducibleRational();
+    return *this;
+  }
+
+  Rational &Rational::neg() {
+    sign = !sign;
+    return *this;
+  }
+
+  Rational &Rational::mul(const Rational &rhs) {
+    numerator *= rhs.numerator;
+    denominator *= rhs.denominator;
+    sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
+    toIrreducibleRational();
+    return *this;
+  }
+
+  Rational &Rational::div(const Rational &rhs) {
+    numerator *= rhs.denominator;
+    denominator *= rhs.numerator;
+    sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
+    toIrreducibleRational();
+    return *this;
+  }
+
+  Rational &Rational::inc() {
+    return *this += 1;
+  }
+
+  Rational &Rational::dec() {
+    return *this -= 1;
   }
 
   void Rational::fixNegative() {
@@ -372,16 +225,6 @@ namespace fintamath {
     rhs.numerator *= (lcmVal / rhs.denominator);
     rhs.denominator = lcmVal;
     rhs.sign = false;
-  }
-  std::unique_ptr<MathObject> Rational::clone() const {
-    return std::make_unique<Rational>(*this);
-  }
-  bool Rational::equals(const MathObject &rhs) const {
-    if (rhs.is<Rational>() && (this->sign == rhs.to<Rational>().sign) &&
-        (this->numerator == rhs.to<Rational>().numerator) && (this->denominator == rhs.to<Rational>().denominator)) {
-      return true;
-    }
-    return false;
   }
 
   // Using Euclid's algorithm

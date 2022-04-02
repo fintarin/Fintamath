@@ -3,91 +3,63 @@
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  class Rational : public MathObject {
+  class Rational : public Number<Rational> {
   public:
     Rational() = default;
+
     explicit Rational(const std::string_view &str);
+
     explicit Rational(Integer numerator, Integer denominator);
-    Rational(Integer rhs); // NOLINT
 
-    Rational &operator=(const Integer &rhs);
+    Rational(Integer rhs);
 
-    Rational &operator+=(const Rational &rhs);
-    Rational &operator+=(const Integer &rhs);
-    Rational operator+(const Rational &rhs) const;
-    Rational operator+(const Integer &rhs) const;
-    friend Rational operator+(const Integer &lhs, const Rational &rhs);
-
-    Rational &operator-=(const Rational &rhs);
-    Rational &operator-=(const Integer &rhs);
-    Rational operator-(const Rational &rhs) const;
-    Rational operator-(const Integer &rhs) const;
-    friend Rational operator-(const Integer &lhs, const Rational &rhs);
-
-    Rational &operator*=(const Rational &rhs);
-    Rational &operator*=(const Integer &rhs);
-    Rational operator*(const Rational &rhs) const;
-    Rational operator*(const Integer &rhs) const;
-    friend Rational operator*(const Integer &lhs, const Rational &rhs);
-
-    Rational &operator/=(const Rational &rhs);
-    Rational &operator/=(const Integer &rhs);
-    Rational operator/(const Rational &rhs) const;
-    Rational operator/(const Integer &rhs) const;
-    friend Rational operator/(const Integer &lhs, const Rational &rhs);
-
-    Rational &operator++();
-    Rational operator++(int);
-
-    Rational &operator--();
-    Rational operator--(int);
-
-    Rational operator+() const;
-    Rational operator-() const;
-
-    bool operator==(const Rational &rhs) const;
-    bool operator==(const Integer &rhs) const;
-    friend bool operator==(const Integer &lhs, const Rational &rhs);
-
-    bool operator!=(const Rational &rhs) const;
-    bool operator!=(const Integer &rhs) const;
-    friend bool operator!=(const Integer &lhs, const Rational &rhs);
-
-    bool operator<(const Rational &rhs) const;
-    bool operator<(const Integer &rhs) const;
-    friend bool operator<(const Integer &lhs, const Rational &rhs);
-
-    bool operator>(const Rational &rhs) const;
-    bool operator>(const Integer &rhs) const;
-    friend bool operator>(const Integer &lhs, const Rational &rhs);
-
-    bool operator<=(const Rational &rhs) const;
-    bool operator<=(const Integer &rhs) const;
-    friend bool operator<=(const Integer &lhs, const Rational &rhs);
-
-    bool operator>=(const Rational &rhs) const;
-    bool operator>=(const Integer &rhs) const;
-    friend bool operator>=(const Integer &lhs, const Rational &rhs);
-
-    Integer getInteger() const;
-    Integer getNumerator() const;
-    Integer getDenominator() const;
-
-    Rational round(size_t precision) const;
+    Rational(int64_t rhs);
 
     std::string toString() const override;
+
+    std::unique_ptr<MathObjectBase> clone() const override;
+
+    bool equals(const Rational &rhs) const override;
+
+    bool less(const Rational &rhs) const override;
+
+    bool more(const Rational &rhs) const override;
+
+    Rational &add(const Rational &rhs) override;
+
+    Rational &sub(const Rational &rhs) override;
+
+    Rational &neg() override;
+
+    Rational &mul(const Rational &rhs) override;
+
+    Rational &div(const Rational &rhs) override;
+
+    Rational &inc() override;
+
+    Rational &dec() override;
+
+    Rational &round(size_t precision);
+
     std::string toString(size_t precision) const;
-    std::unique_ptr<MathObject> clone() const override;
-    bool equals(const MathObject &rhs) const override;
+
+    Integer getInteger() const;
+
+    Integer getNumerator() const;
+
+    Integer getDenominator() const;
 
   private:
+    void fixNegative();
+
+    void fixZero();
+
+    void toIrreducibleRational();
+
+    static void toCommonDenominators(Rational &lhs, Rational &rhs);
+
     Integer numerator = 0;
     Integer denominator = 1;
     bool sign{};
-
-    void fixNegative();
-    void fixZero();
-    void toIrreducibleRational();
-    static void toCommonDenominators(Rational &lhs, Rational &rhs);
   };
 }
