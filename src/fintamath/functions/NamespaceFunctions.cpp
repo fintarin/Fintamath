@@ -43,7 +43,7 @@ namespace fintamath {
       shift.insert(shift.begin(), '1');
       shiftMult2.insert(shiftMult2.begin(), '1');
 
-      Rational val((rhs * Integer(shiftMult2)).getInteger().sqrt(), Integer(shift));
+      Rational val(Integer((rhs * Integer(shiftMult2)).getInteger()).sqrt(), Integer(shift));
       return val.round(precision);
     }
 
@@ -340,7 +340,7 @@ namespace fintamath {
         throw std::domain_error("acos out of range");
       }
 
-      Rational rhsStep = rhs.round(getNewPrecision(precision));
+      Rational rhsStep = Rational(rhs).round(getNewPrecision(precision));
       bool isNegative = false;
       if (rhsStep < 0) {
         isNegative = true;
@@ -385,7 +385,7 @@ namespace fintamath {
       Else using the formula: atan(a) = acos(1 / sqrt(1 + x^2)).
     */
     Rational atan(const Rational &rhs, size_t precision) {
-      Rational rhsStep = rhs.round(getNewPrecision(precision));
+      Rational rhsStep = Rational(rhs).round(getNewPrecision(precision));
       bool isNegative = false;
       if (rhsStep < 0) {
         isNegative = true;
@@ -528,7 +528,7 @@ namespace fintamath {
   */
   Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision) {
     const Rational maxRedusedVal("0.01");
-    Rational res = rhs.round(getNewPrecision(precision));
+    Rational res = Rational(rhs).round(getNewPrecision(precision));
     multiplier = 1;
 
     while (functions::abs(res - 1) > maxRedusedVal) {
@@ -567,7 +567,7 @@ namespace fintamath {
     k = a div p.
   */
   Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision) {
-    Rational period = (int64_t)multiplier * functions::getPi(getNewPrecision(precision) + rhs.getInteger().size());
+    Rational period = (int64_t)multiplier * functions::getPi(getNewPrecision(precision) + rhs.getInteger().getSize());
     Integer perionMultiplier = (rhs / period).getInteger();
     Rational res = rhs - perionMultiplier * period;
     return res;
