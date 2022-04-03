@@ -5,11 +5,11 @@
 #include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
-  Function::Function(const std::string &strFunc) {
-    if (!types::isFunction(strFunc)) {
+  Function::Function(const std::string &str) {
+    if (!types::isFunction(str)) {
       throw std::invalid_argument("Function invalid input");
     }
-    name = strFunc;
+    name = str;
   }
 
   Rational Function::solve(const Rational &rhs, int64_t precision) const {
@@ -75,17 +75,17 @@ namespace fintamath {
     return name;
   }
 
-  std::unique_ptr<MathObject> Function::clone() const {
+  std::unique_ptr<MathObjectBase> Function::clone() const {
     return std::make_unique<Function>(*this);
   }
-  bool Function::equals(const MathObject &rhs) const {
-    return rhs.is<Function>() && (this->name == rhs.to<Function>().name);
+  bool Function::equals(const Function &rhs) const {
+    return name == rhs.name;
   }
 
   namespace types {
     bool isFunction(const std::string &str) {
-      std::regex funcRegex(R"(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs|!|!!)");
-      return regex_search(str, funcRegex);
+      std::regex reg(R"(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs|!|!!)");
+      return regex_search(str, reg);
     }
 
     bool isBinaryFunction(const std::string_view &str) {
