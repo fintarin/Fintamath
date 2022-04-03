@@ -5,11 +5,11 @@
 #include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
-  Operator::Operator(const std::string &strOper) {
-    if (!types::isOperator(strOper)) {
+  Operator::Operator(const std::string &str) {
+    if (!types::isOperator(str)) {
       throw std::invalid_argument("Operator invalid input");
     }
-    name = *strOper.begin();
+    name = *str.begin();
   }
 
   Rational Operator::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
@@ -33,17 +33,18 @@ namespace fintamath {
     return std::string(1, name);
   }
 
-  std::unique_ptr<MathObject> Operator::clone() const {
+  std::unique_ptr<MathObjectBase> Operator::clone() const {
     return std::make_unique<Operator>(*this);
   }
-  bool Operator::equals(const MathObject &rhs) const {
-    return rhs.is<Operator>() && (this->name == rhs.to<Operator>().name);
+
+  bool Operator::equals(const Operator &rhs) const {
+    return name == rhs.name;
   }
 
   namespace types {
     bool isOperator(const std::string &str) {
-      std::regex funcRegex(R"(\+|\-|\*|\/|\^)");
-      return regex_search(str, funcRegex);
+      std::regex reg(R"(\+|\-|\*|\/|\^)");
+      return regex_search(str, reg);
     }
   }
 }
