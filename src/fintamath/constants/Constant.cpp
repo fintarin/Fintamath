@@ -5,11 +5,11 @@
 #include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
-  Constant::Constant(const std::string &strConst) {
-    if (!types::isConstant(strConst)) {
+  Constant::Constant(const std::string_view &str) {
+    if (!types::isConstant(str)) {
       throw std::invalid_argument("Constant invalid input");
     }
-    name = strConst;
+    name = str;
   }
 
   Rational Constant::toRational(int64_t precision) const {
@@ -22,15 +22,16 @@ namespace fintamath {
     throw std::invalid_argument("Constant invalid input");
   }
 
-  std::unique_ptr<MathObject> Constant::clone() const {
+  std::unique_ptr<MathObjectBase> Constant::clone() const {
     return std::make_unique<Constant>(*this);
   }
+
   std::string Constant::toString() const {
     return name;
   }
 
-  bool Constant::equals(const MathObject &rhs) const {
-    return rhs.is<Constant>() && (this->name == rhs.to<Constant>().name);
+  bool Constant::equals(const Constant &rhs) const {
+    return name == rhs.name;
   }
 
   namespace types {
