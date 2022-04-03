@@ -2,20 +2,20 @@
 
 #include <memory>
 
-#include "fintamath/nodes/Node.hpp"
-#include "fintamath/nodes/numbers/Rational.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  class Constant : public Node {
+  class Constant : public MathObject<Constant> {
   public:
-    explicit Constant(const std::string &strConst);
+    explicit Constant(const std::string_view &str);
 
     Rational toRational(int64_t precision) const;
+
     std::string toString() const override;
 
-    std::unique_ptr<Object> clone() const override;
+    std::unique_ptr<MathObjectBase> clone() const override;
 
-    bool equals(const Object &rhs) const override;
+    bool equals(const Constant &rhs) const override;
 
   private:
     std::string name;

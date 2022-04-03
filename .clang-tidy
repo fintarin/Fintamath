@@ -11,6 +11,7 @@ Checks: >-
   -bugprone-easily-swappable-parameters,
   -cert-dcl21-cpp,
   -cppcoreguidelines-special-member-functions,
+  -hicpp-explicit-conversions,
   -hicpp-special-member-functions,
   -misc-no-recursion,
   -modernize-use-trailing-return-type,

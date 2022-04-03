@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "fintamath/nodes/expressions/Expression.hpp"
+#include "fintamath/expressions/Expression.hpp"
 
 using namespace fintamath;
 

@@ -1,18 +1,19 @@
 #pragma once
 
-#include "fintamath/nodes/numbers/Rational.hpp"
-#include "fintamath/relations/Relation.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  class Operator : public Relation {
+  class Operator : public MathObject<Operator> {
   public:
-    explicit Operator(const std::string &strOper);
+    explicit Operator(const std::string &str);
 
     Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
 
     std::string toString() const override;
-    std::unique_ptr<Object> clone() const override;
-    bool equals(const Object &rhs) const override;
+
+    std::unique_ptr<MathObjectBase> clone() const override;
+
+    bool equals(const Operator &rhs) const override;
 
   private:
     char name;
