@@ -4,9 +4,9 @@
 #include <stdexcept>
 
 #include "fintamath/constants/Constant.hpp"
-#include "fintamath/variables/Variable.hpp"
 #include "fintamath/functions/Function.hpp"
 #include "fintamath/functions/Operator.hpp"
+#include "fintamath/variables/Variable.hpp"
 
 namespace fintamath {
   constexpr int64_t INITIAL_PRECISION = 36;
@@ -46,7 +46,6 @@ namespace fintamath {
                          size_t first, size_t last);
 
   Rational toRational(const std::shared_ptr<Expression::Elem> &elem);
-
   void solveRec(const std::shared_ptr<Expression::Elem> &elem);
   void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
 
@@ -54,21 +53,12 @@ namespace fintamath {
   void insertFloatingPoint(std::string &strVal, int64_t precision);
   size_t cutZeros(std::string &strVal);
 
-  Expression::Expression(const std::string &strExpr) {
-    makeExpression(makeVectOfTokens(strExpr));
-    // solveRec(root);
-  }
+  std::string toString(const Expression::Elem &elem);
+  void clone(const Expression::Elem &from, Expression::Elem &to);
+  bool equals(const Expression::Elem &lhs, const Expression::Elem &rhs);
 
-  std::string Expression::toString() const {
-    return root->toString();
-  }
-
-  std::string Expression::solve() {
-    solveRec(root);
-    auto resVal = toRational(root);
-    auto valStr = resVal.toString(INITIAL_PRECISION);
-    toShortForm(valStr);
-    return valStr;
+  Expression::Expression(const std::string &str) {
+    makeExpression(makeVectOfTokens(str));
   }
 
   void Expression::makeExpression(const std::vector<std::string> &tokensVect) {
@@ -78,19 +68,33 @@ namespace fintamath {
     makeExpressionRec(tokensVect, root, 0, tokensVect.size() - 1);
   }
 
-  std::unique_ptr<MathObject> Expression::clone() const {
-    auto newExpression = std::make_unique<Expression>();
-    newExpression->root = this->root->clone();
-    return newExpression;
+  std::string Expression::toString() const {
+    if (!root) {
+      return {};
+    }
+    return fintamath::toString(*root);
   }
 
-  bool Expression::equals(const MathObject &rhs) const {
-    if (rhs.is<Expression>()) {
-      if (this->root->equals(rhs.to<Expression>().root)) {
-        return true;
-      }
+  std::unique_ptr<MathObjectBase> Expression::clone() const {
+    if (!root) {
+      return {};
     }
-    return false;
+    auto res = std::make_unique<Expression>();
+    res->root = std::make_shared<Elem>();
+    fintamath::clone(*root, *res->root);
+    return res;
+  }
+
+  bool Expression::equals(const Expression &rhs) const {
+    return fintamath::equals(*root, *rhs.root);
+  }
+
+  std::string Expression::solve() {
+    solveRec(root);
+    auto resVal = toRational(root);
+    auto valStr = resVal.toString(INITIAL_PRECISION);
+    toShortForm(valStr);
+    return valStr;
   }
 
   std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
@@ -265,20 +269,20 @@ namespace fintamath {
     }
 
     std::string literalExpr;
-    int tPos = pos;
-    while (tPos < token.size()) {
-      literalExpr += token[tPos];
-      tPos++;
-      if (!isLetter(token[tPos])) {
+    size_t newPos = pos;
+    while (newPos < token.size()) {
+      literalExpr += token[newPos];
+      newPos++;
+      if (!isLetter(token[newPos])) {
         break;
       }
     }
-    if (tPos != 0) {
-      tPos--;
+    if (newPos != 0) {
+      newPos--;
     }
 
     if (types::isConstant(literalExpr) || types::isFunction(literalExpr)) {
-      pos = tPos;
+      pos = newPos;
       addMultiply(tokensVect);
       tokensVect.push_back(literalExpr);
     } else {
@@ -445,7 +449,11 @@ namespace fintamath {
     }
 
     try {
-      return *std::dynamic_pointer_cast<Rational>(elem->info);
+      auto res = std::dynamic_pointer_cast<Rational>(elem->info);
+      if (!res) {
+        throw std::invalid_argument("Solver invalid input");
+      }
+      return *res;
     } catch (const std::invalid_argument &) {
       throw std::invalid_argument("Solver invalid input");
     }
@@ -554,59 +562,51 @@ namespace fintamath {
     return order;
   }
 
-  std::shared_ptr<Expression::Elem> Expression::Elem::clone() {
-    auto cloneElem = std::make_shared<Elem>();
-    if (left == nullptr) {
-      cloneElem->left = nullptr;
-    } else {
-      cloneElem->left = left->clone();
+  std::string toString(const Expression::Elem &elem) {
+    std::string result;
+    if (elem.right) {
+      result += "(" + fintamath::toString(*elem.right) + ")";
     }
-    if (right == nullptr) {
-      cloneElem->right = nullptr;
-    } else {
-      cloneElem->right = right->clone();
+    if (elem.left) {
+      result += "(" + fintamath::toString(*elem.left) + ")";
     }
-    cloneElem->info = info->clone();
-    return cloneElem;
+    return result += elem.info->toString();
   }
 
-  bool Expression::Elem::equals(const std::shared_ptr<Elem> &rhs) const {
-    if (!this->info->equals(*(rhs->info))) {
+  void clone(const Expression::Elem &from, Expression::Elem &to) {
+    if (from.right) {
+      to.right = std::make_shared<Expression::Elem>();
+      clone(*from.right, *to.right);
+    }
+    if (from.left) {
+      to.left = std::make_shared<Expression::Elem>();
+      clone(*from.left, *to.left);
+    }
+    to.info = from.info->clone();
+  }
+
+  bool equals(const Expression::Elem &lhs, const Expression::Elem &rhs) {
+    if (!lhs.info->equals(*rhs.info)) {
       return false;
     }
-    if (this->right != nullptr) {
-      if (rhs->right != nullptr) {
-        if (!this->right->equals(rhs->right)) {
-          return false;
-        }
-      } else {
-        return false;
+    if (lhs.right) {
+      if (rhs.right) {
+        return equals(*lhs.right, *rhs.right);
       }
-    } else if (rhs->right != nullptr) {
       return false;
     }
-    if (this->left != nullptr) {
-      if (rhs->left != nullptr) {
-        if (!this->left->equals(rhs->left)) {
-          return false;
-        }
-      } else {
-        return false;
+    if (rhs.right) {
+      return false;
+    }
+    if (lhs.left) {
+      if (rhs.left) {
+        return equals(*lhs.left, *rhs.left);
       }
-    } else if (rhs->left != nullptr) {
+      return false;
+    }
+    if (rhs.left) {
       return false;
     }
     return true;
-  }
-  std::string Expression::Elem::toString() const {
-    std::string result;
-    if (right != nullptr) {
-      result += ("(" + right->toString() + ")");
-    }
-    result += info->toString();
-    if (left != nullptr) {
-      result += ("(" + left->toString() + ")");
-    }
-    return result;
   }
 }
