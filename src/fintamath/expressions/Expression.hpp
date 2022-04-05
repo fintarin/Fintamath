@@ -16,11 +16,13 @@ namespace fintamath {
 
     Expression() = default;
 
+    Expression(const Expression &rhs) noexcept;
+
+    Expression &operator=(const Expression &rhs) noexcept;
+
     explicit Expression(const std::string &str);
 
     std::string toString() const override;
-
-    std::unique_ptr<MathObjectBase> clone() const override;
 
     bool equals(const Expression &rhs) const override;
 

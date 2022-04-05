@@ -75,9 +75,6 @@ namespace fintamath {
     return name;
   }
 
-  std::unique_ptr<MathObjectBase> Function::clone() const {
-    return std::make_unique<Function>(*this);
-  }
   bool Function::equals(const Function &rhs) const {
     return name == rhs.name;
   }

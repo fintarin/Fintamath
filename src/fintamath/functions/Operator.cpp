@@ -33,10 +33,6 @@ namespace fintamath {
     return std::string(1, name);
   }
 
-  std::unique_ptr<MathObjectBase> Operator::clone() const {
-    return std::make_unique<Operator>(*this);
-  }
-
   bool Operator::equals(const Operator &rhs) const {
     return name == rhs.name;
   }

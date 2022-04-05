@@ -120,10 +120,6 @@ namespace fintamath {
     }
   }
 
-  std::unique_ptr<MathObjectBase> Rational::clone() const {
-    return std::make_unique<Rational>(*this);
-  }
-
   bool Rational::equals(const Rational &rhs) const {
     return sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator;
   }

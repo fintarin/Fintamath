@@ -22,10 +22,6 @@ namespace fintamath {
     throw std::invalid_argument("Constant invalid input");
   }
 
-  std::unique_ptr<MathObjectBase> Constant::clone() const {
-    return std::make_unique<Constant>(*this);
-  }
-
   std::string Constant::toString() const {
     return name;
   }

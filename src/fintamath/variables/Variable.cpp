@@ -14,10 +14,6 @@ namespace fintamath {
     return name;
   }
 
-  std::unique_ptr<MathObjectBase> Variable::clone() const {
-    return std::make_unique<Variable>(*this);
-  }
-
   bool Variable::equals(const Variable &rhs) const {
     return this->name == rhs.name;
   }
