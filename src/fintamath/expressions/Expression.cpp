@@ -54,8 +54,21 @@ namespace fintamath {
   size_t cutZeros(std::string &strVal);
 
   std::string toString(const Expression::Elem &elem);
-  void clone(const Expression::Elem &from, Expression::Elem &to);
+  void clone(const std::shared_ptr<Expression::Elem> &from, std::shared_ptr<Expression::Elem> &to);
   bool equals(const Expression::Elem &lhs, const Expression::Elem &rhs);
+
+  Expression::Expression(const Expression &rhs) noexcept {
+    if (rhs.root) {
+      fintamath::clone(rhs.root, root);
+    }
+  }
+
+  Expression &Expression::operator=(const Expression &rhs) noexcept {
+    if (&rhs != this && rhs.root) {
+      fintamath::clone(rhs.root, root);
+    }
+    return *this;
+  }
 
   Expression::Expression(const std::string &str) {
     makeExpression(makeVectOfTokens(str));
@@ -73,16 +86,6 @@ namespace fintamath {
       return {};
     }
     return fintamath::toString(*root);
-  }
-
-  std::unique_ptr<MathObjectBase> Expression::clone() const {
-    if (!root) {
-      return {};
-    }
-    auto res = std::make_unique<Expression>();
-    res->root = std::make_shared<Elem>();
-    fintamath::clone(*root, *res->root);
-    return res;
   }
 
   bool Expression::equals(const Expression &rhs) const {
@@ -573,16 +576,17 @@ namespace fintamath {
     return result += elem.info->toString();
   }
 
-  void clone(const Expression::Elem &from, Expression::Elem &to) {
-    if (from.right) {
-      to.right = std::make_shared<Expression::Elem>();
-      clone(*from.right, *to.right);
+  void clone(const std::shared_ptr<Expression::Elem> &from, std::shared_ptr<Expression::Elem> &to) {
+    if (!to) {
+      to = std::make_shared<Expression::Elem>();
     }
-    if (from.left) {
-      to.left = std::make_shared<Expression::Elem>();
-      clone(*from.left, *to.left);
+    if (from->right) {
+      clone(from->right, to->right);
     }
-    to.info = from.info->clone();
+    if (from->left) {
+      clone(from->left, to->left);
+    }
+    to->info = from->info->clone();
   }
 
   bool equals(const Expression::Elem &lhs, const Expression::Elem &rhs) {

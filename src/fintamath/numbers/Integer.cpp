@@ -91,10 +91,6 @@ namespace fintamath {
     return str;
   }
 
-  std::unique_ptr<MathObjectBase> Integer::clone() const {
-    return std::make_unique<Integer>(*this);
-  }
-
   bool Integer::equals(const Integer &rhs) const {
     return sign == rhs.sign && equal(intVect, rhs.intVect);
   }

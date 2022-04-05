@@ -17,8 +17,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::unique_ptr<MathObjectBase> clone() const override;
-
     bool equals(const Rational &rhs) const override;
 
     bool less(const Rational &rhs) const override;
