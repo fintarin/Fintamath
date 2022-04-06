@@ -1,6 +1,5 @@
 #include "fintamath/expressions/Expression.hpp"
 
-#include <algorithm>
 #include <fintamath/functions/ConcreteFunction.hpp>
 #include <fintamath/operators/Add.hpp>
 #include <fintamath/operators/Div.hpp>
@@ -17,20 +16,6 @@
 #include "fintamath/variables/Variable.hpp"
 
 namespace fintamath {
-  constexpr int64_t INITIAL_PRECISION = 36;
-  constexpr int64_t PRECISION_INCREASER = 9;
-  constexpr int64_t NEW_PRECISION = INITIAL_PRECISION + PRECISION_INCREASER;
-  constexpr int64_t NEW_ROUND_PRECISION = NEW_PRECISION - 1;
-
-  std::vector<std::string> makeVectOfTokens(const std::string &strExpr);
-
-  bool isDigit(char ch);
-  bool isLetter(char ch);
-
-  void toShortForm(std::string &strVal);
-  void insertFloatingPoint(std::string &strVal, int64_t precision);
-  size_t cutZeros(std::string &strVal);
-
   Expression::Expression(const Expression &rhs) noexcept {
     if (rhs.info) {
       info = rhs.info->clone();
@@ -65,8 +50,11 @@ namespace fintamath {
     *this = *parseExpression(str);
   }
 
-  Expression::Expression(const MathObjectPtr &obj) {
-    info = obj->clone();
+  Expression::Expression(const MathObject &obj) : info(obj.clone()) {
+  }
+
+  std::string putInBrackets(const std::string &str) {
+    return "(" + str + ")";
   }
 
   std::string Expression::toString() const {
@@ -74,17 +62,42 @@ namespace fintamath {
       return {};
     }
     std::string result;
-    if(children.at(0)){
-      result += ("(" + children.at(0)->toString() + ")");
+    if (info->instanceOf<Operator>()) {
+      const auto &rootOp = info->to<Operator>();
+
+      if (children.at(0)->info->instanceOf<Operator>()) {
+        if (const auto &nodeOp = children.at(0)->info->to<Operator>();
+            (rootOp.getPriority() > nodeOp.getPriority()) ||
+            (rootOp.is<Neg>() && rootOp.getPriority() == nodeOp.getPriority())) {
+          result += putInBrackets(children.at(0)->toString());
+        }
+        result += children.at(0)->toString();
+      }
+
+      if (rootOp.is<Neg>()) {
+        result = rootOp.toString() + result;
+        return result;
+      }
+      result += info->toString();
+
+      if (children.at(1)->info->instanceOf<Operator>()) {
+        const auto &nodeOp = children.at(0)->info->to<Operator>();
+        if (rootOp.getPriority() > nodeOp.getPriority()) {
+          return result + putInBrackets(children.at(0)->toString());
+        }
+        if ((rootOp.is<Sub>() || rootOp.is<Div>()) && rootOp.getPriority() == nodeOp.getPriority()) {
+          return result + putInBrackets(children.at(0)->toString());
+        }
+        return result + children.at(0)->toString();
+      }
     }
-    result += info->toString();
-    if(children.at(1)){
-      result += ("(" + children.at(1)->toString() + ")");
-    }
-    return result;
+
+    return info->toString();
+
+    // TODO: add instanceOf for functions
   }
 
-  bool Expression::equals(const Expression &rhs) const {
+  bool Expression::equals(const Expression & /*rhs*/) const {
     return false;
   }
 
@@ -108,81 +121,20 @@ namespace fintamath {
     return strExpr;
   }
 
-  std::string cutBraces(const std::string &str){
+  std::string cutBraces(const std::string &str) {
     std::string strExpr = str;
-    if(strExpr.front() == '(' && strExpr.back() == ')') {
+    if (strExpr.front() == '(' && strExpr.back() == ')') {
       strExpr.erase(strExpr.begin());
       strExpr.erase(strExpr.end() - 1);
     }
     return strExpr;
   }
 
-  bool isDigit(char ch) {
-    return (ch >= '0' && ch <= '9');
-  }
-
-  bool isLetter(char ch) {
-    return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
-  }
-
-  void toShortForm(std::string &strVal) {
-    bool isNegative = (*strVal.begin() == '-');
-    if (isNegative) {
-      strVal.erase(0, 1);
-    }
-
-    if (strVal == "0") {
-      return;
-    }
-
-    if (*strVal.begin() == '0') {
-      strVal.erase(strVal.begin() + 1);
-      size_t order = cutZeros(strVal);
-      insertFloatingPoint(strVal, INITIAL_PRECISION);
-      strVal += "*10^(-";
-      strVal += std::to_string(order) + ')';
-    } else {
-      size_t order = distance(begin(strVal), find(begin(strVal), end(strVal), '.'));
-      if (order != strVal.size()) {
-        strVal.erase(order, 1);
-      }
-      if (strVal.size() > INITIAL_PRECISION + 1) {
-        strVal.erase(INITIAL_PRECISION + 2);
-      }
-
-      insertFloatingPoint(strVal, INITIAL_PRECISION);
-
-      if (order > 1) {
-        strVal += "*10^";
-        strVal += std::to_string(order - 1);
-      }
-    }
-
-    if (isNegative) {
-      strVal.insert(strVal.begin(), '-');
-    }
-  }
-
-  void insertFloatingPoint(std::string &strVal, int64_t precision) {
-    strVal.insert(strVal.begin() + 1, '.');
-    strVal += '0';
-    strVal = Rational(strVal).toString(precision);
-  }
-
-  size_t cutZeros(std::string &strVal) {
-    size_t order = 0;
-    while (*strVal.begin() == '0') {
-      strVal.erase(strVal.begin());
-      order++;
-    }
-    return order;
-  }
-
-  static void ignoreBracketsRightLeft(const std::string_view &str, int &position) {
+  static size_t ignoreBracketsRightLeft(const std::string_view &str, size_t position) {
     int leftBracket = 0;
-    int rightBracket = 0;
-
-    while (position >= 0) {
+    int rightBracket = 1;
+    do {
+      position--;
       if (str[position] == ')') {
         rightBracket++;
       }
@@ -190,14 +142,13 @@ namespace fintamath {
         leftBracket++;
       }
       if (rightBracket == leftBracket) {
-        return;
+        return position;
       }
-      position--;
-    }
-    throw std::invalid_argument("Expression invalid input");
+    } while (position > 0);
+    return position;
   }
 
-  static void ignoreBracketsLeftRight(const std::string_view &str, int &position) {
+  static size_t ignoreBracketsLeftRight(const std::string_view &str, size_t position) {
     int leftBracket = 0;
     int rightBracket = 0;
 
@@ -209,7 +160,7 @@ namespace fintamath {
         leftBracket++;
       }
       if (rightBracket == leftBracket) {
-        return;
+        return position;
       }
       position++;
     }
@@ -218,116 +169,118 @@ namespace fintamath {
   /*
    * Expr: Expr+Expr | Expr-Expr | Expr*Expr | Expr/Expr | E
    * E: -E | E^Term | Term!! | Term! | Term
-   * Term:
+   * Term: Function | (Expr) | Const | Var | Num
+   * Function: Name(Args)
+   * Args: Expr, Args | Expr
    */
-  std::shared_ptr<Expression> Expression::parseExpression(const std::string& exprStr){
+  std::shared_ptr<Expression> Expression::parseExpression(const std::string &exprStr) {
     auto expr = cutSpaces(exprStr);
     Expression elem;
-    for(int i = int(expr.size() - 1); i > 0; i--) {
-      if(expr[i] == '+' || expr[i] == '-'){
-        if(i == expr.size() - 1) {
+    for (size_t i = expr.size() - 1; i > 0; i--) {
+      if (expr[i] == '+' || expr[i] == '-') {
+        if (i == expr.size() - 1) {
           return nullptr;
         }
-        if(expr[i] == '+') {
+        if (expr[i] == '+') {
           elem.info = std::make_shared<Add>();
-        }
-        else {
+        } else {
           elem.info = std::make_shared<Sub>();
         }
         elem.children.push_back(parseExpression(cutSpaces(expr.substr(0, i))));
         elem.children.push_back(parseDivMulTerm(cutSpaces(expr.substr(i + 1))));
         return std::make_shared<Expression>(elem);
       }
-      if(expr[i] == ')'){
-        ignoreBracketsRightLeft(expr, i);
+      if (expr[i] == ')') {
+        i = ignoreBracketsRightLeft(expr, i);
+        if (i == 0) {
+          break;
+        }
         continue;
       }
     }
     return parseDivMulTerm(expr);
   }
 
-  std::shared_ptr<Expression> Expression::parseDivMulTerm(const std::string& term) {
+  std::shared_ptr<Expression> Expression::parseDivMulTerm(const std::string &term) {
     Expression elem;
-    for(int i = int(term.size() - 1); i > 0; i--) {
-      if(term[i] == '*' || term[i] == '/'){
-        if(i == term.size() - 1) {
+    for (size_t i = term.size() - 1; i > 0; i--) {
+      if (term[i] == '*' || term[i] == '/') {
+        if (i == term.size() - 1) {
           return nullptr;
         }
-        if(term[i] == '*') {
+        if (term[i] == '*') {
           elem.info = std::make_shared<Mul>();
-        }
-        else {
+        } else {
           elem.info = std::make_shared<Div>();
         }
         elem.children.push_back(parseDivMulTerm(cutSpaces(term.substr(0, i))));
         elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(i + 1))));
         return std::make_shared<Expression>(elem);
       }
-      if(term[i] == ')'){
-        ignoreBracketsRightLeft(term, i);
+      if (term[i] == ')') {
+        i = ignoreBracketsRightLeft(term, i);
+        if (i == 0) {
+          break;
+        }
         continue;
       }
     }
     return parseNegPowFactorTerm(term);
   }
 
-  std::shared_ptr<Expression> Expression::parseNegPowFactorTerm(const std::string& term){
+  std::shared_ptr<Expression> Expression::parseNegPowFactorTerm(const std::string &term) {
     Expression elem;
-    if(term[0] == '-'){
+    if (term[0] == '-') {
       elem.info = std::make_shared<Neg>();
-      elem.children.push_back(nullptr);
       elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(1))));
       return std::make_shared<Expression>(elem);
     }
 
-    for(int i = int(term.size() - 1); i > 0; i--) {
-      if(term[i] == '^'){
+    for (size_t i = 0; i < term.size(); i++) {
+      if (term[i] == '^') {
         elem.info = std::make_shared<Pow>();
-        elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(0, i))));
-        elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(i + 1))));
+        elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, i))));
+        elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(i + 1))));
         return std::make_shared<Expression>(elem);
+      }
+      if (term[i] == '(') {
+        i = ignoreBracketsLeftRight(term, i);
       }
     }
 
-    if(term[term.size() - 1] == '!'){
-      if(term[term.size() - 2] == '!'){
+    if (term[term.size() - 1] == '!') {
+      if (term[term.size() - 2] == '!') {
         elem.info = std::make_shared<ConcreteFunction>("!!");
         elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 2))));
-        elem.children.push_back(nullptr);
         return std::make_shared<Expression>(elem);
       }
       elem.info = std::make_shared<ConcreteFunction>("!");
       elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 1))));
-      elem.children.push_back(nullptr);
       return std::make_shared<Expression>(elem);
     }
 
     return parseFiniteTerm(term);
   }
 
-  std::shared_ptr<Expression> Expression::parseFiniteTerm(const std::string& term) {
+  std::shared_ptr<Expression> Expression::parseFiniteTerm(const std::string &term) {
     if (auto parseResult = parseFunction(term); parseResult) {
       return parseResult;
     }
     Expression parseResult;
-    if(term[0] == '(' && term[term.size() - 1] == ')'){
+    if (term[0] == '(' && term[term.size() - 1] == ')') {
       return parseExpression(term.substr(1, term.size() - 2));
     }
-    if(types::isConstant(term)){
+    if (types::isConstant(term)) {
       parseResult.info = std::make_shared<Constant>(term);
-    }
-    else if(types::isVariable(term)){
+    } else if (types::isVariable(term)) {
       parseResult.info = std::make_shared<Variable>(term);
-    }
-    else{
-      try{
+    } else {
+      try {
         parseResult.info = std::make_shared<Integer>(term);
-      }
-      catch(std::invalid_argument& ){
-        try{
+      } catch (const std::invalid_argument &) {
+        try {
           parseResult.info = std::make_shared<Rational>(term);
-        }
-        catch(std::invalid_argument& ) {
+        } catch (const std::invalid_argument &) {
           return nullptr;
         }
       }
@@ -335,14 +288,14 @@ namespace fintamath {
     return std::make_shared<Expression>(parseResult);
   }
 
-  std::shared_ptr<Expression> Expression::parseFunction(const std::string& term){
-    std::regex reg(R"(^((sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs)\(.+\))$)");
-    if(regex_search(term, reg)){
+  std::shared_ptr<Expression> Expression::parseFunction(const std::string &term) {
+    if (std::regex reg(R"(^((sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs)\(.+\))$)");
+        regex_search(term, reg)) {
       Expression expr;
-      int pos = 0;
+      size_t pos = 0;
       std::string funcName;
-      while(term[pos] != '('){
-        funcName += term[pos];
+      while (term.at(pos) != '(') {
+        funcName += term.at(pos);
         pos++;
       }
       expr.info = std::make_shared<ConcreteFunction>(funcName);
@@ -352,20 +305,20 @@ namespace fintamath {
     return nullptr;
   }
 
-  std::vector<std::shared_ptr<Expression>> Expression::getArgs(const std::string& argsStr){
+  std::vector<std::shared_ptr<Expression>> Expression::getArgs(const std::string &argsStr) {
     std::vector<std::shared_ptr<Expression>> args;
-    for(int pos = 0; pos < argsStr.size(); pos++){
-      if(argsStr[pos] == '('){
-        ignoreBracketsLeftRight(argsStr, pos);
+    for (size_t pos = 0; pos < argsStr.size(); pos++) {
+      if (argsStr[pos] == '(') {
+        pos = ignoreBracketsLeftRight(argsStr, pos);
         continue;
       }
-      if(argsStr[pos] == ','){
-        if(pos == 0 || pos == argsStr.size()-1){
+      if (argsStr[pos] == ',') {
+        if (pos == 0 || pos == argsStr.size() - 1) {
           throw std::invalid_argument("Expression invalid input");
         }
         args.push_back(parseExpression(cutSpaces(argsStr.substr(0, pos))));
         auto addArgs = getArgs(cutSpaces(argsStr.substr(pos + 1)));
-        for(const auto& arg : addArgs){
+        for (const auto &arg : addArgs) {
           args.push_back(arg);
         }
         return args;
@@ -375,17 +328,67 @@ namespace fintamath {
     return args;
   }
 
-  Expression Expression::simplify(){
+  Expression Expression::simplify() {
     auto newExpr = std::make_shared<Expression>(*this);
-    return *simplify(newExpr);
+    newExpr = simplifyNumbers(newExpr);
+    return *newExpr;
   }
 
-  std::shared_ptr<Expression> Expression::simplify(const std::shared_ptr<Expression> &expr) {
-    for(auto & child : expr->children){
-      if(child != nullptr){
-        child = simplify(child);
+  std::shared_ptr<Expression> Expression::simplifyNumbers(const std::shared_ptr<Expression> &expr) {
+    for (auto &child : expr->children) {
+      if (child != nullptr) {
+        child = simplifyNumbers(child);
       }
     }
-    return nullptr;
+
+    if (expr->info->instanceOf<Operator>()) {
+      const auto &o = expr->info->to<Operator>();
+      try {
+        if (o.instanceOf<Neg>()) {
+          auto newExpr = std::make_shared<Expression>(*o(*expr->children.at(0)->info));
+          return newExpr;
+        }
+        return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
+      } catch (const std::invalid_argument &e) {
+        // skip operation if child is Variable
+      }
+    }
+
+    return expr;
+  }
+
+  std::shared_ptr<Expression> Expression::mainSimplify(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = subDivNegSimplify(expr);
+    return newExpr;
+  }
+
+  std::shared_ptr<Expression> Expression::subDivNegSimplify(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+    if (newExpr->info->is<Sub>()) {
+      newExpr->info = std::make_shared<Add>();
+      auto rightNode = std::make_shared<Expression>();
+      rightNode->info = std::make_shared<Neg>();
+      rightNode->children.push_back(newExpr->children.at(1));
+      rightNode = simplifyNumbers(rightNode);
+      newExpr->children.at(1) = rightNode;
+    }
+    if (newExpr->info->is<Div>()) {
+      newExpr->info = std::make_shared<Mul>();
+      auto rightNode = std::make_shared<Expression>();
+      rightNode->info = std::make_shared<Div>();
+      rightNode->children.push_back(std::make_shared<Expression>(Integer(1)));
+      rightNode->children.push_back(newExpr->children.at(1));
+      rightNode = simplifyNumbers(rightNode);
+      newExpr->children.at(1) = rightNode;
+    }
+    if (newExpr->info->is<Neg>() && newExpr->children.at(0)->info->is<Neg>()) {
+      newExpr = newExpr->children.at(0)->children.at(0);
+    }
+    for (auto &child : newExpr->children) {
+      if (child != nullptr) {
+        child = subDivNegSimplify(child);
+      }
+    }
+    return newExpr;
   }
 }
