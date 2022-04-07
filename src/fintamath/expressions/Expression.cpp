@@ -1,11 +1,19 @@
 #include "fintamath/expressions/Expression.hpp"
 
 #include <algorithm>
+#include <fintamath/functions/ConcreteFunction.hpp>
+#include <fintamath/operators/Add.hpp>
+#include <fintamath/operators/Div.hpp>
+#include <fintamath/operators/Mul.hpp>
+#include <fintamath/operators/Neg.hpp>
+#include <fintamath/operators/Pow.hpp>
+#include <fintamath/operators/Sub.hpp>
+#include <regex>
 #include <stdexcept>
 
 #include "fintamath/constants/Constant.hpp"
-#include "fintamath/functions/ConcreteFunction.hpp"
-#include "fintamath/functions/Operator.hpp"
+#include "fintamath/functions/Function.hpp"
+#include "fintamath/operators/Operator.hpp"
 #include "fintamath/variables/Variable.hpp"
 
 namespace fintamath {
@@ -15,63 +23,31 @@ namespace fintamath {
   constexpr int64_t NEW_ROUND_PRECISION = NEW_PRECISION - 1;
 
   std::vector<std::string> makeVectOfTokens(const std::string &strExpr);
-  Expression makeExpression(const std::vector<std::string> &tokensVect);
-
-  void cutSpaces(std::string &strExpr);
 
   bool isDigit(char ch);
   bool isLetter(char ch);
-
-  void addMultiply(std::vector<std::string> &tokensVect);
-  void addClosingBracket(std::vector<std::string> &tokensVect);
-  void addOpenBracket(std::vector<std::string> &tokensVect);
-  void addUnaryOperator(std::vector<std::string> &tokensVect);
-  void addOperator(std::vector<std::string> &tokensVect, char token);
-  void addRational(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
-  void addFactorial(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
-  void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
-  void addBinaryFunctions(std::vector<std::string> &tokensVect);
-  void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num);
-  void addValue(std::shared_ptr<Expression::Elem> &elem, const std::string &token);
-  void addVariable(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos);
-
-  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
-               size_t end, const std::string &oper1, const std::string_view &oper2);
-  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
-               size_t end, const std::string &oper);
-  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
-               size_t end);
-
-  void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
-                         size_t first, size_t last);
-
-  Rational toRational(const std::shared_ptr<Expression::Elem> &elem);
-  void solveRec(const std::shared_ptr<Expression::Elem> &elem);
-  void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val);
 
   void toShortForm(std::string &strVal);
   void insertFloatingPoint(std::string &strVal, int64_t precision);
   size_t cutZeros(std::string &strVal);
 
-  std::string toString(const Expression::Elem &elem);
-  void clone(const std::shared_ptr<Expression::Elem> &from, std::shared_ptr<Expression::Elem> &to);
-  bool equals(const Expression::Elem &lhs, const Expression::Elem &rhs);
-
   Expression::Expression(const Expression &rhs) noexcept {
-    if (rhs.root) {
-      fintamath::clone(rhs.root, root);
+    if (rhs.info) {
+      info = rhs.info->clone();
+      children = rhs.children;
     }
   }
 
-  Expression::Expression(Expression &&rhs) noexcept : root(std::move(rhs.root)) {
+  Expression::Expression(Expression &&rhs) noexcept : info(std::move(rhs.info)), children(std::move(rhs.children)) {
   }
 
   Expression &Expression::operator=(const Expression &rhs) noexcept {
     if (&rhs != this) {
-      if (rhs.root) {
-        fintamath::clone(rhs.root, root);
+      if (rhs.info) {
+        info = rhs.info->clone();
+        children = rhs.children;
       } else {
-        root = nullptr;
+        info = nullptr;
       }
     }
     return *this;
@@ -79,80 +55,41 @@ namespace fintamath {
 
   Expression &Expression::operator=(Expression &&rhs) noexcept {
     if (&rhs != this) {
-      std::swap(root, rhs.root);
+      std::swap(info, rhs.info);
+      std::swap(children, rhs.children);
     }
     return *this;
   }
 
   Expression::Expression(const std::string &str) {
-    makeExpression(makeVectOfTokens(str));
+    *this = *parseExpression(str);
   }
 
-  Expression::Expression(const MathObject &obj) {
-    root = std::make_shared<Expression::Elem>();
-    root->info = obj.clone();
-  }
-
-  void Expression::makeExpression(const std::vector<std::string> &tokensVect) {
-    if (tokensVect.empty()) {
-      throw std::invalid_argument("Expression invalid input");
-    }
-    makeExpressionRec(tokensVect, root, 0, tokensVect.size() - 1);
+  Expression::Expression(const MathObjectPtr &obj) {
+    info = obj->clone();
   }
 
   std::string Expression::toString() const {
-    if (!root) {
+    if (!info) {
       return {};
     }
-    return fintamath::toString(*root);
-  }
-
-  std::string Expression::solve() {
-    solveRec(root);
-    auto resVal = toRational(root);
-    auto valStr = resVal.toString(INITIAL_PRECISION);
-    toShortForm(valStr);
-    return valStr;
+    std::string result;
+    if(children.at(0)){
+      result += ("(" + children.at(0)->toString() + ")");
+    }
+    result += info->toString();
+    if(children.at(1)){
+      result += ("(" + children.at(1)->toString() + ")");
+    }
+    return result;
   }
 
   bool Expression::equals(const Expression &rhs) const {
-    return fintamath::equals(*root, *rhs.root);
+    return false;
   }
 
-  std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
-    std::string tmpStrExpr = strExpr;
-    cutSpaces(tmpStrExpr);
-    std::vector<std::string> tokensVect;
-
-    size_t i = 0;
-    while (i < tmpStrExpr.size()) {
-      if (tmpStrExpr[i] == ')') {
-        addClosingBracket(tokensVect);
-      } else if (tmpStrExpr[i] == '(') {
-        addOpenBracket(tokensVect);
-      } else if (types::isOperator(std::string(1, tmpStrExpr[i]))) {
-        addOperator(tokensVect, tmpStrExpr[i]);
-      } else if (tmpStrExpr[i] == '!') {
-        addFactorial(tokensVect, tmpStrExpr, i);
-      } else if (isDigit(tmpStrExpr[i])) {
-        addRational(tokensVect, tmpStrExpr, i);
-      } else {
-        try {
-          addConstOrFunction(tokensVect, tmpStrExpr, i);
-        } catch (const std::invalid_argument &) {
-          addVariable(tokensVect, tmpStrExpr, i);
-        }
-      }
-      i++;
-    }
-
-    addBinaryFunctions(tokensVect);
-    reverse(tokensVect.begin(), tokensVect.end());
-
-    return tokensVect;
-  }
-
-  void cutSpaces(std::string &strExpr) {
+  std::string cutSpaces(const std::string &str) {
+    std::string strExpr = str;
     while (!strExpr.empty()) {
       if (strExpr.front() != ' ') {
         break;
@@ -168,6 +105,16 @@ namespace fintamath {
       }
       i++;
     }
+    return strExpr;
+  }
+
+  std::string cutBraces(const std::string &str){
+    std::string strExpr = str;
+    if(strExpr.front() == '(' && strExpr.back() == ')') {
+      strExpr.erase(strExpr.begin());
+      strExpr.erase(strExpr.end() - 1);
+    }
+    return strExpr;
   }
 
   bool isDigit(char ch) {
@@ -176,359 +123,6 @@ namespace fintamath {
 
   bool isLetter(char ch) {
     return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
-  }
-
-  void addMultiply(std::vector<std::string> &tokensVect) {
-    if (tokensVect.empty()) {
-      return;
-    }
-    if (tokensVect.back() != "," && tokensVect.back() != "(" && !types::isOperator(tokensVect.back()) &&
-        !types::isFunction(tokensVect.back())) {
-      tokensVect.emplace(tokensVect.end(), "*");
-    }
-  }
-
-  void addClosingBracket(std::vector<std::string> &tokensVect) {
-    tokensVect.emplace_back(")");
-  }
-
-  void addOpenBracket(std::vector<std::string> &tokensVect) {
-    addMultiply(tokensVect);
-    tokensVect.emplace_back("(");
-  }
-
-  void addUnaryOperator(std::vector<std::string> &tokensVect) {
-    if (tokensVect.back() == "+") {
-      tokensVect.pop_back();
-    } else if (tokensVect.back() == "-") {
-      tokensVect.pop_back();
-      tokensVect.emplace_back("-1");
-      tokensVect.emplace_back("*");
-    }
-  }
-
-  void addOperator(std::vector<std::string> &tokensVect, char token) {
-    tokensVect.emplace_back(1, token);
-    if (tokensVect.size() == 1) {
-      addUnaryOperator(tokensVect);
-      return;
-    }
-    if (*(tokensVect.end() - 2) == "(") {
-      addUnaryOperator(tokensVect);
-    }
-  }
-
-  void addRational(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
-    addMultiply(tokensVect);
-
-    std::string strVal;
-    while (pos < token.size()) {
-      strVal += token[pos];
-      pos++;
-      if (!isDigit(token[pos]) && token[pos] != '.') {
-        break;
-      }
-    }
-    if (pos != 0) {
-      pos--;
-    }
-
-    tokensVect.push_back(strVal);
-  }
-
-  void addFactorial(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
-    if (tokensVect.empty()) {
-      throw std::invalid_argument("Expression invalid input");
-    }
-
-    std::string factorialFunc = "!";
-    if (pos != token.size() - 1 && token[pos + 1] == '!') {
-      factorialFunc += '!';
-      pos++;
-    }
-
-    size_t bracketsNum = 0;
-
-    for (size_t i = tokensVect.size() - 1; i > 0; i--) {
-      if (tokensVect[i] == ")") {
-        bracketsNum++;
-      } else if (tokensVect[i] == "(") {
-        if (bracketsNum == 0) {
-          throw std::invalid_argument("Expression invalid input");
-        }
-        bracketsNum--;
-      }
-      if (bracketsNum == 0) {
-        if (types::isFunction(tokensVect[i - 1])) {
-          tokensVect.insert(tokensVect.begin() + int64_t(i - 1), factorialFunc);
-        }
-        tokensVect.insert(tokensVect.begin() + int64_t(i), factorialFunc);
-        return;
-      }
-    }
-
-    if (tokensVect.front() == "(") {
-      if (bracketsNum == 0) {
-        throw std::invalid_argument("Expression invalid input");
-      }
-      bracketsNum--;
-    }
-    if (bracketsNum != 0) {
-      throw std::invalid_argument("Expression invalid input");
-    }
-
-    tokensVect.insert(tokensVect.begin(), factorialFunc);
-  }
-
-  void addConstOrFunction(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
-    if (token[pos] == '!') {
-      addFactorial(tokensVect, token, pos);
-      return;
-    }
-    if (token[pos] == ',') {
-      tokensVect.emplace_back(",");
-      return;
-    }
-
-    std::string literalExpr;
-    size_t newPos = pos;
-    while (newPos < token.size()) {
-      literalExpr += token[newPos];
-      newPos++;
-      if (!isLetter(token[newPos])) {
-        break;
-      }
-    }
-    if (newPos != 0) {
-      newPos--;
-    }
-
-    if (types::isConstant(literalExpr) || types::isFunction(literalExpr)) {
-      pos = newPos;
-      addMultiply(tokensVect);
-      tokensVect.push_back(literalExpr);
-    } else {
-      throw std::invalid_argument("Expression invalid input");
-    }
-  }
-
-  void addBinaryFunctions(std::vector<std::string> &tokensVect) {
-    std::vector<size_t> placementsVect;
-    size_t i = 0;
-    while (i < tokensVect.size()) {
-      if (types::isBinaryFunction(tokensVect[i]) &&
-          find(placementsVect.begin(), placementsVect.end(), i) == placementsVect.end()) {
-        addBinaryFunction(tokensVect, placementsVect, i);
-      }
-      i++;
-    }
-  }
-
-  void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num) {
-    std::string token = tokensVect[num];
-    tokensVect.erase(tokensVect.begin() + int64_t(num));
-    size_t bracketsNum = 1;
-
-    size_t i = num + 1;
-    while (i < tokensVect.size()) {
-      if (bracketsNum == 0) {
-        throw std::invalid_argument("Expression invalid input");
-      }
-
-      if (tokensVect[i] == "(") {
-        bracketsNum++;
-      } else if (tokensVect[i] == ")") {
-        bracketsNum--;
-      } else if (bracketsNum == 1 && tokensVect[i] == ",") {
-        tokensVect.erase(tokensVect.begin() + int64_t(i));
-        tokensVect.insert(tokensVect.begin() + int64_t(i), {")", token, "("});
-
-        transform(placementsVect.begin(), placementsVect.end(), placementsVect.begin(),
-                  [i](size_t k) { return (k > i) ? k + 1 : k; });
-        placementsVect.push_back(i + 1);
-
-        return;
-      }
-
-      i++;
-    }
-
-    throw std::invalid_argument("Expression invalid input");
-  }
-
-  void addVariable(std::vector<std::string> &tokensVect, const std::string &token, size_t &pos) {
-    if (types::isVariable(std::string(1, token[pos]))) {
-      addMultiply(tokensVect);
-      tokensVect.emplace_back(1, token[pos]);
-    } else {
-      throw std::invalid_argument("Expression invalid input");
-    }
-  }
-
-  void addValue(std::shared_ptr<Expression::Elem> &elem, const std::string &token) {
-    if (types::isConstant(token)) {
-      elem->info = std::make_shared<Constant>(token);
-    } else if (types::isVariable(token)) {
-      elem->info = std::make_shared<Variable>(token);
-    } else {
-      try {
-        elem->info = std::make_shared<Rational>(token);
-      } catch (const std::invalid_argument &) {
-        throw std::invalid_argument("Expression invalid input");
-      }
-    }
-  }
-
-  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
-               size_t end, const std::string &oper1, const std::string_view &oper2) {
-    size_t bracketsNum = 0;
-
-    for (size_t i = begin; i <= end; i++) {
-      if (tokensVect[i] == ")") {
-        bracketsNum++;
-      } else if (tokensVect[i] == "(") {
-        if (bracketsNum == 0) {
-          throw std::invalid_argument("Expression invalid input");
-        }
-        bracketsNum--;
-      }
-
-      if (bracketsNum == 0 && (tokensVect[i] == oper1 || tokensVect[i] == oper2)) {
-        if (types::isBinaryFunction(oper1)) {
-          elem->info = std::make_shared<ConcreteFunction>(tokensVect[i]);
-        } else {
-          elem->info = std::make_shared<Operator>(tokensVect[i]);
-        }
-        makeExpressionRec(tokensVect, elem->right, i + 1, end);
-        makeExpressionRec(tokensVect, elem->left, begin, i - 1);
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
-               size_t end, const std::string &oper) {
-    return descent(tokensVect, elem, begin, end, oper, "");
-  }
-
-  bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
-               size_t end) {
-    if (types::isFunction(tokensVect[end])) {
-      elem->info = std::make_shared<ConcreteFunction>(tokensVect[end]);
-      makeExpressionRec(tokensVect, elem->right, begin, end - 1);
-      return true;
-    }
-    return false;
-  }
-
-  void makeExpressionRec(const std::vector<std::string> &tokensVect, std::shared_ptr<Expression::Elem> &elem,
-                         size_t first, size_t last) {
-    if (first > last) {
-      throw std::invalid_argument("Expression invalid input");
-    }
-    if (first == SIZE_MAX || last == SIZE_MAX) {
-      throw std::invalid_argument("Expression invalid input");
-    }
-
-    if (elem == nullptr) {
-      elem = std::make_shared<Expression::Elem>();
-    }
-
-    if (first == last) {
-      addValue(elem, tokensVect[first]);
-      return;
-    }
-
-    if (descent(tokensVect, elem, first, last, "+", "-")) {
-      return;
-    }
-    if (descent(tokensVect, elem, first, last, "*", "/")) {
-      return;
-    }
-    if (descent(tokensVect, elem, first, last, "^")) {
-      return;
-    }
-    if (descent(tokensVect, elem, first, last, "log")) {
-      return;
-    }
-    if (descent(tokensVect, elem, first, last)) {
-      return;
-    }
-    if (tokensVect[first] == ")" && tokensVect[last] == "(") {
-      makeExpressionRec(tokensVect, elem, first + 1, last - 1);
-    }
-  }
-
-  Rational toRational(const std::shared_ptr<Expression::Elem> &elem) {
-    if (elem->info == nullptr) {
-      throw std::invalid_argument("Solver invalid input");
-    }
-
-    if (elem->info->is<Constant>()) {
-      return Constant(elem->info->toString()).toRational(NEW_PRECISION);
-    }
-
-    try {
-      auto res = std::dynamic_pointer_cast<Rational>(elem->info);
-      if (!res) {
-        throw std::invalid_argument("Solver invalid input");
-      }
-      return *res;
-    } catch (const std::invalid_argument &) {
-      throw std::invalid_argument("Solver invalid input");
-    }
-  }
-
-  void solveRec(const std::shared_ptr<Expression::Elem> &elem) {
-    if (elem->info == nullptr) {
-      throw std::invalid_argument("Solver invalid input");
-    }
-
-    if (elem->right != nullptr) {
-      if (elem->right->info == nullptr) {
-        throw std::invalid_argument("Solver invalid input");
-      }
-      if (elem->right->info->is<Operator>() || elem->right->info->is<ConcreteFunction>()) {
-        solveRec(elem->right);
-      }
-    }
-
-    if (elem->left != nullptr) {
-      if (elem->left->info == nullptr) {
-        throw std::invalid_argument("Solver invalid input");
-      }
-      if (elem->left->info->is<Operator>() || elem->left->info->is<ConcreteFunction>()) {
-        solveRec(elem->left);
-      }
-    }
-
-    if (elem->info->is<Operator>()) {
-      Operator oper(elem->info->toString());
-      Rational val(oper.solve(toRational(elem->right), toRational(elem->left), NEW_PRECISION).toString(NEW_PRECISION));
-      elemReset(elem, val);
-      return;
-    }
-
-    if (elem->info->is<ConcreteFunction>()) {
-      ConcreteFunction func(elem->info->toString());
-      Rational val;
-      if (types::isBinaryFunction(func.toString())) {
-        val = Rational(
-            func.solve(toRational(elem->right), toRational(elem->left), NEW_PRECISION).toString(NEW_ROUND_PRECISION));
-      } else {
-        val = Rational(func.solve(toRational(elem->right), NEW_PRECISION).toString(NEW_ROUND_PRECISION));
-      }
-      elemReset(elem, val);
-      return;
-    }
-  }
-
-  void elemReset(const std::shared_ptr<Expression::Elem> &elem, const Rational &val) {
-    elem->info = std::make_shared<Rational>(val);
-    elem->right.reset();
-    elem->left.reset();
   }
 
   void toShortForm(std::string &strVal) {
@@ -548,9 +142,9 @@ namespace fintamath {
       strVal += "*10^(-";
       strVal += std::to_string(order) + ')';
     } else {
-      int64_t order = distance(begin(strVal), find(begin(strVal), end(strVal), '.'));
-      if (size_t(order) != strVal.size()) {
-        strVal.erase(size_t(order), 1);
+      size_t order = distance(begin(strVal), find(begin(strVal), end(strVal), '.'));
+      if (order != strVal.size()) {
+        strVal.erase(order, 1);
       }
       if (strVal.size() > INITIAL_PRECISION + 1) {
         strVal.erase(INITIAL_PRECISION + 2);
@@ -584,53 +178,214 @@ namespace fintamath {
     return order;
   }
 
-  std::string toString(const Expression::Elem &elem) {
-    std::string res;
-    if (elem.right) {
-      res += "(" + fintamath::toString(*elem.right) + ")";
+  static void ignoreBracketsRightLeft(const std::string_view &str, int &position) {
+    int leftBracket = 0;
+    int rightBracket = 0;
+
+    while (position >= 0) {
+      if (str[position] == ')') {
+        rightBracket++;
+      }
+      if (str[position] == '(') {
+        leftBracket++;
+      }
+      if (rightBracket == leftBracket) {
+        return;
+      }
+      position--;
     }
-    res += elem.info->toString();
-    if (elem.left) {
-      res += "(" + fintamath::toString(*elem.left) + ")";
-    }
-    return res;
+    throw std::invalid_argument("Expression invalid input");
   }
 
-  void clone(const std::shared_ptr<Expression::Elem> &from, std::shared_ptr<Expression::Elem> &to) {
-    if (!to) {
-      to = std::make_shared<Expression::Elem>();
+  static void ignoreBracketsLeftRight(const std::string_view &str, int &position) {
+    int leftBracket = 0;
+    int rightBracket = 0;
+
+    while (position < str.size()) {
+      if (str[position] == ')') {
+        rightBracket++;
+      }
+      if (str[position] == '(') {
+        leftBracket++;
+      }
+      if (rightBracket == leftBracket) {
+        return;
+      }
+      position++;
     }
-    if (from->right) {
-      clone(from->right, to->right);
+    throw std::invalid_argument("Expression invalid input");
+  }
+  /*
+   * Expr: Expr+Expr | Expr-Expr | Expr*Expr | Expr/Expr | E
+   * E: -E | E^Term | Term!! | Term! | Term
+   * Term:
+   */
+  std::shared_ptr<Expression> Expression::parseExpression(const std::string& exprStr){
+    auto expr = cutSpaces(exprStr);
+    Expression elem;
+    for(int i = int(expr.size() - 1); i > 0; i--) {
+      if(expr[i] == '+' || expr[i] == '-'){
+        if(i == expr.size() - 1) {
+          return nullptr;
+        }
+        if(expr[i] == '+') {
+          elem.info = std::make_shared<Add>();
+        }
+        else {
+          elem.info = std::make_shared<Sub>();
+        }
+        elem.children.push_back(parseExpression(cutSpaces(expr.substr(0, i))));
+        elem.children.push_back(parseDivMulTerm(cutSpaces(expr.substr(i + 1))));
+        return std::make_shared<Expression>(elem);
+      }
+      if(expr[i] == ')'){
+        ignoreBracketsRightLeft(expr, i);
+        continue;
+      }
     }
-    if (from->left) {
-      clone(from->left, to->left);
-    }
-    to->info = from->info->clone();
+    return parseDivMulTerm(expr);
   }
 
-  bool equals(const Expression::Elem &lhs, const Expression::Elem &rhs) {
-    if (*lhs.info != *rhs.info) {
-      return false;
-    }
-    if (lhs.right) {
-      if (rhs.right) {
-        return equals(*lhs.right, *rhs.right);
+  std::shared_ptr<Expression> Expression::parseDivMulTerm(const std::string& term) {
+    Expression elem;
+    for(int i = int(term.size() - 1); i > 0; i--) {
+      if(term[i] == '*' || term[i] == '/'){
+        if(i == term.size() - 1) {
+          return nullptr;
+        }
+        if(term[i] == '*') {
+          elem.info = std::make_shared<Mul>();
+        }
+        else {
+          elem.info = std::make_shared<Div>();
+        }
+        elem.children.push_back(parseDivMulTerm(cutSpaces(term.substr(0, i))));
+        elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(i + 1))));
+        return std::make_shared<Expression>(elem);
       }
-      return false;
-    }
-    if (rhs.right) {
-      return false;
-    }
-    if (lhs.left) {
-      if (rhs.left) {
-        return equals(*lhs.left, *rhs.left);
+      if(term[i] == ')'){
+        ignoreBracketsRightLeft(term, i);
+        continue;
       }
-      return false;
     }
-    if (rhs.left) {
-      return false;
+    return parseNegPowFactorTerm(term);
+  }
+
+  std::shared_ptr<Expression> Expression::parseNegPowFactorTerm(const std::string& term){
+    Expression elem;
+    if(term[0] == '-'){
+      elem.info = std::make_shared<Neg>();
+      elem.children.push_back(nullptr);
+      elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(1))));
+      return std::make_shared<Expression>(elem);
     }
-    return true;
+
+    for(int i = int(term.size() - 1); i > 0; i--) {
+      if(term[i] == '^'){
+        elem.info = std::make_shared<Pow>();
+        elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(0, i))));
+        elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(i + 1))));
+        return std::make_shared<Expression>(elem);
+      }
+    }
+
+    if(term[term.size() - 1] == '!'){
+      if(term[term.size() - 2] == '!'){
+        elem.info = std::make_shared<ConcreteFunction>("!!");
+        elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 2))));
+        elem.children.push_back(nullptr);
+        return std::make_shared<Expression>(elem);
+      }
+      elem.info = std::make_shared<ConcreteFunction>("!");
+      elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 1))));
+      elem.children.push_back(nullptr);
+      return std::make_shared<Expression>(elem);
+    }
+
+    return parseFiniteTerm(term);
+  }
+
+  std::shared_ptr<Expression> Expression::parseFiniteTerm(const std::string& term) {
+    if (auto parseResult = parseFunction(term); parseResult) {
+      return parseResult;
+    }
+    Expression parseResult;
+    if(term[0] == '(' && term[term.size() - 1] == ')'){
+      return parseExpression(term.substr(1, term.size() - 2));
+    }
+    if(types::isConstant(term)){
+      parseResult.info = std::make_shared<Constant>(term);
+    }
+    else if(types::isVariable(term)){
+      parseResult.info = std::make_shared<Variable>(term);
+    }
+    else{
+      try{
+        parseResult.info = std::make_shared<Integer>(term);
+      }
+      catch(std::invalid_argument& ){
+        try{
+          parseResult.info = std::make_shared<Rational>(term);
+        }
+        catch(std::invalid_argument& ) {
+          return nullptr;
+        }
+      }
+    }
+    return std::make_shared<Expression>(parseResult);
+  }
+
+  std::shared_ptr<Expression> Expression::parseFunction(const std::string& term){
+    std::regex reg(R"(^((sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs)\(.+\))$)");
+    if(regex_search(term, reg)){
+      Expression expr;
+      int pos = 0;
+      std::string funcName;
+      while(term[pos] != '('){
+        funcName += term[pos];
+        pos++;
+      }
+      expr.info = std::make_shared<ConcreteFunction>(funcName);
+      expr.children = getArgs(cutBraces(term.substr(pos)));
+      return std::make_shared<Expression>(expr);
+    }
+    return nullptr;
+  }
+
+  std::vector<std::shared_ptr<Expression>> Expression::getArgs(const std::string& argsStr){
+    std::vector<std::shared_ptr<Expression>> args;
+    for(int pos = 0; pos < argsStr.size(); pos++){
+      if(argsStr[pos] == '('){
+        ignoreBracketsLeftRight(argsStr, pos);
+        continue;
+      }
+      if(argsStr[pos] == ','){
+        if(pos == 0 || pos == argsStr.size()-1){
+          throw std::invalid_argument("Expression invalid input");
+        }
+        args.push_back(parseExpression(cutSpaces(argsStr.substr(0, pos))));
+        auto addArgs = getArgs(cutSpaces(argsStr.substr(pos + 1)));
+        for(const auto& arg : addArgs){
+          args.push_back(arg);
+        }
+        return args;
+      }
+    }
+    args.push_back(parseExpression(argsStr));
+    return args;
+  }
+
+  Expression Expression::simplify(){
+    auto newExpr = std::make_shared<Expression>(*this);
+    return *simplify(newExpr);
+  }
+
+  std::shared_ptr<Expression> Expression::simplify(const std::shared_ptr<Expression> &expr) {
+    for(auto & child : expr->children){
+      if(child != nullptr){
+        child = simplify(child);
+      }
+    }
+    return nullptr;
   }
 }
