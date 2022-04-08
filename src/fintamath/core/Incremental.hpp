@@ -8,10 +8,6 @@ namespace fintamath {
   public:
     ~Incremental() override = default;
 
-    virtual Derived &inc() = 0;
-
-    virtual Derived &dec() = 0;
-
     Derived &operator++() {
       return inc();
     }
@@ -31,5 +27,10 @@ namespace fintamath {
       dec();
       return prev;
     }
+
+  protected:
+    virtual Derived &inc() = 0;
+
+    virtual Derived &dec() = 0;
   };
 }

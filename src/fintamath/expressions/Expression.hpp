@@ -24,9 +24,10 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    bool equals(const Expression &rhs) const override;
-
     std::string solve();
+
+  protected:
+    bool equals(const Expression &rhs) const override;
 
   private:
     std::shared_ptr<Elem> root;

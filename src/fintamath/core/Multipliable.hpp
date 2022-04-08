@@ -8,10 +8,6 @@ namespace fintamath {
   public:
     ~Multipliable() override = default;
 
-    virtual Derived &mul(const Derived &rhs) = 0;
-
-    virtual Derived &div(const Derived &rhs) = 0;
-
     Derived &operator*=(const Derived &rhs) {
       return mul(rhs);
     }
@@ -21,53 +17,60 @@ namespace fintamath {
     }
 
     Derived operator*(const Derived &rhs) const {
-      return Derived(this->template to<Derived>()).mul(rhs);
+      std::unique_ptr<Multipliable<Derived>> tmp = std::make_unique<Derived>(this->template to<Derived>());
+      return tmp->mul(rhs);
     }
 
     Derived operator/(const Derived &rhs) const {
-      return Derived(this->template to<Derived>()).div(rhs);
+      std::unique_ptr<Multipliable<Derived>> tmp = std::make_unique<Derived>(this->template to<Derived>());
+      return tmp->div(rhs);
     }
+
+  protected:
+    virtual Derived &mul(const Derived &rhs) = 0;
+
+    virtual Derived &div(const Derived &rhs) = 0;
   };
 
   template <typename LhsType, typename RhsType,
             typename = std::enable_if_t<std::is_base_of_v<Multipliable<LhsType>, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType &operator*=(LhsType &lhs, const RhsType &rhs) {
-    return lhs.mul(LhsType(rhs));
+    return lhs *= LhsType(rhs);
   }
 
   template <typename LhsType, typename RhsType,
             typename = std::enable_if_t<std::is_base_of_v<Multipliable<LhsType>, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType &operator/=(LhsType &lhs, const RhsType &rhs) {
-    return lhs.div(LhsType(rhs));
+    return lhs /= LhsType(rhs);
   }
 
   template <typename LhsType, typename RhsType,
             typename = std::enable_if_t<std::is_base_of_v<Multipliable<LhsType>, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType operator*(const LhsType &lhs, const RhsType &rhs) {
-    return LhsType(lhs).mul(LhsType(rhs));
+    return lhs * LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
             typename = std::enable_if_t<std::is_base_of_v<Multipliable<RhsType>, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   RhsType operator*(const LhsType &lhs, const RhsType &rhs) {
-    return RhsType(lhs).mul(rhs);
+    return RhsType(lhs) * rhs;
   }
 
   template <typename LhsType, typename RhsType,
             typename = std::enable_if_t<std::is_base_of_v<Multipliable<LhsType>, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType operator/(const LhsType &lhs, const RhsType &rhs) {
-    return LhsType(lhs).div(LhsType(rhs));
+    return lhs / LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
             typename = std::enable_if_t<std::is_base_of_v<Multipliable<RhsType>, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   RhsType operator/(const LhsType &lhs, const RhsType &rhs) {
-    return RhsType(lhs).div(rhs);
+    return RhsType(lhs) / rhs;
   }
 }

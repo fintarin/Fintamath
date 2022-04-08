@@ -88,16 +88,16 @@ namespace fintamath {
     return fintamath::toString(*root);
   }
 
-  bool Expression::equals(const Expression &rhs) const {
-    return fintamath::equals(*root, *rhs.root);
-  }
-
   std::string Expression::solve() {
     solveRec(root);
     auto resVal = toRational(root);
     auto valStr = resVal.toString(INITIAL_PRECISION);
     toShortForm(valStr);
     return valStr;
+  }
+
+  bool Expression::equals(const Expression &rhs) const {
+    return fintamath::equals(*root, *rhs.root);
   }
 
   std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
@@ -591,7 +591,7 @@ namespace fintamath {
   }
 
   bool equals(const Expression::Elem &lhs, const Expression::Elem &rhs) {
-    if (!lhs.info->equals(*rhs.info)) {
+    if (*lhs.info != *rhs.info) {
       return false;
     }
     if (lhs.right) {

@@ -60,15 +60,15 @@ namespace fintamath {
     fixNegative();
   }
 
-  Rational &Rational::round(size_t precision) {
-    return *this = Rational(toString(precision));
+  Rational Rational::round(size_t precision) const {
+    return Rational(toString(precision));
   }
 
   Integer Rational::getInteger() const {
     return numerator / denominator;
   }
 
-   Integer Rational::getNumerator() const {
+  Integer Rational::getNumerator() const {
     return numerator % denominator;
   }
 

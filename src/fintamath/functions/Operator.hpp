@@ -11,6 +11,7 @@ namespace fintamath {
 
     std::string toString() const override;
 
+  protected:
     bool equals(const Operator &rhs) const override;
 
   private:

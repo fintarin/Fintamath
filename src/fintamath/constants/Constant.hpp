@@ -13,6 +13,7 @@ namespace fintamath {
 
     std::string toString() const override;
 
+  protected:
     bool equals(const Constant &rhs) const override;
 
   private:

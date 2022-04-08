@@ -17,6 +17,17 @@ namespace fintamath {
 
     std::string toString() const override;
 
+    Rational round(size_t precision) const;
+
+    std::string toString(size_t precision) const;
+
+    Integer getInteger() const;
+
+    Integer getNumerator() const;
+
+    Integer getDenominator() const;
+
+  protected:
     bool equals(const Rational &rhs) const override;
 
     bool less(const Rational &rhs) const override;
@@ -36,16 +47,6 @@ namespace fintamath {
     Rational &inc() override;
 
     Rational &dec() override;
-
-    Rational &round(size_t precision);
-
-    std::string toString(size_t precision) const;
-
-    Integer getInteger() const;
-
-    Integer getNumerator() const;
-
-    Integer getDenominator() const;
 
   private:
     void fixNegative();

@@ -8,6 +8,11 @@ namespace fintamath {
   public:
     ~MathObject() override = default;
 
+    std::unique_ptr<MathObjectBase> clone() const final {
+      return std::make_unique<Derived>(to<Derived>());
+    }
+
+  protected:
     virtual bool equals(const Derived &rhs) const = 0;
 
     bool equals(const MathObjectBase &rhs) const final {
@@ -15,10 +20,6 @@ namespace fintamath {
         return false;
       }
       return equals(rhs.to<Derived>());
-    }
-
-    std::unique_ptr<MathObjectBase> clone() const final {
-      return std::make_unique<Derived>(to<Derived>());
     }
   };
 }
