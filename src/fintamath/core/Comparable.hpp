@@ -4,7 +4,7 @@
 
 namespace fintamath {
   template <typename Derived>
-  class Comparable : virtual public MathObject<Derived> {
+  class Comparable : virtual public MathObjectBase<Derived> {
   public:
     ~Comparable() override = default;
 
