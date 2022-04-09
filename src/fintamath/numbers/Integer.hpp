@@ -16,6 +16,15 @@ namespace fintamath {
 
     std::string toString() const override;
 
+    size_t getSize() const;
+
+    Integer sqrt() const;
+
+    Integer &operator%=(const Integer &rhs);
+
+    Integer operator%(const Integer &rhs) const;
+
+  protected:
     bool equals(const Integer &rhs) const override;
 
     bool less(const Integer &rhs) const override;
@@ -38,14 +47,6 @@ namespace fintamath {
 
     Integer &mod(const Integer &rhs);
 
-    Integer &sqrt();
-
-    size_t getSize() const;
-
-    Integer &operator%=(const Integer &rhs);
-
-    Integer operator%(const Integer &rhs) const;
-
   private:
     void fixZero();
 
@@ -56,18 +57,18 @@ namespace fintamath {
   template <typename RhsType,
             typename = std::enable_if_t<std::is_convertible_v<RhsType, Integer> && !std::is_same_v<Integer, RhsType>>>
   Integer &operator%=(Integer &lhs, const RhsType &rhs) {
-    return lhs.mod(LhsType(rhs));
+    return lhs %= LhsType(rhs);
   }
 
   template <typename RhsType,
             typename = std::enable_if_t<std::is_convertible_v<RhsType, Integer> && !std::is_same_v<Integer, RhsType>>>
   Integer operator%(const Integer &lhs, const RhsType &rhs) {
-    return Integer(lhs).mod(Integer(rhs));
+    return lhs % Integer(rhs);
   }
 
   template <typename LhsType,
             typename = std::enable_if_t<std::is_convertible_v<LhsType, Integer> && !std::is_same_v<LhsType, Integer>>>
   Integer operator%(const LhsType &lhs, const Integer &rhs) {
-    return Integer(lhs).mod(rhs);
+    return Integer(lhs) % rhs;
   }
 }

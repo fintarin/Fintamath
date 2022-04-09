@@ -6,7 +6,7 @@
 #include "fintamath/expressions/Expression.hpp"
 
 namespace fintamath {
-  class Variable : public MathObject<Variable> {
+  class Variable : public MathObjectBase<Variable> {
   public:
     explicit Variable(const std::string &str);
 

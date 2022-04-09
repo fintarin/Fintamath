@@ -75,12 +75,20 @@ namespace fintamath {
   }
 
   // Changing the number base to solve sqrt
-  Integer &Integer::sqrt() {
+  Integer Integer::sqrt() const {
     if (*this < 0) {
       throw std::domain_error("sqrt out of range");
     }
     auto vect = toIntVector(toString(), 2);
-    return *this = Integer(fintamath::toString(fintamath::sqrt(vect), 1));
+    return Integer(fintamath::toString(fintamath::sqrt(vect), 1));
+  }
+
+  Integer &Integer::operator%=(const Integer &rhs) {
+    return mod(rhs);
+  }
+
+  Integer Integer::operator%(const Integer &rhs) const {
+    return Integer(*this).mod(rhs);
   }
 
   std::string Integer::toString() const {
@@ -200,14 +208,6 @@ namespace fintamath {
 
     fixZero();
     return *this;
-  }
-
-  Integer &Integer::operator%=(const Integer &rhs) {
-    return mod(rhs);
-  }
-
-  Integer Integer::operator%(const Integer &rhs) const {
-    return Integer(*this).mod(rhs);
   }
 
   void Integer::fixZero() {

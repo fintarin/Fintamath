@@ -63,15 +63,34 @@ namespace fintamath {
     }
   }
 
+  Expression::Expression(Expression &&rhs) noexcept : root(std::move(rhs.root)) {
+  }
+
   Expression &Expression::operator=(const Expression &rhs) noexcept {
-    if (&rhs != this && rhs.root) {
-      fintamath::clone(rhs.root, root);
+    if (&rhs != this) {
+      if (rhs.root) {
+        fintamath::clone(rhs.root, root);
+      } else {
+        root = nullptr;
+      }
+    }
+    return *this;
+  }
+
+  Expression &Expression::operator=(Expression &&rhs) noexcept {
+    if (&rhs != this) {
+      std::swap(root, rhs.root);
     }
     return *this;
   }
 
   Expression::Expression(const std::string &str) {
     makeExpression(makeVectOfTokens(str));
+  }
+
+  Expression::Expression(const MathObject &obj) {
+    root = std::make_shared<Expression::Elem>();
+    root->info = obj.clone();
   }
 
   void Expression::makeExpression(const std::vector<std::string> &tokensVect) {
@@ -88,16 +107,16 @@ namespace fintamath {
     return fintamath::toString(*root);
   }
 
-  bool Expression::equals(const Expression &rhs) const {
-    return fintamath::equals(*root, *rhs.root);
-  }
-
   std::string Expression::solve() {
     solveRec(root);
     auto resVal = toRational(root);
     auto valStr = resVal.toString(INITIAL_PRECISION);
     toShortForm(valStr);
     return valStr;
+  }
+
+  bool Expression::equals(const Expression &rhs) const {
+    return fintamath::equals(*root, *rhs.root);
   }
 
   std::vector<std::string> makeVectOfTokens(const std::string &strExpr) {
@@ -566,14 +585,15 @@ namespace fintamath {
   }
 
   std::string toString(const Expression::Elem &elem) {
-    std::string result;
+    std::string res;
     if (elem.right) {
-      result += "(" + fintamath::toString(*elem.right) + ")";
+      res += "(" + fintamath::toString(*elem.right) + ")";
     }
+    res += elem.info->toString();
     if (elem.left) {
-      result += "(" + fintamath::toString(*elem.left) + ")";
+      res += "(" + fintamath::toString(*elem.left) + ")";
     }
-    return result += elem.info->toString();
+    return res;
   }
 
   void clone(const std::shared_ptr<Expression::Elem> &from, std::shared_ptr<Expression::Elem> &to) {
@@ -590,7 +610,7 @@ namespace fintamath {
   }
 
   bool equals(const Expression::Elem &lhs, const Expression::Elem &rhs) {
-    if (!lhs.info->equals(*rhs.info)) {
+    if (*lhs.info != *rhs.info) {
       return false;
     }
     if (lhs.right) {

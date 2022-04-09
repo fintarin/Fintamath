@@ -3,7 +3,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  class Operator : public MathObject<Operator> {
+  class Operator : public MathObjectBase<Operator> {
   public:
     explicit Operator(const std::string &str);
 
@@ -11,6 +11,7 @@ namespace fintamath {
 
     std::string toString() const override;
 
+  protected:
     bool equals(const Operator &rhs) const override;
 
   private:

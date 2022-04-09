@@ -60,15 +60,15 @@ namespace fintamath {
     fixNegative();
   }
 
-  Rational &Rational::round(size_t precision) {
-    return *this = Rational(toString(precision));
+  Rational Rational::round(size_t precision) const {
+    return Rational(toString(precision));
   }
 
   Integer Rational::getInteger() const {
     return numerator / denominator;
   }
 
-   Integer Rational::getNumerator() const {
+  Integer Rational::getNumerator() const {
     return numerator % denominator;
   }
 
@@ -110,7 +110,12 @@ namespace fintamath {
   }
 
   std::string Rational::toString() const {
-    return (sign ? "-" : "") + numerator.toString() + "/" + denominator.toString();
+    std::string res = sign ? "-" : "";
+    res += numerator.toString();
+    if (denominator != 1) {
+      res += "/" + denominator.toString();
+    }
+    return res;
   }
 
   void Rational::fixZero() {

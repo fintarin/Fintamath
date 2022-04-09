@@ -5,7 +5,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  class Constant : public MathObject<Constant> {
+  class Constant : public MathObjectBase<Constant> {
   public:
     explicit Constant(const std::string_view &str);
 
@@ -13,6 +13,7 @@ namespace fintamath {
 
     std::string toString() const override;
 
+  protected:
     bool equals(const Constant &rhs) const override;
 
   private:

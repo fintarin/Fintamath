@@ -3,33 +3,34 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
-  template <typename ObjectType>
-  class Incremental : virtual public MathObject<ObjectType> {
+  template <typename Derived>
+  class Incremental : virtual public MathObjectBase<Derived> {
   public:
     ~Incremental() override = default;
 
-    virtual ObjectType &inc() = 0;
-
-    virtual ObjectType &dec() = 0;
-
-    ObjectType &operator++() {
+    Derived &operator++() {
       return inc();
     }
 
-    ObjectType &operator--() {
+    Derived &operator--() {
       return dec();
     }
 
-    ObjectType operator++(int) {
-      auto prev = ObjectType(this->template to<ObjectType>());
+    Derived operator++(int) {
+      auto prev = Derived(this->template to<Derived>());
       inc();
       return prev;
     }
 
-    ObjectType operator--(int) {
-      auto prev = ObjectType(this->template to<ObjectType>());
+    Derived operator--(int) {
+      auto prev = Derived(this->template to<Derived>());
       dec();
       return prev;
     }
+
+  protected:
+    virtual Derived &inc() = 0;
+
+    virtual Derived &dec() = 0;
   };
 }
