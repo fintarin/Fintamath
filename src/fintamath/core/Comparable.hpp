@@ -38,7 +38,7 @@ namespace fintamath {
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<MathObjectBase, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<Comparable<RhsType>, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator<(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) < rhs;
@@ -52,7 +52,7 @@ namespace fintamath {
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<MathObjectBase, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<Comparable<RhsType>, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator>(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) > rhs;
@@ -66,7 +66,7 @@ namespace fintamath {
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<MathObjectBase, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<Comparable<RhsType>, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator<=(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) <= rhs;
@@ -80,7 +80,7 @@ namespace fintamath {
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<MathObjectBase, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<Comparable<RhsType>, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator>=(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) >= rhs;
