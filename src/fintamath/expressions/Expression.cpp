@@ -566,14 +566,15 @@ namespace fintamath {
   }
 
   std::string toString(const Expression::Elem &elem) {
-    std::string result;
+    std::string res;
     if (elem.right) {
-      result += "(" + fintamath::toString(*elem.right) + ")";
+      res += "(" + fintamath::toString(*elem.right) + ")";
     }
+    res += elem.info->toString();
     if (elem.left) {
-      result += "(" + fintamath::toString(*elem.left) + ")";
+      res += "(" + fintamath::toString(*elem.left) + ")";
     }
-    return result += elem.info->toString();
+    return res;
   }
 
   void clone(const std::shared_ptr<Expression::Elem> &from, std::shared_ptr<Expression::Elem> &to) {
