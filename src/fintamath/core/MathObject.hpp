@@ -3,22 +3,22 @@
 #include "fintamath/core/MathObjectBase.hpp"
 
 namespace fintamath {
-  template <typename ObjectType>
+  template <typename Derived>
   class MathObject : public MathObjectBase {
   public:
     ~MathObject() override = default;
 
-    virtual bool equals(const ObjectType &rhs) const = 0;
+    virtual bool equals(const Derived &rhs) const = 0;
 
     bool equals(const MathObjectBase &rhs) const final {
-      if (!rhs.is<ObjectType>()) {
+      if (!rhs.is<Derived>()) {
         return false;
       }
-      return equals(rhs.to<ObjectType>());
+      return equals(rhs.to<Derived>());
     }
 
     std::unique_ptr<MathObjectBase> clone() const final {
-      return std::make_unique<ObjectType>(to<ObjectType>());
+      return std::make_unique<Derived>(to<Derived>());
     }
   };
 }

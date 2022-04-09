@@ -3,28 +3,28 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
-  template <typename ObjectType>
-  class Comparable : virtual public MathObject<ObjectType> {
+  template <typename Derived>
+  class Comparable : virtual public MathObject<Derived> {
   public:
     ~Comparable() override = default;
 
-    virtual bool less(const ObjectType &rhs) const = 0;
+    virtual bool less(const Derived &rhs) const = 0;
 
-    virtual bool more(const ObjectType &rhs) const = 0;
+    virtual bool more(const Derived &rhs) const = 0;
 
-    bool operator<(const ObjectType &rhs) const {
+    bool operator<(const Derived &rhs) const {
       return less(rhs);
     }
 
-    bool operator>(const ObjectType &rhs) const {
+    bool operator>(const Derived &rhs) const {
       return more(rhs);
     }
 
-    bool operator<=(const ObjectType &rhs) const {
+    bool operator<=(const Derived &rhs) const {
       return !more(rhs);
     }
 
-    bool operator>=(const ObjectType &rhs) const {
+    bool operator>=(const Derived &rhs) const {
       return !less(rhs);
     }
   };

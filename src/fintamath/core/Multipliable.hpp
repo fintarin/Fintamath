@@ -3,29 +3,29 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
-  template <typename ObjectType>
-  class Multipliable : virtual public MathObject<ObjectType> {
+  template <typename Derived>
+  class Multipliable : virtual public MathObject<Derived> {
   public:
     ~Multipliable() override = default;
 
-    virtual ObjectType &mul(const ObjectType &rhs) = 0;
+    virtual Derived &mul(const Derived &rhs) = 0;
 
-    virtual ObjectType &div(const ObjectType &rhs) = 0;
+    virtual Derived &div(const Derived &rhs) = 0;
 
-    ObjectType &operator*=(const ObjectType &rhs) {
+    Derived &operator*=(const Derived &rhs) {
       return mul(rhs);
     }
 
-    ObjectType &operator/=(const ObjectType &rhs) {
+    Derived &operator/=(const Derived &rhs) {
       return div(rhs);
     }
 
-    ObjectType operator*(const ObjectType &rhs) const {
-      return ObjectType(this->template to<ObjectType>()).mul(rhs);
+    Derived operator*(const Derived &rhs) const {
+      return Derived(this->template to<Derived>()).mul(rhs);
     }
 
-    ObjectType operator/(const ObjectType &rhs) const {
-      return ObjectType(this->template to<ObjectType>()).div(rhs);
+    Derived operator/(const Derived &rhs) const {
+      return Derived(this->template to<Derived>()).div(rhs);
     }
   };
 

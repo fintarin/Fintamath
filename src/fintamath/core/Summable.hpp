@@ -3,39 +3,39 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
-  template <typename ObjectType>
-  class Summable : virtual public MathObject<ObjectType> {
+  template <typename Derived>
+  class Summable : virtual public MathObject<Derived> {
   public:
     ~Summable() override = default;
 
-    virtual ObjectType &add(const ObjectType &rhs) = 0;
+    virtual Derived &add(const Derived &rhs) = 0;
 
-    virtual ObjectType &sub(const ObjectType &rhs) = 0;
+    virtual Derived &sub(const Derived &rhs) = 0;
 
-    virtual ObjectType &neg() = 0;
+    virtual Derived &neg() = 0;
 
-    ObjectType &operator+=(const ObjectType &rhs) {
+    Derived &operator+=(const Derived &rhs) {
       return add(rhs);
     }
 
-    ObjectType &operator-=(const ObjectType &rhs) {
+    Derived &operator-=(const Derived &rhs) {
       return sub(rhs);
     }
 
-    ObjectType operator+(const ObjectType &rhs) const {
-      return ObjectType(this->template to<ObjectType>()).add(rhs);
+    Derived operator+(const Derived &rhs) const {
+      return Derived(this->template to<Derived>()).add(rhs);
     }
 
-    ObjectType operator-(const ObjectType &rhs) const {
-      return ObjectType(this->template to<ObjectType>()).sub(rhs);
+    Derived operator-(const Derived &rhs) const {
+      return Derived(this->template to<Derived>()).sub(rhs);
     }
 
-    ObjectType operator+() const {
-      return ObjectType(this->template to<ObjectType>());
+    Derived operator+() const {
+      return Derived(this->template to<Derived>());
     }
 
-    ObjectType operator-() const {
-      return ObjectType(this->template to<ObjectType>()).neg();
+    Derived operator-() const {
+      return Derived(this->template to<Derived>()).neg();
     }
   };
 
