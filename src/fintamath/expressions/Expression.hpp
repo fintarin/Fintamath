@@ -22,6 +22,8 @@ namespace fintamath {
 
     explicit Expression(const std::string &str);
 
+    explicit Expression(const MathObject &obj);
+
     std::string toString() const override;
 
     std::string solve();

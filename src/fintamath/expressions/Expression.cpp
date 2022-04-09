@@ -74,6 +74,11 @@ namespace fintamath {
     makeExpression(makeVectOfTokens(str));
   }
 
+  Expression::Expression(const MathObject &obj) {
+    root = std::make_shared<Expression::Elem>();
+    root->info = obj.clone();
+  }
+
   void Expression::makeExpression(const std::vector<std::string> &tokensVect) {
     if (tokensVect.empty()) {
       throw std::invalid_argument("Expression invalid input");
