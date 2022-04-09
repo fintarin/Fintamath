@@ -110,7 +110,12 @@ namespace fintamath {
   }
 
   std::string Rational::toString() const {
-    return (sign ? "-" : "") + numerator.toString() + "/" + denominator.toString();
+    std::string res = sign ? "-" : "";
+    res += numerator.toString();
+    if (denominator != 1) {
+      res += "/" + denominator.toString();
+    }
+    return res;
   }
 
   void Rational::fixZero() {
