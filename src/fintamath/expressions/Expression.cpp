@@ -63,9 +63,23 @@ namespace fintamath {
     }
   }
 
+  Expression::Expression(Expression &&rhs) noexcept : root(std::move(rhs.root)) {
+  }
+
   Expression &Expression::operator=(const Expression &rhs) noexcept {
-    if (&rhs != this && rhs.root) {
-      fintamath::clone(rhs.root, root);
+    if (&rhs != this) {
+      if (rhs.root) {
+        fintamath::clone(rhs.root, root);
+      } else {
+        root = nullptr;
+      }
+    }
+    return *this;
+  }
+
+  Expression &Expression::operator=(Expression &&rhs) noexcept {
+    if (&rhs != this) {
+      std::swap(root, rhs.root);
     }
     return *this;
   }

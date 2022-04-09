@@ -18,7 +18,13 @@ namespace fintamath {
 
     Expression(const Expression &rhs) noexcept;
 
+    Expression(Expression &&rhs) noexcept;
+
     Expression &operator=(const Expression &rhs) noexcept;
+
+    Expression &operator=(Expression &&rhs) noexcept;
+
+    ~Expression() override = default;
 
     explicit Expression(const std::string &str);
 
