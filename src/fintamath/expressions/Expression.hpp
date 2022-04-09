@@ -8,11 +8,6 @@
 namespace fintamath {
   class Expression : public MathObjectImpl<Expression> {
   public:
-    struct Elem {
-      std::shared_ptr<MathObject> info;
-      std::shared_ptr<Elem> left;
-      std::shared_ptr<Elem> right;
-    };
 
     Expression() = default;
 
@@ -36,6 +31,13 @@ namespace fintamath {
     bool equals(const Expression &rhs) const override;
 
   private:
-    std::shared_ptr<Elem> root;
+    std::shared_ptr<MathObject> info;
+    std::vector<std::shared_ptr<Expression>> children;
+
+    static std::shared_ptr<Expression> parseExpression(const std::string& expr);
+    static std::shared_ptr<Expression> parseDivMulTerm(const std::string& term);
+    static std::shared_ptr<Expression> parseNegPowFactorTerm(const std::string& term);
+    static std::shared_ptr<Expression> parseFiniteTerm(const std::string& term);
+    static std::shared_ptr<Expression> parseFunction(const std::string& term);
   };
 }
