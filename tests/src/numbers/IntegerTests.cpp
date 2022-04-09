@@ -665,11 +665,11 @@ TEST(IntegerTests, toStringTest) {
 
 TEST(IntegerTests, cloneTests){
   auto a = Integer(100);
-  EXPECT_TRUE(&a != &(*a.clone()) && a.equals((*a.clone()).to<Integer>()));
+  EXPECT_TRUE(&a != &(*a.clone()) && a == (*a.clone()).to<Integer>());
 }
 
 TEST(IntegerTests, equalsTests){
-  EXPECT_TRUE(Integer(100).equals(Integer("100")));
-  EXPECT_FALSE(Integer(100).equals(Integer("-100")));
-  EXPECT_FALSE(Integer(100).equals(Integer("1")));
+  EXPECT_TRUE(Integer(100) == Integer("100"));
+  EXPECT_FALSE(Integer(100) == Integer("-100"));
+  EXPECT_FALSE(Integer(100) == Integer("1"));
 }

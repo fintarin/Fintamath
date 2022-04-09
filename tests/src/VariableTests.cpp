@@ -23,6 +23,6 @@ TEST(VariableTests, cloneTests){
 }
 
 TEST(VariableTests, equalsTests){
-  EXPECT_TRUE(Variable("a").equals(Variable("a")));
-  EXPECT_FALSE(Variable("z").equals(Variable("Z")));
+  EXPECT_TRUE(Variable("a") == Variable("a"));
+  EXPECT_FALSE(Variable("z") == Variable("Z"));
 }

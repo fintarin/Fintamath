@@ -27,10 +27,10 @@ TEST(ConstantTest, toStringTest){
 
 TEST(ConstantTests, cloneTests){
   auto a = Constant("e");
-  EXPECT_TRUE(&a != &(*a.clone()) && a.equals((*a.clone()).to<Constant>()));
+  EXPECT_TRUE(&a != &(*a.clone()) && a==(*a.clone()).to<Constant>());
 }
 
 TEST(ConstantTests, equalsTests){
-  EXPECT_TRUE(Constant("e").equals(Constant("e")));
-  EXPECT_FALSE(Constant("e").equals(Constant("pi")));
+  EXPECT_TRUE(Constant("e") == Constant("e"));
+  EXPECT_FALSE(Constant("e") == Constant("pi"));
 }
