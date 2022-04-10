@@ -23,9 +23,11 @@ namespace fintamath {
 
     explicit Expression(const std::string &str);
 
-    explicit Expression(const MathObject &obj);
+    explicit Expression(const MathObjectPtr &obj);
 
     std::string toString() const override;
+
+    Expression simplify();
 
   protected:
     bool equals(const Expression &rhs) const override;
@@ -41,6 +43,8 @@ namespace fintamath {
     static std::shared_ptr<Expression> parseFunction(const std::string& term);
     static std::vector<std::shared_ptr<Expression>> getArgs(const std::string& args);
 
-    static std::shared_ptr<Expression> simplify(const std::shared_ptr<Expression>& expression);
+    static std::shared_ptr<Expression> mainSimplify(const std::shared_ptr<Expression>& expr);
+    static std::shared_ptr<Expression> simplifyNumbers(const std::shared_ptr<Expression>& expr);
+    static std::shared_ptr<Expression> subDivNegSimplify(const std::shared_ptr<Expression>& expr);
   };
 }
