@@ -39,5 +39,8 @@ namespace fintamath {
     static std::shared_ptr<Expression> parseNegPowFactorTerm(const std::string& term);
     static std::shared_ptr<Expression> parseFiniteTerm(const std::string& term);
     static std::shared_ptr<Expression> parseFunction(const std::string& term);
+    static std::vector<std::shared_ptr<Expression>> getArgs(const std::string& args);
+
+    static std::shared_ptr<Expression> simplify(const std::shared_ptr<Expression>& expression);
   };
 }

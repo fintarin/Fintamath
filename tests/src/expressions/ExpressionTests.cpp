@@ -17,5 +17,5 @@ using namespace fintamath;
 //}
 
 TEST(ExpressionTests, parserTest){
-  auto a = Expression(" - ( 2 !) ! ^ 3");
+  auto a = Expression("log( 1 + 2 , a)");
 }
