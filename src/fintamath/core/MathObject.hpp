@@ -36,9 +36,9 @@ namespace fintamath {
   };
 
   template <typename Derived>
-  class MathObjectBase : virtual public MathObject {
+  class MathObjectImpl : virtual public MathObject {
   public:
-    ~MathObjectBase() override = default;
+    ~MathObjectImpl() override = default;
 
     std::unique_ptr<MathObject> clone() const final {
       return std::make_unique<Derived>(to<Derived>());

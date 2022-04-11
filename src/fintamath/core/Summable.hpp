@@ -4,7 +4,7 @@
 
 namespace fintamath {
   template <typename Derived>
-  class Summable : virtual public MathObjectBase<Derived> {
+  class Summable : virtual public MathObjectImpl<Derived> {
   public:
     ~Summable() override = default;
 

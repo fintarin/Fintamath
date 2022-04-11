@@ -5,7 +5,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  class Constant : public MathObjectBase<Constant> {
+  class Constant : public MathObjectImpl<Constant> {
   public:
     explicit Constant(const std::string_view &str);
 

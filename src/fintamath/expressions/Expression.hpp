@@ -6,7 +6,7 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
-  class Expression : public MathObjectBase<Expression> {
+  class Expression : public MathObjectImpl<Expression> {
   public:
     struct Elem {
       std::shared_ptr<MathObject> info;

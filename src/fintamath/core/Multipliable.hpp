@@ -4,7 +4,7 @@
 
 namespace fintamath {
   template <typename Derived>
-  class Multipliable : virtual public MathObjectBase<Derived> {
+  class Multipliable : virtual public MathObjectImpl<Derived> {
   public:
     ~Multipliable() override = default;
 

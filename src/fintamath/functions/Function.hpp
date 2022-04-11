@@ -5,7 +5,7 @@
 #include <string>
 
 namespace fintamath {
-  class Function : public MathObjectBase<Function> {
+  class Function : public MathObjectImpl<Function> {
   public:
     explicit Function(const std::string &str);
 
