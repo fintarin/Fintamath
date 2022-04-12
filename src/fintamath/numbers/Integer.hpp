@@ -35,8 +35,6 @@ namespace fintamath {
 
     Integer &sub(const Integer &rhs) override;
 
-    Integer &neg() override;
-
     Integer &mul(const Integer &rhs) override;
 
     Integer &div(const Integer &rhs) override;

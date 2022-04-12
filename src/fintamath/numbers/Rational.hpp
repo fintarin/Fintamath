@@ -38,8 +38,6 @@ namespace fintamath {
 
     Rational &sub(const Rational &rhs) override;
 
-    Rational &neg() override;
-
     Rational &mul(const Rational &rhs) override;
 
     Rational &div(const Rational &rhs) override;

@@ -159,11 +159,6 @@ namespace fintamath {
     return *this;
   }
 
-  Rational &Rational::neg() {
-    sign = !sign;
-    return *this;
-  }
-
   Rational &Rational::mul(const Rational &rhs) {
     numerator *= rhs.numerator;
     denominator *= rhs.denominator;
