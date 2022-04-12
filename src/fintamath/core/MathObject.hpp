@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 
+#include "fintamath/meta/Converter.hpp"
+
 namespace fintamath {
   class MathObject {
   public:
@@ -48,10 +50,16 @@ namespace fintamath {
     virtual bool equals(const Derived &rhs) const = 0;
 
     bool equals(const MathObject &rhs) const final {
-      if (!rhs.is<Derived>()) {
-        return false;
+      if (rhs.is<Derived>()) {
+        return equals(rhs.to<Derived>());
       }
-      return equals(rhs.to<Derived>());
+      if (auto tmp = meta::convert(*this, rhs); tmp != nullptr) {
+        return *this == *tmp;
+      }
+      if (auto tmp = meta::convert(rhs, *this); tmp != nullptr) {
+        return *tmp == rhs;
+      }
+      return false;
     }
   };
 
