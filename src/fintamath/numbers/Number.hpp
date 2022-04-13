@@ -7,10 +7,10 @@
 
 namespace fintamath {
   template <typename Derived>
-  class Number : public Comparable<Derived>,
-                 public Summable<Derived>,
-                 public Multipliable<Derived>,
-                 public Incremental<Derived> {
+  class Number : virtual public ComparableImpl<Derived>,
+                 virtual public SummableImpl<Derived>,
+                 virtual public MultipliableImpl<Derived>,
+                 virtual public Incremental<Derived> {
   public:
     ~Number() override = default;
   };
