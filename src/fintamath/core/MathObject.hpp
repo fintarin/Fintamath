@@ -23,12 +23,12 @@ namespace fintamath {
       return !equals(rhs);
     }
 
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<MathObject, T>>>
+    template <typename T>
     const T &to() const {
       return dynamic_cast<const T &>(*this);
     }
 
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<MathObject, T>>>
+    template <typename T>
     bool is() const {
       return typeid(*this) == typeid(T);
     }
