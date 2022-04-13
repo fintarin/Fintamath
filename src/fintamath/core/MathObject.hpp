@@ -7,13 +7,16 @@
 #include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
+  class MathObject;
+  using MathObjectPtr = std::unique_ptr<MathObject>;
+
   class MathObject {
   public:
     virtual ~MathObject() = default;
 
     virtual std::string toString() const = 0;
 
-    virtual std::unique_ptr<MathObject> clone() const = 0;
+    virtual MathObjectPtr clone() const = 0;
 
     template <typename T>
     const T &to() const {
@@ -46,7 +49,7 @@ namespace fintamath {
   public:
     ~MathObjectImpl() override = default;
 
-    std::unique_ptr<MathObject> clone() const final {
+    MathObjectPtr clone() const final {
       return std::make_unique<Derived>(to<Derived>());
     }
 
@@ -63,12 +66,12 @@ namespace fintamath {
 
     bool equalsAbstract(const MathObject &rhs) const final {
       if (rhs.is<Derived>()) {
-        return *this == rhs.to<Derived>();
+        return equals(rhs.to<Derived>());
       }
-      if (auto tmp = meta::convert(*this, rhs); tmp != nullptr) {
+      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
         return *this == *tmp;
       }
-      if (auto tmp = meta::convert(rhs, *this); tmp != nullptr) {
+      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
         return *tmp == rhs;
       }
       return false;

@@ -1,14 +1,20 @@
 #pragma once
 
 #include "fintamath/meta/MultiMethod.hpp"
+
 #include <memory>
 
 namespace fintamath {
   class MathObject;
+  using MathObjectPtr = std::unique_ptr<MathObject>;
 }
 
 namespace fintamath::meta {
-  MultiMethod<std::unique_ptr<MathObject>(const MathObject &, const MathObject &)> initConverter();
+  class Converter {
+  public:
+    static MathObjectPtr convertToBase(const MathObject &, const MathObject &);
 
-  const auto convert = initConverter();
+  private:
+    static const MultiMethod<MathObjectPtr(const MathObject &, const MathObject &)> converter;
+  };
 }
