@@ -10,7 +10,11 @@ namespace fintamath {
 }
 
 namespace fintamath::meta {
-  MultiMethod<MathObjectPtr(const MathObject &, const MathObject &)> initConverter();
+  class Converter {
+  public:
+    static MathObjectPtr convertToBase(const MathObject &, const MathObject &);
 
-  const auto convert = initConverter();
+  private:
+    static const MultiMethod<MathObjectPtr(const MathObject &, const MathObject &)> converter;
+  };
 }
