@@ -3,41 +3,44 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
+  class Summable;
+  using SummablePtr = std::unique_ptr<Summable>;
+
   class Summable : virtual public MathObject {
   public:
     ~Summable() override = default;
 
-    friend std::unique_ptr<Summable> operator+(const Summable &lhs, const Summable &rhs);
+    friend SummablePtr operator+(const Summable &lhs, const Summable &rhs);
 
-    friend std::unique_ptr<Summable> operator-(const Summable &lhs, const Summable &rhs);
+    friend SummablePtr operator-(const Summable &lhs, const Summable &rhs);
 
-    friend std::unique_ptr<Summable> operator+(const Summable &rhs);
+    friend SummablePtr operator+(const Summable &rhs);
 
-    friend std::unique_ptr<Summable> operator-(const Summable &rhs);
+    friend SummablePtr operator-(const Summable &rhs);
 
   protected:
-    virtual std::unique_ptr<Summable> addAbstract(const Summable &rhs) const = 0;
+    virtual SummablePtr addAbstract(const Summable &rhs) const = 0;
 
-    virtual std::unique_ptr<Summable> substractAbstract(const Summable &rhs) const = 0;
+    virtual SummablePtr substractAbstract(const Summable &rhs) const = 0;
 
-    virtual std::unique_ptr<Summable> convertAbstract() const = 0;
+    virtual SummablePtr convertAbstract() const = 0;
 
-    virtual std::unique_ptr<Summable> negateAbstract() const = 0;
+    virtual SummablePtr negateAbstract() const = 0;
   };
 
-  inline std::unique_ptr<Summable> operator+(const Summable &lhs, const Summable &rhs) {
+  inline SummablePtr operator+(const Summable &lhs, const Summable &rhs) {
     return lhs.addAbstract(rhs);
   }
 
-  inline std::unique_ptr<Summable> operator-(const Summable &lhs, const Summable &rhs) {
+  inline SummablePtr operator-(const Summable &lhs, const Summable &rhs) {
     return lhs.substractAbstract(rhs);
   }
 
-  inline std::unique_ptr<Summable> operator+(const Summable &rhs) {
+  inline SummablePtr operator+(const Summable &rhs) {
     return rhs.convertAbstract();
   }
 
-  inline std::unique_ptr<Summable> operator-(const Summable &rhs) {
+  inline SummablePtr operator-(const Summable &rhs) {
     return rhs.negateAbstract();
   }
 
@@ -78,7 +81,7 @@ namespace fintamath {
 
     virtual Derived &negate() = 0;
 
-    std::unique_ptr<Summable> addAbstract(const Summable &rhs) const final {
+    SummablePtr addAbstract(const Summable &rhs) const final {
       if (rhs.is<Derived>()) {
         return std::make_unique<Derived>(*this + rhs.to<Derived>());
       }
@@ -91,7 +94,7 @@ namespace fintamath {
       throw std::invalid_argument("Cannot be summarized");
     }
 
-    std::unique_ptr<Summable> substractAbstract(const Summable &rhs) const final {
+    SummablePtr substractAbstract(const Summable &rhs) const final {
       if (rhs.is<Derived>()) {
         return std::make_unique<Derived>(*this - rhs.to<Derived>());
       }
@@ -104,11 +107,11 @@ namespace fintamath {
       throw std::invalid_argument("Cannot be substacted");
     }
 
-    std::unique_ptr<Summable> convertAbstract() const final {
+    SummablePtr convertAbstract() const final {
       return std::make_unique<Derived>(+(*this));
     }
 
-    std::unique_ptr<Summable> negateAbstract() const final {
+    SummablePtr negateAbstract() const final {
       return std::make_unique<Derived>(-(*this));
     }
   };

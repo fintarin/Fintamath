@@ -3,6 +3,9 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
+  class Comparable;
+  using ComparablePtr = std::unique_ptr<Comparable>;
+
   class Comparable : virtual public MathObject {
   public:
     ~Comparable() override = default;

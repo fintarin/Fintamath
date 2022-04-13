@@ -6,10 +6,13 @@
 #include "fintamath/core/Summable.hpp"
 
 namespace fintamath {
-  class Number : public virtual Comparable,
-                 public virtual Summable,
-                 public virtual Multipliable,
-                 public virtual Incremental {
+  class Number;
+  using NumberPtr = std::unique_ptr<Number>;
+
+  class Number : virtual public Comparable,
+                 virtual public Summable,
+                 virtual public Multipliable,
+                 virtual public Incremental {
   public:
     ~Number() override = default;
   };

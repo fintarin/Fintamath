@@ -3,25 +3,28 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
+  class Multipliable;
+  using MultipliablePtr = std::unique_ptr<Multipliable>;
+
   class Multipliable : virtual public MathObject {
   public:
     ~Multipliable() override = default;
 
-    friend std::unique_ptr<Multipliable> operator*(const Multipliable &lhs, const Multipliable &rhs);
+    friend MultipliablePtr operator*(const Multipliable &lhs, const Multipliable &rhs);
 
-    friend std::unique_ptr<Multipliable> operator/(const Multipliable &lhs, const Multipliable &rhs);
+    friend MultipliablePtr operator/(const Multipliable &lhs, const Multipliable &rhs);
 
   protected:
-    virtual std::unique_ptr<Multipliable> multiplyAbstract(const Multipliable &rhs) const = 0;
+    virtual MultipliablePtr multiplyAbstract(const Multipliable &rhs) const = 0;
 
-    virtual std::unique_ptr<Multipliable> divideAbstract(const Multipliable &rhs) const = 0;
+    virtual MultipliablePtr divideAbstract(const Multipliable &rhs) const = 0;
   };
 
-  inline std::unique_ptr<Multipliable> operator*(const Multipliable &lhs, const Multipliable &rhs) {
+  inline MultipliablePtr operator*(const Multipliable &lhs, const Multipliable &rhs) {
     return lhs.multiplyAbstract(rhs);
   }
 
-  inline std::unique_ptr<Multipliable> operator/(const Multipliable &lhs, const Multipliable &rhs) {
+  inline MultipliablePtr operator/(const Multipliable &lhs, const Multipliable &rhs) {
     return lhs.divideAbstract(rhs);
   }
 
@@ -51,7 +54,7 @@ namespace fintamath {
 
     virtual Derived &divide(const Derived &rhs) = 0;
 
-    std::unique_ptr<Multipliable> multiplyAbstract(const Multipliable &rhs) const final {
+    MultipliablePtr multiplyAbstract(const Multipliable &rhs) const final {
       if (rhs.is<Derived>()) {
         return std::make_unique<Derived>(*this * rhs.to<Derived>());
       }
@@ -64,7 +67,7 @@ namespace fintamath {
       throw std::invalid_argument("Cannot be multiplied");
     }
 
-    std::unique_ptr<Multipliable> divideAbstract(const Multipliable &rhs) const final {
+    MultipliablePtr divideAbstract(const Multipliable &rhs) const final {
       if (rhs.is<Derived>()) {
         return std::make_unique<Derived>(*this / rhs.to<Derived>());
       }

@@ -1,21 +1,23 @@
 #pragma once
 
-#include "fintamath/core/Summable.hpp"
-#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
+  class Function;
+  using FunctionPtr = std::unique_ptr<Function>;
+
   class Function : virtual public MathObject {
   public:
     ~Function() override = default;
 
     template <typename... Args>
-    std::unique_ptr<MathObject> operator()(const Args &...args) const {
+    MathObjectPtr operator()(const Args &...args) const {
       std::vector<std::shared_ptr<MathObject>> argsVect = {args.clone()...};
       return call(argsVect);
     }
 
   protected:
-    virtual std::unique_ptr<MathObject> call(const std::vector<std::shared_ptr<MathObject>> &argsVect) const = 0;
+    virtual MathObjectPtr call(const std::vector<std::shared_ptr<MathObject>> &argsVect) const = 0;
   };
 
   template <typename Derived>
