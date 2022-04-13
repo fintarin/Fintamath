@@ -9,28 +9,28 @@ namespace fintamath {
     ~Incremental() override = default;
 
     Derived &operator++() {
-      return inc();
+      return increase();
     }
 
     Derived &operator--() {
-      return dec();
+      return decrease();
     }
 
     Derived operator++(int) {
       auto prev = Derived(this->template to<Derived>());
-      inc();
+      increase();
       return prev;
     }
 
     Derived operator--(int) {
       auto prev = Derived(this->template to<Derived>());
-      dec();
+      decrease();
       return prev;
     }
 
   protected:
-    virtual Derived &inc() = 0;
+    virtual Derived &increase() = 0;
 
-    virtual Derived &dec() = 0;
+    virtual Derived &decrease() = 0;
   };
 }

@@ -151,7 +151,7 @@ namespace fintamath {
     return *this;
   }
 
-  Rational &Rational::sub(const Rational &rhs) {
+  Rational &Rational::substract(const Rational &rhs) {
     Rational tmpRhs = rhs;
     toCommonDenominators(*this, tmpRhs);
     numerator -= tmpRhs.numerator;
@@ -159,7 +159,7 @@ namespace fintamath {
     return *this;
   }
 
-  Rational &Rational::mul(const Rational &rhs) {
+  Rational &Rational::multiply(const Rational &rhs) {
     numerator *= rhs.numerator;
     denominator *= rhs.denominator;
     sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
@@ -167,7 +167,7 @@ namespace fintamath {
     return *this;
   }
 
-  Rational &Rational::div(const Rational &rhs) {
+  Rational &Rational::divide(const Rational &rhs) {
     numerator *= rhs.denominator;
     denominator *= rhs.numerator;
     sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
@@ -175,11 +175,11 @@ namespace fintamath {
     return *this;
   }
 
-  Rational &Rational::inc() {
+  Rational &Rational::increase() {
     return *this += 1;
   }
 
-  Rational &Rational::dec() {
+  Rational &Rational::decrease() {
     return *this -= 1;
   }
 

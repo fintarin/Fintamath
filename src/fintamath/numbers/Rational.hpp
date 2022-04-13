@@ -36,15 +36,15 @@ namespace fintamath {
 
     Rational &add(const Rational &rhs) override;
 
-    Rational &sub(const Rational &rhs) override;
+    Rational &substract(const Rational &rhs) override;
 
-    Rational &mul(const Rational &rhs) override;
+    Rational &multiply(const Rational &rhs) override;
 
-    Rational &div(const Rational &rhs) override;
+    Rational &divide(const Rational &rhs) override;
 
-    Rational &inc() override;
+    Rational &increase() override;
 
-    Rational &dec() override;
+    Rational &decrease() override;
 
   private:
     void fixNegative();

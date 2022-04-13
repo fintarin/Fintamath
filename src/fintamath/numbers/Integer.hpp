@@ -33,15 +33,15 @@ namespace fintamath {
 
     Integer &add(const Integer &rhs) override;
 
-    Integer &sub(const Integer &rhs) override;
+    Integer &substract(const Integer &rhs) override;
 
-    Integer &mul(const Integer &rhs) override;
+    Integer &multiply(const Integer &rhs) override;
 
-    Integer &div(const Integer &rhs) override;
+    Integer &divide(const Integer &rhs) override;
 
-    Integer &inc() override;
+    Integer &increase() override;
 
-    Integer &dec() override;
+    Integer &decrease() override;
 
     Integer &mod(const Integer &rhs);
 

@@ -48,27 +48,27 @@ namespace fintamath {
     }
 
     Derived &operator*=(const Derived &rhs) {
-      return mul(rhs);
+      return multiply(rhs);
     }
 
     Derived &operator/=(const Derived &rhs) {
-      return div(rhs);
+      return divide(rhs);
     }
 
     Derived operator*(const Derived &rhs) const {
       std::unique_ptr<MultipliableImpl<Derived>> tmp = std::make_unique<Derived>(this->template to<Derived>());
-      return tmp->mul(rhs);
+      return tmp->multiply(rhs);
     }
 
     Derived operator/(const Derived &rhs) const {
       std::unique_ptr<MultipliableImpl<Derived>> tmp = std::make_unique<Derived>(this->template to<Derived>());
-      return tmp->div(rhs);
+      return tmp->divide(rhs);
     }
 
   protected:
-    virtual Derived &mul(const Derived &rhs) = 0;
+    virtual Derived &multiply(const Derived &rhs) = 0;
 
-    virtual Derived &div(const Derived &rhs) = 0;
+    virtual Derived &divide(const Derived &rhs) = 0;
   };
 
   template <typename LhsType, typename RhsType,

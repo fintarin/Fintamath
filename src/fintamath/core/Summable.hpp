@@ -52,7 +52,7 @@ namespace fintamath {
     }
 
     Derived &operator-=(const Derived &rhs) {
-      return sub(rhs);
+      return substract(rhs);
     }
 
     Derived operator+(const Derived &rhs) const {
@@ -74,7 +74,7 @@ namespace fintamath {
   protected:
     virtual Derived &add(const Derived &rhs) = 0;
 
-    virtual Derived &sub(const Derived &rhs) = 0;
+    virtual Derived &substract(const Derived &rhs) = 0;
   };
 
   template <typename LhsType, typename RhsType,
