@@ -10,7 +10,7 @@ namespace fintamath {
   class Number : virtual public ComparableImpl<Derived>,
                  virtual public SummableImpl<Derived>,
                  virtual public MultipliableImpl<Derived>,
-                 virtual public Incremental<Derived> {
+                 virtual public IncrementalImpl<Derived> {
   public:
     ~Number() override = default;
   };
