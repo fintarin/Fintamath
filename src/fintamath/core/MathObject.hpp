@@ -30,7 +30,7 @@ namespace fintamath {
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<MathObject, T>>>
     bool is() const {
-      return dynamic_cast<const T *>(this);
+      return typeid(*this) == typeid(T);
     }
 
   protected:
