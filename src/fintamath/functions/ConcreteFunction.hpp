@@ -5,9 +5,9 @@
 #include <string>
 
 namespace fintamath {
-  class Function : public MathObjectImpl<Function> {
+  class ConcreteFunction : public MathObjectImpl<ConcreteFunction> {
   public:
-    explicit Function(const std::string &str);
+    explicit ConcreteFunction(const std::string &str);
 
     Rational solve(const Rational &rhs, int64_t precision) const;
 
@@ -16,7 +16,7 @@ namespace fintamath {
     std::string toString() const override;
 
   protected:
-    bool equals(const Function &rhs) const override;
+    bool equals(const ConcreteFunction &rhs) const override;
 
   private:
     std::string name;
