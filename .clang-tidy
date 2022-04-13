@@ -12,9 +12,11 @@ Checks: >-
   -cert-dcl21-cpp,
   -cert-err58-cpp,
   -cppcoreguidelines-special-member-functions,
+  -cppcoreguidelines-virtual-class-destructor,
   -hicpp-explicit-conversions,
   -hicpp-special-member-functions,
   -misc-no-recursion,
   -modernize-use-trailing-return-type,
   -modernize-use-nodiscard,
+  -readability-identifier-length,
   -readability-suspicious-call-argument
