@@ -39,6 +39,8 @@ namespace fintamath {
 
     Integer &divide(const Integer &rhs) override;
 
+    Integer &negate() override;
+
     Integer &increase() override;
 
     Integer &decrease() override;

@@ -180,6 +180,11 @@ namespace fintamath {
     return *this;
   }
 
+  Integer &Integer::negate() {
+    sign = !sign;
+    return *this;
+  }
+
   Integer &Integer::increase() {
     return *this += 1;
   }

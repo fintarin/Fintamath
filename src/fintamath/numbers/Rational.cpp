@@ -175,6 +175,11 @@ namespace fintamath {
     return *this;
   }
 
+  Rational &Rational::negate() {
+    sign = !sign;
+    return *this;
+  }
+
   Rational &Rational::increase() {
     return *this += 1;
   }

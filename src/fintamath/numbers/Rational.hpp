@@ -42,6 +42,8 @@ namespace fintamath {
 
     Rational &divide(const Rational &rhs) override;
 
+    Rational &negate() override;
+
     Rational &increase() override;
 
     Rational &decrease() override;
