@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "fintamath/constants/Constant.hpp"
-#include "fintamath/functions/Function.hpp"
+#include "fintamath/functions/ConcreteFunction.hpp"
 #include "fintamath/functions/Operator.hpp"
 #include "fintamath/variables/Variable.hpp"
 
@@ -395,7 +395,7 @@ namespace fintamath {
 
       if (bracketsNum == 0 && (tokensVect[i] == oper1 || tokensVect[i] == oper2)) {
         if (types::isBinaryFunction(oper1)) {
-          elem->info = std::make_shared<Function>(tokensVect[i]);
+          elem->info = std::make_shared<ConcreteFunction>(tokensVect[i]);
         } else {
           elem->info = std::make_shared<Operator>(tokensVect[i]);
         }
@@ -416,7 +416,7 @@ namespace fintamath {
   bool descent(const std::vector<std::string> &tokensVect, const std::shared_ptr<Expression::Elem> &elem, size_t begin,
                size_t end) {
     if (types::isFunction(tokensVect[end])) {
-      elem->info = std::make_shared<Function>(tokensVect[end]);
+      elem->info = std::make_shared<ConcreteFunction>(tokensVect[end]);
       makeExpressionRec(tokensVect, elem->right, begin, end - 1);
       return true;
     }
@@ -490,7 +490,7 @@ namespace fintamath {
       if (elem->right->info == nullptr) {
         throw std::invalid_argument("Solver invalid input");
       }
-      if (elem->right->info->is<Operator>() || elem->right->info->is<Function>()) {
+      if (elem->right->info->is<Operator>() || elem->right->info->is<ConcreteFunction>()) {
         solveRec(elem->right);
       }
     }
@@ -499,7 +499,7 @@ namespace fintamath {
       if (elem->left->info == nullptr) {
         throw std::invalid_argument("Solver invalid input");
       }
-      if (elem->left->info->is<Operator>() || elem->left->info->is<Function>()) {
+      if (elem->left->info->is<Operator>() || elem->left->info->is<ConcreteFunction>()) {
         solveRec(elem->left);
       }
     }
@@ -511,8 +511,8 @@ namespace fintamath {
       return;
     }
 
-    if (elem->info->is<Function>()) {
-      Function func(elem->info->toString());
+    if (elem->info->is<ConcreteFunction>()) {
+      ConcreteFunction func(elem->info->toString());
       Rational val;
       if (types::isBinaryFunction(func.toString())) {
         val = Rational(

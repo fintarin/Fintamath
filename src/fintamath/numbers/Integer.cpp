@@ -153,11 +153,6 @@ namespace fintamath {
     return *this += tmpRhs;
   }
 
-  Integer &Integer::neg() {
-    sign = !sign;
-    return *this;
-  }
-
   Integer &Integer::mul(const Integer &rhs) {
     intVect = multiply(intVect, rhs.intVect, INT_BASE);
     sign = !((sign && rhs.sign) || (!sign && !rhs.sign));

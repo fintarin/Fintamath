@@ -4,7 +4,7 @@
 
 namespace fintamath {
   template <typename Derived>
-  class Incremental : virtual public MathObjectBase<Derived> {
+  class Incremental : virtual public MathObjectImpl<Derived> {
   public:
     ~Incremental() override = default;
 

@@ -1,18 +1,18 @@
-#include "fintamath/functions/Function.hpp"
+#include "fintamath/functions/ConcreteFunction.hpp"
 
 #include <regex>
 
 #include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
-  Function::Function(const std::string &str) {
+  ConcreteFunction::ConcreteFunction(const std::string &str) {
     if (!types::isFunction(str)) {
-      throw std::invalid_argument("Function invalid input");
+      throw std::invalid_argument("ConcreteFunction invalid input");
     }
     name = str;
   }
 
-  Rational Function::solve(const Rational &rhs, int64_t precision) const {
+  Rational ConcreteFunction::solve(const Rational &rhs, int64_t precision) const {
     if (name == "sqrt") {
       return functions::sqrt(rhs, precision);
     }
@@ -61,21 +61,21 @@ namespace fintamath {
     if (name == "!!") {
       return functions::doubleFactorial(rhs);
     }
-    throw std::invalid_argument("Function invalid input");
+    throw std::invalid_argument("ConcreteFunction invalid input");
   }
 
-  Rational Function::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
+  Rational ConcreteFunction::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
     if (name == "log") {
       return functions::log(lhs, rhs, precision);
     }
-    throw std::invalid_argument("Function invalid input");
+    throw std::invalid_argument("ConcreteFunction invalid input");
   }
 
-  std::string Function::toString() const {
+  std::string ConcreteFunction::toString() const {
     return name;
   }
 
-  bool Function::equals(const Function &rhs) const {
+  bool ConcreteFunction::equals(const ConcreteFunction &rhs) const {
     return name == rhs.name;
   }
 

@@ -1,30 +1,26 @@
 #pragma once
 
-#include "fintamath/numbers/Rational.hpp"
-
-#include <string>
+#include "fintamath/core/Summable.hpp"
+#include "fintamath/expressions/Expression.hpp"
 
 namespace fintamath {
-  class Function : public MathObjectBase<Function> {
+  class Function : virtual public MathObject {
   public:
-    explicit Function(const std::string &str);
+    ~Function() override = default;
 
-    Rational solve(const Rational &rhs, int64_t precision) const;
-
-    Rational solve(const Rational &lhs, const Rational &rhs, int64_t precision) const;
-
-    std::string toString() const override;
+    template <typename... Args>
+    std::unique_ptr<MathObject> operator()(const Args &...args) const {
+      std::vector<std::shared_ptr<MathObject>> argsVect = {args.clone()...};
+      return call(argsVect);
+    }
 
   protected:
-    bool equals(const Function &rhs) const override;
-
-  private:
-    std::string name;
+    virtual std::unique_ptr<MathObject> call(const std::vector<std::shared_ptr<MathObject>> &argsVect) const = 0;
   };
 
-  namespace types {
-    bool isFunction(const std::string &str);
-
-    bool isBinaryFunction(const std::string_view &str);
-  }
+  template <typename Derived>
+  class FunctionImpl : virtual public Function, virtual public MathObjectImpl<Derived> {
+  public:
+    ~FunctionImpl() override = default;
+  };
 }
