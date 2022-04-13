@@ -136,10 +136,10 @@ namespace fintamath {
 
     else {
       if (greater(intVect, rhs.intVect)) {
-        intVect = substract(intVect, rhs.intVect, INT_BASE);
+        intVect = fintamath::substract(intVect, rhs.intVect, INT_BASE);
       } else {
         sign = !sign;
-        intVect = substract(rhs.intVect, intVect, INT_BASE);
+        intVect = fintamath::substract(rhs.intVect, intVect, INT_BASE);
       }
     }
 
@@ -147,20 +147,20 @@ namespace fintamath {
     return *this;
   }
 
-  Integer &Integer::sub(const Integer &rhs) {
+  Integer &Integer::substract(const Integer &rhs) {
     Integer tmpRhs = rhs;
     tmpRhs.sign = !tmpRhs.sign;
     return *this += tmpRhs;
   }
 
-  Integer &Integer::mul(const Integer &rhs) {
-    intVect = multiply(intVect, rhs.intVect, INT_BASE);
+  Integer &Integer::multiply(const Integer &rhs) {
+    intVect = fintamath::multiply(intVect, rhs.intVect, INT_BASE);
     sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
     fixZero();
     return *this;
   }
 
-  Integer &Integer::div(const Integer &rhs) {
+  Integer &Integer::divide(const Integer &rhs) {
     if (rhs == 0) {
       throw std::domain_error("Div by zero");
     }
@@ -173,18 +173,23 @@ namespace fintamath {
     }
 
     IntVector modVal;
-    intVect = divide(intVect, rhs.intVect, modVal, INT_BASE);
+    intVect = fintamath::divide(intVect, rhs.intVect, modVal, INT_BASE);
     sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
 
     fixZero();
     return *this;
   }
 
-  Integer &Integer::inc() {
+  Integer &Integer::negate() {
+    sign = !sign;
+    return *this;
+  }
+
+  Integer &Integer::increase() {
     return *this += 1;
   }
 
-  Integer &Integer::dec() {
+  Integer &Integer::decrease() {
     return *this -= 1;
   }
 
@@ -199,7 +204,7 @@ namespace fintamath {
       return *this;
     }
 
-    divide(intVect, rhs.intVect, intVect, INT_BASE);
+    fintamath::divide(intVect, rhs.intVect, intVect, INT_BASE);
 
     fixZero();
     return *this;

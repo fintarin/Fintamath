@@ -6,12 +6,21 @@
 #include "fintamath/core/Summable.hpp"
 
 namespace fintamath {
-  template <typename Derived>
-  class Number : virtual public ComparableImpl<Derived>,
-                 virtual public SummableImpl<Derived>,
-                 virtual public MultipliableImpl<Derived>,
-                 virtual public Incremental<Derived> {
+  class Number : public virtual Comparable,
+                 public virtual Summable,
+                 public virtual Multipliable,
+                 public virtual Incremental {
   public:
     ~Number() override = default;
+  };
+
+  template <typename Derived>
+  class NumberImpl : public Number,
+                     public ComparableImpl<Derived>,
+                     public SummableImpl<Derived>,
+                     public MultipliableImpl<Derived>,
+                     public IncrementalImpl<Derived> {
+  public:
+    ~NumberImpl() override = default;
   };
 }

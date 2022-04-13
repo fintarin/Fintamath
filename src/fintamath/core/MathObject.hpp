@@ -15,27 +15,31 @@ namespace fintamath {
 
     virtual std::unique_ptr<MathObject> clone() const = 0;
 
-    bool operator==(const MathObject &rhs) const {
-      return equals(rhs);
-    }
-
-    bool operator!=(const MathObject &rhs) const {
-      return !equals(rhs);
-    }
-
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<MathObject, T>>>
+    template <typename T>
     const T &to() const {
       return dynamic_cast<const T &>(*this);
     }
 
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<MathObject, T>>>
+    template <typename T>
     bool is() const {
-      return dynamic_cast<const T *>(this);
+      return typeid(*this) == typeid(T);
     }
 
+    friend bool operator==(const MathObject &lhs, const MathObject &rhs);
+
+    friend bool operator!=(const MathObject &lhs, const MathObject &rhs);
+
   protected:
-    virtual bool equals(const MathObject &rhs) const = 0;
+    virtual bool equalsAbstract(const MathObject &rhs) const = 0;
   };
+
+  inline bool operator==(const MathObject &lhs, const MathObject &rhs) {
+    return lhs.equalsAbstract(rhs);
+  }
+
+  inline bool operator!=(const MathObject &lhs, const MathObject &rhs) {
+    return !lhs.equalsAbstract(rhs);
+  }
 
   template <typename Derived>
   class MathObjectImpl : virtual public MathObject {
@@ -46,12 +50,20 @@ namespace fintamath {
       return std::make_unique<Derived>(to<Derived>());
     }
 
+    bool operator==(const Derived &rhs) const {
+      return equals(rhs);
+    }
+
+    bool operator!=(const Derived &rhs) const {
+      return !equals(rhs);
+    }
+
   protected:
     virtual bool equals(const Derived &rhs) const = 0;
 
-    bool equals(const MathObject &rhs) const final {
+    bool equalsAbstract(const MathObject &rhs) const final {
       if (rhs.is<Derived>()) {
-        return equals(rhs.to<Derived>());
+        return *this == rhs.to<Derived>();
       }
       if (auto tmp = meta::convert(*this, rhs); tmp != nullptr) {
         return *this == *tmp;

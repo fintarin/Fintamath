@@ -564,7 +564,7 @@ namespace fintamath {
 
   /*
     Trigonometry functions reduction: f(a) = f(b + k*p) = f(b), where k is natural, p is perion. Then b = a - k * p,
-    k = a div p.
+    k = a divide p.
   */
   Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision) {
     Rational period = (int64_t)multiplier * functions::getPi(getNewPrecision(precision) + rhs.getInteger().getSize());

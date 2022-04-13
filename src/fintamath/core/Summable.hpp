@@ -7,21 +7,80 @@ namespace fintamath {
   public:
     ~Summable() override = default;
 
-    virtual std::unique_ptr<Summable> operator+(const Summable &rhs) const = 0;
+    friend std::unique_ptr<Summable> operator+(const Summable &lhs, const Summable &rhs);
 
-    virtual std::unique_ptr<Summable> operator-(const Summable &rhs) const = 0;
+    friend std::unique_ptr<Summable> operator-(const Summable &lhs, const Summable &rhs);
+
+    friend std::unique_ptr<Summable> operator+(const Summable &rhs);
+
+    friend std::unique_ptr<Summable> operator-(const Summable &rhs);
+
+  protected:
+    virtual std::unique_ptr<Summable> addAbstract(const Summable &rhs) const = 0;
+
+    virtual std::unique_ptr<Summable> substractAbstract(const Summable &rhs) const = 0;
+
+    virtual std::unique_ptr<Summable> convertAbstract() const = 0;
+
+    virtual std::unique_ptr<Summable> negateAbstract() const = 0;
   };
+
+  inline std::unique_ptr<Summable> operator+(const Summable &lhs, const Summable &rhs) {
+    return lhs.addAbstract(rhs);
+  }
+
+  inline std::unique_ptr<Summable> operator-(const Summable &lhs, const Summable &rhs) {
+    return lhs.substractAbstract(rhs);
+  }
+
+  inline std::unique_ptr<Summable> operator+(const Summable &rhs) {
+    return rhs.convertAbstract();
+  }
+
+  inline std::unique_ptr<Summable> operator-(const Summable &rhs) {
+    return rhs.negateAbstract();
+  }
 
   template <typename Derived>
   class SummableImpl : virtual public Summable, virtual public MathObjectImpl<Derived> {
   public:
     ~SummableImpl() override = default;
 
-    std::unique_ptr<Summable> operator+(const Summable &rhs) const final {
+    Derived &operator+=(const Derived &rhs) {
+      return add(rhs);
+    }
+
+    Derived &operator-=(const Derived &rhs) {
+      return substract(rhs);
+    }
+
+    Derived operator+(const Derived &rhs) const {
+      return Derived(static_cast<const Derived &>(*this)) += rhs;
+    }
+
+    Derived operator-(const Derived &rhs) const {
+      return Derived(static_cast<const Derived &>(*this)) -= rhs;
+    }
+
+    Derived operator+() const {
+      return Derived(static_cast<const Derived &>(*this));
+    }
+
+    Derived operator-() const {
+      Derived tmp = Derived(static_cast<const Derived &>(*this));
+      return static_cast<SummableImpl<Derived> &>(tmp).negate();
+    }
+
+  protected:
+    virtual Derived &add(const Derived &rhs) = 0;
+
+    virtual Derived &substract(const Derived &rhs) = 0;
+
+    virtual Derived &negate() = 0;
+
+    std::unique_ptr<Summable> addAbstract(const Summable &rhs) const final {
       if (rhs.is<Derived>()) {
-        auto res = std::make_unique<Derived>(to<Derived>());
-        *res += rhs.to<Derived>();
-        return res;
+        return std::make_unique<Derived>(*this + rhs.to<Derived>());
       }
       if (auto tmp = meta::convert(*this, rhs); tmp != nullptr) {
         return *this + tmp->template to<Summable>();
@@ -32,11 +91,9 @@ namespace fintamath {
       throw std::invalid_argument("Cannot be summarized");
     }
 
-    std::unique_ptr<Summable> operator-(const Summable &rhs) const final {
+    std::unique_ptr<Summable> substractAbstract(const Summable &rhs) const final {
       if (rhs.is<Derived>()) {
-        auto res = std::make_unique<Derived>(to<Derived>());
-        *res -= rhs.to<Derived>();
-        return res;
+        return std::make_unique<Derived>(*this - rhs.to<Derived>());
       }
       if (auto tmp = meta::convert(*this, rhs); tmp != nullptr) {
         return *this - tmp->template to<Summable>();
@@ -44,37 +101,16 @@ namespace fintamath {
       if (auto tmp = meta::convert(rhs, *this); tmp != nullptr) {
         return tmp->template to<Summable>() - rhs;
       }
-      return {};
+      throw std::invalid_argument("Cannot be substacted");
     }
 
-    Derived &operator+=(const Derived &rhs) {
-      return add(rhs);
+    std::unique_ptr<Summable> convertAbstract() const final {
+      return std::make_unique<Derived>(+(*this));
     }
 
-    Derived &operator-=(const Derived &rhs) {
-      return sub(rhs);
+    std::unique_ptr<Summable> negateAbstract() const final {
+      return std::make_unique<Derived>(-(*this));
     }
-
-    Derived operator+(const Derived &rhs) const {
-      return Derived(to<Derived>()) += rhs;
-    }
-
-    Derived operator-(const Derived &rhs) const {
-      return Derived(to<Derived>()) -= rhs;
-    }
-
-    Derived operator+() const {
-      return Derived(to<Derived>());
-    }
-
-    Derived operator-() const {
-      return 0 - to<Derived>();
-    }
-
-  protected:
-    virtual Derived &add(const Derived &rhs) = 0;
-
-    virtual Derived &sub(const Derived &rhs) = 0;
   };
 
   template <typename LhsType, typename RhsType,
