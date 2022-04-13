@@ -6,7 +6,7 @@
 #include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
-  class Integer : public Number<Integer> {
+  class Integer : public NumberImpl<Integer> {
   public:
     Integer() = default;
 
