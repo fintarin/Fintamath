@@ -50,7 +50,7 @@ namespace fintamath {
   private:
     void fixZero();
 
-    std::vector<int64_t> intVect;
+    std::vector<int64_t> intVect{0};
     bool sign{};
   };
 
