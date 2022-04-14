@@ -14,8 +14,9 @@ namespace fintamath::meta {
     return converter;
   }
 
+  const auto converter = initConverter();
+
   MathObjectPtr convertRhsToLhsType(const MathObject &lhs, const MathObject &rhs) {
-    static const auto converter = initConverter();
     return converter(lhs, rhs);
   }
 }
