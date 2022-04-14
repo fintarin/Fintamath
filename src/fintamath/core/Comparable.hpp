@@ -2,6 +2,18 @@
 
 #include "fintamath/core/MathObject.hpp"
 
+#define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
+  if (rhs.is<Derived>()) {                                                                                             \
+    return *this OPER to<Derived>();                                                                                   \
+  }                                                                                                                    \
+  if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                              \
+    return *this OPER tmp->template to<Comparable>();                                                                  \
+  }                                                                                                                    \
+  if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {                                              \
+    return tmp->template to<Comparable>() OPER rhs;                                                                    \
+  }                                                                                                                    \
+  throw std::invalid_argument("Incompatible types")
+
 namespace fintamath {
   class Comparable;
   using ComparablePtr = std::unique_ptr<Comparable>;
@@ -67,29 +79,11 @@ namespace fintamath {
     virtual bool more(const Derived &rhs) const = 0;
 
     bool lessAbstract(const Comparable &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return less(rhs.to<Derived>());
-      }
-      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
-        return *this < tmp->template to<Comparable>();
-      }
-      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
-        return tmp->template to<Comparable>() < rhs;
-      }
-      throw std::invalid_argument("Cannot be compared");
+      FINTAMATH_CALL_OPERATOR(<);
     }
 
     bool moreAbstract(const Comparable &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return more(rhs.to<Derived>());
-      }
-      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
-        return *this > tmp->template to<Comparable>();
-      }
-      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
-        return tmp->template to<Comparable>() > rhs;
-      }
-      throw std::invalid_argument("Cannot be compared");
+      FINTAMATH_CALL_OPERATOR(>);
     }
   };
 
@@ -149,3 +143,5 @@ namespace fintamath {
     return RhsType(lhs) >= rhs;
   }
 }
+
+#undef FINTAMATH_CALL_OPERATOR

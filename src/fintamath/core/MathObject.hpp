@@ -6,6 +6,18 @@
 
 #include "fintamath/meta/Converter.hpp"
 
+#define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
+  if (rhs.is<Derived>()) {                                                                                             \
+    return *this OPER to<Derived>();                                                                                   \
+  }                                                                                                                    \
+  if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                              \
+    return *this OPER * tmp;                                                                                           \
+  }                                                                                                                    \
+  if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {                                              \
+    return *tmp OPER rhs;                                                                                              \
+  }                                                                                                                    \
+  return false
+
 namespace fintamath {
   class MathObject;
   using MathObjectPtr = std::unique_ptr<MathObject>;
@@ -65,16 +77,7 @@ namespace fintamath {
     virtual bool equals(const Derived &rhs) const = 0;
 
     bool equalsAbstract(const MathObject &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return equals(rhs.to<Derived>());
-      }
-      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
-        return *this == *tmp;
-      }
-      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
-        return *tmp == rhs;
-      }
-      return false;
+      FINTAMATH_CALL_OPERATOR(==);
     }
   };
 
@@ -110,3 +113,5 @@ namespace fintamath {
     return out << rhs.toString();
   }
 }
+
+#undef FINTAMATH_CALL_OPERATOR
