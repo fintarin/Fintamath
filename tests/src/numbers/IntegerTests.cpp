@@ -4,6 +4,10 @@
 
 using namespace fintamath;
 
+TEST(IntegerTests, constructorTest) {
+  EXPECT_EQ(Integer(), 0);
+}
+
 TEST(IntegerTests, stringConstructorTest) {
   EXPECT_EQ(Integer("10").toString(), "10");
   EXPECT_EQ(Integer("2432432423432432454745").toString(), "2432432423432432454745");
@@ -21,67 +25,44 @@ TEST(IntegerTests, intConstructorTest) {
 
   Integer a = 10;
   EXPECT_EQ(a, 10);
+
+  a = 11;
+  EXPECT_EQ(a, 11);
 }
 
-TEST(IntegerTests, intAssignmentOperatorTest) {
-  Integer a;
-  EXPECT_EQ(a = 10, 10);
-}
-
-TEST(IntegerTests, plusAssignmentOperatorTest) {
+TEST(IntegerTests, addTest) {
   EXPECT_EQ(Integer(5) += Integer(10), 15);
   EXPECT_EQ(Integer(-5) += Integer(10), 5);
   EXPECT_EQ(Integer(-10) += Integer(10), 0);
-  EXPECT_EQ(Integer("-72838928574893245678976545678765457483992") + Integer("-387827392020390239201210"),
-            Integer("-72838928574893246066803937699155696685202"));
-}
-
-TEST(IntegerTests, intPlusAssignmentOperatorTest) {
-  EXPECT_EQ(Integer(5) += 10, 15);
-}
-
-TEST(IntegerTests, plusOperatorTest) {
-  EXPECT_EQ(Integer(-100) + Integer("10"), -90);
-  EXPECT_EQ(Integer("65784932384756574839238475674839") + Integer("-387827392020390239201210"),
+  EXPECT_EQ(Integer("65784932384756574839238475674839") += Integer("-387827392020390239201210"),
             Integer("65784931996929182818848236473629"));
-}
+  EXPECT_EQ(Integer("-72838928574893245678976545678765457483992") += Integer("-387827392020390239201210"),
+            Integer("-72838928574893246066803937699155696685202"));
 
-TEST(IntegerTests, intPlusOperatorTest) {
+  EXPECT_EQ(Integer(5) += 10, 15);
+  EXPECT_EQ(Integer(-100) + Integer(10), -90);
   EXPECT_EQ(Integer(5) + 10, 15);
-}
-
-TEST(IntegerTests, friendIntPlusOperatorTest) {
   EXPECT_EQ(5 + Integer(10), 15);
 }
 
-TEST(IntegerTests, minusAssignmentOperatorTest) {
+TEST(IntegerTests, subTest) {
   EXPECT_EQ(Integer(5) -= Integer(10), -5);
   EXPECT_EQ(Integer(-5) -= Integer(-10105), 10100);
   EXPECT_EQ(Integer("520039026478395743890") -= Integer("-1930275483923745483957483983"),
             Integer("1930276003962771962353227873"));
-}
-
-TEST(IntegerTests, intMinusAssignmentOperatorTest) {
-  EXPECT_EQ(Integer(5) -= 10, -5);
-}
-
-TEST(IntegerTests, minusOperatorTest) {
-  EXPECT_EQ(Integer(-100) - Integer("-748"), 648);
-  EXPECT_EQ(Integer("65784932384756574839238475674839") - Integer("-387827392020390239201210"),
+  EXPECT_EQ(Integer("65784932384756574839238475674839") -= Integer("-387827392020390239201210"),
             Integer("65784932772583966859628714876049"));
-}
 
-TEST(IntegerTests, intMinusOperatorTest) {
+  EXPECT_EQ(Integer(5) -= 10, -5);
+  EXPECT_EQ(Integer(-100) - Integer("-748"), 648);
   EXPECT_EQ(Integer(5) - 10, -5);
-}
-
-TEST(IntegerTests, friendIntMinusOperatorTest) {
   EXPECT_EQ(5 - Integer(10), -5);
 }
 
-TEST(IntegerTests, multiplyAssignmentOperatorTest) {
-  EXPECT_EQ(Integer(5) *= Integer("-12"), -60);
+TEST(IntegerTests, mulTest) {
+  EXPECT_EQ(Integer(5) *= Integer(-12), -60);
   EXPECT_EQ(Integer(190) *= Integer(100), 19000);
+  EXPECT_EQ(Integer(63275) *= Integer(4), 253100);
 
   EXPECT_EQ(Integer(2) *= Integer(2), 4);
   EXPECT_EQ(Integer(2) *= Integer(-2), -4);
@@ -123,6 +104,8 @@ TEST(IntegerTests, multiplyAssignmentOperatorTest) {
               "65372160456377225038193337551038386721802236490190062569358734230986015740887981896525986601358715191775"
               "27712321026727864894116182516571952255309976060371240725788414615669092908108006712326787049482866822978"
               "975630405666674149042810506762418271584881122946889745403"));
+  EXPECT_EQ(Integer("-46387457368576823782") * Integer("-4837274673279875647746473847384738478378327647387463746372"),
+            Integer("224388872686866615413795053083509315281416419176500823292877913926466185818904"));
 
   Integer bigNum(
       "3507630615696849555869044818661735064986392883263011691538871248141434862220387449579227548346015035603"
@@ -335,33 +318,19 @@ TEST(IntegerTests, multiplyAssignmentOperatorTest) {
           "239858440041433274200690837181845702296096899881452319022399743878664475279581420130632815890324906120799587"
           "196239625285537049703745880213074847992463253073407426073938512212379965366695424855366627524513096871821462"
           "780954251198329876879475643655179996936141808182981109761"));
-}
 
-TEST(IntegerTests, intMultiplyAssignmentOperatorTest) {
   EXPECT_EQ(Integer(5) *= 10, 50);
-}
-
-TEST(IntegerTests, multiplyOperatorTest) {
   EXPECT_EQ(Integer(100) * Integer(-748), -74800);
-  EXPECT_EQ(Integer(63275) * Integer(4), 253100);
-  EXPECT_EQ(Integer("-46387457368576823782") * Integer("-4837274673279875647746473847384738478378327647387463746372"),
-            Integer("224388872686866615413795053083509315281416419176500823292877913926466185818904"));
-}
-
-TEST(IntegerTests, intMultiplyOperatorTest) {
   EXPECT_EQ(Integer(5) * 10, 50);
-}
-
-TEST(IntegerTests, friendIntMultiplyOperatorTest) {
   EXPECT_EQ(5 * Integer(10), 50);
 }
 
-TEST(IntegerTests, divideAssignmentOperatorTest) {
+TEST(IntegerTests, divTest) {
   EXPECT_EQ(Integer(-25) /= Integer(368273929), 0);
   EXPECT_EQ(Integer(2000) /= Integer(-368273929), 0);
   EXPECT_EQ(Integer(-20) /= Integer(-20), 1);
   EXPECT_EQ(Integer(-29829920) /= Integer(1), -29829920);
-  EXPECT_EQ(Integer(150067278) / Integer(100000), 1500);
+  EXPECT_EQ(Integer(150067278) /= Integer(100000), 1500);
 
   EXPECT_EQ(Integer(2) /= Integer(2), 1);
   EXPECT_EQ(Integer(2) /= Integer(-2), -1);
@@ -377,6 +346,8 @@ TEST(IntegerTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(Integer("100000000000000000000000000000000000000000000000000000000000000000000000000000000") /=
             Integer("7182818284590452353602874713526624977572470936999595749669676277240766335354759"),
             13);
+  EXPECT_EQ(Integer("-4837274673279875647746473847384738478378327647387463746372") / Integer("-463874573"),
+            Integer("10427979792028556925767245809751978965181020274175"));
 
   EXPECT_EQ(Integer("100000000000000000000000000000000000000000000000000000000000000000000000000000000000000") /=
             Integer("10000000000000000000000000000000000000000000"),
@@ -437,28 +408,15 @@ TEST(IntegerTests, divideAssignmentOperatorTest) {
                     "89266820855771268403147576567095701074005469808857005026436237359557162582162903447744543426516804"
                     "1405756975664327860057312868835959178663661834688407715795207372052181069795781487373087361"));
 
+  EXPECT_EQ(Integer(10) /= 5, 2);
+  EXPECT_EQ(Integer(-25) / Integer(368273929), 0);
+  EXPECT_EQ(Integer(10) / 5, 2);
+  EXPECT_EQ(10 / Integer(5), 2);
+
   EXPECT_THROW(Integer(-25) /= Integer(0), std::domain_error);
 }
 
-TEST(IntegerTests, intDivideAssignmentOperatorTest) {
-  EXPECT_EQ(Integer(10) /= 5, 2);
-}
-
-TEST(IntegerTests, divideOperatorTest) {
-  EXPECT_EQ(Integer(-25) / Integer(368273929), 0);
-  EXPECT_EQ(Integer("-4837274673279875647746473847384738478378327647387463746372") / Integer("-463874573"),
-            Integer("10427979792028556925767245809751978965181020274175"));
-}
-
-TEST(IntegerTests, intDivideOperatorTest) {
-  EXPECT_EQ(Integer(10) / 5, 2);
-}
-
-TEST(IntegerTests, friendIntDivideOperatorTest) {
-  EXPECT_EQ(10 / Integer(5), 2);
-}
-
-TEST(IntegerTests, moduloAssignmentOperatorTest) {
+TEST(IntegerTests, modTest) {
   EXPECT_EQ(Integer(25) %= Integer(368273929), 25);
   EXPECT_EQ(Integer(-25) %= Integer(3), -1);
   EXPECT_EQ(Integer(2000) %= Integer(-36), Integer(20));
@@ -470,172 +428,93 @@ TEST(IntegerTests, moduloAssignmentOperatorTest) {
   EXPECT_EQ(Integer("54732897657873247528747287294738765738746547387476327946763287467388493894839489384938483948398493"
                     "83893847267328724673874") %= Integer("1738383928837528673287446238746237943"),
             Integer("1186817955126284001426922341829394317"));
+  EXPECT_EQ(Integer("54732897657873247528747287294738765738746547387476327946763287467387267328724673874") %=
+            Integer("47632837528673287446238746237943"),
+            Integer("25193809905191080888100466723580"));
+
+  EXPECT_EQ(Integer(10) %= 4, 2);
+  EXPECT_EQ(Integer(-25) % Integer(3), -1);
+  EXPECT_EQ(Integer(10) % 4, 2);
+  EXPECT_EQ(10 % Integer(4), 2);
 
   EXPECT_THROW(Integer(-25) %= Integer(0), std::domain_error);
 }
 
-TEST(IntegerTests, intModuloAssignmentOperatorTest) {
-  EXPECT_EQ(Integer(10) %= 4, 2);
-}
+TEST(IntegerTests, incDecTest) {
+  EXPECT_EQ(++Integer(5), 6);
+  EXPECT_EQ(++Integer("4632819374289745632874563287263891364238928"),
+            Integer("4632819374289745632874563287263891364238929"));
 
-TEST(IntegerTests, moduloOperatorTest) {
-  EXPECT_EQ(Integer(-25) % Integer(3), -1);
-  EXPECT_EQ(Integer("54732897657873247528747287294738765738746547387476327946763287467387267328724673874") %
-                Integer("47632837528673287446238746237943"),
-            Integer("25193809905191080888100466723580"));
-}
+  EXPECT_EQ(--Integer(5), 4);
+  EXPECT_EQ(--Integer("4632819374289745632874563287263891364238928"),
+            Integer("4632819374289745632874563287263891364238927"));
 
-TEST(IntegerTests, intModuloOperatorTest) {
-  EXPECT_EQ(Integer(10) % 4, 2);
-}
-
-TEST(IntegerTests, friendIntModuloOperatorTest) {
-  EXPECT_EQ(10 % Integer(4), 2);
-}
-
-TEST(IntegerTests, preIncrementOperatorTest) {
-  Integer a = 5;
-  EXPECT_EQ(++a, 6);
-
-  Integer b("4632819374289745632874563287263891364238928");
-  EXPECT_EQ(++b, Integer("4632819374289745632874563287263891364238929"));
-}
-
-TEST(IntegerTests, postIncrementOperatorTest) {
   Integer a = 5;
   EXPECT_EQ(a++, 5);
   EXPECT_EQ(a, 6);
 
-  Integer b("4632819374289745632874563287263891364238928");
-  EXPECT_EQ(b++, Integer("4632819374289745632874563287263891364238928"));
-  EXPECT_EQ(b, Integer("4632819374289745632874563287263891364238929"));
+  Integer b = 5;
+  EXPECT_EQ(b--, 5);
+  EXPECT_EQ(b, 4);
 }
 
-TEST(IntegerTests, preDecrementOperatorTest) {
-  EXPECT_EQ(--Integer(5), 4);
-  EXPECT_EQ(--Integer("4632819374289745632874563287263891364238928"),
-            Integer("4632819374289745632874563287263891364238927"));
-}
-
-TEST(IntegerTests, postDecrementOperatorTest) {
-  Integer a = 5;
-  EXPECT_EQ(a--, 5);
-  EXPECT_EQ(a, 4);
-
-  Integer b("4632819374289745632874563287263891364238928");
-  EXPECT_EQ(b--, Integer("4632819374289745632874563287263891364238928"));
-  EXPECT_EQ(b, Integer("4632819374289745632874563287263891364238927"));
-}
-
-TEST(IntegerTests, unaryPlusOperatorTest) {
+TEST(IntegerTests, unaryTest) {
   EXPECT_EQ(+Integer(5), 5);
   EXPECT_EQ(+Integer("-6748346738212618723653728362813238128121823281328381262673676266"),
             Integer("-6748346738212618723653728362813238128121823281328381262673676266"));
-}
 
-TEST(IntegerTests, unaryMinusOperatorTest) {
   EXPECT_EQ(-Integer(5), -5);
   EXPECT_EQ(-Integer("-6748346738212618723653728362813238128121823281328381262673676266"),
             Integer("6748346738212618723653728362813238128121823281328381262673676266"));
 }
 
-TEST(IntegerTests, equalOperatorTest) {
+TEST(IntegerTests, equalsTest) {
   EXPECT_TRUE(Integer(13663) == Integer(13663));
-
   EXPECT_FALSE(Integer("5643879274839203876783492873448927") == Integer("-5643879274839203876783492873448927"));
   EXPECT_FALSE(Integer(13663) == Integer(298392));
-}
-
-TEST(IntegerTests, intEqualOperatorTest) {
   EXPECT_TRUE(Integer(283746) == 283746);
-}
-
-TEST(IntegerTests, friendIntEqualOperatorTest) {
   EXPECT_TRUE(283746 == Integer(283746));
-}
 
-TEST(IntegerTests, notEqualOperatorTest) {
   EXPECT_TRUE(Integer(13663) != 298392);
   EXPECT_TRUE(Integer("5643879274839203876783492873448927") != Integer("-5643879274839203876783492873448927"));
-
   EXPECT_FALSE(Integer(13663) != 13663);
-}
-
-TEST(IntegerTests, intNotEqualOperatorTest) {
   EXPECT_TRUE(Integer(283746) != 12121);
-}
-
-TEST(IntegerTests, friendIntNotEqualOperatorTest) {
   EXPECT_TRUE(283746 != Integer(12121));
 }
 
-TEST(IntegerTests, lessOperatorTest) {
+TEST(IntegerTests, compareTest) {
   EXPECT_TRUE(Integer("-724627382732") < Integer("643864837483437378342"));
   EXPECT_TRUE(Integer("7236") < Integer("748274299"));
   EXPECT_TRUE(Integer("1") < Integer("10000000000000000000000000000000000"));
-
   EXPECT_FALSE(Integer("-7236726372") < Integer("-64283827387283728"));
   EXPECT_FALSE(Integer("7236726372") < Integer("-62736"));
-}
-
-TEST(IntegerTests, intLessOperatorTest) {
   EXPECT_TRUE(Integer(283746) < 2379264);
-}
-
-TEST(IntegerTests, friendIntLessOperatorTest) {
   EXPECT_TRUE(283746 < Integer(2379264));
-}
 
-TEST(IntegerTests, moreOperatorTest) {
   EXPECT_TRUE(Integer("-7236726372") > Integer("-64283827387283728"));
   EXPECT_TRUE(Integer("7236726372") > Integer("-727"));
   EXPECT_TRUE(Integer("7236") > Integer("483"));
-
   EXPECT_FALSE(Integer("-724627382732") > Integer("643864837483437378342"));
   EXPECT_FALSE(Integer("1") > Integer("10000000000000000000000000000000000"));
-}
-
-TEST(IntegerTests, intMoreOperatorTest) {
   EXPECT_TRUE(Integer(283746) > 12121);
-}
-
-TEST(IntegerTests, friendIntMoreOperatorTest) {
   EXPECT_TRUE(283746 > Integer(12121));
-}
 
-TEST(IntegerTests, lessEqualOperatorTest) {
   EXPECT_TRUE(Integer("-724627382732") <= Integer("643864837483437378342"));
   EXPECT_TRUE(Integer("-7246") <= Integer("-7246"));
   EXPECT_TRUE(Integer("1") <= Integer("10000000000000000000000000000000000"));
-
   EXPECT_FALSE(Integer("-7236726372") <= Integer("-64283827387283728"));
   EXPECT_FALSE(Integer("7236726372") <= Integer("0"));
   EXPECT_FALSE(Integer("7236") <= Integer("-74827"));
-}
-
-TEST(IntegerTests, intLessEqualOperatorTest) {
   EXPECT_TRUE(Integer(12121) <= 283746);
-}
-
-TEST(IntegerTests, friendIntLessEqualOperatorTest) {
   EXPECT_TRUE(12121 <= Integer(283746));
-}
 
-TEST(IntegerTests, moreEqualOperatorTest) {
   EXPECT_TRUE(Integer("-7246") >= Integer("-7246"));
   EXPECT_TRUE(Integer("-7236726372") >= Integer("-64283827387283728"));
   EXPECT_TRUE(Integer("7236726372") >= Integer("0"));
   EXPECT_TRUE(Integer("7236") >= Integer("-748274299"));
-
   EXPECT_FALSE(Integer("-724627382732") >= Integer("643864837483437378342"));
   EXPECT_FALSE(Integer("1") >= Integer("10000000000000000000000000000000000"));
-}
-
-TEST(IntegerTests, intMoreEqualOperatorTest) {
   EXPECT_TRUE(Integer(283746) >= 12121);
-}
-
-TEST(IntegerTests, friendIntMoreEqualOperatorTest) {
   EXPECT_TRUE(283746 >= Integer(12121));
 }
 
