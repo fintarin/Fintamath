@@ -31,13 +31,18 @@ namespace fintamath {
     virtual MathObjectPtr clone() const = 0;
 
     template <typename T>
-    const T &to() const {
-      return dynamic_cast<const T &>(*this);
+    bool is() const {
+      return typeid(*this) == typeid(T);
     }
 
     template <typename T>
-    bool is() const {
-      return typeid(*this) == typeid(T);
+    bool instanceof () const {
+      return dynamic_cast<const T *>(this);
+    }
+
+    template <typename T>
+    const T &to() const {
+      return dynamic_cast<const T &>(*this);
     }
 
     friend bool operator==(const MathObject &lhs, const MathObject &rhs);
@@ -77,7 +82,16 @@ namespace fintamath {
     virtual bool equals(const Derived &rhs) const = 0;
 
     bool equalsAbstract(const MathObject &rhs) const final {
-      FINTAMATH_CALL_OPERATOR(==);
+      if (rhs.is<Derived>()) {
+        return *this == rhs.to<Derived>();
+      }
+      if (auto tmp = meta ::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
+        return *this == *tmp;
+      }
+      if (auto tmp = meta ::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
+        return *tmp == rhs;
+      }
+      return false;
     }
   };
 
