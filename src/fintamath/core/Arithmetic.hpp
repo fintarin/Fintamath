@@ -2,6 +2,18 @@
 
 #include "fintamath/core/MathObject.hpp"
 
+#define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
+  if (rhs.is<Derived>()) {                                                                                             \
+    return std::make_unique<Derived>(*this OPER rhs.to<Derived>());                                                    \
+  }                                                                                                                    \
+  if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                              \
+    return *this OPER tmp->template to<Arithmetic>();                                                                  \
+  }                                                                                                                    \
+  if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {                                              \
+    return tmp->template to<Arithmetic>() OPER rhs;                                                                    \
+  }                                                                                                                    \
+  throw std::invalid_argument("Incompatible types")
+
 namespace fintamath {
   class Arithmetic;
   using ArithmeticPtr = std::unique_ptr<Arithmetic>;
@@ -118,55 +130,19 @@ namespace fintamath {
     virtual Derived &negate() = 0;
 
     ArithmeticPtr addAbstract(const Arithmetic &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return std::make_unique<Derived>(*this + rhs.to<Derived>());
-      }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
-        return *this + tmp->template to<Arithmetic>();
-      }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
-        return tmp->template to<Arithmetic>() + rhs;
-      }
-      throw std::invalid_argument("Cannot be summarized");
+      FINTAMATH_CALL_OPERATOR(+);
     }
 
     ArithmeticPtr substractAbstract(const Arithmetic &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return std::make_unique<Derived>(*this - rhs.to<Derived>());
-      }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
-        return *this - tmp->template to<Arithmetic>();
-      }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
-        return tmp->template to<Arithmetic>() - rhs;
-      }
-      throw std::invalid_argument("Cannot be substacted");
+      FINTAMATH_CALL_OPERATOR(-);
     }
 
     ArithmeticPtr multiplyAbstract(const Arithmetic &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return std::make_unique<Derived>(*this * rhs.to<Derived>());
-      }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
-        return *this * tmp->template to<Arithmetic>();
-      }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
-        return tmp->template to<Arithmetic>() * rhs;
-      }
-      throw std::invalid_argument("Cannot be multiplied");
+      FINTAMATH_CALL_OPERATOR(*);
     }
 
     ArithmeticPtr divideAbstract(const Arithmetic &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return std::make_unique<Derived>(*this / rhs.to<Derived>());
-      }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
-        return *this / tmp->template to<Arithmetic>();
-      }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
-        return tmp->template to<Arithmetic>() / rhs;
-      }
-      throw std::invalid_argument("Cannot be divided");
+      FINTAMATH_CALL_OPERATOR(/);
     }
 
     ArithmeticPtr convertAbstract() const final {
@@ -262,3 +238,5 @@ namespace fintamath {
     return RhsType(lhs) / rhs;
   }
 }
+
+#undef FINTAMATH_CALL_OPERATOR
