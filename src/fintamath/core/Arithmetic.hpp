@@ -121,10 +121,10 @@ namespace fintamath {
       if (rhs.is<Derived>()) {
         return std::make_unique<Derived>(*this + rhs.to<Derived>());
       }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
         return *this + tmp->template to<Arithmetic>();
       }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
         return tmp->template to<Arithmetic>() + rhs;
       }
       throw std::invalid_argument("Cannot be summarized");
@@ -134,10 +134,10 @@ namespace fintamath {
       if (rhs.is<Derived>()) {
         return std::make_unique<Derived>(*this - rhs.to<Derived>());
       }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
         return *this - tmp->template to<Arithmetic>();
       }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
         return tmp->template to<Arithmetic>() - rhs;
       }
       throw std::invalid_argument("Cannot be substacted");
@@ -147,10 +147,10 @@ namespace fintamath {
       if (rhs.is<Derived>()) {
         return std::make_unique<Derived>(*this * rhs.to<Derived>());
       }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
         return *this * tmp->template to<Arithmetic>();
       }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
         return tmp->template to<Arithmetic>() * rhs;
       }
       throw std::invalid_argument("Cannot be multiplied");
@@ -160,10 +160,10 @@ namespace fintamath {
       if (rhs.is<Derived>()) {
         return std::make_unique<Derived>(*this / rhs.to<Derived>());
       }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
         return *this / tmp->template to<Arithmetic>();
       }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
         return tmp->template to<Arithmetic>() / rhs;
       }
       throw std::invalid_argument("Cannot be divided");

@@ -70,10 +70,10 @@ namespace fintamath {
       if (rhs.is<Derived>()) {
         return less(rhs.to<Derived>());
       }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
         return *this < tmp->template to<Comparable>();
       }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
         return tmp->template to<Comparable>() < rhs;
       }
       throw std::invalid_argument("Cannot be compared");
@@ -83,10 +83,10 @@ namespace fintamath {
       if (rhs.is<Derived>()) {
         return more(rhs.to<Derived>());
       }
-      if (auto tmp = meta::Converter::convertToBase(*this, rhs); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
         return *this > tmp->template to<Comparable>();
       }
-      if (auto tmp = meta::Converter::convertToBase(rhs, *this); tmp != nullptr) {
+      if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
         return tmp->template to<Comparable>() > rhs;
       }
       throw std::invalid_argument("Cannot be compared");
