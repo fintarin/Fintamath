@@ -8,7 +8,7 @@
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
   if (rhs.is<Derived>()) {                                                                                             \
-    return *this OPER to<Derived>();                                                                                   \
+    return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
   if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                              \
     return *this OPER * tmp;                                                                                           \
@@ -36,7 +36,7 @@ namespace fintamath {
     }
 
     template <typename T>
-    bool instanceof () const {
+    bool instanceOf() const {
       return dynamic_cast<const T *>(this);
     }
 
@@ -82,16 +82,7 @@ namespace fintamath {
     virtual bool equals(const Derived &rhs) const = 0;
 
     bool equalsAbstract(const MathObject &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return *this == rhs.to<Derived>();
-      }
-      if (auto tmp = meta ::convertRhsToLhsType(*this, rhs); tmp != nullptr) {
-        return *this == *tmp;
-      }
-      if (auto tmp = meta ::convertRhsToLhsType(rhs, *this); tmp != nullptr) {
-        return *tmp == rhs;
-      }
-      return false;
+      FINTAMATH_CALL_OPERATOR(==);
     }
   };
 
