@@ -23,7 +23,7 @@ namespace fintamath {
   };
 
   template <typename Derived>
-  class FunctionImpl : virtual public Function, virtual public MathObjectImpl<Derived> {
+  class FunctionImpl : public Function, public MathObjectImpl<Derived> {
   public:
     ~FunctionImpl() override = default;
   };
