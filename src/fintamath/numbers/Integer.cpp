@@ -33,7 +33,7 @@ namespace fintamath {
   IntVector shortMultiply(const IntVector &lhs, int64_t rhs, int64_t base);
   IntVector polynomialMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
   IntVector karatsubaMultiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
-  size_t zerosMultiply(IntVector &lhs, IntVector &rhs);
+  int64_t zerosMultiply(IntVector &lhs, IntVector &rhs);
   IntVector multiply(const IntVector &lhs, const IntVector &rhs, int64_t base);
 
   IntVector shortDivide(const IntVector &lhs, int64_t rhs, int64_t base);
@@ -53,8 +53,8 @@ namespace fintamath {
   Integer::Integer(int64_t val) : Integer(std::to_string(val)) {
   }
 
-  size_t Integer::getSize() const {
-    return (intVect.size() - 1) * INT_BASE_SIZE + (std::to_string(intVect.back())).size();
+  int64_t Integer::getSize() const {
+    return int64_t((intVect.size() - 1) * INT_BASE_SIZE + (std::to_string(intVect.back())).size());
   }
 
   // Changing the number base to solve sqrt
@@ -207,11 +207,11 @@ namespace fintamath {
       firstDigitNum++;
     }
 
-    if (!canConvert(str.substr(firstDigitNum))) {
+    if (!canConvert(str.substr(size_t(firstDigitNum)))) {
       throw std::invalid_argument("Integer invalid input");
     }
 
-    intVect = toIntVector(str.substr(firstDigitNum), INT_BASE_SIZE);
+    intVect = toIntVector(str.substr(size_t(firstDigitNum)), INT_BASE_SIZE);
   }
 
   void Integer::fixZero() {
@@ -245,7 +245,7 @@ namespace fintamath {
     }
     for (size_t i = intVect.size() - 2; i != SIZE_MAX; i--) {
       std::string tmp = std::to_string(intVect[i]);
-      tmp.insert(0, baseSize - tmp.size(), '0');
+      tmp.insert(0, size_t(baseSize) - tmp.size(), '0');
       str.insert(str.size(), tmp);
     }
     return str;
@@ -253,11 +253,11 @@ namespace fintamath {
 
   // Finding a digit before the first non-zero digit, starting with the lowest digits
   int64_t firstZeroNum(const IntVector &rhs) {
-    int64_t num = 0;
+    size_t num = 0;
     while (num < rhs.size() && rhs[num] == 0) {
       num++;
     }
-    return num;
+    return int64_t(num);
   }
 
   void toSignificantDigits(IntVector &rhs) {
@@ -431,7 +431,7 @@ namespace fintamath {
       return polynomialMultiply(lhs, rhs, base);
     }
 
-    int64_t mid = (int64_t)lhs.size() / 2;
+    auto mid = int64_t(lhs.size() / 2);
 
     IntVector lhsHalf1(lhs.begin(), lhs.begin() + mid);
     IntVector lhsHalf2(lhs.begin() + mid, lhs.end());
@@ -445,14 +445,14 @@ namespace fintamath {
 
     coeff2 = substract(coeff2, add(coeff3, coeff1, base), base);
 
-    coeff2.insert(coeff2.begin(), mid, 0);
-    coeff3.insert(coeff3.begin(), mid * 2, 0);
+    coeff2.insert(coeff2.begin(), size_t(mid), 0);
+    coeff3.insert(coeff3.begin(), size_t(mid) * 2, 0);
 
     return add(add(coeff3, coeff2, base), coeff1, base);
   }
 
   // Multiplication of zero digits
-  size_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
+  int64_t zerosMultiply(IntVector &lhs, IntVector &rhs) {
     int64_t lhsZerosNum = firstZeroNum(lhs);
     int64_t rhsZerosNum = firstZeroNum(rhs);
 
@@ -471,7 +471,7 @@ namespace fintamath {
     IntVector tmpLhs = lhs;
     IntVector tmpRhs = rhs;
     IntVector res;
-    size_t zerosNum = zerosMultiply(tmpLhs, tmpRhs);
+    int64_t zerosNum = zerosMultiply(tmpLhs, tmpRhs);
 
     if (tmpRhs.size() < KARATSUBA_CUTOFF) {
       res = polynomialMultiply(tmpLhs, tmpRhs, base);
@@ -486,7 +486,7 @@ namespace fintamath {
       res = karatsubaMultiply(tmpLhs, tmpRhs, base);
     }
 
-    res.insert(res.begin(), zerosNum, 0);
+    res.insert(res.begin(), size_t(zerosNum), 0);
     toSignificantDigits(res);
     return res;
   }
@@ -573,8 +573,8 @@ namespace fintamath {
       right.back() = INT_BASE - 1;
     }
 
-    left.erase(left.begin(), left.begin() + (int64_t)tmpRhs.size() - 1);
-    right.erase(right.begin(), right.begin() + (int64_t)tmpRhs.size() - 1);
+    left.erase(left.begin(), left.begin() + int64_t(tmpRhs.size()) - 1);
+    right.erase(right.begin(), right.begin() + int64_t(tmpRhs.size()) - 1);
 
     if (equal(right, left)) {
       modVal = substract(lhs, multiply(rhs, left, base), base);
@@ -606,9 +606,8 @@ namespace fintamath {
   IntVector sqrt(const IntVector &rhs) {
     const int64_t base = 10;
 
-    IntVector val;
+    IntVector val{int64_t(std::sqrt(double(rhs.back())))};
     IntVector diff;
-    val.push_back((int64_t)std::sqrt((double)rhs.back()));
 
     getSqrtDiff(rhs, base, val, diff);
 
@@ -629,12 +628,9 @@ namespace fintamath {
       while (left < right) {
         intVect.front() = (left + right) / 2;
         doubledRes = shortMultiply(intVect, intVect.front(), base);
-
         if (greater(doubledRes, modVal)) {
           right = intVect.front();
-        }
-
-        else {
+        } else {
           left = intVect.front() + 1;
         }
       }
@@ -642,7 +638,7 @@ namespace fintamath {
       intVect.front() = right - 1;
 
       diff = substract(modVal, shortMultiply(intVect, intVect.front(), base), base);
-      val.insert(val.begin(), intVect.front());
+      val.insert(val.begin(), intVect.begin(), intVect.begin() + 1);
     }
 
     return val;

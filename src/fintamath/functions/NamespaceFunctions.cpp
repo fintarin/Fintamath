@@ -14,12 +14,12 @@ namespace fintamath {
   const Rational PI_CONST("3.14159265358979323846264338327950288419716939937510582097494459230781640628620899");
   const int64_t PI_INITIAL_PRECISION = 72;
 
-  int64_t getNewPrecision(size_t precision);
-  Rational getInversedPrecisionVal(size_t precision);
+  int64_t getNewPrecision(int64_t precision);
+  Rational getInversedPrecisionVal(int64_t precision);
 
-  Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision);
+  Rational lnReduce(const Rational &rhs, Integer &multiplier, int64_t precision);
   Rational naturalPow(const Rational &lhs, const Integer &rhs);
-  Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision);
+  Rational trigonometryReduce(const Rational &rhs, size_t multiplier, int64_t precision);
   Integer factorialRec(const Integer &left, const Integer &right);
 
   namespace functions {
@@ -30,7 +30,7 @@ namespace fintamath {
       return rhs;
     }
 
-    Rational sqrt(const Rational &rhs, size_t precision) {
+    Rational sqrt(const Rational &rhs, int64_t precision) {
       if (rhs < 0) {
         throw std::domain_error("sqrt out of range");
       }
@@ -38,8 +38,8 @@ namespace fintamath {
         return Integer(0);
       }
 
-      std::string shift(precision, '0');
-      std::string shiftMult2(precision * 2, '0');
+      std::string shift(size_t(precision), '0');
+      std::string shiftMult2(size_t(precision) * 2, '0');
       shift.insert(shift.begin(), '1');
       shiftMult2.insert(shiftMult2.begin(), '1');
 
@@ -48,7 +48,7 @@ namespace fintamath {
     }
 
     // Using formula: log(a, b) = ln(b) / ln(a).
-    Rational log(const Rational &lhs, const Rational &rhs, size_t precision) {
+    Rational log(const Rational &lhs, const Rational &rhs, int64_t precision) {
       try {
         return (ln(rhs, precision) / ln(lhs, precision)).round(precision);
       } catch (const std::domain_error &) {
@@ -57,7 +57,7 @@ namespace fintamath {
     }
 
     // Using Taylor series: ln(a) = sum_{k=0}^{inf} (2/(2k+1)) * ((a-1)/(a+1))^(2k+1)
-    Rational ln(const Rational &rhs, size_t precision) {
+    Rational ln(const Rational &rhs, int64_t precision) {
       if (rhs <= 0) {
         throw std::domain_error("ln out of range");
       }
@@ -84,7 +84,7 @@ namespace fintamath {
     }
 
     // log2(a)
-    Rational lb(const Rational &rhs, size_t precision) {
+    Rational lb(const Rational &rhs, int64_t precision) {
       const int64_t logBase = 2;
       try {
         return log(Integer(logBase), rhs, precision);
@@ -94,7 +94,7 @@ namespace fintamath {
     }
 
     // log10(a)
-    Rational lg(const Rational &rhs, size_t precision) {
+    Rational lg(const Rational &rhs, int64_t precision) {
       const int64_t logBase = 10;
       try {
         return log(Integer(logBase), rhs, precision);
@@ -108,7 +108,7 @@ namespace fintamath {
       n_int + n_float, where |n_float| <= 1, then a^n = a^n_int * a^n_float. Using Taylor series for solving a^n_float:
       a^n = 1 + sum_{k=1}^{inf} (n * ln(a))^k / k! where |n| <= 1.
     */
-    Rational pow(const Rational &lhs, const Rational &rhs, size_t precision) {
+    Rational pow(const Rational &lhs, const Rational &rhs, int64_t precision) {
       if (lhs == 0 && rhs == 0) {
         throw std::domain_error("Zero pow zero");
       }
@@ -146,12 +146,12 @@ namespace fintamath {
       return (lhsPowFloatRhs * lhsPowIntRhs).round(precision);
     }
 
-    Rational exp(const Rational &rhs, size_t precision) {
+    Rational exp(const Rational &rhs, int64_t precision) {
       return pow(getE(precision), rhs, precision);
     }
 
     // Using reduction formulas and Taylor series: sin(a) = sum_{k=0}^{k=1} (-1)^k * x^(2k+1) / (2k+1)!
-    Rational sin(const Rational &rhs, size_t precision) {
+    Rational sin(const Rational &rhs, int64_t precision) {
       Rational pi = getPi(precision);
       Rational piMult2 = pi * 2;
       Rational piDiv2 = pi / 2;
@@ -201,7 +201,7 @@ namespace fintamath {
     /*
       Using Taylor series: cos(a) = sum_{k=0}^{k=1} (-1)^k * x^(2k) / (2k)
     */
-    Rational cos(const Rational &rhs, size_t precision) {
+    Rational cos(const Rational &rhs, int64_t precision) {
       Rational pi = getPi(precision);
       Rational piMult2 = pi * 2;
       Rational piDiv2 = pi / 2;
@@ -246,7 +246,7 @@ namespace fintamath {
     }
 
     // tan(a) = sin(a) / cos(a)
-    Rational tan(const Rational &rhs, size_t precision) {
+    Rational tan(const Rational &rhs, int64_t precision) {
       Rational pi = getPi(precision);
       Rational piDiv2 = pi / 2;
 
@@ -283,7 +283,7 @@ namespace fintamath {
     }
 
     // cot(a) = cos(a) / sin(a)
-    Rational cot(const Rational &rhs, size_t precision) {
+    Rational cot(const Rational &rhs, int64_t precision) {
       Rational pi = getPi(precision);
       Rational piDiv2 = pi / 2;
 
@@ -323,7 +323,7 @@ namespace fintamath {
     }
 
     // asin(x) = pi/2 - acos(x)
-    Rational asin(const Rational &rhs, size_t precision) {
+    Rational asin(const Rational &rhs, int64_t precision) {
       if (abs(rhs) > 1) {
         throw std::domain_error("asin out of range");
       }
@@ -335,7 +335,7 @@ namespace fintamath {
       If |a| <= 1/5, using Taylor series: acos(a) = pi/2 - sum_{k=0}^{inf}((2k)! * a^(2k+1) / (4^k * (k!)^2 * (2k+1)).
       Else using the formula: acos(a) = pi/2 - sum_{k=0}^{inf}((2k)! * a^(2k+1) / (4^k * (k!)^2 * (2k+1)).
     */
-    Rational acos(const Rational &rhs, size_t precision) {
+    Rational acos(const Rational &rhs, int64_t precision) {
       if (abs(rhs) > 1) {
         throw std::domain_error("acos out of range");
       }
@@ -384,7 +384,7 @@ namespace fintamath {
       If |a| <= 1/5, using Taylor series: atan(a) = sum_{k=1}^{inf} ((-1)^(k-1) * a^(2k-1)) / ((2k-1)).
       Else using the formula: atan(a) = acos(1 / sqrt(1 + x^2)).
     */
-    Rational atan(const Rational &rhs, size_t precision) {
+    Rational atan(const Rational &rhs, int64_t precision) {
       Rational rhsStep = rhs.round(getNewPrecision(precision));
       bool isNegative = false;
       if (rhsStep < 0) {
@@ -422,7 +422,7 @@ namespace fintamath {
     }
 
     // acot(x) = pi/2 - atan(x)
-    Rational acot(const Rational &rhs, size_t precision) {
+    Rational acot(const Rational &rhs, int64_t precision) {
       Rational res = getPi(precision) / 2;
       if (rhs < 0) {
         res = -res;
@@ -452,7 +452,7 @@ namespace fintamath {
     }
 
     // Using Taylor series: e = sum_{k=0}^{inf} 1/n!
-    Rational getE(size_t precision) {
+    Rational getE(int64_t precision) {
       if (precision <= E_INITIAL_PRECISION) {
         return E_CONST;
       }
@@ -486,12 +486,12 @@ namespace fintamath {
 
       pi = (a + b)^2 / (4 * t)
     */
-    Rational getPi(size_t precision) {
+    Rational getPi(int64_t precision) {
       if (precision <= PI_INITIAL_PRECISION) {
         return PI_CONST;
       }
 
-      Integer step = lb(Integer((int64_t)precision), precision).getInteger() + 1;
+      Integer step = lb(Integer(precision), precision).getInteger() + 1;
       Integer p = 1;
       Rational a = Integer(1);
       Rational b = 1 / functions::sqrt(Integer(2), precision);
@@ -512,12 +512,12 @@ namespace fintamath {
     }
   } // namespace functions
 
-  int64_t getNewPrecision(size_t precision) {
-    return (int64_t)precision + (int64_t)sqrt((double)precision);
+  int64_t getNewPrecision(int64_t precision) {
+    return precision + int64_t(sqrt(double(precision)));
   }
 
-  Rational getInversedPrecisionVal(size_t precision) {
-    std::string precStr(precision + 1, '0');
+  Rational getInversedPrecisionVal(int64_t precision) {
+    std::string precStr(size_t(precision) + 1, '0');
     precStr.front() = '1';
     return (Rational(1, Integer(precStr)));
   }
@@ -526,7 +526,7 @@ namespace fintamath {
     Decrease the value of a under the logarithm so that a -> 1. Using the formula log(a^n) = n*log, by taking a multiple
     square root, the number is reduced to to the desired form.
   */
-  Rational lnReduce(const Rational &rhs, Integer &multiplier, size_t precision) {
+  Rational lnReduce(const Rational &rhs, Integer &multiplier, int64_t precision) {
     const Rational maxRedusedVal("0.01");
     Rational res = rhs.round(getNewPrecision(precision));
     multiplier = 1;
@@ -566,8 +566,8 @@ namespace fintamath {
     Trigonometry functions reduction: f(a) = f(b + k*p) = f(b), where k is natural, p is perion. Then b = a - k * p,
     k = a divide p.
   */
-  Rational trigonometryReduce(const Rational &rhs, size_t multiplier, size_t precision) {
-    Rational period = (int64_t)multiplier * functions::getPi(getNewPrecision(precision) + rhs.getInteger().getSize());
+  Rational trigonometryReduce(const Rational &rhs, size_t multiplier, int64_t precision) {
+    Rational period = int64_t(multiplier) * functions::getPi(getNewPrecision(precision) + rhs.getInteger().getSize());
     Integer perionMultiplier = (rhs / period).getInteger();
     Rational res = rhs - perionMultiplier * period;
     return res;

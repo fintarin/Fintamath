@@ -16,7 +16,7 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    size_t getSize() const;
+    int64_t getSize() const;
 
     Integer sqrt() const;
 

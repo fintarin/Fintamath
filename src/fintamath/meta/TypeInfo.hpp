@@ -13,7 +13,7 @@ namespace fintamath::meta {
     const std::type_info &info;
   };
 
-  inline TypeInfo::TypeInfo(const std::type_info &info) : info(info) {
+  inline TypeInfo::TypeInfo(const std::type_info &tinfo) : info(tinfo) {
   }
 
   inline bool operator<(const TypeInfo &lhs, const TypeInfo &rhs) {

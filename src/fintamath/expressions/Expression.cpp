@@ -161,9 +161,9 @@ namespace fintamath {
     }
 
     int64_t i = 0;
-    while (i < strExpr.size()) {
-      if (strExpr[i] == ' ') {
-        strExpr.erase(i, 1);
+    while (i < int64_t(strExpr.size())) {
+      if (strExpr[size_t(i)] == ' ') {
+        strExpr.erase(size_t(i), 1);
         i--;
       }
       i++;
@@ -260,9 +260,9 @@ namespace fintamath {
       }
       if (bracketsNum == 0) {
         if (types::isFunction(tokensVect[i - 1])) {
-          tokensVect.insert(tokensVect.begin() + (int64_t)i - 1, factorialFunc);
+          tokensVect.insert(tokensVect.begin() + int64_t(i - 1), factorialFunc);
         }
-        tokensVect.insert(tokensVect.begin() + (int64_t)i, factorialFunc);
+        tokensVect.insert(tokensVect.begin() + int64_t(i), factorialFunc);
         return;
       }
     }
@@ -326,7 +326,7 @@ namespace fintamath {
 
   void addBinaryFunction(std::vector<std::string> &tokensVect, std::vector<size_t> &placementsVect, size_t num) {
     std::string token = tokensVect[num];
-    tokensVect.erase(tokensVect.begin() + (int64_t)num);
+    tokensVect.erase(tokensVect.begin() + int64_t(num));
     size_t bracketsNum = 1;
 
     size_t i = num + 1;
@@ -340,8 +340,8 @@ namespace fintamath {
       } else if (tokensVect[i] == ")") {
         bracketsNum--;
       } else if (bracketsNum == 1 && tokensVect[i] == ",") {
-        tokensVect.erase(tokensVect.begin() + (int64_t)i);
-        tokensVect.insert(tokensVect.begin() + (int64_t)i, {")", token, "("});
+        tokensVect.erase(tokensVect.begin() + int64_t(i));
+        tokensVect.insert(tokensVect.begin() + int64_t(i), {")", token, "("});
 
         transform(placementsVect.begin(), placementsVect.end(), placementsVect.begin(),
                   [i](size_t k) { return (k > i) ? k + 1 : k; });
@@ -548,9 +548,9 @@ namespace fintamath {
       strVal += "*10^(-";
       strVal += std::to_string(order) + ')';
     } else {
-      size_t order = distance(begin(strVal), find(begin(strVal), end(strVal), '.'));
-      if (order != strVal.size()) {
-        strVal.erase(order, 1);
+      int64_t order = distance(begin(strVal), find(begin(strVal), end(strVal), '.'));
+      if (size_t(order) != strVal.size()) {
+        strVal.erase(size_t(order), 1);
       }
       if (strVal.size() > INITIAL_PRECISION + 1) {
         strVal.erase(INITIAL_PRECISION + 2);
