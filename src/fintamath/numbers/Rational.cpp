@@ -8,47 +8,10 @@ namespace fintamath {
   static Integer lcm(const Integer &lhs, const Integer &rhs);
 
   Rational::Rational(const std::string_view &str) {
-    size_t firstDigitNum = 0;
-    size_t firstDotNum = std::distance(str.begin(), std::find(str.begin(), str.end(), '.'));
-
-    bool isNegative = false;
-    if (str.front() == '-') {
-      isNegative = true;
-      firstDigitNum++;
-    }
-
-    Integer intPart;
-    try {
-      intPart = Integer(str.substr(firstDigitNum, firstDotNum - firstDigitNum));
-    } catch (const std::invalid_argument &) {
-      throw std::invalid_argument("Rational invalid input");
-    }
-
-    if (firstDotNum != str.size()) {
-      try {
-        auto numeratorStr = str.substr(firstDotNum + 1);
-        std::string denominatorStr(numeratorStr.size() + 1, '0');
-        denominatorStr.front() = '1';
-        numerator = Integer(numeratorStr);
-        denominator = Integer(denominatorStr);
-      } catch (const std::invalid_argument &) {
-        throw std::invalid_argument("Rational invalid input");
-      }
-    }
-
-    if (intPart < 0 || numerator < 0) {
-      throw std::invalid_argument("Rational invalid input");
-    }
-
-    toIrreducibleRational();
-    numerator += intPart * denominator;
-    if (numerator != 0) {
-      sign = isNegative;
-    }
+    parse(str);
   }
 
-  Rational::Rational(Integer numerator, Integer denominator)
-      : numerator(std::move(numerator)), denominator(std::move(denominator)) {
+  Rational::Rational(Integer numer, Integer denom) : numerator(std::move(numer)), denominator(std::move(denom)) {
     toIrreducibleRational();
   }
 
@@ -60,7 +23,7 @@ namespace fintamath {
     fixNegative();
   }
 
-  Rational Rational::round(size_t precision) const {
+  Rational Rational::round(int64_t precision) const {
     return Rational(toString(precision));
   }
 
@@ -76,11 +39,11 @@ namespace fintamath {
     return denominator;
   }
 
-  std::string Rational::toString(size_t precision) const {
+  std::string Rational::toString(int64_t precision) const {
     const int64_t base = 10;
     const int64_t roundUp = 5;
 
-    std::string precisionStr(precision + 2, '0');
+    std::string precisionStr(size_t(precision) + 2, '0');
     precisionStr.front() = '1';
 
     Integer val = numerator * Integer(precisionStr) / denominator;
@@ -90,10 +53,10 @@ namespace fintamath {
     val /= base;
 
     std::string strVal = val.toString();
-    if (strVal.size() <= precision) {
-      strVal.insert(strVal.begin(), precision + 1 - strVal.size(), '0');
+    if (strVal.size() <= size_t(precision)) {
+      strVal.insert(strVal.begin(), size_t(precision) + 1 - strVal.size(), '0');
     }
-    strVal.insert(strVal.end() - (int64_t)precision, '.');
+    strVal.insert(strVal.end() - precision, '.');
 
     while (!strVal.empty() && strVal.back() == '0') {
       strVal.pop_back();
@@ -186,6 +149,46 @@ namespace fintamath {
 
   Rational &Rational::decrease() {
     return *this -= 1;
+  }
+
+  void Rational::parse(const std::string_view &str) {
+    int64_t firstDigitNum = 0;
+    int64_t firstDotNum = std::distance(str.begin(), std::find(str.begin(), str.end(), '.'));
+
+    bool isNegative = false;
+    if (str.front() == '-') {
+      isNegative = true;
+      firstDigitNum++;
+    }
+
+    Integer intPart;
+    try {
+      intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
+    } catch (const std::invalid_argument &) {
+      throw std::invalid_argument("Rational invalid input");
+    }
+
+    if (size_t(firstDotNum) != str.size()) {
+      try {
+        auto numeratorStr = str.substr(size_t(firstDotNum) + 1);
+        std::string denominatorStr(numeratorStr.size() + 1, '0');
+        denominatorStr.front() = '1';
+        numerator = Integer(numeratorStr);
+        denominator = Integer(denominatorStr);
+      } catch (const std::invalid_argument &) {
+        throw std::invalid_argument("Rational invalid input");
+      }
+    }
+
+    if (intPart < 0 || numerator < 0) {
+      throw std::invalid_argument("Rational invalid input");
+    }
+
+    toIrreducibleRational();
+    numerator += intPart * denominator;
+    if (numerator != 0) {
+      sign = isNegative;
+    }
   }
 
   void Rational::fixNegative() {

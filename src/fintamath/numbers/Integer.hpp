@@ -16,7 +16,7 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    size_t getSize() const;
+    int64_t getSize() const;
 
     Integer sqrt() const;
 
@@ -48,9 +48,11 @@ namespace fintamath {
     Integer &mod(const Integer &rhs);
 
   private:
+    void parse(const std::string_view &str);
+
     void fixZero();
 
-    std::vector<int64_t> intVect;
+    std::vector<int64_t> intVect{0};
     bool sign{};
   };
 

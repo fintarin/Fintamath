@@ -4,6 +4,10 @@
 
 using namespace fintamath;
 
+TEST(RationalTests, constructorTest) {
+  EXPECT_EQ(Rational(), 0);
+}
+
 TEST(RationalTests, stringConstructorTest) {
   EXPECT_EQ(Rational("-93"), -93);
   EXPECT_EQ(Rational("-9.3").toString(), "-93/10");

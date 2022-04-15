@@ -6,10 +6,7 @@
 
 namespace fintamath {
   Operator::Operator(const std::string &str) {
-    if (!types::isOperator(str)) {
-      throw std::invalid_argument("Operator invalid input");
-    }
-    name = *str.begin();
+    parse(str);
   }
 
   Rational Operator::solve(const Rational &lhs, const Rational &rhs, int64_t precision) const {
@@ -35,6 +32,13 @@ namespace fintamath {
 
   bool Operator::equals(const Operator &rhs) const {
     return name == rhs.name;
+  }
+
+  void Operator::parse(const std::string &str) {
+    if (!types::isOperator(str)) {
+      throw std::invalid_argument("Operator invalid input");
+    }
+    name = *str.begin();
   }
 
   namespace types {
