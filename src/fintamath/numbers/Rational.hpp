@@ -49,6 +49,8 @@ namespace fintamath {
     Rational &decrease() override;
 
   private:
+    void parse(const std::string_view &str);
+
     void fixNegative();
 
     void fixZero();

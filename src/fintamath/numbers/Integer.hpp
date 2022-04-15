@@ -48,6 +48,8 @@ namespace fintamath {
     Integer &mod(const Integer &rhs);
 
   private:
+    void parse(const std::string_view &str);
+
     void fixZero();
 
     std::vector<int64_t> intVect{0};

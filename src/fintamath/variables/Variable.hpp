@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
   class Variable : public MathObjectImpl<Variable> {
@@ -15,6 +15,8 @@ namespace fintamath {
     bool equals(const Variable &rhs) const override;
 
   private:
+    void parse(const std::string &str);
+
     std::string name;
   };
 
