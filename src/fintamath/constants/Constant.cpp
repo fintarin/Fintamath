@@ -5,11 +5,8 @@
 #include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
-  Constant::Constant(const std::string_view &str) {
-    if (!types::isConstant(str)) {
-      throw std::invalid_argument("Constant invalid input");
-    }
-    name = str;
+  Constant::Constant(const std::string &str) {
+    parse(str);
   }
 
   Rational Constant::toRational(int64_t precision) const {
@@ -30,8 +27,15 @@ namespace fintamath {
     return name == rhs.name;
   }
 
+  void Constant::parse(const std::string &str) {
+    if (!types::isConstant(str)) {
+      throw std::invalid_argument("Constant invalid input");
+    }
+    name = str;
+  }
+
   namespace types {
-    bool isConstant(const std::string_view &str) {
+    bool isConstant(const std::string &str) {
       if (str == "e") {
         return true;
       }

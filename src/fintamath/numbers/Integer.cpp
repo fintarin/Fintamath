@@ -47,24 +47,7 @@ namespace fintamath {
   void getSqrtDiff(const IntVector &rhs, const int64_t &base, IntVector &val, IntVector &diff);
 
   Integer::Integer(const std::string_view &str) {
-    if (str.empty()) {
-      throw std::invalid_argument("Integer invalid input");
-    }
-
-    intVect.clear();
-    sign = false;
-
-    int64_t firstDigitNum = 0;
-    if (str.front() == '-') {
-      sign = true;
-      firstDigitNum++;
-    }
-
-    if (!canConvert(str.substr(firstDigitNum))) {
-      throw std::invalid_argument("Integer invalid input");
-    }
-
-    intVect = toIntVector(str.substr(firstDigitNum), INT_BASE_SIZE);
+    parse(str);
   }
 
   Integer::Integer(int64_t val) : Integer(std::to_string(val)) {
@@ -208,6 +191,27 @@ namespace fintamath {
 
     fixZero();
     return *this;
+  }
+
+  void Integer::parse(const std::string_view &str) {
+    if (str.empty()) {
+      throw std::invalid_argument("Integer invalid input");
+    }
+
+    intVect.clear();
+    sign = false;
+
+    int64_t firstDigitNum = 0;
+    if (str.front() == '-') {
+      sign = true;
+      firstDigitNum++;
+    }
+
+    if (!canConvert(str.substr(firstDigitNum))) {
+      throw std::invalid_argument("Integer invalid input");
+    }
+
+    intVect = toIntVector(str.substr(firstDigitNum), INT_BASE_SIZE);
   }
 
   void Integer::fixZero() {

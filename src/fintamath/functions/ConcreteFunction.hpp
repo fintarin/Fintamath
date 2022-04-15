@@ -19,6 +19,8 @@ namespace fintamath {
     bool equals(const ConcreteFunction &rhs) const override;
 
   private:
+    void parse(const std::string &str);
+
     std::string name;
   };
 

@@ -15,7 +15,9 @@ namespace fintamath {
     bool equals(const Operator &rhs) const override;
 
   private:
-    char name;
+    void parse(const std::string &str);
+
+    char name{};
   };
 
   namespace types {

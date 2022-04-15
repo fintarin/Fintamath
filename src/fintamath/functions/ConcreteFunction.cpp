@@ -6,10 +6,7 @@
 
 namespace fintamath {
   ConcreteFunction::ConcreteFunction(const std::string &str) {
-    if (!types::isFunction(str)) {
-      throw std::invalid_argument("ConcreteFunction invalid input");
-    }
-    name = str;
+    parse(str);
   }
 
   Rational ConcreteFunction::solve(const Rational &rhs, int64_t precision) const {
@@ -77,6 +74,13 @@ namespace fintamath {
 
   bool ConcreteFunction::equals(const ConcreteFunction &rhs) const {
     return name == rhs.name;
+  }
+
+  void ConcreteFunction::parse(const std::string &str) {
+    if (!types::isFunction(str)) {
+      throw std::invalid_argument("ConcreteFunction invalid input");
+    }
+    name = str;
   }
 
   namespace types {
