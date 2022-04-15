@@ -4,6 +4,10 @@
 
 using namespace fintamath;
 
+TEST(IntegerTests, constructorTest) {
+  EXPECT_EQ(Integer(), 0);
+}
+
 TEST(IntegerTests, stringConstructorTest) {
   EXPECT_EQ(Integer("10").toString(), "10");
   EXPECT_EQ(Integer("2432432423432432454745").toString(), "2432432423432432454745");
@@ -32,7 +36,7 @@ TEST(IntegerTests, plusAssignmentOperatorTest) {
   EXPECT_EQ(Integer(5) += Integer(10), 15);
   EXPECT_EQ(Integer(-5) += Integer(10), 5);
   EXPECT_EQ(Integer(-10) += Integer(10), 0);
-  EXPECT_EQ(Integer("-72838928574893245678976545678765457483992") + Integer("-387827392020390239201210"),
+  EXPECT_EQ(Integer("-72838928574893245678976545678765457483992") += Integer("-387827392020390239201210"),
             Integer("-72838928574893246066803937699155696685202"));
 }
 
@@ -361,7 +365,7 @@ TEST(IntegerTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(Integer(2000) /= Integer(-368273929), 0);
   EXPECT_EQ(Integer(-20) /= Integer(-20), 1);
   EXPECT_EQ(Integer(-29829920) /= Integer(1), -29829920);
-  EXPECT_EQ(Integer(150067278) / Integer(100000), 1500);
+  EXPECT_EQ(Integer(150067278) /= Integer(100000), 1500);
 
   EXPECT_EQ(Integer(2) /= Integer(2), 1);
   EXPECT_EQ(Integer(2) /= Integer(-2), -1);
