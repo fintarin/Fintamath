@@ -115,18 +115,21 @@ TEST(ArithmeticTests, mulTest) {
 
 TEST(ArithmeticTests, diveTest) {
   ArithmeticPtr m1 = std::make_unique<Integer>(1);
-  ArithmeticPtr m2 = std::make_unique<Rational>(2);
-  ArithmeticPtr m3 = std::make_unique<Rational>(1, 2);
+  ArithmeticPtr m2 = std::make_unique<Integer>(5);
+  ArithmeticPtr m3 = std::make_unique<Rational>(2);
+  ArithmeticPtr m4 = std::make_unique<Rational>(1, 2);
+
+  EXPECT_EQ((*m1 / *m2)->toString(), "1/5");
 
   EXPECT_EQ((*m1 / *m1)->toString(), "1");
-  EXPECT_EQ((*m2 / *m2)->toString(), "1");
-  EXPECT_EQ((*m1 / *m2)->toString(), "1/2");
-  EXPECT_EQ((*m2 / *m1)->toString(), "2");
+  EXPECT_EQ((*m3 / *m3)->toString(), "1");
+  EXPECT_EQ((*m1 / *m3)->toString(), "1/2");
+  EXPECT_EQ((*m3 / *m1)->toString(), "2");
 
-  EXPECT_EQ((*m1 / *m3)->toString(), "2");
-  EXPECT_EQ((*m2 / *m3)->toString(), "4");
-  EXPECT_EQ((*m3 / *m1)->toString(), "1/2");
-  EXPECT_EQ((*m3 / *m2)->toString(), "1/4");
+  EXPECT_EQ((*m1 / *m4)->toString(), "2");
+  EXPECT_EQ((*m3 / *m4)->toString(), "4");
+  EXPECT_EQ((*m4 / *m1)->toString(), "1/2");
+  EXPECT_EQ((*m4 / *m3)->toString(), "1/4");
 
   EXPECT_THROW(*m1 / tests::TestArithmetic(), std::invalid_argument);
   EXPECT_THROW(tests::TestArithmetic() / *m1, std::invalid_argument);

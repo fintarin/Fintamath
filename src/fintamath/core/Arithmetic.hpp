@@ -142,6 +142,9 @@ namespace fintamath {
     }
 
     ArithmeticPtr divideAbstract(const Arithmetic &rhs) const final {
+      if (auto tmp = multiDiv(*this, rhs); tmp != nullptr) {
+        return tmp;
+      }
       FINTAMATH_CALL_OPERATOR(/);
     }
 
@@ -152,6 +155,9 @@ namespace fintamath {
     ArithmeticPtr negateAbstract() const final {
       return std::make_unique<Derived>(-(*this));
     }
+
+  private:
+    friend ArithmeticPtr multiDiv(const Arithmetic &lhs ,const Arithmetic &rhs);
   };
 
   template <typename LhsType, typename RhsType,
