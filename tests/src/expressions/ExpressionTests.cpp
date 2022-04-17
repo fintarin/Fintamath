@@ -7,14 +7,14 @@
 
 using namespace fintamath;
 
-//TEST(ExpressionTests, expressionPositiveTests) {
-//  std::ifstream testsIn(RESOURCES_DIR "positive_tests.txt");
-//  for (std::string input, output; getline(testsIn, input) && getline(testsIn, output);) {
-//    std::cout << input << '\n' << output << "\n\n";
-//    EXPECT_EQ(Expression(input).solve(), output);
-//    getline(testsIn, input);
-//  }
-//}
+TEST(ExpressionTests, expressionPositiveTests) {
+  std::ifstream testsIn(RESOURCES_DIR "positive_tests.txt");
+  for (std::string input, output; getline(testsIn, input) && getline(testsIn, output);) {
+    std::cout << input << '\n' << output << "\n\n";
+    EXPECT_EQ(Expression(input).simplify().toString(), output);
+    getline(testsIn, input);
+  }
+}
 
 TEST(ExpressionTests, parserTest){
   auto a = Expression("log( 1 + 2 , a)");
