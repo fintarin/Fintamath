@@ -65,7 +65,9 @@ namespace fintamath {
     if (info->instanceOf<Operator>()) {
       const auto &rootOp = info->to<Operator>();
 
-      if (children.at(0)->info->instanceOf<Operator>()) {
+      if (!children.at(0)->info->instanceOf<Operator>()) {
+        result += children.at(0)->toString();
+      } else {
         if (const auto &nodeOp = children.at(0)->info->to<Operator>();
             (rootOp.getPriority() > nodeOp.getPriority()) ||
             (rootOp.is<Neg>() && rootOp.getPriority() == nodeOp.getPriority())) {
@@ -80,16 +82,17 @@ namespace fintamath {
       }
       result += info->toString();
 
-      if (children.at(1)->info->instanceOf<Operator>()) {
-        const auto &nodeOp = children.at(0)->info->to<Operator>();
-        if (rootOp.getPriority() > nodeOp.getPriority()) {
-          return result + putInBrackets(children.at(0)->toString());
-        }
-        if ((rootOp.is<Sub>() || rootOp.is<Div>()) && rootOp.getPriority() == nodeOp.getPriority()) {
-          return result + putInBrackets(children.at(0)->toString());
-        }
-        return result + children.at(0)->toString();
+      if (!children.at(1)->info->instanceOf<Operator>()) {
+        return result + children.at(1)->toString();
       }
+      const auto &nodeOp = children.at(1)->info->to<Operator>();
+      if (rootOp.getPriority() > nodeOp.getPriority()) {
+        return result + putInBrackets(children.at(1)->toString());
+      }
+      if ((rootOp.is<Sub>() || rootOp.is<Div>()) && rootOp.getPriority() == nodeOp.getPriority()) {
+        return result + putInBrackets(children.at(1)->toString());
+      }
+      return result + children.at(1)->toString();
     }
 
     return info->toString();
