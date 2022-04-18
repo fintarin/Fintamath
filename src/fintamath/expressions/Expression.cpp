@@ -100,8 +100,16 @@ namespace fintamath {
     // TODO: add instanceOf for functions
   }
 
-  bool Expression::equals(const Expression & /*rhs*/) const {
-    return false;
+  bool Expression::equals(const Expression & rhs) const {
+    bool flag = *info == *rhs.info;
+    if(children.size() == rhs.children.size()){
+      for(size_t pos = 0;pos < children.size();pos++){
+        flag = flag && *children.at(pos) == *rhs.children.at(pos);
+      }
+    }else {
+      return false;
+    }
+    return flag;
   }
 
   std::string cutSpaces(const std::string &str) {
