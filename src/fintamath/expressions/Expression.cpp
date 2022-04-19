@@ -12,7 +12,6 @@
 
 #include "fintamath/constants/Constant.hpp"
 #include "fintamath/functions/Function.hpp"
-#include "fintamath/operators/Operator.hpp"
 #include "fintamath/variables/Variable.hpp"
 
 namespace fintamath {
@@ -100,13 +99,13 @@ namespace fintamath {
     // TODO: add instanceOf for functions
   }
 
-  bool Expression::equals(const Expression & rhs) const {
+  bool Expression::equals(const Expression &rhs) const {
     bool flag = *info == *rhs.info;
-    if(children.size() == rhs.children.size()){
-      for(size_t pos = 0;pos < children.size();pos++){
+    if (children.size() == rhs.children.size()) {
+      for (size_t pos = 0; pos < children.size(); pos++) {
         flag = flag && *children.at(pos) == *rhs.children.at(pos);
       }
-    }else {
+    } else {
       return false;
     }
     return flag;
@@ -342,6 +341,12 @@ namespace fintamath {
   Expression Expression::simplify() {
     auto newExpr = std::make_shared<Expression>(*this);
     newExpr = simplifyNumbers(newExpr);
+    newExpr = invertSubDiv(newExpr);
+    newExpr = simplifyNegNeg(newExpr);
+    newExpr = rebuildAdd(newExpr);
+    newExpr = rebuildMul(newExpr);
+
+    newExpr = mainSimplify(newExpr);
     return *newExpr;
   }
 
@@ -351,7 +356,6 @@ namespace fintamath {
         child = simplifyNumbers(child);
       }
     }
-
     if (expr->info->instanceOf<Operator>()) {
       const auto &o = expr->info->to<Operator>();
       try {
@@ -364,16 +368,19 @@ namespace fintamath {
         // skip operation if child is Variable
       }
     }
-
+    // TODO: add functions
     return expr;
   }
 
   std::shared_ptr<Expression> Expression::mainSimplify(const std::shared_ptr<Expression> &expr) {
-    auto newExpr = subDivNegSimplify(expr);
+    auto newExpr = simplifyMulNum(expr);
+    newExpr = simplifyAddNum(newExpr);
+    newExpr = openBracketsMulAdd(newExpr);
+    newExpr = openBracketsPowMul(newExpr);
     return newExpr;
   }
 
-  std::shared_ptr<Expression> Expression::subDivNegSimplify(const std::shared_ptr<Expression> &expr) {
+  std::shared_ptr<Expression> Expression::invertSubDiv(const std::shared_ptr<Expression> &expr) {
     auto newExpr = std::make_shared<Expression>(*expr);
     if (newExpr->info->is<Sub>()) {
       newExpr->info = std::make_shared<Add>();
@@ -386,20 +393,235 @@ namespace fintamath {
     if (newExpr->info->is<Div>()) {
       newExpr->info = std::make_shared<Mul>();
       auto rightNode = std::make_shared<Expression>();
-      rightNode->info = std::make_shared<Div>();
-      rightNode->children.push_back(std::make_shared<Expression>(Integer(1)));
-      rightNode->children.push_back(newExpr->children.at(1));
-      rightNode = simplifyNumbers(rightNode);
+      if (newExpr->children.at(1)->is<Arithmetic>()) {
+        rightNode->info = std::make_shared<Div>();
+        rightNode->children.push_back(std::make_shared<Expression>(Integer(1)));
+        rightNode->children.push_back(newExpr->children.at(1));
+        rightNode = simplifyNumbers(rightNode);
+      } else {
+        rightNode->info = std::make_shared<Pow>();
+        rightNode->children.push_back(newExpr->children.at(1));
+        rightNode->children.push_back(std::make_shared<Expression>(Integer(-1)));
+      }
       newExpr->children.at(1) = rightNode;
-    }
-    if (newExpr->info->is<Neg>() && newExpr->children.at(0)->info->is<Neg>()) {
-      newExpr = newExpr->children.at(0)->children.at(0);
     }
     for (auto &child : newExpr->children) {
       if (child != nullptr) {
-        child = subDivNegSimplify(child);
+        child = invertSubDiv(child);
       }
     }
     return newExpr;
+  }
+
+  std::shared_ptr<Expression> Expression::simplifyNegNeg(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+    while (newExpr->info->is<Neg>() && newExpr->children.at(0)->info->is<Neg>()) {
+      newExpr = newExpr->children.at(0)->children.at(0);
+    }
+    return newExpr;
+  }
+
+  std::shared_ptr<Expression> Expression::rebuildAdd(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+    for (auto &child : newExpr->children) {
+      child = rebuildAdd(child);
+    }
+    if (!newExpr->info->is<Add>()) {
+      return newExpr;
+    }
+    std::vector<std::shared_ptr<Expression>> newChildren;
+    for (auto &child : newExpr->children) {
+      if (child->info->is<Add>()) {
+        for (auto &childChild : child->children) {
+          newChildren.push_back(childChild);
+        }
+      } else {
+        newChildren.push_back(child);
+      }
+    }
+    newExpr->children = newChildren;
+    return newExpr;
+  }
+
+  std::shared_ptr<Expression> Expression::rebuildMul(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+    for (auto &child : newExpr->children) {
+      child = rebuildMul(child);
+    }
+    if (!newExpr->info->is<Mul>()) {
+      return newExpr;
+    }
+    std::vector<std::shared_ptr<Expression>> newChildren;
+    for (auto &child : newExpr->children) {
+      if (child->info->is<Mul>()) {
+        for (auto &childChild : child->children) {
+          newChildren.push_back(childChild);
+        }
+      } else {
+        newChildren.push_back(child);
+      }
+    }
+    newExpr->children = newChildren;
+    return newExpr;
+  }
+
+  std::shared_ptr<Expression> Expression::simplifyAddNum(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+    for (auto &child : newExpr->children) {
+      child = simplifyAddNum(child);
+    }
+    if (!newExpr->info->is<Add>()) {
+      return newExpr;
+    }
+    auto op = Add();
+    MathObjectPtr result = std::make_unique<Integer>(0);
+    size_t position = newExpr->children.size();
+
+    do {
+      position--;
+      if (newExpr->children.at(position)->info->instanceOf<Arithmetic>()) {
+        result = op(*result, *newExpr->children.at(position)->info);
+        newExpr->children.erase(newExpr->children.begin() + static_cast<long long int>(position));
+      }
+    } while (position > 0);
+
+    if (result->toString() != "0") {
+      newExpr->children.push_back(std::make_shared<Expression>(*result));
+    }
+    if (newExpr->children.size() == 1) {
+      return newExpr->children.at(0);
+    }
+    return newExpr;
+  }
+
+  std::shared_ptr<Expression> Expression::simplifyMulNum(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+    for (auto &child : newExpr->children) {
+      child = simplifyMulNum(child);
+    }
+    if (!newExpr->info->is<Mul>()) {
+      return newExpr;
+    }
+    auto op = Mul();
+    MathObjectPtr result = std::make_unique<Integer>(1);
+    size_t position = newExpr->children.size();
+
+    do {
+      position--;
+      if (newExpr->children.at(position)->info->toString() == "0") {
+        return newExpr->children.at(position);
+      }
+      if (newExpr->children.at(position)->info->instanceOf<Arithmetic>()) {
+        result = op(*result, *newExpr->children.at(position)->info);
+        newExpr->children.erase(newExpr->children.begin() + static_cast<long long int>(position));
+      }
+    } while (position > 0);
+
+    if (result->toString() != "1") {
+      newExpr->children.push_back(std::make_shared<Expression>(*result));
+    }
+    if (newExpr->children.size() == 1) {
+      return newExpr->children.at(0);
+    }
+    return newExpr;
+  }
+
+  std::vector<std::shared_ptr<Expression>>
+  Expression::getOpenTwoBrackets(const std::vector<std::shared_ptr<Expression>> &lhsBracket,
+                              const std::vector<std::shared_ptr<Expression>> &rhsBracket, const MathObject&  o) {
+    auto openBrackets = std::vector<std::shared_ptr<Expression>>();
+    for(const auto& lhs: lhsBracket){
+      for(const auto& rhs: rhsBracket){
+        auto newExpr = std::make_shared<Expression>();
+        newExpr->info = o.clone();
+        newExpr->children = {lhs, rhs};
+        openBrackets.push_back(newExpr);
+      }
+    }
+    return openBrackets;
+  }
+
+  std::shared_ptr<Expression> Expression::openBracketsMulAdd(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+    for (auto &child : newExpr->children) {
+      child = openBracketsMulAdd(child);
+    }
+    if (!newExpr->info->is<Mul>()) {
+      return newExpr;
+    }
+    size_t pos = newExpr->children.size();
+
+    while (newExpr->children.size() > 1) {
+      pos--;
+      auto lhs = std::vector<std::shared_ptr<Expression>>();
+      auto rhs = std::vector<std::shared_ptr<Expression>>();
+      if(newExpr->children.at(pos - 1)->info->is<Add>()){
+        lhs = newExpr->children.at(pos - 1)->children;
+      }
+      else{
+        lhs = {newExpr->children.at(pos - 1)};
+      }
+
+      if(newExpr->children.at(pos)->info->is<Add>()){
+        rhs = newExpr->children.at(pos)->children;
+      }
+      else{
+        rhs = {newExpr->children.at(pos)};
+      }
+      if(rhs.size() == 1 && lhs.size() == 1){
+        return newExpr;
+      }
+      newExpr->children.pop_back();
+      newExpr->children.pop_back();
+
+      auto lastExpr = std::make_shared<Expression>();
+      lastExpr->info = std::make_shared<Add>();
+      lastExpr->children = getOpenTwoBrackets(lhs, rhs, Mul());
+      newExpr->children.push_back(lastExpr);
+    }
+
+    return mainSimplify(newExpr->children.at(0));
+  }
+
+  std::shared_ptr<Expression> Expression::openBracketsPowMul(const std::shared_ptr<Expression> &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+    for (auto &child : newExpr->children) {
+      child = openBracketsPowMul(child);
+    }
+    if (!newExpr->info->is<Pow>()) {
+      return newExpr;
+    }
+    size_t pos = newExpr->children.size();
+
+    while (newExpr->children.size() > 1) {
+      pos--;
+      auto lhs = std::vector<std::shared_ptr<Expression>>();
+      auto rhs = std::vector<std::shared_ptr<Expression>>();
+      if(newExpr->children.at(pos - 1)->info->is<Mul>()){
+        lhs = newExpr->children.at(pos - 1)->children;
+      }
+      else{
+        lhs = {newExpr->children.at(pos - 1)};
+      }
+
+      if(newExpr->children.at(pos)->info->is<Mul>()){
+        rhs = newExpr->children.at(pos)->children;
+      }
+      else{
+        rhs = {newExpr->children.at(pos)};
+      }
+      if(rhs.size() == 1 && lhs.size() == 1){
+        return newExpr;
+      }
+      newExpr->children.pop_back();
+      newExpr->children.pop_back();
+
+      auto lastExpr = std::make_shared<Expression>();
+      lastExpr->info = std::make_shared<Mul>();
+      lastExpr->children = getOpenTwoBrackets(lhs, rhs, Pow());
+      newExpr->children.push_back(lastExpr);
+    }
+
+    return mainSimplify(newExpr->children.at(0));
   }
 }
