@@ -9,6 +9,7 @@
 #include <fintamath/operators/Sub.hpp>
 #include <regex>
 #include <stdexcept>
+#include <algorithm>
 
 #include "fintamath/constants/Constant.hpp"
 #include "fintamath/functions/Function.hpp"
@@ -641,17 +642,12 @@ namespace fintamath {
     }
   }
 
-  void Expression::sortExprVect(std::vector<std::shared_ptr<Expression>>& exprVect){
-    if(exprVect.size() < 2){
-      return;
-    }
-    for(size_t i = 0;i < exprVect.size() - 1;i++){
-      for(size_t j = i + 1; j < exprVect.size(); j++){
-        if(exprVect[i]->toString() < exprVect[j]->toString()){
-          std::swap(exprVect[i], exprVect[j]);
-        }
-      }
-    }
+  bool compareExprVar(const std::shared_ptr<Expression>& lhs, const std::shared_ptr<Expression>& rhs){
+    return lhs->toString() > rhs->toString();
+  }
+
+  bool compareExprMulPow(const std::shared_ptr<Expression>& lhs, const std::shared_ptr<Expression>& rhs){
+    return lhs->toString() < rhs->toString();
   }
 
   std::shared_ptr<Expression> Expression::sort(const std::shared_ptr<Expression> &expr){
@@ -682,9 +678,9 @@ namespace fintamath {
       }
     }
     newExpr->children.clear();
-    sortVarVect(varVect);
-    sortExprVect(powVect);
-    sortExprVect(mulVect);
+    std::sort(varVect.begin(), varVect.end(), compareExprVar);
+    std::sort(powVect.begin(), powVect.end(), compareExprMulPow);
+    std::sort(mulVect.begin(), mulVect.end(), compareExprMulPow);
 
     if(newExpr->info->is<Add>()){
       for(const auto& pow:powVect){
