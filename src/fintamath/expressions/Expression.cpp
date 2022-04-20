@@ -350,7 +350,7 @@ namespace fintamath {
     auto newExpr = std::make_shared<Expression>(*this);
     newExpr = simplifyNumbers(newExpr);
     newExpr = invertSubDiv(newExpr);
-    newExpr = simplifyNegNeg(newExpr);
+    newExpr = simplifyNeg(newExpr);
     newExpr = rebuildAdd(newExpr);
     newExpr = rebuildMul(newExpr);
 
@@ -421,10 +421,17 @@ namespace fintamath {
     return newExpr;
   }
 
-  std::shared_ptr<Expression> Expression::simplifyNegNeg(const std::shared_ptr<Expression> &expr) {
+  std::shared_ptr<Expression> Expression::simplifyNeg(const std::shared_ptr<Expression> &expr) {
     auto newExpr = std::make_shared<Expression>(*expr);
     while (newExpr->info->is<Neg>() && newExpr->children.at(0)->info->is<Neg>()) {
       newExpr = newExpr->children.at(0)->children.at(0);
+    }
+    if(newExpr->info->is<Neg>() && !newExpr->children.at(0)->info->is<Arithmetic>()){
+      newExpr->info = std::make_shared<Mul>();
+      newExpr->children.insert(newExpr->children.begin(), std::make_shared<Expression>(Integer(-1)));
+    }
+    for(auto& child : newExpr->children){
+      child = simplifyNeg(child);
     }
     return newExpr;
   }
