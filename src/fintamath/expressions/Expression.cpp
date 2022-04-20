@@ -383,6 +383,7 @@ namespace fintamath {
   std::shared_ptr<Expression> Expression::mainSimplify(const std::shared_ptr<Expression> &expr) {
     auto newExpr = simplifyMulNum(expr);
     newExpr = simplifyAddNum(newExpr);
+    newExpr = openBracketsPowMul(newExpr);
     newExpr = openBracketsMulAdd(newExpr);
     newExpr = openBracketsPowMul(newExpr);
     return newExpr;
@@ -606,7 +607,39 @@ namespace fintamath {
     if (!newExpr->info->is<Pow>()) {
       return newExpr;
     }
-    size_t pos = newExpr->children.size();
+
+    if(!newExpr->children.at(0)->info->is<Mul>()){
+      return newExpr;
+    }
+
+    auto newChildren = std::vector<std::shared_ptr<Expression>>();
+    for(auto& child: newExpr->children.at(0)->children){
+      auto newChild = std::make_shared<Expression>();
+      newChild->info = std::make_shared<Pow>();
+      newChild->children.push_back(child);
+      newChild->children.push_back(std::make_shared<Expression>(*newExpr->children.at(1)));
+      newChildren.push_back(newChild);
+    }
+    newExpr->children = newChildren;
+    newExpr->info = std::make_shared<Mul>();
+    return newExpr;
+  }
+
+  void Expression::sortVarVect(std::vector<std::shared_ptr<Expression>>& varVect){
+    if(varVect.size() < 2){
+      return;
+    }
+    for(size_t i = 0;i < varVect.size() - 1;i++){
+      for(size_t j = i + 1; j < varVect.size(); j++){
+        if(!varVect[i]->info->is<Variable>() || !varVect[j]->info->is<Variable>()){
+          throw std::invalid_argument("Expression invalid input");
+        }
+        if(varVect[i]->info->toString() > varVect[j]->info->toString()){
+          std::swap(varVect[i], varVect[j]);
+        }
+      }
+    }
+  }
 
     while (newExpr->children.size() > 1) {
       pos--;
