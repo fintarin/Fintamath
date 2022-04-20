@@ -385,7 +385,7 @@ namespace fintamath {
     newExpr = simplifyAddNum(newExpr);
     newExpr = openBracketsPowMul(newExpr);
     newExpr = openBracketsMulAdd(newExpr);
-    newExpr = openBracketsPowMul(newExpr);
+    newExpr = sort(newExpr);
     return newExpr;
   }
 
@@ -641,28 +641,82 @@ namespace fintamath {
     }
   }
 
-    while (newExpr->children.size() > 1) {
-      pos--;
-      auto lhs = std::vector<std::shared_ptr<Expression>>();
-      auto rhs = std::vector<std::shared_ptr<Expression>>();
-      if(newExpr->children.at(pos - 1)->info->is<Mul>()){
-        lhs = newExpr->children.at(pos - 1)->children;
+  void Expression::sortExprVect(std::vector<std::shared_ptr<Expression>>& exprVect){
+    if(exprVect.size() < 2){
+      return;
+    }
+    for(size_t i = 0;i < exprVect.size() - 1;i++){
+      for(size_t j = i + 1; j < exprVect.size(); j++){
+        if(exprVect[i]->toString() < exprVect[j]->toString()){
+          std::swap(exprVect[i], exprVect[j]);
+        }
       }
-      else{
-        lhs = {newExpr->children.at(pos - 1)};
-      }
+    }
+  }
 
-      if(newExpr->children.at(pos)->info->is<Mul>()){
-        rhs = newExpr->children.at(pos)->children;
+  std::shared_ptr<Expression> Expression::sort(const std::shared_ptr<Expression> &expr){
+    auto newExpr = std::make_shared<Expression>(*expr);
+    for(auto& child:newExpr->children){
+      child = sort(child);
+    }
+    if(!newExpr->info->instanceOf<Operator>()||newExpr->info->is<Pow>()){
+      return newExpr;
+    }
+    auto numVect = std::vector<std::shared_ptr<Expression>>();
+    auto powVect = std::vector<std::shared_ptr<Expression>>();
+    auto varVect = std::vector<std::shared_ptr<Expression>>();
+    auto mulVect = std::vector<std::shared_ptr<Expression>>();
+
+    for(auto& child:newExpr->children){
+      if(child->info->instanceOf<Arithmetic>()){
+        numVect.push_back(child);
       }
-      else{
-        rhs = {newExpr->children.at(pos)};
+      if(child->info->is<Pow>()){
+        powVect.push_back(child);
       }
-      if(rhs.size() == 1 && lhs.size() == 1){
-        return newExpr;
+      if(child->info->is<Variable>()){
+        varVect.push_back(child);
       }
-      newExpr->children.pop_back();
-      newExpr->children.pop_back();
+      if(child->info->is<Mul>()){
+        mulVect.push_back(child);
+      }
+    }
+    newExpr->children.clear();
+    sortVarVect(varVect);
+    sortExprVect(powVect);
+    sortExprVect(mulVect);
+
+    if(newExpr->info->is<Add>()){
+      for(const auto& pow:powVect){
+        newExpr->children.push_back(pow);
+      }
+      for(const auto& mul:mulVect){
+        newExpr->children.push_back(mul);
+      }
+      for(const auto& var:varVect){
+        newExpr->children.push_back(var);
+      }
+      for(const auto& num:numVect){
+        newExpr->children.push_back(num);
+      }
+    }
+
+    if(newExpr->info->is<Mul>()){
+      for(const auto& num:numVect){
+        newExpr->children.push_back(num);
+      }
+      for(const auto& pow:powVect){
+        newExpr->children.push_back(pow);
+      }
+      for(const auto& mul:mulVect){
+        newExpr->children.push_back(mul);
+      }
+      for(const auto& var:varVect){
+        newExpr->children.push_back(var);
+      }
+    }
+    return newExpr;
+  }
 
       auto lastExpr = std::make_shared<Expression>();
       lastExpr->info = std::make_shared<Mul>();
