@@ -69,29 +69,37 @@ namespace fintamath {
       } else {
         if (const auto &nodeOp = children.at(0)->info->to<Operator>();
             (rootOp.getPriority() > nodeOp.getPriority()) ||
-            (rootOp.is<Neg>() && rootOp.getPriority() == nodeOp.getPriority())) {
+            ((rootOp.is<Neg>()||rootOp.is<Pow>()) && rootOp.getPriority() == nodeOp.getPriority())) {
           result += putInBrackets(children.at(0)->toString());
         }
-        result += children.at(0)->toString();
+        else {
+          result += children.at(0)->toString();
+        }
       }
 
       if (rootOp.is<Neg>()) {
         result = rootOp.toString() + result;
         return result;
       }
-      result += info->toString();
+      for(size_t i = 1;i < children.size();i++) {
+        result += info->toString();
 
-      if (!children.at(1)->info->instanceOf<Operator>()) {
-        return result + children.at(1)->toString();
+        if (!children.at(i)->info->instanceOf<Operator>()) {
+          result += children.at(i)->toString();
+          continue;
+        }
+        const auto &nodeOp = children.at(i)->info->to<Operator>();
+        if (rootOp.getPriority() > nodeOp.getPriority()) {
+          result += putInBrackets(children.at(i)->toString());
+          continue;
+        }
+        if ((rootOp.is<Sub>() || rootOp.is<Div>()) && rootOp.getPriority() == nodeOp.getPriority()) {
+          result += putInBrackets(children.at(i)->toString());
+          continue;
+        }
+        result += children.at(i)->toString();
       }
-      const auto &nodeOp = children.at(1)->info->to<Operator>();
-      if (rootOp.getPriority() > nodeOp.getPriority()) {
-        return result + putInBrackets(children.at(1)->toString());
-      }
-      if ((rootOp.is<Sub>() || rootOp.is<Div>()) && rootOp.getPriority() == nodeOp.getPriority()) {
-        return result + putInBrackets(children.at(1)->toString());
-      }
-      return result + children.at(1)->toString();
+      return result;
     }
 
     return info->toString();
@@ -364,7 +372,7 @@ namespace fintamath {
           return newExpr;
         }
         return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
-      } catch (const std::invalid_argument &e) {
+      } catch (const std::invalid_argument &) {
         // skip operation if child is Variable
       }
     }
