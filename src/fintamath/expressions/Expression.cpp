@@ -48,6 +48,7 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     *this = *parseExpression(str);
+    *this = simplify();
   }
 
   Expression::Expression(const MathObject &obj) : info(obj.clone()) {
@@ -352,10 +353,13 @@ namespace fintamath {
     newExpr = simplifyNumbers(newExpr);
     newExpr = invertSubDiv(newExpr);
     newExpr = simplifyNeg(newExpr);
-    newExpr = rebuildAdd(newExpr);
-    newExpr = rebuildMul(newExpr);
 
+    auto oldExpr = newExpr;
     newExpr = mainSimplify(newExpr);
+    while(*oldExpr != *newExpr){
+      oldExpr = newExpr;
+      newExpr = mainSimplify(newExpr);
+    }
     return *newExpr;
   }
 
@@ -382,11 +386,20 @@ namespace fintamath {
   }
 
   std::shared_ptr<Expression> Expression::mainSimplify(const std::shared_ptr<Expression> &expr) {
-    auto newExpr = simplifyMulNum(expr);
-    newExpr = simplifyAddNum(newExpr);
+    auto newExpr = rebuildMul(expr);
+    newExpr = rebuildAdd(newExpr);
+
     newExpr = openBracketsPowMul(newExpr);
     newExpr = openBracketsMulAdd(newExpr);
+
+    newExpr = rebuildMul(newExpr);
+    newExpr = rebuildAdd(newExpr);
+
+    newExpr = simplifyAddVar(newExpr);
+    newExpr = simplifyMulNum(newExpr);
+    newExpr = simplifyAddNum(newExpr);
     newExpr = sort(newExpr);
+
     return newExpr;
   }
 
@@ -447,9 +460,9 @@ namespace fintamath {
       return newExpr;
     }
     std::vector<std::shared_ptr<Expression>> newChildren;
-    for (auto &child : newExpr->children) {
+    for (const auto &child : newExpr->children) {
       if (child->info->is<Add>()) {
-        for (auto &childChild : child->children) {
+        for (const auto &childChild : child->children) {
           newChildren.push_back(childChild);
         }
       } else {
@@ -469,9 +482,9 @@ namespace fintamath {
       return newExpr;
     }
     std::vector<std::shared_ptr<Expression>> newChildren;
-    for (auto &child : newExpr->children) {
+    for (const auto &child : newExpr->children) {
       if (child->info->is<Mul>()) {
-        for (auto &childChild : child->children) {
+        for (const auto &childChild : child->children) {
           newChildren.push_back(childChild);
         }
       } else {
@@ -508,6 +521,9 @@ namespace fintamath {
     if (newExpr->children.size() == 1) {
       return newExpr->children.at(0);
     }
+    if (newExpr->children.empty()){
+      return std::make_shared<Expression>(Integer(0));
+    }
     return newExpr;
   }
 
@@ -539,6 +555,9 @@ namespace fintamath {
     }
     if (newExpr->children.size() == 1) {
       return newExpr->children.at(0);
+    }
+    if (newExpr->children.empty()) {
+      return std::make_shared<Expression>(Integer(1));
     }
     return newExpr;
   }
@@ -597,7 +616,7 @@ namespace fintamath {
       newExpr->children.push_back(lastExpr);
     }
 
-    return mainSimplify(newExpr->children.at(0));
+    return newExpr->children.at(0);
   }
 
   std::shared_ptr<Expression> Expression::openBracketsPowMul(const std::shared_ptr<Expression> &expr) {
@@ -614,7 +633,7 @@ namespace fintamath {
     }
 
     auto newChildren = std::vector<std::shared_ptr<Expression>>();
-    for(auto& child: newExpr->children.at(0)->children){
+    for(const auto& child: newExpr->children.at(0)->children){
       auto newChild = std::make_shared<Expression>();
       newChild->info = std::make_shared<Pow>();
       newChild->children.push_back(child);
@@ -626,28 +645,12 @@ namespace fintamath {
     return newExpr;
   }
 
-  void Expression::sortVarVect(std::vector<std::shared_ptr<Expression>>& varVect){
-    if(varVect.size() < 2){
-      return;
-    }
-    for(size_t i = 0;i < varVect.size() - 1;i++){
-      for(size_t j = i + 1; j < varVect.size(); j++){
-        if(!varVect[i]->info->is<Variable>() || !varVect[j]->info->is<Variable>()){
-          throw std::invalid_argument("Expression invalid input");
-        }
-        if(varVect[i]->info->toString() > varVect[j]->info->toString()){
-          std::swap(varVect[i], varVect[j]);
-        }
-      }
-    }
-  }
-
   bool compareExprVar(const std::shared_ptr<Expression>& lhs, const std::shared_ptr<Expression>& rhs){
-    return lhs->toString() > rhs->toString();
+    return lhs->toString() < rhs->toString();
   }
 
   bool compareExprMulPow(const std::shared_ptr<Expression>& lhs, const std::shared_ptr<Expression>& rhs){
-    return lhs->toString() < rhs->toString();
+    return lhs->toString() > rhs->toString();
   }
 
   std::shared_ptr<Expression> Expression::sort(const std::shared_ptr<Expression> &expr){
@@ -663,7 +666,7 @@ namespace fintamath {
     auto varVect = std::vector<std::shared_ptr<Expression>>();
     auto mulVect = std::vector<std::shared_ptr<Expression>>();
 
-    for(auto& child:newExpr->children){
+    for(const auto& child:newExpr->children){
       if(child->info->instanceOf<Arithmetic>()){
         numVect.push_back(child);
       }
@@ -714,6 +717,18 @@ namespace fintamath {
     return newExpr;
   }
 
+  bool compareVect(const std::vector<std::shared_ptr<Expression>>& lhs, const std::vector<std::shared_ptr<Expression>>& rhs){
+    if(lhs.size() != rhs.size()){
+      return false;
+    }
+    for(size_t i = 1;i < lhs.size(); i++){
+      if(*lhs.at(i)!=*rhs.at(i)){
+        return false;
+      }
+    }
+    return true;
+  }
+
   std::shared_ptr<Expression> Expression::simplifyAddVar(const std::shared_ptr<Expression> &expr){
     auto newExpr = std::make_shared<Expression>(*expr);
     for(auto& child:newExpr->children){
@@ -735,6 +750,24 @@ namespace fintamath {
         newChild->children.push_back(child);
         child = newChild;
       }
+    }
+    auto newChildren = std::vector<std::shared_ptr<Expression>>();
+    for(const auto& child: newExpr->children){
+      bool isAdd = false;
+      for(const auto& newChild: newChildren){
+        if(compareVect(child->children, newChild->children)){
+          newChild->children.at(0)->info = Add()(*newChild->children.at(0)->info,*child->children.at(0)->info);
+          isAdd = true;
+          break;
+        }
+      }
+      if(!isAdd){
+        newChildren.push_back(child);
+      }
+    }
+    newExpr->children = newChildren;
+    if(newExpr->children.size() == 1){
+      return newExpr->children.at(0);
     }
     return newExpr;
   }
