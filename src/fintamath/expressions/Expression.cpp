@@ -718,12 +718,28 @@ namespace fintamath {
     return newExpr;
   }
 
-      auto lastExpr = std::make_shared<Expression>();
-      lastExpr->info = std::make_shared<Mul>();
-      lastExpr->children = getOpenTwoBrackets(lhs, rhs, Pow());
-      newExpr->children.push_back(lastExpr);
+  std::shared_ptr<Expression> Expression::simplifyAddVar(const std::shared_ptr<Expression> &expr){
+    auto newExpr = std::make_shared<Expression>(*expr);
+    for(auto& child:newExpr->children){
+      child = simplifyAddVar(child);
     }
-
-    return mainSimplify(newExpr->children.at(0));
+    if(!newExpr->info->is<Add>()){
+      return newExpr;
+    }
+    for(auto& child:newExpr->children){
+      if(child->info->is<Mul>()){
+        if(!child->children.at(0)->info->instanceOf<Arithmetic>()){
+          child->children.insert(child->children.begin(), std::make_shared<Expression>(Integer(1)));
+        }
+      }
+      else{
+        auto newChild = std::make_shared<Expression>();
+        newChild->info = std::make_shared<Mul>();
+        newChild->children.push_back(std::make_shared<Expression>(Integer(1)));
+        newChild->children.push_back(child);
+        child = newChild;
+      }
+    }
+    return newExpr;
   }
 }
