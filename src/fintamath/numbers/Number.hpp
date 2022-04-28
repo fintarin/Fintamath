@@ -13,6 +13,26 @@ namespace fintamath {
     ~Number() override = default;
   };
 
+  inline NumberPtr operator+(const Number &lhs, const Number &rhs) {
+    auto res = lhs + rhs.to<Arithmetic>();
+    return std::unique_ptr<Number>(dynamic_cast<Number *>(res.release()));
+  }
+
+  inline NumberPtr operator-(const Number &lhs, const Number &rhs) {
+    auto res = lhs - rhs.to<Arithmetic>();
+    return std::unique_ptr<Number>(dynamic_cast<Number *>(res.release()));
+  }
+
+  inline NumberPtr operator*(const Number &lhs, const Number &rhs) {
+    auto res = lhs * rhs.to<Arithmetic>();
+    return std::unique_ptr<Number>(dynamic_cast<Number *>(res.release()));
+  }
+
+  inline NumberPtr operator/(const Number &lhs, const Number &rhs) {
+    auto res = lhs / rhs.to<Arithmetic>();
+    return std::unique_ptr<Number>(dynamic_cast<Number *>(res.release()));
+  }
+
   template <typename Derived>
   class NumberImpl : public Number,
                      public ComparableImpl<Derived>,
