@@ -1,7 +1,7 @@
 # Enable compiler warning
 
 function(set_project_warnings)
-  option(${PROJECT_NAME}_warnings_as_error "Treat compiler warnings as errors" OFF)
+  option(${PROJECT_NAME}_warnings_as_errors "Treat compiler warnings as errors" OFF)
 
   set(MSVC_WARNINGS
       /W4 # Baseline reasonable warnings
@@ -27,6 +27,8 @@ function(set_project_warnings)
       /w14906 # string literal cast to 'LPWSTR'
       /w14928 # illegal copy-initialization; more than one user-defined conversion has been implicitly applied
       /permissive- # standards conformance mode for MSVC compiler.
+      # Ignored warnings
+      /wd4250 # inherits via dominance warn
   )
 
   set(CLANG_WARNINGS
@@ -48,7 +50,7 @@ function(set_project_warnings)
       -Wimplicit-fallthrough # warn on statements that fallthrough without an explicit annotation
   )
 
-  if(${PROJECT_NAME}_warnings_as_error)
+  if(${PROJECT_NAME}_warnings_as_errors)
     set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
     set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
   endif()
@@ -60,6 +62,8 @@ function(set_project_warnings)
       -Wduplicated-branches # warn if if / else branches have duplicated code
       -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
       -Wuseless-cast # warn if you perform a cast to the same type
+      # Ignored warnings
+      -Wno-nonnull-compare # nonnull compare warn
   )
 
   if(MSVC)

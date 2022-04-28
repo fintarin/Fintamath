@@ -37,7 +37,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON -Dfintamath_warnings_as_errors=ON
         env:
           CC: ${{matrix.config.cc}}
           CXX: ${{matrix.config.cxx}}
