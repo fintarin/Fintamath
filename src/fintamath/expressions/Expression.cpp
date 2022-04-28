@@ -139,7 +139,7 @@ namespace fintamath {
       } else {
         try {
           addConstOrFunction(tokensVect, tmpStrExpr, i);
-        } catch (const std::invalid_argument &e) {
+        } catch (const std::invalid_argument &) {
           addVariable(tokensVect, tmpStrExpr, i);
         }
       }
