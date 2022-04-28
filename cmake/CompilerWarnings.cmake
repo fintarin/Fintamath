@@ -27,6 +27,8 @@ function(set_project_warnings)
       /w14906 # string literal cast to 'LPWSTR'
       /w14928 # illegal copy-initialization; more than one user-defined conversion has been implicitly applied
       /permissive- # standards conformance mode for MSVC compiler.
+      # Ignored warnings
+      /wd4250 # inherits via dominance warn
   )
 
   set(CLANG_WARNINGS
@@ -55,12 +57,13 @@ function(set_project_warnings)
 
   set(GCC_WARNINGS
       ${CLANG_WARNINGS}
-      -Wno-nonnull-compare # ignore warn on nonnull compare
       -Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
       -Wduplicated-cond # warn if if / else chain has duplicated conditions
       -Wduplicated-branches # warn if if / else branches have duplicated code
       -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
       -Wuseless-cast # warn if you perform a cast to the same type
+      # Ignored warnings
+      -Wno-nonnull-compare # nonnull compare warn
   )
 
   if(MSVC)
