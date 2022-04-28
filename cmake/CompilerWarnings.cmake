@@ -1,7 +1,7 @@
 # Enable compiler warning
 
 function(set_project_warnings)
-  option(${PROJECT_NAME}_warnings_as_error "Treat compiler warnings as errors" OFF)
+  option(${PROJECT_NAME}_warnings_as_errors "Treat compiler warnings as errors" OFF)
 
   set(MSVC_WARNINGS
       /W4 # Baseline reasonable warnings
@@ -48,7 +48,7 @@ function(set_project_warnings)
       -Wimplicit-fallthrough # warn on statements that fallthrough without an explicit annotation
   )
 
-  if(${PROJECT_NAME}_warnings_as_error)
+  if(${PROJECT_NAME}_warnings_as_errors)
     set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
     set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
   endif()
