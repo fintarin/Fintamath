@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/core/MathObject.hpp"
+#include "fintamath/meta/Caster.hpp"
 
 namespace fintamath {
   class Incremental;
@@ -33,15 +34,17 @@ namespace fintamath {
   }
 
   inline IncrementalPtr operator++(Incremental &lhs, int) {
-    IncrementalPtr tmp(dynamic_cast<Incremental *>(lhs.clone().release()));
+    auto tmp = lhs.clone();
+    auto res = meta::castPtr<Incremental>(tmp);
     lhs.increaseAbstract();
-    return tmp;
+    return res;
   }
 
   inline IncrementalPtr operator--(Incremental &lhs, int) {
-    IncrementalPtr tmp(dynamic_cast<Incremental *>(lhs.clone().release()));
+    auto tmp = lhs.clone();
+    auto res = meta::castPtr<Incremental>(tmp);
     lhs.decreaseAbstract();
-    return tmp;
+    return res;
   }
 
   template <typename Derived>

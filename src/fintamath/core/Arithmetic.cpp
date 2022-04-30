@@ -8,7 +8,8 @@ namespace fintamath {
   auto initMultiDiv() {
     meta::MultiMethod<ArithmeticPtr(const Arithmetic &, const Arithmetic &)> multiDiv;
     multiDiv.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
-      return std::make_unique<Rational>(Rational(lhs) / Rational(rhs));
+      auto res = (Rational(lhs) / Rational(rhs)).simplify();
+      return meta::castPtr<Arithmetic>(res);
     });
     return multiDiv;
   }

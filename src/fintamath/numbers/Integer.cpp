@@ -165,6 +165,7 @@ namespace fintamath {
 
   Integer &Integer::negate() {
     sign = !sign;
+    fixZero();
     return *this;
   }
 

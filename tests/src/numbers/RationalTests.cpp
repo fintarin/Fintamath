@@ -356,3 +356,15 @@ TEST(RationalTests, toStringTest) {
   EXPECT_EQ(Rational(5, 2).toString(), "5/2");
   EXPECT_EQ(Rational(55, -10).toString(), "-11/2");
 }
+
+TEST(RationalTests, simplifyTest) {
+  EXPECT_TRUE(Rational(5, 2).simplify()->is<Rational>());
+  EXPECT_TRUE(Rational(55, 5).simplify()->is<Integer>());
+  EXPECT_TRUE(Rational(-5, 2).simplify()->is<Rational>());
+  EXPECT_TRUE(Rational(-55, 5).simplify()->is<Integer>());
+
+  EXPECT_EQ(Rational(5, 2).simplify()->toString(), "5/2");
+  EXPECT_EQ(Rational(55, 5).simplify()->toString(), "11");
+  EXPECT_EQ(Rational(-5, 2).simplify()->toString(), "-5/2");
+  EXPECT_EQ(Rational(-55, 5).simplify()->toString(), "-11");
+}

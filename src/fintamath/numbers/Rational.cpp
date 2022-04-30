@@ -81,6 +81,13 @@ namespace fintamath {
     return res;
   }
 
+  MathObjectPtr Rational::simplify() const {
+    if (denominator == 1) {
+      return sign ? (-getInteger()).clone() : getInteger().clone();
+    }
+    return clone();
+  }
+
   void Rational::fixZero() {
     if (numerator == 0) {
       sign = false;

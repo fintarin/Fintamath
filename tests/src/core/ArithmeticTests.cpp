@@ -55,6 +55,18 @@ TEST(ArithmeticTests, addTest) {
   EXPECT_EQ((*m2 + *m3)->toString(), "5/2");
   EXPECT_EQ((*m3 + *m1)->toString(), "3/2");
   EXPECT_EQ((*m3 + *m2)->toString(), "5/2");
+  EXPECT_EQ((*m3 + *m3)->toString(), "1");
+
+  EXPECT_TRUE((*m1 + *m1)->is<Integer>());
+  EXPECT_TRUE((*m2 + *m2)->is<Integer>());
+  EXPECT_TRUE((*m1 + *m2)->is<Integer>());
+  EXPECT_TRUE((*m2 + *m1)->is<Integer>());
+
+  EXPECT_TRUE((*m1 + *m3)->is<Rational>());
+  EXPECT_TRUE((*m2 + *m3)->is<Rational>());
+  EXPECT_TRUE((*m3 + *m1)->is<Rational>());
+  EXPECT_TRUE((*m3 + *m2)->is<Rational>());
+  EXPECT_TRUE((*m3 + *m3)->is<Integer>());
 
   EXPECT_THROW(*m1 + tests::TestArithmetic(), std::invalid_argument);
   EXPECT_THROW(tests::TestArithmetic() + *m1, std::invalid_argument);
@@ -79,6 +91,18 @@ TEST(ArithmeticTests, subTest) {
   EXPECT_EQ((*m2 - *m3)->toString(), "3/2");
   EXPECT_EQ((*m3 - *m1)->toString(), "-1/2");
   EXPECT_EQ((*m3 - *m2)->toString(), "-3/2");
+  EXPECT_EQ((*m3 - *m3)->toString(), "0");
+
+  EXPECT_TRUE((*m1 - *m1)->is<Integer>());
+  EXPECT_TRUE((*m2 - *m2)->is<Integer>());
+  EXPECT_TRUE((*m1 - *m2)->is<Integer>());
+  EXPECT_TRUE((*m2 - *m1)->is<Integer>());
+
+  EXPECT_TRUE((*m1 - *m3)->is<Rational>());
+  EXPECT_TRUE((*m2 - *m3)->is<Rational>());
+  EXPECT_TRUE((*m3 - *m1)->is<Rational>());
+  EXPECT_TRUE((*m3 - *m2)->is<Rational>());
+  EXPECT_TRUE((*m3 - *m3)->is<Integer>());
 
   EXPECT_THROW(*m1 - tests::TestArithmetic(), std::invalid_argument);
   EXPECT_THROW(tests::TestArithmetic() - *m1, std::invalid_argument);
@@ -103,6 +127,18 @@ TEST(ArithmeticTests, mulTest) {
   EXPECT_EQ((*m2 * *m3)->toString(), "1");
   EXPECT_EQ((*m3 * *m1)->toString(), "1/2");
   EXPECT_EQ((*m3 * *m2)->toString(), "1");
+  EXPECT_EQ((*m3 * *m3)->toString(), "1/4");
+
+  EXPECT_TRUE((*m1 * *m1)->is<Integer>());
+  EXPECT_TRUE((*m2 * *m2)->is<Integer>());
+  EXPECT_TRUE((*m1 * *m2)->is<Integer>());
+  EXPECT_TRUE((*m2 * *m1)->is<Integer>());
+
+  EXPECT_TRUE((*m1 * *m3)->is<Rational>());
+  EXPECT_TRUE((*m2 * *m3)->is<Integer>());
+  EXPECT_TRUE((*m3 * *m1)->is<Rational>());
+  EXPECT_TRUE((*m3 * *m2)->is<Integer>());
+  EXPECT_TRUE((*m3 * *m3)->is<Rational>());
 
   EXPECT_THROW(*m1 * tests::TestArithmetic(), std::invalid_argument);
   EXPECT_THROW(tests::TestArithmetic() * *m1, std::invalid_argument);
@@ -113,23 +149,32 @@ TEST(ArithmeticTests, mulTest) {
   EXPECT_EQ((-2 * Integer(2)).toString(), "-4");
 }
 
-TEST(ArithmeticTests, diveTest) {
+TEST(ArithmeticTests, divTest) {
   ArithmeticPtr m1 = std::make_unique<Integer>(1);
-  ArithmeticPtr m2 = std::make_unique<Integer>(5);
-  ArithmeticPtr m3 = std::make_unique<Rational>(2);
-  ArithmeticPtr m4 = std::make_unique<Rational>(1, 2);
-
-  EXPECT_EQ((*m1 / *m2)->toString(), "1/5");
+  ArithmeticPtr m2 = std::make_unique<Rational>(2);
+  ArithmeticPtr m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_EQ((*m1 / *m1)->toString(), "1");
-  EXPECT_EQ((*m3 / *m3)->toString(), "1");
-  EXPECT_EQ((*m1 / *m3)->toString(), "1/2");
-  EXPECT_EQ((*m3 / *m1)->toString(), "2");
+  EXPECT_EQ((*m2 / *m2)->toString(), "1");
+  EXPECT_EQ((*m1 / *m2)->toString(), "1/2");
+  EXPECT_EQ((*m2 / *m1)->toString(), "2");
 
-  EXPECT_EQ((*m1 / *m4)->toString(), "2");
-  EXPECT_EQ((*m3 / *m4)->toString(), "4");
-  EXPECT_EQ((*m4 / *m1)->toString(), "1/2");
-  EXPECT_EQ((*m4 / *m3)->toString(), "1/4");
+  EXPECT_EQ((*m1 / *m3)->toString(), "2");
+  EXPECT_EQ((*m2 / *m3)->toString(), "4");
+  EXPECT_EQ((*m3 / *m1)->toString(), "1/2");
+  EXPECT_EQ((*m3 / *m2)->toString(), "1/4");
+  EXPECT_EQ((*m3 / *m3)->toString(), "1");
+
+  EXPECT_TRUE((*m1 / *m1)->is<Integer>());
+  EXPECT_TRUE((*m2 / *m2)->is<Integer>());
+  EXPECT_TRUE((*m1 / *m2)->is<Rational>());
+  EXPECT_TRUE((*m2 / *m1)->is<Integer>());
+
+  EXPECT_TRUE((*m1 / *m3)->is<Integer>());
+  EXPECT_TRUE((*m2 / *m3)->is<Integer>());
+  EXPECT_TRUE((*m3 / *m1)->is<Rational>());
+  EXPECT_TRUE((*m3 / *m2)->is<Rational>());
+  EXPECT_TRUE((*m3 / *m3)->is<Integer>());
 
   EXPECT_THROW(*m1 / tests::TestArithmetic(), std::invalid_argument);
   EXPECT_THROW(tests::TestArithmetic() / *m1, std::invalid_argument);

@@ -1,18 +1,22 @@
 #pragma once
 
 #include "fintamath/core/MathObject.hpp"
+#include "fintamath/meta/Caster.hpp"
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
   if (rhs.is<Derived>()) {                                                                                             \
-    return std::make_unique<Derived>(*this OPER rhs.to<Derived>());                                                    \
+    auto res = (*this OPER rhs.to<Derived>()).simplify();                                                              \
+    return meta::castPtr<Arithmetic>(res);                                                                             \
   }                                                                                                                    \
-  if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                              \
-    return *this OPER tmp->template to<Arithmetic>();                                                                  \
+  if (auto tmp = meta ::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                             \
+    auto res = (*this OPER tmp->template to<Arithmetic>())->simplify();                                                \
+    return meta::castPtr<Arithmetic>(res);                                                                             \
   }                                                                                                                    \
-  if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {                                              \
-    return tmp->template to<Arithmetic>() OPER rhs;                                                                    \
+  if (auto tmp = meta ::convertRhsToLhsType(rhs, *this); tmp != nullptr) {                                             \
+    auto res = (tmp->template to<Arithmetic>() OPER rhs)->simplify();                                                  \
+    return meta::castPtr<Arithmetic>(res);                                                                             \
   }                                                                                                                    \
-  throw std::invalid_argument("Incompatible types")
+  throw std ::invalid_argument("Incompatible types");
 
 namespace fintamath {
   class Arithmetic;
@@ -157,7 +161,7 @@ namespace fintamath {
     }
 
   private:
-    friend ArithmeticPtr multiDiv(const Arithmetic &lhs ,const Arithmetic &rhs);
+    friend ArithmeticPtr multiDiv(const Arithmetic &lhs, const Arithmetic &rhs);
   };
 
   template <typename LhsType, typename RhsType,

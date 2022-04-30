@@ -45,6 +45,8 @@ namespace fintamath {
       return dynamic_cast<const T &>(*this);
     }
 
+    virtual MathObjectPtr simplify() const;
+
     friend bool operator==(const MathObject &lhs, const MathObject &rhs);
 
     friend bool operator!=(const MathObject &lhs, const MathObject &rhs);
@@ -52,6 +54,10 @@ namespace fintamath {
   protected:
     virtual bool equalsAbstract(const MathObject &rhs) const = 0;
   };
+
+  inline MathObjectPtr MathObject::simplify() const {
+    return clone();
+  }
 
   inline bool operator==(const MathObject &lhs, const MathObject &rhs) {
     return lhs.equalsAbstract(rhs);
