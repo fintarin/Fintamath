@@ -17,6 +17,8 @@ namespace fintamath {
 
     std::string toString() const override;
 
+    MathObjectPtr simplify() const override;
+
     Rational round(int64_t precision) const;
 
     std::string toString(int64_t precision) const;
