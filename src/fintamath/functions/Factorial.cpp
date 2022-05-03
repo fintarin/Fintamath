@@ -7,7 +7,7 @@ namespace fintamath {
   }
 
   MathObjectPtr Factorial::operator()(const MathObject &rhs) const {
-    if (!rhs.instanceOf<Arithmetic>()) {
+    if (!rhs.is<Integer>()) {
       throw std::invalid_argument("Types must be Arithmetic");
     }
 

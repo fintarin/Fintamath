@@ -8,7 +8,7 @@ namespace fintamath {
 
   MathObjectPtr Tan::operator()(const MathObject &rhs) const {
     const int64_t defaultPrecision = 36;
-    if (!rhs.instanceOf<Arithmetic>()) {
+    if (!rhs.instanceOf<Number>()) {
       throw std::invalid_argument("Types must be Arithmetic");
     }
 
