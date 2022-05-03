@@ -32,33 +32,33 @@ namespace fintamath {
     bool equals(const Expression &rhs) const override;
 
   private:
+    using ExprPtr = std::shared_ptr<Expression>;
+    using ExprVect = std::vector<ExprPtr>;
+
+    static ExprPtr parseExpression(const std::string &expr);
+    static ExprPtr parseDivMulTerm(const std::string &term);
+    static ExprPtr parseNegPowFactorTerm(const std::string &term);
+    static ExprPtr parseFiniteTerm(const std::string &term);
+    static ExprPtr parseFunction(const std::string &term);
+    static ExprVect getArgs(const std::string &args);
+
+    static ExprPtr mainSimplify(const ExprPtr &expr);
+    static ExprPtr simplifyNumbers(const ExprPtr &expr);
+    static ExprPtr invertSubDiv(const ExprPtr &expr);
+    static ExprPtr simplifyNeg(const ExprPtr &expr);
+    static ExprPtr rebuildAdd(const ExprPtr &expr);
+    static ExprPtr rebuildMul(const ExprPtr &expr);
+    static ExprPtr simplifyAddNum(const ExprPtr &expr);
+    static ExprPtr simplifyMulNum(const ExprPtr &expr);
+    static ExprPtr simplifyAddVar(const ExprPtr &expr);
+    static ExprPtr openBracketsMulAdd(const ExprPtr &expr);
+    static ExprPtr openBracketsPowMul(const ExprPtr &expr);
+
+    static ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket,
+                                               const MathObject &o);
+    static ExprPtr sort(const ExprPtr &expr);
+
     std::shared_ptr<MathObject> info;
-    std::vector<std::shared_ptr<Expression>> children;
-
-    static std::shared_ptr<Expression> parseExpression(const std::string &expr);
-    static std::shared_ptr<Expression> parseDivMulTerm(const std::string &term);
-    static std::shared_ptr<Expression> parseNegPowFactorTerm(const std::string &term);
-    static std::shared_ptr<Expression> parseFiniteTerm(const std::string &term);
-    static std::shared_ptr<Expression> parseFunction(const std::string &term);
-    static std::vector<std::shared_ptr<Expression>> getArgs(const std::string &args);
-
-    static std::shared_ptr<Expression> mainSimplify(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> simplifyNumbers(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> invertSubDiv(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> simplifyNeg(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> rebuildAdd(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> rebuildMul(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> simplifyAddNum(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> simplifyMulNum(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> simplifyAddVar(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> openBracketsMulAdd(const std::shared_ptr<Expression> &expr);
-    static std::shared_ptr<Expression> openBracketsPowMul(const std::shared_ptr<Expression> &expr);
-
-    static std::vector<std::shared_ptr<Expression>>
-    getOpenTwoBrackets(const std::vector<std::shared_ptr<Expression>> &lhsBracket,
-                                const std::vector<std::shared_ptr<Expression>> &rhsBracket, const MathObject& o);
-    static std::shared_ptr<Expression> sort(const std::shared_ptr<Expression> & expr);
-
-
+    ExprVect children;
   };
 }
