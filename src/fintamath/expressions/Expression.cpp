@@ -1,7 +1,24 @@
 #include "fintamath/expressions/Expression.hpp"
 
 #include <algorithm>
+#include <fintamath/functions/Abs.hpp>
+#include <fintamath/functions/Acot.hpp>
+#include <fintamath/functions/Asin.hpp>
+#include <fintamath/functions/Atan.hpp>
 #include <fintamath/functions/ConcreteFunction.hpp>
+#include <fintamath/functions/Cos.hpp>
+#include <fintamath/functions/Cot.hpp>
+#include <fintamath/functions/DoubleFactorial.hpp>
+#include <fintamath/functions/Exp.hpp>
+#include <fintamath/functions/Factorial.hpp>
+#include <fintamath/functions/Lb.hpp>
+#include <fintamath/functions/Lg.hpp>
+#include <fintamath/functions/Ln.hpp>
+#include <fintamath/functions/Log.hpp>
+#include <fintamath/functions/Percent.hpp>
+#include <fintamath/functions/Sin.hpp>
+#include <fintamath/functions/Sqrt.hpp>
+#include <fintamath/functions/Tan.hpp>
 #include <fintamath/operators/Add.hpp>
 #include <fintamath/operators/Div.hpp>
 #include <fintamath/operators/Mul.hpp>
@@ -106,9 +123,35 @@ namespace fintamath {
       return result;
     }
 
-    return info->toString();
+    if (info->instanceOf<Function>()) {
+      const auto &rootFunc = info->to<Function>();
+      if (rootFunc.is<Factorial>() || rootFunc.is<DoubleFactorial>() || rootFunc.is<Percent>()) {
+        if (children.at(0)->is<Factorial>() && rootFunc.is<Factorial>()) {
+          result += putInBrackets(children.at(0)->toString());
+        }
+        if (children.at(0)->info->instanceOf<Operator>()) {
+          result += putInBrackets(children.at(0)->toString());
+        }
+        result += rootFunc.toString();
+        return result;
+      }
 
-    // TODO: add instanceOf for functions
+      result += rootFunc.toString();
+      result += putInBrackets(funcArgsToString(children));
+      return result;
+    }
+
+    return info->toString();
+  }
+
+  std::string Expression::funcArgsToString(const ExprVect &args) {
+    std::string result;
+    for(size_t i = 0; i < args.size() - 1; i++) {
+      result += args.at(i)->toString();
+      result += ',';
+    }
+    result += args.at(args.size() - 1)->toString();
+    return result;
   }
 
   bool Expression::equals(const Expression &rhs) const {
@@ -237,7 +280,7 @@ namespace fintamath {
           elem.info = std::make_shared<Div>();
         }
         elem.children.push_back(parseDivMulTerm(cutSpaces(term.substr(0, i))));
-        elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(i + 1))));
+        elem.children.push_back(parseNegPowFactorPercentTerm(cutSpaces(term.substr(i + 1))));
         return std::make_shared<Expression>(elem);
       }
       if (term[i] == ')') {
@@ -248,14 +291,14 @@ namespace fintamath {
         continue;
       }
     }
-    return parseNegPowFactorTerm(term);
+    return parseNegPowFactorPercentTerm(term);
   }
 
-  ExprPtr Expression::parseNegPowFactorTerm(const std::string &term) {
+  ExprPtr Expression::parseNegPowFactorPercentTerm(const std::string &term) {
     Expression elem;
     if (term[0] == '-') {
       elem.info = std::make_shared<Neg>();
-      elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(1))));
+      elem.children.push_back(parseNegPowFactorPercentTerm(cutSpaces(term.substr(1))));
       return std::make_shared<Expression>(elem);
     }
 
@@ -263,7 +306,7 @@ namespace fintamath {
       if (term[i] == '^') {
         elem.info = std::make_shared<Pow>();
         elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, i))));
-        elem.children.push_back(parseNegPowFactorTerm(cutSpaces(term.substr(i + 1))));
+        elem.children.push_back(parseNegPowFactorPercentTerm(cutSpaces(term.substr(i + 1))));
         return std::make_shared<Expression>(elem);
       }
       if (term[i] == '(') {
@@ -271,13 +314,19 @@ namespace fintamath {
       }
     }
 
+    if (term[term.size() - 1] == '%') {
+      elem.info = std::make_shared<Percent>();
+      elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 1))));
+      return std::make_shared<Expression>(elem);
+    }
+
     if (term[term.size() - 1] == '!') {
       if (term[term.size() - 2] == '!') {
-        elem.info = std::make_shared<ConcreteFunction>("!!");
+        elem.info = std::make_shared<DoubleFactorial>();
         elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 2))));
         return std::make_shared<Expression>(elem);
       }
-      elem.info = std::make_shared<ConcreteFunction>("!");
+      elem.info = std::make_shared<Factorial>();
       elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 1))));
       return std::make_shared<Expression>(elem);
     }
@@ -312,7 +361,7 @@ namespace fintamath {
   }
 
   ExprPtr Expression::parseFunction(const std::string &term) {
-    if (std::regex reg(R"(^((sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|acot|abs)\(.+\))$)");
+    if (std::regex reg(R"(^((sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|atan|acot|abs)\(.+\))$)");
         regex_search(term, reg)) {
       Expression expr;
       size_t pos = 0;
@@ -321,7 +370,35 @@ namespace fintamath {
         funcName += term.at(pos);
         pos++;
       }
-      expr.info = std::make_shared<ConcreteFunction>(funcName);
+      if (funcName == "sqrt") {
+        expr.info = std::make_shared<Sqrt>();
+      } else if (funcName == "exp") {
+        expr.info = std::make_shared<Exp>();
+      } else if (funcName == "log") {
+        expr.info = std::make_shared<Log>();
+      } else if (funcName == "ln") {
+        expr.info = std::make_shared<Ln>();
+      } else if (funcName == "lb") {
+        expr.info = std::make_shared<Lb>();
+      } else if (funcName == "lg") {
+        expr.info = std::make_shared<Lg>();
+      } else if (funcName == "sin") {
+        expr.info = std::make_shared<Sin>();
+      } else if (funcName == "cos") {
+        expr.info = std::make_shared<Cos>();
+      } else if (funcName == "tan") {
+        expr.info = std::make_shared<Tan>();
+      } else if (funcName == "cot") {
+        expr.info = std::make_shared<Cot>();
+      } else if (funcName == "asin") {
+        expr.info = std::make_shared<Asin>();
+      } else if (funcName == "acot") {
+        expr.info = std::make_shared<Acot>();
+      } else if (funcName == "atan") {
+        expr.info = std::make_shared<Atan>();
+      } else if (funcName == "abs") {
+        expr.info = std::make_shared<Abs>();
+      }
       expr.children = getArgs(cutBraces(term.substr(pos)));
       return std::make_shared<Expression>(expr);
     }
@@ -565,8 +642,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprVect Expression::getOpenTwoBrackets(const ExprVect &lhsBracket,
-                                                  const ExprVect &rhsBracket, const MathObject &o) {
+  ExprVect Expression::getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const MathObject &o) {
     auto openBrackets = ExprVect();
     for (const auto &lhs : lhsBracket) {
       for (const auto &rhs : rhsBracket) {
@@ -649,7 +725,7 @@ namespace fintamath {
     return lhs->toString() < rhs->toString();
   }
 
-  bool compareExprMulPow(const ExprPtr &lhs, const ExprPtr &rhs) {
+  bool compareExprMulPowFunc(const ExprPtr &lhs, const ExprPtr &rhs) {
     return lhs->toString() > rhs->toString();
   }
 
@@ -665,6 +741,7 @@ namespace fintamath {
     auto powVect = ExprVect();
     auto varVect = ExprVect();
     auto mulVect = ExprVect();
+    auto funcVect = ExprVect();
 
     for (const auto &child : newExpr->children) {
       if (child->info->instanceOf<Arithmetic>()) {
@@ -679,13 +756,20 @@ namespace fintamath {
       if (child->info->is<Mul>()) {
         mulVect.push_back(child);
       }
+      if(child->info->instanceOf<Function>()){
+        funcVect.push_back(child);
+      }
     }
     newExpr->children.clear();
     std::sort(varVect.begin(), varVect.end(), compareExprVar);
-    std::sort(powVect.begin(), powVect.end(), compareExprMulPow);
-    std::sort(mulVect.begin(), mulVect.end(), compareExprMulPow);
+    std::sort(powVect.begin(), powVect.end(), compareExprMulPowFunc);
+    std::sort(mulVect.begin(), mulVect.end(), compareExprMulPowFunc);
+    std::sort(funcVect.begin(), funcVect.end(), compareExprMulPowFunc);
 
     if (newExpr->info->is<Add>()) {
+      for (const auto &func : funcVect) {
+        newExpr->children.push_back(func);
+      }
       for (const auto &pow : powVect) {
         newExpr->children.push_back(pow);
       }
@@ -703,6 +787,9 @@ namespace fintamath {
     if (newExpr->info->is<Mul>()) {
       for (const auto &num : numVect) {
         newExpr->children.push_back(num);
+      }
+      for (const auto &func : funcVect) {
+        newExpr->children.push_back(func);
       }
       for (const auto &pow : powVect) {
         newExpr->children.push_back(pow);

@@ -37,7 +37,7 @@ namespace fintamath {
 
     static ExprPtr parseExpression(const std::string &expr);
     static ExprPtr parseDivMulTerm(const std::string &term);
-    static ExprPtr parseNegPowFactorTerm(const std::string &term);
+    static ExprPtr parseNegPowFactorPercentTerm(const std::string &term);
     static ExprPtr parseFiniteTerm(const std::string &term);
     static ExprPtr parseFunction(const std::string &term);
     static ExprVect getArgs(const std::string &args);
@@ -54,10 +54,10 @@ namespace fintamath {
     static ExprPtr openBracketsMulAdd(const ExprPtr &expr);
     static ExprPtr openBracketsPowMul(const ExprPtr &expr);
 
-    static ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket,
-                                               const MathObject &o);
+    static ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const MathObject &o);
     static ExprPtr sort(const ExprPtr &expr);
 
+    static std::string funcArgsToString(const ExprVect &args);
     std::shared_ptr<MathObject> info;
     ExprVect children;
   };
