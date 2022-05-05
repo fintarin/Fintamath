@@ -68,7 +68,7 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     *this = *parseExpression(str);
-    *this = simplify();
+    *this = simplify()->to<Expression>();
   }
 
   Expression::Expression(const MathObject &obj) : info(obj.clone()) {
@@ -428,7 +428,7 @@ namespace fintamath {
     return args;
   }
 
-  Expression Expression::simplify() {
+  MathObjectPtr Expression::simplify() const{
     auto newExpr = std::make_shared<Expression>(*this);
     newExpr = simplifyNumbers(newExpr);
     newExpr = invertSubDiv(newExpr);
@@ -440,7 +440,7 @@ namespace fintamath {
       oldExpr = newExpr;
       newExpr = mainSimplify(newExpr);
     }
-    return *newExpr;
+    return std::make_unique<Expression>(*newExpr);
   }
 
   ExprPtr Expression::simplifyNumbers(const ExprPtr &expr) {

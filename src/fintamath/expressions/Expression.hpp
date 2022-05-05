@@ -26,7 +26,7 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    Expression simplify();
+    MathObjectPtr simplify() const override;
 
   protected:
     bool equals(const Expression &rhs) const override;
