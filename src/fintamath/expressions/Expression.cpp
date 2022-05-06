@@ -11,10 +11,10 @@
 #include <fintamath/functions/DoubleFactorial.hpp>
 #include <fintamath/functions/Exp.hpp>
 #include <fintamath/functions/Factorial.hpp>
-#include <fintamath/functions/Lb.hpp>
-#include <fintamath/functions/Lg.hpp>
-#include <fintamath/functions/Ln.hpp>
-#include <fintamath/functions/Log.hpp>
+#include <fintamath/functions/logarithms/Lb.hpp>
+#include <fintamath/functions/logarithms/Lg.hpp>
+#include <fintamath/functions/logarithms/Ln.hpp>
+#include <fintamath/functions/logarithms/Log.hpp>
 #include <fintamath/functions/Percent.hpp>
 #include <fintamath/functions/trigonometry/Sin.hpp>
 #include <fintamath/functions/Sqrt.hpp>

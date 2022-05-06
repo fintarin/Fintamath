@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Ln.hpp>
+#include <fintamath/functions/logarithms/Ln.hpp>
 
 using namespace fintamath;
 

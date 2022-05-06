@@ -1,4 +1,4 @@
-#include "Function.hpp"
+#include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
   class Lb: public FunctionImpl<Lb> {

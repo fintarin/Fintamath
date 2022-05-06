@@ -2,7 +2,7 @@
 #include <fintamath/operators/Add.hpp>
 #include <fintamath/literals/Variable.hpp>
 
-#include <fintamath/functions/Log.hpp>
+#include <fintamath/functions/logarithms/Log.hpp>
 
 using namespace fintamath;
 
