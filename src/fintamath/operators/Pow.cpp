@@ -1,5 +1,5 @@
 #include "fintamath/operators/Pow.hpp"
-#include "fintamath/functions/NamespaceFunctions.hpp"
+#include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
   std::string Pow::toString() const {

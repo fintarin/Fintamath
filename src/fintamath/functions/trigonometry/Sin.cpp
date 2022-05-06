@@ -1,5 +1,5 @@
 #include "Sin.hpp"
-#include "fintamath/functions/NamespaceFunctions.hpp"
+#include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
   std::string Sin::toString() const {

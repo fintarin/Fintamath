@@ -1,4 +1,4 @@
-#include "fintamath/functions/NamespaceFunctions.hpp"
+#include "fintamath/numbers/NumericFunctions.hpp"
 
 #include <cmath>
 #include <stdexcept>

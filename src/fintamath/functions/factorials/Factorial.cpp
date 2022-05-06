@@ -1,5 +1,5 @@
 #include "Factorial.hpp"
-#include "fintamath/functions/NamespaceFunctions.hpp"
+#include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
   std::string Factorial::toString() const {

@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "fintamath/functions/NamespaceFunctions.hpp"
+#include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
   Constant::Constant(const std::string &str) {

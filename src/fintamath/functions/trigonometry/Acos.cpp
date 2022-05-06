@@ -1,5 +1,5 @@
 #include "Acos.hpp"
-#include "fintamath/functions/NamespaceFunctions.hpp"
+#include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
   std::string Acos::toString() const {

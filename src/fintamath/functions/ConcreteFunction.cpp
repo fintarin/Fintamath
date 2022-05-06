@@ -2,7 +2,7 @@
 
 #include <regex>
 
-#include "fintamath/functions/NamespaceFunctions.hpp"
+#include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
   ConcreteFunction::ConcreteFunction(const std::string &str) {
