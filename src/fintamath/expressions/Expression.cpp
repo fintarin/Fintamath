@@ -8,9 +8,9 @@
 #include <fintamath/functions/ConcreteFunction.hpp>
 #include <fintamath/functions/trigonometry/Cos.hpp>
 #include <fintamath/functions/trigonometry/Cot.hpp>
-#include <fintamath/functions/DoubleFactorial.hpp>
+#include <fintamath/functions/factorials/DoubleFactorial.hpp>
 #include <fintamath/functions/powers/Exp.hpp>
-#include <fintamath/functions/Factorial.hpp>
+#include <fintamath/functions/factorials/Factorial.hpp>
 #include <fintamath/functions/logarithms/Lb.hpp>
 #include <fintamath/functions/logarithms/Lg.hpp>
 #include <fintamath/functions/logarithms/Ln.hpp>

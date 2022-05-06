@@ -1,5 +1,5 @@
 #include "DoubleFactorial.hpp"
-#include "NamespaceFunctions.hpp"
+#include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
   std::string DoubleFactorial::toString() const {

@@ -1,10 +1,10 @@
-#include "Function.hpp"
+#include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Factorial: public FunctionImpl<Factorial> {
+  class DoubleFactorial: public FunctionImpl<DoubleFactorial> {
   public:
 
-    explicit Factorial() = default;
+    explicit DoubleFactorial() = default;
 
     std::string toString() const override;
 
@@ -12,7 +12,7 @@ namespace fintamath {
 
   protected:
 
-    bool equals(const Factorial& rhs) const override;
+    bool equals(const DoubleFactorial& rhs) const override;
 
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
   };

@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Factorial.hpp>
+#include <fintamath/functions/factorials/Factorial.hpp>
 
 using namespace fintamath;
 
