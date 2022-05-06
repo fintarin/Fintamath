@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Atan.hpp>
+#include <fintamath/functions/trigonometry/Atan.hpp>
 
 using namespace fintamath;
 

@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Sin.hpp>
+#include <fintamath/functions/trigonometry/Sin.hpp>
 
 using namespace fintamath;
 

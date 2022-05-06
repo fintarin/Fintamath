@@ -1,10 +1,10 @@
-#include "Function.hpp"
+#include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Sin: public FunctionImpl<Sin> {
+  class Acos: public FunctionImpl<Acos> {
   public:
 
-    explicit Sin() = default;
+    explicit Acos() = default;
 
     std::string toString() const override;
 
@@ -12,7 +12,7 @@ namespace fintamath {
 
   protected:
 
-    bool equals(const Sin& rhs) const override;
+    bool equals(const Acos& rhs) const override;
 
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
   };

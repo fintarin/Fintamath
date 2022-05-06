@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Cos.hpp>
+#include <fintamath/functions/trigonometry/Cos.hpp>
 
 using namespace fintamath;
 

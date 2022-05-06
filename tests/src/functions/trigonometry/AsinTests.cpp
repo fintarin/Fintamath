@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Asin.hpp>
+#include <fintamath/functions/trigonometry/Asin.hpp>
 
 using namespace fintamath;
 

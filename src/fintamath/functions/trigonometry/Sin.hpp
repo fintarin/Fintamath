@@ -1,10 +1,10 @@
-#include "Function.hpp"
+#include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Asin: public FunctionImpl<Asin> {
+  class Sin: public FunctionImpl<Sin> {
   public:
 
-    explicit Asin() = default;
+    explicit Sin() = default;
 
     std::string toString() const override;
 
@@ -12,7 +12,7 @@ namespace fintamath {
 
   protected:
 
-    bool equals(const Asin& rhs) const override;
+    bool equals(const Sin& rhs) const override;
 
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
   };

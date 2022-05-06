@@ -1,5 +1,7 @@
 #include "Cot.hpp"
-#include "NamespaceFunctions.hpp"
+
+#include "fintamath/functions/Function.hpp"
+#include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
   std::string Cot::toString() const {

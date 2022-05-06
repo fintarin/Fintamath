@@ -1,5 +1,5 @@
 #include "Asin.hpp"
-#include "NamespaceFunctions.hpp"
+#include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
   std::string Asin::toString() const {

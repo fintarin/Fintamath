@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Acos.hpp>
+#include <fintamath/functions/trigonometry/Acos.hpp>
 
 using namespace fintamath;
 

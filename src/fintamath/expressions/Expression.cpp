@@ -2,12 +2,12 @@
 
 #include <algorithm>
 #include <fintamath/functions/Abs.hpp>
-#include <fintamath/functions/Acot.hpp>
-#include <fintamath/functions/Asin.hpp>
-#include <fintamath/functions/Atan.hpp>
+#include <fintamath/functions/trigonometry/Acot.hpp>
+#include <fintamath/functions/trigonometry/Asin.hpp>
+#include <fintamath/functions/trigonometry/Atan.hpp>
 #include <fintamath/functions/ConcreteFunction.hpp>
-#include <fintamath/functions/Cos.hpp>
-#include <fintamath/functions/Cot.hpp>
+#include <fintamath/functions/trigonometry/Cos.hpp>
+#include <fintamath/functions/trigonometry/Cot.hpp>
 #include <fintamath/functions/DoubleFactorial.hpp>
 #include <fintamath/functions/Exp.hpp>
 #include <fintamath/functions/Factorial.hpp>
@@ -16,9 +16,9 @@
 #include <fintamath/functions/Ln.hpp>
 #include <fintamath/functions/Log.hpp>
 #include <fintamath/functions/Percent.hpp>
-#include <fintamath/functions/Sin.hpp>
+#include <fintamath/functions/trigonometry/Sin.hpp>
 #include <fintamath/functions/Sqrt.hpp>
-#include <fintamath/functions/Tan.hpp>
+#include <fintamath/functions/trigonometry/Tan.hpp>
 #include <fintamath/operators/Add.hpp>
 #include <fintamath/operators/Div.hpp>
 #include <fintamath/operators/Mul.hpp>

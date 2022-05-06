@@ -1,5 +1,5 @@
 #include "Atan.hpp"
-#include "NamespaceFunctions.hpp"
+#include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
   std::string Atan::toString() const {

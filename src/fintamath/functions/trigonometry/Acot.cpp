@@ -1,5 +1,5 @@
 #include "Acot.hpp"
-#include "NamespaceFunctions.hpp"
+#include "fintamath/functions/NamespaceFunctions.hpp"
 
 namespace fintamath {
   std::string Acot::toString() const {

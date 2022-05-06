@@ -1,10 +1,10 @@
-#include "Function.hpp"
+#include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Cot: public FunctionImpl<Cot> {
+  class Acot: public FunctionImpl<Acot> {
   public:
 
-    explicit Cot() = default;
+    explicit Acot() = default;
 
     std::string toString() const override;
 
@@ -12,7 +12,7 @@ namespace fintamath {
 
   protected:
 
-    bool equals(const Cot& rhs) const override;
+    bool equals(const Acot& rhs) const override;
 
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
   };

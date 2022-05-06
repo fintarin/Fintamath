@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Tan.hpp>
+#include <fintamath/functions/trigonometry/Tan.hpp>
 
 using namespace fintamath;
 
