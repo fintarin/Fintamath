@@ -663,11 +663,6 @@ TEST(IntegerTests, toStringTest) {
   EXPECT_EQ(Integer("-738").toString(), "-738");
 }
 
-TEST(IntegerTests, cloneTests){
-  auto a = Integer(100);
-  EXPECT_TRUE(&a != &(*a.clone()) && a == (*a.clone()).to<Integer>());
-}
-
 TEST(IntegerTests, equalsTests){
   EXPECT_TRUE(Integer(100) == Integer("100"));
   EXPECT_FALSE(Integer(100) == Integer("-100"));

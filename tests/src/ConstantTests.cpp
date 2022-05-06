@@ -25,11 +25,6 @@ TEST(ConstantTest, toStringTest){
   EXPECT_EQ(Constant("pi").toString(), "pi");
 }
 
-TEST(ConstantTests, cloneTests){
-  auto a = Constant("e");
-  EXPECT_TRUE(&a != &(*a.clone()) && a==(*a.clone()).to<Constant>());
-}
-
 TEST(ConstantTests, equalsTests){
   EXPECT_TRUE(Constant("e") == Constant("e"));
   EXPECT_FALSE(Constant("e") == Constant("pi"));
