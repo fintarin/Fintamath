@@ -5,6 +5,8 @@
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
+  bool isConstant(const std::string &str);
+
   Constant::Constant(const std::string &str) {
     parse(str);
   }
@@ -28,21 +30,19 @@ namespace fintamath {
   }
 
   void Constant::parse(const std::string &str) {
-    if (!types::isConstant(str)) {
+    if (!isConstant(str)) {
       throw std::invalid_argument("Constant invalid input");
     }
     name = str;
   }
 
-  namespace types {
-    bool isConstant(const std::string &str) {
-      if (str == "e") {
-        return true;
-      }
-      if (str == "pi") {
-        return true;
-      }
-      return false;
+  bool isConstant(const std::string &str) {
+    if (str == "e") {
+      return true;
     }
+    if (str == "pi") {
+      return true;
+    }
+    return false;
   }
 }

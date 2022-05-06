@@ -21,8 +21,4 @@ namespace fintamath {
 
     std::string name;
   };
-
-  namespace types {
-    bool isConstant(const std::string &str);
-  }
 }

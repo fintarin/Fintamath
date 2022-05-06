@@ -19,8 +19,4 @@ namespace fintamath {
 
     std::string name;
   };
-
-  namespace types {
-    bool isVariable(const std::string &str);
-  }
 }

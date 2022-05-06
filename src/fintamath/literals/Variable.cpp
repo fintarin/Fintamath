@@ -3,6 +3,8 @@
 #include <regex>
 
 namespace fintamath {
+  bool isVariable(const std::string &str);
+
   Variable::Variable(const std::string &str) {
     parse(str);
   }
@@ -16,16 +18,14 @@ namespace fintamath {
   }
 
   void Variable::parse(const std::string &str) {
-    if (!types::isVariable(str)) {
+    if (!isVariable(str)) {
       throw std::invalid_argument("Variable invalid input");
     }
     name = str;
   }
 
-  namespace types {
-    bool isVariable(const std::string &str) {
-      std::regex reg(R"([a-df-hj-zA-Z])");
-      return regex_search(str, reg);
-    }
+  bool isVariable(const std::string &str) {
+    std::regex reg(R"([a-df-hj-zA-Z])");
+    return regex_search(str, reg);
   }
 }
