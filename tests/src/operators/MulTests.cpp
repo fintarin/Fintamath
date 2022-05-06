@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include <fintamath/operators/Sub.hpp>
-#include <fintamath/variables/Variable.hpp>
+#include <fintamath/literals/Variable.hpp>
 
 #include "fintamath/operators/Mul.hpp"
 

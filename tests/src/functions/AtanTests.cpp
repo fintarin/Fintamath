@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <fintamath/operators/Add.hpp>
-#include <fintamath/variables/Variable.hpp>
-#include <fintamath/constants/Constant.hpp>
+#include <fintamath/literals/Variable.hpp>
+#include <fintamath/literals/Constant.hpp>
 
 #include <fintamath/functions/Atan.hpp>
 

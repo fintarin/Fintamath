@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/variables/Variable.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
@@ -17,7 +17,7 @@ TEST(VariableTest, toStringTest){
   EXPECT_EQ(Variable("Z").toString(), "Z");
 }
 
-TEST(VariableTests, cloneTests){
+TEST(VariableTests, z){
   auto a = Variable("a");
   EXPECT_TRUE(&a != &(*a.clone()) && a.equals((*a.clone()).to<Variable>()));
 }

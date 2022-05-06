@@ -28,9 +28,9 @@
 #include <regex>
 #include <stdexcept>
 
-#include "fintamath/constants/Constant.hpp"
 #include "fintamath/functions/Function.hpp"
-#include "fintamath/variables/Variable.hpp"
+#include "fintamath/literals/Constant.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
   using ExprPtr = std::shared_ptr<Expression>;
@@ -126,7 +126,8 @@ namespace fintamath {
     if (info->instanceOf<Function>()) {
       const auto &rootFunc = info->to<Function>();
       if (rootFunc.is<Factorial>() || rootFunc.is<DoubleFactorial>() || rootFunc.is<Percent>()) {
-        if ((children.at(0)->is<Factorial>() && rootFunc.is<Factorial>()) || children.at(0)->info->instanceOf<Operator>()) {
+        if ((children.at(0)->is<Factorial>() && rootFunc.is<Factorial>()) ||
+            children.at(0)->info->instanceOf<Operator>()) {
           result += putInBrackets(children.at(0)->toString());
         } else {
           result += children.at(0)->toString();
@@ -145,7 +146,7 @@ namespace fintamath {
 
   std::string Expression::funcArgsToString(const ExprVect &args) {
     std::string result;
-    for(size_t i = 0; i < args.size() - 1; i++) {
+    for (size_t i = 0; i < args.size() - 1; i++) {
       result += args.at(i)->toString();
       result += ',';
     }
@@ -427,7 +428,7 @@ namespace fintamath {
     return args;
   }
 
-  ExprPtr Expression::baseSimplify() const{
+  ExprPtr Expression::baseSimplify() const {
     auto newExpr = std::make_shared<Expression>(*this);
     newExpr = simplifyOperators(newExpr);
     newExpr = invertSubDiv(newExpr);
@@ -482,7 +483,7 @@ namespace fintamath {
         // skip operation if child is Variable or Function
       }
     }
-    if(expr->info->is<Constant>()){
+    if (expr->info->is<Constant>()) {
       auto constant = expr->info->to<Constant>();
       expr->info = std::make_shared<Rational>(constant.toRational(defaultPrecision));
     }
@@ -788,7 +789,7 @@ namespace fintamath {
         mulVect.push_back(child);
         continue;
       }
-      if(child->info->instanceOf<Function>()){
+      if (child->info->instanceOf<Function>()) {
         funcVect.push_back(child);
         continue;
       }
@@ -799,7 +800,6 @@ namespace fintamath {
     std::sort(mulVect.begin(), mulVect.end(), compareExprMulPowFunc);
     std::sort(funcVect.begin(), funcVect.end(), compareExprMulPowFunc);
     std::sort(constVect.begin(), constVect.end(), compareExprVar);
-
 
     if (newExpr->info->is<Add>()) {
       for (const auto &func : funcVect) {
@@ -911,7 +911,7 @@ namespace fintamath {
       oldExpr = newExpr;
       newExpr = mainSimplify(newExpr);
     }
-    if(newExpr->children.empty()) {
+    if (newExpr->children.empty()) {
       return newExpr->info->clone();
     }
     return std::make_unique<Expression>(*newExpr);

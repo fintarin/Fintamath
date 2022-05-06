@@ -4,7 +4,7 @@
 
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
-#include "fintamath/variables/Variable.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 

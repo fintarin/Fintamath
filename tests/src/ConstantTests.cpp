@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/constants/Constant.hpp"
+#include "fintamath/literals/Constant.hpp"
 
 using namespace fintamath;
 
