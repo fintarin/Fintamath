@@ -106,7 +106,7 @@ namespace fintamath {
     /*
       The power of the real a to the real degree n. n can be represented as
       n_int + n_float, where |n_float| <= 1, then a^n = a^n_int * a^n_float. Using Taylor series for solving a^n_float:
-      a^n = 1 + sum_{k=1}^{inf} (n * ln(a))^k / k! where |n| <= 1.
+      a^n_float = 1 + sum_{k=1}^{inf} (n * ln(a))^k / k! where |n| <= 1.
     */
     Rational pow(const Rational &lhs, const Rational &rhs, int64_t precision) {
       if (lhs == 0 && rhs == 0) {
@@ -119,29 +119,30 @@ namespace fintamath {
         return Integer(1);
       }
 
-      Rational rhsStep = lhs;
+      Rational tmpLhs = lhs;
       if (rhs < 0) {
-        rhsStep = 1 / rhsStep;
+        tmpLhs = 1 / tmpLhs;
       }
 
-      Rational lhsPowIntRhs = naturalPow(rhsStep, rhs.getInteger());
+      Rational lhsPowIntRhs = naturalPow(tmpLhs, rhs.getInteger());
       if (rhs.getDenominator() == 1) {
         return lhsPowIntRhs;
       }
 
-      auto rhsMultLnRhs = Rational(rhs.getNumerator(), rhs.getDenominator()) * ln(rhsStep, precision);
+      auto rhsMultLnRhs = Rational(rhs.getNumerator(), rhs.getDenominator()) * ln(tmpLhs, getNewPrecision(precision));
 
       Integer step = 1;
       Rational precisionVal = getInversedPrecisionVal(getNewPrecision(precision));
       Rational lhsPowFloatRhs = Integer(1);
+      tmpLhs = 1;
 
       do {
-        rhsStep *= rhsMultLnRhs;
-        rhsStep /= step;
-        rhsStep = rhsStep.round(getNewPrecision(precision));
-        lhsPowFloatRhs += rhsStep;
+        tmpLhs *= rhsMultLnRhs;
+        tmpLhs /= step;
+        tmpLhs = tmpLhs.round(getNewPrecision(precision));
+        lhsPowFloatRhs += tmpLhs;
         step++;
-      } while (abs(rhsStep) > precisionVal);
+      } while (abs(tmpLhs) > precisionVal);
 
       return (lhsPowFloatRhs * lhsPowIntRhs).round(precision);
     }
