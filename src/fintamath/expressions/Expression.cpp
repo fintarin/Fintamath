@@ -5,7 +5,6 @@
 #include <fintamath/functions/trigonometry/Acot.hpp>
 #include <fintamath/functions/trigonometry/Asin.hpp>
 #include <fintamath/functions/trigonometry/Atan.hpp>
-#include <fintamath/functions/ConcreteFunction.hpp>
 #include <fintamath/functions/trigonometry/Cos.hpp>
 #include <fintamath/functions/trigonometry/Cot.hpp>
 #include <fintamath/functions/factorials/DoubleFactorial.hpp>
