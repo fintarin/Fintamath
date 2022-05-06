@@ -1,4 +1,4 @@
-#include "fintamath/operators/Neg.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 
 namespace fintamath {
   std::string Neg::toString() const {

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <fintamath/operators/Add.hpp>
+#include <fintamath/functions/arithmetic/Add.hpp>
 #include <fintamath/literals/Variable.hpp>
 
 #include <fintamath/functions/logarithms/Lg.hpp>

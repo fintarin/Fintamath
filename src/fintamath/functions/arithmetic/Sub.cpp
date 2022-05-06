@@ -1,4 +1,4 @@
-#include "fintamath/operators/Sub.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
 
 namespace fintamath {
   std::string Sub::toString() const {

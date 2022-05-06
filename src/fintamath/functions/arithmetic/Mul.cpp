@@ -1,4 +1,4 @@
-#include "fintamath/operators/Mul.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 
 namespace fintamath {
   std::string Mul::toString() const {

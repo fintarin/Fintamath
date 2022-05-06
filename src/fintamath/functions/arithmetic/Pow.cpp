@@ -1,4 +1,4 @@
-#include "fintamath/operators/Pow.hpp"
+#include "fintamath/functions/arithmetic/Pow.hpp"
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {

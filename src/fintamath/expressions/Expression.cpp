@@ -19,12 +19,12 @@
 #include <fintamath/functions/trigonometry/Sin.hpp>
 #include <fintamath/functions/powers/Sqrt.hpp>
 #include <fintamath/functions/trigonometry/Tan.hpp>
-#include <fintamath/operators/Add.hpp>
-#include <fintamath/operators/Div.hpp>
-#include <fintamath/operators/Mul.hpp>
-#include <fintamath/operators/Neg.hpp>
-#include <fintamath/operators/Pow.hpp>
-#include <fintamath/operators/Sub.hpp>
+#include <fintamath/functions/arithmetic/Add.hpp>
+#include <fintamath/functions/arithmetic/Div.hpp>
+#include <fintamath/functions/arithmetic/Mul.hpp>
+#include <fintamath/functions/arithmetic/Neg.hpp>
+#include <fintamath/functions/arithmetic/Pow.hpp>
+#include <fintamath/functions/arithmetic/Sub.hpp>
 #include <regex>
 #include <stdexcept>
 

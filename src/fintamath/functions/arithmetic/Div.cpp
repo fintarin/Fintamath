@@ -1,4 +1,4 @@
-#include "fintamath/operators/Div.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
 
 namespace fintamath {
   std::string Div::toString() const {

@@ -1,4 +1,4 @@
-#include "fintamath/operators/Add.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 
 namespace fintamath {
 

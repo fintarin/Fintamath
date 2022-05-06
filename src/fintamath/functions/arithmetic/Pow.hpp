@@ -1,4 +1,4 @@
-#include "fintamath/operators/Operator.hpp"
+#include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
   class Pow: public OperatorImpl<Pow> {

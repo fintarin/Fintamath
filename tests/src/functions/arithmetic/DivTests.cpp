@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
-#include <fintamath/operators/Sub.hpp>
+#include <fintamath/functions/arithmetic/Sub.hpp>
 #include <fintamath/literals/Variable.hpp>
 
-#include "fintamath/operators/Div.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
 
 using namespace fintamath;
 

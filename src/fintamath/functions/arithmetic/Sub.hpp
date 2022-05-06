@@ -1,19 +1,19 @@
-#include "fintamath/operators/Operator.hpp"
+#include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
-  class Neg: public OperatorImpl<Neg> {
+  class Sub: public OperatorImpl<Sub> {
   public:
 
-    explicit Neg() = default;
+    explicit Sub() = default;
 
     std::string toString() const override;
 
     int getPriority() const override;
 
-    MathObjectPtr operator()(const MathObject &rhs) const;
+    MathObjectPtr operator()(const MathObject &lhs, const MathObject &rhs) const;
 
   protected:
-    bool equals(const Neg& rhs) const override;
+    bool equals(const Sub& rhs) const override;
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
 
   private:

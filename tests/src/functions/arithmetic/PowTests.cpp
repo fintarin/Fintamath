@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
-#include <fintamath/operators/Neg.hpp>
+#include <fintamath/functions/arithmetic/Neg.hpp>
 #include <fintamath/literals/Variable.hpp>
 
-#include "fintamath/operators/Pow.hpp"
+#include "fintamath/functions/arithmetic/Pow.hpp"
 
 using namespace fintamath;
 

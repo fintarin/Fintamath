@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <fintamath/operators/Neg.hpp>
+#include <fintamath/functions/arithmetic/Neg.hpp>
 #include <fintamath/literals/Variable.hpp>
 
 #include "fintamath/functions/powers/Exp.hpp"
