@@ -3,7 +3,7 @@
 #include <fintamath/literals/Variable.hpp>
 #include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/Percent.hpp>
+#include <fintamath/functions/other/Percent.hpp>
 
 using namespace fintamath;
 

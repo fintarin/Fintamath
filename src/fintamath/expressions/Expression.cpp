@@ -1,7 +1,7 @@
 #include "fintamath/expressions/Expression.hpp"
 
 #include <algorithm>
-#include <fintamath/functions/Abs.hpp>
+#include <fintamath/functions/other/Abs.hpp>
 #include <fintamath/functions/trigonometry/Acot.hpp>
 #include <fintamath/functions/trigonometry/Asin.hpp>
 #include <fintamath/functions/trigonometry/Atan.hpp>
@@ -15,7 +15,7 @@
 #include <fintamath/functions/logarithms/Lg.hpp>
 #include <fintamath/functions/logarithms/Ln.hpp>
 #include <fintamath/functions/logarithms/Log.hpp>
-#include <fintamath/functions/Percent.hpp>
+#include <fintamath/functions/other/Percent.hpp>
 #include <fintamath/functions/trigonometry/Sin.hpp>
 #include <fintamath/functions/powers/Sqrt.hpp>
 #include <fintamath/functions/trigonometry/Tan.hpp>

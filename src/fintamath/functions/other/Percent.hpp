@@ -1,10 +1,10 @@
-#include "Function.hpp"
+#include "fintamath/functions/Function.hpp"
 
-namespace fintamath{
-  class Abs: public FunctionImpl<Abs> {
+namespace fintamath {
+  class Percent: public FunctionImpl<Percent> {
   public:
 
-    explicit Abs() = default;
+    explicit Percent() = default;
 
     std::string toString() const override;
 
@@ -12,7 +12,7 @@ namespace fintamath{
 
   protected:
 
-    bool equals(const Abs& rhs) const override;
+    bool equals(const Percent& rhs) const override;
 
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
   };

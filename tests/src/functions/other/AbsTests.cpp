@@ -2,7 +2,7 @@
 #include <fintamath/operators/Add.hpp>
 #include <fintamath/literals/Variable.hpp>
 
-#include <fintamath/functions/Abs.hpp>
+#include <fintamath/functions/other/Abs.hpp>
 
 using namespace fintamath;
 
