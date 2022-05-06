@@ -2,7 +2,7 @@
 #include <fintamath/operators/Add.hpp>
 #include <fintamath/literals/Variable.hpp>
 
-#include <fintamath/functions/Sqrt.hpp>
+#include <fintamath/functions/powers/Sqrt.hpp>
 
 using namespace fintamath;
 

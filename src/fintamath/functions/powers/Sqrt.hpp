@@ -1,10 +1,10 @@
-#include "Function.hpp"
+#include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Exp: public FunctionImpl<Exp> {
+  class Sqrt: public FunctionImpl<Sqrt> {
   public:
 
-    explicit Exp() = default;
+    explicit Sqrt() = default;
 
     std::string toString() const override;
 
@@ -12,7 +12,7 @@ namespace fintamath {
 
   protected:
 
-    bool equals(const Exp& rhs) const override;
+    bool equals(const Sqrt& rhs) const override;
 
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
   };

@@ -9,7 +9,7 @@
 #include <fintamath/functions/trigonometry/Cos.hpp>
 #include <fintamath/functions/trigonometry/Cot.hpp>
 #include <fintamath/functions/DoubleFactorial.hpp>
-#include <fintamath/functions/Exp.hpp>
+#include <fintamath/functions/powers/Exp.hpp>
 #include <fintamath/functions/Factorial.hpp>
 #include <fintamath/functions/logarithms/Lb.hpp>
 #include <fintamath/functions/logarithms/Lg.hpp>
@@ -17,7 +17,7 @@
 #include <fintamath/functions/logarithms/Log.hpp>
 #include <fintamath/functions/Percent.hpp>
 #include <fintamath/functions/trigonometry/Sin.hpp>
-#include <fintamath/functions/Sqrt.hpp>
+#include <fintamath/functions/powers/Sqrt.hpp>
 #include <fintamath/functions/trigonometry/Tan.hpp>
 #include <fintamath/operators/Add.hpp>
 #include <fintamath/operators/Div.hpp>

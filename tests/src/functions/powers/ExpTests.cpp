@@ -2,7 +2,7 @@
 #include <fintamath/operators/Neg.hpp>
 #include <fintamath/literals/Variable.hpp>
 
-#include "fintamath/functions/Exp.hpp"
+#include "fintamath/functions/powers/Exp.hpp"
 
 using namespace fintamath;
 
