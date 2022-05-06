@@ -68,7 +68,7 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     *this = *parseExpression(str);
-    *this = simplify()->to<Expression>();
+    *this = *baseSimplify();
   }
 
   Expression::Expression(const MathObject &obj) : info(obj.clone()) {
@@ -126,11 +126,10 @@ namespace fintamath {
     if (info->instanceOf<Function>()) {
       const auto &rootFunc = info->to<Function>();
       if (rootFunc.is<Factorial>() || rootFunc.is<DoubleFactorial>() || rootFunc.is<Percent>()) {
-        if (children.at(0)->is<Factorial>() && rootFunc.is<Factorial>()) {
+        if ((children.at(0)->is<Factorial>() && rootFunc.is<Factorial>()) || children.at(0)->info->instanceOf<Operator>()) {
           result += putInBrackets(children.at(0)->toString());
-        }
-        if (children.at(0)->info->instanceOf<Operator>()) {
-          result += putInBrackets(children.at(0)->toString());
+        } else {
+          result += children.at(0)->toString();
         }
         result += rootFunc.toString();
         return result;
@@ -428,9 +427,9 @@ namespace fintamath {
     return args;
   }
 
-  MathObjectPtr Expression::simplify() const{
+  ExprPtr Expression::baseSimplify() const{
     auto newExpr = std::make_shared<Expression>(*this);
-    newExpr = simplifyNumbers(newExpr);
+    newExpr = simplifyOperators(newExpr);
     newExpr = invertSubDiv(newExpr);
     newExpr = simplifyNeg(newExpr);
 
@@ -440,13 +439,13 @@ namespace fintamath {
       oldExpr = newExpr;
       newExpr = mainSimplify(newExpr);
     }
-    return std::make_unique<Expression>(*newExpr);
+    return newExpr;
   }
 
-  ExprPtr Expression::simplifyNumbers(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyOperators(const ExprPtr &expr) {
     for (auto &child : expr->children) {
       if (child != nullptr) {
-        child = simplifyNumbers(child);
+        child = simplifyOperators(child);
       }
     }
     if (expr->info->instanceOf<Operator>()) {
@@ -458,10 +457,35 @@ namespace fintamath {
         }
         return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
       } catch (const std::invalid_argument &) {
-        // skip operation if child is Variable
+        // skip operation if child is Variable or Function
       }
     }
-    // TODO: add functions
+    return expr;
+  }
+
+  ExprPtr Expression::simplifyFunctions(const ExprPtr &expr) {
+    const int defaultPrecision = 36;
+    for (auto &child : expr->children) {
+      if (child != nullptr) {
+        child = simplifyFunctions(child);
+        child = simplifyOperators(child);
+      }
+    }
+    if (expr->info->instanceOf<Function>()) {
+      const auto &o = expr->info->to<Function>();
+      try {
+        if (o.instanceOf<Log>()) {
+          return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
+        }
+        return std::make_shared<Expression>(*o(*expr->children.at(0)->info));
+      } catch (const std::invalid_argument &) {
+        // skip operation if child is Variable or Function
+      }
+    }
+    if(expr->info->is<Constant>()){
+      auto constant = expr->info->to<Constant>();
+      expr->info = std::make_shared<Rational>(constant.toRational(defaultPrecision));
+    }
     return expr;
   }
 
@@ -490,7 +514,7 @@ namespace fintamath {
       auto rightNode = std::make_shared<Expression>();
       rightNode->info = std::make_shared<Neg>();
       rightNode->children.push_back(newExpr->children.at(1));
-      rightNode = simplifyNumbers(rightNode);
+      rightNode = simplifyOperators(rightNode);
       newExpr->children.at(1) = rightNode;
     }
     if (newExpr->info->is<Div>()) {
@@ -500,7 +524,7 @@ namespace fintamath {
         rightNode->info = std::make_shared<Div>();
         rightNode->children.push_back(std::make_shared<Expression>(Integer(1)));
         rightNode->children.push_back(newExpr->children.at(1));
-        rightNode = simplifyNumbers(rightNode);
+        rightNode = simplifyOperators(rightNode);
       } else {
         rightNode->info = std::make_shared<Pow>();
         rightNode->children.push_back(newExpr->children.at(1));
@@ -742,6 +766,7 @@ namespace fintamath {
     auto varVect = ExprVect();
     auto mulVect = ExprVect();
     auto funcVect = ExprVect();
+    auto constVect = ExprVect();
 
     for (const auto &child : newExpr->children) {
       if (child->info->instanceOf<Arithmetic>()) {
@@ -749,15 +774,23 @@ namespace fintamath {
       }
       if (child->info->is<Pow>()) {
         powVect.push_back(child);
+        continue;
       }
       if (child->info->is<Variable>()) {
         varVect.push_back(child);
+        continue;
+      }
+      if (child->info->is<Constant>()) {
+        constVect.push_back(child);
+        continue;
       }
       if (child->info->is<Mul>()) {
         mulVect.push_back(child);
+        continue;
       }
       if(child->info->instanceOf<Function>()){
         funcVect.push_back(child);
+        continue;
       }
     }
     newExpr->children.clear();
@@ -765,6 +798,8 @@ namespace fintamath {
     std::sort(powVect.begin(), powVect.end(), compareExprMulPowFunc);
     std::sort(mulVect.begin(), mulVect.end(), compareExprMulPowFunc);
     std::sort(funcVect.begin(), funcVect.end(), compareExprMulPowFunc);
+    std::sort(constVect.begin(), constVect.end(), compareExprVar);
+
 
     if (newExpr->info->is<Add>()) {
       for (const auto &func : funcVect) {
@@ -775,6 +810,9 @@ namespace fintamath {
       }
       for (const auto &mul : mulVect) {
         newExpr->children.push_back(mul);
+      }
+      for (const auto &constant : constVect) {
+        newExpr->children.push_back(constant);
       }
       for (const auto &var : varVect) {
         newExpr->children.push_back(var);
@@ -796,6 +834,9 @@ namespace fintamath {
       }
       for (const auto &mul : mulVect) {
         newExpr->children.push_back(mul);
+      }
+      for (const auto &constant : constVect) {
+        newExpr->children.push_back(constant);
       }
       for (const auto &var : varVect) {
         newExpr->children.push_back(var);
@@ -856,5 +897,23 @@ namespace fintamath {
       return newExpr->children.at(0);
     }
     return newExpr;
+  }
+  MathObjectPtr Expression::simplify() const {
+    auto newExpr = std::make_shared<Expression>(*this);
+    newExpr = simplifyFunctions(newExpr);
+    newExpr = simplifyOperators(newExpr);
+    newExpr = invertSubDiv(newExpr);
+    newExpr = simplifyNeg(newExpr);
+
+    auto oldExpr = newExpr;
+    newExpr = mainSimplify(newExpr);
+    while (*oldExpr != *newExpr) {
+      oldExpr = newExpr;
+      newExpr = mainSimplify(newExpr);
+    }
+    if(newExpr->children.empty()) {
+      return newExpr->info->clone();
+    }
+    return std::make_unique<Expression>(*newExpr);
   }
 }

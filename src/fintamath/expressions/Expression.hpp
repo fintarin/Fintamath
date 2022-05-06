@@ -35,6 +35,7 @@ namespace fintamath {
     using ExprPtr = std::shared_ptr<Expression>;
     using ExprVect = std::vector<ExprPtr>;
 
+    ExprPtr baseSimplify() const;
     static ExprPtr parseExpression(const std::string &expr);
     static ExprPtr parseDivMulTerm(const std::string &term);
     static ExprPtr parseNegPowFactorPercentTerm(const std::string &term);
@@ -43,7 +44,8 @@ namespace fintamath {
     static ExprVect getArgs(const std::string &args);
 
     static ExprPtr mainSimplify(const ExprPtr &expr);
-    static ExprPtr simplifyNumbers(const ExprPtr &expr);
+    static ExprPtr simplifyOperators(const ExprPtr &expr);
+    static ExprPtr simplifyFunctions(const ExprPtr &expr);
     static ExprPtr invertSubDiv(const ExprPtr &expr);
     static ExprPtr simplifyNeg(const ExprPtr &expr);
     static ExprPtr rebuildAdd(const ExprPtr &expr);
