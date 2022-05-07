@@ -25,7 +25,7 @@ namespace fintamath {
   }
 
   bool isVariable(const std::string &str) {
-    std::regex reg(R"([a-df-hj-zA-Z])");
+    std::regex reg(R"(^[a-df-hj-zA-Z]$)");
     return regex_search(str, reg);
   }
 }

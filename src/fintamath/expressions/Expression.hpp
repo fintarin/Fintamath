@@ -55,6 +55,8 @@ namespace fintamath {
 
     static ExprPtr simplifyFunctions(const ExprPtr &expr);
 
+    static ExprPtr simplifyConstant(const ExprPtr &expr);
+
     static ExprPtr invertSubDiv(const ExprPtr &expr);
 
     static ExprPtr simplifyNeg(const ExprPtr &expr);

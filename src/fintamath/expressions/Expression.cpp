@@ -21,6 +21,7 @@
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
+#include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
@@ -35,6 +36,34 @@ namespace fintamath {
   using ExprPtr = std::shared_ptr<Expression>;
   using ExprVect = std::vector<ExprPtr>;
 
+  std::string cutSpaces(const std::string &str) {
+    std::string strExpr = str;
+    while (!strExpr.empty()) {
+      if (strExpr.front() != ' ') {
+        break;
+      }
+      strExpr.erase(strExpr.begin());
+    }
+
+    int64_t i = 0;
+    while (i < int64_t(strExpr.size())) {
+      if (strExpr[size_t(i)] == ' ') {
+        strExpr.erase(size_t(i), 1);
+        i--;
+      }
+      i++;
+    }
+    return strExpr;
+  }
+
+  std::string cutBraces(const std::string &str) {
+    std::string strExpr = str;
+    if (strExpr.front() == '(' && strExpr.back() == ')') {
+      strExpr.erase(strExpr.begin());
+      strExpr.erase(strExpr.end() - 1);
+    }
+    return strExpr;
+  }
   Expression::Expression(const Expression &rhs) noexcept {
     if (rhs.info) {
       info = rhs.info->clone();
@@ -66,7 +95,7 @@ namespace fintamath {
   }
 
   Expression::Expression(const std::string &str) {
-    *this = *parseExpression(str);
+    *this = *parseExpression(cutSpaces(str));
     *this = *baseSimplify();
   }
 
@@ -170,41 +199,12 @@ namespace fintamath {
     return flag;
   }
 
-  std::string cutSpaces(const std::string &str) {
-    std::string strExpr = str;
-    while (!strExpr.empty()) {
-      if (strExpr.front() != ' ') {
-        break;
-      }
-      strExpr.erase(strExpr.begin());
-    }
-
-    int64_t i = 0;
-    while (i < int64_t(strExpr.size())) {
-      if (strExpr[size_t(i)] == ' ') {
-        strExpr.erase(size_t(i), 1);
-        i--;
-      }
-      i++;
-    }
-    return strExpr;
-  }
-
-  std::string cutBraces(const std::string &str) {
-    std::string strExpr = str;
-
-    if (strExpr.front() == '(' && strExpr.back() == ')') {
-      strExpr.erase(strExpr.begin());
-      strExpr.erase(strExpr.end() - 1);
-    }
-
-    return strExpr;
-  }
-
   static size_t ignoreBracketsRightLeft(const std::string_view &str, size_t position) {
+    if (position == 0) {
+      throw std::invalid_argument("Expression invalid input");
+    }
     int leftBracket = 0;
     int rightBracket = 1;
-
     do {
       position--;
       if (str[position] == ')') {
@@ -218,7 +218,7 @@ namespace fintamath {
       }
     } while (position > 0);
 
-    return position;
+    throw std::invalid_argument("Expression invalid input");
   }
 
   static size_t ignoreBracketsLeftRight(const std::string_view &str, size_t position) {
@@ -249,13 +249,19 @@ namespace fintamath {
    * Args: Expr, Args | Expr
    */
   ExprPtr Expression::parseExpression(const std::string &exprStr) {
+    if (exprStr.empty()) {
+      throw std::invalid_argument("Expression invalid input");
+    }
     auto expr = cutSpaces(exprStr);
     Expression elem;
 
     for (size_t i = expr.size() - 1; i > 0; i--) {
       if (expr[i] == '+' || expr[i] == '-') {
         if (i == expr.size() - 1) {
-          return {};
+          throw std::invalid_argument("Expression invalid input");
+        }
+        if (expr[i - 1] == '+' || expr[i - 1] == '-' || expr[i - 1] == '*' || expr[i - 1] == '/') {
+          continue;
         }
         if (expr[i] == '+') {
           elem.info = std::make_shared<Add>();
@@ -284,7 +290,7 @@ namespace fintamath {
     for (size_t i = term.size() - 1; i > 0; i--) {
       if (term[i] == '*' || term[i] == '/') {
         if (i == term.size() - 1) {
-          return {};
+          throw std::invalid_argument("Expression invalid input");
         }
         if (term[i] == '*') {
           elem.info = std::make_shared<Mul>();
@@ -308,12 +314,19 @@ namespace fintamath {
   }
 
   ExprPtr Expression::parseNegPowFactorPercentTerm(const std::string &term) {
+    if (term.empty() || term[0] == '*' || term[0] == '/') {
+      throw std::invalid_argument("Expression invalid input");
+    }
     Expression elem;
 
     if (term[0] == '-') {
       elem.info = std::make_shared<Neg>();
       elem.children.push_back(parseNegPowFactorPercentTerm(cutSpaces(term.substr(1))));
       return std::make_shared<Expression>(elem);
+    }
+
+    if (term[0] == '+') {
+      elem.info = parseNegPowFactorPercentTerm(cutSpaces(term.substr(1)))->info;
     }
 
     for (size_t i = 0; i < term.size(); i++) {
@@ -376,7 +389,7 @@ namespace fintamath {
       try {
         parseResult.info = std::make_shared<Rational>(term);
       } catch (const std::invalid_argument &) {
-        return {};
+        throw std::invalid_argument("Expression invalid input");
       }
     }
 
@@ -417,12 +430,16 @@ namespace fintamath {
         expr.info = std::make_shared<Cot>();
       } else if (funcName == "asin") {
         expr.info = std::make_shared<Asin>();
+      } else if (funcName == "acos") {
+        expr.info = std::make_shared<Acos>();
       } else if (funcName == "acot") {
         expr.info = std::make_shared<Acot>();
       } else if (funcName == "atan") {
         expr.info = std::make_shared<Atan>();
       } else if (funcName == "abs") {
         expr.info = std::make_shared<Abs>();
+      } else {
+        throw std::invalid_argument("Expression invalid input");
       }
 
       expr.children = getArgs(cutBraces(term.substr(pos)));
@@ -497,31 +514,37 @@ namespace fintamath {
   }
 
   ExprPtr Expression::simplifyFunctions(const ExprPtr &expr) {
-    const int defaultPrecision = 45;
+    for (auto &child : expr->children) {
+      if (child != nullptr) {
+        child = simplifyOperators(child);
+        child = simplifyFunctions(child);
+      }
+    }
+
+    if (expr->info->instanceOf<Function>() && !expr->info->instanceOf<Operator>()) {
+      const auto &o = expr->info->to<Function>();
+      if (o.is<Log>()) {
+        return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
+      }
+      return std::make_shared<Expression>(*o(*expr->children.at(0)->info));
+    }
+
+    return expr;
+  }
+
+  ExprPtr Expression::simplifyConstant(const ExprPtr &expr) {
+    const int defaultPrecision = 36;
 
     for (auto &child : expr->children) {
       if (child != nullptr) {
-        child = simplifyFunctions(child);
-        child = simplifyOperators(child);
+        child = simplifyConstant(child);
       }
     }
 
-    if (expr->info->instanceOf<Function>()) {
-      const auto &o = expr->info->to<Function>();
-      try {
-        if (o.instanceOf<Log>()) {
-          return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
-        }
-        return std::make_shared<Expression>(*o(*expr->children.at(0)->info));
-      } catch (const std::invalid_argument &) {
-        // skip operation if child is Variable or Function
-      }
-    }
     if (expr->info->is<Constant>()) {
       auto constant = expr->info->to<Constant>();
       expr->info = std::make_shared<Rational>(constant.toRational(defaultPrecision));
     }
-
     return expr;
   }
 
@@ -973,8 +996,10 @@ namespace fintamath {
 
     return newExpr;
   }
+
   MathObjectPtr Expression::simplify() const {
     auto newExpr = std::make_shared<Expression>(*this);
+    newExpr = simplifyConstant(newExpr);
     newExpr = simplifyFunctions(newExpr);
     newExpr = simplifyOperators(newExpr);
     newExpr = invertSubDiv(newExpr);
