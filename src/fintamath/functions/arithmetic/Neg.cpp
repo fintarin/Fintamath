@@ -11,10 +11,6 @@ namespace fintamath {
     return priority;
   }
 
-  bool Neg::equals(const Neg & /*rhs*/) const {
-    return true;
-  }
-
   MathObjectPtr Neg::operator()(const MathObject &rhs) const {
     if (!rhs.instanceOf<Arithmetic>()) {
       throw std::invalid_argument("Types must be Arithmetic");

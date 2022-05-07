@@ -26,8 +26,3 @@ TEST(LbTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(10), Integer(10), Integer(10)));
 }
-
-TEST(LbTests, equalsTest) {
-  EXPECT_TRUE(Lb() == Lb());
-  EXPECT_FALSE(Lb() == Add());
-}

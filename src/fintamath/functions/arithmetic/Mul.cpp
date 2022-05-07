@@ -11,10 +11,6 @@ namespace fintamath {
     return priority;
   }
 
-  bool Mul::equals(const Mul & /*rhs*/) const {
-    return true;
-  }
-
   MathObjectPtr Mul::operator()(const MathObject &lhs, const MathObject &rhs) const {
     if (!lhs.instanceOf<Arithmetic>() || !rhs.instanceOf<Arithmetic>()) {
       throw std::invalid_argument("Types must be Arithmetic");

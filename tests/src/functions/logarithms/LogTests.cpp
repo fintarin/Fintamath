@@ -28,8 +28,3 @@ TEST(LogTests, callTest) {
   EXPECT_ANY_THROW((*f)(Integer(10)));
   EXPECT_ANY_THROW((*f)(Integer(10), Integer(10), Integer(10)));
 }
-
-TEST(LogTests, equalsTest) {
-  EXPECT_TRUE(Log() == Log());
-  EXPECT_FALSE(Log() == Add());
-}

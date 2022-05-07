@@ -10,9 +10,6 @@ namespace fintamath {
   int Pow::getPriority() const {
     return priority;
   }
-  bool Pow::equals(const Pow & /*rhs*/) const {
-    return true;
-  }
 
   MathObjectPtr Pow::operator()(const MathObject &lhs, const MathObject &rhs) const {
     const int64_t defaultPrecision = 36;

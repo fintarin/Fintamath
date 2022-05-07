@@ -26,8 +26,3 @@ TEST(CosTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(CosTests, equalsTest) {
-  EXPECT_TRUE(Cos() == Cos());
-  EXPECT_FALSE(Cos() == Add());
-}

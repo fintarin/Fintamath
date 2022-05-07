@@ -25,8 +25,3 @@ TEST(ExpTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1)));
 }
-
-TEST(ExpTests, equalsTest) {
-  EXPECT_TRUE(Exp() == Exp());
-  EXPECT_FALSE(Exp() == Neg());
-}

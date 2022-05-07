@@ -26,8 +26,3 @@ TEST(AcotTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(AcotTests, equalsTest) {
-  EXPECT_TRUE(Acot() == Acot());
-  EXPECT_FALSE(Acot() == Add());
-}

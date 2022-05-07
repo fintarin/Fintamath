@@ -10,9 +10,6 @@ namespace fintamath {
   int Sub::getPriority() const {
     return priority;
   }
-  bool Sub::equals(const Sub & /*rhs*/) const {
-    return true;
-  }
 
   MathObjectPtr Sub::operator()(const MathObject &lhs, const MathObject &rhs) const {
     if (!lhs.instanceOf<Arithmetic>() || !rhs.instanceOf<Arithmetic>()) {

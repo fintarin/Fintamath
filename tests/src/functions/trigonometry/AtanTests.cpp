@@ -26,8 +26,3 @@ TEST(AtanTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(AtanTests, equalsTest) {
-  EXPECT_TRUE(Atan() == Atan());
-  EXPECT_FALSE(Atan() == Add());
-}

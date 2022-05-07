@@ -17,10 +17,6 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::acos(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Acos::equals(const Acos & /*rhs*/) const {
-    return true;
-  }
-
   MathObjectPtr Acos::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
     if (argsVect.size() != 1) {
       throw std::invalid_argument("The number of arguments must be 1");

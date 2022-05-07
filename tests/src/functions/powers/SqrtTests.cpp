@@ -26,8 +26,3 @@ TEST(SqrtTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(SqrtTests, equalsTest) {
-  EXPECT_TRUE(Sqrt() == Sqrt());
-  EXPECT_FALSE(Sqrt() == Add());
-}

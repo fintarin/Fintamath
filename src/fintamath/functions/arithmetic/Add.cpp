@@ -11,10 +11,6 @@ namespace fintamath {
     return "+";
   }
 
-  bool Add::equals(const Add & /*rhs*/) const {
-    return true;
-  }
-
   MathObjectPtr Add::operator()(const MathObject &lhs, const MathObject &rhs) const {
     if (!lhs.instanceOf<Arithmetic>() || !rhs.instanceOf<Arithmetic>()) {
       throw std::invalid_argument("Types must be Arithmetic");

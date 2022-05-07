@@ -24,8 +24,3 @@ TEST(AbsTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(AbsTests, equalsTest) {
-  EXPECT_TRUE(Abs() == Abs());
-  EXPECT_FALSE(Abs() == Add());
-}

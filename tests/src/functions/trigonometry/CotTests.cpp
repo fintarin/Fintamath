@@ -28,8 +28,3 @@ TEST(CotTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(CotTests, equalsTest) {
-  EXPECT_TRUE(Cot() == Cot());
-  EXPECT_FALSE(Cot() == Add());
-}

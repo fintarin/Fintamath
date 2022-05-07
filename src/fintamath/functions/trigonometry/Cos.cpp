@@ -17,10 +17,6 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::cos(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Cos::equals(const Cos & /*rhs*/) const {
-    return true;
-  }
-
   MathObjectPtr Cos::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
     if (argsVect.size() != 1) {
       throw std::invalid_argument("The number of arguments must be 1");

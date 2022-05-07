@@ -16,10 +16,6 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::abs(newRhs->to<Rational>()));
   }
 
-  bool Abs::equals(const Abs & /*rhs*/) const {
-    return true;
-  }
-
   MathObjectPtr Abs::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
     if (argsVect.size() != 1) {
       throw std::invalid_argument("The number of arguments must be 1");

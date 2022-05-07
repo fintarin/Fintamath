@@ -26,8 +26,3 @@ TEST(LgTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(10), Integer(10), Integer(10)));
 }
-
-TEST(LgTests, equalsTest) {
-  EXPECT_TRUE(Lg() == Lg());
-  EXPECT_FALSE(Lg() == Add());
-}

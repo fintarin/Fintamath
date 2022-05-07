@@ -26,8 +26,3 @@ TEST(FactorialTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(FactorialTests, equalsTest) {
-  EXPECT_TRUE(Factorial() == Factorial());
-  EXPECT_FALSE(Factorial() == Add());
-}

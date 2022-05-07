@@ -55,8 +55,3 @@ TEST(PowTests, callTest) {
   EXPECT_ANY_THROW((*o)());
   EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(PowTests, equalsTest) {
-  EXPECT_TRUE(Pow() == Pow());
-  EXPECT_FALSE(Pow() == Neg());
-}

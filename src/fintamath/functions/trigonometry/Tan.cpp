@@ -16,10 +16,6 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::tan(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Tan::equals(const Tan & /*rhs*/) const {
-    return true;
-  }
-
   MathObjectPtr Tan::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
     if (argsVect.size() != 1) {
       throw std::invalid_argument("The number of arguments must be 1");

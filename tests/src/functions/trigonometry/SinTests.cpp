@@ -26,8 +26,3 @@ TEST(SinTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(SinTests, equalsTest) {
-  EXPECT_TRUE(Sin() == Sin());
-  EXPECT_FALSE(Sin() == Add());
-}

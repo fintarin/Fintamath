@@ -25,8 +25,3 @@ TEST(PercentTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(PercentTests, equalsTest) {
-  EXPECT_TRUE(Percent() == Percent());
-  EXPECT_FALSE(Percent() == Add());
-}

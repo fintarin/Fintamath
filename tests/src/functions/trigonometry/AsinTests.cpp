@@ -26,8 +26,3 @@ TEST(AsinTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(AsinTests, equalsTest) {
-  EXPECT_TRUE(Asin() == Asin());
-  EXPECT_FALSE(Asin() == Add());
-}

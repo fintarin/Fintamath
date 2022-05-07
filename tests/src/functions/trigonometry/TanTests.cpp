@@ -28,8 +28,3 @@ TEST(TanTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(TanTests, equalsTest) {
-  EXPECT_TRUE(Tan() == Tan());
-  EXPECT_FALSE(Tan() == Add());
-}

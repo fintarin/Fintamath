@@ -31,8 +31,3 @@ TEST(AddTests, callTest) {
   EXPECT_ANY_THROW((*o)());
   EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(AddTests, equalsTest) {
-  EXPECT_TRUE(Add() == Add());
-  EXPECT_FALSE(Add() == Sub());
-}

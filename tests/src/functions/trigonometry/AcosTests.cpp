@@ -26,8 +26,3 @@ TEST(AcosTests, callTest) {
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
-
-TEST(AcosTests, equalsTest) {
-  EXPECT_TRUE(Acos() == Acos());
-  EXPECT_FALSE(Acos() == Add());
-}
