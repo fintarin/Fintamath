@@ -2,7 +2,6 @@
 
 #include "fintamath/functions/trigonometry/Acot.hpp"
 
-#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -13,16 +12,16 @@ TEST(AcotTests, toStringTest) {
 }
 
 TEST(AcotTests, callTest) {
-  EXPECT_EQ(Acot()(Integer(0))->to<Rational>().toString(10), "1.5707963268");
-  EXPECT_EQ(Acot()(Integer(1))->to<Rational>().toString(36), "0.785398163397448309615660845819875726");
-  EXPECT_EQ(Acot()(Integer(10))->to<Rational>().toString(10), "0.0996686525");
-  EXPECT_EQ(Acot()(Integer(-10))->to<Rational>().toString(10), "-0.0996686525");
-  EXPECT_EQ(Acot()(Rational(1, 10))->to<Rational>().toString(10), "1.4711276743");
+  EXPECT_EQ(Acot()(Integer(0))->toString(), "1.570796326794896619231321691639751442");
+  EXPECT_EQ(Acot()(Integer(1))->toString(), "0.785398163397448309615660845819875721");
+  EXPECT_EQ(Acot()(Integer(10))->toString(), "0.09966865249116202737844611987802059");
+  EXPECT_EQ(Acot()(Integer(-10))->toString(), "-0.09966865249116202737844611987802059");
+  EXPECT_EQ(Acot()(Rational(1, 10))->toString(), "1.471127674303734591852875571761730852");
 
   EXPECT_ANY_THROW(Acot()(Variable("a")));
 
   std::unique_ptr<Function> f = std::make_unique<Acot>();
-  EXPECT_EQ((*f)(Integer(10))->to<Rational>().toString(10), "0.0996686525");
+  EXPECT_EQ((*f)(Integer(10))->toString(), "0.09966865249116202737844611987802059");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }

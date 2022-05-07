@@ -2,7 +2,6 @@
 
 #include "fintamath/functions/arithmetic/Mul.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
