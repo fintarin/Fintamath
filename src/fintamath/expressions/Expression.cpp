@@ -497,7 +497,7 @@ namespace fintamath {
   }
 
   ExprPtr Expression::simplifyFunctions(const ExprPtr &expr) {
-    const int defaultPrecision = 36;
+    const int defaultPrecision = 45;
 
     for (auto &child : expr->children) {
       if (child != nullptr) {

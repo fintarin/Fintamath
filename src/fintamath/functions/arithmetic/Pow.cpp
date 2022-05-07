@@ -12,7 +12,7 @@ namespace fintamath {
   }
 
   MathObjectPtr Pow::operator()(const MathObject &lhs, const MathObject &rhs) const {
-    const int64_t defaultPrecision = 36;
+    const int64_t defaultPrecision = 45;
     if (!lhs.instanceOf<Arithmetic>() || !rhs.instanceOf<Arithmetic>()) {
       throw std::invalid_argument("Types must be Arithmetic");
     }
