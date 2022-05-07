@@ -3,7 +3,7 @@
 namespace fintamath {
   class Abs : public FunctionImpl<Abs> {
   public:
-    explicit Abs() = default;
+    Abs() = default;
 
     std::string toString() const override;
 

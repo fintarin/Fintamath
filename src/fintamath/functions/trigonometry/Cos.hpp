@@ -3,7 +3,7 @@
 namespace fintamath {
   class Cos : public FunctionImpl<Cos> {
   public:
-    explicit Cos() = default;
+    Cos() = default;
 
     std::string toString() const override;
 

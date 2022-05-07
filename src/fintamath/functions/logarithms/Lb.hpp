@@ -3,7 +3,7 @@
 namespace fintamath {
   class Lb : public FunctionImpl<Lb> {
   public:
-    explicit Lb() = default;
+    Lb() = default;
 
     std::string toString() const override;
 

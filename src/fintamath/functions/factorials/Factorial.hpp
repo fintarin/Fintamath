@@ -3,7 +3,7 @@
 namespace fintamath {
   class Factorial : public FunctionImpl<Factorial> {
   public:
-    explicit Factorial() = default;
+    Factorial() = default;
 
     std::string toString() const override;
 

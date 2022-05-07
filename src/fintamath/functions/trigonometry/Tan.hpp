@@ -3,7 +3,7 @@
 namespace fintamath {
   class Tan : public FunctionImpl<Tan> {
   public:
-    explicit Tan() = default;
+    Tan() = default;
 
     std::string toString() const override;
 

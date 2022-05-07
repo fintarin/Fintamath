@@ -3,7 +3,7 @@
 namespace fintamath {
   class Asin : public FunctionImpl<Asin> {
   public:
-    explicit Asin() = default;
+    Asin() = default;
 
     std::string toString() const override;
 

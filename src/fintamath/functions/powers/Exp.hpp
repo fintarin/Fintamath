@@ -3,7 +3,7 @@
 namespace fintamath {
   class Exp : public FunctionImpl<Exp> {
   public:
-    explicit Exp() = default;
+    Exp() = default;
 
     std::string toString() const override;
 

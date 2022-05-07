@@ -3,7 +3,7 @@
 namespace fintamath {
   class Percent : public FunctionImpl<Percent> {
   public:
-    explicit Percent() = default;
+    Percent() = default;
 
     std::string toString() const override;
 

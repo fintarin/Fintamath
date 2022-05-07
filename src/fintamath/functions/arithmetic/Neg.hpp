@@ -3,7 +3,7 @@
 namespace fintamath {
   class Neg : public OperatorImpl<Neg> {
   public:
-    explicit Neg() = default;
+    Neg() = default;
 
     std::string toString() const override;
 

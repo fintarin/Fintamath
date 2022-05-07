@@ -3,7 +3,7 @@
 namespace fintamath {
   class DoubleFactorial : public FunctionImpl<DoubleFactorial> {
   public:
-    explicit DoubleFactorial() = default;
+    DoubleFactorial() = default;
 
     std::string toString() const override;
 

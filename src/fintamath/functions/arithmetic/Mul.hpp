@@ -3,7 +3,7 @@
 namespace fintamath {
   class Mul : public OperatorImpl<Mul> {
   public:
-    explicit Mul() = default;
+    Mul() = default;
 
     std::string toString() const override;
 

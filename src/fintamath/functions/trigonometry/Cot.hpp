@@ -3,7 +3,7 @@
 namespace fintamath {
   class Cot : public FunctionImpl<Cot> {
   public:
-    explicit Cot() = default;
+    Cot() = default;
 
     std::string toString() const override;
 

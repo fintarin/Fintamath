@@ -3,7 +3,7 @@
 namespace fintamath {
   class Log : public FunctionImpl<Log> {
   public:
-    explicit Log() = default;
+    Log() = default;
 
     std::string toString() const override;
 

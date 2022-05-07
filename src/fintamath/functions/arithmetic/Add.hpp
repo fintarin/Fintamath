@@ -3,7 +3,7 @@
 namespace fintamath {
   class Add : public OperatorImpl<Add> {
   public:
-    explicit Add() = default;
+    Add() = default;
 
     int getPriority() const override;
 

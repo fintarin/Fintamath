@@ -3,7 +3,7 @@
 namespace fintamath {
   class Sub : public OperatorImpl<Sub> {
   public:
-    explicit Sub() = default;
+    Sub() = default;
 
     std::string toString() const override;
 

@@ -3,7 +3,7 @@
 namespace fintamath {
   class Acos : public FunctionImpl<Acos> {
   public:
-    explicit Acos() = default;
+    Acos() = default;
 
     std::string toString() const override;
 

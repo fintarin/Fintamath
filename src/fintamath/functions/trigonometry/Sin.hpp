@@ -3,7 +3,7 @@
 namespace fintamath {
   class Sin : public FunctionImpl<Sin> {
   public:
-    explicit Sin() = default;
+    Sin() = default;
 
     std::string toString() const override;
 

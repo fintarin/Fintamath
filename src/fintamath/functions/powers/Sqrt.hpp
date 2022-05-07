@@ -3,7 +3,7 @@
 namespace fintamath {
   class Sqrt : public FunctionImpl<Sqrt> {
   public:
-    explicit Sqrt() = default;
+    Sqrt() = default;
 
     std::string toString() const override;
 

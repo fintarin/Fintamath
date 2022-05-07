@@ -3,7 +3,7 @@
 namespace fintamath {
   class Pow : public OperatorImpl<Pow> {
   public:
-    explicit Pow() = default;
+    Pow() = default;
 
     std::string toString() const override;
 

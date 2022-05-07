@@ -3,7 +3,7 @@
 namespace fintamath {
   class Div : public OperatorImpl<Div> {
   public:
-    explicit Div() = default;
+    Div() = default;
 
     std::string toString() const override;
 

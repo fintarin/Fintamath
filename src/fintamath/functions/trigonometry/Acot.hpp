@@ -3,7 +3,7 @@
 namespace fintamath {
   class Acot : public FunctionImpl<Acot> {
   public:
-    explicit Acot() = default;
+    Acot() = default;
 
     std::string toString() const override;
 
