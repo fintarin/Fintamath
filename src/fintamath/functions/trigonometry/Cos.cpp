@@ -14,7 +14,7 @@ namespace fintamath {
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(functions::cos(newRhs->to<Rational>(), defaultPrecision));
+    return std::make_unique<Rational>(cos(newRhs->to<Rational>(), defaultPrecision));
   }
 
   MathObjectPtr Cos::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {

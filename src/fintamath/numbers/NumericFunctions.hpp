@@ -2,7 +2,7 @@
 
 #include "fintamath/numbers/Rational.hpp"
 
-namespace fintamath::functions {
+namespace fintamath {
   Rational getE(int64_t precision);
 
   Rational getPi(int64_t precision);

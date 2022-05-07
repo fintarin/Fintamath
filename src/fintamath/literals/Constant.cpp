@@ -13,10 +13,10 @@ namespace fintamath {
 
   Rational Constant::toRational(int64_t precision) const {
     if (name == "e") {
-      return functions::getE(precision);
+      return getE(precision);
     }
     if (name == "pi") {
-      return functions::getPi(precision);
+      return getPi(precision);
     }
     throw std::invalid_argument("Constant invalid input");
   }

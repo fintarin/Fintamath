@@ -13,7 +13,7 @@ namespace fintamath {
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(functions::tan(newRhs->to<Rational>(), defaultPrecision));
+    return std::make_unique<Rational>(tan(newRhs->to<Rational>(), defaultPrecision));
   }
 
   MathObjectPtr Tan::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {

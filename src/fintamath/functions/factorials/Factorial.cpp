@@ -13,7 +13,7 @@ namespace fintamath {
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(functions::factorial(newRhs->to<Rational>()));
+    return std::make_unique<Rational>(factorial(newRhs->to<Rational>()));
   }
 
   MathObjectPtr Factorial::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
