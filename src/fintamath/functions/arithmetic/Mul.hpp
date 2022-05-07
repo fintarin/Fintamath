@@ -17,6 +17,6 @@ namespace fintamath {
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
 
   private:
-    int priority = 2;
+    static constexpr int priority = 2;
   };
 }
