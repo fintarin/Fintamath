@@ -1,3 +1,5 @@
+#pragma once
+
 #include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
