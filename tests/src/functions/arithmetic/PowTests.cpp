@@ -2,7 +2,6 @@
 
 #include "fintamath/functions/arithmetic/Pow.hpp"
 
-#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -38,6 +37,18 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(Pow()(*Pow()(Integer(10), Integer(300)), Rational(1, 100))->toString(), "1000");
   EXPECT_EQ(Pow()(Integer(1), Rational(1, 1234))->toString(), "1");
   EXPECT_EQ(Pow()(Integer(10000000000), Rational(1, 100))->toString(), "1.258925411794167210423954106395800606");
+
+  EXPECT_EQ(Pow()(Integer(4), Rational(-1, 2))->toString(), "0.5");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-1, 3))->toString(), "0.629960524947436582383605303639114175");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-1, 4))->toString(), "0.707106781186547524400844362104849039");
+  EXPECT_EQ(Pow()(Integer(8), Rational(-1, 3))->toString(), "0.5");
+  EXPECT_EQ(Pow()(Integer(16), Rational(-1, 4))->toString(), "0.5");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-5, 2))->toString(), "0.03125");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-5, 3))->toString(), "0.099212565748012467171981602454519266");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-5, 4))->toString(), "0.17677669529663688110021109052621226");
+  EXPECT_EQ(Pow()(Integer(8), Rational(-5, 3))->toString(), "0.03125");
+  EXPECT_EQ(Pow()(Integer(16), Rational(-5, 4))->toString(), "0.03125");
+  EXPECT_EQ(Pow()(Integer(7), Rational(-3, 1000))->toString(), "0.994179275992125393883093456029745344");
 
   EXPECT_ANY_THROW(Pow()(Integer(3), Variable("a")));
 
