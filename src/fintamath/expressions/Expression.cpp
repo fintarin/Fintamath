@@ -9,7 +9,6 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/arithmetic/Pow.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
@@ -20,6 +19,7 @@
 #include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
@@ -497,7 +497,7 @@ namespace fintamath {
   }
 
   ExprPtr Expression::simplifyFunctions(const ExprPtr &expr) {
-    const int defaultPrecision = 36;
+    const int defaultPrecision = 45;
 
     for (auto &child : expr->children) {
       if (child != nullptr) {

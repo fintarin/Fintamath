@@ -4,6 +4,8 @@
 #include <stdexcept>
 
 namespace fintamath {
+  constexpr int64_t DEFAULT_PRECISION = 36;
+
   static Integer gcd(const Integer &lhs, const Integer &rhs);
   static Integer lcm(const Integer &lhs, const Integer &rhs);
 
@@ -24,7 +26,9 @@ namespace fintamath {
   }
 
   Rational Rational::round(int64_t precision) const {
-    return Rational(toString(precision));
+    Rational res(toString(precision));
+    res.precise = false;
+    return res;
   }
 
   Integer Rational::getInteger() const {
@@ -73,6 +77,9 @@ namespace fintamath {
   }
 
   std::string Rational::toString() const {
+    if (!precise) {
+      return toString(DEFAULT_PRECISION);
+    }
     std::string res = sign ? "-" : "";
     res += numerator.toString();
     if (denominator != 1) {
@@ -96,7 +103,7 @@ namespace fintamath {
   }
 
   bool Rational::equals(const Rational &rhs) const {
-    return sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator;
+    return sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator && precise == rhs.precise;
   }
 
   bool Rational::less(const Rational &rhs) const {
@@ -118,6 +125,7 @@ namespace fintamath {
     toCommonDenominators(*this, tmpRhs);
     numerator += tmpRhs.numerator;
     toIrreducibleRational();
+    solvePrecision(rhs);
     return *this;
   }
 
@@ -126,6 +134,7 @@ namespace fintamath {
     toCommonDenominators(*this, tmpRhs);
     numerator -= tmpRhs.numerator;
     toIrreducibleRational();
+    solvePrecision(rhs);
     return *this;
   }
 
@@ -134,6 +143,7 @@ namespace fintamath {
     denominator *= rhs.denominator;
     sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
     toIrreducibleRational();
+    solvePrecision(rhs);
     return *this;
   }
 
@@ -142,6 +152,7 @@ namespace fintamath {
     denominator *= rhs.numerator;
     sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
     toIrreducibleRational();
+    solvePrecision(rhs);
     return *this;
   }
 
@@ -218,6 +229,10 @@ namespace fintamath {
     numerator /= gcdVal;
     denominator /= gcdVal;
     fixZero();
+  }
+
+  void Rational::solvePrecision(const Rational &rhs) {
+    precise = precise && rhs.precise;
   }
 
   void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {

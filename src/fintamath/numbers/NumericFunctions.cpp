@@ -454,7 +454,7 @@ namespace fintamath {
   // Using Taylor series: e = sum_{k=0}^{inf} 1/n!
   Rational getE(int64_t precision) {
     if (precision <= E_INITIAL_PRECISION) {
-      return E_CONST;
+      return E_CONST.round(E_INITIAL_PRECISION);
     }
 
     Integer step = 1;
@@ -488,7 +488,7 @@ namespace fintamath {
   */
   Rational getPi(int64_t precision) {
     if (precision <= PI_INITIAL_PRECISION) {
-      return PI_CONST;
+      return PI_CONST.round(PI_INITIAL_PRECISION);
     }
 
     Integer step = lb(Integer(precision), precision).getInteger() + 1;

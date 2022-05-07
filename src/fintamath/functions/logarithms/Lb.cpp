@@ -8,7 +8,7 @@ namespace fintamath {
   }
 
   MathObjectPtr Lb::operator()(const MathObject &rhs) const {
-    const int64_t defaultPrecision = 36;
+    const int64_t defaultPrecision = 45;
     if (!rhs.instanceOf<Arithmetic>()) {
       throw std::invalid_argument("Types must be Arithmetic");
     }

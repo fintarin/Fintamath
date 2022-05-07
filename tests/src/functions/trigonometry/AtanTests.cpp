@@ -2,7 +2,6 @@
 
 #include "fintamath/functions/trigonometry/Atan.hpp"
 
-#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -13,16 +12,16 @@ TEST(AtanTests, toStringTest) {
 }
 
 TEST(AtanTests, callTest) {
-  EXPECT_EQ(Atan()(Integer(0))->to<Rational>().toString(5), "0");
-  EXPECT_EQ(Atan()(Integer(1))->to<Rational>().toString(36), "0.785398163397448309615660845819875716");
-  EXPECT_EQ(Atan()(Integer(10))->to<Rational>().toString(10), "1.4711276743");
-  EXPECT_EQ(Atan()(Integer(-10))->to<Rational>().toString(10), "-1.4711276743");
-  EXPECT_EQ(Atan()(Rational(1, 10))->to<Rational>().toString(10), "0.0996686525");
+  EXPECT_EQ(Atan()(Integer(0))->toString(), "0");
+  EXPECT_EQ(Atan()(Integer(1))->toString(), "0.785398163397448309615660845819875721");
+  EXPECT_EQ(Atan()(Integer(10))->toString(), "1.471127674303734591852875571761730852");
+  EXPECT_EQ(Atan()(Integer(-10))->toString(), "-1.471127674303734591852875571761730852");
+  EXPECT_EQ(Atan()(Rational(1, 10))->toString(), "0.09966865249116202737844611987802059");
 
   EXPECT_ANY_THROW(Atan()(Variable("a")));
 
   std::unique_ptr<Function> f = std::make_unique<Atan>();
-  EXPECT_EQ((*f)(Integer(10))->to<Rational>().toString(10), "1.4711276743");
+  EXPECT_EQ((*f)(Integer(10))->toString(), "1.471127674303734591852875571761730852");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }

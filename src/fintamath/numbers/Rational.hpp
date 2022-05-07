@@ -59,10 +59,13 @@ namespace fintamath {
 
     void toIrreducibleRational();
 
+    void solvePrecision(const Rational &rhs);
+
     static void toCommonDenominators(Rational &lhs, Rational &rhs);
 
     Integer numerator = 0;
     Integer denominator = 1;
     bool sign{};
+    bool precise{true};
   };
 }
