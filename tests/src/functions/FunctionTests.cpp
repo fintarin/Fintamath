@@ -2,42 +2,16 @@
 
 #include "fintamath/functions/Function.hpp"
 
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
-#include "fintamath/variables/Variable.hpp"
 
 using namespace fintamath;
 
-namespace fintamath::tests {
-  class TestAdd : public FunctionImpl<TestAdd> {
-  public:
-    std::string toString() const override {
-      return "+";
-    }
-
-    MathObjectPtr operator()(const MathObject &lhs, const MathObject &rhs) const {
-      if (!lhs.instanceOf<Arithmetic>() || !rhs.instanceOf<Arithmetic>()) {
-        throw std::invalid_argument("Types must be Arithmetic");
-      }
-      return lhs.to<Arithmetic>() + rhs.to<Arithmetic>();
-    }
-
-  protected:
-    MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override {
-      if (argsVect.size() != 2) {
-        throw std::invalid_argument("The number of arguments must be 2");
-      }
-      return TestAdd::operator()(argsVect.at(0).get(), argsVect.at(1).get());
-    }
-
-    bool equals(const TestAdd & /*rhs*/) const override {
-      return true;
-    }
-  };
-}
-
 TEST(FunctionTests, callTests) {
-  FunctionPtr f = std::make_unique<tests::TestAdd>();
+  FunctionPtr f = std::make_unique<Add>();
   Integer a = 3;
   Rational b(1, 2);
 
@@ -52,4 +26,11 @@ TEST(FunctionTests, callTests) {
   EXPECT_THROW((*f)(a), std::invalid_argument);
   EXPECT_THROW((*f)(a, a, a), std::invalid_argument);
   EXPECT_THROW((*f)(a, a, a, a, a, a, a), std::invalid_argument);
+}
+
+TEST(FunctionTests, equalsTests) {
+  EXPECT_TRUE(Add() == Add());
+
+  EXPECT_FALSE(Add() == Sub());
+  EXPECT_FALSE(Sub() == Add());
 }

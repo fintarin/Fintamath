@@ -26,5 +26,10 @@ namespace fintamath {
   class FunctionImpl : virtual public Function, virtual public MathObjectImpl<Derived> {
   public:
     ~FunctionImpl() override = default;
+
+  protected:
+    bool equals(const Derived & /*rhs*/) const override {
+      return true;
+    }
   };
 }

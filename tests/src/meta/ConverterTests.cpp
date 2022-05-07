@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "fintamath/meta/Converter.hpp"
+
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;

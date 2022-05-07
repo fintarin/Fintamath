@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 project(
   fintamath
   LANGUAGES CXX
-  VERSION 0.2)
+  VERSION 0.3)
 
 include(cmake/PreventInSourceBuilds.cmake)
 
