@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/factorials/Factorial.hpp>
+#include "fintamath/functions/factorials/Factorial.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(FactorialTests, toStringTest) {
   EXPECT_EQ(Factorial().toString(), "!");
 }
 
-TEST(FactorialTests, callTest){
+TEST(FactorialTests, callTest) {
   EXPECT_EQ(Factorial()(Integer(0))->to<Rational>().toString(), "1");
   EXPECT_EQ(Factorial()(Integer(1))->to<Rational>().toString(), "1");
   EXPECT_EQ(Factorial()(Integer(10))->to<Rational>().toString(), "3628800");

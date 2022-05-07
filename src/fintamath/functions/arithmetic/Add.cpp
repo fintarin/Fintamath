@@ -1,10 +1,12 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 
-namespace fintamath {
+#include "fintamath/core/Arithmetic.hpp"
 
-  int Add::getPriority() const{
+namespace fintamath {
+  int Add::getPriority() const {
     return priority;
   }
+
   std::string Add::toString() const {
     return "+";
   }
@@ -26,5 +28,4 @@ namespace fintamath {
     }
     return Add::operator()(argsVect.at(0).get(), argsVect.at(1).get());
   }
-
 }

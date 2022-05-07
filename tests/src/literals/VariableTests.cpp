@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(VariableTest, stringConstructorTest){
+TEST(VariableTest, stringConstructorTest) {
   EXPECT_EQ(Variable("a").toString(), "a");
 
   EXPECT_THROW(Variable("10"), std::invalid_argument);
@@ -12,12 +12,12 @@ TEST(VariableTest, stringConstructorTest){
   EXPECT_THROW(Variable(""), std::invalid_argument);
 }
 
-TEST(VariableTest, toStringTest){
+TEST(VariableTest, toStringTest) {
   EXPECT_EQ(Variable("a").toString(), "a");
   EXPECT_EQ(Variable("Z").toString(), "Z");
 }
 
-TEST(VariableTests, equalsTests){
+TEST(VariableTests, equalsTests) {
   EXPECT_TRUE(Variable("a") == Variable("a"));
   EXPECT_FALSE(Variable("z") == Variable("Z"));
 }

@@ -1,4 +1,5 @@
-#include "Atan.hpp"
+#include "fintamath/functions/trigonometry/Atan.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -16,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::atan(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Atan::equals(const Atan &/*rhs*/) const {
+  bool Atan::equals(const Atan & /*rhs*/) const {
     return true;
   }
 

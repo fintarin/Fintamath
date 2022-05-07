@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/other/Percent.hpp>
+#include "fintamath/functions/other/Percent.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(PercentTests, toStringTest) {
   EXPECT_EQ(Percent().toString(), "%");
 }
 
-TEST(PercentTests, callTest){
+TEST(PercentTests, callTest) {
   EXPECT_EQ(Percent()(Integer(1))->to<Rational>().toString(5), "0.01");
   EXPECT_EQ(Percent()(Integer(1000))->to<Rational>().toString(10), "10");
   EXPECT_EQ(Percent()(Integer(-10))->to<Rational>().toString(10), "-0.1");

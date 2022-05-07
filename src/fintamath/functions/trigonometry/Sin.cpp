@@ -1,4 +1,5 @@
-#include "Sin.hpp"
+#include "fintamath/functions/trigonometry/Sin.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -16,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::sin(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Sin::equals(const Sin &/*rhs*/) const {
+  bool Sin::equals(const Sin & /*rhs*/) const {
     return true;
   }
 

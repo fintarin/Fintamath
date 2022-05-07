@@ -1,8 +1,8 @@
-#include "Lb.hpp"
+#include "fintamath/functions/logarithms/Lb.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
-
   std::string Lb::toString() const {
     return "lb";
   }
@@ -26,5 +26,4 @@ namespace fintamath {
     }
     return Lb::operator()(argsVect.at(0).get());
   }
-
 }

@@ -4,7 +4,7 @@
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
   if (rhs.is<Derived>()) {                                                                                             \
-    return *this OPER rhs.to<Derived>();                                                                                   \
+    return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
   if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                              \
     return *this OPER tmp->template to<Comparable>();                                                                  \

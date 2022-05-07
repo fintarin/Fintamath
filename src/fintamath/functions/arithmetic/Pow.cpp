@@ -1,4 +1,5 @@
 #include "fintamath/functions/arithmetic/Pow.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -6,7 +7,7 @@ namespace fintamath {
     return "^";
   }
 
-  int Pow::getPriority() const{
+  int Pow::getPriority() const {
     return priority;
   }
   bool Pow::equals(const Pow & /*rhs*/) const {

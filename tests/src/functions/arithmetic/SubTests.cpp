@@ -1,8 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Neg.hpp>
-#include <fintamath/literals/Variable.hpp>
 
 #include "fintamath/functions/arithmetic/Sub.hpp"
+
+#include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -14,7 +16,7 @@ TEST(SubTests, getPriorityTest) {
   EXPECT_EQ(Sub().getPriority(), 1);
 }
 
-TEST(SubTests, callTest){
+TEST(SubTests, callTest) {
   EXPECT_EQ(Sub()(Integer(3), Integer(5))->toString(), "-2");
   EXPECT_EQ(Sub()(Integer(3), Rational(5, 2))->toString(), "1/2");
   EXPECT_EQ(Sub()(Rational(5, 2), Integer(3))->toString(), "-1/2");

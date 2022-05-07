@@ -1,4 +1,5 @@
-#include "Asin.hpp"
+#include "fintamath/functions/trigonometry/Asin.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -16,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::asin(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Asin::equals(const Asin &/*rhs*/) const {
+  bool Asin::equals(const Asin & /*rhs*/) const {
     return true;
   }
 

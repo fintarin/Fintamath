@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <fintamath/numbers/Rational.hpp>
+#include "fintamath/expressions/Expression.hpp"
+
 #include <fstream>
 
-#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -59,16 +60,15 @@ TEST(ExpressionTests, constructorSimplifyTest) {
 TEST(ExpressionsTest, simplifyTest) {
   EXPECT_EQ(Expression("e^101").simplify()->to<Rational>().toString(10),
             "73070599793680672726476826340615135890078390.0839607076");
-  EXPECT_EQ(Expression("e^101-e^101").simplify()->toString(),
-            "0");
-  EXPECT_EQ(Expression("0.001-0.002").simplify()->to<Rational>().toString(10),
-            "-0.001");
-  EXPECT_EQ(Expression("e^(-101)").simplify()->to<Rational>().toString(10),
-            "0");
+  EXPECT_EQ(Expression("e^101-e^101").simplify()->toString(), "0");
+  EXPECT_EQ(Expression("0.001-0.002").simplify()->to<Rational>().toString(10), "-0.001");
+  EXPECT_EQ(Expression("e^(-101)").simplify()->to<Rational>().toString(10), "0");
   EXPECT_EQ(Expression("e^(-101)/e^(-101)").simplify()->toString(), "1");
   EXPECT_EQ(Expression("(0.004)/(0.002+0.002)").simplify()->toString(), "1");
   EXPECT_EQ(Expression("-1!").simplify()->toString(), "-1");
-  EXPECT_EQ(Expression("-100!").simplify()->toString(), "-93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000");
+  EXPECT_EQ(Expression("-100!").simplify()->toString(),
+            "-933262154439441526816992388562667004907159682643816214685929638952175999932299156089414639761565182862536"
+            "97920827223758251185210916864000000000000000000000000");
   EXPECT_EQ(Expression("ln(3)").simplify()->to<Rational>().toString(36), "1.098612288668109691395245236922525582");
   EXPECT_EQ(Expression("ln(2)").simplify()->to<Rational>().toString(36), "0.693147180559945309417232121458176479");
   EXPECT_EQ(Expression("e").simplify()->to<Rational>().toString(36), "2.718281828459045235360287471352662498");

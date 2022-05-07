@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/trigonometry/Acos.hpp>
+#include "fintamath/functions/trigonometry/Acos.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/numbers/Rational.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(AcosTests, toStringTest) {
   EXPECT_EQ(Acos().toString(), "acos");
 }
 
-TEST(AcosTests, callTest){
+TEST(AcosTests, callTest) {
   EXPECT_EQ(Acos()(Integer(1))->to<Rational>().toString(5), "0");
   EXPECT_EQ(Acos()(Integer(0))->to<Rational>().toString(36), "1.570796326794896619231321691639751442");
   EXPECT_EQ(Acos()(Rational(1, 10))->to<Rational>().toString(10), "1.4706289056");

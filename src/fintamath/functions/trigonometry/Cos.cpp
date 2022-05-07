@@ -1,4 +1,5 @@
-#include "Cos.hpp"
+#include "fintamath/functions/trigonometry/Cos.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -16,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::cos(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Cos::equals(const Cos &/*rhs*/) const {
+  bool Cos::equals(const Cos & /*rhs*/) const {
     return true;
   }
 

@@ -1,4 +1,5 @@
-#include "DoubleFactorial.hpp"
+#include "fintamath/functions/factorials/DoubleFactorial.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -15,7 +16,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::doubleFactorial(newRhs->to<Rational>()));
   }
 
-  bool DoubleFactorial::equals(const DoubleFactorial &/*rhs*/) const {
+  bool DoubleFactorial::equals(const DoubleFactorial & /*rhs*/) const {
     return true;
   }
 

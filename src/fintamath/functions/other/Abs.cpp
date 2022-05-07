@@ -1,8 +1,8 @@
-#include "Abs.hpp"
+#include "fintamath/functions/other/Abs.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
-
   std::string Abs::toString() const {
     return "abs";
   }
@@ -16,7 +16,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::abs(newRhs->to<Rational>()));
   }
 
-  bool Abs::equals(const Abs &/*rhs*/) const {
+  bool Abs::equals(const Abs & /*rhs*/) const {
     return true;
   }
 
@@ -26,5 +26,4 @@ namespace fintamath {
     }
     return Abs::operator()(argsVect.at(0).get());
   }
-
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "fintamath/numbers/Rational.hpp"
-#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
@@ -15,7 +13,7 @@ namespace fintamath {
   };
 
   template <typename Derived>
-  class OperatorImpl: virtual public Operator, virtual public MathObjectImpl<Derived> {
+  class OperatorImpl : virtual public Operator, virtual public MathObjectImpl<Derived> {
   public:
     ~OperatorImpl() override = default;
   };

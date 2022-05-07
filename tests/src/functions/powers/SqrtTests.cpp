@@ -1,8 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
 
-#include <fintamath/functions/powers/Sqrt.hpp>
+#include "fintamath/functions/powers/Sqrt.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -10,7 +12,7 @@ TEST(SqrtTests, toStringTest) {
   EXPECT_EQ(Sqrt().toString(), "sqrt");
 }
 
-TEST(SqrtTests, callTest){
+TEST(SqrtTests, callTest) {
   EXPECT_EQ(Sqrt()(Integer(100))->to<Rational>().toString(10), "10");
   EXPECT_EQ(Sqrt()(Integer(10))->to<Rational>().toString(10), "3.1622776602");
   EXPECT_EQ(Sqrt()(Integer(10))->to<Rational>().toString(36), "3.162277660168379331998893544432718533");

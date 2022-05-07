@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/trigonometry/Cot.hpp>
+#include "fintamath/functions/trigonometry/Cot.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Constant.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(CotTests, toStringTest) {
   EXPECT_EQ(Cot().toString(), "cot");
 }
 
-TEST(CotTests, callTest){
+TEST(CotTests, callTest) {
   EXPECT_EQ(Cot()(Constant("pi").toRational(10) / 2)->to<Rational>().toString(5), "-0");
   EXPECT_EQ(Cot()(Integer(10))->to<Rational>().toString(10), "1.5423510454");
   EXPECT_EQ(Cot()(Integer(-10))->to<Rational>().toString(10), "-1.5423510454");

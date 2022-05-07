@@ -1,11 +1,13 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 
+#include "fintamath/core/Arithmetic.hpp"
+
 namespace fintamath {
   std::string Mul::toString() const {
     return "*";
   }
 
-  int Mul::getPriority() const{
+  int Mul::getPriority() const {
     return priority;
   }
 

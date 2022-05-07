@@ -2,9 +2,9 @@
 
 #include "fintamath/functions/Function.hpp"
 
+#include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
-#include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 

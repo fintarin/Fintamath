@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/trigonometry/Tan.hpp>
+#include "fintamath/functions/trigonometry/Tan.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Constant.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(TanTests, toStringTest) {
   EXPECT_EQ(Tan().toString(), "tan");
 }
 
-TEST(TanTests, callTest){
+TEST(TanTests, callTest) {
   EXPECT_EQ(Tan()(Integer(0))->to<Rational>().toString(5), "0");
   EXPECT_EQ(Tan()(Integer(10))->to<Rational>().toString(10), "0.6483608275");
   EXPECT_EQ(Tan()(Integer(-10))->to<Rational>().toString(10), "-0.6483608275");

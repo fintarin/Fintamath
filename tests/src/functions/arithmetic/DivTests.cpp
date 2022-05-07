@@ -1,8 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Sub.hpp>
-#include <fintamath/literals/Variable.hpp>
 
 #include "fintamath/functions/arithmetic/Div.hpp"
+
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -14,7 +16,7 @@ TEST(DivTests, getPriorityTest) {
   EXPECT_EQ(Div().getPriority(), 2);
 }
 
-TEST(DivTests, callTest){
+TEST(DivTests, callTest) {
   EXPECT_EQ(Div()(Integer(3), Integer(5))->toString(), "3/5");
   EXPECT_EQ(Div()(Integer(3), Rational(5, 2))->toString(), "6/5");
   EXPECT_EQ(Div()(Rational(5, 2), Integer(3))->toString(), "5/6");

@@ -1,8 +1,8 @@
-#include "Exp.hpp"
+#include "fintamath/functions/powers/Exp.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
-
   std::string Exp::toString() const {
     return "exp";
   }
@@ -27,5 +27,4 @@ namespace fintamath {
     }
     return Exp::operator()(argsVect.at(0).get());
   }
-
 }

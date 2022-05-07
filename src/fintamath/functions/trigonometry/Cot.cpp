@@ -1,6 +1,5 @@
-#include "Cot.hpp"
+#include "fintamath/functions/trigonometry/Cot.hpp"
 
-#include "fintamath/functions/Function.hpp"
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -18,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::cot(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Cot::equals(const Cot &/*rhs*/) const {
+  bool Cot::equals(const Cot & /*rhs*/) const {
     return true;
   }
 

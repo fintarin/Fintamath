@@ -1,8 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
 
-#include <fintamath/functions/logarithms/Lg.hpp>
+#include "fintamath/functions/logarithms/Lg.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -10,7 +12,7 @@ TEST(LgTests, toStringTest) {
   EXPECT_EQ(Lg().toString(), "lg");
 }
 
-TEST(LgTests, callTest){
+TEST(LgTests, callTest) {
   EXPECT_EQ(Lg()(Integer(10))->to<Rational>().toString(10), "1");
   EXPECT_EQ(Lg()(Integer(20))->to<Rational>().toString(10), "1.3010299957");
   EXPECT_EQ(Lg()(Integer(2))->to<Rational>().toString(36), "0.301029995663981195213738894724493001");

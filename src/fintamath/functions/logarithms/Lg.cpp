@@ -1,8 +1,8 @@
-#include "Lg.hpp"
+#include "fintamath/functions/logarithms/Lg.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
-
   std::string Lg::toString() const {
     return "lg";
   }
@@ -26,5 +26,4 @@ namespace fintamath {
     }
     return Lg::operator()(argsVect.at(0).get());
   }
-
 }

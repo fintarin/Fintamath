@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/trigonometry/Atan.hpp>
+#include "fintamath/functions/trigonometry/Atan.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(AtanTests, toStringTest) {
   EXPECT_EQ(Atan().toString(), "atan");
 }
 
-TEST(AtanTests, callTest){
+TEST(AtanTests, callTest) {
   EXPECT_EQ(Atan()(Integer(0))->to<Rational>().toString(5), "0");
   EXPECT_EQ(Atan()(Integer(1))->to<Rational>().toString(36), "0.785398163397448309615660845819875716");
   EXPECT_EQ(Atan()(Integer(10))->to<Rational>().toString(10), "1.4711276743");

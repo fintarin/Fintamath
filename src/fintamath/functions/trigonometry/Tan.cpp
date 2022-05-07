@@ -1,4 +1,4 @@
-#include "Tan.hpp"
+#include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -16,7 +16,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::tan(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Tan::equals(const Tan &/*rhs*/) const {
+  bool Tan::equals(const Tan & /*rhs*/) const {
     return true;
   }
 

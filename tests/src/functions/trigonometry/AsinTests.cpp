@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/trigonometry/Asin.hpp>
+#include "fintamath/functions/trigonometry/Asin.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(AsinTests, toStringTest) {
   EXPECT_EQ(Asin().toString(), "asin");
 }
 
-TEST(AsinTests, callTest){
+TEST(AsinTests, callTest) {
   EXPECT_EQ(Asin()(Integer(0))->to<Rational>().toString(5), "0");
   EXPECT_EQ(Asin()(Integer(1))->to<Rational>().toString(36), "1.570796326794896619231321691639751442");
   EXPECT_EQ(Asin()(Rational(1, 10))->to<Rational>().toString(10), "0.1001674212");

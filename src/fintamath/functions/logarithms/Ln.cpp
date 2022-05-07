@@ -1,4 +1,5 @@
-#include "Ln.hpp"
+#include "fintamath/functions/logarithms/Ln.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -16,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::ln(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Ln::equals(const Ln &/*rhs*/) const {
+  bool Ln::equals(const Ln & /*rhs*/) const {
     return true;
   }
 
@@ -27,4 +28,3 @@ namespace fintamath {
     return Ln::operator()(argsVect.at(0).get());
   }
 }
-

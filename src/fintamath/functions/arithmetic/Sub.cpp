@@ -1,11 +1,13 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 
+#include "fintamath/core/Arithmetic.hpp"
+
 namespace fintamath {
   std::string Sub::toString() const {
     return "-";
   }
 
-  int Sub::getPriority() const{
+  int Sub::getPriority() const {
     return priority;
   }
   bool Sub::equals(const Sub & /*rhs*/) const {

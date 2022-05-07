@@ -1,4 +1,5 @@
-#include "Acot.hpp"
+#include "fintamath/functions/trigonometry/Acot.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -16,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::acot(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Acot::equals(const Acot &/*rhs*/) const {
+  bool Acot::equals(const Acot & /*rhs*/) const {
     return true;
   }
 

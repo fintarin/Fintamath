@@ -1,13 +1,16 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 
+#include "fintamath/core/Arithmetic.hpp"
+
 namespace fintamath {
   std::string Neg::toString() const {
     return "-";
   }
 
-  int Neg::getPriority() const{
+  int Neg::getPriority() const {
     return priority;
   }
+
   bool Neg::equals(const Neg & /*rhs*/) const {
     return true;
   }

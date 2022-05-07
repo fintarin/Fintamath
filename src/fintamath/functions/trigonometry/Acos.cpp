@@ -1,4 +1,5 @@
-#include "Acos.hpp"
+#include "fintamath/functions/trigonometry/Acos.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -16,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::acos(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Acos::equals(const Acos &/*rhs*/) const {
+  bool Acos::equals(const Acos & /*rhs*/) const {
     return true;
   }
 

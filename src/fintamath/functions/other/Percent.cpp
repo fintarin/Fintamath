@@ -1,5 +1,6 @@
-#include "Percent.hpp"
-#include "fintamath/numbers/NumericFunctions.hpp"
+#include "fintamath/functions/other/Percent.hpp"
+
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
   std::string Percent::toString() const {
@@ -16,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(newRhs->to<Rational>() / percentValue);
   }
 
-  bool Percent::equals(const Percent &/*rhs*/) const {
+  bool Percent::equals(const Percent & /*rhs*/) const {
     return true;
   }
 

@@ -1,8 +1,8 @@
-#include "Sqrt.hpp"
+#include "fintamath/functions/powers/Sqrt.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
-
   std::string Sqrt::toString() const {
     return "sqrt";
   }
@@ -17,7 +17,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::sqrt(newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Sqrt::equals(const Sqrt &/*rhs*/) const {
+  bool Sqrt::equals(const Sqrt & /*rhs*/) const {
     return true;
   }
 
@@ -27,5 +27,4 @@ namespace fintamath {
     }
     return Sqrt::operator()(argsVect.at(0).get());
   }
-
 }

@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/trigonometry/Cos.hpp>
+#include "fintamath/functions/trigonometry/Cos.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Constant.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(CosTests, toStringTest) {
   EXPECT_EQ(Cos().toString(), "cos");
 }
 
-TEST(CosTests, callTest){
+TEST(CosTests, callTest) {
   EXPECT_EQ(Cos()(Integer(0))->to<Rational>().toString(5), "1");
   EXPECT_EQ(Cos()(Integer(10))->to<Rational>().toString(10), "-0.8390715291");
   EXPECT_EQ(Cos()(Integer(5))->to<Rational>().toString(36), "0.283662185463226264466639171513557308");

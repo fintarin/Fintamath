@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <fintamath/functions/arithmetic/Add.hpp>
-#include <fintamath/literals/Variable.hpp>
-#include <fintamath/literals/Constant.hpp>
 
-#include <fintamath/functions/trigonometry/Sin.hpp>
+#include "fintamath/functions/trigonometry/Sin.hpp"
+
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/literals/Constant.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ TEST(SinTests, toStringTest) {
   EXPECT_EQ(Sin().toString(), "sin");
 }
 
-TEST(SinTests, callTest){
+TEST(SinTests, callTest) {
   EXPECT_EQ(Sin()(Integer(0))->to<Rational>().toString(5), "0");
   EXPECT_EQ(Sin()(Integer(10))->to<Rational>().toString(10), "-0.5440211109");
   EXPECT_EQ(Sin()(Integer(5))->to<Rational>().toString(36), "-0.958924274663138468893154406155993973");

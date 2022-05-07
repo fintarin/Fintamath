@@ -1,8 +1,8 @@
-#include "Log.hpp"
+#include "fintamath/functions/logarithms/Log.hpp"
+
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
-
   std::string Log::toString() const {
     return "log";
   }
@@ -18,7 +18,7 @@ namespace fintamath {
     return std::make_unique<Rational>(functions::log(newLhs->to<Rational>(), newRhs->to<Rational>(), defaultPrecision));
   }
 
-  bool Log::equals(const Log &/*rhs*/) const {
+  bool Log::equals(const Log & /*rhs*/) const {
     return true;
   }
 
@@ -28,5 +28,4 @@ namespace fintamath {
     }
     return Log::operator()(argsVect.at(0).get(), argsVect.at(1).get());
   }
-
 }
