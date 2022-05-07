@@ -1,4 +1,4 @@
-#include "fintamath/functions/arithmetic/Pow.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 
 #include "fintamath/numbers/NumericFunctions.hpp"
 
