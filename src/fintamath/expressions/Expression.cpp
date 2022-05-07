@@ -64,6 +64,7 @@ namespace fintamath {
     }
     return strExpr;
   }
+
   Expression::Expression(const Expression &rhs) noexcept {
     if (rhs.info) {
       info = rhs.info->clone();
@@ -95,7 +96,7 @@ namespace fintamath {
   }
 
   Expression::Expression(const std::string &str) {
-    *this = *parseExpression(cutSpaces(str));
+    *this = *parseExpression(str);
     *this = *baseSimplify();
   }
 
@@ -249,10 +250,11 @@ namespace fintamath {
    * Args: Expr, Args | Expr
    */
   ExprPtr Expression::parseExpression(const std::string &exprStr) {
-    if (exprStr.empty()) {
+    auto expr = cutSpaces(exprStr);
+    if (expr.empty()) {
       throw std::invalid_argument("Expression invalid input");
     }
-    auto expr = cutSpaces(exprStr);
+
     Expression elem;
 
     for (size_t i = expr.size() - 1; i > 0; i--) {
