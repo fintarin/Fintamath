@@ -18,7 +18,7 @@ namespace fintamath {
     }
     auto newLhs = meta::convertRhsToLhsType(Rational(), lhs);
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(pow(newLhs->to<Rational>(), newRhs->to<Rational>(), defaultPrecision));
+    return pow(newLhs->to<Rational>(), newRhs->to<Rational>(), defaultPrecision).simplify();
   }
 
   MathObjectPtr Pow::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
