@@ -16,8 +16,3 @@ TEST(VariableTest, toStringTest) {
   EXPECT_EQ(Variable("a").toString(), "a");
   EXPECT_EQ(Variable("Z").toString(), "Z");
 }
-
-TEST(VariableTests, equalsTests) {
-  EXPECT_TRUE(Variable("a") == Variable("a"));
-  EXPECT_FALSE(Variable("z") == Variable("Z"));
-}

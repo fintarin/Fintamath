@@ -25,10 +25,6 @@ namespace fintamath {
     return name;
   }
 
-  bool Constant::equals(const Constant &rhs) const {
-    return name == rhs.name;
-  }
-
   void Constant::parse(const std::string &str) {
     if (!isConstant(str)) {
       throw std::invalid_argument("Constant invalid input");

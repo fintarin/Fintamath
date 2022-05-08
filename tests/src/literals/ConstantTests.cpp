@@ -28,8 +28,3 @@ TEST(ConstantTest, toStringTest) {
   EXPECT_EQ(Constant("e").toString(), "e");
   EXPECT_EQ(Constant("pi").toString(), "pi");
 }
-
-TEST(ConstantTests, equalsTests) {
-  EXPECT_TRUE(Constant("e") == Constant("e"));
-  EXPECT_FALSE(Constant("e") == Constant("pi"));
-}

@@ -1,18 +1,13 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/literals/Literal.hpp"
 
 namespace fintamath {
-  class Variable : public MathObjectImpl<Variable> {
+  class Variable : public LiteralImpl<Variable> {
   public:
     explicit Variable(const std::string &str);
 
     std::string toString() const override;
-
-    bool equals(const Variable &rhs) const override;
 
   private:
     void parse(const std::string &str);
