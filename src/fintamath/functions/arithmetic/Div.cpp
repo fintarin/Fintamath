@@ -13,7 +13,7 @@ namespace fintamath {
 
   MathObjectPtr Div::operator()(const MathObject &lhs, const MathObject &rhs) const {
     if (!lhs.instanceOf<Arithmetic>() || !rhs.instanceOf<Arithmetic>()) {
-      throw std::invalid_argument("Types must be Arithmetic");
+      throw std::invalid_argument("Lhs and Rhs must be Arithmetic");
     }
     return lhs.to<Arithmetic>() / rhs.to<Arithmetic>();
   }

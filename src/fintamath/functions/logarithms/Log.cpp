@@ -10,7 +10,7 @@ namespace fintamath {
   MathObjectPtr Log::operator()(const MathObject &lhs, const MathObject &rhs) const {
     const int64_t defaultPrecision = 45;
     if (!rhs.instanceOf<Arithmetic>()) {
-      throw std::invalid_argument("Types must be Arithmetic");
+      throw std::invalid_argument("Lhs and Rhs must be Arithmetic");
     }
 
     auto newLhs = meta::convertRhsToLhsType(Rational(), lhs);

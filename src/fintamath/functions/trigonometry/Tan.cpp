@@ -9,7 +9,7 @@ namespace fintamath {
   MathObjectPtr Tan::operator()(const MathObject &rhs) const {
     const int64_t defaultPrecision = 45;
     if (!rhs.instanceOf<Number>()) {
-      throw std::invalid_argument("Types must be Arithmetic");
+      throw std::invalid_argument("Rhs must be Number");
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);

@@ -9,7 +9,7 @@ namespace fintamath {
 
   MathObjectPtr Abs::operator()(const MathObject &rhs) const {
     if (!rhs.instanceOf<Arithmetic>()) {
-      throw std::invalid_argument("Types must be Arithmetic");
+      throw std::invalid_argument("Rhs must be Arithmetic");
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);

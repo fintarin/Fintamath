@@ -10,7 +10,7 @@ namespace fintamath {
   MathObjectPtr Percent::operator()(const MathObject &rhs) const {
     const int64_t percentValue = 100;
     if (!rhs.instanceOf<Arithmetic>()) {
-      throw std::invalid_argument("Types must be Arithmetic");
+      throw std::invalid_argument("Rhs must be Arithmetic");
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);

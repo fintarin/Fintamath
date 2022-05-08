@@ -13,7 +13,7 @@ namespace fintamath {
 
   MathObjectPtr Neg::operator()(const MathObject &rhs) const {
     if (!rhs.instanceOf<Arithmetic>()) {
-      throw std::invalid_argument("Types must be Arithmetic");
+      throw std::invalid_argument("Rhs must be Arithmetic");
     }
     return -rhs.to<Arithmetic>();
   }
