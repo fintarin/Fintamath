@@ -10,5 +10,3 @@ target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${PROJECT_NAME} gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}_tests)
-
-add_definitions(-DRESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")

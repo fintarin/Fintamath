@@ -64,6 +64,7 @@ namespace fintamath {
     }
     return strExpr;
   }
+
   Expression::Expression(const Expression &rhs) noexcept {
     if (rhs.info) {
       info = rhs.info->clone();
@@ -95,7 +96,7 @@ namespace fintamath {
   }
 
   Expression::Expression(const std::string &str) {
-    *this = *parseExpression(cutSpaces(str));
+    *this = *parseExpression(str);
     *this = *baseSimplify();
   }
 
@@ -249,10 +250,11 @@ namespace fintamath {
    * Args: Expr, Args | Expr
    */
   ExprPtr Expression::parseExpression(const std::string &exprStr) {
-    if (exprStr.empty()) {
+    auto expr = cutSpaces(exprStr);
+    if (expr.empty()) {
       throw std::invalid_argument("Expression invalid input");
     }
-    auto expr = cutSpaces(exprStr);
+
     Expression elem;
 
     for (size_t i = expr.size() - 1; i > 0; i--) {
@@ -397,15 +399,12 @@ namespace fintamath {
   }
 
   ExprPtr Expression::parseFunction(const std::string &term) {
-    if (std::regex reg(R"(^((sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|atan|acot|abs)\(.+\))$)");
-        regex_search(term, reg)) {
-      std::string funcName;
-      size_t pos = 0;
-      while (term.at(pos) != '(') {
-        funcName += term.at(pos);
-        pos++;
-      }
+    std::regex reg("^(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|atan|acot|abs)");
+    std::smatch funcNameMatch;
+    std::regex_search(term, funcNameMatch, reg);
 
+    if (!funcNameMatch.empty()) {
+      std::string funcName = funcNameMatch.str();
       Expression expr;
 
       if (funcName == "sqrt") {
@@ -439,10 +438,10 @@ namespace fintamath {
       } else if (funcName == "abs") {
         expr.info = std::make_shared<Abs>();
       } else {
-        throw std::invalid_argument("Expression invalid input");
+        return {};
       }
 
-      expr.children = getArgs(cutBraces(term.substr(pos)));
+      expr.children = getArgs(cutBraces(term.substr(funcName.size())));
       return std::make_shared<Expression>(expr);
     }
 
@@ -1000,7 +999,7 @@ namespace fintamath {
   MathObjectPtr Expression::simplify() const {
     auto newExpr = std::make_shared<Expression>(*this);
     newExpr = simplifyConstant(newExpr);
-    newExpr = simplifyFunctions(newExpr);
+    newExpr = simplifyFunctions(newExpr); // TODO: fix nested functions
     newExpr = simplifyOperators(newExpr);
     newExpr = invertSubDiv(newExpr);
     newExpr = simplifyNeg(newExpr);
