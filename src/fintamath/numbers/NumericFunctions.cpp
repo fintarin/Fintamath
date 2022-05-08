@@ -6,13 +6,11 @@
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  // NOLINTNEXTLINE
   const Rational E_CONST("2.71828182845904523536028747135266249775724709369995957496696762772407663035354759");
-  const int64_t E_INITIAL_PRECISION = 72;
+  constexpr int64_t E_INITIAL_PRECISION = 72;
 
-  // NOLINTNEXTLINE
   const Rational PI_CONST("3.14159265358979323846264338327950288419716939937510582097494459230781640628620899");
-  const int64_t PI_INITIAL_PRECISION = 72;
+  constexpr int64_t PI_INITIAL_PRECISION = 72;
 
   int64_t getNewPrecision(int64_t precision);
   Rational getInversedPrecisionVal(int64_t precision);
@@ -84,7 +82,7 @@ namespace fintamath {
 
   // log2(a)
   Rational lb(const Rational &rhs, int64_t precision) {
-    const int64_t logBase = 2;
+    constexpr int64_t logBase = 2;
     try {
       return log(Integer(logBase), rhs, precision);
     } catch (const std::domain_error &) {
@@ -94,7 +92,7 @@ namespace fintamath {
 
   // log10(a)
   Rational lg(const Rational &rhs, int64_t precision) {
-    const int64_t logBase = 10;
+    constexpr int64_t logBase = 10;
     try {
       return log(Integer(logBase), rhs, precision);
     } catch (const std::domain_error &) {

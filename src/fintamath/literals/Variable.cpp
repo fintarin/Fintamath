@@ -13,10 +13,6 @@ namespace fintamath {
     return name;
   }
 
-  bool Variable::equals(const Variable &rhs) const {
-    return this->name == rhs.name;
-  }
-
   void Variable::parse(const std::string &str) {
     if (!isVariable(str)) {
       throw std::invalid_argument("Variable invalid input");

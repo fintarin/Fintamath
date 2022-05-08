@@ -9,7 +9,7 @@ namespace fintamath {
 
   MathObjectPtr Factorial::operator()(const MathObject &rhs) const {
     if (!rhs.is<Integer>()) {
-      throw std::invalid_argument("Types must be Arithmetic");
+      throw std::invalid_argument("Rhs must be Integer");
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);

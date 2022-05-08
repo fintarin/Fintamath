@@ -44,8 +44,8 @@ namespace fintamath {
   }
 
   std::string Rational::toString(int64_t precision) const {
-    const int64_t base = 10;
-    const int64_t roundUp = 5;
+    constexpr int64_t base = 10;
+    constexpr int64_t roundUp = 5;
 
     std::string precisionStr(size_t(precision) + 2, '0');
     precisionStr.front() = '1';
