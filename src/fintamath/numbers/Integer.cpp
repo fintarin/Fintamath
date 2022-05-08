@@ -233,8 +233,8 @@ namespace fintamath {
   }
 
   bool canConvert(const std::string_view &str) {
-    const int64_t firstDigit = 0;
-    const int64_t lastDigit = 9;
+    constexpr int64_t firstDigit = 0;
+    constexpr int64_t lastDigit = 9;
     return std::all_of(str.begin(), str.end(),
                        [&](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
   }
@@ -605,7 +605,7 @@ namespace fintamath {
     5.To the resulting difference carry the next facet and follow the algorithm.
   */
   IntVector sqrt(const IntVector &rhs) {
-    const int64_t base = 10;
+    constexpr int64_t base = 10;
 
     IntVector val{int64_t(std::sqrt(double(rhs.back())))};
     IntVector diff;
