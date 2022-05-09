@@ -12,8 +12,7 @@ namespace fintamath {
       throw std::invalid_argument("Rhs must be Integer");
     }
 
-    auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(factorial(newRhs->to<Rational>()));
+    return std::make_unique<Integer>(factorial(rhs.to<Integer>()));
   }
 
   MathObjectPtr Factorial::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
