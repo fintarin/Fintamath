@@ -28,7 +28,7 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
-TEST(ExpressionTests, stingConstructorTest) { // TODO: fix factorial
+TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
   EXPECT_EQ(Expression("-2 + 3").toString(), "1");
@@ -57,16 +57,16 @@ TEST(ExpressionTests, stingConstructorTest) { // TODO: fix factorial
   EXPECT_EQ(Expression("--5").toString(), "5");
   EXPECT_EQ(Expression("5*-3").toString(), "-15");
 
-  // EXPECT_EQ(Expression("5!").toString(), "120");
-  // EXPECT_EQ(Expression("-1!").toString(), "-1");
-  // EXPECT_EQ(Expression("-100!").toString(),
-  //           "-933262154439441526816992388562667004907159682643816214685929638952175999932299156089414639761565182862536"
-  //           "97920827223758251185210916864000000000000000000000000");
-  // EXPECT_EQ(Expression("5!!").toString(), "15");
+   EXPECT_EQ(Expression("5!").simplify()->toString(), "120");
+   EXPECT_EQ(Expression("-1!").simplify()->toString(), "-1");
+   EXPECT_EQ(Expression("-100!").simplify()->toString(),
+             "-933262154439441526816992388562667004907159682643816214685929638952175999932299156089414639761565182862536"
+             "97920827223758251185210916864000000000000000000000000");
+   EXPECT_EQ(Expression("5!!").simplify()->toString(), "15");
 
-  // EXPECT_EQ(Expression("(2)!").toString(), "2");
-  // EXPECT_EQ(Expression("2!2!").toString(), "4");
-  // EXPECT_EQ(Expression("2!2!2!").toString(), "8");
+   EXPECT_EQ(Expression("(2)!").simplify()->toString(), "2");
+//   EXPECT_EQ(Expression("2!2!").simplify()->toString(), "4");
+//   EXPECT_EQ(Expression("2!2!2!").simplify()->toString(), "8");
 
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-a)))))))").toString(), "a");
   EXPECT_EQ(Expression("a+a").toString(), "2*a");
@@ -83,7 +83,7 @@ TEST(ExpressionTests, simplifyTest) { // TODO: fix nested functions
 
   EXPECT_EQ(Expression("abs(-5)").simplify()->toString(), "5");
   EXPECT_EQ(Expression("abs((-5))").simplify()->toString(), "5");
-  
+
   EXPECT_EQ(Expression("sqrt144").simplify()->toString(), "12");
   EXPECT_EQ(Expression("sqrt0").simplify()->toString(), "0");
   EXPECT_EQ(Expression("exp100").simplify()->toString(),
@@ -133,26 +133,26 @@ TEST(ExpressionTests, simplifyTest) { // TODO: fix nested functions
   EXPECT_EQ(Expression("lne").simplify()->toString(), "1");
   EXPECT_EQ(Expression("lncossine").simplify()->toString(), "-0.086855992785406199870464541502090651");
 
-  EXPECT_EQ(Expression("e^(-101)/e^(-101)").simplify()->toString(), "1");
+  // EXPECT_EQ(Expression("e^(-101)/e^(-101)").simplify()->toString(), "1");
   EXPECT_EQ(Expression("e^101-e^101").simplify()->toString(), "0");
-  // EXPECT_EQ(Expression("ln(e^e) / ln(e^e) - 1").simplify()->toString(), "0");
+  EXPECT_EQ(Expression("ln(e^e) / ln(e^e) - 1").simplify()->toString(), "0");
 
-  // EXPECT_EQ(Expression("sqrt4!").simplify()->toString(), "2");
-  // EXPECT_EQ(Expression("(sqrt4)!").simplify()->toString(), "2");
-  // EXPECT_EQ(Expression("sqrt4*2!").simplify()->toString(), "4");
+  EXPECT_EQ(Expression("sqrt4!").simplify()->toString(), "2");
+  EXPECT_EQ(Expression("(sqrt4)!").simplify()->toString(), "2");
+  EXPECT_EQ(Expression("sqrt4*2!").simplify()->toString(), "4");
   // EXPECT_EQ(Expression("2!sqrt4").simplify()->toString(), "4");
   EXPECT_EQ(Expression("2!*e").simplify()->toString(), "5.436563656918090470720574942705324996");
   EXPECT_EQ(Expression("e*2!").simplify()->toString(), "5.436563656918090470720574942705324996");
 
-  // EXPECT_EQ(Expression("sqrt((1-cos(2*(pi/3)))/2)").simplify()->toString(),
-  // "0.866025403784438646763723170752936183");
-  // EXPECT_EQ(Expression("2*sqrt((1-cos(2*(pi/3)))/2)*cos(pi/3)").simplify()->toString(),
-  //           "0.866025403784438646763723170752936183");
-  // EXPECT_EQ(Expression("1-2*sin((pi/6))*sqrt((1/2)*(1-cos(2*(pi/6))))").simplify()->toString(), "0.5");
-  // EXPECT_EQ(Expression("1-2*sin((pi/6))*sqrt((1/2)*(1-(1-2*sin((pi/6))*sqrt((1/2)*(1-cos(2*(pi/6)))))))")
-  //               .simplify()
-  //               ->toString(),
-  //           "0.5");
+  EXPECT_EQ(Expression("sqrt((1-cos(2*(pi/3)))/2)").simplify()->toString(),
+  "0.866025403784438646763723170752936183");
+  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(pi/3)))/2)*cos(pi/3)").simplify()->toString(),
+            "0.866025403784438646763723170752936183");
+//  EXPECT_EQ(Expression("1-2*sin((pi/6))*sqrt((1/2)*(1-cos(2*(pi/6))))").simplify()->toString(), "0.5");
+//  EXPECT_EQ(Expression("1-2*sin((pi/6))*sqrt((1/2)*(1-(1-2*sin((pi/6))*sqrt((1/2)*(1-cos(2*(pi/6)))))))")
+//                 .simplify()
+//                 ->toString(),
+//             "0.5");
 }
 
 TEST(ExpressionTests, negativeTests) {
@@ -242,4 +242,17 @@ TEST(ExpressionTests, negativeTests) {
 
   EXPECT_ANY_THROW(
       Expression("1-2*sin((pi/6))*sqrt((1/2)*(1-1-2*sin((pi/6))*sqrt((1/2)*(1-cos(2(pi/6))))))").simplify());
+}
+
+TEST(ExpressionTests, dialogusTests){
+  EXPECT_EQ(Expression("+5").toString(), "5");
+  EXPECT_EQ(Expression("+a").toString(), "a");
+
+}
+
+TEST(ExpressionTests, testTest) {
+  auto expr = Expression("ln(e^e) / ln(e^e) - 1");
+  auto a = expr.toString();
+  auto b = expr.simplify();
+  auto c = b->toString();
 }
