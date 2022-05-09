@@ -39,7 +39,7 @@ namespace fintamath {
 
   Rational acot(const Rational &rhs, int64_t precision);
 
-  Rational factorial(const Rational &rhs);
+  Integer factorial(const Integer &rhs);
 
-  Rational doubleFactorial(const Rational &rhs);
+  Integer doubleFactorial(const Integer &rhs);
 }
