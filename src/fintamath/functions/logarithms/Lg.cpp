@@ -13,7 +13,7 @@ namespace fintamath {
       throw std::invalid_argument("Rhs must be Arithmetic");
     }
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(lg(newRhs->to<Rational>(), defaultPrecision));
+    return lg(newRhs->to<Rational>(), defaultPrecision).simplify();
   }
 
   MathObjectPtr Lg::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
