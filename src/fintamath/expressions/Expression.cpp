@@ -29,8 +29,9 @@
 #include "fintamath/functions/trigonometry/Cot.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
-#include "fintamath/literals/Constant.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/E.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
 
 namespace fintamath {
   using ExprPtr = std::shared_ptr<Expression>;
@@ -262,7 +263,8 @@ namespace fintamath {
         if (i == expr.size() - 1) {
           throw std::invalid_argument("Expression invalid input");
         }
-        if (expr[i - 1] == '+' || expr[i - 1] == '-' || expr[i - 1] == '*' || expr[i - 1] == '/' || expr[i - 1] == '^') {
+        if (expr[i - 1] == '+' || expr[i - 1] == '-' || expr[i - 1] == '*' || expr[i - 1] == '/' ||
+            expr[i - 1] == '^') {
           continue;
         }
         if (expr[i] == '+') {
@@ -364,39 +366,54 @@ namespace fintamath {
   }
 
   ExprPtr Expression::parseFiniteTerm(const std::string &term) {
-    if (auto parseResult = parseFunction(term); parseResult) {
-      return parseResult;
-    }
-
     if (term[0] == '(' && term[term.size() - 1] == ')') {
       return parseExpression(term.substr(1, term.size() - 2));
     }
 
-    Expression parseResult;
+    if (auto parseResult = parseFunction(term); parseResult) {
+      return parseResult;
+    }
+    if (auto parseResult = parseConstant(term); parseResult) {
+      return parseResult;
+    }
 
     try {
-      parseResult.info = std::make_shared<Constant>(term);
-      return std::make_shared<Expression>(parseResult);
-    } catch (const std::invalid_argument &) {
-      // do nothing
-    }
-    try {
+      Expression parseResult;
       parseResult.info = std::make_shared<Variable>(term);
       return std::make_shared<Expression>(parseResult);
     } catch (const std::invalid_argument &) {
       // do nothing
     }
     try {
+      Expression parseResult;
       parseResult.info = std::make_shared<Integer>(term);
+      return std::make_shared<Expression>(parseResult);
     } catch (const std::invalid_argument &) {
-      try {
-        parseResult.info = std::make_shared<Rational>(term);
-      } catch (const std::invalid_argument &) {
-        throw std::invalid_argument("Expression invalid input");
-      }
+      // do nothing
+    }
+    try {
+      Expression parseResult;
+      parseResult.info = std::make_shared<Rational>(term);
+      return std::make_shared<Expression>(parseResult);
+    } catch (const std::invalid_argument &) {
+      // do nothing
     }
 
-    return std::make_shared<Expression>(parseResult);
+    throw std::invalid_argument("Expression invalid input");
+  }
+
+  ExprPtr Expression::parseConstant(const std::string &term) {
+    Expression expr;
+
+    if (term == "e") {
+      expr.info = std::make_shared<E>();
+    } else if (term == "pi") {
+      expr.info = std::make_shared<Pi>();
+    } else {
+      return {};
+    }
+
+    return std::make_shared<Expression>(expr);
   }
 
   ExprPtr Expression::parseFunction(const std::string &term) {
@@ -506,7 +523,7 @@ namespace fintamath {
         }
         return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
       } catch (const std::invalid_argument &) {
-        // skip operation if child is Variable or Function
+        // skip operation if child is Variable,  Function or Constant
       }
     }
 
@@ -541,9 +558,9 @@ namespace fintamath {
       }
     }
 
-    if (expr->info->is<Constant>()) {
-      auto constant = expr->info->to<Constant>();
-      expr->info = std::make_shared<Rational>(constant.toRational(defaultPrecision));
+    if (expr->info->instanceOf<Constant>()) {
+      const auto &constant = expr->info->to<Constant>();
+      expr->info = std::make_shared<Rational>(constant.getValue(defaultPrecision));
     }
     return expr;
   }
@@ -599,8 +616,8 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::revertPow(const ExprPtr &expr){
-    if(!expr->info->is<Pow>()){
+  ExprPtr Expression::revertPow(const ExprPtr &expr) {
+    if (!expr->info->is<Pow>()) {
       auto newExpr = std::make_shared<Expression>();
       newExpr->info = std::make_shared<Pow>();
       newExpr->children.push_back(expr);
@@ -881,7 +898,7 @@ namespace fintamath {
         powVect.push_back(child);
       } else if (child->info->is<Variable>()) {
         varVect.push_back(child);
-      } else if (child->info->is<Constant>()) {
+      } else if (child->info->instanceOf<Constant>()) {
         constVect.push_back(child);
       } else if (child->info->is<Mul>()) {
         mulVect.push_back(child);

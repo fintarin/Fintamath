@@ -2,8 +2,8 @@
 
 #include "fintamath/functions/trigonometry/Acos.hpp"
 
-#include "fintamath/numbers/Rational.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 

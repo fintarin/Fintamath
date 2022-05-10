@@ -45,6 +45,8 @@ namespace fintamath {
 
     static ExprPtr parseFiniteTerm(const std::string &term);
 
+    static ExprPtr parseConstant(const std::string &term);
+
     static ExprPtr parseFunction(const std::string &term);
 
     static ExprVect getArgs(const std::string &args);
