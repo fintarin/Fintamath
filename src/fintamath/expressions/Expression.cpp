@@ -262,7 +262,7 @@ namespace fintamath {
         if (i == expr.size() - 1) {
           throw std::invalid_argument("Expression invalid input");
         }
-        if (expr[i - 1] == '+' || expr[i - 1] == '-' || expr[i - 1] == '*' || expr[i - 1] == '/') {
+        if (expr[i - 1] == '+' || expr[i - 1] == '-' || expr[i - 1] == '*' || expr[i - 1] == '/' || expr[i - 1] == '^') {
           continue;
         }
         if (expr[i] == '+') {
@@ -328,7 +328,8 @@ namespace fintamath {
     }
 
     if (term[0] == '+') {
-      elem.info = parseNegPowFactorPercentTerm(cutSpaces(term.substr(1)))->info;
+      elem = *parseNegPowFactorPercentTerm(cutSpaces(term.substr(1)));
+      return std::make_shared<Expression>(elem);
     }
 
     for (size_t i = 0; i < term.size(); i++) {
@@ -515,8 +516,8 @@ namespace fintamath {
   ExprPtr Expression::simplifyFunctions(const ExprPtr &expr) {
     for (auto &child : expr->children) {
       if (child != nullptr) {
-        child = simplifyOperators(child);
         child = simplifyFunctions(child);
+        child = simplifyOperators(child);
       }
     }
 
@@ -568,6 +569,12 @@ namespace fintamath {
   ExprPtr Expression::invertSubDiv(const ExprPtr &expr) {
     auto newExpr = std::make_shared<Expression>(*expr);
 
+    for (auto &child : newExpr->children) {
+      if (child != nullptr) {
+        child = invertSubDiv(child);
+      }
+    }
+
     if (newExpr->info->is<Sub>()) {
       newExpr->info = std::make_shared<Add>();
       auto rightNode = std::make_shared<Expression>();
@@ -579,26 +586,32 @@ namespace fintamath {
     if (newExpr->info->is<Div>()) {
       newExpr->info = std::make_shared<Mul>();
       auto rightNode = std::make_shared<Expression>();
-      if (newExpr->children.at(1)->is<Arithmetic>()) {
+      if (newExpr->children.at(1)->info->instanceOf<Number>()) {
         rightNode->info = std::make_shared<Div>();
         rightNode->children.push_back(std::make_shared<Expression>(Integer(1)));
         rightNode->children.push_back(newExpr->children.at(1));
         rightNode = simplifyOperators(rightNode);
       } else {
-        rightNode->info = std::make_shared<Pow>();
-        rightNode->children.push_back(newExpr->children.at(1));
-        rightNode->children.push_back(std::make_shared<Expression>(Integer(-1)));
+        rightNode = revertPow(newExpr->children.at(1));
       }
       newExpr->children.at(1) = rightNode;
     }
-
-    for (auto &child : newExpr->children) {
-      if (child != nullptr) {
-        child = invertSubDiv(child);
-      }
-    }
-
     return newExpr;
+  }
+
+  ExprPtr Expression::revertPow(const ExprPtr &expr){
+    if(!expr->info->is<Pow>()){
+      auto newExpr = std::make_shared<Expression>();
+      newExpr->info = std::make_shared<Pow>();
+      newExpr->children.push_back(expr);
+      newExpr->children.push_back(std::make_shared<Expression>(Integer(-1)));
+      return newExpr;
+    }
+    auto rightNode = std::make_shared<Expression>();
+    rightNode->info = std::make_shared<Neg>();
+    rightNode->children.push_back(expr->children.at(1));
+    expr->children.at(1) = rightNode;
+    return expr;
   }
 
   ExprPtr Expression::simplifyNeg(const ExprPtr &expr) {
@@ -997,10 +1010,11 @@ namespace fintamath {
   }
 
   MathObjectPtr Expression::simplify() const {
-    auto newExpr = std::make_shared<Expression>(*this);
+    auto newExpr = std::make_shared<Expression>();
+    newExpr = std::make_shared<Expression>(*this);
     newExpr = simplifyConstant(newExpr);
-    newExpr = simplifyFunctions(newExpr); // TODO: fix nested functions
-    newExpr = simplifyOperators(newExpr);
+    newExpr = simplifyFunctions(newExpr);
+
     newExpr = invertSubDiv(newExpr);
     newExpr = simplifyNeg(newExpr);
 
@@ -1012,10 +1026,12 @@ namespace fintamath {
       newExpr = mainSimplify(newExpr);
     }
 
+    newExpr = simplifyOperators(newExpr);
+
     if (newExpr->children.empty()) {
       return newExpr->info->clone();
     }
 
-    return std::make_unique<Expression>(*newExpr);
+    return std::make_unique<Expression>(*this);
   }
 }

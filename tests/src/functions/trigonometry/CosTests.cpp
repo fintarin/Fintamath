@@ -16,7 +16,7 @@ TEST(CosTests, callTest) {
   EXPECT_EQ(Cos()(Integer(10))->toString(), "-0.839071529076452452258863947824064835");
   EXPECT_EQ(Cos()(Integer(5))->toString(), "0.283662185463226264466639171513557308");
   EXPECT_EQ(Cos()(Rational(1, 10))->toString(), "0.995004165278025766095561987803870295");
-  EXPECT_EQ(Cos()(Constant("pi").toRational(10) / 2)->toString(), "-0");
+  EXPECT_EQ(Cos()(Constant("pi").toRational(10) / 2)->toString(), "0");
 
   EXPECT_ANY_THROW(Cos()(Variable("a")));
 

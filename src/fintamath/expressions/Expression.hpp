@@ -81,6 +81,8 @@ namespace fintamath {
 
     static std::string funcArgsToString(const ExprVect &args);
 
+    static ExprPtr revertPow(const ExprPtr &expr);
+
     std::shared_ptr<MathObject> info;
     ExprVect children;
   };

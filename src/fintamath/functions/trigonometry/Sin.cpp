@@ -14,7 +14,7 @@ namespace fintamath {
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(sin(newRhs->to<Rational>(), defaultPrecision));
+    return sin(newRhs->to<Rational>(), defaultPrecision).simplify();
   }
 
   MathObjectPtr Sin::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {

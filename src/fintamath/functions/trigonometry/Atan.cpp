@@ -14,7 +14,7 @@ namespace fintamath {
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(atan(newRhs->to<Rational>(), defaultPrecision));
+    return atan(newRhs->to<Rational>(), defaultPrecision).simplify();
   }
 
   MathObjectPtr Atan::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {

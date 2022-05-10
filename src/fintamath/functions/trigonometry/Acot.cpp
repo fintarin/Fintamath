@@ -14,7 +14,7 @@ namespace fintamath {
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(acot(newRhs->to<Rational>(), defaultPrecision));
+    return acot(newRhs->to<Rational>(), defaultPrecision).simplify();
   }
 
   MathObjectPtr Acot::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {

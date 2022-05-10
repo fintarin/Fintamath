@@ -13,7 +13,7 @@ namespace fintamath {
     }
 
     auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
-    return std::make_unique<Rational>(doubleFactorial(newRhs->to<Rational>()));
+    return std::make_unique<Integer>(doubleFactorial(rhs.to<Integer>()));
   }
 
   MathObjectPtr DoubleFactorial::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {

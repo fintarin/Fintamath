@@ -428,22 +428,22 @@ namespace fintamath {
     return (res - atan(rhs, precision)).round(precision);
   }
 
-  Rational factorial(const Rational &rhs) {
-    if (rhs < 0 || rhs.getNumerator() != 0) {
+  Integer factorial(const Integer &rhs) {
+    if (rhs < 0) {
       throw std::domain_error("factorial out of range");
     }
     if (rhs < 2) {
-      return Integer(1);
+      return {1};
     }
-    return factorialRec(2, rhs.getInteger());
+    return factorialRec(2, rhs);
   }
 
-  Rational doubleFactorial(const Rational &rhs) {
-    if (rhs < 0 || rhs.getNumerator() != 0) {
+  Integer doubleFactorial(const Integer &rhs) {
+    if (rhs < 0) {
       throw std::domain_error("factorial out of range");
     }
     Integer res = 1;
-    for (Integer i = rhs.getInteger(); i > 0; i -= 2) {
+    for (Integer i = rhs; i > 0; i -= 2) {
       res *= i;
     }
     return res;
