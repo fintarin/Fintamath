@@ -15,22 +15,22 @@ namespace fintamath {
 
   inline NumberPtr operator+(const Number &lhs, const Number &rhs) {
     auto res = lhs + rhs.to<Arithmetic>();
-    return std::unique_ptr<Number>(dynamic_cast<Number *>(res.release()));
+    return meta::castPtr<Number>(res);
   }
 
   inline NumberPtr operator-(const Number &lhs, const Number &rhs) {
     auto res = lhs - rhs.to<Arithmetic>();
-    return std::unique_ptr<Number>(dynamic_cast<Number *>(res.release()));
+    return meta::castPtr<Number>(res);
   }
 
   inline NumberPtr operator*(const Number &lhs, const Number &rhs) {
     auto res = lhs * rhs.to<Arithmetic>();
-    return std::unique_ptr<Number>(dynamic_cast<Number *>(res.release()));
+    return meta::castPtr<Number>(res);
   }
 
   inline NumberPtr operator/(const Number &lhs, const Number &rhs) {
     auto res = lhs / rhs.to<Arithmetic>();
-    return std::unique_ptr<Number>(dynamic_cast<Number *>(res.release()));
+    return meta::castPtr<Number>(res);
   }
 
   template <typename Derived>
