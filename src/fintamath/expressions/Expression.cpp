@@ -118,7 +118,11 @@ namespace fintamath {
       const auto &rootOp = info->to<Operator>();
 
       if (!children.at(0)->info->instanceOf<Operator>()) {
-        result += children.at(0)->toString();
+        if (children.at(0)->info->instanceOf<Comparable>() && children.at(0)->info->to<Comparable>() < Integer(0)) {
+          result += putInBrackets(children.at(0)->toString());
+        } else {
+          result += children.at(0)->toString();
+        }
       } else {
         if (const auto &nodeOp = children.at(0)->info->to<Operator>();
             (rootOp.getPriority() > nodeOp.getPriority()) ||
@@ -137,6 +141,10 @@ namespace fintamath {
         result += info->toString();
 
         if (!children.at(i)->info->instanceOf<Operator>()) {
+          if (children.at(i)->info->instanceOf<Comparable>() && children.at(i)->info->to<Comparable>() < Integer(0)) {
+            result += putInBrackets(children.at(i)->toString());
+            continue;
+          }
           result += children.at(i)->toString();
           continue;
         }
@@ -575,8 +583,12 @@ namespace fintamath {
     newExpr = rebuildMul(newExpr);
     newExpr = rebuildAdd(newExpr);
 
+    newExpr = simplifyMulVar(newExpr);
+    newExpr = simplifyPowNum(newExpr);
+
     newExpr = simplifyAddVar(newExpr);
     newExpr = simplifyMulNum(newExpr);
+
     newExpr = simplifyAddNum(newExpr);
     newExpr = sort(newExpr);
 
@@ -773,6 +785,28 @@ namespace fintamath {
       return newExpr->children.at(0);
     }
     if (newExpr->children.empty()) {
+      return std::make_shared<Expression>(Integer(1));
+    }
+
+    return newExpr;
+  }
+
+  ExprPtr Expression::simplifyPowNum(const ExprPtr &expr){
+    auto newExpr = std::make_shared<Expression>(*expr);
+
+    for (auto &child : newExpr->children) {
+      child = simplifyPowNum(child);
+    }
+
+    if (!newExpr->info->is<Pow>()) {
+      return newExpr;
+    }
+
+    if(*newExpr->children.at(1)->info == Integer(1)){
+      return newExpr->children.at(0);
+    }
+
+    if(*newExpr->children.at(1)->info == Integer(0)){
       return std::make_shared<Expression>(Integer(1));
     }
 
@@ -976,6 +1010,7 @@ namespace fintamath {
     return true;
   }
 
+
   ExprPtr Expression::simplifyAddVar(const ExprPtr &expr) {
     auto newExpr = std::make_shared<Expression>(*expr);
 
@@ -1013,6 +1048,64 @@ namespace fintamath {
         }
       }
       if (!isAdd) {
+        newChildren.push_back(child);
+      }
+    }
+
+    newExpr->children = newChildren;
+
+    if (newExpr->children.size() == 1) {
+      return newExpr->children.at(0);
+    }
+
+    return newExpr;
+  }
+
+  ExprPtr Expression::createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr){
+    if(currExpr->info->is<Add>()){
+      currExpr->children.push_back(addExpr);
+      return currExpr;
+    }
+    auto newExpr = std::make_shared<Expression>();
+    newExpr->info = std::make_shared<Add>();
+    newExpr->children.push_back(currExpr);
+    newExpr->children.push_back(addExpr);
+    return newExpr;
+  }
+
+  ExprPtr Expression::simplifyMulVar(const ExprPtr &expr){
+    auto newExpr = std::make_shared<Expression>(*expr);
+
+    for (auto &child : newExpr->children) {
+      child = simplifyMulVar(child);
+    }
+
+    if(!newExpr->info->is<Mul>()){
+      return newExpr;
+    }
+
+    for (auto &child : newExpr->children) {
+      if (!child->info->is<Pow>()) {
+        auto newChild = std::make_shared<Expression>();
+        newChild->info = std::make_shared<Pow>();
+        newChild->children.push_back(child);
+        newChild->children.push_back(std::make_shared<Expression>(Integer(1)));
+        child = newChild;
+      }
+    }
+
+    auto newChildren = ExprVect();
+
+    for (const auto &child : newExpr->children) {
+      bool isMul = false;
+      for (const auto &newChild : newChildren) {
+        if (*child->children.at(0) == *newChild->children.at(0)) {
+          newChild->children.at(1) = createAddExpr(newChild->children.at(1), child->children.at(1));
+          isMul = true;
+          break;
+        }
+      }
+      if (!isMul) {
         newChildren.push_back(child);
       }
     }
