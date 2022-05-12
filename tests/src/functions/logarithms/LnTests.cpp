@@ -2,7 +2,7 @@
 
 #include "fintamath/functions/logarithms/Ln.hpp"
 
-#include "fintamath/literals/Constant.hpp"
+#include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
@@ -16,7 +16,7 @@ TEST(LnTests, callTest) {
   EXPECT_EQ(Ln()(Integer(10))->toString(), "2.302585092994045684017991454684364208");
   EXPECT_EQ(Ln()(Integer(5))->toString(), "1.60943791243410037460075933322618764");
   EXPECT_EQ(Ln()(Rational(1, 10))->toString(), "-2.302585092994045684017991454684364208");
-  EXPECT_EQ(Ln()(Constant("e").toRational(10))->toString(), "1");
+  EXPECT_EQ(Ln()(E().getValue(10))->toString(), "1");
 
   EXPECT_ANY_THROW(Ln()(Variable("a")));
   EXPECT_ANY_THROW(Ln()(Integer(-10)));

@@ -16,7 +16,7 @@
     auto res = (tmp->template to<Arithmetic>() OPER rhs)->simplify();                                                  \
     return meta::castPtr<Arithmetic>(res);                                                                             \
   }                                                                                                                    \
-  throw std ::invalid_argument("Incompatible types");
+  throw std ::invalid_argument("Incompatible types")
 
 namespace fintamath {
   class Arithmetic;
