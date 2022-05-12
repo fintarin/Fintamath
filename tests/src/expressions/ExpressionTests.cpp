@@ -7,6 +7,7 @@
 using namespace fintamath;
 
 TEST(ExpressionTests, toStringTest) {
+  EXPECT_EQ(Expression("a^-3").toString(), "a^(-3)");
 }
 
 TEST(ExpressionTests, constructorTest) {
@@ -72,12 +73,12 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("a+a").toString(), "2*a");
   EXPECT_EQ(Expression("a-a").toString(), "0");
   EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
-  EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "b*b+a*a+3*a*b");
+  EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "b^2+a^2+3*a*b");
 
   EXPECT_EQ(Expression("lncossina").toString(), "ln(cos(sin(a)))");
 }
 
-TEST(ExpressionTests, simplifyTest) { // TODO: fix nested functions
+TEST(ExpressionTests, simplifyTest) {
    EXPECT_EQ(Expression("e ").simplify()->toString(), "2.718281828459045235360287471352662498");
    EXPECT_EQ(Expression("pi").simplify()->toString(), "3.141592653589793238462643383279502884");
 
@@ -249,7 +250,7 @@ TEST(ExpressionTests, dialogusTests) {
 }
 
 TEST(ExpressionTests, testTest) {
-  auto expr = Expression("e+3");
+  auto expr = Expression("a/a");
   auto a = expr.toString();
   auto b = expr.simplify();
   auto c = b->toString();
