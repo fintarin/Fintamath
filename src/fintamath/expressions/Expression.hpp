@@ -79,17 +79,13 @@ namespace fintamath {
 
     static ExprPtr simplifyMulVar(const ExprPtr &expr);
 
-    static ExprPtr normalize(const ExprPtr &expr);
-
-    static ExprPtr normalizeSub(const ExprPtr &expr);
-
-    static ExprPtr normalizeDiv(const ExprPtr &expr);
-
     static ExprPtr createAddExpr(const ExprPtr &currNode, const ExprPtr &addNode);
 
     static ExprPtr openBracketsMulAdd(const ExprPtr &expr);
 
     static ExprPtr openBracketsPowMul(const ExprPtr &expr);
+
+    static ExprPtr openBracketsPowAdd(const ExprPtr &expr);
 
     static ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const MathObject &o);
 

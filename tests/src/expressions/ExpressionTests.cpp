@@ -76,6 +76,7 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "b^2+a^2+3*a*b");
 
   EXPECT_EQ(Expression("lncossina").toString(), "ln(cos(sin(a)))");
+  EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a+b");
 }
 
 TEST(ExpressionTests, simplifyTest) {
@@ -247,10 +248,15 @@ TEST(ExpressionTests, negativeTests) {
 TEST(ExpressionTests, dialogusTests) {
   EXPECT_EQ(Expression("+5").toString(), "5");
   EXPECT_EQ(Expression("+a").toString(), "a");
+  EXPECT_EQ(Expression("a=a").toString(), "1");
+  EXPECT_EQ(Expression("a+a=2*a").toString(), "1");
+  //EXPECT_EQ(Expression("a=1").toString(), "a-1=0");
+  EXPECT_EQ(Expression("(a+b)^2").toString(), "b^2+a^2+2*a*b");
+
 }
 
 TEST(ExpressionTests, testTest) {
-  auto expr = Expression("a/a");
+  auto expr = Expression("(a+b)^5");
   auto a = expr.toString();
   auto b = expr.simplify();
   auto c = b->toString();

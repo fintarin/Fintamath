@@ -628,11 +628,7 @@ namespace fintamath {
     auto newExpr = rebuildMul(expr);
     newExpr = rebuildAdd(newExpr);
 
-    newExpr = openBracketsPowMul(newExpr);
-    newExpr = openBracketsMulAdd(newExpr);
-
-    newExpr = rebuildMul(newExpr);
-    newExpr = rebuildAdd(newExpr);
+    newExpr = sort(newExpr);
 
     newExpr = simplifyMulVar(newExpr);
     newExpr = simplifyPowNum(newExpr);
@@ -641,7 +637,13 @@ namespace fintamath {
     newExpr = simplifyMulNum(newExpr);
 
     newExpr = simplifyAddNum(newExpr);
+
+    newExpr = openBracketsPowMul(newExpr);
+    newExpr = openBracketsPowAdd(newExpr);
+    newExpr = openBracketsMulAdd(newExpr);
+
     newExpr = sort(newExpr);
+
 
     return newExpr;
   }
@@ -877,6 +879,28 @@ namespace fintamath {
     }
 
     return openBrackets;
+  }
+
+  ExprPtr Expression::openBracketsPowAdd(const ExprPtr &expr) {
+    auto newExpr = std::make_shared<Expression>(*expr);
+
+    for (auto &child : newExpr->children) {
+      child = openBracketsPowAdd(child);
+    }
+
+    if(!newExpr->info->is<Pow>() || !newExpr->children.at(0)->info->is<Add>() || !newExpr->children.at(1)->info->is<Integer>()) {
+      return newExpr;
+    }
+
+    auto mulExpr = Expression();
+    mulExpr.info = std::make_shared<Mul>();
+
+    auto range = newExpr->children.at(1)->info->to<Integer>();
+    for(int i = 0;i < range;i++){
+      std::shared_ptr<MathObject> copyExpr = newExpr->children.at(0)->clone();
+      mulExpr.children.push_back(std::make_shared<Expression>(copyExpr->to<Expression>()));
+    }
+    return openBracketsMulAdd(std::make_shared<Expression>(mulExpr));
   }
 
   ExprPtr Expression::openBracketsMulAdd(const ExprPtr &expr) {
@@ -1172,10 +1196,6 @@ namespace fintamath {
 
   MathObjectPtr Expression::simplify() const {
     auto newExpr = std::make_shared<Expression>(*this);
-
-    if(newExpr->info->is<Eq>()){
-      return Eq()(*newExpr->children.at(0), *newExpr->children.at(1));
-    }
 
     newExpr = simplifyConstant(newExpr);
     newExpr = simplifyFunctions(newExpr);
