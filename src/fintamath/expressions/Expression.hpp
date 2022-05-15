@@ -37,7 +37,9 @@ namespace fintamath {
 
     ExprPtr baseSimplify() const;
 
-    static ExprPtr parseExpression(const std::string &expr);
+    static ExprPtr parseEqualExpression(const std::string &expr);
+
+    static ExprPtr parseExpression(const std::string &exprStr);
 
     static ExprPtr parseDivMulTerm(const std::string &term);
 
@@ -71,7 +73,19 @@ namespace fintamath {
 
     static ExprPtr simplifyMulNum(const ExprPtr &expr);
 
+    static ExprPtr simplifyPowNum(const ExprPtr &expr);
+
     static ExprPtr simplifyAddVar(const ExprPtr &expr);
+
+    static ExprPtr simplifyMulVar(const ExprPtr &expr);
+
+    static ExprPtr normalize(const ExprPtr &expr);
+
+    static ExprPtr normalizeSub(const ExprPtr &expr);
+
+    static ExprPtr normalizeDiv(const ExprPtr &expr);
+
+    static ExprPtr createAddExpr(const ExprPtr &currNode, const ExprPtr &addNode);
 
     static ExprPtr openBracketsMulAdd(const ExprPtr &expr);
 
