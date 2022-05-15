@@ -1173,10 +1173,6 @@ namespace fintamath {
   MathObjectPtr Expression::simplify() const {
     auto newExpr = std::make_shared<Expression>(*this);
 
-    if(newExpr->info->is<Eq>()){
-      return Eq()(*newExpr->children.at(0), *newExpr->children.at(1));
-    }
-
     newExpr = simplifyConstant(newExpr);
     newExpr = simplifyFunctions(newExpr);
 
