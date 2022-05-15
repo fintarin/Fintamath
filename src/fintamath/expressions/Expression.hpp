@@ -85,6 +85,8 @@ namespace fintamath {
 
     static ExprPtr openBracketsPowMul(const ExprPtr &expr);
 
+    static ExprPtr openBracketsPowAdd(const ExprPtr &expr);
+
     static ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const MathObject &o);
 
     static ExprPtr sort(const ExprPtr &expr);
