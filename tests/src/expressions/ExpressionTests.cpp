@@ -66,8 +66,6 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("5!!").simplify()->toString(), "15");
 
   EXPECT_EQ(Expression("(2)!").simplify()->toString(), "2");
-  //   EXPECT_EQ(Expression("2!2!").simplify()->toString(), "4");
-  //   EXPECT_EQ(Expression("2!2!2!").simplify()->toString(), "8");
 
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-a)))))))").toString(), "a");
   EXPECT_EQ(Expression("a+a").toString(), "2*a");
@@ -77,83 +75,82 @@ TEST(ExpressionTests, stingConstructorTest) {
 
   EXPECT_EQ(Expression("lncossina").toString(), "ln(cos(sin(a)))");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a+b");
+
+  EXPECT_EQ(Expression("+5").toString(), "5");
+  EXPECT_EQ(Expression("+a").toString(), "a");
+  EXPECT_EQ(Expression("a=a").toString(), "1");
+  EXPECT_EQ(Expression("a+a=2*a").toString(), "1");
+  EXPECT_EQ(Expression("(a+b)^2").toString(), "b^2+a^2+2*a*b");
 }
 
 TEST(ExpressionTests, simplifyTest) {
-   EXPECT_EQ(Expression("e ").simplify()->toString(), "2.718281828459045235360287471352662498");
-   EXPECT_EQ(Expression("pi").simplify()->toString(), "3.141592653589793238462643383279502884");
+  EXPECT_EQ(Expression("e ").simplify()->toString(), "2.718281828459045235360287471352662498");
+  EXPECT_EQ(Expression("pi").simplify()->toString(), "3.141592653589793238462643383279502884");
 
-   EXPECT_EQ(Expression("abs(-5)").simplify()->toString(), "5");
-   EXPECT_EQ(Expression("abs((-5))").simplify()->toString(), "5");
+  EXPECT_EQ(Expression("abs(-5)").simplify()->toString(), "5");
+  EXPECT_EQ(Expression("abs((-5))").simplify()->toString(), "5");
 
-   EXPECT_EQ(Expression("sqrt144").simplify()->toString(), "12");
-   EXPECT_EQ(Expression("sqrt0").simplify()->toString(), "0");
-   EXPECT_EQ(Expression("exp100").simplify()->toString(),
-             "26881171418161354484126255515800135873611118.773741922415191608615280286685285277");
+  EXPECT_EQ(Expression("sqrt144").simplify()->toString(), "12");
+  EXPECT_EQ(Expression("sqrt0").simplify()->toString(), "0");
+  EXPECT_EQ(Expression("exp100").simplify()->toString(),
+            "26881171418161354484126255515800135873611118.773741922415191608615280286685285277");
 
-   EXPECT_EQ(Expression("e^101").simplify()->toString(),
-             "73070599793680672726476826340615135890078390.083960707616445859670987727649317305");
-   EXPECT_EQ(Expression("e^(-101)").simplify()->toString(), "0");
+  EXPECT_EQ(Expression("e^101").simplify()->toString(),
+            "73070599793680672726476826340615135890078390.083960707616445859670987727649317305");
+  EXPECT_EQ(Expression("e^(-101)").simplify()->toString(), "0");
 
-   EXPECT_EQ(Expression("log(e,e)").simplify()->toString(), "1");
-   EXPECT_EQ(Expression("log(2, 256)").simplify()->toString(), "8");
-   EXPECT_EQ(Expression("log(pi, pi^10)").simplify()->toString(), "10");
-   EXPECT_EQ(Expression("log(e,e^3)").simplify()->toString(), "3");
+  EXPECT_EQ(Expression("log(e,e)").simplify()->toString(), "1");
+  EXPECT_EQ(Expression("log(2, 256)").simplify()->toString(), "8");
+  EXPECT_EQ(Expression("log(pi, pi^10)").simplify()->toString(), "10");
+  EXPECT_EQ(Expression("log(e,e^3)").simplify()->toString(), "3");
 
-   EXPECT_EQ(Expression("ln3").simplify()->toString(), "1.098612288668109691395245236922525705");
-   EXPECT_EQ(Expression("ln2").simplify()->toString(), "0.693147180559945309417232121458176568");
-   EXPECT_EQ(Expression("ln100").simplify()->toString(), "4.605170185988091368035982909368728415");
-   EXPECT_EQ(Expression("ln(e)").simplify()->toString(), "1");
+  EXPECT_EQ(Expression("ln3").simplify()->toString(), "1.098612288668109691395245236922525705");
+  EXPECT_EQ(Expression("ln2").simplify()->toString(), "0.693147180559945309417232121458176568");
+  EXPECT_EQ(Expression("ln100").simplify()->toString(), "4.605170185988091368035982909368728415");
+  EXPECT_EQ(Expression("ln(e)").simplify()->toString(), "1");
 
-   EXPECT_EQ(Expression("lg99").simplify()->toString(), "1.99563519459754991534025577775325486");
-   EXPECT_EQ(Expression("lg100").simplify()->toString(), "2");
+  EXPECT_EQ(Expression("lg99").simplify()->toString(), "1.99563519459754991534025577775325486");
+  EXPECT_EQ(Expression("lg100").simplify()->toString(), "2");
 
-   EXPECT_EQ(Expression("lb100").simplify()->toString(), "6.643856189774724695740638858978780352");
-   EXPECT_EQ(Expression("lb4").simplify()->toString(), "2");
+  EXPECT_EQ(Expression("lb100").simplify()->toString(), "6.643856189774724695740638858978780352");
+  EXPECT_EQ(Expression("lb4").simplify()->toString(), "2");
 
-   EXPECT_EQ(Expression("sin10").simplify()->toString(), "-0.544021110889369813404747661851377282");
-   EXPECT_EQ(Expression("cos10").simplify()->toString(), "-0.839071529076452452258863947824064835");
-   EXPECT_EQ(Expression("tan10").simplify()->toString(), "0.648360827459086671259124933009808677");
-   EXPECT_EQ(Expression("cot10").simplify()->toString(), "1.542351045356920048277469355682429311");
+  EXPECT_EQ(Expression("sin10").simplify()->toString(), "-0.544021110889369813404747661851377282");
+  EXPECT_EQ(Expression("cos10").simplify()->toString(), "-0.839071529076452452258863947824064835");
+  EXPECT_EQ(Expression("tan10").simplify()->toString(), "0.648360827459086671259124933009808677");
+  EXPECT_EQ(Expression("cot10").simplify()->toString(), "1.542351045356920048277469355682429311");
 
-   EXPECT_EQ(Expression("asin0.9").simplify()->toString(), "1.119769514998634186686677055845399616");
-   EXPECT_EQ(Expression("acos0.9").simplify()->toString(), "0.451026811796262432544644635794351826");
-   EXPECT_EQ(Expression("atan10").simplify()->toString(), "1.471127674303734591852875571761730852");
-   EXPECT_EQ(Expression("acot10").simplify()->toString(), "0.09966865249116202737844611987802059");
+  EXPECT_EQ(Expression("asin0.9").simplify()->toString(), "1.119769514998634186686677055845399616");
+  EXPECT_EQ(Expression("acos0.9").simplify()->toString(), "0.451026811796262432544644635794351826");
+  EXPECT_EQ(Expression("atan10").simplify()->toString(), "1.471127674303734591852875571761730852");
+  EXPECT_EQ(Expression("acot10").simplify()->toString(), "0.09966865249116202737844611987802059");
 
-   EXPECT_EQ(Expression("((2))*sqrt2").simplify()->toString(), "2.828427124746190097603377448419396157");
-   EXPECT_EQ(Expression("sqrt2*((2))").simplify()->toString(), "2.828427124746190097603377448419396157");
+  EXPECT_EQ(Expression("((2))*sqrt2").simplify()->toString(), "2.828427124746190097603377448419396157");
+  EXPECT_EQ(Expression("sqrt2*((2))").simplify()->toString(), "2.828427124746190097603377448419396157");
 
-   EXPECT_EQ(Expression("sin(1)^2").simplify()->toString(), "0.708073418273571193498784114750381095");
-   EXPECT_EQ(Expression("sin(-1)^2").simplify()->toString(), "0.708073418273571193498784114750381095");
-   EXPECT_EQ(Expression("sin1^2").simplify()->toString(), "0.708073418273571193498784114750381095");
-   EXPECT_EQ(Expression("sin(10^30)").simplify()->toString(), "-0.09011690191213805803038642895298733");
-   EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").simplify()->toString(), "1");
+  EXPECT_EQ(Expression("sin(1)^2").simplify()->toString(), "0.708073418273571193498784114750381095");
+  EXPECT_EQ(Expression("sin(-1)^2").simplify()->toString(), "0.708073418273571193498784114750381095");
+  EXPECT_EQ(Expression("sin1^2").simplify()->toString(), "0.708073418273571193498784114750381095");
+  EXPECT_EQ(Expression("sin(10^30)").simplify()->toString(), "-0.09011690191213805803038642895298733");
+  EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").simplify()->toString(), "1");
   EXPECT_EQ(Expression("sin(pi/3)").simplify()->toString(), "0.866025403784438646763723170752936183");
   EXPECT_EQ(Expression("cos(pi/3)").simplify()->toString(), "0.5");
 
   EXPECT_EQ(Expression("lne").simplify()->toString(), "1");
   EXPECT_EQ(Expression("lncossine").simplify()->toString(), "-0.086855992785406199870464541502090651");
 
-  // EXPECT_EQ(Expression("e^(-101)/e^(-101)").simplify()->toString(), "1");
   EXPECT_EQ(Expression("e^101-e^101").simplify()->toString(), "0");
   EXPECT_EQ(Expression("ln(e^e) / ln(e^e) - 1").simplify()->toString(), "0");
 
   EXPECT_EQ(Expression("sqrt4!").simplify()->toString(), "2");
   EXPECT_EQ(Expression("(sqrt4)!").simplify()->toString(), "2");
   EXPECT_EQ(Expression("sqrt4*2!").simplify()->toString(), "4");
-  // EXPECT_EQ(Expression("2!sqrt4").simplify()->toString(), "4");
   EXPECT_EQ(Expression("2!*e").simplify()->toString(), "5.436563656918090470720574942705324996");
   EXPECT_EQ(Expression("e*2!").simplify()->toString(), "5.436563656918090470720574942705324996");
 
   EXPECT_EQ(Expression("sqrt((1-cos(2*(pi/3)))/2)").simplify()->toString(), "0.866025403784438646763723170752936183");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(pi/3)))/2)*cos(pi/3)").simplify()->toString(),
             "0.866025403784438646763723170752936183");
-  //  EXPECT_EQ(Expression("1-2*sin((pi/6))*sqrt((1/2)*(1-cos(2*(pi/6))))").simplify()->toString(), "0.5");
-  //  EXPECT_EQ(Expression("1-2*sin((pi/6))*sqrt((1/2)*(1-(1-2*sin((pi/6))*sqrt((1/2)*(1-cos(2*(pi/6)))))))")
-  //                 .simplify()
-  //                 ->toString(),
-  //             "0.5");
 }
 
 TEST(ExpressionTests, negativeTests) {
@@ -243,21 +240,4 @@ TEST(ExpressionTests, negativeTests) {
 
   EXPECT_ANY_THROW(
       Expression("1-2*sin((pi/6))*sqrt((1/2)*(1-1-2*sin((pi/6))*sqrt((1/2)*(1-cos(2(pi/6))))))").simplify());
-}
-
-TEST(ExpressionTests, dialogusTests) {
-  EXPECT_EQ(Expression("+5").toString(), "5");
-  EXPECT_EQ(Expression("+a").toString(), "a");
-  EXPECT_EQ(Expression("a=a").toString(), "1");
-  EXPECT_EQ(Expression("a+a=2*a").toString(), "1");
-  //EXPECT_EQ(Expression("a=1").toString(), "a-1=0");
-  EXPECT_EQ(Expression("(a+b)^2").toString(), "b^2+a^2+2*a*b");
-
-}
-
-TEST(ExpressionTests, testTest) {
-  auto expr = Expression("(a+b)^5");
-  auto a = expr.toString();
-  auto b = expr.simplify();
-  auto c = b->toString();
 }

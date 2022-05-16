@@ -67,10 +67,10 @@ namespace fintamath {
     return strExpr;
   }
 
-  int countEqual(const std::string &str){
+  int countEqual(const std::string &str) {
     int counter = 0;
-    for(const auto& ch : str){
-      if(ch=='='){
+    for (const auto &ch : str) {
+      if (ch == '=') {
         counter++;
       }
     }
@@ -113,13 +113,13 @@ namespace fintamath {
       throw std::invalid_argument("Expression invalid input");
     }
 
-    if(countEqual(exprStr) == 0) {
+    if (countEqual(exprStr) == 0) {
       *this = *parseExpression(exprStr);
       *this = *baseSimplify();
       return;
     }
 
-    if(countEqual(exprStr) == 1){
+    if (countEqual(exprStr) == 1) {
       *this = *parseEqualExpression(exprStr);
       return;
     }
@@ -278,22 +278,22 @@ namespace fintamath {
   }
 
   /*
-   * Expr: Expr+Expr | Expr-Expr | Expr*Expr | Expr/Expr | E
-   * E: -E | E^Term | Term!! | Term! | Term
-   * Term: Function | (Expr) | Const | Var | Num
-   * Function: Name(Args)
-   * Args: Expr, Args | Expr
+    Expr: AddExpr | MulExpr | PowExpr | FuncExpr | (Expr) | Term
+    AddExpr: +Expr | -Expr | Expr + Expr | Expr - Expr
+    MulExpr: Expr * Expr | Expr / Expr
+    PowExpr: Expr^Expr
+    FuncExpr: PreFuncName Expr | Expr PostFuncName
+    Term: Const | Var | Num
    */
-
-  ExprPtr Expression::parseEqualExpression(const std::string &exprStr){
+  ExprPtr Expression::parseEqualExpression(const std::string &exprStr) {
     for (size_t i = exprStr.size() - 1; i > 0; i--) {
-      if (exprStr[i] == '='){
+      if (exprStr[i] == '=') {
         if (i == exprStr.size() - 1) {
           throw std::invalid_argument("Expression invalid input");
         }
         auto lhs = Expression(exprStr.substr(0, i));
         auto rhs = Expression(exprStr.substr(i + 1));
-        if(*Eq()(lhs, rhs)==Integer(1)){
+        if (*Eq()(lhs, rhs) == Integer(1)) {
           return std::make_shared<Expression>(Integer(1));
         }
         auto eqExpr = Expression();
@@ -644,7 +644,6 @@ namespace fintamath {
 
     newExpr = sort(newExpr);
 
-
     return newExpr;
   }
 
@@ -844,7 +843,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::simplifyPowNum(const ExprPtr &expr){
+  ExprPtr Expression::simplifyPowNum(const ExprPtr &expr) {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -855,11 +854,11 @@ namespace fintamath {
       return newExpr;
     }
 
-    if(*newExpr->children.at(1)->info == Integer(1)){
+    if (*newExpr->children.at(1)->info == Integer(1)) {
       return newExpr->children.at(0);
     }
 
-    if(*newExpr->children.at(1)->info == Integer(0)){
+    if (*newExpr->children.at(1)->info == Integer(0)) {
       return std::make_shared<Expression>(Integer(1));
     }
 
@@ -888,7 +887,8 @@ namespace fintamath {
       child = openBracketsPowAdd(child);
     }
 
-    if(!newExpr->info->is<Pow>() || !newExpr->children.at(0)->info->is<Add>() || !newExpr->children.at(1)->info->is<Integer>()) {
+    if (!newExpr->info->is<Pow>() || !newExpr->children.at(0)->info->is<Add>() ||
+        !newExpr->children.at(1)->info->is<Integer>()) {
       return newExpr;
     }
 
@@ -896,7 +896,7 @@ namespace fintamath {
     mulExpr.info = std::make_shared<Mul>();
 
     auto range = newExpr->children.at(1)->info->to<Integer>();
-    for(int i = 0;i < range;i++){
+    for (int i = 0; i < range; i++) {
       std::shared_ptr<MathObject> copyExpr = newExpr->children.at(0)->clone();
       mulExpr.children.push_back(std::make_shared<Expression>(copyExpr->to<Expression>()));
     }
@@ -1085,7 +1085,6 @@ namespace fintamath {
     return true;
   }
 
-
   ExprPtr Expression::simplifyAddVar(const ExprPtr &expr) {
     auto newExpr = std::make_shared<Expression>(*expr);
 
@@ -1136,8 +1135,8 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr){
-    if(currExpr->info->is<Add>()){
+  ExprPtr Expression::createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr) {
+    if (currExpr->info->is<Add>()) {
       currExpr->children.push_back(addExpr);
       return currExpr;
     }
@@ -1148,14 +1147,14 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::simplifyMulVar(const ExprPtr &expr){
+  ExprPtr Expression::simplifyMulVar(const ExprPtr &expr) {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
       child = simplifyMulVar(child);
     }
 
-    if(!newExpr->info->is<Mul>()){
+    if (!newExpr->info->is<Mul>()) {
       return newExpr;
     }
 
