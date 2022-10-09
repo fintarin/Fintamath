@@ -9,7 +9,7 @@ namespace fintamath {
   static Integer gcd(const Integer &lhs, const Integer &rhs);
   static Integer lcm(const Integer &lhs, const Integer &rhs);
 
-  Rational::Rational(const std::string_view &str) {
+  Rational::Rational(const std::string &str) {
     parse(str);
   }
 
@@ -169,7 +169,7 @@ namespace fintamath {
     return *this -= 1;
   }
 
-  void Rational::parse(const std::string_view &str) {
+  void Rational::parse(const std::string &str) {
     int64_t firstDigitNum = 0;
     int64_t firstDotNum = std::distance(str.begin(), std::find(str.begin(), str.end(), '.'));
 

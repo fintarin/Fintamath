@@ -1,22 +1,36 @@
 #pragma once
 
+#include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
+  struct IntegerImpl;
+
   class Integer : public NumberImpl<Integer> {
   public:
-    Integer() = default;
+    Integer();
 
-    explicit Integer(const std::string_view &str);
+    Integer(const Integer &rhs);
+
+    Integer(Integer &&rhs) noexcept;
+
+    Integer &operator=(const Integer &rhs);
+
+    Integer &operator=(Integer &&rhs) noexcept;
+
+    ~Integer() override;
+
+    explicit Integer(const std::string &str);
 
     Integer(int64_t val);
 
     std::string toString() const override;
 
-    int64_t getSize() const;
+    size_t length() const;
 
     Integer sqrt() const;
 
@@ -48,12 +62,7 @@ namespace fintamath {
     Integer &mod(const Integer &rhs);
 
   private:
-    void parse(const std::string_view &str);
-
-    void fixZero();
-
-    std::vector<int64_t> intVect{0};
-    bool sign{};
+    std::unique_ptr<IntegerImpl> value;
   };
 
   template <typename RhsType,

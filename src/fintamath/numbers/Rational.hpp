@@ -7,7 +7,7 @@ namespace fintamath {
   public:
     Rational() = default;
 
-    explicit Rational(const std::string_view &str);
+    explicit Rational(const std::string &str);
 
     explicit Rational(Integer numerator, Integer denominator);
 
@@ -51,7 +51,7 @@ namespace fintamath {
     Rational &decrease() override;
 
   private:
-    void parse(const std::string_view &str);
+    void parse(const std::string &str);
 
     void fixNegative();
 

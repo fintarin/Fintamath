@@ -564,7 +564,7 @@ namespace fintamath {
     k = a divide p.
   */
   Rational trigonometryReduce(const Rational &rhs, size_t multiplier, int64_t precision) {
-    Rational period = int64_t(multiplier) * getPi(getNewPrecision(precision) + rhs.getInteger().getSize());
+    Rational period = int64_t(multiplier) * getPi(getNewPrecision(precision) + int64_t(rhs.getInteger().length()));
     Integer perionMultiplier = (rhs / period).getInteger();
     Rational res = rhs - perionMultiplier * period;
     return res;
