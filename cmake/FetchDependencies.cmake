@@ -2,6 +2,9 @@
 
 include(FetchContent)
 
+# Find GMP
+find_package(GMP REQUIRED)
+
 # Fetch GTest
 if(${PROJECT_NAME}_build_tests)
   message(STATUS "Fetching GTest...")

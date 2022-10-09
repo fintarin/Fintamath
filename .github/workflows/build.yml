@@ -35,6 +35,10 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install Conan Packet Manage
+        if: matrix.config.os == 'windows-latest'
+        run: pip3 install conan
+
       - name: Configure CMake
         working-directory: ${{github.workspace}}
         run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON -Dfintamath_warnings_as_errors=ON
