@@ -18,9 +18,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(cmake/FetchDependencies.cmake)
-include(cmake/CompilerWarnings.cmake)
-include(cmake/Coverage.cmake)
-include(cmake/Sanitizers.cmake)
 
 add_subdirectory(src)
 
@@ -28,3 +25,7 @@ if(${PROJECT_NAME}_build_tests)
   enable_testing()
   add_subdirectory(tests)
 endif()
+
+include(cmake/CompilerWarnings.cmake)
+include(cmake/Coverage.cmake)
+include(cmake/Sanitizers.cmake)
