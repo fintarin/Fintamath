@@ -26,10 +26,9 @@ Fintamath is an algebra & analysis library written in pure C++.
   * GCC 9 or higher
   * Clang 11 or higher
   * MSVC 14 or higher
+* GMP library
 * OS:
   * Linux
-  * Windows
-  * macOS
 
 ## Build
 
