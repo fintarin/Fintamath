@@ -10,7 +10,7 @@
 namespace fintamath {
   struct IntegerImpl;
 
-  class Integer : public NumberImpl<Integer> {
+  class Integer : public NumberCRTP<Integer> {
   public:
     Integer();
 

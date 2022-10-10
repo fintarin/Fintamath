@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class DoubleFactorial : public FunctionImpl<DoubleFactorial> {
+  class DoubleFactorial : public FunctionCRTP<DoubleFactorial> {
   public:
     DoubleFactorial() = default;
 

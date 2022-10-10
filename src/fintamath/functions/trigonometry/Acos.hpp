@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Acos : public FunctionImpl<Acos> {
+  class Acos : public FunctionCRTP<Acos> {
   public:
     Acos() = default;
 

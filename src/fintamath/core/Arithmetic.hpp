@@ -8,11 +8,11 @@
     auto res = (*this OPER rhs.to<Derived>()).simplify();                                                              \
     return meta::castPtr<Arithmetic>(res);                                                                             \
   }                                                                                                                    \
-  if (auto tmp = meta ::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                             \
+  if (auto tmp = meta::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
     auto res = (*this OPER tmp->template to<Arithmetic>())->simplify();                                                \
     return meta::castPtr<Arithmetic>(res);                                                                             \
   }                                                                                                                    \
-  if (auto tmp = meta ::convertRhsToLhsType(rhs, *this); tmp != nullptr) {                                             \
+  if (auto tmp = meta::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
     auto res = (tmp->template to<Arithmetic>() OPER rhs)->simplify();                                                  \
     return meta::castPtr<Arithmetic>(res);                                                                             \
   }                                                                                                                    \
@@ -77,9 +77,9 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class ArithmeticImpl : virtual public Arithmetic, virtual public MathObjectImpl<Derived> {
+  class ArithmeticCRTP : virtual public Arithmetic, virtual public MathObjectCRTP<Derived> {
   public:
-    ~ArithmeticImpl() override = default;
+    ~ArithmeticCRTP() override = default;
 
     Derived &operator+=(const Derived &rhs) {
       return add(rhs);
@@ -119,7 +119,7 @@ namespace fintamath {
 
     Derived operator-() const {
       Derived tmp = Derived(static_cast<const Derived &>(*this));
-      return static_cast<ArithmeticImpl<Derived> &>(tmp).negate();
+      return static_cast<ArithmeticCRTP<Derived> &>(tmp).negate();
     }
 
   protected:

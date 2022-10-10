@@ -6,10 +6,10 @@
   if (rhs.is<Derived>()) {                                                                                             \
     return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
-  if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                              \
+  if (auto tmp = meta::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
     return *this OPER tmp->template to<Comparable>();                                                                  \
   }                                                                                                                    \
-  if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {                                              \
+  if (auto tmp = meta::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
     return tmp->template to<Comparable>() OPER rhs;                                                                    \
   }                                                                                                                    \
   throw std::invalid_argument("Incompatible types")
@@ -53,9 +53,9 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class ComparableImpl : virtual public Comparable, virtual public MathObjectImpl<Derived> {
+  class ComparableCRTP : virtual public Comparable, virtual public MathObjectCRTP<Derived> {
   public:
-    ~ComparableImpl() override = default;
+    ~ComparableCRTP() override = default;
 
     bool operator<(const Derived &rhs) const {
       return less(rhs);

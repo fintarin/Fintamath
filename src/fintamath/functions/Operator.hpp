@@ -13,8 +13,8 @@ namespace fintamath {
   };
 
   template <typename Derived>
-  class OperatorImpl : virtual public Operator, virtual public FunctionImpl<Derived> {
+  class OperatorCRTP : virtual public Operator, virtual public FunctionCRTP<Derived> {
   public:
-    ~OperatorImpl() override = default;
+    ~OperatorCRTP() override = default;
   };
 }

@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Cos : public FunctionImpl<Cos> {
+  class Cos : public FunctionCRTP<Cos> {
   public:
     Cos() = default;
 

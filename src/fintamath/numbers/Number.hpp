@@ -11,6 +11,10 @@ namespace fintamath {
   class Number : virtual public Comparable, virtual public Arithmetic, virtual public Incremental {
   public:
     ~Number() override = default;
+
+    static NumberPtr parse(const std::string &str);
+
+    static NumberPtr parse(int64_t num);
   };
 
   inline NumberPtr operator+(const Number &lhs, const Number &rhs) {
@@ -34,11 +38,11 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class NumberImpl : public Number,
-                     public ComparableImpl<Derived>,
-                     public ArithmeticImpl<Derived>,
-                     public IncrementalImpl<Derived> {
+  class NumberCRTP : public Number,
+                     public ComparableCRTP<Derived>,
+                     public ArithmeticCRTP<Derived>,
+                     public IncrementalCRTP<Derived> {
   public:
-    ~NumberImpl() override = default;
+    ~NumberCRTP() override = default;
   };
 }

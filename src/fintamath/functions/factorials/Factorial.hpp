@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Factorial : public FunctionImpl<Factorial> {
+  class Factorial : public FunctionCRTP<Factorial> {
   public:
     Factorial() = default;
 

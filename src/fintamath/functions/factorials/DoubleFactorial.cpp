@@ -12,7 +12,7 @@ namespace fintamath {
       throw std::invalid_argument("Rhs must be Integer");
     }
 
-    auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
+    auto newRhs = meta::convertMathObject(rhs, Rational());
     return std::make_unique<Integer>(doubleFactorial(rhs.to<Integer>()));
   }
 

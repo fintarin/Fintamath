@@ -6,7 +6,7 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
-  class Expression : public MathObjectImpl<Expression> {
+  class Expression : public MathObjectCRTP<Expression> {
   public:
     Expression() = default;
 
@@ -47,8 +47,6 @@ namespace fintamath {
 
     static ExprPtr parseFiniteTerm(const std::string &term);
 
-    static ExprPtr parseConstant(const std::string &term);
-
     static ExprPtr parseFunction(const std::string &term);
 
     static ExprVect getArgs(const std::string &args);
@@ -79,7 +77,7 @@ namespace fintamath {
 
     static ExprPtr simplifyMulVar(const ExprPtr &expr);
 
-    static ExprPtr createAddExpr(const ExprPtr &currNode, const ExprPtr &addNode);
+    static ExprPtr createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr);
 
     static ExprPtr openBracketsMulAdd(const ExprPtr &expr);
 

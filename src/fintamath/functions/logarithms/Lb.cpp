@@ -12,7 +12,7 @@ namespace fintamath {
     if (!rhs.instanceOf<Arithmetic>()) {
       throw std::invalid_argument("Rhs must be Arithmetic");
     }
-    auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
+    auto newRhs = meta::convertMathObject(rhs, Rational());
     return lb(newRhs->to<Rational>(), defaultPrecision).simplify();
   }
 

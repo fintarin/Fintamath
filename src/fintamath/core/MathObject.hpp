@@ -10,10 +10,10 @@
   if (rhs.is<Derived>()) {                                                                                             \
     return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
-  if (auto tmp = meta::convertRhsToLhsType(*this, rhs); tmp != nullptr) {                                              \
+  if (auto tmp = meta::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
     return *this OPER * tmp;                                                                                           \
   }                                                                                                                    \
-  if (auto tmp = meta::convertRhsToLhsType(rhs, *this); tmp != nullptr) {                                              \
+  if (auto tmp = meta::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
     return *tmp OPER rhs;                                                                                              \
   }                                                                                                                    \
   return false
@@ -68,9 +68,9 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class MathObjectImpl : virtual public MathObject {
+  class MathObjectCRTP : virtual public MathObject {
   public:
-    ~MathObjectImpl() override = default;
+    ~MathObjectCRTP() override = default;
 
     MathObjectPtr clone() const final {
       return std::make_unique<Derived>(to<Derived>());

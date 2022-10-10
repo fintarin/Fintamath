@@ -9,12 +9,14 @@ namespace fintamath {
   class Literal : virtual public MathObject {
   public:
     ~Literal() override = default;
+
+    static LiteralPtr parse(const std::string &str);
   };
 
   template <typename Derived>
-  class LiteralImpl : virtual public Literal, virtual public MathObjectImpl<Derived> {
+  class LiteralCRTP : virtual public Literal, virtual public MathObjectCRTP<Derived> {
   public:
-    ~LiteralImpl() override = default;
+    ~LiteralCRTP() override = default;
 
   protected:
     bool equals(const Derived &rhs) const final {

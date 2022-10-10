@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Sin : public FunctionImpl<Sin> {
+  class Sin : public FunctionCRTP<Sin> {
   public:
     Sin() = default;
 

@@ -18,14 +18,16 @@ namespace fintamath {
       return call(argsVect);
     }
 
+    static FunctionPtr parse(const std::string &str, bool unaryIfPossible = false);
+
   protected:
     virtual MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const = 0;
   };
 
   template <typename Derived>
-  class FunctionImpl : virtual public Function, virtual public MathObjectImpl<Derived> {
+  class FunctionCRTP : virtual public Function, virtual public MathObjectCRTP<Derived> {
   public:
-    ~FunctionImpl() override = default;
+    ~FunctionCRTP() override = default;
 
   protected:
     bool equals(const Derived & /*rhs*/) const override {

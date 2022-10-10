@@ -3,7 +3,7 @@
 #include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
-  class Eq : public OperatorImpl<Eq> {
+  class Eq : public OperatorCRTP<Eq> {
   public:
     Eq() = default;
 

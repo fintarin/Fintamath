@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Atan : public FunctionImpl<Atan> {
+  class Atan : public FunctionCRTP<Atan> {
   public:
     Atan() = default;
 

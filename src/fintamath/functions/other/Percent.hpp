@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Percent : public FunctionImpl<Percent> {
+  class Percent : public FunctionCRTP<Percent> {
   public:
     Percent() = default;
 

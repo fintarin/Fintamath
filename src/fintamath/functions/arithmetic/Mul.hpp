@@ -3,7 +3,7 @@
 #include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
-  class Mul : public OperatorImpl<Mul> {
+  class Mul : public OperatorCRTP<Mul> {
   public:
     Mul() = default;
 
