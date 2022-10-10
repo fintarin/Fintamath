@@ -19,4 +19,7 @@ Checks: >-
   -modernize-use-trailing-return-type,
   -modernize-use-nodiscard,
   -readability-identifier-length,
-  -readability-suspicious-call-argument
+  -readability-suspicious-call-argument,
+  -misc-non-private-member-variables-in-classes,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -hicpp-no-array-decay
