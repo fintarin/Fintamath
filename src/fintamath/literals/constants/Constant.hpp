@@ -14,6 +14,8 @@ namespace fintamath {
     ~Constant() override = default;
 
     virtual Rational getValue(int64_t precision) const = 0;
+
+    static ConstantPtr parse(const std::string& str);
   };
 
   template <typename Derived>

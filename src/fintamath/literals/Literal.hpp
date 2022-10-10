@@ -9,6 +9,8 @@ namespace fintamath {
   class Literal : virtual public MathObject {
   public:
     ~Literal() override = default;
+
+    static LiteralPtr parse(const std::string &str);
   };
 
   template <typename Derived>
