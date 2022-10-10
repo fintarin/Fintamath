@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 namespace fintamath::tests {
-  class TestArithmetic : public ArithmeticImpl<TestArithmetic> {
+  class TestArithmetic : public ArithmeticCRTP<TestArithmetic> {
   public:
     std::string toString() const override {
       return {};

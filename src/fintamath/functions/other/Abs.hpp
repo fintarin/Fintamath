@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Abs : public FunctionImpl<Abs> {
+  class Abs : public FunctionCRTP<Abs> {
   public:
     Abs() = default;
 

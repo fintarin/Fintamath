@@ -25,9 +25,9 @@ namespace fintamath {
   };
 
   template <typename Derived>
-  class FunctionImpl : virtual public Function, virtual public MathObjectImpl<Derived> {
+  class FunctionCRTP : virtual public Function, virtual public MathObjectCRTP<Derived> {
   public:
-    ~FunctionImpl() override = default;
+    ~FunctionCRTP() override = default;
 
   protected:
     bool equals(const Derived & /*rhs*/) const override {

@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Cot : public FunctionImpl<Cot> {
+  class Cot : public FunctionCRTP<Cot> {
   public:
     Cot() = default;
 

@@ -53,9 +53,9 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class ComparableImpl : virtual public Comparable, virtual public MathObjectImpl<Derived> {
+  class ComparableCRTP : virtual public Comparable, virtual public MathObjectCRTP<Derived> {
   public:
-    ~ComparableImpl() override = default;
+    ~ComparableCRTP() override = default;
 
     bool operator<(const Derived &rhs) const {
       return less(rhs);

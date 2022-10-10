@@ -3,7 +3,7 @@
 #include "fintamath/literals/Literal.hpp"
 
 namespace fintamath {
-  class Variable : public LiteralImpl<Variable> {
+  class Variable : public LiteralCRTP<Variable> {
   public:
     explicit Variable(const std::string &str);
 

@@ -3,7 +3,7 @@
 #include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
-  class Neg : public OperatorImpl<Neg> {
+  class Neg : public OperatorCRTP<Neg> {
   public:
     Neg() = default;
 

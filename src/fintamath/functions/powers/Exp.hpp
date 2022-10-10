@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Exp : public FunctionImpl<Exp> {
+  class Exp : public FunctionCRTP<Exp> {
   public:
     Exp() = default;
 

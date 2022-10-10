@@ -3,7 +3,7 @@
 #include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
-  class Div : public OperatorImpl<Div> {
+  class Div : public OperatorCRTP<Div> {
   public:
     Div() = default;
 

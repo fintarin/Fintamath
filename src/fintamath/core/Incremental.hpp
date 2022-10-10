@@ -48,9 +48,9 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class IncrementalImpl : virtual public MathObjectImpl<Derived>, virtual public Incremental {
+  class IncrementalCRTP : virtual public MathObjectCRTP<Derived>, virtual public Incremental {
   public:
-    ~IncrementalImpl() override = default;
+    ~IncrementalCRTP() override = default;
 
     Derived &operator++() {
       return increase();

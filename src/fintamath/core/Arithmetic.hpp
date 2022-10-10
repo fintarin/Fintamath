@@ -77,9 +77,9 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class ArithmeticImpl : virtual public Arithmetic, virtual public MathObjectImpl<Derived> {
+  class ArithmeticCRTP : virtual public Arithmetic, virtual public MathObjectCRTP<Derived> {
   public:
-    ~ArithmeticImpl() override = default;
+    ~ArithmeticCRTP() override = default;
 
     Derived &operator+=(const Derived &rhs) {
       return add(rhs);
@@ -119,7 +119,7 @@ namespace fintamath {
 
     Derived operator-() const {
       Derived tmp = Derived(static_cast<const Derived &>(*this));
-      return static_cast<ArithmeticImpl<Derived> &>(tmp).negate();
+      return static_cast<ArithmeticCRTP<Derived> &>(tmp).negate();
     }
 
   protected:

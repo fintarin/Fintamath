@@ -3,7 +3,7 @@
 #include "fintamath/literals/constants/Constant.hpp"
 
 namespace fintamath {
-  class Pi : public ConstantImpl<Pi> {
+  class Pi : public ConstantCRTP<Pi> {
   public:
     Rational getValue(int64_t precision) const override;
 

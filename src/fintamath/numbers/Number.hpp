@@ -38,11 +38,11 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class NumberImpl : public Number,
-                     public ComparableImpl<Derived>,
-                     public ArithmeticImpl<Derived>,
-                     public IncrementalImpl<Derived> {
+  class NumberCRTP : public Number,
+                     public ComparableCRTP<Derived>,
+                     public ArithmeticCRTP<Derived>,
+                     public IncrementalCRTP<Derived> {
   public:
-    ~NumberImpl() override = default;
+    ~NumberCRTP() override = default;
   };
 }

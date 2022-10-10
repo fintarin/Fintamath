@@ -6,7 +6,7 @@
 #include "fintamath/core/MathObject.hpp"
 
 namespace fintamath {
-  class Expression : public MathObjectImpl<Expression> {
+  class Expression : public MathObjectCRTP<Expression> {
   public:
     Expression() = default;
 

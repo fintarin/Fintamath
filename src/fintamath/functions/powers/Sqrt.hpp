@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Sqrt : public FunctionImpl<Sqrt> {
+  class Sqrt : public FunctionCRTP<Sqrt> {
   public:
     Sqrt() = default;
 

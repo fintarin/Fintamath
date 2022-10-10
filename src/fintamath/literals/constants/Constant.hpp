@@ -19,8 +19,8 @@ namespace fintamath {
   };
 
   template <typename Derived>
-  class ConstantImpl : virtual public Constant, virtual public LiteralImpl<Derived> {
+  class ConstantCRTP : virtual public Constant, virtual public LiteralCRTP<Derived> {
   public:
-    ~ConstantImpl() override = default;
+    ~ConstantCRTP() override = default;
   };
 }

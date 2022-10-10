@@ -3,7 +3,7 @@
 #include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
-  class Sub : public OperatorImpl<Sub> {
+  class Sub : public OperatorCRTP<Sub> {
   public:
     Sub() = default;
 

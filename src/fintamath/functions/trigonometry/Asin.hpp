@@ -3,7 +3,7 @@
 #include "fintamath/functions/Function.hpp"
 
 namespace fintamath {
-  class Asin : public FunctionImpl<Asin> {
+  class Asin : public FunctionCRTP<Asin> {
   public:
     Asin() = default;
 

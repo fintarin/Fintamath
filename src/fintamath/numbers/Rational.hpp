@@ -3,7 +3,7 @@
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  class Rational : public NumberImpl<Rational> {
+  class Rational : public NumberCRTP<Rational> {
   public:
     Rational() = default;
 
