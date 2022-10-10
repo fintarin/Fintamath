@@ -8,17 +8,19 @@ namespace fintamath::meta {
   auto initConverter() {
     MultiMethod<MathObjectPtr(const MathObject &, const MathObject &)> converter;
 
+    converter.add<Integer, Integer>(
+        [](const Integer &value, const Integer & /*type*/) { return std::make_unique<Integer>(value); });
     converter.add<Rational, Rational>(
-        [](const Rational & /*lhs*/, const Rational &rhs) { return std::make_unique<Rational>(rhs); });
-    converter.add<Rational, Integer>(
-        [](const Rational & /*lhs*/, const Integer &rhs) { return std::make_unique<Rational>(rhs); });
+        [](const Rational &value, const Rational & /*type*/) { return std::make_unique<Rational>(value); });
+    converter.add<Integer, Rational>(
+        [](const Integer &value, const Rational & /*type*/) { return std::make_unique<Rational>(value); });
 
     return converter;
   }
 
   const auto converter = initConverter();
 
-  MathObjectPtr convertRhsToLhsType(const MathObject &lhs, const MathObject &rhs) {
-    return converter(lhs, rhs);
+  MathObjectPtr convertMathObject(const MathObject &value, const MathObject &type) {
+    return converter(value, type);
   }
 }

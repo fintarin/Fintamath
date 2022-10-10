@@ -12,7 +12,7 @@ namespace fintamath {
       throw std::invalid_argument("Rhs must be Number");
     }
 
-    auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
+    auto newRhs = meta::convertMathObject(rhs, Rational());
     return tan(newRhs->to<Rational>(), defaultPrecision).simplify();
   }
 

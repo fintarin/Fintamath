@@ -16,8 +16,8 @@ namespace fintamath {
     if (!lhs.instanceOf<Arithmetic>() || !rhs.instanceOf<Arithmetic>()) {
       throw std::invalid_argument("Lhs and Rhs must be Arithmetic");
     }
-    auto newLhs = meta::convertRhsToLhsType(Rational(), lhs);
-    auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
+    auto newLhs = meta::convertMathObject(lhs, Rational());
+    auto newRhs = meta::convertMathObject(rhs, Rational());
     return pow(newLhs->to<Rational>(), newRhs->to<Rational>(), defaultPrecision).simplify();
   }
 

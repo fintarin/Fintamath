@@ -8,5 +8,5 @@ namespace fintamath {
 }
 
 namespace fintamath::meta {
-  MathObjectPtr convertRhsToLhsType(const MathObject &lhs, const MathObject &rhs);
+  MathObjectPtr convertMathObject(const MathObject &value, const MathObject &type);
 }

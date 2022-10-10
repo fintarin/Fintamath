@@ -13,7 +13,7 @@ namespace fintamath {
       throw std::invalid_argument("Rhs must be Arithmetic");
     }
 
-    auto newRhs = meta::convertRhsToLhsType(Rational(), rhs);
+    auto newRhs = meta::convertMathObject(rhs, Rational());
     return (newRhs->to<Rational>() / percentValue).simplify();
   }
 
