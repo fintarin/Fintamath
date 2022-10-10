@@ -8,15 +8,18 @@ find_package(GMP REQUIRED)
 # Fetch Eigen3
 if(NOT TARGET Eigen3::Eigen)
   FetchContent_Declare(
-    eigen3
-    GIT_REPOSITORY https://gitlab.com/libeigen/eigen
-    GIT_TAG 3.4.0)
+    Eigen
+    GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE)
 
   set(EIGEN_BUILD_DOC OFF)
   set(BUILD_TESTING OFF)
   set(EIGEN_BUILD_PKGCONFIG OFF)
-
-  FetchContent_MakeAvailable(eigen3)
+  set(OFF)
+  
+  FetchContent_MakeAvailable(Eigen)
 endif()
 
 # Fetch GTest
