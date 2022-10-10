@@ -11,6 +11,10 @@ namespace fintamath {
   class Number : virtual public Comparable, virtual public Arithmetic, virtual public Incremental {
   public:
     ~Number() override = default;
+
+    static NumberPtr parse(const std::string &str);
+
+    static NumberPtr parse(int64_t num);
   };
 
   inline NumberPtr operator+(const Number &lhs, const Number &rhs) {
