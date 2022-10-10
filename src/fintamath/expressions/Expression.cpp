@@ -1,9 +1,11 @@
 #include "fintamath/expressions/Expression.hpp"
 
 #include <algorithm>
+#include <memory>
 #include <regex>
 #include <stdexcept>
 
+#include "fintamath/core/MathObject.hpp"
 #include "fintamath/functions/Function.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -12,27 +14,15 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
-#include "fintamath/functions/logarithms/Lb.hpp"
-#include "fintamath/functions/logarithms/Lg.hpp"
-#include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/logic/Eq.hpp"
-#include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Percent.hpp"
-#include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/functions/powers/Sqrt.hpp"
-#include "fintamath/functions/trigonometry/Acos.hpp"
-#include "fintamath/functions/trigonometry/Acot.hpp"
-#include "fintamath/functions/trigonometry/Asin.hpp"
-#include "fintamath/functions/trigonometry/Atan.hpp"
-#include "fintamath/functions/trigonometry/Cos.hpp"
-#include "fintamath/functions/trigonometry/Cot.hpp"
-#include "fintamath/functions/trigonometry/Sin.hpp"
-#include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/literals/Literal.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/E.hpp"
-#include "fintamath/literals/constants/Pi.hpp"
+#include "fintamath/literals/constants/Constant.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
   using ExprPtr = std::shared_ptr<Expression>;
@@ -432,92 +422,28 @@ namespace fintamath {
     if (auto parseResult = parseFunction(term); parseResult) {
       return parseResult;
     }
-    if (auto parseResult = parseConstant(term); parseResult) {
-      return parseResult;
+
+    if (LiteralPtr ptr = Literal::parse(term)) {
+      return std::make_shared<Expression>(*ptr);
     }
 
-    try {
-      Expression parseResult;
-      parseResult.info = std::make_shared<Variable>(term);
-      return std::make_shared<Expression>(parseResult);
-    } catch (const std::invalid_argument &) {
-      // do nothing
-    }
-    try {
-      Expression parseResult;
-      parseResult.info = std::make_shared<Integer>(term);
-      return std::make_shared<Expression>(parseResult);
-    } catch (const std::invalid_argument &) {
-      // do nothing
-    }
-    try {
-      Expression parseResult;
-      parseResult.info = std::make_shared<Rational>(term);
-      return std::make_shared<Expression>(parseResult);
-    } catch (const std::invalid_argument &) {
-      // do nothing
+    if (NumberPtr ptr = Number::parse(term)) {
+      return std::make_shared<Expression>(*ptr);
     }
 
     throw std::invalid_argument("Expression invalid input");
   }
 
-  ExprPtr Expression::parseConstant(const std::string &term) {
-    Expression expr;
-
-    if (term == "e") {
-      expr.info = std::make_shared<E>();
-    } else if (term == "pi") {
-      expr.info = std::make_shared<Pi>();
-    } else {
-      return {};
-    }
-
-    return std::make_shared<Expression>(expr);
-  }
-
   ExprPtr Expression::parseFunction(const std::string &term) {
-    std::regex reg("^(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|atan|acot|abs)");
+    const std::regex reg("^(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|atan|acot|abs)");
     std::smatch funcNameMatch;
     std::regex_search(term, funcNameMatch, reg);
 
     if (!funcNameMatch.empty()) {
-      std::string funcName = funcNameMatch.str();
+      const std::string funcName = funcNameMatch.str();
       Expression expr;
-
-      if (funcName == "sqrt") {
-        expr.info = std::make_shared<Sqrt>();
-      } else if (funcName == "exp") {
-        expr.info = std::make_shared<Exp>();
-      } else if (funcName == "log") {
-        expr.info = std::make_shared<Log>();
-      } else if (funcName == "ln") {
-        expr.info = std::make_shared<Ln>();
-      } else if (funcName == "lb") {
-        expr.info = std::make_shared<Lb>();
-      } else if (funcName == "lg") {
-        expr.info = std::make_shared<Lg>();
-      } else if (funcName == "sin") {
-        expr.info = std::make_shared<Sin>();
-      } else if (funcName == "cos") {
-        expr.info = std::make_shared<Cos>();
-      } else if (funcName == "tan") {
-        expr.info = std::make_shared<Tan>();
-      } else if (funcName == "cot") {
-        expr.info = std::make_shared<Cot>();
-      } else if (funcName == "asin") {
-        expr.info = std::make_shared<Asin>();
-      } else if (funcName == "acos") {
-        expr.info = std::make_shared<Acos>();
-      } else if (funcName == "acot") {
-        expr.info = std::make_shared<Acot>();
-      } else if (funcName == "atan") {
-        expr.info = std::make_shared<Atan>();
-      } else if (funcName == "abs") {
-        expr.info = std::make_shared<Abs>();
-      } else {
-        return {};
-      }
-
+      FunctionPtr functPtr = Function::parse(funcName);
+      expr.info = std::shared_ptr<MathObject>(functPtr.release());
       expr.children = getArgs(cutBraces(term.substr(funcName.size())));
       return std::make_shared<Expression>(expr);
     }
@@ -897,7 +823,7 @@ namespace fintamath {
 
     auto range = newExpr->children.at(1)->info->to<Integer>();
     for (int i = 0; i < range; i++) {
-      std::shared_ptr<MathObject> copyExpr = newExpr->children.at(0)->clone();
+      const std::shared_ptr<MathObject> copyExpr = newExpr->children.at(0)->clone();
       mulExpr.children.push_back(std::make_shared<Expression>(copyExpr->to<Expression>()));
     }
     return openBracketsMulAdd(std::make_shared<Expression>(mulExpr));
