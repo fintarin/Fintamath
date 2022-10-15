@@ -7,6 +7,10 @@
 
 #include "gmp/mini-gmp.h"
 
+#if _MSC_VER && !__INTEL_COMPILER
+#pragma warning(disable : 4244)
+#endif
+
 namespace fintamath {
   constexpr int64_t BASE = 10;
 
