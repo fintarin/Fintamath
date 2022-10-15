@@ -5,13 +5,36 @@
 #include <stdexcept>
 #include <string>
 
-#include <gmpxx.h>
+#include "gmp/mini-gmp.h"
 
 namespace fintamath {
   constexpr int64_t BASE = 10;
 
   struct IntegerImpl {
-    mpz_class mpz;
+    mpz_t mpz{};
+
+    IntegerImpl() {
+      mpz_init_set_ui(mpz, 0);
+    }
+
+    IntegerImpl(const IntegerImpl &rhs) {
+      mpz_set(mpz, rhs.mpz);
+    }
+
+    IntegerImpl(IntegerImpl &&rhs) noexcept = delete;
+
+    IntegerImpl &operator=(const IntegerImpl &rhs) {
+      if (this != &rhs) {
+        mpz_set(mpz, rhs.mpz);
+      }
+      return *this;
+    }
+
+    IntegerImpl &operator=(IntegerImpl &&rhs) = delete;
+
+    ~IntegerImpl() {
+      mpz_clear(mpz);
+    }
   };
 
   static bool isIntegerStr(std::string str);
@@ -21,8 +44,7 @@ namespace fintamath {
   }
 
   Integer::Integer(const Integer &rhs) {
-    value = std::make_unique<IntegerImpl>();
-    *value = *rhs.value;
+    value = std::make_unique<IntegerImpl>(*rhs.value);
   }
 
   Integer::Integer(Integer &&rhs) noexcept : value(std::move(rhs.value)) {
@@ -30,8 +52,7 @@ namespace fintamath {
 
   Integer &Integer::operator=(const Integer &rhs) {
     if (this != &rhs) {
-      value = std::make_unique<IntegerImpl>();
-      *value = *rhs.value;
+      value = std::make_unique<IntegerImpl>(*rhs.value);
     }
     return *this;
   }
@@ -50,11 +71,11 @@ namespace fintamath {
       throw std::invalid_argument("Invalid integer string: " + str);
     }
 
-    value->mpz.set_str(str, BASE);
+    mpz_set_str(value->mpz, str.c_str(), BASE);
   }
 
   Integer::Integer(int64_t val) : Integer() {
-    value->mpz = val;
+    mpz_set_si(value->mpz, val);
   }
 
   size_t Integer::length() const {
@@ -67,7 +88,7 @@ namespace fintamath {
     }
 
     Integer res;
-    res.value->mpz = ::sqrt(value->mpz);
+    res.callFunction([this](IntegerImpl &resVal) { mpz_sqrt(resVal.mpz, value->mpz); });
     return res;
   }
 
@@ -80,33 +101,34 @@ namespace fintamath {
   }
 
   std::string Integer::toString() const {
-    return value->mpz.get_str(BASE);
+    char *tmp = nullptr;
+    return mpz_get_str(tmp, BASE, value->mpz);
   }
 
   bool Integer::equals(const Integer &rhs) const {
-    return value->mpz == rhs.value->mpz;
+    return mpz_cmp(value->mpz, rhs.value->mpz) == 0;
   }
 
   bool Integer::less(const Integer &rhs) const {
-    return value->mpz < rhs.value->mpz;
+    return mpz_cmp(value->mpz, rhs.value->mpz) == -1;
   }
 
   bool Integer::more(const Integer &rhs) const {
-    return value->mpz > rhs.value->mpz;
+    return mpz_cmp(value->mpz, rhs.value->mpz) == 1;
   }
 
   Integer &Integer::add(const Integer &rhs) {
-    value->mpz += rhs.value->mpz;
+    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_add(resVal.mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
   Integer &Integer::substract(const Integer &rhs) {
-    value->mpz -= rhs.value->mpz;
+    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_sub(resVal.mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
   Integer &Integer::multiply(const Integer &rhs) {
-    value->mpz *= rhs.value->mpz;
+    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_mul(resVal.mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
@@ -115,22 +137,22 @@ namespace fintamath {
       throw std::domain_error("Division by zero");
     }
 
-    value->mpz /= rhs.value->mpz;
+    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_tdiv_q(resVal.mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
   Integer &Integer::negate() {
-    value->mpz = -value->mpz;
+    callFunction([this](IntegerImpl &resVal) { mpz_neg(resVal.mpz, value->mpz); });
     return *this;
   }
 
   Integer &Integer::increase() {
-    ++value->mpz;
+    callFunction([this](IntegerImpl &resVal) { mpz_add_ui(resVal.mpz, value->mpz, 1); });
     return *this;
   }
 
   Integer &Integer::decrease() {
-    --value->mpz;
+    callFunction([this](IntegerImpl &resVal) { mpz_sub_ui(resVal.mpz, value->mpz, 1); });
     return *this;
   }
 
@@ -139,7 +161,14 @@ namespace fintamath {
       throw std::domain_error("Modulo by zero");
     }
 
-    value->mpz %= rhs.value->mpz;
+    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_tdiv_r(resVal.mpz, value->mpz, rhs.value->mpz); });
+    return *this;
+  }
+
+  Integer &Integer::callFunction(const std::function<void(IntegerImpl &)> &func) {
+    IntegerImpl res;
+    func(res);
+    *value = res;
     return *this;
   }
 

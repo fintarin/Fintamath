@@ -62,6 +62,8 @@ namespace fintamath {
     Integer &mod(const Integer &rhs);
 
   private:
+    Integer &callFunction(const std::function<void(IntegerImpl &)> &func);
+
     std::unique_ptr<IntegerImpl> value;
   };
 
