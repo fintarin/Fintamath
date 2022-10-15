@@ -2,9 +2,6 @@
 
 include(FetchContent)
 
-# Find GMP
-find_package(GMP REQUIRED)
-
 # Fetch Eigen3
 if(NOT TARGET Eigen3::Eigen)
   FetchContent_Declare(
