@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include(cmake/FetchDependencies.cmake)
+include(cmake/FetchGtest.cmake)
 include(cmake/Coverage.cmake)
 include(cmake/Sanitizers.cmake)
 

@@ -2,7 +2,6 @@
 
 include(FetchContent)
 
-# Fetch GTest
 if(${PROJECT_NAME}_build_tests)
   message(STATUS "Fetching GTest...")
 
