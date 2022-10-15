@@ -9,4 +9,4 @@ add_library(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC .)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${GMP_LIBRARIES} Eigen3::Eigen)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_gmp Eigen3::Eigen)

@@ -23,10 +23,10 @@ jobs:
         config:
           - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
           - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
-          # - { name: macOS GCC, os: macOS-latest, cc: gcc, cxx: g++ }
-          # - { name: macOS Clang, os: macOS-latest, cc: clang, cxx: clang++ }
-          # - { name: Windows GCC, os: windows-latest, cc: gcc, cxx: g++ }
-          # - { name: Windows Clang, os: windows-latest, cc: clang, cxx: clang++ }
+          - { name: macOS GCC, os: macOS-latest, cc: gcc, cxx: g++ }
+          - { name: macOS Clang, os: macOS-latest, cc: clang, cxx: clang++ }
+          - { name: Windows GCC, os: windows-latest, cc: gcc, cxx: g++ }
+          - { name: Windows Clang, os: windows-latest, cc: clang, cxx: clang++ }
           # - { name: Windows MSVC, os: windows-latest, cc: msvc, cxx: msvc }
 
     steps:
@@ -34,10 +34,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-
-      - name: Install Conan Packet Manage
-        if: matrix.config.os == 'windows-latest'
-        run: pip3 install conan
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
