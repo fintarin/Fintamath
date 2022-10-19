@@ -148,7 +148,8 @@ TEST(ExpressionTests, simplifyTest) {
   // EXPECT_EQ(Expression("2!*e").simplify()->toString(), "5.436563656918090470720574942705324996");
   // EXPECT_EQ(Expression("e*2!").simplify()->toString(), "5.436563656918090470720574942705324996");
 
-  // EXPECT_EQ(Expression("sqrt((1-cos(2*(pi/3)))/2)").simplify()->toString(), "0.866025403784438646763723170752936183");
+  // EXPECT_EQ(Expression("sqrt((1-cos(2*(pi/3)))/2)").simplify()->toString(),
+  // "0.866025403784438646763723170752936183");
   // EXPECT_EQ(Expression("2*sqrt((1-cos(2*(pi/3)))/2)*cos(pi/3)").simplify()->toString(),
   //           "0.866025403784438646763723170752936183");
 }
