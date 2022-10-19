@@ -3,28 +3,20 @@
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
+  Pow::Pow() : OperatorCRTP(Operator::Priority::Exponentiation) {
+  }
+
   std::string Pow::toString() const {
     return "^";
   }
 
-  int Pow::getPriority() const {
-    return priority;
-  }
-
-  MathObjectPtr Pow::operator()(const MathObject &lhs, const MathObject &rhs) const {
-    constexpr int64_t defaultPrecision = 45;
-    if (!lhs.instanceOf<Arithmetic>() || !rhs.instanceOf<Arithmetic>()) {
-      throw std::invalid_argument("Lhs and Rhs must be Arithmetic");
-    }
-    auto newLhs = meta::convertMathObject(lhs, Rational());
-    auto newRhs = meta::convertMathObject(rhs, Rational());
-    return pow(newLhs->to<Rational>(), newRhs->to<Rational>(), defaultPrecision).simplify();
-  }
-
   MathObjectPtr Pow::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
-    if (argsVect.size() != 2) {
-      throw std::invalid_argument("The number of arguments must be 2");
-    }
-    return Pow::operator()(argsVect.at(0).get(), argsVect.at(1).get());
+    constexpr int64_t defaultPrecision = 45;
+
+    return pow(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(),
+               meta::convertMathObject(argsVect.at(1), Rational())->to<Rational>(), defaultPrecision)
+        .simplify();
   }
+
+  static const bool isDefined = Operator::addParser<Pow>();
 }

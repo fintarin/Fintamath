@@ -1,15 +1,14 @@
 #pragma once
 
-#include "fintamath/functions/Function.hpp"
+#include "fintamath/functions/Operator.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  class DoubleFactorial : public FunctionCRTP<DoubleFactorial> {
+  class DoubleFactorial : public OperatorCRTP<DoubleFactorial, Integer> {
   public:
-    DoubleFactorial() = default;
+    DoubleFactorial();
 
     std::string toString() const override;
-
-    MathObjectPtr operator()(const MathObject &rhs) const;
 
   protected:
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;

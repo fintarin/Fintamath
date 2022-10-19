@@ -11,6 +11,10 @@ TEST(AbsTests, toStringTest) {
   EXPECT_EQ(Abs().toString(), "abs");
 }
 
+TEST(AbsTests, getFunctionTypeTest) {
+  EXPECT_EQ(Abs().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(AbsTests, callTest) {
   EXPECT_EQ(Abs()(Integer(10))->toString(), "10");
   EXPECT_EQ(Abs()(Integer(-10))->toString(), "10");

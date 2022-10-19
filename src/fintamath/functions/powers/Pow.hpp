@@ -1,22 +1,16 @@
 #pragma once
 
+#include "fintamath/core/Arithmetic.hpp"
 #include "fintamath/functions/Operator.hpp"
 
 namespace fintamath {
-  class Pow : public OperatorCRTP<Pow> {
+  class Pow : public OperatorCRTP<Pow, Arithmetic, Arithmetic> {
   public:
-    Pow() = default;
+    Pow();
 
     std::string toString() const override;
 
-    int getPriority() const override;
-
-    MathObjectPtr operator()(const MathObject &lhs, const MathObject &rhs) const;
-
   protected:
     MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
-
-  private:
-    static constexpr int priority = 3;
   };
 }

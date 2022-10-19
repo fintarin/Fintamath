@@ -12,6 +12,10 @@ TEST(CosTests, toStringTest) {
   EXPECT_EQ(Cos().toString(), "cos");
 }
 
+TEST(CosTests, getFunctionTypeTest) {
+  EXPECT_EQ(Cos().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(CosTests, callTest) {
   EXPECT_EQ(Cos()(Integer(0))->toString(), "1");
   EXPECT_EQ(Cos()(Integer(10))->toString(), "-0.839071529076452452258863947824064835");

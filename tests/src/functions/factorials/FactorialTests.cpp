@@ -11,6 +11,14 @@ TEST(FactorialTests, toStringTest) {
   EXPECT_EQ(Factorial().toString(), "!");
 }
 
+TEST(FactorialTests, getFunctionTypeTest) {
+  EXPECT_EQ(Factorial().getFunctionType(), Function::Type::Unary);
+}
+
+TEST(FactorialTests, getOperatorPriorityTest) {
+  EXPECT_EQ(Factorial().getOperatorPriority(), Operator::Priority::PostfixUnary);
+}
+
 TEST(FactorialTests, callTest) {
   EXPECT_EQ(Factorial()(Integer(0))->toString(), "1");
   EXPECT_EQ(Factorial()(Integer(1))->toString(), "1");

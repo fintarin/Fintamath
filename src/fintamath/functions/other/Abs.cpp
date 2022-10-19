@@ -7,19 +7,9 @@ namespace fintamath {
     return "abs";
   }
 
-  MathObjectPtr Abs::operator()(const MathObject &rhs) const {
-    if (!rhs.instanceOf<Arithmetic>()) {
-      throw std::invalid_argument("Rhs must be Arithmetic");
-    }
-
-    auto newRhs = meta::convertMathObject(rhs, Rational());
-    return abs(newRhs->to<Rational>()).simplify();
-  }
-
   MathObjectPtr Abs::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
-    if (argsVect.size() != 1) {
-      throw std::invalid_argument("The number of arguments must be 1");
-    }
-    return Abs::operator()(argsVect.at(0).get());
+    return abs(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>()).simplify();
   }
+
+  static const bool isDefined = Function::addParser<Abs>();
 }

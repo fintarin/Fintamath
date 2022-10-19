@@ -11,6 +11,10 @@ TEST(AcotTests, toStringTest) {
   EXPECT_EQ(Acot().toString(), "acot");
 }
 
+TEST(AcotTests, getFunctionTypeTest) {
+  EXPECT_EQ(Acot().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(AcotTests, callTest) {
   EXPECT_EQ(Acot()(Integer(0))->toString(), "1.570796326794896619231321691639751442");
   EXPECT_EQ(Acot()(Integer(1))->toString(), "0.785398163397448309615660845819875721");

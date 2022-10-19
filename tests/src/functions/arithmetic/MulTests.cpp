@@ -11,8 +11,12 @@ TEST(MulTests, toStringTest) {
   EXPECT_EQ(Mul().toString(), "*");
 }
 
-TEST(MulTests, getPriorityTest) {
-  EXPECT_EQ(Mul().getPriority(), 2);
+TEST(MulTests, getFunctionTypeTest) {
+  EXPECT_EQ(Mul().getFunctionType(), Function::Type::Binary);
+}
+
+TEST(MulTests, getOperatorPriorityTest) {
+  EXPECT_EQ(Mul().getOperatorPriority(), Operator::Priority::Multiplication);
 }
 
 TEST(MulTests, callTest) {

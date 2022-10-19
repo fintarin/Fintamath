@@ -11,6 +11,10 @@ TEST(AcosTests, toStringTest) {
   EXPECT_EQ(Acos().toString(), "acos");
 }
 
+TEST(AcosTests, getFunctionTypeTest) {
+  EXPECT_EQ(Acos().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(AcosTests, callTest) {
   EXPECT_EQ(Acos()(Integer(1))->toString(), "0");
   EXPECT_EQ(Acos()(Integer(0))->toString(), "1.570796326794896619231321691639751442");

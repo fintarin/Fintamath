@@ -11,8 +11,12 @@ TEST(DivTests, toStringTest) {
   EXPECT_EQ(Div().toString(), "/");
 }
 
-TEST(DivTests, getPriorityTest) {
-  EXPECT_EQ(Div().getPriority(), 2);
+TEST(DivTests, getFunctionTypeTest) {
+  EXPECT_EQ(Div().getFunctionType(), Function::Type::Binary);
+}
+
+TEST(DivTests, getOperatorPriorityTest) {
+  EXPECT_EQ(Div().getOperatorPriority(), Operator::Priority::Multiplication);
 }
 
 TEST(DivTests, callTest) {

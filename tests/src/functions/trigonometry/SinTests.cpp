@@ -12,6 +12,10 @@ TEST(SinTests, toStringTest) {
   EXPECT_EQ(Sin().toString(), "sin");
 }
 
+TEST(SinTests, getFunctionTypeTest) {
+  EXPECT_EQ(Sin().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(SinTests, callTest) {
   EXPECT_EQ(Sin()(Integer(0))->toString(), "0");
   EXPECT_EQ(Sin()(Integer(10))->toString(), "-0.544021110889369813404747661851377282");

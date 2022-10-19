@@ -11,8 +11,12 @@ TEST(PowTests, toStringTest) {
   EXPECT_EQ(Pow().toString(), "^");
 }
 
-TEST(PowTests, getPriorityTest) {
-  EXPECT_EQ(Pow().getPriority(), 3);
+TEST(PowTests, getFunctionTypeTest) {
+  EXPECT_EQ(Pow().getFunctionType(), Function::Type::Binary);
+}
+
+TEST(PowTests, getOperatorPriorityTest) {
+  EXPECT_EQ(Pow().getOperatorPriority(), Operator::Priority::Exponentiation);
 }
 
 TEST(PowTests, callTest) {

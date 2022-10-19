@@ -11,6 +11,10 @@ TEST(AsinTests, toStringTest) {
   EXPECT_EQ(Asin().toString(), "asin");
 }
 
+TEST(AsinTests, getFunctionTypeTest) {
+  EXPECT_EQ(Asin().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(AsinTests, callTest) {
   EXPECT_EQ(Asin()(Integer(0))->toString(), "0");
   EXPECT_EQ(Asin()(Integer(1))->toString(), "1.570796326794896619231321691639751442");

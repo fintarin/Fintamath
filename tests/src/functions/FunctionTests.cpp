@@ -7,6 +7,7 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
@@ -58,13 +59,13 @@ TEST(FunctionTests, equalsTests) {
 }
 
 TEST(FunctionTests, parseTest) {
-  EXPECT_TRUE(Function::parse("+")->is<Add>());
-  EXPECT_TRUE(Function::parse("-")->is<Sub>());
-  EXPECT_TRUE(Function::parse("-", true)->is<Neg>());
+  EXPECT_TRUE(Function::parse("+", Function::Type::Binary)->is<Add>());
+  EXPECT_TRUE(Function::parse("+", Function::Type::Unary)->is<UnaryPlus>());
+  EXPECT_TRUE(Function::parse("-", Function::Type::Binary)->is<Sub>());
+  EXPECT_TRUE(Function::parse("-", Function::Type::Unary)->is<Neg>());
   EXPECT_TRUE(Function::parse("*")->is<Mul>());
   EXPECT_TRUE(Function::parse("/")->is<Div>());
   EXPECT_TRUE(Function::parse("^")->is<Pow>());
-  EXPECT_TRUE(Function::parse("pow")->is<Pow>());
   EXPECT_TRUE(Function::parse("%")->is<Percent>());
   EXPECT_TRUE(Function::parse("!")->is<Factorial>());
   EXPECT_TRUE(Function::parse("!!")->is<DoubleFactorial>());

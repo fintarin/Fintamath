@@ -7,19 +7,10 @@ namespace fintamath {
     return "lg";
   }
 
-  MathObjectPtr Lg::operator()(const MathObject &rhs) const {
+  MathObjectPtr Lg::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
-    if (!rhs.instanceOf<Arithmetic>()) {
-      throw std::invalid_argument("Rhs must be Arithmetic");
-    }
-    auto newRhs = meta::convertMathObject(rhs, Rational());
-    return lg(newRhs->to<Rational>(), defaultPrecision).simplify();
+    return lg(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
-  MathObjectPtr Lg::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
-    if (argsVect.size() != 1) {
-      throw std::invalid_argument("The number of arguments must be 1");
-    }
-    return Lg::operator()(argsVect.at(0).get());
-  }
+  static const bool isDefined = Function::addParser<Lg>();
 }
