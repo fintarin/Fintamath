@@ -15,5 +15,5 @@ namespace fintamath {
         .simplify();
   }
 
-  static const bool isDefined = Function::addParser<Log>();
+  static const bool isAdded = Function::addParser<Log>();
 }

@@ -15,5 +15,5 @@ namespace fintamath {
     return Number::parse(int64_t(argsVect.at(0).get() == argsVect.at(1).get()));
   }
 
-  static const bool isDefined = Operator::addParser<Eq>();
+  static const bool isAdded = Operator::addParser<Eq>();
 }

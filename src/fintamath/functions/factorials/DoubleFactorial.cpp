@@ -14,5 +14,5 @@ namespace fintamath {
     return std::make_unique<Integer>(doubleFactorial(argsVect.at(0).get().to<Integer>()));
   }
 
-  static const bool isDefined = Operator::addParser<DoubleFactorial>();
+  static const bool isAdded = Operator::addParser<DoubleFactorial>();
 }

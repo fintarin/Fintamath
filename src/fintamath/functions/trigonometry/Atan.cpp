@@ -12,5 +12,5 @@ namespace fintamath {
     return atan(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
-  static const bool isDefined = Function::addParser<Atan>();
+  static const bool isAdded = Function::addParser<Atan>();
 }

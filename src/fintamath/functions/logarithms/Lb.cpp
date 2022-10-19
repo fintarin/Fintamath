@@ -12,5 +12,5 @@ namespace fintamath {
     return lb(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
-  static const bool isDefined = Function::addParser<Lb>();
+  static const bool isAdded = Function::addParser<Lb>();
 }

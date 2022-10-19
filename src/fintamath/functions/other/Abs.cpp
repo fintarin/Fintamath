@@ -11,5 +11,5 @@ namespace fintamath {
     return abs(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>()).simplify();
   }
 
-  static const bool isDefined = Function::addParser<Abs>();
+  static const bool isAdded = Function::addParser<Abs>();
 }

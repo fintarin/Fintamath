@@ -18,5 +18,5 @@ namespace fintamath {
         .simplify();
   }
 
-  static const bool isDefined = Operator::addParser<Pow>();
+  static const bool isAdded = Operator::addParser<Pow>();
 }

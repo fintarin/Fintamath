@@ -12,5 +12,5 @@ namespace fintamath {
     return sqrt(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
-  static const bool isDefined = Function::addParser<Sqrt>();
+  static const bool isAdded = Function::addParser<Sqrt>();
 }

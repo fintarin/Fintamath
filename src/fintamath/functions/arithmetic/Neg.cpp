@@ -12,5 +12,5 @@ namespace fintamath {
     return -argsVect.at(0).get().to<Arithmetic>();
   }
 
-  static const bool isDefined = Operator::addParser<Neg>();
+  static const bool isAdded = Operator::addParser<Neg>();
 }
