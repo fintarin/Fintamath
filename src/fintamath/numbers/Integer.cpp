@@ -18,37 +18,20 @@ namespace fintamath {
     mpz_t mpz{};
 
     IntegerImpl() {
-      mpz_init_set_ui(mpz, 0);
+      mpz_init_set_si(mpz, 0);
     }
-
-    IntegerImpl(const IntegerImpl &rhs) {
-      mpz_set(mpz, rhs.mpz);
-    }
-
-    IntegerImpl(IntegerImpl &&rhs) noexcept = delete;
-
-    IntegerImpl &operator=(const IntegerImpl &rhs) {
-      if (this != &rhs) {
-        mpz_set(mpz, rhs.mpz);
-      }
-      return *this;
-    }
-
-    IntegerImpl &operator=(IntegerImpl &&rhs) = delete;
 
     ~IntegerImpl() {
       mpz_clear(mpz);
     }
   };
 
-  static bool isIntegerStr(std::string str);
-
   Integer::Integer() {
     value = std::make_unique<IntegerImpl>();
   }
 
-  Integer::Integer(const Integer &rhs) {
-    value = std::make_unique<IntegerImpl>(*rhs.value);
+  Integer::Integer(const Integer &rhs) : Integer() {
+    mpz_set(value->mpz, rhs.value->mpz);
   }
 
   Integer::Integer(Integer &&rhs) noexcept : value(std::move(rhs.value)) {
@@ -56,7 +39,8 @@ namespace fintamath {
 
   Integer &Integer::operator=(const Integer &rhs) {
     if (this != &rhs) {
-      value = std::make_unique<IntegerImpl>(*rhs.value);
+      value = std::make_unique<IntegerImpl>();
+      mpz_set(value->mpz, rhs.value->mpz);
     }
     return *this;
   }
@@ -71,15 +55,13 @@ namespace fintamath {
   Integer::~Integer() = default;
 
   Integer::Integer(const std::string &str) : Integer() {
-    if (!isIntegerStr(str)) {
-      throw std::invalid_argument("Invalid integer string: " + str);
+    if (mpz_set_str(value->mpz, str.c_str(), BASE) != 0) {
+      throw std::invalid_argument("Invalid integer: " + str);
     }
-
-    mpz_set_str(value->mpz, str.c_str(), BASE);
   }
 
   Integer::Integer(int64_t val) : Integer() {
-    mpz_set_si(value->mpz, val);
+    mpz_init_set_si(value->mpz, val);
   }
 
   size_t Integer::length() const {
@@ -92,7 +74,7 @@ namespace fintamath {
     }
 
     Integer res;
-    res.callFunction([this](IntegerImpl &resVal) { mpz_sqrt(resVal.mpz, value->mpz); });
+    res.callFunction([this](Integer &tmpRes) { mpz_sqrt(tmpRes.value->mpz, value->mpz); });
     return res;
   }
 
@@ -105,8 +87,10 @@ namespace fintamath {
   }
 
   std::string Integer::toString() const {
-    char *tmp = nullptr;
-    return mpz_get_str(tmp, BASE, value->mpz);
+    char *tmp = mpz_get_str(nullptr, BASE, value->mpz);
+    std::string res = tmp;
+    free(tmp);
+    return res;
   }
 
   bool Integer::equals(const Integer &rhs) const {
@@ -122,17 +106,17 @@ namespace fintamath {
   }
 
   Integer &Integer::add(const Integer &rhs) {
-    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_add(resVal.mpz, value->mpz, rhs.value->mpz); });
+    callFunction([this, &rhs](Integer &res) { mpz_add(res.value->mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
   Integer &Integer::substract(const Integer &rhs) {
-    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_sub(resVal.mpz, value->mpz, rhs.value->mpz); });
+    callFunction([this, &rhs](Integer &res) { mpz_sub(res.value->mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
   Integer &Integer::multiply(const Integer &rhs) {
-    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_mul(resVal.mpz, value->mpz, rhs.value->mpz); });
+    callFunction([this, &rhs](Integer &res) { mpz_mul(res.value->mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
@@ -141,22 +125,22 @@ namespace fintamath {
       throw std::domain_error("Division by zero");
     }
 
-    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_tdiv_q(resVal.mpz, value->mpz, rhs.value->mpz); });
+    callFunction([this, &rhs](Integer &res) { mpz_tdiv_q(res.value->mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
   Integer &Integer::negate() {
-    callFunction([this](IntegerImpl &resVal) { mpz_neg(resVal.mpz, value->mpz); });
+    callFunction([this](Integer &res) { mpz_neg(res.value->mpz, value->mpz); });
     return *this;
   }
 
   Integer &Integer::increase() {
-    callFunction([this](IntegerImpl &resVal) { mpz_add_ui(resVal.mpz, value->mpz, 1); });
+    callFunction([this](Integer &res) { mpz_add_ui(res.value->mpz, value->mpz, 1); });
     return *this;
   }
 
   Integer &Integer::decrease() {
-    callFunction([this](IntegerImpl &resVal) { mpz_sub_ui(resVal.mpz, value->mpz, 1); });
+    callFunction([this](Integer &res) { mpz_sub_ui(res.value->mpz, value->mpz, 1); });
     return *this;
   }
 
@@ -165,29 +149,13 @@ namespace fintamath {
       throw std::domain_error("Modulo by zero");
     }
 
-    callFunction([this, &rhs](IntegerImpl &resVal) { mpz_tdiv_r(resVal.mpz, value->mpz, rhs.value->mpz); });
+    callFunction([this, &rhs](Integer &res) { mpz_tdiv_r(res.value->mpz, value->mpz, rhs.value->mpz); });
     return *this;
   }
 
-  Integer &Integer::callFunction(const std::function<void(IntegerImpl &)> &func) {
-    IntegerImpl res;
+  Integer &Integer::callFunction(const std::function<void(Integer &)> &func) {
+    Integer res;
     func(res);
-    *value = res;
-    return *this;
-  }
-
-  static bool isIntegerStr(std::string str) {
-    if (str.empty()) {
-      throw std::invalid_argument("Integer invalid input");
-    }
-
-    if (str.front() == '-') {
-      str = str.substr(1);
-    }
-
-    constexpr int64_t firstDigit = 0;
-    constexpr int64_t lastDigit = 9;
-    return std::all_of(str.begin(), str.end(),
-                       [&](auto ch) { return ch - '0' >= firstDigit && ch - '0' <= lastDigit; });
+    return *this = std::move(res);
   }
 }
