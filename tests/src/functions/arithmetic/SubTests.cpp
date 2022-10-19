@@ -11,8 +11,12 @@ TEST(SubTests, toStringTest) {
   EXPECT_EQ(Sub().toString(), "-");
 }
 
-TEST(SubTests, getPriorityTest) {
-  EXPECT_EQ(Sub().getPriority(), 1);
+TEST(SubTests, getFunctionTypeTest) {
+  EXPECT_EQ(Sub().getFunctionType(), Function::Type::Binary);
+}
+
+TEST(SubTests, getOperatorPriorityTest) {
+  EXPECT_EQ(Sub().getOperatorPriority(), Operator::Priority::Addition);
 }
 
 TEST(SubTests, callTest) {

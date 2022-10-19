@@ -11,6 +11,10 @@ TEST(ExpTests, toStringTest) {
   EXPECT_EQ(Exp().toString(), "exp");
 }
 
+TEST(ExpTests, getFunctionTypeTest) {
+  EXPECT_EQ(Exp().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(ExpTests, callTest) {
   EXPECT_EQ(Exp()(Integer(3))->toString(), "20.085536923187667740928529654581717897");
   EXPECT_EQ(Exp()(Integer(3))->toString(), "20.085536923187667740928529654581717897");

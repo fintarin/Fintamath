@@ -11,8 +11,12 @@ TEST(NegTests, toStringTest) {
   EXPECT_EQ(Neg().toString(), "-");
 }
 
-TEST(NegTests, getPriorityTest) {
-  EXPECT_EQ(Neg().getPriority(), 1);
+TEST(NegTests, getFunctionTypeTest) {
+  EXPECT_EQ(Neg().getFunctionType(), Function::Type::Unary);
+}
+
+TEST(NegTests, getOperatorPriorityTest) {
+  EXPECT_EQ(Neg().getOperatorPriority(), Operator::Priority::PrefixUnary);
 }
 
 TEST(NegTests, callTest) {

@@ -11,6 +11,10 @@ TEST(LnTests, toStringTest) {
   EXPECT_EQ(Ln().toString(), "ln");
 }
 
+TEST(LnTests, getFunctionTypeTest) {
+  EXPECT_EQ(Ln().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(LnTests, callTest) {
   EXPECT_EQ(Ln()(Integer(1))->toString(), "0");
   EXPECT_EQ(Ln()(Integer(10))->toString(), "2.302585092994045684017991454684364208");

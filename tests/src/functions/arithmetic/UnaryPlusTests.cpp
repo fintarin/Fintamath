@@ -11,8 +11,12 @@ TEST(UnaryPlusTests, toStringTest) {
   EXPECT_EQ(UnaryPlus().toString(), "+");
 }
 
-TEST(UnaryPlusTests, getPriorityTest) {
-  EXPECT_EQ(UnaryPlus().getPriority(), 1);
+TEST(UnaryPlusTests, getFunctionTypeTest) {
+  EXPECT_EQ(UnaryPlus().getFunctionType(), Function::Type::Unary);
+}
+
+TEST(UnaryPlusTests, getOperatorPriorityTest) {
+  EXPECT_EQ(UnaryPlus().getOperatorPriority(), Operator::Priority::PrefixUnary);
 }
 
 TEST(UnaryPlusTests, callTest) {

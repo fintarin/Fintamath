@@ -11,6 +11,10 @@ TEST(SqrtTests, toStringTest) {
   EXPECT_EQ(Sqrt().toString(), "sqrt");
 }
 
+TEST(SqrtTests, getFunctionTypeTest) {
+  EXPECT_EQ(Sqrt().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(SqrtTests, callTest) {
   EXPECT_EQ(Sqrt()(Integer(100))->toString(), "10");
   EXPECT_EQ(Sqrt()(Integer(10))->toString(), "3.162277660168379331998893544432718534");

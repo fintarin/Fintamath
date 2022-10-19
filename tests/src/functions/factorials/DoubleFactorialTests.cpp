@@ -11,6 +11,14 @@ TEST(DoubleFactorialTests, toStringTest) {
   EXPECT_EQ(DoubleFactorial().toString(), "!!");
 }
 
+TEST(DoubleFactorialTests, getFunctionTypeTest) {
+  EXPECT_EQ(DoubleFactorial().getFunctionType(), Function::Type::Unary);
+}
+
+TEST(DoubleFactorialTests, getOperatorPriorityTest) {
+  EXPECT_EQ(DoubleFactorial().getOperatorPriority(), Operator::Priority::PostfixUnary);
+}
+
 TEST(DoubleFactorialTests, callTest) {
   EXPECT_EQ(DoubleFactorial()(Integer(0))->toString(), "1");
   EXPECT_EQ(DoubleFactorial()(Integer(1))->toString(), "1");

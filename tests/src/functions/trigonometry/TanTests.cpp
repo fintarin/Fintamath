@@ -12,6 +12,10 @@ TEST(TanTests, toStringTest) {
   EXPECT_EQ(Tan().toString(), "tan");
 }
 
+TEST(TanTests, getFunctionTypeTest) {
+  EXPECT_EQ(Tan().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(TanTests, callTest) {
   EXPECT_EQ(Tan()(Integer(0))->toString(), "0");
   EXPECT_EQ(Tan()(Integer(10))->toString(), "0.648360827459086671259124933009808677");

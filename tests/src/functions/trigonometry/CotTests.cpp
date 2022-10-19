@@ -12,6 +12,10 @@ TEST(CotTests, toStringTest) {
   EXPECT_EQ(Cot().toString(), "cot");
 }
 
+TEST(CotTests, getFunctionTypeTest) {
+  EXPECT_EQ(Cot().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(CotTests, callTest) {
   EXPECT_EQ(Cot()(Pi().getValue(10) / 2)->toString(), "0");
   EXPECT_EQ(Cot()(Integer(10))->toString(), "1.542351045356920048277469355682429311");

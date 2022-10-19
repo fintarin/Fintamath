@@ -11,6 +11,10 @@ TEST(LogTests, toStringTest) {
   EXPECT_EQ(Log().toString(), "log");
 }
 
+TEST(LogTests, getFunctionTypeTest) {
+  EXPECT_EQ(Log().getFunctionType(), Function::Type::Binary);
+}
+
 TEST(LogTests, callTest) {
   EXPECT_EQ(Log()(Integer(10), Integer(1))->toString(), "0");
   EXPECT_EQ(Log()(Integer(2), Integer(10))->toString(), "3.321928094887362347870319429489390176");

@@ -11,6 +11,10 @@ TEST(AtanTests, toStringTest) {
   EXPECT_EQ(Atan().toString(), "atan");
 }
 
+TEST(AtanTests, getFunctionTypeTest) {
+  EXPECT_EQ(Atan().getFunctionType(), Function::Type::Unary);
+}
+
 TEST(AtanTests, callTest) {
   EXPECT_EQ(Atan()(Integer(0))->toString(), "0");
   EXPECT_EQ(Atan()(Integer(1))->toString(), "0.785398163397448309615660845819875721");

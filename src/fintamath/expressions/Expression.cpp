@@ -141,8 +141,8 @@ namespace fintamath {
         }
       } else {
         if (const auto &nodeOp = children.at(0)->info->to<Operator>();
-            (rootOp.getPriority() > nodeOp.getPriority()) ||
-            ((rootOp.is<Neg>() || rootOp.is<Pow>()) && rootOp.getPriority() == nodeOp.getPriority())) {
+            (rootOp.getOperatorPriority() > nodeOp.getOperatorPriority()) ||
+            ((rootOp.is<Neg>() || rootOp.is<Pow>()) && rootOp.getOperatorPriority() == nodeOp.getOperatorPriority())) {
           result += putInBrackets(children.at(0)->toString());
         } else {
           result += children.at(0)->toString();
@@ -165,11 +165,11 @@ namespace fintamath {
           continue;
         }
         const auto &nodeOp = children.at(i)->info->to<Operator>();
-        if (rootOp.getPriority() > nodeOp.getPriority()) {
+        if (rootOp.getOperatorPriority() > nodeOp.getOperatorPriority()) {
           result += putInBrackets(children.at(i)->toString());
           continue;
         }
-        if ((rootOp.is<Sub>() || rootOp.is<Div>()) && rootOp.getPriority() == nodeOp.getPriority()) {
+        if ((rootOp.is<Sub>() || rootOp.is<Div>()) && rootOp.getOperatorPriority() == nodeOp.getOperatorPriority()) {
           result += putInBrackets(children.at(i)->toString());
           continue;
         }
