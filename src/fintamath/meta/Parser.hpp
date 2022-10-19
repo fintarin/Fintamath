@@ -14,10 +14,7 @@ namespace fintamath::meta {
   bool addParser(ParserMap<Value> &parserMap) {
     Value value = std::make_unique<Parser>();
     std::string name = value->toString();
-
-    auto constructor = [] {
-      return std::make_unique<Parser>();
-    };
+    std::function<Value()> constructor = [] { return std::make_unique<Parser>(); };
 
     constructor();
     parserMap.insert({name, constructor});
