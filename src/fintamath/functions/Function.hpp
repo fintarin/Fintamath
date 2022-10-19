@@ -74,8 +74,7 @@ namespace fintamath {
 
     MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const final {
       if (!isTypeAny && argsVect.size() != sizeof...(Args)) {
-        throw std::invalid_argument(toString() + " requires " + std::to_string(sizeof...(Args)) +
-                                    " arguments, but obtained " + std::to_string(argsVect.size()));
+        throwInvalidSize(argsVect.size());
       }
 
       validateArgs(argsVect);
@@ -99,8 +98,7 @@ namespace fintamath {
     template <int32_t i, typename Head, typename... Tail>
     void validateArgs(const ArgumentsVector &argsVect) const {
       if (!argsVect.at(i).get().instanceOf<Head>()) {
-        throw std::invalid_argument(toString() + " requires an argument of type " + typeid(Head).name() +
-                                    " at position " + std::to_string(i + 1));
+        throwInvalidArgument(i);
       }
 
       validateArgs<i + 1, Tail...>(argsVect);
@@ -114,11 +112,22 @@ namespace fintamath {
     void validateTypeAnyArgs(const ArgumentsVector &argsVect) const {
       for (size_t i = 0; i < argsVect.size(); i++) {
         if ((!argsVect.at(i).get().instanceOf<Args>() && ...)) {
-          throw std::invalid_argument(toString() + " requires argument of types " +
-                                      (std::string(typeid(Args).name()) + " " + ...) + "at position " +
-                                      std::to_string(i + 1));
+          throwInvalidArgument(i);
         }
       }
+    }
+
+    void throwInvalidArgument(size_t argPos) const {
+      throw std::invalid_argument(exceptionPrefix() + "unexpected argument at position " + std::to_string(argPos + 1));
+    }
+
+    void throwInvalidSize(size_t size) const {
+      throw std::invalid_argument(exceptionPrefix() + std::to_string(sizeof...(Args)) + " arguments required, but " +
+                                  std::to_string(size) + " obtained");
+    }
+
+    std::string exceptionPrefix() const {
+      return "\"" + toString() + "\": ";
     }
 
     bool isTypeAny;

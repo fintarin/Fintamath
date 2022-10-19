@@ -56,7 +56,7 @@ namespace fintamath {
 
   Integer::Integer(const std::string &str) : Integer() {
     if (mpz_set_str(value->mpz, str.c_str(), BASE) != 0) {
-      throw std::invalid_argument("Invalid integer: " + str);
+      throw std::invalid_argument("Integer is invalid: \"" + str + "\"");
     }
   }
 
