@@ -6,7 +6,7 @@
 #include <string>
 #include <utility>
 
-namespace fintamath::meta {
+namespace fintamath::help {
   template <typename Value>
   using ParserMap = std::multimap<std::string, std::function<Value()>>;
 

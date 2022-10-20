@@ -41,11 +41,11 @@ namespace fintamath {
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
     static bool addParser() {
-      return meta::addParser<T>(parserMap);
+      return help::addParser<T>(parserMap);
     }
 
     static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-      return meta::parse<FunctionPtr>(parserMap, parsedStr, [type](const FunctionPtr &func) {
+      return help::parse<FunctionPtr>(parserMap, parsedStr, [type](const FunctionPtr &func) {
         return type == IFunction::Type::Any || func->getFunctionType() == type;
       });
     }
@@ -54,7 +54,7 @@ namespace fintamath {
     virtual MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const = 0;
 
   private:
-    static meta::ParserMap<FunctionPtr> parserMap;
+    static help::ParserMap<FunctionPtr> parserMap;
   };
 
   template <typename Derived, typename... Args>

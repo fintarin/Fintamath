@@ -10,8 +10,8 @@ namespace fintamath {
   MathObjectPtr Log::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
 
-    return log(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(),
-               meta::convertMathObject(argsVect.at(1), Rational())->to<Rational>(), defaultPrecision)
+    return log(help::convertMathObject(argsVect.at(0), Rational())->to<Rational>(),
+               help::convertMathObject(argsVect.at(1), Rational())->to<Rational>(), defaultPrecision)
         .simplify();
   }
 

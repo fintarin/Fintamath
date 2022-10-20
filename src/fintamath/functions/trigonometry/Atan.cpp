@@ -9,7 +9,7 @@ namespace fintamath {
 
   MathObjectPtr Atan::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
-    return atan(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
+    return atan(help::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
   static const bool isAdded = IFunction::addParser<Atan>();

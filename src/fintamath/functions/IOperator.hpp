@@ -26,17 +26,17 @@ namespace fintamath {
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<IOperator, T>>>
     static bool addParser() {
       IFunction::addParser<T>();
-      return meta::addParser<T>(parserMap);
+      return help::addParser<T>(parserMap);
     }
 
     static OperatorPtr parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
-      return meta::parse<OperatorPtr>(parserMap, parsedStr, [priority](const OperatorPtr &oper) {
+      return help::parse<OperatorPtr>(parserMap, parsedStr, [priority](const OperatorPtr &oper) {
         return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
       });
     }
 
   private:
-    static meta::ParserMap<OperatorPtr> parserMap;
+    static help::ParserMap<OperatorPtr> parserMap;
   };
 
   template <typename Derived, typename... Args>

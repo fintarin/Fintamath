@@ -1,5 +1,5 @@
 #include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
-  meta::ParserMap<FunctionPtr> IFunction::parserMap = {};
+  help::ParserMap<FunctionPtr> IFunction::parserMap = {};
 }

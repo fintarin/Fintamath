@@ -6,10 +6,10 @@
 
 namespace fintamath {
   auto initMultiDiv() {
-    meta::MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiDiv;
+    help::MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiDiv;
     multiDiv.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
       auto res = (Rational(lhs) / Rational(rhs)).simplify();
-      return meta::castPtr<IArithmetic>(res);
+      return help::castPtr<IArithmetic>(res);
     });
     return multiDiv;
   }

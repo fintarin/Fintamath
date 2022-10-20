@@ -2,7 +2,7 @@
 
 #include "fintamath/helpers/TypeInfo.hpp"
 
-using namespace fintamath::meta;
+using namespace fintamath::help;
 
 TEST(TypeInfoTests, typeInfoConstructorTest) {
   EXPECT_NO_THROW(TypeInfo(typeid(std::string)));

@@ -5,7 +5,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
-using namespace fintamath::meta;
+using namespace fintamath::help;
 
 TEST(CasterTests, castPtrTest) {
   MathObjectPtr obj = std::make_unique<Integer>(1);
