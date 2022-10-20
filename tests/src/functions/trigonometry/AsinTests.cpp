@@ -12,7 +12,7 @@ TEST(AsinTests, toStringTest) {
 }
 
 TEST(AsinTests, getFunctionTypeTest) {
-  EXPECT_EQ(Asin().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Asin().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(AsinTests, callTest) {
@@ -24,7 +24,7 @@ TEST(AsinTests, callTest) {
   EXPECT_ANY_THROW(Asin()(Variable("a")));
   EXPECT_ANY_THROW(Asin()(Integer(10)));
 
-  std::unique_ptr<Function> f = std::make_unique<Asin>();
+  std::unique_ptr<IFunction> f = std::make_unique<Asin>();
   EXPECT_EQ((*f)(Rational(1, 10))->toString(), "0.100167421161559796345523179452693319");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

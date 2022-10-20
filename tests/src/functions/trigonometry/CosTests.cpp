@@ -13,7 +13,7 @@ TEST(CosTests, toStringTest) {
 }
 
 TEST(CosTests, getFunctionTypeTest) {
-  EXPECT_EQ(Cos().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Cos().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(CosTests, callTest) {
@@ -25,7 +25,7 @@ TEST(CosTests, callTest) {
 
   EXPECT_ANY_THROW(Cos()(Variable("a")));
 
-  std::unique_ptr<Function> f = std::make_unique<Cos>();
+  std::unique_ptr<IFunction> f = std::make_unique<Cos>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "-0.839071529076452452258863947824064835");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

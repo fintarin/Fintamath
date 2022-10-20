@@ -12,7 +12,7 @@ TEST(SqrtTests, toStringTest) {
 }
 
 TEST(SqrtTests, getFunctionTypeTest) {
-  EXPECT_EQ(Sqrt().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Sqrt().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(SqrtTests, callTest) {
@@ -24,7 +24,7 @@ TEST(SqrtTests, callTest) {
   EXPECT_ANY_THROW(Sqrt()(Variable("a")));
   EXPECT_ANY_THROW(Sqrt()(Integer(-10)));
 
-  std::unique_ptr<Function> f = std::make_unique<Sqrt>();
+  std::unique_ptr<IFunction> f = std::make_unique<Sqrt>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "3.162277660168379331998893544432718534");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

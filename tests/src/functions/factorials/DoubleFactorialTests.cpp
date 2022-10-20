@@ -12,11 +12,11 @@ TEST(DoubleFactorialTests, toStringTest) {
 }
 
 TEST(DoubleFactorialTests, getFunctionTypeTest) {
-  EXPECT_EQ(DoubleFactorial().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(DoubleFactorial().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(DoubleFactorialTests, getOperatorPriorityTest) {
-  EXPECT_EQ(DoubleFactorial().getOperatorPriority(), Operator::Priority::PostfixUnary);
+  EXPECT_EQ(DoubleFactorial().getOperatorPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(DoubleFactorialTests, callTest) {
@@ -29,7 +29,7 @@ TEST(DoubleFactorialTests, callTest) {
   EXPECT_ANY_THROW(DoubleFactorial()(Integer(-10)));
   EXPECT_ANY_THROW(DoubleFactorial()(Rational(1, 10)));
 
-  std::unique_ptr<Function> f = std::make_unique<DoubleFactorial>();
+  std::unique_ptr<IFunction> f = std::make_unique<DoubleFactorial>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "3840");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

@@ -4,7 +4,7 @@
 #include <map>
 #include <tuple>
 
-#include "fintamath/meta/TypeInfo.hpp"
+#include "fintamath/helpers/TypeInfo.hpp"
 
 namespace fintamath::meta {
   template <typename Signature>

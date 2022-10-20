@@ -13,7 +13,7 @@ TEST(CotTests, toStringTest) {
 }
 
 TEST(CotTests, getFunctionTypeTest) {
-  EXPECT_EQ(Cot().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Cot().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(CotTests, callTest) {
@@ -27,7 +27,7 @@ TEST(CotTests, callTest) {
   EXPECT_ANY_THROW(Cot()(Variable("a")));
   EXPECT_ANY_THROW(Cot()(Integer(0)));
 
-  std::unique_ptr<Function> f = std::make_unique<Cot>();
+  std::unique_ptr<IFunction> f = std::make_unique<Cot>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "1.542351045356920048277469355682429311");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-#include "fintamath/meta/Converter.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
   if (rhs.is<Derived>()) {                                                                                             \
@@ -19,12 +19,12 @@
   return false
 
 namespace fintamath {
-  class MathObject;
-  using MathObjectPtr = std::unique_ptr<MathObject>;
+  class IMathObject;
+  using MathObjectPtr = std::unique_ptr<IMathObject>;
 
-  class MathObject {
+  class IMathObject {
   public:
-    virtual ~MathObject() = default;
+    virtual ~IMathObject() = default;
 
     virtual std::string toString() const = 0;
 
@@ -47,30 +47,30 @@ namespace fintamath {
 
     virtual MathObjectPtr simplify() const;
 
-    friend bool operator==(const MathObject &lhs, const MathObject &rhs);
+    friend bool operator==(const IMathObject &lhs, const IMathObject &rhs);
 
-    friend bool operator!=(const MathObject &lhs, const MathObject &rhs);
+    friend bool operator!=(const IMathObject &lhs, const IMathObject &rhs);
 
   protected:
-    virtual bool equalsAbstract(const MathObject &rhs) const = 0;
+    virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
   };
 
-  inline MathObjectPtr MathObject::simplify() const {
+  inline MathObjectPtr IMathObject::simplify() const {
     return clone();
   }
 
-  inline bool operator==(const MathObject &lhs, const MathObject &rhs) {
+  inline bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
     return lhs.equalsAbstract(rhs);
   }
 
-  inline bool operator!=(const MathObject &lhs, const MathObject &rhs) {
+  inline bool operator!=(const IMathObject &lhs, const IMathObject &rhs) {
     return !lhs.equalsAbstract(rhs);
   }
 
   template <typename Derived>
-  class MathObjectCRTP : virtual public MathObject {
+  class IMathObjectCRTP : virtual public IMathObject {
   public:
-    ~MathObjectCRTP() override = default;
+    ~IMathObjectCRTP() override = default;
 
     MathObjectPtr clone() const final {
       return std::make_unique<Derived>(to<Derived>());
@@ -87,40 +87,40 @@ namespace fintamath {
   protected:
     virtual bool equals(const Derived &rhs) const = 0;
 
-    bool equalsAbstract(const MathObject &rhs) const final {
+    bool equalsAbstract(const IMathObject &rhs) const final {
       FINTAMATH_CALL_OPERATOR(==);
     }
   };
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<MathObject, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IMathObject, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator==(const LhsType &lhs, const RhsType &rhs) {
     return lhs == LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<MathObject, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IMathObject, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator==(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) == rhs;
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<MathObject, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IMathObject, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator!=(const LhsType &lhs, const RhsType &rhs) {
     return lhs != LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<MathObject, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IMathObject, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator!=(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) != rhs;
   }
 
-  inline std::ostream &operator<<(std::ostream &out, const MathObject &rhs) {
+  inline std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {
     return out << rhs.toString();
   }
 }

@@ -8,14 +8,14 @@
 #include <utility>
 #include <vector>
 
-#include "fintamath/core/MathObject.hpp"
-#include "fintamath/meta/Parser.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/helpers/Parser.hpp"
 
 namespace fintamath {
-  class Function;
-  using FunctionPtr = std::unique_ptr<Function>;
+  class IFunction;
+  using FunctionPtr = std::unique_ptr<IFunction>;
 
-  class Function : virtual public MathObject {
+  class IFunction : virtual public IMathObject {
   public:
     enum Type : uint16_t {
       None,    // 0 arguments
@@ -26,12 +26,12 @@ namespace fintamath {
     };
 
   protected:
-    using ArgumentsVector = std::vector<std::reference_wrapper<const MathObject>>;
+    using ArgumentsVector = std::vector<std::reference_wrapper<const IMathObject>>;
 
   public:
-    ~Function() override = default;
+    ~IFunction() override = default;
 
-    virtual Function::Type getFunctionType() const = 0;
+    virtual IFunction::Type getFunctionType() const = 0;
 
     template <typename... Args>
     MathObjectPtr operator()(const Args &...args) const {
@@ -39,14 +39,14 @@ namespace fintamath {
       return callAbstract(argsVect);
     }
 
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Function, T>>>
+    template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
     static bool addParser() {
       return meta::addParser<T>(parserMap);
     }
 
-    static FunctionPtr parse(const std::string &parsedStr, Function::Type type = Function::Type::Any) {
+    static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
       return meta::parse<FunctionPtr>(parserMap, parsedStr, [type](const FunctionPtr &func) {
-        return type == Function::Type::Any || func->getFunctionType() == type;
+        return type == IFunction::Type::Any || func->getFunctionType() == type;
       });
     }
 
@@ -58,15 +58,15 @@ namespace fintamath {
   };
 
   template <typename Derived, typename... Args>
-  class FunctionCRTP : virtual public Function, virtual public MathObjectCRTP<Derived> {
+  class IFunctionCRTP : virtual public IFunction, virtual public IMathObjectCRTP<Derived> {
   public:
-    FunctionCRTP(bool inIsTypeAny = false) : isTypeAny(inIsTypeAny) {
+    IFunctionCRTP(bool inIsTypeAny = false) : isTypeAny(inIsTypeAny) {
     }
 
-    ~FunctionCRTP() override = default;
+    ~IFunctionCRTP() override = default;
 
-    Function::Type getFunctionType() const final {
-      return Function::Type(sizeof...(Args));
+    IFunction::Type getFunctionType() const final {
+      return IFunction::Type(sizeof...(Args));
     }
 
   protected:

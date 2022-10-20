@@ -1,85 +1,85 @@
 #pragma once
 
-#include "fintamath/core/MathObject.hpp"
-#include "fintamath/meta/Caster.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/helpers/Caster.hpp"
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
   if (rhs.is<Derived>()) {                                                                                             \
     auto res = (*this OPER rhs.to<Derived>()).simplify();                                                              \
-    return meta::castPtr<Arithmetic>(res);                                                                             \
+    return meta::castPtr<IArithmetic>(res);                                                                             \
   }                                                                                                                    \
   if (auto tmp = meta::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
-    auto res = (*this OPER tmp->template to<Arithmetic>())->simplify();                                                \
-    return meta::castPtr<Arithmetic>(res);                                                                             \
+    auto res = (*this OPER tmp->template to<IArithmetic>())->simplify();                                                \
+    return meta::castPtr<IArithmetic>(res);                                                                             \
   }                                                                                                                    \
   if (auto tmp = meta::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
-    auto res = (tmp->template to<Arithmetic>() OPER rhs)->simplify();                                                  \
-    return meta::castPtr<Arithmetic>(res);                                                                             \
+    auto res = (tmp->template to<IArithmetic>() OPER rhs)->simplify();                                                  \
+    return meta::castPtr<IArithmetic>(res);                                                                             \
   }                                                                                                                    \
   throw std ::invalid_argument("Incompatible types")
 
 namespace fintamath {
-  class Arithmetic;
-  using ArithmeticPtr = std::unique_ptr<Arithmetic>;
+  class IArithmetic;
+  using ArithmeticPtr = std::unique_ptr<IArithmetic>;
 
-  class Arithmetic : virtual public MathObject {
+  class IArithmetic : virtual public IMathObject {
   public:
-    ~Arithmetic() override = default;
+    ~IArithmetic() override = default;
 
-    friend ArithmeticPtr operator+(const Arithmetic &lhs, const Arithmetic &rhs);
+    friend ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs);
 
-    friend ArithmeticPtr operator-(const Arithmetic &lhs, const Arithmetic &rhs);
+    friend ArithmeticPtr operator-(const IArithmetic &lhs, const IArithmetic &rhs);
 
-    friend ArithmeticPtr operator*(const Arithmetic &lhs, const Arithmetic &rhs);
+    friend ArithmeticPtr operator*(const IArithmetic &lhs, const IArithmetic &rhs);
 
-    friend ArithmeticPtr operator/(const Arithmetic &lhs, const Arithmetic &rhs);
+    friend ArithmeticPtr operator/(const IArithmetic &lhs, const IArithmetic &rhs);
 
-    friend ArithmeticPtr operator+(const Arithmetic &rhs);
+    friend ArithmeticPtr operator+(const IArithmetic &rhs);
 
-    friend ArithmeticPtr operator-(const Arithmetic &rhs);
+    friend ArithmeticPtr operator-(const IArithmetic &rhs);
 
   protected:
-    virtual ArithmeticPtr addAbstract(const Arithmetic &rhs) const = 0;
+    virtual ArithmeticPtr addAbstract(const IArithmetic &rhs) const = 0;
 
-    virtual ArithmeticPtr substractAbstract(const Arithmetic &rhs) const = 0;
+    virtual ArithmeticPtr substractAbstract(const IArithmetic &rhs) const = 0;
 
-    virtual ArithmeticPtr multiplyAbstract(const Arithmetic &rhs) const = 0;
+    virtual ArithmeticPtr multiplyAbstract(const IArithmetic &rhs) const = 0;
 
-    virtual ArithmeticPtr divideAbstract(const Arithmetic &rhs) const = 0;
+    virtual ArithmeticPtr divideAbstract(const IArithmetic &rhs) const = 0;
 
     virtual ArithmeticPtr convertAbstract() const = 0;
 
     virtual ArithmeticPtr negateAbstract() const = 0;
   };
 
-  inline ArithmeticPtr operator+(const Arithmetic &lhs, const Arithmetic &rhs) {
+  inline ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.addAbstract(rhs);
   }
 
-  inline ArithmeticPtr operator-(const Arithmetic &lhs, const Arithmetic &rhs) {
+  inline ArithmeticPtr operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.substractAbstract(rhs);
   }
 
-  inline ArithmeticPtr operator*(const Arithmetic &lhs, const Arithmetic &rhs) {
+  inline ArithmeticPtr operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.multiplyAbstract(rhs);
   }
 
-  inline ArithmeticPtr operator/(const Arithmetic &lhs, const Arithmetic &rhs) {
+  inline ArithmeticPtr operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.divideAbstract(rhs);
   }
 
-  inline ArithmeticPtr operator+(const Arithmetic &rhs) {
+  inline ArithmeticPtr operator+(const IArithmetic &rhs) {
     return rhs.convertAbstract();
   }
 
-  inline ArithmeticPtr operator-(const Arithmetic &rhs) {
+  inline ArithmeticPtr operator-(const IArithmetic &rhs) {
     return rhs.negateAbstract();
   }
 
   template <typename Derived>
-  class ArithmeticCRTP : virtual public Arithmetic, virtual public MathObjectCRTP<Derived> {
+  class IArithmeticCRTP : virtual public IArithmetic, virtual public IMathObjectCRTP<Derived> {
   public:
-    ~ArithmeticCRTP() override = default;
+    ~IArithmeticCRTP() override = default;
 
     Derived &operator+=(const Derived &rhs) {
       return add(rhs);
@@ -119,7 +119,7 @@ namespace fintamath {
 
     Derived operator-() const {
       Derived tmp = Derived(static_cast<const Derived &>(*this));
-      return static_cast<ArithmeticCRTP<Derived> &>(tmp).negate();
+      return static_cast<IArithmeticCRTP<Derived> &>(tmp).negate();
     }
 
   protected:
@@ -133,19 +133,19 @@ namespace fintamath {
 
     virtual Derived &negate() = 0;
 
-    ArithmeticPtr addAbstract(const Arithmetic &rhs) const final {
+    ArithmeticPtr addAbstract(const IArithmetic &rhs) const final {
       FINTAMATH_CALL_OPERATOR(+);
     }
 
-    ArithmeticPtr substractAbstract(const Arithmetic &rhs) const final {
+    ArithmeticPtr substractAbstract(const IArithmetic &rhs) const final {
       FINTAMATH_CALL_OPERATOR(-);
     }
 
-    ArithmeticPtr multiplyAbstract(const Arithmetic &rhs) const final {
+    ArithmeticPtr multiplyAbstract(const IArithmetic &rhs) const final {
       FINTAMATH_CALL_OPERATOR(*);
     }
 
-    ArithmeticPtr divideAbstract(const Arithmetic &rhs) const final {
+    ArithmeticPtr divideAbstract(const IArithmetic &rhs) const final {
       if (auto tmp = multiDiv(*this, rhs); tmp != nullptr) {
         return tmp;
       }
@@ -161,88 +161,88 @@ namespace fintamath {
     }
 
   private:
-    friend ArithmeticPtr multiDiv(const Arithmetic &lhs, const Arithmetic &rhs);
+    friend ArithmeticPtr multiDiv(const IArithmetic &lhs, const IArithmetic &rhs);
   };
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType &operator+=(LhsType &lhs, const RhsType &rhs) {
     return lhs += LhsType(rhs);
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType &operator-=(LhsType &lhs, const RhsType &rhs) {
     return lhs -= LhsType(rhs);
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType &operator*=(LhsType &lhs, const RhsType &rhs) {
     return lhs *= LhsType(rhs);
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType &operator/=(LhsType &lhs, const RhsType &rhs) {
     return lhs /= LhsType(rhs);
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType operator+(const LhsType &lhs, const RhsType &rhs) {
     return lhs + LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   RhsType operator+(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) + rhs;
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType operator-(const LhsType &lhs, const RhsType &rhs) {
     return lhs - LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   RhsType operator-(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) - rhs;
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType operator*(const LhsType &lhs, const RhsType &rhs) {
     return lhs * LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   RhsType operator*(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) * rhs;
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   LhsType operator/(const LhsType &lhs, const RhsType &rhs) {
     return lhs / LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Arithmetic, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   RhsType operator/(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) / rhs;

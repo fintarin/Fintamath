@@ -7,10 +7,10 @@ namespace fintamath {
     return "exp";
   }
 
-  MathObjectPtr Exp::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
+  MathObjectPtr Exp::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
     return exp(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
-  static const bool isAdded = Function::addParser<Exp>();
+  static const bool isAdded = IFunction::addParser<Exp>();
 }

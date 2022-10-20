@@ -1,16 +1,16 @@
 #pragma once
 
-#include "fintamath/core/Arithmetic.hpp"
-#include "fintamath/functions/Function.hpp"
+#include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
-  class Lb : public FunctionCRTP<Lb, Arithmetic> {
+  class Lb : public IFunctionCRTP<Lb, IArithmetic> {
   public:
     Lb() = default;
 
     std::string toString() const override;
 
   protected:
-    MathObjectPtr call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const override;
+    MathObjectPtr call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
   };
 }

@@ -1,22 +1,22 @@
-#include "fintamath/core/Arithmetic.hpp"
+#include "fintamath/core/IArithmetic.hpp"
 
-#include "fintamath/meta/MultiMethod.hpp"
+#include "fintamath/helpers/MultiMethod.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
   auto initMultiDiv() {
-    meta::MultiMethod<ArithmeticPtr(const Arithmetic &, const Arithmetic &)> multiDiv;
+    meta::MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiDiv;
     multiDiv.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
       auto res = (Rational(lhs) / Rational(rhs)).simplify();
-      return meta::castPtr<Arithmetic>(res);
+      return meta::castPtr<IArithmetic>(res);
     });
     return multiDiv;
   }
 
   const auto mDiv = initMultiDiv();
 
-  ArithmeticPtr multiDiv(const Arithmetic &lhs, const Arithmetic &rhs) {
+  ArithmeticPtr multiDiv(const IArithmetic &lhs, const IArithmetic &rhs) {
     return mDiv(lhs, rhs);
   }
 }

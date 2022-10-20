@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/numbers/Number.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -75,39 +75,39 @@ TEST(NumberTests, diveTest) {
 }
 
 TEST(NumberTests, parseTest) {
-  EXPECT_EQ(Number::parse("1231412736218731623872183")->toString(), "1231412736218731623872183");
-  EXPECT_TRUE(Number::parse("1231412736218731623872183")->is<Integer>());
+  EXPECT_EQ(INumber::parse("1231412736218731623872183")->toString(), "1231412736218731623872183");
+  EXPECT_TRUE(INumber::parse("1231412736218731623872183")->is<Integer>());
 
-  EXPECT_EQ(Number::parse("-1231412736218731623872183")->toString(), "-1231412736218731623872183");
-  EXPECT_TRUE(Number::parse("-1231412736218731623872183")->is<Integer>());
+  EXPECT_EQ(INumber::parse("-1231412736218731623872183")->toString(), "-1231412736218731623872183");
+  EXPECT_TRUE(INumber::parse("-1231412736218731623872183")->is<Integer>());
 
-  EXPECT_EQ(Number::parse("0")->toString(), "0");
-  EXPECT_TRUE(Number::parse("0")->is<Integer>());
+  EXPECT_EQ(INumber::parse("0")->toString(), "0");
+  EXPECT_TRUE(INumber::parse("0")->is<Integer>());
 
-  EXPECT_EQ(Number::parse("0.1")->toString(), "1/10");
-  EXPECT_TRUE(Number::parse("0.1")->is<Rational>());
+  EXPECT_EQ(INumber::parse("0.1")->toString(), "1/10");
+  EXPECT_TRUE(INumber::parse("0.1")->is<Rational>());
 
-  EXPECT_EQ(Number::parse("12323231498721983.12323432432")->toString(), "77020196867012394520214527/6250000000");
-  EXPECT_TRUE(Number::parse("12323231498721983.12323432432")->is<Rational>());
+  EXPECT_EQ(INumber::parse("12323231498721983.12323432432")->toString(), "77020196867012394520214527/6250000000");
+  EXPECT_TRUE(INumber::parse("12323231498721983.12323432432")->is<Rational>());
 
-  EXPECT_EQ(Number::parse("-12323231498721983.12323432432")->toString(), "-77020196867012394520214527/6250000000");
-  EXPECT_TRUE(Number::parse("-12323231498721983.12323432432")->is<Rational>());
+  EXPECT_EQ(INumber::parse("-12323231498721983.12323432432")->toString(), "-77020196867012394520214527/6250000000");
+  EXPECT_TRUE(INumber::parse("-12323231498721983.12323432432")->is<Rational>());
 
-  EXPECT_EQ(Number::parse("--10"), nullptr);
-  EXPECT_EQ(Number::parse("test"), nullptr);
-  EXPECT_EQ(Number::parse(""), nullptr);
-  EXPECT_EQ(Number::parse("+"), nullptr);
-  EXPECT_EQ(Number::parse("939849.0-0023"), nullptr);
-  EXPECT_EQ(Number::parse("a"), nullptr);
-  EXPECT_EQ(Number::parse("a.1"), nullptr);
-  EXPECT_EQ(Number::parse("1.a"), nullptr);
-  EXPECT_EQ(Number::parse("1a.1"), nullptr);
-  EXPECT_EQ(Number::parse("1.1a"), nullptr);
-  EXPECT_EQ(Number::parse(".1"), nullptr);
-  EXPECT_EQ(Number::parse("1."), nullptr);
-  EXPECT_EQ(Number::parse("--10.-1"), nullptr);
-  EXPECT_EQ(Number::parse("10.-1"), nullptr);
-  EXPECT_EQ(Number::parse("1-0.1"), nullptr);
-  EXPECT_EQ(Number::parse("10-.1"), nullptr);
-  EXPECT_EQ(Number::parse("10.--1"), nullptr);
+  EXPECT_EQ(INumber::parse("--10"), nullptr);
+  EXPECT_EQ(INumber::parse("test"), nullptr);
+  EXPECT_EQ(INumber::parse(""), nullptr);
+  EXPECT_EQ(INumber::parse("+"), nullptr);
+  EXPECT_EQ(INumber::parse("939849.0-0023"), nullptr);
+  EXPECT_EQ(INumber::parse("a"), nullptr);
+  EXPECT_EQ(INumber::parse("a.1"), nullptr);
+  EXPECT_EQ(INumber::parse("1.a"), nullptr);
+  EXPECT_EQ(INumber::parse("1a.1"), nullptr);
+  EXPECT_EQ(INumber::parse("1.1a"), nullptr);
+  EXPECT_EQ(INumber::parse(".1"), nullptr);
+  EXPECT_EQ(INumber::parse("1."), nullptr);
+  EXPECT_EQ(INumber::parse("--10.-1"), nullptr);
+  EXPECT_EQ(INumber::parse("10.-1"), nullptr);
+  EXPECT_EQ(INumber::parse("1-0.1"), nullptr);
+  EXPECT_EQ(INumber::parse("10-.1"), nullptr);
+  EXPECT_EQ(INumber::parse("10.--1"), nullptr);
 }

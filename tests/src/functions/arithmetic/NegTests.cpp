@@ -12,11 +12,11 @@ TEST(NegTests, toStringTest) {
 }
 
 TEST(NegTests, getFunctionTypeTest) {
-  EXPECT_EQ(Neg().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Neg().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(NegTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Neg().getOperatorPriority(), Operator::Priority::PrefixUnary);
+  EXPECT_EQ(Neg().getOperatorPriority(), IOperator::Priority::PrefixUnary);
 }
 
 TEST(NegTests, callTest) {
@@ -25,7 +25,7 @@ TEST(NegTests, callTest) {
 
   EXPECT_ANY_THROW(Neg()(Variable("a")));
 
-  std::unique_ptr<Operator> o = std::make_unique<Neg>();
+  std::unique_ptr<IOperator> o = std::make_unique<Neg>();
   EXPECT_ANY_THROW((*o)(Integer(1), Rational(2, 3)));
   EXPECT_ANY_THROW((*o)());
   EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));

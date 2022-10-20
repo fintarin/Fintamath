@@ -1,12 +1,12 @@
-#include "fintamath/meta/Converter.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
-#include "fintamath/meta/MultiMethod.hpp"
+#include "fintamath/helpers/MultiMethod.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath::meta {
   auto initConverter() {
-    MultiMethod<MathObjectPtr(const MathObject &, const MathObject &)> converter;
+    MultiMethod<MathObjectPtr(const IMathObject &, const IMathObject &)> converter;
 
     converter.add<Integer, Integer>(
         [](const Integer &value, const Integer & /*type*/) { return std::make_unique<Integer>(value); });
@@ -20,7 +20,7 @@ namespace fintamath::meta {
 
   const auto converter = initConverter();
 
-  MathObjectPtr convertMathObject(const MathObject &value, const MathObject &type) {
+  MathObjectPtr convertMathObject(const IMathObject &value, const IMathObject &type) {
     return converter(value, type);
   }
 }

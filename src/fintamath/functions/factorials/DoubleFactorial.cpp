@@ -3,16 +3,16 @@
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
-  DoubleFactorial::DoubleFactorial() : OperatorCRTP(Operator::Priority::PostfixUnary) {
+  DoubleFactorial::DoubleFactorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }
 
   std::string DoubleFactorial::toString() const {
     return "!!";
   }
 
-  MathObjectPtr DoubleFactorial::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
+  MathObjectPtr DoubleFactorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return std::make_unique<Integer>(doubleFactorial(argsVect.at(0).get().to<Integer>()));
   }
 
-  static const bool isAdded = Operator::addParser<DoubleFactorial>();
+  static const bool isAdded = IOperator::addParser<DoubleFactorial>();
 }

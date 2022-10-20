@@ -2,7 +2,7 @@
 
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
-#include "fintamath/literals/constants/Constant.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 
 using namespace fintamath;
 

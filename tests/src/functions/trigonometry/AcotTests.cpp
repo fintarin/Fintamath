@@ -12,7 +12,7 @@ TEST(AcotTests, toStringTest) {
 }
 
 TEST(AcotTests, getFunctionTypeTest) {
-  EXPECT_EQ(Acot().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Acot().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(AcotTests, callTest) {
@@ -24,7 +24,7 @@ TEST(AcotTests, callTest) {
 
   EXPECT_ANY_THROW(Acot()(Variable("a")));
 
-  std::unique_ptr<Function> f = std::make_unique<Acot>();
+  std::unique_ptr<IFunction> f = std::make_unique<Acot>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "0.09966865249116202737844611987802059");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

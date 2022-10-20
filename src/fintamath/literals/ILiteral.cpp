@@ -1,13 +1,13 @@
-#include "fintamath/literals/Literal.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 
 #include <stdexcept>
 
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/Constant.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 
 namespace fintamath {
-  LiteralPtr Literal::parse(const std::string &str) {
-    if (ConstantPtr ptr = Constant::parse(str)) {
+  LiteralPtr ILiteral::parse(const std::string &str) {
+    if (ConstantPtr ptr = IConstant::parse(str)) {
       return ptr;
     }
 

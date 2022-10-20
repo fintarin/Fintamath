@@ -12,11 +12,11 @@ TEST(PercentTests, toStringTest) {
 }
 
 TEST(PercentTests, getFunctionTypeTest) {
-  EXPECT_EQ(Percent().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Percent().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(PercentTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Percent().getOperatorPriority(), Operator::Priority::PostfixUnary);
+  EXPECT_EQ(Percent().getOperatorPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(PercentTests, callTest) {
@@ -27,7 +27,7 @@ TEST(PercentTests, callTest) {
   EXPECT_ANY_THROW(Percent()(Rational(1, 10))->toString());
   EXPECT_ANY_THROW(Percent()(Variable("a")));
 
-  std::unique_ptr<Function> f = std::make_unique<Percent>();
+  std::unique_ptr<IFunction> f = std::make_unique<Percent>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "1/10");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

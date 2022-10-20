@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/literals/Literal.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
@@ -29,13 +29,13 @@ TEST(LiteralTests, equalsTests) {
 }
 
 TEST(LiteralTests, parseTest) {
-  EXPECT_TRUE(Literal::parse("e")->is<E>());
-  EXPECT_TRUE(Literal::parse("pi")->is<Pi>());
-  EXPECT_TRUE(Literal::parse("a")->is<Variable>());
-  EXPECT_TRUE(Literal::parse("z")->is<Variable>());
+  EXPECT_TRUE(ILiteral::parse("e")->is<E>());
+  EXPECT_TRUE(ILiteral::parse("pi")->is<Pi>());
+  EXPECT_TRUE(ILiteral::parse("a")->is<Variable>());
+  EXPECT_TRUE(ILiteral::parse("z")->is<Variable>());
 
-  EXPECT_EQ(Literal::parse("1"), nullptr);
-  EXPECT_EQ(Literal::parse("a_"), nullptr);
-  EXPECT_EQ(Literal::parse("a1"), nullptr);
-  EXPECT_EQ(Literal::parse("aa"), nullptr);
+  EXPECT_EQ(ILiteral::parse("1"), nullptr);
+  EXPECT_EQ(ILiteral::parse("a_"), nullptr);
+  EXPECT_EQ(ILiteral::parse("a1"), nullptr);
+  EXPECT_EQ(ILiteral::parse("aa"), nullptr);
 }

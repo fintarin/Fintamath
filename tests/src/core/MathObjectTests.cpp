@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/IMathObject.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -21,9 +21,9 @@ TEST(MathObjectTests, instanceofTest) {
   MathObjectPtr m1 = std::make_unique<Integer>();
 
   EXPECT_TRUE(m1->instanceOf<Integer>());
-  EXPECT_TRUE(m1->instanceOf<Number>());
-  EXPECT_TRUE(m1->instanceOf<Arithmetic>());
-  EXPECT_TRUE(m1->instanceOf<MathObject>());
+  EXPECT_TRUE(m1->instanceOf<INumber>());
+  EXPECT_TRUE(m1->instanceOf<IArithmetic>());
+  EXPECT_TRUE(m1->instanceOf<IMathObject>());
 
   EXPECT_FALSE(m1->instanceOf<Rational>());
   EXPECT_FALSE(m1->instanceOf<Variable>());
@@ -33,11 +33,11 @@ TEST(MathObjectTests, toTest) {
   MathObjectPtr m1 = std::make_unique<Integer>();
 
   EXPECT_TRUE(m1->to<Integer>().instanceOf<Integer>());
-  EXPECT_TRUE(m1->to<Number>().instanceOf<Number>());
-  EXPECT_TRUE(m1->to<Arithmetic>().instanceOf<Arithmetic>());
-  EXPECT_TRUE(m1->to<MathObject>().instanceOf<MathObject>());
+  EXPECT_TRUE(m1->to<INumber>().instanceOf<INumber>());
+  EXPECT_TRUE(m1->to<IArithmetic>().instanceOf<IArithmetic>());
+  EXPECT_TRUE(m1->to<IMathObject>().instanceOf<IMathObject>());
 
-  EXPECT_TRUE(m1->to<MathObject>().instanceOf<Integer>());
+  EXPECT_TRUE(m1->to<IMathObject>().instanceOf<Integer>());
 
   EXPECT_THROW(m1->to<Rational>(), std::bad_cast);
   EXPECT_THROW(m1->to<Variable>(), std::bad_cast);

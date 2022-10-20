@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/core/Comparable.hpp"
+#include "fintamath/core/IComparable.hpp"
 
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"

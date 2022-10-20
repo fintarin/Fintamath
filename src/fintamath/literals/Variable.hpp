@@ -1,9 +1,9 @@
 #pragma once
 
-#include "fintamath/literals/Literal.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 
 namespace fintamath {
-  class Variable : public LiteralCRTP<Variable> {
+  class Variable : public ILiteralCRTP<Variable> {
   public:
     explicit Variable(const std::string &str);
 

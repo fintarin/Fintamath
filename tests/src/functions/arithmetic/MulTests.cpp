@@ -12,11 +12,11 @@ TEST(MulTests, toStringTest) {
 }
 
 TEST(MulTests, getFunctionTypeTest) {
-  EXPECT_EQ(Mul().getFunctionType(), Function::Type::Binary);
+  EXPECT_EQ(Mul().getFunctionType(), IFunction::Type::Binary);
 }
 
 TEST(MulTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Mul().getOperatorPriority(), Operator::Priority::Multiplication);
+  EXPECT_EQ(Mul().getOperatorPriority(), IOperator::Priority::Multiplication);
 }
 
 TEST(MulTests, callTest) {
@@ -27,7 +27,7 @@ TEST(MulTests, callTest) {
 
   EXPECT_ANY_THROW(Mul()(Integer(3), Variable("a")));
 
-  std::unique_ptr<Operator> o = std::make_unique<Mul>();
+  std::unique_ptr<IOperator> o = std::make_unique<Mul>();
   EXPECT_ANY_THROW((*o)(Integer(1)));
   EXPECT_ANY_THROW((*o)(Rational(2, 3)));
   EXPECT_ANY_THROW((*o)());

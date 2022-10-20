@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/functions/Operator.hpp"
+#include "fintamath/functions/IOperator.hpp"
 
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -16,17 +16,17 @@
 using namespace fintamath;
 
 TEST(OperatorTests, parseTest) {
-  EXPECT_TRUE(Operator::parse("+", Operator::Priority::Addition)->is<Add>());
-  EXPECT_TRUE(Operator::parse("+", Operator::Priority::PrefixUnary)->is<UnaryPlus>());
-  EXPECT_TRUE(Operator::parse("-", Operator::Priority::Addition)->is<Sub>());
-  EXPECT_TRUE(Operator::parse("-", Operator::Priority::PrefixUnary)->is<Neg>());
-  EXPECT_TRUE(Operator::parse("*")->is<Mul>());
-  EXPECT_TRUE(Operator::parse("/")->is<Div>());
-  EXPECT_TRUE(Operator::parse("^")->is<Pow>());
-  EXPECT_TRUE(Operator::parse("%")->is<Percent>());
-  EXPECT_TRUE(Operator::parse("!")->is<Factorial>());
-  EXPECT_TRUE(Operator::parse("!!")->is<DoubleFactorial>());
+  EXPECT_TRUE(IOperator::parse("+", IOperator::Priority::Addition)->is<Add>());
+  EXPECT_TRUE(IOperator::parse("+", IOperator::Priority::PrefixUnary)->is<UnaryPlus>());
+  EXPECT_TRUE(IOperator::parse("-", IOperator::Priority::Addition)->is<Sub>());
+  EXPECT_TRUE(IOperator::parse("-", IOperator::Priority::PrefixUnary)->is<Neg>());
+  EXPECT_TRUE(IOperator::parse("*")->is<Mul>());
+  EXPECT_TRUE(IOperator::parse("/")->is<Div>());
+  EXPECT_TRUE(IOperator::parse("^")->is<Pow>());
+  EXPECT_TRUE(IOperator::parse("%")->is<Percent>());
+  EXPECT_TRUE(IOperator::parse("!")->is<Factorial>());
+  EXPECT_TRUE(IOperator::parse("!!")->is<DoubleFactorial>());
 
-  EXPECT_EQ(Operator::parse("asdgewfe"), nullptr);
-  EXPECT_EQ(Operator::parse("1224"), nullptr);
+  EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
+  EXPECT_EQ(IOperator::parse("1224"), nullptr);
 }

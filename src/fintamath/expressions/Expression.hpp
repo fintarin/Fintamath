@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/IMathObject.hpp"
 
 namespace fintamath {
-  class Expression : public MathObjectCRTP<Expression> {
+  class Expression : public IMathObjectCRTP<Expression> {
   public:
     Expression() = default;
 
@@ -22,7 +22,7 @@ namespace fintamath {
 
     explicit Expression(const std::string &str);
 
-    explicit Expression(const MathObject &obj);
+    explicit Expression(const IMathObject &obj);
 
     std::string toString() const override;
 
@@ -85,7 +85,7 @@ namespace fintamath {
 
     static ExprPtr openBracketsPowAdd(const ExprPtr &expr);
 
-    static ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const MathObject &o);
+    static ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const IMathObject &o);
 
     static ExprPtr sort(const ExprPtr &expr);
 
@@ -93,7 +93,7 @@ namespace fintamath {
 
     static ExprPtr revertPow(const ExprPtr &expr);
 
-    std::shared_ptr<MathObject> info;
+    std::shared_ptr<IMathObject> info;
     ExprVect children;
   };
 }

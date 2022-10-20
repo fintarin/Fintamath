@@ -1,4 +1,4 @@
-#include "fintamath/numbers/Number.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 #include <memory>
 
@@ -6,7 +6,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  NumberPtr fintamath::Number::parse(const std::string &str) {
+  NumberPtr fintamath::INumber::parse(const std::string &str) {
     try {
       return std::make_unique<Integer>(str);
     } catch (const std::invalid_argument &) {
@@ -22,7 +22,7 @@ namespace fintamath {
     return nullptr;
   }
 
-  NumberPtr Number::parse(int64_t num) {
+  NumberPtr INumber::parse(int64_t num) {
     return std::make_unique<Integer>(num);
   }
 }

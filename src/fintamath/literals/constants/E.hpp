@@ -1,9 +1,9 @@
 #pragma once
 
-#include "fintamath/literals/constants/Constant.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 
 namespace fintamath {
-  class E : public ConstantCRTP<E> {
+  class E : public IConstantCRTP<E> {
   public:
     Rational getValue(int64_t precision) const override;
 

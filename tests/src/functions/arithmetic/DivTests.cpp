@@ -12,11 +12,11 @@ TEST(DivTests, toStringTest) {
 }
 
 TEST(DivTests, getFunctionTypeTest) {
-  EXPECT_EQ(Div().getFunctionType(), Function::Type::Binary);
+  EXPECT_EQ(Div().getFunctionType(), IFunction::Type::Binary);
 }
 
 TEST(DivTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Div().getOperatorPriority(), Operator::Priority::Multiplication);
+  EXPECT_EQ(Div().getOperatorPriority(), IOperator::Priority::Multiplication);
 }
 
 TEST(DivTests, callTest) {
@@ -27,7 +27,7 @@ TEST(DivTests, callTest) {
 
   EXPECT_ANY_THROW(Div()(Integer(3), Variable("a")));
 
-  std::unique_ptr<Operator> o = std::make_unique<Div>();
+  std::unique_ptr<IOperator> o = std::make_unique<Div>();
   EXPECT_ANY_THROW((*o)(Integer(1)));
   EXPECT_ANY_THROW((*o)(Rational(2, 3)));
   EXPECT_ANY_THROW((*o)());

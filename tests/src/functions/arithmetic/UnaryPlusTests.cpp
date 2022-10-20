@@ -12,11 +12,11 @@ TEST(UnaryPlusTests, toStringTest) {
 }
 
 TEST(UnaryPlusTests, getFunctionTypeTest) {
-  EXPECT_EQ(UnaryPlus().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(UnaryPlus().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(UnaryPlusTests, getOperatorPriorityTest) {
-  EXPECT_EQ(UnaryPlus().getOperatorPriority(), Operator::Priority::PrefixUnary);
+  EXPECT_EQ(UnaryPlus().getOperatorPriority(), IOperator::Priority::PrefixUnary);
 }
 
 TEST(UnaryPlusTests, callTest) {
@@ -25,7 +25,7 @@ TEST(UnaryPlusTests, callTest) {
 
   EXPECT_ANY_THROW(UnaryPlus()(Variable("a")));
 
-  std::unique_ptr<Operator> o = std::make_unique<UnaryPlus>();
+  std::unique_ptr<IOperator> o = std::make_unique<UnaryPlus>();
   EXPECT_ANY_THROW((*o)(Integer(1), Rational(2, 3)));
   EXPECT_ANY_THROW((*o)());
   EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));

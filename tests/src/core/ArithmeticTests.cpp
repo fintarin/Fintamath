@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/core/Arithmetic.hpp"
+#include "fintamath/core/IArithmetic.hpp"
 
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 namespace fintamath::tests {
-  class TestArithmetic : public ArithmeticCRTP<TestArithmetic> {
+  class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
   public:
     std::string toString() const override {
       return {};

@@ -12,11 +12,11 @@ TEST(AddTests, toStringTest) {
 }
 
 TEST(AddTests, getFunctionTypeTest) {
-  EXPECT_EQ(Add().getFunctionType(), Function::Type::Binary);
+  EXPECT_EQ(Add().getFunctionType(), IFunction::Type::Binary);
 }
 
 TEST(AddTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Add().getOperatorPriority(), Operator::Priority::Addition);
+  EXPECT_EQ(Add().getOperatorPriority(), IOperator::Priority::Addition);
 }
 
 TEST(AddTests, callTest) {
@@ -28,7 +28,7 @@ TEST(AddTests, callTest) {
 
   EXPECT_ANY_THROW(Add()(Integer(3), Variable("a")));
 
-  std::unique_ptr<Operator> o = std::make_unique<Add>();
+  std::unique_ptr<IOperator> o = std::make_unique<Add>();
   EXPECT_ANY_THROW((*o)(Integer(1)));
   EXPECT_ANY_THROW((*o)(Rational(2, 3)));
   EXPECT_ANY_THROW((*o)());

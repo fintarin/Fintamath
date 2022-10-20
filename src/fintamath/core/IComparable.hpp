@@ -1,59 +1,59 @@
 #pragma once
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/IMathObject.hpp"
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
   if (rhs.is<Derived>()) {                                                                                             \
     return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
   if (auto tmp = meta::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
-    return *this OPER tmp->template to<Comparable>();                                                                  \
+    return *this OPER tmp->template to<IComparable>();                                                                  \
   }                                                                                                                    \
   if (auto tmp = meta::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
-    return tmp->template to<Comparable>() OPER rhs;                                                                    \
+    return tmp->template to<IComparable>() OPER rhs;                                                                    \
   }                                                                                                                    \
   throw std::invalid_argument("Incompatible types")
 
 namespace fintamath {
-  class Comparable;
-  using ComparablePtr = std::unique_ptr<Comparable>;
+  class IComparable;
+  using ComparablePtr = std::unique_ptr<IComparable>;
 
-  class Comparable : virtual public MathObject {
+  class IComparable : virtual public IMathObject {
   public:
-    ~Comparable() override = default;
+    ~IComparable() override = default;
 
-    friend bool operator<(const Comparable &lhs, const Comparable &rhs);
+    friend bool operator<(const IComparable &lhs, const IComparable &rhs);
 
-    friend bool operator>(const Comparable &lhs, const Comparable &rhs);
+    friend bool operator>(const IComparable &lhs, const IComparable &rhs);
 
-    friend bool operator<=(const Comparable &lhs, const Comparable &rhs);
+    friend bool operator<=(const IComparable &lhs, const IComparable &rhs);
 
-    friend bool operator>=(const Comparable &lhs, const Comparable &rhs);
+    friend bool operator>=(const IComparable &lhs, const IComparable &rhs);
 
   protected:
-    virtual bool lessAbstract(const Comparable &rhs) const = 0;
+    virtual bool lessAbstract(const IComparable &rhs) const = 0;
 
-    virtual bool moreAbstract(const Comparable &rhs) const = 0;
+    virtual bool moreAbstract(const IComparable &rhs) const = 0;
   };
 
-  inline bool operator<(const Comparable &lhs, const Comparable &rhs) {
+  inline bool operator<(const IComparable &lhs, const IComparable &rhs) {
     return lhs.lessAbstract(rhs);
   }
 
-  inline bool operator>(const Comparable &lhs, const Comparable &rhs) {
+  inline bool operator>(const IComparable &lhs, const IComparable &rhs) {
     return lhs.moreAbstract(rhs);
   }
 
-  inline bool operator<=(const Comparable &lhs, const Comparable &rhs) {
+  inline bool operator<=(const IComparable &lhs, const IComparable &rhs) {
     return !lhs.moreAbstract(rhs);
   }
 
-  inline bool operator>=(const Comparable &lhs, const Comparable &rhs) {
+  inline bool operator>=(const IComparable &lhs, const IComparable &rhs) {
     return !lhs.lessAbstract(rhs);
   }
 
   template <typename Derived>
-  class ComparableCRTP : virtual public Comparable, virtual public MathObjectCRTP<Derived> {
+  class ComparableCRTP : virtual public IComparable, virtual public IMathObjectCRTP<Derived> {
   public:
     ~ComparableCRTP() override = default;
 
@@ -78,66 +78,66 @@ namespace fintamath {
 
     virtual bool more(const Derived &rhs) const = 0;
 
-    bool lessAbstract(const Comparable &rhs) const final {
+    bool lessAbstract(const IComparable &rhs) const final {
       FINTAMATH_CALL_OPERATOR(<);
     }
 
-    bool moreAbstract(const Comparable &rhs) const final {
+    bool moreAbstract(const IComparable &rhs) const final {
       FINTAMATH_CALL_OPERATOR(>);
     }
   };
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Comparable, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator<(const LhsType &lhs, const RhsType &rhs) {
     return lhs < LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Comparable, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator<(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) < rhs;
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Comparable, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator>(const LhsType &lhs, const RhsType &rhs) {
     return lhs > LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Comparable, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator>(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) > rhs;
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Comparable, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator<=(const LhsType &lhs, const RhsType &rhs) {
     return lhs <= LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Comparable, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator<=(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) <= rhs;
   }
 
   template <typename LhsType, typename RhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Comparable, LhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, LhsType> &&
                                         std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator>=(const LhsType &lhs, const RhsType &rhs) {
     return lhs >= LhsType(rhs);
   }
 
   template <typename RhsType, typename LhsType,
-            typename = std::enable_if_t<std::is_base_of_v<Comparable, RhsType> &&
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, RhsType> &&
                                         std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
   bool operator>=(const LhsType &lhs, const RhsType &rhs) {
     return RhsType(lhs) >= rhs;

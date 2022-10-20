@@ -13,7 +13,7 @@ TEST(SinTests, toStringTest) {
 }
 
 TEST(SinTests, getFunctionTypeTest) {
-  EXPECT_EQ(Sin().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Sin().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(SinTests, callTest) {
@@ -25,7 +25,7 @@ TEST(SinTests, callTest) {
 
   EXPECT_ANY_THROW(Sin()(Variable("a")));
 
-  std::unique_ptr<Function> f = std::make_unique<Sin>();
+  std::unique_ptr<IFunction> f = std::make_unique<Sin>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "-0.544021110889369813404747661851377282");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

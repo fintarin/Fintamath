@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/core/Incremental.hpp"
+#include "fintamath/core/IIncremental.hpp"
 
 #include "fintamath/numbers/Integer.hpp"
 

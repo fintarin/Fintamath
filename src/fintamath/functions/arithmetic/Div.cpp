@@ -1,16 +1,16 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 
 namespace fintamath {
-  Div::Div() : OperatorCRTP(Operator::Priority::Multiplication) {
+  Div::Div() : IOperatorCRTP(IOperator::Priority::Multiplication) {
   }
 
   std::string Div::toString() const {
     return "/";
   }
 
-  MathObjectPtr Div::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
-    return argsVect.at(0).get().to<Arithmetic>() / argsVect.at(1).get().to<Arithmetic>();
+  MathObjectPtr Div::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+    return argsVect.at(0).get().to<IArithmetic>() / argsVect.at(1).get().to<IArithmetic>();
   }
 
-  static const bool isAdded = Operator::addParser<Div>();
+  static const bool isAdded = IOperator::addParser<Div>();
 }

@@ -12,7 +12,7 @@ TEST(LgTests, toStringTest) {
 }
 
 TEST(LgTests, getFunctionTypeTest) {
-  EXPECT_EQ(Lg().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Lg().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(LgTests, callTest) {
@@ -24,7 +24,7 @@ TEST(LgTests, callTest) {
   EXPECT_ANY_THROW(Lg()(Variable("a")));
   EXPECT_ANY_THROW(Lg()(Integer(-10)));
 
-  std::unique_ptr<Function> f = std::make_unique<Lg>();
+  std::unique_ptr<IFunction> f = std::make_unique<Lg>();
   EXPECT_EQ((*f)(Integer(20))->toString(), "1.301029995663981195213738894724493027");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(10), Integer(10), Integer(10)));

@@ -13,7 +13,7 @@ TEST(TanTests, toStringTest) {
 }
 
 TEST(TanTests, getFunctionTypeTest) {
-  EXPECT_EQ(Tan().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Tan().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(TanTests, callTest) {
@@ -27,7 +27,7 @@ TEST(TanTests, callTest) {
   EXPECT_ANY_THROW(Tan()(Variable("a")));
   EXPECT_ANY_THROW(Tan()(Pi().getValue(10) / 2));
 
-  std::unique_ptr<Function> f = std::make_unique<Tan>();
+  std::unique_ptr<IFunction> f = std::make_unique<Tan>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "0.648360827459086671259124933009808677");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

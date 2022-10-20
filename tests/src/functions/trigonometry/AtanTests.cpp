@@ -12,7 +12,7 @@ TEST(AtanTests, toStringTest) {
 }
 
 TEST(AtanTests, getFunctionTypeTest) {
-  EXPECT_EQ(Atan().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Atan().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(AtanTests, callTest) {
@@ -24,7 +24,7 @@ TEST(AtanTests, callTest) {
 
   EXPECT_ANY_THROW(Atan()(Variable("a")));
 
-  std::unique_ptr<Function> f = std::make_unique<Atan>();
+  std::unique_ptr<IFunction> f = std::make_unique<Atan>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "1.471127674303734591852875571761730852");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

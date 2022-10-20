@@ -12,7 +12,7 @@ TEST(LogTests, toStringTest) {
 }
 
 TEST(LogTests, getFunctionTypeTest) {
-  EXPECT_EQ(Log().getFunctionType(), Function::Type::Binary);
+  EXPECT_EQ(Log().getFunctionType(), IFunction::Type::Binary);
 }
 
 TEST(LogTests, callTest) {
@@ -25,7 +25,7 @@ TEST(LogTests, callTest) {
   EXPECT_ANY_THROW(Log()(Integer(-10), Integer(10)));
   EXPECT_ANY_THROW(Log()(Integer(1), Integer(10)));
 
-  std::unique_ptr<Function> f = std::make_unique<Log>();
+  std::unique_ptr<IFunction> f = std::make_unique<Log>();
   EXPECT_EQ((*f)(Integer(2), Integer(10))->toString(), "3.321928094887362347870319429489390176");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(10)));

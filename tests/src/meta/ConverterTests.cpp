@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/meta/Converter.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
 #include "fintamath/numbers/Rational.hpp"
 

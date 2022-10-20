@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/meta/TypeInfo.hpp"
+#include "fintamath/helpers/TypeInfo.hpp"
 
 using namespace fintamath::meta;
 

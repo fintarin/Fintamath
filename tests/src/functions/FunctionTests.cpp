@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/functions/Function.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -59,32 +59,32 @@ TEST(FunctionTests, equalsTests) {
 }
 
 TEST(FunctionTests, parseTest) {
-  EXPECT_TRUE(Function::parse("+", Function::Type::Binary)->is<Add>());
-  EXPECT_TRUE(Function::parse("+", Function::Type::Unary)->is<UnaryPlus>());
-  EXPECT_TRUE(Function::parse("-", Function::Type::Binary)->is<Sub>());
-  EXPECT_TRUE(Function::parse("-", Function::Type::Unary)->is<Neg>());
-  EXPECT_TRUE(Function::parse("*")->is<Mul>());
-  EXPECT_TRUE(Function::parse("/")->is<Div>());
-  EXPECT_TRUE(Function::parse("^")->is<Pow>());
-  EXPECT_TRUE(Function::parse("%")->is<Percent>());
-  EXPECT_TRUE(Function::parse("!")->is<Factorial>());
-  EXPECT_TRUE(Function::parse("!!")->is<DoubleFactorial>());
-  EXPECT_TRUE(Function::parse("sqrt")->is<Sqrt>());
-  EXPECT_TRUE(Function::parse("exp")->is<Exp>());
-  EXPECT_TRUE(Function::parse("log")->is<Log>());
-  EXPECT_TRUE(Function::parse("ln")->is<Ln>());
-  EXPECT_TRUE(Function::parse("lb")->is<Lb>());
-  EXPECT_TRUE(Function::parse("lg")->is<Lg>());
-  EXPECT_TRUE(Function::parse("sin")->is<Sin>());
-  EXPECT_TRUE(Function::parse("cos")->is<Cos>());
-  EXPECT_TRUE(Function::parse("tan")->is<Tan>());
-  EXPECT_TRUE(Function::parse("cot")->is<Cot>());
-  EXPECT_TRUE(Function::parse("asin")->is<Asin>());
-  EXPECT_TRUE(Function::parse("acos")->is<Acos>());
-  EXPECT_TRUE(Function::parse("atan")->is<Atan>());
-  EXPECT_TRUE(Function::parse("acot")->is<Acot>());
-  EXPECT_TRUE(Function::parse("abs")->is<Abs>());
+  EXPECT_TRUE(IFunction::parse("+", IFunction::Type::Binary)->is<Add>());
+  EXPECT_TRUE(IFunction::parse("+", IFunction::Type::Unary)->is<UnaryPlus>());
+  EXPECT_TRUE(IFunction::parse("-", IFunction::Type::Binary)->is<Sub>());
+  EXPECT_TRUE(IFunction::parse("-", IFunction::Type::Unary)->is<Neg>());
+  EXPECT_TRUE(IFunction::parse("*")->is<Mul>());
+  EXPECT_TRUE(IFunction::parse("/")->is<Div>());
+  EXPECT_TRUE(IFunction::parse("^")->is<Pow>());
+  EXPECT_TRUE(IFunction::parse("%")->is<Percent>());
+  EXPECT_TRUE(IFunction::parse("!")->is<Factorial>());
+  EXPECT_TRUE(IFunction::parse("!!")->is<DoubleFactorial>());
+  EXPECT_TRUE(IFunction::parse("sqrt")->is<Sqrt>());
+  EXPECT_TRUE(IFunction::parse("exp")->is<Exp>());
+  EXPECT_TRUE(IFunction::parse("log")->is<Log>());
+  EXPECT_TRUE(IFunction::parse("ln")->is<Ln>());
+  EXPECT_TRUE(IFunction::parse("lb")->is<Lb>());
+  EXPECT_TRUE(IFunction::parse("lg")->is<Lg>());
+  EXPECT_TRUE(IFunction::parse("sin")->is<Sin>());
+  EXPECT_TRUE(IFunction::parse("cos")->is<Cos>());
+  EXPECT_TRUE(IFunction::parse("tan")->is<Tan>());
+  EXPECT_TRUE(IFunction::parse("cot")->is<Cot>());
+  EXPECT_TRUE(IFunction::parse("asin")->is<Asin>());
+  EXPECT_TRUE(IFunction::parse("acos")->is<Acos>());
+  EXPECT_TRUE(IFunction::parse("atan")->is<Atan>());
+  EXPECT_TRUE(IFunction::parse("acot")->is<Acot>());
+  EXPECT_TRUE(IFunction::parse("abs")->is<Abs>());
 
-  EXPECT_EQ(Function::parse("asdgewfe"), nullptr);
-  EXPECT_EQ(Function::parse("1224"), nullptr);
+  EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
+  EXPECT_EQ(IFunction::parse("1224"), nullptr);
 }

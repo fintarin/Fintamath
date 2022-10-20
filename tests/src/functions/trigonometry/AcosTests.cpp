@@ -12,7 +12,7 @@ TEST(AcosTests, toStringTest) {
 }
 
 TEST(AcosTests, getFunctionTypeTest) {
-  EXPECT_EQ(Acos().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Acos().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(AcosTests, callTest) {
@@ -24,7 +24,7 @@ TEST(AcosTests, callTest) {
   EXPECT_ANY_THROW(Acos()(Variable("a")));
   EXPECT_ANY_THROW(Acos()(Integer(10)));
 
-  std::unique_ptr<Function> f = std::make_unique<Acos>();
+  std::unique_ptr<IFunction> f = std::make_unique<Acos>();
   EXPECT_EQ((*f)(Rational(1, 10))->toString(), "1.470628905633336822885798512187058124");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

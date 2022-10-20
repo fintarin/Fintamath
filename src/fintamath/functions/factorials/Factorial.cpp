@@ -3,16 +3,16 @@
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
-  Factorial::Factorial() : OperatorCRTP(Operator::Priority::PostfixUnary) {
+  Factorial::Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }
 
   std::string Factorial::toString() const {
     return "!";
   }
 
-  MathObjectPtr Factorial::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
+  MathObjectPtr Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return std::make_unique<Integer>(factorial(argsVect.at(0).get().to<Integer>()));
   }
 
-  static const bool isAdded = Operator::addParser<Factorial>();
+  static const bool isAdded = IOperator::addParser<Factorial>();
 }

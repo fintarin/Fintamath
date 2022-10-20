@@ -12,7 +12,7 @@ TEST(AbsTests, toStringTest) {
 }
 
 TEST(AbsTests, getFunctionTypeTest) {
-  EXPECT_EQ(Abs().getFunctionType(), Function::Type::Unary);
+  EXPECT_EQ(Abs().getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(AbsTests, callTest) {
@@ -22,7 +22,7 @@ TEST(AbsTests, callTest) {
 
   EXPECT_ANY_THROW(Abs()(Variable("a")));
 
-  std::unique_ptr<Function> f = std::make_unique<Abs>();
+  std::unique_ptr<IFunction> f = std::make_unique<Abs>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "10");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));

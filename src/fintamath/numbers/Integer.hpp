@@ -5,12 +5,12 @@
 #include <string>
 #include <vector>
 
-#include "fintamath/numbers/Number.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
   struct IntegerImpl;
 
-  class Integer : public NumberCRTP<Integer> {
+  class Integer : public INumberCRTP<Integer> {
   public:
     Integer();
 

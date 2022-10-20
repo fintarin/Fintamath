@@ -5,8 +5,8 @@
 #include <regex>
 #include <stdexcept>
 
-#include "fintamath/core/MathObject.hpp"
-#include "fintamath/functions/Function.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -18,11 +18,11 @@
 #include "fintamath/functions/logic/Eq.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/Literal.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/Constant.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/Number.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
   using ExprPtr = std::shared_ptr<Expression>;
@@ -117,7 +117,7 @@ namespace fintamath {
     throw std::invalid_argument("Expected one \'=\'");
   }
 
-  Expression::Expression(const MathObject &obj) : info(obj.clone()) {
+  Expression::Expression(const IMathObject &obj) : info(obj.clone()) {
   }
 
   std::string putInBrackets(const std::string &str) {
@@ -130,17 +130,17 @@ namespace fintamath {
     }
 
     std::string result;
-    if (info->instanceOf<Operator>()) {
-      const auto &rootOp = info->to<Operator>();
+    if (info->instanceOf<IOperator>()) {
+      const auto &rootOp = info->to<IOperator>();
 
-      if (!children.at(0)->info->instanceOf<Operator>()) {
-        if (children.at(0)->info->instanceOf<Comparable>() && children.at(0)->info->to<Comparable>() < Integer(0)) {
+      if (!children.at(0)->info->instanceOf<IOperator>()) {
+        if (children.at(0)->info->instanceOf<IComparable>() && children.at(0)->info->to<IComparable>() < Integer(0)) {
           result += putInBrackets(children.at(0)->toString());
         } else {
           result += children.at(0)->toString();
         }
       } else {
-        if (const auto &nodeOp = children.at(0)->info->to<Operator>();
+        if (const auto &nodeOp = children.at(0)->info->to<IOperator>();
             (rootOp.getOperatorPriority() > nodeOp.getOperatorPriority()) ||
             ((rootOp.is<Neg>() || rootOp.is<Pow>()) && rootOp.getOperatorPriority() == nodeOp.getOperatorPriority())) {
           result += putInBrackets(children.at(0)->toString());
@@ -156,15 +156,15 @@ namespace fintamath {
       for (size_t i = 1; i < children.size(); i++) {
         result += info->toString();
 
-        if (!children.at(i)->info->instanceOf<Operator>()) {
-          if (children.at(i)->info->instanceOf<Comparable>() && children.at(i)->info->to<Comparable>() < Integer(0)) {
+        if (!children.at(i)->info->instanceOf<IOperator>()) {
+          if (children.at(i)->info->instanceOf<IComparable>() && children.at(i)->info->to<IComparable>() < Integer(0)) {
             result += putInBrackets(children.at(i)->toString());
             continue;
           }
           result += children.at(i)->toString();
           continue;
         }
-        const auto &nodeOp = children.at(i)->info->to<Operator>();
+        const auto &nodeOp = children.at(i)->info->to<IOperator>();
         if (rootOp.getOperatorPriority() > nodeOp.getOperatorPriority()) {
           result += putInBrackets(children.at(i)->toString());
           continue;
@@ -178,11 +178,11 @@ namespace fintamath {
       return result;
     }
 
-    if (info->instanceOf<Function>()) {
-      const auto &rootFunc = info->to<Function>();
+    if (info->instanceOf<IFunction>()) {
+      const auto &rootFunc = info->to<IFunction>();
       if (rootFunc.is<Factorial>() || rootFunc.is<DoubleFactorial>() || rootFunc.is<Percent>()) {
         if ((children.at(0)->is<Factorial>() && rootFunc.is<Factorial>()) ||
-            children.at(0)->info->instanceOf<Operator>()) {
+            children.at(0)->info->instanceOf<IOperator>()) {
           result += putInBrackets(children.at(0)->toString());
         } else {
           result += children.at(0)->toString();
@@ -423,11 +423,11 @@ namespace fintamath {
       return parseResult;
     }
 
-    if (LiteralPtr ptr = Literal::parse(term)) {
+    if (LiteralPtr ptr = ILiteral::parse(term)) {
       return std::make_shared<Expression>(*ptr);
     }
 
-    if (NumberPtr ptr = Number::parse(term)) {
+    if (NumberPtr ptr = INumber::parse(term)) {
       return std::make_shared<Expression>(*ptr);
     }
 
@@ -442,8 +442,8 @@ namespace fintamath {
     if (!funcNameMatch.empty()) {
       const std::string funcName = funcNameMatch.str();
       Expression expr;
-      FunctionPtr functPtr = Function::parse(funcName);
-      expr.info = std::shared_ptr<MathObject>(functPtr.release());
+      FunctionPtr functPtr = IFunction::parse(funcName);
+      expr.info = std::shared_ptr<IMathObject>(functPtr.release());
       expr.children = getArgs(cutBraces(term.substr(funcName.size())));
       return std::make_shared<Expression>(expr);
     }
@@ -499,8 +499,8 @@ namespace fintamath {
       }
     }
 
-    if (expr->info->instanceOf<Operator>()) {
-      const auto &o = expr->info->to<Operator>();
+    if (expr->info->instanceOf<IOperator>()) {
+      const auto &o = expr->info->to<IOperator>();
       try {
         if (o.instanceOf<Neg>()) {
           auto newExpr = std::make_shared<Expression>(*o(*expr->children.at(0)->info));
@@ -508,7 +508,7 @@ namespace fintamath {
         }
         return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
       } catch (const std::invalid_argument &) {
-        // skip operation if child is Variable,  Function or Constant
+        // skip operation if child is Variable,  IFunction or IConstant
       }
     }
 
@@ -523,8 +523,8 @@ namespace fintamath {
       }
     }
 
-    if (expr->info->instanceOf<Function>() && !expr->info->instanceOf<Operator>()) {
-      const auto &o = expr->info->to<Function>();
+    if (expr->info->instanceOf<IFunction>() && !expr->info->instanceOf<IOperator>()) {
+      const auto &o = expr->info->to<IFunction>();
       if (o.is<Log>()) {
         return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
       }
@@ -543,8 +543,8 @@ namespace fintamath {
       }
     }
 
-    if (expr->info->instanceOf<Constant>()) {
-      const auto &constant = expr->info->to<Constant>();
+    if (expr->info->instanceOf<IConstant>()) {
+      const auto &constant = expr->info->to<IConstant>();
       expr->info = std::make_shared<Rational>(constant.getValue(defaultPrecision));
     }
     return expr;
@@ -593,7 +593,7 @@ namespace fintamath {
     if (newExpr->info->is<Div>()) {
       newExpr->info = std::make_shared<Mul>();
       auto rightNode = std::make_shared<Expression>();
-      if (newExpr->children.at(1)->info->instanceOf<Number>()) {
+      if (newExpr->children.at(1)->info->instanceOf<INumber>()) {
         rightNode->info = std::make_shared<Div>();
         rightNode->children.push_back(std::make_shared<Expression>(Integer(1)));
         rightNode->children.push_back(newExpr->children.at(1));
@@ -628,7 +628,7 @@ namespace fintamath {
       newExpr = newExpr->children.at(0)->children.at(0);
     }
 
-    if (newExpr->info->is<Neg>() && !newExpr->children.at(0)->info->is<Arithmetic>()) {
+    if (newExpr->info->is<Neg>() && !newExpr->children.at(0)->info->is<IArithmetic>()) {
       newExpr->info = std::make_shared<Mul>();
       newExpr->children.insert(newExpr->children.begin(), std::make_shared<Expression>(Integer(-1)));
     }
@@ -711,7 +711,7 @@ namespace fintamath {
 
     do {
       position--;
-      if (newExpr->children.at(position)->info->instanceOf<Arithmetic>()) {
+      if (newExpr->children.at(position)->info->instanceOf<IArithmetic>()) {
         result = op(*result, *newExpr->children.at(position)->info);
         newExpr->children.erase(newExpr->children.begin() + static_cast<long long int>(position));
       }
@@ -750,7 +750,7 @@ namespace fintamath {
       if (newExpr->children.at(position)->info->toString() == "0") {
         return newExpr->children.at(position);
       }
-      if (newExpr->children.at(position)->info->instanceOf<Arithmetic>()) {
+      if (newExpr->children.at(position)->info->instanceOf<IArithmetic>()) {
         result = op(*result, *newExpr->children.at(position)->info);
         newExpr->children.erase(newExpr->children.begin() + static_cast<long long int>(position));
       }
@@ -791,7 +791,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprVect Expression::getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const MathObject &o) {
+  ExprVect Expression::getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const IMathObject &o) {
     auto openBrackets = ExprVect();
 
     for (const auto &lhs : lhsBracket) {
@@ -823,7 +823,7 @@ namespace fintamath {
 
     auto range = newExpr->children.at(1)->info->to<Integer>();
     for (int i = 0; i < range; i++) {
-      const std::shared_ptr<MathObject> copyExpr = newExpr->children.at(0)->clone();
+      const std::shared_ptr<IMathObject> copyExpr = newExpr->children.at(0)->clone();
       mulExpr.children.push_back(std::make_shared<Expression>(copyExpr->to<Expression>()));
     }
     return openBracketsMulAdd(std::make_shared<Expression>(mulExpr));
@@ -915,7 +915,7 @@ namespace fintamath {
       child = sort(child);
     }
 
-    if (!newExpr->info->instanceOf<Operator>() || newExpr->info->is<Pow>()) {
+    if (!newExpr->info->instanceOf<IOperator>() || newExpr->info->is<Pow>()) {
       return newExpr;
     }
 
@@ -927,17 +927,17 @@ namespace fintamath {
     auto constVect = ExprVect();
 
     for (const auto &child : newExpr->children) {
-      if (child->info->instanceOf<Arithmetic>()) {
+      if (child->info->instanceOf<IArithmetic>()) {
         numVect.push_back(child);
       } else if (child->info->is<Pow>()) {
         powVect.push_back(child);
       } else if (child->info->is<Variable>()) {
         varVect.push_back(child);
-      } else if (child->info->instanceOf<Constant>()) {
+      } else if (child->info->instanceOf<IConstant>()) {
         constVect.push_back(child);
       } else if (child->info->is<Mul>()) {
         mulVect.push_back(child);
-      } else if (child->info->instanceOf<Function>()) {
+      } else if (child->info->instanceOf<IFunction>()) {
         funcVect.push_back(child);
       } else {
         throw std::invalid_argument("Expression invalid input");
@@ -1024,7 +1024,7 @@ namespace fintamath {
 
     for (auto &child : newExpr->children) {
       if (child->info->is<Mul>()) {
-        if (!child->children.at(0)->info->instanceOf<Arithmetic>()) {
+        if (!child->children.at(0)->info->instanceOf<IArithmetic>()) {
           child->children.insert(child->children.begin(), std::make_shared<Expression>(Integer(1)));
         }
       } else {

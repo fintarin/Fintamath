@@ -1,4 +1,4 @@
-#include "fintamath/literals/constants/Constant.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 
 #include <memory>
 
@@ -6,7 +6,7 @@
 #include "fintamath/literals/constants/Pi.hpp"
 
 namespace fintamath {
-  ConstantPtr Constant::parse(const std::string &str) {
+  ConstantPtr IConstant::parse(const std::string &str) {
     if (str == "e") {
       return std::make_unique<E>();
     }

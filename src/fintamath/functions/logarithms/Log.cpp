@@ -7,7 +7,7 @@ namespace fintamath {
     return "log";
   }
 
-  MathObjectPtr Log::call(const std::vector<std::reference_wrapper<const MathObject>> &argsVect) const {
+  MathObjectPtr Log::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
 
     return log(meta::convertMathObject(argsVect.at(0), Rational())->to<Rational>(),
@@ -15,5 +15,5 @@ namespace fintamath {
         .simplify();
   }
 
-  static const bool isAdded = Function::addParser<Log>();
+  static const bool isAdded = IFunction::addParser<Log>();
 }

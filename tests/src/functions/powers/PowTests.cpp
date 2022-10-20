@@ -12,11 +12,11 @@ TEST(PowTests, toStringTest) {
 }
 
 TEST(PowTests, getFunctionTypeTest) {
-  EXPECT_EQ(Pow().getFunctionType(), Function::Type::Binary);
+  EXPECT_EQ(Pow().getFunctionType(), IFunction::Type::Binary);
 }
 
 TEST(PowTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Pow().getOperatorPriority(), Operator::Priority::Exponentiation);
+  EXPECT_EQ(Pow().getOperatorPriority(), IOperator::Priority::Exponentiation);
 }
 
 TEST(PowTests, callTest) {
@@ -56,7 +56,7 @@ TEST(PowTests, callTest) {
 
   EXPECT_ANY_THROW(Pow()(Integer(3), Variable("a")));
 
-  std::unique_ptr<Operator> o = std::make_unique<Pow>();
+  std::unique_ptr<IOperator> o = std::make_unique<Pow>();
   EXPECT_ANY_THROW((*o)(Integer(1)));
   EXPECT_ANY_THROW((*o)(Rational(2, 3)));
   EXPECT_ANY_THROW((*o)());
