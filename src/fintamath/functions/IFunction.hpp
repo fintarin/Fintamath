@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include "fintamath/core/ArgumentsVector.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/helpers/Parser.hpp"
 
@@ -24,9 +25,6 @@ namespace fintamath {
       Ternary, // 3 arguments
       Any,     // undefined number of arguments
     };
-
-  protected:
-    using ArgumentsVector = std::vector<std::reference_wrapper<const IMathObject>>;
 
   public:
     ~IFunction() override = default;
