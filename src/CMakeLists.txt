@@ -2,8 +2,8 @@ file(
   GLOB_RECURSE
   SOURCES
   CONFIGURE_DEPENDS
-  "*.cpp"
-  "*.hpp")
+  "fintamath/*.cpp"
+  "fintamath/*.hpp")
 
 add_library(${PROJECT_NAME} ${SOURCES})
 
