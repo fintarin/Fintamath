@@ -10,6 +10,4 @@ namespace fintamath {
   MathObjectPtr Abs::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return abs(helpers::convertMathObject(argsVect.at(0), Rational())->to<Rational>()).simplify();
   }
-
-  static const bool IS_ADDED = IFunction::addParser<Abs>();
 }

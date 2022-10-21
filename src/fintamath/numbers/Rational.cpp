@@ -268,5 +268,5 @@ namespace fintamath {
   // Using the formula lcm(a, b) = a * b / gcd(a, b)
   static Integer lcm(const Integer &lhs, const Integer &rhs) {
     return lhs * rhs / gcd(lhs, rhs);
-  }
+  } 
 }

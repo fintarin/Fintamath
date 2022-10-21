@@ -11,6 +11,4 @@ namespace fintamath {
     constexpr int64_t defaultPrecision = 45;
     return sin(helpers::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
-
-  static const bool IS_ADDED = IFunction::addParser<Sin>();
 }

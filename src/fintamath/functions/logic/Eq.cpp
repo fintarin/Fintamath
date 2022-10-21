@@ -14,6 +14,4 @@ namespace fintamath {
   MathObjectPtr Eq::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return INumber::parse(int64_t(argsVect.at(0).get() == argsVect.at(1).get()));
   }
-
-  static const bool IS_ADDED = IOperator::addParser<Eq>();
 }

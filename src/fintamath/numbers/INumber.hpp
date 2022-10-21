@@ -3,6 +3,7 @@
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IIncremental.hpp"
+#include "fintamath/helpers/Parser.hpp"
 
 namespace fintamath {
   class INumber;
@@ -12,9 +13,21 @@ namespace fintamath {
   public:
     ~INumber() override = default;
 
-    static NumberPtr parse(const std::string &str);
+    template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
+    static bool addParser() {
+      return helpers::addParser<T>(parserMap);
+    }
 
-    static NumberPtr parse(int64_t num);
+    static NumberPtr parse(const std::string &str) {
+      return helpers::parse(parserMap, str);
+    }
+
+    static NumberPtr parse(int64_t num) {
+      return parse(std::to_string(num));
+    }
+
+  private:
+    static helpers::ParserVector<NumberPtr> parserMap;
   };
 
   inline NumberPtr operator+(const INumber &lhs, const INumber &rhs) {
@@ -39,9 +52,9 @@ namespace fintamath {
 
   template <typename Derived>
   class INumberCRTP : public INumber,
-                     public ComparableCRTP<Derived>,
-                     public IArithmeticCRTP<Derived>,
-                     public IIncrementalCRTP<Derived> {
+                      public ComparableCRTP<Derived>,
+                      public IArithmeticCRTP<Derived>,
+                      public IIncrementalCRTP<Derived> {
   public:
     ~INumberCRTP() override = default;
   };

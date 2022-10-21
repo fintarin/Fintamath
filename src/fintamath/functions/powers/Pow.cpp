@@ -17,6 +17,4 @@ namespace fintamath {
                helpers::convertMathObject(argsVect.at(1), Rational())->to<Rational>(), defaultPrecision)
         .simplify();
   }
-
-  static const bool IS_ADDED = IOperator::addParser<Pow>();
 }

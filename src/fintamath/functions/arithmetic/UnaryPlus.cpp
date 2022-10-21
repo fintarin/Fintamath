@@ -11,6 +11,4 @@ namespace fintamath {
   MathObjectPtr UnaryPlus::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return +argsVect.at(0).get().to<IArithmetic>();
   }
-
-  static const bool IS_ADDED = IOperator::addParser<UnaryPlus>();
 }

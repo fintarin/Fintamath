@@ -13,6 +13,4 @@ namespace fintamath {
   MathObjectPtr DoubleFactorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return std::make_unique<Integer>(doubleFactorial(argsVect.at(0).get().to<Integer>()));
   }
-
-  static const bool IS_ADDED = IOperator::addParser<DoubleFactorial>();
 }
