@@ -8,7 +8,7 @@ namespace fintamath {
 
   class IOperator : virtual public IFunction {
   public:
-    enum Priority : uint16_t {
+    enum class Priority : uint16_t {
       PostfixUnary,   // postfix unary operators
       PrefixUnary,    // prefix unary operators
       Exponentiation, // operators with priority like exponentiation

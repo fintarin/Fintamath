@@ -18,7 +18,7 @@ namespace fintamath {
 
   class IFunction : virtual public IMathObject {
   public:
-    enum Type : uint16_t {
+    enum class Type : uint16_t {
       None,    // 0 arguments
       Unary,   // 1 argument
       Binary,  // 2 arguments
