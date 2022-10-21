@@ -1,13 +1,5 @@
 #pragma once
 
-#include <cstdint>
-#include <cstdlib>
-#include <functional>
-#include <map>
-#include <string>
-#include <utility>
-#include <vector>
-
 #include "fintamath/core/ArgumentsVector.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/helpers/Parser.hpp"
