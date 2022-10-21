@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/core/ArgumentsVector.hpp"
+#include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/helpers/Parser.hpp"
 

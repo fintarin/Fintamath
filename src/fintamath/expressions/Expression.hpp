@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
-  class Expression : public IMathObjectCRTP<Expression> {
+  class Expression : public IExpressionCRTP<Expression> {
   public:
     Expression() = default;
 
@@ -28,11 +28,8 @@ namespace fintamath {
 
     MathObjectPtr simplify() const override;
 
-  protected:
-    bool equals(const Expression &rhs) const override;
-
   private:
-    using ExprPtr = std::shared_ptr<Expression>;
+    using ExprPtr = std::shared_ptr<Expression>; // TODO replace with ExpressionPtr
     using ExprVect = std::vector<ExprPtr>;
 
     ExprPtr baseSimplify() const;

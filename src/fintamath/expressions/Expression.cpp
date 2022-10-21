@@ -18,15 +18,14 @@
 #include "fintamath/functions/logic/Eq.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  using ExprPtr = std::shared_ptr<Expression>;
-  using ExprVect = std::vector<ExprPtr>;
+  using ExprPtr = std::shared_ptr<Expression>; // TODO remove
+  using ExprVect = std::vector<ExprPtr>;       // TODO remove
 
   std::string cutSpaces(const std::string &str) {
     std::string strExpr = str;
@@ -209,20 +208,6 @@ namespace fintamath {
 
     result += args.at(args.size() - 1)->toString();
     return result;
-  }
-
-  bool Expression::equals(const Expression &rhs) const {
-    bool flag = *info == *rhs.info;
-
-    if (children.size() == rhs.children.size()) {
-      for (size_t pos = 0; pos < children.size(); pos++) {
-        flag = flag && *children.at(pos) == *rhs.children.at(pos);
-      }
-    } else {
-      return false;
-    }
-
-    return flag;
   }
 
   static size_t ignoreBracketsRightLeft(const std::string_view &str, size_t position) {
@@ -791,7 +776,8 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprVect Expression::getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const IMathObject &o) {
+  ExprVect Expression::getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket,
+                                          const IMathObject &o) {
     auto openBrackets = ExprVect();
 
     for (const auto &lhs : lhsBracket) {
