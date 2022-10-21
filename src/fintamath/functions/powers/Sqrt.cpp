@@ -9,7 +9,7 @@ namespace fintamath {
 
   MathObjectPtr Sqrt::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
-    return sqrt(help::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
+    return sqrt(helpers::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
   static const bool isAdded = IFunction::addParser<Sqrt>();

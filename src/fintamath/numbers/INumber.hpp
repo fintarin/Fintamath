@@ -19,22 +19,22 @@ namespace fintamath {
 
   inline NumberPtr operator+(const INumber &lhs, const INumber &rhs) {
     auto res = lhs + rhs.to<IArithmetic>();
-    return help::castPtr<INumber>(res);
+    return helpers::castPtr<INumber>(res);
   }
 
   inline NumberPtr operator-(const INumber &lhs, const INumber &rhs) {
     auto res = lhs - rhs.to<IArithmetic>();
-    return help::castPtr<INumber>(res);
+    return helpers::castPtr<INumber>(res);
   }
 
   inline NumberPtr operator*(const INumber &lhs, const INumber &rhs) {
     auto res = lhs * rhs.to<IArithmetic>();
-    return help::castPtr<INumber>(res);
+    return helpers::castPtr<INumber>(res);
   }
 
   inline NumberPtr operator/(const INumber &lhs, const INumber &rhs) {
     auto res = lhs / rhs.to<IArithmetic>();
-    return help::castPtr<INumber>(res);
+    return helpers::castPtr<INumber>(res);
   }
 
   template <typename Derived>

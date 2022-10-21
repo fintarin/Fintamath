@@ -2,7 +2,7 @@
 
 #include <typeinfo>
 
-namespace fintamath::help {
+namespace fintamath::helpers {
   class TypeInfo {
   public:
     TypeInfo(const std::type_info &info);

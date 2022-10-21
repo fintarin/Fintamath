@@ -35,14 +35,14 @@ namespace fintamath {
 
   inline IncrementalPtr operator++(IIncremental &lhs, int) {
     auto tmp = lhs.clone();
-    auto res = help::castPtr<IIncremental>(tmp);
+    auto res = helpers::castPtr<IIncremental>(tmp);
     lhs.increaseAbstract();
     return res;
   }
 
   inline IncrementalPtr operator--(IIncremental &lhs, int) {
     auto tmp = lhs.clone();
-    auto res = help::castPtr<IIncremental>(tmp);
+    auto res = helpers::castPtr<IIncremental>(tmp);
     lhs.decreaseAbstract();
     return res;
   }

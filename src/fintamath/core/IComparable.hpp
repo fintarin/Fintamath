@@ -6,10 +6,10 @@
   if (rhs.is<Derived>()) {                                                                                             \
     return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
-  if (auto tmp = help::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
+  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
     return *this OPER tmp->template to<IComparable>();                                                                  \
   }                                                                                                                    \
-  if (auto tmp = help::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
+  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
     return tmp->template to<IComparable>() OPER rhs;                                                                    \
   }                                                                                                                    \
   throw std::invalid_argument("Incompatible types")

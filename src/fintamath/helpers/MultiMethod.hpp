@@ -6,7 +6,7 @@
 
 #include "fintamath/helpers/TypeInfo.hpp"
 
-namespace fintamath::help {
+namespace fintamath::helpers {
   template <typename Signature>
   class MultiMethod;
 

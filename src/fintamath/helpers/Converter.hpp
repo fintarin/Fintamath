@@ -7,6 +7,6 @@ namespace fintamath {
   using MathObjectPtr = std::unique_ptr<IMathObject>;
 }
 
-namespace fintamath::help {
+namespace fintamath::helpers {
   MathObjectPtr convertMathObject(const IMathObject &value, const IMathObject &type);
 }

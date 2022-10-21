@@ -4,7 +4,7 @@
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
-namespace fintamath::help {
+namespace fintamath::helpers {
   auto initConverter() {
     MultiMethod<MathObjectPtr(const IMathObject &, const IMathObject &)> converter;
 

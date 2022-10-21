@@ -5,7 +5,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
-using namespace fintamath::help;
+using namespace fintamath::helpers;
 
 TEST(ConverterTests, convertTest) {
   EXPECT_TRUE(convertMathObject(Integer(), Rational())->is<Rational>());

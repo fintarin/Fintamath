@@ -10,10 +10,10 @@
   if (rhs.is<Derived>()) {                                                                                             \
     return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
-  if (auto tmp = help::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
+  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
     return *this OPER * tmp;                                                                                           \
   }                                                                                                                    \
-  if (auto tmp = help::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
+  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
     return *tmp OPER rhs;                                                                                              \
   }                                                                                                                    \
   return false
