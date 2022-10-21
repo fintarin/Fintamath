@@ -13,6 +13,7 @@ namespace fintamath {
   protected:
     using TokenVector = std::vector<std::string>;
 
+    static ExpressionPtr parse(const std::string &str);
   protected:
     static TokenVector tokenize(const std::string &str);
   };
