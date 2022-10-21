@@ -15,5 +15,5 @@ namespace fintamath {
     return (helpers::convertMathObject(argsVect.at(0), Rational())->to<Rational>() / percentValue).simplify();
   }
 
-  static const bool isAdded = IOperator::addParser<Percent>();
+  static const bool IS_ADDED = IOperator::addParser<Percent>();
 }

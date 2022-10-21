@@ -12,5 +12,5 @@ namespace fintamath {
     return acos(helpers::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
-  static const bool isAdded = IFunction::addParser<Acos>();
+  static const bool IS_ADDED = IFunction::addParser<Acos>();
 }

@@ -12,5 +12,5 @@ namespace fintamath {
     return exp(helpers::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
   }
 
-  static const bool isAdded = IFunction::addParser<Exp>();
+  static const bool IS_ADDED = IFunction::addParser<Exp>();
 }

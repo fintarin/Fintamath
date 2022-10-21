@@ -12,5 +12,5 @@ namespace fintamath {
     return argsVect.at(0).get().to<IArithmetic>() - argsVect.at(1).get().to<IArithmetic>();
   }
 
-  static const bool isAdded = IOperator::addParser<Sub>();
+  static const bool IS_ADDED = IOperator::addParser<Sub>();
 }

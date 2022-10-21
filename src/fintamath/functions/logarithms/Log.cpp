@@ -15,5 +15,5 @@ namespace fintamath {
         .simplify();
   }
 
-  static const bool isAdded = IFunction::addParser<Log>();
+  static const bool IS_ADDED = IFunction::addParser<Log>();
 }

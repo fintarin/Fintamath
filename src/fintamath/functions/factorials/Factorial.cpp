@@ -14,5 +14,5 @@ namespace fintamath {
     return std::make_unique<Integer>(factorial(argsVect.at(0).get().to<Integer>()));
   }
 
-  static const bool isAdded = IOperator::addParser<Factorial>();
+  static const bool IS_ADDED = IOperator::addParser<Factorial>();
 }
