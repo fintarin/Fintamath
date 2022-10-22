@@ -24,9 +24,9 @@ namespace fintamath {
     virtual IOperator::Priority getOperatorPriority() const = 0;
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<IOperator, T>>>
-    static bool addParser() {
+    static void addParser() {
       IFunction::addParser<T>();
-      return helpers::addParser<T>(parserMap);
+      helpers::addParser<T>(parserMap);
     }
 
     static OperatorPtr parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {

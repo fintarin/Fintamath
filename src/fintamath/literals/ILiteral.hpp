@@ -12,12 +12,12 @@ namespace fintamath {
     ~ILiteral() override = default;
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
-    static bool addParser() {
-      return helpers::addParser<T>(parserMap);
+    static void addParser() {
+      helpers::addParser<T>(parserMap);
     }
 
-    static bool addParser(const helpers::ParserStringFunction<LiteralPtr> &parserFunc) {
-      return helpers::addParser(parserMap, parserFunc);
+    static void addParser(const helpers::ParserStringFunction<LiteralPtr> &parserFunc) {
+      helpers::addParser(parserMap, parserFunc);
     }
 
     static LiteralPtr parse(const std::string &str) {

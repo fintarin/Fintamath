@@ -16,8 +16,8 @@ namespace fintamath {
     virtual Rational getValue(int64_t precision) const = 0;
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
-    static bool addParser() {
-      return helpers::addParser<T>(parserMap);
+    static void addParser() {
+      helpers::addParser<T>(parserMap);
     }
 
     static ConstantPtr parse(const std::string &parsedStr) {

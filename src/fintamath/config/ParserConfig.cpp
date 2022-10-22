@@ -1,3 +1,5 @@
+#include "fintamath/config/ParserConfig.hpp"
+
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -43,48 +45,50 @@ namespace fintamath {
   helpers::ParserMap<OperatorPtr> IOperator::parserMap;
 }
 
-namespace {
-  using namespace fintamath;
+namespace fintamath::config {
+  ParserConfig::ParserConfig() {
+    // numbers
+    INumber::addParser<Integer>();
+    INumber::addParser<Rational>();
 
-  // numbers
-  bool integer = INumber::addParser<Integer>();
-  bool rational = INumber::addParser<Rational>();
+    // constants
+    IConstant::addParser<E>();
+    IConstant::addParser<Pi>();
 
-  // constants
-  bool e = IConstant::addParser<E>();
-  bool pi = IConstant::addParser<Pi>();
+    // literals
+    ILiteral::addParser(&IConstant::parse);
+    ILiteral::addParser<Variable>();
 
-  // literals
-  bool constant = ILiteral::addParser(&IConstant::parse);
-  bool variable = ILiteral::addParser<Variable>();
+    // operators
+    IOperator::addParser<Add>();
+    IOperator::addParser<Sub>();
+    IOperator::addParser<Mul>();
+    IOperator::addParser<Div>();
+    IOperator::addParser<Neg>();
+    IOperator::addParser<UnaryPlus>();
+    IOperator::addParser<Factorial>();
+    IOperator::addParser<DoubleFactorial>();
+    IOperator::addParser<Percent>();
+    IOperator::addParser<Pow>();
+    IOperator::addParser<Eq>();
 
-  // operators
-  bool add = IOperator::addParser<Add>();
-  bool sub = IOperator::addParser<Sub>();
-  bool mul = IOperator::addParser<Mul>();
-  bool div = IOperator::addParser<Div>();
-  bool neg = IOperator::addParser<Neg>();
-  bool unaryPlus = IOperator::addParser<UnaryPlus>();
-  bool factorial = IOperator::addParser<Factorial>();
-  bool doubleFactorial = IOperator::addParser<DoubleFactorial>();
-  bool percent = IOperator::addParser<Percent>();
-  bool pow = IOperator::addParser<Pow>();
-  bool eq = IOperator::addParser<Eq>();
+    // functions
+    IFunction::addParser<Abs>();
+    IFunction::addParser<Log>();
+    IFunction::addParser<Ln>();
+    IFunction::addParser<Lb>();
+    IFunction::addParser<Lg>();
+    IFunction::addParser<Exp>();
+    IFunction::addParser<Sqrt>();
+    IFunction::addParser<Sin>();
+    IFunction::addParser<Cos>();
+    IFunction::addParser<Tan>();
+    IFunction::addParser<Cot>();
+    IFunction::addParser<Asin>();
+    IFunction::addParser<Acos>();
+    IFunction::addParser<Atan>();
+    IFunction::addParser<Acot>();
+  }
 
-  // functions
-  bool abs = IFunction::addParser<Abs>();
-  bool log = IFunction::addParser<Log>();
-  bool ln = IFunction::addParser<Ln>();
-  bool lb = IFunction::addParser<Lb>();
-  bool lg = IFunction::addParser<Lg>();
-  bool exp = IFunction::addParser<Exp>();
-  bool sqrt = IFunction::addParser<Sqrt>();
-  bool sin = IFunction::addParser<Sin>();
-  bool cos = IFunction::addParser<Cos>();
-  bool tan = IFunction::addParser<Tan>();
-  bool cot = IFunction::addParser<Cot>();
-  bool asin = IFunction::addParser<Asin>();
-  bool acos = IFunction::addParser<Acos>();
-  bool atan = IFunction::addParser<Atan>();
-  bool acot = IFunction::addParser<Acot>();
+  static const ParserConfig config;
 }

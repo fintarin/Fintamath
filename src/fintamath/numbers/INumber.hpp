@@ -14,8 +14,8 @@ namespace fintamath {
     ~INumber() override = default;
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
-    static bool addParser() {
-      return helpers::addParser<T>(parserMap);
+    static void addParser() {
+      helpers::addParser<T>(parserMap);
     }
 
     static NumberPtr parse(const std::string &str) {

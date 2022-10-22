@@ -24,7 +24,7 @@ namespace fintamath::helpers {
   using ParserVector = std::vector<ParserStringFunction<Value>>;
 
   template <typename Parser, typename Value>
-  bool addParser(ParserMap<Value> &parserMap) {
+  void addParser(ParserMap<Value> &parserMap) {
     ParserFunction<Value> constructor = [] {
       return std::make_unique<Parser>(); //
     };
@@ -32,11 +32,10 @@ namespace fintamath::helpers {
     std::string name = std::make_unique<Parser>()->toString();
 
     parserMap.insert({name, constructor});
-    return true;
   }
 
   template <typename Parser, typename Value>
-  bool addParser(ParserVector<Value> &parserVect) {
+  void addParser(ParserVector<Value> &parserVect) {
     ParserStringFunction<Value> constructor = [](const std::string &str) {
       try {
         return std::make_unique<Parser>(str);
@@ -46,13 +45,11 @@ namespace fintamath::helpers {
     };
 
     parserVect.push_back(constructor);
-    return true;
   }
 
   template <typename Value>
-  bool addParser(ParserVector<Value> &parserVect, const ParserStringFunction<Value> &parserFunc) {
+  void addParser(ParserVector<Value> &parserVect, const ParserStringFunction<Value> &parserFunc) {
     parserVect.push_back(parserFunc);
-    return true;
   }
 
   template <typename Value>

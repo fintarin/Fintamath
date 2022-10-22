@@ -30,8 +30,8 @@ namespace fintamath {
     }
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
-    static bool addParser() {
-      return helpers::addParser<T>(parserMap);
+    static void addParser() {
+      helpers::addParser<T>(parserMap);
     }
 
     static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
