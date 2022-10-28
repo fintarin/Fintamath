@@ -3,6 +3,9 @@
 #include <cmath>
 #include <stdexcept>
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
@@ -29,7 +32,7 @@ namespace fintamath {
 
   Rational sqrt(const Rational &rhs, int64_t precision) {
     if (rhs < 0) {
-      throw std::domain_error("sqrt out of range");
+      throw UndefinedFunctionException("sqrt", rhs.toString());
     }
     if (rhs == 0) {
       return Integer(0);
@@ -49,14 +52,14 @@ namespace fintamath {
     try {
       return (ln(rhs, precision) / ln(lhs, precision)).round(precision);
     } catch (const std::domain_error &) {
-      throw std::domain_error("log out of range");
+      throw UndefinedFunctionException("log", rhs.toString(), lhs.toString());
     }
   }
 
   // Using Taylor series: ln(a) = sum_{k=0}^{inf} (2/(2k+1)) * ((a-1)/(a+1))^(2k+1)
   Rational ln(const Rational &rhs, int64_t precision) {
     if (rhs <= 0) {
-      throw std::domain_error("ln out of range");
+      throw UndefinedFunctionException("ln", rhs.toString());
     }
 
     Integer multiplier;
@@ -86,7 +89,7 @@ namespace fintamath {
     try {
       return log(Integer(logBase), rhs, precision);
     } catch (const std::domain_error &) {
-      throw std::domain_error("lb out of range");
+      throw UndefinedFunctionException("lb", rhs.toString());
     }
   }
 
@@ -96,7 +99,7 @@ namespace fintamath {
     try {
       return log(Integer(logBase), rhs, precision);
     } catch (const std::domain_error &) {
-      throw std::domain_error("lg out of range");
+      throw UndefinedFunctionException("lg", rhs.toString());
     }
   }
 
@@ -107,10 +110,10 @@ namespace fintamath {
   */
   Rational pow(const Rational &lhs, const Rational &rhs, int64_t precision) {
     if (lhs == 0 && rhs == 0) {
-      throw std::domain_error("Zero pow zero");
+      throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
     }
     if (lhs < 0 && rhs.getNumerator() != 0) {
-      throw std::domain_error("pow out of range");
+      throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
     }
     if (rhs == 0) {
       return Integer(1);
@@ -262,7 +265,7 @@ namespace fintamath {
       try {
         val = -cot(val - piDiv2, precision);
       } catch (const std::domain_error &) {
-        throw std::domain_error("tan out of range");
+        throw UndefinedFunctionException("tan", rhs.toString());
       }
 
       if (isNegative) {
@@ -299,7 +302,7 @@ namespace fintamath {
       try {
         val = -tan(val - piDiv2, precision);
       } catch (const std::domain_error &) {
-        throw std::domain_error("cot out of range");
+        throw UndefinedFunctionException("cot", rhs.toString());
       }
 
       if (isNegative) {
@@ -310,7 +313,7 @@ namespace fintamath {
 
     Rational sinVal = sin(val, precision);
     if (sinVal.round(precision - 1) == 0) {
-      throw std::domain_error("cot out of range");
+      throw UndefinedFunctionException("cot", rhs.toString());
     }
 
     Rational res = sqrt(1 - sinVal * sinVal, precision) / sinVal;
@@ -323,7 +326,7 @@ namespace fintamath {
   // asin(x) = pi/2 - acos(x)
   Rational asin(const Rational &rhs, int64_t precision) {
     if (abs(rhs) > 1) {
-      throw std::domain_error("asin out of range");
+      throw UndefinedFunctionException("asin", rhs.toString());
     }
     Rational res = (getPi(precision) / 2 - acos(rhs, precision));
     return res.round(precision);
@@ -335,7 +338,7 @@ namespace fintamath {
   */
   Rational acos(const Rational &rhs, int64_t precision) {
     if (abs(rhs) > 1) {
-      throw std::domain_error("acos out of range");
+      throw UndefinedFunctionException("acos", rhs.toString());
     }
 
     Rational rhsStep = rhs.round(getNewPrecision(precision));
@@ -430,7 +433,7 @@ namespace fintamath {
 
   Integer factorial(const Integer &rhs) {
     if (rhs < 0) {
-      throw std::domain_error("factorial out of range");
+      throw UndefinedFunctionException("!", rhs.toString()); // TODOn
     }
     if (rhs < 2) {
       return {1};
@@ -440,7 +443,7 @@ namespace fintamath {
 
   Integer doubleFactorial(const Integer &rhs) {
     if (rhs < 0) {
-      throw std::domain_error("factorial out of range");
+      throw UndefinedFunctionException("!!", rhs.toString()); // TODO
     }
     Integer res = 1;
     for (Integer i = rhs; i > 0; i -= 2) {

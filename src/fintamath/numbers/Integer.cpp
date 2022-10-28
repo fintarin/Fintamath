@@ -7,6 +7,10 @@
 
 #include "gmp/mini-gmp.h"
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+
 #if _MSC_VER && !__INTEL_COMPILER
 #pragma warning(disable : 4244)
 #endif
@@ -56,7 +60,7 @@ namespace fintamath {
 
   Integer::Integer(const std::string &str) : Integer() {
     if (mpz_set_str(value->mpz, str.c_str(), BASE) != 0) {
-      throw std::invalid_argument("Integer is invalid: \"" + str + "\"");
+      throw InvalidInputException("Integer", str);
     }
   }
 
@@ -70,7 +74,7 @@ namespace fintamath {
 
   Integer Integer::sqrt() const {
     if (*this < 0) {
-      throw std::domain_error("Sqrt of a negative number");
+      throw UndefinedFunctionException("sqrt", toString());
     }
 
     Integer res;
@@ -122,7 +126,7 @@ namespace fintamath {
 
   Integer &Integer::divide(const Integer &rhs) {
     if (rhs == 0) {
-      throw std::domain_error("Division by zero");
+      throw UndefinedBinaryOpearatorException("/", toString(), rhs.toString());
     }
 
     callFunction([this, &rhs](Integer &res) { mpz_tdiv_q(res.value->mpz, value->mpz, rhs.value->mpz); });
@@ -146,7 +150,7 @@ namespace fintamath {
 
   Integer &Integer::mod(const Integer &rhs) {
     if (rhs == 0) {
-      throw std::domain_error("Modulo by zero");
+      throw UndefinedBinaryOpearatorException("mod", toString(), rhs.toString());
     }
 
     callFunction([this, &rhs](Integer &res) { mpz_tdiv_r(res.value->mpz, value->mpz, rhs.value->mpz); });

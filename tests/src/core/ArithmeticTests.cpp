@@ -68,8 +68,8 @@ TEST(ArithmeticTests, addTest) {
   EXPECT_TRUE((*m3 + *m2)->is<Rational>());
   EXPECT_TRUE((*m3 + *m3)->is<Integer>());
 
-  EXPECT_THROW(*m1 + tests::TestArithmetic(), std::invalid_argument);
-  EXPECT_THROW(tests::TestArithmetic() + *m1, std::invalid_argument);
+  EXPECT_THROW(*m1 + tests::TestArithmetic(), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(tests::TestArithmetic() + *m1, UndefinedBinaryOpearatorException);
 
   Integer a;
   EXPECT_EQ((a += 3).toString(), "3");
@@ -104,8 +104,8 @@ TEST(ArithmeticTests, subTest) {
   EXPECT_TRUE((*m3 - *m2)->is<Rational>());
   EXPECT_TRUE((*m3 - *m3)->is<Integer>());
 
-  EXPECT_THROW(*m1 - tests::TestArithmetic(), std::invalid_argument);
-  EXPECT_THROW(tests::TestArithmetic() - *m1, std::invalid_argument);
+  EXPECT_THROW(*m1 - tests::TestArithmetic(), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(tests::TestArithmetic() - *m1, UndefinedBinaryOpearatorException);
 
   Integer a;
   EXPECT_EQ((a -= 3).toString(), "-3");
@@ -140,8 +140,8 @@ TEST(ArithmeticTests, mulTest) {
   EXPECT_TRUE((*m3 * *m2)->is<Integer>());
   EXPECT_TRUE((*m3 * *m3)->is<Rational>());
 
-  EXPECT_THROW(*m1 * tests::TestArithmetic(), std::invalid_argument);
-  EXPECT_THROW(tests::TestArithmetic() * *m1, std::invalid_argument);
+  EXPECT_THROW(*m1 * tests::TestArithmetic(), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(tests::TestArithmetic() * *m1, UndefinedBinaryOpearatorException);
 
   Integer a = 2;
   EXPECT_EQ((a *= 3).toString(), "6");
@@ -176,8 +176,8 @@ TEST(ArithmeticTests, divTest) {
   EXPECT_TRUE((*m3 / *m2)->is<Rational>());
   EXPECT_TRUE((*m3 / *m3)->is<Integer>());
 
-  EXPECT_THROW(*m1 / tests::TestArithmetic(), std::invalid_argument);
-  EXPECT_THROW(tests::TestArithmetic() / *m1, std::invalid_argument);
+  EXPECT_THROW(*m1 / tests::TestArithmetic(), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(tests::TestArithmetic() / *m1, UndefinedBinaryOpearatorException);
 
   Integer a = 4;
   EXPECT_EQ((a /= 2).toString(), "2");

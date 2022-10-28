@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;
@@ -14,10 +16,10 @@ TEST(IntegerTests, stringConstructorTest) {
   EXPECT_EQ(Integer("-10"), -10);
   EXPECT_EQ(Integer("01"), 1);
 
-  EXPECT_THROW(Integer("--10"), std::invalid_argument);
-  EXPECT_THROW(Integer("test"), std::invalid_argument);
-  EXPECT_THROW(Integer(""), std::invalid_argument);
-  EXPECT_THROW(Integer("+"), std::invalid_argument);
+  EXPECT_THROW(Integer("--10"), InvalidInputException);
+  EXPECT_THROW(Integer("test"), InvalidInputException);
+  EXPECT_THROW(Integer(""), InvalidInputException);
+  EXPECT_THROW(Integer("+"), InvalidInputException);
 }
 
 TEST(IntegerTests, intConstructorTest) {
@@ -441,7 +443,7 @@ TEST(IntegerTests, divideAssignmentOperatorTest) {
                     "89266820855771268403147576567095701074005469808857005026436237359557162582162903447744543426516804"
                     "1405756975664327860057312868835959178663661834688407715795207372052181069795781487373087361"));
 
-  EXPECT_THROW(Integer(-25) /= Integer(0), std::domain_error);
+  EXPECT_THROW(Integer(-25) /= Integer(0), UndefinedBinaryOpearatorException);
 }
 
 TEST(IntegerTests, intDivideAssignmentOperatorTest) {
@@ -475,7 +477,7 @@ TEST(IntegerTests, moduloAssignmentOperatorTest) {
                     "83893847267328724673874") %= Integer("1738383928837528673287446238746237943"),
             Integer("1186817955126284001426922341829394317"));
 
-  EXPECT_THROW(Integer(-25) %= Integer(0), std::domain_error);
+  EXPECT_THROW(Integer(-25) %= Integer(0), UndefinedBinaryOpearatorException);
 }
 
 TEST(IntegerTests, intModuloAssignmentOperatorTest) {
@@ -654,7 +656,7 @@ TEST(IntegerTests, sqrtTest) {
             Integer("100000000000000000000000000"));
   EXPECT_EQ(Integer("68732648273642987365932706179432649827364").sqrt(), Integer("262169121510606178721"));
 
-  EXPECT_THROW(Integer(-9289).sqrt(), std::domain_error);
+  EXPECT_THROW(Integer(-9289).sqrt(), UndefinedFunctionException);
 }
 
 TEST(IntegerTests, toStringTest) {

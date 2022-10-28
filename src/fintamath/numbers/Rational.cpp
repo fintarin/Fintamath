@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+
 namespace fintamath {
   constexpr int64_t DEFAULT_PRECISION = 36;
 
@@ -183,7 +186,7 @@ namespace fintamath {
     try {
       intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
     } catch (const std::invalid_argument &) {
-      throw std::invalid_argument("Rational invalid input");
+      throw InvalidInputException("Rational", str);
     }
 
     if (size_t(firstDotNum) != str.size()) {
@@ -194,12 +197,12 @@ namespace fintamath {
         numerator = Integer(numeratorStr);
         denominator = Integer(denominatorStr);
       } catch (const std::invalid_argument &) {
-        throw std::invalid_argument("Rational invalid input");
+      throw InvalidInputException("Rational", str);
       }
     }
 
     if (intPart < 0 || numerator < 0) {
-      throw std::invalid_argument("Rational invalid input");
+      throw InvalidInputException("Rational", str);
     }
 
     toIrreducibleRational();
@@ -222,7 +225,7 @@ namespace fintamath {
 
   void Rational::toIrreducibleRational() {
     if (denominator == 0) {
-      throw std::domain_error("Div by zero");
+      throw UndefinedBinaryOpearatorException("/", numerator.toString(), denominator.toString());
     }
     fixNegative();
     Integer gcdVal = gcd(numerator, denominator);
@@ -268,5 +271,5 @@ namespace fintamath {
   // Using the formula lcm(a, b) = a * b / gcd(a, b)
   static Integer lcm(const Integer &lhs, const Integer &rhs) {
     return lhs * rhs / gcd(lhs, rhs);
-  } 
+  }
 }

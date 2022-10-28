@@ -1,22 +1,23 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/helpers/Caster.hpp"
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
   if (rhs.is<Derived>()) {                                                                                             \
     auto res = (*this OPER rhs.to<Derived>()).simplify();                                                              \
-    return helpers::castPtr<IArithmetic>(res);                                                                             \
+    return helpers::castPtr<IArithmetic>(res);                                                                         \
   }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
-    auto res = (*this OPER tmp->template to<IArithmetic>())->simplify();                                                \
-    return helpers::castPtr<IArithmetic>(res);                                                                             \
+  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                             \
+    auto res = (*this OPER tmp->template to<IArithmetic>())->simplify();                                               \
+    return helpers::castPtr<IArithmetic>(res);                                                                         \
   }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
-    auto res = (tmp->template to<IArithmetic>() OPER rhs)->simplify();                                                  \
-    return helpers::castPtr<IArithmetic>(res);                                                                             \
+  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                             \
+    auto res = (tmp->template to<IArithmetic>() OPER rhs)->simplify();                                                 \
+    return helpers::castPtr<IArithmetic>(res);                                                                         \
   }                                                                                                                    \
-  throw std ::invalid_argument("Incompatible types")
+  throw UndefinedBinaryOpearatorException(#OPER, toString(), rhs.toString());
 
 namespace fintamath {
   class IArithmetic;

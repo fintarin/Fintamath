@@ -1,18 +1,19 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
   if (rhs.is<Derived>()) {                                                                                             \
     return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
-    return *this OPER tmp->template to<IComparable>();                                                                  \
+  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                             \
+    return *this OPER tmp->template to<IComparable>();                                                                 \
   }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
-    return tmp->template to<IComparable>() OPER rhs;                                                                    \
+  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                             \
+    return tmp->template to<IComparable>() OPER rhs;                                                                   \
   }                                                                                                                    \
-  throw std::invalid_argument("Incompatible types")
+  throw UndefinedBinaryOpearatorException(#OPER, toString(), rhs.toString())
 
 namespace fintamath {
   class IComparable;

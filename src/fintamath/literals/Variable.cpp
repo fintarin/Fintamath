@@ -2,12 +2,14 @@
 
 #include <regex>
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
+
 namespace fintamath {
   bool isVariable(const std::string &str);
 
   Variable::Variable(const std::string &str) {
     if (!isVariable(str)) {
-      throw std::invalid_argument("Variable invalid input");
+      throw InvalidInputException("Variable", str);
     }
     name = str;
   }

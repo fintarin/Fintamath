@@ -8,6 +8,8 @@
 #include <utility>
 #include <vector>
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
+
 namespace fintamath::helpers {
   template <typename Value>
   using ParserFunction = std::function<Value()>;
@@ -40,7 +42,7 @@ namespace fintamath::helpers {
     ParserStringFunction<Value> constructor = [](const std::string &str) {
       try {
         return std::make_unique<Parser>(str);
-      } catch (const std::invalid_argument &) {
+      } catch (const InvalidInputException &) {
         return std::unique_ptr<Parser>();
       }
     };

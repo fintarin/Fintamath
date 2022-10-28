@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
@@ -13,23 +14,23 @@ TEST(RationalTests, stringConstructorTest) {
   EXPECT_EQ(Rational("-9.3").toString(), "-93/10");
   EXPECT_EQ(Rational("0989929039237832000.9302930929333").toString(), "9899290392378320009302930929333/10000000000000");
 
-  EXPECT_THROW(Rational("--10"), std::invalid_argument);
-  EXPECT_THROW(Rational("test"), std::invalid_argument);
-  EXPECT_THROW(Rational(""), std::invalid_argument);
-  EXPECT_THROW(Rational("+"), std::invalid_argument);
-  EXPECT_THROW(Rational("939849.0-0023"), std::invalid_argument);
-  EXPECT_THROW(Rational("a"), std::invalid_argument);
-  EXPECT_THROW(Rational("a.1"), std::invalid_argument);
-  EXPECT_THROW(Rational("1.a"), std::invalid_argument);
-  EXPECT_THROW(Rational("1a.1"), std::invalid_argument);
-  EXPECT_THROW(Rational("1.1a"), std::invalid_argument);
-  EXPECT_THROW(Rational(".1"), std::invalid_argument);
-  EXPECT_THROW(Rational("1."), std::invalid_argument);
-  EXPECT_THROW(Rational("--10.-1"), std::invalid_argument);
-  EXPECT_THROW(Rational("10.-1"), std::invalid_argument);
-  EXPECT_THROW(Rational("1-0.1"), std::invalid_argument);
-  EXPECT_THROW(Rational("10-.1"), std::invalid_argument);
-  EXPECT_THROW(Rational("10.--1"), std::invalid_argument);
+  EXPECT_THROW(Rational("--10"), InvalidInputException);
+  EXPECT_THROW(Rational("test"), InvalidInputException);
+  EXPECT_THROW(Rational(""), InvalidInputException);
+  EXPECT_THROW(Rational("+"), InvalidInputException);
+  EXPECT_THROW(Rational("939849.0-0023"), InvalidInputException);
+  EXPECT_THROW(Rational("a"), InvalidInputException);
+  EXPECT_THROW(Rational("a.1"), InvalidInputException);
+  EXPECT_THROW(Rational("1.a"), InvalidInputException);
+  EXPECT_THROW(Rational("1a.1"), InvalidInputException);
+  EXPECT_THROW(Rational("1.1a"), InvalidInputException);
+  EXPECT_THROW(Rational(".1"), InvalidInputException);
+  EXPECT_THROW(Rational("1."), InvalidInputException);
+  EXPECT_THROW(Rational("--10.-1"), InvalidInputException);
+  EXPECT_THROW(Rational("10.-1"), InvalidInputException);
+  EXPECT_THROW(Rational("1-0.1"), InvalidInputException);
+  EXPECT_THROW(Rational("10-.1"), InvalidInputException);
+  EXPECT_THROW(Rational("10.--1"), InvalidInputException);
 }
 
 TEST(RationalTests, integerIntegerConstructorTest) {
@@ -37,7 +38,7 @@ TEST(RationalTests, integerIntegerConstructorTest) {
   EXPECT_EQ(Rational(2849300, 18493).toString(), "2849300/18493");
   EXPECT_EQ(Rational(2849300, -1893).toString(), "-2849300/1893");
 
-  EXPECT_THROW(Rational(23070, 0), std::domain_error);
+  EXPECT_THROW(Rational(23070, 0), UndefinedBinaryOpearatorException);
 }
 
 TEST(RationalTests, integerConstructorTest) {
@@ -148,7 +149,7 @@ TEST(RationalTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(Rational(738, 10) /= Rational(5, 2), Rational(738, 25));
   EXPECT_EQ(Rational(-738, 10) /= Rational(-5, 2), Rational(738, 25));
 
-  EXPECT_THROW(Rational(-738, -10) /= Rational("0"), std::domain_error);
+  EXPECT_THROW(Rational(-738, -10) /= Rational("0"), UndefinedBinaryOpearatorException);
 }
 
 TEST(RationalTests, integerDivideAssignmentOperatorTest) {
