@@ -2,6 +2,7 @@
 
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/helpers/Parser.hpp"
 
 namespace fintamath {
@@ -64,7 +65,7 @@ namespace fintamath {
 
     MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const final {
       if (!isTypeAny && argsVect.size() != sizeof...(Args)) {
-        throwInvalidSize(argsVect.size());
+        throwInvalidInput(argsVect);
       }
 
       validateArgs(argsVect);
@@ -77,47 +78,44 @@ namespace fintamath {
     }
 
   private:
-    void validateArgs(const ArgumentsVector &argsVect) const {
+    void validateArgs(const ArgumentsVector &args) const {
       if (isTypeAny) {
-        validateTypeAnyArgs(argsVect);
+        validateTypeAnyArgs(args);
       } else {
-        validateArgs<0, Args...>(argsVect);
+        validateArgs<0, Args...>(args);
       }
     }
 
-    template <int32_t i, typename Head, typename... Tail>
-    void validateArgs(const ArgumentsVector &argsVect) const {
-      if (!argsVect.at(i).get().instanceOf<Head>()) {
-        throwInvalidArgument(i);
+    template <size_t i, typename Head, typename... Tail>
+    void validateArgs(const ArgumentsVector &args) const {
+      if (!args.at(i).get().instanceOf<Head>()) {
+        throwInvalidInput(args);
       }
 
-      validateArgs<i + 1, Tail...>(argsVect);
+      validateArgs<i + 1, Tail...>(args);
     }
 
-    template <int32_t>
+    template <size_t>
     void validateArgs(const ArgumentsVector & /*unused*/) const {
       // validation passes
     }
 
-    void validateTypeAnyArgs(const ArgumentsVector &argsVect) const {
-      for (size_t i = 0; i < argsVect.size(); i++) {
-        if ((!argsVect.at(i).get().instanceOf<Args>() && ...)) {
-          throwInvalidArgument(i);
+    void validateTypeAnyArgs(const ArgumentsVector &args) const {
+      for (const auto &arg : args) {
+        if ((!arg.get().instanceOf<Args>() && ...)) {
+          throwInvalidInput(args);
         }
       }
     }
 
-    void throwInvalidArgument(size_t argPos) const {
-      throw std::invalid_argument(exceptionPrefix() + "unexpected argument at position " + std::to_string(argPos + 1));
-    }
+    void throwInvalidInput(const ArgumentsVector &argsVect) const {
+      std::vector<std::string> argNamesVect(argsVect.size());
 
-    void throwInvalidSize(size_t size) const {
-      throw std::invalid_argument(exceptionPrefix() + std::to_string(sizeof...(Args)) + " arguments required, but " +
-                                  std::to_string(size) + " obtained");
-    }
+      for (size_t i = 0; i < argNamesVect.size(); i++) {
+        argNamesVect.at(i) = argsVect.at(i).get().toString();
+      }
 
-    std::string exceptionPrefix() const {
-      return "\"" + toString() + "\": ";
+      throw FunctionCallException(toString(), argNamesVect);
     }
 
     bool isTypeAny;

@@ -43,12 +43,12 @@ TEST(FunctionTests, callTests) {
   EXPECT_EQ((*f)(a, b)->toString(), "7/2");
   EXPECT_EQ((*f)(b, a)->toString(), "7/2");
 
-  EXPECT_THROW((*f)(a, Variable("a")), std::invalid_argument);
+  EXPECT_THROW((*f)(a, Variable("a")), FunctionCallException);
 
-  EXPECT_THROW((*f)(), std::invalid_argument);
-  EXPECT_THROW((*f)(a), std::invalid_argument);
-  EXPECT_THROW((*f)(a, a, a), std::invalid_argument);
-  EXPECT_THROW((*f)(a, a, a, a, a, a, a), std::invalid_argument);
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(a), FunctionCallException);
+  EXPECT_THROW((*f)(a, a, a), FunctionCallException);
+  EXPECT_THROW((*f)(a, a, a, a, a, a, a), FunctionCallException);
 }
 
 TEST(FunctionTests, equalsTests) {

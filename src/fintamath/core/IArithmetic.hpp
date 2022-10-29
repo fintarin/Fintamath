@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/helpers/Caster.hpp"
 
 #define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
@@ -17,7 +17,7 @@
     auto res = (tmp->template to<IArithmetic>() OPER rhs)->simplify();                                                 \
     return helpers::castPtr<IArithmetic>(res);                                                                         \
   }                                                                                                                    \
-  throw UndefinedBinaryOpearatorException(#OPER, toString(), rhs.toString());
+  throw FunctionCallException(#OPER, {toString(), rhs.toString()});
 
 namespace fintamath {
   class IArithmetic;

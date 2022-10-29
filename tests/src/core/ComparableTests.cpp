@@ -2,6 +2,7 @@
 
 #include "fintamath/core/IComparable.hpp"
 
+#include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -44,8 +45,8 @@ TEST(ComparableTests, lessTest) {
   EXPECT_TRUE(*m3 < *m1);
   EXPECT_TRUE(*m3 < *m2);
 
-  EXPECT_THROW((void)(*m1 < tests::TestComparable()), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(void(tests::TestComparable() < *m1), UndefinedBinaryOpearatorException);
+  EXPECT_THROW((void)(*m1 < tests::TestComparable()), FunctionCallException);
+  EXPECT_THROW(void(tests::TestComparable() < *m1), FunctionCallException);
 
   EXPECT_TRUE(Integer() < 1);
   EXPECT_TRUE(-1 < Integer());
@@ -69,8 +70,8 @@ TEST(ComparableTests, moreTest) {
   EXPECT_FALSE(*m3 > *m1);
   EXPECT_FALSE(*m3 > *m2);
 
-  EXPECT_THROW(void(*m1 > tests::TestComparable()), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(void(tests::TestComparable() > *m1), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(void(*m1 > tests::TestComparable()), FunctionCallException);
+  EXPECT_THROW(void(tests::TestComparable() > *m1), FunctionCallException);
 
   EXPECT_FALSE(Integer() > 1);
   EXPECT_FALSE(-1 > Integer());
@@ -94,8 +95,8 @@ TEST(ComparableTests, lessEqualsTest) {
   EXPECT_TRUE(*m3 <= *m1);
   EXPECT_TRUE(*m3 <= *m2);
 
-  EXPECT_THROW(void(*m1 <= tests::TestComparable()), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(void(tests::TestComparable() <= *m1), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(void(*m1 <= tests::TestComparable()), FunctionCallException);
+  EXPECT_THROW(void(tests::TestComparable() <= *m1), FunctionCallException);
 
   EXPECT_TRUE(Integer() <= 1);
   EXPECT_TRUE(-1 <= Integer());
@@ -119,8 +120,8 @@ TEST(ComparableTests, moreEqualsTest) {
   EXPECT_FALSE(*m3 >= *m1);
   EXPECT_FALSE(*m3 >= *m2);
 
-  EXPECT_THROW(void(*m1 >= tests::TestComparable()), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(void(tests::TestComparable() >= *m1), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(void(*m1 >= tests::TestComparable()), FunctionCallException);
+  EXPECT_THROW(void(tests::TestComparable() >= *m1), FunctionCallException);
 
   EXPECT_FALSE(Integer() >= 1);
   EXPECT_FALSE(-1 >= Integer());

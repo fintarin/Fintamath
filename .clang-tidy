@@ -24,4 +24,5 @@ Checks: >-
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
   -hicpp-no-array-decay,
   -cppcoreguidelines-avoid-non-const-global-variables,
-  -readability-redundant-access-specifiers
+  -readability-redundant-access-specifiers,
+  -cppcoreguidelines-non-private-member-variables-in-classes

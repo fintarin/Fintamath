@@ -7,7 +7,6 @@
 
 #include "gmp/mini-gmp.h"
 
-#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
@@ -74,7 +73,7 @@ namespace fintamath {
 
   Integer Integer::sqrt() const {
     if (*this < 0) {
-      throw UndefinedFunctionException("sqrt", toString());
+      throw UndefinedFunctionException("sqrt", {toString()});
     }
 
     Integer res;

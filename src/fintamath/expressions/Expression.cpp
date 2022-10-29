@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -99,7 +100,7 @@ namespace fintamath {
   Expression::Expression(const std::string &str) {
     auto exprStr = cutSpaces(str);
     if (exprStr.empty()) {
-      throw std::invalid_argument("Expression invalid input");
+      throw InvalidInputException("Expression", str, ""); // TODO add comment here
     }
 
     if (countEqual(exprStr) == 0) {
@@ -113,7 +114,7 @@ namespace fintamath {
       return;
     }
 
-    throw std::invalid_argument("Expected one \'=\'");
+    throw InvalidInputException("Expression", str, ""); // TODO add comment here
   }
 
   Expression::Expression(const IMathObject &obj) : info(obj.clone()) {
@@ -210,9 +211,9 @@ namespace fintamath {
     return result;
   }
 
-  static size_t ignoreBracketsRightLeft(const std::string_view &str, size_t position) {
+  static size_t ignoreBracketsRightLeft(const std::string &str, size_t position) {
     if (position == 0) {
-      throw std::invalid_argument("Expression invalid input");
+      throw InvalidInputException("Expression", str, ""); // TODO add comment here
     }
     int leftBracket = 0;
     int rightBracket = 1;
@@ -229,10 +230,10 @@ namespace fintamath {
       }
     } while (position > 0);
 
-    throw std::invalid_argument("Expression invalid input");
+    throw InvalidInputException("Expression", str, ""); // TODO add comment here
   }
 
-  static size_t ignoreBracketsLeftRight(const std::string_view &str, size_t position) {
+  static size_t ignoreBracketsLeftRight(const std::string &str, size_t position) {
     int leftBracket = 0;
     int rightBracket = 0;
 
@@ -249,7 +250,7 @@ namespace fintamath {
       position++;
     }
 
-    throw std::invalid_argument("Expression invalid input");
+    throw InvalidInputException("Expression", str, ""); // TODO add comment here
   }
 
   /*
@@ -264,7 +265,7 @@ namespace fintamath {
     for (size_t i = exprStr.size() - 1; i > 0; i--) {
       if (exprStr[i] == '=') {
         if (i == exprStr.size() - 1) {
-          throw std::invalid_argument("Expression invalid input");
+          throw InvalidInputException("Expression", exprStr, ""); // TODO add comment here
         }
         auto lhs = Expression(exprStr.substr(0, i));
         auto rhs = Expression(exprStr.substr(i + 1));
@@ -283,11 +284,11 @@ namespace fintamath {
         return std::make_shared<Expression>(newExpr);
       }
     }
-    throw std::invalid_argument("Expression invalid input");
+    throw InvalidInputException("Expression", exprStr, ""); // TODO add comment here
   }
   ExprPtr Expression::parseExpression(const std::string &exprStr) {
     if (exprStr.empty()) {
-      throw std::invalid_argument("Expression invalid input");
+      throw InvalidInputException("Expression", exprStr, ""); // TODO add comment here
     }
 
     Expression elem;
@@ -295,7 +296,7 @@ namespace fintamath {
     for (size_t i = exprStr.size() - 1; i > 0; i--) {
       if (exprStr[i] == '+' || exprStr[i] == '-') {
         if (i == exprStr.size() - 1) {
-          throw std::invalid_argument("Expression invalid input");
+          throw InvalidInputException("Expression", exprStr, ""); // TODO add comment here
         }
         if (exprStr[i - 1] == '+' || exprStr[i - 1] == '-' || exprStr[i - 1] == '*' || exprStr[i - 1] == '/' ||
             exprStr[i - 1] == '^') {
@@ -328,7 +329,7 @@ namespace fintamath {
     for (size_t i = term.size() - 1; i > 0; i--) {
       if (term[i] == '*' || term[i] == '/') {
         if (i == term.size() - 1) {
-          throw std::invalid_argument("Expression invalid input");
+          throw InvalidInputException("Expression"); // TODO add comment and string here
         }
         if (term[i] == '*') {
           elem.info = std::make_shared<Mul>();
@@ -353,7 +354,7 @@ namespace fintamath {
 
   ExprPtr Expression::parseNegPowFactorPercentTerm(const std::string &term) {
     if (term.empty() || term[0] == '*' || term[0] == '/') {
-      throw std::invalid_argument("Expression invalid input");
+      throw InvalidInputException("Expression"); // TODO add comment and string here
     }
     Expression elem;
 
@@ -416,7 +417,7 @@ namespace fintamath {
       return std::make_shared<Expression>(*ptr);
     }
 
-    throw std::invalid_argument("Expression invalid input");
+    throw InvalidInputException("Expression"); // TODO add comment and string here
   }
 
   ExprPtr Expression::parseFunction(const std::string &term) {
@@ -446,7 +447,7 @@ namespace fintamath {
       }
       if (argsStr[pos] == ',') {
         if (pos == 0 || pos == argsStr.size() - 1) {
-          throw std::invalid_argument("Expression invalid input");
+          throw InvalidInputException("Expression"); // TODO add comment and string here
         }
         args.push_back(parseExpression(cutSpaces(argsStr.substr(0, pos))));
         auto addArgs = getArgs(cutSpaces(argsStr.substr(pos + 1)));
@@ -492,7 +493,7 @@ namespace fintamath {
           return newExpr;
         }
         return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
-      } catch (const std::invalid_argument &) {
+      } catch (const FunctionCallException &) { // TODO revisit this
         // skip operation if child is Variable,  IFunction or IConstant
       }
     }
@@ -926,7 +927,7 @@ namespace fintamath {
       } else if (child->info->instanceOf<IFunction>()) {
         funcVect.push_back(child);
       } else {
-        throw std::invalid_argument("Expression invalid input");
+        throw InvalidInputException("Expression"); // TODO add input and comment here
       }
     }
 

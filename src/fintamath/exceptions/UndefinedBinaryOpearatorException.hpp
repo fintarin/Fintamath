@@ -10,14 +10,7 @@ namespace fintamath {
     ~UndefinedBinaryOpearatorException() override = default;
 
     UndefinedBinaryOpearatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
-      content = lhs + " " + oper + " " + rhs + " is undefined";
+      content += ": " + lhs + " " + oper + " " + rhs;
     }
-
-    const char *what() const noexcept override {
-      return content.c_str();
-    }
-
-  private:
-    std::string content;
   };
 }

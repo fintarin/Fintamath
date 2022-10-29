@@ -1,17 +1,20 @@
 #pragma once
 
+#include <string>
 #include <utility>
 #include <vector>
 
-#include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/exceptions/Exception.hpp"
 
 namespace fintamath {
-  class UndefinedFunctionException : public UndefinedException {
+  class FunctionCallException : public Exception {
   public:
-    ~UndefinedFunctionException() override = default;
+    FunctionCallException() = default;
 
-    UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
-      content += ": " + func + "(";
+    ~FunctionCallException() override = default;
+
+    FunctionCallException(const std::string &func, const std::vector<std::string> &argsVect) {
+      content += "Cannot call " + func + " for arguments (";
 
       if (!argsVect.empty()) {
         static const std::string delimiter = ", ";
@@ -30,7 +33,7 @@ namespace fintamath {
       return content.c_str();
     }
 
-  private:
+  protected:
     std::string content;
   };
 }
