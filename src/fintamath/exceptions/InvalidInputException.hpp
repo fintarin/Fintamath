@@ -16,12 +16,11 @@ namespace fintamath {
     }
 
     InvalidInputException(const std::string &object, const std::string &input) : InvalidInputException(object) {
-      content += ": " + input;
-    }
-
-    InvalidInputException(const std::string &object, const std::string &input, const std::string &comment)
-        : InvalidInputException(object, input) {
-      content += ". " + comment;
+      if (!input.empty()) {
+        content += ": " + input;
+      } else {
+        content += " (empty)";
+      }
     }
 
     const char *what() const noexcept override {
