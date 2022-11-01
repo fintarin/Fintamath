@@ -100,7 +100,7 @@ namespace fintamath {
   Expression::Expression(const std::string &str) {
     auto exprStr = cutSpaces(str);
     if (exprStr.empty()) {
-      throw InvalidInputException("Expression", str);
+      throw InvalidInputException(*this, str);
     }
 
     if (countEqual(exprStr) == 0) {
@@ -114,7 +114,7 @@ namespace fintamath {
       return;
     }
 
-    throw InvalidInputException("Expression", str);
+    throw InvalidInputException(*this, str);
   }
 
   Expression::Expression(const IMathObject &obj) : info(obj.clone()) {
@@ -199,7 +199,7 @@ namespace fintamath {
     return info->toString();
   }
 
-  std::string Expression::funcArgsToString(const ExprVect &args) {
+  std::string Expression::funcArgsToString(const ExprVect &args) const {
     std::string result;
 
     for (size_t i = 0; i < args.size() - 1; i++) {
@@ -211,9 +211,9 @@ namespace fintamath {
     return result;
   }
 
-  static size_t ignoreBracketsRightLeft(const std::string &str, size_t position) {
+  size_t Expression::ignoreBracketsRightLeft(const std::string &str, size_t position) const {
     if (position == 0) {
-      throw InvalidInputException("Expression"); // TODO add comment here
+      throw InvalidInputException(*this); // TODO add comment here
     }
     int leftBracket = 0;
     int rightBracket = 1;
@@ -230,10 +230,10 @@ namespace fintamath {
       }
     } while (position > 0);
 
-    throw InvalidInputException("Expression"); // TODO add comment here
+    throw InvalidInputException(*this); // TODO add comment here
   }
 
-  static size_t ignoreBracketsLeftRight(const std::string &str, size_t position) {
+  size_t Expression::ignoreBracketsLeftRight(const std::string &str, size_t position) const {
     int leftBracket = 0;
     int rightBracket = 0;
 
@@ -250,7 +250,7 @@ namespace fintamath {
       position++;
     }
 
-    throw InvalidInputException("Expression"); // TODO add comment here
+    throw InvalidInputException(*this); // TODO add comment here
   }
 
   /*
@@ -261,11 +261,11 @@ namespace fintamath {
     FuncExpr: PreFuncName Expr | Expr PostFuncName
     Term: Const | Var | Num
    */
-  ExprPtr Expression::parseEqualExpression(const std::string &exprStr) {
+  ExprPtr Expression::parseEqualExpression(const std::string &exprStr) const {
     for (size_t i = exprStr.size() - 1; i > 0; i--) {
       if (exprStr[i] == '=') {
         if (i == exprStr.size() - 1) {
-          throw InvalidInputException("Expression"); // TODO add comment here
+          throw InvalidInputException(*this); // TODO add comment here
         }
         auto lhs = Expression(exprStr.substr(0, i));
         auto rhs = Expression(exprStr.substr(i + 1));
@@ -284,11 +284,11 @@ namespace fintamath {
         return std::make_shared<Expression>(newExpr);
       }
     }
-    throw InvalidInputException("Expression"); // TODO add comment here
+    throw InvalidInputException(*this); // TODO add comment here
   }
-  ExprPtr Expression::parseExpression(const std::string &exprStr) {
+  ExprPtr Expression::parseExpression(const std::string &exprStr) const {
     if (exprStr.empty()) {
-      throw InvalidInputException("Expression"); // TODO add comment here
+      throw InvalidInputException(*this); // TODO add comment here
     }
 
     Expression elem;
@@ -296,7 +296,7 @@ namespace fintamath {
     for (size_t i = exprStr.size() - 1; i > 0; i--) {
       if (exprStr[i] == '+' || exprStr[i] == '-') {
         if (i == exprStr.size() - 1) {
-          throw InvalidInputException("Expression"); // TODO add comment here
+          throw InvalidInputException(*this); // TODO add comment here
         }
         if (exprStr[i - 1] == '+' || exprStr[i - 1] == '-' || exprStr[i - 1] == '*' || exprStr[i - 1] == '/' ||
             exprStr[i - 1] == '^') {
@@ -323,13 +323,13 @@ namespace fintamath {
     return parseDivMulTerm(exprStr);
   }
 
-  ExprPtr Expression::parseDivMulTerm(const std::string &term) {
+  ExprPtr Expression::parseDivMulTerm(const std::string &term) const {
     Expression elem;
 
     for (size_t i = term.size() - 1; i > 0; i--) {
       if (term[i] == '*' || term[i] == '/') {
         if (i == term.size() - 1) {
-          throw InvalidInputException("Expression"); // TODO add comment here
+          throw InvalidInputException(*this); // TODO add comment here
         }
         if (term[i] == '*') {
           elem.info = std::make_shared<Mul>();
@@ -352,9 +352,9 @@ namespace fintamath {
     return parseNegPowFactorPercentTerm(term);
   }
 
-  ExprPtr Expression::parseNegPowFactorPercentTerm(const std::string &term) {
+  ExprPtr Expression::parseNegPowFactorPercentTerm(const std::string &term) const {
     if (term.empty() || term[0] == '*' || term[0] == '/') {
-      throw InvalidInputException("Expression"); // TODO add comment here
+      throw InvalidInputException(*this); // TODO add comment here
     }
     Expression elem;
 
@@ -400,7 +400,7 @@ namespace fintamath {
     return parseFiniteTerm(term);
   }
 
-  ExprPtr Expression::parseFiniteTerm(const std::string &term) {
+  ExprPtr Expression::parseFiniteTerm(const std::string &term) const {
     if (term[0] == '(' && term[term.size() - 1] == ')') {
       return parseExpression(term.substr(1, term.size() - 2));
     }
@@ -417,10 +417,10 @@ namespace fintamath {
       return std::make_shared<Expression>(*ptr);
     }
 
-    throw InvalidInputException("Expression"); // TODO add comment here
+    throw InvalidInputException(*this); // TODO add comment here
   }
 
-  ExprPtr Expression::parseFunction(const std::string &term) {
+  ExprPtr Expression::parseFunction(const std::string &term) const {
     const std::regex reg("^(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|atan|acot|abs)");
     std::smatch funcNameMatch;
     std::regex_search(term, funcNameMatch, reg);
@@ -437,7 +437,7 @@ namespace fintamath {
     return {};
   }
 
-  ExprVect Expression::getArgs(const std::string &argsStr) {
+  ExprVect Expression::getArgs(const std::string &argsStr) const {
     ExprVect args;
 
     for (size_t pos = 0; pos < argsStr.size(); pos++) {
@@ -447,7 +447,7 @@ namespace fintamath {
       }
       if (argsStr[pos] == ',') {
         if (pos == 0 || pos == argsStr.size() - 1) {
-          throw InvalidInputException("Expression"); // TODO add comment here
+          throw InvalidInputException(*this); // TODO add comment here
         }
         args.push_back(parseExpression(cutSpaces(argsStr.substr(0, pos))));
         auto addArgs = getArgs(cutSpaces(argsStr.substr(pos + 1)));
@@ -478,7 +478,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::simplifyOperators(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyOperators(const ExprPtr &expr) const {
     for (auto &child : expr->children) {
       if (child != nullptr) {
         child = simplifyOperators(child);
@@ -501,7 +501,7 @@ namespace fintamath {
     return expr;
   }
 
-  ExprPtr Expression::simplifyFunctions(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyFunctions(const ExprPtr &expr) const {
     for (auto &child : expr->children) {
       if (child != nullptr) {
         child = simplifyFunctions(child);
@@ -520,7 +520,7 @@ namespace fintamath {
     return expr;
   }
 
-  ExprPtr Expression::simplifyConstant(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyConstant(const ExprPtr &expr) const {
     const int defaultPrecision = 36;
 
     for (auto &child : expr->children) {
@@ -536,7 +536,7 @@ namespace fintamath {
     return expr;
   }
 
-  ExprPtr Expression::mainSimplify(const ExprPtr &expr) {
+  ExprPtr Expression::mainSimplify(const ExprPtr &expr) const {
     auto newExpr = rebuildMul(expr);
     newExpr = rebuildAdd(newExpr);
 
@@ -559,7 +559,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::invertSubDiv(const ExprPtr &expr) {
+  ExprPtr Expression::invertSubDiv(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -592,7 +592,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::revertPow(const ExprPtr &expr) {
+  ExprPtr Expression::revertPow(const ExprPtr &expr) const {
     if (!expr->info->is<Pow>()) {
       auto newExpr = std::make_shared<Expression>();
       newExpr->info = std::make_shared<Pow>();
@@ -607,7 +607,7 @@ namespace fintamath {
     return expr;
   }
 
-  ExprPtr Expression::simplifyNeg(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyNeg(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     while (newExpr->info->is<Neg>() && newExpr->children.at(0)->info->is<Neg>()) {
@@ -626,7 +626,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::rebuildAdd(const ExprPtr &expr) {
+  ExprPtr Expression::rebuildAdd(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -653,7 +653,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::rebuildMul(const ExprPtr &expr) {
+  ExprPtr Expression::rebuildMul(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -680,7 +680,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::simplifyAddNum(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyAddNum(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -716,7 +716,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::simplifyMulNum(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyMulNum(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -755,7 +755,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::simplifyPowNum(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyPowNum(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -778,7 +778,7 @@ namespace fintamath {
   }
 
   ExprVect Expression::getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket,
-                                          const IMathObject &o) {
+                                          const IMathObject &o) const {
     auto openBrackets = ExprVect();
 
     for (const auto &lhs : lhsBracket) {
@@ -793,7 +793,7 @@ namespace fintamath {
     return openBrackets;
   }
 
-  ExprPtr Expression::openBracketsPowAdd(const ExprPtr &expr) {
+  ExprPtr Expression::openBracketsPowAdd(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -816,7 +816,7 @@ namespace fintamath {
     return openBracketsMulAdd(std::make_shared<Expression>(mulExpr));
   }
 
-  ExprPtr Expression::openBracketsMulAdd(const ExprPtr &expr) {
+  ExprPtr Expression::openBracketsMulAdd(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -858,7 +858,7 @@ namespace fintamath {
     return newExpr->children.at(0);
   }
 
-  ExprPtr Expression::openBracketsPowMul(const ExprPtr &expr) {
+  ExprPtr Expression::openBracketsPowMul(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -895,7 +895,7 @@ namespace fintamath {
     return lhs->toString() > rhs->toString();
   }
 
-  ExprPtr Expression::sort(const ExprPtr &expr) {
+  ExprPtr Expression::sort(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -927,7 +927,7 @@ namespace fintamath {
       } else if (child->info->instanceOf<IFunction>()) {
         funcVect.push_back(child);
       } else {
-        throw InvalidInputException("Expression"); // TODO add input and comment here
+        throw InvalidInputException(*this); // TODO add input and comment here
       }
     }
 
@@ -998,7 +998,7 @@ namespace fintamath {
     return true;
   }
 
-  ExprPtr Expression::simplifyAddVar(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyAddVar(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -1048,7 +1048,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr) {
+  ExprPtr Expression::createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr) const {
     if (currExpr->info->is<Add>()) {
       currExpr->children.push_back(addExpr);
       return currExpr;
@@ -1060,7 +1060,7 @@ namespace fintamath {
     return newExpr;
   }
 
-  ExprPtr Expression::simplifyMulVar(const ExprPtr &expr) {
+  ExprPtr Expression::simplifyMulVar(const ExprPtr &expr) const {
     auto newExpr = std::make_shared<Expression>(*expr);
 
     for (auto &child : newExpr->children) {
@@ -1130,5 +1130,9 @@ namespace fintamath {
     }
 
     return std::make_unique<Expression>(*this);
+  }
+
+  std::string Expression::getClassName() const {
+    return "Expression";
   }
 }

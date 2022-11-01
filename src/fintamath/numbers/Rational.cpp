@@ -91,6 +91,10 @@ namespace fintamath {
     return res;
   }
 
+  std::string Rational::getClassName() const {
+    return "Rational";
+  }
+
   MathObjectPtr Rational::simplify() const {
     if (denominator == 1) {
       return sign ? (-getInteger()).clone() : getInteger().clone();
@@ -186,7 +190,7 @@ namespace fintamath {
     try {
       intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
     } catch (const std::invalid_argument &) {
-      throw InvalidInputException("Rational", str);
+      throw InvalidInputException(*this, str);
     }
 
     if (size_t(firstDotNum) != str.size()) {
@@ -197,12 +201,12 @@ namespace fintamath {
         numerator = Integer(numeratorStr);
         denominator = Integer(denominatorStr);
       } catch (const std::invalid_argument &) {
-      throw InvalidInputException("Rational", str);
+        throw InvalidInputException(*this, str);
       }
     }
 
     if (intPart < 0 || numerator < 0) {
-      throw InvalidInputException("Rational", str);
+      throw InvalidInputException(*this, str);
     }
 
     toIrreducibleRational();

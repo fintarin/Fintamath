@@ -7,6 +7,10 @@ namespace fintamath {
     return "asin";
   }
 
+  std::string Asin::getClassName() const {
+    return "Asin";
+  }
+
   MathObjectPtr Asin::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
     return asin(helpers::convertMathObject(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();

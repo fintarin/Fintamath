@@ -10,6 +10,10 @@ namespace fintamath {
     return "!!";
   }
 
+  std::string DoubleFactorial::getClassName() const {
+    return "DoubleFactorial";
+  }
+
   MathObjectPtr DoubleFactorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return std::make_unique<Integer>(doubleFactorial(argsVect.at(0).get().to<Integer>()));
   }

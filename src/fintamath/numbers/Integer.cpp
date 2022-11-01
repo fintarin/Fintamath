@@ -59,7 +59,7 @@ namespace fintamath {
 
   Integer::Integer(const std::string &str) : Integer() {
     if (mpz_set_str(value->mpz, str.c_str(), BASE) != 0) {
-      throw InvalidInputException("Integer", str);
+      throw InvalidInputException(*this, str);
     }
   }
 
@@ -94,6 +94,10 @@ namespace fintamath {
     std::string res = tmp;
     free(tmp);
     return res;
+  }
+
+  std::string Integer::getClassName() const {
+    return "Integer";
   }
 
   bool Integer::equals(const Integer &rhs) const {

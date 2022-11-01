@@ -15,6 +15,10 @@ namespace fintamath::tests {
       return {};
     }
 
+    std::string getClassName() const override {
+      return {};
+    }
+
   protected:
     bool equals(const TestArithmetic & /* rhs */) const override {
       return true;

@@ -11,6 +11,10 @@ namespace fintamath {
     return "=";
   }
 
+  std::string Eq::getClassName() const {
+    return "Eq";
+  }
+
   MathObjectPtr Eq::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return INumber::parse(int64_t(argsVect.at(0).get() == argsVect.at(1).get()));
   }

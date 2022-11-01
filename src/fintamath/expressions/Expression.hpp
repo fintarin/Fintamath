@@ -28,67 +28,73 @@ namespace fintamath {
 
     MathObjectPtr simplify() const override;
 
+    std::string getClassName() const override;
+
   private:
     using ExprPtr = std::shared_ptr<Expression>; // TODO replace with ExpressionPtr
     using ExprVect = std::vector<ExprPtr>;
 
     ExprPtr baseSimplify() const;
 
-    static ExprPtr parseEqualExpression(const std::string &expr);
+    ExprPtr parseEqualExpression(const std::string &expr) const;
 
-    static ExprPtr parseExpression(const std::string &exprStr);
+    ExprPtr parseExpression(const std::string &exprStr) const;
 
-    static ExprPtr parseDivMulTerm(const std::string &term);
+    ExprPtr parseDivMulTerm(const std::string &term) const;
 
-    static ExprPtr parseNegPowFactorPercentTerm(const std::string &term);
+    ExprPtr parseNegPowFactorPercentTerm(const std::string &term) const;
 
-    static ExprPtr parseFiniteTerm(const std::string &term);
+    ExprPtr parseFiniteTerm(const std::string &term) const;
 
-    static ExprPtr parseFunction(const std::string &term);
+    ExprPtr parseFunction(const std::string &term) const;
 
-    static ExprVect getArgs(const std::string &args);
+    ExprVect getArgs(const std::string &args) const;
 
-    static ExprPtr mainSimplify(const ExprPtr &expr);
+    ExprPtr mainSimplify(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyOperators(const ExprPtr &expr);
+    ExprPtr simplifyOperators(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyFunctions(const ExprPtr &expr);
+    ExprPtr simplifyFunctions(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyConstant(const ExprPtr &expr);
+    ExprPtr simplifyConstant(const ExprPtr &expr) const;
 
-    static ExprPtr invertSubDiv(const ExprPtr &expr);
+    ExprPtr invertSubDiv(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyNeg(const ExprPtr &expr);
+    ExprPtr simplifyNeg(const ExprPtr &expr) const;
 
-    static ExprPtr rebuildAdd(const ExprPtr &expr);
+    ExprPtr rebuildAdd(const ExprPtr &expr) const;
 
-    static ExprPtr rebuildMul(const ExprPtr &expr);
+    ExprPtr rebuildMul(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyAddNum(const ExprPtr &expr);
+    ExprPtr simplifyAddNum(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyMulNum(const ExprPtr &expr);
+    ExprPtr simplifyMulNum(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyPowNum(const ExprPtr &expr);
+    ExprPtr simplifyPowNum(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyAddVar(const ExprPtr &expr);
+    ExprPtr simplifyAddVar(const ExprPtr &expr) const;
 
-    static ExprPtr simplifyMulVar(const ExprPtr &expr);
+    ExprPtr simplifyMulVar(const ExprPtr &expr) const;
 
-    static ExprPtr createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr);
+    ExprPtr createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr) const;
 
-    static ExprPtr openBracketsMulAdd(const ExprPtr &expr);
+    ExprPtr openBracketsMulAdd(const ExprPtr &expr) const;
 
-    static ExprPtr openBracketsPowMul(const ExprPtr &expr);
+    ExprPtr openBracketsPowMul(const ExprPtr &expr) const;
 
-    static ExprPtr openBracketsPowAdd(const ExprPtr &expr);
+    ExprPtr openBracketsPowAdd(const ExprPtr &expr) const;
 
-    static ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const IMathObject &o);
+    ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const IMathObject &o) const;
 
-    static ExprPtr sort(const ExprPtr &expr);
+    ExprPtr sort(const ExprPtr &expr) const;
 
-    static std::string funcArgsToString(const ExprVect &args);
+    std::string funcArgsToString(const ExprVect &args) const;
 
-    static ExprPtr revertPow(const ExprPtr &expr);
+    size_t ignoreBracketsLeftRight(const std::string &str, size_t position) const;
+
+    size_t ignoreBracketsRightLeft(const std::string &str, size_t position) const;
+
+    ExprPtr revertPow(const ExprPtr &expr) const;
 
     std::shared_ptr<IMathObject> info;
     ExprVect children;

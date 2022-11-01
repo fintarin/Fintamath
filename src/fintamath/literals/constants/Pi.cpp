@@ -10,4 +10,8 @@ namespace fintamath {
   std::string Pi::toString() const {
     return "pi";
   }
+
+  std::string Pi::getClassName() const {
+    return "Pi";
+  }
 }

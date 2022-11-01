@@ -7,15 +7,15 @@
 namespace fintamath {
   class InvalidInputException : public Exception {
   public:
-    InvalidInputException() = default;
-
     ~InvalidInputException() override = default;
 
-    InvalidInputException(const std::string &object) {
-      content += " of " + object;
+    template <typename Obj>
+    InvalidInputException(const Obj &obj) {
+      content += " of " + obj.getClassName();
     }
 
-    InvalidInputException(const std::string &object, const std::string &input) : InvalidInputException(object) {
+    template <typename Obj>
+    InvalidInputException(const Obj &obj, const std::string &input) : InvalidInputException(obj) {
       if (!input.empty()) {
         content += ": " + input;
       } else {

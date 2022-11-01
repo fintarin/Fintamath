@@ -10,6 +10,10 @@ namespace fintamath {
     return "^";
   }
 
+  std::string Pow::getClassName() const {
+    return "Pow";
+  }
+
   MathObjectPtr Pow::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
 

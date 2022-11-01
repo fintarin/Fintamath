@@ -7,6 +7,10 @@ namespace fintamath {
     return "log";
   }
 
+  std::string Log::getClassName() const {
+    return "Log";
+  }
+
   MathObjectPtr Log::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t defaultPrecision = 45;
 

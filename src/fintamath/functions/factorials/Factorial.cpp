@@ -10,6 +10,10 @@ namespace fintamath {
     return "!";
   }
 
+  std::string Factorial::getClassName() const {
+    return "Factorial";
+  }
+
   MathObjectPtr Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return std::make_unique<Integer>(factorial(argsVect.at(0).get().to<Integer>()));
   }

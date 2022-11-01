@@ -9,13 +9,17 @@ namespace fintamath {
 
   Variable::Variable(const std::string &str) {
     if (!isVariable(str)) {
-      throw InvalidInputException("Variable", str);
+      throw InvalidInputException(*this, str);
     }
     name = str;
   }
 
   std::string Variable::toString() const {
     return name;
+  }
+
+  std::string Variable::getClassName() const {
+    return "Variable";
   }
 
   bool isVariable(const std::string &str) {

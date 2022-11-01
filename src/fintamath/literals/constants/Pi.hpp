@@ -8,5 +8,7 @@ namespace fintamath {
     Rational getValue(int64_t precision) const override;
 
     std::string toString() const override;
+
+    std::string getClassName() const override;
   };
 }

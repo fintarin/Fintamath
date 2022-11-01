@@ -30,6 +30,8 @@ namespace fintamath {
 
     std::string toString() const override;
 
+    std::string getClassName() const override;
+
     size_t length() const;
 
     Integer sqrt() const;
