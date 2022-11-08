@@ -11,11 +11,8 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath::helpers {
-  template <typename Value>
-  using ParserFunction = std::function<Value()>;
-
-  template <typename Value>
-  using ParserStringFunction = std::function<Value(const std::string &str)>;
+  template <typename Value, typename... Args>
+  using ParserFunction = std::function<Value(const Args &...)>;
 
   template <typename Value>
   using ParserComparator = std::function<bool(const Value &)>;
@@ -23,8 +20,8 @@ namespace fintamath::helpers {
   template <typename Value>
   using ParserMap = std::multimap<std::string, ParserFunction<Value>>;
 
-  template <typename Value>
-  using ParserVector = std::vector<ParserStringFunction<Value>>;
+  template <typename Value, typename... Args>
+  using ParserVector = std::vector<ParserFunction<Value, Args...>>;
 
   template <typename Parser, typename Value>
   void addParser(ParserMap<Value> &parserMap) {
@@ -37,11 +34,11 @@ namespace fintamath::helpers {
     parserMap.insert({name, constructor});
   }
 
-  template <typename Parser, typename Value>
-  void addParser(ParserVector<Value> &parserVect) {
-    ParserStringFunction<Value> constructor = [](const std::string &str) {
+  template <typename Parser, typename Value, typename... Args>
+  void addParser(ParserVector<Value, Args...> &parserVect) {
+    ParserFunction<Value, Args...> constructor = [](const Args &...args) {
       try {
-        return std::make_unique<Parser>(str);
+        return std::make_unique<Parser>(args...);
       } catch (const InvalidInputException &) {
         return std::unique_ptr<Parser>();
       }
@@ -50,8 +47,8 @@ namespace fintamath::helpers {
     parserVect.push_back(constructor);
   }
 
-  template <typename Value>
-  void addParser(ParserVector<Value> &parserVect, const ParserStringFunction<Value> &parserFunc) {
+  template <typename Value, typename... Args>
+  void addParser(ParserVector<Value, Args...> &parserVect, const ParserFunction<Value, Args...> &parserFunc) {
     parserVect.push_back(parserFunc);
   }
 
@@ -69,10 +66,10 @@ namespace fintamath::helpers {
     return nullptr;
   }
 
-  template <typename Value>
-  Value parse(const ParserVector<Value> &parserVect, const std::string &parsedStr) {
+  template <typename Value, typename... Args>
+  Value parse(const ParserVector<Value, Args...> &parserVect, const Args &...args) {
     for (const auto &constructor : parserVect) {
-      if (Value value = constructor(parsedStr)) {
+      if (Value value = constructor(args...)) {
         return value;
       }
     }

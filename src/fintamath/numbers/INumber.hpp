@@ -27,7 +27,7 @@ namespace fintamath {
     }
 
   private:
-    static helpers::ParserVector<NumberPtr> parserMap;
+    static helpers::ParserVector<NumberPtr, std::string> parserMap;
   };
 
   inline NumberPtr operator+(const INumber &lhs, const INumber &rhs) {

@@ -38,8 +38,8 @@
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  helpers::ParserVector<NumberPtr> INumber::parserMap;
-  helpers::ParserVector<LiteralPtr> ILiteral::parserMap;
+  helpers::ParserVector<NumberPtr, std::string> INumber::parserMap;
+  helpers::ParserVector<LiteralPtr, std::string> ILiteral::parserMap;
   helpers::ParserMap<ConstantPtr> IConstant::parserMap;
   helpers::ParserMap<FunctionPtr> IFunction::parserMap;
   helpers::ParserMap<OperatorPtr> IOperator::parserMap;

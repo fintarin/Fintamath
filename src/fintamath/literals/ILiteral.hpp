@@ -16,7 +16,7 @@ namespace fintamath {
       helpers::addParser<T>(parserMap);
     }
 
-    static void addParser(const helpers::ParserStringFunction<LiteralPtr> &parserFunc) {
+    static void addParser(const helpers::ParserFunction<LiteralPtr, std::string> &parserFunc) {
       helpers::addParser(parserMap, parserFunc);
     }
 
@@ -25,7 +25,7 @@ namespace fintamath {
     }
 
   private:
-    static helpers::ParserVector<LiteralPtr> parserMap;
+    static helpers::ParserVector<LiteralPtr, std::string> parserMap;
   };
 
   template <typename Derived>
