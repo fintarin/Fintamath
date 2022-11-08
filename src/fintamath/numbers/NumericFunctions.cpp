@@ -43,7 +43,7 @@ namespace fintamath {
     shift.insert(shift.begin(), '1');
     shiftMult2.insert(shiftMult2.begin(), '1');
 
-    Rational val((rhs * Integer(shiftMult2)).getInteger().sqrt(), Integer(shift));
+    Rational val(sqrt((rhs * Integer(shiftMult2)).getInteger()), Integer(shift));
     return val.round(precision);
   }
 
@@ -567,7 +567,8 @@ namespace fintamath {
     k = a divide p.
   */
   Rational trigonometryReduce(const Rational &rhs, size_t multiplier, int64_t precision) {
-    Rational period = int64_t(multiplier) * getPi(getNewPrecision(precision) + int64_t(rhs.getInteger().length()));
+    Rational period =
+        int64_t(multiplier) * getPi(getNewPrecision(precision) + int64_t(rhs.getInteger().toString().size()));
     Integer perionMultiplier = (rhs / period).getInteger();
     Rational res = rhs - perionMultiplier * period;
     return res;

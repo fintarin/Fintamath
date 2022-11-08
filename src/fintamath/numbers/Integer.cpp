@@ -5,80 +5,47 @@
 #include <stdexcept>
 #include <string>
 
-#include "gmp/mini-gmp.h"
+#include "boost/multiprecision/cpp_int.hpp"
 
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
-#if _MSC_VER && !__INTEL_COMPILER
-#pragma warning(disable : 4244)
-#endif
+using namespace boost::multiprecision;
 
 namespace fintamath {
-  constexpr int64_t BASE = 10;
+  Integer::Integer() = default;
 
-  struct IntegerImpl {
-    mpz_t mpz{};
+  Integer &Integer::operator=(const Integer &) = default;
 
-    IntegerImpl() {
-      mpz_init_set_si(mpz, 0);
-    }
+  Integer &Integer::operator=(Integer &&) noexcept = default;
 
-    ~IntegerImpl() {
-      mpz_clear(mpz);
-    }
-  };
+  Integer::Integer(const Integer &) = default;
 
-  Integer::Integer() {
-    value = std::make_unique<IntegerImpl>();
-  }
-
-  Integer::Integer(const Integer &rhs) : Integer() {
-    mpz_set(value->mpz, rhs.value->mpz);
-  }
-
-  Integer::Integer(Integer &&rhs) noexcept : value(std::move(rhs.value)) {
-  }
-
-  Integer &Integer::operator=(const Integer &rhs) {
-    if (this != &rhs) {
-      value = std::make_unique<IntegerImpl>();
-      mpz_set(value->mpz, rhs.value->mpz);
-    }
-    return *this;
-  }
-
-  Integer &Integer::operator=(Integer &&rhs) noexcept {
-    if (this != &rhs) {
-      value = std::move(rhs.value);
-    }
-    return *this;
-  }
+  Integer::Integer(Integer &&) noexcept = default;
 
   Integer::~Integer() = default;
 
-  Integer::Integer(const std::string &str) : Integer() {
-    if (mpz_set_str(value->mpz, str.c_str(), BASE) != 0) {
+  Integer::Integer(std::string str) {
+    if (str.empty()) {
+      throw InvalidInputException(*this, str);
+    }
+
+    {
+      int8_t i = 0;
+      if (str.front() == '-') {
+        i++;
+      }
+      str.erase(i, str.find_first_not_of('0'));
+    }
+
+    try {
+      value = cpp_int(str);
+    } catch (const std::runtime_error &) {
       throw InvalidInputException(*this, str);
     }
   }
 
-  Integer::Integer(int64_t val) : Integer() {
-    mpz_init_set_si(value->mpz, val);
-  }
-
-  size_t Integer::length() const {
-    return toString().length();
-  }
-
-  Integer Integer::sqrt() const {
-    if (*this < 0) {
-      throw UndefinedFunctionException("sqrt", {toString()});
-    }
-
-    Integer res;
-    res.callFunction([this](Integer &tmpRes) { mpz_sqrt(tmpRes.value->mpz, value->mpz); });
-    return res;
+  Integer::Integer(int64_t val) : value(val) {
   }
 
   Integer &Integer::operator%=(const Integer &rhs) {
@@ -90,10 +57,7 @@ namespace fintamath {
   }
 
   std::string Integer::toString() const {
-    char *tmp = mpz_get_str(nullptr, BASE, value->mpz);
-    std::string res = tmp;
-    free(tmp);
-    return res;
+    return value.str();
   }
 
   std::string Integer::getClassName() const {
@@ -101,29 +65,29 @@ namespace fintamath {
   }
 
   bool Integer::equals(const Integer &rhs) const {
-    return mpz_cmp(value->mpz, rhs.value->mpz) == 0;
+    return value == rhs.value;
   }
 
   bool Integer::less(const Integer &rhs) const {
-    return mpz_cmp(value->mpz, rhs.value->mpz) == -1;
+    return value < rhs.value;
   }
 
   bool Integer::more(const Integer &rhs) const {
-    return mpz_cmp(value->mpz, rhs.value->mpz) == 1;
+    return value > rhs.value;
   }
 
   Integer &Integer::add(const Integer &rhs) {
-    callFunction([this, &rhs](Integer &res) { mpz_add(res.value->mpz, value->mpz, rhs.value->mpz); });
+    value += rhs.value;
     return *this;
   }
 
   Integer &Integer::substract(const Integer &rhs) {
-    callFunction([this, &rhs](Integer &res) { mpz_sub(res.value->mpz, value->mpz, rhs.value->mpz); });
+    value -= rhs.value;
     return *this;
   }
 
   Integer &Integer::multiply(const Integer &rhs) {
-    callFunction([this, &rhs](Integer &res) { mpz_mul(res.value->mpz, value->mpz, rhs.value->mpz); });
+    value *= rhs.value;
     return *this;
   }
 
@@ -132,22 +96,22 @@ namespace fintamath {
       throw UndefinedBinaryOpearatorException("/", toString(), rhs.toString());
     }
 
-    callFunction([this, &rhs](Integer &res) { mpz_tdiv_q(res.value->mpz, value->mpz, rhs.value->mpz); });
+    value /= rhs.value;
     return *this;
   }
 
   Integer &Integer::negate() {
-    callFunction([this](Integer &res) { mpz_neg(res.value->mpz, value->mpz); });
+    value = -value;
     return *this;
   }
 
   Integer &Integer::increase() {
-    callFunction([this](Integer &res) { mpz_add_ui(res.value->mpz, value->mpz, 1); });
+    ++value;
     return *this;
   }
 
   Integer &Integer::decrease() {
-    callFunction([this](Integer &res) { mpz_sub_ui(res.value->mpz, value->mpz, 1); });
+    --value;
     return *this;
   }
 
@@ -156,13 +120,17 @@ namespace fintamath {
       throw UndefinedBinaryOpearatorException("mod", toString(), rhs.toString());
     }
 
-    callFunction([this, &rhs](Integer &res) { mpz_tdiv_r(res.value->mpz, value->mpz, rhs.value->mpz); });
+    value %= rhs.value;
     return *this;
   }
 
-  Integer &Integer::callFunction(const std::function<void(Integer &)> &func) {
-    Integer res;
-    func(res);
-    return *this = std::move(res);
+  Integer sqrt(Integer rhs) {
+    if (rhs < 0) {
+      throw UndefinedFunctionException("sqrt", {rhs.toString()});
+    }
+
+    rhs.value = sqrt(rhs.value);
+
+    return rhs;
   }
 }

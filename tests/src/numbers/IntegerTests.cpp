@@ -648,16 +648,16 @@ TEST(IntegerTests, friendIntMoreEqualOperatorTest) {
 }
 
 TEST(IntegerTests, sqrtTest) {
-  EXPECT_EQ(Integer(35).sqrt(), 5);
-  EXPECT_EQ(Integer(100).sqrt(), 10);
-  EXPECT_EQ(Integer(4212).sqrt(), Integer(64));
+  EXPECT_EQ(sqrt(Integer(35)), 5);
+  EXPECT_EQ(sqrt(Integer(100)), 10);
+  EXPECT_EQ(sqrt(Integer(4212)), Integer(64));
 
-  EXPECT_EQ(Integer("992188888888").sqrt(), Integer(996086));
-  EXPECT_EQ(Integer("10000000000000000000000000000000000000000000000000000").sqrt(),
+  EXPECT_EQ(sqrt(Integer("992188888888")), Integer(996086));
+  EXPECT_EQ(sqrt(Integer("10000000000000000000000000000000000000000000000000000")),
             Integer("100000000000000000000000000"));
-  EXPECT_EQ(Integer("68732648273642987365932706179432649827364").sqrt(), Integer("262169121510606178721"));
+  EXPECT_EQ(sqrt(Integer("68732648273642987365932706179432649827364")), Integer("262169121510606178721"));
 
-  EXPECT_THROW(Integer(-9289).sqrt(), UndefinedFunctionException);
+  EXPECT_THROW(sqrt(Integer(-9289)), UndefinedFunctionException);
 }
 
 TEST(IntegerTests, toStringTest) {
