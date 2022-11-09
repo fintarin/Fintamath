@@ -16,6 +16,6 @@ namespace fintamath {
 
   MathObjectPtr Percent::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t percentValue = 100;
-    return (helpers::convertMathObject(argsVect.at(0), Rational())->to<Rational>() / percentValue).simplify();
+    return (helpers::Converter::convert(argsVect.at(0), Rational())->to<Rational>() / percentValue).simplify();
   }
 }

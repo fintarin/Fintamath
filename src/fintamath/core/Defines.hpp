@@ -12,10 +12,10 @@
   if (rhs.is<Derived>()) {                                                                                             \
     return *this OPER rhs.to<Derived>();                                                                               \
   }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                             \
+  if (auto tmp = helpers::Converter::convert(rhs, *this); tmp != nullptr) {                                             \
     return *this OPER tmp->template to<CLASS>();                                                                       \
   }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                             \
+  if (auto tmp = helpers::Converter::convert(*this, rhs); tmp != nullptr) {                                             \
     return tmp->template to<CLASS>() OPER rhs;                                                                         \
   }                                                                                                                    \
   throw FunctionCallException(#OPER, {toString(), rhs.toString()})
@@ -25,11 +25,11 @@
     auto res = (*this OPER rhs.to<Derived>()).simplify();                                                              \
     return helpers::cast<CLASS>(res);                                                                                  \
   }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                             \
+  if (auto tmp = helpers::Converter::convert(rhs, *this); tmp != nullptr) {                                             \
     auto res = (*this OPER tmp->template to<CLASS>())->simplify();                                                     \
     return helpers::cast<CLASS>(res);                                                                                  \
   }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                             \
+  if (auto tmp = helpers::Converter::convert(*this, rhs); tmp != nullptr) {                                             \
     auto res = (tmp->template to<CLASS>() OPER rhs)->simplify();                                                       \
     return helpers::cast<CLASS>(res);                                                                                  \
   }                                                                                                                    \

@@ -8,7 +8,7 @@ using namespace fintamath;
 using namespace fintamath::helpers;
 
 TEST(ConverterTests, convertTest) {
-  EXPECT_TRUE(convertMathObject(Integer(), Rational())->is<Rational>());
+  EXPECT_TRUE(Converter::convert(Integer(), Rational())->is<Rational>());
 
-  EXPECT_FALSE(convertMathObject(Rational(), Integer()));
+  EXPECT_FALSE(Converter::convert(Rational(), Integer()));
 }

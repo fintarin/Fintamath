@@ -79,10 +79,10 @@ namespace fintamath {
       if (rhs.is<Derived>()) {
         return *this == rhs.to<Derived>();
       }
-      if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {
+      if (auto tmp = helpers::Converter::convert(rhs, *this); tmp != nullptr) {
         return *this == *tmp;
       }
-      if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {
+      if (auto tmp = helpers::Converter::convert(*this, rhs); tmp != nullptr) {
         return *tmp == rhs;
       }
       return false;
