@@ -5,24 +5,24 @@
 #include <string>
 #include <vector>
 
-#include "boost/multiprecision/cpp_int.hpp"
-
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
+  class IntegerImpl;
+
   class Integer : public INumberCRTP<Integer> {
   public:
     Integer();
 
-    Integer(const Integer &);
+    Integer(const Integer &rhs);
 
-    Integer(Integer &&) noexcept;
-
-    Integer &operator=(const Integer &);
-
-    Integer &operator=(Integer &&) noexcept;
+    Integer &operator=(const Integer &rhs);
 
     ~Integer() override;
+
+    Integer(Integer &&rhs) noexcept;
+
+    Integer &operator=(Integer &&rhs) noexcept;
 
     explicit Integer(std::string str);
 
@@ -53,16 +53,16 @@ namespace fintamath {
 
     Integer &divide(const Integer &rhs) override;
 
+    Integer &mod(const Integer &rhs);
+
     Integer &negate() override;
 
     Integer &increase() override;
 
     Integer &decrease() override;
 
-    Integer &mod(const Integer &rhs);
-
   private:
-    boost::multiprecision::cpp_int value;
+    std::unique_ptr<IntegerImpl> value;
   };
 
   template <typename RhsType,
