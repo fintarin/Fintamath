@@ -9,7 +9,7 @@ using namespace fintamath::helpers;
 
 TEST(CasterTests, castPtrTest) {
   MathObjectPtr obj = std::make_unique<Integer>(1);
-  EXPECT_NO_THROW(ArithmeticPtr a = castPtr<IArithmetic>(obj));
+  EXPECT_NO_THROW(ArithmeticPtr a = cast<IArithmetic>(obj));
 
-  EXPECT_FALSE(castPtr<Rational>(obj));
+  EXPECT_FALSE(cast<Rational>(obj));
 }

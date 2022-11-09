@@ -16,7 +16,7 @@ namespace fintamath {
       helpers::addParser<T>(parserVector);
     }
 
-    static void addParser(const helpers::ParserFunction<LiteralPtr, std::string> &parserFunc) {
+    static void addParser(const helpers::Function<LiteralPtr, std::string> &parserFunc) {
       helpers::addParser(parserVector, parserFunc);
     }
 

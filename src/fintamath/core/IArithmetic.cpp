@@ -9,7 +9,7 @@ namespace fintamath {
     helpers::MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiDiv;
     multiDiv.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
       auto res = (Rational(lhs) / Rational(rhs)).simplify();
-      return helpers::castPtr<IArithmetic>(res);
+      return helpers::cast<IArithmetic>(res);
     });
     return multiDiv;
   }
