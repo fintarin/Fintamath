@@ -11,6 +11,8 @@ namespace fintamath {
   public:
     std::string toString() const override;
 
+    std::string getClassName() const override;
+
   private:
     std::vector<Element> addPolynom;
   };
