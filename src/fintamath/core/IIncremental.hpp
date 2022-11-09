@@ -9,8 +9,6 @@ namespace fintamath {
 
   class IIncremental : virtual public IMathObject {
   public:
-    ~IIncremental() override = default;
-
     friend IIncremental &operator++(IIncremental &rhs);
 
     friend IIncremental &operator--(IIncremental &rhs);
@@ -50,8 +48,6 @@ namespace fintamath {
   template <typename Derived>
   class IIncrementalCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IIncremental {
   public:
-    ~IIncrementalCRTP() override = default;
-
     Derived &operator++() {
       return increase();
     }

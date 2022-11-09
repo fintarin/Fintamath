@@ -11,8 +11,6 @@ namespace fintamath {
 
   class INumber : virtual public IComparable, virtual public IArithmetic, virtual public IIncremental {
   public:
-    ~INumber() override = default;
-
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
     static void addParser() {
       helpers::addParser<T>(parserVector);
@@ -54,8 +52,5 @@ namespace fintamath {
   class INumberCRTP : public INumber,
                       public ComparableCRTP<Derived>,
                       public IArithmeticCRTP<Derived>,
-                      public IIncrementalCRTP<Derived> {
-  public:
-    ~INumberCRTP() override = default;
-  };
+                      public IIncrementalCRTP<Derived> {};
 }

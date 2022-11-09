@@ -20,8 +20,6 @@ namespace fintamath {
     };
 
   public:
-    ~IFunction() override = default;
-
     virtual IFunction::Type getFunctionType() const = 0;
 
     template <typename... Args>
@@ -53,8 +51,6 @@ namespace fintamath {
   public:
     IFunctionCRTP(bool inIsTypeAny = false) : isTypeAny(inIsTypeAny) {
     }
-
-    ~IFunctionCRTP() override = default;
 
     IFunction::Type getFunctionType() const final {
       return IFunction::Type(sizeof...(Args));

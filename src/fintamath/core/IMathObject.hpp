@@ -72,8 +72,6 @@ namespace fintamath {
   template <typename Derived>
   class IMathObjectCRTP : virtual public IMathObject {
   public:
-    ~IMathObjectCRTP() override = default;
-
     MathObjectPtr clone() const final {
       return std::make_unique<Derived>(to<Derived>());
     }

@@ -11,8 +11,6 @@ namespace fintamath {
 
   class IConstant : virtual public ILiteral {
   public:
-    ~IConstant() override = default;
-
     virtual Rational getValue(int64_t precision) const = 0;
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
@@ -29,8 +27,5 @@ namespace fintamath {
   };
 
   template <typename Derived>
-  class IConstantCRTP : virtual public IConstant, virtual public ILiteralCRTP<Derived> {
-  public:
-    ~IConstantCRTP() override = default;
-  };
+  class IConstantCRTP : virtual public IConstant, virtual public ILiteralCRTP<Derived> {};
 }

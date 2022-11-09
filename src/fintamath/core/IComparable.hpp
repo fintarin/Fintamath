@@ -21,8 +21,6 @@ namespace fintamath {
 
   class IComparable : virtual public IMathObject {
   public:
-    ~IComparable() override = default;
-
     friend bool operator<(const IComparable &lhs, const IComparable &rhs);
 
     friend bool operator>(const IComparable &lhs, const IComparable &rhs);
@@ -56,8 +54,6 @@ namespace fintamath {
   template <typename Derived>
   class ComparableCRTP : virtual public IComparable, virtual public IMathObjectCRTP<Derived> {
   public:
-    ~ComparableCRTP() override = default;
-
     bool operator<(const Derived &rhs) const {
       return less(rhs);
     }

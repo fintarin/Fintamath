@@ -25,8 +25,6 @@ namespace fintamath {
 
   class IArithmetic : virtual public IMathObject {
   public:
-    ~IArithmetic() override = default;
-
     friend ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs);
 
     friend ArithmeticPtr operator-(const IArithmetic &lhs, const IArithmetic &rhs);
@@ -80,8 +78,6 @@ namespace fintamath {
   template <typename Derived>
   class IArithmeticCRTP : virtual public IArithmetic, virtual public IMathObjectCRTP<Derived> {
   public:
-    ~IArithmeticCRTP() override = default;
-
     Derived &operator+=(const Derived &rhs) {
       return add(rhs);
     }

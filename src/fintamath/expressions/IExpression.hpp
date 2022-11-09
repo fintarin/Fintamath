@@ -13,9 +13,6 @@ namespace fintamath {
   protected:
     using TokenVector = std::vector<std::string>;
 
-  public:
-    ~IExpression() override = default;
-
   protected:
     static TokenVector tokenize(const std::string &str);
   };
@@ -23,9 +20,6 @@ namespace fintamath {
   template <typename Derived>
   class IExpressionCRTP : virtual public IExpression,
                           virtual public IMathObjectCRTP<Derived> { // TODO replace IMathObjectCRTP to IArithmeticCRTP
-  public:
-    ~IExpressionCRTP() override = default;
-
   protected:
     bool equals(const Derived &rhs) const final {
       return toString() == rhs.toString();
