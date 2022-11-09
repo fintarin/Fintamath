@@ -4,19 +4,7 @@
 #include <sstream>
 #include <string>
 
-#include "fintamath/helpers/Converter.hpp"
-
-#define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
-  if (rhs.is<Derived>()) {                                                                                             \
-    return *this OPER rhs.to<Derived>();                                                                               \
-  }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                                \
-    return *this OPER * tmp;                                                                                           \
-  }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                                \
-    return *tmp OPER rhs;                                                                                              \
-  }                                                                                                                    \
-  return false
+#include "fintamath/core/Defines.hpp"
 
 namespace fintamath {
   class IMathObject;
@@ -88,7 +76,16 @@ namespace fintamath {
     virtual bool equals(const Derived &rhs) const = 0;
 
     bool equalsAbstract(const IMathObject &rhs) const final {
-      FINTAMATH_CALL_OPERATOR(==);
+      if (rhs.is<Derived>()) {
+        return *this == rhs.to<Derived>();
+      }
+      if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {
+        return *this == *tmp;
+      }
+      if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {
+        return *tmp == rhs;
+      }
+      return false;
     }
   };
 
@@ -124,5 +121,3 @@ namespace fintamath {
     return out << rhs.toString();
   }
 }
-
-#undef FINTAMATH_CALL_OPERATOR

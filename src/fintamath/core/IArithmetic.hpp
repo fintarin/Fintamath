@@ -4,21 +4,6 @@
 #include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/helpers/Caster.hpp"
 
-#define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
-  if (rhs.is<Derived>()) {                                                                                             \
-    auto res = (*this OPER rhs.to<Derived>()).simplify();                                                              \
-    return helpers::castPtr<IArithmetic>(res);                                                                         \
-  }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                             \
-    auto res = (*this OPER tmp->template to<IArithmetic>())->simplify();                                               \
-    return helpers::castPtr<IArithmetic>(res);                                                                         \
-  }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                             \
-    auto res = (tmp->template to<IArithmetic>() OPER rhs)->simplify();                                                 \
-    return helpers::castPtr<IArithmetic>(res);                                                                         \
-  }                                                                                                                    \
-  throw FunctionCallException(#OPER, {toString(), rhs.toString()});
-
 namespace fintamath {
   class IArithmetic;
   using ArithmeticPtr = std::unique_ptr<IArithmetic>;
@@ -131,22 +116,22 @@ namespace fintamath {
     virtual Derived &negate() = 0;
 
     ArithmeticPtr addAbstract(const IArithmetic &rhs) const final {
-      FINTAMATH_CALL_OPERATOR(+);
+      FINTAMATH_ARITHMETIC_OPERATOR(IArithmetic, +);
     }
 
     ArithmeticPtr substractAbstract(const IArithmetic &rhs) const final {
-      FINTAMATH_CALL_OPERATOR(-);
+      FINTAMATH_ARITHMETIC_OPERATOR(IArithmetic, -);
     }
 
     ArithmeticPtr multiplyAbstract(const IArithmetic &rhs) const final {
-      FINTAMATH_CALL_OPERATOR(*);
+      FINTAMATH_ARITHMETIC_OPERATOR(IArithmetic, *);
     }
 
     ArithmeticPtr divideAbstract(const IArithmetic &rhs) const final {
       if (auto tmp = multiDiv(*this, rhs); tmp != nullptr) {
         return tmp;
       }
-      FINTAMATH_CALL_OPERATOR(/);
+      FINTAMATH_ARITHMETIC_OPERATOR(IArithmetic, /);
     }
 
     ArithmeticPtr convertAbstract() const final {
@@ -245,5 +230,3 @@ namespace fintamath {
     return RhsType(lhs) / rhs;
   }
 }
-
-#undef FINTAMATH_CALL_OPERATOR

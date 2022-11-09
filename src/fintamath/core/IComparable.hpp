@@ -1,19 +1,6 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/FunctionCallException.hpp"
-
-#define FINTAMATH_CALL_OPERATOR(OPER)                                                                                  \
-  if (rhs.is<Derived>()) {                                                                                             \
-    return *this OPER rhs.to<Derived>();                                                                               \
-  }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(rhs, *this); tmp != nullptr) {                                             \
-    return *this OPER tmp->template to<IComparable>();                                                                 \
-  }                                                                                                                    \
-  if (auto tmp = helpers::convertMathObject(*this, rhs); tmp != nullptr) {                                             \
-    return tmp->template to<IComparable>() OPER rhs;                                                                   \
-  }                                                                                                                    \
-  throw FunctionCallException(#OPER, {toString(), rhs.toString()})
 
 namespace fintamath {
   class IComparable;
@@ -76,11 +63,11 @@ namespace fintamath {
     virtual bool more(const Derived &rhs) const = 0;
 
     bool lessAbstract(const IComparable &rhs) const final {
-      FINTAMATH_CALL_OPERATOR(<);
+      FINTAMATH_COMPARISON_OPERATOR(IComparable, <);
     }
 
     bool moreAbstract(const IComparable &rhs) const final {
-      FINTAMATH_CALL_OPERATOR(>);
+      FINTAMATH_COMPARISON_OPERATOR(IComparable, >);
     }
   };
 
@@ -140,5 +127,3 @@ namespace fintamath {
     return RhsType(lhs) >= rhs;
   }
 }
-
-#undef FINTAMATH_CALL_OPERATOR
