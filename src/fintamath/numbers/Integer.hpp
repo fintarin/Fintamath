@@ -16,13 +16,13 @@ namespace fintamath {
 
     Integer(const Integer &rhs);
 
-    Integer &operator=(const Integer &rhs);
-
-    ~Integer() override;
-
     Integer(Integer &&rhs) noexcept;
 
+    Integer &operator=(const Integer &rhs);
+
     Integer &operator=(Integer &&rhs) noexcept;
+
+    ~Integer() override;
 
     explicit Integer(std::string str);
 

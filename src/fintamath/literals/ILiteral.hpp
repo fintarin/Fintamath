@@ -13,19 +13,19 @@ namespace fintamath {
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
     static void addParser() {
-      helpers::addParser<T>(parserMap);
+      helpers::addParser<T>(parserVector);
     }
 
     static void addParser(const helpers::ParserFunction<LiteralPtr, std::string> &parserFunc) {
-      helpers::addParser(parserMap, parserFunc);
+      helpers::addParser(parserVector, parserFunc);
     }
 
     static LiteralPtr parse(const std::string &str) {
-      return helpers::parse(parserMap, str);
+      return helpers::parse(parserVector, str);
     }
 
   private:
-    static helpers::ParserVector<LiteralPtr, std::string> parserMap;
+    static helpers::ParserVector<LiteralPtr, std::string> parserVector;
   };
 
   template <typename Derived>

@@ -21,11 +21,9 @@ namespace fintamath {
     value = std::make_unique<IntegerImpl>();
   }
 
-  Integer::Integer(const Integer &rhs) {
-    value = std::make_unique<IntegerImpl>(*rhs.value);
+  Integer::Integer(const Integer &rhs) : Integer() {
+    value->v.assign(rhs.value->v);
   }
-
-  Integer::~Integer() = default;
 
   Integer::Integer(Integer &&) noexcept = default;
 
@@ -33,9 +31,12 @@ namespace fintamath {
     if (this != &rhs) {
       value = std::make_unique<IntegerImpl>(*rhs.value);
     }
+    return *this;
   }
 
   Integer &Integer::operator=(Integer &&) noexcept = default;
+
+  Integer::~Integer() = default;
 
   Integer::Integer(std::string str) : Integer() {
     if (str.empty()) {

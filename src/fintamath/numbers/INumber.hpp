@@ -15,11 +15,11 @@ namespace fintamath {
 
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
     static void addParser() {
-      helpers::addParser<T>(parserMap);
+      helpers::addParser<T>(parserVector);
     }
 
     static NumberPtr parse(const std::string &str) {
-      return helpers::parse(parserMap, str);
+      return helpers::parse(parserVector, str);
     }
 
     static NumberPtr parse(int64_t num) {
@@ -27,7 +27,7 @@ namespace fintamath {
     }
 
   private:
-    static helpers::ParserVector<NumberPtr, std::string> parserMap;
+    static helpers::ParserVector<NumberPtr, std::string> parserVector;
   };
 
   inline NumberPtr operator+(const INumber &lhs, const INumber &rhs) {
