@@ -28,6 +28,7 @@
 #include "fintamath/functions/trigonometry/Cot.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
@@ -58,6 +59,7 @@ namespace fintamath::config {
     // literals
     ILiteral::addParser(&IConstant::parse);
     ILiteral::addParser<Variable>();
+    ILiteral::addParser<Boolean>();
 
     // operators
     IOperator::addParser<Add>();
