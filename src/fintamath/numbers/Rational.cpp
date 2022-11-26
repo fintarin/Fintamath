@@ -13,6 +13,10 @@ namespace fintamath {
   static Integer lcm(const Integer &lhs, const Integer &rhs);
 
   Rational::Rational(const std::string &str) {
+    if (str.empty()) {
+      throw InvalidInputException(*this, str);
+    }
+
     parse(str);
   }
 
