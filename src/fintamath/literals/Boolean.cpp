@@ -5,8 +5,8 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
-  constexpr char *TRUE = "true";
-  constexpr char *FALSE = "false";
+  const std::string TRUE = "true";
+  const std::string FALSE = "false";
 
   bool isBoolean(const std::string &str);
 
