@@ -11,6 +11,7 @@ namespace fintamath {
     if (!isVariable(str)) {
       throw InvalidInputException(*this, str);
     }
+
     name = str;
   }
 
