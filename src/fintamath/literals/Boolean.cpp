@@ -8,8 +8,6 @@ namespace fintamath {
   const std::string TRUE = "true";
   const std::string FALSE = "false";
 
-  bool isBoolean(const std::string &str);
-
   Boolean::Boolean(const std::string &str) {
     if (str != TRUE && str != FALSE) {
       throw InvalidInputException(*this, str);
@@ -31,14 +29,5 @@ namespace fintamath {
 
   Boolean::operator bool() const {
     return name == TRUE;
-  }
-
-  bool isBoolean(const std::string &str) {
-    if (str.size() != 1) {
-      return false;
-    }
-
-    const std::regex reg(R"(^[a-df-hj-zA-Z]$)");
-    return regex_search(str, reg);
   }
 }
