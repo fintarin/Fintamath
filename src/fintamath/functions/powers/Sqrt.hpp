@@ -2,9 +2,10 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class Sqrt : public IFunctionCRTP<Sqrt, IArithmetic> {
+  class Sqrt : public IFunctionCRTP<Sqrt, INumber> {
   public:
     Sqrt() = default;
 

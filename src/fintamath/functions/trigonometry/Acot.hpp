@@ -2,9 +2,10 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class Acot : public IFunctionCRTP<Acot, IArithmetic> {
+  class Acot : public IFunctionCRTP<Acot, INumber> {
   public:
     Acot() = default;
 

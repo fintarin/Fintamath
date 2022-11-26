@@ -3,6 +3,7 @@
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/helpers/Parser.hpp"
 
 namespace fintamath {
@@ -64,7 +65,11 @@ namespace fintamath {
         throwInvalidInput(argsVect);
       }
 
-      validateArgs(argsVect);
+      if (!validateArgs(argsVect)) {
+        // TODO make Expression
+        // return std::make_unique<Expression>(clone(), argsVect);
+        throwInvalidInput(argsVect);
+      }
 
       return call(argsVect);
     }
@@ -74,34 +79,36 @@ namespace fintamath {
     }
 
   private:
-    void validateArgs(const ArgumentsVector &args) const {
+    bool validateArgs(const ArgumentsVector &args) const {
       if (isTypeAny) {
-        validateTypeAnyArgs(args);
-      } else {
-        validateArgs<0, Args...>(args);
+        return validateTypeAnyArgs(args);
       }
+
+      return validateArgs<0, Args...>(args);
     }
 
     template <size_t i, typename Head, typename... Tail>
-    void validateArgs(const ArgumentsVector &args) const {
+    bool validateArgs(const ArgumentsVector &args) const {
       if (!args.at(i).get().instanceOf<Head>()) {
-        throwInvalidInput(args);
+        return false;
       }
 
-      validateArgs<i + 1, Tail...>(args);
+      return validateArgs<i + 1, Tail...>(args);
     }
 
     template <size_t>
-    void validateArgs(const ArgumentsVector & /*unused*/) const {
-      // validation passes
+    bool validateArgs(const ArgumentsVector & /*unused*/) const {
+      return true;
     }
 
-    void validateTypeAnyArgs(const ArgumentsVector &args) const {
+    bool validateTypeAnyArgs(const ArgumentsVector &args) const {
       for (const auto &arg : args) {
         if ((!arg.get().instanceOf<Args>() && ...)) {
-          throwInvalidInput(args);
+          return false;
         }
       }
+
+      return true;
     }
 
     void throwInvalidInput(const ArgumentsVector &argsVect) const {

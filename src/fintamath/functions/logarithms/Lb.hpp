@@ -2,9 +2,10 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class Lb : public IFunctionCRTP<Lb, IArithmetic> {
+  class Lb : public IFunctionCRTP<Lb, INumber> {
   public:
     Lb() = default;
 
