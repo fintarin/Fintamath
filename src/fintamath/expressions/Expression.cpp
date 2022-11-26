@@ -16,7 +16,7 @@
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
-#include "fintamath/functions/logic/Eq.hpp"
+#include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -269,7 +269,7 @@ namespace fintamath {
         }
         auto lhs = Expression(exprStr.substr(0, i));
         auto rhs = Expression(exprStr.substr(i + 1));
-        if (*Eq()(lhs, rhs) == Integer(1)) {
+        if (*Eqv()(lhs, rhs) == Integer(1)) {
           return std::make_shared<Expression>(Integer(1));
         }
         auto eqExpr = Expression();
@@ -278,7 +278,7 @@ namespace fintamath {
         eqExpr.children.push_back(std::make_shared<Expression>(rhs));
 
         auto newExpr = Expression();
-        newExpr.info = std::make_shared<Eq>();
+        newExpr.info = std::make_shared<Eqv>();
         newExpr.children.push_back(eqExpr.baseSimplify());
         newExpr.children.push_back(std::make_shared<Expression>(Integer(0)));
         return std::make_shared<Expression>(newExpr);

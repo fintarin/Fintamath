@@ -4,9 +4,9 @@
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
-  class Eq : public IOperatorCRTP<Eq, IMathObject, IMathObject> {
+  class Eqv : public IOperatorCRTP<Eqv, IMathObject, IMathObject> {
   public:
-    Eq();
+    Eqv();
 
     std::string toString() const override;
 

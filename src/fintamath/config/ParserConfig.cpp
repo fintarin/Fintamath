@@ -14,7 +14,7 @@
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
-#include "fintamath/functions/logic/Eq.hpp"
+#include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
@@ -72,7 +72,7 @@ namespace fintamath::config {
     IOperator::addParser<DoubleFactorial>();
     IOperator::addParser<Percent>();
     IOperator::addParser<Pow>();
-    IOperator::addParser<Eq>();
+    IOperator::addParser<Eqv>();
 
     // functions
     IFunction::addParser<Abs>();
