@@ -1,7 +1,12 @@
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
   std::string MulExpression::getClassName() const {
@@ -87,13 +92,15 @@ namespace fintamath {
 
   MulExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
 
-  void MulExpression::tryCompressExpression(){
-    for(auto& child : mulPolynom){
+  MathObjectPtr MulExpression::tryCompressExpression() const {
+    auto copyExpr = *this;
+    for(auto& child : copyExpr.mulPolynom){
       if(child.info->getClassName() == Expression().getClassName()){
         auto childExpr = child.info->to<Expression>();
         child.info = childExpr.tryCompress();
       }
     }
+    return std::make_unique<MulExpression>(copyExpr);
   }
 
   std::vector<MulExpression::Element> MulExpression::Element::getMulPolynom() const {
@@ -110,7 +117,8 @@ namespace fintamath {
     return {*this};
   }
 
-  void MulExpression::tryCompressTree(){
+  MathObjectPtr MulExpression::tryCompressTree() const {
+    auto copyExpr = *this;
     std::vector<Element> newPolynom;
     for(const auto& child : mulPolynom){
       auto pushPolynom = child.getMulPolynom();
@@ -118,15 +126,57 @@ namespace fintamath {
         newPolynom.emplace_back(std::move(pushChild));
       }
     }
-    mulPolynom = newPolynom;
+    copyExpr.mulPolynom = newPolynom;
+    return std::make_unique<MulExpression>(std::move(copyExpr));
   }
 
   void MulExpression::addElement(MathObjectPtr elem, bool inverted){
     mulPolynom.emplace_back(Element(elem->clone(), inverted));
   }
 
-  void MulExpression::baseSimplify(){
-    tryCompressExpression();
-    tryCompressTree();
+  MathObjectPtr MulExpression::simplify() const {
+    auto exprPtr = tryCompressExpression();
+    auto exprObj = helpers::cast<MulExpression>(exprPtr);
+
+    exprPtr = exprObj->tryCompressTree();
+    exprObj = helpers::cast<MulExpression>(exprPtr);
+
+    exprObj->mulNumbers();
+    auto expr = exprObj->toString();
+
+    return exprObj;
   }
+
+  void MulExpression::mulNumbers(){
+    MathObjectPtr mulNumResult = std::make_unique<Integer>(1);
+    auto mul = Mul();
+    auto div = Div();
+    std::vector<Element> newMulPolynom;
+    for(const auto& elem : mulPolynom){
+      auto tmpElem = elem.info->clone();
+      auto a = tmpElem->toString();
+      auto b = tmpElem->getClassName();
+      auto expr = helpers::cast<Expression>(tmpElem);
+      try{
+        if(!expr){
+          throw FunctionCallException();
+        }
+        if(!elem.inverted){
+          mulNumResult = mul(*mulNumResult, *expr->info);
+        }
+        else{
+          mulNumResult = div(*mulNumResult, *expr->info);
+        }
+      }catch(const FunctionCallException &){
+        newMulPolynom.emplace_back(elem);
+      }
+    }
+    if(newMulPolynom.empty() || mulNumResult->toString() != "1"){
+      auto expr = std::make_unique<Expression>(*mulNumResult);
+      newMulPolynom.emplace_back(Element(expr->clone(), false));
+    }
+    mulPolynom = newMulPolynom;
+  }
+
+
 }

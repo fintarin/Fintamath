@@ -1,7 +1,15 @@
 #include "fintamath/expressions/AddExpression.hpp"
+#include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/helpers/Converter.hpp"
+#include "fintamath/helpers/Caster.hpp"
+#include "fintamath/numbers/Integer.hpp"
+
+#include <memory>
 
 namespace fintamath{
 
@@ -90,13 +98,15 @@ namespace fintamath{
 
   AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
 
-  void AddExpression::tryCompressExpression(){
-    for(auto& child : addPolynom){
+  MathObjectPtr AddExpression::tryCompressExpression() const{
+    auto copyExpr = *this;
+    for(auto& child : copyExpr.addPolynom){
       if(child.info->getClassName() == "Expression"){
         auto childExpr = child.info->to<Expression>();
         child.info = childExpr.tryCompress();
       }
     }
+    return std::make_unique<AddExpression>(copyExpr);
   }
 
   std::vector<AddExpression::Element> AddExpression::Element::getAddPolynom() const {
@@ -113,23 +123,62 @@ namespace fintamath{
     return {*this};
   }
 
-  void AddExpression::tryCompressTree(){
+  MathObjectPtr AddExpression::tryCompressTree() const{
+    auto copyExpr = *this;
     std::vector<Element> newPolynom;
-    for(const auto& child : addPolynom){
+    for(const auto& child : copyExpr.addPolynom){
       auto pushPolynom = child.getAddPolynom();
       for(auto& pushChild: pushPolynom){
         newPolynom.emplace_back(std::move(pushChild));
       }
     }
-    addPolynom = newPolynom;
+    copyExpr.addPolynom = std::move(newPolynom);
+    return std::make_unique<AddExpression>(std::move(copyExpr));
   }
 
   void AddExpression::addElement(MathObjectPtr elem, bool inverted){
     addPolynom.emplace_back(Element(elem->clone(), inverted));
   }
 
-  void AddExpression::baseSimplify(){
-    tryCompressExpression();
-    tryCompressTree();
+  MathObjectPtr AddExpression::simplify() const {
+
+    auto exprPtr = tryCompressExpression();
+    auto exprObj = helpers::cast<AddExpression>(exprPtr);
+
+    exprPtr = exprObj->tryCompressTree();
+    exprObj = helpers::cast<AddExpression>(exprPtr);
+
+    exprObj->sumNumbers();
+
+    return exprObj;
+  }
+
+  void AddExpression::sumNumbers(){
+    MathObjectPtr sumNumResult = std::make_unique<Expression>(Integer(0));
+    auto add = Add();
+    auto sub = Sub();
+    std::vector<Element> newAddPolynom;
+    for(const auto& elem : addPolynom){
+      auto tmpElem = elem.info->clone();
+      auto expr = helpers::cast<IArithmetic>(tmpElem);
+      try{
+        if(!expr){
+          throw FunctionCallException();
+        }
+        if(!elem.inverted){
+          sumNumResult = add(*sumNumResult, *expr);
+        }
+        else{
+          sumNumResult = sub(*sumNumResult, *expr);
+        }
+      }catch(const FunctionCallException &){
+        newAddPolynom.emplace_back(elem);
+      }
+    }
+    if(newAddPolynom.empty() || sumNumResult->toString() != "0"){
+      auto expr = std::make_unique<Expression>(*sumNumResult);
+      newAddPolynom.emplace_back(Element(expr->clone(), false));
+    }
+    addPolynom = newAddPolynom;
   }
 }

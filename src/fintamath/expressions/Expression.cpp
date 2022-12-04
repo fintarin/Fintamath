@@ -12,6 +12,7 @@
 #include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -70,7 +71,6 @@ namespace fintamath {
     return counter;
   }
 
-
   Expression::ExprVect Expression::copy(const ExprVect& rhs){
     ExprVect result;
     for(const auto& value : rhs){
@@ -114,7 +114,12 @@ namespace fintamath {
     if(!info){
       throw InvalidInputException(*this, "incorrect input");
     }
-    if(info->instanceOf<Expression>()){
+    tryCompressTree();
+    *this = simplify()->to<Expression>();
+  }
+
+  void Expression::tryCompressTree(){
+    if(info->is<Expression>()){
       auto exprInfo = info->to<Expression>();
       info = MathObjectPtr(exprInfo.info.release());
       children = copy(exprInfo.children);
@@ -126,6 +131,8 @@ namespace fintamath {
 
   Expression::Expression(const TokenVector& tokens){
     parse(tokens);
+    tryCompressTree();
+    *this = simplify()->to<Expression>();
   }
 
   std::string putInBrackets(const std::string &str) {
@@ -438,8 +445,8 @@ namespace fintamath {
     auto addExpr = std::make_unique<AddExpression>();
     addExpr->addElement(std::make_unique<Expression>(*this), false);
     addExpr->addElement(std::make_unique<Expression>(rhs), false);
-    addExpr->baseSimplify();
-    this->info = addExpr->clone();
+    auto simplExpr = addExpr->simplify();
+    this->info = helpers::cast<AddExpression>(simplExpr);
     this->children.clear();
     return *this;
   }
@@ -448,8 +455,8 @@ namespace fintamath {
     auto addExpr = std::make_unique<AddExpression>();
     addExpr->addElement(std::make_unique<Expression>(*this), false);
     addExpr->addElement(std::make_unique<Expression>(rhs), true);
-    addExpr->baseSimplify();
-    this->info = addExpr->clone();
+    auto simplExpr = addExpr->simplify();
+    this->info = helpers::cast<AddExpression>(simplExpr);
     this->children.clear();
     return *this;
   }
@@ -458,8 +465,8 @@ namespace fintamath {
     auto mulExpr = std::make_unique<MulExpression>();
     mulExpr->addElement(std::make_unique<Expression>(*this), false);
     mulExpr->addElement(std::make_unique<Expression>(rhs), false);
-    mulExpr->baseSimplify();
-    this->info = mulExpr->clone();
+    auto simplExpr = mulExpr->simplify();
+    this->info = helpers::cast<MulExpression>(simplExpr);
     this->children.clear();
     return *this;
   }
@@ -468,24 +475,39 @@ namespace fintamath {
     auto mulExpr = std::make_unique<MulExpression>();
     mulExpr->addElement(std::make_unique<Expression>(*this), false);
     mulExpr->addElement(std::make_unique<Expression>(rhs), true);
-    mulExpr->baseSimplify();
-    this->info = mulExpr->clone();
+    auto simplExpr = mulExpr->simplify();
+    this->info = helpers::cast<MulExpression>(simplExpr);
     this->children.clear();
     return *this;
   }
 
   Expression &Expression::negate(){
-    auto negExpr = std::make_unique<Expression>(*this);
-    this->info = std::make_unique<Neg>();
-    this->children.clear();
-    this->children.emplace_back(negExpr->clone());
-    return *this;
+    auto neg = Neg();
+    if(info->toString() == neg.toString()){
+      info = children.at(0)->clone();
+      children.clear();
+      return *this;
+    }
+    if(!children.empty()){
+      auto expr = *this;
+      info = std::make_unique<Neg>();
+      children.clear();
+      children.emplace_back(std::make_unique<Expression>(expr));
+      return *this;
+    }
+    try{
+      info = neg(*info);
+      return *this;
+    }
+    catch(const FunctionCallException &){
+      auto mul = MulExpression();
+      mul.mulPolynom.emplace_back(MulExpression::Element(std::make_unique<Expression>(Integer(-1)), false));
+      mul.mulPolynom.emplace_back(MulExpression::Element(std::make_unique<Expression>(*this), false));
+      info = std::make_unique<MulExpression>(mul)->simplify();
+      children.clear();
+      return *this;
+    }
   }
-
-  void Expression::baseSimplify(){
-
-  }
-
   /*
     Expr: AddExpr | MulExpr | PowExpr | FuncExpr | (Expr) | Term
     AddExpr: +Expr | -Expr | Expr + Expr | Expr - Expr
@@ -1110,16 +1132,44 @@ namespace fintamath {
     return newExpr;
   }
 */
+  MathObjectPtr Expression::simplifyNeg(std::unique_ptr<Expression>& expr) const {
+    auto a = expr->toString();
+    if(!expr->info->is<Neg>()){
+      return expr->clone();
+    }
+    auto mathExpr = expr->clone();
+    auto newExpr = helpers::cast<Expression>(mathExpr);
+
+    auto exprPtr = helpers::cast<Expression>(newExpr->children.at(0));
+    if(!exprPtr){
+      return newExpr;
+    }
+    if(!exprPtr->info->is<Neg>()){
+      return Neg()(*exprPtr->tryCompress());
+    }
+    newExpr->info = exprPtr->children.at(0)->clone();
+    newExpr->tryCompressTree();
+    return newExpr;
+  }
+
+
   MathObjectPtr Expression::simplify() const {
+    auto newExpr = std::make_unique<Expression>(*this);
+
+    auto mathObjPtr = simplifyNeg(newExpr);
+    auto exprPtr = helpers::cast<Expression>(mathObjPtr);
+    if(exprPtr->info && ((exprPtr->info->getClassName() == AddExpression().getClassName()) || (exprPtr->info->getClassName() == MulExpression().getClassName()))){
+      exprPtr->info = exprPtr->info->simplify();
+    }
+    
     /*auto newExpr = std::make_shared<Expression>(*this);
 
     newExpr = simplifyConstant(newExpr);
     newExpr = simplifyFunctions(newExpr);
+newExpr = simplifyNeg();
+    newExpr = invertSubDiv(newExpr);*/
 
-    newExpr = invertSubDiv(newExpr);
-    newExpr = simplifyNeg(newExpr);
-
-    auto oldExpr = newExpr;
+    /*auto oldExpr = newExpr;
     newExpr = mainSimplify(newExpr);
 
     while (*oldExpr != *newExpr) {
@@ -1133,7 +1183,10 @@ namespace fintamath {
       return newExpr->info->clone();
     }*/
 
-    return std::make_unique<Expression>(*this);
+    auto a = exprPtr->info->toString();
+    auto b = exprPtr->toString();
+
+    return exprPtr;
   }
 
   std::string Expression::getClassName() const {

@@ -5,6 +5,10 @@
 namespace fintamath {
   class MulExpression : public IExpressionCRTP<MulExpression> {
   private:
+
+    friend class Expression;
+
+    friend class AddExpression;
     struct Element {
       MathObjectPtr info;
       bool inverted = false;
@@ -46,7 +50,7 @@ namespace fintamath {
 
     void addElement(MathObjectPtr elem, bool inverted);
 
-    void baseSimplify() override;
+    MathObjectPtr simplify() const override;
 
   private:
 
@@ -54,11 +58,13 @@ namespace fintamath {
 
     std::vector<Element> mulPolynom;
 
-    void tryCompressExpression();
+    MathObjectPtr tryCompressExpression() const;
 
-    void tryCompressTree();
+    MathObjectPtr tryCompressTree() const;
 
     static std::string tryPutInBrackets(const MathObjectPtr& obj);
+
+    void mulNumbers();
 
   };
 }
