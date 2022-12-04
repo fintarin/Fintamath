@@ -8,6 +8,11 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
+#include "fintamath/functions/comparison/Eqv.hpp"
+#include "fintamath/functions/comparison/Less.hpp"
+#include "fintamath/functions/comparison/LessEqv.hpp"
+#include "fintamath/functions/comparison/More.hpp"
+#include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/other/Percent.hpp"
@@ -26,6 +31,11 @@ TEST(OperatorTests, parseTest) {
   EXPECT_TRUE(IOperator::parse("%")->is<Percent>());
   EXPECT_TRUE(IOperator::parse("!")->is<Factorial>());
   EXPECT_TRUE(IOperator::parse("!!")->is<DoubleFactorial>());
+  EXPECT_TRUE(IOperator::parse("=")->is<Eqv>());
+  EXPECT_TRUE(IOperator::parse("<")->is<Less>());
+  EXPECT_TRUE(IOperator::parse(">")->is<More>());
+  EXPECT_TRUE(IOperator::parse("<=")->is<LessEqv>());
+  EXPECT_TRUE(IOperator::parse(">=")->is<MoreEqv>());
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);

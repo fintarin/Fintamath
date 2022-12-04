@@ -8,6 +8,10 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
+#include "fintamath/functions/comparison/Less.hpp"
+#include "fintamath/functions/comparison/LessEqv.hpp"
+#include "fintamath/functions/comparison/More.hpp"
+#include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
@@ -73,6 +77,10 @@ namespace fintamath::config {
     IOperator::addParser<Percent>();
     IOperator::addParser<Pow>();
     IOperator::addParser<Eqv>();
+    IOperator::addParser<Less>();
+    IOperator::addParser<More>();
+    IOperator::addParser<LessEqv>();
+    IOperator::addParser<MoreEqv>();
 
     // functions
     IFunction::addParser<Abs>();
