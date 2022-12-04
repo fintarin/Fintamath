@@ -69,7 +69,8 @@ namespace fintamath {
 
       mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
       mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "/"));
-      tryCompress();
+      tryCompressExpression();
+      tryCompressTree();
       return;
     }
     throw InvalidInputException(*this, " not a MulExpression");
@@ -77,12 +78,38 @@ namespace fintamath {
 
   MulExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
 
-  void MulExpression::tryCompress(){
+  void MulExpression::tryCompressExpression(){
     for(auto& child : mulPolynom){
-      if(child.info->getClassName() == "Expression"){
+      if(child.info->getClassName() == Expression().getClassName()){
         auto childExpr = child.info->to<Expression>();
         child.info = childExpr.tryCompress();
       }
     }
   }
+
+  std::vector<MulExpression::Element> MulExpression::Element::getMulPolynom() const {
+    if(info->getClassName() == MulExpression().getClassName()){
+      std::vector<Element> result;
+      auto mulExpr = info->to<MulExpression>();
+      for(auto& child : mulExpr.mulPolynom){
+        auto childToPush = std::move(child);
+        childToPush.inverted = childToPush.inverted ^ inverted;
+        result.emplace_back(childToPush);
+      }
+      return result;
+    }
+    return {*this};
+  }
+
+  void MulExpression::tryCompressTree(){
+    std::vector<Element> newPolynom;
+    for(const auto& child : mulPolynom){
+      auto pushPolynom = child.getMulPolynom();
+      for(auto& pushChild: pushPolynom){
+        newPolynom.emplace_back(std::move(pushChild));
+      }
+    }
+    mulPolynom = newPolynom;
+  }
+
 }

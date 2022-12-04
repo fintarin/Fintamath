@@ -21,6 +21,9 @@ namespace fintamath {
       Element &operator=(const Element &rhs);
 
       Element &operator=(Element &&rhs) noexcept = default;
+
+      std::vector<Element> getAddPolynom() const;
+
     };
 
   public:
@@ -48,7 +51,9 @@ namespace fintamath {
 
     std::vector<Element> addPolynom;
 
-    void tryCompress();
+    void tryCompressExpression();
+
+    void tryCompressTree();
     
   };
 }

@@ -62,7 +62,8 @@ namespace fintamath{
 
       addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
       addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "-"));
-      tryCompress();
+      tryCompressExpression();
+      tryCompressTree();
       return;
     }
     throw InvalidInputException(*this, " not an AddExpression");
@@ -82,7 +83,7 @@ namespace fintamath{
 
   AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
 
-  void AddExpression::tryCompress(){
+  void AddExpression::tryCompressExpression(){
     for(auto& child : addPolynom){
       if(child.info->getClassName() == "Expression"){
         auto childExpr = child.info->to<Expression>();
@@ -90,4 +91,30 @@ namespace fintamath{
       }
     }
   }
+
+  std::vector<AddExpression::Element> AddExpression::Element::getAddPolynom() const {
+    if(info->getClassName() == AddExpression().getClassName()){
+      std::vector<Element> result;
+      auto addExpr = info->to<AddExpression>();
+      for(auto& child : addExpr.addPolynom){
+        auto childToPush = std::move(child);
+        childToPush.inverted = childToPush.inverted ^ inverted;
+        result.emplace_back(childToPush);
+      }
+      return result;
+    }
+    return {*this};
+  }
+
+  void AddExpression::tryCompressTree(){
+    std::vector<Element> newPolynom;
+    for(const auto& child : addPolynom){
+      auto pushPolynom = child.getAddPolynom();
+      for(auto& pushChild: pushPolynom){
+        newPolynom.emplace_back(std::move(pushChild));
+      }
+    }
+    addPolynom = newPolynom;
+  }
+
 }
