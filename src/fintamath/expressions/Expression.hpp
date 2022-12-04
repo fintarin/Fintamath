@@ -16,7 +16,7 @@ namespace fintamath {
 
     Expression(Expression &&rhs) noexcept;
 
-    Expression(const TokenVector& tokens) noexcept;
+    explicit Expression(const TokenVector& tokens);
 
     Expression &operator=(const Expression &rhs) noexcept;
 
@@ -33,10 +33,33 @@ namespace fintamath {
     MathObjectPtr simplify() const override;
 
     std::string getClassName() const override;
-
+  
   private:
-    using ExprVect = std::vector<ExpressionPtr>;
+    using ExprVect = std::vector<MathObjectPtr>;
 
+    static ExprVect copy(const ExprVect& rhs);
+
+    void parse(const TokenVector & tokens);
+
+    bool parseNeg(const TokenVector & tokens);
+
+    bool parsePow(const TokenVector & tokens);
+
+    bool parsePercent(const TokenVector & tokens);
+
+    bool parseFactorial(const TokenVector & tokens);
+
+    bool parseFiniteTerm(const TokenVector & tokens);
+
+    bool parseFunction(const TokenVector & tokens);
+
+    bool parseLiteral(const TokenVector & tokens);
+
+    bool parseNumber(const TokenVector & tokens);
+
+    ExprVect getArgs(const TokenVector & tokens);
+
+    TokenVector splitLiteral(const std::string & token, bool addMultiplyToEnd = false);
     /*ExprPtr baseSimplify() const;
 
     ExprPtr parseEqualExpression(const std::string &expr) const;

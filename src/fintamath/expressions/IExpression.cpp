@@ -132,7 +132,7 @@ namespace fintamath {
   }
 
   bool IExpression::isOneSymbolToken(char token){
-    static std::string oneSymbolTokens = "+-*/%^";
+    static std::string oneSymbolTokens = "+-*/%^!";
     return findCharInStr(token, oneSymbolTokens);
   }
   

@@ -1,4 +1,6 @@
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/core/Defines.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 
 
@@ -9,6 +11,7 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -21,15 +24,13 @@
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  using ExprPtr = std::shared_ptr<Expression>; // TODO remove
-  using ExprVect = std::vector<ExprPtr>;       // TODO remove
-
   std::string cutSpaces(const std::string &str) {
     std::string strExpr = str;
     while (!strExpr.empty()) {
@@ -68,25 +69,34 @@ namespace fintamath {
     return counter;
   }
 
+
+  Expression::ExprVect Expression::copy(const ExprVect& rhs){
+    ExprVect result;
+    for(const auto& value : rhs){
+      result.emplace_back(value->clone());
+    }
+    return result;
+  }
+
   Expression::Expression(const Expression &rhs) noexcept {
-    /*if (rhs.info) {
+    if (rhs.info) {
       info = rhs.info->clone();
-      children = rhs.children;
-    }*/
+      children = copy(rhs.children);
+    }
   }
 
   Expression::Expression(Expression &&rhs) noexcept : info(std::move(rhs.info)), children(std::move(rhs.children)) {
   }
 
   Expression &Expression::operator=(const Expression &rhs) noexcept {
-    /*if (&rhs != this) {
+    if (&rhs != this) {
       if (rhs.info) {
         info = rhs.info->clone();
-        children = rhs.children;
+        children = copy(rhs.children);
       } else {
         info = nullptr;
       }
-    }*/
+    }
     return *this;
   }
 
@@ -100,7 +110,11 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     info = IExpression::parse(str);
-
+    /*if(info->instanceOf<Expression>()){
+      auto exprInfo = info->to<Expression>();
+      info = MathObjectPtr(exprInfo.info.release());
+      children = copy(exprInfo.children);
+    }*/
     /*if (countEqual(exprStr) == 0) {
       *this = *parseExpression(exprStr);
       *this = *baseSimplify();
@@ -112,10 +126,13 @@ namespace fintamath {
       return;
     }*/
 
-    throw InvalidInputException(*this, str);
   }
 
   Expression::Expression(const IMathObject &obj) : info(obj.clone()) {
+  }
+
+  Expression::Expression(const TokenVector& tokens){
+    parse(tokens);
   }
 
   std::string putInBrackets(const std::string &str) {
@@ -123,6 +140,14 @@ namespace fintamath {
   }
 
   std::string Expression::toString() const {
+    std::string result;
+    result.push_back('(');
+    for(const auto & var : children){
+      result += var->toString();
+    }
+    result += info->toString();
+    result.push_back(')');
+    return result;
     /*if (!info) {
       return {};
     }
@@ -193,9 +218,174 @@ namespace fintamath {
       result += putInBrackets(funcArgsToString(children));
       return result;
     }*/
-
-    return info->toString();
   }
+
+  void Expression::parse(const TokenVector& tokens) {
+    if(tokens.empty()){
+      throw InvalidInputException(*this, " token is empty");
+    }
+    if(tokens[0] == "*" || tokens[0] == "/"){
+      throw InvalidInputException(*this, " unexpected sign");
+    }
+    
+    if(parseNeg(tokens)){
+      return;
+    }
+
+    if(parsePow(tokens)){
+      return;
+    }
+
+    if(parsePercent(tokens)){
+      return;
+    }
+
+    if(parseFactorial(tokens)){
+      return;
+    }
+
+    if(parseFunction(tokens)){
+      return;
+    }
+
+    if(parseFiniteTerm(tokens)){
+      return;
+    }
+
+    auto newTokens = splitLiteral(tokens[0], tokens.size() > 1);
+    for(size_t i = 1; i < tokens.size();i++){
+      newTokens.emplace_back(tokens[i]);
+    }
+
+    info = IExpression::parse(newTokens);
+  }
+
+  bool Expression::parseNeg(const TokenVector& tokens) {
+    if(tokens[0] != "-" && tokens[0] != "+"){
+      return false;
+    }
+    if(tokens[0] == "+"){
+      *this = Expression(TokenVector(tokens.begin() + 1, tokens.end()));
+      return true;
+    }
+    info = std::make_unique<Neg>();
+    children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + 1, tokens.end())));
+    return true;
+  }
+
+  bool Expression::parsePow(const TokenVector& tokens){
+    for (size_t i = 0; i < tokens.size(); i++) {
+      if (tokens[i] == "^") {
+        info = std::make_unique<Pow>();
+        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)i)));
+        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + (long)i + 1, tokens.end())));
+        return true;
+      }
+      if(tokens[i] == "(" && !skipBrackets(tokens, i)){
+        throw InvalidInputException(*this, " braces must be closed");
+      }
+    }
+    return false;
+  }
+
+  bool Expression::parsePercent(const TokenVector& tokens){
+    if(tokens[tokens.size() - 1] != "%"){
+      return false;
+    }
+    info = std::make_unique<Percent>();
+    children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.end() - 1)));
+    return true;
+  }
+
+  bool Expression::parseFactorial(const TokenVector& tokens){
+    if(tokens.size() < 2){
+      return false;
+    }
+    if(tokens[tokens.size() - 1] == "!"){
+      if(tokens[tokens.size() - 2] == "!"){
+        info = std::make_unique<DoubleFactorial>();
+        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.end() - 2)));
+        return true;
+      }
+      info = std::make_unique<DoubleFactorial>();
+      children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.end() - 1)));
+      return true;
+    }
+    return false;
+  }
+
+  bool Expression::parseFiniteTerm(const TokenVector& tokens){
+    if(tokens[0] == "(" && tokens[tokens.size() - 1] == ")"){
+      info = IExpression::parse(cutBraces(tokens));
+      auto c = info->toString();
+      return true;
+    }
+
+    if(tokens.size() > 1){
+      return false;
+    }
+
+    if(auto ptr = ILiteral::parse(tokens[0])){
+      info = std::unique_ptr<ILiteral>(ptr.release());
+      return true;
+    }
+
+    if(auto ptr = INumber::parse(tokens[0])){
+      info = std::unique_ptr<INumber>(ptr.release());
+      return true;
+    }
+  }
+
+  bool Expression::parseFunction(const TokenVector& tokens){
+    if(auto ptr = IFunction::parse(tokens[0])){
+      info = std::unique_ptr<IFunction>(ptr.release());
+      children = getArgs(TokenVector(tokens.begin() + 1, tokens.end()));
+      return true;
+    }
+    return false;
+  }
+
+  Expression::ExprVect Expression::getArgs(const TokenVector & tokens){
+    ExprVect args;
+    for(size_t pos = 0;pos < tokens.size();pos++){
+      if(tokens[pos] == "(" && !skipBrackets(tokens, pos)){
+        throw InvalidInputException(*this, " braces must be closed");
+      }
+      if(tokens[pos] == ","){
+        if(pos == 0 || pos == tokens.size() - 1){
+          throw InvalidInputException(*this, " incorrect use of a comma");
+        }
+        args.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)pos)));
+        auto addArgs = getArgs(TokenVector(tokens.begin() + (long)pos + 1, tokens.end()));
+
+        for(auto& token : addArgs){
+          args.push_back(MathObjectPtr(token.release()));
+        }
+        return args;
+      }
+    }
+    args.push_back(std::make_unique<Expression>(tokens));
+    return args;
+  }
+
+  TokenVector Expression::splitLiteral(const std::string & token, bool addMultiplyToEnd){
+    if(token.empty()){
+      throw InvalidInputException(*this, "");
+    }
+    TokenVector tokens;
+    for(const auto & var : token){
+      if(!isLetter(var)){
+        throw InvalidInputException(*this, " incorrect variable");
+      }
+      tokens.emplace_back(std::string(1, var));
+      tokens.emplace_back("*");
+    }
+    if(!addMultiplyToEnd){
+      tokens.pop_back();
+    }
+    return tokens;
+  }
+
 
  /* std::string Expression::funcArgsToString(const ExprVect &args) const {
     std::string result;
@@ -208,48 +398,6 @@ namespace fintamath {
     result += args.at(args.size() - 1)->toString();
     return result;
   }
-
-  size_t Expression::ignoreBracketsRightLeft(const std::string &str, size_t position) const {
-    if (position == 0) {
-      throw InvalidInputException(*this); // TODO add comment here
-    }
-    int leftBracket = 0;
-    int rightBracket = 1;
-    do {
-      position--;
-      if (str[position] == ')') {
-        rightBracket++;
-      }
-      if (str[position] == '(') {
-        leftBracket++;
-      }
-      if (rightBracket == leftBracket) {
-        return position;
-      }
-    } while (position > 0);
-
-    throw InvalidInputException(*this); // TODO add comment here
-  }
-
-  size_t Expression::ignoreBracketsLeftRight(const std::string &str, size_t position) const {
-    int leftBracket = 0;
-    int rightBracket = 0;
-
-    while (position < str.size()) {
-      if (str[position] == ')') {
-        rightBracket++;
-      }
-      if (str[position] == '(') {
-        leftBracket++;
-      }
-      if (rightBracket == leftBracket) {
-        return position;
-      }
-      position++;
-    }
-
-    throw InvalidInputException(*this); // TODO add comment here
-  }*/
 
   /*
     Expr: AddExpr | MulExpr | PowExpr | FuncExpr | (Expr) | Term
@@ -283,181 +431,6 @@ namespace fintamath {
       }
     }
     throw InvalidInputException(*this); // TODO add comment here
-  }
-  ExprPtr Expression::parseExpression(const std::string &exprStr) const {
-    if (exprStr.empty()) {
-      throw InvalidInputException(*this); // TODO add comment here
-    }
-
-    Expression elem;
-
-    for (size_t i = exprStr.size() - 1; i > 0; i--) {
-      if (exprStr[i] == '+' || exprStr[i] == '-') {
-        if (i == exprStr.size() - 1) {
-          throw InvalidInputException(*this); // TODO add comment here
-        }
-        if (exprStr[i - 1] == '+' || exprStr[i - 1] == '-' || exprStr[i - 1] == '*' || exprStr[i - 1] == '/' ||
-            exprStr[i - 1] == '^') {
-          continue;
-        }
-        if (exprStr[i] == '+') {
-          elem.info = std::make_shared<Add>();
-        } else {
-          elem.info = std::make_shared<Sub>();
-        }
-        elem.children.push_back(parseExpression(cutSpaces(exprStr.substr(0, i))));
-        elem.children.push_back(parseDivMulTerm(cutSpaces(exprStr.substr(i + 1))));
-        return std::make_shared<Expression>(elem);
-      }
-      if (exprStr[i] == ')') {
-        i = ignoreBracketsRightLeft(exprStr, i);
-        if (i == 0) {
-          break;
-        }
-        continue;
-      }
-    }
-
-    return parseDivMulTerm(exprStr);
-  }
-
-  ExprPtr Expression::parseDivMulTerm(const std::string &term) const {
-    Expression elem;
-
-    for (size_t i = term.size() - 1; i > 0; i--) {
-      if (term[i] == '*' || term[i] == '/') {
-        if (i == term.size() - 1) {
-          throw InvalidInputException(*this); // TODO add comment here
-        }
-        if (term[i] == '*') {
-          elem.info = std::make_shared<Mul>();
-        } else {
-          elem.info = std::make_shared<Div>();
-        }
-        elem.children.push_back(parseDivMulTerm(cutSpaces(term.substr(0, i))));
-        elem.children.push_back(parseNegPowFactorPercentTerm(cutSpaces(term.substr(i + 1))));
-        return std::make_shared<Expression>(elem);
-      }
-      if (term[i] == ')') {
-        i = ignoreBracketsRightLeft(term, i);
-        if (i == 0) {
-          break;
-        }
-        continue;
-      }
-    }
-
-    return parseNegPowFactorPercentTerm(term);
-  }
-
-  ExprPtr Expression::parseNegPowFactorPercentTerm(const std::string &term) const {
-    if (term.empty() || term[0] == '*' || term[0] == '/') {
-      throw InvalidInputException(*this); // TODO add comment here
-    }
-    Expression elem;
-
-    if (term[0] == '-') {
-      elem.info = std::make_shared<Neg>();
-      elem.children.push_back(parseNegPowFactorPercentTerm(cutSpaces(term.substr(1))));
-      return std::make_shared<Expression>(elem);
-    }
-
-    if (term[0] == '+') {
-      elem = *parseNegPowFactorPercentTerm(cutSpaces(term.substr(1)));
-      return std::make_shared<Expression>(elem);
-    }
-
-    for (size_t i = 0; i < term.size(); i++) {
-      if (term[i] == '^') {
-        elem.info = std::make_shared<Pow>();
-        elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, i))));
-        elem.children.push_back(parseNegPowFactorPercentTerm(cutSpaces(term.substr(i + 1))));
-        return std::make_shared<Expression>(elem);
-      }
-      if (term[i] == '(') {
-        i = ignoreBracketsLeftRight(term, i);
-      }
-    }
-
-    if (term[term.size() - 1] == '%') {
-      elem.info = std::make_shared<Percent>();
-      elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 1))));
-      return std::make_shared<Expression>(elem);
-    }
-    if (term[term.size() - 1] == '!') {
-      if (term[term.size() - 2] == '!') {
-        elem.info = std::make_shared<DoubleFactorial>();
-        elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 2))));
-        return std::make_shared<Expression>(elem);
-      }
-      elem.info = std::make_shared<Factorial>();
-      elem.children.push_back(parseFiniteTerm(cutSpaces(term.substr(0, term.size() - 1))));
-      return std::make_shared<Expression>(elem);
-    }
-
-    return parseFiniteTerm(term);
-  }
-
-  ExprPtr Expression::parseFiniteTerm(const std::string &term) const {
-    if (term[0] == '(' && term[term.size() - 1] == ')') {
-      return parseExpression(term.substr(1, term.size() - 2));
-    }
-
-    if (auto parseResult = parseFunction(term); parseResult) {
-      return parseResult;
-    }
-
-    if (LiteralPtr ptr = ILiteral::parse(term)) {
-      return std::make_shared<Expression>(*ptr);
-    }
-
-    if (NumberPtr ptr = INumber::parse(term)) {
-      return std::make_shared<Expression>(*ptr);
-    }
-
-    throw InvalidInputException(*this); // TODO add comment here
-  }
-
-  ExprPtr Expression::parseFunction(const std::string &term) const {
-    const std::regex reg("^(sqrt|exp|log|ln|lb|lg|sin|cos|tan|cot|asin|acos|atan|acot|abs)");
-    std::smatch funcNameMatch;
-    std::regex_search(term, funcNameMatch, reg);
-
-    if (!funcNameMatch.empty()) {
-      const std::string funcName = funcNameMatch.str();
-      Expression expr;
-      FunctionPtr functPtr = IFunction::parse(funcName);
-      expr.info = std::shared_ptr<IMathObject>(functPtr.release());
-      expr.children = getArgs(cutBraces(term.substr(funcName.size())));
-      return std::make_shared<Expression>(expr);
-    }
-
-    return {};
-  }
-
-  ExprVect Expression::getArgs(const std::string &argsStr) const {
-    ExprVect args;
-
-    for (size_t pos = 0; pos < argsStr.size(); pos++) {
-      if (argsStr[pos] == '(') {
-        pos = ignoreBracketsLeftRight(argsStr, pos);
-        continue;
-      }
-      if (argsStr[pos] == ',') {
-        if (pos == 0 || pos == argsStr.size() - 1) {
-          throw InvalidInputException(*this); // TODO add comment here
-        }
-        args.push_back(parseExpression(cutSpaces(argsStr.substr(0, pos))));
-        auto addArgs = getArgs(cutSpaces(argsStr.substr(pos + 1)));
-        for (const auto &arg : addArgs) {
-          args.push_back(arg);
-        }
-        return args;
-      }
-    }
-
-    args.push_back(parseExpression(argsStr));
-    return args;
   }
 
   ExprPtr Expression::baseSimplify() const {

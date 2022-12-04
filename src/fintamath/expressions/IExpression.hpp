@@ -30,7 +30,6 @@ namespace fintamath {
   private:
     static bool appendToken(TokenVector& tokens, std::string& token);
     static bool isDigit(char c);
-    static bool isLetter(char c);
     static bool isBracket(char c);
     static bool isBracket(const std::string& c);
     static bool isSpecial(char c);
@@ -38,6 +37,7 @@ namespace fintamath {
     static bool isCanInsertMultiplyCharacter(char c);
     static bool findCharInStr(char c, const std::string& str);
   protected:
+    static bool isLetter(char c);
     static bool skipBrackets(const TokenVector& tokens, size_t& openBracketIndex);
     static TokenVector tokenize(const std::string &str);
     static bool isOneSymbolToken(const std::string& token);
