@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
   class Expression : public IExpressionCRTP<Expression> {
@@ -31,10 +32,9 @@ namespace fintamath {
     std::string getClassName() const override;
 
   private:
-    using ExprPtr = std::shared_ptr<Expression>; // TODO replace with ExpressionPtr
-    using ExprVect = std::vector<ExprPtr>;
+    using ExprVect = std::vector<ExpressionPtr>;
 
-    ExprPtr baseSimplify() const;
+    /*ExprPtr baseSimplify() const;
 
     ExprPtr parseEqualExpression(const std::string &expr) const;
 
@@ -94,9 +94,9 @@ namespace fintamath {
 
     size_t ignoreBracketsRightLeft(const std::string &str, size_t position) const;
 
-    ExprPtr revertPow(const ExprPtr &expr) const;
+    ExprPtr revertPow(const ExprPtr &expr) const;*/
 
-    std::shared_ptr<IMathObject> info;
+    MathObjectPtr info;
     ExprVect children;
   };
 }
