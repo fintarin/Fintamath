@@ -3,12 +3,22 @@
 
 namespace fintamath{
 
-  AddExpression::AddExpression(const AddExpression & /*rhs*/) noexcept{
+  AddExpression::AddExpression(const AddExpression & rhs) noexcept : addPolynom(rhs.addPolynom){}
 
+  AddExpression::AddExpression(AddExpression && rhs) noexcept : addPolynom(std::move(rhs.addPolynom)){}
+
+  AddExpression& AddExpression::operator=(const AddExpression& rhs) noexcept{
+    if(&rhs != this){
+      addPolynom = rhs.addPolynom;
+    }
+    return *this;
   }
 
-  AddExpression::AddExpression(AddExpression && /*rhs*/) noexcept{
-
+  AddExpression& AddExpression::operator=(AddExpression&& rhs) noexcept{
+    if(&rhs != this){
+      std::swap(addPolynom, rhs.addPolynom);
+    }
+    return *this;
   }
 
   AddExpression::AddExpression(const TokenVector& tokens){ 
