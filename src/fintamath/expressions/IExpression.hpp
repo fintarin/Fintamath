@@ -22,10 +22,12 @@ namespace fintamath {
       helpers::addParser<T>(parserMap);
     }
     static ExpressionPtr parse(const std::string &str) {
-      return helpers::parse(parserMap, str);
+      return helpers::parse(parserMap, tokenize(str));
+    }
+    static ExpressionPtr parse(const TokenVector &tokens) {
+      return helpers::parse(parserMap, tokens);
     }
   private:
-    const std::string oneSymbolTokens = "+-*/%";
     static bool appendToken(TokenVector& tokens, std::string& token);
     static bool isDigit(char c);
     static bool isLetter(char c);
@@ -38,8 +40,12 @@ namespace fintamath {
   protected:
     static bool skipBrackets(const TokenVector& tokens, size_t& openBracketIndex);
     static TokenVector tokenize(const std::string &str);
+    static bool isOneSymbolToken(const std::string& token);
+    static bool isOneSymbolToken(char token);
+    static TokenVector cutBraces(const TokenVector& tokens);
   private:
-    static helpers::ParserVector<ExpressionPtr, std::string> parserMap;
+    static helpers::ParserVector<ExpressionPtr, TokenVector> parserMap;
+
   };
 
   template <typename Derived>

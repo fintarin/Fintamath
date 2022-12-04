@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
 
@@ -14,6 +15,8 @@ namespace fintamath {
     Expression(const Expression &rhs) noexcept;
 
     Expression(Expression &&rhs) noexcept;
+
+    Expression(const TokenVector& tokens) noexcept;
 
     Expression &operator=(const Expression &rhs) noexcept;
 
