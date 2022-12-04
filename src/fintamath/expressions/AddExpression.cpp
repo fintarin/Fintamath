@@ -1,6 +1,7 @@
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath{
 
@@ -32,14 +33,20 @@ namespace fintamath{
 
   std::string AddExpression::toString() const {
     std::string result;
-    result.push_back('(');
     for(const auto & var : addPolynom){
-      result += var.info->toString();
       result += var.inverted ? '-' : '+';
+      result += tryPutInBracketsIfNeg(var.info);
     }
-    result.pop_back();
-    result.push_back(')');
+    if(!result.empty() && result[0] == '+'){
+      result.erase(result.begin());
+    }
     return result;
+  }
+
+  void AddExpression::invert(){
+    for(auto& child : addPolynom){
+      child.inverted = !child.inverted;
+    }
   }
 
   void AddExpression::parse(const TokenVector& tokens){
@@ -56,7 +63,7 @@ namespace fintamath{
       if(i == tokens.size() - 1){
         throw InvalidInputException(*this, " unexpected sign");
       }
-      if (i == 0 || (isOneSymbolToken(tokens[i-1]) && tokens[i-1] != "%")) {
+      if (i == 0 || (isOneSymbolToken(tokens[i-1]) && tokens[i-1] != "%" && tokens[i-1] != "!")) {
       continue;
       }
 

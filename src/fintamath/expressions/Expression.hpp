@@ -36,6 +36,8 @@ namespace fintamath {
 
     std::string getClassName() const override;
 
+    std::string getInfoClassName() const;
+
     MathObjectPtr tryCompress() const;
 
   private:
@@ -64,21 +66,17 @@ namespace fintamath {
     ExprVect getArgs(const TokenVector & tokens);
 
     TokenVector splitLiteral(const std::string & token, bool addMultiplyToEnd = false);
+
+    std::string powToString() const;
+
+    std::string negToString() const;
+
+    std::string factorialOrPercentToString() const;
+
+    std::string functionToString() const;
     /*ExprPtr baseSimplify() const;
 
     ExprPtr parseEqualExpression(const std::string &expr) const;
-
-    ExprPtr parseExpression(const std::string &exprStr) const;
-
-    ExprPtr parseDivMulTerm(const std::string &term) const;
-
-    ExprPtr parseNegPowFactorPercentTerm(const std::string &term) const;
-
-    ExprPtr parseFiniteTerm(const std::string &term) const;
-
-    ExprPtr parseFunction(const std::string &term) const;
-
-    ExprVect getArgs(const std::string &args) const;
 
     ExprPtr mainSimplify(const ExprPtr &expr) const;
 

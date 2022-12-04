@@ -1,4 +1,6 @@
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 #include <algorithm>
 
 namespace fintamath {
@@ -52,7 +54,12 @@ namespace fintamath {
         if(!isCanInsertMultiplyCharacter(tokenizeStr[i+1])){
           continue;
         }
-        if(appendToken(tokens, digitToken) || appendToken(tokens, letterToken)){
+        if(appendToken(tokens, digitToken)){
+          tokens.push_back("*");
+          continue;
+        }
+        if(!letterToken.empty() && isLetter(tokenizeStr[i+1])){
+          appendToken(tokens, letterToken);
           tokens.push_back("*");
         }
       }
@@ -152,5 +159,15 @@ namespace fintamath {
     return newTokens;
   }
 
+  std::string IExpression::tryPutInBracketsIfNeg(const MathObjectPtr& obj){
+    if(!obj->is<Expression>()){
+      return obj->toString();
+    }
+    const auto& exprObj = obj->to<Expression>();
+    if(exprObj.getInfoClassName() == Neg().getClassName()){
+      return "(" + exprObj.toString() + ")";
+    }
+    return obj->toString();
+  }
 
 }
