@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 TEST(MoreTests, toStringTest) {
-  EXPECT_EQ(More().toString(), "=");
+  EXPECT_EQ(More().toString(), ">");
 }
 
 TEST(MoreTests, getFunctionTypeTest) {

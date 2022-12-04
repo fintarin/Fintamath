@@ -9,7 +9,7 @@ namespace fintamath {
   }
 
   std::string More::toString() const {
-    return "=";
+    return ">";
   }
 
   std::string More::getClassName() const {

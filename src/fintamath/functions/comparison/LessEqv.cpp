@@ -9,7 +9,7 @@ namespace fintamath {
   }
 
   std::string LessEqv::toString() const {
-    return "=";
+    return "<=";
   }
 
   std::string LessEqv::getClassName() const {
