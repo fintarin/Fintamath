@@ -1,3 +1,4 @@
+#pragma once
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
@@ -46,6 +47,8 @@ namespace fintamath {
     void parse(const TokenVector & tokens);
 
     std::vector<Element> addPolynom;
+
+    void tryCompress();
     
   };
 }

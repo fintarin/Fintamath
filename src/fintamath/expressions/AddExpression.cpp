@@ -1,5 +1,6 @@
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/expressions/Expression.hpp"
 
 namespace fintamath{
 
@@ -61,6 +62,7 @@ namespace fintamath{
 
       addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
       addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "-"));
+      tryCompress();
       return;
     }
     throw InvalidInputException(*this, " not an AddExpression");
@@ -80,5 +82,12 @@ namespace fintamath{
 
   AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
 
-
+  void AddExpression::tryCompress(){
+    for(auto& child : addPolynom){
+      if(child.info->getClassName() == "Expression"){
+        auto childExpr = child.info->to<Expression>();
+        child.info = childExpr.tryCompress();
+      }
+    }
+  }
 }

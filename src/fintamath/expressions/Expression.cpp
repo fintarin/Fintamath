@@ -1,7 +1,6 @@
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/expressions/AddExpression.hpp"
 
 
 #include <algorithm>
@@ -110,11 +109,11 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     info = IExpression::parse(str);
-    /*if(info->instanceOf<Expression>()){
+    if(info->instanceOf<Expression>()){
       auto exprInfo = info->to<Expression>();
       info = MathObjectPtr(exprInfo.info.release());
       children = copy(exprInfo.children);
-    }*/
+    }
     /*if (countEqual(exprStr) == 0) {
       *this = *parseExpression(exprStr);
       *this = *baseSimplify();
@@ -317,7 +316,11 @@ namespace fintamath {
   bool Expression::parseFiniteTerm(const TokenVector& tokens){
     if(tokens[0] == "(" && tokens[tokens.size() - 1] == ")"){
       info = IExpression::parse(cutBraces(tokens));
-      auto c = info->toString();
+      if(info->instanceOf<Expression>()){
+        auto exprInfo = info->to<Expression>();
+        info = MathObjectPtr(exprInfo.info.release());
+        children = copy(exprInfo.children);
+      }
       return true;
     }
 
@@ -343,6 +346,17 @@ namespace fintamath {
       return true;
     }
     return false;
+  }
+
+  MathObjectPtr Expression::tryCompress() const{
+    if(info && std::find(classNames.begin(), classNames.end(), info->getClassName()) == classNames.end()){
+      return this->clone();
+    }
+    if(info)
+    {
+      return info->clone();
+    }
+    return nullptr;
   }
 
   Expression::ExprVect Expression::getArgs(const TokenVector & tokens){

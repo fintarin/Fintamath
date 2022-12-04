@@ -1,3 +1,4 @@
+#pragma once
 #include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
@@ -46,5 +47,6 @@ namespace fintamath {
 
     std::vector<Element> mulPolynom;
 
+    void tryCompress();
   };
 }

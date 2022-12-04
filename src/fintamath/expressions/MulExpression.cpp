@@ -1,4 +1,5 @@
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/Expression.hpp"
 
 namespace fintamath {
   std::string MulExpression::getClassName() const {
@@ -68,12 +69,20 @@ namespace fintamath {
 
       mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
       mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "/"));
-      auto c = mulPolynom[0].info->toString();
-      auto c2 = mulPolynom[1].info->toString();
+      tryCompress();
       return;
     }
     throw InvalidInputException(*this, " not a MulExpression");
   }
 
   MulExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
+
+  void MulExpression::tryCompress(){
+    for(auto& child : mulPolynom){
+      if(child.info->getClassName() == "Expression"){
+        auto childExpr = child.info->to<Expression>();
+        child.info = childExpr.tryCompress();
+      }
+    }
+  }
 }
