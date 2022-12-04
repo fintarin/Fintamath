@@ -13,6 +13,10 @@ namespace fintamath {
     return "MulExpression";
   }
 
+  const MulExpression::Polynom &MulExpression::getPolynom() const {
+    return mulPolynom;
+  }
+
   MulExpression::MulExpression(const MulExpression & rhs) noexcept : mulPolynom(rhs.mulPolynom){}
 
   MulExpression::MulExpression(MulExpression && rhs) noexcept : mulPolynom(std::move(rhs.mulPolynom)){}
@@ -66,6 +70,9 @@ namespace fintamath {
     parse(tokens);
   }
 
+  MulExpression::MulExpression(Polynom inMulPolynom) : mulPolynom(std::move(inMulPolynom)) {
+  }
+
   void MulExpression::parse(const TokenVector & tokens){
     for(size_t i = 0;i < tokens.size();i++){
       if(tokens[i] == "(" && !skipBrackets(tokens, i)){
@@ -105,7 +112,7 @@ namespace fintamath {
 
   std::vector<MulExpression::Element> MulExpression::Element::getMulPolynom() const {
     if(info->getClassName() == MulExpression().getClassName()){
-      std::vector<Element> result;
+      Polynom result;
       auto mulExpr = info->to<MulExpression>();
       for(auto& child : mulExpr.mulPolynom){
         auto childToPush = std::move(child);
@@ -119,7 +126,7 @@ namespace fintamath {
 
   MathObjectPtr MulExpression::tryCompressTree() const {
     auto copyExpr = *this;
-    std::vector<Element> newPolynom;
+    Polynom newPolynom;
     for(const auto& child : mulPolynom){
       auto pushPolynom = child.getMulPolynom();
       for(auto& pushChild: pushPolynom){
@@ -130,8 +137,8 @@ namespace fintamath {
     return std::make_unique<MulExpression>(std::move(copyExpr));
   }
 
-  void MulExpression::addElement(MathObjectPtr elem, bool inverted){
-    mulPolynom.emplace_back(Element(elem->clone(), inverted));
+  void MulExpression::addElement(const Element &elem){
+    mulPolynom.emplace_back(elem);
   }
 
   MathObjectPtr MulExpression::simplify() const {
@@ -151,7 +158,7 @@ namespace fintamath {
     MathObjectPtr mulNumResult = std::make_unique<Integer>(1);
     auto mul = Mul();
     auto div = Div();
-    std::vector<Element> newMulPolynom;
+    Polynom newMulPolynom;
     for(const auto& elem : mulPolynom){
       auto tmpElem = elem.info->clone();
       auto a = tmpElem->toString();
@@ -162,10 +169,10 @@ namespace fintamath {
           throw FunctionCallException();
         }
         if(!elem.inverted){
-          mulNumResult = mul(*mulNumResult, *expr->info);
+          mulNumResult = mul(*mulNumResult, *expr->getInfo());
         }
         else{
-          mulNumResult = div(*mulNumResult, *expr->info);
+          mulNumResult = div(*mulNumResult, *expr->getInfo());
         }
       }catch(const FunctionCallException &){
         newMulPolynom.emplace_back(elem);

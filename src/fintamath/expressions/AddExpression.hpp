@@ -6,11 +6,11 @@
 
 namespace fintamath {
   class AddExpression : public IExpressionCRTP<AddExpression> {
-  private:
+  public:
+    struct Element;
 
-    friend class Expression;
-    
-    friend class MulExpression;
+    using Polynom = std::vector<Element>;
+
     struct Element {
       MathObjectPtr info;
       bool inverted = false;
@@ -27,14 +27,15 @@ namespace fintamath {
 
       Element &operator=(Element &&rhs) noexcept = default;
 
-      std::vector<Element> getAddPolynom() const;
+      Polynom getAddPolynom() const;
 
     };
 
-  public:
     AddExpression() = default;
 
     explicit AddExpression(const TokenVector& tokens);
+
+    explicit AddExpression(Polynom inAddPolynom);
 
     AddExpression(const AddExpression &rhs) noexcept;
 
@@ -52,7 +53,9 @@ namespace fintamath {
 
     void invert();
 
-    void addElement(MathObjectPtr elem, bool inverted);
+    const Polynom &getPolynom() const;
+
+    void addElement(const Element &elem);
 
     MathObjectPtr simplify() const override;
 
@@ -60,7 +63,7 @@ namespace fintamath {
 
     void parse(const TokenVector & tokens);
 
-    std::vector<Element> addPolynom;
+    Polynom addPolynom;
 
     MathObjectPtr tryCompressExpression() const;
 
