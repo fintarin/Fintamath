@@ -6,6 +6,8 @@
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
+#include "fintamath/expressions/AddExpression.hpp"
+#include "fintamath/expressions/MulExpression.hpp"
 
 namespace fintamath {
   class Expression : public IExpressionCRTP<Expression> {
@@ -33,7 +35,9 @@ namespace fintamath {
     MathObjectPtr simplify() const override;
 
     std::string getClassName() const override;
-  
+
+    MathObjectPtr tryCompress() const;
+
   private:
     using ExprVect = std::vector<MathObjectPtr>;
 
@@ -124,5 +128,7 @@ namespace fintamath {
 
     MathObjectPtr info;
     ExprVect children;
+
+    const std::vector<std::string> classNames = {getClassName(), AddExpression().getClassName(), MulExpression().getClassName()};
   };
 }
