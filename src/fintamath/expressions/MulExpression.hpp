@@ -19,6 +19,8 @@ namespace fintamath {
       Element &operator=(const Element &rhs);
 
       Element &operator=(Element &&rhs) noexcept = default;
+
+      std::vector<Element> getMulPolynom() const;
     };
 
   public:
@@ -47,6 +49,8 @@ namespace fintamath {
 
     std::vector<Element> mulPolynom;
 
-    void tryCompress();
+    void tryCompressExpression();
+
+    void tryCompressTree();
   };
 }

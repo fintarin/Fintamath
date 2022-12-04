@@ -306,7 +306,7 @@ namespace fintamath {
         children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.end() - 2)));
         return true;
       }
-      info = std::make_unique<DoubleFactorial>();
+      info = std::make_unique<Factorial>();
       children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.end() - 1)));
       return true;
     }
@@ -337,6 +337,7 @@ namespace fintamath {
       info = std::unique_ptr<INumber>(ptr.release());
       return true;
     }
+    return false;
   }
 
   bool Expression::parseFunction(const TokenVector& tokens){
@@ -365,6 +366,11 @@ namespace fintamath {
       if(tokens[pos] == "(" && !skipBrackets(tokens, pos)){
         throw InvalidInputException(*this, " braces must be closed");
       }
+
+      if(pos == tokens.size()){
+        return getArgs(cutBraces(tokens));
+      }
+
       if(tokens[pos] == ","){
         if(pos == 0 || pos == tokens.size() - 1){
           throw InvalidInputException(*this, " incorrect use of a comma");
