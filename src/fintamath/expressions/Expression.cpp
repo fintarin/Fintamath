@@ -80,7 +80,7 @@ namespace fintamath {
   }
 
   Expression::Expression(const Expression &rhs) noexcept {
-    if (rhs.info) {
+    /*if (rhs.info) {
       info = rhs.info->clone();
       children = copy(rhs.children);
     }
@@ -90,14 +90,14 @@ namespace fintamath {
   }
 
   Expression &Expression::operator=(const Expression &rhs) noexcept {
-    if (&rhs != this) {
+    /*if (&rhs != this) {
       if (rhs.info) {
         info = rhs.info->clone();
         children = copy(rhs.children);
       } else {
         info = nullptr;
       }
-    }
+    }*/
     return *this;
   }
 
@@ -126,7 +126,10 @@ namespace fintamath {
     }
   }
 
-  Expression::Expression(const IMathObject &obj) : info(obj.clone()) {
+  Expression::Expression(const TokenVector& tokens){
+    parse(tokens);
+    tryCompressTree();
+    *this = simplify()->to<Expression>();
   }
 
   Expression::Expression(const TokenVector& tokens){

@@ -12,7 +12,7 @@ namespace fintamath {
     
     friend class MulExpression;
     struct Element {
-      MathObjectPtr info;
+      ExpressionPtr info;
       bool inverted = false;
 
       Element() = default;

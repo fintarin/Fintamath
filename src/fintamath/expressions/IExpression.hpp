@@ -29,6 +29,7 @@ namespace fintamath {
       return helpers::parse(parserMap, tokens);
     }
   private:
+    const std::string oneSymbolTokens = "+-*/%";
     static bool appendToken(TokenVector& tokens, std::string& token);
     static bool isDigit(char c);
     static bool isBracket(char c);
