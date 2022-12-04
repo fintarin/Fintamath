@@ -31,6 +31,10 @@ namespace fintamath {
 
     AddExpression(AddExpression &&rhs) noexcept;
 
+    AddExpression &operator=(const AddExpression &rhs) noexcept;
+
+    AddExpression &operator=(AddExpression &&rhs) noexcept;
+
     std::string toString() const override;
 
     std::string getClassName() const override;

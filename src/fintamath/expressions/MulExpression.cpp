@@ -5,12 +5,22 @@ namespace fintamath {
     return "MulExpression";
   }
 
-  MulExpression::MulExpression(const MulExpression & /*rhs*/) noexcept{
+  MulExpression::MulExpression(const MulExpression & rhs) noexcept : mulPolynom(rhs.mulPolynom){}
 
+  MulExpression::MulExpression(MulExpression && rhs) noexcept : mulPolynom(std::move(rhs.mulPolynom)){}
+
+  MulExpression& MulExpression::operator=(const MulExpression& rhs) noexcept{
+    if(&rhs != this){
+      mulPolynom = rhs.mulPolynom;
+    }
+    return *this;
   }
 
-  MulExpression::MulExpression(MulExpression && /*rhs*/) noexcept{
-
+  MulExpression& MulExpression::operator=(MulExpression&& rhs) noexcept{
+    if(&rhs != this){
+      std::swap(mulPolynom, rhs.mulPolynom);
+    }
+    return *this;
   }
 
   std::string MulExpression::toString() const{
@@ -58,6 +68,8 @@ namespace fintamath {
 
       mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
       mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "/"));
+      auto c = mulPolynom[0].info->toString();
+      auto c2 = mulPolynom[1].info->toString();
       return;
     }
     throw InvalidInputException(*this, " not a MulExpression");
