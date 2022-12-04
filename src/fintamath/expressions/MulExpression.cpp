@@ -14,7 +14,15 @@ namespace fintamath {
   }
 
   std::string MulExpression::toString() const{
-    return {};
+    std::string result;
+    result.push_back('(');
+    for(const auto & var : mulPolynom){
+      result += var.info->toString();
+      result += var.inverted ? '/' : '*';
+    }
+    result.pop_back();
+    result.push_back(')');
+    return result;
   }
 
   MulExpression::Element::Element(const Element &rhs) : inverted(rhs.inverted) {
@@ -38,6 +46,9 @@ namespace fintamath {
       if(tokens[i] == "(" && !skipBrackets(tokens, i)){
         throw InvalidInputException(*this, " braces must be closed");
       }
+      if(i == tokens.size()){
+        break;
+      }
       if(tokens[i] != "*" && tokens[i] != "/"){
         continue;
         }
@@ -45,8 +56,9 @@ namespace fintamath {
         throw InvalidInputException(*this, " unexpected sign");
       }
 
-      mulPolynom.emplace_back(Element(IExpression::parse(cutBraces(TokenVector(tokens.begin(), tokens.begin() + (long)i)))));
-      mulPolynom.emplace_back(Element(IExpression::parse(cutBraces(TokenVector(tokens.begin() + (long)i + 1, tokens.end()))), tokens[i] == "/"));
+      mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
+      mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "/"));
+      return;
     }
     throw InvalidInputException(*this, " not a MulExpression");
   }
