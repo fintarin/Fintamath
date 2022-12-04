@@ -1,5 +1,9 @@
 #include "fintamath/config/ParserConfig.hpp"
 
+#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/AddExpression.hpp"
+#include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -45,6 +49,7 @@
 namespace fintamath {
   helpers::ParserVector<NumberPtr, std::string> INumber::parserVector;
   helpers::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
+  helpers::ParserVector<ExpressionPtr, std::string> IExpression::parserMap;
   helpers::ParserMap<ConstantPtr> IConstant::parserMap;
   helpers::ParserMap<FunctionPtr> IFunction::parserMap;
   helpers::ParserMap<OperatorPtr> IOperator::parserMap;
@@ -98,6 +103,12 @@ namespace fintamath::config {
     IFunction::addParser<Acos>();
     IFunction::addParser<Atan>();
     IFunction::addParser<Acot>();
+
+    //expressions
+    IExpression::addParser<AddExpression>();
+    //IExpression::addParser<Expression>();
+    //IExpression::addParser<MulExpression>();
+
   }
 
   static const ParserConfig config;

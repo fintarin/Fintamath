@@ -1,4 +1,6 @@
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/AddExpression.hpp"
+
 
 #include <algorithm>
 #include <memory>
@@ -68,24 +70,24 @@ namespace fintamath {
   }
 
   Expression::Expression(const Expression &rhs) noexcept {
-    if (rhs.info) {
+    /*if (rhs.info) {
       info = rhs.info->clone();
       children = rhs.children;
-    }
+    }*/
   }
 
   Expression::Expression(Expression &&rhs) noexcept : info(std::move(rhs.info)), children(std::move(rhs.children)) {
   }
 
   Expression &Expression::operator=(const Expression &rhs) noexcept {
-    if (&rhs != this) {
+    /*if (&rhs != this) {
       if (rhs.info) {
         info = rhs.info->clone();
         children = rhs.children;
       } else {
         info = nullptr;
       }
-    }
+    }*/
     return *this;
   }
 
@@ -98,12 +100,14 @@ namespace fintamath {
   }
 
   Expression::Expression(const std::string &str) {
-    auto exprStr = cutSpaces(str);
-    if (exprStr.empty()) {
+    auto tokens = tokenize(str);
+    if (tokens.empty()) {
       throw InvalidInputException(*this, str);
     }
 
-    if (countEqual(exprStr) == 0) {
+    info = IExpression::parse(str);
+
+    /*if (countEqual(exprStr) == 0) {
       *this = *parseExpression(exprStr);
       *this = *baseSimplify();
       return;
@@ -112,7 +116,7 @@ namespace fintamath {
     if (countEqual(exprStr) == 1) {
       *this = *parseEqualExpression(exprStr);
       return;
-    }
+    }*/
 
     throw InvalidInputException(*this, str);
   }
@@ -125,7 +129,7 @@ namespace fintamath {
   }
 
   std::string Expression::toString() const {
-    if (!info) {
+    /*if (!info) {
       return {};
     }
 
@@ -194,12 +198,12 @@ namespace fintamath {
       result += rootFunc.toString();
       result += putInBrackets(funcArgsToString(children));
       return result;
-    }
+    }*/
 
     return info->toString();
   }
 
-  std::string Expression::funcArgsToString(const ExprVect &args) const {
+ /* std::string Expression::funcArgsToString(const ExprVect &args) const {
     std::string result;
 
     for (size_t i = 0; i < args.size() - 1; i++) {
@@ -251,7 +255,7 @@ namespace fintamath {
     }
 
     throw InvalidInputException(*this); // TODO add comment here
-  }
+  }*/
 
   /*
     Expr: AddExpr | MulExpr | PowExpr | FuncExpr | (Expr) | Term
@@ -261,7 +265,7 @@ namespace fintamath {
     FuncExpr: PreFuncName Expr | Expr PostFuncName
     Term: Const | Var | Num
    */
-  ExprPtr Expression::parseEqualExpression(const std::string &exprStr) const {
+ /* ExprPtr Expression::parseEqualExpression(const std::string &exprStr) const {
     for (size_t i = exprStr.size() - 1; i > 0; i--) {
       if (exprStr[i] == '=') {
         if (i == exprStr.size() - 1) {
@@ -1105,9 +1109,9 @@ namespace fintamath {
 
     return newExpr;
   }
-
+*/
   MathObjectPtr Expression::simplify() const {
-    auto newExpr = std::make_shared<Expression>(*this);
+    /*auto newExpr = std::make_shared<Expression>(*this);
 
     newExpr = simplifyConstant(newExpr);
     newExpr = simplifyFunctions(newExpr);
@@ -1127,7 +1131,7 @@ namespace fintamath {
 
     if (newExpr->children.empty()) {
       return newExpr->info->clone();
-    }
+    }*/
 
     return std::make_unique<Expression>(*this);
   }
