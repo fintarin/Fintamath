@@ -121,4 +121,12 @@ namespace fintamath {
     mulPolynom = newPolynom;
   }
 
+  void MulExpression::addElement(MathObjectPtr elem, bool inverted){
+    mulPolynom.emplace_back(Element(elem->clone(), inverted));
+  }
+
+  void MulExpression::baseSimplify(){
+    tryCompressExpression();
+    tryCompressTree();
+  }
 }

@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/helpers/Parser.hpp"
@@ -44,6 +45,7 @@ namespace fintamath {
     static bool isOneSymbolToken(char token);
     static TokenVector cutBraces(const TokenVector& tokens);
     static std::string tryPutInBracketsIfNeg(const MathObjectPtr& obj);
+    virtual void baseSimplify() = 0; //TODO: delete this, refactor to simplify() implementation in all of classes
   private:
     static helpers::ParserVector<ExpressionPtr, TokenVector> parserMap;
 
