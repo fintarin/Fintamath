@@ -45,6 +45,8 @@ namespace fintamath {
 
     ~AddExpression() override = default;
 
+    void invert();
+
   private:
 
     void parse(const TokenVector & tokens);

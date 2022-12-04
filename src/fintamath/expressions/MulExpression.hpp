@@ -1,5 +1,6 @@
 #pragma once
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
   class MulExpression : public IExpressionCRTP<MulExpression> {
@@ -52,5 +53,7 @@ namespace fintamath {
     void tryCompressExpression();
 
     void tryCompressTree();
+
+    static std::string tryPutInBrackets(const MathObjectPtr& obj);
   };
 }

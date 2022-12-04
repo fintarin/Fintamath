@@ -10,6 +10,7 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -23,6 +24,7 @@
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -109,22 +111,14 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     info = IExpression::parse(str);
+    if(!info){
+      throw InvalidInputException(*this, "incorrect input");
+    }
     if(info->instanceOf<Expression>()){
       auto exprInfo = info->to<Expression>();
       info = MathObjectPtr(exprInfo.info.release());
       children = copy(exprInfo.children);
     }
-    /*if (countEqual(exprStr) == 0) {
-      *this = *parseExpression(exprStr);
-      *this = *baseSimplify();
-      return;
-    }
-
-    if (countEqual(exprStr) == 1) {
-      *this = *parseEqualExpression(exprStr);
-      return;
-    }*/
-
   }
 
   Expression::Expression(const IMathObject &obj) : info(obj.clone()) {
@@ -138,85 +132,113 @@ namespace fintamath {
     return "(" + str + ")";
   }
 
-  std::string Expression::toString() const {
+  std::string Expression::powToString() const {
+    if(children.size() != 2){
+      throw InvalidInputException(*this, "too many or too low operands for pow");
+    }
     std::string result;
-    result.push_back('(');
-    for(const auto & var : children){
-      result += var->toString();
+    for(const auto& child : children){
+      if(!child->is<Expression>()){
+        throw InvalidInputException(*this, "unexpected parse result");
+      }
+      const auto& childExpr = child->to<Expression>();
+      if ((childExpr.info->instanceOf<IComparable>() &&
+      childExpr.info->to<IComparable>() < Integer(0)) || 
+      childExpr.info->is<AddExpression>() ||
+      childExpr.info->is<MulExpression>() ||
+      childExpr.info->is<Neg>()) {
+        result += putInBrackets(child->toString());
+      } else {
+        result += child->toString();
+      }
+      result += info->toString();
+    }
+    result.pop_back();
+    return result;
+  }
+
+  std::string Expression::negToString() const{
+    if(children.size() != 1){
+      throw InvalidInputException(*this, "too many or too low operands for pow");
+    }
+    std::string result;
+    if(!children.at(0)->is<Expression>()){
+      throw InvalidInputException(*this, "unexpected parse result");
     }
     result += info->toString();
-    result.push_back(')');
+    const auto& childExpr = children.at(0)->to<Expression>();
+    if((childExpr.info->instanceOf<IComparable>() &&
+      childExpr.info->to<IComparable>() < Integer(0)) || 
+      childExpr.info->is<AddExpression>() ||
+      childExpr.info->is<Neg>()){
+      result += putInBrackets(children.at(0)->toString());
+    } else {
+      result += children.at(0)->toString();
+    }
     return result;
-    /*if (!info) {
-      return {};
-    }
+  }
 
+  std::string Expression::factorialOrPercentToString() const {
+    if(children.size() != 1){
+      throw InvalidInputException(*this, "too many or too low operands for pow");
+    }
     std::string result;
-    if (info->instanceOf<IOperator>()) {
-      const auto &rootOp = info->to<IOperator>();
-
-      if (!children.at(0)->info->instanceOf<IOperator>()) {
-        if (children.at(0)->info->instanceOf<IComparable>() && children.at(0)->info->to<IComparable>() < Integer(0)) {
-          result += putInBrackets(children.at(0)->toString());
-        } else {
-          result += children.at(0)->toString();
-        }
+    if(!children.at(0)->is<Expression>()){
+      throw InvalidInputException(*this, "unexpected parse result");
+    }
+    const auto& childExpr = children.at(0)->to<Expression>();
+    if ((childExpr.info->instanceOf<IComparable>() &&
+      childExpr.info->to<IComparable>() < Integer(0)) || 
+      childExpr.info->is<AddExpression>() ||
+      childExpr.info->is<MulExpression>() ||
+      childExpr.info->is<Neg>()) {
+        result += putInBrackets(childExpr.toString());
       } else {
-        if (const auto &nodeOp = children.at(0)->info->to<IOperator>();
-            (rootOp.getOperatorPriority() > nodeOp.getOperatorPriority()) ||
-            ((rootOp.is<Neg>() || rootOp.is<Pow>()) && rootOp.getOperatorPriority() == nodeOp.getOperatorPriority())) {
-          result += putInBrackets(children.at(0)->toString());
-        } else {
-          result += children.at(0)->toString();
-        }
+        result += childExpr.toString();
       }
+    result += info->toString();
+    return result;
+  }
 
-      if (rootOp.is<Neg>()) {
-        result = rootOp.toString() + result;
-        return result;
-      }
-      for (size_t i = 1; i < children.size(); i++) {
-        result += info->toString();
+  std::string Expression::functionToString() const {
+    std::string result;
+    result += info->toString();
+    result += "(";
+    for(const auto& child : children){
+      result += child->toString();
+      result += ",";
+    }
+    result.pop_back();
+    result += ")";
+    return result;
+  }
 
-        if (!children.at(i)->info->instanceOf<IOperator>()) {
-          if (children.at(i)->info->instanceOf<IComparable>() && children.at(i)->info->to<IComparable>() < Integer(0)) {
-            result += putInBrackets(children.at(i)->toString());
-            continue;
-          }
-          result += children.at(i)->toString();
-          continue;
-        }
-        const auto &nodeOp = children.at(i)->info->to<IOperator>();
-        if (rootOp.getOperatorPriority() > nodeOp.getOperatorPriority()) {
-          result += putInBrackets(children.at(i)->toString());
-          continue;
-        }
-        if ((rootOp.is<Sub>() || rootOp.is<Div>()) && rootOp.getOperatorPriority() == nodeOp.getOperatorPriority()) {
-          result += putInBrackets(children.at(i)->toString());
-          continue;
-        }
-        result += children.at(i)->toString();
-      }
-      return result;
+  std::string Expression::getInfoClassName() const {
+    return info ? info->getClassName() : std::string();
+  }
+
+  std::string Expression::toString() const {
+    std::string result;
+    if(children.empty()){
+      return info ? info->toString() : result;
     }
 
-    if (info->instanceOf<IFunction>()) {
-      const auto &rootFunc = info->to<IFunction>();
-      if (rootFunc.is<Factorial>() || rootFunc.is<DoubleFactorial>() || rootFunc.is<Percent>()) {
-        if ((children.at(0)->is<Factorial>() && rootFunc.is<Factorial>()) ||
-            children.at(0)->info->instanceOf<IOperator>()) {
-          result += putInBrackets(children.at(0)->toString());
-        } else {
-          result += children.at(0)->toString();
-        }
-        result += rootFunc.toString();
-        return result;
-      }
+    if(info && info->is<Pow>()){
+      return powToString();
+    }
 
-      result += rootFunc.toString();
-      result += putInBrackets(funcArgsToString(children));
-      return result;
-    }*/
+    if(info && info->is<Neg>()){
+      return negToString();
+    }
+
+    if(info && (info->is<Factorial>() || info->is<DoubleFactorial>() || info->is<Percent>())){
+      return factorialOrPercentToString();
+    }
+
+    if(info && info->instanceOf<IFunction>()){
+      return functionToString();
+    }
+    return result;
   }
 
   void Expression::parse(const TokenVector& tokens) {
@@ -274,14 +296,20 @@ namespace fintamath {
 
   bool Expression::parsePow(const TokenVector& tokens){
     for (size_t i = 0; i < tokens.size(); i++) {
+      if(tokens[i] == "(" && !skipBrackets(tokens, i)){
+        throw InvalidInputException(*this, " braces must be closed");
+      }
+      if(i == tokens.size()){
+        break;
+      }
       if (tokens[i] == "^") {
+        if(i == tokens.size() - 1){
+          throw InvalidInputException(*this, "too low operands for pow");
+        }
         info = std::make_unique<Pow>();
         children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)i)));
         children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + (long)i + 1, tokens.end())));
         return true;
-      }
-      if(tokens[i] == "(" && !skipBrackets(tokens, i)){
-        throw InvalidInputException(*this, " braces must be closed");
       }
     }
     return false;
@@ -303,7 +331,7 @@ namespace fintamath {
     if(tokens[tokens.size() - 1] == "!"){
       if(tokens[tokens.size() - 2] == "!"){
         info = std::make_unique<DoubleFactorial>();
-        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.end() - 2)));
+        children.push_back(IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2)));
         return true;
       }
       info = std::make_unique<Factorial>();
@@ -375,7 +403,7 @@ namespace fintamath {
         if(pos == 0 || pos == tokens.size() - 1){
           throw InvalidInputException(*this, " incorrect use of a comma");
         }
-        args.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)pos)));
+        args.push_back(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)pos)));
         auto addArgs = getArgs(TokenVector(tokens.begin() + (long)pos + 1, tokens.end()));
 
         for(auto& token : addArgs){
@@ -384,7 +412,7 @@ namespace fintamath {
         return args;
       }
     }
-    args.push_back(std::make_unique<Expression>(tokens));
+    args.push_back(IExpression::parse(tokens));
     return args;
   }
 

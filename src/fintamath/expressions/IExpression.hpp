@@ -43,6 +43,7 @@ namespace fintamath {
     static bool isOneSymbolToken(const std::string& token);
     static bool isOneSymbolToken(char token);
     static TokenVector cutBraces(const TokenVector& tokens);
+    static std::string tryPutInBracketsIfNeg(const MathObjectPtr& obj);
   private:
     static helpers::ParserVector<ExpressionPtr, TokenVector> parserMap;
 

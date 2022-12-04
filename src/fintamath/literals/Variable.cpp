@@ -28,7 +28,7 @@ namespace fintamath {
       return false;
     }
 
-    const std::regex reg(R"(^[a-df-hj-zA-Z]$)");
+    const std::regex reg(R"(^[a-df-zA-Z]$)"); //TODO: change regex to ^[a-df-hj-zA-Z]$ when complex i will be implemented
     return regex_search(str, reg);
   }
 }
