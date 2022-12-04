@@ -44,6 +44,10 @@ namespace fintamath {
 
     ~MulExpression() override = default;
 
+    void addElement(MathObjectPtr elem, bool inverted);
+
+    void baseSimplify() override;
+
   private:
 
     void parse(const TokenVector & tokens);
@@ -55,5 +59,6 @@ namespace fintamath {
     void tryCompressTree();
 
     static std::string tryPutInBrackets(const MathObjectPtr& obj);
+
   };
 }

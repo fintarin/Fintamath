@@ -4,13 +4,14 @@
 #include <vector>
 
 #include "fintamath/core/Defines.hpp"
+#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 
 namespace fintamath {
-  class Expression : public IExpressionCRTP<Expression> {
+  class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
   public:
     Expression() = default;
 
@@ -39,6 +40,19 @@ namespace fintamath {
     std::string getInfoClassName() const;
 
     MathObjectPtr tryCompress() const;
+
+  protected:
+    Expression &add(const Expression &rhs) override;
+
+    Expression &substract(const Expression &rhs) override;
+
+    Expression &multiply(const Expression &rhs) override;
+
+    Expression &divide(const Expression &rhs) override;
+
+    Expression &negate() override;
+
+    void baseSimplify() override;
 
   private:
     using ExprVect = std::vector<MathObjectPtr>;
@@ -74,6 +88,7 @@ namespace fintamath {
     std::string factorialOrPercentToString() const;
 
     std::string functionToString() const;
+
     /*ExprPtr baseSimplify() const;
 
     ExprPtr parseEqualExpression(const std::string &expr) const;

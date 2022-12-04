@@ -124,4 +124,12 @@ namespace fintamath{
     addPolynom = newPolynom;
   }
 
+  void AddExpression::addElement(MathObjectPtr elem, bool inverted){
+    addPolynom.emplace_back(Element(elem->clone(), inverted));
+  }
+
+  void AddExpression::baseSimplify(){
+    tryCompressExpression();
+    tryCompressTree();
+  }
 }

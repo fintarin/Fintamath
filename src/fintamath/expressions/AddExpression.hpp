@@ -47,6 +47,10 @@ namespace fintamath {
 
     void invert();
 
+    void addElement(MathObjectPtr elem, bool inverted);
+
+    void baseSimplify() override;
+
   private:
 
     void parse(const TokenVector & tokens);
