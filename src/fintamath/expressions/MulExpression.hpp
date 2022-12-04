@@ -13,17 +13,34 @@ namespace fintamath {
 
       Element(Element &&rhs) = default;
 
+      Element(MathObjectPtr info, bool inverted = false);
+
       Element &operator=(const Element &rhs);
 
       Element &operator=(Element &&rhs) noexcept = default;
     };
 
   public:
+
+    MulExpression() = default;
+
+    explicit MulExpression(const TokenVector& tokens);
+    
+    MulExpression(const MulExpression &rhs) noexcept;
+
+    MulExpression(MulExpression &&rhs) noexcept;
+
     std::string toString() const override;
 
     std::string getClassName() const override;
 
+    ~MulExpression() override = default;
+
   private:
+
+    void parse(const TokenVector & tokens);
+
     std::vector<Element> mulPolynom;
+
   };
 }

@@ -40,8 +40,6 @@ namespace fintamath{
 
       addPolynom.emplace_back(Element(IExpression::parse(cutBraces(TokenVector(tokens.begin(), tokens.begin() + (long)i)))));
       addPolynom.emplace_back(Element(IExpression::parse(cutBraces(TokenVector(tokens.begin() + (long)i + 1, tokens.end()))), tokens[i] == "-"));
-
-      
     }
     throw InvalidInputException(*this, " not an AddExpression");
   }

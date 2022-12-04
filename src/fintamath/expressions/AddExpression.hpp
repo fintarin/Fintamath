@@ -38,7 +38,10 @@ namespace fintamath {
     ~AddExpression() override = default;
 
   private:
+
     void parse(const TokenVector & tokens);
+
     std::vector<Element> addPolynom;
+    
   };
 }
