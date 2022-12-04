@@ -7,19 +7,19 @@
 
 using namespace fintamath;
 
-TEST(EqTests, toStringTest) {
+TEST(EqvTests, toStringTest) {
   EXPECT_EQ(Eqv().toString(), "=");
 }
 
-TEST(EqTests, getFunctionTypeTest) {
+TEST(EqvTests, getFunctionTypeTest) {
   EXPECT_EQ(Eqv().getFunctionType(), IFunction::Type::Binary);
 }
 
-TEST(EqTests, getOperatorPriorityTest) {
+TEST(EqvTests, getOperatorPriorityTest) {
   EXPECT_EQ(Eqv().getOperatorPriority(), IOperator::Priority::Comparison);
 }
 
-TEST(EqTests, callTest) {
+TEST(EqvTests, callTest) {
   EXPECT_EQ(Eqv()(Integer(5), Integer(3))->toString(), "false");
   EXPECT_EQ(Eqv()(Integer(3), Integer(5))->toString(), "false");
   EXPECT_EQ(Eqv()(Integer(3), Integer(3))->toString(), "true");
