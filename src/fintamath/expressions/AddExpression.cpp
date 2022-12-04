@@ -35,6 +35,9 @@ namespace fintamath{
       parse(tokens);
   }
 
+  AddExpression::AddExpression(Polynom inAddPolynom) :addPolynom(std::move(inAddPolynom)) {  
+  }
+
   std::string AddExpression::getClassName() const {
       return "AddExpression";
   }
@@ -55,6 +58,10 @@ namespace fintamath{
     for(auto& child : addPolynom){
       child.inverted = !child.inverted;
     }
+  }
+
+  const AddExpression::Polynom &AddExpression::getPolynom() const {
+    return addPolynom;
   }
 
   void AddExpression::parse(const TokenVector& tokens){
@@ -111,7 +118,7 @@ namespace fintamath{
 
   std::vector<AddExpression::Element> AddExpression::Element::getAddPolynom() const {
     if(info->getClassName() == AddExpression().getClassName()){
-      std::vector<Element> result;
+      Polynom result;
       auto addExpr = info->to<AddExpression>();
       for(auto& child : addExpr.addPolynom){
         auto childToPush = std::move(child);
@@ -125,7 +132,7 @@ namespace fintamath{
 
   MathObjectPtr AddExpression::tryCompressTree() const{
     auto copyExpr = *this;
-    std::vector<Element> newPolynom;
+    Polynom newPolynom;
     for(const auto& child : copyExpr.addPolynom){
       auto pushPolynom = child.getAddPolynom();
       for(auto& pushChild: pushPolynom){
@@ -136,8 +143,8 @@ namespace fintamath{
     return std::make_unique<AddExpression>(std::move(copyExpr));
   }
 
-  void AddExpression::addElement(MathObjectPtr elem, bool inverted){
-    addPolynom.emplace_back(Element(elem->clone(), inverted));
+  void AddExpression::addElement(const Element &elem){
+    addPolynom.emplace_back(elem);
   }
 
   MathObjectPtr AddExpression::simplify() const {
@@ -157,7 +164,7 @@ namespace fintamath{
     MathObjectPtr sumNumResult = std::make_unique<Expression>(Integer(0));
     auto add = Add();
     auto sub = Sub();
-    std::vector<Element> newAddPolynom;
+    Polynom newAddPolynom;
     for(const auto& elem : addPolynom){
       auto tmpElem = elem.info->clone();
       auto expr = helpers::cast<IArithmetic>(tmpElem);

@@ -4,11 +4,11 @@
 
 namespace fintamath {
   class MulExpression : public IExpressionCRTP<MulExpression> {
-  private:
+  public:
+    struct Element;
 
-    friend class Expression;
+    using Polynom = std::vector<Element>;
 
-    friend class AddExpression;
     struct Element {
       MathObjectPtr info;
       bool inverted = false;
@@ -25,15 +25,15 @@ namespace fintamath {
 
       Element &operator=(Element &&rhs) noexcept = default;
 
-      std::vector<Element> getMulPolynom() const;
+      Polynom getMulPolynom() const;
     };
-
-  public:
 
     MulExpression() = default;
 
-    explicit MulExpression(const TokenVector& tokens);
-    
+    explicit MulExpression(const TokenVector &tokens);
+
+    explicit MulExpression(Polynom inMulPolynom);
+
     MulExpression(const MulExpression &rhs) noexcept;
 
     MulExpression(MulExpression &&rhs) noexcept;
@@ -42,29 +42,29 @@ namespace fintamath {
 
     MulExpression &operator=(MulExpression &&rhs) noexcept;
 
+    ~MulExpression() override = default;
+
     std::string toString() const override;
 
     std::string getClassName() const override;
 
-    ~MulExpression() override = default;
+    const Polynom &getPolynom() const;
 
-    void addElement(MathObjectPtr elem, bool inverted);
+    void addElement(const Element &elem);
 
     MathObjectPtr simplify() const override;
 
   private:
+    void parse(const TokenVector &tokens);
 
-    void parse(const TokenVector & tokens);
-
-    std::vector<Element> mulPolynom;
+    Polynom mulPolynom;
 
     MathObjectPtr tryCompressExpression() const;
 
     MathObjectPtr tryCompressTree() const;
 
-    static std::string tryPutInBrackets(const MathObjectPtr& obj);
+    static std::string tryPutInBrackets(const MathObjectPtr &obj);
 
     void mulNumbers();
-
   };
 }
