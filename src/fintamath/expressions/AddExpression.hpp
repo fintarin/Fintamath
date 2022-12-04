@@ -1,11 +1,16 @@
 #pragma once
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
   class AddExpression : public IExpressionCRTP<AddExpression> {
   private:
+
+    friend class Expression;
+    
+    friend class MulExpression;
     struct Element {
       MathObjectPtr info;
       bool inverted = false;
@@ -49,7 +54,7 @@ namespace fintamath {
 
     void addElement(MathObjectPtr elem, bool inverted);
 
-    void baseSimplify() override;
+    MathObjectPtr simplify() const override;
 
   private:
 
@@ -57,9 +62,11 @@ namespace fintamath {
 
     std::vector<Element> addPolynom;
 
-    void tryCompressExpression();
+    MathObjectPtr tryCompressExpression() const;
 
-    void tryCompressTree();
+    MathObjectPtr tryCompressTree() const;
+
+    void sumNumbers();
     
   };
 }

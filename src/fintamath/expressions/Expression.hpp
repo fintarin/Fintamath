@@ -12,6 +12,11 @@
 
 namespace fintamath {
   class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
+  private:
+    friend class AddExpression;
+
+    friend class MulExpression;
+
   public:
     Expression() = default;
 
@@ -51,13 +56,13 @@ namespace fintamath {
     Expression &divide(const Expression &rhs) override;
 
     Expression &negate() override;
-
-    void baseSimplify() override;
-
+    
   private:
     using ExprVect = std::vector<MathObjectPtr>;
 
     static ExprVect copy(const ExprVect& rhs);
+
+    void tryCompressTree();
 
     void parse(const TokenVector & tokens);
 
@@ -89,6 +94,9 @@ namespace fintamath {
 
     std::string functionToString() const;
 
+    MathObjectPtr simplifyNeg(std::unique_ptr<Expression> &expr) const;
+
+
     /*ExprPtr baseSimplify() const;
 
     ExprPtr parseEqualExpression(const std::string &expr) const;
@@ -102,8 +110,6 @@ namespace fintamath {
     ExprPtr simplifyConstant(const ExprPtr &expr) const;
 
     ExprPtr invertSubDiv(const ExprPtr &expr) const;
-
-    ExprPtr simplifyNeg(const ExprPtr &expr) const;
 
     ExprPtr rebuildAdd(const ExprPtr &expr) const;
 
