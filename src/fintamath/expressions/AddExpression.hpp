@@ -1,16 +1,19 @@
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
   class AddExpression : public IExpressionCRTP<AddExpression> {
   private:
     struct Element {
-      ExpressionPtr info;
+      MathObjectPtr info;
       bool inverted = false;
 
       Element() = default;
 
       Element(const Element &rhs);
+
+      Element(MathObjectPtr info, bool inverted = false);
 
       Element(Element &&rhs) = default;
 
@@ -27,8 +30,6 @@ namespace fintamath {
     AddExpression(const AddExpression &rhs) noexcept;
 
     AddExpression(AddExpression &&rhs) noexcept;
-
-    AddExpression(const std::string& str) noexcept;
 
     std::string toString() const override;
 
