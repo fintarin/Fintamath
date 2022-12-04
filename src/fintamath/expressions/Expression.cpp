@@ -391,6 +391,17 @@ namespace fintamath {
     return nullptr;
   }
 
+  ExpressionPtr Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
+    auto funcExpr = std::make_unique<Expression>();
+    funcExpr->info = func.clone();
+    
+    for (const auto &arg : args) {
+      funcExpr->children.push_back(arg.get().clone());
+    }
+
+    return funcExpr;
+  }
+
   Expression::Vector Expression::getArgs(const TokenVector &tokens) {
     Vector args;
     for (size_t pos = 0; pos < tokens.size(); pos++) {
