@@ -16,6 +16,14 @@ namespace fintamath {
     static ExpressionPtr parse(const std::string &str);
   protected:
     static TokenVector tokenize(const std::string &str);
+  private:
+    static TokenVector handleLetterToken(const std::string &str);
+    static bool appendToken(TokenVector& tokens, std::string& token);
+    static bool isDigit(char c);
+    static bool isLetter(char c);
+    static bool isBracket(char c);
+    static bool isSpecial(char c);
+    static std::string cutSpacesFromBeginEnd(const std::string& str);
   };
 
   template <typename Derived>
