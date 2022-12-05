@@ -5,7 +5,7 @@
 namespace fintamath {
   class Pi : public IConstantCRTP<Pi> {
   public:
-    Rational getValue(int64_t precision) const override;
+    Rational getValue(int64_t precision) const override; // TODO change to operator Rational()
 
     std::string toString() const override;
 
