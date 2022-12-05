@@ -44,6 +44,9 @@ namespace fintamath {
 
   std::string MulExpression::toString() const{
     std::string result;
+    if(!mulPolynom.empty() && mulPolynom.at(0).inverted){
+      result += '1';
+    }
     for(const auto & var : mulPolynom){
       result += var.inverted ? '/' : '*';
       result += tryPutInBrackets(var.info);
@@ -68,6 +71,7 @@ namespace fintamath {
 
   MulExpression::MulExpression(const TokenVector& tokens){
     parse(tokens);
+    *this = simplify()->to<MulExpression>();
   }
 
   MulExpression::MulExpression(Polynom inMulPolynom) : mulPolynom(std::move(inMulPolynom)) {
@@ -151,6 +155,9 @@ namespace fintamath {
     exprObj->mulNumbers();
     auto expr = exprObj->toString();
 
+    /*if(exprObj->mulPolynom.size() == 1 && !exprObj->mulPolynom.at(0).inverted){
+      return exprObj->mulPolynom.at(0).info->clone();
+    }*/
     return exprObj;
   }
 
