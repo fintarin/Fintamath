@@ -57,7 +57,7 @@ TEST(IntegerTests, intPlusOperatorTest) {
   EXPECT_EQ(Integer(5) + 10, 15);
 }
 
-TEST(IntegerTests, friendIntPlusOperatorTest) {
+TEST(IntegerTests, intFriendPlusOperatorTest) {
   EXPECT_EQ(5 + Integer(10), 15);
 }
 
@@ -82,7 +82,7 @@ TEST(IntegerTests, intMinusOperatorTest) {
   EXPECT_EQ(Integer(5) - 10, -5);
 }
 
-TEST(IntegerTests, friendIntMinusOperatorTest) {
+TEST(IntegerTests, intFriendMinusOperatorTest) {
   EXPECT_EQ(5 - Integer(10), -5);
 }
 
@@ -359,7 +359,7 @@ TEST(IntegerTests, intMultiplyOperatorTest) {
   EXPECT_EQ(Integer(5) * 10, 50);
 }
 
-TEST(IntegerTests, friendIntMultiplyOperatorTest) {
+TEST(IntegerTests, intFriendMultiplyOperatorTest) {
   EXPECT_EQ(5 * Integer(10), 50);
 }
 
@@ -461,7 +461,7 @@ TEST(IntegerTests, intDivideOperatorTest) {
   EXPECT_EQ(Integer(10) / 5, 2);
 }
 
-TEST(IntegerTests, friendIntDivideOperatorTest) {
+TEST(IntegerTests, intFriendDivideOperatorTest) {
   EXPECT_EQ(10 / Integer(5), 2);
 }
 
@@ -496,7 +496,7 @@ TEST(IntegerTests, intModuloOperatorTest) {
   EXPECT_EQ(Integer(10) % 4, 2);
 }
 
-TEST(IntegerTests, friendIntModuloOperatorTest) {
+TEST(IntegerTests, intFriendModuloOperatorTest) {
   EXPECT_EQ(10 % Integer(4), 2);
 }
 
@@ -558,7 +558,7 @@ TEST(IntegerTests, intEqualOperatorTest) {
   EXPECT_TRUE(Integer(283746) == 283746);
 }
 
-TEST(IntegerTests, friendIntEqualOperatorTest) {
+TEST(IntegerTests, intFriendEqualOperatorTest) {
   EXPECT_TRUE(283746 == Integer(283746));
 }
 
@@ -573,7 +573,7 @@ TEST(IntegerTests, intNotEqualOperatorTest) {
   EXPECT_TRUE(Integer(283746) != 12121);
 }
 
-TEST(IntegerTests, friendIntNotEqualOperatorTest) {
+TEST(IntegerTests, intFriendNotEqualOperatorTest) {
   EXPECT_TRUE(283746 != Integer(12121));
 }
 
@@ -590,7 +590,7 @@ TEST(IntegerTests, intLessOperatorTest) {
   EXPECT_TRUE(Integer(283746) < 2379264);
 }
 
-TEST(IntegerTests, friendIntLessOperatorTest) {
+TEST(IntegerTests, intFriendLessOperatorTest) {
   EXPECT_TRUE(283746 < Integer(2379264));
 }
 
@@ -607,7 +607,7 @@ TEST(IntegerTests, intMoreOperatorTest) {
   EXPECT_TRUE(Integer(283746) > 12121);
 }
 
-TEST(IntegerTests, friendIntMoreOperatorTest) {
+TEST(IntegerTests, intFriendMoreOperatorTest) {
   EXPECT_TRUE(283746 > Integer(12121));
 }
 
@@ -625,7 +625,7 @@ TEST(IntegerTests, intLessEqualOperatorTest) {
   EXPECT_TRUE(Integer(12121) <= 283746);
 }
 
-TEST(IntegerTests, friendIntLessEqualOperatorTest) {
+TEST(IntegerTests, intFriendLessEqualOperatorTest) {
   EXPECT_TRUE(12121 <= Integer(283746));
 }
 
@@ -643,7 +643,7 @@ TEST(IntegerTests, intMoreEqualOperatorTest) {
   EXPECT_TRUE(Integer(283746) >= 12121);
 }
 
-TEST(IntegerTests, friendIntMoreEqualOperatorTest) {
+TEST(IntegerTests, intFriendMoreEqualOperatorTest) {
   EXPECT_TRUE(283746 >= Integer(12121));
 }
 

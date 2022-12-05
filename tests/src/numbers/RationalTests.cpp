@@ -79,7 +79,7 @@ TEST(RationalTests, integerPlusOperatorTest) {
   EXPECT_EQ(Rational(170, 12) + 2, Rational(194, 12));
 }
 
-TEST(RationalTests, friendIntegerPlusOperatorTest) {
+TEST(RationalTests, integerFriendPlusOperatorTest) {
   EXPECT_EQ(2 + Rational(-18), -16);
   EXPECT_EQ(4938493849 + Rational(1009), 4938494858);
 }
@@ -108,7 +108,7 @@ TEST(RationalTests, integerMinusOperatorTest) {
   EXPECT_EQ(Rational(170, 12) - -2, Rational(194, 12));
 }
 
-TEST(RationalTests, friendIntegerMinusOperatorTest) {
+TEST(RationalTests, integerFriendMinusOperatorTest) {
   EXPECT_EQ(2 - Rational(-18), 20);
   EXPECT_EQ(4938493849 - Rational(1009), 4938492840);
 }
@@ -138,7 +138,7 @@ TEST(RationalTests, integerMultiplyOperatorTest) {
   EXPECT_EQ(Rational(-738, -10) * 10, 738);
 }
 
-TEST(RationalTests, friendIntegerMultiplyOperatorTest) {
+TEST(RationalTests, integerFriendMultiplyOperatorTest) {
   EXPECT_EQ(-5 * Rational(2, 3), Rational(-10, 3));
   EXPECT_EQ(589398724 * Rational(1, 8372738), Rational(589398724, 8372738));
   EXPECT_EQ(10 * Rational(-738, -10), 738);
@@ -170,7 +170,7 @@ TEST(RationalTests, integerDivideOperatorTest) {
   EXPECT_EQ(Rational(738, -10) / 5894, Rational(738, -58940));
 }
 
-TEST(RationalTests, friendIntegerDivideOperatorTest) {
+TEST(RationalTests, integerFriendDivideOperatorTest) {
   EXPECT_EQ(-5 / Rational(2, 3), Rational(-15, 2));
   EXPECT_EQ(589398724 / Rational(8372738), Rational(589398724, 8372738));
   EXPECT_EQ(10 / Rational(-10, -738), 738);
@@ -229,7 +229,7 @@ TEST(RationalTests, integerEqualOperatorTest) {
   EXPECT_TRUE(Rational(50, -10) == -5);
 }
 
-TEST(RationalTests, friendIntegerEqualOperatorTest) {
+TEST(RationalTests, integerFriendEqualOperatorTest) {
   EXPECT_TRUE(500 == Rational(500));
   EXPECT_TRUE(-5 == Rational(50, -10));
 }
@@ -247,7 +247,7 @@ TEST(RationalTests, integerNotEqualOperatorTest) {
   EXPECT_FALSE(Rational(500) != 500);
 }
 
-TEST(RationalTests, friendIntegerNotEqualOperatorTest) {
+TEST(RationalTests, integerFriendNotEqualOperatorTest) {
   EXPECT_TRUE(50 != Rational(3920));
 
   EXPECT_FALSE(500 != Rational(500));
@@ -268,7 +268,7 @@ TEST(RationalTests, integerLessOperatorTest) {
   EXPECT_FALSE(Rational(50, -10) < -5);
 }
 
-TEST(RationalTests, friendIntegerLessOperatorTest) {
+TEST(RationalTests, integerFriendLessOperatorTest) {
   EXPECT_TRUE(-5 < Rational(50, 10));
   EXPECT_TRUE(7387 < Rational(3983920));
 
@@ -288,7 +288,7 @@ TEST(RationalTests, integerMoreOperatorTest) {
   EXPECT_FALSE(Rational(50, -10) > -5);
 }
 
-TEST(RationalTests, friendIntegerMoreOperatorTest) {
+TEST(RationalTests, integerFriendMoreOperatorTest) {
   EXPECT_TRUE(738657 > Rational(320));
 
   EXPECT_FALSE(500 > Rational(500));
@@ -308,7 +308,7 @@ TEST(RationalTests, integerLessEqualOperatorTest) {
   EXPECT_TRUE(Rational(50, -10) <= -5);
 }
 
-TEST(RationalTests, friendIntegerLessEqualOperatorTest) {
+TEST(RationalTests, integerFriendLessEqualOperatorTest) {
   EXPECT_TRUE(500 <= Rational(500));
   EXPECT_TRUE(-5 <= Rational(50, 10));
 
@@ -329,7 +329,7 @@ TEST(RationalTests, integerMoreEqualOperatorTest) {
   EXPECT_FALSE(Rational(500) >= 3283);
 }
 
-TEST(RationalTests, friendIntegerMoreEqualOperatorTest) {
+TEST(RationalTests, integerFriendMoreEqualOperatorTest) {
   EXPECT_TRUE(500 >= Rational(500));
   EXPECT_TRUE(738657 >= Rational(320));
 
