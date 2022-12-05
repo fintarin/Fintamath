@@ -49,7 +49,11 @@ namespace fintamath {
       if (str.front() == '-') {
         i++;
       }
+
       str.erase(i, str.find_first_not_of('0'));
+      if (str.empty()) {
+        str = "0";
+      }
     }
 
     try {

@@ -11,6 +11,10 @@ namespace fintamath {
 
   class INumber : virtual public IComparable, virtual public IArithmetic, virtual public IIncremental {
   public:
+    virtual bool isPrecise() const {
+      return true;
+    }
+
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
     static void addParser() {
       helpers::addParser<T>(parserVector);
