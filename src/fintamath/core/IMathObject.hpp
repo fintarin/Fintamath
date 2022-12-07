@@ -76,16 +76,7 @@ namespace fintamath {
     virtual bool equals(const Derived &rhs) const = 0;
 
     bool equalsAbstract(const IMathObject &rhs) const final {
-      if (rhs.is<Derived>()) {
-        return *this == rhs.to<Derived>();
-      }
-      if (auto tmp = helpers::Converter::convert(rhs, *this); tmp != nullptr) {
-        return *this == *tmp;
-      }
-      if (auto tmp = helpers::Converter::convert(*this, rhs); tmp != nullptr) {
-        return *tmp == rhs;
-      }
-      return false;
+      FINTAMATH_EQUALS_OPERATOR();
     }
   };
 
