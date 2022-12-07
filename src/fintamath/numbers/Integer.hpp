@@ -5,12 +5,13 @@
 #include <string>
 #include <vector>
 
+#include "fintamath/core/IModular.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
   class IntegerImpl;
 
-  class Integer : public INumberCRTP<Integer> {
+  class Integer : public INumberCRTP<Integer>, public IModularCRTP<Integer> {
   public:
     Integer();
 
@@ -32,10 +33,6 @@ namespace fintamath {
 
     std::string getClassName() const override;
 
-    Integer &operator%=(const Integer &rhs);
-
-    Integer operator%(const Integer &rhs) const;
-
     friend Integer sqrt(Integer rhs);
 
   protected:
@@ -53,7 +50,7 @@ namespace fintamath {
 
     Integer &divide(const Integer &rhs) override;
 
-    Integer &mod(const Integer &rhs);
+    Integer &mod(const Integer &rhs) override;
 
     Integer &negate() override;
 
@@ -64,22 +61,4 @@ namespace fintamath {
   private:
     std::unique_ptr<IntegerImpl> value;
   };
-
-  template <typename RhsType,
-            typename = std::enable_if_t<std::is_convertible_v<RhsType, Integer> && !std::is_same_v<Integer, RhsType>>>
-  Integer &operator%=(Integer &lhs, const RhsType &rhs) {
-    return lhs %= LhsType(rhs);
-  }
-
-  template <typename RhsType,
-            typename = std::enable_if_t<std::is_convertible_v<RhsType, Integer> && !std::is_same_v<Integer, RhsType>>>
-  Integer operator%(const Integer &lhs, const RhsType &rhs) {
-    return lhs % Integer(rhs);
-  }
-
-  template <typename LhsType,
-            typename = std::enable_if_t<std::is_convertible_v<LhsType, Integer> && !std::is_same_v<LhsType, Integer>>>
-  Integer operator%(const LhsType &lhs, const Integer &rhs) {
-    return Integer(lhs) % rhs;
-  }
 }

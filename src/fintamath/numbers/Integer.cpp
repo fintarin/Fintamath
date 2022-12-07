@@ -67,14 +67,6 @@ namespace fintamath {
     value->v.assign(val);
   }
 
-  Integer &Integer::operator%=(const Integer &rhs) {
-    return mod(rhs);
-  }
-
-  Integer Integer::operator%(const Integer &rhs) const {
-    return Integer(*this).mod(rhs);
-  }
-
   std::string Integer::toString() const {
     return value->v.str();
   }
