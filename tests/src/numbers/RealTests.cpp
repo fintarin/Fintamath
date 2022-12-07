@@ -37,6 +37,7 @@ TEST(RealTests, stringConstructorTest) {
 
 TEST(RealTests, rationalConstructorTest) {
   EXPECT_EQ(Real(Rational(2, 5)).toString(), "0.4");
+  EXPECT_EQ(Real(Rational(-2, 5)).toString(), "-0.4");
   EXPECT_EQ(Real(Rational(30, 10)), 3);
 }
 
@@ -509,4 +510,24 @@ TEST(RealTests, simplifyTest) {
   EXPECT_EQ(Real(11).simplify()->toString(), "11");
   EXPECT_EQ(Real(-2.5).simplify()->toString(), "-2.5");
   EXPECT_EQ(Real(-11).simplify()->toString(), "-11");
+}
+
+TEST(RealTests, roundTests) {
+  Real val = Rational(1, 3);
+
+  EXPECT_EQ(val.round().toString(), "0");
+  EXPECT_EQ(val.round(2).toString(), "0.33");
+  EXPECT_EQ(val.round(3).toString(), "0.333");
+  EXPECT_EQ(val.round(10).toString(), "0.3333333333");
+
+  EXPECT_EQ((-val).round().toString(), "0");
+  EXPECT_EQ((-val).round(2).toString(), "-0.33");
+  EXPECT_EQ((-val).round(3).toString(), "-0.333");
+  EXPECT_EQ((-val).round(10).toString(), "-0.3333333333");
+
+  EXPECT_EQ(Real("10000000000000000000.37841620837012").round(2).toString(), "10000000000000000000.38");
+  EXPECT_EQ(Real("10000000000000000000.375").round(2).toString(), "10000000000000000000.38");
+}
+
+TEST(RealTests, sqrtTests) {
 }

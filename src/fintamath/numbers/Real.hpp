@@ -41,6 +41,8 @@ namespace fintamath {
 
     bool isPrecise() const override;
 
+    Real round(size_t precision = 0) const;
+
     friend Real sqrt(Real rhs);
 
   protected:

@@ -78,6 +78,10 @@ namespace fintamath {
 
   Real::Real(const Rational &val) : Real() {
     *this = Real(val.getInteger()) + Real(val.getNumerator()) / Real(val.getDenominator());
+
+    if (val < 0) {
+      *this = -(*this);
+    }
   }
 
   Real::Real(const Integer &val) : Real(val.toString()) {
@@ -105,6 +109,13 @@ namespace fintamath {
 
   bool Real::isPrecise() const {
     return false;
+  }
+
+  Real Real::round(size_t precision) const {
+    Real precCoeff("1" + std::string(precision, '0'));
+    Real res = *this * precCoeff;
+    res.value->v = boost::multiprecision::round(res.value->v);
+    return res / precCoeff;
   }
 
   bool Real::equals(const Real &rhs) const {
