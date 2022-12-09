@@ -30,6 +30,10 @@ namespace fintamath {
 
     MulExpression(MulExpression &&rhs) noexcept;
 
+    MulExpression &operator=(const MulExpression &rhs) noexcept;
+
+    MulExpression &operator=(MulExpression &&rhs) noexcept;
+
     std::string toString() const override;
 
     std::string getClassName() const override;
