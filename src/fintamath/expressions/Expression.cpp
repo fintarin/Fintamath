@@ -108,7 +108,7 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     info = IExpression::parse(str);
-     if (!info) {
+    if (!info) {
       throw InvalidInputException(*this, "incorrect input");
     }
     tryCompressTree();
@@ -146,9 +146,11 @@ namespace fintamath {
     std::string result;
     for (const auto &child : children) {
       if (!child->is<Expression>()) {
-        throw InvalidInputException(*this, "unexpected parse result");
+        throw InvalidInputException(*this, child->toString());
       }
       const auto &childExpr = child->to<Expression>();
+      auto a = child->toString();
+      auto b = childExpr.info->getClassName();
       if ((childExpr.info->instanceOf<IComparable>() && childExpr.info->to<IComparable>() < Integer(0)) ||
           childExpr.info->is<AddExpression>() || childExpr.info->is<MulExpression>() || childExpr.info->is<Neg>()) {
         result += putInBrackets(child->toString());
@@ -515,7 +517,7 @@ namespace fintamath {
 
   Expression &Expression::negate() {
     auto neg = Neg();
-    if (info->toString() == neg.toString()) {
+    if (info->is<Neg>()) {
       info = children.at(0)->clone();
       children.clear();
       return *this;
@@ -528,7 +530,9 @@ namespace fintamath {
       return *this;
     }
     try {
-      return *this = neg(*this);
+      *this = neg(*this->info);
+      tryCompress();
+      return *this;
     } catch (const FunctionCallException &) {
       auto mul = MulExpression();
       mul.addElement(MulExpression::Element(std::make_unique<Expression>(Integer(-1)), false));

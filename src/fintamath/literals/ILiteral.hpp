@@ -22,7 +22,7 @@ namespace fintamath {
     }
 
     operator Expression() {
-      return Expression(*this);
+      return {*this->clone()};
     }
 
   private:

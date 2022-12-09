@@ -164,8 +164,6 @@ namespace fintamath {
     Polynom newMulPolynom;
     for(const auto& elem : mulPolynom){
       auto tmpElem = elem.info->clone();
-      auto a = tmpElem->toString();
-      auto b = tmpElem->getClassName();
       auto expr = helpers::cast<Expression>(tmpElem);
       try{
         if(!expr){
