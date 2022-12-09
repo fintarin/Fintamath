@@ -109,7 +109,7 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     info = IExpression::parse(str);
-    if (!info) {
+     if (!info) {
       throw InvalidInputException(*this, "incorrect input");
     }
     tryCompressTree();
@@ -1157,6 +1157,7 @@ namespace fintamath {
 
   MathObjectPtr Expression::simplify() const {
     auto newExpr = std::make_unique<Expression>(*this);
+    auto a = newExpr->toString();
 
     auto mathObjPtr = simplifyNeg(newExpr);
     auto exprPtr = helpers::cast<Expression>(mathObjPtr);
@@ -1185,9 +1186,6 @@ newExpr = simplifyNeg();
     if (newExpr->children.empty()) {
       return newExpr->info->clone();
     }*/
-
-    auto a = exprPtr->info->toString();
-    auto b = exprPtr->toString();
 
     return exprPtr;
   }

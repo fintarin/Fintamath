@@ -4,6 +4,7 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/helpers/Caster.hpp"
@@ -33,6 +34,7 @@ namespace fintamath{
 
   AddExpression::AddExpression(const TokenVector& tokens){ 
       parse(tokens);
+      *this = simplify()->to<AddExpression>();
   }
 
   AddExpression::AddExpression(Polynom inAddPolynom) :addPolynom(std::move(inAddPolynom)) {  
@@ -156,27 +158,33 @@ namespace fintamath{
     exprObj = helpers::cast<AddExpression>(exprPtr);
 
     exprObj->sumNumbers();
+    /*if(exprObj->addPolynom.size() == 1){
+      if(exprObj->addPolynom.at(0).inverted){
+        return Neg()(*exprObj->addPolynom.at(0).info);
+      }
+      return exprObj->addPolynom.at(0).info->clone();
+    }*/
 
     return exprObj;
   }
 
   void AddExpression::sumNumbers(){
-    MathObjectPtr sumNumResult = std::make_unique<Expression>(Integer(0));
+    MathObjectPtr sumNumResult = std::make_unique<Integer>(0);
     auto add = Add();
     auto sub = Sub();
     Polynom newAddPolynom;
     for(const auto& elem : addPolynom){
       auto tmpElem = elem.info->clone();
-      auto expr = helpers::cast<IArithmetic>(tmpElem);
+      auto expr = helpers::cast<Expression>(tmpElem);
       try{
         if(!expr){
           throw FunctionCallException();
         }
         if(!elem.inverted){
-          sumNumResult = add(*sumNumResult, *expr);
+          sumNumResult = add(*sumNumResult, *expr->getInfo());
         }
         else{
-          sumNumResult = sub(*sumNumResult, *expr);
+          sumNumResult = sub(*sumNumResult, *expr->getInfo());
         }
       }catch(const FunctionCallException &){
         newAddPolynom.emplace_back(elem);
