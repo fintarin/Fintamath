@@ -158,7 +158,7 @@ namespace fintamath {
   }
 
   void MulExpression::mulNumbers(){
-    MathObjectPtr mulNumResult = std::make_unique<Integer>(1);
+    Expression mulNumResult = Integer(1);
     auto mul = Mul();
     auto div = Div();
     Polynom newMulPolynom;
@@ -172,18 +172,17 @@ namespace fintamath {
           throw FunctionCallException();
         }
         if(!elem.inverted){
-          mulNumResult = mul(*mulNumResult, *expr->getInfo());
+          mulNumResult = mul(mulNumResult, *expr->getInfo());
         }
         else{
-          mulNumResult = div(*mulNumResult, *expr->getInfo());
+          mulNumResult = div(mulNumResult, *expr->getInfo());
         }
       }catch(const FunctionCallException &){
         newMulPolynom.emplace_back(elem);
       }
     }
-    if(newMulPolynom.empty() || mulNumResult->toString() != "1"){
-      auto expr = std::make_unique<Expression>(*mulNumResult);
-      newMulPolynom.emplace_back(Element(expr->clone(), false));
+    if(newMulPolynom.empty() || mulNumResult.toString() != "1"){
+      newMulPolynom.emplace_back(Element(mulNumResult.clone(), false));
     }
     mulPolynom = newMulPolynom;
   }

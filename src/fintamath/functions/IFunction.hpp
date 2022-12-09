@@ -27,7 +27,7 @@ namespace fintamath {
     virtual IFunction::Type getFunctionType() const = 0;
 
     template <typename... Args>
-    MathObjectPtr operator()(const Args &...args) const {
+    Expression operator()(const Args &...args) const {
       ArgumentsVector argsVect = {args...};
       return callAbstract(argsVect);
     }
@@ -44,7 +44,7 @@ namespace fintamath {
     }
 
   protected:
-    virtual MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const = 0;
+    virtual Expression callAbstract(const ArgumentsVector &argsVect) const = 0;
 
   private:
     static helpers::ParserMap<FunctionPtr> parserMap;
@@ -61,9 +61,9 @@ namespace fintamath {
     }
 
   protected:
-    virtual MathObjectPtr call(const ArgumentsVector &argsVect) const = 0;
+    virtual Expression call(const ArgumentsVector &argsVect) const = 0;
 
-    MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const final {
+    Expression callAbstract(const ArgumentsVector &argsVect) const final {
       if (!isTypeAny && argsVect.size() != sizeof...(Args)) {
         throwInvalidInput(argsVect);
       }

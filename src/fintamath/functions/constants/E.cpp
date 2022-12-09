@@ -11,7 +11,7 @@ namespace fintamath {
     return "E";
   }
 
-  MathObjectPtr E::call(const std::vector<std::reference_wrapper<const IMathObject>> & /*argsVect*/) const {
-    return e().clone();
+  Expression E::call(const std::vector<std::reference_wrapper<const IMathObject>> & /*argsVect*/) const {
+    return e();
   }
 }

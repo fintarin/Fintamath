@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/helpers/Parser.hpp"
 
 namespace fintamath {
@@ -18,6 +19,10 @@ namespace fintamath {
 
     static LiteralPtr parse(const std::string &str) {
       return helpers::parse(parserVector, str);
+    }
+
+    operator Expression() {
+      return Expression(*this);
     }
 
   private:

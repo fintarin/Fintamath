@@ -20,13 +20,13 @@ TEST(AddTests, getOperatorPriorityTest) {
 }
 
 TEST(AddTests, callTest) {
-  EXPECT_EQ(Add()(Integer(3), Integer(5))->toString(), "8");
-  EXPECT_EQ(Add()(Integer(3), Rational(5, 2))->toString(), "11/2");
-  EXPECT_EQ(Add()(Rational(5, 2), Integer(3))->toString(), "11/2");
-  EXPECT_EQ(Add()(Rational(5, 2), Rational(5, 2))->toString(), "5");
-  EXPECT_EQ(Add()(Rational(5, 2), Rational(5, 3))->toString(), "25/6");
+  EXPECT_EQ(Add()(Integer(3), Integer(5)).toString(), "8");
+  EXPECT_EQ(Add()(Integer(3), Rational(5, 2)).toString(), "11/2");
+  EXPECT_EQ(Add()(Rational(5, 2), Integer(3)).toString(), "11/2");
+  EXPECT_EQ(Add()(Rational(5, 2), Rational(5, 2)).toString(), "5");
+  EXPECT_EQ(Add()(Rational(5, 2), Rational(5, 3)).toString(), "25/6");
 
-  EXPECT_EQ(Add()(Integer(3), Variable("a"))->toString(), "a+3");
+  EXPECT_EQ(Add()(Integer(3), Variable("a")).toString(), "a+3");
 
   std::unique_ptr<IOperator> o = std::make_unique<Add>();
   EXPECT_ANY_THROW((*o)(Integer(1)));

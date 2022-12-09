@@ -16,7 +16,7 @@ namespace fintamath {
     return "Less";
   }
 
-  MathObjectPtr Less::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    return std::make_unique<Boolean>(argsVect.at(0).get().to<IComparable>() < argsVect.at(1).get().to<IComparable>());
+  Expression Less::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+    return Boolean(argsVect.at(0).get().to<IComparable>() < argsVect.at(1).get().to<IComparable>());
   }
 }

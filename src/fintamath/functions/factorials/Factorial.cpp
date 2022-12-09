@@ -15,13 +15,13 @@ namespace fintamath {
     return "Factorial";
   }
 
-  MathObjectPtr Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+  Expression Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     const auto &rhs = argsVect.at(0).get();
 
     if (!rhs.is<Integer>()) {
       throw UndefinedUnaryOpearatorException("!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
     }
 
-    return std::make_unique<Integer>(factorial(rhs.to<Integer>()));
+    return factorial(rhs.to<Integer>());
   }
 }

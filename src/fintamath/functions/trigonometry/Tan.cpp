@@ -11,7 +11,7 @@ namespace fintamath {
     return "Tan";
   }
 
-  MathObjectPtr Tan::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    return tan(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+  Expression Tan::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+    return *tan(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }
 }

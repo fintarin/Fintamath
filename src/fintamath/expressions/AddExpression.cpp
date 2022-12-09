@@ -163,7 +163,7 @@ namespace fintamath{
   }
 
   void AddExpression::sumNumbers(){
-    MathObjectPtr sumNumResult = std::make_unique<Integer>(0);
+    Expression sumNumResult = 0;
     auto add = Add();
     auto sub = Sub();
     Polynom newAddPolynom;
@@ -175,18 +175,17 @@ namespace fintamath{
           throw FunctionCallException();
         }
         if(!elem.inverted){
-          sumNumResult = add(*sumNumResult, *expr->getInfo());
+          sumNumResult = add(sumNumResult, *expr->getInfo());
         }
         else{
-          sumNumResult = sub(*sumNumResult, *expr->getInfo());
+          sumNumResult = sub(sumNumResult, *expr->getInfo());
         }
       }catch(const FunctionCallException &){
         newAddPolynom.emplace_back(elem);
       }
     }
-    if(newAddPolynom.empty() || sumNumResult->toString() != "0"){
-      auto expr = std::make_unique<Expression>(*sumNumResult);
-      newAddPolynom.emplace_back(Element(expr->clone(), false));
+    if(newAddPolynom.empty() || sumNumResult.toString() != "0"){
+      newAddPolynom.emplace_back(Element(sumNumResult.clone(), false));
     }
     addPolynom = newAddPolynom;
   }

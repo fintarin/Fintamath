@@ -16,14 +16,14 @@ TEST(AbsTests, getFunctionTypeTest) {
 }
 
 TEST(AbsTests, callTest) {
-  EXPECT_EQ(Abs()(Integer(10))->toString(), "10");
-  EXPECT_EQ(Abs()(Integer(-10))->toString(), "10");
-  EXPECT_EQ(Abs()(Rational(-5, 2))->toString(), "5/2");
+  EXPECT_EQ(Abs()(Integer(10)).toString(), "10");
+  EXPECT_EQ(Abs()(Integer(-10)).toString(), "10");
+  EXPECT_EQ(Abs()(Rational(-5, 2)).toString(), "5/2");
 
-  EXPECT_EQ(Abs()(Variable("a"))->toString(), "abs(a)");
+  EXPECT_EQ(Abs()(Variable("a")).toString(), "abs(a)");
 
   std::unique_ptr<IFunction> f = std::make_unique<Abs>();
-  EXPECT_EQ((*f)(Integer(10))->toString(), "10");
+  EXPECT_EQ((*f)(Integer(10)).toString(), "10");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }

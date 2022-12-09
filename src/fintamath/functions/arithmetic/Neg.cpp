@@ -12,7 +12,7 @@ namespace fintamath {
     return "Neg";
   }
 
-  MathObjectPtr Neg::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    return -argsVect.at(0).get().to<IArithmetic>();
+  Expression Neg::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+    return *(-argsVect.at(0).get().to<IArithmetic>());
   }
 }

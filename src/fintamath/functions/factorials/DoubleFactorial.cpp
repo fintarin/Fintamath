@@ -15,13 +15,13 @@ namespace fintamath {
     return "DoubleFactorial";
   }
 
-  MathObjectPtr DoubleFactorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+  Expression DoubleFactorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     const auto &rhs = argsVect.at(0).get();
 
     if (!rhs.is<Integer>()) {
       throw UndefinedUnaryOpearatorException("!!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
     }
 
-    return std::make_unique<Integer>(doubleFactorial(rhs.to<Integer>()));
+    return doubleFactorial(rhs.to<Integer>());
   }
 }

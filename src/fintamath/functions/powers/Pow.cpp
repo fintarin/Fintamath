@@ -14,8 +14,8 @@ namespace fintamath {
     return "Pow";
   }
 
-  MathObjectPtr Pow::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    return pow(helpers::Converter::convert<Real>(argsVect.at(0)), helpers::Converter::convert<Real>(argsVect.at(1)))
-        .simplify();
+  Expression Pow::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+    return *pow(helpers::Converter::convert<Real>(argsVect.at(0)), helpers::Converter::convert<Real>(argsVect.at(1)))
+                .simplify();
   }
 }

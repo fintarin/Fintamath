@@ -126,6 +126,9 @@ namespace fintamath {
   Expression::Expression(const IMathObject &obj) : info(obj.clone()) {
   }
 
+  Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
+  }
+
   Expression::Expression(const TokenVector &tokens) {
     parse(tokens);
     tryCompressTree();
@@ -387,23 +390,23 @@ namespace fintamath {
     return nullptr;
   }
 
-  ExpressionPtr Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-    auto funcExpr = std::make_unique<Expression>();
+  Expression Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
+    Expression funcExpr;
 
-    if(func.is<Add>() || func.is<Sub>()) {
-      funcExpr->info = buildAddExpression(func, args);
+    if (func.is<Add>() || func.is<Sub>()) {
+      funcExpr.info = buildAddExpression(func, args);
       return funcExpr;
     }
 
-    if(func.is<Mul>() || func.is<Div>()) {
-      funcExpr->info = buildMulExpression(func, args);
+    if (func.is<Mul>() || func.is<Div>()) {
+      funcExpr.info = buildMulExpression(func, args);
       return funcExpr;
     }
 
-    funcExpr->info = func.clone();
-    
+    funcExpr.info = func.clone();
+
     for (const auto &arg : args) {
-      funcExpr->children.push_back(std::make_unique<Expression>(arg.get())->clone());
+      funcExpr.children.push_back(std::make_unique<Expression>(arg.get())->clone());
     }
 
     // TODO add simplify here
@@ -478,8 +481,7 @@ namespace fintamath {
     auto addExpr = std::make_unique<AddExpression>();
     addExpr->addElement({std::make_unique<Expression>(*this), false});
     addExpr->addElement({std::make_unique<Expression>(rhs), false});
-    auto simplExpr = addExpr->simplify();
-    this->info = helpers::cast<AddExpression>(simplExpr);
+    this->info = helpers::cast<AddExpression>(addExpr->simplify());
     this->children.clear();
     return *this;
   }
@@ -488,8 +490,7 @@ namespace fintamath {
     auto addExpr = std::make_unique<AddExpression>();
     addExpr->addElement({std::make_unique<Expression>(*this), false});
     addExpr->addElement({std::make_unique<Expression>(rhs), true});
-    auto simplExpr = addExpr->simplify();
-    this->info = helpers::cast<AddExpression>(simplExpr);
+    this->info = helpers::cast<AddExpression>(addExpr->simplify());
     this->children.clear();
     return *this;
   }
@@ -498,18 +499,16 @@ namespace fintamath {
     auto mulExpr = std::make_unique<MulExpression>();
     mulExpr->addElement({std::make_unique<Expression>(*this), false});
     mulExpr->addElement({std::make_unique<Expression>(rhs), false});
-    auto simplExpr = mulExpr->simplify();
-    this->info = helpers::cast<MulExpression>(simplExpr);
+    this->info = helpers::cast<MulExpression>(mulExpr->simplify());
     this->children.clear();
     return *this;
   }
 
   Expression &Expression::divide(const Expression &rhs) {
-    auto mulExpr = std::make_unique<MulExpression>();
-    mulExpr->addElement({std::make_unique<Expression>(*this), false});
-    mulExpr->addElement({std::make_unique<Expression>(rhs), true});
-    auto simplExpr = mulExpr->simplify();
-    this->info = helpers::cast<MulExpression>(simplExpr);
+    auto divExpr = std::make_unique<MulExpression>();
+    divExpr->addElement({std::make_unique<Expression>(*this), false});
+    divExpr->addElement({std::make_unique<Expression>(rhs), true});
+    this->info = helpers::cast<MulExpression>(divExpr->simplify());
     this->children.clear();
     return *this;
   }
@@ -529,8 +528,7 @@ namespace fintamath {
       return *this;
     }
     try {
-      info = neg(*info);
-      return *this;
+      return *this = neg(*this);
     } catch (const FunctionCallException &) {
       auto mul = MulExpression();
       mul.addElement(MulExpression::Element(std::make_unique<Expression>(Integer(-1)), false));
@@ -1164,35 +1162,27 @@ namespace fintamath {
      return newExpr;
    }
  */
-  MathObjectPtr Expression::simplifyNeg(std::unique_ptr<Expression> &expr) const {
-    auto a = expr->toString();
-    if (!expr->info->is<Neg>()) {
-      return expr->clone();
+  Expression Expression::simplifyNeg(Expression expr) {
+    if (!expr.info->is<Neg>()) {
+      return expr;
     }
-    auto mathExpr = expr->clone();
-    auto newExpr = helpers::cast<Expression>(mathExpr);
 
-    auto exprPtr = helpers::cast<Expression>(newExpr->children.at(0));
+    auto exprPtr = helpers::cast<Expression>(expr.children.at(0));
     if (!exprPtr) {
-      return newExpr;
+      return expr;
     }
     if (!exprPtr->info->is<Neg>()) {
       return Neg()(*exprPtr->tryCompress());
     }
-    newExpr->info = exprPtr->children.at(0)->clone();
-    newExpr->tryCompressTree();
-    return newExpr;
+    expr.info = exprPtr->children.at(0)->clone();
+    expr.tryCompressTree();
+    return expr;
   }
 
   MathObjectPtr Expression::simplify() const {
-    auto newExpr = std::make_unique<Expression>(*this);
-    auto a = newExpr->toString();
-
-    auto mathObjPtr = simplifyNeg(newExpr);
-    auto exprPtr = helpers::cast<Expression>(mathObjPtr);
-    if (exprPtr->info && ((exprPtr->info->getClassName() == AddExpression().getClassName()) ||
-                          (exprPtr->info->getClassName() == MulExpression().getClassName()))) {
-      exprPtr->info = exprPtr->info->simplify();
+    Expression expr = simplifyNeg(*this);
+    if (expr.info && (expr.info->is<AddExpression>() || expr.info->is<MulExpression>())) {
+      expr.info = expr.info->simplify();
     }
 
     /*auto newExpr = std::make_shared<Expression>(*this);
@@ -1215,7 +1205,7 @@ newExpr = simplifyNeg();
       return newExpr->info->clone();
     }*/
 
-    return exprPtr;
+    return expr.clone();
   }
 
   std::string Expression::getClassName() const {

@@ -24,17 +24,19 @@ namespace fintamath {
 
     Expression(Expression &&rhs) noexcept;
 
-    explicit Expression(const TokenVector &tokens);
-
     Expression &operator=(const Expression &rhs) noexcept;
 
     Expression &operator=(Expression &&rhs) noexcept;
 
     ~Expression() override = default;
 
+    explicit Expression(const TokenVector &tokens);
+
     explicit Expression(const std::string &str);
 
-    explicit Expression(const IMathObject &obj);
+    Expression(const IMathObject &obj);
+
+    Expression(int64_t val);
 
     std::string toString() const override;
 
@@ -48,7 +50,7 @@ namespace fintamath {
 
     MathObjectPtr tryCompress() const;
 
-    static ExpressionPtr buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+    static Expression buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
   protected:
     Expression &add(const Expression &rhs) override;
@@ -101,7 +103,7 @@ namespace fintamath {
 
     std::string functionToString() const;
 
-    MathObjectPtr simplifyNeg(std::unique_ptr<Expression> &expr) const;
+    static Expression simplifyNeg(Expression expr);
 
     /*ExprPtr baseSimplify() const;
 

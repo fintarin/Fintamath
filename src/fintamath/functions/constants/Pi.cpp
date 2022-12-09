@@ -11,7 +11,7 @@ namespace fintamath {
     return "Pi";
   }
 
-  MathObjectPtr Pi::call(const std::vector<std::reference_wrapper<const IMathObject>> & /*argsVect*/) const {
-    return pi().clone();
+  Expression Pi::call(const std::vector<std::reference_wrapper<const IMathObject>> & /*argsVect*/) const {
+    return pi();
   }
 }

@@ -16,8 +16,11 @@ namespace fintamath {
     return "Eqv";
   }
 
-  MathObjectPtr Eqv::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    // TODO make Expression here if false
-    return std::make_unique<Boolean>(argsVect.at(0).get() == argsVect.at(1).get());
+  Expression Eqv::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+    if (argsVect.at(0).get() != argsVect.at(1).get()) {
+      return Expression::buildFunctionExpression(*this, argsVect);
+    }
+
+    return Boolean(true);
   }
 }
