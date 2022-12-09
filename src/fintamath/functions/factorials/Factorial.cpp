@@ -1,5 +1,6 @@
 #include "fintamath/functions/factorials/Factorial.hpp"
 
+#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 #include "fintamath/numbers/NumericFunctions.hpp"
 
 namespace fintamath {
@@ -15,6 +16,12 @@ namespace fintamath {
   }
 
   MathObjectPtr Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    return std::make_unique<Integer>(factorial(argsVect.at(0).get().to<Integer>()));
+    const auto &rhs = argsVect.at(0).get();
+
+    if (!rhs.is<Integer>()) {
+      throw UndefinedUnaryOpearatorException("!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
+    }
+
+    return std::make_unique<Integer>(factorial(rhs.to<Integer>()));
   }
 }

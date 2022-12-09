@@ -4,7 +4,7 @@
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  class Factorial : public IOperatorCRTP<Factorial, Integer> {
+  class Factorial : public IOperatorCRTP<Factorial, INumber> {
   public:
     Factorial();
 

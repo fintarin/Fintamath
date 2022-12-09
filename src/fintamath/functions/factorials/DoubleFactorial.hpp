@@ -4,7 +4,7 @@
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  class DoubleFactorial : public IOperatorCRTP<DoubleFactorial, Integer> {
+  class DoubleFactorial : public IOperatorCRTP<DoubleFactorial, INumber> {
   public:
     DoubleFactorial();
 

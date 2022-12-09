@@ -4,7 +4,7 @@
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  class Percent : public IOperatorCRTP<Percent, Integer> {
+  class Percent : public IOperatorCRTP<Percent, INumber> {
   public:
     Percent();
 

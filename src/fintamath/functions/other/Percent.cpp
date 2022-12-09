@@ -1,5 +1,6 @@
 #include "fintamath/functions/other/Percent.hpp"
 
+#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
@@ -16,6 +17,13 @@ namespace fintamath {
 
   MathObjectPtr Percent::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     constexpr int64_t percentValue = 100;
+
+    const auto &rhs = argsVect.at(0).get();
+
+    if (!rhs.is<Integer>()) {
+      throw UndefinedUnaryOpearatorException("%", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
+    }
+
     return (helpers::Converter::convert(argsVect.at(0), Rational())->to<Rational>() / percentValue).simplify();
   }
 }
