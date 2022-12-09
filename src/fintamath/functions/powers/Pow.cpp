@@ -1,6 +1,6 @@
 #include "fintamath/functions/powers/Pow.hpp"
 
-#include "fintamath/numbers/NumericFunctions.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
   Pow::Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation) {
@@ -15,10 +15,7 @@ namespace fintamath {
   }
 
   MathObjectPtr Pow::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    constexpr int64_t defaultPrecision = 45;
-
-    return pow(helpers::Converter::convert(argsVect.at(0), Rational())->to<Rational>(),
-               helpers::Converter::convert(argsVect.at(1), Rational())->to<Rational>(), defaultPrecision)
+    return pow(helpers::Converter::convert<Real>(argsVect.at(0)), helpers::Converter::convert<Real>(argsVect.at(1)))
         .simplify();
   }
 }

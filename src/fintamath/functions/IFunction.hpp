@@ -6,6 +6,9 @@
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/helpers/Parser.hpp"
 
+template <typename Head, typename... Tail>
+struct A {};
+
 namespace fintamath {
   class IFunction;
   using FunctionPtr = std::unique_ptr<IFunction>;

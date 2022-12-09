@@ -1,12 +1,11 @@
 #pragma once
 
 #include "fintamath/functions/IFunction.hpp"
-#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class Abs : public IFunctionCRTP<Abs, INumber> {
+  class Pi : public IFunctionCRTP<Pi> {
   public:
-    Abs() = default;
+    Pi() = default;
 
     std::string toString() const override;
 

@@ -113,8 +113,6 @@ namespace fintamath {
 
     ExprPtr simplifyFunctions(const ExprPtr &expr) const;
 
-    ExprPtr simplifyConstant(const ExprPtr &expr) const;
-
     ExprPtr invertSubDiv(const ExprPtr &expr) const;
 
     ExprPtr rebuildAdd(const ExprPtr &expr) const;

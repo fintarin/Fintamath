@@ -5,31 +5,27 @@
 #include <stdexcept>
 #include <string>
 
-#include "boost/multiprecision/cpp_dec_float.hpp"
-
+#include "fintamath/core/Constants.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/numbers/NumberImpls.hpp"
 
 using namespace boost::multiprecision;
 
 namespace fintamath {
-  struct RealImpl {
-    cpp_dec_float_100 v;
-  };
-
   Real::Real() {
-    value = std::make_unique<RealImpl>();
+    impl = std::make_unique<RealImpl>();
   }
 
   Real::Real(const Real &rhs) : Real() {
-    value->v.assign(rhs.value->v);
+    impl->v.assign(rhs.impl->v);
   }
 
   Real::Real(Real &&) noexcept = default;
 
   Real &Real::operator=(const Real &rhs) {
     if (this != &rhs) {
-      value = std::make_unique<RealImpl>(*rhs.value);
+      impl = std::make_unique<RealImpl>(*rhs.impl);
     }
     return *this;
   }
@@ -37,6 +33,9 @@ namespace fintamath {
   Real &Real::operator=(Real &&) noexcept = default;
 
   Real::~Real() = default;
+
+  Real::Real(const RealImpl &impl) : impl(std::make_unique<RealImpl>(impl)) {
+  }
 
   Real::Real(std::string str) : Real() {
     if (str.empty()) {
@@ -70,7 +69,7 @@ namespace fintamath {
     }
 
     try {
-      value->v.assign(str);
+      impl->v.assign(str);
     } catch (const std::runtime_error &) {
       throw InvalidInputException(*this, str);
     }
@@ -88,11 +87,11 @@ namespace fintamath {
   }
 
   Real::Real(double val) : Real() {
-    value->v.assign(val);
+    impl->v.assign(val);
   }
 
   std::string Real::toString() const {
-    return value->v.str();
+    return impl->v.str(FINTAMATH_DEFAULT_OUTPUT_PRECISION);
   }
 
   std::string Real::getClassName() const {
@@ -114,34 +113,38 @@ namespace fintamath {
   Real Real::round(size_t precision) const {
     Real precCoeff("1" + std::string(precision, '0'));
     Real res = *this * precCoeff;
-    res.value->v = boost::multiprecision::round(res.value->v);
+    res.impl->v = boost::multiprecision::round(res.impl->v);
     return res / precCoeff;
   }
 
+  const std::unique_ptr<RealImpl> &Real::getImpl() const {
+    return impl;
+  }
+
   bool Real::equals(const Real &rhs) const {
-    return value->v == rhs.value->v;
+    return impl->v == rhs.impl->v;
   }
 
   bool Real::less(const Real &rhs) const {
-    return value->v < rhs.value->v;
+    return impl->v < rhs.impl->v;
   }
 
   bool Real::more(const Real &rhs) const {
-    return value->v > rhs.value->v;
+    return impl->v > rhs.impl->v;
   }
 
   Real &Real::add(const Real &rhs) {
-    value->v += rhs.value->v;
+    impl->v += rhs.impl->v;
     return *this;
   }
 
   Real &Real::substract(const Real &rhs) {
-    value->v -= rhs.value->v;
+    impl->v -= rhs.impl->v;
     return *this;
   }
 
   Real &Real::multiply(const Real &rhs) {
-    value->v *= rhs.value->v;
+    impl->v *= rhs.impl->v;
     return *this;
   }
 
@@ -150,32 +153,22 @@ namespace fintamath {
       throw UndefinedBinaryOpearatorException("/", toString(), rhs.toString());
     }
 
-    value->v /= rhs.value->v;
+    impl->v /= rhs.impl->v;
     return *this;
   }
 
   Real &Real::negate() {
-    value->v = -value->v;
+    impl->v = -impl->v;
     return *this;
   }
 
   Real &Real::increase() {
-    ++value->v;
+    ++impl->v;
     return *this;
   }
 
   Real &Real::decrease() {
-    --value->v;
+    --impl->v;
     return *this;
-  }
-
-  Real sqrt(Real rhs) {
-    if (rhs < 0) {
-      throw UndefinedFunctionException("sqrt", {rhs.toString()});
-    }
-
-    rhs.value->v = sqrt(rhs.value->v);
-
-    return rhs;
   }
 }

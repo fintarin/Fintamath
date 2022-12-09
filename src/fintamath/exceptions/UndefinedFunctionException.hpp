@@ -29,8 +29,5 @@ namespace fintamath {
     const char *what() const noexcept override {
       return content.c_str();
     }
-
-  private:
-    std::string content;
   };
 }

@@ -1,7 +1,7 @@
 #include "fintamath/functions/factorials/Factorial.hpp"
 
 #include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
-#include "fintamath/numbers/NumericFunctions.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
 
 namespace fintamath {
   Factorial::Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {

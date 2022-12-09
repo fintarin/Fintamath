@@ -21,6 +21,11 @@ namespace fintamath::helpers {
       return converter(value, type);
     }
 
+    template <typename T>
+    static T convert(const IMathObject &value) {
+      return convert(value, T())->template to<T>();
+    }
+
   private:
     static MultiMethod<MathObjectPtr(const IMathObject &, const IMathObject &)> converter;
   };

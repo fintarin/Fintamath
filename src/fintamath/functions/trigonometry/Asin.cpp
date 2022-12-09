@@ -1,6 +1,6 @@
 #include "fintamath/functions/trigonometry/Asin.hpp"
 
-#include "fintamath/numbers/NumericFunctions.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
   std::string Asin::toString() const {
@@ -12,7 +12,6 @@ namespace fintamath {
   }
 
   MathObjectPtr Asin::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    constexpr int64_t defaultPrecision = 45;
-    return asin(helpers::Converter::convert(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
+    return asin(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }
 }

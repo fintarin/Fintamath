@@ -1,6 +1,6 @@
 #include "fintamath/functions/logarithms/Lb.hpp"
 
-#include "fintamath/numbers/NumericFunctions.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
   std::string Lb::toString() const {
@@ -12,7 +12,6 @@ namespace fintamath {
   }
 
   MathObjectPtr Lb::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    constexpr int64_t defaultPrecision = 45;
-    return lb(helpers::Converter::convert(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
+    return lb(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }
 }

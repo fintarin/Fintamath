@@ -1,6 +1,6 @@
 #include "fintamath/functions/trigonometry/Atan.hpp"
 
-#include "fintamath/numbers/NumericFunctions.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
   std::string Atan::toString() const {
@@ -12,7 +12,6 @@ namespace fintamath {
   }
 
   MathObjectPtr Atan::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    constexpr int64_t defaultPrecision = 45;
-    return atan(helpers::Converter::convert(argsVect.at(0), Rational())->to<Rational>(), defaultPrecision).simplify();
+    return atan(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }
 }

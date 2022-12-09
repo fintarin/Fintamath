@@ -25,6 +25,8 @@ namespace fintamath {
 
     ~Real() override;
 
+    Real(const RealImpl &impl);
+
     explicit Real(std::string str);
 
     Real(const Rational &val);
@@ -43,7 +45,7 @@ namespace fintamath {
 
     Real round(size_t precision = 0) const;
 
-    friend Real sqrt(Real rhs);
+    const std::unique_ptr<RealImpl> &getImpl() const;
 
   protected:
     bool equals(const Real &rhs) const override;
@@ -67,6 +69,6 @@ namespace fintamath {
     Real &decrease() override;
 
   private:
-    std::unique_ptr<RealImpl> value;
+    std::unique_ptr<RealImpl> impl;
   };
 }

@@ -17,8 +17,8 @@ TEST(LgTests, getFunctionTypeTest) {
 
 TEST(LgTests, callTest) {
   EXPECT_EQ(Lg()(Integer(10))->toString(), "1");
-  EXPECT_EQ(Lg()(Integer(20))->toString(), "1.301029995663981195213738894724493027");
-  EXPECT_EQ(Lg()(Integer(2))->toString(), "0.301029995663981195213738894724493027");
+  EXPECT_EQ(Lg()(Integer(20))->toString(), "1.3010299956639811952137388947244930267681898814621085413104274611271081892744245");
+  EXPECT_EQ(Lg()(Integer(2))->toString(), "0.30102999566398119521373889472449302676818988146210854131042746112710818927442451");
   EXPECT_EQ(Lg()(Rational(1, 10))->toString(), "-1");
 
   EXPECT_EQ(Lg()(Variable("a"))->toString(), "lg(a)");
@@ -26,7 +26,7 @@ TEST(LgTests, callTest) {
   EXPECT_ANY_THROW(Lg()(Integer(-10)));
 
   std::unique_ptr<IFunction> f = std::make_unique<Lg>();
-  EXPECT_EQ((*f)(Integer(20))->toString(), "1.301029995663981195213738894724493027");
+  EXPECT_EQ((*f)(Integer(20))->toString(), "1.3010299956639811952137388947244930267681898814621085413104274611271081892744245");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(10), Integer(10), Integer(10)));
 }

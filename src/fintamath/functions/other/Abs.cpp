@@ -1,6 +1,7 @@
 #include "fintamath/functions/other/Abs.hpp"
 
-#include "fintamath/numbers/NumericFunctions.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberFunctions.hpp"
 
 namespace fintamath {
   std::string Abs::toString() const {
@@ -12,6 +13,10 @@ namespace fintamath {
   }
 
   MathObjectPtr Abs::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    return abs(helpers::Converter::convert(argsVect.at(0), Rational())->to<Rational>()).simplify();
+    const auto &rhs = argsVect.at(0).get().to<INumber>();
+    if (rhs < Integer(0)) {
+      return -rhs;
+    }
+    return rhs.clone();
   }
 }

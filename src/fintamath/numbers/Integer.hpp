@@ -25,6 +25,8 @@ namespace fintamath {
 
     ~Integer() override;
 
+    Integer(const IntegerImpl &impl);
+
     explicit Integer(std::string str);
 
     Integer(int64_t val);
@@ -33,7 +35,7 @@ namespace fintamath {
 
     std::string getClassName() const override;
 
-    friend Integer sqrt(Integer rhs);
+    const std::unique_ptr<IntegerImpl> &getImpl() const;
 
   protected:
     bool equals(const Integer &rhs) const override;
@@ -59,6 +61,6 @@ namespace fintamath {
     Integer &decrease() override;
 
   private:
-    std::unique_ptr<IntegerImpl> value;
+    std::unique_ptr<IntegerImpl> impl;
   };
 }

@@ -27,7 +27,6 @@
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
@@ -1198,7 +1197,6 @@ namespace fintamath {
 
     /*auto newExpr = std::make_shared<Expression>(*this);
 
-    newExpr = simplifyConstant(newExpr);
     newExpr = simplifyFunctions(newExpr);
 newExpr = simplifyNeg();
     newExpr = invertSubDiv(newExpr);*/

@@ -1,6 +1,6 @@
 #include "fintamath/functions/logarithms/Log.hpp"
 
-#include "fintamath/numbers/NumericFunctions.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
   std::string Log::toString() const {
@@ -12,10 +12,7 @@ namespace fintamath {
   }
 
   MathObjectPtr Log::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    constexpr int64_t defaultPrecision = 45;
-
-    return log(helpers::Converter::convert(argsVect.at(0), Rational())->to<Rational>(),
-               helpers::Converter::convert(argsVect.at(1), Rational())->to<Rational>(), defaultPrecision)
+    return log(helpers::Converter::convert<Real>(argsVect.at(0)), helpers::Converter::convert<Real>(argsVect.at(1)))
         .simplify();
   }
 }

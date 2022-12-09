@@ -2,9 +2,10 @@
 
 #include "fintamath/functions/trigonometry/Sin.hpp"
 
+#include "fintamath/functions/constants/Pi.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 using namespace fintamath;
 
@@ -18,15 +19,15 @@ TEST(SinTests, getFunctionTypeTest) {
 
 TEST(SinTests, callTest) {
   EXPECT_EQ(Sin()(Integer(0))->toString(), "0");
-  EXPECT_EQ(Sin()(Integer(10))->toString(), "-0.544021110889369813404747661851377282");
-  EXPECT_EQ(Sin()(Integer(5))->toString(), "-0.958924274663138468893154406155993973");
-  EXPECT_EQ(Sin()(Rational(1, 10))->toString(), "0.099833416646828152306814198410622027");
-  EXPECT_EQ(Sin()(Pi().getValue(10) / 2)->toString(), "1");
+  EXPECT_EQ(Sin()(Integer(10))->toString(), "-0.54402111088936981340474766185137728168364301291622389157418401261675720964049343");
+  EXPECT_EQ(Sin()(Integer(5))->toString(), "-0.9589242746631384688931544061559939733524615439646017781316724542351025580865596");
+  EXPECT_EQ(Sin()(Rational(1, 10))->toString(), "0.099833416646828152306814198410622026989915388017982259992766861561651744283292428");
+  EXPECT_EQ(Sin()(*(Pi()()->to<INumber>() / Integer(2)))->toString(), "1");
 
   EXPECT_EQ(Sin()(Variable("a"))->toString(), "sin(a)");
 
   std::unique_ptr<IFunction> f = std::make_unique<Sin>();
-  EXPECT_EQ((*f)(Integer(10))->toString(), "-0.544021110889369813404747661851377282");
+  EXPECT_EQ((*f)(Integer(10))->toString(), "-0.54402111088936981340474766185137728168364301291622389157418401261675720964049343");
   EXPECT_ANY_THROW((*f)());
   EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
 }
