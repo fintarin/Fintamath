@@ -11,7 +11,7 @@ namespace fintamath{
 
   }
 
-  AddExpression::AddExpression(const TokenVector& tokens) { 
+  AddExpression::AddExpression(const TokenVector& tokens){ 
       parse(tokens);
   }
 
@@ -20,7 +20,15 @@ namespace fintamath{
   }
 
   std::string AddExpression::toString() const {
-      return {};
+    std::string result;
+    result.push_back('(');
+    for(const auto & var : addPolynom){
+      result += var.info->toString();
+      result += var.inverted ? '-' : '+';
+    }
+    result.pop_back();
+    result.push_back(')');
+    return result;
   }
 
   void AddExpression::parse(const TokenVector& tokens){
@@ -28,9 +36,12 @@ namespace fintamath{
       if(tokens[i] == "(" && !skipBrackets(tokens, i)){
         throw InvalidInputException(*this, " braces must be closed");
       }
+      if(i == tokens.size()){
+        break;
+      }
       if(tokens[i] != "+" && tokens[i] != "-"){
         continue;
-        }
+      }
       if(i == tokens.size() - 1){
         throw InvalidInputException(*this, " unexpected sign");
       }
@@ -38,8 +49,9 @@ namespace fintamath{
       continue;
       }
 
-      addPolynom.emplace_back(Element(IExpression::parse(cutBraces(TokenVector(tokens.begin(), tokens.begin() + (long)i)))));
-      addPolynom.emplace_back(Element(IExpression::parse(cutBraces(TokenVector(tokens.begin() + (long)i + 1, tokens.end()))), tokens[i] == "-"));
+      addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
+      addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "-"));
+      return;
     }
     throw InvalidInputException(*this, " not an AddExpression");
   }
