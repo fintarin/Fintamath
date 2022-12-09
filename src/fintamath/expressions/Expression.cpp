@@ -53,8 +53,7 @@ namespace fintamath {
   std::string cutBraces(const std::string &str) {
     std::string strExpr = str;
     if (strExpr.front() == '(' && strExpr.back() == ')') {
-      strExpr.erase(strExpr.begin());
-      strExpr.erase(strExpr.end() - 1);
+      
     }
     return strExpr;
   }
@@ -100,11 +99,6 @@ namespace fintamath {
   }
 
   Expression::Expression(const std::string &str) {
-    auto tokens = tokenize(str);
-    if (tokens.empty()) {
-      throw InvalidInputException(*this, str);
-    }
-
     info = IExpression::parse(str);
 
     /*if (countEqual(exprStr) == 0) {

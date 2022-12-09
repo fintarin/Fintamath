@@ -39,7 +39,7 @@ namespace fintamath {
       if(isSpecial(value)){
         appendToken(tokens, digitToken);
         appendToken(tokens, letterToken);
-        if(findCharInStr(value, oneSymbolTokens)){
+        if(isOneSymbolToken(value)){
           tokens.push_back(std::string(1, value));
           continue;
         }
@@ -129,6 +129,27 @@ namespace fintamath {
 
   bool IExpression::isBracket(const std::string& c){
     return c.size() == 1 && isBracket(c[0]);
+  }
+
+  bool IExpression::isOneSymbolToken(char token){
+    static std::string oneSymbolTokens = "+-*/%^";
+    return findCharInStr(token, oneSymbolTokens);
+  }
+  
+  bool IExpression::isOneSymbolToken(const std::string& token){
+    return token.size() == 1 && isOneSymbolToken(token[0]);
+  }
+
+  TokenVector IExpression::cutBraces(const TokenVector& tokens){
+    if(tokens.empty()){
+      return tokens;
+    }
+    auto newTokens = tokens;
+    if(newTokens.front() == "(" && newTokens.back() == ")"){
+      newTokens.erase(newTokens.begin());
+      newTokens.erase(newTokens.end() - 1);
+    }
+    return newTokens;
   }
 
 
