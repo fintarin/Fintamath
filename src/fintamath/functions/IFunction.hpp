@@ -66,9 +66,7 @@ namespace fintamath {
       }
 
       if (!validateArgs(argsVect)) {
-        // TODO make Expression
-        // return std::make_unique<Expression>(clone(), argsVect);
-        throwInvalidInput(argsVect);
+        return Expression::buildFunctionExpression(*this, argsVect);
       }
 
       return call(argsVect);

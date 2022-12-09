@@ -11,6 +11,8 @@
 #include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
+  class IFunction;
+
   class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
   public:
     using Vector = std::vector<MathObjectPtr>;
@@ -45,6 +47,8 @@ namespace fintamath {
     const Expression::Vector &getChildren() const;
 
     MathObjectPtr tryCompress() const;
+
+    static ExpressionPtr buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
   protected:
     Expression &add(const Expression &rhs) override;
