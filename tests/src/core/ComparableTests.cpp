@@ -9,7 +9,7 @@
 using namespace fintamath;
 
 namespace fintamath::tests {
-  class TestComparable : public ComparableCRTP<TestComparable> {
+  class TestComparable : public IComparableCRTP<TestComparable> {
   public:
     std::string toString() const override {
       return {};

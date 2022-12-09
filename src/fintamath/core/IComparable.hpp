@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/exceptions/FunctionCallException.hpp"
 
 namespace fintamath {
   class IComparable;
@@ -39,7 +40,7 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class ComparableCRTP : virtual public IComparable, virtual public IMathObjectCRTP<Derived> {
+  class IComparableCRTP : virtual public IComparable, virtual public IMathObjectCRTP<Derived> {
   public:
     bool operator<(const Derived &rhs) const {
       return less(rhs);
@@ -63,11 +64,31 @@ namespace fintamath {
     virtual bool more(const Derived &rhs) const = 0;
 
     bool lessAbstract(const IComparable &rhs) const final {
-      FINTAMATH_COMPARISON_OPERATOR(IComparable, <);
+      return executeAbstract(
+          rhs, "<", [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) { return lhs.less(rhs); },
+          [](const IComparable &lhs, const IComparable &rhs) { return lhs < rhs; });
     }
 
     bool moreAbstract(const IComparable &rhs) const final {
-      FINTAMATH_COMPARISON_OPERATOR(IComparable, >);
+      return executeAbstract(
+          rhs, ">", [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) { return lhs.more(rhs); },
+          [](const IComparable &lhs, const IComparable &rhs) { return lhs > rhs; });
+    }
+
+  private:
+    bool executeAbstract(const IComparable &rhs, const std::string &excStr,
+                         std::function<bool(const IComparableCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
+                         std::function<bool(const IComparable &, const IComparable &)> &&f2) const {
+      if (rhs.is<Derived>()) {
+        return f1(*this, rhs.to<Derived>());
+      }
+      if (MathObjectPtr tmpRhs = helpers::Converter::convert(rhs, *this); tmpRhs != nullptr) {
+        return f1(*this, tmpRhs->template to<Derived>());
+      }
+      if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
+        return f2(tmpLhs->to<IComparable>(), rhs);
+      }
+      throw FunctionCallException(excStr, {toString(), rhs.toString()});
     }
   };
 

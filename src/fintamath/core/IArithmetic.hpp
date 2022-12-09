@@ -116,22 +116,31 @@ namespace fintamath {
     virtual Derived &negate() = 0;
 
     ArithmeticPtr addAbstract(const IArithmetic &rhs) const final {
-      FINTAMATH_ARITHMETIC_OPERATOR(IArithmetic, +);
+      return executeAbstract(
+          rhs, "+", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.add(rhs); },
+          [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs + rhs; });
     }
 
     ArithmeticPtr substractAbstract(const IArithmetic &rhs) const final {
-      FINTAMATH_ARITHMETIC_OPERATOR(IArithmetic, -);
+      return executeAbstract(
+          rhs, "-", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.substract(rhs); },
+          [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs - rhs; });
     }
 
     ArithmeticPtr multiplyAbstract(const IArithmetic &rhs) const final {
-      FINTAMATH_ARITHMETIC_OPERATOR(IArithmetic, *);
+      return executeAbstract(
+          rhs, "*", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.multiply(rhs); },
+          [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs * rhs; });
     }
 
     ArithmeticPtr divideAbstract(const IArithmetic &rhs) const final {
       if (auto tmp = multiDiv(*this, rhs); tmp != nullptr) {
         return tmp;
       }
-      FINTAMATH_ARITHMETIC_OPERATOR(IArithmetic, /);
+
+      return executeAbstract(
+          rhs, "/", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.divide(rhs); },
+          [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs / rhs; });
     }
 
     ArithmeticPtr convertAbstract() const final {
@@ -143,6 +152,23 @@ namespace fintamath {
     }
 
   private:
+    ArithmeticPtr executeAbstract(const IArithmetic &rhs, const std::string &excStr,
+                                  std::function<Derived(IArithmeticCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
+                                  std::function<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> &&f2) const {
+      if (rhs.is<Derived>()) {
+        auto tmpLhs = helpers::cast<IArithmeticCRTP<Derived>>(clone());
+        return helpers::cast<IArithmetic>(f1(*tmpLhs, rhs.to<Derived>()).simplify());
+      }
+      if (MathObjectPtr tmpRhs = helpers::Converter::convert(rhs, *this); tmpRhs != nullptr) {
+        auto tmpLhs = helpers::cast<IArithmeticCRTP<Derived>>(clone());
+        return helpers::cast<IArithmetic>(f1(*tmpLhs, tmpRhs->to<Derived>()).simplify());
+      }
+      if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
+        return helpers::cast<IArithmetic>(f2(tmpLhs->to<IArithmetic>(), rhs)->simplify());
+      }
+      throw FunctionCallException(excStr, {toString(), rhs.toString()});
+    }
+
     friend ArithmeticPtr multiDiv(const IArithmetic &lhs, const IArithmetic &rhs);
   };
 

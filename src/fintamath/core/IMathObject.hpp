@@ -1,10 +1,12 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <sstream>
 #include <string>
+#include <vector>
 
-#include "fintamath/core/Defines.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
   class IMathObject;
@@ -76,7 +78,16 @@ namespace fintamath {
     virtual bool equals(const Derived &rhs) const = 0;
 
     bool equalsAbstract(const IMathObject &rhs) const final {
-      FINTAMATH_EQUALS_OPERATOR();
+      if (rhs.is<Derived>()) {
+        return equals(rhs.to<Derived>());
+      }
+      if (MathObjectPtr tmpRhs = helpers::Converter::convert(rhs, *this); tmpRhs != nullptr) {
+        return equals(tmpRhs->template to<Derived>());
+      }
+      if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
+        return *tmpLhs == rhs;
+      }
+      return false;
     }
   };
 

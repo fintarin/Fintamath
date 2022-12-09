@@ -35,7 +35,19 @@ namespace fintamath {
     virtual Derived &mod(const Derived &rhs) = 0;
 
     ModularPtr modAbstract(const IModular &rhs) const final {
-      FINTAMATH_ARITHMETIC_OPERATOR(IModular, %);
+      if (rhs.is<Derived>()) {
+        auto tmpLhs = helpers::cast<IModularCRTP<Derived>>(clone());
+        return helpers::cast<IModular>(tmpLhs->mod(rhs.to<Derived>()).simplify());
+      }
+      if (MathObjectPtr tmpRhs = helpers::Converter::convert(rhs, *this); tmpRhs != nullptr) {
+        auto tmpLhs = helpers::cast<IModularCRTP<Derived>>(clone());
+        return helpers::cast<IModular>(tmpLhs->mod(tmpRhs->to<Derived>()).simplify());
+      }
+      if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
+        auto res = (tmpLhs->to<IModular>() % rhs)->simplify();
+        return helpers::cast<IModular>(res);
+      }
+      throw FunctionCallException("%", {toString(), rhs.toString()});
     }
   };
 

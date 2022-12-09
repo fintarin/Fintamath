@@ -54,7 +54,7 @@ namespace fintamath {
 
   template <typename Derived>
   class INumberCRTP : public INumber,
-                      public ComparableCRTP<Derived>,
+                      public IComparableCRTP<Derived>,
                       public IArithmeticCRTP<Derived>,
                       public IIncrementalCRTP<Derived> {};
 }
