@@ -390,14 +390,43 @@ namespace fintamath {
 
   ExpressionPtr Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
     auto funcExpr = std::make_unique<Expression>();
+
+    if(func.is<Add>() || func.is<Sub>()) {
+      funcExpr->info = buildAddExpression(func, args);
+      return funcExpr;
+    }
+
+    if(func.is<Mul>() || func.is<Div>()) {
+      funcExpr->info = buildMulExpression(func, args);
+      return funcExpr;
+    }
+
     funcExpr->info = func.clone();
     
     for (const auto &arg : args) {
-      funcExpr->children.push_back(arg.get().clone());
+      funcExpr->children.push_back(std::make_unique<Expression>(arg.get())->clone());
     }
 
     // TODO add simplify here
     return funcExpr;
+  }
+
+  ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args){
+    auto addExpr = std::make_unique<AddExpression>();
+    auto firstEl = std::make_unique<Expression>(args.at(0).get());
+    auto secondEl = std::make_unique<Expression>(args.at(1).get());
+    addExpr->addElement(AddExpression::Element(firstEl->clone()));
+    addExpr->addElement(AddExpression::Element(secondEl->clone(), func.is<Sub>()));
+    return addExpr;
+  }
+
+  ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args){
+    auto mulExpr = std::make_unique<MulExpression>();
+    auto firstEl = std::make_unique<Expression>(args.at(0).get());
+    auto secondEl = std::make_unique<Expression>(args.at(1).get());
+    mulExpr->addElement(MulExpression::Element(firstEl->clone()));
+    mulExpr->addElement(MulExpression::Element(secondEl->clone(), func.is<Div>()));
+    return mulExpr;
   }
 
   Expression::Vector Expression::getArgs(const TokenVector &tokens) {

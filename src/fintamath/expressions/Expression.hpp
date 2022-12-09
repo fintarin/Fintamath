@@ -62,6 +62,11 @@ namespace fintamath {
     Expression &negate() override;
 
   private:
+
+    static ExpressionPtr buildAddExpression(const IFunction &func, const ArgumentsVector &args);
+
+    static ExpressionPtr buildMulExpression(const IFunction &func, const ArgumentsVector &args);
+
     static Vector copy(const Vector &rhs);
 
     void tryCompressTree();

@@ -153,11 +153,7 @@ namespace fintamath {
     exprObj = helpers::cast<MulExpression>(exprPtr);
 
     exprObj->mulNumbers();
-    auto expr = exprObj->toString();
-
-    /*if(exprObj->mulPolynom.size() == 1 && !exprObj->mulPolynom.at(0).inverted){
-      return exprObj->mulPolynom.at(0).info->clone();
-    }*/
+    
     return exprObj;
   }
 

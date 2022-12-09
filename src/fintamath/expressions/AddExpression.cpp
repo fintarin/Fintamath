@@ -158,12 +158,6 @@ namespace fintamath{
     exprObj = helpers::cast<AddExpression>(exprPtr);
 
     exprObj->sumNumbers();
-    /*if(exprObj->addPolynom.size() == 1){
-      if(exprObj->addPolynom.at(0).inverted){
-        return Neg()(*exprObj->addPolynom.at(0).info);
-      }
-      return exprObj->addPolynom.at(0).info->clone();
-    }*/
 
     return exprObj;
   }
