@@ -5,13 +5,16 @@
 
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/helpers/Converter.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
   class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
+  public:
+    using Vector = std::vector<MathObjectPtr>;
+
   public:
     Expression() = default;
 
@@ -19,7 +22,7 @@ namespace fintamath {
 
     Expression(Expression &&rhs) noexcept;
 
-    explicit Expression(const TokenVector& tokens);
+    explicit Expression(const TokenVector &tokens);
 
     Expression &operator=(const Expression &rhs) noexcept;
 
@@ -37,7 +40,9 @@ namespace fintamath {
 
     std::string getClassName() const override;
 
-    std::string getInfoClassName() const;
+    const MathObjectPtr &getInfo() const;
+
+    const Expression::Vector &getChildren() const;
 
     MathObjectPtr tryCompress() const;
 
@@ -52,34 +57,32 @@ namespace fintamath {
 
     Expression &negate() override;
 
-    void baseSimplify() override;
-
   private:
-    using ExprVect = std::vector<MathObjectPtr>;
+    static Vector copy(const Vector &rhs);
 
-    static ExprVect copy(const ExprVect& rhs);
+    void tryCompressTree();
 
-    void parse(const TokenVector & tokens);
+    void parse(const TokenVector &tokens);
 
-    bool parseNeg(const TokenVector & tokens);
+    bool parseNeg(const TokenVector &tokens);
 
-    bool parsePow(const TokenVector & tokens);
+    bool parsePow(const TokenVector &tokens);
 
-    bool parsePercent(const TokenVector & tokens);
+    bool parsePercent(const TokenVector &tokens);
 
-    bool parseFactorial(const TokenVector & tokens);
+    bool parseFactorial(const TokenVector &tokens);
 
-    bool parseFiniteTerm(const TokenVector & tokens);
+    bool parseFiniteTerm(const TokenVector &tokens);
 
-    bool parseFunction(const TokenVector & tokens);
+    bool parseFunction(const TokenVector &tokens);
 
-    bool parseLiteral(const TokenVector & tokens);
+    bool parseLiteral(const TokenVector &tokens);
 
-    bool parseNumber(const TokenVector & tokens);
+    bool parseNumber(const TokenVector &tokens);
 
-    ExprVect getArgs(const TokenVector & tokens);
+    Vector getArgs(const TokenVector &tokens);
 
-    TokenVector splitLiteral(const std::string & token, bool addMultiplyToEnd = false);
+    TokenVector splitLiteral(const std::string &token, bool addMultiplyToEnd = false);
 
     std::string powToString() const;
 
@@ -88,6 +91,8 @@ namespace fintamath {
     std::string factorialOrPercentToString() const;
 
     std::string functionToString() const;
+
+    MathObjectPtr simplifyNeg(std::unique_ptr<Expression> &expr) const;
 
     /*ExprPtr baseSimplify() const;
 
@@ -102,8 +107,6 @@ namespace fintamath {
     ExprPtr simplifyConstant(const ExprPtr &expr) const;
 
     ExprPtr invertSubDiv(const ExprPtr &expr) const;
-
-    ExprPtr simplifyNeg(const ExprPtr &expr) const;
 
     ExprPtr rebuildAdd(const ExprPtr &expr) const;
 
@@ -140,8 +143,9 @@ namespace fintamath {
     ExprPtr revertPow(const ExprPtr &expr) const;*/
 
     MathObjectPtr info;
-    ExprVect children;
+    Vector children;
 
-    const std::vector<std::string> classNames = {getClassName(), AddExpression().getClassName(), MulExpression().getClassName()};
+    const std::vector<std::string> classNames = {getClassName(), AddExpression().getClassName(),
+                                                 MulExpression().getClassName()};
   };
 }

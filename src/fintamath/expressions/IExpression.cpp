@@ -164,7 +164,7 @@ namespace fintamath {
       return obj->toString();
     }
     const auto& exprObj = obj->to<Expression>();
-    if(exprObj.getInfoClassName() == Neg().getClassName()){
+    if(exprObj.getInfo()->is<Neg>()) {
       return "(" + exprObj.toString() + ")";
     }
     return obj->toString();
