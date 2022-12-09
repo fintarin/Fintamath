@@ -1,14 +1,17 @@
 #include "fintamath/expressions/IExpression.hpp"
+#include <algorithm>
 
 namespace fintamath {
-  IExpression::TokenVector IExpression::tokenize(const std::string & str) {
+  TokenVector IExpression::tokenize(const std::string & str) {
+    static const std::string oneSymbolTokens = "+-*/%";
     std::string tokenizeStr = cutSpacesFromBeginEnd(str);
     TokenVector tokens;
     std::string digitToken;
     std::string letterToken;
     std::string specialToken;
 
-    for(const auto & value: tokenizeStr ){
+    for(size_t i = 0;i < tokenizeStr.size();i++){
+      const auto & value = tokenizeStr[i];
       if(isDigit(value) || value == '.'){
         digitToken.push_back(value);
         appendToken(tokens, letterToken);
@@ -34,17 +37,22 @@ namespace fintamath {
       }
       
       if(isSpecial(value)){
-        specialToken.push_back(value);
         appendToken(tokens, digitToken);
         appendToken(tokens, letterToken);
+        if(findCharInStr(value, oneSymbolTokens)){
+          tokens.push_back(std::string(1, value));
+          continue;
+        }
+        specialToken.push_back(value);
         continue;
       }
 
       if(value == ' '){
-        appendToken(tokens, digitToken);
         appendToken(tokens, specialToken);
-        appendToken(tokens, letterToken);
-        if(!tokens.empty() && tokens.back() != "*"){
+        if(!isCanInsertMultiplyCharacter(tokenizeStr[i+1])){
+          continue;
+        }
+        if(appendToken(tokens, digitToken) || appendToken(tokens, letterToken)){
           tokens.push_back("*");
         }
       }
@@ -55,6 +63,13 @@ namespace fintamath {
     return tokens;
   }
 
+  bool IExpression::findCharInStr(char c, const std::string& str){
+    return std::find(str.begin(), str.end(), c) != str.end();
+  }
+
+  bool IExpression::isCanInsertMultiplyCharacter(char c){
+    return !(c == ' ' || isSpecial(c));
+  }
   bool IExpression::isDigit(char c){
     return c >= '0' && c <='9';
   }
@@ -90,4 +105,31 @@ namespace fintamath {
     }
     return result;
   }
+
+  bool IExpression::skipBrackets(const TokenVector& tokens, size_t& openBracketIndex){
+    if(openBracketIndex >= tokens.size()) {return true;}
+    if(tokens[openBracketIndex] != "("){return true;}
+
+    int leftBrackets = 0;
+    int rightBrackets = 0;
+    for(size_t position = openBracketIndex; position < tokens.size();position++){
+      if(tokens[position] == ")"){
+        rightBrackets++;
+      }
+      if(tokens[position] == "("){
+        leftBrackets++;
+      }
+      if(leftBrackets == rightBrackets){
+        openBracketIndex = position + 1;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool IExpression::isBracket(const std::string& c){
+    return c.size() == 1 && isBracket(c[0]);
+  }
+
+
 }
