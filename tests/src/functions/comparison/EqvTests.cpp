@@ -25,7 +25,8 @@ TEST(EqvTests, callTest) {
   EXPECT_EQ(Eqv()(Integer(3), Integer(3))->toString(), "true");
   EXPECT_EQ(Eqv()(Integer(3), Rational(3, 1))->toString(), "true");
   EXPECT_EQ(Eqv()(Rational(5, 2), Integer(2))->toString(), "false");
-  EXPECT_EQ(Eqv()(Integer(3), Variable("a"))->toString(), "false");
+
+  EXPECT_EQ(Eqv()(Integer(3), Variable("a"))->toString(), "-a+3=0");
   EXPECT_EQ(Eqv()(Variable("a"), Variable("a"))->toString(), "true");
 
   std::unique_ptr<IOperator> o = std::make_unique<Eqv>();

@@ -2,8 +2,8 @@
 
 #include "fintamath/functions/logarithms/Ln.hpp"
 
-#include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/E.hpp"
 
 using namespace fintamath;
 
@@ -22,7 +22,8 @@ TEST(LnTests, callTest) {
   EXPECT_EQ(Ln()(Rational(1, 10))->toString(), "-2.302585092994045684017991454684364208");
   EXPECT_EQ(Ln()(E().getValue(10))->toString(), "1");
 
-  EXPECT_ANY_THROW(Ln()(Variable("a")));
+  EXPECT_EQ(Ln()(Variable("a"))->toString(), "ln(a)");
+
   EXPECT_ANY_THROW(Ln()(Integer(-10)));
 
   std::unique_ptr<IFunction> f = std::make_unique<Ln>();

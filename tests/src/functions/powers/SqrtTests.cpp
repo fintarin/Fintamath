@@ -21,7 +21,8 @@ TEST(SqrtTests, callTest) {
   EXPECT_EQ(Sqrt()(Integer(10))->toString(), "3.162277660168379331998893544432718534");
   EXPECT_EQ(Sqrt()(Rational(1, 10))->toString(), "0.316227766016837933199889354443271853");
 
-  EXPECT_ANY_THROW(Sqrt()(Variable("a")));
+  EXPECT_EQ(Sqrt()(Variable("a"))->toString(), "sqrt(a)");
+
   EXPECT_ANY_THROW(Sqrt()(Integer(-10)));
 
   std::unique_ptr<IFunction> f = std::make_unique<Sqrt>();

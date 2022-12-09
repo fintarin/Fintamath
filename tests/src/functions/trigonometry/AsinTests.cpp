@@ -21,7 +21,8 @@ TEST(AsinTests, callTest) {
   EXPECT_EQ(Asin()(Rational(1, 10))->toString(), "0.100167421161559796345523179452693319");
   EXPECT_EQ(Asin()(Rational(-1, 5))->toString(), "-0.20135792079033079145512555221762341");
 
-  EXPECT_ANY_THROW(Asin()(Variable("a")));
+  EXPECT_EQ(Asin()(Variable("a"))->toString(), "asin(a)");
+
   EXPECT_ANY_THROW(Asin()(Integer(10)));
 
   std::unique_ptr<IFunction> f = std::make_unique<Asin>();

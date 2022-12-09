@@ -26,7 +26,7 @@ TEST(SubTests, callTest) {
   EXPECT_EQ(Sub()(Rational(5, 2), Rational(5, 2))->toString(), "0");
   EXPECT_EQ(Sub()(Rational(5, 2), Rational(5, 3))->toString(), "5/6");
 
-  EXPECT_ANY_THROW(Sub()(Integer(3), Variable("a")));
+  EXPECT_EQ(Sub()(Integer(3), Variable("a"))->toString(), "-a+3");
 
   std::unique_ptr<IOperator> o = std::make_unique<Sub>();
   EXPECT_ANY_THROW((*o)(Integer(1)));

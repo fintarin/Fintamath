@@ -23,7 +23,7 @@ TEST(NegTests, callTest) {
   EXPECT_EQ(Neg()(Integer(3))->toString(), "-3");
   EXPECT_EQ(Neg()(Rational(5, 2))->toString(), "-5/2");
 
-  EXPECT_ANY_THROW(Neg()(Variable("a")));
+  EXPECT_EQ(Neg()(Variable("a"))->toString(), "-a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Neg>();
   EXPECT_ANY_THROW((*o)(Integer(1), Rational(2, 3)));

@@ -25,7 +25,7 @@ TEST(DivTests, callTest) {
   EXPECT_EQ(Div()(Rational(5, 2), Integer(3))->toString(), "5/6");
   EXPECT_EQ(Div()(Rational(5, 2), Rational(5, 3))->toString(), "3/2");
 
-  EXPECT_ANY_THROW(Div()(Integer(3), Variable("a")));
+  EXPECT_EQ(Div()(Integer(3), Variable("a"))->toString(), "3/a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Div>();
   EXPECT_ANY_THROW((*o)(Integer(1)));

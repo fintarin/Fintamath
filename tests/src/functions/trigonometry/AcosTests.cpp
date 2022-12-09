@@ -21,7 +21,8 @@ TEST(AcosTests, callTest) {
   EXPECT_EQ(Acos()(Rational(1, 10))->toString(), "1.470628905633336822885798512187058124");
   EXPECT_EQ(Acos()(Rational(-1, 5))->toString(), "1.772154247585227410686447243857374852");
 
-  EXPECT_ANY_THROW(Acos()(Variable("a")));
+  EXPECT_EQ(Acos()(Variable("a"))->toString(), "acos(a)");
+
   EXPECT_ANY_THROW(Acos()(Integer(10)));
 
   std::unique_ptr<IFunction> f = std::make_unique<Acos>();

@@ -23,7 +23,7 @@ TEST(CosTests, callTest) {
   EXPECT_EQ(Cos()(Rational(1, 10))->toString(), "0.995004165278025766095561987803870295");
   EXPECT_EQ(Cos()(Pi().getValue(10) / 2)->toString(), "0");
 
-  EXPECT_ANY_THROW(Cos()(Variable("a")));
+  EXPECT_EQ(Cos()(Variable("a"))->toString(), "cos(a)");
 
   std::unique_ptr<IFunction> f = std::make_unique<Cos>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "-0.839071529076452452258863947824064835");

@@ -54,7 +54,7 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(Pow()(Integer(16), Rational(-5, 4))->toString(), "0.03125");
   EXPECT_EQ(Pow()(Integer(7), Rational(-3, 1000))->toString(), "0.994179275992125393883093456029745344");
 
-  EXPECT_ANY_THROW(Pow()(Integer(3), Variable("a")));
+  EXPECT_EQ(Pow()(Integer(3), Variable("a"))->toString(), "3^a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Pow>();
   EXPECT_ANY_THROW((*o)(Integer(1)));

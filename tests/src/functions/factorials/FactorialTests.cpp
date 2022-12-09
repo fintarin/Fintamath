@@ -24,7 +24,8 @@ TEST(FactorialTests, callTest) {
   EXPECT_EQ(Factorial()(Integer(1))->toString(), "1");
   EXPECT_EQ(Factorial()(Integer(10))->toString(), "3628800");
 
-  EXPECT_ANY_THROW(Factorial()(Variable("a")));
+  EXPECT_EQ(Factorial()(Variable("a"))->toString(), "a!");
+
   EXPECT_ANY_THROW(Factorial()(Integer(-10)));
   EXPECT_ANY_THROW(Factorial()(Rational(1, 10)));
 

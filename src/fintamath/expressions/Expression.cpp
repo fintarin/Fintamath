@@ -396,6 +396,7 @@ namespace fintamath {
       funcExpr->children.push_back(arg.get().clone());
     }
 
+    // TODO add simplify here
     return funcExpr;
   }
 

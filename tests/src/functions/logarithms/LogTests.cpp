@@ -21,7 +21,8 @@ TEST(LogTests, callTest) {
   EXPECT_EQ(Log()(Integer(2), Integer(3))->toString(), "1.584962500721156181453738943947816509");
   EXPECT_EQ(Log()(Rational(1, 10), Integer(10))->toString(), "-1");
 
-  EXPECT_ANY_THROW(Log()(Variable("a"), Variable("b")));
+  EXPECT_EQ(Log()(Variable("a"), Variable("b"))->toString(), "log(a,b)");
+
   EXPECT_ANY_THROW(Log()(Integer(-10), Integer(10)));
   EXPECT_ANY_THROW(Log()(Integer(1), Integer(10)));
 

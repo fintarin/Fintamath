@@ -25,7 +25,7 @@ TEST(MulTests, callTest) {
   EXPECT_EQ(Mul()(Rational(5, 2), Integer(3))->toString(), "15/2");
   EXPECT_EQ(Mul()(Rational(5, 2), Rational(5, 3))->toString(), "25/6");
 
-  EXPECT_ANY_THROW(Mul()(Integer(3), Variable("a")));
+  EXPECT_EQ(Mul()(Integer(3), Variable("a"))->toString(), "3*a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Mul>();
   EXPECT_ANY_THROW((*o)(Integer(1)));

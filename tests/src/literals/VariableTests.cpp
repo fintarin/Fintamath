@@ -9,7 +9,6 @@ TEST(VariableTest, stringConstructorTest) {
   EXPECT_EQ(Variable("a").toString(), "a");
 
   EXPECT_THROW(Variable("10"), InvalidInputException);
-  EXPECT_THROW(Variable("i"), InvalidInputException);
   EXPECT_THROW(Variable(""), InvalidInputException);
 }
 

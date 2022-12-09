@@ -22,7 +22,7 @@ TEST(AtanTests, callTest) {
   EXPECT_EQ(Atan()(Integer(-10))->toString(), "-1.471127674303734591852875571761730852");
   EXPECT_EQ(Atan()(Rational(1, 10))->toString(), "0.09966865249116202737844611987802059");
 
-  EXPECT_ANY_THROW(Atan()(Variable("a")));
+  EXPECT_EQ(Atan()(Variable("a"))->toString(), "atan(a)");
 
   std::unique_ptr<IFunction> f = std::make_unique<Atan>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "1.471127674303734591852875571761730852");

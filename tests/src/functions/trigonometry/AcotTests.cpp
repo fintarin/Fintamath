@@ -22,7 +22,7 @@ TEST(AcotTests, callTest) {
   EXPECT_EQ(Acot()(Integer(-10))->toString(), "-0.09966865249116202737844611987802059");
   EXPECT_EQ(Acot()(Rational(1, 10))->toString(), "1.471127674303734591852875571761730852");
 
-  EXPECT_ANY_THROW(Acot()(Variable("a")));
+  EXPECT_EQ(Acot()(Variable("a"))->toString(), "acot(a)");
 
   std::unique_ptr<IFunction> f = std::make_unique<Acot>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "0.09966865249116202737844611987802059");

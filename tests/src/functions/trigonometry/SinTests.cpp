@@ -23,7 +23,7 @@ TEST(SinTests, callTest) {
   EXPECT_EQ(Sin()(Rational(1, 10))->toString(), "0.099833416646828152306814198410622027");
   EXPECT_EQ(Sin()(Pi().getValue(10) / 2)->toString(), "1");
 
-  EXPECT_ANY_THROW(Sin()(Variable("a")));
+  EXPECT_EQ(Sin()(Variable("a"))->toString(), "sin(a)");
 
   std::unique_ptr<IFunction> f = std::make_unique<Sin>();
   EXPECT_EQ((*f)(Integer(10))->toString(), "-0.544021110889369813404747661851377282");

@@ -25,7 +25,8 @@ TEST(DoubleFactorialTests, callTest) {
   EXPECT_EQ(DoubleFactorial()(Integer(5))->toString(), "15");
   EXPECT_EQ(DoubleFactorial()(Integer(10))->toString(), "3840");
 
-  EXPECT_ANY_THROW(DoubleFactorial()(Variable("a")));
+  EXPECT_EQ(DoubleFactorial()(Variable("a"))->toString(), "a!!");
+
   EXPECT_ANY_THROW(DoubleFactorial()(Integer(-10)));
   EXPECT_ANY_THROW(DoubleFactorial()(Rational(1, 10)));
 

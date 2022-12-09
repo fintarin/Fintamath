@@ -21,7 +21,8 @@ TEST(LbTests, callTest) {
   EXPECT_EQ(Lb()(Integer(3))->toString(), "1.584962500721156181453738943947816509");
   EXPECT_EQ(Lb()(Rational(1, 16))->toString(), "-4");
 
-  EXPECT_ANY_THROW(Lb()(Variable("a")));
+  EXPECT_EQ(Lb()(Variable("a"))->toString(), "lb(a)");
+
   EXPECT_ANY_THROW(Lb()(Integer(-10)));
 
   std::unique_ptr<IFunction> f = std::make_unique<Lb>();
