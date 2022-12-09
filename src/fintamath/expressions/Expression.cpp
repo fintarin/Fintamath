@@ -1215,4 +1215,9 @@ newExpr = simplifyNeg();
   std::string Expression::getClassName() const {
     return "Expression";
   }
+
+  std::string Expression::solve() const {
+    // TODO to be implemented
+    return "";
+  }
 }

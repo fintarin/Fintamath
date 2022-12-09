@@ -44,6 +44,8 @@ namespace fintamath {
 
     std::string getClassName() const override;
 
+    std::string solve() const;
+
     const MathObjectPtr &getInfo() const;
 
     const Expression::Vector &getChildren() const;
