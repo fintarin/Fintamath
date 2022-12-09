@@ -8,6 +8,7 @@
 #include "fintamath/core/Constants.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/NumberImpls.hpp"
 
 using namespace boost::multiprecision;
@@ -111,10 +112,10 @@ namespace fintamath {
   }
 
   Real Real::round(size_t precision) const {
-    Real precCoeff("1" + std::string(precision, '0'));
-    Real res = *this * precCoeff;
+    const Integer coeff = pow(10, precision);
+    Real res = *this * coeff;
     res.impl->v = boost::multiprecision::round(res.impl->v);
-    return res / precCoeff;
+    return res / coeff;
   }
 
   const std::unique_ptr<RealImpl> &Real::getImpl() const {

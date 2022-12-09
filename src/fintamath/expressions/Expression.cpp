@@ -415,7 +415,7 @@ namespace fintamath {
     return funcExpr;
   }
 
-  ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args){
+  ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
     auto addExpr = std::make_unique<AddExpression>();
     auto firstEl = std::make_unique<Expression>(args.at(0).get());
     auto secondEl = std::make_unique<Expression>(args.at(1).get());
@@ -424,7 +424,7 @@ namespace fintamath {
     return addExpr;
   }
 
-  ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args){
+  ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args) {
     auto mulExpr = std::make_unique<MulExpression>();
     auto firstEl = std::make_unique<Expression>(args.at(0).get());
     auto secondEl = std::make_unique<Expression>(args.at(1).get());

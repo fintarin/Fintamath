@@ -22,8 +22,10 @@ TEST(PowTests, getOperatorPriorityTest) {
 TEST(PowTests, callTest) {
   EXPECT_EQ(Pow()(Integer(3), Integer(2)).toString(), "9");
   EXPECT_EQ(Pow()(Integer(-3), Integer(2)).toString(), "9");
-  EXPECT_EQ(Pow()(Rational(5, 2), Integer(2)).toString(), "6.25"); // TODO make Rational here
-  EXPECT_EQ(Pow()(Integer(11), Integer(200)).toString(), "2");
+  EXPECT_EQ(Pow()(Rational(5, 2), Integer(2)).toString(), "25/4");
+  EXPECT_EQ(Pow()(Integer(11), Integer(200)).toString(),
+            "1899052764604618242121820463954116340585832240009877848127251456103762646167989140750662066593328455813588"
+            "1805238401044949435868367905913020005911442340062387227375955664576836341689587626164144676307968892001");
 
   EXPECT_EQ(Pow()(Integer(4), Rational(1, 2)).toString(), "2");
   EXPECT_EQ(Pow()(Integer(4), Rational(1, 3)).toString(),
