@@ -434,17 +434,56 @@ namespace fintamath {
     return tokens;
   }
 
+  Expression &Expression::add(const Expression &rhs){
+    auto addExpr = std::make_unique<AddExpression>();
+    addExpr->addElement(std::make_unique<Expression>(*this), false);
+    addExpr->addElement(std::make_unique<Expression>(rhs), false);
+    addExpr->baseSimplify();
+    this->info = addExpr->clone();
+    this->children.clear();
+    return *this;
+  }
 
- /* std::string Expression::funcArgsToString(const ExprVect &args) const {
-    std::string result;
+  Expression &Expression::substract(const Expression &rhs){
+    auto addExpr = std::make_unique<AddExpression>();
+    addExpr->addElement(std::make_unique<Expression>(*this), false);
+    addExpr->addElement(std::make_unique<Expression>(rhs), true);
+    addExpr->baseSimplify();
+    this->info = addExpr->clone();
+    this->children.clear();
+    return *this;
+  }
 
-    for (size_t i = 0; i < args.size() - 1; i++) {
-      result += args.at(i)->toString();
-      result += ',';
-    }
+  Expression &Expression::multiply(const Expression &rhs){
+    auto mulExpr = std::make_unique<MulExpression>();
+    mulExpr->addElement(std::make_unique<Expression>(*this), false);
+    mulExpr->addElement(std::make_unique<Expression>(rhs), false);
+    mulExpr->baseSimplify();
+    this->info = mulExpr->clone();
+    this->children.clear();
+    return *this;
+  }
 
-    result += args.at(args.size() - 1)->toString();
-    return result;
+  Expression &Expression::divide(const Expression &rhs){
+    auto mulExpr = std::make_unique<MulExpression>();
+    mulExpr->addElement(std::make_unique<Expression>(*this), false);
+    mulExpr->addElement(std::make_unique<Expression>(rhs), true);
+    mulExpr->baseSimplify();
+    this->info = mulExpr->clone();
+    this->children.clear();
+    return *this;
+  }
+
+  Expression &Expression::negate(){
+    auto negExpr = std::make_unique<Expression>(*this);
+    this->info = std::make_unique<Neg>();
+    this->children.clear();
+    this->children.emplace_back(negExpr->clone());
+    return *this;
+  }
+
+  void Expression::baseSimplify(){
+
   }
 
   /*
@@ -507,7 +546,7 @@ namespace fintamath {
     if (expr->info->instanceOf<IOperator>()) {
       const auto &o = expr->info->to<IOperator>();
       try {
-        if (o.instanceOf<Neg>()) {
+        if (o.is<Neg>()) {
           auto newExpr = std::make_shared<Expression>(*o(*expr->children.at(0)->info));
           return newExpr;
         }
@@ -642,60 +681,6 @@ namespace fintamath {
       child = simplifyNeg(child);
     }
 
-    return newExpr;
-  }
-
-  ExprPtr Expression::rebuildAdd(const ExprPtr &expr) const {
-    auto newExpr = std::make_shared<Expression>(*expr);
-
-    for (auto &child : newExpr->children) {
-      child = rebuildAdd(child);
-    }
-
-    if (!newExpr->info->is<Add>()) {
-      return newExpr;
-    }
-
-    ExprVect newChildren;
-
-    for (const auto &child : newExpr->children) {
-      if (child->info->is<Add>()) {
-        for (const auto &childChild : child->children) {
-          newChildren.push_back(childChild);
-        }
-      } else {
-        newChildren.push_back(child);
-      }
-    }
-
-    newExpr->children = newChildren;
-    return newExpr;
-  }
-
-  ExprPtr Expression::rebuildMul(const ExprPtr &expr) const {
-    auto newExpr = std::make_shared<Expression>(*expr);
-
-    for (auto &child : newExpr->children) {
-      child = rebuildMul(child);
-    }
-
-    if (!newExpr->info->is<Mul>()) {
-      return newExpr;
-    }
-
-    ExprVect newChildren;
-
-    for (const auto &child : newExpr->children) {
-      if (child->info->is<Mul>()) {
-        for (const auto &childChild : child->children) {
-          newChildren.push_back(childChild);
-        }
-      } else {
-        newChildren.push_back(child);
-      }
-    }
-
-    newExpr->children = newChildren;
     return newExpr;
   }
 
