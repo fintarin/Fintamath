@@ -1,5 +1,7 @@
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 
 namespace fintamath {
   std::string MulExpression::getClassName() const {
@@ -24,15 +26,22 @@ namespace fintamath {
     return *this;
   }
 
+  std::string MulExpression::tryPutInBrackets(const MathObjectPtr& obj) {
+    if(obj->is<AddExpression>()){
+      return "(" + obj->toString() + ")";
+    }
+    return tryPutInBracketsIfNeg(obj);
+  }
+
   std::string MulExpression::toString() const{
     std::string result;
-    result.push_back('(');
     for(const auto & var : mulPolynom){
-      result += var.info->toString();
       result += var.inverted ? '/' : '*';
+      result += tryPutInBrackets(var.info);
     }
-    result.pop_back();
-    result.push_back(')');
+    if(!result.empty()){
+      result.erase(result.begin());
+    }
     return result;
   }
 
