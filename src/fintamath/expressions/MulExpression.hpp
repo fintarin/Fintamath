@@ -4,7 +4,6 @@
 #include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
-  class AddExpression;
   class MulExpression : public IExpressionCRTP<MulExpression> {
   public:
     struct Element;
@@ -77,5 +76,14 @@ namespace fintamath {
     static Polynom divideBraceByObj(const Polynom& lhs, const Polynom& rhs);
 
     void sortPolynom();
+
+    void simplifyPow(Polynom& powVect, Polynom& addVect, Polynom& literalVect);
+
+    struct ObjectPow;
+
+    using Objects = std::vector<ObjectPow>;
+
+    void sortPowObjects(const Objects& objs, Polynom& powVect, Polynom& addVect, Polynom& literalVect);
+
   };
 }

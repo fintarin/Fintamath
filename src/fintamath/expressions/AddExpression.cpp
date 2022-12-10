@@ -150,6 +150,7 @@ namespace fintamath{
 
   void AddExpression::addElement(const Element &elem){
     addPolynom.emplace_back(elem);
+    *this = simplify()->to<AddExpression>();
   }
 
   MathObjectPtr AddExpression::simplify() const {
@@ -164,6 +165,10 @@ namespace fintamath{
     exprObj->sort();
     b = exprObj->toString();
     return exprObj;
+  }
+
+  bool sortFunc(const AddExpression::Element& lhs, const AddExpression::Element& rhs){
+    return lhs.info->toString() < rhs.info->toString();
   }
 
   void AddExpression::sort(){
@@ -199,11 +204,18 @@ namespace fintamath{
 
     addPolynom.clear();
 
+    std::sort(funcVect.begin(), funcVect.end(), sortFunc);
+    std::sort(powVect.begin(), powVect.end(), sortFunc);
+    std::sort(literalVect.begin(), literalVect.end(), sortFunc);
+    std::sort(mulVect.begin(), mulVect.end(), sortFunc);
+
     pushPolynomToPolynom<AddExpression>(funcVect, addPolynom);
     pushPolynomToPolynom<AddExpression>(powVect, addPolynom);
     pushPolynomToPolynom<AddExpression>(mulVect, addPolynom);
     pushPolynomToPolynom<AddExpression>(literalVect, addPolynom);
-    pushPolynomToPolynom<AddExpression>(numVect, addPolynom);
+    if(numVect.size() != 1 || numVect.at(0).info->toString() != "0"){
+      pushPolynomToPolynom<AddExpression>(numVect, addPolynom);
+    }
   }
 
   AddExpression::Polynom AddExpression::sumNumbers(const Polynom& numVect){
