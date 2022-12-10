@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 
 #include "fintamath/literals/Variable.hpp"
@@ -36,7 +37,7 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(Pow()(Integer(16), Rational(1, 4)).toString(), "2");
   EXPECT_EQ(Pow()(Integer(7), Rational(1, 1000)).toString(),
             "1.0019478046608600325035566282397824682830146541368868842018499358998331147926632");
-  EXPECT_EQ(Pow()(Pow()(Integer(10), Integer(100)).to<INumber>(), Rational(1, 100)).toString(), "10");
+  EXPECT_EQ(Pow()(Pow()(Integer(10), Integer(100)), Rational(1, 100)).toString(), "10");
   EXPECT_EQ(Pow()(Integer(4), Rational(5, 2)).toString(), "32");
   EXPECT_EQ(Pow()(Integer(4), Rational(5, 3)).toString(), "10.079368399158985318137684858225826805");
   EXPECT_EQ(Pow()(Integer(4), Rational(5, 4)).toString(), "5.656854249492380195206754896838792314");
