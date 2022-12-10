@@ -92,7 +92,7 @@ namespace fintamath {
   }
 
   std::string Real::toString() const {
-    return impl->v.str(FINTAMATH_DEFAULT_OUTPUT_PRECISION);
+    return round(FINTAMATH_ROUND_PRECISION + 1).impl->v.str(FINTAMATH_OUTPUT_PRECISION);
   }
 
   std::string Real::getClassName() const {
@@ -112,10 +112,10 @@ namespace fintamath {
   }
 
   Real Real::round(size_t precision) const {
-    const Integer coeff = pow(10, precision);
-    Real res = *this * coeff;
-    res.impl->v = boost::multiprecision::round(res.impl->v);
-    return res / coeff;
+    const RealImpl::Backend roundCoeff = pow(RealImpl::Backend(10), precision);
+    RealImpl::Backend res = impl->v;
+    res = boost::multiprecision::round(res * roundCoeff);
+    return RealImpl(res / roundCoeff);
   }
 
   const std::unique_ptr<RealImpl> &Real::getImpl() const {
@@ -150,7 +150,7 @@ namespace fintamath {
   }
 
   Real &Real::divide(const Real &rhs) {
-    if (rhs == 0) {
+    if (rhs.round(FINTAMATH_ROUND_PRECISION) == 0) {
       throw UndefinedBinaryOpearatorException("/", toString(), rhs.toString());
     }
 

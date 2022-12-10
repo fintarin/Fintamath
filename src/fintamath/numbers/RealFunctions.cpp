@@ -67,7 +67,7 @@ namespace fintamath {
 
   Real tan(const Real &rhs) {
     try {
-      return RealImpl(tan(rhs.getImpl()->v));
+      return sin(rhs) / cos(rhs);
     } catch (const std::domain_error &) {
       throw UndefinedFunctionException("tan", {rhs.toString()});
     }
@@ -75,7 +75,7 @@ namespace fintamath {
 
   Real cot(const Real &rhs) {
     try {
-      return RealImpl(1 / tan(rhs.getImpl()->v));
+      return cos(rhs) / sin(rhs);
     } catch (const std::domain_error &) {
       throw UndefinedFunctionException("cot", {rhs.toString()});
     }
