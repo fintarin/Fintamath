@@ -73,7 +73,7 @@ namespace fintamath {
 
     static Vector copy(const Vector &rhs);
 
-    void tryCompressTree();
+    Expression &tryCompressTree();
 
     void parse(const TokenVector &tokens);
 
@@ -97,13 +97,15 @@ namespace fintamath {
 
     TokenVector splitLiteral(const std::string &token, bool addMultiplyToEnd = false);
 
-    std::string powToString() const;
+    std::string binaryOperatorToString() const;
 
-    std::string negToString() const;
+    std::string prefixUnaryOperatorToString() const;
 
-    std::string factorialOrPercentToString() const;
+    std::string postfixUnaryOperatorToString() const;
 
     std::string functionToString() const;
+
+    static Expression simplifyPrefixUnaryOperator(Expression expr);
 
     static Expression simplifyNeg(Expression expr);
 
