@@ -1,13 +1,17 @@
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/exceptions/Exception.hpp"
 #include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/helpers/Caster.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 #include <memory>
@@ -34,6 +38,7 @@ namespace fintamath{
 
   AddExpression::AddExpression(const TokenVector& tokens){ 
       parse(tokens);
+      auto a = toString();
       *this = simplify()->to<AddExpression>();
   }
 
@@ -86,8 +91,6 @@ namespace fintamath{
 
       addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
       addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "-"));
-      tryCompressExpression();
-      tryCompressTree();
       return;
     }
     throw InvalidInputException(*this, " not an AddExpression");
@@ -157,36 +160,64 @@ namespace fintamath{
     exprPtr = exprObj->tryCompressTree();
     exprObj = helpers::cast<AddExpression>(exprPtr);
 
-    exprObj->sumNumbers();
-
+    auto b = exprObj->toString();
+    exprObj->sort();
+    b = exprObj->toString();
     return exprObj;
   }
 
-  void AddExpression::sumNumbers(){
-    Expression sumNumResult = 0;
-    auto add = Add();
-    auto sub = Sub();
-    Polynom newAddPolynom;
-    for(const auto& elem : addPolynom){
-      auto tmpElem = elem.info->clone();
-      auto expr = helpers::cast<Expression>(tmpElem);
-      try{
-        if(!expr){
-          throw FunctionCallException();
-        }
-        if(!elem.inverted){
-          sumNumResult = add(sumNumResult, *expr->getInfo());
-        }
-        else{
-          sumNumResult = sub(sumNumResult, *expr->getInfo());
-        }
-      }catch(const FunctionCallException &){
-        newAddPolynom.emplace_back(elem);
+  void AddExpression::sort(){
+    auto numVect = Polynom();
+    auto powVect = Polynom();
+    auto literalVect = Polynom();
+    auto mulVect = Polynom();
+    auto funcVect = Polynom();
+
+    for(const auto& child : addPolynom){
+      if(child.info->is<MulExpression>()){
+        mulVect.emplace_back(child);
+        continue;
+      }
+      if(!child.info->is<Expression>()){
+        throw InvalidInputException(*this, "argument must be an expression: " + child.info->toString());
+      }
+      auto exprInfo = (child.info->to<Expression>()).getInfo()->clone();
+      if(exprInfo->instanceOf<IArithmetic>()){
+        numVect.emplace_back(child);
+      } else if (exprInfo->is<Pow>()){
+        powVect.emplace_back(child);
+      } else if (exprInfo->instanceOf<ILiteral>()){
+        literalVect.emplace_back(child);
+      } else if (exprInfo->instanceOf<IFunction>()){
+        funcVect.emplace_back(child);
+      } else {
+        throw InvalidInputException(*this, "undefined expression type: " + exprInfo->getClassName());
       }
     }
-    if(newAddPolynom.empty() || sumNumResult.toString() != "0"){
-      newAddPolynom.emplace_back(Element(sumNumResult.clone(), false));
+
+    numVect = sumNumbers(numVect);
+
+    addPolynom.clear();
+
+    pushPolynomToPolynom<AddExpression>(funcVect, addPolynom);
+    pushPolynomToPolynom<AddExpression>(powVect, addPolynom);
+    pushPolynomToPolynom<AddExpression>(mulVect, addPolynom);
+    pushPolynomToPolynom<AddExpression>(literalVect, addPolynom);
+    pushPolynomToPolynom<AddExpression>(numVect, addPolynom);
+  }
+
+  AddExpression::Polynom AddExpression::sumNumbers(const Polynom& numVect){
+    Expression expr = 0;
+    Add add;
+    Sub sub;
+    for(const auto& elem: numVect){
+      auto exprNum = elem.info->to<Expression>();
+      if(elem.inverted){
+        expr = sub(*expr.getInfo(), *exprNum.getInfo());
+      } else {
+        expr = add(*expr.getInfo(), *exprNum.getInfo());
+      }
     }
-    addPolynom = newAddPolynom;
+    return {{std::make_unique<Expression>(expr), false}};
   }
 }

@@ -45,11 +45,20 @@ namespace fintamath {
     static bool isOneSymbolToken(char token);
     static TokenVector cutBraces(const TokenVector& tokens);
     static std::string tryPutInBracketsIfNeg(const MathObjectPtr& obj);
-    virtual void baseSimplify(){} //TODO: delete this, refactor to simplify() implementation in all of classes
+
+    template<typename T>
+    static void pushPolynomToPolynom(typename T::Polynom& push, typename T::Polynom& cont);
   private:
     static helpers::ParserVector<ExpressionPtr, TokenVector> parserMap;
 
   };
+
+  template<typename T>
+  void IExpression::pushPolynomToPolynom(typename T::Polynom& push, typename T::Polynom& cont){
+    for(const auto& elem: push){
+      cont.emplace_back(elem);
+    }
+  }
 
   template <typename Derived>
   class IExpressionCRTP : virtual public IExpression,

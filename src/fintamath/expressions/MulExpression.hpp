@@ -1,8 +1,10 @@
 #pragma once
+#include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
+  class AddExpression;
   class MulExpression : public IExpressionCRTP<MulExpression> {
   public:
     struct Element;
@@ -55,6 +57,7 @@ namespace fintamath {
     MathObjectPtr simplify() const override;
 
   private:
+
     void parse(const TokenVector &tokens);
 
     Polynom mulPolynom;
@@ -65,6 +68,14 @@ namespace fintamath {
 
     static std::string tryPutInBrackets(const MathObjectPtr &obj);
 
-    void mulNumbers();
+    static Polynom mulNumbers(const Polynom& numVect);
+
+    static Polynom multiplicateBraces(const Polynom& addVect);
+
+    static Polynom multiplicateTwoBraces(const Polynom& lhs, const Polynom& rhs);
+
+    static Polynom divideBraceByObj(const Polynom& lhs, const Polynom& rhs);
+
+    void sortPolynom();
   };
 }
