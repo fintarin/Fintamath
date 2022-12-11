@@ -39,26 +39,29 @@ TEST(PowTests, callTest) {
             "1.0019478046608600325035566282397824682830146541368868842018499358998331147926632");
   EXPECT_EQ(Pow()(Pow()(Integer(10), Integer(100)), Rational(1, 100)).toString(), "10");
   EXPECT_EQ(Pow()(Integer(4), Rational(5, 2)).toString(), "32");
-  EXPECT_EQ(Pow()(Integer(4), Rational(5, 3)).toString(), "10.079368399158985318137684858225826805");
-  EXPECT_EQ(Pow()(Integer(4), Rational(5, 4)).toString(), "5.656854249492380195206754896838792314");
+  EXPECT_EQ(Pow()(Integer(4), Rational(5, 3)).toString(),
+            "10.079368399158985318137684858225826804562011717612063840655800897242397412111676");
+  EXPECT_EQ(Pow()(Integer(4), Rational(5, 4)).toString(),
+            "5.6568542494923801952067548968387923142786875015077922927067189519629299138484282");
   EXPECT_EQ(Pow()(Integer(8), Rational(5, 3)).toString(), "32");
   EXPECT_EQ(Pow()(Integer(16), Rational(5, 4)).toString(), "32");
-  EXPECT_EQ(Pow()(Integer(7), Rational(3, 1000)).toString(), "1.005854803201430554046280293844745209");
-  EXPECT_EQ(Pow()(Pow()(Integer(10), Integer(300)).to<INumber>(), Rational(1, 100)).toString(), "1000");
+  EXPECT_EQ(Pow()(Integer(7), Rational(3, 1000)).toString(),
+            "1.0058548032014305540462802938447452087153844969521205792334942435663538095322262");
+  EXPECT_EQ(Pow()(Pow()(Integer(10), Integer(300)), Rational(1, 100)).toString(), "1000");
   EXPECT_EQ(Pow()(Integer(1), Rational(1, 1234)).toString(), "1");
-  EXPECT_EQ(Pow()(Integer(10000000000), Rational(1, 100)).toString(), "1.258925411794167210423954106395800606");
+  EXPECT_EQ(Pow()(Integer(10000000000), Rational(1, 100)).toString(), "1.258925411794167210423954106395800606093617409466931069107923019526647615782502");
 
   EXPECT_EQ(Pow()(Integer(4), Rational(-1, 2)).toString(), "0.5");
-  EXPECT_EQ(Pow()(Integer(4), Rational(-1, 3)).toString(), "0.629960524947436582383605303639114175");
-  EXPECT_EQ(Pow()(Integer(4), Rational(-1, 4)).toString(), "0.707106781186547524400844362104849039");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-1, 3)).toString(), "0.62996052494743658238360530363911417528512573235075399004098755607764983825697974");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-1, 4)).toString(), "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352");
   EXPECT_EQ(Pow()(Integer(8), Rational(-1, 3)).toString(), "0.5");
   EXPECT_EQ(Pow()(Integer(16), Rational(-1, 4)).toString(), "0.5");
   EXPECT_EQ(Pow()(Integer(4), Rational(-5, 2)).toString(), "0.03125");
-  EXPECT_EQ(Pow()(Integer(4), Rational(-5, 3)).toString(), "0.099212565748012467171981602454519266");
-  EXPECT_EQ(Pow()(Integer(4), Rational(-5, 4)).toString(), "0.17677669529663688110021109052621226");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-5, 3)).toString(), "0.099212565748012467171981602454519266274468332993740813113017860114076031601513698");
+  EXPECT_EQ(Pow()(Integer(4), Rational(-5, 4)).toString(), "0.17677669529663688110021109052621225982120898442211850914708496724884155980776338");
   EXPECT_EQ(Pow()(Integer(8), Rational(-5, 3)).toString(), "0.03125");
   EXPECT_EQ(Pow()(Integer(16), Rational(-5, 4)).toString(), "0.03125");
-  EXPECT_EQ(Pow()(Integer(7), Rational(-3, 1000)).toString(), "0.994179275992125393883093456029745344");
+  EXPECT_EQ(Pow()(Integer(7), Rational(-3, 1000)).toString(), "0.99417927599212539388309345602974534386950277212157482682781039330883285005190623");
 
   EXPECT_ANY_THROW(Pow()(Integer(0), Integer(0)));
 
