@@ -6,19 +6,19 @@
 
 namespace fintamath {
   Real sqrt(const Real &rhs) {
-    try {
-      return RealImpl(sqrt(rhs.getImpl()->v));
-    } catch (const std::domain_error &) {
+    if (rhs.round(FINTAMATH_ROUND_PRECISION) < 0) {
       throw UndefinedFunctionException("sqrt", {rhs.toString()});
     }
+
+    return RealImpl(sqrt(rhs.getImpl()->v));
   }
 
   Real pow(const Real &lhs, const Real &rhs) {
-    try {
-      return RealImpl(pow(lhs.getImpl()->v, rhs.getImpl()->v));
-    } catch (const std::domain_error &) {
+    if (lhs.round(FINTAMATH_ROUND_PRECISION) == 0 && rhs.round(FINTAMATH_ROUND_PRECISION) == 0) {
       throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
     }
+
+    return RealImpl(pow(lhs.getImpl()->v, rhs.getImpl()->v));
   }
 
   Real exp(const Real &rhs) {
@@ -34,27 +34,15 @@ namespace fintamath {
   }
 
   Real ln(const Real &rhs) {
-    try {
-      return RealImpl(log(rhs.getImpl()->v));
-    } catch (const std::domain_error &) {
-      throw UndefinedFunctionException("ln", {rhs.toString()});
-    }
+    return RealImpl(log(rhs.getImpl()->v));
   }
 
   Real lb(const Real &rhs) {
-    try {
-      return RealImpl(log2(rhs.getImpl()->v));
-    } catch (const std::domain_error &) {
-      throw UndefinedFunctionException("lb", {rhs.toString()});
-    }
+    return RealImpl(log2(rhs.getImpl()->v));
   }
 
   Real lg(const Real &rhs) {
-    try {
-      return RealImpl(log10(rhs.getImpl()->v));
-    } catch (const std::domain_error &) {
-      throw UndefinedFunctionException("lg", {rhs.toString()});
-    }
+    return RealImpl(log10(rhs.getImpl()->v));
   }
 
   Real sin(const Real &rhs) {
