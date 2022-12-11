@@ -14,7 +14,7 @@ namespace fintamath {
     ~FunctionCallException() override = default;
 
     FunctionCallException(const std::string &func, const std::vector<std::string> &argsVect) {
-      content += "Cannot call " + func + " for arguments (";
+      content += "Unable to call " + func + " for arguments (";
 
       if (!argsVect.empty()) {
         static const std::string delimiter = ", ";
