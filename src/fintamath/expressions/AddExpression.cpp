@@ -72,6 +72,7 @@ namespace fintamath{
   }
 
   void AddExpression::parse(const TokenVector& tokens){
+    int lastSignPosition = -1;
     for(size_t i = 0;i < tokens.size();i++){
       if(tokens[i] == "(" && !skipBrackets(tokens, i)){
         throw InvalidInputException(*this, " braces must be closed");
@@ -88,12 +89,16 @@ namespace fintamath{
       if (i == 0 || (isOneSymbolToken(tokens[i-1]) && tokens[i-1] != "%" && tokens[i-1] != "!")) {
       continue;
       }
-
-      addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i))));
-      addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())), tokens[i] == "-"));
-      return;
+      lastSignPosition = (int)i;
     }
-    throw InvalidInputException(*this, " not an AddExpression");
+
+    if(lastSignPosition == -1){
+      throw InvalidInputException(*this, " not an AddExpression");
+    }
+
+    addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition))));
+    addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end())), tokens[lastSignPosition] == "-"));
+
   }
     
   AddExpression::Element::Element(const Element &rhs) : inverted(rhs.inverted) {
@@ -113,7 +118,7 @@ namespace fintamath{
   MathObjectPtr AddExpression::tryCompressExpression() const{
     auto copyExpr = *this;
     for(auto& child : copyExpr.addPolynom){
-      if(child.info->getClassName() == "Expression"){
+      if(child.info->is<Expression>()){
         auto childExpr = child.info->to<Expression>();
         child.info = childExpr.tryCompress();
       }
@@ -122,30 +127,39 @@ namespace fintamath{
   }
 
   std::vector<AddExpression::Element> AddExpression::Element::getAddPolynom() const {
-    if(info->getClassName() == AddExpression().getClassName()){
+    if(info->is<AddExpression>()){
       Polynom result;
       auto addExpr = info->to<AddExpression>();
-      for(auto& child : addExpr.addPolynom){
-        auto childToPush = std::move(child);
-        childToPush.inverted = childToPush.inverted ^ inverted;
-        result.emplace_back(childToPush);
+      for(const auto& child : addExpr.addPolynom){
+        result.emplace_back(Element{child.info->clone(), (bool)(child.inverted^inverted)});
       }
       return result;
     }
+    /*if(info->is<Expression>()){
+      auto expr = info->to<Expression>();
+      if(expr.getInfo()->is<AddExpression>()){
+        Polynom result;
+        auto addExpr = info->to<AddExpression>();
+        for(const auto& child : addExpr.addPolynom){
+          result.emplace_back(Element{child.info->clone(), (bool)(child.inverted^inverted)});
+        }
+        return result;
+      }
+    }*/
     return {*this};
   }
 
-  MathObjectPtr AddExpression::tryCompressTree() const{
+  MathObjectPtr AddExpression::compressTree() const{
     auto copyExpr = *this;
     Polynom newPolynom;
     for(const auto& child : copyExpr.addPolynom){
       auto pushPolynom = child.getAddPolynom();
       for(auto& pushChild: pushPolynom){
-        newPolynom.emplace_back(std::move(pushChild));
+        newPolynom.emplace_back(pushChild);
       }
     }
-    copyExpr.addPolynom = std::move(newPolynom);
-    return std::make_unique<AddExpression>(std::move(copyExpr));
+    copyExpr.addPolynom = newPolynom;
+    return std::make_unique<AddExpression>(copyExpr);
   }
 
   void AddExpression::addElement(const Element &elem){
@@ -153,12 +167,13 @@ namespace fintamath{
     *this = simplify()->to<AddExpression>();
   }
 
+
   MathObjectPtr AddExpression::simplify() const {
 
     auto exprPtr = tryCompressExpression();
     auto exprObj = helpers::cast<AddExpression>(exprPtr);
 
-    exprPtr = exprObj->tryCompressTree();
+    exprPtr = exprObj->compressTree();
     exprObj = helpers::cast<AddExpression>(exprPtr);
 
     auto b = exprObj->toString();
@@ -213,7 +228,7 @@ namespace fintamath{
     pushPolynomToPolynom<AddExpression>(powVect, addPolynom);
     pushPolynomToPolynom<AddExpression>(mulVect, addPolynom);
     pushPolynomToPolynom<AddExpression>(literalVect, addPolynom);
-    if(numVect.size() != 1 || numVect.at(0).info->toString() != "0"){
+    if(numVect.at(0).info->toString() != "0" || addPolynom.empty()){
       pushPolynomToPolynom<AddExpression>(numVect, addPolynom);
     }
   }

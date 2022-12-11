@@ -115,6 +115,7 @@ namespace fintamath {
 
   Expression::Expression(const TokenVector &tokens) {
     parse(tokens);
+    auto a = toString();
     *this = tryCompressTree().simplify()->to<Expression>();
   }
 
@@ -126,19 +127,17 @@ namespace fintamath {
     std::string result;
 
     for (const auto &child : children) {
-      const auto &childExpr = child->to<Expression>();
-
-      // TODO скобки добавлять, если приоритет вложенных операторов ниже
-      if ((childExpr.info->instanceOf<IComparable>() && childExpr.info->to<IComparable>() < Integer(0)) ||
-          childExpr.info->is<AddExpression>() || childExpr.info->is<MulExpression>() || childExpr.info->is<Neg>()) {
-        result += putInBrackets(child->toString());
-      } else {
-        result += child->toString();
+      if(child->is<Expression>()){
+        auto expr = child->to<Expression>();
+        if((expr.info->instanceOf<IComparable>() && expr.info->to<IComparable>() > Integer(0)) || expr.info->instanceOf<ILiteral>()){
+          result += child->toString();
+          result += info->toString();
+          continue;
+        } 
       }
-
+      result += putInBrackets(child->toString());
       result += info->toString();
     }
-
     result.pop_back();
     return result;
   }
@@ -284,8 +283,8 @@ namespace fintamath {
           throw InvalidInputException(*this, "too low operands for pow");
         }
         info = std::make_unique<Pow>();
-        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)i)));
-        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + (long)i + 1, tokens.end())));
+        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)i))->tryCompress());
+        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + (long)i + 1, tokens.end()))->tryCompress());
         return true;
       }
     }
@@ -321,7 +320,7 @@ namespace fintamath {
   bool Expression::parseFiniteTerm(const TokenVector &tokens) {
     if (tokens[0] == "(" && tokens[tokens.size() - 1] == ")") {
       info = IExpression::parse(cutBraces(tokens));
-      if (info->instanceOf<Expression>()) {
+      if (info->is<Expression>()) {
         auto exprInfo = info->to<Expression>();
         info = MathObjectPtr(exprInfo.info.release());
         children = copy(exprInfo.children);
@@ -500,18 +499,17 @@ namespace fintamath {
       children.emplace_back(std::make_unique<Expression>(expr));
       return *this;
     }
-    try {
-      *this = neg(*this->info);
-      tryCompress();
-      return *this;
-    } catch (const FunctionCallException &) {
-      auto mul = MulExpression();
-      mul.addElement(MulExpression::Element(std::make_unique<Expression>(Integer(-1)), false));
-      mul.addElement(MulExpression::Element(std::make_unique<Expression>(*this), false));
-      info = std::make_unique<MulExpression>(mul)->simplify();
-      children.clear();
+    if(info->instanceOf<IArithmetic>()){
+      *this = neg(*info);
       return *this;
     }
+
+    auto mul = MulExpression();
+    mul.addElement(MulExpression::Element(std::make_unique<Expression>(Integer(-1)), false));
+    mul.addElement(MulExpression::Element(std::make_unique<Expression>(*this), false));
+    info = std::make_unique<MulExpression>(mul)->simplify();
+    children.clear();
+    return *this;
   }
   /*
     Expr: AddExpr | MulExpr | PowExpr | FuncExpr | (Expr) | Term
@@ -1146,7 +1144,7 @@ namespace fintamath {
       return simplifyNeg(expr);
     }
 
-    return expr;
+    return expr.tryCompressTree();
   }
 
   Expression Expression::simplifyNeg(Expression expr) {
@@ -1162,7 +1160,7 @@ namespace fintamath {
         return Neg()(*compressedExpr);
       }
 
-      return expr;
+      return Neg()(*childExpr);
     }
 
     expr.info = childExpr->children.at(0)->clone();

@@ -67,7 +67,7 @@ namespace fintamath {
 
     MathObjectPtr tryCompressExpression() const;
 
-    MathObjectPtr tryCompressTree() const;
+    MathObjectPtr compressTree() const;
 
     static Polynom sumNumbers(const Polynom& numVect);
     
