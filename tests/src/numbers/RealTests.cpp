@@ -894,3 +894,9 @@ TEST(RealTests, roundTests) {
   EXPECT_EQ(Real("10000000000000000000.37841620837012").round(2).toString(), "10000000000000000000.38");
   EXPECT_EQ(Real("10000000000000000000.375").round(2).toString(), "10000000000000000000.38");
 }
+
+TEST(RealTests, signTests) {
+  EXPECT_EQ(Real(1).sign(), 1);
+  EXPECT_EQ(Real(-1).sign(), -1);
+  EXPECT_EQ(Real(0).sign(), 0);
+}

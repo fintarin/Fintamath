@@ -118,6 +118,10 @@ namespace fintamath {
     return RealImpl(res / roundCoeff);
   }
 
+  int Real::sign() const {
+    return impl->v.sign();
+  }
+
   const std::unique_ptr<RealImpl> &Real::getImpl() const {
     return impl;
   }

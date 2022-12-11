@@ -14,7 +14,7 @@ namespace fintamath {
   }
 
   Real pow(const Real &lhs, const Real &rhs) {
-    if (lhs.round(FINTAMATH_ROUND_PRECISION) == 0 && rhs.round(FINTAMATH_ROUND_PRECISION) == 0) {
+    if (lhs.round(FINTAMATH_ROUND_PRECISION) <= 0 && rhs.round(FINTAMATH_ROUND_PRECISION) <= 0) {
       throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
     }
 
@@ -29,19 +29,31 @@ namespace fintamath {
     try {
       return ln(rhs) / ln(lhs);
     } catch (const UndefinedException &) {
-      throw UndefinedFunctionException("log", {rhs.toString(), lhs.toString()});
+      throw UndefinedFunctionException("log", {lhs.toString(), rhs.toString()});
     }
   }
 
   Real ln(const Real &rhs) {
+    if (rhs.round(FINTAMATH_ROUND_PRECISION) <= 0) {
+      throw UndefinedFunctionException("ln", {rhs.toString()});
+    }
+
     return RealImpl(log(rhs.getImpl()->v));
   }
 
   Real lb(const Real &rhs) {
+    if (rhs.round(FINTAMATH_ROUND_PRECISION) <= 0) {
+      throw UndefinedFunctionException("lb", {rhs.toString()});
+    }
+
     return RealImpl(log2(rhs.getImpl()->v));
   }
 
   Real lg(const Real &rhs) {
+    if (rhs.round(FINTAMATH_ROUND_PRECISION) <= 0) {
+      throw UndefinedFunctionException("lg", {rhs.toString()});
+    }
+
     return RealImpl(log10(rhs.getImpl()->v));
   }
 
@@ -56,7 +68,7 @@ namespace fintamath {
   Real tan(const Real &rhs) {
     try {
       return sin(rhs) / cos(rhs);
-    } catch (const std::domain_error &) {
+    } catch (const UndefinedException &) {
       throw UndefinedFunctionException("tan", {rhs.toString()});
     }
   }
@@ -64,25 +76,29 @@ namespace fintamath {
   Real cot(const Real &rhs) {
     try {
       return cos(rhs) / sin(rhs);
-    } catch (const std::domain_error &) {
+    } catch (const UndefinedException &) {
       throw UndefinedFunctionException("cot", {rhs.toString()});
     }
   }
 
   Real asin(const Real &rhs) {
-    try {
-      return RealImpl(asin(rhs.getImpl()->v));
-    } catch (const std::domain_error &) {
+    RealImpl::Backend res = asin(rhs.getImpl()->v);
+
+    if (res.backend().isnan()) {
       throw UndefinedFunctionException("asin", {rhs.toString()});
     }
+
+    return RealImpl(res);
   }
 
   Real acos(const Real &rhs) {
-    try {
-      return RealImpl(acos(rhs.getImpl()->v));
-    } catch (const std::domain_error &) {
+    RealImpl::Backend res = acos(rhs.getImpl()->v);
+
+    if (res.backend().isnan()) {
       throw UndefinedFunctionException("acos", {rhs.toString()});
     }
+
+    return RealImpl(res);
   }
 
   Real atan(const Real &rhs) {

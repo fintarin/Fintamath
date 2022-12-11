@@ -45,6 +45,8 @@ namespace fintamath {
 
     Real round(size_t precision = 0) const;
 
+    int sign() const;
+
     const std::unique_ptr<RealImpl> &getImpl() const;
 
   protected:

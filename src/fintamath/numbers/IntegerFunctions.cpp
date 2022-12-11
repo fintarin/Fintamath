@@ -7,19 +7,19 @@
 
 namespace fintamath {
   Integer sqrt(const Integer &rhs) {
-    try {
-      return IntegerImpl(sqrt(rhs.getImpl()->v));
-    } catch (const std::domain_error &) {
+    if (rhs < 0) {
       throw UndefinedFunctionException("sqrt", {rhs.toString()});
     }
+
+    return IntegerImpl(sqrt(rhs.getImpl()->v));
   }
 
   Integer pow(const Integer &lhs, uint64_t rhs) {
-    try {
-      return IntegerImpl(pow(lhs.getImpl()->v, rhs));
-    } catch (const std::domain_error &) {
+    if (lhs == 0 && rhs == 0) {
       throw UndefinedBinaryOpearatorException("^", lhs.toString(), std::to_string(rhs));
     }
+
+    return IntegerImpl(pow(lhs.getImpl()->v, rhs));
   }
 
   Integer factorialRec(const Integer &left, const Integer &right) {
