@@ -36,6 +36,6 @@ TEST(UndefinedBinaryOpearatorExceptionTests, whatTests) {
     TestOperator().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), "Undefined: 0 ^ 0");
+    EXPECT_EQ(std::string(e.what()), "Undefined: (0)^(0)");
   }
 }

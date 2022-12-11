@@ -18,10 +18,10 @@ namespace fintamath {
     UndefinedUnaryOpearatorException(const std::string &oper, const std::string &rhs, Type type) {
       switch (type) {
       case Type::Prefix:
-        content += ": " + oper + rhs;
+        content += ": " + oper + "(" + rhs + ")";
         break;
       case Type::Postfix:
-        content += ": " + rhs + oper;
+        content += ": (" + rhs + ")" + oper;
         break;
       }
     }

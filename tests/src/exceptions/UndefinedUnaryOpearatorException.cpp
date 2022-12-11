@@ -36,6 +36,6 @@ TEST(UndefinedUnaryOpearatorException, whatTests) {
     TestOperator().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), "Undefined: -10!");
+    EXPECT_EQ(std::string(e.what()), "Undefined: (-10)!");
   }
 }
