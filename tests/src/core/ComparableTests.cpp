@@ -8,7 +8,7 @@
 
 using namespace fintamath;
 
-namespace fintamath::tests {
+namespace {
   class TestComparable : public IComparableCRTP<TestComparable> {
   public:
     std::string toString() const override {
@@ -49,8 +49,8 @@ TEST(ComparableTests, lessTest) {
   EXPECT_TRUE(*m3 < *m1);
   EXPECT_TRUE(*m3 < *m2);
 
-  EXPECT_THROW((void)(*m1 < tests::TestComparable()), FunctionCallException);
-  EXPECT_THROW(void(tests::TestComparable() < *m1), FunctionCallException);
+  EXPECT_THROW((void)(*m1 < TestComparable()), FunctionCallException);
+  EXPECT_THROW(void(TestComparable() < *m1), FunctionCallException);
 
   EXPECT_TRUE(Integer() < 1);
   EXPECT_TRUE(-1 < Integer());
@@ -74,8 +74,8 @@ TEST(ComparableTests, moreTest) {
   EXPECT_FALSE(*m3 > *m1);
   EXPECT_FALSE(*m3 > *m2);
 
-  EXPECT_THROW(void(*m1 > tests::TestComparable()), FunctionCallException);
-  EXPECT_THROW(void(tests::TestComparable() > *m1), FunctionCallException);
+  EXPECT_THROW(void(*m1 > TestComparable()), FunctionCallException);
+  EXPECT_THROW(void(TestComparable() > *m1), FunctionCallException);
 
   EXPECT_FALSE(Integer() > 1);
   EXPECT_FALSE(-1 > Integer());
@@ -99,8 +99,8 @@ TEST(ComparableTests, lessEqualsTest) {
   EXPECT_TRUE(*m3 <= *m1);
   EXPECT_TRUE(*m3 <= *m2);
 
-  EXPECT_THROW(void(*m1 <= tests::TestComparable()), FunctionCallException);
-  EXPECT_THROW(void(tests::TestComparable() <= *m1), FunctionCallException);
+  EXPECT_THROW(void(*m1 <= TestComparable()), FunctionCallException);
+  EXPECT_THROW(void(TestComparable() <= *m1), FunctionCallException);
 
   EXPECT_TRUE(Integer() <= 1);
   EXPECT_TRUE(-1 <= Integer());
@@ -124,8 +124,8 @@ TEST(ComparableTests, moreEqualsTest) {
   EXPECT_FALSE(*m3 >= *m1);
   EXPECT_FALSE(*m3 >= *m2);
 
-  EXPECT_THROW(void(*m1 >= tests::TestComparable()), FunctionCallException);
-  EXPECT_THROW(void(tests::TestComparable() >= *m1), FunctionCallException);
+  EXPECT_THROW(void(*m1 >= TestComparable()), FunctionCallException);
+  EXPECT_THROW(void(TestComparable() >= *m1), FunctionCallException);
 
   EXPECT_FALSE(Integer() >= 1);
   EXPECT_FALSE(-1 >= Integer());
