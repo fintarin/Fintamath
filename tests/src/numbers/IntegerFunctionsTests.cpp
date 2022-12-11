@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
+
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 using namespace fintamath;
 
@@ -16,4 +17,16 @@ TEST(IntegerFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Integer("68732648273642987365932706179432649827364")), Integer("262169121510606178721"));
 
   EXPECT_THROW(sqrt(Integer(-9289)), UndefinedFunctionException);
+}
+
+TEST(IntegerFunctionsTests, powTest) {
+  // TODO
+}
+
+TEST(IntegerFunctionsTests, factorialTest) {
+  // TODO
+}
+
+TEST(IntegerFunctionsTests, doubleFactorialTest) {
+  // TODO
 }
