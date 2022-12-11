@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/expressions/Expression.hpp"
 
 #include "fintamath/core/IMathObject.hpp"
 
@@ -18,8 +19,7 @@ namespace {
     }
 
     void throwException() const {
-      // TODO
-      // throw InvalidInputException();
+      throw InvalidInputException(Expression(), " unexpected sign");
     }
 
   protected:
@@ -34,6 +34,6 @@ TEST(InvalidInputExceptionTests, whatTests) {
     TestMathObject().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), ""); // TODO
+    EXPECT_EQ(std::string(e.what()), "Invalid input of Expression:  unexpected sign");
   }
 }

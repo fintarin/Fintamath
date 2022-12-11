@@ -18,8 +18,7 @@ namespace {
     }
 
     void throwException() const {
-      // TODO
-      // throw UndefinedException("");
+      throw UndefinedException();
     }
 
   protected:
@@ -34,6 +33,6 @@ TEST(UndefinedExceptionTests, whatTests) {
     TestFunction().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), ""); // TODO
+    EXPECT_EQ(std::string(e.what()), "Undefined");
   }
 }

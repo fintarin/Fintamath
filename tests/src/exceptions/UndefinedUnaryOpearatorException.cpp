@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 
 #include "fintamath/functions/IOperator.hpp"
 
@@ -21,8 +21,7 @@ namespace {
     }
 
     void throwException() const {
-      // TODO
-      // throw UndefinedUnaryOpearatorException();
+      throw UndefinedUnaryOpearatorException("!", "-10", UndefinedUnaryOpearatorException::Type::Postfix);
     }
 
   protected:
@@ -37,6 +36,6 @@ TEST(UndefinedUnaryOpearatorException, whatTests) {
     TestOperator().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), ""); // TODO
+    EXPECT_EQ(std::string(e.what()), "Undefined: -10!");
   }
 }

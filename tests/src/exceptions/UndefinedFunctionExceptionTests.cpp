@@ -18,8 +18,7 @@ namespace {
     }
 
     void throwException() const {
-      // TODO
-      // throw UndefinedFunctionException("");
+      throw UndefinedFunctionException("sqrt", {"-10"});
     }
 
   protected:
@@ -34,6 +33,6 @@ TEST(UndefinedFunctionExceptionTests, whatTests) {
     TestFunction().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), ""); // TODO
+    EXPECT_EQ(std::string(e.what()), "Undefined: sqrt(-10)");
   }
 }

@@ -21,8 +21,7 @@ namespace {
     }
 
     void throwException() const {
-      // TODO
-      // throw UndefinedBinaryOpearatorException();
+      throw UndefinedBinaryOpearatorException("^", "0", "0");
     }
 
   protected:
@@ -37,6 +36,6 @@ TEST(UndefinedBinaryOpearatorExceptionTests, whatTests) {
     TestOperator().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), ""); // TODO
+    EXPECT_EQ(std::string(e.what()), "Undefined: 0 ^ 0");
   }
 }
