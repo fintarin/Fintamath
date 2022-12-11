@@ -65,7 +65,7 @@ namespace fintamath {
 
     Expression callAbstract(const ArgumentsVector &argsVect) const final {
       if (!isTypeAny && argsVect.size() != sizeof...(Args)) {
-        throwInvalidInput(argsVect);
+        throwFunctionCallException(argsVect);
       }
 
       if (!validateArgs(argsVect)) {
@@ -112,7 +112,7 @@ namespace fintamath {
       return true;
     }
 
-    void throwInvalidInput(const ArgumentsVector &argsVect) const {
+    void throwFunctionCallException(const ArgumentsVector &argsVect) const {
       std::vector<std::string> argNamesVect(argsVect.size());
 
       for (size_t i = 0; i < argNamesVect.size(); i++) {
