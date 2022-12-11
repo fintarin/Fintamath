@@ -103,13 +103,9 @@ namespace fintamath {
     }
 
     bool validateTypeAnyArgs(const ArgumentsVector &args) const {
-      for (const auto &arg : args) {
-        if ((!arg.get().instanceOf<Args>() && ...)) {
-          return false;
-        }
-      }
-
-      return true;
+      return std::all_of(args.begin(), args.end(), [](const auto &arg) {
+        return (arg.get().template instanceOf<Args>() || ...); //
+      });
     }
 
     void throwFunctionCallException(const ArgumentsVector &argsVect) const {
