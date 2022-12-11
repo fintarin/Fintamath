@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/logarithms/Log.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -23,12 +24,12 @@ TEST(LogTests, callTest) {
 
   EXPECT_EQ(Log()(Variable("a"), Variable("b")).toString(), "log(a,b)");
 
-  EXPECT_ANY_THROW(Log()(Integer(-10), Integer(10)));
-  EXPECT_ANY_THROW(Log()(Integer(1), Integer(10)));
+  EXPECT_THROW(Log()(Integer(-10), Integer(10)), UndefinedFunctionException);
+  EXPECT_THROW(Log()(Integer(1), Integer(10)), UndefinedFunctionException);
 
   std::unique_ptr<IFunction> f = std::make_unique<Log>();
   EXPECT_EQ((*f)(Integer(2), Integer(10)).toString(), "3.3219280948873623478703194294893901758648313930245806120547563958159347766086252");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(10)));
-  EXPECT_ANY_THROW((*f)(Integer(10), Integer(10), Integer(10)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(10)), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(10), Integer(10), Integer(10)), FunctionCallException);
 }

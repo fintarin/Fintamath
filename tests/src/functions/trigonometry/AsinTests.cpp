@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/trigonometry/Asin.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -26,11 +27,11 @@ TEST(AsinTests, callTest) {
 
   EXPECT_EQ(Asin()(Variable("a")).toString(), "asin(a)");
 
-  EXPECT_ANY_THROW(Asin()(Integer(10)));
+  EXPECT_THROW(Asin()(Integer(10)), UndefinedFunctionException);
 
   std::unique_ptr<IFunction> f = std::make_unique<Asin>();
   EXPECT_EQ((*f)(Rational(1, 10)).toString(),
             "0.10016742116155979634552317945269331856867597222962954139102385503640267365086255");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

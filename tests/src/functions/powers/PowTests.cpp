@@ -2,6 +2,7 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -63,13 +64,13 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(Pow()(Integer(16), Rational(-5, 4)).toString(), "0.03125");
   EXPECT_EQ(Pow()(Integer(7), Rational(-3, 1000)).toString(), "0.99417927599212539388309345602974534386950277212157482682781039330883285005190623");
 
-  EXPECT_ANY_THROW(Pow()(Integer(0), Integer(0)));
+  EXPECT_THROW(Pow()(Integer(0), Integer(0)), UndefinedBinaryOpearatorException);
 
   EXPECT_EQ(Pow()(Integer(3), Variable("a")).toString(), "3^a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Pow>();
-  EXPECT_ANY_THROW((*o)(Integer(1)));
-  EXPECT_ANY_THROW((*o)(Rational(2, 3)));
-  EXPECT_ANY_THROW((*o)());
-  EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*o)(Integer(1)), FunctionCallException);
+  EXPECT_THROW((*o)(Rational(2, 3)), FunctionCallException);
+  EXPECT_THROW((*o)(), FunctionCallException);
+  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

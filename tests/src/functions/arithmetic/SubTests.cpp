@@ -29,8 +29,8 @@ TEST(SubTests, callTest) {
   EXPECT_EQ(Sub()(Integer(3), Variable("a")).toString(), "-a+3");
 
   std::unique_ptr<IOperator> o = std::make_unique<Sub>();
-  EXPECT_ANY_THROW((*o)(Integer(1)));
-  EXPECT_ANY_THROW((*o)(Rational(2, 3)));
-  EXPECT_ANY_THROW((*o)());
-  EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*o)(Integer(1)), FunctionCallException);
+  EXPECT_THROW((*o)(Rational(2, 3)), FunctionCallException);
+  EXPECT_THROW((*o)(), FunctionCallException);
+  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 #include "fintamath/functions/Functions.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -31,11 +32,11 @@ TEST(TanTests, callTest) {
 
   EXPECT_EQ(Tan()(Variable("a")).toString(), "tan(a)");
 
-  EXPECT_ANY_THROW(Tan()(pi() / 2));
+  EXPECT_THROW(Tan()(pi() / 2), UndefinedFunctionException);
 
   std::unique_ptr<IFunction> f = std::make_unique<Tan>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "0.6483608274590866712591249330098086768168743429837249756336279673958556003746239");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

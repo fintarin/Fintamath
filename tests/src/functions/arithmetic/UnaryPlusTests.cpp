@@ -26,7 +26,7 @@ TEST(UnaryPlusTests, callTest) {
   EXPECT_EQ(UnaryPlus()(Variable("a")).toString(), "a");
 
   std::unique_ptr<IOperator> o = std::make_unique<UnaryPlus>();
-  EXPECT_ANY_THROW((*o)(Integer(1), Rational(2, 3)));
-  EXPECT_ANY_THROW((*o)());
-  EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*o)(Integer(1), Rational(2, 3)), FunctionCallException);
+  EXPECT_THROW((*o)(), FunctionCallException);
+  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

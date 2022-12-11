@@ -32,6 +32,6 @@ TEST(AcotTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Acot>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "0.099668652491162027378446119878020590243278322504314648015508776810027747447550654");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

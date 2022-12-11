@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/exceptions/FunctionCallException.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -29,8 +30,8 @@ TEST(AddTests, callTest) {
   EXPECT_EQ(Add()(Integer(3), Variable("a")).toString(), "a+3");
 
   std::unique_ptr<IOperator> o = std::make_unique<Add>();
-  EXPECT_ANY_THROW((*o)(Integer(1)));
-  EXPECT_ANY_THROW((*o)(Rational(2, 3)));
-  EXPECT_ANY_THROW((*o)());
-  EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*o)(Integer(1)), FunctionCallException);
+  EXPECT_THROW((*o)(Rational(2, 3)), FunctionCallException);
+  EXPECT_THROW((*o)(), FunctionCallException);
+  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

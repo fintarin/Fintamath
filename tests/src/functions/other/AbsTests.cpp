@@ -24,6 +24,6 @@ TEST(AbsTests, callTest) {
 
   std::unique_ptr<IFunction> f = std::make_unique<Abs>();
   EXPECT_EQ((*f)(Integer(10)).toString(), "10");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

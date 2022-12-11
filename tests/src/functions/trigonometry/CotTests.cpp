@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 #include "fintamath/functions/Functions.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -31,11 +32,11 @@ TEST(CotTests, callTest) {
 
   EXPECT_EQ(Cot()(Variable("a")).toString(), "cot(a)");
 
-  EXPECT_ANY_THROW(Cot()(Integer(0)));
+  EXPECT_THROW(Cot()(Integer(0)), UndefinedFunctionException);
 
   std::unique_ptr<IFunction> f = std::make_unique<Cot>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "1.5423510453569200482774693556824293113206672064019624909194716061981945043136768");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

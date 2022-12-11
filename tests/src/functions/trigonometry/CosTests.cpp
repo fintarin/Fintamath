@@ -32,6 +32,6 @@ TEST(CosTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Cos>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "-0.83907152907645245225886394782406483451993016513316854683595373104879258686627077");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

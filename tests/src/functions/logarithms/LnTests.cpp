@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/logarithms/Ln.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 #include "fintamath/functions/Functions.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -30,11 +31,11 @@ TEST(LnTests, callTest) {
 
   EXPECT_EQ(Ln()(Variable("a")).toString(), "ln(a)");
 
-  EXPECT_ANY_THROW(Ln()(Integer(-10)));
+  EXPECT_THROW(Ln()(Integer(-10)), UndefinedFunctionException);
 
   std::unique_ptr<IFunction> f = std::make_unique<Ln>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "2.3025850929940456840179914546843642076011014886287729760333279009675726096773525");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/trigonometry/Acos.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -26,11 +27,11 @@ TEST(AcosTests, callTest) {
 
   EXPECT_EQ(Acos()(Variable("a")).toString(), "acos(a)");
 
-  EXPECT_ANY_THROW(Acos()(Integer(10)));
+  EXPECT_THROW(Acos()(Integer(10)), UndefinedFunctionException);
 
   std::unique_ptr<IFunction> f = std::make_unique<Acos>();
   EXPECT_EQ((*f)(Rational(1, 10)).toString(),
             "1.4706289056333368228857985121870581235299087274579233690964484411175055294922419");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -27,11 +28,11 @@ TEST(DoubleFactorialTests, callTest) {
 
   EXPECT_EQ(DoubleFactorial()(Variable("a")).toString(), "a!!");
 
-  EXPECT_ANY_THROW(DoubleFactorial()(Integer(-10)));
-  EXPECT_ANY_THROW(DoubleFactorial()(Rational(1, 10)));
+  EXPECT_THROW(DoubleFactorial()(Integer(-10)), UndefinedUnaryOpearatorException);
+  EXPECT_THROW(DoubleFactorial()(Rational(1, 10)), UndefinedUnaryOpearatorException);
 
   std::unique_ptr<IFunction> f = std::make_unique<DoubleFactorial>();
   EXPECT_EQ((*f)(Integer(10)).toString(), "3840");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

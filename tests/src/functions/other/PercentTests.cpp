@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/functions/other/Percent.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -26,10 +27,10 @@ TEST(PercentTests, callTest) {
 
   EXPECT_EQ(Percent()(Variable("a")).toString(), "a%");
 
-  EXPECT_ANY_THROW(Percent()(Rational(1, 10)).toString());
+  EXPECT_THROW(Percent()(Rational(1, 10)).toString(), UndefinedUnaryOpearatorException);
 
   std::unique_ptr<IFunction> f = std::make_unique<Percent>();
   EXPECT_EQ((*f)(Integer(10)).toString(), "1/10");
-  EXPECT_ANY_THROW((*f)());
-  EXPECT_ANY_THROW((*f)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*f)(), FunctionCallException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }

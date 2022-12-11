@@ -28,8 +28,8 @@ TEST(MulTests, callTest) {
   EXPECT_EQ(Mul()(Integer(3), Variable("a")).toString(), "3*a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Mul>();
-  EXPECT_ANY_THROW((*o)(Integer(1)));
-  EXPECT_ANY_THROW((*o)(Rational(2, 3)));
-  EXPECT_ANY_THROW((*o)());
-  EXPECT_ANY_THROW((*o)(Integer(1), Integer(1), Integer(1)));
+  EXPECT_THROW((*o)(Integer(1)), FunctionCallException);
+  EXPECT_THROW((*o)(Rational(2, 3)), FunctionCallException);
+  EXPECT_THROW((*o)(), FunctionCallException);
+  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
