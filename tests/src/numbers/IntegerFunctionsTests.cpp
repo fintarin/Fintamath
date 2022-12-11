@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
@@ -20,13 +23,27 @@ TEST(IntegerFunctionsTests, sqrtTest) {
 }
 
 TEST(IntegerFunctionsTests, powTest) {
-  // TODO
+    EXPECT_EQ(pow(Integer(5), 2), 25);
+    EXPECT_EQ(pow(Integer(-5), 5), -3125);
+    EXPECT_EQ(pow(Integer("5"), -2), 0);
+    EXPECT_EQ(pow(Integer("6789"), 4), 0);
+
+    EXPECT_THROW(pow(Integer(10), -5), UndefinedBinaryOpearatorException);
+    EXPECT_THROW(pow(Integer(10), 0), UndefinedBinaryOpearatorException);
 }
 
 TEST(IntegerFunctionsTests, factorialTest) {
-  // TODO
+  EXPECT_EQ(factorial(Integer(0)), 1);
+  EXPECT_EQ(factorial(Integer(5)), 120);
+  EXPECT_EQ(factorial(Integer("25")).toString(), "15511210043330985984000000");
+
+  EXPECT_THROW(factorial(Integer(-1)), UndefinedUnaryOpearatorException);
 }
 
 TEST(IntegerFunctionsTests, doubleFactorialTest) {
-  // TODO
+  EXPECT_EQ(doubleFactorial(Integer(0)), 1);
+  EXPECT_EQ(doubleFactorial(Integer(5)), 15);
+  EXPECT_EQ(doubleFactorial(Integer("25")), 7905853580625);
+
+  EXPECT_THROW(doubleFactorial(Integer(-1)), UndefinedUnaryOpearatorException);
 }
