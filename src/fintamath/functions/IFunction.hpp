@@ -64,11 +64,11 @@ namespace fintamath {
     virtual Expression call(const ArgumentsVector &argsVect) const = 0;
 
     Expression callAbstract(const ArgumentsVector &argsVect) const final {
-      if (!isTypeAny && argsVect.size() != sizeof...(Args)) {
+      if (!doesArgsSizeMatch(argsVect)) {
         throwFunctionCallException(argsVect);
       }
 
-      if (!validateArgs(argsVect)) {
+      if (!doAgsMatch(argsVect)) {
         return Expression::buildFunctionExpression(*this, argsVect);
       }
 
@@ -79,31 +79,39 @@ namespace fintamath {
       return true;
     }
 
-  private:
-    bool validateArgs(const ArgumentsVector &args) const {
-      if (isTypeAny) {
-        return validateTypeAnyArgs(args);
-      }
-
-      return validateArgs<0, Args...>(args);
-    }
-
-    template <size_t i, typename Head, typename... Tail>
-    bool validateArgs(const ArgumentsVector &args) const {
-      if (!args.at(i).get().instanceOf<Head>()) {
+    bool doAgsMatch(const ArgumentsVector &argsVect) const {
+      if (!doesArgsSizeMatch(argsVect)) {
         return false;
       }
 
-      return validateArgs<i + 1, Tail...>(args);
+      if (isTypeAny) {
+        return doAnyArgsMatch(argsVect);
+      }
+
+      return doAgsMatch<0, Args...>(argsVect);
+    }
+
+    bool doesArgsSizeMatch(const ArgumentsVector &argsVect) const {
+      return isTypeAny || argsVect.size() == sizeof...(Args);
+    }
+
+  private:
+    template <size_t i, typename Head, typename... Tail>
+    bool doAgsMatch(const ArgumentsVector &argsVect) const {
+      if (!argsVect.at(i).get().instanceOf<Head>()) {
+        return false;
+      }
+
+      return doAgsMatch<i + 1, Tail...>(argsVect);
     }
 
     template <size_t>
-    bool validateArgs(const ArgumentsVector & /*unused*/) const {
+    bool doAgsMatch(const ArgumentsVector & /*unused*/) const {
       return true;
     }
 
-    bool validateTypeAnyArgs(const ArgumentsVector &args) const {
-      return std::all_of(args.begin(), args.end(), [](const auto &arg) {
+    bool doAnyArgsMatch(const ArgumentsVector &argsVect) const {
+      return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
         return (arg.get().template instanceOf<Args>() || ...); //
       });
     }
