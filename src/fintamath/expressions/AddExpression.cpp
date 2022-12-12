@@ -43,6 +43,8 @@ namespace fintamath{
   }
 
   AddExpression::AddExpression(Polynom inAddPolynom) :addPolynom(std::move(inAddPolynom)) {  
+
+    *this = simplify()->to<AddExpression>();
   }
 
   std::string AddExpression::getClassName() const {
@@ -135,17 +137,6 @@ namespace fintamath{
       }
       return result;
     }
-    /*if(info->is<Expression>()){
-      auto expr = info->to<Expression>();
-      if(expr.getInfo()->is<AddExpression>()){
-        Polynom result;
-        auto addExpr = info->to<AddExpression>();
-        for(const auto& child : addExpr.addPolynom){
-          result.emplace_back(Element{child.info->clone(), (bool)(child.inverted^inverted)});
-        }
-        return result;
-      }
-    }*/
     return {*this};
   }
 
@@ -169,14 +160,20 @@ namespace fintamath{
 
 
   MathObjectPtr AddExpression::simplify() const {
-
+    
     auto exprPtr = tryCompressExpression();
     auto exprObj = helpers::cast<AddExpression>(exprPtr);
+
+    auto b = exprObj->toString();
+
+    for(auto& obj : exprObj->addPolynom){
+      obj.info = obj.info->simplify();
+    }
 
     exprPtr = exprObj->compressTree();
     exprObj = helpers::cast<AddExpression>(exprPtr);
 
-    auto b = exprObj->toString();
+    b = exprObj->toString();
     exprObj->sort();
     b = exprObj->toString();
     return exprObj;

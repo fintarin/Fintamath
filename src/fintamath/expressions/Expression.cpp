@@ -107,7 +107,14 @@ namespace fintamath {
     return *this;
   }
 
-  Expression::Expression(const IMathObject &obj) : info(obj.clone()) {
+  Expression::Expression(const IMathObject &obj) {
+    if(obj.is<Expression>()){
+      auto expr = obj.to<Expression>();
+      info = expr.info->clone();
+      children = copy(expr.children);
+      return;
+    }
+    info = obj.clone();
   }
 
   Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
@@ -283,8 +290,8 @@ namespace fintamath {
           throw InvalidInputException(*this, "too low operands for pow");
         }
         info = std::make_unique<Pow>();
-        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)i))->tryCompress());
-        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + (long)i + 1, tokens.end()))->tryCompress());
+        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)i))); //TODO: may be compressTree
+        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + (long)i + 1, tokens.end())));
         return true;
       }
     }
@@ -379,10 +386,15 @@ namespace fintamath {
     funcExpr.info = func.clone();
 
     for (const auto &arg : args) {
-      funcExpr.children.push_back(std::make_unique<Expression>(arg.get())->clone());
+
+      if(arg.get().is<Expression>()){
+        funcExpr.children.push_back(std::make_unique<Expression>(arg.get().to<Expression>()));
+      } else {
+        funcExpr.children.push_back(std::make_unique<Expression>(arg.get()));
+      }
     }
 
-    return funcExpr.simplify()->to<Expression>();
+    return funcExpr.simplify()->to<Expression>(); //TODO: refactor to simplifyToExpression
   }
 
   ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
@@ -1168,8 +1180,34 @@ namespace fintamath {
     return expr.tryCompressTree();
   }
 
+  Expression Expression::simplifyPow(Expression expr){
+    if(expr.info->is<Pow>()){
+      if(expr.children.at(0)->is<Expression>() && expr.children.at(1)->is<Expression>()){
+        auto left = expr.children.at(0)->to<Expression>();
+        auto right = expr.children.at(1)->to<Expression>();
+        if(left.info->instanceOf<INumber>() && right.info->instanceOf<INumber>()){
+          auto result = Pow()(*left.info, *right.info);
+          return result;
+        }
+      }
+      /*MulExpression mulExpr;
+      mulExpr.addElement({std::make_unique<Expression>(expr)});
+      mulExpr.addElement({std::make_unique<Expression>(1)});
+      auto resultMul = mulExpr.simplify();
+      if(resultMul->is<Expression>()){
+        auto exprRes = resultMul->to<Expression>();
+        return exprRes;
+      }
+      expr.info = resultMul->clone();
+      expr.children.clear();*/
+    }
+    return expr;
+  }
+
+
   MathObjectPtr Expression::simplify() const {
     Expression expr = simplifyPrefixUnaryOperator(*this);
+    expr = simplifyPow(expr);
     if (expr.info && (expr.info->is<AddExpression>() || expr.info->is<MulExpression>())) {
       expr.info = expr.info->simplify();
     }
@@ -1194,6 +1232,7 @@ newExpr = simplifyNeg();
       return newExpr->info->clone();
     }*/
 
+    auto b = expr.toString();
     return expr.clone();
   }
 

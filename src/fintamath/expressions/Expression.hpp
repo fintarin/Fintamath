@@ -109,6 +109,8 @@ namespace fintamath {
 
     static Expression simplifyNeg(Expression expr);
 
+    static Expression simplifyPow(Expression expr);
+
     /*ExprPtr baseSimplify() const;
 
     ExprPtr parseEqualExpression(const std::string &expr) const;

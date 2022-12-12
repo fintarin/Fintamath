@@ -59,13 +59,17 @@ namespace fintamath {
 
     void parse(const TokenVector &tokens);
 
+    MulExpression simplifyResultToMulExpression() const;
+
     Polynom mulPolynom;
 
-    MathObjectPtr tryCompressExpression() const;
+    MathObjectPtr compressExpression() const;
 
-    MathObjectPtr tryCompressTree() const;
+    MathObjectPtr compressTree() const;
 
-    static std::string tryPutInBrackets(const MathObjectPtr &obj);
+    static std::string tryPutInBrackets(const MathObjectPtr &obj);\
+
+    static Polynom openPowMulExpression(const Polynom& powVect);
 
     static Polynom mulNumbers(const Polynom& numVect);
 

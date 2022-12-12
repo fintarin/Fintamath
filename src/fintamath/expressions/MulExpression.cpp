@@ -76,11 +76,10 @@ namespace fintamath {
   MulExpression::MulExpression(const TokenVector& tokens){
     parse(tokens);
     auto a = toString();
-    *this = simplify()->to<MulExpression>();
   }
 
   MulExpression::MulExpression(Polynom inMulPolynom) : mulPolynom(std::move(inMulPolynom)) {
-    *this = simplify()->to<MulExpression>();
+    *this = simplifyResultToMulExpression();
   }
 
   void MulExpression::parse(const TokenVector & tokens){
@@ -105,15 +104,16 @@ namespace fintamath {
     }
 
     mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition))));
+
     mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end())), tokens[lastSignPosition] == "/"));
   }
 
   MulExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
 
-  MathObjectPtr MulExpression::tryCompressExpression() const {
+  MathObjectPtr MulExpression::compressExpression() const {
     auto copyExpr = *this;
     for(auto& child : copyExpr.mulPolynom){
-      if(child.info->getClassName() == Expression().getClassName()){
+      if(child.info->is<Expression>()){
         auto childExpr = child.info->to<Expression>();
         child.info = childExpr.tryCompress();
       }
@@ -122,7 +122,7 @@ namespace fintamath {
   }
 
   std::vector<MulExpression::Element> MulExpression::Element::getMulPolynom() const {
-    if(info->getClassName() == MulExpression().getClassName()){
+    if(info->is<MulExpression>()){
       Polynom result;
       auto mulExpr = info->to<MulExpression>();
       for(auto& child : mulExpr.mulPolynom){
@@ -135,34 +135,54 @@ namespace fintamath {
     return {*this};
   }
 
-  MathObjectPtr MulExpression::tryCompressTree() const {
+  MulExpression MulExpression::simplifyResultToMulExpression() const{
+    MulExpression mulExpr;
+    auto info = simplify();
+    if(info->is<MulExpression>()){
+      mulExpr = info->to<MulExpression>();
+      return mulExpr;
+    }
+    mulExpr.mulPolynom.emplace_back(Element(info->clone(), false));
+    return mulExpr;
+  }
+
+  MathObjectPtr MulExpression::compressTree() const {
     auto copyExpr = *this;
     Polynom newPolynom;
     for(const auto& child : mulPolynom){
       auto pushPolynom = child.getMulPolynom();
       for(auto& pushChild: pushPolynom){
-        newPolynom.emplace_back(std::move(pushChild));
+        newPolynom.emplace_back(pushChild);
       }
     }
     copyExpr.mulPolynom = newPolynom;
-    return std::make_unique<MulExpression>(std::move(copyExpr));
+    return std::make_unique<MulExpression>(copyExpr);
   }
 
   void MulExpression::addElement(const Element &elem){
     mulPolynom.emplace_back(elem);
-    *this = simplify()->to<MulExpression>();
+    *this = simplifyResultToMulExpression();
   }
 
   MathObjectPtr MulExpression::simplify() const {
-    auto a = toString();
-    auto exprPtr = tryCompressExpression();
+    auto exprPtr = compressExpression();
     auto exprObj = helpers::cast<MulExpression>(exprPtr);
 
-    exprPtr = exprObj->tryCompressTree();
+    exprPtr = exprObj->compressTree();
     exprObj = helpers::cast<MulExpression>(exprPtr);
+
+    for(auto& obj : exprObj->mulPolynom){
+      obj.info = obj.info->simplify();
+    }
 
     exprObj->sortPolynom();
     
+    if(exprObj->mulPolynom.size() == 1){
+      if(exprObj->mulPolynom.at(0).inverted){
+        return std::make_unique<Expression>(Expression::buildFunctionExpression(Pow(), {*exprObj->mulPolynom.at(0).info, *std::make_unique<Integer>(-1)}));
+      }
+      return exprObj->mulPolynom.at(0).info->clone();
+    }
     return exprObj;
   }
 
@@ -297,12 +317,12 @@ namespace fintamath {
         if(num == 0){
           continue;
         }
-        if((num == 1) || num == -1){
-          if(obj.obj->is<AddExpression>()){
-            addVect.emplace_back(Element(obj.obj->clone(), num == -1));
-          }else{
+        if(obj.obj->is<Expression>()) {
+          if((num == 1) || (num == -1)){
             literalVect.emplace_back(Element(obj.obj->clone(), num == -1));
+            continue;
           }
+          powVect.emplace_back(Element(std::make_unique<Expression>(Expression::buildFunctionExpression(Pow(), {*obj.obj, num})), false));
           continue;
         }
         if(num < 0){
@@ -312,15 +332,13 @@ namespace fintamath {
           }
           continue;
         }
-        if(obj.obj->is<Expression>()) {
-          auto exprInfo = obj.obj->to<Expression>().getInfo()->clone();
-          powVect.emplace_back(Element(std::make_unique<Expression>(Expression::buildFunctionExpression(Pow(), {*exprInfo, num})), false));
-          continue;
-        }
         for(Integer i = 0;i < num; i++){
           addVect.emplace_back(Element(obj.obj->clone()));
         }
-      } else if(auto exprObj = obj.getPowIfSingle()){
+        continue;
+      }
+      
+      if(auto exprObj = obj.getPowIfSingle()){
         powVect.emplace_back(Element(std::make_unique<Expression>(Expression::buildFunctionExpression(Pow(), {*obj.obj, *exprObj})), false));
       } else {
         powVect.emplace_back(Element(std::make_unique<Expression>(Expression::buildFunctionExpression(Pow(), {*obj.obj, obj.pow}))));
@@ -422,9 +440,13 @@ namespace fintamath {
       }
     }
 
+    powVect = openPowMulExpression(powVect);
+
     numVect = mulNumbers(numVect);
 
     simplifyPow(powVect, addVect, literalVect);    
+
+    b = toString();
 
     addVect = multiplicateBraces(addVect);
 
@@ -445,4 +467,23 @@ namespace fintamath {
       mulPolynom = numVect;
     }
   }
+
+  MulExpression::Polynom MulExpression::openPowMulExpression(const Polynom& powVect){
+    Polynom newPowVect;
+    for(const auto& pow : powVect){
+      auto expr = pow.info->to<Expression>();
+      auto leftExpr = expr.getChildren().at(0)->to<Expression>();
+      if(!leftExpr.getInfo()->is<MulExpression>()){
+        newPowVect.emplace_back(pow);
+        continue;
+      }
+      auto powExpr = expr.getChildren().at(1)->clone();
+      auto mulExpr = leftExpr.getInfo()->to<MulExpression>();
+      for(const auto& child: mulExpr.mulPolynom){
+        newPowVect.emplace_back(Element{std::make_unique<Expression>(Expression::buildFunctionExpression(Pow(), {*child.info, *powExpr})), child.inverted});
+      }
+    }
+    return newPowVect;
+  }
+
 }
