@@ -66,6 +66,7 @@ namespace fintamath {
     Expression &negate() override;
 
   private:
+    static Expression buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
     static ExpressionPtr buildAddExpression(const IFunction &func, const ArgumentsVector &args);
 
@@ -104,6 +105,8 @@ namespace fintamath {
     std::string postfixUnaryOperatorToString() const;
 
     std::string functionToString() const;
+
+    void simplifyFunctionsRec();
 
     static Expression simplifyPrefixUnaryOperator(Expression expr);
 

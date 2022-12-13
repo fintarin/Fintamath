@@ -191,6 +191,32 @@ namespace fintamath {
     return result + ")";
   }
 
+  void Expression::simplifyFunctionsRec() {
+    if (children.empty()) {
+      info = info->simplify();
+      return;
+    }
+
+    for (auto &child : children) {
+      if (child->instanceOf<IExpression>()) {
+        child = child->simplify();
+      }
+    }
+
+    if (info->instanceOf<IFunction>()) {
+      const auto &func = info->to<IFunction>();
+      ArgumentsVector args;
+
+      for (const auto &child : children) {
+        args.emplace_back(*child);
+      }
+
+      if (func.doAgsMatch(args)) {
+        info = func(args).info;
+      }
+    }
+  }
+
   const MathObjectPtr &Expression::getInfo() const {
     return info;
   }
@@ -371,30 +397,7 @@ namespace fintamath {
   }
 
   Expression Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-    Expression funcExpr;
-
-    if (func.is<Add>() || func.is<Sub>()) {
-      funcExpr.info = buildAddExpression(func, args);
-      return funcExpr;
-    }
-
-    if (func.is<Mul>() || func.is<Div>()) {
-      funcExpr.info = buildMulExpression(func, args);
-      return funcExpr;
-    }
-
-    funcExpr.info = func.clone();
-
-    for (const auto &arg : args) {
-
-      if(arg.get().is<Expression>()){
-        funcExpr.children.push_back(std::make_unique<Expression>(arg.get().to<Expression>()));
-      } else {
-        funcExpr.children.push_back(std::make_unique<Expression>(arg.get()));
-      }
-    }
-
-    return funcExpr.simplify()->to<Expression>(); //TODO: refactor to simplifyToExpression
+    return buildRawFunctionExpression(func, args).simplify()->to<Expression>(); //TODO: refactor to simplifyToExpression
   }
 
   ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
@@ -523,6 +526,34 @@ namespace fintamath {
     children.clear();
     return *this;
   }
+  
+  Expression Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
+    Expression funcExpr;
+
+    if (func.is<Add>() || func.is<Sub>()) {
+      funcExpr.info = buildAddExpression(func, args);
+      return funcExpr;
+    }
+
+    if (func.is<Mul>() || func.is<Div>()) {
+      funcExpr.info = buildMulExpression(func, args);
+      return funcExpr;
+    }
+
+    funcExpr.info = func.clone();
+
+    for (const auto &arg : args) {
+
+      if(arg.get().is<Expression>()){
+        funcExpr.children.push_back(std::make_unique<Expression>(arg.get().to<Expression>()));
+      } else {
+        funcExpr.children.push_back(std::make_unique<Expression>(arg.get()));
+      }
+    }
+
+    return funcExpr;
+  }
+
   /*
     Expr: AddExpr | MulExpr | PowExpr | FuncExpr | (Expr) | Term
     AddExpr: +Expr | -Expr | Expr + Expr | Expr - Expr
@@ -1095,13 +1126,7 @@ namespace fintamath {
     }
 
     if (!childExpr->info->is<Neg>()) {
-      MathObjectPtr compressedExpr = childExpr->tryCompress();
-
-      if (*compressedExpr != *childExpr) {
-        return Neg()(*compressedExpr);
-      }
-
-      return Neg()(*childExpr);
+      return buildRawFunctionExpression(Neg(), {*childExpr->tryCompress()});
     }
 
     expr.info = childExpr->children.at(0)->clone();
@@ -1137,6 +1162,7 @@ namespace fintamath {
 
   MathObjectPtr Expression::simplify() const {
     Expression expr = *this;
+    expr.simplifyFunctionsRec();
     auto b = expr.toString();
     expr.info = expr.info->simplify();
     while(expr.info->is<Expression>()){

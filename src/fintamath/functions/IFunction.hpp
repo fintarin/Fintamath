@@ -26,9 +26,15 @@ namespace fintamath {
   public:
     virtual IFunction::Type getFunctionType() const = 0;
 
+    virtual bool doAgsMatch(const ArgumentsVector &argsVect) const = 0;
+
     template <typename... Args>
     Expression operator()(const Args &...args) const {
       ArgumentsVector argsVect = {args...};
+      return callAbstract(argsVect);
+    }
+
+    Expression operator()(const ArgumentsVector &argsVect) const {
       return callAbstract(argsVect);
     }
 
@@ -60,6 +66,18 @@ namespace fintamath {
       return IFunction::Type(sizeof...(Args));
     }
 
+    bool doAgsMatch(const ArgumentsVector &argsVect) const override {
+      if (!doesArgsSizeMatch(argsVect)) {
+        return false;
+      }
+
+      if (isTypeAny) {
+        return doAnyArgsMatch(argsVect);
+      }
+
+      return doAgsMatch<0, Args...>(argsVect);
+    }
+
   protected:
     virtual Expression call(const ArgumentsVector &argsVect) const = 0;
 
@@ -79,23 +97,11 @@ namespace fintamath {
       return true;
     }
 
-    bool doAgsMatch(const ArgumentsVector &argsVect) const {
-      if (!doesArgsSizeMatch(argsVect)) {
-        return false;
-      }
-
-      if (isTypeAny) {
-        return doAnyArgsMatch(argsVect);
-      }
-
-      return doAgsMatch<0, Args...>(argsVect);
-    }
-
+  private:
     bool doesArgsSizeMatch(const ArgumentsVector &argsVect) const {
       return isTypeAny || argsVect.size() == sizeof...(Args);
     }
 
-  private:
     template <size_t i, typename Head, typename... Tail>
     bool doAgsMatch(const ArgumentsVector &argsVect) const {
       if (!argsVect.at(i).get().instanceOf<Head>()) {
