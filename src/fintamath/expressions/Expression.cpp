@@ -631,77 +631,6 @@ namespace fintamath {
      return expr;
    }
 
-   ExprPtr Expression::mainSimplify(const ExprPtr &expr) const {
-     auto newExpr = rebuildMul(expr);
-     newExpr = rebuildAdd(newExpr);
-
-     newExpr = sort(newExpr);
-
-     newExpr = simplifyMulVar(newExpr);
-     newExpr = simplifyPowNum(newExpr);
-
-     newExpr = simplifyAddVar(newExpr);
-     newExpr = simplifyMulNum(newExpr);
-
-     newExpr = simplifyAddNum(newExpr);
-
-     newExpr = openBracketsPowMul(newExpr);
-     newExpr = openBracketsPowAdd(newExpr);
-     newExpr = openBracketsMulAdd(newExpr);
-
-     newExpr = sort(newExpr);
-
-     return newExpr;
-   }
-
-   ExprPtr Expression::invertSubDiv(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       if (child != nullptr) {
-         child = invertSubDiv(child);
-       }
-     }
-
-     if (newExpr->info->is<Sub>()) {
-       newExpr->info = std::make_shared<Add>();
-       auto rightNode = std::make_shared<Expression>();
-       rightNode->info = std::make_shared<Neg>();
-       rightNode->children.push_back(newExpr->children.at(1));
-       rightNode = simplifyOperators(rightNode);
-       newExpr->children.at(1) = rightNode;
-     }
-     if (newExpr->info->is<Div>()) {
-       newExpr->info = std::make_shared<Mul>();
-       auto rightNode = std::make_shared<Expression>();
-       if (newExpr->children.at(1)->info->instanceOf<INumber>()) {
-         rightNode->info = std::make_shared<Div>();
-         rightNode->children.push_back(std::make_shared<Expression>(Integer(1)));
-         rightNode->children.push_back(newExpr->children.at(1));
-         rightNode = simplifyOperators(rightNode);
-       } else {
-         rightNode = revertPow(newExpr->children.at(1));
-       }
-       newExpr->children.at(1) = rightNode;
-     }
-     return newExpr;
-   }
-
-   ExprPtr Expression::revertPow(const ExprPtr &expr) const {
-     if (!expr->info->is<Pow>()) {
-       auto newExpr = std::make_shared<Expression>();
-       newExpr->info = std::make_shared<Pow>();
-       newExpr->children.push_back(expr);
-       newExpr->children.push_back(std::make_shared<Expression>(Integer(-1)));
-       return newExpr;
-     }
-     auto rightNode = std::make_shared<Expression>();
-     rightNode->info = std::make_shared<Neg>();
-     rightNode->children.push_back(expr->children.at(1));
-     expr->children.at(1) = rightNode;
-     return expr;
-   }
-
    ExprPtr Expression::simplifyNeg(const ExprPtr &expr) const {
      auto newExpr = std::make_shared<Expression>(*expr);
 
@@ -1185,6 +1114,7 @@ namespace fintamath {
       if(expr.children.at(0)->is<Expression>() && expr.children.at(1)->is<Expression>()){
         auto left = expr.children.at(0)->to<Expression>();
         auto right = expr.children.at(1)->to<Expression>();
+        auto leftInfo = left.info->getClassName();
         if(left.info->instanceOf<INumber>() && right.info->instanceOf<INumber>()){
           auto result = Pow()(*left.info, *right.info);
           return result;
@@ -1206,33 +1136,37 @@ namespace fintamath {
 
 
   MathObjectPtr Expression::simplify() const {
-    Expression expr = simplifyPrefixUnaryOperator(*this);
-    expr = simplifyPow(expr);
-    if (expr.info && (expr.info->is<AddExpression>() || expr.info->is<MulExpression>())) {
-      expr.info = expr.info->simplify();
-    }
-
-    /*auto newExpr = std::make_shared<Expression>(*this);
-
-    newExpr = simplifyFunctions(newExpr);
-newExpr = simplifyNeg();
-    newExpr = invertSubDiv(newExpr);*/
-
-    /*auto oldExpr = newExpr;
-    newExpr = mainSimplify(newExpr);
-
-    while (*oldExpr != *newExpr) {
-      oldExpr = newExpr;
-      newExpr = mainSimplify(newExpr);
-    }
-
-    newExpr = simplifyOperators(newExpr);
-
-    if (newExpr->children.empty()) {
-      return newExpr->info->clone();
-    }*/
-
+    Expression expr = *this;
     auto b = expr.toString();
+    expr.info = expr.info->simplify();
+    while(expr.info->is<Expression>()){
+      expr = expr.info->to<Expression>();
+    }
+
+
+    for(auto& child : expr.children){
+      auto childExpr = child->to<Expression>();
+
+      b = childExpr.info->getClassName();
+      b = childExpr.info->toString();
+      
+      child = child->simplify();
+      childExpr = child->to<Expression>();
+
+      b = childExpr.info->getClassName();
+      b = childExpr.info->toString();
+
+      while(childExpr.info->is<Expression>()){
+        childExpr = childExpr.info->to<Expression>();
+        child = childExpr.clone();
+      }
+
+    }
+    b = expr.toString();
+
+    expr = simplifyPrefixUnaryOperator(*this);
+    expr = simplifyPow(expr);
+
     return expr.clone();
   }
 

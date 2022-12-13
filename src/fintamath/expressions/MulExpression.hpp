@@ -79,7 +79,7 @@ namespace fintamath {
 
     static Polynom divideBraceByObj(const Polynom& lhs, const Polynom& rhs);
 
-    void sortPolynom();
+    void simplifyPolynom();
 
     void simplifyPow(Polynom& powVect, Polynom& addVect, Polynom& literalVect);
 

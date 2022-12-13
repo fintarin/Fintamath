@@ -39,12 +39,11 @@ namespace fintamath{
   AddExpression::AddExpression(const TokenVector& tokens){ 
       parse(tokens);
       auto a = toString();
-      *this = simplify()->to<AddExpression>();
+      *this = simplifyResultToAddExpression();
   }
 
   AddExpression::AddExpression(Polynom inAddPolynom) :addPolynom(std::move(inAddPolynom)) {  
-
-    *this = simplify()->to<AddExpression>();
+    *this = simplifyResultToAddExpression();
   }
 
   std::string AddExpression::getClassName() const {
@@ -155,11 +154,17 @@ namespace fintamath{
 
   void AddExpression::addElement(const Element &elem){
     addPolynom.emplace_back(elem);
-    *this = simplify()->to<AddExpression>();
+    *this = simplifyResultToAddExpression();
   }
 
 
   MathObjectPtr AddExpression::simplify() const {
+    if(addPolynom.size() == 1){
+      if(addPolynom.at(0).inverted){
+        return std::make_unique<Expression>(Neg()(*addPolynom.at(0).info));
+      }
+      return addPolynom.at(0).info->clone();
+    }
     
     auto exprPtr = tryCompressExpression();
     auto exprObj = helpers::cast<AddExpression>(exprPtr);
@@ -176,6 +181,16 @@ namespace fintamath{
     b = exprObj->toString();
     exprObj->sort();
     b = exprObj->toString();
+
+    exprPtr = exprObj->compressTree();
+    exprObj = helpers::cast<AddExpression>(exprPtr);
+
+    if(exprObj->addPolynom.size() == 1){
+      if(exprObj->addPolynom.at(0).inverted){
+        return std::make_unique<Expression>(Neg()(*exprObj->addPolynom.at(0).info));
+      }
+      return exprObj->addPolynom.at(0).info->clone();
+    }
     return exprObj;
   }
 
@@ -243,5 +258,16 @@ namespace fintamath{
       }
     }
     return {{std::make_unique<Expression>(expr), false}};
+  }
+
+  AddExpression AddExpression::simplifyResultToAddExpression() const{
+    AddExpression addExpr;
+    auto info = simplify();
+    if(info->is<AddExpression>()){
+      addExpr = info->to<AddExpression>();
+      return addExpr;
+    }
+    addExpr.addPolynom.emplace_back(Element(info->clone(), false));
+    return addExpr;
   }
 }

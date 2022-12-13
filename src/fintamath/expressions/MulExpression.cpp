@@ -165,6 +165,13 @@ namespace fintamath {
   }
 
   MathObjectPtr MulExpression::simplify() const {
+    if(mulPolynom.size() == 1){
+      if(mulPolynom.at(0).inverted){
+        return std::make_unique<Expression>(Expression::buildFunctionExpression(Pow(), {*mulPolynom.at(0).info, *std::make_unique<Integer>(-1)}));
+      }
+      return mulPolynom.at(0).info->clone();
+    }
+
     auto exprPtr = compressExpression();
     auto exprObj = helpers::cast<MulExpression>(exprPtr);
 
@@ -175,7 +182,7 @@ namespace fintamath {
       obj.info = obj.info->simplify();
     }
 
-    exprObj->sortPolynom();
+    exprObj->simplifyPolynom();
     
     if(exprObj->mulPolynom.size() == 1){
       if(exprObj->mulPolynom.at(0).inverted){
@@ -385,6 +392,7 @@ namespace fintamath {
     for(auto& powObj: powVect){
       bool added = false;
       auto expr = powObj.info->to<Expression>();
+      
       auto leftValue = expr.getChildren().at(0)->clone();
       auto rightValue = expr.getChildren().at(1)->clone();
       for(auto& obj: objects){
@@ -396,6 +404,10 @@ namespace fintamath {
       }
       if(added){
         continue;
+      }
+      auto leftExpr = leftValue->to<Expression>();
+      if(leftExpr.getInfo()->is<AddExpression>()){
+        leftValue = leftExpr.getInfo()->clone();
       }
       ObjectPow obj(leftValue);
       obj.pow.addElement({rightValue->clone(),powObj.inverted});
@@ -409,7 +421,7 @@ namespace fintamath {
     sortPowObjects(objects, powVect, addVect, literalVect);
   }
 
-  void MulExpression::sortPolynom(){
+  void MulExpression::simplifyPolynom(){
     auto numVect = Polynom();
     auto powVect = Polynom();
     auto literalVect = Polynom();
@@ -440,15 +452,39 @@ namespace fintamath {
       }
     }
 
-    powVect = openPowMulExpression(powVect);
+
+    Polynom tmpVect = openPowMulExpression(powVect);
+    powVect.clear();
+
+    for(const auto& child : tmpVect){
+      if(child.info->is<AddExpression>()){
+        addVect.emplace_back(child);
+        continue;
+      }
+      if(!child.info->is<Expression>()){
+        throw InvalidInputException(*this, "argument must be an expression: " + child.info->toString());
+      }
+      auto exprInfo = (child.info->to<Expression>()).getInfo()->clone();
+      if(exprInfo->instanceOf<IArithmetic>()){
+        numVect.emplace_back(child);
+      } else if (exprInfo->is<Pow>()){
+        powVect.emplace_back(child);
+      } else if (exprInfo->instanceOf<ILiteral>()){
+        literalVect.emplace_back(child);
+      } else if (exprInfo->instanceOf<IFunction>()){
+        funcVect.emplace_back(child);
+      } else {
+        throw InvalidInputException(*this, "undefined expression type: " + exprInfo->getClassName());
+      }
+    }
 
     numVect = mulNumbers(numVect);
 
     simplifyPow(powVect, addVect, literalVect);    
 
-    b = toString();
-
     addVect = multiplicateBraces(addVect);
+
+
 
     mulPolynom.clear();
 

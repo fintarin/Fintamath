@@ -70,6 +70,9 @@ namespace fintamath {
     MathObjectPtr compressTree() const;
 
     static Polynom sumNumbers(const Polynom& numVect);
+
+    AddExpression simplifyResultToAddExpression() const;
+
     
     void sort();
   };
