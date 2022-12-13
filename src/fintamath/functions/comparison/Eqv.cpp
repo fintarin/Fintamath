@@ -17,10 +17,6 @@ namespace fintamath {
   }
 
   Expression Eqv::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    if (argsVect.at(0).get() != argsVect.at(1).get()) {
-      return Expression::buildFunctionExpression(*this, argsVect);
-    }
-
-    return Boolean(true);
+    return Boolean(argsVect.at(0).get() == argsVect.at(1).get());
   }
 }

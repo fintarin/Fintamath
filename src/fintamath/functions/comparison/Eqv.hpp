@@ -1,10 +1,10 @@
 #pragma once
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
-  class Eqv : public IOperatorCRTP<Eqv, IMathObject, IMathObject> {
+  class Eqv : public IOperatorCRTP<Eqv, IComparable, IComparable> {
   public:
     Eqv();
 
