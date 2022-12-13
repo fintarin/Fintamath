@@ -1,4 +1,4 @@
-#include "fintamath/functions/constants/Pi.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
 
 #include "fintamath/numbers/RealFunctions.hpp"
 
@@ -11,7 +11,7 @@ namespace fintamath {
     return "Pi";
   }
 
-  Expression Pi::call(const std::vector<std::reference_wrapper<const IMathObject>> & /*argsVect*/) const {
+  Expression Pi::toExpression() const {
     return pi();
   }
 }

@@ -1,4 +1,4 @@
-#include "fintamath/functions/constants/E.hpp"
+#include "fintamath/literals/constants/E.hpp"
 
 #include "fintamath/numbers/RealFunctions.hpp"
 
@@ -11,7 +11,7 @@ namespace fintamath {
     return "E";
   }
 
-  Expression E::call(const std::vector<std::reference_wrapper<const IMathObject>> & /*argsVect*/) const {
+  Expression E::toExpression() const {
     return e();
   }
 }

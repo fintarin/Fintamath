@@ -8,8 +8,6 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/constants/E.hpp"
-#include "fintamath/functions/constants/Pi.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
@@ -86,8 +84,6 @@ TEST(FunctionTests, parseTest) {
   EXPECT_TRUE(IFunction::parse("atan")->is<Atan>());
   EXPECT_TRUE(IFunction::parse("acot")->is<Acot>());
   EXPECT_TRUE(IFunction::parse("abs")->is<Abs>());
-  EXPECT_TRUE(IFunction::parse("e")->is<E>());
-  EXPECT_TRUE(IFunction::parse("pi")->is<Pi>());
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

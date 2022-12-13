@@ -13,19 +13,17 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
-#include "fintamath/functions/constants/E.hpp"
-#include "fintamath/functions/constants/Pi.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
+#include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
@@ -42,6 +40,9 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/E.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -49,7 +50,10 @@
 namespace fintamath {
   helpers::ParserVector<NumberPtr, std::string> INumber::parserVector;
   helpers::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
+
   helpers::ParserVector<ExpressionPtr, TokenVector> IExpression::parserMap;
+
+  helpers::ParserMap<ConstantPtr> IConstant::parserMap;
   helpers::ParserMap<FunctionPtr> IFunction::parserMap;
   helpers::ParserMap<OperatorPtr> IOperator::parserMap;
 }
@@ -60,7 +64,12 @@ namespace fintamath::config {
     INumber::addParser<Integer>();
     INumber::addParser<Rational>();
 
+    // constants
+    IConstant::addParser<E>();
+    IConstant::addParser<Pi>();
+
     // literals
+    ILiteral::addParser(&IConstant::parse);
     ILiteral::addParser<Variable>();
     ILiteral::addParser<Boolean>();
 
@@ -97,8 +106,6 @@ namespace fintamath::config {
     IFunction::addParser<Acos>();
     IFunction::addParser<Atan>();
     IFunction::addParser<Acot>();
-    IFunction::addParser<E>();
-    IFunction::addParser<Pi>();
 
     //expressions
     IExpression::addParser<AddExpression>();

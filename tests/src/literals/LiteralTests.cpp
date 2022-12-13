@@ -3,8 +3,6 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 
-#include "fintamath/functions/constants/E.hpp"
-#include "fintamath/functions/constants/Pi.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;

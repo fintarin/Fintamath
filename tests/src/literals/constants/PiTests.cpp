@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/functions/constants/Pi.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
 
 using namespace fintamath;
 
@@ -13,5 +13,5 @@ TEST(PiTests, toStringTest) {
 }
 
 TEST(PiTests, callTest) {
-  EXPECT_EQ(Pi()().toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
+  EXPECT_EQ(Expression(Pi()).toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
 }
