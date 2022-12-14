@@ -4,6 +4,7 @@
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
+#include <cstdint>
 
 namespace fintamath {
   class EqvExpression : public IExpressionCRTP<EqvExpression> {
@@ -27,6 +28,8 @@ namespace fintamath {
     ~EqvExpression() override = default;
 
     MathObjectPtr simplify() const override;
+
+    uint16_t getInfoPriority() override;
 
   private:
 

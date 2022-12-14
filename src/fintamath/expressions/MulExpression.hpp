@@ -59,6 +59,8 @@ namespace fintamath {
 
     MathObjectPtr simplify() const override;
 
+    uint16_t getInfoPriority() override;
+    
   private:
 
     void parse(const TokenVector &tokens);

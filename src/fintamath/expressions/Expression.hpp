@@ -54,6 +54,8 @@ namespace fintamath {
 
     static Expression buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
+    uint16_t getInfoPriority() override;
+
   protected:
     Expression &add(const Expression &rhs) override;
 
@@ -74,7 +76,7 @@ namespace fintamath {
 
     static Vector copy(const Vector &rhs);
 
-    Expression &tryCompressTree();
+    Expression &compressTree();
 
     void parse(const TokenVector &tokens);
 

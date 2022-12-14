@@ -47,6 +47,10 @@ namespace fintamath {
     mulPolynom.emplace_back(Element{rhs.clone(), false});
   }
 
+  uint16_t MulExpression::getInfoPriority(){
+    return (uint16_t)IOperator::Priority::Multiplication;
+  }
+
   std::string MulExpression::tryPutInBrackets(const MathObjectPtr& obj) {
     if(obj->is<AddExpression>()){
       return "(" + obj->toString() + ")";

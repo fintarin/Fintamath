@@ -27,7 +27,9 @@ namespace fintamath {
     }
     static ExpressionPtr parse(const TokenVector &tokens) {
       return helpers::parse(parserMap, tokens);
-    }
+    } 
+    virtual uint16_t getInfoPriority() = 0;
+
   private:
     static bool appendToken(TokenVector& tokens, std::string& token);
     static bool isDigit(char c);

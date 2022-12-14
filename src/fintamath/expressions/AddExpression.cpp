@@ -5,6 +5,7 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -14,6 +15,7 @@
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
+#include <cstdint>
 #include <memory>
 
 namespace fintamath{
@@ -53,6 +55,11 @@ namespace fintamath{
   std::string AddExpression::getClassName() const {
       return "AddExpression";
   }
+
+  uint16_t AddExpression::getInfoPriority(){
+    return (uint16_t)IOperator::Priority::Addition;
+  }
+
 
   std::string AddExpression::toString() const {
     std::string result;

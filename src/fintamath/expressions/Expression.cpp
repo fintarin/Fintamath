@@ -1,5 +1,6 @@
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/core/Defines.hpp"
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 #include <algorithm>
@@ -13,6 +14,7 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -25,6 +27,7 @@
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/helpers/Caster.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -95,7 +98,7 @@ namespace fintamath {
     *this = Expression(*info->simplify());
   }
 
-  Expression &Expression::tryCompressTree() {
+  Expression &Expression::compressTree() {
     if (info->is<Expression>()) {
       auto exprInfo = info->to<Expression>();
       info = MathObjectPtr(exprInfo.info.release());
@@ -103,6 +106,14 @@ namespace fintamath {
     }
 
     return *this;
+  }
+
+  uint16_t Expression::getInfoPriority(){
+    if(info->instanceOf<IOperator>()){
+      auto oper = helpers::cast<IOperator>(info);
+      return (uint16_t)oper->getOperatorPriority();
+    }
+    return (uint16_t)IOperator::Priority::Any;
   }
 
   Expression::Expression(const IMathObject &obj) {
@@ -142,47 +153,54 @@ namespace fintamath {
     std::string result;
 
     for (const auto &child : children) {
-      if(child->is<Expression>()){
-        auto expr = child->to<Expression>();
-        if((expr.info->instanceOf<IComparable>() && expr.info->to<IComparable>() > Integer(0)) || expr.info->instanceOf<ILiteral>()){
+      if(!child->instanceOf<IExpression>()){
+        if(child->instanceOf<IComparable>() && child->to<IComparable>() < Integer(0)){
+          result += putInBrackets(child->toString());
+        } else {
           result += child->toString();
-          result += info->toString();
-          continue;
-        } 
+        }
+      } else {
+        auto parentPriority = helpers::cast<IOperator>(info->clone())->getOperatorPriority();
+
+        if(auto childPriority = (IOperator::Priority)helpers::cast<IExpression>(child->clone())->getInfoPriority(); childPriority == IOperator::Priority::PostfixUnary ||
+        childPriority == IOperator::Priority::PrefixUnary || 
+        (parentPriority >= childPriority)){
+          result += putInBrackets(child->toString());
+        } else {
+          result += child->toString();
+        }
       }
-      result += putInBrackets(child->toString());
       result += info->toString();
     }
-    result.pop_back();
+
+    for(int i = 0; i < info->toString().size(); i++){
+      result.pop_back();
+    }
     return result;
   }
 
   std::string Expression::prefixUnaryOperatorToString() const {
-    std::string result = info->toString();
+    std::string result = info->toString();    
 
-    // TODO после simplify() не может быть -0. Скобки добавлять, если подвыражение -- IExpression или IFunction
-    if (const auto &childExpr = children.at(0)->to<Expression>(); (childExpr.info->instanceOf<IComparable>() && childExpr.info->to<IComparable>() < Integer(0)) ||
-        childExpr.info->is<AddExpression>() || childExpr.info->is<Neg>()) {
-      result += putInBrackets(children.at(0)->toString());
-    } else {
-      result += children.at(0)->toString();
+    if(children.at(0)->instanceOf<IExpression>()){
+      return result + putInBrackets(children.at(0)->toString());
     }
-
-    return result;
+    if(children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)){
+      return result + putInBrackets(children.at(0)->toString());
+    }
+    return result + children.at(0)->toString();
   }
 
   std::string Expression::postfixUnaryOperatorToString() const {
-    std::string result;
+    std::string result = children.at(0)->toString();    
 
-    // TODO здесь может быть 0, например, 0!. Скобки добавлять, если подвыражение -- IExpression или IFunction
-    if (const auto &childExpr = children.at(0)->to<Expression>(); (childExpr.info->instanceOf<IComparable>() && childExpr.info->to<IComparable>() < Integer(0)) ||
-        childExpr.info->is<AddExpression>() || childExpr.info->is<MulExpression>() || childExpr.info->is<Neg>()) {
-      result += putInBrackets(childExpr.toString());
-    } else {
-      result += childExpr.toString();
+    if(children.at(0)->instanceOf<IExpression>()){
+      return putInBrackets(result) + info->toString();
     }
-
-    return result + info->toString();
+    if(children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)){
+      return putInBrackets(result) + info->toString();
+    }
+      return result + info->toString();
   }
 
   std::string Expression::functionToString() const {
@@ -551,12 +569,7 @@ namespace fintamath {
     funcExpr.info = func.clone();
 
     for (const auto &arg : args) {
-
-      if(arg.get().is<Expression>()){
-        funcExpr.children.push_back(std::make_unique<Expression>(arg.get().to<Expression>()));
-      } else {
-        funcExpr.children.push_back(std::make_unique<Expression>(arg.get()));
-      }
+      funcExpr.children.push_back(arg.get().clone());
     }
 
     return funcExpr;
@@ -605,7 +618,7 @@ namespace fintamath {
       return simplifyNeg(expr);
     }
 
-    return expr.tryCompressTree();
+    return expr;
   }
 
   Expression Expression::simplifyNeg(Expression expr) {
@@ -620,15 +633,15 @@ namespace fintamath {
 
     expr.info = childExpr->children.at(0)->clone();
 
-    return expr.tryCompressTree();
+    return expr.compressTree();
   }
 
   MathObjectPtr Expression::simplify() const {
     Expression expr = *this;
-    expr = expr.tryCompressTree();
+    expr = expr.compressTree();
     expr.simplifyFunctionsRec();
 
-    //expr = simplifyPrefixUnaryOperator(*this);
+    expr = simplifyPrefixUnaryOperator(expr);
     //expr = simplifyPow(expr);
     if(expr.children.empty()){
       return expr.info->clone();

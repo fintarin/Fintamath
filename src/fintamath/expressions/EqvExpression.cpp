@@ -83,4 +83,9 @@ namespace fintamath {
     }
     throw InvalidInputException(*this, " not an EqvExpression");
   }
+
+  uint16_t getInfoPriority(){
+    return (uint16_t)IOperator::Priority::Comparison;
+  }
+
 }
