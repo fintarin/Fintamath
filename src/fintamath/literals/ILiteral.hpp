@@ -25,15 +25,6 @@ namespace fintamath {
       return helpers::parse(parserVector, str);
     }
 
-    operator Expression() const {
-      return toExpression();
-    }
-
-  protected:
-    virtual Expression toExpression() const {
-      return {*this->clone()};
-    }
-
   private:
     static helpers::ParserVector<LiteralPtr, std::string> parserVector;
   };

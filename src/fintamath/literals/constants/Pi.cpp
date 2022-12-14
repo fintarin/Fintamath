@@ -11,7 +11,7 @@ namespace fintamath {
     return "Pi";
   }
 
-  Expression Pi::toExpression() const {
+  Expression Pi::getValue() const {
     return pi();
   }
 }

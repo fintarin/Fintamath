@@ -20,6 +20,13 @@ namespace fintamath {
       return helpers::parse<ConstantPtr>(parserMap, parsedStr, [](const ConstantPtr &) { return true; });
     }
 
+    Expression operator()() const {
+      return getValue();
+    }
+
+  protected:
+    virtual Expression getValue() const = 0;
+
   private:
     static helpers::ParserMap<ConstantPtr> parserMap;
   };

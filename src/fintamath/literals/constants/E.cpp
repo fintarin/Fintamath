@@ -11,7 +11,7 @@ namespace fintamath {
     return "E";
   }
 
-  Expression E::toExpression() const {
+  Expression E::getValue() const {
     return e();
   }
 }

@@ -10,6 +10,6 @@ namespace fintamath {
     std::string getClassName() const override;
 
   protected:
-    Expression toExpression() const override;
+    Expression getValue() const override;
   };
 }
