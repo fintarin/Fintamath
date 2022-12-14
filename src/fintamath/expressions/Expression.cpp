@@ -20,8 +20,6 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
-#include "fintamath/functions/constants/E.hpp"
-#include "fintamath/functions/constants/Pi.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
@@ -416,19 +414,15 @@ namespace fintamath {
 
   ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
     auto addExpr = std::make_unique<AddExpression>();
-    auto firstEl = std::make_unique<Expression>(args.at(0).get());
-    auto secondEl = std::make_unique<Expression>(args.at(1).get());
-    addExpr->addElement(AddExpression::Element(firstEl->clone()));
-    addExpr->addElement(AddExpression::Element(secondEl->clone(), func.is<Sub>()));
+    addExpr->addElement(AddExpression::Element(args.at(0).get().clone()));
+    addExpr->addElement(AddExpression::Element(args.at(1).get().clone(), func.is<Sub>()));
     return addExpr;
   }
 
   ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args) {
     auto mulExpr = std::make_unique<MulExpression>();
-    auto firstEl = std::make_unique<Expression>(args.at(0).get());
-    auto secondEl = std::make_unique<Expression>(args.at(1).get());
-    mulExpr->addElement(MulExpression::Element(firstEl->clone()));
-    mulExpr->addElement(MulExpression::Element(secondEl->clone(), func.is<Div>()));
+    mulExpr->addElement(MulExpression::Element(args.at(0).get().clone()));
+    mulExpr->addElement(MulExpression::Element(args.at(1).get().clone(), func.is<Div>()));
     return mulExpr;
   }
 

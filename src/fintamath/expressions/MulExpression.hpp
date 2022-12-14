@@ -91,7 +91,7 @@ namespace fintamath {
 
     using Objects = std::vector<ObjectPow>;
 
-    static void sortPowObjects(const Objects& objs, Polynom& powVect, Polynom& addVect, Polynom& literalVect);
+    static void sortPowObjects(Objects& objs, Polynom& powVect, Polynom& addVect, Polynom& literalVect);
 
   };
 }

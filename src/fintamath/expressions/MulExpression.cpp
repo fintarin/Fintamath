@@ -307,10 +307,15 @@ namespace fintamath {
       *powValue = polynom.at(0).inverted ? *Neg()(*powValue).simplify() : *powValue;
       return powValue;
     }
+
+    void simplifyPow(){
+      pow = AddExpression(*pow.simplify());
+    }
   };
 
-  void MulExpression::sortPowObjects(const Objects& objs, Polynom& powVect, Polynom& addVect, Polynom& literalVect){
-    for(const auto& obj : objs){
+  void MulExpression::sortPowObjects(Objects& objs, Polynom& powVect, Polynom& addVect, Polynom& literalVect){
+    for(auto& obj : objs){
+      obj.simplifyPow();
       if(auto numObj = obj.getPowIfInteger()){
         auto num = numObj->to<Integer>();
         if(num == 0){
