@@ -29,6 +29,8 @@ namespace fintamath {
 
       Polynom getAddPolynom() const;
 
+      MathObjectPtr toMathObject() const;
+
     };
 
     AddExpression() = default;
@@ -40,6 +42,8 @@ namespace fintamath {
     AddExpression(const AddExpression &rhs) noexcept;
 
     AddExpression(AddExpression &&rhs) noexcept;
+
+    AddExpression(const IMathObject& rhs);
 
     AddExpression &operator=(const AddExpression &rhs) noexcept;
 
@@ -65,15 +69,15 @@ namespace fintamath {
 
     Polynom addPolynom;
 
-    MathObjectPtr tryCompressExpression() const;
+    Polynom compressExpression() const;
 
-    MathObjectPtr compressTree() const;
+    Polynom compressTree() const;
 
     static Polynom sumNumbers(const Polynom& numVect);
 
-    AddExpression simplifyResultToAddExpression() const;
+    static void sortPolynom(const Polynom& vect, Polynom& numVect, Polynom& mulVect, Polynom& literalVect, Polynom& funcVect, Polynom& powVect);
 
     
-    void sort();
+    void simplifyPolynom();
   };
 }

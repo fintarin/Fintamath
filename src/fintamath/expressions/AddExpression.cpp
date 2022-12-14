@@ -38,13 +38,17 @@ namespace fintamath{
 
   AddExpression::AddExpression(const TokenVector& tokens){ 
       parse(tokens);
-      auto a = toString();
-      *this = simplifyResultToAddExpression();
   }
 
-  AddExpression::AddExpression(Polynom inAddPolynom) :addPolynom(std::move(inAddPolynom)) {  
-    *this = simplifyResultToAddExpression();
+  AddExpression::AddExpression(const IMathObject& rhs){
+    if(rhs.is<AddExpression>()){
+      *this = rhs.to<AddExpression>();
+      return;
+    }
+    addPolynom.emplace_back(Element{rhs.clone(), false});
   }
+
+  AddExpression::AddExpression(Polynom inAddPolynom) :addPolynom(std::move(inAddPolynom)) {}
 
   std::string AddExpression::getClassName() const {
       return "AddExpression";
@@ -100,6 +104,7 @@ namespace fintamath{
     addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition))));
     addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end())), tokens[lastSignPosition] == "-"));
 
+    *this = AddExpression(compressTree());
   }
     
   AddExpression::Element::Element(const Element &rhs) : inverted(rhs.inverted) {
@@ -116,15 +121,24 @@ namespace fintamath{
 
   AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
 
-  MathObjectPtr AddExpression::tryCompressExpression() const{
-    auto copyExpr = *this;
-    for(auto& child : copyExpr.addPolynom){
+  MathObjectPtr AddExpression::Element::toMathObject() const {
+    if(inverted){
+      return Neg()(*info->clone()).simplify();
+    }
+    return info->simplify();
+  }
+
+  AddExpression::Polynom AddExpression::compressExpression() const{
+    Polynom newPolynom;
+    for(auto& child : addPolynom){
       if(child.info->is<Expression>()){
         auto childExpr = child.info->to<Expression>();
-        child.info = childExpr.tryCompress();
+        newPolynom.emplace_back(Element(childExpr.compress(), child.inverted));
+      } else {
+        newPolynom.emplace_back(child);
       }
     }
-    return std::make_unique<AddExpression>(copyExpr);
+    return newPolynom;
   }
 
   std::vector<AddExpression::Element> AddExpression::Element::getAddPolynom() const {
@@ -132,100 +146,88 @@ namespace fintamath{
       Polynom result;
       auto addExpr = info->to<AddExpression>();
       for(const auto& child : addExpr.addPolynom){
-        result.emplace_back(Element{child.info->clone(), (bool)(child.inverted^inverted)});
+        result.emplace_back(Element{child.info->clone(), (bool)((unsigned)child.inverted ^ (unsigned)inverted)});
       }
       return result;
     }
     return {*this};
   }
 
-  MathObjectPtr AddExpression::compressTree() const{
-    auto copyExpr = *this;
+  AddExpression::Polynom AddExpression::compressTree() const{
     Polynom newPolynom;
-    for(const auto& child : copyExpr.addPolynom){
+    Polynom vect = compressExpression();
+    for(const auto& child : vect){
       auto pushPolynom = child.getAddPolynom();
       for(auto& pushChild: pushPolynom){
         newPolynom.emplace_back(pushChild);
       }
     }
-    copyExpr.addPolynom = newPolynom;
-    return std::make_unique<AddExpression>(copyExpr);
+    return newPolynom;
   }
 
   void AddExpression::addElement(const Element &elem){
     addPolynom.emplace_back(elem);
-    *this = simplifyResultToAddExpression();
   }
 
 
   MathObjectPtr AddExpression::simplify() const {
     if(addPolynom.size() == 1){
-      if(addPolynom.at(0).inverted){
-        return std::make_unique<Expression>(Neg()(*addPolynom.at(0).info));
-      }
-      return addPolynom.at(0).info->clone();
+      return addPolynom.at(0).toMathObject();
     }
-    
-    auto exprPtr = tryCompressExpression();
-    auto exprObj = helpers::cast<AddExpression>(exprPtr);
 
-    auto b = exprObj->toString();
+    auto exprObj = *this;
 
-    for(auto& obj : exprObj->addPolynom){
+    for(auto& obj : exprObj.addPolynom){
       obj.info = obj.info->simplify();
     }
 
-    exprPtr = exprObj->compressTree();
-    exprObj = helpers::cast<AddExpression>(exprPtr);
+    exprObj = AddExpression(exprObj.compressTree());
 
-    b = exprObj->toString();
-    exprObj->sort();
-    b = exprObj->toString();
+    exprObj.simplifyPolynom();
 
-    exprPtr = exprObj->compressTree();
-    exprObj = helpers::cast<AddExpression>(exprPtr);
-
-    if(exprObj->addPolynom.size() == 1){
-      if(exprObj->addPolynom.at(0).inverted){
-        return std::make_unique<Expression>(Neg()(*exprObj->addPolynom.at(0).info));
-      }
-      return exprObj->addPolynom.at(0).info->clone();
+    if(exprObj.addPolynom.size() == 1){
+      return exprObj.addPolynom.at(0).toMathObject();
     }
-    return exprObj;
+    return exprObj.clone();
   }
 
   bool sortFunc(const AddExpression::Element& lhs, const AddExpression::Element& rhs){
     return lhs.info->toString() < rhs.info->toString();
   }
 
-  void AddExpression::sort(){
+  void AddExpression::sortPolynom(const Polynom& vect, Polynom& numVect, Polynom& mulVect, Polynom& literalVect, Polynom& funcVect, Polynom& powVect){
+    for(const auto& child : vect){
+      if(child.info->is<MulExpression>()){
+        mulVect.emplace_back(child);
+        continue;
+      }
+      if(child.info->is<Expression>()){
+        if (auto exprInfo = (child.info->to<Expression>()).getInfo()->clone(); exprInfo->is<Pow>()){
+          powVect.emplace_back(child);
+          continue;
+        } 
+        funcVect.emplace_back(child);
+        continue;
+      }
+      if(child.info->instanceOf<IArithmetic>()){
+        numVect.emplace_back(child);
+        continue;
+      }
+      if (child.info->instanceOf<ILiteral>()){
+        literalVect.emplace_back(child);
+        continue;
+      }
+    }
+  }
+
+  void AddExpression::simplifyPolynom(){
     auto numVect = Polynom();
     auto powVect = Polynom();
     auto literalVect = Polynom();
     auto mulVect = Polynom();
     auto funcVect = Polynom();
 
-    for(const auto& child : addPolynom){
-      if(child.info->is<MulExpression>()){
-        mulVect.emplace_back(child);
-        continue;
-      }
-      if(!child.info->is<Expression>()){
-        throw InvalidInputException(*this, "argument must be an expression: " + child.info->toString());
-      }
-      auto exprInfo = (child.info->to<Expression>()).getInfo()->clone();
-      if(exprInfo->instanceOf<IArithmetic>()){
-        numVect.emplace_back(child);
-      } else if (exprInfo->is<Pow>()){
-        powVect.emplace_back(child);
-      } else if (exprInfo->instanceOf<ILiteral>()){
-        literalVect.emplace_back(child);
-      } else if (exprInfo->instanceOf<IFunction>()){
-        funcVect.emplace_back(child);
-      } else {
-        throw InvalidInputException(*this, "undefined expression type: " + exprInfo->getClassName());
-      }
-    }
+    sortPolynom(addPolynom, numVect, mulVect, literalVect, funcVect, powVect);
 
     numVect = sumNumbers(numVect);
 
@@ -246,28 +248,16 @@ namespace fintamath{
   }
 
   AddExpression::Polynom AddExpression::sumNumbers(const Polynom& numVect){
-    Expression expr = 0;
+    Expression result = 0;
     Add add;
     Sub sub;
     for(const auto& elem: numVect){
-      auto exprNum = elem.info->to<Expression>();
       if(elem.inverted){
-        expr = sub(*expr.getInfo(), *exprNum.getInfo());
+        result = sub(*result.getInfo(), *elem.info);
       } else {
-        expr = add(*expr.getInfo(), *exprNum.getInfo());
+        result = add(*result.getInfo(), *elem.info);
       }
     }
-    return {{std::make_unique<Expression>(expr), false}};
-  }
-
-  AddExpression AddExpression::simplifyResultToAddExpression() const{
-    AddExpression addExpr;
-    auto info = simplify();
-    if(info->is<AddExpression>()){
-      addExpr = info->to<AddExpression>();
-      return addExpr;
-    }
-    addExpr.addPolynom.emplace_back(Element(info->clone(), false));
-    return addExpr;
+    return {{result.simplify(), false}};
   }
 }

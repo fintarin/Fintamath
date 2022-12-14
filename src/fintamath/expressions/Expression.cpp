@@ -20,6 +20,8 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
+#include "fintamath/functions/constants/E.hpp"
+#include "fintamath/functions/constants/Pi.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
@@ -89,12 +91,10 @@ namespace fintamath {
 
   Expression::Expression(const std::string &str) {
     info = IExpression::parse(str);
-
     if (!info) {
       throw InvalidInputException(*this, str);
     }
-
-    *this = tryCompressTree().simplify()->to<Expression>();
+    *this = Expression(*info->simplify());
   }
 
   Expression &Expression::tryCompressTree() {
@@ -120,10 +120,20 @@ namespace fintamath {
   Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
   }
 
+  std::string tokenVectorToString(const TokenVector& tokens){
+    std::string result;
+    for(const auto& token : tokens){
+      result += token;
+    }
+    return result;
+  }
+
   Expression::Expression(const TokenVector &tokens) {
     parse(tokens);
-    auto a = toString();
-    *this = tryCompressTree().simplify()->to<Expression>();
+    if (!info) {
+      throw InvalidInputException(*this, tokenVectorToString(tokens));
+    }
+    *this = Expression(*simplify());
   }
 
   std::string putInBrackets(const std::string &str) {
@@ -153,8 +163,7 @@ namespace fintamath {
     std::string result = info->toString();
 
     // TODO после simplify() не может быть -0. Скобки добавлять, если подвыражение -- IExpression или IFunction
-    const auto &childExpr = children.at(0)->to<Expression>();
-    if ((childExpr.info->instanceOf<IComparable>() && childExpr.info->to<IComparable>() < Integer(0)) ||
+    if (const auto &childExpr = children.at(0)->to<Expression>(); (childExpr.info->instanceOf<IComparable>() && childExpr.info->to<IComparable>() < Integer(0)) ||
         childExpr.info->is<AddExpression>() || childExpr.info->is<Neg>()) {
       result += putInBrackets(children.at(0)->toString());
     } else {
@@ -168,8 +177,7 @@ namespace fintamath {
     std::string result;
 
     // TODO здесь может быть 0, например, 0!. Скобки добавлять, если подвыражение -- IExpression или IFunction
-    const auto &childExpr = children.at(0)->to<Expression>();
-    if ((childExpr.info->instanceOf<IComparable>() && childExpr.info->to<IComparable>() < Integer(0)) ||
+    if (const auto &childExpr = children.at(0)->to<Expression>(); (childExpr.info->instanceOf<IComparable>() && childExpr.info->to<IComparable>() < Integer(0)) ||
         childExpr.info->is<AddExpression>() || childExpr.info->is<MulExpression>() || childExpr.info->is<Neg>()) {
       result += putInBrackets(childExpr.toString());
     } else {
@@ -213,6 +221,7 @@ namespace fintamath {
 
       if (func.doAgsMatch(args)) {
         info = func(args).info;
+        children.clear();
       }
     }
   }
@@ -316,8 +325,9 @@ namespace fintamath {
           throw InvalidInputException(*this, "too low operands for pow");
         }
         info = std::make_unique<Pow>();
-        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)i))); //TODO: may be compressTree
-        children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + (long)i + 1, tokens.end())));
+        children.push_back(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i)));
+        auto a = children.at(0)->getClassName();
+        children.push_back(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())));
         return true;
       }
     }
@@ -378,6 +388,9 @@ namespace fintamath {
   }
 
   bool Expression::parseFunction(const TokenVector &tokens) {
+    if(tokens.size() <= 1){
+      return false;
+    }
     if (auto ptr = IFunction::parse(tokens[0])) {
       info = std::unique_ptr<IFunction>(ptr.release());
       children = getArgs(TokenVector(tokens.begin() + 1, tokens.end()));
@@ -386,18 +399,19 @@ namespace fintamath {
     return false;
   }
 
-  MathObjectPtr Expression::tryCompress() const {
-    if (info && std::find(classNames.begin(), classNames.end(), info->getClassName()) == classNames.end()) {
-      return this->clone();
+  MathObjectPtr Expression::compress() const {
+    auto copyExpr = *this;
+    while(copyExpr.info->is<Expression>() && copyExpr.children.empty()){
+      copyExpr = copyExpr.to<Expression>();
     }
-    if (info) {
-      return info->clone();
+    if(children.empty()){
+      return copyExpr.info->clone();
     }
-    return nullptr;
+    return copyExpr.clone();
   }
 
   Expression Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-    return buildRawFunctionExpression(func, args).simplify()->to<Expression>(); //TODO: refactor to simplifyToExpression
+    return {*buildRawFunctionExpression(func, args).simplify()};
   }
 
   ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
@@ -433,7 +447,7 @@ namespace fintamath {
         if (pos == 0 || pos == tokens.size() - 1) {
           throw InvalidInputException(*this, " incorrect use of a comma");
         }
-        args.push_back(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)pos)));
+        args.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)pos)));
         auto addArgs = getArgs(TokenVector(tokens.begin() + (long)pos + 1, tokens.end()));
 
         for (auto &token : addArgs) {
@@ -587,526 +601,7 @@ namespace fintamath {
      }
      throw InvalidInputException(*this); // TODO add comment here
    }
-
-   ExprPtr Expression::baseSimplify() const {
-     auto newExpr = std::make_shared<Expression>(*this);
-     newExpr = simplifyOperators(newExpr);
-     newExpr = invertSubDiv(newExpr);
-     newExpr = simplifyNeg(newExpr);
-
-     auto oldExpr = newExpr;
-     newExpr = mainSimplify(newExpr);
-     while (*oldExpr != *newExpr) {
-       oldExpr = newExpr;
-       newExpr = mainSimplify(newExpr);
-     }
-
-     return newExpr;
-   }
-
-   ExprPtr Expression::simplifyOperators(const ExprPtr &expr) const {
-     for (auto &child : expr->children) {
-       if (child != nullptr) {
-         child = simplifyOperators(child);
-       }
-     }
-
-     if (expr->info->instanceOf<IOperator>()) {
-       const auto &o = expr->info->to<IOperator>();
-       try {
-         if (o.is<Neg>()) {
-           auto newExpr = std::make_shared<Expression>(*o(*expr->children.at(0)->info));
-           return newExpr;
-         }
-         return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
-       } catch (const FunctionCallException &) { // TODO revisit this
-         // skip operation if child is Variable,  IFunction or IConstant
-       }
-     }
-
-     return expr;
-   }
-
-   ExprPtr Expression::simplifyFunctions(const ExprPtr &expr) const {
-     for (auto &child : expr->children) {
-       if (child != nullptr) {
-         child = simplifyFunctions(child);
-         child = simplifyOperators(child);
-       }
-     }
-
-     if (expr->info->instanceOf<IFunction>() && !expr->info->instanceOf<IOperator>()) {
-       const auto &o = expr->info->to<IFunction>();
-       if (o.is<Log>()) {
-         return std::make_shared<Expression>(*o(*expr->children.at(0)->info, *expr->children.at(1)->info));
-       }
-       return std::make_shared<Expression>(*o(*expr->children.at(0)->info));
-     }
-
-     return expr;
-   }
-
-   ExprPtr Expression::simplifyConstant(const ExprPtr &expr) const {
-     const int defaultPrecision = 36;
-
-     for (auto &child : expr->children) {
-       if (child != nullptr) {
-         child = simplifyConstant(child);
-       }
-     }
-
-     if (expr->info->instanceOf<IConstant>()) {
-       const auto &constant = expr->info->to<IConstant>();
-       expr->info = std::make_shared<Rational>(constant.getValue(defaultPrecision));
-     }
-     return expr;
-   }
-
-   ExprPtr Expression::simplifyNeg(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     while (newExpr->info->is<Neg>() && newExpr->children.at(0)->info->is<Neg>()) {
-       newExpr = newExpr->children.at(0)->children.at(0);
-     }
-
-     if (newExpr->info->is<Neg>() && !newExpr->children.at(0)->info->is<IArithmetic>()) {
-       newExpr->info = std::make_shared<Mul>();
-       newExpr->children.insert(newExpr->children.begin(), std::make_shared<Expression>(Integer(-1)));
-     }
-
-     for (auto &child : newExpr->children) {
-       child = simplifyNeg(child);
-     }
-
-     return newExpr;
-   }
-
-   ExprPtr Expression::simplifyAddNum(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = simplifyAddNum(child);
-     }
-
-     if (!newExpr->info->is<Add>()) {
-       return newExpr;
-     }
-
-     auto op = Add();
-     MathObjectPtr result = std::make_unique<Integer>(0);
-     size_t position = newExpr->children.size();
-
-     do {
-       position--;
-       if (newExpr->children.at(position)->info->instanceOf<IArithmetic>()) {
-         result = op(*result, *newExpr->children.at(position)->info);
-         newExpr->children.erase(newExpr->children.begin() + static_cast<long long int>(position));
-       }
-     } while (position > 0);
-
-     if (result->toString() != "0") {
-       newExpr->children.push_back(std::make_shared<Expression>(*result));
-     }
-     if (newExpr->children.size() == 1) {
-       return newExpr->children.at(0);
-     }
-     if (newExpr->children.empty()) {
-       return std::make_shared<Expression>(Integer(0));
-     }
-
-     return newExpr;
-   }
-
-   ExprPtr Expression::simplifyMulNum(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = simplifyMulNum(child);
-     }
-
-     if (!newExpr->info->is<Mul>()) {
-       return newExpr;
-     }
-
-     auto op = Mul();
-     MathObjectPtr result = std::make_unique<Integer>(1);
-     size_t position = newExpr->children.size();
-
-     do {
-       position--;
-       if (newExpr->children.at(position)->info->toString() == "0") {
-         return newExpr->children.at(position);
-       }
-       if (newExpr->children.at(position)->info->instanceOf<IArithmetic>()) {
-         result = op(*result, *newExpr->children.at(position)->info);
-         newExpr->children.erase(newExpr->children.begin() + static_cast<long long int>(position));
-       }
-     } while (position > 0);
-
-     if (result->toString() != "1") {
-       newExpr->children.push_back(std::make_shared<Expression>(*result));
-     }
-     if (newExpr->children.size() == 1) {
-       return newExpr->children.at(0);
-     }
-     if (newExpr->children.empty()) {
-       return std::make_shared<Expression>(Integer(1));
-     }
-
-     return newExpr;
-   }
-
-   ExprPtr Expression::simplifyPowNum(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = simplifyPowNum(child);
-     }
-
-     if (!newExpr->info->is<Pow>()) {
-       return newExpr;
-     }
-
-     if (*newExpr->children.at(1)->info == Integer(1)) {
-       return newExpr->children.at(0);
-     }
-
-     if (*newExpr->children.at(1)->info == Integer(0)) {
-       return std::make_shared<Expression>(Integer(1));
-     }
-
-     return newExpr;
-   }
-
-   ExprVect Expression::getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket,
-                                           const IMathObject &o) const {
-     auto openBrackets = ExprVect();
-
-     for (const auto &lhs : lhsBracket) {
-       for (const auto &rhs : rhsBracket) {
-         auto newExpr = std::make_shared<Expression>();
-         newExpr->info = o.clone();
-         newExpr->children = {lhs, rhs};
-         openBrackets.push_back(newExpr);
-       }
-     }
-
-     return openBrackets;
-   }
-
-   ExprPtr Expression::openBracketsPowAdd(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = openBracketsPowAdd(child);
-     }
-
-     if (!newExpr->info->is<Pow>() || !newExpr->children.at(0)->info->is<Add>() ||
-         !newExpr->children.at(1)->info->is<Integer>()) {
-       return newExpr;
-     }
-
-     auto mulExpr = Expression();
-     mulExpr.info = std::make_shared<Mul>();
-
-     auto range = newExpr->children.at(1)->info->to<Integer>();
-     for (int i = 0; i < range; i++) {
-       const std::shared_ptr<IMathObject> copyExpr = newExpr->children.at(0)->clone();
-       mulExpr.children.push_back(std::make_shared<Expression>(copyExpr->to<Expression>()));
-     }
-     return openBracketsMulAdd(std::make_shared<Expression>(mulExpr));
-   }
-
-   ExprPtr Expression::openBracketsMulAdd(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = openBracketsMulAdd(child);
-     }
-
-     if (!newExpr->info->is<Mul>()) {
-       return newExpr;
-     }
-
-     size_t pos = newExpr->children.size();
-     while (newExpr->children.size() > 1) {
-       pos--;
-       auto lhs = ExprVect();
-       auto rhs = ExprVect();
-       if (newExpr->children.at(pos - 1)->info->is<Add>()) {
-         lhs = newExpr->children.at(pos - 1)->children;
-       } else {
-         lhs = {newExpr->children.at(pos - 1)};
-       }
-
-       if (newExpr->children.at(pos)->info->is<Add>()) {
-         rhs = newExpr->children.at(pos)->children;
-       } else {
-         rhs = {newExpr->children.at(pos)};
-       }
-       if (rhs.size() == 1 && lhs.size() == 1) {
-         return newExpr;
-       }
-       newExpr->children.pop_back();
-       newExpr->children.pop_back();
-
-       auto lastExpr = std::make_shared<Expression>();
-       lastExpr->info = std::make_shared<Add>();
-       lastExpr->children = getOpenTwoBrackets(lhs, rhs, Mul());
-       newExpr->children.push_back(lastExpr);
-     }
-
-     return newExpr->children.at(0);
-   }
-
-   ExprPtr Expression::openBracketsPowMul(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = openBracketsPowMul(child);
-     }
-
-     if (!newExpr->info->is<Pow>()) {
-       return newExpr;
-     }
-     if (!newExpr->children.at(0)->info->is<Mul>()) {
-       return newExpr;
-     }
-
-     auto newChildren = ExprVect();
-
-     for (const auto &child : newExpr->children.at(0)->children) {
-       auto newChild = std::make_shared<Expression>();
-       newChild->info = std::make_shared<Pow>();
-       newChild->children.push_back(child);
-       newChild->children.push_back(std::make_shared<Expression>(*newExpr->children.at(1)));
-       newChildren.push_back(newChild);
-     }
-
-     newExpr->children = newChildren;
-     newExpr->info = std::make_shared<Mul>();
-     return newExpr;
-   }
-
-   bool compareExprVar(const ExprPtr &lhs, const ExprPtr &rhs) {
-     return lhs->toString() < rhs->toString();
-   }
-
-   bool compareExprMulPowFunc(const ExprPtr &lhs, const ExprPtr &rhs) {
-     return lhs->toString() > rhs->toString();
-   }
-
-   ExprPtr Expression::sort(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = sort(child);
-     }
-
-     if (!newExpr->info->instanceOf<IOperator>() || newExpr->info->is<Pow>()) {
-       return newExpr;
-     }
-
-     auto numVect = ExprVect();
-     auto powVect = ExprVect();
-     auto varVect = ExprVect();
-     auto mulVect = ExprVect();
-     auto funcVect = ExprVect();
-     auto constVect = ExprVect();
-
-     for (const auto &child : newExpr->children) {
-       if (child->info->instanceOf<IArithmetic>()) {
-         numVect.push_back(child);
-       } else if (child->info->is<Pow>()) {
-         powVect.push_back(child);
-       } else if (child->info->is<Variable>()) {
-         varVect.push_back(child);
-       } else if (child->info->instanceOf<IConstant>()) {
-         constVect.push_back(child);
-       } else if (child->info->is<Mul>()) {
-         mulVect.push_back(child);
-       } else if (child->info->instanceOf<IFunction>()) {
-         funcVect.push_back(child);
-       } else {
-         throw InvalidInputException(*this); // TODO add input and comment here
-       }
-     }
-
-     std::sort(varVect.begin(), varVect.end(), compareExprVar);
-     std::sort(powVect.begin(), powVect.end(), compareExprMulPowFunc);
-     std::sort(mulVect.begin(), mulVect.end(), compareExprMulPowFunc);
-     std::sort(funcVect.begin(), funcVect.end(), compareExprMulPowFunc);
-     std::sort(constVect.begin(), constVect.end(), compareExprVar);
-
-     newExpr->children.clear();
-
-     if (newExpr->info->is<Add>()) {
-       for (const auto &func : funcVect) {
-         newExpr->children.push_back(func);
-       }
-       for (const auto &pow : powVect) {
-         newExpr->children.push_back(pow);
-       }
-       for (const auto &mul : mulVect) {
-         newExpr->children.push_back(mul);
-       }
-       for (const auto &constant : constVect) {
-         newExpr->children.push_back(constant);
-       }
-       for (const auto &var : varVect) {
-         newExpr->children.push_back(var);
-       }
-       for (const auto &num : numVect) {
-         newExpr->children.push_back(num);
-       }
-     }
-
-     if (newExpr->info->is<Mul>()) {
-       for (const auto &num : numVect) {
-         newExpr->children.push_back(num);
-       }
-       for (const auto &func : funcVect) {
-         newExpr->children.push_back(func);
-       }
-       for (const auto &pow : powVect) {
-         newExpr->children.push_back(pow);
-       }
-       for (const auto &mul : mulVect) {
-         newExpr->children.push_back(mul);
-       }
-       for (const auto &constant : constVect) {
-         newExpr->children.push_back(constant);
-       }
-       for (const auto &var : varVect) {
-         newExpr->children.push_back(var);
-       }
-     }
-
-     return newExpr;
-   }
-
-   bool compareVect(const ExprVect &lhs, const ExprVect &rhs) {
-     if (lhs.size() != rhs.size()) {
-       return false;
-     }
-
-     for (size_t i = 1; i < lhs.size(); i++) {
-       if (*lhs.at(i) != *rhs.at(i)) {
-         return false;
-       }
-     }
-
-     return true;
-   }
-
-   ExprPtr Expression::simplifyAddVar(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = simplifyAddVar(child);
-     }
-
-     if (!newExpr->info->is<Add>()) {
-       return newExpr;
-     }
-
-     for (auto &child : newExpr->children) {
-       if (child->info->is<Mul>()) {
-         if (!child->children.at(0)->info->instanceOf<IArithmetic>()) {
-           child->children.insert(child->children.begin(), std::make_shared<Expression>(Integer(1)));
-         }
-       } else {
-         auto newChild = std::make_shared<Expression>();
-         newChild->info = std::make_shared<Mul>();
-         newChild->children.push_back(std::make_shared<Expression>(Integer(1)));
-         newChild->children.push_back(child);
-         child = newChild;
-       }
-     }
-
-     auto newChildren = ExprVect();
-
-     for (const auto &child : newExpr->children) {
-       bool isAdd = false;
-       for (const auto &newChild : newChildren) {
-         if (compareVect(child->children, newChild->children)) {
-           newChild->children.at(0)->info = Add()(*newChild->children.at(0)->info, *child->children.at(0)->info);
-           isAdd = true;
-           break;
-         }
-       }
-       if (!isAdd) {
-         newChildren.push_back(child);
-       }
-     }
-
-     newExpr->children = newChildren;
-
-     if (newExpr->children.size() == 1) {
-       return newExpr->children.at(0);
-     }
-
-     return newExpr;
-   }
-
-   ExprPtr Expression::createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr) const {
-     if (currExpr->info->is<Add>()) {
-       currExpr->children.push_back(addExpr);
-       return currExpr;
-     }
-     auto newExpr = std::make_shared<Expression>();
-     newExpr->info = std::make_shared<Add>();
-     newExpr->children.push_back(currExpr);
-     newExpr->children.push_back(addExpr);
-     return newExpr;
-   }
-
-   ExprPtr Expression::simplifyMulVar(const ExprPtr &expr) const {
-     auto newExpr = std::make_shared<Expression>(*expr);
-
-     for (auto &child : newExpr->children) {
-       child = simplifyMulVar(child);
-     }
-
-     if (!newExpr->info->is<Mul>()) {
-       return newExpr;
-     }
-
-     for (auto &child : newExpr->children) {
-       if (!child->info->is<Pow>()) {
-         auto newChild = std::make_shared<Expression>();
-         newChild->info = std::make_shared<Pow>();
-         newChild->children.push_back(child);
-         newChild->children.push_back(std::make_shared<Expression>(Integer(1)));
-         child = newChild;
-       }
-     }
-
-     auto newChildren = ExprVect();
-
-     for (const auto &child : newExpr->children) {
-       bool isMul = false;
-       for (const auto &newChild : newChildren) {
-         if (*child->children.at(0) == *newChild->children.at(0)) {
-           newChild->children.at(1) = createAddExpr(newChild->children.at(1), child->children.at(1));
-           isMul = true;
-           break;
-         }
-       }
-       if (!isMul) {
-         newChildren.push_back(child);
-       }
-     }
-
-     newExpr->children = newChildren;
-
-     if (newExpr->children.size() == 1) {
-       return newExpr->children.at(0);
-     }
-
-     return newExpr;
-   }
- */
+   */
   Expression Expression::simplifyPrefixUnaryOperator(Expression expr) {
     if (expr.info->is<UnaryPlus>()) {
       return *expr.children.at(0);
@@ -1126,7 +621,7 @@ namespace fintamath {
     }
 
     if (!childExpr->info->is<Neg>()) {
-      return buildRawFunctionExpression(Neg(), {*childExpr->tryCompress()});
+      return buildRawFunctionExpression(Neg(), {*childExpr->compress()});
     }
 
     expr.info = childExpr->children.at(0)->clone();
@@ -1134,65 +629,16 @@ namespace fintamath {
     return expr.tryCompressTree();
   }
 
-  Expression Expression::simplifyPow(Expression expr){
-    if(expr.info->is<Pow>()){
-      if(expr.children.at(0)->is<Expression>() && expr.children.at(1)->is<Expression>()){
-        auto left = expr.children.at(0)->to<Expression>();
-        auto right = expr.children.at(1)->to<Expression>();
-        auto leftInfo = left.info->getClassName();
-        if(left.info->instanceOf<INumber>() && right.info->instanceOf<INumber>()){
-          auto result = Pow()(*left.info, *right.info);
-          return result;
-        }
-      }
-      /*MulExpression mulExpr;
-      mulExpr.addElement({std::make_unique<Expression>(expr)});
-      mulExpr.addElement({std::make_unique<Expression>(1)});
-      auto resultMul = mulExpr.simplify();
-      if(resultMul->is<Expression>()){
-        auto exprRes = resultMul->to<Expression>();
-        return exprRes;
-      }
-      expr.info = resultMul->clone();
-      expr.children.clear();*/
-    }
-    return expr;
-  }
-
-
   MathObjectPtr Expression::simplify() const {
     Expression expr = *this;
+    expr = expr.tryCompressTree();
     expr.simplifyFunctionsRec();
-    auto b = expr.toString();
-    expr.info = expr.info->simplify();
-    while(expr.info->is<Expression>()){
-      expr = expr.info->to<Expression>();
+
+    //expr = simplifyPrefixUnaryOperator(*this);
+    //expr = simplifyPow(expr);
+    if(expr.children.empty()){
+      return expr.info->clone();
     }
-
-
-    for(auto& child : expr.children){
-      auto childExpr = child->to<Expression>();
-
-      b = childExpr.info->getClassName();
-      b = childExpr.info->toString();
-      
-      child = child->simplify();
-      childExpr = child->to<Expression>();
-
-      b = childExpr.info->getClassName();
-      b = childExpr.info->toString();
-
-      while(childExpr.info->is<Expression>()){
-        childExpr = childExpr.info->to<Expression>();
-        child = childExpr.clone();
-      }
-
-    }
-    b = expr.toString();
-
-    expr = simplifyPrefixUnaryOperator(*this);
-    expr = simplifyPow(expr);
-
     return expr.clone();
   }
 

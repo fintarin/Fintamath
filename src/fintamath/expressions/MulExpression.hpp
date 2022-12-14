@@ -27,6 +27,8 @@ namespace fintamath {
       Element &operator=(Element &&rhs) noexcept = default;
 
       Polynom getMulPolynom() const;
+
+      MathObjectPtr toMathObject() const;
     };
 
     MulExpression() = default;
@@ -38,6 +40,8 @@ namespace fintamath {
     MulExpression(const MulExpression &rhs) noexcept;
 
     MulExpression(MulExpression &&rhs) noexcept;
+
+    MulExpression(const IMathObject& rhs);
 
     MulExpression &operator=(const MulExpression &rhs) noexcept;
 
@@ -59,13 +63,11 @@ namespace fintamath {
 
     void parse(const TokenVector &tokens);
 
-    MulExpression simplifyResultToMulExpression() const;
-
     Polynom mulPolynom;
 
-    MathObjectPtr compressExpression() const;
+    Polynom compressExpression() const;
 
-    MathObjectPtr compressTree() const;
+    Polynom compressTree() const;
 
     static std::string tryPutInBrackets(const MathObjectPtr &obj);\
 
@@ -79,15 +81,17 @@ namespace fintamath {
 
     static Polynom divideBraceByObj(const Polynom& lhs, const Polynom& rhs);
 
+    static void sortPolynom(const Polynom& vect, Polynom& numVect, Polynom& addVect, Polynom& literalVect, Polynom& funcVect, Polynom& powVect);
+
     void simplifyPolynom();
 
-    void simplifyPow(Polynom& powVect, Polynom& addVect, Polynom& literalVect);
+    static void simplifyPow(Polynom& powVect, Polynom& addVect, Polynom& literalVect);
 
     struct ObjectPow;
 
     using Objects = std::vector<ObjectPow>;
 
-    void sortPowObjects(const Objects& objs, Polynom& powVect, Polynom& addVect, Polynom& literalVect);
+    static void sortPowObjects(const Objects& objs, Polynom& powVect, Polynom& addVect, Polynom& literalVect);
 
   };
 }

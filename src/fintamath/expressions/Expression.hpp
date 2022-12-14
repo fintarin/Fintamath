@@ -50,7 +50,7 @@ namespace fintamath {
 
     const Expression::Vector &getChildren() const;
 
-    MathObjectPtr tryCompress() const;
+    MathObjectPtr compress() const;
 
     static Expression buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
