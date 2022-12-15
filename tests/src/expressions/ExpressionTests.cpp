@@ -1,6 +1,9 @@
 // #include <gtest/gtest.h>
 
-// #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/Functions.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 // #include <fstream>
 
@@ -25,14 +28,19 @@
 //   EXPECT_TRUE(a == b && &a != &b);
 // }
 
-// TEST(ExpressionTests, stringConstructorTest) {
-//   EXPECT_EQ(Expression("2").toString(), "2");
-//   EXPECT_EQ(Expression("2 + 2").toString(), "4");
-//   EXPECT_EQ(Expression("-2 + 3").toString(), "1");
-//   EXPECT_EQ(Expression("2 * 2").toString(), "4");
-//   EXPECT_EQ(Expression("1 / 3").toString(), "1/3");
-//   EXPECT_EQ(Expression("0 / 3").toString(), "0");
-//   EXPECT_EQ(Expression("2 ^ 2").toString(), "4");
+TEST(ExpressionTests, testTest) {
+  auto a = Expression("3/a");
+  auto b = a.toString();
+}
+
+TEST(ExpressionTests, stingConstructorTest) {
+  EXPECT_EQ(Expression("2").toString(), "2");
+  EXPECT_EQ(Expression("2 + 2").toString(), "4");
+  EXPECT_EQ(Expression("-2 + 3").toString(), "1");
+  EXPECT_EQ(Expression("2 * 2").toString(), "4");
+  EXPECT_EQ(Expression("1 / 3").toString(), "1/3");
+  EXPECT_EQ(Expression("0 / 3").toString(), "0");
+  EXPECT_EQ(Expression("2 ^ 2").toString(), "4");
 
 //   EXPECT_EQ(Expression("0^1").toString(), "0");
 //   EXPECT_EQ(Expression("2^0").toString(), "1");
@@ -69,8 +77,8 @@
 //   EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
 //   EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "b^2+a^2+3*a*b");
 
-//   EXPECT_EQ(Expression("lncossina").toString(), "ln(cos(sin(a)))");
-//   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a+b");
+  EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
+  EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a+b");
 
 //   EXPECT_EQ(Expression("+5").toString(), "5");
 //   EXPECT_EQ(Expression("+a").toString(), "a");

@@ -7,13 +7,16 @@
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/helpers/Caster.hpp"
 #include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -107,16 +110,20 @@ namespace fintamath{
     if(lastSignPosition == -1){
       throw InvalidInputException(*this, " not an AddExpression");
     }
+    auto leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition));
+    auto rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end()));
 
-    addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition))));
-    addPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end())), tokens[lastSignPosition] == "-"));
+    if(!leftExpr || !rightExpr){
+      throw InvalidInputException(*this, tokensToString(tokens));
+    }
+
+    addPolynom.emplace_back(Element(leftExpr->clone()));
+    addPolynom.emplace_back(Element(rightExpr->clone(), tokens[lastSignPosition] == "-"));
 
     *this = AddExpression(compressTree());
   }
     
-  AddExpression::Element::Element(const Element &rhs) : inverted(rhs.inverted) {
-    info = rhs.info->clone();
-  }
+  AddExpression::Element::Element(const Element &rhs) : info(rhs.info->clone()), inverted(rhs.inverted) {}
 
   AddExpression::Element &AddExpression::Element::operator=(const Element &rhs) {
     if (this != &rhs) {
@@ -184,10 +191,14 @@ namespace fintamath{
 
     auto exprObj = *this;
 
+    auto b = exprObj.toString();
     for(auto& obj : exprObj.addPolynom){
       obj.info = obj.info->simplify();
+      auto a = obj.info->toString();
+      auto c = a;
     }
 
+    b = exprObj.toString();
     exprObj = AddExpression(exprObj.compressTree());
 
     exprObj.simplifyPolynom();
@@ -238,6 +249,9 @@ namespace fintamath{
 
     numVect = sumNumbers(numVect);
 
+    //TODO: pow simplify ??
+    
+    simplifyMul(mulVect, literalVect, powVect);
     addPolynom.clear();
 
     std::sort(funcVect.begin(), funcVect.end(), sortFunc);
@@ -267,4 +281,123 @@ namespace fintamath{
     }
     return {{result.simplify(), false}};
   }
+
+  struct AddExpression::ObjectMul{
+    MathObjectPtr obj;
+    AddExpression counter;
+
+    ObjectMul(const MathObjectPtr& obj): obj(obj->clone()){}
+    ObjectMul(const ObjectMul& objMul) : obj(objMul.obj->clone()), counter(objMul.counter){} 
+    void simplifyCounter(){
+      counter = AddExpression(*counter.simplify());
+    }
+
+    MathObjectPtr getCounterValue() const {
+      auto polynom = counter.getPolynom();
+      auto countValue = polynom.at(0).info->clone();
+      *countValue = polynom.at(0).inverted ? *Neg()(*countValue).simplify() : *countValue;
+      return countValue;
+    }
+  };
+
+  void AddExpression::sortMulObjects(Objects& objs, Polynom& mulVect, Polynom& literalVect, Polynom& powVect){
+    for(auto& obj : objs){
+      obj.simplifyCounter();
+      auto counter = obj.getCounterValue();
+      if(counter->to<IComparable>() == Integer(0)){
+        continue;
+      }
+      if(counter->to<IComparable>() == Integer(1) || counter->to<IComparable>() == Integer(-1)){
+        if(obj.obj->instanceOf<ILiteral>()){
+          literalVect.emplace_back(obj.obj->clone(), counter->to<IComparable>() == Integer(-1));
+          continue;
+        }
+        if(obj.obj->is<Expression>()){
+          powVect.emplace_back(obj.obj->clone(), counter->to<IComparable>() == Integer(-1));
+          continue;
+        }
+        if(obj.obj->is<MulExpression>()){
+          mulVect.emplace_back(obj.obj->clone(), counter->to<IComparable>() == Integer(-1));
+          continue;
+        }
+      }
+      mulVect.emplace_back(Element(Mul()(*obj.obj, *counter).simplify()));
+    }
+  }
+
+  void AddExpression::simplifyMul(Polynom& mulVect, Polynom& literalVect, Polynom& powVect){
+    Objects objs;
+    for(const auto& mulObj: mulVect){
+      bool added = false;
+      auto mulExprPolynom = mulObj.info->to<MulExpression>().getPolynom();
+      if(mulExprPolynom.empty()){
+        added = true;
+      }
+      MathObjectPtr number = std::make_unique<Integer>(1);
+      if(mulExprPolynom.at(0).info->instanceOf<INumber>()){
+        if(mulExprPolynom.at(0).inverted){
+          number = Neg()(*mulExprPolynom.at(0).info).simplify();
+        } else {
+          number = mulExprPolynom.at(0).info->clone();
+        }
+        mulExprPolynom  = MulExpression::Polynom(mulExprPolynom.begin() + 1, mulExprPolynom.end());
+      }
+      
+      MulExpression mulExpr(mulExprPolynom);
+      for(auto& obj: objs){
+        if(obj.obj->toString() == mulExpr.toString()){
+          obj.counter.addElement(Element(Integer(1).clone() , mulObj.inverted));
+          added = true;
+          break;
+        }
+      }
+      if(added){
+        continue;
+      }
+      ObjectMul object(mulExpr.clone());
+      object.counter.addElement(Element(Integer(1).clone(), mulObj.inverted));
+      objs.emplace_back(object);
+    }
+    for(const auto& litObj: literalVect){
+      bool added = false;
+      for(auto& obj: objs){
+        if(obj.obj->toString() == litObj.info->toString()){
+          obj.counter.addElement(Element(Integer(1).clone(), litObj.inverted));
+          added = true;
+          break;
+        }
+      }
+      if(added){
+        continue;
+      }
+      ObjectMul object(litObj.info);
+      object.counter.addElement(Element(Integer(1).clone(), litObj.inverted));
+      objs.emplace_back(object);
+    }
+
+    for(const auto& powObj: powVect){
+      bool added = false;
+      for(auto& obj: objs){
+        if(obj.obj->toString() == powObj.info->toString()){
+          obj.counter.addElement(Element(Integer(1).clone(), powObj.inverted));
+          added = true;
+          break;
+        }
+      }
+      if(added){
+        continue;
+      }
+      ObjectMul object(powObj.info);
+      object.counter.addElement(Element(Integer(1).clone(), powObj.inverted));
+      objs.emplace_back(object);
+    }
+
+    literalVect.clear();
+    mulVect.clear();
+    powVect.clear();
+
+    sortMulObjects(objs, mulVect, literalVect, powVect);
+  }
+
+
 }

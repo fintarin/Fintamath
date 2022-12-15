@@ -18,7 +18,7 @@ namespace fintamath {
     using Vector = std::vector<MathObjectPtr>;
 
   public:
-    Expression() = default;
+    Expression();
 
     Expression(const Expression &rhs) noexcept;
 

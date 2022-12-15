@@ -28,6 +28,7 @@ namespace fintamath {
     static ExpressionPtr parse(const TokenVector &tokens) {
       return helpers::parse(parserMap, tokens);
     } 
+    static std::string tokensToString(const TokenVector &tokens);
     virtual uint16_t getInfoPriority() = 0;
 
   private:

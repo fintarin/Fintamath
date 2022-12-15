@@ -1,5 +1,6 @@
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
@@ -112,9 +113,15 @@ namespace fintamath {
       throw InvalidInputException(*this, " not a MulExpression");
     }
 
-    mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition))));
+    auto leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition));
+    auto rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end()));
 
-    mulPolynom.emplace_back(Element(IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end())), tokens[lastSignPosition] == "/"));
+    if(!leftExpr || !rightExpr){
+      throw InvalidInputException(*this, tokensToString(tokens));
+    }
+
+    mulPolynom.emplace_back(Element(leftExpr->clone()));
+    mulPolynom.emplace_back(Element(rightExpr->clone(), tokens[lastSignPosition] == "/"));
 
     *this = MulExpression(compressTree());
   }
@@ -286,9 +293,7 @@ namespace fintamath {
     MathObjectPtr obj;
     AddExpression pow;
     ObjectPow(const MathObjectPtr& obj): obj(obj->clone()){}
-    ObjectPow(const ObjectPow& objPow) : pow(objPow.pow){
-      obj = objPow.obj->clone();
-    }
+    ObjectPow(const ObjectPow& objPow) : obj(objPow.obj->clone()), pow(objPow.pow){}
 
     MathObjectPtr getPowIfInteger() const{
       auto polynom = pow.getPolynom();
@@ -459,6 +464,10 @@ namespace fintamath {
     sortPolynom(tmpVect, numVect, addVect, literalVect, funcVect, powVect);
 
     numVect = mulNumbers(numVect);
+    if(numVect.size() == 1 && numVect.at(0).info->is<IComparable>() && numVect.at(0).info->to<IComparable>() == Integer(0)){
+      mulPolynom = numVect;
+      return;
+    }
 
     simplifyPow(powVect, addVect, literalVect);    
 

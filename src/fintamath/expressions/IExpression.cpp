@@ -70,6 +70,14 @@ namespace fintamath {
     return tokens;
   }
 
+  std::string IExpression::tokensToString(const TokenVector &tokens){
+    std::string result;
+    for(const auto& token: tokens){
+      result += token;
+    }
+    return result;
+  }
+
   bool IExpression::findCharInStr(char c, const std::string& str){
     return std::find(str.begin(), str.end(), c) != str.end();
   }

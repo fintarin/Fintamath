@@ -79,7 +79,13 @@ namespace fintamath {
 
     static void sortPolynom(const Polynom& vect, Polynom& numVect, Polynom& mulVect, Polynom& literalVect, Polynom& funcVect, Polynom& powVect);
 
+    struct ObjectMul;
+    using Objects = std::vector<ObjectMul>;
     
     void simplifyPolynom();
+    static void sortMulObjects(Objects& objs, Polynom& mulVect, Polynom& literalVect, Polynom& powVect);
+
+    static void simplifyMul(Polynom& mulVect, Polynom& literalVect, Polynom& powVect);
+
   };
 }

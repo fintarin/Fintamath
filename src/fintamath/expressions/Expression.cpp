@@ -67,7 +67,10 @@ namespace fintamath {
     }
   }
 
+  Expression::Expression() : info(Integer(0).clone()) {}
+
   Expression::Expression(Expression &&rhs) noexcept : info(std::move(rhs.info)), children(std::move(rhs.children)) {
+    rhs.info = Integer(0).clone();
   }
 
   Expression &Expression::operator=(const Expression &rhs) noexcept {
@@ -86,6 +89,7 @@ namespace fintamath {
     if (&rhs != this) {
       std::swap(info, rhs.info);
       std::swap(children, rhs.children);
+      rhs.info = Integer(0).clone();
     }
     return *this;
   }
