@@ -17,6 +17,7 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -63,6 +64,11 @@ namespace fintamath{
     return (uint16_t)IOperator::Priority::Addition;
   }
 
+  void AddExpression::setPrecision(uint8_t precision){
+    for(auto& child : addPolynom){
+      child.setPrecision(precision);
+    }
+  }
 
   std::string AddExpression::toString() const {
     std::string result;
@@ -133,6 +139,12 @@ namespace fintamath{
     return *this;
   }
 
+  void AddExpression::Element::setPrecision(uint8_t precision){
+    if(info->instanceOf<INumber>()){
+      info = helpers::Converter::convert(*info, Real())->to<Real>().round(precision).clone();
+    }
+  }
+
   AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted){}
 
   MathObjectPtr AddExpression::Element::toMathObject() const {
@@ -182,7 +194,6 @@ namespace fintamath{
   void AddExpression::addElement(const Element &elem){
     addPolynom.emplace_back(elem);
   }
-
 
   MathObjectPtr AddExpression::simplify() const {
     if(addPolynom.size() == 1){

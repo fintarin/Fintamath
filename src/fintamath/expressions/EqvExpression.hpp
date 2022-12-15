@@ -31,6 +31,8 @@ namespace fintamath {
 
     uint16_t getInfoPriority() override;
 
+    void setPrecision(uint8_t precision) override;
+
   private:
 
     MathObjectPtr leftExpr;

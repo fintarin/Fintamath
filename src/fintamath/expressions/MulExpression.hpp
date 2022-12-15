@@ -2,6 +2,7 @@
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
+#include <cstdint>
 
 namespace fintamath {
   class MulExpression : public IExpressionCRTP<MulExpression> {
@@ -29,6 +30,8 @@ namespace fintamath {
       Polynom getMulPolynom() const;
 
       MathObjectPtr toMathObject() const;
+
+      void setPrecision(uint8_t precision);
     };
 
     MulExpression() = default;
@@ -60,6 +63,8 @@ namespace fintamath {
     MathObjectPtr simplify() const override;
 
     uint16_t getInfoPriority() override;
+
+    void setPrecision(uint8_t precision) override;
     
   private:
 

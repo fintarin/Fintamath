@@ -88,4 +88,9 @@ namespace fintamath {
     return (uint16_t)IOperator::Priority::Comparison;
   }
 
+  void EqvExpression::setPrecision(uint8_t precision) {
+    //TODO: implement it
+  }
+
+
 }

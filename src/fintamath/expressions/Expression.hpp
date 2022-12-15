@@ -58,6 +58,8 @@ namespace fintamath {
 
     uint16_t getInfoPriority() override;
 
+    void setPrecision(uint8_t precision) override;
+
   protected:
     Expression &add(const Expression &rhs) override;
 
@@ -119,8 +121,6 @@ namespace fintamath {
     static Expression simplifyNeg(Expression expr);
 
     static Expression simplifyPow(Expression expr);
-
-    void setPrecision(uint8_t precision);
 
     MathObjectPtr info;
     Vector children;

@@ -11,6 +11,7 @@
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Real.hpp"
 #include <memory>
 
 namespace fintamath {
@@ -52,6 +53,12 @@ namespace fintamath {
     return (uint16_t)IOperator::Priority::Multiplication;
   }
 
+  void MulExpression::setPrecision(uint8_t precision){
+    for(auto& child : mulPolynom){
+      child.setPrecision(precision);
+    }
+  }
+
   std::string MulExpression::tryPutInBrackets(const MathObjectPtr& obj) {
     if(obj->is<AddExpression>()){
       return "(" + obj->toString() + ")";
@@ -84,6 +91,12 @@ namespace fintamath {
       inverted = rhs.inverted;
     }
     return *this;
+  }
+
+  void MulExpression::Element::setPrecision(uint8_t precision){
+    if(info->instanceOf<INumber>()){
+      info = helpers::Converter::convert(*info, Real())->to<Real>().round(precision).clone();
+    }
   }
 
   MulExpression::MulExpression(const TokenVector& tokens){

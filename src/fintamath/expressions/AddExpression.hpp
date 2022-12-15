@@ -3,6 +3,7 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/helpers/Converter.hpp"
+#include <cstdint>
 
 namespace fintamath {
   class AddExpression : public IExpressionCRTP<AddExpression> {
@@ -30,6 +31,8 @@ namespace fintamath {
       Polynom getAddPolynom() const;
 
       MathObjectPtr toMathObject() const;
+
+      void setPrecision(uint8_t precision);
 
     };
 
@@ -64,6 +67,8 @@ namespace fintamath {
     MathObjectPtr simplify() const override;
 
     uint16_t getInfoPriority() override;
+
+    void setPrecision(uint8_t precision) override;
 
   private:
 

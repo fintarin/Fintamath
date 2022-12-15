@@ -31,6 +31,8 @@ namespace fintamath {
     static std::string tokensToString(const TokenVector &tokens);
     virtual uint16_t getInfoPriority() = 0;
 
+    virtual void setPrecision(uint8_t precision) = 0;
+
   private:
     static bool appendToken(TokenVector& tokens, std::string& token);
     static bool isDigit(char c);

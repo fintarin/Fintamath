@@ -712,15 +712,17 @@ namespace fintamath {
   }
 
   void Expression::setPrecision(uint8_t precision) {
-    // for (auto &child : children) {
-    //   if (child->instanceOf<IExpression>()) {
-    //     child = child->to<IExpression>()->setPrecision(precision);
-    //   }
-    // }
+    for (auto &child : children) {
+      if (child->instanceOf<IExpression>()) {
+        auto copyChild = helpers::cast<IExpression>(child->clone());
+        copyChild->setPrecision(precision);
+        child = copyChild->clone();
+      }
+    }
 
-    // if (info->instanceOf<INumber>()) {
-    //   info = helpers::Converter::convert(*info, Real());
-    // }
+    if (info->instanceOf<INumber>()) {
+     info = helpers::Converter::convert(*info, Real())->to<Real>().round(precision).clone();
+    }
   }
 
   MathObjectPtr Expression::simplify() const {
