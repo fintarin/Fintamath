@@ -117,9 +117,13 @@ namespace fintamath {
     }
 
     bool doAnyArgsMatch(const ArgumentsVector &argsVect) const {
-      return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
-        return (arg.get().template instanceOf<Args>() || ...); //
-      });
+      for (const auto &arg : argsVect) {
+        if ((!arg.get().instanceOf<Args>() && ...)) {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     void throwFunctionCallException(const ArgumentsVector &argsVect) const {
