@@ -19,7 +19,7 @@ namespace fintamath {
   }
 
   EqvExpression &EqvExpression::operator=(const EqvExpression &rhs) noexcept {
-    if(&rhs != this){
+    if (&rhs != this) {
       leftExpr = rhs.leftExpr->clone();
       rightExpr = rhs.rightExpr->clone();
       oper = rhs.oper->clone();
@@ -28,7 +28,7 @@ namespace fintamath {
   }
 
   EqvExpression &EqvExpression::operator=(EqvExpression &&rhs) noexcept {
-    if(&rhs != this){
+    if (&rhs != this) {
       std::swap(leftExpr, rhs.leftExpr);
       std::swap(rightExpr, rhs.rightExpr);
       std::swap(oper, rhs.oper);
@@ -48,31 +48,31 @@ namespace fintamath {
     return IMathObject::simplify();
   }
 
-  void EqvExpression::parse(const TokenVector& tokens) {
+  void EqvExpression::parse(const TokenVector &tokens) {
     bool eqvOpers = false;
-    for(size_t i = 0;i < tokens.size();i++){
-      if (tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == "=" || tokens[i] == ">=" || tokens[i] == ">"){
-        if (eqvOpers){
+    for (size_t i = 0; i < tokens.size(); i++) {
+      if (tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == "=" || tokens[i] == ">=" || tokens[i] == ">") {
+        if (eqvOpers) {
           throw InvalidInputException(*this, " number of comparison operators exceeded");
         }
         eqvOpers = true;
       }
     }
 
-    for(size_t i = 0;i < tokens.size();i++){
-      if(tokens[i] == "(" && !skipBrackets(tokens, i)){
+    for (size_t i = 0; i < tokens.size(); i++) {
+      if (tokens[i] == "(" && !skipBrackets(tokens, i)) {
         throw InvalidInputException(*this, " braces must be closed");
       }
-      if(i == tokens.size()){
+      if (i == tokens.size()) {
         break;
       }
-      if(tokens[i] != "<" && tokens[i] != "<=" && tokens[i] != "=" && tokens[i] != ">=" && tokens[i] != ">"){
+      if (tokens[i] != "<" && tokens[i] != "<=" && tokens[i] != "=" && tokens[i] != ">=" && tokens[i] != ">") {
         continue;
       }
-      if(i == tokens.size() - 1){
+      if (i == tokens.size() - 1) {
         throw InvalidInputException(*this, " unexpected sign");
       }
-      if (i == 0 || (isOneSymbolToken(tokens[i-1]) && tokens[i-1] != "%" && tokens[i-1] != "!")) {
+      if (i == 0 || (isOneSymbolToken(tokens[i - 1]) && tokens[i - 1] != "%" && tokens[i - 1] != "!")) {
         continue;
       }
 
@@ -84,13 +84,12 @@ namespace fintamath {
     throw InvalidInputException(*this, " not an EqvExpression");
   }
 
-  uint16_t getInfoPriority(){
+  uint16_t getInfoPriority() {
     return (uint16_t)IOperator::Priority::Comparison;
   }
 
   void EqvExpression::setPrecision(uint8_t precision) {
-    //TODO: implement it
+    // TODO: implement it
   }
-
 
 }

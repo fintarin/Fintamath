@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
+#include "fintamath/functions/other/Percent.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/numbers/NumberFunctions.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 

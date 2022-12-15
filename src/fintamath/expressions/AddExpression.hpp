@@ -33,12 +33,11 @@ namespace fintamath {
       MathObjectPtr toMathObject() const;
 
       void setPrecision(uint8_t precision);
-
     };
 
     AddExpression() = default;
 
-    explicit AddExpression(const TokenVector& tokens);
+    explicit AddExpression(const TokenVector &tokens);
 
     explicit AddExpression(Polynom inAddPolynom);
 
@@ -46,7 +45,7 @@ namespace fintamath {
 
     AddExpression(AddExpression &&rhs) noexcept;
 
-    AddExpression(const IMathObject& rhs);
+    AddExpression(const IMathObject &rhs);
 
     AddExpression &operator=(const AddExpression &rhs) noexcept;
 
@@ -71,8 +70,7 @@ namespace fintamath {
     void setPrecision(uint8_t precision) override;
 
   private:
-
-    void parse(const TokenVector & tokens);
+    void parse(const TokenVector &tokens);
 
     Polynom addPolynom;
 
@@ -80,17 +78,17 @@ namespace fintamath {
 
     Polynom compressTree() const;
 
-    static Polynom sumNumbers(const Polynom& numVect);
+    static Polynom sumNumbers(const Polynom &numVect);
 
-    static void sortPolynom(const Polynom& vect, Polynom& numVect, Polynom& mulVect, Polynom& literalVect, Polynom& funcVect, Polynom& powVect);
+    static void sortPolynom(const Polynom &vect, Polynom &numVect, Polynom &mulVect, Polynom &literalVect,
+                            Polynom &funcVect, Polynom &powVect);
 
     struct ObjectMul;
     using Objects = std::vector<ObjectMul>;
-    
+
     void simplifyPolynom();
-    static void sortMulObjects(Objects& objs, Polynom& mulVect, Polynom& literalVect, Polynom& powVect);
+    static void sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &literalVect, Polynom &powVect);
 
-    static void simplifyMul(Polynom& mulVect, Polynom& literalVect, Polynom& powVect);
-
+    static void simplifyMul(Polynom &mulVect, Polynom &literalVect, Polynom &powVect);
   };
 }

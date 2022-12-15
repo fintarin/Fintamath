@@ -21,8 +21,7 @@ namespace fintamath::config {
     Converter::add<Integer, Rational>(
         [](const Integer &value, const Rational & /*type*/) { return std::make_unique<Rational>(value); });
 
-    Converter::add<Real, Real>(
-      [](const Real &value, const Real & /*type*/) { return std::make_unique<Real>(value); });
+    Converter::add<Real, Real>([](const Real &value, const Real & /*type*/) { return std::make_unique<Real>(value); });
     Converter::add<Integer, Real>(
         [](const Integer &value, const Real & /*type*/) { return std::make_unique<Real>(value); });
     Converter::add<Rational, Real>(

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
@@ -23,11 +23,11 @@ TEST(IntegerFunctionsTests, sqrtTest) {
 }
 
 TEST(IntegerFunctionsTests, powTest) {
-    EXPECT_EQ(pow(Integer(5), 2), 25);
-    EXPECT_EQ(pow(Integer(-5), 5), -3125);
-    EXPECT_EQ(pow(Integer("6789"), 4), 2124336126051441);
+  EXPECT_EQ(pow(Integer(5), 2), 25);
+  EXPECT_EQ(pow(Integer(-5), 5), -3125);
+  EXPECT_EQ(pow(Integer("6789"), 4), 2124336126051441);
 
-    EXPECT_THROW(pow(Integer(0), 0), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(pow(Integer(0), 0), UndefinedBinaryOpearatorException);
 }
 
 TEST(IntegerFunctionsTests, factorialTest) {

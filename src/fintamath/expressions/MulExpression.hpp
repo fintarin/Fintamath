@@ -44,7 +44,7 @@ namespace fintamath {
 
     MulExpression(MulExpression &&rhs) noexcept;
 
-    MulExpression(const IMathObject& rhs);
+    MulExpression(const IMathObject &rhs);
 
     MulExpression &operator=(const MulExpression &rhs) noexcept;
 
@@ -65,9 +65,8 @@ namespace fintamath {
     uint16_t getInfoPriority() override;
 
     void setPrecision(uint8_t precision) override;
-    
-  private:
 
+  private:
     void parse(const TokenVector &tokens);
 
     Polynom mulPolynom;
@@ -76,29 +75,29 @@ namespace fintamath {
 
     Polynom compressTree() const;
 
-    static std::string tryPutInBrackets(const MathObjectPtr &obj);\
+    static std::string tryPutInBrackets(const MathObjectPtr &obj);
 
-    static Polynom openPowMulExpression(const Polynom& powVect);
+    static Polynom openPowMulExpression(const Polynom &powVect);
 
-    static Polynom mulNumbers(const Polynom& numVect);
+    static Polynom mulNumbers(const Polynom &numVect);
 
-    static Polynom multiplicateBraces(const Polynom& addVect);
+    static Polynom multiplicateBraces(const Polynom &addVect);
 
-    static Polynom multiplicateTwoBraces(const Polynom& lhs, const Polynom& rhs);
+    static Polynom multiplicateTwoBraces(const Polynom &lhs, const Polynom &rhs);
 
-    static Polynom divideBraceByObj(const Polynom& lhs, const Polynom& rhs);
+    static Polynom divideBraceByObj(const Polynom &lhs, const Polynom &rhs);
 
-    static void sortPolynom(const Polynom& vect, Polynom& numVect, Polynom& addVect, Polynom& literalVect, Polynom& funcVect, Polynom& powVect);
+    static void sortPolynom(const Polynom &vect, Polynom &numVect, Polynom &addVect, Polynom &literalVect,
+                            Polynom &funcVect, Polynom &powVect);
 
     void simplifyPolynom();
 
-    static void simplifyPow(Polynom& powVect, Polynom& addVect, Polynom& literalVect);
+    static void simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &literalVect);
 
     struct ObjectPow;
 
     using Objects = std::vector<ObjectPow>;
 
-    static void sortPowObjects(Objects& objs, Polynom& powVect, Polynom& addVect, Polynom& literalVect);
-
+    static void sortPowObjects(Objects &objs, Polynom &powVect, Polynom &addVect, Polynom &literalVect);
   };
 }

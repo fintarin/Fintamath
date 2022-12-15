@@ -70,7 +70,8 @@ namespace fintamath {
     }
   }
 
-  Expression::Expression() : info(Integer(0).clone()) {}
+  Expression::Expression() : info(Integer(0).clone()) {
+  }
 
   Expression::Expression(Expression &&rhs) noexcept : info(std::move(rhs.info)), children(std::move(rhs.children)) {
     rhs.info = Integer(0).clone();
@@ -115,8 +116,8 @@ namespace fintamath {
     return *this;
   }
 
-  uint16_t Expression::getInfoPriority(){
-    if(info->instanceOf<IOperator>()){
+  uint16_t Expression::getInfoPriority() {
+    if (info->instanceOf<IOperator>()) {
       auto oper = helpers::cast<IOperator>(info);
       return (uint16_t)oper->getOperatorPriority();
     }
@@ -124,7 +125,7 @@ namespace fintamath {
   }
 
   Expression::Expression(const IMathObject &obj) {
-    if(obj.is<Expression>()){
+    if (obj.is<Expression>()) {
       auto expr = obj.to<Expression>();
       info = expr.info->clone();
       children = copy(expr.children);
@@ -136,9 +137,9 @@ namespace fintamath {
   Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
   }
 
-  std::string tokenVectorToString(const TokenVector& tokens){
+  std::string tokenVectorToString(const TokenVector &tokens) {
     std::string result;
-    for(const auto& token : tokens){
+    for (const auto &token : tokens) {
       result += token;
     }
     return result;
@@ -160,8 +161,8 @@ namespace fintamath {
     std::string result;
 
     for (const auto &child : children) {
-      if(!child->instanceOf<IExpression>()){
-        if(child->instanceOf<IComparable>() && child->to<IComparable>() < Integer(0)){
+      if (!child->instanceOf<IExpression>()) {
+        if (child->instanceOf<IComparable>() && child->to<IComparable>() < Integer(0)) {
           result += putInBrackets(child->toString());
         } else {
           result += child->toString();
@@ -169,9 +170,9 @@ namespace fintamath {
       } else {
         auto parentPriority = helpers::cast<IOperator>(info->clone())->getOperatorPriority();
 
-        if(auto childPriority = (IOperator::Priority)helpers::cast<IExpression>(child->clone())->getInfoPriority(); childPriority == IOperator::Priority::PostfixUnary ||
-        childPriority == IOperator::Priority::PrefixUnary || 
-        (parentPriority >= childPriority)){
+        if (auto childPriority = (IOperator::Priority)helpers::cast<IExpression>(child->clone())->getInfoPriority();
+            childPriority == IOperator::Priority::PostfixUnary || childPriority == IOperator::Priority::PrefixUnary ||
+            (parentPriority >= childPriority)) {
           result += putInBrackets(child->toString());
         } else {
           result += child->toString();
@@ -180,34 +181,34 @@ namespace fintamath {
       result += info->toString();
     }
 
-    for(int i = 0; i < info->toString().size(); i++){
+    for (int i = 0; i < info->toString().size(); i++) {
       result.pop_back();
     }
     return result;
   }
 
   std::string Expression::prefixUnaryOperatorToString() const {
-    std::string result = info->toString();    
+    std::string result = info->toString();
 
-    if(children.at(0)->instanceOf<IExpression>()){
+    if (children.at(0)->instanceOf<IExpression>()) {
       return result + putInBrackets(children.at(0)->toString());
     }
-    if(children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)){
+    if (children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)) {
       return result + putInBrackets(children.at(0)->toString());
     }
     return result + children.at(0)->toString();
   }
 
   std::string Expression::postfixUnaryOperatorToString() const {
-    std::string result = children.at(0)->toString();    
+    std::string result = children.at(0)->toString();
 
-    if(children.at(0)->instanceOf<IExpression>()){
+    if (children.at(0)->instanceOf<IExpression>()) {
       return putInBrackets(result) + info->toString();
     }
-    if(children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)){
+    if (children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)) {
       return putInBrackets(result) + info->toString();
     }
-      return result + info->toString();
+    return result + info->toString();
   }
 
   std::string Expression::functionToString() const {
@@ -222,8 +223,8 @@ namespace fintamath {
     return result + ")";
   }
 
-  void Expression::simplifyConstant(){
-    if(info->instanceOf<IConstant>()){
+  void Expression::simplifyConstant() {
+    if (info->instanceOf<IConstant>()) {
       info = (*helpers::cast<IConstant>(info->clone()))().simplify();
       return;
     }
@@ -336,8 +337,8 @@ namespace fintamath {
 
     info = IExpression::parse(newTokens);
 
-    for(const auto& child : children) {
-      if(info == nullptr || child == nullptr){
+    for (const auto &child : children) {
+      if (info == nullptr || child == nullptr) {
         throw InvalidInputException(*this, tokensToString(tokens));
       }
     }
@@ -354,7 +355,7 @@ namespace fintamath {
     info = std::make_unique<Neg>();
 
     auto value = IExpression::parse(TokenVector(tokens.begin() + 1, tokens.end()));
-    if(!value){
+    if (!value) {
       throw InvalidInputException(*this, tokensToString(tokens));
     }
 
@@ -379,7 +380,7 @@ namespace fintamath {
         auto leftValue = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i));
         auto rightValue = IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end()));
 
-        if(!leftValue || !rightValue) {
+        if (!leftValue || !rightValue) {
           throw InvalidInputException(*this, tokenVectorToString(tokens));
         }
 
@@ -398,7 +399,7 @@ namespace fintamath {
     info = std::make_unique<Percent>();
 
     auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
-    if(!value){
+    if (!value) {
       throw InvalidInputException(*this, tokenVectorToString(tokens));
     }
     children.emplace_back(value->clone());
@@ -413,7 +414,7 @@ namespace fintamath {
       if (tokens.at(tokens.size() - 2) == "!") {
         info = std::make_unique<DoubleFactorial>();
         auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2));
-        if(!result){
+        if (!result) {
           throw InvalidInputException(*this, tokensToString(tokens));
         }
         children.push_back(result->clone());
@@ -421,9 +422,9 @@ namespace fintamath {
       }
       info = std::make_unique<Factorial>();
       auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
-        if(!result){
-          throw InvalidInputException(*this, tokensToString(tokens));
-        }
+      if (!result) {
+        throw InvalidInputException(*this, tokensToString(tokens));
+      }
       children.push_back(result->clone());
       return true;
     }
@@ -433,7 +434,7 @@ namespace fintamath {
   bool Expression::parseFiniteTerm(const TokenVector &tokens) {
     if (tokens.at(0) == "(" && tokens.at(tokens.size() - 1) == ")") {
       info = IExpression::parse(cutBraces(tokens));
-      if(!info){
+      if (!info) {
         throw InvalidInputException(*this, tokenVectorToString(tokens));
       }
       if (info->is<Expression>()) {
@@ -461,10 +462,10 @@ namespace fintamath {
   }
 
   bool Expression::parseFunction(const TokenVector &tokens) {
-    if(tokens.size() <= 1){
+    if (tokens.size() <= 1) {
       return false;
     }
-    if (auto ptr = IFunction::parse(tokens.at(0));ptr && !ptr->instanceOf<IOperator>()) {
+    if (auto ptr = IFunction::parse(tokens.at(0)); ptr && !ptr->instanceOf<IOperator>()) {
       info = std::unique_ptr<IFunction>(ptr.release());
       children = getArgs(TokenVector(tokens.begin() + 1, tokens.end()));
       return true;
@@ -474,10 +475,10 @@ namespace fintamath {
 
   MathObjectPtr Expression::compress() const {
     auto copyExpr = *this;
-    while(copyExpr.info->is<Expression>() && copyExpr.children.empty()){
+    while (copyExpr.info->is<Expression>() && copyExpr.children.empty()) {
       copyExpr = copyExpr.to<Expression>();
     }
-    if(children.empty()){
+    if (children.empty()) {
       return copyExpr.info->clone();
     }
     return copyExpr.clone();
@@ -506,16 +507,16 @@ namespace fintamath {
     for (size_t pos = 0; pos < tokens.size(); pos++) {
       bool isBracketsSkip = false;
       if (tokens.at(pos) == "(") {
-        if(pos == 0){
+        if (pos == 0) {
           isBracketsSkip = true;
         }
-        if(!skipBrackets(tokens, pos)){
+        if (!skipBrackets(tokens, pos)) {
           throw InvalidInputException(*this, " braces must be closed");
         }
       }
 
       if (pos == tokens.size()) {
-        if(isBracketsSkip){
+        if (isBracketsSkip) {
           return getArgs(cutBraces(tokens));
         }
         break;
@@ -527,7 +528,7 @@ namespace fintamath {
         }
 
         auto arg = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)pos));
-        if(!arg){
+        if (!arg) {
           throw InvalidInputException(*this, tokenVectorToString(tokens));
         }
 
@@ -542,7 +543,7 @@ namespace fintamath {
     }
 
     auto arg = IExpression::parse(tokens);
-    if(!arg){
+    if (!arg) {
       throw InvalidInputException(*this, tokenVectorToString(tokens));
     }
 
@@ -618,7 +619,7 @@ namespace fintamath {
       children.emplace_back(expr.clone());
       return *this;
     }
-    if(info->instanceOf<IArithmetic>()){
+    if (info->instanceOf<IArithmetic>()) {
       *this = neg(*info);
       return *this;
     }
@@ -684,7 +685,7 @@ namespace fintamath {
          return std::make_shared<Expression>(newExpr);
        }
      }
-     throw InvalidInputException(*this); 
+     throw InvalidInputException(*this);
    }
    */
   Expression Expression::simplifyPrefixUnaryOperator(Expression expr) {
@@ -724,7 +725,7 @@ namespace fintamath {
     }
 
     if (info->instanceOf<INumber>()) {
-     info = helpers::Converter::convert(*info, Real())->to<Real>().round(precision).clone();
+      info = helpers::Converter::convert(*info, Real())->to<Real>().round(precision).clone();
     }
   }
 
@@ -734,8 +735,8 @@ namespace fintamath {
     expr.simplifyFunctionsRec();
 
     expr = simplifyPrefixUnaryOperator(expr);
-    //expr = simplifyPow(expr);
-    if(expr.children.empty()){
+    // expr = simplifyPow(expr);
+    if (expr.children.empty()) {
       return expr.info->clone();
     }
     return expr.clone();

@@ -1,10 +1,10 @@
 #include "fintamath/config/ParserConfig.hpp"
 
 #include "fintamath/core/Defines.hpp"
-#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
-#include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -13,6 +13,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
+#include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"
 #include "fintamath/functions/comparison/More.hpp"
@@ -23,7 +24,6 @@
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
-#include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
@@ -107,7 +107,7 @@ namespace fintamath::config {
     IFunction::addParser<Atan>();
     IFunction::addParser<Acot>();
 
-    //expressions
+    // expressions
     IExpression::addParser<AddExpression>();
     IExpression::addParser<MulExpression>();
     IExpression::addParser<Expression>();

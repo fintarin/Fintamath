@@ -1,8 +1,8 @@
 #pragma once
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include <cstdint>
 
@@ -11,7 +11,7 @@ namespace fintamath {
   public:
     EqvExpression() = default;
 
-    explicit EqvExpression(const TokenVector& tokens);
+    explicit EqvExpression(const TokenVector &tokens);
 
     EqvExpression(const EqvExpression &rhs) noexcept;
 
@@ -34,11 +34,10 @@ namespace fintamath {
     void setPrecision(uint8_t precision) override;
 
   private:
-
     MathObjectPtr leftExpr;
     MathObjectPtr rightExpr;
     MathObjectPtr oper;
 
-    void parse(const TokenVector& tokens);
+    void parse(const TokenVector &tokens);
   };
 }

@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/trigonometry/Cot.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/functions/trigonometry/Cot.hpp"
 
 #include "fintamath/functions/Functions.hpp"
 #include "fintamath/literals/Variable.hpp"

@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/functions/trigonometry/Acos.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"

@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/functions/logarithms/Ln.hpp"
 
 #include "fintamath/functions/Functions.hpp"
 #include "fintamath/literals/Variable.hpp"

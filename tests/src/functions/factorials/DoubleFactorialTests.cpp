@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
+#include "fintamath/functions/factorials/DoubleFactorial.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"

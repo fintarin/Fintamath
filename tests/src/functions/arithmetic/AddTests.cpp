@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
