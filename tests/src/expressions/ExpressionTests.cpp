@@ -28,9 +28,10 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
-TEST(ExpressionTests, testTest) {
-  auto a = Expression("cos(2(pi/6))");
-  auto b = a.toString();
+TEST(ExpressionTests, toStringPrecision) {
+  EXPECT_EQ(Expression("10^10000").toString(8), "1*10^10000");
+  EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
+
 }
 
 TEST(ExpressionTests, stingConstructorTest) {
