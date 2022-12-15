@@ -335,6 +335,12 @@ namespace fintamath {
     }
 
     info = IExpression::parse(newTokens);
+
+    for(const auto& child : children) {
+      if(info == nullptr || child == nullptr){
+        throw InvalidInputException(*this, tokensToString(tokens));
+      }
+    }
   }
 
   bool Expression::parseNeg(const TokenVector &tokens) {
@@ -346,7 +352,13 @@ namespace fintamath {
       return true;
     }
     info = std::make_unique<Neg>();
-    children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin() + 1, tokens.end())));
+
+    auto value = IExpression::parse(TokenVector(tokens.begin() + 1, tokens.end()));
+    if(!value){
+      throw InvalidInputException(*this, tokensToString(tokens));
+    }
+
+    children.emplace_back(value->clone());
     return true;
   }
 
@@ -363,9 +375,16 @@ namespace fintamath {
           throw InvalidInputException(*this, "too low operands for pow");
         }
         info = std::make_unique<Pow>();
-        children.push_back(IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i)));
-        auto a = children.at(0)->getClassName();
-        children.push_back(IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end())));
+
+        auto leftValue = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i));
+        auto rightValue = IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end()));
+
+        if(!leftValue || !rightValue) {
+          throw InvalidInputException(*this, tokenVectorToString(tokens));
+        }
+
+        children.emplace_back(leftValue->clone());
+        children.emplace_back(rightValue->clone());
         return true;
       }
     }
@@ -377,7 +396,12 @@ namespace fintamath {
       return false;
     }
     info = std::make_unique<Percent>();
-    children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.end() - 1)));
+
+    auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
+    if(!value){
+      throw InvalidInputException(*this, tokenVectorToString(tokens));
+    }
+    children.emplace_back(value->clone());
     return true;
   }
 
@@ -388,11 +412,19 @@ namespace fintamath {
     if (tokens[tokens.size() - 1] == "!") {
       if (tokens[tokens.size() - 2] == "!") {
         info = std::make_unique<DoubleFactorial>();
-        children.push_back(IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2)));
+        auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2));
+        if(!result){
+          throw InvalidInputException(*this, tokensToString(tokens));
+        }
+        children.push_back(result->clone());
         return true;
       }
       info = std::make_unique<Factorial>();
-      children.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.end() - 1)));
+      auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
+        if(!result){
+          throw InvalidInputException(*this, tokensToString(tokens));
+        }
+      children.push_back(result->clone());
       return true;
     }
     return false;
@@ -429,7 +461,7 @@ namespace fintamath {
     if(tokens.size() <= 1){
       return false;
     }
-    if (auto ptr = IFunction::parse(tokens[0])) {
+    if (auto ptr = IFunction::parse(tokens[0]);ptr && !ptr->instanceOf<IOperator>()) {
       info = std::unique_ptr<IFunction>(ptr.release());
       children = getArgs(TokenVector(tokens.begin() + 1, tokens.end()));
       return true;
@@ -490,7 +522,13 @@ namespace fintamath {
         if (pos == 0 || pos == tokens.size() - 1) {
           throw InvalidInputException(*this, " incorrect use of a comma");
         }
-        args.push_back(std::make_unique<Expression>(TokenVector(tokens.begin(), tokens.begin() + (long)pos)));
+
+        auto arg = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)pos));
+        if(!arg){
+          throw InvalidInputException(*this, tokenVectorToString(tokens));
+        }
+
+        args.emplace_back(arg->clone());
         auto addArgs = getArgs(TokenVector(tokens.begin() + (long)pos + 1, tokens.end()));
 
         for (auto &token : addArgs) {
@@ -499,7 +537,13 @@ namespace fintamath {
         return args;
       }
     }
-    args.push_back(IExpression::parse(tokens));
+
+    auto arg = IExpression::parse(tokens);
+    if(!arg){
+      throw InvalidInputException(*this, tokenVectorToString(tokens));
+    }
+
+    args.emplace_back(arg->clone());
     return args;
   }
 
@@ -523,8 +567,8 @@ namespace fintamath {
 
   Expression &Expression::add(const Expression &rhs) {
     auto addExpr = std::make_unique<AddExpression>();
-    addExpr->addElement({std::make_unique<Expression>(*this), false});
-    addExpr->addElement({std::make_unique<Expression>(rhs), false});
+    addExpr->addElement({clone(), false});
+    addExpr->addElement({rhs.clone(), false});
     this->info = helpers::cast<AddExpression>(addExpr->simplify());
     this->children.clear();
     return *this;
@@ -532,8 +576,8 @@ namespace fintamath {
 
   Expression &Expression::substract(const Expression &rhs) {
     auto addExpr = std::make_unique<AddExpression>();
-    addExpr->addElement({std::make_unique<Expression>(*this), false});
-    addExpr->addElement({std::make_unique<Expression>(rhs), true});
+    addExpr->addElement({clone(), false});
+    addExpr->addElement({rhs.clone(), true});
     this->info = helpers::cast<AddExpression>(addExpr->simplify());
     this->children.clear();
     return *this;
@@ -541,8 +585,8 @@ namespace fintamath {
 
   Expression &Expression::multiply(const Expression &rhs) {
     auto mulExpr = std::make_unique<MulExpression>();
-    mulExpr->addElement({std::make_unique<Expression>(*this), false});
-    mulExpr->addElement({std::make_unique<Expression>(rhs), false});
+    mulExpr->addElement({clone(), false});
+    mulExpr->addElement({rhs.clone(), false});
     this->info = helpers::cast<MulExpression>(mulExpr->simplify());
     this->children.clear();
     return *this;
@@ -550,8 +594,8 @@ namespace fintamath {
 
   Expression &Expression::divide(const Expression &rhs) {
     auto divExpr = std::make_unique<MulExpression>();
-    divExpr->addElement({std::make_unique<Expression>(*this), false});
-    divExpr->addElement({std::make_unique<Expression>(rhs), true});
+    divExpr->addElement({clone(), false});
+    divExpr->addElement({rhs.clone(), true});
     this->info = helpers::cast<MulExpression>(divExpr->simplify());
     this->children.clear();
     return *this;
@@ -568,7 +612,7 @@ namespace fintamath {
       auto expr = *this;
       info = std::make_unique<Neg>();
       children.clear();
-      children.emplace_back(std::make_unique<Expression>(expr));
+      children.emplace_back(expr.clone());
       return *this;
     }
     if(info->instanceOf<IArithmetic>()){
@@ -577,8 +621,8 @@ namespace fintamath {
     }
 
     auto mul = MulExpression();
-    mul.addElement(MulExpression::Element(std::make_unique<Expression>(Integer(-1)), false));
-    mul.addElement(MulExpression::Element(std::make_unique<Expression>(*this), false));
+    mul.addElement(MulExpression::Element(Integer(-1).clone(), false));
+    mul.addElement(MulExpression::Element(clone(), false));
     info = std::make_unique<MulExpression>(mul)->simplify();
     children.clear();
     return *this;
