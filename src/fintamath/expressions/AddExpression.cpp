@@ -76,7 +76,7 @@ namespace fintamath{
       result += var.inverted ? '-' : '+';
       result += tryPutInBracketsIfNeg(var.info);
     }
-    if(!result.empty() && result[0] == '+'){
+    if(!result.empty() && result.at(0) == '+'){
       result.erase(result.begin());
     }
     return result;
@@ -95,19 +95,19 @@ namespace fintamath{
   void AddExpression::parse(const TokenVector& tokens){
     int lastSignPosition = -1;
     for(size_t i = 0;i < tokens.size();i++){
-      if(tokens[i] == "(" && !skipBrackets(tokens, i)){
+      if(tokens.at(i) == "(" && !skipBrackets(tokens, i)){
         throw InvalidInputException(*this, " braces must be closed");
       }
       if(i == tokens.size()){
         break;
       }
-      if(tokens[i] != "+" && tokens[i] != "-"){
+      if(tokens.at(i) != "+" && tokens.at(i) != "-"){
         continue;
       }
       if(i == tokens.size() - 1){
         throw InvalidInputException(*this, " unexpected sign");
       }
-      if (i == 0 || (isOneSymbolToken(tokens[i-1]) && tokens[i-1] != "%" && tokens[i-1] != "!")) {
+      if (i == 0 || (isOneSymbolToken(tokens.at(i-1)) && tokens.at(i-1) != "%" && tokens.at(i-1) != "!")) {
       continue;
       }
       lastSignPosition = (int)i;
@@ -124,7 +124,7 @@ namespace fintamath{
     }
 
     addPolynom.emplace_back(Element(leftExpr->clone()));
-    addPolynom.emplace_back(Element(rightExpr->clone(), tokens[lastSignPosition] == "-"));
+    addPolynom.emplace_back(Element(rightExpr->clone(), tokens.at(lastSignPosition) == "-"));
 
     *this = AddExpression(compressTree());
   }

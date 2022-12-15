@@ -108,13 +108,13 @@ namespace fintamath {
   void MulExpression::parse(const TokenVector & tokens){
     int lastSignPosition = -1;
     for(size_t i = 0;i < tokens.size();i++){
-      if(tokens[i] == "(" && !skipBrackets(tokens, i)){
+      if(tokens.at(i) == "(" && !skipBrackets(tokens, i)){
         throw InvalidInputException(*this, " braces must be closed");
       }
       if(i == tokens.size()){
         break;
       }
-      if(tokens[i] != "*" && tokens[i] != "/"){
+      if(tokens.at(i) != "*" && tokens.at(i) != "/"){
         continue;
         }
       if(i == tokens.size() - 1){
@@ -134,7 +134,7 @@ namespace fintamath {
     }
 
     mulPolynom.emplace_back(Element(leftExpr->clone()));
-    mulPolynom.emplace_back(Element(rightExpr->clone(), tokens[lastSignPosition] == "/"));
+    mulPolynom.emplace_back(Element(rightExpr->clone(), tokens.at(lastSignPosition) == "/"));
 
     *this = MulExpression(compressTree());
   }

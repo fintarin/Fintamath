@@ -301,7 +301,7 @@ namespace fintamath {
     if (tokens.empty()) {
       throw InvalidInputException(*this, " token is empty");
     }
-    if (tokens[0] == "*" || tokens[0] == "/") {
+    if (tokens.at(0) == "*" || tokens.at(0) == "/") {
       throw InvalidInputException(*this, " unexpected sign");
     }
 
@@ -329,9 +329,9 @@ namespace fintamath {
       return;
     }
 
-    auto newTokens = splitLiteral(tokens[0], tokens.size() > 1);
+    auto newTokens = splitLiteral(tokens.at(0), tokens.size() > 1);
     for (size_t i = 1; i < tokens.size(); i++) {
-      newTokens.emplace_back(tokens[i]);
+      newTokens.emplace_back(tokens.at(i));
     }
 
     info = IExpression::parse(newTokens);
@@ -344,10 +344,10 @@ namespace fintamath {
   }
 
   bool Expression::parseNeg(const TokenVector &tokens) {
-    if (tokens[0] != "-" && tokens[0] != "+") {
+    if (tokens.at(0) != "-" && tokens.at(0) != "+") {
       return false;
     }
-    if (tokens[0] == "+") {
+    if (tokens.at(0) == "+") {
       *this = Expression(TokenVector(tokens.begin() + 1, tokens.end()));
       return true;
     }
@@ -364,13 +364,13 @@ namespace fintamath {
 
   bool Expression::parsePow(const TokenVector &tokens) {
     for (size_t i = 0; i < tokens.size(); i++) {
-      if (tokens[i] == "(" && !skipBrackets(tokens, i)) {
+      if (tokens.at(i) == "(" && !skipBrackets(tokens, i)) {
         throw InvalidInputException(*this, " braces must be closed");
       }
       if (i == tokens.size()) {
         break;
       }
-      if (tokens[i] == "^") {
+      if (tokens.at(i) == "^") {
         if (i == tokens.size() - 1) {
           throw InvalidInputException(*this, "too low operands for pow");
         }
@@ -392,7 +392,7 @@ namespace fintamath {
   }
 
   bool Expression::parsePercent(const TokenVector &tokens) {
-    if (tokens[tokens.size() - 1] != "%") {
+    if (tokens.at(tokens.size() - 1) != "%") {
       return false;
     }
     info = std::make_unique<Percent>();
@@ -409,8 +409,8 @@ namespace fintamath {
     if (tokens.size() < 2) {
       return false;
     }
-    if (tokens[tokens.size() - 1] == "!") {
-      if (tokens[tokens.size() - 2] == "!") {
+    if (tokens.at(tokens.size() - 1) == "!") {
+      if (tokens.at(tokens.size() - 2) == "!") {
         info = std::make_unique<DoubleFactorial>();
         auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2));
         if(!result){
@@ -431,8 +431,11 @@ namespace fintamath {
   }
 
   bool Expression::parseFiniteTerm(const TokenVector &tokens) {
-    if (tokens[0] == "(" && tokens[tokens.size() - 1] == ")") {
+    if (tokens.at(0) == "(" && tokens.at(tokens.size() - 1) == ")") {
       info = IExpression::parse(cutBraces(tokens));
+      if(!info){
+        throw InvalidInputException(*this, tokenVectorToString(tokens));
+      }
       if (info->is<Expression>()) {
         auto exprInfo = info->to<Expression>();
         info = MathObjectPtr(exprInfo.info.release());
@@ -445,12 +448,12 @@ namespace fintamath {
       return false;
     }
 
-    if (auto ptr = ILiteral::parse(tokens[0])) {
+    if (auto ptr = ILiteral::parse(tokens.at(0))) {
       info = std::unique_ptr<ILiteral>(ptr.release());
       return true;
     }
 
-    if (auto ptr = INumber::parse(tokens[0])) {
+    if (auto ptr = INumber::parse(tokens.at(0))) {
       info = std::unique_ptr<INumber>(ptr.release());
       return true;
     }
@@ -461,7 +464,7 @@ namespace fintamath {
     if(tokens.size() <= 1){
       return false;
     }
-    if (auto ptr = IFunction::parse(tokens[0]);ptr && !ptr->instanceOf<IOperator>()) {
+    if (auto ptr = IFunction::parse(tokens.at(0));ptr && !ptr->instanceOf<IOperator>()) {
       info = std::unique_ptr<IFunction>(ptr.release());
       children = getArgs(TokenVector(tokens.begin() + 1, tokens.end()));
       return true;
@@ -502,7 +505,7 @@ namespace fintamath {
     Vector args;
     for (size_t pos = 0; pos < tokens.size(); pos++) {
       bool isBracketsSkip = false;
-      if (tokens[pos] == "(") {
+      if (tokens.at(pos) == "(") {
         if(pos == 0){
           isBracketsSkip = true;
         }
@@ -518,7 +521,7 @@ namespace fintamath {
         break;
       }
 
-      if (tokens[pos] == ",") {
+      if (tokens.at(pos) == ",") {
         if (pos == 0 || pos == tokens.size() - 1) {
           throw InvalidInputException(*this, " incorrect use of a comma");
         }
