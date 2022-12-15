@@ -40,11 +40,13 @@ namespace fintamath {
 
     std::string toString() const override;
 
+    std::string toString(uint8_t precision) const;
+
     MathObjectPtr simplify() const override;
 
     std::string getClassName() const override;
 
-    std::string solve() const;
+    Expression solve() const;
 
     const MathObjectPtr &getInfo() const;
 
@@ -117,6 +119,8 @@ namespace fintamath {
     static Expression simplifyNeg(Expression expr);
 
     static Expression simplifyPow(Expression expr);
+
+    void setPrecision(uint8_t precision);
 
     MathObjectPtr info;
     Vector children;

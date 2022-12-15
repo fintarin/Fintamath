@@ -1,9 +1,11 @@
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/core/Constants.hpp"
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <memory>
 #include <regex>
 #include <stdexcept>
@@ -286,6 +288,13 @@ namespace fintamath {
     }
 
     return result;
+  }
+
+  std::string Expression::toString(uint8_t precision) const {
+    assert(precision <= FINTAMATH_OUTPUT_PRECISION);
+    Expression expr = *this;
+    expr.setPrecision(precision);
+    return expr.toString();
   }
 
   void Expression::parse(const TokenVector &tokens) {
@@ -574,7 +583,7 @@ namespace fintamath {
     children.clear();
     return *this;
   }
-  
+
   Expression Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
     Expression funcExpr;
 
@@ -658,6 +667,18 @@ namespace fintamath {
     return expr.compressTree();
   }
 
+  void Expression::setPrecision(uint8_t precision) {
+    // for (auto &child : children) {
+    //   if (child->instanceOf<IExpression>()) {
+    //     child = child->to<IExpression>()->setPrecision(precision);
+    //   }
+    // }
+
+    // if (info->instanceOf<INumber>()) {
+    //   info = helpers::Converter::convert(*info, Real());
+    // }
+  }
+
   MathObjectPtr Expression::simplify() const {
     Expression expr = *this;
     expr = expr.compressTree();
@@ -675,8 +696,7 @@ namespace fintamath {
     return "Expression";
   }
 
-  std::string Expression::solve() const {
-    // TODO to be implemented
-    return "";
+  Expression Expression::solve() const {
+    return {};
   }
 }
