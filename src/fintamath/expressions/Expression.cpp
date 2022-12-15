@@ -31,6 +31,7 @@
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
@@ -219,9 +220,17 @@ namespace fintamath {
     return result + ")";
   }
 
+  void Expression::simplifyConstant(){
+    if(info->instanceOf<IConstant>()){
+      info = (*helpers::cast<IConstant>(info->clone()))().simplify();
+      return;
+    }
+    info = info->simplify();
+  }
+
   void Expression::simplifyFunctionsRec() {
     if (children.empty()) {
-      info = info->simplify();
+      simplifyConstant();
       return;
     }
 
@@ -451,12 +460,21 @@ namespace fintamath {
   Expression::Vector Expression::getArgs(const TokenVector &tokens) {
     Vector args;
     for (size_t pos = 0; pos < tokens.size(); pos++) {
-      if (tokens[pos] == "(" && !skipBrackets(tokens, pos)) {
-        throw InvalidInputException(*this, " braces must be closed");
+      bool isBracketsSkip = false;
+      if (tokens[pos] == "(") {
+        if(pos == 0){
+          isBracketsSkip = true;
+        }
+        if(!skipBrackets(tokens, pos)){
+          throw InvalidInputException(*this, " braces must be closed");
+        }
       }
 
       if (pos == tokens.size()) {
-        return getArgs(cutBraces(tokens));
+        if(isBracketsSkip){
+          return getArgs(cutBraces(tokens));
+        }
+        break;
       }
 
       if (tokens[pos] == ",") {

@@ -24,17 +24,19 @@ namespace fintamath {
       if(isLetter(value)){
         letterToken.push_back(value);
         if(appendToken(tokens, digitToken)){
-          tokens.push_back("*");
+          tokens.emplace_back("*");
         }
         appendToken(tokens, specialToken);
         continue;
       }
 
       if(isBracket(value)){
-        appendToken(tokens, digitToken);
+        if(appendToken(tokens, digitToken) && isOpenBracket(value) && value == '('){
+          tokens.emplace_back("*");
+        }
         appendToken(tokens, specialToken);
         appendToken(tokens, letterToken);
-        tokens.push_back(std::string(1, value));
+        tokens.emplace_back(1, value);
         continue;
       }
       
@@ -42,7 +44,7 @@ namespace fintamath {
         appendToken(tokens, digitToken);
         appendToken(tokens, letterToken);
         if(isOneSymbolToken(value)){
-          tokens.push_back(std::string(1, value));
+          tokens.emplace_back(1, value);
           continue;
         }
         specialToken.push_back(value);
@@ -55,12 +57,12 @@ namespace fintamath {
           continue;
         }
         if(appendToken(tokens, digitToken)){
-          tokens.push_back("*");
+          tokens.emplace_back("*");
           continue;
         }
         if(!letterToken.empty() && isLetter(tokenizeStr[i+1])){
           appendToken(tokens, letterToken);
-          tokens.push_back("*");
+          tokens.emplace_back("*");
         }
       }
     }
@@ -97,13 +99,17 @@ namespace fintamath {
     return c == '(' || c == ')' || c == '{' || c == '}' || c == '[' || c == ']';
   }
 
+  bool IExpression::isOpenBracket(char c){
+    return c == '(' || c == '{' || c == '[';
+  }
+
   bool IExpression::isSpecial(char c){
     return (c >='!' && c <= '/') || (c >= ':' && c <= '@') || (c >= '[' && c <= '`') || (c >= '{' && c <= '~');
   }
 
   bool IExpression::appendToken(TokenVector& tokens, std::string& token){
     if(!token.empty()){
-      tokens.push_back(token);
+      tokens.emplace_back(token);
       token.clear();
       return true;
     }

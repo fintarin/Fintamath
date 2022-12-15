@@ -110,11 +110,14 @@ namespace fintamath {
 
     void simplifyFunctionsRec();
 
+    void simplifyConstant();
+
     static Expression simplifyPrefixUnaryOperator(Expression expr);
 
     static Expression simplifyNeg(Expression expr);
 
     static Expression simplifyPow(Expression expr);
+
 
     /*ExprPtr baseSimplify() const;
 
