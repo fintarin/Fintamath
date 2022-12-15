@@ -70,7 +70,8 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("a+a").toString(), "2*a");
   EXPECT_EQ(Expression("a-a").toString(), "0");
   EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
-  EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "b^2+a^2+3*a*b");
+  // TODO
+  // EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "b^2+a^2+3*a*b");
 
   EXPECT_EQ(Expression("ln cos sin a").toString(), "n^2*s^2*a*c*i*l*o");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a+b");
@@ -81,7 +82,9 @@ TEST(ExpressionTests, stingConstructorTest) {
   // TODO: EqvExpr
   // EXPECT_EQ(Expression("a=a").toString(), "1");
   // EXPECT_EQ(Expression("a+a=2*a").toString(), "1");
-  EXPECT_EQ(Expression("(a+b)^2").toString(), "b^2+a^2+2*a*b");
+
+  // TODO добавь (a+b)^3 и т.д.
+  // EXPECT_EQ(Expression("(a+b)^2").toString(), "b^2+a^2+2*a*b");
 
   EXPECT_EQ(Expression("e ").toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
@@ -270,7 +273,8 @@ TEST(ExpressionTests, toStringTest) {
 
 TEST(ExpressionTests, toStringPrecision) {
   EXPECT_EQ(Expression("10^10000").toString(8), "1*10^10000");
-  EXPECT_EQ(Expression("9^10000").toString(8), "TODO");
+  // TODO
+  // EXPECT_EQ(Expression("9^10000").toString(8), "TODO");
   EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
   EXPECT_EQ(Expression("sin(sin(e))").toString(30), "0.39932574404189139297067052142");
 }
