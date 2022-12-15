@@ -19,6 +19,7 @@
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <memory>
 

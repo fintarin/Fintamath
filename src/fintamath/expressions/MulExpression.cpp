@@ -12,6 +12,7 @@
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Real.hpp"
+#include <algorithm>
 #include <memory>
 
 namespace fintamath {
