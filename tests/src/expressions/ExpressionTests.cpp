@@ -28,12 +28,6 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
-TEST(ExpressionTests, toStringPrecision) {
-  EXPECT_EQ(Expression("10^10000").toString(8), "1*10^10000");
-  EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
-
-}
-
 TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
@@ -244,4 +238,11 @@ TEST(ExpressionTests, solveTest) {
 
 TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("a^-3").toString(), "a^(-3)");
+}
+
+TEST(ExpressionTests, toStringPrecision) {
+  EXPECT_EQ(Expression("10^10000").toString(8), "1*10^10000");
+  EXPECT_EQ(Expression("9^10000").toString(8), "TODO");
+  EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
+  EXPECT_EQ(Expression("sin(sin(e))").toString(30), "0.39932574404189139297067052142");
 }
