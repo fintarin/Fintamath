@@ -92,7 +92,17 @@ namespace fintamath {
   }
 
   std::string Real::toString() const {
-    return round(FINTAMATH_ROUND_PRECISION + 1).impl->v.str(FINTAMATH_OUTPUT_PRECISION);
+    std::string res = round(FINTAMATH_ROUND_PRECISION + 1).impl->v.str(FINTAMATH_OUTPUT_PRECISION);
+
+    if (size_t i = res.find('e'); i != std::string::npos) {
+      res.replace(i, 1, "*10^");
+
+      if (i = res.find('+'); i != std::string::npos) {
+        res.replace(i, 1, "");
+      }
+    }
+
+    return res;
   }
 
   std::string Real::getClassName() const {
