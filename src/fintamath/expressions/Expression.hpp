@@ -118,53 +118,6 @@ namespace fintamath {
 
     static Expression simplifyPow(Expression expr);
 
-
-    /*ExprPtr baseSimplify() const;
-
-    ExprPtr parseEqualExpression(const std::string &expr) const;
-
-    ExprPtr mainSimplify(const ExprPtr &expr) const;
-
-    ExprPtr simplifyOperators(const ExprPtr &expr) const;
-
-    ExprPtr simplifyFunctions(const ExprPtr &expr) const;
-
-    ExprPtr invertSubDiv(const ExprPtr &expr) const;
-
-    ExprPtr rebuildAdd(const ExprPtr &expr) const;
-
-    ExprPtr rebuildMul(const ExprPtr &expr) const;
-
-    ExprPtr simplifyAddNum(const ExprPtr &expr) const;
-
-    ExprPtr simplifyMulNum(const ExprPtr &expr) const;
-
-    ExprPtr simplifyPowNum(const ExprPtr &expr) const;
-
-    ExprPtr simplifyAddVar(const ExprPtr &expr) const;
-
-    ExprPtr simplifyMulVar(const ExprPtr &expr) const;
-
-    ExprPtr createAddExpr(const ExprPtr &currExpr, const ExprPtr &addExpr) const;
-
-    ExprPtr openBracketsMulAdd(const ExprPtr &expr) const;
-
-    ExprPtr openBracketsPowMul(const ExprPtr &expr) const;
-
-    ExprPtr openBracketsPowAdd(const ExprPtr &expr) const;
-
-    ExprVect getOpenTwoBrackets(const ExprVect &lhsBracket, const ExprVect &rhsBracket, const IMathObject &o) const;
-
-    ExprPtr sort(const ExprPtr &expr) const;
-
-    std::string funcArgsToString(const ExprVect &args) const;
-
-    size_t ignoreBracketsLeftRight(const std::string &str, size_t position) const;
-
-    size_t ignoreBracketsRightLeft(const std::string &str, size_t position) const;
-
-    ExprPtr revertPow(const ExprPtr &expr) const;*/
-
     MathObjectPtr info;
     Vector children;
 

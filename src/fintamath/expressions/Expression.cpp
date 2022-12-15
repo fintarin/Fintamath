@@ -628,7 +628,7 @@ namespace fintamath {
          return std::make_shared<Expression>(newExpr);
        }
      }
-     throw InvalidInputException(*this); // TODO add comment here
+     throw InvalidInputException(*this); 
    }
    */
   Expression Expression::simplifyPrefixUnaryOperator(Expression expr) {
