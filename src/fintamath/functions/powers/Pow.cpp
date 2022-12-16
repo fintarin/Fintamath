@@ -39,6 +39,6 @@ namespace fintamath {
       return *naturalPow(lhs, rhs.to<Integer>()).simplify();
     }
 
-    return *pow(helpers::Converter::convert<Real>(lhs), helpers::Converter::convert<Real>(rhs)).simplify();
+    return {*pow(helpers::Converter::convert<Real>(lhs), helpers::Converter::convert<Real>(rhs)).simplify()};
   }
 }

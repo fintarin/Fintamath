@@ -252,7 +252,11 @@ namespace fintamath {
       }
 
       if (func.doAgsMatch(args)) {
-        info = func(args).info;
+        auto countResult = func(args).info;
+        if(countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise()) {
+          return;
+        }
+        info = countResult->clone();
         children.clear();
       }
     }
