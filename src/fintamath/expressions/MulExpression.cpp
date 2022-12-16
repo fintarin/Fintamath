@@ -98,7 +98,7 @@ namespace fintamath {
 
   void MulExpression::Element::setPrecision(uint8_t precision) {
     if (info->instanceOf<INumber>()) {
-      info = helpers::Converter::convert(*info, Real())->to<Real>().round(precision).clone();
+      info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
     }
   }
 

@@ -101,7 +101,7 @@ TEST(ExpressionTests, stingConstructorTest) {
 
   EXPECT_EQ(Expression("e^101").toString(),
             "73070599793680672726476826340615135890078390.083960707616445859670987728609198428");
-  EXPECT_EQ(Expression("e^(-101)").toString(), "1.36853947117385300024705573023229441779867755316*10^-44");
+  EXPECT_EQ(Expression("e^(-101)").toString(), "1.3685394711738530002470557302322944177986775531612023009807438134142551921153897*10^-44");
 
   EXPECT_EQ(Expression("log(e,e)").toString(), "1");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
@@ -273,8 +273,7 @@ TEST(ExpressionTests, toStringTest) {
 
 TEST(ExpressionTests, toStringPrecision) {
   EXPECT_EQ(Expression("10^10000").toString(8), "1*10^10000");
-  // TODO
-  // EXPECT_EQ(Expression("9^10000").toString(8), "TODO");
+  EXPECT_EQ(Expression("9^10000").toString(8), "2.6613034*10^9542");
   EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
   EXPECT_EQ(Expression("sin(sin(e))").toString(30), "0.39932574404189139297067052142");
 }

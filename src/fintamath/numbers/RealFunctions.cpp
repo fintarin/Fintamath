@@ -6,7 +6,7 @@
 
 namespace fintamath {
   Real sqrt(const Real &rhs) {
-    if (rhs.round(FINTAMATH_ROUND_PRECISION) < 0) {
+    if (rhs < 0) {
       throw UndefinedFunctionException("sqrt", {rhs.toString()});
     }
 
@@ -14,7 +14,7 @@ namespace fintamath {
   }
 
   Real pow(const Real &lhs, const Real &rhs) {
-    if (lhs.round(FINTAMATH_ROUND_PRECISION) <= 0 && rhs.round(FINTAMATH_ROUND_PRECISION) <= 0) {
+    if (lhs <= 0 && rhs <= 0) {
       throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
     }
 
@@ -34,7 +34,7 @@ namespace fintamath {
   }
 
   Real ln(const Real &rhs) {
-    if (rhs.round(FINTAMATH_ROUND_PRECISION) <= 0) {
+    if (rhs <= 0) {
       throw UndefinedFunctionException("ln", {rhs.toString()});
     }
 
@@ -42,7 +42,7 @@ namespace fintamath {
   }
 
   Real lb(const Real &rhs) {
-    if (rhs.round(FINTAMATH_ROUND_PRECISION) <= 0) {
+    if (rhs <= 0) {
       throw UndefinedFunctionException("lb", {rhs.toString()});
     }
 
@@ -50,7 +50,7 @@ namespace fintamath {
   }
 
   Real lg(const Real &rhs) {
-    if (rhs.round(FINTAMATH_ROUND_PRECISION) <= 0) {
+    if (rhs <= 0) {
       throw UndefinedFunctionException("lg", {rhs.toString()});
     }
 
@@ -58,11 +58,23 @@ namespace fintamath {
   }
 
   Real sin(const Real &rhs) {
-    return RealImpl(sin(rhs.getImpl()->v));
+    Real res = RealImpl(sin(rhs.getImpl()->v));
+
+    if (res.isNearZero()) {
+      return 0;
+    }
+
+    return res;
   }
 
   Real cos(const Real &rhs) {
-    return RealImpl(cos(rhs.getImpl()->v));
+    Real res = RealImpl(cos(rhs.getImpl()->v));
+
+    if (res.isNearZero()) {
+      return 0;
+    }
+
+    return res;
   }
 
   Real tan(const Real &rhs) {

@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "fintamath/core/Constants.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -43,9 +44,11 @@ namespace fintamath {
 
     bool isPrecise() const override;
 
-    Real round(size_t precision = 0) const;
+    Real precise(uint8_t precision) const;
 
     int sign() const;
+
+    bool isNearZero() const;
 
     const std::unique_ptr<RealImpl> &getImpl() const;
 
@@ -72,5 +75,9 @@ namespace fintamath {
 
   private:
     std::unique_ptr<RealImpl> impl;
+
+    uint8_t ouputPrecision = FINTAMATH_ROUND_PRECISION;
+
+    static const RealImpl DELTA;
   };
 }

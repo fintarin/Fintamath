@@ -14,12 +14,20 @@
 using namespace boost::multiprecision;
 
 namespace fintamath {
+  static RealImpl initDelta() {
+    const RealImpl::Backend delta = pow(RealImpl::Backend(10), -FINTAMATH_ROUND_PRECISION);
+    return delta;
+  }
+
+  const RealImpl Real::DELTA = initDelta();
+
   Real::Real() {
     impl = std::make_unique<RealImpl>();
   }
 
   Real::Real(const Real &rhs) : Real() {
     impl->v.assign(rhs.impl->v);
+    ouputPrecision = rhs.ouputPrecision; // NOLINT
   }
 
   Real::Real(Real &&) noexcept = default;
@@ -27,6 +35,7 @@ namespace fintamath {
   Real &Real::operator=(const Real &rhs) {
     if (this != &rhs) {
       impl = std::make_unique<RealImpl>(*rhs.impl);
+      ouputPrecision = rhs.ouputPrecision;
     }
     return *this;
   }
@@ -92,13 +101,16 @@ namespace fintamath {
   }
 
   std::string Real::toString() const {
-    std::string res = round(FINTAMATH_ROUND_PRECISION + 1).impl->v.str(FINTAMATH_OUTPUT_PRECISION);
+    std::stringstream ss;
+    ss.precision(ouputPrecision);
+    ss << impl->v;
+    std::string res = ss.str();
 
-    if (size_t i = res.find('e'); i != std::string::npos) {
-      res.replace(i, 1, "*10^");
+    if (size_t ePos = res.find('e'); ePos != std::string::npos) {
+      res.replace(ePos, 1, "*10^");
 
-      if (i = res.find('+'); i != std::string::npos) {
-        res.replace(i, 1, "");
+      if (size_t plusPos = res.find('+'); plusPos != std::string::npos) {
+        res.replace(plusPos, 1, "");
       }
     }
 
@@ -121,15 +133,19 @@ namespace fintamath {
     return false;
   }
 
-  Real Real::round(size_t precision) const {
-    const RealImpl::Backend roundCoeff = pow(RealImpl::Backend(10), precision);
-    RealImpl::Backend res = impl->v;
-    res = boost::multiprecision::round(res * roundCoeff);
-    return RealImpl(res / roundCoeff);
+  Real Real::precise(uint8_t precision) const {
+    assert(precision <= FINTAMATH_ROUND_PRECISION);
+    Real res = *this;
+    res.ouputPrecision = precision;
+    return res;
   }
 
   int Real::sign() const {
     return impl->v.sign();
+  }
+
+  bool Real::isNearZero() const {
+    return abs(impl->v) < DELTA;
   }
 
   const std::unique_ptr<RealImpl> &Real::getImpl() const {
@@ -164,7 +180,7 @@ namespace fintamath {
   }
 
   Real &Real::divide(const Real &rhs) {
-    if (rhs.round(FINTAMATH_ROUND_PRECISION) == 0) {
+    if (rhs.isNearZero()) {
       throw UndefinedBinaryOpearatorException("/", toString(), rhs.toString());
     }
 

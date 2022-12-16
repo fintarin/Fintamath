@@ -292,7 +292,6 @@ namespace fintamath {
   }
 
   std::string Expression::toString(uint8_t precision) const {
-    assert(precision <= FINTAMATH_OUTPUT_PRECISION);
     Expression expr = *this;
     expr.setPrecision(precision);
     return expr.toString();
@@ -725,7 +724,7 @@ namespace fintamath {
     }
 
     if (info->instanceOf<INumber>()) {
-      info = helpers::Converter::convert(*info, Real())->to<Real>().round(precision).clone();
+      info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
     }
   }
 
