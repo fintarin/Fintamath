@@ -48,6 +48,10 @@ namespace fintamath {
     return IMathObject::simplify();
   }
 
+  uint16_t EqvExpression::getInfoPriority() {
+    return (uint16_t)IOperator::Priority::Comparison;
+  }
+
   void EqvExpression::parse(const TokenVector &tokens) {
     bool eqvOpers = false;
     for (size_t i = 0; i < tokens.size(); i++) {
@@ -82,10 +86,6 @@ namespace fintamath {
       return;
     }
     throw InvalidInputException(*this, " not an EqvExpression");
-  }
-
-  uint16_t getInfoPriority() {
-    return (uint16_t)IOperator::Priority::Comparison;
   }
 
   void EqvExpression::setPrecision(uint8_t precision) {
