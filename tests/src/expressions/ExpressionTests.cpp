@@ -53,6 +53,7 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("((((2))))").toString(), "2");
   EXPECT_EQ(Expression("(((((2 + 2) + 2) + 2) + 2) + 2)").toString(), "12");
   EXPECT_EQ(Expression("(((2 ^ 2)^2))").toString(), "16");
+  EXPECT_EQ(Expression("10^-1000").toString(), "1*10^-1000");
 
   EXPECT_EQ(Expression("--5").toString(), "5");
   EXPECT_EQ(Expression("5*-3").toString(), "-15");
