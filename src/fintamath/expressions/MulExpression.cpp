@@ -471,7 +471,7 @@ namespace fintamath {
   void MulExpression::multiplicatePolynom(Polynom &vect, Polynom &positive, Polynom &negative){
     for(const auto& el : vect){
       if(el.inverted){
-        negative = multiplicateTwoBraces(negative, {el});
+        negative = multiplicateTwoBraces(negative, {Element(el.info->clone())});
       } else {
         positive = multiplicateTwoBraces(positive, {el});
       }
