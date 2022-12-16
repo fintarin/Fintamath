@@ -750,7 +750,7 @@ namespace fintamath {
   }
 
   Expression Expression::solve() const {
-    return {};
+    return *this;
   }
 
   void Expression::simplifyPow(){
