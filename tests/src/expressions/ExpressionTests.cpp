@@ -86,6 +86,9 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("(a+b)^3").toString(), "a^3+b^3+3*a^2*b+3*b^2*a");
   EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3+b^3+3*a^2*b+3*b^2*a");
   EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4+b^4+4*a^3*b+4*b^3*a+6*a^2*b^2");
+  EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "(a+3)/(b+2)");
+  EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(3*b+a*b)/(2*a+a*b)");
+  EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "(3*b+5*a+a*b+15)/(2*a+a*b)");
 
   EXPECT_EQ(Expression("e ").toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
