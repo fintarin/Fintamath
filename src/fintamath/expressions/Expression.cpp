@@ -734,7 +734,7 @@ namespace fintamath {
     expr.simplifyFunctionsRec();
 
     expr = simplifyPrefixUnaryOperator(expr);
-    // expr = simplifyPow(expr);
+    expr.simplifyPow();
     if (expr.children.empty()) {
       return expr.info->clone();
     }
@@ -748,4 +748,20 @@ namespace fintamath {
   Expression Expression::solve() const {
     return {};
   }
+
+  void Expression::simplifyPow(){
+    if(!info->is<Pow>()){
+      return;
+    }
+    if(children.at(1)->is<Integer>() && children.at(0)->instanceOf<IExpression>()){
+      Integer num = children.at(1)->to<Integer>();
+      MulExpression mul;
+      for(Integer i = 0;i < num; i++){
+        mul.addElement(MulExpression::Element(children.at(0)->clone()));
+      }
+      info = mul.simplify();
+      children.clear();
+    }
+  }
+
 }

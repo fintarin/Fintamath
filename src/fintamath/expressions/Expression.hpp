@@ -116,6 +116,8 @@ namespace fintamath {
 
     void simplifyConstant();
 
+    void simplifyPow();
+
     static Expression simplifyPrefixUnaryOperator(Expression expr);
 
     static Expression simplifyNeg(Expression expr);
