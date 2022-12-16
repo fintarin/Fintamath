@@ -342,6 +342,11 @@ namespace fintamath {
           continue;
         }
 
+        if(obj.obj->instanceOf<INumber>()){
+          powVect.emplace_back(Element(Pow()(*obj.obj, num).simplify()));
+          continue;
+        }
+
         auto oldNum = num;
         if (num < 0) {
           num = -num;
@@ -509,9 +514,8 @@ namespace fintamath {
     Polynom negative;
 
     if(!addVect.empty()){
-      //TODO: positive divide by negative
-
       multiplicateBraces(addVect, positive, negative);
+      //TODO: positive divide by negative
       multiplicatePolynom(literalVect, positive, negative);
       multiplicatePolynom(funcVect, positive, negative);
       multiplicatePolynom(numVect, positive, negative);

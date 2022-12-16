@@ -28,6 +28,11 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
+TEST(ExpressionTests, testTest) {
+  auto a = Expression("1/10^-100");
+  auto b = a.toString();
+}
+
 TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
@@ -41,9 +46,10 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("2^0").toString(), "1");
   EXPECT_EQ(Expression("(-7)^10").toString(), "282475249");
   EXPECT_EQ(Expression("2^0").toString(), "1");
+  EXPECT_EQ(Expression("1/10^-100").toString(), "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
   EXPECT_EQ(Expression("0.001-0.002").toString(), "-1/1000");
-  EXPECT_EQ(Expression("(0.004)/(0.002+0.002)").toString(), "1");
+  EXPECT_EQ(Expression("(0.004)/(0.002+0.002)").toString(), "");
 
   EXPECT_EQ(Expression("2 + 2 * 2").toString(), "6");
   EXPECT_EQ(Expression("2^2^2^2").toString(), "65536");

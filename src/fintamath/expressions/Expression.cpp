@@ -757,7 +757,7 @@ namespace fintamath {
     if(!info->is<Pow>()){
       return;
     }
-    if(children.at(1)->is<Integer>() && children.at(0)->instanceOf<IExpression>()){
+    if(children.at(1)->is<Integer>() && children.at(0)->instanceOf<IExpression>() && !children.at(0)->is<Expression>()){
       Integer num = children.at(1)->to<Integer>();
       MulExpression mul;
       for(Integer i = 0;i < num; i++){
