@@ -218,11 +218,13 @@ namespace fintamath {
     b = exprObj.toString();
     exprObj = AddExpression(exprObj.compressTree());
 
+    b = exprObj.toString();
     exprObj.simplifyPolynom();
 
     if (exprObj.addPolynom.size() == 1) {
       return exprObj.addPolynom.at(0).toMathObject();
     }
+    b = exprObj.toString();
     return exprObj.clone();
   }
 
@@ -266,8 +268,6 @@ namespace fintamath {
     sortPolynom(addPolynom, numVect, mulVect, literalVect, funcVect, powVect);
 
     numVect = sumNumbers(numVect);
-
-    // TODO: pow simplify ??
 
     simplifyMul(mulVect, literalVect, powVect);
     addPolynom.clear();
@@ -341,7 +341,8 @@ namespace fintamath {
           continue;
         }
       }
-      mulVect.emplace_back(Element(Mul()(*obj.obj, *counter).simplify()));
+      auto a = counter->toString();
+      mulVect.emplace_back(Element(MulExpression({MulExpression::Element(obj.obj->clone()), MulExpression::Element(counter->clone())}).simplify()));
     }
   }
 
@@ -375,7 +376,7 @@ namespace fintamath {
         continue;
       }
       ObjectMul object(mulExpr.clone());
-      object.counter.addElement(Element(Integer(1).clone(), mulObj.inverted));
+      object.counter.addElement(Element(number->clone(), mulObj.inverted));
       objs.emplace_back(object);
     }
     for (const auto &litObj : literalVect) {

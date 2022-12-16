@@ -70,8 +70,7 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("a+a").toString(), "2*a");
   EXPECT_EQ(Expression("a-a").toString(), "0");
   EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
-  // TODO
-  // EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "b^2+a^2+3*a*b");
+  EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "a^2+b^2+3*a*b");
 
   EXPECT_EQ(Expression("ln cos sin a").toString(), "n^2*s^2*a*c*i*l*o");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a+b");
@@ -83,8 +82,10 @@ TEST(ExpressionTests, stingConstructorTest) {
   // EXPECT_EQ(Expression("a=a").toString(), "1");
   // EXPECT_EQ(Expression("a+a=2*a").toString(), "1");
 
-  // TODO добавь (a+b)^3 и т.д.
-  // EXPECT_EQ(Expression("(a+b)^2").toString(), "b^2+a^2+2*a*b");
+  EXPECT_EQ(Expression("(a+b)^2").toString(), "a^2+b^2+2*a*b");
+  EXPECT_EQ(Expression("(a+b)^3").toString(), "a^3+b^3+3*a^2*b+3*b^2*a");
+  EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3+b^3+3*a^2*b+3*b^2*a");
+  EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4+b^4+4*a^3*b+4*b^3*a+6*a^2*b^2");
 
   EXPECT_EQ(Expression("e ").toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");

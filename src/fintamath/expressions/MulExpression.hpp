@@ -81,23 +81,22 @@ namespace fintamath {
 
     static Polynom mulNumbers(const Polynom &numVect);
 
-    static Polynom multiplicateBraces(const Polynom &addVect);
+    static void multiplicateBraces(const Polynom &addVect, Polynom& positive, Polynom& negative);
 
     static Polynom multiplicateTwoBraces(const Polynom &lhs, const Polynom &rhs);
-
-    static Polynom divideBraceByObj(const Polynom &lhs, const Polynom &rhs);
 
     static void sortPolynom(const Polynom &vect, Polynom &numVect, Polynom &addVect, Polynom &literalVect,
                             Polynom &funcVect, Polynom &powVect);
 
     void simplifyPolynom();
 
-    static void simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &literalVect);
+    static void simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
+    static void multiplicatePolynom(Polynom &vect, Polynom &positive, Polynom &negative);
 
     struct ObjectPow;
 
     using Objects = std::vector<ObjectPow>;
 
-    static void sortPowObjects(Objects &objs, Polynom &powVect, Polynom &addVect, Polynom &literalVect);
+    static void sortPowObjects(Objects &objs, Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
   };
 }

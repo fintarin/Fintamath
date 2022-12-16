@@ -107,6 +107,7 @@ namespace fintamath {
   }
 
   MulExpression::MulExpression(Polynom inMulPolynom) : mulPolynom(std::move(inMulPolynom)) {
+    mulPolynom = compressTree();
   }
 
   void MulExpression::parse(const TokenVector &tokens) {
@@ -210,6 +211,7 @@ namespace fintamath {
     exprObj.simplifyPolynom();
 
     if (exprObj.mulPolynom.size() == 1) {
+      a = exprObj.mulPolynom.at(0).toMathObject()->toString();
       return exprObj.mulPolynom.at(0).toMathObject();
     }
     return exprObj.clone();
@@ -229,8 +231,23 @@ namespace fintamath {
     return {{result.simplify(), false}};
   }
 
+  MulExpression::Polynom convertAddPolynomToMul(const AddExpression::Polynom& polynom){
+    MulExpression::Polynom result;
+    for(const auto& elem : polynom){
+      result.emplace_back(MulExpression::Element(elem.info->clone(), elem.inverted));
+    }
+    return result;
+  }
+
+  AddExpression::Polynom convertMulPolynomToAdd(const MulExpression::Polynom& polynom){
+    AddExpression::Polynom result;
+    for(const auto& elem : polynom){
+      result.emplace_back(AddExpression::Element(elem.info->clone(), elem.inverted));
+    }
+    return result;
+  }
   // TODO: перемнжение скобок: отрефакторить, мб переписать
-  /*MulExpression::Polynom MulExpression::multiplicateTwoBraces(const Polynom& lhs, const Polynom& rhs){
+  MulExpression::Polynom MulExpression::multiplicateTwoBraces(const Polynom& lhs, const Polynom& rhs){
     Polynom result;
     for(const auto& lhsElem:lhs){
       for(const auto& rhsElem: rhs){
@@ -241,68 +258,24 @@ namespace fintamath {
       }
     }
     return result;
-  }*/
+  }
 
-  /*MulExpression::Polynom convertAddPolynomToMul(const AddExpression::Polynom& polynom){
-    MulExpression::Polynom result;
-    for(const auto& elem : polynom){
-      result.emplace_back(MulExpression::Element(elem.info->clone(), elem.inverted));
-    }
-    return result;
-  }*/
 
-  /*AddExpression::Polynom convertMulPolynomToAdd(const MulExpression::Polynom& polynom){
-    AddExpression::Polynom result;
-    for(const auto& elem : polynom){
-      result.emplace_back(AddExpression::Element(elem.info->clone(), elem.inverted));
-    }
-    return result;
-  }*/
+  void MulExpression::multiplicateBraces(const Polynom &addVect, Polynom& positive, Polynom& negative){
+    Polynom result{MulExpression({Integer(1).clone()}).clone()};
+    Polynom inverted{MulExpression({Integer(1).clone()}).clone()};
 
-  /*MulExpression::Polynom MulExpression::divideBraceByObj(const Polynom& lhs, const Polynom& rhs){
-    Polynom result = lhs;
-    for(auto& elem : result){
-      auto polynom = elem.info->to<MulExpression>().getPolynom();
-      polynom.emplace_back(Element{rhs.at(0).info->clone(), true});
-      elem.inverted = elem.inverted ^ rhs.at(0).inverted;
-      elem.info = std::make_unique<MulExpression>(polynom);
-    }
-    return result;
-  }*/
-
-  /*MulExpression::Polynom MulExpression::multiplicateBraces(const Polynom& addVect){
-    if(addVect.empty()){
-      return {};
-    }
-    Polynom result;
-    Polynom addResult = {{std::make_unique<MulExpression>(Polynom{{std::make_unique<Expression>(1), false}})}};
-    Polynom divideResult = {{std::make_unique<MulExpression>(Polynom{{std::make_unique<Expression>(1), false}})}};
-    for(const auto& elem : addVect){
-      auto addPolynom = elem.info->to<AddExpression>().getPolynom();
-      if(elem.inverted){
-        if(addPolynom.size() != 1){
-          divideResult = multiplicateTwoBraces(divideResult, convertAddPolynomToMul(addPolynom));
-          continue;
-        }
-        addResult = divideBraceByObj(addResult, convertAddPolynomToMul(addPolynom));
-        continue;
+    for(const auto& addExpr: addVect) {
+      if(addExpr.inverted){
+        inverted = multiplicateTwoBraces(inverted, convertAddPolynomToMul(addExpr.info->to<AddExpression>().getPolynom()));
+      } else {
+        result = multiplicateTwoBraces(result, convertAddPolynomToMul(addExpr.info->to<AddExpression>().getPolynom()));
       }
-      addResult = multiplicateTwoBraces(addResult, convertAddPolynomToMul(addPolynom));
     }
 
-    auto addResultAddPolynom = convertMulPolynomToAdd(addResult);
-    if(addResultAddPolynom.size() != 1 || addResultAddPolynom.at(0).info->toString() != "1" ||
-  addResultAddPolynom.at(0).inverted){ result.emplace_back(Element{std::make_unique<AddExpression>(addResultAddPolynom),
-  false});
-    }
-
-    auto divideResultDividePolynom = convertMulPolynomToAdd(divideResult);
-    if(divideResultDividePolynom.size() == 1 && divideResultDividePolynom.at(0).info->toString() == "1" &&
-  !divideResultDividePolynom.at(0).inverted){ return result;
-    }
-    result.emplace_back(Element{std::make_unique<AddExpression>(divideResultDividePolynom), true});
-    return result;
-  }*/
+    positive = result;
+    negative = inverted;
+  }
 
   bool sortFunc(const MulExpression::Element &lhs, const MulExpression::Element &rhs) {
     return lhs.info->toString() < rhs.info->toString();
@@ -343,7 +316,7 @@ namespace fintamath {
     }
   };
 
-  void MulExpression::sortPowObjects(Objects &objs, Polynom &powVect, Polynom &addVect, Polynom &literalVect) {
+  void MulExpression::sortPowObjects(Objects &objs, Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom& funcVect) {
     for (auto &obj : objs) {
       obj.simplifyPow();
       if (auto numObj = obj.getPowIfInteger()) {
@@ -354,6 +327,15 @@ namespace fintamath {
         if (obj.obj->instanceOf<ILiteral>()) {
           if ((num == 1) || (num == -1)) {
             literalVect.emplace_back(Element(obj.obj->clone(), num == -1));
+            continue;
+          }
+          powVect.emplace_back(Element(Pow()(*obj.obj, num).simplify()));
+          continue;
+        }
+
+        if (obj.obj->is<Expression>()) {
+          if ((num == 1) || (num == -1)) {
+            funcVect.emplace_back(Element(obj.obj->clone(), num == -1));
             continue;
           }
           powVect.emplace_back(Element(Pow()(*obj.obj, num).simplify()));
@@ -378,7 +360,7 @@ namespace fintamath {
     }
   }
 
-  void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &literalVect) {
+  void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom& funcVect) {
     Objects objects;
     for (const auto &addObj : addVect) {
       bool added = false;
@@ -414,6 +396,23 @@ namespace fintamath {
       objects.emplace_back(obj);
     }
 
+    for (const auto &funcObj : funcVect) {
+      bool added = false;
+      for (auto &obj : objects) {
+        if (obj.obj->toString() == funcObj.info->toString()) {
+          obj.pow.addElement({std::make_unique<Integer>(1), funcObj.inverted});
+          added = true;
+          break;
+        }
+      }
+      if (added) {
+        continue;
+      }
+      ObjectPow obj(funcObj.info);
+      obj.pow.addElement({std::make_unique<Integer>(1), funcObj.inverted});
+      objects.emplace_back(obj);
+    }
+
     for (const auto &powObj : powVect) {
       bool added = false;
       auto expr = powObj.info->to<Expression>();
@@ -438,8 +437,9 @@ namespace fintamath {
     powVect.clear();
     literalVect.clear();
     addVect.clear();
+    funcVect.clear();
 
-    sortPowObjects(objects, powVect, addVect, literalVect);
+    sortPowObjects(objects, powVect, addVect, literalVect, funcVect);
   }
 
   void MulExpression::sortPolynom(const Polynom &vect, Polynom &numVect, Polynom &addVect, Polynom &literalVect,
@@ -468,6 +468,16 @@ namespace fintamath {
     }
   }
 
+  void MulExpression::multiplicatePolynom(Polynom &vect, Polynom &positive, Polynom &negative){
+    for(const auto& el : vect){
+      if(el.inverted){
+        negative = multiplicateTwoBraces(negative, {el});
+      } else {
+        positive = multiplicateTwoBraces(positive, {el});
+      }
+    }
+  }
+
   void MulExpression::simplifyPolynom() {
     auto numVect = Polynom();
     auto powVect = Polynom();
@@ -475,9 +485,11 @@ namespace fintamath {
     auto addVect = Polynom();
     auto funcVect = Polynom();
 
-    auto b = toString();
 
+    auto test = toString();
     sortPolynom(mulPolynom, numVect, addVect, literalVect, funcVect, powVect);
+    mulPolynom.clear();
+
 
     Polynom tmpVect = openPowMulExpression(powVect);
     powVect.clear();
@@ -491,12 +503,56 @@ namespace fintamath {
       return;
     }
 
-    simplifyPow(powVect, addVect, literalVect);
+    simplifyPow(powVect, addVect, literalVect, funcVect);
 
-    // TODO: перемножение скобок, потом перемножение со всем остальным
-    // addVect = multiplicateBraces(addVect);
+    Polynom positive;
+    Polynom negative;
 
-    mulPolynom.clear();
+    if(!addVect.empty()){
+      //TODO: positive divide by negative
+
+      multiplicateBraces(addVect, positive, negative);
+      multiplicatePolynom(literalVect, positive, negative);
+      multiplicatePolynom(funcVect, positive, negative);
+      multiplicatePolynom(numVect, positive, negative);
+      multiplicatePolynom(powVect, positive, negative);
+
+      addVect.clear();
+
+      bool positiveAdded = false;
+      bool negativeAdded = false;
+      if(!positive.empty()){
+        auto addExpr = AddExpression(convertMulPolynomToAdd(positive)).simplify();
+        if(!addExpr->instanceOf<INumber>()){
+          mulPolynom.emplace_back(Element{addExpr->clone()});
+          positiveAdded = true;
+        } else {
+          numVect.emplace_back(addExpr->clone());
+        }
+      }
+      if(!negative.empty()){
+        auto addExpr = AddExpression(convertMulPolynomToAdd(negative)).simplify();
+        auto a = addExpr->getClassName();
+        auto b = addExpr->toString();
+        if(!addExpr->instanceOf<INumber>()){
+          mulPolynom.emplace_back(Element(addExpr->clone(), true));
+          negativeAdded = true;
+        } else {
+          numVect.emplace_back(Element(addExpr->clone(), true));
+        }
+      }
+      if(positiveAdded && negativeAdded){
+        return;
+      }
+      numVect = mulNumbers(numVect);
+      if (numVect.at(0).info->toString() != "1" || mulPolynom.empty()) {
+        pushPolynomToPolynom<MulExpression>(mulPolynom, numVect);
+        mulPolynom = numVect;
+        return;
+      }
+      return;
+    }
+
 
     std::sort(funcVect.begin(), funcVect.end(), sortFunc);
     std::sort(powVect.begin(), powVect.end(), sortFunc);
