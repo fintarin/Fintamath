@@ -25,7 +25,8 @@ TEST(SinTests, callTest) {
             "-0.9589242746631384688931544061559939733524615439646017781316724542351025580865596");
   EXPECT_EQ(Sin()(Rational(1, 10)).toString(),
             "0.099833416646828152306814198410622026989915388017982259992766861561651744283292428");
-  EXPECT_EQ(Sin()(pi() / 2).toString(), "1");
+  EXPECT_EQ(Sin()(PI_NUM / 2).toString(), "1");
+  EXPECT_EQ(Sin()(PI_NUM).toString(), "0");
 
   EXPECT_EQ(Sin()(Variable("a")).toString(), "sin(a)");
 

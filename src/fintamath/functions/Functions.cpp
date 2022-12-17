@@ -19,6 +19,8 @@
 #include "fintamath/functions/trigonometry/Cot.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/literals/constants/E.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
 
 namespace fintamath {
   Expression eqv(const Expression &lhs, const Expression &rhs) {
@@ -95,5 +97,13 @@ namespace fintamath {
 
   Expression acot(const Expression &rhs) {
     return Acot()(rhs);
+  }
+
+  Expression e() {
+    return E();
+  }
+
+  Expression pi() {
+    return Pi();
   }
 }

@@ -28,11 +28,11 @@ TEST(TanTests, callTest) {
             "-3.3805150062465856369827058794473439087095692082854598771768209809183460102012061");
   EXPECT_EQ(Tan()(Rational(1, 10)).toString(),
             "0.10033467208545054505808004578111153681900480457644204002220806579803211288567387");
-  EXPECT_EQ(Tan()(pi() / 4).toString(), "1");
+  EXPECT_EQ(Tan()(PI_NUM / 4).toString(), "1");
 
   EXPECT_EQ(Tan()(Variable("a")).toString(), "tan(a)");
 
-  EXPECT_THROW(Tan()(pi() / 2), UndefinedFunctionException);
+  EXPECT_THROW(Tan()(PI_NUM / 2), UndefinedFunctionException);
 
   std::unique_ptr<IFunction> f = std::make_unique<Tan>();
   EXPECT_EQ((*f)(Integer(10)).toString(),

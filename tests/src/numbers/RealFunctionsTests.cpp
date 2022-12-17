@@ -7,8 +7,6 @@
 
 using namespace fintamath;
 
-// TODO add all functions from fintamath/numbers/RealFunctions.hpp
-
 TEST(RealFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Real(1)).toString(), "1");
   EXPECT_EQ(sqrt(Real(4)).toString(), "2");
@@ -100,7 +98,7 @@ TEST(RealFunctionsTests, tanTest) {
   EXPECT_EQ(tan(Real("1.5")).toString(),
             "14.101419947171719387646083651987756445659543577235861866123267586089696270414155");
 
-  EXPECT_THROW(tan(Real(pi() / 2)), UndefinedFunctionException);
+  EXPECT_THROW(tan(Real(PI_NUM / 2)), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, cotTest) {
@@ -147,10 +145,10 @@ TEST(RealFunctionsTests, acotTest) {
             "0.001");
 }
 
-TEST(RealFunctionsTests, eTest) {
-  EXPECT_EQ(e().toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
+TEST(RealFunctionsTests, eNumTest) {
+  EXPECT_EQ(E_NUM.toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
 }
 
-TEST(RealFunctionsTests, piTest) {
-  EXPECT_EQ(pi().toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
+TEST(RealFunctionsTests, piNumTest) {
+  EXPECT_EQ(PI_NUM.toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
 }

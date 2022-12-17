@@ -12,6 +12,6 @@ namespace fintamath {
   }
 
   Expression E::getValue() const {
-    return e();
+    return E_NUM;
   }
 }

@@ -56,4 +56,8 @@ namespace fintamath {
   Expression atan(const Expression &rhs);
 
   Expression acot(const Expression &rhs);
+
+  Expression e();
+
+  Expression pi();
 }

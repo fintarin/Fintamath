@@ -25,7 +25,8 @@ TEST(CosTests, callTest) {
             "0.2836621854632262644666391715135573083344225922522159449303590665861514567673827");
   EXPECT_EQ(Cos()(Rational(1, 10)).toString(),
             "0.99500416527802576609556198780387029483857622541508403595935274468526591021824047");
-  EXPECT_EQ(Cos()(pi() / 2).toString(), "0");
+  EXPECT_EQ(Cos()(PI_NUM / 2).toString(), "0");
+  EXPECT_EQ(Cos()(PI_NUM).toString(), "1");
 
   EXPECT_EQ(Cos()(Variable("a")).toString(), "cos(a)");
 

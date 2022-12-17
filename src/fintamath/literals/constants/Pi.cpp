@@ -12,6 +12,6 @@ namespace fintamath {
   }
 
   Expression Pi::getValue() const {
-    return pi();
+    return PI_NUM;
   }
 }

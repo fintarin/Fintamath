@@ -1,6 +1,10 @@
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
+  extern const Real E_NUM;
+
+  extern const Real PI_NUM;
+
   Real sqrt(const Real &rhs);
 
   Real pow(const Real &lhs, const Real &rhs);
@@ -30,8 +34,4 @@ namespace fintamath {
   Real atan(const Real &rhs);
 
   Real acot(const Real &rhs);
-
-  Real e();
-
-  Real pi();
 }

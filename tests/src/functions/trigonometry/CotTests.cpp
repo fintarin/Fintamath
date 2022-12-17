@@ -27,8 +27,8 @@ TEST(CotTests, callTest) {
             "-0.29581291553274554042776716808248528606823479548153489533787776852195700157385241");
   EXPECT_EQ(Cot()(Rational(1, 10)).toString(),
             "9.9666444232592378597941126892705939076302483291514474270066809743652342102525365");
-  EXPECT_EQ(Cot()(pi() / 2).toString(), "0");
-  EXPECT_EQ(Cot()(pi() / 4).toString(), "1");
+  EXPECT_EQ(Cot()(PI_NUM / 2).toString(), "0");
+  EXPECT_EQ(Cot()(PI_NUM / 4).toString(), "1");
 
   EXPECT_EQ(Cot()(Variable("a")).toString(), "cot(a)");
 

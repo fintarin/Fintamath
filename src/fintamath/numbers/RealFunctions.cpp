@@ -5,6 +5,10 @@
 #include "fintamath/numbers/NumberImpls.hpp"
 
 namespace fintamath {
+  const Real E_NUM = RealImpl(default_ops::get_constant_e<RealImpl::Backend::backend_type>());
+
+  const Real PI_NUM = RealImpl(default_ops::get_constant_pi<RealImpl::Backend::backend_type>());
+
   Real sqrt(const Real &rhs) {
     if (rhs < 0) {
       throw UndefinedFunctionException("sqrt", {rhs.toString()});
@@ -118,20 +122,12 @@ namespace fintamath {
   }
 
   Real acot(const Real &rhs) {
-    Real res = pi() / 2;
+    Real res = PI_NUM / 2;
 
     if (rhs < 0) {
       res = -res;
     }
 
     return res - atan(rhs);
-  }
-
-  Real e() {
-    return RealImpl(default_ops::get_constant_e<RealImpl::Backend::backend_type>());
-  }
-
-  Real pi() {
-    return RealImpl(default_ops::get_constant_pi<RealImpl::Backend::backend_type>());
   }
 }
