@@ -60,6 +60,9 @@ namespace fintamath {
 
     void setPrecision(uint8_t precision) override;
 
+    MathObjectPtr simplify(bool isPrecise) const override;
+
+
   protected:
     Expression &add(const Expression &rhs) override;
 
@@ -112,9 +115,9 @@ namespace fintamath {
 
     std::string functionToString() const;
 
-    void simplifyFunctionsRec();
+    void simplifyFunctionsRec(bool isPrecise);
 
-    void simplifyConstant();
+    void simplifyConstant(bool isPrecise);
 
     void simplifyPow();
 

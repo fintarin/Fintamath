@@ -14,6 +14,7 @@
 #include "fintamath/helpers/Caster.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -153,11 +154,32 @@ namespace fintamath {
   AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted) {
   }
 
-  MathObjectPtr AddExpression::Element::toMathObject() const {
-    if (inverted) {
-      return Neg()(*info->clone()).simplify();
+  MathObjectPtr AddExpression::Element::toMathObject(bool isPrecise) const {
+    auto copy = *this;
+    if (copy.inverted) {
+      copy.info = Neg()(*info->clone()).simplify();
+      copy.simplify(isPrecise);
+      return copy.info->clone();
     }
-    return info->simplify();
+    copy.simplify(isPrecise);
+    return copy.info->clone();
+  }
+
+  void AddExpression::Element::simplify(bool isPrecise) {
+    if(info->instanceOf<IExpression>()){
+      info = info->to<IExpression>().simplify(isPrecise);
+      return;
+    }
+    if (info->instanceOf<IConstant>()) {
+      auto constant = (*helpers::cast<IConstant>(info->clone()))().simplify();
+      if(!isPrecise || constant->to<INumber>().isPrecise()){
+        info = constant->clone();
+        return;
+      } 
+      info = info->simplify();
+      return;
+    }
+    info = info->simplify();
   }
 
   AddExpression::Polynom AddExpression::compressExpression() const {
@@ -202,29 +224,26 @@ namespace fintamath {
   }
 
   MathObjectPtr AddExpression::simplify() const {
-    if (addPolynom.size() == 1) {
-      return addPolynom.at(0).toMathObject();
+    return simplify(true);
+  }
+
+  MathObjectPtr AddExpression::simplify(bool isPrecise) const {
+    auto exprObj = AddExpression(compressTree());
+
+    if (exprObj.addPolynom.size() == 1) {
+      return exprObj.addPolynom.at(0).toMathObject(isPrecise);
     }
 
-    auto exprObj = *this;
-
-    auto b = exprObj.toString();
     for (auto &obj : exprObj.addPolynom) {
-      obj.info = obj.info->simplify();
-      auto a = obj.info->toString();
-      auto c = a;
+      obj.simplify(isPrecise);
     }
 
-    b = exprObj.toString();
     exprObj = AddExpression(exprObj.compressTree());
-
-    b = exprObj.toString();
     exprObj.simplifyPolynom();
 
     if (exprObj.addPolynom.size() == 1) {
-      return exprObj.addPolynom.at(0).toMathObject();
+      return exprObj.addPolynom.at(0).toMathObject(isPrecise);
     }
-    b = exprObj.toString();
     return exprObj.clone();
   }
 

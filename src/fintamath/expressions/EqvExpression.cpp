@@ -3,7 +3,6 @@
 namespace fintamath {
   EqvExpression::EqvExpression(const TokenVector &tokens) {
     parse(tokens);
-    *this = simplify()->to<EqvExpression>();
   }
 
   EqvExpression::EqvExpression(const EqvExpression &rhs) noexcept {
@@ -45,8 +44,13 @@ namespace fintamath {
   }
 
   MathObjectPtr EqvExpression::simplify() const {
+    return simplify(true);
+  }
+
+  MathObjectPtr EqvExpression::simplify(bool isPrecise) const{
     return IMathObject::simplify();
   }
+
 
   uint16_t EqvExpression::getInfoPriority() {
     return (uint16_t)IOperator::Priority::Comparison;

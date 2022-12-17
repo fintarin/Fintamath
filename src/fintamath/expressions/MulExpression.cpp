@@ -10,6 +10,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include <algorithm>
@@ -86,6 +87,22 @@ namespace fintamath {
 
   MulExpression::Element::Element(const Element &rhs) : inverted(rhs.inverted) {
     info = rhs.info->clone();
+  }
+
+  void MulExpression::Element::simplify(bool isPrecise){
+    if(info->instanceOf<IExpression>()){
+      info = info->to<IExpression>().simplify(isPrecise);
+      return;
+    }
+    if (info->instanceOf<IConstant>()) {
+      auto constant = (*helpers::cast<IConstant>(info->clone()))().simplify();
+      if(!isPrecise || constant->to<INumber>().isPrecise()){
+        info = constant->clone();
+        return;
+      } 
+      info = info->simplify();
+    }
+    info = info->simplify();
   }
 
   MulExpression::Element &MulExpression::Element::operator=(const Element &rhs) {
@@ -172,11 +189,15 @@ namespace fintamath {
     return {*this};
   }
 
-  MathObjectPtr MulExpression::Element::toMathObject() const {
-    if (inverted) {
-      return Pow()(*info, *std::make_unique<Integer>(-1)).simplify();
+  MathObjectPtr MulExpression::Element::toMathObject(bool isPrecise) const {
+    auto copy = *this;
+    if (copy.inverted) {
+      copy.info = Pow()(*info->clone(), Integer(-1)).simplify();
+      copy.simplify(isPrecise);
+      return copy.info->clone();
     }
-    return info->simplify();
+    copy.simplify(isPrecise);
+    return copy.info->clone();
   }
 
   MulExpression::Polynom MulExpression::compressTree() const {
@@ -196,23 +217,26 @@ namespace fintamath {
   }
 
   MathObjectPtr MulExpression::simplify() const {
-    if (mulPolynom.size() == 1) {
-      return mulPolynom.at(0).toMathObject();
-    }
+    return simplify(true);
+  }
 
-    auto exprObj = *this;
-
-    auto a = toString();
-
-    for (auto &obj : exprObj.mulPolynom) {
-      obj.info = obj.info->simplify();
-    }
-
-    exprObj.simplifyPolynom();
+  MathObjectPtr MulExpression::simplify(bool isPrecise) const {
+    auto exprObj = MulExpression(compressTree());
 
     if (exprObj.mulPolynom.size() == 1) {
-      a = exprObj.mulPolynom.at(0).toMathObject()->toString();
-      return exprObj.mulPolynom.at(0).toMathObject();
+      return exprObj.mulPolynom.at(0).toMathObject(isPrecise);
+    }
+
+    for (auto &obj : exprObj.mulPolynom) {
+      obj.simplify(isPrecise);
+    }
+
+    auto b = exprObj.toString();
+    exprObj.simplifyPolynom();
+
+    auto c = exprObj.toString();
+    if (exprObj.mulPolynom.size() == 1) {
+      return exprObj.mulPolynom.at(0).toMathObject(isPrecise);
     }
     return exprObj.clone();
   }
@@ -246,7 +270,7 @@ namespace fintamath {
     }
     return result;
   }
-  // TODO: перемнжение скобок: отрефакторить, мб переписать
+
   MulExpression::Polynom MulExpression::multiplicateTwoBraces(const Polynom& lhs, const Polynom& rhs){
     Polynom result;
     for(const auto& lhsElem:lhs){
@@ -491,7 +515,6 @@ namespace fintamath {
     auto funcVect = Polynom();
 
 
-    auto test = toString();
     sortPolynom(mulPolynom, numVect, addVect, literalVect, funcVect, powVect);
     mulPolynom.clear();
 
@@ -522,6 +545,7 @@ namespace fintamath {
       multiplicatePolynom(powVect, positive, negative);
 
       addVect.clear();
+      numVect.clear();
 
       bool positiveAdded = false;
       bool negativeAdded = false;

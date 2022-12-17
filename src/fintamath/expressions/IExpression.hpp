@@ -31,6 +31,8 @@ namespace fintamath {
 
     virtual void setPrecision(uint8_t precision) = 0;
 
+    virtual MathObjectPtr simplify(bool isPrecise) const = 0;
+
   private:
     static bool appendToken(TokenVector &tokens, std::string &token);
     static bool isDigit(char c);

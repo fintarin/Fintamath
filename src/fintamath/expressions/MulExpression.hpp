@@ -29,9 +29,11 @@ namespace fintamath {
 
       Polynom getMulPolynom() const;
 
-      MathObjectPtr toMathObject() const;
+      MathObjectPtr toMathObject(bool isPrecise) const;
 
       void setPrecision(uint8_t precision);
+
+      void simplify(bool isPrecise);
     };
 
     MulExpression() = default;
@@ -61,6 +63,8 @@ namespace fintamath {
     void addElement(const Element &elem);
 
     MathObjectPtr simplify() const override;
+
+    MathObjectPtr simplify(bool isPrecise) const override;
 
     uint16_t getInfoPriority() override;
 

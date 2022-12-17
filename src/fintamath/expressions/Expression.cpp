@@ -223,24 +223,40 @@ namespace fintamath {
     return result + ")";
   }
 
-  void Expression::simplifyConstant() {
+  void Expression::simplifyConstant(bool isPrecise) {
     if (info->instanceOf<IConstant>()) {
-      info = (*helpers::cast<IConstant>(info->clone()))().simplify();
+      auto constant = (*helpers::cast<IConstant>(info->clone()))().simplify();
+      if(!isPrecise || constant->to<INumber>().isPrecise()){
+        info = constant->clone();
+        return;
+      } 
+    }
+    if(info->instanceOf<IExpression>()){
+      info = info->to<IExpression>().simplify(isPrecise);
       return;
     }
     info = info->simplify();
   }
 
-  void Expression::simplifyFunctionsRec() {
+  void Expression::simplifyFunctionsRec(bool isPrecise) {
     if (children.empty()) {
-      simplifyConstant();
+      simplifyConstant(isPrecise);
       return;
     }
 
     for (auto &child : children) {
-      if (child->instanceOf<IExpression>()) {
-        child = child->simplify();
+      if (child->instanceOf<IConstant>()) {
+        auto constant = (*helpers::cast<IConstant>(child->clone()))().simplify();
+        if(!isPrecise || constant->to<INumber>().isPrecise()){
+          child = constant->clone();
+          continue;
+        } 
       }
+      if(child->instanceOf<IExpression>()){
+        child = child->to<IExpression>().simplify(isPrecise);
+        continue;
+      }
+      child = child->simplify();
     }
 
     if (info->instanceOf<IFunction>()) {
@@ -253,7 +269,7 @@ namespace fintamath {
 
       if (func.doAgsMatch(args)) {
         auto countResult = func(args).info;
-        if(countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise()) {
+        if(countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
           return;
         }
         info = countResult->clone();
@@ -296,7 +312,7 @@ namespace fintamath {
   }
 
   std::string Expression::toString(uint8_t precision) const {
-    Expression expr = *this;
+    auto expr = Expression(*simplify(false));
     expr.setPrecision(precision);
     return expr.toString();
   }
@@ -305,7 +321,8 @@ namespace fintamath {
     if (tokens.empty()) {
       throw InvalidInputException(*this, " token is empty");
     }
-    if (tokens.at(0) == "*" || tokens.at(0) == "/") {
+    if (tokens.at(0) == "*" || tokens.at(0) == "/"
+    || tokens.at(tokens.size() -1) == "*" || tokens.at(tokens.size() - 1) == "/") {
       throw InvalidInputException(*this, " unexpected sign");
     }
 
@@ -338,7 +355,7 @@ namespace fintamath {
       newTokens.emplace_back(tokens.at(i));
     }
 
-    info = IExpression::parse(newTokens);
+    info = MulExpression(newTokens).clone();
 
     for (const auto &child : children) {
       if (info == nullptr || child == nullptr) {
@@ -573,37 +590,37 @@ namespace fintamath {
   }
 
   Expression &Expression::add(const Expression &rhs) {
-    auto addExpr = std::make_unique<AddExpression>();
-    addExpr->addElement({clone(), false});
-    addExpr->addElement({rhs.clone(), false});
-    this->info = helpers::cast<AddExpression>(addExpr->simplify());
+    auto addExpr = AddExpression();
+    addExpr.addElement({clone(), false});
+    addExpr.addElement({rhs.clone(), false});
+    this->info = AddExpression(*addExpr.simplify()).clone();
     this->children.clear();
     return *this;
   }
 
   Expression &Expression::substract(const Expression &rhs) {
-    auto addExpr = std::make_unique<AddExpression>();
-    addExpr->addElement({clone(), false});
-    addExpr->addElement({rhs.clone(), true});
-    this->info = helpers::cast<AddExpression>(addExpr->simplify());
+    auto addExpr = AddExpression();
+    addExpr.addElement({clone(), false});
+    addExpr.addElement({rhs.clone(), true});
+    this->info = AddExpression(*addExpr.simplify()).clone();
     this->children.clear();
     return *this;
   }
 
   Expression &Expression::multiply(const Expression &rhs) {
-    auto mulExpr = std::make_unique<MulExpression>();
-    mulExpr->addElement({clone(), false});
-    mulExpr->addElement({rhs.clone(), false});
-    this->info = helpers::cast<MulExpression>(mulExpr->simplify());
+    auto mulExpr = MulExpression();
+    mulExpr.addElement({clone(), false});
+    mulExpr.addElement({rhs.clone(), false});
+    this->info = MulExpression(*mulExpr.simplify()).clone();
     this->children.clear();
     return *this;
   }
 
   Expression &Expression::divide(const Expression &rhs) {
-    auto divExpr = std::make_unique<MulExpression>();
-    divExpr->addElement({clone(), false});
-    divExpr->addElement({rhs.clone(), true});
-    this->info = helpers::cast<MulExpression>(divExpr->simplify());
+    auto mulExpr = MulExpression();
+    mulExpr.addElement({clone(), false});
+    mulExpr.addElement({rhs.clone(), true});
+    this->info = MulExpression(*mulExpr.simplify()).clone();
     this->children.clear();
     return *this;
   }
@@ -732,10 +749,10 @@ namespace fintamath {
     }
   }
 
-  MathObjectPtr Expression::simplify() const {
+  MathObjectPtr Expression::simplify(bool isPrecise) const {
     Expression expr = *this;
     expr = expr.compressTree();
-    expr.simplifyFunctionsRec();
+    expr.simplifyFunctionsRec(isPrecise);
 
     expr = simplifyPrefixUnaryOperator(expr);
     expr.simplifyPow();
@@ -743,6 +760,10 @@ namespace fintamath {
       return expr.info->clone();
     }
     return expr.clone();
+  }
+
+  MathObjectPtr Expression::simplify() const {
+    return simplify(true);
   }
 
   std::string Expression::getClassName() const {

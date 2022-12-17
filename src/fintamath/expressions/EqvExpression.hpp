@@ -33,6 +33,9 @@ namespace fintamath {
 
     void setPrecision(uint8_t precision) override;
 
+    MathObjectPtr simplify(bool isPrecise) const override;
+
+
   private:
     MathObjectPtr leftExpr;
     MathObjectPtr rightExpr;
