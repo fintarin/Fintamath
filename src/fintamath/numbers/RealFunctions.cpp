@@ -22,7 +22,12 @@ namespace fintamath {
       throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
     }
 
-    return RealImpl(pow(lhs.getImpl()->v, rhs.getImpl()->v));
+    RealImpl res = RealImpl(pow(lhs.getImpl()->v, rhs.getImpl()->v));
+    if (res.v.backend().isinf()) {
+      throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
+    }
+
+    return res;
   }
 
   Real exp(const Real &rhs) {
