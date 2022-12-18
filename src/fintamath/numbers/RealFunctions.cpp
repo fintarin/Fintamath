@@ -23,7 +23,8 @@ namespace fintamath {
     }
 
     RealImpl res = RealImpl(pow(lhs.getImpl()->v, rhs.getImpl()->v));
-    if (res.v.backend().isinf()) {
+
+    if (res.v.backend().isinf() || res.v.backend().isnan()) {
       throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
     }
 

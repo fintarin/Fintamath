@@ -308,7 +308,7 @@ TEST(ExpressionTests, solveTest) {
   EXPECT_THROW(Expression("log(1, 0)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("lb(-1)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("lg(-1)").simplify(false), UndefinedException);
-  EXPECT_THROW(Expression("(-1)^(2/3)").simplify(false), InvalidInputException);
+  EXPECT_THROW(Expression("(-1)^(2/3)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("tan(pi/2)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("cot(0)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("asin(2)").simplify(false), UndefinedException);

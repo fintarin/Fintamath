@@ -122,8 +122,10 @@ namespace fintamath {
   }
 
   MathObjectPtr Real::simplify() const {
-    if (std::string str = toString(); str.find('.') == std::string::npos && str.find('*') == std::string::npos) {
-      return std::make_unique<Integer>(str);
+    if (impl->v.backend().isfinite()) {
+      if (std::string str = toString(); str.find('.') == std::string::npos && str.find('*') == std::string::npos) {
+        return std::make_unique<Integer>(str);
+      }
     }
 
     return clone();
