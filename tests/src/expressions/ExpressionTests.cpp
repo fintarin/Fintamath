@@ -222,7 +222,6 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   // EXPECT_THROW(Expression("cot(2*pi)"), UndefinedException);
 }
 
-
 TEST(ExpressionTests, simplifyInpreciseTest) {
   EXPECT_EQ(Expression("150!").simplify(false)->toString(), "57133839564458545904789328652610540031895535786011264182548375833179829124845398393126574488675311145377107878746854204162666250198684504466355949195922066574942592095735778929325357290444962472405416790722118445437122269675520000000000000000000000000000000000000");
   EXPECT_EQ(Expression("10^-1000").simplify(false)->toString(), "1*10^-1000");
@@ -296,7 +295,9 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
 
   // EXPECT_EQ(Expression("ln(ln(ln(ln(e))))").simplify(false)->toString(), "0");
   // EXPECT_EQ(Expression("ln(ln(ln(ln(ln(e)))))").simplify(false)->toString(), "1");
+}
 
+TEST(ExpressionTests, simplifyInpreciseNegativeTest) {
   EXPECT_THROW(Expression("ln(ln(ln(ln(e))))").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("ln(ln(ln(ln(ln(e)))))").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("e!").simplify(false), UndefinedException);
@@ -315,8 +316,6 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
   EXPECT_THROW(Expression("acos(2)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("tan(3/2*pi)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("cot(2*pi)").simplify(false), UndefinedException);
-  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(e^e^e^e^e)))))").simplify(false), UndefinedException);
-  EXPECT_THROW(Expression("pi^2^2^2^2^2").simplify(false), UndefinedException);
 }
 
 TEST(ExpressionTests, toStringTest) {
