@@ -133,7 +133,7 @@ namespace fintamath {
     if (!info) {
       throw InvalidInputException(*this, tokenVectorToString(tokens));
     }
-    *this = Expression(*simplify());
+    //*this = Expression(*simplify());
   }
 
   std::string putInBrackets(const std::string &str) {

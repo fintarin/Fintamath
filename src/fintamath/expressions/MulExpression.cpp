@@ -91,6 +91,14 @@ namespace fintamath {
 
   void MulExpression::Element::simplify(bool isPrecise){
     if(info->instanceOf<IExpression>()){
+      //TODO: remove this condition when polynomial division is implemented 
+      if(info->is<Expression>() && info->to<Expression>().getInfo()->is<Pow>()){
+        if(auto tmpSimpl = info->to<IExpression>().simplify(isPrecise); !tmpSimpl->is<AddExpression>()){
+          info = tmpSimpl->clone();
+          return;
+        }
+        return;
+      }
       info = info->to<IExpression>().simplify(isPrecise);
       return;
     }
