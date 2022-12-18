@@ -29,12 +29,6 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
-TEST(ExpressionTests, testTest) {
-  auto a = Expression("e*2");
-  auto b = a.toString();
-  auto c = a.simplify(false)->toString();
-}
-
 TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
@@ -321,6 +315,8 @@ TEST(ExpressionTests, solveTest) {
   EXPECT_THROW(Expression("acos(2)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("tan(3/2*pi)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("cot(2*pi)").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(e^e^e^e^e)))))").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("pi^2^2^2^2^2").simplify(false), UndefinedException);
 }
 
 TEST(ExpressionTests, toStringTest) {
