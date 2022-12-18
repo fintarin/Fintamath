@@ -13,6 +13,7 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
+#include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -24,6 +25,10 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
+#include "fintamath/functions/comparison/LessEqv.hpp"
+#include "fintamath/functions/comparison/Less.hpp"
+#include "fintamath/functions/comparison/More.hpp"
+#include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
@@ -505,6 +510,10 @@ namespace fintamath {
     return mulExpr;
   }
 
+  ExpressionPtr Expression::buildEqvExpression(const IFunction &func, const ArgumentsVector &args) {
+    return std::make_unique<EqvExpression>(func, args.at(0).get(), args.at(1).get());
+  }
+
   Expression::Vector Expression::getArgs(const TokenVector &tokens) {
     Vector args;
     for (size_t pos = 0; pos < tokens.size(); pos++) {
@@ -648,6 +657,11 @@ namespace fintamath {
       return funcExpr;
     }
 
+    if(func.instanceOf<IOperator>() && func.to<IOperator>().getOperatorPriority() == IOperator::Priority::Comparison){
+      funcExpr.info = buildEqvExpression(func, args);
+      return funcExpr;
+    }
+
     funcExpr.info = func.clone();
 
     for (const auto &arg : args) {
@@ -665,32 +679,7 @@ namespace fintamath {
     FuncExpr: PreFuncName Expr | Expr PostFuncName
     Term: Const | Var | Num
    */
-  /* ExprPtr Expression::parseEqualExpression(const std::string &exprStr) const {
-     for (size_t i = exprStr.size() - 1; i > 0; i--) {
-       if (exprStr[i] == '=') {
-         if (i == exprStr.size() - 1) {
-           throw InvalidInputException(*this); // TODO add comment here
-         }
-         auto lhs = Expression(exprStr.substr(0, i));
-         auto rhs = Expression(exprStr.substr(i + 1));
-         if (*Eqv()(lhs, rhs) == Integer(1)) {
-           return std::make_shared<Expression>(Integer(1));
-         }
-         auto eqExpr = Expression();
-         eqExpr.info = std::make_shared<Sub>();
-         eqExpr.children.push_back(std::make_shared<Expression>(lhs));
-         eqExpr.children.push_back(std::make_shared<Expression>(rhs));
 
-         auto newExpr = Expression();
-         newExpr.info = std::make_shared<Eqv>();
-         newExpr.children.push_back(eqExpr.baseSimplify());
-         newExpr.children.push_back(std::make_shared<Expression>(Integer(0)));
-         return std::make_shared<Expression>(newExpr);
-       }
-     }
-     throw InvalidInputException(*this);
-   }
-   */
   Expression Expression::simplifyPrefixUnaryOperator(Expression expr) {
     if (expr.info->is<UnaryPlus>()) {
       return *expr.children.at(0);
@@ -760,6 +749,9 @@ namespace fintamath {
   }
 
   Expression Expression::solve() const {
+    if(info->is<EqvExpression>()){
+      return {*info->to<EqvExpression>().solve()};
+    }
     return *this;
   }
 

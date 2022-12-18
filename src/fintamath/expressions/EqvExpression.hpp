@@ -13,6 +13,8 @@ namespace fintamath {
 
     explicit EqvExpression(const TokenVector &tokens);
 
+    EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs);
+
     EqvExpression(const EqvExpression &rhs) noexcept;
 
     EqvExpression(EqvExpression &&rhs) noexcept;
@@ -29,6 +31,8 @@ namespace fintamath {
 
     MathObjectPtr simplify() const override;
 
+    MathObjectPtr solve() const {};
+
     uint16_t getInfoPriority() override;
 
     void setPrecision(uint8_t precision) override;
@@ -42,5 +46,7 @@ namespace fintamath {
     MathObjectPtr oper;
 
     void parse(const TokenVector &tokens);
+
+    bool getResult() const;
   };
 }

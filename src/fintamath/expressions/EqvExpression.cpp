@@ -1,8 +1,25 @@
 #include "fintamath/expressions/EqvExpression.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/Boolean.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
   EqvExpression::EqvExpression(const TokenVector &tokens) {
     parse(tokens);
+  }
+
+  EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs) {
+    if(!oper.instanceOf<IOperator>() || oper.to<IOperator>().getOperatorPriority() != IOperator::Priority::Comparison){
+      throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
+    }
+    if(lhs.is<EqvExpression>() || rhs.is<EqvExpression>()) {
+      throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
+    }
+
+    this->oper = oper.clone();
+    leftExpr = lhs.clone();
+    rightExpr = rhs.clone();
   }
 
   EqvExpression::EqvExpression(const EqvExpression &rhs) noexcept {
@@ -48,9 +65,24 @@ namespace fintamath {
   }
 
   MathObjectPtr EqvExpression::simplify(bool isPrecise) const{
-    return IMathObject::simplify();
+    auto cloneExpr = *this;
+    AddExpression addExpr;
+    addExpr.addElement(AddExpression::Element(cloneExpr.leftExpr->clone()));
+    addExpr.addElement(AddExpression::Element(cloneExpr.rightExpr->clone(), true));
+    cloneExpr.leftExpr = addExpr.simplify();
+    cloneExpr.rightExpr = Integer(0).clone();
+
+    if(cloneExpr.leftExpr->instanceOf<IComparable>()){
+      auto b = oper->to<IOperator>()(*cloneExpr.leftExpr, *cloneExpr.rightExpr);
+      return b.simplify();
+    }
+    return cloneExpr.clone();
   }
 
+  bool EqvExpression::getResult() const {
+    auto b = oper->to<IOperator>()(*leftExpr, *rightExpr);
+    
+  }
 
   uint16_t EqvExpression::getInfoPriority() {
     return (uint16_t)IOperator::Priority::Comparison;
@@ -79,9 +111,6 @@ namespace fintamath {
       }
       if (i == tokens.size() - 1) {
         throw InvalidInputException(*this, " unexpected sign");
-      }
-      if (i == 0 || (isOneSymbolToken(tokens[i - 1]) && tokens[i - 1] != "%" && tokens[i - 1] != "!")) {
-        continue;
       }
 
       leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i));

@@ -29,14 +29,16 @@ TEST(FintamathTests, fintamathTests) {
   // EXPECT_EQ(expr.toString(), "1");
 
   Expression x("x");
-  Expression y("x");
+  Expression y("y");
 
-  //TODO: EqvExpression
-  //expr = eqv(x * x + y * y * y, x * y);
-  //EXPECT_EQ(expr.toString(), "y^3+x^2-x*y=0");
+  expr = eqv(x * x + y * y * y, x * y);
 
-  //expr = eqv(x * x + y * y * y, x * y);
-  //EXPECT_EQ(expr.toString(), "x^2+y^2-x*y=0");
+  //TODO: replace to y^3+x^2-x*y=0
+  EXPECT_EQ(expr.toString(), "x^2+y^3-x*y=0");
+
+  //TODO: replace to 
+  expr = eqv(x * x + y * y, x * y);
+  EXPECT_EQ(expr.toString(), "x^2+y^2-x*y=0");
 
   // TODO equations
   // expr = eqv(pow(x, 2) - 10, 39);

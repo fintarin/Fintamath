@@ -81,6 +81,8 @@ namespace fintamath {
 
     static ExpressionPtr buildMulExpression(const IFunction &func, const ArgumentsVector &args);
 
+    static ExpressionPtr buildEqvExpression(const IFunction &func, const ArgumentsVector &args);
+
     static Vector copy(const Vector &rhs);
 
     Expression &compressTree();

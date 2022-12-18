@@ -2,6 +2,7 @@
 
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
+#include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
@@ -108,6 +109,7 @@ namespace fintamath::config {
     IFunction::addParser<Acot>();
 
     // expressions
+    IExpression::addParser<EqvExpression>();
     IExpression::addParser<AddExpression>();
     IExpression::addParser<MulExpression>();
     IExpression::addParser<Expression>();
