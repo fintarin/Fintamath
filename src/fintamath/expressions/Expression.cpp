@@ -38,23 +38,6 @@
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  std::string cutBraces(const std::string &str) {
-    std::string strExpr = str;
-    if (strExpr.front() == '(' && strExpr.back() == ')') {
-    }
-    return strExpr;
-  }
-
-  int countEqual(const std::string &str) {
-    int counter = 0;
-    for (const auto &ch : str) {
-      if (ch == '=') {
-        counter++;
-      }
-    }
-    return counter;
-  }
-
   Expression::Vector Expression::copy(const Vector &rhs) {
     Vector result;
     for (const auto &value : rhs) {

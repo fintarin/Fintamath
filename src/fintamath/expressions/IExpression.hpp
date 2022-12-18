@@ -39,6 +39,7 @@ namespace fintamath {
     static bool isBracket(char c);
     static bool isBracket(const std::string &c);
     static bool isOpenBracket(char c);
+    static bool isCloseBracket(char c);
     static bool isSpecial(char c);
     static std::string cutSpacesFromBeginEnd(const std::string &str);
     static bool isCanInsertMultiplyCharacter(char c);

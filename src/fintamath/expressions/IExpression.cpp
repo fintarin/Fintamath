@@ -1,4 +1,5 @@
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include <algorithm>
@@ -18,6 +19,10 @@ namespace fintamath {
         digitToken.push_back(value);
         appendToken(tokens, letterToken);
         appendToken(tokens, specialToken);
+
+        if(!tokens.empty() && tokens.at(tokens.size() - 1) == ")"){
+          tokens.emplace_back("*");
+        }
         continue;
       }
 
@@ -27,11 +32,15 @@ namespace fintamath {
           tokens.emplace_back("*");
         }
         appendToken(tokens, specialToken);
+
+        if(!tokens.empty() && tokens.at(tokens.size() - 1) == ")"){
+          tokens.emplace_back("*");
+        }
         continue;
       }
 
       if (isBracket(value)) {
-        if (appendToken(tokens, digitToken) && isOpenBracket(value) && value == '(') {
+        if ((appendToken(tokens, digitToken) || (!tokens.empty() && tokens.at(tokens.size() - 1) == ")")) && isOpenBracket(value) && value == '(') {
           tokens.emplace_back("*");
         }
         appendToken(tokens, specialToken);
@@ -69,6 +78,7 @@ namespace fintamath {
     appendToken(tokens, digitToken);
     appendToken(tokens, specialToken);
     appendToken(tokens, letterToken);
+
     return tokens;
   }
 
@@ -101,6 +111,10 @@ namespace fintamath {
 
   bool IExpression::isOpenBracket(char c) {
     return c == '(' || c == '{' || c == '[';
+  }
+
+  bool IExpression::isCloseBracket(char c) {
+    return c == ')' || c == '}' || c == ']';
   }
 
   bool IExpression::isSpecial(char c) {
