@@ -659,3 +659,7 @@ TEST(IntegerTests, equalsTests) {
   EXPECT_FALSE(Integer(100) == Integer("-100"));
   EXPECT_FALSE(Integer(100) == Integer("1"));
 }
+
+TEST(IntegerTests, getClassNameTest) {
+  EXPECT_EQ(Integer().getClassName(), "Integer");
+}

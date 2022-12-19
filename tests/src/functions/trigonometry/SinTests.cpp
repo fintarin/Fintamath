@@ -36,3 +36,7 @@ TEST(SinTests, callTest) {
   EXPECT_THROW((*f)(), FunctionCallException);
   EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
+
+TEST(SinTests, getClassNameTest) {
+  EXPECT_EQ(Sin().getClassName(), "Sin");
+}

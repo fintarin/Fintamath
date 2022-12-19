@@ -36,3 +36,7 @@ TEST(LogTests, callTest) {
   EXPECT_THROW((*f)(Integer(10)), FunctionCallException);
   EXPECT_THROW((*f)(Integer(10), Integer(10), Integer(10)), FunctionCallException);
 }
+
+TEST(LogTests, getClassNameTest) {
+  EXPECT_EQ(Log().getClassName(), "Log");
+}

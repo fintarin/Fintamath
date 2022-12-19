@@ -34,3 +34,7 @@ TEST(SubTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
+
+TEST(SubTests, getClassNameTest) {
+  EXPECT_EQ(Sub().getClassName(), "Sub");
+}

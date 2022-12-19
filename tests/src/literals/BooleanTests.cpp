@@ -5,7 +5,7 @@
 
 using namespace fintamath;
 
-TEST(BooleanTest, stringConstructorTest) {
+TEST(BooleanTests, stringConstructorTest) {
   EXPECT_EQ(Boolean(std::string("true")), true);
   EXPECT_EQ(Boolean(std::string("false")), false);
 
@@ -15,17 +15,17 @@ TEST(BooleanTest, stringConstructorTest) {
   EXPECT_THROW(Boolean(std::string("")), InvalidInputException);
 }
 
-TEST(BooleanTest, boolConstructorTest) {
+TEST(BooleanTests, boolConstructorTest) {
   EXPECT_EQ(Boolean(true), true);
   EXPECT_EQ(Boolean(false), false);
 }
 
-TEST(BooleanTest, toStringTest) {
+TEST(BooleanTests, toStringTest) {
   EXPECT_EQ(Boolean(true).toString(), "true");
   EXPECT_EQ(Boolean(false).toString(), "false");
 }
 
-TEST(BooleanTest, opearatorsTest) {
+TEST(BooleanTests, opearatorsTest) {
   EXPECT_EQ(Boolean(false) && Boolean(false), false);
   EXPECT_EQ(Boolean(true) && Boolean(false), false);
   EXPECT_EQ(Boolean(false) && Boolean(true), false);
@@ -35,4 +35,8 @@ TEST(BooleanTest, opearatorsTest) {
   EXPECT_EQ(Boolean(true) || Boolean(false), true);
   EXPECT_EQ(Boolean(false) || Boolean(true), true);
   EXPECT_EQ(Boolean(true) || Boolean(true), true);
+}
+
+TEST(BooleanTests, getClassNameTest) {
+  EXPECT_EQ(Boolean(true).getClassName(), "Boolean");
 }

@@ -40,3 +40,7 @@ TEST(CotTests, callTest) {
   EXPECT_THROW((*f)(), FunctionCallException);
   EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
+
+TEST(CotTests, getClassNameTest) {
+  EXPECT_EQ(Cot().getClassName(), "Cot");
+}

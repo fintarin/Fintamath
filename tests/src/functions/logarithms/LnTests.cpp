@@ -39,3 +39,7 @@ TEST(LnTests, callTest) {
   EXPECT_THROW((*f)(), FunctionCallException);
   EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
+
+TEST(LnTests, getClassNameTest) {
+  EXPECT_EQ(Ln().getClassName(), "Ln");
+}

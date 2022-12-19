@@ -10,3 +10,7 @@ using namespace fintamath;
 
 TEST(AddExpressionTests, toStringTest) {
 }
+
+TEST(AddExpressionTests, getClassNameTest) {
+  EXPECT_EQ(AddExpression().getClassName(), "AddExpression");
+}

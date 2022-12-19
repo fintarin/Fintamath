@@ -33,3 +33,7 @@ TEST(ExpTests, callTest) {
   EXPECT_THROW((*f)(), FunctionCallException);
   EXPECT_THROW((*f)(Integer(1), Integer(1)), FunctionCallException);
 }
+
+TEST(ExpTests, getClassNameTest) {
+  EXPECT_EQ(Exp().getClassName(), "Exp");
+}

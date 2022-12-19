@@ -35,3 +35,7 @@ TEST(AcotTests, callTest) {
   EXPECT_THROW((*f)(), FunctionCallException);
   EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
+
+TEST(AcotTests, getClassNameTest) {
+  EXPECT_EQ(Acot().getClassName(), "Acot");
+}

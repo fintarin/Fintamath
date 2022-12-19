@@ -339,3 +339,7 @@ TEST(ExpressionTests, toStringPrecision) {
   EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
   EXPECT_EQ(Expression("sin(sin(e))").toString(30), "0.39932574404189139297067052142");
 }
+
+TEST(ExpressionTests, getClassNameTest) {
+  EXPECT_EQ(Expression().getClassName(), "Expression");
+}
