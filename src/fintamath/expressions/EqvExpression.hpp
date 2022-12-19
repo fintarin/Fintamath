@@ -4,6 +4,7 @@
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/helpers/Converter.hpp"
+#include "fintamath/literals/Variable.hpp"
 #include <cstdint>
 
 namespace fintamath {
@@ -31,7 +32,9 @@ namespace fintamath {
 
     MathObjectPtr simplify() const override;
 
-    MathObjectPtr solve() const {};
+    std::string solve() const;
+
+    std::string solve(uint8_t precision) const;
 
     uint16_t getInfoPriority() override;
 
@@ -47,6 +50,9 @@ namespace fintamath {
 
     void parse(const TokenVector &tokens);
 
-    bool getResult() const;
+    std::vector<MathObjectPtr> solvePowEquation(const Variable& x) const;
+    std::vector<MathObjectPtr> solveQuadraticEquation(const MathObjectPtr& v) const;
+
+    bool detectOneVariable(Variable &v) const;
   };
 }

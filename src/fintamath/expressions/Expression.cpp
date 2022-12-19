@@ -748,11 +748,18 @@ namespace fintamath {
     return "Expression";
   }
 
-  Expression Expression::solve() const {
+  std::string Expression::solve(uint8_t precision) const {
     if(info->is<EqvExpression>()){
-      return {*info->to<EqvExpression>().solve()};
+      return info->to<EqvExpression>().solve(precision);
     }
-    return *this;
+    return toString(precision);
+  }
+
+  std::string Expression::solve() const {
+    if(info->is<EqvExpression>()){
+      return info->to<EqvExpression>().solve();
+    }
+    return toString();
   }
 
   void Expression::simplifyPow(){
@@ -770,4 +777,31 @@ namespace fintamath {
     }
   }
 
+  std::vector<MathObjectPtr> Expression::getVariables() const {
+    std::vector<MathObjectPtr> result;
+    if(info->is<Variable>()){
+        result.emplace_back(info->clone());
+        return result;
+      }
+    if(info->instanceOf<IExpression>()){
+      auto addResult = info->to<IExpression>().getVariables();
+      for(const auto& add: addResult){
+        result.emplace_back(add->clone());
+      }
+      return result;
+    }
+    for(const auto& child : children){
+      if(child->is<Variable>()){
+        result.emplace_back(child->clone());
+        continue;
+      }
+      if(child->instanceOf<IExpression>()){
+        auto addResult = child->to<IExpression>().getVariables();
+        for(const auto& add: addResult){
+          result.emplace_back(add->clone());
+        }
+      }
+    }
+    return result;
+  }
 }

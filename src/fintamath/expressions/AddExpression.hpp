@@ -73,6 +73,12 @@ namespace fintamath {
 
     void setPrecision(uint8_t precision) override;
 
+    std::vector<MathObjectPtr> getVariables() const override;
+
+    MathObjectPtr getPowCoefficient(const MathObjectPtr& powValue) const;
+
+    MathObjectPtr getPow() const;
+
   private:
     void parse(const TokenVector &tokens);
 

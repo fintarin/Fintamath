@@ -10,6 +10,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -629,5 +630,56 @@ namespace fintamath {
     }
     return newPowVect;
   }
+
+  std::vector<MathObjectPtr> MulExpression::getVariables() const {
+    std::vector<MathObjectPtr> result;
+    for(const auto& child : mulPolynom){
+      if(child.info->is<Variable>()){
+        result.emplace_back(child.info->clone());
+        continue;
+      }
+      if(child.info->instanceOf<IExpression>()){
+        auto addResult = child.info->to<IExpression>().getVariables();
+        for(const auto& add: addResult){
+          result.emplace_back(add->clone());
+        }
+      }
+    }
+    return result;
+  }
+
+  MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr& powValue) const{
+    for(const auto& child : mulPolynom){
+      if(child.info->is<Expression>() && child.info->to<Expression>().getInfo()->is<Pow>()){
+        auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
+          if(rightVal->instanceOf<IComparable>() && powValue->instanceOf<IComparable>() && rightVal->to<IComparable>() == powValue->to<IComparable>()){
+            return mulPolynom.at(0).info->clone();
+          }
+      }
+      if(powValue->instanceOf<IComparable>() && powValue->to<IComparable>() == Integer(1)){
+        if(child.info->is<Variable>()){
+          return mulPolynom.at(0).info->clone();
+        }
+      }
+    }
+    return nullptr;
+  }
+
+  MathObjectPtr MulExpression::getPow() const{
+    Integer maxValue(0);
+    for(const auto& child : mulPolynom){
+      if(child.info->is<Expression>()){
+        if(child.info->to<Expression>().getInfo()->is<Pow>()){
+          auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
+          if(rightVal->is<Integer>() && rightVal->to<Integer>() > maxValue){
+            maxValue = rightVal->to<Integer>();
+          }
+        }
+      } 
+    }
+    return maxValue.clone();
+  }
+
+
 
 }

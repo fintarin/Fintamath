@@ -6,6 +6,7 @@
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/helpers/Converter.hpp"
 #include "fintamath/helpers/Parser.hpp"
 
 namespace fintamath {
@@ -32,6 +33,8 @@ namespace fintamath {
     virtual void setPrecision(uint8_t precision) = 0;
 
     virtual MathObjectPtr simplify(bool isPrecise) const = 0;
+
+    virtual std::vector<MathObjectPtr> getVariables() const;
 
   private:
     static bool appendToken(TokenVector &tokens, std::string &token);

@@ -46,7 +46,9 @@ namespace fintamath {
 
     std::string getClassName() const override;
 
-    Expression solve() const;
+    std::string solve() const;
+
+    std::string solve(uint8_t precision) const;
 
     const MathObjectPtr &getInfo() const;
 
@@ -62,6 +64,7 @@ namespace fintamath {
 
     MathObjectPtr simplify(bool isPrecise) const override;
 
+    std::vector<MathObjectPtr> getVariables() const override;
 
   protected:
     Expression &add(const Expression &rhs) override;

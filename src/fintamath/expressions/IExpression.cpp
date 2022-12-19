@@ -2,6 +2,7 @@
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/helpers/Converter.hpp"
 #include <algorithm>
 
 namespace fintamath {
@@ -201,5 +202,10 @@ namespace fintamath {
     }
     return obj->toString();
   }
+
+  std::vector<MathObjectPtr> IExpression::getVariables() const{
+    return {};
+  }
+
 
 }
