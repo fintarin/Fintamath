@@ -516,6 +516,11 @@ namespace fintamath {
             }
           }
         } 
+        if(child.info->is<Variable>()){
+          if(Integer(1) > maxValue){
+            maxValue = Integer(1);
+          }
+        } 
       }
       return maxValue.clone();
     }

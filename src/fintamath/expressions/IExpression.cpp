@@ -54,6 +54,7 @@ namespace fintamath {
         appendToken(tokens, digitToken);
         appendToken(tokens, letterToken);
         if (isOneSymbolToken(value)) {
+          appendToken(tokens, specialToken);
           tokens.emplace_back(1, value);
           continue;
         }

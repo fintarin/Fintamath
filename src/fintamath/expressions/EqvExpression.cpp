@@ -12,6 +12,7 @@
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/functions/Functions.hpp"
 #include <cstdint>
+#include <ios>
 
 
 namespace fintamath {
@@ -121,6 +122,10 @@ namespace fintamath {
       leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i));
       rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end()));
       oper = IOperator::parse(tokens[i]);
+
+      if(!leftExpr || !rightExpr || !oper){
+        throw InvalidInputException(*this, tokensToString(tokens));
+      }
       return;
     }
     throw InvalidInputException(*this, " not an EqvExpression");
