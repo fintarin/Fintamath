@@ -328,6 +328,7 @@ TEST(ExpressionTests, simplifyInpreciseNegativeTest) {
 
 TEST(ExpressionTests, solveTest){
   EXPECT_EQ(Expression("x-10=0").solve(), "x in {10}");
+  EXPECT_EQ(Expression("x<-10").solve(), "x+10<0");
   EXPECT_EQ(Expression("-10-x=0").solve(), "x in {-10}");
   EXPECT_EQ(Expression("x^2-10=39").solve(), "x in {-7,7}");
   EXPECT_EQ(Expression("x^2=0").solve(), "x in {0}");

@@ -172,17 +172,25 @@ namespace fintamath {
 
   std::string EqvExpression::solve(uint8_t precision) const{
     Variable x("x");
-    if(!detectOneVariable(x)){
-      auto copyExpr = *this;
-      copyExpr.setPrecision(precision);
-      return copyExpr.toString();
+    auto expr = simplify(false);
+    if(!expr->is<EqvExpression>()){
+      return expr->toString();
+    }
+    auto copyExpr = expr->to<EqvExpression>();
+    if(!copyExpr.oper->is<Eqv>()){
+      return expr->toString();
+    }
+    if(!copyExpr.detectOneVariable(x)){
+      auto e = *this;
+      e.setPrecision(precision);
+      return e.toString();
     }
 
-    auto results = solvePowEquation(x);
+    auto results = copyExpr.solvePowEquation(x);
     if(results.empty()){
-      auto copyExpr = *this;
-      copyExpr.setPrecision(precision);
-      return copyExpr.toString();
+      auto e = *this;
+      e.setPrecision(precision);
+      return e.toString();
     }
     results = sortResult(results);
     std::string resultStr = x.toString() + " in {";
