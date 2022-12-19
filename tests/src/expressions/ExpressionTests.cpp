@@ -337,6 +337,7 @@ TEST(ExpressionTests, solveTest){
   EXPECT_EQ(Expression("x^2-2x-3=0").solve(), "x in {-1,3}");
   EXPECT_EQ(Expression("15-2x-x^2=0").solve(), "x in {-5,3}");
   EXPECT_EQ(Expression("x^2+12x+36=0").solve(), "x in {-6}");
+  EXPECT_EQ(Expression("15x^2+sin(25)x-10%=ey").solve(5), "15*x^2-2.7183*y+-0.13235*x+-0.1=0");
 }
 
 TEST(ExpressionTests, toStringTest) {

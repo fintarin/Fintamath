@@ -132,6 +132,11 @@ namespace fintamath {
       copyExpr->setPrecision(precision);
       info = copyExpr->clone();
     }
+
+    if (info->instanceOf<IConstant>()) {
+      info = (*helpers::cast<IConstant>(info->clone()))().simplify();
+      info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    }
   }
 
   MulExpression::MulExpression(const TokenVector &tokens) {

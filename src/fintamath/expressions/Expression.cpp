@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstdint>
 #include <memory>
 #include <regex>
 #include <stdexcept>
@@ -224,6 +225,54 @@ namespace fintamath {
       return;
     }
     info = info->simplify();
+  }
+
+  void Expression::setPrecisionRec(uint8_t precision) {
+    if (children.empty()) {
+        if (info->instanceOf<INumber>()) {
+        info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+        return;
+      }
+      if (info->instanceOf<IExpression>()) {
+        auto copyExpr = helpers::cast<IExpression>(info->clone());
+        copyExpr->setPrecision(precision);
+        info = copyExpr->simplify(false);
+      }
+    }
+
+    for (auto &child : children) {
+      if (child->instanceOf<IExpression>()) {
+        auto copyChild = helpers::cast<IExpression>(child->clone());
+        copyChild->setPrecision(precision);
+        child = copyChild->simplify(false);
+      }
+      if (child->instanceOf<INumber>()) {
+        child = helpers::Converter::convert(*child, Real())->to<Real>().precise(precision).clone();
+        continue;
+      }
+      if (child->instanceOf<IExpression>()) {
+        auto copyExpr = helpers::cast<IExpression>(child->clone());
+        copyExpr->setPrecision(precision);
+        child = copyExpr->simplify(false);
+      }
+    }
+
+    if (info->instanceOf<IFunction>()) {
+      const auto &func = info->to<IFunction>();
+      ArgumentsVector args;
+
+      for (const auto &child : children) {
+        args.emplace_back(*child);
+      }
+
+      if (func.doAgsMatch(args)) {
+        auto countResult = func(args).info;
+        if(countResult->instanceOf<INumber>()) {
+          info = helpers::Converter::convert(*countResult, Real())->to<Real>().precise(precision).clone();
+          children.clear();
+        }
+      }
+    }
   }
 
   void Expression::simplifyFunctionsRec(bool isPrecise) {
@@ -701,23 +750,7 @@ namespace fintamath {
   }
 
   void Expression::setPrecision(uint8_t precision) {
-    for (auto &child : children) {
-      if (child->instanceOf<IExpression>()) {
-        auto copyChild = helpers::cast<IExpression>(child->clone());
-        copyChild->setPrecision(precision);
-        child = copyChild->clone();
-      }
-    }
-
-    if (info->instanceOf<INumber>()) {
-      info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
-      return;
-    }
-    if (info->instanceOf<IExpression>()) {
-      auto copyExpr = helpers::cast<IExpression>(info->clone());
-      copyExpr->setPrecision(precision);
-      info = copyExpr->clone();
-    }
+    setPrecisionRec(precision);
   }
 
   MathObjectPtr Expression::simplify(bool isPrecise) const {

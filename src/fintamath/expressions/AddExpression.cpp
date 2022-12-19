@@ -157,6 +157,12 @@ namespace fintamath {
       copyExpr->setPrecision(precision);
       info = copyExpr->clone();
     }
+
+    if (info->instanceOf<IConstant>()) {
+      info = (*helpers::cast<IConstant>(info->clone()))().simplify();
+      auto a = info->toString();
+      info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    }
   }
 
   AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted) {

@@ -66,6 +66,9 @@ namespace fintamath {
 
     std::vector<MathObjectPtr> getVariables() const override;
 
+    void setPrecisionRec(uint8_t precision);
+
+
   protected:
     Expression &add(const Expression &rhs) override;
 
