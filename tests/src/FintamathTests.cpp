@@ -43,10 +43,10 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(expr.solve(), "x in {-7,7}");
 
   expr = Expression("-4x^2 + 28x - 49 = 0");
-  EXPECT_EQ(expr.solve(2), "x in {3.5,3.5}");
+  EXPECT_EQ(expr.solve(2), "x in {3.5}");
 
   expr = Expression("-4x^2 + 28x - 49 = 0");
-  EXPECT_EQ(expr.solve(), "x in {7/2,7/2}");
+  EXPECT_EQ(expr.solve(), "x in {7/2}");
 
   expr = Expression("sin2^2 + cos2^2 = 1");
   EXPECT_EQ(expr.solve(), "true");

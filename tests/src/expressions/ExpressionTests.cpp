@@ -330,12 +330,12 @@ TEST(ExpressionTests, solveTest){
   EXPECT_EQ(Expression("x-10=0").solve(), "x in {10}");
   EXPECT_EQ(Expression("-10-x=0").solve(), "x in {-10}");
   EXPECT_EQ(Expression("x^2-10=39").solve(), "x in {-7,7}");
-  EXPECT_EQ(Expression("x^2=0").solve(), "x in {0}"); // TODO remove duplicated roots
+  EXPECT_EQ(Expression("x^2=0").solve(), "x in {0}");
   EXPECT_EQ(Expression("x^2=1").solve(), "x in {-1,1}");
   EXPECT_EQ(Expression("x^2=-1").solve(), "x^2+1=0"); // TODO complex numbers
   EXPECT_EQ(Expression("x^2-2x-3=0").solve(), "x in {-1,3}");
-  EXPECT_EQ(Expression("15-2x-x^2=0").solve(), "x in {3,-5}");
-  EXPECT_EQ(Expression("x^2+12x+36=0").solve(), "x in {-6}"); // TODO remove duplicated roots
+  EXPECT_EQ(Expression("15-2x-x^2=0").solve(), "x in {-5,3}");
+  EXPECT_EQ(Expression("x^2+12x+36=0").solve(), "x in {-6}");
 }
 
 TEST(ExpressionTests, toStringTest) {
