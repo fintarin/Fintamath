@@ -149,6 +149,9 @@ namespace fintamath {
     }
 
     auto results = copyExpr.solvePowEquation(x);
+    if(results.empty()){
+      return toString();
+    }
     std::string resultStr = x.toString() + " in {";
     for(const auto& res : results){
       resultStr += res->toString();
@@ -168,6 +171,11 @@ namespace fintamath {
     }
 
     auto results = solvePowEquation(x);
+    if(results.empty()){
+      auto copyExpr = *this;
+      copyExpr.setPrecision(precision);
+      return copyExpr.toString();
+    }
     std::string resultStr = x.toString() + " in {";
     for(const auto& res : results){
       resultStr += Expression(*res).toString(precision);
