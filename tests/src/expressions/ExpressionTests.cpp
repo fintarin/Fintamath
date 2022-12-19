@@ -29,14 +29,6 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
-TEST(ExpressionTests, testTest){
-  auto a = Expression("x^2-10=39");
-  auto b = a.toString();
-  auto c = a.solve(3);
-  auto e = a.simplify(false)->toString();
-  auto d = a.toString(2);
-}
-
 TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
@@ -144,6 +136,7 @@ TEST(ExpressionTests, stingConstructorTest) {
 
   EXPECT_EQ(Expression("a=a").toString(), "true");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "true");
+  EXPECT_EQ(Expression("a=b").toString(), "a-b=0");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
@@ -299,7 +292,12 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(pi/3)))/2)*cos(pi/3)").simplify(false)->toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  EXPECT_EQ(Expression("sin(e)>sin(e)").simplify(false)->toString(), "false");
+  EXPECT_EQ(Expression("sin(e)>=sin(e)").simplify(false)->toString(), "true");
+  EXPECT_EQ(Expression("sin(e)<sin(e)").simplify(false)->toString(), "false");
+  EXPECT_EQ(Expression("sin(e)<=sin(e)").simplify(false)->toString(), "true");
 
+  // TODO logarithms
   // EXPECT_EQ(Expression("ln(ln(ln(ln(e))))").simplify(false)->toString(), "0");
   // EXPECT_EQ(Expression("ln(ln(ln(ln(ln(e)))))").simplify(false)->toString(), "1");
 }
@@ -326,6 +324,18 @@ TEST(ExpressionTests, simplifyInpreciseNegativeTest) {
 
   //TODD: do no perform operation, when the result is too big
   EXPECT_THROW(Expression("ln(ln(ln(ln(ln(e^e^e^e^e)))))").simplify(false), UndefinedException);
+}
+
+TEST(ExpressionTests, solveTest){
+  EXPECT_EQ(Expression("x-10=0").solve(), "x in {10}");
+  EXPECT_EQ(Expression("-10-x=0").solve(), "x in {-10}");
+  EXPECT_EQ(Expression("x^2-10=39").solve(), "x in {-7,7}");
+  EXPECT_EQ(Expression("x^2=0").solve(), "x in {0}"); // TODO remove duplicated roots
+  EXPECT_EQ(Expression("x^2=1").solve(), "x in {-1,1}");
+  EXPECT_EQ(Expression("x^2=-1").solve(), "x^2+1=0"); // TODO complex numbers
+  EXPECT_EQ(Expression("x^2-2x-3=0").solve(), "x in {3,-5}");
+  EXPECT_EQ(Expression("15-2x-x^2=0").solve(), "x in {-5,3}");
+  EXPECT_EQ(Expression("x^2+12x+36=0").solve(), "x in {-6}"); // TODO remove duplicated roots
 }
 
 TEST(ExpressionTests, toStringTest) {
