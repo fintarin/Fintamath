@@ -14,6 +14,7 @@
 #include "fintamath/functions/Functions.hpp"
 #include <cstdint>
 #include <ios>
+#include <algorithm>
 
 
 namespace fintamath {
