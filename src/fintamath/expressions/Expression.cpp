@@ -693,16 +693,13 @@ namespace fintamath {
   }
 
   Expression Expression::simplifyNeg(Expression expr) {
-    auto childExpr = helpers::cast<Expression>(expr.children.at(0)->clone());
-    if (!childExpr) {
-      return expr;
+    auto childExpr = Expression(*expr.children.at(0)->clone());
+
+    if (!childExpr.info->is<Neg>()) {
+      return buildRawFunctionExpression(Neg(), {*childExpr.compress()});
     }
 
-    if (!childExpr->info->is<Neg>()) {
-      return buildRawFunctionExpression(Neg(), {*childExpr->compress()});
-    }
-
-    expr.info = childExpr->children.at(0)->clone();
+    expr.info = childExpr.children.at(0)->clone();
 
     return expr.compressTree();
   }
