@@ -26,9 +26,8 @@ TEST(LessEqvTests, callTest) {
   EXPECT_EQ(LessEqv()(Integer(3), Rational(3, 1)).toString(), "true");
   EXPECT_EQ(LessEqv()(Rational(5, 2), Integer(2)).toString(), "false");
 
-  // TODO: uncomment this
-  // EXPECT_EQ(LessEqv()(Integer(3), Variable("a")).toString(), "-a+3<=0");
-  // EXPECT_EQ(LessEqv()(Variable("a"), Variable("a")).toString(), "true");
+  EXPECT_EQ(LessEqv()(Integer(3), Variable("a")).toString(), "-a+3<=0");
+  EXPECT_EQ(LessEqv()(Variable("a"), Variable("a")).toString(), "true");
 
   std::unique_ptr<IOperator> o = std::make_unique<LessEqv>();
   EXPECT_THROW((*o)(Integer(1)), FunctionCallException);

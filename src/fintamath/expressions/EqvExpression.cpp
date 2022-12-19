@@ -4,6 +4,7 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/Boolean.hpp"
@@ -140,6 +141,9 @@ namespace fintamath {
       return expr->toString();
     }
     auto copyExpr = expr->to<EqvExpression>();
+    if(!copyExpr.oper->is<Eqv>()){
+      return expr->toString();
+    }
     if(!copyExpr.detectOneVariable(x)){
       return toString();
     }

@@ -29,6 +29,14 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
+TEST(ExpressionTests, testTest){
+  auto a = Expression("x^2-10=39");
+  auto b = a.toString();
+  auto c = a.solve(3);
+  auto e = a.simplify(false)->toString();
+  auto d = a.toString(2);
+}
+
 TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
@@ -134,9 +142,8 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("lne").toString(), "e*l*n");
   EXPECT_EQ(Expression("lncossine").toString(), "n^2*s^2*c*e*i*l*o");
 
-  // TODO: EqvExpr
-  // EXPECT_EQ(Expression("a=a").toString(), "1");
-  // EXPECT_EQ(Expression("a+a=2*a").toString(), "1");
+  EXPECT_EQ(Expression("a=a").toString(), "true");
+  EXPECT_EQ(Expression("a+a=2*a").toString(), "true");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
@@ -316,6 +323,9 @@ TEST(ExpressionTests, simplifyInpreciseNegativeTest) {
   EXPECT_THROW(Expression("acos(2)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("tan(3/2*pi)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("cot(2*pi)").simplify(false), UndefinedException);
+
+  //TODD: do no perform operation, when the result is too big
+  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(e^e^e^e^e)))))").simplify(false), UndefinedException);
 }
 
 TEST(ExpressionTests, toStringTest) {
@@ -324,6 +334,7 @@ TEST(ExpressionTests, toStringTest) {
 
 TEST(ExpressionTests, toStringPrecision) {
   EXPECT_EQ(Expression("10^10000").toString(8), "1*10^10000");
+  EXPECT_EQ(Expression("x+e").toString(8), "x+2.7182818");
   EXPECT_EQ(Expression("9^10000").toString(8), "2.6613034*10^9542");
   EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
   EXPECT_EQ(Expression("sin(sin(e))").toString(30), "0.39932574404189139297067052142");
