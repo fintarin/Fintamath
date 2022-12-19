@@ -394,7 +394,7 @@ namespace fintamath {
       MulExpression mulExpr(mulExprPolynom);
       for (auto &obj : objs) {
         if (obj.obj->toString() == mulExpr.toString()) {
-          obj.counter.addElement(Element(Integer(1).clone(), mulObj.inverted));
+          obj.counter.addElement(Element(number->clone(), mulObj.inverted));
           added = true;
           break;
         }

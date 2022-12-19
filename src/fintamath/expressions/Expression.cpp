@@ -585,8 +585,7 @@ namespace fintamath {
     auto addExpr = AddExpression();
     addExpr.addElement({clone(), false});
     addExpr.addElement({rhs.clone(), false});
-    this->info = AddExpression(*addExpr.simplify()).clone();
-    this->children.clear();
+    *this = Expression(*addExpr.simplify());
     return *this;
   }
 
@@ -594,8 +593,7 @@ namespace fintamath {
     auto addExpr = AddExpression();
     addExpr.addElement({clone(), false});
     addExpr.addElement({rhs.clone(), true});
-    this->info = AddExpression(*addExpr.simplify()).clone();
-    this->children.clear();
+    *this = Expression(*addExpr.simplify());
     return *this;
   }
 
@@ -603,8 +601,7 @@ namespace fintamath {
     auto mulExpr = MulExpression();
     mulExpr.addElement({clone(), false});
     mulExpr.addElement({rhs.clone(), false});
-    this->info = MulExpression(*mulExpr.simplify()).clone();
-    this->children.clear();
+    *this = Expression(*mulExpr.simplify());
     return *this;
   }
 
@@ -612,8 +609,7 @@ namespace fintamath {
     auto mulExpr = MulExpression();
     mulExpr.addElement({clone(), false});
     mulExpr.addElement({rhs.clone(), true});
-    this->info = MulExpression(*mulExpr.simplify()).clone();
-    this->children.clear();
+    *this = Expression(*mulExpr.simplify());
     return *this;
   }
 

@@ -1,4 +1,5 @@
 #include "fintamath/expressions/EqvExpression.hpp"
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -157,6 +158,7 @@ namespace fintamath {
     if(results.empty()){
       return toString();
     }
+    results = sortResult(results);
     std::string resultStr = x.toString() + " in {";
     for(const auto& res : results){
       resultStr += res->toString();
@@ -181,6 +183,7 @@ namespace fintamath {
       copyExpr.setPrecision(precision);
       return copyExpr.toString();
     }
+    results = sortResult(results);
     std::string resultStr = x.toString() + " in {";
     for(const auto& res : results){
       resultStr += Expression(*res).toString(precision);
@@ -215,8 +218,6 @@ namespace fintamath {
 
     for(int i = 0; i <= maxPow->to<Integer>();i++){
       coefficients.emplace_back(polynom.getPowCoefficient(Integer(i).clone()));
-      auto coef = coefficients.at(i)->toString();
-      auto b = coef;
     }
 
     std::vector<MathObjectPtr> results;  
@@ -228,9 +229,6 @@ namespace fintamath {
       auto discr = Sub()(*fintamath::pow(*coefficients.at(1), Integer(2)).simplify(false), *mul(Integer(4), *coefficients.at(0), *coefficients.at(2)).simplify(false)).simplify(false);
 
       auto discrStr = discr->toString();
-      auto aStr = coefficients.at(2)->toString();
-      auto cStr = coefficients.at(0)->toString();
-      auto bStr = coefficients.at(1)->toString();
 
       if(discr->instanceOf<IComparable>() && discr->to<IComparable>() < Integer(0)){
         return {};
@@ -239,11 +237,6 @@ namespace fintamath {
       auto sqrt_D = sqrt(*discr).simplify(false);
       auto minus_B = Neg()(*coefficients.at(1)).simplify(false);
       auto two_A = mul(*coefficients.at(2), Integer(2)).simplify(false);
-
-      auto a = sqrt_D->toString();
-      auto dis = discr->toString();
-      auto two_a = two_A->toString();
-      auto minusB =minus_B->toString();
 
       auto x1 = Div()(*Sub()(*minus_B, *sqrt_D).simplify(false), *two_A).simplify(false);
       auto x2 = Div()(*add(*minus_B, *sqrt_D).simplify(false), *two_A).simplify(false);
@@ -277,4 +270,28 @@ namespace fintamath {
       return true;
     }
   }
+
+  bool EqvExpression::sortPredicat(const MathObjectPtr& lhs, const MathObjectPtr& rhs) {
+    if(!lhs->instanceOf<IComparable>() || !rhs->instanceOf<IComparable>()){
+      return false;
+    }
+    return lhs->to<IComparable>() < rhs->to<IComparable>();
+  }
+
+  std::vector<MathObjectPtr> EqvExpression::sortResult(std::vector<MathObjectPtr>& result) {
+    std::sort(result.begin(), result.end(), sortPredicat);
+    std::vector<MathObjectPtr> resultWithoutRepeat;
+    for(const auto& val : result){
+      if(resultWithoutRepeat.empty()){
+        resultWithoutRepeat.emplace_back(val->clone());
+        continue;
+      }
+      if(val->to<IComparable>() == resultWithoutRepeat.at(resultWithoutRepeat.size() - 1)->to<IComparable>()){
+        continue;
+      }
+      resultWithoutRepeat.emplace_back(val->clone());
+    }
+    return resultWithoutRepeat;
+  }
+
 }
