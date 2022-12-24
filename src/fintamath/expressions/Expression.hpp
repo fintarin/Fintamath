@@ -50,8 +50,16 @@ namespace fintamath {
 
     std::string solve(uint8_t precision) const;
 
+    // TODO: implement iterator & remove this
+    MathObjectPtr &getInfo();
+
+    // TODO: implement iterator & remove this
     const MathObjectPtr &getInfo() const;
 
+    // TODO: implement iterator & remove this
+    Expression::Vector &getChildren();
+
+    // TODO: implement iterator & remove this
     const Expression::Vector &getChildren() const;
 
     MathObjectPtr compress() const;

@@ -315,8 +315,16 @@ namespace fintamath {
     }
   }
 
+  MathObjectPtr &Expression::getInfo() {
+    return info;
+  }
+
   const MathObjectPtr &Expression::getInfo() const {
     return info;
+  }
+
+  Expression::Vector &Expression::getChildren() {
+    return children;
   }
 
   const Expression::Vector &Expression::getChildren() const {

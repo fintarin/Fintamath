@@ -58,6 +58,7 @@ namespace fintamath {
 
     std::string getClassName() const override;
 
+    // TODO: implement iterator & remove this
     const Polynom &getPolynom() const;
 
     void addElement(const Element &elem);

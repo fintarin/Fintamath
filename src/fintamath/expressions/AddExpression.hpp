@@ -61,6 +61,7 @@ namespace fintamath {
 
     void invert();
 
+    // TODO: implement iterator & remove this
     const Polynom &getPolynom() const;
 
     void addElement(const Element &elem);
