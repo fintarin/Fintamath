@@ -5,7 +5,11 @@ file(
   "fintamath/*.cpp"
   "fintamath/*.hpp")
 
-add_library(${PROJECT_NAME} ${SOURCES})
+if(${PROJECT_NAME}_build_shared)
+  add_library(${PROJECT_NAME} SHARED ${SOURCES})
+else()
+  add_library(${PROJECT_NAME} ${SOURCES})
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC .)
 

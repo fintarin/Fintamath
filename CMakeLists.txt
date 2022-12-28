@@ -14,12 +14,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(cmake/Coverage.cmake)
 include(cmake/Sanitizers.cmake)
 
+option(${PROJECT_NAME}_build_shared "Build shared" OFF)
+option(${PROJECT_NAME}_build_tests "Build tests" OFF)
+
 add_subdirectory(thirdparty)
 add_subdirectory(src)
 
 include(cmake/CompilerWarnings.cmake)
 
-option(${PROJECT_NAME}_build_tests "Build tests" OFF)
 if(${PROJECT_NAME}_build_tests)
   enable_testing()
   include(cmake/FetchGtest.cmake)
