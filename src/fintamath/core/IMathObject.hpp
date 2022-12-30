@@ -16,9 +16,9 @@ namespace fintamath {
   public:
     virtual ~IMathObject() = default;
 
-    virtual std::string toString() const = 0;
-
     virtual MathObjectPtr clone() const = 0;
+
+    virtual std::string toString() const;
 
     template <typename T>
     bool is() const {
@@ -44,6 +44,10 @@ namespace fintamath {
   protected:
     virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
   };
+
+  inline std::string IMathObject::toString() const {
+    return {};
+  }
 
   inline MathObjectPtr IMathObject::simplify() const {
     return clone();
@@ -73,7 +77,9 @@ namespace fintamath {
     }
 
   protected:
-    virtual bool equals(const Derived &rhs) const = 0;
+    virtual bool equals(const Derived &rhs) const {
+      return toString() == rhs.toString();
+    }
 
     bool equalsAbstract(const IMathObject &rhs) const final {
       if (rhs.is<Derived>()) {

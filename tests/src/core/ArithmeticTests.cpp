@@ -10,16 +10,7 @@ using namespace fintamath;
 
 namespace {
   class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
-  public:
-    std::string toString() const override {
-      return {};
-    }
-
   protected:
-    bool equals(const TestArithmetic & /* rhs */) const override {
-      return true;
-    }
-
     TestArithmetic &add(const TestArithmetic & /* rhs */) override {
       return *this;
     }

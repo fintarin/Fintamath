@@ -10,16 +10,7 @@ using namespace fintamath;
 
 namespace {
   class TestComparable : public IComparableCRTP<TestComparable> {
-  public:
-    std::string toString() const override {
-      return {};
-    }
-
   protected:
-    bool equals(const TestComparable & /* rhs */) const override {
-      return true;
-    }
-
     bool less(const TestComparable & /* rhs */) const override {
       return true;
     }

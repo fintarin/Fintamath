@@ -13,7 +13,7 @@ namespace fintamath {
   class IExpression;
   using ExpressionPtr = std::unique_ptr<IExpression>;
 
-  class IExpression : virtual public IMathObject { // TODO replace IMathObject to IArithmetic
+  class IExpression : virtual public IMathObject {
   public:
     ~IExpression() override = default;
 
@@ -72,11 +72,5 @@ namespace fintamath {
   }
 
   template <typename Derived>
-  class IExpressionCRTP : virtual public IExpression,
-                          virtual public IMathObjectCRTP<Derived> { // TODO replace IMathObjectCRTP to IArithmeticCRTP
-  protected:
-    bool equals(const Derived &rhs) const final {
-      return toString() == rhs.toString();
-    }
-  };
+  class IExpressionCRTP : virtual public IExpression, virtual public IMathObjectCRTP<Derived> {};
 }

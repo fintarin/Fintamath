@@ -31,9 +31,5 @@ namespace fintamath {
 
   template <typename Derived>
   class ILiteralCRTP : virtual public ILiteral, virtual public IMathObjectCRTP<Derived> {
-  protected:
-    bool equals(const Derived &rhs) const final {
-      return toString() == rhs.toString();
-    }
   };
 }

@@ -9,10 +9,6 @@ using namespace fintamath;
 namespace {
   class TestFunction : public IFunctionCRTP<TestFunction, IMathObject> {
   public:
-    std::string toString() const override {
-      return {};
-    }
-
     void throwException() const {
       throw FunctionCallException("func", {"a", "b", "c"});
     }

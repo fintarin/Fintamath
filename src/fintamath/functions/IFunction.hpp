@@ -95,10 +95,6 @@ namespace fintamath {
       return call(argsVect);
     }
 
-    bool equals(const Derived & /*rhs*/) const final {
-      return true;
-    }
-
   private:
     bool doesArgsSizeMatch(const ArgumentsVector &argsVect) const {
       return isTypeAny || argsVect.size() == sizeof...(Args);

@@ -9,17 +9,8 @@ using namespace fintamath;
 namespace {
   class TestMathObject : public IMathObjectCRTP<TestMathObject> {
   public:
-    std::string toString() const override {
-      return {};
-    }
-
     void throwException() const {
       throw Exception();
-    }
-
-  protected:
-    bool equals(const TestMathObject & /* rhs */) const override {
-      return true;
     }
   };
 }

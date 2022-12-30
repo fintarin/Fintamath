@@ -12,10 +12,6 @@ namespace {
     TestOperator() : IOperatorCRTP(IOperator::Priority::Addition) {
     }
 
-    std::string toString() const override {
-      return {};
-    }
-
     void throwException() const {
       throw UndefinedBinaryOpearatorException("^", "0", "0");
     }

@@ -11,15 +11,7 @@ using namespace fintamath;
 namespace {
   class TestModular : public IModularCRTP<TestModular> {
   public:
-    std::string toString() const override {
-      return {};
-    }
-
   protected:
-    bool equals(const TestModular & /* rhs */) const override {
-      return true;
-    }
-
     TestModular &mod(const TestModular & /* rhs */) override {
       return *this;
     }
