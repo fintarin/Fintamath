@@ -4,13 +4,6 @@
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 namespace fintamath {
-  Factorial::Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
-  }
-
-  std::string Factorial::toString() const {
-    return "!";
-  }
-
   Expression Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     const auto &rhs = argsVect.at(0).get();
 

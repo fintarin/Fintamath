@@ -5,13 +5,6 @@
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  MoreEqv::MoreEqv() : IOperatorCRTP(IOperator::Priority::Comparison) {
-  }
-
-  std::string MoreEqv::toString() const {
-    return ">=";
-  }
-
   Expression MoreEqv::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return Boolean(argsVect.at(0).get().to<IComparable>() >= argsVect.at(1).get().to<IComparable>());
   }

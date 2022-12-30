@@ -4,13 +4,6 @@
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 namespace fintamath {
-  DoubleFactorial::DoubleFactorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
-  }
-
-  std::string DoubleFactorial::toString() const {
-    return "!!";
-  }
-
   Expression DoubleFactorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     const auto &rhs = argsVect.at(0).get();
 

@@ -1,4 +1,4 @@
-#include "fintamath/config/ConverterConfig.hpp"
+#include "ConverterConfig.hpp"
 
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/numbers/Integer.hpp"

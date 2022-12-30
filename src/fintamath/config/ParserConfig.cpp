@@ -1,4 +1,4 @@
-#include "fintamath/config/ParserConfig.hpp"
+#include "ParserConfig.hpp"
 
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/AddExpression.hpp"

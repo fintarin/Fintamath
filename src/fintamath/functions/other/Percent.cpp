@@ -6,13 +6,6 @@
 namespace fintamath {
   constexpr int64_t PERCENT_VALUE = 100;
 
-  Percent::Percent() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
-  }
-
-  std::string Percent::toString() const {
-    return "%";
-  }
-
   Expression Percent::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     const auto &rhs = argsVect.at(0).get();
 

@@ -3,13 +3,6 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
-  Pow::Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation) {
-  }
-
-  std::string Pow::toString() const {
-    return "^";
-  }
-
   Expression naturalPow(const INumber &lhs, Integer rhs) {
     NumberPtr res = INumber::parse("1");
     NumberPtr tmpLhs = helpers::cast<INumber>(lhs.clone());

@@ -1,8 +1,8 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
+#include "NumberImpls.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
-#include "fintamath/numbers/NumberImpls.hpp"
 
 namespace fintamath {
   const Real E_NUM = RealImpl(default_ops::get_constant_e<RealImpl::Backend::backend_type>());
