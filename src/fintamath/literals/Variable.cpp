@@ -9,7 +9,7 @@ namespace fintamath {
 
   Variable::Variable(const std::string &str) {
     if (!isVariable(str)) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
 
     name = str;

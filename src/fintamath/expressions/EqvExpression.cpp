@@ -101,7 +101,7 @@ namespace fintamath {
     for (size_t i = 0; i < tokens.size(); i++) {
       if (tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == "=" || tokens[i] == ">=" || tokens[i] == ">") {
         if (eqvOpers) {
-          throw InvalidInputException(*this, " number of comparison operators exceeded");
+          throw InvalidInputException(" number of comparison operators exceeded");
         }
         eqvOpers = true;
       }
@@ -109,7 +109,7 @@ namespace fintamath {
 
     for (size_t i = 0; i < tokens.size(); i++) {
       if (tokens[i] == "(" && !skipBrackets(tokens, i)) {
-        throw InvalidInputException(*this, " braces must be closed");
+        throw InvalidInputException(" braces must be closed");
       }
       if (i == tokens.size()) {
         break;
@@ -118,7 +118,7 @@ namespace fintamath {
         continue;
       }
       if (i == tokens.size() - 1) {
-        throw InvalidInputException(*this, " unexpected sign");
+        throw InvalidInputException(" unexpected sign");
       }
 
       leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i));
@@ -126,11 +126,11 @@ namespace fintamath {
       oper = IOperator::parse(tokens[i]);
 
       if(!leftExpr || !rightExpr || !oper){
-        throw InvalidInputException(*this, tokensToString(tokens));
+        throw InvalidInputException(tokensToString(tokens));
       }
       return;
     }
-    throw InvalidInputException(*this, " not an EqvExpression");
+    throw InvalidInputException(" not an EqvExpression");
   }
 
   void EqvExpression::setPrecision(uint8_t precision) {

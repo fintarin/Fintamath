@@ -10,7 +10,7 @@ namespace fintamath {
 
   Boolean::Boolean(const std::string &str) {
     if (str != TRUE && str != FALSE) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
 
     name = str;

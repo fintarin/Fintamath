@@ -19,7 +19,7 @@ namespace {
     }
 
     void throwException() const {
-      throw InvalidInputException(Expression(), " unexpected sign");
+      throw InvalidInputException("123");
     }
 
   protected:
@@ -34,6 +34,6 @@ TEST(InvalidInputExceptionTests, whatTests) {
     TestMathObject().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), "Invalid input of Expression:  unexpected sign");
+    EXPECT_EQ(std::string(e.what()), "Invalid input: 123");
   }
 }

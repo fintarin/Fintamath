@@ -14,7 +14,7 @@ namespace fintamath {
 
   Rational::Rational(const std::string &str) {
     if (str.empty()) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
 
     parse(str);
@@ -194,7 +194,7 @@ namespace fintamath {
     try {
       intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
     } catch (const std::invalid_argument &) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
 
     if (size_t(firstDotNum) != str.size()) {
@@ -205,12 +205,12 @@ namespace fintamath {
         numerator = Integer(numeratorStr);
         denominator = Integer(denominatorStr);
       } catch (const std::invalid_argument &) {
-        throw InvalidInputException(*this, str);
+        throw InvalidInputException(str);
       }
     }
 
     if (intPart < 0 || numerator < 0) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
 
     toIrreducibleRational();

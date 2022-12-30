@@ -90,7 +90,7 @@ namespace fintamath {
   Expression::Expression(const std::string &str) {
     info = IExpression::parse(str);
     if (!info) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
     *this = Expression(*info->simplify());
   }
@@ -137,7 +137,7 @@ namespace fintamath {
   Expression::Expression(const TokenVector &tokens) {
     parse(tokens);
     if (!info) {
-      throw InvalidInputException(*this, tokenVectorToString(tokens));
+      throw InvalidInputException(tokenVectorToString(tokens));
     }
     //*this = Expression(*simplify());
   }
@@ -364,11 +364,11 @@ namespace fintamath {
 
   void Expression::parse(const TokenVector &tokens) {
     if (tokens.empty()) {
-      throw InvalidInputException(*this, " token is empty");
+      throw InvalidInputException(" token is empty");
     }
     if (tokens.at(0) == "*" || tokens.at(0) == "/"
     || tokens.at(tokens.size() -1) == "*" || tokens.at(tokens.size() - 1) == "/") {
-      throw InvalidInputException(*this, " unexpected sign");
+      throw InvalidInputException(" unexpected sign");
     }
 
     if (parseNeg(tokens)) {
@@ -404,7 +404,7 @@ namespace fintamath {
 
     for (const auto &child : children) {
       if (info == nullptr || child == nullptr) {
-        throw InvalidInputException(*this, tokensToString(tokens));
+        throw InvalidInputException(tokensToString(tokens));
       }
     }
   }
@@ -421,7 +421,7 @@ namespace fintamath {
 
     auto value = IExpression::parse(TokenVector(tokens.begin() + 1, tokens.end()));
     if (!value) {
-      throw InvalidInputException(*this, tokensToString(tokens));
+      throw InvalidInputException(tokensToString(tokens));
     }
 
     children.emplace_back(value->clone());
@@ -431,14 +431,14 @@ namespace fintamath {
   bool Expression::parsePow(const TokenVector &tokens) {
     for (size_t i = 0; i < tokens.size(); i++) {
       if (tokens.at(i) == "(" && !skipBrackets(tokens, i)) {
-        throw InvalidInputException(*this, " braces must be closed");
+        throw InvalidInputException(" braces must be closed");
       }
       if (i == tokens.size()) {
         break;
       }
       if (tokens.at(i) == "^") {
         if (i == tokens.size() - 1) {
-          throw InvalidInputException(*this, "too low operands for pow");
+          throw InvalidInputException("too low operands for pow");
         }
         info = std::make_unique<Pow>();
 
@@ -446,7 +446,7 @@ namespace fintamath {
         auto rightValue = IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end()));
 
         if (!leftValue || !rightValue) {
-          throw InvalidInputException(*this, tokenVectorToString(tokens));
+          throw InvalidInputException(tokenVectorToString(tokens));
         }
 
         children.emplace_back(leftValue->clone());
@@ -465,7 +465,7 @@ namespace fintamath {
 
     auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
     if (!value) {
-      throw InvalidInputException(*this, tokenVectorToString(tokens));
+      throw InvalidInputException(tokenVectorToString(tokens));
     }
     children.emplace_back(value->clone());
     return true;
@@ -480,7 +480,7 @@ namespace fintamath {
         info = std::make_unique<DoubleFactorial>();
         auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2));
         if (!result) {
-          throw InvalidInputException(*this, tokensToString(tokens));
+          throw InvalidInputException(tokensToString(tokens));
         }
         children.push_back(result->clone());
         return true;
@@ -488,7 +488,7 @@ namespace fintamath {
       info = std::make_unique<Factorial>();
       auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
       if (!result) {
-        throw InvalidInputException(*this, tokensToString(tokens));
+        throw InvalidInputException(tokensToString(tokens));
       }
       children.push_back(result->clone());
       return true;
@@ -500,7 +500,7 @@ namespace fintamath {
     if (tokens.at(0) == "(" && tokens.at(tokens.size() - 1) == ")") {
       info = IExpression::parse(cutBraces(tokens));
       if (!info) {
-        throw InvalidInputException(*this, tokenVectorToString(tokens));
+        throw InvalidInputException(tokenVectorToString(tokens));
       }
       if (info->is<Expression>()) {
         auto exprInfo = info->to<Expression>();
@@ -580,7 +580,7 @@ namespace fintamath {
           isBracketsSkip = true;
         }
         if (!skipBrackets(tokens, pos)) {
-          throw InvalidInputException(*this, " braces must be closed");
+          throw InvalidInputException(" braces must be closed");
         }
       }
 
@@ -593,12 +593,12 @@ namespace fintamath {
 
       if (tokens.at(pos) == ",") {
         if (pos == 0 || pos == tokens.size() - 1) {
-          throw InvalidInputException(*this, " incorrect use of a comma");
+          throw InvalidInputException(" incorrect use of a comma");
         }
 
         auto arg = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)pos));
         if (!arg) {
-          throw InvalidInputException(*this, tokenVectorToString(tokens));
+          throw InvalidInputException(tokenVectorToString(tokens));
         }
 
         args.emplace_back(arg->clone());
@@ -613,7 +613,7 @@ namespace fintamath {
 
     auto arg = IExpression::parse(tokens);
     if (!arg) {
-      throw InvalidInputException(*this, tokenVectorToString(tokens));
+      throw InvalidInputException(tokenVectorToString(tokens));
     }
 
     args.emplace_back(arg->clone());
@@ -622,12 +622,12 @@ namespace fintamath {
 
   TokenVector Expression::splitLiteral(const std::string &token, bool addMultiplyToEnd) {
     if (token.empty()) {
-      throw InvalidInputException(*this, "");
+      throw InvalidInputException("");
     }
     TokenVector tokens;
     for (const auto &var : token) {
       if (!isLetter(var)) {
-        throw InvalidInputException(*this, " incorrect variable");
+        throw InvalidInputException(" incorrect variable");
       }
       tokens.emplace_back(std::string(1, var));
       tokens.emplace_back("*");

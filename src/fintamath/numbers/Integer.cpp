@@ -36,7 +36,7 @@ namespace fintamath {
 
   Integer::Integer(std::string str) : Integer() {
     if (str.empty()) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
 
     // Remove leading zeros
@@ -55,7 +55,7 @@ namespace fintamath {
     try {
       impl->v.assign(str);
     } catch (const std::runtime_error &) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
   }
 

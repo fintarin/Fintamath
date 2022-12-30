@@ -49,7 +49,7 @@ namespace fintamath {
 
   Real::Real(std::string str) : Real() {
     if (str.empty()) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
 
     // Validate input and remove leading zeros
@@ -69,11 +69,11 @@ namespace fintamath {
         if (str[i] == '.') {
           dotsNum++;
         } else if (str[i] < '0' || str[i] > '9') {
-          throw InvalidInputException(*this, str);
+          throw InvalidInputException(str);
         }
 
         if (dotsNum > 1) {
-          throw InvalidInputException(*this, str);
+          throw InvalidInputException(str);
         }
       }
     }
@@ -81,7 +81,7 @@ namespace fintamath {
     try {
       impl->v.assign(str);
     } catch (const std::runtime_error &) {
-      throw InvalidInputException(*this, str);
+      throw InvalidInputException(str);
     }
   }
 

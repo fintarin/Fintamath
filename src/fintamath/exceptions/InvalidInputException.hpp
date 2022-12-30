@@ -9,18 +9,8 @@ namespace fintamath {
   public:
     ~InvalidInputException() override = default;
 
-    template <typename Obj>
-    InvalidInputException(const Obj &obj) {
-      content += " of " + obj.getClassName();
-    }
-
-    template <typename Obj>
-    InvalidInputException(const Obj &obj, const std::string &input) : InvalidInputException(obj) {
-      if (!input.empty()) {
-        content += ": " + input;
-      } else {
-        content += " (empty)";
-      }
+    InvalidInputException(const std::string &input) {
+      content += ": " + input;
     }
 
     const char *what() const noexcept override {

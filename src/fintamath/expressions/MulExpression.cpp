@@ -151,7 +151,7 @@ namespace fintamath {
     int lastSignPosition = -1;
     for (size_t i = 0; i < tokens.size(); i++) {
       if (tokens.at(i) == "(" && !skipBrackets(tokens, i)) {
-        throw InvalidInputException(*this, " braces must be closed");
+        throw InvalidInputException(" braces must be closed");
       }
       if (i == tokens.size()) {
         break;
@@ -160,19 +160,19 @@ namespace fintamath {
         continue;
       }
       if (i == tokens.size() - 1) {
-        throw InvalidInputException(*this, " unexpected sign");
+        throw InvalidInputException(" unexpected sign");
       }
       lastSignPosition = (int)i;
     }
     if (lastSignPosition == -1) {
-      throw InvalidInputException(*this, " not a MulExpression");
+      throw InvalidInputException(" not a MulExpression");
     }
 
     auto leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition));
     auto rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end()));
 
     if (!leftExpr || !rightExpr) {
-      throw InvalidInputException(*this, tokensToString(tokens));
+      throw InvalidInputException(tokensToString(tokens));
     }
 
     mulPolynom.emplace_back(Element(leftExpr->clone()));
