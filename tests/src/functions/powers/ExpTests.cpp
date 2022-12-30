@@ -30,6 +30,6 @@ TEST(ExpTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Exp>();
   EXPECT_EQ((*f)(Integer(3)).toString(),
             "20.085536923187667740928529654581717896987907838554150144378934229698845878091974");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1)), InvalidInputFunctionException);
 }

@@ -4,7 +4,7 @@
 
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/exceptions/InvalidInputFunctionException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/helpers/Parser.hpp"
 
@@ -85,7 +85,7 @@ namespace fintamath {
 
     Expression callAbstract(const ArgumentsVector &argsVect) const final {
       if (!doesArgsSizeMatch(argsVect)) {
-        throwFunctionCallException(argsVect);
+        throwInvalidInputFunctionException(argsVect);
       }
 
       if (!doAgsMatch(argsVect)) {
@@ -120,14 +120,14 @@ namespace fintamath {
       });
     }
 
-    void throwFunctionCallException(const ArgumentsVector &argsVect) const {
+    void throwInvalidInputFunctionException(const ArgumentsVector &argsVect) const {
       std::vector<std::string> argNamesVect(argsVect.size());
 
       for (size_t i = 0; i < argNamesVect.size(); i++) {
         argNamesVect.at(i) = argsVect.at(i).get().toString();
       }
 
-      throw FunctionCallException(toString(), argNamesVect);
+      throw InvalidInputFunctionException(toString(), argNamesVect);
     }
 
     bool isTypeAny;

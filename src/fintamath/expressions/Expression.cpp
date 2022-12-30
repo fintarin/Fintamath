@@ -12,7 +12,6 @@
 #include <stdexcept>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"

@@ -1,7 +1,6 @@
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
-#include "fintamath/exceptions/FunctionCallException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"

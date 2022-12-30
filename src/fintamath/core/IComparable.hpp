@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
 
 namespace fintamath {
   class IComparable;
@@ -76,7 +76,7 @@ namespace fintamath {
     }
 
   private:
-    bool executeAbstract(const IComparable &rhs, const std::string &excStr,
+    bool executeAbstract(const IComparable &rhs, const std::string &oper,
                          std::function<bool(const IComparableCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
                          std::function<bool(const IComparable &, const IComparable &)> &&f2) const {
       if (rhs.is<Derived>()) {
@@ -88,7 +88,7 @@ namespace fintamath {
       if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
         return f2(tmpLhs->to<IComparable>(), rhs);
       }
-      throw FunctionCallException(excStr, {toString(), rhs.toString()});
+      throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
     }
   };
 

@@ -7,6 +7,8 @@
 namespace fintamath {
   class InvalidInputException : public Exception {
   public:
+    InvalidInputException() = default;
+
     ~InvalidInputException() override = default;
 
     InvalidInputException(const std::string &input) {

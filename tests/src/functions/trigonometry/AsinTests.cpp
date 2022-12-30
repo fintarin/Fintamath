@@ -32,6 +32,6 @@ TEST(AsinTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Asin>();
   EXPECT_EQ((*f)(Rational(1, 10)).toString(),
             "0.10016742116155979634552317945269331856867597222962954139102385503640267365086255");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

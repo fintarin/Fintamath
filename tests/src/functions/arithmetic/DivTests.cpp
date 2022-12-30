@@ -4,6 +4,7 @@
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
+#include "fintamath/exceptions/InvalidInputFunctionException.hpp"
 
 using namespace fintamath;
 
@@ -28,8 +29,8 @@ TEST(DivTests, callTest) {
   EXPECT_EQ(Div()(Integer(3), Variable("a")).toString(), "3/a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Div>();
-  EXPECT_THROW((*o)(Integer(1)), FunctionCallException);
-  EXPECT_THROW((*o)(Rational(2, 3)), FunctionCallException);
-  EXPECT_THROW((*o)(), FunctionCallException);
-  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*o)(Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(Rational(2, 3)), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
 #include "fintamath/helpers/Caster.hpp"
 
 namespace fintamath {
@@ -47,7 +47,7 @@ namespace fintamath {
         auto res = (tmpLhs->to<IModular>() % rhs)->simplify();
         return helpers::cast<IModular>(res);
       }
-      throw FunctionCallException("%", {toString(), rhs.toString()});
+      throw InvalidInputBinaryOpearatorException("%", toString(), rhs.toString());
     }
   };
 

@@ -33,6 +33,6 @@ TEST(SinTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Sin>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "-0.54402111088936981340474766185137728168364301291622389157418401261675720964049343");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

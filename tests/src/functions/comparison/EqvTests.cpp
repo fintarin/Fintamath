@@ -30,8 +30,8 @@ TEST(EqvTests, callTest) {
   EXPECT_EQ(Eqv()(Variable("a"), Variable("a")).toString(), "true");
 
   std::unique_ptr<IOperator> o = std::make_unique<Eqv>();
-  EXPECT_THROW((*o)(Integer(1)), FunctionCallException);
-  EXPECT_THROW((*o)(Rational(2, 3)), FunctionCallException);
-  EXPECT_THROW((*o)(), FunctionCallException);
-  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*o)(Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(Rational(2, 3)), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

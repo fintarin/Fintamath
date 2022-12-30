@@ -10,7 +10,7 @@ namespace {
   class TestFunction : public IFunctionCRTP<TestFunction, IMathObject> {
   public:
     void throwException() const {
-      throw UndefinedFunctionException("sqrt", {"-10"});
+      throw UndefinedFunctionException("sqrt", {"-10", "a", "b"});
     }
 
   protected:
@@ -25,6 +25,6 @@ TEST(UndefinedFunctionExceptionTests, whatTests) {
     TestFunction().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), "Undefined: sqrt(-10)");
+    EXPECT_EQ(std::string(e.what()), "Undefined: sqrt(-10,a,b)");
   }
 }

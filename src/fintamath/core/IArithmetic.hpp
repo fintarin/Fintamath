@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
 #include "fintamath/helpers/Caster.hpp"
 
 namespace fintamath {
@@ -152,7 +152,7 @@ namespace fintamath {
     }
 
   private:
-    ArithmeticPtr executeAbstract(const IArithmetic &rhs, const std::string &excStr,
+    ArithmeticPtr executeAbstract(const IArithmetic &rhs, const std::string &oper,
                                   std::function<Derived(IArithmeticCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
                                   std::function<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> &&f2) const {
       if (rhs.is<Derived>()) {
@@ -166,7 +166,7 @@ namespace fintamath {
       if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
         return helpers::cast<IArithmetic>(f2(tmpLhs->to<IArithmetic>(), rhs)->simplify());
       }
-      throw FunctionCallException(excStr, {toString(), rhs.toString()});
+      throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
     }
 
     friend ArithmeticPtr multiDiv(const IArithmetic &lhs, const IArithmetic &rhs);

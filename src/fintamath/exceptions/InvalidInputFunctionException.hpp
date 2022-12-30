@@ -3,14 +3,14 @@
 #include <utility>
 #include <vector>
 
-#include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
-  class UndefinedFunctionException : public UndefinedException {
+  class InvalidInputFunctionException : public InvalidInputException {
   public:
-    ~UndefinedFunctionException() override = default;
+    ~InvalidInputFunctionException() override = default;
 
-    UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
+    InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
       content += ": " + func + "(";
 
       if (!argsVect.empty()) {

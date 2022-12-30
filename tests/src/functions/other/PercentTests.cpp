@@ -31,6 +31,6 @@ TEST(PercentTests, callTest) {
 
   std::unique_ptr<IFunction> f = std::make_unique<Percent>();
   EXPECT_EQ((*f)(Integer(10)).toString(), "1/10");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

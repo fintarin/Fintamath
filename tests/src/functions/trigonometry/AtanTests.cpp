@@ -31,6 +31,6 @@ TEST(AtanTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Atan>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "1.4711276743037345918528755717617308518553063771832382624719635193438804556955538");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

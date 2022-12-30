@@ -32,6 +32,6 @@ TEST(SqrtTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Sqrt>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "3.1622776601683793319988935444327185337195551393252168268575048527925944386392382");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

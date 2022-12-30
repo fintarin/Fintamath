@@ -75,8 +75,8 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(Pow()(Integer(3), Variable("a")).toString(), "3^a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Pow>();
-  EXPECT_THROW((*o)(Integer(1)), FunctionCallException);
-  EXPECT_THROW((*o)(Rational(2, 3)), FunctionCallException);
-  EXPECT_THROW((*o)(), FunctionCallException);
-  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*o)(Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(Rational(2, 3)), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(), InvalidInputFunctionException);
+  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

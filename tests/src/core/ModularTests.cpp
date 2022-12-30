@@ -2,7 +2,7 @@
 
 #include "fintamath/core/IModular.hpp"
 
-#include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -32,8 +32,8 @@ TEST(ModularTests, modTest) {
   EXPECT_TRUE((*m1 % *m2)->is<Integer>());
   EXPECT_TRUE((*m2 % *m1)->is<Integer>());
 
-  EXPECT_THROW(*m1 % TestModular(), FunctionCallException);
-  EXPECT_THROW(TestModular() % *m1, FunctionCallException);
+  EXPECT_THROW(*m1 % TestModular(), InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(TestModular() % *m1, InvalidInputBinaryOpearatorException);
 
   Integer a;
   EXPECT_EQ((a %= 3).toString(), "0");

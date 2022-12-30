@@ -32,6 +32,6 @@ TEST(AcosTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Acos>();
   EXPECT_EQ((*f)(Rational(1, 10)).toString(),
             "1.4706289056333368228857985121870581235299087274579233690964484411175055294922419");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/FunctionCallException.hpp"
+#include "fintamath/exceptions/InvalidInputFunctionException.hpp"
 
 #include "fintamath/functions/IFunction.hpp"
 
@@ -10,7 +10,7 @@ namespace {
   class TestFunction : public IFunctionCRTP<TestFunction, IMathObject> {
   public:
     void throwException() const {
-      throw FunctionCallException("func", {"a", "b", "c"});
+      throw InvalidInputFunctionException("sqrt", {"-10", "a", "b"});
     }
 
   protected:
@@ -20,11 +20,11 @@ namespace {
   };
 }
 
-TEST(FunctionCallExceptionTests, whatTests) {
+TEST(InvalidInputFunctionExceptionTests, whatTests) {
   try {
     TestFunction().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), "Unable to call func for arguments (a, b, c)");
+    EXPECT_EQ(std::string(e.what()), "Invalid input: sqrt(-10,a,b)");
   }
 }

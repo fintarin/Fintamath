@@ -45,10 +45,10 @@ TEST(FunctionTests, callTests) {
 
   EXPECT_EQ((*f)(a, Variable("a")).toString(), "a+3");
 
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(a), FunctionCallException);
-  EXPECT_THROW((*f)(a, a, a), FunctionCallException);
-  EXPECT_THROW((*f)(a, a, a, a, a, a, a), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(a), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(a, a, a), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(a, a, a, a, a, a, a), InvalidInputFunctionException);
 }
 
 TEST(FunctionTests, equalsTests) {

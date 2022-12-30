@@ -37,6 +37,6 @@ TEST(CotTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Cot>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "1.5423510453569200482774693556824293113206672064019624909194716061981945043136768");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

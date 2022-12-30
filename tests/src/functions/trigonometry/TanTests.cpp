@@ -37,6 +37,6 @@ TEST(TanTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Tan>();
   EXPECT_EQ((*f)(Integer(10)).toString(),
             "0.6483608274590866712591249330098086768168743429837249756336279673958556003746239");
-  EXPECT_THROW((*f)(), FunctionCallException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
+  EXPECT_THROW((*f)(), InvalidInputFunctionException);
+  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
