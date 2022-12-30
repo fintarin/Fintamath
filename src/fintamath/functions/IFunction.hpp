@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/FunctionCallException.hpp"
@@ -117,13 +119,9 @@ namespace fintamath {
     }
 
     bool doAnyArgsMatch(const ArgumentsVector &argsVect) const {
-      for (const auto &arg : argsVect) {
-        if ((!arg.get().instanceOf<Args>() && ...)) {
-          return false;
-        }
-      }
-
-      return true;
+      return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
+        return (arg.get().template instanceOf<Args>() || ...); //
+      });
     }
 
     void throwFunctionCallException(const ArgumentsVector &argsVect) const {
