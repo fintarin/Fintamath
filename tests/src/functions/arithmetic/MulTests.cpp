@@ -33,7 +33,3 @@ TEST(MulTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(MulTests, getClassNameTest) {
-  EXPECT_EQ(Mul().getClassName(), "Mul");
-}

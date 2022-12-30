@@ -56,8 +56,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::string getClassName() const override;
-
     // TODO: implement iterator & remove this
     const Polynom &getPolynom() const;
 
@@ -73,10 +71,9 @@ namespace fintamath {
 
     std::vector<MathObjectPtr> getVariables() const override;
 
-    MathObjectPtr getPowCoefficient(const MathObjectPtr& powValue) const;
-    
-    MathObjectPtr getPow() const;
+    MathObjectPtr getPowCoefficient(const MathObjectPtr &powValue) const;
 
+    MathObjectPtr getPow() const;
 
   private:
     void parse(const TokenVector &tokens);
@@ -93,7 +90,7 @@ namespace fintamath {
 
     static Polynom mulNumbers(const Polynom &numVect);
 
-    static void multiplicateBraces(const Polynom &addVect, Polynom& positive, Polynom& negative);
+    static void multiplicateBraces(const Polynom &addVect, Polynom &positive, Polynom &negative);
 
     static Polynom multiplicateTwoBraces(const Polynom &lhs, const Polynom &rhs);
 
@@ -109,6 +106,7 @@ namespace fintamath {
 
     using Objects = std::vector<ObjectPow>;
 
-    static void sortPowObjects(Objects &objs, Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
+    static void sortPowObjects(Objects &objs, Polynom &powVect, Polynom &addVect, Polynom &literalVect,
+                               Polynom &funcVect);
   };
 }

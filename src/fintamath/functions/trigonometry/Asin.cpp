@@ -7,10 +7,6 @@ namespace fintamath {
     return "asin";
   }
 
-  std::string Asin::getClassName() const {
-    return "Asin";
-  }
-
   Expression Asin::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return *asin(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }

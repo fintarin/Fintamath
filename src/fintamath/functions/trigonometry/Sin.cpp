@@ -7,10 +7,6 @@ namespace fintamath {
     return "sin";
   }
 
-  std::string Sin::getClassName() const {
-    return "Sin";
-  }
-
   Expression Sin::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return *sin(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }

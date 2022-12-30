@@ -30,7 +30,3 @@ TEST(NegTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(NegTests, getClassNameTest) {
-  EXPECT_EQ(Neg().getClassName(), "Neg");
-}

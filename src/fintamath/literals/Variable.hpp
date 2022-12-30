@@ -9,8 +9,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::string getClassName() const override;
-
   private:
     std::string name;
   };

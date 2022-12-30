@@ -117,10 +117,6 @@ namespace fintamath {
     return res;
   }
 
-  std::string Real::getClassName() const {
-    return "Real";
-  }
-
   MathObjectPtr Real::simplify() const {
     if (impl->v.backend().isfinite()) {
       if (std::string str = toString(); str.find('.') == std::string::npos && str.find('*') == std::string::npos) {

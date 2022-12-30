@@ -7,10 +7,6 @@ namespace fintamath {
     return "exp";
   }
 
-  std::string Exp::getClassName() const {
-    return "Exp";
-  }
-
   Expression Exp::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return *exp(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }

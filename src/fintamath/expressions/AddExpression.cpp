@@ -63,10 +63,6 @@ namespace fintamath {
   AddExpression::AddExpression(Polynom inAddPolynom) : addPolynom(std::move(inAddPolynom)) {
   }
 
-  std::string AddExpression::getClassName() const {
-    return "AddExpression";
-  }
-
   uint16_t AddExpression::getInfoPriority() {
     return (uint16_t)IOperator::Priority::Addition;
   }
@@ -180,16 +176,16 @@ namespace fintamath {
   }
 
   void AddExpression::Element::simplify(bool isPrecise) {
-    if(info->instanceOf<IExpression>()){
+    if (info->instanceOf<IExpression>()) {
       info = info->to<IExpression>().simplify(isPrecise);
       return;
     }
     if (info->instanceOf<IConstant>()) {
       auto constant = (*helpers::cast<IConstant>(info->clone()))().simplify();
-      if(!isPrecise || constant->to<INumber>().isPrecise()){
+      if (!isPrecise || constant->to<INumber>().isPrecise()) {
         info = constant->clone();
         return;
-      } 
+      }
       info = info->simplify();
       return;
     }
@@ -375,7 +371,9 @@ namespace fintamath {
         }
       }
       auto a = counter->toString();
-      mulVect.emplace_back(Element(MulExpression({MulExpression::Element(obj.obj->clone()), MulExpression::Element(counter->clone())}).simplify()));
+      mulVect.emplace_back(
+          Element(MulExpression({MulExpression::Element(obj.obj->clone()), MulExpression::Element(counter->clone())})
+                      .simplify()));
     }
   }
 
@@ -455,14 +453,14 @@ namespace fintamath {
 
   std::vector<MathObjectPtr> AddExpression::getVariables() const {
     std::vector<MathObjectPtr> result;
-    for(const auto& child : addPolynom){
-      if(child.info->is<Variable>()){
+    for (const auto &child : addPolynom) {
+      if (child.info->is<Variable>()) {
         result.emplace_back(child.info->clone());
         continue;
       }
-      if(child.info->instanceOf<IExpression>()){
+      if (child.info->instanceOf<IExpression>()) {
         auto addResult = child.info->to<IExpression>().getVariables();
-        for(const auto& add: addResult){
+        for (const auto &add : addResult) {
           result.emplace_back(add->clone());
         }
       }
@@ -470,66 +468,66 @@ namespace fintamath {
     return result;
   }
 
-    MathObjectPtr AddExpression::getPowCoefficient(const MathObjectPtr& powValue) const{
-      if(powValue->instanceOf<IComparable>() && powValue->to<IComparable>() == Integer(0)){
-        for(const auto& child : addPolynom){
-          if(child.info->instanceOf<INumber>()){
-            return child.toMathObject(false);
-          }
+  MathObjectPtr AddExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
+    if (powValue->instanceOf<IComparable>() && powValue->to<IComparable>() == Integer(0)) {
+      for (const auto &child : addPolynom) {
+        if (child.info->instanceOf<INumber>()) {
+          return child.toMathObject(false);
         }
       }
+    }
 
-      if(powValue->instanceOf<IComparable>() && powValue->to<IComparable>() == Integer(1)){
-        for(const auto& child : addPolynom){
-          if(child.info->is<Variable>()){
+    if (powValue->instanceOf<IComparable>() && powValue->to<IComparable>() == Integer(1)) {
+      for (const auto &child : addPolynom) {
+        if (child.info->is<Variable>()) {
+          return child.inverted ? Integer(-1).clone() : Integer(1).clone();
+        }
+      }
+    }
+
+    for (const auto &child : addPolynom) {
+      if (child.info->is<MulExpression>()) {
+        if (auto result = child.info->to<MulExpression>().getPowCoefficient(powValue->clone())) {
+          return child.inverted ? Neg()(*result->clone(), Integer(-1)).simplify() : result->clone();
+        }
+      }
+      if (child.info->is<Expression>()) {
+        if (child.info->to<Expression>().getInfo()->is<Pow>()) {
+          auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
+          if (rightVal->instanceOf<IComparable>() && powValue->instanceOf<IComparable>() &&
+              rightVal->to<IComparable>() == powValue->to<IComparable>()) {
             return child.inverted ? Integer(-1).clone() : Integer(1).clone();
           }
         }
       }
+    }
+    return Integer(0).clone();
+  }
 
-      for(const auto& child : addPolynom){
-        if(child.info->is<MulExpression>()){
-          if(auto result = child.info->to<MulExpression>().getPowCoefficient(powValue->clone())){
-              return child.inverted ? Neg()(*result->clone(), Integer(-1)).simplify() : result->clone();
-          }
+  MathObjectPtr AddExpression::getPow() const {
+    auto maxValue = Integer(0);
+    for (const auto &child : addPolynom) {
+      if (child.info->is<MulExpression>()) {
+        auto pow = child.info->to<MulExpression>().getPow();
+        if (pow->is<Integer>() && pow->to<Integer>() > maxValue) {
+          maxValue = pow->to<Integer>();
         }
-        if(child.info->is<Expression>()){
-          if(child.info->to<Expression>().getInfo()->is<Pow>()){
-            auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
-            if(rightVal->instanceOf<IComparable>() && powValue->instanceOf<IComparable>() && rightVal->to<IComparable>() == powValue->to<IComparable>()){
-              return child.inverted ? Integer(-1).clone() : Integer(1).clone();
-            }
+      }
+      if (child.info->is<Expression>()) {
+        if (child.info->to<Expression>().getInfo()->is<Pow>()) {
+          auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
+          if (rightVal->is<Integer>() && rightVal->to<Integer>() > maxValue) {
+            maxValue = rightVal->to<Integer>();
           }
         }
       }
-      return Integer(0).clone();
-    }
-
-    MathObjectPtr AddExpression::getPow() const {
-      auto maxValue = Integer(0);
-      for(const auto& child : addPolynom){
-        if(child.info->is<MulExpression>()){
-          auto pow = child.info->to<MulExpression>().getPow();
-          if(pow->is<Integer>() && pow->to<Integer>() > maxValue){
-            maxValue = pow->to<Integer>();
-          }
+      if (child.info->is<Variable>()) {
+        if (Integer(1) > maxValue) {
+          maxValue = Integer(1);
         }
-        if(child.info->is<Expression>()){
-          if(child.info->to<Expression>().getInfo()->is<Pow>()){
-            auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
-            if(rightVal->is<Integer>() && rightVal->to<Integer>() > maxValue){
-              maxValue = rightVal->to<Integer>();
-            }
-          }
-        } 
-        if(child.info->is<Variable>()){
-          if(Integer(1) > maxValue){
-            maxValue = Integer(1);
-          }
-        } 
       }
-      return maxValue.clone();
     }
-
+    return maxValue.clone();
+  }
 
 }

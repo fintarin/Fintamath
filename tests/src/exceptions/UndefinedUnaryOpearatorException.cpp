@@ -16,10 +16,6 @@ namespace {
       return {};
     }
 
-    std::string getClassName() const override {
-      return {};
-    }
-
     void throwException() const {
       throw UndefinedUnaryOpearatorException("!", "-10", UndefinedUnaryOpearatorException::Type::Postfix);
     }

@@ -7,10 +7,6 @@ namespace fintamath {
     return "ln";
   }
 
-  std::string Ln::getClassName() const {
-    return "Ln";
-  }
-
   Expression Ln::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return *ln(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }

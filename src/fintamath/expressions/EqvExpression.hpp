@@ -27,8 +27,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::string getClassName() const override;
-
     ~EqvExpression() override = default;
 
     MathObjectPtr simplify() const override;
@@ -43,7 +41,6 @@ namespace fintamath {
 
     MathObjectPtr simplify(bool isPrecise) const override;
 
-
   private:
     MathObjectPtr leftExpr;
     MathObjectPtr rightExpr;
@@ -51,11 +48,11 @@ namespace fintamath {
 
     void parse(const TokenVector &tokens);
 
-    std::vector<MathObjectPtr> solvePowEquation(const Variable& x) const;
-    std::vector<MathObjectPtr> solveQuadraticEquation(const MathObjectPtr& v) const;
+    std::vector<MathObjectPtr> solvePowEquation(const Variable &x) const;
+    std::vector<MathObjectPtr> solveQuadraticEquation(const MathObjectPtr &v) const;
 
-    static bool sortPredicat(const MathObjectPtr& lhs, const MathObjectPtr& rhs);
-    static std::vector<MathObjectPtr> sortResult(std::vector<MathObjectPtr>& result);
+    static bool sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
+    static std::vector<MathObjectPtr> sortResult(std::vector<MathObjectPtr> &result);
 
     bool detectOneVariable(Variable &v) const;
   };

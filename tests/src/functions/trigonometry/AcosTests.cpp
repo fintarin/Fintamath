@@ -35,7 +35,3 @@ TEST(AcosTests, callTest) {
   EXPECT_THROW((*f)(), FunctionCallException);
   EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(AcosTests, getClassNameTest) {
-  EXPECT_EQ(Acos().getClassName(), "Acos");
-}

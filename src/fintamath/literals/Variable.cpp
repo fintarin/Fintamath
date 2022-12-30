@@ -19,10 +19,6 @@ namespace fintamath {
     return name;
   }
 
-  std::string Variable::getClassName() const {
-    return "Variable";
-  }
-
   bool isVariable(const std::string &str) {
     if (str.size() != 1) {
       return false;

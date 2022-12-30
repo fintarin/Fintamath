@@ -7,10 +7,6 @@ namespace fintamath {
     return "pi";
   }
 
-  std::string Pi::getClassName() const {
-    return "Pi";
-  }
-
   Expression Pi::getValue() const {
     return PI_NUM;
   }

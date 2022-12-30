@@ -14,10 +14,6 @@ namespace {
       return {};
     }
 
-    std::string getClassName() const override {
-      return {};
-    }
-
     void throwException() const {
       throw InvalidInputException("123");
     }

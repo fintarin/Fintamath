@@ -80,7 +80,3 @@ TEST(PowTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(PowTests, getClassNameTest) {
-  EXPECT_EQ(Pow().getClassName(), "Pow");
-}

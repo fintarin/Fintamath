@@ -35,7 +35,3 @@ TEST(EqvTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(EqvTests, getClassNameTest) {
-  EXPECT_EQ(Eqv().getClassName(), "Eqv");
-}

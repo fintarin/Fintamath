@@ -44,8 +44,6 @@ namespace fintamath {
 
     MathObjectPtr simplify() const override;
 
-    std::string getClassName() const override;
-
     std::string solve() const;
 
     std::string solve(uint8_t precision) const;
@@ -75,7 +73,6 @@ namespace fintamath {
     std::vector<MathObjectPtr> getVariables() const override;
 
     void setPrecisionRec(uint8_t precision);
-
 
   protected:
     Expression &add(const Expression &rhs) override;
@@ -145,8 +142,5 @@ namespace fintamath {
 
     MathObjectPtr info;
     Vector children;
-
-    const std::vector<std::string> classNames = {getClassName(), AddExpression().getClassName(),
-                                                 MulExpression().getClassName()};
   };
 }

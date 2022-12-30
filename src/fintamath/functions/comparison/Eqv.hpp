@@ -10,8 +10,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::string getClassName() const override;
-
   protected:
     Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
   };

@@ -7,10 +7,6 @@ namespace fintamath {
     return "e";
   }
 
-  std::string E::getClassName() const {
-    return "E";
-  }
-
   Expression E::getValue() const {
     return E_NUM;
   }

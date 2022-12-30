@@ -11,8 +11,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::string getClassName() const override;
-
     operator bool() const;
 
   private:

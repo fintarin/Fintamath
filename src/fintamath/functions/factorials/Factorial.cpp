@@ -11,10 +11,6 @@ namespace fintamath {
     return "!";
   }
 
-  std::string Factorial::getClassName() const {
-    return "Factorial";
-  }
-
   Expression Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     const auto &rhs = argsVect.at(0).get();
 

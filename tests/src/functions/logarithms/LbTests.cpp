@@ -34,7 +34,3 @@ TEST(LbTests, callTest) {
   EXPECT_THROW((*f)(), FunctionCallException);
   EXPECT_THROW((*f)(Integer(10), Integer(10), Integer(10)), FunctionCallException);
 }
-
-TEST(LbTests, getClassNameTest) {
-  EXPECT_EQ(Lb().getClassName(), "Lb");
-}

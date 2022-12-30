@@ -35,7 +35,3 @@ TEST(LessEqvTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(LessEqvTests, getClassNameTest) {
-  EXPECT_EQ(LessEqv().getClassName(), "LessEqv");
-}

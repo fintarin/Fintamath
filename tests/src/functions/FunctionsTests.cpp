@@ -8,7 +8,8 @@
 using namespace fintamath;
 
 TEST(FunctionsTests, addTest) {
-  EXPECT_EQ(add(Variable("a"), -1, Expression("b^2")).toString(), "b^2+a+-1"); //TODO: fix toString in Expression, replace to b^2+a-1
+  EXPECT_EQ(add(Variable("a"), -1, Expression("b^2")).toString(),
+            "b^2+a+-1"); // TODO: fix toString in Expression, replace to b^2+a-1
   EXPECT_EQ(add(10, Expression("a+2")).toString(), "a+12");
   EXPECT_EQ(add(Variable("a"), Expression("a+2")).toString(), "2*a+2");
   EXPECT_EQ(add(Expression("b+2"), Expression("a+2")).toString(), "a+b+4");
@@ -21,8 +22,9 @@ TEST(FunctionsTests, mulTest) {
   EXPECT_EQ(mul(Variable("a"), -1, Expression("a*2")).toString(), "-2*a^2");
   EXPECT_EQ(mul(10, Expression("a+2")).toString(), "10*a+20");
   EXPECT_EQ(mul(Variable("a"), Expression("a^3+a^2")).toString(), "a^3+a^4");
-  EXPECT_EQ(mul(5, Expression("a+3"), Expression("a+2")).toString(), "25*a+5*a^2+30"); //TODO: replace to 2*a^2+25*a+30
-  EXPECT_EQ(mul(Expression("a+b"), Expression("3*b+c")).toString(), "3*a*b+3*b^2+a*c+b*c"); //TODO: replace to 3*b^2+3*a*b+a*c+b*c
+  EXPECT_EQ(mul(5, Expression("a+3"), Expression("a+2")).toString(), "25*a+5*a^2+30"); // TODO: replace to 2*a^2+25*a+30
+  EXPECT_EQ(mul(Expression("a+b"), Expression("3*b+c")).toString(),
+            "3*a*b+3*b^2+a*c+b*c"); // TODO: replace to 3*b^2+3*a*b+a*c+b*c
 }
 
 TEST(FunctionsTests, eqvTest) {
@@ -59,10 +61,10 @@ TEST(FunctionsTests, sqrtTest) {
 
 TEST(FunctionsTests, powTest) {
   EXPECT_EQ(pow(Expression("a+b"), Expression("0")).toString(), "1");
-  //TODO: uncomment this
-  // EXPECT_EQ(pow(Expression("a^4"), Expression("a")).toString(), "a^(4*a)");
-  // EXPECT_EQ(pow(Expression("a^4"), Expression("2")).toString(), "a^8");
-  // EXPECT_EQ(pow(Expression("a*b"), Expression("a+3")).toString(), "a^a*a^3*b^a*b^3");
+  // TODO: uncomment this
+  //  EXPECT_EQ(pow(Expression("a^4"), Expression("a")).toString(), "a^(4*a)");
+  //  EXPECT_EQ(pow(Expression("a^4"), Expression("2")).toString(), "a^8");
+  //  EXPECT_EQ(pow(Expression("a*b"), Expression("a+3")).toString(), "a^a*a^3*b^a*b^3");
   EXPECT_EQ(pow(Expression("a+2"), Expression("2")).toString(), "a^2+4*a+4");
 }
 
@@ -86,7 +88,7 @@ TEST(FunctionsTests, lnTest) {
 
 TEST(FunctionsTests, lbTest) {
   EXPECT_EQ(lb(Expression("1024*a")).toString(), "lb(1024*a)"); // TODO logarithms
-  EXPECT_EQ(ln(Expression("2+a")).toString(), "ln(a+2)"); // TODO logarithms
+  EXPECT_EQ(ln(Expression("2+a")).toString(), "ln(a+2)");       // TODO logarithms
 }
 
 TEST(FunctionsTests, lgTest) {
@@ -95,13 +97,13 @@ TEST(FunctionsTests, lgTest) {
 }
 
 TEST(FunctionsTests, sinTest) {
-  EXPECT_EQ(sin(Expression("5*pi")).toString(), "sin(5*pi)"); // TODO trigonometry
-  EXPECT_EQ(sin(Expression("pi/2")).toString(), "sin(1/2*pi)");// TODO trigonometry
+  EXPECT_EQ(sin(Expression("5*pi")).toString(), "sin(5*pi)");   // TODO trigonometry
+  EXPECT_EQ(sin(Expression("pi/2")).toString(), "sin(1/2*pi)"); // TODO trigonometry
   EXPECT_EQ(sin(Expression("a+b")).toString(), "sin(a+b)");
 }
 
 TEST(FunctionsTests, cosTest) {
-  EXPECT_EQ(cos(Expression("5*pi")).toString(), "cos(5*pi)"); // TODO trigonometry
+  EXPECT_EQ(cos(Expression("5*pi")).toString(), "cos(5*pi)");     // TODO trigonometry
   EXPECT_EQ(cos(Expression("3*pi/2")).toString(), "cos(3/2*pi)"); // TODO trigonometry
   EXPECT_EQ(cos(Expression("8*a")).toString(), "cos(8*a)");
 }

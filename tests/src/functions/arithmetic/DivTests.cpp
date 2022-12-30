@@ -33,7 +33,3 @@ TEST(DivTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(DivTests, getClassNameTest) {
-  EXPECT_EQ(Div().getClassName(), "Div");
-}

@@ -16,7 +16,3 @@ TEST(VariableTest, toStringTest) {
   EXPECT_EQ(Variable("a").toString(), "a");
   EXPECT_EQ(Variable("Z").toString(), "Z");
 }
-
-TEST(VariableTest, getClassNameTest) {
-  EXPECT_EQ(Variable("a").getClassName(), "Variable");
-}

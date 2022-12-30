@@ -95,10 +95,6 @@ namespace fintamath {
     return res;
   }
 
-  std::string Rational::getClassName() const {
-    return "Rational";
-  }
-
   MathObjectPtr Rational::simplify() const {
     if (denominator == 1) {
       return sign ? (-getInteger()).clone() : getInteger().clone();

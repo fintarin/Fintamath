@@ -8,10 +8,6 @@ namespace fintamath {
     return "-";
   }
 
-  std::string Neg::getClassName() const {
-    return "Neg";
-  }
-
   Expression Neg::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return *(-argsVect.at(0).get().to<IArithmetic>());
   }

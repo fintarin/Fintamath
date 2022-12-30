@@ -73,7 +73,8 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("abs(-5)").toString(), "5");
   EXPECT_EQ(Expression("abs((-5))").toString(), "5");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
-  EXPECT_EQ(Expression("1/10^-100").toString(), "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+  EXPECT_EQ(Expression("1/10^-100").toString(),
+            "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
   EXPECT_EQ(Expression("10^-1000").toString(), "10^(-1000)");
   EXPECT_EQ(Expression("e").toString(), "e");
@@ -223,7 +224,10 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
 }
 
 TEST(ExpressionTests, simplifyInpreciseTest) {
-  EXPECT_EQ(Expression("150!").simplify(false)->toString(), "57133839564458545904789328652610540031895535786011264182548375833179829124845398393126574488675311145377107878746854204162666250198684504466355949195922066574942592095735778929325357290444962472405416790722118445437122269675520000000000000000000000000000000000000");
+  EXPECT_EQ(Expression("150!").simplify(false)->toString(),
+            "5713383956445854590478932865261054003189553578601126418254837583317982912484539839312657448867531114537710"
+            "7878746854204162666250198684504466355949195922066574942592095735778929325357290444962472405416790722118445"
+            "437122269675520000000000000000000000000000000000000");
   EXPECT_EQ(Expression("10^-1000").simplify(false)->toString(), "1*10^-1000");
   EXPECT_EQ(Expression("e").simplify(false)->toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
@@ -322,11 +326,11 @@ TEST(ExpressionTests, simplifyInpreciseNegativeTest) {
   EXPECT_THROW(Expression("tan(3/2*pi)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("cot(2*pi)").simplify(false), UndefinedException);
 
-  //TODD: do no perform operation, when the result is too big
+  // TODD: do no perform operation, when the result is too big
   EXPECT_THROW(Expression("ln(ln(ln(ln(ln(e^e^e^e^e)))))").simplify(false), UndefinedException);
 }
 
-TEST(ExpressionTests, solveTest){
+TEST(ExpressionTests, solveTest) {
   EXPECT_EQ(Expression("x-10=0").solve(), "x in {10}");
   EXPECT_EQ(Expression("x<-10").solve(), "x+10<0");
   EXPECT_EQ(Expression("-10-x=0").solve(), "x in {-10}");
@@ -351,8 +355,4 @@ TEST(ExpressionTests, toStringPrecision) {
   EXPECT_EQ(Expression("9^10000").toString(8), "2.6613034*10^9542");
   EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
   EXPECT_EQ(Expression("sin(sin(e))").toString(30), "0.39932574404189139297067052142");
-}
-
-TEST(ExpressionTests, getClassNameTest) {
-  EXPECT_EQ(Expression().getClassName(), "Expression");
 }

@@ -13,10 +13,6 @@ namespace {
       return {};
     }
 
-    std::string getClassName() const override {
-      return {};
-    }
-
     void throwException() const {
       throw UndefinedException();
     }

@@ -35,7 +35,3 @@ TEST(FactorialTests, callTest) {
   EXPECT_THROW((*f)(), FunctionCallException);
   EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(FactorialTests, getClassNameTest) {
-  EXPECT_EQ(Factorial().getClassName(), "Factorial");
-}

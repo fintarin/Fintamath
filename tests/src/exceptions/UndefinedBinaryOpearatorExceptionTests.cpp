@@ -16,10 +16,6 @@ namespace {
       return {};
     }
 
-    std::string getClassName() const override {
-      return {};
-    }
-
     void throwException() const {
       throw UndefinedBinaryOpearatorException("^", "0", "0");
     }

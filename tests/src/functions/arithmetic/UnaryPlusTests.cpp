@@ -30,7 +30,3 @@ TEST(UnaryPlusTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(UnaryPlusTests, getClassNameTest) {
-  EXPECT_EQ(UnaryPlus().getClassName(), "UnaryPlus");
-}

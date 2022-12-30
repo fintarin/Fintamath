@@ -10,10 +10,6 @@ namespace fintamath {
     return "^";
   }
 
-  std::string Pow::getClassName() const {
-    return "Pow";
-  }
-
   Expression naturalPow(const INumber &lhs, Integer rhs) {
     NumberPtr res = INumber::parse("1");
     NumberPtr tmpLhs = helpers::cast<INumber>(lhs.clone());

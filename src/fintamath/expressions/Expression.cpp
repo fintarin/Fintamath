@@ -26,8 +26,8 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
-#include "fintamath/functions/comparison/LessEqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
+#include "fintamath/functions/comparison/LessEqv.hpp"
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
@@ -215,12 +215,12 @@ namespace fintamath {
   void Expression::simplifyConstant(bool isPrecise) {
     if (info->instanceOf<IConstant>()) {
       auto constant = (*helpers::cast<IConstant>(info->clone()))().simplify();
-      if(!isPrecise || constant->to<INumber>().isPrecise()){
+      if (!isPrecise || constant->to<INumber>().isPrecise()) {
         info = constant->clone();
         return;
-      } 
+      }
     }
-    if(info->instanceOf<IExpression>()){
+    if (info->instanceOf<IExpression>()) {
       info = info->to<IExpression>().simplify(isPrecise);
       return;
     }
@@ -229,7 +229,7 @@ namespace fintamath {
 
   void Expression::setPrecisionRec(uint8_t precision) {
     if (children.empty()) {
-        if (info->instanceOf<INumber>()) {
+      if (info->instanceOf<INumber>()) {
         info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
         return;
       }
@@ -267,7 +267,7 @@ namespace fintamath {
 
       if (func.doAgsMatch(args)) {
         auto countResult = func(args).info;
-        if(countResult->instanceOf<INumber>()) {
+        if (countResult->instanceOf<INumber>()) {
           info = helpers::Converter::convert(*countResult, Real())->to<Real>().precise(precision).clone();
           children.clear();
         }
@@ -284,12 +284,12 @@ namespace fintamath {
     for (auto &child : children) {
       if (child->instanceOf<IConstant>()) {
         auto constant = (*helpers::cast<IConstant>(child->clone()))().simplify();
-        if(!isPrecise || constant->to<INumber>().isPrecise()){
+        if (!isPrecise || constant->to<INumber>().isPrecise()) {
           child = constant->clone();
           continue;
-        } 
+        }
       }
-      if(child->instanceOf<IExpression>()){
+      if (child->instanceOf<IExpression>()) {
         child = child->to<IExpression>().simplify(isPrecise);
         continue;
       }
@@ -306,7 +306,7 @@ namespace fintamath {
 
       if (func.doAgsMatch(args)) {
         auto countResult = func(args).info;
-        if(countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
+        if (countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
           return;
         }
         info = countResult->clone();
@@ -366,8 +366,8 @@ namespace fintamath {
     if (tokens.empty()) {
       throw InvalidInputException(" token is empty");
     }
-    if (tokens.at(0) == "*" || tokens.at(0) == "/"
-    || tokens.at(tokens.size() -1) == "*" || tokens.at(tokens.size() - 1) == "/") {
+    if (tokens.at(0) == "*" || tokens.at(0) == "/" || tokens.at(tokens.size() - 1) == "*" ||
+        tokens.at(tokens.size() - 1) == "/") {
       throw InvalidInputException(" unexpected sign");
     }
 
@@ -710,7 +710,7 @@ namespace fintamath {
       return funcExpr;
     }
 
-    if(func.instanceOf<IOperator>() && func.to<IOperator>().getOperatorPriority() == IOperator::Priority::Comparison){
+    if (func.instanceOf<IOperator>() && func.to<IOperator>().getOperatorPriority() == IOperator::Priority::Comparison) {
       funcExpr.info = buildEqvExpression(func, args);
       return funcExpr;
     }
@@ -778,32 +778,29 @@ namespace fintamath {
     return simplify(true);
   }
 
-  std::string Expression::getClassName() const {
-    return "Expression";
-  }
-
   std::string Expression::solve(uint8_t precision) const {
-    if(info->is<EqvExpression>()){
+    if (info->is<EqvExpression>()) {
       return info->to<EqvExpression>().solve(precision);
     }
     return toString(precision);
   }
 
   std::string Expression::solve() const {
-    if(info->is<EqvExpression>()){
+    if (info->is<EqvExpression>()) {
       return info->to<EqvExpression>().solve();
     }
     return toString();
   }
 
-  void Expression::simplifyPow(){
-    if(!info->is<Pow>()){
+  void Expression::simplifyPow() {
+    if (!info->is<Pow>()) {
       return;
     }
-    if(children.at(1)->is<Integer>() && children.at(0)->instanceOf<IExpression>() && !children.at(0)->is<Expression>()){
+    if (children.at(1)->is<Integer>() && children.at(0)->instanceOf<IExpression>() &&
+        !children.at(0)->is<Expression>()) {
       Integer num = children.at(1)->to<Integer>();
       MulExpression mul;
-      for(Integer i = 0;i < num; i++){
+      for (Integer i = 0; i < num; i++) {
         mul.addElement(MulExpression::Element(children.at(0)->clone()));
       }
       info = mul.simplify();
@@ -813,25 +810,25 @@ namespace fintamath {
 
   std::vector<MathObjectPtr> Expression::getVariables() const {
     std::vector<MathObjectPtr> result;
-    if(info->is<Variable>()){
-        result.emplace_back(info->clone());
-        return result;
-      }
-    if(info->instanceOf<IExpression>()){
+    if (info->is<Variable>()) {
+      result.emplace_back(info->clone());
+      return result;
+    }
+    if (info->instanceOf<IExpression>()) {
       auto addResult = info->to<IExpression>().getVariables();
-      for(const auto& add: addResult){
+      for (const auto &add : addResult) {
         result.emplace_back(add->clone());
       }
       return result;
     }
-    for(const auto& child : children){
-      if(child->is<Variable>()){
+    for (const auto &child : children) {
+      if (child->is<Variable>()) {
         result.emplace_back(child->clone());
         continue;
       }
-      if(child->instanceOf<IExpression>()){
+      if (child->instanceOf<IExpression>()) {
         auto addResult = child->to<IExpression>().getVariables();
-        for(const auto& add: addResult){
+        for (const auto &add : addResult) {
           result.emplace_back(add->clone());
         }
       }

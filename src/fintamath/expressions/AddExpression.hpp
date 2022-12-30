@@ -55,8 +55,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::string getClassName() const override;
-
     ~AddExpression() override = default;
 
     void invert();
@@ -76,7 +74,7 @@ namespace fintamath {
 
     std::vector<MathObjectPtr> getVariables() const override;
 
-    MathObjectPtr getPowCoefficient(const MathObjectPtr& powValue) const;
+    MathObjectPtr getPowCoefficient(const MathObjectPtr &powValue) const;
 
     MathObjectPtr getPow() const;
 

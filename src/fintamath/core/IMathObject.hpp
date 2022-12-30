@@ -20,8 +20,6 @@ namespace fintamath {
 
     virtual MathObjectPtr clone() const = 0;
 
-    virtual std::string getClassName() const = 0;
-
     template <typename T>
     bool is() const {
       return typeid(*this) == typeid(T);

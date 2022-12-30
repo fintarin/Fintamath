@@ -35,7 +35,3 @@ TEST(MoreTests, callTest) {
   EXPECT_THROW((*o)(), FunctionCallException);
   EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), FunctionCallException);
 }
-
-TEST(MoreTests, getClassNameTest) {
-  EXPECT_EQ(More().getClassName(), "More");
-}

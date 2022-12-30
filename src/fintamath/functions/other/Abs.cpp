@@ -8,10 +8,6 @@ namespace fintamath {
     return "abs";
   }
 
-  std::string Abs::getClassName() const {
-    return "Abs";
-  }
-
   Expression Abs::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     const auto &rhs = argsVect.at(0).get().to<INumber>();
 

@@ -21,7 +21,7 @@ namespace fintamath {
         appendToken(tokens, letterToken);
         appendToken(tokens, specialToken);
 
-        if(!tokens.empty() && tokens.at(tokens.size() - 1) == ")"){
+        if (!tokens.empty() && tokens.at(tokens.size() - 1) == ")") {
           tokens.emplace_back("*");
         }
         continue;
@@ -34,14 +34,15 @@ namespace fintamath {
         }
         appendToken(tokens, specialToken);
 
-        if(!tokens.empty() && tokens.at(tokens.size() - 1) == ")"){
+        if (!tokens.empty() && tokens.at(tokens.size() - 1) == ")") {
           tokens.emplace_back("*");
         }
         continue;
       }
 
       if (isBracket(value)) {
-        if ((appendToken(tokens, digitToken) || (!tokens.empty() && tokens.at(tokens.size() - 1) == ")")) && isOpenBracket(value) && value == '(') {
+        if ((appendToken(tokens, digitToken) || (!tokens.empty() && tokens.at(tokens.size() - 1) == ")")) &&
+            isOpenBracket(value) && value == '(') {
           tokens.emplace_back("*");
         }
         appendToken(tokens, specialToken);
@@ -204,9 +205,8 @@ namespace fintamath {
     return obj->toString();
   }
 
-  std::vector<MathObjectPtr> IExpression::getVariables() const{
+  std::vector<MathObjectPtr> IExpression::getVariables() const {
     return {};
   }
-
 
 }

@@ -36,7 +36,3 @@ TEST(BooleanTests, opearatorsTest) {
   EXPECT_EQ(Boolean(false) || Boolean(true), true);
   EXPECT_EQ(Boolean(true) || Boolean(true), true);
 }
-
-TEST(BooleanTests, getClassNameTest) {
-  EXPECT_EQ(Boolean(true).getClassName(), "Boolean");
-}

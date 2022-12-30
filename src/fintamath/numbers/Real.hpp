@@ -38,8 +38,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::string getClassName() const override;
-
     MathObjectPtr simplify() const override;
 
     bool isPrecise() const override;

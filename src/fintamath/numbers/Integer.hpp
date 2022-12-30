@@ -33,8 +33,6 @@ namespace fintamath {
 
     std::string toString() const override;
 
-    std::string getClassName() const override;
-
     const std::unique_ptr<IntegerImpl> &getImpl() const;
 
   protected:

@@ -7,10 +7,6 @@ namespace fintamath {
     return "acos";
   }
 
-  std::string Acos::getClassName() const {
-    return "Acos";
-  }
-
   Expression Acos::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
     return *acos(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
   }

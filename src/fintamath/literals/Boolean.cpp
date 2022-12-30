@@ -23,10 +23,6 @@ namespace fintamath {
     return name;
   }
 
-  std::string Boolean::getClassName() const {
-    return "Boolean";
-  }
-
   Boolean::operator bool() const {
     return name == TRUE;
   }

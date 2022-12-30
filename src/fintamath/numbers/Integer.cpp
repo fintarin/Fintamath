@@ -67,10 +67,6 @@ namespace fintamath {
     return impl->v.str();
   }
 
-  std::string Integer::getClassName() const {
-    return "Integer";
-  }
-
   const std::unique_ptr<IntegerImpl> &Integer::getImpl() const {
     return impl;
   }
