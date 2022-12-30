@@ -6,31 +6,33 @@
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
-  class IConstant;
-  using ConstantPtr = std::unique_ptr<IConstant>;
 
-  class IConstant : virtual public ILiteral {
-  public:
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
-    static void addParser() {
-      helpers::addParser<T>(parserMap);
-    }
+class IConstant;
+using ConstantPtr = std::unique_ptr<IConstant>;
 
-    static ConstantPtr parse(const std::string &parsedStr) {
-      return helpers::parse<ConstantPtr>(parserMap, parsedStr, [](const ConstantPtr &) { return true; });
-    }
+class IConstant : virtual public ILiteral {
+public:
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
+  static void addParser() {
+    helpers::addParser<T>(parserMap);
+  }
 
-    Expression operator()() const {
-      return getValue();
-    }
+  static ConstantPtr parse(const std::string &parsedStr) {
+    return helpers::parse<ConstantPtr>(parserMap, parsedStr, [](const ConstantPtr &) { return true; });
+  }
 
-  protected:
-    virtual Expression getValue() const = 0;
+  Expression operator()() const {
+    return getValue();
+  }
 
-  private:
-    static helpers::ParserMap<ConstantPtr> parserMap;
-  };
+protected:
+  virtual Expression getValue() const = 0;
 
-  template <typename Derived>
-  class IConstantCRTP : virtual public IConstant, virtual public ILiteralCRTP<Derived> {};
+private:
+  static helpers::ParserMap<ConstantPtr> parserMap;
+};
+
+template <typename Derived>
+class IConstantCRTP : virtual public IConstant, virtual public ILiteralCRTP<Derived> {};
+
 }

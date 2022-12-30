@@ -7,20 +7,22 @@
 using namespace fintamath;
 
 namespace {
-  class TestOperator : public IOperatorCRTP<TestOperator, IMathObject, IMathObject> {
-  public:
-    TestOperator() : IOperatorCRTP(IOperator::Priority::Addition) {
-    }
 
-    void throwException() const {
-      throw UndefinedBinaryOpearatorException("^", "0", "0");
-    }
+class TestOperator : public IOperatorCRTP<TestOperator, IMathObject, IMathObject> {
+public:
+  TestOperator() : IOperatorCRTP(IOperator::Priority::Addition) {
+  }
 
-  protected:
-    virtual Expression call(const ArgumentsVector &argsVect) const override {
-      return {};
-    }
-  };
+  void throwException() const {
+    throw UndefinedBinaryOpearatorException("^", "0", "0");
+  }
+
+protected:
+  virtual Expression call(const ArgumentsVector &argsVect) const override {
+    return {};
+  }
+};
+
 }
 
 TEST(UndefinedBinaryOpearatorExceptionTests, whatTests) {

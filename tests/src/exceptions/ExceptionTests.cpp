@@ -7,12 +7,14 @@
 using namespace fintamath;
 
 namespace {
-  class TestMathObject : public IMathObjectCRTP<TestMathObject> {
-  public:
-    void throwException() const {
-      throw Exception();
-    }
-  };
+
+class TestMathObject : public IMathObjectCRTP<TestMathObject> {
+public:
+  void throwException() const {
+    throw Exception();
+  }
+};
+
 }
 
 TEST(ExceptionTests, whatTests) {

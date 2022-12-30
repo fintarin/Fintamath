@@ -5,15 +5,17 @@
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class Log : public IFunctionCRTP<Log, INumber, INumber> {
-  public:
-    Log() = default;
 
-    std::string toString() const {
-      return "log";
-    }
+class Log : public IFunctionCRTP<Log, INumber, INumber> {
+public:
+  Log() = default;
 
-  protected:
-    Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
-  };
+  std::string toString() const override {
+    return "log";
+  }
+
+protected:
+  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+};
+
 }

@@ -23,87 +23,89 @@
 #include "fintamath/literals/constants/Pi.hpp"
 
 namespace fintamath {
-  Expression eqv(const Expression &lhs, const Expression &rhs) {
-    return Eqv()(lhs, rhs);
-  }
 
-  Expression abs(const Expression &rhs) {
-    return Abs()(rhs);
-  }
+Expression eqv(const Expression &lhs, const Expression &rhs) {
+  return Eqv()(lhs, rhs);
+}
 
-  Expression factorial(const Expression &rhs) {
-    return Factorial()(rhs);
-  }
+Expression abs(const Expression &rhs) {
+  return Abs()(rhs);
+}
 
-  Expression doubleFactorial(const Expression &rhs) {
-    return DoubleFactorial()(rhs);
-  }
+Expression factorial(const Expression &rhs) {
+  return Factorial()(rhs);
+}
 
-  Expression sqrt(const Expression &rhs) {
-    return Sqrt()(rhs);
-  }
+Expression doubleFactorial(const Expression &rhs) {
+  return DoubleFactorial()(rhs);
+}
 
-  Expression pow(const Expression &lhs, const Expression &rhs) {
-    return Pow()(lhs, rhs);
-  }
+Expression sqrt(const Expression &rhs) {
+  return Sqrt()(rhs);
+}
 
-  Expression exp(const Expression &rhs) {
-    return Exp()(rhs);
-  }
+Expression pow(const Expression &lhs, const Expression &rhs) {
+  return Pow()(lhs, rhs);
+}
 
-  Expression log(const Expression &lhs, const Expression &rhs) {
-    return Log()(lhs, rhs);
-  }
+Expression exp(const Expression &rhs) {
+  return Exp()(rhs);
+}
 
-  Expression ln(const Expression &rhs) {
-    return Ln()(rhs);
-  }
+Expression log(const Expression &lhs, const Expression &rhs) {
+  return Log()(lhs, rhs);
+}
 
-  Expression lb(const Expression &rhs) {
-    return Lb()(rhs);
-  }
+Expression ln(const Expression &rhs) {
+  return Ln()(rhs);
+}
 
-  Expression lg(const Expression &rhs) {
-    return Lg()(rhs);
-  }
+Expression lb(const Expression &rhs) {
+  return Lb()(rhs);
+}
 
-  Expression sin(const Expression &rhs) {
-    return Sin()(rhs);
-  }
+Expression lg(const Expression &rhs) {
+  return Lg()(rhs);
+}
 
-  Expression cos(const Expression &rhs) {
-    return Cos()(rhs);
-  }
+Expression sin(const Expression &rhs) {
+  return Sin()(rhs);
+}
 
-  Expression tan(const Expression &rhs) {
-    return Tan()(rhs);
-  }
+Expression cos(const Expression &rhs) {
+  return Cos()(rhs);
+}
 
-  Expression cot(const Expression &rhs) {
-    return Cot()(rhs);
-  }
+Expression tan(const Expression &rhs) {
+  return Tan()(rhs);
+}
 
-  Expression asin(const Expression &rhs) {
-    return Asin()(rhs);
-  }
+Expression cot(const Expression &rhs) {
+  return Cot()(rhs);
+}
 
-  Expression acos(const Expression &rhs) {
-    return Acos()(rhs);
-  }
+Expression asin(const Expression &rhs) {
+  return Asin()(rhs);
+}
 
-  Expression atan(const Expression &rhs) {
-    return Atan()(rhs);
-  }
+Expression acos(const Expression &rhs) {
+  return Acos()(rhs);
+}
 
-  Expression acot(const Expression &rhs) {
-    return Acot()(rhs);
-  }
+Expression atan(const Expression &rhs) {
+  return Atan()(rhs);
+}
 
-  Expression e() {
-    return E();
-  }
+Expression acot(const Expression &rhs) {
+  return Acot()(rhs);
+}
 
-  Expression pi() {
-    return Pi();
-  }
+Expression e() {
+  return E();
+}
+
+Expression pi() {
+  return Pi();
+}
+
 }

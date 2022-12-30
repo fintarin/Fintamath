@@ -5,16 +5,18 @@
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class Pow : public IOperatorCRTP<Pow, INumber, INumber> {
-  public:
-    Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation) {
-    }
 
-    std::string toString() const {
-      return "^";
-    }
+class Pow : public IOperatorCRTP<Pow, INumber, INumber> {
+public:
+  Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation) {
+  }
 
-  protected:
-    Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
-  };
+  std::string toString() const override {
+    return "^";
+  }
+
+protected:
+  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+};
+
 }

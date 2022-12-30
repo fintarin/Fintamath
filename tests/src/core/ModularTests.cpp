@@ -9,13 +9,15 @@
 using namespace fintamath;
 
 namespace {
-  class TestModular : public IModularCRTP<TestModular> {
-  public:
-  protected:
-    TestModular &mod(const TestModular & /* rhs */) override {
-      return *this;
-    }
-  };
+
+class TestModular : public IModularCRTP<TestModular> {
+public:
+protected:
+  TestModular &mod(const TestModular & /* rhs */) override {
+    return *this;
+  }
+};
+
 }
 
 TEST(ModularTests, modTest) {

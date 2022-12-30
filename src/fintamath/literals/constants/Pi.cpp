@@ -3,7 +3,9 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
-  Expression Pi::getValue() const {
-    return PI_NUM;
-  }
+
+Expression Pi::getValue() const {
+  return PI_NUM;
+}
+
 }

@@ -6,26 +6,28 @@
 #include "fintamath/exceptions/UndefinedException.hpp"
 
 namespace fintamath {
-  class UndefinedFunctionException : public UndefinedException {
-  public:
-    ~UndefinedFunctionException() override = default;
 
-    UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
-      content += ": " + func + "(";
+class UndefinedFunctionException : public UndefinedException {
+public:
+  ~UndefinedFunctionException() override = default;
 
-      if (!argsVect.empty()) {
-        for (const auto &arg : argsVect) {
-          content += arg + ',';
-        }
+  UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
+    content += ": " + func + "(";
 
-        content.pop_back();
+    if (!argsVect.empty()) {
+      for (const auto &arg : argsVect) {
+        content += arg + ',';
       }
 
-      content += ")";
+      content.pop_back();
     }
 
-    const char *what() const noexcept override {
-      return content.c_str();
-    }
-  };
+    content += ")";
+  }
+
+  const char *what() const noexcept override {
+    return content.c_str();
+  }
+};
+
 }

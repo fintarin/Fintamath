@@ -8,12 +8,14 @@
 using namespace fintamath;
 
 namespace {
-  class TestMathObject : public IMathObjectCRTP<TestMathObject> {
-  public:
-    void throwException() const {
-      throw InvalidInputException("123");
-    }
-  };
+
+class TestMathObject : public IMathObjectCRTP<TestMathObject> {
+public:
+  void throwException() const {
+    throw InvalidInputException("123");
+  }
+};
+
 }
 
 TEST(InvalidInputExceptionTests, whatTests) {

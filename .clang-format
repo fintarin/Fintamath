@@ -1,6 +1,6 @@
 BasedOnStyle: LLVM
 ColumnLimit: 120
-NamespaceIndentation: All
+NamespaceIndentation: None
 AlwaysBreakTemplateDeclarations: true
 AllowShortFunctionsOnASingleLine: false
 FixNamespaceComments: false

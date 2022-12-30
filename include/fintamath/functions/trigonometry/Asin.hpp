@@ -5,15 +5,17 @@
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class Asin : public IFunctionCRTP<Asin, INumber> {
-  public:
-    Asin() = default;
 
-    std::string toString() const {
-      return "asin";
-    }
+class Asin : public IFunctionCRTP<Asin, INumber> {
+public:
+  Asin() = default;
 
-  protected:
-    Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
-  };
+  std::string toString() const override {
+    return "asin";
+  }
+
+protected:
+  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+};
+
 }

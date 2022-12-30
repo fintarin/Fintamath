@@ -3,69 +3,71 @@
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
-  class Rational : public INumberCRTP<Rational> {
-  public:
-    Rational() = default;
 
-    explicit Rational(const std::string &str);
+class Rational : public INumberCRTP<Rational> {
+public:
+  Rational() = default;
 
-    explicit Rational(Integer numerator, Integer denominator);
+  explicit Rational(const std::string &str);
 
-    Rational(Integer rhs);
+  explicit Rational(Integer numerator, Integer denominator);
 
-    Rational(int64_t rhs);
+  Rational(Integer rhs);
 
-    std::string toString() const override;
+  Rational(int64_t rhs);
 
-    MathObjectPtr simplify() const override;
+  std::string toString() const override;
 
-    Rational round(int64_t precision) const;
+  MathObjectPtr simplify() const override;
 
-    std::string toString(int64_t precision) const;
+  Rational round(int64_t precision) const;
 
-    Integer getInteger() const;
+  std::string toString(int64_t precision) const;
 
-    Integer getNumerator() const;
+  Integer getInteger() const;
 
-    Integer getDenominator() const;
+  Integer getNumerator() const;
 
-  protected:
-    bool equals(const Rational &rhs) const override;
+  Integer getDenominator() const;
 
-    bool less(const Rational &rhs) const override;
+protected:
+  bool equals(const Rational &rhs) const override;
 
-    bool more(const Rational &rhs) const override;
+  bool less(const Rational &rhs) const override;
 
-    Rational &add(const Rational &rhs) override;
+  bool more(const Rational &rhs) const override;
 
-    Rational &substract(const Rational &rhs) override;
+  Rational &add(const Rational &rhs) override;
 
-    Rational &multiply(const Rational &rhs) override;
+  Rational &substract(const Rational &rhs) override;
 
-    Rational &divide(const Rational &rhs) override;
+  Rational &multiply(const Rational &rhs) override;
 
-    Rational &negate() override;
+  Rational &divide(const Rational &rhs) override;
 
-    Rational &increase() override;
+  Rational &negate() override;
 
-    Rational &decrease() override;
+  Rational &increase() override;
 
-  private:
-    void parse(const std::string &str);
+  Rational &decrease() override;
 
-    void fixNegative();
+private:
+  void parse(const std::string &str);
 
-    void fixZero();
+  void fixNegative();
 
-    void toIrreducibleRational();
+  void fixZero();
 
-    void solvePrecision(const Rational &rhs);
+  void toIrreducibleRational();
 
-    static void toCommonDenominators(Rational &lhs, Rational &rhs);
+  void solvePrecision(const Rational &rhs);
 
-    Integer numerator = 0;
-    Integer denominator = 1;
-    bool sign{};
-    bool precise{true};
-  };
+  static void toCommonDenominators(Rational &lhs, Rational &rhs);
+
+  Integer numerator = 0;
+  Integer denominator = 1;
+  bool sign{};
+  bool precise{true};
+};
+
 }

@@ -2,9 +2,9 @@
 
 #include "fintamath/functions/arithmetic/Div.hpp"
 
+#include "fintamath/exceptions/InvalidInputFunctionException.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
-#include "fintamath/exceptions/InvalidInputFunctionException.hpp"
 
 using namespace fintamath;
 

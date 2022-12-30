@@ -49,71 +49,75 @@
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
-  helpers::ParserVector<NumberPtr, std::string> INumber::parserVector;
-  helpers::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
 
-  helpers::ParserVector<ExpressionPtr, TokenVector> IExpression::parserMap;
+helpers::ParserVector<NumberPtr, std::string> INumber::parserVector;
+helpers::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
 
-  helpers::ParserMap<ConstantPtr> IConstant::parserMap;
-  helpers::ParserMap<FunctionPtr> IFunction::parserMap;
-  helpers::ParserMap<OperatorPtr> IOperator::parserMap;
+helpers::ParserVector<ExpressionPtr, TokenVector> IExpression::parserMap;
+
+helpers::ParserMap<ConstantPtr> IConstant::parserMap;
+helpers::ParserMap<FunctionPtr> IFunction::parserMap;
+helpers::ParserMap<OperatorPtr> IOperator::parserMap;
+
 }
 
 namespace fintamath::config {
-  ParserConfig::ParserConfig() {
-    // numbers
-    INumber::addParser<Integer>();
-    INumber::addParser<Rational>();
 
-    // constants
-    IConstant::addParser<E>();
-    IConstant::addParser<Pi>();
+ParserConfig::ParserConfig() {
+  // numbers
+  INumber::addParser<Integer>();
+  INumber::addParser<Rational>();
 
-    // literals
-    ILiteral::addParser(&IConstant::parse);
-    ILiteral::addParser<Variable>();
-    ILiteral::addParser<Boolean>();
+  // constants
+  IConstant::addParser<E>();
+  IConstant::addParser<Pi>();
 
-    // operators
-    IOperator::addParser<Add>();
-    IOperator::addParser<Sub>();
-    IOperator::addParser<Mul>();
-    IOperator::addParser<Div>();
-    IOperator::addParser<Neg>();
-    IOperator::addParser<UnaryPlus>();
-    IOperator::addParser<Factorial>();
-    IOperator::addParser<DoubleFactorial>();
-    IOperator::addParser<Percent>();
-    IOperator::addParser<Pow>();
-    IOperator::addParser<Eqv>();
-    IOperator::addParser<Less>();
-    IOperator::addParser<More>();
-    IOperator::addParser<LessEqv>();
-    IOperator::addParser<MoreEqv>();
+  // literals
+  ILiteral::addParser(&IConstant::parse);
+  ILiteral::addParser<Variable>();
+  ILiteral::addParser<Boolean>();
 
-    // functions
-    IFunction::addParser<Abs>();
-    IFunction::addParser<Log>();
-    IFunction::addParser<Ln>();
-    IFunction::addParser<Lb>();
-    IFunction::addParser<Lg>();
-    IFunction::addParser<Exp>();
-    IFunction::addParser<Sqrt>();
-    IFunction::addParser<Sin>();
-    IFunction::addParser<Cos>();
-    IFunction::addParser<Tan>();
-    IFunction::addParser<Cot>();
-    IFunction::addParser<Asin>();
-    IFunction::addParser<Acos>();
-    IFunction::addParser<Atan>();
-    IFunction::addParser<Acot>();
+  // operators
+  IOperator::addParser<Add>();
+  IOperator::addParser<Sub>();
+  IOperator::addParser<Mul>();
+  IOperator::addParser<Div>();
+  IOperator::addParser<Neg>();
+  IOperator::addParser<UnaryPlus>();
+  IOperator::addParser<Factorial>();
+  IOperator::addParser<DoubleFactorial>();
+  IOperator::addParser<Percent>();
+  IOperator::addParser<Pow>();
+  IOperator::addParser<Eqv>();
+  IOperator::addParser<Less>();
+  IOperator::addParser<More>();
+  IOperator::addParser<LessEqv>();
+  IOperator::addParser<MoreEqv>();
 
-    // expressions
-    IExpression::addParser<EqvExpression>();
-    IExpression::addParser<AddExpression>();
-    IExpression::addParser<MulExpression>();
-    IExpression::addParser<Expression>();
-  }
+  // functions
+  IFunction::addParser<Abs>();
+  IFunction::addParser<Log>();
+  IFunction::addParser<Ln>();
+  IFunction::addParser<Lb>();
+  IFunction::addParser<Lg>();
+  IFunction::addParser<Exp>();
+  IFunction::addParser<Sqrt>();
+  IFunction::addParser<Sin>();
+  IFunction::addParser<Cos>();
+  IFunction::addParser<Tan>();
+  IFunction::addParser<Cot>();
+  IFunction::addParser<Asin>();
+  IFunction::addParser<Acos>();
+  IFunction::addParser<Atan>();
+  IFunction::addParser<Acot>();
 
-  static const ParserConfig config;
+  // expressions
+  IExpression::addParser<EqvExpression>();
+  IExpression::addParser<AddExpression>();
+  IExpression::addParser<MulExpression>();
+  IExpression::addParser<Expression>();
+}
+
+static const ParserConfig config;
+
 }

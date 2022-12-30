@@ -7,20 +7,22 @@
 using namespace fintamath;
 
 namespace {
-  class TestOperator : public IOperatorCRTP<TestOperator, IMathObject> {
-  public:
-    TestOperator() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
-    }
 
-    void throwException() const {
-      throw InvalidInputUnaryOpearatorException("!", "-10", InvalidInputUnaryOpearatorException::Type::Postfix);
-    }
+class TestOperator : public IOperatorCRTP<TestOperator, IMathObject> {
+public:
+  TestOperator() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
+  }
 
-  protected:
-    virtual Expression call(const ArgumentsVector &argsVect) const override {
-      return {};
-    }
-  };
+  void throwException() const {
+    throw InvalidInputUnaryOpearatorException("!", "-10", InvalidInputUnaryOpearatorException::Type::Postfix);
+  }
+
+protected:
+  virtual Expression call(const ArgumentsVector &argsVect) const override {
+    return {};
+  }
+};
+
 }
 
 TEST(InvalidInputUnaryOpearatorException, whatTests) {

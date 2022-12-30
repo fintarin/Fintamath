@@ -5,15 +5,17 @@
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class Cos : public IFunctionCRTP<Cos, INumber> {
-  public:
-    Cos() = default;
 
-    std::string toString() const {
-      return "cos";
-    }
+class Cos : public IFunctionCRTP<Cos, INumber> {
+public:
+  Cos() = default;
 
-  protected:
-    Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
-  };
+  std::string toString() const override {
+    return "cos";
+  }
+
+protected:
+  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+};
+
 }

@@ -9,136 +9,138 @@
 #include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
-  class IFunction;
 
-  class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
-  public:
-    using Vector = std::vector<MathObjectPtr>;
+class IFunction;
 
-  public:
-    Expression();
+class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
+public:
+  using Vector = std::vector<MathObjectPtr>;
 
-    Expression(const Expression &rhs) noexcept;
+public:
+  Expression();
 
-    Expression(Expression &&rhs) noexcept;
+  Expression(const Expression &rhs) noexcept;
 
-    Expression &operator=(const Expression &rhs) noexcept;
+  Expression(Expression &&rhs) noexcept;
 
-    Expression &operator=(Expression &&rhs) noexcept;
+  Expression &operator=(const Expression &rhs) noexcept;
 
-    ~Expression() override = default;
+  Expression &operator=(Expression &&rhs) noexcept;
 
-    explicit Expression(const TokenVector &tokens);
+  ~Expression() override = default;
 
-    explicit Expression(const std::string &str);
+  explicit Expression(const TokenVector &tokens);
 
-    Expression(const IMathObject &obj);
+  explicit Expression(const std::string &str);
 
-    Expression(int64_t val);
+  Expression(const IMathObject &obj);
 
-    std::string toString() const override;
+  Expression(int64_t val);
 
-    std::string toString(uint8_t precision) const;
+  std::string toString() const override;
 
-    MathObjectPtr simplify() const override;
+  std::string toString(uint8_t precision) const;
 
-    std::string solve() const;
+  MathObjectPtr simplify() const override;
 
-    std::string solve(uint8_t precision) const;
+  std::string solve() const;
 
-    // TODO: implement iterator & remove this
-    MathObjectPtr &getInfo();
+  std::string solve(uint8_t precision) const;
 
-    // TODO: implement iterator & remove this
-    const MathObjectPtr &getInfo() const;
+  // TODO: implement iterator & remove this
+  MathObjectPtr &getInfo();
 
-    // TODO: implement iterator & remove this
-    Expression::Vector &getChildren();
+  // TODO: implement iterator & remove this
+  const MathObjectPtr &getInfo() const;
 
-    // TODO: implement iterator & remove this
-    const Expression::Vector &getChildren() const;
+  // TODO: implement iterator & remove this
+  Expression::Vector &getChildren();
 
-    MathObjectPtr compress() const;
+  // TODO: implement iterator & remove this
+  const Expression::Vector &getChildren() const;
 
-    static Expression buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+  MathObjectPtr compress() const;
 
-    uint16_t getInfoPriority() override;
+  static Expression buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
-    void setPrecision(uint8_t precision) override;
+  uint16_t getInfoPriority() override;
 
-    MathObjectPtr simplify(bool isPrecise) const override;
+  void setPrecision(uint8_t precision) override;
 
-    std::vector<MathObjectPtr> getVariables() const override;
+  MathObjectPtr simplify(bool isPrecise) const override;
 
-    void setPrecisionRec(uint8_t precision);
+  std::vector<MathObjectPtr> getVariables() const override;
 
-  protected:
-    Expression &add(const Expression &rhs) override;
+  void setPrecisionRec(uint8_t precision);
 
-    Expression &substract(const Expression &rhs) override;
+protected:
+  Expression &add(const Expression &rhs) override;
 
-    Expression &multiply(const Expression &rhs) override;
+  Expression &substract(const Expression &rhs) override;
 
-    Expression &divide(const Expression &rhs) override;
+  Expression &multiply(const Expression &rhs) override;
 
-    Expression &negate() override;
+  Expression &divide(const Expression &rhs) override;
 
-  private:
-    static Expression buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+  Expression &negate() override;
 
-    static ExpressionPtr buildAddExpression(const IFunction &func, const ArgumentsVector &args);
+private:
+  static Expression buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
-    static ExpressionPtr buildMulExpression(const IFunction &func, const ArgumentsVector &args);
+  static ExpressionPtr buildAddExpression(const IFunction &func, const ArgumentsVector &args);
 
-    static ExpressionPtr buildEqvExpression(const IFunction &func, const ArgumentsVector &args);
+  static ExpressionPtr buildMulExpression(const IFunction &func, const ArgumentsVector &args);
 
-    static Vector copy(const Vector &rhs);
+  static ExpressionPtr buildEqvExpression(const IFunction &func, const ArgumentsVector &args);
 
-    Expression &compressTree();
+  static Vector copy(const Vector &rhs);
 
-    void parse(const TokenVector &tokens);
+  Expression &compressTree();
 
-    bool parseNeg(const TokenVector &tokens);
+  void parse(const TokenVector &tokens);
 
-    bool parsePow(const TokenVector &tokens);
+  bool parseNeg(const TokenVector &tokens);
 
-    bool parsePercent(const TokenVector &tokens);
+  bool parsePow(const TokenVector &tokens);
 
-    bool parseFactorial(const TokenVector &tokens);
+  bool parsePercent(const TokenVector &tokens);
 
-    bool parseFiniteTerm(const TokenVector &tokens);
+  bool parseFactorial(const TokenVector &tokens);
 
-    bool parseFunction(const TokenVector &tokens);
+  bool parseFiniteTerm(const TokenVector &tokens);
 
-    bool parseLiteral(const TokenVector &tokens);
+  bool parseFunction(const TokenVector &tokens);
 
-    bool parseNumber(const TokenVector &tokens);
+  bool parseLiteral(const TokenVector &tokens);
 
-    Vector getArgs(const TokenVector &tokens);
+  bool parseNumber(const TokenVector &tokens);
 
-    TokenVector splitLiteral(const std::string &token, bool addMultiplyToEnd = false);
+  Vector getArgs(const TokenVector &tokens);
 
-    std::string binaryOperatorToString() const;
+  TokenVector splitLiteral(const std::string &token, bool addMultiplyToEnd = false);
 
-    std::string prefixUnaryOperatorToString() const;
+  std::string binaryOperatorToString() const;
 
-    std::string postfixUnaryOperatorToString() const;
+  std::string prefixUnaryOperatorToString() const;
 
-    std::string functionToString() const;
+  std::string postfixUnaryOperatorToString() const;
 
-    void simplifyFunctionsRec(bool isPrecise);
+  std::string functionToString() const;
 
-    void simplifyConstant(bool isPrecise);
+  void simplifyFunctionsRec(bool isPrecise);
 
-    void simplifyPow();
+  void simplifyConstant(bool isPrecise);
 
-    static Expression simplifyPrefixUnaryOperator(Expression expr);
+  void simplifyPow();
 
-    static Expression simplifyNeg(Expression expr);
+  static Expression simplifyPrefixUnaryOperator(Expression expr);
 
-    static Expression simplifyPow(Expression expr);
+  static Expression simplifyNeg(Expression expr);
 
-    MathObjectPtr info;
-    Vector children;
-  };
+  static Expression simplifyPow(Expression expr);
+
+  MathObjectPtr info;
+  Vector children;
+};
+
 }

@@ -9,28 +9,30 @@
 using namespace fintamath;
 
 namespace {
-  class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
-  protected:
-    TestArithmetic &add(const TestArithmetic & /* rhs */) override {
-      return *this;
-    }
 
-    TestArithmetic &substract(const TestArithmetic & /* rhs */) override {
-      return *this;
-    }
+class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
+protected:
+  TestArithmetic &add(const TestArithmetic & /* rhs */) override {
+    return *this;
+  }
 
-    TestArithmetic &multiply(const TestArithmetic & /* rhs */) override {
-      return *this;
-    }
+  TestArithmetic &substract(const TestArithmetic & /* rhs */) override {
+    return *this;
+  }
 
-    TestArithmetic &divide(const TestArithmetic & /* rhs */) override {
-      return *this;
-    }
+  TestArithmetic &multiply(const TestArithmetic & /* rhs */) override {
+    return *this;
+  }
 
-    TestArithmetic &negate() override {
-      return *this;
-    }
-  };
+  TestArithmetic &divide(const TestArithmetic & /* rhs */) override {
+    return *this;
+  }
+
+  TestArithmetic &negate() override {
+    return *this;
+  }
+};
+
 }
 
 TEST(ArithmeticTests, addTest) {

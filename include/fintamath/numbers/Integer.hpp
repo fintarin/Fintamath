@@ -9,56 +9,58 @@
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-  class IntegerImpl;
 
-  class Integer : public INumberCRTP<Integer>, public IModularCRTP<Integer> {
-  public:
-    Integer();
+class IntegerImpl;
 
-    Integer(const Integer &rhs);
+class Integer : public INumberCRTP<Integer>, public IModularCRTP<Integer> {
+public:
+  Integer();
 
-    Integer(Integer &&rhs) noexcept;
+  Integer(const Integer &rhs);
 
-    Integer &operator=(const Integer &rhs);
+  Integer(Integer &&rhs) noexcept;
 
-    Integer &operator=(Integer &&rhs) noexcept;
+  Integer &operator=(const Integer &rhs);
 
-    ~Integer() override;
+  Integer &operator=(Integer &&rhs) noexcept;
 
-    Integer(const IntegerImpl &impl);
+  ~Integer() override;
 
-    explicit Integer(std::string str);
+  Integer(const IntegerImpl &impl);
 
-    Integer(int64_t val);
+  explicit Integer(std::string str);
 
-    std::string toString() const override;
+  Integer(int64_t val);
 
-    const std::unique_ptr<IntegerImpl> &getImpl() const;
+  std::string toString() const override;
 
-  protected:
-    bool equals(const Integer &rhs) const override;
+  const std::unique_ptr<IntegerImpl> &getImpl() const;
 
-    bool less(const Integer &rhs) const override;
+protected:
+  bool equals(const Integer &rhs) const override;
 
-    bool more(const Integer &rhs) const override;
+  bool less(const Integer &rhs) const override;
 
-    Integer &add(const Integer &rhs) override;
+  bool more(const Integer &rhs) const override;
 
-    Integer &substract(const Integer &rhs) override;
+  Integer &add(const Integer &rhs) override;
 
-    Integer &multiply(const Integer &rhs) override;
+  Integer &substract(const Integer &rhs) override;
 
-    Integer &divide(const Integer &rhs) override;
+  Integer &multiply(const Integer &rhs) override;
 
-    Integer &mod(const Integer &rhs) override;
+  Integer &divide(const Integer &rhs) override;
 
-    Integer &negate() override;
+  Integer &mod(const Integer &rhs) override;
 
-    Integer &increase() override;
+  Integer &negate() override;
 
-    Integer &decrease() override;
+  Integer &increase() override;
 
-  private:
-    std::unique_ptr<IntegerImpl> impl;
-  };
+  Integer &decrease() override;
+
+private:
+  std::unique_ptr<IntegerImpl> impl;
+};
+
 }

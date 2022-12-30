@@ -9,16 +9,18 @@
 using namespace fintamath;
 
 namespace {
-  class TestComparable : public IComparableCRTP<TestComparable> {
-  protected:
-    bool less(const TestComparable & /* rhs */) const override {
-      return true;
-    }
 
-    bool more(const TestComparable & /* rhs */) const override {
-      return true;
-    }
-  };
+class TestComparable : public IComparableCRTP<TestComparable> {
+protected:
+  bool less(const TestComparable & /* rhs */) const override {
+    return true;
+  }
+
+  bool more(const TestComparable & /* rhs */) const override {
+    return true;
+  }
+};
+
 }
 
 TEST(ComparableTests, lessTest) {

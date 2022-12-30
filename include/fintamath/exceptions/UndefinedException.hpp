@@ -5,21 +5,23 @@
 #include "fintamath/exceptions/Exception.hpp"
 
 namespace fintamath {
-  class UndefinedException : public Exception {
-  public:
-    UndefinedException() = default;
 
-    ~UndefinedException() override = default;
+class UndefinedException : public Exception {
+public:
+  UndefinedException() = default;
 
-    UndefinedException(const std::string &input) {
-      content += ": " + input;
-    }
+  ~UndefinedException() override = default;
 
-    const char *what() const noexcept override {
-      return content.c_str();
-    }
+  UndefinedException(const std::string &input) {
+    content += ": " + input;
+  }
 
-  protected:
-    std::string content = "Undefined";
-  };
+  const char *what() const noexcept override {
+    return content.c_str();
+  }
+
+protected:
+  std::string content = "Undefined";
+};
+
 }

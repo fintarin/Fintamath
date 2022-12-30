@@ -3,19 +3,21 @@
 #include "fintamath/literals/ILiteral.hpp"
 
 namespace fintamath {
-  class Boolean : public ILiteralCRTP<Boolean> {
-  public:
-    explicit Boolean(const std::string &str);
 
-    Boolean(bool val);
+class Boolean : public ILiteralCRTP<Boolean> {
+public:
+  explicit Boolean(const std::string &str);
 
-    std::string toString() const override;
+  Boolean(bool val);
 
-    operator bool() const;
+  std::string toString() const override;
 
-  private:
-    void parse(const std::string &str);
+  operator bool() const;
 
-    std::string name;
-  };
+private:
+  void parse(const std::string &str);
+
+  std::string name;
+};
+
 }

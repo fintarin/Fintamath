@@ -4,83 +4,85 @@
 #include "fintamath/helpers/Caster.hpp"
 
 namespace fintamath {
-  class IIncremental;
-  using IncrementalPtr = std::unique_ptr<IIncremental>;
 
-  class IIncremental : virtual public IMathObject {
-  public:
-    friend IIncremental &operator++(IIncremental &rhs);
+class IIncremental;
+using IncrementalPtr = std::unique_ptr<IIncremental>;
 
-    friend IIncremental &operator--(IIncremental &rhs);
+class IIncremental : virtual public IMathObject {
+public:
+  friend IIncremental &operator++(IIncremental &rhs);
 
-    friend IncrementalPtr operator++(IIncremental &lhs, int);
+  friend IIncremental &operator--(IIncremental &rhs);
 
-    friend IncrementalPtr operator--(IIncremental &lhs, int);
+  friend IncrementalPtr operator++(IIncremental &lhs, int);
 
-  protected:
-    virtual IIncremental &increaseAbstract() = 0;
+  friend IncrementalPtr operator--(IIncremental &lhs, int);
 
-    virtual IIncremental &decreaseAbstract() = 0;
-  };
+protected:
+  virtual IIncremental &increaseAbstract() = 0;
 
-  inline IIncremental &operator++(IIncremental &rhs) {
-    return rhs.increaseAbstract();
+  virtual IIncremental &decreaseAbstract() = 0;
+};
+
+inline IIncremental &operator++(IIncremental &rhs) {
+  return rhs.increaseAbstract();
+}
+
+inline IIncremental &operator--(IIncremental &rhs) {
+  return rhs.decreaseAbstract();
+}
+
+inline IncrementalPtr operator++(IIncremental &lhs, int) {
+  auto tmp = lhs.clone();
+  auto res = helpers::cast<IIncremental>(tmp);
+  lhs.increaseAbstract();
+  return res;
+}
+
+inline IncrementalPtr operator--(IIncremental &lhs, int) {
+  auto tmp = lhs.clone();
+  auto res = helpers::cast<IIncremental>(tmp);
+  lhs.decreaseAbstract();
+  return res;
+}
+
+template <typename Derived>
+class IIncrementalCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IIncremental {
+public:
+  Derived &operator++() {
+    return increase();
   }
 
-  inline IIncremental &operator--(IIncremental &rhs) {
-    return rhs.decreaseAbstract();
+  Derived &operator--() {
+    return decrease();
   }
 
-  inline IncrementalPtr operator++(IIncremental &lhs, int) {
-    auto tmp = lhs.clone();
-    auto res = helpers::cast<IIncremental>(tmp);
-    lhs.increaseAbstract();
-    return res;
+  Derived operator++(int) {
+    auto tmp = Derived(to<Derived>());
+    increase();
+    return tmp;
   }
 
-  inline IncrementalPtr operator--(IIncremental &lhs, int) {
-    auto tmp = lhs.clone();
-    auto res = helpers::cast<IIncremental>(tmp);
-    lhs.decreaseAbstract();
-    return res;
+  Derived operator--(int) {
+    auto tmp = Derived(to<Derived>());
+    decrease();
+    return tmp;
   }
 
-  template <typename Derived>
-  class IIncrementalCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IIncremental {
-  public:
-    Derived &operator++() {
-      return increase();
-    }
+protected:
+  virtual Derived &increase() = 0;
 
-    Derived &operator--() {
-      return decrease();
-    }
+  virtual Derived &decrease() = 0;
 
-    Derived operator++(int) {
-      auto tmp = Derived(to<Derived>());
-      increase();
-      return tmp;
-    }
+  IIncremental &increaseAbstract() final {
+    increase();
+    return *this;
+  }
 
-    Derived operator--(int) {
-      auto tmp = Derived(to<Derived>());
-      decrease();
-      return tmp;
-    }
+  IIncremental &decreaseAbstract() final {
+    decrease();
+    return *this;
+  }
+};
 
-  protected:
-    virtual Derived &increase() = 0;
-
-    virtual Derived &decrease() = 0;
-
-    IIncremental &increaseAbstract() final {
-      increase();
-      return *this;
-    }
-
-    IIncremental &decreaseAbstract() final {
-      decrease();
-      return *this;
-    }
-  };
 }

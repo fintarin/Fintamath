@@ -4,16 +4,18 @@
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
-  class Neg : public IOperatorCRTP<Neg, IArithmetic> {
-  public:
-    Neg() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
-    }
 
-    std::string toString() const {
-      return "-";
-    }
+class Neg : public IOperatorCRTP<Neg, IArithmetic> {
+public:
+  Neg() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
+  }
 
-  protected:
-    Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
-  };
+  std::string toString() const override {
+    return "-";
+  }
+
+protected:
+  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+};
+
 }

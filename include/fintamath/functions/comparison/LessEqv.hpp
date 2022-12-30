@@ -4,16 +4,18 @@
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
-  class LessEqv : public IOperatorCRTP<LessEqv, IComparable, IComparable> {
-  public:
-    LessEqv() : IOperatorCRTP(IOperator::Priority::Comparison) {
-    }
 
-    std::string toString() const {
-      return "<=";
-    }
+class LessEqv : public IOperatorCRTP<LessEqv, IComparable, IComparable> {
+public:
+  LessEqv() : IOperatorCRTP(IOperator::Priority::Comparison) {
+  }
 
-  protected:
-    Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
-  };
+  std::string toString() const override {
+    return "<=";
+  }
+
+protected:
+  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+};
+
 }

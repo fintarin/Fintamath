@@ -1,8 +1,10 @@
 #pragma once
 
 namespace fintamath::config {
-  class ConverterConfig {
-  public:
-    ConverterConfig();
-  };
+
+class ConverterConfig {
+public:
+  ConverterConfig();
+};
+
 }

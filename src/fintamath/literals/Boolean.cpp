@@ -5,25 +5,27 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
-  const std::string TRUE = "true";
-  const std::string FALSE = "false";
 
-  Boolean::Boolean(const std::string &str) {
-    if (str != TRUE && str != FALSE) {
-      throw InvalidInputException(str);
-    }
+const std::string TRUE = "true";
+const std::string FALSE = "false";
 
-    name = str;
+Boolean::Boolean(const std::string &str) {
+  if (str != TRUE && str != FALSE) {
+    throw InvalidInputException(str);
   }
 
-  Boolean::Boolean(bool val) : name(val ? TRUE : FALSE) {
-  }
+  name = str;
+}
 
-  std::string Boolean::toString() const {
-    return name;
-  }
+Boolean::Boolean(bool val) : name(val ? TRUE : FALSE) {
+}
 
-  Boolean::operator bool() const {
-    return name == TRUE;
-  }
+std::string Boolean::toString() const {
+  return name;
+}
+
+Boolean::operator bool() const {
+  return name == TRUE;
+}
+
 }

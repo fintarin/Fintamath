@@ -4,13 +4,15 @@
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 namespace fintamath {
-  Expression Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-    const auto &rhs = argsVect.at(0).get();
 
-    if (!rhs.is<Integer>()) {
-      throw UndefinedUnaryOpearatorException("!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
-    }
+Expression Factorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+  const auto &rhs = argsVect.at(0).get();
 
-    return factorial(rhs.to<Integer>());
+  if (!rhs.is<Integer>()) {
+    throw UndefinedUnaryOpearatorException("!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
   }
+
+  return factorial(rhs.to<Integer>());
+}
+
 }

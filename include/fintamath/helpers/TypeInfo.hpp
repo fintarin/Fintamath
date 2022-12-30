@@ -3,20 +3,22 @@
 #include <typeinfo>
 
 namespace fintamath::helpers {
-  class TypeInfo {
-  public:
-    TypeInfo(const std::type_info &info);
 
-    friend bool operator<(const TypeInfo &lhs, const TypeInfo &rhs);
+class TypeInfo {
+public:
+  TypeInfo(const std::type_info &info);
 
-  private:
-    const std::type_info &info;
-  };
+  friend bool operator<(const TypeInfo &lhs, const TypeInfo &rhs);
 
-  inline TypeInfo::TypeInfo(const std::type_info &tinfo) : info(tinfo) {
-  }
+private:
+  const std::type_info &info;
+};
 
-  inline bool operator<(const TypeInfo &lhs, const TypeInfo &rhs) {
-    return lhs.info.before(rhs.info);
-  }
+inline TypeInfo::TypeInfo(const std::type_info &tinfo) : info(tinfo) {
+}
+
+inline bool operator<(const TypeInfo &lhs, const TypeInfo &rhs) {
+  return lhs.info.before(rhs.info);
+}
+
 }

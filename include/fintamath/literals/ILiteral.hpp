@@ -5,31 +5,32 @@
 #include "fintamath/helpers/Parser.hpp"
 
 namespace fintamath {
-  class ILiteral;
-  using LiteralPtr = std::unique_ptr<ILiteral>;
 
-  class ILiteral : virtual public IMathObject {
-  public:
-    ~ILiteral() override = default;
+class ILiteral;
+using LiteralPtr = std::unique_ptr<ILiteral>;
 
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
-    static void addParser() {
-      helpers::addParser<T>(parserVector);
-    }
+class ILiteral : virtual public IMathObject {
+public:
+  ~ILiteral() override = default;
 
-    static void addParser(const helpers::Function<LiteralPtr, std::string> &parserFunc) {
-      helpers::addParser(parserVector, parserFunc);
-    }
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
+  static void addParser() {
+    helpers::addParser<T>(parserVector);
+  }
 
-    static LiteralPtr parse(const std::string &str) {
-      return helpers::parse(parserVector, str);
-    }
+  static void addParser(const helpers::Function<LiteralPtr, std::string> &parserFunc) {
+    helpers::addParser(parserVector, parserFunc);
+  }
 
-  private:
-    static helpers::ParserVector<LiteralPtr, std::string> parserVector;
-  };
+  static LiteralPtr parse(const std::string &str) {
+    return helpers::parse(parserVector, str);
+  }
 
-  template <typename Derived>
-  class ILiteralCRTP : virtual public ILiteral, virtual public IMathObjectCRTP<Derived> {
-  };
+private:
+  static helpers::ParserVector<LiteralPtr, std::string> parserVector;
+};
+
+template <typename Derived>
+class ILiteralCRTP : virtual public ILiteral, virtual public IMathObjectCRTP<Derived> {};
+
 }

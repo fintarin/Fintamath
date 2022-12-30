@@ -9,51 +9,53 @@
 #include <vector>
 
 namespace fintamath {
-  class EqvExpression : public IExpressionCRTP<EqvExpression> {
-  public:
-    EqvExpression() = default;
 
-    explicit EqvExpression(const TokenVector &tokens);
+class EqvExpression : public IExpressionCRTP<EqvExpression> {
+public:
+  EqvExpression() = default;
 
-    EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs);
+  explicit EqvExpression(const TokenVector &tokens);
 
-    EqvExpression(const EqvExpression &rhs) noexcept;
+  EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs);
 
-    EqvExpression(EqvExpression &&rhs) noexcept;
+  EqvExpression(const EqvExpression &rhs) noexcept;
 
-    EqvExpression &operator=(const EqvExpression &rhs) noexcept;
+  EqvExpression(EqvExpression &&rhs) noexcept;
 
-    EqvExpression &operator=(EqvExpression &&rhs) noexcept;
+  EqvExpression &operator=(const EqvExpression &rhs) noexcept;
 
-    std::string toString() const override;
+  EqvExpression &operator=(EqvExpression &&rhs) noexcept;
 
-    ~EqvExpression() override = default;
+  std::string toString() const override;
 
-    MathObjectPtr simplify() const override;
+  ~EqvExpression() override = default;
 
-    std::string solve() const;
+  MathObjectPtr simplify() const override;
 
-    std::string solve(uint8_t precision) const;
+  std::string solve() const;
 
-    uint16_t getInfoPriority() override;
+  std::string solve(uint8_t precision) const;
 
-    void setPrecision(uint8_t precision) override;
+  uint16_t getInfoPriority() override;
 
-    MathObjectPtr simplify(bool isPrecise) const override;
+  void setPrecision(uint8_t precision) override;
 
-  private:
-    MathObjectPtr leftExpr;
-    MathObjectPtr rightExpr;
-    MathObjectPtr oper;
+  MathObjectPtr simplify(bool isPrecise) const override;
 
-    void parse(const TokenVector &tokens);
+private:
+  MathObjectPtr leftExpr;
+  MathObjectPtr rightExpr;
+  MathObjectPtr oper;
 
-    std::vector<MathObjectPtr> solvePowEquation(const Variable &x) const;
-    std::vector<MathObjectPtr> solveQuadraticEquation(const MathObjectPtr &v) const;
+  void parse(const TokenVector &tokens);
 
-    static bool sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
-    static std::vector<MathObjectPtr> sortResult(std::vector<MathObjectPtr> &result);
+  std::vector<MathObjectPtr> solvePowEquation(const Variable &x) const;
+  std::vector<MathObjectPtr> solveQuadraticEquation(const MathObjectPtr &v) const;
 
-    bool detectOneVariable(Variable &v) const;
-  };
+  static bool sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
+  static std::vector<MathObjectPtr> sortResult(std::vector<MathObjectPtr> &result);
+
+  bool detectOneVariable(Variable &v) const;
+};
+
 }

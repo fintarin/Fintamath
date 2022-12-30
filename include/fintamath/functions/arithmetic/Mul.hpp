@@ -4,16 +4,18 @@
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
-  class Mul : public IOperatorCRTP<Mul, IArithmetic, IArithmetic> {
-  public:
-    Mul() : IOperatorCRTP(IOperator::Priority::Multiplication) {
-    }
 
-    std::string toString() const {
-      return "*";
-    }
+class Mul : public IOperatorCRTP<Mul, IArithmetic, IArithmetic> {
+public:
+  Mul() : IOperatorCRTP(IOperator::Priority::Multiplication) {
+  }
 
-  protected:
-    Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
-  };
+  std::string toString() const override {
+    return "*";
+  }
+
+protected:
+  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+};
+
 }

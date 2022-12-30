@@ -10,33 +10,35 @@
 using namespace boost::multiprecision;
 
 namespace fintamath {
-  struct IntegerImpl {
-    using Backend = cpp_int;
 
-    Backend v;
+struct IntegerImpl {
+  using Backend = cpp_int;
 
-    IntegerImpl() = default;
+  Backend v;
 
-    IntegerImpl(Backend inV) : v(std::move(inV)) {
-    }
+  IntegerImpl() = default;
 
-    operator Backend() const {
-      return v;
-    }
-  };
+  IntegerImpl(Backend inV) : v(std::move(inV)) {
+  }
 
-  struct RealImpl {
-    using Backend = number<cpp_dec_float<FINTAMATH_DEFAULT_PRECISION>>;
+  operator Backend() const {
+    return v;
+  }
+};
 
-    Backend v;
+struct RealImpl {
+  using Backend = number<cpp_dec_float<FINTAMATH_DEFAULT_PRECISION>>;
 
-    RealImpl() = default;
+  Backend v;
 
-    RealImpl(Backend inV) : v(std::move(inV)) {
-    }
+  RealImpl() = default;
 
-    operator Backend() const {
-      return v;
-    }
-  };
+  RealImpl(Backend inV) : v(std::move(inV)) {
+  }
+
+  operator Backend() const {
+    return v;
+  }
+};
+
 }

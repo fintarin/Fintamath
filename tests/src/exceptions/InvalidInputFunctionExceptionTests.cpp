@@ -7,17 +7,19 @@
 using namespace fintamath;
 
 namespace {
-  class TestFunction : public IFunctionCRTP<TestFunction, IMathObject> {
-  public:
-    void throwException() const {
-      throw InvalidInputFunctionException("sqrt", {"-10", "a", "b"});
-    }
 
-  protected:
-    virtual Expression call(const ArgumentsVector &argsVect) const override {
-      return {};
-    }
-  };
+class TestFunction : public IFunctionCRTP<TestFunction, IMathObject> {
+public:
+  void throwException() const {
+    throw InvalidInputFunctionException("sqrt", {"-10", "a", "b"});
+  }
+
+protected:
+  virtual Expression call(const ArgumentsVector &argsVect) const override {
+    return {};
+  }
+};
+
 }
 
 TEST(InvalidInputFunctionExceptionTests, whatTests) {

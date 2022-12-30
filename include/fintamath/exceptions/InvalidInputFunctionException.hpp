@@ -6,26 +6,28 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
-  class InvalidInputFunctionException : public InvalidInputException {
-  public:
-    ~InvalidInputFunctionException() override = default;
 
-    InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
-      content += ": " + func + "(";
+class InvalidInputFunctionException : public InvalidInputException {
+public:
+  ~InvalidInputFunctionException() override = default;
 
-      if (!argsVect.empty()) {
-        for (const auto &arg : argsVect) {
-          content += arg + ',';
-        }
+  InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
+    content += ": " + func + "(";
 
-        content.pop_back();
+    if (!argsVect.empty()) {
+      for (const auto &arg : argsVect) {
+        content += arg + ',';
       }
 
-      content += ")";
+      content.pop_back();
     }
 
-    const char *what() const noexcept override {
-      return content.c_str();
-    }
-  };
+    content += ")";
+  }
+
+  const char *what() const noexcept override {
+    return content.c_str();
+  }
+};
+
 }

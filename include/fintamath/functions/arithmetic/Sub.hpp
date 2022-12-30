@@ -4,16 +4,18 @@
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
-  class Sub : public IOperatorCRTP<Sub, IArithmetic, IArithmetic> {
-  public:
-    Sub() : IOperatorCRTP(IOperator::Priority::Addition) {
-    }
 
-    std::string toString() const {
-      return "-";
-    }
+class Sub : public IOperatorCRTP<Sub, IArithmetic, IArithmetic> {
+public:
+  Sub() : IOperatorCRTP(IOperator::Priority::Addition) {
+  }
 
-  protected:
-    Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
-  };
+  std::string toString() const override {
+    return "-";
+  }
+
+protected:
+  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+};
+
 }

@@ -3,7 +3,9 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
-  Expression E::getValue() const {
-    return E_NUM;
-  }
+
+Expression E::getValue() const {
+  return E_NUM;
+}
+
 }
