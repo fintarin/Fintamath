@@ -25,7 +25,7 @@ protected:
 
 }
 
-TEST(InvalidInputUnaryOpearatorException, whatTests) {
+TEST(InvalidInputUnaryOpearatorExceptionTests, whatTests) {
   try {
     TestOperator().throwException();
     EXPECT_TRUE(false);

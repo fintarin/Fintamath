@@ -25,7 +25,7 @@ protected:
 
 }
 
-TEST(UndefinedUnaryOpearatorException, whatTests) {
+TEST(UndefinedUnaryOpearatorExceptionTests, whatTests) {
   try {
     TestOperator().throwException();
     EXPECT_TRUE(false);
