@@ -2,10 +2,10 @@
 
 #include "fintamath/functions/trigonometry/Cos.hpp"
 
-#include "fintamath/functions/Functions.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 

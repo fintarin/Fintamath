@@ -1,12 +1,12 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
 
-#include "fintamath/functions/Functions.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/Functions.hpp"
+#include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;

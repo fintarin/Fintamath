@@ -1,4 +1,4 @@
-#include "fintamath/functions/Functions.hpp"
+#include "fintamath/expressions/ExpressionFunctions.hpp"
 
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"

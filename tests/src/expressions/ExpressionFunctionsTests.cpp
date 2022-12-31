@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/functions/Functions.hpp"
+#include "fintamath/expressions/ExpressionFunctions.hpp"
 
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/literals/Variable.hpp"

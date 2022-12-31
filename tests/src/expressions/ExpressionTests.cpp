@@ -1,10 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/Functions.hpp"
-#include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/literals/Variable.hpp"
+
+#include "fintamath/exceptions/UndefinedException.hpp"
 
 #include <fstream>
 

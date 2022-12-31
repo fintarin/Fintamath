@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 
-#include "fintamath/functions/Functions.hpp"
+#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"

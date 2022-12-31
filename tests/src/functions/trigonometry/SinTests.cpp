@@ -2,7 +2,7 @@
 
 #include "fintamath/functions/trigonometry/Sin.hpp"
 
-#include "fintamath/functions/Functions.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"

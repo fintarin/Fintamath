@@ -1,7 +1,7 @@
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
-#include "fintamath/functions/Functions.hpp"
+#include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
