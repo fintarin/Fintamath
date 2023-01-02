@@ -21,7 +21,7 @@ public:
 
     Element(const Element &rhs);
 
-    Element(MathObjectPtr info, bool inverted = false);
+    Element(const MathObjectPtr &info, bool inverted = false);
 
     Element(Element &&rhs) = default;
 
@@ -69,7 +69,7 @@ public:
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
-  uint16_t getInfoPriority() override;
+  uint16_t getBaseOperatorPriority() const override;
 
   void setPrecision(uint8_t precision) override;
 
@@ -88,7 +88,7 @@ private:
 
   Polynom compressTree() const;
 
-  static Polynom sumNumbers(const Polynom &numVect);
+  Polynom sumNumbers(const Polynom &numVect);
 
   static void sortPolynom(const Polynom &vect, Polynom &numVect, Polynom &mulVect, Polynom &literalVect,
                           Polynom &funcVect, Polynom &powVect);
@@ -99,7 +99,7 @@ private:
   void simplifyPolynom();
   static void sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &literalVect, Polynom &powVect);
 
-  static void simplifyMul(Polynom &mulVect, Polynom &literalVect, Polynom &powVect);
+  static void simplifyMul(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
 };
 
 }

@@ -29,6 +29,8 @@ public:
 
   virtual bool doAgsMatch(const ArgumentsVector &argsVect) const = 0;
 
+  virtual ArgumentsVector getNonMatchingArgs(const ArgumentsVector &argsVect) const = 0;
+
   template <typename... Args>
   MathObjectPtr operator()(const Args &...args) const {
     ArgumentsVector argsVect = {args...};
@@ -68,9 +70,7 @@ public:
   }
 
   bool doAgsMatch(const ArgumentsVector &argsVect) const override {
-    if (!doesArgsSizeMatch(argsVect)) {
-      return false;
-    }
+    validateArgsSize(argsVect);
 
     if (isTypeAny) {
       return doAnyArgsMatch(argsVect);
@@ -79,14 +79,22 @@ public:
     return doAgsMatch<0, Args...>(argsVect);
   }
 
+  ArgumentsVector getNonMatchingArgs(const ArgumentsVector &argsVect) const override {
+    validateArgsSize(argsVect);
+
+    if (isTypeAny) {
+      return doAnyArgsMatch(argsVect) ? ArgumentsVector() : argsVect;
+    }
+
+    ArgumentsVector nonMatchingArgsVect;
+    getNonMatchingArgs<0, Args...>(argsVect, nonMatchingArgsVect);
+    return nonMatchingArgsVect;
+  }
+
 protected:
   virtual MathObjectPtr call(const ArgumentsVector &argsVect) const = 0;
 
   MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const final {
-    if (!doesArgsSizeMatch(argsVect)) {
-      throwInvalidInputFunctionException(argsVect);
-    }
-
     if (!doAgsMatch(argsVect)) {
       return Expression::buildFunctionExpression(*this, argsVect); // TODO: do not use Expression here
     }
@@ -95,10 +103,6 @@ protected:
   }
 
 private:
-  bool doesArgsSizeMatch(const ArgumentsVector &argsVect) const {
-    return isTypeAny || argsVect.size() == sizeof...(Args);
-  }
-
   template <size_t i, typename Head, typename... Tail>
   bool doAgsMatch(const ArgumentsVector &argsVect) const {
     if (!argsVect.at(i).get().instanceOf<Head>()) {
@@ -117,6 +121,25 @@ private:
     return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
       return (arg.get().template instanceOf<Args>() || ...); //
     });
+  }
+
+  template <size_t i, typename Head, typename... Tail>
+  void getNonMatchingArgs(const ArgumentsVector &argsVect, ArgumentsVector &nonMatchingArgsVect) const {
+    if (!argsVect.at(i).get().instanceOf<Head>()) {
+      nonMatchingArgsVect.push_back(argsVect.at(i));
+    }
+
+    getNonMatchingArgs<i + 1, Tail...>(argsVect, nonMatchingArgsVect);
+  }
+
+  template <size_t>
+  void getNonMatchingArgs(const ArgumentsVector &argsVect, ArgumentsVector &nonMatchingArgsVect) const {
+  }
+
+  void validateArgsSize(const ArgumentsVector &argsVect) const {
+    if (!isTypeAny && argsVect.size() != sizeof...(Args)) {
+      throwInvalidInputFunctionException(argsVect);
+    }
   }
 
   void throwInvalidInputFunctionException(const ArgumentsVector &argsVect) const {

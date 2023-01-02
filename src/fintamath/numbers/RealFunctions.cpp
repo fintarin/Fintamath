@@ -19,7 +19,10 @@ Real sqrt(const Real &rhs) {
 }
 
 Real pow(const Real &lhs, const Real &rhs) {
-  if (lhs <= 0 && rhs <= 0) {
+  if (lhs.isNearZero() && rhs.isNearZero()) {
+    throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
+  }
+  if (lhs < 0 && !rhs.simplify()->is<Integer>()) {
     throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
   }
 

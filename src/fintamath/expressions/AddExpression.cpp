@@ -4,6 +4,7 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/Exception.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
@@ -25,6 +26,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <memory>
+#include <regex>
 
 namespace fintamath {
 
@@ -63,7 +65,7 @@ AddExpression::AddExpression(const IMathObject &rhs) {
 AddExpression::AddExpression(Polynom inAddPolynom) : addPolynom(std::move(inAddPolynom)) {
 }
 
-uint16_t AddExpression::getInfoPriority() {
+uint16_t AddExpression::getBaseOperatorPriority() const {
   return (uint16_t)IOperator::Priority::Addition;
 }
 
@@ -75,13 +77,19 @@ void AddExpression::setPrecision(uint8_t precision) {
 
 std::string AddExpression::toString() const {
   std::string result;
+
   for (const auto &var : addPolynom) {
     result += var.inverted ? '-' : '+';
     result += tryPutInBracketsIfNeg(var.info);
   }
+
   if (!result.empty() && result.at(0) == '+') {
     result.erase(result.begin());
   }
+
+  result = std::regex_replace(result, std::regex(R"(\+\+|\-\-)"), "+");
+  result = std::regex_replace(result, std::regex(R"(\+\-|\+\-)"), "-");
+
   return result;
 }
 
@@ -98,11 +106,9 @@ const AddExpression::Polynom &AddExpression::getPolynom() const {
 void AddExpression::parse(const TokenVector &tokens) {
   int lastSignPosition = -1;
   for (size_t i = 0; i < tokens.size(); i++) {
-    if (tokens.at(i) == "(" && !skipBrackets(tokens, i)) {
-      throw InvalidInputException(" braces must be closed");
-    }
-    if (i == tokens.size()) {
-      break;
+    if (skipBrackets(tokens, i)) {
+      i--;
+      continue;
     }
     if (tokens.at(i) != "+" && tokens.at(i) != "-") {
       continue;
@@ -161,7 +167,7 @@ void AddExpression::Element::setPrecision(uint8_t precision) {
   }
 }
 
-AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted) {
+AddExpression::Element::Element(const MathObjectPtr &info, bool inverted) : info(info->clone()), inverted(inverted) {
 }
 
 MathObjectPtr AddExpression::Element::toMathObject(bool isPrecise) const {
@@ -240,12 +246,25 @@ MathObjectPtr AddExpression::simplify() const {
 MathObjectPtr AddExpression::simplify(bool isPrecise) const {
   auto exprObj = AddExpression(compressTree());
 
+  for (auto &obj : exprObj.addPolynom) { // TODO: find a better solution
+    if (obj.info->is<EqvExpression>()) {
+      throw InvalidInputException(toString());
+    }
+  }
+
   if (exprObj.addPolynom.size() == 1) {
     return exprObj.addPolynom.at(0).toMathObject(isPrecise);
   }
 
   for (auto &obj : exprObj.addPolynom) {
     obj.simplify(isPrecise);
+  }
+
+  if (!exprObj.addPolynom.empty()) { // TODO move to IExpression
+    static const Add func;
+    for (size_t i = 0; i < exprObj.addPolynom.size() - 1; i++) {
+      validateFunctionArgs(func, {*exprObj.addPolynom.at(i).info, *exprObj.addPolynom.at(i + 1).info});
+    }
   }
 
   exprObj = AddExpression(exprObj.compressTree());
@@ -298,7 +317,7 @@ void AddExpression::simplifyPolynom() {
 
   numVect = sumNumbers(numVect);
 
-  simplifyMul(mulVect, literalVect, powVect);
+  simplifyMul(powVect, mulVect, literalVect, funcVect);
   addPolynom.clear();
 
   std::sort(funcVect.begin(), funcVect.end(), sortFunc);
@@ -374,7 +393,7 @@ void AddExpression::sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &lit
   }
 }
 
-void AddExpression::simplifyMul(Polynom &mulVect, Polynom &literalVect, Polynom &powVect) {
+void AddExpression::simplifyMul(Polynom &powVect, Polynom &mulVect, Polynom &literalVect, Polynom &funcVect) {
   Objects objs;
   for (const auto &mulObj : mulVect) {
     bool added = false;
@@ -423,6 +442,22 @@ void AddExpression::simplifyMul(Polynom &mulVect, Polynom &literalVect, Polynom 
     object.counter.addElement(Element(Integer(1).clone(), litObj.inverted));
     objs.emplace_back(object);
   }
+  for (const auto &funcObj : funcVect) {
+    bool added = false;
+    for (auto &obj : objs) {
+      if (obj.obj->toString() == funcObj.info->toString()) {
+        obj.counter.addElement(Element(Integer(1).clone(), funcObj.inverted));
+        added = true;
+        break;
+      }
+    }
+    if (added) {
+      continue;
+    }
+    ObjectMul object(funcObj.info);
+    object.counter.addElement(Element(Integer(1).clone(), funcObj.inverted));
+    objs.emplace_back(object);
+  }
 
   for (const auto &powObj : powVect) {
     bool added = false;
@@ -444,6 +479,7 @@ void AddExpression::simplifyMul(Polynom &mulVect, Polynom &literalVect, Polynom 
   literalVect.clear();
   mulVect.clear();
   powVect.clear();
+  funcVect.clear();
 
   sortMulObjects(objs, mulVect, literalVect, powVect);
 }

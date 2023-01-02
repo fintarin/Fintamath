@@ -11,6 +11,8 @@
 
 namespace fintamath {
 
+class IFunction;
+
 class IExpression;
 using ExpressionPtr = std::unique_ptr<IExpression>;
 
@@ -29,7 +31,7 @@ public:
     return helpers::parse(parserMap, tokens);
   }
   static std::string tokensToString(const TokenVector &tokens);
-  virtual uint16_t getInfoPriority() = 0;
+  virtual uint16_t getBaseOperatorPriority() const = 0;
 
   virtual void setPrecision(uint8_t precision) = 0;
 
@@ -57,6 +59,8 @@ protected:
   static bool isOneSymbolToken(char token);
   static TokenVector cutBraces(const TokenVector &tokens);
   static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
+
+  void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;
 
   template <typename T>
   static void pushPolynomToPolynom(typename T::Polynom &push, typename T::Polynom &cont);

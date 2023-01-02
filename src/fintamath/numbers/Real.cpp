@@ -151,14 +151,20 @@ const std::unique_ptr<RealImpl> &Real::getImpl() const {
 }
 
 bool Real::equals(const Real &rhs) const {
-  return impl->v == rhs.impl->v;
+  return (*this - rhs).isNearZero();
 }
 
 bool Real::less(const Real &rhs) const {
+  if (*this == rhs) {
+    return false;
+  }
   return impl->v < rhs.impl->v;
 }
 
 bool Real::more(const Real &rhs) const {
+  if (*this == rhs) {
+    return false;
+  }
   return impl->v > rhs.impl->v;
 }
 

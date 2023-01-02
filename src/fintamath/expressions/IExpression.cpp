@@ -1,14 +1,16 @@
 #include "fintamath/expressions/IExpression.hpp"
+
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/helpers/Converter.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include <algorithm>
 
 namespace fintamath {
 
 TokenVector IExpression::tokenize(const std::string &str) {
-  static const std::string oneSymbolTokens = "+-*/%";
   std::string tokenizeStr = cutSpacesFromBeginEnd(str);
   TokenVector tokens;
   std::string digitToken;
@@ -42,12 +44,14 @@ TokenVector IExpression::tokenize(const std::string &str) {
     }
 
     if (isBracket(value)) {
-      if ((appendToken(tokens, digitToken) || (!tokens.empty() && tokens.at(tokens.size() - 1) == ")")) &&
-          isOpenBracket(value) && value == '(') {
-        tokens.emplace_back("*");
-      }
+      appendToken(tokens, digitToken);
       appendToken(tokens, specialToken);
       appendToken(tokens, letterToken);
+
+      if (((!tokens.empty() && tokens.at(tokens.size() - 1) == ")")) && isOpenBracket(value) && value == '(') {
+        tokens.emplace_back("*");
+      }
+
       tokens.emplace_back(1, value);
       continue;
     }
@@ -99,7 +103,7 @@ bool IExpression::findCharInStr(char c, const std::string &str) {
 }
 
 bool IExpression::isCanInsertMultiplyCharacter(char c) {
-  return !(c == ' ' || isSpecial(c));
+  return c != ' ' && !isSpecial(c);
 }
 bool IExpression::isDigit(char c) {
   return c >= '0' && c <= '9';
@@ -145,29 +149,30 @@ std::string IExpression::cutSpacesFromBeginEnd(const std::string &str) {
   return result;
 }
 
-bool IExpression::skipBrackets(const TokenVector &tokens, size_t &openBracketIndex) {
-  if (openBracketIndex >= tokens.size()) {
-    return true;
-  }
-  if (tokens[openBracketIndex] != "(") {
-    return true;
+bool IExpression::skipBrackets(const TokenVector &tokens, size_t &inOutIndex) {
+  if (inOutIndex >= tokens.size() || tokens.at(inOutIndex) != "(") {
+    return false;
   }
 
-  int leftBrackets = 0;
-  int rightBrackets = 0;
-  for (size_t position = openBracketIndex; position < tokens.size(); position++) {
-    if (tokens[position] == ")") {
-      rightBrackets++;
+  int64_t brackets = 0;
+
+  for (size_t i = inOutIndex; i < tokens.size(); i++) {
+    if (tokens[i] == "(") {
+      brackets++;
+    } else if (tokens[i] == ")") {
+      brackets--;
     }
-    if (tokens[position] == "(") {
-      leftBrackets++;
-    }
-    if (leftBrackets == rightBrackets) {
-      openBracketIndex = position + 1;
+
+    if (brackets == 0) {
+      inOutIndex = i + 1;
       return true;
     }
+    if (brackets < 0) {
+      throw InvalidInputException("");
+    }
   }
-  return false;
+
+  throw InvalidInputException("");
 }
 
 bool IExpression::isBracket(const std::string &c) {
@@ -204,6 +209,16 @@ std::string IExpression::tryPutInBracketsIfNeg(const MathObjectPtr &obj) {
     return "(" + exprObj.toString() + ")";
   }
   return obj->toString();
+}
+
+void IExpression::validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const {
+  ArgumentsVector nonMatchingArgs = func.getNonMatchingArgs(args);
+
+  for (const auto &arg : nonMatchingArgs) {
+    if (!arg.get().is<Variable>() && !arg.get().instanceOf<IConstant>() && !arg.get().instanceOf<IExpression>()) {
+      throw InvalidInputException(toString());
+    }
+  }
 }
 
 std::vector<MathObjectPtr> IExpression::getVariables() const {

@@ -25,6 +25,13 @@ TEST(RealFunctionsTests, powTest) {
   EXPECT_EQ(pow(Real("20"), Real("10000")).toString(),
             "1.9950631168807583848837421626835850838234968318861924548520089498529438830221947*10^13010");
   EXPECT_EQ(pow(Real("10"), Real("-10000")).toString(), "1*10^-10000");
+  EXPECT_EQ(pow(Real("-10"), Real("-3")).toString(), "-0.001");
+  EXPECT_EQ(pow(Real("-1"), Real("-25")).toString(), "-1");
+  EXPECT_EQ(pow(Real("-2.2"), Real("-5")).toString(),
+            "-0.019403791345598599201495178545926445660070412478034908196782385703907457886011264");
+  EXPECT_EQ(pow(Real("-10"), Real("-10000")).toString(), "1*10^-10000");
+  EXPECT_EQ(pow(Real("-20"), Real("-10000")).toString(),
+            "5.012372749206452009297555933742977749321567781338425839421429042279239530950784*10^-13011");
 
   EXPECT_THROW(pow(Real("0"), Real("0")), UndefinedBinaryOpearatorException);
   EXPECT_THROW(pow(Real("0"), Real("-10")), UndefinedBinaryOpearatorException);

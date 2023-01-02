@@ -11,6 +11,7 @@
 #include <stdexcept>
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
@@ -112,10 +113,9 @@ Expression &Expression::compressTree() {
   return *this;
 }
 
-uint16_t Expression::getInfoPriority() {
+uint16_t Expression::getBaseOperatorPriority() const {
   if (info->instanceOf<IOperator>()) {
-    auto oper = helpers::cast<IOperator>(info);
-    return (uint16_t)oper->getOperatorPriority();
+    return (uint16_t)info->to<IOperator>().getOperatorPriority();
   }
   return (uint16_t)IOperator::Priority::Any;
 }
@@ -151,11 +151,12 @@ std::string Expression::binaryOperatorToString() const {
         result += child->toString();
       }
     } else {
-      auto parentPriority = helpers::cast<IOperator>(info->clone())->getOperatorPriority();
+      auto parentPriority = info->to<IOperator>().getOperatorPriority();
+      auto childPriority = (IOperator::Priority)child->to<IExpression>().getBaseOperatorPriority();
 
-      if (auto childPriority = (IOperator::Priority)helpers::cast<IExpression>(child->clone())->getInfoPriority();
-          childPriority == IOperator::Priority::PostfixUnary || childPriority == IOperator::Priority::PrefixUnary ||
-          (parentPriority >= childPriority)) {
+      if (childPriority == IOperator::Priority::PostfixUnary || childPriority == IOperator::Priority::PrefixUnary ||
+          (childPriority != IOperator::Priority::Any && parentPriority <= childPriority)) {
+
         result += putInBrackets(child->toString());
       } else {
         result += child->toString();
@@ -173,12 +174,14 @@ std::string Expression::binaryOperatorToString() const {
 std::string Expression::prefixUnaryOperatorToString() const {
   std::string result = info->toString();
 
-  if (children.at(0)->instanceOf<IExpression>()) {
+  if (children.at(0)->instanceOf<IExpression>() &&
+      children.at(0)->to<IExpression>().getBaseOperatorPriority() != uint16_t(IOperator::Priority::Any)) {
     return result + putInBrackets(children.at(0)->toString());
   }
   if (children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)) {
     return result + putInBrackets(children.at(0)->toString());
   }
+
   return result + children.at(0)->toString();
 }
 
@@ -230,7 +233,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
     if (info->instanceOf<IExpression>()) {
       auto copyExpr = helpers::cast<IExpression>(info->clone());
       copyExpr->setPrecision(precision);
-      info = copyExpr->simplify(false);
+      info = std::move(copyExpr);
     }
   }
 
@@ -305,6 +308,8 @@ void Expression::simplifyFunctionsRec(bool isPrecise) {
       }
       info = countResult->clone();
       children.clear();
+    } else {
+      validateFunctionArgs(func, args);
     }
   }
 }
@@ -424,11 +429,9 @@ bool Expression::parseNeg(const TokenVector &tokens) {
 
 bool Expression::parsePow(const TokenVector &tokens) {
   for (size_t i = 0; i < tokens.size(); i++) {
-    if (tokens.at(i) == "(" && !skipBrackets(tokens, i)) {
-      throw InvalidInputException(" braces must be closed");
-    }
-    if (i == tokens.size()) {
-      break;
+    if (skipBrackets(tokens, i)) {
+      i--;
+      continue;
     }
     if (tokens.at(i) == "^") {
       if (i == tokens.size() - 1) {
@@ -573,9 +576,8 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
       if (pos == 0) {
         isBracketsSkip = true;
       }
-      if (!skipBrackets(tokens, pos)) {
-        throw InvalidInputException(" braces must be closed");
-      }
+
+      skipBrackets(tokens, pos);
     }
 
     if (pos == tokens.size()) {
@@ -790,12 +792,42 @@ void Expression::simplifyPow() {
   if (!info->is<Pow>()) {
     return;
   }
-  if (children.at(1)->is<Integer>() && children.at(0)->instanceOf<IExpression>() && !children.at(0)->is<Expression>()) {
-    Integer num = children.at(1)->to<Integer>();
-    MulExpression mul;
-    for (Integer i = 0; i < num; i++) {
-      mul.addElement(MulExpression::Element(children.at(0)->clone()));
+
+  MathObjectPtr &lhsRef = children.at(0);
+  MathObjectPtr &rhsRef = children.at(1);
+
+  if (rhsRef->is<Integer>() && lhsRef->instanceOf<IExpression>() && !lhsRef->is<Expression>()) {
+    Integer rhs = rhsRef->to<Integer>();
+
+    if (rhs == 0) {
+      info = std::make_unique<Integer>(1);
+      children.clear();
+      return;
     }
+    if (lhsRef->toString() == "1" || rhs == 1) {
+      info = lhsRef->clone();
+      children.clear();
+      return;
+    }
+    if (rhs == -1) {
+      info = std::make_unique<Div>();
+      rhsRef = std::make_unique<Integer>(1);
+      std::swap(lhsRef, rhsRef);
+      return;
+    }
+
+    MulExpression::Element lhs = lhsRef;
+
+    if (rhs < 0) {
+      lhs.inverted = true;
+      rhs = -rhs;
+    }
+
+    MulExpression mul;
+    for (Integer i = 0; i < rhs; i++) {
+      mul.addElement(lhs);
+    }
+
     info = mul.simplify();
     children.clear();
   }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <utility>
 
 #include "fintamath/exceptions/Exception.hpp"

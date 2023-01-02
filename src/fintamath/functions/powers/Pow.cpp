@@ -1,5 +1,6 @@
 #include "fintamath/functions/powers/Pow.hpp"
 
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -22,14 +23,24 @@ MathObjectPtr naturalPow(const INumber &lhs, Integer rhs) {
 }
 
 MathObjectPtr Pow::call(const ArgumentsVector &argsVect) const {
-  const auto &lhs = argsVect.at(0).get().to<INumber>();
-  const auto &rhs = argsVect.at(1).get().to<INumber>();
+  auto lhs = helpers::cast<INumber>(argsVect.at(0).get().simplify());
+  auto rhs = helpers::cast<INumber>(argsVect.at(1).get().simplify());
 
-  if (rhs.is<Integer>() && rhs > Integer(0)) {
-    return naturalPow(lhs, rhs.to<Integer>());
+  if (rhs->is<Integer>() && lhs->isPrecise()) {
+    Integer intRhs = rhs->to<Integer>();
+
+    if (intRhs == 0 && lhs->to<INumber>() == Integer(0)) {
+      throw UndefinedBinaryOpearatorException("^", lhs->toString(), rhs->toString());
+    }
+
+    if (intRhs < 0) {
+      return naturalPow(*(Integer(1) / *lhs), -intRhs);
+    }
+
+    return naturalPow(*lhs, intRhs);
   }
 
-  return pow(helpers::Converter::convert<Real>(lhs), helpers::Converter::convert<Real>(rhs)).simplify();
+  return pow(helpers::Converter::convert<Real>(*lhs), helpers::Converter::convert<Real>(*rhs)).simplify();
 }
 
 }

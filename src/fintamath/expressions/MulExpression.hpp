@@ -22,7 +22,7 @@ public:
 
     Element(Element &&rhs) = default;
 
-    Element(MathObjectPtr info, bool inverted = false);
+    Element(const MathObjectPtr &info, bool inverted = false);
 
     Element &operator=(const Element &rhs);
 
@@ -66,7 +66,7 @@ public:
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
-  uint16_t getInfoPriority() override;
+  uint16_t getBaseOperatorPriority() const override;
 
   void setPrecision(uint8_t precision) override;
 

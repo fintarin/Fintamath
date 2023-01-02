@@ -65,7 +65,7 @@ public:
 
   static MathObjectPtr buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
-  uint16_t getInfoPriority() override;
+  uint16_t getBaseOperatorPriority() const override;
 
   void setPrecision(uint8_t precision) override;
 

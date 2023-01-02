@@ -3,6 +3,7 @@
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
+#include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -53,7 +54,7 @@ MulExpression::MulExpression(const IMathObject &rhs) {
   mulPolynom.emplace_back(Element{rhs.clone(), false});
 }
 
-uint16_t MulExpression::getInfoPriority() {
+uint16_t MulExpression::getBaseOperatorPriority() const {
   return (uint16_t)IOperator::Priority::Multiplication;
 }
 
@@ -149,11 +150,9 @@ MulExpression::MulExpression(Polynom inMulPolynom) : mulPolynom(std::move(inMulP
 void MulExpression::parse(const TokenVector &tokens) {
   int lastSignPosition = -1;
   for (size_t i = 0; i < tokens.size(); i++) {
-    if (tokens.at(i) == "(" && !skipBrackets(tokens, i)) {
-      throw InvalidInputException(" braces must be closed");
-    }
-    if (i == tokens.size()) {
-      break;
+    if (skipBrackets(tokens, i)) {
+      i--;
+      continue;
     }
     if (tokens.at(i) != "*" && tokens.at(i) != "/") {
       continue;
@@ -180,7 +179,7 @@ void MulExpression::parse(const TokenVector &tokens) {
   *this = MulExpression(compressTree());
 }
 
-MulExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->clone()), inverted(inverted) {
+MulExpression::Element::Element(const MathObjectPtr &info, bool inverted) : info(info->clone()), inverted(inverted) {
 }
 
 MulExpression::Polynom MulExpression::compressExpression() const {
@@ -242,6 +241,12 @@ MathObjectPtr MulExpression::simplify() const {
 MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   auto exprObj = MulExpression(compressTree());
 
+  for (auto &obj : exprObj.mulPolynom) { // TODO: find a better solution
+    if (obj.info->is<EqvExpression>()) {
+      throw InvalidInputException(toString());
+    }
+  }
+
   if (exprObj.mulPolynom.size() == 1) {
     return exprObj.mulPolynom.at(0).toMathObject(isPrecise);
   }
@@ -250,13 +255,19 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
     obj.simplify(isPrecise);
   }
 
-  auto b = exprObj.toString();
+  if (!exprObj.mulPolynom.empty()) { // TODO move to IExpression
+    static const Mul func;
+    for (size_t i = 0; i < exprObj.mulPolynom.size() - 1; i++) {
+      validateFunctionArgs(func, {*exprObj.mulPolynom.at(i).info, *exprObj.mulPolynom.at(i + 1).info});
+    }
+  }
+
   exprObj.simplifyPolynom();
 
-  auto c = exprObj.toString();
   if (exprObj.mulPolynom.size() == 1) {
     return exprObj.mulPolynom.at(0).toMathObject(isPrecise);
   }
+
   return exprObj.clone();
 }
 
@@ -302,8 +313,8 @@ MulExpression::Polynom MulExpression::multiplicateTwoBraces(const Polynom &lhs, 
 }
 
 void MulExpression::multiplicateBraces(const Polynom &addVect, Polynom &positive, Polynom &negative) {
-  Polynom result{MulExpression({Integer(1).clone()}).clone()};
-  Polynom inverted{MulExpression({Integer(1).clone()}).clone()};
+  Polynom result{MulExpression({Integer(1)}).clone()};
+  Polynom inverted{MulExpression({Integer(1)}).clone()};
 
   for (const auto &addExpr : addVect) {
     if (addExpr.inverted) {

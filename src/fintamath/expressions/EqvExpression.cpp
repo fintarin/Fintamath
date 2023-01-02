@@ -83,48 +83,43 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
     auto b = Expression(oper->to<IOperator>()(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
     return b.simplify(isPrecise);
   }
+
   return cloneExpr.clone();
 }
 
-uint16_t EqvExpression::getInfoPriority() {
+uint16_t EqvExpression::getBaseOperatorPriority() const {
   return (uint16_t)IOperator::Priority::Comparison;
 }
 
 void EqvExpression::parse(const TokenVector &tokens) {
-  bool eqvOpers = false;
-  for (size_t i = 0; i < tokens.size(); i++) {
-    if (tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == "=" || tokens[i] == ">=" || tokens[i] == ">") {
-      if (eqvOpers) {
-        throw InvalidInputException(" number of comparison operators exceeded");
-      }
-      eqvOpers = true;
-    }
-  }
+  size_t pos = SIZE_MAX;
 
   for (size_t i = 0; i < tokens.size(); i++) {
-    if (tokens[i] == "(" && !skipBrackets(tokens, i)) {
-      throw InvalidInputException(" braces must be closed");
-    }
-    if (i == tokens.size()) {
-      break;
-    }
-    if (tokens[i] != "<" && tokens[i] != "<=" && tokens[i] != "=" && tokens[i] != ">=" && tokens[i] != ">") {
+    if (skipBrackets(tokens, i)) {
+      i--;
       continue;
     }
-    if (i == tokens.size() - 1) {
-      throw InvalidInputException(" unexpected sign");
-    }
 
-    leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i));
-    rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end()));
-    oper = IOperator::parse(tokens[i]);
+    if (tokens[i] == "=" || tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == ">=" || tokens[i] == ">") {
+      if (pos != SIZE_MAX) { // TODO remove this when we have systems of equations
+        throw InvalidInputException("");
+      }
 
-    if (!leftExpr || !rightExpr || !oper) {
-      throw InvalidInputException(tokensToString(tokens));
+      pos = i;
     }
-    return;
   }
-  throw InvalidInputException(" not an EqvExpression");
+
+  if (pos == SIZE_MAX) {
+    throw InvalidInputException("");
+  }
+
+  leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + pos));
+  rightExpr = IExpression::parse(TokenVector(tokens.begin() + pos + 1, tokens.end()));
+  oper = IOperator::parse(tokens[pos]);
+
+  if (!leftExpr || !rightExpr || !oper) {
+    throw InvalidInputException(tokensToString(tokens));
+  }
 }
 
 void EqvExpression::setPrecision(uint8_t precision) {

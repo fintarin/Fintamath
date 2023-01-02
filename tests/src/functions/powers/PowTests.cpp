@@ -70,7 +70,13 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(Pow()(Integer(7), Rational(-3, 1000))->toString(),
             "0.99417927599212539388309345602974534386950277212157482682781039330883285005190623");
 
+  EXPECT_EQ(Pow()(Rational("-10"), Rational("-3"))->toString(), "-1/1000");
+  EXPECT_EQ(Pow()(Rational("-1"), Rational("-25"))->toString(), "-1");
+  EXPECT_EQ(Pow()(Rational("-2.2"), Rational("-5"))->toString(), "-3125/161051");
+
   EXPECT_THROW(Pow()(Integer(0), Integer(0)), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Pow()(Rational("0"), Rational("-10")), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Pow()(Rational("-10"), Rational("-1.5")), UndefinedBinaryOpearatorException);
 
   EXPECT_EQ(Pow()(Integer(3), Variable("a"))->toString(), "3^a");
 
