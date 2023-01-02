@@ -15,7 +15,7 @@ public:
   }
 
 protected:
-  virtual Expression call(const ArgumentsVector &argsVect) const override {
+  virtual MathObjectPtr call(const ArgumentsVector &argsVect) const override {
     return {};
   }
 };

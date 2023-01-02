@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-Expression Exp::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *exp(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+MathObjectPtr Exp::call(const ArgumentsVector &argsVect) const {
+  return exp(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
 }
 
 }

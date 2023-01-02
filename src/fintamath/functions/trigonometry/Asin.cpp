@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-Expression Asin::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *asin(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+MathObjectPtr Asin::call(const ArgumentsVector &argsVect) const {
+  return asin(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
 }
 
 }

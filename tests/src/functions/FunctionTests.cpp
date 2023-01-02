@@ -38,12 +38,12 @@ TEST(FunctionTests, callTests) {
   Integer a = 3;
   Rational b(1, 2);
 
-  EXPECT_EQ((*f)(a, a).toString(), "6");
-  EXPECT_EQ((*f)(b, b).toString(), "1");
-  EXPECT_EQ((*f)(a, b).toString(), "7/2");
-  EXPECT_EQ((*f)(b, a).toString(), "7/2");
+  EXPECT_EQ((*f)(a, a)->toString(), "6");
+  EXPECT_EQ((*f)(b, b)->toString(), "1");
+  EXPECT_EQ((*f)(a, b)->toString(), "7/2");
+  EXPECT_EQ((*f)(b, a)->toString(), "7/2");
 
-  EXPECT_EQ((*f)(a, Variable("a")).toString(), "a+3");
+  EXPECT_EQ((*f)(a, Variable("a"))->toString(), "a+3");
 
   EXPECT_THROW((*f)(), InvalidInputFunctionException);
   EXPECT_THROW((*f)(a), InvalidInputFunctionException);

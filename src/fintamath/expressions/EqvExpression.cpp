@@ -1,13 +1,11 @@
 #include "fintamath/expressions/EqvExpression.hpp"
+
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/functions/IOperator.hpp"
-#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -82,7 +80,7 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   cloneExpr.rightExpr = Integer(0).clone();
 
   if (cloneExpr.leftExpr->instanceOf<IComparable>()) {
-    auto b = oper->to<IOperator>()(*cloneExpr.leftExpr, *cloneExpr.rightExpr);
+    auto b = Expression(oper->to<IOperator>()(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
     return b.simplify(isPrecise);
   }
   return cloneExpr.clone();
@@ -206,9 +204,6 @@ std::vector<MathObjectPtr> EqvExpression::solvePowEquation(const Variable &x) co
 
 std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
   auto copyExpr = *this;
-  if (copyExpr.leftExpr->instanceOf<IExpression>()) {
-    copyExpr.leftExpr = copyExpr.leftExpr->to<IExpression>().simplify(false);
-  }
 
   AddExpression polynom(*leftExpr);
   auto maxPow = polynom.getPow();
@@ -219,37 +214,33 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
 
   std::vector<MathObjectPtr> coefficients;
 
-  auto pow = maxPow->to<Integer>();
-
   for (int i = 0; i <= maxPow->to<Integer>(); i++) {
     coefficients.emplace_back(polynom.getPowCoefficient(Integer(i).clone()));
   }
 
   std::vector<MathObjectPtr> results;
   if (coefficients.size() == 2) {
-    results.emplace_back(Neg()(Div()(*coefficients.at(0), *coefficients.at(1))).simplify(false));
+    results.emplace_back(Neg()(*div(*coefficients.at(0), *coefficients.at(1)).simplify(false)));
     return results;
   }
   if (coefficients.size() == 3) {
-    auto discr = Sub()(*fintamath::pow(*coefficients.at(1), Integer(2)).simplify(false),
-                       *mul(Integer(4), *coefficients.at(0), *coefficients.at(2)).simplify(false))
-                     .simplify(false);
-
-    auto discrStr = discr->toString();
+    auto discr =
+        (fintamath::pow(*coefficients.at(1), Integer(2)) - mul(Integer(4), *coefficients.at(0), *coefficients.at(2)))
+            .simplify(false);
 
     if (discr->instanceOf<IComparable>() && discr->to<IComparable>() < Integer(0)) {
       return {};
     }
 
-    auto sqrt_D = sqrt(*discr).simplify(false);
-    auto minus_B = Neg()(*coefficients.at(1)).simplify(false);
-    auto two_A = mul(*coefficients.at(2), Integer(2)).simplify(false);
+    auto sqrt_D = sqrt(*discr);
+    auto minus_B = Neg()(*coefficients.at(1));
+    auto two_A = mul(*coefficients.at(2), Integer(2));
 
-    auto x1 = Div()(*Sub()(*minus_B, *sqrt_D).simplify(false), *two_A).simplify(false);
-    auto x2 = Div()(*add(*minus_B, *sqrt_D).simplify(false), *two_A).simplify(false);
+    auto x1 = div(sub(*minus_B, sqrt_D), two_A).simplify(false);
+    auto x2 = div(add(*minus_B, sqrt_D), two_A).simplify(false);
 
-    results.emplace_back(x1->clone());
-    results.emplace_back(x2->clone());
+    results.emplace_back(std::move(x1));
+    results.emplace_back(std::move(x2));
 
     return results;
   }

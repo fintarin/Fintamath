@@ -23,14 +23,8 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/comparison/Eqv.hpp"
-#include "fintamath/functions/comparison/Less.hpp"
-#include "fintamath/functions/comparison/LessEqv.hpp"
-#include "fintamath/functions/comparison/More.hpp"
-#include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
-#include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/helpers/Caster.hpp"
@@ -94,6 +88,20 @@ Expression::Expression(const std::string &str) {
   *this = Expression(*info->simplify());
 }
 
+Expression::Expression(const MathObjectPtr &obj) {
+  if (obj->is<Expression>()) {
+    *this = obj->to<Expression>();
+  } else {
+    info = obj->clone();
+  }
+}
+
+Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
+}
+
+Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
+}
+
 Expression &Expression::compressTree() {
   if (info->is<Expression>()) {
     auto exprInfo = info->to<Expression>();
@@ -110,19 +118,6 @@ uint16_t Expression::getInfoPriority() {
     return (uint16_t)oper->getOperatorPriority();
   }
   return (uint16_t)IOperator::Priority::Any;
-}
-
-Expression::Expression(const IMathObject &obj) {
-  if (obj.is<Expression>()) {
-    auto expr = obj.to<Expression>();
-    info = expr.info->clone();
-    children = copy(expr.children);
-    return;
-  }
-  info = obj.clone();
-}
-
-Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
 }
 
 std::string tokenVectorToString(const TokenVector &tokens) {
@@ -265,7 +260,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
     }
 
     if (func.doAgsMatch(args)) {
-      auto countResult = func(args).info;
+      auto countResult = func(args);
       if (countResult->instanceOf<INumber>()) {
         info = helpers::Converter::convert(*countResult, Real())->to<Real>().precise(precision).clone();
         children.clear();
@@ -304,7 +299,7 @@ void Expression::simplifyFunctionsRec(bool isPrecise) {
     }
 
     if (func.doAgsMatch(args)) {
-      auto countResult = func(args).info;
+      auto countResult = func(args);
       if (countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
         return;
       }
@@ -548,8 +543,8 @@ MathObjectPtr Expression::compress() const {
   return copyExpr.clone();
 }
 
-Expression Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-  return {*buildRawFunctionExpression(func, args).simplify()};
+MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
+  return buildRawFunctionExpression(func, args).simplify();
 }
 
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
@@ -684,7 +679,7 @@ Expression &Expression::negate() {
     return *this;
   }
   if (info->instanceOf<IArithmetic>()) {
-    *this = neg(*info);
+    *this = Expression(neg(*info));
     return *this;
   }
 

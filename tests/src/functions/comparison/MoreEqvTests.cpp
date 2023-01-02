@@ -20,14 +20,14 @@ TEST(MoreEqvTests, getOperatorPriorityTest) {
 }
 
 TEST(MoreEqvTests, callTest) {
-  EXPECT_EQ(MoreEqv()(Integer(5), Integer(3)).toString(), "true");
-  EXPECT_EQ(MoreEqv()(Integer(3), Integer(5)).toString(), "false");
-  EXPECT_EQ(MoreEqv()(Integer(3), Integer(3)).toString(), "true");
-  EXPECT_EQ(MoreEqv()(Integer(3), Rational(3, 1)).toString(), "true");
-  EXPECT_EQ(MoreEqv()(Rational(5, 2), Integer(2)).toString(), "true");
+  EXPECT_EQ(MoreEqv()(Integer(5), Integer(3))->toString(), "true");
+  EXPECT_EQ(MoreEqv()(Integer(3), Integer(5))->toString(), "false");
+  EXPECT_EQ(MoreEqv()(Integer(3), Integer(3))->toString(), "true");
+  EXPECT_EQ(MoreEqv()(Integer(3), Rational(3, 1))->toString(), "true");
+  EXPECT_EQ(MoreEqv()(Rational(5, 2), Integer(2))->toString(), "true");
 
-  EXPECT_EQ(MoreEqv()(Integer(3), Variable("a")).toString(), "-a+3>=0");
-  EXPECT_EQ(MoreEqv()(Variable("a"), Variable("a")).toString(), "true");
+  EXPECT_EQ(MoreEqv()(Integer(3), Variable("a"))->toString(), "-a+3>=0");
+  EXPECT_EQ(MoreEqv()(Variable("a"), Variable("a"))->toString(), "true");
 
   std::unique_ptr<IOperator> o = std::make_unique<MoreEqv>();
   EXPECT_THROW((*o)(Integer(1)), InvalidInputFunctionException);

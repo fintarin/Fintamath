@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-Expression Atan::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *atan(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+MathObjectPtr Atan::call(const ArgumentsVector &argsVect) const {
+  return atan(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
 }
 
 }

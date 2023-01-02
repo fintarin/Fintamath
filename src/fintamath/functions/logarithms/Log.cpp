@@ -4,9 +4,9 @@
 
 namespace fintamath {
 
-Expression Log::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *log(helpers::Converter::convert<Real>(argsVect.at(0)), helpers::Converter::convert<Real>(argsVect.at(1)))
-              .simplify();
+MathObjectPtr Log::call(const ArgumentsVector &argsVect) const {
+  return log(helpers::Converter::convert<Real>(argsVect.at(0)), helpers::Converter::convert<Real>(argsVect.at(1)))
+      .simplify();
 }
 
 }

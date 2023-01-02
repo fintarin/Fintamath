@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include "fintamath/core/Defines.hpp"
-#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputFunctionException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/helpers/Parser.hpp"
@@ -32,12 +30,12 @@ public:
   virtual bool doAgsMatch(const ArgumentsVector &argsVect) const = 0;
 
   template <typename... Args>
-  Expression operator()(const Args &...args) const {
+  MathObjectPtr operator()(const Args &...args) const {
     ArgumentsVector argsVect = {args...};
     return callAbstract(argsVect);
   }
 
-  Expression operator()(const ArgumentsVector &argsVect) const {
+  MathObjectPtr operator()(const ArgumentsVector &argsVect) const {
     return callAbstract(argsVect);
   }
 
@@ -53,7 +51,7 @@ public:
   }
 
 protected:
-  virtual Expression callAbstract(const ArgumentsVector &argsVect) const = 0;
+  virtual MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const = 0;
 
 private:
   static helpers::ParserMap<FunctionPtr> parserMap;
@@ -82,15 +80,15 @@ public:
   }
 
 protected:
-  virtual Expression call(const ArgumentsVector &argsVect) const = 0;
+  virtual MathObjectPtr call(const ArgumentsVector &argsVect) const = 0;
 
-  Expression callAbstract(const ArgumentsVector &argsVect) const final {
+  MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const final {
     if (!doesArgsSizeMatch(argsVect)) {
       throwInvalidInputFunctionException(argsVect);
     }
 
     if (!doAgsMatch(argsVect)) {
-      return Expression::buildFunctionExpression(*this, argsVect);
+      return Expression::buildFunctionExpression(*this, argsVect); // TODO: do not use Expression here
     }
 
     return call(argsVect);

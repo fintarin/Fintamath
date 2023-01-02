@@ -2,8 +2,8 @@
 
 namespace fintamath {
 
-Expression Sub::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *(argsVect.at(0).get().to<IArithmetic>() - argsVect.at(1).get().to<IArithmetic>());
+MathObjectPtr Sub::call(const ArgumentsVector &argsVect) const {
+  return argsVect.at(0).get().to<IArithmetic>() - argsVect.at(1).get().to<IArithmetic>();
 }
 
 }

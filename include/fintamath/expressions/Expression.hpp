@@ -33,6 +33,8 @@ public:
 
   explicit Expression(const std::string &str);
 
+  explicit Expression(const MathObjectPtr &obj);
+
   Expression(const IMathObject &obj);
 
   Expression(int64_t val);
@@ -61,7 +63,7 @@ public:
 
   MathObjectPtr compress() const;
 
-  static Expression buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+  static MathObjectPtr buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
   uint16_t getInfoPriority() override;
 

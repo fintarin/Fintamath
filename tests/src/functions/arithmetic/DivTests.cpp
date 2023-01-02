@@ -21,12 +21,12 @@ TEST(DivTests, getOperatorPriorityTest) {
 }
 
 TEST(DivTests, callTest) {
-  EXPECT_EQ(Div()(Integer(3), Integer(5)).toString(), "3/5");
-  EXPECT_EQ(Div()(Integer(3), Rational(5, 2)).toString(), "6/5");
-  EXPECT_EQ(Div()(Rational(5, 2), Integer(3)).toString(), "5/6");
-  EXPECT_EQ(Div()(Rational(5, 2), Rational(5, 3)).toString(), "3/2");
+  EXPECT_EQ(Div()(Integer(3), Integer(5))->toString(), "3/5");
+  EXPECT_EQ(Div()(Integer(3), Rational(5, 2))->toString(), "6/5");
+  EXPECT_EQ(Div()(Rational(5, 2), Integer(3))->toString(), "5/6");
+  EXPECT_EQ(Div()(Rational(5, 2), Rational(5, 3))->toString(), "3/2");
 
-  EXPECT_EQ(Div()(Integer(3), Variable("a")).toString(), "3/a");
+  EXPECT_EQ(Div()(Integer(3), Variable("a"))->toString(), "3/a");
 
   std::unique_ptr<IOperator> o = std::make_unique<Div>();
   EXPECT_THROW((*o)(Integer(1)), InvalidInputFunctionException);

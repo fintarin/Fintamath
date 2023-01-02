@@ -25,79 +25,79 @@
 namespace fintamath {
 
 Expression eqv(const Expression &lhs, const Expression &rhs) {
-  return Eqv()(lhs, rhs);
+  return Expression(Eqv()(lhs, rhs));
 }
 
 Expression abs(const Expression &rhs) {
-  return Abs()(rhs);
+  return Expression(Abs()(rhs));
 }
 
 Expression factorial(const Expression &rhs) {
-  return Factorial()(rhs);
+  return Expression(Factorial()(rhs));
 }
 
 Expression doubleFactorial(const Expression &rhs) {
-  return DoubleFactorial()(rhs);
+  return Expression(DoubleFactorial()(rhs));
 }
 
 Expression sqrt(const Expression &rhs) {
-  return Sqrt()(rhs);
+  return Expression(Sqrt()(rhs));
 }
 
 Expression pow(const Expression &lhs, const Expression &rhs) {
-  return Pow()(lhs, rhs);
+  return Expression(Pow()(lhs, rhs));
 }
 
 Expression exp(const Expression &rhs) {
-  return Exp()(rhs);
+  return Expression(Exp()(rhs));
 }
 
 Expression log(const Expression &lhs, const Expression &rhs) {
-  return Log()(lhs, rhs);
+  return Expression(Log()(lhs, rhs));
 }
 
 Expression ln(const Expression &rhs) {
-  return Ln()(rhs);
+  return Expression(Ln()(rhs));
 }
 
 Expression lb(const Expression &rhs) {
-  return Lb()(rhs);
+  return Expression(Lb()(rhs));
 }
 
 Expression lg(const Expression &rhs) {
-  return Lg()(rhs);
+  return Expression(Lg()(rhs));
 }
 
 Expression sin(const Expression &rhs) {
-  return Sin()(rhs);
+  return Expression(Sin()(rhs));
 }
 
 Expression cos(const Expression &rhs) {
-  return Cos()(rhs);
+  return Expression(Cos()(rhs));
 }
 
 Expression tan(const Expression &rhs) {
-  return Tan()(rhs);
+  return Expression(Tan()(rhs));
 }
 
 Expression cot(const Expression &rhs) {
-  return Cot()(rhs);
+  return Expression(Cot()(rhs));
 }
 
 Expression asin(const Expression &rhs) {
-  return Asin()(rhs);
+  return Expression(Asin()(rhs));
 }
 
 Expression acos(const Expression &rhs) {
-  return Acos()(rhs);
+  return Expression(Acos()(rhs));
 }
 
 Expression atan(const Expression &rhs) {
-  return Atan()(rhs);
+  return Expression(Atan()(rhs));
 }
 
 Expression acot(const Expression &rhs) {
-  return Acot()(rhs);
+  return Expression(Acot()(rhs));
 }
 
 Expression e() {

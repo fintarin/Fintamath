@@ -1,13 +1,14 @@
 #include "fintamath/expressions/AddExpression.hpp"
+
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/Exception.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -166,7 +167,7 @@ AddExpression::Element::Element(MathObjectPtr info, bool inverted) : info(info->
 MathObjectPtr AddExpression::Element::toMathObject(bool isPrecise) const {
   auto copy = *this;
   if (copy.inverted) {
-    copy.info = Neg()(*info->clone()).simplify();
+    copy.info = Neg()(*info);
     copy.simplify(isPrecise);
     return copy.info->clone();
   }
@@ -315,14 +316,12 @@ void AddExpression::simplifyPolynom() {
 }
 
 AddExpression::Polynom AddExpression::sumNumbers(const Polynom &numVect) {
-  Expression result = 0;
-  Add add;
-  Sub sub;
+  Expression result;
   for (const auto &elem : numVect) {
     if (elem.inverted) {
-      result = sub(*result.getInfo(), *elem.info);
+      result.getInfo() = Sub()(*result.getInfo(), *elem.info);
     } else {
-      result = add(*result.getInfo(), *elem.info);
+      result.getInfo() = Add()(*result.getInfo(), *elem.info);
     }
   }
   return {{result.simplify(), false}};
@@ -343,8 +342,7 @@ struct AddExpression::ObjectMul {
   MathObjectPtr getCounterValue() const {
     auto polynom = counter.getPolynom();
     auto countValue = polynom.at(0).info->clone();
-    *countValue = polynom.at(0).inverted ? *Neg()(*countValue).simplify() : *countValue;
-    return countValue;
+    return polynom.at(0).inverted ? Neg()(*countValue) : std::move(countValue);
   }
 };
 
@@ -387,7 +385,7 @@ void AddExpression::simplifyMul(Polynom &mulVect, Polynom &literalVect, Polynom 
     MathObjectPtr number = std::make_unique<Integer>(1);
     if (mulExprPolynom.at(0).info->instanceOf<INumber>()) {
       if (mulExprPolynom.at(0).inverted) {
-        number = Neg()(*mulExprPolynom.at(0).info).simplify();
+        number = Neg()(*mulExprPolynom.at(0).info);
       } else {
         number = mulExprPolynom.at(0).info->clone();
       }
@@ -487,7 +485,7 @@ MathObjectPtr AddExpression::getPowCoefficient(const MathObjectPtr &powValue) co
   for (const auto &child : addPolynom) {
     if (child.info->is<MulExpression>()) {
       if (auto result = child.info->to<MulExpression>().getPowCoefficient(powValue->clone())) {
-        return child.inverted ? Neg()(*result->clone(), Integer(-1)).simplify() : result->clone();
+        return child.inverted ? Neg()(*result) : result->clone();
       }
     }
     if (child.info->is<Expression>()) {

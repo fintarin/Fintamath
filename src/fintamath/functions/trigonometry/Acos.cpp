@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-Expression Acos::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *acos(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+MathObjectPtr Acos::call(const ArgumentsVector &argsVect) const {
+  return acos(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
 }
 
 }

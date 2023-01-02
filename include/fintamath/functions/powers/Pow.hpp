@@ -16,7 +16,7 @@ public:
   }
 
 protected:
-  Expression call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const override;
+  MathObjectPtr call(const ArgumentsVector &argsVect) const override;
 };
 
 }

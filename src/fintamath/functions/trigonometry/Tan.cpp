@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-Expression Tan::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *tan(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+MathObjectPtr Tan::call(const ArgumentsVector &argsVect) const {
+  return tan(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
 }
 
 }

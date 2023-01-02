@@ -2,8 +2,8 @@
 
 namespace fintamath {
 
-Expression UnaryPlus::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *(+argsVect.at(0).get().to<IArithmetic>());
+MathObjectPtr UnaryPlus::call(const ArgumentsVector &argsVect) const {
+  return +argsVect.at(0).get().to<IArithmetic>();
 }
 
 }

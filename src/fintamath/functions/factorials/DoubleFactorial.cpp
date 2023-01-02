@@ -5,14 +5,14 @@
 
 namespace fintamath {
 
-Expression DoubleFactorial::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+MathObjectPtr DoubleFactorial::call(const ArgumentsVector &argsVect) const {
   const auto &rhs = argsVect.at(0).get();
 
   if (!rhs.is<Integer>()) {
     throw UndefinedUnaryOpearatorException("!!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
   }
 
-  return doubleFactorial(rhs.to<Integer>());
+  return doubleFactorial(rhs.to<Integer>()).simplify();
 }
 
 }

@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-Expression Lb::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
-  return *lb(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+MathObjectPtr Lb::call(const ArgumentsVector &argsVect) const {
+  return lb(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
 }
 
 }

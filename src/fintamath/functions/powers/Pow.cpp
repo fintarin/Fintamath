@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-Expression naturalPow(const INumber &lhs, Integer rhs) {
+MathObjectPtr naturalPow(const INumber &lhs, Integer rhs) {
   NumberPtr res = INumber::parse("1");
   NumberPtr tmpLhs = helpers::cast<INumber>(lhs.clone());
 
@@ -18,18 +18,18 @@ Expression naturalPow(const INumber &lhs, Integer rhs) {
     }
   }
 
-  return *res;
+  return res->simplify();
 }
 
-Expression Pow::call(const std::vector<std::reference_wrapper<const IMathObject>> &argsVect) const {
+MathObjectPtr Pow::call(const ArgumentsVector &argsVect) const {
   const auto &lhs = argsVect.at(0).get().to<INumber>();
   const auto &rhs = argsVect.at(1).get().to<INumber>();
 
   if (rhs.is<Integer>() && rhs > Integer(0)) {
-    return *naturalPow(lhs, rhs.to<Integer>()).simplify();
+    return naturalPow(lhs, rhs.to<Integer>());
   }
 
-  return {*pow(helpers::Converter::convert<Real>(lhs), helpers::Converter::convert<Real>(rhs)).simplify()};
+  return pow(helpers::Converter::convert<Real>(lhs), helpers::Converter::convert<Real>(rhs)).simplify();
 }
 
 }
