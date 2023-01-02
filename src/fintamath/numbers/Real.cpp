@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "fintamath/core/Constants.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"

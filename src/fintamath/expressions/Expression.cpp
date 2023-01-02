@@ -1,5 +1,4 @@
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/core/Constants.hpp"
 #include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"

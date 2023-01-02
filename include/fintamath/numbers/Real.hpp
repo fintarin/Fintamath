@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "fintamath/core/Constants.hpp"
+#include "fintamath/core/Defines.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
