@@ -20,6 +20,14 @@ Expression mul(const Args &...args) {
   return (Expression(args) * ...);
 }
 
+inline Expression sub(const Expression &lhs, const Expression &rhs) {
+  return lhs - rhs;
+}
+
+inline Expression div(const Expression &lhs, const Expression &rhs) {
+  return lhs / rhs;
+}
+
 Expression eqv(const Expression &lhs, const Expression &rhs);
 
 Expression abs(const Expression &rhs);

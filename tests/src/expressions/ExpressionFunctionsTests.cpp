@@ -27,6 +27,26 @@ TEST(FunctionsTests, mulTest) {
             "3*a*b+3*b^2+a*c+b*c"); // TODO: replace to 3*b^2+3*a*b+a*c+b*c
 }
 
+TEST(FunctionsTests, subTest) {
+  EXPECT_EQ(sub(Variable("a"), Expression("b^2")).toString(), "-b^2+a");
+  EXPECT_EQ(sub(10, Expression("a+2")).toString(), "-a+8");
+  EXPECT_EQ(sub(Variable("a"), Expression("a+2")).toString(), "-2");
+  EXPECT_EQ(sub(Expression("b+2"), Expression("a+2")).toString(), "-a+b");
+  EXPECT_EQ(sub(Expression("10+a^3"), Expression("a^2")).toString(), "-a^2+a^3+10"); // TODO sort powers
+  EXPECT_EQ(sub(Expression("a*b"), Expression("b*a")).toString(), "0");
+  EXPECT_EQ(sub(Expression("a+b"), Expression("a+b")).toString(), "0");
+}
+
+TEST(FunctionsTests, divTest) {
+  EXPECT_EQ(div(Variable("a"), Expression("b^2")).toString(), "b^(-2)*a");
+  EXPECT_EQ(div(10, Expression("a+2")).toString(), "10/(a+2)");
+  EXPECT_EQ(div(Variable("a"), Expression("a+2")).toString(), "a/(a+2)");
+  EXPECT_EQ(div(Expression("b+2"), Expression("a+2")).toString(), "(b+2)/(a+2)");
+  EXPECT_EQ(div(Expression("10+a^3"), Expression("a^2")).toString(), "10*a^(-2)+a");
+  EXPECT_EQ(div(Expression("a*b"), Expression("b*a")).toString(), "1");
+  EXPECT_EQ(div(Expression("a+b"), Expression("a+b")).toString(), "1");
+}
+
 TEST(FunctionsTests, eqvTest) {
   EXPECT_EQ(eqv(Expression("a+3"), Expression("3+a")).toString(), "true");
   EXPECT_EQ(eqv(Expression("a^2"), Expression("a*a+0")).toString(), "true");
