@@ -19,7 +19,9 @@ public:
 
   virtual MathObjectPtr clone() const = 0;
 
-  virtual std::string toString() const;
+  virtual std::string toString() const {
+    return {};
+  }
 
   template <typename T>
   bool is() const {
@@ -36,31 +38,21 @@ public:
     return dynamic_cast<const T &>(*this);
   }
 
-  virtual MathObjectPtr simplify() const;
+  virtual MathObjectPtr simplify() const {
+    return clone();
+  }
 
-  friend bool operator==(const IMathObject &lhs, const IMathObject &rhs);
+  friend bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
+    return lhs.equalsAbstract(rhs);
+  }
 
-  friend bool operator!=(const IMathObject &lhs, const IMathObject &rhs);
+  friend bool operator!=(const IMathObject &lhs, const IMathObject &rhs) {
+    return !lhs.equalsAbstract(rhs);
+  }
 
 protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
 };
-
-inline std::string IMathObject::toString() const {
-  return {};
-}
-
-inline MathObjectPtr IMathObject::simplify() const {
-  return clone();
-}
-
-inline bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
-  return lhs.equalsAbstract(rhs);
-}
-
-inline bool operator!=(const IMathObject &lhs, const IMathObject &rhs) {
-  return !lhs.equalsAbstract(rhs);
-}
 
 template <typename Derived>
 class IMathObjectCRTP : virtual public IMathObject {
