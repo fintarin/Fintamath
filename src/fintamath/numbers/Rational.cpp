@@ -33,12 +33,6 @@ Rational::Rational(int64_t rhs) : numerator(rhs) {
   fixNegative();
 }
 
-Rational Rational::round(int64_t precision) const {
-  Rational res(toString(precision));
-  res.precise = false;
-  return res;
-}
-
 Integer Rational::getInteger() const {
   return numerator / denominator;
 }
@@ -51,48 +45,14 @@ Integer Rational::getDenominator() const {
   return denominator;
 }
 
-std::string Rational::toString(int64_t precision) const {
-  constexpr int64_t base = 10;
-  constexpr int64_t roundUp = 5;
-
-  std::string precisionStr(size_t(precision) + 2, '0');
-  precisionStr.front() = '1';
-
-  Integer val = numerator * Integer(precisionStr) / denominator;
-  if (val % base >= roundUp) {
-    val += base;
-  }
-  val /= base;
-
-  std::string strVal = val.toString();
-  if (strVal.size() <= size_t(precision)) {
-    strVal.insert(strVal.begin(), size_t(precision) + 1 - strVal.size(), '0');
-  }
-  strVal.insert(strVal.end() - precision, '.');
-
-  while (!strVal.empty() && strVal.back() == '0') {
-    strVal.pop_back();
-  }
-  if (strVal.back() == '.') {
-    strVal.pop_back();
-  }
-
-  if (sign) {
-    strVal.insert(strVal.begin(), '-');
-  }
-
-  return strVal;
-}
-
 std::string Rational::toString() const {
-  if (!precise) {
-    return toString(DEFAULT_PRECISION);
-  }
   std::string res = sign ? "-" : "";
   res += numerator.toString();
+
   if (denominator != 1) {
     res += "/" + denominator.toString();
   }
+
   return res;
 }
 
@@ -111,7 +71,7 @@ void Rational::fixZero() {
 }
 
 bool Rational::equals(const Rational &rhs) const {
-  return sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator && precise == rhs.precise;
+  return sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator;
 }
 
 bool Rational::less(const Rational &rhs) const {
@@ -133,7 +93,6 @@ Rational &Rational::add(const Rational &rhs) {
   toCommonDenominators(*this, tmpRhs);
   numerator += tmpRhs.numerator;
   toIrreducibleRational();
-  solvePrecision(rhs);
   return *this;
 }
 
@@ -142,25 +101,22 @@ Rational &Rational::substract(const Rational &rhs) {
   toCommonDenominators(*this, tmpRhs);
   numerator -= tmpRhs.numerator;
   toIrreducibleRational();
-  solvePrecision(rhs);
   return *this;
 }
 
 Rational &Rational::multiply(const Rational &rhs) {
   numerator *= rhs.numerator;
   denominator *= rhs.denominator;
-  sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
+  sign = (!sign || !rhs.sign) && (sign || rhs.sign);
   toIrreducibleRational();
-  solvePrecision(rhs);
   return *this;
 }
 
 Rational &Rational::divide(const Rational &rhs) {
   numerator *= rhs.denominator;
   denominator *= rhs.numerator;
-  sign = !((sign && rhs.sign) || (!sign && !rhs.sign));
+  sign = (!sign || !rhs.sign) && (sign || rhs.sign);
   toIrreducibleRational();
-  solvePrecision(rhs);
   return *this;
 }
 
@@ -178,6 +134,10 @@ Rational &Rational::decrease() {
 }
 
 void Rational::parse(const std::string &str) {
+  if (str.empty() || str == ".") {
+    throw InvalidInputException(str);
+  }
+
   int64_t firstDigitNum = 0;
   int64_t firstDotNum = std::distance(str.begin(), std::find(str.begin(), str.end(), '.'));
 
@@ -187,14 +147,18 @@ void Rational::parse(const std::string &str) {
     firstDigitNum++;
   }
 
+  std::string intPartStr = str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum));
   Integer intPart;
-  try {
-    intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
-  } catch (const std::invalid_argument &) {
-    throw InvalidInputException(str);
+
+  if (!intPartStr.empty()) {
+    try {
+      intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
+    } catch (const std::invalid_argument &) {
+      throw InvalidInputException(str);
+    }
   }
 
-  if (size_t(firstDotNum) != str.size()) {
+  if (firstDotNum + 1 < int64_t(str.size())) {
     try {
       auto numeratorStr = str.substr(size_t(firstDotNum) + 1);
       std::string denominatorStr(numeratorStr.size() + 1, '0');
@@ -237,10 +201,6 @@ void Rational::toIrreducibleRational() {
   numerator /= gcdVal;
   denominator /= gcdVal;
   fixZero();
-}
-
-void Rational::solvePrecision(const Rational &rhs) {
-  precise = precise && rhs.precise;
 }
 
 void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {

@@ -14,6 +14,8 @@ TEST(RationalTests, stringConstructorTest) {
   EXPECT_EQ(Rational("-93"), -93);
   EXPECT_EQ(Rational("-9.3").toString(), "-93/10");
   EXPECT_EQ(Rational("0989929039237832000.9302930929333").toString(), "9899290392378320009302930929333/10000000000000");
+  EXPECT_EQ(Rational(".1").toString(), "1/10");
+  EXPECT_EQ(Rational("1.").toString(), "1");
 
   EXPECT_THROW(Rational("--10"), InvalidInputException);
   EXPECT_THROW(Rational("test"), InvalidInputException);
@@ -25,8 +27,8 @@ TEST(RationalTests, stringConstructorTest) {
   EXPECT_THROW(Rational("1.a"), InvalidInputException);
   EXPECT_THROW(Rational("1a.1"), InvalidInputException);
   EXPECT_THROW(Rational("1.1a"), InvalidInputException);
-  EXPECT_THROW(Rational(".1"), InvalidInputException);
-  EXPECT_THROW(Rational("1."), InvalidInputException);
+  EXPECT_THROW(Rational(".1."), InvalidInputException);
+  EXPECT_THROW(Rational("."), InvalidInputException);
   EXPECT_THROW(Rational("--10.-1"), InvalidInputException);
   EXPECT_THROW(Rational("10.-1"), InvalidInputException);
   EXPECT_THROW(Rational("1-0.1"), InvalidInputException);

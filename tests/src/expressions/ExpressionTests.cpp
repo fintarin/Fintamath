@@ -160,6 +160,11 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3+3*sin(x)+3*sin(x)^2+1");
   EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3+3*sin(x)+3*sin(x)^2+1)");
   EXPECT_EQ(Expression("1^-1").toString(), "1");
+  EXPECT_EQ(Expression("1.").toString(), "1");
+  EXPECT_EQ(Expression(".1").toString(), "1/10");
+  EXPECT_EQ(Expression("2+.1+.1+1.+1.").toString(), "21/5");
+  EXPECT_EQ(Expression("2.a").toString(), "2*a");
+  EXPECT_EQ(Expression("a.2").toString(), "1/5*a");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
@@ -172,7 +177,6 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(1+2))"), InvalidInputException);
   EXPECT_THROW(Expression("5-*3"), InvalidInputException);
   EXPECT_THROW(Expression("((()()))"), InvalidInputException);
-  EXPECT_THROW(Expression("2.a"), InvalidInputException);
   EXPECT_THROW(Expression("2.2.2"), InvalidInputException);
   EXPECT_THROW(Expression("--"), InvalidInputException);
   EXPECT_THROW(Expression("."), InvalidInputException);

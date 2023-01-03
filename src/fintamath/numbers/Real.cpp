@@ -48,7 +48,7 @@ Real::Real(const RealImpl &impl) : impl(std::make_unique<RealImpl>(impl)) {
 }
 
 Real::Real(std::string str) : Real() {
-  if (str.empty()) {
+  if (str.empty() || str == ".") {
     throw InvalidInputException(str);
   }
 

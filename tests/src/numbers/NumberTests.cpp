@@ -87,6 +87,12 @@ TEST(NumberTests, parseTest) {
   EXPECT_EQ(INumber::parse("0.1")->toString(), "1/10");
   EXPECT_TRUE(INumber::parse("0.1")->is<Rational>());
 
+  EXPECT_EQ(INumber::parse(".1")->toString(), "1/10");
+  EXPECT_TRUE(INumber::parse(".1")->is<Rational>());
+
+  EXPECT_EQ(INumber::parse("1.")->toString(), "1");
+  EXPECT_TRUE(INumber::parse("1.")->is<Rational>());
+
   EXPECT_EQ(INumber::parse("12323231498721983.12323432432")->toString(), "77020196867012394520214527/6250000000");
   EXPECT_TRUE(INumber::parse("12323231498721983.12323432432")->is<Rational>());
 
@@ -103,8 +109,6 @@ TEST(NumberTests, parseTest) {
   EXPECT_EQ(INumber::parse("1.a"), nullptr);
   EXPECT_EQ(INumber::parse("1a.1"), nullptr);
   EXPECT_EQ(INumber::parse("1.1a"), nullptr);
-  EXPECT_EQ(INumber::parse(".1"), nullptr);
-  EXPECT_EQ(INumber::parse("1."), nullptr);
   EXPECT_EQ(INumber::parse("--10.-1"), nullptr);
   EXPECT_EQ(INumber::parse("10.-1"), nullptr);
   EXPECT_EQ(INumber::parse("1-0.1"), nullptr);
