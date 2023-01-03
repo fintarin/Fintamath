@@ -2,10 +2,10 @@
 
 #include "fintamath/functions/trigonometry/Sin.hpp"
 
-#include "fintamath/numbers/RealFunctions.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 

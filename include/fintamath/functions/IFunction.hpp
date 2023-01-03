@@ -3,13 +3,15 @@
 #include <algorithm>
 
 #include "fintamath/exceptions/InvalidInputFunctionException.hpp"
-#include "fintamath/expressions/Expression.hpp"
-#include "fintamath/helpers/Parser.hpp"
+#include "fintamath/expressions/Expression.hpp" // TODO: remove this
+#include "fintamath/parser/Parser.hpp"
 
 template <typename Head, typename... Tail>
 struct A {};
 
 namespace fintamath {
+
+using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;
 
 class IFunction;
 using FunctionPtr = std::unique_ptr<IFunction>;
@@ -43,11 +45,11 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
   static void addParser() {
-    helpers::addParser<T>(parserMap);
+    Parser::addParser<T>(parserMap);
   }
 
   static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-    return helpers::parse<FunctionPtr>(parserMap, parsedStr, [type](const FunctionPtr &func) {
+    return Parser::parse<FunctionPtr>(parserMap, parsedStr, [type](const FunctionPtr &func) {
       return type == IFunction::Type::Any || func->getFunctionType() == type;
     });
   }
@@ -56,7 +58,7 @@ protected:
   virtual MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const = 0;
 
 private:
-  static helpers::ParserMap<FunctionPtr> parserMap;
+  static Parser::ParserMap<FunctionPtr> parserMap;
 };
 
 template <typename Derived, typename... Args>

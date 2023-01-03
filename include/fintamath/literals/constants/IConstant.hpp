@@ -14,22 +14,22 @@ class IConstant : virtual public ILiteral {
 public:
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
   static void addParser() {
-    helpers::addParser<T>(parserMap);
+    Parser::addParser<T>(parserMap);
   }
 
   static ConstantPtr parse(const std::string &parsedStr) {
-    return helpers::parse<ConstantPtr>(parserMap, parsedStr, [](const ConstantPtr &) { return true; });
+    return Parser::parse<ConstantPtr>(parserMap, parsedStr, [](const ConstantPtr &) { return true; });
   }
 
-  Expression operator()() const {
-    return getValue();
+  Real operator()() const {
+    return call();
   }
 
 protected:
-  virtual Expression getValue() const = 0;
+  virtual Real call() const = 0;
 
 private:
-  static helpers::ParserMap<ConstantPtr> parserMap;
+  static Parser::ParserMap<ConstantPtr> parserMap;
 };
 
 template <typename Derived>

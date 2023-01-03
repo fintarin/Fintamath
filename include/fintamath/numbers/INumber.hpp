@@ -3,7 +3,7 @@
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IIncremental.hpp"
-#include "fintamath/helpers/Parser.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
@@ -18,11 +18,11 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
   static void addParser() {
-    helpers::addParser<T>(parserVector);
+    Parser::addParser<T>(parserVector);
   }
 
   static NumberPtr parse(const std::string &str) {
-    return helpers::parse(parserVector, str);
+    return Parser::parse(parserVector, str);
   }
 
   static NumberPtr parse(int64_t num) {
@@ -30,27 +30,27 @@ public:
   }
 
 private:
-  static helpers::ParserVector<NumberPtr, std::string> parserVector;
+  static Parser::ParserVector<NumberPtr, std::string> parserVector;
 };
 
 inline NumberPtr operator+(const INumber &lhs, const INumber &rhs) {
   auto res = lhs + rhs.to<IArithmetic>();
-  return helpers::cast<INumber>(res);
+  return castPtr<INumber>(res);
 }
 
 inline NumberPtr operator-(const INumber &lhs, const INumber &rhs) {
   auto res = lhs - rhs.to<IArithmetic>();
-  return helpers::cast<INumber>(res);
+  return castPtr<INumber>(res);
 }
 
 inline NumberPtr operator*(const INumber &lhs, const INumber &rhs) {
   auto res = lhs * rhs.to<IArithmetic>();
-  return helpers::cast<INumber>(res);
+  return castPtr<INumber>(res);
 }
 
 inline NumberPtr operator/(const INumber &lhs, const INumber &rhs) {
   auto res = lhs / rhs.to<IArithmetic>();
-  return helpers::cast<INumber>(res);
+  return castPtr<INumber>(res);
 }
 
 template <typename Derived>

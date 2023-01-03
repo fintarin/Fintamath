@@ -5,8 +5,9 @@
 #include <string>
 #include <vector>
 
-#include "fintamath/core/Defines.hpp"
+#include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {

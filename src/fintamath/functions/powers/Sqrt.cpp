@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Sqrt::call(const ArgumentsVector &argsVect) const {
-  return sqrt(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+  return sqrt(Converter::convert<Real>(argsVect.at(0))).simplify();
 }
 
 }

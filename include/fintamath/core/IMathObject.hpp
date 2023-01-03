@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "fintamath/helpers/Converter.hpp"
+#include "fintamath/multimethod/Converter.hpp"
 
 namespace fintamath {
 
@@ -78,10 +78,10 @@ protected:
     if (rhs.is<Derived>()) {
       return equals(rhs.to<Derived>());
     }
-    if (MathObjectPtr tmpRhs = helpers::Converter::convert(rhs, *this); tmpRhs != nullptr) {
+    if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {
       return equals(tmpRhs->template to<Derived>());
     }
-    if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
+    if (MathObjectPtr tmpLhs = Converter::convert(*this, rhs); tmpLhs != nullptr) {
       return *tmpLhs == rhs;
     }
     return false;

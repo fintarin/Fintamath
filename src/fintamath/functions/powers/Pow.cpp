@@ -7,7 +7,7 @@ namespace fintamath {
 
 MathObjectPtr naturalPow(const INumber &lhs, Integer rhs) {
   NumberPtr res = INumber::parse("1");
-  NumberPtr tmpLhs = helpers::cast<INumber>(lhs.clone());
+  NumberPtr tmpLhs = castPtr<INumber>(lhs.clone());
 
   while (rhs != 0) {
     if ((*(rhs.toString().end() - 1) - '0') % 2 == 0) {
@@ -23,8 +23,8 @@ MathObjectPtr naturalPow(const INumber &lhs, Integer rhs) {
 }
 
 MathObjectPtr Pow::call(const ArgumentsVector &argsVect) const {
-  auto lhs = helpers::cast<INumber>(argsVect.at(0).get().simplify());
-  auto rhs = helpers::cast<INumber>(argsVect.at(1).get().simplify());
+  auto lhs = castPtr<INumber>(argsVect.at(0).get().simplify());
+  auto rhs = castPtr<INumber>(argsVect.at(1).get().simplify());
 
   if (rhs->is<Integer>() && lhs->isPrecise()) {
     Integer intRhs = rhs->to<Integer>();
@@ -40,7 +40,7 @@ MathObjectPtr Pow::call(const ArgumentsVector &argsVect) const {
     return naturalPow(*lhs, intRhs);
   }
 
-  return pow(helpers::Converter::convert<Real>(*lhs), helpers::Converter::convert<Real>(*rhs)).simplify();
+  return pow(Converter::convert<Real>(*lhs), Converter::convert<Real>(*rhs)).simplify();
 }
 
 }

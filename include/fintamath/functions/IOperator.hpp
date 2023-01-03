@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 class IOperator;
@@ -25,17 +26,17 @@ public:
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IOperator, T>>>
   static void addParser() {
     IFunction::addParser<T>();
-    helpers::addParser<T>(parserMap);
+    Parser::addParser<T>(parserMap);
   }
 
   static OperatorPtr parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
-    return helpers::parse<OperatorPtr>(parserMap, parsedStr, [priority](const OperatorPtr &oper) {
+    return Parser::parse<OperatorPtr>(parserMap, parsedStr, [priority](const OperatorPtr &oper) {
       return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
     });
   }
 
 private:
-  static helpers::ParserMap<OperatorPtr> parserMap;
+  static Parser::ParserMap<OperatorPtr> parserMap;
 };
 
 template <typename Derived, typename... Args>

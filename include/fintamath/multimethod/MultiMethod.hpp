@@ -4,9 +4,9 @@
 #include <map>
 #include <tuple>
 
-#include "fintamath/helpers/TypeInfo.hpp"
+#include "fintamath/multimethod/TypeInfo.hpp"
 
-namespace fintamath::helpers {
+namespace fintamath {
 
 template <typename Signature>
 class MultiMethod;

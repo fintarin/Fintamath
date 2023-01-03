@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/helpers/MultiMethod.hpp"
+#include "fintamath/multimethod/MultiMethod.hpp"
 
 namespace fintamath {
 
@@ -11,7 +11,7 @@ using MathObjectPtr = std::unique_ptr<IMathObject>;
 
 }
 
-namespace fintamath::helpers {
+namespace fintamath {
 
 class Converter {
 public:

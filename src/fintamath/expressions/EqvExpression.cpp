@@ -1,18 +1,20 @@
 #include "fintamath/expressions/EqvExpression.hpp"
 
+#include <algorithm>
+#include <cstdint>
+#include <ios>
+
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
-#include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include <algorithm>
-#include <cstdint>
-#include <ios>
+#include "fintamath/tokenizer/TokenVector.hpp"
 
 namespace fintamath {
 
@@ -124,7 +126,7 @@ void EqvExpression::parse(const TokenVector &tokens) {
 
 void EqvExpression::setPrecision(uint8_t precision) {
   if (leftExpr->instanceOf<IExpression>()) {
-    auto copyExpr = helpers::cast<IExpression>(leftExpr);
+    auto copyExpr = castPtr<IExpression>(leftExpr);
     copyExpr->setPrecision(precision);
     leftExpr = copyExpr->clone();
   }

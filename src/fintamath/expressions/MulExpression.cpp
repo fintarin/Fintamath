@@ -1,5 +1,8 @@
 #include "fintamath/expressions/MulExpression.hpp"
 
+#include <algorithm>
+#include <memory>
+
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
@@ -11,14 +14,11 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Real.hpp"
-#include <algorithm>
-#include <memory>
 
 namespace fintamath {
 
@@ -104,7 +104,7 @@ void MulExpression::Element::simplify(bool isPrecise) {
     return;
   }
   if (info->instanceOf<IConstant>()) {
-    auto constant = (*helpers::cast<IConstant>(info->clone()))().simplify();
+    auto constant = (*castPtr<IConstant>(info->clone()))().simplify();
     if (!isPrecise || constant->to<INumber>().isPrecise()) {
       info = constant->clone();
       return;
@@ -124,18 +124,18 @@ MulExpression::Element &MulExpression::Element::operator=(const Element &rhs) {
 
 void MulExpression::Element::setPrecision(uint8_t precision) {
   if (info->instanceOf<INumber>()) {
-    info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
   }
 
   if (info->instanceOf<IExpression>()) {
-    auto copyExpr = helpers::cast<IExpression>(info->clone());
+    auto copyExpr = castPtr<IExpression>(info->clone());
     copyExpr->setPrecision(precision);
     info = copyExpr->clone();
   }
 
   if (info->instanceOf<IConstant>()) {
-    info = (*helpers::cast<IConstant>(info->clone()))().simplify();
-    info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    info = (*castPtr<IConstant>(info->clone()))().simplify();
+    info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
   }
 }
 

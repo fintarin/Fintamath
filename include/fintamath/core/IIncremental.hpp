@@ -1,7 +1,7 @@
 #pragma once
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/helpers/Caster.hpp"
 
 namespace fintamath {
 
@@ -34,14 +34,14 @@ inline IIncremental &operator--(IIncremental &rhs) {
 
 inline IncrementalPtr operator++(IIncremental &lhs, int) {
   auto tmp = lhs.clone();
-  auto res = helpers::cast<IIncremental>(tmp);
+  auto res = castPtr<IIncremental>(tmp);
   lhs.increaseAbstract();
   return res;
 }
 
 inline IncrementalPtr operator--(IIncremental &lhs, int) {
   auto tmp = lhs.clone();
-  auto res = helpers::cast<IIncremental>(tmp);
+  auto res = castPtr<IIncremental>(tmp);
   lhs.decreaseAbstract();
   return res;
 }

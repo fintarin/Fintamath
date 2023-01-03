@@ -1,8 +1,8 @@
 #pragma once
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
-#include "fintamath/helpers/Caster.hpp"
 
 namespace fintamath {
 
@@ -37,16 +37,16 @@ protected:
 
   ModularPtr modAbstract(const IModular &rhs) const final {
     if (rhs.is<Derived>()) {
-      auto tmpLhs = helpers::cast<IModularCRTP<Derived>>(clone());
-      return helpers::cast<IModular>(tmpLhs->mod(rhs.to<Derived>()).simplify());
+      auto tmpLhs = castPtr<IModularCRTP<Derived>>(clone());
+      return castPtr<IModular>(tmpLhs->mod(rhs.to<Derived>()).simplify());
     }
-    if (MathObjectPtr tmpRhs = helpers::Converter::convert(rhs, *this); tmpRhs != nullptr) {
-      auto tmpLhs = helpers::cast<IModularCRTP<Derived>>(clone());
-      return helpers::cast<IModular>(tmpLhs->mod(tmpRhs->to<Derived>()).simplify());
+    if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {
+      auto tmpLhs = castPtr<IModularCRTP<Derived>>(clone());
+      return castPtr<IModular>(tmpLhs->mod(tmpRhs->to<Derived>()).simplify());
     }
-    if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
+    if (MathObjectPtr tmpLhs = Converter::convert(*this, rhs); tmpLhs != nullptr) {
       auto res = (tmpLhs->to<IModular>() % rhs)->simplify();
-      return helpers::cast<IModular>(res);
+      return castPtr<IModular>(res);
     }
     throw InvalidInputBinaryOpearatorException("%", toString(), rhs.toString());
   }

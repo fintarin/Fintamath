@@ -5,8 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Log::call(const ArgumentsVector &argsVect) const {
-  return log(helpers::Converter::convert<Real>(argsVect.at(0)), helpers::Converter::convert<Real>(argsVect.at(1)))
-      .simplify();
+  return log(Converter::convert<Real>(argsVect.at(0)), Converter::convert<Real>(argsVect.at(1))).simplify();
 }
 
 }

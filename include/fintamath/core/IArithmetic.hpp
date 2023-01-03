@@ -1,8 +1,8 @@
 #pragma once
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
-#include "fintamath/helpers/Caster.hpp"
 
 namespace fintamath {
 
@@ -23,6 +23,26 @@ public:
 
   friend ArithmeticPtr operator-(const IArithmetic &rhs);
 
+  template <typename Lhs, typename Rhs, typename Func>
+  static void addMultiAddFunction(const Func &func) {
+    multiAdd.add<Lhs, Rhs>(func);
+  }
+
+  template <typename Lhs, typename Rhs, typename Func>
+  static void addMultiSubFunction(const Func &func) {
+    multiSub.add<Lhs, Rhs>(func);
+  }
+
+  template <typename Lhs, typename Rhs, typename Func>
+  static void addMultiMulFunction(const Func &func) {
+    multiMul.add<Lhs, Rhs>(func);
+  }
+
+  template <typename Lhs, typename Rhs, typename Func>
+  static void addMultiDivFunction(const Func &func) {
+    multiDiv.add<Lhs, Rhs>(func);
+  }
+
 protected:
   virtual ArithmeticPtr addAbstract(const IArithmetic &rhs) const = 0;
 
@@ -35,21 +55,41 @@ protected:
   virtual ArithmeticPtr convertAbstract() const = 0;
 
   virtual ArithmeticPtr negateAbstract() const = 0;
+
+  static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiAdd;
+
+  static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiSub;
+
+  static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiMul;
+
+  static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiDiv;
 };
 
 inline ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
+  if (auto res = IArithmetic::multiAdd(lhs, rhs)) {
+    return res;
+  }
   return lhs.addAbstract(rhs);
 }
 
 inline ArithmeticPtr operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
+  if (auto res = IArithmetic::multiSub(lhs, rhs)) {
+    return res;
+  }
   return lhs.substractAbstract(rhs);
 }
 
 inline ArithmeticPtr operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
+  if (auto res = IArithmetic::multiMul(lhs, rhs)) {
+    return res;
+  }
   return lhs.multiplyAbstract(rhs);
 }
 
 inline ArithmeticPtr operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
+  if (auto res = IArithmetic::multiDiv(lhs, rhs)) {
+    return res;
+  }
   return lhs.divideAbstract(rhs);
 }
 
@@ -135,10 +175,6 @@ protected:
   }
 
   ArithmeticPtr divideAbstract(const IArithmetic &rhs) const final {
-    if (auto tmp = multiDiv(*this, rhs); tmp != nullptr) {
-      return tmp;
-    }
-
     return executeAbstract(
         rhs, "/", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.divide(rhs); },
         [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs / rhs; });
@@ -157,20 +193,18 @@ private:
                                 std::function<Derived(IArithmeticCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
                                 std::function<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> &&f2) const {
     if (rhs.is<Derived>()) {
-      auto tmpLhs = helpers::cast<IArithmeticCRTP<Derived>>(clone());
-      return helpers::cast<IArithmetic>(f1(*tmpLhs, rhs.to<Derived>()).simplify());
+      auto tmpLhs = castPtr<IArithmeticCRTP<Derived>>(clone());
+      return castPtr<IArithmetic>(f1(*tmpLhs, rhs.to<Derived>()).simplify());
     }
-    if (MathObjectPtr tmpRhs = helpers::Converter::convert(rhs, *this); tmpRhs != nullptr) {
-      auto tmpLhs = helpers::cast<IArithmeticCRTP<Derived>>(clone());
-      return helpers::cast<IArithmetic>(f1(*tmpLhs, tmpRhs->to<Derived>()).simplify());
+    if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {
+      auto tmpLhs = castPtr<IArithmeticCRTP<Derived>>(clone());
+      return castPtr<IArithmetic>(f1(*tmpLhs, tmpRhs->to<Derived>()).simplify());
     }
-    if (MathObjectPtr tmpLhs = helpers::Converter::convert(*this, rhs); tmpLhs != nullptr) {
-      return helpers::cast<IArithmetic>(f2(tmpLhs->to<IArithmetic>(), rhs)->simplify());
+    if (MathObjectPtr tmpLhs = Converter::convert(*this, rhs); tmpLhs != nullptr) {
+      return castPtr<IArithmetic>(f2(tmpLhs->to<IArithmetic>(), rhs)->simplify());
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
   }
-
-  friend ArithmeticPtr multiDiv(const IArithmetic &lhs, const IArithmetic &rhs);
 };
 
 template <typename LhsType, typename RhsType,

@@ -1,9 +1,8 @@
 #pragma once
-#include "fintamath/core/Defines.hpp"
-#include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/expressions/MulExpression.hpp"
-#include "fintamath/helpers/Converter.hpp"
+
 #include <cstdint>
+
+#include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
 

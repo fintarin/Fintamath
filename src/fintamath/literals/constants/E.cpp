@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-Expression E::getValue() const {
+Real E::call() const {
   return E_NUM;
 }
 

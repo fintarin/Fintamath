@@ -11,7 +11,7 @@ public:
   }
 
 protected:
-  Expression getValue() const override;
+  Real call() const override;
 };
 
 }

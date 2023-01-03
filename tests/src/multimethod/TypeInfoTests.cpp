@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/helpers/TypeInfo.hpp"
+#include "fintamath/multimethod/TypeInfo.hpp"
 
-using namespace fintamath::helpers;
+using namespace fintamath;
 
 TEST(TypeInfoTests, typeInfoConstructorTest) {
   EXPECT_NO_THROW(TypeInfo(typeid(std::string)));

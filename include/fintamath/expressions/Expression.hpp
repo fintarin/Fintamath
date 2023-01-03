@@ -3,14 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/helpers/Converter.hpp"
 
 namespace fintamath {
-
-class IFunction;
 
 class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
 public:

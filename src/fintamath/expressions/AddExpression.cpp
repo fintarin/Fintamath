@@ -13,8 +13,6 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/helpers/Caster.hpp"
-#include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -151,19 +149,19 @@ AddExpression::Element &AddExpression::Element::operator=(const Element &rhs) {
 
 void AddExpression::Element::setPrecision(uint8_t precision) {
   if (info->instanceOf<INumber>()) {
-    info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
   }
 
   if (info->instanceOf<IExpression>()) {
-    auto copyExpr = helpers::cast<IExpression>(info->clone());
+    auto copyExpr = castPtr<IExpression>(info->clone());
     copyExpr->setPrecision(precision);
     info = copyExpr->clone();
   }
 
   if (info->instanceOf<IConstant>()) {
-    info = (*helpers::cast<IConstant>(info->clone()))().simplify();
+    info = (*castPtr<IConstant>(info->clone()))().simplify();
     auto a = info->toString();
-    info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
   }
 }
 
@@ -187,7 +185,7 @@ void AddExpression::Element::simplify(bool isPrecise) {
     return;
   }
   if (info->instanceOf<IConstant>()) {
-    auto constant = (*helpers::cast<IConstant>(info->clone()))().simplify();
+    auto constant = (*castPtr<IConstant>(info->clone()))().simplify();
     if (!isPrecise || constant->to<INumber>().isPrecise()) {
       info = constant->clone();
       return;

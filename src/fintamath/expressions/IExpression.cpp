@@ -1,12 +1,11 @@
 #include "fintamath/expressions/IExpression.hpp"
 
-#include "fintamath/core/Defines.hpp"
+#include <algorithm>
+
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include <algorithm>
 
 namespace fintamath {
 

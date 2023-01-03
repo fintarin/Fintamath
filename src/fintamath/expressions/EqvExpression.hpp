@@ -1,12 +1,11 @@
 #pragma once
-#include "fintamath/core/Defines.hpp"
-#include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/expressions/MulExpression.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/helpers/Converter.hpp"
-#include "fintamath/literals/Variable.hpp"
+
 #include <cstdint>
 #include <vector>
+
+#include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 

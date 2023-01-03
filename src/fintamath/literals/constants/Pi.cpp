@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-Expression Pi::getValue() const {
+Real Pi::call() const {
   return PI_NUM;
 }
 

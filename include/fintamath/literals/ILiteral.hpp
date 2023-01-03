@@ -1,8 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/expressions/Expression.hpp"
-#include "fintamath/helpers/Parser.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
@@ -15,19 +14,19 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
   static void addParser() {
-    helpers::addParser<T>(parserVector);
+    Parser::addParser<T>(parserVector);
   }
 
-  static void addParser(const helpers::Function<LiteralPtr, std::string> &parserFunc) {
-    helpers::addParser(parserVector, parserFunc);
+  static void addParser(const Parser::Function<LiteralPtr, std::string> &parserFunc) {
+    Parser::addParser(parserVector, parserFunc);
   }
 
   static LiteralPtr parse(const std::string &str) {
-    return helpers::parse(parserVector, str);
+    return Parser::parse(parserVector, str);
   }
 
 private:
-  static helpers::ParserVector<LiteralPtr, std::string> parserVector;
+  static Parser::ParserVector<LiteralPtr, std::string> parserVector;
 };
 
 template <typename Derived>

@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Atan::call(const ArgumentsVector &argsVect) const {
-  return atan(helpers::Converter::convert<Real>(argsVect.at(0))).simplify();
+  return atan(Converter::convert<Real>(argsVect.at(0))).simplify();
 }
 
 }

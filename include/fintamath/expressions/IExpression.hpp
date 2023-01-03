@@ -3,15 +3,18 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/core/Defines.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/helpers/Converter.hpp"
-#include "fintamath/helpers/Parser.hpp"
+#include "fintamath/parser/Parser.hpp"
+#include "fintamath/tokenizer/TokenVector.hpp"
 
 namespace fintamath {
 
 class IFunction;
+
+using ArgumentsVector =
+    std::vector<std::reference_wrapper<const class IMathObject>>; // TODO: remove after break circular dependency
+                                                                  // between Expression and IFunction
 
 class IExpression;
 using ExpressionPtr = std::unique_ptr<IExpression>;
@@ -22,13 +25,13 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
   static void addParser() {
-    helpers::addParser<T>(parserMap);
+    Parser::addParser<T>(parserVector);
   }
   static ExpressionPtr parse(const std::string &str) {
-    return helpers::parse(parserMap, tokenize(str));
+    return Parser::parse(parserVector, tokenize(str));
   }
   static ExpressionPtr parse(const TokenVector &tokens) {
-    return helpers::parse(parserMap, tokens);
+    return Parser::parse(parserVector, tokens);
   }
   static std::string tokensToString(const TokenVector &tokens);
   virtual uint16_t getBaseOperatorPriority() const = 0;
@@ -66,7 +69,7 @@ protected:
   static void pushPolynomToPolynom(typename T::Polynom &push, typename T::Polynom &cont);
 
 private:
-  static helpers::ParserVector<ExpressionPtr, TokenVector> parserMap;
+  static Parser::ParserVector<ExpressionPtr, TokenVector> parserVector;
 };
 
 template <typename T>

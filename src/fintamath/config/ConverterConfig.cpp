@@ -1,19 +1,15 @@
-#include "ConverterConfig.hpp"
+#include "fintamath/config/ConverterConfig.hpp"
 
-#include "fintamath/helpers/Converter.hpp"
+#include "fintamath/multimethod/Converter.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
-
-using namespace fintamath::helpers;
 
 namespace fintamath {
 
 MultiMethod<MathObjectPtr(const IMathObject &, const IMathObject &)> Converter::converter;
 
-}
-
-namespace fintamath::config {
+static const ConverterConfig config;
 
 ConverterConfig::ConverterConfig() {
   Converter::add<Integer, Integer>(
@@ -30,7 +26,5 @@ ConverterConfig::ConverterConfig() {
   Converter::add<Rational, Real>(
       [](const Rational &value, const Real & /*type*/) { return std::make_unique<Real>(value); });
 }
-
-static const ConverterConfig config;
 
 }

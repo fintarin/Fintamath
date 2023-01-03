@@ -1,6 +1,5 @@
-#include "ParserConfig.hpp"
+#include "fintamath/config/ParserConfig.hpp"
 
-#include "fintamath/core/Defines.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
@@ -47,21 +46,18 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
-helpers::ParserVector<NumberPtr, std::string> INumber::parserVector;
-helpers::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
+Parser::ParserVector<NumberPtr, std::string> INumber::parserVector;
+Parser::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
+Parser::ParserVector<ExpressionPtr, TokenVector> IExpression::parserVector;
+Parser::ParserMap<ConstantPtr> IConstant::parserMap;
+Parser::ParserMap<FunctionPtr> IFunction::parserMap;
+Parser::ParserMap<OperatorPtr> IOperator::parserMap;
 
-helpers::ParserVector<ExpressionPtr, TokenVector> IExpression::parserMap;
-
-helpers::ParserMap<ConstantPtr> IConstant::parserMap;
-helpers::ParserMap<FunctionPtr> IFunction::parserMap;
-helpers::ParserMap<OperatorPtr> IOperator::parserMap;
-
-}
-
-namespace fintamath::config {
+static const ParserConfig config;
 
 ParserConfig::ParserConfig() {
   // numbers
@@ -117,7 +113,5 @@ ParserConfig::ParserConfig() {
   IExpression::addParser<MulExpression>();
   IExpression::addParser<Expression>();
 }
-
-static const ParserConfig config;
 
 }

@@ -1,11 +1,10 @@
 #pragma once
 
+#include "fintamath/core/CoreConstants.hpp"
 #include <utility>
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
-
-#include "fintamath/core/Defines.hpp"
 
 using namespace boost::multiprecision;
 

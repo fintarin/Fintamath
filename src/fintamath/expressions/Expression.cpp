@@ -1,7 +1,4 @@
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/core/Defines.hpp"
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -10,7 +7,9 @@
 #include <regex>
 #include <stdexcept>
 
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
@@ -28,8 +27,6 @@
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/helpers/Caster.hpp"
-#include "fintamath/helpers/Converter.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -211,7 +208,7 @@ std::string Expression::functionToString() const {
 
 void Expression::simplifyConstant(bool isPrecise) {
   if (info->instanceOf<IConstant>()) {
-    auto constant = (*helpers::cast<IConstant>(info->clone()))().simplify();
+    auto constant = (*castPtr<IConstant>(info->clone()))().simplify();
     if (!isPrecise || constant->to<INumber>().isPrecise()) {
       info = constant->clone();
       return;
@@ -227,11 +224,11 @@ void Expression::simplifyConstant(bool isPrecise) {
 void Expression::setPrecisionRec(uint8_t precision) {
   if (children.empty()) {
     if (info->instanceOf<INumber>()) {
-      info = helpers::Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+      info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
       return;
     }
     if (info->instanceOf<IExpression>()) {
-      auto copyExpr = helpers::cast<IExpression>(info->clone());
+      auto copyExpr = castPtr<IExpression>(info->clone());
       copyExpr->setPrecision(precision);
       info = std::move(copyExpr);
     }
@@ -239,16 +236,16 @@ void Expression::setPrecisionRec(uint8_t precision) {
 
   for (auto &child : children) {
     if (child->instanceOf<IExpression>()) {
-      auto copyChild = helpers::cast<IExpression>(child->clone());
+      auto copyChild = castPtr<IExpression>(child->clone());
       copyChild->setPrecision(precision);
       child = copyChild->simplify(false);
     }
     if (child->instanceOf<INumber>()) {
-      child = helpers::Converter::convert(*child, Real())->to<Real>().precise(precision).clone();
+      child = Converter::convert(*child, Real())->to<Real>().precise(precision).clone();
       continue;
     }
     if (child->instanceOf<IExpression>()) {
-      auto copyExpr = helpers::cast<IExpression>(child->clone());
+      auto copyExpr = castPtr<IExpression>(child->clone());
       copyExpr->setPrecision(precision);
       child = copyExpr->simplify(false);
     }
@@ -265,7 +262,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
     if (func.doAgsMatch(args)) {
       auto countResult = func(args);
       if (countResult->instanceOf<INumber>()) {
-        info = helpers::Converter::convert(*countResult, Real())->to<Real>().precise(precision).clone();
+        info = Converter::convert(*countResult, Real())->to<Real>().precise(precision).clone();
         children.clear();
       }
     }
@@ -280,7 +277,7 @@ void Expression::simplifyFunctionsRec(bool isPrecise) {
 
   for (auto &child : children) {
     if (child->instanceOf<IConstant>()) {
-      auto constant = (*helpers::cast<IConstant>(child->clone()))().simplify();
+      auto constant = (*castPtr<IConstant>(child->clone()))().simplify();
       if (!isPrecise || constant->to<INumber>().isPrecise()) {
         child = constant->clone();
         continue;
