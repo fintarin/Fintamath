@@ -112,7 +112,7 @@ void AddExpression::parse(const TokenVector &tokens) {
       continue;
     }
     if (i == tokens.size() - 1) {
-      throw InvalidInputException(" unexpected sign");
+      throw InvalidInputException(tokenVectorToString(tokens));
     }
     if (i == 0 || (isOneSymbolToken(tokens.at(i - 1)) && tokens.at(i - 1) != "%" && tokens.at(i - 1) != "!")) {
       continue;
@@ -121,13 +121,13 @@ void AddExpression::parse(const TokenVector &tokens) {
   }
 
   if (lastSignPosition == -1) {
-    throw InvalidInputException(" not an AddExpression");
+    throw InvalidInputException(tokenVectorToString(tokens));
   }
   auto leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition));
   auto rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end()));
 
   if (!leftExpr || !rightExpr) {
-    throw InvalidInputException(tokensToString(tokens));
+    throw InvalidInputException(tokenVectorToString(tokens));
   }
 
   addPolynom.emplace_back(Element(leftExpr->clone()));

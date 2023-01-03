@@ -360,11 +360,11 @@ std::string Expression::toString(uint8_t precision) const {
 
 void Expression::parse(const TokenVector &tokens) {
   if (tokens.empty()) {
-    throw InvalidInputException(" token is empty");
+    throw InvalidInputException(tokenVectorToString(tokens));
   }
   if (tokens.at(0) == "*" || tokens.at(0) == "/" || tokens.at(tokens.size() - 1) == "*" ||
       tokens.at(tokens.size() - 1) == "/") {
-    throw InvalidInputException(" unexpected sign");
+    throw InvalidInputException(tokenVectorToString(tokens));
   }
 
   if (parseNeg(tokens)) {
@@ -400,7 +400,7 @@ void Expression::parse(const TokenVector &tokens) {
 
   for (const auto &child : children) {
     if (info == nullptr || child == nullptr) {
-      throw InvalidInputException(tokensToString(tokens));
+      throw InvalidInputException(tokenVectorToString(tokens));
     }
   }
 }
@@ -417,7 +417,7 @@ bool Expression::parseNeg(const TokenVector &tokens) {
 
   auto value = IExpression::parse(TokenVector(tokens.begin() + 1, tokens.end()));
   if (!value) {
-    throw InvalidInputException(tokensToString(tokens));
+    throw InvalidInputException(tokenVectorToString(tokens));
   }
 
   children.emplace_back(value->clone());
@@ -432,7 +432,7 @@ bool Expression::parsePow(const TokenVector &tokens) {
     }
     if (tokens.at(i) == "^") {
       if (i == tokens.size() - 1) {
-        throw InvalidInputException("too low operands for pow");
+        throw InvalidInputException(tokenVectorToString(tokens));
       }
       info = std::make_unique<Pow>();
 
@@ -474,7 +474,7 @@ bool Expression::parseFactorial(const TokenVector &tokens) {
       info = std::make_unique<DoubleFactorial>();
       auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2));
       if (!result) {
-        throw InvalidInputException(tokensToString(tokens));
+        throw InvalidInputException(tokenVectorToString(tokens));
       }
       children.push_back(result->clone());
       return true;
@@ -482,7 +482,7 @@ bool Expression::parseFactorial(const TokenVector &tokens) {
     info = std::make_unique<Factorial>();
     auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
     if (!result) {
-      throw InvalidInputException(tokensToString(tokens));
+      throw InvalidInputException(tokenVectorToString(tokens));
     }
     children.push_back(result->clone());
     return true;
@@ -586,7 +586,7 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
 
     if (tokens.at(pos) == ",") {
       if (pos == 0 || pos == tokens.size() - 1) {
-        throw InvalidInputException(" incorrect use of a comma");
+        throw InvalidInputException(tokenVectorToString(tokens));
       }
 
       auto arg = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)pos));
@@ -615,12 +615,12 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
 
 TokenVector Expression::splitLiteral(const std::string &token, bool addMultiplyToEnd) {
   if (token.empty()) {
-    throw InvalidInputException("");
+    throw InvalidInputException(token); // TODO: throw InvalidInputException(tokenVectorToString(tokens))
   }
   TokenVector tokens;
   for (const auto &var : token) {
     if (!isLetter(var)) {
-      throw InvalidInputException(" incorrect variable");
+      throw InvalidInputException(token); // TODO: throw InvalidInputException(tokenVectorToString(tokens))
     }
     tokens.emplace_back(std::string(1, var));
     tokens.emplace_back("*");

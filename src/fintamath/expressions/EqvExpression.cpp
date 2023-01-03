@@ -104,7 +104,7 @@ void EqvExpression::parse(const TokenVector &tokens) {
 
     if (tokens[i] == "=" || tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == ">=" || tokens[i] == ">") {
       if (pos != SIZE_MAX) { // TODO remove this when we have systems of equations
-        throw InvalidInputException("");
+        throw InvalidInputException(tokenVectorToString(tokens));
       }
 
       pos = i;
@@ -112,7 +112,7 @@ void EqvExpression::parse(const TokenVector &tokens) {
   }
 
   if (pos == SIZE_MAX) {
-    throw InvalidInputException("");
+    throw InvalidInputException(tokenVectorToString(tokens));
   }
 
   leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + pos));
@@ -120,7 +120,7 @@ void EqvExpression::parse(const TokenVector &tokens) {
   oper = IOperator::parse(tokens[pos]);
 
   if (!leftExpr || !rightExpr || !oper) {
-    throw InvalidInputException(tokensToString(tokens));
+    throw InvalidInputException(tokenVectorToString(tokens));
   }
 }
 

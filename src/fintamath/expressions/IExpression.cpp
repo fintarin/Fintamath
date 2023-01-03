@@ -89,14 +89,6 @@ TokenVector IExpression::tokenize(const std::string &str) {
   return tokens;
 }
 
-std::string IExpression::tokensToString(const TokenVector &tokens) {
-  std::string result;
-  for (const auto &token : tokens) {
-    result += token;
-  }
-  return result;
-}
-
 bool IExpression::findCharInStr(char c, const std::string &str) {
   return std::find(str.begin(), str.end(), c) != str.end();
 }
@@ -167,11 +159,11 @@ bool IExpression::skipBrackets(const TokenVector &tokens, size_t &inOutIndex) {
       return true;
     }
     if (brackets < 0) {
-      throw InvalidInputException("");
+      throw InvalidInputException(tokenVectorToString(tokens));
     }
   }
 
-  throw InvalidInputException("");
+  throw InvalidInputException(tokenVectorToString(tokens));
 }
 
 bool IExpression::isBracket(const std::string &c) {
