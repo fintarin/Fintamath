@@ -158,19 +158,19 @@ void MulExpression::parse(const TokenVector &tokens) {
       continue;
     }
     if (i == tokens.size() - 1) {
-      throw InvalidInputException(tokenVectorToString(tokens));
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
     }
     lastSignPosition = (int)i;
   }
   if (lastSignPosition == -1) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
   auto leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition));
   auto rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end()));
 
   if (!leftExpr || !rightExpr) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
   mulPolynom.emplace_back(Element(leftExpr->clone()));

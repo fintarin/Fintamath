@@ -14,7 +14,6 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/tokenizer/TokenVector.hpp"
 
 namespace fintamath {
 
@@ -104,7 +103,7 @@ void EqvExpression::parse(const TokenVector &tokens) {
 
     if (tokens[i] == "=" || tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == ">=" || tokens[i] == ">") {
       if (pos != SIZE_MAX) { // TODO remove this when we have systems of equations
-        throw InvalidInputException(tokenVectorToString(tokens));
+        throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
       pos = i;
@@ -112,7 +111,7 @@ void EqvExpression::parse(const TokenVector &tokens) {
   }
 
   if (pos == SIZE_MAX) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
   leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + pos));
@@ -120,7 +119,7 @@ void EqvExpression::parse(const TokenVector &tokens) {
   oper = IOperator::parse(tokens[pos]);
 
   if (!leftExpr || !rightExpr || !oper) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 }
 

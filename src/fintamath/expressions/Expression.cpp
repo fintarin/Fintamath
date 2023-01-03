@@ -117,7 +117,7 @@ uint16_t Expression::getBaseOperatorPriority() const {
   return (uint16_t)IOperator::Priority::Any;
 }
 
-std::string tokenVectorToString(const TokenVector &tokens) {
+std::string tokensToString(const TokenVector &tokens) {
   std::string result;
   for (const auto &token : tokens) {
     result += token;
@@ -128,7 +128,7 @@ std::string tokenVectorToString(const TokenVector &tokens) {
 Expression::Expression(const TokenVector &tokens) {
   parse(tokens);
   if (!info) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
   //*this = Expression(*simplify());
 }
@@ -360,11 +360,11 @@ std::string Expression::toString(uint8_t precision) const {
 
 void Expression::parse(const TokenVector &tokens) {
   if (tokens.empty()) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
   if (tokens.at(0) == "*" || tokens.at(0) == "/" || tokens.at(tokens.size() - 1) == "*" ||
       tokens.at(tokens.size() - 1) == "/") {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
   if (parseNeg(tokens)) {
@@ -400,7 +400,7 @@ void Expression::parse(const TokenVector &tokens) {
 
   for (const auto &child : children) {
     if (info == nullptr || child == nullptr) {
-      throw InvalidInputException(tokenVectorToString(tokens));
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
     }
   }
 }
@@ -417,7 +417,7 @@ bool Expression::parseNeg(const TokenVector &tokens) {
 
   auto value = IExpression::parse(TokenVector(tokens.begin() + 1, tokens.end()));
   if (!value) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
   children.emplace_back(value->clone());
@@ -432,7 +432,7 @@ bool Expression::parsePow(const TokenVector &tokens) {
     }
     if (tokens.at(i) == "^") {
       if (i == tokens.size() - 1) {
-        throw InvalidInputException(tokenVectorToString(tokens));
+        throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
       info = std::make_unique<Pow>();
 
@@ -440,7 +440,7 @@ bool Expression::parsePow(const TokenVector &tokens) {
       auto rightValue = IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end()));
 
       if (!leftValue || !rightValue) {
-        throw InvalidInputException(tokenVectorToString(tokens));
+        throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
       children.emplace_back(leftValue->clone());
@@ -459,7 +459,7 @@ bool Expression::parsePercent(const TokenVector &tokens) {
 
   auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
   if (!value) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
   children.emplace_back(value->clone());
   return true;
@@ -474,7 +474,7 @@ bool Expression::parseFactorial(const TokenVector &tokens) {
       info = std::make_unique<DoubleFactorial>();
       auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2));
       if (!result) {
-        throw InvalidInputException(tokenVectorToString(tokens));
+        throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
       children.push_back(result->clone());
       return true;
@@ -482,7 +482,7 @@ bool Expression::parseFactorial(const TokenVector &tokens) {
     info = std::make_unique<Factorial>();
     auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
     if (!result) {
-      throw InvalidInputException(tokenVectorToString(tokens));
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
     }
     children.push_back(result->clone());
     return true;
@@ -494,7 +494,7 @@ bool Expression::parseFiniteTerm(const TokenVector &tokens) {
   if (tokens.at(0) == "(" && tokens.at(tokens.size() - 1) == ")") {
     info = IExpression::parse(cutBraces(tokens));
     if (!info) {
-      throw InvalidInputException(tokenVectorToString(tokens));
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
     }
     if (info->is<Expression>()) {
       auto exprInfo = info->to<Expression>();
@@ -586,12 +586,12 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
 
     if (tokens.at(pos) == ",") {
       if (pos == 0 || pos == tokens.size() - 1) {
-        throw InvalidInputException(tokenVectorToString(tokens));
+        throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
       auto arg = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)pos));
       if (!arg) {
-        throw InvalidInputException(tokenVectorToString(tokens));
+        throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
       args.emplace_back(arg->clone());
@@ -606,7 +606,7 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
 
   auto arg = IExpression::parse(tokens);
   if (!arg) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
   args.emplace_back(arg->clone());
@@ -615,12 +615,12 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
 
 TokenVector Expression::splitLiteral(const std::string &token, bool addMultiplyToEnd) {
   if (token.empty()) {
-    throw InvalidInputException(token); // TODO: throw InvalidInputException(tokenVectorToString(tokens))
+    throw InvalidInputException(token); // TODO: throw InvalidInputException(Tokenizer::tokensToString(tokens))
   }
   TokenVector tokens;
   for (const auto &var : token) {
-    if (!isLetter(var)) {
-      throw InvalidInputException(token); // TODO: throw InvalidInputException(tokenVectorToString(tokens))
+    if (!Tokenizer::isLetter(var)) {
+      throw InvalidInputException(token); // TODO: throw InvalidInputException(Tokenizer::tokensToString(tokens))
     }
     tokens.emplace_back(std::string(1, var));
     tokens.emplace_back("*");

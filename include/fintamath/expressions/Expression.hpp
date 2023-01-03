@@ -115,7 +115,7 @@ private:
 
   Vector getArgs(const TokenVector &tokens);
 
-  TokenVector splitLiteral(const std::string &token, bool addMultiplyToEnd = false);
+  TokenVector splitLiteral(const std::string &token, bool addMultiplyToEnd = false); // TODO: remove this and handle the behavior in Tokenizer
 
   std::string binaryOperatorToString() const;
 

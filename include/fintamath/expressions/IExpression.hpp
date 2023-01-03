@@ -6,15 +6,13 @@
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/parser/Parser.hpp"
-#include "fintamath/tokenizer/TokenVector.hpp"
+#include "fintamath/tokenizer/Tokenizer.hpp"
 
 namespace fintamath {
 
 class IFunction;
 
-using ArgumentsVector =
-    std::vector<std::reference_wrapper<const class IMathObject>>; // TODO: remove after break circular dependency
-                                                                  // between Expression and IFunction
+using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;
 
 class IExpression;
 using ExpressionPtr = std::unique_ptr<IExpression>;
@@ -27,13 +25,17 @@ public:
   static void addParser() {
     Parser::addParser<T>(parserVector);
   }
+
   static ExpressionPtr parse(const std::string &str) {
-    return Parser::parse(parserVector, tokenize(str));
+    return Parser::parse(parserVector, Tokenizer::tokenize(str));
   }
+
   static ExpressionPtr parse(const TokenVector &tokens) {
     return Parser::parse(parserVector, tokens);
   }
+
   static std::string tokensToString(const TokenVector &tokens);
+
   virtual uint16_t getBaseOperatorPriority() const = 0;
 
   virtual void setPrecision(uint8_t precision) = 0;
@@ -42,25 +44,11 @@ public:
 
   virtual std::vector<MathObjectPtr> getVariables() const;
 
-private:
-  static bool appendToken(TokenVector &tokens, std::string &token);
-  static bool isDigit(char c);
-  static bool isBracket(char c);
-  static bool isBracket(const std::string &c);
-  static bool isOpenBracket(char c);
-  static bool isCloseBracket(char c);
-  static bool isSpecial(char c);
-  static std::string cutSpacesFromBeginEnd(const std::string &str);
-  static bool isCanInsertMultiplyCharacter(char c);
-  static bool findCharInStr(char c, const std::string &str);
-
 protected:
-  static bool isLetter(char c);
   static bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
-  static TokenVector tokenize(const std::string &str);
-  static bool isOneSymbolToken(const std::string &token);
-  static bool isOneSymbolToken(char token);
+
   static TokenVector cutBraces(const TokenVector &tokens);
+
   static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
 
   void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;

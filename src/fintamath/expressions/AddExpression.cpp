@@ -1,5 +1,10 @@
 #include "fintamath/expressions/AddExpression.hpp"
 
+#include <algorithm>
+#include <cstdint>
+#include <memory>
+#include <regex>
+
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/Exception.hpp"
@@ -20,11 +25,6 @@
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
-
-#include <algorithm>
-#include <cstdint>
-#include <memory>
-#include <regex>
 
 namespace fintamath {
 
@@ -112,22 +112,23 @@ void AddExpression::parse(const TokenVector &tokens) {
       continue;
     }
     if (i == tokens.size() - 1) {
-      throw InvalidInputException(tokenVectorToString(tokens));
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
     }
-    if (i == 0 || (isOneSymbolToken(tokens.at(i - 1)) && tokens.at(i - 1) != "%" && tokens.at(i - 1) != "!")) {
+    if (i == 0 || (Tokenizer::isOneSymbolToken(tokens.at(i - 1)) && tokens.at(i - 1) != "%" &&
+                   tokens.at(i - 1) != "!")) { // TODO: remove this and handle the behaviour in Tokenizer
       continue;
     }
     lastSignPosition = (int)i;
   }
 
   if (lastSignPosition == -1) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
   auto leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition));
   auto rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end()));
 
   if (!leftExpr || !rightExpr) {
-    throw InvalidInputException(tokenVectorToString(tokens));
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
   addPolynom.emplace_back(Element(leftExpr->clone()));
