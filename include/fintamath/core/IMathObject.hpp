@@ -38,6 +38,11 @@ public:
     return dynamic_cast<const T &>(*this);
   }
 
+  template <typename T>
+  T &to() {
+    return dynamic_cast<T &>(*this);
+  }
+
   virtual MathObjectPtr simplify() const {
     return clone();
   }
