@@ -6,7 +6,7 @@
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/parser/Parser.hpp"
-#include "fintamath/tokenizer/Tokenizer.hpp"
+#include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
 
