@@ -2,10 +2,9 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/ILiteral.hpp"
-#include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/literals/constants/True.hpp"
 #include "fintamath/numbers/INumber.hpp"
+#include "fintamath/parser/Tokenizer.hpp"
 
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
@@ -44,13 +43,16 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
+#include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
+#include "fintamath/literals/constants/True.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
+TokenVector Tokenizer::registeredTokens;
 Parser::ParserVector<NumberPtr, std::string> INumber::parserVector;
 Parser::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
 Parser::ParserVector<ExpressionPtr, TokenVector> IExpression::parserVector;

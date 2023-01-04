@@ -140,9 +140,9 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(3*b+a*b)/(2*a+a*b)");
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "(3*b+5*a+a*b+15)/(2*a+a*b)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a+b");
-  EXPECT_EQ(Expression("ln cos sin a").toString(), "n^2*s^2*a*c*i*l*o");
-  EXPECT_EQ(Expression("lne").toString(), "e*l*n");
-  EXPECT_EQ(Expression("lncossine").toString(), "n^2*s^2*c*e*i*l*o");
+  EXPECT_EQ(Expression("lne").toString(), "ln(e)");
+  EXPECT_EQ(Expression("lncossine").toString(), "ln(cos(sin(e)))");
+  EXPECT_EQ(Expression("ln cos sin a").toString(), "n^2*s^2*a*c*i*l*o"); // TODO: ln(cos(sin(a)))
   EXPECT_EQ(Expression("a=a").toString(), "true");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "true");
   EXPECT_EQ(Expression("a=b").toString(), "a-b=0");

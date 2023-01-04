@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
 
@@ -33,6 +34,8 @@ public:
     };
 
     std::string name = std::make_unique<Parsed>()->toString();
+
+    Tokenizer::registerToken(name);
 
     parserMap.insert({name, constructor});
   }

@@ -367,19 +367,15 @@ void Expression::parse(const TokenVector &tokens) {
     throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
-  if (parseNeg(tokens)) {
+  if (parsePrefixOperator(tokens)) {
+    return;
+  }
+
+  if (parsePostfixOperator(tokens)) {
     return;
   }
 
   if (parsePow(tokens)) {
-    return;
-  }
-
-  if (parsePercent(tokens)) {
-    return;
-  }
-
-  if (parseFactorial(tokens)) {
     return;
   }
 
@@ -405,23 +401,36 @@ void Expression::parse(const TokenVector &tokens) {
   }
 }
 
-bool Expression::parseNeg(const TokenVector &tokens) {
-  if (tokens.at(0) != "-" && tokens.at(0) != "+") {
-    return false;
-  }
-  if (tokens.at(0) == "+") {
-    *this = Expression(TokenVector(tokens.begin() + 1, tokens.end()));
+bool Expression::parsePrefixOperator(const TokenVector &tokens) {
+  if (auto oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
+    info = std::move(oper);
+
+    auto value = IExpression::parse(TokenVector(tokens.begin() + 1, tokens.end()));
+    if (!value) {
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
+    }
+
+    children.emplace_back(std::move(value));
     return true;
   }
-  info = std::make_unique<Neg>();
 
-  auto value = IExpression::parse(TokenVector(tokens.begin() + 1, tokens.end()));
-  if (!value) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
+  return false;
+}
+
+bool Expression::parsePostfixOperator(const TokenVector &tokens) {
+  if (auto oper = IOperator::parse(tokens.back(), IOperator::Priority::PostfixUnary)) {
+    info = std::move(oper);
+
+    auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
+    if (!value) {
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
+    }
+
+    children.emplace_back(std::move(value));
+    return true;
   }
 
-  children.emplace_back(value->clone());
-  return true;
+  return false;
 }
 
 bool Expression::parsePow(const TokenVector &tokens) {
@@ -447,45 +456,6 @@ bool Expression::parsePow(const TokenVector &tokens) {
       children.emplace_back(rightValue->clone());
       return true;
     }
-  }
-  return false;
-}
-
-bool Expression::parsePercent(const TokenVector &tokens) {
-  if (tokens.at(tokens.size() - 1) != "%") {
-    return false;
-  }
-  info = std::make_unique<Percent>();
-
-  auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
-  if (!value) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-  children.emplace_back(value->clone());
-  return true;
-}
-
-bool Expression::parseFactorial(const TokenVector &tokens) {
-  if (tokens.size() < 2) {
-    return false;
-  }
-  if (tokens.at(tokens.size() - 1) == "!") {
-    if (tokens.at(tokens.size() - 2) == "!") {
-      info = std::make_unique<DoubleFactorial>();
-      auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 2));
-      if (!result) {
-        throw InvalidInputException(Tokenizer::tokensToString(tokens));
-      }
-      children.push_back(result->clone());
-      return true;
-    }
-    info = std::make_unique<Factorial>();
-    auto result = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
-    if (!result) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-    children.push_back(result->clone());
-    return true;
   }
   return false;
 }

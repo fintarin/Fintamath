@@ -114,10 +114,6 @@ void AddExpression::parse(const TokenVector &tokens) {
     if (i == tokens.size() - 1) {
       throw InvalidInputException(Tokenizer::tokensToString(tokens));
     }
-    if (i == 0 || (Tokenizer::isOneSymbolToken(tokens.at(i - 1)) && tokens.at(i - 1) != "%" &&
-                   tokens.at(i - 1) != "!")) { // TODO: remove this and handle the behaviour in Tokenizer
-      continue;
-    }
     lastSignPosition = (int)i;
   }
 

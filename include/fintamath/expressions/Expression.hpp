@@ -97,13 +97,11 @@ private:
 
   void parse(const TokenVector &tokens);
 
-  bool parseNeg(const TokenVector &tokens);
+  bool parsePrefixOperator(const TokenVector &tokens);
+
+  bool parsePostfixOperator(const TokenVector &tokens);
 
   bool parsePow(const TokenVector &tokens);
-
-  bool parsePercent(const TokenVector &tokens);
-
-  bool parseFactorial(const TokenVector &tokens);
 
   bool parseFiniteTerm(const TokenVector &tokens);
 

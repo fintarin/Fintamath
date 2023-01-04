@@ -1,44 +1,52 @@
 #pragma once
 
+#include <set>
 #include <string>
 #include <vector>
 
 namespace fintamath {
 
-using TokenVector = std::vector<std::string>;
+using Token = std::string;
+using TokenVector = std::vector<Token>;
 
 class Tokenizer {
 public:
-  static TokenVector tokenize(const std::string &str);
-
-  static bool isLetter(char c); // TODO: remove
-
-  static bool isOneSymbolToken(const std::string &token); // TODO: remove this and implement Expression::splitOperator
-
-  static bool isOneSymbolToken(char token); // TODO: remove this and implement Expression::splitOperator
-
-  static bool isSpecial(char c);
+  static TokenVector tokenize(std::string str);
 
   static std::string tokensToString(const TokenVector &tokens);
 
+  static void registerToken(const Token &token);
+
+  static bool isLetter(char c); // TODO: remove
+
 private:
-  static bool appendToken(TokenVector &tokens, std::string &token);
+  static bool appendToken(TokenVector &tokens, Token &token, bool isNumber = false);
 
-  static bool isDigit(char c);
+  static TokenVector splitTokens(const Token &token);
 
-  static bool isBracket(char c);
+  static void handleSpaces(std::string &str);
 
-  static bool isBracket(const std::string &c);
+  static bool isDigitOrPoint(char c);
 
-  static bool isOpenBracket(char c);
+  static bool isOneSymbolToken(const Token &token); // TODO: remove
 
-  static bool isCloseBracket(char c);
+  static bool isOneSymbolToken(char token); // TODO: remove
 
-  static std::string cutSpacesFromBeginEnd(const std::string &str);
+  static bool isSpecial(char c); // TODO: remove
 
-  static bool isCanInsertMultiplyCharacter(char c);
+  static bool isBracket(char c); // TODO: remove
 
-  static bool findCharInStr(char c, const std::string &str);
+  static bool isBracket(const std::string &c); // TODO: remove
+
+  static bool isOpenBracket(char c); // TODO: remove
+
+  static bool isCloseBracket(char c); // TODO: remove
+
+  static bool isCanInsertMultiplyCharacter(char c); // TODO: remove
+
+  static bool findCharInStr(char c, const std::string &str); // TODO: remove
+
+  static TokenVector registeredTokens;
 };
 
 }
