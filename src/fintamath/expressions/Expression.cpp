@@ -94,7 +94,7 @@ Expression::Expression(const MathObjectPtr &obj) {
   }
 }
 
-Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
+Expression::Expression(const IMathObject &obj) : Expression(obj.simplify()) {
 }
 
 Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
