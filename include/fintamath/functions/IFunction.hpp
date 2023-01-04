@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputFunctionException.hpp"
-#include "fintamath/expressions/Expression.hpp" // TODO: remove this
 #include "fintamath/parser/Parser.hpp"
 
 template <typename Head, typename... Tail>
@@ -57,6 +57,9 @@ public:
 protected:
   virtual MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const = 0;
 
+  static const std::function<MathObjectPtr(const IFunction &function, const ArgumentsVector &args)>
+      buildFunctionExpression;
+
 private:
   static Parser::ParserMap<FunctionPtr> parserMap;
 };
@@ -98,7 +101,7 @@ protected:
 
   MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const final {
     if (!doAgsMatch(argsVect)) {
-      return Expression::buildFunctionExpression(*this, argsVect); // TODO: do not use Expression here
+      return buildFunctionExpression(*this, argsVect);
     }
 
     return call(argsVect);
