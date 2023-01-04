@@ -17,6 +17,8 @@ public:
     Multiplication, // operators with priority like multiplication
     Addition,       // operators with priority like addition
     Comparison,     // comparison operators
+    And,            // operators with priority like logical AND
+    Or,             // operators with priority like logical OR
     Any,            // operators with any priority
   };
 

@@ -101,7 +101,7 @@ private:
 
   bool parsePostfixOperator(const TokenVector &tokens);
 
-  bool parsePow(const TokenVector &tokens);
+  bool parseBinaryOperator(const TokenVector &tokens);
 
   bool parseFiniteTerm(const TokenVector &tokens);
 
@@ -110,6 +110,8 @@ private:
   bool parseLiteral(const TokenVector &tokens);
 
   bool parseNumber(const TokenVector &tokens);
+
+  std::map<size_t, MathObjectPtr> findBinaryOperators(const TokenVector &tokens);
 
   Vector getArgs(const TokenVector &tokens);
 

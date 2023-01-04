@@ -29,6 +29,9 @@
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
+#include "fintamath/functions/logic/And.hpp"
+#include "fintamath/functions/logic/Not.hpp"
+#include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
@@ -102,6 +105,9 @@ struct ParserConfig {
     IOperator::registerParser<LessEqv>();
     IOperator::registerParser<MoreEqv>();
     IOperator::registerParser<Derivate>();
+    IOperator::registerParser<Not>();
+    IOperator::registerParser<And>();
+    IOperator::registerParser<Or>();
 
     // functions
     IFunction::registerParser<Abs>();

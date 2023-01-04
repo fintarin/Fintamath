@@ -73,6 +73,8 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
   EXPECT_EQ(Expression("1/10^-100").toString(),
             "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+  EXPECT_EQ(Expression("1/10^---100").toString(),
+            "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
   EXPECT_EQ(
       Expression("10^-1000").toString(),
       "1/"
@@ -171,6 +173,23 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("(a+a)'").toString(), "(2*a)'");
   EXPECT_EQ(Expression("b'+a'").toString(), "2");
   EXPECT_EQ(Expression("5'").toString(), "0");
+  EXPECT_EQ(Expression("!true").toString(), "false");
+  EXPECT_EQ(Expression("!false").toString(), "true");
+  EXPECT_EQ(Expression("true&&false").toString(), "false");
+  EXPECT_EQ(Expression("!!!true&&!!!!false||!!!!!!false||false").toString(), "false");
+  EXPECT_EQ(Expression("true||false").toString(), "true");
+  EXPECT_EQ(Expression("true&&false||true&&false").toString(), "false");
+  EXPECT_EQ(Expression("false&&true||true&&false").toString(), "false");
+  EXPECT_EQ(Expression("false&&true||true&&true||false").toString(), "true");
+  EXPECT_EQ(Expression("false||!false&&true").toString(), "true");
+  EXPECT_EQ(Expression("(false||false&&!true)||(true&&!(false||true))").toString(), "false");
+  EXPECT_EQ(Expression("!(1=1)").toString(), "false");
+  EXPECT_EQ(Expression("!(1=2)").toString(), "true");
+  EXPECT_EQ(Expression("(1=1)&&(1=2)").toString(), "false");
+  EXPECT_EQ(Expression("(1=1)||(1=2)").toString(), "true");
+  EXPECT_EQ(Expression("false&&true||false").toString(), "false");
+  EXPECT_EQ(Expression("(1=2)||!(1=2)&&(1=1)").toString(), "true");
+  EXPECT_EQ(Expression("((1=2)||(1=2)&&!(1=1))||((1=1)&&!((1=2)||(1=1)))").toString(), "false");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {

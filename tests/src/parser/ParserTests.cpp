@@ -8,7 +8,6 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
-#include "fintamath/functions/calculus/Derivate.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -16,6 +15,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
+#include "fintamath/functions/calculus/Derivate.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"
@@ -28,6 +28,9 @@
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
+#include "fintamath/functions/logic/And.hpp"
+#include "fintamath/functions/logic/Not.hpp"
+#include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
@@ -139,6 +142,9 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(IOperator::parse("<=")->is<LessEqv>());
   EXPECT_TRUE(IOperator::parse(">=")->is<MoreEqv>());
   EXPECT_TRUE(IOperator::parse("'")->is<Derivate>());
+  EXPECT_TRUE(IOperator::parse("!", IOperator::Priority::PrefixUnary)->is<Not>());
+  EXPECT_TRUE(IOperator::parse("&&")->is<And>());
+  EXPECT_TRUE(IOperator::parse("||")->is<Or>());
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
@@ -177,6 +183,8 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(IFunction::parse("atan")->is<Atan>());
   EXPECT_TRUE(IFunction::parse("acot")->is<Acot>());
   EXPECT_TRUE(IFunction::parse("abs")->is<Abs>());
+  EXPECT_TRUE(IFunction::parse("&&")->is<And>());
+  EXPECT_TRUE(IFunction::parse("||")->is<Or>());
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

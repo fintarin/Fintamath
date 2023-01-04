@@ -375,7 +375,7 @@ void Expression::parse(const TokenVector &tokens) {
     return;
   }
 
-  if (parsePow(tokens)) {
+  if (parseBinaryOperator(tokens)) {
     return;
   }
 
@@ -433,31 +433,39 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
   return false;
 }
 
-bool Expression::parsePow(const TokenVector &tokens) {
-  for (size_t i = 0; i < tokens.size(); i++) {
-    if (skipBrackets(tokens, i)) {
-      i--;
-      continue;
-    }
-    if (tokens.at(i) == "^") {
-      if (i == tokens.size() - 1) {
-        throw InvalidInputException(Tokenizer::tokensToString(tokens));
-      }
-      info = std::make_unique<Pow>();
+bool Expression::parseBinaryOperator(const TokenVector &tokens) {
+  auto operMap = findBinaryOperators(tokens);
 
-      auto leftValue = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)i));
-      auto rightValue = IExpression::parse(TokenVector(tokens.begin() + (long)i + 1, tokens.end()));
+  if (operMap.empty()) {
+    return false;
+  }
 
-      if (!leftValue || !rightValue) {
-        throw InvalidInputException(Tokenizer::tokensToString(tokens));
-      }
+  auto foundOperIt = operMap.begin();
+  for (auto it = operMap.begin(); it != operMap.end(); ++it) {
+    size_t foundIndex = foundOperIt->first;
+    size_t index = it->first;
+    IOperator::Priority foundPriority = foundOperIt->second->to<IOperator>().getOperatorPriority();
+    IOperator::Priority priority = it->second->to<IOperator>().getOperatorPriority();
 
-      children.emplace_back(leftValue->clone());
-      children.emplace_back(rightValue->clone());
-      return true;
+    if (foundPriority < priority ||
+        (foundPriority != IOperator::Priority::Exponentiation && foundPriority == priority && index > foundIndex)) {
+      foundOperIt = it;
     }
   }
-  return false;
+
+  info = std::move(foundOperIt->second);
+
+  auto leftValue = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + int64_t(foundOperIt->first)));
+  auto rightValue = IExpression::parse(TokenVector(tokens.begin() + int64_t(foundOperIt->first) + 1, tokens.end()));
+
+  if (!leftValue || !rightValue) {
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
+  }
+
+  children.emplace_back(leftValue->clone());
+  children.emplace_back(rightValue->clone());
+
+  return true;
 }
 
 bool Expression::parseFiniteTerm(const TokenVector &tokens) {
@@ -500,6 +508,35 @@ bool Expression::parseFunction(const TokenVector &tokens) {
     return true;
   }
   return false;
+}
+
+std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVector &tokens) {
+  std::map<size_t, MathObjectPtr> operators;
+
+  bool isPrevTokenOper = false;
+
+  for (size_t i = 0; i < tokens.size(); i++) {
+    if (skipBrackets(tokens, i)) {
+      i--;
+      continue;
+    }
+
+    if (auto oper = IOperator::parse(tokens.at(i));
+        oper && oper->to<IOperator>().getFunctionType() == IFunction::Type::Binary) {
+      if (i + 1 >= tokens.size()) {
+        throw InvalidInputException(Tokenizer::tokensToString(tokens));
+      }
+
+      if (!isPrevTokenOper) {
+        operators.insert({i, std::move(oper)});
+        isPrevTokenOper = true;
+      }
+    } else {
+      isPrevTokenOper = false;
+    }
+  }
+
+  return operators;
 }
 
 MathObjectPtr Expression::compress() const {
@@ -827,5 +864,4 @@ std::vector<MathObjectPtr> Expression::getVariables() const {
   }
   return result;
 }
-
 }
