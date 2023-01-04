@@ -48,17 +48,4 @@ Integer factorial(const Integer &rhs) {
   return factorialRec(2, rhs);
 }
 
-Integer doubleFactorial(const Integer &rhs) {
-  if (rhs < 0) {
-    throw UndefinedUnaryOpearatorException("!!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
-  }
-
-  Integer res = 1;
-  for (Integer i = rhs; i > 0; i -= 2) {
-    res *= i;
-  }
-
-  return res;
-}
-
 }

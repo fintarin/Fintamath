@@ -1,4 +1,4 @@
-#include "fintamath/functions/factorials/Factorial.hpp"
+#include "fintamath/functions/other/Factorial.hpp"
 
 #include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"

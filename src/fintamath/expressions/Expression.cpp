@@ -23,9 +23,6 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/factorials/DoubleFactorial.hpp"
-#include "fintamath/functions/factorials/Factorial.hpp"
-#include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -362,28 +359,12 @@ void Expression::parse(const TokenVector &tokens) {
   if (tokens.empty()) {
     throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
-  if (tokens.at(0) == "*" || tokens.at(0) == "/" || tokens.at(tokens.size() - 1) == "*" ||
-      tokens.at(tokens.size() - 1) == "/") {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
 
-  if (parsePrefixOperator(tokens)) {
-    return;
-  }
-
-  if (parsePostfixOperator(tokens)) {
-    return;
-  }
-
-  if (parseBinaryOperator(tokens)) {
-    return;
-  }
-
-  if (parseFunction(tokens)) {
-    return;
-  }
-
-  if (parseFiniteTerm(tokens)) {
+  if (parseBinaryOperator(tokens) ||  //
+      parsePrefixOperator(tokens) ||  //
+      parsePostfixOperator(tokens) || //
+      parseFunction(tokens) ||        //
+      parseFiniteTerm(tokens)) {
     return;
   }
 
@@ -459,7 +440,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
   auto rightValue = IExpression::parse(TokenVector(tokens.begin() + int64_t(foundOperIt->first) + 1, tokens.end()));
 
   if (!leftValue || !rightValue) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
+    return false;
   }
 
   children.emplace_back(leftValue->clone());

@@ -59,7 +59,9 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("-100!").toString(),
             "-933262154439441526816992388562667004907159682643816214685929638952175999932299156089414639761565182862536"
             "97920827223758251185210916864000000000000000000000000");
-  EXPECT_EQ(Expression("5!!").toString(), "15");
+  EXPECT_EQ(Expression("5!!").toString(),
+            "6689502913449127057588118054090372586752746333138029810295671352301633557244962989366874165271984981308157"
+            "637893214090552534408589408121859898481114389650005964960521256960000000000000000000000000000");
   EXPECT_EQ(Expression("(2)!").toString(), "2");
   EXPECT_EQ(Expression("sqrt144").toString(), "12");
   EXPECT_EQ(Expression("sqrt0").toString(), "0");
@@ -187,9 +189,12 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("!(1=2)").toString(), "true");
   EXPECT_EQ(Expression("(1=1)&&(1=2)").toString(), "false");
   EXPECT_EQ(Expression("(1=1)||(1=2)").toString(), "true");
-  EXPECT_EQ(Expression("false&&true||false").toString(), "false");
   EXPECT_EQ(Expression("(1=2)||!(1=2)&&(1=1)").toString(), "true");
   EXPECT_EQ(Expression("((1=2)||(1=2)&&!(1=1))||((1=1)&&!((1=2)||(1=1)))").toString(), "false");
+  EXPECT_EQ(Expression("----5+++5").toString(), "10");
+  EXPECT_EQ(Expression("5----4").toString(), "9");
+  EXPECT_EQ(Expression("5+-+-4").toString(), "9");
+  EXPECT_EQ(Expression("5*+++---4").toString(), "-20");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {

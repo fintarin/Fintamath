@@ -1,13 +1,12 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
 #include "fintamath/functions/comparison/Eqv.hpp"
-#include "fintamath/functions/factorials/DoubleFactorial.hpp"
-#include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/other/Abs.hpp"
+#include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -34,10 +33,6 @@ Expression abs(const Expression &rhs) {
 
 Expression factorial(const Expression &rhs) {
   return Expression(Factorial()(rhs));
-}
-
-Expression doubleFactorial(const Expression &rhs) {
-  return Expression(DoubleFactorial()(rhs));
 }
 
 Expression sqrt(const Expression &rhs) {

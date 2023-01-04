@@ -8,6 +8,4 @@ Integer pow(const Integer &lhs, uint64_t rhs);
 
 Integer factorial(const Integer &rhs);
 
-Integer doubleFactorial(const Integer &rhs);
-
 }

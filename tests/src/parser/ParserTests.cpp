@@ -22,8 +22,6 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
-#include "fintamath/functions/factorials/DoubleFactorial.hpp"
-#include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
@@ -32,6 +30,7 @@
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Abs.hpp"
+#include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -134,7 +133,6 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(IOperator::parse("^")->is<Pow>());
   EXPECT_TRUE(IOperator::parse("%")->is<Percent>());
   EXPECT_TRUE(IOperator::parse("!")->is<Factorial>());
-  EXPECT_TRUE(IOperator::parse("!!")->is<DoubleFactorial>());
   EXPECT_TRUE(IOperator::parse("=")->is<Eqv>());
   EXPECT_TRUE(IOperator::parse("!=")->is<Neqv>());
   EXPECT_TRUE(IOperator::parse("<")->is<Less>());
@@ -160,7 +158,6 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(IFunction::parse("^")->is<Pow>());
   EXPECT_TRUE(IFunction::parse("%")->is<Percent>());
   EXPECT_TRUE(IFunction::parse("!")->is<Factorial>());
-  EXPECT_TRUE(IFunction::parse("!!")->is<DoubleFactorial>());
   EXPECT_TRUE(IFunction::parse("=")->is<Eqv>());
   EXPECT_TRUE(IFunction::parse("!=")->is<Neqv>());
   EXPECT_TRUE(IFunction::parse("<")->is<Less>());

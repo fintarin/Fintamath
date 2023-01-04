@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
-#include "fintamath/functions/factorials/Factorial.hpp"
+#include "fintamath/functions/other/Factorial.hpp"
 
+#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 

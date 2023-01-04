@@ -1,6 +1,7 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
@@ -23,8 +24,6 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
-#include "fintamath/functions/factorials/DoubleFactorial.hpp"
-#include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
@@ -95,7 +94,6 @@ struct ParserConfig {
     IOperator::registerParser<Neg>();
     IOperator::registerParser<UnaryPlus>();
     IOperator::registerParser<Factorial>();
-    IOperator::registerParser<DoubleFactorial>();
     IOperator::registerParser<Percent>();
     IOperator::registerParser<Pow>();
     IOperator::registerParser<Eqv>();

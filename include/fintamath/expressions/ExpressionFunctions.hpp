@@ -34,8 +34,6 @@ Expression abs(const Expression &rhs);
 
 Expression factorial(const Expression &rhs);
 
-Expression doubleFactorial(const Expression &rhs);
-
 Expression sqrt(const Expression &rhs);
 
 Expression pow(const Expression &lhs, const Expression &rhs);

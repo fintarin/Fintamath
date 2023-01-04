@@ -37,11 +37,3 @@ TEST(IntegerFunctionsTests, factorialTest) {
 
   EXPECT_THROW(factorial(Integer(-1)), UndefinedUnaryOpearatorException);
 }
-
-TEST(IntegerFunctionsTests, doubleFactorialTest) {
-  EXPECT_EQ(doubleFactorial(Integer(0)), 1);
-  EXPECT_EQ(doubleFactorial(Integer(5)), 15);
-  EXPECT_EQ(doubleFactorial(Integer("25")), 7905853580625);
-
-  EXPECT_THROW(doubleFactorial(Integer(-1)), UndefinedUnaryOpearatorException);
-}
