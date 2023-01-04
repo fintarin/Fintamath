@@ -24,9 +24,9 @@ public:
   virtual IOperator::Priority getOperatorPriority() const = 0;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IOperator, T>>>
-  static void addParser() {
-    IFunction::addParser<T>();
-    Parser::addParser<T>(parserMap);
+  static void registerParser() {
+    IFunction::registerParser<T>();
+    Parser::registerParser<T>(parserMap);
   }
 
   static OperatorPtr parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {

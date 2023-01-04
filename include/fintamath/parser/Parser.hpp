@@ -27,7 +27,7 @@ public:
   using ParserVector = std::vector<Function<Return, Args...>>;
 
   template <typename Parsed, typename Return>
-  static void addParser(ParserMap<Return> &parserMap) {
+  static void registerParser(ParserMap<Return> &parserMap) {
     Function<Return> constructor = [] {
       return std::make_unique<Parsed>(); //
     };
@@ -38,7 +38,7 @@ public:
   }
 
   template <typename Parsed, typename Return, typename... Args>
-  static void addParser(ParserVector<Return, Args...> &parserVect) {
+  static void registerParser(ParserVector<Return, Args...> &parserVect) {
     Function<Return, Args...> constructor = [](const Args &...args) {
       try {
         return std::make_unique<Parsed>(args...);
@@ -51,7 +51,7 @@ public:
   }
 
   template <typename Return, typename... Args>
-  static void addParser(ParserVector<Return, Args...> &parserVect, const Function<Return, Args...> &parserFunc) {
+  static void registerParser(ParserVector<Return, Args...> &parserVect, const Function<Return, Args...> &parserFunc) {
     parserVect.push_back(parserFunc);
   }
 

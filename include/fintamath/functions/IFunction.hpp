@@ -44,8 +44,8 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
-  static void addParser() {
-    Parser::addParser<T>(parserMap);
+  static void registerParser() {
+    Parser::registerParser<T>(parserMap);
   }
 
   static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {

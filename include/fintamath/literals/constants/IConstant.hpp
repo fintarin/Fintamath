@@ -13,8 +13,8 @@ using ConstantPtr = std::unique_ptr<IConstant>;
 class IConstant : virtual public ILiteral {
 public:
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
-  static void addParser() {
-    Parser::addParser<T>(parserMap);
+  static void registerParser() {
+    Parser::registerParser<T>(parserMap);
   }
 
   static ConstantPtr parse(const std::string &parsedStr) {

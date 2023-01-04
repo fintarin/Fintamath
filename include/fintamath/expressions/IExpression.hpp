@@ -22,8 +22,8 @@ public:
   ~IExpression() override = default;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
-  static void addParser() {
-    Parser::addParser<T>(parserVector);
+  static void registerParser() {
+    Parser::registerParser<T>(parserVector);
   }
 
   static ExpressionPtr parse(const std::string &str) {

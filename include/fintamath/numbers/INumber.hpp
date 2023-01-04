@@ -17,8 +17,8 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
-  static void addParser() {
-    Parser::addParser<T>(parserVector);
+  static void registerParser() {
+    Parser::registerParser<T>(parserVector);
   }
 
   static NumberPtr parse(const std::string &str) {

@@ -65,57 +65,57 @@ namespace {
 struct ParserConfig {
   ParserConfig() {
     // numbers
-    INumber::addParser<Integer>();
-    INumber::addParser<Rational>();
+    INumber::registerParser<Integer>();
+    INumber::registerParser<Rational>();
 
     // constants
-    IConstant::addParser<E>();
-    IConstant::addParser<Pi>();
+    IConstant::registerParser<E>();
+    IConstant::registerParser<Pi>();
 
     // literals
-    ILiteral::addParser(&IConstant::parse);
-    ILiteral::addParser<Variable>();
-    ILiteral::addParser<Boolean>();
+    ILiteral::registerParser(&IConstant::parse);
+    ILiteral::registerParser<Variable>();
+    ILiteral::registerParser<Boolean>();
 
     // operators
-    IOperator::addParser<Add>();
-    IOperator::addParser<Sub>();
-    IOperator::addParser<Mul>();
-    IOperator::addParser<Div>();
-    IOperator::addParser<Neg>();
-    IOperator::addParser<UnaryPlus>();
-    IOperator::addParser<Factorial>();
-    IOperator::addParser<DoubleFactorial>();
-    IOperator::addParser<Percent>();
-    IOperator::addParser<Pow>();
-    IOperator::addParser<Eqv>();
-    IOperator::addParser<Less>();
-    IOperator::addParser<More>();
-    IOperator::addParser<LessEqv>();
-    IOperator::addParser<MoreEqv>();
+    IOperator::registerParser<Add>();
+    IOperator::registerParser<Sub>();
+    IOperator::registerParser<Mul>();
+    IOperator::registerParser<Div>();
+    IOperator::registerParser<Neg>();
+    IOperator::registerParser<UnaryPlus>();
+    IOperator::registerParser<Factorial>();
+    IOperator::registerParser<DoubleFactorial>();
+    IOperator::registerParser<Percent>();
+    IOperator::registerParser<Pow>();
+    IOperator::registerParser<Eqv>();
+    IOperator::registerParser<Less>();
+    IOperator::registerParser<More>();
+    IOperator::registerParser<LessEqv>();
+    IOperator::registerParser<MoreEqv>();
 
     // functions
-    IFunction::addParser<Abs>();
-    IFunction::addParser<Log>();
-    IFunction::addParser<Ln>();
-    IFunction::addParser<Lb>();
-    IFunction::addParser<Lg>();
-    IFunction::addParser<Exp>();
-    IFunction::addParser<Sqrt>();
-    IFunction::addParser<Sin>();
-    IFunction::addParser<Cos>();
-    IFunction::addParser<Tan>();
-    IFunction::addParser<Cot>();
-    IFunction::addParser<Asin>();
-    IFunction::addParser<Acos>();
-    IFunction::addParser<Atan>();
-    IFunction::addParser<Acot>();
+    IFunction::registerParser<Abs>();
+    IFunction::registerParser<Log>();
+    IFunction::registerParser<Ln>();
+    IFunction::registerParser<Lb>();
+    IFunction::registerParser<Lg>();
+    IFunction::registerParser<Exp>();
+    IFunction::registerParser<Sqrt>();
+    IFunction::registerParser<Sin>();
+    IFunction::registerParser<Cos>();
+    IFunction::registerParser<Tan>();
+    IFunction::registerParser<Cot>();
+    IFunction::registerParser<Asin>();
+    IFunction::registerParser<Acos>();
+    IFunction::registerParser<Atan>();
+    IFunction::registerParser<Acot>();
 
     // expressions
-    IExpression::addParser<EqvExpression>();
-    IExpression::addParser<AddExpression>();
-    IExpression::addParser<MulExpression>();
-    IExpression::addParser<Expression>();
+    IExpression::registerParser<EqvExpression>();
+    IExpression::registerParser<AddExpression>();
+    IExpression::registerParser<MulExpression>();
+    IExpression::registerParser<Expression>();
   }
 };
 
