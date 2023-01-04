@@ -16,6 +16,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
+#include "fintamath/functions/calculus/Derivate.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"
@@ -100,6 +101,7 @@ struct ParserConfig {
     IOperator::registerParser<More>();
     IOperator::registerParser<LessEqv>();
     IOperator::registerParser<MoreEqv>();
+    IOperator::registerParser<Derivate>();
 
     // functions
     IFunction::registerParser<Abs>();

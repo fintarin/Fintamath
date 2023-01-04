@@ -1,3 +1,5 @@
+#include <gtest/gtest.h>
+
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -5,8 +7,8 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
-#include <gtest/gtest.h>
 
+#include "fintamath/functions/calculus/Derivate.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -136,6 +138,7 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(IOperator::parse(">")->is<More>());
   EXPECT_TRUE(IOperator::parse("<=")->is<LessEqv>());
   EXPECT_TRUE(IOperator::parse(">=")->is<MoreEqv>());
+  EXPECT_TRUE(IOperator::parse("'")->is<Derivate>());
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
@@ -158,6 +161,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(IFunction::parse(">")->is<More>());
   EXPECT_TRUE(IFunction::parse("<=")->is<LessEqv>());
   EXPECT_TRUE(IFunction::parse(">=")->is<MoreEqv>());
+  EXPECT_TRUE(IFunction::parse("'")->is<Derivate>());
   EXPECT_TRUE(IFunction::parse("sqrt")->is<Sqrt>());
   EXPECT_TRUE(IFunction::parse("exp")->is<Exp>());
   EXPECT_TRUE(IFunction::parse("log")->is<Log>());

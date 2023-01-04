@@ -167,7 +167,10 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression(".1").toString(), "1/10");
   EXPECT_EQ(Expression("2+.1+.1+1.+1.").toString(), "21/5");
   EXPECT_EQ(Expression("2.a").toString(), "2*a");
-  EXPECT_EQ(Expression("a.2").toString(), "1/5*a");
+  EXPECT_EQ(Expression("a'").toString(), "1");
+  EXPECT_EQ(Expression("(a+a)'").toString(), "(2*a)'");
+  EXPECT_EQ(Expression("b'+a'").toString(), "2");
+  EXPECT_EQ(Expression("5'").toString(), "0");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
@@ -352,6 +355,7 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
   EXPECT_EQ(Expression("log(e,5)>ln(5)").simplify(false)->toString(), "false");
   EXPECT_EQ(Expression("log(e,5)<=ln(5)").simplify(false)->toString(), "true");
   EXPECT_EQ(Expression("log(e,5)>=ln(5)").simplify(false)->toString(), "true");
+  EXPECT_EQ(Expression("(sqrt((1-cos(2*(pi/3)))/2))'").simplify(false)->toString(), "0");
 
   // TODO logarithms
   // EXPECT_EQ(Expression("ln(ln(ln(ln(e))))").simplify(false)->toString(), "0");
