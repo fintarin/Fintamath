@@ -1,4 +1,4 @@
-#include "fintamath/expressions/DerivateExpression.hpp"
+#include "fintamath/expressions/DerivativeExpression.hpp"
 
 #include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -10,10 +10,10 @@
 
 namespace fintamath {
 
-DerivateExpression::DerivateExpression(const DerivateExpression &rhs) : info(rhs.info->clone()) {
+DerivativeExpression::DerivativeExpression(const DerivativeExpression &rhs) : info(rhs.info->clone()) {
 }
 
-DerivateExpression &DerivateExpression::operator=(const DerivateExpression &rhs) {
+DerivativeExpression &DerivativeExpression::operator=(const DerivativeExpression &rhs) {
   if (this == &rhs) {
     return *this;
   }
@@ -23,29 +23,29 @@ DerivateExpression &DerivateExpression::operator=(const DerivateExpression &rhs)
   return *this;
 }
 
-DerivateExpression::DerivateExpression(const IMathObject &obj) {
+DerivativeExpression::DerivativeExpression(const IMathObject &obj) {
   info = obj.simplify();
 }
 
-std::string DerivateExpression::toString() const {
+std::string DerivativeExpression::toString() const {
   return "(" + info->toString() + ")'";
 }
 
-uint16_t DerivateExpression::getBaseOperatorPriority() const {
+uint16_t DerivativeExpression::getBaseOperatorPriority() const {
   return uint16_t(IOperator::Priority::PostfixUnary);
 }
 
-void DerivateExpression::setPrecision(uint8_t precision) {
+void DerivativeExpression::setPrecision(uint8_t precision) {
   if (info->instanceOf<IExpression>()) {
     info->to<IExpression>().setPrecision(precision);
   }
 }
 
-MathObjectPtr DerivateExpression::simplify() const {
+MathObjectPtr DerivativeExpression::simplify() const {
   return simplify(true);
 }
 
-MathObjectPtr DerivateExpression::simplify(bool isPrecise) const {
+MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
   MathObjectPtr value;
   if (info->instanceOf<IExpression>()) {
     value = info->to<IExpression>().simplify(isPrecise);
@@ -58,7 +58,7 @@ MathObjectPtr DerivateExpression::simplify(bool isPrecise) const {
                                               InvalidInputUnaryOpearatorException::Type::Postfix);
   }
   if (!isPrecise && value->instanceOf<IExpression>()) {
-    return std::make_unique<DerivateExpression>(*(value->to<IExpression>().simplify(isPrecise)));
+    return std::make_unique<DerivativeExpression>(*(value->to<IExpression>().simplify(isPrecise)));
   }
   if (value->instanceOf<INumber>() || value->is<IConstant>()) {
     return std::make_unique<Integer>(0);

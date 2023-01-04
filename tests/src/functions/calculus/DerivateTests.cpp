@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/calculus/Derivate.hpp"
+#include "fintamath/functions/calculus/Derivative.hpp"
 
 #include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -9,24 +9,24 @@
 
 using namespace fintamath;
 
-TEST(DerivateTests, toStringTest) {
-  EXPECT_EQ(Derivate().toString(), "'");
+TEST(DerivativeTests, toStringTest) {
+  EXPECT_EQ(Derivative().toString(), "'");
 }
 
-TEST(DerivateTests, getFunctionTypeTest) {
-  EXPECT_EQ(Derivate().getFunctionType(), IFunction::Type::Unary);
+TEST(DerivativeTests, getFunctionTypeTest) {
+  EXPECT_EQ(Derivative().getFunctionType(), IFunction::Type::Unary);
 }
 
-TEST(DerivateTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Derivate().getOperatorPriority(), IOperator::Priority::PostfixUnary);
+TEST(DerivativeTests, getOperatorPriorityTest) {
+  EXPECT_EQ(Derivative().getOperatorPriority(), IOperator::Priority::PostfixUnary);
 }
 
-TEST(DerivateTests, callTest) {
-  EXPECT_EQ(Derivate()(Variable("a"))->toString(), "1");
-  EXPECT_EQ(Derivate()(Expression("a+a"))->toString(), "(2*a)'");
-  EXPECT_EQ(Derivate()(Integer(5))->toString(), "0");
+TEST(DerivativeTests, callTest) {
+  EXPECT_EQ(Derivative()(Variable("a"))->toString(), "1");
+  EXPECT_EQ(Derivative()(Expression("a+a"))->toString(), "(2*a)'");
+  EXPECT_EQ(Derivative()(Integer(5))->toString(), "0");
 
-  std::unique_ptr<IFunction> f = std::make_unique<Derivate>();
+  std::unique_ptr<IFunction> f = std::make_unique<Derivative>();
   EXPECT_EQ((*f)(Integer(5))->toString(), "0");
   EXPECT_THROW((*f)(), InvalidInputFunctionException);
   EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

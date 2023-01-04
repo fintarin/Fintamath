@@ -15,7 +15,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/calculus/Derivate.hpp"
+#include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"
@@ -139,7 +139,7 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(IOperator::parse(">")->is<More>());
   EXPECT_TRUE(IOperator::parse("<=")->is<LessEqv>());
   EXPECT_TRUE(IOperator::parse(">=")->is<MoreEqv>());
-  EXPECT_TRUE(IOperator::parse("'")->is<Derivate>());
+  EXPECT_TRUE(IOperator::parse("'")->is<Derivative>());
   EXPECT_TRUE(IOperator::parse("!", IOperator::Priority::PrefixUnary)->is<Not>());
   EXPECT_TRUE(IOperator::parse("&&")->is<And>());
   EXPECT_TRUE(IOperator::parse("||")->is<Or>());
@@ -164,7 +164,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(IFunction::parse(">")->is<More>());
   EXPECT_TRUE(IFunction::parse("<=")->is<LessEqv>());
   EXPECT_TRUE(IFunction::parse(">=")->is<MoreEqv>());
-  EXPECT_TRUE(IFunction::parse("'")->is<Derivate>());
+  EXPECT_TRUE(IFunction::parse("'")->is<Derivative>());
   EXPECT_TRUE(IFunction::parse("sqrt")->is<Sqrt>());
   EXPECT_TRUE(IFunction::parse("exp")->is<Exp>());
   EXPECT_TRUE(IFunction::parse("log")->is<Log>());
