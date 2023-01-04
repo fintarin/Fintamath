@@ -160,9 +160,10 @@ void AddExpression::Element::setPrecision(uint8_t precision) {
   }
 
   if (info->instanceOf<IConstant>()) {
-    info = (*castPtr<IConstant>(info->clone()))().simplify();
-    auto a = info->toString();
-    info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    info = (*castPtr<IConstant>(info->clone()))();
+    if (info->instanceOf<INumber>()) {
+      info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    }
   }
 }
 
@@ -186,8 +187,8 @@ void AddExpression::Element::simplify(bool isPrecise) {
     return;
   }
   if (info->instanceOf<IConstant>()) {
-    auto constant = (*castPtr<IConstant>(info->clone()))().simplify();
-    if (!isPrecise || constant->to<INumber>().isPrecise()) {
+    auto constant = (*castPtr<IConstant>(info->clone()))();
+    if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
       info = constant->clone();
       return;
     }

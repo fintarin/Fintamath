@@ -208,8 +208,8 @@ std::string Expression::functionToString() const {
 
 void Expression::simplifyConstant(bool isPrecise) {
   if (info->instanceOf<IConstant>()) {
-    auto constant = (*castPtr<IConstant>(info->clone()))().simplify();
-    if (!isPrecise || constant->to<INumber>().isPrecise()) {
+    auto constant = (*castPtr<IConstant>(info->clone()))();
+    if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
       info = constant->clone();
       return;
     }
@@ -277,8 +277,8 @@ void Expression::simplifyFunctionsRec(bool isPrecise) {
 
   for (auto &child : children) {
     if (child->instanceOf<IConstant>()) {
-      auto constant = (*castPtr<IConstant>(child->clone()))().simplify();
-      if (!isPrecise || constant->to<INumber>().isPrecise()) {
+      auto constant = (*castPtr<IConstant>(child->clone()))();
+      if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
         child = constant->clone();
         continue;
       }

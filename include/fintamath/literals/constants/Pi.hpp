@@ -11,7 +11,7 @@ public:
   }
 
 protected:
-  Real call() const override;
+  MathObjectPtr call() const override;
 };
 
 }

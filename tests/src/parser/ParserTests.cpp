@@ -3,6 +3,7 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
@@ -36,11 +37,11 @@
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
+#include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
+#include "fintamath/literals/constants/True.hpp"
 #include "fintamath/numbers/INumber.hpp"
-#include "fintamath/literals/constants/Pi.hpp"
-#include "fintamath/functions/arithmetic/Add.hpp"
 
 using namespace fintamath;
 
@@ -103,8 +104,8 @@ TEST(ParserTests, parseLiteralTest) {
   EXPECT_TRUE(ILiteral::parse("pi")->is<Pi>());
   EXPECT_TRUE(ILiteral::parse("a")->is<Variable>());
   EXPECT_TRUE(ILiteral::parse("z")->is<Variable>());
-  EXPECT_TRUE(ILiteral::parse("true")->is<Boolean>());
-  EXPECT_TRUE(ILiteral::parse("false")->is<Boolean>());
+  EXPECT_TRUE(ILiteral::parse("true")->is<True>());
+  EXPECT_TRUE(ILiteral::parse("false")->is<False>());
 
   EXPECT_EQ(ILiteral::parse("1"), nullptr);
   EXPECT_EQ(ILiteral::parse("a_"), nullptr);

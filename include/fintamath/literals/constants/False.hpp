@@ -4,10 +4,10 @@
 
 namespace fintamath {
 
-class E : public IConstantCRTP<E> {
+class False : public IConstantCRTP<False> {
 public:
   std::string toString() const override {
-    return "e";
+    return "false";
   }
 
 protected:

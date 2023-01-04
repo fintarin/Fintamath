@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-Real E::call() const {
-  return E_NUM;
+MathObjectPtr E::call() const {
+  return std::make_unique<Real>(E_NUM);
 }
 
 }

@@ -2,7 +2,9 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/literals/constants/True.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 #include "fintamath/expressions/AddExpression.hpp"
@@ -71,11 +73,12 @@ struct ParserConfig {
     // constants
     IConstant::registerParser<E>();
     IConstant::registerParser<Pi>();
+    IConstant::registerParser<True>();
+    IConstant::registerParser<False>();
 
     // literals
     ILiteral::registerParser(&IConstant::parse);
     ILiteral::registerParser<Variable>();
-    ILiteral::registerParser<Boolean>();
 
     // operators
     IOperator::registerParser<Add>();

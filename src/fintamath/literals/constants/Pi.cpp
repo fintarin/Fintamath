@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-Real Pi::call() const {
-  return PI_NUM;
+MathObjectPtr Pi::call() const {
+  return std::make_unique<Real>(PI_NUM);
 }
 
 }

@@ -21,12 +21,12 @@ public:
     return Parser::parse<ConstantPtr>(parserMap, parsedStr, [](const ConstantPtr &) { return true; });
   }
 
-  Real operator()() const {
+  MathObjectPtr operator()() const {
     return call();
   }
 
 protected:
-  virtual Real call() const = 0;
+  virtual MathObjectPtr call() const = 0;
 
 private:
   static Parser::ParserMap<ConstantPtr> parserMap;
