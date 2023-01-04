@@ -1,12 +1,14 @@
-#include "fintamath/config/ParserConfig.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
-#include "fintamath/functions/IFunction.hpp"
-#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -38,12 +40,9 @@
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/Boolean.hpp"
-#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
-#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/parser/Parser.hpp"
@@ -57,61 +56,69 @@ Parser::ParserMap<ConstantPtr> IConstant::parserMap;
 Parser::ParserMap<FunctionPtr> IFunction::parserMap;
 Parser::ParserMap<OperatorPtr> IOperator::parserMap;
 
-static const ParserConfig config;
-
-ParserConfig::ParserConfig() {
-  // numbers
-  INumber::addParser<Integer>();
-  INumber::addParser<Rational>();
-
-  // constants
-  IConstant::addParser<E>();
-  IConstant::addParser<Pi>();
-
-  // literals
-  ILiteral::addParser(&IConstant::parse);
-  ILiteral::addParser<Variable>();
-  ILiteral::addParser<Boolean>();
-
-  // operators
-  IOperator::addParser<Add>();
-  IOperator::addParser<Sub>();
-  IOperator::addParser<Mul>();
-  IOperator::addParser<Div>();
-  IOperator::addParser<Neg>();
-  IOperator::addParser<UnaryPlus>();
-  IOperator::addParser<Factorial>();
-  IOperator::addParser<DoubleFactorial>();
-  IOperator::addParser<Percent>();
-  IOperator::addParser<Pow>();
-  IOperator::addParser<Eqv>();
-  IOperator::addParser<Less>();
-  IOperator::addParser<More>();
-  IOperator::addParser<LessEqv>();
-  IOperator::addParser<MoreEqv>();
-
-  // functions
-  IFunction::addParser<Abs>();
-  IFunction::addParser<Log>();
-  IFunction::addParser<Ln>();
-  IFunction::addParser<Lb>();
-  IFunction::addParser<Lg>();
-  IFunction::addParser<Exp>();
-  IFunction::addParser<Sqrt>();
-  IFunction::addParser<Sin>();
-  IFunction::addParser<Cos>();
-  IFunction::addParser<Tan>();
-  IFunction::addParser<Cot>();
-  IFunction::addParser<Asin>();
-  IFunction::addParser<Acos>();
-  IFunction::addParser<Atan>();
-  IFunction::addParser<Acot>();
-
-  // expressions
-  IExpression::addParser<EqvExpression>();
-  IExpression::addParser<AddExpression>();
-  IExpression::addParser<MulExpression>();
-  IExpression::addParser<Expression>();
 }
+
+using namespace fintamath;
+
+namespace {
+
+struct ParserConfig {
+  ParserConfig() {
+    // numbers
+    INumber::addParser<Integer>();
+    INumber::addParser<Rational>();
+
+    // constants
+    IConstant::addParser<E>();
+    IConstant::addParser<Pi>();
+
+    // literals
+    ILiteral::addParser(&IConstant::parse);
+    ILiteral::addParser<Variable>();
+    ILiteral::addParser<Boolean>();
+
+    // operators
+    IOperator::addParser<Add>();
+    IOperator::addParser<Sub>();
+    IOperator::addParser<Mul>();
+    IOperator::addParser<Div>();
+    IOperator::addParser<Neg>();
+    IOperator::addParser<UnaryPlus>();
+    IOperator::addParser<Factorial>();
+    IOperator::addParser<DoubleFactorial>();
+    IOperator::addParser<Percent>();
+    IOperator::addParser<Pow>();
+    IOperator::addParser<Eqv>();
+    IOperator::addParser<Less>();
+    IOperator::addParser<More>();
+    IOperator::addParser<LessEqv>();
+    IOperator::addParser<MoreEqv>();
+
+    // functions
+    IFunction::addParser<Abs>();
+    IFunction::addParser<Log>();
+    IFunction::addParser<Ln>();
+    IFunction::addParser<Lb>();
+    IFunction::addParser<Lg>();
+    IFunction::addParser<Exp>();
+    IFunction::addParser<Sqrt>();
+    IFunction::addParser<Sin>();
+    IFunction::addParser<Cos>();
+    IFunction::addParser<Tan>();
+    IFunction::addParser<Cot>();
+    IFunction::addParser<Asin>();
+    IFunction::addParser<Acos>();
+    IFunction::addParser<Atan>();
+    IFunction::addParser<Acot>();
+
+    // expressions
+    IExpression::addParser<EqvExpression>();
+    IExpression::addParser<AddExpression>();
+    IExpression::addParser<MulExpression>();
+    IExpression::addParser<Expression>();
+  }
+};
+
+const ParserConfig config;
 
 }
