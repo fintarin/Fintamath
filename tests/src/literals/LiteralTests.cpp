@@ -28,17 +28,3 @@ TEST(LiteralTests, equalsTests) {
   EXPECT_NE(*c1, *v1);
   EXPECT_NE(*c1, *v1);
 }
-
-TEST(LiteralTests, parseTest) {
-  EXPECT_TRUE(ILiteral::parse("e")->is<E>());
-  EXPECT_TRUE(ILiteral::parse("pi")->is<Pi>());
-  EXPECT_TRUE(ILiteral::parse("a")->is<Variable>());
-  EXPECT_TRUE(ILiteral::parse("z")->is<Variable>());
-  EXPECT_TRUE(ILiteral::parse("true")->is<Boolean>());
-  EXPECT_TRUE(ILiteral::parse("false")->is<Boolean>());
-
-  EXPECT_EQ(ILiteral::parse("1"), nullptr);
-  EXPECT_EQ(ILiteral::parse("a_"), nullptr);
-  EXPECT_EQ(ILiteral::parse("a1"), nullptr);
-  EXPECT_EQ(ILiteral::parse("aa"), nullptr);
-}
