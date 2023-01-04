@@ -146,6 +146,9 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("a=a").toString(), "true");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "true");
   EXPECT_EQ(Expression("a=b").toString(), "a-b=0");
+  EXPECT_EQ(Expression("a!=a").toString(), "false");
+  EXPECT_EQ(Expression("a+a!=2*a").toString(), "false");
+  EXPECT_EQ(Expression("a!=b").toString(), "a-b!=0");
   EXPECT_EQ(Expression("x<6").toString(), "x-6<0");
   EXPECT_EQ(Expression("x<=6").toString(), "x-6<=0");
   EXPECT_EQ(Expression("x>6").toString(), "x-6>0");

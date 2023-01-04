@@ -21,6 +21,7 @@
 #include "fintamath/functions/comparison/LessEqv.hpp"
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
+#include "fintamath/functions/comparison/Neqv.hpp"
 #include "fintamath/functions/factorials/DoubleFactorial.hpp"
 #include "fintamath/functions/factorials/Factorial.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
@@ -94,6 +95,7 @@ struct ParserConfig {
     IOperator::registerParser<Percent>();
     IOperator::registerParser<Pow>();
     IOperator::registerParser<Eqv>();
+    IOperator::registerParser<Neqv>();
     IOperator::registerParser<Less>();
     IOperator::registerParser<More>();
     IOperator::registerParser<LessEqv>();

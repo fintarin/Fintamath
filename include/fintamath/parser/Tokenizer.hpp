@@ -28,10 +28,6 @@ private:
 
   static bool isDigitOrPoint(char c);
 
-  static bool isOneSymbolToken(const Token &token); // TODO: remove
-
-  static bool isOneSymbolToken(char token); // TODO: remove
-
   static bool isSpecial(char c); // TODO: remove
 
   static bool isBracket(char c); // TODO: remove

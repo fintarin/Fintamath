@@ -101,7 +101,8 @@ void EqvExpression::parse(const TokenVector &tokens) {
       continue;
     }
 
-    if (tokens[i] == "=" || tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == ">=" || tokens[i] == ">") {
+    if (tokens[i] == "=" || tokens[i] == "!=" || tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == ">=" ||
+        tokens[i] == ">") {
       if (pos != SIZE_MAX) { // TODO remove this when we have systems of equations
         throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
