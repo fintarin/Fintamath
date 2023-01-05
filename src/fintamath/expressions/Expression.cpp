@@ -12,6 +12,7 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/AddExpression.hpp"
+#include "fintamath/expressions/DerivativeExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
@@ -23,6 +24,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
+#include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -522,6 +524,10 @@ MathObjectPtr Expression::compress() const {
 }
 
 MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
+  if (func.is<Derivative>()) {
+    return DerivativeExpression(args.at(0).get()).simplify();
+  }
+
   return buildRawFunctionExpression(func, args).simplify();
 }
 
@@ -734,14 +740,15 @@ void Expression::setPrecision(uint8_t precision) {
 
 MathObjectPtr Expression::simplify(bool isPrecise) const {
   Expression expr = *this;
-  expr = expr.compressTree();
+  expr.compressTree();
   expr.simplifyFunctionsRec(isPrecise);
-
   expr = simplifyPrefixUnaryOperator(expr);
   expr.simplifyPow();
+
   if (expr.children.empty()) {
     return expr.info->clone();
   }
+
   return expr.clone();
 }
 
