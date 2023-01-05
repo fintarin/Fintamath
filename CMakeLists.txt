@@ -11,9 +11,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include(cmake/Coverage.cmake)
-include(cmake/Sanitizers.cmake)
-
 option(${PROJECT_NAME}_build_shared "Build shared" OFF)
 option(${PROJECT_NAME}_build_tests "Build tests" OFF)
 
@@ -41,6 +38,8 @@ target_include_directories(
 target_link_libraries(${PROJECT_NAME} PRIVATE Boost::multiprecision)
 
 include(cmake/CompilerWarnings.cmake)
+include(cmake/Coverage.cmake)
+include(cmake/Sanitizers.cmake)
 
 if(${PROJECT_NAME}_build_tests)
   enable_testing()
