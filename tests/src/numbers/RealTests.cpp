@@ -34,6 +34,7 @@ TEST(RealTests, stringConstructorTest) {
   EXPECT_THROW(Real("10-.1"), InvalidInputException);
   EXPECT_THROW(Real("10.--1"), InvalidInputException);
   EXPECT_THROW(Real("."), InvalidInputException);
+  EXPECT_THROW(Real("1.2.1"), InvalidInputException);
 }
 
 TEST(RealTests, rationalConstructorTest) {

@@ -78,11 +78,7 @@ Real::Real(std::string str) : Real() {
     }
   }
 
-  try {
-    impl->v.assign(str);
-  } catch (const std::runtime_error &) {
-    throw InvalidInputException(str);
-  }
+  impl->v.assign(str);
 }
 
 Real::Real(const Rational &val) : Real() {

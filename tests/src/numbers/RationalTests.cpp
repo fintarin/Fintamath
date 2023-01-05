@@ -34,6 +34,7 @@ TEST(RationalTests, stringConstructorTest) {
   EXPECT_THROW(Rational("1-0.1"), InvalidInputException);
   EXPECT_THROW(Rational("10-.1"), InvalidInputException);
   EXPECT_THROW(Rational("10.--1"), InvalidInputException);
+  EXPECT_THROW(Rational("1.10.1"), InvalidInputException);
 }
 
 TEST(RationalTests, integerIntegerConstructorTest) {

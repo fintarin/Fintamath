@@ -13,7 +13,11 @@ public:
   TestOperator() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
   }
 
-  void throwException() const {
+  void throwExceptionPrefix() const {
+    throw InvalidInputUnaryOpearatorException("!", "-10", InvalidInputUnaryOpearatorException::Type::Prefix);
+  }
+
+  void throwExceptionPostfix() const {
     throw InvalidInputUnaryOpearatorException("!", "-10", InvalidInputUnaryOpearatorException::Type::Postfix);
   }
 
@@ -27,7 +31,14 @@ protected:
 
 TEST(InvalidInputUnaryOpearatorExceptionTests, whatTests) {
   try {
-    TestOperator().throwException();
+    TestOperator().throwExceptionPrefix();
+    EXPECT_TRUE(false);
+  } catch (const Exception &e) {
+    EXPECT_EQ(std::string(e.what()), "Invalid input: !(-10)");
+  }
+
+  try {
+    TestOperator().throwExceptionPostfix();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Invalid input: (-10)!");

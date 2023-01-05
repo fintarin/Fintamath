@@ -151,23 +151,15 @@ void Rational::parse(const std::string &str) {
   Integer intPart;
 
   if (!intPartStr.empty()) {
-    try {
-      intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
-    } catch (const std::invalid_argument &) {
-      throw InvalidInputException(str);
-    }
+    intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
   }
 
   if (firstDotNum + 1 < int64_t(str.size())) {
-    try {
-      auto numeratorStr = str.substr(size_t(firstDotNum) + 1);
-      std::string denominatorStr(numeratorStr.size() + 1, '0');
-      denominatorStr.front() = '1';
-      numerator = Integer(numeratorStr);
-      denominator = Integer(denominatorStr);
-    } catch (const std::invalid_argument &) {
-      throw InvalidInputException(str);
-    }
+    auto numeratorStr = str.substr(size_t(firstDotNum) + 1);
+    std::string denominatorStr(numeratorStr.size() + 1, '0');
+    denominatorStr.front() = '1';
+    numerator = Integer(numeratorStr);
+    denominator = Integer(denominatorStr);
   }
 
   if (intPart < 0 || numerator < 0) {

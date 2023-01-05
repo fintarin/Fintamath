@@ -43,17 +43,7 @@ public:
 
   explicit MulExpression(Polynom inMulPolynom);
 
-  MulExpression(const MulExpression &rhs) noexcept;
-
-  MulExpression(MulExpression &&rhs) noexcept;
-
   MulExpression(const IMathObject &rhs);
-
-  MulExpression &operator=(const MulExpression &rhs) noexcept;
-
-  MulExpression &operator=(MulExpression &&rhs) noexcept;
-
-  ~MulExpression() override = default;
 
   std::string toString() const override;
 

@@ -43,15 +43,7 @@ public:
 
   explicit AddExpression(Polynom inAddPolynom);
 
-  AddExpression(const AddExpression &rhs) noexcept;
-
-  AddExpression(AddExpression &&rhs) noexcept;
-
   AddExpression(const IMathObject &rhs);
-
-  AddExpression &operator=(const AddExpression &rhs) noexcept;
-
-  AddExpression &operator=(AddExpression &&rhs) noexcept;
 
   std::string toString() const override;
 

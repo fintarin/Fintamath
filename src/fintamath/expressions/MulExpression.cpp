@@ -26,26 +26,6 @@ const MulExpression::Polynom &MulExpression::getPolynom() const {
   return mulPolynom;
 }
 
-MulExpression::MulExpression(const MulExpression &rhs) noexcept : mulPolynom(rhs.mulPolynom) {
-}
-
-MulExpression::MulExpression(MulExpression &&rhs) noexcept : mulPolynom(std::move(rhs.mulPolynom)) {
-}
-
-MulExpression &MulExpression::operator=(const MulExpression &rhs) noexcept {
-  if (&rhs != this) {
-    mulPolynom = rhs.mulPolynom;
-  }
-  return *this;
-}
-
-MulExpression &MulExpression::operator=(MulExpression &&rhs) noexcept {
-  if (&rhs != this) {
-    std::swap(mulPolynom, rhs.mulPolynom);
-  }
-  return *this;
-}
-
 MulExpression::MulExpression(const IMathObject &rhs) {
   if (rhs.is<MulExpression>()) {
     *this = rhs.to<MulExpression>();

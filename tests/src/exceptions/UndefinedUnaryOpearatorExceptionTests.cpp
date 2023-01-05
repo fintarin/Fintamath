@@ -13,7 +13,11 @@ public:
   TestOperator() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
   }
 
-  void throwException() const {
+  void throwExceptionPrefix() const {
+    throw UndefinedUnaryOpearatorException("!", "-10", UndefinedUnaryOpearatorException::Type::Prefix);
+  }
+
+  void throwExceptionPostfix() const {
     throw UndefinedUnaryOpearatorException("!", "-10", UndefinedUnaryOpearatorException::Type::Postfix);
   }
 
@@ -27,7 +31,14 @@ protected:
 
 TEST(UndefinedUnaryOpearatorExceptionTests, whatTests) {
   try {
-    TestOperator().throwException();
+    TestOperator().throwExceptionPrefix();
+    EXPECT_TRUE(false);
+  } catch (const Exception &e) {
+    EXPECT_EQ(std::string(e.what()), "Undefined: !(-10)");
+  }
+
+  try {
+    TestOperator().throwExceptionPostfix();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Undefined: (-10)!");
