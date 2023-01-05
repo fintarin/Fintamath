@@ -33,8 +33,6 @@ public:
     return Parser::parse(parserVector, tokens);
   }
 
-  static std::string tokensToString(const TokenVector &tokens);
-
   virtual uint16_t getBaseOperatorPriority() const = 0;
 
   virtual void setPrecision(uint8_t precision) = 0;

@@ -115,14 +115,6 @@ uint16_t Expression::getBaseOperatorPriority() const {
   return (uint16_t)IOperator::Priority::Any;
 }
 
-std::string tokensToString(const TokenVector &tokens) {
-  std::string result;
-  for (const auto &token : tokens) {
-    result += token;
-  }
-  return result;
-}
-
 Expression::Expression(const TokenVector &tokens) {
   parse(tokens);
   if (!info) {
