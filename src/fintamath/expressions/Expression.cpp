@@ -131,24 +131,19 @@ std::string Expression::binaryOperatorToString() const {
   std::string result;
 
   for (const auto &child : children) {
-    if (!child->instanceOf<IExpression>()) {
-      if (child->instanceOf<IComparable>() && child->to<IComparable>() < Integer(0)) {
+    if (child->instanceOf<IExpression>()) {
+      auto parentPriority = info->to<IOperator>().getOperatorPriority();
+      auto childPriority = IOperator::Priority(child->to<IExpression>().getBaseOperatorPriority());
+
+      if (childPriority != IOperator::Priority::Any && parentPriority <= childPriority) {
         result += putInBrackets(child->toString());
       } else {
         result += child->toString();
       }
     } else {
-      auto parentPriority = info->to<IOperator>().getOperatorPriority();
-      auto childPriority = (IOperator::Priority)child->to<IExpression>().getBaseOperatorPriority();
-
-      if (childPriority == IOperator::Priority::PostfixUnary || childPriority == IOperator::Priority::PrefixUnary ||
-          (childPriority != IOperator::Priority::Any && parentPriority <= childPriority)) {
-
-        result += putInBrackets(child->toString());
-      } else {
-        result += child->toString();
-      }
+      result += child->toString();
     }
+
     result += info->toString();
   }
 
@@ -161,12 +156,11 @@ std::string Expression::binaryOperatorToString() const {
 std::string Expression::prefixUnaryOperatorToString() const {
   std::string result = info->toString();
 
-  if (children.at(0)->instanceOf<IExpression>() &&
-      children.at(0)->to<IExpression>().getBaseOperatorPriority() != uint16_t(IOperator::Priority::Any)) {
-    return result + putInBrackets(children.at(0)->toString());
-  }
-  if (children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)) {
-    return result + putInBrackets(children.at(0)->toString());
+  if (children.at(0)->instanceOf<IExpression>()) {
+    if (auto priority = IOperator::Priority(children.at(0)->to<IExpression>().getBaseOperatorPriority());
+        priority != IOperator::Priority::Any && priority != IOperator::Priority::PrefixUnary) {
+      return result + putInBrackets(children.at(0)->toString());
+    }
   }
 
   return result + children.at(0)->toString();
@@ -176,7 +170,10 @@ std::string Expression::postfixUnaryOperatorToString() const {
   std::string result = children.at(0)->toString();
 
   if (children.at(0)->instanceOf<IExpression>()) {
-    return putInBrackets(result) + info->toString();
+    if (auto priority = IOperator::Priority(children.at(0)->to<IExpression>().getBaseOperatorPriority());
+        priority != IOperator::Priority::Any && priority != IOperator::Priority::PostfixUnary) {
+      return putInBrackets(result) + info->toString();
+    }
   }
   if (children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)) {
     return putInBrackets(result) + info->toString();

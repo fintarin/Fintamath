@@ -27,7 +27,7 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
-TEST(ExpressionTests, stingConstructorTest) {
+TEST(ExpressionTests, stingConstructorAndToStringTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
   EXPECT_EQ(Expression("-2 + 3").toString(), "1");
@@ -93,7 +93,7 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("pi").toString(), "pi");
   EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
   EXPECT_EQ(Expression("e^101").toString(), "e^101");
-  EXPECT_EQ(Expression("e^(-101)").toString(), "e^(-101)");
+  EXPECT_EQ(Expression("e^(-101)").toString(), "e^-101");
   EXPECT_EQ(Expression("log(e,e)").toString(), "log(e,e)");
   EXPECT_EQ(Expression("log(pi, pi^10)").toString(), "log(pi,pi^10)");
   EXPECT_EQ(Expression("log(e,e^3)").toString(), "log(e,e^3)");
@@ -195,6 +195,8 @@ TEST(ExpressionTests, stingConstructorTest) {
   EXPECT_EQ(Expression("5----4").toString(), "9");
   EXPECT_EQ(Expression("5+-+-4").toString(), "9");
   EXPECT_EQ(Expression("5*+++---4").toString(), "-20");
+  EXPECT_EQ(Expression("!!!!!!!!!!a").toString(), "!!!!!!!!!!a");
+  EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
@@ -422,10 +424,6 @@ TEST(ExpressionTests, solveTest) {
   EXPECT_EQ(Expression("15-2x-x^2=0").solve(), "x in {-5,3}");
   EXPECT_EQ(Expression("x^2+12x+36=0").solve(), "x in {-6}");
   EXPECT_EQ(Expression("15x^2+sin(25)x-10%=ey").solve(5), "15*x^2-2.7183*y-0.13235*x-0.1=0");
-}
-
-TEST(ExpressionTests, toStringTest) {
-  EXPECT_EQ(Expression("a^-3").toString(), "a^(-3)");
 }
 
 TEST(ExpressionTests, toStringPrecision) {
