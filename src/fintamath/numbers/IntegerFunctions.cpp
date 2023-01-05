@@ -1,9 +1,9 @@
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
-#include "NumberImpls.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
+#include "fintamath/numbers/NumberImpls.hpp"
 
 namespace fintamath {
 

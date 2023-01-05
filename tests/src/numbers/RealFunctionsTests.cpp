@@ -4,6 +4,7 @@
 
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace fintamath;
 

@@ -1,6 +1,6 @@
 #include "fintamath/literals/constants/Pi.hpp"
 
-#include "fintamath/numbers/RealFunctions.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 

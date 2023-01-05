@@ -3,6 +3,7 @@
 #include "fintamath/functions/trigonometry/Cos.hpp"
 
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"

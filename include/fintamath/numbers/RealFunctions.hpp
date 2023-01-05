@@ -4,10 +4,6 @@
 
 namespace fintamath {
 
-extern const Real E_NUM;
-
-extern const Real PI_NUM;
-
 Real sqrt(const Real &rhs);
 
 Real pow(const Real &lhs, const Real &rhs);

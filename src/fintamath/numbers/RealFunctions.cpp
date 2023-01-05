@@ -1,14 +1,11 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
-#include "NumberImpls.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
+#include "fintamath/numbers/NumberImpls.hpp"
 
 namespace fintamath {
-
-const Real E_NUM = RealImpl(default_ops::get_constant_e<RealImpl::Backend::backend_type>());
-
-const Real PI_NUM = RealImpl(default_ops::get_constant_pi<RealImpl::Backend::backend_type>());
 
 Real sqrt(const Real &rhs) {
   if (rhs < 0) {
