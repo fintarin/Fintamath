@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/logic/And.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
+
 using namespace fintamath;
 
 TEST(AndTests, toStringTest) {

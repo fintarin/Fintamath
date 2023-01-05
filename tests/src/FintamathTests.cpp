@@ -3,6 +3,7 @@
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 using namespace fintamath;
 

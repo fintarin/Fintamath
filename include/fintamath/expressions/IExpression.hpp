@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/parser/Parser.hpp"
 #include "fintamath/parser/Tokenizer.hpp"

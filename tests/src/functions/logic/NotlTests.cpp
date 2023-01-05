@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/logic/Not.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
+
 using namespace fintamath;
 
 TEST(NotTests, toStringTest) {

@@ -6,9 +6,6 @@
 #include "fintamath/exceptions/InvalidInputFunctionException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
-template <typename Head, typename... Tail>
-struct A {};
-
 namespace fintamath {
 
 using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;

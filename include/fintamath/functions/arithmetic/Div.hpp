@@ -1,9 +1,10 @@
 #pragma once
 
-#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
+
+class IArithmetic;
 
 class Div : public IOperatorCRTP<Div, IArithmetic, IArithmetic> {
 public:

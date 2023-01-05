@@ -1,4 +1,8 @@
+#pragma once
+
 #include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
 

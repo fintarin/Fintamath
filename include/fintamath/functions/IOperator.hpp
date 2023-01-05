@@ -4,6 +4,7 @@
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
+
 class IOperator;
 using OperatorPtr = std::unique_ptr<IOperator>;
 

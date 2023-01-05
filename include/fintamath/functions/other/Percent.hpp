@@ -1,9 +1,10 @@
 #pragma once
 
 #include "fintamath/functions/IOperator.hpp"
-#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
+
+class INumber;
 
 class Percent : public IOperatorCRTP<Percent, INumber> {
 public:

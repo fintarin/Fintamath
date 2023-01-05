@@ -4,9 +4,7 @@
 #include <vector>
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/NumberFunctions.hpp"
-#include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
 

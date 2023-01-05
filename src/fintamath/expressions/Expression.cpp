@@ -29,6 +29,7 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 

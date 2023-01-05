@@ -1,9 +1,6 @@
 #pragma once
 
-#include <functional>
 #include <memory>
-#include <string>
-#include <vector>
 
 #include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/numbers/INumber.hpp"

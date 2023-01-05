@@ -1,8 +1,7 @@
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 
-#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/literals/Boolean.hpp"
-#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 

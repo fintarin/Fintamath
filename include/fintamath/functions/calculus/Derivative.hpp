@@ -1,11 +1,8 @@
 #pragma once
 
 #include "fintamath/functions/IOperator.hpp"
-#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
-
-class IExpression;
 
 class Derivative : public IOperatorCRTP<Derivative, IMathObject> {
 public:

@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "fintamath/literals/ILiteral.hpp"
-#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 

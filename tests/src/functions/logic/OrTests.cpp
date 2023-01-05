@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/logic/Or.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
+
 using namespace fintamath;
 
 TEST(OrTests, toStringTest) {
