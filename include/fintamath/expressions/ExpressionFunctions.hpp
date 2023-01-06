@@ -9,7 +9,7 @@
 namespace fintamath {
 
 template <typename... Args>
-Expression add(const Args &...args) {
+Expression sum(const Args &...args) {
   return (Expression(args) + ...);
 }
 

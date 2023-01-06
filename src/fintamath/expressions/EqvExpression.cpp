@@ -234,7 +234,7 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
     auto two_A = mul(*coefficients.at(2), Integer(2));
 
     auto x1 = div(sub(*minus_B, sqrt_D), two_A).simplify(false);
-    auto x2 = div(add(*minus_B, sqrt_D), two_A).simplify(false);
+    auto x2 = div(sum(*minus_B, sqrt_D), two_A).simplify(false);
 
     results.emplace_back(std::move(x1));
     results.emplace_back(std::move(x2));
