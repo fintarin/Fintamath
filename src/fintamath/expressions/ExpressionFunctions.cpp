@@ -1,10 +1,19 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
+#include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
+#include "fintamath/functions/comparison/Less.hpp"
+#include "fintamath/functions/comparison/LessEqv.hpp"
+#include "fintamath/functions/comparison/More.hpp"
+#include "fintamath/functions/comparison/MoreEqv.hpp"
+#include "fintamath/functions/comparison/Neqv.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
+#include "fintamath/functions/logic/And.hpp"
+#include "fintamath/functions/logic/Not.hpp"
+#include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
@@ -18,6 +27,7 @@
 #include "fintamath/functions/trigonometry/Cot.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 
@@ -25,6 +35,26 @@ namespace fintamath {
 
 Expression eqv(const Expression &lhs, const Expression &rhs) {
   return Expression(Eqv()(lhs, rhs));
+}
+
+Expression neqv(const Expression &lhs, const Expression &rhs) {
+  return Expression(Neqv()(lhs, rhs));
+}
+
+Expression less(const Expression &lhs, const Expression &rhs) {
+  return Expression(Less()(lhs, rhs));
+}
+
+Expression move(const Expression &lhs, const Expression &rhs) {
+  return Expression(More()(lhs, rhs));
+}
+
+Expression lessEqv(const Expression &lhs, const Expression &rhs) {
+  return Expression(LessEqv()(lhs, rhs));
+}
+
+Expression moveEqv(const Expression &lhs, const Expression &rhs) {
+  return Expression(MoreEqv()(lhs, rhs));
 }
 
 Expression abs(const Expression &rhs) {
@@ -101,6 +131,22 @@ Expression e() {
 
 Expression pi() {
   return Pi();
+}
+
+Expression derivative(const Expression &rhs) {
+  return Expression(Derivative()(rhs));
+}
+
+Expression notL(const Expression &rhs) {
+  return Expression(Not()(rhs));
+}
+
+Expression andL(const Expression &lhs, const Expression &rhs) {
+  return Expression(And()(lhs, rhs));
+}
+
+Expression orL(const Expression &lhs, const Expression &rhs) {
+  return Expression(Or()(lhs, rhs));
 }
 
 }

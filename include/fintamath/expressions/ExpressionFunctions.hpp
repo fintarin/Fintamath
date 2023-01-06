@@ -26,7 +26,21 @@ inline Expression div(const Expression &lhs, const Expression &rhs) {
   return lhs / rhs;
 }
 
+inline Expression neg(const Expression &rhs) {
+  return -rhs;
+}
+
 Expression eqv(const Expression &lhs, const Expression &rhs);
+
+Expression neqv(const Expression &lhs, const Expression &rhs);
+
+Expression less(const Expression &lhs, const Expression &rhs);
+
+Expression move(const Expression &lhs, const Expression &rhs);
+
+Expression lessEqv(const Expression &lhs, const Expression &rhs);
+
+Expression moveEqv(const Expression &lhs, const Expression &rhs);
 
 Expression abs(const Expression &rhs);
 
@@ -65,5 +79,13 @@ Expression acot(const Expression &rhs);
 Expression e();
 
 Expression pi();
+
+Expression derivative(const Expression &rhs);
+
+Expression notL(const Expression &rhs);
+
+Expression andL(const Expression &lhs, const Expression &rhs);
+
+Expression orL(const Expression &lhs, const Expression &rhs);
 
 }

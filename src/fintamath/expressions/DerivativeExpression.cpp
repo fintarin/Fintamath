@@ -60,7 +60,7 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
   if (!isPrecise && value->instanceOf<IExpression>()) {
     return std::make_unique<DerivativeExpression>(*(value->to<IExpression>().simplify(isPrecise)));
   }
-  if (value->instanceOf<INumber>() || value->is<IConstant>()) {
+  if (value->instanceOf<INumber>() || value->instanceOf<IConstant>()) {
     return std::make_unique<Integer>(0);
   }
   if (value->is<Variable>()) {
