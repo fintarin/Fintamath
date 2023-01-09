@@ -318,8 +318,10 @@ bool sortFunc(const MulExpression::Element &lhs, const MulExpression::Element &r
 struct MulExpression::ObjectPow {
   MathObjectPtr obj;
   AddExpression pow;
+
   ObjectPow(const MathObjectPtr &obj) : obj(obj->clone()) {
   }
+
   ObjectPow(const ObjectPow &objPow) : obj(objPow.obj->clone()), pow(objPow.pow) {
   }
 
@@ -335,6 +337,7 @@ struct MulExpression::ObjectPow {
     }
     return nullptr;
   }
+
   MathObjectPtr getPowIfSingle() const {
     auto polynom = pow.getPolynom();
     if (polynom.size() != 1) {

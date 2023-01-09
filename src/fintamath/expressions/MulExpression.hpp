@@ -9,13 +9,14 @@ namespace fintamath {
 class MulExpression : public IExpressionCRTP<MulExpression> {
 public:
   struct Element;
-
   using Polynom = std::vector<Element>;
 
   struct Element {
     MathObjectPtr info;
+
     bool inverted = false;
 
+  public:
     Element() = default;
 
     Element(const Element &rhs);
@@ -91,6 +92,7 @@ private:
   void simplifyPolynom();
 
   static void simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
+
   static void multiplicatePolynom(Polynom &vect, Polynom &positive, Polynom &negative);
 
   struct ObjectPow;

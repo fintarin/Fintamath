@@ -328,8 +328,10 @@ struct AddExpression::ObjectMul {
 
   ObjectMul(const MathObjectPtr &obj) : obj(obj->clone()) {
   }
+
   ObjectMul(const ObjectMul &objMul) : obj(objMul.obj->clone()), counter(objMul.counter) {
   }
+
   void simplifyCounter() {
     counter = AddExpression(*counter.simplify());
   }

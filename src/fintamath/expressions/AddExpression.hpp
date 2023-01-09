@@ -9,11 +9,11 @@ namespace fintamath {
 class AddExpression : public IExpressionCRTP<AddExpression> {
 public:
   struct Element;
-
   using Polynom = std::vector<Element>;
 
   struct Element {
     MathObjectPtr info;
+
     bool inverted = false;
 
     Element() = default;
@@ -88,6 +88,7 @@ private:
   using Objects = std::vector<ObjectMul>;
 
   void simplifyPolynom();
+
   static void sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &literalVect, Polynom &powVect);
 
   static void simplifyMul(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);

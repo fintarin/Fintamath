@@ -43,15 +43,19 @@ public:
 
 private:
   MathObjectPtr leftExpr;
+
   MathObjectPtr rightExpr;
+
   MathObjectPtr oper;
 
   void parse(const TokenVector &tokens);
 
   std::vector<MathObjectPtr> solvePowEquation(const Variable &x) const;
+
   std::vector<MathObjectPtr> solveQuadraticEquation(const MathObjectPtr &v) const;
 
   static bool sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
+
   static std::vector<MathObjectPtr> sortResult(std::vector<MathObjectPtr> &result);
 
   bool detectOneVariable(Variable &v) const;

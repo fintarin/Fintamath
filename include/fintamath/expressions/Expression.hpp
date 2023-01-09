@@ -115,7 +115,8 @@ private:
 
   Vector getArgs(const TokenVector &tokens);
 
-  TokenVector splitLiteral(const std::string &token, bool addMultiplyToEnd = false); // TODO: remove this and handle the behavior in Tokenizer
+  TokenVector splitLiteral(const std::string &token,
+                           bool addMultiplyToEnd = false); // TODO: remove this and handle the behavior in Tokenizer
 
   std::string binaryOperatorToString() const;
 
@@ -138,6 +139,7 @@ private:
   static Expression simplifyPow(Expression expr);
 
   MathObjectPtr info;
+
   Vector children;
 };
 
