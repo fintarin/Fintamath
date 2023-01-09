@@ -1,0 +1,36 @@
+name: style
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  check-style:
+    name: Check Style
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_enable_clangformat=ON
+        env:
+          CC: gcc
+          CXX: g++
+
+      - name: Run clang-format
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --target clangformat_check
