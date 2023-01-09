@@ -7,29 +7,30 @@
 
 using namespace fintamath;
 
+const Mul f;
+
 TEST(MulTests, toStringTest) {
-  EXPECT_EQ(Mul().toString(), "*");
+  EXPECT_EQ(f.toString(), "*");
 }
 
 TEST(MulTests, getFunctionTypeTest) {
-  EXPECT_EQ(Mul().getFunctionType(), IFunction::Type::Binary);
+  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
 }
 
 TEST(MulTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Mul().getOperatorPriority(), IOperator::Priority::Multiplication);
+  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Multiplication);
 }
 
 TEST(MulTests, callTest) {
-  EXPECT_EQ(Mul()(Integer(3), Integer(5))->toString(), "15");
-  EXPECT_EQ(Mul()(Integer(3), Rational(5, 2))->toString(), "15/2");
-  EXPECT_EQ(Mul()(Rational(5, 2), Integer(3))->toString(), "15/2");
-  EXPECT_EQ(Mul()(Rational(5, 2), Rational(5, 3))->toString(), "25/6");
+  EXPECT_EQ(f(Integer(3), Integer(5))->toString(), "15");
+  EXPECT_EQ(f(Integer(3), Rational(5, 2))->toString(), "15/2");
+  EXPECT_EQ(f(Rational(5, 2), Integer(3))->toString(), "15/2");
+  EXPECT_EQ(f(Rational(5, 2), Rational(5, 3))->toString(), "25/6");
 
-  EXPECT_EQ(Mul()(Integer(3), Variable("a"))->toString(), "3*a");
+  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3*a");
 
-  std::unique_ptr<IOperator> o = std::make_unique<Mul>();
-  EXPECT_THROW((*o)(Integer(1)), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
+  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

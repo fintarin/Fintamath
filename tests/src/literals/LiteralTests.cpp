@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/Pi.hpp"

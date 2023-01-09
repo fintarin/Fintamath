@@ -10,25 +10,26 @@
 
 using namespace fintamath;
 
+const Derivative f;
+
 TEST(DerivativeTests, toStringTest) {
-  EXPECT_EQ(Derivative().toString(), "'");
+  EXPECT_EQ(f.toString(), "'");
 }
 
 TEST(DerivativeTests, getFunctionTypeTest) {
-  EXPECT_EQ(Derivative().getFunctionType(), IFunction::Type::Unary);
+  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(DerivativeTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Derivative().getOperatorPriority(), IOperator::Priority::PostfixUnary);
+  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(DerivativeTests, callTest) {
-  EXPECT_EQ(Derivative()(Variable("a"))->toString(), "1");
-  EXPECT_EQ(Derivative()(Expression("a+a"))->toString(), "(2*a)'");
-  EXPECT_EQ(Derivative()(Integer(5))->toString(), "0");
+  EXPECT_EQ(f(Variable("a"))->toString(), "1");
+  EXPECT_EQ(f(Expression("a+a"))->toString(), "(2*a)'");
+  EXPECT_EQ(f(Integer(5))->toString(), "0");
 
-  std::unique_ptr<IFunction> f = std::make_unique<Derivative>();
-  EXPECT_EQ((*f)(Integer(5))->toString(), "0");
-  EXPECT_THROW((*f)(), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_EQ(f(Integer(5))->toString(), "0");
+  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

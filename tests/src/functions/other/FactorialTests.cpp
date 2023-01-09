@@ -8,30 +8,30 @@
 
 using namespace fintamath;
 
+const Factorial f;
+
 TEST(FactorialTests, toStringTest) {
-  EXPECT_EQ(Factorial().toString(), "!");
+  EXPECT_EQ(f.toString(), "!");
 }
 
 TEST(FactorialTests, getFunctionTypeTest) {
-  EXPECT_EQ(Factorial().getFunctionType(), IFunction::Type::Unary);
+  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(FactorialTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Factorial().getOperatorPriority(), IOperator::Priority::PostfixUnary);
+  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(FactorialTests, callTest) {
-  EXPECT_EQ(Factorial()(Integer(0))->toString(), "1");
-  EXPECT_EQ(Factorial()(Integer(1))->toString(), "1");
-  EXPECT_EQ(Factorial()(Integer(10))->toString(), "3628800");
+  EXPECT_EQ(f(Integer(0))->toString(), "1");
+  EXPECT_EQ(f(Integer(1))->toString(), "1");
+  EXPECT_EQ(f(Integer(10))->toString(), "3628800");
 
-  EXPECT_EQ(Factorial()(Variable("a"))->toString(), "a!");
+  EXPECT_EQ(f(Variable("a"))->toString(), "a!");
 
-  EXPECT_THROW(Factorial()(Integer(-10)), UndefinedUnaryOpearatorException);
-  EXPECT_THROW(Factorial()(Rational(1, 10)), UndefinedUnaryOpearatorException);
+  EXPECT_THROW(f(Integer(-10)), UndefinedUnaryOpearatorException);
+  EXPECT_THROW(f(Rational(1, 10)), UndefinedUnaryOpearatorException);
 
-  std::unique_ptr<IFunction> f = std::make_unique<Factorial>();
-  EXPECT_EQ((*f)(Integer(5))->toString(), "120");
-  EXPECT_THROW((*f)(), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

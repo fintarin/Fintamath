@@ -7,30 +7,31 @@
 
 using namespace fintamath;
 
+const Sub f;
+
 TEST(SubTests, toStringTest) {
-  EXPECT_EQ(Sub().toString(), "-");
+  EXPECT_EQ(f.toString(), "-");
 }
 
 TEST(SubTests, getFunctionTypeTest) {
-  EXPECT_EQ(Sub().getFunctionType(), IFunction::Type::Binary);
+  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
 }
 
 TEST(SubTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Sub().getOperatorPriority(), IOperator::Priority::Addition);
+  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Addition);
 }
 
 TEST(SubTests, callTest) {
-  EXPECT_EQ(Sub()(Integer(3), Integer(5))->toString(), "-2");
-  EXPECT_EQ(Sub()(Integer(3), Rational(5, 2))->toString(), "1/2");
-  EXPECT_EQ(Sub()(Rational(5, 2), Integer(3))->toString(), "-1/2");
-  EXPECT_EQ(Sub()(Rational(5, 2), Rational(5, 2))->toString(), "0");
-  EXPECT_EQ(Sub()(Rational(5, 2), Rational(5, 3))->toString(), "5/6");
+  EXPECT_EQ(f(Integer(3), Integer(5))->toString(), "-2");
+  EXPECT_EQ(f(Integer(3), Rational(5, 2))->toString(), "1/2");
+  EXPECT_EQ(f(Rational(5, 2), Integer(3))->toString(), "-1/2");
+  EXPECT_EQ(f(Rational(5, 2), Rational(5, 2))->toString(), "0");
+  EXPECT_EQ(f(Rational(5, 2), Rational(5, 3))->toString(), "5/6");
 
-  EXPECT_EQ(Sub()(Integer(3), Variable("a"))->toString(), "-a+3");
+  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "-a+3");
 
-  std::unique_ptr<IOperator> o = std::make_unique<Sub>();
-  EXPECT_THROW((*o)(Integer(1)), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
+  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

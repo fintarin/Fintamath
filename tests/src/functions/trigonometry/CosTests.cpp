@@ -10,30 +10,29 @@
 
 using namespace fintamath;
 
+const Cos f;
+
 TEST(CosTests, toStringTest) {
-  EXPECT_EQ(Cos().toString(), "cos");
+  EXPECT_EQ(f.toString(), "cos");
 }
 
 TEST(CosTests, getFunctionTypeTest) {
-  EXPECT_EQ(Cos().getFunctionType(), IFunction::Type::Unary);
+  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(CosTests, callTest) {
-  EXPECT_EQ(Cos()(Integer(0))->toString(), "1");
-  EXPECT_EQ(Cos()(Integer(10))->toString(),
+  EXPECT_EQ(f(Integer(0))->toString(), "1");
+  EXPECT_EQ(f(Integer(10))->toString(),
             "-0.83907152907645245225886394782406483451993016513316854683595373104879258686627077");
-  EXPECT_EQ(Cos()(Integer(5))->toString(),
+  EXPECT_EQ(f(Integer(5))->toString(),
             "0.2836621854632262644666391715135573083344225922522159449303590665861514567673827");
-  EXPECT_EQ(Cos()(Rational(1, 10))->toString(),
+  EXPECT_EQ(f(Rational(1, 10))->toString(),
             "0.99500416527802576609556198780387029483857622541508403595935274468526591021824047");
-  EXPECT_EQ(Cos()(PI_NUM / 2)->toString(), "0");
-  EXPECT_EQ(Cos()(PI_NUM)->toString(), "-1");
+  EXPECT_EQ(f(PI_NUM / 2)->toString(), "0");
+  EXPECT_EQ(f(PI_NUM)->toString(), "-1");
 
-  EXPECT_EQ(Cos()(Variable("a"))->toString(), "cos(a)");
+  EXPECT_EQ(f(Variable("a"))->toString(), "cos(a)");
 
-  std::unique_ptr<IFunction> f = std::make_unique<Cos>();
-  EXPECT_EQ((*f)(Integer(10))->toString(),
-            "-0.83907152907645245225886394782406483451993016513316854683595373104879258686627077");
-  EXPECT_THROW((*f)(), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

@@ -27,7 +27,7 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
-TEST(ExpressionTests, stingConstructorAndToStringTest) {
+TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
   EXPECT_EQ(Expression("-2 + 3").toString(), "1");

@@ -5,15 +5,13 @@
 
 using namespace fintamath;
 
-TEST(FalseTests, constructorTest) {
-  EXPECT_EQ(False().toString(), "false");
-}
+const False f;
 
 TEST(FalseTests, toStringTest) {
-  EXPECT_EQ(False().toString(), "false");
+  EXPECT_EQ(f.toString(), "false");
 }
 
 TEST(FalseTests, callTest) {
-  EXPECT_EQ(False()()->toString(), "false");
-  EXPECT_TRUE(False()()->is<Boolean>());
+  EXPECT_EQ(f()->toString(), "false");
+  EXPECT_TRUE(f()->is<Boolean>());
 }

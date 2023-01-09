@@ -8,29 +8,30 @@
 
 using namespace fintamath;
 
+const Div f;
+
 TEST(DivTests, toStringTest) {
-  EXPECT_EQ(Div().toString(), "/");
+  EXPECT_EQ(f.toString(), "/");
 }
 
 TEST(DivTests, getFunctionTypeTest) {
-  EXPECT_EQ(Div().getFunctionType(), IFunction::Type::Binary);
+  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
 }
 
 TEST(DivTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Div().getOperatorPriority(), IOperator::Priority::Multiplication);
+  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Multiplication);
 }
 
 TEST(DivTests, callTest) {
-  EXPECT_EQ(Div()(Integer(3), Integer(5))->toString(), "3/5");
-  EXPECT_EQ(Div()(Integer(3), Rational(5, 2))->toString(), "6/5");
-  EXPECT_EQ(Div()(Rational(5, 2), Integer(3))->toString(), "5/6");
-  EXPECT_EQ(Div()(Rational(5, 2), Rational(5, 3))->toString(), "3/2");
+  EXPECT_EQ(f(Integer(3), Integer(5))->toString(), "3/5");
+  EXPECT_EQ(f(Integer(3), Rational(5, 2))->toString(), "6/5");
+  EXPECT_EQ(f(Rational(5, 2), Integer(3))->toString(), "5/6");
+  EXPECT_EQ(f(Rational(5, 2), Rational(5, 3))->toString(), "3/2");
 
-  EXPECT_EQ(Div()(Integer(3), Variable("a"))->toString(), "3/a");
+  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3/a");
 
-  std::unique_ptr<IOperator> o = std::make_unique<Div>();
-  EXPECT_THROW((*o)(Integer(1)), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
+  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }

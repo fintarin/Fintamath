@@ -7,26 +7,28 @@
 
 using namespace fintamath;
 
+const UnaryPlus f;
+
 TEST(UnaryPlusTests, toStringTest) {
-  EXPECT_EQ(UnaryPlus().toString(), "+");
+  EXPECT_EQ(f.toString(), "+");
 }
 
 TEST(UnaryPlusTests, getFunctionTypeTest) {
-  EXPECT_EQ(UnaryPlus().getFunctionType(), IFunction::Type::Unary);
+  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
 }
 
 TEST(UnaryPlusTests, getOperatorPriorityTest) {
-  EXPECT_EQ(UnaryPlus().getOperatorPriority(), IOperator::Priority::PrefixUnary);
+  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PrefixUnary);
 }
 
 TEST(UnaryPlusTests, callTest) {
-  EXPECT_EQ(UnaryPlus()(Integer(3))->toString(), "3");
-  EXPECT_EQ(UnaryPlus()(Rational(5, 2))->toString(), "5/2");
+  EXPECT_EQ(f(Integer(3))->toString(), "3");
+  EXPECT_EQ(f(Rational(5, 2))->toString(), "5/2");
+  EXPECT_EQ(f(Rational(-5, 2))->toString(), "-5/2");
 
-  EXPECT_EQ(UnaryPlus()(Variable("a"))->toString(), "a");
+  EXPECT_EQ(f(Variable("a"))->toString(), "a");
 
-  std::unique_ptr<IOperator> o = std::make_unique<UnaryPlus>();
-  EXPECT_THROW((*o)(Integer(1), Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(), InvalidInputFunctionException);
-  EXPECT_THROW((*o)(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Rational(2, 3)), InvalidInputFunctionException);
+  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
