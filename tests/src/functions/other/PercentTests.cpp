@@ -26,10 +26,9 @@ TEST(PercentTests, callTest) {
   EXPECT_EQ(f(Integer(1))->toString(), "1/100");
   EXPECT_EQ(f(Integer(1000))->toString(), "10");
   EXPECT_EQ(f(Integer(-10))->toString(), "-1/10");
+  EXPECT_EQ(f(Rational(1, 10))->toString(), "1/1000");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "a%");
-
-  EXPECT_THROW(f(Rational(1, 10))->toString(), UndefinedUnaryOpearatorException);
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

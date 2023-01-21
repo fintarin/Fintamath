@@ -197,6 +197,10 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("5*+++---4").toString(), "-20");
   EXPECT_EQ(Expression("!!!!!!!!!!a").toString(), "!!!!!!!!!!a");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
+  EXPECT_EQ(Expression("2%").toString(), "1/50");
+  EXPECT_EQ(Expression("2.35%").toString(), "47/2000");
+  EXPECT_EQ(Expression("1100*4.76%").toString(), "1309/25");
+  EXPECT_EQ(Expression("2.35%%%%").toString(), "47/2000000000");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
