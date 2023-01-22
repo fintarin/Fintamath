@@ -16,10 +16,8 @@ public:
 
   static void registerToken(const Token &token);
 
-  static bool isLetter(char c); // TODO: remove
-
 private:
-  static bool appendToken(TokenVector &tokens, Token &token, bool isNumber = false);
+  static bool appendToken(TokenVector &tokens, Token &token, bool shouldSplit);
 
   static TokenVector splitTokens(const Token &token);
 
@@ -27,19 +25,13 @@ private:
 
   static bool isDigitOrPoint(char c);
 
-  static bool isSpecial(char c); // TODO: remove
+  static bool isBracket(char c);
 
-  static bool isBracket(char c); // TODO: remove
+  static bool isOpenBracket(char c);
 
-  static bool isBracket(const std::string &c); // TODO: remove
+  static bool isCloseBracket(char c);
 
-  static bool isOpenBracket(char c); // TODO: remove
-
-  static bool isCloseBracket(char c); // TODO: remove
-
-  static bool isCanInsertMultiplyCharacter(char c); // TODO: remove
-
-  static bool findCharInStr(char c, const std::string &str); // TODO: remove
+  static bool findCharInStr(char c, const std::string &str);
 
   static TokenVector registeredTokens;
 };

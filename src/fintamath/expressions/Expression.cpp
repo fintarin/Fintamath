@@ -619,17 +619,18 @@ TokenVector Expression::splitLiteral(const std::string &token, bool addMultiplyT
   if (token.empty()) {
     throw InvalidInputException(token); // TODO: throw InvalidInputException(Tokenizer::tokensToString(tokens))
   }
+
   TokenVector tokens;
+
   for (const auto &var : token) {
-    if (!Tokenizer::isLetter(var)) {
-      throw InvalidInputException(token); // TODO: throw InvalidInputException(Tokenizer::tokensToString(tokens))
-    }
     tokens.emplace_back(std::string(1, var));
     tokens.emplace_back("*");
   }
+
   if (!addMultiplyToEnd) {
     tokens.pop_back();
   }
+
   return tokens;
 }
 

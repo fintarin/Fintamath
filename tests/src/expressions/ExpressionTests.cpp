@@ -163,7 +163,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("lne").toString(), "ln(e)");
   EXPECT_EQ(Expression("lncossine").toString(), "ln(cos(sin(e)))");
-  EXPECT_EQ(Expression("ln cos sin a").toString(), "n^2 s^2 a c i l o"); // TODO: ln(cos(sin(a)))
+  EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
   EXPECT_EQ(Expression("a=a").toString(), "true");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "true");
   EXPECT_EQ(Expression("a=b").toString(), "a - b = 0");

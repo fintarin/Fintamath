@@ -15,40 +15,14 @@ TokenVector Tokenizer::tokenize(std::string str) {
 
   TokenVector tokens;
   Token numberToken;
-  Token letterToken;
   Token specialToken;
 
   for (size_t i = 0; i < str.size(); i++) {
     const auto &ch = str[i];
 
-    if (isDigitOrPoint(ch)) {
-      appendToken(tokens, letterToken);
-      appendToken(tokens, specialToken);
-      numberToken.push_back(ch);
-
-      if (!tokens.empty() && tokens.at(tokens.size() - 1) == ")") { // TODO: do it in IExpression or Expression
-        tokens.emplace_back("*");
-      }
-      continue;
-    }
-
-    if (isLetter(ch)) {
-      letterToken.push_back(ch);
-      if (appendToken(tokens, numberToken, true)) {
-        tokens.emplace_back("*");
-      }
-      appendToken(tokens, specialToken);
-
-      if (!tokens.empty() && tokens.at(tokens.size() - 1) == ")") { // TODO: do it in IExpression or Expression
-        tokens.emplace_back("*");
-      }
-      continue;
-    }
-
     if (isBracket(ch)) {
-      appendToken(tokens, numberToken, true);
-      appendToken(tokens, specialToken);
-      appendToken(tokens, letterToken);
+      appendToken(tokens, numberToken, false);
+      appendToken(tokens, specialToken, true);
 
       if (((!tokens.empty() && tokens.at(tokens.size() - 1) == ")")) && isOpenBracket(ch) &&
           ch == '(') { // TODO: do it in IExpression or Expression
@@ -56,35 +30,21 @@ TokenVector Tokenizer::tokenize(std::string str) {
       }
 
       tokens.emplace_back(1, ch);
-      continue;
-    }
+    } else if (isDigitOrPoint(ch)) {
+      appendToken(tokens, specialToken, true);
+      numberToken.push_back(ch);
 
-    if (isSpecial(ch)) {
-      appendToken(tokens, numberToken, true);
-      appendToken(tokens, letterToken);
+      if (!tokens.empty() && tokens.at(tokens.size() - 1) == ")") { // TODO: do it in IExpression or Expression
+        tokens.emplace_back("*");
+      }
+    } else {
+      appendToken(tokens, numberToken, false);
       specialToken.push_back(ch);
-      continue;
-    }
-
-    if (ch == ' ') { // TODO: do it in IExpression or Expression
-      appendToken(tokens, specialToken);
-      if (!isCanInsertMultiplyCharacter(str[i + 1])) {
-        continue;
-      }
-      if (appendToken(tokens, numberToken, true)) {
-        tokens.emplace_back("*");
-        continue;
-      }
-      if (!letterToken.empty() && isLetter(str[i + 1])) {
-        appendToken(tokens, letterToken);
-        tokens.emplace_back("*");
-      }
     }
   }
 
-  appendToken(tokens, numberToken, true);
-  appendToken(tokens, specialToken);
-  appendToken(tokens, letterToken);
+  appendToken(tokens, numberToken, false);
+  appendToken(tokens, specialToken, true);
 
   return tokens;
 }
@@ -106,12 +66,12 @@ void Tokenizer::registerToken(const Token &token) {
             [](const Token &a, const Token &b) { return a.length() > b.length(); });
 }
 
-bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool isNumber) {
+bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit) {
   if (token.empty()) {
     return false;
   }
 
-  if (isNumber) {
+  if (!shouldSplit) {
     tokens.emplace_back(token);
     token.clear();
     return true;
@@ -135,19 +95,24 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool isNumber) {
     }
 
     if (!isNestedTokenFind) {
-      tokens.emplace_back(token.substr(0, 1));
-      token = token.substr(1);
-    } else {
-      tokens.emplace_back(nestedToken);
-      token = token.substr(nestedToken.size());
+      nestedToken = token.substr(0, 1);
+
+      // TODO: do it in IExpression or Expression
+      if (nestedToken != "," && !tokens.empty() &&
+          (isDigitOrPoint(tokens.back().back()) || tokens.at(tokens.size() - 1) == ")")) {
+        tokens.emplace_back("*");
+      }
     }
+
+    tokens.emplace_back(nestedToken);
+    token = token.substr(nestedToken.size());
   }
 
   return true;
 }
 
 void Tokenizer::handleSpaces(std::string &str) {
-  str = std::regex_replace(str, std::regex(R"([\s\r\n]+)"), " ");
+  str = std::regex_replace(str, std::regex(R"([\s\r\n]+)"), "");
 
   if (str.front() == ' ') {
     str = str.substr(0);
@@ -161,16 +126,8 @@ bool Tokenizer::isDigitOrPoint(char c) {
   return c == '.' || (c >= '0' && c <= '9');
 }
 
-bool Tokenizer::isLetter(char c) {
-  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
-}
-
 bool Tokenizer::isBracket(char c) {
   return isOpenBracket(c) || isCloseBracket(c);
-}
-
-bool Tokenizer::isBracket(const std::string &c) {
-  return c.size() == 1 && isBracket(c[0]);
 }
 
 bool Tokenizer::isOpenBracket(char c) {
@@ -179,14 +136,6 @@ bool Tokenizer::isOpenBracket(char c) {
 
 bool Tokenizer::isCloseBracket(char c) {
   return c == ')' || c == '}' || c == ']';
-}
-
-bool Tokenizer::isSpecial(char c) {
-  return (c >= '!' && c <= '/') || (c >= ':' && c <= '@') || (c >= '[' && c <= '`') || (c >= '{' && c <= '~');
-}
-
-bool Tokenizer::isCanInsertMultiplyCharacter(char c) {
-  return c != ' ' && !isSpecial(c);
 }
 
 bool Tokenizer::findCharInStr(char c, const std::string &str) {
