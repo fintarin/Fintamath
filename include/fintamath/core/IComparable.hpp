@@ -80,7 +80,7 @@ private:
   bool executeAbstract(const IComparable &rhs, const std::string &oper,
                        std::function<bool(const IComparableCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
                        std::function<bool(const IComparable &, const IComparable &)> &&f2) const {
-    if (rhs.is<Derived>()) {
+    if (rhs.instanceof <Derived>()) {
       return f1(*this, rhs.to<Derived>());
     }
     if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {

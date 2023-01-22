@@ -33,7 +33,7 @@ AddExpression::AddExpression(const TokenVector &tokens) {
 }
 
 AddExpression::AddExpression(const IMathObject &rhs) {
-  if (rhs.is<AddExpression>()) {
+  if (rhs.instanceof <AddExpression>()) {
     *this = rhs.to<AddExpression>();
     return;
   }
@@ -125,19 +125,19 @@ AddExpression::Element &AddExpression::Element::operator=(const Element &rhs) {
 }
 
 void AddExpression::Element::setPrecision(uint8_t precision) {
-  if (info->instanceOf<INumber>()) {
+  if (info->instanceof <INumber>()) {
     info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
   }
 
-  if (info->instanceOf<IExpression>()) {
+  if (info->instanceof <IExpression>()) {
     auto copyExpr = castPtr<IExpression>(info->clone());
     copyExpr->setPrecision(precision);
     info = copyExpr->clone();
   }
 
-  if (info->instanceOf<IConstant>()) {
+  if (info->instanceof <IConstant>()) {
     info = (*castPtr<IConstant>(info->clone()))();
-    if (info->instanceOf<INumber>()) {
+    if (info->instanceof <INumber>()) {
       info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
     }
   }
@@ -158,13 +158,13 @@ MathObjectPtr AddExpression::Element::toMathObject(bool isPrecise) const {
 }
 
 void AddExpression::Element::simplify(bool isPrecise) {
-  if (info->instanceOf<IExpression>()) {
+  if (info->instanceof <IExpression>()) {
     info = info->to<IExpression>().simplify(isPrecise);
     return;
   }
-  if (info->instanceOf<IConstant>()) {
+  if (info->instanceof <IConstant>()) {
     auto constant = (*castPtr<IConstant>(info->clone()))();
-    if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
+    if (!isPrecise || !constant->instanceof <INumber>() || constant->to<INumber>().isPrecise()) {
       info = constant->clone();
       return;
     }
@@ -177,7 +177,7 @@ void AddExpression::Element::simplify(bool isPrecise) {
 AddExpression::Polynom AddExpression::compressExpression() const {
   Polynom newPolynom;
   for (auto &child : addPolynom) {
-    if (child.info->is<Expression>()) {
+    if (child.info->instanceof <Expression>()) {
       auto childExpr = child.info->to<Expression>();
       newPolynom.emplace_back(Element(childExpr.compress(), child.inverted));
     } else {
@@ -188,7 +188,7 @@ AddExpression::Polynom AddExpression::compressExpression() const {
 }
 
 std::vector<AddExpression::Element> AddExpression::Element::getAddPolynom() const {
-  if (info->is<AddExpression>()) {
+  if (info->instanceof <AddExpression>()) {
     Polynom result;
     auto addExpr = info->to<AddExpression>();
     for (const auto &child : addExpr.addPolynom) {
@@ -223,7 +223,7 @@ MathObjectPtr AddExpression::simplify(bool isPrecise) const {
   auto exprObj = AddExpression(compressTree());
 
   for (auto &obj : exprObj.addPolynom) { // TODO: find a better solution
-    if (obj.info->is<EqvExpression>()) {
+    if (obj.info->instanceof <EqvExpression>()) {
       throw InvalidInputException(toString());
     }
   }
@@ -259,23 +259,23 @@ bool sortFunc(const AddExpression::Element &lhs, const AddExpression::Element &r
 void AddExpression::sortPolynom(const Polynom &vect, Polynom &numVect, Polynom &mulVect, Polynom &literalVect,
                                 Polynom &funcVect, Polynom &powVect) {
   for (const auto &child : vect) {
-    if (child.info->is<MulExpression>()) {
+    if (child.info->instanceof <MulExpression>()) {
       mulVect.emplace_back(child);
       continue;
     }
-    if (child.info->is<Expression>()) {
-      if (auto exprInfo = (child.info->to<Expression>()).getInfo()->clone(); exprInfo->is<Pow>()) {
+    if (child.info->instanceof <Expression>()) {
+      if (auto exprInfo = (child.info->to<Expression>()).getInfo()->clone(); exprInfo->instanceof <Pow>()) {
         powVect.emplace_back(child);
         continue;
       }
       funcVect.emplace_back(child);
       continue;
     }
-    if (child.info->instanceOf<IArithmetic>()) {
+    if (child.info->instanceof <IArithmetic>()) {
       numVect.emplace_back(child);
       continue;
     }
-    if (child.info->instanceOf<ILiteral>()) {
+    if (child.info->instanceof <ILiteral>()) {
       literalVect.emplace_back(child);
       continue;
     }
@@ -351,15 +351,15 @@ void AddExpression::sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &lit
       continue;
     }
     if (counter->to<IComparable>() == Integer(1) || counter->to<IComparable>() == Integer(-1)) {
-      if (obj.obj->instanceOf<ILiteral>()) {
+      if (obj.obj->instanceof <ILiteral>()) {
         literalVect.emplace_back(obj.obj->clone(), counter->to<IComparable>() == Integer(-1));
         continue;
       }
-      if (obj.obj->is<Expression>()) {
+      if (obj.obj->instanceof <Expression>()) {
         powVect.emplace_back(obj.obj->clone(), counter->to<IComparable>() == Integer(-1));
         continue;
       }
-      if (obj.obj->is<MulExpression>()) {
+      if (obj.obj->instanceof <MulExpression>()) {
         mulVect.emplace_back(obj.obj->clone(), counter->to<IComparable>() == Integer(-1));
         continue;
       }
@@ -380,7 +380,7 @@ void AddExpression::simplifyMul(Polynom &powVect, Polynom &mulVect, Polynom &lit
       added = true;
     }
     MathObjectPtr number = std::make_unique<Integer>(1);
-    if (mulExprPolynom.at(0).info->instanceOf<INumber>()) {
+    if (mulExprPolynom.at(0).info->instanceof <INumber>()) {
       if (mulExprPolynom.at(0).inverted) {
         number = Neg()(*mulExprPolynom.at(0).info);
       } else {
@@ -465,11 +465,11 @@ void AddExpression::simplifyMul(Polynom &powVect, Polynom &mulVect, Polynom &lit
 std::vector<MathObjectPtr> AddExpression::getVariables() const {
   std::vector<MathObjectPtr> result;
   for (const auto &child : addPolynom) {
-    if (child.info->is<Variable>()) {
+    if (child.info->instanceof <Variable>()) {
       result.emplace_back(child.info->clone());
       continue;
     }
-    if (child.info->instanceOf<IExpression>()) {
+    if (child.info->instanceof <IExpression>()) {
       auto addResult = child.info->to<IExpression>().getVariables();
       for (const auto &add : addResult) {
         result.emplace_back(add->clone());
@@ -480,33 +480,33 @@ std::vector<MathObjectPtr> AddExpression::getVariables() const {
 }
 
 MathObjectPtr AddExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
-  if (powValue->instanceOf<IComparable>() && powValue->to<IComparable>() == Integer(0)) {
+  if (powValue->instanceof <IComparable>() && powValue->to<IComparable>() == Integer(0)) {
     for (const auto &child : addPolynom) {
-      if (child.info->instanceOf<INumber>()) {
+      if (child.info->instanceof <INumber>()) {
         return child.toMathObject(false);
       }
     }
   }
 
-  if (powValue->instanceOf<IComparable>() && powValue->to<IComparable>() == Integer(1)) {
+  if (powValue->instanceof <IComparable>() && powValue->to<IComparable>() == Integer(1)) {
     for (const auto &child : addPolynom) {
-      if (child.info->is<Variable>()) {
+      if (child.info->instanceof <Variable>()) {
         return child.inverted ? Integer(-1).clone() : Integer(1).clone();
       }
     }
   }
 
   for (const auto &child : addPolynom) {
-    if (child.info->is<MulExpression>()) {
+    if (child.info->instanceof <MulExpression>()) {
       if (auto result = child.info->to<MulExpression>().getPowCoefficient(powValue->clone())) {
         return child.inverted ? Neg()(*result) : result->clone();
       }
     }
-    if (child.info->is<Expression>()) {
-      if (child.info->to<Expression>().getInfo()->is<Pow>()) {
+    if (child.info->instanceof <Expression>()) {
+      if (child.info->to<Expression>().getInfo()->instanceof <Pow>()) {
         auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
-        if (rightVal->instanceOf<IComparable>() && powValue->instanceOf<IComparable>() &&
-            rightVal->to<IComparable>() == powValue->to<IComparable>()) {
+        if (rightVal->instanceof <IComparable>() && powValue->instanceof
+            <IComparable>() && rightVal->to<IComparable>() == powValue->to<IComparable>()) {
           return child.inverted ? Integer(-1).clone() : Integer(1).clone();
         }
       }
@@ -518,21 +518,21 @@ MathObjectPtr AddExpression::getPowCoefficient(const MathObjectPtr &powValue) co
 MathObjectPtr AddExpression::getPow() const {
   auto maxValue = Integer(0);
   for (const auto &child : addPolynom) {
-    if (child.info->is<MulExpression>()) {
+    if (child.info->instanceof <MulExpression>()) {
       auto pow = child.info->to<MulExpression>().getPow();
-      if (pow->is<Integer>() && pow->to<Integer>() > maxValue) {
+      if (pow->instanceof <Integer>() && pow->to<Integer>() > maxValue) {
         maxValue = pow->to<Integer>();
       }
     }
-    if (child.info->is<Expression>()) {
-      if (child.info->to<Expression>().getInfo()->is<Pow>()) {
+    if (child.info->instanceof <Expression>()) {
+      if (child.info->to<Expression>().getInfo()->instanceof <Pow>()) {
         auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
-        if (rightVal->is<Integer>() && rightVal->to<Integer>() > maxValue) {
+        if (rightVal->instanceof <Integer>() && rightVal->to<Integer>() > maxValue) {
           maxValue = rightVal->to<Integer>();
         }
       }
     }
-    if (child.info->is<Variable>()) {
+    if (child.info->instanceof <Variable>()) {
       if (Integer(1) > maxValue) {
         maxValue = Integer(1);
       }
