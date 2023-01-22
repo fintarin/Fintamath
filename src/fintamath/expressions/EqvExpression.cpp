@@ -22,10 +22,10 @@ EqvExpression::EqvExpression(const TokenVector &tokens) {
 }
 
 EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs) {
-  if (!oper.instanceof <IOperator>() || oper.to<IOperator>().getOperatorPriority() != IOperator::Priority::Comparison) {
+  if (!oper.instanceOf<IOperator>() || oper.to<IOperator>().getOperatorPriority() != IOperator::Priority::Comparison) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
   }
-  if (lhs.instanceof <EqvExpression>() || rhs.instanceof <EqvExpression>()) {
+  if (lhs.instanceOf<EqvExpression>() || rhs.instanceOf<EqvExpression>()) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
   }
 
@@ -80,7 +80,7 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   cloneExpr.leftExpr = addExpr.simplify(isPrecise);
   cloneExpr.rightExpr = Integer(0).clone();
 
-  if (cloneExpr.leftExpr->instanceof <IComparable>()) {
+  if (cloneExpr.leftExpr->instanceOf<IComparable>()) {
     auto b = Expression(oper->to<IOperator>()(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
     return b.simplify(isPrecise);
   }
@@ -125,7 +125,7 @@ void EqvExpression::parse(const TokenVector &tokens) {
 }
 
 void EqvExpression::setPrecision(uint8_t precision) {
-  if (leftExpr->instanceof <IExpression>()) {
+  if (leftExpr->instanceOf<IExpression>()) {
     auto copyExpr = castPtr<IExpression>(leftExpr);
     copyExpr->setPrecision(precision);
     leftExpr = copyExpr->clone();
@@ -135,11 +135,11 @@ void EqvExpression::setPrecision(uint8_t precision) {
 std::string EqvExpression::solve() const {
   Variable x("x");
   auto expr = simplify(false);
-  if (!expr->instanceof <EqvExpression>()) {
+  if (!expr->instanceOf<EqvExpression>()) {
     return expr->toString();
   }
   auto copyExpr = expr->to<EqvExpression>();
-  if (!copyExpr.oper->instanceof <Eqv>()) {
+  if (!copyExpr.oper->instanceOf<Eqv>()) {
     return expr->toString();
   }
   if (!copyExpr.detectOneVariable(x)) {
@@ -164,11 +164,11 @@ std::string EqvExpression::solve() const {
 std::string EqvExpression::solve(uint8_t precision) const {
   Variable x("x");
   auto expr = simplify(false);
-  if (!expr->instanceof <EqvExpression>()) {
+  if (!expr->instanceOf<EqvExpression>()) {
     return expr->toString();
   }
   auto copyExpr = expr->to<EqvExpression>();
-  if (!copyExpr.oper->instanceof <Eqv>()) {
+  if (!copyExpr.oper->instanceOf<Eqv>()) {
     return expr->toString();
   }
   if (!copyExpr.detectOneVariable(x)) {
@@ -205,7 +205,7 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
   AddExpression polynom(*leftExpr);
   auto maxPow = polynom.getPow();
 
-  if (!maxPow->instanceof <Integer>() || maxPow->to<Integer>() > Integer(2)) {
+  if (!maxPow->instanceOf<Integer>() || maxPow->to<Integer>() > Integer(2)) {
     return {};
   }
 
@@ -225,7 +225,7 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
         (fintamath::pow(*coefficients.at(1), Integer(2)) - mul(Integer(4), *coefficients.at(0), *coefficients.at(2)))
             .simplify(false);
 
-    if (discr->instanceof <IComparable>() && discr->to<IComparable>() < Integer(0)) {
+    if (discr->instanceOf<IComparable>() && discr->to<IComparable>() < Integer(0)) {
       return {};
     }
 
@@ -245,11 +245,11 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
 }
 
 bool EqvExpression::detectOneVariable(Variable &v) const {
-  if (leftExpr->instanceof <Variable>()) {
+  if (leftExpr->instanceOf<Variable>()) {
     v = leftExpr->to<Variable>();
     return true;
   }
-  if (leftExpr->instanceof <IExpression>()) {
+  if (leftExpr->instanceOf<IExpression>()) {
     auto variables = leftExpr->to<IExpression>().getVariables();
     if (variables.empty()) {
       return false;
@@ -265,7 +265,7 @@ bool EqvExpression::detectOneVariable(Variable &v) const {
 }
 
 bool EqvExpression::sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
-  if (!lhs->instanceof <IComparable>() || !rhs->instanceof <IComparable>()) {
+  if (!lhs->instanceOf<IComparable>() || !rhs->instanceOf<IComparable>()) {
     return false;
   }
   return lhs->to<IComparable>() < rhs->to<IComparable>();

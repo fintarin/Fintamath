@@ -24,7 +24,7 @@ public:
   }
 
   template <typename T>
-  bool instanceof () const {
+  bool instanceOf() const {
     return dynamic_cast<const T *>(this);
   }
 
@@ -75,7 +75,7 @@ protected:
   }
 
   bool equalsAbstract(const IMathObject &rhs) const final {
-    if (rhs.instanceof <Derived>()) {
+    if (rhs.instanceOf<Derived>()) {
       return equals(rhs.to<Derived>());
     }
     if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {

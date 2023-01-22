@@ -363,10 +363,10 @@ TEST(RationalTests, toStringTest) {
 }
 
 TEST(RationalTests, simplifyTest) {
-  EXPECT_TRUE(Rational(5, 2).simplify()->instanceof<Rational>());
-  EXPECT_TRUE(Rational(55, 5).simplify()->instanceof<Integer>());
-  EXPECT_TRUE(Rational(-5, 2).simplify()->instanceof<Rational>());
-  EXPECT_TRUE(Rational(-55, 5).simplify()->instanceof<Integer>());
+  EXPECT_TRUE(Rational(5, 2).simplify()->instanceOf<Rational>());
+  EXPECT_TRUE(Rational(55, 5).simplify()->instanceOf<Integer>());
+  EXPECT_TRUE(Rational(-5, 2).simplify()->instanceOf<Rational>());
+  EXPECT_TRUE(Rational(-55, 5).simplify()->instanceOf<Integer>());
 
   EXPECT_EQ(Rational(5, 2).simplify()->toString(), "5/2");
   EXPECT_EQ(Rational(55, 5).simplify()->toString(), "11");

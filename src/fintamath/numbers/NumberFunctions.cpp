@@ -36,7 +36,7 @@ NumberPtr pow(const INumber &inLhs, const INumber &inRhs) {
   const auto &lhs = lhsPtr->to<INumber>();
   const auto &rhs = rhsPtr->to<INumber>();
 
-  if (rhs.instanceof <Integer>() && lhs.isPrecise()) {
+  if (rhs.instanceOf<Integer>() && lhs.isPrecise()) {
     const auto &intRhs = rhs.to<Integer>();
 
     if (intRhs == ZERO && lhs == ZERO) {

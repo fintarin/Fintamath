@@ -46,13 +46,13 @@ TokenVector IExpression::cutBraces(const TokenVector &tokens) {
 }
 
 std::string IExpression::tryPutInBracketsIfNeg(const MathObjectPtr &obj) {
-  if (!obj->instanceof <Expression>()) {
+  if (!obj->instanceOf<Expression>()) {
     return obj->toString();
   }
 
   const auto &exprObj = obj->to<Expression>();
 
-  if (exprObj.getInfo()->instanceof <Neg>()) {
+  if (exprObj.getInfo()->instanceOf<Neg>()) {
     return "(" + exprObj.toString() + ")";
   }
 
@@ -63,8 +63,8 @@ void IExpression::validateFunctionArgs(const IFunction &func, const ArgumentsVec
   ArgumentsVector nonMatchingArgs = func.getNonMatchingArgs(args);
 
   for (const auto &arg : nonMatchingArgs) {
-    if (!arg.get().instanceof <Variable>() && !arg.get().instanceof <IConstant>() && !arg.get().instanceof
-        <IExpression>()) {
+    if (!arg.get().instanceOf<Variable>() && !arg.get().instanceOf<IConstant>() &&
+        !arg.get().instanceOf<IExpression>()) {
       throw InvalidInputException(toString());
     }
   }

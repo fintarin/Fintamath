@@ -11,33 +11,33 @@ using namespace fintamath;
 TEST(MathObjectTests, isTest) {
   MathObjectPtr m1 = std::make_unique<Integer>();
 
-  EXPECT_TRUE(m1->instanceof<Integer>());
+  EXPECT_TRUE(m1->instanceOf<Integer>());
 
-  EXPECT_FALSE(m1->instanceof<Rational>());
-  EXPECT_FALSE(m1->instanceof<Variable>());
+  EXPECT_FALSE(m1->instanceOf<Rational>());
+  EXPECT_FALSE(m1->instanceOf<Variable>());
 }
 
 TEST(MathObjectTests, instanceofTest) {
   MathObjectPtr m1 = std::make_unique<Integer>();
 
-  EXPECT_TRUE(m1->instanceof<Integer>());
-  EXPECT_TRUE(m1->instanceof<INumber>());
-  EXPECT_TRUE(m1->instanceof<IArithmetic>());
-  EXPECT_TRUE(m1->instanceof<IMathObject>());
+  EXPECT_TRUE(m1->instanceOf<Integer>());
+  EXPECT_TRUE(m1->instanceOf<INumber>());
+  EXPECT_TRUE(m1->instanceOf<IArithmetic>());
+  EXPECT_TRUE(m1->instanceOf<IMathObject>());
 
-  EXPECT_FALSE(m1->instanceof<Rational>());
-  EXPECT_FALSE(m1->instanceof<Variable>());
+  EXPECT_FALSE(m1->instanceOf<Rational>());
+  EXPECT_FALSE(m1->instanceOf<Variable>());
 }
 
 TEST(MathObjectTests, toTest) {
   MathObjectPtr m1 = std::make_unique<Integer>();
 
-  EXPECT_TRUE(m1->to<Integer>().instanceof<Integer>());
-  EXPECT_TRUE(m1->to<INumber>().instanceof<INumber>());
-  EXPECT_TRUE(m1->to<IArithmetic>().instanceof<IArithmetic>());
-  EXPECT_TRUE(m1->to<IMathObject>().instanceof<IMathObject>());
+  EXPECT_TRUE(m1->to<Integer>().instanceOf<Integer>());
+  EXPECT_TRUE(m1->to<INumber>().instanceOf<INumber>());
+  EXPECT_TRUE(m1->to<IArithmetic>().instanceOf<IArithmetic>());
+  EXPECT_TRUE(m1->to<IMathObject>().instanceOf<IMathObject>());
 
-  EXPECT_TRUE(m1->to<IMathObject>().instanceof<Integer>());
+  EXPECT_TRUE(m1->to<IMathObject>().instanceOf<Integer>());
 
   EXPECT_THROW(m1->to<Rational>(), std::bad_cast);
   EXPECT_THROW(m1->to<Variable>(), std::bad_cast);

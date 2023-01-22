@@ -36,7 +36,7 @@ protected:
   virtual Derived &mod(const Derived &rhs) = 0;
 
   ModularPtr modAbstract(const IModular &rhs) const final {
-    if (rhs.instanceof <Derived>()) {
+    if (rhs.instanceOf<Derived>()) {
       auto tmpLhs = castPtr<IModularCRTP<Derived>>(clone());
       return castPtr<IModular>(tmpLhs->mod(rhs.to<Derived>()).simplify());
     }

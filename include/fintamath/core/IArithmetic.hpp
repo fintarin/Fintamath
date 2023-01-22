@@ -192,7 +192,7 @@ private:
   ArithmeticPtr executeAbstract(const IArithmetic &rhs, const std::string &oper,
                                 std::function<Derived(IArithmeticCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
                                 std::function<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> &&f2) const {
-    if (rhs.instanceof <Derived>()) {
+    if (rhs.instanceOf<Derived>()) {
       auto tmpLhs = castPtr<IArithmeticCRTP<Derived>>(clone());
       return castPtr<IArithmetic>(f1(*tmpLhs, rhs.to<Derived>()).simplify());
     }
