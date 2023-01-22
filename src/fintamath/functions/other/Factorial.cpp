@@ -9,10 +9,10 @@ MathObjectPtr Factorial::call(const ArgumentsVector &argsVect) const {
   const auto &rhs = argsVect.at(0).get();
 
   if (!rhs.instanceof <Integer>()) {
-    throw UndefinedUnaryOpearatorException("!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
+    throw UndefinedUnaryOpearatorException(toString(), rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
   }
 
-  return factorial(rhs.to<Integer>()).simplify();
+  return factorial(rhs.to<Integer>(), order).simplify();
 }
 
 }

@@ -10,4 +10,6 @@ Integer pow(const Integer &lhs, uint64_t rhs);
 
 Integer factorial(const Integer &rhs);
 
+Integer factorial(const Integer &rhs, int64_t order);
+
 }

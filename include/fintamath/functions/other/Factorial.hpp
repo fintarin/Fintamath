@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
@@ -12,11 +14,23 @@ public:
   }
 
   std::string toString() const override {
-    return "!";
+    return std::string(order, '!');
+  }
+
+  uint64_t getOrder() const {
+    return order;
+  }
+
+  void setOrder(int64_t order) {
+    assert(order > 0);
+    this->order = order;
   }
 
 protected:
   MathObjectPtr call(const ArgumentsVector &argsVect) const override;
+
+private:
+  int64_t order = 1;
 };
 
 }

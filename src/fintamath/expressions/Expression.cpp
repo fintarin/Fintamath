@@ -25,6 +25,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
+#include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -399,9 +400,19 @@ bool Expression::parsePrefixOperator(const TokenVector &tokens) {
 
 bool Expression::parsePostfixOperator(const TokenVector &tokens) {
   if (auto oper = IOperator::parse(tokens.back(), IOperator::Priority::PostfixUnary)) {
+    int64_t order = 1;
+
+    if (oper->instanceof <Factorial>()) {
+      while (tokens[tokens.size() - order - 1] == oper->toString()) {
+        order++;
+      }
+
+      oper->to<Factorial>().setOrder(order);
+    }
+
     info = std::move(oper);
 
-    auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - 1));
+    auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - order));
     if (!value) {
       throw InvalidInputException(Tokenizer::tokensToString(tokens));
     }

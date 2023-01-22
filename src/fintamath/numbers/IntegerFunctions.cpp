@@ -48,4 +48,24 @@ Integer factorial(const Integer &rhs) {
   return factorialRec(2, rhs);
 }
 
+Integer factorial(const Integer &rhs, int64_t order) {
+  assert(order > 0);
+
+  if (rhs < 0) {
+    throw UndefinedUnaryOpearatorException(std::string(order, '!'), rhs.toString(),
+                                           UndefinedUnaryOpearatorException::Type::Postfix);
+  }
+
+  if (order == 1) {
+    return factorial(rhs);
+  }
+
+  Integer res = 1;
+  for (Integer i = rhs; i > 0; i -= order) {
+    res *= i;
+  }
+
+  return res;
+}
+
 }
