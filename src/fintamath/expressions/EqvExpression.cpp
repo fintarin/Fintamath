@@ -65,7 +65,7 @@ EqvExpression &EqvExpression::operator=(EqvExpression &&rhs) noexcept {
 }
 
 std::string EqvExpression::toString() const {
-  return leftExpr->toString() + oper->toString() + rightExpr->toString();
+  return leftExpr->toString() + ' ' + oper->toString() + ' ' + rightExpr->toString();
 }
 
 MathObjectPtr EqvExpression::simplify() const {

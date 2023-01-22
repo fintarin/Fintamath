@@ -132,6 +132,12 @@ std::string putInBrackets(const std::string &str) {
 std::string Expression::binaryOperatorToString() const {
   std::string result;
 
+  std::string operStr = info->toString();
+  if (auto priority = info->to<IOperator>().getOperatorPriority();
+      priority != IOperator::Priority::Multiplication && priority != IOperator::Priority::Exponentiation) {
+    operStr = ' ' + operStr + ' ';
+  }
+
   for (const auto &child : children) {
     if (child->instanceof <IExpression>()) {
       auto parentPriority = info->to<IOperator>().getOperatorPriority();
@@ -146,12 +152,11 @@ std::string Expression::binaryOperatorToString() const {
       result += child->toString();
     }
 
-    result += info->toString();
+    result += operStr;
   }
 
-  for (int i = 0; i < info->toString().size(); i++) {
-    result.pop_back();
-  }
+  result = result.substr(0, result.length() - operStr.length());
+
   return result;
 }
 
@@ -184,15 +189,17 @@ std::string Expression::postfixUnaryOperatorToString() const {
 }
 
 std::string Expression::functionToString() const {
+  static const std::string delimiter = ", ";
+
   std::string result = info->toString() + "(";
 
   for (const auto &child : children) {
-    result += child->toString() + ",";
+    result += child->toString() + delimiter;
   }
 
-  result.pop_back();
+  result = result.substr(0, result.length() - delimiter.length()) + ")";
 
-  return result + ")";
+  return result;
 }
 
 void Expression::simplifyConstant(bool isPrecise) {

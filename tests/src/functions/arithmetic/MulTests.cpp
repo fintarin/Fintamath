@@ -27,7 +27,7 @@ TEST(MulTests, callTest) {
   EXPECT_EQ(f(Rational(5, 2), Integer(3))->toString(), "15/2");
   EXPECT_EQ(f(Rational(5, 2), Rational(5, 3))->toString(), "25/6");
 
-  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3*a");
+  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3 a");
 
   EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
   EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);

@@ -23,6 +23,7 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -56,17 +57,23 @@ void AddExpression::setPrecision(uint8_t precision) {
 std::string AddExpression::toString() const {
   std::string result;
 
-  for (const auto &var : addPolynom) {
-    result += var.inverted ? '-' : '+';
-    result += tryPutInBracketsIfNeg(var.info);
+  result += tryPutInBracketsIfNeg(addPolynom.front().info);
+  if (result.front() != '-' && addPolynom.front().inverted) {
+    result.insert(result.begin(), '-');
   }
 
-  if (!result.empty() && result.at(0) == '+') {
-    result.erase(result.begin());
-  }
+  for (size_t i = 1; i < addPolynom.size(); i++) {
+    std::string childStr = tryPutInBracketsIfNeg(addPolynom[i].info);
 
-  result = std::regex_replace(result, std::regex(R"(\+\+|\-\-)"), "+");
-  result = std::regex_replace(result, std::regex(R"(\+\-|\+\-)"), "-");
+    if (childStr.front() != '-') {
+      result += addPolynom[i].inverted ? " - " : " + ";
+      result += childStr;
+    } else {
+      childStr = childStr.substr(1);
+      result += addPolynom[i].inverted ? " + " : " - ";
+      result += childStr;
+    }
+  }
 
   return result;
 }

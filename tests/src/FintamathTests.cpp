@@ -11,16 +11,16 @@ TEST(FintamathTests, fintamathTests) {
   Expression expr;
 
   expr = sum(e(), pi(), Variable("a"), Variable("b"));
-  EXPECT_EQ(expr.toString(), "a+b+e+pi");
+  EXPECT_EQ(expr.toString(), "a + b + e + pi");
 
   expr = mul(e(), pi(), Variable("a"), Variable("b"));
-  EXPECT_EQ(expr.toString(), "a*b*e*pi");
+  EXPECT_EQ(expr.toString(), "a b e pi");
 
   expr = pow(Variable("a"), Variable("b")) * Variable("c");
-  EXPECT_EQ(expr.toString(), "a^b*c");
+  EXPECT_EQ(expr.toString(), "a^b c");
 
   expr = pow(Variable("a"), Variable("b")) * Variable("c");
-  EXPECT_EQ(expr.toString(), "a^b*c");
+  EXPECT_EQ(expr.toString(), "a^b c");
 
   // expr = pow(sin(Expression(2)), 2) + pow(cos(Expression(2)), 2);
   // EXPECT_EQ(expr.toString(), "1");
@@ -35,10 +35,10 @@ TEST(FintamathTests, fintamathTests) {
   expr = eqv(x * x + y * y * y, x * y);
 
   // TODO: replace to y^3+x^2-x*y=0
-  EXPECT_EQ(expr.toString(), "x^2+y^3-x*y=0");
+  EXPECT_EQ(expr.toString(), "x^2 + y^3 - x y = 0");
 
   expr = eqv(x * x + y * y, x * y);
-  EXPECT_EQ(expr.toString(), "x^2+y^2-x*y=0");
+  EXPECT_EQ(expr.toString(), "x^2 + y^2 - x y = 0");
 
   expr = eqv(pow(x, 2) - 10, 39);
   EXPECT_EQ(expr.solve(), "x in {-7,7}");

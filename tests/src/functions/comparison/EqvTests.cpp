@@ -28,7 +28,7 @@ TEST(EqvTests, callTest) {
   EXPECT_EQ(f(Integer(3), Rational(3, 1))->toString(), "true");
   EXPECT_EQ(f(Rational(5, 2), Integer(2))->toString(), "false");
 
-  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "-a+3=0");
+  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "-a + 3 = 0");
   EXPECT_EQ(f(Variable("a"), Variable("a"))->toString(), "true");
 
   EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);

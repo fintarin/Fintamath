@@ -49,10 +49,13 @@ std::string IExpression::tryPutInBracketsIfNeg(const MathObjectPtr &obj) {
   if (!obj->instanceof <Expression>()) {
     return obj->toString();
   }
+
   const auto &exprObj = obj->to<Expression>();
+
   if (exprObj.getInfo()->instanceof <Neg>()) {
     return "(" + exprObj.toString() + ")";
   }
+
   return obj->toString();
 }
 

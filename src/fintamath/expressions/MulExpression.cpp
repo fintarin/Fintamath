@@ -53,16 +53,17 @@ std::string MulExpression::tryPutInBrackets(const MathObjectPtr &obj) {
 
 std::string MulExpression::toString() const {
   std::string result;
-  if (!mulPolynom.empty() && mulPolynom.at(0).inverted) {
-    result += '1';
+
+  if (mulPolynom.front().inverted) {
+    result += "1/";
   }
-  for (const auto &var : mulPolynom) {
-    result += var.inverted ? '/' : '*';
-    result += tryPutInBrackets(var.info);
+  result += tryPutInBrackets(mulPolynom.front().info);
+
+  for (size_t i = 1; i < mulPolynom.size(); i++) {
+    result += mulPolynom[i].inverted ? '/' : ' ';
+    result += tryPutInBrackets(mulPolynom[i].info);
   }
-  if (!result.empty() && !mulPolynom.at(0).inverted) {
-    result.erase(result.begin());
-  }
+
   return result;
 }
 

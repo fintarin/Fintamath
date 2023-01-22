@@ -26,7 +26,7 @@ TEST(DerivativeTests, getOperatorPriorityTest) {
 
 TEST(DerivativeTests, callTest) {
   EXPECT_EQ(f(Variable("a"))->toString(), "1");
-  EXPECT_EQ(f(Expression("a+a"))->toString(), "(2*a)'");
+  EXPECT_EQ(f(Expression("a+a"))->toString(), "(2 a)'");
   EXPECT_EQ(f(Integer(5))->toString(), "0");
 
   EXPECT_EQ(f(Integer(5))->toString(), "0");

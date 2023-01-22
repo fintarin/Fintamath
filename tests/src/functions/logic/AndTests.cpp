@@ -27,7 +27,7 @@ TEST(AndTests, callTest) {
   EXPECT_EQ(f(Boolean(true), Boolean(false))->toString(), "false");
   EXPECT_EQ(f(Boolean(true), Boolean(true))->toString(), "true");
 
-  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "a&&b");
+  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "a && b");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Boolean(true)), InvalidInputFunctionException);
