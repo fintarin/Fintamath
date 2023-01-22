@@ -214,6 +214,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("false <-> !false && true").toString(), "false");
   EXPECT_EQ(Expression("false <-> true -> false").toString(), "true");
   EXPECT_EQ(Expression("!a && b || !c -> d <-> f !<-> g").toString(), "(!a && b || !c -> d <-> f) !<-> g");
+  EXPECT_EQ(Expression("a<->(true)<->(false)").toString(), "(a <-> true) <-> false");
+  EXPECT_EQ(Expression("a&&b->b&&c").toString(), "a && b -> b && c");
   EXPECT_EQ(Expression("----5+++5").toString(), "10");
   EXPECT_EQ(Expression("5----4").toString(), "9");
   EXPECT_EQ(Expression("5+-+-4").toString(), "9");

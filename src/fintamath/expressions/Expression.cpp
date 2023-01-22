@@ -432,14 +432,16 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
   }
 
   auto foundOperIt = operMap.begin();
+  auto foundIndex = foundOperIt->first;
+  auto foundPriority = foundOperIt->second->to<IOperator>().getOperatorPriority();
+
   for (auto it = operMap.begin(); it != operMap.end(); ++it) {
-    size_t foundIndex = foundOperIt->first;
-    size_t index = it->first;
-    IOperator::Priority foundPriority = foundOperIt->second->to<IOperator>().getOperatorPriority();
-    IOperator::Priority priority = it->second->to<IOperator>().getOperatorPriority();
+    auto index = it->first;
+    auto priority = it->second->to<IOperator>().getOperatorPriority();
 
     if (foundPriority < priority ||
         (foundPriority != IOperator::Priority::Exponentiation && foundPriority == priority && index > foundIndex)) {
+      foundPriority = priority;
       foundOperIt = it;
     }
   }
@@ -508,6 +510,7 @@ std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVecto
 
   for (size_t i = 0; i < tokens.size(); i++) {
     if (skipBrackets(tokens, i)) {
+      isPrevTokenOper = false;
       i--;
       continue;
     }
