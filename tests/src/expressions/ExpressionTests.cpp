@@ -208,6 +208,12 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(1=1)||(1=2)").toString(), "true");
   EXPECT_EQ(Expression("(1=2)||!(1=2)&&(1=1)").toString(), "true");
   EXPECT_EQ(Expression("((1=2)||(1=2)&&!(1=1))||((1=1)&&!((1=2)||(1=1)))").toString(), "false");
+  EXPECT_EQ(Expression("true !<-> true").toString(), "false");
+  EXPECT_EQ(Expression("(false -> false && !true) !<-> (true <-> !(false||true))").toString(), "true");
+  EXPECT_EQ(Expression("((1=2) -> (1=2) && !(1=1)) !<-> ((1=1) <-> !((1=2) || (1=1)))").toString(), "true");
+  EXPECT_EQ(Expression("false <-> !false && true").toString(), "false");
+  EXPECT_EQ(Expression("false <-> true -> false").toString(), "true");
+  EXPECT_EQ(Expression("!a && b || !c -> d <-> f !<-> g").toString(), "(!a && b || !c -> d <-> f) !<-> g");
   EXPECT_EQ(Expression("----5+++5").toString(), "10");
   EXPECT_EQ(Expression("5----4").toString(), "9");
   EXPECT_EQ(Expression("5+-+-4").toString(), "9");

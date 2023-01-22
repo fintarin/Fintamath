@@ -3,6 +3,9 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/logic/Equiv.hpp"
+#include "fintamath/functions/logic/Impl.hpp"
+#include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
@@ -143,6 +146,9 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(IOperator::parse("!", IOperator::Priority::PrefixUnary)->instanceOf<Not>());
   EXPECT_TRUE(IOperator::parse("&&")->instanceOf<And>());
   EXPECT_TRUE(IOperator::parse("||")->instanceOf<Or>());
+  EXPECT_TRUE(IOperator::parse("->")->instanceOf<Impl>());
+  EXPECT_TRUE(IOperator::parse("<->")->instanceOf<Equiv>());
+  EXPECT_TRUE(IOperator::parse("!<->")->instanceOf<Nequiv>());
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
@@ -182,6 +188,9 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(IFunction::parse("abs")->instanceOf<Abs>());
   EXPECT_TRUE(IFunction::parse("&&")->instanceOf<And>());
   EXPECT_TRUE(IFunction::parse("||")->instanceOf<Or>());
+  EXPECT_TRUE(IFunction::parse("->")->instanceOf<Impl>());
+  EXPECT_TRUE(IFunction::parse("<->")->instanceOf<Equiv>());
+  EXPECT_TRUE(IFunction::parse("!<->")->instanceOf<Nequiv>());
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

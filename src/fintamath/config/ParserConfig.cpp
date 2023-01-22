@@ -1,6 +1,9 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/logic/Equiv.hpp"
+#include "fintamath/functions/logic/Impl.hpp"
+#include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -106,6 +109,9 @@ struct ParserConfig {
     IOperator::registerParser<Not>();
     IOperator::registerParser<And>();
     IOperator::registerParser<Or>();
+    IOperator::registerParser<Impl>();
+    IOperator::registerParser<Equiv>();
+    IOperator::registerParser<Nequiv>();
 
     // functions
     IFunction::registerParser<Abs>();

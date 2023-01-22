@@ -14,13 +14,15 @@ public:
   enum class Priority : uint16_t {
     PostfixUnary,   // postfix unary operators
     PrefixUnary,    // prefix unary operators
-    Exponentiation, // operators with priority like exponentiation
-    Multiplication, // operators with priority like multiplication
-    Addition,       // operators with priority like addition
+    Exponentiation, // exponentiation operators
+    Multiplication, // multiplication operators
+    Addition,       // addition operators
     Comparison,     // comparison operators
-    And,            // operators with priority like logical AND
-    Or,             // operators with priority like logical OR
-    Any,            // operators with any priority
+    And,            // conjunction operators
+    Or,             // disjunction operators
+    Implication,    // implication operators
+    Equivalence,    // equivalence operators
+    Any,            // any priority operators
   };
 
 public:
