@@ -147,7 +147,32 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("ln(ln(ln(ln(ln(e)))))").toString(), "ln(ln(ln(ln(ln(e)))))");
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
+  EXPECT_EQ(Expression("--a").toString(), "a");
+  EXPECT_EQ(Expression("---a").toString(), "-a");
+  EXPECT_EQ(Expression("b--a").toString(), "a + b");
+  EXPECT_EQ(Expression("b---a").toString(), "-a + b");
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-a)))))))").toString(), "a");
+  EXPECT_EQ(Expression("-(-(-(-(-(-(-(-(-a))))))))").toString(), "-a");
+  EXPECT_EQ(Expression("-(-(-(-(-(-(-(-a)))))))").toString(), "a");
+  EXPECT_EQ(Expression("-(-(-(-(-(-(-(-(-a))))))))").toString(), "-a");
+  EXPECT_EQ(
+      Expression("-----------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------a")
+          .toString(),
+      "a");
+  EXPECT_EQ(
+      Expression("-----------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "------------------------------------------------------------------------a")
+          .toString(),
+      "-a");
   EXPECT_EQ(Expression("a+a").toString(), "2 a");
   EXPECT_EQ(Expression("a-a").toString(), "0");
   EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
@@ -161,6 +186,29 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(3 b + a b)/(2 a + a b)");
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "(3 b + 5 a + a b + 15)/(2 a + a b)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
+  EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
+  EXPECT_EQ(Expression("1*(a+b)*1").toString(), "a + b");
+  // EXPECT_EQ(Expression("-1*(a+b)*1").toString(), "-a - b"); // TODO: implement negation of MulExpression
+  EXPECT_EQ(Expression("1*(a+b)*-1").toString(), "-a - b");
+  // EXPECT_EQ(Expression("-1*(a+b)*-1").toString(), "a + b");  // TODO: implement negation of MulExpression
+  EXPECT_EQ(Expression("1+(a+b)+1").toString(), "a + b + 2");
+  EXPECT_EQ(Expression("-1+(a+b)+1").toString(), "a + b");
+  EXPECT_EQ(Expression("1+(a+b)-1").toString(), "a + b");
+  EXPECT_EQ(Expression("-1+(a+b)-1").toString(), "a + b - 2");
+  EXPECT_EQ(Expression("2*(a+b)*2").toString(), "4 a + 4 b");
+  // EXPECT_EQ(Expression("-2*(a+b)*2").toString(), "-4 a - 4 b"); // TODO: implement negation of MulExpression
+  EXPECT_EQ(Expression("2*(a+b)*-2").toString(), "-4 a - 4 b");
+  // EXPECT_EQ(Expression("-2*(a+b)*-2").toString(), "4 a + 4 b"); // TODO: implement negation of MulExpression
+  EXPECT_EQ(Expression("2+(a+b)+2").toString(), "a + b + 4");
+  EXPECT_EQ(Expression("-2+(a+b)+2").toString(), "a + b");
+  EXPECT_EQ(Expression("2+(a+b)-2").toString(), "a + b");
+  EXPECT_EQ(Expression("-2+(a+b)-2").toString(), "a + b - 4");
+  EXPECT_EQ(Expression("(a+b)+(a+b)-(a+b)").toString(), "a + b");
+  EXPECT_EQ(Expression("(a+b)+(a+b)+(-(a+b))").toString(), "a + b");
+  EXPECT_EQ(Expression("(a+b)+(a+b)+(-(-(a+b)))").toString(), "3 a + 3 b");
+  EXPECT_EQ(Expression("-a^2 + b").toString(), "-a^2 + b");
+  EXPECT_EQ(Expression("-a^2 c + b").toString(), "-a^2 c + b");
+  EXPECT_EQ(Expression("-a^2 d - a^2 c + b").toString(), "-a^2 c - a^2 d + b");
   EXPECT_EQ(Expression("lne").toString(), "ln(e)");
   EXPECT_EQ(Expression("lncossine").toString(), "ln(cos(sin(e)))");
   EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
@@ -216,6 +264,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("!a && b || !c -> d <-> f !<-> g").toString(), "(!a && b || !c -> d <-> f) !<-> g");
   EXPECT_EQ(Expression("a<->(true)<->(false)").toString(), "(a <-> true) <-> false");
   EXPECT_EQ(Expression("a&&b->b&&c").toString(), "a && b -> b && c");
+  EXPECT_EQ(Expression("false||1=1").toString(), "true");
+  EXPECT_EQ(Expression("1=1||false").toString(), "true");
   EXPECT_EQ(Expression("----5+++5").toString(), "10");
   EXPECT_EQ(Expression("5----4").toString(), "9");
   EXPECT_EQ(Expression("5+-+-4").toString(), "9");
@@ -226,6 +276,14 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("2.35%").toString(), "47/2000");
   EXPECT_EQ(Expression("1100*4.76%").toString(), "1309/25");
   EXPECT_EQ(Expression("2.35%%%%").toString(), "47/2000000000");
+  EXPECT_EQ(Expression("abc").toString(), "a b c");
+  // EXPECT_EQ(Expression("d^abc").toString(), "d^a b c"); // TODO: fix split tokens
+  // EXPECT_EQ(Expression("abc^d").toString(), "a b c^d"); // TODO: fix split tokens
+  EXPECT_EQ(Expression("36/3(8-6)").toString(), "24");
+  // EXPECT_EQ(Expression("x!y").toString(), "x! y"); // TODO: fix split tokens 
+  // EXPECT_EQ(Expression("1100*4.76%1100*4.76%").toString(), "1713481/625"); // TODO: fix split tokens
+  // EXPECT_EQ(Expression("a(2)").toString(), "2 a"); // TODO: fix split tokens
+  EXPECT_EQ(Expression("(2)a").toString(), "2 a");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
