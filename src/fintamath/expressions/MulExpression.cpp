@@ -18,6 +18,7 @@
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
@@ -122,44 +123,8 @@ void MulExpression::Element::setPrecision(uint8_t precision) {
   }
 }
 
-MulExpression::MulExpression(const TokenVector &tokens) {
-  parse(tokens);
-}
-
 MulExpression::MulExpression(Polynom inMulPolynom) : mulPolynom(std::move(inMulPolynom)) {
   mulPolynom = compressTree();
-}
-
-void MulExpression::parse(const TokenVector &tokens) {
-  int lastSignPosition = -1;
-  for (size_t i = 0; i < tokens.size(); i++) {
-    if (skipBrackets(tokens, i)) {
-      i--;
-      continue;
-    }
-    if (tokens.at(i) != "*" && tokens.at(i) != "/") {
-      continue;
-    }
-    if (i == tokens.size() - 1) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-    lastSignPosition = (int)i;
-  }
-  if (lastSignPosition == -1) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-
-  auto leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition));
-  auto rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end()));
-
-  if (!leftExpr || !rightExpr) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-
-  mulPolynom.emplace_back(Element(leftExpr->clone()));
-  mulPolynom.emplace_back(Element(rightExpr->clone(), tokens.at(lastSignPosition) == "/"));
-
-  *this = MulExpression(compressTree());
 }
 
 MulExpression::Element::Element(const MathObjectPtr &info, bool inverted) : info(info->clone()), inverted(inverted) {
@@ -192,12 +157,15 @@ std::vector<MulExpression::Element> MulExpression::Element::getMulPolynom() cons
 
 MathObjectPtr MulExpression::Element::toMathObject(bool isPrecise) const {
   auto copy = *this;
+
   if (copy.inverted) {
-    copy.info = Pow()(*info->clone(), Integer(-1));
+    copy.info = Expression::buildRawFunctionExpression(Pow(), {*info, NEG_ONE});
     copy.simplify(isPrecise);
     return copy.info->clone();
   }
+
   copy.simplify(isPrecise);
+
   return copy.info->clone();
 }
 

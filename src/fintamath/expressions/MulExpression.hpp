@@ -40,8 +40,6 @@ public:
 
   MulExpression() = default;
 
-  explicit MulExpression(const TokenVector &tokens);
-
   explicit MulExpression(Polynom inMulPolynom);
 
   MulExpression(const IMathObject &rhs);
@@ -68,8 +66,6 @@ public:
   MathObjectPtr getPow() const;
 
 private:
-  void parse(const TokenVector &tokens);
-
   Polynom mulPolynom;
 
   Polynom compressExpression() const;

@@ -17,10 +17,6 @@
 
 namespace fintamath {
 
-EqvExpression::EqvExpression(const TokenVector &tokens) {
-  parse(tokens);
-}
-
 EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs) {
   if (!oper.instanceOf<IOperator>() || oper.to<IOperator>().getOperatorPriority() != IOperator::Priority::Comparison) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
@@ -90,38 +86,6 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
 
 uint16_t EqvExpression::getBaseOperatorPriority() const {
   return (uint16_t)IOperator::Priority::Comparison;
-}
-
-void EqvExpression::parse(const TokenVector &tokens) {
-  size_t pos = SIZE_MAX;
-
-  for (size_t i = 0; i < tokens.size(); i++) {
-    if (skipBrackets(tokens, i)) {
-      i--;
-      continue;
-    }
-
-    if (tokens[i] == "=" || tokens[i] == "!=" || tokens[i] == "<" || tokens[i] == "<=" || tokens[i] == ">=" ||
-        tokens[i] == ">") {
-      if (pos != SIZE_MAX) { // TODO remove this when we have systems of equations
-        throw InvalidInputException(Tokenizer::tokensToString(tokens));
-      }
-
-      pos = i;
-    }
-  }
-
-  if (pos == SIZE_MAX) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-
-  leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + pos));
-  rightExpr = IExpression::parse(TokenVector(tokens.begin() + pos + 1, tokens.end()));
-  oper = IOperator::parse(tokens[pos]);
-
-  if (!leftExpr || !rightExpr || !oper) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
 }
 
 void EqvExpression::setPrecision(uint8_t precision) {

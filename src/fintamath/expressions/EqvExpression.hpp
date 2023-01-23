@@ -13,8 +13,6 @@ class EqvExpression : public IExpressionCRTP<EqvExpression> {
 public:
   EqvExpression() = default;
 
-  explicit EqvExpression(const TokenVector &tokens);
-
   EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs);
 
   EqvExpression(const EqvExpression &rhs) noexcept;
@@ -47,8 +45,6 @@ private:
   MathObjectPtr rightExpr;
 
   MathObjectPtr oper;
-
-  void parse(const TokenVector &tokens);
 
   std::vector<MathObjectPtr> solvePowEquation(const Variable &x) const;
 

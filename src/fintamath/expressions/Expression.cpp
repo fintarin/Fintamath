@@ -74,25 +74,46 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
   return *this;
 }
 
-Expression::Expression(const std::string &str) {
-  info = IExpression::parse(str);
+Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
+  *this = Expression(simplify());
+}
+
+Expression::Expression(const TokenVector &tokens) {
+  if (tokens.empty()) {
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
+  }
+
+  if (parseBinaryOperator(tokens) ||  //
+      parsePrefixOperator(tokens) ||  //
+      parsePostfixOperator(tokens) || //
+      parseFunction(tokens) ||        //
+      parseFiniteTerm(tokens)) {
+    return;
+  }
+
+  *this = Expression(splitTokens(tokens));
 
   if (!info) {
-    throw InvalidInputException(str);
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
-
-  *this = Expression(*info->simplify());
 }
 
-Expression::Expression(const MathObjectPtr &obj) {
+Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
+}
+
+Expression::Expression(const MathObjectPtr &obj) : Expression(obj->clone()) {
+}
+
+Expression::Expression(MathObjectPtr &&obj) {
   if (obj->instanceOf<Expression>()) {
-    *this = obj->to<Expression>();
+    *this = std::move(obj->to<Expression>());
+  } else if (obj->instanceOf<IExpression>()) {
+    info = std::move(obj);
+    children.clear();
   } else {
-    info = obj->clone();
+    info = obj->simplify();
+    children.clear();
   }
-}
-
-Expression::Expression(const IMathObject &obj) : Expression(obj.simplify()) {
 }
 
 Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
@@ -113,14 +134,6 @@ uint16_t Expression::getBaseOperatorPriority() const {
     return (uint16_t)info->to<IOperator>().getOperatorPriority();
   }
   return (uint16_t)IOperator::Priority::Any;
-}
-
-Expression::Expression(const TokenVector &tokens) {
-  parse(tokens);
-
-  if (!info) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
 }
 
 std::string putInBrackets(const std::string &str) {
@@ -162,8 +175,23 @@ std::string Expression::prefixUnaryOperatorToString() const {
   std::string result = info->toString();
 
   if (children.at(0)->instanceOf<IExpression>()) {
-    if (auto priority = IOperator::Priority(children.at(0)->to<IExpression>().getBaseOperatorPriority());
+    const auto &child = children.at(0)->to<IExpression>();
+
+    if (auto priority = IOperator::Priority(child.getBaseOperatorPriority());
         priority != IOperator::Priority::Any && priority != IOperator::Priority::PrefixUnary) {
+
+      if (child.instanceOf<MulExpression>()) {
+        return result + children.at(0)->toString();
+      }
+
+      if (child.instanceOf<Expression>()) {
+        const auto &childExpr = child.to<Expression>();
+
+        if (childExpr.info->instanceOf<Pow>()) {
+          return result + children.at(0)->toString();
+        }
+      }
+
       return result + putInBrackets(children.at(0)->toString());
     }
   }
@@ -273,19 +301,38 @@ void Expression::simplifyFunctionsRec(bool isPrecise) {
     const auto &func = info->to<IFunction>();
     ArgumentsVector args;
 
+    bool hasExpressionArg = false;
     for (const auto &child : children) {
+      if (child->instanceOf<IExpression>()) {
+        hasExpressionArg = true;
+      }
+
       args.emplace_back(*child);
     }
 
-    if (func.doAgsMatch(args)) {
+    if (!hasExpressionArg && func.doAgsMatch(args)) {
       auto countResult = func(args);
+
       if (countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
         return;
       }
+
       info = countResult->clone();
       children.clear();
     } else {
       validateFunctionArgs(func, args);
+
+      auto funcExpr = buildRawFunctionExpression(func, args);
+      if (funcExpr->instanceOf<Expression>()) {
+        return;
+      }
+
+      info = std::move(funcExpr);
+      children.clear();
+
+      if (!info->instanceOf<IFunction>()) {
+        info = info->simplify();
+      }
     }
   }
 }
@@ -337,43 +384,10 @@ std::string Expression::toString(uint8_t precision) const {
   return expr.toString();
 }
 
-void Expression::parse(const TokenVector &tokens) {
-  if (tokens.empty()) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-
-  if (parseBinaryOperator(tokens) ||  //
-      parsePrefixOperator(tokens) ||  //
-      parsePostfixOperator(tokens) || //
-      parseFunction(tokens) ||        //
-      parseFiniteTerm(tokens)) {
-    return;
-  }
-
-  auto newTokens = splitLiteral(tokens.at(0), tokens.size() > 1);
-  for (size_t i = 1; i < tokens.size(); i++) {
-    newTokens.emplace_back(tokens.at(i));
-  }
-
-  info = MulExpression(newTokens).clone();
-
-  for (const auto &child : children) {
-    if (info == nullptr || child == nullptr) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-  }
-}
-
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
   if (auto oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
     info = std::move(oper);
-
-    auto value = IExpression::parse(TokenVector(tokens.begin() + 1, tokens.end()));
-    if (!value) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-
-    children.emplace_back(std::move(value));
+    children.emplace_back(std::unique_ptr<Expression>(new Expression(TokenVector(tokens.begin() + 1, tokens.end()))));
     return true;
   }
 
@@ -393,13 +407,8 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
     }
 
     info = std::move(oper);
-
-    auto value = IExpression::parse(TokenVector(tokens.begin(), tokens.end() - order));
-    if (!value) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-
-    children.emplace_back(std::move(value));
+    children.emplace_back(
+        std::unique_ptr<Expression>(new Expression(TokenVector(TokenVector(tokens.begin(), tokens.end() - order)))));
     return true;
   }
 
@@ -417,7 +426,10 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
   auto foundIndex = foundOperIt->first;
   auto foundPriority = foundOperIt->second->to<IOperator>().getOperatorPriority();
 
-  for (auto it = operMap.begin(); it != operMap.end(); ++it) {
+  auto it = operMap.begin();
+  ++it;
+
+  for (; it != operMap.end(); ++it) {
     auto index = it->first;
     auto priority = it->second->to<IOperator>().getOperatorPriority();
 
@@ -437,26 +449,15 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
   auto rhsTokens = TokenVector(tokens.begin() + operPos + 1, tokens.end());
 
   info = std::move(foundOperIt->second);
-  children.emplace_back(std::make_unique<Expression>(lhsTokens));
-  children.emplace_back(std::make_unique<Expression>(rhsTokens));
+  children.emplace_back(std::unique_ptr<Expression>(new Expression(lhsTokens)));
+  children.emplace_back(std::unique_ptr<Expression>(new Expression(rhsTokens)));
 
   return true;
 }
 
 bool Expression::parseFiniteTerm(const TokenVector &tokens) {
   if (tokens.at(0) == "(" && tokens.at(tokens.size() - 1) == ")") {
-    info = IExpression::parse(cutBraces(tokens));
-
-    if (!info) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-
-    if (info->instanceOf<Expression>()) {
-      auto exprInfo = info->to<Expression>();
-      info = MathObjectPtr(exprInfo.info.release());
-      children = copy(exprInfo.children);
-    }
-
+    *this = Expression(cutBraces(tokens));
     return true;
   }
 
@@ -530,6 +531,33 @@ MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, const A
   return buildRawFunctionExpression(func, args)->simplify();
 }
 
+ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
+  if (func.instanceOf<Add>() || func.instanceOf<Sub>()) {
+    return buildAddExpression(func, args);
+  }
+
+  if (func.instanceOf<Mul>() || func.instanceOf<Div>()) {
+    return buildMulExpression(func, args);
+  }
+
+  if (func.instanceOf<IOperator>() && func.to<IOperator>().getOperatorPriority() == IOperator::Priority::Comparison) {
+    return buildEqvExpression(func, args);
+  }
+
+  if (func.instanceOf<Derivative>()) {
+    return buildDerivateExpression(args);
+  }
+
+  auto funcExpr = std::make_unique<Expression>();
+  funcExpr->info = func.clone();
+
+  for (const auto &arg : args) {
+    funcExpr->children.push_back(arg.get().clone());
+  }
+
+  return funcExpr;
+}
+
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
   auto addExpr = std::make_unique<AddExpression>();
   addExpr->addElement(AddExpression::Element(args.at(0).get().clone()));
@@ -587,7 +615,8 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
         throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
-      args.emplace_back(Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(pos))).clone());
+      args.emplace_back(
+          std::unique_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(pos)))));
       auto addArgs = getArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
 
       for (auto &token : addArgs) {
@@ -598,28 +627,30 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
     }
   }
 
-  args.emplace_back(Expression(tokens).clone());
+  args.emplace_back(std::unique_ptr<Expression>(new Expression(tokens)));
 
   return args;
 }
 
-TokenVector Expression::splitLiteral(const std::string &token, bool addMultiplyToEnd) {
-  if (token.empty()) {
-    throw InvalidInputException(token); // TODO: throw InvalidInputException(Tokenizer::tokensToString(tokens))
+TokenVector Expression::splitTokens(const TokenVector &tokens) { // TODO: revisit this: abc || d <=> a && b && c || d
+  if (tokens.empty()) {
+    throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
 
-  TokenVector tokens;
+  TokenVector splittedTokens;
 
-  for (const auto &var : token) {
-    tokens.emplace_back(std::string(1, var));
-    tokens.emplace_back("*");
+  for (const auto &token : tokens) {
+    if (!ILiteral::parse(token)) {
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
+    }
+
+    splittedTokens.emplace_back(token);
+    splittedTokens.emplace_back("*");
   }
 
-  if (!addMultiplyToEnd) {
-    tokens.pop_back();
-  }
+  splittedTokens.pop_back();
 
-  return tokens;
+  return splittedTokens;
 }
 
 Expression &Expression::add(const Expression &rhs) {
@@ -679,33 +710,6 @@ Expression &Expression::negate() {
   info = std::make_unique<MulExpression>(mul)->simplify();
   children.clear();
   return *this;
-}
-
-ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-  if (func.instanceOf<Add>() || func.instanceOf<Sub>()) {
-    return buildAddExpression(func, args);
-  }
-
-  if (func.instanceOf<Mul>() || func.instanceOf<Div>()) {
-    return buildMulExpression(func, args);
-  }
-
-  if (func.instanceOf<IOperator>() && func.to<IOperator>().getOperatorPriority() == IOperator::Priority::Comparison) {
-    return buildEqvExpression(func, args);
-  }
-
-  if (func.instanceOf<Derivative>()) {
-    return buildDerivateExpression(args);
-  }
-
-  auto funcExpr = std::make_unique<Expression>();
-  funcExpr->info = func.clone();
-
-  for (const auto &arg : args) {
-    funcExpr->children.push_back(arg.get().clone());
-  }
-
-  return funcExpr;
 }
 
 void Expression::simplifyUnaryPlus() {

@@ -25,13 +25,13 @@ public:
 
   ~Expression() override = default;
 
-  explicit Expression(const TokenVector &tokens);
-
   explicit Expression(const std::string &str);
+
+  Expression(const IMathObject &obj);
 
   explicit Expression(const MathObjectPtr &obj);
 
-  Expression(const IMathObject &obj);
+  explicit Expression(MathObjectPtr &&obj);
 
   Expression(int64_t val);
 
@@ -61,6 +61,8 @@ public:
 
   static MathObjectPtr buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
+  static ExpressionPtr buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+
   uint16_t getBaseOperatorPriority() const override;
 
   void setPrecision(uint8_t precision) override;
@@ -83,7 +85,7 @@ protected:
   Expression &negate() override;
 
 private:
-  static ExpressionPtr buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+  explicit Expression(const TokenVector &tokens);
 
   static ExpressionPtr buildAddExpression(const IFunction &func, const ArgumentsVector &args);
 
@@ -96,8 +98,6 @@ private:
   static Vector copy(const Vector &rhs);
 
   Expression &compressTree();
-
-  void parse(const TokenVector &tokens);
 
   bool parsePrefixOperator(const TokenVector &tokens);
 
@@ -113,12 +113,11 @@ private:
 
   bool parseNumber(const TokenVector &tokens);
 
-  std::map<size_t, MathObjectPtr> findBinaryOperators(const TokenVector &tokens);
+  static std::map<size_t, MathObjectPtr> findBinaryOperators(const TokenVector &tokens);
 
   Vector getArgs(const TokenVector &tokens);
 
-  TokenVector splitLiteral(const std::string &token,
-                           bool addMultiplyToEnd = false); // TODO: remove this and handle the behavior in Tokenizer
+  static TokenVector splitTokens(const TokenVector &tokens);
 
   std::string binaryOperatorToString() const;
 
@@ -132,11 +131,11 @@ private:
 
   void simplifyConstant(bool isPrecise);
 
-  void simplifyPow();
+  void simplifyPow(); // TODO: move to PowExpression
 
-  void simplifyUnaryPlus();
+  void simplifyUnaryPlus(); // TODO: move to other type of Expression
 
-  void simplifyNeg();
+  void simplifyNeg(); // TODO move to NegExpression
 
   MathObjectPtr info;
 

@@ -62,7 +62,6 @@ namespace fintamath {
 TokenVector Tokenizer::registeredTokens;
 Parser::ParserVector<NumberPtr, std::string> INumber::parserVector;
 Parser::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
-Parser::ParserVector<ExpressionPtr, TokenVector> IExpression::parserVector;
 Parser::ParserMap<ConstantPtr> IConstant::parserMap;
 Parser::ParserMap<FunctionPtr> IFunction::parserMap;
 Parser::ParserMap<OperatorPtr> IOperator::parserMap;
@@ -129,12 +128,6 @@ struct ParserConfig {
     IFunction::registerParser<Acos>();
     IFunction::registerParser<Atan>();
     IFunction::registerParser<Acot>();
-
-    // expressions
-    IExpression::registerParser<EqvExpression>();
-    IExpression::registerParser<AddExpression>();
-    IExpression::registerParser<MulExpression>();
-    IExpression::registerParser<Expression>();
   }
 };
 

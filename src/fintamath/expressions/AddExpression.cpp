@@ -29,10 +29,6 @@
 
 namespace fintamath {
 
-AddExpression::AddExpression(const TokenVector &tokens) {
-  parse(tokens);
-}
-
 AddExpression::AddExpression(const IMathObject &rhs) {
   if (rhs.instanceOf<AddExpression>()) {
     *this = rhs.to<AddExpression>();
@@ -57,7 +53,7 @@ void AddExpression::setPrecision(uint8_t precision) {
 std::string AddExpression::toString() const {
   std::string result;
 
-  result += tryPutInBracketsIfNeg(addPolynom.front().info);
+  result += addPolynom.front().info->toString();
   if (result.front() != '-' && addPolynom.front().inverted) {
     result.insert(result.begin(), '-');
   }
@@ -86,38 +82,6 @@ void AddExpression::invert() {
 
 const AddExpression::Polynom &AddExpression::getPolynom() const {
   return addPolynom;
-}
-
-void AddExpression::parse(const TokenVector &tokens) {
-  int lastSignPosition = -1;
-  for (size_t i = 0; i < tokens.size(); i++) {
-    if (skipBrackets(tokens, i)) {
-      i--;
-      continue;
-    }
-    if (tokens.at(i) != "+" && tokens.at(i) != "-") {
-      continue;
-    }
-    if (i == tokens.size() - 1) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-    lastSignPosition = (int)i;
-  }
-
-  if (lastSignPosition == -1) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-  auto leftExpr = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)lastSignPosition));
-  auto rightExpr = IExpression::parse(TokenVector(tokens.begin() + (long)lastSignPosition + 1, tokens.end()));
-
-  if (!leftExpr || !rightExpr) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-
-  addPolynom.emplace_back(Element(leftExpr->clone()));
-  addPolynom.emplace_back(Element(rightExpr->clone(), tokens.at(lastSignPosition) == "-"));
-
-  *this = AddExpression(compressTree());
 }
 
 AddExpression::Element::Element(const Element &rhs) : info(rhs.info->clone()), inverted(rhs.inverted) {
@@ -155,12 +119,15 @@ AddExpression::Element::Element(const MathObjectPtr &info, bool inverted) : info
 
 MathObjectPtr AddExpression::Element::toMathObject(bool isPrecise) const {
   auto copy = *this;
+
   if (copy.inverted) {
-    copy.info = Neg()(*info);
+    copy.info = Expression::buildRawFunctionExpression(Neg(), {*info});
     copy.simplify(isPrecise);
     return copy.info->clone();
   }
+
   copy.simplify(isPrecise);
+
   return copy.info->clone();
 }
 

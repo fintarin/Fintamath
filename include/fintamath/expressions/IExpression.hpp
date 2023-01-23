@@ -20,19 +20,6 @@ class IExpression : virtual public IMathObject {
 public:
   ~IExpression() override = default;
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
-  static void registerParser() {
-    Parser::registerParser<T>(parserVector);
-  }
-
-  static ExpressionPtr parse(const std::string &str) {
-    return Parser::parse(parserVector, Tokenizer::tokenize(str));
-  }
-
-  static ExpressionPtr parse(const TokenVector &tokens) {
-    return Parser::parse(parserVector, tokens);
-  }
-
   virtual uint16_t getBaseOperatorPriority() const = 0;
 
   virtual void setPrecision(uint8_t precision) = 0;
@@ -54,9 +41,6 @@ protected:
 
   template <typename T>
   static void pushPolynomToPolynom(typename T::Polynom &push, typename T::Polynom &cont);
-
-private:
-  static Parser::ParserVector<ExpressionPtr, TokenVector> parserVector;
 };
 
 template <typename T>

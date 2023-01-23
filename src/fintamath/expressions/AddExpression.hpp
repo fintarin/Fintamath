@@ -39,8 +39,6 @@ public:
 
   AddExpression() = default;
 
-  explicit AddExpression(const TokenVector &tokens);
-
   explicit AddExpression(Polynom inAddPolynom);
 
   AddExpression(const IMathObject &rhs);
@@ -71,8 +69,6 @@ public:
   MathObjectPtr getPow() const;
 
 private:
-  void parse(const TokenVector &tokens);
-
   Polynom addPolynom;
 
   Polynom compressExpression() const;
