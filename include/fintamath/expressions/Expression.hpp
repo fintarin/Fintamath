@@ -109,10 +109,6 @@ private:
 
   bool parseFunction(const TokenVector &tokens);
 
-  bool parseLiteral(const TokenVector &tokens);
-
-  bool parseNumber(const TokenVector &tokens);
-
   static std::map<size_t, MathObjectPtr> findBinaryOperators(const TokenVector &tokens);
 
   Vector getArgs(const TokenVector &tokens);
