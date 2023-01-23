@@ -87,6 +87,8 @@ private:
 
   void simplifyPolynom();
 
+  void simplifyDivisions();
+
   static void simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
 
   static void multiplicatePolynom(Polynom &vect, Polynom &positive, Polynom &negative);

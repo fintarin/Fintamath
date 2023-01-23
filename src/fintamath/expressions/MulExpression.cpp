@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <set>
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
@@ -226,6 +227,7 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
     }
   }
 
+  exprObj.simplifyDivisions();
   exprObj.simplifyPolynom();
 
   if (exprObj.mulPolynom.size() == 1) {
@@ -585,6 +587,29 @@ void MulExpression::simplifyPolynom() {
   if (numVect.at(0).info->toString() != "1" || mulPolynom.empty()) {
     pushPolynomToPolynom<MulExpression>(mulPolynom, numVect);
     mulPolynom = numVect;
+  }
+}
+
+void MulExpression::simplifyDivisions() {
+  std::set<size_t> childrenToRemove;
+
+  for (size_t i = 0; i < mulPolynom.size() - 1; i++) {
+    for (size_t j = i + 1; j < mulPolynom.size(); j++) {
+      if (mulPolynom[i].inverted != mulPolynom[j].inverted && *mulPolynom[i].info == *mulPolynom[j].info &&
+          childrenToRemove.count(i) == 0 && childrenToRemove.count(j) == 0) {
+        childrenToRemove.insert(i);
+        childrenToRemove.insert(j);
+      }
+    }
+  }
+
+  auto it = childrenToRemove.begin();
+  for (size_t i = 0; i < childrenToRemove.size(); i++, ++it) {
+    mulPolynom.erase(mulPolynom.begin() + int64_t(*it - i));
+  }
+
+  if (mulPolynom.empty()) {
+    mulPolynom.emplace_back(std::make_unique<Integer>(1));
   }
 }
 
