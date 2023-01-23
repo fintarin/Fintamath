@@ -74,12 +74,6 @@ std::string AddExpression::toString() const {
   return result;
 }
 
-void AddExpression::invert() {
-  for (auto &child : addPolynom) {
-    child.inverted = !child.inverted;
-  }
-}
-
 const AddExpression::Polynom &AddExpression::getPolynom() const {
   return addPolynom;
 }
@@ -150,7 +144,7 @@ void AddExpression::Element::simplify(bool isPrecise) {
 
 AddExpression::Polynom AddExpression::compressExpression() const {
   Polynom newPolynom;
-  for (auto &child : addPolynom) {
+  for (const auto &child : addPolynom) {
     if (child.info->instanceOf<Expression>()) {
       auto childExpr = child.info->to<Expression>();
       newPolynom.emplace_back(Element(childExpr.compress(), child.inverted));
@@ -166,7 +160,7 @@ std::vector<AddExpression::Element> AddExpression::Element::getAddPolynom() cons
     Polynom result;
     auto addExpr = info->to<AddExpression>();
     for (const auto &child : addExpr.addPolynom) {
-      result.emplace_back(Element{child.info->clone(), (bool)((unsigned)child.inverted ^ (unsigned)inverted)});
+      result.emplace_back(Element{child.info->clone(), child.inverted != inverted});
     }
     return result;
   }
@@ -321,10 +315,10 @@ void AddExpression::sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &lit
   for (auto &obj : objs) {
     obj.simplifyCounter();
     auto counter = obj.getCounterValue();
-    if (counter->to<IComparable>() == Integer(0)) {
+    if (*counter == ZERO) {
       continue;
     }
-    if (counter->to<IComparable>() == Integer(1) || counter->to<IComparable>() == Integer(-1)) {
+    if (*counter == ONE || *counter == NEG_ONE) {
       if (obj.obj->instanceOf<ILiteral>()) {
         literalVect.emplace_back(obj.obj->clone(), counter->to<IComparable>() == Integer(-1));
         continue;

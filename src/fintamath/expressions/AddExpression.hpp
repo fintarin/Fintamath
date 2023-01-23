@@ -47,8 +47,6 @@ public:
 
   ~AddExpression() override = default;
 
-  void invert();
-
   // TODO: implement iterator & remove this
   const Polynom &getPolynom() const;
 
