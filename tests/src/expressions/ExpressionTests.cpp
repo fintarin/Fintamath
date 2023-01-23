@@ -114,6 +114,8 @@ TEST(ExpressionTests, toStringTest) {
 
   EXPECT_EQ(Expression("e").toString(), "e");
   EXPECT_EQ(Expression("pi").toString(), "pi");
+  // EXPECT_EQ(Expression("8e").toString(), "8 e"); // TODO: fix split tokens
+  // EXPECT_EQ(Expression("8pi").toString(), "8 pi"); //TODO: fix split tokens
   EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
   EXPECT_EQ(Expression("e^101").toString(), "e^101");
   EXPECT_EQ(Expression("e^(-101)").toString(), "e^-101");
