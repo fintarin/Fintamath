@@ -211,6 +211,7 @@ MathObjectPtr AddExpression::simplify(bool isPrecise) const {
     }
   }
 
+  exprObj.simplifyNegations();
   exprObj = AddExpression(exprObj.compressTree());
   exprObj.simplifyPolynom();
 
@@ -275,6 +276,19 @@ void AddExpression::simplifyPolynom() {
   pushPolynomToPolynom<AddExpression>(literalVect, addPolynom);
   if (numVect.at(0).info->toString() != "0" || addPolynom.empty()) {
     pushPolynomToPolynom<AddExpression>(numVect, addPolynom);
+  }
+}
+
+void AddExpression::simplifyNegations() {
+  for (auto &child : addPolynom) {
+    if (child.info->instanceOf<Expression>()) {
+      auto &childExpr = child.info->to<Expression>();
+
+      if (childExpr.getInfo()->instanceOf<Neg>()) {
+        childExpr = Expression(childExpr.getChildren().front());
+        child.inverted = !child.inverted;
+      }
+    }
   }
 }
 

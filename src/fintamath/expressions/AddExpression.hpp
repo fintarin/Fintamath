@@ -83,6 +83,8 @@ private:
 
   void simplifyPolynom();
 
+  void simplifyNegations();
+
   static void sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &literalVect, Polynom &powVect);
 
   static void simplifyMul(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
