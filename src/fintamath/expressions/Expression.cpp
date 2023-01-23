@@ -445,12 +445,16 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
     return false;
   }
 
-  auto lhsTokens = TokenVector(tokens.begin(), tokens.begin() + operPos);
-  auto rhsTokens = TokenVector(tokens.begin() + operPos + 1, tokens.end());
+  auto lhsExpr = Expression(TokenVector(tokens.begin(), tokens.begin() + operPos));
+  auto rhsExpr = Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end()));
+  auto funcExpr = buildRawFunctionExpression(foundOperIt->second->to<IFunction>(), {lhsExpr, rhsExpr});
 
-  info = std::move(foundOperIt->second);
-  children.emplace_back(std::unique_ptr<Expression>(new Expression(lhsTokens)));
-  children.emplace_back(std::unique_ptr<Expression>(new Expression(rhsTokens)));
+  if (funcExpr->instanceOf<Expression>()) {
+    *this = std::move(funcExpr->to<Expression>());
+  } else {
+    info = std::move(funcExpr);
+    children.clear();
+  }
 
   return true;
 }
