@@ -644,6 +644,44 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
   return args;
 }
 
+bool Expression::skipBrackets(const TokenVector &tokens, size_t &openBracketIndex) {
+  if (openBracketIndex >= tokens.size() || tokens.at(openBracketIndex) != "(") {
+    return false;
+  }
+
+  int64_t brackets = 0;
+
+  for (size_t i = openBracketIndex; i < tokens.size(); i++) {
+    if (tokens[i] == "(") {
+      brackets++;
+    } else if (tokens[i] == ")") {
+      brackets--;
+    }
+
+    if (brackets == 0) {
+      openBracketIndex = i + 1;
+      return true;
+    }
+    if (brackets < 0) {
+      throw InvalidInputException(Tokenizer::tokensToString(tokens));
+    }
+  }
+
+  throw InvalidInputException(Tokenizer::tokensToString(tokens));
+}
+
+TokenVector Expression::cutBraces(const TokenVector &tokens) {
+  if (tokens.empty()) {
+    return tokens;
+  }
+  auto newTokens = tokens;
+  if (newTokens.front() == "(" && newTokens.back() == ")") {
+    newTokens.erase(newTokens.begin());
+    newTokens.erase(newTokens.end() - 1);
+  }
+  return newTokens;
+}
+
 TokenVector Expression::splitTokens(const TokenVector &tokens) { // TODO: revisit this: abc || d <=> a && b && c || d
   if (tokens.empty()) {
     throw InvalidInputException(Tokenizer::tokensToString(tokens));

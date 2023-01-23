@@ -113,6 +113,10 @@ private:
 
   Vector getArgs(const TokenVector &tokens);
 
+  static bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
+
+  static TokenVector cutBraces(const TokenVector &tokens);
+
   static TokenVector splitTokens(const TokenVector &tokens);
 
   std::string binaryOperatorToString() const;

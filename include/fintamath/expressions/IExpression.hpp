@@ -31,10 +31,6 @@ public:
   virtual std::vector<MathObjectPtr> getVariables() const;
 
 protected:
-  static bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
-
-  static TokenVector cutBraces(const TokenVector &tokens);
-
   static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
 
   void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;
