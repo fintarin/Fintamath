@@ -180,7 +180,20 @@ AddExpression::Polynom AddExpression::compressTree() const {
 }
 
 void AddExpression::addElement(const Element &elem) {
-  addPolynom.emplace_back(elem);
+  if (!elem.info->instanceOf<AddExpression>()) {
+    addPolynom.emplace_back(elem);
+    return;
+  }
+
+  const auto &elemPolynom = elem.info->to<AddExpression>().addPolynom;
+
+  for (const auto &child : elemPolynom) {
+    addPolynom.emplace_back(child);
+
+    if (elem.inverted) {
+      addPolynom.back().inverted = !addPolynom.back().inverted;
+    }
+  }
 }
 
 MathObjectPtr AddExpression::simplify() const {

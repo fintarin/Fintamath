@@ -182,7 +182,20 @@ MulExpression::Polynom MulExpression::compressTree() const {
 }
 
 void MulExpression::addElement(const Element &elem) {
-  mulPolynom.emplace_back(elem);
+  if (!elem.info->instanceOf<MulExpression>()) {
+    mulPolynom.emplace_back(elem);
+    return;
+  }
+
+  const auto &elemPolynom = elem.info->to<MulExpression>().mulPolynom;
+
+  for (const auto &child : elemPolynom) {
+    mulPolynom.emplace_back(child);
+
+    if (elem.inverted) {
+      mulPolynom.back().inverted = !mulPolynom.back().inverted;
+    }
+  }
 }
 
 MathObjectPtr MulExpression::simplify() const {
