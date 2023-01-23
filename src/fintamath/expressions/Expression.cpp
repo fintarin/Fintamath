@@ -14,6 +14,7 @@
 #include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/DerivativeExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
+#include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -25,8 +26,15 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
+#include "fintamath/functions/logic/And.hpp"    // TODO: remove this include after LogicException is implemented
+#include "fintamath/functions/logic/Equiv.hpp"  // TODO: remove this include after LogicException is implemented
+#include "fintamath/functions/logic/Impl.hpp"   // TODO: remove this include after LogicException is implemented
+#include "fintamath/functions/logic/Nequiv.hpp" // TODO: remove this include after LogicException is implemented
+#include "fintamath/functions/logic/Not.hpp"    // TODO: remove this include after LogicException is implemented
+#include "fintamath/functions/logic/Or.hpp"     // TODO: remove this include after LogicException is implemented
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/Boolean.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -748,6 +756,112 @@ void Expression::simplifyNeg() {
   *this = Expression(childExpr.children.front());
 }
 
+void Expression::simplifyNot() {
+  if (!info->instanceOf<Not>()) {
+    return;
+  }
+
+  auto &child = children.at(0);
+  if (!child->instanceOf<Expression>()) {
+    return;
+  }
+
+  auto &childExpr = child->to<Expression>();
+  if (!childExpr.info->instanceOf<Not>()) {
+    return;
+  }
+
+  *this = Expression(childExpr.children.front());
+}
+
+void Expression::simplifyAnd() {
+  if (!info->instanceOf<And>()) {
+    return;
+  }
+
+  const auto &lhs = *children.front();
+  const auto &rhs = *children.back();
+
+  if (lhs.instanceOf<Boolean>()) {
+    if (lhs.to<Boolean>() == true) {
+      *this = rhs;
+    } else {
+      *this = Boolean(false);
+    }
+  } else if (rhs.instanceOf<Boolean>()) {
+    if (rhs.to<Boolean>() == true) {
+      *this = lhs;
+    } else {
+      *this = Boolean(false);
+    }
+  } else if (lhs == rhs) {
+    *this = lhs;
+  } else if (lhs == notL(rhs)) {
+    *this = Boolean(false);
+  }
+}
+
+void Expression::simplifyOr() {
+  if (!info->instanceOf<Or>()) {
+    return;
+  }
+
+  const auto &lhs = *children.front();
+  const auto &rhs = *children.back();
+
+  if (lhs.instanceOf<Boolean>()) {
+    if (lhs.to<Boolean>() == true) {
+      *this = Boolean(true);
+    } else {
+      *this = rhs;
+    }
+  } else if (rhs.instanceOf<Boolean>()) {
+    if (rhs.to<Boolean>() == true) {
+      *this = Boolean(true);
+    } else {
+      *this = lhs;
+    }
+  } else if (lhs == rhs) {
+    *this = lhs;
+    return;
+  } else if (lhs == notL(rhs)) {
+    *this = Boolean(true);
+  }
+}
+
+void Expression::simplifyImpl() {
+  if (!info->instanceOf<Impl>()) {
+    return;
+  }
+
+  const auto &lhs = *children.front();
+  const auto &rhs = *children.back();
+
+  *this = orL(notL(lhs), rhs);
+}
+
+void Expression::simplifyEquiv() {
+  if (!info->instanceOf<Equiv>()) {
+    return;
+  }
+
+  const auto &lhs = *children.front();
+  const auto &rhs = *children.back();
+
+  *this = orL(andL(lhs, rhs), andL(notL(lhs), notL(rhs)));
+}
+
+void Expression::simplifyNequiv() {
+  if (!info->instanceOf<Nequiv>()) {
+    return;
+  }
+
+  const auto &lhs = *children.front();
+  const auto &rhs = *children.back();
+
+  *this = orL(andL(notL(lhs), rhs), andL(lhs, notL(rhs)));
+}
+
 void Expression::setPrecision(uint8_t precision) {
   setPrecisionRec(precision);
 }
@@ -774,6 +888,14 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   }
 
   expr.simplifyFunctionsRec(isPrecise);
+
+  expr.simplifyNot();
+  expr.simplifyAnd();
+  expr.simplifyOr();
+  expr.simplifyImpl();
+  expr.simplifyEquiv();
+  expr.simplifyNequiv();
+
   expr.simplifyUnaryPlus();
   expr.simplifyNeg();
   expr.simplifyPow();

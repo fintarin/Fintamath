@@ -133,6 +133,18 @@ private:
 
   void simplifyNeg(); // TODO move to NegExpression
 
+  void simplifyNot(); // TODO move to LogicExpression
+
+  void simplifyAnd(); // TODO move to LogicExpression
+
+  void simplifyOr(); // TODO move to LogicExpression
+
+  void simplifyImpl(); // TODO move to LogicExpression
+
+  void simplifyEquiv(); // TODO move to LogicExpression
+
+  void simplifyNequiv(); // TODO move to LogicExpression
+
   MathObjectPtr info;
 
   Vector children;

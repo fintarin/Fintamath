@@ -15,8 +15,10 @@ TEST(ExpressionTests, constructorTest) {
 TEST(ExpressionTests, moveTest) {
   auto a = Expression("1+2");
   EXPECT_EQ(a.toString(), "3");
+
   auto b = std::move(a);
   EXPECT_TRUE(b.toString() == "3" && a.toString() == "0");
+
   a = std::move(b);
   EXPECT_TRUE(a.toString() == "3" && b.toString() == "0");
 }
@@ -54,6 +56,24 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("---5").toString(), "-5");
   EXPECT_EQ(Expression("+5").toString(), "5");
   EXPECT_EQ(Expression("5*-3").toString(), "-15");
+  EXPECT_EQ(Expression("----5+++5").toString(), "10");
+  EXPECT_EQ(Expression("5----4").toString(), "9");
+  EXPECT_EQ(Expression("5+-+-4").toString(), "9");
+  EXPECT_EQ(Expression("5*+++---4").toString(), "-20");
+  EXPECT_EQ(Expression("1^-1").toString(), "1");
+  EXPECT_EQ(Expression("1.").toString(), "1");
+  EXPECT_EQ(Expression(".1").toString(), "1/10");
+  EXPECT_EQ(Expression("2+.1+.1+1.+1.").toString(), "21/5");
+  EXPECT_EQ(Expression("1/10^-20").toString(), "100000000000000000000");
+  EXPECT_EQ(Expression("1/10^--20").toString(), "1/100000000000000000000");
+  EXPECT_EQ(Expression("1/10^---20").toString(), "100000000000000000000");
+  EXPECT_EQ(Expression("36/3(8-6)").toString(), "24");
+  EXPECT_EQ(Expression("2%").toString(), "1/50");
+  EXPECT_EQ(Expression("2.35%").toString(), "47/2000");
+  EXPECT_EQ(Expression("1100*4.76%").toString(), "1309/25");
+  EXPECT_EQ(Expression("2.35%%%%").toString(), "47/2000000000");
+  // EXPECT_EQ(Expression("1100*4.76%1100*4.76%").toString(), "1713481/625"); // TODO: fix split tokens
+
   EXPECT_EQ(Expression("9!").toString(), "362880");
   EXPECT_EQ(Expression("-1!").toString(), "-1");
   EXPECT_EQ(Expression("-100!").toString(),
@@ -62,6 +82,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(5!)!").toString(),
             "6689502913449127057588118054090372586752746333138029810295671352301633557244962989366874165271984981308157"
             "637893214090552534408589408121859898481114389650005964960521256960000000000000000000000000000");
+  EXPECT_EQ(Expression("(2)!").toString(), "2");
+
   EXPECT_EQ(Expression("5!").toString(), "120");
   EXPECT_EQ(Expression("5!!").toString(), "15");
   EXPECT_EQ(Expression("5!!!").toString(), "10");
@@ -78,7 +100,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("15!!!!!!!").toString(), "120");
   EXPECT_EQ(Expression("30!!!!!!").toString(), "933120");
   EXPECT_EQ(Expression("30!!!!!!!").toString(), "198720");
-  EXPECT_EQ(Expression("(2)!").toString(), "2");
+
   EXPECT_EQ(Expression("sqrt144").toString(), "12");
   EXPECT_EQ(Expression("sqrt0").toString(), "0");
   EXPECT_EQ(Expression("e^101-e^101").toString(), "0");
@@ -89,22 +111,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("abs(-5)").toString(), "5");
   EXPECT_EQ(Expression("abs((-5))").toString(), "5");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
-  EXPECT_EQ(Expression("1/10^-100").toString(),
-            "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-  EXPECT_EQ(Expression("1/10^---100").toString(),
-            "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-  EXPECT_EQ(
-      Expression("10^-1000").toString(),
-      "1/"
-      "1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-      "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+
   EXPECT_EQ(Expression("e").toString(), "e");
   EXPECT_EQ(Expression("pi").toString(), "pi");
   EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
@@ -145,8 +152,8 @@ TEST(ExpressionTests, toStringTest) {
             "2 cos(1/3 pi) sqrt(-1/2 cos(2/3 pi) + 1/2)");
   EXPECT_EQ(Expression("ln(ln(ln(ln(e))))").toString(), "ln(ln(ln(ln(e))))");
   EXPECT_EQ(Expression("ln(ln(ln(ln(ln(e)))))").toString(), "ln(ln(ln(ln(ln(e)))))");
-  EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
+
   EXPECT_EQ(Expression("--a").toString(), "a");
   EXPECT_EQ(Expression("---a").toString(), "-a");
   EXPECT_EQ(Expression("b--a").toString(), "a + b");
@@ -155,24 +162,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-(-a))))))))").toString(), "-a");
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-a)))))))").toString(), "a");
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-(-a))))))))").toString(), "-a");
-  EXPECT_EQ(
-      Expression("-----------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------a")
-          .toString(),
-      "a");
-  EXPECT_EQ(
-      Expression("-----------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------------------------------------"
-                 "-----------------------------------------------------------------------------------------------------"
-                 "------------------------------------------------------------------------a")
-          .toString(),
-      "-a");
+
+  EXPECT_EQ(Expression("2.a").toString(), "2 a");
   EXPECT_EQ(Expression("a+a").toString(), "2 a");
   EXPECT_EQ(Expression("a-a").toString(), "0");
   EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
@@ -209,9 +200,24 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("-a^2 + b").toString(), "-a^2 + b");
   EXPECT_EQ(Expression("-a^2 c + b").toString(), "-a^2 c + b");
   EXPECT_EQ(Expression("-a^2 d - a^2 c + b").toString(), "-a^2 c - a^2 d + b");
+  EXPECT_EQ(Expression("abc").toString(), "a b c");
+  // EXPECT_EQ(Expression("d^abc").toString(), "d^a b c"); // TODO: fix split tokens
+  // EXPECT_EQ(Expression("abc^d").toString(), "a b c^d"); // TODO: fix split tokens
+  // EXPECT_EQ(Expression("a(2)").toString(), "2 a"); // TODO: fix split tokens
+  EXPECT_EQ(Expression("(2)a").toString(), "2 a");
+
+  EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("lne").toString(), "ln(e)");
   EXPECT_EQ(Expression("lncossine").toString(), "ln(cos(sin(e)))");
   EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
+  EXPECT_EQ(Expression("1-(sin(x)+1)").toString(), "-sin(x)");
+  EXPECT_EQ(Expression("1/(sin(x)+1)").toString(), "1/(sin(x) + 1)");
+  EXPECT_EQ(Expression("(x+1)^3").toString(), "x^3 + 3 x + 3 x^2 + 1");
+  EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x + 3 x^2 + 1)");
+  EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1");
+  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1)");
+  EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
+
   EXPECT_EQ(Expression("a=a").toString(), "true");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "true");
   EXPECT_EQ(Expression("a=b").toString(), "a - b = 0");
@@ -225,21 +231,12 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(5+5)=(2*5)").toString(), "true");
   EXPECT_EQ(Expression("((((5+5)=(2*5))))").toString(), "true");
   EXPECT_EQ(Expression("((1*1))(5+5)=((2*5)/(1/1))").toString(), "true");
-  EXPECT_EQ(Expression("1-(sin(x)+1)").toString(), "-sin(x)");
-  EXPECT_EQ(Expression("1/(sin(x)+1)").toString(), "1/(sin(x) + 1)");
-  EXPECT_EQ(Expression("(x+1)^3").toString(), "x^3 + 3 x + 3 x^2 + 1");
-  EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x + 3 x^2 + 1)");
-  EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1");
-  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1)");
-  EXPECT_EQ(Expression("1^-1").toString(), "1");
-  EXPECT_EQ(Expression("1.").toString(), "1");
-  EXPECT_EQ(Expression(".1").toString(), "1/10");
-  EXPECT_EQ(Expression("2+.1+.1+1.+1.").toString(), "21/5");
-  EXPECT_EQ(Expression("2.a").toString(), "2 a");
+
   EXPECT_EQ(Expression("a'").toString(), "1");
   EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");
   EXPECT_EQ(Expression("b'+a'").toString(), "2");
   EXPECT_EQ(Expression("5'").toString(), "0");
+
   EXPECT_EQ(Expression("!true").toString(), "false");
   EXPECT_EQ(Expression("!false").toString(), "true");
   EXPECT_EQ(Expression("true&&false").toString(), "false");
@@ -250,40 +247,127 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("false&&true||true&&true||false").toString(), "true");
   EXPECT_EQ(Expression("false||!false&&true").toString(), "true");
   EXPECT_EQ(Expression("(false||false&&!true)||(true&&!(false||true))").toString(), "false");
+  EXPECT_EQ(Expression("true !<-> true").toString(), "false");
+  EXPECT_EQ(Expression("(false -> false && !true) !<-> (true <-> !(false||true))").toString(), "true");
+  EXPECT_EQ(Expression("false <-> !false && true").toString(), "false");
+  EXPECT_EQ(Expression("false <-> true -> false").toString(), "true");
+
   EXPECT_EQ(Expression("!(1=1)").toString(), "false");
   EXPECT_EQ(Expression("!(1=2)").toString(), "true");
   EXPECT_EQ(Expression("(1=1)&&(1=2)").toString(), "false");
   EXPECT_EQ(Expression("(1=1)||(1=2)").toString(), "true");
   EXPECT_EQ(Expression("(1=2)||!(1=2)&&(1=1)").toString(), "true");
   EXPECT_EQ(Expression("((1=2)||(1=2)&&!(1=1))||((1=1)&&!((1=2)||(1=1)))").toString(), "false");
-  EXPECT_EQ(Expression("true !<-> true").toString(), "false");
-  EXPECT_EQ(Expression("(false -> false && !true) !<-> (true <-> !(false||true))").toString(), "true");
   EXPECT_EQ(Expression("((1=2) -> (1=2) && !(1=1)) !<-> ((1=1) <-> !((1=2) || (1=1)))").toString(), "true");
-  EXPECT_EQ(Expression("false <-> !false && true").toString(), "false");
-  EXPECT_EQ(Expression("false <-> true -> false").toString(), "true");
-  EXPECT_EQ(Expression("!a && b || !c -> d <-> f !<-> g").toString(), "(!a && b || !c -> d <-> f) !<-> g");
-  EXPECT_EQ(Expression("a<->(true)<->(false)").toString(), "(a <-> true) <-> false");
-  EXPECT_EQ(Expression("a&&b->b&&c").toString(), "a && b -> b && c");
   EXPECT_EQ(Expression("false||1=1").toString(), "true");
   EXPECT_EQ(Expression("1=1||false").toString(), "true");
-  EXPECT_EQ(Expression("----5+++5").toString(), "10");
-  EXPECT_EQ(Expression("5----4").toString(), "9");
-  EXPECT_EQ(Expression("5+-+-4").toString(), "9");
-  EXPECT_EQ(Expression("5*+++---4").toString(), "-20");
-  EXPECT_EQ(Expression("!!!!!!!!!!a").toString(), "!!!!!!!!!!a");
-  EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
-  EXPECT_EQ(Expression("2%").toString(), "1/50");
-  EXPECT_EQ(Expression("2.35%").toString(), "47/2000");
-  EXPECT_EQ(Expression("1100*4.76%").toString(), "1309/25");
-  EXPECT_EQ(Expression("2.35%%%%").toString(), "47/2000000000");
-  EXPECT_EQ(Expression("abc").toString(), "a b c");
-  // EXPECT_EQ(Expression("d^abc").toString(), "d^a b c"); // TODO: fix split tokens
-  // EXPECT_EQ(Expression("abc^d").toString(), "a b c^d"); // TODO: fix split tokens
-  EXPECT_EQ(Expression("36/3(8-6)").toString(), "24");
-  // EXPECT_EQ(Expression("x!y").toString(), "x! y"); // TODO: fix split tokens 
-  // EXPECT_EQ(Expression("1100*4.76%1100*4.76%").toString(), "1713481/625"); // TODO: fix split tokens
-  // EXPECT_EQ(Expression("a(2)").toString(), "2 a"); // TODO: fix split tokens
-  EXPECT_EQ(Expression("(2)a").toString(), "2 a");
+
+  EXPECT_EQ(Expression("!a").toString(), "!a");
+  EXPECT_EQ(Expression("!!a").toString(), "a");
+  EXPECT_EQ(Expression("!!!a").toString(), "!a");
+  EXPECT_EQ(Expression("!!!!!!!!!!a").toString(), "a");
+  EXPECT_EQ(Expression("!!!!!!!!!!!a").toString(), "!a");
+
+  EXPECT_EQ(Expression("a && b").toString(), "a && b");
+  EXPECT_EQ(Expression("a || b").toString(), "a || b");
+  EXPECT_EQ(Expression("a -> b").toString(), "!a || b");
+  EXPECT_EQ(Expression("a <-> b").toString(), "a && b || !a && !b");
+  EXPECT_EQ(Expression("a !<-> b").toString(), "!a && b || a && !b");
+
+  EXPECT_EQ(Expression("a && a").toString(), "a");
+  EXPECT_EQ(Expression("a || a").toString(), "a");
+  EXPECT_EQ(Expression("a -> a").toString(), "true");
+  EXPECT_EQ(Expression("a <-> a").toString(), "true");
+  EXPECT_EQ(Expression("a !<-> a").toString(), "false");
+
+  EXPECT_EQ(Expression("a && !a").toString(), "false");
+  EXPECT_EQ(Expression("a || !a").toString(), "true");
+  EXPECT_EQ(Expression("a -> !a").toString(), "!a");
+  EXPECT_EQ(Expression("a <-> !a").toString(), "false");
+  EXPECT_EQ(Expression("a !<-> !a").toString(), "true");
+
+  EXPECT_EQ(Expression("!a && a").toString(), "false");
+  EXPECT_EQ(Expression("!a || a").toString(), "true");
+  EXPECT_EQ(Expression("!a -> a").toString(), "a");
+  EXPECT_EQ(Expression("!a <-> a").toString(), "false");
+  EXPECT_EQ(Expression("!a !<-> a").toString(), "true");
+
+  EXPECT_EQ(Expression("!a && !a").toString(), "!a");
+  EXPECT_EQ(Expression("!a || !a").toString(), "!a");
+  EXPECT_EQ(Expression("!a -> !a").toString(), "true");
+  EXPECT_EQ(Expression("!a <-> !a").toString(), "true");
+  EXPECT_EQ(Expression("!a !<-> !a").toString(), "false");
+
+  EXPECT_EQ(Expression("a && false").toString(), "false");
+  EXPECT_EQ(Expression("a || false").toString(), "a");
+  EXPECT_EQ(Expression("a -> false").toString(), "!a");
+  EXPECT_EQ(Expression("a <-> false").toString(), "!a");
+  EXPECT_EQ(Expression("a !<-> false").toString(), "a");
+
+  EXPECT_EQ(Expression("a && true").toString(), "a");
+  EXPECT_EQ(Expression("a || true").toString(), "true");
+  EXPECT_EQ(Expression("a -> true").toString(), "true");
+  EXPECT_EQ(Expression("a <-> true").toString(), "a");
+  EXPECT_EQ(Expression("a !<-> true").toString(), "!a");
+
+  EXPECT_EQ(Expression("a<->(true)<->(false)").toString(), "!a");
+  EXPECT_EQ(Expression("a<->(true)!<->(false)").toString(), "a");
+  EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a").toString(), "true");
+  EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a<->a").toString(), "a");
+  EXPECT_EQ(Expression("a&&b->b&&c").toString(), "!(a && b) || b && c");
+  EXPECT_EQ(Expression("!a && b || !c -> d <-> f !<-> g").toString(),
+            "!((!(!a && b || !c) || d) && f || !(!(!a && b || !c) || d) && !f) && g || ((!(!a && b || !c) || d) && f "
+            "|| !(!(!a && b || !c) || d) && !f) && !g");
+  EXPECT_EQ(Expression("!!!a && !!b || !!!c -> !!d <-> !!f !<-> !!g").toString(),
+            "!((!(!a && b || !c) || d) && f || !(!(!a && b || !c) || d) && !f) && g || ((!(!a && b || !c) || d) && f "
+            "|| !(!(!a && b || !c) || d) && !f) && !g");
+}
+
+TEST(ExpressionTests, toStringLargeTest) {
+  EXPECT_EQ(
+      Expression("10^-1000").toString(),
+      "1/"
+      "1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+
+  EXPECT_EQ(
+      Expression("-----------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------a")
+          .toString(),
+      "a");
+
+  EXPECT_EQ(
+      Expression("-----------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "-----------------------------------------------------------------------------------------------------"
+                 "------------------------------------------------------------------------a")
+          .toString(),
+      "-a");
+
+  EXPECT_EQ(Expression("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                       "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                       "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a")
+                .toString(),
+            "a");
+
+  EXPECT_EQ(Expression("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                       "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                       "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a")
+                .toString(),
+            "!a");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
@@ -324,6 +408,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("_"), InvalidInputException);
   EXPECT_THROW(Expression("[1+1]"), InvalidInputException);
   EXPECT_THROW(Expression("{1}"), InvalidInputException);
+
   EXPECT_THROW(Expression("(1"), InvalidInputException);
   EXPECT_THROW(Expression("(((2)"), InvalidInputException);
   EXPECT_THROW(Expression("(((2))"), InvalidInputException);
@@ -335,6 +420,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(()())"), InvalidInputException);
   EXPECT_THROW(Expression("((((()))))"), InvalidInputException);
   EXPECT_THROW(Expression("((((2)((2))))"), InvalidInputException);
+
   EXPECT_THROW(Expression("!2"), InvalidInputException);
   EXPECT_THROW(Expression("!!2"), InvalidInputException);
   EXPECT_THROW(Expression("!2!!"), InvalidInputException);
@@ -343,12 +429,15 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("2)!"), InvalidInputException);
   EXPECT_THROW(Expression("sin(2))!"), InvalidInputException);
   EXPECT_THROW(Expression("!!!!!!"), InvalidInputException);
+
   EXPECT_THROW(Expression("esin()"), InvalidInputException);
   EXPECT_THROW(Expression("(a+b)*()"), InvalidInputException);
+
   EXPECT_THROW(Expression("sin(2,3)"), InvalidInputException);
   EXPECT_THROW(Expression("sin()"), InvalidInputException);
   EXPECT_THROW(Expression("log(1)"), InvalidInputException);
   EXPECT_THROW(Expression("log()"), InvalidInputException);
+
   EXPECT_THROW(Expression("(1 = 1) / 2"), InvalidInputException);
   EXPECT_THROW(Expression("2 + (1 = 2)"), InvalidInputException);
   EXPECT_THROW(Expression("sin(1 = 1)"), InvalidInputException);
@@ -457,6 +546,7 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(pi/3)))/2)*cos(pi/3)").simplify(false)->toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+
   EXPECT_EQ(Expression("sin(e)=sin(e)").simplify(false)->toString(), "true");
   EXPECT_EQ(Expression("sin(e)>sin(e)").simplify(false)->toString(), "false");
   EXPECT_EQ(Expression("sin(e)>=sin(e)").simplify(false)->toString(), "true");
