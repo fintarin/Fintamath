@@ -5,11 +5,6 @@
 
 namespace fintamath {
 
-// TODO: tokenize this way:
-// if isDigitOrPoint(ch), then parse numberToken
-// else parse registeredToken
-// else parse char as it is
-
 TokenVector Tokenizer::tokenize(std::string str) {
   handleSpaces(str);
 
@@ -17,15 +12,17 @@ TokenVector Tokenizer::tokenize(std::string str) {
   Token numberToken;
   Token specialToken;
 
-  for (size_t i = 0; i < str.size(); i++) {
-    const auto &ch = str[i];
-
+  for (char &ch : str) {
     if (isBracket(ch)) {
-      appendToken(tokens, numberToken, false);
+      if (appendToken(tokens, numberToken, false)) {
+        if (ch == '(') {
+          tokens.emplace_back("*");
+        }
+      }
+
       appendToken(tokens, specialToken, true);
 
-      if (((!tokens.empty() && tokens.at(tokens.size() - 1) == ")")) && isOpenBracket(ch) &&
-          ch == '(') { // TODO: do it in IExpression or Expression
+      if (!tokens.empty() && tokens.back() == ")" && ch == '(') { // TODO: do it in IExpression or Expression
         tokens.emplace_back("*");
       }
 
@@ -34,7 +31,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
       appendToken(tokens, specialToken, true);
       numberToken.push_back(ch);
 
-      if (!tokens.empty() && tokens.at(tokens.size() - 1) == ")") { // TODO: do it in IExpression or Expression
+      if (!tokens.empty() && tokens.back() == ")") { // TODO: do it in IExpression or Expression
         tokens.emplace_back("*");
       }
     } else {
@@ -98,8 +95,8 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
       nestedToken = token.substr(0, 1);
 
       // TODO: do it in IExpression or Expression
-      if (nestedToken != "," && !tokens.empty() &&
-          (isDigitOrPoint(tokens.back().back()) || tokens.at(tokens.size() - 1) == ")")) {
+      if (!tokens.empty() && (isDigitOrPoint(tokens.back().back()) || tokens.at(tokens.size() - 1) == ")") &&
+          token != ",") {
         tokens.emplace_back("*");
       }
     }
@@ -108,6 +105,7 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
     token = token.substr(nestedToken.size());
   }
 
+  token.clear();
   return true;
 }
 
