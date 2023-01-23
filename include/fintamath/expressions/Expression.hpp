@@ -83,13 +83,15 @@ protected:
   Expression &negate() override;
 
 private:
-  static Expression buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+  static ExpressionPtr buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
   static ExpressionPtr buildAddExpression(const IFunction &func, const ArgumentsVector &args);
 
   static ExpressionPtr buildMulExpression(const IFunction &func, const ArgumentsVector &args);
 
   static ExpressionPtr buildEqvExpression(const IFunction &func, const ArgumentsVector &args);
+
+  static ExpressionPtr buildDerivateExpression(const ArgumentsVector &args);
 
   static Vector copy(const Vector &rhs);
 
@@ -132,11 +134,9 @@ private:
 
   void simplifyPow();
 
-  static Expression simplifyPrefixUnaryOperator(Expression expr);
+  void simplifyUnaryPlus();
 
-  static Expression simplifyNeg(Expression expr);
-
-  static Expression simplifyPow(Expression expr);
+  void simplifyNeg();
 
   MathObjectPtr info;
 

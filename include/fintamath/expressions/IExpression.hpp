@@ -37,6 +37,8 @@ public:
 
   virtual void setPrecision(uint8_t precision) = 0;
 
+  MathObjectPtr simplify() const override;
+
   virtual MathObjectPtr simplify(bool isPrecise) const = 0;
 
   virtual std::vector<MathObjectPtr> getVariables() const;

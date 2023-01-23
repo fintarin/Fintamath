@@ -32,17 +32,10 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
-
-Expression::Vector Expression::copy(const Vector &rhs) {
-  Vector result;
-  for (const auto &value : rhs) {
-    result.emplace_back(value->clone());
-  }
-  return result;
-}
 
 Expression::Expression(const Expression &rhs) noexcept {
   if (rhs.info) {
@@ -67,6 +60,7 @@ Expression &Expression::operator=(const Expression &rhs) noexcept {
       info = nullptr;
     }
   }
+
   return *this;
 }
 
@@ -74,16 +68,19 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
   if (&rhs != this) {
     std::swap(info, rhs.info);
     std::swap(children, rhs.children);
-    rhs.info = Integer(0).clone();
+    rhs.info = std::make_unique<Integer>(0);
   }
+
   return *this;
 }
 
 Expression::Expression(const std::string &str) {
   info = IExpression::parse(str);
+
   if (!info) {
     throw InvalidInputException(str);
   }
+
   *this = Expression(*info->simplify());
 }
 
@@ -120,10 +117,10 @@ uint16_t Expression::getBaseOperatorPriority() const {
 
 Expression::Expression(const TokenVector &tokens) {
   parse(tokens);
+
   if (!info) {
     throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
-  //*this = Expression(*simplify());
 }
 
 std::string putInBrackets(const std::string &str) {
@@ -270,21 +267,6 @@ void Expression::simplifyFunctionsRec(bool isPrecise) {
   if (children.empty()) {
     simplifyConstant(isPrecise);
     return;
-  }
-
-  for (auto &child : children) {
-    if (child->instanceOf<IConstant>()) {
-      auto constant = (*castPtr<IConstant>(child->clone()))();
-      if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
-        child = constant->clone();
-        continue;
-      }
-    }
-    if (child->instanceOf<IExpression>()) {
-      child = child->to<IExpression>().simplify(isPrecise);
-      continue;
-    }
-    child = child->simplify();
   }
 
   if (info->instanceOf<IFunction>()) {
@@ -440,23 +422,23 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
     auto priority = it->second->to<IOperator>().getOperatorPriority();
 
     if (foundPriority < priority ||
-        (foundPriority != IOperator::Priority::Exponentiation && foundPriority == priority && index > foundIndex)) {
+        (foundPriority != IOperator::Priority::Exponentiation && foundPriority == priority && foundIndex < index)) {
       foundPriority = priority;
       foundOperIt = it;
     }
   }
 
-  info = std::move(foundOperIt->second);
-
-  auto leftValue = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + int64_t(foundOperIt->first)));
-  auto rightValue = IExpression::parse(TokenVector(tokens.begin() + int64_t(foundOperIt->first) + 1, tokens.end()));
-
-  if (!leftValue || !rightValue) {
+  auto operPos = int64_t(foundOperIt->first);
+  if (operPos < 1 || operPos >= tokens.size()) {
     return false;
   }
 
-  children.emplace_back(leftValue->clone());
-  children.emplace_back(rightValue->clone());
+  auto lhsTokens = TokenVector(tokens.begin(), tokens.begin() + operPos);
+  auto rhsTokens = TokenVector(tokens.begin() + operPos + 1, tokens.end());
+
+  info = std::move(foundOperIt->second);
+  children.emplace_back(std::make_unique<Expression>(lhsTokens));
+  children.emplace_back(std::make_unique<Expression>(rhsTokens));
 
   return true;
 }
@@ -464,14 +446,17 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 bool Expression::parseFiniteTerm(const TokenVector &tokens) {
   if (tokens.at(0) == "(" && tokens.at(tokens.size() - 1) == ")") {
     info = IExpression::parse(cutBraces(tokens));
+
     if (!info) {
       throw InvalidInputException(Tokenizer::tokensToString(tokens));
     }
+
     if (info->instanceOf<Expression>()) {
       auto exprInfo = info->to<Expression>();
       info = MathObjectPtr(exprInfo.info.release());
       children = copy(exprInfo.children);
     }
+
     return true;
   }
 
@@ -488,6 +473,7 @@ bool Expression::parseFiniteTerm(const TokenVector &tokens) {
     info = std::unique_ptr<INumber>(ptr.release());
     return true;
   }
+
   return false;
 }
 
@@ -517,10 +503,6 @@ std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVecto
 
     if (auto oper = IOperator::parse(tokens.at(i));
         oper && oper->to<IOperator>().getFunctionType() == IFunction::Type::Binary) {
-      if (i + 1 >= tokens.size()) {
-        throw InvalidInputException(Tokenizer::tokensToString(tokens));
-      }
-
       if (!isPrevTokenOper) {
         operators.insert({i, std::move(oper)});
         isPrevTokenOper = true;
@@ -545,11 +527,7 @@ MathObjectPtr Expression::compress() const {
 }
 
 MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-  if (func.instanceOf<Derivative>()) {
-    return DerivativeExpression(args.at(0).get()).simplify();
-  }
-
-  return buildRawFunctionExpression(func, args).simplify();
+  return buildRawFunctionExpression(func, args)->simplify();
 }
 
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
@@ -570,8 +548,23 @@ ExpressionPtr Expression::buildEqvExpression(const IFunction &func, const Argume
   return std::make_unique<EqvExpression>(func, args.at(0).get(), args.at(1).get());
 }
 
+ExpressionPtr Expression::buildDerivateExpression(const ArgumentsVector &args) {
+  return std::make_unique<DerivativeExpression>(args.at(0).get());
+}
+
+Expression::Vector Expression::copy(const Vector &rhs) {
+  Vector result;
+
+  for (const auto &value : rhs) {
+    result.emplace_back(value->clone());
+  }
+
+  return result;
+}
+
 Expression::Vector Expression::getArgs(const TokenVector &tokens) {
   Vector args;
+
   for (size_t pos = 0; pos < tokens.size(); pos++) {
     bool isBracketsSkip = false;
     if (tokens.at(pos) == "(") {
@@ -594,27 +587,19 @@ Expression::Vector Expression::getArgs(const TokenVector &tokens) {
         throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
-      auto arg = IExpression::parse(TokenVector(tokens.begin(), tokens.begin() + (long)pos));
-      if (!arg) {
-        throw InvalidInputException(Tokenizer::tokensToString(tokens));
-      }
-
-      args.emplace_back(arg->clone());
-      auto addArgs = getArgs(TokenVector(tokens.begin() + (long)pos + 1, tokens.end()));
+      args.emplace_back(Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(pos))).clone());
+      auto addArgs = getArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
 
       for (auto &token : addArgs) {
         args.push_back(MathObjectPtr(token.release()));
       }
+
       return args;
     }
   }
 
-  auto arg = IExpression::parse(tokens);
-  if (!arg) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
+  args.emplace_back(Expression(tokens).clone());
 
-  args.emplace_back(arg->clone());
   return args;
 }
 
@@ -696,64 +681,63 @@ Expression &Expression::negate() {
   return *this;
 }
 
-Expression Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-  Expression funcExpr;
-
+ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
   if (func.instanceOf<Add>() || func.instanceOf<Sub>()) {
-    funcExpr.info = buildAddExpression(func, args);
-    return funcExpr;
+    return buildAddExpression(func, args);
   }
 
   if (func.instanceOf<Mul>() || func.instanceOf<Div>()) {
-    funcExpr.info = buildMulExpression(func, args);
-    return funcExpr;
+    return buildMulExpression(func, args);
   }
 
   if (func.instanceOf<IOperator>() && func.to<IOperator>().getOperatorPriority() == IOperator::Priority::Comparison) {
-    funcExpr.info = buildEqvExpression(func, args);
-    return funcExpr;
+    return buildEqvExpression(func, args);
   }
 
-  funcExpr.info = func.clone();
+  if (func.instanceOf<Derivative>()) {
+    return buildDerivateExpression(args);
+  }
+
+  auto funcExpr = std::make_unique<Expression>();
+  funcExpr->info = func.clone();
 
   for (const auto &arg : args) {
-    funcExpr.children.push_back(arg.get().clone());
+    funcExpr->children.push_back(arg.get().clone());
   }
 
   return funcExpr;
 }
 
-/*
-  Expr: AddExpr | MulExpr | PowExpr | FuncExpr | (Expr) | Term
-  AddExpr: +Expr | -Expr | Expr + Expr | Expr - Expr
-  MulExpr: Expr * Expr | Expr / Expr
-  PowExpr: Expr^Expr
-  FuncExpr: PreFuncName Expr | Expr PostFuncName
-  Term: Const | Var | Num
- */
-
-Expression Expression::simplifyPrefixUnaryOperator(Expression expr) {
-  if (expr.info->instanceOf<UnaryPlus>()) {
-    return *expr.children.at(0);
+void Expression::simplifyUnaryPlus() {
+  if (!info->instanceOf<UnaryPlus>()) {
+    return;
   }
 
-  if (expr.info->instanceOf<Neg>()) {
-    return simplifyNeg(expr);
+  auto &child = children.at(0);
+  if (child->instanceOf<Expression>()) {
+    *this = std::move(child->to<Expression>());
+  } else {
+    info = std::move(child);
+    children.clear();
   }
-
-  return expr;
 }
 
-Expression Expression::simplifyNeg(Expression expr) {
-  auto childExpr = Expression(*expr.children.at(0)->clone());
-
-  if (!childExpr.info->instanceOf<Neg>()) {
-    return buildRawFunctionExpression(Neg(), {*childExpr.compress()});
+void Expression::simplifyNeg() {
+  if (!info->instanceOf<Neg>()) {
+    return;
   }
 
-  expr.info = childExpr.children.at(0)->clone();
+  auto &child = children.at(0);
+  if (!child->instanceOf<Expression>()) {
+    return;
+  }
 
-  return expr.compressTree();
+  auto &childExpr = child->to<Expression>();
+  if (!childExpr.info->instanceOf<Neg>()) {
+    return;
+  }
+
+  *this = Expression(childExpr.children.front());
 }
 
 void Expression::setPrecision(uint8_t precision) {
@@ -763,8 +747,27 @@ void Expression::setPrecision(uint8_t precision) {
 MathObjectPtr Expression::simplify(bool isPrecise) const {
   Expression expr = *this;
   expr.compressTree();
+
+  for (auto &child : expr.children) {
+    if (child->instanceOf<IConstant>()) {
+      auto constant = (*castPtr<IConstant>(child->clone()))();
+      if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
+        child = constant->clone();
+        continue;
+      }
+    }
+
+    if (child->instanceOf<IExpression>()) {
+      child = child->to<IExpression>().simplify(isPrecise);
+      continue;
+    }
+
+    child = child->simplify();
+  }
+
   expr.simplifyFunctionsRec(isPrecise);
-  expr = simplifyPrefixUnaryOperator(expr);
+  expr.simplifyUnaryPlus();
+  expr.simplifyNeg();
   expr.simplifyPow();
 
   if (expr.children.empty()) {

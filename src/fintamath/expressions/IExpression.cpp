@@ -70,6 +70,10 @@ void IExpression::validateFunctionArgs(const IFunction &func, const ArgumentsVec
   }
 }
 
+MathObjectPtr IExpression::simplify() const {
+  return simplify(false);
+}
+
 std::vector<MathObjectPtr> IExpression::getVariables() const {
   return {};
 }
