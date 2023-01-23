@@ -38,9 +38,6 @@ TEST(MathObjectTests, toTest) {
   EXPECT_TRUE(m1->to<IMathObject>().instanceOf<IMathObject>());
 
   EXPECT_TRUE(m1->to<IMathObject>().instanceOf<Integer>());
-
-  EXPECT_THROW(m1->to<Rational>(), std::bad_cast);
-  EXPECT_THROW(m1->to<Variable>(), std::bad_cast);
 }
 
 TEST(MathObjectTests, cloneTest) {

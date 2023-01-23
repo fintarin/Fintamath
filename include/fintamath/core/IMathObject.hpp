@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <functional>
 #include <memory>
 #include <sstream>
@@ -30,12 +31,16 @@ public:
 
   template <typename T>
   const T &to() const {
-    return dynamic_cast<const T &>(*this);
+    const T *res = dynamic_cast<const T *>(this);
+    assert(res != nullptr);
+    return *res;
   }
 
   template <typename T>
   T &to() {
-    return dynamic_cast<T &>(*this);
+    T *res = dynamic_cast<T *>(this);
+    assert(res != nullptr);
+    return *res;
   }
 
   virtual MathObjectPtr simplify() const {
