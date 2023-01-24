@@ -25,6 +25,8 @@ private:
 
   static bool isDigitOrPoint(char c);
 
+  static bool isLowerLetter(char c);
+
   static bool isUpperLetter(char c);
 
   static bool isBracket(char c);

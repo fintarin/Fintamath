@@ -15,6 +15,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
   for (char &ch : str) {
     if (isBracket(ch)) {
       if (appendToken(tokens, numberToken, false)) {
+        // TODO: do it in Expression
         if (ch == '(') {
           tokens.emplace_back("*");
         }
@@ -22,8 +23,12 @@ TokenVector Tokenizer::tokenize(std::string str) {
 
       appendToken(tokens, specialToken, true);
 
-      if (!tokens.empty() && tokens.back() == ")" && ch == '(') { // TODO: do it in Expression
-        tokens.emplace_back("*");
+      // TODO: do it in Expression
+      if (!tokens.empty() && tokens.back() != "(" && ch == '(') {
+        if (tokens.back() == ")" ||
+            std::find(registeredTokens.begin(), registeredTokens.end(), tokens.back()) == registeredTokens.end()) {
+          tokens.emplace_back("*");
+        }
       }
 
       tokens.emplace_back(1, ch);
@@ -31,7 +36,8 @@ TokenVector Tokenizer::tokenize(std::string str) {
       appendToken(tokens, specialToken, true);
       numberToken.push_back(ch);
 
-      if (!tokens.empty() && tokens.back() == ")") { // TODO: do it in Expression
+      // TODO: do it in Expression
+      if (!tokens.empty() && tokens.back() == ")") {
         tokens.emplace_back("*");
       }
     } else {
@@ -69,7 +75,16 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
   }
 
   if (!shouldSplit) {
+    // TODO: do it in Expression
+    if (!tokens.empty() && !isDigitOrPoint(tokens.back().front()) && tokens.back() != "," && tokens.back() != "(") {
+      if (tokens.back() == ")" || isUpperLetter(tokens.back().front()) ||
+          std::find(registeredTokens.begin(), registeredTokens.end(), tokens.back()) == registeredTokens.end()) {
+        tokens.emplace_back("*");
+      }
+    }
+
     tokens.emplace_back(token);
+
     token.clear();
     return true;
   }
@@ -95,10 +110,19 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
 
     if (!isNestedTokenFind) {
       nestedToken = token.substr(0, 1);
+    }
 
-      if (!tokens.empty() && nestedToken != ",") { // TODO: do it in Expression
-        if (!isPreviousTokenNested || isDigitOrPoint(tokens.back().front()) || isUpperLetter(tokens.back().front()) ||
+    // TODO: do it in Expression
+    if (!tokens.empty() && nestedToken != "," && tokens.back() != ",") {
+      if (!isNestedTokenFind || isUpperLetter(nestedToken.front())) {
+        if (!isPreviousTokenNested || isUpperLetter(tokens.back().front()) || isDigitOrPoint(tokens.back().front()) ||
             tokens.back() == ")") {
+          tokens.emplace_back("*");
+        }
+      }
+
+      if (isLowerLetter(nestedToken.front())) {
+        if (isDigitOrPoint(tokens.back().front()) || tokens.back() == ")") {
           tokens.emplace_back("*");
         }
       }
@@ -127,6 +151,10 @@ void Tokenizer::handleSpaces(std::string &str) {
 
 bool Tokenizer::isDigitOrPoint(char c) {
   return c == '.' || (c >= '0' && c <= '9');
+}
+
+bool Tokenizer::isLowerLetter(char c) {
+  return c >= 'a' && c <= 'z';
 }
 
 bool Tokenizer::isUpperLetter(char c) {

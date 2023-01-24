@@ -68,6 +68,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("1/10^--20").toString(), "1/100000000000000000000");
   EXPECT_EQ(Expression("1/10^---20").toString(), "100000000000000000000");
   EXPECT_EQ(Expression("36/3(8-6)").toString(), "24");
+  EXPECT_EQ(Expression("36/(8-6)3").toString(), "54");
   EXPECT_EQ(Expression("2%").toString(), "1/50");
   EXPECT_EQ(Expression("2.35%").toString(), "47/2000");
   EXPECT_EQ(Expression("1100*4.76%").toString(), "1309/25");
@@ -114,8 +115,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("Pi").toString(), "Pi");
   EXPECT_EQ(Expression("E^101-E^101").toString(), "0");
   EXPECT_EQ(Expression("ln(E^E) / ln(E^E) - 1").toString(), "0");
-  // EXPECT_EQ(Expression("8E").toString(), "8 E"); // TODO: fix split tokens
-  // EXPECT_EQ(Expression("8Pi").toString(), "8 Pi"); // TODO: fix split tokens
+  EXPECT_EQ(Expression("8E").toString(), "8 E");
+  EXPECT_EQ(Expression("8Pi").toString(), "8 Pi");
   EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
   EXPECT_EQ(Expression("E^101").toString(), "E^101");
   EXPECT_EQ(Expression("E^(-101)").toString(), "E^-101");
@@ -205,10 +206,16 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("abc").toString(), "a b c");
   EXPECT_EQ(Expression("d^abc").toString(), "d^a b c");
   EXPECT_EQ(Expression("abc^d").toString(), "c^d a b");
-  // EXPECT_EQ(Expression("a(2)").toString(), "2 a"); // TODO: fix split tokens
+  EXPECT_EQ(Expression("a(2)").toString(), "2 a");
   EXPECT_EQ(Expression("(2)a").toString(), "2 a");
+  EXPECT_EQ(Expression("Ea").toString(), "E a");
+  EXPECT_EQ(Expression("aE").toString(), "E a");
+  EXPECT_EQ(Expression("aEE").toString(), "E^2 a");
+  EXPECT_EQ(Expression("EEa").toString(), "E^2 a");
+  EXPECT_EQ(Expression("x123").toString(), "123 x");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
+  EXPECT_EQ(Expression("-3sin(E)").toString(), "-3 sin(E)");
   EXPECT_EQ(Expression("lnE").toString(), "ln(E)");
   EXPECT_EQ(Expression("lncossinE").toString(), "ln(cos(sin(E)))");
   EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
