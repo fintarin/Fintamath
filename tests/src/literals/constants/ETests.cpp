@@ -7,7 +7,7 @@ using namespace fintamath;
 const E f;
 
 TEST(ETests, toStringTest) {
-  EXPECT_EQ(f.toString(), "e");
+  EXPECT_EQ(f.toString(), "E");
 }
 
 TEST(ETests, callTest) {

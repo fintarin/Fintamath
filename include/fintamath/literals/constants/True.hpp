@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 
 namespace fintamath {
@@ -7,7 +8,7 @@ namespace fintamath {
 class True : public IConstantCRTP<True> {
 public:
   std::string toString() const override {
-    return "true";
+    return Boolean(true).toString();
   }
 
 protected:

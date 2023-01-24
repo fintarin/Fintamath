@@ -103,8 +103,6 @@ TEST(ExpressionTests, toStringTest) {
 
   EXPECT_EQ(Expression("sqrt144").toString(), "12");
   EXPECT_EQ(Expression("sqrt0").toString(), "0");
-  EXPECT_EQ(Expression("e^101-e^101").toString(), "0");
-  EXPECT_EQ(Expression("ln(e^e) / ln(e^e) - 1").toString(), "0");
   EXPECT_EQ(Expression("sqrt4!").toString(), "2");
   EXPECT_EQ(Expression("(sqrt4)!").toString(), "2");
   EXPECT_EQ(Expression("sqrt4*2!").toString(), "4");
@@ -112,20 +110,22 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("abs((-5))").toString(), "5");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
 
-  EXPECT_EQ(Expression("e").toString(), "e");
-  EXPECT_EQ(Expression("pi").toString(), "pi");
-  // EXPECT_EQ(Expression("8e").toString(), "8 e"); // TODO: fix split tokens
-  // EXPECT_EQ(Expression("8pi").toString(), "8 pi"); //TODO: fix split tokens
+  EXPECT_EQ(Expression("E").toString(), "E");
+  EXPECT_EQ(Expression("Pi").toString(), "Pi");
+  EXPECT_EQ(Expression("E^101-E^101").toString(), "0");
+  EXPECT_EQ(Expression("ln(E^E) / ln(E^E) - 1").toString(), "0");
+  // EXPECT_EQ(Expression("8e").toString(), "8 E"); // TODO: fix split tokens
+  // EXPECT_EQ(Expression("8pi").toString(), "8 Pi"); //TODO: fix split tokens
   EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
-  EXPECT_EQ(Expression("e^101").toString(), "e^101");
-  EXPECT_EQ(Expression("e^(-101)").toString(), "e^-101");
-  EXPECT_EQ(Expression("log(e,e)").toString(), "log(e, e)");
-  EXPECT_EQ(Expression("log(pi, pi^10)").toString(), "log(pi, pi^10)");
-  EXPECT_EQ(Expression("log(e,e^3)").toString(), "log(e, e^3)");
+  EXPECT_EQ(Expression("E^101").toString(), "E^101");
+  EXPECT_EQ(Expression("E^(-101)").toString(), "E^-101");
+  EXPECT_EQ(Expression("log(E,E)").toString(), "log(E, E)");
+  EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "log(Pi, Pi^10)");
+  EXPECT_EQ(Expression("log(E,E^3)").toString(), "log(E, E^3)");
   EXPECT_EQ(Expression("ln3").toString(), "ln(3)");
   EXPECT_EQ(Expression("ln2").toString(), "ln(2)");
   EXPECT_EQ(Expression("ln100").toString(), "ln(100)");
-  EXPECT_EQ(Expression("ln(e)").toString(), "ln(e)");
+  EXPECT_EQ(Expression("ln(E)").toString(), "ln(E)");
   EXPECT_EQ(Expression("lg99").toString(), "lg(99)");
   EXPECT_EQ(Expression("lg100").toString(), "2");
   EXPECT_EQ(Expression("lb100").toString(), "lb(100)");
@@ -145,15 +145,15 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("sin1^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin(10^30)").toString(), "sin(1000000000000000000000000000000)");
   EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").toString(), "cos(1)^2 + sin(1)^2");
-  EXPECT_EQ(Expression("sin(pi/3)").toString(), "sin(1/3 pi)");
-  EXPECT_EQ(Expression("cos(pi/3)").toString(), "cos(1/3 pi)");
-  EXPECT_EQ(Expression("2!*e").toString(), "2 e");
-  EXPECT_EQ(Expression("e*2!").toString(), "2 e");
-  EXPECT_EQ(Expression("sqrt((1-cos(2*(pi/3)))/2)").toString(), "sqrt(-1/2 cos(2/3 pi) + 1/2)");
-  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(pi/3)))/2)*cos(pi/3)").toString(),
-            "2 cos(1/3 pi) sqrt(-1/2 cos(2/3 pi) + 1/2)");
-  EXPECT_EQ(Expression("ln(ln(ln(ln(e))))").toString(), "ln(ln(ln(ln(e))))");
-  EXPECT_EQ(Expression("ln(ln(ln(ln(ln(e)))))").toString(), "ln(ln(ln(ln(ln(e)))))");
+  EXPECT_EQ(Expression("sin(Pi/3)").toString(), "sin(1/3 Pi)");
+  EXPECT_EQ(Expression("cos(Pi/3)").toString(), "cos(1/3 Pi)");
+  EXPECT_EQ(Expression("2!*E").toString(), "2 E");
+  EXPECT_EQ(Expression("E*2!").toString(), "2 E");
+  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-1/2 cos(2/3 Pi) + 1/2)");
+  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(),
+            "2 cos(1/3 Pi) sqrt(-1/2 cos(2/3 Pi) + 1/2)");
+  EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").toString(), "ln(ln(ln(ln(E))))");
+  EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").toString(), "ln(ln(ln(ln(ln(E)))))");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
 
   EXPECT_EQ(Expression("--a").toString(), "a");
@@ -209,8 +209,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(2)a").toString(), "2 a");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
-  EXPECT_EQ(Expression("lne").toString(), "ln(e)");
-  EXPECT_EQ(Expression("lncossine").toString(), "ln(cos(sin(e)))");
+  EXPECT_EQ(Expression("lnE").toString(), "ln(E)");
+  EXPECT_EQ(Expression("lncossinE").toString(), "ln(cos(sin(E)))");
   EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
   EXPECT_EQ(Expression("1-(sin(x)+1)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("1/(sin(x)+1)").toString(), "1/(sin(x) + 1)");
@@ -220,49 +220,49 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1)");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
 
-  EXPECT_EQ(Expression("a=a").toString(), "true");
-  EXPECT_EQ(Expression("a+a=2*a").toString(), "true");
+  EXPECT_EQ(Expression("a=a").toString(), "True");
+  EXPECT_EQ(Expression("a+a=2*a").toString(), "True");
   EXPECT_EQ(Expression("a=b").toString(), "a - b = 0");
-  EXPECT_EQ(Expression("a!=a").toString(), "false");
-  EXPECT_EQ(Expression("a+a!=2*a").toString(), "false");
+  EXPECT_EQ(Expression("a!=a").toString(), "False");
+  EXPECT_EQ(Expression("a+a!=2*a").toString(), "False");
   EXPECT_EQ(Expression("a!=b").toString(), "a - b != 0");
   EXPECT_EQ(Expression("x<6").toString(), "x - 6 < 0");
   EXPECT_EQ(Expression("x<=6").toString(), "x - 6 <= 0");
   EXPECT_EQ(Expression("x>6").toString(), "x - 6 > 0");
   EXPECT_EQ(Expression("x>=6").toString(), "x - 6 >= 0");
-  EXPECT_EQ(Expression("(5+5)=(2*5)").toString(), "true");
-  EXPECT_EQ(Expression("((((5+5)=(2*5))))").toString(), "true");
-  EXPECT_EQ(Expression("((1*1))(5+5)=((2*5)/(1/1))").toString(), "true");
+  EXPECT_EQ(Expression("(5+5)=(2*5)").toString(), "True");
+  EXPECT_EQ(Expression("((((5+5)=(2*5))))").toString(), "True");
+  EXPECT_EQ(Expression("((1*1))(5+5)=((2*5)/(1/1))").toString(), "True");
 
   EXPECT_EQ(Expression("a'").toString(), "1");
   EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");
   EXPECT_EQ(Expression("b'+a'").toString(), "2");
   EXPECT_EQ(Expression("5'").toString(), "0");
 
-  EXPECT_EQ(Expression("!true").toString(), "false");
-  EXPECT_EQ(Expression("!false").toString(), "true");
-  EXPECT_EQ(Expression("true&&false").toString(), "false");
-  EXPECT_EQ(Expression("!!!true&&!!!!false||!!!!!!false||false").toString(), "false");
-  EXPECT_EQ(Expression("true||false").toString(), "true");
-  EXPECT_EQ(Expression("true&&false||true&&false").toString(), "false");
-  EXPECT_EQ(Expression("false&&true||true&&false").toString(), "false");
-  EXPECT_EQ(Expression("false&&true||true&&true||false").toString(), "true");
-  EXPECT_EQ(Expression("false||!false&&true").toString(), "true");
-  EXPECT_EQ(Expression("(false||false&&!true)||(true&&!(false||true))").toString(), "false");
-  EXPECT_EQ(Expression("true !<-> true").toString(), "false");
-  EXPECT_EQ(Expression("(false -> false && !true) !<-> (true <-> !(false||true))").toString(), "true");
-  EXPECT_EQ(Expression("false <-> !false && true").toString(), "false");
-  EXPECT_EQ(Expression("false <-> true -> false").toString(), "true");
+  EXPECT_EQ(Expression("!True").toString(), "False");
+  EXPECT_EQ(Expression("!False").toString(), "True");
+  EXPECT_EQ(Expression("True&&False").toString(), "False");
+  EXPECT_EQ(Expression("!!!True&&!!!!False||!!!!!!False||False").toString(), "False");
+  EXPECT_EQ(Expression("True||False").toString(), "True");
+  EXPECT_EQ(Expression("True&&False||True&&False").toString(), "False");
+  EXPECT_EQ(Expression("False&&True||True&&False").toString(), "False");
+  EXPECT_EQ(Expression("False&&True||True&&True||False").toString(), "True");
+  EXPECT_EQ(Expression("False||!False&&True").toString(), "True");
+  EXPECT_EQ(Expression("(False||False&&!True)||(True&&!(False||True))").toString(), "False");
+  EXPECT_EQ(Expression("True !<-> True").toString(), "False");
+  EXPECT_EQ(Expression("(False -> False && !True) !<-> (True <-> !(False||True))").toString(), "True");
+  EXPECT_EQ(Expression("False <-> !False && True").toString(), "False");
+  EXPECT_EQ(Expression("False <-> True -> False").toString(), "True");
 
-  EXPECT_EQ(Expression("!(1=1)").toString(), "false");
-  EXPECT_EQ(Expression("!(1=2)").toString(), "true");
-  EXPECT_EQ(Expression("(1=1)&&(1=2)").toString(), "false");
-  EXPECT_EQ(Expression("(1=1)||(1=2)").toString(), "true");
-  EXPECT_EQ(Expression("(1=2)||!(1=2)&&(1=1)").toString(), "true");
-  EXPECT_EQ(Expression("((1=2)||(1=2)&&!(1=1))||((1=1)&&!((1=2)||(1=1)))").toString(), "false");
-  EXPECT_EQ(Expression("((1=2) -> (1=2) && !(1=1)) !<-> ((1=1) <-> !((1=2) || (1=1)))").toString(), "true");
-  EXPECT_EQ(Expression("false||1=1").toString(), "true");
-  EXPECT_EQ(Expression("1=1||false").toString(), "true");
+  EXPECT_EQ(Expression("!(1=1)").toString(), "False");
+  EXPECT_EQ(Expression("!(1=2)").toString(), "True");
+  EXPECT_EQ(Expression("(1=1)&&(1=2)").toString(), "False");
+  EXPECT_EQ(Expression("(1=1)||(1=2)").toString(), "True");
+  EXPECT_EQ(Expression("(1=2)||!(1=2)&&(1=1)").toString(), "True");
+  EXPECT_EQ(Expression("((1=2)||(1=2)&&!(1=1))||((1=1)&&!((1=2)||(1=1)))").toString(), "False");
+  EXPECT_EQ(Expression("((1=2) -> (1=2) && !(1=1)) !<-> ((1=1) <-> !((1=2) || (1=1)))").toString(), "True");
+  EXPECT_EQ(Expression("False||1=1").toString(), "True");
+  EXPECT_EQ(Expression("1=1||False").toString(), "True");
 
   EXPECT_EQ(Expression("!a").toString(), "!a");
   EXPECT_EQ(Expression("!!a").toString(), "a");
@@ -278,43 +278,43 @@ TEST(ExpressionTests, toStringTest) {
 
   EXPECT_EQ(Expression("a && a").toString(), "a");
   EXPECT_EQ(Expression("a || a").toString(), "a");
-  EXPECT_EQ(Expression("a -> a").toString(), "true");
-  EXPECT_EQ(Expression("a <-> a").toString(), "true");
-  EXPECT_EQ(Expression("a !<-> a").toString(), "false");
+  EXPECT_EQ(Expression("a -> a").toString(), "True");
+  EXPECT_EQ(Expression("a <-> a").toString(), "True");
+  EXPECT_EQ(Expression("a !<-> a").toString(), "False");
 
-  EXPECT_EQ(Expression("a && !a").toString(), "false");
-  EXPECT_EQ(Expression("a || !a").toString(), "true");
+  EXPECT_EQ(Expression("a && !a").toString(), "False");
+  EXPECT_EQ(Expression("a || !a").toString(), "True");
   EXPECT_EQ(Expression("a -> !a").toString(), "!a");
-  EXPECT_EQ(Expression("a <-> !a").toString(), "false");
-  EXPECT_EQ(Expression("a !<-> !a").toString(), "true");
+  EXPECT_EQ(Expression("a <-> !a").toString(), "False");
+  EXPECT_EQ(Expression("a !<-> !a").toString(), "True");
 
-  EXPECT_EQ(Expression("!a && a").toString(), "false");
-  EXPECT_EQ(Expression("!a || a").toString(), "true");
+  EXPECT_EQ(Expression("!a && a").toString(), "False");
+  EXPECT_EQ(Expression("!a || a").toString(), "True");
   EXPECT_EQ(Expression("!a -> a").toString(), "a");
-  EXPECT_EQ(Expression("!a <-> a").toString(), "false");
-  EXPECT_EQ(Expression("!a !<-> a").toString(), "true");
+  EXPECT_EQ(Expression("!a <-> a").toString(), "False");
+  EXPECT_EQ(Expression("!a !<-> a").toString(), "True");
 
   EXPECT_EQ(Expression("!a && !a").toString(), "!a");
   EXPECT_EQ(Expression("!a || !a").toString(), "!a");
-  EXPECT_EQ(Expression("!a -> !a").toString(), "true");
-  EXPECT_EQ(Expression("!a <-> !a").toString(), "true");
-  EXPECT_EQ(Expression("!a !<-> !a").toString(), "false");
+  EXPECT_EQ(Expression("!a -> !a").toString(), "True");
+  EXPECT_EQ(Expression("!a <-> !a").toString(), "True");
+  EXPECT_EQ(Expression("!a !<-> !a").toString(), "False");
 
-  EXPECT_EQ(Expression("a && false").toString(), "false");
-  EXPECT_EQ(Expression("a || false").toString(), "a");
-  EXPECT_EQ(Expression("a -> false").toString(), "!a");
-  EXPECT_EQ(Expression("a <-> false").toString(), "!a");
-  EXPECT_EQ(Expression("a !<-> false").toString(), "a");
+  EXPECT_EQ(Expression("a && False").toString(), "False");
+  EXPECT_EQ(Expression("a || False").toString(), "a");
+  EXPECT_EQ(Expression("a -> False").toString(), "!a");
+  EXPECT_EQ(Expression("a <-> False").toString(), "!a");
+  EXPECT_EQ(Expression("a !<-> False").toString(), "a");
 
-  EXPECT_EQ(Expression("a && true").toString(), "a");
-  EXPECT_EQ(Expression("a || true").toString(), "true");
-  EXPECT_EQ(Expression("a -> true").toString(), "true");
-  EXPECT_EQ(Expression("a <-> true").toString(), "a");
-  EXPECT_EQ(Expression("a !<-> true").toString(), "!a");
+  EXPECT_EQ(Expression("a && True").toString(), "a");
+  EXPECT_EQ(Expression("a || True").toString(), "True");
+  EXPECT_EQ(Expression("a -> True").toString(), "True");
+  EXPECT_EQ(Expression("a <-> True").toString(), "a");
+  EXPECT_EQ(Expression("a !<-> True").toString(), "!a");
 
-  EXPECT_EQ(Expression("a<->(true)<->(false)").toString(), "!a");
-  EXPECT_EQ(Expression("a<->(true)!<->(false)").toString(), "a");
-  EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a").toString(), "true");
+  EXPECT_EQ(Expression("a<->(True)<->(False)").toString(), "!a");
+  EXPECT_EQ(Expression("a<->(True)!<->(False)").toString(), "a");
+  EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a").toString(), "True");
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a<->a").toString(), "a");
   EXPECT_EQ(Expression("a&&b->b&&c").toString(), "!(a && b) || b && c");
   EXPECT_EQ(Expression("!a && b || !c -> d <-> f !<-> g").toString(),
@@ -443,7 +443,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(1 = 1) / 2"), InvalidInputException);
   EXPECT_THROW(Expression("2 + (1 = 2)"), InvalidInputException);
   EXPECT_THROW(Expression("sin(1 = 1)"), InvalidInputException);
-  EXPECT_THROW(Expression("true/true"), InvalidInputException);
+  EXPECT_THROW(Expression("True/True"), InvalidInputException);
   EXPECT_THROW(Expression("((1 == 1)) + ((1 == 2))"), InvalidInputException);
   EXPECT_THROW(Expression("((1 == 1)) - ((1 == 1))"), InvalidInputException);
   EXPECT_THROW(Expression("((1 == 1)) / ((1 == 1))"), InvalidInputException);
@@ -467,13 +467,13 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("lg(-1)"), UndefinedException);
   EXPECT_THROW(Expression("(-1)^(2/3)"), UndefinedException);
   // TODO constants
-  // EXPECT_THROW(Expression("e!"), UndefinedException);
-  // EXPECT_THROW(Expression("tan(pi/2)"), UndefinedException);
+  // EXPECT_THROW(Expression("E!"), UndefinedException);
+  // EXPECT_THROW(Expression("tan(Pi/2)"), UndefinedException);
   // EXPECT_THROW(Expression("cot(0)"), UndefinedException);
   // EXPECT_THROW(Expression("asin(2)"), UndefinedException);
   // EXPECT_THROW(Expression("acos(2)"), UndefinedException);
-  // EXPECT_THROW(Expression("tan(3/2*pi)"), UndefinedException);
-  // EXPECT_THROW(Expression("cot(2*pi)"), UndefinedException);
+  // EXPECT_THROW(Expression("tan(3/2*Pi)"), UndefinedException);
+  // EXPECT_THROW(Expression("cot(2*Pi)"), UndefinedException);
 }
 
 TEST(ExpressionTests, simplifyInpreciseTest) {
@@ -481,27 +481,27 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
             "5713383956445854590478932865261054003189553578601126418254837583317982912484539839312657448867531114537710"
             "7878746854204162666250198684504466355949195922066574942592095735778929325357290444962472405416790722118445"
             "437122269675520000000000000000000000000000000000000");
-  EXPECT_EQ(Expression("e").simplify(false)->toString(),
+  EXPECT_EQ(Expression("E").simplify(false)->toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
-  EXPECT_EQ(Expression("pi").simplify(false)->toString(),
+  EXPECT_EQ(Expression("Pi").simplify(false)->toString(),
             "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
   EXPECT_EQ(Expression("exp100").simplify(false)->toString(),
             "26881171418161354484126255515800135873611118.773741922415191608615280287034909565");
-  EXPECT_EQ(Expression("e^101").simplify(false)->toString(),
+  EXPECT_EQ(Expression("E^101").simplify(false)->toString(),
             "73070599793680672726476826340615135890078390.083960707616445859670987728609198428");
-  EXPECT_EQ(Expression("e^(-101)").simplify(false)->toString(),
+  EXPECT_EQ(Expression("E^(-101)").simplify(false)->toString(),
             "1.3685394711738530002470557302322944177986775531612023009807438134142551921153897*10^-44");
-  EXPECT_EQ(Expression("log(e,e)").simplify(false)->toString(), "1");
+  EXPECT_EQ(Expression("log(E,E)").simplify(false)->toString(), "1");
   EXPECT_EQ(Expression("log(2, 256)").simplify(false)->toString(), "8");
-  EXPECT_EQ(Expression("log(pi, pi^10)").simplify(false)->toString(), "10");
-  EXPECT_EQ(Expression("log(e,e^3)").simplify(false)->toString(), "3");
+  EXPECT_EQ(Expression("log(Pi, Pi^10)").simplify(false)->toString(), "10");
+  EXPECT_EQ(Expression("log(E,E^3)").simplify(false)->toString(), "3");
   EXPECT_EQ(Expression("ln3").simplify(false)->toString(),
             "1.098612288668109691395245236922525704647490557822749451734694333637494293218609");
   EXPECT_EQ(Expression("ln2").simplify(false)->toString(),
             "0.69314718055994530941723212145817656807550013436025525412068000949339362196969472");
   EXPECT_EQ(Expression("ln100").simplify(false)->toString(),
             "4.605170185988091368035982909368728415202202977257545952066655801935145219354705");
-  EXPECT_EQ(Expression("ln(e)").simplify(false)->toString(), "1");
+  EXPECT_EQ(Expression("ln(E)").simplify(false)->toString(), "1");
   EXPECT_EQ(Expression("lg99").simplify(false)->toString(),
             "1.9956351945975499153402557777532548601069599188478448242562702992902113378005716");
   EXPECT_EQ(Expression("lg100").simplify(false)->toString(), "2");
@@ -537,41 +537,41 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
   EXPECT_EQ(Expression("sin(10^30)").simplify(false)->toString(),
             "-0.090116901912138058030386428952987330274396332993043449885460666579773983476795775");
   EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").simplify(false)->toString(), "1");
-  EXPECT_EQ(Expression("sin(pi/3)").simplify(false)->toString(),
+  EXPECT_EQ(Expression("sin(Pi/3)").simplify(false)->toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("cos(pi/3)").simplify(false)->toString(), "0.5");
-  EXPECT_EQ(Expression("2!*e").simplify(false)->toString(),
+  EXPECT_EQ(Expression("cos(Pi/3)").simplify(false)->toString(), "0.5");
+  EXPECT_EQ(Expression("2!*E").simplify(false)->toString(),
             "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
-  EXPECT_EQ(Expression("e*2!").simplify(false)->toString(),
+  EXPECT_EQ(Expression("E*2!").simplify(false)->toString(),
             "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
-  EXPECT_EQ(Expression("sqrt((1-cos(2*(pi/3)))/2)").simplify(false)->toString(),
+  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").simplify(false)->toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(pi/3)))/2)*cos(pi/3)").simplify(false)->toString(),
+  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").simplify(false)->toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
 
-  EXPECT_EQ(Expression("sin(e)=sin(e)").simplify(false)->toString(), "true");
-  EXPECT_EQ(Expression("sin(e)>sin(e)").simplify(false)->toString(), "false");
-  EXPECT_EQ(Expression("sin(e)>=sin(e)").simplify(false)->toString(), "true");
-  EXPECT_EQ(Expression("sin(e)<sin(e)").simplify(false)->toString(), "false");
-  EXPECT_EQ(Expression("sin(e)<=sin(e)").simplify(false)->toString(), "true");
+  EXPECT_EQ(Expression("sin(E)=sin(E)").simplify(false)->toString(), "True");
+  EXPECT_EQ(Expression("sin(E)>sin(E)").simplify(false)->toString(), "False");
+  EXPECT_EQ(Expression("sin(E)>=sin(E)").simplify(false)->toString(), "True");
+  EXPECT_EQ(Expression("sin(E)<sin(E)").simplify(false)->toString(), "False");
+  EXPECT_EQ(Expression("sin(E)<=sin(E)").simplify(false)->toString(), "True");
   EXPECT_EQ(Expression("1/(sin(5))").simplify(false)->toString(),
             "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
-  EXPECT_EQ(Expression("log(e,5)=ln(5)").simplify(false)->toString(), "true");
-  EXPECT_EQ(Expression("log(e,5)<ln(5)").simplify(false)->toString(), "false");
-  EXPECT_EQ(Expression("log(e,5)>ln(5)").simplify(false)->toString(), "false");
-  EXPECT_EQ(Expression("log(e,5)<=ln(5)").simplify(false)->toString(), "true");
-  EXPECT_EQ(Expression("log(e,5)>=ln(5)").simplify(false)->toString(), "true");
-  EXPECT_EQ(Expression("(sqrt((1-cos(2*(pi/3)))/2))'").simplify(false)->toString(), "0");
+  EXPECT_EQ(Expression("log(E,5)=ln(5)").simplify(false)->toString(), "True");
+  EXPECT_EQ(Expression("log(E,5)<ln(5)").simplify(false)->toString(), "False");
+  EXPECT_EQ(Expression("log(E,5)>ln(5)").simplify(false)->toString(), "False");
+  EXPECT_EQ(Expression("log(E,5)<=ln(5)").simplify(false)->toString(), "True");
+  EXPECT_EQ(Expression("log(E,5)>=ln(5)").simplify(false)->toString(), "True");
+  EXPECT_EQ(Expression("(sqrt((1-cos(2*(Pi/3)))/2))'").simplify(false)->toString(), "0");
 
   // TODO logarithms
-  // EXPECT_EQ(Expression("ln(ln(ln(ln(e))))").simplify(false)->toString(), "0");
-  // EXPECT_EQ(Expression("ln(ln(ln(ln(ln(e)))))").simplify(false)->toString(), "1");
+  // EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").simplify(false)->toString(), "0");
+  // EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").simplify(false)->toString(), "1");
 }
 
 TEST(ExpressionTests, simplifyInpreciseNegativeTest) {
-  EXPECT_THROW(Expression("ln(ln(ln(ln(e))))").simplify(false), UndefinedException);
-  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(e)))))").simplify(false), UndefinedException);
-  EXPECT_THROW(Expression("e!").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("ln(ln(ln(ln(E))))").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E)))))").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("E!").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("sqrt(-1)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("ln(0)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("ln(-1)").simplify(false), UndefinedException);
@@ -581,15 +581,15 @@ TEST(ExpressionTests, simplifyInpreciseNegativeTest) {
   EXPECT_THROW(Expression("lb(-1)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("lg(-1)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("(-1)^(2/3)").simplify(false), UndefinedException);
-  EXPECT_THROW(Expression("tan(pi/2)").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("tan(Pi/2)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("cot(0)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("asin(2)").simplify(false), UndefinedException);
   EXPECT_THROW(Expression("acos(2)").simplify(false), UndefinedException);
-  EXPECT_THROW(Expression("tan(3/2*pi)").simplify(false), UndefinedException);
-  EXPECT_THROW(Expression("cot(2*pi)").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("tan(3/2*Pi)").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("cot(2*Pi)").simplify(false), UndefinedException);
 
-  // TODD: do no perform operation, when the result is too big
-  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(e^e^e^e^e)))))").simplify(false), UndefinedException);
+  // TODO: do no perform operation, when the result is too big
+  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E^E^E^E^E)))))").simplify(false), UndefinedException);
 }
 
 TEST(ExpressionTests, solveTest) {
@@ -603,13 +603,13 @@ TEST(ExpressionTests, solveTest) {
   EXPECT_EQ(Expression("x^2-2x-3=0").solve(), "x in {-1,3}");
   EXPECT_EQ(Expression("15-2x-x^2=0").solve(), "x in {-5,3}");
   EXPECT_EQ(Expression("x^2+12x+36=0").solve(), "x in {-6}");
-  EXPECT_EQ(Expression("15x^2+sin(25)x-10%=ey").solve(5), "15 x^2 - 2.7183 y - 0.13235 x - 0.1 = 0");
+  EXPECT_EQ(Expression("15x^2+sin(25)x-10%=Ey").solve(5), "15 x^2 - 2.7183 y - 0.13235 x - 0.1 = 0");
 }
 
 TEST(ExpressionTests, toStringPrecision) {
   EXPECT_EQ(Expression("10^10000").toString(8), "1*10^10000");
-  EXPECT_EQ(Expression("x+e").toString(8), "x + 2.7182818");
+  EXPECT_EQ(Expression("x+E").toString(8), "x + 2.7182818");
   EXPECT_EQ(Expression("9^10000").toString(8), "2.6613034*10^9542");
-  EXPECT_EQ(Expression("sin(e)").toString(16), "0.4107812905029087");
-  EXPECT_EQ(Expression("sin(sin(e))").toString(30), "0.39932574404189139297067052142");
+  EXPECT_EQ(Expression("sin(E)").toString(16), "0.4107812905029087");
+  EXPECT_EQ(Expression("sin(sin(E))").toString(30), "0.39932574404189139297067052142");
 }

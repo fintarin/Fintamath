@@ -11,10 +11,10 @@ TEST(FintamathTests, fintamathTests) {
   Expression expr;
 
   expr = sum(e(), pi(), Variable("a"), Variable("b"));
-  EXPECT_EQ(expr.toString(), "a + b + e + pi");
+  EXPECT_EQ(expr.toString(), "a + b + E + Pi");
 
   expr = mul(e(), pi(), Variable("a"), Variable("b"));
-  EXPECT_EQ(expr.toString(), "a b e pi");
+  EXPECT_EQ(expr.toString(), "E Pi a b");
 
   expr = pow(Variable("a"), Variable("b")) * Variable("c");
   EXPECT_EQ(expr.toString(), "a^b c");
@@ -50,7 +50,7 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(expr.solve(), "x in {7/2}");
 
   expr = Expression("sin2^2 + cos2^2 = 1");
-  EXPECT_EQ(expr.solve(), "true");
+  EXPECT_EQ(expr.solve(), "True");
 
   // EXPECT_ANY_THROW(1 / (ln(pow(e(), pow(e(), e()))) - pow(e(), e())));
   // EXPECT_ANY_THROW(1 / (ln(ln(pow(e(), pow(e(), e())))) - e()));

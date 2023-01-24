@@ -235,6 +235,14 @@ MathObjectPtr AddExpression::simplify(bool isPrecise) const {
 }
 
 bool sortFunc(const AddExpression::Element &lhs, const AddExpression::Element &rhs) {
+  if (lhs.info->instanceOf<IConstant>()) {
+    return false;
+  }
+
+  if (rhs.info->instanceOf<IConstant>()) {
+    return true;
+  }
+
   return lhs.info->toString() < rhs.info->toString();
 }
 
@@ -359,7 +367,6 @@ void AddExpression::sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &lit
         continue;
       }
     }
-    auto a = counter->toString();
     mulVect.emplace_back(
         Element(MulExpression({MulExpression::Element(obj.obj->clone()), MulExpression::Element(counter->clone())})
                     .simplify()));

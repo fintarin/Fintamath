@@ -25,8 +25,9 @@ bool isVariable(const std::string &str) {
     return false;
   }
 
-  const std::regex reg(R"(^[a-df-zA-Z]$)"); // TODO: change regex to ^[a-df-hj-zA-Z]$ when complex i will be implemented
-  return regex_search(str, reg);
+  char ch = str[0];
+
+  return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }
 
 }

@@ -6,12 +6,8 @@ using namespace fintamath;
 
 const Pi f;
 
-TEST(PiTests, stringConstructorTest) {
-  EXPECT_EQ(f.toString(), "pi");
-}
-
 TEST(PiTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "pi");
+  EXPECT_EQ(f.toString(), "Pi");
 }
 
 TEST(PiTests, callTest) {

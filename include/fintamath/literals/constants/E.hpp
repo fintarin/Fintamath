@@ -7,7 +7,7 @@ namespace fintamath {
 class E : public IConstantCRTP<E> {
 public:
   std::string toString() const override {
-    return "e";
+    return "E";
   }
 
 protected:

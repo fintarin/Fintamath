@@ -22,8 +22,8 @@ TEST(NotTests, getOperatorPriorityTest) {
 }
 
 TEST(NotTests, callTest) {
-  EXPECT_EQ(f(Boolean(true))->toString(), "false");
-  EXPECT_EQ(f(Boolean(false))->toString(), "true");
+  EXPECT_EQ(f(Boolean(true))->toString(), "False");
+  EXPECT_EQ(f(Boolean(false))->toString(), "True");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "!a");
 

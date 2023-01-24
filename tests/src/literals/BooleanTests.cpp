@@ -6,9 +6,11 @@
 using namespace fintamath;
 
 TEST(BooleanTests, stringConstructorTest) {
-  EXPECT_EQ(Boolean(std::string("true")), true);
-  EXPECT_EQ(Boolean(std::string("false")), false);
+  EXPECT_EQ(Boolean(std::string("True")), true);
+  EXPECT_EQ(Boolean(std::string("False")), false);
 
+  EXPECT_THROW(Boolean(std::string("true")), InvalidInputException);
+  EXPECT_THROW(Boolean(std::string("false")), InvalidInputException);
   EXPECT_THROW(Boolean(std::string("10")), InvalidInputException);
   EXPECT_THROW(Boolean(std::string("i")), InvalidInputException);
   EXPECT_THROW(Boolean(std::string("")), InvalidInputException);
@@ -21,8 +23,8 @@ TEST(BooleanTests, boolConstructorTest) {
 }
 
 TEST(BooleanTests, toStringTest) {
-  EXPECT_EQ(Boolean(true).toString(), "true");
-  EXPECT_EQ(Boolean(false).toString(), "false");
+  EXPECT_EQ(Boolean(true).toString(), "True");
+  EXPECT_EQ(Boolean(false).toString(), "False");
 }
 
 TEST(BooleanTests, opearatorsTest) {

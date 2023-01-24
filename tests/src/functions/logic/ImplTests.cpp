@@ -22,10 +22,10 @@ TEST(ImplTests, getOperatorPriorityTest) {
 }
 
 TEST(ImplTests, callTest) {
-  EXPECT_EQ(f(Boolean(false), Boolean(false))->toString(), "true");
-  EXPECT_EQ(f(Boolean(false), Boolean(true))->toString(), "true");
-  EXPECT_EQ(f(Boolean(true), Boolean(false))->toString(), "false");
-  EXPECT_EQ(f(Boolean(true), Boolean(true))->toString(), "true");
+  EXPECT_EQ(f(Boolean(false), Boolean(false))->toString(), "True");
+  EXPECT_EQ(f(Boolean(false), Boolean(true))->toString(), "True");
+  EXPECT_EQ(f(Boolean(true), Boolean(false))->toString(), "False");
+  EXPECT_EQ(f(Boolean(true), Boolean(true))->toString(), "True");
 
   EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "!a || b");
 

@@ -7,15 +7,11 @@ using namespace fintamath;
 
 const True f;
 
-TEST(TrueTests, constructorTest) {
-  EXPECT_EQ(f.toString(), "true");
-}
-
 TEST(TrueTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "true");
+  EXPECT_EQ(f.toString(), "True");
 }
 
 TEST(TrueTests, callTest) {
-  EXPECT_EQ(f()->toString(), "true");
+  EXPECT_EQ(f()->toString(), "True");
   EXPECT_TRUE(f()->instanceOf<Boolean>());
 }

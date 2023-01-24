@@ -101,8 +101,8 @@ TEST(ParserTests, parseNumberTest) {
 }
 
 TEST(ParseTests, parseConstantTest) {
-  EXPECT_TRUE(IConstant::parse("e")->instanceOf<E>());
-  EXPECT_TRUE(IConstant::parse("pi")->instanceOf<Pi>());
+  EXPECT_TRUE(IConstant::parse("E")->instanceOf<E>());
+  EXPECT_TRUE(IConstant::parse("Pi")->instanceOf<Pi>());
 
   EXPECT_EQ(IConstant::parse("a"), nullptr);
   EXPECT_EQ(IConstant::parse("z"), nullptr);
@@ -113,12 +113,12 @@ TEST(ParseTests, parseConstantTest) {
 }
 
 TEST(ParserTests, parseLiteralTest) {
-  EXPECT_TRUE(ILiteral::parse("e")->instanceOf<E>());
-  EXPECT_TRUE(ILiteral::parse("pi")->instanceOf<Pi>());
+  EXPECT_TRUE(ILiteral::parse("E")->instanceOf<E>());
+  EXPECT_TRUE(ILiteral::parse("Pi")->instanceOf<Pi>());
   EXPECT_TRUE(ILiteral::parse("a")->instanceOf<Variable>());
   EXPECT_TRUE(ILiteral::parse("z")->instanceOf<Variable>());
-  EXPECT_TRUE(ILiteral::parse("true")->instanceOf<True>());
-  EXPECT_TRUE(ILiteral::parse("false")->instanceOf<False>());
+  EXPECT_TRUE(ILiteral::parse("True")->instanceOf<True>());
+  EXPECT_TRUE(ILiteral::parse("False")->instanceOf<False>());
 
   EXPECT_EQ(ILiteral::parse("1"), nullptr);
   EXPECT_EQ(ILiteral::parse("a_"), nullptr);

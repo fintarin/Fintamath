@@ -21,7 +21,8 @@ TEST(ExpressionFunctionsTests, mulTest) {
   EXPECT_EQ(mul(Variable("a"), -1, Expression("a*2")).toString(), "-2 a^2");
   EXPECT_EQ(mul(10, Expression("a+2")).toString(), "10 a + 20");
   EXPECT_EQ(mul(Variable("a"), Expression("a^3+a^2")).toString(), "a^3 + a^4");
-  EXPECT_EQ(mul(5, Expression("a+3"), Expression("a+2")).toString(), "25 a + 5 a^2 + 30"); // TODO: replace to 2*a^2+25*a+30
+  EXPECT_EQ(mul(5, Expression("a+3"), Expression("a+2")).toString(),
+            "25 a + 5 a^2 + 30"); // TODO: replace to 2*a^2+25*a+30
   EXPECT_EQ(mul(Expression("a+b"), Expression("3 b + c")).toString(),
             "3 a b + 3 b^2 + a c + b c"); // TODO: replace to 3*b^2+3*a*b+a*c+b*c
 }
@@ -52,38 +53,38 @@ TEST(ExpressionFunctionsTests, negTest) {
 }
 
 TEST(ExpressionFunctionsTests, eqvTest) {
-  EXPECT_EQ(eqv(Expression("a+3"), Expression("3+a")).toString(), "true");
-  EXPECT_EQ(eqv(Expression("a^2"), Expression("a*a+0")).toString(), "true");
+  EXPECT_EQ(eqv(Expression("a+3"), Expression("3+a")).toString(), "True");
+  EXPECT_EQ(eqv(Expression("a^2"), Expression("a*a+0")).toString(), "True");
   EXPECT_EQ(eqv(Expression("a^2"), Expression("a")).toString(), "a^2 - a = 0");
 }
 
 TEST(ExpressionFunctionsTests, neqvTest) {
-  EXPECT_EQ(neqv(Expression("a+3"), Expression("3+a")).toString(), "false");
-  EXPECT_EQ(neqv(Expression("a^2"), Expression("a*a+0")).toString(), "false");
+  EXPECT_EQ(neqv(Expression("a+3"), Expression("3+a")).toString(), "False");
+  EXPECT_EQ(neqv(Expression("a^2"), Expression("a*a+0")).toString(), "False");
   EXPECT_EQ(neqv(Expression("a^2"), Expression("a")).toString(), "a^2 - a != 0");
 }
 
 TEST(ExpressionFunctionsTests, lessTest) {
-  EXPECT_EQ(less(Expression("a+3"), Expression("3+a")).toString(), "false");
-  EXPECT_EQ(less(Expression("a^2"), Expression("a*a+0")).toString(), "false");
+  EXPECT_EQ(less(Expression("a+3"), Expression("3+a")).toString(), "False");
+  EXPECT_EQ(less(Expression("a^2"), Expression("a*a+0")).toString(), "False");
   EXPECT_EQ(less(Expression("a^2"), Expression("a")).toString(), "a^2 - a < 0");
 }
 
 TEST(ExpressionFunctionsTests, moreTest) {
-  EXPECT_EQ(move(Expression("a+3"), Expression("3+a")).toString(), "false");
-  EXPECT_EQ(move(Expression("a^2"), Expression("a*a+0")).toString(), "false");
+  EXPECT_EQ(move(Expression("a+3"), Expression("3+a")).toString(), "False");
+  EXPECT_EQ(move(Expression("a^2"), Expression("a*a+0")).toString(), "False");
   EXPECT_EQ(move(Expression("a^2"), Expression("a")).toString(), "a^2 - a > 0");
 }
 
 TEST(ExpressionFunctionsTests, lessEqvTest) {
-  EXPECT_EQ(lessEqv(Expression("a+3"), Expression("3+a")).toString(), "true");
-  EXPECT_EQ(lessEqv(Expression("a^2"), Expression("a*a+0")).toString(), "true");
+  EXPECT_EQ(lessEqv(Expression("a+3"), Expression("3+a")).toString(), "True");
+  EXPECT_EQ(lessEqv(Expression("a^2"), Expression("a*a+0")).toString(), "True");
   EXPECT_EQ(lessEqv(Expression("a^2"), Expression("a")).toString(), "a^2 - a <= 0");
 }
 
 TEST(ExpressionFunctionsTests, moreEqvTest) {
-  EXPECT_EQ(moveEqv(Expression("a+3"), Expression("3+a")).toString(), "true");
-  EXPECT_EQ(moveEqv(Expression("a^2"), Expression("a*a+0")).toString(), "true");
+  EXPECT_EQ(moveEqv(Expression("a+3"), Expression("3+a")).toString(), "True");
+  EXPECT_EQ(moveEqv(Expression("a^2"), Expression("a*a+0")).toString(), "True");
   EXPECT_EQ(moveEqv(Expression("a^2"), Expression("a")).toString(), "a^2 - a >= 0");
 }
 
@@ -131,41 +132,41 @@ TEST(ExpressionFunctionsTests, logTest) {
 }
 
 TEST(ExpressionFunctionsTests, lnTest) {
-  EXPECT_EQ(ln(Expression("e*e")).toString(), "ln(e^2)"); // TODO logarithms
+  EXPECT_EQ(ln(Expression("E*E")).toString(), "ln(E^2)"); // TODO logarithms
   EXPECT_EQ(ln(Expression("10")).toString(), "ln(10)");
 }
 
 TEST(ExpressionFunctionsTests, lbTest) {
   EXPECT_EQ(lb(Expression("1024*a")).toString(), "lb(1024 a)"); // TODO logarithms
-  EXPECT_EQ(ln(Expression("2+a")).toString(), "ln(a + 2)");       // TODO logarithms
+  EXPECT_EQ(ln(Expression("2+a")).toString(), "ln(a + 2)");     // TODO logarithms
 }
 
 TEST(ExpressionFunctionsTests, lgTest) {
   EXPECT_EQ(lg(Expression("10")).toString(), "1");
-  EXPECT_EQ(lg(Expression("e*a")).toString(), "lg(a e)");
+  EXPECT_EQ(lg(Expression("E*a")).toString(), "lg(E a)");
 }
 
 TEST(ExpressionFunctionsTests, sinTest) {
-  EXPECT_EQ(sin(Expression("5*pi")).toString(), "sin(5 pi)");   // TODO trigonometry
-  EXPECT_EQ(sin(Expression("pi/2")).toString(), "sin(1/2 pi)"); // TODO trigonometry
+  EXPECT_EQ(sin(Expression("5*Pi")).toString(), "sin(5 Pi)");   // TODO trigonometry
+  EXPECT_EQ(sin(Expression("Pi/2")).toString(), "sin(1/2 Pi)"); // TODO trigonometry
   EXPECT_EQ(sin(Expression("a+b")).toString(), "sin(a + b)");
 }
 
 TEST(ExpressionFunctionsTests, cosTest) {
-  EXPECT_EQ(cos(Expression("5*pi")).toString(), "cos(5 pi)");     // TODO trigonometry
-  EXPECT_EQ(cos(Expression("3*pi/2")).toString(), "cos(3/2 pi)"); // TODO trigonometry
+  EXPECT_EQ(cos(Expression("5*Pi")).toString(), "cos(5 Pi)");     // TODO trigonometry
+  EXPECT_EQ(cos(Expression("3*Pi/2")).toString(), "cos(3/2 Pi)"); // TODO trigonometry
   EXPECT_EQ(cos(Expression("8*a")).toString(), "cos(8 a)");
 }
 
 TEST(ExpressionFunctionsTests, tanTest) {
   EXPECT_EQ(tan(Expression("0")).toString(), "0");
-  EXPECT_EQ(tan(Expression("3*pi/4")).toString(), "tan(3/4 pi)"); // TODO trigonometry
+  EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "tan(3/4 Pi)"); // TODO trigonometry
   EXPECT_EQ(tan(Expression("a^3")).toString(), "tan(a^3)");
 }
 
 TEST(ExpressionFunctionsTests, cotTest) {
-  EXPECT_EQ(cot(Expression("pi/4")).toString(), "cot(1/4 pi)"); // TODO trigonometry
-  EXPECT_EQ(cot(Expression("pi/2")).toString(), "cot(1/2 pi)"); // TODO trigonometry
+  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "cot(1/4 Pi)"); // TODO trigonometry
+  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "cot(1/2 Pi)"); // TODO trigonometry
   EXPECT_EQ(cot(Expression("a/5")).toString(), "cot(1/5 a)");
 }
 
@@ -195,28 +196,28 @@ TEST(ExpressionFunctionsTests, acotTest) {
 
 TEST(ExpressionFunctionsTests, derivativeTest) {
   EXPECT_EQ(derivative(Expression("1")).toString(), "0");
-  EXPECT_EQ(derivative(Expression("e")).toString(), "0");
+  EXPECT_EQ(derivative(Expression("E")).toString(), "0");
   EXPECT_EQ(derivative(Expression("a")).toString(), "1");
   EXPECT_EQ(derivative(Expression("(a+5)")).toString(), "(a + 5)'");
 }
 
 TEST(ExpressionFunctionsTests, notTest) {
-  EXPECT_EQ(notL(Expression("true")).toString(), "false");
-  EXPECT_EQ(notL(Expression("false")).toString(), "true");
+  EXPECT_EQ(notL(Expression("True")).toString(), "False");
+  EXPECT_EQ(notL(Expression("False")).toString(), "True");
   EXPECT_EQ(notL(Expression("a")).toString(), "!a");
-  EXPECT_EQ(notL(Expression("1=1")).toString(), "false");
+  EXPECT_EQ(notL(Expression("1=1")).toString(), "False");
 }
 
 TEST(ExpressionFunctionsTests, andTest) {
-  EXPECT_EQ(andL(Expression("true"), Expression("true")).toString(), "true");
-  EXPECT_EQ(andL(Expression("false"), Expression("true")).toString(), "false");
+  EXPECT_EQ(andL(Expression("True"), Expression("True")).toString(), "True");
+  EXPECT_EQ(andL(Expression("False"), Expression("True")).toString(), "False");
   EXPECT_EQ(andL(Expression("a"), Expression("b")).toString(), "a && b");
-  EXPECT_EQ(andL(Expression("a=a"), Expression("b=b")).toString(), "true");
+  EXPECT_EQ(andL(Expression("a=a"), Expression("b=b")).toString(), "True");
 }
 
 TEST(ExpressionFunctionsTests, orTest) {
-  EXPECT_EQ(orL(Expression("true"), Expression("true")).toString(), "true");
-  EXPECT_EQ(orL(Expression("false"), Expression("true")).toString(), "true");
+  EXPECT_EQ(orL(Expression("True"), Expression("True")).toString(), "True");
+  EXPECT_EQ(orL(Expression("False"), Expression("True")).toString(), "True");
   EXPECT_EQ(orL(Expression("a"), Expression("b")).toString(), "a || b");
-  EXPECT_EQ(orL(Expression("a!=a"), Expression("b!=b")).toString(), "false");
+  EXPECT_EQ(orL(Expression("a!=a"), Expression("b!=b")).toString(), "False");
 }
