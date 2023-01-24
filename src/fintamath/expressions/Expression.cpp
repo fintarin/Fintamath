@@ -439,8 +439,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
     auto index = it->first;
     auto priority = it->second->to<IOperator>().getOperatorPriority();
 
-    if (foundPriority < priority ||
-        (foundPriority != IOperator::Priority::Exponentiation && foundPriority == priority && foundIndex < index)) {
+    if (foundPriority < priority || (foundPriority == priority && foundIndex < index)) {
       foundPriority = priority;
       foundOperIt = it;
     }

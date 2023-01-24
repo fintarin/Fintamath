@@ -44,7 +44,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("0.001-0.002").toString(), "-1/1000");
   EXPECT_EQ(Expression("(0.004)/(0.002+0.002)").toString(), "1");
   EXPECT_EQ(Expression("2 + 2 * 2").toString(), "6");
-  EXPECT_EQ(Expression("2^2^2^2").toString(), "65536");
+  EXPECT_EQ(Expression("2^2^2^2").toString(), "256");
   EXPECT_EQ(Expression("(2 + 2) * 2").toString(), "8");
   EXPECT_EQ(Expression("(2-2)").toString(), "0");
   EXPECT_EQ(Expression("(2 + 2) / (2 ^ 2 - 2) * 2").toString(), "4");
@@ -596,7 +596,7 @@ TEST(ExpressionTests, simplifyInpreciseNegativeTest) {
   EXPECT_THROW(Expression("cot(2*Pi)").simplify(false), UndefinedException);
 
   // TODO: do no perform operation, when the result is too big
-  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E^E^E^E^E)))))").simplify(false), UndefinedException);
+  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E^(E^(E^(E^E))))))))").simplify(false), UndefinedException);
 }
 
 TEST(ExpressionTests, solveTest) {
