@@ -22,7 +22,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
 
       appendToken(tokens, specialToken, true);
 
-      if (!tokens.empty() && tokens.back() == ")" && ch == '(') { // TODO: do it in IExpression or Expression
+      if (!tokens.empty() && tokens.back() == ")" && ch == '(') { // TODO: do it in Expression
         tokens.emplace_back("*");
       }
 
@@ -31,7 +31,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
       appendToken(tokens, specialToken, true);
       numberToken.push_back(ch);
 
-      if (!tokens.empty() && tokens.back() == ")") { // TODO: do it in IExpression or Expression
+      if (!tokens.empty() && tokens.back() == ")") { // TODO: do it in Expression
         tokens.emplace_back("*");
       }
     } else {
@@ -74,6 +74,8 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
     return true;
   }
 
+  bool isPreviousTokenNested = true;
+
   while (!token.empty()) {
     std::string nestedToken = token.substr(0, registeredTokens.front().length());
     bool isNestedTokenFind = false;
@@ -94,15 +96,18 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
     if (!isNestedTokenFind) {
       nestedToken = token.substr(0, 1);
 
-      // TODO: do it in IExpression or Expression
-      if (!tokens.empty() && (isDigitOrPoint(tokens.back().back()) || tokens.at(tokens.size() - 1) == ")") &&
-          token != ",") {
-        tokens.emplace_back("*");
+      if (!tokens.empty() && nestedToken != ",") { // TODO: do it in Expression
+        if (!isPreviousTokenNested || isDigitOrPoint(tokens.back().front()) || isUpperLetter(tokens.back().front()) ||
+            tokens.back() == ")") {
+          tokens.emplace_back("*");
+        }
       }
     }
 
     tokens.emplace_back(nestedToken);
     token = token.substr(nestedToken.size());
+
+    isPreviousTokenNested = isNestedTokenFind;
   }
 
   token.clear();
@@ -122,6 +127,10 @@ void Tokenizer::handleSpaces(std::string &str) {
 
 bool Tokenizer::isDigitOrPoint(char c) {
   return c == '.' || (c >= '0' && c <= '9');
+}
+
+bool Tokenizer::isUpperLetter(char c) {
+  return c >= 'A' && c <= 'Z';
 }
 
 bool Tokenizer::isBracket(char c) {

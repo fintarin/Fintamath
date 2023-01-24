@@ -114,8 +114,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("Pi").toString(), "Pi");
   EXPECT_EQ(Expression("E^101-E^101").toString(), "0");
   EXPECT_EQ(Expression("ln(E^E) / ln(E^E) - 1").toString(), "0");
-  // EXPECT_EQ(Expression("8e").toString(), "8 E"); // TODO: fix split tokens
-  // EXPECT_EQ(Expression("8pi").toString(), "8 Pi"); //TODO: fix split tokens
+  // EXPECT_EQ(Expression("8E").toString(), "8 E"); // TODO: fix split tokens
+  // EXPECT_EQ(Expression("8Pi").toString(), "8 Pi"); // TODO: fix split tokens
   EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
   EXPECT_EQ(Expression("E^101").toString(), "E^101");
   EXPECT_EQ(Expression("E^(-101)").toString(), "E^-101");
@@ -203,8 +203,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("-a^2 c + b").toString(), "-a^2 c + b");
   EXPECT_EQ(Expression("-a^2 d - a^2 c + b").toString(), "-a^2 c - a^2 d + b");
   EXPECT_EQ(Expression("abc").toString(), "a b c");
-  // EXPECT_EQ(Expression("d^abc").toString(), "d^a b c"); // TODO: fix split tokens
-  // EXPECT_EQ(Expression("abc^d").toString(), "a b c^d"); // TODO: fix split tokens
+  EXPECT_EQ(Expression("d^abc").toString(), "d^a b c");
+  EXPECT_EQ(Expression("abc^d").toString(), "c^d a b");
   // EXPECT_EQ(Expression("a(2)").toString(), "2 a"); // TODO: fix split tokens
   EXPECT_EQ(Expression("(2)a").toString(), "2 a");
 

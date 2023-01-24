@@ -117,8 +117,6 @@ private:
 
   static TokenVector cutBraces(const TokenVector &tokens);
 
-  static TokenVector splitTokens(const TokenVector &tokens);
-
   std::string binaryOperatorToString() const;
 
   std::string prefixUnaryOperatorToString() const;

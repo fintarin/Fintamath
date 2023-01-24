@@ -99,8 +99,6 @@ Expression::Expression(const TokenVector &tokens) {
     return;
   }
 
-  *this = Expression(splitTokens(tokens));
-
   if (!info) {
     throw InvalidInputException(Tokenizer::tokensToString(tokens));
   }
@@ -680,27 +678,6 @@ TokenVector Expression::cutBraces(const TokenVector &tokens) {
     newTokens.erase(newTokens.end() - 1);
   }
   return newTokens;
-}
-
-TokenVector Expression::splitTokens(const TokenVector &tokens) { // TODO: revisit this: abc || d <=> a && b && c || d
-  if (tokens.empty()) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-
-  TokenVector splittedTokens;
-
-  for (const auto &token : tokens) {
-    if (!ILiteral::parse(token)) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-
-    splittedTokens.emplace_back(token);
-    splittedTokens.emplace_back("*");
-  }
-
-  splittedTokens.pop_back();
-
-  return splittedTokens;
 }
 
 Expression &Expression::add(const Expression &rhs) {
