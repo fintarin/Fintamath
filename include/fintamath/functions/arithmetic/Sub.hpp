@@ -8,7 +8,7 @@ class IArithmetic;
 
 class Sub : public IOperatorCRTP<Sub, IArithmetic, IArithmetic> {
 public:
-  Sub() : IOperatorCRTP(IOperator::Priority::Addition) {
+  Sub() : IOperatorCRTP(IOperator::Priority::Addition, false) {
   }
 
   std::string toString() const override {

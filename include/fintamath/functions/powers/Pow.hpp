@@ -8,7 +8,7 @@ class INumber;
 
 class Pow : public IOperatorCRTP<Pow, INumber, INumber> {
 public:
-  Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation) {
+  Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
   }
 
   std::string toString() const override {

@@ -169,9 +169,18 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
   EXPECT_EQ(Expression("a+a").toString(), "2 a");
   EXPECT_EQ(Expression("a-a").toString(), "0");
-  EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
-  EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "a^2 + b^2 + 3 a b");
   EXPECT_EQ(Expression("+a").toString(), "a");
+  EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
+  EXPECT_EQ(Expression("a-b-c").toString(), "a - b - c");
+  EXPECT_EQ(Expression("a-(b-c)").toString(), "a - b + c");
+  EXPECT_EQ(Expression("(a-b)-c").toString(), "a - b - c");
+  EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "a^2 + b^2 + 3 a b");
+  EXPECT_EQ(Expression("x/y/z").toString(), "x/y/z");
+  EXPECT_EQ(Expression("x/(y/z)").toString(), "x/y z");
+  EXPECT_EQ(Expression("(x/y)/z").toString(), "x/y/z");
+  EXPECT_EQ(Expression("x^y^z").toString(), "x^y^z");
+  EXPECT_EQ(Expression("x^(y^z)").toString(), "x^(y^z)");
+  EXPECT_EQ(Expression("(x^y)^z").toString(), "x^y^z");
   EXPECT_EQ(Expression("(a+b)^2").toString(), "a^2 + b^2 + 2 a b");
   EXPECT_EQ(Expression("(a+b)^3").toString(), "a^3 + b^3 + 3 a^2 b + 3 b^2 a");
   EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3 + b^3 + 3 a^2 b + 3 b^2 a");
@@ -324,6 +333,11 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a").toString(), "True");
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a<->a").toString(), "a");
   EXPECT_EQ(Expression("a&&b->b&&c").toString(), "!(a && b) || b && c");
+  EXPECT_EQ(Expression("a&&b&&c").toString(), "a && b && c");
+  EXPECT_EQ(Expression("a&&(b&&c)").toString(), "a && b && c");
+  EXPECT_EQ(Expression("a && !b && c").toString(), "a && !b && c");
+  EXPECT_EQ(Expression("a || (!b && c)").toString(), "a || !b && c");
+  EXPECT_EQ(Expression("(a || !b) && c").toString(), "(a || !b) && c");
   EXPECT_EQ(Expression("!a && b || !c -> d <-> f !<-> g").toString(),
             "!((!(!a && b || !c) || d) && f || !(!(!a && b || !c) || d) && !f) && g || ((!(!a && b || !c) || d) && f "
             "|| !(!(!a && b || !c) || d) && !f) && !g");

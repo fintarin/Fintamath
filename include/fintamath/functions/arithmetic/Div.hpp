@@ -8,7 +8,7 @@ class IArithmetic;
 
 class Div : public IOperatorCRTP<Div, IArithmetic, IArithmetic> {
 public:
-  Div() : IOperatorCRTP(IOperator::Priority::Multiplication) {
+  Div() : IOperatorCRTP(IOperator::Priority::Multiplication, false) {
   }
 
   std::string toString() const override {

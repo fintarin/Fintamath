@@ -8,7 +8,7 @@ class Boolean;
 
 class Impl : public IOperatorCRTP<Impl, Boolean, Boolean> {
 public:
-  Impl() : IOperatorCRTP(IOperator::Priority::Implication) {
+  Impl() : IOperatorCRTP(IOperator::Priority::Implication, false) {
   }
 
   std::string toString() const override {

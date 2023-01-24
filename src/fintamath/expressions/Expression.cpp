@@ -155,12 +155,16 @@ std::string Expression::binaryOperatorToString() const {
     operStr = ' ' + operStr + ' ';
   }
 
-  for (const auto &child : children) {
+  for (size_t i = 0; i < children.size(); i++) {
+    const auto &child = children[i];
+
     if (child->instanceOf<IExpression>()) {
       auto parentPriority = info->to<IOperator>().getOperatorPriority();
       auto childPriority = IOperator::Priority(child->to<IExpression>().getBaseOperatorPriority());
 
-      if (childPriority != IOperator::Priority::Any && parentPriority <= childPriority) {
+      if (childPriority != IOperator::Priority::Any &&
+          (parentPriority < childPriority ||
+           (parentPriority == childPriority && !info->to<IOperator>().isAssociative() && i > 0))) {
         result += putInBrackets(child->toString());
       } else {
         result += child->toString();

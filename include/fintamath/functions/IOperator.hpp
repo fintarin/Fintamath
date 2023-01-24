@@ -28,6 +28,8 @@ public:
 public:
   virtual IOperator::Priority getOperatorPriority() const = 0;
 
+  virtual bool isAssociative() const = 0;
+
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IOperator, T>>>
   static void registerParser() {
     IFunction::registerParser<T>();
@@ -50,12 +52,22 @@ public:
   IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any) : priority(inPriority) {
   }
 
+  IOperatorCRTP(IOperator::Priority priority, bool isAssociative)
+      : priority(priority), isAssociativeOper(isAssociative) {
+  }
+
   IOperator::Priority getOperatorPriority() const final {
     return priority;
   }
 
+  bool isAssociative() const override {
+    return isAssociativeOper;
+  }
+
 private:
-  const IOperator::Priority priority;
+  const IOperator::Priority priority = IOperator::Priority::Any;
+
+  const bool isAssociativeOper = true;
 };
 
 }
