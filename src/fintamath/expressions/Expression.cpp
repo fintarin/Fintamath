@@ -238,29 +238,6 @@ std::string Expression::functionToString() const {
   return result;
 }
 
-void Expression::simplifyConstant(bool isPrecise) {
-  if (info->instanceOf<IExpression>()) {
-    auto expr = cast<IExpression>(std::move(info));
-    info = expr->simplify(isPrecise);
-    return;
-  }
-
-  if (info->instanceOf<IConstant>()) {
-    auto constant = cast<IConstant>(std::move(info));
-    auto constVal = (*constant)();
-
-    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
-      info = std::move(constant);
-    } else {
-      info = std::move(constVal);
-    }
-
-    return;
-  }
-
-  info = info->simplify();
-}
-
 void Expression::setPrecisionRec(uint8_t precision) {
   if (children.empty()) {
     if (info->instanceOf<INumber>()) {
@@ -306,45 +283,6 @@ void Expression::setPrecisionRec(uint8_t precision) {
         children.clear();
       }
     }
-  }
-}
-
-void Expression::simplifyFunction(bool isPrecise) {
-  if (children.empty()) {
-    return;
-  }
-
-  const auto &func = info->to<IFunction>();
-  ArgumentsVector args;
-
-  bool hasExpressionArg = false;
-  for (const auto &child : children) {
-    if (child->instanceOf<IExpression>()) {
-      hasExpressionArg = true;
-    }
-
-    args.emplace_back(*child);
-  }
-
-  if (!hasExpressionArg && func.doAgsMatch(args)) {
-    auto countResult = func(args);
-
-    if (countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
-      return;
-    }
-
-    info = countResult->clone();
-    children.clear();
-  } else {
-    validateFunctionArgs(func, args);
-
-    auto funcExpr = buildRawFunctionExpression(func, args);
-    if (funcExpr->instanceOf<Expression>()) {
-      return;
-    }
-
-    info = std::move(funcExpr);
-    children.clear();
   }
 }
 
@@ -899,7 +837,7 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
       auto constant = cast<IConstant>(std::move(child));
       auto constVal = (*constant)();
 
-      if (const auto *num = cast<INumber>(constVal.get()); isPrecise && !num->isPrecise()) {
+      if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
         child = std::move(constant);
       } else {
         child = std::move(constVal);
@@ -911,7 +849,16 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
     child = child->simplify();
   }
 
-  expr.simplifyConstant(isPrecise);
+  if (expr.children.empty()) {
+    expr.simplifyConstant(isPrecise);
+
+    if (info->instanceOf<IExpression>()) {
+      return expr.info->to<IExpression>().simplify(isPrecise);
+    }
+
+    return expr.info->simplify();
+  }
+
   expr.simplifyFunction(isPrecise);
 
   expr.simplifyNot();
@@ -929,7 +876,7 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
     return std::move(expr.info);
   }
 
-  return expr.clone();
+  return std::make_unique<Expression>(std::move(expr));
 }
 
 MathObjectPtr Expression::simplify() const {
@@ -948,6 +895,60 @@ std::string Expression::solve() const {
     return info->to<EqvExpression>().solve();
   }
   return toString();
+}
+
+void Expression::simplifyFunction(bool isPrecise) {
+  if (children.empty()) {
+    return;
+  }
+
+  const auto &func = info->to<IFunction>();
+  ArgumentsVector args;
+
+  bool hasExpressionArg = false;
+  for (const auto &child : children) {
+    if (child->instanceOf<IExpression>()) {
+      hasExpressionArg = true;
+    }
+
+    args.emplace_back(*child);
+  }
+
+  if (!hasExpressionArg && func.doAgsMatch(args)) {
+    auto countResult = func(args);
+
+    if (countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
+      return;
+    }
+
+    info = countResult->clone();
+    children.clear();
+  } else {
+    validateFunctionArgs(func, args);
+
+    auto funcExpr = buildRawFunctionExpression(func, args);
+    if (funcExpr->instanceOf<Expression>()) {
+      return;
+    }
+
+    info = std::move(funcExpr);
+    children.clear();
+  }
+}
+
+void Expression::simplifyConstant(bool isPrecise) {
+  if (!info->instanceOf<IConstant>()) {
+    return;
+  }
+
+  auto constant = cast<IConstant>(std::move(info));
+  auto constVal = (*constant)();
+
+  if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
+    info = std::move(constant);
+  } else {
+    info = std::move(constVal);
+  }
 }
 
 void Expression::simplifyPow() {
