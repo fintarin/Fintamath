@@ -309,49 +309,42 @@ void Expression::setPrecisionRec(uint8_t precision) {
   }
 }
 
-void Expression::simplifyFunctionsRec(bool isPrecise) {
+void Expression::simplifyFunction(bool isPrecise) {
   if (children.empty()) {
-    simplifyConstant(isPrecise);
     return;
   }
 
-  if (info->instanceOf<IFunction>()) {
-    const auto &func = info->to<IFunction>();
-    ArgumentsVector args;
+  const auto &func = info->to<IFunction>();
+  ArgumentsVector args;
 
-    bool hasExpressionArg = false;
-    for (const auto &child : children) {
-      if (child->instanceOf<IExpression>()) {
-        hasExpressionArg = true;
-      }
-
-      args.emplace_back(*child);
+  bool hasExpressionArg = false;
+  for (const auto &child : children) {
+    if (child->instanceOf<IExpression>()) {
+      hasExpressionArg = true;
     }
 
-    if (!hasExpressionArg && func.doAgsMatch(args)) {
-      auto countResult = func(args);
+    args.emplace_back(*child);
+  }
 
-      if (countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
-        return;
-      }
+  if (!hasExpressionArg && func.doAgsMatch(args)) {
+    auto countResult = func(args);
 
-      info = countResult->clone();
-      children.clear();
-    } else {
-      validateFunctionArgs(func, args);
-
-      auto funcExpr = buildRawFunctionExpression(func, args);
-      if (funcExpr->instanceOf<Expression>()) {
-        return;
-      }
-
-      info = std::move(funcExpr);
-      children.clear();
-
-      if (!info->instanceOf<IFunction>()) {
-        info = info->simplify();
-      }
+    if (countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
+      return;
     }
+
+    info = countResult->clone();
+    children.clear();
+  } else {
+    validateFunctionArgs(func, args);
+
+    auto funcExpr = buildRawFunctionExpression(func, args);
+    if (funcExpr->instanceOf<Expression>()) {
+      return;
+    }
+
+    info = std::move(funcExpr);
+    children.clear();
   }
 }
 
@@ -897,23 +890,29 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   expr.compressTree();
 
   for (auto &child : expr.children) {
-    if (child->instanceOf<IConstant>()) {
-      auto constant = (*cast<IConstant>(child->clone()))();
-      if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
-        child = constant->clone();
-        continue;
-      }
-    }
-
     if (child->instanceOf<IExpression>()) {
       child = child->to<IExpression>().simplify(isPrecise);
+      continue;
+    }
+
+    if (child->instanceOf<IConstant>()) {
+      auto constant = cast<IConstant>(std::move(child));
+      auto constVal = (*constant)();
+
+      if (const auto *num = cast<INumber>(constVal.get()); isPrecise && !num->isPrecise()) {
+        child = std::move(constant);
+      } else {
+        child = std::move(constVal);
+      }
+
       continue;
     }
 
     child = child->simplify();
   }
 
-  expr.simplifyFunctionsRec(isPrecise);
+  expr.simplifyConstant(isPrecise);
+  expr.simplifyFunction(isPrecise);
 
   expr.simplifyNot();
   expr.simplifyAnd();
@@ -927,7 +926,7 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   expr.simplifyPow();
 
   if (expr.children.empty()) {
-    return expr.info->clone();
+    return std::move(expr.info);
   }
 
   return expr.clone();

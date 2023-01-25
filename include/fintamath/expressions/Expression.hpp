@@ -125,7 +125,7 @@ private:
 
   std::string functionToString() const;
 
-  void simplifyFunctionsRec(bool isPrecise);
+  void simplifyFunction(bool isPrecise);
 
   void simplifyConstant(bool isPrecise);
 
