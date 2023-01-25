@@ -18,8 +18,6 @@ using ExpressionPtr = std::unique_ptr<IExpression>;
 
 class IExpression : virtual public IMathObject {
 public:
-  ~IExpression() override = default;
-
   virtual uint16_t getBaseOperatorPriority() const = 0;
 
   virtual void setPrecision(uint8_t precision) = 0;

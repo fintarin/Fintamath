@@ -23,8 +23,6 @@ public:
 
   Expression &operator=(Expression &&rhs) noexcept;
 
-  ~Expression() override = default;
-
   explicit Expression(const std::string &str);
 
   Expression(const IMathObject &obj);
