@@ -279,8 +279,8 @@ MulExpression::Polynom MulExpression::multiplicateTwoBraces(const Polynom &lhs, 
 }
 
 void MulExpression::multiplicateBraces(const Polynom &addVect, Polynom &positive, Polynom &negative) {
-  Polynom result{MulExpression({Integer(1)}).clone()};
-  Polynom inverted{MulExpression({Integer(1)}).clone()};
+  Polynom result{MulExpression({ONE}).clone()};
+  Polynom inverted{MulExpression({ONE}).clone()};
 
   for (const auto &addExpr : addVect) {
     if (addExpr.inverted) {
@@ -393,7 +393,7 @@ void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &lit
     bool added = false;
     for (auto &obj : objects) {
       if (obj.obj->toString() == addObj.info->toString()) {
-        obj.pow.addElement({std::make_unique<Integer>(1), addObj.inverted});
+        obj.pow.addElement({ONE.clone(), addObj.inverted});
         added = true;
         break;
       }
@@ -402,7 +402,7 @@ void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &lit
       continue;
     }
     ObjectPow obj(addObj.info);
-    obj.pow.addElement({std::make_unique<Integer>(1), addObj.inverted});
+    obj.pow.addElement({ONE.clone(), addObj.inverted});
     objects.emplace_back(obj);
   }
 
@@ -410,7 +410,7 @@ void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &lit
     bool added = false;
     for (auto &obj : objects) {
       if (obj.obj->toString() == litObj.info->toString()) {
-        obj.pow.addElement({std::make_unique<Integer>(1), litObj.inverted});
+        obj.pow.addElement({ONE.clone(), litObj.inverted});
         added = true;
         break;
       }
@@ -419,7 +419,7 @@ void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &lit
       continue;
     }
     ObjectPow obj(litObj.info);
-    obj.pow.addElement({std::make_unique<Integer>(1), litObj.inverted});
+    obj.pow.addElement({ONE.clone(), litObj.inverted});
     objects.emplace_back(obj);
   }
 
@@ -427,7 +427,7 @@ void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &lit
     bool added = false;
     for (auto &obj : objects) {
       if (obj.obj->toString() == funcObj.info->toString()) {
-        obj.pow.addElement({std::make_unique<Integer>(1), funcObj.inverted});
+        obj.pow.addElement({ONE.clone(), funcObj.inverted});
         added = true;
         break;
       }
@@ -436,7 +436,7 @@ void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &lit
       continue;
     }
     ObjectPow obj(funcObj.info);
-    obj.pow.addElement({std::make_unique<Integer>(1), funcObj.inverted});
+    obj.pow.addElement({ONE.clone(), funcObj.inverted});
     objects.emplace_back(obj);
   }
 
@@ -521,8 +521,7 @@ void MulExpression::simplifyPolynom() {
   sortPolynom(tmpVect, numVect, addVect, literalVect, funcVect, powVect);
 
   numVect = mulNumbers(numVect);
-  if (numVect.size() == 1 && numVect.at(0).info->instanceOf<IComparable>() &&
-      numVect.at(0).info->to<IComparable>() == Integer(0)) {
+  if (numVect.size() == 1 && numVect.at(0).info->instanceOf<IComparable>() && *numVect.at(0).info == ZERO) {
     mulPolynom = numVect;
     return;
   }
@@ -609,7 +608,7 @@ void MulExpression::simplifyDivisions() {
   }
 
   if (mulPolynom.empty()) {
-    mulPolynom.emplace_back(std::make_unique<Integer>(1));
+    mulPolynom.emplace_back(ONE.clone());
   }
 }
 
@@ -653,12 +652,11 @@ MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) co
   for (const auto &child : mulPolynom) {
     if (child.info->instanceOf<Expression>() && child.info->to<Expression>().getInfo()->instanceOf<Pow>()) {
       auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
-      if (rightVal->instanceOf<IComparable>() && powValue->instanceOf<IComparable>() &&
-          rightVal->to<IComparable>() == powValue->to<IComparable>()) {
+      if (rightVal->instanceOf<IComparable>() && powValue->instanceOf<IComparable>() && *rightVal == *powValue) {
         return mulPolynom.at(0).info->clone();
       }
     }
-    if (powValue->instanceOf<IComparable>() && powValue->to<IComparable>() == Integer(1)) {
+    if (powValue->instanceOf<IComparable>() && *powValue == ONE) {
       if (child.info->instanceOf<Variable>()) {
         return mulPolynom.at(0).info->clone();
       }

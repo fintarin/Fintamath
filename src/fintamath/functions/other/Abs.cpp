@@ -1,6 +1,7 @@
 #include "fintamath/functions/other/Abs.hpp"
 
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/NumberFunctions.hpp"
 
 namespace fintamath {
@@ -8,7 +9,7 @@ namespace fintamath {
 MathObjectPtr Abs::call(const ArgumentsVector &argsVect) const {
   const auto &rhs = argsVect.at(0).get().to<INumber>();
 
-  if (rhs < Integer(0)) {
+  if (rhs < ZERO) {
     return -rhs;
   }
 

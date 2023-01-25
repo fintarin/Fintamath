@@ -7,6 +7,7 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -61,10 +62,10 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
     return std::make_unique<DerivativeExpression>(*(value->to<IExpression>().simplify(isPrecise)));
   }
   if (value->instanceOf<INumber>() || value->instanceOf<IConstant>()) {
-    return std::make_unique<Integer>(0);
+    return ZERO.clone();
   }
   if (value->instanceOf<Variable>()) {
-    return std::make_unique<Integer>(1);
+    return ONE.clone();
   }
 
   return clone();

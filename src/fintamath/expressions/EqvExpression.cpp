@@ -14,6 +14,7 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -74,7 +75,7 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   addExpr.addElement(AddExpression::Element(cloneExpr.leftExpr->clone()));
   addExpr.addElement(AddExpression::Element(cloneExpr.rightExpr->clone(), true));
   cloneExpr.leftExpr = addExpr.simplify(isPrecise);
-  cloneExpr.rightExpr = Integer(0).clone();
+  cloneExpr.rightExpr = ZERO.clone();
 
   if (cloneExpr.leftExpr->instanceOf<IComparable>()) {
     auto b = Expression(oper->to<IOperator>()(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
@@ -169,7 +170,7 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
   AddExpression polynom(*leftExpr);
   auto maxPow = polynom.getPow();
 
-  if (!maxPow->instanceOf<Integer>() || maxPow->to<Integer>() > Integer(2)) {
+  if (!maxPow->instanceOf<Integer>() || maxPow->to<Integer>() > TWO) {
     return {};
   }
 
@@ -185,17 +186,16 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
     return results;
   }
   if (coefficients.size() == 3) {
-    auto discr =
-        (fintamath::pow(*coefficients.at(1), Integer(2)) - mul(Integer(4), *coefficients.at(0), *coefficients.at(2)))
-            .simplify(false);
+    auto discr = (fintamath::pow(*coefficients.at(1), TWO) - mul(Integer(4), *coefficients.at(0), *coefficients.at(2)))
+                     .simplify(false);
 
-    if (discr->instanceOf<IComparable>() && discr->to<IComparable>() < Integer(0)) {
+    if (discr->instanceOf<IComparable>() && discr->to<IComparable>() < ZERO) {
       return {};
     }
 
     auto sqrt_D = sqrt(*discr);
     auto minus_B = Neg()(*coefficients.at(1));
-    auto two_A = mul(*coefficients.at(2), Integer(2));
+    auto two_A = mul(*coefficients.at(2), TWO);
 
     auto x1 = div(sub(*minus_B, sqrt_D), two_A).simplify(false);
     auto x2 = div(sum(*minus_B, sqrt_D), two_A).simplify(false);
@@ -243,7 +243,7 @@ std::vector<MathObjectPtr> EqvExpression::sortResult(std::vector<MathObjectPtr> 
       resultWithoutRepeat.emplace_back(val->clone());
       continue;
     }
-    if (val->to<IComparable>() == resultWithoutRepeat.at(resultWithoutRepeat.size() - 1)->to<IComparable>()) {
+    if (*val == *resultWithoutRepeat.at(resultWithoutRepeat.size() - 1)) {
       continue;
     }
     resultWithoutRepeat.emplace_back(val->clone());

@@ -52,11 +52,11 @@ Expression::Expression(const Expression &rhs) noexcept {
   }
 }
 
-Expression::Expression() : info(Integer(0).clone()) {
+Expression::Expression() : info(ZERO.clone()) {
 }
 
 Expression::Expression(Expression &&rhs) noexcept : info(std::move(rhs.info)), children(std::move(rhs.children)) {
-  rhs.info = Integer(0).clone();
+  rhs.info = ZERO.clone();
 }
 
 Expression &Expression::operator=(const Expression &rhs) noexcept {
@@ -76,7 +76,7 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
   if (&rhs != this) {
     std::swap(info, rhs.info);
     std::swap(children, rhs.children);
-    rhs.info = std::make_unique<Integer>(0);
+    rhs.info = ZERO.clone();
   }
 
   return *this;
@@ -218,7 +218,7 @@ std::string Expression::postfixUnaryOperatorToString() const {
       return putInBrackets(result) + info->toString();
     }
   }
-  if (children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < Integer(0)) {
+  if (children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < ZERO) {
     return putInBrackets(result) + info->toString();
   }
   return result + info->toString();
@@ -735,7 +735,7 @@ Expression &Expression::negate() {
   }
 
   auto mul = MulExpression();
-  mul.addElement(MulExpression::Element(Integer(-1).clone(), false));
+  mul.addElement(MulExpression::Element(NEG_ONE.clone(), false));
   mul.addElement(MulExpression::Element(clone(), false));
   info = std::make_unique<MulExpression>(mul)->simplify();
   children.clear();
@@ -955,7 +955,7 @@ void Expression::simplifyPow() {
     Integer rhs = rhsRef->to<Integer>();
 
     if (rhs == 0) {
-      info = std::make_unique<Integer>(1);
+      info = ONE.clone();
       children.clear();
       return;
     }
@@ -966,7 +966,7 @@ void Expression::simplifyPow() {
     }
     if (rhs == -1) {
       info = std::make_unique<Div>();
-      rhsRef = std::make_unique<Integer>(1);
+      rhsRef = ONE.clone();
       std::swap(lhsRef, rhsRef);
       return;
     }
