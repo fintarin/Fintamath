@@ -80,14 +80,14 @@ private:
   bool executeAbstract(const IComparable &rhs, const std::string &oper,
                        std::function<bool(const IComparableCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
                        std::function<bool(const IComparable &, const IComparable &)> &&f2) const {
-    if (rhs.instanceOf<Derived>()) {
-      return f1(*this, rhs.to<Derived>());
+    if (const auto *rhsPtr = cast<Derived>(&rhs)) {
+      return f1(*this, *rhsPtr);
     }
-    if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {
-      return f1(*this, tmpRhs->template to<Derived>());
+    if (MathObjectPtr rhsPtr = Converter::convert(rhs, *this); rhsPtr != nullptr) {
+      return f1(*this, cast<Derived>(*rhsPtr));
     }
-    if (MathObjectPtr tmpLhs = Converter::convert(*this, rhs); tmpLhs != nullptr) {
-      return f2(tmpLhs->to<IComparable>(), rhs);
+    if (MathObjectPtr lhsPtr = Converter::convert(*this, rhs); lhsPtr != nullptr) {
+      return f2(cast<IComparable>(*lhsPtr), rhs);
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
   }

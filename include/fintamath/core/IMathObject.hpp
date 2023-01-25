@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/multimethod/Converter.hpp"
 
 namespace fintamath {
@@ -24,11 +25,13 @@ public:
     return {};
   }
 
+  // TODO: remove this
   template <typename T>
   bool instanceOf() const {
     return dynamic_cast<const T *>(this);
   }
 
+  // TODO: remove this
   template <typename T>
   const T &to() const {
     const T *res = dynamic_cast<const T *>(this);
@@ -36,6 +39,7 @@ public:
     return *res;
   }
 
+  // TODO: remove this
   template <typename T>
   T &to() {
     T *res = dynamic_cast<T *>(this);
@@ -63,7 +67,7 @@ template <typename Derived>
 class IMathObjectCRTP : virtual public IMathObject {
 public:
   MathObjectPtr clone() const final {
-    return std::make_unique<Derived>(to<Derived>());
+    return std::make_unique<Derived>(cast<Derived>(*this));
   }
 
   bool operator==(const Derived &rhs) const {
@@ -80,14 +84,14 @@ protected:
   }
 
   bool equalsAbstract(const IMathObject &rhs) const final {
-    if (rhs.instanceOf<Derived>()) {
-      return equals(rhs.to<Derived>());
+    if (const auto *rhsPtr = cast<Derived>(&rhs)) {
+      return equals(*rhsPtr);
     }
-    if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {
-      return equals(tmpRhs->template to<Derived>());
+    if (MathObjectPtr rhsPtr = Converter::convert(rhs, *this); rhsPtr != nullptr) {
+      return equals(cast<Derived>(*rhsPtr));
     }
-    if (MathObjectPtr tmpLhs = Converter::convert(*this, rhs); tmpLhs != nullptr) {
-      return *tmpLhs == rhs;
+    if (MathObjectPtr lhsPtr = Converter::convert(*this, rhs); lhsPtr != nullptr) {
+      return *lhsPtr == rhs;
     }
     return false;
   }

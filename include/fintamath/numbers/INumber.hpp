@@ -34,23 +34,23 @@ private:
 };
 
 inline NumberPtr operator+(const INumber &lhs, const INumber &rhs) {
-  auto res = lhs + rhs.to<IArithmetic>();
-  return castPtr<INumber>(res);
+  auto res = lhs + cast<IArithmetic>(rhs);
+  return cast<INumber>(std::move(res));
 }
 
 inline NumberPtr operator-(const INumber &lhs, const INumber &rhs) {
-  auto res = lhs - rhs.to<IArithmetic>();
-  return castPtr<INumber>(res);
+  auto res = lhs - cast<IArithmetic>(rhs);
+  return cast<INumber>(std::move(res));
 }
 
 inline NumberPtr operator*(const INumber &lhs, const INumber &rhs) {
-  auto res = lhs * rhs.to<IArithmetic>();
-  return castPtr<INumber>(res);
+  auto res = lhs * cast<IArithmetic>(rhs);
+  return cast<INumber>(std::move(res));
 }
 
 inline NumberPtr operator/(const INumber &lhs, const INumber &rhs) {
-  auto res = lhs / rhs.to<IArithmetic>();
-  return castPtr<INumber>(res);
+  auto res = lhs / cast<IArithmetic>(rhs);
+  return cast<INumber>(std::move(res));
 }
 
 template <typename Derived>

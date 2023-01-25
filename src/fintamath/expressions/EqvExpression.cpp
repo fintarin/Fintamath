@@ -91,7 +91,7 @@ uint16_t EqvExpression::getBaseOperatorPriority() const {
 
 void EqvExpression::setPrecision(uint8_t precision) {
   if (leftExpr->instanceOf<IExpression>()) {
-    auto copyExpr = castPtr<IExpression>(leftExpr);
+    auto copyExpr = cast<IExpression>(std::move(leftExpr));
     copyExpr->setPrecision(precision);
     leftExpr = copyExpr->clone();
   }

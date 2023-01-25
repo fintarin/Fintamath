@@ -7,14 +7,14 @@ namespace fintamath {
 
 NumberPtr abs(const INumber &rhs) {
   if (rhs < ZERO) {
-    return castPtr<INumber>(-rhs);
+    return cast<INumber>(-rhs);
   }
-  return castPtr<INumber>(rhs.clone());
+  return cast<INumber>(rhs.clone());
 }
 
 NumberPtr naturalPow(const INumber &lhs, Integer rhs) {
   NumberPtr res = std::make_unique<Integer>(ONE);
-  NumberPtr tmp = castPtr<INumber>(lhs.clone());
+  NumberPtr tmp = cast<INumber>(lhs.clone());
 
   while (rhs != ZERO) {
     if ((*(rhs.toString().end() - 1) - '0') % 2 == 0) {
@@ -26,7 +26,7 @@ NumberPtr naturalPow(const INumber &lhs, Integer rhs) {
     }
   }
 
-  return castPtr<INumber>(res->simplify());
+  return cast<INumber>(res->simplify());
 }
 
 NumberPtr pow(const INumber &inLhs, const INumber &inRhs) {
@@ -50,7 +50,7 @@ NumberPtr pow(const INumber &inLhs, const INumber &inRhs) {
     return naturalPow(lhs, intRhs);
   }
 
-  return castPtr<INumber>(pow(Converter::convert<Real>(lhs), Converter::convert<Real>(rhs)).simplify());
+  return cast<INumber>(pow(Converter::convert<Real>(lhs), Converter::convert<Real>(rhs)).simplify());
 }
 
 }

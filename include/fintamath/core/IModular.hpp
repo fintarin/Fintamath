@@ -36,17 +36,16 @@ protected:
   virtual Derived &mod(const Derived &rhs) = 0;
 
   ModularPtr modAbstract(const IModular &rhs) const final {
-    if (rhs.instanceOf<Derived>()) {
-      auto tmpLhs = castPtr<IModularCRTP<Derived>>(clone());
-      return castPtr<IModular>(tmpLhs->mod(rhs.to<Derived>()).simplify());
+    if (const auto *rhsPtr = cast<Derived>(&rhs)) {
+      auto lhsPtr = cast<IModularCRTP<Derived>>(clone());
+      return cast<IModular>(lhsPtr->mod(*rhsPtr).simplify());
     }
-    if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {
-      auto tmpLhs = castPtr<IModularCRTP<Derived>>(clone());
-      return castPtr<IModular>(tmpLhs->mod(tmpRhs->to<Derived>()).simplify());
+    if (MathObjectPtr rhsPtr = Converter::convert(rhs, *this)) {
+      auto lhsPtr = cast<IModularCRTP<Derived>>(clone());
+      return cast<IModular>(lhsPtr->mod(cast<Derived>(*rhsPtr)).simplify());
     }
-    if (MathObjectPtr tmpLhs = Converter::convert(*this, rhs); tmpLhs != nullptr) {
-      auto res = (tmpLhs->to<IModular>() % rhs)->simplify();
-      return castPtr<IModular>(res);
+    if (MathObjectPtr lhsPtr = Converter::convert(*this, rhs)) {
+      return cast<IModular>((cast<IModular>(*lhsPtr) % rhs)->simplify());
     }
     throw InvalidInputBinaryOpearatorException("%", toString(), rhs.toString());
   }

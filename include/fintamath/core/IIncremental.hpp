@@ -33,15 +33,13 @@ inline IIncremental &operator--(IIncremental &rhs) {
 }
 
 inline IncrementalPtr operator++(IIncremental &lhs, int) {
-  auto tmp = lhs.clone();
-  auto res = castPtr<IIncremental>(tmp);
+  auto res = cast<IIncremental>(lhs.clone());
   lhs.increaseAbstract();
   return res;
 }
 
 inline IncrementalPtr operator--(IIncremental &lhs, int) {
-  auto tmp = lhs.clone();
-  auto res = castPtr<IIncremental>(tmp);
+  auto res = cast<IIncremental>(lhs.clone());
   lhs.decreaseAbstract();
   return res;
 }
@@ -58,15 +56,15 @@ public:
   }
 
   Derived operator++(int) {
-    auto tmp = Derived(to<Derived>());
+    auto res = Derived(cast<Derived>(*this));
     increase();
-    return tmp;
+    return res;
   }
 
   Derived operator--(int) {
-    auto tmp = Derived(to<Derived>());
+    auto res = Derived(cast<Derived>(*this));
     decrease();
-    return tmp;
+    return res;
   }
 
 protected:

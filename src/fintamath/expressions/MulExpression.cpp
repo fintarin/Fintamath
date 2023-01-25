@@ -83,17 +83,25 @@ void MulExpression::Element::simplify(bool isPrecise) {
       }
       return;
     }
-    info = info->to<IExpression>().simplify(isPrecise);
+
+    auto expr = cast<IExpression>(std::move(info));
+    info = expr->simplify(isPrecise);
     return;
   }
+
   if (info->instanceOf<IConstant>()) {
-    auto constant = (*castPtr<IConstant>(info->clone()))();
-    if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
-      info = constant->clone();
-      return;
+    auto constant = cast<IConstant>(std::move(info));
+    auto constVal = (*constant)();
+
+    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
+      info = std::move(constant);
+    } else {
+      info = std::move(constVal);
     }
-    info = info->simplify();
+
+    return;
   }
+
   info = info->simplify();
 }
 
@@ -106,21 +114,27 @@ MulExpression::Element &MulExpression::Element::operator=(const Element &rhs) {
 }
 
 void MulExpression::Element::setPrecision(uint8_t precision) {
+  if (info->instanceOf<IExpression>()) {
+    auto expr = cast<IExpression>(std::move(info));
+    expr->setPrecision(precision);
+    info = std::move(expr);
+    return;
+  }
+
   if (info->instanceOf<INumber>()) {
     info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
   }
 
-  if (info->instanceOf<IExpression>()) {
-    auto copyExpr = castPtr<IExpression>(info->clone());
-    copyExpr->setPrecision(precision);
-    info = copyExpr->clone();
-  }
-
   if (info->instanceOf<IConstant>()) {
-    info = (*castPtr<IConstant>(info->clone()))();
-    if (info->instanceOf<INumber>()) {
-      info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    auto constVal = (*cast<IConstant>(std::move(info)))();
+
+    if (auto num = cast<INumber>(std::move(constVal))) {
+      info = Converter::convert(*num, Real())->to<Real>().precise(precision).clone();
+    } else {
+      info = std::move(constVal);
     }
+
+    return;
   }
 }
 

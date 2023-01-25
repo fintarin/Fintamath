@@ -239,17 +239,25 @@ std::string Expression::functionToString() const {
 }
 
 void Expression::simplifyConstant(bool isPrecise) {
-  if (info->instanceOf<IConstant>()) {
-    auto constant = (*castPtr<IConstant>(info->clone()))();
-    if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
-      info = constant->clone();
-      return;
-    }
-  }
   if (info->instanceOf<IExpression>()) {
-    info = info->to<IExpression>().simplify(isPrecise);
+    auto expr = cast<IExpression>(std::move(info));
+    info = expr->simplify(isPrecise);
     return;
   }
+
+  if (info->instanceOf<IConstant>()) {
+    auto constant = cast<IConstant>(std::move(info));
+    auto constVal = (*constant)();
+
+    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
+      info = std::move(constant);
+    } else {
+      info = std::move(constVal);
+    }
+
+    return;
+  }
+
   info = info->simplify();
 }
 
@@ -260,7 +268,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
       return;
     }
     if (info->instanceOf<IExpression>()) {
-      auto copyExpr = castPtr<IExpression>(info->clone());
+      auto copyExpr = cast<IExpression>(std::move(info));
       copyExpr->setPrecision(precision);
       info = std::move(copyExpr);
     }
@@ -268,7 +276,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
 
   for (auto &child : children) {
     if (child->instanceOf<IExpression>()) {
-      auto copyChild = castPtr<IExpression>(child->clone());
+      auto copyChild = cast<IExpression>(std::move(child));
       copyChild->setPrecision(precision);
       child = copyChild->simplify(false);
     }
@@ -277,7 +285,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
       continue;
     }
     if (child->instanceOf<IExpression>()) {
-      auto copyExpr = castPtr<IExpression>(child->clone());
+      auto copyExpr = cast<IExpression>(std::move(child));
       copyExpr->setPrecision(precision);
       child = copyExpr->simplify(false);
     }
@@ -890,7 +898,7 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
 
   for (auto &child : expr.children) {
     if (child->instanceOf<IConstant>()) {
-      auto constant = (*castPtr<IConstant>(child->clone()))();
+      auto constant = (*cast<IConstant>(child->clone()))();
       if (!isPrecise || !constant->instanceOf<INumber>() || constant->to<INumber>().isPrecise()) {
         child = constant->clone();
         continue;

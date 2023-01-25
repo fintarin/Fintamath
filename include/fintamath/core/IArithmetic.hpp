@@ -1,6 +1,5 @@
 #pragma once
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
 
@@ -192,16 +191,16 @@ private:
   ArithmeticPtr executeAbstract(const IArithmetic &rhs, const std::string &oper,
                                 std::function<Derived(IArithmeticCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
                                 std::function<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> &&f2) const {
-    if (rhs.instanceOf<Derived>()) {
-      auto tmpLhs = castPtr<IArithmeticCRTP<Derived>>(clone());
-      return castPtr<IArithmetic>(f1(*tmpLhs, rhs.to<Derived>()).simplify());
+    if (const auto *rhpPtr = cast<Derived>(&rhs)) {
+      auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
+      return cast<IArithmetic>(f1(*lhsPtr, *rhpPtr).simplify());
     }
-    if (MathObjectPtr tmpRhs = Converter::convert(rhs, *this); tmpRhs != nullptr) {
-      auto tmpLhs = castPtr<IArithmeticCRTP<Derived>>(clone());
-      return castPtr<IArithmetic>(f1(*tmpLhs, tmpRhs->to<Derived>()).simplify());
+    if (MathObjectPtr rhsPtr = Converter::convert(rhs, *this)) {
+      auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
+      return cast<IArithmetic>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).simplify());
     }
-    if (MathObjectPtr tmpLhs = Converter::convert(*this, rhs); tmpLhs != nullptr) {
-      return castPtr<IArithmetic>(f2(tmpLhs->to<IArithmetic>(), rhs)->simplify());
+    if (MathObjectPtr lhsPtr = Converter::convert(*this, rhs)) {
+      return cast<IArithmetic>(f2(cast<IArithmetic>(*lhsPtr), rhs)->simplify());
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
   }
