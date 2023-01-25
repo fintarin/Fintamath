@@ -197,12 +197,20 @@ MulExpression::Polynom MulExpression::compressTree() const {
 }
 
 void MulExpression::addElement(const Element &elem) {
-  if (!elem.info->instanceOf<MulExpression>()) {
+  Polynom elemPolynom;
+
+  if (const auto *expr = cast<MulExpression>(elem.info.get())) {
+    elemPolynom = expr->mulPolynom;
+  } else if (const auto *expr = cast<Expression>(elem.info.get())) {
+    if (const auto *exprInfo = cast<MulExpression>(expr->getInfo().get())) {
+      elemPolynom = exprInfo->mulPolynom;
+    }
+  }
+
+  if (elemPolynom.empty()) {
     mulPolynom.emplace_back(elem);
     return;
   }
-
-  const auto &elemPolynom = elem.info->to<MulExpression>().mulPolynom;
 
   for (const auto &child : elemPolynom) {
     mulPolynom.emplace_back(child);
@@ -693,5 +701,4 @@ MathObjectPtr MulExpression::getPow() const {
   }
   return maxValue.clone();
 }
-
 }

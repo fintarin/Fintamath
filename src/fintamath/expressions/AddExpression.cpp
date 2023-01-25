@@ -192,12 +192,20 @@ AddExpression::Polynom AddExpression::compressTree() const {
 }
 
 void AddExpression::addElement(const Element &elem) {
-  if (!elem.info->instanceOf<AddExpression>()) {
+  Polynom elemPolynom;
+
+  if (const auto *expr = cast<AddExpression>(elem.info.get())) {
+    elemPolynom = expr->addPolynom;
+  } else if (const auto *expr = cast<Expression>(elem.info.get())) {
+    if (const auto *exprInfo = cast<AddExpression>(expr->getInfo().get())) {
+      elemPolynom = exprInfo->addPolynom;
+    }
+  }
+
+  if (elemPolynom.empty()) {
     addPolynom.emplace_back(elem);
     return;
   }
-
-  const auto &elemPolynom = elem.info->to<AddExpression>().addPolynom;
 
   for (const auto &child : elemPolynom) {
     addPolynom.emplace_back(child);

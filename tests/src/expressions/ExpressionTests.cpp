@@ -158,19 +158,22 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").toString(), "ln(ln(ln(ln(ln(E)))))");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
 
+  EXPECT_EQ(Expression("2.a").toString(), "2 a");
+  EXPECT_EQ(Expression("a+a").toString(), "2 a");
+  EXPECT_EQ(Expression("a-a").toString(), "0");
+  EXPECT_EQ(Expression("-a").toString(), "-a");
+  EXPECT_EQ(Expression("+a").toString(), "a");
   EXPECT_EQ(Expression("--a").toString(), "a");
   EXPECT_EQ(Expression("---a").toString(), "-a");
   EXPECT_EQ(Expression("b--a").toString(), "a + b");
   EXPECT_EQ(Expression("b---a").toString(), "-a + b");
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-a)))))))").toString(), "a");
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-(-a))))))))").toString(), "-a");
-  EXPECT_EQ(Expression("-(-(-(-(-(-(-(-a)))))))").toString(), "a");
-  EXPECT_EQ(Expression("-(-(-(-(-(-(-(-(-a))))))))").toString(), "-a");
-
+  EXPECT_EQ(Expression("--------a").toString(), "a");
+  EXPECT_EQ(Expression("---------a").toString(), "-a");
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
-  EXPECT_EQ(Expression("a+a").toString(), "2 a");
-  EXPECT_EQ(Expression("a-a").toString(), "0");
-  EXPECT_EQ(Expression("+a").toString(), "a");
+  EXPECT_EQ(Expression("abcdefg").toString(), "a b c d e f g");
+  EXPECT_EQ(Expression("a+b+c+d+e+f+g").toString(), "a + b + c + d + e + f + g");
   EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
   EXPECT_EQ(Expression("a-b-c").toString(), "a - b - c");
   EXPECT_EQ(Expression("a-(b-c)").toString(), "a - b + c");
@@ -223,6 +226,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("aEE").toString(), "E^2 a");
   EXPECT_EQ(Expression("EEa").toString(), "E^2 a");
   EXPECT_EQ(Expression("x123").toString(), "123 x");
+  EXPECT_EQ(Expression("(a+b(a+b(a+b(a+b))))").toString(), "b^4 + a b + b^2 a + b^3 a + a");
+  EXPECT_EQ(Expression("(ab+(ab+(ab+(ab))))").toString(), "4 a b");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-3sin(E)").toString(), "-3 sin(E)");
