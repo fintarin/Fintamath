@@ -227,7 +227,7 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   }
 
   if (exprObj.mulPolynom.size() == 1) {
-    return exprObj.mulPolynom.at(0).toMathObject(isPrecise);
+    return exprObj.mulPolynom.front().toMathObject(isPrecise);
   }
 
   for (auto &obj : exprObj.mulPolynom) {
@@ -245,7 +245,7 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   exprObj.simplifyPolynom();
 
   if (exprObj.mulPolynom.size() == 1) {
-    return exprObj.mulPolynom.at(0).toMathObject(isPrecise);
+    return exprObj.mulPolynom.front().toMathObject(isPrecise);
   }
 
   return exprObj.clone();
@@ -328,8 +328,8 @@ struct MulExpression::ObjectPow {
     if (polynom.size() != 1) {
       return nullptr;
     }
-    auto powValue = polynom.at(0).info->clone();
-    *powValue = polynom.at(0).inverted ? *Neg()(*powValue) : *powValue;
+    auto powValue = polynom.front().info->clone();
+    *powValue = polynom.front().inverted ? *Neg()(*powValue) : *powValue;
     if (powValue->instanceOf<Integer>()) {
       return powValue;
     }
@@ -341,8 +341,8 @@ struct MulExpression::ObjectPow {
     if (polynom.size() != 1) {
       return nullptr;
     }
-    auto powValue = polynom.at(0).info->clone();
-    *powValue = polynom.at(0).inverted ? *Neg()(*powValue) : *powValue;
+    auto powValue = polynom.front().info->clone();
+    *powValue = polynom.front().inverted ? *Neg()(*powValue) : *powValue;
     return powValue;
   }
 
@@ -458,8 +458,8 @@ void MulExpression::simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &lit
     bool added = false;
     auto expr = powObj.info->to<Expression>();
 
-    auto leftValue = expr.getChildren().at(0)->clone();
-    auto rightValue = expr.getChildren().at(1)->clone();
+    auto leftValue = expr.getChildren().front()->clone();
+    auto rightValue = expr.getChildren().back()->clone();
     for (auto &obj : objects) {
       if (obj.obj->toString() == leftValue->toString()) {
         obj.pow.addElement({rightValue->clone(), powObj.inverted});
@@ -535,7 +535,7 @@ void MulExpression::simplifyPolynom() {
   sortPolynom(tmpVect, numVect, addVect, literalVect, funcVect, powVect);
 
   numVect = mulNumbers(numVect);
-  if (numVect.size() == 1 && numVect.at(0).info->instanceOf<IComparable>() && *numVect.at(0).info == ZERO) {
+  if (numVect.size() == 1 && numVect.front().info->instanceOf<IComparable>() && *numVect.front().info == ZERO) {
     mulPolynom = numVect;
     return;
   }
@@ -580,7 +580,7 @@ void MulExpression::simplifyPolynom() {
       return;
     }
     numVect = mulNumbers(numVect);
-    if (numVect.at(0).info->toString() != "1" || mulPolynom.empty()) {
+    if (numVect.front().info->toString() != "1" || mulPolynom.empty()) {
       pushPolynomToPolynom<MulExpression>(mulPolynom, numVect);
       mulPolynom = numVect;
       return;
@@ -597,7 +597,7 @@ void MulExpression::simplifyPolynom() {
   pushPolynomToPolynom<MulExpression>(powVect, mulPolynom);
   pushPolynomToPolynom<MulExpression>(addVect, mulPolynom);
   pushPolynomToPolynom<MulExpression>(literalVect, mulPolynom);
-  if (numVect.at(0).info->toString() != "1" || mulPolynom.empty()) {
+  if (numVect.front().info->toString() != "1" || mulPolynom.empty()) {
     pushPolynomToPolynom<MulExpression>(mulPolynom, numVect);
     mulPolynom = numVect;
   }
@@ -631,12 +631,12 @@ MulExpression::Polynom MulExpression::openPowMulExpression(const Polynom &powVec
 
   for (const auto &pow : powVect) {
     auto expr = pow.info->to<Expression>();
-    auto left = expr.getChildren().at(0)->clone();
+    auto left = expr.getChildren().front()->clone();
     if (!left->instanceOf<MulExpression>()) {
       newPowVect.emplace_back(pow);
       continue;
     }
-    auto right = expr.getChildren().at(1)->clone();
+    auto right = expr.getChildren().back()->clone();
     auto mulExpr = left->to<MulExpression>();
     for (const auto &child : mulExpr.mulPolynom) {
       newPowVect.emplace_back(Element{Pow()(*child.info, *right), child.inverted});
@@ -665,14 +665,14 @@ std::vector<MathObjectPtr> MulExpression::getVariables() const {
 MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
   for (const auto &child : mulPolynom) {
     if (child.info->instanceOf<Expression>() && child.info->to<Expression>().getInfo()->instanceOf<Pow>()) {
-      auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
+      auto rightVal = child.info->to<Expression>().getChildren().back()->clone();
       if (rightVal->instanceOf<IComparable>() && powValue->instanceOf<IComparable>() && *rightVal == *powValue) {
-        return mulPolynom.at(0).info->clone();
+        return mulPolynom.front().info->clone();
       }
     }
     if (powValue->instanceOf<IComparable>() && *powValue == ONE) {
       if (child.info->instanceOf<Variable>()) {
-        return mulPolynom.at(0).info->clone();
+        return mulPolynom.front().info->clone();
       }
     }
   }
@@ -684,7 +684,7 @@ MathObjectPtr MulExpression::getPow() const {
   for (const auto &child : mulPolynom) {
     if (child.info->instanceOf<Expression>()) {
       if (child.info->to<Expression>().getInfo()->instanceOf<Pow>()) {
-        auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
+        auto rightVal = child.info->to<Expression>().getChildren().back()->clone();
         if (rightVal->instanceOf<Integer>() && rightVal->to<Integer>() > maxValue) {
           maxValue = rightVal->to<Integer>();
         }

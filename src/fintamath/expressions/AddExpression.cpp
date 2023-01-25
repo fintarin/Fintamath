@@ -222,7 +222,7 @@ MathObjectPtr AddExpression::simplify(bool isPrecise) const {
   }
 
   if (exprObj.addPolynom.size() == 1) {
-    return exprObj.addPolynom.at(0).toMathObject(isPrecise);
+    return exprObj.addPolynom.front().toMathObject(isPrecise);
   }
 
   for (auto &obj : exprObj.addPolynom) {
@@ -241,7 +241,7 @@ MathObjectPtr AddExpression::simplify(bool isPrecise) const {
   exprObj.simplifyPolynom();
 
   if (exprObj.addPolynom.size() == 1) {
-    return exprObj.addPolynom.at(0).toMathObject(isPrecise);
+    return exprObj.addPolynom.front().toMathObject(isPrecise);
   }
   return exprObj.clone();
 }
@@ -307,7 +307,7 @@ void AddExpression::simplifyPolynom() {
   pushPolynomToPolynom<AddExpression>(powVect, addPolynom);
   pushPolynomToPolynom<AddExpression>(mulVect, addPolynom);
   pushPolynomToPolynom<AddExpression>(literalVect, addPolynom);
-  if (numVect.at(0).info->toString() != "0" || addPolynom.empty()) {
+  if (numVect.front().info->toString() != "0" || addPolynom.empty()) {
     pushPolynomToPolynom<AddExpression>(numVect, addPolynom);
   }
 }
@@ -353,8 +353,8 @@ struct AddExpression::ObjectMul {
 
   MathObjectPtr getCounterValue() const {
     auto polynom = counter.getPolynom();
-    auto countValue = polynom.at(0).info->clone();
-    return polynom.at(0).inverted ? Neg()(*countValue) : std::move(countValue);
+    auto countValue = polynom.front().info->clone();
+    return polynom.front().inverted ? Neg()(*countValue) : std::move(countValue);
   }
 };
 
@@ -394,11 +394,11 @@ void AddExpression::simplifyMul(Polynom &powVect, Polynom &mulVect, Polynom &lit
       added = true;
     }
     MathObjectPtr number = ONE.clone();
-    if (mulExprPolynom.at(0).info->instanceOf<INumber>()) {
-      if (mulExprPolynom.at(0).inverted) {
-        number = Neg()(*mulExprPolynom.at(0).info);
+    if (mulExprPolynom.front().info->instanceOf<INumber>()) {
+      if (mulExprPolynom.front().inverted) {
+        number = Neg()(*mulExprPolynom.front().info);
       } else {
-        number = mulExprPolynom.at(0).info->clone();
+        number = mulExprPolynom.front().info->clone();
       }
       mulExprPolynom = MulExpression::Polynom(mulExprPolynom.begin() + 1, mulExprPolynom.end());
     }
@@ -518,7 +518,7 @@ MathObjectPtr AddExpression::getPowCoefficient(const MathObjectPtr &powValue) co
     }
     if (child.info->instanceOf<Expression>()) {
       if (child.info->to<Expression>().getInfo()->instanceOf<Pow>()) {
-        auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
+        auto rightVal = child.info->to<Expression>().getChildren().back()->clone();
         if (rightVal->instanceOf<IComparable>() && powValue->instanceOf<IComparable>() && *rightVal == *powValue) {
           return child.inverted ? NEG_ONE.clone() : ONE.clone();
         }
@@ -539,7 +539,7 @@ MathObjectPtr AddExpression::getPow() const {
     }
     if (child.info->instanceOf<Expression>()) {
       if (child.info->to<Expression>().getInfo()->instanceOf<Pow>()) {
-        auto rightVal = child.info->to<Expression>().getChildren().at(1)->clone();
+        auto rightVal = child.info->to<Expression>().getChildren().back()->clone();
         if (rightVal->instanceOf<Integer>() && rightVal->to<Integer>() > maxValue) {
           maxValue = rightVal->to<Integer>();
         }

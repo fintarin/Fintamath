@@ -184,41 +184,41 @@ std::string Expression::binaryOperatorToString() const {
 std::string Expression::prefixUnaryOperatorToString() const {
   std::string result = info->toString();
 
-  if (children.at(0)->instanceOf<IExpression>()) {
-    const auto &child = children.at(0)->to<IExpression>();
+  if (children.front()->instanceOf<IExpression>()) {
+    const auto &child = children.front()->to<IExpression>();
 
     if (auto priority = IOperator::Priority(child.getBaseOperatorPriority());
         priority != IOperator::Priority::Any && priority != IOperator::Priority::PrefixUnary) {
 
       if (child.instanceOf<MulExpression>()) {
-        return result + children.at(0)->toString();
+        return result + children.front()->toString();
       }
 
       if (child.instanceOf<Expression>()) {
         const auto &childExpr = child.to<Expression>();
 
         if (childExpr.info->instanceOf<Pow>()) {
-          return result + children.at(0)->toString();
+          return result + children.front()->toString();
         }
       }
 
-      return result + putInBrackets(children.at(0)->toString());
+      return result + putInBrackets(children.front()->toString());
     }
   }
 
-  return result + children.at(0)->toString();
+  return result + children.front()->toString();
 }
 
 std::string Expression::postfixUnaryOperatorToString() const {
-  std::string result = children.at(0)->toString();
+  std::string result = children.front()->toString();
 
-  if (children.at(0)->instanceOf<IExpression>()) {
-    if (auto priority = IOperator::Priority(children.at(0)->to<IExpression>().getBaseOperatorPriority());
+  if (children.front()->instanceOf<IExpression>()) {
+    if (auto priority = IOperator::Priority(children.front()->to<IExpression>().getBaseOperatorPriority());
         priority != IOperator::Priority::Any && priority != IOperator::Priority::PostfixUnary) {
       return putInBrackets(result) + info->toString();
     }
   }
-  if (children.at(0)->instanceOf<IComparable>() && children.at(0)->to<IComparable>() < ZERO) {
+  if (children.front()->instanceOf<IComparable>() && children.front()->to<IComparable>() < ZERO) {
     return putInBrackets(result) + info->toString();
   }
   return result + info->toString();
@@ -470,7 +470,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 }
 
 bool Expression::parseFiniteTerm(const TokenVector &tokens) {
-  if (tokens.at(0) == "(" && tokens.at(tokens.size() - 1) == ")") {
+  if (tokens.front() == "(" && tokens.at(tokens.size() - 1) == ")") {
     *this = Expression(cutBraces(tokens));
     return true;
   }
@@ -479,12 +479,12 @@ bool Expression::parseFiniteTerm(const TokenVector &tokens) {
     return false;
   }
 
-  if (auto ptr = ILiteral::parse(tokens.at(0))) {
+  if (auto ptr = ILiteral::parse(tokens.front())) {
     info = std::unique_ptr<ILiteral>(ptr.release());
     return true;
   }
 
-  if (auto ptr = INumber::parse(tokens.at(0))) {
+  if (auto ptr = INumber::parse(tokens.front())) {
     info = std::unique_ptr<INumber>(ptr.release());
     return true;
   }
@@ -496,7 +496,7 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   if (tokens.size() <= 1) {
     return false;
   }
-  if (auto ptr = IFunction::parse(tokens.at(0)); ptr && !ptr->instanceOf<IOperator>()) {
+  if (auto ptr = IFunction::parse(tokens.front()); ptr && !ptr->instanceOf<IOperator>()) {
     info = std::unique_ptr<IFunction>(ptr.release());
     children = getArgs(TokenVector(tokens.begin() + 1, tokens.end()));
     return true;
@@ -574,24 +574,24 @@ ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, cons
 
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
   auto addExpr = std::make_unique<AddExpression>();
-  addExpr->addElement(AddExpression::Element(args.at(0).get().clone()));
-  addExpr->addElement(AddExpression::Element(args.at(1).get().clone(), func.instanceOf<Sub>()));
+  addExpr->addElement(AddExpression::Element(args.front().get().clone()));
+  addExpr->addElement(AddExpression::Element(args.back().get().clone(), func.instanceOf<Sub>()));
   return addExpr;
 }
 
 ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args) {
   auto mulExpr = std::make_unique<MulExpression>();
-  mulExpr->addElement(MulExpression::Element(args.at(0).get().clone()));
-  mulExpr->addElement(MulExpression::Element(args.at(1).get().clone(), func.instanceOf<Div>()));
+  mulExpr->addElement(MulExpression::Element(args.front().get().clone()));
+  mulExpr->addElement(MulExpression::Element(args.back().get().clone(), func.instanceOf<Div>()));
   return mulExpr;
 }
 
 ExpressionPtr Expression::buildEqvExpression(const IFunction &func, const ArgumentsVector &args) {
-  return std::make_unique<EqvExpression>(func, args.at(0).get(), args.at(1).get());
+  return std::make_unique<EqvExpression>(func, args.front().get(), args.back().get());
 }
 
 ExpressionPtr Expression::buildDerivateExpression(const ArgumentsVector &args) {
-  return std::make_unique<DerivativeExpression>(args.at(0).get());
+  return std::make_unique<DerivativeExpression>(args.front().get());
 }
 
 Expression::Vector Expression::copy(const Vector &rhs) {
@@ -719,7 +719,7 @@ Expression &Expression::divide(const Expression &rhs) {
 Expression &Expression::negate() {
   auto neg = Neg();
   if (info->instanceOf<Neg>()) {
-    info = children.at(0)->clone();
+    info = children.front()->clone();
     children.clear();
     return *this;
   }
@@ -748,7 +748,7 @@ void Expression::simplifyUnaryPlus() {
     return;
   }
 
-  auto &child = children.at(0);
+  auto &child = children.front();
   if (child->instanceOf<Expression>()) {
     *this = std::move(child->to<Expression>());
   } else {
@@ -762,7 +762,7 @@ void Expression::simplifyNeg() {
     return;
   }
 
-  auto &child = children.at(0);
+  auto &child = children.front();
   if (!child->instanceOf<Expression>()) {
     return;
   }
@@ -780,7 +780,7 @@ void Expression::simplifyNot() {
     return;
   }
 
-  auto &child = children.at(0);
+  auto &child = children.front();
   if (!child->instanceOf<Expression>()) {
     return;
   }
@@ -955,8 +955,8 @@ void Expression::simplifyPow() {
     return;
   }
 
-  MathObjectPtr &lhsRef = children.at(0);
-  MathObjectPtr &rhsRef = children.at(1);
+  MathObjectPtr &lhsRef = children.front();
+  MathObjectPtr &rhsRef = children.back();
 
   if (rhsRef->instanceOf<Integer>() && lhsRef->instanceOf<IExpression>() && !lhsRef->instanceOf<Expression>()) {
     Integer rhs = rhsRef->to<Integer>();

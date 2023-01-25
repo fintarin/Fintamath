@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Pow::call(const ArgumentsVector &argsVect) const {
-  return pow(argsVect.at(0).get().to<INumber>(), argsVect.at(1).get().to<INumber>());
+  return pow(argsVect.front().get().to<INumber>(), argsVect.back().get().to<INumber>());
 }
 
 }

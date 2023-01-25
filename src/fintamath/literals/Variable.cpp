@@ -25,7 +25,7 @@ bool isVariable(const std::string &str) {
     return false;
   }
 
-  char ch = str[0];
+  char ch = str.front();
 
   return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }

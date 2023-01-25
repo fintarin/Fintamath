@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Sin::call(const ArgumentsVector &argsVect) const {
-  return sin(Converter::convert<Real>(argsVect.at(0))).simplify();
+  return sin(Converter::convert<Real>(argsVect.front())).simplify();
 }
 
 }

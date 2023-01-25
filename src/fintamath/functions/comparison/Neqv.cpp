@@ -6,7 +6,7 @@
 namespace fintamath {
 
 MathObjectPtr Neqv::call(const ArgumentsVector &argsVect) const {
-  return std::make_unique<Boolean>(argsVect.at(0).get() != argsVect.at(1).get());
+  return std::make_unique<Boolean>(argsVect.front().get() != argsVect.back().get());
 }
 
 }

@@ -7,7 +7,7 @@
 namespace fintamath {
 
 MathObjectPtr Abs::call(const ArgumentsVector &argsVect) const {
-  const auto &rhs = argsVect.at(0).get().to<INumber>();
+  const auto &rhs = argsVect.front().get().to<INumber>();
 
   if (rhs < ZERO) {
     return -rhs;

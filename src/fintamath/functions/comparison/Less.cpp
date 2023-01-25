@@ -6,7 +6,7 @@
 namespace fintamath {
 
 MathObjectPtr Less::call(const ArgumentsVector &argsVect) const {
-  return std::make_unique<Boolean>(argsVect.at(0).get().to<IComparable>() < argsVect.at(1).get().to<IComparable>());
+  return std::make_unique<Boolean>(argsVect.front().get().to<IComparable>() < argsVect.back().get().to<IComparable>());
 }
 
 }
