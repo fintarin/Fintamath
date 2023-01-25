@@ -228,6 +228,9 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("x123").toString(), "123 x");
   EXPECT_EQ(Expression("(a+b(a+b(a+b(a+b))))").toString(), "b^4 + a b + b^2 a + b^3 a + a");
   EXPECT_EQ(Expression("(ab+(ab+(ab+(ab))))").toString(), "4 a b");
+  // TODO: fix this
+  // EXPECT_EQ(Expression("((a+b+(a+c)+(1+v))+((a+c(abc(aaa))+v)c+d))((c)((d+d+d)b)a)").toString(),
+  // "2 a^2 b c + a b c + a b c d + a b c v + a^2 c^2 b + a^5 b^2 c^4 + b^2 a c + c^2 a b + c^2 a b v");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-3sin(E)").toString(), "-3 sin(E)");
