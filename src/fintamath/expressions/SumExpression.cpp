@@ -52,43 +52,10 @@ struct SumExpression::MulObject {
 
 //-----------------------------------------------------------------------------------------------------//
 
-SumElement::SumElement(const SumElement &rhs) : info(rhs.info->clone()), inverted(rhs.inverted) {
+SumElement::SumElement(const MathObjectPtr &info, bool inverted) : PolynomElement(info, inverted) {
 }
 
-SumElement &SumElement::operator=(const SumElement &rhs) {
-  if (this != &rhs) {
-    info = rhs.info->clone();
-    inverted = rhs.inverted;
-  }
-  return *this;
-}
-
-void SumElement::setPrecision(uint8_t precision) {
-  if (info->instanceOf<IExpression>()) {
-    auto expr = cast<IExpression>(std::move(info));
-    expr->setPrecision(precision);
-    info = std::move(expr);
-    return;
-  }
-
-  if (info->instanceOf<INumber>()) {
-    info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
-  }
-
-  if (info->instanceOf<IConstant>()) {
-    auto constVal = (*cast<IConstant>(std::move(info)))();
-
-    if (auto num = cast<INumber>(std::move(constVal))) {
-      info = Converter::convert(*num, Real())->to<Real>().precise(precision).clone();
-    } else {
-      info = std::move(constVal);
-    }
-
-    return;
-  }
-}
-
-SumElement::SumElement(const MathObjectPtr &info, bool inverted) : info(info->clone()), inverted(inverted) {
+SumElement::SumElement(MathObjectPtr &&info, bool inverted) : PolynomElement(info, inverted) {
 }
 
 MathObjectPtr SumElement::toMathObject(bool isPrecise) const {
@@ -192,13 +159,6 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
 
   for (auto &obj : exprObj.polynomVect) {
     obj.simplify(isPrecise);
-  }
-
-  if (!exprObj.polynomVect.empty()) { // TODO: move to PolynomExpression
-    static const Add func;
-    for (size_t i = 0; i < exprObj.polynomVect.size() - 1; i++) {
-      validateFunctionArgs(func, {*exprObj.polynomVect.at(i).info, *exprObj.polynomVect.at(i + 1).info});
-    }
   }
 
   exprObj.simplifyNegations();

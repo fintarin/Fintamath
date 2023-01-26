@@ -8,6 +8,33 @@
 
 namespace fintamath {
 
+// TODO: try to remove this and use Expression instead
+struct PolynomElement {
+  MathObjectPtr info;
+
+  bool inverted = false;
+
+public:
+  PolynomElement() = default;
+
+  PolynomElement(const PolynomElement &rhs);
+
+  PolynomElement(PolynomElement &&rhs) = default;
+
+  PolynomElement &operator=(const PolynomElement &rhs);
+
+  PolynomElement &operator=(PolynomElement &&rhs) noexcept = default;
+
+  virtual ~PolynomElement() = default;
+
+  PolynomElement(const MathObjectPtr &info, bool inverted = false);
+
+  PolynomElement(MathObjectPtr &&info, bool inverted = false);
+
+  void setPrecision(uint8_t precision);
+};
+
+// TODO: try to remove the 2sd template argument and use Expression instead
 template <typename Derived, typename Element>
 class PolynomExpressionCRTP : public IExpressionCRTP<Derived> {
 public:

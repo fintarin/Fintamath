@@ -64,40 +64,10 @@ struct MulExpression::ObjectPow {
 
 //-----------------------------------------------------------------------------------------------------//
 
-MulElement &MulElement::operator=(const MulElement &rhs) {
-  if (this != &rhs) {
-    info = rhs.info->clone();
-    inverted = rhs.inverted;
-  }
-  return *this;
+MulElement::MulElement(const MathObjectPtr &info, bool inverted) : PolynomElement(info, inverted) {
 }
 
-void MulElement::setPrecision(uint8_t precision) {
-  if (info->instanceOf<IExpression>()) {
-    auto expr = cast<IExpression>(std::move(info));
-    expr->setPrecision(precision);
-    info = std::move(expr);
-    return;
-  }
-
-  if (info->instanceOf<INumber>()) {
-    info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
-  }
-
-  if (info->instanceOf<IConstant>()) {
-    auto constVal = (*cast<IConstant>(std::move(info)))();
-
-    if (auto num = cast<INumber>(std::move(constVal))) {
-      info = Converter::convert(*num, Real())->to<Real>().precise(precision).clone();
-    } else {
-      info = std::move(constVal);
-    }
-
-    return;
-  }
-}
-
-MulElement::MulElement(const MathObjectPtr &info, bool inverted) : info(info->clone()), inverted(inverted) {
+MulElement::MulElement(MathObjectPtr &&info, bool inverted) : PolynomElement(info, inverted) {
 }
 
 MathObjectPtr MulElement::toMathObject(bool isPrecise) const {
@@ -112,10 +82,6 @@ MathObjectPtr MulElement::toMathObject(bool isPrecise) const {
   copy.simplify(isPrecise);
 
   return copy.info->clone();
-}
-
-MulElement::MulElement(const MulElement &rhs) : inverted(rhs.inverted) {
-  info = rhs.info->clone();
 }
 
 void MulElement::simplify(bool isPrecise) {
