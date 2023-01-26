@@ -8,14 +8,8 @@
 namespace fintamath {
 
 std::string IExpression::tryPutInBracketsIfNeg(const MathObjectPtr &obj) {
-  if (!obj->instanceOf<Expression>()) {
-    return obj->toString();
-  }
-
-  const auto &exprObj = obj->to<Expression>();
-
-  if (exprObj.getInfo()->instanceOf<Neg>()) {
-    return "(" + exprObj.toString() + ")";
+  if (const auto *expr = cast<Expression>(obj.get()); expr && expr->getInfo()->instanceOf<Neg>()) {
+    return "(" + expr->toString() + ")";
   }
 
   return obj->toString();
