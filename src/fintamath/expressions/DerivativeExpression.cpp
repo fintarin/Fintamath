@@ -37,8 +37,8 @@ uint16_t DerivativeExpression::getBaseOperatorPriority() const {
 }
 
 void DerivativeExpression::setPrecision(uint8_t precision) {
-  if (info->instanceOf<IExpression>()) {
-    info->to<IExpression>().setPrecision(precision);
+  if (auto *expr = cast<IExpression>(info.get())) {
+    expr->setPrecision(precision);
   }
 }
 
@@ -48,8 +48,9 @@ MathObjectPtr DerivativeExpression::simplify() const {
 
 MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
   MathObjectPtr value;
-  if (info->instanceOf<IExpression>()) {
-    value = info->to<IExpression>().simplify(isPrecise);
+
+  if (const auto *expr = cast<IExpression>(info.get())) {
+    value = expr->simplify(isPrecise);
   } else {
     value = info->simplify();
   }
@@ -58,8 +59,8 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
     throw InvalidInputUnaryOpearatorException("'", value->toString(),
                                               InvalidInputUnaryOpearatorException::Type::Postfix);
   }
-  if (!isPrecise && value->instanceOf<IExpression>()) {
-    return std::make_unique<DerivativeExpression>(*(value->to<IExpression>().simplify(isPrecise)));
+  if (auto *expr = cast<IExpression>(value.get()); expr && !isPrecise) {
+    return std::make_unique<DerivativeExpression>(*(expr->simplify(isPrecise)));
   }
   if (value->instanceOf<INumber>() || value->instanceOf<IConstant>()) {
     return ZERO.clone();
