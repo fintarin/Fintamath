@@ -8,8 +8,7 @@ namespace fintamath {
 const Integer PERCENT_VALUE = 100;
 
 MathObjectPtr Percent::call(const ArgumentsVector &argsVect) const {
-  const auto &rhs = argsVect.front().get();
-  return (rhs.to<INumber>() / PERCENT_VALUE)->simplify();
+  return (cast<INumber>(argsVect.front().get()) / PERCENT_VALUE)->simplify();
 }
 
 }

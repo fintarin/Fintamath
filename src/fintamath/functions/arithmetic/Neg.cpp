@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Neg::call(const ArgumentsVector &argsVect) const {
-  return -argsVect.front().get().to<IArithmetic>();
+  return -cast<IArithmetic>(argsVect.front().get());
 }
 
 }

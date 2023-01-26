@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Add::call(const ArgumentsVector &argsVect) const {
-  return argsVect.front().get().to<IArithmetic>() + argsVect.back().get().to<IArithmetic>();
+  return cast<IArithmetic>(argsVect.front().get()) + cast<IArithmetic>(argsVect.back().get());
 }
 
 }

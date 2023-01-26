@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Not::call(const ArgumentsVector &argsVect) const {
-  return std::make_unique<Boolean>(!argsVect.front().get().to<Boolean>());
+  return std::make_unique<Boolean>(!cast<Boolean>(argsVect.front().get()));
 }
 
 }

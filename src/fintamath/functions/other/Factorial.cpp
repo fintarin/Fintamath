@@ -12,7 +12,7 @@ MathObjectPtr Factorial::call(const ArgumentsVector &argsVect) const {
     throw UndefinedUnaryOpearatorException(toString(), rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
   }
 
-  return factorial(rhs.to<Integer>(), order).simplify();
+  return factorial(cast<Integer>(rhs), order).simplify();
 }
 
 }
