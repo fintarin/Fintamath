@@ -30,14 +30,14 @@ void PolynomElement::setPrecision(uint8_t precision) {
   }
 
   if (info->instanceOf<INumber>()) {
-    info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+    info = Converter::convert<Real>(*info).precise(precision).clone();
   }
 
   if (info->instanceOf<IConstant>()) {
     auto constVal = (*cast<IConstant>(std::move(info)))();
 
     if (auto num = cast<INumber>(std::move(constVal))) {
-      info = Converter::convert(*num, Real())->to<Real>().precise(precision).clone();
+      info = Converter::convert<Real>(*num).precise(precision).clone();
     } else {
       info = std::move(constVal);
     }
