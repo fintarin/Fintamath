@@ -2,16 +2,13 @@
 
 #include <memory>
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/multimethod/MultiMethod.hpp"
 
 namespace fintamath {
 
 class IMathObject;
 using MathObjectPtr = std::unique_ptr<IMathObject>;
-
-}
-
-namespace fintamath {
 
 class Converter {
 public:
@@ -24,9 +21,10 @@ public:
     return converter(value, type);
   }
 
-  template <typename T>
-  static T convert(const IMathObject &value) {
-    return convert(value, T())->template to<T>();
+  template <typename Type>
+  static Type convert(const IMathObject &value) {
+    static const Type type;
+    return cast<Type>(*convert(value, type));
   }
 
 private:
