@@ -42,17 +42,11 @@ public:
 
   std::string toString() const override;
 
-  void addElement(const SumElement &elem);
-
   MathObjectPtr simplify() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
   uint16_t getBaseOperatorPriority() const override;
-
-  void setPrecision(uint8_t precision) override;
-
-  std::vector<MathObjectPtr> getVariables() const override;
 
   MathObjectPtr getPowCoefficient(const MathObjectPtr &powValue) const;
 
@@ -64,12 +58,7 @@ private:
   using MulObjects = std::vector<MulObject>;
 
 private:
-  void compress();
-
-  PolynomVector sumNumbers(const PolynomVector &numVect);
-
-  static void sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &mulVect,
-                          PolynomVector &literalVect, PolynomVector &funcVect, PolynomVector &powVect);
+  static PolynomVector sumNumbers(const PolynomVector &numVect);
 
   void simplifyPolynom();
 

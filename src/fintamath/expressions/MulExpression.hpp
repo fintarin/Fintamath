@@ -43,17 +43,11 @@ public:
 
   std::string toString() const override;
 
-  void addElement(const MulElement &elem);
-
   MathObjectPtr simplify() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
   uint16_t getBaseOperatorPriority() const override;
-
-  void setPrecision(uint8_t precision) override;
-
-  std::vector<MathObjectPtr> getVariables() const override;
 
   MathObjectPtr getPowCoefficient(const MathObjectPtr &powValue) const;
 
@@ -65,8 +59,6 @@ private:
   using Objects = std::vector<ObjectPow>;
 
 private:
-  void compress();
-
   static std::string tryPutInBrackets(const MathObjectPtr &obj);
 
   static PolynomVector openPowMulExpression(const PolynomVector &powVect);
@@ -76,9 +68,6 @@ private:
   static void multiplicateBraces(const PolynomVector &addVect, PolynomVector &positive, PolynomVector &negative);
 
   static PolynomVector multiplicateTwoBraces(const PolynomVector &lhs, const PolynomVector &rhs);
-
-  static void sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &addVect,
-                          PolynomVector &literalVect, PolynomVector &funcVect, PolynomVector &powVect);
 
   void simplifyPolynom();
 

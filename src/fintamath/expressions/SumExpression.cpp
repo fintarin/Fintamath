@@ -148,12 +148,6 @@ uint16_t SumExpression::getBaseOperatorPriority() const {
   return (uint16_t)IOperator::Priority::Addition;
 }
 
-void SumExpression::setPrecision(uint8_t precision) {
-  for (auto &child : polynomVect) {
-    child.setPrecision(precision);
-  }
-}
-
 std::string SumExpression::toString() const {
   std::string result;
 
@@ -176,42 +170,6 @@ std::string SumExpression::toString() const {
   }
 
   return result;
-}
-
-void SumExpression::compress() {
-  SumExpression compressedExpr;
-
-  for (const auto &child : polynomVect) {
-    compressedExpr.addElement(child);
-  }
-
-  *this = std::move(compressedExpr);
-}
-
-void SumExpression::addElement(const SumElement &elem) {
-  PolynomVector elemPolynom;
-
-  if (const auto *expr = cast<SumExpression>(elem.info.get())) {
-    elemPolynom = expr->polynomVect;
-  } else if (const auto *expr = cast<Expression>(elem.info.get())) {
-    if (expr->getChildren().empty()) {
-      addElement({expr->getInfo(), elem.inverted});
-      return;
-    }
-  }
-
-  if (elemPolynom.empty()) {
-    polynomVect.emplace_back(elem);
-    return;
-  }
-
-  for (const auto &child : elemPolynom) {
-    polynomVect.emplace_back(child);
-
-    if (elem.inverted) {
-      polynomVect.back().inverted = !polynomVect.back().inverted;
-    }
-  }
 }
 
 MathObjectPtr SumExpression::simplify() const {
@@ -265,54 +223,28 @@ bool sortFunc(const SumElement &lhs, const SumElement &rhs) {
   return lhs.info->toString() < rhs.info->toString();
 }
 
-void SumExpression::sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &mulVect,
-                                PolynomVector &literalVect, PolynomVector &funcVect, PolynomVector &powVect) {
-  for (const auto &child : vect) {
-    if (child.info->instanceOf<MulExpression>()) {
-      mulVect.emplace_back(child);
-      continue;
-    }
-    if (child.info->instanceOf<Expression>()) {
-      if (auto exprInfo = (child.info->to<Expression>()).getInfo()->clone(); exprInfo->instanceOf<Pow>()) {
-        powVect.emplace_back(child);
-        continue;
-      }
-      funcVect.emplace_back(child);
-      continue;
-    }
-    if (child.info->instanceOf<IArithmetic>()) {
-      numVect.emplace_back(child);
-      continue;
-    }
-    if (child.info->instanceOf<ILiteral>()) {
-      literalVect.emplace_back(child);
-      continue;
-    }
-  }
-}
-
 void SumExpression::simplifyPolynom() {
   auto numVect = PolynomVector();
   auto powVect = PolynomVector();
   auto literalVect = PolynomVector();
-  auto mulVect = PolynomVector();
+  auto exprVect = PolynomVector();
   auto funcVect = PolynomVector();
 
-  sortPolynom(polynomVect, numVect, mulVect, literalVect, funcVect, powVect);
+  sortPolynom(polynomVect, numVect, exprVect, literalVect, funcVect, powVect);
 
   numVect = sumNumbers(numVect);
 
-  simplifyMul(powVect, mulVect, literalVect, funcVect);
+  simplifyMul(powVect, exprVect, literalVect, funcVect);
   polynomVect.clear();
 
   std::sort(funcVect.begin(), funcVect.end(), sortFunc);
   std::sort(powVect.begin(), powVect.end(), sortFunc);
   std::sort(literalVect.begin(), literalVect.end(), sortFunc);
-  std::sort(mulVect.begin(), mulVect.end(), sortFunc);
+  std::sort(exprVect.begin(), exprVect.end(), sortFunc);
 
   pushPolynomToPolynom(funcVect, polynomVect);
   pushPolynomToPolynom(powVect, polynomVect);
-  pushPolynomToPolynom(mulVect, polynomVect);
+  pushPolynomToPolynom(exprVect, polynomVect);
   pushPolynomToPolynom(literalVect, polynomVect);
   if (numVect.front().info->toString() != "0" || polynomVect.empty()) {
     pushPolynomToPolynom(numVect, polynomVect);
@@ -460,23 +392,6 @@ void SumExpression::simplifyMul(PolynomVector &powVect, PolynomVector &mulVect, 
   funcVect.clear();
 
   sortMulObjects(objs, mulVect, literalVect, powVect);
-}
-
-std::vector<MathObjectPtr> SumExpression::getVariables() const {
-  std::vector<MathObjectPtr> result;
-  for (const auto &child : polynomVect) {
-    if (child.info->instanceOf<Variable>()) {
-      result.emplace_back(child.info->clone());
-      continue;
-    }
-    if (child.info->instanceOf<IExpression>()) {
-      auto addResult = child.info->to<IExpression>().getVariables();
-      for (const auto &add : addResult) {
-        result.emplace_back(add->clone());
-      }
-    }
-  }
-  return result;
 }
 
 MathObjectPtr SumExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
