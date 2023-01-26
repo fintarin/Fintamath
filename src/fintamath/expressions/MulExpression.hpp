@@ -8,28 +8,23 @@ namespace fintamath {
 
 class MulExpression : public IExpressionCRTP<MulExpression> {
 public:
-  struct Element;
-  using Polynom = std::vector<Element>;
-
-  struct Element {
+  struct MulElement {
     MathObjectPtr info;
 
     bool inverted = false;
 
   public:
-    Element() = default;
+    MulElement() = default;
 
-    Element(const Element &rhs);
+    MulElement(const MulElement &rhs);
 
-    Element(Element &&rhs) = default;
+    MulElement(MulElement &&rhs) = default;
 
-    Element(const MathObjectPtr &info, bool inverted = false);
+    MulElement(const MathObjectPtr &info, bool inverted = false);
 
-    Element &operator=(const Element &rhs);
+    MulElement &operator=(const MulElement &rhs);
 
-    Element &operator=(Element &&rhs) noexcept = default;
-
-    Polynom getMulPolynom() const;
+    MulElement &operator=(MulElement &&rhs) noexcept = default;
 
     MathObjectPtr toMathObject(bool isPrecise) const;
 
@@ -38,18 +33,21 @@ public:
     void simplify(bool isPrecise);
   };
 
+  using PolynomVector = std::vector<MulElement>;
+
+public:
   MulExpression() = default;
 
-  explicit MulExpression(Polynom inMulPolynom);
+  explicit MulExpression(PolynomVector inMulPolynom);
 
   MulExpression(const IMathObject &rhs);
 
   std::string toString() const override;
 
   // TODO: implement iterator & remove this
-  const Polynom &getPolynom() const;
+  const PolynomVector &getPolynom() const;
 
-  void addElement(const Element &elem);
+  void addElement(const MulElement &elem);
 
   MathObjectPtr simplify() const override;
 
@@ -66,39 +64,40 @@ public:
   MathObjectPtr getPow() const;
 
 private:
-  Polynom mulPolynom;
+  // TODO: Implement a new Expression and remove this
+  struct ObjectPow;
+  using Objects = std::vector<ObjectPow>;
 
-  Polynom compressExpression() const;
-
-  Polynom compressTree() const;
+private:
+  void compress();
 
   static std::string tryPutInBrackets(const MathObjectPtr &obj);
 
-  static Polynom openPowMulExpression(const Polynom &powVect);
+  static PolynomVector openPowMulExpression(const PolynomVector &powVect);
 
-  static Polynom mulNumbers(const Polynom &numVect);
+  static PolynomVector mulNumbers(const PolynomVector &numVect);
 
-  static void multiplicateBraces(const Polynom &addVect, Polynom &positive, Polynom &negative);
+  static void multiplicateBraces(const PolynomVector &addVect, PolynomVector &positive, PolynomVector &negative);
 
-  static Polynom multiplicateTwoBraces(const Polynom &lhs, const Polynom &rhs);
+  static PolynomVector multiplicateTwoBraces(const PolynomVector &lhs, const PolynomVector &rhs);
 
-  static void sortPolynom(const Polynom &vect, Polynom &numVect, Polynom &addVect, Polynom &literalVect,
-                          Polynom &funcVect, Polynom &powVect);
+  static void sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &addVect,
+                          PolynomVector &literalVect, PolynomVector &funcVect, PolynomVector &powVect);
 
   void simplifyPolynom();
 
   void simplifyDivisions();
 
-  static void simplifyPow(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
+  static void simplifyPow(PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
+                          PolynomVector &funcVect);
 
-  static void multiplicatePolynom(Polynom &vect, Polynom &positive, Polynom &negative);
+  static void multiplicatePolynom(PolynomVector &vect, PolynomVector &positive, PolynomVector &negative);
 
-  struct ObjectPow;
+  static void sortPowObjects(Objects &objs, PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
+                             PolynomVector &funcVect);
 
-  using Objects = std::vector<ObjectPow>;
-
-  static void sortPowObjects(Objects &objs, Polynom &powVect, Polynom &addVect, Polynom &literalVect,
-                             Polynom &funcVect);
+private:
+  PolynomVector mulPolynom;
 };
 
 }

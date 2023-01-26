@@ -294,11 +294,11 @@ const MathObjectPtr &Expression::getInfo() const {
   return info;
 }
 
-Expression::Vector &Expression::getChildren() {
+Expression::ChildrenVector &Expression::getChildren() {
   return children;
 }
 
-const Expression::Vector &Expression::getChildren() const {
+const Expression::ChildrenVector &Expression::getChildren() const {
   return children;
 }
 
@@ -512,15 +512,15 @@ ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, cons
 
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
   auto addExpr = std::make_unique<AddExpression>();
-  addExpr->addElement(AddExpression::Element(args.front().get().clone()));
-  addExpr->addElement(AddExpression::Element(args.back().get().clone(), func.instanceOf<Sub>()));
+  addExpr->addElement(AddExpression::AddElement(args.front().get().clone()));
+  addExpr->addElement(AddExpression::AddElement(args.back().get().clone(), func.instanceOf<Sub>()));
   return addExpr;
 }
 
 ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args) {
   auto mulExpr = std::make_unique<MulExpression>();
-  mulExpr->addElement(MulExpression::Element(args.front().get().clone()));
-  mulExpr->addElement(MulExpression::Element(args.back().get().clone(), func.instanceOf<Div>()));
+  mulExpr->addElement(MulExpression::MulElement(args.front().get().clone()));
+  mulExpr->addElement(MulExpression::MulElement(args.back().get().clone(), func.instanceOf<Div>()));
   return mulExpr;
 }
 
@@ -532,8 +532,8 @@ ExpressionPtr Expression::buildDerivateExpression(const ArgumentsVector &args) {
   return std::make_unique<DerivativeExpression>(args.front().get());
 }
 
-Expression::Vector Expression::copy(const Vector &rhs) {
-  Vector result;
+Expression::ChildrenVector Expression::copy(const ChildrenVector &rhs) {
+  ChildrenVector result;
 
   for (const auto &value : rhs) {
     result.emplace_back(value->clone());
@@ -542,8 +542,8 @@ Expression::Vector Expression::copy(const Vector &rhs) {
   return result;
 }
 
-Expression::Vector Expression::getArgs(const TokenVector &tokens) {
-  Vector args;
+Expression::ChildrenVector Expression::getArgs(const TokenVector &tokens) {
+  ChildrenVector args;
 
   for (size_t pos = 0; pos < tokens.size(); pos++) {
     bool isBracketsSkip = false;
@@ -674,8 +674,8 @@ Expression &Expression::negate() {
   }
 
   auto mul = MulExpression();
-  mul.addElement(MulExpression::Element(NEG_ONE.clone(), false));
-  mul.addElement(MulExpression::Element(clone(), false));
+  mul.addElement(MulExpression::MulElement(NEG_ONE.clone(), false));
+  mul.addElement(MulExpression::MulElement(clone(), false));
   info = std::make_unique<MulExpression>(mul)->simplify();
   children.clear();
   return *this;
@@ -979,7 +979,7 @@ void Expression::simplifyPow() {
       return;
     }
 
-    MulExpression::Element lhs = lhsRef;
+    MulExpression::MulElement lhs = lhsRef;
 
     if (rhs < 0) {
       lhs.inverted = true;

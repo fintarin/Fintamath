@@ -8,27 +8,23 @@ namespace fintamath {
 
 class AddExpression : public IExpressionCRTP<AddExpression> {
 public:
-  struct Element;
-  using Polynom = std::vector<Element>;
-
-  struct Element {
+  // TODO: implement NegExpression and remove this
+  struct AddElement {
     MathObjectPtr info;
 
     bool inverted = false;
 
-    Element() = default;
+    AddElement() = default;
 
-    Element(const Element &rhs);
+    AddElement(const AddElement &rhs);
 
-    Element(const MathObjectPtr &info, bool inverted = false);
+    AddElement(AddElement &&rhs) = default;
 
-    Element(Element &&rhs) = default;
+    AddElement &operator=(const AddElement &rhs);
 
-    Element &operator=(const Element &rhs);
+    AddElement &operator=(AddElement &&rhs) noexcept = default;
 
-    Element &operator=(Element &&rhs) noexcept = default;
-
-    Polynom getAddPolynom() const;
+    AddElement(const MathObjectPtr &info, bool inverted = false);
 
     MathObjectPtr toMathObject(bool isPrecise) const;
 
@@ -37,20 +33,21 @@ public:
     void setPrecision(uint8_t precision);
   };
 
-  AddExpression() = default;
+  using PolynomVector = std::vector<AddElement>;
 
-  explicit AddExpression(Polynom inAddPolynom);
+public:
+  AddExpression() = default;
 
   AddExpression(const IMathObject &rhs);
 
+  explicit AddExpression(PolynomVector inAddPolynom);
+
   std::string toString() const override;
 
-  ~AddExpression() override = default;
-
   // TODO: implement iterator & remove this
-  const Polynom &getPolynom() const;
+  const PolynomVector &getPolynom() const;
 
-  void addElement(const Element &elem);
+  void addElement(const AddElement &elem);
 
   MathObjectPtr simplify() const override;
 
@@ -67,27 +64,30 @@ public:
   MathObjectPtr getPow() const;
 
 private:
-  Polynom addPolynom;
+  // TODO: Implement a new Expression and remove this
+  struct MulObject;
+  using MulObjects = std::vector<MulObject>;
 
-  Polynom compressExpression() const;
+private:
+  void compress();
 
-  Polynom compressTree() const;
+  PolynomVector sumNumbers(const PolynomVector &numVect);
 
-  Polynom sumNumbers(const Polynom &numVect);
-
-  static void sortPolynom(const Polynom &vect, Polynom &numVect, Polynom &mulVect, Polynom &literalVect,
-                          Polynom &funcVect, Polynom &powVect);
-
-  struct ObjectMul;
-  using Objects = std::vector<ObjectMul>;
+  static void sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &mulVect,
+                          PolynomVector &literalVect, PolynomVector &funcVect, PolynomVector &powVect);
 
   void simplifyPolynom();
 
   void simplifyNegations();
 
-  static void sortMulObjects(Objects &objs, Polynom &mulVect, Polynom &literalVect, Polynom &powVect);
+  static void sortMulObjects(MulObjects &objs, PolynomVector &mulVect, PolynomVector &literalVect,
+                             PolynomVector &powVect);
 
-  static void simplifyMul(Polynom &powVect, Polynom &addVect, Polynom &literalVect, Polynom &funcVect);
+  static void simplifyMul(PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
+                          PolynomVector &funcVect);
+
+private:
+  PolynomVector addPolynom;
 };
 
 }

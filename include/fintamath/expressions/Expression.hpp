@@ -10,7 +10,7 @@ namespace fintamath {
 
 class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
 public:
-  using Vector = std::vector<MathObjectPtr>;
+  using ChildrenVector = std::vector<MathObjectPtr>;
 
 public:
   Expression();
@@ -50,10 +50,10 @@ public:
   const MathObjectPtr &getInfo() const;
 
   // TODO: implement iterator & remove this
-  Expression::Vector &getChildren();
+  Expression::ChildrenVector &getChildren();
 
   // TODO: implement iterator & remove this
-  const Expression::Vector &getChildren() const;
+  const Expression::ChildrenVector &getChildren() const;
 
   MathObjectPtr compress() const;
 
@@ -93,7 +93,7 @@ private:
 
   static ExpressionPtr buildDerivateExpression(const ArgumentsVector &args);
 
-  static Vector copy(const Vector &rhs);
+  static ChildrenVector copy(const ChildrenVector &rhs);
 
   Expression &compressTree();
 
@@ -109,7 +109,7 @@ private:
 
   static std::map<size_t, MathObjectPtr> findBinaryOperators(const TokenVector &tokens);
 
-  Vector getArgs(const TokenVector &tokens);
+  ChildrenVector getArgs(const TokenVector &tokens);
 
   static bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
 
@@ -145,9 +145,10 @@ private:
 
   void simplifyNequiv(); // TODO move to LogicExpression
 
+private:
   MathObjectPtr info;
 
-  Vector children;
+  ChildrenVector children;
 };
 
 }

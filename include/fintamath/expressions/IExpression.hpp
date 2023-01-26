@@ -34,15 +34,12 @@ protected:
   void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;
 
   template <typename T>
-  static void pushPolynomToPolynom(typename T::Polynom &push, typename T::Polynom &cont);
-};
-
-template <typename T>
-void IExpression::pushPolynomToPolynom(typename T::Polynom &push, typename T::Polynom &cont) {
-  for (const auto &elem : push) {
-    cont.emplace_back(elem);
+  static void pushPolynomToPolynom(typename T::PolynomVector &push, typename T::PolynomVector &cont) {
+    for (const auto &elem : push) {
+      cont.emplace_back(elem);
+    }
   }
-}
+};
 
 template <typename Derived>
 class IExpressionCRTP : virtual public IExpression, virtual public IMathObjectCRTP<Derived> {};

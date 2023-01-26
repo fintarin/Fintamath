@@ -72,8 +72,8 @@ MathObjectPtr EqvExpression::simplify() const {
 MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   auto cloneExpr = *this;
   AddExpression addExpr;
-  addExpr.addElement(AddExpression::Element(cloneExpr.leftExpr->clone()));
-  addExpr.addElement(AddExpression::Element(cloneExpr.rightExpr->clone(), true));
+  addExpr.addElement(AddExpression::AddElement(cloneExpr.leftExpr->clone()));
+  addExpr.addElement(AddExpression::AddElement(cloneExpr.rightExpr->clone(), true));
   cloneExpr.leftExpr = addExpr.simplify(isPrecise);
   cloneExpr.rightExpr = ZERO.clone();
 
