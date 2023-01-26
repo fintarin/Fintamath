@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/PolynomExpression.hpp"
 
 namespace fintamath {
 
@@ -33,21 +33,15 @@ public:
 
 //-----------------------------------------------------------------------------------------------------//
 
-class MulExpression : public IExpressionCRTP<MulExpression> {
-public:
-  using PolynomVector = std::vector<MulElement>;
-
+class MulExpression : public PolynomExpressionCRTP<MulExpression, MulElement> {
 public:
   MulExpression() = default;
 
-  explicit MulExpression(PolynomVector inMulPolynom);
+  explicit MulExpression(PolynomVector inPolynomVect);
 
   MulExpression(const IMathObject &rhs);
 
   std::string toString() const override;
-
-  // TODO: implement iterator & remove this
-  const PolynomVector &getPolynom() const;
 
   void addElement(const MulElement &elem);
 
@@ -97,9 +91,6 @@ private:
 
   static void sortPowObjects(Objects &objs, PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
                              PolynomVector &funcVect);
-
-private:
-  PolynomVector mulPolynom;
 };
 
 }

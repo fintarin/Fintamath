@@ -32,13 +32,6 @@ protected:
   static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
 
   void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;
-
-  template <typename T>
-  static void pushPolynomToPolynom(typename T::PolynomVector &push, typename T::PolynomVector &cont) {
-    for (const auto &elem : push) {
-      cont.emplace_back(elem);
-    }
-  }
 };
 
 template <typename Derived>

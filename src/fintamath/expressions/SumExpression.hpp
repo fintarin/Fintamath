@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/PolynomExpression.hpp"
 
 namespace fintamath {
 
@@ -32,21 +32,15 @@ struct SumElement {
 
 //-----------------------------------------------------------------------------------------------------//
 
-class SumExpression : public IExpressionCRTP<SumExpression> {
-public:
-  using PolynomVector = std::vector<SumElement>;
-
+class SumExpression : public PolynomExpressionCRTP<SumExpression, SumElement> {
 public:
   SumExpression() = default;
 
   SumExpression(const IMathObject &rhs);
 
-  explicit SumExpression(PolynomVector inAddPolynom);
+  explicit SumExpression(PolynomVector inPolynomVect);
 
   std::string toString() const override;
-
-  // TODO: implement iterator & remove this
-  const PolynomVector &getPolynom() const;
 
   void addElement(const SumElement &elem);
 
@@ -86,9 +80,6 @@ private:
 
   static void simplifyMul(PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
                           PolynomVector &funcVect);
-
-private:
-  PolynomVector addPolynom;
 };
 
 }
