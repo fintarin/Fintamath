@@ -120,7 +120,7 @@ protected:
       compressedExpr.addElement(child);
     }
 
-    *this = std::move(compressedExpr);
+    polynomVect = std::move(compressedExpr.polynomVect);
   }
 
 protected:
