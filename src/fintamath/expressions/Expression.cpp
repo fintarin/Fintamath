@@ -11,12 +11,12 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
-#include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/DerivativeExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -511,9 +511,9 @@ ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, cons
 }
 
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
-  auto addExpr = std::make_unique<AddExpression>();
-  addExpr->addElement(AddExpression::AddElement(args.front().get().clone()));
-  addExpr->addElement(AddExpression::AddElement(args.back().get().clone(), func.instanceOf<Sub>()));
+  auto addExpr = std::make_unique<SumExpression>();
+  addExpr->addElement(SumExpression::SumElement(args.front().get().clone()));
+  addExpr->addElement(SumExpression::SumElement(args.back().get().clone(), func.instanceOf<Sub>()));
   return addExpr;
 }
 
@@ -623,7 +623,7 @@ TokenVector Expression::cutBraces(const TokenVector &tokens) {
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  auto addExpr = AddExpression();
+  auto addExpr = SumExpression();
   addExpr.addElement({clone(), false});
   addExpr.addElement({rhs.clone(), false});
   *this = Expression(*addExpr.simplify());
@@ -631,7 +631,7 @@ Expression &Expression::add(const Expression &rhs) {
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  auto addExpr = AddExpression();
+  auto addExpr = SumExpression();
   addExpr.addElement({clone(), false});
   addExpr.addElement({rhs.clone(), true});
   *this = Expression(*addExpr.simplify());

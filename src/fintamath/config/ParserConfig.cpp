@@ -10,10 +10,6 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
-#include "fintamath/expressions/AddExpression.hpp"
-#include "fintamath/expressions/EqvExpression.hpp"
-#include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"

@@ -6,10 +6,10 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
-#include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -26,7 +26,7 @@ namespace fintamath {
 
 struct MulExpression::ObjectPow {
   MathObjectPtr obj;
-  AddExpression pow;
+  SumExpression pow;
 
   ObjectPow(const MathObjectPtr &obj) : obj(obj->clone()) {
   }
@@ -58,7 +58,7 @@ struct MulExpression::ObjectPow {
   }
 
   void simplifyPow() {
-    pow = AddExpression(*pow.simplify());
+    pow = SumExpression(*pow.simplify());
   }
 };
 
@@ -95,7 +95,8 @@ void MulExpression::MulElement::setPrecision(uint8_t precision) {
   }
 }
 
-MulExpression::MulElement::MulElement(const MathObjectPtr &info, bool inverted) : info(info->clone()), inverted(inverted) {
+MulExpression::MulElement::MulElement(const MathObjectPtr &info, bool inverted)
+    : info(info->clone()), inverted(inverted) {
 }
 
 MathObjectPtr MulExpression::MulElement::toMathObject(bool isPrecise) const {
@@ -149,7 +150,7 @@ void MulExpression::compress() {
 }
 
 std::string MulExpression::tryPutInBrackets(const MathObjectPtr &obj) {
-  if (obj->instanceOf<AddExpression>()) {
+  if (obj->instanceOf<SumExpression>()) {
     return "(" + obj->toString() + ")";
   }
   return tryPutInBracketsIfNeg(obj);
@@ -179,7 +180,7 @@ void MulExpression::MulElement::simplify(bool isPrecise) {
   if (info->instanceOf<IExpression>()) {
     // TODO: remove this condition when polynomial division is implemented
     if (info->instanceOf<Expression>() && info->to<Expression>().getInfo()->instanceOf<Pow>()) {
-      if (auto tmpSimpl = info->to<IExpression>().simplify(isPrecise); !tmpSimpl->instanceOf<AddExpression>()) {
+      if (auto tmpSimpl = info->to<IExpression>().simplify(isPrecise); !tmpSimpl->instanceOf<SumExpression>()) {
         info = tmpSimpl->clone();
         return;
       }
@@ -285,7 +286,7 @@ MulExpression::PolynomVector MulExpression::mulNumbers(const PolynomVector &numV
   return {{result.simplify(), false}};
 }
 
-MulExpression::PolynomVector convertAddPolynomToMul(const AddExpression::PolynomVector &polynom) {
+MulExpression::PolynomVector convertAddPolynomToMul(const SumExpression::PolynomVector &polynom) {
   MulExpression::PolynomVector result;
   for (const auto &elem : polynom) {
     result.emplace_back(MulExpression::MulElement(elem.info->clone(), elem.inverted));
@@ -293,10 +294,10 @@ MulExpression::PolynomVector convertAddPolynomToMul(const AddExpression::Polynom
   return result;
 }
 
-AddExpression::PolynomVector convertMulPolynomToAdd(const MulExpression::PolynomVector &polynom) {
-  AddExpression::PolynomVector result;
+SumExpression::PolynomVector convertMulPolynomToAdd(const MulExpression::PolynomVector &polynom) {
+  SumExpression::PolynomVector result;
   for (const auto &elem : polynom) {
-    result.emplace_back(AddExpression::AddElement(elem.info->clone(), elem.inverted));
+    result.emplace_back(SumExpression::SumElement(elem.info->clone(), elem.inverted));
   }
   return result;
 }
@@ -321,9 +322,9 @@ void MulExpression::multiplicateBraces(const PolynomVector &addVect, PolynomVect
   for (const auto &addExpr : addVect) {
     if (addExpr.inverted) {
       inverted =
-          multiplicateTwoBraces(inverted, convertAddPolynomToMul(addExpr.info->to<AddExpression>().getPolynom()));
+          multiplicateTwoBraces(inverted, convertAddPolynomToMul(addExpr.info->to<SumExpression>().getPolynom()));
     } else {
-      result = multiplicateTwoBraces(result, convertAddPolynomToMul(addExpr.info->to<AddExpression>().getPolynom()));
+      result = multiplicateTwoBraces(result, convertAddPolynomToMul(addExpr.info->to<SumExpression>().getPolynom()));
     }
   }
 
@@ -471,7 +472,7 @@ void MulExpression::simplifyPow(PolynomVector &powVect, PolynomVector &addVect, 
 void MulExpression::sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &addVect,
                                 PolynomVector &literalVect, PolynomVector &funcVect, PolynomVector &powVect) {
   for (const auto &child : vect) {
-    if (child.info->instanceOf<AddExpression>()) {
+    if (child.info->instanceOf<SumExpression>()) {
       addVect.emplace_back(child);
       continue;
     }
@@ -544,7 +545,7 @@ void MulExpression::simplifyPolynom() {
     bool positiveAdded = false;
     bool negativeAdded = false;
     if (!positive.empty()) {
-      auto addExpr = AddExpression(convertMulPolynomToAdd(positive)).simplify();
+      auto addExpr = SumExpression(convertMulPolynomToAdd(positive)).simplify();
       if (!addExpr->instanceOf<INumber>()) {
         mulPolynom.emplace_back(MulElement{addExpr->clone()});
         positiveAdded = true;
@@ -553,7 +554,7 @@ void MulExpression::simplifyPolynom() {
       }
     }
     if (!negative.empty()) {
-      auto addExpr = AddExpression(convertMulPolynomToAdd(negative)).simplify();
+      auto addExpr = SumExpression(convertMulPolynomToAdd(negative)).simplify();
       if (!addExpr->instanceOf<INumber>()) {
         mulPolynom.emplace_back(MulElement(addExpr->clone(), true));
         negativeAdded = true;

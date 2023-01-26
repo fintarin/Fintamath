@@ -6,8 +6,8 @@
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
-#include "fintamath/expressions/AddExpression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
@@ -71,9 +71,9 @@ MathObjectPtr EqvExpression::simplify() const {
 
 MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   auto cloneExpr = *this;
-  AddExpression addExpr;
-  addExpr.addElement(AddExpression::AddElement(cloneExpr.leftExpr->clone()));
-  addExpr.addElement(AddExpression::AddElement(cloneExpr.rightExpr->clone(), true));
+  SumExpression addExpr;
+  addExpr.addElement(SumExpression::SumElement(cloneExpr.leftExpr->clone()));
+  addExpr.addElement(SumExpression::SumElement(cloneExpr.rightExpr->clone(), true));
   cloneExpr.leftExpr = addExpr.simplify(isPrecise);
   cloneExpr.rightExpr = ZERO.clone();
 
@@ -167,7 +167,7 @@ std::vector<MathObjectPtr> EqvExpression::solvePowEquation(const Variable &x) co
 std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
   auto copyExpr = *this;
 
-  AddExpression polynom(*leftExpr);
+  SumExpression polynom(*leftExpr);
   auto maxPow = polynom.getPow();
 
   if (!maxPow->instanceOf<Integer>() || maxPow->to<Integer>() > TWO) {

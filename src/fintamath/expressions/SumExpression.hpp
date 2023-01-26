@@ -6,25 +6,25 @@
 
 namespace fintamath {
 
-class AddExpression : public IExpressionCRTP<AddExpression> {
+class SumExpression : public IExpressionCRTP<SumExpression> {
 public:
   // TODO: implement NegExpression and remove this
-  struct AddElement {
+  struct SumElement {
     MathObjectPtr info;
 
     bool inverted = false;
 
-    AddElement() = default;
+    SumElement() = default;
 
-    AddElement(const AddElement &rhs);
+    SumElement(const SumElement &rhs);
 
-    AddElement(AddElement &&rhs) = default;
+    SumElement(SumElement &&rhs) = default;
 
-    AddElement &operator=(const AddElement &rhs);
+    SumElement &operator=(const SumElement &rhs);
 
-    AddElement &operator=(AddElement &&rhs) noexcept = default;
+    SumElement &operator=(SumElement &&rhs) noexcept = default;
 
-    AddElement(const MathObjectPtr &info, bool inverted = false);
+    SumElement(const MathObjectPtr &info, bool inverted = false);
 
     MathObjectPtr toMathObject(bool isPrecise) const;
 
@@ -33,21 +33,21 @@ public:
     void setPrecision(uint8_t precision);
   };
 
-  using PolynomVector = std::vector<AddElement>;
+  using PolynomVector = std::vector<SumElement>;
 
 public:
-  AddExpression() = default;
+  SumExpression() = default;
 
-  AddExpression(const IMathObject &rhs);
+  SumExpression(const IMathObject &rhs);
 
-  explicit AddExpression(PolynomVector inAddPolynom);
+  explicit SumExpression(PolynomVector inAddPolynom);
 
   std::string toString() const override;
 
   // TODO: implement iterator & remove this
   const PolynomVector &getPolynom() const;
 
-  void addElement(const AddElement &elem);
+  void addElement(const SumElement &elem);
 
   MathObjectPtr simplify() const override;
 
