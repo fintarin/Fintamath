@@ -62,7 +62,9 @@ struct MulExpression::ObjectPow {
   }
 };
 
-MulExpression::MulElement &MulExpression::MulElement::operator=(const MulElement &rhs) {
+//-----------------------------------------------------------------------------------------------------//
+
+MulElement &MulElement::operator=(const MulElement &rhs) {
   if (this != &rhs) {
     info = rhs.info->clone();
     inverted = rhs.inverted;
@@ -70,7 +72,7 @@ MulExpression::MulElement &MulExpression::MulElement::operator=(const MulElement
   return *this;
 }
 
-void MulExpression::MulElement::setPrecision(uint8_t precision) {
+void MulElement::setPrecision(uint8_t precision) {
   if (info->instanceOf<IExpression>()) {
     auto expr = cast<IExpression>(std::move(info));
     expr->setPrecision(precision);
@@ -95,11 +97,10 @@ void MulExpression::MulElement::setPrecision(uint8_t precision) {
   }
 }
 
-MulExpression::MulElement::MulElement(const MathObjectPtr &info, bool inverted)
-    : info(info->clone()), inverted(inverted) {
+MulElement::MulElement(const MathObjectPtr &info, bool inverted) : info(info->clone()), inverted(inverted) {
 }
 
-MathObjectPtr MulExpression::MulElement::toMathObject(bool isPrecise) const {
+MathObjectPtr MulElement::toMathObject(bool isPrecise) const {
   auto copy = *this;
 
   if (copy.inverted) {
@@ -112,6 +113,44 @@ MathObjectPtr MulExpression::MulElement::toMathObject(bool isPrecise) const {
 
   return copy.info->clone();
 }
+
+MulElement::MulElement(const MulElement &rhs) : inverted(rhs.inverted) {
+  info = rhs.info->clone();
+}
+
+void MulElement::simplify(bool isPrecise) {
+  if (info->instanceOf<IExpression>()) {
+    // TODO: remove this condition when polynomial division is implemented
+    if (info->instanceOf<Expression>() && info->to<Expression>().getInfo()->instanceOf<Pow>()) {
+      if (auto tmpSimpl = info->to<IExpression>().simplify(isPrecise); !tmpSimpl->instanceOf<SumExpression>()) {
+        info = tmpSimpl->clone();
+        return;
+      }
+      return;
+    }
+
+    auto expr = cast<IExpression>(std::move(info));
+    info = expr->simplify(isPrecise);
+    return;
+  }
+
+  if (info->instanceOf<IConstant>()) {
+    auto constant = cast<IConstant>(std::move(info));
+    auto constVal = (*constant)();
+
+    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
+      info = std::move(constant);
+    } else {
+      info = std::move(constVal);
+    }
+
+    return;
+  }
+
+  info = info->simplify();
+}
+
+//-----------------------------------------------------------------------------------------------------//
 
 const MulExpression::PolynomVector &MulExpression::getPolynom() const {
   return mulPolynom;
@@ -170,42 +209,6 @@ std::string MulExpression::toString() const {
   }
 
   return result;
-}
-
-MulExpression::MulElement::MulElement(const MulElement &rhs) : inverted(rhs.inverted) {
-  info = rhs.info->clone();
-}
-
-void MulExpression::MulElement::simplify(bool isPrecise) {
-  if (info->instanceOf<IExpression>()) {
-    // TODO: remove this condition when polynomial division is implemented
-    if (info->instanceOf<Expression>() && info->to<Expression>().getInfo()->instanceOf<Pow>()) {
-      if (auto tmpSimpl = info->to<IExpression>().simplify(isPrecise); !tmpSimpl->instanceOf<SumExpression>()) {
-        info = tmpSimpl->clone();
-        return;
-      }
-      return;
-    }
-
-    auto expr = cast<IExpression>(std::move(info));
-    info = expr->simplify(isPrecise);
-    return;
-  }
-
-  if (info->instanceOf<IConstant>()) {
-    auto constant = cast<IConstant>(std::move(info));
-    auto constVal = (*constant)();
-
-    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
-      info = std::move(constant);
-    } else {
-      info = std::move(constVal);
-    }
-
-    return;
-  }
-
-  info = info->simplify();
 }
 
 void MulExpression::addElement(const MulElement &elem) {
@@ -288,9 +291,11 @@ MulExpression::PolynomVector MulExpression::mulNumbers(const PolynomVector &numV
 
 MulExpression::PolynomVector convertAddPolynomToMul(const SumExpression::PolynomVector &polynom) {
   MulExpression::PolynomVector result;
+
   for (const auto &elem : polynom) {
-    result.emplace_back(MulExpression::MulElement(elem.info->clone(), elem.inverted));
+    result.emplace_back(MulElement(elem.info->clone(), elem.inverted));
   }
+
   return result;
 }
 
@@ -332,7 +337,7 @@ void MulExpression::multiplicateBraces(const PolynomVector &addVect, PolynomVect
   negative = inverted;
 }
 
-bool sortFunc(const MulExpression::MulElement &lhs, const MulExpression::MulElement &rhs) {
+bool sortFunc(const MulElement &lhs, const MulElement &rhs) {
   return lhs.info->toString() < rhs.info->toString();
 }
 

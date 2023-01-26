@@ -519,8 +519,8 @@ ExpressionPtr Expression::buildAddExpression(const IFunction &func, const Argume
 
 ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args) {
   auto mulExpr = std::make_unique<MulExpression>();
-  mulExpr->addElement(MulExpression::MulElement(args.front().get().clone()));
-  mulExpr->addElement(MulExpression::MulElement(args.back().get().clone(), func.instanceOf<Div>()));
+  mulExpr->addElement({args.front().get().clone()});
+  mulExpr->addElement({args.back().get().clone(), func.instanceOf<Div>()});
   return mulExpr;
 }
 
@@ -674,8 +674,8 @@ Expression &Expression::negate() {
   }
 
   auto mul = MulExpression();
-  mul.addElement(MulExpression::MulElement(NEG_ONE.clone(), false));
-  mul.addElement(MulExpression::MulElement(clone(), false));
+  mul.addElement({NEG_ONE.clone(), false});
+  mul.addElement({clone(), false});
   info = std::make_unique<MulExpression>(mul)->simplify();
   children.clear();
   return *this;
@@ -979,7 +979,7 @@ void Expression::simplifyPow() {
       return;
     }
 
-    MulExpression::MulElement lhs = lhsRef;
+    MulElement lhs = lhsRef;
 
     if (rhs < 0) {
       lhs.inverted = true;

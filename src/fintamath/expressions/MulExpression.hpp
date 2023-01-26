@@ -6,33 +6,35 @@
 
 namespace fintamath {
 
+struct MulElement {
+  MathObjectPtr info;
+
+  bool inverted = false;
+
+public:
+  MulElement() = default;
+
+  MulElement(const MulElement &rhs);
+
+  MulElement(MulElement &&rhs) = default;
+
+  MulElement(const MathObjectPtr &info, bool inverted = false);
+
+  MulElement &operator=(const MulElement &rhs);
+
+  MulElement &operator=(MulElement &&rhs) noexcept = default;
+
+  MathObjectPtr toMathObject(bool isPrecise) const;
+
+  void setPrecision(uint8_t precision);
+
+  void simplify(bool isPrecise);
+};
+
+//-----------------------------------------------------------------------------------------------------//
+
 class MulExpression : public IExpressionCRTP<MulExpression> {
 public:
-  struct MulElement {
-    MathObjectPtr info;
-
-    bool inverted = false;
-
-  public:
-    MulElement() = default;
-
-    MulElement(const MulElement &rhs);
-
-    MulElement(MulElement &&rhs) = default;
-
-    MulElement(const MathObjectPtr &info, bool inverted = false);
-
-    MulElement &operator=(const MulElement &rhs);
-
-    MulElement &operator=(MulElement &&rhs) noexcept = default;
-
-    MathObjectPtr toMathObject(bool isPrecise) const;
-
-    void setPrecision(uint8_t precision);
-
-    void simplify(bool isPrecise);
-  };
-
   using PolynomVector = std::vector<MulElement>;
 
 public:

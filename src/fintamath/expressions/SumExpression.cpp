@@ -366,9 +366,7 @@ void SumExpression::sortMulObjects(MulObjects &objs, PolynomVector &mulVect, Pol
         continue;
       }
     }
-    mulVect.emplace_back(SumElement(
-        MulExpression({MulExpression::MulElement(obj.obj->clone()), MulExpression::MulElement(counter->clone())})
-            .simplify()));
+    mulVect.emplace_back(SumElement(MulExpression({{obj.obj->clone()}, {counter->clone()}}).simplify()));
   }
 }
 
