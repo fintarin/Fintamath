@@ -512,8 +512,8 @@ ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, cons
 
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
   auto addExpr = std::make_unique<SumExpression>();
-  addExpr->addElement(SumExpression::SumElement(args.front().get().clone()));
-  addExpr->addElement(SumExpression::SumElement(args.back().get().clone(), func.instanceOf<Sub>()));
+  addExpr->addElement({args.front().get().clone()});
+  addExpr->addElement({args.back().get().clone(), func.instanceOf<Sub>()});
   return addExpr;
 }
 

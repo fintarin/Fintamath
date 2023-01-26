@@ -50,10 +50,12 @@ struct SumExpression::MulObject {
   }
 };
 
-SumExpression::SumElement::SumElement(const SumElement &rhs) : info(rhs.info->clone()), inverted(rhs.inverted) {
+//-----------------------------------------------------------------------------------------------------//
+
+SumElement::SumElement(const SumElement &rhs) : info(rhs.info->clone()), inverted(rhs.inverted) {
 }
 
-SumExpression::SumElement &SumExpression::SumElement::operator=(const SumElement &rhs) {
+SumElement &SumElement::operator=(const SumElement &rhs) {
   if (this != &rhs) {
     info = rhs.info->clone();
     inverted = rhs.inverted;
@@ -61,7 +63,7 @@ SumExpression::SumElement &SumExpression::SumElement::operator=(const SumElement
   return *this;
 }
 
-void SumExpression::SumElement::setPrecision(uint8_t precision) {
+void SumElement::setPrecision(uint8_t precision) {
   if (info->instanceOf<IExpression>()) {
     auto expr = cast<IExpression>(std::move(info));
     expr->setPrecision(precision);
@@ -86,11 +88,10 @@ void SumExpression::SumElement::setPrecision(uint8_t precision) {
   }
 }
 
-SumExpression::SumElement::SumElement(const MathObjectPtr &info, bool inverted)
-    : info(info->clone()), inverted(inverted) {
+SumElement::SumElement(const MathObjectPtr &info, bool inverted) : info(info->clone()), inverted(inverted) {
 }
 
-MathObjectPtr SumExpression::SumElement::toMathObject(bool isPrecise) const {
+MathObjectPtr SumElement::toMathObject(bool isPrecise) const {
   auto copy = *this;
 
   if (copy.inverted) {
@@ -104,7 +105,7 @@ MathObjectPtr SumExpression::SumElement::toMathObject(bool isPrecise) const {
   return copy.info->clone();
 }
 
-void SumExpression::SumElement::simplify(bool isPrecise) {
+void SumElement::simplify(bool isPrecise) {
   if (info->instanceOf<IExpression>()) {
     auto expr = cast<IExpression>(std::move(info));
     info = expr->simplify(isPrecise);
@@ -126,6 +127,8 @@ void SumExpression::SumElement::simplify(bool isPrecise) {
 
   info = info->simplify();
 }
+
+//-----------------------------------------------------------------------------------------------------//
 
 SumExpression::SumExpression(const IMathObject &rhs) {
   if (const auto *rhsPtr = cast<SumExpression>(&rhs)) {
@@ -253,7 +256,7 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
   return exprObj.clone();
 }
 
-bool sortFunc(const SumExpression::SumElement &lhs, const SumExpression::SumElement &rhs) {
+bool sortFunc(const SumElement &lhs, const SumElement &rhs) {
   if (lhs.info->instanceOf<IConstant>()) {
     return false;
   }

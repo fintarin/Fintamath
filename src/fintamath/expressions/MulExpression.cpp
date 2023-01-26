@@ -301,9 +301,11 @@ MulExpression::PolynomVector convertAddPolynomToMul(const SumExpression::Polynom
 
 SumExpression::PolynomVector convertMulPolynomToAdd(const MulExpression::PolynomVector &polynom) {
   SumExpression::PolynomVector result;
+
   for (const auto &elem : polynom) {
-    result.emplace_back(SumExpression::SumElement(elem.info->clone(), elem.inverted));
+    result.emplace_back(SumElement(elem.info->clone(), elem.inverted));
   }
+
   return result;
 }
 

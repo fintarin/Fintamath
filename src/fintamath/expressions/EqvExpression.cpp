@@ -72,8 +72,8 @@ MathObjectPtr EqvExpression::simplify() const {
 MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   auto cloneExpr = *this;
   SumExpression addExpr;
-  addExpr.addElement(SumExpression::SumElement(cloneExpr.leftExpr->clone()));
-  addExpr.addElement(SumExpression::SumElement(cloneExpr.rightExpr->clone(), true));
+  addExpr.addElement({cloneExpr.leftExpr->clone()});
+  addExpr.addElement({cloneExpr.rightExpr->clone(), true});
   cloneExpr.leftExpr = addExpr.simplify(isPrecise);
   cloneExpr.rightExpr = ZERO.clone();
 

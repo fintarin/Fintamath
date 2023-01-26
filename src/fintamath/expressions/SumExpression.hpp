@@ -6,33 +6,34 @@
 
 namespace fintamath {
 
+struct SumElement {
+  MathObjectPtr info;
+
+  bool inverted = false;
+
+  SumElement() = default;
+
+  SumElement(const SumElement &rhs);
+
+  SumElement(SumElement &&rhs) = default;
+
+  SumElement &operator=(const SumElement &rhs);
+
+  SumElement &operator=(SumElement &&rhs) noexcept = default;
+
+  SumElement(const MathObjectPtr &info, bool inverted = false);
+
+  MathObjectPtr toMathObject(bool isPrecise) const;
+
+  void simplify(bool isPrecise);
+
+  void setPrecision(uint8_t precision);
+};
+
+//-----------------------------------------------------------------------------------------------------//
+
 class SumExpression : public IExpressionCRTP<SumExpression> {
 public:
-  // TODO: implement NegExpression and remove this
-  struct SumElement {
-    MathObjectPtr info;
-
-    bool inverted = false;
-
-    SumElement() = default;
-
-    SumElement(const SumElement &rhs);
-
-    SumElement(SumElement &&rhs) = default;
-
-    SumElement &operator=(const SumElement &rhs);
-
-    SumElement &operator=(SumElement &&rhs) noexcept = default;
-
-    SumElement(const MathObjectPtr &info, bool inverted = false);
-
-    MathObjectPtr toMathObject(bool isPrecise) const;
-
-    void simplify(bool isPrecise);
-
-    void setPrecision(uint8_t precision);
-  };
-
   using PolynomVector = std::vector<SumElement>;
 
 public:
