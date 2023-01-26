@@ -19,7 +19,8 @@
 namespace fintamath {
 
 EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs) {
-  if (!oper.instanceOf<IOperator>() || oper.to<IOperator>().getOperatorPriority() != IOperator::Priority::Comparison) {
+  if (const auto *operPtr = cast<IOperator>(&oper);
+      !operPtr || operPtr->getOperatorPriority() != IOperator::Priority::Comparison) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
   }
   if (lhs.instanceOf<EqvExpression>() || rhs.instanceOf<EqvExpression>()) {
@@ -78,7 +79,7 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   cloneExpr.rightExpr = ZERO.clone();
 
   if (cloneExpr.leftExpr->instanceOf<IComparable>()) {
-    auto b = Expression(oper->to<IOperator>()(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
+    auto b = Expression(cast<IOperator>(*oper)(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
     return b.simplify(isPrecise);
   }
 
@@ -103,7 +104,7 @@ std::string EqvExpression::solve() const {
   if (!expr->instanceOf<EqvExpression>()) {
     return expr->toString();
   }
-  auto copyExpr = expr->to<EqvExpression>();
+  auto copyExpr = cast<EqvExpression>(*expr);
   if (!copyExpr.oper->instanceOf<Eqv>()) {
     return expr->toString();
   }
@@ -132,7 +133,7 @@ std::string EqvExpression::solve(uint8_t precision) const {
   if (!expr->instanceOf<EqvExpression>()) {
     return expr->toString();
   }
-  auto copyExpr = expr->to<EqvExpression>();
+  auto copyExpr = cast<EqvExpression>(*expr);
   if (!copyExpr.oper->instanceOf<Eqv>()) {
     return expr->toString();
   }
@@ -166,17 +167,20 @@ std::vector<MathObjectPtr> EqvExpression::solvePowEquation(const Variable &x) co
 
 std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
   auto copyExpr = *this;
-
   SumExpression polynom(*leftExpr);
-  auto maxPow = polynom.getPow();
 
-  if (!maxPow->instanceOf<Integer>() || maxPow->to<Integer>() > TWO) {
+  auto maxPowObj = polynom.getPow();
+  if (!maxPowObj) {
+    return {};
+  }
+
+  const auto *maxPow = cast<Integer>(maxPowObj.get());
+  if (*maxPow > TWO) {
     return {};
   }
 
   std::vector<MathObjectPtr> coefficients;
-
-  for (int i = 0; i <= maxPow->to<Integer>(); i++) {
+  for (int i = 0; i <= *maxPow; i++) {
     coefficients.emplace_back(polynom.getPowCoefficient(Integer(i).clone()));
   }
 
@@ -189,7 +193,7 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
     auto discr = (fintamath::pow(*coefficients.at(1), TWO) - mul(Integer(4), *coefficients.at(0), *coefficients.at(2)))
                      .simplify(false);
 
-    if (discr->instanceOf<IComparable>() && discr->to<IComparable>() < ZERO) {
+    if (const auto *discrPtr = cast<Integer>(discr.get()); discrPtr && *discrPtr < ZERO) {
       return {};
     }
 
@@ -209,16 +213,16 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
 }
 
 bool EqvExpression::detectOneVariable(Variable &v) const {
-  if (leftExpr->instanceOf<Variable>()) {
-    v = leftExpr->to<Variable>();
+  if (const auto *var = cast<Variable>(leftExpr.get())) {
+    v = *var;
     return true;
   }
-  if (leftExpr->instanceOf<IExpression>()) {
-    auto variables = leftExpr->to<IExpression>().getVariables();
+  if (const auto *expr = cast<IExpression>(leftExpr.get())) {
+    auto variables = expr->getVariables();
     if (variables.empty()) {
       return false;
     }
-    v = variables.at(0)->to<Variable>();
+    v = cast<Variable>(*variables.at(0).get());
     for (const auto &var : variables) {
       if (var->toString() != v.toString()) {
         return false;
@@ -229,10 +233,13 @@ bool EqvExpression::detectOneVariable(Variable &v) const {
 }
 
 bool EqvExpression::sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
-  if (!lhs->instanceOf<IComparable>() || !rhs->instanceOf<IComparable>()) {
-    return false;
+  if (const auto *lhsComp = cast<IComparable>(lhs.get())) {
+    if (const auto *rhsComp = cast<IComparable>(rhs.get())) {
+      return *lhsComp < *rhsComp;
+    }
   }
-  return lhs->to<IComparable>() < rhs->to<IComparable>();
+
+  return false;
 }
 
 std::vector<MathObjectPtr> EqvExpression::sortResult(std::vector<MathObjectPtr> &result) {
