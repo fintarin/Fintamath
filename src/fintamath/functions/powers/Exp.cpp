@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Exp::call(const ArgumentsVector &argsVect) const {
-  return exp(Converter::convert<Real>(argsVect.front())).simplify();
+  return exp(convert<Real>(argsVect.front())).simplify();
 }
 
 }

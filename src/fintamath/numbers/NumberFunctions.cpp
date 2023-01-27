@@ -48,7 +48,7 @@ NumberPtr pow(const INumber &inLhs, const INumber &inRhs) {
     return naturalPow(*lhs, *rhsInt);
   }
 
-  return cast<INumber>(pow(Converter::convert<Real>(*lhs), Converter::convert<Real>(*rhs)).simplify());
+  return cast<INumber>(pow(convert<Real>(*lhs), convert<Real>(*rhs)).simplify());
 }
 
 }

@@ -40,11 +40,11 @@ protected:
       auto lhsPtr = cast<IModularCRTP<Derived>>(clone());
       return cast<IModular>(lhsPtr->mod(*rhsPtr).simplify());
     }
-    if (MathObjectPtr rhsPtr = Converter::convert(rhs, *this)) {
+    if (MathObjectPtr rhsPtr = convert(rhs, *this)) {
       auto lhsPtr = cast<IModularCRTP<Derived>>(clone());
       return cast<IModular>(lhsPtr->mod(cast<Derived>(*rhsPtr)).simplify());
     }
-    if (MathObjectPtr lhsPtr = Converter::convert(*this, rhs)) {
+    if (MathObjectPtr lhsPtr = convert(*this, rhs)) {
       return cast<IModular>((cast<IModular>(*lhsPtr) % rhs)->simplify());
     }
     throw InvalidInputBinaryOpearatorException("%", toString(), rhs.toString());

@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Acos::call(const ArgumentsVector &argsVect) const {
-  return acos(Converter::convert<Real>(argsVect.front())).simplify();
+  return acos(convert<Real>(argsVect.front())).simplify();
 }
 
 }

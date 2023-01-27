@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/multimethod/Converter.hpp"
 
 namespace fintamath {
 
@@ -71,10 +70,10 @@ protected:
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }
-    if (MathObjectPtr rhsPtr = Converter::convert(rhs, *this); rhsPtr != nullptr) {
+    if (MathObjectPtr rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
       return equals(cast<Derived>(*rhsPtr));
     }
-    if (MathObjectPtr lhsPtr = Converter::convert(*this, rhs); lhsPtr != nullptr) {
+    if (MathObjectPtr lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
       return *lhsPtr == rhs;
     }
     return false;

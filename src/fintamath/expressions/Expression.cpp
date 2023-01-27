@@ -237,7 +237,7 @@ std::string Expression::functionToString() const {
 void Expression::setPrecisionRec(uint8_t precision) {
   if (children.empty()) {
     if (info->instanceOf<INumber>()) {
-      info = Converter::convert<Real>(*info).precise(precision).clone();
+      info = convert<Real>(*info).precise(precision).clone();
       return;
     }
     if (info->instanceOf<IExpression>()) {
@@ -254,7 +254,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
       child = copyChild->simplify(false);
     }
     if (child->instanceOf<INumber>()) {
-      child = Converter::convert<Real>(*child).precise(precision).clone();
+      child = convert<Real>(*child).precise(precision).clone();
       continue;
     }
     if (child->instanceOf<IExpression>()) {
@@ -274,7 +274,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
     if (func->doAgsMatch(args)) {
       auto countResult = (*func)(args);
       if (countResult->instanceOf<INumber>()) {
-        info = Converter::convert<Real>(*countResult).precise(precision).clone();
+        info = convert<Real>(*countResult).precise(precision).clone();
         children.clear();
       }
     }

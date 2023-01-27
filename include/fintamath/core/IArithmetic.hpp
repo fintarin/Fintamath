@@ -195,11 +195,11 @@ private:
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
       return cast<IArithmetic>(f1(*lhsPtr, *rhpPtr).simplify());
     }
-    if (MathObjectPtr rhsPtr = Converter::convert(rhs, *this)) {
+    if (MathObjectPtr rhsPtr = convert(rhs, *this)) {
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
       return cast<IArithmetic>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).simplify());
     }
-    if (MathObjectPtr lhsPtr = Converter::convert(*this, rhs)) {
+    if (MathObjectPtr lhsPtr = convert(*this, rhs)) {
       return cast<IArithmetic>(f2(cast<IArithmetic>(*lhsPtr), rhs)->simplify());
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());

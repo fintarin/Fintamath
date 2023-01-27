@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/multimethod/MultiMethod.hpp"
 
 namespace fintamath {
@@ -17,14 +16,8 @@ public:
     converter.add<Value, Type>(convertFunc);
   }
 
-  static MathObjectPtr convert(const IMathObject &value, const IMathObject &type) {
-    return converter(value, type);
-  }
-
-  template <typename Type>
-  static Type convert(const IMathObject &value) {
-    static const Type type;
-    return cast<Type>(*convert(value, type));
+  static MathObjectPtr convert(const IMathObject &from, const IMathObject &to) {
+    return converter(from, to);
   }
 
 private:
