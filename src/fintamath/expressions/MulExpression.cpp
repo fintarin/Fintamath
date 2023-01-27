@@ -24,6 +24,8 @@
 
 namespace fintamath {
 
+const Mul MUL;
+
 struct MulExpression::ObjectPow {
   MathObjectPtr obj;
   SumExpression pow;
@@ -132,10 +134,6 @@ MulExpression::MulExpression(const IMathObject &rhs) {
   polynomVect.emplace_back(MulElement{rhs.clone(), false});
 }
 
-uint16_t MulExpression::getBaseOperatorPriority() const {
-  return (uint16_t)IOperator::Priority::Multiplication;
-}
-
 std::string MulExpression::tryPutInBrackets(const MathObjectPtr &obj) {
   if (obj->instanceOf<SumExpression>()) {
     return "(" + obj->toString() + ")";
@@ -197,6 +195,10 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   }
 
   return exprObj.clone();
+}
+
+const IFunction *MulExpression::getFunction() const {
+  return &MUL;
 }
 
 MulExpression::PolynomVector MulExpression::mulNumbers(const PolynomVector &numVect) {

@@ -27,7 +27,7 @@ EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, co
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
   }
 
-  this->oper = oper.clone();
+  this->oper = cast<IOperator>(oper.clone());
   leftExpr = lhs.clone();
   rightExpr = rhs.clone();
 }
@@ -35,20 +35,20 @@ EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, co
 EqvExpression::EqvExpression(const EqvExpression &rhs) noexcept {
   leftExpr = rhs.leftExpr->clone();
   rightExpr = rhs.rightExpr->clone();
-  oper = rhs.oper->clone();
+  oper = cast<IOperator>(rhs.oper->clone());
 }
 
 EqvExpression::EqvExpression(EqvExpression &&rhs) noexcept {
   leftExpr = rhs.leftExpr->clone();
   rightExpr = rhs.rightExpr->clone();
-  oper = rhs.oper->clone();
+  oper = cast<IOperator>(rhs.oper->clone());
 }
 
 EqvExpression &EqvExpression::operator=(const EqvExpression &rhs) noexcept {
   if (&rhs != this) {
     leftExpr = rhs.leftExpr->clone();
     rightExpr = rhs.rightExpr->clone();
-    oper = rhs.oper->clone();
+    oper = cast<IOperator>(rhs.oper->clone());
   }
   return *this;
 }
@@ -84,10 +84,6 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   }
 
   return cloneExpr.clone();
-}
-
-uint16_t EqvExpression::getBaseOperatorPriority() const {
-  return (uint16_t)IOperator::Priority::Comparison;
 }
 
 void EqvExpression::setPrecision(uint8_t precision) {
@@ -158,6 +154,10 @@ std::string EqvExpression::solve(uint8_t precision) const {
   resultStr.pop_back();
   resultStr += "}";
   return resultStr;
+}
+
+const IFunction *EqvExpression::getFunction() const {
+  return oper.get();
 }
 
 std::vector<MathObjectPtr> EqvExpression::solvePowEquation(const Variable &x) const {

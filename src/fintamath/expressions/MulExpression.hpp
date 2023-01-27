@@ -35,7 +35,7 @@ public:
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
-  uint16_t getBaseOperatorPriority() const override;
+  const IFunction *getFunction() const override;
 
   MathObjectPtr getPowCoefficient(const MathObjectPtr &powValue) const;
 

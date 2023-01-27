@@ -4,21 +4,18 @@
 #include <vector>
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/parser/Parser.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
-
-class IFunction;
-
-using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;
 
 class IExpression;
 using ExpressionPtr = std::unique_ptr<IExpression>;
 
 class IExpression : virtual public IMathObject {
 public:
-  virtual uint16_t getBaseOperatorPriority() const = 0;
+  virtual const IFunction *getFunction() const = 0;
 
   virtual void setPrecision(uint8_t precision) = 0;
 

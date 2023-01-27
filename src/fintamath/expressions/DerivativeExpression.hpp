@@ -22,7 +22,7 @@ public:
 
   std::string toString() const override;
 
-  uint16_t getBaseOperatorPriority() const override;
+  const IFunction *getFunction() const override;
 
   void setPrecision(uint8_t precision) override;
 

@@ -29,6 +29,8 @@
 
 namespace fintamath {
 
+const Add ADD;
+
 struct SumExpression::MulObject {
   MathObjectPtr obj;
   SumExpression counter;
@@ -111,10 +113,6 @@ SumExpression::SumExpression(PolynomVector inPolynomVect) {
   compress();
 }
 
-uint16_t SumExpression::getBaseOperatorPriority() const {
-  return (uint16_t)IOperator::Priority::Addition;
-}
-
 std::string SumExpression::toString() const {
   std::string result;
 
@@ -169,6 +167,10 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
     return exprObj.polynomVect.front().toMathObject(isPrecise);
   }
   return exprObj.clone();
+}
+
+const IFunction *SumExpression::getFunction() const {
+  return &ADD;
 }
 
 bool sortFunc(const SumElement &lhs, const SumElement &rhs) {

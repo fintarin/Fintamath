@@ -59,7 +59,7 @@ public:
 
   static ExpressionPtr buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
-  uint16_t getBaseOperatorPriority() const override;
+  const IFunction *getFunction() const override;
 
   void setPrecision(uint8_t precision) override;
 

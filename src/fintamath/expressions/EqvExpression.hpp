@@ -33,7 +33,7 @@ public:
 
   std::string solve(uint8_t precision) const;
 
-  uint16_t getBaseOperatorPriority() const override;
+  const IFunction *getFunction() const override;
 
   void setPrecision(uint8_t precision) override;
 
@@ -44,7 +44,7 @@ private:
 
   MathObjectPtr rightExpr;
 
-  MathObjectPtr oper;
+  OperatorPtr oper;
 
   std::vector<MathObjectPtr> solvePowEquation(const Variable &x) const;
 

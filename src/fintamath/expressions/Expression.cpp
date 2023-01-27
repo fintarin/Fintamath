@@ -133,13 +133,6 @@ void Expression::compress() {
   }
 }
 
-uint16_t Expression::getBaseOperatorPriority() const {
-  if (info->instanceOf<IOperator>()) {
-    return (uint16_t)info->to<IOperator>().getOperatorPriority();
-  }
-  return (uint16_t)IOperator::Priority::Any;
-}
-
 std::string putInBrackets(const std::string &str) {
   return "(" + str + ")";
 }
@@ -156,17 +149,22 @@ std::string Expression::binaryOperatorToString() const {
   for (size_t i = 0; i < children.size(); i++) {
     const auto &child = children[i];
 
-    if (child->instanceOf<IExpression>()) {
-      auto parentPriority = info->to<IOperator>().getOperatorPriority();
-      auto childPriority = IOperator::Priority(child->to<IExpression>().getBaseOperatorPriority());
+    bool shouldPutInBrackets = false;
 
-      if (childPriority != IOperator::Priority::Any &&
-          (parentPriority < childPriority ||
-           (parentPriority == childPriority && !info->to<IOperator>().isAssociative() && i > 0))) {
-        result += putInBrackets(child->toString());
-      } else {
-        result += child->toString();
+    if (const auto *childExpr = cast<IExpression>(child.get())) {
+      if (const auto *oper = cast<IOperator>(childExpr->getFunction())) {
+        auto parentPriority = info->to<IOperator>().getOperatorPriority();
+        auto childPriority = oper->getOperatorPriority();
+
+        if ((parentPriority < childPriority ||
+             (parentPriority == childPriority && !info->to<IOperator>().isAssociative() && i > 0))) {
+          shouldPutInBrackets = true;
+        }
       }
+    }
+
+    if (shouldPutInBrackets) {
+      result += putInBrackets(child->toString());
     } else {
       result += child->toString();
     }
@@ -185,22 +183,23 @@ std::string Expression::prefixUnaryOperatorToString() const {
   if (children.front()->instanceOf<IExpression>()) {
     const auto &child = children.front()->to<IExpression>();
 
-    if (auto priority = IOperator::Priority(child.getBaseOperatorPriority());
-        priority != IOperator::Priority::Any && priority != IOperator::Priority::PrefixUnary) {
+    if (const auto *oper = cast<IOperator>(child.getFunction())) {
+      if (auto priority = oper->getOperatorPriority(); priority != IOperator::Priority::PrefixUnary) {
 
-      if (child.instanceOf<MulExpression>()) {
-        return result + children.front()->toString();
-      }
-
-      if (child.instanceOf<Expression>()) {
-        const auto &childExpr = child.to<Expression>();
-
-        if (childExpr.info->instanceOf<Pow>()) {
+        if (child.instanceOf<MulExpression>()) {
           return result + children.front()->toString();
         }
-      }
 
-      return result + putInBrackets(children.front()->toString());
+        if (child.instanceOf<Expression>()) {
+          const auto &childExpr = child.to<Expression>();
+
+          if (childExpr.info->instanceOf<Pow>()) {
+            return result + children.front()->toString();
+          }
+        }
+
+        return result + putInBrackets(children.front()->toString());
+      }
     }
   }
 
@@ -211,9 +210,10 @@ std::string Expression::postfixUnaryOperatorToString() const {
   std::string result = children.front()->toString();
 
   if (children.front()->instanceOf<IExpression>()) {
-    if (auto priority = IOperator::Priority(children.front()->to<IExpression>().getBaseOperatorPriority());
-        priority != IOperator::Priority::Any && priority != IOperator::Priority::PostfixUnary) {
-      return putInBrackets(result) + info->toString();
+    if (const auto *oper = cast<IOperator>(children.front()->to<IExpression>().getFunction())) {
+      if (auto priority = oper->getOperatorPriority(); priority != IOperator::Priority::PostfixUnary) {
+        return putInBrackets(result) + info->toString();
+      }
     }
   }
   if (children.front()->instanceOf<IComparable>() && children.front()->to<IComparable>() < ZERO) {
@@ -495,6 +495,14 @@ ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, cons
   }
 
   return funcExpr;
+}
+
+const IFunction *Expression::getFunction() const {
+  if (const auto *func = cast<IFunction>(info.get())) {
+    return func;
+  }
+
+  return nullptr;
 }
 
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
