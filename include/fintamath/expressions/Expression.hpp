@@ -55,8 +55,6 @@ public:
   // TODO: implement iterator & remove this
   const Expression::ChildrenVector &getChildren() const;
 
-  MathObjectPtr compress() const;
-
   static MathObjectPtr buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
   static ExpressionPtr buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
@@ -68,6 +66,8 @@ public:
   MathObjectPtr simplify(bool isPrecise) const override;
 
   std::vector<MathObjectPtr> getVariables() const override;
+
+  void compress() override;
 
   void setPrecisionRec(uint8_t precision);
 
@@ -94,8 +94,6 @@ private:
   static ExpressionPtr buildDerivateExpression(const ArgumentsVector &args);
 
   static ChildrenVector copy(const ChildrenVector &rhs);
-
-  Expression &compressTree();
 
   bool parsePrefixOperator(const TokenVector &tokens);
 

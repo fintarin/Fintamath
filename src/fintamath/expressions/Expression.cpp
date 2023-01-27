@@ -125,14 +125,12 @@ Expression::Expression(MathObjectPtr &&obj) {
 Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
 }
 
-Expression &Expression::compressTree() {
+void Expression::compress() {
   if (info->instanceOf<Expression>()) {
     auto exprInfo = info->to<Expression>();
     info = MathObjectPtr(exprInfo.info.release());
     children = copy(exprInfo.children);
   }
-
-  return *this;
 }
 
 uint16_t Expression::getBaseOperatorPriority() const {
@@ -466,17 +464,6 @@ std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVecto
   }
 
   return operators;
-}
-
-MathObjectPtr Expression::compress() const {
-  auto copyExpr = *this;
-  while (copyExpr.info->instanceOf<Expression>() && copyExpr.children.empty()) {
-    copyExpr = copyExpr.to<Expression>();
-  }
-  if (children.empty()) {
-    return copyExpr.info->clone();
-  }
-  return copyExpr.clone();
 }
 
 MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
@@ -825,7 +812,7 @@ void Expression::setPrecision(uint8_t precision) {
 
 MathObjectPtr Expression::simplify(bool isPrecise) const {
   Expression expr = *this;
-  expr.compressTree();
+  expr.compress();
 
   for (auto &child : expr.children) {
     if (child->instanceOf<IExpression>()) {

@@ -140,7 +140,7 @@ public:
   }
 
 protected:
-  void compress() {
+  void compress() override {
     Derived compressedExpr;
 
     for (const auto &child : polynomVect) {

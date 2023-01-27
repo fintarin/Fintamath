@@ -22,15 +22,23 @@ public:
 
   virtual void setPrecision(uint8_t precision) = 0;
 
-  MathObjectPtr simplify() const override;
-
   virtual MathObjectPtr simplify(bool isPrecise) const = 0;
 
-  virtual std::vector<MathObjectPtr> getVariables() const;
+  virtual void compress() {
+  }
+
+  MathObjectPtr simplify() const override {
+    return simplify(false);
+  }
+
+  virtual std::vector<MathObjectPtr> getVariables() const {
+    return {};
+  }
 
 protected:
-  static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
+  static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj); // TODO: move to NegExpression
 
+  // TODO: move to Expression
   void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;
 };
 
