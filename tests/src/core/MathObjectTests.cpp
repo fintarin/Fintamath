@@ -29,17 +29,6 @@ TEST(MathObjectTests, instanceofTest) {
   EXPECT_FALSE(m1->instanceOf<Variable>());
 }
 
-TEST(MathObjectTests, toTest) {
-  MathObjectPtr m1 = std::make_unique<Integer>();
-
-  EXPECT_TRUE(m1->to<Integer>().instanceOf<Integer>());
-  EXPECT_TRUE(m1->to<INumber>().instanceOf<INumber>());
-  EXPECT_TRUE(m1->to<IArithmetic>().instanceOf<IArithmetic>());
-  EXPECT_TRUE(m1->to<IMathObject>().instanceOf<IMathObject>());
-
-  EXPECT_TRUE(m1->to<IMathObject>().instanceOf<Integer>());
-}
-
 TEST(MathObjectTests, cloneTest) {
   MathObjectPtr m1 = std::make_unique<Integer>();
   MathObjectPtr m2 = std::make_unique<Integer>(1);

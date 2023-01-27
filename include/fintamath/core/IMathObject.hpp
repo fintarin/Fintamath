@@ -31,22 +31,6 @@ public:
     return dynamic_cast<const T *>(this);
   }
 
-  // TODO: remove this
-  template <typename T>
-  const T &to() const {
-    const T *res = dynamic_cast<const T *>(this);
-    assert(res != nullptr);
-    return *res;
-  }
-
-  // TODO: remove this
-  template <typename T>
-  T &to() {
-    T *res = dynamic_cast<T *>(this);
-    assert(res != nullptr);
-    return *res;
-  }
-
   virtual MathObjectPtr simplify() const {
     return clone();
   }
