@@ -111,8 +111,8 @@ Expression::Expression(const MathObjectPtr &obj) : Expression(obj->clone()) {
 }
 
 Expression::Expression(MathObjectPtr &&obj) {
-  if (obj->instanceOf<Expression>()) {
-    *this = std::move(obj->to<Expression>());
+  if (auto *expr = cast<Expression>(obj.get())) {
+    *this = std::move(*expr);
   } else if (obj->instanceOf<IExpression>()) {
     info = std::move(obj);
     children.clear();
@@ -120,16 +120,16 @@ Expression::Expression(MathObjectPtr &&obj) {
     info = obj->simplify();
     children.clear();
   }
+
+  obj = nullptr;
 }
 
 Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
 }
 
 void Expression::compress() {
-  if (info->instanceOf<Expression>()) {
-    auto exprInfo = info->to<Expression>();
-    info = MathObjectPtr(exprInfo.info.release());
-    children = copy(exprInfo.children);
+  while (auto *expr = cast<Expression>(info.get())) {
+    *this = std::move(*expr);
   }
 }
 
@@ -140,10 +140,14 @@ std::string putInBrackets(const std::string &str) {
 std::string Expression::binaryOperatorToString() const {
   std::string result;
 
-  std::string operStr = info->toString();
-  if (auto priority = info->to<IOperator>().getOperatorPriority();
-      priority != IOperator::Priority::Multiplication && priority != IOperator::Priority::Exponentiation) {
-    operStr = ' ' + operStr + ' ';
+  const auto *parentOper = cast<IOperator>(info.get());
+  std::string parentOperStr = info->toString();
+  IOperator::Priority parentOperPriority = parentOper->getOperatorPriority();
+  bool parentOperIsAssociative = parentOper->isAssociative();
+
+  if (parentOperPriority != IOperator::Priority::Multiplication &&
+      parentOperPriority != IOperator::Priority::Exponentiation) {
+    parentOperStr = ' ' + parentOperStr + ' ';
   }
 
   for (size_t i = 0; i < children.size(); i++) {
@@ -153,11 +157,8 @@ std::string Expression::binaryOperatorToString() const {
 
     if (const auto *childExpr = cast<IExpression>(child.get())) {
       if (const auto *oper = cast<IOperator>(childExpr->getFunction())) {
-        auto parentPriority = info->to<IOperator>().getOperatorPriority();
-        auto childPriority = oper->getOperatorPriority();
-
-        if ((parentPriority < childPriority ||
-             (parentPriority == childPriority && !info->to<IOperator>().isAssociative() && i > 0))) {
+        if (auto priority = oper->getOperatorPriority();
+            priority > parentOperPriority || (priority == parentOperPriority && !parentOperIsAssociative && i > 0)) {
           shouldPutInBrackets = true;
         }
       }
@@ -169,10 +170,10 @@ std::string Expression::binaryOperatorToString() const {
       result += child->toString();
     }
 
-    result += operStr;
+    result += parentOperStr;
   }
 
-  result = result.substr(0, result.length() - operStr.length());
+  result = result.substr(0, result.length() - parentOperStr.length());
 
   return result;
 }
@@ -180,20 +181,15 @@ std::string Expression::binaryOperatorToString() const {
 std::string Expression::prefixUnaryOperatorToString() const {
   std::string result = info->toString();
 
-  if (children.front()->instanceOf<IExpression>()) {
-    const auto &child = children.front()->to<IExpression>();
-
-    if (const auto *oper = cast<IOperator>(child.getFunction())) {
+  if (const auto *child = cast<IExpression>(children.front().get())) {
+    if (const auto *oper = cast<IOperator>(child->getFunction())) {
       if (auto priority = oper->getOperatorPriority(); priority != IOperator::Priority::PrefixUnary) {
-
-        if (child.instanceOf<MulExpression>()) {
+        if (cast<MulExpression>(child)) {
           return result + children.front()->toString();
         }
 
-        if (child.instanceOf<Expression>()) {
-          const auto &childExpr = child.to<Expression>();
-
-          if (childExpr.info->instanceOf<Pow>()) {
+        if (const auto *childExpr = cast<Expression>(child)) {
+          if (cast<Pow>(childExpr->info.get())) {
             return result + children.front()->toString();
           }
         }
@@ -209,16 +205,18 @@ std::string Expression::prefixUnaryOperatorToString() const {
 std::string Expression::postfixUnaryOperatorToString() const {
   std::string result = children.front()->toString();
 
-  if (children.front()->instanceOf<IExpression>()) {
-    if (const auto *oper = cast<IOperator>(children.front()->to<IExpression>().getFunction())) {
+  if (const auto *child = cast<IExpression>(children.front().get())) {
+    if (const auto *oper = cast<IOperator>(child->getFunction())) {
       if (auto priority = oper->getOperatorPriority(); priority != IOperator::Priority::PostfixUnary) {
         return putInBrackets(result) + info->toString();
       }
     }
   }
-  if (children.front()->instanceOf<IComparable>() && children.front()->to<IComparable>() < ZERO) {
+
+  if (const auto *comp = cast<IComparable>(children.front().get()); comp && *comp < ZERO) {
     return putInBrackets(result) + info->toString();
   }
+
   return result + info->toString();
 }
 
@@ -239,7 +237,7 @@ std::string Expression::functionToString() const {
 void Expression::setPrecisionRec(uint8_t precision) {
   if (children.empty()) {
     if (info->instanceOf<INumber>()) {
-      info = Converter::convert(*info, Real())->to<Real>().precise(precision).clone();
+      info = Converter::convert<Real>(*info).precise(precision).clone();
       return;
     }
     if (info->instanceOf<IExpression>()) {
@@ -256,7 +254,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
       child = copyChild->simplify(false);
     }
     if (child->instanceOf<INumber>()) {
-      child = Converter::convert(*child, Real())->to<Real>().precise(precision).clone();
+      child = Converter::convert<Real>(*child).precise(precision).clone();
       continue;
     }
     if (child->instanceOf<IExpression>()) {
@@ -266,18 +264,17 @@ void Expression::setPrecisionRec(uint8_t precision) {
     }
   }
 
-  if (info->instanceOf<IFunction>()) {
-    const auto &func = info->to<IFunction>();
+  if (const auto *func = cast<IFunction>(info.get())) {
     ArgumentsVector args;
 
     for (const auto &child : children) {
       args.emplace_back(*child);
     }
 
-    if (func.doAgsMatch(args)) {
-      auto countResult = func(args);
+    if (func->doAgsMatch(args)) {
+      auto countResult = (*func)(args);
       if (countResult->instanceOf<INumber>()) {
-        info = Converter::convert(*countResult, Real())->to<Real>().precise(precision).clone();
+        info = Converter::convert<Real>(*countResult).precise(precision).clone();
         children.clear();
       }
     }
@@ -307,8 +304,8 @@ std::string Expression::toString() const {
 
   std::string result;
 
-  if (info->instanceOf<IOperator>()) {
-    switch (info->to<IOperator>().getOperatorPriority()) {
+  if (const auto *oper = cast<IOperator>(info.get())) {
+    switch (oper->getOperatorPriority()) {
     case IOperator::Priority::PostfixUnary:
       return postfixUnaryOperatorToString();
     case IOperator::Priority::PrefixUnary:
@@ -345,12 +342,12 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
   if (auto oper = IOperator::parse(tokens.back(), IOperator::Priority::PostfixUnary)) {
     int64_t order = 1;
 
-    if (oper->instanceOf<Factorial>()) {
+    if (auto *factor = cast<Factorial>(oper.get())) {
       while (tokens[tokens.size() - order - 1] == oper->toString()) {
         order++;
       }
 
-      oper->to<Factorial>().setOrder(order);
+      factor->setOrder(order);
     }
 
     info = std::move(oper);
@@ -371,14 +368,14 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 
   auto foundOperIt = operMap.begin();
   auto foundIndex = foundOperIt->first;
-  auto foundPriority = foundOperIt->second->to<IOperator>().getOperatorPriority();
+  auto foundPriority = cast<IOperator>(foundOperIt->second.get())->getOperatorPriority();
 
   auto it = operMap.begin();
   ++it;
 
   for (; it != operMap.end(); ++it) {
     auto index = it->first;
-    auto priority = it->second->to<IOperator>().getOperatorPriority();
+    auto priority = cast<IOperator>(it->second.get())->getOperatorPriority();
 
     if (foundPriority < priority || (foundPriority == priority && foundIndex < index)) {
       foundPriority = priority;
@@ -393,10 +390,10 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 
   auto lhsExpr = Expression(TokenVector(tokens.begin(), tokens.begin() + operPos));
   auto rhsExpr = Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end()));
-  auto funcExpr = buildRawFunctionExpression(foundOperIt->second->to<IFunction>(), {lhsExpr, rhsExpr});
+  auto funcExpr = buildRawFunctionExpression(cast<IFunction>(*foundOperIt->second), {lhsExpr, rhsExpr});
 
-  if (funcExpr->instanceOf<Expression>()) {
-    *this = std::move(funcExpr->to<Expression>());
+  if (const auto *expr = cast<Expression>(funcExpr.get())) {
+    *this = std::move(*expr);
   } else {
     info = std::move(funcExpr);
     children.clear();
@@ -452,8 +449,7 @@ std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVecto
       continue;
     }
 
-    if (auto oper = IOperator::parse(tokens.at(i));
-        oper && oper->to<IOperator>().getFunctionType() == IFunction::Type::Binary) {
+    if (auto oper = IOperator::parse(tokens.at(i)); oper && oper->getFunctionType() == IFunction::Type::Binary) {
       if (!isPrevTokenOper) {
         operators.insert({i, std::move(oper)});
         isPrevTokenOper = true;
@@ -479,7 +475,8 @@ ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, cons
     return buildMulExpression(func, args);
   }
 
-  if (func.instanceOf<IOperator>() && func.to<IOperator>().getOperatorPriority() == IOperator::Priority::Comparison) {
+  if (const auto *oper = cast<IOperator>(&func);
+      oper && oper->getOperatorPriority() == IOperator::Priority::Comparison) {
     return buildEqvExpression(func, args);
   }
 
@@ -682,8 +679,8 @@ void Expression::simplifyUnaryPlus() {
   }
 
   auto &child = children.front();
-  if (child->instanceOf<Expression>()) {
-    *this = std::move(child->to<Expression>());
+  if (auto *expr = cast<Expression>(child.get())) {
+    *this = std::move(*expr);
   } else {
     info = std::move(child);
     children.clear();
@@ -700,12 +697,12 @@ void Expression::simplifyNeg() {
     return;
   }
 
-  auto &childExpr = child->to<Expression>();
-  if (!childExpr.info->instanceOf<Neg>()) {
+  const auto *childExpr = cast<Expression>(child.get());
+  if (!childExpr->info->instanceOf<Neg>()) {
     return;
   }
 
-  *this = Expression(childExpr.children.front());
+  *this = Expression(childExpr->children.front());
 }
 
 void Expression::simplifyNot() {
@@ -718,12 +715,12 @@ void Expression::simplifyNot() {
     return;
   }
 
-  auto &childExpr = child->to<Expression>();
-  if (!childExpr.info->instanceOf<Not>()) {
+  const auto *childExpr = cast<Expression>(child.get());
+  if (!childExpr->info->instanceOf<Not>()) {
     return;
   }
 
-  *this = Expression(childExpr.children.front());
+  *this = Expression(childExpr->children.front());
 }
 
 void Expression::simplifyAnd() {
@@ -734,14 +731,14 @@ void Expression::simplifyAnd() {
   const auto &lhs = *children.front();
   const auto &rhs = *children.back();
 
-  if (lhs.instanceOf<Boolean>()) {
-    if (lhs.to<Boolean>() == true) {
+  if (const auto *lhsBool = cast<Boolean>(&lhs)) {
+    if (*lhsBool == true) {
       *this = rhs;
     } else {
       *this = Boolean(false);
     }
-  } else if (rhs.instanceOf<Boolean>()) {
-    if (rhs.to<Boolean>() == true) {
+  } else if (const auto *rhsBool = cast<Boolean>(&rhs)) {
+    if (*rhsBool == true) {
       *this = lhs;
     } else {
       *this = Boolean(false);
@@ -761,14 +758,14 @@ void Expression::simplifyOr() {
   const auto &lhs = *children.front();
   const auto &rhs = *children.back();
 
-  if (lhs.instanceOf<Boolean>()) {
-    if (lhs.to<Boolean>() == true) {
+  if (const auto *lhsBool = cast<Boolean>(&lhs)) {
+    if (*lhsBool == true) {
       *this = Boolean(true);
     } else {
       *this = rhs;
     }
-  } else if (rhs.instanceOf<Boolean>()) {
-    if (rhs.to<Boolean>() == true) {
+  } else if (const auto *rhsBool = cast<Boolean>(&rhs)) {
+    if (*rhsBool == true) {
       *this = Boolean(true);
     } else {
       *this = lhs;
@@ -823,8 +820,8 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   expr.compress();
 
   for (auto &child : expr.children) {
-    if (child->instanceOf<IExpression>()) {
-      child = child->to<IExpression>().simplify(isPrecise);
+    if (const auto *childExpr = cast<IExpression>(child.get())) {
+      child = childExpr->simplify(isPrecise);
       continue;
     }
 
@@ -847,8 +844,8 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   if (expr.children.empty()) {
     expr.simplifyConstant(isPrecise);
 
-    if (info->instanceOf<IExpression>()) {
-      return expr.info->to<IExpression>().simplify(isPrecise);
+    if (const auto *childExpr = cast<IExpression>(expr.info.get())) {
+      return childExpr->simplify(isPrecise);
     }
 
     return expr.info->simplify();
@@ -879,16 +876,18 @@ MathObjectPtr Expression::simplify() const {
 }
 
 std::string Expression::solve(uint8_t precision) const {
-  if (info->instanceOf<EqvExpression>()) {
-    return info->to<EqvExpression>().solve(precision);
+  if (const auto *expr = cast<EqvExpression>(info.get())) {
+    return expr->solve(precision);
   }
+
   return toString(precision);
 }
 
 std::string Expression::solve() const {
-  if (info->instanceOf<EqvExpression>()) {
-    return info->to<EqvExpression>().solve();
+  if (const auto *expr = cast<EqvExpression>(info.get())) {
+    return expr->solve();
   }
+
   return toString();
 }
 
@@ -897,7 +896,7 @@ void Expression::simplifyFunction(bool isPrecise) {
     return;
   }
 
-  const auto &func = info->to<IFunction>();
+  const auto &func = cast<IFunction>(*info.get());
   ArgumentsVector args;
 
   bool hasExpressionArg = false;
@@ -912,7 +911,7 @@ void Expression::simplifyFunction(bool isPrecise) {
   if (!hasExpressionArg && func.doAgsMatch(args)) {
     auto countResult = func(args);
 
-    if (countResult->instanceOf<INumber>() && !countResult->to<INumber>().isPrecise() && isPrecise) {
+    if (const auto *num = cast<INumber>(countResult.get()); num && !num->isPrecise() && isPrecise) {
       return;
     }
 
@@ -954,35 +953,37 @@ void Expression::simplifyPow() {
   MathObjectPtr &lhsRef = children.front();
   MathObjectPtr &rhsRef = children.back();
 
-  if (rhsRef->instanceOf<Integer>() && lhsRef->instanceOf<IExpression>() && !lhsRef->instanceOf<Expression>()) {
-    Integer rhs = rhsRef->to<Integer>();
+  auto *lhsPtr = cast<IExpression>(lhsRef.get());
+  auto *rhsPtr = cast<Integer>(rhsRef.get());
 
-    if (rhs == 0) {
+  if (lhsPtr && rhsPtr && !cast<Expression>(lhsPtr)) {
+    if (*rhsPtr == ZERO) {
       info = ONE.clone();
       children.clear();
       return;
     }
-    if (lhsRef->toString() == "1" || rhs == 1) {
-      info = lhsRef->clone();
+    if (*lhsPtr == ONE || *rhsPtr == ONE) {
+      info = lhsPtr->clone();
       children.clear();
       return;
     }
-    if (rhs == -1) {
+    if (*rhsPtr == NEG_ONE) {
       info = std::make_unique<Div>();
-      rhsRef = ONE.clone();
+      *rhsPtr = ONE;
       std::swap(lhsRef, rhsRef);
       return;
     }
 
-    MulElement lhs = lhsRef;
+    Integer rhs = *rhsPtr;
+    MulElement lhs = lhsPtr->clone();
 
-    if (rhs < 0) {
+    if (rhs < ZERO) {
       lhs.inverted = true;
       rhs = -rhs;
     }
 
     MulExpression mul;
-    for (Integer i = 0; i < rhs; i++) {
+    for (size_t i = 0; i < rhs; i++) {
       mul.addElement(lhs);
     }
 
@@ -993,29 +994,35 @@ void Expression::simplifyPow() {
 
 std::vector<MathObjectPtr> Expression::getVariables() const {
   std::vector<MathObjectPtr> result;
+
   if (info->instanceOf<Variable>()) {
     result.emplace_back(info->clone());
     return result;
   }
-  if (info->instanceOf<IExpression>()) {
-    auto addResult = info->to<IExpression>().getVariables();
+
+  if (const auto *expr = cast<IExpression>(info.get())) {
+    auto addResult = expr->getVariables();
     for (const auto &add : addResult) {
       result.emplace_back(add->clone());
     }
     return result;
   }
+
   for (const auto &child : children) {
     if (child->instanceOf<Variable>()) {
       result.emplace_back(child->clone());
       continue;
     }
-    if (child->instanceOf<IExpression>()) {
-      auto addResult = child->to<IExpression>().getVariables();
+
+    if (const auto *expr = cast<IExpression>(info.get())) {
+      auto addResult = expr->getVariables();
       for (const auto &add : addResult) {
         result.emplace_back(add->clone());
       }
     }
   }
+
   return result;
 }
+
 }
