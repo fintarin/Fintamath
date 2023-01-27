@@ -480,6 +480,13 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(5+5)=(2=5)"), InvalidInputException);
   EXPECT_THROW(Expression("1+(sin(x)<2)"), InvalidInputException);
   EXPECT_THROW(Expression("1/(sin(x)<2)"), InvalidInputException);
+  EXPECT_THROW(Expression("1+False"), InvalidInputException);
+  EXPECT_THROW(Expression("False+1"), InvalidInputException);
+  EXPECT_THROW(Expression("1=False"), InvalidInputException);
+  EXPECT_THROW(Expression("False=1"), InvalidInputException);
+
+  // TODO: fix nested expressions
+  // EXPECT_THROW(Expression("True && a = b"), InvalidInputException);
 
   EXPECT_THROW(Expression("1/0"), UndefinedException);
   EXPECT_THROW(Expression("0^0"), UndefinedException);

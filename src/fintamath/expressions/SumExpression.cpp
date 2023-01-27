@@ -85,7 +85,7 @@ void SumElement::simplify(bool isPrecise) {
     auto constant = cast<IConstant>(std::move(info));
     auto constVal = (*constant)();
 
-    if (const auto *num = cast<INumber>(constVal.get()); isPrecise && !num->isPrecise()) {
+    if (const auto *num = cast<INumber>(constVal.get()); num && isPrecise && !num->isPrecise()) {
       info = std::move(constant);
     } else {
       info = std::move(constVal);
@@ -157,6 +157,13 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
 
   for (auto &obj : exprObj.polynomVect) {
     obj.simplify(isPrecise);
+  }
+
+  // TODO: find a better solution
+  if (!exprObj.polynomVect.empty()) {
+    for (size_t i = 0; i < exprObj.polynomVect.size() - 1; i++) {
+      validateFunctionArgs(ADD, {*exprObj.polynomVect.at(i).info, *exprObj.polynomVect.at(i + 1).info});
+    }
   }
 
   exprObj.simplifyNegations();
