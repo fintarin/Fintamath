@@ -29,10 +29,10 @@ TEST(ModularTests, modTest) {
   EXPECT_EQ((*m1 % *m2)->toString(), "1");
   EXPECT_EQ((*m2 % *m1)->toString(), "3");
 
-  EXPECT_TRUE((*m1 % *m1)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 % *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m1 % *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 % *m1)->instanceOf<Integer>());
+  EXPECT_TRUE(cast<Integer>(*m1 % *m1));
+  EXPECT_TRUE(cast<Integer>(*m2 % *m2));
+  EXPECT_TRUE(cast<Integer>(*m1 % *m2));
+  EXPECT_TRUE(cast<Integer>(*m2 % *m1));
 
   EXPECT_THROW(*m1 % TestModular(), InvalidInputBinaryOpearatorException);
   EXPECT_THROW(TestModular() % *m1, InvalidInputBinaryOpearatorException);

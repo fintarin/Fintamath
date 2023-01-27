@@ -50,7 +50,7 @@ private:
 
   std::vector<MathObjectPtr> solveQuadraticEquation(const MathObjectPtr &v) const;
 
-  static bool sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
+  static bool sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
 
   static std::vector<MathObjectPtr> sortResult(std::vector<MathObjectPtr> &result);
 

@@ -13,5 +13,5 @@ TEST(FalseTests, toStringTest) {
 
 TEST(FalseTests, callTest) {
   EXPECT_EQ(f()->toString(), "False");
-  EXPECT_TRUE(f()->instanceOf<Boolean>());
+  EXPECT_TRUE(cast<Boolean>(f()));
 }

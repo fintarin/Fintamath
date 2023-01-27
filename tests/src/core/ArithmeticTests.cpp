@@ -51,16 +51,16 @@ TEST(ArithmeticTests, addTest) {
   EXPECT_EQ((*m3 + *m2)->toString(), "5/2");
   EXPECT_EQ((*m3 + *m3)->toString(), "1");
 
-  EXPECT_TRUE((*m1 + *m1)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 + *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m1 + *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 + *m1)->instanceOf<Integer>());
+  EXPECT_TRUE(cast<Integer>(*m1 + *m1));
+  EXPECT_TRUE(cast<Integer>(*m2 + *m2));
+  EXPECT_TRUE(cast<Integer>(*m1 + *m2));
+  EXPECT_TRUE(cast<Integer>(*m2 + *m1));
 
-  EXPECT_TRUE((*m1 + *m3)->instanceOf<Rational>());
-  EXPECT_TRUE((*m2 + *m3)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 + *m1)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 + *m2)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 + *m3)->instanceOf<Integer>());
+  EXPECT_TRUE(cast<Rational>(*m1 + *m3));
+  EXPECT_TRUE(cast<Rational>(*m2 + *m3));
+  EXPECT_TRUE(cast<Rational>(*m3 + *m1));
+  EXPECT_TRUE(cast<Rational>(*m3 + *m2));
+  EXPECT_TRUE(cast<Integer>(*m3 + *m3));
 
   EXPECT_THROW(*m1 + TestArithmetic(), InvalidInputBinaryOpearatorException);
   EXPECT_THROW(TestArithmetic() + *m1, InvalidInputBinaryOpearatorException);
@@ -87,16 +87,16 @@ TEST(ArithmeticTests, subTest) {
   EXPECT_EQ((*m3 - *m2)->toString(), "-3/2");
   EXPECT_EQ((*m3 - *m3)->toString(), "0");
 
-  EXPECT_TRUE((*m1 - *m1)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 - *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m1 - *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 - *m1)->instanceOf<Integer>());
+  EXPECT_TRUE(cast<Integer>(*m1 - *m1));
+  EXPECT_TRUE(cast<Integer>(*m2 - *m2));
+  EXPECT_TRUE(cast<Integer>(*m1 - *m2));
+  EXPECT_TRUE(cast<Integer>(*m2 - *m1));
 
-  EXPECT_TRUE((*m1 - *m3)->instanceOf<Rational>());
-  EXPECT_TRUE((*m2 - *m3)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 - *m1)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 - *m2)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 - *m3)->instanceOf<Integer>());
+  EXPECT_TRUE(cast<Rational>(*m1 - *m3));
+  EXPECT_TRUE(cast<Rational>(*m2 - *m3));
+  EXPECT_TRUE(cast<Rational>(*m3 - *m1));
+  EXPECT_TRUE(cast<Rational>(*m3 - *m2));
+  EXPECT_TRUE(cast<Integer>(*m3 - *m3));
 
   EXPECT_THROW(*m1 - TestArithmetic(), InvalidInputBinaryOpearatorException);
   EXPECT_THROW(TestArithmetic() - *m1, InvalidInputBinaryOpearatorException);
@@ -123,16 +123,16 @@ TEST(ArithmeticTests, mulTest) {
   EXPECT_EQ((*m3 * *m2)->toString(), "1");
   EXPECT_EQ((*m3 * *m3)->toString(), "1/4");
 
-  EXPECT_TRUE((*m1 * *m1)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 * *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m1 * *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 * *m1)->instanceOf<Integer>());
+  EXPECT_TRUE(cast<Integer>(*m1 * *m1));
+  EXPECT_TRUE(cast<Integer>(*m2 * *m2));
+  EXPECT_TRUE(cast<Integer>(*m1 * *m2));
+  EXPECT_TRUE(cast<Integer>(*m2 * *m1));
 
-  EXPECT_TRUE((*m1 * *m3)->instanceOf<Rational>());
-  EXPECT_TRUE((*m2 * *m3)->instanceOf<Integer>());
-  EXPECT_TRUE((*m3 * *m1)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 * *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m3 * *m3)->instanceOf<Rational>());
+  EXPECT_TRUE(cast<Rational>(*m1 * *m3));
+  EXPECT_TRUE(cast<Integer>(*m2 * *m3));
+  EXPECT_TRUE(cast<Rational>(*m3 * *m1));
+  EXPECT_TRUE(cast<Integer>(*m3 * *m2));
+  EXPECT_TRUE(cast<Rational>(*m3 * *m3));
 
   EXPECT_THROW(*m1 * TestArithmetic(), InvalidInputBinaryOpearatorException);
   EXPECT_THROW(TestArithmetic() * *m1, InvalidInputBinaryOpearatorException);
@@ -159,16 +159,16 @@ TEST(ArithmeticTests, divTest) {
   EXPECT_EQ((*m3 / *m2)->toString(), "1/4");
   EXPECT_EQ((*m3 / *m3)->toString(), "1");
 
-  EXPECT_TRUE((*m1 / *m1)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 / *m2)->instanceOf<Integer>());
-  EXPECT_TRUE((*m1 / *m2)->instanceOf<Rational>());
-  EXPECT_TRUE((*m2 / *m1)->instanceOf<Integer>());
+  EXPECT_TRUE(cast<Integer>(*m1 / *m1));
+  EXPECT_TRUE(cast<Integer>(*m2 / *m2));
+  EXPECT_TRUE(cast<Rational>(*m1 / *m2));
+  EXPECT_TRUE(cast<Integer>(*m2 / *m1));
 
-  EXPECT_TRUE((*m1 / *m3)->instanceOf<Integer>());
-  EXPECT_TRUE((*m2 / *m3)->instanceOf<Integer>());
-  EXPECT_TRUE((*m3 / *m1)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 / *m2)->instanceOf<Rational>());
-  EXPECT_TRUE((*m3 / *m3)->instanceOf<Integer>());
+  EXPECT_TRUE(cast<Integer>(*m1 / *m3));
+  EXPECT_TRUE(cast<Integer>(*m2 / *m3));
+  EXPECT_TRUE(cast<Rational>(*m3 / *m1));
+  EXPECT_TRUE(cast<Rational>(*m3 / *m2));
+  EXPECT_TRUE(cast<Integer>(*m3 / *m3));
 
   EXPECT_THROW(*m1 / TestArithmetic(), InvalidInputBinaryOpearatorException);
   EXPECT_THROW(TestArithmetic() / *m1, InvalidInputBinaryOpearatorException);

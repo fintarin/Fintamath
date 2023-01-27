@@ -23,7 +23,8 @@ EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, co
       !operPtr || operPtr->getOperatorPriority() != IOperator::Priority::Comparison) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
   }
-  if (lhs.instanceOf<EqvExpression>() || rhs.instanceOf<EqvExpression>()) {
+
+  if (cast<EqvExpression>(&lhs) || cast<EqvExpression>(&rhs)) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
   }
 
@@ -78,16 +79,16 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   cloneExpr.leftExpr = addExpr.simplify(isPrecise);
   cloneExpr.rightExpr = ZERO.clone();
 
-  if (cloneExpr.leftExpr->instanceOf<IComparable>()) {
-    auto b = Expression(cast<IOperator>(*oper)(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
-    return b.simplify(isPrecise);
+  if (cast<IComparable>(cloneExpr.leftExpr.get())) {
+    auto res = Expression(cast<IOperator>(*oper)(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
+    return res.simplify(isPrecise);
   }
 
   return cloneExpr.clone();
 }
 
 void EqvExpression::setPrecision(uint8_t precision) {
-  if (leftExpr->instanceOf<IExpression>()) {
+  if (cast<IExpression>(leftExpr.get())) {
     auto copyExpr = cast<IExpression>(std::move(leftExpr));
     copyExpr->setPrecision(precision);
     leftExpr = copyExpr->clone();
@@ -97,11 +98,11 @@ void EqvExpression::setPrecision(uint8_t precision) {
 std::string EqvExpression::solve() const {
   Variable x("x");
   auto expr = simplify(false);
-  if (!expr->instanceOf<EqvExpression>()) {
+  if (!cast<EqvExpression>(expr.get())) {
     return expr->toString();
   }
   auto copyExpr = cast<EqvExpression>(*expr);
-  if (!copyExpr.oper->instanceOf<Eqv>()) {
+  if (!cast<Eqv>(copyExpr.oper.get())) {
     return expr->toString();
   }
   if (!copyExpr.detectOneVariable(x)) {
@@ -126,11 +127,11 @@ std::string EqvExpression::solve() const {
 std::string EqvExpression::solve(uint8_t precision) const {
   Variable x("x");
   auto expr = simplify(false);
-  if (!expr->instanceOf<EqvExpression>()) {
+  if (!cast<EqvExpression>(expr.get())) {
     return expr->toString();
   }
   auto copyExpr = cast<EqvExpression>(*expr);
-  if (!copyExpr.oper->instanceOf<Eqv>()) {
+  if (!cast<Eqv>(copyExpr.oper.get())) {
     return expr->toString();
   }
   if (!copyExpr.detectOneVariable(x)) {
@@ -232,7 +233,7 @@ bool EqvExpression::detectOneVariable(Variable &v) const {
   }
 }
 
-bool EqvExpression::sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
+bool EqvExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
   if (const auto *lhsComp = cast<IComparable>(lhs.get())) {
     if (const auto *rhsComp = cast<IComparable>(rhs.get())) {
       return *lhsComp < *rhsComp;
@@ -243,7 +244,7 @@ bool EqvExpression::sortPredicat(const MathObjectPtr &lhs, const MathObjectPtr &
 }
 
 std::vector<MathObjectPtr> EqvExpression::sortResult(std::vector<MathObjectPtr> &result) {
-  std::sort(result.begin(), result.end(), sortPredicat);
+  std::sort(result.begin(), result.end(), sortFunc);
   std::vector<MathObjectPtr> resultWithoutRepeat;
   for (const auto &val : result) {
     if (resultWithoutRepeat.empty()) {

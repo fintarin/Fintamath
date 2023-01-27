@@ -43,7 +43,7 @@ struct MulExpression::ObjectPow {
     }
     auto powValue = polynom.front().info->clone();
     *powValue = polynom.front().inverted ? *Neg()(*powValue) : *powValue;
-    if (powValue->instanceOf<Integer>()) {
+    if (cast<Integer>(powValue.get())) {
       return powValue;
     }
     return nullptr;
@@ -102,7 +102,7 @@ void MulElement::simplify(bool isPrecise) {
     return;
   }
 
-  if (info->instanceOf<IConstant>()) {
+  if (cast<IConstant>(info.get())) {
     auto constant = cast<IConstant>(std::move(info));
     auto constVal = (*constant)();
 
@@ -135,7 +135,7 @@ MulExpression::MulExpression(const IMathObject &rhs) {
 }
 
 std::string MulExpression::tryPutInBrackets(const MathObjectPtr &obj) {
-  if (obj->instanceOf<SumExpression>()) {
+  if (cast<SumExpression>(obj.get())) {
     return "(" + obj->toString() + ")";
   }
   return tryPutInBracketsIfNeg(obj);
@@ -166,7 +166,7 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   exprObj.compress();
 
   for (auto &obj : exprObj.polynomVect) { // TODO: find a better solution
-    if (obj.info->instanceOf<EqvExpression>()) {
+    if (cast<EqvExpression>(obj.info.get())) {
       throw InvalidInputException(toString());
     }
   }
@@ -281,7 +281,7 @@ void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, Polyno
         continue;
       }
 
-      if (obj.obj->instanceOf<ILiteral>()) {
+      if (cast<ILiteral>(obj.obj.get())) {
         if ((num == 1) || (num == -1)) {
           literalVect.emplace_back(MulElement(obj.obj->clone(), num == -1));
           continue;
@@ -290,7 +290,7 @@ void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, Polyno
         continue;
       }
 
-      if (obj.obj->instanceOf<Expression>()) {
+      if (cast<Expression>(obj.obj.get())) {
         if ((num == 1) || (num == -1)) {
           funcVect.emplace_back(MulElement(obj.obj->clone(), num == -1));
           continue;
@@ -299,7 +299,7 @@ void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, Polyno
         continue;
       }
 
-      if (obj.obj->instanceOf<INumber>()) {
+      if (cast<INumber>(obj.obj.get())) {
         powVect.emplace_back(MulElement(Pow()(*obj.obj, num)));
         continue;
       }
@@ -435,7 +435,7 @@ void MulExpression::simplifyPolynom() {
   sortPolynom(tmpVect, numVect, exprVect, literalVect, funcVect, powVect);
 
   numVect = mulNumbers(numVect);
-  if (numVect.size() == 1 && numVect.front().info->instanceOf<IComparable>() && *numVect.front().info == ZERO) {
+  if (numVect.size() == 1 && *numVect.front().info == ZERO) {
     polynomVect = numVect;
     return;
   }
@@ -460,7 +460,7 @@ void MulExpression::simplifyPolynom() {
     bool negativeAdded = false;
     if (!positive.empty()) {
       auto addExpr = SumExpression(convertMulPolynomToAdd(positive)).simplify();
-      if (!addExpr->instanceOf<INumber>()) {
+      if (!cast<INumber>(addExpr.get())) {
         polynomVect.emplace_back(MulElement{addExpr->clone()});
         positiveAdded = true;
       } else {
@@ -469,7 +469,7 @@ void MulExpression::simplifyPolynom() {
     }
     if (!negative.empty()) {
       auto addExpr = SumExpression(convertMulPolynomToAdd(negative)).simplify();
-      if (!addExpr->instanceOf<INumber>()) {
+      if (!cast<INumber>(addExpr.get())) {
         polynomVect.emplace_back(MulElement(addExpr->clone(), true));
         negativeAdded = true;
       } else {
@@ -533,7 +533,7 @@ MulExpression::PolynomVector MulExpression::openPowMulExpression(const PolynomVe
     const auto *expr = cast<Expression>(pow.info.get());
     auto left = expr->getChildren().front()->clone();
 
-    if (!left->instanceOf<MulExpression>()) {
+    if (!cast<MulExpression>(left.get())) {
       newPowVect.emplace_back(pow);
       continue;
     }
@@ -552,7 +552,7 @@ MulExpression::PolynomVector MulExpression::openPowMulExpression(const PolynomVe
 MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
   for (const auto &child : polynomVect) {
     if (*powValue == ONE) {
-      if (child.info->instanceOf<Variable>()) {
+      if (cast<Variable>(child.info.get())) {
         return polynomVect.front().info->clone();
       }
     }

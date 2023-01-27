@@ -22,18 +22,18 @@ PolynomElement::PolynomElement(MathObjectPtr &&info, bool inverted) : info(std::
 }
 
 void PolynomElement::setPrecision(uint8_t precision) {
-  if (info->instanceOf<IExpression>()) {
+  if (cast<IExpression>(info.get())) {
     auto expr = cast<IExpression>(std::move(info));
     expr->setPrecision(precision);
     info = std::move(expr);
     return;
   }
 
-  if (info->instanceOf<INumber>()) {
+  if (cast<INumber>(info.get())) {
     info = convert<Real>(*info).precise(precision).clone();
   }
 
-  if (info->instanceOf<IConstant>()) {
+  if (cast<IConstant>(info.get())) {
     auto constVal = (*cast<IConstant>(std::move(info)))();
 
     if (auto num = cast<INumber>(std::move(constVal))) {

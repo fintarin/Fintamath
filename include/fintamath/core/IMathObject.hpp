@@ -24,12 +24,6 @@ public:
     return {};
   }
 
-  // TODO: remove this
-  template <typename T>
-  bool instanceOf() const {
-    return dynamic_cast<const T *>(this);
-  }
-
   virtual MathObjectPtr simplify() const {
     return clone();
   }

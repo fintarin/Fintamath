@@ -8,7 +8,7 @@ namespace fintamath {
 MathObjectPtr Factorial::call(const ArgumentsVector &argsVect) const {
   const auto &rhs = argsVect.front().get();
 
-  if (!rhs.instanceOf<Integer>()) {
+  if (!cast<Integer>(&rhs)) {
     throw UndefinedUnaryOpearatorException(toString(), rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
   }
 

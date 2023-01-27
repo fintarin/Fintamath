@@ -75,13 +75,13 @@ MathObjectPtr SumElement::toMathObject(bool isPrecise) const {
 }
 
 void SumElement::simplify(bool isPrecise) {
-  if (info->instanceOf<IExpression>()) {
+  if (cast<IExpression>(info.get())) {
     auto expr = cast<IExpression>(std::move(info));
     info = expr->simplify(isPrecise);
     return;
   }
 
-  if (info->instanceOf<IConstant>()) {
+  if (cast<IConstant>(info.get())) {
     auto constant = cast<IConstant>(std::move(info));
     auto constVal = (*constant)();
 
@@ -146,7 +146,7 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
   exprObj.compress();
 
   for (auto &obj : exprObj.polynomVect) { // TODO: find a better solution
-    if (obj.info->instanceOf<EqvExpression>()) {
+    if (cast<EqvExpression>(obj.info.get())) {
       throw InvalidInputException(toString());
     }
   }
@@ -174,11 +174,11 @@ const IFunction *SumExpression::getFunction() const {
 }
 
 bool sortFunc(const SumElement &lhs, const SumElement &rhs) {
-  if (lhs.info->instanceOf<IConstant>()) {
+  if (cast<IConstant>(lhs.info.get())) {
     return false;
   }
 
-  if (rhs.info->instanceOf<IConstant>()) {
+  if (cast<IConstant>(rhs.info.get())) {
     return true;
   }
 
@@ -215,7 +215,7 @@ void SumExpression::simplifyPolynom() {
 
 void SumExpression::simplifyNegations() {
   for (auto &child : polynomVect) {
-    if (auto *childExpr = cast<Expression>(child.info.get()); childExpr && childExpr->getInfo()->instanceOf<Neg>()) {
+    if (auto *childExpr = cast<Expression>(child.info.get()); childExpr && cast<Neg>(childExpr->getInfo().get())) {
       child.info = std::move(childExpr->getChildren().front());
       child.inverted = !child.inverted;
     }
@@ -243,15 +243,15 @@ void SumExpression::sortMulObjects(MulObjects &objs, PolynomVector &mulVect, Pol
       continue;
     }
     if (*counter == ONE || *counter == NEG_ONE) {
-      if (obj.obj->instanceOf<ILiteral>()) {
+      if (cast<ILiteral>(obj.obj.get())) {
         literalVect.emplace_back(obj.obj->clone(), *counter == NEG_ONE);
         continue;
       }
-      if (obj.obj->instanceOf<Expression>()) {
+      if (cast<Expression>(obj.obj.get())) {
         powVect.emplace_back(obj.obj->clone(), *counter == NEG_ONE);
         continue;
       }
-      if (obj.obj->instanceOf<MulExpression>()) {
+      if (cast<MulExpression>(obj.obj.get())) {
         mulVect.emplace_back(obj.obj->clone(), *counter == NEG_ONE);
         continue;
       }
@@ -270,7 +270,7 @@ void SumExpression::simplifyMul(PolynomVector &powVect, PolynomVector &mulVect, 
       added = true;
     }
     MathObjectPtr number = ONE.clone();
-    if (mulExprPolynom.front().info->instanceOf<INumber>()) {
+    if (cast<INumber>(mulExprPolynom.front().info.get())) {
       if (mulExprPolynom.front().inverted) {
         number = Neg()(*mulExprPolynom.front().info);
       } else {
@@ -353,17 +353,17 @@ void SumExpression::simplifyMul(PolynomVector &powVect, PolynomVector &mulVect, 
 }
 
 MathObjectPtr SumExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
-  if (powValue->instanceOf<IComparable>() && *powValue == ZERO) {
+  if (*powValue == ZERO) {
     for (const auto &child : polynomVect) {
-      if (child.info->instanceOf<INumber>()) {
+      if (cast<INumber>(child.info.get())) {
         return child.toMathObject(false);
       }
     }
   }
 
-  if (powValue->instanceOf<IComparable>() && *powValue == ONE) {
+  if (*powValue == ONE) {
     for (const auto &child : polynomVect) {
-      if (child.info->instanceOf<Variable>()) {
+      if (cast<Variable>(child.info.get())) {
         return child.inverted ? NEG_ONE.clone() : ONE.clone();
       }
     }
@@ -406,7 +406,7 @@ MathObjectPtr SumExpression::getPow() const {
       }
     }
 
-    if (child.info->instanceOf<Variable>()) {
+    if (cast<Variable>(child.info.get())) {
       if (ONE > maxValue) {
         maxValue = ONE;
       }

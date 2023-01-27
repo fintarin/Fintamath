@@ -8,27 +8,6 @@
 
 using namespace fintamath;
 
-TEST(MathObjectTests, isTest) {
-  MathObjectPtr m1 = std::make_unique<Integer>();
-
-  EXPECT_TRUE(m1->instanceOf<Integer>());
-
-  EXPECT_FALSE(m1->instanceOf<Rational>());
-  EXPECT_FALSE(m1->instanceOf<Variable>());
-}
-
-TEST(MathObjectTests, instanceofTest) {
-  MathObjectPtr m1 = std::make_unique<Integer>();
-
-  EXPECT_TRUE(m1->instanceOf<Integer>());
-  EXPECT_TRUE(m1->instanceOf<INumber>());
-  EXPECT_TRUE(m1->instanceOf<IArithmetic>());
-  EXPECT_TRUE(m1->instanceOf<IMathObject>());
-
-  EXPECT_FALSE(m1->instanceOf<Rational>());
-  EXPECT_FALSE(m1->instanceOf<Variable>());
-}
-
 TEST(MathObjectTests, cloneTest) {
   MathObjectPtr m1 = std::make_unique<Integer>();
   MathObjectPtr m2 = std::make_unique<Integer>(1);
