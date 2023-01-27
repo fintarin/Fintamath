@@ -33,24 +33,22 @@ NumberPtr pow(const INumber &inLhs, const INumber &inRhs) {
   auto lhsPtr = inLhs.simplify();
   auto rhsPtr = inRhs.simplify();
 
-  const auto &lhs = lhsPtr->to<INumber>();
-  const auto &rhs = rhsPtr->to<INumber>();
+  const auto *lhs = cast<INumber>(lhsPtr.get());
+  const auto *rhs = cast<INumber>(rhsPtr.get());
 
-  if (rhs.instanceOf<Integer>() && lhs.isPrecise()) {
-    const auto &intRhs = rhs.to<Integer>();
-
-    if (intRhs == ZERO && lhs == ZERO) {
-      throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
+  if (const auto *rhsInt = cast<Integer>(rhs); rhsInt && lhs->isPrecise()) {
+    if (*lhs == ZERO && *rhsInt == ZERO) {
+      throw UndefinedBinaryOpearatorException("^", lhs->toString(), rhs->toString());
     }
 
-    if (intRhs < ZERO) {
-      return naturalPow(*(ONE / lhs), -intRhs);
+    if (*rhsInt < ZERO) {
+      return naturalPow(*(ONE / *lhs), -(*rhsInt));
     }
 
-    return naturalPow(lhs, intRhs);
+    return naturalPow(*lhs, *rhsInt);
   }
 
-  return cast<INumber>(pow(Converter::convert<Real>(lhs), Converter::convert<Real>(rhs)).simplify());
+  return cast<INumber>(pow(Converter::convert<Real>(*lhs), Converter::convert<Real>(*rhs)).simplify());
 }
 
 }
