@@ -12,5 +12,5 @@ using namespace fintamath;
 
 TEST(CoreUtilsTests, castUniquePtrTest) {
   EXPECT_NO_THROW(ArithmeticPtr a = cast<IArithmetic>(ONE.clone()));
-  EXPECT_FALSE(cast<Rational>(ONE.clone()));
+  EXPECT_FALSE(is<Rational>(ONE.clone()));
 }

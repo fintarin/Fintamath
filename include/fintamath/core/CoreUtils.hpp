@@ -54,4 +54,26 @@ To convert(const IMathObject &from) {
   return cast<To>(*convert(from, to));
 }
 
+template <typename To, typename = std::enable_if_t<std::is_base_of_v<IMathObject, To>>>
+bool is(const IMathObject *from) {
+  return dynamic_cast<const To *>(from);
+}
+
+template <typename To, typename = std::enable_if_t<std::is_base_of_v<IMathObject, To>>>
+bool is(const IMathObject &from) {
+  return dynamic_cast<const To *>(&from);
+}
+
+template <typename To, typename From,
+          typename = std::enable_if_t<std::is_base_of_v<IMathObject, From> && std::is_base_of_v<IMathObject, To>>>
+bool is(const std::unique_ptr<From> &from) {
+  return dynamic_cast<const To *>(from.get());
+}
+
+template <typename To, typename From,
+          typename = std::enable_if_t<std::is_base_of_v<IMathObject, From> && std::is_base_of_v<IMathObject, To>>>
+bool is(const std::reference_wrapper<From> &from) {
+  return dynamic_cast<const To *>(&from.get());
+}
+
 }

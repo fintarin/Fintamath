@@ -107,7 +107,7 @@ protected:
 private:
   template <size_t i, typename Head, typename... Tail>
   bool doAgsMatch(const ArgumentsVector &argsVect) const {
-    if (!cast<Head>(&argsVect.at(i).get())) {
+    if (!is<Head>(argsVect.at(i))) {
       return false;
     }
 
@@ -121,13 +121,13 @@ private:
 
   bool doAnyArgsMatch(const ArgumentsVector &argsVect) const {
     return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
-      return (cast<Args>(&arg.get()) || ...); //
+      return (is<Args>(arg) || ...); //
     });
   }
 
   template <size_t i, typename Head, typename... Tail>
   void getNonMatchingArgs(const ArgumentsVector &argsVect, ArgumentsVector &nonMatchingArgsVect) const {
-    if (!cast<Head>(&argsVect.at(i).get())) {
+    if (!is<Head>(&argsVect.at(i).get())) {
       nonMatchingArgsVect.push_back(argsVect.at(i));
     }
 

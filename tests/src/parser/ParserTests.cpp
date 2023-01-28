@@ -60,28 +60,28 @@ using namespace fintamath;
 
 TEST(ParserTests, parseNumberTest) {
   EXPECT_EQ(INumber::parse("1231412736218731623872183")->toString(), "1231412736218731623872183");
-  EXPECT_TRUE(cast<Integer>(INumber::parse("1231412736218731623872183")));
+  EXPECT_TRUE(is<Integer>(INumber::parse("1231412736218731623872183")));
 
   EXPECT_EQ(INumber::parse("-1231412736218731623872183")->toString(), "-1231412736218731623872183");
-  EXPECT_TRUE(cast<Integer>(INumber::parse("-1231412736218731623872183")));
+  EXPECT_TRUE(is<Integer>(INumber::parse("-1231412736218731623872183")));
 
   EXPECT_EQ(INumber::parse("0")->toString(), "0");
-  EXPECT_TRUE(cast<Integer>(INumber::parse("0")));
+  EXPECT_TRUE(is<Integer>(INumber::parse("0")));
 
   EXPECT_EQ(INumber::parse("0.1")->toString(), "1/10");
-  EXPECT_TRUE(cast<Rational>(INumber::parse("0.1")));
+  EXPECT_TRUE(is<Rational>(INumber::parse("0.1")));
 
   EXPECT_EQ(INumber::parse(".1")->toString(), "1/10");
-  EXPECT_TRUE(cast<Rational>(INumber::parse(".1")));
+  EXPECT_TRUE(is<Rational>(INumber::parse(".1")));
 
   EXPECT_EQ(INumber::parse("1.")->toString(), "1");
-  EXPECT_TRUE(cast<Rational>(INumber::parse("1.")));
+  EXPECT_TRUE(is<Rational>(INumber::parse("1.")));
 
   EXPECT_EQ(INumber::parse("12323231498721983.12323432432")->toString(), "77020196867012394520214527/6250000000");
-  EXPECT_TRUE(cast<Rational>(INumber::parse("12323231498721983.12323432432")));
+  EXPECT_TRUE(is<Rational>(INumber::parse("12323231498721983.12323432432")));
 
   EXPECT_EQ(INumber::parse("-12323231498721983.12323432432")->toString(), "-77020196867012394520214527/6250000000");
-  EXPECT_TRUE(cast<Rational>(INumber::parse("-12323231498721983.12323432432")));
+  EXPECT_TRUE(is<Rational>(INumber::parse("-12323231498721983.12323432432")));
 
   EXPECT_EQ(INumber::parse("--10"), nullptr);
   EXPECT_EQ(INumber::parse("test"), nullptr);
@@ -101,8 +101,8 @@ TEST(ParserTests, parseNumberTest) {
 }
 
 TEST(ParseTests, parseConstantTest) {
-  EXPECT_TRUE(cast<E>(IConstant::parse("E")));
-  EXPECT_TRUE(cast<Pi>(IConstant::parse("Pi")));
+  EXPECT_TRUE(is<E>(IConstant::parse("E")));
+  EXPECT_TRUE(is<Pi>(IConstant::parse("Pi")));
 
   EXPECT_EQ(IConstant::parse("a"), nullptr);
   EXPECT_EQ(IConstant::parse("z"), nullptr);
@@ -113,12 +113,12 @@ TEST(ParseTests, parseConstantTest) {
 }
 
 TEST(ParserTests, parseLiteralTest) {
-  EXPECT_TRUE(cast<E>(ILiteral::parse("E")));
-  EXPECT_TRUE(cast<Pi>(ILiteral::parse("Pi")));
-  EXPECT_TRUE(cast<Variable>(ILiteral::parse("a")));
-  EXPECT_TRUE(cast<Variable>(ILiteral::parse("z")));
-  EXPECT_TRUE(cast<True>(ILiteral::parse("True")));
-  EXPECT_TRUE(cast<False>(ILiteral::parse("False")));
+  EXPECT_TRUE(is<E>(ILiteral::parse("E")));
+  EXPECT_TRUE(is<Pi>(ILiteral::parse("Pi")));
+  EXPECT_TRUE(is<Variable>(ILiteral::parse("a")));
+  EXPECT_TRUE(is<Variable>(ILiteral::parse("z")));
+  EXPECT_TRUE(is<True>(ILiteral::parse("True")));
+  EXPECT_TRUE(is<False>(ILiteral::parse("False")));
 
   EXPECT_EQ(ILiteral::parse("1"), nullptr);
   EXPECT_EQ(ILiteral::parse("a_"), nullptr);
@@ -127,70 +127,70 @@ TEST(ParserTests, parseLiteralTest) {
 }
 
 TEST(ParserTests, parseOperatorTest) {
-  EXPECT_TRUE(cast<Add>(IOperator::parse("+", IOperator::Priority::Addition)));
-  EXPECT_TRUE(cast<UnaryPlus>(IOperator::parse("+", IOperator::Priority::PrefixUnary)));
-  EXPECT_TRUE(cast<Sub>(IOperator::parse("-", IOperator::Priority::Addition)));
-  EXPECT_TRUE(cast<Neg>(IOperator::parse("-", IOperator::Priority::PrefixUnary)));
-  EXPECT_TRUE(cast<Mul>(IOperator::parse("*")));
-  EXPECT_TRUE(cast<Div>(IOperator::parse("/")));
-  EXPECT_TRUE(cast<Pow>(IOperator::parse("^")));
-  EXPECT_TRUE(cast<Percent>(IOperator::parse("%")));
-  EXPECT_TRUE(cast<Factorial>(IOperator::parse("!")));
-  EXPECT_TRUE(cast<Eqv>(IOperator::parse("=")));
-  EXPECT_TRUE(cast<Neqv>(IOperator::parse("!=")));
-  EXPECT_TRUE(cast<Less>(IOperator::parse("<")));
-  EXPECT_TRUE(cast<More>(IOperator::parse(">")));
-  EXPECT_TRUE(cast<LessEqv>(IOperator::parse("<=")));
-  EXPECT_TRUE(cast<MoreEqv>(IOperator::parse(">=")));
-  EXPECT_TRUE(cast<Derivative>(IOperator::parse("'")));
-  EXPECT_TRUE(cast<Not>(IOperator::parse("!", IOperator::Priority::PrefixUnary)));
-  EXPECT_TRUE(cast<And>(IOperator::parse("&&")));
-  EXPECT_TRUE(cast<Or>(IOperator::parse("||")));
-  EXPECT_TRUE(cast<Impl>(IOperator::parse("->")));
-  EXPECT_TRUE(cast<Equiv>(IOperator::parse("<->")));
-  EXPECT_TRUE(cast<Nequiv>(IOperator::parse("!<->")));
+  EXPECT_TRUE(is<Add>(IOperator::parse("+", IOperator::Priority::Addition)));
+  EXPECT_TRUE(is<UnaryPlus>(IOperator::parse("+", IOperator::Priority::PrefixUnary)));
+  EXPECT_TRUE(is<Sub>(IOperator::parse("-", IOperator::Priority::Addition)));
+  EXPECT_TRUE(is<Neg>(IOperator::parse("-", IOperator::Priority::PrefixUnary)));
+  EXPECT_TRUE(is<Mul>(IOperator::parse("*")));
+  EXPECT_TRUE(is<Div>(IOperator::parse("/")));
+  EXPECT_TRUE(is<Pow>(IOperator::parse("^")));
+  EXPECT_TRUE(is<Percent>(IOperator::parse("%")));
+  EXPECT_TRUE(is<Factorial>(IOperator::parse("!")));
+  EXPECT_TRUE(is<Eqv>(IOperator::parse("=")));
+  EXPECT_TRUE(is<Neqv>(IOperator::parse("!=")));
+  EXPECT_TRUE(is<Less>(IOperator::parse("<")));
+  EXPECT_TRUE(is<More>(IOperator::parse(">")));
+  EXPECT_TRUE(is<LessEqv>(IOperator::parse("<=")));
+  EXPECT_TRUE(is<MoreEqv>(IOperator::parse(">=")));
+  EXPECT_TRUE(is<Derivative>(IOperator::parse("'")));
+  EXPECT_TRUE(is<Not>(IOperator::parse("!", IOperator::Priority::PrefixUnary)));
+  EXPECT_TRUE(is<And>(IOperator::parse("&&")));
+  EXPECT_TRUE(is<Or>(IOperator::parse("||")));
+  EXPECT_TRUE(is<Impl>(IOperator::parse("->")));
+  EXPECT_TRUE(is<Equiv>(IOperator::parse("<->")));
+  EXPECT_TRUE(is<Nequiv>(IOperator::parse("!<->")));
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
 }
 
 TEST(ParserTests, parseFunctionTest) {
-  EXPECT_TRUE(cast<Add>(IFunction::parse("+", IFunction::Type::Binary)));
-  EXPECT_TRUE(cast<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));
-  EXPECT_TRUE(cast<Sub>(IFunction::parse("-", IFunction::Type::Binary)));
-  EXPECT_TRUE(cast<Neg>(IFunction::parse("-", IFunction::Type::Unary)));
-  EXPECT_TRUE(cast<Mul>(IFunction::parse("*")));
-  EXPECT_TRUE(cast<Div>(IFunction::parse("/")));
-  EXPECT_TRUE(cast<Pow>(IFunction::parse("^")));
-  EXPECT_TRUE(cast<Percent>(IFunction::parse("%")));
-  EXPECT_TRUE(cast<Factorial>(IFunction::parse("!")));
-  EXPECT_TRUE(cast<Eqv>(IFunction::parse("=")));
-  EXPECT_TRUE(cast<Neqv>(IFunction::parse("!=")));
-  EXPECT_TRUE(cast<Less>(IFunction::parse("<")));
-  EXPECT_TRUE(cast<More>(IFunction::parse(">")));
-  EXPECT_TRUE(cast<LessEqv>(IFunction::parse("<=")));
-  EXPECT_TRUE(cast<MoreEqv>(IFunction::parse(">=")));
-  EXPECT_TRUE(cast<Derivative>(IFunction::parse("'")));
-  EXPECT_TRUE(cast<Sqrt>(IFunction::parse("sqrt")));
-  EXPECT_TRUE(cast<Exp>(IFunction::parse("exp")));
-  EXPECT_TRUE(cast<Log>(IFunction::parse("log")));
-  EXPECT_TRUE(cast<Ln>(IFunction::parse("ln")));
-  EXPECT_TRUE(cast<Lb>(IFunction::parse("lb")));
-  EXPECT_TRUE(cast<Lg>(IFunction::parse("lg")));
-  EXPECT_TRUE(cast<Sin>(IFunction::parse("sin")));
-  EXPECT_TRUE(cast<Cos>(IFunction::parse("cos")));
-  EXPECT_TRUE(cast<Tan>(IFunction::parse("tan")));
-  EXPECT_TRUE(cast<Cot>(IFunction::parse("cot")));
-  EXPECT_TRUE(cast<Asin>(IFunction::parse("asin")));
-  EXPECT_TRUE(cast<Acos>(IFunction::parse("acos")));
-  EXPECT_TRUE(cast<Atan>(IFunction::parse("atan")));
-  EXPECT_TRUE(cast<Acot>(IFunction::parse("acot")));
-  EXPECT_TRUE(cast<Abs>(IFunction::parse("abs")));
-  EXPECT_TRUE(cast<And>(IFunction::parse("&&")));
-  EXPECT_TRUE(cast<Or>(IFunction::parse("||")));
-  EXPECT_TRUE(cast<Impl>(IFunction::parse("->")));
-  EXPECT_TRUE(cast<Equiv>(IFunction::parse("<->")));
-  EXPECT_TRUE(cast<Nequiv>(IFunction::parse("!<->")));
+  EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
+  EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));
+  EXPECT_TRUE(is<Sub>(IFunction::parse("-", IFunction::Type::Binary)));
+  EXPECT_TRUE(is<Neg>(IFunction::parse("-", IFunction::Type::Unary)));
+  EXPECT_TRUE(is<Mul>(IFunction::parse("*")));
+  EXPECT_TRUE(is<Div>(IFunction::parse("/")));
+  EXPECT_TRUE(is<Pow>(IFunction::parse("^")));
+  EXPECT_TRUE(is<Percent>(IFunction::parse("%")));
+  EXPECT_TRUE(is<Factorial>(IFunction::parse("!")));
+  EXPECT_TRUE(is<Eqv>(IFunction::parse("=")));
+  EXPECT_TRUE(is<Neqv>(IFunction::parse("!=")));
+  EXPECT_TRUE(is<Less>(IFunction::parse("<")));
+  EXPECT_TRUE(is<More>(IFunction::parse(">")));
+  EXPECT_TRUE(is<LessEqv>(IFunction::parse("<=")));
+  EXPECT_TRUE(is<MoreEqv>(IFunction::parse(">=")));
+  EXPECT_TRUE(is<Derivative>(IFunction::parse("'")));
+  EXPECT_TRUE(is<Sqrt>(IFunction::parse("sqrt")));
+  EXPECT_TRUE(is<Exp>(IFunction::parse("exp")));
+  EXPECT_TRUE(is<Log>(IFunction::parse("log")));
+  EXPECT_TRUE(is<Ln>(IFunction::parse("ln")));
+  EXPECT_TRUE(is<Lb>(IFunction::parse("lb")));
+  EXPECT_TRUE(is<Lg>(IFunction::parse("lg")));
+  EXPECT_TRUE(is<Sin>(IFunction::parse("sin")));
+  EXPECT_TRUE(is<Cos>(IFunction::parse("cos")));
+  EXPECT_TRUE(is<Tan>(IFunction::parse("tan")));
+  EXPECT_TRUE(is<Cot>(IFunction::parse("cot")));
+  EXPECT_TRUE(is<Asin>(IFunction::parse("asin")));
+  EXPECT_TRUE(is<Acos>(IFunction::parse("acos")));
+  EXPECT_TRUE(is<Atan>(IFunction::parse("atan")));
+  EXPECT_TRUE(is<Acot>(IFunction::parse("acot")));
+  EXPECT_TRUE(is<Abs>(IFunction::parse("abs")));
+  EXPECT_TRUE(is<And>(IFunction::parse("&&")));
+  EXPECT_TRUE(is<Or>(IFunction::parse("||")));
+  EXPECT_TRUE(is<Impl>(IFunction::parse("->")));
+  EXPECT_TRUE(is<Equiv>(IFunction::parse("<->")));
+  EXPECT_TRUE(is<Nequiv>(IFunction::parse("!<->")));
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

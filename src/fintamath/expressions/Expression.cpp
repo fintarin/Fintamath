@@ -113,7 +113,7 @@ Expression::Expression(const MathObjectPtr &obj) : Expression(obj->clone()) {
 Expression::Expression(MathObjectPtr &&obj) {
   if (auto *expr = cast<Expression>(obj.get())) {
     *this = std::move(*expr);
-  } else if (cast<IExpression>(obj.get())) {
+  } else if (is<IExpression>(obj)) {
     info = std::move(obj);
     children.clear();
   } else {
@@ -184,12 +184,12 @@ std::string Expression::prefixUnaryOperatorToString() const {
   if (const auto *child = cast<IExpression>(children.front().get())) {
     if (const auto *oper = cast<IOperator>(child->getFunction())) {
       if (auto priority = oper->getOperatorPriority(); priority != IOperator::Priority::PrefixUnary) {
-        if (cast<MulExpression>(child)) {
+        if (is<MulExpression>(child)) {
           return result + children.front()->toString();
         }
 
         if (const auto *childExpr = cast<Expression>(child)) {
-          if (cast<Pow>(childExpr->info.get())) {
+          if (is<Pow>(childExpr->info)) {
             return result + children.front()->toString();
           }
         }
@@ -236,11 +236,11 @@ std::string Expression::functionToString() const {
 
 void Expression::setPrecisionRec(uint8_t precision) {
   if (children.empty()) {
-    if (cast<INumber>(info.get())) {
+    if (is<INumber>(info)) {
       info = convert<Real>(*info).precise(precision).clone();
       return;
     }
-    if (cast<IExpression>(info.get())) {
+    if (is<IExpression>(info)) {
       auto copyExpr = cast<IExpression>(std::move(info));
       copyExpr->setPrecision(precision);
       info = std::move(copyExpr);
@@ -248,13 +248,13 @@ void Expression::setPrecisionRec(uint8_t precision) {
   }
 
   for (auto &child : children) {
-    if (cast<IExpression>(child.get())) {
+    if (is<IExpression>(child)) {
       auto copyExpr = cast<IExpression>(std::move(child));
       copyExpr->setPrecision(precision);
       child = copyExpr->simplify(false);
       continue;
     }
-    if (cast<INumber>(child.get())) {
+    if (is<INumber>(child)) {
       child = convert<Real>(*child).precise(precision).clone();
       continue;
     }
@@ -269,7 +269,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
 
     if (func->doAgsMatch(args)) {
       auto countResult = (*func)(args);
-      if (cast<INumber>(countResult.get())) {
+      if (is<INumber>(countResult)) {
         info = convert<Real>(*countResult).precise(precision).clone();
         children.clear();
       }
@@ -311,7 +311,7 @@ std::string Expression::toString() const {
     }
   }
 
-  if (info && cast<IFunction>(info.get())) {
+  if (info && is<IFunction>(info)) {
     return functionToString();
   }
 
@@ -388,7 +388,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
   auto rhsExpr = Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end()));
   auto funcExpr = buildRawFunctionExpression(cast<IFunction>(*foundOperIt->second), {lhsExpr, rhsExpr});
 
-  if (const auto *expr = cast<Expression>(funcExpr.get())) {
+  if (auto *expr = cast<Expression>(funcExpr.get())) {
     *this = std::move(*expr);
   } else {
     info = std::move(funcExpr);
@@ -426,7 +426,7 @@ bool Expression::parseFunction(const TokenVector &tokens) {
     return false;
   }
 
-  if (auto ptr = IFunction::parse(tokens.front()); ptr && !cast<IOperator>(ptr.get())) {
+  if (auto ptr = IFunction::parse(tokens.front()); ptr && !is<IOperator>(ptr)) {
     info = std::unique_ptr<IFunction>(ptr.release());
     children = getArgs(TokenVector(tokens.begin() + 1, tokens.end()));
     return true;
@@ -465,11 +465,11 @@ MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, const A
 }
 
 ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-  if (cast<Add>(&func) || cast<Sub>(&func)) {
+  if (is<Add>(func) || is<Sub>(func)) {
     return buildAddExpression(func, args);
   }
 
-  if (cast<Mul>(&func) || cast<Div>(&func)) {
+  if (is<Mul>(func) || is<Div>(func)) {
     return buildMulExpression(func, args);
   }
 
@@ -478,7 +478,7 @@ ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, cons
     return buildEqvExpression(func, args);
   }
 
-  if (cast<Derivative>(&func)) {
+  if (is<Derivative>(func)) {
     return buildDerivateExpression(args);
   }
 
@@ -503,14 +503,14 @@ const IFunction *Expression::getFunction() const {
 ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
   auto addExpr = std::make_unique<SumExpression>();
   addExpr->addElement({args.front().get().clone()});
-  addExpr->addElement({args.back().get().clone(), cast<Sub>(&func) != nullptr});
+  addExpr->addElement({args.back().get().clone(), is<Sub>(func)});
   return addExpr;
 }
 
 ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args) {
   auto mulExpr = std::make_unique<MulExpression>();
   mulExpr->addElement({args.front().get().clone()});
-  mulExpr->addElement({args.back().get().clone(), cast<Div>(&func) != nullptr});
+  mulExpr->addElement({args.back().get().clone(), is<Div>(func)});
   return mulExpr;
 }
 
@@ -645,7 +645,7 @@ Expression &Expression::divide(const Expression &rhs) {
 }
 
 Expression &Expression::negate() {
-  if (cast<Neg>(info.get())) {
+  if (is<Neg>(info)) {
     info = children.front()->clone();
     children.clear();
     return *this;
@@ -674,7 +674,7 @@ Expression &Expression::negate() {
 }
 
 void Expression::simplifyUnaryPlus() {
-  if (!cast<UnaryPlus>(info.get())) {
+  if (!is<UnaryPlus>(info)) {
     return;
   }
 
@@ -688,17 +688,17 @@ void Expression::simplifyUnaryPlus() {
 }
 
 void Expression::simplifyNeg() {
-  if (!cast<Neg>(info.get())) {
+  if (!is<Neg>(info)) {
     return;
   }
 
   auto &child = children.front();
-  if (!cast<Expression>(child.get())) {
+  if (!is<Expression>(child)) {
     return;
   }
 
   const auto *childExpr = cast<Expression>(child.get());
-  if (!cast<Neg>(childExpr->info.get())) {
+  if (!is<Neg>(childExpr->info)) {
     return;
   }
 
@@ -706,17 +706,17 @@ void Expression::simplifyNeg() {
 }
 
 void Expression::simplifyNot() {
-  if (!cast<Not>(info.get())) {
+  if (!is<Not>(info)) {
     return;
   }
 
   auto &child = children.front();
-  if (!cast<Expression>(child.get())) {
+  if (!is<Expression>(child)) {
     return;
   }
 
   const auto *childExpr = cast<Expression>(child.get());
-  if (!cast<Not>(childExpr->info.get())) {
+  if (!is<Not>(childExpr->info)) {
     return;
   }
 
@@ -724,7 +724,7 @@ void Expression::simplifyNot() {
 }
 
 void Expression::simplifyAnd() {
-  if (!cast<And>(info.get())) {
+  if (!is<And>(info)) {
     return;
   }
 
@@ -751,7 +751,7 @@ void Expression::simplifyAnd() {
 }
 
 void Expression::simplifyOr() {
-  if (!cast<Or>(info.get())) {
+  if (!is<Or>(info)) {
     return;
   }
 
@@ -779,7 +779,7 @@ void Expression::simplifyOr() {
 }
 
 void Expression::simplifyImpl() {
-  if (!cast<Impl>(info.get())) {
+  if (!is<Impl>(info)) {
     return;
   }
 
@@ -790,7 +790,7 @@ void Expression::simplifyImpl() {
 }
 
 void Expression::simplifyEquiv() {
-  if (!cast<Equiv>(info.get())) {
+  if (!is<Equiv>(info)) {
     return;
   }
 
@@ -801,7 +801,7 @@ void Expression::simplifyEquiv() {
 }
 
 void Expression::simplifyNequiv() {
-  if (!cast<Nequiv>(info.get())) {
+  if (!is<Nequiv>(info)) {
     return;
   }
 
@@ -825,7 +825,7 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
       continue;
     }
 
-    if (cast<IConstant>(child.get())) {
+    if (is<IConstant>(child)) {
       auto constant = cast<IConstant>(std::move(child));
       auto constVal = (*constant)();
 
@@ -901,7 +901,7 @@ void Expression::simplifyFunction(bool isPrecise) {
 
   bool hasExpressionArg = false;
   for (const auto &child : children) {
-    if (cast<IExpression>(child.get())) {
+    if (is<IExpression>(child)) {
       hasExpressionArg = true;
     }
 
@@ -921,7 +921,7 @@ void Expression::simplifyFunction(bool isPrecise) {
     validateFunctionArgs(func, args);
 
     auto funcExpr = buildRawFunctionExpression(func, args);
-    if (cast<Expression>(funcExpr.get())) {
+    if (is<Expression>(funcExpr)) {
       return;
     }
 
@@ -931,7 +931,7 @@ void Expression::simplifyFunction(bool isPrecise) {
 }
 
 void Expression::simplifyConstant(bool isPrecise) {
-  if (!cast<IConstant>(info.get())) {
+  if (!is<IConstant>(info)) {
     return;
   }
 
@@ -946,7 +946,7 @@ void Expression::simplifyConstant(bool isPrecise) {
 }
 
 void Expression::simplifyPow() {
-  if (!cast<Pow>(info.get())) {
+  if (!is<Pow>(info)) {
     return;
   }
 
@@ -956,7 +956,7 @@ void Expression::simplifyPow() {
   auto *lhsPtr = cast<IExpression>(lhsRef.get());
   auto *rhsPtr = cast<Integer>(rhsRef.get());
 
-  if (lhsPtr && rhsPtr && !cast<Expression>(lhsPtr)) {
+  if (lhsPtr && rhsPtr && !is<Expression>(lhsPtr)) {
     if (*rhsPtr == ZERO) {
       info = ONE.clone();
       children.clear();
@@ -995,7 +995,7 @@ void Expression::simplifyPow() {
 std::vector<MathObjectPtr> Expression::getVariables() const {
   std::vector<MathObjectPtr> result;
 
-  if (cast<Variable>(info.get())) {
+  if (is<Variable>(info)) {
     result.emplace_back(info->clone());
     return result;
   }
@@ -1009,7 +1009,7 @@ std::vector<MathObjectPtr> Expression::getVariables() const {
   }
 
   for (const auto &child : children) {
-    if (cast<Variable>(child.get())) {
+    if (is<Variable>(child)) {
       result.emplace_back(child->clone());
       continue;
     }

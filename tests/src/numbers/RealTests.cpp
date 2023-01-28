@@ -867,10 +867,10 @@ TEST(RealTests, toStringTest) {
 }
 
 TEST(RealTests, simplifyTest) {
-  EXPECT_TRUE(cast<Real>(Real(2.5).simplify()));
-  EXPECT_TRUE(cast<Integer>(Real(11).simplify()));
-  EXPECT_TRUE(cast<Real>(Real(-2.5).simplify()));
-  EXPECT_TRUE(cast<Integer>(Real(-11).simplify()));
+  EXPECT_TRUE(is<Real>(Real(2.5).simplify()));
+  EXPECT_TRUE(is<Integer>(Real(11).simplify()));
+  EXPECT_TRUE(is<Real>(Real(-2.5).simplify()));
+  EXPECT_TRUE(is<Integer>(Real(-11).simplify()));
 
   EXPECT_EQ(Real(2.5).simplify()->toString(), "2.5");
   EXPECT_EQ(Real(11).simplify()->toString(), "11");

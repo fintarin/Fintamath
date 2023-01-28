@@ -58,17 +58,17 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
     value = info->simplify();
   }
 
-  if (cast<Boolean>(value.get())) {
+  if (is<Boolean>(value)) {
     throw InvalidInputUnaryOpearatorException("'", value->toString(),
                                               InvalidInputUnaryOpearatorException::Type::Postfix);
   }
   if (auto *expr = cast<IExpression>(value.get()); expr && !isPrecise) {
     return std::make_unique<DerivativeExpression>(*(expr->simplify(isPrecise)));
   }
-  if (cast<INumber>(value.get()) || cast<IConstant>(value.get())) {
+  if (is<INumber>(value) || is<IConstant>(value)) {
     return ZERO.clone();
   }
-  if (cast<Variable>(value.get())) {
+  if (is<Variable>(value)) {
     return ONE.clone();
   }
 

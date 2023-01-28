@@ -24,7 +24,7 @@ EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, co
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
   }
 
-  if (cast<EqvExpression>(&lhs) || cast<EqvExpression>(&rhs)) {
+  if (is<EqvExpression>(lhs) || is<EqvExpression>(rhs)) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
   }
 
@@ -88,7 +88,7 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
 }
 
 void EqvExpression::setPrecision(uint8_t precision) {
-  if (cast<IExpression>(leftExpr.get())) {
+  if (is<IExpression>(leftExpr)) {
     auto copyExpr = cast<IExpression>(std::move(leftExpr));
     copyExpr->setPrecision(precision);
     leftExpr = copyExpr->clone();
@@ -98,11 +98,11 @@ void EqvExpression::setPrecision(uint8_t precision) {
 std::string EqvExpression::solve() const {
   Variable x("x");
   auto expr = simplify(false);
-  if (!cast<EqvExpression>(expr.get())) {
+  if (!is<EqvExpression>(expr)) {
     return expr->toString();
   }
   auto copyExpr = cast<EqvExpression>(*expr);
-  if (!cast<Eqv>(copyExpr.oper.get())) {
+  if (!is<Eqv>(copyExpr.oper)) {
     return expr->toString();
   }
   if (!copyExpr.detectOneVariable(x)) {
@@ -127,11 +127,11 @@ std::string EqvExpression::solve() const {
 std::string EqvExpression::solve(uint8_t precision) const {
   Variable x("x");
   auto expr = simplify(false);
-  if (!cast<EqvExpression>(expr.get())) {
+  if (!is<EqvExpression>(expr)) {
     return expr->toString();
   }
   auto copyExpr = cast<EqvExpression>(*expr);
-  if (!cast<Eqv>(copyExpr.oper.get())) {
+  if (!is<Eqv>(copyExpr.oper)) {
     return expr->toString();
   }
   if (!copyExpr.detectOneVariable(x)) {

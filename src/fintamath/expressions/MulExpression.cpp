@@ -43,7 +43,7 @@ struct MulExpression::ObjectPow {
     }
     auto powValue = polynom.front().info->clone();
     *powValue = polynom.front().inverted ? *Neg()(*powValue) : *powValue;
-    if (cast<Integer>(powValue.get())) {
+    if (is<Integer>(powValue)) {
       return powValue;
     }
     return nullptr;
@@ -87,10 +87,10 @@ MathObjectPtr MulElement::toMathObject(bool isPrecise) const {
 }
 
 void MulElement::simplify(bool isPrecise) {
-  if (cast<IExpression>(info.get())) {
+  if (is<IExpression>(info)) {
     // TODO: remove this condition when polynomial division is implemented
-    if (const auto *expr = cast<Expression>(info.get()); expr && cast<Pow>(expr->getInfo().get())) {
-      if (auto exprSimpl = expr->simplify(isPrecise); exprSimpl && !cast<SumExpression>(exprSimpl.get())) {
+    if (const auto *expr = cast<Expression>(info.get()); expr && is<Pow>(expr->getInfo())) {
+      if (auto exprSimpl = expr->simplify(isPrecise); exprSimpl && !is<SumExpression>(exprSimpl)) {
         info = std::move(exprSimpl);
         return;
       }
@@ -102,7 +102,7 @@ void MulElement::simplify(bool isPrecise) {
     return;
   }
 
-  if (cast<IConstant>(info.get())) {
+  if (is<IConstant>(info)) {
     auto constant = cast<IConstant>(std::move(info));
     auto constVal = (*constant)();
 
@@ -135,7 +135,7 @@ MulExpression::MulExpression(const IMathObject &rhs) {
 }
 
 std::string MulExpression::tryPutInBrackets(const MathObjectPtr &obj) {
-  if (cast<SumExpression>(obj.get())) {
+  if (is<SumExpression>(obj)) {
     return "(" + obj->toString() + ")";
   }
   return tryPutInBracketsIfNeg(obj);
@@ -166,7 +166,7 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   exprObj.compress();
 
   for (auto &obj : exprObj.polynomVect) { // TODO: find a better solution
-    if (cast<EqvExpression>(obj.info.get())) {
+    if (is<EqvExpression>(obj.info)) {
       throw InvalidInputException(toString());
     }
   }
@@ -282,7 +282,7 @@ void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, Polyno
         continue;
       }
 
-      if (cast<ILiteral>(obj.obj.get())) {
+      if (is<ILiteral>(obj.obj)) {
         if ((num == 1) || (num == -1)) {
           literalVect.emplace_back(MulElement(obj.obj->clone(), num == -1));
           continue;
@@ -291,7 +291,7 @@ void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, Polyno
         continue;
       }
 
-      if (cast<Expression>(obj.obj.get())) {
+      if (is<Expression>(obj.obj)) {
         if ((num == 1) || (num == -1)) {
           funcVect.emplace_back(MulElement(obj.obj->clone(), num == -1));
           continue;
@@ -300,7 +300,7 @@ void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, Polyno
         continue;
       }
 
-      if (cast<INumber>(obj.obj.get())) {
+      if (is<INumber>(obj.obj)) {
         powVect.emplace_back(MulElement(Pow()(*obj.obj, num)));
         continue;
       }
@@ -461,7 +461,7 @@ void MulExpression::simplifyPolynom() {
     bool negativeAdded = false;
     if (!positive.empty()) {
       auto addExpr = SumExpression(convertMulPolynomToAdd(positive)).simplify();
-      if (!cast<INumber>(addExpr.get())) {
+      if (!is<INumber>(addExpr)) {
         polynomVect.emplace_back(MulElement{addExpr->clone()});
         positiveAdded = true;
       } else {
@@ -470,7 +470,7 @@ void MulExpression::simplifyPolynom() {
     }
     if (!negative.empty()) {
       auto addExpr = SumExpression(convertMulPolynomToAdd(negative)).simplify();
-      if (!cast<INumber>(addExpr.get())) {
+      if (!is<INumber>(addExpr)) {
         polynomVect.emplace_back(MulElement(addExpr->clone(), true));
         negativeAdded = true;
       } else {
@@ -534,7 +534,7 @@ MulExpression::PolynomVector MulExpression::openPowMulExpression(const PolynomVe
     const auto *expr = cast<Expression>(pow.info.get());
     auto left = expr->getChildren().front()->clone();
 
-    if (!cast<MulExpression>(left.get())) {
+    if (!is<MulExpression>(left)) {
       newPowVect.emplace_back(pow);
       continue;
     }
@@ -553,13 +553,12 @@ MulExpression::PolynomVector MulExpression::openPowMulExpression(const PolynomVe
 MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
   for (const auto &child : polynomVect) {
     if (*powValue == ONE) {
-      if (cast<Variable>(child.info.get())) {
+      if (is<Variable>(child.info)) {
         return polynomVect.front().info->clone();
       }
     }
 
-    if (const auto *childExpr = cast<Expression>(child.info.get());
-        childExpr && cast<Pow>(childExpr->getInfo().get())) {
+    if (const auto *childExpr = cast<Expression>(child.info.get()); childExpr && is<Pow>(childExpr->getInfo())) {
       if (auto rightVal = childExpr->getChildren().back()->clone(); rightVal && *rightVal == *powValue) {
         return polynomVect.front().info->clone();
       }
@@ -573,8 +572,7 @@ MathObjectPtr MulExpression::getPow() const {
   Integer maxValue = ZERO;
 
   for (const auto &child : polynomVect) {
-    if (const auto *childExpr = cast<Expression>(child.info.get());
-        childExpr && cast<Pow>(childExpr->getInfo().get())) {
+    if (const auto *childExpr = cast<Expression>(child.info.get()); childExpr && is<Pow>(childExpr->getInfo())) {
       if (const auto *pow = cast<Integer>(childExpr->getChildren().back().get()); *pow > maxValue) {
         maxValue = *pow;
       }

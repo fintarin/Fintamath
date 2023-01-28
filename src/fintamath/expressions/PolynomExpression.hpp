@@ -88,7 +88,7 @@ public:
     std::vector<MathObjectPtr> vars;
 
     for (const auto &child : polynomVect) {
-      if (cast<Variable>(child.info.get())) {
+      if (is<Variable>(child.info)) {
         vars.emplace_back(child.info->clone());
         continue;
       }
@@ -113,7 +113,7 @@ public:
     for (const auto &child : vect) {
       // TODO: do not use Pow here
       if (const auto *childExpr = cast<Expression>(child.info.get())) {
-        if (cast<Pow>(childExpr->getInfo().get())) {
+        if (is<Pow>(childExpr->getInfo())) {
           powVect.emplace_back(child);
         } else {
           funcVect.emplace_back(child);
@@ -122,17 +122,17 @@ public:
         continue;
       }
 
-      if (cast<IExpression>(child.info.get()) && !cast<Derived>(child.info.get())) {
+      if (is<IExpression>(child.info) && !is<Derived>(child.info)) {
         exprVect.emplace_back(child);
         continue;
       }
 
-      if (cast<INumber>(child.info.get())) {
+      if (is<INumber>(child.info)) {
         numVect.emplace_back(child);
         continue;
       }
 
-      if (cast<ILiteral>(child.info.get())) {
+      if (is<ILiteral>(child.info)) {
         literalVect.emplace_back(child);
         continue;
       }
