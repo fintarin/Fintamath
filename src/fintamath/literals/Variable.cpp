@@ -6,10 +6,13 @@
 
 namespace fintamath {
 
-bool isVariable(const std::string &str);
-
 Variable::Variable(const std::string &str) {
-  if (!isVariable(str)) {
+  if (str.size() != 1) {
+    throw InvalidInputException(str);
+  }
+
+  char ch = str.front();
+  if ((ch < 'a' || ch > 'z') && (ch < 'A' || ch > 'Z')) {
     throw InvalidInputException(str);
   }
 
@@ -18,16 +21,6 @@ Variable::Variable(const std::string &str) {
 
 std::string Variable::toString() const {
   return name;
-}
-
-bool isVariable(const std::string &str) {
-  if (str.size() != 1) {
-    return false;
-  }
-
-  char ch = str.front();
-
-  return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }
 
 }
