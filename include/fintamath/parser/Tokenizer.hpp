@@ -35,8 +35,6 @@ private:
 
   static bool isCloseBracket(char c);
 
-  static bool findCharInStr(char c, const std::string &str);
-
   static TokenVector registeredTokens;
 };
 

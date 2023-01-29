@@ -76,8 +76,8 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
 
   if (!shouldSplit) {
     // TODO: do it in Expression
-    if (!tokens.empty() && !isDigitOrPoint(tokens.back().front()) && tokens.back() != "," && tokens.back() != "(") {
-      if (tokens.back() == ")" || isUpperLetter(tokens.back().front()) ||
+    if (!tokens.empty() && tokens.back() != "," && tokens.back() != "(") {
+      if (isUpperLetter(tokens.back().front()) ||
           std::find(registeredTokens.begin(), registeredTokens.end(), tokens.back()) == registeredTokens.end()) {
         tokens.emplace_back("*");
       }
@@ -140,13 +140,6 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
 
 void Tokenizer::handleSpaces(std::string &str) {
   str = std::regex_replace(str, std::regex(R"([\s\r\n]+)"), "");
-
-  if (str.front() == ' ') {
-    str = str.substr(0);
-  }
-  if (str.back() == ' ') {
-    str.pop_back();
-  }
 }
 
 bool Tokenizer::isDigitOrPoint(char c) {
@@ -171,10 +164,6 @@ bool Tokenizer::isOpenBracket(char c) {
 
 bool Tokenizer::isCloseBracket(char c) {
   return c == ')' || c == '}' || c == ']';
-}
-
-bool Tokenizer::findCharInStr(char c, const std::string &str) {
-  return std::find(str.begin(), str.end(), c) != str.end();
 }
 
 }
