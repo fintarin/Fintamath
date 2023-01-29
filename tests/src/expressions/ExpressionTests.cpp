@@ -32,6 +32,7 @@ TEST(ExpressionTests, copyTest) {
 TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
+  EXPECT_EQ(Expression(" 2 + 2 ").toString(), "4");
   EXPECT_EQ(Expression("-2 + 3").toString(), "1");
   EXPECT_EQ(Expression("2 * 2").toString(), "4");
   EXPECT_EQ(Expression("1 / 3").toString(), "1/3");
@@ -118,6 +119,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("ln(E^E) / ln(E^E) - 1").toString(), "0");
   EXPECT_EQ(Expression("8E").toString(), "8 E");
   EXPECT_EQ(Expression("8Pi").toString(), "8 Pi");
+  EXPECT_EQ(Expression("E8").toString(), "8 E");
+  EXPECT_EQ(Expression("Pi8").toString(), "8 Pi");
   EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
   EXPECT_EQ(Expression("E^101").toString(), "E^101");
   EXPECT_EQ(Expression("E^(-101)").toString(), "E^-101");
@@ -159,6 +162,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
 
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
+  EXPECT_EQ(Expression("a.2").toString(), "1/5 a");
   EXPECT_EQ(Expression("a+a").toString(), "2 a");
   EXPECT_EQ(Expression("a-a").toString(), "0");
   EXPECT_EQ(Expression("-a").toString(), "-a");
@@ -171,7 +175,6 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("-(-(-(-(-(-(-(-(-a))))))))").toString(), "-a");
   EXPECT_EQ(Expression("--------a").toString(), "a");
   EXPECT_EQ(Expression("---------a").toString(), "-a");
-  EXPECT_EQ(Expression("2.a").toString(), "2 a");
   EXPECT_EQ(Expression("abcdefg").toString(), "a b c d e f g");
   EXPECT_EQ(Expression("a+b+c+d+e+f+g").toString(), "a + b + c + d + e + f + g");
   EXPECT_EQ(Expression("(a+b)-b").toString(), "a");
@@ -244,6 +247,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1");
   EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1)");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
+  EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
 
   EXPECT_EQ(Expression("a=a").toString(), "True");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "True");
@@ -440,6 +444,8 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("_"), InvalidInputException);
   EXPECT_THROW(Expression("[1+1]"), InvalidInputException);
   EXPECT_THROW(Expression("{1}"), InvalidInputException);
+  EXPECT_THROW(Expression(",2"), InvalidInputException);
+  EXPECT_THROW(Expression("2,"), InvalidInputException);
 
   EXPECT_THROW(Expression("(1"), InvalidInputException);
   EXPECT_THROW(Expression("(((2)"), InvalidInputException);

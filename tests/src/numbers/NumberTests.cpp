@@ -55,7 +55,7 @@ TEST(NumberTests, mulTest) {
   EXPECT_EQ((*m3 * *m2)->toString(), "1");
 }
 
-TEST(NumberTests, diveTest) {
+TEST(NumberTests, divTest) {
   NumberPtr m1 = std::make_unique<Integer>(1);
   NumberPtr m2 = std::make_unique<Integer>(5);
   NumberPtr m3 = std::make_unique<Rational>(2);
