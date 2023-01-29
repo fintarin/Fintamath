@@ -8,28 +8,37 @@
 
 namespace fintamath {
 
+template <typename Rhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Rhs>>>
+Rhs abs(const Rhs &rhs) {
+  if (rhs < ZERO) {
+    return -rhs;
+  }
+  return rhs;
+}
+
 inline NumberPtr abs(const INumber &rhs) {
   if (rhs < ZERO) {
-    return cast<INumber>(-rhs);
+    return -rhs;
   }
   return cast<INumber>(rhs.clone());
 }
 
 template <typename Lhs, typename Rhs,
-          typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs> &&
-                                      !std::is_same_v<Real, Lhs> && !std::is_same_v<Real, Rhs>>>
+          typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs>>>
 NumberPtr pow(const Lhs &lhs, const Rhs &rhs) {
   auto lhsSimpl = cast<INumber>(lhs.simplify());
   auto rhsSimpl = cast<INumber>(rhs.simplify());
 
-  if (const auto *rhsInt = cast<Integer>(rhsSimpl.get())) {
-    return pow(*lhsSimpl, *rhsInt);
+  if (lhsSimpl->isPrecise()) {
+    if (const auto *rhsInt = cast<Integer>(rhsSimpl.get())) {
+      return pow(*lhsSimpl, *rhsInt);
+    }
   }
 
   return cast<INumber>(pow(convert<Real>(*lhsSimpl), convert<Real>(*rhsSimpl)).simplify());
 }
 
-template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && !std::is_same_v<Real, Lhs>>>
+template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
 NumberPtr pow(const Lhs &lhs, Integer rhs) {
   if (lhs == ZERO && rhs == ZERO) {
     throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());

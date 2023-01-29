@@ -9,15 +9,25 @@
 using namespace fintamath;
 
 TEST(NumberFunctionsTests, absTest) {
-  EXPECT_EQ(abs(Integer("-210"))->toString(), "210");
-  EXPECT_EQ(abs(Integer("4545628562"))->toString(), "4545628562");
+  EXPECT_EQ(abs(Integer("-210")).toString(), "210");
+  EXPECT_EQ(abs(Integer("4545628562")).toString(), "4545628562");
 
-  EXPECT_EQ(abs(Rational(-1, 100))->toString(), "1/100");
-  EXPECT_EQ(abs(Rational(1, -100))->toString(), "1/100");
-  EXPECT_EQ(abs(Rational(10, 1000))->toString(), "1/100");
+  EXPECT_EQ(abs(Rational(-1, 100)).toString(), "1/100");
+  EXPECT_EQ(abs(Rational(1, -100)).toString(), "1/100");
+  EXPECT_EQ(abs(Rational(10, 1000)).toString(), "1/100");
 
-  EXPECT_EQ(abs(Real("8465132.321651651"))->toString(), "8465132.321651651");
-  EXPECT_EQ(abs(Real("-98465136846516354684651.351"))->toString(), "98465136846516354684651.351");
+  EXPECT_EQ(abs(Real("8465132.321651651")).toString(), "8465132.321651651");
+  EXPECT_EQ(abs(Real("-98465136846516354684651.351")).toString(), "98465136846516354684651.351");
+
+  EXPECT_EQ(abs(cast<INumber>(Integer("-210")))->toString(), "210");
+  EXPECT_EQ(abs(cast<INumber>(Integer("4545628562")))->toString(), "4545628562");
+
+  EXPECT_EQ(abs(cast<INumber>(Rational(-1, 100)))->toString(), "1/100");
+  EXPECT_EQ(abs(cast<INumber>(Rational(1, -100)))->toString(), "1/100");
+  EXPECT_EQ(abs(cast<INumber>(Rational(10, 1000)))->toString(), "1/100");
+
+  EXPECT_EQ(abs(cast<INumber>(Real("8465132.321651651")))->toString(), "8465132.321651651");
+  EXPECT_EQ(abs(cast<INumber>(Real("-98465136846516354684651.351")))->toString(), "98465136846516354684651.351");
 }
 
 TEST(NumberFunctionsTests, powTest) {
@@ -79,6 +89,15 @@ TEST(NumberFunctionsTests, powTest) {
   EXPECT_EQ(pow(Rational("-10"), Rational("-3"))->toString(), "-1/1000");
   EXPECT_EQ(pow(Rational("-1"), Rational("-25"))->toString(), "-1");
   EXPECT_EQ(pow(Rational("-2.2"), Rational("-5"))->toString(), "-3125/161051");
+
+  EXPECT_EQ(pow(Real("-10"), Rational("-3"))->toString(), "-1/1000");
+  EXPECT_EQ(pow(Real("-1"), Rational("-25"))->toString(), "-1");
+  EXPECT_EQ(pow(Real("-2.2"), Rational("-5"))->toString(),
+            "-0.019403791345598599201495178545926445660070412478034908196782385703907457886011264");
+
+  EXPECT_EQ(pow(Rational("-10"), Real("-3"))->toString(), "-1/1000");
+  EXPECT_EQ(pow(Rational("-1"), Real("-25"))->toString(), "-1");
+  EXPECT_EQ(pow(Rational("-2.2"), Real("-5"))->toString(), "-3125/161051");
 
   EXPECT_THROW(pow(Integer(0), Integer(0)), UndefinedBinaryOpearatorException);
   EXPECT_THROW(pow(Rational("0"), Rational("-10")), UndefinedBinaryOpearatorException);
