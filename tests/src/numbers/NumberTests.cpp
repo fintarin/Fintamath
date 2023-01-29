@@ -73,3 +73,15 @@ TEST(NumberTests, divTest) {
   EXPECT_EQ((*m4 / *m1)->toString(), "1/2");
   EXPECT_EQ((*m4 / *m3)->toString(), "1/4");
 }
+
+TEST(NumberTests, convertTest) {
+  NumberPtr m1 = std::make_unique<Integer>(1);
+  EXPECT_EQ((+*m1)->toString(), "1");
+  EXPECT_TRUE(is<INumber>(+*m1));
+}
+
+TEST(NumberTests, negateTest) {
+  NumberPtr m1 = std::make_unique<Integer>(1);
+  EXPECT_EQ((-*m1)->toString(), "-1");
+  EXPECT_TRUE(is<INumber>(+*m1));
+}

@@ -53,6 +53,16 @@ inline NumberPtr operator/(const INumber &lhs, const INumber &rhs) {
   return cast<INumber>(std::move(res));
 }
 
+template <typename Rhs, typename = std::enable_if_t<std::is_same_v<INumber, Rhs>>>
+NumberPtr operator+(const Rhs &rhs) {
+  return cast<INumber>(+cast<IArithmetic>(rhs));
+}
+
+template <typename Rhs, typename = std::enable_if_t<std::is_same_v<INumber, Rhs>>>
+NumberPtr operator-(const Rhs &rhs) {
+  return cast<INumber>(-cast<IArithmetic>(rhs));
+}
+
 template <typename Derived>
 class INumberCRTP : public INumber,
                     public IComparableCRTP<Derived>,
