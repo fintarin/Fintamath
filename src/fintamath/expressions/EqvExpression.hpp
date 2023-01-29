@@ -15,11 +15,11 @@ public:
 
   EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs);
 
-  EqvExpression(const EqvExpression &rhs) noexcept;
+  EqvExpression(const EqvExpression &rhs);
 
   EqvExpression(EqvExpression &&rhs) noexcept;
 
-  EqvExpression &operator=(const EqvExpression &rhs) noexcept;
+  EqvExpression &operator=(const EqvExpression &rhs);
 
   EqvExpression &operator=(EqvExpression &&rhs) noexcept;
 

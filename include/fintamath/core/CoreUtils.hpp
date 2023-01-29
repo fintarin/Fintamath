@@ -36,6 +36,7 @@ std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
   To *toRawPtr = dynamic_cast<To *>(fromRawPtr);
 
   if (toRawPtr) {
+    from = nullptr;
     return std::unique_ptr<To>(toRawPtr);
   }
 

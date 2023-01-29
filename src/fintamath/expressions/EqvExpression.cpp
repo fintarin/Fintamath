@@ -33,24 +33,25 @@ EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, co
   rightExpr = rhs.clone();
 }
 
-EqvExpression::EqvExpression(const EqvExpression &rhs) noexcept {
-  leftExpr = rhs.leftExpr->clone();
-  rightExpr = rhs.rightExpr->clone();
-  oper = cast<IOperator>(rhs.oper->clone());
+EqvExpression::EqvExpression(const EqvExpression &rhs)
+    : leftExpr(rhs.leftExpr->clone()),   //
+      rightExpr(rhs.rightExpr->clone()), //
+      oper(cast<IOperator>(rhs.oper->clone())) {
 }
 
-EqvExpression::EqvExpression(EqvExpression &&rhs) noexcept {
-  leftExpr = rhs.leftExpr->clone();
-  rightExpr = rhs.rightExpr->clone();
-  oper = cast<IOperator>(rhs.oper->clone());
+EqvExpression::EqvExpression(EqvExpression &&rhs) noexcept
+    : leftExpr(std::move(rhs.leftExpr)),   //
+      rightExpr(std::move(rhs.rightExpr)), //
+      oper(std::move(rhs.oper)) {
 }
 
-EqvExpression &EqvExpression::operator=(const EqvExpression &rhs) noexcept {
+EqvExpression &EqvExpression::operator=(const EqvExpression &rhs) {
   if (&rhs != this) {
     leftExpr = rhs.leftExpr->clone();
     rightExpr = rhs.rightExpr->clone();
     oper = cast<IOperator>(rhs.oper->clone());
   }
+
   return *this;
 }
 
@@ -60,6 +61,7 @@ EqvExpression &EqvExpression::operator=(EqvExpression &&rhs) noexcept {
     std::swap(rightExpr, rhs.rightExpr);
     std::swap(oper, rhs.oper);
   }
+
   return *this;
 }
 
@@ -72,26 +74,25 @@ MathObjectPtr EqvExpression::simplify() const {
 }
 
 MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
-  auto cloneExpr = *this;
   SumExpression addExpr;
-  addExpr.addElement({cloneExpr.leftExpr->clone()});
-  addExpr.addElement({cloneExpr.rightExpr->clone(), true});
-  cloneExpr.leftExpr = addExpr.simplify(isPrecise);
-  cloneExpr.rightExpr = ZERO.clone();
+  addExpr.addElement({leftExpr});
+  addExpr.addElement({rightExpr, true});
 
-  if (cast<IComparable>(cloneExpr.leftExpr.get())) {
-    auto res = Expression(cast<IOperator>(*oper)(*cloneExpr.leftExpr, *cloneExpr.rightExpr));
-    return res.simplify(isPrecise);
+  MathObjectPtr simplExpr = addExpr.simplify(isPrecise);
+
+  if (is<IComparable>(simplExpr)) {
+    return (*oper)(*simplExpr, ZERO);
   }
 
-  return cloneExpr.clone();
+  auto res = std::make_unique<EqvExpression>(*this);
+  res->leftExpr = std::move(simplExpr);
+  res->rightExpr = ZERO.clone();
+  return res;
 }
 
 void EqvExpression::setPrecision(uint8_t precision) {
-  if (is<IExpression>(leftExpr)) {
-    auto copyExpr = cast<IExpression>(std::move(leftExpr));
-    copyExpr->setPrecision(precision);
-    leftExpr = copyExpr->clone();
+  if (auto *expr = cast<IExpression>(leftExpr.get())) {
+    expr->setPrecision(precision);
   }
 }
 
@@ -166,6 +167,7 @@ std::vector<MathObjectPtr> EqvExpression::solvePowEquation(const Variable &x) co
   return results;
 }
 
+// TODO: v is unused here
 std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
   auto copyExpr = *this;
   SumExpression polynom(*leftExpr);
@@ -246,15 +248,15 @@ bool EqvExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs)
 std::vector<MathObjectPtr> EqvExpression::sortResult(std::vector<MathObjectPtr> &result) {
   std::sort(result.begin(), result.end(), sortFunc);
   std::vector<MathObjectPtr> resultWithoutRepeat;
-  for (const auto &val : result) {
+  for (auto &val : result) {
     if (resultWithoutRepeat.empty()) {
-      resultWithoutRepeat.emplace_back(val->clone());
+      resultWithoutRepeat.emplace_back(std::move(val));
       continue;
     }
     if (*val == *resultWithoutRepeat.at(resultWithoutRepeat.size() - 1)) {
       continue;
     }
-    resultWithoutRepeat.emplace_back(val->clone());
+    resultWithoutRepeat.emplace_back(std::move(val));
   }
   return resultWithoutRepeat;
 }

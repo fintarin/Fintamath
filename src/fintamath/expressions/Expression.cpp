@@ -45,7 +45,7 @@
 
 namespace fintamath {
 
-Expression::Expression(const Expression &rhs) noexcept {
+Expression::Expression(const Expression &rhs) {
   if (rhs.info) {
     info = rhs.info->clone();
     children = copy(rhs.children);
@@ -59,7 +59,7 @@ Expression::Expression(Expression &&rhs) noexcept : info(std::move(rhs.info)), c
   rhs.info = ZERO.clone();
 }
 
-Expression &Expression::operator=(const Expression &rhs) noexcept {
+Expression &Expression::operator=(const Expression &rhs) {
   if (&rhs != this) {
     if (rhs.info) {
       info = rhs.info->clone();
@@ -644,18 +644,19 @@ Expression &Expression::divide(const Expression &rhs) {
   return *this;
 }
 
+// TODO: move this logic to NegExpression
 Expression &Expression::negate() {
   if (is<Neg>(info)) {
-    info = children.front()->clone();
+    info = std::move(children.front());
     children.clear();
     return *this;
   }
 
   if (!children.empty()) {
-    auto expr = *this;
+    auto expr = std::make_unique<Expression>(*this);
     info = std::make_unique<Neg>();
     children.clear();
-    children.emplace_back(expr.clone());
+    children.emplace_back(std::move(expr));
     return *this;
   }
 
@@ -915,7 +916,7 @@ void Expression::simplifyFunction(bool isPrecise) {
       return;
     }
 
-    info = countResult->clone();
+    info = std::move(countResult);
     children.clear();
   } else {
     validateFunctionArgs(func, args);
@@ -963,7 +964,7 @@ void Expression::simplifyPow() {
       return;
     }
     if (*lhsPtr == ONE || *rhsPtr == ONE) {
-      info = lhsPtr->clone();
+      info = std::move(lhsRef);
       children.clear();
       return;
     }
@@ -975,7 +976,7 @@ void Expression::simplifyPow() {
     }
 
     Integer rhs = *rhsPtr;
-    MulElement lhs = lhsPtr->clone();
+    MulElement lhs = std::move(lhsRef);
 
     if (rhs < ZERO) {
       lhs.inverted = true;

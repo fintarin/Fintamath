@@ -15,11 +15,11 @@ public:
 public:
   Expression();
 
-  Expression(const Expression &rhs) noexcept;
+  Expression(const Expression &rhs);
 
   Expression(Expression &&rhs) noexcept;
 
-  Expression &operator=(const Expression &rhs) noexcept;
+  Expression &operator=(const Expression &rhs);
 
   Expression &operator=(Expression &&rhs) noexcept;
 
