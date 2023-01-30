@@ -18,11 +18,9 @@ DerivativeExpression::DerivativeExpression(const DerivativeExpression &rhs) : in
 }
 
 DerivativeExpression &DerivativeExpression::operator=(const DerivativeExpression &rhs) {
-  if (this == &rhs) {
-    return *this;
+  if (this != &rhs) {
+    info = rhs.info->clone();
   }
-
-  info = rhs.info->clone();
 
   return *this;
 }
@@ -61,12 +59,9 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
     value = info->simplify();
   }
 
-  if (is<Boolean>(value)) {
-    throw InvalidInputUnaryOpearatorException("'", value->toString(),
-                                              InvalidInputUnaryOpearatorException::Type::Postfix);
-  }
-  if (auto *expr = cast<IExpression>(value.get()); expr && !isPrecise) {
-    return std::make_unique<DerivativeExpression>(expr->simplify(isPrecise));
+  if (is<IExpression>(value)) {
+    // TODO: implement derivative of expression
+    return std::make_unique<DerivativeExpression>(std::move(value));
   }
   if (is<INumber>(value) || is<IConstant>(value)) {
     return ZERO.clone();
