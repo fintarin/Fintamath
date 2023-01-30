@@ -17,10 +17,10 @@ TEST(ExpressionTests, moveTest) {
   EXPECT_EQ(a.toString(), "3");
 
   auto b = std::move(a);
-  EXPECT_TRUE(b.toString() == "3" && a.toString() == "0");
+  EXPECT_TRUE(b.toString() == "3" && &a != &b);
 
   a = std::move(b);
-  EXPECT_TRUE(a.toString() == "3" && b.toString() == "0");
+  EXPECT_TRUE(a.toString() == "3" && &a != &b);
 }
 
 TEST(ExpressionTests, copyTest) {

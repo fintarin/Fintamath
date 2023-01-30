@@ -56,7 +56,6 @@ Expression::Expression() : info(ZERO.clone()) {
 }
 
 Expression::Expression(Expression &&rhs) noexcept : info(std::move(rhs.info)), children(std::move(rhs.children)) {
-  rhs.info = ZERO.clone();
 }
 
 Expression &Expression::operator=(const Expression &rhs) {
@@ -76,13 +75,13 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
   if (&rhs != this) {
     std::swap(info, rhs.info);
     std::swap(children, rhs.children);
-    rhs.info = ZERO.clone();
   }
 
   return *this;
 }
 
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
+  // TODO: implement void simplify() and use it here
   *this = Expression(simplify());
 }
 
