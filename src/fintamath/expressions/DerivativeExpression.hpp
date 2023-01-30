@@ -20,6 +20,8 @@ public:
 
   DerivativeExpression(const IMathObject &obj);
 
+  explicit DerivativeExpression(MathObjectPtr &&obj);
+
   std::string toString() const override;
 
   const IFunction *getFunction() const override;

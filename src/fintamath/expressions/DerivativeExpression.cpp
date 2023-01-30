@@ -31,6 +31,9 @@ DerivativeExpression::DerivativeExpression(const IMathObject &obj) {
   info = obj.simplify();
 }
 
+DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : info(std::move(obj)) {
+}
+
 std::string DerivativeExpression::toString() const {
   return "(" + info->toString() + ")'";
 }
@@ -63,7 +66,7 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
                                               InvalidInputUnaryOpearatorException::Type::Postfix);
   }
   if (auto *expr = cast<IExpression>(value.get()); expr && !isPrecise) {
-    return std::make_unique<DerivativeExpression>(*(expr->simplify(isPrecise)));
+    return std::make_unique<DerivativeExpression>(expr->simplify(isPrecise));
   }
   if (is<INumber>(value) || is<IConstant>(value)) {
     return ZERO.clone();
