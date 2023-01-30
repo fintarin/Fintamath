@@ -30,7 +30,7 @@ public:
 
   virtual ArgumentsVector getNonMatchingArgs(const ArgumentsVector &argsVect) const = 0;
 
-  template <typename... Args>
+  template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
   MathObjectPtr operator()(const Args &...args) const {
     ArgumentsVector argsVect = {args...};
     return callAbstract(argsVect);
