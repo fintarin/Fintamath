@@ -19,8 +19,13 @@ public:
 
   virtual void setPrecision(uint8_t precision) = 0;
 
+  // TODO: add this
+  // virtual void simplify() = 0;
+
+  // TODO: remove this and move simplify(false) logic to setPrecision
   virtual MathObjectPtr simplify(bool isPrecise) const = 0;
 
+  // TODO: remove this and prevent Expression in Expression situations
   virtual void compress() {
   }
 
@@ -28,12 +33,14 @@ public:
     return simplify(false);
   }
 
+  // TODO: make this non virtual using IExpression::Iterator
   virtual std::vector<MathObjectPtr> getVariables() const {
     return {};
   }
 
 protected:
-  static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj); // TODO: move to NegExpression
+  // TODO: move to NegExpression
+  static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
 
   // TODO: move to Expression
   void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;

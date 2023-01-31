@@ -270,6 +270,7 @@ bool sortFunc(const MulElement &lhs, const MulElement &rhs) {
   return lhs.info->toString() < rhs.info->toString();
 }
 
+// TODO: refactor
 void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, PolynomVector &addVect,
                                    PolynomVector &literalVect, PolynomVector &funcVect) {
   for (auto &obj : objs) {
@@ -325,6 +326,7 @@ void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, Polyno
   }
 }
 
+// TODO: refactor
 void MulExpression::simplifyPow(PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
                                 PolynomVector &funcVect) {
   Objects objects;
@@ -420,6 +422,7 @@ void MulExpression::multiplicatePolynom(PolynomVector &vect, PolynomVector &posi
   }
 }
 
+// TODO: refactor
 void MulExpression::simplifyPolynom() {
   auto numVect = PolynomVector();
   auto powVect = PolynomVector();
@@ -550,6 +553,7 @@ MulExpression::PolynomVector MulExpression::openPowMulExpression(const PolynomVe
   return newPowVect;
 }
 
+// TODO: remove this and implement PowExpression
 MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
   for (const auto &child : polynomVect) {
     if (*powValue == ONE) {
@@ -568,6 +572,7 @@ MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) co
   return {};
 }
 
+// TODO: remove this and implement PowExpression
 MathObjectPtr MulExpression::getPow() const {
   Integer maxValue = ZERO;
 

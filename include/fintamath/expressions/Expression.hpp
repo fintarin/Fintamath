@@ -69,6 +69,7 @@ public:
 
   void compress() override;
 
+  // TODO: make this private
   void setPrecisionRec(uint8_t precision);
 
 protected:

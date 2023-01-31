@@ -192,6 +192,7 @@ bool sortFunc(const SumElement &lhs, const SumElement &rhs) {
   return lhs.info->toString() < rhs.info->toString();
 }
 
+// TODO: refactor
 void SumExpression::simplifyPolynom() {
   auto numVect = PolynomVector();
   auto powVect = PolynomVector();
@@ -241,6 +242,7 @@ SumExpression::PolynomVector SumExpression::sumNumbers(const PolynomVector &numV
   return {{result.simplify(), false}};
 }
 
+// TODO: refactor
 void SumExpression::sortMulObjects(MulObjects &objs, PolynomVector &mulVect, PolynomVector &literalVect,
                                    PolynomVector &powVect) {
   for (auto &obj : objs) {
@@ -267,6 +269,7 @@ void SumExpression::sortMulObjects(MulObjects &objs, PolynomVector &mulVect, Pol
   }
 }
 
+// TODO: refactor
 void SumExpression::simplifyMul(PolynomVector &powVect, PolynomVector &mulVect, PolynomVector &literalVect,
                                 PolynomVector &funcVect) {
   MulObjects objs;
@@ -359,6 +362,7 @@ void SumExpression::simplifyMul(PolynomVector &powVect, PolynomVector &mulVect, 
   sortMulObjects(objs, mulVect, literalVect, powVect);
 }
 
+// TODO: remove this and implement PowExpression
 MathObjectPtr SumExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
   if (*powValue == ZERO) {
     for (const auto &child : polynomVect) {
@@ -393,6 +397,7 @@ MathObjectPtr SumExpression::getPowCoefficient(const MathObjectPtr &powValue) co
   return ZERO.clone();
 }
 
+// TODO: remove this and implement PowExpression
 MathObjectPtr SumExpression::getPow() const {
   auto maxValue = ZERO;
 
