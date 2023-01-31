@@ -737,16 +737,26 @@ void Expression::simplifyAnd() {
     } else {
       *this = Boolean(false);
     }
-  } else if (const auto *rhsBool = cast<Boolean>(&rhs)) {
+    return;
+  }
+
+  if (const auto *rhsBool = cast<Boolean>(&rhs)) {
     if (*rhsBool == true) {
       *this = lhs;
     } else {
       *this = Boolean(false);
     }
-  } else if (lhs == rhs) {
+    return;
+  }
+
+  if (lhs == rhs) {
     *this = lhs;
-  } else if (lhs == notL(rhs)) {
+    return;
+  }
+
+  if (lhs == notL(rhs)) {
     *this = Boolean(false);
+    return;
   }
 }
 
@@ -764,17 +774,26 @@ void Expression::simplifyOr() {
     } else {
       *this = rhs;
     }
-  } else if (const auto *rhsBool = cast<Boolean>(&rhs)) {
+    return;
+  }
+
+  if (const auto *rhsBool = cast<Boolean>(&rhs)) {
     if (*rhsBool == true) {
       *this = Boolean(true);
     } else {
       *this = lhs;
     }
-  } else if (lhs == rhs) {
+    return;
+  }
+
+  if (lhs == rhs) {
     *this = lhs;
     return;
-  } else if (lhs == notL(rhs)) {
+  }
+
+  if (lhs == notL(rhs)) {
     *this = Boolean(true);
+    return;
   }
 }
 

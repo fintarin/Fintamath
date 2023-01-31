@@ -32,7 +32,11 @@ TokenVector Tokenizer::tokenize(std::string str) {
       }
 
       tokens.emplace_back(1, ch);
-    } else if (isDigitOrPoint(ch)) {
+
+      continue;
+    }
+
+    if (isDigitOrPoint(ch)) {
       appendToken(tokens, specialToken, true);
       numberToken.push_back(ch);
 
@@ -40,10 +44,12 @@ TokenVector Tokenizer::tokenize(std::string str) {
       if (!tokens.empty() && tokens.back() == ")") {
         tokens.emplace_back("*");
       }
-    } else {
-      appendToken(tokens, numberToken, false);
-      specialToken.push_back(ch);
+
+      continue;
     }
+
+    appendToken(tokens, numberToken, false);
+    specialToken.push_back(ch);
   }
 
   appendToken(tokens, numberToken, false);
