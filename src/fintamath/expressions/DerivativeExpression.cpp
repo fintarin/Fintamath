@@ -33,6 +33,7 @@ DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : info(std::move
 }
 
 std::string DerivativeExpression::toString() const {
+  // TODO: remove this and use general toString() from UnaryExpression
   return "(" + info->toString() + ")'";
 }
 
@@ -41,12 +42,14 @@ const IFunction *DerivativeExpression::getFunction() const {
 }
 
 void DerivativeExpression::setPrecision(uint8_t precision) {
+  // TODO: remove this and use general toString() from UnaryExpression
   if (auto *expr = cast<IExpression>(info.get())) {
     expr->setPrecision(precision);
   }
 }
 
 MathObjectPtr DerivativeExpression::simplify() const {
+  // TODO: remove this and use general toString() from UnaryExpression
   return simplify(true);
 }
 
