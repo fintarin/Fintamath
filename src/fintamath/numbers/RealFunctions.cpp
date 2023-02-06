@@ -138,4 +138,52 @@ Real acot(const Real &rhs) {
   return res - atan(rhs);
 }
 
+Real sinh(const Real &rhs) {
+  return RealImpl(sinh(rhs.getImpl()->v));
+}
+
+Real cosh(const Real &rhs) {
+  return RealImpl(cosh(rhs.getImpl()->v));
+}
+
+Real tanh(const Real &rhs) {
+  return RealImpl(tanh(rhs.getImpl()->v));
+}
+
+Real coth(const Real &rhs) {
+  try {
+    return 1 / tanh(rhs);
+  } catch (const UndefinedException &) {
+    throw UndefinedFunctionException("coth", {rhs.toString()});
+  }
+}
+
+Real asinh(const Real &rhs) {
+  return ln(sqrt(rhs * rhs + 1) + rhs);
+}
+
+Real acosh(const Real &rhs) {
+  try {
+    return ln(rhs + sqrt(rhs - 1) * sqrt(rhs + 1));
+  } catch (const UndefinedException &) {
+    throw UndefinedFunctionException("acoth", {rhs.toString()});
+  }
+}
+
+Real atanh(const Real &rhs) {
+  try {
+    return (ln(1 + rhs) - ln(1 - rhs)) / 2;
+  } catch (const UndefinedException &) {
+    throw UndefinedFunctionException("acoth", {rhs.toString()});
+  }
+}
+
+Real acoth(const Real &rhs) {
+  try {
+    return (ln(1 + 1 / rhs) - ln(1 - 1 / rhs)) / 2;
+  } catch (const UndefinedException &) {
+    throw UndefinedFunctionException("acoth", {rhs.toString()});
+  }
+}
+
 }

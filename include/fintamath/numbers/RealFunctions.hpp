@@ -34,4 +34,20 @@ Real atan(const Real &rhs);
 
 Real acot(const Real &rhs);
 
+Real sinh(const Real &rhs);
+
+Real cosh(const Real &rhs);
+
+Real tanh(const Real &rhs);
+
+Real coth(const Real &rhs);
+
+Real asinh(const Real &rhs);
+
+Real acosh(const Real &rhs);
+
+Real atanh(const Real &rhs);
+
+Real acoth(const Real &rhs);
+
 }

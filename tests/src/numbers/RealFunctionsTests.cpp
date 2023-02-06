@@ -8,6 +8,14 @@
 
 using namespace fintamath;
 
+TEST(RealFunctionsTests, eNumTest) {
+  EXPECT_EQ(E_NUM.toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
+}
+
+TEST(RealFunctionsTests, piNumTest) {
+  EXPECT_EQ(PI_NUM.toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
+}
+
 TEST(RealFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Real(1)).toString(), "1");
   EXPECT_EQ(sqrt(Real(4)).toString(), "2");
@@ -153,10 +161,73 @@ TEST(RealFunctionsTests, acotTest) {
             "0.001");
 }
 
-TEST(RealFunctionsTests, eNumTest) {
-  EXPECT_EQ(E_NUM.toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
+TEST(RealFunctionsTests, sinhTest) {
+  EXPECT_EQ(sinh(Real("0")).toString(), "0");
+  EXPECT_EQ(sinh(Real("-1")).toString(),
+            "-1.1752011936438014568823818505956008151557179813340958702295654130133075673043239");
+  EXPECT_EQ(sinh(Real("360")).toString(),
+            "1.1091326487692776999948329517793349595727082777083535707260458682053441771196906*10^156");
 }
 
-TEST(RealFunctionsTests, piNumTest) {
-  EXPECT_EQ(PI_NUM.toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
+TEST(RealFunctionsTests, coshTest) {
+  EXPECT_EQ(cosh(Real("0")).toString(), "1");
+  EXPECT_EQ(cosh(Real("1")).toString(),
+            "1.5430806348152437784779056207570616826015291123658637047374022147107690630492237");
+  EXPECT_EQ(cosh(Real("125")).toString(),
+            "967788021017861284360312245263743609428141503861911628.64033144120749560890919683");
+}
+
+TEST(RealFunctionsTests, tanhTest) {
+  EXPECT_EQ(tanh(Real("0")).toString(), "0");
+  EXPECT_EQ(tanh(Real("-10")).toString(),
+            "-0.99999999587769276361959283713827574105081461849501996226140069543680188089876683");
+  EXPECT_EQ(tanh(Real("1.5")).toString(),
+            "0.90514825364486643824230369645649559722764113515878179856422398245110257699457953");
+}
+
+TEST(RealFunctionsTests, cothTest) {
+  EXPECT_EQ(coth(Real("1")).toString(),
+            "1.3130352854993313036361612469308478329120139412404526555431529675670842704618744");
+  EXPECT_EQ(coth(Real("200")).toString(), "1");
+  EXPECT_EQ(coth(Real("0.001")).toString(),
+            "1000.0003333333111111132275130158730372508128641887448236432439795543114729807153");
+
+  EXPECT_THROW(coth(Real("0")), UndefinedFunctionException);
+}
+
+TEST(RealFunctionsTests, asinhTest) {
+  EXPECT_EQ(asinh(Real("0")).toString(), "0");
+  EXPECT_EQ(asinh(Real("10")).toString(),
+            "2.9982229502979697388465955375964534766070580548773036557344592627530896573521661");
+  EXPECT_EQ(asinh(Real("-10")).toString(),
+            "-2.9982229502979697388465955375964534766070580548773036557344592627530896573521661");
+}
+
+TEST(RealFunctionsTests, acoshTest) {
+  EXPECT_EQ(acosh(Real("1")).toString(), "0");
+  EXPECT_EQ(acosh(Real("10")).toString(),
+            "2.9932228461263808979126677137741829130836604511809806426851456009774992267097399");
+
+  EXPECT_THROW(acosh(Real("-1")), UndefinedFunctionException);
+  EXPECT_THROW(acosh(Real("0")), UndefinedFunctionException);
+}
+
+TEST(RealFunctionsTests, atanhTest) {
+  EXPECT_EQ(atanh(Real("0")).toString(), "0");
+  EXPECT_EQ(atanh(Real("0.5")).toString(),
+            "0.54930614433405484569762261846126285232374527891137472586734716681874714660930448");
+
+  EXPECT_THROW(atanh(Real("-1")), UndefinedFunctionException);
+  EXPECT_THROW(atanh(Real("1")), UndefinedFunctionException);
+}
+
+TEST(RealFunctionsTests, acothTest) {
+  EXPECT_EQ(acoth(Real("10")).toString(),
+            "0.10033534773107558063572655206003894526336286914595913587458952092779251873800939");
+  EXPECT_EQ(acoth(Real("-10")).toString(),
+            "-0.10033534773107558063572655206003894526336286914595913587458952092779251873800939");
+
+  EXPECT_THROW(acoth(Real("-1")), UndefinedFunctionException);
+  EXPECT_THROW(acoth(Real("0")), UndefinedFunctionException);
+  EXPECT_THROW(acoth(Real("1")), UndefinedFunctionException);
 }
