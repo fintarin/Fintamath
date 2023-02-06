@@ -16,6 +16,12 @@ TEST(RealFunctionsTests, piNumTest) {
   EXPECT_EQ(PI_NUM.toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
 }
 
+TEST(RealFunctionsTests, absTest) {
+  EXPECT_EQ(abs(Real("8465132.321651651")).toString(), "8465132.321651651");
+  EXPECT_EQ(abs(Real("-98465136846516354684651.351")).toString(), "98465136846516354684651.351");
+  EXPECT_EQ(abs(Real("0")).toString(), "0");
+}
+
 TEST(RealFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Real(1)).toString(), "1");
   EXPECT_EQ(sqrt(Real(4)).toString(), "2");

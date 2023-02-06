@@ -4,6 +4,8 @@
 
 namespace fintamath {
 
+Real abs(const Real &rhs);
+
 Real sqrt(const Real &rhs);
 
 Real pow(const Real &lhs, const Real &rhs);

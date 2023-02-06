@@ -1,13 +1,19 @@
 #include <gtest/gtest.h>
 
+#include "fintamath/numbers/IntegerFunctions.hpp"
+
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
-#include "fintamath/numbers/IntegerFunctions.hpp"
-
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 using namespace fintamath;
+
+TEST(IntegerFunctionsTests, absTest) {
+  EXPECT_EQ(abs(Integer("-210")).toString(), "210");
+  EXPECT_EQ(abs(Integer("4545628562")).toString(), "4545628562");
+  EXPECT_EQ(abs(Integer("0")).toString(), "0");
+}
 
 TEST(IntegerFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Integer(35)), 5);

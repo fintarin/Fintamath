@@ -8,18 +8,11 @@
 
 namespace fintamath {
 
-template <typename Rhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Rhs>>>
-Rhs abs(const Rhs &rhs) {
-  if (rhs < ZERO) {
-    return -rhs;
-  }
-  return rhs;
-}
-
 inline NumberPtr abs(const INumber &rhs) {
   if (rhs < ZERO) {
     return -rhs;
   }
+
   return cast<INumber>(rhs.clone());
 }
 

@@ -7,6 +7,14 @@
 
 namespace fintamath {
 
+Real abs(const Real &rhs) {
+  if (rhs < 0) {
+    return -rhs;
+  }
+
+  return rhs;
+}
+
 Real sqrt(const Real &rhs) {
   if (rhs < 0) {
     throw UndefinedFunctionException("sqrt", {rhs.toString()});
