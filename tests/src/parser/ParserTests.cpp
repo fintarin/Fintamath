@@ -6,6 +6,7 @@
 #include "fintamath/functions/logic/Equiv.hpp"
 #include "fintamath/functions/logic/Impl.hpp"
 #include "fintamath/functions/logic/Nequiv.hpp"
+#include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
@@ -191,6 +192,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Impl>(IFunction::parse("->")));
   EXPECT_TRUE(is<Equiv>(IFunction::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IFunction::parse("!<->")));
+  EXPECT_TRUE(is<Degrees>(IFunction::parse("degrees")));
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

@@ -591,6 +591,7 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").simplify(false)->toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  EXPECT_EQ(Expression("degrees(Pi/4)").simplify(false)->toString(), "45");
 
   EXPECT_EQ(Expression("sin(E)=sin(E)").simplify(false)->toString(), "True");
   EXPECT_EQ(Expression("sin(E)>sin(E)").simplify(false)->toString(), "False");
