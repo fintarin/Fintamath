@@ -20,6 +20,8 @@ public:
 
   MathObjectPtr simplify() const override;
 
+  int sign() const;
+
   Integer getInteger() const;
 
   Integer getNumerator() const;
@@ -60,7 +62,7 @@ private:
 
   Integer numerator = 0;
   Integer denominator = 1;
-  bool sign{};
+  bool signVal{};
 };
 
 }

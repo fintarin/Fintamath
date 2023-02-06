@@ -68,6 +68,10 @@ std::string Integer::toString() const {
   return impl->v.str();
 }
 
+int Integer::sign() const {
+  return impl->v.sign();
+}
+
 const std::unique_ptr<IntegerImpl> &Integer::getImpl() const {
   return impl;
 }

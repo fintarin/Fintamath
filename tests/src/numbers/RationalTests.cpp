@@ -373,3 +373,11 @@ TEST(RationalTests, simplifyTest) {
   EXPECT_EQ(Rational(-5, 2).simplify()->toString(), "-5/2");
   EXPECT_EQ(Rational(-55, 5).simplify()->toString(), "-11");
 }
+
+TEST(RationalTests, signTests) {
+  EXPECT_EQ(Rational(-2).sign(), -1);
+  EXPECT_EQ(Rational(-1).sign(), -1);
+  EXPECT_EQ(Rational(0).sign(), 0);
+  EXPECT_EQ(Rational(1).sign(), 1);
+  EXPECT_EQ(Rational(2).sign(), 1);
+}

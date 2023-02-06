@@ -31,6 +31,8 @@ public:
 
   std::string toString() const override;
 
+  int sign() const;
+
   const std::unique_ptr<IntegerImpl> &getImpl() const;
 
 protected:

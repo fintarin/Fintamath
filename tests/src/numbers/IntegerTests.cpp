@@ -659,3 +659,11 @@ TEST(IntegerTests, equalsTests) {
   EXPECT_FALSE(Integer(100) == Integer("-100"));
   EXPECT_FALSE(Integer(100) == Integer("1"));
 }
+
+TEST(IntegerTests, signTests) {
+  EXPECT_EQ(Integer(-2).sign(), -1);
+  EXPECT_EQ(Integer(-1).sign(), -1);
+  EXPECT_EQ(Integer(0).sign(), 0);
+  EXPECT_EQ(Integer(1).sign(), 1);
+  EXPECT_EQ(Integer(2).sign(), 1);
+}

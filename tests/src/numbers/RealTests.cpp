@@ -896,7 +896,9 @@ TEST(RealTests, preciseTests) {
 }
 
 TEST(RealTests, signTests) {
-  EXPECT_EQ(Real(1).sign(), 1);
+  EXPECT_EQ(Real(-2).sign(), -1);
   EXPECT_EQ(Real(-1).sign(), -1);
   EXPECT_EQ(Real(0).sign(), 0);
+  EXPECT_EQ(Real(1).sign(), 1);
+  EXPECT_EQ(Real(2).sign(), 1);
 }

@@ -46,7 +46,7 @@ Integer Rational::getDenominator() const {
 }
 
 std::string Rational::toString() const {
-  std::string res = sign ? "-" : "";
+  std::string res = signVal ? "-" : "";
   res += numerator.toString();
 
   if (denominator != 1) {
@@ -58,20 +58,28 @@ std::string Rational::toString() const {
 
 MathObjectPtr Rational::simplify() const {
   if (denominator == 1) {
-    return sign ? (-getInteger()).clone() : getInteger().clone();
+    return signVal ? (-getInteger()).clone() : getInteger().clone();
   }
   return clone();
 }
 
+int Rational::sign() const {
+  if (*this == 0) {
+    return 0;
+  }
+
+  return signVal ? -1 : 1;
+}
+
 void Rational::fixZero() {
   if (numerator == 0) {
-    sign = false;
+    signVal = false;
     denominator = 1;
   }
 }
 
 bool Rational::equals(const Rational &rhs) const {
-  return sign == rhs.sign && numerator == rhs.numerator && denominator == rhs.denominator;
+  return signVal == rhs.signVal && numerator == rhs.numerator && denominator == rhs.denominator;
 }
 
 bool Rational::less(const Rational &rhs) const {
@@ -107,7 +115,7 @@ Rational &Rational::substract(const Rational &rhs) {
 Rational &Rational::multiply(const Rational &rhs) {
   numerator *= rhs.numerator;
   denominator *= rhs.denominator;
-  sign = (!sign || !rhs.sign) && (sign || rhs.sign);
+  signVal = (!signVal || !rhs.signVal) && (signVal || rhs.signVal);
   toIrreducibleRational();
   return *this;
 }
@@ -115,13 +123,13 @@ Rational &Rational::multiply(const Rational &rhs) {
 Rational &Rational::divide(const Rational &rhs) {
   numerator *= rhs.denominator;
   denominator *= rhs.numerator;
-  sign = (!sign || !rhs.sign) && (sign || rhs.sign);
+  signVal = (!signVal || !rhs.signVal) && (signVal || rhs.signVal);
   toIrreducibleRational();
   return *this;
 }
 
 Rational &Rational::negate() {
-  sign = !sign;
+  signVal = !signVal;
   return *this;
 }
 
@@ -169,18 +177,18 @@ void Rational::parse(const std::string &str) {
   toIrreducibleRational();
   numerator += intPart * denominator;
   if (numerator != 0) {
-    sign = isNegative;
+    signVal = isNegative;
   }
 }
 
 void Rational::fixNegative() {
   if (numerator < 0) {
     numerator *= -1;
-    sign = !sign;
+    signVal = !signVal;
   }
   if (denominator < 0) {
     denominator *= -1;
-    sign = !sign;
+    signVal = !signVal;
   }
 }
 
@@ -198,19 +206,19 @@ void Rational::toIrreducibleRational() {
 void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {
   Integer lcmVal = lcm(lhs.denominator, rhs.denominator);
 
-  if (lhs.sign) {
+  if (lhs.signVal) {
     lhs.numerator *= -1;
   }
   lhs.numerator *= (lcmVal / lhs.denominator);
   lhs.denominator = lcmVal;
-  lhs.sign = false;
+  lhs.signVal = false;
 
-  if (rhs.sign) {
+  if (rhs.signVal) {
     rhs.numerator *= -1;
   }
   rhs.numerator *= (lcmVal / rhs.denominator);
   rhs.denominator = lcmVal;
-  rhs.sign = false;
+  rhs.signVal = false;
 }
 
 // Using Euclid's algorithm
