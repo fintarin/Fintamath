@@ -33,7 +33,7 @@
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include "fintamath/functions/other/Abs.hpp"
+#include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"

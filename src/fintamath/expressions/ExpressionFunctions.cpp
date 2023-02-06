@@ -1,5 +1,6 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
+#include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
@@ -14,7 +15,6 @@
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include "fintamath/functions/other/Abs.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"

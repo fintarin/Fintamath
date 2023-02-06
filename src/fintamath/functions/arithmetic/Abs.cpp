@@ -1,4 +1,4 @@
-#include "fintamath/functions/other/Abs.hpp"
+#include "fintamath/functions/arithmetic/Abs.hpp"
 
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
