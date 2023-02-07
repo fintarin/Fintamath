@@ -340,8 +340,10 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
     int64_t order = 1;
 
     if (auto *factor = cast<Factorial>(oper.get())) {
-      while (tokens[tokens.size() - order - 1] == oper->toString()) {
-        order++;
+      for (; order < tokens.size(); order++) {
+        if (tokens[tokens.size() - order - 1] != oper->toString()) {
+          break;
+        }
       }
 
       factor->setOrder(order);
