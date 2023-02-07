@@ -128,6 +128,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("log(E,E)").toString(), "log(E, E)");
   EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "log(Pi, Pi^10)");
   EXPECT_EQ(Expression("log(E,E^3)").toString(), "log(E, E^3)");
+  EXPECT_EQ(Expression("log((Pi),(E)^((Pi)))").toString(), "log(Pi, E^Pi)");
   EXPECT_EQ(Expression("ln3").toString(), "ln(3)");
   EXPECT_EQ(Expression("ln2").toString(), "ln(2)");
   EXPECT_EQ(Expression("ln100").toString(), "ln(100)");

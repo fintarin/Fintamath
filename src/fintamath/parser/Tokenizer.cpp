@@ -24,7 +24,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
       appendToken(tokens, specialToken, true);
 
       // TODO: do it in Expression
-      if (!tokens.empty() && tokens.back() != "(" && ch == '(') {
+      if (!tokens.empty() && tokens.back() != "(" && tokens.back() != "," && ch == '(') {
         if (tokens.back() == ")" ||
             std::find(registeredTokens.begin(), registeredTokens.end(), tokens.back()) == registeredTokens.end()) {
           tokens.emplace_back("*");
