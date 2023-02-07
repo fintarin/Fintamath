@@ -42,13 +42,21 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
+#include "fintamath/functions/trigonometry/Acosh.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
+#include "fintamath/functions/trigonometry/Acoth.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
+#include "fintamath/functions/trigonometry/Asinh.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
+#include "fintamath/functions/trigonometry/Atanh.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
+#include "fintamath/functions/trigonometry/Cosh.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Coth.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
+#include "fintamath/functions/trigonometry/Sinh.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/functions/trigonometry/Tanh.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
@@ -199,6 +207,14 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Degrees>(IFunction::parse("degrees")));
   EXPECT_TRUE(is<Index>(IFunction::parse("_")));
   EXPECT_TRUE(is<Sign>(IFunction::parse("sign")));
+  EXPECT_TRUE(is<Sinh>(IFunction::parse("sinh")));
+  EXPECT_TRUE(is<Cosh>(IFunction::parse("cosh")));
+  EXPECT_TRUE(is<Tanh>(IFunction::parse("tanh")));
+  EXPECT_TRUE(is<Coth>(IFunction::parse("coth")));
+  EXPECT_TRUE(is<Asinh>(IFunction::parse("asinh")));
+  EXPECT_TRUE(is<Acosh>(IFunction::parse("acosh")));
+  EXPECT_TRUE(is<Atanh>(IFunction::parse("atanh")));
+  EXPECT_TRUE(is<Acoth>(IFunction::parse("acoth")));
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

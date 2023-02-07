@@ -38,13 +38,21 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
+#include "fintamath/functions/trigonometry/Acosh.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
+#include "fintamath/functions/trigonometry/Acoth.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
+#include "fintamath/functions/trigonometry/Asinh.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
+#include "fintamath/functions/trigonometry/Atanh.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
+#include "fintamath/functions/trigonometry/Cosh.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Coth.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
+#include "fintamath/functions/trigonometry/Sinh.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/functions/trigonometry/Tanh.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
@@ -129,6 +137,14 @@ struct ParserConfig {
     IFunction::registerParser<Acot>();
     IFunction::registerParser<Degrees>();
     IFunction::registerParser<Sign>();
+    IFunction::registerParser<Sinh>();
+    IFunction::registerParser<Cosh>();
+    IFunction::registerParser<Tanh>();
+    IFunction::registerParser<Coth>();
+    IFunction::registerParser<Asinh>();
+    IFunction::registerParser<Acosh>();
+    IFunction::registerParser<Atanh>();
+    IFunction::registerParser<Acoth>();
   }
 };
 

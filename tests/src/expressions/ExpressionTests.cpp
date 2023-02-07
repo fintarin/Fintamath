@@ -145,6 +145,14 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("acos0.9").toString(), "acos(9/10)");
   EXPECT_EQ(Expression("atan10").toString(), "atan(10)");
   EXPECT_EQ(Expression("acot10").toString(), "acot(10)");
+  EXPECT_EQ(Expression("sinh10").toString(), "sinh(10)");
+  EXPECT_EQ(Expression("cosh10").toString(), "cosh(10)");
+  EXPECT_EQ(Expression("tanh10").toString(), "tanh(10)");
+  EXPECT_EQ(Expression("coth10").toString(), "coth(10)");
+  EXPECT_EQ(Expression("asinh0.9").toString(), "asinh(9/10)");
+  EXPECT_EQ(Expression("acosh1.9").toString(), "acosh(19/10)");
+  EXPECT_EQ(Expression("atanh0.9").toString(), "atanh(9/10)");
+  EXPECT_EQ(Expression("acoth1.9").toString(), "acoth(19/10)");
   EXPECT_EQ(Expression("((2))*sqrt2").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sqrt2*((2))").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sin(1)^2").toString(), "sin(1)^2");
@@ -578,6 +586,22 @@ TEST(ExpressionTests, simplifyInpreciseTest) {
             "1.4711276743037345918528755717617308518553063771832382624719635193438804556955538");
   EXPECT_EQ(Expression("acot10").simplify(false)->toString(),
             "0.099668652491162027378446119878020590243278322504314648015508776810027747447550654");
+  EXPECT_EQ(Expression("sinh10").simplify(false)->toString(),
+            "11013.232874703393377236524554846364402901451190319346103835228548076948583785685");
+  EXPECT_EQ(Expression("cosh10").simplify(false)->toString(),
+            "11013.232920103323139721376090437879963452061428237434970400197807148254234785107");
+  EXPECT_EQ(Expression("tanh10").simplify(false)->toString(),
+            "0.99999999587769276361959283713827574105081461849501996226140069543680188089876683");
+  EXPECT_EQ(Expression("coth10").simplify(false)->toString(),
+            "1.0000000041223072533738241840280803124601800267562193084479187641100667185123807");
+  EXPECT_EQ(Expression("asinh0.9").simplify(false)->toString(),
+            "0.80886693565278246250935016738160604299699494260611658590774273687832265593746445");
+  EXPECT_EQ(Expression("acosh1.9").simplify(false)->toString(),
+            "1.2571958266003804345446952305599900185447096920846764166114358405852412800661934");
+  EXPECT_EQ(Expression("atanh0.9").simplify(false)->toString(),
+            "1.4722194895832202300045137159439267686186896306495644092689801182046463510320986");
+  EXPECT_EQ(Expression("acoth1.9").simplify(false)->toString(),
+            "0.5850356263251273221963907792584300980997658991386225877261408421838960973503172");
   EXPECT_EQ(Expression("((2))*sqrt2").simplify(false)->toString(),
             "2.8284271247461900976033774484193961571393437507538961463533594759814649569242141");
   EXPECT_EQ(Expression("sqrt2*((2))").simplify(false)->toString(),
