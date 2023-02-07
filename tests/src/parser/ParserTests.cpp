@@ -14,6 +14,7 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
@@ -197,6 +198,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Nequiv>(IFunction::parse("!<->")));
   EXPECT_TRUE(is<Degrees>(IFunction::parse("degrees")));
   EXPECT_TRUE(is<Index>(IFunction::parse("_")));
+  EXPECT_TRUE(is<Sign>(IFunction::parse("sign")));
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

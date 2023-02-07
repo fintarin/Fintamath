@@ -112,6 +112,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("abs(-5)").toString(), "5");
   EXPECT_EQ(Expression("abs((-5))").toString(), "5");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
+  EXPECT_EQ(Expression("sign(10)").toString(), "1");
 
   EXPECT_EQ(Expression("E").toString(), "E");
   EXPECT_EQ(Expression("Pi").toString(), "Pi");

@@ -10,6 +10,7 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
@@ -127,6 +128,7 @@ struct ParserConfig {
     IFunction::registerParser<Atan>();
     IFunction::registerParser<Acot>();
     IFunction::registerParser<Degrees>();
+    IFunction::registerParser<Sign>();
   }
 };
 
