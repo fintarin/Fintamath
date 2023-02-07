@@ -357,6 +357,15 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~d <-> ~~f !<-> ~~g").toString(),
             "~((~(~a & b | ~c) | d) & f | ~(~(~a & b | ~c) | d) & ~f) & g | ((~(~a & b | ~c) | d) & f "
             "| ~(~(~a & b | ~c) | d) & ~f) & ~g");
+
+  EXPECT_EQ(Expression("x_1").toString(), "x_1");
+  EXPECT_EQ(Expression("(x+1)_1").toString(), "(x + 1)_1");
+  EXPECT_EQ(Expression("(x*2)_1").toString(), "(2 x)_1");
+  // EXPECT_EQ(Expression("x+x_1").toString(), "x + x_1"); // TODO: fix
+  // EXPECT_EQ(Expression("x*x_1").toString(), "x * x_1"); // TODO: fix
+  EXPECT_EQ(Expression("x^x_1").toString(), "x^x_1");
+  // EXPECT_EQ(Expression("x_x^2").toString(), "x_x^2"); // TODO: fix
+  EXPECT_EQ(Expression("sin(x_1)").toString(), "sin(x_1)");
 }
 
 TEST(ExpressionTests, toStringLargeTest) {

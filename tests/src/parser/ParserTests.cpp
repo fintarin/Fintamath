@@ -3,16 +3,13 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
-#include "fintamath/functions/logic/Equiv.hpp"
-#include "fintamath/functions/logic/Impl.hpp"
-#include "fintamath/functions/logic/Nequiv.hpp"
-#include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -31,10 +28,14 @@
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/logic/And.hpp"
+#include "fintamath/functions/logic/Equiv.hpp"
+#include "fintamath/functions/logic/Impl.hpp"
+#include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include "fintamath/functions/arithmetic/Abs.hpp"
+#include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
+#include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -150,6 +151,7 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(is<Impl>(IOperator::parse("->")));
   EXPECT_TRUE(is<Equiv>(IOperator::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IOperator::parse("!<->")));
+  EXPECT_TRUE(is<Index>(IOperator::parse("_")));
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
@@ -194,6 +196,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Equiv>(IFunction::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IFunction::parse("!<->")));
   EXPECT_TRUE(is<Degrees>(IFunction::parse("degrees")));
+  EXPECT_TRUE(is<Index>(IFunction::parse("_")));
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

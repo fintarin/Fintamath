@@ -31,6 +31,7 @@
 #include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
+#include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -107,6 +108,7 @@ struct ParserConfig {
     IOperator::registerParser<Impl>();
     IOperator::registerParser<Equiv>();
     IOperator::registerParser<Nequiv>();
+    IOperator::registerParser<Index>();
 
     // functions
     IFunction::registerParser<Abs>();

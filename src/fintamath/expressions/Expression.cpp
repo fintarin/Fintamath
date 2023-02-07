@@ -15,6 +15,7 @@
 #include "fintamath/expressions/EqvExpression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/IndexExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -33,6 +34,7 @@
 #include "fintamath/functions/logic/Not.hpp"    // TODO: remove this include after LogicException is implemented
 #include "fintamath/functions/logic/Or.hpp"     // TODO: remove this include after LogicException is implemented
 #include "fintamath/functions/other/Factorial.hpp"
+#include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Boolean.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/literals/ILiteral.hpp"
@@ -481,6 +483,10 @@ ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, cons
     return buildDerivateExpression(args);
   }
 
+  if (is<Index>(func)) {
+    return buildIndexExpression(args);
+  }
+
   auto funcExpr = std::make_unique<Expression>();
   funcExpr->info = func.clone();
 
@@ -519,6 +525,10 @@ ExpressionPtr Expression::buildEqvExpression(const IFunction &func, const Argume
 
 ExpressionPtr Expression::buildDerivateExpression(const ArgumentsVector &args) {
   return std::make_unique<DerivativeExpression>(args.front().get());
+}
+
+ExpressionPtr Expression::buildIndexExpression(const ArgumentsVector &args) {
+  return std::make_unique<IndexExpression>(args.front().get(), args.back().get());
 }
 
 Expression::ChildrenVector Expression::copy(const ChildrenVector &rhs) {

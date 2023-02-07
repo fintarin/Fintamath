@@ -94,6 +94,8 @@ private:
 
   static ExpressionPtr buildDerivateExpression(const ArgumentsVector &args);
 
+  static ExpressionPtr buildIndexExpression(const ArgumentsVector &args);
+
   static ChildrenVector copy(const ChildrenVector &rhs);
 
   bool parsePrefixOperator(const TokenVector &tokens);
