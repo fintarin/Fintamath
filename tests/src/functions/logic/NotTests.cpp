@@ -10,7 +10,7 @@ using namespace fintamath;
 const Not f;
 
 TEST(NotTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "!");
+  EXPECT_EQ(f.toString(), "~");
 }
 
 TEST(NotTests, getFunctionTypeTest) {
@@ -25,7 +25,7 @@ TEST(NotTests, callTest) {
   EXPECT_EQ(f(Boolean(true))->toString(), "False");
   EXPECT_EQ(f(Boolean(false))->toString(), "True");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "!a");
+  EXPECT_EQ(f(Variable("a"))->toString(), "~a");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Boolean(true), Boolean(true)), InvalidInputFunctionException);

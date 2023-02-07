@@ -12,7 +12,7 @@ public:
   }
 
   std::string toString() const override {
-    return "&&";
+    return "&";
   }
 
 protected:

@@ -144,9 +144,9 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(is<LessEqv>(IOperator::parse("<=")));
   EXPECT_TRUE(is<MoreEqv>(IOperator::parse(">=")));
   EXPECT_TRUE(is<Derivative>(IOperator::parse("'")));
-  EXPECT_TRUE(is<Not>(IOperator::parse("!", IOperator::Priority::PrefixUnary)));
-  EXPECT_TRUE(is<And>(IOperator::parse("&&")));
-  EXPECT_TRUE(is<Or>(IOperator::parse("||")));
+  EXPECT_TRUE(is<Not>(IOperator::parse("~", IOperator::Priority::PrefixUnary)));
+  EXPECT_TRUE(is<And>(IOperator::parse("&")));
+  EXPECT_TRUE(is<Or>(IOperator::parse("|")));
   EXPECT_TRUE(is<Impl>(IOperator::parse("->")));
   EXPECT_TRUE(is<Equiv>(IOperator::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IOperator::parse("!<->")));
@@ -187,8 +187,9 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Atan>(IFunction::parse("atan")));
   EXPECT_TRUE(is<Acot>(IFunction::parse("acot")));
   EXPECT_TRUE(is<Abs>(IFunction::parse("abs")));
-  EXPECT_TRUE(is<And>(IFunction::parse("&&")));
-  EXPECT_TRUE(is<Or>(IFunction::parse("||")));
+  EXPECT_TRUE(is<Not>(IFunction::parse("~")));
+  EXPECT_TRUE(is<And>(IFunction::parse("&")));
+  EXPECT_TRUE(is<Or>(IFunction::parse("|")));
   EXPECT_TRUE(is<Impl>(IFunction::parse("->")));
   EXPECT_TRUE(is<Equiv>(IFunction::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IFunction::parse("!<->")));

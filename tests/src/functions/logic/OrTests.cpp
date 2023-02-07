@@ -10,7 +10,7 @@ using namespace fintamath;
 const Or f;
 
 TEST(OrTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "||");
+  EXPECT_EQ(f.toString(), "|");
 }
 
 TEST(OrTests, getFunctionTypeTest) {
@@ -27,7 +27,7 @@ TEST(OrTests, callTest) {
   EXPECT_EQ(f(Boolean(true), Boolean(false))->toString(), "True");
   EXPECT_EQ(f(Boolean(true), Boolean(true))->toString(), "True");
 
-  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "a || b");
+  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "a | b");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Boolean(true)), InvalidInputFunctionException);

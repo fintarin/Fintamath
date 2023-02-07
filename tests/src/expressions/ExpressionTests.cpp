@@ -17,16 +17,16 @@ TEST(ExpressionTests, moveTest) {
   EXPECT_EQ(a.toString(), "3");
 
   auto b = std::move(a);
-  EXPECT_TRUE(b.toString() == "3" && &a != &b);
+  EXPECT_TRUE(b.toString() == "3" & &a != &b);
 
   a = std::move(b);
-  EXPECT_TRUE(a.toString() == "3" && &a != &b);
+  EXPECT_TRUE(a.toString() == "3" & &a != &b);
 }
 
 TEST(ExpressionTests, copyTest) {
   auto a = Expression("1+2");
   auto b = a;
-  EXPECT_TRUE(a == b && &a != &b);
+  EXPECT_TRUE(a == b & &a != &b);
 }
 
 TEST(ExpressionTests, toStringTest) {
@@ -268,95 +268,95 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("b'+a'").toString(), "2");
   EXPECT_EQ(Expression("5'").toString(), "0");
 
-  EXPECT_EQ(Expression("!True").toString(), "False");
-  EXPECT_EQ(Expression("!False").toString(), "True");
-  EXPECT_EQ(Expression("True&&False").toString(), "False");
-  EXPECT_EQ(Expression("!!!True&&!!!!False||!!!!!!False||False").toString(), "False");
-  EXPECT_EQ(Expression("True||False").toString(), "True");
-  EXPECT_EQ(Expression("True&&False||True&&False").toString(), "False");
-  EXPECT_EQ(Expression("False&&True||True&&False").toString(), "False");
-  EXPECT_EQ(Expression("False&&True||True&&True||False").toString(), "True");
-  EXPECT_EQ(Expression("False||!False&&True").toString(), "True");
-  EXPECT_EQ(Expression("(False||False&&!True)||(True&&!(False||True))").toString(), "False");
+  EXPECT_EQ(Expression("~True").toString(), "False");
+  EXPECT_EQ(Expression("~False").toString(), "True");
+  EXPECT_EQ(Expression("True&False").toString(), "False");
+  EXPECT_EQ(Expression("~~~True&~~~~False|~~~~~~False|False").toString(), "False");
+  EXPECT_EQ(Expression("True|False").toString(), "True");
+  EXPECT_EQ(Expression("True&False|True&False").toString(), "False");
+  EXPECT_EQ(Expression("False&True|True&False").toString(), "False");
+  EXPECT_EQ(Expression("False&True|True&True|False").toString(), "True");
+  EXPECT_EQ(Expression("False|~False&True").toString(), "True");
+  EXPECT_EQ(Expression("(False|False&~True)|(True&~(False|True))").toString(), "False");
   EXPECT_EQ(Expression("True !<-> True").toString(), "False");
-  EXPECT_EQ(Expression("(False -> False && !True) !<-> (True <-> !(False||True))").toString(), "True");
-  EXPECT_EQ(Expression("False <-> !False && True").toString(), "False");
+  EXPECT_EQ(Expression("(False -> False & ~True) !<-> (True <-> ~(False|True))").toString(), "True");
+  EXPECT_EQ(Expression("False <-> ~False & True").toString(), "False");
   EXPECT_EQ(Expression("False <-> True -> False").toString(), "True");
 
-  EXPECT_EQ(Expression("!(1=1)").toString(), "False");
-  EXPECT_EQ(Expression("!(1=2)").toString(), "True");
-  EXPECT_EQ(Expression("(1=1)&&(1=2)").toString(), "False");
-  EXPECT_EQ(Expression("(1=1)||(1=2)").toString(), "True");
-  EXPECT_EQ(Expression("(1=2)||!(1=2)&&(1=1)").toString(), "True");
-  EXPECT_EQ(Expression("((1=2)||(1=2)&&!(1=1))||((1=1)&&!((1=2)||(1=1)))").toString(), "False");
-  EXPECT_EQ(Expression("((1=2) -> (1=2) && !(1=1)) !<-> ((1=1) <-> !((1=2) || (1=1)))").toString(), "True");
-  EXPECT_EQ(Expression("False||1=1").toString(), "True");
-  EXPECT_EQ(Expression("1=1||False").toString(), "True");
+  EXPECT_EQ(Expression("~(1=1)").toString(), "False");
+  EXPECT_EQ(Expression("~(1=2)").toString(), "True");
+  EXPECT_EQ(Expression("(1=1)&(1=2)").toString(), "False");
+  EXPECT_EQ(Expression("(1=1)|(1=2)").toString(), "True");
+  EXPECT_EQ(Expression("(1=2)|~(1=2)&(1=1)").toString(), "True");
+  EXPECT_EQ(Expression("((1=2)|(1=2)&~(1=1))|((1=1)&~((1=2)|(1=1)))").toString(), "False");
+  EXPECT_EQ(Expression("((1=2) -> (1=2) & ~(1=1)) !<-> ((1=1) <-> ~((1=2) | (1=1)))").toString(), "True");
+  EXPECT_EQ(Expression("False|1=1").toString(), "True");
+  EXPECT_EQ(Expression("1=1|False").toString(), "True");
 
-  EXPECT_EQ(Expression("!a").toString(), "!a");
-  EXPECT_EQ(Expression("!!a").toString(), "a");
-  EXPECT_EQ(Expression("!!!a").toString(), "!a");
-  EXPECT_EQ(Expression("!!!!!!!!!!a").toString(), "a");
-  EXPECT_EQ(Expression("!!!!!!!!!!!a").toString(), "!a");
+  EXPECT_EQ(Expression("~a").toString(), "~a");
+  EXPECT_EQ(Expression("~~a").toString(), "a");
+  EXPECT_EQ(Expression("~~~a").toString(), "~a");
+  EXPECT_EQ(Expression("~~~~~~~~~~a").toString(), "a");
+  EXPECT_EQ(Expression("~~~~~~~~~~~a").toString(), "~a");
 
-  EXPECT_EQ(Expression("a && b").toString(), "a && b");
-  EXPECT_EQ(Expression("a || b").toString(), "a || b");
-  EXPECT_EQ(Expression("a -> b").toString(), "!a || b");
-  EXPECT_EQ(Expression("a <-> b").toString(), "a && b || !a && !b");
-  EXPECT_EQ(Expression("a !<-> b").toString(), "!a && b || a && !b");
+  EXPECT_EQ(Expression("a & b").toString(), "a & b");
+  EXPECT_EQ(Expression("a | b").toString(), "a | b");
+  EXPECT_EQ(Expression("a -> b").toString(), "~a | b");
+  EXPECT_EQ(Expression("a <-> b").toString(), "a & b | ~a & ~b");
+  EXPECT_EQ(Expression("a !<-> b").toString(), "~a & b | a & ~b");
 
-  EXPECT_EQ(Expression("a && a").toString(), "a");
-  EXPECT_EQ(Expression("a || a").toString(), "a");
+  EXPECT_EQ(Expression("a & a").toString(), "a");
+  EXPECT_EQ(Expression("a | a").toString(), "a");
   EXPECT_EQ(Expression("a -> a").toString(), "True");
   EXPECT_EQ(Expression("a <-> a").toString(), "True");
   EXPECT_EQ(Expression("a !<-> a").toString(), "False");
 
-  EXPECT_EQ(Expression("a && !a").toString(), "False");
-  EXPECT_EQ(Expression("a || !a").toString(), "True");
-  EXPECT_EQ(Expression("a -> !a").toString(), "!a");
-  EXPECT_EQ(Expression("a <-> !a").toString(), "False");
-  EXPECT_EQ(Expression("a !<-> !a").toString(), "True");
+  EXPECT_EQ(Expression("a & ~a").toString(), "False");
+  EXPECT_EQ(Expression("a | ~a").toString(), "True");
+  EXPECT_EQ(Expression("a -> ~a").toString(), "~a");
+  EXPECT_EQ(Expression("a <-> ~a").toString(), "False");
+  EXPECT_EQ(Expression("a !<-> ~a").toString(), "True");
 
-  EXPECT_EQ(Expression("!a && a").toString(), "False");
-  EXPECT_EQ(Expression("!a || a").toString(), "True");
-  EXPECT_EQ(Expression("!a -> a").toString(), "a");
-  EXPECT_EQ(Expression("!a <-> a").toString(), "False");
-  EXPECT_EQ(Expression("!a !<-> a").toString(), "True");
+  EXPECT_EQ(Expression("~a & a").toString(), "False");
+  EXPECT_EQ(Expression("~a | a").toString(), "True");
+  EXPECT_EQ(Expression("~a -> a").toString(), "a");
+  EXPECT_EQ(Expression("~a <-> a").toString(), "False");
+  EXPECT_EQ(Expression("~a !<-> a").toString(), "True");
 
-  EXPECT_EQ(Expression("!a && !a").toString(), "!a");
-  EXPECT_EQ(Expression("!a || !a").toString(), "!a");
-  EXPECT_EQ(Expression("!a -> !a").toString(), "True");
-  EXPECT_EQ(Expression("!a <-> !a").toString(), "True");
-  EXPECT_EQ(Expression("!a !<-> !a").toString(), "False");
+  EXPECT_EQ(Expression("~a & ~a").toString(), "~a");
+  EXPECT_EQ(Expression("~a | ~a").toString(), "~a");
+  EXPECT_EQ(Expression("~a -> ~a").toString(), "True");
+  EXPECT_EQ(Expression("~a <-> ~a").toString(), "True");
+  EXPECT_EQ(Expression("~a !<-> ~a").toString(), "False");
 
-  EXPECT_EQ(Expression("a && False").toString(), "False");
-  EXPECT_EQ(Expression("a || False").toString(), "a");
-  EXPECT_EQ(Expression("a -> False").toString(), "!a");
-  EXPECT_EQ(Expression("a <-> False").toString(), "!a");
+  EXPECT_EQ(Expression("a & False").toString(), "False");
+  EXPECT_EQ(Expression("a | False").toString(), "a");
+  EXPECT_EQ(Expression("a -> False").toString(), "~a");
+  EXPECT_EQ(Expression("a <-> False").toString(), "~a");
   EXPECT_EQ(Expression("a !<-> False").toString(), "a");
 
-  EXPECT_EQ(Expression("a && True").toString(), "a");
-  EXPECT_EQ(Expression("a || True").toString(), "True");
+  EXPECT_EQ(Expression("a & True").toString(), "a");
+  EXPECT_EQ(Expression("a | True").toString(), "True");
   EXPECT_EQ(Expression("a -> True").toString(), "True");
   EXPECT_EQ(Expression("a <-> True").toString(), "a");
-  EXPECT_EQ(Expression("a !<-> True").toString(), "!a");
+  EXPECT_EQ(Expression("a !<-> True").toString(), "~a");
 
-  EXPECT_EQ(Expression("a<->(True)<->(False)").toString(), "!a");
+  EXPECT_EQ(Expression("a<->(True)<->(False)").toString(), "~a");
   EXPECT_EQ(Expression("a<->(True)!<->(False)").toString(), "a");
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a").toString(), "True");
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a<->a").toString(), "a");
-  EXPECT_EQ(Expression("a&&b->b&&c").toString(), "!(a && b) || b && c");
-  EXPECT_EQ(Expression("a&&b&&c").toString(), "a && b && c");
-  EXPECT_EQ(Expression("a&&(b&&c)").toString(), "a && b && c");
-  EXPECT_EQ(Expression("a && !b && c").toString(), "a && !b && c");
-  EXPECT_EQ(Expression("a || (!b && c)").toString(), "a || !b && c");
-  EXPECT_EQ(Expression("(a || !b) && c").toString(), "(a || !b) && c");
-  EXPECT_EQ(Expression("!a && b || !c -> d <-> f !<-> g").toString(),
-            "!((!(!a && b || !c) || d) && f || !(!(!a && b || !c) || d) && !f) && g || ((!(!a && b || !c) || d) && f "
-            "|| !(!(!a && b || !c) || d) && !f) && !g");
-  EXPECT_EQ(Expression("!!!a && !!b || !!!c -> !!d <-> !!f !<-> !!g").toString(),
-            "!((!(!a && b || !c) || d) && f || !(!(!a && b || !c) || d) && !f) && g || ((!(!a && b || !c) || d) && f "
-            "|| !(!(!a && b || !c) || d) && !f) && !g");
+  EXPECT_EQ(Expression("a&b->b&c").toString(), "~(a & b) | b & c");
+  EXPECT_EQ(Expression("a&b&c").toString(), "a & b & c");
+  EXPECT_EQ(Expression("a&(b&c)").toString(), "a & b & c");
+  EXPECT_EQ(Expression("a & ~b & c").toString(), "a & ~b & c");
+  EXPECT_EQ(Expression("a | (~b & c)").toString(), "a | ~b & c");
+  EXPECT_EQ(Expression("(a | ~b) & c").toString(), "(a | ~b) & c");
+  EXPECT_EQ(Expression("~a & b | ~c -> d <-> f !<-> g").toString(),
+            "~((~(~a & b | ~c) | d) & f | ~(~(~a & b | ~c) | d) & ~f) & g | ((~(~a & b | ~c) | d) & f "
+            "| ~(~(~a & b | ~c) | d) & ~f) & ~g");
+  EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~d <-> ~~f !<-> ~~g").toString(),
+            "~((~(~a & b | ~c) | d) & f | ~(~(~a & b | ~c) | d) & ~f) & g | ((~(~a & b | ~c) | d) & f "
+            "| ~(~(~a & b | ~c) | d) & ~f) & ~g");
 }
 
 TEST(ExpressionTests, toStringLargeTest) {
@@ -393,17 +393,17 @@ TEST(ExpressionTests, toStringLargeTest) {
           .toString(),
       "-a");
 
-  EXPECT_EQ(Expression("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                       "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                       "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a")
+  EXPECT_EQ(Expression("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~a")
                 .toString(),
             "a");
 
-  EXPECT_EQ(Expression("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                       "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                       "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a")
+  EXPECT_EQ(Expression("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~a")
                 .toString(),
-            "!a");
+            "~a");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
@@ -492,7 +492,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("False=1"), InvalidInputException);
 
   // TODO: fix nested expressions
-  // EXPECT_THROW(Expression("True && a = b"), InvalidInputException);
+  // EXPECT_THROW(Expression("True & a = b"), InvalidInputException);
 
   EXPECT_THROW(Expression("1/0"), UndefinedException);
   EXPECT_THROW(Expression("0^0"), UndefinedException);

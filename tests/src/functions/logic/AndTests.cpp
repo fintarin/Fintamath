@@ -10,7 +10,7 @@ using namespace fintamath;
 const And f;
 
 TEST(AndTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "&&");
+  EXPECT_EQ(f.toString(), "&");
 }
 
 TEST(AndTests, getFunctionTypeTest) {
@@ -27,7 +27,7 @@ TEST(AndTests, callTest) {
   EXPECT_EQ(f(Boolean(true), Boolean(false))->toString(), "False");
   EXPECT_EQ(f(Boolean(true), Boolean(true))->toString(), "True");
 
-  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "a && b");
+  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "a & b");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Boolean(true)), InvalidInputFunctionException);

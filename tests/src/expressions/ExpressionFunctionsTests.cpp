@@ -204,20 +204,20 @@ TEST(ExpressionFunctionsTests, derivativeTest) {
 TEST(ExpressionFunctionsTests, notTest) {
   EXPECT_EQ(notL(Expression("True")).toString(), "False");
   EXPECT_EQ(notL(Expression("False")).toString(), "True");
-  EXPECT_EQ(notL(Expression("a")).toString(), "!a");
+  EXPECT_EQ(notL(Expression("a")).toString(), "~a");
   EXPECT_EQ(notL(Expression("1=1")).toString(), "False");
 }
 
 TEST(ExpressionFunctionsTests, andTest) {
   EXPECT_EQ(andL(Expression("True"), Expression("True")).toString(), "True");
   EXPECT_EQ(andL(Expression("False"), Expression("True")).toString(), "False");
-  EXPECT_EQ(andL(Expression("a"), Expression("b")).toString(), "a && b");
+  EXPECT_EQ(andL(Expression("a"), Expression("b")).toString(), "a & b");
   EXPECT_EQ(andL(Expression("a=a"), Expression("b=b")).toString(), "True");
 }
 
 TEST(ExpressionFunctionsTests, orTest) {
   EXPECT_EQ(orL(Expression("True"), Expression("True")).toString(), "True");
   EXPECT_EQ(orL(Expression("False"), Expression("True")).toString(), "True");
-  EXPECT_EQ(orL(Expression("a"), Expression("b")).toString(), "a || b");
+  EXPECT_EQ(orL(Expression("a"), Expression("b")).toString(), "a | b");
   EXPECT_EQ(orL(Expression("a!=a"), Expression("b!=b")).toString(), "False");
 }
