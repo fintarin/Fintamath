@@ -1,4 +1,4 @@
-#include "fintamath/functions/trigonometry/Acosh.hpp"
+#include "fintamath/functions/hyperbolic/Acosh.hpp"
 
 #include "fintamath/numbers/RealFunctions.hpp"
 

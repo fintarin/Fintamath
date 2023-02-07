@@ -1,4 +1,4 @@
-#include "fintamath/functions/trigonometry/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Coth.hpp"
 
 #include "fintamath/numbers/RealFunctions.hpp"
 

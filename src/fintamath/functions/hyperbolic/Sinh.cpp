@@ -1,4 +1,4 @@
-#include "fintamath/functions/trigonometry/Sinh.hpp"
+#include "fintamath/functions/hyperbolic/Sinh.hpp"
 
 #include "fintamath/numbers/RealFunctions.hpp"
 

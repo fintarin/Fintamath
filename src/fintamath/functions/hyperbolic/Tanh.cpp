@@ -1,4 +1,4 @@
-#include "fintamath/functions/trigonometry/Tanh.hpp"
+#include "fintamath/functions/hyperbolic/Tanh.hpp"
 
 #include "fintamath/numbers/RealFunctions.hpp"
 

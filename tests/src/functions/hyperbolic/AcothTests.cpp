@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/trigonometry/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Acoth.hpp"
 
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/literals/Variable.hpp"

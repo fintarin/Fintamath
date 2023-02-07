@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/trigonometry/Cosh.hpp"
+#include "fintamath/functions/hyperbolic/Sinh.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -10,26 +10,26 @@
 
 using namespace fintamath;
 
-const Cosh f;
+const Sinh f;
 
-TEST(CoshTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "cosh");
+TEST(SinhTests, toStringTest) {
+  EXPECT_EQ(f.toString(), "sinh");
 }
 
-TEST(CoshTests, getFunctionTypeTest) {
+TEST(SinhTests, getFunctionTypeTest) {
   EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
 }
 
-TEST(CoshTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "1");
+TEST(SinhTests, callTest) {
+  EXPECT_EQ(f(Integer(0))->toString(), "0");
   EXPECT_EQ(f(Integer(5))->toString(),
-            "74.20994852478784444410610804448771402386825858945317206609157532124237417173709");
+            "74.203210577788758977009471996064565599619409004425816980661269789669690649221486");
   EXPECT_EQ(f(Integer(-5))->toString(),
-            "74.20994852478784444410610804448771402386825858945317206609157532124237417173709");
+            "-74.203210577788758977009471996064565599619409004425816980661269789669690649221486");
   EXPECT_EQ(f(Rational(1, 10))->toString(),
-            "1.0050041680558035989879784429683416447096262778589598354245603032483739660459513");
+            "0.10016675001984402582372938352190502351492091687855888336830298619259400070170297");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "cosh(a)");
+  EXPECT_EQ(f(Variable("a"))->toString(), "sinh(a)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
