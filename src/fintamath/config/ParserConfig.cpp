@@ -20,6 +20,14 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
+#include "fintamath/functions/hyperbolic/Acosh.hpp"
+#include "fintamath/functions/hyperbolic/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Asinh.hpp"
+#include "fintamath/functions/hyperbolic/Atanh.hpp"
+#include "fintamath/functions/hyperbolic/Cosh.hpp"
+#include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Sinh.hpp"
+#include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
@@ -34,25 +42,18 @@
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
+#include "fintamath/functions/other/Rad.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
-#include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
-#include "fintamath/functions/hyperbolic/Acoth.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
-#include "fintamath/functions/hyperbolic/Asinh.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
-#include "fintamath/functions/hyperbolic/Atanh.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
-#include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
-#include "fintamath/functions/hyperbolic/Coth.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
-#include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
-#include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
@@ -136,6 +137,7 @@ struct ParserConfig {
     IFunction::registerParser<Atan>();
     IFunction::registerParser<Acot>();
     IFunction::registerParser<Degrees>();
+    IFunction::registerParser<Rad>();
     IFunction::registerParser<Sign>();
     IFunction::registerParser<Sinh>();
     IFunction::registerParser<Cosh>();

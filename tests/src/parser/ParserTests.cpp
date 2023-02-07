@@ -6,7 +6,6 @@
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
-#include "fintamath/parser/Tokenizer.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
@@ -24,6 +23,14 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
+#include "fintamath/functions/hyperbolic/Acosh.hpp"
+#include "fintamath/functions/hyperbolic/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Asinh.hpp"
+#include "fintamath/functions/hyperbolic/Atanh.hpp"
+#include "fintamath/functions/hyperbolic/Cosh.hpp"
+#include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Sinh.hpp"
+#include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
@@ -38,25 +45,18 @@
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
+#include "fintamath/functions/other/Rad.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
-#include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
-#include "fintamath/functions/hyperbolic/Acoth.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
-#include "fintamath/functions/hyperbolic/Asinh.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
-#include "fintamath/functions/hyperbolic/Atanh.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
-#include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
-#include "fintamath/functions/hyperbolic/Coth.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
-#include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
-#include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
@@ -205,6 +205,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Equiv>(IFunction::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IFunction::parse("!<->")));
   EXPECT_TRUE(is<Degrees>(IFunction::parse("degrees")));
+  EXPECT_TRUE(is<Rad>(IFunction::parse("rad")));
   EXPECT_TRUE(is<Index>(IFunction::parse("_")));
   EXPECT_TRUE(is<Sign>(IFunction::parse("sign")));
   EXPECT_TRUE(is<Sinh>(IFunction::parse("sinh")));
