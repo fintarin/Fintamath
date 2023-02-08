@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/multimethod/Converter.hpp"
+#include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
 

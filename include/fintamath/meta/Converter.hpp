@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/multimethod/MultiMethod.hpp"
+#include "fintamath/meta/MultiMethod.hpp"
 
 namespace fintamath {
 

@@ -1,4 +1,4 @@
-#include "fintamath/multimethod/Converter.hpp"
+#include "fintamath/meta/Converter.hpp"
 
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"

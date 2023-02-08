@@ -4,7 +4,7 @@
 #include <map>
 #include <tuple>
 
-#include "fintamath/multimethod/TypeInfo.hpp"
+#include "fintamath/meta/TypeInfo.hpp"
 
 namespace fintamath {
 
