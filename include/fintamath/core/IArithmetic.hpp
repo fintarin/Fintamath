@@ -2,6 +2,7 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
@@ -55,6 +56,7 @@ protected:
 
   virtual ArithmeticPtr negateAbstract() const = 0;
 
+private:
   static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiAdd;
 
   static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiSub;
