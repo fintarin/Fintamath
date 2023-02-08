@@ -27,39 +27,39 @@ public:
   template <typename Return, typename... Args>
   using ParserVector = std::vector<Function<Return, Args...>>;
 
-  template <typename Parsed, typename Return>
-  static void registerParser(ParserMap<Return> &parserMap) {
-    InheritanceTable::add<typename Return::element_type, Parsed>();
+  template <typename Type, typename BasePtr>
+  static void registerType(ParserMap<BasePtr> &parserMap) {
+    InheritanceTable::add<typename BasePtr::element_type, Type>();
 
-    Function<Return> constructor = [] {
-      return std::make_unique<Parsed>(); //
+    Function<BasePtr> constructor = [] {
+      return std::make_unique<Type>(); //
     };
 
-    std::string name = std::make_unique<Parsed>()->toString();
+    std::string name = std::make_unique<Type>()->toString();
 
     Tokenizer::registerToken(name);
 
     parserMap.insert({name, constructor});
   }
 
-  template <typename Parsed, typename Return, typename... Args>
-  static void registerParser(ParserVector<Return, Args...> &parserVect) {
-    InheritanceTable::add<typename Return::element_type, Parsed>();
+  template <typename Type, typename BasePtr, typename... Args>
+  static void registerType(ParserVector<BasePtr, Args...> &parserVect) {
+    InheritanceTable::add<typename BasePtr::element_type, Type>();
 
-    Function<Return, Args...> constructor = [](const Args &...args) {
+    Function<BasePtr, Args...> constructor = [](const Args &...args) {
       try {
-        return std::make_unique<Parsed>(args...);
+        return std::make_unique<Type>(args...);
       } catch (const InvalidInputException &) {
-        return std::unique_ptr<Parsed>();
+        return std::unique_ptr<Type>();
       }
     };
 
     parserVect.push_back(constructor);
   }
 
-  template <typename Parsed, typename Return, typename... Args>
-  static void registerParser(ParserVector<Return, Args...> &parserVect, const Function<Return, Args...> &parserFunc) {
-    InheritanceTable::add<typename Return::element_type, Parsed>();
+  template <typename Type, typename BasePtr, typename... Args>
+  static void registerType(ParserVector<BasePtr, Args...> &parserVect, const Function<BasePtr, Args...> &parserFunc) {
+    InheritanceTable::add<typename BasePtr::element_type, Type>();
 
     parserVect.push_back(parserFunc);
   }

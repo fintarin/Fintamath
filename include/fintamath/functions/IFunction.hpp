@@ -42,7 +42,7 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
   static void registerType() {
-    Parser::registerParser<T>(parserMap);
+    Parser::registerType<T>(parserMap);
   }
 
   static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {

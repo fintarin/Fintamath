@@ -34,7 +34,7 @@ public:
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IOperator, T>>>
   static void registerType() {
     IFunction::registerType<T>();
-    Parser::registerParser<T>(parserMap);
+    Parser::registerType<T>(parserMap);
   }
 
   static OperatorPtr parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {

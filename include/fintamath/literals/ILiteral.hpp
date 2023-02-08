@@ -14,12 +14,12 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
   static void registerType() {
-    Parser::registerParser<T>(parserVector);
+    Parser::registerType<T>(parserVector);
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
   static void registerType(const Parser::Function<LiteralPtr, std::string> &parserFunc) {
-    Parser::registerParser<T>(parserVector, parserFunc);
+    Parser::registerType<T>(parserVector, parserFunc);
   }
 
   static LiteralPtr parse(const std::string &str) {
