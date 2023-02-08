@@ -41,7 +41,7 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
-  static void registerParser() {
+  static void registerType() {
     Parser::registerParser<T>(parserMap);
   }
 

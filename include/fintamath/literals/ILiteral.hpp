@@ -13,11 +13,11 @@ public:
   ~ILiteral() override = default;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
-  static void registerParser() {
+  static void registerType() {
     Parser::registerParser<T>(parserVector);
   }
 
-  static void registerParser(const Parser::Function<LiteralPtr, std::string> &parserFunc) {
+  static void registerType(const Parser::Function<LiteralPtr, std::string> &parserFunc) {
     Parser::registerParser(parserVector, parserFunc);
   }
 
