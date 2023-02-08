@@ -8,6 +8,8 @@ class TypeInfo {
 public:
   TypeInfo(const std::type_info &info);
 
+  friend bool operator==(const TypeInfo &lhs, const TypeInfo &rhs);
+
   friend bool operator<(const TypeInfo &lhs, const TypeInfo &rhs);
 
 private:
@@ -15,6 +17,10 @@ private:
 };
 
 inline TypeInfo::TypeInfo(const std::type_info &tinfo) : info(tinfo) {
+}
+
+inline bool operator==(const TypeInfo &lhs, const TypeInfo &rhs) {
+  return lhs.info == rhs.info;
 }
 
 inline bool operator<(const TypeInfo &lhs, const TypeInfo &rhs) {

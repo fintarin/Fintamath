@@ -3,6 +3,7 @@
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/meta/InheritanceTable.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 #include "fintamath/functions/arithmetic/Abs.hpp"
@@ -62,11 +63,15 @@
 #include "fintamath/literals/constants/True.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
+std::multimap<TypeInfo, TypeInfo> InheritanceTable::table;
+
 TokenVector Tokenizer::registeredTokens;
+
 Parser::ParserVector<NumberPtr, std::string> INumber::parserVector;
 Parser::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
 Parser::ParserMap<ConstantPtr> IConstant::parserMap;
@@ -92,7 +97,7 @@ struct ParserConfig {
     IConstant::registerType<False>();
 
     // literals
-    ILiteral::registerType(&IConstant::parse);
+    ILiteral::registerType<IConstant>(&IConstant::parse);
     ILiteral::registerType<Variable>();
 
     // operators

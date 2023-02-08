@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/meta/InheritanceTable.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
@@ -28,6 +29,8 @@ public:
 
   template <typename Parsed, typename Return>
   static void registerParser(ParserMap<Return> &parserMap) {
+    InheritanceTable::add<typename Return::element_type, Parsed>();
+
     Function<Return> constructor = [] {
       return std::make_unique<Parsed>(); //
     };
@@ -41,6 +44,8 @@ public:
 
   template <typename Parsed, typename Return, typename... Args>
   static void registerParser(ParserVector<Return, Args...> &parserVect) {
+    InheritanceTable::add<typename Return::element_type, Parsed>();
+
     Function<Return, Args...> constructor = [](const Args &...args) {
       try {
         return std::make_unique<Parsed>(args...);
@@ -52,8 +57,10 @@ public:
     parserVect.push_back(constructor);
   }
 
-  template <typename Return, typename... Args>
+  template <typename Parsed, typename Return, typename... Args>
   static void registerParser(ParserVector<Return, Args...> &parserVect, const Function<Return, Args...> &parserFunc) {
+    InheritanceTable::add<typename Return::element_type, Parsed>();
+
     parserVect.push_back(parserFunc);
   }
 
