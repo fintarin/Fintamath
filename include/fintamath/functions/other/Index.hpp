@@ -6,7 +6,7 @@ namespace fintamath {
 
 class INumber;
 
-class Index : public IOperatorCRTP<Index, IMathObject, IMathObject> {
+class Index : public IOperatorCRTP<IMathObject, Index, IMathObject, IMathObject> {
 public:
   Index() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
   }

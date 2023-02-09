@@ -6,7 +6,7 @@ namespace fintamath {
 
 class IArithmetic;
 
-class Sub : public IOperatorCRTP<Sub, IArithmetic, IArithmetic> {
+class Sub : public IOperatorCRTP<IArithmetic, Sub, IArithmetic, IArithmetic> {
 public:
   Sub() : IOperatorCRTP(IOperator::Priority::Addition, false) {
   }

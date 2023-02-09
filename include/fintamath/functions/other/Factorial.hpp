@@ -8,7 +8,7 @@ namespace fintamath {
 
 class INumber;
 
-class Factorial : public IOperatorCRTP<Factorial, INumber> {
+class Factorial : public IOperatorCRTP<INumber, Factorial, INumber> {
 public:
   Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }

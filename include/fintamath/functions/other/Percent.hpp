@@ -6,7 +6,7 @@ namespace fintamath {
 
 class INumber;
 
-class Percent : public IOperatorCRTP<Percent, INumber> {
+class Percent : public IOperatorCRTP<INumber, Percent, INumber> {
 public:
   Percent() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }

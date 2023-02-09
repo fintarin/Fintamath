@@ -8,7 +8,7 @@ using namespace fintamath;
 
 namespace {
 
-class TestFunction : public IFunctionCRTP<TestFunction, IMathObject> {
+class TestFunction : public IFunctionCRTP<IMathObject, TestFunction, IMathObject> {
 public:
   void throwException() const {
     throw UndefinedFunctionException("sqrt", {"-10", "a", "b"});

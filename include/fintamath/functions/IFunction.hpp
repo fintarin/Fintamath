@@ -61,7 +61,7 @@ private:
   static Parser::ParserMap<FunctionPtr> parserMap;
 };
 
-template <typename Derived, typename... Args>
+template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IFunction {
 public:
   IFunctionCRTP(bool inIsTypeAny = false) : isTypeAny(inIsTypeAny) {

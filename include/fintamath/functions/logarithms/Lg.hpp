@@ -6,7 +6,7 @@ namespace fintamath {
 
 class INumber;
 
-class Lg : public IFunctionCRTP<Lg, INumber> {
+class Lg : public IFunctionCRTP<INumber, Lg, INumber> {
 public:
   Lg() = default;
 

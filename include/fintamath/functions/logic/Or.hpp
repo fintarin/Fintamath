@@ -6,7 +6,7 @@ namespace fintamath {
 
 class Boolean;
 
-class Or : public IOperatorCRTP<Or, Boolean, Boolean> {
+class Or : public IOperatorCRTP<Boolean, Or, Boolean, Boolean> {
 public:
   Or() : IOperatorCRTP(IOperator::Priority::Or) {
   }

@@ -6,7 +6,7 @@ namespace fintamath {
 
 class Boolean;
 
-class Equiv : public IOperatorCRTP<Equiv, Boolean, Boolean> {
+class Equiv : public IOperatorCRTP<Boolean, Equiv, Boolean, Boolean> {
 public:
   Equiv() : IOperatorCRTP(IOperator::Priority::Equivalence) {
   }

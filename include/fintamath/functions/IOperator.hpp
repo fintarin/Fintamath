@@ -46,8 +46,8 @@ private:
   static Parser::ParserMap<OperatorPtr> parserMap;
 };
 
-template <typename Derived, typename... Args>
-class IOperatorCRTP : virtual public IFunctionCRTP<Derived, Args...>, virtual public IOperator {
+template <typename Return, typename Derived, typename... Args>
+class IOperatorCRTP : virtual public IFunctionCRTP<Return, Derived, Args...>, virtual public IOperator {
 public:
   IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any) : priority(inPriority) {
   }

@@ -8,7 +8,7 @@ using namespace fintamath;
 
 namespace {
 
-class TestOperator : public IOperatorCRTP<TestOperator, IMathObject, IMathObject> {
+class TestOperator : public IOperatorCRTP<IMathObject, TestOperator, IMathObject, IMathObject> {
 public:
   TestOperator() : IOperatorCRTP(IOperator::Priority::Addition) {
   }

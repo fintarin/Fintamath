@@ -5,8 +5,9 @@
 namespace fintamath {
 
 class IComparable;
+class Boolean;
 
-class More : public IOperatorCRTP<More, IComparable, IComparable> {
+class More : public IOperatorCRTP<Boolean, More, IComparable, IComparable> {
 public:
   More() : IOperatorCRTP(IOperator::Priority::Comparison) {
   }

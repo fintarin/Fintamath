@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class Derivative : public IOperatorCRTP<Derivative, IMathObject> {
+class Derivative : public IOperatorCRTP<IMathObject, Derivative, IMathObject> {
 public:
   Derivative() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }

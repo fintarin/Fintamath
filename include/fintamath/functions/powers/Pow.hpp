@@ -6,7 +6,7 @@ namespace fintamath {
 
 class INumber;
 
-class Pow : public IOperatorCRTP<Pow, INumber, INumber> {
+class Pow : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
 public:
   Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
   }
