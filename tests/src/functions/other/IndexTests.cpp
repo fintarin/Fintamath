@@ -19,7 +19,7 @@ TEST(IndexTests, getFunctionTypeTest) {
 }
 
 TEST(IndexTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Index);
+  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Exponentiation);
 }
 
 TEST(IndexTests, callTest) {

@@ -14,7 +14,6 @@ public:
   enum class Priority : uint16_t {
     PostfixUnary,   // postfix unary operators
     PrefixUnary,    // prefix unary operators
-    Index,          // index operators
     Exponentiation, // exponentiation operators
     Multiplication, // multiplication operators
     Addition,       // addition operators
