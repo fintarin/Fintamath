@@ -1,11 +1,10 @@
 #pragma once
 
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/Boolean.hpp"
 
 namespace fintamath {
-
-class IComparable;
-class Boolean;
 
 class LessEqv : public IOperatorCRTP<Boolean, LessEqv, IComparable, IComparable> {
 public:

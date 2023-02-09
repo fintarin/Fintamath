@@ -1,7 +1,5 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 
-#include "fintamath/literals/Boolean.hpp"
-
 namespace fintamath {
 
 MathObjectPtr Nequiv::call(const ArgumentsVector &argsVect) const {

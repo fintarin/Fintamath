@@ -1,8 +1,5 @@
 #include "fintamath/functions/comparison/Less.hpp"
 
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/literals/Boolean.hpp"
-
 namespace fintamath {
 
 MathObjectPtr Less::call(const ArgumentsVector &argsVect) const {

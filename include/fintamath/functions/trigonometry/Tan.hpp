@@ -1,10 +1,9 @@
 #pragma once
 
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-
-class INumber;
 
 class Tan : public IFunctionCRTP<INumber, Tan, INumber> {
 public:

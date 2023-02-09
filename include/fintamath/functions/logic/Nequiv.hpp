@@ -1,10 +1,9 @@
 #pragma once
 
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/Boolean.hpp"
 
 namespace fintamath {
-
-class Boolean;
 
 class Nequiv : public IOperatorCRTP<Boolean, Nequiv, Boolean, Boolean> {
 public:

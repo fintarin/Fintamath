@@ -1,8 +1,5 @@
 #include "fintamath/functions/comparison/Neqv.hpp"
 
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/literals/Boolean.hpp"
-
 namespace fintamath {
 
 MathObjectPtr Neqv::call(const ArgumentsVector &argsVect) const {

@@ -1,10 +1,9 @@
 #pragma once
 
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-
-class INumber;
 
 class Pow : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
 public:

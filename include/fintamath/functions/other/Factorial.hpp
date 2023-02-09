@@ -3,10 +3,9 @@
 #include <cassert>
 
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-
-class INumber;
 
 class Factorial : public IOperatorCRTP<INumber, Factorial, INumber> {
 public:

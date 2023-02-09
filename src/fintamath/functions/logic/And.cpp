@@ -1,7 +1,5 @@
 #include "fintamath/functions/logic/And.hpp"
 
-#include "fintamath/literals/Boolean.hpp"
-
 namespace fintamath {
 
 MathObjectPtr And::call(const ArgumentsVector &argsVect) const {

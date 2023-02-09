@@ -1,8 +1,5 @@
 #include "fintamath/functions/comparison/Eqv.hpp"
 
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/literals/Boolean.hpp"
-
 namespace fintamath {
 
 MathObjectPtr Eqv::call(const ArgumentsVector &argsVect) const {

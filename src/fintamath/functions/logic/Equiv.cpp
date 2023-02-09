@@ -1,7 +1,5 @@
 #include "fintamath/functions/logic/Equiv.hpp"
 
-#include "fintamath/literals/Boolean.hpp"
-
 namespace fintamath {
 
 MathObjectPtr Equiv::call(const ArgumentsVector &argsVect) const {
