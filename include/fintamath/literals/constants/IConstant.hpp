@@ -32,6 +32,6 @@ private:
 };
 
 template <typename Derived>
-class IConstantCRTP : virtual public IConstant, virtual public ILiteralCRTP<Derived> {};
+class IConstantCRTP : virtual public ILiteralCRTP<Derived>, virtual public IConstant {};
 
 }

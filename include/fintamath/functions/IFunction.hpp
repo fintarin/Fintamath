@@ -62,7 +62,7 @@ private:
 };
 
 template <typename Derived, typename... Args>
-class IFunctionCRTP : virtual public IFunction, virtual public IMathObjectCRTP<Derived> {
+class IFunctionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IFunction {
 public:
   IFunctionCRTP(bool inIsTypeAny = false) : isTypeAny(inIsTypeAny) {
   }

@@ -119,7 +119,7 @@ inline ArithmeticPtr operator-(const IArithmetic &rhs) {
 }
 
 template <typename Derived>
-class IArithmeticCRTP : virtual public IArithmetic, virtual public IMathObjectCRTP<Derived> {
+class IArithmeticCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IArithmetic {
 public:
   Derived &operator+=(const Derived &rhs) {
     return add(rhs);

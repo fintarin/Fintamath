@@ -48,7 +48,7 @@ private:
 };
 
 template <typename Derived, typename... Args>
-class IOperatorCRTP : virtual public IOperator, virtual public IFunctionCRTP<Derived, Args...> {
+class IOperatorCRTP : virtual public IFunctionCRTP<Derived, Args...>, virtual public IOperator {
 public:
   IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any) : priority(inPriority) {
   }

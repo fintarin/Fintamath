@@ -35,7 +35,7 @@ inline ModularPtr operator%(const IModular &lhs, const IModular &rhs) {
 }
 
 template <typename Derived>
-class IModularCRTP : virtual public IModular, virtual public IMathObjectCRTP<Derived> {
+class IModularCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IModular {
 public:
   Derived &operator%=(const Derived &rhs) {
     return mod(rhs);

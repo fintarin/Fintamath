@@ -54,7 +54,7 @@ inline bool operator>=(const IComparable &lhs, const IComparable &rhs) {
 }
 
 template <typename Derived>
-class IComparableCRTP : virtual public IComparable, virtual public IMathObjectCRTP<Derived> {
+class IComparableCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IComparable {
 public:
   bool operator<(const Derived &rhs) const {
     return less(rhs);

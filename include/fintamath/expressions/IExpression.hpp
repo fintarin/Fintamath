@@ -59,6 +59,6 @@ private:
 };
 
 template <typename Derived>
-class IExpressionCRTP : virtual public IExpression, virtual public IMathObjectCRTP<Derived> {};
+class IExpressionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IExpression {};
 
 }

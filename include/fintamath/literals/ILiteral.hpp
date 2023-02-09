@@ -31,6 +31,6 @@ private:
 };
 
 template <typename Derived>
-class ILiteralCRTP : virtual public ILiteral, virtual public IMathObjectCRTP<Derived> {};
+class ILiteralCRTP : virtual public IMathObjectCRTP<Derived>, virtual public ILiteral {};
 
 }
