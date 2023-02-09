@@ -25,10 +25,6 @@ public:
     return Parser::parse(parserVector, str);
   }
 
-  static NumberPtr parse(int64_t num) {
-    return parse(std::to_string(num));
-  }
-
 private:
   static Parser::ParserVector<NumberPtr, std::string> parserVector;
 };

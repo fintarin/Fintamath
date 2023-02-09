@@ -3,6 +3,7 @@
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
@@ -13,8 +14,20 @@ class IModular : virtual public IMathObject {
 public:
   friend ModularPtr operator%(const IModular &lhs, const IModular &rhs);
 
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IModular, T>>>
+  static void registerType() {
+    Parser::registerType<T>(parserVector);
+  }
+
+  static ModularPtr parse(const std::string &str) {
+    return Parser::parse(parserVector, str);
+  }
+
 protected:
   virtual ModularPtr modAbstract(const IModular &rhs) const = 0;
+
+private:
+  static Parser::ParserVector<ModularPtr, std::string> parserVector;
 };
 
 inline ModularPtr operator%(const IModular &lhs, const IModular &rhs) {

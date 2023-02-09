@@ -15,6 +15,11 @@ using namespace fintamath;
 TEST(InheritanceTableTests, isBaseOfTest) {
   EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(INumber), typeid(Integer)));
   EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(INumber), typeid(Rational)));
+  EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(IArithmetic), typeid(Integer)));
+  EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(IMathObject), typeid(Integer)));
+  EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(IArithmetic), typeid(INumber)));
+  EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(IMathObject), typeid(INumber)));
+  EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(IMathObject), typeid(IArithmetic)));
   EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(IConstant), typeid(True)));
   EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(ILiteral), typeid(Variable)));
   EXPECT_TRUE(InheritanceTable::isBaseOf(typeid(ILiteral), typeid(IConstant)));
@@ -23,6 +28,11 @@ TEST(InheritanceTableTests, isBaseOfTest) {
 
   EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(Integer), typeid(INumber)));
   EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(Rational), typeid(INumber)));
+  EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(Integer), typeid(IArithmetic)));
+  EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(Integer), typeid(IMathObject)));
+  EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(INumber), typeid(IArithmetic)));
+  EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(INumber), typeid(IMathObject)));
+  EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(IArithmetic), typeid(IMathObject)));
   EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(True), typeid(IConstant)));
   EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(Variable), typeid(ILiteral)));
   EXPECT_FALSE(InheritanceTable::isBaseOf(typeid(IConstant), typeid(ILiteral)));

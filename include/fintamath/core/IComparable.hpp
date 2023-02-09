@@ -2,6 +2,7 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
@@ -18,10 +19,22 @@ public:
 
   friend bool operator>=(const IComparable &lhs, const IComparable &rhs);
 
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
+  static void registerType(const Parser::Function<ComparablePtr, std::string> &parserFunc) {
+    Parser::registerType<T>(parserVector, parserFunc);
+  }
+
+  static ComparablePtr parse(const std::string &str) {
+    return Parser::parse(parserVector, str);
+  }
+
 protected:
   virtual bool lessAbstract(const IComparable &rhs) const = 0;
 
   virtual bool moreAbstract(const IComparable &rhs) const = 0;
+
+private:
+  static Parser::ParserVector<ComparablePtr, std::string> parserVector;
 };
 
 inline bool operator<(const IComparable &lhs, const IComparable &rhs) {

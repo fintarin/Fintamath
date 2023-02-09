@@ -2,6 +2,7 @@
 
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
@@ -18,10 +19,22 @@ public:
 
   friend IncrementalPtr operator--(IIncremental &lhs, int);
 
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IIncremental, T>>>
+  static void registerType(const Parser::Function<IncrementalPtr, std::string> &parserFunc) {
+    Parser::registerType<T>(parserVector, parserFunc);
+  }
+
+  static IncrementalPtr parse(const std::string &str) {
+    return Parser::parse(parserVector, str);
+  }
+
 protected:
   virtual IIncremental &increaseAbstract() = 0;
 
   virtual IIncremental &decreaseAbstract() = 0;
+
+private:
+  static Parser::ParserVector<IncrementalPtr, std::string> parserVector;
 };
 
 inline IIncremental &operator++(IIncremental &rhs) {

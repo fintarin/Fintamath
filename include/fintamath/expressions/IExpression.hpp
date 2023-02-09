@@ -38,12 +38,24 @@ public:
     return {};
   }
 
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
+  static void registerType() {
+    Parser::registerType<T>(parserVector);
+  }
+
+  static ExpressionPtr parse(const std::string &str) {
+    return Parser::parse(parserVector, str);
+  }
+
 protected:
   // TODO: move to NegExpression
   static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
 
   // TODO: move to Expression
   void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;
+
+private:
+  static Parser::ParserVector<ExpressionPtr, std::string> parserVector;
 };
 
 template <typename Derived>

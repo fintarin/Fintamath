@@ -43,6 +43,20 @@ public:
     multiDiv.add<Lhs, Rhs>(func);
   }
 
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
+  static void registerType() {
+    Parser::registerType<T>(parserVector);
+  }
+
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
+  static void registerType(const Parser::Function<ArithmeticPtr, std::string> &parserFunc) {
+    Parser::registerType<T>(parserVector, parserFunc);
+  }
+
+  static ArithmeticPtr parse(const std::string &str) {
+    return Parser::parse(parserVector, str);
+  }
+
 protected:
   virtual ArithmeticPtr addAbstract(const IArithmetic &rhs) const = 0;
 
@@ -64,6 +78,8 @@ private:
   static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiMul;
 
   static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiDiv;
+
+  static Parser::ParserVector<ArithmeticPtr, std::string> parserVector;
 };
 
 inline ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs) {

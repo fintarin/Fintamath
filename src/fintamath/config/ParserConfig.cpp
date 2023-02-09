@@ -1,11 +1,12 @@
+#include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/core/IComparable.hpp"
+#include "fintamath/core/IIncremental.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/IModular.hpp"
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
-#include "fintamath/literals/ILiteral.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/meta/InheritanceTable.hpp"
-#include "fintamath/numbers/INumber.hpp"
-
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -56,15 +57,20 @@
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/Boolean.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/literals/constants/True.hpp"
+#include "fintamath/meta/InheritanceTable.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/parser/Parser.hpp"
+#include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
 
@@ -72,11 +78,21 @@ std::multimap<TypeInfo, TypeInfo> InheritanceTable::table;
 
 TokenVector Tokenizer::registeredTokens;
 
+Parser::ParserVector<MathObjectPtr, std::string> IMathObject::parserVector;
+Parser::ParserVector<ArithmeticPtr, std::string> IArithmetic::parserVector;
+Parser::ParserVector<ComparablePtr, std::string> IComparable::parserVector;
+Parser::ParserVector<IncrementalPtr, std::string> IIncremental::parserVector;
+Parser::ParserVector<ModularPtr, std::string> IModular::parserVector;
+
 Parser::ParserVector<NumberPtr, std::string> INumber::parserVector;
+
 Parser::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
 Parser::ParserMap<ConstantPtr> IConstant::parserMap;
+
 Parser::ParserMap<FunctionPtr> IFunction::parserMap;
 Parser::ParserMap<OperatorPtr> IOperator::parserMap;
+
+Parser::ParserVector<ExpressionPtr, std::string> IExpression::parserVector;
 
 }
 
@@ -86,46 +102,35 @@ namespace {
 
 struct ParserConfig {
   ParserConfig() {
-    // numbers
+    IMathObject::registerType<ILiteral>(&ILiteral::parse);
+    IMathObject::registerType<IFunction>([](const std::string &str) { return IFunction::parse(str); });
+    IMathObject::registerType<IArithmetic>(&IArithmetic::parse);
+    IMathObject::registerType<IComparable>(&IComparable::parse);
+    IMathObject::registerType<IIncremental>(&IIncremental::parse);
+    IMathObject::registerType<IModular>(&IModular::parse);
+    IMathObject::registerType<IExpression>([](const std::string &str) { return IExpression::parse(str); });
+
+    IArithmetic::registerType<INumber>(&INumber::parse);
+    IArithmetic::registerType<Expression>();
+
+    IComparable::registerType<INumber>(&INumber::parse);
+
+    IIncremental::registerType<INumber>(&INumber::parse);
+
+    IModular::registerType<Integer>();
+
     INumber::registerType<Integer>();
     INumber::registerType<Rational>();
+    INumber::registerType<Real>();
 
-    // constants
+    ILiteral::registerType<IConstant>(&IConstant::parse);
+    ILiteral::registerType<Variable>();
+
     IConstant::registerType<E>();
     IConstant::registerType<Pi>();
     IConstant::registerType<True>();
     IConstant::registerType<False>();
 
-    // literals
-    ILiteral::registerType<IConstant>(&IConstant::parse);
-    ILiteral::registerType<Variable>();
-
-    // operators
-    IOperator::registerType<Add>();
-    IOperator::registerType<Sub>();
-    IOperator::registerType<Mul>();
-    IOperator::registerType<Div>();
-    IOperator::registerType<Neg>();
-    IOperator::registerType<UnaryPlus>();
-    IOperator::registerType<Factorial>();
-    IOperator::registerType<Percent>();
-    IOperator::registerType<Pow>();
-    IOperator::registerType<Eqv>();
-    IOperator::registerType<Neqv>();
-    IOperator::registerType<Less>();
-    IOperator::registerType<More>();
-    IOperator::registerType<LessEqv>();
-    IOperator::registerType<MoreEqv>();
-    IOperator::registerType<Derivative>();
-    IOperator::registerType<Not>();
-    IOperator::registerType<And>();
-    IOperator::registerType<Or>();
-    IOperator::registerType<Impl>();
-    IOperator::registerType<Equiv>();
-    IOperator::registerType<Nequiv>();
-    IOperator::registerType<Index>();
-
-    // functions
     IFunction::registerType<Abs>();
     IFunction::registerType<Log>();
     IFunction::registerType<Ln>();
@@ -152,6 +157,32 @@ struct ParserConfig {
     IFunction::registerType<Acosh>();
     IFunction::registerType<Atanh>();
     IFunction::registerType<Acoth>();
+
+    IOperator::registerType<Add>();
+    IOperator::registerType<Sub>();
+    IOperator::registerType<Mul>();
+    IOperator::registerType<Div>();
+    IOperator::registerType<Neg>();
+    IOperator::registerType<UnaryPlus>();
+    IOperator::registerType<Factorial>();
+    IOperator::registerType<Percent>();
+    IOperator::registerType<Pow>();
+    IOperator::registerType<Eqv>();
+    IOperator::registerType<Neqv>();
+    IOperator::registerType<Less>();
+    IOperator::registerType<More>();
+    IOperator::registerType<LessEqv>();
+    IOperator::registerType<MoreEqv>();
+    IOperator::registerType<Derivative>();
+    IOperator::registerType<Not>();
+    IOperator::registerType<And>();
+    IOperator::registerType<Or>();
+    IOperator::registerType<Impl>();
+    IOperator::registerType<Equiv>();
+    IOperator::registerType<Nequiv>();
+    IOperator::registerType<Index>();
+
+    IExpression::registerType<Expression>();
   }
 };
 

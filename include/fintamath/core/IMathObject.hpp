@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
@@ -36,8 +37,20 @@ public:
     return !lhs.equalsAbstract(rhs);
   }
 
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IMathObject, T>>>
+  static void registerType(const Parser::Function<MathObjectPtr, std::string> &parserFunc) {
+    Parser::registerType<T>(parserVector, parserFunc);
+  }
+
+  static MathObjectPtr parse(const std::string &str) {
+    return Parser::parse(parserVector, str);
+  }
+
 protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
+
+private:
+  static Parser::ParserVector<MathObjectPtr, std::string> parserVector;
 };
 
 template <typename Derived>

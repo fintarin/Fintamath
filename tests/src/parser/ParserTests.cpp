@@ -1,13 +1,9 @@
 #include <gtest/gtest.h>
 
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
-#include "fintamath/literals/ILiteral.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/INumber.hpp"
-
-#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -58,16 +54,67 @@
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/Boolean.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/literals/constants/True.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 using namespace fintamath;
+
+TEST(ParserTests, parseMathObjectTest) {
+  EXPECT_TRUE(is<IArithmetic>(IMathObject::parse("a+1")));
+  EXPECT_TRUE(is<IComparable>(IMathObject::parse("1231412736.218731623872183")));
+  EXPECT_TRUE(is<IIncremental>(IMathObject::parse("1231412736.218731623872183")));
+  EXPECT_TRUE(is<IModular>(IMathObject::parse("1231412736218731623872183")));
+  EXPECT_TRUE(is<ILiteral>(IMathObject::parse("a")));
+  EXPECT_TRUE(is<IFunction>(IMathObject::parse("sin")));
+  EXPECT_TRUE(is<IExpression>(IMathObject::parse("a+1")));
+
+  EXPECT_FALSE(is<IArithmetic>(IMathObject::parse("a")));
+  EXPECT_FALSE(is<IComparable>(IMathObject::parse("True")));
+  EXPECT_FALSE(is<IIncremental>(IMathObject::parse("E")));
+  EXPECT_FALSE(is<IModular>(IMathObject::parse("12314127362187.31623872183")));
+  EXPECT_FALSE(is<ILiteral>(IMathObject::parse("sin")));
+  EXPECT_FALSE(is<IFunction>(IMathObject::parse("123")));
+  EXPECT_FALSE(is<IExpression>(IMathObject::parse("sin")));
+
+  EXPECT_EQ(IMathObject::parse("x+"), nullptr);
+}
+
+TEST(ParserTests, parseArithmeticTest) {
+  EXPECT_TRUE(is<INumber>(IArithmetic::parse("12314127362.18731623872183")));
+  EXPECT_TRUE(is<Expression>(IArithmetic::parse("a")));
+
+  EXPECT_FALSE(is<INumber>(IArithmetic::parse("a")));
+  EXPECT_FALSE(is<Expression>(IArithmetic::parse("123")));
+
+  EXPECT_EQ(IArithmetic::parse("x+"), nullptr);
+}
+
+TEST(ParserTests, parseComparableTest) {
+  EXPECT_TRUE(is<INumber>(IComparable::parse("12314127362.18731623872183")));
+
+  EXPECT_EQ(IComparable::parse("x"), nullptr);
+}
+
+TEST(ParserTests, parseIncrementalTest) {
+  EXPECT_TRUE(is<INumber>(IIncremental::parse("12314127362.18731623872183")));
+
+  EXPECT_EQ(IIncremental::parse("x"), nullptr);
+}
+
+TEST(ParserTests, parseModularTest) {
+  EXPECT_TRUE(is<Integer>(IModular::parse("18731623872183")));
+
+  EXPECT_EQ(IModular::parse("123.123"), nullptr);
+}
 
 TEST(ParserTests, parseNumberTest) {
   EXPECT_EQ(INumber::parse("1231412736218731623872183")->toString(), "1231412736218731623872183");
@@ -111,18 +158,6 @@ TEST(ParserTests, parseNumberTest) {
   EXPECT_EQ(INumber::parse("10.--1"), nullptr);
 }
 
-TEST(ParseTests, parseConstantTest) {
-  EXPECT_TRUE(is<E>(IConstant::parse("E")));
-  EXPECT_TRUE(is<Pi>(IConstant::parse("Pi")));
-
-  EXPECT_EQ(IConstant::parse("a"), nullptr);
-  EXPECT_EQ(IConstant::parse("z"), nullptr);
-  EXPECT_EQ(IConstant::parse("1"), nullptr);
-  EXPECT_EQ(IConstant::parse("a_"), nullptr);
-  EXPECT_EQ(IConstant::parse("a1"), nullptr);
-  EXPECT_EQ(IConstant::parse("aa"), nullptr);
-}
-
 TEST(ParserTests, parseLiteralTest) {
   EXPECT_TRUE(is<E>(ILiteral::parse("E")));
   EXPECT_TRUE(is<Pi>(ILiteral::parse("Pi")));
@@ -135,6 +170,55 @@ TEST(ParserTests, parseLiteralTest) {
   EXPECT_EQ(ILiteral::parse("a_"), nullptr);
   EXPECT_EQ(ILiteral::parse("a1"), nullptr);
   EXPECT_EQ(ILiteral::parse("aa"), nullptr);
+}
+
+TEST(ParseTests, parseConstantTest) {
+  EXPECT_TRUE(is<E>(IConstant::parse("E")));
+  EXPECT_TRUE(is<Pi>(IConstant::parse("Pi")));
+
+  EXPECT_EQ(IConstant::parse("a"), nullptr);
+  EXPECT_EQ(IConstant::parse("z"), nullptr);
+  EXPECT_EQ(IConstant::parse("1"), nullptr);
+  EXPECT_EQ(IConstant::parse("a_"), nullptr);
+  EXPECT_EQ(IConstant::parse("a1"), nullptr);
+  EXPECT_EQ(IConstant::parse("aa"), nullptr);
+}
+
+TEST(ParserTests, parseFunctionTest) {
+  EXPECT_TRUE(is<Sqrt>(IFunction::parse("sqrt")));
+  EXPECT_TRUE(is<Exp>(IFunction::parse("exp")));
+  EXPECT_TRUE(is<Log>(IFunction::parse("log")));
+  EXPECT_TRUE(is<Ln>(IFunction::parse("ln")));
+  EXPECT_TRUE(is<Lb>(IFunction::parse("lb")));
+  EXPECT_TRUE(is<Lg>(IFunction::parse("lg")));
+  EXPECT_TRUE(is<Sin>(IFunction::parse("sin")));
+  EXPECT_TRUE(is<Cos>(IFunction::parse("cos")));
+  EXPECT_TRUE(is<Tan>(IFunction::parse("tan")));
+  EXPECT_TRUE(is<Cot>(IFunction::parse("cot")));
+  EXPECT_TRUE(is<Asin>(IFunction::parse("asin")));
+  EXPECT_TRUE(is<Acos>(IFunction::parse("acos")));
+  EXPECT_TRUE(is<Atan>(IFunction::parse("atan")));
+  EXPECT_TRUE(is<Acot>(IFunction::parse("acot")));
+  EXPECT_TRUE(is<Abs>(IFunction::parse("abs")));
+  EXPECT_TRUE(is<Degrees>(IFunction::parse("degrees")));
+  EXPECT_TRUE(is<Rad>(IFunction::parse("rad")));
+  EXPECT_TRUE(is<Sign>(IFunction::parse("sign")));
+  EXPECT_TRUE(is<Sinh>(IFunction::parse("sinh")));
+  EXPECT_TRUE(is<Cosh>(IFunction::parse("cosh")));
+  EXPECT_TRUE(is<Tanh>(IFunction::parse("tanh")));
+  EXPECT_TRUE(is<Coth>(IFunction::parse("coth")));
+  EXPECT_TRUE(is<Asinh>(IFunction::parse("asinh")));
+  EXPECT_TRUE(is<Acosh>(IFunction::parse("acosh")));
+  EXPECT_TRUE(is<Atanh>(IFunction::parse("atanh")));
+  EXPECT_TRUE(is<Acoth>(IFunction::parse("acoth")));
+
+  EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
+  EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));
+  EXPECT_TRUE(is<Sub>(IFunction::parse("-", IFunction::Type::Binary)));
+  EXPECT_TRUE(is<Neg>(IFunction::parse("-", IFunction::Type::Unary)));
+
+  EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
+  EXPECT_EQ(IFunction::parse("1224"), nullptr);
 }
 
 TEST(ParserTests, parseOperatorTest) {
@@ -166,57 +250,10 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
 }
 
-TEST(ParserTests, parseFunctionTest) {
-  EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
-  EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));
-  EXPECT_TRUE(is<Sub>(IFunction::parse("-", IFunction::Type::Binary)));
-  EXPECT_TRUE(is<Neg>(IFunction::parse("-", IFunction::Type::Unary)));
-  EXPECT_TRUE(is<Mul>(IFunction::parse("*")));
-  EXPECT_TRUE(is<Div>(IFunction::parse("/")));
-  EXPECT_TRUE(is<Pow>(IFunction::parse("^")));
-  EXPECT_TRUE(is<Percent>(IFunction::parse("%")));
-  EXPECT_TRUE(is<Factorial>(IFunction::parse("!")));
-  EXPECT_TRUE(is<Eqv>(IFunction::parse("=")));
-  EXPECT_TRUE(is<Neqv>(IFunction::parse("!=")));
-  EXPECT_TRUE(is<Less>(IFunction::parse("<")));
-  EXPECT_TRUE(is<More>(IFunction::parse(">")));
-  EXPECT_TRUE(is<LessEqv>(IFunction::parse("<=")));
-  EXPECT_TRUE(is<MoreEqv>(IFunction::parse(">=")));
-  EXPECT_TRUE(is<Derivative>(IFunction::parse("'")));
-  EXPECT_TRUE(is<Sqrt>(IFunction::parse("sqrt")));
-  EXPECT_TRUE(is<Exp>(IFunction::parse("exp")));
-  EXPECT_TRUE(is<Log>(IFunction::parse("log")));
-  EXPECT_TRUE(is<Ln>(IFunction::parse("ln")));
-  EXPECT_TRUE(is<Lb>(IFunction::parse("lb")));
-  EXPECT_TRUE(is<Lg>(IFunction::parse("lg")));
-  EXPECT_TRUE(is<Sin>(IFunction::parse("sin")));
-  EXPECT_TRUE(is<Cos>(IFunction::parse("cos")));
-  EXPECT_TRUE(is<Tan>(IFunction::parse("tan")));
-  EXPECT_TRUE(is<Cot>(IFunction::parse("cot")));
-  EXPECT_TRUE(is<Asin>(IFunction::parse("asin")));
-  EXPECT_TRUE(is<Acos>(IFunction::parse("acos")));
-  EXPECT_TRUE(is<Atan>(IFunction::parse("atan")));
-  EXPECT_TRUE(is<Acot>(IFunction::parse("acot")));
-  EXPECT_TRUE(is<Abs>(IFunction::parse("abs")));
-  EXPECT_TRUE(is<Not>(IFunction::parse("~")));
-  EXPECT_TRUE(is<And>(IFunction::parse("&")));
-  EXPECT_TRUE(is<Or>(IFunction::parse("|")));
-  EXPECT_TRUE(is<Impl>(IFunction::parse("->")));
-  EXPECT_TRUE(is<Equiv>(IFunction::parse("<->")));
-  EXPECT_TRUE(is<Nequiv>(IFunction::parse("!<->")));
-  EXPECT_TRUE(is<Degrees>(IFunction::parse("degrees")));
-  EXPECT_TRUE(is<Rad>(IFunction::parse("rad")));
-  EXPECT_TRUE(is<Index>(IFunction::parse("_")));
-  EXPECT_TRUE(is<Sign>(IFunction::parse("sign")));
-  EXPECT_TRUE(is<Sinh>(IFunction::parse("sinh")));
-  EXPECT_TRUE(is<Cosh>(IFunction::parse("cosh")));
-  EXPECT_TRUE(is<Tanh>(IFunction::parse("tanh")));
-  EXPECT_TRUE(is<Coth>(IFunction::parse("coth")));
-  EXPECT_TRUE(is<Asinh>(IFunction::parse("asinh")));
-  EXPECT_TRUE(is<Acosh>(IFunction::parse("acosh")));
-  EXPECT_TRUE(is<Atanh>(IFunction::parse("atanh")));
-  EXPECT_TRUE(is<Acoth>(IFunction::parse("acoth")));
+TEST(ParserTests, parseExpressionTest) {
+  EXPECT_TRUE(is<Expression>(IExpression::parse("x+1")));
+  EXPECT_TRUE(is<Expression>(IExpression::parse("x*1")));
 
-  EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
-  EXPECT_EQ(IFunction::parse("1224"), nullptr);
+  EXPECT_EQ(IExpression::parse("x+"), nullptr);
+  EXPECT_EQ(IExpression::parse("^x"), nullptr);
 }
