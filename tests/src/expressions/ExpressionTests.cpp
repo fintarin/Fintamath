@@ -519,6 +519,9 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("x+1&x"), InvalidInputException);
   EXPECT_THROW(Expression("x&x+2"), InvalidInputException);
   EXPECT_THROW(Expression("(x&y)=(y&z)"), InvalidInputException);
+  EXPECT_THROW(Expression("(x=y)'"), InvalidInputException);
+  EXPECT_THROW(Expression("(x&y)'"), InvalidInputException);
+  EXPECT_THROW(Expression("True'"), InvalidInputException);
 
   EXPECT_THROW(Expression("1/0"), UndefinedException);
   EXPECT_THROW(Expression("0^0"), UndefinedException);

@@ -1,10 +1,11 @@
 #pragma once
 
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
 
-class Derivative : public IOperatorCRTP<IMathObject, Derivative, IMathObject> {
+class Derivative : public IOperatorCRTP<IComparable, Derivative, IComparable> {
 public:
   Derivative() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }
