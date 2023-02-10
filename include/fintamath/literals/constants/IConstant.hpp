@@ -11,6 +11,12 @@ using ConstantPtr = std::unique_ptr<IConstant>;
 
 class IConstant : virtual public ILiteral {
 public:
+  virtual const std::type_info &getReturnType() const = 0;
+
+  MathObjectPtr operator()() const {
+    return call();
+  }
+
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
   static void registerType() {
     Parser::registerType<T>(parserMap);
@@ -20,10 +26,6 @@ public:
     return Parser::parse<ConstantPtr>(parserMap, parsedStr, [](const ConstantPtr &) { return true; });
   }
 
-  MathObjectPtr operator()() const {
-    return call();
-  }
-
 protected:
   virtual MathObjectPtr call() const = 0;
 
@@ -31,7 +33,11 @@ private:
   static Parser::ParserMap<ConstantPtr> parserMap;
 };
 
-template <typename Derived>
-class IConstantCRTP : virtual public ILiteralCRTP<Derived>, virtual public IConstant {};
+template <typename Return, typename Derived>
+class IConstantCRTP : virtual public ILiteralCRTP<Derived>, virtual public IConstant {
+  const std::type_info &getReturnType() const final {
+    return typeid(Return);
+  }
+};
 
 }

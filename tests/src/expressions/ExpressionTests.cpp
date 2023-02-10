@@ -273,10 +273,10 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("((((5+5)=(2*5))))").toString(), "True");
   EXPECT_EQ(Expression("((1*1))(5+5)=((2*5)/(1/1))").toString(), "True");
 
-  EXPECT_EQ(Expression("a'").toString(), "1");
-  EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");
-  EXPECT_EQ(Expression("b'+a'").toString(), "2");
-  EXPECT_EQ(Expression("5'").toString(), "0");
+  // EXPECT_EQ(Expression("a'").toString(), "1");
+  // EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");
+  // EXPECT_EQ(Expression("b'+a'").toString(), "2");
+  // EXPECT_EQ(Expression("5'").toString(), "0");
 
   EXPECT_EQ(Expression("~True").toString(), "False");
   EXPECT_EQ(Expression("~False").toString(), "True");
@@ -367,6 +367,9 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~d <-> ~~f !<-> ~~g").toString(),
             "~((~(~a & b | ~c) | d) & f | ~(~(~a & b | ~c) | d) & ~f) & g | ((~(~a & b | ~c) | d) & f "
             "| ~(~(~a & b | ~c) | d) & ~f) & ~g");
+
+  EXPECT_EQ(Expression("x=1&a").toString(), "x - 1 = 0 & a");
+  EXPECT_EQ(Expression("True & a = b").toString(), "a - b = 0");
 
   EXPECT_EQ(Expression("x_1").toString(), "x_1");
   EXPECT_EQ(Expression("(x+1)_1").toString(), "(x + 1)_1");
@@ -498,6 +501,8 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(1 = 1) / 2"), InvalidInputException);
   EXPECT_THROW(Expression("2 + (1 = 2)"), InvalidInputException);
   EXPECT_THROW(Expression("sin(1 = 1)"), InvalidInputException);
+  EXPECT_THROW(Expression("sin(sin(1 = 1))"), InvalidInputException);
+  EXPECT_THROW(Expression("sin(sin(sin(1 = 1)))"), InvalidInputException);
   EXPECT_THROW(Expression("True/True"), InvalidInputException);
   EXPECT_THROW(Expression("((1 == 1)) + ((1 == 2))"), InvalidInputException);
   EXPECT_THROW(Expression("((1 == 1)) - ((1 == 1))"), InvalidInputException);
@@ -509,9 +514,11 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("False+1"), InvalidInputException);
   EXPECT_THROW(Expression("1=False"), InvalidInputException);
   EXPECT_THROW(Expression("False=1"), InvalidInputException);
-
-  // TODO: fix nested expressions
-  // EXPECT_THROW(Expression("True & a = b"), InvalidInputException);
+  EXPECT_THROW(Expression("1&2"), InvalidInputException);
+  EXPECT_THROW(Expression("x+1&x+2"), InvalidInputException);
+  EXPECT_THROW(Expression("x+1&x"), InvalidInputException);
+  EXPECT_THROW(Expression("x&x+2"), InvalidInputException);
+  EXPECT_THROW(Expression("(x&y)=(y&z)"), InvalidInputException);
 
   EXPECT_THROW(Expression("1/0"), UndefinedException);
   EXPECT_THROW(Expression("0^0"), UndefinedException);

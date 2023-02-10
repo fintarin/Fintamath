@@ -29,6 +29,9 @@ public:
   virtual void compress() {
   }
 
+  // TODO: remove this and implement in Expression using IExpression::Iterator
+  virtual void validate() const = 0;
+
   MathObjectPtr simplify() const override {
     return simplify(false);
   }
@@ -51,8 +54,8 @@ protected:
   // TODO: move to NegExpression
   static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
 
-  // TODO: move to Expression
-  void validateFunctionArgs(const IFunction &func, const ArgumentsVector &args) const;
+  // TODO: remove this and implement in Expression using IExpression::Iterator
+  void validateArgs(const IFunction &func, const ArgumentsVector &args) const;
 
 private:
   static Parser::ParserVector<ExpressionPtr, std::string> parserVector;

@@ -36,7 +36,7 @@
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/Boolean.hpp" // TODO: remove this include after LogicException is implemented
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -83,6 +83,8 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
 }
 
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
+  compress();
+  validate();
   // TODO: implement void simplify() and use it here
   *this = Expression(simplify());
 }
@@ -129,8 +131,24 @@ Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
 }
 
 void Expression::compress() {
-  while (auto *expr = cast<Expression>(info.get())) {
-    *this = std::move(*expr);
+  if (auto *childExpr = cast<IExpression>(info.get())) {
+    childExpr->compress();
+  }
+
+  while (auto *childExpr = cast<Expression>(info.get())) {
+    *this = std::move(*childExpr);
+  }
+
+  for (auto &child : children) {
+    if (auto *childExpr = cast<IExpression>(child.get())) {
+      childExpr->compress();
+    }
+
+    if (auto *childExpr = cast<Expression>(child.get())) {
+      if (childExpr->children.empty()) {
+        child = std::move(childExpr->info);
+      }
+    }
   }
 }
 
@@ -268,12 +286,10 @@ void Expression::setPrecisionRec(uint8_t precision) {
       args.emplace_back(*child);
     }
 
-    if (func->doAgsMatch(args)) {
-      auto countResult = (*func)(args);
-      if (is<INumber>(countResult)) {
-        info = convert<Real>(*countResult).precise(precision).clone();
-        children.clear();
-      }
+    auto countResult = (*func)(args);
+    if (is<INumber>(countResult)) {
+      info = convert<Real>(*countResult).precise(precision).clone();
+      children.clear();
     }
   }
 }
@@ -842,13 +858,36 @@ void Expression::simplifyNequiv() {
   *this = orL(andL(notL(lhs), rhs), andL(lhs, notL(rhs)));
 }
 
+void Expression::validate() const {
+  const IFunction *func = getFunction();
+
+  if (!func) {
+    if (const auto *expr = cast<IExpression>(info.get())) {
+      expr->validate();
+    }
+
+    return;
+  }
+
+  ArgumentsVector args;
+
+  for (const auto &child : children) {
+    if (const auto *childExpr = cast<IExpression>(child.get())) {
+      childExpr->validate();
+    }
+
+    args.emplace_back(*child);
+  }
+
+  validateArgs(*func, args);
+}
+
 void Expression::setPrecision(uint8_t precision) {
   setPrecisionRec(precision);
 }
 
 MathObjectPtr Expression::simplify(bool isPrecise) const {
   Expression expr = *this;
-  expr.compress();
 
   for (auto &child : expr.children) {
     if (const auto *childExpr = cast<IExpression>(child.get())) {
@@ -928,18 +967,27 @@ void Expression::simplifyFunction(bool isPrecise) {
   }
 
   const auto &func = cast<IFunction>(*info.get());
-  ArgumentsVector args;
+  const ArgumentsTypesVector argsTypes = func.getArgsTypes();
 
-  bool hasExpressionArg = false;
-  for (const auto &child : children) {
-    if (is<IExpression>(child)) {
-      hasExpressionArg = true;
+  if (children.size() != argsTypes.size()) {
+    throw InvalidInputException(toString());
+  }
+
+  ArgumentsVector args;
+  bool canCallFunction = true;
+
+  for (size_t i = 0; i < children.size(); i++) {
+    const auto *child = children[i].get();
+    const auto &type = argsTypes[i];
+
+    if (is<Variable>(child) || is<IConstant>(child) || is<IExpression>(child)) {
+      canCallFunction = false;
     }
 
     args.emplace_back(*child);
   }
 
-  if (!hasExpressionArg && func.doAgsMatch(args)) {
+  if (canCallFunction) {
     auto countResult = func(args);
 
     if (const auto *num = cast<INumber>(countResult.get()); num && !num->isPrecise() && isPrecise) {
@@ -949,9 +997,8 @@ void Expression::simplifyFunction(bool isPrecise) {
     info = std::move(countResult);
     children.clear();
   } else {
-    validateFunctionArgs(func, args);
-
     auto funcExpr = buildRawFunctionExpression(func, args);
+
     if (is<Expression>(funcExpr)) {
       return;
     }

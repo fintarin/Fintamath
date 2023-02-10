@@ -179,14 +179,6 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
     obj.simplify(isPrecise);
   }
 
-  // TODO: find a better solution
-  if (!exprObj.polynomVect.empty()) {
-    static const Mul func;
-    for (size_t i = 0; i < exprObj.polynomVect.size() - 1; i++) {
-      validateFunctionArgs(func, {*exprObj.polynomVect.at(i).info, *exprObj.polynomVect.at(i + 1).info});
-    }
-  }
-
   exprObj.simplifyDivisions();
   exprObj.compress();
   exprObj.simplifyPolynom();

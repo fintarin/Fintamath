@@ -69,6 +69,9 @@ public:
 
   void compress() override;
 
+  // TODO: make private
+  void validate() const override;
+
   // TODO: make this private
   void setPrecisionRec(uint8_t precision);
 

@@ -76,4 +76,12 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
   return clone();
 }
 
+void DerivativeExpression::validate() const {
+  if (const auto *childExpr = cast<IExpression>(info.get())) {
+    childExpr->validate();
+  }
+
+  this->validateArgs(*getFunction(), {*info});
+}
+
 }

@@ -90,6 +90,26 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   return res;
 }
 
+void EqvExpression::compress() {
+  if (auto *childExpr = cast<Expression>(leftExpr.get()); childExpr && childExpr->getChildren().empty()) {
+    leftExpr = std::move(childExpr->getInfo());
+  }
+  if (auto *childExpr = cast<Expression>(rightExpr.get()); childExpr && childExpr->getChildren().empty()) {
+    rightExpr = std::move(childExpr->getInfo());
+  }
+}
+
+void EqvExpression::validate() const {
+  if (const auto *childExpr = cast<IExpression>(leftExpr.get())) {
+    childExpr->validate();
+  }
+  if (const auto *childExpr = cast<IExpression>(rightExpr.get())) {
+    childExpr->validate();
+  }
+
+  this->validateArgs(*getFunction(), {*leftExpr, *rightExpr});
+}
+
 void EqvExpression::setPrecision(uint8_t precision) {
   if (auto *expr = cast<IExpression>(leftExpr.get())) {
     expr->setPrecision(precision);

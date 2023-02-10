@@ -32,6 +32,9 @@ public:
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
+  // TODO: remove this
+  void validate() const override;
+
 private:
   MathObjectPtr info;
 };

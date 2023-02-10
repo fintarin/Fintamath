@@ -140,7 +140,7 @@ public:
   }
 
 protected:
-  void compress() override {
+  void compress() final {
     Derived compressedExpr;
 
     for (const auto &child : polynomVect) {
@@ -148,6 +148,21 @@ protected:
     }
 
     polynomVect = std::move(compressedExpr.polynomVect);
+  }
+
+  // TODO: remove this
+  void validate() const final {
+    for (const auto &child : polynomVect) {
+      if (const auto *childExpr = cast<IExpression>(child.info.get())) {
+        childExpr->validate();
+      }
+    }
+
+    const IFunction *func = this->getFunction();
+
+    for (size_t i = 1; i < polynomVect.size(); i++) {
+      this->validateArgs(*func, {*polynomVect[i - 1].info, *polynomVect[i].info});
+    }
   }
 
 protected:

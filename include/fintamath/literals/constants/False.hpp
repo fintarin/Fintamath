@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class False : public IConstantCRTP<False> {
+class False : public IConstantCRTP<Boolean, False> {
 public:
   std::string toString() const override {
     return Boolean(false).toString();

@@ -9,6 +9,7 @@
 namespace fintamath {
 
 using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;
+using ArgumentsTypesVector = std::vector<std::reference_wrapper<const std::type_info>>;
 
 class IFunction;
 using FunctionPtr = std::unique_ptr<IFunction>;
@@ -26,9 +27,9 @@ public:
 public:
   virtual IFunction::Type getFunctionType() const = 0;
 
-  virtual bool doAgsMatch(const ArgumentsVector &argsVect) const = 0;
+  virtual const std::type_info &getReturnType() const = 0;
 
-  virtual ArgumentsVector getNonMatchingArgs(const ArgumentsVector &argsVect) const = 0;
+  virtual ArgumentsTypesVector getArgsTypes() const = 0;
 
   template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
   MathObjectPtr operator()(const Args &...args) const {
@@ -71,33 +72,23 @@ public:
     return IFunction::Type(sizeof...(Args));
   }
 
-  bool doAgsMatch(const ArgumentsVector &argsVect) const override {
-    validateArgsSize(argsVect);
-
-    if (isTypeAny) {
-      return doAnyArgsMatch(argsVect);
-    }
-
-    return doAgsMatch<0, Args...>(argsVect);
+  const std::type_info &getReturnType() const final {
+    return typeid(Return);
   }
 
-  ArgumentsVector getNonMatchingArgs(const ArgumentsVector &argsVect) const override {
-    validateArgsSize(argsVect);
-
-    if (isTypeAny) {
-      return doAnyArgsMatch(argsVect) ? ArgumentsVector() : argsVect;
-    }
-
-    ArgumentsVector nonMatchingArgsVect;
-    getNonMatchingArgs<0, Args...>(argsVect, nonMatchingArgsVect);
-    return nonMatchingArgsVect;
+  ArgumentsTypesVector getArgsTypes() const final {
+    ArgumentsTypesVector argsTypes;
+    getArgsTypes<0, Args...>(argsTypes);
+    return argsTypes;
   }
 
 protected:
   virtual MathObjectPtr call(const ArgumentsVector &argsVect) const = 0;
 
   MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const final {
-    if (!doAgsMatch(argsVect)) {
+    validateArgsSize(argsVect);
+
+    if (!doArgsMatch(argsVect)) {
       return buildFunctionExpression(*this, argsVect);
     }
 
@@ -106,16 +97,34 @@ protected:
 
 private:
   template <size_t i, typename Head, typename... Tail>
-  bool doAgsMatch(const ArgumentsVector &argsVect) const {
+  void getArgsTypes(ArgumentsTypesVector &outArgsTypes) const {
+    outArgsTypes.emplace_back(typeid(Head));
+    getArgsTypes<i + 1, Tail...>(outArgsTypes);
+  }
+
+  template <size_t>
+  void getArgsTypes(ArgumentsTypesVector &outArgTypes) const {
+  }
+
+  bool doArgsMatch(const ArgumentsVector &argsVect) const {
+    if (isTypeAny) {
+      return doAnyArgsMatch(argsVect);
+    }
+
+    return doArgsMatch<0, Args...>(argsVect);
+  }
+
+  template <size_t i, typename Head, typename... Tail>
+  bool doArgsMatch(const ArgumentsVector &argsVect) const {
     if (!is<Head>(argsVect.at(i))) {
       return false;
     }
 
-    return doAgsMatch<i + 1, Tail...>(argsVect);
+    return doArgsMatch<i + 1, Tail...>(argsVect);
   }
 
   template <size_t>
-  bool doAgsMatch(const ArgumentsVector & /*unused*/) const {
+  bool doArgsMatch(const ArgumentsVector & /*unused*/) const {
     return true;
   }
 
@@ -123,19 +132,6 @@ private:
     return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
       return (is<Args>(arg) || ...); //
     });
-  }
-
-  template <size_t i, typename Head, typename... Tail>
-  void getNonMatchingArgs(const ArgumentsVector &argsVect, ArgumentsVector &nonMatchingArgsVect) const {
-    if (!is<Head>(&argsVect.at(i).get())) {
-      nonMatchingArgsVect.push_back(argsVect.at(i));
-    }
-
-    getNonMatchingArgs<i + 1, Tail...>(argsVect, nonMatchingArgsVect);
-  }
-
-  template <size_t>
-  void getNonMatchingArgs(const ArgumentsVector &argsVect, ArgumentsVector &nonMatchingArgsVect) const {
   }
 
   void validateArgsSize(const ArgumentsVector &argsVect) const {

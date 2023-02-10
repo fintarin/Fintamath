@@ -39,6 +39,11 @@ public:
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
+  void compress() override;
+
+  // TODO: remove this
+  void validate() const override;
+
 private:
   MathObjectPtr leftExpr;
 
