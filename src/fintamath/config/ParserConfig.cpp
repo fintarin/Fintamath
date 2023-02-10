@@ -105,17 +105,15 @@ struct ParserConfig {
     IMathObject::registerType<ILiteral>(&ILiteral::parse);
     IMathObject::registerType<IFunction>([](const std::string &str) { return IFunction::parse(str); });
     IMathObject::registerType<IArithmetic>(&IArithmetic::parse);
-    IMathObject::registerType<IComparable>(&IComparable::parse);
-    IMathObject::registerType<IIncremental>(&IIncremental::parse);
-    IMathObject::registerType<IModular>(&IModular::parse);
-    IMathObject::registerType<IExpression>([](const std::string &str) { return IExpression::parse(str); });
 
-    IArithmetic::registerType<INumber>(&INumber::parse);
+    IArithmetic::registerType<IComparable>(&IComparable::parse);
+    IArithmetic::registerType<IIncremental>(&IIncremental::parse);
+    IArithmetic::registerType<IModular>(&IModular::parse);
     IArithmetic::registerType<Expression>();
 
     IComparable::registerType<INumber>(&INumber::parse);
 
-    IIncremental::registerType<INumber>(&INumber::parse);
+    IIncremental::registerType<Integer>();
 
     IModular::registerType<Integer>();
 

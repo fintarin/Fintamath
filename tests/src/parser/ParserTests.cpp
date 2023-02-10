@@ -70,17 +70,11 @@ using namespace fintamath;
 
 TEST(ParserTests, parseMathObjectTest) {
   EXPECT_TRUE(is<IArithmetic>(IMathObject::parse("a+1")));
-  EXPECT_TRUE(is<IComparable>(IMathObject::parse("1231412736.218731623872183")));
-  EXPECT_TRUE(is<IIncremental>(IMathObject::parse("1231412736.218731623872183")));
-  EXPECT_TRUE(is<IModular>(IMathObject::parse("1231412736218731623872183")));
   EXPECT_TRUE(is<ILiteral>(IMathObject::parse("a")));
   EXPECT_TRUE(is<IFunction>(IMathObject::parse("sin")));
   EXPECT_TRUE(is<IExpression>(IMathObject::parse("a+1")));
 
   EXPECT_FALSE(is<IArithmetic>(IMathObject::parse("a")));
-  EXPECT_FALSE(is<IComparable>(IMathObject::parse("True")));
-  EXPECT_FALSE(is<IIncremental>(IMathObject::parse("E")));
-  EXPECT_FALSE(is<IModular>(IMathObject::parse("12314127362187.31623872183")));
   EXPECT_FALSE(is<ILiteral>(IMathObject::parse("sin")));
   EXPECT_FALSE(is<IFunction>(IMathObject::parse("123")));
   EXPECT_FALSE(is<IExpression>(IMathObject::parse("sin")));
@@ -89,9 +83,14 @@ TEST(ParserTests, parseMathObjectTest) {
 }
 
 TEST(ParserTests, parseArithmeticTest) {
-  EXPECT_TRUE(is<INumber>(IArithmetic::parse("12314127362.18731623872183")));
+  EXPECT_TRUE(is<IComparable>(IArithmetic::parse("1231412736.218731623872183")));
+  EXPECT_TRUE(is<IIncremental>(IArithmetic::parse("1231412736218731623872183")));
+  EXPECT_TRUE(is<IModular>(IArithmetic::parse("1231412736218731623872183")));
   EXPECT_TRUE(is<Expression>(IArithmetic::parse("a")));
 
+  EXPECT_FALSE(is<IComparable>(IArithmetic::parse("True")));
+  EXPECT_FALSE(is<IIncremental>(IArithmetic::parse("E")));
+  EXPECT_FALSE(is<IModular>(IArithmetic::parse("12314127362187.31623872183")));
   EXPECT_FALSE(is<INumber>(IArithmetic::parse("a")));
   EXPECT_FALSE(is<Expression>(IArithmetic::parse("123")));
 
@@ -105,7 +104,7 @@ TEST(ParserTests, parseComparableTest) {
 }
 
 TEST(ParserTests, parseIncrementalTest) {
-  EXPECT_TRUE(is<INumber>(IIncremental::parse("12314127362.18731623872183")));
+  EXPECT_TRUE(is<Integer>(IIncremental::parse("1231412736218731623872183")));
 
   EXPECT_EQ(IIncremental::parse("x"), nullptr);
 }

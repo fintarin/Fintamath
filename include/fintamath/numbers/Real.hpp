@@ -66,10 +66,6 @@ protected:
 
   Real &negate() override;
 
-  Real &increase() override;
-
-  Real &decrease() override;
-
 private:
   std::unique_ptr<RealImpl> impl;
 

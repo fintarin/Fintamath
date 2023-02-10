@@ -489,36 +489,6 @@ TEST(RealTests, doubleFriendDivideOperatorTest) {
   EXPECT_EQ(a.precise(3).toString(), "-11");
 }
 
-TEST(RealTests, preIncrementOperatorTest) {
-  EXPECT_EQ(++Real(-10), -9);
-  EXPECT_EQ(++Real("0.55"), Real("1.55"));
-}
-
-TEST(RealTests, postIncrementOperatorTest) {
-  Real a(5);
-  EXPECT_EQ(a++, 5);
-  EXPECT_EQ(a, 6);
-
-  Real b("2.55");
-  EXPECT_EQ(b++, Real("2.55"));
-  EXPECT_EQ(b, Real("3.55"));
-}
-
-TEST(RealTests, preDecrementOperatorTest) {
-  EXPECT_EQ(--Real(-10), -11);
-  EXPECT_EQ(--Real("0.55"), Real("-0.45"));
-}
-
-TEST(RealTests, postDecrementOperatorTest) {
-  Real a(5);
-  EXPECT_EQ(a--, 5);
-  EXPECT_EQ(a, 4);
-
-  Real b("0.5");
-  EXPECT_EQ(b--, Real("0.5"));
-  EXPECT_EQ(b, Real("-0.5"));
-}
-
 TEST(RealTests, unaryPlusOperatorTest) {
   EXPECT_EQ(+Real(-5), -5);
   EXPECT_EQ(+Real(5), 5);

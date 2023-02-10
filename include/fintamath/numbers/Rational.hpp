@@ -45,10 +45,6 @@ protected:
 
   Rational &negate() override;
 
-  Rational &increase() override;
-
-  Rational &decrease() override;
-
 private:
   void parse(const std::string &str);
 

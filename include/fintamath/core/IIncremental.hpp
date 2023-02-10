@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
@@ -9,7 +9,7 @@ namespace fintamath {
 class IIncremental;
 using IncrementalPtr = std::unique_ptr<IIncremental>;
 
-class IIncremental : virtual public IMathObject {
+class IIncremental : virtual public IArithmetic {
 public:
   friend IIncremental &operator++(IIncremental &rhs);
 
@@ -20,8 +20,8 @@ public:
   friend IncrementalPtr operator--(IIncremental &lhs, int);
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IIncremental, T>>>
-  static void registerType(const Parser::Function<IncrementalPtr, std::string> &parserFunc) {
-    Parser::registerType<T>(parserVector, parserFunc);
+  static void registerType() {
+    Parser::registerType<T>(parserVector);
   }
 
   static IncrementalPtr parse(const std::string &str) {
@@ -58,7 +58,7 @@ inline IncrementalPtr operator--(IIncremental &lhs, int) {
 }
 
 template <typename Derived>
-class IIncrementalCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IIncremental {
+class IIncrementalCRTP : virtual public IArithmeticCRTP<Derived>, virtual public IIncremental {
 public:
   Derived &operator++() {
     return increase();

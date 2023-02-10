@@ -9,7 +9,7 @@ namespace fintamath {
 
 class IntegerImpl;
 
-class Integer : public INumberCRTP<Integer>, public IModularCRTP<Integer> {
+class Integer : public INumberCRTP<Integer>, public IModularCRTP<Integer>, public IIncrementalCRTP<Integer> {
 public:
   Integer();
 

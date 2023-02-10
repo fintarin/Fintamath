@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
@@ -9,7 +9,7 @@ namespace fintamath {
 class IComparable;
 using ComparablePtr = std::unique_ptr<IComparable>;
 
-class IComparable : virtual public IMathObject {
+class IComparable : virtual public IArithmetic {
 public:
   friend bool operator<(const IComparable &lhs, const IComparable &rhs);
 
@@ -54,7 +54,7 @@ inline bool operator>=(const IComparable &lhs, const IComparable &rhs) {
 }
 
 template <typename Derived>
-class IComparableCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IComparable {
+class IComparableCRTP : virtual public IArithmeticCRTP<Derived>, virtual public IComparable {
 public:
   bool operator<(const Derived &rhs) const {
     return less(rhs);

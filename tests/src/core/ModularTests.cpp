@@ -16,6 +16,26 @@ protected:
   TestModular &mod(const TestModular & /* rhs */) override {
     return *this;
   }
+
+  TestModular &add(const TestModular &rhs) override {
+    return *this;
+  }
+
+  virtual TestModular &substract(const TestModular &rhs) override {
+    return *this;
+  }
+
+  virtual TestModular &multiply(const TestModular &rhs) override {
+    return *this;
+  }
+
+  virtual TestModular &divide(const TestModular &rhs) override {
+    return *this;
+  }
+
+  virtual TestModular &negate() override {
+    return *this;
+  }
 };
 
 }

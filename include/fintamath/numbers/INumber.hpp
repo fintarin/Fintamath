@@ -10,7 +10,7 @@ namespace fintamath {
 class INumber;
 using NumberPtr = std::unique_ptr<INumber>;
 
-class INumber : virtual public IComparable, virtual public IArithmetic, virtual public IIncremental {
+class INumber : virtual public IComparable {
 public:
   virtual bool isPrecise() const {
     return true;
@@ -60,9 +60,6 @@ NumberPtr operator-(const Rhs &rhs) {
 }
 
 template <typename Derived>
-class INumberCRTP : public INumber,
-                    public IComparableCRTP<Derived>,
-                    public IArithmeticCRTP<Derived>,
-                    public IIncrementalCRTP<Derived> {};
+class INumberCRTP : public IComparableCRTP<Derived>, public INumber {};
 
 }

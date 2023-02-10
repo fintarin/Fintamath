@@ -138,27 +138,27 @@ public:
   }
 
   Derived operator+(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) += rhs;
+    return Derived(cast<Derived>(*this)) += rhs;
   }
 
   Derived operator-(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) -= rhs;
+    return Derived(cast<Derived>(*this)) -= rhs;
   }
 
   Derived operator*(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) *= rhs;
+    return Derived(cast<Derived>(*this)) *= rhs;
   }
 
   Derived operator/(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) /= rhs;
+    return Derived(cast<Derived>(*this)) /= rhs;
   }
 
   Derived operator+() const {
-    return Derived(static_cast<const Derived &>(*this));
+    return Derived(cast<Derived>(*this));
   }
 
   Derived operator-() const {
-    Derived tmp = Derived(static_cast<const Derived &>(*this));
+    Derived tmp = Derived(cast<Derived>(*this));
     return static_cast<IArithmeticCRTP<Derived> &>(tmp).negate();
   }
 

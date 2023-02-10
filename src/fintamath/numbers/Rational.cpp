@@ -133,14 +133,6 @@ Rational &Rational::negate() {
   return *this;
 }
 
-Rational &Rational::increase() {
-  return *this += 1;
-}
-
-Rational &Rational::decrease() {
-  return *this -= 1;
-}
-
 void Rational::parse(const std::string &str) {
   if (str.empty() || str == ".") {
     throw InvalidInputException(str);

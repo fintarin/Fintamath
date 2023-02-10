@@ -19,6 +19,26 @@ protected:
   bool more(const TestComparable & /* rhs */) const override {
     return true;
   }
+
+  TestComparable &add(const TestComparable &rhs) override {
+    return *this;
+  }
+
+  virtual TestComparable &substract(const TestComparable &rhs) override {
+    return *this;
+  }
+
+  virtual TestComparable &multiply(const TestComparable &rhs) override {
+    return *this;
+  }
+
+  virtual TestComparable &divide(const TestComparable &rhs) override {
+    return *this;
+  }
+
+  virtual TestComparable &negate() override {
+    return *this;
+  }
 };
 
 }

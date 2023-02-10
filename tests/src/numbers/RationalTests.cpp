@@ -179,36 +179,6 @@ TEST(RationalTests, integerFriendDivideOperatorTest) {
   EXPECT_EQ(10 / Rational(-10, -738), 738);
 }
 
-TEST(RationalTests, preIncrementOperatorTest) {
-  EXPECT_EQ(++Rational(-10), -9);
-  EXPECT_EQ(++Rational(1, 2), Rational(3, 2));
-}
-
-TEST(RationalTests, postIncrementOperatorTest) {
-  Rational a = {5};
-  EXPECT_EQ(a++, 5);
-  EXPECT_EQ(a, 6);
-
-  Rational b(2, 3);
-  EXPECT_EQ(b++, Rational(2, 3));
-  EXPECT_EQ(b, Rational(5, 3));
-}
-
-TEST(RationalTests, preDecrementOperatorTest) {
-  EXPECT_EQ(--Rational(-10), -11);
-  EXPECT_EQ(--Rational(1, 2), Rational(-1, 2));
-}
-
-TEST(RationalTests, postDecrementOperatorTest) {
-  Rational a = {5};
-  EXPECT_EQ(a--, 5);
-  EXPECT_EQ(a, 4);
-
-  Rational b(2, 3);
-  EXPECT_EQ(b--, Rational(2, 3));
-  EXPECT_EQ(b, Rational(-1, 3));
-}
-
 TEST(RationalTests, unaryPlusOperatorTest) {
   EXPECT_EQ(+Rational(-5), -5);
 }

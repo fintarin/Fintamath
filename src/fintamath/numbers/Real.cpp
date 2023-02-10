@@ -193,14 +193,4 @@ Real &Real::negate() {
   return *this;
 }
 
-Real &Real::increase() {
-  ++impl->v;
-  return *this;
-}
-
-Real &Real::decrease() {
-  --impl->v;
-  return *this;
-}
-
 }

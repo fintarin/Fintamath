@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
@@ -10,7 +10,7 @@ namespace fintamath {
 class IModular;
 using ModularPtr = std::unique_ptr<IModular>;
 
-class IModular : virtual public IMathObject {
+class IModular : virtual public IArithmetic {
 public:
   friend ModularPtr operator%(const IModular &lhs, const IModular &rhs);
 
@@ -35,7 +35,7 @@ inline ModularPtr operator%(const IModular &lhs, const IModular &rhs) {
 }
 
 template <typename Derived>
-class IModularCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IModular {
+class IModularCRTP : virtual public IArithmeticCRTP<Derived>, virtual public IModular {
 public:
   Derived &operator%=(const Derived &rhs) {
     return mod(rhs);
