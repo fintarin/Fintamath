@@ -984,15 +984,16 @@ void Expression::simplifyFunction(bool isPrecise) {
   const auto &func = cast<IFunction>(*info.get());
   const ArgumentsTypesVector argsTypes = func.getArgsTypes();
 
-  if (children.size() != argsTypes.size()) {
-    throw InvalidInputException(toString());
-  }
-
   ArgumentsVector args;
   bool canCallFunction = true;
 
   for (size_t i = 0; i < children.size(); i++) {
     const auto *child = children[i].get();
+
+    if (!child) {
+      continue;
+    }
+
     const auto &type = argsTypes[i];
 
     if (is<Variable>(child) || is<IConstant>(child) || is<IExpression>(child)) {
