@@ -273,10 +273,10 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("((((5+5)=(2*5))))").toString(), "True");
   EXPECT_EQ(Expression("((1*1))(5+5)=((2*5)/(1/1))").toString(), "True");
 
-  // EXPECT_EQ(Expression("a'").toString(), "1");
-  // EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");
-  // EXPECT_EQ(Expression("b'+a'").toString(), "2");
-  // EXPECT_EQ(Expression("5'").toString(), "0");
+  EXPECT_EQ(Expression("a'").toString(), "1");
+  EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");
+  EXPECT_EQ(Expression("b'+a'").toString(), "2");
+  EXPECT_EQ(Expression("5'").toString(), "0");
 
   EXPECT_EQ(Expression("~True").toString(), "False");
   EXPECT_EQ(Expression("~False").toString(), "True");

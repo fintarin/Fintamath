@@ -343,8 +343,16 @@ std::string Expression::toString(uint8_t precision) const {
 
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
   if (auto oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
-    info = std::move(oper);
-    children.emplace_back(std::unique_ptr<Expression>(new Expression(TokenVector(tokens.begin() + 1, tokens.end()))));
+    auto rhsExpr = Expression(TokenVector(tokens.begin() + 1, tokens.end()));
+    auto funcExpr = buildRawFunctionExpression(*oper, {rhsExpr});
+
+    if (auto *expr = cast<Expression>(funcExpr.get())) {
+      *this = std::move(*expr);
+    } else {
+      info = std::move(funcExpr);
+      children.clear();
+    }
+
     return true;
   }
 
@@ -365,9 +373,16 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
       factor->setOrder(order);
     }
 
-    info = std::move(oper);
-    children.emplace_back(
-        std::unique_ptr<Expression>(new Expression(TokenVector(TokenVector(tokens.begin(), tokens.end() - order)))));
+    auto rhsExpr = Expression(TokenVector(tokens.begin(), tokens.end() - order));
+    auto funcExpr = buildRawFunctionExpression(*oper, {rhsExpr});
+
+    if (auto *expr = cast<Expression>(funcExpr.get())) {
+      *this = std::move(*expr);
+    } else {
+      info = std::move(funcExpr);
+      children.clear();
+    }
+
     return true;
   }
 
