@@ -26,7 +26,7 @@ public:
   }
 
 private:
-  static Parser::ParserVector<NumberPtr, std::string> parserVector;
+  static Parser::Vector<NumberPtr, std::string> parserVector;
 };
 
 inline NumberPtr operator+(const INumber &lhs, const INumber &rhs) {

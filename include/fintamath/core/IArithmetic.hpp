@@ -49,7 +49,7 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
-  static void registerType(const Parser::Function<ArithmeticPtr, std::string> &parserFunc) {
+  static void registerType(Parser::Function<ArithmeticPtr, std::string> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
@@ -79,7 +79,7 @@ private:
 
   static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiDiv;
 
-  static Parser::ParserVector<ArithmeticPtr, std::string> parserVector;
+  static Parser::Vector<ArithmeticPtr, std::string> parserVector;
 };
 
 inline ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs) {

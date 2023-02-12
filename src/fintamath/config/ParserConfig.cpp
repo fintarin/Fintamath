@@ -78,21 +78,21 @@ std::multimap<TypeInfo, TypeInfo> InheritanceTable::table;
 
 TokenVector Tokenizer::registeredTokens;
 
-Parser::ParserVector<MathObjectPtr, std::string> IMathObject::parserVector;
-Parser::ParserVector<ArithmeticPtr, std::string> IArithmetic::parserVector;
-Parser::ParserVector<ComparablePtr, std::string> IComparable::parserVector;
-Parser::ParserVector<IncrementalPtr, std::string> IIncremental::parserVector;
-Parser::ParserVector<ModularPtr, std::string> IModular::parserVector;
+Parser::Vector<MathObjectPtr, std::string> IMathObject::parserVector;
+Parser::Vector<ArithmeticPtr, std::string> IArithmetic::parserVector;
+Parser::Vector<ComparablePtr, std::string> IComparable::parserVector;
+Parser::Vector<IncrementalPtr, std::string> IIncremental::parserVector;
+Parser::Vector<ModularPtr, std::string> IModular::parserVector;
 
-Parser::ParserVector<NumberPtr, std::string> INumber::parserVector;
+Parser::Vector<NumberPtr, std::string> INumber::parserVector;
 
-Parser::ParserVector<LiteralPtr, std::string> ILiteral::parserVector;
-Parser::ParserMap<ConstantPtr> IConstant::parserMap;
+Parser::Vector<LiteralPtr, std::string> ILiteral::parserVector;
+Parser::Map<ConstantPtr> IConstant::parserMap;
 
-Parser::ParserMap<FunctionPtr> IFunction::parserMap;
-Parser::ParserMap<OperatorPtr> IOperator::parserMap;
+Parser::Map<FunctionPtr> IFunction::parserMap;
+Parser::Map<OperatorPtr> IOperator::parserMap;
 
-Parser::ParserVector<ExpressionPtr, std::string> IExpression::parserVector;
+Parser::Vector<ExpressionPtr, std::string> IExpression::parserVector;
 
 }
 

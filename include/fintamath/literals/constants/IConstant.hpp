@@ -23,14 +23,14 @@ public:
   }
 
   static ConstantPtr parse(const std::string &parsedStr) {
-    return Parser::parse<ConstantPtr>(parserMap, parsedStr, [](const ConstantPtr &) { return true; });
+    return Parser::parse<ConstantPtr>(parserMap, parsedStr);
   }
 
 protected:
   virtual MathObjectPtr call() const = 0;
 
 private:
-  static Parser::ParserMap<ConstantPtr> parserMap;
+  static Parser::Map<ConstantPtr> parserMap;
 };
 
 template <typename Return, typename Derived>

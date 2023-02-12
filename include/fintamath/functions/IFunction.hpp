@@ -47,9 +47,10 @@ public:
   }
 
   static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-    return Parser::parse<FunctionPtr>(parserMap, parsedStr, [type](const FunctionPtr &func) {
+    Parser::Comparator<FunctionPtr> comp = [type](const FunctionPtr &func) {
       return type == IFunction::Type::Any || func->getFunctionType() == type;
-    });
+    };
+    return Parser::parse<FunctionPtr>(parserMap, comp, parsedStr);
   }
 
 protected:
@@ -59,7 +60,7 @@ protected:
       buildFunctionExpression;
 
 private:
-  static Parser::ParserMap<FunctionPtr> parserMap;
+  static Parser::Map<FunctionPtr> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>

@@ -37,13 +37,14 @@ public:
   }
 
   static OperatorPtr parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
-    return Parser::parse<OperatorPtr>(parserMap, parsedStr, [priority](const OperatorPtr &oper) {
+    Parser::Comparator<OperatorPtr> comp = [priority](const OperatorPtr &oper) {
       return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
-    });
+    };
+    return Parser::parse<OperatorPtr>(parserMap, comp, parsedStr);
   }
 
 private:
-  static Parser::ParserMap<OperatorPtr> parserMap;
+  static Parser::Map<OperatorPtr> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>

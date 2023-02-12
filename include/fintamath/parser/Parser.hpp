@@ -21,31 +21,34 @@ public:
   template <typename... Args>
   using Comparator = std::function<bool(const Args &...)>;
 
-  template <typename Return>
-  using ParserMap = std::multimap<std::string, Function<Return>>;
+  template <typename Return, typename... Args>
+  using Map = std::multimap<std::string, Function<Return, Args...>>;
 
   template <typename Return, typename... Args>
-  using ParserVector = std::vector<Function<Return, Args...>>;
+  using Vector = std::vector<Function<Return, Args...>>;
 
-  template <typename Type, typename BasePtr>
-  static void registerType(ParserMap<BasePtr> &parserMap) {
-    InheritanceTable::add<typename BasePtr::element_type, Type>();
-
-    Function<BasePtr> constructor = [] {
-      return std::make_unique<Type>(); //
+  template <typename Type, typename BasePtr, typename... Args>
+  static void add(Map<BasePtr, Args...> &parserMap) {
+    Function<BasePtr, Args...> constructor = [](const Args &...args) {
+      return std::make_unique<Type>(args...); //
     };
 
     std::string name = std::make_unique<Type>()->toString();
+    parserMap.insert({name, constructor});
 
     Tokenizer::registerToken(name);
-
-    parserMap.insert({name, constructor});
   }
 
   template <typename Type, typename BasePtr, typename... Args>
-  static void registerType(ParserVector<BasePtr, Args...> &parserVect) {
-    InheritanceTable::add<typename BasePtr::element_type, Type>();
+  static void add(Map<BasePtr, Args...> &parserMap, const Function<BasePtr, Args...> &parserFunc) {
+    std::string name = std::make_unique<Type>()->toString();
+    parserMap.insert({name, parserFunc});
 
+    Tokenizer::registerToken(name);
+  }
+
+  template <typename Type, typename BasePtr, typename... Args>
+  static void add(Vector<BasePtr, Args...> &parserVect) {
     Function<BasePtr, Args...> constructor = [](const Args &...args) {
       try {
         return std::make_unique<Type>(args...);
@@ -58,20 +61,16 @@ public:
   }
 
   template <typename Type, typename BasePtr, typename... Args>
-  static void registerType(ParserVector<BasePtr, Args...> &parserVect, const Function<BasePtr, Args...> &parserFunc) {
-    InheritanceTable::add<typename BasePtr::element_type, Type>();
-
+  static void add(Vector<BasePtr, Args...> &parserVect, const Function<BasePtr, Args...> &parserFunc) {
     parserVect.push_back(parserFunc);
   }
 
-  template <typename Return>
-  static Return parse(const ParserMap<Return> &parserMap, const std::string &parsedStr,
-                      const Comparator<Return> &comp) {
+  template <typename Return, typename... Args>
+  static Return parse(const Map<Return, Args...> &parserMap, const std::string &parsedStr, const Args &...args) {
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
-      Return value = pair->second();
-      if (comp(value)) {
+      if (Return value = pair->second(args...)) {
         return value;
       }
     }
@@ -80,7 +79,21 @@ public:
   }
 
   template <typename Return, typename... Args>
-  static Return parse(const ParserVector<Return, Args...> &parserVect, const Args &...args) {
+  static Return parse(const Map<Return, Args...> &parserMap, const Comparator<Return> &comp,
+                      const std::string &parsedStr, const Args &...args) {
+    const auto &valuePairs = parserMap.equal_range(parsedStr);
+
+    for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
+      if (Return value = pair->second(args...); value && comp(value)) {
+        return value;
+      }
+    }
+
+    return nullptr;
+  }
+
+  template <typename Return, typename... Args>
+  static Return parse(const Vector<Return, Args...> &parserVect, const Args &...args) {
     for (const auto &constructor : parserVect) {
       if (Return value = constructor(args...)) {
         return value;
@@ -88,6 +101,30 @@ public:
     }
 
     return nullptr;
+  }
+
+  template <typename Type, typename BasePtr, typename... Args>
+  static void registerType(Map<BasePtr, Args...> &parserMap) {
+    InheritanceTable::add<typename BasePtr::element_type, Type>();
+    add<Type>(parserMap);
+  }
+
+  template <typename Type, typename BasePtr, typename... Args>
+  static void registerType(Map<BasePtr, Args...> &parserMap, const Function<BasePtr, Args...> &parserFunc) {
+    InheritanceTable::add<typename BasePtr::element_type, Type>();
+    add<Type>(parserMap, parserFunc);
+  }
+
+  template <typename Type, typename BasePtr, typename... Args>
+  static void registerType(Vector<BasePtr, Args...> &parserVect) {
+    InheritanceTable::add<typename BasePtr::element_type, Type>();
+    add<Type>(parserVect);
+  }
+
+  template <typename Type, typename BasePtr, typename... Args>
+  static void registerType(Vector<BasePtr, Args...> &parserVect, const Function<BasePtr, Args...> &parserFunc) {
+    InheritanceTable::add<typename BasePtr::element_type, Type>();
+    add<Type>(parserVect, parserFunc);
   }
 };
 

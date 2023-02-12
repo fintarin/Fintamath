@@ -34,7 +34,7 @@ protected:
   virtual IIncremental &decreaseAbstract() = 0;
 
 private:
-  static Parser::ParserVector<IncrementalPtr, std::string> parserVector;
+  static Parser::Vector<IncrementalPtr, std::string> parserVector;
 };
 
 inline IIncremental &operator++(IIncremental &rhs) {

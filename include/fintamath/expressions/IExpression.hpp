@@ -58,7 +58,7 @@ protected:
   void validateArgs(const IFunction &func, const ArgumentsVector &args) const;
 
 private:
-  static Parser::ParserVector<ExpressionPtr, std::string> parserVector;
+  static Parser::Vector<ExpressionPtr, std::string> parserVector;
 };
 
 template <typename Derived>
