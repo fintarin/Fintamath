@@ -107,9 +107,6 @@ Expression::Expression(const TokenVector &tokens) {
 Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 }
 
-Expression::Expression(const MathObjectPtr &obj) : Expression(obj->clone()) {
-}
-
 Expression::Expression(MathObjectPtr &&obj) {
   if (auto *expr = cast<Expression>(obj.get())) {
     *this = std::move(*expr);
@@ -680,12 +677,12 @@ void Expression::simplifyNeg() {
     return;
   }
 
-  const auto *childExpr = cast<Expression>(child.get());
+  auto *childExpr = cast<Expression>(child.get());
   if (!is<Neg>(childExpr->info)) {
     return;
   }
 
-  *this = Expression(childExpr->children.front());
+  *this = Expression(std::move(childExpr->children.front()));
 }
 
 void Expression::simplifyNot() {
@@ -698,12 +695,12 @@ void Expression::simplifyNot() {
     return;
   }
 
-  const auto *childExpr = cast<Expression>(child.get());
+  auto *childExpr = cast<Expression>(child.get());
   if (!is<Not>(childExpr->info)) {
     return;
   }
 
-  *this = Expression(childExpr->children.front());
+  *this = Expression(std::move(childExpr->children.front()));
 }
 
 void Expression::simplifyAnd() {
@@ -711,12 +708,15 @@ void Expression::simplifyAnd() {
     return;
   }
 
-  const auto &lhs = *children.front();
-  const auto &rhs = *children.back();
+  auto &lhsPtr = children.front();
+  auto &rhsPtr = children.back();
+
+  auto &lhs = *lhsPtr;
+  auto &rhs = *rhsPtr;
 
   if (const auto *lhsBool = cast<Boolean>(&lhs)) {
     if (*lhsBool == true) {
-      *this = rhs;
+      *this = Expression(std::move(rhsPtr));
     } else {
       *this = Boolean(false);
     }
@@ -725,7 +725,7 @@ void Expression::simplifyAnd() {
 
   if (const auto *rhsBool = cast<Boolean>(&rhs)) {
     if (*rhsBool == true) {
-      *this = lhs;
+      *this = Expression(std::move(lhsPtr));
     } else {
       *this = Boolean(false);
     }
@@ -733,7 +733,7 @@ void Expression::simplifyAnd() {
   }
 
   if (lhs == rhs) {
-    *this = lhs;
+    *this = Expression(std::move(lhsPtr));
     return;
   }
 
@@ -748,14 +748,17 @@ void Expression::simplifyOr() {
     return;
   }
 
-  const auto &lhs = *children.front();
-  const auto &rhs = *children.back();
+  auto &lhsPtr = children.front();
+  auto &rhsPtr = children.back();
+
+  auto &lhs = *lhsPtr;
+  auto &rhs = *rhsPtr;
 
   if (const auto *lhsBool = cast<Boolean>(&lhs)) {
     if (*lhsBool == true) {
       *this = Boolean(true);
     } else {
-      *this = rhs;
+      *this = Expression(std::move(rhsPtr));
     }
     return;
   }
@@ -764,13 +767,13 @@ void Expression::simplifyOr() {
     if (*rhsBool == true) {
       *this = Boolean(true);
     } else {
-      *this = lhs;
+      *this = Expression(std::move(lhsPtr));
     }
     return;
   }
 
   if (lhs == rhs) {
-    *this = lhs;
+    *this = Expression(std::move(lhsPtr));
     return;
   }
 
@@ -906,25 +909,18 @@ void Expression::simplifyFunction(bool isPrecise) {
     args.emplace_back(*child);
   }
 
-  if (canCallFunction) {
-    auto countResult = func(args);
-
-    if (const auto *num = cast<INumber>(countResult.get()); num && !num->isPrecise() && isPrecise) {
-      return;
-    }
-
-    info = std::move(countResult);
-    children.clear();
-  } else {
-    auto funcExpr = buildRawFunctionExpression(func, args);
-
-    if (is<Expression>(funcExpr)) {
-      return;
-    }
-
-    info = std::move(funcExpr);
-    children.clear();
+  if (!canCallFunction) {
+    return;
   }
+
+  auto countResult = func(args);
+
+  if (const auto *num = cast<INumber>(countResult.get()); num && !num->isPrecise() && isPrecise) {
+    return;
+  }
+
+  info = std::move(countResult);
+  children.clear();
 }
 
 void Expression::simplifyConstant(bool isPrecise) {

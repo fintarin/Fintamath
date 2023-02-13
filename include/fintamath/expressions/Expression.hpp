@@ -24,8 +24,6 @@ public:
 
   Expression(const IMathObject &obj);
 
-  explicit Expression(const MathObjectPtr &obj);
-
   explicit Expression(MathObjectPtr &&obj);
 
   Expression(int64_t val);
