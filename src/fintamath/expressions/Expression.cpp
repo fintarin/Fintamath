@@ -603,65 +603,28 @@ TokenVector Expression::cutBraces(const TokenVector &tokens) {
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  auto addExpr = SumExpression();
-  addExpr.addElement({clone(), false});
-  addExpr.addElement({rhs.clone(), false});
-  *this = Expression(*addExpr.simplify());
-  return *this;
+  return *this = Expression(buildFunctionExpression(
+             Add(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  auto addExpr = SumExpression();
-  addExpr.addElement({clone(), false});
-  addExpr.addElement({rhs.clone(), true});
-  *this = Expression(*addExpr.simplify());
-  return *this;
+  return *this = Expression(buildFunctionExpression(
+             Sub(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  auto mulExpr = MulExpression();
-  mulExpr.addElement({clone(), false});
-  mulExpr.addElement({rhs.clone(), false});
-  *this = Expression(*mulExpr.simplify());
-  return *this;
+  return *this = Expression(buildFunctionExpression(
+             Mul(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  auto mulExpr = MulExpression();
-  mulExpr.addElement({clone(), false});
-  mulExpr.addElement({rhs.clone(), true});
-  *this = Expression(*mulExpr.simplify());
-  return *this;
+  return *this = Expression(buildFunctionExpression(
+             Div(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
-// TODO: move this logic to NegExpression
 Expression &Expression::negate() {
-  if (is<Neg>(info)) {
-    info = std::move(children.front());
-    children.clear();
-    return *this;
-  }
-
-  if (!children.empty()) {
-    auto expr = std::make_unique<Expression>(*this);
-    info = std::make_unique<Neg>();
-    children.clear();
-    children.emplace_back(std::move(expr));
-    return *this;
-  }
-
-  if (cast<IArithmetic>(info.get())) {
-    *this = Expression(neg(*info));
-    return *this;
-  }
-
-  auto mul = MulExpression();
-  mul.addElement({NEG_ONE.clone(), false});
-  mul.addElement({clone(), false});
-  info = std::make_unique<MulExpression>(mul)->simplify();
-  children.clear();
-
-  return *this;
+  return *this = Expression(buildFunctionExpression(
+             Neg(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)))));
 }
 
 void Expression::simplifyNeg() {
