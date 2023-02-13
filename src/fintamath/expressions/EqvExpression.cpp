@@ -34,14 +34,14 @@ EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, co
 }
 
 EqvExpression::EqvExpression(const EqvExpression &rhs)
-    : leftExpr(rhs.leftExpr->clone()),   //
-      rightExpr(rhs.rightExpr->clone()), //
+    : leftExpr(rhs.leftExpr->clone()),
+      rightExpr(rhs.rightExpr->clone()),
       oper(cast<IOperator>(rhs.oper->clone())) {
 }
 
 EqvExpression::EqvExpression(EqvExpression &&rhs) noexcept
-    : leftExpr(std::move(rhs.leftExpr)),   //
-      rightExpr(std::move(rhs.rightExpr)), //
+    : leftExpr(std::move(rhs.leftExpr)),
+      rightExpr(std::move(rhs.rightExpr)),
       oper(std::move(rhs.oper)) {
 }
 

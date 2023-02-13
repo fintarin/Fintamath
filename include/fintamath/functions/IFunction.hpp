@@ -131,7 +131,7 @@ private:
 
   bool doAnyArgsMatch(const ArgumentsVector &argsVect) const {
     return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
-      return (is<Args>(arg) || ...); //
+      return (is<Args>(arg) || ...);
     });
   }
 

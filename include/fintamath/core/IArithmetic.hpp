@@ -175,26 +175,46 @@ protected:
 
   ArithmeticPtr addAbstract(const IArithmetic &rhs) const final {
     return executeAbstract(
-        rhs, "+", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.add(rhs); },
-        [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs + rhs; });
+        rhs, "+",
+        [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
+          return lhs.add(rhs);
+        },
+        [](const IArithmetic &lhs, const IArithmetic &rhs) {
+          return lhs + rhs;
+        });
   }
 
   ArithmeticPtr substractAbstract(const IArithmetic &rhs) const final {
     return executeAbstract(
-        rhs, "-", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.substract(rhs); },
-        [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs - rhs; });
+        rhs, "-",
+        [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
+          return lhs.substract(rhs);
+        },
+        [](const IArithmetic &lhs, const IArithmetic &rhs) {
+          return lhs - rhs;
+        });
   }
 
   ArithmeticPtr multiplyAbstract(const IArithmetic &rhs) const final {
     return executeAbstract(
-        rhs, "*", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.multiply(rhs); },
-        [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs * rhs; });
+        rhs, "*",
+        [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
+          return lhs.multiply(rhs);
+        },
+        [](const IArithmetic &lhs, const IArithmetic &rhs) {
+          return lhs * rhs;
+        });
   }
 
   ArithmeticPtr divideAbstract(const IArithmetic &rhs) const final {
     return executeAbstract(
-        rhs, "/", [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) { return lhs.divide(rhs); },
-        [](const IArithmetic &lhs, const IArithmetic &rhs) { return lhs / rhs; });
+        rhs, "/",
+        [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
+          return lhs.divide(rhs);
+        },
+        [](const IArithmetic &lhs, const IArithmetic &rhs) {
+          return lhs / rhs;
+        });
   }
 
   ArithmeticPtr convertAbstract() const final {

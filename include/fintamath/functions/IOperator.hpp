@@ -54,7 +54,8 @@ public:
   }
 
   IOperatorCRTP(IOperator::Priority priority, bool isAssociative)
-      : priority(priority), isAssociativeOper(isAssociative) {
+      : priority(priority),
+        isAssociativeOper(isAssociative) {
   }
 
   IOperator::Priority getOperatorPriority() const final {

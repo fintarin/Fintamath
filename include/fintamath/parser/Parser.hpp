@@ -30,7 +30,7 @@ public:
   template <typename Type, typename BasePtr, typename... Args>
   static void add(Map<BasePtr, Args...> &parserMap) {
     Function<BasePtr, Args...> constructor = [](const Args &...args) {
-      return std::make_unique<Type>(args...); //
+      return std::make_unique<Type>(args...);
     };
 
     std::string name = std::make_unique<Type>()->toString();

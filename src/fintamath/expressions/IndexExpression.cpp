@@ -16,7 +16,8 @@ namespace fintamath {
 const Index INDEX;
 
 IndexExpression::IndexExpression(const IndexExpression &rhs)
-    : lhsInfo(rhs.lhsInfo->clone()), rhsInfo(rhs.rhsInfo->clone()) {
+    : lhsInfo(rhs.lhsInfo->clone()),
+      rhsInfo(rhs.rhsInfo->clone()) {
 }
 
 IndexExpression &IndexExpression::operator=(const IndexExpression &rhs) {
@@ -29,11 +30,13 @@ IndexExpression &IndexExpression::operator=(const IndexExpression &rhs) {
 }
 
 IndexExpression::IndexExpression(const IMathObject &lhs, const IMathObject &rhs)
-    : lhsInfo(lhs.clone()), rhsInfo(rhs.clone()) {
+    : lhsInfo(lhs.clone()),
+      rhsInfo(rhs.clone()) {
 }
 
 IndexExpression::IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
-    : lhsInfo(std::move(lhs)), rhsInfo(std::move(rhs)) {
+    : lhsInfo(std::move(lhs)),
+      rhsInfo(std::move(rhs)) {
 }
 
 std::string IndexExpression::toString() const {

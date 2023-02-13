@@ -2,6 +2,9 @@ BasedOnStyle: LLVM
 ColumnLimit: 120
 AlwaysBreakTemplateDeclarations: true
 AllowShortFunctionsOnASingleLine: false
+AllowShortLambdasOnASingleLine: false
+AllowAllParametersOfDeclarationOnNextLine: true
+PackConstructorInitializers: CurrentLine
 SeparateDefinitionBlocks: Always
 NamespaceIndentation: None
 FixNamespaceComments: false

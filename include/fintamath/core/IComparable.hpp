@@ -79,14 +79,24 @@ protected:
 
   bool lessAbstract(const IComparable &rhs) const final {
     return executeAbstract(
-        rhs, "<", [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) { return lhs.less(rhs); },
-        [](const IComparable &lhs, const IComparable &rhs) { return lhs < rhs; });
+        rhs, "<",
+        [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
+          return lhs.less(rhs);
+        },
+        [](const IComparable &lhs, const IComparable &rhs) {
+          return lhs < rhs;
+        });
   }
 
   bool moreAbstract(const IComparable &rhs) const final {
     return executeAbstract(
-        rhs, ">", [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) { return lhs.more(rhs); },
-        [](const IComparable &lhs, const IComparable &rhs) { return lhs > rhs; });
+        rhs, ">",
+        [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
+          return lhs.more(rhs);
+        },
+        [](const IComparable &lhs, const IComparable &rhs) {
+          return lhs > rhs;
+        });
   }
 
 private:

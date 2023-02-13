@@ -103,7 +103,9 @@ namespace {
 struct ParserConfig {
   ParserConfig() {
     IMathObject::registerType<ILiteral>(&ILiteral::parse);
-    IMathObject::registerType<IFunction>([](const std::string &str) { return IFunction::parse(str); });
+    IMathObject::registerType<IFunction>([](const std::string &str) {
+      return IFunction::parse(str);
+    });
     IMathObject::registerType<IArithmetic>(&IArithmetic::parse);
 
     IArithmetic::registerType<IComparable>(&IComparable::parse);

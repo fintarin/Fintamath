@@ -71,8 +71,9 @@ std::string Tokenizer::tokensToString(const TokenVector &tokens) {
 void Tokenizer::registerToken(const Token &token) {
   // TODO: use more efficient algorithm to emplace
   registeredTokens.emplace_back(token);
-  std::sort(registeredTokens.begin(), registeredTokens.end(),
-            [](const Token &a, const Token &b) { return a.length() > b.length(); });
+  std::sort(registeredTokens.begin(), registeredTokens.end(), [](const Token &a, const Token &b) {
+    return a.length() > b.length();
+  });
 }
 
 bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit) {
