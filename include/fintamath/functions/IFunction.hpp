@@ -9,6 +9,7 @@
 namespace fintamath {
 
 using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;
+using ArgumentsPtrVector = std::vector<MathObjectPtr>;
 using ArgumentsTypesVector = std::vector<std::reference_wrapper<const std::type_info>>;
 
 class IFunction;

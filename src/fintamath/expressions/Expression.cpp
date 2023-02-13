@@ -299,11 +299,11 @@ const MathObjectPtr &Expression::getInfo() const {
   return info;
 }
 
-Expression::ChildrenVector &Expression::getChildren() {
+ArgumentsPtrVector &Expression::getChildren() {
   return children;
 }
 
-const Expression::ChildrenVector &Expression::getChildren() const {
+const ArgumentsPtrVector &Expression::getChildren() const {
   return children;
 }
 
@@ -518,8 +518,8 @@ const IFunction *Expression::getFunction() const {
   return nullptr;
 }
 
-Expression::ChildrenVector Expression::copy(const ChildrenVector &rhs) {
-  ChildrenVector result;
+ArgumentsPtrVector Expression::copy(const ArgumentsPtrVector &rhs) {
+  ArgumentsPtrVector result;
 
   for (const auto &value : rhs) {
     result.emplace_back(value->clone());
@@ -528,8 +528,8 @@ Expression::ChildrenVector Expression::copy(const ChildrenVector &rhs) {
   return result;
 }
 
-Expression::ChildrenVector Expression::getArgs(const TokenVector &tokens) {
-  ChildrenVector args;
+ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
+  ArgumentsPtrVector args;
 
   for (size_t pos = 0; pos < tokens.size(); pos++) {
     bool isBracketsSkip = false;

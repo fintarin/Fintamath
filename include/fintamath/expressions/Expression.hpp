@@ -10,9 +10,6 @@ namespace fintamath {
 
 class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
 public:
-  using ChildrenVector = std::vector<MathObjectPtr>;
-
-public:
   Expression();
 
   Expression(const Expression &rhs);
@@ -50,10 +47,10 @@ public:
   const MathObjectPtr &getInfo() const;
 
   // TODO: implement iterator & remove this
-  Expression::ChildrenVector &getChildren();
+  ArgumentsPtrVector &getChildren();
 
   // TODO: implement iterator & remove this
-  const Expression::ChildrenVector &getChildren() const;
+  const ArgumentsPtrVector &getChildren() const;
 
   const IFunction *getFunction() const override;
 
@@ -104,7 +101,7 @@ protected:
 private:
   explicit Expression(const TokenVector &tokens);
 
-  static ChildrenVector copy(const ChildrenVector &rhs);
+  static ArgumentsPtrVector copy(const ArgumentsPtrVector &rhs);
 
   bool parsePrefixOperator(const TokenVector &tokens);
 
@@ -118,7 +115,7 @@ private:
 
   static std::map<size_t, MathObjectPtr> findBinaryOperators(const TokenVector &tokens);
 
-  ChildrenVector getArgs(const TokenVector &tokens);
+  ArgumentsPtrVector getArgs(const TokenVector &tokens);
 
   static bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
 
@@ -149,7 +146,7 @@ private:
 private:
   MathObjectPtr info;
 
-  ChildrenVector children;
+  ArgumentsPtrVector children; // TODO: remove this and implement GeneralFunctionExpression
 
   static Parser::Map<ExpressionPtr, ArgumentsVector> expressionBuildersMap;
 };
