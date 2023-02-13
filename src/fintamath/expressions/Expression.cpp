@@ -673,20 +673,6 @@ Expression &Expression::negate() {
   return *this;
 }
 
-void Expression::simplifyUnaryPlus() {
-  if (!is<UnaryPlus>(info)) {
-    return;
-  }
-
-  auto &child = children.front();
-  if (auto *expr = cast<Expression>(child.get())) {
-    *this = std::move(*expr);
-  } else {
-    info = std::move(child);
-    children.clear();
-  }
-}
-
 void Expression::simplifyNeg() {
   if (!is<Neg>(info)) {
     return;
@@ -902,7 +888,6 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   expr.simplifyEquiv();
   expr.simplifyNequiv();
 
-  expr.simplifyUnaryPlus();
   expr.simplifyNeg();
   expr.simplifyPow();
 

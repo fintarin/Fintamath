@@ -138,8 +138,6 @@ private:
 
   void simplifyPow(); // TODO: move to PowExpression
 
-  void simplifyUnaryPlus(); // TODO: move to other type of Expression
-
   void simplifyNeg(); // TODO move to NegExpression
 
   void simplifyNot(); // TODO move to LogicExpression

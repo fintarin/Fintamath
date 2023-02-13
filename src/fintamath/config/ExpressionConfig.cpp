@@ -9,6 +9,7 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
@@ -56,6 +57,10 @@ struct ExpressionConfig {
       expr->addElement({args.front().get().clone()});
       expr->addElement({args.back().get().clone(), true});
       return expr;
+    });
+
+    Expression::registerExpressionBuilder<UnaryPlus>([](const ArgumentsVector &args) {
+      return std::make_unique<Expression>(args.front().get());
     });
 
     Expression::registerExpressionBuilder<Eqv>([](const ArgumentsVector &args) {
