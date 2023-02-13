@@ -499,25 +499,8 @@ MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, const A
 }
 
 ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-  if (is<Add>(func) || is<Sub>(func)) {
-    return buildAddExpression(func, args);
-  }
-
-  if (is<Mul>(func) || is<Div>(func)) {
-    return buildMulExpression(func, args);
-  }
-
-  if (const auto *oper = cast<IOperator>(&func);
-      oper && oper->getOperatorPriority() == IOperator::Priority::Comparison) {
-    return buildEqvExpression(func, args);
-  }
-
-  if (is<Derivative>(func)) {
-    return buildDerivateExpression(args);
-  }
-
-  if (is<Index>(func)) {
-    return buildIndexExpression(args);
+  if (auto expr = Parser::parse(expressionBuildersMap, func.toString(), args)) {
+    return expr;
   }
 
   auto funcExpr = std::make_unique<Expression>();
@@ -536,32 +519,6 @@ const IFunction *Expression::getFunction() const {
   }
 
   return nullptr;
-}
-
-ExpressionPtr Expression::buildAddExpression(const IFunction &func, const ArgumentsVector &args) {
-  auto addExpr = std::make_unique<SumExpression>();
-  addExpr->addElement({args.front().get().clone()});
-  addExpr->addElement({args.back().get().clone(), is<Sub>(func)});
-  return addExpr;
-}
-
-ExpressionPtr Expression::buildMulExpression(const IFunction &func, const ArgumentsVector &args) {
-  auto mulExpr = std::make_unique<MulExpression>();
-  mulExpr->addElement({args.front().get().clone()});
-  mulExpr->addElement({args.back().get().clone(), is<Div>(func)});
-  return mulExpr;
-}
-
-ExpressionPtr Expression::buildEqvExpression(const IFunction &func, const ArgumentsVector &args) {
-  return std::make_unique<EqvExpression>(func, args.front().get(), args.back().get());
-}
-
-ExpressionPtr Expression::buildDerivateExpression(const ArgumentsVector &args) {
-  return std::make_unique<DerivativeExpression>(args.front().get());
-}
-
-ExpressionPtr Expression::buildIndexExpression(const ArgumentsVector &args) {
-  return std::make_unique<IndexExpression>(args.front().get(), args.back().get());
 }
 
 Expression::ChildrenVector Expression::copy(const ChildrenVector &rhs) {

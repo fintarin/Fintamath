@@ -55,10 +55,6 @@ public:
   // TODO: implement iterator & remove this
   const Expression::ChildrenVector &getChildren() const;
 
-  static MathObjectPtr buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
-
-  static ExpressionPtr buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
-
   const IFunction *getFunction() const override;
 
   void setPrecision(uint8_t precision) override;
@@ -75,6 +71,25 @@ public:
   // TODO: make this private
   void setPrecisionRec(uint8_t precision);
 
+  static MathObjectPtr buildFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+
+  static ExpressionPtr buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+
+  template <typename Function, typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
+  static void registerExpressionBuilder(Parser::Function<ExpressionPtr, ArgumentsVector> &&builder) {
+    Parser::Function<ExpressionPtr, ArgumentsVector> constructor =
+        [builder = std::move(builder)](const ArgumentsVector &args) {
+          static const IFunction::Type type = Function().getFunctionType();
+
+          if (type == IFunction::Type::Any || static_cast<uint16_t>(type) == args.size()) {
+            return builder(args);
+          }
+
+          return ExpressionPtr();
+        };
+    Parser::add<Function>(expressionBuildersMap, constructor);
+  }
+
 protected:
   Expression &add(const Expression &rhs) override;
 
@@ -88,16 +103,6 @@ protected:
 
 private:
   explicit Expression(const TokenVector &tokens);
-
-  static ExpressionPtr buildAddExpression(const IFunction &func, const ArgumentsVector &args);
-
-  static ExpressionPtr buildMulExpression(const IFunction &func, const ArgumentsVector &args);
-
-  static ExpressionPtr buildEqvExpression(const IFunction &func, const ArgumentsVector &args);
-
-  static ExpressionPtr buildDerivateExpression(const ArgumentsVector &args);
-
-  static ExpressionPtr buildIndexExpression(const ArgumentsVector &args);
 
   static ChildrenVector copy(const ChildrenVector &rhs);
 
@@ -153,6 +158,8 @@ private:
   MathObjectPtr info;
 
   ChildrenVector children;
+
+  static Parser::Map<ExpressionPtr, ArgumentsVector> expressionBuildersMap;
 };
 
 }
