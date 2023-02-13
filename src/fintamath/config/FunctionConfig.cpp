@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-const std::function<MathObjectPtr(const IFunction &function, const ArgumentsVector &args)>
+const std::function<MathObjectPtr(const IFunction &function, ArgumentsPtrVector &&args)>
     IFunction::buildFunctionExpression = &Expression::buildFunctionExpression;
 
 }

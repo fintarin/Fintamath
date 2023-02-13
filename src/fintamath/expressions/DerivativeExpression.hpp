@@ -35,6 +35,8 @@ public:
   // TODO: remove this
   void validate() const override;
 
+  void compress() override;
+
 private:
   MathObjectPtr info;
 };

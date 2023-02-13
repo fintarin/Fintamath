@@ -337,8 +337,8 @@ std::string Expression::toString(uint8_t precision) const {
 
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
   if (auto oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
-    auto rhsExpr = Expression(TokenVector(tokens.begin() + 1, tokens.end()));
-    auto funcExpr = buildRawFunctionExpression(*oper, {rhsExpr});
+    auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + 1, tokens.end())));
+    auto funcExpr = buildRawFunctionExpression(*oper, IFunction::buildArgsPtrVect(std::move(rhsExpr)));
 
     if (auto *expr = cast<Expression>(funcExpr.get())) {
       *this = std::move(*expr);
@@ -367,8 +367,8 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
       factor->setOrder(order);
     }
 
-    auto rhsExpr = Expression(TokenVector(tokens.begin(), tokens.end() - order));
-    auto funcExpr = buildRawFunctionExpression(*oper, {rhsExpr});
+    auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.end() - order)));
+    auto funcExpr = buildRawFunctionExpression(*oper, IFunction::buildArgsPtrVect(std::move(rhsExpr)));
 
     if (auto *expr = cast<Expression>(funcExpr.get())) {
       *this = std::move(*expr);
@@ -412,9 +412,10 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
     return false;
   }
 
-  auto lhsExpr = Expression(TokenVector(tokens.begin(), tokens.begin() + operPos));
-  auto rhsExpr = Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end()));
-  auto funcExpr = buildRawFunctionExpression(cast<IFunction>(*foundOperIt->second), {lhsExpr, rhsExpr});
+  auto lhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.begin() + operPos)));
+  auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end())));
+  auto funcExpr = buildRawFunctionExpression(cast<IFunction>(*foundOperIt->second),
+                                             IFunction::buildArgsPtrVect(std::move(lhsExpr), std::move(rhsExpr)));
 
   if (auto *expr = cast<Expression>(funcExpr.get())) {
     *this = std::move(*expr);
@@ -488,22 +489,18 @@ std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVecto
   return operators;
 }
 
-MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-  return buildRawFunctionExpression(func, args)->simplify();
+MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
+  return buildRawFunctionExpression(func, std::move(args))->simplify();
 }
 
-ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
-  if (auto expr = Parser::parse(expressionBuildersMap, func.toString(), args)) {
+ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
+  if (auto expr = Parser::parse(expressionBuildersMap, func.toString(), std::move(args))) {
     return expr;
   }
 
   auto funcExpr = std::make_unique<Expression>();
   funcExpr->info = func.clone();
-
-  for (const auto &arg : args) {
-    funcExpr->children.push_back(arg.get().clone());
-  }
-
+  funcExpr->children = std::move(args);
   return funcExpr;
 }
 
@@ -977,7 +974,7 @@ void Expression::simplifyPow() {
 
     MulExpression mul;
     for (size_t i = 0; i < rhs; i++) {
-      mul.addElement(lhs);
+      mul.addElement(MulElement(lhs));
     }
 
     info = mul.simplify();

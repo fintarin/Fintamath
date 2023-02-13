@@ -60,14 +60,13 @@ struct MulExpression::ObjectPow {
   }
 
   void simplifyPow() {
-    pow = SumExpression(*pow.simplify());
+    auto powSimpl = pow.simplify();
+    pow = SumExpression();
+    pow.addElement({std::move(powSimpl)});
   }
 };
 
 //-----------------------------------------------------------------------------------------------------//
-
-MulElement::MulElement(const MathObjectPtr &info, bool inverted) : PolynomElement(info, inverted) {
-}
 
 MulElement::MulElement(MathObjectPtr &&info, bool inverted) : PolynomElement(info, inverted) {
 }
@@ -76,7 +75,8 @@ MathObjectPtr MulElement::toMathObject(bool isPrecise) const {
   auto copy = *this;
 
   if (copy.inverted) {
-    copy.info = Expression::buildRawFunctionExpression(Pow(), {*info, NEG_ONE});
+    copy.info =
+        Expression::buildRawFunctionExpression(Pow(), IFunction::buildArgsPtrVect(info->clone(), NEG_ONE.clone()));
     copy.simplify(isPrecise);
     return copy.info->clone();
   }

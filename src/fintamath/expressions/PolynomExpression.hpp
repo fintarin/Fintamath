@@ -52,25 +52,25 @@ public:
     return polynomVect;
   }
 
-  void addElement(const Element &elem) {
+  void addElement(Element &&elem) {
     PolynomVector elemPolynom;
 
-    if (const auto *expr = cast<Derived>(elem.info.get())) {
-      elemPolynom = expr->polynomVect;
-    } else if (const auto *expr = cast<Expression>(elem.info.get())) {
+    if (auto *expr = cast<Derived>(elem.info.get())) {
+      elemPolynom = std::move(expr->polynomVect);
+    } else if (auto *expr = cast<Expression>(elem.info.get())) {
       if (expr->getChildren().empty()) {
-        addElement(Element(expr->getInfo(), elem.inverted));
+        addElement(Element(std::move(expr->getInfo()), elem.inverted));
         return;
       }
     }
 
     if (elemPolynom.empty()) {
-      polynomVect.emplace_back(elem);
+      polynomVect.emplace_back(std::move(elem));
       return;
     }
 
-    for (const auto &child : elemPolynom) {
-      polynomVect.emplace_back(child);
+    for (auto &child : elemPolynom) {
+      polynomVect.emplace_back(std::move(child));
 
       if (elem.inverted) {
         polynomVect.back().inverted = !polynomVect.back().inverted;
@@ -143,8 +143,8 @@ protected:
   void compress() final {
     Derived compressedExpr;
 
-    for (const auto &child : polynomVect) {
-      compressedExpr.addElement(child);
+    for (auto &child : polynomVect) {
+      compressedExpr.addElement({std::move(child)});
     }
 
     polynomVect = std::move(compressedExpr.polynomVect);

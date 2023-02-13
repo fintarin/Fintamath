@@ -13,7 +13,7 @@ class EqvExpression : public IExpressionCRTP<EqvExpression> {
 public:
   EqvExpression() = default;
 
-  EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs);
+  EqvExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
   EqvExpression(const EqvExpression &rhs);
 

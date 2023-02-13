@@ -42,7 +42,9 @@ struct SumExpression::MulObject {
   }
 
   void simplifyCounter() {
-    counter = SumExpression(*counter.simplify());
+    auto counterSimpl = counter.simplify();
+    counter = SumExpression();
+    counter.addElement({std::move(counterSimpl)});
   }
 
   MathObjectPtr getCounterValue() const {
@@ -54,9 +56,6 @@ struct SumExpression::MulObject {
 
 //-----------------------------------------------------------------------------------------------------//
 
-SumElement::SumElement(const MathObjectPtr &info, bool inverted) : PolynomElement(info, inverted) {
-}
-
 SumElement::SumElement(MathObjectPtr &&info, bool inverted) : PolynomElement(info, inverted) {
 }
 
@@ -64,7 +63,7 @@ MathObjectPtr SumElement::toMathObject(bool isPrecise) const {
   auto copy = *this;
 
   if (copy.inverted) {
-    copy.info = Expression::buildRawFunctionExpression(Neg(), {*info});
+    copy.info = Expression::buildRawFunctionExpression(Neg(), IFunction::buildArgsPtrVect(info->clone()));
     copy.simplify(isPrecise);
     return copy.info->clone();
   }
@@ -98,15 +97,6 @@ void SumElement::simplify(bool isPrecise) {
 }
 
 //-----------------------------------------------------------------------------------------------------//
-
-SumExpression::SumExpression(const IMathObject &rhs) {
-  if (const auto *rhsPtr = cast<SumExpression>(&rhs)) {
-    *this = *rhsPtr;
-    return;
-  }
-
-  polynomVect.emplace_back(SumElement{rhs.clone(), false});
-}
 
 SumExpression::SumExpression(PolynomVector inPolynomVect) {
   polynomVect = std::move(inPolynomVect);

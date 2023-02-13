@@ -10,8 +10,6 @@ namespace fintamath {
 struct MulElement : public PolynomElement {
   MulElement() = default;
 
-  MulElement(const MathObjectPtr &info, bool inverted = false);
-
   MulElement(MathObjectPtr &&info, bool inverted = false);
 
   MathObjectPtr toMathObject(bool isPrecise) const;

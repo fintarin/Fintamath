@@ -18,19 +18,14 @@
 
 namespace fintamath {
 
-EqvExpression::EqvExpression(const IMathObject &oper, const IMathObject &lhs, const IMathObject &rhs) {
-  if (const auto *operPtr = cast<IOperator>(&oper);
-      !operPtr || operPtr->getOperatorPriority() != IOperator::Priority::Comparison) {
-    throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
-  }
-
+EqvExpression::EqvExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs) {
   if (is<EqvExpression>(lhs) || is<EqvExpression>(rhs)) {
-    throw UndefinedBinaryOpearatorException(oper.toString(), lhs.toString(), rhs.toString());
+    throw UndefinedBinaryOpearatorException(oper.toString(), lhs->toString(), rhs->toString());
   }
 
   this->oper = cast<IOperator>(oper.clone());
-  leftExpr = lhs.clone();
-  rightExpr = rhs.clone();
+  leftExpr = std::move(lhs);
+  rightExpr = std::move(rhs);
 }
 
 EqvExpression::EqvExpression(const EqvExpression &rhs)
@@ -75,8 +70,8 @@ MathObjectPtr EqvExpression::simplify() const {
 
 MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
   SumExpression addExpr;
-  addExpr.addElement({leftExpr});
-  addExpr.addElement({rightExpr, true});
+  addExpr.addElement({leftExpr->clone()});
+  addExpr.addElement({rightExpr->clone(), true});
 
   MathObjectPtr simplExpr = addExpr.simplify(isPrecise);
 
@@ -190,7 +185,8 @@ std::vector<MathObjectPtr> EqvExpression::solvePowEquation(const Variable &x) co
 // TODO: v is unused here
 std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
   auto copyExpr = *this;
-  SumExpression polynom(*leftExpr);
+  SumExpression polynom;
+  polynom.addElement({leftExpr->clone()});
 
   auto maxPowObj = polynom.getPow();
   if (!maxPowObj) {

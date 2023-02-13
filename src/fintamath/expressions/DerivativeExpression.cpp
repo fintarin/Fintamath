@@ -1,6 +1,7 @@
 #include "fintamath/expressions/DerivativeExpression.hpp"
 
 #include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/literals/Boolean.hpp"
@@ -82,6 +83,12 @@ void DerivativeExpression::validate() const {
   }
 
   this->validateArgs(*getFunction(), {*info});
+}
+
+void DerivativeExpression::compress() {
+  if (auto *childExpr = cast<Expression>(info.get()); childExpr && childExpr->getChildren().empty()) {
+    info = std::move(childExpr->getInfo());
+  }
 }
 
 }

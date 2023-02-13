@@ -27,7 +27,7 @@
 
 namespace fintamath {
 
-Parser::Map<ExpressionPtr, const ArgumentsVector &> Expression::expressionBuildersMap;
+Parser::Map<ExpressionPtr, ArgumentsPtrVector &&> Expression::expressionBuildersMap;
 
 }
 
@@ -37,95 +37,110 @@ namespace {
 
 struct ExpressionConfig {
   ExpressionConfig() {
-    Expression::registerExpressionBuilder<Add>([](const ArgumentsVector &args) {
+    Expression::registerExpressionBuilder<Add>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<SumExpression>();
-      expr->addElement({args.front().get().clone()});
-      expr->addElement({args.back().get().clone()});
+      expr->addElement({std::move(args.front())});
+      expr->addElement({std::move(args.back())});
       return expr;
     });
 
-    Expression::registerExpressionBuilder<Sub>([](const ArgumentsVector &args) {
+    Expression::registerExpressionBuilder<Sub>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<SumExpression>();
-      expr->addElement({args.front().get().clone()});
-      expr->addElement({args.back().get().clone(), true});
+      expr->addElement({std::move(args.front())});
+      expr->addElement({std::move(args.back()), true});
       return expr;
     });
 
-    Expression::registerExpressionBuilder<Mul>([](const ArgumentsVector &args) {
+    Expression::registerExpressionBuilder<Mul>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<MulExpression>();
-      expr->addElement({args.front().get().clone()});
-      expr->addElement({args.back().get().clone()});
+      expr->addElement({std::move(args.front())});
+      expr->addElement({std::move(args.back())});
       return expr;
     });
 
-    Expression::registerExpressionBuilder<Div>([](const ArgumentsVector &args) {
+    Expression::registerExpressionBuilder<Div>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<MulExpression>();
-      expr->addElement({args.front().get().clone()});
-      expr->addElement({args.back().get().clone(), true});
+      expr->addElement({std::move(args.front())});
+      expr->addElement({std::move(args.back()), true});
       return expr;
     });
 
-    Expression::registerExpressionBuilder<UnaryPlus>([](const ArgumentsVector &args) {
-      return std::make_unique<Expression>(args.front().get());
+    Expression::registerExpressionBuilder<UnaryPlus>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<Expression>(std::move(args.front()));
     });
 
-    Expression::registerExpressionBuilder<Eqv>([](const ArgumentsVector &args) {
-      return std::make_unique<EqvExpression>(Eqv(), args.front().get(), args.back().get());
+    Expression::registerExpressionBuilder<Eqv>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<EqvExpression>(Eqv(), std::move(args.front()), std::move(args.back()));
     });
 
-    Expression::registerExpressionBuilder<Neqv>([](const ArgumentsVector &args) {
-      return std::make_unique<EqvExpression>(Neqv(), args.front().get(), args.back().get());
+    Expression::registerExpressionBuilder<Neqv>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<EqvExpression>(Neqv(), std::move(args.front()), std::move(args.back()));
     });
 
-    Expression::registerExpressionBuilder<Less>([](const ArgumentsVector &args) {
-      return std::make_unique<EqvExpression>(Less(), args.front().get(), args.back().get());
+    Expression::registerExpressionBuilder<Less>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<EqvExpression>(Less(), std::move(args.front()), std::move(args.back()));
     });
 
-    Expression::registerExpressionBuilder<More>([](const ArgumentsVector &args) {
-      return std::make_unique<EqvExpression>(More(), args.front().get(), args.back().get());
+    Expression::registerExpressionBuilder<More>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<EqvExpression>(More(), std::move(args.front()), std::move(args.back()));
     });
 
-    Expression::registerExpressionBuilder<LessEqv>([](const ArgumentsVector &args) {
-      return std::make_unique<EqvExpression>(LessEqv(), args.front().get(), args.back().get());
+    Expression::registerExpressionBuilder<LessEqv>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<EqvExpression>(LessEqv(), std::move(args.front()), std::move(args.back()));
     });
 
-    Expression::registerExpressionBuilder<MoreEqv>([](const ArgumentsVector &args) {
-      return std::make_unique<EqvExpression>(MoreEqv(), args.front().get(), args.back().get());
+    Expression::registerExpressionBuilder<MoreEqv>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<EqvExpression>(MoreEqv(), std::move(args.front()), std::move(args.back()));
     });
 
-    Expression::registerExpressionBuilder<Derivative>([](const ArgumentsVector &args) {
-      return std::make_unique<DerivativeExpression>(args.front().get());
+    Expression::registerExpressionBuilder<Derivative>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<DerivativeExpression>(std::move(args.front()));
     });
 
-    Expression::registerExpressionBuilder<Index>([](const ArgumentsVector &args) {
-      return std::make_unique<IndexExpression>(args.front().get(), args.back().get());
+    Expression::registerExpressionBuilder<Index>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<IndexExpression>(std::move(args.front()), std::move(args.back()));
     });
 
-    Expression::registerExpressionBuilder<Impl>([](const ArgumentsVector &args) {
-      const IMathObject &lhs = args.front().get();
-      const IMathObject &rhs = args.back().get();
-      const MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), {lhs});
-      return Expression::buildRawFunctionExpression(Or(), {*notLhs, rhs});
+    Expression::registerExpressionBuilder<Impl>([](ArgumentsPtrVector &&args) {
+      MathObjectPtr &lhs = args.front();
+      MathObjectPtr &rhs = args.back();
+
+      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(std::move(lhs)));
+
+      return Expression::buildRawFunctionExpression(Or(),
+                                                    IFunction::buildArgsPtrVect(std::move(notLhs), std::move(rhs)));
     });
 
-    Expression::registerExpressionBuilder<Equiv>([](const ArgumentsVector &args) {
-      const IMathObject &lhs = args.front().get();
-      const IMathObject &rhs = args.back().get();
-      const MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), {lhs});
-      const MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), {rhs});
-      const MathObjectPtr lhsAndRhs = Expression::buildRawFunctionExpression(And(), {lhs, rhs});
-      const MathObjectPtr notLhsAndNotRhs = Expression::buildRawFunctionExpression(And(), {*notLhs, *notRhs});
-      return Expression::buildRawFunctionExpression(Or(), {*lhsAndRhs, *notLhsAndNotRhs});
+    Expression::registerExpressionBuilder<Equiv>([](ArgumentsPtrVector &&args) {
+      MathObjectPtr &lhs = args.front();
+      MathObjectPtr &rhs = args.back();
+
+      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(lhs->clone()));
+      MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(rhs->clone()));
+
+      MathObjectPtr lhsAndRhs = Expression::buildRawFunctionExpression( //
+          And(), IFunction::buildArgsPtrVect(std::move(lhs), std::move(rhs)));
+      MathObjectPtr notLhsAndNotRhs = Expression::buildRawFunctionExpression( //
+          And(), IFunction::buildArgsPtrVect(std::move(notLhs), std::move(notRhs)));
+
+      return Expression::buildRawFunctionExpression(
+          Or(), IFunction::buildArgsPtrVect(std::move(lhsAndRhs), std::move(notLhsAndNotRhs)));
     });
 
-    Expression::registerExpressionBuilder<Nequiv>([](const ArgumentsVector &args) {
-      const IMathObject &lhs = args.front().get();
-      const IMathObject &rhs = args.back().get();
-      const MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), {lhs});
-      const MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), {rhs});
-      const MathObjectPtr notLhsAndRhs = Expression::buildRawFunctionExpression(And(), {*notLhs, rhs});
-      const MathObjectPtr lhsAndNotRhs = Expression::buildRawFunctionExpression(And(), {lhs, *notRhs});
-      return Expression::buildRawFunctionExpression(Or(), {*notLhsAndRhs, *lhsAndNotRhs});
+    Expression::registerExpressionBuilder<Nequiv>([](ArgumentsPtrVector &&args) {
+      MathObjectPtr &lhs = args.front();
+      MathObjectPtr &rhs = args.back();
+
+      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(lhs->clone()));
+      MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(rhs->clone()));
+
+      MathObjectPtr notLhsAndRhs = Expression::buildRawFunctionExpression( //
+          And(), IFunction::buildArgsPtrVect(std::move(notLhs), std::move(rhs)));
+      MathObjectPtr lhsAndNotRhs = Expression::buildRawFunctionExpression( //
+          And(), IFunction::buildArgsPtrVect(std::move(lhs), std::move(notRhs)));
+
+      return Expression::buildRawFunctionExpression(
+          Or(), IFunction::buildArgsPtrVect(std::move(notLhsAndRhs), std::move(lhsAndNotRhs)));
     });
   }
 };

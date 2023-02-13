@@ -10,8 +10,6 @@ namespace fintamath {
 struct SumElement : public PolynomElement {
   SumElement() = default;
 
-  SumElement(const MathObjectPtr &info, bool inverted = false);
-
   SumElement(MathObjectPtr &&info, bool inverted = false);
 
   MathObjectPtr toMathObject(bool isPrecise) const;
@@ -24,8 +22,6 @@ struct SumElement : public PolynomElement {
 class SumExpression : public PolynomExpressionCRTP<SumExpression, SumElement> {
 public:
   SumExpression() = default;
-
-  SumExpression(const IMathObject &rhs);
 
   explicit SumExpression(PolynomVector inPolynomVect);
 
