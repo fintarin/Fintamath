@@ -48,7 +48,7 @@ public:
   }
 
   static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-    Parser::Comparator<FunctionPtr> comp = [type](const FunctionPtr &func) {
+    Parser::Comparator<const FunctionPtr &> comp = [type](const FunctionPtr &func) {
       return type == IFunction::Type::Any || func->getFunctionType() == type;
     };
     return Parser::parse<FunctionPtr>(parserMap, comp, parsedStr);

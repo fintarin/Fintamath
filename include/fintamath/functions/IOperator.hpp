@@ -37,7 +37,7 @@ public:
   }
 
   static OperatorPtr parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
-    Parser::Comparator<OperatorPtr> comp = [priority](const OperatorPtr &oper) {
+    Parser::Comparator<const OperatorPtr &> comp = [priority](const OperatorPtr &oper) {
       return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
     };
     return Parser::parse<OperatorPtr>(parserMap, comp, parsedStr);

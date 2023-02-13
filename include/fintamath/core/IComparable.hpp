@@ -20,7 +20,7 @@ public:
   friend bool operator>=(const IComparable &lhs, const IComparable &rhs);
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
-  static void registerType(Parser::Function<ComparablePtr, std::string> &&parserFunc) {
+  static void registerType(Parser::Function<ComparablePtr, const std::string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
@@ -34,7 +34,7 @@ protected:
   virtual bool moreAbstract(const IComparable &rhs) const = 0;
 
 private:
-  static Parser::Vector<ComparablePtr, std::string> parserVector;
+  static Parser::Vector<ComparablePtr, const std::string &> parserVector;
 };
 
 inline bool operator<(const IComparable &lhs, const IComparable &rhs) {

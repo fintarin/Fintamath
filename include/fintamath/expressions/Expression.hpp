@@ -72,7 +72,7 @@ public:
 
   template <typename Function, typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
   static void registerExpressionBuilder(Parser::Function<ExpressionPtr, ArgumentsVector> &&builder) {
-    Parser::Function<ExpressionPtr, ArgumentsVector> constructor =
+    Parser::Function<ExpressionPtr, const ArgumentsVector &> constructor =
         [builder = std::move(builder)](const ArgumentsVector &args) {
           static const IFunction::Type type = Function().getFunctionType();
 
@@ -146,7 +146,7 @@ private:
 
   ArgumentsPtrVector children; // TODO: remove this and implement GeneralFunctionExpression
 
-  static Parser::Map<ExpressionPtr, ArgumentsVector> expressionBuildersMap;
+  static Parser::Map<ExpressionPtr, const ArgumentsVector &> expressionBuildersMap;
 };
 
 }

@@ -27,7 +27,7 @@
 
 namespace fintamath {
 
-Parser::Map<ExpressionPtr, ArgumentsVector> Expression::expressionBuildersMap;
+Parser::Map<ExpressionPtr, const ArgumentsVector &> Expression::expressionBuildersMap;
 
 }
 

@@ -18,7 +18,7 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
-  static void registerType(Parser::Function<LiteralPtr, std::string> &&parserFunc) {
+  static void registerType(Parser::Function<LiteralPtr, const std::string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
@@ -27,7 +27,7 @@ public:
   }
 
 private:
-  static Parser::Vector<LiteralPtr, std::string> parserVector;
+  static Parser::Vector<LiteralPtr, const std::string &> parserVector;
 };
 
 template <typename Derived>

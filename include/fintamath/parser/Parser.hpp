@@ -16,10 +16,10 @@ namespace fintamath {
 class Parser {
 public:
   template <typename Return, typename... Args>
-  using Function = std::function<Return(const Args &...)>;
+  using Function = std::function<Return(Args...)>;
 
   template <typename... Args>
-  using Comparator = std::function<bool(const Args &...)>;
+  using Comparator = std::function<bool(Args...)>;
 
   template <typename Return, typename... Args>
   using Map = std::multimap<std::string, Function<Return, Args...>>;
@@ -66,7 +66,8 @@ public:
   }
 
   template <typename Return, typename... Args>
-  static Return parse(const Map<Return, Args...> &parserMap, const std::string &parsedStr, const Args &...args) {
+  static Return parse(const Map<Return, const Args &...> &parserMap, const std::string &parsedStr,
+                      const Args &...args) {
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
@@ -78,8 +79,21 @@ public:
     return nullptr;
   }
 
+  template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
+  static Return parse(const Map<Return, Args &&...> &parserMap, const std::string &parsedStr, Args &&...args) {
+    const auto &valuePairs = parserMap.equal_range(parsedStr);
+
+    for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
+      if (Return value = pair->second(std::move(args)...)) {
+        return value;
+      }
+    }
+
+    return nullptr;
+  }
+
   template <typename Return, typename... Args>
-  static Return parse(const Map<Return, Args...> &parserMap, const Comparator<Return> &comp,
+  static Return parse(const Map<Return, const Args &...> &parserMap, const Comparator<const Return &> &comp,
                       const std::string &parsedStr, const Args &...args) {
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
@@ -92,10 +106,35 @@ public:
     return nullptr;
   }
 
+  template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
+  static Return parse(const Map<Return, Args &&...> &parserMap, const Comparator<const Return &> &comp,
+                      const std::string &parsedStr, Args &&...args) {
+    const auto &valuePairs = parserMap.equal_range(parsedStr);
+
+    for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
+      if (Return value = pair->second(std::move(args)...); value && comp(value)) {
+        return value;
+      }
+    }
+
+    return nullptr;
+  }
+
   template <typename Return, typename... Args>
-  static Return parse(const Vector<Return, Args...> &parserVect, const Args &...args) {
+  static Return parse(const Vector<Return, const Args &...> &parserVect, const Args &...args) {
     for (const auto &constructor : parserVect) {
       if (Return value = constructor(args...)) {
+        return value;
+      }
+    }
+
+    return nullptr;
+  }
+
+  template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
+  static Return parse(const Vector<Return, Args &&...> &parserVect, Args &&...args) {
+    for (const auto &constructor : parserVect) {
+      if (Return value = constructor(std::move(args)...)) {
         return value;
       }
     }

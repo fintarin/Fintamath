@@ -27,7 +27,7 @@ protected:
   virtual ModularPtr modAbstract(const IModular &rhs) const = 0;
 
 private:
-  static Parser::Vector<ModularPtr, std::string> parserVector;
+  static Parser::Vector<ModularPtr, const std::string &> parserVector;
 };
 
 inline ModularPtr operator%(const IModular &lhs, const IModular &rhs) {
