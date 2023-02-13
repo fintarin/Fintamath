@@ -17,6 +17,12 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
+#include "fintamath/functions/logic/And.hpp"
+#include "fintamath/functions/logic/Equiv.hpp"
+#include "fintamath/functions/logic/Impl.hpp"
+#include "fintamath/functions/logic/Nequiv.hpp"
+#include "fintamath/functions/logic/Not.hpp"
+#include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Index.hpp"
 
 namespace fintamath {
@@ -93,6 +99,33 @@ struct ExpressionConfig {
 
     Expression::registerExpressionBuilder<Index>([](const ArgumentsVector &args) {
       return std::make_unique<IndexExpression>(args.front().get(), args.back().get());
+    });
+
+    Expression::registerExpressionBuilder<Impl>([](const ArgumentsVector &args) {
+      const IMathObject &lhs = args.front().get();
+      const IMathObject &rhs = args.back().get();
+      const MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), {lhs});
+      return Expression::buildRawFunctionExpression(Or(), {*notLhs, rhs});
+    });
+
+    Expression::registerExpressionBuilder<Equiv>([](const ArgumentsVector &args) {
+      const IMathObject &lhs = args.front().get();
+      const IMathObject &rhs = args.back().get();
+      const MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), {lhs});
+      const MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), {rhs});
+      const MathObjectPtr lhsAndRhs = Expression::buildRawFunctionExpression(And(), {lhs, rhs});
+      const MathObjectPtr notLhsAndNotRhs = Expression::buildRawFunctionExpression(And(), {*notLhs, *notRhs});
+      return Expression::buildRawFunctionExpression(Or(), {*lhsAndRhs, *notLhsAndNotRhs});
+    });
+
+    Expression::registerExpressionBuilder<Nequiv>([](const ArgumentsVector &args) {
+      const IMathObject &lhs = args.front().get();
+      const IMathObject &rhs = args.back().get();
+      const MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), {lhs});
+      const MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), {rhs});
+      const MathObjectPtr notLhsAndRhs = Expression::buildRawFunctionExpression(And(), {*notLhs, rhs});
+      const MathObjectPtr lhsAndNotRhs = Expression::buildRawFunctionExpression(And(), {lhs, *notRhs});
+      return Expression::buildRawFunctionExpression(Or(), {*notLhsAndRhs, *lhsAndNotRhs});
     });
   }
 };

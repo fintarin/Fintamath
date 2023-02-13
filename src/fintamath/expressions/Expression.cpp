@@ -27,12 +27,9 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
-#include "fintamath/functions/logic/And.hpp"    // TODO: remove this include after LogicException is implemented
-#include "fintamath/functions/logic/Equiv.hpp"  // TODO: remove this include after LogicException is implemented
-#include "fintamath/functions/logic/Impl.hpp"   // TODO: remove this include after LogicException is implemented
-#include "fintamath/functions/logic/Nequiv.hpp" // TODO: remove this include after LogicException is implemented
-#include "fintamath/functions/logic/Not.hpp"    // TODO: remove this include after LogicException is implemented
-#include "fintamath/functions/logic/Or.hpp"     // TODO: remove this include after LogicException is implemented
+#include "fintamath/functions/logic/And.hpp" // TODO: remove this include after LogicException is implemented
+#include "fintamath/functions/logic/Not.hpp" // TODO: remove this include after LogicException is implemented
+#include "fintamath/functions/logic/Or.hpp"  // TODO: remove this include after LogicException is implemented
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -783,39 +780,6 @@ void Expression::simplifyOr() {
   }
 }
 
-void Expression::simplifyImpl() {
-  if (!is<Impl>(info)) {
-    return;
-  }
-
-  const auto &lhs = *children.front();
-  const auto &rhs = *children.back();
-
-  *this = orL(notL(lhs), rhs);
-}
-
-void Expression::simplifyEquiv() {
-  if (!is<Equiv>(info)) {
-    return;
-  }
-
-  const auto &lhs = *children.front();
-  const auto &rhs = *children.back();
-
-  *this = orL(andL(lhs, rhs), andL(notL(lhs), notL(rhs)));
-}
-
-void Expression::simplifyNequiv() {
-  if (!is<Nequiv>(info)) {
-    return;
-  }
-
-  const auto &lhs = *children.front();
-  const auto &rhs = *children.back();
-
-  *this = orL(andL(notL(lhs), rhs), andL(lhs, notL(rhs)));
-}
-
 void Expression::validate() const {
   const IFunction *func = getFunction();
 
@@ -884,9 +848,6 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   expr.simplifyNot();
   expr.simplifyAnd();
   expr.simplifyOr();
-  expr.simplifyImpl();
-  expr.simplifyEquiv();
-  expr.simplifyNequiv();
 
   expr.simplifyNeg();
   expr.simplifyPow();

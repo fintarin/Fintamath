@@ -146,12 +146,6 @@ private:
 
   void simplifyOr(); // TODO move to LogicExpression
 
-  void simplifyImpl(); // TODO move to LogicExpression
-
-  void simplifyEquiv(); // TODO move to LogicExpression
-
-  void simplifyNequiv(); // TODO move to LogicExpression
-
 private:
   MathObjectPtr info;
 
