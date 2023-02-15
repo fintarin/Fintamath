@@ -40,6 +40,7 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/other/Angle.hpp"
 #include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
@@ -181,6 +182,7 @@ struct ParserConfig {
     IOperator::registerType<Equiv>();
     IOperator::registerType<Nequiv>();
     IOperator::registerType<Index>();
+    IOperator::registerType<Angle>();
 
     IExpression::registerType<Expression>();
   }

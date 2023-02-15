@@ -37,6 +37,7 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/other/Angle.hpp"
 #include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
@@ -244,6 +245,7 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(is<Equiv>(IOperator::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IOperator::parse("!<->")));
   EXPECT_TRUE(is<Index>(IOperator::parse("_")));
+  EXPECT_TRUE(is<Angle>(IOperator::parse("°")));
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
