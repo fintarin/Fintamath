@@ -126,6 +126,10 @@ protected:
     return call(argsVect);
   }
 
+  virtual bool equals(const Derived &rhs) const {
+    return getFunctionType() == rhs.getFunctionType() && toString() == rhs.toString();
+  }
+
 private:
   template <size_t i, typename Head, typename... Tail>
   void getArgsTypes(ArgumentsTypesVector &outArgsTypes) const {

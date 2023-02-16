@@ -48,3 +48,9 @@ TEST(FunctionTests, callTests) {
   EXPECT_THROW((*f)(a, a, a), InvalidInputFunctionException);
   EXPECT_THROW((*f)(a, a, a, a, a, a, a), InvalidInputFunctionException);
 }
+
+TEST(FunctionTests, equalTests) {
+  EXPECT_EQ(Add(), Add());
+  EXPECT_NE(Add(), Sub());
+  EXPECT_NE(Add(), UnaryPlus());
+}
