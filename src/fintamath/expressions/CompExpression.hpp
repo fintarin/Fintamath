@@ -9,23 +9,23 @@
 
 namespace fintamath {
 
-class EqvExpression : public IExpressionCRTP<EqvExpression> {
+class CompExpression : public IExpressionCRTP<CompExpression> {
 public:
-  EqvExpression() = default;
+  CompExpression() = default;
 
-  EqvExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs);
+  CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
-  EqvExpression(const EqvExpression &rhs);
+  CompExpression(const CompExpression &rhs);
 
-  EqvExpression(EqvExpression &&rhs) noexcept;
+  CompExpression(CompExpression &&rhs) noexcept;
 
-  EqvExpression &operator=(const EqvExpression &rhs);
+  CompExpression &operator=(const CompExpression &rhs);
 
-  EqvExpression &operator=(EqvExpression &&rhs) noexcept;
+  CompExpression &operator=(CompExpression &&rhs) noexcept;
 
   std::string toString() const override;
 
-  ~EqvExpression() override = default;
+  ~CompExpression() override = default;
 
   MathObjectPtr toMinimalObject() const override;
 

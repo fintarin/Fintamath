@@ -12,7 +12,7 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/DerivativeExpression.hpp"
-#include "fintamath/expressions/EqvExpression.hpp"
+#include "fintamath/expressions/CompExpression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/IndexExpression.hpp"
@@ -827,7 +827,7 @@ MathObjectPtr Expression::toMinimalObject() const {
 }
 
 std::string Expression::solve(uint8_t precision) const {
-  if (const auto *expr = cast<EqvExpression>(info.get())) {
+  if (const auto *expr = cast<CompExpression>(info.get())) {
     return expr->solve(precision);
   }
 
@@ -835,7 +835,7 @@ std::string Expression::solve(uint8_t precision) const {
 }
 
 std::string Expression::solve() const {
-  if (const auto *expr = cast<EqvExpression>(info.get())) {
+  if (const auto *expr = cast<CompExpression>(info.get())) {
     return expr->solve();
   }
 

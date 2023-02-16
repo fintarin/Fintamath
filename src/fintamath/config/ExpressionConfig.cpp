@@ -1,5 +1,5 @@
 #include "fintamath/expressions/DerivativeExpression.hpp"
-#include "fintamath/expressions/EqvExpression.hpp"
+#include "fintamath/expressions/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 
 #include "fintamath/expressions/IndexExpression.hpp"
@@ -70,27 +70,27 @@ struct ExpressionConfig {
     });
 
     Expression::registerExpressionBuilder<Eqv>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<EqvExpression>(Eqv(), std::move(args.front()), std::move(args.back()));
+      return std::make_unique<CompExpression>(Eqv(), std::move(args.front()), std::move(args.back()));
     });
 
     Expression::registerExpressionBuilder<Neqv>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<EqvExpression>(Neqv(), std::move(args.front()), std::move(args.back()));
+      return std::make_unique<CompExpression>(Neqv(), std::move(args.front()), std::move(args.back()));
     });
 
     Expression::registerExpressionBuilder<Less>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<EqvExpression>(Less(), std::move(args.front()), std::move(args.back()));
+      return std::make_unique<CompExpression>(Less(), std::move(args.front()), std::move(args.back()));
     });
 
     Expression::registerExpressionBuilder<More>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<EqvExpression>(More(), std::move(args.front()), std::move(args.back()));
+      return std::make_unique<CompExpression>(More(), std::move(args.front()), std::move(args.back()));
     });
 
     Expression::registerExpressionBuilder<LessEqv>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<EqvExpression>(LessEqv(), std::move(args.front()), std::move(args.back()));
+      return std::make_unique<CompExpression>(LessEqv(), std::move(args.front()), std::move(args.back()));
     });
 
     Expression::registerExpressionBuilder<MoreEqv>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<EqvExpression>(MoreEqv(), std::move(args.front()), std::move(args.back()));
+      return std::make_unique<CompExpression>(MoreEqv(), std::move(args.front()), std::move(args.back()));
     });
 
     Expression::registerExpressionBuilder<Derivative>([](ArgumentsPtrVector &&args) {

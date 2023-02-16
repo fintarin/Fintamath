@@ -1,4 +1,4 @@
-#include "fintamath/expressions/EqvExpression.hpp"
+#include "fintamath/expressions/CompExpression.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -18,8 +18,8 @@
 
 namespace fintamath {
 
-EqvExpression::EqvExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs) {
-  if (is<EqvExpression>(lhs) || is<EqvExpression>(rhs)) {
+CompExpression::CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs) {
+  if (is<CompExpression>(lhs) || is<CompExpression>(rhs)) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs->toString(), rhs->toString());
   }
 
@@ -28,19 +28,19 @@ EqvExpression::EqvExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathO
   rightExpr = std::move(rhs);
 }
 
-EqvExpression::EqvExpression(const EqvExpression &rhs)
+CompExpression::CompExpression(const CompExpression &rhs)
     : leftExpr(rhs.leftExpr->clone()),
       rightExpr(rhs.rightExpr->clone()),
       oper(cast<IOperator>(rhs.oper->clone())) {
 }
 
-EqvExpression::EqvExpression(EqvExpression &&rhs) noexcept
+CompExpression::CompExpression(CompExpression &&rhs) noexcept
     : leftExpr(std::move(rhs.leftExpr)),
       rightExpr(std::move(rhs.rightExpr)),
       oper(std::move(rhs.oper)) {
 }
 
-EqvExpression &EqvExpression::operator=(const EqvExpression &rhs) {
+CompExpression &CompExpression::operator=(const CompExpression &rhs) {
   if (&rhs != this) {
     leftExpr = rhs.leftExpr->clone();
     rightExpr = rhs.rightExpr->clone();
@@ -50,7 +50,7 @@ EqvExpression &EqvExpression::operator=(const EqvExpression &rhs) {
   return *this;
 }
 
-EqvExpression &EqvExpression::operator=(EqvExpression &&rhs) noexcept {
+CompExpression &CompExpression::operator=(CompExpression &&rhs) noexcept {
   if (&rhs != this) {
     std::swap(leftExpr, rhs.leftExpr);
     std::swap(rightExpr, rhs.rightExpr);
@@ -60,15 +60,15 @@ EqvExpression &EqvExpression::operator=(EqvExpression &&rhs) noexcept {
   return *this;
 }
 
-std::string EqvExpression::toString() const {
+std::string CompExpression::toString() const {
   return leftExpr->toString() + ' ' + oper->toString() + ' ' + rightExpr->toString();
 }
 
-MathObjectPtr EqvExpression::toMinimalObject() const {
+MathObjectPtr CompExpression::toMinimalObject() const {
   return simplify(true);
 }
 
-MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
+MathObjectPtr CompExpression::simplify(bool isPrecise) const {
   SumExpression addExpr;
   addExpr.addElement({leftExpr->clone()});
   addExpr.addElement({rightExpr->clone(), true});
@@ -79,13 +79,13 @@ MathObjectPtr EqvExpression::simplify(bool isPrecise) const {
     return (*oper)(*simplExpr, ZERO);
   }
 
-  auto res = std::make_unique<EqvExpression>(*this);
+  auto res = std::make_unique<CompExpression>(*this);
   res->leftExpr = std::move(simplExpr);
   res->rightExpr = ZERO.clone();
   return res;
 }
 
-void EqvExpression::compress() {
+void CompExpression::compress() {
   if (auto *childExpr = cast<Expression>(leftExpr.get()); childExpr && childExpr->getChildren().empty()) {
     leftExpr = std::move(childExpr->getInfo());
   }
@@ -94,7 +94,7 @@ void EqvExpression::compress() {
   }
 }
 
-void EqvExpression::validate() const {
+void CompExpression::validate() const {
   if (const auto *childExpr = cast<IExpression>(leftExpr.get())) {
     childExpr->validate();
   }
@@ -105,19 +105,19 @@ void EqvExpression::validate() const {
   this->validateArgs(*getFunction(), {*leftExpr, *rightExpr});
 }
 
-void EqvExpression::setPrecision(uint8_t precision) {
+void CompExpression::setPrecision(uint8_t precision) {
   if (auto *expr = cast<IExpression>(leftExpr.get())) {
     expr->setPrecision(precision);
   }
 }
 
-std::string EqvExpression::solve() const {
+std::string CompExpression::solve() const {
   Variable x("x");
   auto expr = simplify(false);
-  if (!is<EqvExpression>(expr)) {
+  if (!is<CompExpression>(expr)) {
     return expr->toString();
   }
-  auto copyExpr = cast<EqvExpression>(*expr);
+  auto copyExpr = cast<CompExpression>(*expr);
   if (!is<Eqv>(copyExpr.oper)) {
     return expr->toString();
   }
@@ -140,13 +140,13 @@ std::string EqvExpression::solve() const {
   return resultStr;
 }
 
-std::string EqvExpression::solve(uint8_t precision) const {
+std::string CompExpression::solve(uint8_t precision) const {
   Variable x("x");
   auto expr = simplify(false);
-  if (!is<EqvExpression>(expr)) {
+  if (!is<CompExpression>(expr)) {
     return expr->toString();
   }
-  auto copyExpr = cast<EqvExpression>(*expr);
+  auto copyExpr = cast<CompExpression>(*expr);
   if (!is<Eqv>(copyExpr.oper)) {
     return expr->toString();
   }
@@ -173,17 +173,17 @@ std::string EqvExpression::solve(uint8_t precision) const {
   return resultStr;
 }
 
-const IFunction *EqvExpression::getFunction() const {
+const IFunction *CompExpression::getFunction() const {
   return oper.get();
 }
 
-std::vector<MathObjectPtr> EqvExpression::solvePowEquation(const Variable &x) const {
+std::vector<MathObjectPtr> CompExpression::solvePowEquation(const Variable &x) const {
   auto results = solveQuadraticEquation(x.clone());
   return results;
 }
 
 // TODO: v is unused here
-std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
+std::vector<MathObjectPtr> CompExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
   auto copyExpr = *this;
   SumExpression polynom;
   polynom.addElement({leftExpr->clone()});
@@ -231,7 +231,7 @@ std::vector<MathObjectPtr> EqvExpression::solveQuadraticEquation(const MathObjec
   return results;
 }
 
-bool EqvExpression::detectOneVariable(Variable &v) const {
+bool CompExpression::detectOneVariable(Variable &v) const {
   if (const auto *var = cast<Variable>(leftExpr.get())) {
     v = *var;
     return true;
@@ -251,7 +251,7 @@ bool EqvExpression::detectOneVariable(Variable &v) const {
   }
 }
 
-bool EqvExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
+bool CompExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
   if (const auto *lhsComp = cast<IComparable>(lhs.get())) {
     if (const auto *rhsComp = cast<IComparable>(rhs.get())) {
       return *lhsComp < *rhsComp;
@@ -261,7 +261,7 @@ bool EqvExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs)
   return false;
 }
 
-std::vector<MathObjectPtr> EqvExpression::sortResult(std::vector<MathObjectPtr> &result) {
+std::vector<MathObjectPtr> CompExpression::sortResult(std::vector<MathObjectPtr> &result) {
   std::sort(result.begin(), result.end(), sortFunc);
   std::vector<MathObjectPtr> resultWithoutRepeat;
   for (auto &val : result) {

@@ -9,7 +9,7 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/Exception.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/expressions/EqvExpression.hpp"
+#include "fintamath/expressions/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
@@ -136,7 +136,7 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
   exprObj.compress();
 
   for (auto &obj : exprObj.polynomVect) { // TODO: find a better solution
-    if (is<EqvExpression>(obj.info)) {
+    if (is<CompExpression>(obj.info)) {
       throw InvalidInputException(toString());
     }
   }
