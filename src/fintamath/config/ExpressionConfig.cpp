@@ -1,7 +1,6 @@
-#include "fintamath/expressions/DerivativeExpression.hpp"
 #include "fintamath/expressions/CompExpression.hpp"
+#include "fintamath/expressions/DerivativeExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
-
 #include "fintamath/expressions/IndexExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
