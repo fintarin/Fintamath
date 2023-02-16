@@ -28,7 +28,7 @@ public:
 
   void setPrecision(uint8_t precision) override;
 
-  MathObjectPtr simplify() const override;
+  MathObjectPtr toMinimalObject() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;
 

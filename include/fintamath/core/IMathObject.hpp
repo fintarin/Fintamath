@@ -25,7 +25,7 @@ public:
     return {};
   }
 
-  virtual MathObjectPtr simplify() const {
+  virtual MathObjectPtr toMinimalObject() const {
     return clone();
   }
 

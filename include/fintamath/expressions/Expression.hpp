@@ -32,7 +32,7 @@ public:
 
   std::string toString(uint8_t precision) const;
 
-  MathObjectPtr simplify() const override;
+  MathObjectPtr toMinimalObject() const override;
 
   std::string solve() const;
 

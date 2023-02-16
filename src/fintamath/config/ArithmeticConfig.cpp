@@ -20,7 +20,7 @@ namespace {
 struct ArithmeticConfig {
   ArithmeticConfig() {
     IArithmetic::addMultiDivFunction<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
-      return cast<IArithmetic>((Rational(lhs) / Rational(rhs)).simplify());
+      return cast<IArithmetic>((Rational(lhs) / Rational(rhs)).toMinimalObject());
     });
   }
 };

@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Asinh::call(const ArgumentsVector &argsVect) const {
-  return asinh(convert<Real>(argsVect.front())).simplify();
+  return asinh(convert<Real>(argsVect.front())).toMinimalObject();
 }
 
 }

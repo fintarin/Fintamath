@@ -27,7 +27,7 @@ Real pow(const Real &lhs, const Real &rhs) {
   if (lhs.isNearZero() && rhs.isNearZero()) {
     throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
   }
-  if (lhs < 0 && !is<Integer>(rhs.simplify())) {
+  if (lhs < 0 && !is<Integer>(rhs.toMinimalObject())) {
     throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
   }
 

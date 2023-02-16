@@ -231,14 +231,14 @@ private:
                                 std::function<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> &&f2) const {
     if (const auto *rhpPtr = cast<Derived>(&rhs)) {
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
-      return cast<IArithmetic>(f1(*lhsPtr, *rhpPtr).simplify());
+      return cast<IArithmetic>(f1(*lhsPtr, *rhpPtr).toMinimalObject());
     }
     if (MathObjectPtr rhsPtr = convert(rhs, *this)) {
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
-      return cast<IArithmetic>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).simplify());
+      return cast<IArithmetic>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
     }
     if (MathObjectPtr lhsPtr = convert(*this, rhs)) {
-      return cast<IArithmetic>(f2(cast<IArithmetic>(*lhsPtr), rhs)->simplify());
+      return cast<IArithmetic>(f2(cast<IArithmetic>(*lhsPtr), rhs)->toMinimalObject());
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
   }

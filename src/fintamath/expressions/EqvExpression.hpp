@@ -27,7 +27,7 @@ public:
 
   ~EqvExpression() override = default;
 
-  MathObjectPtr simplify() const override;
+  MathObjectPtr toMinimalObject() const override;
 
   std::string solve() const;
 

@@ -42,7 +42,7 @@ struct SumExpression::MulObject {
   }
 
   void simplifyCounter() {
-    auto counterSimpl = counter.simplify();
+    auto counterSimpl = counter.toMinimalObject();
     counter = SumExpression();
     counter.addElement({std::move(counterSimpl)});
   }
@@ -93,7 +93,7 @@ void SumElement::simplify(bool isPrecise) {
     return;
   }
 
-  info = info->simplify();
+  info = info->toMinimalObject();
 }
 
 //-----------------------------------------------------------------------------------------------------//
@@ -127,7 +127,7 @@ std::string SumExpression::toString() const {
   return result;
 }
 
-MathObjectPtr SumExpression::simplify() const {
+MathObjectPtr SumExpression::toMinimalObject() const {
   return simplify(true);
 }
 
@@ -222,7 +222,7 @@ SumExpression::PolynomVector SumExpression::sumNumbers(const PolynomVector &numV
       result.getInfo() = Add()(*result.getInfo(), *elem.info);
     }
   }
-  return {{result.simplify(), false}};
+  return {{result.toMinimalObject(), false}};
 }
 
 // TODO: refactor
@@ -248,7 +248,7 @@ void SumExpression::sortMulObjects(MulObjects &objs, PolynomVector &mulVect, Pol
         continue;
       }
     }
-    mulVect.emplace_back(SumElement(MulExpression({{obj.obj->clone()}, {counter->clone()}}).simplify()));
+    mulVect.emplace_back(SumElement(MulExpression({{obj.obj->clone()}, {counter->clone()}}).toMinimalObject()));
   }
 }
 

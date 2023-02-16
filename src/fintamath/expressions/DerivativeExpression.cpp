@@ -27,7 +27,7 @@ DerivativeExpression &DerivativeExpression::operator=(const DerivativeExpression
 }
 
 DerivativeExpression::DerivativeExpression(const IMathObject &obj) {
-  info = obj.simplify();
+  info = obj.toMinimalObject();
 }
 
 DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : info(std::move(obj)) {
@@ -49,7 +49,7 @@ void DerivativeExpression::setPrecision(uint8_t precision) {
   }
 }
 
-MathObjectPtr DerivativeExpression::simplify() const {
+MathObjectPtr DerivativeExpression::toMinimalObject() const {
   // TODO: remove this and use general toString() from UnaryExpression
   return simplify(true);
 }
@@ -60,7 +60,7 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
   if (const auto *expr = cast<IExpression>(info.get())) {
     value = expr->simplify(isPrecise);
   } else {
-    value = info->simplify();
+    value = info->toMinimalObject();
   }
 
   if (is<IExpression>(value)) {

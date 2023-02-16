@@ -82,8 +82,8 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
   compress();
   validate();
-  // TODO: implement void simplify() and use it here
-  *this = Expression(simplify());
+  // TODO: implement void toMinimalObject() and use it here
+  *this = Expression(toMinimalObject());
 }
 
 Expression::Expression(const TokenVector &tokens) {
@@ -114,7 +114,7 @@ Expression::Expression(MathObjectPtr &&obj) {
     info = std::move(obj);
     children.clear();
   } else {
-    info = obj->simplify();
+    info = obj->toMinimalObject();
     children.clear();
   }
 
@@ -490,7 +490,7 @@ std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVecto
 }
 
 MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
-  return buildRawFunctionExpression(func, std::move(args))->simplify();
+  return buildRawFunctionExpression(func, std::move(args))->toMinimalObject();
 }
 
 ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
@@ -793,7 +793,7 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
       continue;
     }
 
-    child = child->simplify();
+    child = child->toMinimalObject();
   }
 
   if (expr.children.empty()) {
@@ -803,7 +803,7 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
       return childExpr->simplify(isPrecise);
     }
 
-    return expr.info->simplify();
+    return expr.info->toMinimalObject();
   }
 
   expr.simplifyFunction(isPrecise);
@@ -822,7 +822,7 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   return std::make_unique<Expression>(std::move(expr));
 }
 
-MathObjectPtr Expression::simplify() const {
+MathObjectPtr Expression::toMinimalObject() const {
   return simplify(true);
 }
 
@@ -940,7 +940,7 @@ void Expression::simplifyPow() {
       mul.addElement(MulElement(lhs));
     }
 
-    info = mul.simplify();
+    info = mul.toMinimalObject();
     children.clear();
   }
 }

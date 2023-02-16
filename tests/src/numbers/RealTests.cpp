@@ -837,15 +837,15 @@ TEST(RealTests, toStringTest) {
 }
 
 TEST(RealTests, simplifyTest) {
-  EXPECT_TRUE(is<Real>(Real(2.5).simplify()));
-  EXPECT_TRUE(is<Integer>(Real(11).simplify()));
-  EXPECT_TRUE(is<Real>(Real(-2.5).simplify()));
-  EXPECT_TRUE(is<Integer>(Real(-11).simplify()));
+  EXPECT_TRUE(is<Real>(Real(2.5).toMinimalObject()));
+  EXPECT_TRUE(is<Integer>(Real(11).toMinimalObject()));
+  EXPECT_TRUE(is<Real>(Real(-2.5).toMinimalObject()));
+  EXPECT_TRUE(is<Integer>(Real(-11).toMinimalObject()));
 
-  EXPECT_EQ(Real(2.5).simplify()->toString(), "2.5");
-  EXPECT_EQ(Real(11).simplify()->toString(), "11");
-  EXPECT_EQ(Real(-2.5).simplify()->toString(), "-2.5");
-  EXPECT_EQ(Real(-11).simplify()->toString(), "-11");
+  EXPECT_EQ(Real(2.5).toMinimalObject()->toString(), "2.5");
+  EXPECT_EQ(Real(11).toMinimalObject()->toString(), "11");
+  EXPECT_EQ(Real(-2.5).toMinimalObject()->toString(), "-2.5");
+  EXPECT_EQ(Real(-11).toMinimalObject()->toString(), "-11");
 }
 
 TEST(RealTests, preciseTests) {

@@ -37,7 +37,7 @@ public:
 
   std::string toString() const override;
 
-  MathObjectPtr simplify() const override;
+  MathObjectPtr toMinimalObject() const override;
 
   bool isPrecise() const override;
 

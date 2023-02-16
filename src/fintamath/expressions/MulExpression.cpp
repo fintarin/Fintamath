@@ -60,7 +60,7 @@ struct MulExpression::ObjectPow {
   }
 
   void simplifyPow() {
-    auto powSimpl = pow.simplify();
+    auto powSimpl = pow.toMinimalObject();
     pow = SumExpression();
     pow.addElement({std::move(powSimpl)});
   }
@@ -115,7 +115,7 @@ void MulElement::simplify(bool isPrecise) {
     return;
   }
 
-  info = info->simplify();
+  info = info->toMinimalObject();
 }
 
 //-----------------------------------------------------------------------------------------------------//
@@ -157,7 +157,7 @@ std::string MulExpression::toString() const {
   return result;
 }
 
-MathObjectPtr MulExpression::simplify() const {
+MathObjectPtr MulExpression::toMinimalObject() const {
   return simplify(true);
 }
 
@@ -203,7 +203,7 @@ MulExpression::PolynomVector MulExpression::mulNumbers(const PolynomVector &numV
       result.getInfo() = Mul()(*result.getInfo(), *elem.info);
     }
   }
-  return {{result.simplify(), false}};
+  return {{result.toMinimalObject(), false}};
 }
 
 MulExpression::PolynomVector convertAddPolynomToMul(const SumExpression::PolynomVector &polynom) {
@@ -455,7 +455,7 @@ void MulExpression::simplifyPolynom() {
     bool positiveAdded = false;
     bool negativeAdded = false;
     if (!positive.empty()) {
-      auto addExpr = SumExpression(convertMulPolynomToAdd(positive)).simplify();
+      auto addExpr = SumExpression(convertMulPolynomToAdd(positive)).toMinimalObject();
       if (!is<INumber>(addExpr)) {
         polynomVect.emplace_back(MulElement{addExpr->clone()});
         positiveAdded = true;
@@ -464,7 +464,7 @@ void MulExpression::simplifyPolynom() {
       }
     }
     if (!negative.empty()) {
-      auto addExpr = SumExpression(convertMulPolynomToAdd(negative)).simplify();
+      auto addExpr = SumExpression(convertMulPolynomToAdd(negative)).toMinimalObject();
       if (!is<INumber>(addExpr)) {
         polynomVect.emplace_back(MulElement(addExpr->clone(), true));
         negativeAdded = true;

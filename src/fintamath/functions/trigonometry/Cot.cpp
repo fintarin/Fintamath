@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Cot::call(const ArgumentsVector &argsVect) const {
-  return cot(convert<Real>(argsVect.front())).simplify();
+  return cot(convert<Real>(argsVect.front())).toMinimalObject();
 }
 
 }

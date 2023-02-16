@@ -20,7 +20,7 @@ public:
   virtual void setPrecision(uint8_t precision) = 0;
 
   // TODO: add this
-  // virtual void simplify() = 0;
+  // virtual void toMinimalObject() = 0;
 
   // TODO: remove this and move simplify(false) logic to setPrecision
   virtual MathObjectPtr simplify(bool isPrecise) const = 0;
@@ -32,7 +32,7 @@ public:
   // TODO: remove this and implement in Expression using IExpression::Iterator
   virtual void validate() const = 0;
 
-  MathObjectPtr simplify() const override {
+  MathObjectPtr toMinimalObject() const override {
     return simplify(false);
   }
 

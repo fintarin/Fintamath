@@ -56,7 +56,7 @@ std::string Rational::toString() const {
   return res;
 }
 
-MathObjectPtr Rational::simplify() const {
+MathObjectPtr Rational::toMinimalObject() const {
   if (denominator == 1) {
     return signVal ? (-getInteger()).clone() : getInteger().clone();
   }

@@ -69,7 +69,7 @@ void IndexExpression::setPrecision(uint8_t precision) {
   }
 }
 
-MathObjectPtr IndexExpression::simplify() const {
+MathObjectPtr IndexExpression::toMinimalObject() const {
   return simplify(true);
 }
 
@@ -80,13 +80,13 @@ MathObjectPtr IndexExpression::simplify(bool isPrecise) const {
   if (const auto *expr = cast<IExpression>(lhsInfo.get())) {
     lhs = expr->simplify(isPrecise);
   } else {
-    lhs = lhsInfo->simplify();
+    lhs = lhsInfo->toMinimalObject();
   }
 
   if (const auto *expr = cast<IExpression>(rhsInfo.get())) {
     rhs = expr->simplify(isPrecise);
   } else {
-    rhs = rhsInfo->simplify();
+    rhs = rhsInfo->toMinimalObject();
   }
 
   // TODO: implement derivative of expression

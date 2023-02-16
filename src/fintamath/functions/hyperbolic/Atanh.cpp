@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Atanh::call(const ArgumentsVector &argsVect) const {
-  return atanh(convert<Real>(argsVect.front())).simplify();
+  return atanh(convert<Real>(argsVect.front())).toMinimalObject();
 }
 
 }

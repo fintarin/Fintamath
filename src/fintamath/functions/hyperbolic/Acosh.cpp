@@ -5,7 +5,7 @@
 namespace fintamath {
 
 MathObjectPtr Acosh::call(const ArgumentsVector &argsVect) const {
-  return acosh(convert<Real>(argsVect.front())).simplify();
+  return acosh(convert<Real>(argsVect.front())).toMinimalObject();
 }
 
 }

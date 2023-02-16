@@ -51,14 +51,14 @@ protected:
   ModularPtr modAbstract(const IModular &rhs) const final {
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       auto lhsPtr = cast<IModularCRTP<Derived>>(clone());
-      return cast<IModular>(lhsPtr->mod(*rhsPtr).simplify());
+      return cast<IModular>(lhsPtr->mod(*rhsPtr).toMinimalObject());
     }
     if (MathObjectPtr rhsPtr = convert(rhs, *this)) {
       auto lhsPtr = cast<IModularCRTP<Derived>>(clone());
-      return cast<IModular>(lhsPtr->mod(cast<Derived>(*rhsPtr)).simplify());
+      return cast<IModular>(lhsPtr->mod(cast<Derived>(*rhsPtr)).toMinimalObject());
     }
     if (MathObjectPtr lhsPtr = convert(*this, rhs)) {
-      return cast<IModular>((cast<IModular>(*lhsPtr) % rhs)->simplify());
+      return cast<IModular>((cast<IModular>(*lhsPtr) % rhs)->toMinimalObject());
     }
     throw InvalidInputBinaryOpearatorException("%", toString(), rhs.toString());
   }

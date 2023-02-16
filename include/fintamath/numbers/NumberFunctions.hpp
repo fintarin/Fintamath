@@ -19,8 +19,8 @@ inline NumberPtr abs(const INumber &rhs) {
 template <typename Lhs, typename Rhs,
           typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs>>>
 NumberPtr pow(const Lhs &lhs, const Rhs &rhs) {
-  auto lhsSimpl = cast<INumber>(lhs.simplify());
-  auto rhsSimpl = cast<INumber>(rhs.simplify());
+  auto lhsSimpl = cast<INumber>(lhs.toMinimalObject());
+  auto rhsSimpl = cast<INumber>(rhs.toMinimalObject());
 
   if (lhsSimpl->isPrecise()) {
     if (const auto *rhsInt = cast<Integer>(rhsSimpl.get())) {
@@ -28,7 +28,7 @@ NumberPtr pow(const Lhs &lhs, const Rhs &rhs) {
     }
   }
 
-  return cast<INumber>(pow(convert<Real>(*lhsSimpl), convert<Real>(*rhsSimpl)).simplify());
+  return cast<INumber>(pow(convert<Real>(*lhsSimpl), convert<Real>(*rhsSimpl)).toMinimalObject());
 }
 
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
@@ -54,7 +54,7 @@ NumberPtr pow(const Lhs &lhs, Integer rhs) {
     }
   }
 
-  return cast<INumber>(res->simplify());
+  return cast<INumber>(res->toMinimalObject());
 }
 
 }

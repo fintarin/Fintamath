@@ -64,7 +64,7 @@ std::string EqvExpression::toString() const {
   return leftExpr->toString() + ' ' + oper->toString() + ' ' + rightExpr->toString();
 }
 
-MathObjectPtr EqvExpression::simplify() const {
+MathObjectPtr EqvExpression::toMinimalObject() const {
   return simplify(true);
 }
 
