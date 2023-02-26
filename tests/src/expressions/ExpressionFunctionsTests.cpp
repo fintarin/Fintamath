@@ -126,6 +126,15 @@ TEST(ExpressionFunctionsTests, expTest) {
   EXPECT_EQ(exp(Expression("ln(5)")).toString(), "exp(ln(5))");
 }
 
+TEST(ExpressionFunctionsTests, invTest) {
+  EXPECT_EQ(inv(Expression("a")).toString(), "inv(a)");
+  EXPECT_EQ(inv(Expression("2")).toString(), "inv(2)");
+  EXPECT_EQ(inv(Expression("10")).toString(), "inv(10)");
+  EXPECT_EQ(inv(Expression("0.1")).toString(), "10");
+  EXPECT_EQ(inv(Expression("0.2")).toString(), "5");
+  EXPECT_EQ(inv(Expression("ln(5)")).toString(), "inv(ln(5))");
+}
+
 TEST(ExpressionFunctionsTests, logTest) {
   EXPECT_EQ(log(Expression("a+b"), Expression("1")).toString(), "log(a + b, 1)");
   EXPECT_EQ(log(Expression("2*a"), Expression("a+b")).toString(), "log(2 a, a + b)");
