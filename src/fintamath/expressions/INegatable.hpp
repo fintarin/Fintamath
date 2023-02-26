@@ -8,7 +8,4 @@ class INegatable : virtual public IMathObject {
 public:
   virtual void negate() = 0;
 };
-
-template <typename Derived>
-class INegatableCRTP : virtual public INegatable, IMathObjectCRTP<Derived> {};
 }
