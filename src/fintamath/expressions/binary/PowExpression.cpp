@@ -23,11 +23,11 @@ MathObjectPtr PowExpression::toMinimalObject() const {
 
 MathObjectPtr PowExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<PowExpression>(*this);
-  simplifyValue(isPrecise, exprObj->lhsInfo);
-  simplifyValue(isPrecise, exprObj->rhsInfo);
+  simplifyValue(isPrecise, exprObj->lhsChild);
+  simplifyValue(isPrecise, exprObj->rhsChild);
 
-  auto *lhsPtr = cast<IExpression>(exprObj->lhsInfo.get());
-  auto *rhsPtr = cast<Integer>(exprObj->rhsInfo.get());
+  auto *lhsPtr = cast<IExpression>(exprObj->lhsChild.get());
+  auto *rhsPtr = cast<Integer>(exprObj->rhsChild.get());
 
   if (lhsPtr && rhsPtr && !is<Expression>(lhsPtr)) {
     lhsPtr = cast<IExpression>(lhsPtr->simplify(isPrecise).get());
@@ -60,8 +60,8 @@ MathObjectPtr PowExpression::simplify(bool isPrecise) const {
     return mul.simplify();*/
   }
 
-  if (is<INumber>(exprObj->lhsInfo) && is<INumber>(exprObj->rhsInfo)) {
-    return POW(*exprObj->lhsInfo, *exprObj->rhsInfo);
+  if (is<INumber>(exprObj->lhsChild) && is<INumber>(exprObj->rhsChild)) {
+    return POW(*exprObj->lhsChild, *exprObj->rhsChild);
   }
   return exprObj;
 }

@@ -30,9 +30,9 @@ public:
 protected:
   FunctionPtr function;
 
-  MathObjectPtr lhsInfo;
+  MathObjectPtr lhsChild;
 
-  MathObjectPtr rhsInfo;
+  MathObjectPtr rhsChild;
 };
 
 template <typename Derived>

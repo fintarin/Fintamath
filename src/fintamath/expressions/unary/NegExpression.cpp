@@ -20,35 +20,36 @@ MathObjectPtr NegExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<NegExpression>(*this);
   exprObj->simplifyValue(isPrecise);
 
-  if (const auto *expr = cast<INumber>(exprObj->info.get())) {
+  if (const auto *expr = cast<INumber>(exprObj->child.get())) {
     return -(*expr);
   }
 
-  if (auto *expr = cast<INegatable>(exprObj->info.get())) {
+  if (auto *expr = cast<INegatable>(exprObj->child.get())) {
     expr->negate();
     return expr->clone();
   }
 
-  if (const auto *expr = cast<NegExpression>(exprObj->info.get())) {
-    return expr->info->clone();
+  if (const auto *expr = cast<NegExpression>(exprObj->child.get())) {
+    return expr->child->clone();
   }
 
   return exprObj;
 }
 
 IMathObject *NegExpression::simplify() {
-  if (function->doArgsMatch({*info})) {
-    return (*function)(*info).release();
+  if (function->doArgsMatch({*child})) {
+    return (*function)(*child).release();
   }
 
-  if (auto *expr = cast<INegatable>(info.get())) {
+  if (auto *expr = cast<INegatable>(child.get())) {
     expr->negate();
     return expr;
   }
 
-  if (auto *expr = cast<NegExpression>(info.get())) {
-    return expr->info.release();
+  if (auto *expr = cast<NegExpression>(child.get())) {
+    return expr->child.release();
   }
+
   return this;
 }
 

@@ -27,10 +27,10 @@ MathObjectPtr DerivativeExpression::toMinimalObject() const {
 MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
   MathObjectPtr value;
 
-  if (const auto *expr = cast<IExpression>(info.get())) {
+  if (const auto *expr = cast<IExpression>(child.get())) {
     value = expr->simplify(isPrecise);
   } else {
-    value = info->toMinimalObject();
+    value = child->toMinimalObject();
   }
 
   if (is<IExpression>(value)) {
@@ -56,8 +56,8 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
 // }
 
 void DerivativeExpression::compress() {
-  if (auto *childExpr = cast<Expression>(info.get())) {
-    info = std::move(childExpr->getInfo());
+  if (auto *childExpr = cast<Expression>(child.get())) {
+    child = std::move(childExpr->getInfo());
   }
 }
 

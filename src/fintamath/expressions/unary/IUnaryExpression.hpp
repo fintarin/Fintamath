@@ -42,7 +42,7 @@ protected:
 
   FunctionPtr function;
 
-  MathObjectPtr info;
+  MathObjectPtr child;
 };
 
 template <typename Derived>

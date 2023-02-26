@@ -1,5 +1,6 @@
 #include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -13,15 +14,15 @@ namespace fintamath {
 
 IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs)
     : function(cast<IFunction>(rhs.function->clone())),
-      info(rhs.info->clone()) {
+      child(rhs.child->clone()) {
 }
 
-IUnaryExpression::IUnaryExpression(MathObjectPtr &&rhs) : info(std::move(rhs)) {
+IUnaryExpression::IUnaryExpression(MathObjectPtr &&rhs) : child(std::move(rhs)) {
 }
 
 IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
   if (&rhs != this) {
-    info = rhs.info->clone();
+    child = rhs.child->clone();
     function = cast<IFunction>(rhs.function->clone());
   }
 
@@ -29,17 +30,17 @@ IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
 }
 
 void IUnaryExpression::setPrecision(uint8_t precision) {
-  if (auto *expr = cast<IExpression>(info.get())) {
+  if (auto *expr = cast<IExpression>(child.get())) {
     expr->setPrecision(precision);
     return;
   }
 
-  if (const auto *constant = cast<IConstant>(info.get())) {
-    info = (*constant)();
+  if (const auto *constant = cast<IConstant>(child.get())) {
+    child = (*constant)();
   }
 
-  if (is<INumber>(info)) {
-    info = convert<Real>(*info).precise(precision).clone();
+  if (is<INumber>(child)) {
+    child = convert<Real>(*child).precise(precision).clone();
   }
 }
 
@@ -63,17 +64,17 @@ std::string IUnaryExpression::toString() const {
 }
 
 std::string IUnaryExpression::postfixToString(const IFunction &oper) const {
-  std::string result = info->toString();
+  std::string result = child->toString();
 
-  if (const auto *child = cast<IExpression>(info.get())) {
-    if (const auto *exprOper = cast<IOperator>(child->getFunction())) {
+  if (const auto *childExpr = cast<IExpression>(child.get())) {
+    if (const auto *exprOper = cast<IOperator>(childExpr->getFunction())) {
       if (auto priority = exprOper->getOperatorPriority(); priority != IOperator::Priority::PostfixUnary) {
         return putInBrackets(result) + oper.toString();
       }
     }
   }
 
-  if (const auto *comp = cast<IComparable>(info.get()); comp && *comp < ZERO) {
+  if (const auto *comp = cast<IComparable>(child.get()); comp && *comp < ZERO) {
     return putInBrackets(result) + oper.toString();
   }
 
@@ -83,28 +84,28 @@ std::string IUnaryExpression::postfixToString(const IFunction &oper) const {
 std::string IUnaryExpression::prefixToString(const IFunction &oper) const {
   std::string result = oper.toString();
 
-  if (const auto *child = cast<IExpression>(info.get())) {
-    if (const auto *exprOper = cast<IOperator>(child->getFunction())) {
+  if (const auto *childExpr = cast<IExpression>(child.get())) {
+    if (const auto *exprOper = cast<IOperator>(childExpr->getFunction())) {
       auto priority = exprOper->getOperatorPriority();
 
       if (priority == IOperator::Priority::PrefixUnary || priority == IOperator::Priority::Multiplication ||
           priority == IOperator::Priority::Exponentiation) {
-        return result + info->toString();
+        return result + child->toString();
       }
 
-      return result + putInBrackets(info->toString());
+      return result + putInBrackets(child->toString());
     }
   }
 
-  return result + info->toString();
+  return result + child->toString();
 }
 
 std::string IUnaryExpression::functionToString(const IFunction &oper) const {
-  return oper.toString() + "(" + info->toString() + ")";
+  return oper.toString() + "(" + child->toString() + ")";
 }
 
 void IUnaryExpression::simplifyValue(bool isPrecise) {
-  IExpression::simplifyValue(isPrecise, info);
+  IExpression::simplifyValue(isPrecise, child);
 }
 
 void IUnaryExpression::validate() const {
@@ -112,7 +113,7 @@ void IUnaryExpression::validate() const {
 }
 
 MathObjectPtr IUnaryExpression::getInfo() const {
-  return info->clone();
+  return child->clone();
 }
 
 const IFunction *IUnaryExpression::getFunction() const {

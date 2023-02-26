@@ -21,17 +21,17 @@ MathObjectPtr InvExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<InvExpression>(*this);
   exprObj->simplifyValue(isPrecise);
 
-  if (const auto *expr = cast<INumber>(exprObj->info.get())) {
+  if (const auto *expr = cast<INumber>(exprObj->child.get())) {
     return INV(*expr);
   }
 
-  if (auto *expr = cast<IInvertable>(exprObj->info.get())) {
+  if (auto *expr = cast<IInvertable>(exprObj->child.get())) {
     expr->invert();
     return expr->clone();
   }
 
-  if (const auto *expr = cast<InvExpression>(exprObj->info.get())) {
-    return expr->info->clone();
+  if (const auto *expr = cast<InvExpression>(exprObj->child.get())) {
+    return expr->child->clone();
   }
   return exprObj;
 }

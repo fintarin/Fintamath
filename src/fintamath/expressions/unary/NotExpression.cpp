@@ -21,8 +21,8 @@ MathObjectPtr NotExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<NotExpression>(*this);
   exprObj->simplifyValue(isPrecise);
 
-  if (const auto *expr = cast<NotExpression>(exprObj->info.get())) {
-    return expr->info->clone();
+  if (const auto *expr = cast<NotExpression>(exprObj->child.get())) {
+    return expr->child->clone();
   }
 
   return exprObj;

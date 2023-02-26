@@ -45,16 +45,16 @@ MathObjectPtr IndexExpression::simplify(bool isPrecise) const {
   MathObjectPtr lhs;
   MathObjectPtr rhs;
 
-  if (const auto *expr = cast<IExpression>(lhsInfo.get())) {
+  if (const auto *expr = cast<IExpression>(lhsChild.get())) {
     lhs = expr->simplify(isPrecise);
   } else {
-    lhs = lhsInfo->toMinimalObject();
+    lhs = lhsChild->toMinimalObject();
   }
 
-  if (const auto *expr = cast<IExpression>(rhsInfo.get())) {
+  if (const auto *expr = cast<IExpression>(rhsChild.get())) {
     rhs = expr->simplify(isPrecise);
   } else {
-    rhs = rhsInfo->toMinimalObject();
+    rhs = rhsChild->toMinimalObject();
   }
 
   return std::make_unique<IndexExpression>(std::move(lhs), std::move(rhs));
