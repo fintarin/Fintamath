@@ -92,7 +92,7 @@ std::string MulExpression::toString() const {
   }
 
   for (size_t i = 1; i < polynomVect.size(); i++) {
-    if (const auto *invExpr = cast<InvExpression>(polynomVect.front().get())) {
+    if (const auto *invExpr = cast<InvExpression>(polynomVect[i].get())) {
       result += " / ";
       result += sumExprToString(invExpr->getInfo());
       continue;
