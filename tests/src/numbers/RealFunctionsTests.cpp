@@ -238,8 +238,3 @@ TEST(RealFunctionsTests, acothTest) {
   EXPECT_THROW(acoth(Real("0")), UndefinedFunctionException);
   EXPECT_THROW(acoth(Real("1")), UndefinedFunctionException);
 }
-
-TEST(RealFunctionsTests, invTest) {
-  EXPECT_EQ(inv(Real(E_NUM)).toString(), "0.3678794411714423215955237701614608674458111310317678345078368016974614957448998");
-  EXPECT_EQ(inv(Real(10)).toString(), "0.1");
-}

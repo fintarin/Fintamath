@@ -16,6 +16,10 @@ inline NumberPtr abs(const INumber &rhs) {
   return cast<INumber>(rhs.clone());
 }
 
+inline NumberPtr inv(const INumber &rhs) {
+  return ONE / rhs;
+}
+
 template <typename Lhs, typename Rhs,
           typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs>>>
 NumberPtr pow(const Lhs &lhs, const Rhs &rhs) {

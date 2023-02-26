@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 
@@ -20,16 +21,16 @@ TEST(InvTests, getFunctionTypeTest) {
 } 
 
 TEST(InvTests, callTest) {
-  EXPECT_EQ(f(Integer(10))->toString(), "0.1");
+  EXPECT_EQ(f(Integer(10))->toString(), "1/10");
   EXPECT_EQ(f(Integer(20))->toString(),
-            "0.05");
+            "1/20");
   EXPECT_EQ(f(Integer(2))->toString(),
-            "0.5");
+            "1/2");
   EXPECT_EQ(f(Rational(1, 10))->toString(), "10");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "inv(a)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(10), Integer(10), Integer(10)), InvalidInputFunctionException);
-	EXPECT_THROW(f(Integer(0)), UndefinedFunctionException);
+	EXPECT_THROW(f(Integer(0)), UndefinedBinaryOpearatorException);
 }
