@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "fintamath/expressions/IInvertable.hpp"
 #include "fintamath/expressions/INegatable.hpp"
 #include "fintamath/expressions/PolynomExpression.hpp"
 
@@ -20,7 +21,7 @@ struct MulElement : public PolynomElement {
 
 //-----------------------------------------------------------------------------------------------------//
 
-class MulExpression : public PolynomExpressionCRTP<MulExpression, MulElement>, public INegatable {
+class MulExpression : public PolynomExpressionCRTP<MulExpression, MulElement>, public INegatable, public IInvertable {
 public:
   MulExpression() = default; // TODO: remove this
 
@@ -41,6 +42,8 @@ public:
   MathObjectPtr getPow() const;
 
   void negate() override;
+
+  void invert() override;
 
 private:
   // TODO: Implement a new Expression and remove this

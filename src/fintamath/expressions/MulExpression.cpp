@@ -587,4 +587,8 @@ void MulExpression::negate() {
   polynomVect.front().info = NegExpression(polynomVect.front().info).simplify();
 }
 
+void MulExpression::invert() {
+  // TODO: refactor PolynomExpression and implement it
+}
+
 }

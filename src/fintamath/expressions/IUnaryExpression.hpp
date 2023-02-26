@@ -12,6 +12,8 @@ namespace fintamath {
 
 class IUnaryExpression : virtual public IExpression {
 public:
+  IUnaryExpression() = default;
+
   IUnaryExpression(const IUnaryExpression &rhs);
 
   IUnaryExpression(IUnaryExpression &&rhs) noexcept = default;
