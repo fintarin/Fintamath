@@ -30,7 +30,6 @@ MathObjectPtr PowExpression::simplify(bool isPrecise) const {
   auto *rhsPtr = cast<Integer>(exprObj->rhsChild.get());
 
   if (lhsPtr && rhsPtr && !is<Expression>(lhsPtr)) {
-    lhsPtr = cast<IExpression>(lhsPtr->simplify(isPrecise).get());
     if (*rhsPtr == ZERO) {
       return ONE.clone();
     }

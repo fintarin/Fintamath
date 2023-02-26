@@ -119,7 +119,7 @@ std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, con
 }
 
 void IExpression::simplifyValue(bool isPrecise, MathObjectPtr &obj) {
-  if (auto expr = cast<IExpression>(std::move(obj))) {
+  if (auto *expr = cast<IExpression>(obj.get())) {
     obj = expr->simplify(isPrecise);
     return;
   }
