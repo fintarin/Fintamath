@@ -1,7 +1,8 @@
-#include "fintamath/expressions/DerivativeExpression.hpp"
+#include "fintamath/expressions/unary/DerivativeExpression.hpp"
 
 #include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/IUnaryExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/literals/Boolean.hpp"
@@ -15,38 +16,14 @@ namespace fintamath {
 
 const Derivative DER;
 
-DerivativeExpression::DerivativeExpression(const DerivativeExpression &rhs) : info(rhs.info->clone()) {
+DerivativeExpression::DerivativeExpression(const IMathObject &obj) : IUnaryExpression(obj) {
 }
 
-DerivativeExpression &DerivativeExpression::operator=(const DerivativeExpression &rhs) {
-  if (this != &rhs) {
-    info = rhs.info->clone();
-  }
-
-  return *this;
-}
-
-DerivativeExpression::DerivativeExpression(const IMathObject &obj) {
-  info = obj.toMinimalObject();
-}
-
-DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : info(std::move(obj)) {
-}
-
-std::string DerivativeExpression::toString() const {
-  // TODO: remove this and use general toString() from UnaryExpression
-  return "(" + info->toString() + ")'";
+DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : IUnaryExpression(std::move(obj)) {
 }
 
 const IFunction *DerivativeExpression::getFunction() const {
   return &DER;
-}
-
-void DerivativeExpression::setPrecision(uint8_t precision) {
-  // TODO: remove this and use general toString() from UnaryExpression
-  if (auto *expr = cast<IExpression>(info.get())) {
-    expr->setPrecision(precision);
-  }
 }
 
 MathObjectPtr DerivativeExpression::toMinimalObject() const {
@@ -77,13 +54,13 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
   return clone();
 }
 
-void DerivativeExpression::validate() const {
-  if (const auto *childExpr = cast<IExpression>(info.get())) {
-    childExpr->validate();
-  }
+// void DerivativeExpression::validate() const {
+//   if (const auto *childExpr = cast<IExpression>(info.get())) {
+//     childExpr->validate();
+//   }
 
-  this->validateArgs(*getFunction(), {*info});
-}
+//   this->validateArgs(*getFunction(), {*info});
+// }
 
 void DerivativeExpression::compress() {
   if (auto *childExpr = cast<Expression>(info.get()); childExpr && childExpr->getChildren().empty()) {

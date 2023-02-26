@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
@@ -66,6 +67,9 @@ std::string IUnaryExpression::toString() const {
 
 std::string IUnaryExpression::postfixToString(const IFunction &oper) const {
   std::string result = info->toString();
+  if (is<Derivative>(oper)) {
+    return "(" + info->toString() + ")'";
+  }
 
   if (const auto *child = cast<IExpression>(info.get())) {
     if (const auto *exprOper = cast<IOperator>(child->getFunction())) {

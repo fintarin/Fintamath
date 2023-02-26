@@ -12,10 +12,10 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/CompExpression.hpp"
-#include "fintamath/expressions/DerivativeExpression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/IndexExpression.hpp"
+#include "fintamath/expressions/unary/DerivativeExpression.hpp"
 
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
