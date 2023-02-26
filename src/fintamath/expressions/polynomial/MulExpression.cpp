@@ -518,4 +518,8 @@ void MulExpression::invert() {
   }
 }
 
+IMathObject *MulExpression::simplify() {
+  return this;
+}
+
 }

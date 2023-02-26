@@ -11,5 +11,8 @@ public:
   MathObjectPtr toMinimalObject() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;
+
+protected:
+  IMathObject *simplify() override;
 };
 }

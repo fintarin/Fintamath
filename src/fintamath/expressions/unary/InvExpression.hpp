@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
 namespace fintamath {
@@ -11,5 +12,8 @@ public:
   MathObjectPtr toMinimalObject() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;
+
+protected:
+  IMathObject *simplify() override;
 };
 }

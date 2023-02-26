@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
 
 namespace fintamath {
@@ -13,5 +14,8 @@ public:
   MathObjectPtr simplify(bool isPrecise) const override;
 
   const IFunction *getFunction() const override;
+
+protected:
+  IMathObject *simplify() override;
 };
 }

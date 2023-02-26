@@ -61,4 +61,8 @@ void DerivativeExpression::compress() {
   }
 }
 
+IMathObject *DerivativeExpression::simplify() {
+  return this;
+}
+
 }

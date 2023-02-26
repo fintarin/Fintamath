@@ -59,4 +59,8 @@ MathObjectPtr AndExpression::simplify(bool /*isPrecise*/) const {
 const IFunction *AndExpression::getFunction() const {
   return &AND;
 }
+
+IMathObject *AndExpression::simplify() {
+  return this;
+}
 }

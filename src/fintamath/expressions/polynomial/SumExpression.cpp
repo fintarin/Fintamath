@@ -362,4 +362,8 @@ void SumExpression::negate() {
   }
 }
 
+IMathObject *SumExpression::simplify() {
+  return this;
+}
+
 }

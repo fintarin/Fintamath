@@ -59,4 +59,8 @@ MathObjectPtr OrExpression::simplify(bool /*isPrecise*/) const {
 const IFunction *OrExpression::getFunction() const {
   return &OR;
 }
+
+IMathObject *OrExpression::simplify() {
+  return this;
+}
 }

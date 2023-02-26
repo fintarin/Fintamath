@@ -466,4 +466,8 @@ std::vector<MathObjectPtr> Expression::getVariables() const {
   return result;
 }
 
+IMathObject *Expression::simplify() {
+  return this;
+}
+
 }

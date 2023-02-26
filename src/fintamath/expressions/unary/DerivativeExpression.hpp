@@ -15,6 +15,9 @@ public:
   MathObjectPtr simplify(bool isPrecise) const override;
 
   void compress() override;
+
+protected:
+  IMathObject *simplify() override;
 };
 
 }

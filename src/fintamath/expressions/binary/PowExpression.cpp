@@ -2,7 +2,7 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/unary/InvExpression.hpp"
-// #include "fintamath/expressions/MulExpression.hpp"
+// #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -22,6 +22,8 @@ MathObjectPtr PowExpression::toMinimalObject() const {
 
 MathObjectPtr PowExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<PowExpression>(*this);
+  simplifyValue(isPrecise, exprObj->lhsInfo);
+  simplifyValue(isPrecise, exprObj->rhsInfo);
 
   auto *lhsPtr = cast<IExpression>(exprObj->lhsInfo.get());
   auto *rhsPtr = cast<Integer>(exprObj->rhsInfo.get());
@@ -46,8 +48,7 @@ MathObjectPtr PowExpression::simplify(bool isPrecise) const {
       rhs = -rhs;
     }
 
-    // MulExpression mul(MulExpression::ArgumentsPtrVector{});
-    /*
+    /*MulExpression mul(MulExpression::ArgumentsPtrVector{});
     for (size_t i = 0; i < rhs; i++) {
       mul.addElement(exprObj->lhsInfo);
     }
@@ -58,11 +59,20 @@ MathObjectPtr PowExpression::simplify(bool isPrecise) const {
     return mul.simplify();*/
   }
 
+  auto *lhs = cast<INumber>(exprObj->lhsInfo.get());
+  auto *rhs = cast<INumber>(exprObj->rhsInfo.get());
+  if (lhs && rhs) {
+    return POW(*lhs, *rhs);
+  }
   return exprObj;
 }
 
 const IFunction *PowExpression::getFunction() const {
   return &POW;
+}
+
+IMathObject *PowExpression::simplify() {
+  return this;
 }
 
 }

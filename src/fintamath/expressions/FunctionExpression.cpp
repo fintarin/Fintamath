@@ -119,4 +119,8 @@ void FunctionExpression::validate() const {
 
   validateArgs(*function, newArgs);
 }
+
+IMathObject *FunctionExpression::simplify() {
+  return this;
+}
 }

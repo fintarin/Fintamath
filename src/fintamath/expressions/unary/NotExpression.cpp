@@ -28,4 +28,8 @@ MathObjectPtr NotExpression::simplify(bool isPrecise) const {
   return exprObj;
 }
 
+IMathObject *NotExpression::simplify() {
+  return this;
+}
+
 }

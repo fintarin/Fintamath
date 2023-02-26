@@ -63,4 +63,8 @@ MathObjectPtr IndexExpression::simplify(bool isPrecise) const {
   return std::make_unique<IndexExpression>(std::move(lhs), std::move(rhs));
 }
 
+IMathObject *IndexExpression::simplify() {
+  return this;
+}
+
 }

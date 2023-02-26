@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
 
 namespace fintamath {
@@ -15,6 +16,9 @@ public:
   MathObjectPtr toMinimalObject() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;
+
+protected:
+  IMathObject *simplify() override;
 };
 
 }

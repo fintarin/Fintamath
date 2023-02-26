@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/IInvertable.hpp"
 #include "fintamath/expressions/INegatable.hpp"
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
@@ -29,12 +30,14 @@ public:
 
   void invert() override;
 
+protected:
+  IMathObject *simplify() override;
+
 private:
   // TODO: Implement a new Expression and remove this
   struct ObjectPow;
   using Objects = std::vector<ObjectPow>;
 
-private:
   static std::string sumExprToString(const MathObjectPtr &obj);
 
   static ArgumentsPtrVector openPowMulExpression(const ArgumentsPtrVector &powVect);

@@ -8,10 +8,8 @@
 
 namespace fintamath {
 
-const Neg NEG;
-
 NegExpression::NegExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
-  function = cast<IFunction>(NEG.clone());
+  function = cast<IFunction>(Neg().clone());
 }
 
 MathObjectPtr NegExpression::toMinimalObject() const {
@@ -36,6 +34,22 @@ MathObjectPtr NegExpression::simplify(bool isPrecise) const {
   }
 
   return exprObj;
+}
+
+IMathObject *NegExpression::simplify() {
+  if (function->doArgsMatch({*info})) {
+    return (*function)(*info).release();
+  }
+
+  if (auto *expr = cast<INegatable>(info.get())) {
+    expr->negate();
+    return expr;
+  }
+
+  if (auto *expr = cast<NegExpression>(info.get())) {
+    return expr->info.release();
+  }
+  return this;
 }
 
 }

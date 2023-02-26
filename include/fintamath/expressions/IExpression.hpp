@@ -66,6 +66,8 @@ protected:
 
   static void setMathObjectPrecision(MathObjectPtr &obj, uint8_t precision);
 
+  virtual IMathObject *simplify() = 0;
+
 private:
   static Parser::Vector<ExpressionPtr, const std::string &> parserVector;
 };

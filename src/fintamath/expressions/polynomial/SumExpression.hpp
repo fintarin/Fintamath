@@ -26,6 +26,9 @@ public:
 
   void negate() override;
 
+protected:
+  IMathObject *simplify() override;
+
 private:
   // TODO: Implement a new Expression and remove this
   struct MulObject;

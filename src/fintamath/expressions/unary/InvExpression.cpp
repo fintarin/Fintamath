@@ -36,4 +36,7 @@ MathObjectPtr InvExpression::simplify(bool isPrecise) const {
   return exprObj;
 }
 
+IMathObject *InvExpression::simplify() {
+  return this;
+}
 }

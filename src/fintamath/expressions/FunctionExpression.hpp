@@ -31,6 +31,9 @@ public:
 
   void validate() const override;
 
+protected:
+  IMathObject *simplify() override;
+
 private:
   FunctionPtr function;
 

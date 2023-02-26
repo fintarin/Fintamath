@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -33,6 +34,9 @@ public:
   MathObjectPtr simplify(bool isPrecise) const override;
 
   void compress() override;
+
+protected:
+  IMathObject *simplify() override;
 
 private:
   OperatorPtr oper;

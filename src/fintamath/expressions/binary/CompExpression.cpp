@@ -274,4 +274,9 @@ std::vector<MathObjectPtr> CompExpression::sortResult(std::vector<MathObjectPtr>
   return resultWithoutRepeat;
 }
 */
+
+IMathObject *CompExpression::simplify() {
+  return this;
+}
+
 }

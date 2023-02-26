@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
@@ -89,6 +90,8 @@ protected:
   Expression &divide(const Expression &rhs) override;
 
   Expression &negate() override;
+
+  IMathObject *simplify() override;
 
 private:
   explicit Expression(const TokenVector &tokens);
