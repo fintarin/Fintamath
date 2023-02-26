@@ -1,4 +1,4 @@
-#include "fintamath/expressions/IExpression.hpp"
+#pragma once
 
 #include "fintamath/expressions/IUnaryExpression.hpp"
 

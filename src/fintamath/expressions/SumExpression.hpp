@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "fintamath/expressions/INegatable.hpp"
 #include "fintamath/expressions/PolynomExpression.hpp"
 
 namespace fintamath {
@@ -19,7 +20,7 @@ struct SumElement : public PolynomElement {
 
 //-----------------------------------------------------------------------------------------------------//
 
-class SumExpression : public PolynomExpressionCRTP<SumExpression, SumElement> {
+class SumExpression : public INegatable, public PolynomExpressionCRTP<SumExpression, SumElement> {
 public:
   SumExpression() = default; // TODO: remove this
 

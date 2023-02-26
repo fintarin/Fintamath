@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "fintamath/expressions/INegatable.hpp"
 #include "fintamath/expressions/PolynomExpression.hpp"
 
 namespace fintamath {
@@ -19,7 +20,7 @@ struct MulElement : public PolynomElement {
 
 //-----------------------------------------------------------------------------------------------------//
 
-class MulExpression : public PolynomExpressionCRTP<MulExpression, MulElement> {
+class MulExpression : public INegatable, public PolynomExpressionCRTP<MulExpression, MulElement> {
 public:
   MulExpression() = default; // TODO: remove this
 

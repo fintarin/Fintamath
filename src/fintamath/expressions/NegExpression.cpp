@@ -1,8 +1,6 @@
 #include "fintamath/expressions/NegExpression.hpp"
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/expressions/MulExpression.hpp"
-#include "fintamath/expressions/PolynomExpression.hpp"
-#include "fintamath/expressions/SumExpression.hpp"
+#include "fintamath/expressions/INegatable.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include <memory>
@@ -23,12 +21,7 @@ MathObjectPtr NegExpression::simplify(bool isPrecise) const {
     return -*expr;
   }
 
-  if (auto *expr = cast<SumExpression>(exprObj->info.get())) {
-    expr->negate();
-    return expr->clone();
-  }
-
-  if (auto *expr = cast<MulExpression>(exprObj->info.get())) {
+  if (auto *expr = cast<INegatable>(exprObj->info.get())) {
     expr->negate();
     return expr->clone();
   }
