@@ -62,6 +62,8 @@ protected:
 
   static void simplifyConstant(bool isPrecise, MathObjectPtr &obj);
 
+  static void setPrecisionMathObject(uint8_t precision, MathObjectPtr &obj);
+
 private:
   static Parser::Vector<ExpressionPtr, const std::string &> parserVector;
 };

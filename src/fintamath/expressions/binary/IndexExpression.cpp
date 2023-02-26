@@ -1,6 +1,7 @@
-#include "fintamath/expressions/IndexExpression.hpp"
+#include "fintamath/expressions/binary/IndexExpression.hpp"
 
 #include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
+#include "fintamath/expressions/IBinaryExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/other/Index.hpp"
@@ -15,58 +16,31 @@ namespace fintamath {
 
 const Index INDEX;
 
-IndexExpression::IndexExpression(const IndexExpression &rhs)
-    : lhsInfo(rhs.lhsInfo->clone()),
-      rhsInfo(rhs.rhsInfo->clone()) {
-}
-
-IndexExpression &IndexExpression::operator=(const IndexExpression &rhs) {
-  if (this != &rhs) {
-    lhsInfo = rhs.lhsInfo->clone();
-    rhsInfo = rhs.rhsInfo->clone();
-  }
-
-  return *this;
-}
-
-IndexExpression::IndexExpression(const IMathObject &lhs, const IMathObject &rhs)
-    : lhsInfo(lhs.clone()),
-      rhsInfo(rhs.clone()) {
+IndexExpression::IndexExpression(const IMathObject &lhs, const IMathObject &rhs) : IBinaryExpression(lhs, rhs) {
 }
 
 IndexExpression::IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
-    : lhsInfo(std::move(lhs)),
-      rhsInfo(std::move(rhs)) {
+    : IBinaryExpression(std::move(lhs), std::move(rhs)) {
 }
 
-std::string IndexExpression::toString() const {
-  // TODO: remove this and use general toString() from BinaryExpression
+// std::string IndexExpression::toString() const {
+//   // TODO: remove this and use general toString() from BinaryExpression
 
-  std::string lhsStr = lhsInfo->toString();
-  if (is<IExpression>(lhsInfo)) {
-    lhsStr = "(" + lhsStr + ")";
-  }
+//   std::string lhsStr = lhsInfo->toString();
+//   if (is<IExpression>(lhsInfo)) {
+//     lhsStr = "(" + lhsStr + ")";
+//   }
 
-  std::string rhsStr = rhsInfo->toString();
-  if (is<IExpression>(rhsInfo)) {
-    rhsStr = "(" + rhsStr + ")";
-  }
+//   std::string rhsStr = rhsInfo->toString();
+//   if (is<IExpression>(rhsInfo)) {
+//     rhsStr = "(" + rhsStr + ")";
+//   }
 
-  return lhsStr + "_" + rhsStr;
-}
+//   return lhsStr + "_" + rhsStr;
+// }
 
 const IFunction *IndexExpression::getFunction() const {
   return &INDEX;
-}
-
-void IndexExpression::setPrecision(uint8_t precision) {
-  if (auto *expr = cast<IExpression>(lhsInfo.get())) {
-    expr->setPrecision(precision);
-  }
-
-  if (auto *expr = cast<IExpression>(rhsInfo.get())) {
-    expr->setPrecision(precision);
-  }
 }
 
 MathObjectPtr IndexExpression::toMinimalObject() const {
@@ -92,10 +66,6 @@ MathObjectPtr IndexExpression::simplify(bool isPrecise) const {
   // TODO: implement derivative of expression
 
   return std::make_unique<IndexExpression>(std::move(lhs), std::move(rhs));
-}
-
-void IndexExpression::validate() const {
-  // do nothing
 }
 
 }

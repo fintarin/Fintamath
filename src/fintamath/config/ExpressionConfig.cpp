@@ -1,6 +1,6 @@
 #include "fintamath/expressions/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/IndexExpression.hpp"
+#include "fintamath/expressions/binary/IndexExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"

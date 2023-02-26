@@ -33,7 +33,8 @@ IBinaryExpression &IBinaryExpression::operator=(const IBinaryExpression &rhs) {
 }
 
 void IBinaryExpression::setPrecision(uint8_t precision) {
-  // TODO: implement it
+  setPrecisionMathObject(precision, lhsInfo);
+  setPrecisionMathObject(precision, rhsInfo);
 }
 
 std::string IBinaryExpression::toString() const {

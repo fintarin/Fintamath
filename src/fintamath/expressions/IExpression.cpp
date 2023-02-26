@@ -6,6 +6,7 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/meta/Converter.hpp"
 #include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -120,4 +121,17 @@ void IExpression::simplifyConstant(bool isPrecise, MathObjectPtr &obj) {
 
   obj = obj->toMinimalObject();
 }
+
+void IExpression::setPrecisionMathObject(uint8_t precision, MathObjectPtr &obj) {
+  if (is<INumber>(obj)) {
+    obj = convert<Real>(*obj).precise(precision).clone();
+    return;
+  }
+  if (is<IExpression>(obj)) {
+    auto copyExpr = cast<IExpression>(std::move(obj));
+    copyExpr->setPrecision(precision);
+    obj = std::move(copyExpr);
+  }
+}
+
 }
