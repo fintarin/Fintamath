@@ -21,7 +21,7 @@ struct MulElement : public PolynomElement {
 
 class MulExpression : public PolynomExpressionCRTP<MulExpression, MulElement> {
 public:
-  MulExpression() = default;
+  MulExpression() = default; // TODO: remove this
 
   explicit MulExpression(PolynomVector inPolynomVect);
 

@@ -12,8 +12,6 @@ public:
   explicit NegExpression(const MathObjectPtr &rhs) : UnaryExpressionCRTP(rhs) {
   }
 
-  std::string toString() const override;
-
   MathObjectPtr simplify() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;

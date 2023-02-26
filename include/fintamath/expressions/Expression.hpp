@@ -121,10 +121,13 @@ private:
 
   std::string binaryOperatorToString() const;
 
+  // TODO: remove when UnaryExpressions will be implemented
   std::string prefixUnaryOperatorToString() const;
 
+  // TODO: remove when UnaryExpressions will be implemented
   std::string postfixUnaryOperatorToString() const;
 
+  // TODO: remove when UnaryExpressions will be implemented
   std::string functionToString() const;
 
   void simplifyFunction(bool isPrecise);

@@ -21,7 +21,7 @@ struct SumElement : public PolynomElement {
 
 class SumExpression : public PolynomExpressionCRTP<SumExpression, SumElement> {
 public:
-  SumExpression() = default;
+  SumExpression() = default; // TODO: remove this
 
   explicit SumExpression(PolynomVector inPolynomVect);
 
