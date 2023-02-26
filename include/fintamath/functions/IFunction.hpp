@@ -98,7 +98,7 @@ protected:
     validateArgsSize(argsVect);
 
     if (!doArgsMatch(argsVect)) {
-      return makeFunctionExpression(*this, argsVectToArgsPtrVect(argsVect));
+      return makeFunctionExpression(*this, toArgumentsPtrVect(argsVect));
     }
 
     return call(argsVect);

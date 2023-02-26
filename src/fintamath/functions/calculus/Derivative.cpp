@@ -3,7 +3,7 @@
 namespace fintamath {
 
 MathObjectPtr Derivative::call(const ArgumentsVector &argsVect) const {
-  return makeFunctionExpression(*this, argsVectToArgsPtrVect(argsVect));
+  return makeFunctionExpression(*this, toArgumentsPtrVect(argsVect));
 }
 
 }

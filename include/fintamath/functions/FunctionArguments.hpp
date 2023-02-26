@@ -16,17 +16,7 @@ static ArgumentsPtrVector makeArgumentsPtrVector(Args &&...args) {
   return vect;
 }
 
-template <size_t i, typename Head, typename... Tail>
-static void makeArgumentsPtrVector(ArgumentsPtrVector &vect, Head &&head, Tail &&...tail) {
-  vect.emplace_back(std::forward<Head>(head));
-  makeArgumentsPtrVector<i + 1>(vect, std::move(tail)...);
-}
-
-template <size_t i>
-static void makeArgumentsPtrVector(ArgumentsPtrVector &vect) {
-}
-
-static ArgumentsPtrVector argsVectToArgsPtrVect(const ArgumentsVector &argsVect) {
+inline ArgumentsPtrVector toArgumentsPtrVect(const ArgumentsVector &argsVect) {
   ArgumentsPtrVector argsPtrVector;
 
   for (const auto &arg : argsVect) {
@@ -34,6 +24,16 @@ static ArgumentsPtrVector argsVectToArgsPtrVect(const ArgumentsVector &argsVect)
   }
 
   return argsPtrVector;
+}
+
+template <size_t i, typename Head, typename... Tail>
+void makeArgumentsPtrVector(ArgumentsPtrVector &vect, Head &&head, Tail &&...tail) {
+  vect.emplace_back(std::forward<Head>(head));
+  makeArgumentsPtrVector<i + 1>(vect, std::move(tail)...);
+}
+
+template <size_t i>
+void makeArgumentsPtrVector(ArgumentsPtrVector &vect) {
 }
 
 }
