@@ -409,4 +409,11 @@ MathObjectPtr SumExpression::getPow() const {
   return maxValue.clone();
 }
 
+void SumExpression::negate() {
+  // TODO: refactor with using NegExpression
+  for (auto &child : polynomVect) {
+    child.inverted = !child.inverted;
+  }
+}
+
 }

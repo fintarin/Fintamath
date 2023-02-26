@@ -41,6 +41,8 @@ public:
   using PolynomVector = std::vector<Element>;
 
 public:
+  virtual void negate() = 0;
+
   void pushPolynomToPolynom(const PolynomVector &from, PolynomVector &to) {
     for (const auto &elem : from) {
       to.emplace_back(elem);

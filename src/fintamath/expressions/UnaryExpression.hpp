@@ -54,7 +54,7 @@ public:
     }
   }
 
-  std::string toString() const override {
+  std::string toString() const final {
     const auto *func = this->getFunction();
 
     if (const auto *oper = cast<IOperator>(func)) {
@@ -116,6 +116,30 @@ private:
 
   std::string functionToString(const IFunction &oper) const {
     return oper.toString() + "(" + info->toString() + ")";
+  }
+
+protected:
+  void simplifyValue(bool isPrecise) {
+    if (is<IExpression>(info)) {
+      auto expr = cast<IExpression>(std::move(info));
+      info = expr->simplify(isPrecise);
+      return;
+    }
+
+    if (is<IConstant>(info)) {
+      auto constant = cast<IConstant>(std::move(info));
+      auto constVal = (*constant)();
+
+      if (const auto *num = cast<INumber>(constVal.get()); num && isPrecise && !num->isPrecise()) {
+        info = std::move(constant);
+      } else {
+        info = std::move(constVal);
+      }
+
+      return;
+    }
+
+    info = info->simplify();
   }
 };
 

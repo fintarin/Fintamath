@@ -9,6 +9,7 @@
 #include "fintamath/expressions/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/NegExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -576,6 +577,14 @@ MathObjectPtr MulExpression::getPow() const {
   }
 
   return maxValue.clone();
+}
+
+void MulExpression::negate() {
+  if (polynomVect.empty()) {
+    return;
+  }
+  // TODO: refactor with using InvExpression
+  polynomVect.front().info = NegExpression(polynomVect.front().info).simplify();
 }
 
 }

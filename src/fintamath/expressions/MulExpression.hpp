@@ -39,6 +39,8 @@ public:
 
   MathObjectPtr getPow() const;
 
+  void negate() override;
+
 private:
   // TODO: Implement a new Expression and remove this
   struct ObjectPow;
