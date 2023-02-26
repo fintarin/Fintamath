@@ -11,10 +11,11 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
-#include "fintamath/expressions/CompExpression.hpp"
+#include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/binary/IndexExpression.hpp"
+#include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/unary/DerivativeExpression.hpp"
 
 #include "fintamath/expressions/unary/NegExpression.hpp"
@@ -146,71 +147,6 @@ void Expression::compress() {
   }
 }
 
-std::string Expression::binaryOperatorToString() const {
-  std::string result;
-
-  const auto *parentOper = cast<IOperator>(info.get());
-  std::string parentOperStr = info->toString();
-  IOperator::Priority parentOperPriority = parentOper->getOperatorPriority();
-  bool parentOperIsAssociative = parentOper->isAssociative();
-
-  if (parentOperPriority != IOperator::Priority::Multiplication &&
-      parentOperPriority != IOperator::Priority::Exponentiation) {
-    parentOperStr = ' ' + parentOperStr + ' ';
-  }
-
-  for (size_t i = 0; i < children.size(); i++) {
-    const auto &child = children[i];
-
-    bool shouldPutInBrackets = false;
-
-    if (const auto *childExpr = cast<IExpression>(child.get())) {
-      if (const auto *oper = cast<IOperator>(childExpr->getFunction())) {
-        if (auto priority = oper->getOperatorPriority();
-            priority > parentOperPriority || (priority == parentOperPriority && !parentOperIsAssociative && i > 0)) {
-          shouldPutInBrackets = true;
-        }
-      }
-    }
-
-    if (shouldPutInBrackets) {
-      result += putInBrackets(child->toString());
-    } else {
-      result += child->toString();
-    }
-
-    result += parentOperStr;
-  }
-
-  result = result.substr(0, result.length() - parentOperStr.length());
-
-  return result;
-}
-
-std::string Expression::prefixUnaryOperatorToString() const {
-  std::string result = info->toString();
-
-  if (const auto *child = cast<IExpression>(children.front().get())) {
-    if (const auto *oper = cast<IOperator>(child->getFunction())) {
-      if (auto priority = oper->getOperatorPriority(); priority != IOperator::Priority::PrefixUnary) {
-        if (is<MulExpression>(child)) {
-          return result + children.front()->toString();
-        }
-
-        if (const auto *childExpr = cast<Expression>(child)) {
-          if (is<Pow>(childExpr->info)) {
-            return result + children.front()->toString();
-          }
-        }
-
-        return result + putInBrackets(children.front()->toString());
-      }
-    }
-  }
-
-  return result + children.front()->toString();
-}
-
 std::string Expression::postfixUnaryOperatorToString() const {
   std::string result = children.front()->toString();
 
@@ -245,28 +181,11 @@ std::string Expression::functionToString() const {
 
 void Expression::setPrecisionRec(uint8_t precision) {
   if (children.empty()) {
-    if (is<INumber>(info)) {
-      info = convert<Real>(*info).precise(precision).clone();
-      return;
-    }
-    if (is<IExpression>(info)) {
-      auto copyExpr = cast<IExpression>(std::move(info));
-      copyExpr->setPrecision(precision);
-      info = std::move(copyExpr);
-    }
+    setPrecisionMathObject(precision, info);
   }
 
   for (auto &child : children) {
-    if (is<IExpression>(child)) {
-      auto copyExpr = cast<IExpression>(std::move(child));
-      copyExpr->setPrecision(precision);
-      child = copyExpr->simplify(false);
-      continue;
-    }
-    if (is<INumber>(child)) {
-      child = convert<Real>(*child).precise(precision).clone();
-      continue;
-    }
+    setPrecisionMathObject(precision, child);
   }
 
   if (const auto *func = cast<IFunction>(info.get())) {
@@ -311,10 +230,11 @@ std::string Expression::toString() const {
     switch (oper->getOperatorPriority()) {
     case IOperator::Priority::PostfixUnary:
       return postfixUnaryOperatorToString();
-    case IOperator::Priority::PrefixUnary:
-      return prefixUnaryOperatorToString();
     default:
-      return binaryOperatorToString();
+      std::vector<MathObjectPtr> values;
+      values.emplace_back(children.front()->clone());
+      values.emplace_back(children.back()->clone());
+      return binaryOperatorToString(*oper, values);
     }
   }
 

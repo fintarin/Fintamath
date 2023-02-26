@@ -9,7 +9,7 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/Exception.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/expressions/CompExpression.hpp"
+#include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"

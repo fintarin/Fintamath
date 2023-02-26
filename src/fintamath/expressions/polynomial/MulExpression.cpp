@@ -6,7 +6,7 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
-#include "fintamath/expressions/CompExpression.hpp"
+#include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"

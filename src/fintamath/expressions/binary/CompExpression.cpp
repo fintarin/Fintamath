@@ -1,12 +1,14 @@
-#include "fintamath/expressions/CompExpression.hpp"
+#include "fintamath/expressions/binary/CompExpression.hpp"
 
 #include <algorithm>
 #include <cstdint>
 #include <ios>
+#include <memory>
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/IBinaryExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -19,32 +21,26 @@
 
 namespace fintamath {
 
-CompExpression::CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs) {
+CompExpression::CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs)
+    : IBinaryExpression(std::move(lhs), std::move(rhs)) {
   if (is<CompExpression>(lhs) || is<CompExpression>(rhs)) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs->toString(), rhs->toString());
   }
 
   this->oper = cast<IOperator>(oper.clone());
-  leftExpr = std::move(lhs);
-  rightExpr = std::move(rhs);
 }
 
-CompExpression::CompExpression(const CompExpression &rhs)
-    : leftExpr(rhs.leftExpr->clone()),
-      rightExpr(rhs.rightExpr->clone()),
-      oper(cast<IOperator>(rhs.oper->clone())) {
+CompExpression::CompExpression(const CompExpression &rhs) : IBinaryExpression(rhs) {
+  oper = cast<IOperator>(rhs.oper->clone());
 }
 
-CompExpression::CompExpression(CompExpression &&rhs) noexcept
-    : leftExpr(std::move(rhs.leftExpr)),
-      rightExpr(std::move(rhs.rightExpr)),
-      oper(std::move(rhs.oper)) {
+CompExpression::CompExpression(CompExpression &&rhs) noexcept : IBinaryExpression(std::move(rhs)) {
+  oper = std::move(rhs.oper);
 }
 
 CompExpression &CompExpression::operator=(const CompExpression &rhs) {
   if (&rhs != this) {
-    leftExpr = rhs.leftExpr->clone();
-    rightExpr = rhs.rightExpr->clone();
+    IBinaryExpression::operator=(rhs);
     oper = cast<IOperator>(rhs.oper->clone());
   }
 
@@ -53,16 +49,11 @@ CompExpression &CompExpression::operator=(const CompExpression &rhs) {
 
 CompExpression &CompExpression::operator=(CompExpression &&rhs) noexcept {
   if (&rhs != this) {
-    std::swap(leftExpr, rhs.leftExpr);
-    std::swap(rightExpr, rhs.rightExpr);
+    IBinaryExpression::operator=(std::move(rhs));
     std::swap(oper, rhs.oper);
   }
 
   return *this;
-}
-
-std::string CompExpression::toString() const {
-  return leftExpr->toString() + ' ' + oper->toString() + ' ' + rightExpr->toString();
 }
 
 MathObjectPtr CompExpression::toMinimalObject() const {
@@ -70,7 +61,7 @@ MathObjectPtr CompExpression::toMinimalObject() const {
 }
 
 MathObjectPtr CompExpression::simplify(bool isPrecise) const {
-  SumExpression addExpr(*leftExpr->clone());
+  /*SumExpression addExpr(*leftExpr->clone());
   addExpr.addElement(NegExpression(*rightExpr).toMinimalObject());
 
   MathObjectPtr simplExpr = addExpr.simplify(isPrecise);
@@ -82,19 +73,20 @@ MathObjectPtr CompExpression::simplify(bool isPrecise) const {
   auto res = std::make_unique<CompExpression>(*this);
   res->leftExpr = std::move(simplExpr);
   res->rightExpr = ZERO.clone();
-  return res;
+  return res;*/
+  return std::make_unique<CompExpression>(*this);
 }
 
 void CompExpression::compress() {
-  if (auto *childExpr = cast<Expression>(leftExpr.get()); childExpr && childExpr->getChildren().empty()) {
+  /*if (auto *childExpr = cast<Expression>(leftExpr.get()); childExpr && childExpr->getChildren().empty()) {
     leftExpr = std::move(childExpr->getInfo());
   }
   if (auto *childExpr = cast<Expression>(rightExpr.get()); childExpr && childExpr->getChildren().empty()) {
     rightExpr = std::move(childExpr->getInfo());
-  }
+  }*/
 }
 
-void CompExpression::validate() const {
+/*void CompExpression::validate() const {
   if (const auto *childExpr = cast<IExpression>(leftExpr.get())) {
     childExpr->validate();
   }
@@ -103,17 +95,17 @@ void CompExpression::validate() const {
   }
 
   this->validateArgs(*getFunction(), {*leftExpr, *rightExpr});
-}
+}*/
 
-void CompExpression::setPrecision(uint8_t precision) {
+/*void CompExpression::setPrecision(uint8_t precision) {
   if (auto *expr = cast<IExpression>(leftExpr.get())) {
     expr->setPrecision(precision);
   }
-}
+}*/
 
 std::string CompExpression::solve() const {
   return "Remove this"; // TODO: remove this
-  Variable x("x");
+  /*Variable x("x");
   auto expr = simplify(false);
   if (!is<CompExpression>(expr)) {
     return expr->toString();
@@ -138,12 +130,12 @@ std::string CompExpression::solve() const {
   }
   resultStr.pop_back();
   resultStr += "}";
-  return resultStr;
+  return resultStr;*/
 }
 
 std::string CompExpression::solve(uint8_t precision) const {
   return "Remove this"; // TODO: remove this
-  Variable x("x");
+  /*Variable x("x");
   auto expr = simplify(false);
   if (!is<CompExpression>(expr)) {
     return expr->toString();
@@ -172,18 +164,18 @@ std::string CompExpression::solve(uint8_t precision) const {
   }
   resultStr.pop_back();
   resultStr += "}";
-  return resultStr;
+  return resultStr;*/
 }
 
 const IFunction *CompExpression::getFunction() const {
   return oper.get();
 }
 
-std::vector<MathObjectPtr> CompExpression::solvePowEquation(const Variable &x) const {
+/*std::vector<MathObjectPtr> CompExpression::solvePowEquation(const Variable &x) const {
   auto results = solveQuadraticEquation(x.clone());
   return results;
-}
-
+}*/
+/*
 // TODO: v is unused here
 std::vector<MathObjectPtr> CompExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
   auto copyExpr = *this;
@@ -278,5 +270,5 @@ std::vector<MathObjectPtr> CompExpression::sortResult(std::vector<MathObjectPtr>
   }
   return resultWithoutRepeat;
 }
-
+*/
 }
