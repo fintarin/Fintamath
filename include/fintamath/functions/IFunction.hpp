@@ -29,6 +29,8 @@ public:
 
   virtual ArgumentsTypesVector getArgsTypes() const = 0;
 
+  virtual bool doArgsMatch(const ArgumentsVector &argsVect) const = 0;
+
   template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
   MathObjectPtr operator()(const Args &...args) const {
     ArgumentsVector argsVect = {args...};
@@ -81,6 +83,14 @@ public:
     return argsTypes;
   }
 
+  bool doArgsMatch(const ArgumentsVector &argsVect) const override {
+    if (isTypeAny) {
+      return doAnyArgsMatch(argsVect);
+    }
+
+    return doArgsMatch<0, Args...>(argsVect);
+  }
+
 protected:
   virtual MathObjectPtr call(const ArgumentsVector &argsVect) const = 0;
 
@@ -109,17 +119,9 @@ private:
   void getArgsTypes(ArgumentsTypesVector &outArgTypes) const {
   }
 
-  bool doArgsMatch(const ArgumentsVector &argsVect) const {
-    if (isTypeAny) {
-      return doAnyArgsMatch(argsVect);
-    }
-
-    return doArgsMatch<0, Args...>(argsVect);
-  }
-
   template <size_t i, typename Head, typename... Tail>
   bool doArgsMatch(const ArgumentsVector &argsVect) const {
-    if (!is<Head>(argsVect.at(i))) {
+    if (!is<Head>(argsVect[i])) {
       return false;
     }
 
@@ -131,7 +133,8 @@ private:
     return true;
   }
 
-  bool doAnyArgsMatch(const ArgumentsVector &argsVect) const {
+  template <typename ArgumentsVectorType>
+  bool doAnyArgsMatch(const ArgumentsVectorType &argsVect) const {
     return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
       return (is<Args>(arg) || ...);
     });
@@ -147,7 +150,7 @@ private:
     std::vector<std::string> argNamesVect(argsVect.size());
 
     for (size_t i = 0; i < argNamesVect.size(); i++) {
-      argNamesVect.at(i) = argsVect.at(i).get().toString();
+      argNamesVect[i] = argsVect[i].get().toString();
     }
 
     throw InvalidInputFunctionException(toString(), argNamesVect);
