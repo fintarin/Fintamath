@@ -1,12 +1,6 @@
 #pragma once
 
 #include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/expressions/MulExpression.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/multimethod/Converter.hpp"
-#include "fintamath/numbers/INumber.hpp"
-#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -24,7 +18,7 @@ public:
 
   IUnaryExpression(const IMathObject &rhs);
 
-  explicit IUnaryExpression(const MathObjectPtr &rhs);
+  IUnaryExpression(MathObjectPtr &&rhs);
 
   void setPrecision(uint8_t precision) final;
 
@@ -44,6 +38,6 @@ protected:
 };
 
 template <typename Derived>
-class IUnaryExpressionCRTP : virtual public IUnaryExpression, virtual public IExpressionCRTP<Derived> {};
+class IUnaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IUnaryExpression {};
 
 }

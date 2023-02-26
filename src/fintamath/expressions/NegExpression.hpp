@@ -8,7 +8,7 @@ class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
   NegExpression(const IMathObject &rhs);
 
-  explicit NegExpression(const MathObjectPtr &rhs);
+  NegExpression(MathObjectPtr &&rhs);
 
   MathObjectPtr simplify() const override;
 

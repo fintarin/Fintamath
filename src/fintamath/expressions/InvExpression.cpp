@@ -1,6 +1,8 @@
 #include "fintamath/expressions/InvExpression.hpp"
+
 #include "fintamath/expressions/IInvertable.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include <memory>
 
 namespace fintamath {
@@ -10,7 +12,7 @@ const Inv INV;
 InvExpression::InvExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
 }
 
-InvExpression::InvExpression(const MathObjectPtr &rhs) : IUnaryExpression(rhs) {
+InvExpression::InvExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
 }
 
 MathObjectPtr InvExpression::simplify() const {
@@ -21,7 +23,7 @@ MathObjectPtr InvExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<InvExpression>(*this);
   exprObj->simplifyValue(isPrecise);
 
-  if (const auto *expr = cast<IArithmetic>(exprObj->info.get())) {
+  if (const auto *expr = cast<INumber>(exprObj->info.get())) {
     return INV(*expr);
   }
 

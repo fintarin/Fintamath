@@ -8,7 +8,7 @@ class InvExpression : public IUnaryExpressionCRTP<InvExpression> {
 public:
   InvExpression(const IMathObject &rhs);
 
-  explicit InvExpression(const MathObjectPtr &rhs);
+  explicit InvExpression(MathObjectPtr &&rhs);
 
   MathObjectPtr simplify() const override;
 

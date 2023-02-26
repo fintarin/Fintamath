@@ -186,6 +186,7 @@ struct ParserConfig {
     IOperator::registerType<Angle>();
 
     IExpression::registerType<Expression>();
+    IFunction::registerType<Inv>();
   }
 };
 

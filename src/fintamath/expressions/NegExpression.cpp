@@ -1,8 +1,9 @@
 #include "fintamath/expressions/NegExpression.hpp"
-#include "fintamath/core/IArithmetic.hpp"
+
 #include "fintamath/expressions/INegatable.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include <memory>
 
 namespace fintamath {
@@ -12,7 +13,7 @@ const Neg NEG;
 NegExpression::NegExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
 }
 
-NegExpression::NegExpression(const MathObjectPtr &rhs) : IUnaryExpression(rhs) {
+NegExpression::NegExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
 }
 
 MathObjectPtr NegExpression::simplify() const {
@@ -23,7 +24,7 @@ MathObjectPtr NegExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<NegExpression>(*this);
   exprObj->simplifyValue(isPrecise);
 
-  if (const auto *expr = cast<IArithmetic>(exprObj->info.get())) {
+  if (const auto *expr = cast<INumber>(exprObj->info.get())) {
     return -*expr;
   }
 
