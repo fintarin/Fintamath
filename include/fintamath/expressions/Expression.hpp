@@ -44,12 +44,6 @@ public:
   // TODO: implement iterator & remove this
   const MathObjectPtr &getInfo() const;
 
-  // TODO: implement iterator & remove this
-  ArgumentsPtrVector &getChildren();
-
-  // TODO: implement iterator & remove this
-  const ArgumentsPtrVector &getChildren() const;
-
   const IFunction *getFunction() const override;
 
   void setPrecision(uint8_t precision) override;
@@ -119,28 +113,8 @@ private:
 
   static TokenVector cutBraces(const TokenVector &tokens);
 
-  // TODO: remove when UnaryExpressions will be implemented
-  std::string postfixUnaryOperatorToString() const;
-
-  // TODO: remove when UnaryExpressions will be implemented
-  std::string functionToString() const;
-
-  void simplifyFunction(bool isPrecise);
-
-  void simplifyPow(); // TODO: move to PowExpression
-
-  void simplifyNeg(); // TODO move to NegExpression
-
-  void simplifyNot(); // TODO move to LogicExpression
-
-  void simplifyAnd(); // TODO move to LogicExpression
-
-  void simplifyOr(); // TODO move to LogicExpression
-
 private:
   MathObjectPtr info;
-
-  ArgumentsPtrVector children; // TODO: remove this and implement GeneralFunctionExpression
 
   static Parser::Map<ExpressionPtr, ArgumentsPtrVector &&> expressionBuildersMap;
 };

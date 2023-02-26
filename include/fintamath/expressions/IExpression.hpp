@@ -58,7 +58,9 @@ protected:
 
   static std::string putInBrackets(const std::string &str);
 
-  static std::string binaryOperatorToString(const IOperator &oper, const std::vector<MathObjectPtr> &values);
+  static std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
+
+  static std::string postfixUnaryOperatorToString(const IOperator &oper, const MathObjectPtr &lhs);
 
   static void simplifyConstant(bool isPrecise, MathObjectPtr &obj);
 

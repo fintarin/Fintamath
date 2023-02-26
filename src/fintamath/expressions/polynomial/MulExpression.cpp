@@ -6,9 +6,9 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
-#include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/expressions/unary/InvExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
@@ -479,7 +479,7 @@ MulExpression::PolynomVector MulExpression::openPowMulExpression(const PolynomVe
 
 // TODO: remove this and implement PowExpression
 MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
-  for (const auto &child : polynomVect) {
+  /*for (const auto &child : polynomVect) {
     if (*powValue == ONE) {
       if (is<Variable>(child)) {
         return polynomVect.front()->clone();
@@ -491,7 +491,7 @@ MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) co
         return polynomVect.front()->clone();
       }
     }
-  }
+  }*/
 
   return {};
 }
@@ -500,13 +500,14 @@ MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) co
 MathObjectPtr MulExpression::getPow() const {
   Integer maxValue = ZERO;
 
-  for (const auto &child : polynomVect) {
+  // TODO: refactor this
+  /*for (const auto &child : polynomVect) {
     if (const auto *childExpr = cast<Expression>(child.get()); childExpr && is<Pow>(childExpr->getInfo())) {
       if (const auto *pow = cast<Integer>(childExpr->getChildren().back().get()); *pow > maxValue) {
         maxValue = *pow;
       }
     }
-  }
+  }*/
 
   return maxValue.clone();
 }

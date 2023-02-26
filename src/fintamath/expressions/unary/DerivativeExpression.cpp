@@ -63,7 +63,7 @@ MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
 // }
 
 void DerivativeExpression::compress() {
-  if (auto *childExpr = cast<Expression>(info.get()); childExpr && childExpr->getChildren().empty()) {
+  if (auto *childExpr = cast<Expression>(info.get())) {
     info = std::move(childExpr->getInfo());
   }
 }

@@ -6,6 +6,7 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/meta/Converter.hpp"
 #include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
@@ -98,6 +99,24 @@ std::string IExpression::binaryOperatorToString(const IOperator &oper, const std
   result = result.substr(0, result.length() - operStr.length());
 
   return result;
+}
+
+std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, const MathObjectPtr &lhs) {
+  std::string result = lhs->toString();
+
+  if (const auto *child = cast<IExpression>(lhs.get())) {
+    if (const auto *childOper = cast<IOperator>(child->getFunction())) {
+      if (auto priority = childOper->getOperatorPriority(); priority != IOperator::Priority::PostfixUnary) {
+        return putInBrackets(result) + oper.toString();
+      }
+    }
+  }
+
+  if (const auto *comp = cast<IComparable>(lhs.get()); comp && *comp < ZERO) {
+    return putInBrackets(result) + oper.toString();
+  }
+
+  return result + oper.toString();
 }
 
 void IExpression::simplifyConstant(bool isPrecise, MathObjectPtr &obj) {

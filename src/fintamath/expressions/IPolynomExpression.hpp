@@ -53,10 +53,8 @@ public:
     if (auto *expr = cast<Derived>(elem.get())) {
       elemPolynom = std::move(expr->polynomVect);
     } else if (auto *expr = cast<Expression>(elem.get())) {
-      if (expr->getChildren().empty()) {
-        addElement(std::move(expr->getInfo()));
-        return;
-      }
+      addElement(std::move(expr->getInfo()));
+      return;
     }
 
     if (elemPolynom.empty()) {
