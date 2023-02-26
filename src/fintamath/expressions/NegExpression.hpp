@@ -12,8 +12,6 @@ public:
 
   NegExpression(const IMathObject &rhs);
 
-  NegExpression(const NegExpression &rhs);
-
   std::string toString() const override;
 
   MathObjectPtr simplify() const override;

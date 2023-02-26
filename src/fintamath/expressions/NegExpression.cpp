@@ -9,13 +9,6 @@ NegExpression::NegExpression(const IMathObject &rhs) {
   info = rhs.clone();
 }
 
-NegExpression::NegExpression(const NegExpression &rhs) {
-  if (this == &rhs) {
-    return;
-  }
-  info = rhs.info->clone();
-}
-
 MathObjectPtr NegExpression::simplify() const {
   return {};
 }
