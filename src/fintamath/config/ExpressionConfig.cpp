@@ -5,6 +5,7 @@
 #include "fintamath/expressions/InvExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/expressions/NegExpression.hpp"
+#include "fintamath/expressions/NotExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -110,6 +111,10 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Index>([](ArgumentsPtrVector &&args) {
       return std::make_unique<IndexExpression>(std::move(args.front()), std::move(args.back()));
+    });
+
+    Expression::registerFunctionExpressionMaker<Not>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<NotExpression>(std::move(args.front()));
     });
 
     Expression::registerFunctionExpressionMaker<Impl>([](ArgumentsPtrVector &&args) {
