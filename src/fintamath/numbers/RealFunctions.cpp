@@ -194,4 +194,12 @@ Real acoth(const Real &rhs) {
   }
 }
 
+Real inv(const Real &rhs) {
+  if (rhs.isNearZero()) {
+    throw UndefinedFunctionException("inv", {rhs.toString()});
+  }
+
+  return 1 / rhs;
+}
+
 }

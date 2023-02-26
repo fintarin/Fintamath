@@ -52,4 +52,6 @@ Real atanh(const Real &rhs);
 
 Real acoth(const Real &rhs);
 
+Real inv(const Real &rhs);
+
 }

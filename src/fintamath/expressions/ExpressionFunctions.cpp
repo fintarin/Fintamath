@@ -1,6 +1,7 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
 #include "fintamath/functions/arithmetic/Abs.hpp"
+#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
@@ -77,6 +78,10 @@ Expression exp(const Expression &rhs) {
   return Expression(Exp()(rhs));
 }
 
+Expression inv(const Expression &rhs) {
+  return Expression(Inv()(rhs));
+}
+
 Expression log(const Expression &lhs, const Expression &rhs) {
   return Expression(Log()(lhs, rhs));
 }
@@ -148,5 +153,4 @@ Expression andL(const Expression &lhs, const Expression &rhs) {
 Expression orL(const Expression &lhs, const Expression &rhs) {
   return Expression(Or()(lhs, rhs));
 }
-
 }
