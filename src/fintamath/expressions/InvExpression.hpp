@@ -6,7 +6,7 @@ namespace fintamath {
 
 class InvExpression : public IUnaryExpressionCRTP<InvExpression> {
 public:
-  InvExpression(const IMathObject &rhs);
+  explicit InvExpression(const IMathObject &rhs);
 
   explicit InvExpression(MathObjectPtr &&rhs);
 
