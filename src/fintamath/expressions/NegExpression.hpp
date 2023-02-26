@@ -1,15 +1,15 @@
 #include "fintamath/expressions/IExpression.hpp"
 
-#include "fintamath/expressions/UnaryExpression.hpp"
+#include "fintamath/expressions/IUnaryExpression.hpp"
 
 namespace fintamath {
 
-class NegExpression : public UnaryExpressionCRTP<NegExpression> {
+class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
-  NegExpression(const IMathObject &rhs) : UnaryExpressionCRTP(rhs) {
+  NegExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
   }
 
-  explicit NegExpression(const MathObjectPtr &rhs) : UnaryExpressionCRTP(rhs) {
+  explicit NegExpression(const MathObjectPtr &rhs) : IUnaryExpression(rhs) {
   }
 
   MathObjectPtr simplify() const override;
