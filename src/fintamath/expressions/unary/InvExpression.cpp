@@ -1,4 +1,4 @@
-#include "fintamath/expressions/InvExpression.hpp"
+#include "fintamath/expressions/unary/InvExpression.hpp"
 
 #include "fintamath/expressions/IInvertable.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"

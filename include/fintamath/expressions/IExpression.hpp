@@ -5,6 +5,8 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/meta/Converter.hpp"
 #include "fintamath/parser/Parser.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
@@ -54,7 +56,9 @@ protected:
   // TODO: remove this and implement in Expression using IExpression::Iterator
   void validateArgs(const IFunction &func, const ArgumentsVector &args) const;
 
-  std::string putInBrackets(const std::string &str) const;
+  static std::string putInBrackets(const std::string &str);
+
+  static std::string binaryOperatorToString(const IOperator &oper, const std::vector<MathObjectPtr> &values);
 
 private:
   static Parser::Vector<ExpressionPtr, const std::string &> parserVector;

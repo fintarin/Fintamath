@@ -4,6 +4,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
 
@@ -54,8 +55,47 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
   }
 }
 
-std::string IExpression::putInBrackets(const std::string &str) const {
+std::string IExpression::putInBrackets(const std::string &str) {
   return "(" + str + ")";
+}
+
+std::string IExpression::binaryOperatorToString(const IOperator &oper, const std::vector<MathObjectPtr> &values) {
+  std::string result;
+
+  std::string operStr = oper.toString();
+  IOperator::Priority operPriority = oper.getOperatorPriority();
+  bool operIsAssociative = oper.isAssociative();
+
+  if (operPriority != IOperator::Priority::Multiplication && operPriority != IOperator::Priority::Exponentiation) {
+    operStr = ' ' + operStr + ' ';
+  }
+
+  for (size_t i = 0; i < values.size(); i++) {
+    const auto &child = values[i];
+
+    bool shouldPutInBrackets = false;
+
+    if (const auto *childExpr = cast<IExpression>(child.get())) {
+      if (const auto *childOper = cast<IOperator>(childExpr->getFunction())) {
+        if (auto priority = childOper->getOperatorPriority();
+            priority > operPriority || (priority == operPriority && !operIsAssociative && i > 0)) {
+          shouldPutInBrackets = true;
+        }
+      }
+    }
+
+    if (shouldPutInBrackets) {
+      result += putInBrackets(child->toString());
+    } else {
+      result += child->toString();
+    }
+
+    result += operStr;
+  }
+
+  result = result.substr(0, result.length() - operStr.length());
+
+  return result;
 }
 
 }

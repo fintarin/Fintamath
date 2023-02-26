@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
 

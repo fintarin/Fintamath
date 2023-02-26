@@ -1,4 +1,4 @@
-#include "fintamath/expressions/NotExpression.hpp"
+#include "fintamath/expressions/unary/NotExpression.hpp"
 
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/logic/Not.hpp"

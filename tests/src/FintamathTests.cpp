@@ -7,6 +7,13 @@
 
 using namespace fintamath;
 
+TEST(FintamathTests, testTest) {
+  Expression expr;
+
+  expr = pow(Variable("a"), Variable("b")) * Variable("c");
+  EXPECT_EQ(expr.toString(), "a^b c");
+}
+
 TEST(FintamathTests, fintamathTests) {
   Expression expr;
 

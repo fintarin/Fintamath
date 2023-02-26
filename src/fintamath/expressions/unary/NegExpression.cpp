@@ -1,4 +1,4 @@
-#include "fintamath/expressions/NegExpression.hpp"
+#include "fintamath/expressions/unary/NegExpression.hpp"
 
 #include "fintamath/expressions/INegatable.hpp"
 #include "fintamath/functions/IOperator.hpp"

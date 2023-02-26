@@ -2,11 +2,14 @@
 #include "fintamath/expressions/DerivativeExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IndexExpression.hpp"
-#include "fintamath/expressions/InvExpression.hpp"
-#include "fintamath/expressions/MulExpression.hpp"
-#include "fintamath/expressions/NegExpression.hpp"
-#include "fintamath/expressions/NotExpression.hpp"
-#include "fintamath/expressions/SumExpression.hpp"
+#include "fintamath/expressions/binary/PowExpression.hpp"
+#include "fintamath/expressions/polynomial/AndExpression.hpp"
+#include "fintamath/expressions/polynomial/MulExpression.hpp"
+#include "fintamath/expressions/polynomial/SumExpression.hpp"
+#include "fintamath/expressions/unary/InvExpression.hpp"
+#include "fintamath/expressions/unary/NegExpression.hpp"
+#include "fintamath/expressions/unary/NotExpression.hpp"
+
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -27,6 +30,7 @@
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Index.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include <memory>
 
 namespace fintamath {
@@ -66,6 +70,13 @@ struct ExpressionConfig {
       auto expr = std::make_unique<MulExpression>();
       expr->addElement(std::move(args.front()));
       expr->addElement(std::make_unique<InvExpression>(std::move(args.back())));
+      return expr;
+    });
+
+    Expression::registerFunctionExpressionMaker<And>([](ArgumentsPtrVector &&args) {
+      auto expr = std::make_unique<AndExpression>();
+      expr->addElement(std::move(args.front()));
+      expr->addElement(std::move(args.back()));
       return expr;
     });
 

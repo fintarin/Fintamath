@@ -2,8 +2,6 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/expressions/PowExpression.hpp"
-#include "fintamath/functions/powers/Pow.hpp" // TODO: remove this include
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/meta/Converter.hpp"

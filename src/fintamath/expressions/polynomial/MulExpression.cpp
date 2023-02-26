@@ -1,4 +1,4 @@
-#include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/polynomial/MulExpression.hpp"
 
 #include <algorithm>
 #include <memory>
@@ -9,10 +9,9 @@
 #include "fintamath/expressions/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
-#include "fintamath/expressions/IPolynomExpression.hpp"
-#include "fintamath/expressions/InvExpression.hpp"
-#include "fintamath/expressions/NegExpression.hpp"
-#include "fintamath/expressions/SumExpression.hpp"
+#include "fintamath/expressions/polynomial/SumExpression.hpp"
+#include "fintamath/expressions/unary/InvExpression.hpp"
+#include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"

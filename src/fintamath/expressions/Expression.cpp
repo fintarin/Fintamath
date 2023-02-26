@@ -16,12 +16,8 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/IndexExpression.hpp"
-#include "fintamath/expressions/InvExpression.hpp"
-#include "fintamath/expressions/MulExpression.hpp"
-#include "fintamath/expressions/NegExpression.hpp"
-#include "fintamath/expressions/PowExpression.hpp"
-#include "fintamath/expressions/SumExpression.hpp"
 
+#include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"

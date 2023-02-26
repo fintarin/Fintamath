@@ -1,7 +1,7 @@
-#include "fintamath/expressions/PowExpression.hpp"
+#include "fintamath/expressions/binary/PowExpression.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/InvExpression.hpp"
+#include "fintamath/expressions/unary/InvExpression.hpp"
 // #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/Integer.hpp"
