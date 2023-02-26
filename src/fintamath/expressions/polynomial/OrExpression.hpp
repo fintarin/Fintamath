@@ -2,16 +2,14 @@
 
 #include <cstdint>
 
-#include "fintamath/expressions/IPolynomExpression.hpp"
+#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
 namespace fintamath {
 class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
   OrExpression() = default; // TODO: remove this
 
-  OrExpression(const IMathObject &rhs);
-
-  explicit OrExpression(PolynomVector inPolynomVect);
+  explicit OrExpression(ArgumentsPtrVector inPolynomVect);
 
   std::string toString() const override;
 

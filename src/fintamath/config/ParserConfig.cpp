@@ -159,6 +159,7 @@ struct ParserConfig {
     IFunction::registerType<Acosh>();
     IFunction::registerType<Atanh>();
     IFunction::registerType<Acoth>();
+    IFunction::registerType<Inv>();
 
     IOperator::registerType<Add>();
     IOperator::registerType<Sub>();
@@ -186,7 +187,6 @@ struct ParserConfig {
     IOperator::registerType<Angle>();
 
     IExpression::registerType<Expression>();
-    IFunction::registerType<Inv>();
   }
 };
 

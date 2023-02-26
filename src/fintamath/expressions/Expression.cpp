@@ -132,7 +132,7 @@ void Expression::compress() {
 }
 
 void Expression::setPrecisionRec(uint8_t precision) {
-  setPrecisionMathObject(precision, info);
+  setMathObjectPrecision(info, precision);
 
   // TODO: move to FunctionExression
   /*for (auto &child : children) {
@@ -454,8 +454,8 @@ Expression &Expression::divide(const Expression &rhs) {
 }
 
 Expression &Expression::negate() {
-  *this = Expression(NegExpression(*this).toMinimalObject());
-  return *this;
+  return *this = Expression(
+             makeFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)))));
 }
 
 void Expression::validate() const {

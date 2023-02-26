@@ -17,8 +17,6 @@ public:
 
   IUnaryExpression &operator=(IUnaryExpression &&rhs) noexcept = default;
 
-  explicit IUnaryExpression(const IMathObject &rhs);
-
   explicit IUnaryExpression(MathObjectPtr &&rhs);
 
   void setPrecision(uint8_t precision) final;

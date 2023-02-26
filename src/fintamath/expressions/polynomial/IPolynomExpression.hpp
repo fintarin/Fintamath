@@ -12,8 +12,6 @@ namespace fintamath {
 
 class IPolynomExpression : virtual public IExpression {
 public:
-  using PolynomVector = std::vector<MathObjectPtr>;
-
   IPolynomExpression() = default;
 
   IPolynomExpression(const IPolynomExpression &rhs);
@@ -24,31 +22,31 @@ public:
 
   IPolynomExpression &operator=(IPolynomExpression &&rhs) noexcept = default;
 
-  explicit IPolynomExpression(PolynomVector inPolynomVect);
+  explicit IPolynomExpression(ArgumentsPtrVector inPolynomVect);
 
   // TODO: implement iterator & remove this
-  const PolynomVector &getPolynomVector() const;
+  const ArgumentsPtrVector &getArgumentsPtrVector() const;
 
   void setPrecision(uint8_t precision) final;
 
   std::vector<MathObjectPtr> getVariables() const final;
 
-  PolynomVector clonePolynom() const;
+  ArgumentsPtrVector clonePolynom() const;
 
   // TODO: remove this
   void validate() const final;
 
 protected:
-  PolynomVector polynomVect;
+  ArgumentsPtrVector polynomVect;
 
-  static void pushPolynomToPolynom(const PolynomVector &from, PolynomVector &to);
+  static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
 };
 
 template <typename Derived>
 class IPolynomExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IPolynomExpression {
 public:
   void addElement(MathObjectPtr &&elem) {
-    PolynomVector elemPolynom;
+    ArgumentsPtrVector elemPolynom;
 
     if (auto *expr = cast<Derived>(elem.get())) {
       elemPolynom = std::move(expr->polynomVect);
@@ -68,8 +66,8 @@ public:
   }
 
   // TODO: refactor arguments
-  /*static void sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &exprVect,
-                          PolynomVector &literalVect, PolynomVector &funcVect, PolynomVector &powVect) {
+  /*static void sortPolynom(const ArgumentsPtrVector &vect, ArgumentsPtrVector &numVect, ArgumentsPtrVector &exprVect,
+                          ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect, ArgumentsPtrVector &powVect) {
     for (const auto &child : vect) {
       if (is<Expression>(child)) {
         funcVect.emplace_back(child->clone());
@@ -100,7 +98,7 @@ public:
 
 protected:
   void compress() final {
-    Derived compressedExpr(PolynomVector{});
+    Derived compressedExpr(ArgumentsPtrVector{});
 
     for (auto &child : polynomVect) {
       compressedExpr.addElement(std::move(child));

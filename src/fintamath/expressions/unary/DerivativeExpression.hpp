@@ -2,14 +2,12 @@
 
 #include <cstdint>
 
-#include "fintamath/expressions/IUnaryExpression.hpp"
+#include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
 namespace fintamath {
 
 class DerivativeExpression : public IUnaryExpressionCRTP<DerivativeExpression> {
 public:
-  explicit DerivativeExpression(const IMathObject &obj);
-
   explicit DerivativeExpression(MathObjectPtr &&obj);
 
   const IFunction *getFunction() const override;

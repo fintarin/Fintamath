@@ -16,8 +16,6 @@ public:
 
   IBinaryExpression &operator=(IBinaryExpression &&rhs) noexcept = default;
 
-  explicit IBinaryExpression(const IMathObject &lhs, const IMathObject &rhs);
-
   explicit IBinaryExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
   void setPrecision(uint8_t precision) final;

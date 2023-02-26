@@ -12,9 +12,6 @@ namespace fintamath {
 
 const Pow POW;
 
-PowExpression::PowExpression(const IMathObject &lhs, const IMathObject &rhs) : IBinaryExpression(lhs, rhs) {
-}
-
 PowExpression::PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
     : IBinaryExpression(std::move(lhs), std::move(rhs)) {
 }
@@ -49,7 +46,7 @@ MathObjectPtr PowExpression::simplify(bool isPrecise) const {
       rhs = -rhs;
     }
 
-    // MulExpression mul(MulExpression::PolynomVector{});
+    // MulExpression mul(MulExpression::ArgumentsPtrVector{});
     /*
     for (size_t i = 0; i < rhs; i++) {
       mul.addElement(exprObj->lhsInfo);

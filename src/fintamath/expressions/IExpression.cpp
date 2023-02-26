@@ -1,6 +1,5 @@
 #include "fintamath/expressions/IExpression.hpp"
 
-#include "fintamath/expressions/Expression.hpp" // TODO: remove this include
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -120,36 +119,29 @@ std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, con
 }
 
 void IExpression::simplifyConstant(bool isPrecise, MathObjectPtr &obj) {
-  if (auto expr = cast<IExpression>(std::move(obj))) {
-    obj = expr->simplify(isPrecise);
+  if (!is<IConstant>(obj)) {
     return;
   }
 
-  if (is<IConstant>(obj)) {
-    auto constant = cast<IConstant>(std::move(obj));
-    auto constVal = (*constant)();
+  auto constant = cast<IConstant>(std::move(obj));
+  auto constVal = (*constant)();
 
-    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
-      obj = std::move(constant);
-    } else {
-      obj = std::move(constVal);
-    }
-
-    return;
+  if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
+    obj = std::move(constant);
+  } else {
+    obj = std::move(constVal);
   }
-
-  obj = obj->toMinimalObject();
 }
 
-void IExpression::setPrecisionMathObject(uint8_t precision, MathObjectPtr &obj) {
+void IExpression::setMathObjectPrecision(MathObjectPtr &obj, uint8_t precision) {
   if (is<INumber>(obj)) {
     obj = convert<Real>(*obj).precise(precision).clone();
     return;
   }
-  if (is<IExpression>(obj)) {
-    auto copyExpr = cast<IExpression>(std::move(obj));
-    copyExpr->setPrecision(precision);
-    obj = std::move(copyExpr);
+
+  if (auto *expr = cast<IExpression>(obj.get())) {
+    expr->setPrecision(precision);
+    return;
   }
 }
 

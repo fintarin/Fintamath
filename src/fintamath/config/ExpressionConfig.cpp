@@ -4,12 +4,12 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
+#include "fintamath/expressions/polynomial/OrExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/expressions/unary/DerivativeExpression.hpp"
 #include "fintamath/expressions/unary/InvExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
-
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -31,7 +31,6 @@
 #include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include <memory>
 
 namespace fintamath {
 
@@ -73,6 +72,18 @@ struct ExpressionConfig {
       return expr;
     });
 
+    Expression::registerFunctionExpressionMaker<Pow>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<PowExpression>(std::move(args.front()), std::move(args.back()));
+    });
+
+    Expression::registerFunctionExpressionMaker<Neg>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<NegExpression>(std::move(args.front()));
+    });
+
+    Expression::registerFunctionExpressionMaker<UnaryPlus>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<Expression>(std::move(args.front()));
+    });
+
     Expression::registerFunctionExpressionMaker<And>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<AndExpression>();
       expr->addElement(std::move(args.front()));
@@ -80,16 +91,15 @@ struct ExpressionConfig {
       return expr;
     });
 
-    Expression::registerFunctionExpressionMaker<UnaryPlus>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<Expression>(std::move(args.front()));
+    Expression::registerFunctionExpressionMaker<Or>([](ArgumentsPtrVector &&args) {
+      auto expr = std::make_unique<OrExpression>();
+      expr->addElement(std::move(args.front()));
+      expr->addElement(std::move(args.back()));
+      return expr;
     });
 
-    Expression::registerFunctionExpressionMaker<Neg>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<NegExpression>(std::move(args.front()));
-    });
-
-    Expression::registerFunctionExpressionMaker<Pow>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<PowExpression>(std::move(args.front()), std::move(args.back()));
+    Expression::registerFunctionExpressionMaker<Not>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<NotExpression>(std::move(args.front()));
     });
 
     Expression::registerFunctionExpressionMaker<Eqv>([](ArgumentsPtrVector &&args) {
@@ -122,10 +132,6 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Index>([](ArgumentsPtrVector &&args) {
       return std::make_unique<IndexExpression>(std::move(args.front()), std::move(args.back()));
-    });
-
-    Expression::registerFunctionExpressionMaker<Not>([](ArgumentsPtrVector &&args) {
-      return std::make_unique<NotExpression>(std::move(args.front()));
     });
 
     Expression::registerFunctionExpressionMaker<Impl>([](ArgumentsPtrVector &&args) {

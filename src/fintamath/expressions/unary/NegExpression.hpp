@@ -1,13 +1,11 @@
 #pragma once
 
-#include "fintamath/expressions/IUnaryExpression.hpp"
+#include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
 namespace fintamath {
 
 class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
-  explicit NegExpression(const IMathObject &rhs);
-
   explicit NegExpression(MathObjectPtr &&rhs);
 
   MathObjectPtr toMinimalObject() const override;

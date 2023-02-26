@@ -1,13 +1,11 @@
 #pragma once
 
-#include "fintamath/expressions/IUnaryExpression.hpp"
+#include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
 namespace fintamath {
 
 class InvExpression : public IUnaryExpressionCRTP<InvExpression> {
 public:
-  explicit InvExpression(const IMathObject &rhs);
-
   explicit InvExpression(MathObjectPtr &&rhs);
 
   MathObjectPtr toMinimalObject() const override;

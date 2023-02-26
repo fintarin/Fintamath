@@ -4,16 +4,14 @@
 
 #include "fintamath/expressions/IInvertable.hpp"
 #include "fintamath/expressions/INegatable.hpp"
-#include "fintamath/expressions/IPolynomExpression.hpp"
+#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
 namespace fintamath {
 class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatable, public IInvertable {
 public:
   MulExpression() = default;
 
-  explicit MulExpression(PolynomVector inPolynomVect);
-
-  MulExpression(const IMathObject &rhs);
+  explicit MulExpression(ArgumentsPtrVector inPolynomVect);
 
   std::string toString() const override;
 
@@ -39,25 +37,26 @@ private:
 private:
   static std::string sumExprToString(const MathObjectPtr &obj);
 
-  static PolynomVector openPowMulExpression(const PolynomVector &powVect);
+  static ArgumentsPtrVector openPowMulExpression(const ArgumentsPtrVector &powVect);
 
-  static PolynomVector mulNumbers(const PolynomVector &numVect);
+  static ArgumentsPtrVector mulNumbers(const ArgumentsPtrVector &numVect);
 
-  static void multiplicateBraces(const PolynomVector &addVect, PolynomVector &positive, PolynomVector &negative);
+  static void multiplicateBraces(const ArgumentsPtrVector &addVect, ArgumentsPtrVector &positive,
+                                 ArgumentsPtrVector &negative);
 
-  static PolynomVector multiplicateTwoBraces(const PolynomVector &lhs, const PolynomVector &rhs);
+  static ArgumentsPtrVector multiplicateTwoBraces(const ArgumentsPtrVector &lhs, const ArgumentsPtrVector &rhs);
 
   void simplifyPolynom();
 
   void simplifyDivisions();
 
-  static void simplifyPow(PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
-                          PolynomVector &funcVect);
+  static void simplifyPow(ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect, ArgumentsPtrVector &literalVect,
+                          ArgumentsPtrVector &funcVect);
 
-  static void multiplicatePolynom(PolynomVector &vect, PolynomVector &positive, PolynomVector &negative);
+  static void multiplicatePolynom(ArgumentsPtrVector &vect, ArgumentsPtrVector &positive, ArgumentsPtrVector &negative);
 
-  static void sortPowObjects(Objects &objs, PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
-                             PolynomVector &funcVect);
+  static void sortPowObjects(Objects &objs, ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect,
+                             ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect);
 
   static bool sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
 };

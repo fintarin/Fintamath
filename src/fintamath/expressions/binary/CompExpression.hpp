@@ -1,7 +1,7 @@
 #pragma once
 
-#include "fintamath/expressions/IBinaryExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/binary/IBinaryExpression.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include <cstdint>
 #include <vector>

@@ -8,19 +8,10 @@ namespace fintamath {
 
 const Or OR;
 
-OrExpression::OrExpression(PolynomVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
+OrExpression::OrExpression(ArgumentsPtrVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
   if (!polynomVect.empty()) {
     compress();
   }
-}
-
-OrExpression::OrExpression(const IMathObject &rhs) {
-  if (const auto *rhsPtr = cast<OrExpression>(&rhs)) {
-    *this = *rhsPtr;
-    return;
-  }
-
-  polynomVect.emplace_back(rhs.clone());
 }
 
 std::string OrExpression::toString() const {

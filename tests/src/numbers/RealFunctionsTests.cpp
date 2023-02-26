@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"

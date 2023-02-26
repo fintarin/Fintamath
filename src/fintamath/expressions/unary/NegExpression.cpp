@@ -10,9 +10,6 @@ namespace fintamath {
 
 const Neg NEG;
 
-NegExpression::NegExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
-}
-
 NegExpression::NegExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
 }
 

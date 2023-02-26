@@ -55,16 +55,7 @@ struct SumExpression::MulObject {
   }
 };
 
-SumExpression::SumExpression(const IMathObject &rhs) {
-  if (const auto *rhsPtr = cast<SumExpression>(&rhs)) {
-    *this = *rhsPtr;
-    return;
-  }
-
-  polynomVect.emplace_back(rhs.clone());
-}
-
-SumExpression::SumExpression(PolynomVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
+SumExpression::SumExpression(ArgumentsPtrVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
   if (!polynomVect.empty()) {
     compress();
   }
@@ -142,11 +133,11 @@ bool SumExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs)
 
 // TODO: refactor
 void SumExpression::simplifyPolynom() {
-  auto numVect = PolynomVector();
-  auto powVect = PolynomVector();
-  auto literalVect = PolynomVector();
-  auto exprVect = PolynomVector();
-  auto funcVect = PolynomVector();
+  auto numVect = ArgumentsPtrVector();
+  auto powVect = ArgumentsPtrVector();
+  auto literalVect = ArgumentsPtrVector();
+  auto exprVect = ArgumentsPtrVector();
+  auto funcVect = ArgumentsPtrVector();
 
   // sortPolynom(polynomVect, numVect, exprVect, literalVect, funcVect, powVect);
 
@@ -169,9 +160,9 @@ void SumExpression::simplifyPolynom() {
   }
 }
 
-SumExpression::PolynomVector SumExpression::sumNumbers(const PolynomVector &numVect) {
+ArgumentsPtrVector SumExpression::sumNumbers(const ArgumentsPtrVector &numVect) {
   Expression result;
-  PolynomVector resultVector;
+  ArgumentsPtrVector resultVector;
   for (const auto &elem : numVect) {
     result.getInfo() = Add()(*result.getInfo(), *elem);
   }
@@ -180,8 +171,8 @@ SumExpression::PolynomVector SumExpression::sumNumbers(const PolynomVector &numV
 }
 
 // TODO: refactor
-void SumExpression::sortMulObjects(MulObjects &objs, PolynomVector &mulVect, PolynomVector &literalVect,
-                                   PolynomVector &powVect) {
+void SumExpression::sortMulObjects(MulObjects &objs, ArgumentsPtrVector &mulVect, ArgumentsPtrVector &literalVect,
+                                   ArgumentsPtrVector &powVect) {
   /*for (auto &obj : objs) {
     obj.simplifyCounter();
     auto counter = obj.getCounterValue();
@@ -207,12 +198,12 @@ void SumExpression::sortMulObjects(MulObjects &objs, PolynomVector &mulVect, Pol
 }
 
 // TODO: refactor
-void SumExpression::simplifyMul(PolynomVector &powVect, PolynomVector &mulVect, PolynomVector &literalVect,
-                                PolynomVector &funcVect) {
+void SumExpression::simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector &mulVect,
+                                ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect) {
   /*MulObjects objs;
   for (const auto &mulObj : mulVect) {
     bool added = false;
-    auto mulExprPolynom = cast<MulExpression>(mulObj.get())->getPolynomVector();
+    auto mulExprPolynom = cast<MulExpression>(mulObj.get())->getArgumentsPtrVector();
     if (mulExprPolynom.empty()) {
       added = true;
     }
@@ -223,7 +214,7 @@ void SumExpression::simplifyMul(PolynomVector &powVect, PolynomVector &mulVect, 
       } else {
         number = mulExprPolynom.front()->clone();
       }
-      mulExprPolynom = MulExpression::PolynomVector(mulExprPolynom.begin() + 1, mulExprPolynom.end());
+      mulExprPolynom = MulExpression::ArgumentsPtrVector(mulExprPolynom.begin() + 1, mulExprPolynom.end());
     }
 
     MulExpression mulExpr(mulExprPolynom);
@@ -367,7 +358,7 @@ MathObjectPtr SumExpression::getPow() const {
 void SumExpression::negate() {
   // TODO: refactor with using NegExpression
   for (auto &child : polynomVect) {
-    child = NegExpression(*child).toMinimalObject();
+    child = NegExpression(std::move(child)).toMinimalObject();
   }
 }
 

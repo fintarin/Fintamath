@@ -9,9 +9,6 @@ namespace fintamath {
 
 const Inv INV;
 
-InvExpression::InvExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
-}
-
 InvExpression::InvExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
 }
 

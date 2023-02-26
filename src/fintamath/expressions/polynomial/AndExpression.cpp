@@ -8,19 +8,10 @@ namespace fintamath {
 
 const And AND;
 
-AndExpression::AndExpression(PolynomVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
+AndExpression::AndExpression(ArgumentsPtrVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
   if (!polynomVect.empty()) {
     compress();
   }
-}
-
-AndExpression::AndExpression(const IMathObject &rhs) {
-  if (const auto *rhsPtr = cast<AndExpression>(&rhs)) {
-    *this = *rhsPtr;
-    return;
-  }
-
-  polynomVect.emplace_back(rhs.clone());
 }
 
 std::string AndExpression::toString() const {
@@ -31,13 +22,13 @@ MathObjectPtr AndExpression::toMinimalObject() const {
   return simplify(false);
 }
 
-MathObjectPtr AndExpression::simplify(bool isPrecise) const {
+MathObjectPtr AndExpression::simplify(bool /*isPrecise*/) const {
   MathObjectPtr result = polynomVect.front()->clone();
   for (size_t i = 1; i < polynomVect.size(); i++) {
-    auto &lhsPtr = result;
-    auto &rhsPtr = polynomVect[i];
-    auto &lhs = *lhsPtr;
-    auto &rhs = *rhsPtr;
+    const MathObjectPtr &lhsPtr = result;
+    const MathObjectPtr &rhsPtr = polynomVect[i];
+    const IMathObject &lhs = *lhsPtr;
+    const IMathObject &rhs = *rhsPtr;
 
     if (const auto *lhsBool = cast<Boolean>(&lhs)) {
       if (*lhsBool == true) {

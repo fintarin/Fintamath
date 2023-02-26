@@ -8,7 +8,7 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
-#include "fintamath/expressions/IBinaryExpression.hpp"
+#include "fintamath/expressions/binary/IBinaryExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -30,12 +30,15 @@ CompExpression::CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, Mat
   this->oper = cast<IOperator>(oper.clone());
 }
 
-CompExpression::CompExpression(const CompExpression &rhs) : IBinaryExpression(rhs) {
-  oper = cast<IOperator>(rhs.oper->clone());
+CompExpression::CompExpression(const CompExpression &rhs)
+    : IBinaryExpressionCRTP(rhs),
+      IBinaryExpression(rhs),
+      oper(cast<IOperator>(rhs.oper->clone())) {
 }
 
-CompExpression::CompExpression(CompExpression &&rhs) noexcept : IBinaryExpression(std::move(rhs)) {
-  oper = std::move(rhs.oper);
+CompExpression::CompExpression(CompExpression &&rhs) noexcept
+    : IBinaryExpressionCRTP(std::move(rhs)),
+      oper(std::move(rhs.oper)) {
 }
 
 CompExpression &CompExpression::operator=(const CompExpression &rhs) {

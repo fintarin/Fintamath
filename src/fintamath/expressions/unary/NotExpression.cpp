@@ -9,9 +9,6 @@ namespace fintamath {
 
 const Not NOT;
 
-NotExpression::NotExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
-}
-
 NotExpression::NotExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
 }
 

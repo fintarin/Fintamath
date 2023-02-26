@@ -2,7 +2,7 @@
 
 #include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/IUnaryExpression.hpp"
+#include "fintamath/expressions/unary/IUnaryExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/literals/Boolean.hpp"
@@ -15,9 +15,6 @@
 namespace fintamath {
 
 const Derivative DER;
-
-DerivativeExpression::DerivativeExpression(const IMathObject &obj) : IUnaryExpression(obj) {
-}
 
 DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : IUnaryExpression(std::move(obj)) {
 }

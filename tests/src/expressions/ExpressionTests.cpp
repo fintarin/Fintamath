@@ -208,17 +208,17 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   EXPECT_EQ(Expression("1*(a+b)*1").toString(), "a + b");
-  // EXPECT_EQ(Expression("-1*(a+b)*1").toString(), "-a - b"); // TODO: implement negation of MulExpression
+  EXPECT_EQ(Expression("-1*(a+b)*1").toString(), "-a - b");
   EXPECT_EQ(Expression("1*(a+b)*-1").toString(), "-a - b");
-  // EXPECT_EQ(Expression("-1*(a+b)*-1").toString(), "a + b");  // TODO: implement negation of MulExpression
+  // EXPECT_EQ(Expression("-1*(a+b)*-1").toString(), "a + b");
   EXPECT_EQ(Expression("1+(a+b)+1").toString(), "a + b + 2");
   EXPECT_EQ(Expression("-1+(a+b)+1").toString(), "a + b");
   EXPECT_EQ(Expression("1+(a+b)-1").toString(), "a + b");
   EXPECT_EQ(Expression("-1+(a+b)-1").toString(), "a + b - 2");
   EXPECT_EQ(Expression("2*(a+b)*2").toString(), "4 a + 4 b");
-  // EXPECT_EQ(Expression("-2*(a+b)*2").toString(), "-4 a - 4 b"); // TODO: implement negation of MulExpression
+  // EXPECT_EQ(Expression("-2*(a+b)*2").toString(), "-4 a - 4 b");
   EXPECT_EQ(Expression("2*(a+b)*-2").toString(), "-4 a - 4 b");
-  // EXPECT_EQ(Expression("-2*(a+b)*-2").toString(), "4 a + 4 b"); // TODO: implement negation of MulExpression
+  // EXPECT_EQ(Expression("-2*(a+b)*-2").toString(), "4 a + 4 b");
   EXPECT_EQ(Expression("2+(a+b)+2").toString(), "a + b + 4");
   EXPECT_EQ(Expression("-2+(a+b)+2").toString(), "a + b");
   EXPECT_EQ(Expression("2+(a+b)-2").toString(), "a + b");
@@ -374,10 +374,10 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("x_1").toString(), "x_1");
   EXPECT_EQ(Expression("(x+1)_1").toString(), "(x + 1)_1");
   EXPECT_EQ(Expression("(x*2)_1").toString(), "(2 x)_1");
-  // EXPECT_EQ(Expression("x+x_1").toString(), "x + x_1"); // TODO: fix
-  // EXPECT_EQ(Expression("x*x_1").toString(), "x * x_1"); // TODO: fix
+  EXPECT_EQ(Expression("x+x_1").toString(), "x + x_1");
+  // EXPECT_EQ(Expression("x*x_1").toString(), "x * x_1");
   EXPECT_EQ(Expression("x^x_1").toString(), "(x^x)_1");
-  // EXPECT_EQ(Expression("x_x^2").toString(), "x_x^2"); // TODO: fix
+  // EXPECT_EQ(Expression("x_x^2").toString(), "x_x^2");
   EXPECT_EQ(Expression("sin(x_1)").toString(), "sin(x_1)");
 }
 

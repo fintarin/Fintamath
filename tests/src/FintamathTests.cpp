@@ -7,6 +7,7 @@
 
 using namespace fintamath;
 
+// TODO: remove this
 TEST(FintamathTests, testTest) {
   Expression expr;
 

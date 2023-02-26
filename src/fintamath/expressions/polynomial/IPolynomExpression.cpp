@@ -1,4 +1,4 @@
-#include "fintamath/expressions/IPolynomExpression.hpp"
+#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
 namespace fintamath {
 
@@ -12,16 +12,16 @@ IPolynomExpression &IPolynomExpression::operator=(const IPolynomExpression &rhs)
   return *this;
 }
 
-IPolynomExpression::IPolynomExpression(PolynomVector inPolynomVect) : polynomVect(std::move(inPolynomVect)) {
+IPolynomExpression::IPolynomExpression(ArgumentsPtrVector inPolynomVect) : polynomVect(std::move(inPolynomVect)) {
 }
 
-void IPolynomExpression::pushPolynomToPolynom(const PolynomVector &from, PolynomVector &to) {
+void IPolynomExpression::pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to) {
   for (const auto &elem : from) {
     to.emplace_back(elem->clone());
   }
 }
 
-const IPolynomExpression::PolynomVector &IPolynomExpression::getPolynomVector() const {
+const ArgumentsPtrVector &IPolynomExpression::getArgumentsPtrVector() const {
   return clonePolynom();
 }
 
@@ -66,11 +66,13 @@ std::vector<MathObjectPtr> IPolynomExpression::getVariables() const {
   return vars;
 }
 
-IPolynomExpression::PolynomVector IPolynomExpression::clonePolynom() const {
-  PolynomVector clonedVector;
+ArgumentsPtrVector IPolynomExpression::clonePolynom() const {
+  ArgumentsPtrVector clonedVector;
+
   for (const auto &elem : polynomVect) {
     clonedVector.emplace_back(elem->clone());
   }
+
   return clonedVector;
 }
 

@@ -1,4 +1,4 @@
-#include "fintamath/expressions/IUnaryExpression.hpp"
+#include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -13,27 +13,20 @@ namespace fintamath {
 IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs) : info(rhs.info->clone()) {
 }
 
-IUnaryExpression::IUnaryExpression(const IMathObject &rhs) : info(rhs.clone()) {
-}
-
 IUnaryExpression::IUnaryExpression(MathObjectPtr &&rhs) : info(std::move(rhs)) {
 }
 
 IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
   if (&rhs != this) {
-    if (rhs.info) {
-      info = rhs.info->clone();
-    } else {
-      info = nullptr;
-    }
+    info = rhs.info->clone();
   }
+
   return *this;
 }
 
 void IUnaryExpression::setPrecision(uint8_t precision) {
   if (auto *expr = cast<IExpression>(info.get())) {
     expr->setPrecision(precision);
-    info = MathObjectPtr(expr);
     return;
   }
 
@@ -74,13 +67,13 @@ std::string IUnaryExpression::postfixToString(const IFunction &oper) const {
   if (const auto *child = cast<IExpression>(info.get())) {
     if (const auto *exprOper = cast<IOperator>(child->getFunction())) {
       if (auto priority = exprOper->getOperatorPriority(); priority != IOperator::Priority::PostfixUnary) {
-        return this->putInBrackets(result) + oper.toString();
+        return putInBrackets(result) + oper.toString();
       }
     }
   }
 
   if (const auto *comp = cast<IComparable>(info.get()); comp && *comp < ZERO) {
-    return this->putInBrackets(result) + oper.toString();
+    return putInBrackets(result) + oper.toString();
   }
 
   return result + oper.toString();
@@ -88,6 +81,7 @@ std::string IUnaryExpression::postfixToString(const IFunction &oper) const {
 
 std::string IUnaryExpression::prefixToString(const IFunction &oper) const {
   std::string result = oper.toString();
+
   if (const auto *child = cast<IExpression>(info.get())) {
     if (const auto *exprOper = cast<IOperator>(child->getFunction())) {
       auto priority = exprOper->getOperatorPriority();
@@ -103,9 +97,10 @@ std::string IUnaryExpression::prefixToString(const IFunction &oper) const {
         }
       }
 
-      return result + this->putInBrackets(info->toString());
+      return result + putInBrackets(info->toString());
     }
   }
+
   return result + info->toString();
 }
 
@@ -114,7 +109,7 @@ std::string IUnaryExpression::functionToString(const IFunction &oper) const {
 }
 
 void IUnaryExpression::simplifyValue(bool isPrecise) {
-  if (const auto *expr = cast<IExpression>(info.get())) {
+  if (auto *expr = cast<IExpression>(info.get())) {
     info = expr->simplify(isPrecise);
     return;
   }

@@ -1,13 +1,11 @@
 #pragma once
 
-#include "fintamath/expressions/IBinaryExpression.hpp"
+#include "fintamath/expressions/binary/IBinaryExpression.hpp"
 
 namespace fintamath {
 
 class PowExpression : public IBinaryExpressionCRTP<PowExpression> {
 public:
-  explicit PowExpression(const IMathObject &lhs, const IMathObject &rhs);
-
   explicit PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
   MathObjectPtr toMinimalObject() const override;

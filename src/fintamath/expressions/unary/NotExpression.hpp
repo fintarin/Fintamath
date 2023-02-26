@@ -1,13 +1,11 @@
 #pragma once
 
-#include "fintamath/expressions/IUnaryExpression.hpp"
+#include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
 namespace fintamath {
 
 class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
 public:
-  explicit NotExpression(const IMathObject &rhs);
-
   explicit NotExpression(MathObjectPtr &&rhs);
 
   MathObjectPtr toMinimalObject() const override;

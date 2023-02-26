@@ -2,16 +2,14 @@
 
 #include <cstdint>
 
-#include "fintamath/expressions/IPolynomExpression.hpp"
+#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
 namespace fintamath {
 class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
   AndExpression() = default; // TODO: remove this
 
-  AndExpression(const IMathObject &rhs);
-
-  explicit AndExpression(PolynomVector inPolynomVect);
+  explicit AndExpression(ArgumentsPtrVector inPolynomVect);
 
   std::string toString() const override;
 

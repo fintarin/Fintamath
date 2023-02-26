@@ -3,16 +3,14 @@
 #include <cstdint>
 
 #include "fintamath/expressions/INegatable.hpp"
-#include "fintamath/expressions/IPolynomExpression.hpp"
+#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
 namespace fintamath {
 class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatable {
 public:
   SumExpression() = default; // TODO: remove this
 
-  SumExpression(const IMathObject &rhs);
-
-  explicit SumExpression(PolynomVector inPolynomVect);
+  explicit SumExpression(ArgumentsPtrVector inPolynomVect);
 
   std::string toString() const override;
 
@@ -33,7 +31,7 @@ private:
   struct MulObject;
   using MulObjects = std::vector<MulObject>;
 
-  static PolynomVector sumNumbers(const PolynomVector &numVect);
+  static ArgumentsPtrVector sumNumbers(const ArgumentsPtrVector &numVect);
 
   bool static sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
 
@@ -41,11 +39,11 @@ private:
 
   void simplifyNegations();
 
-  static void sortMulObjects(MulObjects &objs, PolynomVector &mulVect, PolynomVector &literalVect,
-                             PolynomVector &powVect);
+  static void sortMulObjects(MulObjects &objs, ArgumentsPtrVector &mulVect, ArgumentsPtrVector &literalVect,
+                             ArgumentsPtrVector &powVect);
 
-  static void simplifyMul(PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
-                          PolynomVector &funcVect);
+  static void simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect, ArgumentsPtrVector &literalVect,
+                          ArgumentsPtrVector &funcVect);
 };
 
 }
