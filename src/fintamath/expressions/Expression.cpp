@@ -7,42 +7,16 @@
 #include <regex>
 #include <stdexcept>
 
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
-#include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/FunctionExpression.hpp"
-#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
-#include "fintamath/expressions/binary/IndexExpression.hpp"
-#include "fintamath/expressions/polynomial/MulExpression.hpp"
-#include "fintamath/expressions/unary/DerivativeExpression.hpp"
-
-#include "fintamath/expressions/unary/NegExpression.hpp"
-#include "fintamath/functions/IFunction.hpp"
-#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/calculus/Derivative.hpp"
-#include "fintamath/functions/logic/And.hpp" // TODO: remove this include after LogicException is implemented
-#include "fintamath/functions/logic/Not.hpp" // TODO: remove this include after LogicException is implemented
-#include "fintamath/functions/logic/Or.hpp"  // TODO: remove this include after LogicException is implemented
 #include "fintamath/functions/other/Factorial.hpp"
-#include "fintamath/functions/other/Index.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/INumber.hpp"
-#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
-#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -82,7 +56,7 @@ Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(
   compress();
   validate();
   // TODO: implement void simplify() and use it here
-  *this = Expression(toMinimalObject());
+  //*this = Expression(toMinimalObject());
 }
 
 Expression::Expression(const TokenVector &tokens) {
@@ -111,7 +85,7 @@ Expression::Expression(MathObjectPtr &&obj) {
     *this = std::move(*expr);
   } else {
     info = std::move(obj);
-  } 
+  }
 }
 
 Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
