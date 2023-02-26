@@ -18,19 +18,12 @@ public:
       return;
     }
 
-    if (is<INumber>(info)) {
-      info = convert<Real>(*info).precise(precision).clone();
+    if (is<IConstant>(info)) {
+      info = (*cast<IConstant>(std::move(info)))();
     }
 
-    if (is<IConstant>(info)) {
-      auto constVal = (*cast<IConstant>(std::move(info)))();
-
-      if (is<INumber>(constVal)) {
-        info = convert<Real>(*constVal).precise(precision).clone();
-      } else {
-        info = std::move(constVal);
-      }
-      return;
+    if (is<INumber>(info)) {
+      info = convert<Real>(*info).precise(precision).clone();
     }
   }
 
