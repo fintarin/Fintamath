@@ -132,8 +132,6 @@ private:
 
   void simplifyFunction(bool isPrecise);
 
-  void simplifyConstant(bool isPrecise);
-
   void simplifyPow(); // TODO: move to PowExpression
 
   void simplifyNeg(); // TODO move to NegExpression

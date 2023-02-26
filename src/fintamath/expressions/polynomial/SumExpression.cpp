@@ -106,19 +106,19 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
   }
 
   if (exprObj.polynomVect.size() == 1) {
-    simplifyValue(isPrecise, exprObj.polynomVect.front());
+    simplifyConstant(isPrecise, exprObj.polynomVect.front());
     return exprObj.polynomVect.front()->clone();
   }
 
   for (auto &obj : exprObj.polynomVect) {
-    simplifyValue(isPrecise, obj);
+    simplifyConstant(isPrecise, obj);
   }
 
   exprObj.compress();
   // exprObj.simplifyPolynom();
 
   if (exprObj.polynomVect.size() == 1) {
-    simplifyValue(isPrecise, exprObj.polynomVect.front());
+    simplifyConstant(isPrecise, exprObj.polynomVect.front());
     return exprObj.polynomVect.front()->clone();
   }
   return exprObj.clone();
@@ -367,7 +367,7 @@ MathObjectPtr SumExpression::getPow() const {
 void SumExpression::negate() {
   // TODO: refactor with using NegExpression
   for (auto &child : polynomVect) {
-    child = NegExpression(*child).simplify();
+    child = NegExpression(*child).toMinimalObject();
   }
 }
 

@@ -15,7 +15,7 @@ NotExpression::NotExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
 NotExpression::NotExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
 }
 
-MathObjectPtr NotExpression::simplify() const {
+MathObjectPtr NotExpression::toMinimalObject() const {
   return simplify(false);
 }
 

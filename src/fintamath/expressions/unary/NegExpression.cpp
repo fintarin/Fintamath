@@ -16,7 +16,7 @@ NegExpression::NegExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
 NegExpression::NegExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
 }
 
-MathObjectPtr NegExpression::simplify() const {
+MathObjectPtr NegExpression::toMinimalObject() const {
   return simplify(false);
 }
 

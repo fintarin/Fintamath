@@ -41,8 +41,6 @@ public:
 protected:
   PolynomVector polynomVect;
 
-  void simplifyValue(bool isPrecise, MathObjectPtr &obj) const;
-
   static void pushPolynomToPolynom(const PolynomVector &from, PolynomVector &to);
 };
 

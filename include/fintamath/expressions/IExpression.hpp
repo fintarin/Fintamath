@@ -60,6 +60,8 @@ protected:
 
   static std::string binaryOperatorToString(const IOperator &oper, const std::vector<MathObjectPtr> &values);
 
+  static void simplifyConstant(bool isPrecise, MathObjectPtr &obj);
+
 private:
   static Parser::Vector<ExpressionPtr, const std::string &> parserVector;
 };

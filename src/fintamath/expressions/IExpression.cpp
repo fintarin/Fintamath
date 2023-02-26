@@ -5,6 +5,7 @@
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/meta/Converter.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
@@ -98,4 +99,25 @@ std::string IExpression::binaryOperatorToString(const IOperator &oper, const std
   return result;
 }
 
+void IExpression::simplifyConstant(bool isPrecise, MathObjectPtr &obj) {
+  if (auto expr = cast<IExpression>(std::move(obj))) {
+    obj = expr->simplify(isPrecise);
+    return;
+  }
+
+  if (is<IConstant>(obj)) {
+    auto constant = cast<IConstant>(std::move(obj));
+    auto constVal = (*constant)();
+
+    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
+      obj = std::move(constant);
+    } else {
+      obj = std::move(constVal);
+    }
+
+    return;
+  }
+
+  obj = obj->toMinimalObject();
+}
 }

@@ -27,7 +27,7 @@ std::string AndExpression::toString() const {
   return binaryOperatorToString(AND, polynomVect);
 }
 
-MathObjectPtr AndExpression::simplify() const {
+MathObjectPtr AndExpression::toMinimalObject() const {
   return simplify(false);
 }
 

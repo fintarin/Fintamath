@@ -15,7 +15,7 @@ InvExpression::InvExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
 InvExpression::InvExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
 }
 
-MathObjectPtr InvExpression::simplify() const {
+MathObjectPtr InvExpression::toMinimalObject() const {
   return simplify(false);
 }
 

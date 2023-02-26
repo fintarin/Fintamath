@@ -19,7 +19,7 @@ PowExpression::PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
     : IBinaryExpression(std::move(lhs), std::move(rhs)) {
 }
 
-MathObjectPtr PowExpression::simplify() const {
+MathObjectPtr PowExpression::toMinimalObject() const {
   return simplify(false);
 }
 

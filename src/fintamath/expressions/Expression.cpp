@@ -619,7 +619,7 @@ Expression &Expression::divide(const Expression &rhs) {
 }
 
 Expression &Expression::negate() {
-  *this = Expression(NegExpression(*this).simplify());
+  *this = Expression(NegExpression(*this).toMinimalObject());
   return *this;
 }
 
@@ -771,45 +771,15 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   Expression expr = *this;
 
   for (auto &child : expr.children) {
-    if (const auto *childExpr = cast<IExpression>(child.get())) {
-      child = childExpr->simplify(isPrecise);
-      continue;
-    }
-
-    if (is<IConstant>(child)) {
-      auto constant = cast<IConstant>(std::move(child));
-      auto constVal = (*constant)();
-
-      if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
-        child = std::move(constant);
-      } else {
-        child = std::move(constVal);
-      }
-
-      continue;
-    }
-
-    child = child->toMinimalObject();
+    simplifyConstant(isPrecise, child);
   }
 
   if (expr.children.empty()) {
-    expr.simplifyConstant(isPrecise);
-
-    if (const auto *childExpr = cast<IExpression>(expr.info.get())) {
-      return childExpr->simplify(isPrecise);
-    }
-
-    return expr.info->toMinimalObject();
+    simplifyConstant(isPrecise, expr.info);
+    return std::move(expr.info);
   }
 
   expr.simplifyFunction(isPrecise);
-
-  expr.simplifyNot();
-  expr.simplifyAnd();
-  expr.simplifyOr();
-
-  expr.simplifyNeg();
-  expr.simplifyPow();
 
   if (expr.children.empty()) {
     return std::move(expr.info);
@@ -877,21 +847,6 @@ void Expression::simplifyFunction(bool isPrecise) {
 
   info = std::move(countResult);
   children.clear();
-}
-
-void Expression::simplifyConstant(bool isPrecise) {
-  if (!is<IConstant>(info)) {
-    return;
-  }
-
-  auto constant = cast<IConstant>(std::move(info));
-  auto constVal = (*constant)();
-
-  if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
-    info = std::move(constant);
-  } else {
-    info = std::move(constVal);
-  }
 }
 
 void Expression::simplifyPow() {

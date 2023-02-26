@@ -128,7 +128,7 @@ void IUnaryExpression::simplifyValue(bool isPrecise) {
     return;
   }
 
-  info = info->simplify();
+  info = info->toMinimalObject();
 }
 
 void IUnaryExpression::validate() const {

@@ -27,7 +27,7 @@ std::string OrExpression::toString() const {
   return binaryOperatorToString(OR, polynomVect);
 }
 
-MathObjectPtr OrExpression::simplify() const {
+MathObjectPtr OrExpression::toMinimalObject() const {
   return simplify(false);
 }
 

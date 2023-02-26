@@ -10,7 +10,7 @@ public:
 
   explicit PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
-  MathObjectPtr simplify() const override;
+  MathObjectPtr toMinimalObject() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;
 

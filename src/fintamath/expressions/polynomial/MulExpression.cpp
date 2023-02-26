@@ -44,7 +44,7 @@ struct MulExpression::ObjectPow {
     if (polynom.size() != 1) {
       return nullptr;
     }
-    auto powValue = polynom.front()->simplify();
+    auto powValue = polynom.front()->toMinimalObject();
     if (is<Integer>(powValue)) {
       return powValue;
     }
@@ -128,12 +128,12 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   }
 
   if (exprObj.polynomVect.size() == 1) {
-    simplifyValue(isPrecise, exprObj.polynomVect.front());
+    simplifyConstant(isPrecise, exprObj.polynomVect.front());
     return exprObj.polynomVect.front()->clone();
   }
 
   for (auto &obj : exprObj.polynomVect) {
-    simplifyValue(isPrecise, obj);
+    simplifyConstant(isPrecise, obj);
   }
 
   exprObj.simplifyDivisions();
@@ -141,7 +141,7 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   // exprObj.simplifyPolynom();
 
   if (exprObj.polynomVect.size() == 1) {
-    simplifyValue(isPrecise, exprObj.polynomVect.front());
+    simplifyConstant(isPrecise, exprObj.polynomVect.front());
     return exprObj.polynomVect.front()->clone();
   }
 
@@ -515,12 +515,12 @@ void MulExpression::negate() {
   if (polynomVect.empty()) {
     return;
   }
-  polynomVect.front() = NegExpression(std::move(polynomVect.front())).simplify();
+  polynomVect.front() = NegExpression(std::move(polynomVect.front())).toMinimalObject();
 }
 
 void MulExpression::invert() {
   for (auto &v : polynomVect) {
-    v = InvExpression(*v).simplify();
+    v = InvExpression(*v).toMinimalObject();
   }
 }
 
