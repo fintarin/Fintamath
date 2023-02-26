@@ -2,11 +2,14 @@
 #include "fintamath/expressions/DerivativeExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IndexExpression.hpp"
+#include "fintamath/expressions/InvExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/NegExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
@@ -23,6 +26,7 @@
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/other/Index.hpp"
+#include <memory>
 
 namespace fintamath {
 
@@ -38,34 +42,42 @@ struct ExpressionConfig {
   ExpressionConfig() {
     Expression::registerFunctionExpressionMaker<Add>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<SumExpression>();
-      expr->addElement({std::move(args.front())});
-      expr->addElement({std::move(args.back())});
+      expr->addElement(std::move(args.front()));
+      expr->addElement(std::move(args.back()));
       return expr;
     });
 
     Expression::registerFunctionExpressionMaker<Sub>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<SumExpression>();
-      expr->addElement({std::move(args.front())});
-      expr->addElement({std::move(args.back()), true});
+      expr->addElement(std::move(args.front()));
+      expr->addElement(std::make_unique<NegExpression>(std::move(args.back())));
       return expr;
     });
 
     Expression::registerFunctionExpressionMaker<Mul>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<MulExpression>();
-      expr->addElement({std::move(args.front())});
-      expr->addElement({std::move(args.back())});
+      expr->addElement(std::move(args.front()));
+      expr->addElement(std::move(args.back()));
       return expr;
     });
 
     Expression::registerFunctionExpressionMaker<Div>([](ArgumentsPtrVector &&args) {
       auto expr = std::make_unique<MulExpression>();
-      expr->addElement({std::move(args.front())});
-      expr->addElement({std::move(args.back()), true});
+      expr->addElement(std::move(args.front()));
+      expr->addElement(std::make_unique<InvExpression>(std::move(args.back())));
       return expr;
     });
 
     Expression::registerFunctionExpressionMaker<UnaryPlus>([](ArgumentsPtrVector &&args) {
       return std::make_unique<Expression>(std::move(args.front()));
+    });
+
+    Expression::registerFunctionExpressionMaker<Neg>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<NegExpression>(std::move(args.front()));
+    });
+
+    Expression::registerFunctionExpressionMaker<Pow>([](ArgumentsPtrVector &&args) {
+      return std::make_unique<PowExpression>(std::move(args.front()), std::move(args.back()));
     });
 
     Expression::registerFunctionExpressionMaker<Eqv>([](ArgumentsPtrVector &&args) {

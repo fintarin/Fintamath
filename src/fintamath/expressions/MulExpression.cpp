@@ -9,6 +9,8 @@
 #include "fintamath/expressions/CompExpression.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/IPolynomExpression.hpp"
+#include "fintamath/expressions/InvExpression.hpp"
 #include "fintamath/expressions/NegExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -19,6 +21,7 @@
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/meta/Converter.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -38,12 +41,11 @@ struct MulExpression::ObjectPow {
   }
 
   MathObjectPtr getPowIfInteger() const {
-    auto polynom = pow.getPolynomVector();
+    auto polynom = pow.clonePolynom();
     if (polynom.size() != 1) {
       return nullptr;
     }
-    auto powValue = polynom.front().info->clone();
-    *powValue = polynom.front().inverted ? *Neg()(*powValue) : *powValue;
+    auto powValue = polynom.front()->simplify();
     if (is<Integer>(powValue)) {
       return powValue;
     }
@@ -51,107 +53,62 @@ struct MulExpression::ObjectPow {
   }
 
   MathObjectPtr getPowIfSingle() const {
-    auto polynom = pow.getPolynomVector();
+    auto polynom = pow.clonePolynom();
     if (polynom.size() != 1) {
       return nullptr;
     }
-    auto powValue = polynom.front().info->clone();
-    *powValue = polynom.front().inverted ? *Neg()(*powValue) : *powValue;
-    return powValue;
+    return polynom.front()->clone();
   }
 
   void simplifyPow() {
     auto powSimpl = pow.toMinimalObject();
     pow = SumExpression();
-    pow.addElement({std::move(powSimpl)});
+    pow.addElement(std::move(powSimpl));
   }
 };
 
 //-----------------------------------------------------------------------------------------------------//
 
-MulElement::MulElement(MathObjectPtr &&info, bool inverted) : PolynomElement(info, inverted) {
-}
-
-MathObjectPtr MulElement::toMathObject(bool isPrecise) const {
-  auto copy = *this;
-
-  if (copy.inverted) {
-    copy.info = Expression::makeRawFunctionExpression(Pow(), makeArgumentsPtrVector(info->clone(), NEG_ONE.clone()));
-    copy.simplify(isPrecise);
-    return copy.info->clone();
+MulExpression::MulExpression(PolynomVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
+  if (!polynomVect.empty()) {
+    compress();
   }
-
-  copy.simplify(isPrecise);
-
-  return copy.info->clone();
-}
-
-void MulElement::simplify(bool isPrecise) {
-  if (is<IExpression>(info)) {
-    // TODO: remove this condition when polynomial division is implemented
-    if (const auto *expr = cast<Expression>(info.get()); expr && is<Pow>(expr->getInfo())) {
-      if (auto exprSimpl = expr->simplify(isPrecise); exprSimpl && !is<SumExpression>(exprSimpl)) {
-        info = std::move(exprSimpl);
-        return;
-      }
-      return;
-    }
-
-    auto expr = cast<IExpression>(std::move(info));
-    info = expr->simplify(isPrecise);
-    return;
-  }
-
-  if (is<IConstant>(info)) {
-    auto constant = cast<IConstant>(std::move(info));
-    auto constVal = (*constant)();
-
-    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
-      info = std::move(constant);
-    } else {
-      info = std::move(constVal);
-    }
-
-    return;
-  }
-
-  info = info->toMinimalObject();
-}
-
-//-----------------------------------------------------------------------------------------------------//
-
-MulExpression::MulExpression(PolynomVector inPolynomVect) {
-  polynomVect = std::move(inPolynomVect);
-  compress();
 }
 
 MulExpression::MulExpression(const IMathObject &rhs) {
-  if (const auto *rhsPtr = cast<SumExpression>(&rhs)) {
+  if (const auto *rhsPtr = cast<MulExpression>(&rhs)) {
     *this = *rhsPtr;
     return;
   }
 
-  polynomVect.emplace_back(MulElement{rhs.clone(), false});
+  polynomVect.emplace_back(rhs.clone());
 }
 
 std::string MulExpression::tryPutInBrackets(const MathObjectPtr &obj) {
   if (is<SumExpression>(obj)) {
     return "(" + obj->toString() + ")";
   }
-  return tryPutInBracketsIfNeg(obj);
+  return obj->toString();
 }
 
 std::string MulExpression::toString() const {
   std::string result;
 
-  if (polynomVect.front().inverted) {
-    result += "1/";
+  if (const auto *invExpr = cast<InvExpression>(polynomVect.front().get())) {
+    result += "1 / ";
+    result += tryPutInBrackets(invExpr->getInfo());
+  } else {
+    result += tryPutInBrackets(polynomVect.front());
   }
-  result += tryPutInBrackets(polynomVect.front().info);
 
   for (size_t i = 1; i < polynomVect.size(); i++) {
-    result += polynomVect[i].inverted ? '/' : ' ';
-    result += tryPutInBrackets(polynomVect[i].info);
+    if (const auto *invExpr = cast<InvExpression>(polynomVect.front().get())) {
+      result += " / ";
+      result += tryPutInBrackets(invExpr->getInfo());
+      continue;
+    }
+    result += ' ';
+    result += tryPutInBrackets(polynomVect[i]);
   }
 
   return result;
@@ -166,17 +123,18 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   exprObj.compress();
 
   for (auto &obj : exprObj.polynomVect) { // TODO: find a better solution
-    if (is<CompExpression>(obj.info)) {
+    if (is<CompExpression>(obj)) {
       throw InvalidInputException(toString());
     }
   }
 
   if (exprObj.polynomVect.size() == 1) {
-    return exprObj.polynomVect.front().toMathObject(isPrecise);
+    simplifyValue(isPrecise, exprObj.polynomVect.front());
+    return exprObj.polynomVect.front()->clone();
   }
 
   for (auto &obj : exprObj.polynomVect) {
-    obj.simplify(isPrecise);
+    simplifyValue(isPrecise, obj);
   }
 
   exprObj.simplifyDivisions();
@@ -184,7 +142,8 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   exprObj.simplifyPolynom();
 
   if (exprObj.polynomVect.size() == 1) {
-    return exprObj.polynomVect.front().toMathObject(isPrecise);
+    simplifyValue(isPrecise, exprObj.polynomVect.front());
+    return exprObj.polynomVect.front()->clone();
   }
 
   return exprObj.clone();
@@ -196,34 +155,12 @@ const IFunction *MulExpression::getFunction() const {
 
 MulExpression::PolynomVector MulExpression::mulNumbers(const PolynomVector &numVect) {
   Expression result = 1;
+  PolynomVector resultVector;
   for (const auto &elem : numVect) {
-    if (elem.inverted) {
-      result.getInfo() = Div()(*result.getInfo(), *elem.info);
-    } else {
-      result.getInfo() = Mul()(*result.getInfo(), *elem.info);
-    }
+    result.getInfo() = Mul()(*result.getInfo(), *elem);
   }
-  return {{result.toMinimalObject(), false}};
-}
-
-MulExpression::PolynomVector convertAddPolynomToMul(const SumExpression::PolynomVector &polynom) {
-  MulExpression::PolynomVector result;
-
-  for (const auto &elem : polynom) {
-    result.emplace_back(MulElement(elem.info->clone(), elem.inverted));
-  }
-
-  return result;
-}
-
-SumExpression::PolynomVector convertMulPolynomToAdd(const MulExpression::PolynomVector &polynom) {
-  SumExpression::PolynomVector result;
-
-  for (const auto &elem : polynom) {
-    result.emplace_back(SumElement(elem.info->clone(), elem.inverted));
-  }
-
-  return result;
+  resultVector.emplace_back(result.toMinimalObject());
+  return resultVector;
 }
 
 MulExpression::PolynomVector MulExpression::multiplicateTwoBraces(const PolynomVector &lhs, const PolynomVector &rhs) {
@@ -231,9 +168,9 @@ MulExpression::PolynomVector MulExpression::multiplicateTwoBraces(const PolynomV
 
   for (const auto &lhsElem : lhs) {
     for (const auto &rhsElem : rhs) {
-      auto polynom = cast<MulExpression>(lhsElem.info.get())->getPolynomVector();
-      polynom.emplace_back(MulElement{rhsElem.info->clone()});
-      result.emplace_back(MulElement{std::make_unique<MulExpression>(polynom), lhsElem.inverted != rhsElem.inverted});
+      auto polynom = cast<MulExpression>(lhsElem.get())->clonePolynom();
+      polynom.emplace_back(rhsElem->clone());
+      result.emplace_back(std::make_unique<MulExpression>(std::move(polynom)));
     }
   }
 
@@ -241,31 +178,26 @@ MulExpression::PolynomVector MulExpression::multiplicateTwoBraces(const PolynomV
 }
 
 void MulExpression::multiplicateBraces(const PolynomVector &addVect, PolynomVector &positive, PolynomVector &negative) {
-  PolynomVector result{MulExpression({ONE}).clone()};
-  PolynomVector inverted{MulExpression({ONE}).clone()};
+  PolynomVector result;
+  PolynomVector inverted;
+  result.emplace_back(MulExpression(ONE).clone());
+  inverted.emplace_back(MulExpression(ONE).clone());
 
   for (const auto &addExpr : addVect) {
-    if (addExpr.inverted) {
-      inverted = multiplicateTwoBraces(
-          inverted, convertAddPolynomToMul(cast<SumExpression>(addExpr.info.get())->getPolynomVector()));
-    } else {
-      result = multiplicateTwoBraces(
-          result, convertAddPolynomToMul(cast<SumExpression>(addExpr.info.get())->getPolynomVector()));
-    }
   }
 
-  positive = result;
-  negative = inverted;
+  positive = std::move(result);
+  negative = std::move(inverted);
 }
 
-bool sortFunc(const MulElement &lhs, const MulElement &rhs) {
-  return lhs.info->toString() < rhs.info->toString();
+bool MulExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
+  return lhs->toString() < rhs->toString();
 }
 
 // TODO: refactor
 void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, PolynomVector &addVect,
                                    PolynomVector &literalVect, PolynomVector &funcVect) {
-  for (auto &obj : objs) {
+  /*for (auto &obj : objs) {
     obj.simplifyPow();
 
     if (auto numObj = obj.getPowIfInteger()) {
@@ -315,13 +247,13 @@ void MulExpression::sortPowObjects(Objects &objs, PolynomVector &powVect, Polyno
     } else {
       powVect.emplace_back(MulElement(Pow()(*obj.obj, obj.pow)));
     }
-  }
+  }*/
 }
 
 // TODO: refactor
 void MulExpression::simplifyPow(PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
                                 PolynomVector &funcVect) {
-  Objects objects;
+  /*Objects objects;
   for (const auto &addObj : addVect) {
     bool added = false;
     for (auto &obj : objects) {
@@ -401,17 +333,17 @@ void MulExpression::simplifyPow(PolynomVector &powVect, PolynomVector &addVect, 
   addVect.clear();
   funcVect.clear();
 
-  sortPowObjects(objects, powVect, addVect, literalVect, funcVect);
+  sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
 }
 
 void MulExpression::multiplicatePolynom(PolynomVector &vect, PolynomVector &positive, PolynomVector &negative) {
-  for (const auto &el : vect) {
+  /*for (const auto &el : vect) {
     if (el.inverted) {
       negative = multiplicateTwoBraces(negative, {MulElement(el.info->clone())});
     } else {
       positive = multiplicateTwoBraces(positive, {el});
     }
-  }
+  }*/
 }
 
 // TODO: refactor
@@ -431,8 +363,8 @@ void MulExpression::simplifyPolynom() {
   sortPolynom(tmpVect, numVect, exprVect, literalVect, funcVect, powVect);
 
   numVect = mulNumbers(numVect);
-  if (numVect.size() == 1 && *numVect.front().info == ZERO) {
-    polynomVect = numVect;
+  if (numVect.size() == 1 && *numVect.front() == ZERO) {
+    polynomVect = std::move(numVect);
     return;
   }
 
@@ -455,30 +387,30 @@ void MulExpression::simplifyPolynom() {
     bool positiveAdded = false;
     bool negativeAdded = false;
     if (!positive.empty()) {
-      auto addExpr = SumExpression(convertMulPolynomToAdd(positive)).toMinimalObject();
+      auto addExpr = SumExpression(std::move(negative)).toMinimalObject();
       if (!is<INumber>(addExpr)) {
-        polynomVect.emplace_back(MulElement{addExpr->clone()});
+        polynomVect.emplace_back(addExpr->clone());
         positiveAdded = true;
       } else {
         numVect.emplace_back(addExpr->clone());
       }
     }
     if (!negative.empty()) {
-      auto addExpr = SumExpression(convertMulPolynomToAdd(negative)).toMinimalObject();
+      auto addExpr = SumExpression(std::move(negative)).toMinimalObject();
       if (!is<INumber>(addExpr)) {
-        polynomVect.emplace_back(MulElement(addExpr->clone(), true));
+        polynomVect.emplace_back(InvExpression(addExpr->clone()).toMinimalObject());
         negativeAdded = true;
       } else {
-        numVect.emplace_back(MulElement(addExpr->clone(), true));
+        numVect.emplace_back(InvExpression(addExpr->clone()).toMinimalObject());
       }
     }
     if (positiveAdded && negativeAdded) {
       return;
     }
     numVect = mulNumbers(numVect);
-    if (numVect.front().info->toString() != "1" || polynomVect.empty()) {
+    if (numVect.front()->toString() != "1" || polynomVect.empty()) {
       pushPolynomToPolynom(polynomVect, numVect);
-      polynomVect = numVect;
+      polynomVect = std::move(numVect);
       return;
     }
     return;
@@ -493,14 +425,14 @@ void MulExpression::simplifyPolynom() {
   pushPolynomToPolynom(powVect, polynomVect);
   pushPolynomToPolynom(exprVect, polynomVect);
   pushPolynomToPolynom(literalVect, polynomVect);
-  if (numVect.front().info->toString() != "1" || polynomVect.empty()) {
+  if (numVect.front()->toString() != "1" || polynomVect.empty()) {
     pushPolynomToPolynom(polynomVect, numVect);
-    polynomVect = numVect;
+    polynomVect = std::move(numVect);
   }
 }
 
 void MulExpression::simplifyDivisions() {
-  std::set<size_t> childrenToRemove;
+  /*std::set<size_t> childrenToRemove;
 
   for (size_t i = 0; i < polynomVect.size() - 1; i++) {
     for (size_t j = i + 1; j < polynomVect.size(); j++) {
@@ -519,14 +451,14 @@ void MulExpression::simplifyDivisions() {
 
   if (polynomVect.empty()) {
     polynomVect.emplace_back(ONE.clone());
-  }
+  }*/
 }
 
 MulExpression::PolynomVector MulExpression::openPowMulExpression(const PolynomVector &powVect) {
-  PolynomVector newPowVect;
+  /*PolynomVector newPowVect;
 
   for (const auto &pow : powVect) {
-    const auto *expr = cast<Expression>(pow.info.get());
+    const auto *expr = cast<Expression>(pow.get());
     auto left = expr->getChildren().front()->clone();
 
     if (!is<MulExpression>(left)) {
@@ -542,21 +474,22 @@ MulExpression::PolynomVector MulExpression::openPowMulExpression(const PolynomVe
     }
   }
 
-  return newPowVect;
+  return newPowVect;*/
+  return {};
 }
 
 // TODO: remove this and implement PowExpression
 MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
   for (const auto &child : polynomVect) {
     if (*powValue == ONE) {
-      if (is<Variable>(child.info)) {
-        return polynomVect.front().info->clone();
+      if (is<Variable>(child)) {
+        return polynomVect.front()->clone();
       }
     }
 
-    if (const auto *childExpr = cast<Expression>(child.info.get()); childExpr && is<Pow>(childExpr->getInfo())) {
+    if (const auto *childExpr = cast<Expression>(child.get()); childExpr && is<Pow>(childExpr->getInfo())) {
       if (auto rightVal = childExpr->getChildren().back()->clone(); rightVal && *rightVal == *powValue) {
-        return polynomVect.front().info->clone();
+        return polynomVect.front()->clone();
       }
     }
   }
@@ -569,7 +502,7 @@ MathObjectPtr MulExpression::getPow() const {
   Integer maxValue = ZERO;
 
   for (const auto &child : polynomVect) {
-    if (const auto *childExpr = cast<Expression>(child.info.get()); childExpr && is<Pow>(childExpr->getInfo())) {
+    if (const auto *childExpr = cast<Expression>(child.get()); childExpr && is<Pow>(childExpr->getInfo())) {
       if (const auto *pow = cast<Integer>(childExpr->getChildren().back().get()); *pow > maxValue) {
         maxValue = *pow;
       }
@@ -583,12 +516,13 @@ void MulExpression::negate() {
   if (polynomVect.empty()) {
     return;
   }
-  // TODO: refactor with using InvExpression
-  polynomVect.front().info = NegExpression(std::move(polynomVect.front().info)).simplify();
+  polynomVect.front() = NegExpression(std::move(polynomVect.front())).simplify();
 }
 
 void MulExpression::invert() {
-  // TODO: refactor PolynomExpression and implement it
+  for (auto &v : polynomVect) {
+    v = InvExpression(*v).simplify();
+  }
 }
 
 }

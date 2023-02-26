@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/InvExpression.hpp"
+// #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -37,24 +38,27 @@ MathObjectPtr PowExpression::simplify(bool isPrecise) const {
       return lhsPtr->clone();
     }
     if (*rhsPtr == NEG_ONE) {
-      return InvExpression(MathObjectPtr(lhsPtr)).simplify(isPrecise);
+      return InvExpression(lhsPtr->clone()).simplify(isPrecise);
     }
 
-    // TODO: implement this logic when Polynom will be implemented
-    // Integer rhs = *rhsPtr;
-    // MulElement lhs = std::move(lhsInfo);
-    //  if (rhs < ZERO) {
-    //    lhs.inverted = true;
-    //    rhs = -rhs;
-    //  }
+    Integer rhs = *rhsPtr;
 
-    // MulExpression mul;
-    // for (size_t i = 0; i < rhs; i++) {
-    //   mul.addElement(lhs);
-    // }
+    bool isInverted = false;
+    if (rhs < ZERO) {
+      isInverted = true;
+      rhs = -rhs;
+    }
 
-    // info = mul.simplify();
-    // children.clear();
+    // MulExpression mul(MulExpression::PolynomVector{});
+    /*
+    for (size_t i = 0; i < rhs; i++) {
+      mul.addElement(exprObj->lhsInfo);
+    }
+
+    if (isInverted) {
+      return InvExpression(mul.simplify()).simplify();
+    }
+    return mul.simplify();*/
   }
 
   return exprObj;

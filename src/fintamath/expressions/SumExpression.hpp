@@ -3,26 +3,14 @@
 #include <cstdint>
 
 #include "fintamath/expressions/INegatable.hpp"
-#include "fintamath/expressions/PolynomExpression.hpp"
+#include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
-
-// TODO: try to remove this and use Expression instead
-struct SumElement : public PolynomElement {
-  SumElement() = default;
-
-  SumElement(MathObjectPtr &&info, bool inverted = false);
-
-  MathObjectPtr toMathObject(bool isPrecise) const;
-
-  void simplify(bool isPrecise);
-};
-
-//-----------------------------------------------------------------------------------------------------//
-
-class SumExpression : public PolynomExpressionCRTP<SumExpression, SumElement>, public INegatable {
+class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatable {
 public:
   SumExpression() = default; // TODO: remove this
+
+  SumExpression(const IMathObject &rhs);
 
   explicit SumExpression(PolynomVector inPolynomVect);
 
@@ -45,8 +33,9 @@ private:
   struct MulObject;
   using MulObjects = std::vector<MulObject>;
 
-private:
   static PolynomVector sumNumbers(const PolynomVector &numVect);
+
+  bool static sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
 
   void simplifyPolynom();
 

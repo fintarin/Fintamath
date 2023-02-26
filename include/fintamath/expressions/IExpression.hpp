@@ -51,9 +51,6 @@ public:
   }
 
 protected:
-  // TODO: move to NegExpression
-  static std::string tryPutInBracketsIfNeg(const MathObjectPtr &obj);
-
   // TODO: remove this and implement in Expression using IExpression::Iterator
   void validateArgs(const IFunction &func, const ArgumentsVector &args) const;
 

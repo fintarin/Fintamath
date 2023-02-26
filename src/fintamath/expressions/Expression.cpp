@@ -16,8 +16,10 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp" // TODO: remove this include after LogicException is implemented
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/IndexExpression.hpp"
+#include "fintamath/expressions/InvExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
 #include "fintamath/expressions/NegExpression.hpp"
+#include "fintamath/expressions/PowExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
 
 #include "fintamath/functions/IFunction.hpp"
@@ -85,7 +87,7 @@ Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(
   compress();
   validate();
   // TODO: implement void toMinimalObject() and use it here
-  *this = Expression(toMinimalObject());
+  //*this = Expression(toMinimalObject());
 }
 
 Expression::Expression(const TokenVector &tokens) {
@@ -621,8 +623,8 @@ Expression &Expression::divide(const Expression &rhs) {
 }
 
 Expression &Expression::negate() {
-  return *this = Expression(
-             makeFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)))));
+  *this = Expression(NegExpression(*this).simplify());
+  return *this;
 }
 
 void Expression::simplifyNeg() {
@@ -899,47 +901,6 @@ void Expression::simplifyConstant(bool isPrecise) {
 void Expression::simplifyPow() {
   if (!is<Pow>(info)) {
     return;
-  }
-
-  MathObjectPtr &lhsRef = children.front();
-  MathObjectPtr &rhsRef = children.back();
-
-  auto *lhsPtr = cast<IExpression>(lhsRef.get());
-  auto *rhsPtr = cast<Integer>(rhsRef.get());
-
-  if (lhsPtr && rhsPtr && !is<Expression>(lhsPtr)) {
-    if (*rhsPtr == ZERO) {
-      info = ONE.clone();
-      children.clear();
-      return;
-    }
-    if (*lhsPtr == ONE || *rhsPtr == ONE) {
-      info = std::move(lhsRef);
-      children.clear();
-      return;
-    }
-    if (*rhsPtr == NEG_ONE) {
-      info = std::make_unique<Div>();
-      *rhsPtr = ONE;
-      std::swap(lhsRef, rhsRef);
-      return;
-    }
-
-    Integer rhs = *rhsPtr;
-    MulElement lhs = std::move(lhsRef);
-
-    if (rhs < ZERO) {
-      lhs.inverted = true;
-      rhs = -rhs;
-    }
-
-    MulExpression mul;
-    for (size_t i = 0; i < rhs; i++) {
-      mul.addElement(MulElement(lhs));
-    }
-
-    info = mul.toMinimalObject();
-    children.clear();
   }
 }
 

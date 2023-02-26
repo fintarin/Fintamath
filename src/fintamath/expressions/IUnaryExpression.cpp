@@ -135,4 +135,8 @@ void IUnaryExpression::validate() const {
   // TODO: implement it
 }
 
+MathObjectPtr IUnaryExpression::getInfo() const {
+  return info->clone();
+}
+
 }

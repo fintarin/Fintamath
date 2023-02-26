@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
 
@@ -23,6 +24,8 @@ public:
   void setPrecision(uint8_t precision) final;
 
   std::string toString() const final;
+
+  MathObjectPtr getInfo() const;
 
   // TODO: remove this
   void validate() const final;

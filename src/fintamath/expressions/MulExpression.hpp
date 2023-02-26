@@ -4,27 +4,13 @@
 
 #include "fintamath/expressions/IInvertable.hpp"
 #include "fintamath/expressions/INegatable.hpp"
-#include "fintamath/expressions/PolynomExpression.hpp"
+#include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
-
-// TODO: try to remove this and use Expression instead
-struct MulElement : public PolynomElement {
-  MulElement() = default;
-
-  MulElement(MathObjectPtr &&info, bool inverted = false);
-
-  MathObjectPtr toMathObject(bool isPrecise) const;
-
-  void simplify(bool isPrecise);
-};
-
-//-----------------------------------------------------------------------------------------------------//
-
-class MulExpression : public PolynomExpressionCRTP<MulExpression, MulElement>, public INegatable, public IInvertable {
+class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatable, public IInvertable {
 public:
-  MulExpression() = default; // TODO: remove this
-
+  MulExpression() = default;
+  
   explicit MulExpression(PolynomVector inPolynomVect);
 
   MulExpression(const IMathObject &rhs);
@@ -72,6 +58,8 @@ private:
 
   static void sortPowObjects(Objects &objs, PolynomVector &powVect, PolynomVector &addVect, PolynomVector &literalVect,
                              PolynomVector &funcVect);
+
+  static bool sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
 };
 
 }

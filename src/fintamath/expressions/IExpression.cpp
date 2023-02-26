@@ -7,15 +7,6 @@
 
 namespace fintamath {
 
-// TODO: remove this, and don't use Expression in IExpression
-std::string IExpression::tryPutInBracketsIfNeg(const MathObjectPtr &obj) {
-  if (const auto *expr = cast<Expression>(obj.get()); expr && is<Neg>(expr->getInfo())) {
-    return "(" + expr->toString() + ")";
-  }
-
-  return obj->toString();
-}
-
 void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &args) const {
   const ArgumentsTypesVector argsTypes = func.getArgsTypes();
 

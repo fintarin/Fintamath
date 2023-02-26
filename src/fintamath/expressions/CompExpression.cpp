@@ -7,6 +7,7 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/NegExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
@@ -69,9 +70,8 @@ MathObjectPtr CompExpression::toMinimalObject() const {
 }
 
 MathObjectPtr CompExpression::simplify(bool isPrecise) const {
-  SumExpression addExpr;
-  addExpr.addElement({leftExpr->clone()});
-  addExpr.addElement({rightExpr->clone(), true});
+  SumExpression addExpr(*leftExpr->clone());
+  addExpr.addElement(NegExpression(*rightExpr).toMinimalObject());
 
   MathObjectPtr simplExpr = addExpr.simplify(isPrecise);
 
@@ -112,6 +112,7 @@ void CompExpression::setPrecision(uint8_t precision) {
 }
 
 std::string CompExpression::solve() const {
+  return "Remove this"; // TODO: remove this
   Variable x("x");
   auto expr = simplify(false);
   if (!is<CompExpression>(expr)) {
@@ -141,6 +142,7 @@ std::string CompExpression::solve() const {
 }
 
 std::string CompExpression::solve(uint8_t precision) const {
+  return "Remove this"; // TODO: remove this
   Variable x("x");
   auto expr = simplify(false);
   if (!is<CompExpression>(expr)) {
