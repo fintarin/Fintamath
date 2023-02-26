@@ -16,7 +16,7 @@ public:
 
   IBinaryExpression &operator=(IBinaryExpression &&rhs) noexcept = default;
 
-  IBinaryExpression(const IMathObject &lhs, const IMathObject &rhs);
+  explicit IBinaryExpression(const IMathObject &lhs, const IMathObject &rhs);
 
   explicit IBinaryExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
@@ -24,9 +24,12 @@ public:
 
   std::string toString() const final;
 
+  // TODO: remove this
+  void validate() const final;
+
 protected:
-  MathObjectPtr lhs;
-  MathObjectPtr rhs;
+  MathObjectPtr lhsInfo;
+  MathObjectPtr rhsInfo;
 };
 
 template <typename Derived>

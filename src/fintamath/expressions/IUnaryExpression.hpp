@@ -16,13 +16,16 @@ public:
 
   IUnaryExpression &operator=(IUnaryExpression &&rhs) noexcept = default;
 
-  IUnaryExpression(const IMathObject &rhs);
+  explicit IUnaryExpression(const IMathObject &rhs);
 
-  IUnaryExpression(MathObjectPtr &&rhs);
+  explicit IUnaryExpression(MathObjectPtr &&rhs);
 
   void setPrecision(uint8_t precision) final;
 
   std::string toString() const final;
+
+  // TODO: remove this
+  void validate() const final;
 
 private:
   std::string postfixToString(const IFunction &oper) const;

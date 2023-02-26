@@ -48,6 +48,10 @@ void IUnaryExpression::setPrecision(uint8_t precision) {
 std::string IUnaryExpression::toString() const {
   const auto *func = this->getFunction();
 
+  if (!func) {
+    return {};
+  }
+
   if (const auto *oper = cast<IOperator>(func)) {
     switch (oper->getOperatorPriority()) {
     case IOperator::Priority::PostfixUnary:
@@ -57,9 +61,6 @@ std::string IUnaryExpression::toString() const {
     }
   }
 
-  if (!func) {
-    return {};
-  }
   return functionToString(*func);
 }
 
@@ -129,4 +130,9 @@ void IUnaryExpression::simplifyValue(bool isPrecise) {
 
   info = info->simplify();
 }
+
+void IUnaryExpression::validate() const {
+  // TODO: implement it
+}
+
 }
