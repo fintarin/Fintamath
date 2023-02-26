@@ -118,19 +118,24 @@ std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, con
   return result + oper.toString();
 }
 
-void IExpression::simplifyConstant(bool isPrecise, MathObjectPtr &obj) {
-  if (!is<IConstant>(obj)) {
+void IExpression::simplifyValue(bool isPrecise, MathObjectPtr &obj) {
+  if (auto expr = cast<IExpression>(std::move(obj))) {
+    obj = expr->simplify(isPrecise);
     return;
   }
 
-  auto constant = cast<IConstant>(std::move(obj));
-  auto constVal = (*constant)();
+  if (is<IConstant>(obj)) {
+    auto constant = cast<IConstant>(std::move(obj));
+    auto constVal = (*constant)();
 
-  if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
-    obj = std::move(constant);
-  } else {
-    obj = std::move(constVal);
+    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
+      obj = std::move(constant);
+    } else {
+      obj = std::move(constVal);
+    }
   }
+
+  obj = obj->toMinimalObject();
 }
 
 void IExpression::setMathObjectPrecision(MathObjectPtr &obj, uint8_t precision) {

@@ -104,14 +104,7 @@ std::string IUnaryExpression::functionToString(const IFunction &oper) const {
 }
 
 void IUnaryExpression::simplifyValue(bool isPrecise) {
-  if (auto expr = cast<IExpression>(std::move(info))) {
-    info = expr->simplify(isPrecise);
-    return;
-  }
-
-  simplifyConstant(isPrecise, info);
-
-  info = info->toMinimalObject();
+  IExpression::simplifyValue(isPrecise, info);
 }
 
 void IUnaryExpression::validate() const {

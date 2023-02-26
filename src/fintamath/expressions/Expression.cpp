@@ -81,8 +81,8 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
   compress();
   validate();
-  // TODO: implement void toMinimalObject() and use it here
-  //*this = Expression(toMinimalObject());
+  // TODO: implement void simplify() and use it here
+  *this = Expression(toMinimalObject());
 }
 
 Expression::Expression(const TokenVector &tokens) {
@@ -109,13 +109,9 @@ Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 Expression::Expression(MathObjectPtr &&obj) {
   if (auto *expr = cast<Expression>(obj.get())) {
     *this = std::move(*expr);
-  } else if (is<IExpression>(obj)) {
-    info = std::move(obj);
   } else {
-    info = obj->toMinimalObject();
-  }
-
-  obj = nullptr;
+    info = std::move(obj);
+  } 
 }
 
 Expression::Expression(int64_t val) : info(std::make_unique<Integer>(val)) {
@@ -318,8 +314,8 @@ ExpressionPtr Expression::makeRawFunctionExpression(const IFunction &func, Argum
 }
 
 const IFunction *Expression::getFunction() const {
-  if (const auto *func = cast<IFunction>(info.get())) {
-    return func;
+  if (const auto *funcExpr = cast<IExpression>(info.get())) {
+    return funcExpr->getFunction();
   }
 
   return nullptr;
@@ -453,7 +449,7 @@ void Expression::setPrecision(uint8_t precision) {
 MathObjectPtr Expression::simplify(bool isPrecise) const {
   Expression expr = *this;
 
-  simplifyConstant(isPrecise, expr.info);
+  simplifyValue(isPrecise, expr.info);
   return std::move(expr.info);
 }
 
