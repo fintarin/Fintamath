@@ -22,11 +22,16 @@ public:
 
   std::string toString() const final;
 
+  const IFunction *getFunction() const final;
+
   // TODO: remove this
   void validate() const final;
 
 protected:
+  FunctionPtr function;
+
   MathObjectPtr lhsInfo;
+
   MathObjectPtr rhsInfo;
 };
 

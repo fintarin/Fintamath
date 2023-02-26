@@ -13,8 +13,6 @@ public:
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
-  const IFunction *getFunction() const override;
-
 protected:
   IMathObject *simplify() override;
 };

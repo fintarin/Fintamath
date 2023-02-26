@@ -5,7 +5,8 @@
 namespace fintamath {
 
 IBinaryExpression::IBinaryExpression(const IBinaryExpression &rhs)
-    : lhsInfo(rhs.lhsInfo->clone()),
+    : function(cast<IFunction>(rhs.function->clone())),
+      lhsInfo(rhs.lhsInfo->clone()),
       rhsInfo(rhs.rhsInfo->clone()) {
 }
 
@@ -16,6 +17,7 @@ IBinaryExpression::IBinaryExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
 
 IBinaryExpression &IBinaryExpression::operator=(const IBinaryExpression &rhs) {
   if (&rhs != this) {
+    function = cast<IFunction>(rhs.function->clone());
     lhsInfo = rhs.lhsInfo->clone();
     rhsInfo = rhs.rhsInfo->clone();
   }
@@ -38,6 +40,10 @@ std::string IBinaryExpression::toString() const {
 
 void IBinaryExpression::validate() const {
   // TODO: implement it
+}
+
+const IFunction *IBinaryExpression::getFunction() const {
+  return function.get();
 }
 
 }

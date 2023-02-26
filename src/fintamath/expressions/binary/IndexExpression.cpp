@@ -18,6 +18,7 @@ const Index INDEX;
 
 IndexExpression::IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
     : IBinaryExpression(std::move(lhs), std::move(rhs)) {
+  function = cast<IFunction>(INDEX.clone());
 }
 
 // std::string IndexExpression::toString() const {
@@ -35,10 +36,6 @@ IndexExpression::IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
 
 //   return lhsStr + "_" + rhsStr;
 // }
-
-const IFunction *IndexExpression::getFunction() const {
-  return &INDEX;
-}
 
 MathObjectPtr IndexExpression::toMinimalObject() const {
   return simplify(true);

@@ -14,6 +14,7 @@ const Pow POW;
 
 PowExpression::PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
     : IBinaryExpression(std::move(lhs), std::move(rhs)) {
+  function = cast<IFunction>(POW.clone());
 }
 
 MathObjectPtr PowExpression::toMinimalObject() const {
@@ -59,16 +60,10 @@ MathObjectPtr PowExpression::simplify(bool isPrecise) const {
     return mul.simplify();*/
   }
 
-  auto *lhs = cast<INumber>(exprObj->lhsInfo.get());
-  auto *rhs = cast<INumber>(exprObj->rhsInfo.get());
-  if (lhs && rhs) {
-    return POW(*lhs, *rhs);
+  if (is<INumber>(exprObj->lhsInfo) && is<INumber>(exprObj->rhsInfo)) {
+    return POW(*exprObj->lhsInfo, *exprObj->rhsInfo);
   }
   return exprObj;
-}
-
-const IFunction *PowExpression::getFunction() const {
-  return &POW;
 }
 
 IMathObject *PowExpression::simplify() {

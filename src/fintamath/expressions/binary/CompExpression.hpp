@@ -13,23 +13,11 @@ class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
 public:
   CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
-  CompExpression(const CompExpression &rhs);
-
-  CompExpression(CompExpression &&rhs) noexcept;
-
-  CompExpression &operator=(const CompExpression &rhs);
-
-  CompExpression &operator=(CompExpression &&rhs) noexcept;
-
-  ~CompExpression() override = default;
-
   MathObjectPtr toMinimalObject() const override;
 
   std::string solve() const;
 
   std::string solve(uint8_t precision) const;
-
-  const IFunction *getFunction() const override;
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
@@ -37,9 +25,6 @@ public:
 
 protected:
   IMathObject *simplify() override;
-
-private:
-  OperatorPtr oper;
 
   // std::vector<MathObjectPtr> solvePowEquation(const Variable &x) const;
 

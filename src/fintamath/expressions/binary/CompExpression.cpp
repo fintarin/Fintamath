@@ -27,36 +27,7 @@ CompExpression::CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, Mat
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs->toString(), rhs->toString());
   }
 
-  this->oper = cast<IOperator>(oper.clone());
-}
-
-CompExpression::CompExpression(const CompExpression &rhs)
-    : IBinaryExpressionCRTP(rhs),
-      IBinaryExpression(rhs),
-      oper(cast<IOperator>(rhs.oper->clone())) {
-}
-
-CompExpression::CompExpression(CompExpression &&rhs) noexcept
-    : IBinaryExpressionCRTP(std::move(rhs)),
-      oper(std::move(rhs.oper)) {
-}
-
-CompExpression &CompExpression::operator=(const CompExpression &rhs) {
-  if (&rhs != this) {
-    IBinaryExpression::operator=(rhs);
-    oper = cast<IOperator>(rhs.oper->clone());
-  }
-
-  return *this;
-}
-
-CompExpression &CompExpression::operator=(CompExpression &&rhs) noexcept {
-  if (&rhs != this) {
-    IBinaryExpression::operator=(std::move(rhs));
-    std::swap(oper, rhs.oper);
-  }
-
-  return *this;
+  this->function = cast<IOperator>(oper.clone());
 }
 
 MathObjectPtr CompExpression::toMinimalObject() const {
@@ -168,10 +139,6 @@ std::string CompExpression::solve(uint8_t precision) const {
   resultStr.pop_back();
   resultStr += "}";
   return resultStr;*/
-}
-
-const IFunction *CompExpression::getFunction() const {
-  return oper.get();
 }
 
 /*std::vector<MathObjectPtr> CompExpression::solvePowEquation(const Variable &x) const {
