@@ -8,10 +8,6 @@ namespace fintamath {
 
 class NegExpression : public UnaryExpressionCRTP<NegExpression> {
 public:
-  NegExpression() = default;
-
-  NegExpression(const IMathObject &rhs);
-
   std::string toString() const override;
 
   MathObjectPtr simplify() const override;

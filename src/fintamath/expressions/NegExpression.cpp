@@ -5,10 +5,6 @@ namespace fintamath {
 
 const Neg NEG;
 
-NegExpression::NegExpression(const IMathObject &rhs) {
-  info = rhs.clone();
-}
-
 MathObjectPtr NegExpression::simplify() const {
   return {};
 }

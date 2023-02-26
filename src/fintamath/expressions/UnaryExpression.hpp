@@ -10,8 +10,6 @@ namespace fintamath {
 template <typename Derived>
 class UnaryExpressionCRTP : public IExpressionCRTP<Derived> {
 public:
-  UnaryExpressionCRTP() = default;
-
   UnaryExpressionCRTP(const UnaryExpressionCRTP &rhs) : info(rhs.info->clone()) {
   }
 
@@ -29,6 +27,8 @@ public:
   }
 
   UnaryExpressionCRTP &operator=(UnaryExpressionCRTP &&rhs) noexcept = default;
+
+  UnaryExpressionCRTP(IMathObject &rhs) : info(rhs.clone()) {}
 
   void setPrecision(uint8_t precision) final {
     if (is<IExpression>(info)) {
