@@ -57,6 +57,8 @@ protected:
   // TODO: remove this and implement in Expression using IExpression::Iterator
   void validateArgs(const IFunction &func, const ArgumentsVector &args) const;
 
+  std::string putInBrackets(const std::string &str) const;
+
 private:
   static Parser::Vector<ExpressionPtr, const std::string &> parserVector;
 };

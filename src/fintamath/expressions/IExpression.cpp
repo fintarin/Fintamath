@@ -63,4 +63,8 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
   }
 }
 
+std::string IExpression::putInBrackets(const std::string &str) const {
+  return "(" + str + ")";
+}
+
 }

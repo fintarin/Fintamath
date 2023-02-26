@@ -17,7 +17,9 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/IndexExpression.hpp"
 #include "fintamath/expressions/MulExpression.hpp"
+#include "fintamath/expressions/NegExpression.hpp"
 #include "fintamath/expressions/SumExpression.hpp"
+
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -144,10 +146,6 @@ void Expression::compress() {
       }
     }
   }
-}
-
-std::string putInBrackets(const std::string &str) {
-  return "(" + str + ")";
 }
 
 std::string Expression::binaryOperatorToString() const {
