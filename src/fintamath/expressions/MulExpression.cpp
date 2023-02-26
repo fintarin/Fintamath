@@ -75,7 +75,7 @@ MathObjectPtr MulElement::toMathObject(bool isPrecise) const {
   auto copy = *this;
 
   if (copy.inverted) {
-    copy.info = Expression::buildRawFunctionExpression(Pow(), makeArgumentsPtrVector(info->clone(), NEG_ONE.clone()));
+    copy.info = Expression::makeRawFunctionExpression(Pow(), makeArgumentsPtrVector(info->clone(), NEG_ONE.clone()));
     copy.simplify(isPrecise);
     return copy.info->clone();
   }

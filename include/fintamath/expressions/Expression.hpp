@@ -66,12 +66,12 @@ public:
   // TODO: make this private
   void setPrecisionRec(uint8_t precision);
 
-  static MathObjectPtr buildFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
+  static MathObjectPtr makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
 
-  static ExpressionPtr buildRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
+  static ExpressionPtr makeRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
 
   template <typename Function, typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
-  static void registerExpressionBuilder(Parser::Function<ExpressionPtr, ArgumentsPtrVector &&> &&builder) {
+  static void registerFunctionExpressionMaker(Parser::Function<ExpressionPtr, ArgumentsPtrVector &&> &&builder) {
     Parser::Function<ExpressionPtr, ArgumentsPtrVector &&> constructor =
         [builder = std::move(builder)](ArgumentsPtrVector &&args) {
           static const IFunction::Type type = Function().getFunctionType();

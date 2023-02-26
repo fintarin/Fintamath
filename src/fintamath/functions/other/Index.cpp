@@ -3,7 +3,7 @@
 namespace fintamath {
 
 MathObjectPtr Index::call(const ArgumentsVector &argsVect) const {
-  return buildFunctionExpression(*this, argsVectToArgsPtrVect(argsVect));
+  return makeFunctionExpression(*this, argsVectToArgsPtrVect(argsVect));
 }
 
 }

@@ -63,7 +63,7 @@ MathObjectPtr SumElement::toMathObject(bool isPrecise) const {
   auto copy = *this;
 
   if (copy.inverted) {
-    copy.info = Expression::buildRawFunctionExpression(Neg(), makeArgumentsPtrVector(info->clone()));
+    copy.info = Expression::makeRawFunctionExpression(Neg(), makeArgumentsPtrVector(info->clone()));
     copy.simplify(isPrecise);
     return copy.info->clone();
   }

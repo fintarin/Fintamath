@@ -338,7 +338,7 @@ std::string Expression::toString(uint8_t precision) const {
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
   if (auto oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
     auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + 1, tokens.end())));
-    auto funcExpr = buildRawFunctionExpression(*oper, makeArgumentsPtrVector(std::move(rhsExpr)));
+    auto funcExpr = makeRawFunctionExpression(*oper, makeArgumentsPtrVector(std::move(rhsExpr)));
 
     if (auto *expr = cast<Expression>(funcExpr.get())) {
       *this = std::move(*expr);
@@ -368,7 +368,7 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
     }
 
     auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.end() - order)));
-    auto funcExpr = buildRawFunctionExpression(*oper, makeArgumentsPtrVector(std::move(rhsExpr)));
+    auto funcExpr = makeRawFunctionExpression(*oper, makeArgumentsPtrVector(std::move(rhsExpr)));
 
     if (auto *expr = cast<Expression>(funcExpr.get())) {
       *this = std::move(*expr);
@@ -414,7 +414,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 
   auto lhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.begin() + operPos)));
   auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end())));
-  auto funcExpr = buildRawFunctionExpression(cast<IFunction>(*foundOperIt->second),
+  auto funcExpr = makeRawFunctionExpression(cast<IFunction>(*foundOperIt->second),
                                              makeArgumentsPtrVector(std::move(lhsExpr), std::move(rhsExpr)));
 
   if (auto *expr = cast<Expression>(funcExpr.get())) {
@@ -489,11 +489,11 @@ std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVecto
   return operators;
 }
 
-MathObjectPtr Expression::buildFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
-  return buildRawFunctionExpression(func, std::move(args))->toMinimalObject();
+MathObjectPtr Expression::makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
+  return makeRawFunctionExpression(func, std::move(args))->toMinimalObject();
 }
 
-ExpressionPtr Expression::buildRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
+ExpressionPtr Expression::makeRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
   if (auto expr = Parser::parse(expressionBuildersMap, func.toString(), std::move(args))) {
     return expr;
   }
@@ -603,28 +603,28 @@ TokenVector Expression::cutBraces(const TokenVector &tokens) {
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  return *this = Expression(buildFunctionExpression(
+  return *this = Expression(makeFunctionExpression(
              Add(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  return *this = Expression(buildFunctionExpression(
+  return *this = Expression(makeFunctionExpression(
              Sub(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  return *this = Expression(buildFunctionExpression(
+  return *this = Expression(makeFunctionExpression(
              Mul(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  return *this = Expression(buildFunctionExpression(
+  return *this = Expression(makeFunctionExpression(
              Div(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::negate() {
   return *this = Expression(
-             buildFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)))));
+             makeFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)))));
 }
 
 void Expression::simplifyNeg() {

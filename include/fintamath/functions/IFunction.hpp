@@ -55,7 +55,7 @@ protected:
   virtual MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const = 0;
 
   static const std::function<MathObjectPtr(const IFunction &function, ArgumentsPtrVector &&args)>
-      buildFunctionExpression;
+      makeFunctionExpression;
 
 private:
   static Parser::Map<FunctionPtr> parserMap;
@@ -88,7 +88,7 @@ protected:
     validateArgsSize(argsVect);
 
     if (!doArgsMatch(argsVect)) {
-      return buildFunctionExpression(*this, argsVectToArgsPtrVect(argsVect));
+      return makeFunctionExpression(*this, argsVectToArgsPtrVect(argsVect));
     }
 
     return call(argsVect);
