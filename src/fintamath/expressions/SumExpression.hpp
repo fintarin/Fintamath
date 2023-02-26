@@ -20,7 +20,7 @@ struct SumElement : public PolynomElement {
 
 //-----------------------------------------------------------------------------------------------------//
 
-class SumExpression : public INegatable, public PolynomExpressionCRTP<SumExpression, SumElement> {
+class SumExpression : public PolynomExpressionCRTP<SumExpression, SumElement>, public INegatable {
 public:
   SumExpression() = default; // TODO: remove this
 

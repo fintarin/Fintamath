@@ -2,6 +2,15 @@
 
 namespace fintamath {
 
+IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs) : info(rhs.info->clone()) {
+}
+
+IUnaryExpression::IUnaryExpression(const IMathObject &rhs) : info(rhs.clone()) {
+}
+
+IUnaryExpression::IUnaryExpression(const MathObjectPtr &rhs) : info(rhs->clone()) {
+}
+
 IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
   if (&rhs != this) {
     if (rhs.info) {
@@ -14,8 +23,7 @@ IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
 }
 
 void IUnaryExpression::setPrecision(uint8_t precision) {
-  if (is<IExpression>(info)) {
-    auto expr = cast<IExpression>(std::move(info));
+  if (auto expr = cast<IExpression>(std::move(info))) {
     expr->setPrecision(precision);
     info = std::move(expr);
     return;
@@ -34,13 +42,13 @@ std::string IUnaryExpression::toString() const {
   const auto *func = this->getFunction();
 
   if (const auto *oper = cast<IOperator>(func)) {
-    if (oper->getOperatorPriority() == IOperator::Priority::PostfixUnary) {
+    switch (oper->getOperatorPriority()) {
+    case IOperator::Priority::PostfixUnary:
       return postfixToString(*func);
+    default:
+      return prefixToString(*func);
     }
-
-    return prefixToString(*func);
   }
-
   return functionToString(*func);
 }
 
@@ -112,5 +120,4 @@ void IUnaryExpression::simplifyValue(bool isPrecise) {
 
   info = info->simplify();
 }
-
 }

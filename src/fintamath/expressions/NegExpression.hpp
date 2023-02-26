@@ -6,11 +6,9 @@ namespace fintamath {
 
 class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
-  NegExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
-  }
+  NegExpression(const IMathObject &rhs);
 
-  explicit NegExpression(const MathObjectPtr &rhs) : IUnaryExpression(rhs) {
-  }
+  explicit NegExpression(const MathObjectPtr &rhs);
 
   MathObjectPtr simplify() const override;
 

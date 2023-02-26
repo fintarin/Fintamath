@@ -12,8 +12,7 @@ namespace fintamath {
 
 class IUnaryExpression : virtual public IExpression {
 public:
-  IUnaryExpression(const IUnaryExpression &rhs) : info(rhs.info->clone()) {
-  }
+  IUnaryExpression(const IUnaryExpression &rhs);
 
   IUnaryExpression(IUnaryExpression &&rhs) noexcept = default;
 
@@ -21,11 +20,9 @@ public:
 
   IUnaryExpression &operator=(IUnaryExpression &&rhs) noexcept = default;
 
-  IUnaryExpression(const IMathObject &rhs) : info(rhs.clone()) {
-  }
+  IUnaryExpression(const IMathObject &rhs);
 
-  explicit IUnaryExpression(const MathObjectPtr &rhs) : info(rhs->clone()) {
-  }
+  explicit IUnaryExpression(const MathObjectPtr &rhs);
 
   void setPrecision(uint8_t precision) final;
 

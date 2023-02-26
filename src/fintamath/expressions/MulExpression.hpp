@@ -20,7 +20,7 @@ struct MulElement : public PolynomElement {
 
 //-----------------------------------------------------------------------------------------------------//
 
-class MulExpression : public INegatable, public PolynomExpressionCRTP<MulExpression, MulElement> {
+class MulExpression : public PolynomExpressionCRTP<MulExpression, MulElement>, public INegatable {
 public:
   MulExpression() = default; // TODO: remove this
 

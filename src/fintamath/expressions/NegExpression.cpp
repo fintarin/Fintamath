@@ -9,6 +9,12 @@ namespace fintamath {
 
 const Neg NEG;
 
+NegExpression::NegExpression(const IMathObject &rhs) : IUnaryExpression(rhs) {
+}
+
+NegExpression::NegExpression(const MathObjectPtr &rhs) : IUnaryExpression(rhs) {
+}
+
 MathObjectPtr NegExpression::simplify() const {
   return simplify(false);
 }
