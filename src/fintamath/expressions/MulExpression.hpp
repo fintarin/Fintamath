@@ -10,7 +10,7 @@ namespace fintamath {
 class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatable, public IInvertable {
 public:
   MulExpression() = default;
-  
+
   explicit MulExpression(PolynomVector inPolynomVect);
 
   MulExpression(const IMathObject &rhs);
@@ -37,7 +37,7 @@ private:
   using Objects = std::vector<ObjectPow>;
 
 private:
-  static std::string tryPutInBrackets(const MathObjectPtr &obj);
+  static std::string sumExprToString(const MathObjectPtr &obj);
 
   static PolynomVector openPowMulExpression(const PolynomVector &powVect);
 

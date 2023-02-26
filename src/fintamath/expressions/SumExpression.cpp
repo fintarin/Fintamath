@@ -117,7 +117,7 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
   }
 
   exprObj.compress();
-  exprObj.simplifyPolynom();
+  // exprObj.simplifyPolynom();
 
   if (exprObj.polynomVect.size() == 1) {
     simplifyValue(isPrecise, exprObj.polynomVect.front());
@@ -150,7 +150,7 @@ void SumExpression::simplifyPolynom() {
   auto exprVect = PolynomVector();
   auto funcVect = PolynomVector();
 
-  sortPolynom(polynomVect, numVect, exprVect, literalVect, funcVect, powVect);
+  // sortPolynom(polynomVect, numVect, exprVect, literalVect, funcVect, powVect);
 
   numVect = sumNumbers(numVect);
 

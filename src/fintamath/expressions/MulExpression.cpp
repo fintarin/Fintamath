@@ -84,7 +84,7 @@ MulExpression::MulExpression(const IMathObject &rhs) {
   polynomVect.emplace_back(rhs.clone());
 }
 
-std::string MulExpression::tryPutInBrackets(const MathObjectPtr &obj) {
+std::string MulExpression::sumExprToString(const MathObjectPtr &obj) {
   if (is<SumExpression>(obj)) {
     return "(" + obj->toString() + ")";
   }
@@ -96,19 +96,19 @@ std::string MulExpression::toString() const {
 
   if (const auto *invExpr = cast<InvExpression>(polynomVect.front().get())) {
     result += "1 / ";
-    result += tryPutInBrackets(invExpr->getInfo());
+    result += sumExprToString(invExpr->getInfo());
   } else {
-    result += tryPutInBrackets(polynomVect.front());
+    result += sumExprToString(polynomVect.front());
   }
 
   for (size_t i = 1; i < polynomVect.size(); i++) {
     if (const auto *invExpr = cast<InvExpression>(polynomVect.front().get())) {
       result += " / ";
-      result += tryPutInBrackets(invExpr->getInfo());
+      result += sumExprToString(invExpr->getInfo());
       continue;
     }
     result += ' ';
-    result += tryPutInBrackets(polynomVect[i]);
+    result += sumExprToString(polynomVect[i]);
   }
 
   return result;
@@ -139,7 +139,7 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
 
   exprObj.simplifyDivisions();
   exprObj.compress();
-  exprObj.simplifyPolynom();
+  // exprObj.simplifyPolynom();
 
   if (exprObj.polynomVect.size() == 1) {
     simplifyValue(isPrecise, exprObj.polynomVect.front());
@@ -354,13 +354,13 @@ void MulExpression::simplifyPolynom() {
   auto exprVect = PolynomVector();
   auto funcVect = PolynomVector();
 
-  sortPolynom(polynomVect, numVect, exprVect, literalVect, funcVect, powVect);
+  // sortPolynom(polynomVect, numVect, exprVect, literalVect, funcVect, powVect);
   polynomVect.clear();
 
   PolynomVector tmpVect = openPowMulExpression(powVect);
   powVect.clear();
 
-  sortPolynom(tmpVect, numVect, exprVect, literalVect, funcVect, powVect);
+  // sortPolynom(tmpVect, numVect, exprVect, literalVect, funcVect, powVect);
 
   numVect = mulNumbers(numVect);
   if (numVect.size() == 1 && *numVect.front() == ZERO) {

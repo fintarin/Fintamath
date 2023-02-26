@@ -28,12 +28,8 @@ public:
 
   explicit IPolynomExpression(PolynomVector inPolynomVect);
 
-  static void pushPolynomToPolynom(const PolynomVector &from, PolynomVector &to);
-
   // TODO: implement iterator & remove this
   const PolynomVector &getPolynomVector() const;
-
-  void simplifyValue(bool isPrecise, MathObjectPtr &obj) const;
 
   void setPrecision(uint8_t precision) final;
 
@@ -46,6 +42,10 @@ public:
 
 protected:
   PolynomVector polynomVect;
+
+  void simplifyValue(bool isPrecise, MathObjectPtr &obj) const;
+
+  static void pushPolynomToPolynom(const PolynomVector &from, PolynomVector &to);
 };
 
 template <typename Derived>
@@ -74,7 +74,7 @@ public:
   }
 
   // TODO: refactor arguments
-  static void sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &exprVect,
+  /*static void sortPolynom(const PolynomVector &vect, PolynomVector &numVect, PolynomVector &exprVect,
                           PolynomVector &literalVect, PolynomVector &funcVect, PolynomVector &powVect) {
     for (const auto &child : vect) {
       if (is<Expression>(child)) {
@@ -102,7 +102,7 @@ public:
         continue;
       }
     }
-  }
+  }*/
 
 protected:
   void compress() final {
