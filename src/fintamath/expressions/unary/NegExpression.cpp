@@ -11,6 +11,7 @@ namespace fintamath {
 const Neg NEG;
 
 NegExpression::NegExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
+  function = cast<IFunction>(NEG.clone());
 }
 
 MathObjectPtr NegExpression::toMinimalObject() const {
@@ -35,10 +36,6 @@ MathObjectPtr NegExpression::simplify(bool isPrecise) const {
   }
 
   return exprObj;
-}
-
-const IFunction *NegExpression::getFunction() const {
-  return &NEG;
 }
 
 }

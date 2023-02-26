@@ -10,6 +10,7 @@ namespace fintamath {
 const Inv INV;
 
 InvExpression::InvExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
+  function = cast<IFunction>(INV.clone());
 }
 
 MathObjectPtr InvExpression::toMinimalObject() const {
@@ -33,10 +34,6 @@ MathObjectPtr InvExpression::simplify(bool isPrecise) const {
     return expr->info->clone();
   }
   return exprObj;
-}
-
-const IFunction *InvExpression::getFunction() const {
-  return &INV;
 }
 
 }

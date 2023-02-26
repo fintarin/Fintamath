@@ -1,6 +1,7 @@
 #include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -10,7 +11,9 @@
 
 namespace fintamath {
 
-IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs) : info(rhs.info->clone()) {
+IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs)
+    : function(cast<IFunction>(rhs.function->clone())),
+      info(rhs.info->clone()) {
 }
 
 IUnaryExpression::IUnaryExpression(MathObjectPtr &&rhs) : info(std::move(rhs)) {
@@ -19,6 +22,7 @@ IUnaryExpression::IUnaryExpression(MathObjectPtr &&rhs) : info(std::move(rhs)) {
 IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
   if (&rhs != this) {
     info = rhs.info->clone();
+    function = cast<IFunction>(rhs.function->clone());
   }
 
   return *this;
@@ -83,15 +87,9 @@ std::string IUnaryExpression::prefixToString(const IFunction &oper) const {
     if (const auto *exprOper = cast<IOperator>(child->getFunction())) {
       auto priority = exprOper->getOperatorPriority();
 
-      if (priority == IOperator::Priority::PrefixUnary || priority == IOperator::Priority::Multiplication) {
+      if (priority == IOperator::Priority::PrefixUnary || priority == IOperator::Priority::Multiplication ||
+          priority == IOperator::Priority::Exponentiation) {
         return result + info->toString();
-      }
-
-      // TODO: refactor this when PowExpression will be implemented
-      if (const auto *childExpr = cast<Expression>(child)) {
-        if (is<Pow>(childExpr->getFunction())) {
-          return result + info->toString();
-        }
       }
 
       return result + putInBrackets(info->toString());
@@ -106,23 +104,12 @@ std::string IUnaryExpression::functionToString(const IFunction &oper) const {
 }
 
 void IUnaryExpression::simplifyValue(bool isPrecise) {
-  if (auto *expr = cast<IExpression>(info.get())) {
+  if (auto expr = cast<IExpression>(std::move(info))) {
     info = expr->simplify(isPrecise);
     return;
   }
 
-  if (is<IConstant>(info)) {
-    auto constant = cast<IConstant>(std::move(info));
-    auto constVal = (*constant)();
-
-    if (const auto *num = cast<INumber>(constVal.get()); num && isPrecise && !num->isPrecise()) {
-      info = std::move(constant);
-    } else {
-      info = std::move(constVal);
-    }
-
-    return;
-  }
+  simplifyConstant(isPrecise, info);
 
   info = info->toMinimalObject();
 }
@@ -133,6 +120,10 @@ void IUnaryExpression::validate() const {
 
 MathObjectPtr IUnaryExpression::getInfo() const {
   return info->clone();
+}
+
+const IFunction *IUnaryExpression::getFunction() const {
+  return function.get();
 }
 
 }

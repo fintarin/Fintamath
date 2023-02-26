@@ -28,6 +28,8 @@ public:
   // TODO: remove this
   void validate() const final;
 
+  const IFunction *getFunction() const final;
+
 private:
   std::string postfixToString(const IFunction &oper) const;
 
@@ -37,6 +39,8 @@ private:
 
 protected:
   void simplifyValue(bool isPrecise);
+
+  FunctionPtr function;
 
   MathObjectPtr info;
 };

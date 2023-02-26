@@ -10,6 +10,7 @@ namespace fintamath {
 const Not NOT;
 
 NotExpression::NotExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
+  function = cast<IFunction>(NOT.clone());
 }
 
 MathObjectPtr NotExpression::toMinimalObject() const {
@@ -25,10 +26,6 @@ MathObjectPtr NotExpression::simplify(bool isPrecise) const {
   }
 
   return exprObj;
-}
-
-const IFunction *NotExpression::getFunction() const {
-  return &NOT;
 }
 
 }

@@ -17,14 +17,10 @@ namespace fintamath {
 const Derivative DER;
 
 DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : IUnaryExpression(std::move(obj)) {
-}
-
-const IFunction *DerivativeExpression::getFunction() const {
-  return &DER;
+  function = cast<IFunction>(DER.clone());
 }
 
 MathObjectPtr DerivativeExpression::toMinimalObject() const {
-  // TODO: remove this and use general toString() from UnaryExpression
   return simplify(true);
 }
 
