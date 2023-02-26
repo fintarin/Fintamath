@@ -68,7 +68,7 @@ struct MulExpression::ObjectPow {
 
 //-----------------------------------------------------------------------------------------------------//
 
-MulExpression::MulExpression(ArgumentsPtrVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
+MulExpression::MulExpression(ArgumentsPtrVector &&inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
   if (!polynomVect.empty()) {
     compress();
   }

@@ -9,7 +9,7 @@ class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
   OrExpression() = default; // TODO: remove this
 
-  explicit OrExpression(ArgumentsPtrVector inPolynomVect);
+  explicit OrExpression(ArgumentsPtrVector &&inPolynomVect);
 
   std::string toString() const override;
 

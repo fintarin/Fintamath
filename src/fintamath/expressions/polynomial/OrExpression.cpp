@@ -8,7 +8,7 @@ namespace fintamath {
 
 const Or OR;
 
-OrExpression::OrExpression(ArgumentsPtrVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
+OrExpression::OrExpression(ArgumentsPtrVector &&inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
   if (!polynomVect.empty()) {
     compress();
   }
@@ -22,13 +22,13 @@ MathObjectPtr OrExpression::toMinimalObject() const {
   return simplify(false);
 }
 
-MathObjectPtr OrExpression::simplify(bool isPrecise) const {
+MathObjectPtr OrExpression::simplify(bool /*isPrecise*/) const {
   MathObjectPtr result = polynomVect.front()->clone();
   for (size_t i = 1; i < polynomVect.size(); i++) {
-    auto &lhsPtr = result;
-    auto &rhsPtr = polynomVect[i];
-    auto &lhs = *lhsPtr;
-    auto &rhs = *rhsPtr;
+    const auto &lhsPtr = result;
+    const auto &rhsPtr = polynomVect[i];
+    const auto &lhs = *lhsPtr;
+    const auto &rhs = *rhsPtr;
 
     if (const auto *lhsBool = cast<Boolean>(&lhs)) {
       if (*lhsBool == true) {

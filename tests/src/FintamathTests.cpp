@@ -42,8 +42,7 @@ TEST(FintamathTests, fintamathTests) {
 
   expr = eqv(x * x + y * y * y, x * y);
 
-  // TODO: replace to y^3+x^2-x*y=0
-  EXPECT_EQ(expr.toString(), "x^2 + y^3 - x y = 0");
+  EXPECT_EQ(expr.toString(), "y^3 + x^2 - x y = 0");
 
   expr = eqv(x * x + y * y, x * y);
   EXPECT_EQ(expr.toString(), "x^2 + y^2 - x y = 0");

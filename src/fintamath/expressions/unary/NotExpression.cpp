@@ -23,6 +23,7 @@ MathObjectPtr NotExpression::simplify(bool isPrecise) const {
   if (const auto *expr = cast<NotExpression>(exprObj->info.get())) {
     return expr->info->clone();
   }
+
   return exprObj;
 }
 

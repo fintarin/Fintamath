@@ -9,7 +9,7 @@ class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
   AndExpression() = default; // TODO: remove this
 
-  explicit AndExpression(ArgumentsPtrVector inPolynomVect);
+  explicit AndExpression(ArgumentsPtrVector &&inPolynomVect);
 
   std::string toString() const override;
 

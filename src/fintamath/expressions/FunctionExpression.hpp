@@ -17,8 +17,6 @@ public:
 
   FunctionExpression &operator=(FunctionExpression &&rhs) noexcept = default;
 
-  explicit FunctionExpression(const IFunction &function, const ArgumentsVector &args);
-
   explicit FunctionExpression(const IFunction &function, ArgumentsPtrVector &&args);
 
   std::string toString() const override;

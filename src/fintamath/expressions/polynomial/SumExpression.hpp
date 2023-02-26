@@ -10,7 +10,7 @@ class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INega
 public:
   SumExpression() = default; // TODO: remove this
 
-  explicit SumExpression(ArgumentsPtrVector inPolynomVect);
+  explicit SumExpression(ArgumentsPtrVector &&inPolynomVect);
 
   std::string toString() const override;
 

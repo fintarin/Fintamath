@@ -11,7 +11,7 @@ class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INega
 public:
   MulExpression() = default;
 
-  explicit MulExpression(ArgumentsPtrVector inPolynomVect);
+  explicit MulExpression(ArgumentsPtrVector &&inPolynomVect);
 
   std::string toString() const override;
 

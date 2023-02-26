@@ -60,9 +60,6 @@ std::string IUnaryExpression::toString() const {
 
 std::string IUnaryExpression::postfixToString(const IFunction &oper) const {
   std::string result = info->toString();
-  if (is<Derivative>(oper)) {
-    return "(" + info->toString() + ")'";
-  }
 
   if (const auto *child = cast<IExpression>(info.get())) {
     if (const auto *exprOper = cast<IOperator>(child->getFunction())) {

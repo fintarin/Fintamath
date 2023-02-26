@@ -22,7 +22,7 @@ MathObjectPtr NegExpression::simplify(bool isPrecise) const {
   exprObj->simplifyValue(isPrecise);
 
   if (const auto *expr = cast<INumber>(exprObj->info.get())) {
-    return -*expr;
+    return -(*expr);
   }
 
   if (auto *expr = cast<INegatable>(exprObj->info.get())) {
@@ -33,6 +33,7 @@ MathObjectPtr NegExpression::simplify(bool isPrecise) const {
   if (const auto *expr = cast<NegExpression>(exprObj->info.get())) {
     return expr->info->clone();
   }
+
   return exprObj;
 }
 

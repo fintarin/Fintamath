@@ -8,7 +8,7 @@ namespace fintamath {
 
 const And AND;
 
-AndExpression::AndExpression(ArgumentsPtrVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
+AndExpression::AndExpression(ArgumentsPtrVector &&inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
   if (!polynomVect.empty()) {
     compress();
   }

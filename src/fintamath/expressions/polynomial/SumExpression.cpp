@@ -55,7 +55,7 @@ struct SumExpression::MulObject {
   }
 };
 
-SumExpression::SumExpression(ArgumentsPtrVector inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
+SumExpression::SumExpression(ArgumentsPtrVector &&inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
   if (!polynomVect.empty()) {
     compress();
   }

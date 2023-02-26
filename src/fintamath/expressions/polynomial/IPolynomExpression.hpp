@@ -22,7 +22,7 @@ public:
 
   IPolynomExpression &operator=(IPolynomExpression &&rhs) noexcept = default;
 
-  explicit IPolynomExpression(ArgumentsPtrVector inPolynomVect);
+  explicit IPolynomExpression(ArgumentsPtrVector &&inPolynomVect);
 
   // TODO: implement iterator & remove this
   const ArgumentsPtrVector &getArgumentsPtrVector() const;

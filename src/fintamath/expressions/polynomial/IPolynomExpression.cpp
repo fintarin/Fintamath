@@ -12,7 +12,7 @@ IPolynomExpression &IPolynomExpression::operator=(const IPolynomExpression &rhs)
   return *this;
 }
 
-IPolynomExpression::IPolynomExpression(ArgumentsPtrVector inPolynomVect) : polynomVect(std::move(inPolynomVect)) {
+IPolynomExpression::IPolynomExpression(ArgumentsPtrVector &&inPolynomVect) : polynomVect(std::move(inPolynomVect)) {
 }
 
 void IPolynomExpression::pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to) {
@@ -22,14 +22,13 @@ void IPolynomExpression::pushPolynomToPolynom(const ArgumentsPtrVector &from, Ar
 }
 
 const ArgumentsPtrVector &IPolynomExpression::getArgumentsPtrVector() const {
-  return clonePolynom();
+  return polynomVect;
 }
 
 void IPolynomExpression::setPrecision(uint8_t precision) {
   for (auto &child : polynomVect) {
     if (auto *expr = cast<IExpression>(child.get())) {
       expr->setPrecision(precision);
-      child = MathObjectPtr(expr);
       return;
     }
 

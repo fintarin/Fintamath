@@ -12,18 +12,13 @@ FunctionExpression::FunctionExpression(const FunctionExpression &rhs)
 FunctionExpression &FunctionExpression::operator=(const FunctionExpression &rhs) {
   if (&rhs != this) {
     function = cast<IFunction>(rhs.function->clone());
+
     for (const auto &arg : rhs.args) {
       args.emplace_back(arg->clone());
     }
   }
-  return *this;
-}
 
-FunctionExpression::FunctionExpression(const IFunction &function, const ArgumentsVector &args)
-    : function(cast<IFunction>(function.clone())) {
-  for (const auto &arg : args) {
-    this->args.emplace_back(arg.get().clone());
-  }
+  return *this;
 }
 
 FunctionExpression::FunctionExpression(const IFunction &function, ArgumentsPtrVector &&args)
@@ -72,7 +67,7 @@ const IFunction *FunctionExpression::getFunction() const {
 void FunctionExpression::setPrecision(uint8_t precision) {
 }
 
-MathObjectPtr FunctionExpression::simplify(bool isPrecise) const {
+MathObjectPtr FunctionExpression::simplify(bool /*isPrecise*/) const {
   return std::make_unique<FunctionExpression>(*this);
 }
 
