@@ -133,24 +133,6 @@ void Expression::compress() {
 
 void Expression::setPrecisionRec(uint8_t precision) {
   setMathObjectPrecision(info, precision);
-
-  // TODO: move to FunctionExression
-  /*for (auto &child : children) {
-    setPrecisionMathObject(precision, child);
-  }
-
-  if (const auto *func = cast<IFunction>(info.get())) {
-    ArgumentsVector args;
-
-    for (const auto &child : children) {
-      args.emplace_back(*child);
-    }
-
-    auto countResult = (*func)(args);
-    if (is<INumber>(countResult)) {
-      info = convert<Real>(*countResult).precise(precision).clone();
-    }
-  }*/
 }
 
 MathObjectPtr &Expression::getInfo() {
@@ -464,32 +446,6 @@ void Expression::validate() const {
   }
 }
 
-// TODO: move to functionExpression
-/*
-void Expression::validate() const {
-  const IFunction *func = getFunction();
-
-  if (!func) {
-    if (const auto *expr = cast<IExpression>(info.get())) {
-      expr->validate();
-    }
-
-    return;
-  }
-
-  ArgumentsVector args;
-
-  for (const auto &child : children) {
-    if (const auto *childExpr = cast<IExpression>(child.get())) {
-      childExpr->validate();
-    }
-
-    args.emplace_back(*child);
-  }
-
-  validateArgs(*func, args);
-}*/
-
 void Expression::setPrecision(uint8_t precision) {
   setPrecisionRec(precision);
 }
@@ -520,48 +476,6 @@ std::string Expression::solve() const {
 
   return toString();
 }
-
-// TODO: move to FunctionExpression
-/*void Expression::simplifyFunction(bool isPrecise) {
-  if (children.empty()) {
-    return;
-  }
-
-  const auto &func = cast<IFunction>(*info.get());
-  const ArgumentsTypesVector argsTypes = func.getArgsTypes();
-
-  ArgumentsVector args;
-  bool canCallFunction = true;
-
-  for (size_t i = 0; i < children.size(); i++) {
-    const auto *child = children[i].get();
-
-    if (!child) {
-      continue;
-    }
-
-    const auto &type = argsTypes[i];
-
-    if (is<Variable>(child) || is<IConstant>(child) || is<IExpression>(child)) {
-      canCallFunction = false;
-    }
-
-    args.emplace_back(*child);
-  }
-
-  if (!canCallFunction) {
-    return;
-  }
-
-  auto countResult = func(args);
-
-  if (const auto *num = cast<INumber>(countResult.get()); num && !num->isPrecise() && isPrecise) {
-    return;
-  }
-
-  info = std::move(countResult);
-  children.clear();
-}*/
 
 std::vector<MathObjectPtr> Expression::getVariables() const {
   std::vector<MathObjectPtr> result;
