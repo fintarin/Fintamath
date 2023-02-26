@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/multimethod/Converter.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -28,7 +29,11 @@ public:
 
   UnaryExpressionCRTP &operator=(UnaryExpressionCRTP &&rhs) noexcept = default;
 
-  UnaryExpressionCRTP(IMathObject &rhs) : info(rhs.clone()) {}
+  UnaryExpressionCRTP(const IMathObject &rhs) : info(rhs.clone()) {
+  }
+
+  explicit UnaryExpressionCRTP(const MathObjectPtr &rhs) : info(rhs->clone()) {
+  }
 
   void setPrecision(uint8_t precision) final {
     if (is<IExpression>(info)) {
