@@ -338,7 +338,7 @@ std::string Expression::toString(uint8_t precision) const {
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
   if (auto oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
     auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + 1, tokens.end())));
-    auto funcExpr = buildRawFunctionExpression(*oper, IFunction::buildArgsPtrVect(std::move(rhsExpr)));
+    auto funcExpr = buildRawFunctionExpression(*oper, makeArgumentsPtrVector(std::move(rhsExpr)));
 
     if (auto *expr = cast<Expression>(funcExpr.get())) {
       *this = std::move(*expr);
@@ -368,7 +368,7 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
     }
 
     auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.end() - order)));
-    auto funcExpr = buildRawFunctionExpression(*oper, IFunction::buildArgsPtrVect(std::move(rhsExpr)));
+    auto funcExpr = buildRawFunctionExpression(*oper, makeArgumentsPtrVector(std::move(rhsExpr)));
 
     if (auto *expr = cast<Expression>(funcExpr.get())) {
       *this = std::move(*expr);
@@ -415,7 +415,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
   auto lhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.begin() + operPos)));
   auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end())));
   auto funcExpr = buildRawFunctionExpression(cast<IFunction>(*foundOperIt->second),
-                                             IFunction::buildArgsPtrVect(std::move(lhsExpr), std::move(rhsExpr)));
+                                             makeArgumentsPtrVector(std::move(lhsExpr), std::move(rhsExpr)));
 
   if (auto *expr = cast<Expression>(funcExpr.get())) {
     *this = std::move(*expr);
@@ -604,27 +604,27 @@ TokenVector Expression::cutBraces(const TokenVector &tokens) {
 
 Expression &Expression::add(const Expression &rhs) {
   return *this = Expression(buildFunctionExpression(
-             Add(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
+             Add(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::substract(const Expression &rhs) {
   return *this = Expression(buildFunctionExpression(
-             Sub(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
+             Sub(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
   return *this = Expression(buildFunctionExpression(
-             Mul(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
+             Mul(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::divide(const Expression &rhs) {
   return *this = Expression(buildFunctionExpression(
-             Div(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
+             Div(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
 }
 
 Expression &Expression::negate() {
-  return *this = Expression(buildFunctionExpression(
-             Neg(), IFunction::buildArgsPtrVect(std::make_unique<Expression>(std::move(*this)))));
+  return *this = Expression(
+             buildFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)))));
 }
 
 void Expression::simplifyNeg() {

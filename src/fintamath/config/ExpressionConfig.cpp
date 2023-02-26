@@ -104,42 +104,41 @@ struct ExpressionConfig {
       MathObjectPtr &lhs = args.front();
       MathObjectPtr &rhs = args.back();
 
-      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(std::move(lhs)));
+      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), makeArgumentsPtrVector(std::move(lhs)));
 
-      return Expression::buildRawFunctionExpression(Or(),
-                                                    IFunction::buildArgsPtrVect(std::move(notLhs), std::move(rhs)));
+      return Expression::buildRawFunctionExpression(Or(), makeArgumentsPtrVector(std::move(notLhs), std::move(rhs)));
     });
 
     Expression::registerExpressionBuilder<Equiv>([](ArgumentsPtrVector &&args) {
       MathObjectPtr &lhs = args.front();
       MathObjectPtr &rhs = args.back();
 
-      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(lhs->clone()));
-      MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(rhs->clone()));
+      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), makeArgumentsPtrVector(lhs->clone()));
+      MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), makeArgumentsPtrVector(rhs->clone()));
 
-      MathObjectPtr lhsAndRhs = Expression::buildRawFunctionExpression( //
-          And(), IFunction::buildArgsPtrVect(std::move(lhs), std::move(rhs)));
-      MathObjectPtr notLhsAndNotRhs = Expression::buildRawFunctionExpression( //
-          And(), IFunction::buildArgsPtrVect(std::move(notLhs), std::move(notRhs)));
+      MathObjectPtr lhsAndRhs =
+          Expression::buildRawFunctionExpression(And(), makeArgumentsPtrVector(std::move(lhs), std::move(rhs)));
+      MathObjectPtr notLhsAndNotRhs =
+          Expression::buildRawFunctionExpression(And(), makeArgumentsPtrVector(std::move(notLhs), std::move(notRhs)));
 
       return Expression::buildRawFunctionExpression(
-          Or(), IFunction::buildArgsPtrVect(std::move(lhsAndRhs), std::move(notLhsAndNotRhs)));
+          Or(), makeArgumentsPtrVector(std::move(lhsAndRhs), std::move(notLhsAndNotRhs)));
     });
 
     Expression::registerExpressionBuilder<Nequiv>([](ArgumentsPtrVector &&args) {
       MathObjectPtr &lhs = args.front();
       MathObjectPtr &rhs = args.back();
 
-      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(lhs->clone()));
-      MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), IFunction::buildArgsPtrVect(rhs->clone()));
+      MathObjectPtr notLhs = Expression::buildRawFunctionExpression(Not(), makeArgumentsPtrVector(lhs->clone()));
+      MathObjectPtr notRhs = Expression::buildRawFunctionExpression(Not(), makeArgumentsPtrVector(rhs->clone()));
 
-      MathObjectPtr notLhsAndRhs = Expression::buildRawFunctionExpression( //
-          And(), IFunction::buildArgsPtrVect(std::move(notLhs), std::move(rhs)));
-      MathObjectPtr lhsAndNotRhs = Expression::buildRawFunctionExpression( //
-          And(), IFunction::buildArgsPtrVect(std::move(lhs), std::move(notRhs)));
+      MathObjectPtr notLhsAndRhs =
+          Expression::buildRawFunctionExpression(And(), makeArgumentsPtrVector(std::move(notLhs), std::move(rhs)));
+      MathObjectPtr lhsAndNotRhs =
+          Expression::buildRawFunctionExpression(And(), makeArgumentsPtrVector(std::move(lhs), std::move(notRhs)));
 
       return Expression::buildRawFunctionExpression(
-          Or(), IFunction::buildArgsPtrVect(std::move(notLhsAndRhs), std::move(lhsAndNotRhs)));
+          Or(), makeArgumentsPtrVector(std::move(notLhsAndRhs), std::move(lhsAndNotRhs)));
     });
   }
 };

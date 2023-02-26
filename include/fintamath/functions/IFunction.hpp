@@ -4,13 +4,10 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputFunctionException.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
-
-using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;
-using ArgumentsPtrVector = std::vector<MathObjectPtr>;
-using ArgumentsTypesVector = std::vector<std::reference_wrapper<const std::type_info>>;
 
 class IFunction;
 using FunctionPtr = std::unique_ptr<IFunction>;
@@ -54,40 +51,11 @@ public:
     return Parser::parse<FunctionPtr>(parserMap, comp, parsedStr);
   }
 
-  template <typename... Args,
-            typename = std::enable_if_t<(std::is_base_of_v<IMathObject, typename Args::element_type> && ...)>>
-  static ArgumentsPtrVector buildArgsPtrVect(Args &&...args) {
-    ArgumentsPtrVector vect;
-    buildArgsPtrVect<0>(vect, std::move(args)...);
-    return vect;
-  }
-
-  static ArgumentsPtrVector argsVectToArgsPtrVect(const ArgumentsVector &argsVect) {
-    ArgumentsPtrVector argsPtrVector;
-
-    for (const auto &arg : argsVect) {
-      argsPtrVector.emplace_back(arg.get().clone());
-    }
-
-    return argsPtrVector;
-  }
-
 protected:
   virtual MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const = 0;
 
   static const std::function<MathObjectPtr(const IFunction &function, ArgumentsPtrVector &&args)>
       buildFunctionExpression;
-
-private:
-  template <size_t i, typename Head, typename... Tail>
-  static void buildArgsPtrVect(ArgumentsPtrVector &vect, Head &&head, Tail &&...tail) {
-    vect.emplace_back(std::forward<Head>(head));
-    buildArgsPtrVect<i + 1>(vect, std::move(tail)...);
-  }
-
-  template <size_t i>
-  static void buildArgsPtrVect(ArgumentsPtrVector &vect) {
-  }
 
 private:
   static Parser::Map<FunctionPtr> parserMap;
