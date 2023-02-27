@@ -61,6 +61,8 @@ MathObjectPtr IndexExpression::simplify(bool isPrecise) const {
 }
 
 IMathObject *IndexExpression::simplify() {
+  simplifyExpr(lhsChild);
+  simplifyExpr(rhsChild);
   return this;
 }
 
