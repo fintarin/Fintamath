@@ -29,6 +29,12 @@ MathObjectPtr NotExpression::simplify(bool isPrecise) const {
 }
 
 IMathObject *NotExpression::simplify() {
+  simplifyExpr(child);
+
+  if (auto *expr = cast<NotExpression>(child.get())) {
+    return expr->child.release();
+  }
+
   return this;
 }
 
