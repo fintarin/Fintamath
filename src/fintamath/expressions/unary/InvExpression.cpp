@@ -37,6 +37,21 @@ MathObjectPtr InvExpression::simplify(bool isPrecise) const {
 }
 
 IMathObject *InvExpression::simplify() {
+  simplifyExpr(child);
+
+  if (function->doArgsMatch({*child})) {
+    return (*function)(*child).release();
+  }
+
+  if (auto *expr = cast<IInvertable>(child.get())) {
+    expr->invert();
+    return expr;
+  }
+
+  if (auto *expr = cast<InvExpression>(child.get())) {
+    return expr->child.release();
+  }
+
   return this;
 }
 }
