@@ -37,6 +37,8 @@ MathObjectPtr NegExpression::simplify(bool isPrecise) const {
 }
 
 IMathObject *NegExpression::simplify() {
+  simplifyExpr(child);
+
   if (function->doArgsMatch({*child})) {
     return (*function)(*child).release();
   }
