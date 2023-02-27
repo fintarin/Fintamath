@@ -23,8 +23,6 @@ MathObjectPtr PowExpression::toMinimalObject() const {
 
 MathObjectPtr PowExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<PowExpression>(*this);
-  simplifyValue(isPrecise, exprObj->lhsChild);
-  simplifyValue(isPrecise, exprObj->rhsChild);
 
   auto *lhsPtr = cast<IExpression>(exprObj->lhsChild.get());
   auto *rhsPtr = cast<Integer>(exprObj->rhsChild.get());
@@ -66,6 +64,29 @@ MathObjectPtr PowExpression::simplify(bool isPrecise) const {
 }
 
 IMathObject *PowExpression::simplify() {
+  simplifyExpr(lhsChild);
+  simplifyExpr(rhsChild);
+
+  auto *lhsPtr = cast<IExpression>(lhsChild.get());
+  auto *rhsPtr = cast<Integer>(rhsChild.get());
+
+  if (lhsPtr && rhsPtr) {
+    if (*rhsPtr == ZERO) {
+      return ONE.clone().release();
+    }
+    if (*lhsPtr == ONE || *rhsPtr == ONE) {
+      return lhsPtr;
+    }
+    if (*rhsPtr == NEG_ONE) {
+      return nullptr;
+    }
+
+    // TODO: add logic for (x+y)^10
+  }
+
+  if (function->doArgsMatch({*lhsChild, *rhsChild})) {
+    return (*function)(*lhsChild, *rhsChild).release();
+  }
   return this;
 }
 
