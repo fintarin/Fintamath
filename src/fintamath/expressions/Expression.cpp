@@ -415,7 +415,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
   auto lhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.begin() + operPos)));
   auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end())));
   auto funcExpr = makeRawFunctionExpression(cast<IFunction>(*foundOperIt->second),
-                                             makeArgumentsPtrVector(std::move(lhsExpr), std::move(rhsExpr)));
+                                            makeArgumentsPtrVector(std::move(lhsExpr), std::move(rhsExpr)));
 
   if (auto *expr = cast<Expression>(funcExpr.get())) {
     *this = std::move(*expr);
