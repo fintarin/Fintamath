@@ -7,6 +7,7 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Real.hpp"
+#include <memory>
 
 namespace fintamath {
 
@@ -118,24 +119,12 @@ std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, con
   return result + oper.toString();
 }
 
-void IExpression::simplifyValue(bool isPrecise, MathObjectPtr &obj) {
-  if (auto *expr = cast<IExpression>(obj.get())) {
-    obj = expr->simplify(isPrecise);
-    return;
-  }
-
-  if (is<IConstant>(obj)) {
-    auto constant = cast<IConstant>(std::move(obj));
-    auto constVal = (*constant)();
-
-    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise() && isPrecise) {
-      obj = std::move(constant);
-    } else {
-      obj = std::move(constVal);
+void IExpression::simplifyExpr(MathObjectPtr &obj) {
+  if (auto *exprObj = cast<IExpression>(obj.get())) {
+    if (auto *simplObj = exprObj->simplify(); simplObj && simplObj != obj.get()) {
+      obj = MathObjectPtr(simplObj);
     }
   }
-
-  obj = obj->toMinimalObject();
 }
 
 void IExpression::setMathObjectPrecision(MathObjectPtr &obj, uint8_t precision) {

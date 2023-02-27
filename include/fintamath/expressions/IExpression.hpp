@@ -62,7 +62,7 @@ protected:
 
   static std::string postfixUnaryOperatorToString(const IOperator &oper, const MathObjectPtr &lhs);
 
-  static void simplifyValue(bool isPrecise, MathObjectPtr &obj);
+  static void simplifyExpr(MathObjectPtr &obj);
 
   static void setMathObjectPrecision(MathObjectPtr &obj, uint8_t precision);
 
