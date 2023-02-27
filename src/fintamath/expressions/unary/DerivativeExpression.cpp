@@ -62,6 +62,20 @@ void DerivativeExpression::compress() {
 }
 
 IMathObject *DerivativeExpression::simplify() {
+  simplifyExpr(child);
+
+  if (is<IExpression>(child)) {
+    // TODO: implement derivative of expression
+    return this;
+  }
+
+  if (is<INumber>(child) || is<IConstant>(child)) {
+    return ZERO.clone().release();
+  }
+  if (is<Variable>(child)) {
+    return ONE.clone().release();
+  }
+
   return this;
 }
 
