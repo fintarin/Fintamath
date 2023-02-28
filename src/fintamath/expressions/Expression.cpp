@@ -423,7 +423,7 @@ void Expression::setPrecision(uint8_t precision) {
 MathObjectPtr Expression::simplify(bool isPrecise) const {
   Expression expr = *this;
 
-  simplifyValue(isPrecise, expr.info);
+  // simplifyValue(isPrecise, expr.info);
   return std::move(expr.info);
 }
 
@@ -467,6 +467,7 @@ std::vector<MathObjectPtr> Expression::getVariables() const {
 }
 
 IMathObject *Expression::simplify() {
+  simplifyExpr(info);
   return this;
 }
 
