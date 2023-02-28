@@ -121,6 +121,35 @@ void FunctionExpression::validate() const {
 }
 
 IMathObject *FunctionExpression::simplify() {
-  return this;
+  const auto &func = *function;
+
+  ArgumentsVector arguments;
+  bool canCallFunction = true;
+
+  for (const auto &arg : args) {
+    const auto *child = arg.get();
+
+    if (!child) {
+      continue;
+    }
+
+    if (is<Variable>(child) || is<IConstant>(child) || is<IExpression>(child)) {
+      canCallFunction = false;
+    }
+
+    arguments.emplace_back(*child);
+  }
+
+  if (!canCallFunction) {
+    return this;
+  }
+
+  auto countResult = func(arguments);
+
+  if (const auto *num = cast<INumber>(countResult.get()); num && !num->isPrecise()) {
+    return this;
+  }
+
+  return countResult.release();
 }
 }
