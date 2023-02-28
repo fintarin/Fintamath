@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/functions/logic/And.hpp"
+#include "fintamath/literals/constants/False.hpp"
 #include <memory>
 
 namespace fintamath {
@@ -61,6 +62,29 @@ const IFunction *AndExpression::getFunction() const {
 }
 
 IMathObject *AndExpression::simplify() {
-  return this;
+  auto *result = polynomVect.front().release();
+  for (size_t i = 1; i < polynomVect.size(); i++) {
+    const auto *rhsPtr = polynomVect[i].get();
+    if (const auto *lhsBool = cast<Boolean>(result)) {
+      if (*lhsBool == true) {
+        *result = *rhsPtr;
+      } else {
+        result = std::make_unique<Boolean>(false).release(); // TODO: new False() instead??
+      }
+      continue;
+    }
+
+    if (const auto *rhsBool = cast<Boolean>(rhsPtr)) {
+      if (*rhsBool != true) {
+        result = std::make_unique<Boolean>(false).release(); // TODO: new False() instead??
+      }
+      continue;
+    }
+
+    if (*result == notL(*rhsPtr)) {
+      result = std::make_unique<Boolean>(false).release(); // TODO: new False() instead??
+    }
+  }
+  return result;
 }
 }
