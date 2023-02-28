@@ -61,6 +61,30 @@ const IFunction *OrExpression::getFunction() const {
 }
 
 IMathObject *OrExpression::simplify() {
-  return this;
+  auto *result = polynomVect.front().get();
+  for (size_t i = 1; i < polynomVect.size(); i++) {
+    const auto *rhsPtr = polynomVect[i].get();
+    if (const auto *lhsBool = cast<Boolean>(result)) {
+      if (*lhsBool == true) {
+        result = std::make_unique<Boolean>(true).release();
+      } else {
+        *result = *rhsPtr;
+      }
+      continue;
+    }
+
+    if (const auto *rhsBool = cast<Boolean>(rhsPtr)) {
+      if (*rhsBool == true) {
+        result = std::make_unique<Boolean>(true).release();
+      }
+      continue;
+    }
+
+    if (*result == notL(*rhsPtr)) {
+      result = std::make_unique<Boolean>(true).release();
+    }
+  }
+
+  return result;
 }
 }
