@@ -3,6 +3,7 @@
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/unary/InvExpression.hpp"
 // #include "fintamath/expressions/polynomial/MulExpression.hpp"
+#include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -88,6 +89,11 @@ IMathObject *PowExpression::simplify() {
     return (*function)(*lhsChild, *rhsChild).release();
   }
   return this;
+}
+
+void PowExpression::invert() {
+  lhsChild = std::make_unique<NegExpression>(std::move(lhsChild));
+  simplifyExpr(lhsChild);
 }
 
 }
