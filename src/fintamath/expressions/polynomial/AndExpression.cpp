@@ -59,14 +59,17 @@ const IFunction *AndExpression::getFunction() const {
 
 IMathObject *AndExpression::simplify() {
   auto *result = polynomVect.front().release();
+
   for (size_t i = 1; i < polynomVect.size(); i++) {
     const auto *rhsPtr = polynomVect[i].get();
+
     if (const auto *lhsBool = cast<Boolean>(result)) {
       if (*lhsBool == true) {
         *result = *rhsPtr;
       } else {
         result = std::make_unique<Boolean>(false).release(); // TODO: new False() instead??
       }
+
       continue;
     }
 
@@ -74,6 +77,7 @@ IMathObject *AndExpression::simplify() {
       if (*rhsBool != true) {
         result = std::make_unique<Boolean>(false).release(); // TODO: new False() instead??
       }
+
       continue;
     }
 
@@ -81,6 +85,8 @@ IMathObject *AndExpression::simplify() {
       result = std::make_unique<Boolean>(false).release(); // TODO: new False() instead??
     }
   }
+
   return result;
 }
+
 }

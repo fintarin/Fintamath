@@ -41,7 +41,7 @@ IMathObject *NegExpression::simplify() {
 
   if (auto *expr = cast<INegatable>(child.get())) {
     expr->negate();
-    return expr;
+    return child.release();
   }
 
   if (auto *expr = cast<NegExpression>(child.get())) {

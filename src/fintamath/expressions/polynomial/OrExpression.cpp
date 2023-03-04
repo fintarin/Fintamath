@@ -57,15 +57,18 @@ const IFunction *OrExpression::getFunction() const {
 }
 
 IMathObject *OrExpression::simplify() {
-  auto *result = polynomVect.front().get();
+  auto *result = polynomVect.front().release();
+
   for (size_t i = 1; i < polynomVect.size(); i++) {
     const auto *rhsPtr = polynomVect[i].get();
+
     if (const auto *lhsBool = cast<Boolean>(result)) {
       if (*lhsBool == true) {
         result = std::make_unique<Boolean>(true).release();
       } else {
         *result = *rhsPtr;
       }
+
       continue;
     }
 
@@ -73,6 +76,7 @@ IMathObject *OrExpression::simplify() {
       if (*rhsBool == true) {
         result = std::make_unique<Boolean>(true).release();
       }
+
       continue;
     }
 

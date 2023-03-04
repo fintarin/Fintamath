@@ -41,7 +41,7 @@ IMathObject *InvExpression::simplify() {
 
   if (auto *expr = cast<IInvertable>(child.get())) {
     expr->invert();
-    return expr;
+    return child.release();
   }
 
   if (auto *expr = cast<InvExpression>(child.get())) {

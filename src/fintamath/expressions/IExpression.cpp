@@ -128,6 +128,9 @@ void IExpression::simplifyExpr(MathObjectPtr &obj) {
       obj = MathObjectPtr(simplObj);
     }
   }
+
+  int a = 2;
+  a++;
 }
 
 void IExpression::setMathObjectPrecision(MathObjectPtr &obj, uint8_t precision) {
