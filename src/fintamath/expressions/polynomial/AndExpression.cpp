@@ -19,10 +19,6 @@ std::string AndExpression::toString() const {
   return binaryOperatorToString(AND, polynomVect);
 }
 
-MathObjectPtr AndExpression::toMinimalObject() const {
-  return simplify(false);
-}
-
 MathObjectPtr AndExpression::simplify(bool /*isPrecise*/) const {
   MathObjectPtr result = polynomVect.front()->clone();
   for (size_t i = 1; i < polynomVect.size(); i++) {

@@ -30,10 +30,6 @@ CompExpression::CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, Mat
   this->function = cast<IOperator>(oper.clone());
 }
 
-MathObjectPtr CompExpression::toMinimalObject() const {
-  return simplify(true);
-}
-
 MathObjectPtr CompExpression::simplify(bool isPrecise) const {
   /*SumExpression addExpr(*leftExpr->clone());
   addExpr.addElement(NegExpression(*rightExpr).toMinimalObject());

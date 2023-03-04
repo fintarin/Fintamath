@@ -20,10 +20,6 @@ DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : IUnaryExpressi
   function = cast<IFunction>(DER.clone());
 }
 
-MathObjectPtr DerivativeExpression::toMinimalObject() const {
-  return simplify(true);
-}
-
 MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
   MathObjectPtr value;
 

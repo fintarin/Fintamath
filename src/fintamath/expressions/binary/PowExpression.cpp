@@ -18,10 +18,6 @@ PowExpression::PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
   function = cast<IFunction>(POW.clone());
 }
 
-MathObjectPtr PowExpression::toMinimalObject() const {
-  return simplify(false);
-}
-
 MathObjectPtr PowExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<PowExpression>(*this);
 

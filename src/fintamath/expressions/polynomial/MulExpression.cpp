@@ -104,10 +104,6 @@ std::string MulExpression::toString() const {
   return result;
 }
 
-MathObjectPtr MulExpression::toMinimalObject() const {
-  return simplify(true);
-}
-
 MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   auto exprObj = *this;
   exprObj.compress();

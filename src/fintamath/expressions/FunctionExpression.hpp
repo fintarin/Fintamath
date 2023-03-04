@@ -21,8 +21,6 @@ public:
 
   std::string toString() const override;
 
-  MathObjectPtr toMinimalObject() const override;
-
   const IFunction *getFunction() const override;
 
   void setPrecision(uint8_t precision) override;

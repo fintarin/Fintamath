@@ -18,10 +18,6 @@ std::string OrExpression::toString() const {
   return binaryOperatorToString(OR, polynomVect);
 }
 
-MathObjectPtr OrExpression::toMinimalObject() const {
-  return simplify(false);
-}
-
 MathObjectPtr OrExpression::simplify(bool /*isPrecise*/) const {
   MathObjectPtr result = polynomVect.front()->clone();
   for (size_t i = 1; i < polynomVect.size(); i++) {

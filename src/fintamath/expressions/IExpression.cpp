@@ -58,6 +58,12 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
   }
 }
 
+MathObjectPtr IExpression::toMinimalObject() const {
+  auto copyExpr = clone();
+  simplifyExpr(copyExpr);
+  return copyExpr;
+}
+
 std::string IExpression::putInBrackets(const std::string &str) {
   return "(" + str + ")";
 }

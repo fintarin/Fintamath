@@ -13,10 +13,6 @@ InvExpression::InvExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(r
   function = cast<IFunction>(INV.clone());
 }
 
-MathObjectPtr InvExpression::toMinimalObject() const {
-  return simplify(false);
-}
-
 MathObjectPtr InvExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<InvExpression>(*this);
   exprObj->simplifyValue(isPrecise);

@@ -11,8 +11,6 @@ class IndexExpression : public IBinaryExpressionCRTP<IndexExpression> {
 public:
   explicit IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
-  MathObjectPtr toMinimalObject() const override;
-
   MathObjectPtr simplify(bool isPrecise) const override;
 
 protected:

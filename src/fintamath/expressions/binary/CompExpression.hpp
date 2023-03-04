@@ -13,8 +13,6 @@ class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
 public:
   CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
-  MathObjectPtr toMinimalObject() const override;
-
   std::string solve() const;
 
   std::string solve(uint8_t precision) const;

@@ -10,8 +10,6 @@ class PowExpression : public IBinaryExpressionCRTP<PowExpression>, public IInver
 public:
   explicit PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
 
-  MathObjectPtr toMinimalObject() const override;
-
   MathObjectPtr simplify(bool isPrecise) const override;
 
   void invert() override;

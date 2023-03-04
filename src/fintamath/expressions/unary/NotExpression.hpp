@@ -9,8 +9,6 @@ class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
 public:
   explicit NotExpression(MathObjectPtr &&rhs);
 
-  MathObjectPtr toMinimalObject() const override;
-
   MathObjectPtr simplify(bool isPrecise) const override;
 
 protected:

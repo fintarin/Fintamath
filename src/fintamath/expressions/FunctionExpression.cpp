@@ -59,10 +59,6 @@ std::string FunctionExpression::functionToString() const {
   return result;
 }
 
-MathObjectPtr FunctionExpression::toMinimalObject() const {
-  return simplify(true);
-}
-
 const IFunction *FunctionExpression::getFunction() const {
   return function.get();
 }

@@ -82,10 +82,6 @@ std::string SumExpression::toString() const {
   return result;
 }
 
-MathObjectPtr SumExpression::toMinimalObject() const {
-  return simplify(true);
-}
-
 MathObjectPtr SumExpression::simplify(bool isPrecise) const {
   SumExpression exprObj = *this;
   exprObj.compress();

@@ -355,10 +355,6 @@ MathObjectPtr Expression::simplify(bool isPrecise) const {
   return std::move(expr.info);
 }
 
-MathObjectPtr Expression::toMinimalObject() const {
-  return simplify(true);
-}
-
 std::string Expression::solve(uint8_t precision) const {
   if (const auto *expr = cast<CompExpression>(info.get())) {
     return expr->solve(precision);

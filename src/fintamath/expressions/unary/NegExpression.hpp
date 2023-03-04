@@ -8,8 +8,6 @@ class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
   explicit NegExpression(MathObjectPtr &&rhs);
 
-  MathObjectPtr toMinimalObject() const override;
-
   MathObjectPtr simplify(bool isPrecise) const override;
 
 protected:

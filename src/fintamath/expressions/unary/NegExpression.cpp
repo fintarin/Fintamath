@@ -12,10 +12,6 @@ NegExpression::NegExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(r
   function = cast<IFunction>(Neg().clone());
 }
 
-MathObjectPtr NegExpression::toMinimalObject() const {
-  return simplify(false);
-}
-
 MathObjectPtr NegExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<NegExpression>(*this);
   exprObj->simplifyValue(isPrecise);

@@ -37,10 +37,6 @@ IndexExpression::IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
 //   return lhsStr + "_" + rhsStr;
 // }
 
-MathObjectPtr IndexExpression::toMinimalObject() const {
-  return simplify(true);
-}
-
 MathObjectPtr IndexExpression::simplify(bool isPrecise) const {
   MathObjectPtr lhs;
   MathObjectPtr rhs;

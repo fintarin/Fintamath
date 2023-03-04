@@ -13,10 +13,6 @@ NotExpression::NotExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(r
   function = cast<IFunction>(NOT.clone());
 }
 
-MathObjectPtr NotExpression::toMinimalObject() const {
-  return simplify(false);
-}
-
 MathObjectPtr NotExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<NotExpression>(*this);
   exprObj->simplifyValue(isPrecise);
