@@ -352,9 +352,9 @@ MathObjectPtr SumExpression::getPow() const {
 }
 
 void SumExpression::negate() {
-  // TODO: refactor with using NegExpression
   for (auto &child : polynomVect) {
-    child = NegExpression(std::move(child)).toMinimalObject();
+    child = std::make_unique<NegExpression>(std::move(child));
+    simplifyExpr(child);
   }
 }
 

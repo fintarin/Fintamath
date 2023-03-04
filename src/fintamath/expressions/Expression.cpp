@@ -17,6 +17,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/meta/Converter.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
@@ -57,7 +58,7 @@ Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(
   compress();
   validate();
   // TODO: implement void simplify() and use it here
-  //*this = Expression(toMinimalObject());
+  *this = Expression(toMinimalObject());
 }
 
 Expression::Expression(const TokenVector &tokens) {
@@ -82,7 +83,7 @@ Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 }
 
 Expression::Expression(MathObjectPtr &&obj) {
-  if (auto *expr = cast<Expression>(obj.get())) {
+  if (auto * expr = cast<Expression>(obj.get())) {
     *this = std::move(*expr);
   } else {
     info = std::move(obj);
@@ -250,7 +251,7 @@ bool Expression::parseFunction(const TokenVector &tokens) {
 }
 
 MathObjectPtr Expression::makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
-  return makeRawFunctionExpression(func, std::move(args))->toMinimalObject();
+  return makeRawFunctionExpression(func, std::move(args));
 }
 
 ExpressionPtr Expression::makeRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
@@ -314,28 +315,34 @@ ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  return *this = Expression(makeFunctionExpression(
-             Add(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
+  MathObjectPtr expr = makeFunctionExpression(Add(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone()));
+  simplifyExpr(expr);
+  return *this = Expression(std::move(expr));
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  return *this = Expression(makeFunctionExpression(
-             Sub(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
+  MathObjectPtr expr = makeFunctionExpression(Sub(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone()));
+  simplifyExpr(expr);
+  return *this = Expression(std::move(expr));
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  return *this = Expression(makeFunctionExpression(
-             Mul(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
+  MathObjectPtr expr = makeFunctionExpression(Mul(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone()));
+  simplifyExpr(expr);
+  return *this = Expression(std::move(expr));
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  return *this = Expression(makeFunctionExpression(
-             Div(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone())));
+  MathObjectPtr expr = makeFunctionExpression(Div(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone()));
+  simplifyExpr(expr);
+  return *this = Expression(std::move(expr));
 }
 
 Expression &Expression::negate() {
-  return *this = Expression(
-             makeFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)))));
+  MathObjectPtr expr = makeFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this))));
+  simplifyExpr(expr);
+  auto a = Expression(std::move(expr));
+  return *this = a;
 }
 
 void Expression::validate() const {
@@ -392,7 +399,7 @@ std::vector<MathObjectPtr> Expression::getVariables() const {
 
 IMathObject *Expression::simplify() {
   simplifyExpr(info);
-  return this;
+  return info.release();
 }
 
 }
