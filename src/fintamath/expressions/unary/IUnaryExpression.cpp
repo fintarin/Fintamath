@@ -2,6 +2,7 @@
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"

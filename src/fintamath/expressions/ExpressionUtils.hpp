@@ -78,4 +78,8 @@ inline ArgumentsPtrVector copy(const ArgumentsPtrVector &rhs) {
 
   return result;
 }
+
+inline std::string putInBrackets(const std::string &str) {
+  return "(" + str + ")";
+}
 }

@@ -1,5 +1,6 @@
 #include "fintamath/expressions/IExpression.hpp"
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -60,12 +61,8 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
 
 MathObjectPtr IExpression::toMinimalObject() const {
   auto copyExpr = clone();
-  simplifyExpr(copyExpr);
+  // simplifyExpr(copyExpr); //TODO: enable when simplify will be implemented finally
   return copyExpr;
-}
-
-std::string IExpression::putInBrackets(const std::string &str) {
-  return "(" + str + ")";
 }
 
 std::string IExpression::binaryOperatorToString(const IOperator &oper, const std::vector<MathObjectPtr> &values) {

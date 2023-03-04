@@ -54,8 +54,6 @@ protected:
   // TODO: remove this and implement in Expression using IExpression::Iterator
   void validateArgs(const IFunction &func, const ArgumentsVector &args) const;
 
-  static std::string putInBrackets(const std::string &str);
-
   static std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
 
   static std::string postfixUnaryOperatorToString(const IOperator &oper, const MathObjectPtr &lhs);
