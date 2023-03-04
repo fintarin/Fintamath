@@ -207,18 +207,19 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "(3 b + 5 a + a b + 15)/(2 a + a b)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
+  EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
   EXPECT_EQ(Expression("1*(a+b)*1").toString(), "a + b");
   EXPECT_EQ(Expression("-1*(a+b)*1").toString(), "-a - b");
   EXPECT_EQ(Expression("1*(a+b)*-1").toString(), "-a - b");
-  // EXPECT_EQ(Expression("-1*(a+b)*-1").toString(), "a + b");
+  EXPECT_EQ(Expression("-1*(a+b)*-1").toString(), "a + b");
   EXPECT_EQ(Expression("1+(a+b)+1").toString(), "a + b + 2");
   EXPECT_EQ(Expression("-1+(a+b)+1").toString(), "a + b");
   EXPECT_EQ(Expression("1+(a+b)-1").toString(), "a + b");
   EXPECT_EQ(Expression("-1+(a+b)-1").toString(), "a + b - 2");
   EXPECT_EQ(Expression("2*(a+b)*2").toString(), "4 a + 4 b");
-  // EXPECT_EQ(Expression("-2*(a+b)*2").toString(), "-4 a - 4 b");
+  EXPECT_EQ(Expression("-2*(a+b)*2").toString(), "-4 a - 4 b");
   EXPECT_EQ(Expression("2*(a+b)*-2").toString(), "-4 a - 4 b");
-  // EXPECT_EQ(Expression("-2*(a+b)*-2").toString(), "4 a + 4 b");
+  EXPECT_EQ(Expression("-2*(a+b)*-2").toString(), "4 a + 4 b");
   EXPECT_EQ(Expression("2+(a+b)+2").toString(), "a + b + 4");
   EXPECT_EQ(Expression("-2+(a+b)+2").toString(), "a + b");
   EXPECT_EQ(Expression("2+(a+b)-2").toString(), "a + b");
@@ -361,6 +362,8 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("a & ~b & c").toString(), "a & ~b & c");
   EXPECT_EQ(Expression("a | (~b & c)").toString(), "a | ~b & c");
   EXPECT_EQ(Expression("(a | ~b) & c").toString(), "(a | ~b) & c");
+  EXPECT_EQ(Expression("~(a & b)").toString(), "~a | ~b");
+  EXPECT_EQ(Expression("~(a | b)").toString(), "~a & ~b");
   EXPECT_EQ(Expression("~a & b | ~c -> d <-> f !<-> g").toString(),
             "~((~(~a & b | ~c) | d) & f | ~(~(~a & b | ~c) | d) & ~f) & g | ((~(~a & b | ~c) | d) & f "
             "| ~(~(~a & b | ~c) | d) & ~f) & ~g");
