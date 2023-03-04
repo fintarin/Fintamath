@@ -105,7 +105,7 @@ std::string IUnaryExpression::functionToString(const IFunction &oper) const {
 }
 
 void IUnaryExpression::simplifyValue(bool isPrecise) {
-  IExpression::simplifyValue(isPrecise, child);
+  IExpression::simplifyExpr(child);
 }
 
 void IUnaryExpression::validate() const {

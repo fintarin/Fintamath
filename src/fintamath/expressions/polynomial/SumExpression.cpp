@@ -97,19 +97,19 @@ MathObjectPtr SumExpression::simplify(bool isPrecise) const {
   }
 
   if (exprObj.polynomVect.size() == 1) {
-    simplifyValue(isPrecise, exprObj.polynomVect.front());
+    simplifyExpr(exprObj.polynomVect.front());
     return exprObj.polynomVect.front()->clone();
   }
 
   for (auto &obj : exprObj.polynomVect) {
-    simplifyValue(isPrecise, obj);
+    simplifyExpr(obj);
   }
 
   exprObj.compress();
   // exprObj.simplifyPolynom();
 
   if (exprObj.polynomVect.size() == 1) {
-    simplifyValue(isPrecise, exprObj.polynomVect.front());
+    simplifyExpr(exprObj.polynomVect.front());
     return exprObj.polynomVect.front()->clone();
   }
   return exprObj.clone();

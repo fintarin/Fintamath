@@ -30,6 +30,8 @@ public:
 
   const IFunction *getFunction() const final;
 
+  void simplifyValue(bool isPrecise);
+
 private:
   std::string postfixToString(const IFunction &oper) const;
 
@@ -38,8 +40,6 @@ private:
   std::string functionToString(const IFunction &oper) const;
 
 protected:
-  void simplifyValue(bool isPrecise);
-
   FunctionPtr function;
 
   MathObjectPtr child;
