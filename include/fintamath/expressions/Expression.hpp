@@ -96,8 +96,6 @@ protected:
 private:
   explicit Expression(const TokenVector &tokens);
 
-  static ArgumentsPtrVector copy(const ArgumentsPtrVector &rhs);
-
   bool parsePrefixOperator(const TokenVector &tokens);
 
   bool parsePostfixOperator(const TokenVector &tokens);
@@ -108,13 +106,7 @@ private:
 
   bool parseFunction(const TokenVector &tokens);
 
-  static std::map<size_t, MathObjectPtr> findBinaryOperators(const TokenVector &tokens);
-
   ArgumentsPtrVector getArgs(const TokenVector &tokens);
-
-  static bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
-
-  static TokenVector cutBraces(const TokenVector &tokens);
 
 private:
   MathObjectPtr info;

@@ -7,6 +7,7 @@
 #include <regex>
 #include <stdexcept>
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/FunctionExpression.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -248,31 +249,6 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   return false;
 }
 
-std::map<size_t, MathObjectPtr> Expression::findBinaryOperators(const TokenVector &tokens) {
-  std::map<size_t, MathObjectPtr> operators;
-
-  bool isPrevTokenOper = false;
-
-  for (size_t i = 0; i < tokens.size(); i++) {
-    if (skipBrackets(tokens, i)) {
-      isPrevTokenOper = false;
-      i--;
-      continue;
-    }
-
-    if (auto oper = IOperator::parse(tokens.at(i)); oper && oper->getFunctionType() == IFunction::Type::Binary) {
-      if (!isPrevTokenOper) {
-        operators.insert({i, std::move(oper)});
-        isPrevTokenOper = true;
-      }
-    } else {
-      isPrevTokenOper = false;
-    }
-  }
-
-  return operators;
-}
-
 MathObjectPtr Expression::makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
   return makeRawFunctionExpression(func, std::move(args))->toMinimalObject();
 }
@@ -293,16 +269,6 @@ const IFunction *Expression::getFunction() const {
   }
 
   return nullptr;
-}
-
-ArgumentsPtrVector Expression::copy(const ArgumentsPtrVector &rhs) {
-  ArgumentsPtrVector result;
-
-  for (const auto &value : rhs) {
-    result.emplace_back(value->clone());
-  }
-
-  return result;
 }
 
 ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
@@ -345,44 +311,6 @@ ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
   args.emplace_back(std::unique_ptr<Expression>(new Expression(tokens)));
 
   return args;
-}
-
-bool Expression::skipBrackets(const TokenVector &tokens, size_t &openBracketIndex) {
-  if (openBracketIndex >= tokens.size() || tokens.at(openBracketIndex) != "(") {
-    return false;
-  }
-
-  int64_t brackets = 0;
-
-  for (size_t i = openBracketIndex; i < tokens.size(); i++) {
-    if (tokens[i] == "(") {
-      brackets++;
-    } else if (tokens[i] == ")") {
-      brackets--;
-    }
-
-    if (brackets == 0) {
-      openBracketIndex = i + 1;
-      return true;
-    }
-    if (brackets < 0) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
-  }
-
-  throw InvalidInputException(Tokenizer::tokensToString(tokens));
-}
-
-TokenVector Expression::cutBraces(const TokenVector &tokens) {
-  if (tokens.empty()) {
-    return tokens;
-  }
-  auto newTokens = tokens;
-  if (newTokens.front() == "(" && newTokens.back() == ")") {
-    newTokens.erase(newTokens.begin());
-    newTokens.erase(newTokens.end() - 1);
-  }
-  return newTokens;
 }
 
 Expression &Expression::add(const Expression &rhs) {
