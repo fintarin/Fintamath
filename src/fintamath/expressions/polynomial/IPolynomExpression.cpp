@@ -1,4 +1,6 @@
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
+#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 
@@ -87,6 +89,26 @@ void IPolynomExpression::validate() const {
 
   for (size_t i = 1; i < polynomVect.size(); i++) {
     this->validateArgs(*func, {*polynomVect[i - 1], *polynomVect[i]});
+  }
+}
+
+void IPolynomExpression::sortVector(ArgumentsPtrVector &vector,
+                                    std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+                                    ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector) {
+  for (auto &child : vector) {
+    if (const auto *expr = cast<IExpression>(child.get())) {
+      const auto *func = expr->getFunction();
+      if (const auto *op = cast<IOperator>(func)) {
+        priorityMap[op->getOperatorPriority()].emplace_back(std::move(child));
+        continue;
+      }
+      functionVector.emplace_back(std::move(child));
+      continue;
+    }
+
+    if (is<Variable>(child)) {
+      variableVector.emplace_back(std::move(child));
+    }
   }
 }
 

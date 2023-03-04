@@ -2,6 +2,8 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/meta/Converter.hpp"
@@ -38,6 +40,9 @@ public:
 
 protected:
   ArgumentsPtrVector polynomVect;
+
+  static void sortVector(ArgumentsPtrVector &vector, std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+                         ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
 
   static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
 };
@@ -81,7 +86,7 @@ public:
 
       if (is<IExpression>(child) && !is<Derived>(child)) {
         exprVect.emplace_back(child->clone());
-        continue;
+        continue;exprVect
       }
 
       if (is<INumber>(child)) {
