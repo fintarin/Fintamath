@@ -501,6 +501,147 @@ TEST(IntegerTests, intFriendModuloOperatorTest) {
   EXPECT_EQ(10 % Integer(4), 2);
 }
 
+TEST(IntegerTests, bitAndAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(192) &= Integer(361), 64);
+  EXPECT_EQ(Integer(192) &= Integer(-361), 128);
+  EXPECT_EQ(Integer(-192) &= Integer(361), 320);
+  EXPECT_EQ(Integer(-192) &= Integer(-361), -512);
+
+  EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") &=
+            Integer("239821736218376218710101004349800036128736128451262548126372110293"),
+            Integer("1646269354501586035462268928227889963640732025882107625773765"));
+}
+
+TEST(IntegerTests, intBitAndAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(5) &= 3, 1);
+}
+
+TEST(IntegerTests, bitAndOperatorTest) {
+  EXPECT_EQ(Integer(5) & Integer(3), 1);
+}
+
+TEST(IntegerTests, intBitAndOperatorTest) {
+  EXPECT_EQ(Integer(5) & 3, 1);
+}
+
+TEST(IntegerTests, intFriendBitAndOperatorTest) {
+  EXPECT_EQ(5 & Integer(3), 1);
+}
+
+TEST(IntegerTests, bitOrAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(192) |= Integer(361), 489);
+  EXPECT_EQ(Integer(192) |= Integer(-361), -297);
+  EXPECT_EQ(Integer(-192) |= Integer(361), -151);
+  EXPECT_EQ(Integer(-192) |= Integer(-361), -41);
+
+  EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") |=
+            Integer("239821736218376218710101004349800036128736128451262548126372110293"),
+            Integer("239832181341861544524065542080871808238765471449074594411546337239"));
+}
+
+TEST(IntegerTests, intBitOrAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(5) |= 3, 7);
+}
+
+TEST(IntegerTests, bitOrOperatorTest) {
+  EXPECT_EQ(Integer(5) | Integer(3), 7);
+}
+
+TEST(IntegerTests, intBitOrOperatorTest) {
+  EXPECT_EQ(Integer(5) | 3, 7);
+}
+
+TEST(IntegerTests, intFriendBitOrOperatorTest) {
+  EXPECT_EQ(5 | Integer(3), 7);
+}
+
+TEST(IntegerTests, bitXorAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(192) ^= Integer(361), 425);
+  EXPECT_EQ(Integer(192) ^= Integer(-361), -425);
+  EXPECT_EQ(Integer(-192) ^= Integer(361), -471);
+  EXPECT_EQ(Integer(-192) ^= Integer(-361), 471);
+
+  EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") ^=
+            Integer("239821736218376218710101004349800036128736128451262548126372110293"),
+            Integer("239830535072507042938030079811943580348801830717048712303920563474"));
+}
+
+TEST(IntegerTests, intBitXorAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(5) ^= 3, 6);
+}
+
+TEST(IntegerTests, bitXorOperatorTest) {
+  EXPECT_EQ(Integer(5) ^ Integer(3), 6);
+}
+
+TEST(IntegerTests, intBitXorOperatorTest) {
+  EXPECT_EQ(Integer(5) ^ 3, 6);
+}
+
+TEST(IntegerTests, intFriendBitXorOperatorTest) {
+  EXPECT_EQ(5 ^ Integer(3), 6);
+}
+
+TEST(IntegerTests, bitLeftShiftAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(192) <<= Integer(5), 6144);
+  EXPECT_EQ(Integer(-192) <<= Integer(5), -6144);
+
+  EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") <<= 5,
+            Integer("386924570874476799999999999999999999775479354813708569600022752"));
+
+  EXPECT_THROW(Integer(192) <<= Integer(-5), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Integer(-192) <<= Integer(-5), UndefinedBinaryOpearatorException);
+}
+
+TEST(IntegerTests, intBitLeftShiftAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(5) <<= 3, 40);
+}
+
+TEST(IntegerTests, bitLeftShiftOperatorTest) {
+  EXPECT_EQ(Integer(5) << Integer(3), 40);
+}
+
+TEST(IntegerTests, intBitLeftShiftOperatorTest) {
+  EXPECT_EQ(Integer(5) << 3, 40);
+}
+
+TEST(IntegerTests, intFriendBitLeftShiftOperatorTest) {
+  EXPECT_EQ(5 << Integer(3), 40);
+}
+
+TEST(IntegerTests, bitRightShiftAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(192) >>= Integer(5), 6);
+  EXPECT_EQ(Integer(-192) >>= Integer(5), -6);
+
+  EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") >>= 5,
+            Integer("377856026244606249999999999999999999780741557435262275000022"));
+
+  EXPECT_THROW(Integer(192) >>= Integer(-5), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Integer(-192) >>= Integer(-5), UndefinedBinaryOpearatorException);
+}
+
+TEST(IntegerTests, intBitRightShiftAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(5) >>= 3, 0);
+}
+
+TEST(IntegerTests, bitRightShiftOperatorTest) {
+  EXPECT_EQ(Integer(5) >> Integer(3), 0);
+}
+
+TEST(IntegerTests, intBitRightShiftOperatorTest) {
+  EXPECT_EQ(Integer(5) >> 3, 0);
+}
+
+TEST(IntegerTests, intFriendBitRightShiftOperatorTest) {
+  EXPECT_EQ(5 >> Integer(3), 0);
+}
+
+TEST(IntegerTests, bitNotOperatorTest) {
+  EXPECT_EQ(~Integer(5), -6);
+  EXPECT_EQ(~Integer("-6748346738212618723653728362813238128121823281328381262673676266"),
+            Integer("6748346738212618723653728362813238128121823281328381262673676265"));
+}
+
 TEST(IntegerTests, preIncrementOperatorTest) {
   Integer a = 5;
   EXPECT_EQ(++a, 6);

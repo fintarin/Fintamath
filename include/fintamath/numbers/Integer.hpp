@@ -52,6 +52,18 @@ protected:
 
   Integer &mod(const Integer &rhs) override;
 
+  Integer &bitAnd(const Integer &rhs) override;
+
+  Integer &bitOr(const Integer &rhs) override;
+
+  Integer &bitXor(const Integer &rhs) override;
+
+  Integer &bitLeftShift(const Integer &rhs) override;
+
+  Integer &bitRightShift(const Integer &rhs) override;
+
+  Integer &bitNot() override;
+
   Integer &negate() override;
 
   Integer &increase() override;

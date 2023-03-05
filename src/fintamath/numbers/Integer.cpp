@@ -121,6 +121,44 @@ Integer &Integer::mod(const Integer &rhs) {
   return *this;
 }
 
+Integer &Integer::bitAnd(const Integer &rhs) {
+  impl->v &= rhs.impl->v;
+  return *this;
+}
+
+Integer &Integer::bitOr(const Integer &rhs) {
+  impl->v |= rhs.impl->v;
+  return *this;
+}
+
+Integer &Integer::bitXor(const Integer &rhs) {
+  impl->v ^= rhs.impl->v;
+  return *this;
+}
+
+Integer &Integer::bitLeftShift(const Integer &rhs) {
+  try {
+    impl->v <<= int64_t(rhs.impl->v);
+    return *this;
+  } catch (...) {
+    throw UndefinedBinaryOpearatorException("<<", toString(), rhs.toString());
+  }
+}
+
+Integer &Integer::bitRightShift(const Integer &rhs) {
+  try {
+    impl->v >>= int64_t(rhs.impl->v);
+    return *this;
+  } catch (...) {
+    throw UndefinedBinaryOpearatorException(">>", toString(), rhs.toString());
+  }
+}
+
+Integer &Integer::bitNot() {
+  impl->v = ~impl->v;
+  return *this;
+}
+
 Integer &Integer::negate() {
   impl->v = -impl->v;
   return *this;
@@ -135,5 +173,4 @@ Integer &Integer::decrease() {
   --impl->v;
   return *this;
 }
-
 }
