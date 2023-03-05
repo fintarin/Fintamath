@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/core/IModular.hpp"
+#include "fintamath/core/IIntegral.hpp"
 
 #include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -10,39 +10,39 @@ using namespace fintamath;
 
 namespace {
 
-class TestModular : public IModularCRTP<TestModular> {
+class TestIntegral : public IIntegralCRTP<TestIntegral> {
 public:
 protected:
-  TestModular &mod(const TestModular & /* rhs */) override {
+  TestIntegral &mod(const TestIntegral & /* rhs */) override {
     return *this;
   }
 
-  TestModular &add(const TestModular &rhs) override {
+  TestIntegral &add(const TestIntegral &rhs) override {
     return *this;
   }
 
-  virtual TestModular &substract(const TestModular &rhs) override {
+  virtual TestIntegral &substract(const TestIntegral &rhs) override {
     return *this;
   }
 
-  virtual TestModular &multiply(const TestModular &rhs) override {
+  virtual TestIntegral &multiply(const TestIntegral &rhs) override {
     return *this;
   }
 
-  virtual TestModular &divide(const TestModular &rhs) override {
+  virtual TestIntegral &divide(const TestIntegral &rhs) override {
     return *this;
   }
 
-  virtual TestModular &negate() override {
+  virtual TestIntegral &negate() override {
     return *this;
   }
 };
 
 }
 
-TEST(ModularTests, modTest) {
-  ModularPtr m1 = std::make_unique<Integer>(10);
-  ModularPtr m2 = std::make_unique<Integer>(3);
+TEST(IntegralTests, modTest) {
+  IntegralPtr m1 = std::make_unique<Integer>(10);
+  IntegralPtr m2 = std::make_unique<Integer>(3);
 
   EXPECT_EQ((*m1 % *m1)->toString(), "0");
   EXPECT_EQ((*m2 % *m2)->toString(), "0");
@@ -54,8 +54,8 @@ TEST(ModularTests, modTest) {
   EXPECT_TRUE(is<Integer>(*m1 % *m2));
   EXPECT_TRUE(is<Integer>(*m2 % *m1));
 
-  EXPECT_THROW(*m1 % TestModular(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestModular() % *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 % TestIntegral(), InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(TestIntegral() % *m1, InvalidInputBinaryOpearatorException);
 
   Integer a;
   EXPECT_EQ((a %= 3).toString(), "0");

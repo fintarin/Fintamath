@@ -86,12 +86,12 @@ TEST(ParserTests, parseMathObjectTest) {
 TEST(ParserTests, parseArithmeticTest) {
   EXPECT_TRUE(is<IComparable>(IArithmetic::parse("1231412736.218731623872183")));
   EXPECT_TRUE(is<IIncremental>(IArithmetic::parse("1231412736218731623872183")));
-  EXPECT_TRUE(is<IModular>(IArithmetic::parse("1231412736218731623872183")));
+  EXPECT_TRUE(is<IIntegral>(IArithmetic::parse("1231412736218731623872183")));
   EXPECT_TRUE(is<Expression>(IArithmetic::parse("a")));
 
   EXPECT_FALSE(is<IComparable>(IArithmetic::parse("True")));
   EXPECT_FALSE(is<IIncremental>(IArithmetic::parse("E")));
-  EXPECT_FALSE(is<IModular>(IArithmetic::parse("12314127362187.31623872183")));
+  EXPECT_FALSE(is<IIntegral>(IArithmetic::parse("12314127362187.31623872183")));
   EXPECT_FALSE(is<INumber>(IArithmetic::parse("a")));
   EXPECT_FALSE(is<Expression>(IArithmetic::parse("123")));
 
@@ -111,9 +111,9 @@ TEST(ParserTests, parseIncrementalTest) {
 }
 
 TEST(ParserTests, parseModularTest) {
-  EXPECT_TRUE(is<Integer>(IModular::parse("18731623872183")));
+  EXPECT_TRUE(is<Integer>(IIntegral::parse("18731623872183")));
 
-  EXPECT_EQ(IModular::parse("123.123"), nullptr);
+  EXPECT_EQ(IIntegral::parse("123.123"), nullptr);
 }
 
 TEST(ParserTests, parseNumberTest) {

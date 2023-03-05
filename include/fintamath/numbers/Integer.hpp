@@ -2,14 +2,14 @@
 
 #include <memory>
 
-#include "fintamath/core/IModular.hpp"
+#include "fintamath/core/IIntegral.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
 class IntegerImpl;
 
-class Integer : public INumberCRTP<Integer>, public IModularCRTP<Integer>, public IIncrementalCRTP<Integer> {
+class Integer : public INumberCRTP<Integer>, public IIntegralCRTP<Integer>, public IIncrementalCRTP<Integer> {
 public:
   Integer();
 

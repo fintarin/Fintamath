@@ -1,8 +1,8 @@
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IIncremental.hpp"
+#include "fintamath/core/IIntegral.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/IModular.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -83,7 +83,7 @@ Parser::Vector<MathObjectPtr, const std::string &> IMathObject::parserVector;
 Parser::Vector<ArithmeticPtr, const std::string &> IArithmetic::parserVector;
 Parser::Vector<ComparablePtr, const std::string &> IComparable::parserVector;
 Parser::Vector<IncrementalPtr, const std::string &> IIncremental::parserVector;
-Parser::Vector<ModularPtr, const std::string &> IModular::parserVector;
+Parser::Vector<IntegralPtr, const std::string &> IIntegral::parserVector;
 
 Parser::Vector<NumberPtr, const std::string &> INumber::parserVector;
 
@@ -111,14 +111,14 @@ struct ParserConfig {
 
     IArithmetic::registerType<IComparable>(&IComparable::parse);
     IArithmetic::registerType<IIncremental>(&IIncremental::parse);
-    IArithmetic::registerType<IModular>(&IModular::parse);
+    IArithmetic::registerType<IIntegral>(&IIntegral::parse);
     IArithmetic::registerType<Expression>();
 
     IComparable::registerType<INumber>(&INumber::parse);
 
     IIncremental::registerType<Integer>();
 
-    IModular::registerType<Integer>();
+    IIntegral::registerType<Integer>();
 
     INumber::registerType<Integer>();
     INumber::registerType<Rational>();
