@@ -4,12 +4,12 @@
 
 namespace fintamath {
 
-IPolynomExpression::IPolynomExpression(const IPolynomExpression &rhs) : polynomVect(rhs.clonePolynom()) {
+IPolynomExpression::IPolynomExpression(const IPolynomExpression &rhs) : polynomVect(rhs.getPolynom()) {
 }
 
 IPolynomExpression &IPolynomExpression::operator=(const IPolynomExpression &rhs) {
   if (&rhs != this) {
-    polynomVect = rhs.clonePolynom();
+    polynomVect = rhs.getPolynom();
   }
   return *this;
 }
@@ -67,7 +67,7 @@ std::vector<MathObjectPtr> IPolynomExpression::getVariables() const {
   return vars;
 }
 
-ArgumentsPtrVector IPolynomExpression::clonePolynom() const {
+ArgumentsPtrVector IPolynomExpression::getPolynom() const {
   ArgumentsPtrVector clonedVector;
 
   for (const auto &elem : polynomVect) {

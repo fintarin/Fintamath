@@ -113,7 +113,7 @@ void IUnaryExpression::validate() const {
   // TODO: implement it
 }
 
-MathObjectPtr IUnaryExpression::getInfo() const {
+MathObjectPtr IUnaryExpression::getChild() const {
   return child->clone();
 }
 

@@ -9,6 +9,7 @@
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
+#include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/expressions/unary/InvExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
@@ -40,7 +41,7 @@ struct MulExpression::ObjectPow {
   }
 
   MathObjectPtr getPowIfInteger() const {
-    auto polynom = pow.clonePolynom();
+    auto polynom = pow.getPolynom();
     if (polynom.size() != 1) {
       return nullptr;
     }
@@ -52,7 +53,7 @@ struct MulExpression::ObjectPow {
   }
 
   MathObjectPtr getPowIfSingle() const {
-    auto polynom = pow.clonePolynom();
+    auto polynom = pow.getPolynom();
     if (polynom.size() != 1) {
       return nullptr;
     }
@@ -86,7 +87,7 @@ std::string MulExpression::toString() const {
 
   if (const auto *invExpr = cast<InvExpression>(polynomVect.front().get())) {
     result += "1 / ";
-    result += sumExprToString(invExpr->getInfo());
+    result += sumExprToString(invExpr->getChild());
   } else {
     result += sumExprToString(polynomVect.front());
   }
@@ -94,7 +95,7 @@ std::string MulExpression::toString() const {
   for (size_t i = 1; i < polynomVect.size(); i++) {
     if (const auto *invExpr = cast<InvExpression>(polynomVect[i].get())) {
       result += "/";
-      result += sumExprToString(invExpr->getInfo());
+      result += sumExprToString(invExpr->getChild());
       continue;
     }
     result += ' ';
@@ -135,6 +136,29 @@ MathObjectPtr MulExpression::simplify(bool isPrecise) const {
   return exprObj.clone();
 }
 
+IMathObject *MulExpression::simplify() {
+  compress();
+
+  for (auto &obj : polynomVect) { // TODO: find a better solution
+    if (is<CompExpression>(obj)) {
+      throw InvalidInputException(toString());
+    }
+  }
+
+  if (polynomVect.size() == 1) {
+    simplifyExpr(polynomVect.front());
+    return polynomVect.front().release();
+  }
+
+  for (auto &obj : polynomVect) {
+    simplifyExpr(obj);
+  }
+
+  simplifyDivisions();
+
+  return this;
+}
+
 const IFunction *MulExpression::getFunction() const {
   return &MUL;
 }
@@ -154,7 +178,7 @@ ArgumentsPtrVector MulExpression::multiplicateTwoBraces(const ArgumentsPtrVector
 
   for (const auto &lhsElem : lhs) {
     for (const auto &rhsElem : rhs) {
-      auto polynom = cast<MulExpression>(lhsElem.get())->clonePolynom();
+      auto polynom = cast<MulExpression>(lhsElem.get())->getPolynom();
       polynom.emplace_back(rhsElem->clone());
       result.emplace_back(std::make_unique<MulExpression>(std::move(polynom)));
     }
@@ -420,12 +444,13 @@ void MulExpression::simplifyPolynom() {
 }
 
 void MulExpression::simplifyDivisions() {
-  /*std::set<size_t> childrenToRemove;
+  std::set<size_t> childrenToRemove;
 
   for (size_t i = 0; i < polynomVect.size() - 1; i++) {
     for (size_t j = i + 1; j < polynomVect.size(); j++) {
-      if (polynomVect[i].inverted != polynomVect[j].inverted && *polynomVect[i].info == *polynomVect[j].info &&
-          childrenToRemove.count(i) == 0 && childrenToRemove.count(j) == 0) {
+      const auto *lhsInv = cast<InvExpression>(polynomVect[i].get());
+      const auto *rhsInv = cast<InvExpression>(polynomVect[j].get());
+      if ((lhsInv && *lhsInv->getChild() == *polynomVect[j]) || (rhsInv && *rhsInv->getChild() == *polynomVect[i])) {
         childrenToRemove.insert(i);
         childrenToRemove.insert(j);
       }
@@ -439,7 +464,14 @@ void MulExpression::simplifyDivisions() {
 
   if (polynomVect.empty()) {
     polynomVect.emplace_back(ONE.clone());
-  }*/
+  }
+}
+
+void MulExpression::setPow(const MathObjectPtr &value) {
+  for (auto &child : polynomVect) {
+    child = std::make_unique<PowExpression>(std::move(child), std::move(value->clone()));
+    simplifyExpr(child);
+  }
 }
 
 ArgumentsPtrVector MulExpression::openPowMulExpression(const ArgumentsPtrVector &powVect) {
@@ -512,10 +544,6 @@ void MulExpression::invert() {
   for (auto &child : polynomVect) {
     child = InvExpression(std::move(child)).toMinimalObject();
   }
-}
-
-IMathObject *MulExpression::simplify() {
-  return this;
 }
 
 }

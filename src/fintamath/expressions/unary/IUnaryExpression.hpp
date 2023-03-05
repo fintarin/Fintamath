@@ -23,7 +23,7 @@ public:
 
   std::string toString() const final;
 
-  MathObjectPtr getInfo() const;
+  MathObjectPtr getChild() const;
 
   // TODO: remove this
   void validate() const final;

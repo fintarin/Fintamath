@@ -33,7 +33,7 @@ public:
 
   std::vector<MathObjectPtr> getVariables() const final;
 
-  ArgumentsPtrVector clonePolynom() const;
+  ArgumentsPtrVector getPolynom() const;
 
   // TODO: remove this
   void validate() const final;

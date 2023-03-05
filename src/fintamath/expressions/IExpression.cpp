@@ -61,7 +61,7 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
 
 MathObjectPtr IExpression::toMinimalObject() const {
   auto copyExpr = clone();
-  simplifyExpr(copyExpr); //TODO: enable when simplify will be implemented finally
+  simplifyExpr(copyExpr); // TODO: enable when simplify will be implemented finally
   return copyExpr;
 }
 

@@ -24,6 +24,8 @@ public:
 
   MathObjectPtr getPow() const;
 
+  void setPow(const MathObjectPtr &value);
+
   void negate() override;
 
   void invert() override;
@@ -35,6 +37,8 @@ private:
   // TODO: Implement a new Expression and remove this
   struct ObjectPow;
   using Objects = std::vector<ObjectPow>;
+
+  void simplifyDivisions();
 
   static std::string sumExprToString(const MathObjectPtr &obj);
 
@@ -48,8 +52,6 @@ private:
   static ArgumentsPtrVector multiplicateTwoBraces(const ArgumentsPtrVector &lhs, const ArgumentsPtrVector &rhs);
 
   void simplifyPolynom();
-
-  void simplifyDivisions();
 
   static void simplifyPow(ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect, ArgumentsPtrVector &literalVect,
                           ArgumentsPtrVector &funcVect);

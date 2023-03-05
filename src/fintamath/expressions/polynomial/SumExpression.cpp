@@ -49,7 +49,7 @@ struct SumExpression::MulObject {
   }
 
   MathObjectPtr getCounterValue() const {
-    auto polynom = counter.clonePolynom();
+    auto polynom = counter.getPolynom();
     auto countValue = polynom.front()->clone();
     return is<NegExpression>(polynom.front()) ? Neg()(*countValue) : std::move(countValue);
   }
