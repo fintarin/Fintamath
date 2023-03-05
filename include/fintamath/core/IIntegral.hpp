@@ -12,7 +12,9 @@ using IntegralPtr = std::unique_ptr<IIntegral>;
 
 class IIntegral : virtual public IArithmetic {
 public:
-  friend IntegralPtr operator%(const IIntegral &lhs, const IIntegral &rhs);
+  friend inline IntegralPtr operator%(const IIntegral &lhs, const IIntegral &rhs) {
+    return lhs.modAbstract(rhs);
+  }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IIntegral, T>>>
   static void registerType() {
@@ -29,10 +31,6 @@ protected:
 private:
   static Parser::Vector<IntegralPtr, const std::string &> parserVector;
 };
-
-inline IntegralPtr operator%(const IIntegral &lhs, const IIntegral &rhs) {
-  return lhs.modAbstract(rhs);
-}
 
 template <typename Derived>
 class IIntegralCRTP : virtual public IArithmeticCRTP<Derived>, virtual public IIntegral {

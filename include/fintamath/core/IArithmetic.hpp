@@ -11,17 +11,41 @@ using ArithmeticPtr = std::unique_ptr<IArithmetic>;
 
 class IArithmetic : virtual public IMathObject {
 public:
-  friend ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs);
+  friend inline ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
+    if (auto res = IArithmetic::multiAdd(lhs, rhs)) {
+      return res;
+    }
+    return lhs.addAbstract(rhs);
+  }
 
-  friend ArithmeticPtr operator-(const IArithmetic &lhs, const IArithmetic &rhs);
+  friend inline ArithmeticPtr operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
+    if (auto res = IArithmetic::multiSub(lhs, rhs)) {
+      return res;
+    }
+    return lhs.substractAbstract(rhs);
+  }
 
-  friend ArithmeticPtr operator*(const IArithmetic &lhs, const IArithmetic &rhs);
+  friend inline ArithmeticPtr operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
+    if (auto res = IArithmetic::multiMul(lhs, rhs)) {
+      return res;
+    }
+    return lhs.multiplyAbstract(rhs);
+  }
 
-  friend ArithmeticPtr operator/(const IArithmetic &lhs, const IArithmetic &rhs);
+  friend inline ArithmeticPtr operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
+    if (auto res = IArithmetic::multiDiv(lhs, rhs)) {
+      return res;
+    }
+    return lhs.divideAbstract(rhs);
+  }
 
-  friend ArithmeticPtr operator+(const IArithmetic &rhs);
+  friend inline ArithmeticPtr operator+(const IArithmetic &rhs) {
+    return rhs.convertAbstract();
+  }
 
-  friend ArithmeticPtr operator-(const IArithmetic &rhs);
+  friend inline ArithmeticPtr operator-(const IArithmetic &rhs) {
+    return rhs.negateAbstract();
+  }
 
   template <typename Lhs, typename Rhs, typename Func>
   static void addMultiAddFunction(const Func &func) {
@@ -81,42 +105,6 @@ private:
 
   static Parser::Vector<ArithmeticPtr, const std::string &> parserVector;
 };
-
-inline ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
-  if (auto res = IArithmetic::multiAdd(lhs, rhs)) {
-    return res;
-  }
-  return lhs.addAbstract(rhs);
-}
-
-inline ArithmeticPtr operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
-  if (auto res = IArithmetic::multiSub(lhs, rhs)) {
-    return res;
-  }
-  return lhs.substractAbstract(rhs);
-}
-
-inline ArithmeticPtr operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
-  if (auto res = IArithmetic::multiMul(lhs, rhs)) {
-    return res;
-  }
-  return lhs.multiplyAbstract(rhs);
-}
-
-inline ArithmeticPtr operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
-  if (auto res = IArithmetic::multiDiv(lhs, rhs)) {
-    return res;
-  }
-  return lhs.divideAbstract(rhs);
-}
-
-inline ArithmeticPtr operator+(const IArithmetic &rhs) {
-  return rhs.convertAbstract();
-}
-
-inline ArithmeticPtr operator-(const IArithmetic &rhs) {
-  return rhs.negateAbstract();
-}
 
 template <typename Derived>
 class IArithmeticCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IArithmetic {

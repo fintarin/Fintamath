@@ -29,11 +29,11 @@ public:
     return clone();
   }
 
-  friend bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
+  friend inline bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
     return lhs.equalsAbstract(rhs);
   }
 
-  friend bool operator!=(const IMathObject &lhs, const IMathObject &rhs) {
+  friend inline bool operator!=(const IMathObject &lhs, const IMathObject &rhs) {
     return !lhs.equalsAbstract(rhs);
   }
 

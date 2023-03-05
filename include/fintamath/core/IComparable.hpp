@@ -11,13 +11,21 @@ using ComparablePtr = std::unique_ptr<IComparable>;
 
 class IComparable : virtual public IArithmetic {
 public:
-  friend bool operator<(const IComparable &lhs, const IComparable &rhs);
+  friend inline bool operator<(const IComparable &lhs, const IComparable &rhs) {
+    return lhs.lessAbstract(rhs);
+  }
 
-  friend bool operator>(const IComparable &lhs, const IComparable &rhs);
+  friend inline bool operator>(const IComparable &lhs, const IComparable &rhs) {
+    return lhs.moreAbstract(rhs);
+  }
 
-  friend bool operator<=(const IComparable &lhs, const IComparable &rhs);
+  friend inline bool operator<=(const IComparable &lhs, const IComparable &rhs) {
+    return !lhs.moreAbstract(rhs);
+  }
 
-  friend bool operator>=(const IComparable &lhs, const IComparable &rhs);
+  friend inline bool operator>=(const IComparable &lhs, const IComparable &rhs) {
+    return !lhs.lessAbstract(rhs);
+  }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
   static void registerType(Parser::Function<ComparablePtr, const std::string &> &&parserFunc) {
@@ -36,22 +44,6 @@ protected:
 private:
   static Parser::Vector<ComparablePtr, const std::string &> parserVector;
 };
-
-inline bool operator<(const IComparable &lhs, const IComparable &rhs) {
-  return lhs.lessAbstract(rhs);
-}
-
-inline bool operator>(const IComparable &lhs, const IComparable &rhs) {
-  return lhs.moreAbstract(rhs);
-}
-
-inline bool operator<=(const IComparable &lhs, const IComparable &rhs) {
-  return !lhs.moreAbstract(rhs);
-}
-
-inline bool operator>=(const IComparable &lhs, const IComparable &rhs) {
-  return !lhs.lessAbstract(rhs);
-}
 
 template <typename Derived>
 class IComparableCRTP : virtual public IArithmeticCRTP<Derived>, virtual public IComparable {

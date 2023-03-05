@@ -11,13 +11,25 @@ using IncrementalPtr = std::unique_ptr<IIncremental>;
 
 class IIncremental : virtual public IArithmetic {
 public:
-  friend IIncremental &operator++(IIncremental &rhs);
+  friend inline IIncremental &operator++(IIncremental &rhs) {
+    return rhs.increaseAbstract();
+  }
 
-  friend IIncremental &operator--(IIncremental &rhs);
+  friend inline IIncremental &operator--(IIncremental &rhs) {
+    return rhs.decreaseAbstract();
+  }
 
-  friend IncrementalPtr operator++(IIncremental &lhs, int);
+  friend inline IncrementalPtr operator++(IIncremental &lhs, int) {
+    auto res = cast<IIncremental>(lhs.clone());
+    lhs.increaseAbstract();
+    return res;
+  }
 
-  friend IncrementalPtr operator--(IIncremental &lhs, int);
+  friend inline IncrementalPtr operator--(IIncremental &lhs, int) {
+    auto res = cast<IIncremental>(lhs.clone());
+    lhs.decreaseAbstract();
+    return res;
+  }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IIncremental, T>>>
   static void registerType() {
@@ -36,26 +48,6 @@ protected:
 private:
   static Parser::Vector<IncrementalPtr, const std::string &> parserVector;
 };
-
-inline IIncremental &operator++(IIncremental &rhs) {
-  return rhs.increaseAbstract();
-}
-
-inline IIncremental &operator--(IIncremental &rhs) {
-  return rhs.decreaseAbstract();
-}
-
-inline IncrementalPtr operator++(IIncremental &lhs, int) {
-  auto res = cast<IIncremental>(lhs.clone());
-  lhs.increaseAbstract();
-  return res;
-}
-
-inline IncrementalPtr operator--(IIncremental &lhs, int) {
-  auto res = cast<IIncremental>(lhs.clone());
-  lhs.decreaseAbstract();
-  return res;
-}
 
 template <typename Derived>
 class IIncrementalCRTP : virtual public IArithmeticCRTP<Derived>, virtual public IIncremental {
