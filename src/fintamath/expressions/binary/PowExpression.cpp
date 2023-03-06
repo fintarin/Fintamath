@@ -88,7 +88,7 @@ MathObjectPtr PowExpression::polynomialSimplify() {
 
   const auto *rhs = cast<Integer>(powExpr->rhsChild.get());
   if (auto *sumExpr = cast<SumExpression>(powExpr->lhsChild.get()); sumExpr && rhs) {
-    *powExpr->lhsChild.get() = *sumPolynomSimplify(*sumExpr, *rhs);
+    *sumExpr = *cast<SumExpression>(sumPolynomSimplify(*sumExpr, *rhs));
     return MathObjectPtr(powExpr->lhsChild.release());
   }
 
@@ -145,7 +145,7 @@ IMathObject *PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Int
     ArgumentsPtrVector mulExprPolynom;
     mulExprPolynom.emplace_back(std::make_unique<Integer>(split(pow, vectOfPows)));
     for (size_t j = 0; j < variableCount; j++) {
-      auto powExpr = std::make_unique<PowExpression>(polynom[j]->clone(), vectOfPows[j].clone());
+      auto *powExpr = new PowExpression(polynom[j]->clone(), vectOfPows[j].clone());
       mulExprPolynom.emplace_back(powExpr->polynomialSimplify());
     }
     MathObjectPtr mulExpr = std::make_unique<MulExpression>(std::move(mulExprPolynom));

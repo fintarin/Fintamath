@@ -10,6 +10,7 @@
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/FunctionExpression.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
+#include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -57,7 +58,7 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
   compress();
   validate();
-  *this = Expression(MathObjectPtr(simplify()));
+  info = MathObjectPtr(simplify());
 }
 
 Expression::Expression(const TokenVector &tokens) {
@@ -398,6 +399,11 @@ std::vector<MathObjectPtr> Expression::getVariables() const {
 
 IMathObject *Expression::simplify() {
   simplifyExpr(info);
+
+  if (auto *powExpr = cast<PowExpression>(info.get())) {
+    info = powExpr->polynomialSimplify();
+    return info.release();
+  }
   return info.release();
 }
 
