@@ -462,9 +462,17 @@ TEST(ExpressionTests, toStringLargeTest) {
       "e | ~(((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & "
       "~c) & ~d) & ~e) & ~f) & ~g) & ~h");
 
-  EXPECT_EQ(Expression("(x+y)^12").toString(),
-            "x^12 + y^12 + 12 x^11 y + 12 y^11 x + 220 x^3 y^9 + 220 x^9 y^3 + 495 x^4 y^8 + 495 x^8 y^4 + 66 x^10 y^2 "
-            "+ 66 x^2 y^10 + 792 x^5 y^7 + 792 x^7 y^5 + 924 x^6 y^6");
+  EXPECT_EQ(Expression("(x+y)^100").toString(), "???");
+
+  EXPECT_EQ(Expression("(x+y+z)^10").toString(), "???");
+
+  EXPECT_EQ(
+      Expression(
+          "(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+"
+          "y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)("
+          "x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)")
+          .toString(),
+      "???");
 
   EXPECT_EQ(
       Expression("sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin("
