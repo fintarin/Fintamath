@@ -56,7 +56,7 @@ public:
     if (auto *expr = cast<Derived>(elem.get())) {
       elemPolynom = std::move(expr->polynomVect);
     } else if (auto *expr = cast<Expression>(elem.get())) {
-      addElement(std::move(expr->getInfo()));
+      addElement(std::move(expr->getChild()));
       return;
     }
 

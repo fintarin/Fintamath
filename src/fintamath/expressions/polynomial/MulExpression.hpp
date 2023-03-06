@@ -40,18 +40,25 @@ private:
 
   void simplifyDivisions();
 
+  void simplifyPolynom();
+
+  static void simplifyPowCoefficients(std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+                                      ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
+
+  static void addValueToMaps(MathObjectPtr &lhs, MathObjectPtr &rhs, std::map<std::string, MathObjectPtr> &valuesMap,
+                             std::map<std::string, ArgumentsPtrVector> &powMap);
+
+  static ArgumentsPtrVector coefficientProcessing(std::map<std::string, MathObjectPtr> &valuesMap,
+                                                  std::map<std::string, ArgumentsPtrVector> &powMap);
+
   static std::string sumExprToString(const MathObjectPtr &obj);
 
-  static ArgumentsPtrVector openPowMulExpression(const ArgumentsPtrVector &powVect);
-
-  static ArgumentsPtrVector mulNumbers(const ArgumentsPtrVector &numVect);
+  static NumberPtr mulNumbers(const ArgumentsPtrVector &numVect);
 
   static void multiplicateBraces(const ArgumentsPtrVector &addVect, ArgumentsPtrVector &positive,
                                  ArgumentsPtrVector &negative);
 
   static ArgumentsPtrVector multiplicateTwoBraces(const ArgumentsPtrVector &lhs, const ArgumentsPtrVector &rhs);
-
-  void simplifyPolynom();
 
   static void simplifyPow(ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect, ArgumentsPtrVector &literalVect,
                           ArgumentsPtrVector &funcVect);

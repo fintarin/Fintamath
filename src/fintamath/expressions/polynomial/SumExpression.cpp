@@ -160,7 +160,7 @@ ArgumentsPtrVector SumExpression::sumNumbers(const ArgumentsPtrVector &numVect) 
   Expression result;
   ArgumentsPtrVector resultVector;
   for (const auto &elem : numVect) {
-    result.getInfo() = Add()(*result.getInfo(), *elem);
+    result.getChild() = Add()(*result.getChild(), *elem);
   }
   resultVector.emplace_back(result.toMinimalObject());
   return resultVector;

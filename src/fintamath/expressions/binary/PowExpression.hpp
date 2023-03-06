@@ -4,6 +4,7 @@
 #include "fintamath/expressions/IInvertable.hpp"
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
+#include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
 
@@ -17,11 +18,15 @@ public:
 
   void invert() override;
 
+  MathObjectPtr getValue();
+
+  MathObjectPtr getPow();
+
 protected:
   IMathObject *simplify() override;
 
 private:
-  static IMathObject *sumPolynomSimplify(const SumExpression &sumExpr, const Integer &pow);
+  static IMathObject *sumPolynomSimplify(const SumExpression &sumExpr, Integer pow);
 
   static Integer generateNextNumber(Integer n);
 

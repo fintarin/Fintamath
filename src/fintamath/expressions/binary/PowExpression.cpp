@@ -4,6 +4,7 @@
 #include "fintamath/expressions/unary/InvExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/meta/Converter.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 #include <memory>
@@ -125,10 +126,17 @@ std::vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integ
   return result;
 }
 
-IMathObject *PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, const Integer &pow) {
+IMathObject *PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Integer pow) {
   auto polynom = sumExpr.getPolynom();
   ArgumentsPtrVector newPolynom;
   Integer variableCount = polynom.size();
+
+  bool invert = false;
+  if (pow < ZERO) {
+    pow = abs(pow);
+    invert = true;
+  }
+
   Integer bitNumber = generateFirstNum(pow);
   for (int i = 0; i < combinations(pow + variableCount - 1, pow); i++) {
     auto vectOfPows = generateSplit(bitNumber, variableCount);
@@ -147,7 +155,20 @@ IMathObject *PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, con
 
   MathObjectPtr newSumExpr = std::make_unique<SumExpression>(std::move(newPolynom));
   simplifyExpr(newSumExpr);
+  if (invert) {
+    MathObjectPtr invertExpr = std::make_unique<InvExpression>(std::move(newSumExpr));
+    simplifyExpr(invertExpr);
+    return invertExpr.release();
+  }
   return newSumExpr.release();
+}
+
+MathObjectPtr PowExpression::getValue() {
+  return std::move(lhsChild);
+}
+
+MathObjectPtr PowExpression::getPow() {
+  return std::move(rhsChild);
 }
 
 }

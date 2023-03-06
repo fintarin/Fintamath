@@ -7,6 +7,10 @@
 
 using namespace fintamath;
 
+TEST(FintamathTest, testTest) {
+  EXPECT_EQ(Expression("(a+b)/(a+b)^2").toString(), "");
+}
+
 TEST(FintamathTests, fintamathTests) {
   Expression expr;
 

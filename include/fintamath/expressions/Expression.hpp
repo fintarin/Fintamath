@@ -38,7 +38,7 @@ public:
   std::string solve(uint8_t precision) const;
 
   // TODO: implement iterator & remove this
-  MathObjectPtr &getInfo();
+  MathObjectPtr &getChild();
 
   // TODO: implement iterator & remove this
   const MathObjectPtr &getInfo() const;

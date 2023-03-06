@@ -106,7 +106,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
   setMathObjectPrecision(info, precision);
 }
 
-MathObjectPtr &Expression::getInfo() {
+MathObjectPtr &Expression::getChild() {
   return info;
 }
 
