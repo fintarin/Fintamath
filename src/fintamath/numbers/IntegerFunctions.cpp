@@ -76,4 +76,26 @@ Integer factorial(const Integer &rhs, int64_t order) {
   return res;
 }
 
+Integer split(const Integer &n, const std::vector<Integer> &k_values) {
+  Integer checkValue;
+  for (auto &k : k_values) {
+    checkValue += k;
+  }
+  if (checkValue != n) {
+    throw UndefinedFunctionException("split", {n.toString()});
+  }
+  auto result = factorial(n);
+  for (const auto &k : k_values) {
+    result /= factorial(k);
+  }
+  return result;
+}
+
+Integer combinations(const Integer &n, const Integer &k) {
+  if (k > n) {
+    throw UndefinedFunctionException("combinations", {n.toString()});
+  }
+  return factorial(n) / (factorial(k) * factorial(n - k));
+}
+
 }

@@ -1,18 +1,11 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
-#include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
-#include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/expressions/unary/InvExpression.hpp"
-// #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/meta/Converter.hpp"
-#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
+
 #include <memory>
 
 namespace fintamath {
@@ -94,25 +87,11 @@ MathObjectPtr PowExpression::polynomialSimplify() {
 
   const auto *rhs = cast<Integer>(powExpr->rhsChild.get());
   if (auto *sumExpr = cast<SumExpression>(powExpr->lhsChild.get()); sumExpr && rhs) {
-    *powExpr->lhsChild.get() = *sumPolynomSimplify(std::move(*sumExpr), *rhs);
+    *powExpr->lhsChild.get() = *sumPolynomSimplify(*sumExpr, *rhs);
     return MathObjectPtr(powExpr->lhsChild.release());
   }
 
   return MathObjectPtr(powExpr);
-}
-
-// TODO: move to IntegerFunctions
-Integer combinations(const Integer &n, const Integer &k) {
-  return factorial(n) / (factorial(k) * factorial(n - k));
-}
-
-// TODO: move to IntegerFunctions
-Integer split(const Integer &n, const std::vector<Integer> &k_values) {
-  auto result = factorial(n);
-  for (const auto &k : k_values) {
-    result /= factorial(k);
-  }
-  return result;
 }
 
 Integer PowExpression::generateNextNumber(Integer n) {

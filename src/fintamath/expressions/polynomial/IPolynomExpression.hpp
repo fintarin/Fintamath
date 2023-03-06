@@ -70,37 +70,6 @@ public:
     }
   }
 
-  // TODO: refactor arguments
-  /*static void sortPolynom(const ArgumentsPtrVector &vect, ArgumentsPtrVector &numVect, ArgumentsPtrVector &exprVect,
-                          ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect, ArgumentsPtrVector &powVect) {
-    for (const auto &child : vect) {
-      if (is<Expression>(child)) {
-        funcVect.emplace_back(child->clone());
-        continue;
-      }
-
-      if (is<PowExpression>(child)) {
-        powVect.emplace_back(child->clone());
-        continue;
-      }
-
-      if (is<IExpression>(child) && !is<Derived>(child)) {
-        exprVect.emplace_back(child->clone());
-        continue;exprVect
-      }
-
-      if (is<INumber>(child)) {
-        numVect.emplace_back(child->clone());
-        continue;
-      }
-
-      if (is<ILiteral>(child)) {
-        literalVect.emplace_back(child->clone());
-        continue;
-      }
-    }
-  }*/
-
 protected:
   void compress() final {
     Derived compressedExpr(ArgumentsPtrVector{});
