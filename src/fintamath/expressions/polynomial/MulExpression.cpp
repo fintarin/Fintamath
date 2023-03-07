@@ -156,9 +156,11 @@ IMathObject *MulExpression::simplify() {
     simplifyExpr(obj);
   }
 
+  simplifyNegations();
+
   simplifyDivisions();
 
-  // simplifyPolynom();
+  simplifyPolynom();
 
   return this;
 }
@@ -168,10 +170,6 @@ const IFunction *MulExpression::getFunction() const {
 }
 
 void MulExpression::simplifyPolynom() {
-  ArgumentsPtrVector functions;
-  ArgumentsPtrVector variables;
-  std::map<IOperator::Priority, ArgumentsPtrVector> priorityMap;
-
   auto number = mulNumbers(polynomVect);
 
   if (*number == ZERO) {
@@ -180,7 +178,24 @@ void MulExpression::simplifyPolynom() {
     return;
   }
 
+  ArgumentsPtrVector functions;
+  ArgumentsPtrVector variables;
+  std::map<IOperator::Priority, ArgumentsPtrVector> priorityMap;
+
   sortVector(polynomVect, priorityMap, functions, variables);
+  simplifyPowCoefficients(priorityMap, functions, variables);
+}
+
+void MulExpression::simplifyNegations() {
+  ArgumentsPtrVector newPolynomVect;
+  for (auto &child : polynomVect) {
+    if (auto *negExpr = cast<NegExpression>(child.get())) {
+      newPolynomVect.emplace_back(NEG_ONE.clone());
+      child = MathObjectPtr(negExpr->getChild().release());
+    }
+    newPolynomVect.emplace_back(std::move(child));
+  }
+  polynomVect = std::move(newPolynomVect);
 }
 
 void MulExpression::addValueToMaps(MathObjectPtr &lhs, MathObjectPtr &rhs,

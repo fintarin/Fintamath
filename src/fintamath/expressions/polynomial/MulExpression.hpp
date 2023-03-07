@@ -38,6 +38,8 @@ private:
   struct ObjectPow;
   using Objects = std::vector<ObjectPow>;
 
+  void simplifyNegations();
+
   void simplifyDivisions();
 
   void simplifyPolynom();
