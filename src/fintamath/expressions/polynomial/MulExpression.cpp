@@ -158,15 +158,27 @@ IMathObject *MulExpression::simplify() {
 
   simplifyNegations();
 
+  simplifyPow();
+
   simplifyDivisions();
 
-  simplifyPolynom();
+  // simplifyPolynom();
 
   return this;
 }
 
 const IFunction *MulExpression::getFunction() const {
   return &MUL;
+}
+
+void MulExpression::simplifyPow() {
+  for (auto &child : polynomVect) {
+    if (is<PowExpression>(child)) {
+      auto *powExpr = cast<PowExpression>(child.release());
+      child = MathObjectPtr(powExpr->mulSimplify());
+    }
+  }
+  compress();
 }
 
 void MulExpression::simplifyPolynom() {
@@ -184,6 +196,12 @@ void MulExpression::simplifyPolynom() {
 
   sortVector(polynomVect, priorityMap, functions, variables);
   simplifyPowCoefficients(priorityMap, functions, variables);
+
+  // TODO: refactor
+  for (auto &powExpr : priorityMap[IOperator::Priority::Exponentiation]) {
+    auto *pow = cast<PowExpression>(powExpr.release());
+    powExpr = MathObjectPtr(pow->sumSimplify());
+  }
 }
 
 void MulExpression::simplifyNegations() {

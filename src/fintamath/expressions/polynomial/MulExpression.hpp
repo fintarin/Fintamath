@@ -40,6 +40,8 @@ private:
 
   void simplifyNegations();
 
+  void simplifyPow();
+
   void simplifyDivisions();
 
   void simplifyPolynom();

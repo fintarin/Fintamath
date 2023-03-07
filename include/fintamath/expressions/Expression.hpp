@@ -106,6 +106,8 @@ private:
 
   ArgumentsPtrVector getArgs(const TokenVector &tokens);
 
+  void callPowSimplify();
+
 private:
   MathObjectPtr info;
 

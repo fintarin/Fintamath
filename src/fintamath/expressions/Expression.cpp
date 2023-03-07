@@ -399,12 +399,17 @@ std::vector<MathObjectPtr> Expression::getVariables() const {
 
 IMathObject *Expression::simplify() {
   simplifyExpr(info);
-
-  if (auto *powExpr = cast<PowExpression>(info.get())) {
-    info = powExpr->polynomialSimplify();
-    return info.release();
-  }
+  callPowSimplify();
   return info.release();
+}
+
+void Expression::callPowSimplify() {
+  if (auto *powExpr = cast<PowExpression>(info.get())) {
+    info = MathObjectPtr(powExpr->mulSimplify());
+  }
+  if (auto *powExpr = cast<PowExpression>(info.get())) {
+    info = MathObjectPtr(powExpr->sumSimplify());
+  }
 }
 
 }

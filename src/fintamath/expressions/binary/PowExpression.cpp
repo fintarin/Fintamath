@@ -1,5 +1,6 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/unary/InvExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
@@ -74,25 +75,36 @@ void PowExpression::invert() {
   simplifyExpr(lhsChild);
 }
 
-MathObjectPtr PowExpression::polynomialSimplify() {
+IMathObject *PowExpression::mulSimplify() {
   auto *simplExpr = simplify();
   if (!is<PowExpression>(simplExpr)) {
-    return MathObjectPtr(simplExpr);
+    return simplExpr;
   }
   auto *powExpr = cast<PowExpression>(simplExpr);
 
   if (auto *mulExpr = cast<MulExpression>(powExpr->lhsChild.get())) {
     mulExpr->setPow(powExpr->rhsChild);
-    return MathObjectPtr(powExpr->lhsChild.release());
+    MathObjectPtr mulExprResult(powExpr->lhsChild.release());
+    simplifyExpr(mulExprResult);
+    return mulExprResult.release();
   }
+  return powExpr;
+}
+
+IMathObject *PowExpression::sumSimplify() {
+  auto *simplExpr = simplify();
+  if (!is<PowExpression>(simplExpr)) {
+    return simplExpr;
+  }
+  auto *powExpr = cast<PowExpression>(simplExpr);
 
   const auto *rhs = cast<Integer>(powExpr->rhsChild.get());
   if (auto *sumExpr = cast<SumExpression>(powExpr->lhsChild.get()); sumExpr && rhs) {
     *sumExpr = *cast<SumExpression>(sumPolynomSimplify(*sumExpr, *rhs));
-    return MathObjectPtr(powExpr->lhsChild.release());
+    return powExpr->lhsChild.release();
   }
 
-  return MathObjectPtr(powExpr);
+  return powExpr;
 }
 
 Integer PowExpression::generateNextNumber(Integer n) {
@@ -146,7 +158,7 @@ IMathObject *PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Int
     mulExprPolynom.emplace_back(std::make_unique<Integer>(split(pow, vectOfPows)));
     for (size_t j = 0; j < variableCount; j++) {
       auto *powExpr = new PowExpression(polynom[j]->clone(), vectOfPows[j].clone());
-      mulExprPolynom.emplace_back(powExpr->polynomialSimplify());
+      mulExprPolynom.emplace_back(powExpr->sumSimplify());
     }
     MathObjectPtr mulExpr = std::make_unique<MulExpression>(std::move(mulExprPolynom));
     simplifyExpr(mulExpr);
