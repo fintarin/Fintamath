@@ -71,8 +71,8 @@ IMathObject *PowExpression::simplify() {
 }
 
 void PowExpression::invert() {
-  lhsChild = std::make_unique<NegExpression>(std::move(lhsChild));
-  simplifyExpr(lhsChild);
+  rhsChild = std::make_unique<NegExpression>(std::move(rhsChild));
+  simplifyExpr(rhsChild);
 }
 
 IMathObject *PowExpression::mulSimplify() {
@@ -100,8 +100,7 @@ IMathObject *PowExpression::sumSimplify() {
 
   const auto *rhs = cast<Integer>(powExpr->rhsChild.get());
   if (auto *sumExpr = cast<SumExpression>(powExpr->lhsChild.get()); sumExpr && rhs) {
-    *sumExpr = *cast<SumExpression>(sumPolynomSimplify(*sumExpr, *rhs));
-    return powExpr->lhsChild.release();
+    return MathObjectPtr(sumPolynomSimplify(*sumExpr, *rhs)).release();
   }
 
   return powExpr;
@@ -158,7 +157,7 @@ IMathObject *PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Int
     mulExprPolynom.emplace_back(std::make_unique<Integer>(split(pow, vectOfPows)));
     for (size_t j = 0; j < variableCount; j++) {
       auto *powExpr = new PowExpression(polynom[j]->clone(), vectOfPows[j].clone());
-      mulExprPolynom.emplace_back(powExpr->sumSimplify());
+      mulExprPolynom.emplace_back(powExpr->polynomSimplify());
     }
     MathObjectPtr mulExpr = std::make_unique<MulExpression>(std::move(mulExprPolynom));
     simplifyExpr(mulExpr);
@@ -181,6 +180,14 @@ MathObjectPtr PowExpression::getValue() {
 
 MathObjectPtr PowExpression::getPow() {
   return std::move(rhsChild);
+}
+
+IMathObject *PowExpression::polynomSimplify() {
+  auto *result = mulSimplify();
+  if (auto *powExpr = cast<PowExpression>(result)) {
+    return powExpr->sumSimplify();
+  }
+  return result;
 }
 
 }

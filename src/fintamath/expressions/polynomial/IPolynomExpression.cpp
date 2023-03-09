@@ -17,9 +17,9 @@ IPolynomExpression &IPolynomExpression::operator=(const IPolynomExpression &rhs)
 IPolynomExpression::IPolynomExpression(ArgumentsPtrVector &&inPolynomVect) : polynomVect(std::move(inPolynomVect)) {
 }
 
-void IPolynomExpression::pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to) {
-  for (const auto &elem : from) {
-    to.emplace_back(elem->clone());
+void IPolynomExpression::pushPolynomToPolynom(ArgumentsPtrVector &&from, ArgumentsPtrVector &to) {
+  for (auto &elem : from) {
+    to.emplace_back(std::move(elem));
   }
 }
 

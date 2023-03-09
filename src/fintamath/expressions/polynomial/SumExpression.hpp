@@ -4,6 +4,7 @@
 
 #include "fintamath/expressions/INegatable.hpp"
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
+#include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
 class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatable {
@@ -23,6 +24,8 @@ public:
   MathObjectPtr getPow() const;
 
   void negate() override;
+
+  void multiplicate(const MathObjectPtr &value);
 
 protected:
   IMathObject *simplify() override;

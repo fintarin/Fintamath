@@ -162,7 +162,11 @@ IMathObject *MulExpression::simplify() {
 
   simplifyDivisions();
 
-  // simplifyPolynom();
+  simplifyPolynom();
+
+  if (polynomVect.size() == 1) {
+    return polynomVect.front().release();
+  }
 
   return this;
 }
@@ -197,10 +201,23 @@ void MulExpression::simplifyPolynom() {
   sortVector(polynomVect, priorityMap, functions, variables);
   simplifyPowCoefficients(priorityMap, functions, variables);
 
-  // TODO: refactor
-  for (auto &powExpr : priorityMap[IOperator::Priority::Exponentiation]) {
+  auto pows = std::move(priorityMap[IOperator::Priority::Exponentiation]);
+  for (auto &powExpr : pows) {
     auto *pow = cast<PowExpression>(powExpr.release());
     powExpr = MathObjectPtr(pow->sumSimplify());
+  }
+  sortVector(pows, priorityMap, functions, variables);
+
+  polynomVect.clear();
+
+  // TODO: temporary solution
+  for (auto &[key, value] : priorityMap) {
+    pushPolynomToPolynom(std::move(value), polynomVect);
+  }
+  pushPolynomToPolynom(std::move(functions), polynomVect);
+  pushPolynomToPolynom(std::move(variables), polynomVect);
+  if (polynomVect.empty() || *number != Integer(1)) {
+    polynomVect.insert(polynomVect.begin(), std::move(number));
   }
 }
 

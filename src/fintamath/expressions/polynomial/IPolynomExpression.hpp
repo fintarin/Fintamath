@@ -44,7 +44,7 @@ protected:
   static void sortVector(ArgumentsPtrVector &vector, std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
                          ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
 
-  static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
+  static void pushPolynomToPolynom(ArgumentsPtrVector &&from, ArgumentsPtrVector &to);
 };
 
 template <typename Derived>

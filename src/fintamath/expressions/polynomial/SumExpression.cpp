@@ -147,12 +147,12 @@ void SumExpression::simplifyPolynom() {
   std::sort(literalVect.begin(), literalVect.end(), sortFunc);
   std::sort(exprVect.begin(), exprVect.end(), sortFunc);
 
-  pushPolynomToPolynom(funcVect, polynomVect);
-  pushPolynomToPolynom(powVect, polynomVect);
-  pushPolynomToPolynom(exprVect, polynomVect);
-  pushPolynomToPolynom(literalVect, polynomVect);
+  pushPolynomToPolynom(std::move(funcVect), polynomVect);
+  pushPolynomToPolynom(std::move(powVect), polynomVect);
+  pushPolynomToPolynom(std::move(exprVect), polynomVect);
+  pushPolynomToPolynom(std::move(literalVect), polynomVect);
   if (numVect.front()->toString() != "0" || polynomVect.empty()) {
-    pushPolynomToPolynom(numVect, polynomVect);
+    pushPolynomToPolynom(std::move(numVect), polynomVect);
   }
 }
 
@@ -359,7 +359,13 @@ void SumExpression::negate() {
 }
 
 IMathObject *SumExpression::simplify() {
+  if (polynomVect.size() == 1) {
+    return polynomVect.front().release();
+  }
   return this;
+}
+
+void SumExpression::multiplicate(const MathObjectPtr &value) {
 }
 
 }

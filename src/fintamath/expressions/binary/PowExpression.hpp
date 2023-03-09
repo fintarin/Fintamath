@@ -14,6 +14,8 @@ public:
 
   MathObjectPtr simplify(bool isPrecise) const override;
 
+  IMathObject *polynomSimplify();
+
   IMathObject *sumSimplify();
 
   IMathObject *mulSimplify();

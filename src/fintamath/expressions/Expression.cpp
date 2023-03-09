@@ -406,11 +406,7 @@ IMathObject *Expression::simplify() {
 void Expression::callPowSimplify() {
   if (is<PowExpression>(info)) {
     auto *powExpr = cast<PowExpression>(info.release());
-    info = MathObjectPtr(powExpr->mulSimplify());
-  }
-  if (is<PowExpression>(info)) {
-    auto *powExpr = cast<PowExpression>(info.release());
-    info = MathObjectPtr(powExpr->sumSimplify());
+    info = MathObjectPtr(powExpr->polynomSimplify());
   }
 }
 
