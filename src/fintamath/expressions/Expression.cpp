@@ -404,10 +404,12 @@ IMathObject *Expression::simplify() {
 }
 
 void Expression::callPowSimplify() {
-  if (auto *powExpr = cast<PowExpression>(info.get())) {
+  if (is<PowExpression>(info)) {
+    auto *powExpr = cast<PowExpression>(info.release());
     info = MathObjectPtr(powExpr->mulSimplify());
   }
-  if (auto *powExpr = cast<PowExpression>(info.get())) {
+  if (is<PowExpression>(info)) {
+    auto *powExpr = cast<PowExpression>(info.release());
     info = MathObjectPtr(powExpr->sumSimplify());
   }
 }
