@@ -34,7 +34,7 @@
 
 namespace fintamath {
 
-Parser::Map<ExpressionPtr, ArgumentsPtrVector &&> Expression::expressionBuildersMap;
+Parser::Map<std::unique_ptr<IExpression>, ArgumentsPtrVector &&> Expression::expressionBuildersMap;
 
 }
 
@@ -135,24 +135,27 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Impl>([](ArgumentsPtrVector &&args) {
-      MathObjectPtr &lhs = args.front();
-      MathObjectPtr &rhs = args.back();
+      std::unique_ptr<IMathObject> &lhs = args.front();
+      std::unique_ptr<IMathObject> &rhs = args.back();
 
-      MathObjectPtr notLhs = Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(std::move(lhs)));
+      std::unique_ptr<IMathObject> notLhs =
+          Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(std::move(lhs)));
 
       return Expression::makeRawFunctionExpression(Or(), makeArgumentsPtrVector(std::move(notLhs), std::move(rhs)));
     });
 
     Expression::registerFunctionExpressionMaker<Equiv>([](ArgumentsPtrVector &&args) {
-      MathObjectPtr &lhs = args.front();
-      MathObjectPtr &rhs = args.back();
+      std::unique_ptr<IMathObject> &lhs = args.front();
+      std::unique_ptr<IMathObject> &rhs = args.back();
 
-      MathObjectPtr notLhs = Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(lhs->clone()));
-      MathObjectPtr notRhs = Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(rhs->clone()));
+      std::unique_ptr<IMathObject> notLhs =
+          Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(lhs->clone()));
+      std::unique_ptr<IMathObject> notRhs =
+          Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(rhs->clone()));
 
-      MathObjectPtr lhsAndRhs =
+      std::unique_ptr<IMathObject> lhsAndRhs =
           Expression::makeRawFunctionExpression(And(), makeArgumentsPtrVector(std::move(lhs), std::move(rhs)));
-      MathObjectPtr notLhsAndNotRhs =
+      std::unique_ptr<IMathObject> notLhsAndNotRhs =
           Expression::makeRawFunctionExpression(And(), makeArgumentsPtrVector(std::move(notLhs), std::move(notRhs)));
 
       return Expression::makeRawFunctionExpression(
@@ -160,15 +163,17 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Nequiv>([](ArgumentsPtrVector &&args) {
-      MathObjectPtr &lhs = args.front();
-      MathObjectPtr &rhs = args.back();
+      std::unique_ptr<IMathObject> &lhs = args.front();
+      std::unique_ptr<IMathObject> &rhs = args.back();
 
-      MathObjectPtr notLhs = Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(lhs->clone()));
-      MathObjectPtr notRhs = Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(rhs->clone()));
+      std::unique_ptr<IMathObject> notLhs =
+          Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(lhs->clone()));
+      std::unique_ptr<IMathObject> notRhs =
+          Expression::makeRawFunctionExpression(Not(), makeArgumentsPtrVector(rhs->clone()));
 
-      MathObjectPtr notLhsAndRhs =
+      std::unique_ptr<IMathObject> notLhsAndRhs =
           Expression::makeRawFunctionExpression(And(), makeArgumentsPtrVector(std::move(notLhs), std::move(rhs)));
-      MathObjectPtr lhsAndNotRhs =
+      std::unique_ptr<IMathObject> lhsAndNotRhs =
           Expression::makeRawFunctionExpression(And(), makeArgumentsPtrVector(std::move(lhs), std::move(notRhs)));
 
       return Expression::makeRawFunctionExpression(

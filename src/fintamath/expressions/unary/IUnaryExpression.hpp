@@ -17,13 +17,13 @@ public:
 
   IUnaryExpression &operator=(IUnaryExpression &&rhs) noexcept = default;
 
-  explicit IUnaryExpression(MathObjectPtr &&rhs);
+  explicit IUnaryExpression(std::unique_ptr<IMathObject> &&rhs);
 
   void setPrecision(uint8_t precision) final;
 
   std::string toString() const final;
 
-  MathObjectPtr getChild() const;
+  std::unique_ptr<IMathObject> getChild() const;
 
   // TODO: remove this
   void validate() const final;
@@ -40,9 +40,9 @@ private:
   std::string functionToString(const IFunction &oper) const;
 
 protected:
-  FunctionPtr function;
+  std::unique_ptr<IFunction> function;
 
-  MathObjectPtr child;
+  std::unique_ptr<IMathObject> child;
 };
 
 template <typename Derived>

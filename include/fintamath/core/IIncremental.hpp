@@ -6,9 +6,6 @@
 
 namespace fintamath {
 
-class IIncremental;
-using IncrementalPtr = std::unique_ptr<IIncremental>;
-
 class IIncremental : virtual public IArithmetic {
 public:
   friend inline IIncremental &operator++(IIncremental &rhs) {
@@ -19,13 +16,13 @@ public:
     return rhs.decreaseAbstract();
   }
 
-  friend inline IncrementalPtr operator++(IIncremental &lhs, int) {
+  friend inline std::unique_ptr<IIncremental> operator++(IIncremental &lhs, int) {
     auto res = cast<IIncremental>(lhs.clone());
     lhs.increaseAbstract();
     return res;
   }
 
-  friend inline IncrementalPtr operator--(IIncremental &lhs, int) {
+  friend inline std::unique_ptr<IIncremental> operator--(IIncremental &lhs, int) {
     auto res = cast<IIncremental>(lhs.clone());
     lhs.decreaseAbstract();
     return res;
@@ -36,7 +33,7 @@ public:
     Parser::registerType<T>(parserVector);
   }
 
-  static IncrementalPtr parse(const std::string &str) {
+  static std::unique_ptr<IIncremental> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -46,7 +43,7 @@ protected:
   virtual IIncremental &decreaseAbstract() = 0;
 
 private:
-  static Parser::Vector<IncrementalPtr, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> parserVector;
 };
 
 template <typename Derived>

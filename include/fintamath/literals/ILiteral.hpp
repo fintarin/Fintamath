@@ -5,9 +5,6 @@
 
 namespace fintamath {
 
-class ILiteral;
-using LiteralPtr = std::unique_ptr<ILiteral>;
-
 class ILiteral : virtual public IMathObject {
 public:
   ~ILiteral() override = default;
@@ -18,16 +15,16 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
-  static void registerType(Parser::Function<LiteralPtr, const std::string &> &&parserFunc) {
+  static void registerType(Parser::Function<std::unique_ptr<ILiteral>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
-  static LiteralPtr parse(const std::string &str) {
+  static std::unique_ptr<ILiteral> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
 private:
-  static Parser::Vector<LiteralPtr, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> parserVector;
 };
 
 template <typename Derived>

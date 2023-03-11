@@ -7,7 +7,6 @@
 namespace fintamath {
 
 class IMathObject;
-using MathObjectPtr = std::unique_ptr<IMathObject>;
 
 template <typename To, typename = std::enable_if_t<std::is_base_of_v<IMathObject, To>>>
 To *cast(IMathObject *from) {
@@ -45,7 +44,7 @@ std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
   return std::unique_ptr<To>();
 }
 
-inline MathObjectPtr convert(const IMathObject &from, const IMathObject &to) {
+inline std::unique_ptr<IMathObject> convert(const IMathObject &from, const IMathObject &to) {
   return Converter::convert(from, to);
 }
 

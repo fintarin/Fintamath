@@ -5,9 +5,6 @@
 
 namespace fintamath {
 
-class IOperator;
-using OperatorPtr = std::unique_ptr<IOperator>;
-
 class IOperator : virtual public IFunction {
 
 public:
@@ -36,15 +33,16 @@ public:
     Parser::registerType<T>(parserMap);
   }
 
-  static OperatorPtr parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
-    Parser::Comparator<const OperatorPtr &> comp = [priority](const OperatorPtr &oper) {
+  static std::unique_ptr<IOperator> parse(const std::string &parsedStr,
+                                          IOperator::Priority priority = IOperator::Priority::Any) {
+    Parser::Comparator<const std::unique_ptr<IOperator> &> comp = [priority](const std::unique_ptr<IOperator> &oper) {
       return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
     };
-    return Parser::parse<OperatorPtr>(parserMap, comp, parsedStr);
+    return Parser::parse<std::unique_ptr<IOperator>>(parserMap, comp, parsedStr);
   }
 
 private:
-  static Parser::Map<OperatorPtr> parserMap;
+  static Parser::Map<std::unique_ptr<IOperator>> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>

@@ -18,7 +18,7 @@ public:
 
   std::string toString() const override;
 
-  MathObjectPtr toMinimalObject() const override;
+  std::unique_ptr<IMathObject> toMinimalObject() const override;
 
   int sign() const;
 

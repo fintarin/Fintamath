@@ -16,7 +16,7 @@ public:
 
   IBinaryExpression &operator=(IBinaryExpression &&rhs) noexcept = default;
 
-  explicit IBinaryExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
+  explicit IBinaryExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs);
 
   void setPrecision(uint8_t precision) final;
 
@@ -28,11 +28,11 @@ public:
   void validate() const final;
 
 protected:
-  FunctionPtr function;
+  std::unique_ptr<IFunction> function;
 
-  MathObjectPtr lhsChild;
+  std::unique_ptr<IMathObject> lhsChild;
 
-  MathObjectPtr rhsChild;
+  std::unique_ptr<IMathObject> rhsChild;
 };
 
 template <typename Derived>

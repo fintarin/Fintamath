@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Sqrt::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Sqrt::call(const ArgumentsVector &argsVect) const {
   return sqrt(convert<Real>(argsVect.front())).toMinimalObject();
 }
 

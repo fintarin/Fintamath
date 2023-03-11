@@ -9,9 +9,9 @@
 using namespace fintamath;
 
 TEST(MathObjectTests, cloneTest) {
-  MathObjectPtr m1 = std::make_unique<Integer>();
-  MathObjectPtr m2 = std::make_unique<Integer>(1);
-  MathObjectPtr m3 = m1->clone();
+  std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>();
+  std::unique_ptr<IMathObject> m2 = std::make_unique<Integer>(1);
+  std::unique_ptr<IMathObject> m3 = m1->clone();
 
   EXPECT_EQ(*m3, *m1);
 
@@ -21,9 +21,9 @@ TEST(MathObjectTests, cloneTest) {
 }
 
 TEST(MathObjectTests, equalsTest) {
-  MathObjectPtr m1 = std::make_unique<Integer>(1);
-  MathObjectPtr m2 = std::make_unique<Rational>(1);
-  MathObjectPtr m3 = std::make_unique<Rational>(1, 2);
+  std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IMathObject> m2 = std::make_unique<Rational>(1);
+  std::unique_ptr<IMathObject> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_TRUE(*m1 == *m1);
   EXPECT_TRUE(*m2 == *m2);
@@ -46,9 +46,9 @@ TEST(MathObjectTests, equalsTest) {
 }
 
 TEST(MathObjectTests, nequalsTest) {
-  MathObjectPtr m1 = std::make_unique<Integer>(1);
-  MathObjectPtr m2 = std::make_unique<Rational>(1);
-  MathObjectPtr m3 = std::make_unique<Rational>(1, 2);
+  std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IMathObject> m2 = std::make_unique<Rational>(1);
+  std::unique_ptr<IMathObject> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_FALSE(*m1 != *m1);
   EXPECT_FALSE(*m2 != *m2);
@@ -71,7 +71,7 @@ TEST(MathObjectTests, nequalsTest) {
 }
 
 TEST(MathObjectTests, outputTest) {
-  MathObjectPtr m1 = std::make_unique<Integer>(123);
+  std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>(123);
   std::stringstream out;
   out << *m1;
   EXPECT_EQ(out.str(), "123");

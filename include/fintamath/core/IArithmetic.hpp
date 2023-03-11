@@ -6,44 +6,41 @@
 
 namespace fintamath {
 
-class IArithmetic;
-using ArithmeticPtr = std::unique_ptr<IArithmetic>;
-
 class IArithmetic : virtual public IMathObject {
 public:
-  friend inline ArithmeticPtr operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
+  friend inline std::unique_ptr<IArithmetic> operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
     if (auto res = IArithmetic::multiAdd(lhs, rhs)) {
       return res;
     }
     return lhs.addAbstract(rhs);
   }
 
-  friend inline ArithmeticPtr operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
+  friend inline std::unique_ptr<IArithmetic> operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
     if (auto res = IArithmetic::multiSub(lhs, rhs)) {
       return res;
     }
     return lhs.substractAbstract(rhs);
   }
 
-  friend inline ArithmeticPtr operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
+  friend inline std::unique_ptr<IArithmetic> operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
     if (auto res = IArithmetic::multiMul(lhs, rhs)) {
       return res;
     }
     return lhs.multiplyAbstract(rhs);
   }
 
-  friend inline ArithmeticPtr operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
+  friend inline std::unique_ptr<IArithmetic> operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
     if (auto res = IArithmetic::multiDiv(lhs, rhs)) {
       return res;
     }
     return lhs.divideAbstract(rhs);
   }
 
-  friend inline ArithmeticPtr operator+(const IArithmetic &rhs) {
+  friend inline std::unique_ptr<IArithmetic> operator+(const IArithmetic &rhs) {
     return rhs.convertAbstract();
   }
 
-  friend inline ArithmeticPtr operator-(const IArithmetic &rhs) {
+  friend inline std::unique_ptr<IArithmetic> operator-(const IArithmetic &rhs) {
     return rhs.negateAbstract();
   }
 
@@ -73,37 +70,37 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
-  static void registerType(Parser::Function<ArithmeticPtr, const std::string &> &&parserFunc) {
+  static void registerType(Parser::Function<std::unique_ptr<IArithmetic>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
-  static ArithmeticPtr parse(const std::string &str) {
+  static std::unique_ptr<IArithmetic> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
 protected:
-  virtual ArithmeticPtr addAbstract(const IArithmetic &rhs) const = 0;
+  virtual std::unique_ptr<IArithmetic> addAbstract(const IArithmetic &rhs) const = 0;
 
-  virtual ArithmeticPtr substractAbstract(const IArithmetic &rhs) const = 0;
+  virtual std::unique_ptr<IArithmetic> substractAbstract(const IArithmetic &rhs) const = 0;
 
-  virtual ArithmeticPtr multiplyAbstract(const IArithmetic &rhs) const = 0;
+  virtual std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &rhs) const = 0;
 
-  virtual ArithmeticPtr divideAbstract(const IArithmetic &rhs) const = 0;
+  virtual std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &rhs) const = 0;
 
-  virtual ArithmeticPtr convertAbstract() const = 0;
+  virtual std::unique_ptr<IArithmetic> convertAbstract() const = 0;
 
-  virtual ArithmeticPtr negateAbstract() const = 0;
+  virtual std::unique_ptr<IArithmetic> negateAbstract() const = 0;
 
 private:
-  static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiAdd;
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiAdd;
 
-  static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiSub;
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiSub;
 
-  static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiMul;
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiMul;
 
-  static MultiMethod<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> multiDiv;
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiDiv;
 
-  static Parser::Vector<ArithmeticPtr, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> parserVector;
 };
 
 template <typename Derived>
@@ -161,7 +158,7 @@ protected:
 
   virtual Derived &negate() = 0;
 
-  ArithmeticPtr addAbstract(const IArithmetic &rhs) const final {
+  std::unique_ptr<IArithmetic> addAbstract(const IArithmetic &rhs) const final {
     return executeAbstract(
         rhs, "+",
         [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
@@ -172,7 +169,7 @@ protected:
         });
   }
 
-  ArithmeticPtr substractAbstract(const IArithmetic &rhs) const final {
+  std::unique_ptr<IArithmetic> substractAbstract(const IArithmetic &rhs) const final {
     return executeAbstract(
         rhs, "-",
         [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
@@ -183,7 +180,7 @@ protected:
         });
   }
 
-  ArithmeticPtr multiplyAbstract(const IArithmetic &rhs) const final {
+  std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &rhs) const final {
     return executeAbstract(
         rhs, "*",
         [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
@@ -194,7 +191,7 @@ protected:
         });
   }
 
-  ArithmeticPtr divideAbstract(const IArithmetic &rhs) const final {
+  std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &rhs) const final {
     return executeAbstract(
         rhs, "/",
         [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
@@ -205,27 +202,28 @@ protected:
         });
   }
 
-  ArithmeticPtr convertAbstract() const final {
+  std::unique_ptr<IArithmetic> convertAbstract() const final {
     return std::make_unique<Derived>(+(*this));
   }
 
-  ArithmeticPtr negateAbstract() const final {
+  std::unique_ptr<IArithmetic> negateAbstract() const final {
     return std::make_unique<Derived>(-(*this));
   }
 
 private:
-  ArithmeticPtr executeAbstract(const IArithmetic &rhs, const std::string &oper,
-                                std::function<Derived(IArithmeticCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
-                                std::function<ArithmeticPtr(const IArithmetic &, const IArithmetic &)> &&f2) const {
+  std::unique_ptr<IArithmetic>
+  executeAbstract(const IArithmetic &rhs, const std::string &oper,
+                  std::function<Derived(IArithmeticCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
+                  std::function<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &&f2) const {
     if (const auto *rhpPtr = cast<Derived>(&rhs)) {
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
       return cast<IArithmetic>(f1(*lhsPtr, *rhpPtr).toMinimalObject());
     }
-    if (MathObjectPtr rhsPtr = convert(rhs, *this)) {
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(rhs, *this)) {
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
       return cast<IArithmetic>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
     }
-    if (MathObjectPtr lhsPtr = convert(*this, rhs)) {
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(*this, rhs)) {
       return cast<IArithmetic>(f2(cast<IArithmetic>(*lhsPtr), rhs)->toMinimalObject());
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());

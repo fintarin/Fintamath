@@ -9,9 +9,9 @@ namespace fintamath {
 
 class IndexExpression : public IBinaryExpressionCRTP<IndexExpression> {
 public:
-  explicit IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
+  explicit IndexExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs);
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
 protected:
   IMathObject *simplify() override;

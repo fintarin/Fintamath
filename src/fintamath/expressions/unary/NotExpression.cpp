@@ -9,11 +9,11 @@ namespace fintamath {
 
 const Not NOT;
 
-NotExpression::NotExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
+NotExpression::NotExpression(std::unique_ptr<IMathObject> &&rhs) : IUnaryExpression(std::move(rhs)) {
   function = cast<IFunction>(NOT.clone());
 }
 
-MathObjectPtr NotExpression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<NotExpression>(*this);
   exprObj->simplifyValue(isPrecise);
 

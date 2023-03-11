@@ -9,11 +9,11 @@ namespace fintamath {
 
 const Inv INV;
 
-InvExpression::InvExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
+InvExpression::InvExpression(std::unique_ptr<IMathObject> &&rhs) : IUnaryExpression(std::move(rhs)) {
   function = cast<IFunction>(INV.clone());
 }
 
-MathObjectPtr InvExpression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<InvExpression>(*this);
   exprObj->simplifyValue(isPrecise);
 

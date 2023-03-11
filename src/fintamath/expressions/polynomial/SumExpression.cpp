@@ -33,10 +33,10 @@ namespace fintamath {
 const Add ADD;
 
 struct SumExpression::MulObject {
-  MathObjectPtr obj;
+  std::unique_ptr<IMathObject> obj;
   SumExpression counter;
 
-  MulObject(const MathObjectPtr &obj) : obj(obj->clone()) {
+  MulObject(const std::unique_ptr<IMathObject> &obj) : obj(obj->clone()) {
   }
 
   MulObject(const MulObject &objMul) : obj(objMul.obj->clone()), counter(objMul.counter) {
@@ -48,7 +48,7 @@ struct SumExpression::MulObject {
     counter.addElement(std::move(counterSimpl));
   }
 
-  MathObjectPtr getCounterValue() const {
+  std::unique_ptr<IMathObject> getCounterValue() const {
     auto polynom = counter.getPolynom();
     auto countValue = polynom.front()->clone();
     return is<NegExpression>(polynom.front()) ? Neg()(*countValue) : std::move(countValue);
@@ -82,7 +82,7 @@ std::string SumExpression::toString() const {
   return result;
 }
 
-MathObjectPtr SumExpression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> SumExpression::simplify(bool isPrecise) const {
   SumExpression exprObj = *this;
   exprObj.compress();
 
@@ -115,7 +115,7 @@ const IFunction *SumExpression::getFunction() const {
   return &ADD;
 }
 
-bool SumExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
+bool SumExpression::sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs) {
   if (is<IConstant>(lhs)) {
     return false;
   }
@@ -203,7 +203,7 @@ void SumExpression::simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector 
     if (mulExprPolynom.empty()) {
       added = true;
     }
-    MathObjectPtr number = ONE.clone();
+    std::unique_ptr<IMathObject> number = ONE.clone();
     if (is<INumber>(mulExprPolynom.front())) {
       if (mulExprPolynom.front().inverted) {
         number = Neg()(*mulExprPolynom.front());
@@ -287,7 +287,7 @@ void SumExpression::simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector 
 }
 
 // TODO: remove this and implement PowExpression
-MathObjectPtr SumExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
+std::unique_ptr<IMathObject> SumExpression::getPowCoefficient(const std::unique_ptr<IMathObject> &powValue) const {
   /*if (*powValue == ZERO) {
     for (const auto &child : polynomVect) {
       if (is<INumber>(child.info)) {
@@ -322,7 +322,7 @@ MathObjectPtr SumExpression::getPowCoefficient(const MathObjectPtr &powValue) co
 }
 
 // TODO: remove this and implement PowExpression
-MathObjectPtr SumExpression::getPow() const {
+std::unique_ptr<IMathObject> SumExpression::getPow() const {
   /*auto maxValue = ZERO;
 
   for (const auto &child : polynomVect) {
@@ -365,7 +365,7 @@ IMathObject *SumExpression::simplify() {
   return this;
 }
 
-void SumExpression::multiplicate(const MathObjectPtr &value) {
+void SumExpression::multiplicate(const std::unique_ptr<IMathObject> &value) {
 }
 
 }

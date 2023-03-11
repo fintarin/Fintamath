@@ -36,9 +36,9 @@ protected:
 }
 
 TEST(ArithmeticTests, addTest) {
-  ArithmeticPtr m1 = std::make_unique<Integer>(1);
-  ArithmeticPtr m2 = std::make_unique<Rational>(2);
-  ArithmeticPtr m3 = std::make_unique<Rational>(1, 2);
+  std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IArithmetic> m2 = std::make_unique<Rational>(2);
+  std::unique_ptr<IArithmetic> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_EQ((*m1 + *m1)->toString(), "2");
   EXPECT_EQ((*m2 + *m2)->toString(), "4");
@@ -72,9 +72,9 @@ TEST(ArithmeticTests, addTest) {
 }
 
 TEST(ArithmeticTests, subTest) {
-  ArithmeticPtr m1 = std::make_unique<Integer>(1);
-  ArithmeticPtr m2 = std::make_unique<Rational>(2);
-  ArithmeticPtr m3 = std::make_unique<Rational>(1, 2);
+  std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IArithmetic> m2 = std::make_unique<Rational>(2);
+  std::unique_ptr<IArithmetic> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_EQ((*m1 - *m1)->toString(), "0");
   EXPECT_EQ((*m2 - *m2)->toString(), "0");
@@ -108,9 +108,9 @@ TEST(ArithmeticTests, subTest) {
 }
 
 TEST(ArithmeticTests, mulTest) {
-  ArithmeticPtr m1 = std::make_unique<Integer>(1);
-  ArithmeticPtr m2 = std::make_unique<Rational>(2);
-  ArithmeticPtr m3 = std::make_unique<Rational>(1, 2);
+  std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IArithmetic> m2 = std::make_unique<Rational>(2);
+  std::unique_ptr<IArithmetic> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_EQ((*m1 * *m1)->toString(), "1");
   EXPECT_EQ((*m2 * *m2)->toString(), "4");
@@ -144,9 +144,9 @@ TEST(ArithmeticTests, mulTest) {
 }
 
 TEST(ArithmeticTests, divTest) {
-  ArithmeticPtr m1 = std::make_unique<Integer>(1);
-  ArithmeticPtr m2 = std::make_unique<Rational>(2);
-  ArithmeticPtr m3 = std::make_unique<Rational>(1, 2);
+  std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IArithmetic> m2 = std::make_unique<Rational>(2);
+  std::unique_ptr<IArithmetic> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_EQ((*m1 / *m1)->toString(), "1");
   EXPECT_EQ((*m2 / *m2)->toString(), "1");
@@ -180,14 +180,14 @@ TEST(ArithmeticTests, divTest) {
 }
 
 TEST(ArithmeticTests, convertTest) {
-  ArithmeticPtr m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((+*m1)->toString(), "1");
 
   EXPECT_EQ((+Integer(1)).toString(), "1");
 }
 
 TEST(ArithmeticTests, negateTest) {
-  ArithmeticPtr m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((-*m1)->toString(), "-1");
 
   EXPECT_EQ((-Integer(1)).toString(), "-1");

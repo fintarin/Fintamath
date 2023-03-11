@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Exp::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Exp::call(const ArgumentsVector &argsVect) const {
   return exp(convert<Real>(argsVect.front())).toMinimalObject();
 }
 

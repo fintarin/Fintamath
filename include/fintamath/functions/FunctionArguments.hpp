@@ -5,7 +5,7 @@
 namespace fintamath {
 
 using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;
-using ArgumentsPtrVector = std::vector<MathObjectPtr>;
+using ArgumentsPtrVector = std::vector<std::unique_ptr<IMathObject>>;
 using ArgumentsTypesVector = std::vector<std::reference_wrapper<const std::type_info>>;
 
 template <typename... Args,

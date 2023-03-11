@@ -35,7 +35,7 @@ std::string FunctionExpression::toString() const {
     case IOperator::Priority::PostfixUnary:
       return postfixUnaryOperatorToString(*oper, args.front());
     default:
-      std::vector<MathObjectPtr> values;
+      std::vector<std::unique_ptr<IMathObject>> values;
       values.emplace_back(args.front()->clone());
       values.emplace_back(args.back()->clone());
       return binaryOperatorToString(*oper, values);
@@ -69,7 +69,7 @@ void FunctionExpression::setPrecision(uint8_t precision) {
   }
 }
 
-MathObjectPtr FunctionExpression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const {
   const auto &func = cast<IFunction>(*function.get());
 
   ArgumentsVector arguments;

@@ -7,36 +7,33 @@
 
 namespace fintamath {
 
-class IIntegral;
-using IntegralPtr = std::unique_ptr<IIntegral>;
-
 class IIntegral : virtual public IArithmetic {
 public:
-  friend inline IntegralPtr operator%(const IIntegral &lhs, const IIntegral &rhs) {
+  friend inline std::unique_ptr<IIntegral> operator%(const IIntegral &lhs, const IIntegral &rhs) {
     return lhs.modAbstract(rhs);
   }
 
-  friend inline IntegralPtr operator&(const IIntegral &lhs, const IIntegral &rhs) {
+  friend inline std::unique_ptr<IIntegral> operator&(const IIntegral &lhs, const IIntegral &rhs) {
     return lhs.bitAndAbstract(rhs);
   }
 
-  friend inline IntegralPtr operator|(const IIntegral &lhs, const IIntegral &rhs) {
+  friend inline std::unique_ptr<IIntegral> operator|(const IIntegral &lhs, const IIntegral &rhs) {
     return lhs.bitOrAbstract(rhs);
   }
 
-  friend inline IntegralPtr operator^(const IIntegral &lhs, const IIntegral &rhs) {
+  friend inline std::unique_ptr<IIntegral> operator^(const IIntegral &lhs, const IIntegral &rhs) {
     return lhs.bitXorAbstract(rhs);
   }
 
-  friend inline IntegralPtr operator<<(const IIntegral &lhs, const IIntegral &rhs) {
+  friend inline std::unique_ptr<IIntegral> operator<<(const IIntegral &lhs, const IIntegral &rhs) {
     return lhs.bitLeftShiftAbstract(rhs);
   }
 
-  friend inline IntegralPtr operator>>(const IIntegral &lhs, const IIntegral &rhs) {
+  friend inline std::unique_ptr<IIntegral> operator>>(const IIntegral &lhs, const IIntegral &rhs) {
     return lhs.bitRightShiftAbstract(rhs);
   }
 
-  friend inline IntegralPtr operator~(const IIntegral &rhs) {
+  friend inline std::unique_ptr<IIntegral> operator~(const IIntegral &rhs) {
     return rhs.bitNotAbstract();
   }
 
@@ -45,27 +42,27 @@ public:
     Parser::registerType<T>(parserVector);
   }
 
-  static IntegralPtr parse(const std::string &str) {
+  static std::unique_ptr<IIntegral> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
 protected:
-  virtual IntegralPtr modAbstract(const IIntegral &rhs) const = 0;
+  virtual std::unique_ptr<IIntegral> modAbstract(const IIntegral &rhs) const = 0;
 
-  virtual IntegralPtr bitAndAbstract(const IIntegral &rhs) const = 0;
+  virtual std::unique_ptr<IIntegral> bitAndAbstract(const IIntegral &rhs) const = 0;
 
-  virtual IntegralPtr bitOrAbstract(const IIntegral &rhs) const = 0;
+  virtual std::unique_ptr<IIntegral> bitOrAbstract(const IIntegral &rhs) const = 0;
 
-  virtual IntegralPtr bitXorAbstract(const IIntegral &rhs) const = 0;
+  virtual std::unique_ptr<IIntegral> bitXorAbstract(const IIntegral &rhs) const = 0;
 
-  virtual IntegralPtr bitLeftShiftAbstract(const IIntegral &rhs) const = 0;
+  virtual std::unique_ptr<IIntegral> bitLeftShiftAbstract(const IIntegral &rhs) const = 0;
 
-  virtual IntegralPtr bitRightShiftAbstract(const IIntegral &rhs) const = 0;
+  virtual std::unique_ptr<IIntegral> bitRightShiftAbstract(const IIntegral &rhs) const = 0;
 
-  virtual IntegralPtr bitNotAbstract() const = 0;
+  virtual std::unique_ptr<IIntegral> bitNotAbstract() const = 0;
 
 private:
-  static Parser::Vector<IntegralPtr, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> parserVector;
 };
 
 template <typename Derived>
@@ -139,7 +136,7 @@ protected:
 
   virtual Derived &bitNot() = 0;
 
-  IntegralPtr modAbstract(const IIntegral &rhs) const final {
+  std::unique_ptr<IIntegral> modAbstract(const IIntegral &rhs) const final {
     return executeAbstract(
         rhs, "%",
         [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
@@ -150,7 +147,7 @@ protected:
         });
   }
 
-  IntegralPtr bitAndAbstract(const IIntegral &rhs) const override {
+  std::unique_ptr<IIntegral> bitAndAbstract(const IIntegral &rhs) const override {
     return executeAbstract(
         rhs, "&",
         [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
@@ -161,7 +158,7 @@ protected:
         });
   }
 
-  IntegralPtr bitOrAbstract(const IIntegral &rhs) const override {
+  std::unique_ptr<IIntegral> bitOrAbstract(const IIntegral &rhs) const override {
     return executeAbstract(
         rhs, "|",
         [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
@@ -172,7 +169,7 @@ protected:
         });
   }
 
-  IntegralPtr bitXorAbstract(const IIntegral &rhs) const override {
+  std::unique_ptr<IIntegral> bitXorAbstract(const IIntegral &rhs) const override {
     return executeAbstract(
         rhs, "^",
         [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
@@ -183,7 +180,7 @@ protected:
         });
   }
 
-  IntegralPtr bitLeftShiftAbstract(const IIntegral &rhs) const override {
+  std::unique_ptr<IIntegral> bitLeftShiftAbstract(const IIntegral &rhs) const override {
     return executeAbstract(
         rhs, "<<",
         [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
@@ -194,7 +191,7 @@ protected:
         });
   }
 
-  IntegralPtr bitRightShiftAbstract(const IIntegral &rhs) const override {
+  std::unique_ptr<IIntegral> bitRightShiftAbstract(const IIntegral &rhs) const override {
     return executeAbstract(
         rhs, ">>",
         [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
@@ -205,23 +202,24 @@ protected:
         });
   }
 
-  IntegralPtr bitNotAbstract() const final {
+  std::unique_ptr<IIntegral> bitNotAbstract() const final {
     return std::make_unique<Derived>(~(*this));
   }
 
 private:
-  IntegralPtr executeAbstract(const IIntegral &rhs, const std::string &oper,
-                              std::function<Derived(IIntegralCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
-                              std::function<IntegralPtr(const IIntegral &, const IIntegral &)> &&f2) const {
+  std::unique_ptr<IIntegral>
+  executeAbstract(const IIntegral &rhs, const std::string &oper,
+                  std::function<Derived(IIntegralCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
+                  std::function<std::unique_ptr<IIntegral>(const IIntegral &, const IIntegral &)> &&f2) const {
     if (const auto *rhpPtr = cast<Derived>(&rhs)) {
       auto lhsPtr = cast<IIntegralCRTP<Derived>>(clone());
       return cast<IIntegral>(f1(*lhsPtr, *rhpPtr).toMinimalObject());
     }
-    if (MathObjectPtr rhsPtr = convert(rhs, *this)) {
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(rhs, *this)) {
       auto lhsPtr = cast<IIntegralCRTP<Derived>>(clone());
       return cast<IIntegral>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
     }
-    if (MathObjectPtr lhsPtr = convert(*this, rhs)) {
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(*this, rhs)) {
       return cast<IIntegral>(f2(cast<IIntegral>(*lhsPtr), rhs)->toMinimalObject());
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());

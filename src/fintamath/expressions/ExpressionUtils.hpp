@@ -44,8 +44,8 @@ inline TokenVector cutBraces(const TokenVector &tokens) {
   return newTokens;
 }
 
-inline std::map<size_t, MathObjectPtr> findBinaryOperators(const TokenVector &tokens) {
-  std::map<size_t, MathObjectPtr> operators;
+inline std::map<size_t, std::unique_ptr<IMathObject>> findBinaryOperators(const TokenVector &tokens) {
+  std::map<size_t, std::unique_ptr<IMathObject>> operators;
 
   bool isPrevTokenOper = false;
 

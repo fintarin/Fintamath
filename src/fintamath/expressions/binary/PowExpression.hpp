@@ -10,9 +10,9 @@ namespace fintamath {
 
 class PowExpression : public IBinaryExpressionCRTP<PowExpression>, public IInvertable {
 public:
-  explicit PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs);
+  explicit PowExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs);
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
   IMathObject *polynomSimplify();
 
@@ -22,9 +22,9 @@ public:
 
   void invert() override;
 
-  MathObjectPtr getValue();
+  std::unique_ptr<IMathObject> getValue();
 
-  MathObjectPtr getPow();
+  std::unique_ptr<IMathObject> getPow();
 
 protected:
   IMathObject *simplify() override;

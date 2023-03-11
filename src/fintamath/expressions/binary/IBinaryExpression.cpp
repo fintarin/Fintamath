@@ -13,7 +13,7 @@ IBinaryExpression::IBinaryExpression(const IBinaryExpression &rhs)
       rhsChild(rhs.rhsChild->clone()) {
 }
 
-IBinaryExpression::IBinaryExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
+IBinaryExpression::IBinaryExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs)
     : lhsChild(std::move(lhs)),
       rhsChild(std::move(rhs)) {
 }
@@ -34,7 +34,7 @@ void IBinaryExpression::setPrecision(uint8_t precision) {
 }
 
 std::string IBinaryExpression::toString() const {
-  std::vector<MathObjectPtr> values;
+  std::vector<std::unique_ptr<IMathObject>> values;
   values.emplace_back(lhsChild->clone());
   values.emplace_back(rhsChild->clone());
 

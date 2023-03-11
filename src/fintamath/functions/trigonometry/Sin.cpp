@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Sin::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Sin::call(const ArgumentsVector &argsVect) const {
   return sin(convert<Real>(argsVect.front())).toMinimalObject();
 }
 

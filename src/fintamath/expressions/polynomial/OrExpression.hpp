@@ -13,7 +13,7 @@ public:
 
   std::string toString() const override;
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
   const IFunction *getFunction() const override;
 

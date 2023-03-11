@@ -44,8 +44,8 @@ void IPolynomExpression::setPrecision(uint8_t precision) {
   }
 }
 
-std::vector<MathObjectPtr> IPolynomExpression::getVariables() const {
-  std::vector<MathObjectPtr> vars;
+std::vector<std::unique_ptr<IMathObject>> IPolynomExpression::getVariables() const {
+  std::vector<std::unique_ptr<IMathObject>> vars;
 
   for (const auto &child : polynomVect) {
     if (is<Variable>(child)) {

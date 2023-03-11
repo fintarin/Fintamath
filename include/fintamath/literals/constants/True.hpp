@@ -12,7 +12,7 @@ public:
   }
 
 protected:
-  MathObjectPtr call() const override;
+  std::unique_ptr<IMathObject> call() const override;
 };
 
 }

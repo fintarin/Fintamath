@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Coth::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Coth::call(const ArgumentsVector &argsVect) const {
   return coth(convert<Real>(argsVect.front())).toMinimalObject();
 }
 

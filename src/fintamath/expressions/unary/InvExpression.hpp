@@ -7,9 +7,9 @@ namespace fintamath {
 
 class InvExpression : public IUnaryExpressionCRTP<InvExpression> {
 public:
-  explicit InvExpression(MathObjectPtr &&rhs);
+  explicit InvExpression(std::unique_ptr<IMathObject> &&rhs);
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
 protected:
   IMathObject *simplify() override;

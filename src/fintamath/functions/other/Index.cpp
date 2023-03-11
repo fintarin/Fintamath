@@ -2,7 +2,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Index::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Index::call(const ArgumentsVector &argsVect) const {
   return makeFunctionExpression(*this, toArgumentsPtrVect(argsVect));
 }
 

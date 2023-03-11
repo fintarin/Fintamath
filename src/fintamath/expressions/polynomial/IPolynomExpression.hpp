@@ -31,7 +31,7 @@ public:
 
   void setPrecision(uint8_t precision) final;
 
-  std::vector<MathObjectPtr> getVariables() const final;
+  std::vector<std::unique_ptr<IMathObject>> getVariables() const final;
 
   ArgumentsPtrVector getPolynom() const;
 
@@ -50,7 +50,7 @@ protected:
 template <typename Derived>
 class IPolynomExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IPolynomExpression {
 public:
-  void addElement(MathObjectPtr &&elem) {
+  void addElement(std::unique_ptr<IMathObject> &&elem) {
     ArgumentsPtrVector elemPolynom;
 
     if (auto *expr = cast<Derived>(elem.get())) {

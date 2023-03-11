@@ -7,21 +7,21 @@
 namespace fintamath {
 
 class IMathObject;
-using MathObjectPtr = std::unique_ptr<IMathObject>;
 
 class Converter {
 public:
   template <typename Value, typename Type>
-  static void add(const std::function<MathObjectPtr(const Value &value, const Type &type)> &convertFunc) {
+  static void
+  add(const std::function<std::unique_ptr<IMathObject>(const Value &value, const Type &type)> &convertFunc) {
     converter.add<Value, Type>(convertFunc);
   }
 
-  static MathObjectPtr convert(const IMathObject &from, const IMathObject &to) {
+  static std::unique_ptr<IMathObject> convert(const IMathObject &from, const IMathObject &to) {
     return converter(from, to);
   }
 
 private:
-  static MultiMethod<MathObjectPtr(const IMathObject &, const IMathObject &)> converter;
+  static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> converter;
 };
 
 }

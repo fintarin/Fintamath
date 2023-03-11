@@ -6,14 +6,11 @@
 
 namespace fintamath {
 
-class IConstant;
-using ConstantPtr = std::unique_ptr<IConstant>;
-
 class IConstant : virtual public ILiteral {
 public:
   virtual const std::type_info &getReturnType() const = 0;
 
-  MathObjectPtr operator()() const {
+  std::unique_ptr<IMathObject> operator()() const {
     return call();
   }
 
@@ -22,15 +19,15 @@ public:
     Parser::registerType<T>(parserMap);
   }
 
-  static ConstantPtr parse(const std::string &parsedStr) {
-    return Parser::parse<ConstantPtr>(parserMap, parsedStr);
+  static std::unique_ptr<IConstant> parse(const std::string &parsedStr) {
+    return Parser::parse<std::unique_ptr<IConstant>>(parserMap, parsedStr);
   }
 
 protected:
-  virtual MathObjectPtr call() const = 0;
+  virtual std::unique_ptr<IMathObject> call() const = 0;
 
 private:
-  static Parser::Map<ConstantPtr> parserMap;
+  static Parser::Map<std::unique_ptr<IConstant>> parserMap;
 };
 
 template <typename Return, typename Derived>

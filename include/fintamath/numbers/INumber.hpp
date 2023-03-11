@@ -7,9 +7,6 @@
 
 namespace fintamath {
 
-class INumber;
-using NumberPtr = std::unique_ptr<INumber>;
-
 class INumber : virtual public IComparable {
 public:
   virtual bool isPrecise() const {
@@ -21,41 +18,41 @@ public:
     Parser::registerType<T>(parserVector);
   }
 
-  static NumberPtr parse(const std::string &str) {
+  static std::unique_ptr<INumber> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
 private:
-  static Parser::Vector<NumberPtr, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> parserVector;
 };
 
-inline NumberPtr operator+(const INumber &lhs, const INumber &rhs) {
+inline std::unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs) {
   auto res = lhs + cast<IArithmetic>(rhs);
   return cast<INumber>(std::move(res));
 }
 
-inline NumberPtr operator-(const INumber &lhs, const INumber &rhs) {
+inline std::unique_ptr<INumber> operator-(const INumber &lhs, const INumber &rhs) {
   auto res = lhs - cast<IArithmetic>(rhs);
   return cast<INumber>(std::move(res));
 }
 
-inline NumberPtr operator*(const INumber &lhs, const INumber &rhs) {
+inline std::unique_ptr<INumber> operator*(const INumber &lhs, const INumber &rhs) {
   auto res = lhs * cast<IArithmetic>(rhs);
   return cast<INumber>(std::move(res));
 }
 
-inline NumberPtr operator/(const INumber &lhs, const INumber &rhs) {
+inline std::unique_ptr<INumber> operator/(const INumber &lhs, const INumber &rhs) {
   auto res = lhs / cast<IArithmetic>(rhs);
   return cast<INumber>(std::move(res));
 }
 
 template <typename Rhs, typename = std::enable_if_t<std::is_same_v<INumber, Rhs>>>
-NumberPtr operator+(const Rhs &rhs) {
+std::unique_ptr<INumber> operator+(const Rhs &rhs) {
   return cast<INumber>(+cast<IArithmetic>(rhs));
 }
 
 template <typename Rhs, typename = std::enable_if_t<std::is_same_v<INumber, Rhs>>>
-NumberPtr operator-(const Rhs &rhs) {
+std::unique_ptr<INumber> operator-(const Rhs &rhs) {
   return cast<INumber>(-cast<IArithmetic>(rhs));
 }
 

@@ -12,9 +12,6 @@
 
 namespace fintamath {
 
-class IExpression;
-using ExpressionPtr = std::unique_ptr<IExpression>;
-
 class IExpression : virtual public IMathObject {
 public:
   virtual const IFunction *getFunction() const = 0;
@@ -25,9 +22,9 @@ public:
   // virtual void toMinimalObject() = 0;
 
   // TODO: remove this and move simplify(false) logic to setPrecision
-  virtual MathObjectPtr simplify(bool isPrecise) const = 0;
+  virtual std::unique_ptr<IMathObject> simplify(bool isPrecise) const = 0;
 
-  MathObjectPtr toMinimalObject() const final;
+  std::unique_ptr<IMathObject> toMinimalObject() const final;
 
   // TODO: remove this and prevent Expression in Expression situations
   virtual void compress() {
@@ -37,7 +34,7 @@ public:
   virtual void validate() const = 0;
 
   // TODO: make this non virtual using IExpression::Iterator
-  virtual std::vector<MathObjectPtr> getVariables() const {
+  virtual std::vector<std::unique_ptr<IMathObject>> getVariables() const {
     return {};
   }
 
@@ -46,7 +43,7 @@ public:
     Parser::registerType<T>(parserVector);
   }
 
-  static ExpressionPtr parse(const std::string &str) {
+  static std::unique_ptr<IExpression> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -56,16 +53,16 @@ protected:
 
   static std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
 
-  static std::string postfixUnaryOperatorToString(const IOperator &oper, const MathObjectPtr &lhs);
+  static std::string postfixUnaryOperatorToString(const IOperator &oper, const std::unique_ptr<IMathObject> &lhs);
 
-  static void simplifyExpr(MathObjectPtr &obj);
+  static void simplifyExpr(std::unique_ptr<IMathObject> &obj);
 
-  static void setMathObjectPrecision(MathObjectPtr &obj, uint8_t precision);
+  static void setMathObjectPrecision(std::unique_ptr<IMathObject> &obj, uint8_t precision);
 
   virtual IMathObject *simplify() = 0;
 
 private:
-  static Parser::Vector<ExpressionPtr, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parserVector;
 };
 
 template <typename Derived>

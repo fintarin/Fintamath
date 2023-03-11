@@ -25,7 +25,7 @@ public:
 
   Expression(const IMathObject &obj);
 
-  explicit Expression(MathObjectPtr &&obj);
+  explicit Expression(std::unique_ptr<IMathObject> &&obj);
 
   Expression(int64_t val);
 
@@ -38,18 +38,18 @@ public:
   std::string solve(uint8_t precision) const;
 
   // TODO: implement iterator & remove this
-  MathObjectPtr &getChild();
+  std::unique_ptr<IMathObject> &getChild();
 
   // TODO: implement iterator & remove this
-  const MathObjectPtr &getInfo() const;
+  const std::unique_ptr<IMathObject> &getInfo() const;
 
   const IFunction *getFunction() const override;
 
   void setPrecision(uint8_t precision) override;
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
-  std::vector<MathObjectPtr> getVariables() const override;
+  std::vector<std::unique_ptr<IMathObject>> getVariables() const override;
 
   void compress() override;
 
@@ -59,13 +59,14 @@ public:
   // TODO: make this private
   void setPrecisionRec(uint8_t precision);
 
-  static MathObjectPtr makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
+  static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
 
-  static ExpressionPtr makeRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
+  static std::unique_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
 
   template <typename Function, typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
-  static void registerFunctionExpressionMaker(Parser::Function<ExpressionPtr, ArgumentsPtrVector &&> &&builder) {
-    Parser::Function<ExpressionPtr, ArgumentsPtrVector &&> constructor =
+  static void
+  registerFunctionExpressionMaker(Parser::Function<std::unique_ptr<IExpression>, ArgumentsPtrVector &&> &&builder) {
+    Parser::Function<std::unique_ptr<IExpression>, ArgumentsPtrVector &&> constructor =
         [builder = std::move(builder)](ArgumentsPtrVector &&args) {
           static const IFunction::Type type = Function().getFunctionType();
 
@@ -73,7 +74,7 @@ public:
             return builder(std::move(args));
           }
 
-          return ExpressionPtr();
+          return std::unique_ptr<IExpression>();
         };
     Parser::add<Function>(expressionBuildersMap, constructor);
   }
@@ -109,9 +110,9 @@ private:
   void callPowSimplify();
 
 private:
-  MathObjectPtr info;
+  std::unique_ptr<IMathObject> info;
 
-  static Parser::Map<ExpressionPtr, ArgumentsPtrVector &&> expressionBuildersMap;
+  static Parser::Map<std::unique_ptr<IExpression>, ArgumentsPtrVector &&> expressionBuildersMap;
 };
 
 }

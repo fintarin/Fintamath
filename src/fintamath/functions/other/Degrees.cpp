@@ -9,7 +9,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Degrees::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Degrees::call(const ArgumentsVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
   static const Integer ANGLE = 180;
   return rhs * (ANGLE / PI_NUM);

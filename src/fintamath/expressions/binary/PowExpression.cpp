@@ -14,12 +14,12 @@ namespace fintamath {
 
 const Pow POW;
 
-PowExpression::PowExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
+PowExpression::PowExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs)
     : IBinaryExpression(std::move(lhs), std::move(rhs)) {
   function = cast<IFunction>(POW.clone());
 }
 
-MathObjectPtr PowExpression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> PowExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<PowExpression>(*this);
 
   auto *lhsPtr = cast<IExpression>(exprObj->lhsChild.get());
@@ -58,7 +58,7 @@ IMathObject *PowExpression::simplify() {
       return lhsPtr;
     }
     if (*rhsPtr == NEG_ONE) {
-      MathObjectPtr invExpr = std::make_unique<InvExpression>(std::move(lhsChild));
+      std::unique_ptr<IMathObject> invExpr = std::make_unique<InvExpression>(std::move(lhsChild));
       simplifyExpr(invExpr);
       return invExpr.release();
     }
@@ -84,7 +84,7 @@ IMathObject *PowExpression::mulSimplify() {
 
   if (auto *mulExpr = cast<MulExpression>(powExpr->lhsChild.get())) {
     mulExpr->setPow(powExpr->rhsChild);
-    MathObjectPtr mulExprResult(powExpr->lhsChild.release());
+    std::unique_ptr<IMathObject> mulExprResult(powExpr->lhsChild.release());
     simplifyExpr(mulExprResult);
     return mulExprResult.release();
   }
@@ -100,7 +100,7 @@ IMathObject *PowExpression::sumSimplify() {
 
   const auto *rhs = cast<Integer>(powExpr->rhsChild.get());
   if (auto *sumExpr = cast<SumExpression>(powExpr->lhsChild.get()); sumExpr && rhs) {
-    return MathObjectPtr(sumPolynomSimplify(*sumExpr, *rhs)).release();
+    return std::unique_ptr<IMathObject>(sumPolynomSimplify(*sumExpr, *rhs)).release();
   }
 
   return powExpr;
@@ -159,26 +159,26 @@ IMathObject *PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Int
       auto *powExpr = new PowExpression(polynom[j]->clone(), vectOfPows[j].clone());
       mulExprPolynom.emplace_back(powExpr->polynomSimplify());
     }
-    MathObjectPtr mulExpr = std::make_unique<MulExpression>(std::move(mulExprPolynom));
+    std::unique_ptr<IMathObject> mulExpr = std::make_unique<MulExpression>(std::move(mulExprPolynom));
     simplifyExpr(mulExpr);
     newPolynom.emplace_back(std::move(mulExpr));
   }
 
-  MathObjectPtr newSumExpr = std::make_unique<SumExpression>(std::move(newPolynom));
+  std::unique_ptr<IMathObject> newSumExpr = std::make_unique<SumExpression>(std::move(newPolynom));
   simplifyExpr(newSumExpr);
   if (invert) {
-    MathObjectPtr invertExpr = std::make_unique<InvExpression>(std::move(newSumExpr));
+    std::unique_ptr<IMathObject> invertExpr = std::make_unique<InvExpression>(std::move(newSumExpr));
     simplifyExpr(invertExpr);
     return invertExpr.release();
   }
   return newSumExpr.release();
 }
 
-MathObjectPtr PowExpression::getValue() {
+std::unique_ptr<IMathObject> PowExpression::getValue() {
   return std::move(lhsChild);
 }
 
-MathObjectPtr PowExpression::getPow() {
+std::unique_ptr<IMathObject> PowExpression::getPow() {
   return std::move(rhsChild);
 }
 

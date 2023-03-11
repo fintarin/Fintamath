@@ -12,20 +12,17 @@
 
 namespace fintamath {
 
-class IMathObject;
-using MathObjectPtr = std::unique_ptr<IMathObject>;
-
 class IMathObject {
 public:
   virtual ~IMathObject() = default;
 
-  virtual MathObjectPtr clone() const = 0;
+  virtual std::unique_ptr<IMathObject> clone() const = 0;
 
   virtual std::string toString() const {
     return {};
   }
 
-  virtual MathObjectPtr toMinimalObject() const {
+  virtual std::unique_ptr<IMathObject> toMinimalObject() const {
     return clone();
   }
 
@@ -38,11 +35,11 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IMathObject, T>>>
-  static void registerType(Parser::Function<MathObjectPtr, const std::string &> &&parserFunc) {
+  static void registerType(Parser::Function<std::unique_ptr<IMathObject>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
-  static MathObjectPtr parse(const std::string &str) {
+  static std::unique_ptr<IMathObject> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -50,13 +47,13 @@ protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
 
 private:
-  static Parser::Vector<MathObjectPtr, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> parserVector;
 };
 
 template <typename Derived>
 class IMathObjectCRTP : virtual public IMathObject {
 public:
-  MathObjectPtr clone() const final {
+  std::unique_ptr<IMathObject> clone() const final {
     return std::make_unique<Derived>(cast<Derived>(*this));
   }
 
@@ -77,10 +74,10 @@ protected:
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }
-    if (MathObjectPtr rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
       return equals(cast<Derived>(*rhsPtr));
     }
-    if (MathObjectPtr lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
       return *lhsPtr == rhs;
     }
     return false;

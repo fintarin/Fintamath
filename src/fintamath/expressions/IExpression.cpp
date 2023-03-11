@@ -59,13 +59,14 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
   }
 }
 
-MathObjectPtr IExpression::toMinimalObject() const {
+std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
   auto copyExpr = clone();
   simplifyExpr(copyExpr); // TODO: enable when simplify will be implemented finally
   return copyExpr;
 }
 
-std::string IExpression::binaryOperatorToString(const IOperator &oper, const std::vector<MathObjectPtr> &values) {
+std::string IExpression::binaryOperatorToString(const IOperator &oper,
+                                                const std::vector<std::unique_ptr<IMathObject>> &values) {
   std::string result;
 
   std::string operStr = oper.toString();
@@ -104,7 +105,7 @@ std::string IExpression::binaryOperatorToString(const IOperator &oper, const std
   return result;
 }
 
-std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, const MathObjectPtr &lhs) {
+std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, const std::unique_ptr<IMathObject> &lhs) {
   std::string result = lhs->toString();
 
   if (const auto *child = cast<IExpression>(lhs.get())) {
@@ -122,15 +123,15 @@ std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, con
   return result + oper.toString();
 }
 
-void IExpression::simplifyExpr(MathObjectPtr &obj) {
+void IExpression::simplifyExpr(std::unique_ptr<IMathObject> &obj) {
   if (auto *exprObj = cast<IExpression>(obj.get())) {
     if (auto *simplObj = exprObj->simplify(); simplObj && simplObj != obj.get()) {
-      obj = MathObjectPtr(simplObj);
+      obj = std::unique_ptr<IMathObject>(simplObj);
     }
   }
 }
 
-void IExpression::setMathObjectPrecision(MathObjectPtr &obj, uint8_t precision) {
+void IExpression::setMathObjectPrecision(std::unique_ptr<IMathObject> &obj, uint8_t precision) {
   if (is<INumber>(obj)) {
     obj = convert<Real>(*obj).precise(precision).clone();
     return;

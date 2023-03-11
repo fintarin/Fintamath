@@ -19,11 +19,11 @@ std::string AndExpression::toString() const {
   return binaryOperatorToString(AND, polynomVect);
 }
 
-MathObjectPtr AndExpression::simplify(bool /*isPrecise*/) const {
-  MathObjectPtr result = polynomVect.front()->clone();
+std::unique_ptr<IMathObject> AndExpression::simplify(bool /*isPrecise*/) const {
+  std::unique_ptr<IMathObject> result = polynomVect.front()->clone();
   for (size_t i = 1; i < polynomVect.size(); i++) {
-    const MathObjectPtr &lhsPtr = result;
-    const MathObjectPtr &rhsPtr = polynomVect[i];
+    const std::unique_ptr<IMathObject> &lhsPtr = result;
+    const std::unique_ptr<IMathObject> &rhsPtr = polynomVect[i];
     const IMathObject &lhs = *lhsPtr;
     const IMathObject &rhs = *rhsPtr;
 

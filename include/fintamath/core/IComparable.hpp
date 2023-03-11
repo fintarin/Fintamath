@@ -6,9 +6,6 @@
 
 namespace fintamath {
 
-class IComparable;
-using ComparablePtr = std::unique_ptr<IComparable>;
-
 class IComparable : virtual public IArithmetic {
 public:
   friend inline bool operator<(const IComparable &lhs, const IComparable &rhs) {
@@ -28,11 +25,11 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
-  static void registerType(Parser::Function<ComparablePtr, const std::string &> &&parserFunc) {
+  static void registerType(Parser::Function<std::unique_ptr<IComparable>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
-  static ComparablePtr parse(const std::string &str) {
+  static std::unique_ptr<IComparable> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -42,7 +39,7 @@ protected:
   virtual bool moreAbstract(const IComparable &rhs) const = 0;
 
 private:
-  static Parser::Vector<ComparablePtr, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> parserVector;
 };
 
 template <typename Derived>
@@ -98,10 +95,10 @@ private:
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return f1(*this, *rhsPtr);
     }
-    if (MathObjectPtr rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
       return f1(*this, cast<Derived>(*rhsPtr));
     }
-    if (MathObjectPtr lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
       return f2(cast<IComparable>(*lhsPtr), rhs);
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());

@@ -16,7 +16,7 @@ namespace fintamath {
 
 const Index INDEX;
 
-IndexExpression::IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
+IndexExpression::IndexExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs)
     : IBinaryExpression(std::move(lhs), std::move(rhs)) {
   function = cast<IFunction>(INDEX.clone());
 }
@@ -37,9 +37,9 @@ IndexExpression::IndexExpression(MathObjectPtr &&lhs, MathObjectPtr &&rhs)
 //   return lhsStr + "_" + rhsStr;
 // }
 
-MathObjectPtr IndexExpression::simplify(bool isPrecise) const {
-  MathObjectPtr lhs;
-  MathObjectPtr rhs;
+std::unique_ptr<IMathObject> IndexExpression::simplify(bool isPrecise) const {
+  std::unique_ptr<IMathObject> lhs;
+  std::unique_ptr<IMathObject> rhs;
 
   if (const auto *expr = cast<IExpression>(lhsChild.get())) {
     lhs = expr->simplify(isPrecise);

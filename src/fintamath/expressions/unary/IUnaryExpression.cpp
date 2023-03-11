@@ -18,7 +18,7 @@ IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs)
       child(rhs.child->clone()) {
 }
 
-IUnaryExpression::IUnaryExpression(MathObjectPtr &&rhs) : child(std::move(rhs)) {
+IUnaryExpression::IUnaryExpression(std::unique_ptr<IMathObject> &&rhs) : child(std::move(rhs)) {
 }
 
 IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
@@ -113,7 +113,7 @@ void IUnaryExpression::validate() const {
   // TODO: implement it
 }
 
-MathObjectPtr IUnaryExpression::getChild() const {
+std::unique_ptr<IMathObject> IUnaryExpression::getChild() const {
   return child->clone();
 }
 

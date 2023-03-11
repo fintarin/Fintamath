@@ -16,12 +16,12 @@ namespace fintamath {
 
 const Derivative DER;
 
-DerivativeExpression::DerivativeExpression(MathObjectPtr &&obj) : IUnaryExpression(std::move(obj)) {
+DerivativeExpression::DerivativeExpression(std::unique_ptr<IMathObject> &&obj) : IUnaryExpression(std::move(obj)) {
   function = cast<IFunction>(DER.clone());
 }
 
-MathObjectPtr DerivativeExpression::simplify(bool isPrecise) const {
-  MathObjectPtr value;
+std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) const {
+  std::unique_ptr<IMathObject> value;
 
   if (const auto *expr = cast<IExpression>(child.get())) {
     value = expr->simplify(isPrecise);

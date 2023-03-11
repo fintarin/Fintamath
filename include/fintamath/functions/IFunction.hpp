@@ -9,9 +9,6 @@
 
 namespace fintamath {
 
-class IFunction;
-using FunctionPtr = std::unique_ptr<IFunction>;
-
 class IFunction : virtual public IMathObject {
 public:
   enum class Type : uint16_t {
@@ -32,12 +29,12 @@ public:
   virtual bool doArgsMatch(const ArgumentsVector &argsVect) const = 0;
 
   template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-  MathObjectPtr operator()(const Args &...args) const {
+  std::unique_ptr<IMathObject> operator()(const Args &...args) const {
     ArgumentsVector argsVect = {args...};
     return callAbstract(argsVect);
   }
 
-  MathObjectPtr operator()(const ArgumentsVector &argsVect) const {
+  std::unique_ptr<IMathObject> operator()(const ArgumentsVector &argsVect) const {
     return callAbstract(argsVect);
   }
 
@@ -46,21 +43,21 @@ public:
     Parser::registerType<T>(parserMap);
   }
 
-  static FunctionPtr parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-    Parser::Comparator<const FunctionPtr &> comp = [type](const FunctionPtr &func) {
+  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
+    Parser::Comparator<const std::unique_ptr<IFunction> &> comp = [type](const std::unique_ptr<IFunction> &func) {
       return type == IFunction::Type::Any || func->getFunctionType() == type;
     };
-    return Parser::parse<FunctionPtr>(parserMap, comp, parsedStr);
+    return Parser::parse<std::unique_ptr<IFunction>>(parserMap, comp, parsedStr);
   }
 
 protected:
-  virtual MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsVector &argsVect) const = 0;
 
-  static const std::function<MathObjectPtr(const IFunction &function, ArgumentsPtrVector &&args)>
+  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, ArgumentsPtrVector &&args)>
       makeFunctionExpression;
 
 private:
-  static Parser::Map<FunctionPtr> parserMap;
+  static Parser::Map<std::unique_ptr<IFunction>> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>
@@ -92,9 +89,9 @@ public:
   }
 
 protected:
-  virtual MathObjectPtr call(const ArgumentsVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> call(const ArgumentsVector &argsVect) const = 0;
 
-  MathObjectPtr callAbstract(const ArgumentsVector &argsVect) const final {
+  std::unique_ptr<IMathObject> callAbstract(const ArgumentsVector &argsVect) const final {
     validateArgsSize(argsVect);
 
     if (!doArgsMatch(argsVect)) {

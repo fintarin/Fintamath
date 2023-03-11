@@ -11,26 +11,26 @@ namespace fintamath {
 
 class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
 public:
-  CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs);
+  CompExpression(const IMathObject &oper, std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs);
 
   std::string solve() const;
 
   std::string solve(uint8_t precision) const;
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
   void compress() override;
 
 protected:
   IMathObject *simplify() override;
 
-  // std::vector<MathObjectPtr> solvePowEquation(const Variable &x) const;
+  // std::vector<std::unique_ptr<IMathObject>> solvePowEquation(const Variable &x) const;
 
-  // std::vector<MathObjectPtr> solveQuadraticEquation(const MathObjectPtr &v) const;
+  // std::vector<std::unique_ptr<IMathObject>> solveQuadraticEquation(const std::unique_ptr<IMathObject> &v) const;
 
-  // static bool sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
+  // static bool sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs);
 
-  // static std::vector<MathObjectPtr> sortResult(std::vector<MathObjectPtr> &result);
+  // static std::vector<std::unique_ptr<IMathObject>> sortResult(std::vector<std::unique_ptr<IMathObject>> &result);
 
   // bool detectOneVariable(Variable &v) const;
 };

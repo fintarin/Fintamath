@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-MultiMethod<MathObjectPtr(const IMathObject &, const IMathObject &)> Converter::converter;
+MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> Converter::converter;
 
 }
 

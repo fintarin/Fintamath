@@ -2,7 +2,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Equiv::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Equiv::call(const ArgumentsVector &argsVect) const {
   return std::make_unique<Boolean>(cast<Boolean>(argsVect.front().get()) == cast<Boolean>(argsVect.back().get()));
 }
 

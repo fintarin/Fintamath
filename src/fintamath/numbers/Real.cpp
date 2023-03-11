@@ -113,7 +113,7 @@ std::string Real::toString() const {
   return res;
 }
 
-MathObjectPtr Real::toMinimalObject() const {
+std::unique_ptr<IMathObject> Real::toMinimalObject() const {
   if (impl->v.backend().isfinite()) {
     if (std::string str = toString(); str.find('.') == std::string::npos && str.find('*') == std::string::npos) {
       return std::make_unique<Integer>(str);

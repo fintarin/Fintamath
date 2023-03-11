@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Angle::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Angle::call(const ArgumentsVector &argsVect) const {
   static const Rad RAD;
   return RAD(argsVect.front().get());
 }

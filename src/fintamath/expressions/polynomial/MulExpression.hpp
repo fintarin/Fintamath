@@ -16,15 +16,15 @@ public:
 
   std::string toString() const override;
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
   const IFunction *getFunction() const override;
 
-  MathObjectPtr getPowCoefficient(const MathObjectPtr &powValue) const;
+  std::unique_ptr<IMathObject> getPowCoefficient(const std::unique_ptr<IMathObject> &powValue) const;
 
-  MathObjectPtr getPow() const;
+  std::unique_ptr<IMathObject> getPow() const;
 
-  void setPow(const MathObjectPtr &value);
+  void setPow(const std::unique_ptr<IMathObject> &value);
 
   void negate() override;
 
@@ -49,15 +49,16 @@ private:
   static void simplifyPowCoefficients(std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
                                       ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
 
-  static void addValueToMaps(MathObjectPtr &lhs, MathObjectPtr &rhs, std::map<std::string, MathObjectPtr> &valuesMap,
+  static void addValueToMaps(std::unique_ptr<IMathObject> &lhs, std::unique_ptr<IMathObject> &rhs,
+                             std::map<std::string, std::unique_ptr<IMathObject>> &valuesMap,
                              std::map<std::string, ArgumentsPtrVector> &powMap);
 
-  static ArgumentsPtrVector coefficientProcessing(std::map<std::string, MathObjectPtr> &valuesMap,
+  static ArgumentsPtrVector coefficientProcessing(std::map<std::string, std::unique_ptr<IMathObject>> &valuesMap,
                                                   std::map<std::string, ArgumentsPtrVector> &powMap);
 
-  static std::string sumExprToString(const MathObjectPtr &obj);
+  static std::string sumExprToString(const std::unique_ptr<IMathObject> &obj);
 
-  static NumberPtr mulNumbers(const ArgumentsPtrVector &numVect);
+  static std::unique_ptr<INumber> mulNumbers(const ArgumentsPtrVector &numVect);
 
   static void multiplicateBraces(const ArgumentsPtrVector &addVect, ArgumentsPtrVector &positive,
                                  ArgumentsPtrVector &negative);
@@ -72,7 +73,7 @@ private:
   static void sortPowObjects(Objects &objs, ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect,
                              ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect);
 
-  static bool sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
+  static bool sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs);
 };
 
 }

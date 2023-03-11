@@ -21,7 +21,8 @@
 
 namespace fintamath {
 
-CompExpression::CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, MathObjectPtr &&rhs)
+CompExpression::CompExpression(const IMathObject &oper, std::unique_ptr<IMathObject> &&lhs,
+                               std::unique_ptr<IMathObject> &&rhs)
     : IBinaryExpression(std::move(lhs), std::move(rhs)) {
   if (is<CompExpression>(lhs) || is<CompExpression>(rhs)) {
     throw UndefinedBinaryOpearatorException(oper.toString(), lhs->toString(), rhs->toString());
@@ -30,11 +31,11 @@ CompExpression::CompExpression(const IMathObject &oper, MathObjectPtr &&lhs, Mat
   this->function = cast<IOperator>(oper.clone());
 }
 
-MathObjectPtr CompExpression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
   /*SumExpression addExpr(*leftExpr->clone());
   addExpr.addElement(NegExpression(*rightExpr).toMinimalObject());
 
-  MathObjectPtr simplExpr = addExpr.simplify(isPrecise);
+  std::unique_ptr<IMathObject> simplExpr = addExpr.simplify(isPrecise);
 
   if (is<IComparable>(simplExpr)) {
     return (*oper)(*simplExpr, ZERO);
@@ -137,16 +138,14 @@ std::string CompExpression::solve(uint8_t precision) const {
   return resultStr;*/
 }
 
-/*std::vector<MathObjectPtr> CompExpression::solvePowEquation(const Variable &x) const {
+/*std::vector<std::unique_ptr<IMathObject>> CompExpression::solvePowEquation(const Variable &x) const {
   auto results = solveQuadraticEquation(x.clone());
   return results;
 }*/
 /*
 // TODO: v is unused here
-std::vector<MathObjectPtr> CompExpression::solveQuadraticEquation(const MathObjectPtr &v) const {
-  auto copyExpr = *this;
-  SumExpression polynom;
-  polynom.addElement({leftExpr->clone()});
+std::vector<std::unique_ptr<IMathObject>> CompExpression::solveQuadraticEquation(const std::unique_ptr<IMathObject> &v)
+const { auto copyExpr = *this; SumExpression polynom; polynom.addElement({leftExpr->clone()});
 
   auto maxPowObj = polynom.getPow();
   if (!maxPowObj) {
@@ -158,12 +157,12 @@ std::vector<MathObjectPtr> CompExpression::solveQuadraticEquation(const MathObje
     return {};
   }
 
-  std::vector<MathObjectPtr> coefficients;
+  std::vector<std::unique_ptr<IMathObject>> coefficients;
   for (int i = 0; i <= *maxPow; i++) {
     coefficients.emplace_back(polynom.getPowCoefficient(Integer(i).clone()));
   }
 
-  std::vector<MathObjectPtr> results;
+  std::vector<std::unique_ptr<IMathObject>> results;
   if (coefficients.size() == 2) {
     results.emplace_back(Neg()(*div(*coefficients.at(0), *coefficients.at(1)).simplify(false)));
     return results;
@@ -211,7 +210,7 @@ bool CompExpression::detectOneVariable(Variable &v) const {
   }
 }
 
-bool CompExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
+bool CompExpression::sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs) {
   if (const auto *lhsComp = cast<IComparable>(lhs.get())) {
     if (const auto *rhsComp = cast<IComparable>(rhs.get())) {
       return *lhsComp < *rhsComp;
@@ -221,13 +220,9 @@ bool CompExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs
   return false;
 }
 
-std::vector<MathObjectPtr> CompExpression::sortResult(std::vector<MathObjectPtr> &result) {
-  std::sort(result.begin(), result.end(), sortFunc);
-  std::vector<MathObjectPtr> resultWithoutRepeat;
-  for (auto &val : result) {
-    if (resultWithoutRepeat.empty()) {
-      resultWithoutRepeat.emplace_back(std::move(val));
-      continue;
+std::vector<std::unique_ptr<IMathObject>> CompExpression::sortResult(std::vector<std::unique_ptr<IMathObject>> &result)
+{ std::sort(result.begin(), result.end(), sortFunc); std::vector<std::unique_ptr<IMathObject>> resultWithoutRepeat; for
+(auto &val : result) { if (resultWithoutRepeat.empty()) { resultWithoutRepeat.emplace_back(std::move(val)); continue;
     }
     if (*val == *resultWithoutRepeat.at(resultWithoutRepeat.size() - 1)) {
       continue;

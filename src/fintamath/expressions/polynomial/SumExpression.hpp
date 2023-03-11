@@ -15,17 +15,17 @@ public:
 
   std::string toString() const override;
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
   const IFunction *getFunction() const override;
 
-  MathObjectPtr getPowCoefficient(const MathObjectPtr &powValue) const;
+  std::unique_ptr<IMathObject> getPowCoefficient(const std::unique_ptr<IMathObject> &powValue) const;
 
-  MathObjectPtr getPow() const;
+  std::unique_ptr<IMathObject> getPow() const;
 
   void negate() override;
 
-  void multiplicate(const MathObjectPtr &value);
+  void multiplicate(const std::unique_ptr<IMathObject> &value);
 
 protected:
   IMathObject *simplify() override;
@@ -37,7 +37,7 @@ private:
 
   static ArgumentsPtrVector sumNumbers(const ArgumentsPtrVector &numVect);
 
-  bool static sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs);
+  bool static sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs);
 
   void simplifyPolynom();
 

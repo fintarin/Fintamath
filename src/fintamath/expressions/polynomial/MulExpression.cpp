@@ -33,16 +33,16 @@ namespace fintamath {
 const Mul MUL;
 
 struct MulExpression::ObjectPow {
-  MathObjectPtr obj;
+  std::unique_ptr<IMathObject> obj;
   SumExpression pow;
 
-  ObjectPow(const MathObjectPtr &obj) : obj(obj->clone()) {
+  ObjectPow(const std::unique_ptr<IMathObject> &obj) : obj(obj->clone()) {
   }
 
   ObjectPow(const ObjectPow &objPow) : obj(objPow.obj->clone()), pow(objPow.pow) {
   }
 
-  MathObjectPtr getPowIfInteger() const {
+  std::unique_ptr<IMathObject> getPowIfInteger() const {
     auto polynom = pow.getPolynom();
     if (polynom.size() != 1) {
       return nullptr;
@@ -54,7 +54,7 @@ struct MulExpression::ObjectPow {
     return nullptr;
   }
 
-  MathObjectPtr getPowIfSingle() const {
+  std::unique_ptr<IMathObject> getPowIfSingle() const {
     auto polynom = pow.getPolynom();
     if (polynom.size() != 1) {
       return nullptr;
@@ -77,7 +77,7 @@ MulExpression::MulExpression(ArgumentsPtrVector &&inPolynomVect) : IPolynomExpre
   }
 }
 
-std::string MulExpression::sumExprToString(const MathObjectPtr &obj) {
+std::string MulExpression::sumExprToString(const std::unique_ptr<IMathObject> &obj) {
   if (is<SumExpression>(obj)) {
     return "(" + obj->toString() + ")";
   }
@@ -107,7 +107,7 @@ std::string MulExpression::toString() const {
   return result;
 }
 
-MathObjectPtr MulExpression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
   auto exprObj = *this;
   exprObj.compress();
 
@@ -179,7 +179,7 @@ void MulExpression::simplifyPow() {
   for (auto &child : polynomVect) {
     if (is<PowExpression>(child)) {
       auto *powExpr = cast<PowExpression>(child.release());
-      child = MathObjectPtr(powExpr->mulSimplify());
+      child = std::unique_ptr<IMathObject>(powExpr->mulSimplify());
     }
   }
   compress();
@@ -204,7 +204,7 @@ void MulExpression::simplifyPolynom() {
   auto pows = std::move(priorityMap[IOperator::Priority::Exponentiation]);
   for (auto &powExpr : pows) {
     auto *pow = cast<PowExpression>(powExpr.release());
-    powExpr = MathObjectPtr(pow->sumSimplify());
+    powExpr = std::unique_ptr<IMathObject>(pow->sumSimplify());
   }
   sortVector(pows, priorityMap, functions, variables);
 
@@ -226,15 +226,15 @@ void MulExpression::simplifyNegations() {
   for (auto &child : polynomVect) {
     if (auto *negExpr = cast<NegExpression>(child.get())) {
       newPolynomVect.emplace_back(NEG_ONE.clone());
-      child = MathObjectPtr(negExpr->getChild().release());
+      child = std::unique_ptr<IMathObject>(negExpr->getChild().release());
     }
     newPolynomVect.emplace_back(std::move(child));
   }
   polynomVect = std::move(newPolynomVect);
 }
 
-void MulExpression::addValueToMaps(MathObjectPtr &lhs, MathObjectPtr &rhs,
-                                   std::map<std::string, MathObjectPtr> &valuesMap,
+void MulExpression::addValueToMaps(std::unique_ptr<IMathObject> &lhs, std::unique_ptr<IMathObject> &rhs,
+                                   std::map<std::string, std::unique_ptr<IMathObject>> &valuesMap,
                                    std::map<std::string, ArgumentsPtrVector> &powMap) {
   powMap[lhs->toString()].emplace_back(std::move(rhs));
   if (valuesMap.find(lhs->toString()) == valuesMap.end()) {
@@ -242,11 +242,11 @@ void MulExpression::addValueToMaps(MathObjectPtr &lhs, MathObjectPtr &rhs,
   }
 }
 
-ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, MathObjectPtr> &valuesMap,
+ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, std::unique_ptr<IMathObject>> &valuesMap,
                                                         std::map<std::string, ArgumentsPtrVector> &powMap) {
   ArgumentsPtrVector result;
   for (auto &[key, value] : valuesMap) {
-    MathObjectPtr powRhs = std::make_unique<SumExpression>(std::move(powMap[key]));
+    std::unique_ptr<IMathObject> powRhs = std::make_unique<SumExpression>(std::move(powMap[key]));
     simplifyExpr(powRhs);
 
     if (const auto *number = cast<INumber>(powRhs.get())) {
@@ -256,7 +256,7 @@ ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, Ma
       }
 
       if (*number == NEG_ONE) {
-        MathObjectPtr invExpr = std::make_unique<InvExpression>(std::move(value));
+        std::unique_ptr<IMathObject> invExpr = std::make_unique<InvExpression>(std::move(value));
         simplifyExpr(invExpr);
         result.emplace_back(std::move(invExpr));
         continue;
@@ -267,7 +267,7 @@ ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, Ma
       }
     }
 
-    MathObjectPtr powExpr = std::make_unique<PowExpression>(std::move(value), std::move(powRhs));
+    std::unique_ptr<IMathObject> powExpr = std::make_unique<PowExpression>(std::move(value), std::move(powRhs));
     simplifyExpr(powExpr);
     result.emplace_back(std::move(powExpr));
   }
@@ -276,7 +276,7 @@ ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, Ma
 
 void MulExpression::simplifyPowCoefficients(std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
                                             ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector) {
-  std::map<std::string, MathObjectPtr> valuesMap;
+  std::map<std::string, std::unique_ptr<IMathObject>> valuesMap;
   std::map<std::string, ArgumentsPtrVector> powMap;
 
   for (auto &var : variableVector) {
@@ -318,14 +318,14 @@ void MulExpression::simplifyPowCoefficients(std::map<IOperator::Priority, Argume
   sortVector(vectToSort, priorityMap, functionVector, variableVector);
 }
 
-NumberPtr MulExpression::mulNumbers(const ArgumentsPtrVector &numVect) {
+std::unique_ptr<INumber> MulExpression::mulNumbers(const ArgumentsPtrVector &numVect) {
   Expression result = 1;
   for (const auto &elem : numVect) {
     if (is<INumber>(elem)) {
       result.getChild() = Mul()(*result.getChild(), *elem);
     }
   }
-  return NumberPtr(cast<INumber>(result.getChild().release()));
+  return std::unique_ptr<INumber>(cast<INumber>(result.getChild().release()));
 }
 
 ArgumentsPtrVector MulExpression::multiplicateTwoBraces(const ArgumentsPtrVector &lhs, const ArgumentsPtrVector &rhs) {
@@ -356,7 +356,7 @@ void MulExpression::multiplicateBraces(const ArgumentsPtrVector &addVect, Argume
   negative = std::move(inverted);
 }
 
-bool MulExpression::sortFunc(const MathObjectPtr &lhs, const MathObjectPtr &rhs) {
+bool MulExpression::sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs) {
   return lhs->toString() < rhs->toString();
 }
 
@@ -619,7 +619,7 @@ void MulExpression::simplifyDivisions() {
   }
 }
 
-void MulExpression::setPow(const MathObjectPtr &value) {
+void MulExpression::setPow(const std::unique_ptr<IMathObject> &value) {
   for (auto &child : polynomVect) {
     child = std::make_unique<PowExpression>(std::move(child), std::move(value->clone()));
     simplifyExpr(child);
@@ -627,7 +627,7 @@ void MulExpression::setPow(const MathObjectPtr &value) {
 }
 
 // TODO: remove this and implement PowExpression
-MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) const {
+std::unique_ptr<IMathObject> MulExpression::getPowCoefficient(const std::unique_ptr<IMathObject> &powValue) const {
   /*for (const auto &child : polynomVect) {
     if (*powValue == ONE) {
       if (is<Variable>(child)) {
@@ -646,7 +646,7 @@ MathObjectPtr MulExpression::getPowCoefficient(const MathObjectPtr &powValue) co
 }
 
 // TODO: remove this and implement PowExpression
-MathObjectPtr MulExpression::getPow() const {
+std::unique_ptr<IMathObject> MulExpression::getPow() const {
   Integer maxValue = ZERO;
 
   // TODO: refactor this

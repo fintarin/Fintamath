@@ -25,7 +25,7 @@ public:
 
   void setPrecision(uint8_t precision) override;
 
-  MathObjectPtr simplify(bool isPrecise) const override;
+  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
   void validate() const override;
 
@@ -33,7 +33,7 @@ protected:
   IMathObject *simplify() override;
 
 private:
-  FunctionPtr function;
+  std::unique_ptr<IFunction> function;
 
   ArgumentsPtrVector args;
 

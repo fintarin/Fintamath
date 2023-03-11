@@ -58,7 +58,7 @@ Expression &Expression::operator=(Expression &&rhs) noexcept {
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
   compress();
   validate();
-  info = MathObjectPtr(simplify());
+  info = std::unique_ptr<IMathObject>(simplify());
 }
 
 Expression::Expression(const TokenVector &tokens) {
@@ -82,7 +82,7 @@ Expression::Expression(const TokenVector &tokens) {
 Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 }
 
-Expression::Expression(MathObjectPtr &&obj) {
+Expression::Expression(std::unique_ptr<IMathObject> &&obj) {
   if (auto *expr = cast<Expression>(obj.get())) {
     *this = std::move(*expr);
   } else {
@@ -107,11 +107,11 @@ void Expression::setPrecisionRec(uint8_t precision) {
   setMathObjectPrecision(info, precision);
 }
 
-MathObjectPtr &Expression::getChild() {
+std::unique_ptr<IMathObject> &Expression::getChild() {
   return info;
 }
 
-const MathObjectPtr &Expression::getInfo() const {
+const std::unique_ptr<IMathObject> &Expression::getInfo() const {
   return info;
 }
 
@@ -127,7 +127,7 @@ std::string Expression::toString(uint8_t precision) const {
 
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
   if (auto oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
-    auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + 1, tokens.end())));
+    auto rhsExpr = std::unique_ptr<IExpression>(new Expression(TokenVector(tokens.begin() + 1, tokens.end())));
     auto funcExpr = makeRawFunctionExpression(*oper, makeArgumentsPtrVector(std::move(rhsExpr)));
 
     if (auto *expr = cast<Expression>(funcExpr.get())) {
@@ -156,7 +156,7 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
       factor->setOrder(order);
     }
 
-    auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.end() - order)));
+    auto rhsExpr = std::unique_ptr<IExpression>(new Expression(TokenVector(tokens.begin(), tokens.end() - order)));
     auto funcExpr = makeRawFunctionExpression(*oper, makeArgumentsPtrVector(std::move(rhsExpr)));
 
     if (auto *expr = cast<Expression>(funcExpr.get())) {
@@ -200,8 +200,8 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
     return false;
   }
 
-  auto lhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin(), tokens.begin() + operPos)));
-  auto rhsExpr = ExpressionPtr(new Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end())));
+  auto lhsExpr = std::unique_ptr<IExpression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + operPos)));
+  auto rhsExpr = std::unique_ptr<IExpression>(new Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end())));
   auto funcExpr = makeRawFunctionExpression(cast<IFunction>(*foundOperIt->second),
                                             makeArgumentsPtrVector(std::move(lhsExpr), std::move(rhsExpr)));
 
@@ -250,13 +250,13 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   return false;
 }
 
-MathObjectPtr Expression::makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
+std::unique_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
   auto expr = cast<IMathObject>(makeRawFunctionExpression(func, std::move(args)));
   simplifyExpr(expr);
   return expr;
 }
 
-ExpressionPtr Expression::makeRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
+std::unique_ptr<IExpression> Expression::makeRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args) {
   if (auto expr = Parser::parse(expressionBuildersMap, func.toString(), std::move(args))) {
     return expr;
   }
@@ -304,7 +304,7 @@ ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
       auto addArgs = getArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
 
       for (auto &token : addArgs) {
-        args.push_back(MathObjectPtr(token.release()));
+        args.push_back(std::unique_ptr<IMathObject>(token.release()));
       }
 
       return args;
@@ -317,31 +317,32 @@ ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  MathObjectPtr expr = makeFunctionExpression(
+  std::unique_ptr<IMathObject> expr = makeFunctionExpression(
       Add(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone()));
   return *this = Expression(std::move(expr));
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  MathObjectPtr expr = makeFunctionExpression(
+  std::unique_ptr<IMathObject> expr = makeFunctionExpression(
       Sub(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone()));
   return *this = Expression(std::move(expr));
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  MathObjectPtr expr = makeFunctionExpression(
+  std::unique_ptr<IMathObject> expr = makeFunctionExpression(
       Mul(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone()));
   return *this = Expression(std::move(expr));
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  MathObjectPtr expr = makeFunctionExpression(
+  std::unique_ptr<IMathObject> expr = makeFunctionExpression(
       Div(), makeArgumentsPtrVector(std::make_unique<Expression>(std::move(*this)), rhs.clone()));
   return *this = Expression(std::move(expr));
 }
 
 Expression &Expression::negate() {
-  MathObjectPtr expr = makeFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(*this)));
+  std::unique_ptr<IMathObject> expr =
+      makeFunctionExpression(Neg(), makeArgumentsPtrVector(std::make_unique<Expression>(*this)));
   return *this = Expression(std::move(expr));
 }
 
@@ -355,7 +356,7 @@ void Expression::setPrecision(uint8_t precision) {
   setPrecisionRec(precision);
 }
 
-MathObjectPtr Expression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> Expression::simplify(bool isPrecise) const {
   Expression expr = *this;
 
   // simplifyValue(isPrecise, expr.info);
@@ -378,8 +379,8 @@ std::string Expression::solve() const {
   return toString();
 }
 
-std::vector<MathObjectPtr> Expression::getVariables() const {
-  std::vector<MathObjectPtr> result;
+std::vector<std::unique_ptr<IMathObject>> Expression::getVariables() const {
+  std::vector<std::unique_ptr<IMathObject>> result;
 
   if (is<Variable>(info)) {
     result.emplace_back(info->clone());
@@ -406,7 +407,7 @@ IMathObject *Expression::simplify() {
 void Expression::callPowSimplify() {
   if (is<PowExpression>(info)) {
     auto *powExpr = cast<PowExpression>(info.release());
-    info = MathObjectPtr(powExpr->polynomSimplify());
+    info = std::unique_ptr<IMathObject>(powExpr->polynomSimplify());
   }
 }
 

@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-MathObjectPtr Abs::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Abs::call(const ArgumentsVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
   if (rhs < ZERO) {

@@ -8,11 +8,11 @@
 
 namespace fintamath {
 
-NegExpression::NegExpression(MathObjectPtr &&rhs) : IUnaryExpression(std::move(rhs)) {
+NegExpression::NegExpression(std::unique_ptr<IMathObject> &&rhs) : IUnaryExpression(std::move(rhs)) {
   function = cast<IFunction>(Neg().clone());
 }
 
-MathObjectPtr NegExpression::simplify(bool isPrecise) const {
+std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
   auto exprObj = std::make_unique<NegExpression>(*this);
   exprObj->simplifyValue(isPrecise);
 
