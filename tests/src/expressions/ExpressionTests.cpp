@@ -378,6 +378,7 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(x & ~y & z) | (y & z)").toString(), "???");
   EXPECT_EQ(Expression("(x | ~y | (x | ~y | z) & (y | z)) & (y | (x & ~y & z) | (y & z))").toString(), "???");
   EXPECT_EQ(Expression("b&c&d | a&c&d | a&b&c").toString(), "???");
+  EXPECT_EQ(Expression("True | a | b | False").toString(), "True");
 
   EXPECT_EQ(Expression("x=1&a").toString(), "x - 1 = 0 & a");
   EXPECT_EQ(Expression("True & a = b").toString(), "a - b = 0");
