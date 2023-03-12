@@ -76,6 +76,7 @@ Expression::Expression(const std::shared_ptr<IMathObject> &obj) {
     child = expr->child;
   } else {
     child = obj;
+    child = simplify();
   }
 }
 
@@ -251,9 +252,7 @@ std::unique_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction 
 }
 
 std::shared_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
-  std::shared_ptr<IMathObject> funcExpr = makeRawFunctionExpression(func, args);
-  simplifyChild(funcExpr);
-  return funcExpr;
+  return std::make_shared<Expression>(makeRawFunctionExpression(func, args));
 }
 
 std::shared_ptr<IExpression> Expression::makeRawFunctionExpression(const IFunction &func,
