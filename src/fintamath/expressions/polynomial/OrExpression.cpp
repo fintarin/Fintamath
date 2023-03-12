@@ -52,36 +52,25 @@ std::unique_ptr<IMathObject> OrExpression::simplify(bool /*isPrecise*/) const {
   return std::make_unique<OrExpression>(*this);
 }
 
-std::shared_ptr<IMathObject> OrExpression::simplify() {
-  std::shared_ptr<IMathObject> result = children.front();
-
-  for (size_t i = 1; i < children.size(); i++) {
-    const std::shared_ptr<IMathObject> &rhsPtr = children[i];
-
-    if (const auto lhsBool = cast<Boolean>(result)) {
-      if (*lhsBool == true) {
-        result = std::make_shared<Boolean>(true);
-      } else {
-        *result = *rhsPtr;
-      }
-
-      continue;
-    }
-
-    if (const auto rhsBool = cast<Boolean>(rhsPtr)) {
-      if (*rhsBool == true) {
-        result = std::make_shared<Boolean>(true);
-      }
-
-      continue;
-    }
-
-    if (*result == notL(*rhsPtr)) {
-      result = std::make_shared<Boolean>(true);
-    }
+std::shared_ptr<IMathObject> OrExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
+                                                            const std::shared_ptr<IMathObject> &rhsChild) {
+  if (func->doArgsMatch({*lhsChild, *rhsChild})) {
+    return (*func)(*lhsChild, *rhsChild);
   }
 
-  return result;
+  if (const auto lhsBool = cast<Boolean>(lhsChild)) {
+    return *lhsBool ? std::make_shared<Boolean>(true) : rhsChild;
+  }
+
+  if (const auto rhsBool = cast<Boolean>(rhsChild)) {
+    return *rhsBool ? std::make_shared<Boolean>(true) : lhsChild;
+  }
+
+  if (*lhsChild == notL(*rhsChild)) {
+    return std::make_shared<Boolean>(true);
+  }
+
+  return nullptr;
 }
 
 }

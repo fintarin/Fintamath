@@ -8,10 +8,7 @@
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
 namespace fintamath {
-class MulExpression : public IPolynomExpressionCRTP<MulExpression>,
-                      public INegatable,
-                      public IInvertable,
-                      public std::enable_shared_from_this<MulExpression> {
+class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatable, public IInvertable {
 public:
   explicit MulExpression(ArgumentsPtrVector children);
 
@@ -31,6 +28,9 @@ public:
 
 protected:
   std::shared_ptr<IMathObject> simplify() override;
+
+  std::shared_ptr<IMathObject> simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
+                                                const std::shared_ptr<IMathObject> &rhsChild) override;
 
 private:
   // TODO: Implement a new Expression and remove this

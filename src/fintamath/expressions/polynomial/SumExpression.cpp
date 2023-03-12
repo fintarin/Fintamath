@@ -356,6 +356,12 @@ std::shared_ptr<IMathObject> SumExpression::simplify() {
   return shared_from_this();
 }
 
+std::shared_ptr<IMathObject> SumExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
+                                                             const std::shared_ptr<IMathObject> &rhsChild) {
+  // TODO: implement
+  return nullptr;
+}
+
 void SumExpression::multiplicate(const std::shared_ptr<IMathObject> &value) {
 }
 

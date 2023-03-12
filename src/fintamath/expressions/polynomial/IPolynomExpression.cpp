@@ -6,7 +6,8 @@
 namespace fintamath {
 
 IPolynomExpression::IPolynomExpression(const IPolynomExpression &rhs)
-    : func(cast<IFunction>(rhs.func->clone())),
+    : std::enable_shared_from_this<IPolynomExpression>(rhs),
+      func(cast<IFunction>(rhs.func->clone())),
       children(rhs.children) {
 }
 
@@ -81,6 +82,38 @@ ArgumentsPtrVector IPolynomExpression::getVariables() const {
 
 ArgumentsPtrVector IPolynomExpression::getPolynom() const {
   return children;
+}
+
+std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
+  for (auto &child : children) {
+    simplifyExpr(child);
+  }
+
+  return simplifyRec();
+}
+
+std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
+  size_t childrenSize = children.size();
+
+  for (int64_t i = 0; i < children.size() - 1; i++) {
+    for (int64_t j = i + 1; j < children.size(); j++) {
+      if (auto res = simplifyChildren(children[i], children[j])) {
+        children[i] = res;
+        children.erase(children.begin() + j);
+        continue;
+      }
+    }
+  }
+
+  if (children.size() == 1) {
+    return children.front();
+  }
+
+  if (children.size() != childrenSize) {
+    return simplifyRec();
+  }
+
+  return shared_from_this();
 }
 
 void IPolynomExpression::validate() const {

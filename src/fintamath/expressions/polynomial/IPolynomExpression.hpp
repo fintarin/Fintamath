@@ -12,7 +12,7 @@
 
 namespace fintamath {
 
-class IPolynomExpression : virtual public IExpression {
+class IPolynomExpression : virtual public IExpression, public std::enable_shared_from_this<IPolynomExpression> {
 public:
   IPolynomExpression(const IPolynomExpression &rhs);
 
@@ -36,6 +36,11 @@ public:
   ArgumentsPtrVector getPolynom() const;
 
 protected:
+  std::shared_ptr<IMathObject> simplify() override; // TODO: make this final
+
+  virtual std::shared_ptr<IMathObject> simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
+                                                        const std::shared_ptr<IMathObject> &rhsChild) = 0;
+
   void validate() const final;
 
 protected:
@@ -48,6 +53,9 @@ protected:
   std::shared_ptr<IFunction> func;
 
   ArgumentsPtrVector children;
+
+private:
+  std::shared_ptr<IMathObject> simplifyRec();
 };
 
 template <typename Derived>

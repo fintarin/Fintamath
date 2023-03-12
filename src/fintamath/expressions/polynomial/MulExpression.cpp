@@ -166,6 +166,12 @@ std::shared_ptr<IMathObject> MulExpression::simplify() {
   return shared_from_this();
 }
 
+std::shared_ptr<IMathObject> MulExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
+                                                             const std::shared_ptr<IMathObject> &rhsChild) {
+  // TODO: implement
+  return nullptr;
+}
+
 void MulExpression::simplifyPow() {
   for (auto &child : children) {
     if (is<PowExpression>(child)) {

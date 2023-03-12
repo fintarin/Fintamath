@@ -7,9 +7,7 @@
 #include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
-class SumExpression : public IPolynomExpressionCRTP<SumExpression>,
-                      public INegatable,
-                      public std::enable_shared_from_this<SumExpression> {
+class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatable {
 public:
   explicit SumExpression(ArgumentsPtrVector children);
 
@@ -27,6 +25,9 @@ public:
 
 protected:
   std::shared_ptr<IMathObject> simplify() override;
+
+  std::shared_ptr<IMathObject> simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
+                                                const std::shared_ptr<IMathObject> &rhsChild) override;
 
 private:
   // TODO: Implement a new Expression and remove this
