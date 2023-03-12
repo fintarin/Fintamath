@@ -2,9 +2,9 @@
 
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/expressions/unary/NotExpression.hpp"
+#include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include <memory>
 
 namespace fintamath {
 
@@ -58,12 +58,18 @@ std::shared_ptr<IMathObject> OrExpression::simplifyChildren(const std::shared_pt
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {
     return *lhsBool ? std::make_shared<Boolean>(true) : rhsChild;
   }
-
   if (const auto rhsBool = cast<Boolean>(rhsChild)) {
     return *rhsBool ? std::make_shared<Boolean>(true) : lhsChild;
   }
 
-  if (*lhsChild == *Expression::makeFunctionExpression(Neg(), {rhsChild})) {
+  if (*lhsChild == *rhsChild) {
+    return lhsChild;
+  }
+
+  if (const auto lhsNot = cast<NotExpression>(lhsChild); lhsNot && *lhsNot->getChild() == *rhsChild) {
+    return std::make_shared<Boolean>(true);
+  }
+  if (const auto rhsNot = cast<NotExpression>(rhsChild); rhsNot && *rhsNot->getChild() == *lhsChild) {
     return std::make_shared<Boolean>(true);
   }
 
