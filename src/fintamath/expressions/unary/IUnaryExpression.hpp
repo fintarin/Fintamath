@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class IUnaryExpression : virtual public IExpression {
+class IUnaryExpression : virtual public IExpression, public std::enable_shared_from_this<IUnaryExpression> {
 public:
   IUnaryExpression(const IUnaryExpression &rhs);
 
@@ -27,6 +27,10 @@ public:
   void simplifyValue(bool isPrecise);
 
 protected:
+  virtual std::shared_ptr<IMathObject> simplifyChildren() = 0;
+
+  std::shared_ptr<IMathObject> simplify() final;
+
   void validate() const final;
 
   void compress() final;
@@ -39,7 +43,7 @@ private:
   std::string functionToString() const;
 
 protected:
-  std::shared_ptr<IFunction> function;
+  std::shared_ptr<IFunction> func;
 
   std::shared_ptr<IMathObject> child;
 };

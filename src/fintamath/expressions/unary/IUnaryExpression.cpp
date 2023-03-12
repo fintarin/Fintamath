@@ -13,13 +13,14 @@
 namespace fintamath {
 
 IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs)
-    : function(cast<IFunction>(rhs.function->clone())),
+    : std::enable_shared_from_this<IUnaryExpression>(rhs),
+      func(cast<IFunction>(rhs.func->clone())),
       child(rhs.child->clone()) {
 }
 
 IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
   if (&rhs != this) {
-    function = cast<IFunction>(rhs.function->clone());
+    func = cast<IFunction>(rhs.func->clone());
     child = rhs.child->clone();
   }
 
@@ -27,7 +28,7 @@ IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
 }
 
 IUnaryExpression::IUnaryExpression(const IFunction &func, std::shared_ptr<IMathObject> arg)
-    : function(cast<IFunction>(func.clone())),
+    : func(cast<IFunction>(func.clone())),
       child(std::move(arg)) {
 }
 
@@ -47,11 +48,11 @@ void IUnaryExpression::setPrecision(uint8_t precision) {
 }
 
 std::string IUnaryExpression::toString() const {
-  if (!function) {
+  if (!func) {
     return {};
   }
 
-  if (const auto oper = cast<IOperator>(function)) {
+  if (const auto oper = cast<IOperator>(func)) {
     switch (oper->getOperatorPriority()) {
     case IOperator::Priority::PostfixUnary:
       return postfixToString();
@@ -70,20 +71,20 @@ std::string IUnaryExpression::postfixToString() const {
     if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
       if (IOperator::Priority priority = exprOper->getOperatorPriority();
           priority != IOperator::Priority::PostfixUnary) {
-        return putInBrackets(result) + function->toString();
+        return putInBrackets(result) + func->toString();
       }
     }
   }
 
   if (const auto comp = cast<IComparable>(child); comp && *comp < ZERO) {
-    return putInBrackets(result) + function->toString();
+    return putInBrackets(result) + func->toString();
   }
 
-  return result + function->toString();
+  return result + func->toString();
 }
 
 std::string IUnaryExpression::prefixToString() const {
-  std::string result = function->toString();
+  std::string result = func->toString();
 
   if (const auto childExpr = cast<IExpression>(child)) {
     if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
@@ -101,15 +102,25 @@ std::string IUnaryExpression::prefixToString() const {
 }
 
 std::string IUnaryExpression::functionToString() const {
-  return function->toString() + "(" + child->toString() + ")";
+  return func->toString() + "(" + child->toString() + ")";
 }
 
 void IUnaryExpression::simplifyValue(bool isPrecise) {
   IExpression::simplifyExpr(child);
 }
 
+std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
+  simplifyExpr(child);
+
+  if (auto res = simplifyChildren()) {
+    return res;
+  }
+
+  return shared_from_this();
+}
+
 void IUnaryExpression::validate() const {
-  validateArgs(*function, {child});
+  validateArgs(*func, {child});
 }
 
 void IUnaryExpression::compress() {
@@ -119,7 +130,7 @@ void IUnaryExpression::compress() {
 }
 
 std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {
-  return function;
+  return func;
 }
 
 std::shared_ptr<IMathObject> IUnaryExpression::getChild() const {

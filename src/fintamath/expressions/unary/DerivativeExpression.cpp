@@ -45,20 +45,10 @@ std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) cons
   return std::make_unique<DerivativeExpression>(*this);
 }
 
-// void DerivativeExpression::validate() const {
-//   if (const auto *childExpr = cast<IExpression>(info)) {
-//     childExpr->validate();
-//   }
-
-//   this->validateArgs(*getFunction(), {*info});
-// }
-
-std::shared_ptr<IMathObject> DerivativeExpression::simplify() {
-  simplifyExpr(child);
-
+std::shared_ptr<IMathObject> DerivativeExpression::simplifyChildren() {
   if (is<IExpression>(child)) {
     // TODO: implement derivative of expression
-    return shared_from_this();
+    return nullptr;
   }
 
   if (is<INumber>(child) || is<IConstant>(child)) {
@@ -68,7 +58,15 @@ std::shared_ptr<IMathObject> DerivativeExpression::simplify() {
     return ONE.clone();
   }
 
-  return shared_from_this();
+  return nullptr;
 }
+
+// void DerivativeExpression::validate() const {
+//   if (const auto *childExpr = cast<IExpression>(info)) {
+//     childExpr->validate();
+//   }
+
+//   this->validateArgs(*getFunction(), {*info});
+// }
 
 }

@@ -35,11 +35,9 @@ std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
   return std::make_unique<NegExpression>(*this);
 }
 
-std::shared_ptr<IMathObject> NegExpression::simplify() {
-  simplifyExpr(child);
-
-  if (function->doArgsMatch({*child})) {
-    return (*function)(*child);
+std::shared_ptr<IMathObject> NegExpression::simplifyChildren() {
+  if (func->doArgsMatch({*child})) {
+    return (*func)(*child);
   }
 
   if (const auto expr = cast<INegatable>(child)) {
@@ -51,7 +49,7 @@ std::shared_ptr<IMathObject> NegExpression::simplify() {
     return expr->child;
   }
 
-  return shared_from_this();
+  return nullptr;
 }
 
 }
