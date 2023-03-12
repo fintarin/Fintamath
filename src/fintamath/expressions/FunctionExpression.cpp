@@ -125,27 +125,23 @@ void FunctionExpression::compress() {
 
 std::shared_ptr<IMathObject> FunctionExpression::simplify() {
   ArgumentsRefVector arguments;
-  bool canCallFunction = true;
 
-  for (const auto &arg : children) {
-    if (is<Variable>(arg) || is<IConstant>(arg) || is<IExpression>(arg)) {
-      canCallFunction = false;
-    }
-
-    arguments.emplace_back(*arg);
+  for (auto &child : children) {
+    simplifyChild(child);
+    arguments.emplace_back(*child);
   }
 
-  if (!canCallFunction) {
+  if (!function->doArgsMatch(arguments)) {
     return shared_from_this();
   }
 
-  std::shared_ptr<IMathObject> countResult = (*function)(arguments);
+  std::shared_ptr<IMathObject> res = (*function)(arguments);
 
-  if (const auto num = cast<INumber>(countResult); num && !num->isPrecise()) {
+  if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {
     return shared_from_this();
   }
 
-  return countResult;
+  return res;
 }
 
 }
