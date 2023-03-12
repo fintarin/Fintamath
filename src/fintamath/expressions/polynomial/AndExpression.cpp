@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/literals/constants/False.hpp"
 
@@ -64,7 +65,7 @@ std::shared_ptr<IMathObject> AndExpression::simplifyChildren(const std::shared_p
     return *rhsBool ? lhsChild : std::make_shared<Boolean>(false);
   }
 
-  if (*lhsChild == notL(*rhsChild)) {
+  if (*lhsChild == *Expression::makeFunctionExpression(Neg(), {rhsChild})) {
     return std::make_shared<Boolean>(false);
   }
 
