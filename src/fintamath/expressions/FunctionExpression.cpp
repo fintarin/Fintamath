@@ -124,6 +124,10 @@ void FunctionExpression::compress() {
 }
 
 std::shared_ptr<IMathObject> FunctionExpression::simplify() {
+  if (!function->isNonExressionEvaluatable()) {
+    return shared_from_this();
+  }
+
   ArgumentsRefVector arguments;
 
   for (auto &child : children) {
