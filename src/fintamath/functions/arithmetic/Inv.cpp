@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Inv::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Inv::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
   return ONE / rhs;

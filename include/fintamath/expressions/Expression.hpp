@@ -61,7 +61,7 @@ public:
   // TODO: make this private
   void setPrecisionRec(uint8_t precision);
 
-  static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsVector &args);
+  static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 
   static std::shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 

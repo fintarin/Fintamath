@@ -2,7 +2,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Neg::call(const ArgumentsVector &argsVect) const {
+std::unique_ptr<IMathObject> Neg::call(const ArgumentsRefVector &argsVect) const {
   return -cast<IArithmetic>(argsVect.front().get());
 }
 

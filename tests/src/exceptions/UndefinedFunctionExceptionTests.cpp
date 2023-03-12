@@ -15,7 +15,7 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentsVector &argsVect) const override {
+  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
     return {};
   }
 };

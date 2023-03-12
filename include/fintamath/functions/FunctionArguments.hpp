@@ -1,10 +1,10 @@
 #pragma once
 
-#include "fintamath/core/IMathObject.hpp"
-
 namespace fintamath {
 
-using ArgumentsVector = std::vector<std::reference_wrapper<const class IMathObject>>;
+class IMathObject;
+
+using ArgumentsRefVector = std::vector<std::reference_wrapper<const IMathObject>>;
 using ArgumentsPtrVector = std::vector<std::shared_ptr<IMathObject>>;
 using ArgumentsTypesVector = std::vector<std::reference_wrapper<const std::type_info>>;
 

@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsVector &args)>
-    IFunction::makeFunctionExpression = [](const IFunction &function, const ArgumentsVector &args) {
+const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
+    IFunction::makeFunctionExpression = [](const IFunction &function, const ArgumentsRefVector &args) {
       return Expression::makeFunctionExpression(function, args);
     };
 

@@ -26,17 +26,17 @@ public:
 
   virtual ArgumentsTypesVector getArgsTypes() const = 0;
 
-  virtual bool doArgsMatch(const ArgumentsVector &argsVect) const = 0;
+  virtual bool doArgsMatch(const ArgumentsRefVector &argsVect) const = 0;
 
   virtual bool isNonExressionEvaluatable() const = 0;
 
   template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
   std::unique_ptr<IMathObject> operator()(const Args &...args) const {
-    ArgumentsVector argsVect = {args...};
+    ArgumentsRefVector argsVect = {args...};
     return callAbstract(argsVect);
   }
 
-  std::unique_ptr<IMathObject> operator()(const ArgumentsVector &argsVect) const {
+  std::unique_ptr<IMathObject> operator()(const ArgumentsRefVector &argsVect) const {
     return callAbstract(argsVect);
   }
 
@@ -53,9 +53,9 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
 
-  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsVector &args)>
+  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
       makeFunctionExpression;
 
 private:
@@ -84,7 +84,7 @@ public:
     return argsTypes;
   }
 
-  bool doArgsMatch(const ArgumentsVector &argsVect) const override {
+  bool doArgsMatch(const ArgumentsRefVector &argsVect) const override {
     if (isTypeAnyFunc) {
       return doAnyArgsMatch(argsVect);
     }
@@ -97,9 +97,9 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentsVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const = 0;
 
-  std::unique_ptr<IMathObject> callAbstract(const ArgumentsVector &argsVect) const final {
+  std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const final {
     validateArgsSize(argsVect);
 
     if (doArgsMatch(argsVect)) {
@@ -125,7 +125,7 @@ private:
   }
 
   template <size_t i, typename Head, typename... Tail>
-  bool doArgsMatch(const ArgumentsVector &argsVect) const {
+  bool doArgsMatch(const ArgumentsRefVector &argsVect) const {
     if (!is<Head>(argsVect[i])) {
       return false;
     }
@@ -134,24 +134,24 @@ private:
   }
 
   template <size_t>
-  bool doArgsMatch(const ArgumentsVector & /*unused*/) const {
+  bool doArgsMatch(const ArgumentsRefVector & /*unused*/) const {
     return true;
   }
 
-  template <typename ArgumentsVectorType>
-  bool doAnyArgsMatch(const ArgumentsVectorType &argsVect) const {
+  template <typename ArgumentsRefVectorType>
+  bool doAnyArgsMatch(const ArgumentsRefVectorType &argsVect) const {
     return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
       return (is<Args>(arg) || ...);
     });
   }
 
-  void validateArgsSize(const ArgumentsVector &argsVect) const {
+  void validateArgsSize(const ArgumentsRefVector &argsVect) const {
     if (!isTypeAnyFunc && argsVect.size() != sizeof...(Args)) {
       throwInvalidInputFunctionException(argsVect);
     }
   }
 
-  void throwInvalidInputFunctionException(const ArgumentsVector &argsVect) const {
+  void throwInvalidInputFunctionException(const ArgumentsRefVector &argsVect) const {
     std::vector<std::string> argNamesVect(argsVect.size());
 
     for (size_t i = 0; i < argNamesVect.size(); i++) {

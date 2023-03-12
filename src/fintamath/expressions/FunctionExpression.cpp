@@ -73,7 +73,7 @@ void FunctionExpression::setPrecision(uint8_t precision) {
 }
 
 std::unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const {
-  // ArgumentsVector arguments;
+  // ArgumentsRefVector arguments;
   // bool canCallFunction = true;
 
   // for (const auto &arg : args) {
@@ -124,7 +124,7 @@ void FunctionExpression::compress() {
 }
 
 std::shared_ptr<IMathObject> FunctionExpression::simplify() {
-  ArgumentsVector arguments;
+  ArgumentsRefVector arguments;
   bool canCallFunction = true;
 
   for (const auto &arg : children) {

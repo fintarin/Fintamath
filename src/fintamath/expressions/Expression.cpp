@@ -239,7 +239,7 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   return false;
 }
 
-std::unique_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func, const ArgumentsVector &args) {
+std::unique_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args) {
   ArgumentsPtrVector argsPtrVect;
   for (const auto &arg : args) {
     argsPtrVect.emplace_back(arg.get().toMinimalObject());
