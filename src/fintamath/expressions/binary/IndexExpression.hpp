@@ -7,8 +7,7 @@
 
 namespace fintamath {
 
-class IndexExpression : public IBinaryExpressionCRTP<IndexExpression>,
-                        public std::enable_shared_from_this<IndexExpression> {
+class IndexExpression : public IBinaryExpressionCRTP<IndexExpression> {
 public:
   explicit IndexExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild);
 

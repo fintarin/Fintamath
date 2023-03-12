@@ -9,8 +9,7 @@
 
 namespace fintamath {
 
-class CompExpression : public IBinaryExpressionCRTP<CompExpression>,
-                       public std::enable_shared_from_this<CompExpression> {
+class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
 public:
   CompExpression(const IOperator &oper, std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild);
 

@@ -8,9 +8,7 @@
 
 namespace fintamath {
 
-class PowExpression : public IBinaryExpressionCRTP<PowExpression>,
-                      public IInvertable,
-                      public std::enable_shared_from_this<PowExpression> {
+class PowExpression : public IBinaryExpressionCRTP<PowExpression>, public IInvertable {
 public:
   explicit PowExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild);
 

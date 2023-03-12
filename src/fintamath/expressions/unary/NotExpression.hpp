@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class NotExpression : public IUnaryExpressionCRTP<NotExpression>, public std::enable_shared_from_this<NotExpression> {
+class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
 public:
   explicit NotExpression(std::shared_ptr<IMathObject> child);
 

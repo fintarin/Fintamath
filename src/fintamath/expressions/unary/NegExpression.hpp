@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class NegExpression : public IUnaryExpressionCRTP<NegExpression>, public std::enable_shared_from_this<NegExpression> {
+class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
   explicit NegExpression(std::shared_ptr<IMathObject> child);
 
