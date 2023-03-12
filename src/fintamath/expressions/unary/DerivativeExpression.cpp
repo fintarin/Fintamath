@@ -16,63 +16,59 @@ namespace fintamath {
 
 const Derivative DER;
 
-DerivativeExpression::DerivativeExpression(std::unique_ptr<IMathObject> &&obj) : IUnaryExpression(std::move(obj)) {
-  function = cast<IFunction>(DER.clone());
+DerivativeExpression::DerivativeExpression(std::shared_ptr<IMathObject> child)
+    : IUnaryExpression(DER, std::move(child)) {
 }
 
 std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) const {
-  std::unique_ptr<IMathObject> value;
+  // std::unique_ptr<IMathObject> value;
 
-  if (const auto *expr = cast<IExpression>(child.get())) {
-    value = expr->simplify(isPrecise);
-  } else {
-    value = child->toMinimalObject();
-  }
+  // if (const auto *expr = cast<IExpression>(child)) {
+  //   value = expr->simplify(isPrecise);
+  // } else {
+  //   value = child->toMinimalObject();
+  // }
 
-  if (is<IExpression>(value)) {
-    // TODO: implement derivative of expression
-    return std::make_unique<DerivativeExpression>(std::move(value));
-  }
-  if (is<INumber>(value) || is<IConstant>(value)) {
-    return ZERO.clone();
-  }
-  if (is<Variable>(value)) {
-    return ONE.clone();
-  }
+  // if (is<IExpression>(value)) {
+  //   // TODO: implement derivative of expression
+  //   return std::make_unique<DerivativeExpression>(std::move(value));
+  // }
+  // if (is<INumber>(value) || is<IConstant>(value)) {
+  //   return ZERO.clone();
+  // }
+  // if (is<Variable>(value)) {
+  //   return ONE.clone();
+  // }
 
-  return clone();
+  // return clone();
+
+  return std::make_unique<DerivativeExpression>(*this);
 }
 
 // void DerivativeExpression::validate() const {
-//   if (const auto *childExpr = cast<IExpression>(info.get())) {
+//   if (const auto *childExpr = cast<IExpression>(info)) {
 //     childExpr->validate();
 //   }
 
 //   this->validateArgs(*getFunction(), {*info});
 // }
 
-void DerivativeExpression::compress() {
-  if (auto *childExpr = cast<Expression>(child.get())) {
-    child = std::move(childExpr->getChild());
-  }
-}
-
-IMathObject *DerivativeExpression::simplify() {
+std::shared_ptr<IMathObject> DerivativeExpression::simplify() {
   simplifyExpr(child);
 
   if (is<IExpression>(child)) {
     // TODO: implement derivative of expression
-    return this;
+    return shared_from_this();
   }
 
   if (is<INumber>(child) || is<IConstant>(child)) {
-    return ZERO.clone().release();
+    return ZERO.clone();
   }
   if (is<Variable>(child)) {
-    return ONE.clone().release();
+    return ONE.clone();
   }
 
-  return this;
+  return shared_from_this();
 }
 
 }

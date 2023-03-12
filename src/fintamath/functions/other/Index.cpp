@@ -3,7 +3,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Index::call(const ArgumentsVector &argsVect) const {
-  return makeFunctionExpression(*this, toArgumentsPtrVect(argsVect));
+  return makeFunctionExpression(*this, argsVect);
 }
 
 }

@@ -28,4 +28,6 @@ TEST(IndexTests, callTest) {
   EXPECT_EQ(f(Expression("a+1"), Integer(2))->toString(), "(a + 1)_2");
   EXPECT_EQ(f(Variable("a"), Expression("a+1"))->toString(), "a_(a + 1)");
   EXPECT_EQ(f(Expression("a+1"), Expression("a+1"))->toString(), "(a + 1)_(a + 1)");
+
+  EXPECT_THROW(f(Expression("a+1"), Expression("a>1"))->toString(), InvalidInputBinaryOpearatorException);
 }

@@ -48,11 +48,9 @@ private:
 template <typename Return, typename Derived, typename... Args>
 class IOperatorCRTP : virtual public IFunctionCRTP<Return, Derived, Args...>, virtual public IOperator {
 public:
-  IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any) : priority(inPriority) {
-  }
-
-  IOperatorCRTP(IOperator::Priority priority, bool isAssociative)
-      : priority(priority),
+  IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any, bool isAssociative = true)
+      : IFunctionCRTP<Return, Derived, Args...>(false),
+        priority(inPriority),
         isAssociativeOper(isAssociative) {
   }
 
@@ -60,14 +58,14 @@ public:
     return priority;
   }
 
-  bool isAssociative() const override {
+  bool isAssociative() const final {
     return isAssociativeOper;
   }
 
 private:
-  const IOperator::Priority priority = IOperator::Priority::Any;
+  const IOperator::Priority priority;
 
-  const bool isAssociativeOper = true;
+  const bool isAssociativeOper;
 };
 
 }

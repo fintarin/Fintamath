@@ -6,8 +6,6 @@ namespace fintamath {
 
 class IBinaryExpression : virtual public IExpression {
 public:
-  IBinaryExpression() = default;
-
   IBinaryExpression(const IBinaryExpression &rhs);
 
   IBinaryExpression(IBinaryExpression &&rhs) noexcept = default;
@@ -16,25 +14,29 @@ public:
 
   IBinaryExpression &operator=(IBinaryExpression &&rhs) noexcept = default;
 
-  explicit IBinaryExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs);
+  explicit IBinaryExpression(const IFunction &func, std::shared_ptr<IMathObject> lhsChild,
+                             std::shared_ptr<IMathObject> rhsChild);
 
   void setPrecision(uint8_t precision) final;
 
   std::string toString() const final;
 
-  const IFunction *getFunction() const final;
-
-  // TODO: remove this
-  void validate() const final;
+  std::shared_ptr<IFunction> getFunction() const final;
 
 protected:
-  std::unique_ptr<IFunction> function;
+  void validate() const final;
 
-  std::unique_ptr<IMathObject> lhsChild;
+  void compress() final;
 
-  std::unique_ptr<IMathObject> rhsChild;
+protected:
+  std::shared_ptr<IFunction> func;
+
+  std::shared_ptr<IMathObject> lhsChild;
+
+  std::shared_ptr<IMathObject> rhsChild;
 };
 
 template <typename Derived>
 class IBinaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IBinaryExpression {};
+
 }

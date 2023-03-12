@@ -1,14 +1,11 @@
 #pragma once
 
 #include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
 
 class IUnaryExpression : virtual public IExpression {
 public:
-  IUnaryExpression() = default;
-
   IUnaryExpression(const IUnaryExpression &rhs);
 
   IUnaryExpression(IUnaryExpression &&rhs) noexcept = default;
@@ -17,32 +14,34 @@ public:
 
   IUnaryExpression &operator=(IUnaryExpression &&rhs) noexcept = default;
 
-  explicit IUnaryExpression(std::unique_ptr<IMathObject> &&rhs);
+  explicit IUnaryExpression(const IFunction &func, std::shared_ptr<IMathObject> arg);
 
   void setPrecision(uint8_t precision) final;
 
   std::string toString() const final;
 
-  std::unique_ptr<IMathObject> getChild() const;
+  std::shared_ptr<IFunction> getFunction() const final;
 
-  // TODO: remove this
-  void validate() const final;
-
-  const IFunction *getFunction() const final;
+  std::shared_ptr<IMathObject> getChild() const;
 
   void simplifyValue(bool isPrecise);
 
+protected:
+  void validate() const final;
+
+  void compress() final;
+
 private:
-  std::string postfixToString(const IFunction &oper) const;
+  std::string postfixToString() const;
 
-  std::string prefixToString(const IFunction &oper) const;
+  std::string prefixToString() const;
 
-  std::string functionToString(const IFunction &oper) const;
+  std::string functionToString() const;
 
 protected:
-  std::unique_ptr<IFunction> function;
+  std::shared_ptr<IFunction> function;
 
-  std::unique_ptr<IMathObject> child;
+  std::shared_ptr<IMathObject> child;
 };
 
 template <typename Derived>

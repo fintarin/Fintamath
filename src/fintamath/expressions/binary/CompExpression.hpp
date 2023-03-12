@@ -9,9 +9,10 @@
 
 namespace fintamath {
 
-class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
+class CompExpression : public IBinaryExpressionCRTP<CompExpression>,
+                       public std::enable_shared_from_this<CompExpression> {
 public:
-  CompExpression(const IMathObject &oper, std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs);
+  CompExpression(const IOperator &oper, std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild);
 
   std::string solve() const;
 
@@ -19,10 +20,8 @@ public:
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
-  void compress() override;
-
 protected:
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 
   // std::vector<std::unique_ptr<IMathObject>> solvePowEquation(const Variable &x) const;
 

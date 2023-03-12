@@ -12,7 +12,7 @@
 
 namespace fintamath {
 
-void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &args) const {
+void IExpression::validateArgs(const IFunction &func, const ArgumentsPtrVector &args) const {
   const ArgumentsTypesVector argsTypes = func.getArgsTypes();
 
   if (argsTypes.size() != args.size()) {
@@ -20,14 +20,14 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
   }
 
   for (size_t i = 0; i < args.size(); i++) {
-    const auto *child = &args[i].get();
-    const auto &type = argsTypes[i];
+    const std::shared_ptr<IMathObject> &child = args[i];
+    const std::type_info &type = argsTypes[i];
 
     if (is<Variable>(child)) {
       continue;
     }
 
-    if (const auto *childConst = cast<IConstant>(child)) {
+    if (const auto childConst = cast<IConstant>(child)) {
       const std::type_info &childType = childConst->getReturnType();
 
       if (!InheritanceTable::isBaseOf(type, childType)) {
@@ -37,8 +37,8 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
       continue;
     }
 
-    if (const auto *childExpr = cast<IExpression>(child)) {
-      const auto *childFunc = childExpr->getFunction();
+    if (const auto childExpr = cast<IExpression>(child)) {
+      std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
 
       if (!childFunc) {
         continue;
@@ -59,85 +59,21 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsVector &arg
   }
 }
 
-std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
-  auto copyExpr = clone();
-  simplifyExpr(copyExpr); // TODO: enable when simplify will be implemented finally
-  return copyExpr;
-}
-
-std::string IExpression::binaryOperatorToString(const IOperator &oper,
-                                                const std::vector<std::unique_ptr<IMathObject>> &values) {
-  std::string result;
-
-  std::string operStr = oper.toString();
-  IOperator::Priority operPriority = oper.getOperatorPriority();
-  bool operIsAssociative = oper.isAssociative();
-
-  if (operPriority != IOperator::Priority::Multiplication && operPriority != IOperator::Priority::Exponentiation) {
-    operStr = ' ' + operStr + ' ';
-  }
-
-  for (size_t i = 0; i < values.size(); i++) {
-    const auto &child = values[i];
-
-    bool shouldPutInBrackets = false;
-
-    if (const auto *childExpr = cast<IExpression>(child.get())) {
-      if (const auto *childOper = cast<IOperator>(childExpr->getFunction())) {
-        if (auto priority = childOper->getOperatorPriority();
-            priority > operPriority || (priority == operPriority && !operIsAssociative && i > 0)) {
-          shouldPutInBrackets = true;
-        }
-      }
-    }
-
-    if (shouldPutInBrackets) {
-      result += putInBrackets(child->toString());
-    } else {
-      result += child->toString();
-    }
-
-    result += operStr;
-  }
-
-  result = result.substr(0, result.length() - operStr.length());
-
-  return result;
-}
-
-std::string IExpression::postfixUnaryOperatorToString(const IOperator &oper, const std::unique_ptr<IMathObject> &lhs) {
-  std::string result = lhs->toString();
-
-  if (const auto *child = cast<IExpression>(lhs.get())) {
-    if (const auto *childOper = cast<IOperator>(child->getFunction())) {
-      if (auto priority = childOper->getOperatorPriority(); priority != IOperator::Priority::PostfixUnary) {
-        return putInBrackets(result) + oper.toString();
-      }
-    }
-  }
-
-  if (const auto *comp = cast<IComparable>(lhs.get()); comp && *comp < ZERO) {
-    return putInBrackets(result) + oper.toString();
-  }
-
-  return result + oper.toString();
-}
-
-void IExpression::simplifyExpr(std::unique_ptr<IMathObject> &obj) {
-  if (auto *exprObj = cast<IExpression>(obj.get())) {
-    if (auto *simplObj = exprObj->simplify(); simplObj && simplObj != obj.get()) {
-      obj = std::unique_ptr<IMathObject>(simplObj);
+void IExpression::simplifyExpr(std::shared_ptr<IMathObject> &obj) {
+  if (const auto exprObj = cast<IExpression>(obj)) {
+    if (const auto simplObj = exprObj->simplify()) {
+      obj = simplObj;
     }
   }
 }
 
-void IExpression::setMathObjectPrecision(std::unique_ptr<IMathObject> &obj, uint8_t precision) {
+void IExpression::setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision) {
   if (is<INumber>(obj)) {
-    obj = convert<Real>(*obj).precise(precision).clone();
+    obj = std::make_shared<Real>(convert<Real>(*obj).precise(precision));
     return;
   }
 
-  if (auto *expr = cast<IExpression>(obj.get())) {
+  if (auto expr = cast<IExpression>(obj)) {
     expr->setPrecision(precision);
     return;
   }

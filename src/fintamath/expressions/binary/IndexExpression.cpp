@@ -16,9 +16,8 @@ namespace fintamath {
 
 const Index INDEX;
 
-IndexExpression::IndexExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs)
-    : IBinaryExpression(std::move(lhs), std::move(rhs)) {
-  function = cast<IFunction>(INDEX.clone());
+IndexExpression::IndexExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild)
+    : IBinaryExpression(INDEX, std::move(lhsChild), std::move(rhsChild)) {
 }
 
 // std::string IndexExpression::toString() const {
@@ -38,28 +37,31 @@ IndexExpression::IndexExpression(std::unique_ptr<IMathObject> &&lhs, std::unique
 // }
 
 std::unique_ptr<IMathObject> IndexExpression::simplify(bool isPrecise) const {
-  std::unique_ptr<IMathObject> lhs;
-  std::unique_ptr<IMathObject> rhs;
+  // std::unique_ptr<IMathObject> lhs;
+  // std::unique_ptr<IMathObject> rhs;
 
-  if (const auto *expr = cast<IExpression>(lhsChild.get())) {
-    lhs = expr->simplify(isPrecise);
-  } else {
-    lhs = lhsChild->toMinimalObject();
-  }
+  // if (const auto *expr = cast<IExpression>(lhsChild)) {
+  //   lhs = expr->simplify(isPrecise);
+  // } else {
+  //   lhs = lhsChild->toMinimalObject();
+  // }
 
-  if (const auto *expr = cast<IExpression>(rhsChild.get())) {
-    rhs = expr->simplify(isPrecise);
-  } else {
-    rhs = rhsChild->toMinimalObject();
-  }
+  // if (const auto *expr = cast<IExpression>(rhsChild)) {
+  //   rhs = expr->simplify(isPrecise);
+  // } else {
+  //   rhs = rhsChild->toMinimalObject();
+  // }
 
-  return std::make_unique<IndexExpression>(std::move(lhs), std::move(rhs));
+  // return std::make_unique<IndexExpression>(std::move(lhs), std::move(rhs));
+
+  return std::make_unique<IndexExpression>(*this);
 }
 
-IMathObject *IndexExpression::simplify() {
+std::shared_ptr<IMathObject> IndexExpression::simplify() {
   simplifyExpr(lhsChild);
   simplifyExpr(rhsChild);
-  return this;
+
+  return shared_from_this();
 }
 
 }

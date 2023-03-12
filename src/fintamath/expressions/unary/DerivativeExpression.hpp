@@ -6,16 +6,15 @@
 
 namespace fintamath {
 
-class DerivativeExpression : public IUnaryExpressionCRTP<DerivativeExpression> {
+class DerivativeExpression : public IUnaryExpressionCRTP<DerivativeExpression>,
+                             public std::enable_shared_from_this<DerivativeExpression> {
 public:
-  explicit DerivativeExpression(std::unique_ptr<IMathObject> &&obj);
+  explicit DerivativeExpression(std::shared_ptr<IMathObject> child);
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
-  void compress() override;
-
 protected:
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 };
 
 }

@@ -8,18 +8,14 @@
 namespace fintamath {
 class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
-  AndExpression() = default; // TODO: remove this
-
-  explicit AndExpression(ArgumentsPtrVector &&inPolynomVect);
+  explicit AndExpression(ArgumentsPtrVector children);
 
   std::string toString() const override;
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
-  const IFunction *getFunction() const override;
-
 protected:
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 };
 
 }

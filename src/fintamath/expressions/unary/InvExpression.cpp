@@ -9,45 +9,48 @@ namespace fintamath {
 
 const Inv INV;
 
-InvExpression::InvExpression(std::unique_ptr<IMathObject> &&rhs) : IUnaryExpression(std::move(rhs)) {
-  function = cast<IFunction>(INV.clone());
+InvExpression::InvExpression(std::shared_ptr<IMathObject> child) : IUnaryExpression(INV, std::move(child)) {
+  compress();
 }
 
 std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
-  auto exprObj = std::make_unique<InvExpression>(*this);
-  exprObj->simplifyValue(isPrecise);
+  // auto exprObj = std::make_unique<InvExpression>(*this);
+  // exprObj->simplifyValue(isPrecise);
 
-  if (const auto *expr = cast<INumber>(exprObj->child.get())) {
-    return INV(*expr);
-  }
+  // if (const auto *expr = cast<INumber>(exprObj->child)) {
+  //   return INV(*expr);
+  // }
 
-  if (auto *expr = cast<IInvertable>(exprObj->child.get())) {
-    expr->invert();
-    return expr->clone();
-  }
+  // if (auto *expr = cast<IInvertable>(exprObj->child)) {
+  //   expr->invert();
+  //   return expr->clone();
+  // }
 
-  if (const auto *expr = cast<InvExpression>(exprObj->child.get())) {
-    return expr->child->clone();
-  }
-  return exprObj;
+  // if (const auto *expr = cast<InvExpression>(exprObj->child)) {
+  //   return expr->child->clone();
+  // }
+  // return exprObj;
+
+  return std::make_unique<InvExpression>(*this);
 }
 
-IMathObject *InvExpression::simplify() {
+std::shared_ptr<IMathObject> InvExpression::simplify() {
   simplifyExpr(child);
 
   if (function->doArgsMatch({*child})) {
-    return (*function)(*child).release();
+    return (*function)(*child);
   }
 
-  if (auto *expr = cast<IInvertable>(child.get())) {
+  if (auto expr = cast<IInvertable>(child)) {
     expr->invert();
-    return child.release();
+    return child;
   }
 
-  if (auto *expr = cast<InvExpression>(child.get())) {
-    return expr->child.release();
+  if (auto expr = cast<InvExpression>(child)) {
+    return expr->child;
   }
 
-  return this;
+  return shared_from_this();
 }
+
 }

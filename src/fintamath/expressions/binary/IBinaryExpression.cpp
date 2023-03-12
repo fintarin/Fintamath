@@ -1,4 +1,7 @@
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
+
+#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -8,24 +11,27 @@
 namespace fintamath {
 
 IBinaryExpression::IBinaryExpression(const IBinaryExpression &rhs)
-    : function(cast<IFunction>(rhs.function->clone())),
+    : func(cast<IFunction>(rhs.func->clone())),
       lhsChild(rhs.lhsChild->clone()),
       rhsChild(rhs.rhsChild->clone()) {
 }
 
-IBinaryExpression::IBinaryExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs)
-    : lhsChild(std::move(lhs)),
-      rhsChild(std::move(rhs)) {
-}
-
 IBinaryExpression &IBinaryExpression::operator=(const IBinaryExpression &rhs) {
   if (&rhs != this) {
-    function = cast<IFunction>(rhs.function->clone());
+    func = cast<IFunction>(rhs.func->clone());
     lhsChild = rhs.lhsChild->clone();
     rhsChild = rhs.rhsChild->clone();
   }
 
   return *this;
+}
+
+IBinaryExpression::IBinaryExpression(const IFunction &func, std::shared_ptr<IMathObject> lhsChild,
+                                     std::shared_ptr<IMathObject> rhsChild)
+    : func(cast<IFunction>(func.clone())),
+      lhsChild(std::move(lhsChild)),
+      rhsChild(std::move(rhsChild)) {
+  compress();
 }
 
 void IBinaryExpression::setPrecision(uint8_t precision) {
@@ -34,19 +40,27 @@ void IBinaryExpression::setPrecision(uint8_t precision) {
 }
 
 std::string IBinaryExpression::toString() const {
-  std::vector<std::unique_ptr<IMathObject>> values;
-  values.emplace_back(lhsChild->clone());
-  values.emplace_back(rhsChild->clone());
+  ArgumentsPtrVector values;
+  values.emplace_back(lhsChild);
+  values.emplace_back(rhsChild);
+  return binaryOperatorToString(*cast<IOperator>(getFunction()), values);
+}
 
-  return binaryOperatorToString(cast<IOperator>(*getFunction()), values);
+std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {
+  return func;
 }
 
 void IBinaryExpression::validate() const {
-  // TODO: implement it
+  validateArgs(*func, {lhsChild, rhsChild});
 }
 
-const IFunction *IBinaryExpression::getFunction() const {
-  return function.get();
+void IBinaryExpression::compress() {
+  if (auto expr = cast<Expression>(lhsChild)) {
+    lhsChild = expr->getChild();
+  }
+  if (auto expr = cast<Expression>(rhsChild)) {
+    rhsChild = expr->getChild();
+  }
 }
 
 }

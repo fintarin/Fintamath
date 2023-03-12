@@ -8,47 +8,50 @@
 
 namespace fintamath {
 
-NegExpression::NegExpression(std::unique_ptr<IMathObject> &&rhs) : IUnaryExpression(std::move(rhs)) {
-  function = cast<IFunction>(Neg().clone());
+const Neg NEG;
+
+NegExpression::NegExpression(std::shared_ptr<IMathObject> child) : IUnaryExpression(NEG, std::move(child)) {
 }
 
 std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
-  auto exprObj = std::make_unique<NegExpression>(*this);
-  exprObj->simplifyValue(isPrecise);
+  // auto exprObj = std::make_unique<NegExpression>(*this);
+  // exprObj->simplifyValue(isPrecise);
 
-  if (const auto *expr = cast<INumber>(exprObj->child.get())) {
-    return -(*expr);
-  }
+  // if (const auto *expr = cast<INumber>(exprObj->child)) {
+  //   return -(*expr);
+  // }
 
-  if (auto *expr = cast<INegatable>(exprObj->child.get())) {
-    expr->negate();
-    return expr->clone();
-  }
+  // if (auto *expr = cast<INegatable>(exprObj->child)) {
+  //   expr->negate();
+  //   return expr->clone();
+  // }
 
-  if (const auto *expr = cast<NegExpression>(exprObj->child.get())) {
-    return expr->child->clone();
-  }
+  // if (const auto *expr = cast<NegExpression>(exprObj->child)) {
+  //   return expr->child->clone();
+  // }
 
-  return exprObj;
+  // return exprObj;
+
+  return std::make_unique<NegExpression>(*this);
 }
 
-IMathObject *NegExpression::simplify() {
+std::shared_ptr<IMathObject> NegExpression::simplify() {
   simplifyExpr(child);
 
   if (function->doArgsMatch({*child})) {
-    return (*function)(*child).release();
+    return (*function)(*child);
   }
 
-  if (auto *expr = cast<INegatable>(child.get())) {
+  if (const auto expr = cast<INegatable>(child)) {
     expr->negate();
-    return child.release();
+    return child;
   }
 
-  if (auto *expr = cast<NegExpression>(child.get())) {
-    return expr->child.release();
+  if (const auto expr = cast<NegExpression>(child)) {
+    return expr->child;
   }
 
-  return this;
+  return shared_from_this();
 }
 
 }

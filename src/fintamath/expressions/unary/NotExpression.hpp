@@ -5,13 +5,13 @@
 
 namespace fintamath {
 
-class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
+class NotExpression : public IUnaryExpressionCRTP<NotExpression>, public std::enable_shared_from_this<NotExpression> {
 public:
-  explicit NotExpression(std::unique_ptr<IMathObject> &&rhs);
+  explicit NotExpression(std::shared_ptr<IMathObject> child);
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
 protected:
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 };
 }

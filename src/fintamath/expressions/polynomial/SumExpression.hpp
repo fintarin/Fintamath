@@ -7,28 +7,26 @@
 #include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
-class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatable {
+class SumExpression : public IPolynomExpressionCRTP<SumExpression>,
+                      public INegatable,
+                      public std::enable_shared_from_this<SumExpression> {
 public:
-  SumExpression() = default; // TODO: remove this
-
-  explicit SumExpression(ArgumentsPtrVector &&inPolynomVect);
+  explicit SumExpression(ArgumentsPtrVector children);
 
   std::string toString() const override;
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
-  const IFunction *getFunction() const override;
+  std::shared_ptr<IMathObject> getPowCoefficient(const std::shared_ptr<IMathObject> &powValue) const;
 
-  std::unique_ptr<IMathObject> getPowCoefficient(const std::unique_ptr<IMathObject> &powValue) const;
-
-  std::unique_ptr<IMathObject> getPow() const;
+  std::shared_ptr<IMathObject> getPow() const;
 
   void negate() override;
 
-  void multiplicate(const std::unique_ptr<IMathObject> &value);
+  void multiplicate(const std::shared_ptr<IMathObject> &value);
 
 protected:
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 
 private:
   // TODO: Implement a new Expression and remove this
@@ -37,7 +35,7 @@ private:
 
   static ArgumentsPtrVector sumNumbers(const ArgumentsPtrVector &numVect);
 
-  bool static sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs);
+  bool static sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs);
 
   void simplifyPolynom();
 

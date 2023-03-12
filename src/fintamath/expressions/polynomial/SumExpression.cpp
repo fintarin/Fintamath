@@ -33,41 +33,35 @@ namespace fintamath {
 const Add ADD;
 
 struct SumExpression::MulObject {
-  std::unique_ptr<IMathObject> obj;
-  SumExpression counter;
+  std::shared_ptr<IMathObject> obj;
+  SumExpression counter = SumExpression({});
 
-  MulObject(const std::unique_ptr<IMathObject> &obj) : obj(obj->clone()) {
-  }
-
-  MulObject(const MulObject &objMul) : obj(objMul.obj->clone()), counter(objMul.counter) {
+  MulObject(std::shared_ptr<IMathObject> obj) : obj(std::move(obj)) {
   }
 
   void simplifyCounter() {
-    auto counterSimpl = counter.toMinimalObject();
-    counter = SumExpression();
-    counter.addElement(std::move(counterSimpl));
+    std::shared_ptr<IMathObject> counterSimpl = counter.toMinimalObject(); // TODO: remove copy here
+    counter = SumExpression({});
+    counter.addElement(counterSimpl);
   }
 
-  std::unique_ptr<IMathObject> getCounterValue() const {
-    auto polynom = counter.getPolynom();
-    auto countValue = polynom.front()->clone();
-    return is<NegExpression>(polynom.front()) ? Neg()(*countValue) : std::move(countValue);
+  std::shared_ptr<IMathObject> getCounterValue() const {
+    ArgumentsPtrVector polynom = counter.getPolynom();
+    const std::shared_ptr<IMathObject> &countValue = polynom.front();
+    return is<NegExpression>(polynom.front()) ? Expression::makeFunctionExpression(Neg(), {countValue}) : countValue;
   }
 };
 
-SumExpression::SumExpression(ArgumentsPtrVector &&inPolynomVect) : IPolynomExpression(std::move(inPolynomVect)) {
-  if (!polynomVect.empty()) {
-    compress();
-  }
+SumExpression::SumExpression(ArgumentsPtrVector children) : IPolynomExpression(ADD, std::move(children)) {
 }
 
 std::string SumExpression::toString() const {
   std::string result;
 
-  result += polynomVect.front()->toString();
+  result += children.front()->toString();
 
-  for (size_t i = 1; i < polynomVect.size(); i++) {
-    std::string childStr = polynomVect[i]->toString();
+  for (size_t i = 1; i < children.size(); i++) {
+    std::string childStr = children[i]->toString();
 
     if (childStr.front() != '-') {
       result += " + ";
@@ -83,39 +77,31 @@ std::string SumExpression::toString() const {
 }
 
 std::unique_ptr<IMathObject> SumExpression::simplify(bool isPrecise) const {
-  SumExpression exprObj = *this;
-  exprObj.compress();
+  // SumExpression exprObj = *this;
+  // exprObj.compress();
 
-  for (auto &obj : exprObj.polynomVect) { // TODO: find a better solution
-    if (is<CompExpression>(obj)) {
-      throw InvalidInputException(toString());
-    }
-  }
+  // if (exprObj.children.size() == 1) {
+  //   simplifyExpr(exprObj.children.front());
+  //   return exprObj.children.front()->clone();
+  // }
 
-  if (exprObj.polynomVect.size() == 1) {
-    simplifyExpr(exprObj.polynomVect.front());
-    return exprObj.polynomVect.front()->clone();
-  }
+  // for (auto &obj : exprObj.children) {
+  //   simplifyExpr(obj);
+  // }
 
-  for (auto &obj : exprObj.polynomVect) {
-    simplifyExpr(obj);
-  }
+  // exprObj.compress();
+  // // exprObj.simplifyPolynom();
 
-  exprObj.compress();
-  // exprObj.simplifyPolynom();
+  // if (exprObj.children.size() == 1) {
+  //   simplifyExpr(exprObj.children.front());
+  //   return exprObj.children.front()->clone();
+  // }
+  // return exprObj.clone();
 
-  if (exprObj.polynomVect.size() == 1) {
-    simplifyExpr(exprObj.polynomVect.front());
-    return exprObj.polynomVect.front()->clone();
-  }
-  return exprObj.clone();
+  return std::make_unique<SumExpression>(*this);
 }
 
-const IFunction *SumExpression::getFunction() const {
-  return &ADD;
-}
-
-bool SumExpression::sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs) {
+bool SumExpression::sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs) {
   if (is<IConstant>(lhs)) {
     return false;
   }
@@ -129,39 +115,43 @@ bool SumExpression::sortFunc(const std::unique_ptr<IMathObject> &lhs, const std:
 
 // TODO: refactor
 void SumExpression::simplifyPolynom() {
-  auto numVect = ArgumentsPtrVector();
-  auto powVect = ArgumentsPtrVector();
-  auto literalVect = ArgumentsPtrVector();
-  auto exprVect = ArgumentsPtrVector();
-  auto funcVect = ArgumentsPtrVector();
+  ArgumentsPtrVector numVect;
+  ArgumentsPtrVector powVect;
+  ArgumentsPtrVector literalVect;
+  ArgumentsPtrVector exprVect;
+  ArgumentsPtrVector funcVect;
 
-  // sortPolynom(polynomVect, numVect, exprVect, literalVect, funcVect, powVect);
+  // sortPolynom(children, numVect, exprVect, literalVect, funcVect, powVect);
 
   numVect = sumNumbers(numVect);
 
   simplifyMul(powVect, exprVect, literalVect, funcVect);
-  polynomVect.clear();
+  children.clear();
 
   std::sort(funcVect.begin(), funcVect.end(), sortFunc);
   std::sort(powVect.begin(), powVect.end(), sortFunc);
   std::sort(literalVect.begin(), literalVect.end(), sortFunc);
   std::sort(exprVect.begin(), exprVect.end(), sortFunc);
 
-  pushPolynomToPolynom(std::move(funcVect), polynomVect);
-  pushPolynomToPolynom(std::move(powVect), polynomVect);
-  pushPolynomToPolynom(std::move(exprVect), polynomVect);
-  pushPolynomToPolynom(std::move(literalVect), polynomVect);
-  if (numVect.front()->toString() != "0" || polynomVect.empty()) {
-    pushPolynomToPolynom(std::move(numVect), polynomVect);
+  pushPolynomToPolynom(funcVect, children);
+  pushPolynomToPolynom(powVect, children);
+  pushPolynomToPolynom(exprVect, children);
+  pushPolynomToPolynom(literalVect, children);
+  if (numVect.front()->toString() != "0" || children.empty()) {
+    pushPolynomToPolynom(numVect, children);
   }
 }
 
 ArgumentsPtrVector SumExpression::sumNumbers(const ArgumentsPtrVector &numVect) {
+  // TODO: use function doArgsMatch instead (implement this logic in IPolynomExpression)
+
   Expression result;
   ArgumentsPtrVector resultVector;
+
   for (const auto &elem : numVect) {
     result.getChild() = Add()(*result.getChild(), *elem);
   }
+
   resultVector.emplace_back(result.toMinimalObject());
   return resultVector;
 }
@@ -199,7 +189,7 @@ void SumExpression::simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector 
   /*MulObjects objs;
   for (const auto &mulObj : mulVect) {
     bool added = false;
-    auto mulExprPolynom = cast<MulExpression>(mulObj.get())->getArgumentsPtrVector();
+    auto mulExprPolynom = cast<MulExpression>(mulObj)->getArgumentsPtrVector();
     if (mulExprPolynom.empty()) {
       added = true;
     }
@@ -287,9 +277,9 @@ void SumExpression::simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector 
 }
 
 // TODO: remove this and implement PowExpression
-std::unique_ptr<IMathObject> SumExpression::getPowCoefficient(const std::unique_ptr<IMathObject> &powValue) const {
+std::shared_ptr<IMathObject> SumExpression::getPowCoefficient(const std::shared_ptr<IMathObject> &powValue) const {
   /*if (*powValue == ZERO) {
-    for (const auto &child : polynomVect) {
+    for (const auto &child : children) {
       if (is<INumber>(child.info)) {
         return child.toMathObject(false);
       }
@@ -297,21 +287,21 @@ std::unique_ptr<IMathObject> SumExpression::getPowCoefficient(const std::unique_
   }
 
   if (*powValue == ONE) {
-    for (const auto &child : polynomVect) {
+    for (const auto &child : children) {
       if (is<Variable>(child.info)) {
         return child.inverted ? NEG_ONE.clone() : ONE.clone();
       }
     }
   }
 
-  for (const auto &child : polynomVect) {
-    if (const auto *childExpr = cast<MulExpression>(child.info.get())) {
+  for (const auto &child : children) {
+    if (const auto *childExpr = cast<MulExpression>(child.info)) {
       if (auto res = childExpr->getPowCoefficient(powValue)) {
         return child.inverted ? Neg()(*res) : res->clone();
       }
     }
 
-    if (const auto *childExpr = cast<Expression>(child.info.get()); childExpr && is<Pow>(childExpr->getInfo())) {
+    if (const auto *childExpr = cast<Expression>(child.info); childExpr && is<Pow>(childExpr->getInfo())) {
       if (auto rightVal = childExpr->getChildren().back()->clone(); rightVal && *rightVal == *powValue) {
         return child.inverted ? NEG_ONE.clone() : ONE.clone();
       }
@@ -322,20 +312,20 @@ std::unique_ptr<IMathObject> SumExpression::getPowCoefficient(const std::unique_
 }
 
 // TODO: remove this and implement PowExpression
-std::unique_ptr<IMathObject> SumExpression::getPow() const {
+std::shared_ptr<IMathObject> SumExpression::getPow() const {
   /*auto maxValue = ZERO;
 
-  for (const auto &child : polynomVect) {
-    if (const auto *childExpr = cast<MulExpression>(child.info.get())) {
+  for (const auto &child : children) {
+    if (const auto *childExpr = cast<MulExpression>(child.info)) {
       if (auto childPow = childExpr->getPow()) {
-        if (const auto *pow = cast<Integer>(childPow.get()); *pow > maxValue) {
+        if (const auto *pow = cast<Integer>(childPow); *pow > maxValue) {
           maxValue = *pow;
         }
       }
     }
 
-    if (const auto *childExpr = cast<Expression>(child.info.get()); childExpr && is<Pow>(childExpr->getInfo())) {
-      if (const auto *pow = cast<Integer>(childExpr->getChildren().back().get()); *pow > maxValue) {
+    if (const auto *childExpr = cast<Expression>(child.info); childExpr && is<Pow>(childExpr->getInfo())) {
+      if (const auto *pow = cast<Integer>(childExpr->getChildren().back()); *pow > maxValue) {
         maxValue = *pow;
       }
     }
@@ -352,20 +342,21 @@ std::unique_ptr<IMathObject> SumExpression::getPow() const {
 }
 
 void SumExpression::negate() {
-  for (auto &child : polynomVect) {
-    child = std::make_unique<NegExpression>(std::move(child));
+  for (auto &child : children) {
+    child = Expression::makeRawFunctionExpression(Neg(), {child});
     simplifyExpr(child);
   }
 }
 
-IMathObject *SumExpression::simplify() {
-  if (polynomVect.size() == 1) {
-    return polynomVect.front().release();
+std::shared_ptr<IMathObject> SumExpression::simplify() {
+  if (children.size() == 1) {
+    return children.front();
   }
-  return this;
+
+  return shared_from_this();
 }
 
-void SumExpression::multiplicate(const std::unique_ptr<IMathObject> &value) {
+void SumExpression::multiplicate(const std::shared_ptr<IMathObject> &value) {
 }
 
 }

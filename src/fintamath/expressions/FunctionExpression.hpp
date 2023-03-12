@@ -1,14 +1,11 @@
 #pragma once
 
 #include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/functions/IFunction.hpp"
-#include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
-class FunctionExpression : public IExpressionCRTP<FunctionExpression> {
+class FunctionExpression : public IExpressionCRTP<FunctionExpression>,
+                           public std::enable_shared_from_this<FunctionExpression> {
 public:
-  FunctionExpression() = default;
-
   FunctionExpression(const FunctionExpression &rhs);
 
   FunctionExpression(FunctionExpression &&rhs) = default;
@@ -17,26 +14,29 @@ public:
 
   FunctionExpression &operator=(FunctionExpression &&rhs) noexcept = default;
 
-  explicit FunctionExpression(const IFunction &function, ArgumentsPtrVector &&args);
+  explicit FunctionExpression(const IFunction &function, ArgumentsPtrVector children);
 
   std::string toString() const override;
 
-  const IFunction *getFunction() const override;
+  std::shared_ptr<IFunction> getFunction() const override;
 
   void setPrecision(uint8_t precision) override;
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
+protected:
+  std::shared_ptr<IMathObject> simplify() override;
+
   void validate() const override;
 
-protected:
-  IMathObject *simplify() override;
+  void compress() override;
 
 private:
-  std::unique_ptr<IFunction> function;
+  std::shared_ptr<IFunction> function;
 
-  ArgumentsPtrVector args;
+  ArgumentsPtrVector children;
 
   std::string functionToString() const;
 };
+
 }

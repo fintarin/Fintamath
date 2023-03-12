@@ -53,7 +53,7 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsVector &argsVect) const = 0;
 
-  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, ArgumentsPtrVector &&args)>
+  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsVector &args)>
       makeFunctionExpression;
 
 private:
@@ -63,7 +63,7 @@ private:
 template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IFunction {
 public:
-  IFunctionCRTP(bool inIsTypeAny = false) : isTypeAny(inIsTypeAny) {
+  IFunctionCRTP(bool isTypeAny = false) : isTypeAnyFunc(isTypeAny) {
   }
 
   IFunction::Type getFunctionType() const final {
@@ -81,7 +81,7 @@ public:
   }
 
   bool doArgsMatch(const ArgumentsVector &argsVect) const override {
-    if (isTypeAny) {
+    if (isTypeAnyFunc) {
       return doAnyArgsMatch(argsVect);
     }
 
@@ -94,11 +94,11 @@ protected:
   std::unique_ptr<IMathObject> callAbstract(const ArgumentsVector &argsVect) const final {
     validateArgsSize(argsVect);
 
-    if (!doArgsMatch(argsVect)) {
-      return makeFunctionExpression(*this, toArgumentsPtrVect(argsVect));
+    if (doArgsMatch(argsVect)) {
+      return call(argsVect);
     }
 
-    return call(argsVect);
+    return makeFunctionExpression(*this, argsVect);
   }
 
   virtual bool equals(const Derived &rhs) const {
@@ -138,7 +138,7 @@ private:
   }
 
   void validateArgsSize(const ArgumentsVector &argsVect) const {
-    if (!isTypeAny && argsVect.size() != sizeof...(Args)) {
+    if (!isTypeAnyFunc && argsVect.size() != sizeof...(Args)) {
       throwInvalidInputFunctionException(argsVect);
     }
   }
@@ -153,7 +153,8 @@ private:
     throw InvalidInputFunctionException(toString(), argNamesVect);
   }
 
-  bool isTypeAny;
+private:
+  const bool isTypeAnyFunc;
 };
 
 }

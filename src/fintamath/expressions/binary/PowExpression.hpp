@@ -8,29 +8,31 @@
 
 namespace fintamath {
 
-class PowExpression : public IBinaryExpressionCRTP<PowExpression>, public IInvertable {
+class PowExpression : public IBinaryExpressionCRTP<PowExpression>,
+                      public IInvertable,
+                      public std::enable_shared_from_this<PowExpression> {
 public:
-  explicit PowExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs);
+  explicit PowExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild);
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
-  IMathObject *polynomSimplify();
+  std::shared_ptr<IMathObject> polynomSimplify();
 
-  IMathObject *sumSimplify();
+  std::shared_ptr<IMathObject> sumSimplify();
 
-  IMathObject *mulSimplify();
+  std::shared_ptr<IMathObject> mulSimplify();
 
   void invert() override;
 
-  std::unique_ptr<IMathObject> getValue();
+  std::shared_ptr<IMathObject> getValue();
 
-  std::unique_ptr<IMathObject> getPow();
+  std::shared_ptr<IMathObject> getPow();
 
 protected:
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 
 private:
-  static IMathObject *sumPolynomSimplify(const SumExpression &sumExpr, Integer pow);
+  static std::shared_ptr<IMathObject> sumPolynomSimplify(const SumExpression &sumExpr, Integer pow);
 
   static Integer generateNextNumber(Integer n);
 

@@ -14,17 +14,12 @@ namespace fintamath {
 
 class IExpression : virtual public IMathObject {
 public:
-  virtual const IFunction *getFunction() const = 0;
+  virtual std::shared_ptr<IFunction> getFunction() const = 0;
 
   virtual void setPrecision(uint8_t precision) = 0;
 
-  // TODO: add this
-  // virtual void toMinimalObject() = 0;
-
   // TODO: remove this and move simplify(false) logic to setPrecision
   virtual std::unique_ptr<IMathObject> simplify(bool isPrecise) const = 0;
-
-  std::unique_ptr<IMathObject> toMinimalObject() const final;
 
   // TODO: remove this and prevent Expression in Expression situations
   virtual void compress() {
@@ -34,7 +29,7 @@ public:
   virtual void validate() const = 0;
 
   // TODO: make this non virtual using IExpression::Iterator
-  virtual std::vector<std::unique_ptr<IMathObject>> getVariables() const {
+  virtual ArgumentsPtrVector getVariables() const {
     return {};
   }
 
@@ -49,17 +44,13 @@ public:
 
 protected:
   // TODO: remove this and implement in Expression using IExpression::Iterator
-  void validateArgs(const IFunction &func, const ArgumentsVector &args) const;
+  void validateArgs(const IFunction &func, const ArgumentsPtrVector &args) const;
 
-  static std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
+  static void simplifyExpr(std::shared_ptr<IMathObject> &obj);
 
-  static std::string postfixUnaryOperatorToString(const IOperator &oper, const std::unique_ptr<IMathObject> &lhs);
+  static void setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision);
 
-  static void simplifyExpr(std::unique_ptr<IMathObject> &obj);
-
-  static void setMathObjectPrecision(std::unique_ptr<IMathObject> &obj, uint8_t precision);
-
-  virtual IMathObject *simplify() = 0;
+  virtual std::shared_ptr<IMathObject> simplify() = 0;
 
 private:
   static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parserVector;

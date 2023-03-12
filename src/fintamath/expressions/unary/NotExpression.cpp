@@ -9,29 +9,30 @@ namespace fintamath {
 
 const Not NOT;
 
-NotExpression::NotExpression(std::unique_ptr<IMathObject> &&rhs) : IUnaryExpression(std::move(rhs)) {
-  function = cast<IFunction>(NOT.clone());
+NotExpression::NotExpression(std::shared_ptr<IMathObject> child) : IUnaryExpression(NOT, std::move(child)) {
 }
 
 std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
-  auto exprObj = std::make_unique<NotExpression>(*this);
-  exprObj->simplifyValue(isPrecise);
+  // auto exprObj = std::make_unique<NotExpression>(*this);
+  // exprObj->simplifyValue(isPrecise);
 
-  if (const auto *expr = cast<NotExpression>(exprObj->child.get())) {
-    return expr->child->clone();
-  }
+  // if (const auto *expr = cast<NotExpression>(exprObj->child)) {
+  //   return expr->child->clone();
+  // }
 
-  return exprObj;
+  // return exprObj;
+
+  return std::make_unique<NotExpression>(*this);
 }
 
-IMathObject *NotExpression::simplify() {
+std::shared_ptr<IMathObject> NotExpression::simplify() {
   simplifyExpr(child);
 
-  if (auto *expr = cast<NotExpression>(child.get())) {
-    return expr->child.release();
+  if (const auto expr = cast<NotExpression>(child)) {
+    return expr->child;
   }
 
-  return this;
+  return shared_from_this();
 }
 
 }

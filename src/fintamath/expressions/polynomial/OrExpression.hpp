@@ -7,18 +7,14 @@
 namespace fintamath {
 class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
-  OrExpression() = default; // TODO: remove this
-
-  explicit OrExpression(ArgumentsPtrVector &&inPolynomVect);
+  explicit OrExpression(ArgumentsPtrVector children);
 
   std::string toString() const override;
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
-  const IFunction *getFunction() const override;
-
 protected:
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 };
 
 }

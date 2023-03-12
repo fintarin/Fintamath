@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/Expression.hpp" // TODO: remove
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -14,8 +14,6 @@ namespace fintamath {
 
 class IPolynomExpression : virtual public IExpression {
 public:
-  IPolynomExpression() = default;
-
   IPolynomExpression(const IPolynomExpression &rhs);
 
   explicit IPolynomExpression(IPolynomExpression &&rhs) = default;
@@ -24,61 +22,64 @@ public:
 
   IPolynomExpression &operator=(IPolynomExpression &&rhs) noexcept = default;
 
-  explicit IPolynomExpression(ArgumentsPtrVector &&inPolynomVect);
+  explicit IPolynomExpression(const IFunction &func, ArgumentsPtrVector children);
+
+  std::shared_ptr<IFunction> getFunction() const final;
 
   // TODO: implement iterator & remove this
   const ArgumentsPtrVector &getArgumentsPtrVector() const;
 
   void setPrecision(uint8_t precision) final;
 
-  std::vector<std::unique_ptr<IMathObject>> getVariables() const final;
+  ArgumentsPtrVector getVariables() const final;
 
   ArgumentsPtrVector getPolynom() const;
 
-  // TODO: remove this
+protected:
   void validate() const final;
 
 protected:
-  ArgumentsPtrVector polynomVect;
-
   static void sortVector(ArgumentsPtrVector &vector, std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
                          ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
 
-  static void pushPolynomToPolynom(ArgumentsPtrVector &&from, ArgumentsPtrVector &to);
+  static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
+
+protected:
+  std::shared_ptr<IFunction> func;
+
+  ArgumentsPtrVector children;
 };
 
 template <typename Derived>
 class IPolynomExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IPolynomExpression {
 public:
-  void addElement(std::unique_ptr<IMathObject> &&elem) {
+  void addElement(const std::shared_ptr<IMathObject> &elem) {
     ArgumentsPtrVector elemPolynom;
 
-    if (auto *expr = cast<Derived>(elem.get())) {
-      elemPolynom = std::move(expr->polynomVect);
-    } else if (auto *expr = cast<Expression>(elem.get())) {
-      addElement(std::move(expr->getChild()));
+    if (auto expr = cast<Derived>(elem)) {
+      elemPolynom = expr->children;
+    } else if (auto expr = cast<Expression>(elem)) {
+      addElement(expr->getChild());
       return;
     }
 
     if (elemPolynom.empty()) {
-      polynomVect.emplace_back(std::move(elem));
+      children.emplace_back(elem);
       return;
     }
 
     for (auto &child : elemPolynom) {
-      polynomVect.emplace_back(std::move(child));
+      children.emplace_back(child);
     }
   }
 
 protected:
   void compress() final {
-    Derived compressedExpr(ArgumentsPtrVector{});
-
-    for (auto &child : polynomVect) {
-      compressedExpr.addElement(std::move(child));
+    for (auto &child : children) {
+      if (auto expr = cast<Expression>(child)) {
+        child = expr->getChild();
+      }
     }
-
-    polynomVect = std::move(compressedExpr.polynomVect);
   }
 };
 

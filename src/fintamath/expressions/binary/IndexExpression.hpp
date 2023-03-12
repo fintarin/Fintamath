@@ -7,14 +7,15 @@
 
 namespace fintamath {
 
-class IndexExpression : public IBinaryExpressionCRTP<IndexExpression> {
+class IndexExpression : public IBinaryExpressionCRTP<IndexExpression>,
+                        public std::enable_shared_from_this<IndexExpression> {
 public:
-  explicit IndexExpression(std::unique_ptr<IMathObject> &&lhs, std::unique_ptr<IMathObject> &&rhs);
+  explicit IndexExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild);
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
 protected:
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 };
 
 }

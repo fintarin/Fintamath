@@ -15,41 +15,43 @@ public:
 
   Expression(const Expression &rhs);
 
-  Expression(Expression &&rhs) noexcept;
+  Expression(Expression &&rhs) noexcept = default;
 
   Expression &operator=(const Expression &rhs);
 
-  Expression &operator=(Expression &&rhs) noexcept;
+  Expression &operator=(Expression &&rhs) noexcept = default;
 
   explicit Expression(const std::string &str);
 
   Expression(const IMathObject &obj);
 
-  explicit Expression(std::unique_ptr<IMathObject> &&obj);
+  explicit Expression(const std::shared_ptr<IMathObject> &obj);
 
   Expression(int64_t val);
+
+  std::unique_ptr<IMathObject> toMinimalObject() const override;
 
   std::string toString() const override;
 
   std::string toString(uint8_t precision) const;
 
+  // TODO: use friend function instead
   std::string solve() const;
 
+  // TODO: remove this
   std::string solve(uint8_t precision) const;
 
   // TODO: implement iterator & remove this
-  std::unique_ptr<IMathObject> &getChild();
+  std::shared_ptr<IMathObject> &getChild();
 
-  // TODO: implement iterator & remove this
-  const std::unique_ptr<IMathObject> &getInfo() const;
-
-  const IFunction *getFunction() const override;
+  std::shared_ptr<IFunction> getFunction() const override;
 
   void setPrecision(uint8_t precision) override;
 
+  // TODO: remove this and implement precise()
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
-  std::vector<std::unique_ptr<IMathObject>> getVariables() const override;
+  ArgumentsPtrVector getVariables() const override;
 
   void compress() override;
 
@@ -59,22 +61,24 @@ public:
   // TODO: make this private
   void setPrecisionRec(uint8_t precision);
 
-  static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
+  static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsVector &args);
 
-  static std::unique_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, ArgumentsPtrVector &&args);
+  static std::shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+
+  static std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
   template <typename Function, typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
-  static void
-  registerFunctionExpressionMaker(Parser::Function<std::unique_ptr<IExpression>, ArgumentsPtrVector &&> &&builder) {
-    Parser::Function<std::unique_ptr<IExpression>, ArgumentsPtrVector &&> constructor =
-        [builder = std::move(builder)](ArgumentsPtrVector &&args) {
+  static void registerFunctionExpressionMaker(
+      Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &&builder) {
+    Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> constructor =
+        [builder = std::move(builder)](const ArgumentsPtrVector &args) {
           static const IFunction::Type type = Function().getFunctionType();
 
           if (type == IFunction::Type::Any || static_cast<uint16_t>(type) == args.size()) {
-            return builder(std::move(args));
+            return builder(args);
           }
 
-          return std::unique_ptr<IExpression>();
+          return std::shared_ptr<IExpression>();
         };
     Parser::add<Function>(expressionBuildersMap, constructor);
   }
@@ -90,7 +94,7 @@ protected:
 
   Expression &negate() override;
 
-  IMathObject *simplify() override;
+  std::shared_ptr<IMathObject> simplify() override;
 
 private:
   explicit Expression(const TokenVector &tokens);
@@ -110,9 +114,9 @@ private:
   void callPowSimplify();
 
 private:
-  std::unique_ptr<IMathObject> info;
+  std::shared_ptr<IMathObject> child;
 
-  static Parser::Map<std::unique_ptr<IExpression>, ArgumentsPtrVector &&> expressionBuildersMap;
+  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionBuildersMap;
 };
 
 }

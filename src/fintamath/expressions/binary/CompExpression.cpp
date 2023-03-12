@@ -21,14 +21,9 @@
 
 namespace fintamath {
 
-CompExpression::CompExpression(const IMathObject &oper, std::unique_ptr<IMathObject> &&lhs,
-                               std::unique_ptr<IMathObject> &&rhs)
-    : IBinaryExpression(std::move(lhs), std::move(rhs)) {
-  if (is<CompExpression>(lhs) || is<CompExpression>(rhs)) {
-    throw UndefinedBinaryOpearatorException(oper.toString(), lhs->toString(), rhs->toString());
-  }
-
-  this->function = cast<IOperator>(oper.clone());
+CompExpression::CompExpression(const IOperator &oper, std::shared_ptr<IMathObject> lhsChild,
+                               std::shared_ptr<IMathObject> rhsChild)
+    : IBinaryExpression(oper, std::move(lhsChild), std::move(rhsChild)) {
 }
 
 std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
@@ -45,23 +40,15 @@ std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
   res->leftExpr = std::move(simplExpr);
   res->rightExpr = ZERO.clone();
   return res;*/
+
   return std::make_unique<CompExpression>(*this);
 }
 
-void CompExpression::compress() {
-  /*if (auto *childExpr = cast<Expression>(leftExpr.get()); childExpr && childExpr->getChildren().empty()) {
-    leftExpr = std::move(childExpr->getInfo());
-  }
-  if (auto *childExpr = cast<Expression>(rightExpr.get()); childExpr && childExpr->getChildren().empty()) {
-    rightExpr = std::move(childExpr->getInfo());
-  }*/
-}
-
 /*void CompExpression::validate() const {
-  if (const auto *childExpr = cast<IExpression>(leftExpr.get())) {
+  if (const auto *childExpr = cast<IExpression>(leftExpr)) {
     childExpr->validate();
   }
-  if (const auto *childExpr = cast<IExpression>(rightExpr.get())) {
+  if (const auto *childExpr = cast<IExpression>(rightExpr)) {
     childExpr->validate();
   }
 
@@ -69,7 +56,7 @@ void CompExpression::compress() {
 }*/
 
 /*void CompExpression::setPrecision(uint8_t precision) {
-  if (auto *expr = cast<IExpression>(leftExpr.get())) {
+  if (auto *expr = cast<IExpression>(leftExpr)) {
     expr->setPrecision(precision);
   }
 }*/
@@ -152,7 +139,7 @@ const { auto copyExpr = *this; SumExpression polynom; polynom.addElement({leftEx
     return {};
   }
 
-  const auto *maxPow = cast<Integer>(maxPowObj.get());
+  const auto *maxPow = cast<Integer>(maxPowObj);
   if (*maxPow > TWO) {
     return {};
   }
@@ -171,7 +158,7 @@ const { auto copyExpr = *this; SumExpression polynom; polynom.addElement({leftEx
     auto discr = (fintamath::pow(*coefficients.at(1), TWO) - mul(Integer(4), *coefficients.at(0), *coefficients.at(2)))
                      .simplify(false);
 
-    if (const auto *discrPtr = cast<Integer>(discr.get()); discrPtr && *discrPtr < ZERO) {
+    if (const auto *discrPtr = cast<Integer>(discr); discrPtr && *discrPtr < ZERO) {
       return {};
     }
 
@@ -191,16 +178,16 @@ const { auto copyExpr = *this; SumExpression polynom; polynom.addElement({leftEx
 }
 
 bool CompExpression::detectOneVariable(Variable &v) const {
-  if (const auto *var = cast<Variable>(leftExpr.get())) {
+  if (const auto *var = cast<Variable>(leftExpr)) {
     v = *var;
     return true;
   }
-  if (const auto *expr = cast<IExpression>(leftExpr.get())) {
+  if (const auto *expr = cast<IExpression>(leftExpr)) {
     auto variables = expr->getVariables();
     if (variables.empty()) {
       return false;
     }
-    v = cast<Variable>(*variables.at(0).get());
+    v = cast<Variable>(*variables.at(0));
     for (const auto &var : variables) {
       if (var->toString() != v.toString()) {
         return false;
@@ -211,8 +198,8 @@ bool CompExpression::detectOneVariable(Variable &v) const {
 }
 
 bool CompExpression::sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs) {
-  if (const auto *lhsComp = cast<IComparable>(lhs.get())) {
-    if (const auto *rhsComp = cast<IComparable>(rhs.get())) {
+  if (const auto *lhsComp = cast<IComparable>(lhs)) {
+    if (const auto *rhsComp = cast<IComparable>(rhs)) {
       return *lhsComp < *rhsComp;
     }
   }
@@ -233,8 +220,8 @@ std::vector<std::unique_ptr<IMathObject>> CompExpression::sortResult(std::vector
 }
 */
 
-IMathObject *CompExpression::simplify() {
-  return this;
+std::shared_ptr<IMathObject> CompExpression::simplify() {
+  return shared_from_this();
 }
 
 }
