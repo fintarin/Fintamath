@@ -27,7 +27,7 @@ public:
   void invert() override;
 
 protected:
-  std::shared_ptr<IMathObject> simplify() override;
+  // std::shared_ptr<IMathObject> simplify() override;
 
   std::shared_ptr<IMathObject> simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
                                                 const std::shared_ptr<IMathObject> &rhsChild) override;

@@ -36,7 +36,7 @@ public:
   ArgumentsPtrVector getPolynom() const;
 
 protected:
-  std::shared_ptr<IMathObject> simplify() override; // TODO: make this final
+  std::shared_ptr<IMathObject> simplify() final;
 
   virtual std::shared_ptr<IMathObject> simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
                                                         const std::shared_ptr<IMathObject> &rhsChild) = 0;

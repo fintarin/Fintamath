@@ -139,32 +139,32 @@ std::unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
   return std::make_unique<MulExpression>(*this);
 }
 
-std::shared_ptr<IMathObject> MulExpression::simplify() {
-  compress();
+// std::shared_ptr<IMathObject> MulExpression::simplify() {
+//   compress();
 
-  if (children.size() == 1) {
-    simplifyChild(children.front());
-    return children.front();
-  }
+//   if (children.size() == 1) {
+//     simplifyChild(children.front());
+//     return children.front();
+//   }
 
-  for (auto &obj : children) {
-    simplifyChild(obj);
-  }
+//   for (auto &obj : children) {
+//     simplifyChild(obj);
+//   }
 
-  simplifyNegations();
+//   simplifyNegations();
 
-  simplifyPow();
+//   simplifyPow();
 
-  simplifyDivisions();
+//   simplifyDivisions();
 
-  simplifyPolynom();
+//   simplifyPolynom();
 
-  if (children.size() == 1) {
-    return children.front();
-  }
+//   if (children.size() == 1) {
+//     return children.front();
+//   }
 
-  return shared_from_this();
-}
+//   return shared_from_this();
+// }
 
 std::shared_ptr<IMathObject> MulExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
                                                              const std::shared_ptr<IMathObject> &rhsChild) {
