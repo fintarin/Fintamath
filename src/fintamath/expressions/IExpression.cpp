@@ -59,20 +59,20 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsPtrVector &
   }
 }
 
-void IExpression::simplifyExpr(std::shared_ptr<IMathObject> &obj) {
-  if (const auto exprObj = cast<IExpression>(obj)) {
-    if (const auto simplObj = exprObj->simplify()) {
-      obj = simplObj;
+void IExpression::simplifyChild(std::shared_ptr<IMathObject> &child) {
+  if (const auto exprChild = cast<IExpression>(child)) {
+    if (const auto simplObj = exprChild->simplify()) {
+      child = simplObj;
     }
   }
 
-  if (const auto constObj = cast<IConstant>(obj)) {
-    std::shared_ptr<IMathObject> constVal = (*constObj)();
+  if (const auto constChild = cast<IConstant>(child)) {
+    std::shared_ptr<IMathObject> constVal = (*constChild)();
 
     if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
-      obj = constObj;
+      child = constChild;
     } else {
-      obj = constVal;
+      child = constVal;
     }
   }
 }

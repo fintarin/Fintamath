@@ -86,7 +86,7 @@ ArgumentsPtrVector IPolynomExpression::getPolynom() const {
 
 std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
   for (auto &child : children) {
-    simplifyExpr(child);
+    simplifyChild(child);
   }
 
   return simplifyRec();

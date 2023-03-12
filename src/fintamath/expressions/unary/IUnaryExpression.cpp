@@ -106,11 +106,11 @@ std::string IUnaryExpression::functionToString() const {
 }
 
 void IUnaryExpression::simplifyValue(bool isPrecise) {
-  IExpression::simplifyExpr(child);
+  IExpression::simplifyChild(child);
 }
 
 std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
-  simplifyExpr(child);
+  simplifyChild(child);
 
   if (func->isNonExressionEvaluatable() && func->doArgsMatch({*child})) {
     return (*func)(*child);

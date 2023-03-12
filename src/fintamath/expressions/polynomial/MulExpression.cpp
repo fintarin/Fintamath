@@ -117,12 +117,12 @@ std::unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
   // }
 
   // if (exprObj.children.size() == 1) {
-  //   simplifyExpr(exprObj.children.front());
+  //   simplifyChild(exprObj.children.front());
   //   return exprObj.children.front()->clone();
   // }
 
   // for (auto &obj : exprObj.children) {
-  //   simplifyExpr(obj);
+  //   simplifyChild(obj);
   // }
 
   // exprObj.simplifyDivisions();
@@ -130,7 +130,7 @@ std::unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
   // // exprObj.simplifyPolynom();
 
   // if (exprObj.children.size() == 1) {
-  //   simplifyExpr(exprObj.children.front());
+  //   simplifyChild(exprObj.children.front());
   //   return exprObj.children.front()->clone();
   // }
 
@@ -143,12 +143,12 @@ std::shared_ptr<IMathObject> MulExpression::simplify() {
   compress();
 
   if (children.size() == 1) {
-    simplifyExpr(children.front());
+    simplifyChild(children.front());
     return children.front();
   }
 
   for (auto &obj : children) {
-    simplifyExpr(obj);
+    simplifyChild(obj);
   }
 
   simplifyNegations();
@@ -245,7 +245,7 @@ ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, st
   ArgumentsPtrVector result;
   for (auto &[key, value] : valuesMap) {
     std::shared_ptr<IMathObject> powRhs = std::make_shared<SumExpression>(powMap[key]);
-    simplifyExpr(powRhs);
+    simplifyChild(powRhs);
 
     if (const auto number = cast<INumber>(powRhs)) {
       if (*number == ONE) {
@@ -255,7 +255,7 @@ ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, st
 
       if (*number == NEG_ONE) {
         std::shared_ptr<IMathObject> invExpr = std::make_shared<InvExpression>(value);
-        simplifyExpr(invExpr);
+        simplifyChild(invExpr);
         result.emplace_back(invExpr);
         continue;
       }
@@ -266,7 +266,7 @@ ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, st
     }
 
     std::shared_ptr<IMathObject> powExpr = std::make_shared<PowExpression>(value, powRhs);
-    simplifyExpr(powExpr);
+    simplifyChild(powExpr);
     result.emplace_back(powExpr);
   }
   return result;
@@ -624,7 +624,7 @@ void MulExpression::simplifyDivisions() {
 void MulExpression::setPow(const std::shared_ptr<IMathObject> &value) {
   for (auto &child : children) {
     child = std::make_shared<PowExpression>(child, value);
-    simplifyExpr(child);
+    simplifyChild(child);
   }
 }
 
@@ -666,14 +666,14 @@ std::shared_ptr<IMathObject> MulExpression::getPow() const {
 void MulExpression::negate() {
   for (auto &child : children) {
     child = Expression::makeRawFunctionExpression(Neg(), {child});
-    simplifyExpr(child);
+    simplifyChild(child);
   }
 }
 
 void MulExpression::invert() {
   for (auto &child : children) {
     child = Expression::makeRawFunctionExpression(Inv(), {child});
-    simplifyExpr(child);
+    simplifyChild(child);
   }
 }
 

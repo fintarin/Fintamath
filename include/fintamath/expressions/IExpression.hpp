@@ -46,7 +46,7 @@ protected:
   // TODO: remove this and implement in Expression using IExpression::Iterator
   void validateArgs(const IFunction &func, const ArgumentsPtrVector &args) const;
 
-  static void simplifyExpr(std::shared_ptr<IMathObject> &obj);
+  static void simplifyChild(std::shared_ptr<IMathObject> &child);
 
   static void setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision);
 

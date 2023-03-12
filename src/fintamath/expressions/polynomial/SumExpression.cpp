@@ -81,19 +81,19 @@ std::unique_ptr<IMathObject> SumExpression::simplify(bool isPrecise) const {
   // exprObj.compress();
 
   // if (exprObj.children.size() == 1) {
-  //   simplifyExpr(exprObj.children.front());
+  //   simplifyChild(exprObj.children.front());
   //   return exprObj.children.front()->clone();
   // }
 
   // for (auto &obj : exprObj.children) {
-  //   simplifyExpr(obj);
+  //   simplifyChild(obj);
   // }
 
   // exprObj.compress();
   // // exprObj.simplifyPolynom();
 
   // if (exprObj.children.size() == 1) {
-  //   simplifyExpr(exprObj.children.front());
+  //   simplifyChild(exprObj.children.front());
   //   return exprObj.children.front()->clone();
   // }
   // return exprObj.clone();
@@ -344,7 +344,7 @@ std::shared_ptr<IMathObject> SumExpression::getPow() const {
 void SumExpression::negate() {
   for (auto &child : children) {
     child = Expression::makeRawFunctionExpression(Neg(), {child});
-    simplifyExpr(child);
+    simplifyChild(child);
   }
 }
 

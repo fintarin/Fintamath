@@ -47,7 +47,7 @@ std::unique_ptr<IMathObject> PowExpression::simplify(bool isPrecise) const {
 
 void PowExpression::invert() {
   rhsChild = Expression::makeRawFunctionExpression(Inv(), {rhsChild});
-  simplifyExpr(rhsChild);
+  simplifyChild(rhsChild);
 }
 
 std::shared_ptr<IMathObject> PowExpression::mulSimplify() {
@@ -62,7 +62,7 @@ std::shared_ptr<IMathObject> PowExpression::mulSimplify() {
   if (auto mulExpr = cast<MulExpression>(powExpr->lhsChild)) {
     mulExpr->setPow(powExpr->rhsChild);
     std::shared_ptr<IMathObject> mulExprResult = std::make_shared<MulExpression>(ArgumentsPtrVector{powExpr->lhsChild});
-    simplifyExpr(mulExprResult);
+    simplifyChild(mulExprResult);
     return mulExprResult;
   }
 
@@ -139,15 +139,15 @@ std::shared_ptr<IMathObject> PowExpression::sumPolynomSimplify(const SumExpressi
       mulExprPolynom.emplace_back(powExpr->polynomSimplify());
     }
     std::shared_ptr<IMathObject> mulExpr = std::make_shared<MulExpression>(mulExprPolynom);
-    simplifyExpr(mulExpr);
+    simplifyChild(mulExpr);
     newPolynom.emplace_back(mulExpr);
   }
 
   std::shared_ptr<IMathObject> newSumExpr = std::make_shared<SumExpression>(newPolynom);
-  simplifyExpr(newSumExpr);
+  simplifyChild(newSumExpr);
   if (invert) {
     std::shared_ptr<IMathObject> invertExpr = std::make_shared<InvExpression>(newSumExpr);
-    simplifyExpr(invertExpr);
+    simplifyChild(invertExpr);
     return invertExpr;
   }
   return newSumExpr;
@@ -174,7 +174,7 @@ std::shared_ptr<IMathObject> PowExpression::simplifyChildren() {
     }
     if (*rhsInt == NEG_ONE) {
       std::shared_ptr<IMathObject> invExpr = std::make_shared<InvExpression>(lhsChild);
-      simplifyExpr(invExpr);
+      simplifyChild(invExpr);
       return invExpr;
     }
   }

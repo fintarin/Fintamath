@@ -51,8 +51,8 @@ std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {
 }
 
 std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
-  simplifyExpr(lhsChild);
-  simplifyExpr(rhsChild);
+  simplifyChild(lhsChild);
+  simplifyChild(rhsChild);
 
   if (func->isNonExressionEvaluatable() && func->doArgsMatch({*lhsChild, *rhsChild})) {
     return (*func)(*lhsChild, *rhsChild);
