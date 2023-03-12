@@ -45,41 +45,13 @@ std::unique_ptr<IMathObject> PowExpression::simplify(bool isPrecise) const {
   return std::make_unique<PowExpression>(*this);
 }
 
-std::shared_ptr<IMathObject> PowExpression::simplify() {
-  simplifyExpr(lhsChild);
-  simplifyExpr(rhsChild);
-
-  auto lhsPtr = cast<IExpression>(lhsChild);
-  auto rhsPtr = cast<Integer>(rhsChild);
-
-  if (lhsPtr && rhsPtr) {
-    if (*rhsPtr == ZERO) {
-      return ONE.clone();
-    }
-    if (*lhsPtr == ONE || *rhsPtr == ONE) {
-      return lhsChild;
-    }
-    if (*rhsPtr == NEG_ONE) {
-      std::shared_ptr<IMathObject> invExpr = std::make_shared<InvExpression>(lhsChild);
-      simplifyExpr(invExpr);
-      return invExpr;
-    }
-  }
-
-  if (func->doArgsMatch({*lhsChild, *rhsChild})) {
-    return (*func)(*lhsChild, *rhsChild);
-  }
-
-  return shared_from_this();
-}
-
 void PowExpression::invert() {
   rhsChild = Expression::makeRawFunctionExpression(Inv(), {rhsChild});
   simplifyExpr(rhsChild);
 }
 
 std::shared_ptr<IMathObject> PowExpression::mulSimplify() {
-  std::shared_ptr<IMathObject> simplExpr = simplify();
+  std::shared_ptr<IMathObject> simplExpr = IBinaryExpression::simplify();
 
   if (!is<PowExpression>(simplExpr)) {
     return simplExpr;
@@ -98,7 +70,7 @@ std::shared_ptr<IMathObject> PowExpression::mulSimplify() {
 }
 
 std::shared_ptr<IMathObject> PowExpression::sumSimplify() {
-  std::shared_ptr<IMathObject> simplExpr = simplify();
+  std::shared_ptr<IMathObject> simplExpr = IBinaryExpression::simplify();
   if (!is<PowExpression>(simplExpr)) {
     return simplExpr;
   }
@@ -187,6 +159,31 @@ std::shared_ptr<IMathObject> PowExpression::getValue() {
 
 std::shared_ptr<IMathObject> PowExpression::getPow() {
   return rhsChild;
+}
+
+std::shared_ptr<IMathObject> PowExpression::simplifyChildren() {
+  if (func->doArgsMatch({*lhsChild, *rhsChild})) {
+    return (*func)(*lhsChild, *rhsChild);
+  }
+
+  auto lhsExpr = cast<IExpression>(lhsChild);
+  auto rhsInt = cast<Integer>(rhsChild);
+
+  if (lhsExpr && rhsInt) {
+    if (*rhsInt == ZERO) {
+      return ONE.clone();
+    }
+    if (*lhsExpr == ONE || *rhsInt == ONE) {
+      return lhsChild;
+    }
+    if (*rhsInt == NEG_ONE) {
+      std::shared_ptr<IMathObject> invExpr = std::make_shared<InvExpression>(lhsChild);
+      simplifyExpr(invExpr);
+      return invExpr;
+    }
+  }
+
+  return nullptr;
 }
 
 std::shared_ptr<IMathObject> PowExpression::polynomSimplify() {

@@ -44,6 +44,10 @@ std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
   return std::make_unique<CompExpression>(*this);
 }
 
+std::shared_ptr<IMathObject> CompExpression::simplifyChildren() {
+  return nullptr;
+}
+
 /*void CompExpression::validate() const {
   if (const auto *childExpr = cast<IExpression>(leftExpr)) {
     childExpr->validate();
@@ -219,9 +223,5 @@ std::vector<std::unique_ptr<IMathObject>> CompExpression::sortResult(std::vector
   return resultWithoutRepeat;
 }
 */
-
-std::shared_ptr<IMathObject> CompExpression::simplify() {
-  return shared_from_this();
-}
 
 }

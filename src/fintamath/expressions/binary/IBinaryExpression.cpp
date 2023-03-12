@@ -50,6 +50,17 @@ std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {
   return func;
 }
 
+std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
+  simplifyExpr(lhsChild);
+  simplifyExpr(rhsChild);
+
+  if (auto res = simplifyChildren()) {
+    return res;
+  }
+
+  return shared_from_this();
+}
+
 void IBinaryExpression::validate() const {
   validateArgs(*func, {lhsChild, rhsChild});
 }
