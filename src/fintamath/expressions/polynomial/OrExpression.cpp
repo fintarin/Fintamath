@@ -54,10 +54,6 @@ std::unique_ptr<IMathObject> OrExpression::simplify(bool /*isPrecise*/) const {
 
 std::shared_ptr<IMathObject> OrExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
                                                             const std::shared_ptr<IMathObject> &rhsChild) {
-  if (func->doArgsMatch({*lhsChild, *rhsChild})) {
-    return (*func)(*lhsChild, *rhsChild);
-  }
-
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {
     return *lhsBool ? std::make_shared<Boolean>(true) : rhsChild;
   }

@@ -162,10 +162,6 @@ std::shared_ptr<IMathObject> PowExpression::getPow() {
 }
 
 std::shared_ptr<IMathObject> PowExpression::simplifyChildren() {
-  if (func->doArgsMatch({*lhsChild, *rhsChild})) {
-    return (*func)(*lhsChild, *rhsChild);
-  }
-
   auto lhsExpr = cast<IExpression>(lhsChild);
   auto rhsInt = cast<Integer>(rhsChild);
 

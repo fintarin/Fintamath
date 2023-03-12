@@ -35,10 +35,6 @@ std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
 }
 
 std::shared_ptr<IMathObject> InvExpression::simplifyChildren() {
-  if (func->doArgsMatch({*child})) {
-    return (*func)(*child);
-  }
-
   if (auto expr = cast<IInvertable>(child)) {
     expr->invert();
     return child;

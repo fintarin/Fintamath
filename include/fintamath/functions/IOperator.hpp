@@ -46,10 +46,11 @@ private:
 };
 
 template <typename Return, typename Derived, typename... Args>
-class IOperatorCRTP : virtual public IFunctionCRTP<Return, Derived, Args...>, virtual public IOperator {
+class IOperatorCRTP : public IFunctionCRTP<Return, Derived, Args...>, virtual public IOperator {
 public:
-  IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any, bool isAssociative = true)
-      : IFunctionCRTP<Return, Derived, Args...>(false),
+  IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any, bool isAssociative = true,
+                bool isNonExressionEvaluatable = true)
+      : IFunctionCRTP<Return, Derived, Args...>(false, isNonExressionEvaluatable),
         priority(inPriority),
         isAssociativeOper(isAssociative) {
   }

@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Index : public IOperatorCRTP<IComparable, Index, IComparable, IComparable> {
 public:
-  Index() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
+  Index() : IOperatorCRTP(IOperator::Priority::Exponentiation, false, false) {
   }
 
   std::string toString() const override {

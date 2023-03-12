@@ -112,6 +112,10 @@ void IUnaryExpression::simplifyValue(bool isPrecise) {
 std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
   simplifyExpr(child);
 
+  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*child})) {
+    return (*func)(*child);
+  }
+
   if (auto res = simplifyChildren()) {
     return res;
   }

@@ -97,6 +97,12 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
 
   for (int64_t i = 0; i < children.size() - 1; i++) {
     for (int64_t j = i + 1; j < children.size(); j++) {
+      if (func->isNonExressionEvaluatable() && func->doArgsMatch({*children[i], *children[j]})) {
+        children[i] = (*func)(*children[i], *children[j]);
+        children.erase(children.begin() + j);
+        continue;
+      }
+
       if (auto res = simplifyChildren(children[i], children[j])) {
         children[i] = res;
         children.erase(children.begin() + j);

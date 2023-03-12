@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Derivative : public IOperatorCRTP<IComparable, Derivative, IComparable> {
 public:
-  Derivative() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
+  Derivative() : IOperatorCRTP(IOperator::Priority::PostfixUnary, true, false) {
   }
 
   std::string toString() const override {

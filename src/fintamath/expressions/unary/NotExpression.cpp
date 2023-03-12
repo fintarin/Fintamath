@@ -26,10 +26,6 @@ std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
 }
 
 std::shared_ptr<IMathObject> NotExpression::simplifyChildren() {
-  if (func->doArgsMatch({*child})) {
-    return (*func)(*child);
-  }
-
   if (const auto expr = cast<NotExpression>(child)) {
     return expr->child;
   }
