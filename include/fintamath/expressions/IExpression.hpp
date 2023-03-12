@@ -16,14 +16,12 @@ class IExpression : virtual public IMathObject {
 public:
   virtual std::shared_ptr<IFunction> getFunction() const = 0;
 
+  virtual ArgumentsPtrVector getChildren() const = 0;
+
   virtual void setPrecision(uint8_t precision) = 0;
 
   // TODO: remove this and move simplify(false) logic to setPrecision
   virtual std::unique_ptr<IMathObject> simplify(bool isPrecise) const = 0;
-
-  // TODO: remove this and prevent Expression in Expression situations
-  virtual void compress() {
-  }
 
   // TODO: remove this and implement in Expression using IExpression::Iterator
   virtual void validate() const = 0;

@@ -22,7 +22,7 @@ public:
 
   std::shared_ptr<IFunction> getFunction() const final;
 
-  std::shared_ptr<IMathObject> getChild() const;
+  ArgumentsPtrVector getChildren() const override;
 
   void simplifyValue(bool isPrecise);
 
@@ -32,8 +32,6 @@ protected:
   std::shared_ptr<IMathObject> simplify() final;
 
   void validate() const final;
-
-  void compress() final;
 
 private:
   std::string postfixToString() const;

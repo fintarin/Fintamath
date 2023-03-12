@@ -31,7 +31,6 @@ IBinaryExpression::IBinaryExpression(const IFunction &func, std::shared_ptr<IMat
     : func(cast<IFunction>(func.clone())),
       lhsChild(std::move(lhsChild)),
       rhsChild(std::move(rhsChild)) {
-  compress();
 }
 
 void IBinaryExpression::setPrecision(uint8_t precision) {
@@ -48,6 +47,10 @@ std::string IBinaryExpression::toString() const {
 
 std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {
   return func;
+}
+
+ArgumentsPtrVector IBinaryExpression::getChildren() const {
+  return {lhsChild, rhsChild};
 }
 
 std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
@@ -67,15 +70,6 @@ std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
 
 void IBinaryExpression::validate() const {
   validateArgs(*func, {lhsChild, rhsChild});
-}
-
-void IBinaryExpression::compress() {
-  if (auto expr = cast<Expression>(lhsChild)) {
-    lhsChild = expr->getChild();
-  }
-  if (auto expr = cast<Expression>(rhsChild)) {
-    rhsChild = expr->getChild();
-  }
 }
 
 }

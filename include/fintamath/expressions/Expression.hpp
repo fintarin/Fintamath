@@ -41,8 +41,7 @@ public:
   // TODO: remove this
   std::string solve(uint8_t precision) const;
 
-  // TODO: implement iterator & remove this
-  std::shared_ptr<IMathObject> &getChild();
+  ArgumentsPtrVector getChildren() const override;
 
   std::shared_ptr<IFunction> getFunction() const override;
 
@@ -52,8 +51,6 @@ public:
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
   ArgumentsPtrVector getVariables() const override;
-
-  void compress() override;
 
   // TODO: make private
   void validate() const override;

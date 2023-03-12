@@ -45,7 +45,6 @@ Expression &Expression::operator=(const Expression &rhs) {
 }
 
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
-  compress();
   validate();
   child = simplify();
 }
@@ -87,22 +86,8 @@ std::unique_ptr<IMathObject> Expression::toMinimalObject() const {
   return child->clone();
 }
 
-void Expression::compress() {
-  if (auto childExpr = cast<IExpression>(child)) {
-    childExpr->compress();
-  }
-
-  while (auto childExpr = cast<Expression>(child)) {
-    *this = std::move(*childExpr);
-  }
-}
-
 void Expression::setPrecisionRec(uint8_t precision) {
   setMathObjectPrecision(child, precision);
-}
-
-std::shared_ptr<IMathObject> &Expression::getChild() {
-  return child;
 }
 
 std::string Expression::toString() const {
@@ -359,6 +344,10 @@ std::string Expression::solve(uint8_t precision) const {
   }
 
   return toString(precision);
+}
+
+ArgumentsPtrVector Expression::getChildren() const {
+  return {child};
 }
 
 std::string Expression::solve() const {

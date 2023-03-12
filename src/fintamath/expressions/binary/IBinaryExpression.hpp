@@ -23,14 +23,14 @@ public:
 
   std::shared_ptr<IFunction> getFunction() const final;
 
+  ArgumentsPtrVector getChildren() const final;
+
 protected:
   virtual std::shared_ptr<IMathObject> simplifyChildren() = 0;
 
   std::shared_ptr<IMathObject> simplify() final;
 
   void validate() const final;
-
-  void compress() final;
 
 protected:
   std::shared_ptr<IFunction> func;

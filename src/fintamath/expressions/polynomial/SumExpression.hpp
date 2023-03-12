@@ -32,8 +32,6 @@ private:
   struct MulObject;
   using MulObjects = std::vector<MulObject>;
 
-  static ArgumentsPtrVector sumNumbers(const ArgumentsPtrVector &numVect);
-
   bool static sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs);
 
   void simplifyPolynom();

@@ -26,8 +26,7 @@ public:
 
   std::shared_ptr<IFunction> getFunction() const final;
 
-  // TODO: implement iterator & remove this
-  const ArgumentsPtrVector &getArgumentsPtrVector() const;
+  ArgumentsPtrVector getChildren() const final;
 
   void setPrecision(uint8_t precision) final;
 
@@ -66,9 +65,6 @@ public:
 
     if (auto expr = cast<Derived>(elem)) {
       elemPolynom = expr->children;
-    } else if (auto expr = cast<Expression>(elem)) {
-      addElement(expr->getChild());
-      return;
     }
 
     if (elemPolynom.empty()) {
@@ -78,15 +74,6 @@ public:
 
     for (auto &child : elemPolynom) {
       children.emplace_back(child);
-    }
-  }
-
-protected:
-  void compress() final {
-    for (auto &child : children) {
-      if (auto expr = cast<Expression>(child)) {
-        child = expr->getChild();
-      }
     }
   }
 };

@@ -127,18 +127,12 @@ void IUnaryExpression::validate() const {
   validateArgs(*func, {child});
 }
 
-void IUnaryExpression::compress() {
-  if (const auto expr = cast<Expression>(child)) {
-    child = expr->getChild();
-  }
-}
-
 std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {
   return func;
 }
 
-std::shared_ptr<IMathObject> IUnaryExpression::getChild() const {
-  return child;
+ArgumentsPtrVector IUnaryExpression::getChildren() const {
+  return {child};
 }
 
 }

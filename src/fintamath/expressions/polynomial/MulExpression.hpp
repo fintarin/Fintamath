@@ -57,8 +57,6 @@ private:
 
   static std::string sumExprToString(const std::shared_ptr<IMathObject> &obj);
 
-  static std::shared_ptr<INumber> mulNumbers(const ArgumentsPtrVector &numVect);
-
   static void multiplicateBraces(const ArgumentsPtrVector &addVect, ArgumentsPtrVector &positive,
                                  ArgumentsPtrVector &negative);
 

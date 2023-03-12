@@ -20,6 +20,8 @@ public:
 
   std::shared_ptr<IFunction> getFunction() const override;
 
+  ArgumentsPtrVector getChildren() const override;
+
   void setPrecision(uint8_t precision) override;
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
@@ -28,8 +30,6 @@ protected:
   std::shared_ptr<IMathObject> simplify() override;
 
   void validate() const override;
-
-  void compress() override;
 
 private:
   std::shared_ptr<IFunction> function;

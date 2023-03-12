@@ -115,45 +115,31 @@ bool SumExpression::sortFunc(const std::shared_ptr<IMathObject> &lhs, const std:
 
 // TODO: refactor
 void SumExpression::simplifyPolynom() {
-  ArgumentsPtrVector numVect;
-  ArgumentsPtrVector powVect;
-  ArgumentsPtrVector literalVect;
-  ArgumentsPtrVector exprVect;
-  ArgumentsPtrVector funcVect;
+  // ArgumentsPtrVector numVect;
+  // ArgumentsPtrVector powVect;
+  // ArgumentsPtrVector literalVect;
+  // ArgumentsPtrVector exprVect;
+  // ArgumentsPtrVector funcVect;
 
-  // sortPolynom(children, numVect, exprVect, literalVect, funcVect, powVect);
+  // // sortPolynom(children, numVect, exprVect, literalVect, funcVect, powVect);
 
-  numVect = sumNumbers(numVect);
+  // numVect = sumNumbers(numVect);
 
-  simplifyMul(powVect, exprVect, literalVect, funcVect);
-  children.clear();
+  // simplifyMul(powVect, exprVect, literalVect, funcVect);
+  // children.clear();
 
-  std::sort(funcVect.begin(), funcVect.end(), sortFunc);
-  std::sort(powVect.begin(), powVect.end(), sortFunc);
-  std::sort(literalVect.begin(), literalVect.end(), sortFunc);
-  std::sort(exprVect.begin(), exprVect.end(), sortFunc);
+  // std::sort(funcVect.begin(), funcVect.end(), sortFunc);
+  // std::sort(powVect.begin(), powVect.end(), sortFunc);
+  // std::sort(literalVect.begin(), literalVect.end(), sortFunc);
+  // std::sort(exprVect.begin(), exprVect.end(), sortFunc);
 
-  pushPolynomToPolynom(funcVect, children);
-  pushPolynomToPolynom(powVect, children);
-  pushPolynomToPolynom(exprVect, children);
-  pushPolynomToPolynom(literalVect, children);
-  if (numVect.front()->toString() != "0" || children.empty()) {
-    pushPolynomToPolynom(numVect, children);
-  }
-}
-
-ArgumentsPtrVector SumExpression::sumNumbers(const ArgumentsPtrVector &numVect) {
-  // TODO: use function doArgsMatch instead (implement this logic in IPolynomExpression)
-
-  Expression result;
-  ArgumentsPtrVector resultVector;
-
-  for (const auto &elem : numVect) {
-    result.getChild() = Add()(*result.getChild(), *elem);
-  }
-
-  resultVector.emplace_back(result.toMinimalObject());
-  return resultVector;
+  // pushPolynomToPolynom(funcVect, children);
+  // pushPolynomToPolynom(powVect, children);
+  // pushPolynomToPolynom(exprVect, children);
+  // pushPolynomToPolynom(literalVect, children);
+  // if (numVect.front()->toString() != "0" || children.empty()) {
+  //   pushPolynomToPolynom(numVect, children);
+  // }
 }
 
 // TODO: refactor

@@ -23,7 +23,6 @@ IPolynomExpression &IPolynomExpression::operator=(const IPolynomExpression &rhs)
 IPolynomExpression::IPolynomExpression(const IFunction &func, ArgumentsPtrVector children)
     : func(cast<IFunction>(func.clone())),
       children(std::move(children)) {
-  compress();
 }
 
 void IPolynomExpression::pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to) {
@@ -36,7 +35,7 @@ std::shared_ptr<IFunction> IPolynomExpression::getFunction() const {
   return func;
 }
 
-const ArgumentsPtrVector &IPolynomExpression::getArgumentsPtrVector() const {
+ArgumentsPtrVector IPolynomExpression::getChildren() const {
   return children;
 }
 

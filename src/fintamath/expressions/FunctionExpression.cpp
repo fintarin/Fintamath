@@ -66,6 +66,10 @@ std::shared_ptr<IFunction> FunctionExpression::getFunction() const {
   return function;
 }
 
+ArgumentsPtrVector FunctionExpression::getChildren() const {
+  return children;
+}
+
 void FunctionExpression::setPrecision(uint8_t precision) {
   for (auto &arg : children) {
     setMathObjectPrecision(arg, precision);
@@ -111,14 +115,6 @@ void FunctionExpression::validate() const {
   for (const auto &arg : children) {
     if (const auto argExpr = cast<IExpression>(arg)) {
       argExpr->validate();
-    }
-  }
-}
-
-void FunctionExpression::compress() {
-  for (auto &child : children) {
-    if (auto expr = cast<Expression>(child)) {
-      child = expr->getChild();
     }
   }
 }

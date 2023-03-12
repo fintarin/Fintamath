@@ -66,10 +66,10 @@ std::shared_ptr<IMathObject> OrExpression::simplifyChildren(const std::shared_pt
     return lhsChild;
   }
 
-  if (const auto lhsNot = cast<NotExpression>(lhsChild); lhsNot && *lhsNot->getChild() == *rhsChild) {
+  if (const auto lhsNot = cast<NotExpression>(lhsChild); lhsNot && *lhsNot->getChildren().front() == *rhsChild) {
     return std::make_shared<Boolean>(true);
   }
-  if (const auto rhsNot = cast<NotExpression>(rhsChild); rhsNot && *rhsNot->getChild() == *lhsChild) {
+  if (const auto rhsNot = cast<NotExpression>(rhsChild); rhsNot && *rhsNot->getChildren().front() == *lhsChild) {
     return std::make_shared<Boolean>(true);
   }
 
