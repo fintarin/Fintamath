@@ -70,7 +70,7 @@ struct ExpressionConfig {
       const auto &lhs = args.front();
       auto rhs = std::make_shared<InvExpression>(args.back());
 
-      return std::make_shared<SumExpression>(ArgumentsPtrVector{lhs, rhs});
+      return std::make_shared<MulExpression>(ArgumentsPtrVector{lhs, rhs});
     });
 
     Expression::registerFunctionExpressionMaker<And>([](const ArgumentsPtrVector &args) {
