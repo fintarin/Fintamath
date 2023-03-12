@@ -65,6 +65,16 @@ void IExpression::simplifyExpr(std::shared_ptr<IMathObject> &obj) {
       obj = simplObj;
     }
   }
+
+  if (const auto constObj = cast<IConstant>(obj)) {
+    std::shared_ptr<IMathObject> constVal = (*constObj)();
+
+    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
+      obj = constObj;
+    } else {
+      obj = constVal;
+    }
+  }
 }
 
 void IExpression::setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision) {
