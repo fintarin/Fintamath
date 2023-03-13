@@ -24,6 +24,8 @@ public:
 
   ArgumentsPtrVector getPolynom() const;
 
+  virtual void addElement(const std::shared_ptr<IMathObject> &element) = 0;
+
 protected:
   virtual std::shared_ptr<IMathObject> preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
@@ -61,7 +63,7 @@ public:
     }
   }
 
-  void addElement(const std::shared_ptr<IMathObject> &element) {
+  void addElement(const std::shared_ptr<IMathObject> &element) final {
     std::shared_ptr<IMathObject> elem = element;
     compressChild(elem);
 

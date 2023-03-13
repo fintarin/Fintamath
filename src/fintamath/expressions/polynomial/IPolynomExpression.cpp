@@ -82,8 +82,14 @@ void IPolynomExpression::validate() const {
 std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
   preSimplifyRec();
 
-  for (auto &child : children) {
-    simplifyChild(child);
+  {
+    ArgumentsPtrVector oldChildren = children;
+    children.clear();
+
+    for (auto &child : oldChildren) {
+      simplifyChild(child);
+      addElement(child);
+    }
   }
 
   preSimplifyRec(); // TODO: try to remove this
