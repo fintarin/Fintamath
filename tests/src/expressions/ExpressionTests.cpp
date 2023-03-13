@@ -246,6 +246,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("((a+b+(a+c)+(1+v))+((a+c(abc(aaa))+v)c+d))((c)((d+d+d)b)a)").toString(),
             "3 a b c d + 3 a b c d v + 3 a^2 c^2 b d + 3 a^5 b^2 c^4 d + 3 b^2 a c d + 3 c^2 a b d + 3 c^2 a b d v + 3 "
             "d^2 a b c + 6 a^2 b c d");
+  EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + b^2 + 2 a b");
+  EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + b^2 + 2 a b");
+  EXPECT_EQ(Expression("sin(asin(a+b+1-1))^1000/(a+b+1-1)^998").toString(), "sin(asin(a+b))^1000/(a+b)^998");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-3sin(E)").toString(), "-3 sin(E)");
