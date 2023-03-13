@@ -14,23 +14,23 @@ NegExpression::NegExpression(const std::shared_ptr<IMathObject> &child) : IUnary
 }
 
 // std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
-  // auto exprObj = std::make_unique<NegExpression>(*this);
-  // exprObj->simplifyValue(isPrecise);
+// auto exprObj = std::make_unique<NegExpression>(*this);
+// exprObj->simplifyValue(isPrecise);
 
-  // if (const auto *expr = cast<INumber>(exprObj->child)) {
-  //   return -(*expr);
-  // }
+// if (const auto *expr = cast<INumber>(exprObj->child)) {
+//   return -(*expr);
+// }
 
-  // if (auto *expr = cast<INegatable>(exprObj->child)) {
-  //   expr->negate();
-  //   return expr->clone();
-  // }
+// if (auto *expr = cast<INegatable>(exprObj->child)) {
+//   expr->negate();
+//   return expr->clone();
+// }
 
-  // if (const auto *expr = cast<NegExpression>(exprObj->child)) {
-  //   return expr->child->clone();
-  // }
+// if (const auto *expr = cast<NegExpression>(exprObj->child)) {
+//   return expr->child->clone();
+// }
 
-  // return exprObj;
+// return exprObj;
 // }
 
 std::shared_ptr<IMathObject> NegExpression::preSimplify() const {

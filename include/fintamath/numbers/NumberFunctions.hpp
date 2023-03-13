@@ -52,7 +52,8 @@ std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
     if ((*(rhs.toString().end() - 1) - '0') % 2 == 0) {
       rhs /= 2;
       sqr = (*sqr) * (*sqr);
-    } else {
+    }
+    else {
       --rhs;
       res = (*res) * (*sqr);
     }

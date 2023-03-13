@@ -47,7 +47,8 @@ Real exp(const Real &rhs) {
 Real log(const Real &lhs, const Real &rhs) {
   try {
     return ln(rhs) / ln(lhs);
-  } catch (const UndefinedException &) {
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("log", {lhs.toString(), rhs.toString()});
   }
 }
@@ -99,7 +100,8 @@ Real cos(const Real &rhs) {
 Real tan(const Real &rhs) {
   try {
     return sin(rhs) / cos(rhs);
-  } catch (const UndefinedException &) {
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("tan", {rhs.toString()});
   }
 }
@@ -107,7 +109,8 @@ Real tan(const Real &rhs) {
 Real cot(const Real &rhs) {
   try {
     return cos(rhs) / sin(rhs);
-  } catch (const UndefinedException &) {
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("cot", {rhs.toString()});
   }
 }
@@ -161,7 +164,8 @@ Real tanh(const Real &rhs) {
 Real coth(const Real &rhs) {
   try {
     return 1 / tanh(rhs);
-  } catch (const UndefinedException &) {
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("coth", {rhs.toString()});
   }
 }
@@ -173,7 +177,8 @@ Real asinh(const Real &rhs) {
 Real acosh(const Real &rhs) {
   try {
     return ln(rhs + sqrt(rhs - 1) * sqrt(rhs + 1));
-  } catch (const UndefinedException &) {
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("acoth", {rhs.toString()});
   }
 }
@@ -181,7 +186,8 @@ Real acosh(const Real &rhs) {
 Real atanh(const Real &rhs) {
   try {
     return (ln(1 + rhs) - ln(1 - rhs)) / 2;
-  } catch (const UndefinedException &) {
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("acoth", {rhs.toString()});
   }
 }
@@ -189,7 +195,8 @@ Real atanh(const Real &rhs) {
 Real acoth(const Real &rhs) {
   try {
     return (ln(1 + 1 / rhs) - ln(1 - 1 / rhs)) / 2;
-  } catch (const UndefinedException &) {
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("acoth", {rhs.toString()});
   }
 }

@@ -78,7 +78,8 @@ void IExpression::simplifyChild(std::shared_ptr<IMathObject> &child) {
 
     if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
       child = constChild;
-    } else {
+    }
+    else {
       child = constVal;
     }
 

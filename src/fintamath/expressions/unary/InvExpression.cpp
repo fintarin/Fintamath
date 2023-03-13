@@ -13,22 +13,22 @@ InvExpression::InvExpression(const std::shared_ptr<IMathObject> &child) : IUnary
 }
 
 // std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
-  // auto exprObj = std::make_unique<InvExpression>(*this);
-  // exprObj->simplifyValue(isPrecise);
+// auto exprObj = std::make_unique<InvExpression>(*this);
+// exprObj->simplifyValue(isPrecise);
 
-  // if (const auto *expr = cast<INumber>(exprObj->child)) {
-  //   return INV(*expr);
-  // }
+// if (const auto *expr = cast<INumber>(exprObj->child)) {
+//   return INV(*expr);
+// }
 
-  // if (auto *expr = cast<IInvertable>(exprObj->child)) {
-  //   expr->invert();
-  //   return expr->clone();
-  // }
+// if (auto *expr = cast<IInvertable>(exprObj->child)) {
+//   expr->invert();
+//   return expr->clone();
+// }
 
-  // if (const auto *expr = cast<InvExpression>(exprObj->child)) {
-  //   return expr->child->clone();
-  // }
-  // return exprObj;
+// if (const auto *expr = cast<InvExpression>(exprObj->child)) {
+//   return expr->child->clone();
+// }
+// return exprObj;
 // }
 
 std::shared_ptr<IMathObject> InvExpression::preSimplify() const {

@@ -8,3 +8,7 @@ PackConstructorInitializers: CurrentLine
 SeparateDefinitionBlocks: Always
 NamespaceIndentation: None
 FixNamespaceComments: false
+BraceWrapping:
+  BeforeCatch: true
+  BeforeElse: true
+BreakBeforeBraces: Custom

@@ -16,7 +16,8 @@ bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex) {
   for (size_t i = openBracketIndex; i < tokens.size(); i++) {
     if (tokens[i] == "(") {
       brackets++;
-    } else if (tokens[i] == ")") {
+    }
+    else if (tokens[i] == ")") {
       brackets--;
     }
 
@@ -62,7 +63,8 @@ std::map<size_t, std::shared_ptr<IMathObject>> findBinaryOperators(const TokenVe
         operators.insert({i, oper});
         isPrevTokenOper = true;
       }
-    } else {
+    }
+    else {
       isPrevTokenOper = false;
     }
   }
@@ -101,7 +103,8 @@ std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVect
 
     if (shouldPutInBrackets) {
       result += putInBrackets(child->toString());
-    } else {
+    }
+    else {
       result += child->toString();
     }
 

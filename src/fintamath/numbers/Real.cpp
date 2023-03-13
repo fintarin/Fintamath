@@ -68,7 +68,8 @@ Real::Real(std::string str) : Real() {
     for (; i < str.size(); ++i) {
       if (str[i] == '.') {
         dotsNum++;
-      } else if (str[i] < '0' || str[i] > '9') {
+      }
+      else if (str[i] < '0' || str[i] > '9') {
         throw InvalidInputException(str);
       }
 

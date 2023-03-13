@@ -66,7 +66,8 @@ std::string SumExpression::toString() const {
     if (childStr.front() != '-') {
       result += " + ";
       result += childStr;
-    } else {
+    }
+    else {
       childStr = childStr.substr(1);
       result += " - ";
       result += childStr;

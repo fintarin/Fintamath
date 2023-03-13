@@ -14,14 +14,14 @@ NotExpression::NotExpression(const std::shared_ptr<IMathObject> &child) : IUnary
 }
 
 // std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
-  // auto exprObj = std::make_unique<NotExpression>(*this);
-  // exprObj->simplifyValue(isPrecise);
+// auto exprObj = std::make_unique<NotExpression>(*this);
+// exprObj->simplifyValue(isPrecise);
 
-  // if (const auto *expr = cast<NotExpression>(exprObj->child)) {
-  //   return expr->child->clone();
-  // }
+// if (const auto *expr = cast<NotExpression>(exprObj->child)) {
+//   return expr->child->clone();
+// }
 
-  // return exprObj;
+// return exprObj;
 // }
 
 std::shared_ptr<IMathObject> NotExpression::preSimplify() const {

@@ -90,7 +90,8 @@ std::string MulExpression::toString() const {
   if (const auto invExpr = cast<InvExpression>(children.front())) {
     result += "1/";
     result += sumExprToString(invExpr->getChildren().front());
-  } else {
+  }
+  else {
     result += sumExprToString(children.front());
   }
 

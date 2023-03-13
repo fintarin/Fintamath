@@ -55,7 +55,8 @@ Integer::Integer(std::string str) : Integer() {
 
   try {
     impl->v.assign(str);
-  } catch (const std::runtime_error &) {
+  }
+  catch (const std::runtime_error &) {
     throw InvalidInputException(str);
   }
 }
@@ -140,7 +141,8 @@ Integer &Integer::bitLeftShift(const Integer &rhs) {
   try {
     impl->v <<= int64_t(rhs.impl->v);
     return *this;
-  } catch (...) {
+  }
+  catch (...) {
     throw UndefinedBinaryOpearatorException("<<", toString(), rhs.toString());
   }
 }
@@ -149,7 +151,8 @@ Integer &Integer::bitRightShift(const Integer &rhs) {
   try {
     impl->v >>= int64_t(rhs.impl->v);
     return *this;
-  } catch (...) {
+  }
+  catch (...) {
     throw UndefinedBinaryOpearatorException(">>", toString(), rhs.toString());
   }
 }

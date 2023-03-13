@@ -52,7 +52,8 @@ public:
     Function<BasePtr, Args...> constructor = [](const Args &...args) {
       try {
         return std::make_unique<Type>(args...);
-      } catch (const InvalidInputException &) {
+      }
+      catch (const InvalidInputException &) {
         return std::unique_ptr<Type>();
       }
     };

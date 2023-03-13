@@ -52,7 +52,8 @@ Expression::Expression(const TokenVector &tokens) {
 Expression::Expression(const std::shared_ptr<IMathObject> &obj) {
   if (auto expr = cast<Expression>(obj)) {
     child = expr->child;
-  } else {
+  }
+  else {
     child = obj;
     simplifyChild(child);
   }
@@ -88,7 +89,8 @@ bool Expression::parsePrefixOperator(const TokenVector &tokens) {
 
     if (auto expr = cast<Expression>(funcExpr)) {
       *this = std::move(*expr);
-    } else {
+    }
+    else {
       child = funcExpr;
     }
 
@@ -117,7 +119,8 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
 
     if (auto expr = cast<Expression>(funcExpr)) {
       *this = std::move(*expr);
-    } else {
+    }
+    else {
       child = funcExpr;
     }
 
@@ -163,7 +166,8 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 
   if (auto expr = cast<Expression>(funcExpr)) {
     *this = std::move(*expr);
-  } else {
+  }
+  else {
     child = funcExpr;
   }
 

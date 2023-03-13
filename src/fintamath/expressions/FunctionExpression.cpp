@@ -13,7 +13,8 @@ FunctionExpression::FunctionExpression(const IFunction &function, const Argument
   for (const auto &child : children) {
     if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
       this->children.emplace_back(expr->getChildren().front());
-    } else {
+    }
+    else {
       this->children.emplace_back(child);
     }
   }
