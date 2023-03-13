@@ -216,6 +216,10 @@ std::vector<std::unique_ptr<IMathObject>> CompExpression::sortResult(std::vector
 }
 */
 
+std::shared_ptr<IMathObject> CompExpression::solve() const {
+  return {};
+}
+
 std::shared_ptr<IMathObject> CompExpression::postSimplify() const {
   return {};
 }

@@ -90,4 +90,6 @@ Expression andL(const Expression &lhs, const Expression &rhs);
 
 Expression orL(const Expression &lhs, const Expression &rhs);
 
+Expression solve(const Expression &rhs);
+
 }

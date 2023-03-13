@@ -14,7 +14,7 @@ public:
   CompExpression(const IOperator &oper, const std::shared_ptr<IMathObject> &lhsChild,
                  const std::shared_ptr<IMathObject> &rhsChild);
 
-  // std::string solve() const;
+  std::shared_ptr<IMathObject> solve() const;
 
   // std::string solve(uint8_t precision) const;
 

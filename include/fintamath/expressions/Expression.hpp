@@ -28,12 +28,6 @@ public:
 
   Expression precise(size_t precision = FINTAMATH_ROUND_PRECISION) const;
 
-  // TODO: use friend function instead
-  std::string solve() const;
-
-  // TODO: remove this
-  std::string solve(uint8_t precision) const;
-
   ArgumentsPtrVector getChildren() const override;
 
   std::shared_ptr<IFunction> getFunction() const override;

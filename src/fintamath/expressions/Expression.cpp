@@ -323,24 +323,8 @@ void Expression::validate() const {
 // return child->clone();
 // }
 
-std::string Expression::solve(uint8_t precision) const {
-  // if (const auto expr = cast<CompExpression>(child)) {
-  //   return expr->solve(precision);
-  // }
-
-  return toString();
-}
-
 ArgumentsPtrVector Expression::getChildren() const {
   return {child};
-}
-
-std::string Expression::solve() const {
-  // if (const auto expr = cast<CompExpression>(child)) {
-  //   return expr->solve();
-  // }
-
-  return toString();
 }
 
 ArgumentsPtrVector Expression::getVariables() const {

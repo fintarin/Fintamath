@@ -1,5 +1,6 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
+#include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
@@ -153,4 +154,15 @@ Expression andL(const Expression &lhs, const Expression &rhs) {
 Expression orL(const Expression &lhs, const Expression &rhs) {
   return Expression(Or()(lhs, rhs));
 }
+
+Expression solve(const Expression &rhs) {
+  if (const auto compExpr = cast<CompExpression>(rhs.getChildren().front())) {
+    if (std::shared_ptr<IMathObject> res = compExpr->solve()) {
+      return Expression(res);
+    }
+  }
+
+  return rhs;
+}
+
 }

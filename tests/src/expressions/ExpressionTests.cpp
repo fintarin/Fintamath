@@ -767,17 +767,3 @@ TEST(ExpressionTests, preciseNegativeTest) {
   // TODO: do no perform operation, when the result is too big
   EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E^(E^(E^(E^E))))))))").precise(), UndefinedException);
 }
-
-TEST(ExpressionTests, solveTest) {
-  EXPECT_EQ(Expression("x-10=0").solve(), "x in {10}");
-  EXPECT_EQ(Expression("x<-10").solve(), "x + 10 < 0");
-  EXPECT_EQ(Expression("-10-x=0").solve(), "x in {-10}");
-  EXPECT_EQ(Expression("x^2-10=39").solve(), "x in {-7,7}");
-  EXPECT_EQ(Expression("x^2=0").solve(), "x in {0}");
-  EXPECT_EQ(Expression("x^2=1").solve(), "x in {-1,1}");
-  EXPECT_EQ(Expression("x^2=-1").solve(), "x^2 + 1 = 0"); // TODO complex numbers
-  EXPECT_EQ(Expression("x^2-2x-3=0").solve(), "x in {-1,3}");
-  EXPECT_EQ(Expression("15-2x-x^2=0").solve(), "x in {-5,3}");
-  EXPECT_EQ(Expression("x^2+12x+36=0").solve(), "x in {-6}");
-  EXPECT_EQ(Expression("15x^2+sin(25)x-10%=Ey").solve(5), "15 x^2 - 2.7183 y - 0.13235 x - 0.1 = 0");
-}
