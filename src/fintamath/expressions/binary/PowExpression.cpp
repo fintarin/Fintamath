@@ -179,7 +179,7 @@ std::shared_ptr<IMathObject> PowExpression::simplifyChildren() {
     }
   }
 
-  return nullptr;
+  return {};
 }
 
 std::shared_ptr<IMathObject> PowExpression::polynomSimplify() {

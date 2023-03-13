@@ -8,8 +8,7 @@
 namespace fintamath {
 
 FunctionExpression::FunctionExpression(const FunctionExpression &rhs)
-    : std::enable_shared_from_this<FunctionExpression>(rhs),
-      function(cast<IFunction>(rhs.function->clone())) {
+    : function(cast<IFunction>(rhs.function->clone())) {
   for (const auto &arg : rhs.children) {
     children.emplace_back(arg->clone());
   }
@@ -121,7 +120,7 @@ void FunctionExpression::validate() const {
 
 std::shared_ptr<IMathObject> FunctionExpression::simplify() {
   if (!function->isNonExressionEvaluatable()) {
-    return shared_from_this();
+    return {};
   }
 
   ArgumentsRefVector arguments;
@@ -132,13 +131,13 @@ std::shared_ptr<IMathObject> FunctionExpression::simplify() {
   }
 
   if (!function->doArgsMatch(arguments)) {
-    return shared_from_this();
+    return {};
   }
 
   std::shared_ptr<IMathObject> res = (*function)(arguments);
 
   if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {
-    return shared_from_this();
+    return {};
   }
 
   return res;

@@ -12,7 +12,7 @@
 
 namespace fintamath {
 
-class IPolynomExpression : virtual public IExpression, public std::enable_shared_from_this<IPolynomExpression> {
+class IPolynomExpression : virtual public IExpression {
 public:
   IPolynomExpression(const IPolynomExpression &rhs);
 

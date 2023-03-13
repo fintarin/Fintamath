@@ -45,7 +45,7 @@ std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
 }
 
 std::shared_ptr<IMathObject> CompExpression::simplifyChildren() {
-  return nullptr;
+  return {};
 }
 
 /*void CompExpression::validate() const {

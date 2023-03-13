@@ -3,8 +3,7 @@
 #include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
-class FunctionExpression : public IExpressionCRTP<FunctionExpression>,
-                           public std::enable_shared_from_this<FunctionExpression> {
+class FunctionExpression : public IExpressionCRTP<FunctionExpression> {
 public:
   FunctionExpression(const FunctionExpression &rhs);
 

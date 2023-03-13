@@ -74,7 +74,7 @@ std::shared_ptr<IMathObject> AndExpression::simplifyChildren(const std::shared_p
     return std::make_shared<Boolean>(false);
   }
 
-  return nullptr;
+  return {};
 }
 
 }

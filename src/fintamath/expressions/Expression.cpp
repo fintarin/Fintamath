@@ -91,7 +91,7 @@ void Expression::setPrecisionRec(uint8_t precision) {
 }
 
 std::string Expression::toString() const {
-  return child ? child->toString() : "";
+  return child->toString();
 }
 
 std::string Expression::toString(uint8_t precision) const {
@@ -252,7 +252,7 @@ std::shared_ptr<IExpression> Expression::makeRawFunctionExpression(const IFuncti
 }
 
 std::shared_ptr<IFunction> Expression::getFunction() const {
-  return nullptr;
+  return {};
 }
 
 ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {

@@ -43,7 +43,7 @@ std::shared_ptr<IMathObject> InvExpression::simplifyChildren() {
     return expr->child;
   }
 
-  return nullptr;
+  return {};
 }
 
 }

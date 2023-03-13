@@ -6,8 +6,7 @@
 namespace fintamath {
 
 IPolynomExpression::IPolynomExpression(const IPolynomExpression &rhs)
-    : std::enable_shared_from_this<IPolynomExpression>(rhs),
-      func(cast<IFunction>(rhs.func->clone())),
+    : func(cast<IFunction>(rhs.func->clone())),
       children(rhs.children) {
 }
 
@@ -118,7 +117,7 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
     return simplifyRec();
   }
 
-  return shared_from_this();
+  return {};
 }
 
 void IPolynomExpression::validate() const {

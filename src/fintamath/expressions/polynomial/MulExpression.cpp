@@ -44,7 +44,7 @@ struct MulExpression::ObjectPow {
     ArgumentsPtrVector polynom = pow.getPolynom();
 
     if (polynom.size() != 1) {
-      return nullptr;
+      return {};
     }
 
     std::shared_ptr<IMathObject> powValue = polynom.front()->toMinimalObject();
@@ -53,13 +53,13 @@ struct MulExpression::ObjectPow {
       return powValue;
     }
 
-    return nullptr;
+    return {};
   }
 
   std::shared_ptr<IMathObject> getPowIfSingle() const {
     ArgumentsPtrVector polynom = pow.getPolynom();
     if (polynom.size() != 1) {
-      return nullptr;
+      return {};
     }
     return polynom.front();
   }
@@ -169,7 +169,7 @@ std::unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
 std::shared_ptr<IMathObject> MulExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
                                                              const std::shared_ptr<IMathObject> &rhsChild) {
   // TODO: implement
-  return nullptr;
+  return {};
 }
 
 void MulExpression::simplifyPow() {

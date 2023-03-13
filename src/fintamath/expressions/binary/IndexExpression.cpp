@@ -58,7 +58,7 @@ std::unique_ptr<IMathObject> IndexExpression::simplify(bool isPrecise) const {
 }
 
 std::shared_ptr<IMathObject> IndexExpression::simplifyChildren() {
-  return nullptr;
+  return {};
 }
 
 }

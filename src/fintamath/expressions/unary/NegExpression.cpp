@@ -45,7 +45,7 @@ std::shared_ptr<IMathObject> NegExpression::simplifyChildren() {
     return expr->child;
   }
 
-  return nullptr;
+  return {};
 }
 
 }

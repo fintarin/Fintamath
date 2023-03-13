@@ -73,7 +73,7 @@ std::shared_ptr<IMathObject> OrExpression::simplifyChildren(const std::shared_pt
     return std::make_shared<Boolean>(true);
   }
 
-  return nullptr;
+  return {};
 }
 
 }

@@ -337,7 +337,7 @@ void SumExpression::negate() {
 std::shared_ptr<IMathObject> SumExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
                                                              const std::shared_ptr<IMathObject> &rhsChild) {
   // TODO: implement
-  return nullptr;
+  return {};
 }
 
 void SumExpression::multiplicate(const std::shared_ptr<IMathObject> &value) {

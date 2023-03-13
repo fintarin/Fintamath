@@ -30,7 +30,7 @@ std::shared_ptr<IMathObject> NotExpression::simplifyChildren() {
     return expr->child;
   }
 
-  return nullptr;
+  return {};
 }
 
 }

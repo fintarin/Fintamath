@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class IBinaryExpression : virtual public IExpression, public std::enable_shared_from_this<IBinaryExpression> {
+class IBinaryExpression : virtual public IExpression {
 public:
   IBinaryExpression(const IBinaryExpression &rhs);
 

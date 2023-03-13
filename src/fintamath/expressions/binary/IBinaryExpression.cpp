@@ -65,7 +65,7 @@ std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
     return res;
   }
 
-  return shared_from_this();
+  return {};
 }
 
 void IBinaryExpression::validate() const {

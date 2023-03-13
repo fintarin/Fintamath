@@ -13,8 +13,7 @@
 namespace fintamath {
 
 IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs)
-    : std::enable_shared_from_this<IUnaryExpression>(rhs),
-      func(cast<IFunction>(rhs.func->clone())),
+    : func(cast<IFunction>(rhs.func->clone())),
       child(rhs.child->clone()) {
 }
 
@@ -120,7 +119,7 @@ std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
     return res;
   }
 
-  return shared_from_this();
+  return {};
 }
 
 void IUnaryExpression::validate() const {
