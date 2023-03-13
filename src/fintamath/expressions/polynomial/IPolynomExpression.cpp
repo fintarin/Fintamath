@@ -64,18 +64,48 @@ ArgumentsPtrVector IPolynomExpression::getPolynom() const {
 }
 
 std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
+  preSimplifyRec();
+
   for (auto &child : children) {
     simplifyChild(child);
   }
 
-  return simplifyRec();
-}
+  postSimplifyRec();
 
-std::shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChfildNum*/) {
+  if (children.size() == 1) {
+    return children.front();
+  }
+
   return {};
 }
 
-std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
+std::shared_ptr<IMathObject> IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) {
+  return {};
+}
+
+std::shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) {
+  return {};
+}
+
+void IPolynomExpression::preSimplifyRec() {
+  size_t childrenSize = children.size();
+
+  for (int64_t i = 0; i < children.size() - 1; i++) {
+    for (int64_t j = i + 1; j < children.size(); j++) {
+      if (auto res = preSimplify(i, j)) {
+        children[i] = res;
+        children.erase(children.begin() + j);
+        continue;
+      }
+    }
+  }
+
+  if (children.size() != childrenSize) {
+    postSimplifyRec();
+  }
+}
+
+void IPolynomExpression::postSimplifyRec() {
   size_t childrenSize = children.size();
 
   for (int64_t i = 0; i < children.size() - 1; i++) {
@@ -94,15 +124,9 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
     }
   }
 
-  if (children.size() == 1) {
-    return children.front();
-  }
-
   if (children.size() != childrenSize) {
-    return simplifyRec();
+    postSimplifyRec();
   }
-
-  return {};
 }
 
 void IPolynomExpression::validate() const {
