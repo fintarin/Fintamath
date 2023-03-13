@@ -655,6 +655,20 @@ std::shared_ptr<IMathObject> MulExpression::postSimplify(size_t lhsChildNum, siz
   const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
   const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 
+  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
+    return lhsChild;
+  }
+  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ZERO) {
+    return rhsChild;
+  }
+
+  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ONE) {
+    return rhsChild;
+  }
+  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ONE) {
+    return lhsChild;
+  }
+
   if (const auto lhsInv = cast<InvExpression>(lhsChild); lhsInv && *lhsInv->getChildren().front() == *rhsChild) {
     return std::make_shared<Integer>(ONE);
   }

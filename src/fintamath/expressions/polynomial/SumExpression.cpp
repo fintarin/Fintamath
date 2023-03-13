@@ -338,6 +338,13 @@ std::shared_ptr<IMathObject> SumExpression::postSimplify(size_t lhsChildNum, siz
   const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
   const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 
+  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
+    return rhsChild;
+  }
+  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ZERO) {
+    return lhsChild;
+  }
+
   if (const auto lhsNeg = cast<NegExpression>(lhsChild); lhsNeg && *lhsNeg->getChildren().front() == *rhsChild) {
     return std::make_shared<Integer>(ZERO);
   }
