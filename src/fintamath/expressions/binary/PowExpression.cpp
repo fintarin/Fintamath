@@ -161,7 +161,7 @@ std::shared_ptr<IMathObject> PowExpression::getPow() {
   return rhsChild;
 }
 
-std::shared_ptr<IMathObject> PowExpression::simplifyChildren() {
+std::shared_ptr<IMathObject> PowExpression::postSimplify() {
   auto lhsExpr = cast<IExpression>(lhsChild);
   auto rhsInt = cast<Integer>(rhsChild);
 

@@ -12,7 +12,7 @@ public:
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
 protected:
-  std::shared_ptr<IMathObject> simplifyChildren() override;
+  std::shared_ptr<IMathObject> postSimplify() override;
 };
 
 }

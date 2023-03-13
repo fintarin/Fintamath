@@ -166,19 +166,6 @@ std::unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
 //   return shared_from_this();
 // }
 
-std::shared_ptr<IMathObject> MulExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
-                                                             const std::shared_ptr<IMathObject> &rhsChild) {
-
-  if (const auto lhsInv = cast<InvExpression>(lhsChild); lhsInv && *lhsInv->getChildren().front() == *rhsChild) {
-    return std::make_shared<Integer>(ONE);
-  }
-  if (const auto rhsInv = cast<InvExpression>(rhsChild); rhsInv && *rhsInv->getChildren().front() == *lhsChild) {
-    return std::make_shared<Integer>(ONE);
-  }
-
-  return {};
-}
-
 void MulExpression::simplifyPow() {
   for (auto &child : children) {
     if (is<PowExpression>(child)) {
@@ -669,6 +656,20 @@ void MulExpression::invert() {
     child = Expression::makeRawFunctionExpression(Inv(), {child});
     simplifyChild(child);
   }
+}
+
+std::shared_ptr<IMathObject> MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) {
+  const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
+  const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
+
+  if (const auto lhsInv = cast<InvExpression>(lhsChild); lhsInv && *lhsInv->getChildren().front() == *rhsChild) {
+    return std::make_shared<Integer>(ONE);
+  }
+  if (const auto rhsInv = cast<InvExpression>(rhsChild); rhsInv && *rhsInv->getChildren().front() == *lhsChild) {
+    return std::make_shared<Integer>(ONE);
+  }
+
+  return {};
 }
 
 }

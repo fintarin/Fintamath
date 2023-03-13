@@ -27,7 +27,7 @@ public:
   std::shared_ptr<IMathObject> getPow();
 
 protected:
-  std::shared_ptr<IMathObject> simplifyChildren() override;
+  std::shared_ptr<IMathObject> postSimplify() override;
 
 private:
   static std::shared_ptr<IMathObject> sumPolynomSimplify(const SumExpression &sumExpr, Integer pow);

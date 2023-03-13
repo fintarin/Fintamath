@@ -29,8 +29,7 @@ public:
 protected:
   // std::shared_ptr<IMathObject> simplify() override;
 
-  std::shared_ptr<IMathObject> simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
-                                                const std::shared_ptr<IMathObject> &rhsChild) override;
+  std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) override;
 
 private:
   // TODO: Implement a new Expression and remove this

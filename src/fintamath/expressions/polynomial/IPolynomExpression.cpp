@@ -90,6 +90,10 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
   return simplifyRec();
 }
 
+std::shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChfildNum*/) {
+  return {};
+}
+
 std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
   compress();
 
@@ -103,7 +107,7 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
         continue;
       }
 
-      if (auto res = simplifyChildren(children[i], children[j])) {
+      if (auto res = postSimplify(i, j)) {
         children[i] = res;
         children.erase(children.begin() + j);
         continue;

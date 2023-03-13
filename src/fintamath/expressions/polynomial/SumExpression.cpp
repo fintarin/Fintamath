@@ -334,8 +334,12 @@ void SumExpression::negate() {
   }
 }
 
-std::shared_ptr<IMathObject> SumExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
-                                                             const std::shared_ptr<IMathObject> &rhsChild) {
+void SumExpression::multiplicate(const std::shared_ptr<IMathObject> &value) {
+}
+
+std::shared_ptr<IMathObject> SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) {
+  const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
+  const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 
   if (const auto lhsNeg = cast<NegExpression>(lhsChild); lhsNeg && *lhsNeg->getChildren().front() == *rhsChild) {
     return std::make_shared<Integer>(ZERO);
@@ -345,9 +349,6 @@ std::shared_ptr<IMathObject> SumExpression::simplifyChildren(const std::shared_p
   }
 
   return {};
-}
-
-void SumExpression::multiplicate(const std::shared_ptr<IMathObject> &value) {
 }
 
 }

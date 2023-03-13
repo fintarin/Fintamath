@@ -37,8 +37,7 @@ public:
 protected:
   std::shared_ptr<IMathObject> simplify() final;
 
-  virtual std::shared_ptr<IMathObject> simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
-                                                        const std::shared_ptr<IMathObject> &rhsChild) = 0;
+  virtual std::shared_ptr<IMathObject> postSimplify(size_t /*lhsChildNum*/, size_t rhsChildNum);
 
   void validate() const final;
 

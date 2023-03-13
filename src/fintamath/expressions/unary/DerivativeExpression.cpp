@@ -45,7 +45,7 @@ std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) cons
   return std::make_unique<DerivativeExpression>(*this);
 }
 
-std::shared_ptr<IMathObject> DerivativeExpression::simplifyChildren() {
+std::shared_ptr<IMathObject> DerivativeExpression::postSimplify() {
   if (is<IExpression>(child)) {
     // TODO: implement derivative of expression
     return {};

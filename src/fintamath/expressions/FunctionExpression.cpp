@@ -7,8 +7,7 @@
 
 namespace fintamath {
 
-FunctionExpression::FunctionExpression(const FunctionExpression &rhs)
-    : func(cast<IFunction>(rhs.func->clone())) {
+FunctionExpression::FunctionExpression(const FunctionExpression &rhs) : func(cast<IFunction>(rhs.func->clone())) {
   for (const auto &arg : rhs.children) {
     children.emplace_back(arg->clone());
   }

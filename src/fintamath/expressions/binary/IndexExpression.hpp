@@ -12,9 +12,6 @@ public:
   explicit IndexExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild);
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
-
-protected:
-  std::shared_ptr<IMathObject> simplifyChildren() override;
 };
 
 }

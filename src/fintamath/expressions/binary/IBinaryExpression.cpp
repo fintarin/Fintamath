@@ -53,6 +53,10 @@ ArgumentsPtrVector IBinaryExpression::getChildren() const {
   return {lhsChild, rhsChild};
 }
 
+std::shared_ptr<IMathObject> IBinaryExpression::postSimplify() {
+  return {};
+}
+
 std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
   simplifyChild(lhsChild);
   simplifyChild(rhsChild);
@@ -61,7 +65,7 @@ std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
     return (*func)(*lhsChild, *rhsChild);
   }
 
-  if (auto res = simplifyChildren()) {
+  if (auto res = postSimplify()) {
     return res;
   }
 

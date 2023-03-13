@@ -27,7 +27,7 @@ public:
   void simplifyValue(bool isPrecise);
 
 protected:
-  virtual std::shared_ptr<IMathObject> simplifyChildren() = 0;
+  virtual std::shared_ptr<IMathObject> postSimplify();
 
   std::shared_ptr<IMathObject> simplify() final;
 

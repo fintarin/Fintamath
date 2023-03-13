@@ -108,6 +108,10 @@ void IUnaryExpression::simplifyValue(bool isPrecise) {
   IExpression::simplifyChild(child);
 }
 
+std::shared_ptr<IMathObject> IUnaryExpression::postSimplify() {
+  return {};
+}
+
 std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
   simplifyChild(child);
 
@@ -115,7 +119,7 @@ std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
     return (*func)(*child);
   }
 
-  if (auto res = simplifyChildren()) {
+  if (auto res = postSimplify()) {
     return res;
   }
 

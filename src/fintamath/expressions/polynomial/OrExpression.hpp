@@ -14,8 +14,7 @@ public:
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
 protected:
-  std::shared_ptr<IMathObject> simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
-                                                const std::shared_ptr<IMathObject> &rhsChild) override;
+  std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) override;
 };
 
 }
