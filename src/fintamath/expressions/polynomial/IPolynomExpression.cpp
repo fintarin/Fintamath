@@ -133,7 +133,7 @@ void IPolynomExpression::validate() const {
 
   for (int64_t i = 0; i < children.size() - 1; i++) {
     for (int64_t j = i + 1; j < children.size(); j++) {
-      validateArgs(*func, {children[i], children[j]});
+      validateChildren(*func, {children[i], children[j]});
     }
   }
 }

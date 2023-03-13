@@ -42,7 +42,7 @@ public:
 
 protected:
   // TODO: remove this and implement in Expression using IExpression::Iterator
-  void validateArgs(const IFunction &func, const ArgumentsPtrVector &args) const;
+  void validateChildren(const IFunction &func, const ArgumentsPtrVector &args) const;
 
   static void simplifyChild(std::shared_ptr<IMathObject> &child);
 

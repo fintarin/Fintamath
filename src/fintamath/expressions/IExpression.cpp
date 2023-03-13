@@ -12,15 +12,15 @@
 
 namespace fintamath {
 
-void IExpression::validateArgs(const IFunction &func, const ArgumentsPtrVector &args) const {
+void IExpression::validateChildren(const IFunction &func, const ArgumentsPtrVector &children) const {
   const ArgumentsTypesVector argsTypes = func.getArgsTypes();
 
-  if (argsTypes.size() != args.size()) {
+  if (argsTypes.size() != children.size()) {
     throw InvalidInputException(toString());
   }
 
-  for (size_t i = 0; i < args.size(); i++) {
-    std::shared_ptr<IMathObject> child = args[i];
+  for (size_t i = 0; i < children.size(); i++) {
+    std::shared_ptr<IMathObject> child = children[i];
     const std::type_info &type = argsTypes[i];
 
     if (auto childExpr = cast<IExpression>(child)) {

@@ -127,7 +127,7 @@ void IUnaryExpression::validate() const {
     childExpr->validate();
   }
 
-  validateArgs(*func, {child});
+  validateChildren(*func, {child});
 }
 
 std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {

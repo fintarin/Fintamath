@@ -109,7 +109,7 @@ std::unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const 
 }
 
 void FunctionExpression::validate() const {
-  validateArgs(*func, children);
+  validateChildren(*func, children);
 
   for (const auto &arg : children) {
     if (const auto argExpr = cast<IExpression>(arg)) {

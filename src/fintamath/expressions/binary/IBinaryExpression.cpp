@@ -76,7 +76,7 @@ void IBinaryExpression::validate() const {
     childExpr->validate();
   }
 
-  validateArgs(*func, {lhsChild, rhsChild});
+  validateChildren(*func, {lhsChild, rhsChild});
 }
 
 }
