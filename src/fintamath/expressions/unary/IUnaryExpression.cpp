@@ -109,6 +109,10 @@ std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
     return (*func)(*child);
   }
 
+  if (auto res = preSimplify()) { // TODO: try to remove this
+    return res;
+  }
+
   if (auto res = postSimplify()) {
     return res;
   }

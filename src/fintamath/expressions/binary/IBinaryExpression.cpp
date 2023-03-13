@@ -51,6 +51,10 @@ std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
     return (*func)(*lhsChild, *rhsChild);
   }
 
+  if (auto res = preSimplify()) { // TODO: try to remove this
+    return res;
+  }
+
   if (auto res = postSimplify()) {
     return res;
   }

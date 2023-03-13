@@ -365,6 +365,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a | ~b) & c").toString(), "(a | ~b) & c");
   EXPECT_EQ(Expression("~(a & b)").toString(), "~a | ~b");
   EXPECT_EQ(Expression("~(a | b)").toString(), "~a & ~b");
+  EXPECT_EQ(Expression("~(~a & ~a)").toString(), "a");
   EXPECT_EQ(Expression("~a & b | ~c -> d <-> f !<-> g").toString(),
             "~((~(~a & b | ~c) | d) & f | ~(~(~a & b | ~c) | d) & ~f) & g | ((~(~a & b | ~c) | d) & f "
             "| ~(~(~a & b | ~c) | d) & ~f) & ~g");

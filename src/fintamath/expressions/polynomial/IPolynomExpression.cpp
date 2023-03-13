@@ -70,6 +70,7 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
     simplifyChild(child);
   }
 
+  preSimplifyRec(); // TODO: try to remove this
   postSimplifyRec();
 
   if (children.size() == 1) {
