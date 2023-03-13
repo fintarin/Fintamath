@@ -336,7 +336,14 @@ void SumExpression::negate() {
 
 std::shared_ptr<IMathObject> SumExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
                                                              const std::shared_ptr<IMathObject> &rhsChild) {
-  // TODO: implement
+
+  if (const auto lhsNeg = cast<NegExpression>(lhsChild); lhsNeg && *lhsNeg->getChildren().front() == *rhsChild) {
+    return std::make_shared<Integer>(ZERO);
+  }
+  if (const auto rhsNeg = cast<NegExpression>(rhsChild); rhsNeg && *rhsNeg->getChildren().front() == *lhsChild) {
+    return std::make_shared<Integer>(ZERO);
+  }
+
   return {};
 }
 

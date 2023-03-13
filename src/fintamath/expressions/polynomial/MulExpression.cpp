@@ -168,7 +168,14 @@ std::unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
 
 std::shared_ptr<IMathObject> MulExpression::simplifyChildren(const std::shared_ptr<IMathObject> &lhsChild,
                                                              const std::shared_ptr<IMathObject> &rhsChild) {
-  // TODO: implement
+
+  if (const auto lhsInv = cast<InvExpression>(lhsChild); lhsInv && *lhsInv->getChildren().front() == *rhsChild) {
+    return std::make_shared<Integer>(ONE);
+  }
+  if (const auto rhsInv = cast<InvExpression>(rhsChild); rhsInv && *rhsInv->getChildren().front() == *lhsChild) {
+    return std::make_shared<Integer>(ONE);
+  }
+
   return {};
 }
 
