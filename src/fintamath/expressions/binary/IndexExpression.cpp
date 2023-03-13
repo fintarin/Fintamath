@@ -37,25 +37,23 @@ IndexExpression::IndexExpression(const std::shared_ptr<IMathObject> &lhsChild,
 //   return lhsStr + "_" + rhsStr;
 // }
 
-std::unique_ptr<IMathObject> IndexExpression::simplify(bool isPrecise) const {
-  // std::unique_ptr<IMathObject> lhs;
-  // std::unique_ptr<IMathObject> rhs;
+// std::unique_ptr<IMathObject> IndexExpression::simplify(bool isPrecise) const {
+// std::unique_ptr<IMathObject> lhs;
+// std::unique_ptr<IMathObject> rhs;
 
-  // if (const auto *expr = cast<IExpression>(lhsChild)) {
-  //   lhs = expr->simplify(isPrecise);
-  // } else {
-  //   lhs = lhsChild->toMinimalObject();
-  // }
+// if (const auto *expr = cast<IExpression>(lhsChild)) {
+//   lhs = expr->simplify(isPrecise);
+// } else {
+//   lhs = lhsChild->toMinimalObject();
+// }
 
-  // if (const auto *expr = cast<IExpression>(rhsChild)) {
-  //   rhs = expr->simplify(isPrecise);
-  // } else {
-  //   rhs = rhsChild->toMinimalObject();
-  // }
+// if (const auto *expr = cast<IExpression>(rhsChild)) {
+//   rhs = expr->simplify(isPrecise);
+// } else {
+//   rhs = rhsChild->toMinimalObject();
+// }
 
-  // return std::make_unique<IndexExpression>(std::move(lhs), std::move(rhs));
-
-  return std::make_unique<IndexExpression>(*this);
-}
+// return std::make_unique<IndexExpression>(std::move(lhs), std::move(rhs));
+// }
 
 }

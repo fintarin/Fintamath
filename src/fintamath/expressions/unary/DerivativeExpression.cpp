@@ -20,7 +20,7 @@ DerivativeExpression::DerivativeExpression(const std::shared_ptr<IMathObject> &c
     : IUnaryExpressionCRTP(DER, child) {
 }
 
-std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) const {
+// std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) const {
   // std::unique_ptr<IMathObject> value;
 
   // if (const auto *expr = cast<IExpression>(child)) {
@@ -41,9 +41,7 @@ std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) cons
   // }
 
   // return clone();
-
-  return std::make_unique<DerivativeExpression>(*this);
-}
+// }
 
 std::shared_ptr<IMathObject> DerivativeExpression::postSimplify() const {
   if (is<IExpression>(child)) {
@@ -60,13 +58,5 @@ std::shared_ptr<IMathObject> DerivativeExpression::postSimplify() const {
 
   return {};
 }
-
-// void DerivativeExpression::validate() const {
-//   if (const auto *childExpr = cast<IExpression>(info)) {
-//     childExpr->validate();
-//   }
-
-//   this->validateArgs(*getFunction(), {*info});
-// }
 
 }

@@ -13,12 +13,10 @@ public:
 
   ArgumentsPtrVector getChildren() const override;
 
-  void setPrecision(uint8_t precision) override;
-
-  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
-
 protected:
   std::shared_ptr<IMathObject> simplify() override;
+
+  // void setPrecision(uint8_t precision) override;
 
   void validate() const override;
 

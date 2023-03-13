@@ -13,35 +13,33 @@ public:
 
   std::string toString() const override;
 
-  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
+  // std::shared_ptr<IMathObject> getPowCoefficient(const std::shared_ptr<IMathObject> &powValue) const;
 
-  std::shared_ptr<IMathObject> getPowCoefficient(const std::shared_ptr<IMathObject> &powValue) const;
-
-  std::shared_ptr<IMathObject> getPow() const;
+  // std::shared_ptr<IMathObject> getPow() const;
 
   void negate() override;
 
-  void multiplicate(const std::shared_ptr<IMathObject> &value);
+  // void multiplicate(const std::shared_ptr<IMathObject> &value);
 
 protected:
   std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
 private:
   // TODO: Implement a new Expression and remove this
-  struct MulObject;
-  using MulObjects = std::vector<MulObject>;
+  // struct MulObject;
+  // using MulObjects = std::vector<MulObject>;
 
-  bool static sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs);
+  // bool static sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs);
 
-  void simplifyPolynom();
+  // void simplifyPolynom();
 
-  void simplifyNegations();
+  // void simplifyNegations();
 
-  static void sortMulObjects(MulObjects &objs, ArgumentsPtrVector &mulVect, ArgumentsPtrVector &literalVect,
-                             ArgumentsPtrVector &powVect);
+  // static void sortMulObjects(MulObjects &objs, ArgumentsPtrVector &mulVect, ArgumentsPtrVector &literalVect,
+  //                            ArgumentsPtrVector &powVect);
 
-  static void simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect, ArgumentsPtrVector &literalVect,
-                          ArgumentsPtrVector &funcVect);
+  // static void simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect, ArgumentsPtrVector &literalVect,
+  //                         ArgumentsPtrVector &funcVect);
 };
 
 }

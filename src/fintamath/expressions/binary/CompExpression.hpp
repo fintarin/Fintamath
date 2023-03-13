@@ -14,11 +14,9 @@ public:
   CompExpression(const IOperator &oper, const std::shared_ptr<IMathObject> &lhsChild,
                  const std::shared_ptr<IMathObject> &rhsChild);
 
-  std::string solve() const;
+  // std::string solve() const;
 
-  std::string solve(uint8_t precision) const;
-
-  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
+  // std::string solve(uint8_t precision) const;
 
 protected:
   std::shared_ptr<IMathObject> postSimplify() const override;

@@ -26,23 +26,21 @@ CompExpression::CompExpression(const IOperator &oper, const std::shared_ptr<IMat
     : IBinaryExpressionCRTP(oper, lhsChild, rhsChild) {
 }
 
-std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
-  /*SumExpression addExpr(*leftExpr->clone());
-  addExpr.addElement(NegExpression(*rightExpr).toMinimalObject());
+// std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
+/*SumExpression addExpr(*leftExpr->clone());
+addExpr.addElement(NegExpression(*rightExpr).toMinimalObject());
 
-  std::unique_ptr<IMathObject> simplExpr = addExpr.simplify(isPrecise);
+std::unique_ptr<IMathObject> simplExpr = addExpr.simplify(isPrecise);
 
-  if (is<IComparable>(simplExpr)) {
-    return (*oper)(*simplExpr, ZERO);
-  }
-
-  auto res = std::make_unique<CompExpression>(*this);
-  res->leftExpr = std::move(simplExpr);
-  res->rightExpr = ZERO.clone();
-  return res;*/
-
-  return std::make_unique<CompExpression>(*this);
+if (is<IComparable>(simplExpr)) {
+  return (*oper)(*simplExpr, ZERO);
 }
+
+auto res = std::make_unique<CompExpression>(*this);
+res->leftExpr = std::move(simplExpr);
+res->rightExpr = ZERO.clone();
+return res;*/
+// }
 
 /*void CompExpression::validate() const {
   if (const auto *childExpr = cast<IExpression>(leftExpr)) {
@@ -61,69 +59,67 @@ std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
   }
 }*/
 
-std::string CompExpression::solve() const {
-  return "Remove this"; // TODO: remove this
-  /*Variable x("x");
-  auto expr = simplify(false);
-  if (!is<CompExpression>(expr)) {
-    return expr->toString();
-  }
-  auto copyExpr = cast<CompExpression>(*expr);
-  if (!is<Eqv>(copyExpr.oper)) {
-    return expr->toString();
-  }
-  if (!copyExpr.detectOneVariable(x)) {
-    return toString();
-  }
-
-  auto results = copyExpr.solvePowEquation(x);
-  if (results.empty()) {
-    return toString();
-  }
-  results = sortResult(results);
-  std::string resultStr = x.toString() + " in {";
-  for (const auto &res : results) {
-    resultStr += res->toString();
-    resultStr += ",";
-  }
-  resultStr.pop_back();
-  resultStr += "}";
-  return resultStr;*/
+// std::string CompExpression::solve() const {
+/*Variable x("x");
+auto expr = simplify(false);
+if (!is<CompExpression>(expr)) {
+  return expr->toString();
+}
+auto copyExpr = cast<CompExpression>(*expr);
+if (!is<Eqv>(copyExpr.oper)) {
+  return expr->toString();
+}
+if (!copyExpr.detectOneVariable(x)) {
+  return toString();
 }
 
-std::string CompExpression::solve(uint8_t precision) const {
-  return "Remove this"; // TODO: remove this
-  /*Variable x("x");
-  auto expr = simplify(false);
-  if (!is<CompExpression>(expr)) {
-    return expr->toString();
-  }
-  auto copyExpr = cast<CompExpression>(*expr);
-  if (!is<Eqv>(copyExpr.oper)) {
-    return expr->toString();
-  }
-  if (!copyExpr.detectOneVariable(x)) {
-    auto e = *this;
-    e.setPrecision(precision);
-    return e.toString();
-  }
-
-  auto results = copyExpr.solvePowEquation(x);
-  if (results.empty()) {
-    auto e = *this;
-    e.setPrecision(precision);
-    return e.toString();
-  }
-  results = sortResult(results);
-  std::string resultStr = x.toString() + " in {";
-  for (const auto &res : results) {
-    resultStr += Expression(*res).toString(precision);
-    resultStr += ",";
-  }
-  resultStr.pop_back();
-  resultStr += "}";
-  return resultStr;*/
+auto results = copyExpr.solvePowEquation(x);
+if (results.empty()) {
+  return toString();
 }
+results = sortResult(results);
+std::string resultStr = x.toString() + " in {";
+for (const auto &res : results) {
+  resultStr += res->toString();
+  resultStr += ",";
+}
+resultStr.pop_back();
+resultStr += "}";
+return resultStr;*/
+// }
+
+// std::string CompExpression::solve(uint8_t precision) const {
+/*Variable x("x");
+auto expr = simplify(false);
+if (!is<CompExpression>(expr)) {
+  return expr->toString();
+}
+auto copyExpr = cast<CompExpression>(*expr);
+if (!is<Eqv>(copyExpr.oper)) {
+  return expr->toString();
+}
+if (!copyExpr.detectOneVariable(x)) {
+  auto e = *this;
+  e.setPrecision(precision);
+  return e.toString();
+}
+
+auto results = copyExpr.solvePowEquation(x);
+if (results.empty()) {
+  auto e = *this;
+  e.setPrecision(precision);
+  return e.toString();
+}
+results = sortResult(results);
+std::string resultStr = x.toString() + " in {";
+for (const auto &res : results) {
+  resultStr += Expression(*res).toString(precision);
+  resultStr += ",";
+}
+resultStr.pop_back();
+resultStr += "}";
+return resultStr;*/
+// }
 
 /*std::vector<std::unique_ptr<IMathObject>> CompExpression::solvePowEquation(const Variable &x) const {
   auto results = solveQuadraticEquation(x.clone());

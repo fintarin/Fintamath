@@ -18,40 +18,48 @@ std::string OrExpression::toString() const {
   return binaryOperatorToString(OR, children);
 }
 
-std::unique_ptr<IMathObject> OrExpression::simplify(bool /*isPrecise*/) const {
-  // std::unique_ptr<IMathObject> result = children.front()->clone();
-  // for (size_t i = 1; i < children.size(); i++) {
-  //   const auto &lhsPtr = result;
-  //   const auto &rhsPtr = children[i];
-  //   const auto &lhs = *lhsPtr;
-  //   const auto &rhs = *rhsPtr;
+// std::unique_ptr<IMathObject> OrExpression::simplify(bool /*isPrecise*/) const {
+// std::unique_ptr<IMathObject> result = children.front()->clone();
+// for (size_t i = 1; i < children.size(); i++) {
+//   const auto &lhsPtr = result;
+//   const auto &rhsPtr = children[i];
+//   const auto &lhs = *lhsPtr;
+//   const auto &rhs = *rhsPtr;
 
-  //   if (const auto *lhsBool = cast<Boolean>(&lhs)) {
-  //     if (*lhsBool == true) {
-  //       result = std::make_unique<Boolean>(true);
-  //     } else {
-  //       *result = *rhsPtr;
-  //     }
-  //     continue;
-  //   }
+//   if (const auto *lhsBool = cast<Boolean>(&lhs)) {
+//     if (*lhsBool == true) {
+//       result = std::make_unique<Boolean>(true);
+//     } else {
+//       *result = *rhsPtr;
+//     }
+//     continue;
+//   }
 
-  //   if (const auto *rhsBool = cast<Boolean>(&rhs)) {
-  //     if (*rhsBool == true) {
-  //       result = std::make_unique<Boolean>(true);
-  //     } else {
-  //       *result = *lhsPtr;
-  //     }
-  //     continue;
-  //   }
+//   if (const auto *rhsBool = cast<Boolean>(&rhs)) {
+//     if (*rhsBool == true) {
+//       result = std::make_unique<Boolean>(true);
+//     } else {
+//       *result = *lhsPtr;
+//     }
+//     continue;
+//   }
 
-  //   if (lhs == notL(rhs)) {
-  //     result = std::make_unique<Boolean>(true);
-  //   }
-  // }
+//   if (lhs == notL(rhs)) {
+//     result = std::make_unique<Boolean>(true);
+//   }
+// }
 
-  // return result;
+// return result;
+// }
 
-  return std::make_unique<OrExpression>(*this);
+void OrExpression::logicNegate() {
+  ArgumentsPtrVector negChildren;
+
+  for (const auto &child : children) {
+    negChildren.emplace_back(Expression::makeRawFunctionExpression(Not(), {child}));
+  }
+
+  children = {std::make_shared<AndExpression>(negChildren)};
 }
 
 std::shared_ptr<IMathObject> OrExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
@@ -77,16 +85,6 @@ std::shared_ptr<IMathObject> OrExpression::postSimplify(size_t lhsChildNum, size
   }
 
   return {};
-}
-
-void OrExpression::logicNegate() {
-  ArgumentsPtrVector negChildren;
-
-  for (const auto &child : children) {
-    negChildren.emplace_back(Expression::makeRawFunctionExpression(Not(), {child}));
-  }
-
-  children = {std::make_shared<AndExpression>(negChildren)};
 }
 
 }

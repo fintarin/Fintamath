@@ -68,18 +68,19 @@ std::unique_ptr<IMathObject> Expression::toMinimalObject() const {
   return child->clone();
 }
 
-void Expression::setPrecisionRec(uint8_t precision) {
-  setMathObjectPrecision(child, precision);
-}
+// void Expression::setPrecisionRec(uint8_t precision) {
+//   setMathObjectPrecision(child, precision);
+// }
 
 std::string Expression::toString() const {
   return child->toString();
 }
 
 std::string Expression::toString(uint8_t precision) const {
-  auto expr = Expression(*simplify(false));
-  expr.setPrecision(precision);
-  return expr.toString();
+  // auto expr = Expression(*simplify(false));
+  // expr.setPrecision(precision);
+  // return expr.toString();
+  return toString();
 }
 
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
@@ -200,7 +201,7 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   }
 
   if (auto func = IFunction::parse(tokens.front()); func && !is<IOperator>(func)) {
-    child = std::make_shared<FunctionExpression>(*func, getArgs(TokenVector(tokens.begin() + 1, tokens.end())));
+    child = std::make_shared<FunctionExpression>(*func, getFunctionArgs(TokenVector(tokens.begin() + 1, tokens.end())));
     return true;
   }
 
@@ -227,6 +228,7 @@ std::shared_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction 
 
 std::shared_ptr<IExpression> Expression::makeRawFunctionExpression(const IFunction &func,
                                                                    const ArgumentsPtrVector &args) {
+
   if (std::shared_ptr<IExpression> expr = Parser::parse(expressionBuildersMap, func.toString(), args)) {
     return expr;
   }
@@ -240,7 +242,7 @@ std::shared_ptr<IFunction> Expression::getFunction() const {
   return {};
 }
 
-ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
+ArgumentsPtrVector Expression::getFunctionArgs(const TokenVector &tokens) {
   ArgumentsPtrVector args;
 
   for (size_t pos = 0; pos < tokens.size(); pos++) {
@@ -255,7 +257,7 @@ ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
 
     if (pos == tokens.size()) {
       if (isBracketsSkip) {
-        return getArgs(cutBraces(tokens));
+        return getFunctionArgs(cutBraces(tokens));
       }
       break;
     }
@@ -268,7 +270,7 @@ ArgumentsPtrVector Expression::getArgs(const TokenVector &tokens) {
       args.emplace_back(
           std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(pos)))));
 
-      ArgumentsPtrVector addArgs = getArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
+      ArgumentsPtrVector addArgs = getFunctionArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
 
       for (auto &token : addArgs) {
         args.emplace_back(std::shared_ptr<IMathObject>(token));
@@ -314,19 +316,19 @@ void Expression::validate() const {
   }
 }
 
-void Expression::setPrecision(uint8_t precision) {
-  setPrecisionRec(precision);
-}
+// void Expression::setPrecision(uint8_t precision) {
+//   setPrecisionRec(precision);
+// }
 
-std::unique_ptr<IMathObject> Expression::simplify(bool isPrecise) const {
-  // simplifyValue(isPrecise, expr.info);
-  return child->clone();
-}
+// std::unique_ptr<IMathObject> Expression::simplify(bool isPrecise) const {
+// simplifyValue(isPrecise, expr.info);
+// return child->clone();
+// }
 
 std::string Expression::solve(uint8_t precision) const {
-  if (const auto expr = cast<CompExpression>(child)) {
-    return expr->solve(precision);
-  }
+  // if (const auto expr = cast<CompExpression>(child)) {
+  //   return expr->solve(precision);
+  // }
 
   return toString(precision);
 }
@@ -336,9 +338,9 @@ ArgumentsPtrVector Expression::getChildren() const {
 }
 
 std::string Expression::solve() const {
-  if (const auto expr = cast<CompExpression>(child)) {
-    return expr->solve();
-  }
+  // if (const auto expr = cast<CompExpression>(child)) {
+  //   return expr->solve();
+  // }
 
   return toString();
 }
@@ -364,6 +366,7 @@ ArgumentsPtrVector Expression::getVariables() const {
 
 std::shared_ptr<IMathObject> Expression::simplify() {
   simplifyChild(child);
+  // callPowSimplify()
   return child;
 }
 

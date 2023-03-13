@@ -13,8 +13,6 @@ public:
 
   std::string toString() const override;
 
-  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
-
   void logicNegate() override;
 
 protected:

@@ -82,16 +82,16 @@ void IExpression::simplifyChild(std::shared_ptr<IMathObject> &child) {
   }
 }
 
-void IExpression::setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision) {
-  if (is<INumber>(obj)) {
-    obj = std::make_shared<Real>(convert<Real>(*obj).precise(precision));
-    return;
-  }
+// void IExpression::setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision) {
+//   if (is<INumber>(obj)) {
+//     obj = std::make_shared<Real>(convert<Real>(*obj).precise(precision));
+//     return;
+//   }
 
-  if (auto expr = cast<IExpression>(obj)) {
-    expr->setPrecision(precision);
-    return;
-  }
-}
+//   if (auto expr = cast<IExpression>(obj)) {
+//     expr->setPrecision(precision);
+//     return;
+//   }
+// }
 
 }

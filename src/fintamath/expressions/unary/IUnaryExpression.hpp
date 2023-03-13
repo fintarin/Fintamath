@@ -6,7 +6,7 @@ namespace fintamath {
 
 class IUnaryExpression : virtual public IExpression {
 public:
-  void setPrecision(uint8_t precision) final;
+  // void setPrecision(uint8_t precision) final;
 
   std::string toString() const final;
 
@@ -14,16 +14,16 @@ public:
 
   ArgumentsPtrVector getChildren() const override;
 
-  void simplifyValue(bool isPrecise);
+  // void simplifyValue(bool isPrecise);
 
 protected:
-  virtual std::shared_ptr<IMathObject> preSimplify() const;
-
-  virtual std::shared_ptr<IMathObject> postSimplify() const;
+  void validate() const final;
 
   std::shared_ptr<IMathObject> simplify() final;
 
-  void validate() const final;
+  virtual std::shared_ptr<IMathObject> preSimplify() const;
+
+  virtual std::shared_ptr<IMathObject> postSimplify() const;
 
 private:
   std::string postfixToString() const;

@@ -12,20 +12,20 @@
 
 namespace fintamath {
 
-void IUnaryExpression::setPrecision(uint8_t precision) {
-  if (const auto expr = cast<IExpression>(child)) {
-    expr->setPrecision(precision);
-    return;
-  }
+// void IUnaryExpression::setPrecision(uint8_t precision) {
+//   if (const auto expr = cast<IExpression>(child)) {
+//     expr->setPrecision(precision);
+//     return;
+//   }
 
-  if (const auto constant = cast<IConstant>(child)) {
-    child = (*constant)();
-  }
+//   if (const auto constant = cast<IConstant>(child)) {
+//     child = (*constant)();
+//   }
 
-  if (is<INumber>(child)) {
-    child = std::make_shared<Real>(convert<Real>(*child).precise(precision));
-  }
-}
+//   if (is<INumber>(child)) {
+//     child = std::make_shared<Real>(convert<Real>(*child).precise(precision));
+//   }
+// }
 
 std::string IUnaryExpression::toString() const {
   if (!func) {
@@ -85,16 +85,24 @@ std::string IUnaryExpression::functionToString() const {
   return func->toString() + "(" + child->toString() + ")";
 }
 
-void IUnaryExpression::simplifyValue(bool isPrecise) {
-  IExpression::simplifyChild(child);
+// void IUnaryExpression::simplifyValue(bool isPrecise) {
+//   IExpression::simplifyChild(child);
+// }
+
+std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {
+  return func;
 }
 
-std::shared_ptr<IMathObject> IUnaryExpression::preSimplify() const {
-  return {};
+ArgumentsPtrVector IUnaryExpression::getChildren() const {
+  return {child};
 }
 
-std::shared_ptr<IMathObject> IUnaryExpression::postSimplify() const {
-  return {};
+void IUnaryExpression::validate() const {
+  if (const auto childExpr = cast<IExpression>(child)) {
+    childExpr->validate();
+  }
+
+  validateChildren(*func, {child});
 }
 
 std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
@@ -120,20 +128,12 @@ std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
   return {};
 }
 
-void IUnaryExpression::validate() const {
-  if (const auto childExpr = cast<IExpression>(child)) {
-    childExpr->validate();
-  }
-
-  validateChildren(*func, {child});
+std::shared_ptr<IMathObject> IUnaryExpression::preSimplify() const {
+  return {};
 }
 
-std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {
-  return func;
-}
-
-ArgumentsPtrVector IUnaryExpression::getChildren() const {
-  return {child};
+std::shared_ptr<IMathObject> IUnaryExpression::postSimplify() const {
+  return {};
 }
 
 }

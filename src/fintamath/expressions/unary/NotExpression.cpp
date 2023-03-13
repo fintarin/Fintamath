@@ -13,7 +13,7 @@ const Not NOT;
 NotExpression::NotExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NOT, child) {
 }
 
-std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
+// std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
   // auto exprObj = std::make_unique<NotExpression>(*this);
   // exprObj->simplifyValue(isPrecise);
 
@@ -22,9 +22,7 @@ std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
   // }
 
   // return exprObj;
-
-  return std::make_unique<NotExpression>(*this);
-}
+// }
 
 std::shared_ptr<IMathObject> NotExpression::preSimplify() const {
   if (const auto expr = cast<NotExpression>(child)) {

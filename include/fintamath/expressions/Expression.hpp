@@ -37,10 +37,7 @@ public:
 
   std::shared_ptr<IFunction> getFunction() const override;
 
-  void setPrecision(uint8_t precision) override;
-
-  // TODO: remove this and implement precise()
-  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
+  // void setPrecision(uint8_t precision) override;
 
   ArgumentsPtrVector getVariables() const override;
 
@@ -48,7 +45,7 @@ public:
   void validate() const override;
 
   // TODO: make this private
-  void setPrecisionRec(uint8_t precision);
+  // void setPrecisionRec(uint8_t precision);
 
   static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 
@@ -98,7 +95,7 @@ private:
 
   bool parseFunction(const TokenVector &tokens);
 
-  ArgumentsPtrVector getArgs(const TokenVector &tokens);
+  static ArgumentsPtrVector getFunctionArgs(const TokenVector &tokens);
 
   // void callPowSimplify();
 

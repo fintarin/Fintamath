@@ -10,8 +10,6 @@ namespace fintamath {
 class IndexExpression : public IBinaryExpressionCRTP<IndexExpression> {
 public:
   explicit IndexExpression(const std::shared_ptr<IMathObject> &lhsChild, const std::shared_ptr<IMathObject> &rhsChild);
-
-  std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 };
 
 }

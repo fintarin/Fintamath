@@ -10,10 +10,10 @@
 
 namespace fintamath {
 
-void IBinaryExpression::setPrecision(uint8_t precision) {
-  setMathObjectPrecision(lhsChild, precision);
-  setMathObjectPrecision(rhsChild, precision);
-}
+// void IBinaryExpression::setPrecision(uint8_t precision) {
+//   setMathObjectPrecision(lhsChild, precision);
+//   setMathObjectPrecision(rhsChild, precision);
+// }
 
 std::string IBinaryExpression::toString() const {
   ArgumentsPtrVector values;

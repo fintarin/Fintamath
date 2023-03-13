@@ -18,10 +18,8 @@ public:
 
   virtual ArgumentsPtrVector getChildren() const = 0;
 
-  virtual void setPrecision(uint8_t precision) = 0;
-
-  // TODO: remove this and move simplify(false) logic to setPrecision
-  virtual std::unique_ptr<IMathObject> simplify(bool isPrecise) const = 0;
+  // TODO: make this protected
+  // virtual void setPrecision(uint8_t precision) = 0;
 
   // TODO: remove this and implement in Expression
   virtual void validate() const = 0;
@@ -47,7 +45,7 @@ protected:
 
   static void simplifyChild(std::shared_ptr<IMathObject> &child);
 
-  static void setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision);
+  // static void setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision);
 
   virtual std::shared_ptr<IMathObject> simplify() = 0;
 

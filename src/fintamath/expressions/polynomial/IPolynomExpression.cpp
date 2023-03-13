@@ -5,11 +5,11 @@
 
 namespace fintamath {
 
-void IPolynomExpression::pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to) {
-  for (const auto &elem : from) {
-    to.emplace_back(elem);
-  }
-}
+// void IPolynomExpression::pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to) {
+//   for (const auto &elem : from) {
+//     to.emplace_back(elem);
+//   }
+// }
 
 std::shared_ptr<IFunction> IPolynomExpression::getFunction() const {
   return func;
@@ -19,22 +19,22 @@ ArgumentsPtrVector IPolynomExpression::getChildren() const {
   return children;
 }
 
-void IPolynomExpression::setPrecision(uint8_t precision) {
-  for (auto &child : children) {
-    if (auto expr = cast<IExpression>(child)) {
-      expr->setPrecision(precision);
-      return;
-    }
+// void IPolynomExpression::setPrecision(uint8_t precision) {
+//   for (auto &child : children) {
+//     if (auto expr = cast<IExpression>(child)) {
+//       expr->setPrecision(precision);
+//       return;
+//     }
 
-    if (const auto constant = cast<IConstant>(child)) {
-      child = (*constant)();
-    }
+//     if (const auto constant = cast<IConstant>(child)) {
+//       child = (*constant)();
+//     }
 
-    if (is<INumber>(child)) {
-      child = std::make_shared<Real>(convert<Real>(*child).precise(precision));
-    }
-  }
-}
+//     if (is<INumber>(child)) {
+//       child = std::make_shared<Real>(convert<Real>(*child).precise(precision));
+//     }
+//   }
+// }
 
 ArgumentsPtrVector IPolynomExpression::getVariables() const {
   ArgumentsPtrVector vars;
@@ -61,6 +61,22 @@ ArgumentsPtrVector IPolynomExpression::getVariables() const {
 
 ArgumentsPtrVector IPolynomExpression::getPolynom() const {
   return children;
+}
+
+void IPolynomExpression::validate() const {
+  for (const auto &child : children) {
+    if (const auto childExpr = cast<IExpression>(child)) {
+      childExpr->validate();
+    }
+  }
+
+  const auto func = this->getFunction();
+
+  for (int64_t i = 0; i < children.size() - 1; i++) {
+    for (int64_t j = i + 1; j < children.size(); j++) {
+      validateChildren(*func, {children[i], children[j]});
+    }
+  }
 }
 
 std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
@@ -130,39 +146,23 @@ void IPolynomExpression::postSimplifyRec() {
   }
 }
 
-void IPolynomExpression::validate() const {
-  for (const auto &child : children) {
-    if (const auto childExpr = cast<IExpression>(child)) {
-      childExpr->validate();
-    }
-  }
+// void IPolynomExpression::sortVector(ArgumentsPtrVector &vector,
+//                                     std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+//                                     ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector) {
+//   for (auto &child : vector) {
+//     if (const auto expr = cast<IExpression>(child)) {
+//       if (const auto op = cast<IOperator>(expr->getFunction())) {
+//         priorityMap[op->getOperatorPriority()].emplace_back(child);
+//         continue;
+//       }
+//       functionVector.emplace_back(child);
+//       continue;
+//     }
 
-  const auto func = this->getFunction();
-
-  for (int64_t i = 0; i < children.size() - 1; i++) {
-    for (int64_t j = i + 1; j < children.size(); j++) {
-      validateChildren(*func, {children[i], children[j]});
-    }
-  }
-}
-
-void IPolynomExpression::sortVector(ArgumentsPtrVector &vector,
-                                    std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
-                                    ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector) {
-  for (auto &child : vector) {
-    if (const auto expr = cast<IExpression>(child)) {
-      if (const auto op = cast<IOperator>(expr->getFunction())) {
-        priorityMap[op->getOperatorPriority()].emplace_back(child);
-        continue;
-      }
-      functionVector.emplace_back(child);
-      continue;
-    }
-
-    if (is<Variable>(child)) {
-      variableVector.emplace_back(child);
-    }
-  }
-}
+//     if (is<Variable>(child)) {
+//       variableVector.emplace_back(child);
+//     }
+//   }
+// }
 
 }

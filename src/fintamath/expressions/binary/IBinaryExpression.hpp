@@ -6,7 +6,7 @@ namespace fintamath {
 
 class IBinaryExpression : virtual public IExpression {
 public:
-  void setPrecision(uint8_t precision) final;
+  // void setPrecision(uint8_t precision) final;
 
   std::string toString() const final;
 

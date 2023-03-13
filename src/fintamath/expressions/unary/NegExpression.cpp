@@ -13,7 +13,7 @@ const Neg NEG;
 NegExpression::NegExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NEG, child) {
 }
 
-std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
+// std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
   // auto exprObj = std::make_unique<NegExpression>(*this);
   // exprObj->simplifyValue(isPrecise);
 
@@ -31,9 +31,7 @@ std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
   // }
 
   // return exprObj;
-
-  return std::make_unique<NegExpression>(*this);
-}
+// }
 
 std::shared_ptr<IMathObject> NegExpression::preSimplify() const {
   if (const auto expr = cast<NegExpression>(child)) {

@@ -57,44 +57,42 @@ ArgumentsPtrVector FunctionExpression::getChildren() const {
   return children;
 }
 
-void FunctionExpression::setPrecision(uint8_t precision) {
-  for (auto &arg : children) {
-    setMathObjectPrecision(arg, precision);
-  }
-}
+// void FunctionExpression::setPrecision(uint8_t precision) {
+//   for (auto &arg : children) {
+//     setMathObjectPrecision(arg, precision);
+//   }
+// }
 
-std::unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const {
-  // ArgumentsRefVector arguments;
-  // bool canCallFunction = true;
+// std::unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const {
+// ArgumentsRefVector arguments;
+// bool canCallFunction = true;
 
-  // for (const auto &arg : args) {
-  //   const auto *child = arg;
+// for (const auto &arg : args) {
+//   const auto *child = arg;
 
-  //   if (!child) {
-  //     continue;
-  //   }
+//   if (!child) {
+//     continue;
+//   }
 
-  //   if (is<Variable>(child) || is<IConstant>(child) || is<IExpression>(child)) {
-  //     canCallFunction = false;
-  //   }
+//   if (is<Variable>(child) || is<IConstant>(child) || is<IExpression>(child)) {
+//     canCallFunction = false;
+//   }
 
-  //   arguments.emplace_back(*child);
-  // }
+//   arguments.emplace_back(*child);
+// }
 
-  // if (!canCallFunction) {
-  //   return std::make_unique<FunctionExpression>(*this);
-  // }
+// if (!canCallFunction) {
+//   return std::make_unique<FunctionExpression>(*this);
+// }
 
-  // auto countResult = (*function)(arguments);
+// auto countResult = (*function)(arguments);
 
-  // if (const auto *num = cast<INumber>(countResult); num && !num->isPrecise() && isPrecise) {
-  //   return std::make_unique<FunctionExpression>(*this);
-  // }
+// if (const auto *num = cast<INumber>(countResult); num && !num->isPrecise() && isPrecise) {
+//   return std::make_unique<FunctionExpression>(*this);
+// }
 
-  // return countResult;
-
-  return std::make_unique<FunctionExpression>(*this);
-}
+// return countResult;
+// }
 
 void FunctionExpression::validate() const {
   validateChildren(*func, children);

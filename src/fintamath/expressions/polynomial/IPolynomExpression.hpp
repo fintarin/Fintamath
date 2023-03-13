@@ -18,7 +18,7 @@ public:
 
   ArgumentsPtrVector getChildren() const final;
 
-  void setPrecision(uint8_t precision) final;
+  // void setPrecision(uint8_t precision) final;
 
   ArgumentsPtrVector getVariables() const final;
 
@@ -29,15 +29,15 @@ protected:
 
   virtual std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
-  std::shared_ptr<IMathObject> simplify() final;
-
   void validate() const final;
 
-protected:
-  static void sortVector(ArgumentsPtrVector &vector, std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
-                         ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
+  std::shared_ptr<IMathObject> simplify() final;
 
-  static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
+protected:
+  // static void sortVector(ArgumentsPtrVector &vector, std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+  //                        ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
+
+  // static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
 
 protected:
   std::shared_ptr<IFunction> func;

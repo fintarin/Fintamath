@@ -12,7 +12,7 @@ const Inv INV;
 InvExpression::InvExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(INV, child) {
 }
 
-std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
+// std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
   // auto exprObj = std::make_unique<InvExpression>(*this);
   // exprObj->simplifyValue(isPrecise);
 
@@ -29,9 +29,7 @@ std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
   //   return expr->child->clone();
   // }
   // return exprObj;
-
-  return std::make_unique<InvExpression>(*this);
-}
+// }
 
 std::shared_ptr<IMathObject> InvExpression::preSimplify() const {
   if (auto expr = cast<InvExpression>(child)) {
