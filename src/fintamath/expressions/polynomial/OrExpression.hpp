@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "fintamath/expressions/ILogicNegatable.hpp"
+#include "fintamath/expressions/interfaces/ILogicNegatable.hpp"
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
 namespace fintamath {

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "fintamath/expressions/INegatable.hpp"
+#include "fintamath/expressions/interfaces/INegatable.hpp"
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 #include "fintamath/meta/Converter.hpp"
 

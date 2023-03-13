@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/expressions/IInvertable.hpp"
+#include "fintamath/expressions/interfaces/IInvertable.hpp"
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/meta/Converter.hpp"

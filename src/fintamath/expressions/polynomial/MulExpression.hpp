@@ -3,8 +3,8 @@
 #include <cstdint>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/expressions/IInvertable.hpp"
-#include "fintamath/expressions/INegatable.hpp"
+#include "fintamath/expressions/interfaces/IInvertable.hpp"
+#include "fintamath/expressions/interfaces/INegatable.hpp"
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
 namespace fintamath {
