@@ -49,9 +49,6 @@ Expression::Expression(const TokenVector &tokens) {
   }
 }
 
-Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
-}
-
 Expression::Expression(const std::shared_ptr<IMathObject> &obj) {
   if (auto expr = cast<Expression>(obj)) {
     child = expr->child;
@@ -59,6 +56,9 @@ Expression::Expression(const std::shared_ptr<IMathObject> &obj) {
     child = obj;
     simplifyChild(child);
   }
+}
+
+Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 }
 
 Expression::Expression(int64_t val) : child(std::make_shared<Integer>(val)) {
@@ -76,11 +76,9 @@ std::string Expression::toString() const {
   return child->toString();
 }
 
-std::string Expression::toString(uint8_t precision) const {
-  // auto expr = Expression(*simplify(false));
-  // expr.setPrecision(precision);
-  // return expr.toString();
-  return toString();
+Expression Expression::precise(size_t precision) const {
+  assert(precision <= FINTAMATH_ROUND_PRECISION);
+  return *this;
 }
 
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
@@ -330,7 +328,7 @@ std::string Expression::solve(uint8_t precision) const {
   //   return expr->solve(precision);
   // }
 
-  return toString(precision);
+  return toString();
 }
 
 ArgumentsPtrVector Expression::getChildren() const {

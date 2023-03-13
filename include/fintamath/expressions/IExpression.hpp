@@ -24,9 +24,7 @@ public:
   // TODO: remove this and implement in Expression
   virtual void validate() const = 0;
 
-  virtual ArgumentsPtrVector getVariables() const {
-    return {};
-  }
+  virtual ArgumentsPtrVector getVariables() const;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
   static void registerType() {

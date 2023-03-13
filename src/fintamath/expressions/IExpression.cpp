@@ -12,6 +12,10 @@
 
 namespace fintamath {
 
+ArgumentsPtrVector IExpression::getVariables() const {
+  return {};
+}
+
 void IExpression::validateChildren(const IFunction &func, const ArgumentsPtrVector &children) const {
   const ArgumentsTypesVector childrenTypes = func.getArgsTypes();
 

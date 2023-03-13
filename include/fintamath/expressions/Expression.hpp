@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/IExpression.hpp"
@@ -15,9 +16,9 @@ public:
 
   explicit Expression(const std::string &str);
 
-  Expression(const IMathObject &obj);
-
   explicit Expression(const std::shared_ptr<IMathObject> &obj);
+
+  Expression(const IMathObject &obj);
 
   Expression(int64_t val);
 
@@ -25,7 +26,7 @@ public:
 
   std::string toString() const override;
 
-  std::string toString(uint8_t precision) const;
+  Expression precise(size_t precision = FINTAMATH_ROUND_PRECISION) const;
 
   // TODO: use friend function instead
   std::string solve() const;
