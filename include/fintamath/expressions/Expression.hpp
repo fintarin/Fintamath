@@ -108,7 +108,7 @@ private:
 
   ArgumentsPtrVector getArgs(const TokenVector &tokens);
 
-  void callPowSimplify();
+  // void callPowSimplify();
 
 private:
   std::shared_ptr<IMathObject> child;

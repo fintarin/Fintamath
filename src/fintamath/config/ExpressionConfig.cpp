@@ -46,45 +46,29 @@ namespace {
 struct ExpressionConfig {
   ExpressionConfig() {
     Expression::registerFunctionExpressionMaker<Add>([](const ArgumentsPtrVector &args) {
-      const auto &lhs = args.front();
-      const auto &rhs = args.back();
-
-      return std::make_shared<SumExpression>(ArgumentsPtrVector{lhs, rhs});
+      return std::make_shared<SumExpression>(ArgumentsPtrVector{args.front(), args.back()});
     });
 
     Expression::registerFunctionExpressionMaker<Sub>([](const ArgumentsPtrVector &args) {
-      const auto &lhs = args.front();
-      auto rhs = std::make_shared<NegExpression>(args.back());
-
-      return std::make_shared<SumExpression>(ArgumentsPtrVector{lhs, rhs});
+      return std::make_shared<SumExpression>(
+          ArgumentsPtrVector{args.front(), std::make_shared<NegExpression>(args.back())});
     });
 
     Expression::registerFunctionExpressionMaker<Mul>([](const ArgumentsPtrVector &args) {
-      const auto &lhs = args.front();
-      const auto &rhs = args.back();
-
-      return std::make_shared<MulExpression>(ArgumentsPtrVector{lhs, rhs});
+      return std::make_shared<MulExpression>(ArgumentsPtrVector{args.front(), args.back()});
     });
 
     Expression::registerFunctionExpressionMaker<Div>([](const ArgumentsPtrVector &args) {
-      const auto &lhs = args.front();
-      auto rhs = std::make_shared<InvExpression>(args.back());
-
-      return std::make_shared<MulExpression>(ArgumentsPtrVector{lhs, rhs});
+      return std::make_shared<MulExpression>(
+          ArgumentsPtrVector{args.front(), std::make_shared<InvExpression>(args.back())});
     });
 
     Expression::registerFunctionExpressionMaker<And>([](const ArgumentsPtrVector &args) {
-      const auto &lhs = args.front();
-      const auto &rhs = args.back();
-
-      return std::make_shared<AndExpression>(ArgumentsPtrVector{lhs, rhs});
+      return std::make_shared<AndExpression>(ArgumentsPtrVector{args.front(), args.back()});
     });
 
     Expression::registerFunctionExpressionMaker<Or>([](const ArgumentsPtrVector &args) {
-      const auto &lhs = args.front();
-      const auto &rhs = args.back();
-
-      return std::make_shared<OrExpression>(ArgumentsPtrVector{lhs, rhs});
+      return std::make_shared<OrExpression>(ArgumentsPtrVector{args.front(), args.back()});
     });
 
     Expression::registerFunctionExpressionMaker<Pow>([](const ArgumentsPtrVector &args) {

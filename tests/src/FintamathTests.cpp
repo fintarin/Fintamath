@@ -23,9 +23,6 @@ TEST(FintamathTests, fintamathTests) {
   expr = pow(Variable("a"), Variable("b")) * Variable("c");
   EXPECT_EQ(expr.toString(), "a^b c");
 
-  expr = pow(Variable("a"), Variable("b")) * Variable("c");
-  EXPECT_EQ(expr.toString(), "a^b c");
-
   // expr = pow(sin(Expression(2)), 2) + pow(cos(Expression(2)), 2);
   // EXPECT_EQ(expr.toString(), "1");
 

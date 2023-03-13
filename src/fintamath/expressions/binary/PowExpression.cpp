@@ -173,9 +173,7 @@ std::shared_ptr<IMathObject> PowExpression::simplifyChildren() {
       return lhsChild;
     }
     if (*rhsInt == NEG_ONE) {
-      std::shared_ptr<IMathObject> invExpr = std::make_shared<InvExpression>(lhsChild);
-      simplifyChild(invExpr);
-      return invExpr;
+      return Expression::makeFunctionExpression(Inv(), {lhsChild});
     }
   }
 

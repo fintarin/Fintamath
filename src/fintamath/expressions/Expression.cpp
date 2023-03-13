@@ -379,14 +379,14 @@ ArgumentsPtrVector Expression::getVariables() const {
 
 std::shared_ptr<IMathObject> Expression::simplify() {
   simplifyChild(child);
-  callPowSimplify();
+  // callPowSimplify();
   return child;
 }
 
-void Expression::callPowSimplify() {
-  if (auto powExpr = cast<PowExpression>(child)) {
-    child = powExpr->polynomSimplify();
-  }
-}
+// void Expression::callPowSimplify() {
+//   if (auto powExpr = cast<PowExpression>(child)) {
+//     child = powExpr->polynomSimplify();
+//   }
+// }
 
 }
