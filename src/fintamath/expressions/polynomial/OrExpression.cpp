@@ -67,10 +67,10 @@ std::shared_ptr<IMathObject> OrExpression::postSimplify(size_t lhsChildNum, size
   const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {
-    return *lhsBool ? std::make_shared<Boolean>(true) : rhsChild;
+    return *lhsBool ? lhsChild : rhsChild;
   }
   if (const auto rhsBool = cast<Boolean>(rhsChild)) {
-    return *rhsBool ? std::make_shared<Boolean>(true) : lhsChild;
+    return *rhsBool ? rhsChild : lhsChild;
   }
 
   if (*lhsChild == *rhsChild) {
