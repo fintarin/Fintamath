@@ -24,7 +24,7 @@ public:
   void multiplicate(const std::shared_ptr<IMathObject> &value);
 
 protected:
-  std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) override;
+  std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
 private:
   // TODO: Implement a new Expression and remove this

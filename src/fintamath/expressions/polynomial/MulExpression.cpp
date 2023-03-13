@@ -656,7 +656,7 @@ void MulExpression::invert() {
   }
 }
 
-std::shared_ptr<IMathObject> MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) {
+std::shared_ptr<IMathObject> MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
   const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
   const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 

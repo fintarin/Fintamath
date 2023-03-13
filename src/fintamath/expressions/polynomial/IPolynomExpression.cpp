@@ -80,11 +80,11 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
   return {};
 }
 
-std::shared_ptr<IMathObject> IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) {
+std::shared_ptr<IMathObject> IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
   return {};
 }
 
-std::shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) {
+std::shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
   return {};
 }
 

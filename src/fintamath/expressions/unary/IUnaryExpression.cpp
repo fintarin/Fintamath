@@ -89,11 +89,11 @@ void IUnaryExpression::simplifyValue(bool isPrecise) {
   IExpression::simplifyChild(child);
 }
 
-std::shared_ptr<IMathObject> IUnaryExpression::preSimplify() {
+std::shared_ptr<IMathObject> IUnaryExpression::preSimplify() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> IUnaryExpression::postSimplify() {
+std::shared_ptr<IMathObject> IUnaryExpression::postSimplify() const {
   return {};
 }
 

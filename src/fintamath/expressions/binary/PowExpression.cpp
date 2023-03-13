@@ -161,7 +161,15 @@ std::shared_ptr<IMathObject> PowExpression::getPow() {
   return rhsChild;
 }
 
-std::shared_ptr<IMathObject> PowExpression::postSimplify() {
+std::shared_ptr<IMathObject> PowExpression::polynomSimplify() {
+  std::shared_ptr<IMathObject> result = mulSimplify();
+  if (auto powExpr = cast<PowExpression>(result)) {
+    return powExpr->sumSimplify();
+  }
+  return result;
+}
+
+std::shared_ptr<IMathObject> PowExpression::postSimplify() const {
   auto lhsExpr = cast<IExpression>(lhsChild);
   auto rhsInt = cast<Integer>(rhsChild);
 
@@ -178,14 +186,6 @@ std::shared_ptr<IMathObject> PowExpression::postSimplify() {
   }
 
   return {};
-}
-
-std::shared_ptr<IMathObject> PowExpression::polynomSimplify() {
-  std::shared_ptr<IMathObject> result = mulSimplify();
-  if (auto powExpr = cast<PowExpression>(result)) {
-    return powExpr->sumSimplify();
-  }
-  return result;
 }
 
 }

@@ -21,7 +21,7 @@ public:
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
 protected:
-  std::shared_ptr<IMathObject> postSimplify() override;
+  std::shared_ptr<IMathObject> postSimplify() const override;
 
   // std::vector<std::unique_ptr<IMathObject>> solvePowEquation(const Variable &x) const;
 

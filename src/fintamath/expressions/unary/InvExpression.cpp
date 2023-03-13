@@ -33,7 +33,7 @@ std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
   return std::make_unique<InvExpression>(*this);
 }
 
-std::shared_ptr<IMathObject> InvExpression::preSimplify() {
+std::shared_ptr<IMathObject> InvExpression::preSimplify() const {
   if (auto expr = cast<InvExpression>(child)) {
     return expr->child;
   }
@@ -41,7 +41,7 @@ std::shared_ptr<IMathObject> InvExpression::preSimplify() {
   return {};
 }
 
-std::shared_ptr<IMathObject> InvExpression::postSimplify() {
+std::shared_ptr<IMathObject> InvExpression::postSimplify() const {
   if (auto expr = cast<IInvertable>(child)) {
     expr->invert();
     return child;

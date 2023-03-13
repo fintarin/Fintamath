@@ -54,7 +54,7 @@ std::unique_ptr<IMathObject> AndExpression::simplify(bool /*isPrecise*/) const {
   return std::make_unique<AndExpression>(*this);
 }
 
-std::shared_ptr<IMathObject> AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) {
+std::shared_ptr<IMathObject> AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
   const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
   const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 

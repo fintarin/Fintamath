@@ -25,9 +25,9 @@ public:
   ArgumentsPtrVector getPolynom() const;
 
 protected:
-  virtual std::shared_ptr<IMathObject> preSimplify(size_t lhsChildNum, size_t rhsChildNum);
+  virtual std::shared_ptr<IMathObject> preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
-  virtual std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum);
+  virtual std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
   std::shared_ptr<IMathObject> simplify() final;
 

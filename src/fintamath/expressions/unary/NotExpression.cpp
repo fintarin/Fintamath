@@ -25,7 +25,7 @@ std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
   return std::make_unique<NotExpression>(*this);
 }
 
-std::shared_ptr<IMathObject> NotExpression::preSimplify() {
+std::shared_ptr<IMathObject> NotExpression::preSimplify() const {
   if (const auto expr = cast<NotExpression>(child)) {
     return expr->child;
   }
@@ -33,7 +33,7 @@ std::shared_ptr<IMathObject> NotExpression::preSimplify() {
   return {};
 }
 
-std::shared_ptr<IMathObject> NotExpression::postSimplify() {
+std::shared_ptr<IMathObject> NotExpression::postSimplify() const {
   // TODO
   // if (const auto expr = cast<INotable>(child)) {
   //   expr->notL();

@@ -30,11 +30,11 @@ ArgumentsPtrVector IBinaryExpression::getChildren() const {
   return {lhsChild, rhsChild};
 }
 
-std::shared_ptr<IMathObject> IBinaryExpression::preSimplify() {
+std::shared_ptr<IMathObject> IBinaryExpression::preSimplify() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> IBinaryExpression::postSimplify() {
+std::shared_ptr<IMathObject> IBinaryExpression::postSimplify() const {
   return {};
 }
 
