@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/polynomial/AndExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
@@ -76,6 +77,16 @@ std::shared_ptr<IMathObject> OrExpression::postSimplify(size_t lhsChildNum, size
   }
 
   return {};
+}
+
+void OrExpression::logicNegate() {
+  ArgumentsPtrVector negChildren;
+
+  for (const auto &child : children) {
+    negChildren.emplace_back(Expression::makeRawFunctionExpression(Not(), {child}));
+  }
+
+  children = {std::make_shared<AndExpression>(negChildren)};
 }
 
 }

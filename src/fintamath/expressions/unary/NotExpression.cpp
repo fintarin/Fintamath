@@ -1,5 +1,6 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 
+#include "fintamath/expressions/ILogicNegatable.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/numbers/INumber.hpp"
@@ -34,11 +35,12 @@ std::shared_ptr<IMathObject> NotExpression::preSimplify() const {
 }
 
 std::shared_ptr<IMathObject> NotExpression::postSimplify() const {
-  // TODO
-  // if (const auto expr = cast<INotable>(child)) {
-  //   expr->notL();
-  //   return child;
-  // }
+  if (const auto expr = cast<ILogicNegatable>(child)) {
+    expr->logicNegate();
+    auto res = cast<IMathObject>(expr);
+    simplifyChild(res);
+    return res;
+  }
 
   return {};
 }
