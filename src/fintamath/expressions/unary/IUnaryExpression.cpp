@@ -89,11 +89,20 @@ void IUnaryExpression::simplifyValue(bool isPrecise) {
   IExpression::simplifyChild(child);
 }
 
+std::shared_ptr<IMathObject> IUnaryExpression::preSimplify() {
+  return {};
+}
+
 std::shared_ptr<IMathObject> IUnaryExpression::postSimplify() {
   return {};
 }
 
 std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
+  if (auto res = preSimplify()) {
+    simplifyChild(res);
+    return res;
+  }
+
   simplifyChild(child);
 
   if (func->isNonExressionEvaluatable() && func->doArgsMatch({*child})) {

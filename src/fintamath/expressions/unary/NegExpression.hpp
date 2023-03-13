@@ -11,6 +11,8 @@ public:
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 
 protected:
+  std::shared_ptr<IMathObject> preSimplify() override;
+
   std::shared_ptr<IMathObject> postSimplify() override;
 };
 
