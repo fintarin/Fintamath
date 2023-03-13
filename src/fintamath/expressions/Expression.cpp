@@ -45,7 +45,8 @@ Expression &Expression::operator=(const Expression &rhs) {
 }
 
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
-  child = simplify();
+  validate();
+  simplifyChild(child);
 }
 
 Expression::Expression(const TokenVector &tokens) {
@@ -74,7 +75,7 @@ Expression::Expression(const std::shared_ptr<IMathObject> &obj) {
     child = expr->child;
   } else {
     child = obj;
-    child = simplify();
+    simplifyChild(child);
   }
 }
 
@@ -237,7 +238,8 @@ std::unique_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction 
 
 std::shared_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
   auto res = std::make_shared<Expression>(makeRawFunctionExpression(func, args));
-  res->child = res->simplify();
+  res->validate();
+  simplifyChild(res->child);
   return res;
 }
 
@@ -379,7 +381,6 @@ ArgumentsPtrVector Expression::getVariables() const {
 }
 
 std::shared_ptr<IMathObject> Expression::simplify() {
-  validate();
   simplifyChild(child);
   return child;
 }
