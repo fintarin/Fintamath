@@ -44,9 +44,11 @@ std::shared_ptr<IMathObject> NegExpression::preSimplify() const {
 }
 
 std::shared_ptr<IMathObject> NegExpression::postSimplify() const {
-  if (const auto expr = cast<INegatable>(child)) {
+  if (auto expr = cast<INegatable>(child)) {
     expr->negate();
-    return child;
+    auto res = cast<IMathObject>(expr);
+    simplifyChild(res);
+    return res;
   }
 
   return {};

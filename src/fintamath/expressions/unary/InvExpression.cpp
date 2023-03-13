@@ -44,7 +44,9 @@ std::shared_ptr<IMathObject> InvExpression::preSimplify() const {
 std::shared_ptr<IMathObject> InvExpression::postSimplify() const {
   if (auto expr = cast<IInvertable>(child)) {
     expr->invert();
-    return child;
+    auto res = cast<IMathObject>(expr);
+    simplifyChild(res);
+    return res;
   }
 
   return {};
