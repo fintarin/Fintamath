@@ -31,7 +31,7 @@ protected:
   void validate() const override;
 
 private:
-  std::shared_ptr<IFunction> function;
+  std::shared_ptr<IFunction> func;
 
   ArgumentsPtrVector children;
 

@@ -8,7 +8,7 @@
 namespace fintamath {
 
 FunctionExpression::FunctionExpression(const FunctionExpression &rhs)
-    : function(cast<IFunction>(rhs.function->clone())) {
+    : func(cast<IFunction>(rhs.func->clone())) {
   for (const auto &arg : rhs.children) {
     children.emplace_back(arg->clone());
   }
@@ -16,7 +16,7 @@ FunctionExpression::FunctionExpression(const FunctionExpression &rhs)
 
 FunctionExpression &FunctionExpression::operator=(const FunctionExpression &rhs) {
   if (&rhs != this) {
-    function = cast<IFunction>(rhs.function->clone());
+    func = cast<IFunction>(rhs.func->clone());
 
     for (const auto &arg : rhs.children) {
       children.emplace_back(arg->clone());
@@ -27,12 +27,12 @@ FunctionExpression &FunctionExpression::operator=(const FunctionExpression &rhs)
 }
 
 FunctionExpression::FunctionExpression(const IFunction &function, ArgumentsPtrVector children)
-    : function(cast<IFunction>(function.clone())),
+    : func(cast<IFunction>(function.clone())),
       children(std::move(children)) {
 }
 
 std::string FunctionExpression::toString() const {
-  if (const auto oper = cast<IOperator>(function)) {
+  if (const auto oper = cast<IOperator>(func)) {
     switch (oper->getOperatorPriority()) {
     case IOperator::Priority::PostfixUnary:
       return postfixUnaryOperatorToString(*oper, children.front());
@@ -50,7 +50,7 @@ std::string FunctionExpression::toString() const {
 std::string FunctionExpression::functionToString() const {
   static const std::string delimiter = ", ";
 
-  std::string result = function->toString() + "(";
+  std::string result = func->toString() + "(";
 
   for (const auto &arg : children) {
     result += arg->toString() + delimiter;
@@ -62,7 +62,7 @@ std::string FunctionExpression::functionToString() const {
 }
 
 std::shared_ptr<IFunction> FunctionExpression::getFunction() const {
-  return function;
+  return func;
 }
 
 ArgumentsPtrVector FunctionExpression::getChildren() const {
@@ -109,7 +109,7 @@ std::unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const 
 }
 
 void FunctionExpression::validate() const {
-  validateArgs(*function, children);
+  validateArgs(*func, children);
 
   for (const auto &arg : children) {
     if (const auto argExpr = cast<IExpression>(arg)) {
@@ -119,7 +119,7 @@ void FunctionExpression::validate() const {
 }
 
 std::shared_ptr<IMathObject> FunctionExpression::simplify() {
-  if (!function->isNonExressionEvaluatable()) {
+  if (!func->isNonExressionEvaluatable()) {
     return {};
   }
 
@@ -130,11 +130,11 @@ std::shared_ptr<IMathObject> FunctionExpression::simplify() {
     arguments.emplace_back(*child);
   }
 
-  if (!function->doArgsMatch(arguments)) {
+  if (!func->doArgsMatch(arguments)) {
     return {};
   }
 
-  std::shared_ptr<IMathObject> res = (*function)(arguments);
+  std::shared_ptr<IMathObject> res = (*func)(arguments);
 
   if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {
     return {};
