@@ -645,10 +645,8 @@ std::shared_ptr<IMathObject> MulExpression::getPow() const {
 }
 
 void MulExpression::negate() {
-  for (auto &child : children) {
-    child = Expression::makeRawFunctionExpression(Neg(), {child});
-    simplifyChild(child);
-  }
+  addElement(std::make_shared<Integer>(NEG_ONE));
+  IPolynomExpression::simplify();
 }
 
 void MulExpression::invert() {
