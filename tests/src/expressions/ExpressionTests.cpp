@@ -29,7 +29,7 @@ TEST(ExpressionTests, copyTest) {
   EXPECT_TRUE(a == b && &a != &b);
 }
 
-TEST(ExpressionTests, toStringTest) {
+TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
   EXPECT_EQ(Expression(" 2 + 2 ").toString(), "4");
@@ -387,14 +387,14 @@ TEST(ExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("(x+1)_1").toString(), "(x + 1)_1");
   EXPECT_EQ(Expression("(x*2)_1").toString(), "(2 x)_1");
   EXPECT_EQ(Expression("x+x_1").toString(), "x + x_1");
-  EXPECT_EQ(Expression("x*x_1").toString(), "x * x_1");
-  EXPECT_EQ(Expression("x^x_1").toString(), "(x^x)_1");
+  EXPECT_EQ(Expression("x*x_1").toString(), "x x_1");
+  EXPECT_EQ(Expression("x^x_1").toString(), "x^x_1");
   EXPECT_EQ(Expression("x_x^2").toString(), "x_x^2");
   EXPECT_EQ(Expression("sin(x_1)").toString(), "sin(x_1)");
   EXPECT_EQ(Expression("(x*2)_((x+2)_x)").toString(), "(2 x)_((x + 2)_x)");
 }
 
-TEST(ExpressionTests, toStringLargeTest) {
+TEST(ExpressionTests, stringConstructorLargeTest) {
   EXPECT_EQ(Expression("10^-500").toString(),
             "1/"
             "1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
@@ -593,6 +593,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(x=y)'"), InvalidInputException);
   EXPECT_THROW(Expression("(x&y)'"), InvalidInputException);
   EXPECT_THROW(Expression("True'"), InvalidInputException);
+  EXPECT_THROW(Expression("(a+1)_(a>2)"), InvalidInputException);
 
   EXPECT_THROW(Expression("1/0"), UndefinedException);
   EXPECT_THROW(Expression("0^0"), UndefinedException);

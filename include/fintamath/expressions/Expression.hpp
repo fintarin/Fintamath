@@ -110,6 +110,8 @@ private:
 
   // void callPowSimplify();
 
+  static void compress(std::shared_ptr<IMathObject> &child);
+
 private:
   std::shared_ptr<IMathObject> child;
 

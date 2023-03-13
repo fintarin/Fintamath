@@ -131,8 +131,10 @@ void IPolynomExpression::validate() const {
 
   const auto func = this->getFunction();
 
-  for (size_t i = 1; i < children.size(); i++) {
-    this->validateArgs(*func, {children[i - 1], children[i]});
+  for (int64_t i = 0; i < children.size() - 1; i++) {
+    for (int64_t j = i + 1; j < children.size(); j++) {
+      validateArgs(*func, {children[i], children[j]});
+    }
   }
 }
 

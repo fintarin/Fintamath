@@ -123,6 +123,10 @@ std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
 }
 
 void IUnaryExpression::validate() const {
+  if (const auto childExpr = cast<IExpression>(child)) {
+    childExpr->validate();
+  }
+
   validateArgs(*func, {child});
 }
 

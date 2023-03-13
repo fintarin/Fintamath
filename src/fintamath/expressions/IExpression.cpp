@@ -20,8 +20,32 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsPtrVector &
   }
 
   for (size_t i = 0; i < args.size(); i++) {
-    const std::shared_ptr<IMathObject> &child = args[i];
+    std::shared_ptr<IMathObject> child = args[i];
     const std::type_info &type = argsTypes[i];
+
+    if (auto childExpr = cast<IExpression>(child)) {
+      std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
+
+      while (!childFunc) {
+        child = childExpr->getChildren().front();
+
+        if (childExpr = cast<IExpression>(child); childExpr) {
+          childFunc = childExpr->getFunction();
+        } else {
+          break;
+        }
+      }
+
+      if (childFunc) {
+        const std::type_info &childType = childFunc->getReturnType();
+
+        if (!InheritanceTable::isBaseOf(type, childType) && !InheritanceTable::isBaseOf(childType, type)) {
+          throw InvalidInputException(toString());
+        }
+
+        continue;
+      }
+    }
 
     if (is<Variable>(child)) {
       continue;
@@ -31,22 +55,6 @@ void IExpression::validateArgs(const IFunction &func, const ArgumentsPtrVector &
       const std::type_info &childType = childConst->getReturnType();
 
       if (!InheritanceTable::isBaseOf(type, childType)) {
-        throw InvalidInputException(toString());
-      }
-
-      continue;
-    }
-
-    if (const auto childExpr = cast<IExpression>(child)) {
-      std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
-
-      if (!childFunc) {
-        continue;
-      }
-
-      const std::type_info &childType = childFunc->getReturnType();
-
-      if (!InheritanceTable::isBaseOf(type, childType) && !InheritanceTable::isBaseOf(childType, type)) {
         throw InvalidInputException(toString());
       }
 
