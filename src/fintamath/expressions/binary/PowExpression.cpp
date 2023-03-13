@@ -5,6 +5,7 @@
 #include "fintamath/expressions/unary/InvExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/meta/Converter.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
@@ -46,8 +47,7 @@ std::unique_ptr<IMathObject> PowExpression::simplify(bool isPrecise) const {
 }
 
 void PowExpression::invert() {
-  rhsChild = Expression::makeRawFunctionExpression(Inv(), {rhsChild});
-  simplifyChild(rhsChild);
+  rhsChild = Expression::makeRawFunctionExpression(Neg(), {rhsChild});
 }
 
 std::shared_ptr<IMathObject> PowExpression::mulSimplify() {
