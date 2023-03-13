@@ -15,6 +15,8 @@ public:
   ArgumentsPtrVector getChildren() const final;
 
 protected:
+  virtual std::shared_ptr<IMathObject> preSimplify();
+
   virtual std::shared_ptr<IMathObject> postSimplify();
 
   std::shared_ptr<IMathObject> simplify() final;
