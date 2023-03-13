@@ -48,6 +48,8 @@ protected:
 
   static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
 
+  virtual void compress() = 0;
+
 protected:
   std::shared_ptr<IFunction> func;
 
@@ -74,6 +76,16 @@ public:
 
     for (auto &child : elemPolynom) {
       children.emplace_back(child);
+    }
+  }
+
+protected:
+  void compress() final {
+    ArgumentsPtrVector oldChildren = children;
+    children.clear();
+
+    for (auto &child : oldChildren) {
+      addElement(child);
     }
   }
 };

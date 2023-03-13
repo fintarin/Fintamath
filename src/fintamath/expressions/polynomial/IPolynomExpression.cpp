@@ -91,6 +91,8 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
 }
 
 std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
+  compress();
+
   size_t childrenSize = children.size();
 
   for (int64_t i = 0; i < children.size() - 1; i++) {
