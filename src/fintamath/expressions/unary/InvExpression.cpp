@@ -9,7 +9,7 @@ namespace fintamath {
 
 const Inv INV;
 
-InvExpression::InvExpression(std::shared_ptr<IMathObject> child) : IUnaryExpression(INV, std::move(child)) {
+InvExpression::InvExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(INV, child) {
 }
 
 std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {

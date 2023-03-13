@@ -7,7 +7,7 @@
 namespace fintamath {
 class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
-  explicit OrExpression(ArgumentsPtrVector children);
+  explicit OrExpression(const ArgumentsPtrVector &children);
 
   std::string toString() const override;
 

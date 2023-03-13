@@ -13,14 +13,6 @@ class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Ex
 public:
   Expression();
 
-  Expression(const Expression &rhs);
-
-  Expression(Expression &&rhs) noexcept = default;
-
-  Expression &operator=(const Expression &rhs);
-
-  Expression &operator=(Expression &&rhs) noexcept = default;
-
   explicit Expression(const std::string &str);
 
   Expression(const IMathObject &obj);
@@ -109,8 +101,6 @@ private:
   ArgumentsPtrVector getArgs(const TokenVector &tokens);
 
   // void callPowSimplify();
-
-  static void compress(std::shared_ptr<IMathObject> &child);
 
 private:
   std::shared_ptr<IMathObject> child;

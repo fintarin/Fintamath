@@ -9,7 +9,7 @@
 namespace fintamath {
 class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatable {
 public:
-  explicit SumExpression(ArgumentsPtrVector children);
+  explicit SumExpression(const ArgumentsPtrVector &children);
 
   std::string toString() const override;
 

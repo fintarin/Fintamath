@@ -13,41 +13,28 @@
 namespace fintamath {
 
 void IExpression::validateChildren(const IFunction &func, const ArgumentsPtrVector &children) const {
-  const ArgumentsTypesVector argsTypes = func.getArgsTypes();
+  const ArgumentsTypesVector childrenTypes = func.getArgsTypes();
 
-  if (argsTypes.size() != children.size()) {
+  if (childrenTypes.size() != children.size()) {
     throw InvalidInputException(toString());
   }
 
   for (size_t i = 0; i < children.size(); i++) {
-    std::shared_ptr<IMathObject> child = children[i];
-    const std::type_info &type = argsTypes[i];
-
-    if (auto childExpr = cast<IExpression>(child)) {
-      std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
-
-      while (!childFunc) {
-        child = childExpr->getChildren().front();
-
-        if (childExpr = cast<IExpression>(child); childExpr) {
-          childFunc = childExpr->getFunction();
-        } else {
-          break;
-        }
-      }
-
-      if (childFunc) {
-        const std::type_info &childType = childFunc->getReturnType();
-
-        if (!InheritanceTable::isBaseOf(type, childType) && !InheritanceTable::isBaseOf(childType, type)) {
-          throw InvalidInputException(toString());
-        }
-
-        continue;
-      }
-    }
+    const std::shared_ptr<IMathObject> &child = children[i];
+    const std::type_info &type = childrenTypes[i];
 
     if (is<Variable>(child)) {
+      continue;
+    }
+
+    if (const auto childExpr = cast<IExpression>(child)) {
+      const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
+      const std::type_info &childType = childFunc->getReturnType();
+
+      if (!InheritanceTable::isBaseOf(type, childType) && !InheritanceTable::isBaseOf(childType, type)) {
+        throw InvalidInputException(toString());
+      }
+
       continue;
     }
 
@@ -67,12 +54,14 @@ void IExpression::validateChildren(const IFunction &func, const ArgumentsPtrVect
   }
 }
 
+void IExpression::compressChild(std::shared_ptr<IMathObject> &child) {
+  if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
+    child = expr->getChildren().front();
+  }
+}
+
 void IExpression::simplifyChild(std::shared_ptr<IMathObject> &child) {
   if (const auto exprChild = cast<IExpression>(child)) {
-    if (!exprChild->getFunction()) {
-      child = exprChild->getChildren().front();
-    }
-
     if (const auto simplObj = exprChild->simplify()) {
       child = simplObj;
     }

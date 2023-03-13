@@ -9,7 +9,7 @@ namespace fintamath {
 
 const Not NOT;
 
-NotExpression::NotExpression(std::shared_ptr<IMathObject> child) : IUnaryExpression(NOT, std::move(child)) {
+NotExpression::NotExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NOT, child) {
 }
 
 std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {

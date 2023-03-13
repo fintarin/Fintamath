@@ -52,7 +52,7 @@ struct SumExpression::MulObject {
   }
 };
 
-SumExpression::SumExpression(ArgumentsPtrVector children) : IPolynomExpression(ADD, std::move(children)) {
+SumExpression::SumExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(ADD, children) {
 }
 
 std::string SumExpression::toString() const {

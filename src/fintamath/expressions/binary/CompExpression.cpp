@@ -21,9 +21,9 @@
 
 namespace fintamath {
 
-CompExpression::CompExpression(const IOperator &oper, std::shared_ptr<IMathObject> lhsChild,
-                               std::shared_ptr<IMathObject> rhsChild)
-    : IBinaryExpression(oper, std::move(lhsChild), std::move(rhsChild)) {
+CompExpression::CompExpression(const IOperator &oper, const std::shared_ptr<IMathObject> &lhsChild,
+                               const std::shared_ptr<IMathObject> &rhsChild)
+    : IBinaryExpressionCRTP(oper, lhsChild, rhsChild) {
 }
 
 std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {

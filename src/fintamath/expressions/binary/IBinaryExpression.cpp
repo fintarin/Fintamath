@@ -10,29 +10,6 @@
 
 namespace fintamath {
 
-IBinaryExpression::IBinaryExpression(const IBinaryExpression &rhs)
-    : func(cast<IFunction>(rhs.func->clone())),
-      lhsChild(rhs.lhsChild->clone()),
-      rhsChild(rhs.rhsChild->clone()) {
-}
-
-IBinaryExpression &IBinaryExpression::operator=(const IBinaryExpression &rhs) {
-  if (&rhs != this) {
-    func = cast<IFunction>(rhs.func->clone());
-    lhsChild = rhs.lhsChild->clone();
-    rhsChild = rhs.rhsChild->clone();
-  }
-
-  return *this;
-}
-
-IBinaryExpression::IBinaryExpression(const IFunction &func, std::shared_ptr<IMathObject> lhsChild,
-                                     std::shared_ptr<IMathObject> rhsChild)
-    : func(cast<IFunction>(func.clone())),
-      lhsChild(std::move(lhsChild)),
-      rhsChild(std::move(rhsChild)) {
-}
-
 void IBinaryExpression::setPrecision(uint8_t precision) {
   setMathObjectPrecision(lhsChild, precision);
   setMathObjectPrecision(rhsChild, precision);

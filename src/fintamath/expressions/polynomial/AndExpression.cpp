@@ -11,7 +11,7 @@ namespace fintamath {
 
 const And AND;
 
-AndExpression::AndExpression(ArgumentsPtrVector children) : IPolynomExpression(AND, std::move(children)) {
+AndExpression::AndExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(AND, children) {
 }
 
 std::string AndExpression::toString() const {

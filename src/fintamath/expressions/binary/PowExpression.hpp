@@ -10,7 +10,7 @@ namespace fintamath {
 
 class PowExpression : public IBinaryExpressionCRTP<PowExpression>, public IInvertable {
 public:
-  explicit PowExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild);
+  explicit PowExpression(const std::shared_ptr<IMathObject> &lhsChild, const std::shared_ptr<IMathObject> &rhsChild);
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 

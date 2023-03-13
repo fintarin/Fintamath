@@ -5,25 +5,6 @@
 
 namespace fintamath {
 
-IPolynomExpression::IPolynomExpression(const IPolynomExpression &rhs)
-    : func(cast<IFunction>(rhs.func->clone())),
-      children(rhs.children) {
-}
-
-IPolynomExpression &IPolynomExpression::operator=(const IPolynomExpression &rhs) {
-  if (&rhs != this) {
-    func = cast<IFunction>(rhs.func->clone());
-    children = rhs.children;
-  }
-
-  return *this;
-}
-
-IPolynomExpression::IPolynomExpression(const IFunction &func, ArgumentsPtrVector children)
-    : func(cast<IFunction>(func.clone())),
-      children(std::move(children)) {
-}
-
 void IPolynomExpression::pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to) {
   for (const auto &elem : from) {
     to.emplace_back(elem);
@@ -95,8 +76,6 @@ std::shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildN
 }
 
 std::shared_ptr<IMathObject> IPolynomExpression::simplifyRec() {
-  compress();
-
   size_t childrenSize = children.size();
 
   for (int64_t i = 0; i < children.size() - 1; i++) {

@@ -23,25 +23,7 @@
 
 namespace fintamath {
 
-Expression::Expression(const Expression &rhs) {
-  if (rhs.child) {
-    child = rhs.child->clone();
-  }
-}
-
 Expression::Expression() : child(ZERO.clone()) {
-}
-
-Expression &Expression::operator=(const Expression &rhs) {
-  if (&rhs != this) {
-    if (rhs.child) {
-      child = rhs.child->clone();
-    } else {
-      child = nullptr;
-    }
-  }
-
-  return *this;
 }
 
 Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {

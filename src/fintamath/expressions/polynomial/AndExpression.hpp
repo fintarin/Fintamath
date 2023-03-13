@@ -8,7 +8,7 @@
 namespace fintamath {
 class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
-  explicit AndExpression(ArgumentsPtrVector children);
+  explicit AndExpression(const ArgumentsPtrVector &children);
 
   std::string toString() const override;
 

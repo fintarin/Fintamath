@@ -23,10 +23,9 @@ public:
   // TODO: remove this and move simplify(false) logic to setPrecision
   virtual std::unique_ptr<IMathObject> simplify(bool isPrecise) const = 0;
 
-  // TODO: remove this and implement in Expression using IExpression::Iterator
+  // TODO: remove this and implement in Expression
   virtual void validate() const = 0;
 
-  // TODO: make this non virtual using IExpression::Iterator
   virtual ArgumentsPtrVector getVariables() const {
     return {};
   }
@@ -41,8 +40,10 @@ public:
   }
 
 protected:
-  // TODO: remove this and implement in Expression using IExpression::Iterator
+  // TODO: remove this and implement in Expression
   void validateChildren(const IFunction &func, const ArgumentsPtrVector &args) const;
+
+  static void compressChild(std::shared_ptr<IMathObject> &child);
 
   static void simplifyChild(std::shared_ptr<IMathObject> &child);
 

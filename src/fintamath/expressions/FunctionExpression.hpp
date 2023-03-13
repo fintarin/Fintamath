@@ -5,15 +5,7 @@
 namespace fintamath {
 class FunctionExpression : public IExpressionCRTP<FunctionExpression> {
 public:
-  FunctionExpression(const FunctionExpression &rhs);
-
-  FunctionExpression(FunctionExpression &&rhs) = default;
-
-  FunctionExpression &operator=(const FunctionExpression &rhs);
-
-  FunctionExpression &operator=(FunctionExpression &&rhs) noexcept = default;
-
-  explicit FunctionExpression(const IFunction &function, ArgumentsPtrVector children);
+  explicit FunctionExpression(const IFunction &function, const ArgumentsPtrVector &children);
 
   std::string toString() const override;
 

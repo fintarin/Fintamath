@@ -10,7 +10,7 @@
 namespace fintamath {
 class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatable, public IInvertable {
 public:
-  explicit MulExpression(ArgumentsPtrVector children);
+  explicit MulExpression(const ArgumentsPtrVector &children);
 
   std::string toString() const override;
 

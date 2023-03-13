@@ -6,7 +6,7 @@ namespace fintamath {
 
 class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
-  explicit NegExpression(std::shared_ptr<IMathObject> child);
+  explicit NegExpression(const std::shared_ptr<IMathObject> &child);
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 

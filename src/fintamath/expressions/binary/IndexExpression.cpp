@@ -16,8 +16,9 @@ namespace fintamath {
 
 const Index INDEX;
 
-IndexExpression::IndexExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild)
-    : IBinaryExpression(INDEX, std::move(lhsChild), std::move(rhsChild)) {
+IndexExpression::IndexExpression(const std::shared_ptr<IMathObject> &lhsChild,
+                                 const std::shared_ptr<IMathObject> &rhsChild)
+    : IBinaryExpressionCRTP(INDEX, lhsChild, rhsChild) {
 }
 
 // std::string IndexExpression::toString() const {

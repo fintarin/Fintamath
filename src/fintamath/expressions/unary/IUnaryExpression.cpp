@@ -12,25 +12,6 @@
 
 namespace fintamath {
 
-IUnaryExpression::IUnaryExpression(const IUnaryExpression &rhs)
-    : func(cast<IFunction>(rhs.func->clone())),
-      child(rhs.child->clone()) {
-}
-
-IUnaryExpression &IUnaryExpression::operator=(const IUnaryExpression &rhs) {
-  if (&rhs != this) {
-    func = cast<IFunction>(rhs.func->clone());
-    child = rhs.child->clone();
-  }
-
-  return *this;
-}
-
-IUnaryExpression::IUnaryExpression(const IFunction &func, std::shared_ptr<IMathObject> arg)
-    : func(cast<IFunction>(func.clone())),
-      child(std::move(arg)) {
-}
-
 void IUnaryExpression::setPrecision(uint8_t precision) {
   if (const auto expr = cast<IExpression>(child)) {
     expr->setPrecision(precision);

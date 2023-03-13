@@ -7,27 +7,16 @@
 
 namespace fintamath {
 
-FunctionExpression::FunctionExpression(const FunctionExpression &rhs) : func(cast<IFunction>(rhs.func->clone())) {
-  for (const auto &arg : rhs.children) {
-    children.emplace_back(arg->clone());
-  }
-}
+FunctionExpression::FunctionExpression(const IFunction &function, const ArgumentsPtrVector &children)
+    : func(cast<IFunction>(function.clone())) {
 
-FunctionExpression &FunctionExpression::operator=(const FunctionExpression &rhs) {
-  if (&rhs != this) {
-    func = cast<IFunction>(rhs.func->clone());
-
-    for (const auto &arg : rhs.children) {
-      children.emplace_back(arg->clone());
+  for (const auto &child : children) {
+    if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
+      this->children.emplace_back(expr->getChildren().front());
+    } else {
+      this->children.emplace_back(child);
     }
   }
-
-  return *this;
-}
-
-FunctionExpression::FunctionExpression(const IFunction &function, ArgumentsPtrVector children)
-    : func(cast<IFunction>(function.clone())),
-      children(std::move(children)) {
 }
 
 std::string FunctionExpression::toString() const {

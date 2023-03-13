@@ -6,17 +6,6 @@ namespace fintamath {
 
 class IBinaryExpression : virtual public IExpression {
 public:
-  IBinaryExpression(const IBinaryExpression &rhs);
-
-  IBinaryExpression(IBinaryExpression &&rhs) noexcept = default;
-
-  IBinaryExpression &operator=(const IBinaryExpression &rhs);
-
-  IBinaryExpression &operator=(IBinaryExpression &&rhs) noexcept = default;
-
-  explicit IBinaryExpression(const IFunction &func, std::shared_ptr<IMathObject> lhsChild,
-                             std::shared_ptr<IMathObject> rhsChild);
-
   void setPrecision(uint8_t precision) final;
 
   std::string toString() const final;
@@ -41,6 +30,19 @@ protected:
 };
 
 template <typename Derived>
-class IBinaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IBinaryExpression {};
+class IBinaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IBinaryExpression {
+public:
+  explicit IBinaryExpressionCRTP(const IFunction &func, const std::shared_ptr<IMathObject> &lhsChild,
+                                 const std::shared_ptr<IMathObject> &rhsChild) {
+
+    this->func = cast<IFunction>(func.clone());
+
+    this->lhsChild = lhsChild;
+    compressChild(this->lhsChild);
+
+    this->rhsChild = rhsChild;
+    compressChild(this->rhsChild);
+  }
+};
 
 }

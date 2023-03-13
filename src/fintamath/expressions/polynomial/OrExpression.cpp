@@ -10,7 +10,7 @@ namespace fintamath {
 
 const Or OR;
 
-OrExpression::OrExpression(ArgumentsPtrVector children) : IPolynomExpression(OR, std::move(children)) {
+OrExpression::OrExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(OR, children) {
 }
 
 std::string OrExpression::toString() const {

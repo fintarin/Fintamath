@@ -10,7 +10,7 @@ namespace fintamath {
 
 const Neg NEG;
 
-NegExpression::NegExpression(std::shared_ptr<IMathObject> child) : IUnaryExpression(NEG, std::move(child)) {
+NegExpression::NegExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NEG, child) {
 }
 
 std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {

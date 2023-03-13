@@ -7,7 +7,7 @@ namespace fintamath {
 
 class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
 public:
-  explicit NotExpression(std::shared_ptr<IMathObject> child);
+  explicit NotExpression(const std::shared_ptr<IMathObject> &child);
 
   std::unique_ptr<IMathObject> simplify(bool isPrecise) const override;
 

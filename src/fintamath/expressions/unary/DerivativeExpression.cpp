@@ -16,8 +16,8 @@ namespace fintamath {
 
 const Derivative DER;
 
-DerivativeExpression::DerivativeExpression(std::shared_ptr<IMathObject> child)
-    : IUnaryExpression(DER, std::move(child)) {
+DerivativeExpression::DerivativeExpression(const std::shared_ptr<IMathObject> &child)
+    : IUnaryExpressionCRTP(DER, child) {
 }
 
 std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) const {

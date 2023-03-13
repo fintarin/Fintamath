@@ -15,8 +15,8 @@ namespace fintamath {
 
 const Pow POW;
 
-PowExpression::PowExpression(std::shared_ptr<IMathObject> lhsChild, std::shared_ptr<IMathObject> rhsChild)
-    : IBinaryExpression(POW, std::move(lhsChild), std::move(rhsChild)) {
+PowExpression::PowExpression(const std::shared_ptr<IMathObject> &lhsChild, const std::shared_ptr<IMathObject> &rhsChild)
+    : IBinaryExpressionCRTP(POW, lhsChild, rhsChild) {
 }
 
 std::unique_ptr<IMathObject> PowExpression::simplify(bool isPrecise) const {

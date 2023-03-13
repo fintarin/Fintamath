@@ -73,7 +73,7 @@ struct MulExpression::ObjectPow {
 
 //-----------------------------------------------------------------------------------------------------//
 
-MulExpression::MulExpression(ArgumentsPtrVector children) : IPolynomExpression(MUL, std::move(children)) {
+MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(MUL, children) {
 }
 
 std::string MulExpression::sumExprToString(const std::shared_ptr<IMathObject> &obj) {

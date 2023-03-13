@@ -14,16 +14,6 @@ namespace fintamath {
 
 class IPolynomExpression : virtual public IExpression {
 public:
-  IPolynomExpression(const IPolynomExpression &rhs);
-
-  explicit IPolynomExpression(IPolynomExpression &&rhs) = default;
-
-  IPolynomExpression &operator=(const IPolynomExpression &rhs);
-
-  IPolynomExpression &operator=(IPolynomExpression &&rhs) noexcept = default;
-
-  explicit IPolynomExpression(const IFunction &func, ArgumentsPtrVector children);
-
   std::shared_ptr<IFunction> getFunction() const final;
 
   ArgumentsPtrVector getChildren() const final;
@@ -47,8 +37,6 @@ protected:
 
   static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
 
-  virtual void compress() = 0;
-
 protected:
   std::shared_ptr<IFunction> func;
 
@@ -61,7 +49,18 @@ private:
 template <typename Derived>
 class IPolynomExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IPolynomExpression {
 public:
-  void addElement(const std::shared_ptr<IMathObject> &elem) {
+  explicit IPolynomExpressionCRTP(const IFunction &func, const ArgumentsPtrVector &children) {
+    this->func = cast<IFunction>(func.clone());
+
+    for (const auto &child : children) {
+      addElement(child);
+    }
+  }
+
+  void addElement(const std::shared_ptr<IMathObject> &element) {
+    std::shared_ptr<IMathObject> elem = element;
+    compressChild(elem);
+
     ArgumentsPtrVector elemPolynom;
 
     if (auto expr = cast<Derived>(elem)) {
@@ -75,16 +74,6 @@ public:
 
     for (auto &child : elemPolynom) {
       children.emplace_back(child);
-    }
-  }
-
-protected:
-  void compress() final {
-    ArgumentsPtrVector oldChildren = children;
-    children.clear();
-
-    for (auto &child : oldChildren) {
-      addElement(child);
     }
   }
 };
