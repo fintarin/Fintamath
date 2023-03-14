@@ -8,8 +8,6 @@ class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
 public:
   CompExpression(const IOperator &oper, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  ArgumentPtr solve() const;
-
   // string solve(uint8_t precision) const;
 
 protected:

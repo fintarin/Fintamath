@@ -156,12 +156,6 @@ Expression orL(const Expression &lhs, const Expression &rhs) {
 }
 
 Expression solve(const Expression &rhs) {
-  if (const auto compExpr = cast<CompExpression>(rhs.getChildren().front())) {
-    if (ArgumentPtr res = compExpr->solve()) {
-      return Expression(res);
-    }
-  }
-
   return rhs;
 }
 
