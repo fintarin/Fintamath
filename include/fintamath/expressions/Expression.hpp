@@ -39,12 +39,6 @@ public:
   // TODO: make this private
   // void setPrecisionRec(uint8_t precision);
 
-  static unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
-
-  static shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
-
-  static shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
-
   template <typename Function, typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
   static void
   registerFunctionExpressionMaker(Parser::Function<shared_ptr<IExpression>, const ArgumentsPtrVector &> &&builder) {
@@ -94,6 +88,12 @@ private:
   void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const;
 
   // void callPowSimplify();
+
+  friend unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+
+  friend shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+
+  friend shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
 private:
   shared_ptr<IMathObject> child;

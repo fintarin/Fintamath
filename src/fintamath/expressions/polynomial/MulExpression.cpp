@@ -8,6 +8,7 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
@@ -648,7 +649,7 @@ void MulExpression::negate() {
 
 void MulExpression::invert() {
   for (auto &child : children) {
-    child = Expression::makeRawFunctionExpression(Inv(), {child});
+    child = makeRawFunctionExpression(Inv(), {child});
     simplifyChild(child);
   }
 }

@@ -11,6 +11,7 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -48,7 +49,7 @@ const Add ADD;
 //   shared_ptr<IMathObject> getCounterValue() const {
 //     ArgumentsPtrVector polynom = counter.getPolynom();
 //     const shared_ptr<IMathObject> &countValue = polynom.front();
-//     return is<NegExpression>(polynom.front()) ? Expression::makeFunctionExpression(Neg(), {countValue}) : countValue;
+//     return is<NegExpression>(polynom.front()) ? makeFunctionExpression(Neg(), {countValue}) : countValue;
 //   }
 // };
 
@@ -330,7 +331,7 @@ return maxValue.clone();*/
 
 void SumExpression::negate() {
   for (auto &child : children) {
-    child = Expression::makeRawFunctionExpression(Neg(), {child});
+    child = makeRawFunctionExpression(Neg(), {child});
     simplifyChild(child);
   }
 }

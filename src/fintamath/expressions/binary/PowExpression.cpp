@@ -1,6 +1,7 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/unary/InvExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
@@ -164,7 +165,7 @@ PowExpression::PowExpression(const shared_ptr<IMathObject> &lhsChild, const shar
 // }
 
 void PowExpression::invert() {
-  rhsChild = Expression::makeRawFunctionExpression(Neg(), {rhsChild});
+  rhsChild = makeRawFunctionExpression(Neg(), {rhsChild});
 }
 
 shared_ptr<IMathObject> PowExpression::postSimplify() const {
@@ -179,7 +180,7 @@ shared_ptr<IMathObject> PowExpression::postSimplify() const {
       return lhsChild;
     }
     if (*rhsInt == NEG_ONE) {
-      return Expression::makeFunctionExpression(Inv(), {lhsChild});
+      return makeFunctionExpression(Inv(), {lhsChild});
     }
   }
 

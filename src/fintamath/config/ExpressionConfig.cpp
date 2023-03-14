@@ -1,5 +1,6 @@
 #include "fintamath/expressions/Expression.hpp"
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/binary/IndexExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
@@ -105,35 +106,35 @@ struct ExpressionConfig {
       const shared_ptr<IMathObject> &lhs = args.front();
       const shared_ptr<IMathObject> &rhs = args.back();
 
-      shared_ptr<IMathObject> notLhs = Expression::makeRawFunctionExpression(Not(), {lhs});
+      shared_ptr<IMathObject> notLhs = makeRawFunctionExpression(Not(), {lhs});
 
-      return Expression::makeRawFunctionExpression(Or(), {notLhs, rhs});
+      return makeRawFunctionExpression(Or(), {notLhs, rhs});
     });
 
     Expression::registerFunctionExpressionMaker<Equiv>([](const ArgumentsPtrVector &args) {
       const shared_ptr<IMathObject> &lhs = args.front();
       const shared_ptr<IMathObject> &rhs = args.back();
 
-      shared_ptr<IMathObject> notLhs = Expression::makeRawFunctionExpression(Not(), {lhs});
-      shared_ptr<IMathObject> notRhs = Expression::makeRawFunctionExpression(Not(), {rhs});
+      shared_ptr<IMathObject> notLhs = makeRawFunctionExpression(Not(), {lhs});
+      shared_ptr<IMathObject> notRhs = makeRawFunctionExpression(Not(), {rhs});
 
-      shared_ptr<IMathObject> lhsAndRhs = Expression::makeRawFunctionExpression(And(), {lhs, rhs});
-      shared_ptr<IMathObject> notLhsAndNotRhs = Expression::makeRawFunctionExpression(And(), {notLhs, notRhs});
+      shared_ptr<IMathObject> lhsAndRhs = makeRawFunctionExpression(And(), {lhs, rhs});
+      shared_ptr<IMathObject> notLhsAndNotRhs = makeRawFunctionExpression(And(), {notLhs, notRhs});
 
-      return Expression::makeRawFunctionExpression(Or(), {lhsAndRhs, notLhsAndNotRhs});
+      return makeRawFunctionExpression(Or(), {lhsAndRhs, notLhsAndNotRhs});
     });
 
     Expression::registerFunctionExpressionMaker<Nequiv>([](const ArgumentsPtrVector &args) {
       const shared_ptr<IMathObject> &lhs = args.front();
       const shared_ptr<IMathObject> &rhs = args.back();
 
-      shared_ptr<IMathObject> notLhs = Expression::makeRawFunctionExpression(Not(), {lhs});
-      shared_ptr<IMathObject> notRhs = Expression::makeRawFunctionExpression(Not(), {rhs});
+      shared_ptr<IMathObject> notLhs = makeRawFunctionExpression(Not(), {lhs});
+      shared_ptr<IMathObject> notRhs = makeRawFunctionExpression(Not(), {rhs});
 
-      shared_ptr<IMathObject> notLhsAndRhs = Expression::makeRawFunctionExpression(And(), {notLhs, rhs});
-      shared_ptr<IMathObject> lhsAndNotRhs = Expression::makeRawFunctionExpression(And(), {lhs, notRhs});
+      shared_ptr<IMathObject> notLhsAndRhs = makeRawFunctionExpression(And(), {notLhs, rhs});
+      shared_ptr<IMathObject> lhsAndNotRhs = makeRawFunctionExpression(And(), {lhs, notRhs});
 
-      return Expression::makeRawFunctionExpression(Or(), {notLhsAndRhs, lhsAndNotRhs});
+      return makeRawFunctionExpression(Or(), {notLhsAndRhs, lhsAndNotRhs});
     });
 
     Expression::registerFunctionExpressionMaker<Neg>([](const ArgumentsPtrVector &args) {

@@ -67,8 +67,7 @@ public:
   }
 
   template <typename Return, typename... Args>
-  static Return parse(const Map<Return, const Args &...> &parserMap, const string &parsedStr,
-                      const Args &...args) {
+  static Return parse(const Map<Return, const Args &...> &parserMap, const string &parsedStr, const Args &...args) {
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {

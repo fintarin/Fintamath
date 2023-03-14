@@ -210,35 +210,6 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   return false;
 }
 
-unique_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args) {
-  ArgumentsPtrVector argsPtrVect;
-  for (const auto &arg : args) {
-    argsPtrVect.emplace_back(arg.get().toMinimalObject());
-  }
-
-  auto res = make_unique<Expression>();
-  res->child = makeFunctionExpression(func, argsPtrVect);
-  return res;
-}
-
-shared_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
-  auto res = make_shared<Expression>(makeRawFunctionExpression(func, args));
-  res->validateChild(res->child);
-  res->simplifyChild(res->child);
-  return res;
-}
-
-shared_ptr<IExpression> Expression::makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
-
-  if (shared_ptr<IExpression> expr = Parser::parse(expressionBuildersMap, func.toString(), args)) {
-    return expr;
-  }
-
-  auto funcExpr = make_shared<Expression>();
-  funcExpr->child = make_shared<FunctionExpression>(func, args);
-  return funcExpr;
-}
-
 shared_ptr<IFunction> Expression::getFunction() const {
   return {};
 }
@@ -404,6 +375,34 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
       throw InvalidInputException(toString());
     }
   }
+}
+
+unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args) {
+  ArgumentsPtrVector argsPtrVect;
+  for (const auto &arg : args) {
+    argsPtrVect.emplace_back(arg.get().toMinimalObject());
+  }
+
+  auto res = make_unique<Expression>();
+  res->child = makeFunctionExpression(func, argsPtrVect);
+  return res;
+}
+
+shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
+  auto res = make_shared<Expression>(makeRawFunctionExpression(func, args));
+  res->validateChild(res->child);
+  res->simplifyChild(res->child);
+  return res;
+}
+
+shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
+  if (shared_ptr<IExpression> expr = Parser::parse(Expression::expressionBuildersMap, func.toString(), args)) {
+    return expr;
+  }
+
+  auto funcExpr = make_shared<Expression>();
+  funcExpr->child = make_shared<FunctionExpression>(func, args);
+  return funcExpr;
 }
 
 }

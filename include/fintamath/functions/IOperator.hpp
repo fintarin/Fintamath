@@ -33,8 +33,7 @@ public:
     Parser::registerType<T>(parserMap);
   }
 
-  static unique_ptr<IOperator> parse(const string &parsedStr,
-                                     IOperator::Priority priority = IOperator::Priority::Any) {
+  static unique_ptr<IOperator> parse(const string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
     Parser::Comparator<const unique_ptr<IOperator> &> comp = [priority](const unique_ptr<IOperator> &oper) {
       return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
     };

@@ -56,7 +56,7 @@ void OrExpression::logicNegate() {
   ArgumentsPtrVector negChildren;
 
   for (const auto &child : children) {
-    negChildren.emplace_back(Expression::makeRawFunctionExpression(Not(), {child}));
+    negChildren.emplace_back(makeRawFunctionExpression(Not(), {child}));
   }
 
   children = {make_shared<AndExpression>(negChildren)};
