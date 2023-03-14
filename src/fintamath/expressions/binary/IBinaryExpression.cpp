@@ -1,12 +1,6 @@
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
 
-#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/functions/IFunction.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/meta/Converter.hpp"
-#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 

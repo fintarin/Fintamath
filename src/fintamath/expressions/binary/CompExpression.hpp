@@ -1,11 +1,6 @@
 #pragma once
 
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include <cstdint>
-#include <vector>
 
 namespace fintamath {
 

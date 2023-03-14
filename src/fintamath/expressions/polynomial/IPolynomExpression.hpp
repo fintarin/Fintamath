@@ -1,14 +1,6 @@
 #pragma once
 
-#include "fintamath/expressions/Expression.hpp" // TODO: remove
 #include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/meta/Converter.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
-#include <type_traits>
 
 namespace fintamath {
 

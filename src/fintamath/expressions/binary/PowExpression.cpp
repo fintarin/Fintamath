@@ -1,17 +1,11 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
-#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/polynomial/MulExpression.hpp"
-#include "fintamath/expressions/unary/InvExpression.hpp"
-#include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/meta/Converter.hpp"
-#include "fintamath/numbers/IntegerFunctions.hpp"
-
-#include <memory>
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 

@@ -8,7 +8,6 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Real.hpp"
-#include <memory>
 
 namespace fintamath {
 

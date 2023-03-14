@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
-#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/binary/IBinaryExpression.hpp"
 
 namespace fintamath {

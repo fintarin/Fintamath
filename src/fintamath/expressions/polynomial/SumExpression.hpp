@@ -1,10 +1,7 @@
 #pragma once
 
-#include <cstdint>
-
 #include "fintamath/expressions/interfaces/INegatable.hpp"
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
-#include "fintamath/meta/Converter.hpp"
 
 namespace fintamath {
 class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatable {

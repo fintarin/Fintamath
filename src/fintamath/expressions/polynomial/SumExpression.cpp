@@ -1,33 +1,13 @@
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 
 #include <algorithm>
-#include <cstdint>
-#include <memory>
 #include <regex>
 
-#include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/exceptions/Exception.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/binary/CompExpression.hpp"
-#include "fintamath/expressions/unary/NegExpression.hpp"
-#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/ILiteral.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/meta/Converter.hpp"
-#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
-#include "fintamath/numbers/Rational.hpp"
-#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -347,10 +327,12 @@ shared_ptr<IMathObject> SumExpression::postSimplify(size_t lhsChildNum, size_t r
     return lhsChild;
   }
 
-  if (const auto lhsNeg = cast<NegExpression>(lhsChild); lhsNeg && *lhsNeg->getChildren().front() == *rhsChild) {
+  if (const auto lhsExpr = cast<IExpression>(lhsChild);
+      lhsExpr && is<Neg>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
     return make_shared<Integer>(ZERO);
   }
-  if (const auto rhsNeg = cast<NegExpression>(rhsChild); rhsNeg && *rhsNeg->getChildren().front() == *lhsChild) {
+  if (const auto rhsExpr = cast<IExpression>(rhsChild);
+      rhsExpr && is<Neg>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
     return make_shared<Integer>(ZERO);
   }
 

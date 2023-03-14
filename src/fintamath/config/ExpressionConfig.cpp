@@ -46,28 +46,28 @@ namespace {
 
 struct ExpressionConfig {
   ExpressionConfig() {
-    Expression::registerFunctionExpressionMaker<Add>([](const ArgumentsPtrVector &args) {
-      return make_shared<SumExpression>(ArgumentsPtrVector{args.front(), args.back()});
+    Expression::registerFunctionExpressionMaker<Add, true>([](const ArgumentsPtrVector &args) {
+      return make_shared<SumExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Sub>([](const ArgumentsPtrVector &args) {
       return make_shared<SumExpression>(ArgumentsPtrVector{args.front(), make_shared<NegExpression>(args.back())});
     });
 
-    Expression::registerFunctionExpressionMaker<Mul>([](const ArgumentsPtrVector &args) {
-      return make_shared<MulExpression>(ArgumentsPtrVector{args.front(), args.back()});
+    Expression::registerFunctionExpressionMaker<Mul, true>([](const ArgumentsPtrVector &args) {
+      return make_shared<MulExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Div>([](const ArgumentsPtrVector &args) {
       return make_shared<MulExpression>(ArgumentsPtrVector{args.front(), make_shared<InvExpression>(args.back())});
     });
 
-    Expression::registerFunctionExpressionMaker<And>([](const ArgumentsPtrVector &args) {
-      return make_shared<AndExpression>(ArgumentsPtrVector{args.front(), args.back()});
+    Expression::registerFunctionExpressionMaker<And, true>([](const ArgumentsPtrVector &args) {
+      return make_shared<AndExpression>(args);
     });
 
-    Expression::registerFunctionExpressionMaker<Or>([](const ArgumentsPtrVector &args) {
-      return make_shared<OrExpression>(ArgumentsPtrVector{args.front(), args.back()});
+    Expression::registerFunctionExpressionMaker<Or, true>([](const ArgumentsPtrVector &args) {
+      return make_shared<OrExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Pow>([](const ArgumentsPtrVector &args) {

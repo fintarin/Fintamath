@@ -1,34 +1,14 @@
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 
 #include <algorithm>
-#include <memory>
 #include <set>
 
-#include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/binary/CompExpression.hpp"
-#include "fintamath/expressions/binary/PowExpression.hpp"
-#include "fintamath/expressions/polynomial/SumExpression.hpp"
-#include "fintamath/expressions/unary/InvExpression.hpp"
-#include "fintamath/expressions/unary/NegExpression.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/ILiteral.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/meta/Converter.hpp"
-#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
-#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -79,7 +59,7 @@ MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpre
 
 // TODO: remove and use operator priority instead
 string MulExpression::sumExprToString(const shared_ptr<IMathObject> &obj) {
-  if (is<SumExpression>(obj)) {
+  if (const auto expr = cast<IExpression>(obj); expr && is<Add>(expr->getFunction())) {
     return "(" + obj->toString() + ")";
   }
   return obj->toString();
@@ -88,7 +68,7 @@ string MulExpression::sumExprToString(const shared_ptr<IMathObject> &obj) {
 string MulExpression::toString() const {
   string result;
 
-  if (const auto invExpr = cast<InvExpression>(children.front())) {
+  if (const auto invExpr = cast<IExpression>(children.front()); invExpr && is<Inv>(invExpr->getFunction())) {
     result += "1/";
     result += sumExprToString(invExpr->getChildren().front());
   }
@@ -97,7 +77,7 @@ string MulExpression::toString() const {
   }
 
   for (size_t i = 1; i < children.size(); i++) {
-    if (const auto invExpr = cast<InvExpression>(children[i])) {
+    if (const auto invExpr = cast<IExpression>(children[i]); invExpr && is<Inv>(invExpr->getFunction())) {
       result += "/";
       result += sumExprToString(invExpr->getChildren().front());
     }
@@ -672,10 +652,12 @@ shared_ptr<IMathObject> MulExpression::postSimplify(size_t lhsChildNum, size_t r
     return lhsChild;
   }
 
-  if (const auto lhsInv = cast<InvExpression>(lhsChild); lhsInv && *lhsInv->getChildren().front() == *rhsChild) {
+  if (const auto lhsExpr = cast<IExpression>(lhsChild);
+      lhsExpr && is<Inv>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
     return make_shared<Integer>(ONE);
   }
-  if (const auto rhsInv = cast<InvExpression>(rhsChild); rhsInv && *rhsInv->getChildren().front() == *lhsChild) {
+  if (const auto rhsExpr = cast<IExpression>(rhsChild);
+      rhsExpr && is<Inv>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
     return make_shared<Integer>(ONE);
   }
 

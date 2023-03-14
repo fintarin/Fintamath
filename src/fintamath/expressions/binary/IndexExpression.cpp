@@ -1,16 +1,6 @@
 #include "fintamath/expressions/binary/IndexExpression.hpp"
 
-#include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
-#include "fintamath/expressions/binary/IBinaryExpression.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/other/Index.hpp"
-#include "fintamath/literals/Boolean.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/INumber.hpp"
-#include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 

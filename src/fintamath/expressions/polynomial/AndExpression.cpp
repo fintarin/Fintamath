@@ -1,12 +1,9 @@
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
 
-#include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/polynomial/OrExpression.hpp"
-#include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/functions/logic/Not.hpp"
-#include "fintamath/literals/constants/False.hpp"
+#include "fintamath/functions/logic/Or.hpp"
 
 namespace fintamath {
 
@@ -60,7 +57,7 @@ void AndExpression::logicNegate() {
     negChildren.emplace_back(makeRawFunctionExpression(Not(), {child}));
   }
 
-  children = {make_shared<OrExpression>(negChildren)};
+  children = {makeRawFunctionExpression(Or(), negChildren)};
 }
 
 shared_ptr<IMathObject> AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
@@ -78,10 +75,12 @@ shared_ptr<IMathObject> AndExpression::postSimplify(size_t lhsChildNum, size_t r
     return lhsChild;
   }
 
-  if (const auto lhsNot = cast<NotExpression>(lhsChild); lhsNot && *lhsNot->getChildren().front() == *rhsChild) {
+  if (const auto lhsExpr = cast<IExpression>(lhsChild);
+      lhsExpr && is<Not>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
     return make_shared<Boolean>(false);
   }
-  if (const auto rhsNot = cast<NotExpression>(rhsChild); rhsNot && *rhsNot->getChildren().front() == *lhsChild) {
+  if (const auto rhsExpr = cast<IExpression>(rhsChild);
+      rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
     return make_shared<Boolean>(false);
   }
 

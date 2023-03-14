@@ -1,10 +1,10 @@
 #pragma once
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
 
-class ILogicNegatable : virtual public IMathObject {
+class ILogicNegatable : virtual public IExpression {
 public:
   virtual void logicNegate() = 0;
 };

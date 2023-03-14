@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 #include "fintamath/expressions/interfaces/ILogicNegatable.hpp"
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 

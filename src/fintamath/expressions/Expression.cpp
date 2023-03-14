@@ -1,16 +1,10 @@
 #include "fintamath/expressions/Expression.hpp"
 
 #include <algorithm>
-#include <cassert>
-#include <cstdint>
-#include <memory>
 #include <regex>
-#include <stdexcept>
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/FunctionExpression.hpp"
-#include "fintamath/expressions/binary/CompExpression.hpp"
-#include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -18,6 +12,8 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/meta/Converter.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 

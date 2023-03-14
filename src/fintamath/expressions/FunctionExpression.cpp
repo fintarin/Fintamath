@@ -1,8 +1,6 @@
 #include "fintamath/expressions/FunctionExpression.hpp"
-#include "fintamath/expressions/Expression.hpp"
+
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {

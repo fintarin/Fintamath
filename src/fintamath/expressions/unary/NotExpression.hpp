@@ -1,6 +1,5 @@
 #pragma once
 
-#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
 namespace fintamath {

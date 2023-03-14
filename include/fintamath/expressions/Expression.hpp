@@ -1,11 +1,7 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
@@ -39,14 +35,18 @@ public:
   // TODO: make this private
   // void setPrecisionRec(uint8_t precision);
 
-  template <typename Function, typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
+  template <typename Function, bool isPolynomial = false,
+            typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
   static void
   registerFunctionExpressionMaker(Parser::Function<shared_ptr<IExpression>, const ArgumentsPtrVector &> &&builder) {
     Parser::Function<shared_ptr<IExpression>, const ArgumentsPtrVector &> constructor =
         [builder = move(builder)](const ArgumentsPtrVector &args) {
           static const IFunction::Type type = Function().getFunctionType();
 
-          if (type == IFunction::Type::Any || static_cast<uint16_t>(type) == args.size()) {
+          if (type == IFunction::Type::Any || uint16_t(type) == args.size()) {
+            return builder(args);
+          }
+          if (isPolynomial && uint16_t(type) < args.size()) {
             return builder(args);
           }
 

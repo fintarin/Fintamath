@@ -1,23 +1,7 @@
 #include "fintamath/expressions/binary/CompExpression.hpp"
 
 #include <algorithm>
-#include <cstdint>
 #include <ios>
-#include <memory>
-
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
-#include "fintamath/expressions/ExpressionFunctions.hpp"
-#include "fintamath/expressions/binary/IBinaryExpression.hpp"
-#include "fintamath/expressions/polynomial/SumExpression.hpp"
-#include "fintamath/expressions/unary/NegExpression.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/comparison/Eqv.hpp"
-#include "fintamath/literals/Boolean.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 

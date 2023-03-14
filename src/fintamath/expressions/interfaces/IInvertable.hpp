@@ -1,10 +1,10 @@
 #pragma once
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
 
-class IInvertable : virtual public IMathObject {
+class IInvertable : virtual public IExpression {
 public:
   virtual void invert() = 0;
 };

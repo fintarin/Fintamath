@@ -1,13 +1,7 @@
 #include "fintamath/expressions/unary/IUnaryExpression.hpp"
 
-#include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/functions/calculus/Derivative.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {

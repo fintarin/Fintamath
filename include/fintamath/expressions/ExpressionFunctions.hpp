@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/numbers/NumberFunctions.hpp"
 

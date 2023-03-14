@@ -2,8 +2,6 @@
 
 #include "fintamath/expressions/interfaces/IInvertable.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
-#include "fintamath/numbers/INumber.hpp"
-#include <memory>
 
 namespace fintamath {
 
