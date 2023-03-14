@@ -43,6 +43,24 @@ private:
 };
 
 template <typename Derived>
-class IExpressionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IExpression {};
+class IExpressionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IExpression {
+public:
+  bool equals(const Derived &rhs) const override {
+    ArgumentsPtrVector lhsChildren = getChildren();
+    ArgumentsPtrVector rhsChildren = rhs.getChildren();
+
+    if (lhsChildren.size() != rhsChildren.size()) {
+      return false;
+    }
+
+    for (size_t i = 0; i < lhsChildren.size(); i++) {
+      if (lhsChildren[i] != rhsChildren[i] || *lhsChildren[i] != *rhsChildren[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+};
 
 }
