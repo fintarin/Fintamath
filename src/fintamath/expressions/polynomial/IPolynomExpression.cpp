@@ -59,34 +59,36 @@ ArgumentsPtrVector IPolynomExpression::getPolynom() const {
   return children;
 }
 
-shared_ptr<IMathObject> IPolynomExpression::simplify() {
-  preSimplifyRec();
+ArgumentPtr IPolynomExpression::simplify() const {
+  auto simpl = cast<IPolynomExpression>(clone());
+
+  simpl->preSimplifyRec();
 
   {
-    ArgumentsPtrVector oldChildren = children;
-    children.clear();
+    ArgumentsPtrVector oldChildren = simpl->children;
+    simpl->children.clear();
 
     for (auto &child : oldChildren) {
       simplifyChild(child);
-      addElement(child);
+      simpl->addElement(child);
     }
   }
 
-  preSimplifyRec(); // TODO: try to remove this
-  postSimplifyRec();
+  simpl->preSimplifyRec(); // TODO: try to remove this
+  simpl->postSimplifyRec();
 
-  if (children.size() == 1) {
-    return children.front();
+  if (simpl->children.size() == 1) {
+    return simpl->children.front();
   }
 
+  return simpl;
+}
+
+ArgumentPtr IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
   return {};
 }
 
-shared_ptr<IMathObject> IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
-  return {};
-}
-
-shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
+ArgumentPtr IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
   return {};
 }
 

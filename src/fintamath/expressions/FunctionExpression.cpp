@@ -93,29 +93,26 @@ ArgumentsPtrVector FunctionExpression::getChildren() const {
 // return countResult;
 // }
 
-shared_ptr<IMathObject> FunctionExpression::simplify() {
-  if (!func->isNonExressionEvaluatable()) {
-    return {};
-  }
-
+ArgumentPtr FunctionExpression::simplify() const {
+  auto simpl = cast<FunctionExpression>(clone());
   ArgumentsRefVector arguments;
 
-  for (auto &child : children) {
+  for (auto &child : simpl->children) {
     simplifyChild(child);
     arguments.emplace_back(*child);
   }
 
-  if (!func->doArgsMatch(arguments)) {
-    return {};
+  if (!func->isNonExressionEvaluatable() || !func->doArgsMatch(arguments)) {
+    return simpl;
   }
 
-  shared_ptr<IMathObject> res = (*func)(arguments);
+  ArgumentPtr val = (*func)(arguments);
 
-  if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {
-    return {};
+  if (const auto num = cast<INumber>(val); num && !num->isPrecise()) {
+    return simpl;
   }
 
-  return res;
+  return val;
 }
 
 }

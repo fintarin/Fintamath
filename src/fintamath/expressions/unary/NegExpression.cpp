@@ -7,7 +7,7 @@ namespace fintamath {
 
 const Neg NEG;
 
-NegExpression::NegExpression(const shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NEG, child) {
+NegExpression::NegExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(NEG, child) {
 }
 
 // unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
@@ -30,7 +30,7 @@ NegExpression::NegExpression(const shared_ptr<IMathObject> &child) : IUnaryExpre
 // return exprObj;
 // }
 
-shared_ptr<IMathObject> NegExpression::preSimplify() const {
+ArgumentPtr NegExpression::preSimplify() const {
   if (const auto expr = cast<NegExpression>(child)) {
     return expr->child;
   }
@@ -38,12 +38,9 @@ shared_ptr<IMathObject> NegExpression::preSimplify() const {
   return {};
 }
 
-shared_ptr<IMathObject> NegExpression::postSimplify() const {
+ArgumentPtr NegExpression::postSimplify() const {
   if (auto expr = cast<INegatable>(child)) {
-    expr->negate();
-    auto res = cast<IMathObject>(expr);
-    simplifyChild(res);
-    return res;
+    return expr->negate();
   }
 
   return {};

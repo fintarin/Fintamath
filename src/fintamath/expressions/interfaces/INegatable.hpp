@@ -6,6 +6,6 @@ namespace fintamath {
 
 class INegatable : virtual public IExpression {
 public:
-  virtual void negate() = 0;
+  virtual ArgumentPtr negate() const = 0;
 };
 }

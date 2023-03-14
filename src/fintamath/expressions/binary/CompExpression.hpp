@@ -6,15 +6,14 @@ namespace fintamath {
 
 class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
 public:
-  CompExpression(const IOperator &oper, const shared_ptr<IMathObject> &lhsChild,
-                 const shared_ptr<IMathObject> &rhsChild);
+  CompExpression(const IOperator &oper, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  shared_ptr<IMathObject> solve() const;
+  ArgumentPtr solve() const;
 
   // string solve(uint8_t precision) const;
 
 protected:
-  shared_ptr<IMathObject> postSimplify() const override;
+  ArgumentPtr postSimplify() const override;
 
   // vector<unique_ptr<IMathObject>> solvePowEquation(const Variable &x) const;
 

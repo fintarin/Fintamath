@@ -7,7 +7,7 @@ namespace fintamath {
 
 const Inv INV;
 
-InvExpression::InvExpression(const shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(INV, child) {
+InvExpression::InvExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(INV, child) {
 }
 
 // unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
@@ -29,7 +29,7 @@ InvExpression::InvExpression(const shared_ptr<IMathObject> &child) : IUnaryExpre
 // return exprObj;
 // }
 
-shared_ptr<IMathObject> InvExpression::preSimplify() const {
+ArgumentPtr InvExpression::preSimplify() const {
   if (auto expr = cast<InvExpression>(child)) {
     return expr->child;
   }
@@ -37,12 +37,9 @@ shared_ptr<IMathObject> InvExpression::preSimplify() const {
   return {};
 }
 
-shared_ptr<IMathObject> InvExpression::postSimplify() const {
+ArgumentPtr InvExpression::postSimplify() const {
   if (auto expr = cast<IInvertable>(child)) {
-    expr->invert();
-    auto res = cast<IMathObject>(expr);
-    simplifyChild(res);
-    return res;
+    return expr->invert();
   }
 
   return {};

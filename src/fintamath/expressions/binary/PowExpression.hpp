@@ -7,25 +7,25 @@ namespace fintamath {
 
 class PowExpression : public IBinaryExpressionCRTP<PowExpression>, public IInvertable {
 public:
-  explicit PowExpression(const shared_ptr<IMathObject> &lhsChild, const shared_ptr<IMathObject> &rhsChild);
+  explicit PowExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  // shared_ptr<IMathObject> polynomSimplify();
+  // ArgumentPtr polynomSimplify();
 
-  // shared_ptr<IMathObject> sumSimplify();
+  // ArgumentPtr sumSimplify();
 
-  // shared_ptr<IMathObject> mulSimplify();
+  // ArgumentPtr mulSimplify();
 
-  // shared_ptr<IMathObject> getValue();
+  // ArgumentPtr getValue();
 
-  // shared_ptr<IMathObject> getPow();
+  // ArgumentPtr getPow();
 
-  void invert() override;
+  ArgumentPtr invert() const override;
 
 protected:
-  shared_ptr<IMathObject> postSimplify() const override;
+  ArgumentPtr postSimplify() const override;
 
 private:
-  // static shared_ptr<IMathObject> sumPolynomSimplify(const SumExpression &sumExpr, Integer pow);
+  // static ArgumentPtr sumPolynomSimplify(const SumExpression &sumExpr, Integer pow);
 
   // static Integer generateNextNumber(Integer n);
 

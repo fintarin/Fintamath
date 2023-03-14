@@ -50,19 +50,19 @@ string OrExpression::toString() const {
 // return result;
 // }
 
-void OrExpression::logicNegate() {
+ArgumentPtr OrExpression::logicNegate() const {
   ArgumentsPtrVector negChildren;
 
   for (const auto &child : children) {
     negChildren.emplace_back(makeRawFunctionExpression(Not(), {child}));
   }
 
-  children = {makeRawFunctionExpression(And(), negChildren)};
+  return makeFunctionExpression(And(), negChildren);
 }
 
-shared_ptr<IMathObject> OrExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  const shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
-  const shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
+ArgumentPtr OrExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+  const ArgumentPtr &lhsChild = children[lhsChildNum];
+  const ArgumentPtr &rhsChild = children[rhsChildNum];
 
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {
     return *lhsBool ? lhsChild : rhsChild;

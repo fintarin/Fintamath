@@ -6,7 +6,7 @@ namespace fintamath {
 
 const Index INDEX;
 
-IndexExpression::IndexExpression(const shared_ptr<IMathObject> &lhsChild, const shared_ptr<IMathObject> &rhsChild)
+IndexExpression::IndexExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)
     : IBinaryExpressionCRTP(INDEX, lhsChild, rhsChild) {
 }
 

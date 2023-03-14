@@ -5,8 +5,7 @@
 
 namespace fintamath {
 
-CompExpression::CompExpression(const IOperator &oper, const shared_ptr<IMathObject> &lhsChild,
-                               const shared_ptr<IMathObject> &rhsChild)
+CompExpression::CompExpression(const IOperator &oper, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)
     : IBinaryExpressionCRTP(oper, lhsChild, rhsChild) {
 }
 
@@ -200,11 +199,11 @@ vector<unique_ptr<IMathObject>> CompExpression::sortResult(vector<unique_ptr<IMa
 }
 */
 
-shared_ptr<IMathObject> CompExpression::solve() const {
+ArgumentPtr CompExpression::solve() const {
   return {};
 }
 
-shared_ptr<IMathObject> CompExpression::postSimplify() const {
+ArgumentPtr CompExpression::postSimplify() const {
   return {};
 }
 

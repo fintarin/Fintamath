@@ -6,6 +6,6 @@ namespace fintamath {
 
 class IInvertable : virtual public IExpression {
 public:
-  virtual void invert() = 0;
+  virtual ArgumentPtr invert() const = 0;
 };
 }

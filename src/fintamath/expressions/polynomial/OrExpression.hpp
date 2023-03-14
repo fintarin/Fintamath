@@ -11,10 +11,10 @@ public:
 
   string toString() const override;
 
-  void logicNegate() override;
+  ArgumentPtr logicNegate() const override;
 
 protected:
-  shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
+  ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 };
 
 }

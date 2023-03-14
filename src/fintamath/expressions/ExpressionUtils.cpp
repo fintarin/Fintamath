@@ -45,8 +45,8 @@ TokenVector cutBraces(const TokenVector &tokens) {
   return newTokens;
 }
 
-map<size_t, shared_ptr<IMathObject>> findBinaryOperators(const TokenVector &tokens) {
-  map<size_t, shared_ptr<IMathObject>> operators;
+map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens) {
+  map<size_t, ArgumentPtr> operators;
 
   bool isPrevTokenOper = false;
 
@@ -86,7 +86,7 @@ string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &v
   }
 
   for (size_t i = 0; i < values.size(); i++) {
-    const shared_ptr<IMathObject> &child = values[i];
+    const ArgumentPtr &child = values[i];
 
     bool shouldPutInBrackets = false;
 
@@ -114,7 +114,7 @@ string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &v
   return result;
 }
 
-string postfixUnaryOperatorToString(const IOperator &oper, const shared_ptr<IMathObject> &lhs) {
+string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs) {
   string result = lhs->toString();
 
   if (const auto child = cast<IExpression>(lhs)) {

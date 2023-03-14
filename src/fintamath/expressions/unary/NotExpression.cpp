@@ -7,7 +7,7 @@ namespace fintamath {
 
 const Not NOT;
 
-NotExpression::NotExpression(const shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NOT, child) {
+NotExpression::NotExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(NOT, child) {
 }
 
 // unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
@@ -21,7 +21,7 @@ NotExpression::NotExpression(const shared_ptr<IMathObject> &child) : IUnaryExpre
 // return exprObj;
 // }
 
-shared_ptr<IMathObject> NotExpression::preSimplify() const {
+ArgumentPtr NotExpression::preSimplify() const {
   if (const auto expr = cast<NotExpression>(child)) {
     return expr->child;
   }
@@ -29,12 +29,9 @@ shared_ptr<IMathObject> NotExpression::preSimplify() const {
   return {};
 }
 
-shared_ptr<IMathObject> NotExpression::postSimplify() const {
+ArgumentPtr NotExpression::postSimplify() const {
   if (const auto expr = cast<ILogicNegatable>(child)) {
-    expr->logicNegate();
-    auto res = cast<IMathObject>(expr);
-    simplifyChild(res);
-    return res;
+    return expr->logicNegate();
   }
 
   return {};

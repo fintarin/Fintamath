@@ -11,18 +11,18 @@ public:
 
   string toString() const override;
 
-  // shared_ptr<IMathObject> getPowCoefficient(const shared_ptr<IMathObject> &powValue) const;
+  // ArgumentPtr getPowCoefficient(const ArgumentPtr &powValue) const;
 
-  // shared_ptr<IMathObject> getPow() const;
+  // ArgumentPtr getPow() const;
 
-  // void setPow(const shared_ptr<IMathObject> &value);
+  // void setPow(const ArgumentPtr &value);
 
-  void negate() override;
+  ArgumentPtr negate() const override;
 
-  void invert() override;
+  ArgumentPtr invert() const override;
 
 protected:
-  shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
+  ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
 private:
   // TODO: Implement a new Expression and remove this
@@ -40,15 +40,15 @@ private:
   // static void simplifyPowCoefficients(map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
   //                                     ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
 
-  // static void addValueToMaps(shared_ptr<IMathObject> &lhs, shared_ptr<IMathObject> &rhs,
-  //                            map<string, shared_ptr<IMathObject>> &valuesMap,
+  // static void addValueToMaps(ArgumentPtr &lhs, ArgumentPtr &rhs,
+  //                            map<string, ArgumentPtr> &valuesMap,
   //                            map<string, ArgumentsPtrVector> &powMap);
 
-  // static ArgumentsPtrVector coefficientProcessing(map<string, shared_ptr<IMathObject>> &valuesMap,
+  // static ArgumentsPtrVector coefficientProcessing(map<string, ArgumentPtr> &valuesMap,
   //                                                 map<string, ArgumentsPtrVector> &powMap);
 
   // TODO: remove
-  static string sumExprToString(const shared_ptr<IMathObject> &obj);
+  static string sumExprToString(const ArgumentPtr &obj);
 
   // static void multiplicateBraces(const ArgumentsPtrVector &addVect, ArgumentsPtrVector &positive,
   //                                ArgumentsPtrVector &negative);
@@ -64,7 +64,7 @@ private:
   // static void sortPowObjects(Objects &objs, ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect,
   //                            ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect);
 
-  // static bool sortFunc(const shared_ptr<IMathObject> &lhs, const shared_ptr<IMathObject> &rhs);
+  // static bool sortFunc(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 };
 
 }

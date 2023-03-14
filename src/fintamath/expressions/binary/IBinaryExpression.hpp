@@ -15,26 +15,24 @@ public:
   ArgumentsPtrVector getChildren() const final;
 
 protected:
-  virtual shared_ptr<IMathObject> preSimplify() const;
+  virtual ArgumentPtr preSimplify() const;
 
-  virtual shared_ptr<IMathObject> postSimplify() const;
+  virtual ArgumentPtr postSimplify() const;
 
-  shared_ptr<IMathObject> simplify() final;
+  ArgumentPtr simplify() const final;
 
 protected:
   shared_ptr<IFunction> func;
 
-  shared_ptr<IMathObject> lhsChild;
+  ArgumentPtr lhsChild;
 
-  shared_ptr<IMathObject> rhsChild;
+  ArgumentPtr rhsChild;
 };
 
 template <typename Derived>
 class IBinaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IBinaryExpression {
 public:
-  explicit IBinaryExpressionCRTP(const IFunction &func, const shared_ptr<IMathObject> &lhsChild,
-                                 const shared_ptr<IMathObject> &rhsChild) {
-
+  explicit IBinaryExpressionCRTP(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
     this->func = cast<IFunction>(func.clone());
 
     this->lhsChild = lhsChild;

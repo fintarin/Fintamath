@@ -11,7 +11,7 @@ namespace fintamath {
 
 const Pow POW;
 
-PowExpression::PowExpression(const shared_ptr<IMathObject> &lhsChild, const shared_ptr<IMathObject> &rhsChild)
+PowExpression::PowExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)
     : IBinaryExpressionCRTP(POW, lhsChild, rhsChild) {
 }
 
@@ -39,8 +39,8 @@ PowExpression::PowExpression(const shared_ptr<IMathObject> &lhsChild, const shar
 // return exprObj;
 // }
 
-// shared_ptr<IMathObject> PowExpression::mulSimplify() {
-//   shared_ptr<IMathObject> simplExpr = IBinaryExpression::simplify();
+// ArgumentPtr PowExpression::mulSimplify() {
+//   ArgumentPtr simplExpr = IBinaryExpression::simplify();
 
 //   if (!is<PowExpression>(simplExpr)) {
 //     return simplExpr;
@@ -50,7 +50,7 @@ PowExpression::PowExpression(const shared_ptr<IMathObject> &lhsChild, const shar
 
 //   if (auto mulExpr = cast<MulExpression>(powExpr->lhsChild)) {
 //     mulExpr->setPow(powExpr->rhsChild);
-//     shared_ptr<IMathObject> mulExprResult =
+//     ArgumentPtr mulExprResult =
 //     make_shared<MulExpression>(ArgumentsPtrVector{powExpr->lhsChild}); simplifyChild(mulExprResult); return
 //     mulExprResult;
 //   }
@@ -58,8 +58,8 @@ PowExpression::PowExpression(const shared_ptr<IMathObject> &lhsChild, const shar
 //   return powExpr;
 // }
 
-// shared_ptr<IMathObject> PowExpression::sumSimplify() {
-//   shared_ptr<IMathObject> simplExpr = IBinaryExpression::simplify();
+// ArgumentPtr PowExpression::sumSimplify() {
+//   ArgumentPtr simplExpr = IBinaryExpression::simplify();
 //   if (!is<PowExpression>(simplExpr)) {
 //     return simplExpr;
 //   }
@@ -105,7 +105,7 @@ PowExpression::PowExpression(const shared_ptr<IMathObject> &lhsChild, const shar
 //   return result;
 // }
 
-// shared_ptr<IMathObject> PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Integer pow) {
+// ArgumentPtr PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Integer pow) {
 //   ArgumentsPtrVector polynom = sumExpr.getPolynom();
 //   ArgumentsPtrVector newPolynom;
 //   Integer variableCount = int64_t(polynom.size());
@@ -127,42 +127,44 @@ PowExpression::PowExpression(const shared_ptr<IMathObject> &lhsChild, const shar
 //       auto powExpr = make_shared<PowExpression>(polynom[j],
 //       make_shared<Integer>(move(vectOfPows[j]))); mulExprPolynom.emplace_back(powExpr->polynomSimplify());
 //     }
-//     shared_ptr<IMathObject> mulExpr = make_shared<MulExpression>(mulExprPolynom);
+//     ArgumentPtr mulExpr = make_shared<MulExpression>(mulExprPolynom);
 //     simplifyChild(mulExpr);
 //     newPolynom.emplace_back(mulExpr);
 //   }
 
-//   shared_ptr<IMathObject> newSumExpr = make_shared<SumExpression>(newPolynom);
+//   ArgumentPtr newSumExpr = make_shared<SumExpression>(newPolynom);
 //   simplifyChild(newSumExpr);
 //   if (invert) {
-//     shared_ptr<IMathObject> invertExpr = make_shared<InvExpression>(newSumExpr);
+//     ArgumentPtr invertExpr = make_shared<InvExpression>(newSumExpr);
 //     simplifyChild(invertExpr);
 //     return invertExpr;
 //   }
 //   return newSumExpr;
 // }
 
-// shared_ptr<IMathObject> PowExpression::getValue() {
+// ArgumentPtr PowExpression::getValue() {
 //   return lhsChild;
 // }
 
-// shared_ptr<IMathObject> PowExpression::getPow() {
+// ArgumentPtr PowExpression::getPow() {
 //   return rhsChild;
 // }
 
-// shared_ptr<IMathObject> PowExpression::polynomSimplify() {
-//   shared_ptr<IMathObject> result = mulSimplify();
+// ArgumentPtr PowExpression::polynomSimplify() {
+//   ArgumentPtr result = mulSimplify();
 //   if (auto powExpr = cast<PowExpression>(result)) {
 //     return powExpr->sumSimplify();
 //   }
 //   return result;
 // }
 
-void PowExpression::invert() {
-  rhsChild = makeRawFunctionExpression(Neg(), {rhsChild});
+ArgumentPtr PowExpression::invert() const {
+  auto inv = make_shared<PowExpression>(*this);
+  inv->rhsChild = makeFunctionExpression(Neg(), {inv->rhsChild});
+  return inv;
 }
 
-shared_ptr<IMathObject> PowExpression::postSimplify() const {
+ArgumentPtr PowExpression::postSimplify() const {
   auto lhsExpr = cast<IExpression>(lhsChild);
   auto rhsInt = cast<Integer>(rhsChild);
 

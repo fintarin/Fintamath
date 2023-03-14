@@ -24,36 +24,37 @@ ArgumentsPtrVector IBinaryExpression::getChildren() const {
   return {lhsChild, rhsChild};
 }
 
-shared_ptr<IMathObject> IBinaryExpression::preSimplify() const {
+ArgumentPtr IBinaryExpression::preSimplify() const {
   return {};
 }
 
-shared_ptr<IMathObject> IBinaryExpression::postSimplify() const {
+ArgumentPtr IBinaryExpression::postSimplify() const {
   return {};
 }
 
-shared_ptr<IMathObject> IBinaryExpression::simplify() {
+ArgumentPtr IBinaryExpression::simplify() const {
   if (auto res = preSimplify()) {
     simplifyChild(res);
     return res;
   }
 
-  simplifyChild(lhsChild);
-  simplifyChild(rhsChild);
+  auto simpl = cast<IBinaryExpression>(clone());
+  simplifyChild(simpl->lhsChild);
+  simplifyChild(simpl->rhsChild);
 
-  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*lhsChild, *rhsChild})) {
-    return (*func)(*lhsChild, *rhsChild);
+  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*simpl->lhsChild, *simpl->rhsChild})) {
+    return (*func)(*simpl->lhsChild, *simpl->rhsChild);
   }
 
-  if (auto res = preSimplify()) { // TODO: try to remove this
+  if (auto res = simpl->preSimplify()) { // TODO: try to remove this
     return res;
   }
 
-  if (auto res = postSimplify()) {
+  if (auto res = simpl->postSimplify()) {
     return res;
   }
 
-  return {};
+  return simpl;
 }
 
 }

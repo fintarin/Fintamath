@@ -12,7 +12,7 @@ public:
 
   explicit Expression(const string &str);
 
-  explicit Expression(const shared_ptr<IMathObject> &obj);
+  explicit Expression(const ArgumentPtr &obj);
 
   Expression(const IMathObject &obj);
 
@@ -66,7 +66,7 @@ protected:
 
   Expression &negate() override;
 
-  shared_ptr<IMathObject> simplify() override;
+  ArgumentPtr simplify() const override;
 
 private:
   explicit Expression(const TokenVector &tokens);
@@ -83,7 +83,7 @@ private:
 
   static ArgumentsPtrVector parseFunctionArgs(const TokenVector &tokens);
 
-  void validateChild(const shared_ptr<IMathObject> &child) const;
+  void validateChild(const ArgumentPtr &child) const;
 
   void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const;
 
@@ -91,12 +91,12 @@ private:
 
   friend unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 
-  friend shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+  friend ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
   friend shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
 private:
-  shared_ptr<IMathObject> child;
+  ArgumentPtr child;
 
   static Parser::Map<shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionBuildersMap;
 };

@@ -14,21 +14,21 @@ namespace fintamath {
 const Add ADD;
 
 // struct SumExpression::MulObject {
-//   shared_ptr<IMathObject> obj;
+//   ArgumentPtr obj;
 //   SumExpression counter = SumExpression({});
 
-//   MulObject(shared_ptr<IMathObject> obj) : obj(move(obj)) {
+//   MulObject(ArgumentPtr obj) : obj(move(obj)) {
 //   }
 
 //   void simplifyCounter() {
-//     shared_ptr<IMathObject> counterSimpl = counter.toMinimalObject(); // TODO: remove copy here
+//     ArgumentPtr counterSimpl = counter.toMinimalObject(); // TODO: remove copy here
 //     counter = SumExpression({});
 //     counter.addElement(counterSimpl);
 //   }
 
-//   shared_ptr<IMathObject> getCounterValue() const {
+//   ArgumentPtr getCounterValue() const {
 //     ArgumentsPtrVector polynom = counter.getPolynom();
-//     const shared_ptr<IMathObject> &countValue = polynom.front();
+//     const ArgumentPtr &countValue = polynom.front();
 //     return is<NegExpression>(polynom.front()) ? makeFunctionExpression(Neg(), {countValue}) : countValue;
 //   }
 // };
@@ -81,7 +81,7 @@ string SumExpression::toString() const {
 // return exprObj.clone();
 // }
 
-// bool SumExpression::sortFunc(const shared_ptr<IMathObject> &lhs, const shared_ptr<IMathObject> &rhs) {
+// bool SumExpression::sortFunc(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
 //   if (is<IConstant>(lhs)) {
 //     return false;
 //   }
@@ -243,7 +243,7 @@ sortMulObjects(objs, mulVect, literalVect, powVect);*/
 // }
 
 // TODO: remove this and implement PowExpression
-// shared_ptr<IMathObject> SumExpression::getPowCoefficient(const shared_ptr<IMathObject> &powValue) const {
+// ArgumentPtr SumExpression::getPowCoefficient(const ArgumentPtr &powValue) const {
 /*if (*powValue == ZERO) {
   for (const auto &child : children) {
     if (is<INumber>(child.info)) {
@@ -278,7 +278,7 @@ return ZERO.clone();*/
 // }
 
 // TODO: remove this and implement PowExpression
-// shared_ptr<IMathObject> SumExpression::getPow() const {
+// ArgumentPtr SumExpression::getPow() const {
 /*auto maxValue = ZERO;
 
 for (const auto &child : children) {
@@ -306,19 +306,22 @@ for (const auto &child : children) {
 return maxValue.clone();*/
 // }
 
-// void SumExpression::multiplicate(const shared_ptr<IMathObject> &value) {
+// void SumExpression::multiplicate(const ArgumentPtr &value) {
 // }
 
-void SumExpression::negate() {
-  for (auto &child : children) {
+ArgumentPtr SumExpression::negate() const {
+  SumExpression neg = *this;
+
+  for (auto &child : neg.children) {
     child = makeRawFunctionExpression(Neg(), {child});
-    simplifyChild(child);
   }
+
+  return neg.simplify();
 }
 
-shared_ptr<IMathObject> SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  const shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
-  const shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
+ArgumentPtr SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+  const ArgumentPtr &lhsChild = children[lhsChildNum];
+  const ArgumentPtr &rhsChild = children[rhsChildNum];
 
   if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
     return rhsChild;

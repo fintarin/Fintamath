@@ -46,6 +46,11 @@ shared_ptr<To> cast(const shared_ptr<From> &from) {
   return std::dynamic_pointer_cast<To>(from);
 }
 
+template <typename To, typename From>
+shared_ptr<const To> cast(const shared_ptr<const From> &from) {
+  return std::dynamic_pointer_cast<const To>(from);
+}
+
 inline unique_ptr<IMathObject> convert(const IMathObject &from, const IMathObject &to) {
   return Converter::convert(from, to);
 }
@@ -74,6 +79,11 @@ bool is(const unique_ptr<From> &from) {
 template <typename To, typename From>
 bool is(const shared_ptr<From> &from) {
   return std::dynamic_pointer_cast<To>(from) != nullptr;
+}
+
+template <typename To, typename From>
+bool is(const shared_ptr<const From> &from) {
+  return std::dynamic_pointer_cast<const To>(from) != nullptr;
 }
 
 template <typename To, typename From>

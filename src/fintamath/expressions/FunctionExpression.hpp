@@ -14,7 +14,7 @@ public:
   ArgumentsPtrVector getChildren() const override;
 
 protected:
-  shared_ptr<IMathObject> simplify() override;
+  ArgumentPtr simplify() const override;
 
   // void setPrecision(uint8_t precision) override;
 

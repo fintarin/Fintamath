@@ -16,14 +16,14 @@ public:
 
   ArgumentsPtrVector getPolynom() const;
 
-  virtual void addElement(const shared_ptr<IMathObject> &element) = 0;
+  virtual void addElement(const ArgumentPtr &element) = 0;
 
 protected:
-  virtual shared_ptr<IMathObject> preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
+  virtual ArgumentPtr preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
-  virtual shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
+  virtual ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
-  shared_ptr<IMathObject> simplify() final;
+  ArgumentPtr simplify() const final;
 
 protected:
   // static void sortVector(ArgumentsPtrVector &vector, map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
@@ -53,8 +53,8 @@ public:
     }
   }
 
-  void addElement(const shared_ptr<IMathObject> &element) final {
-    shared_ptr<IMathObject> elem = element;
+  void addElement(const ArgumentPtr &element) final {
+    ArgumentPtr elem = element;
     compressChild(elem);
 
     ArgumentsPtrVector elemPolynom;

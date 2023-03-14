@@ -30,13 +30,13 @@ public:
   }
 
 protected:
-  static void compressChild(shared_ptr<IMathObject> &child);
+  static void compressChild(ArgumentPtr &child);
 
-  static void simplifyChild(shared_ptr<IMathObject> &child);
+  static void simplifyChild(ArgumentPtr &child);
 
-  // static void setMathObjectPrecision(shared_ptr<IMathObject> &obj, uint8_t precision);
+  // static void setMathObjectPrecision(ArgumentPtr &obj, uint8_t precision);
 
-  virtual shared_ptr<IMathObject> simplify() = 0;
+  virtual ArgumentPtr simplify() const = 0;
 
 private:
   static Parser::Vector<unique_ptr<IExpression>, const string &> parserVector;

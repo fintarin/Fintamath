@@ -15,20 +15,25 @@ ArgumentsPtrVector IExpression::getVariables() const {
   return {};
 }
 
-void IExpression::compressChild(shared_ptr<IMathObject> &child) {
-  if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
-    child = expr->getChildren().front();
+void IExpression::compressChild(ArgumentPtr &child) {
+  for (;;) {
+    if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
+      child = expr->getChildren().front();
+    }
+    else {
+      break;
+    }
   }
 }
 
-void IExpression::simplifyChild(shared_ptr<IMathObject> &child) {
+void IExpression::simplifyChild(ArgumentPtr &child) {
   if (const auto exprChild = cast<IExpression>(child)) {
     if (const auto simplObj = exprChild->simplify()) {
       child = simplObj;
     }
   }
   else if (const auto constChild = cast<IConstant>(child)) {
-    shared_ptr<IMathObject> constVal = (*constChild)();
+    ArgumentPtr constVal = (*constChild)();
 
     if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
       child = constChild;
@@ -39,7 +44,7 @@ void IExpression::simplifyChild(shared_ptr<IMathObject> &child) {
   }
 }
 
-// void IExpression::setMathObjectPrecision(shared_ptr<IMathObject> &obj, uint8_t precision) {
+// void IExpression::setMathObjectPrecision(ArgumentPtr &obj, uint8_t precision) {
 //   if (is<INumber>(obj)) {
 //     obj = make_shared<Real>(convert<Real>(*obj).precise(precision));
 //     return;

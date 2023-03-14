@@ -45,7 +45,7 @@ Expression::Expression(const TokenVector &tokens) {
   }
 }
 
-Expression::Expression(const shared_ptr<IMathObject> &obj) {
+Expression::Expression(const ArgumentPtr &obj) {
   if (auto expr = cast<Expression>(obj)) {
     child = expr->child;
   }
@@ -127,7 +127,7 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
 }
 
 bool Expression::parseBinaryOperator(const TokenVector &tokens) {
-  map<size_t, shared_ptr<IMathObject>> operMap = findBinaryOperators(tokens);
+  map<size_t, ArgumentPtr> operMap = findBinaryOperators(tokens);
 
   if (operMap.empty()) {
     return false;
@@ -180,12 +180,12 @@ bool Expression::parseFiniteTerm(const TokenVector &tokens) {
     return false;
   }
 
-  if (shared_ptr<IMathObject> parsed = ILiteral::parse(tokens.front())) {
+  if (ArgumentPtr parsed = ILiteral::parse(tokens.front())) {
     child = parsed;
     return true;
   }
 
-  if (shared_ptr<IMathObject> parsed = INumber::parse(tokens.front())) {
+  if (ArgumentPtr parsed = INumber::parse(tokens.front())) {
     child = parsed;
     return true;
   }
@@ -240,8 +240,8 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
 
       ArgumentsPtrVector addArgs = parseFunctionArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
 
-      for (auto &token : addArgs) {
-        args.emplace_back(shared_ptr<IMathObject>(token));
+      for (const auto &token : addArgs) {
+        args.emplace_back(ArgumentPtr(token));
       }
 
       return args;
@@ -303,9 +303,7 @@ ArgumentsPtrVector Expression::getVariables() const {
   return {};
 }
 
-shared_ptr<IMathObject> Expression::simplify() {
-  simplifyChild(child);
-  // callPowSimplify()
+ArgumentPtr Expression::simplify() const {
   return child;
 }
 
@@ -315,7 +313,7 @@ shared_ptr<IMathObject> Expression::simplify() {
 //   }
 // }
 
-void Expression::validateChild(const shared_ptr<IMathObject> &child) const {
+void Expression::validateChild(const ArgumentPtr &child) const {
   const auto childExpr = cast<IExpression>(child);
 
   if (!childExpr) {
@@ -349,7 +347,7 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
   }
 
   for (size_t i = 0; i < args.size(); i++) {
-    const shared_ptr<IMathObject> &child = args[i];
+    const ArgumentPtr &child = args[i];
     const std::type_info &type = childrenTypes[i];
 
     if (const auto childExpr = cast<IExpression>(child)) {
@@ -384,11 +382,11 @@ unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const Argu
   return res;
 }
 
-shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
-  auto res = make_shared<Expression>(makeRawFunctionExpression(func, args));
-  res->validateChild(res->child);
-  res->simplifyChild(res->child);
-  return res;
+ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
+  Expression res(makeRawFunctionExpression(func, args));
+  res.validateChild(res.child);
+  Expression::simplifyChild(res.child);
+  return res.child;
 }
 
 shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {

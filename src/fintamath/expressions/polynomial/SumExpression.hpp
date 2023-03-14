@@ -10,23 +10,23 @@ public:
 
   string toString() const override;
 
-  // shared_ptr<IMathObject> getPowCoefficient(const shared_ptr<IMathObject> &powValue) const;
+  // ArgumentPtr getPowCoefficient(const ArgumentPtr &powValue) const;
 
-  // shared_ptr<IMathObject> getPow() const;
+  // ArgumentPtr getPow() const;
 
-  void negate() override;
+  ArgumentPtr negate() const override;
 
-  // void multiplicate(const shared_ptr<IMathObject> &value);
+  // void multiplicate(const ArgumentPtr &value);
 
 protected:
-  shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
+  ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
 private:
   // TODO: Implement a new Expression and remove this
   // struct MulObject;
   // using MulObjects = vector<MulObject>;
 
-  // bool static sortFunc(const shared_ptr<IMathObject> &lhs, const shared_ptr<IMathObject> &rhs);
+  // bool static sortFunc(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   // void simplifyPolynom();
 

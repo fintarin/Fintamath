@@ -91,34 +91,35 @@ ArgumentsPtrVector IUnaryExpression::getChildren() const {
   return {child};
 }
 
-shared_ptr<IMathObject> IUnaryExpression::simplify() {
+ArgumentPtr IUnaryExpression::simplify() const {
   if (auto res = preSimplify()) {
     simplifyChild(res);
     return res;
   }
 
-  simplifyChild(child);
+  auto simpl = cast<IUnaryExpression>(clone());
+  simplifyChild(simpl->child);
 
-  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*child})) {
-    return (*func)(*child);
+  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*simpl->child})) {
+    return (*func)(*simpl->child);
   }
 
-  if (auto res = preSimplify()) { // TODO: try to remove this
+  if (auto res = simpl->preSimplify()) { // TODO: try to remove this
     return res;
   }
 
-  if (auto res = postSimplify()) {
+  if (auto res = simpl->postSimplify()) {
     return res;
   }
 
+  return simpl;
+}
+
+ArgumentPtr IUnaryExpression::preSimplify() const {
   return {};
 }
 
-shared_ptr<IMathObject> IUnaryExpression::preSimplify() const {
-  return {};
-}
-
-shared_ptr<IMathObject> IUnaryExpression::postSimplify() const {
+ArgumentPtr IUnaryExpression::postSimplify() const {
   return {};
 }
 

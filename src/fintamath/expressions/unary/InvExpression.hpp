@@ -6,12 +6,12 @@ namespace fintamath {
 
 class InvExpression : public IUnaryExpressionCRTP<InvExpression> {
 public:
-  explicit InvExpression(const shared_ptr<IMathObject> &child);
+  explicit InvExpression(const ArgumentPtr &child);
 
 protected:
-  shared_ptr<IMathObject> preSimplify() const override;
+  ArgumentPtr preSimplify() const override;
 
-  shared_ptr<IMathObject> postSimplify() const override;
+  ArgumentPtr postSimplify() const override;
 };
 
 }

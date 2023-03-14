@@ -17,11 +17,11 @@ public:
   // void simplifyValue(bool isPrecise);
 
 protected:
-  shared_ptr<IMathObject> simplify() final;
+  ArgumentPtr simplify() const final;
 
-  virtual shared_ptr<IMathObject> preSimplify() const;
+  virtual ArgumentPtr preSimplify() const;
 
-  virtual shared_ptr<IMathObject> postSimplify() const;
+  virtual ArgumentPtr postSimplify() const;
 
 private:
   string postfixToString() const;
@@ -33,13 +33,13 @@ private:
 protected:
   shared_ptr<IFunction> func;
 
-  shared_ptr<IMathObject> child;
+  ArgumentPtr child;
 };
 
 template <typename Derived>
 class IUnaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IUnaryExpression {
 public:
-  explicit IUnaryExpressionCRTP(const IFunction &func, const shared_ptr<IMathObject> &child) {
+  explicit IUnaryExpressionCRTP(const IFunction &func, const ArgumentPtr &child) {
     this->func = cast<IFunction>(func.clone());
 
     this->child = child;
