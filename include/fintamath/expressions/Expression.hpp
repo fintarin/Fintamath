@@ -36,9 +36,6 @@ public:
 
   ArgumentsPtrVector getVariables() const override;
 
-  // TODO: make private
-  void validate() const override;
-
   // TODO: make this private
   // void setPrecisionRec(uint8_t precision);
 
@@ -90,7 +87,11 @@ private:
 
   bool parseFunction(const TokenVector &tokens);
 
-  static ArgumentsPtrVector getFunctionArgs(const TokenVector &tokens);
+  static ArgumentsPtrVector parseFunctionArgs(const TokenVector &tokens);
+
+  void validateChild(const shared_ptr<IMathObject> &child) const;
+
+  void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const;
 
   // void callPowSimplify();
 

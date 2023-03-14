@@ -95,16 +95,6 @@ ArgumentsPtrVector FunctionExpression::getChildren() const {
 // return countResult;
 // }
 
-void FunctionExpression::validate() const {
-  validateChildren(*func, children);
-
-  for (const auto &arg : children) {
-    if (const auto argExpr = cast<IExpression>(arg)) {
-      argExpr->validate();
-    }
-  }
-}
-
 shared_ptr<IMathObject> FunctionExpression::simplify() {
   if (!func->isNonExressionEvaluatable()) {
     return {};

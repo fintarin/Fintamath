@@ -27,7 +27,7 @@ Expression::Expression() : child(ZERO.clone()) {
 }
 
 Expression::Expression(const string &str) : Expression(Tokenizer::tokenize(str)) {
-  validate();
+  validateChild(child);
   simplifyChild(child);
 }
 
@@ -203,7 +203,7 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   }
 
   if (auto func = IFunction::parse(tokens.front()); func && !is<IOperator>(func)) {
-    child = make_shared<FunctionExpression>(*func, getFunctionArgs(TokenVector(tokens.begin() + 1, tokens.end())));
+    child = make_shared<FunctionExpression>(*func, parseFunctionArgs(TokenVector(tokens.begin() + 1, tokens.end())));
     return true;
   }
 
@@ -223,8 +223,8 @@ unique_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func
 
 shared_ptr<IMathObject> Expression::makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
   auto res = make_shared<Expression>(makeRawFunctionExpression(func, args));
-  res->validate();
-  simplifyChild(res->child);
+  res->validateChild(res->child);
+  res->simplifyChild(res->child);
   return res;
 }
 
@@ -243,7 +243,7 @@ shared_ptr<IFunction> Expression::getFunction() const {
   return {};
 }
 
-ArgumentsPtrVector Expression::getFunctionArgs(const TokenVector &tokens) {
+ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
   ArgumentsPtrVector args;
 
   for (size_t pos = 0; pos < tokens.size(); pos++) {
@@ -258,7 +258,7 @@ ArgumentsPtrVector Expression::getFunctionArgs(const TokenVector &tokens) {
 
     if (pos == tokens.size()) {
       if (isBracketsSkip) {
-        return getFunctionArgs(cutBraces(tokens));
+        return parseFunctionArgs(cutBraces(tokens));
       }
       break;
     }
@@ -271,7 +271,7 @@ ArgumentsPtrVector Expression::getFunctionArgs(const TokenVector &tokens) {
       args.emplace_back(
           shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(pos)))));
 
-      ArgumentsPtrVector addArgs = getFunctionArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
+      ArgumentsPtrVector addArgs = parseFunctionArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
 
       for (auto &token : addArgs) {
         args.emplace_back(shared_ptr<IMathObject>(token));
@@ -311,12 +311,6 @@ Expression &Expression::negate() {
   return *this;
 }
 
-void Expression::validate() const {
-  if (const auto expr = cast<IExpression>(child)) {
-    expr->validate();
-  }
-}
-
 // void Expression::setPrecision(uint8_t precision) {
 //   setPrecisionRec(precision);
 // }
@@ -353,5 +347,63 @@ shared_ptr<IMathObject> Expression::simplify() {
 //     child = powExpr->polynomSimplify();
 //   }
 // }
+
+void Expression::validateChild(const shared_ptr<IMathObject> &child) const {
+  const auto childExpr = cast<IExpression>(child);
+
+  if (!childExpr) {
+    return;
+  }
+
+  const shared_ptr<IFunction> func = childExpr->getFunction();
+  const ArgumentsPtrVector children = childExpr->getChildren();
+
+  if (children.size() <= size_t(func->getFunctionType())) {
+    validateFunctionArgs(func, children);
+  }
+  else {
+    for (size_t i = 0; i < children.size() - 1; i++) {
+      for (size_t j = i + 1; j < children.size(); j++) {
+        validateFunctionArgs(func, {children[i], children[j]});
+      }
+    }
+  }
+
+  for (const auto &arg : children) {
+    validateChild(arg);
+  }
+}
+
+void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const {
+  const ArgumentsTypesVector childrenTypes = func->getArgsTypes();
+
+  if (childrenTypes.size() != args.size()) {
+    throw InvalidInputException(toString());
+  }
+
+  for (size_t i = 0; i < args.size(); i++) {
+    const shared_ptr<IMathObject> &child = args[i];
+    const std::type_info &type = childrenTypes[i];
+
+    if (const auto childExpr = cast<IExpression>(child)) {
+      const shared_ptr<IFunction> childFunc = childExpr->getFunction();
+      const std::type_info &childType = childFunc->getReturnType();
+
+      if (!InheritanceTable::isBaseOf(type, childType) && !InheritanceTable::isBaseOf(childType, type)) {
+        throw InvalidInputException(toString());
+      }
+    }
+    else if (const auto childConst = cast<IConstant>(child)) {
+      const std::type_info &childType = childConst->getReturnType();
+
+      if (!InheritanceTable::isBaseOf(type, childType)) {
+        throw InvalidInputException(toString());
+      }
+    }
+    else if (!is<Variable>(child) && !InheritanceTable::isBaseOf(type, typeid(*child))) {
+      throw InvalidInputException(toString());
+    }
+  }
+}
 
 }

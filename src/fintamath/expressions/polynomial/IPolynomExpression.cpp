@@ -59,22 +59,6 @@ ArgumentsPtrVector IPolynomExpression::getPolynom() const {
   return children;
 }
 
-void IPolynomExpression::validate() const {
-  for (const auto &child : children) {
-    if (const auto childExpr = cast<IExpression>(child)) {
-      childExpr->validate();
-    }
-  }
-
-  const auto func = this->getFunction();
-
-  for (int64_t i = 0; i < children.size() - 1; i++) {
-    for (int64_t j = i + 1; j < children.size(); j++) {
-      validateChildren(*func, {children[i], children[j]});
-    }
-  }
-}
-
 shared_ptr<IMathObject> IPolynomExpression::simplify() {
   preSimplifyRec();
 

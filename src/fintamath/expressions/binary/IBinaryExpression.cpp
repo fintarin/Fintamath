@@ -62,15 +62,4 @@ shared_ptr<IMathObject> IBinaryExpression::simplify() {
   return {};
 }
 
-void IBinaryExpression::validate() const {
-  if (const auto childExpr = cast<IExpression>(lhsChild)) {
-    childExpr->validate();
-  }
-  if (const auto childExpr = cast<IExpression>(rhsChild)) {
-    childExpr->validate();
-  }
-
-  validateChildren(*func, {lhsChild, rhsChild});
-}
-
 }

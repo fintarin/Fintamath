@@ -21,8 +21,6 @@ protected:
 
   shared_ptr<IMathObject> simplify() final;
 
-  void validate() const final;
-
 protected:
   shared_ptr<IFunction> func;
 

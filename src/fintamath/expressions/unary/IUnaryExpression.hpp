@@ -17,8 +17,6 @@ public:
   // void simplifyValue(bool isPrecise);
 
 protected:
-  void validate() const final;
-
   shared_ptr<IMathObject> simplify() final;
 
   virtual shared_ptr<IMathObject> preSimplify() const;

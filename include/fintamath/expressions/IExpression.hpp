@@ -21,9 +21,6 @@ public:
   // TODO: make this protected
   // virtual void setPrecision(uint8_t precision) = 0;
 
-  // TODO: remove this and implement in Expression
-  virtual void validate() const = 0;
-
   virtual ArgumentsPtrVector getVariables() const;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
@@ -36,9 +33,6 @@ public:
   }
 
 protected:
-  // TODO: remove this and implement in Expression
-  void validateChildren(const IFunction &func, const ArgumentsPtrVector &args) const;
-
   static void compressChild(shared_ptr<IMathObject> &child);
 
   static void simplifyChild(shared_ptr<IMathObject> &child);

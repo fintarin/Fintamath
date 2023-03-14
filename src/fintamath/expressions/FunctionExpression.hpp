@@ -18,8 +18,6 @@ protected:
 
   // void setPrecision(uint8_t precision) override;
 
-  void validate() const override;
-
 private:
   shared_ptr<IFunction> func;
 

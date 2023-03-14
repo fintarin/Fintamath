@@ -97,14 +97,6 @@ ArgumentsPtrVector IUnaryExpression::getChildren() const {
   return {child};
 }
 
-void IUnaryExpression::validate() const {
-  if (const auto childExpr = cast<IExpression>(child)) {
-    childExpr->validate();
-  }
-
-  validateChildren(*func, {child});
-}
-
 shared_ptr<IMathObject> IUnaryExpression::simplify() {
   if (auto res = preSimplify()) {
     simplifyChild(res);

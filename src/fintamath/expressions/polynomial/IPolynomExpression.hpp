@@ -31,8 +31,6 @@ protected:
 
   virtual shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
-  void validate() const final;
-
   shared_ptr<IMathObject> simplify() final;
 
 protected:
