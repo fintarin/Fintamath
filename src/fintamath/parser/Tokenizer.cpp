@@ -32,11 +32,8 @@ TokenVector Tokenizer::tokenize(std::string str) {
       }
 
       tokens.emplace_back(1, ch);
-
-      continue;
     }
-
-    if (isDigitOrPoint(ch)) {
+    else if (isDigitOrPoint(ch)) {
       appendToken(tokens, specialToken, true);
       numberToken.push_back(ch);
 
@@ -44,12 +41,11 @@ TokenVector Tokenizer::tokenize(std::string str) {
       if (!tokens.empty() && tokens.back() == ")") {
         tokens.emplace_back("*");
       }
-
-      continue;
     }
-
-    appendToken(tokens, numberToken, false);
-    specialToken.push_back(ch);
+    else {
+      appendToken(tokens, numberToken, false);
+      specialToken.push_back(ch);
+    }
   }
 
   appendToken(tokens, numberToken, false);
@@ -106,9 +102,11 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
       if (nestedToken.length() < registeredToken.length()) {
         continue;
       }
+
       if (nestedToken.length() > registeredToken.length()) {
         nestedToken = token.substr(0, registeredToken.length());
       }
+
       if (nestedToken == registeredToken) {
         isNestedTokenFind = true;
         break;

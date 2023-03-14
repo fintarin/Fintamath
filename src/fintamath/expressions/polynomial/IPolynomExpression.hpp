@@ -73,13 +73,13 @@ public:
       elemPolynom = expr->children;
     }
 
-    if (elemPolynom.empty()) {
-      children.emplace_back(elem);
-      return;
+    if (!elemPolynom.empty()) {
+      for (auto &child : elemPolynom) {
+        children.emplace_back(child);
+      }
     }
-
-    for (auto &child : elemPolynom) {
-      children.emplace_back(child);
+    else {
+      children.emplace_back(elem);
     }
   }
 };

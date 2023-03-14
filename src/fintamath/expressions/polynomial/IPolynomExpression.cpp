@@ -42,17 +42,13 @@ ArgumentsPtrVector IPolynomExpression::getVariables() const {
   for (const auto &child : children) {
     if (is<Variable>(child)) {
       vars.emplace_back(child);
-      continue;
     }
-
-    if (const auto childExpr = cast<IExpression>(child)) {
+    else if (const auto childExpr = cast<IExpression>(child)) {
       auto childVars = childExpr->getVariables();
 
       for (const auto &childVar : childVars) {
         vars.emplace_back(childVar);
       }
-
-      continue;
     }
   }
 
@@ -118,7 +114,6 @@ void IPolynomExpression::preSimplifyRec() {
       if (auto res = preSimplify(i, j)) {
         children[i] = res;
         children.erase(children.begin() + j);
-        continue;
       }
     }
   }
@@ -136,13 +131,10 @@ void IPolynomExpression::postSimplifyRec() {
       if (func->isNonExressionEvaluatable() && func->doArgsMatch({*children[i], *children[j]})) {
         children[i] = (*func)(*children[i], *children[j]);
         children.erase(children.begin() + j);
-        continue;
       }
-
-      if (auto res = postSimplify(i, j)) {
+      else if (auto res = postSimplify(i, j)) {
         children[i] = res;
         children.erase(children.begin() + j);
-        continue;
       }
     }
   }

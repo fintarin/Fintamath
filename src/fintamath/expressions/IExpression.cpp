@@ -27,10 +27,6 @@ void IExpression::validateChildren(const IFunction &func, const ArgumentsPtrVect
     const std::shared_ptr<IMathObject> &child = children[i];
     const std::type_info &type = childrenTypes[i];
 
-    if (is<Variable>(child)) {
-      continue;
-    }
-
     if (const auto childExpr = cast<IExpression>(child)) {
       const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
       const std::type_info &childType = childFunc->getReturnType();
@@ -38,21 +34,15 @@ void IExpression::validateChildren(const IFunction &func, const ArgumentsPtrVect
       if (!InheritanceTable::isBaseOf(type, childType) && !InheritanceTable::isBaseOf(childType, type)) {
         throw InvalidInputException(toString());
       }
-
-      continue;
     }
-
-    if (const auto childConst = cast<IConstant>(child)) {
+    else if (const auto childConst = cast<IConstant>(child)) {
       const std::type_info &childType = childConst->getReturnType();
 
       if (!InheritanceTable::isBaseOf(type, childType)) {
         throw InvalidInputException(toString());
       }
-
-      continue;
     }
-
-    if (!InheritanceTable::isBaseOf(type, typeid(*child))) {
+    else if (!is<Variable>(child) && !InheritanceTable::isBaseOf(type, typeid(*child))) {
       throw InvalidInputException(toString());
     }
   }
@@ -69,11 +59,8 @@ void IExpression::simplifyChild(std::shared_ptr<IMathObject> &child) {
     if (const auto simplObj = exprChild->simplify()) {
       child = simplObj;
     }
-
-    return;
   }
-
-  if (const auto constChild = cast<IConstant>(child)) {
+  else if (const auto constChild = cast<IConstant>(child)) {
     std::shared_ptr<IMathObject> constVal = (*constChild)();
 
     if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
@@ -82,8 +69,6 @@ void IExpression::simplifyChild(std::shared_ptr<IMathObject> &child) {
     else {
       child = constVal;
     }
-
-    return;
   }
 }
 

@@ -332,22 +332,15 @@ ArgumentsPtrVector Expression::getChildren() const {
 }
 
 ArgumentsPtrVector Expression::getVariables() const {
-  ArgumentsPtrVector result;
-
   if (is<Variable>(child)) {
-    result.emplace_back(child);
-    return result;
+    return {child};
   }
 
   if (const auto expr = cast<IExpression>(child)) {
-    ArgumentsPtrVector addResult = expr->getVariables();
-    for (const auto &add : addResult) {
-      result.emplace_back(add);
-    }
-    return result;
+    return expr->getVariables();
   }
 
-  return result;
+  return {};
 }
 
 std::shared_ptr<IMathObject> Expression::simplify() {

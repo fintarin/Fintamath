@@ -54,11 +54,9 @@ std::map<size_t, std::shared_ptr<IMathObject>> findBinaryOperators(const TokenVe
     if (skipBrackets(tokens, i)) {
       isPrevTokenOper = false;
       i--;
-      continue;
     }
-
-    if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.at(i));
-        oper && oper->getFunctionType() == IFunction::Type::Binary) {
+    else if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.at(i));
+             oper && oper->getFunctionType() == IFunction::Type::Binary) {
       if (!isPrevTokenOper) {
         operators.insert({i, oper});
         isPrevTokenOper = true;

@@ -99,10 +99,11 @@ std::string MulExpression::toString() const {
     if (const auto invExpr = cast<InvExpression>(children[i])) {
       result += "/";
       result += sumExprToString(invExpr->getChildren().front());
-      continue;
     }
-    result += ' ';
-    result += sumExprToString(children[i]);
+    else {
+      result += ' ';
+      result += sumExprToString(children[i]);
+    }
   }
 
   return result;
