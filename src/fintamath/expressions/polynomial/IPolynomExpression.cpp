@@ -11,7 +11,7 @@ namespace fintamath {
 //   }
 // }
 
-std::shared_ptr<IFunction> IPolynomExpression::getFunction() const {
+shared_ptr<IFunction> IPolynomExpression::getFunction() const {
   return func;
 }
 
@@ -31,7 +31,7 @@ ArgumentsPtrVector IPolynomExpression::getChildren() const {
 //     }
 
 //     if (is<INumber>(child)) {
-//       child = std::make_shared<Real>(convert<Real>(*child).precise(precision));
+//       child = make_shared<Real>(convert<Real>(*child).precise(precision));
 //     }
 //   }
 // }
@@ -75,7 +75,7 @@ void IPolynomExpression::validate() const {
   }
 }
 
-std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
+shared_ptr<IMathObject> IPolynomExpression::simplify() {
   preSimplifyRec();
 
   {
@@ -98,11 +98,11 @@ std::shared_ptr<IMathObject> IPolynomExpression::simplify() {
   return {};
 }
 
-std::shared_ptr<IMathObject> IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
+shared_ptr<IMathObject> IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
   return {};
 }
 
-std::shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
+shared_ptr<IMathObject> IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
   return {};
 }
 
@@ -145,7 +145,7 @@ void IPolynomExpression::postSimplifyRec() {
 }
 
 // void IPolynomExpression::sortVector(ArgumentsPtrVector &vector,
-//                                     std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+//                                     map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
 //                                     ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector) {
 //   for (auto &child : vector) {
 //     if (const auto expr = cast<IExpression>(child)) {

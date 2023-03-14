@@ -9,12 +9,12 @@ class Acoth : public IFunctionCRTP<INumber, Acoth, INumber> {
 public:
   Acoth() = default;
 
-  std::string toString() const override {
+  string toString() const override {
     return "acoth";
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

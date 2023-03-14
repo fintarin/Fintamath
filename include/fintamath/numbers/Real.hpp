@@ -27,7 +27,7 @@ public:
 
   Real(const RealImpl &impl);
 
-  explicit Real(std::string str);
+  explicit Real(string str);
 
   Real(const Rational &val);
 
@@ -35,9 +35,9 @@ public:
 
   Real(double val);
 
-  std::string toString() const override;
+  string toString() const override;
 
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
+  unique_ptr<IMathObject> toMinimalObject() const override;
 
   bool isPrecise() const override;
 
@@ -47,7 +47,7 @@ public:
 
   bool isNearZero() const;
 
-  const std::unique_ptr<RealImpl> &getImpl() const;
+  const unique_ptr<RealImpl> &getImpl() const;
 
 protected:
   bool equals(const Real &rhs) const override;
@@ -67,7 +67,7 @@ protected:
   Real &negate() override;
 
 private:
-  std::unique_ptr<RealImpl> impl;
+  unique_ptr<RealImpl> impl;
 
   uint8_t ouputPrecision = FINTAMATH_ROUND_PRECISION;
 

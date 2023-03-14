@@ -9,12 +9,12 @@ class Cos : public IFunctionCRTP<INumber, Cos, INumber> {
 public:
   Cos() = default;
 
-  std::string toString() const override {
+  string toString() const override {
     return "cos";
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

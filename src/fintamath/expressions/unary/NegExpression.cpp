@@ -10,11 +10,11 @@ namespace fintamath {
 
 const Neg NEG;
 
-NegExpression::NegExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NEG, child) {
+NegExpression::NegExpression(const shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NEG, child) {
 }
 
-// std::unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
-// auto exprObj = std::make_unique<NegExpression>(*this);
+// unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
+// auto exprObj = make_unique<NegExpression>(*this);
 // exprObj->simplifyValue(isPrecise);
 
 // if (const auto *expr = cast<INumber>(exprObj->child)) {
@@ -33,7 +33,7 @@ NegExpression::NegExpression(const std::shared_ptr<IMathObject> &child) : IUnary
 // return exprObj;
 // }
 
-std::shared_ptr<IMathObject> NegExpression::preSimplify() const {
+shared_ptr<IMathObject> NegExpression::preSimplify() const {
   if (const auto expr = cast<NegExpression>(child)) {
     return expr->child;
   }
@@ -41,7 +41,7 @@ std::shared_ptr<IMathObject> NegExpression::preSimplify() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> NegExpression::postSimplify() const {
+shared_ptr<IMathObject> NegExpression::postSimplify() const {
   if (auto expr = cast<INegatable>(child)) {
     expr->negate();
     auto res = cast<IMathObject>(expr);

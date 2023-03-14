@@ -32,7 +32,7 @@
 using namespace fintamath;
 
 TEST(FunctionTests, callTests) {
-  std::unique_ptr<IFunction> f = std::make_unique<Add>();
+  unique_ptr<IFunction> f = make_unique<Add>();
   Integer a = 3;
   Rational b(1, 2);
 

@@ -9,12 +9,12 @@ class Sqrt : public IFunctionCRTP<INumber, Sqrt, INumber> {
 public:
   Sqrt() = default;
 
-  std::string toString() const override {
+  string toString() const override {
     return "sqrt";
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

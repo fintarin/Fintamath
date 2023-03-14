@@ -14,7 +14,7 @@ namespace fintamath {
 
 class IExpression : virtual public IMathObject {
 public:
-  virtual std::shared_ptr<IFunction> getFunction() const = 0;
+  virtual shared_ptr<IFunction> getFunction() const = 0;
 
   virtual ArgumentsPtrVector getChildren() const = 0;
 
@@ -31,7 +31,7 @@ public:
     Parser::registerType<T>(parserVector);
   }
 
-  static std::unique_ptr<IExpression> parse(const std::string &str) {
+  static unique_ptr<IExpression> parse(const string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -39,16 +39,16 @@ protected:
   // TODO: remove this and implement in Expression
   void validateChildren(const IFunction &func, const ArgumentsPtrVector &args) const;
 
-  static void compressChild(std::shared_ptr<IMathObject> &child);
+  static void compressChild(shared_ptr<IMathObject> &child);
 
-  static void simplifyChild(std::shared_ptr<IMathObject> &child);
+  static void simplifyChild(shared_ptr<IMathObject> &child);
 
-  // static void setMathObjectPrecision(std::shared_ptr<IMathObject> &obj, uint8_t precision);
+  // static void setMathObjectPrecision(shared_ptr<IMathObject> &obj, uint8_t precision);
 
-  virtual std::shared_ptr<IMathObject> simplify() = 0;
+  virtual shared_ptr<IMathObject> simplify() = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parserVector;
+  static Parser::Vector<unique_ptr<IExpression>, const string &> parserVector;
 };
 
 template <typename Derived>

@@ -25,15 +25,15 @@ public:
 
   Integer(const IntegerImpl &impl);
 
-  explicit Integer(std::string str);
+  explicit Integer(string str);
 
   Integer(int64_t val);
 
-  std::string toString() const override;
+  string toString() const override;
 
   int sign() const;
 
-  const std::unique_ptr<IntegerImpl> &getImpl() const;
+  const unique_ptr<IntegerImpl> &getImpl() const;
 
 protected:
   bool equals(const Integer &rhs) const override;
@@ -71,7 +71,7 @@ protected:
   Integer &decrease() override;
 
 private:
-  std::unique_ptr<IntegerImpl> impl;
+  unique_ptr<IntegerImpl> impl;
 };
 
 }

@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-Variable::Variable(const std::string &str) {
+Variable::Variable(const string &str) {
   if (str.size() != 1) {
     throw InvalidInputException(str);
   }
@@ -19,7 +19,7 @@ Variable::Variable(const std::string &str) {
   name = str;
 }
 
-std::string Variable::toString() const {
+string Variable::toString() const {
   return name;
 }
 

@@ -45,8 +45,8 @@ TokenVector cutBraces(const TokenVector &tokens) {
   return newTokens;
 }
 
-std::map<size_t, std::shared_ptr<IMathObject>> findBinaryOperators(const TokenVector &tokens) {
-  std::map<size_t, std::shared_ptr<IMathObject>> operators;
+map<size_t, shared_ptr<IMathObject>> findBinaryOperators(const TokenVector &tokens) {
+  map<size_t, shared_ptr<IMathObject>> operators;
 
   bool isPrevTokenOper = false;
 
@@ -55,7 +55,7 @@ std::map<size_t, std::shared_ptr<IMathObject>> findBinaryOperators(const TokenVe
       isPrevTokenOper = false;
       i--;
     }
-    else if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.at(i));
+    else if (shared_ptr<IOperator> oper = IOperator::parse(tokens.at(i));
              oper && oper->getFunctionType() == IFunction::Type::Binary) {
       if (!isPrevTokenOper) {
         operators.insert({i, oper});
@@ -70,14 +70,14 @@ std::map<size_t, std::shared_ptr<IMathObject>> findBinaryOperators(const TokenVe
   return operators;
 }
 
-std::string putInBrackets(const std::string &str) {
+string putInBrackets(const string &str) {
   return "(" + str + ")";
 }
 
-std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values) {
-  std::string result;
+string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values) {
+  string result;
 
-  std::string operStr = oper.toString();
+  string operStr = oper.toString();
   IOperator::Priority operPriority = oper.getOperatorPriority();
   bool operIsAssociative = oper.isAssociative();
 
@@ -86,7 +86,7 @@ std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVect
   }
 
   for (size_t i = 0; i < values.size(); i++) {
-    const std::shared_ptr<IMathObject> &child = values[i];
+    const shared_ptr<IMathObject> &child = values[i];
 
     bool shouldPutInBrackets = false;
 
@@ -114,8 +114,8 @@ std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVect
   return result;
 }
 
-std::string postfixUnaryOperatorToString(const IOperator &oper, const std::shared_ptr<IMathObject> &lhs) {
-  std::string result = lhs->toString();
+string postfixUnaryOperatorToString(const IOperator &oper, const shared_ptr<IMathObject> &lhs) {
+  string result = lhs->toString();
 
   if (const auto child = cast<IExpression>(lhs)) {
     if (const auto childOper = cast<IOperator>(child->getFunction())) {

@@ -31,12 +31,12 @@ public:
   virtual bool isNonExressionEvaluatable() const = 0;
 
   template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-  std::unique_ptr<IMathObject> operator()(const Args &...args) const {
+  unique_ptr<IMathObject> operator()(const Args &...args) const {
     ArgumentsRefVector argsVect = {args...};
     return callAbstract(argsVect);
   }
 
-  std::unique_ptr<IMathObject> operator()(const ArgumentsRefVector &argsVect) const {
+  unique_ptr<IMathObject> operator()(const ArgumentsRefVector &argsVect) const {
     return callAbstract(argsVect);
   }
 
@@ -45,21 +45,21 @@ public:
     Parser::registerType<T>(parserMap);
   }
 
-  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-    Parser::Comparator<const std::unique_ptr<IFunction> &> comp = [type](const std::unique_ptr<IFunction> &func) {
+  static unique_ptr<IFunction> parse(const string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
+    Parser::Comparator<const unique_ptr<IFunction> &> comp = [type](const unique_ptr<IFunction> &func) {
       return type == IFunction::Type::Any || func->getFunctionType() == type;
     };
-    return Parser::parse<std::unique_ptr<IFunction>>(parserMap, comp, parsedStr);
+    return Parser::parse<unique_ptr<IFunction>>(parserMap, comp, parsedStr);
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
+  virtual unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
 
-  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
+  static const function<unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
       makeFunctionExpression;
 
 private:
-  static Parser::Map<std::unique_ptr<IFunction>> parserMap;
+  static Parser::Map<unique_ptr<IFunction>> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>
@@ -97,9 +97,9 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const = 0;
+  virtual unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const = 0;
 
-  std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const final {
+  unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const final {
     validateArgsSize(argsVect);
 
     if (doArgsMatch(argsVect)) {
@@ -152,7 +152,7 @@ private:
   }
 
   void throwInvalidInputFunctionException(const ArgumentsRefVector &argsVect) const {
-    std::vector<std::string> argNamesVect(argsVect.size());
+    vector<string> argNamesVect(argsVect.size());
 
     for (size_t i = 0; i < argNamesVect.size(); i++) {
       argNamesVect[i] = argsVect[i].get().toString();

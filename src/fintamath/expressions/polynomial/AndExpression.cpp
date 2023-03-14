@@ -15,15 +15,15 @@ const And AND;
 AndExpression::AndExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(AND, children) {
 }
 
-std::string AndExpression::toString() const {
+string AndExpression::toString() const {
   return binaryOperatorToString(AND, children);
 }
 
-// std::unique_ptr<IMathObject> AndExpression::simplify(bool /*isPrecise*/) const {
-// std::unique_ptr<IMathObject> result = polynomVect.front()->clone();
+// unique_ptr<IMathObject> AndExpression::simplify(bool /*isPrecise*/) const {
+// unique_ptr<IMathObject> result = polynomVect.front()->clone();
 // for (size_t i = 1; i < polynomVect.size(); i++) {
-//   const std::unique_ptr<IMathObject> &lhsPtr = result;
-//   const std::unique_ptr<IMathObject> &rhsPtr = polynomVect[i];
+//   const unique_ptr<IMathObject> &lhsPtr = result;
+//   const unique_ptr<IMathObject> &rhsPtr = polynomVect[i];
 //   const IMathObject &lhs = *lhsPtr;
 //   const IMathObject &rhs = *rhsPtr;
 
@@ -31,7 +31,7 @@ std::string AndExpression::toString() const {
 //     if (*lhsBool == true) {
 //       *result = *rhsPtr;
 //     } else {
-//       result = std::make_unique<Boolean>(false);
+//       result = make_unique<Boolean>(false);
 //     }
 //     continue;
 //   }
@@ -40,13 +40,13 @@ std::string AndExpression::toString() const {
 //     if (*rhsBool == true) {
 //       *result = *lhsPtr;
 //     } else {
-//       result = std::make_unique<Boolean>(false);
+//       result = make_unique<Boolean>(false);
 //     }
 //     continue;
 //   }
 
 //   if (lhs == notL(rhs)) {
-//     result = std::make_unique<Boolean>(false);
+//     result = make_unique<Boolean>(false);
 //   }
 // }
 
@@ -60,12 +60,12 @@ void AndExpression::logicNegate() {
     negChildren.emplace_back(Expression::makeRawFunctionExpression(Not(), {child}));
   }
 
-  children = {std::make_shared<OrExpression>(negChildren)};
+  children = {make_shared<OrExpression>(negChildren)};
 }
 
-std::shared_ptr<IMathObject> AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
-  const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
+shared_ptr<IMathObject> AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+  const shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
+  const shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {
     return *lhsBool ? rhsChild : lhsChild;
@@ -79,10 +79,10 @@ std::shared_ptr<IMathObject> AndExpression::postSimplify(size_t lhsChildNum, siz
   }
 
   if (const auto lhsNot = cast<NotExpression>(lhsChild); lhsNot && *lhsNot->getChildren().front() == *rhsChild) {
-    return std::make_shared<Boolean>(false);
+    return make_shared<Boolean>(false);
   }
   if (const auto rhsNot = cast<NotExpression>(rhsChild); rhsNot && *rhsNot->getChildren().front() == *lhsChild) {
-    return std::make_shared<Boolean>(false);
+    return make_shared<Boolean>(false);
   }
 
   return {};

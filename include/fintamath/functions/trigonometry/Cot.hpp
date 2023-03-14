@@ -9,12 +9,12 @@ class Cot : public IFunctionCRTP<INumber, Cot, INumber> {
 public:
   Cot() = default;
 
-  std::string toString() const override {
+  string toString() const override {
     return "cot";
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

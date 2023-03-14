@@ -11,7 +11,7 @@ class UndefinedFunctionException : public UndefinedException {
 public:
   ~UndefinedFunctionException() override = default;
 
-  UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
+  UndefinedFunctionException(const string &func, const vector<string> &argsVect) {
     content += ": " + func + "(";
 
     if (!argsVect.empty()) {

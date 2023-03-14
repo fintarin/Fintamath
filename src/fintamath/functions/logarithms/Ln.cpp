@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Ln::call(const ArgumentsRefVector &argsVect) const {
+unique_ptr<IMathObject> Ln::call(const ArgumentsRefVector &argsVect) const {
   return ln(convert<Real>(argsVect.front())).toMinimalObject();
 }
 

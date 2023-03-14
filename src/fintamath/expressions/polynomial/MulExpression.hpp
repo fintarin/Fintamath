@@ -12,25 +12,25 @@ class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INega
 public:
   explicit MulExpression(const ArgumentsPtrVector &children);
 
-  std::string toString() const override;
+  string toString() const override;
 
-  // std::shared_ptr<IMathObject> getPowCoefficient(const std::shared_ptr<IMathObject> &powValue) const;
+  // shared_ptr<IMathObject> getPowCoefficient(const shared_ptr<IMathObject> &powValue) const;
 
-  // std::shared_ptr<IMathObject> getPow() const;
+  // shared_ptr<IMathObject> getPow() const;
 
-  // void setPow(const std::shared_ptr<IMathObject> &value);
+  // void setPow(const shared_ptr<IMathObject> &value);
 
   void negate() override;
 
   void invert() override;
 
 protected:
-  std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
+  shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
 private:
   // TODO: Implement a new Expression and remove this
   // struct ObjectPow;
-  // using Objects = std::vector<ObjectPow>;
+  // using Objects = vector<ObjectPow>;
 
   // void simplifyNegations();
 
@@ -40,18 +40,18 @@ private:
 
   // void simplifyPolynom();
 
-  // static void simplifyPowCoefficients(std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+  // static void simplifyPowCoefficients(map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
   //                                     ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
 
-  // static void addValueToMaps(std::shared_ptr<IMathObject> &lhs, std::shared_ptr<IMathObject> &rhs,
-  //                            std::map<std::string, std::shared_ptr<IMathObject>> &valuesMap,
-  //                            std::map<std::string, ArgumentsPtrVector> &powMap);
+  // static void addValueToMaps(shared_ptr<IMathObject> &lhs, shared_ptr<IMathObject> &rhs,
+  //                            map<string, shared_ptr<IMathObject>> &valuesMap,
+  //                            map<string, ArgumentsPtrVector> &powMap);
 
-  // static ArgumentsPtrVector coefficientProcessing(std::map<std::string, std::shared_ptr<IMathObject>> &valuesMap,
-  //                                                 std::map<std::string, ArgumentsPtrVector> &powMap);
+  // static ArgumentsPtrVector coefficientProcessing(map<string, shared_ptr<IMathObject>> &valuesMap,
+  //                                                 map<string, ArgumentsPtrVector> &powMap);
 
   // TODO: remove
-  static std::string sumExprToString(const std::shared_ptr<IMathObject> &obj);
+  static string sumExprToString(const shared_ptr<IMathObject> &obj);
 
   // static void multiplicateBraces(const ArgumentsPtrVector &addVect, ArgumentsPtrVector &positive,
   //                                ArgumentsPtrVector &negative);
@@ -67,7 +67,7 @@ private:
   // static void sortPowObjects(Objects &objs, ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect,
   //                            ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect);
 
-  // static bool sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs);
+  // static bool sortFunc(const shared_ptr<IMathObject> &lhs, const shared_ptr<IMathObject> &rhs);
 };
 
 }

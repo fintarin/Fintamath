@@ -10,7 +10,7 @@ class UndefinedBinaryOpearatorException : public UndefinedException {
 public:
   ~UndefinedBinaryOpearatorException() override = default;
 
-  UndefinedBinaryOpearatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
+  UndefinedBinaryOpearatorException(const string &oper, const string &lhs, const string &rhs) {
     content += ": (" + lhs + ")" + oper + "(" + rhs + ")";
   }
 };

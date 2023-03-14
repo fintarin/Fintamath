@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> Converter::converter;
+MultiMethod<unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> Converter::converter;
 
 }
 
@@ -17,24 +17,24 @@ namespace {
 struct ConverterConfig {
   ConverterConfig() {
     Converter::add<Integer, Integer>([](const Integer &value, const Integer & /*type*/) {
-      return std::make_unique<Integer>(value);
+      return make_unique<Integer>(value);
     });
 
     Converter::add<Rational, Rational>([](const Rational &value, const Rational & /*type*/) {
-      return std::make_unique<Rational>(value);
+      return make_unique<Rational>(value);
     });
     Converter::add<Integer, Rational>([](const Integer &value, const Rational & /*type*/) {
-      return std::make_unique<Rational>(value);
+      return make_unique<Rational>(value);
     });
 
     Converter::add<Real, Real>([](const Real &value, const Real & /*type*/) {
-      return std::make_unique<Real>(value);
+      return make_unique<Real>(value);
     });
     Converter::add<Integer, Real>([](const Integer &value, const Real & /*type*/) {
-      return std::make_unique<Real>(value);
+      return make_unique<Real>(value);
     });
     Converter::add<Rational, Real>([](const Rational &value, const Real & /*type*/) {
-      return std::make_unique<Real>(value);
+      return make_unique<Real>(value);
     });
   }
 };

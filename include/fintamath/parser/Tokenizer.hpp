@@ -3,16 +3,18 @@
 #include <string>
 #include <vector>
 
+#include "fintamath/core/CoreDefines.hpp"
+
 namespace fintamath {
 
-using Token = std::string;
-using TokenVector = std::vector<Token>;
+using Token = string;
+using TokenVector = vector<Token>;
 
 class Tokenizer {
 public:
-  static TokenVector tokenize(std::string str);
+  static TokenVector tokenize(string str);
 
-  static std::string tokensToString(const TokenVector &tokens);
+  static string tokensToString(const TokenVector &tokens);
 
   static void registerToken(const Token &token);
 
@@ -21,7 +23,7 @@ private:
 
   static TokenVector splitTokens(const Token &token);
 
-  static void handleSpaces(std::string &str);
+  static void handleSpaces(string &str);
 
   static bool isDigitOrPoint(char c);
 

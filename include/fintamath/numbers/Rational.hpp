@@ -8,7 +8,7 @@ class Rational : public INumberCRTP<Rational> {
 public:
   Rational() = default;
 
-  explicit Rational(const std::string &str);
+  explicit Rational(const string &str);
 
   explicit Rational(Integer numerator, Integer denominator);
 
@@ -16,9 +16,9 @@ public:
 
   Rational(int64_t rhs);
 
-  std::string toString() const override;
+  string toString() const override;
 
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
+  unique_ptr<IMathObject> toMinimalObject() const override;
 
   int sign() const;
 
@@ -46,7 +46,7 @@ protected:
   Rational &negate() override;
 
 private:
-  void parse(const std::string &str);
+  void parse(const string &str);
 
   void fixNegative();
 

@@ -11,6 +11,6 @@ using namespace fintamath;
 // TODO: implement tests
 
 TEST(CoreUtilsTests, castUniquePtrTest) {
-  EXPECT_NO_THROW(std::unique_ptr<IArithmetic> a = cast<IArithmetic>(ONE.clone()));
+  EXPECT_NO_THROW(unique_ptr<IArithmetic> a = cast<IArithmetic>(ONE.clone()));
   EXPECT_FALSE(is<Rational>(ONE.clone()));
 }

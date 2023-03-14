@@ -11,12 +11,12 @@ class OrExpression : public IPolynomExpressionCRTP<OrExpression>, public ILogicN
 public:
   explicit OrExpression(const ArgumentsPtrVector &children);
 
-  std::string toString() const override;
+  string toString() const override;
 
   void logicNegate() override;
 
 protected:
-  std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
+  shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 };
 
 }

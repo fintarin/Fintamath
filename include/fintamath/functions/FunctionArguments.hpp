@@ -4,8 +4,8 @@ namespace fintamath {
 
 class IMathObject;
 
-using ArgumentsRefVector = std::vector<std::reference_wrapper<const IMathObject>>;
-using ArgumentsPtrVector = std::vector<std::shared_ptr<IMathObject>>;
-using ArgumentsTypesVector = std::vector<std::reference_wrapper<const std::type_info>>;
+using ArgumentsRefVector = vector<std::reference_wrapper<const IMathObject>>;
+using ArgumentsPtrVector = vector<shared_ptr<IMathObject>>;
+using ArgumentsTypesVector = vector<std::reference_wrapper<const std::type_info>>;
 
 }

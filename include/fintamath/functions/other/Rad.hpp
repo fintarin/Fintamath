@@ -9,12 +9,12 @@ class Rad : public IFunctionCRTP<INumber, Rad, INumber> {
 public:
   Rad() = default;
 
-  std::string toString() const override {
+  string toString() const override {
     return "rad";
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

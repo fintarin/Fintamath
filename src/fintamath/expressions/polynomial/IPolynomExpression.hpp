@@ -14,7 +14,7 @@ namespace fintamath {
 
 class IPolynomExpression : virtual public IExpression {
 public:
-  std::shared_ptr<IFunction> getFunction() const final;
+  shared_ptr<IFunction> getFunction() const final;
 
   ArgumentsPtrVector getChildren() const final;
 
@@ -24,25 +24,25 @@ public:
 
   ArgumentsPtrVector getPolynom() const;
 
-  virtual void addElement(const std::shared_ptr<IMathObject> &element) = 0;
+  virtual void addElement(const shared_ptr<IMathObject> &element) = 0;
 
 protected:
-  virtual std::shared_ptr<IMathObject> preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
+  virtual shared_ptr<IMathObject> preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
-  virtual std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
+  virtual shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
   void validate() const final;
 
-  std::shared_ptr<IMathObject> simplify() final;
+  shared_ptr<IMathObject> simplify() final;
 
 protected:
-  // static void sortVector(ArgumentsPtrVector &vector, std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+  // static void sortVector(ArgumentsPtrVector &vector, map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
   //                        ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
 
   // static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
 
 protected:
-  std::shared_ptr<IFunction> func;
+  shared_ptr<IFunction> func;
 
   ArgumentsPtrVector children;
 
@@ -63,8 +63,8 @@ public:
     }
   }
 
-  void addElement(const std::shared_ptr<IMathObject> &element) final {
-    std::shared_ptr<IMathObject> elem = element;
+  void addElement(const shared_ptr<IMathObject> &element) final {
+    shared_ptr<IMathObject> elem = element;
     compressChild(elem);
 
     ArgumentsPtrVector elemPolynom;

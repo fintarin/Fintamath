@@ -13,7 +13,7 @@ public:
 
   ~UndefinedException() override = default;
 
-  UndefinedException(const std::string &input) {
+  UndefinedException(const string &input) {
     content += ": " + input;
   }
 
@@ -22,7 +22,7 @@ public:
   }
 
 protected:
-  std::string content = "Undefined";
+  string content = "Undefined";
 };
 
 }

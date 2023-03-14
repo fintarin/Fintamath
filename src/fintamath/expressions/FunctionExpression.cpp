@@ -20,7 +20,7 @@ FunctionExpression::FunctionExpression(const IFunction &function, const Argument
   }
 }
 
-std::string FunctionExpression::toString() const {
+string FunctionExpression::toString() const {
   if (const auto oper = cast<IOperator>(func)) {
     switch (oper->getOperatorPriority()) {
     case IOperator::Priority::PostfixUnary:
@@ -36,10 +36,10 @@ std::string FunctionExpression::toString() const {
   return functionToString();
 }
 
-std::string FunctionExpression::functionToString() const {
-  static const std::string delimiter = ", ";
+string FunctionExpression::functionToString() const {
+  static const string delimiter = ", ";
 
-  std::string result = func->toString() + "(";
+  string result = func->toString() + "(";
 
   for (const auto &arg : children) {
     result += arg->toString() + delimiter;
@@ -50,7 +50,7 @@ std::string FunctionExpression::functionToString() const {
   return result;
 }
 
-std::shared_ptr<IFunction> FunctionExpression::getFunction() const {
+shared_ptr<IFunction> FunctionExpression::getFunction() const {
   return func;
 }
 
@@ -64,7 +64,7 @@ ArgumentsPtrVector FunctionExpression::getChildren() const {
 //   }
 // }
 
-// std::unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const {
+// unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const {
 // ArgumentsRefVector arguments;
 // bool canCallFunction = true;
 
@@ -83,13 +83,13 @@ ArgumentsPtrVector FunctionExpression::getChildren() const {
 // }
 
 // if (!canCallFunction) {
-//   return std::make_unique<FunctionExpression>(*this);
+//   return make_unique<FunctionExpression>(*this);
 // }
 
 // auto countResult = (*function)(arguments);
 
 // if (const auto *num = cast<INumber>(countResult); num && !num->isPrecise() && isPrecise) {
-//   return std::make_unique<FunctionExpression>(*this);
+//   return make_unique<FunctionExpression>(*this);
 // }
 
 // return countResult;
@@ -105,7 +105,7 @@ void FunctionExpression::validate() const {
   }
 }
 
-std::shared_ptr<IMathObject> FunctionExpression::simplify() {
+shared_ptr<IMathObject> FunctionExpression::simplify() {
   if (!func->isNonExressionEvaluatable()) {
     return {};
   }
@@ -121,7 +121,7 @@ std::shared_ptr<IMathObject> FunctionExpression::simplify() {
     return {};
   }
 
-  std::shared_ptr<IMathObject> res = (*func)(arguments);
+  shared_ptr<IMathObject> res = (*func)(arguments);
 
   if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {
     return {};

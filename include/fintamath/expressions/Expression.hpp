@@ -14,23 +14,23 @@ class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Ex
 public:
   Expression();
 
-  explicit Expression(const std::string &str);
+  explicit Expression(const string &str);
 
-  explicit Expression(const std::shared_ptr<IMathObject> &obj);
+  explicit Expression(const shared_ptr<IMathObject> &obj);
 
   Expression(const IMathObject &obj);
 
   Expression(int64_t val);
 
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
+  unique_ptr<IMathObject> toMinimalObject() const override;
 
-  std::string toString() const override;
+  string toString() const override;
 
   Expression precise(size_t precision = FINTAMATH_ROUND_PRECISION) const;
 
   ArgumentsPtrVector getChildren() const override;
 
-  std::shared_ptr<IFunction> getFunction() const override;
+  shared_ptr<IFunction> getFunction() const override;
 
   // void setPrecision(uint8_t precision) override;
 
@@ -42,24 +42,24 @@ public:
   // TODO: make this private
   // void setPrecisionRec(uint8_t precision);
 
-  static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+  static unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 
-  static std::shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+  static shared_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
-  static std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+  static shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
   template <typename Function, typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
-  static void registerFunctionExpressionMaker(
-      Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &&builder) {
-    Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> constructor =
-        [builder = std::move(builder)](const ArgumentsPtrVector &args) {
+  static void
+  registerFunctionExpressionMaker(Parser::Function<shared_ptr<IExpression>, const ArgumentsPtrVector &> &&builder) {
+    Parser::Function<shared_ptr<IExpression>, const ArgumentsPtrVector &> constructor =
+        [builder = move(builder)](const ArgumentsPtrVector &args) {
           static const IFunction::Type type = Function().getFunctionType();
 
           if (type == IFunction::Type::Any || static_cast<uint16_t>(type) == args.size()) {
             return builder(args);
           }
 
-          return std::shared_ptr<IExpression>();
+          return shared_ptr<IExpression>();
         };
     Parser::add<Function>(expressionBuildersMap, constructor);
   }
@@ -75,7 +75,7 @@ protected:
 
   Expression &negate() override;
 
-  std::shared_ptr<IMathObject> simplify() override;
+  shared_ptr<IMathObject> simplify() override;
 
 private:
   explicit Expression(const TokenVector &tokens);
@@ -95,9 +95,9 @@ private:
   // void callPowSimplify();
 
 private:
-  std::shared_ptr<IMathObject> child;
+  shared_ptr<IMathObject> child;
 
-  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionBuildersMap;
+  static Parser::Map<shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionBuildersMap;
 };
 
 }

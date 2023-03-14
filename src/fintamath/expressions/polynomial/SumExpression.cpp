@@ -33,21 +33,21 @@ namespace fintamath {
 const Add ADD;
 
 // struct SumExpression::MulObject {
-//   std::shared_ptr<IMathObject> obj;
+//   shared_ptr<IMathObject> obj;
 //   SumExpression counter = SumExpression({});
 
-//   MulObject(std::shared_ptr<IMathObject> obj) : obj(std::move(obj)) {
+//   MulObject(shared_ptr<IMathObject> obj) : obj(move(obj)) {
 //   }
 
 //   void simplifyCounter() {
-//     std::shared_ptr<IMathObject> counterSimpl = counter.toMinimalObject(); // TODO: remove copy here
+//     shared_ptr<IMathObject> counterSimpl = counter.toMinimalObject(); // TODO: remove copy here
 //     counter = SumExpression({});
 //     counter.addElement(counterSimpl);
 //   }
 
-//   std::shared_ptr<IMathObject> getCounterValue() const {
+//   shared_ptr<IMathObject> getCounterValue() const {
 //     ArgumentsPtrVector polynom = counter.getPolynom();
-//     const std::shared_ptr<IMathObject> &countValue = polynom.front();
+//     const shared_ptr<IMathObject> &countValue = polynom.front();
 //     return is<NegExpression>(polynom.front()) ? Expression::makeFunctionExpression(Neg(), {countValue}) : countValue;
 //   }
 // };
@@ -55,13 +55,13 @@ const Add ADD;
 SumExpression::SumExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(ADD, children) {
 }
 
-std::string SumExpression::toString() const {
-  std::string result;
+string SumExpression::toString() const {
+  string result;
 
   result += children.front()->toString();
 
   for (size_t i = 1; i < children.size(); i++) {
-    std::string childStr = children[i]->toString();
+    string childStr = children[i]->toString();
 
     if (childStr.front() != '-') {
       result += " + ";
@@ -77,7 +77,7 @@ std::string SumExpression::toString() const {
   return result;
 }
 
-// std::unique_ptr<IMathObject> SumExpression::simplify(bool isPrecise) const {
+// unique_ptr<IMathObject> SumExpression::simplify(bool isPrecise) const {
 // SumExpression exprObj = *this;
 // exprObj.compress();
 
@@ -100,7 +100,7 @@ std::string SumExpression::toString() const {
 // return exprObj.clone();
 // }
 
-// bool SumExpression::sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs) {
+// bool SumExpression::sortFunc(const shared_ptr<IMathObject> &lhs, const shared_ptr<IMathObject> &rhs) {
 //   if (is<IConstant>(lhs)) {
 //     return false;
 //   }
@@ -178,7 +178,7 @@ for (const auto &mulObj : mulVect) {
   if (mulExprPolynom.empty()) {
     added = true;
   }
-  std::unique_ptr<IMathObject> number = ONE.clone();
+  unique_ptr<IMathObject> number = ONE.clone();
   if (is<INumber>(mulExprPolynom.front())) {
     if (mulExprPolynom.front().inverted) {
       number = Neg()(*mulExprPolynom.front());
@@ -262,7 +262,7 @@ sortMulObjects(objs, mulVect, literalVect, powVect);*/
 // }
 
 // TODO: remove this and implement PowExpression
-// std::shared_ptr<IMathObject> SumExpression::getPowCoefficient(const std::shared_ptr<IMathObject> &powValue) const {
+// shared_ptr<IMathObject> SumExpression::getPowCoefficient(const shared_ptr<IMathObject> &powValue) const {
 /*if (*powValue == ZERO) {
   for (const auto &child : children) {
     if (is<INumber>(child.info)) {
@@ -297,7 +297,7 @@ return ZERO.clone();*/
 // }
 
 // TODO: remove this and implement PowExpression
-// std::shared_ptr<IMathObject> SumExpression::getPow() const {
+// shared_ptr<IMathObject> SumExpression::getPow() const {
 /*auto maxValue = ZERO;
 
 for (const auto &child : children) {
@@ -325,7 +325,7 @@ for (const auto &child : children) {
 return maxValue.clone();*/
 // }
 
-// void SumExpression::multiplicate(const std::shared_ptr<IMathObject> &value) {
+// void SumExpression::multiplicate(const shared_ptr<IMathObject> &value) {
 // }
 
 void SumExpression::negate() {
@@ -335,9 +335,9 @@ void SumExpression::negate() {
   }
 }
 
-std::shared_ptr<IMathObject> SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
-  const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
+shared_ptr<IMathObject> SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+  const shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
+  const shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 
   if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
     return rhsChild;
@@ -347,10 +347,10 @@ std::shared_ptr<IMathObject> SumExpression::postSimplify(size_t lhsChildNum, siz
   }
 
   if (const auto lhsNeg = cast<NegExpression>(lhsChild); lhsNeg && *lhsNeg->getChildren().front() == *rhsChild) {
-    return std::make_shared<Integer>(ZERO);
+    return make_shared<Integer>(ZERO);
   }
   if (const auto rhsNeg = cast<NegExpression>(rhsChild); rhsNeg && *rhsNeg->getChildren().front() == *lhsChild) {
-    return std::make_shared<Integer>(ZERO);
+    return make_shared<Integer>(ZERO);
   }
 
   return {};

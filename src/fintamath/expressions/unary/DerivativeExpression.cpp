@@ -16,12 +16,11 @@ namespace fintamath {
 
 const Derivative DER;
 
-DerivativeExpression::DerivativeExpression(const std::shared_ptr<IMathObject> &child)
-    : IUnaryExpressionCRTP(DER, child) {
+DerivativeExpression::DerivativeExpression(const shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(DER, child) {
 }
 
-// std::unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) const {
-// std::unique_ptr<IMathObject> value;
+// unique_ptr<IMathObject> DerivativeExpression::simplify(bool isPrecise) const {
+// unique_ptr<IMathObject> value;
 
 // if (const auto *expr = cast<IExpression>(child)) {
 //   value = expr->simplify(isPrecise);
@@ -31,7 +30,7 @@ DerivativeExpression::DerivativeExpression(const std::shared_ptr<IMathObject> &c
 
 // if (is<IExpression>(value)) {
 //   // TODO: implement derivative of expression
-//   return std::make_unique<DerivativeExpression>(std::move(value));
+//   return make_unique<DerivativeExpression>(move(value));
 // }
 // if (is<INumber>(value) || is<IConstant>(value)) {
 //   return ZERO.clone();
@@ -43,7 +42,7 @@ DerivativeExpression::DerivativeExpression(const std::shared_ptr<IMathObject> &c
 // return clone();
 // }
 
-std::shared_ptr<IMathObject> DerivativeExpression::postSimplify() const {
+shared_ptr<IMathObject> DerivativeExpression::postSimplify() const {
   if (is<IExpression>(child)) {
     // TODO: implement derivative of expression
     return {};

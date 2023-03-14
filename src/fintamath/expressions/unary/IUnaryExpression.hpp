@@ -8,9 +8,9 @@ class IUnaryExpression : virtual public IExpression {
 public:
   // void setPrecision(uint8_t precision) final;
 
-  std::string toString() const final;
+  string toString() const final;
 
-  std::shared_ptr<IFunction> getFunction() const final;
+  shared_ptr<IFunction> getFunction() const final;
 
   ArgumentsPtrVector getChildren() const override;
 
@@ -19,29 +19,29 @@ public:
 protected:
   void validate() const final;
 
-  std::shared_ptr<IMathObject> simplify() final;
+  shared_ptr<IMathObject> simplify() final;
 
-  virtual std::shared_ptr<IMathObject> preSimplify() const;
+  virtual shared_ptr<IMathObject> preSimplify() const;
 
-  virtual std::shared_ptr<IMathObject> postSimplify() const;
+  virtual shared_ptr<IMathObject> postSimplify() const;
 
 private:
-  std::string postfixToString() const;
+  string postfixToString() const;
 
-  std::string prefixToString() const;
+  string prefixToString() const;
 
-  std::string functionToString() const;
+  string functionToString() const;
 
 protected:
-  std::shared_ptr<IFunction> func;
+  shared_ptr<IFunction> func;
 
-  std::shared_ptr<IMathObject> child;
+  shared_ptr<IMathObject> child;
 };
 
 template <typename Derived>
 class IUnaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IUnaryExpression {
 public:
-  explicit IUnaryExpressionCRTP(const IFunction &func, const std::shared_ptr<IMathObject> &child) {
+  explicit IUnaryExpressionCRTP(const IFunction &func, const shared_ptr<IMathObject> &child) {
     this->func = cast<IFunction>(func.clone());
 
     this->child = child;

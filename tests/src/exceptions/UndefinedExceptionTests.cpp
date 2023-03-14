@@ -15,7 +15,7 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  virtual unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
     return {};
   }
 };
@@ -27,6 +27,6 @@ TEST(UndefinedExceptionTests, whatTests) {
     TestFunction().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), "Undefined");
+    EXPECT_EQ(string(e.what()), "Undefined");
   }
 }

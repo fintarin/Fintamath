@@ -13,7 +13,7 @@ constexpr int64_t DEFAULT_PRECISION = 36;
 static Integer gcd(const Integer &lhs, const Integer &rhs);
 static Integer lcm(const Integer &lhs, const Integer &rhs);
 
-Rational::Rational(const std::string &str) {
+Rational::Rational(const string &str) {
   if (str.empty()) {
     throw InvalidInputException(str);
   }
@@ -21,11 +21,11 @@ Rational::Rational(const std::string &str) {
   parse(str);
 }
 
-Rational::Rational(Integer numer, Integer denom) : numerator(std::move(numer)), denominator(std::move(denom)) {
+Rational::Rational(Integer numer, Integer denom) : numerator(move(numer)), denominator(move(denom)) {
   toIrreducibleRational();
 }
 
-Rational::Rational(Integer rhs) : numerator(std::move(rhs)) {
+Rational::Rational(Integer rhs) : numerator(move(rhs)) {
   fixNegative();
 }
 
@@ -45,8 +45,8 @@ Integer Rational::getDenominator() const {
   return denominator;
 }
 
-std::string Rational::toString() const {
-  std::string res = signVal ? "-" : "";
+string Rational::toString() const {
+  string res = signVal ? "-" : "";
   res += numerator.toString();
 
   if (denominator != 1) {
@@ -56,7 +56,7 @@ std::string Rational::toString() const {
   return res;
 }
 
-std::unique_ptr<IMathObject> Rational::toMinimalObject() const {
+unique_ptr<IMathObject> Rational::toMinimalObject() const {
   if (denominator == 1) {
     return signVal ? (-getInteger()).clone() : getInteger().clone();
   }
@@ -133,7 +133,7 @@ Rational &Rational::negate() {
   return *this;
 }
 
-void Rational::parse(const std::string &str) {
+void Rational::parse(const string &str) {
   if (str.empty() || str == ".") {
     throw InvalidInputException(str);
   }
@@ -147,7 +147,7 @@ void Rational::parse(const std::string &str) {
     firstDigitNum++;
   }
 
-  std::string intPartStr = str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum));
+  string intPartStr = str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum));
   Integer intPart;
 
   if (!intPartStr.empty()) {
@@ -156,7 +156,7 @@ void Rational::parse(const std::string &str) {
 
   if (firstDotNum + 1 < int64_t(str.size())) {
     auto numeratorStr = str.substr(size_t(firstDotNum) + 1);
-    std::string denominatorStr(numeratorStr.size() + 1, '0');
+    string denominatorStr(numeratorStr.size() + 1, '0');
     denominatorStr.front() = '1';
     numerator = Integer(numeratorStr);
     denominator = Integer(denominatorStr);

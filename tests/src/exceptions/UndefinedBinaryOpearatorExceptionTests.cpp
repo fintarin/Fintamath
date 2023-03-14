@@ -18,7 +18,7 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  virtual unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
     return {};
   }
 };
@@ -30,6 +30,6 @@ TEST(UndefinedBinaryOpearatorExceptionTests, whatTests) {
     TestOperator().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), "Undefined: (0)^(0)");
+    EXPECT_EQ(string(e.what()), "Undefined: (0)^(0)");
   }
 }

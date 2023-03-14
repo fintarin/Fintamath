@@ -60,7 +60,7 @@ Integer factorial(const Integer &rhs, int64_t order) {
   assert(order > 0);
 
   if (rhs < 0) {
-    throw UndefinedUnaryOpearatorException(std::string(order, '!'), rhs.toString(),
+    throw UndefinedUnaryOpearatorException(string(order, '!'), rhs.toString(),
                                            UndefinedUnaryOpearatorException::Type::Postfix);
   }
 
@@ -76,7 +76,7 @@ Integer factorial(const Integer &rhs, int64_t order) {
   return res;
 }
 
-Integer split(const Integer &n, const std::vector<Integer> &k_values) {
+Integer split(const Integer &n, const vector<Integer> &k_values) {
   Integer checkValue;
   for (auto &k : k_values) {
     checkValue += k;

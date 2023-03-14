@@ -9,11 +9,11 @@ namespace fintamath {
 
 const Inv INV;
 
-InvExpression::InvExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(INV, child) {
+InvExpression::InvExpression(const shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(INV, child) {
 }
 
-// std::unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
-// auto exprObj = std::make_unique<InvExpression>(*this);
+// unique_ptr<IMathObject> InvExpression::simplify(bool isPrecise) const {
+// auto exprObj = make_unique<InvExpression>(*this);
 // exprObj->simplifyValue(isPrecise);
 
 // if (const auto *expr = cast<INumber>(exprObj->child)) {
@@ -31,7 +31,7 @@ InvExpression::InvExpression(const std::shared_ptr<IMathObject> &child) : IUnary
 // return exprObj;
 // }
 
-std::shared_ptr<IMathObject> InvExpression::preSimplify() const {
+shared_ptr<IMathObject> InvExpression::preSimplify() const {
   if (auto expr = cast<InvExpression>(child)) {
     return expr->child;
   }
@@ -39,7 +39,7 @@ std::shared_ptr<IMathObject> InvExpression::preSimplify() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> InvExpression::postSimplify() const {
+shared_ptr<IMathObject> InvExpression::postSimplify() const {
   if (auto expr = cast<IInvertable>(child)) {
     expr->invert();
     auto res = cast<IMathObject>(expr);

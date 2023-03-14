@@ -12,8 +12,8 @@ public:
   Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }
 
-  std::string toString() const override {
-    return std::string(order, '!');
+  string toString() const override {
+    return string(order, '!');
   }
 
   uint64_t getOrder() const {
@@ -26,7 +26,7 @@ public:
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
   int64_t order = 1;

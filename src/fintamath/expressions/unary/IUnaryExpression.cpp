@@ -23,11 +23,11 @@ namespace fintamath {
 //   }
 
 //   if (is<INumber>(child)) {
-//     child = std::make_shared<Real>(convert<Real>(*child).precise(precision));
+//     child = make_shared<Real>(convert<Real>(*child).precise(precision));
 //   }
 // }
 
-std::string IUnaryExpression::toString() const {
+string IUnaryExpression::toString() const {
   if (!func) {
     return {};
   }
@@ -44,8 +44,8 @@ std::string IUnaryExpression::toString() const {
   return functionToString();
 }
 
-std::string IUnaryExpression::postfixToString() const {
-  std::string result = child->toString();
+string IUnaryExpression::postfixToString() const {
+  string result = child->toString();
 
   if (const auto childExpr = cast<IExpression>(child)) {
     if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
@@ -63,8 +63,8 @@ std::string IUnaryExpression::postfixToString() const {
   return result + func->toString();
 }
 
-std::string IUnaryExpression::prefixToString() const {
-  std::string result = func->toString();
+string IUnaryExpression::prefixToString() const {
+  string result = func->toString();
 
   if (const auto childExpr = cast<IExpression>(child)) {
     if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
@@ -81,7 +81,7 @@ std::string IUnaryExpression::prefixToString() const {
   return result + child->toString();
 }
 
-std::string IUnaryExpression::functionToString() const {
+string IUnaryExpression::functionToString() const {
   return func->toString() + "(" + child->toString() + ")";
 }
 
@@ -89,7 +89,7 @@ std::string IUnaryExpression::functionToString() const {
 //   IExpression::simplifyChild(child);
 // }
 
-std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {
+shared_ptr<IFunction> IUnaryExpression::getFunction() const {
   return func;
 }
 
@@ -105,7 +105,7 @@ void IUnaryExpression::validate() const {
   validateChildren(*func, {child});
 }
 
-std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
+shared_ptr<IMathObject> IUnaryExpression::simplify() {
   if (auto res = preSimplify()) {
     simplifyChild(res);
     return res;
@@ -128,11 +128,11 @@ std::shared_ptr<IMathObject> IUnaryExpression::simplify() {
   return {};
 }
 
-std::shared_ptr<IMathObject> IUnaryExpression::preSimplify() const {
+shared_ptr<IMathObject> IUnaryExpression::preSimplify() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> IUnaryExpression::postSimplify() const {
+shared_ptr<IMathObject> IUnaryExpression::postSimplify() const {
   return {};
 }
 

@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include "fintamath/core/CoreDefines.hpp"
+
 namespace fintamath {
 
 class Exception : public std::exception {

@@ -34,20 +34,20 @@ namespace fintamath {
 const Mul MUL;
 
 // struct MulExpression::ObjectPow {
-//   std::shared_ptr<IMathObject> obj;
+//   shared_ptr<IMathObject> obj;
 //   SumExpression pow = SumExpression({});
 
-//   ObjectPow(std::shared_ptr<IMathObject> obj) : obj(std::move(obj)) {
+//   ObjectPow(shared_ptr<IMathObject> obj) : obj(move(obj)) {
 //   }
 
-//   std::shared_ptr<IMathObject> getPowIfInteger() const {
+//   shared_ptr<IMathObject> getPowIfInteger() const {
 //     ArgumentsPtrVector polynom = pow.getPolynom();
 
 //     if (polynom.size() != 1) {
 //       return {};
 //     }
 
-//     std::shared_ptr<IMathObject> powValue = polynom.front()->toMinimalObject();
+//     shared_ptr<IMathObject> powValue = polynom.front()->toMinimalObject();
 
 //     if (is<Integer>(powValue)) {
 //       return powValue;
@@ -56,7 +56,7 @@ const Mul MUL;
 //     return {};
 //   }
 
-//   std::shared_ptr<IMathObject> getPowIfSingle() const {
+//   shared_ptr<IMathObject> getPowIfSingle() const {
 //     ArgumentsPtrVector polynom = pow.getPolynom();
 //     if (polynom.size() != 1) {
 //       return {};
@@ -65,7 +65,7 @@ const Mul MUL;
 //   }
 
 //   void simplifyPow() {
-//     std::shared_ptr<IMathObject> powSimpl = pow.toMinimalObject();
+//     shared_ptr<IMathObject> powSimpl = pow.toMinimalObject();
 //     pow = SumExpression({});
 //     pow.addElement(powSimpl);
 //   }
@@ -77,15 +77,15 @@ MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpre
 }
 
 // TODO: remove and use operator priority instead
-std::string MulExpression::sumExprToString(const std::shared_ptr<IMathObject> &obj) {
+string MulExpression::sumExprToString(const shared_ptr<IMathObject> &obj) {
   if (is<SumExpression>(obj)) {
     return "(" + obj->toString() + ")";
   }
   return obj->toString();
 }
 
-std::string MulExpression::toString() const {
-  std::string result;
+string MulExpression::toString() const {
+  string result;
 
   if (const auto invExpr = cast<InvExpression>(children.front())) {
     result += "1/";
@@ -109,7 +109,7 @@ std::string MulExpression::toString() const {
   return result;
 }
 
-// std::unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
+// unique_ptr<IMathObject> MulExpression::simplify(bool isPrecise) const {
 // auto exprObj = *this;
 // exprObj.compress();
 
@@ -134,7 +134,7 @@ std::string MulExpression::toString() const {
 // return exprObj.clone();
 // }
 
-// std::shared_ptr<IMathObject> MulExpression::simplify() {
+// shared_ptr<IMathObject> MulExpression::simplify() {
 //   compress();
 
 //   if (children.size() == 1) {
@@ -171,7 +171,7 @@ std::string MulExpression::toString() const {
 // }
 
 // void MulExpression::simplifyPolynom() {
-// std::shared_ptr<IMathObject> number = mulNumbers(children);
+// shared_ptr<IMathObject> number = mulNumbers(children);
 
 // if (*number == ZERO) {
 //   children.clear();
@@ -181,7 +181,7 @@ std::string MulExpression::toString() const {
 
 // ArgumentsPtrVector functions;
 // ArgumentsPtrVector variables;
-// std::map<IOperator::Priority, ArgumentsPtrVector> priorityMap;
+// map<IOperator::Priority, ArgumentsPtrVector> priorityMap;
 
 // sortVector(children, priorityMap, functions, variables);
 // simplifyPowCoefficients(priorityMap, functions, variables);
@@ -215,24 +215,24 @@ std::string MulExpression::toString() const {
 //     }
 //     newChildren.emplace_back(child);
 //   }
-//   children = std::move(newChildren);
+//   children = move(newChildren);
 // }
 
-// void MulExpression::addValueToMaps(std::shared_ptr<IMathObject> &lhs, std::shared_ptr<IMathObject> &rhs,
-//                                    std::map<std::string, std::shared_ptr<IMathObject>> &valuesMap,
-//                                    std::map<std::string, ArgumentsPtrVector> &powMap) {
+// void MulExpression::addValueToMaps(shared_ptr<IMathObject> &lhs, shared_ptr<IMathObject> &rhs,
+//                                    map<string, shared_ptr<IMathObject>> &valuesMap,
+//                                    map<string, ArgumentsPtrVector> &powMap) {
 //   powMap[lhs->toString()].emplace_back(rhs);
 //   if (valuesMap.find(lhs->toString()) == valuesMap.end()) {
 //     valuesMap[lhs->toString()] = lhs;
 //   }
 // }
 
-// ArgumentsPtrVector MulExpression::coefficientProcessing(std::map<std::string, std::shared_ptr<IMathObject>>
+// ArgumentsPtrVector MulExpression::coefficientProcessing(map<string, shared_ptr<IMathObject>>
 // &valuesMap,
-//                                                         std::map<std::string, ArgumentsPtrVector> &powMap) {
+//                                                         map<string, ArgumentsPtrVector> &powMap) {
 //   ArgumentsPtrVector result;
 //   for (auto &[key, value] : valuesMap) {
-//     std::shared_ptr<IMathObject> powRhs = std::make_shared<SumExpression>(powMap[key]);
+//     shared_ptr<IMathObject> powRhs = make_shared<SumExpression>(powMap[key]);
 //     simplifyChild(powRhs);
 
 //     if (const auto number = cast<INumber>(powRhs)) {
@@ -242,7 +242,7 @@ std::string MulExpression::toString() const {
 //       }
 
 //       if (*number == NEG_ONE) {
-//         std::shared_ptr<IMathObject> invExpr = std::make_shared<InvExpression>(value);
+//         shared_ptr<IMathObject> invExpr = make_shared<InvExpression>(value);
 //         simplifyChild(invExpr);
 //         result.emplace_back(invExpr);
 //         continue;
@@ -253,47 +253,47 @@ std::string MulExpression::toString() const {
 //       }
 //     }
 
-//     std::shared_ptr<IMathObject> powExpr = std::make_shared<PowExpression>(value, powRhs);
+//     shared_ptr<IMathObject> powExpr = make_shared<PowExpression>(value, powRhs);
 //     simplifyChild(powExpr);
 //     result.emplace_back(powExpr);
 //   }
 //   return result;
 // }
 
-// void MulExpression::simplifyPowCoefficients(std::map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
+// void MulExpression::simplifyPowCoefficients(map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
 //                                             ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector) {
-//   std::map<std::string, std::shared_ptr<IMathObject>> valuesMap;
-//   std::map<std::string, ArgumentsPtrVector> powMap;
+//   map<string, shared_ptr<IMathObject>> valuesMap;
+//   map<string, ArgumentsPtrVector> powMap;
 
 //   for (auto &var : variableVector) {
-//     std::shared_ptr<IMathObject> oneCopy = ONE.clone();
+//     shared_ptr<IMathObject> oneCopy = ONE.clone();
 //     addValueToMaps(var, oneCopy, valuesMap, powMap);
 //   }
 
 //   for (auto &func : functionVector) {
 //     if (const auto invFunc = cast<InvExpression>(func)) {
-//       std::shared_ptr<IMathObject> child = invFunc->getChildren().front();
-//       std::shared_ptr<IMathObject> negOneCopy = NEG_ONE.clone();
+//       shared_ptr<IMathObject> child = invFunc->getChildren().front();
+//       shared_ptr<IMathObject> negOneCopy = NEG_ONE.clone();
 //       addValueToMaps(child, negOneCopy, valuesMap, powMap);
 //       continue;
 //     }
 
-//     std::shared_ptr<IMathObject> oneCopy = ONE.clone();
+//     shared_ptr<IMathObject> oneCopy = ONE.clone();
 //     addValueToMaps(func, oneCopy, valuesMap, powMap);
 //   }
 
 //   for (auto &[key, value] : priorityMap) {
 //     if (key != IOperator::Priority::Exponentiation) {
 //       for (auto &v : value) {
-//         std::shared_ptr<IMathObject> oneCopy = ONE.clone();
+//         shared_ptr<IMathObject> oneCopy = ONE.clone();
 //         addValueToMaps(v, oneCopy, valuesMap, powMap);
 //       }
 //       continue;
 //     }
 //     for (auto &v : value) {
 //       if (auto powExpr = cast<PowExpression>(v)) {
-//         std::shared_ptr<IMathObject> lhs = powExpr->getValue();
-//         std::shared_ptr<IMathObject> rhs = powExpr->getPow();
+//         shared_ptr<IMathObject> lhs = powExpr->getValue();
+//         shared_ptr<IMathObject> rhs = powExpr->getPow();
 //         addValueToMaps(lhs, rhs, valuesMap, powMap);
 //       }
 //     }
@@ -314,7 +314,7 @@ std::string MulExpression::toString() const {
 //     for (const auto &rhsElem : rhs) {
 //       auto polynom = cast<MulExpression>(lhsElem)->getPolynom();
 //       polynom.emplace_back(rhsElem);
-//       result.emplace_back(std::make_shared<MulExpression>(polynom));
+//       result.emplace_back(make_shared<MulExpression>(polynom));
 //     }
 //   }
 
@@ -325,17 +325,17 @@ std::string MulExpression::toString() const {
 //                                        ArgumentsPtrVector &negative) {
 //   ArgumentsPtrVector result;
 //   ArgumentsPtrVector inverted;
-//   result.emplace_back(std::make_shared<MulExpression>(ArgumentsPtrVector{ONE.clone()}));
-//   inverted.emplace_back(std::make_shared<MulExpression>(ArgumentsPtrVector{ONE.clone()}));
+//   result.emplace_back(make_shared<MulExpression>(ArgumentsPtrVector{ONE.clone()}));
+//   inverted.emplace_back(make_shared<MulExpression>(ArgumentsPtrVector{ONE.clone()}));
 
 //   for (const auto &addExpr : addVect) {
 //   }
 
-//   positive = std::move(result);
-//   negative = std::move(inverted);
+//   positive = move(result);
+//   negative = move(inverted);
 // }
 
-// bool MulExpression::sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs) {
+// bool MulExpression::sortFunc(const shared_ptr<IMathObject> &lhs, const shared_ptr<IMathObject> &rhs) {
 //   return lhs->toString() < rhs->toString();
 // }
 
@@ -507,7 +507,7 @@ sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
 
   numVect = mulNumbers(numVect);
   if (numVect.size() == 1 && *numVect.front() == ZERO) {
-    children = std::move(numVect);
+    children = move(numVect);
     return;
   }
 
@@ -530,7 +530,7 @@ sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
     bool positiveAdded = false;
     bool negativeAdded = false;
     if (!positive.empty()) {
-      auto addExpr = SumExpression(std::move(negative)).toMinimalObject();
+      auto addExpr = SumExpression(move(negative)).toMinimalObject();
       if (!is<INumber>(addExpr)) {
         children.emplace_back(addExpr->clone());
         positiveAdded = true;
@@ -539,7 +539,7 @@ sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
       }
     }
     if (!negative.empty()) {
-      auto addExpr = SumExpression(std::move(negative)).toMinimalObject();
+      auto addExpr = SumExpression(move(negative)).toMinimalObject();
       if (!is<INumber>(addExpr)) {
         children.emplace_back(InvExpression(addExpr->clone()).toMinimalObject());
         negativeAdded = true;
@@ -553,7 +553,7 @@ sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
     numVect = mulNumbers(numVect);
     if (numVect.front()->toString() != "1" || children.empty()) {
       pushPolynomToPolynom(children, numVect);
-      children = std::move(numVect);
+      children = move(numVect);
       return;
     }
     return;
@@ -570,7 +570,7 @@ sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
   pushPolynomToPolynom(literalVect, children);
   if (numVect.front()->toString() != "1" || children.empty()) {
     pushPolynomToPolynom(children, numVect);
-    children = std::move(numVect);
+    children = move(numVect);
   }
 }*/
 
@@ -599,15 +599,15 @@ sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
 //   }
 // }
 
-// void MulExpression::setPow(const std::shared_ptr<IMathObject> &value) {
+// void MulExpression::setPow(const shared_ptr<IMathObject> &value) {
 //   for (auto &child : children) {
-//     child = std::make_shared<PowExpression>(child, value);
+//     child = make_shared<PowExpression>(child, value);
 //     simplifyChild(child);
 //   }
 // }
 
 // TODO: remove this and implement PowExpression
-// std::shared_ptr<IMathObject> MulExpression::getPowCoefficient(const std::shared_ptr<IMathObject> &powValue) const {
+// shared_ptr<IMathObject> MulExpression::getPowCoefficient(const shared_ptr<IMathObject> &powValue) const {
 /*for (const auto &child : children) {
   if (*powValue == ONE) {
     if (is<Variable>(child)) {
@@ -626,7 +626,7 @@ sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
 // }
 
 // TODO: remove this and implement PowExpression
-// std::shared_ptr<IMathObject> MulExpression::getPow() const {
+// shared_ptr<IMathObject> MulExpression::getPow() const {
 //   Integer maxValue = ZERO;
 
 // TODO: refactor this
@@ -642,7 +642,7 @@ sortPowObjects(objects, powVect, addVect, literalVect, funcVect);*/
 // }
 
 void MulExpression::negate() {
-  addElement(std::make_shared<Integer>(NEG_ONE));
+  addElement(make_shared<Integer>(NEG_ONE));
   IPolynomExpression::simplify();
 }
 
@@ -653,9 +653,9 @@ void MulExpression::invert() {
   }
 }
 
-std::shared_ptr<IMathObject> MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
-  const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
+shared_ptr<IMathObject> MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+  const shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
+  const shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 
   if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
     return lhsChild;
@@ -672,10 +672,10 @@ std::shared_ptr<IMathObject> MulExpression::postSimplify(size_t lhsChildNum, siz
   }
 
   if (const auto lhsInv = cast<InvExpression>(lhsChild); lhsInv && *lhsInv->getChildren().front() == *rhsChild) {
-    return std::make_shared<Integer>(ONE);
+    return make_shared<Integer>(ONE);
   }
   if (const auto rhsInv = cast<InvExpression>(rhsChild); rhsInv && *rhsInv->getChildren().front() == *lhsChild) {
-    return std::make_shared<Integer>(ONE);
+    return make_shared<Integer>(ONE);
   }
 
   return {};

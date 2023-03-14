@@ -21,23 +21,23 @@
 
 namespace fintamath {
 
-CompExpression::CompExpression(const IOperator &oper, const std::shared_ptr<IMathObject> &lhsChild,
-                               const std::shared_ptr<IMathObject> &rhsChild)
+CompExpression::CompExpression(const IOperator &oper, const shared_ptr<IMathObject> &lhsChild,
+                               const shared_ptr<IMathObject> &rhsChild)
     : IBinaryExpressionCRTP(oper, lhsChild, rhsChild) {
 }
 
-// std::unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
+// unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {
 /*SumExpression addExpr(*leftExpr->clone());
 addExpr.addElement(NegExpression(*rightExpr).toMinimalObject());
 
-std::unique_ptr<IMathObject> simplExpr = addExpr.simplify(isPrecise);
+unique_ptr<IMathObject> simplExpr = addExpr.simplify(isPrecise);
 
 if (is<IComparable>(simplExpr)) {
   return (*oper)(*simplExpr, ZERO);
 }
 
-auto res = std::make_unique<CompExpression>(*this);
-res->leftExpr = std::move(simplExpr);
+auto res = make_unique<CompExpression>(*this);
+res->leftExpr = move(simplExpr);
 res->rightExpr = ZERO.clone();
 return res;*/
 // }
@@ -59,7 +59,7 @@ return res;*/
   }
 }*/
 
-// std::string CompExpression::solve() const {
+// string CompExpression::solve() const {
 /*Variable x("x");
 auto expr = simplify(false);
 if (!is<CompExpression>(expr)) {
@@ -78,7 +78,7 @@ if (results.empty()) {
   return toString();
 }
 results = sortResult(results);
-std::string resultStr = x.toString() + " in {";
+string resultStr = x.toString() + " in {";
 for (const auto &res : results) {
   resultStr += res->toString();
   resultStr += ",";
@@ -88,7 +88,7 @@ resultStr += "}";
 return resultStr;*/
 // }
 
-// std::string CompExpression::solve(uint8_t precision) const {
+// string CompExpression::solve(uint8_t precision) const {
 /*Variable x("x");
 auto expr = simplify(false);
 if (!is<CompExpression>(expr)) {
@@ -111,7 +111,7 @@ if (results.empty()) {
   return e.toString();
 }
 results = sortResult(results);
-std::string resultStr = x.toString() + " in {";
+string resultStr = x.toString() + " in {";
 for (const auto &res : results) {
   resultStr += Expression(*res).toString(precision);
   resultStr += ",";
@@ -121,13 +121,13 @@ resultStr += "}";
 return resultStr;*/
 // }
 
-/*std::vector<std::unique_ptr<IMathObject>> CompExpression::solvePowEquation(const Variable &x) const {
+/*vector<unique_ptr<IMathObject>> CompExpression::solvePowEquation(const Variable &x) const {
   auto results = solveQuadraticEquation(x.clone());
   return results;
 }*/
 /*
 // TODO: v is unused here
-std::vector<std::unique_ptr<IMathObject>> CompExpression::solveQuadraticEquation(const std::unique_ptr<IMathObject> &v)
+vector<unique_ptr<IMathObject>> CompExpression::solveQuadraticEquation(const unique_ptr<IMathObject> &v)
 const { auto copyExpr = *this; SumExpression polynom; polynom.addElement({leftExpr->clone()});
 
   auto maxPowObj = polynom.getPow();
@@ -140,12 +140,12 @@ const { auto copyExpr = *this; SumExpression polynom; polynom.addElement({leftEx
     return {};
   }
 
-  std::vector<std::unique_ptr<IMathObject>> coefficients;
+  vector<unique_ptr<IMathObject>> coefficients;
   for (int i = 0; i <= *maxPow; i++) {
     coefficients.emplace_back(polynom.getPowCoefficient(Integer(i).clone()));
   }
 
-  std::vector<std::unique_ptr<IMathObject>> results;
+  vector<unique_ptr<IMathObject>> results;
   if (coefficients.size() == 2) {
     results.emplace_back(Neg()(*div(*coefficients.at(0), *coefficients.at(1)).simplify(false)));
     return results;
@@ -165,8 +165,8 @@ const { auto copyExpr = *this; SumExpression polynom; polynom.addElement({leftEx
     auto x1 = div(sub(*minus_B, sqrt_D), two_A).simplify(false);
     auto x2 = div(sum(*minus_B, sqrt_D), two_A).simplify(false);
 
-    results.emplace_back(std::move(x1));
-    results.emplace_back(std::move(x2));
+    results.emplace_back(move(x1));
+    results.emplace_back(move(x2));
 
     return results;
   }
@@ -193,7 +193,7 @@ bool CompExpression::detectOneVariable(Variable &v) const {
   }
 }
 
-bool CompExpression::sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs) {
+bool CompExpression::sortFunc(const unique_ptr<IMathObject> &lhs, const unique_ptr<IMathObject> &rhs) {
   if (const auto *lhsComp = cast<IComparable>(lhs)) {
     if (const auto *rhsComp = cast<IComparable>(rhs)) {
       return *lhsComp < *rhsComp;
@@ -203,24 +203,24 @@ bool CompExpression::sortFunc(const std::unique_ptr<IMathObject> &lhs, const std
   return false;
 }
 
-std::vector<std::unique_ptr<IMathObject>> CompExpression::sortResult(std::vector<std::unique_ptr<IMathObject>> &result)
-{ std::sort(result.begin(), result.end(), sortFunc); std::vector<std::unique_ptr<IMathObject>> resultWithoutRepeat; for
-(auto &val : result) { if (resultWithoutRepeat.empty()) { resultWithoutRepeat.emplace_back(std::move(val)); continue;
+vector<unique_ptr<IMathObject>> CompExpression::sortResult(vector<unique_ptr<IMathObject>> &result)
+{ std::sort(result.begin(), result.end(), sortFunc); vector<unique_ptr<IMathObject>> resultWithoutRepeat; for
+(auto &val : result) { if (resultWithoutRepeat.empty()) { resultWithoutRepeat.emplace_back(move(val)); continue;
     }
     if (*val == *resultWithoutRepeat.at(resultWithoutRepeat.size() - 1)) {
       continue;
     }
-    resultWithoutRepeat.emplace_back(std::move(val));
+    resultWithoutRepeat.emplace_back(move(val));
   }
   return resultWithoutRepeat;
 }
 */
 
-std::shared_ptr<IMathObject> CompExpression::solve() const {
+shared_ptr<IMathObject> CompExpression::solve() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> CompExpression::postSimplify() const {
+shared_ptr<IMathObject> CompExpression::postSimplify() const {
   return {};
 }
 

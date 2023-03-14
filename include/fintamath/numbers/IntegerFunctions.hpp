@@ -16,6 +16,6 @@ Integer factorial(const Integer &rhs, int64_t order);
 
 Integer combinations(const Integer &n, const Integer &k);
 
-Integer split(const Integer &n, const std::vector<Integer> &k_values);
+Integer split(const Integer &n, const vector<Integer> &k_values);
 
 }

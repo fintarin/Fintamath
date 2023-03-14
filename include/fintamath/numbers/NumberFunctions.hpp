@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-inline std::unique_ptr<INumber> abs(const INumber &rhs) {
+inline unique_ptr<INumber> abs(const INumber &rhs) {
   if (rhs < ZERO) {
     return -rhs;
   }
@@ -16,13 +16,13 @@ inline std::unique_ptr<INumber> abs(const INumber &rhs) {
   return cast<INumber>(rhs.clone());
 }
 
-inline std::unique_ptr<INumber> inv(const INumber &rhs) {
+inline unique_ptr<INumber> inv(const INumber &rhs) {
   return ONE / rhs;
 }
 
 template <typename Lhs, typename Rhs,
           typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs>>>
-std::unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
+unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
   auto lhsSimpl = cast<INumber>(lhs.toMinimalObject());
   auto rhsSimpl = cast<INumber>(rhs.toMinimalObject());
 
@@ -36,7 +36,7 @@ std::unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
 }
 
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
-std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
+unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
   if (lhs == ZERO && rhs == ZERO) {
     throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
   }
@@ -45,8 +45,8 @@ std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
     return pow(*(ONE / cast<INumber>(lhs)), -rhs);
   }
 
-  std::unique_ptr<INumber> res = std::make_unique<Integer>(ONE);
-  std::unique_ptr<INumber> sqr = cast<INumber>(lhs.clone());
+  unique_ptr<INumber> res = make_unique<Integer>(ONE);
+  unique_ptr<INumber> sqr = cast<INumber>(lhs.clone());
 
   while (rhs != ZERO) {
     if ((*(rhs.toString().end() - 1) - '0') % 2 == 0) {

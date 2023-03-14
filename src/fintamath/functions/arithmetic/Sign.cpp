@@ -5,8 +5,8 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Sign::call(const ArgumentsRefVector &argsVect) const {
-  return std::make_unique<Integer>(convert<Real>(argsVect.front().get()).sign());
+unique_ptr<IMathObject> Sign::call(const ArgumentsRefVector &argsVect) const {
+  return make_unique<Integer>(convert<Real>(argsVect.front().get()).sign());
 }
 
 }

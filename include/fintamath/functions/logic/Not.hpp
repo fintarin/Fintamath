@@ -10,12 +10,12 @@ public:
   Not() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
   }
 
-  std::string toString() const override {
+  string toString() const override {
     return "~";
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

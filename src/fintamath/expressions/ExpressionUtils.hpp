@@ -12,12 +12,12 @@ bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
 
 TokenVector cutBraces(const TokenVector &tokens);
 
-std::map<size_t, std::shared_ptr<IMathObject>> findBinaryOperators(const TokenVector &tokens);
+map<size_t, shared_ptr<IMathObject>> findBinaryOperators(const TokenVector &tokens);
 
-std::string putInBrackets(const std::string &str);
+string putInBrackets(const string &str);
 
-std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
+string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
 
-std::string postfixUnaryOperatorToString(const IOperator &oper, const std::shared_ptr<IMathObject> &lhs);
+string postfixUnaryOperatorToString(const IOperator &oper, const shared_ptr<IMathObject> &lhs);
 
 }

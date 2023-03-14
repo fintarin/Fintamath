@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "fintamath/core/CoreDefines.hpp"
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/parser/Parser.hpp"
 
@@ -16,13 +17,13 @@ class IMathObject {
 public:
   virtual ~IMathObject() = default;
 
-  virtual std::unique_ptr<IMathObject> clone() const = 0;
+  virtual unique_ptr<IMathObject> clone() const = 0;
 
-  virtual std::string toString() const {
+  virtual string toString() const {
     return {};
   }
 
-  virtual std::unique_ptr<IMathObject> toMinimalObject() const {
+  virtual unique_ptr<IMathObject> toMinimalObject() const {
     return clone();
   }
 
@@ -35,11 +36,11 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IMathObject, T>>>
-  static void registerType(Parser::Function<std::unique_ptr<IMathObject>, const std::string &> &&parserFunc) {
+  static void registerType(Parser::Function<unique_ptr<IMathObject>, const string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
-  static std::unique_ptr<IMathObject> parse(const std::string &str) {
+  static unique_ptr<IMathObject> parse(const string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -47,14 +48,14 @@ protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> parserVector;
+  static Parser::Vector<unique_ptr<IMathObject>, const string &> parserVector;
 };
 
 template <typename Derived>
 class IMathObjectCRTP : virtual public IMathObject {
 public:
-  std::unique_ptr<IMathObject> clone() const final {
-    return std::make_unique<Derived>(cast<Derived>(*this));
+  unique_ptr<IMathObject> clone() const final {
+    return make_unique<Derived>(cast<Derived>(*this));
   }
 
   bool operator==(const Derived &rhs) const {
@@ -74,10 +75,10 @@ protected:
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }
-    if (std::unique_ptr<IMathObject> rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
+    if (unique_ptr<IMathObject> rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
       return equals(cast<Derived>(*rhsPtr));
     }
-    if (std::unique_ptr<IMathObject> lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
+    if (unique_ptr<IMathObject> lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
       return *lhsPtr == rhs;
     }
     return false;

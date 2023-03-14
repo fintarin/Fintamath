@@ -14,12 +14,12 @@ const Or OR;
 OrExpression::OrExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(OR, children) {
 }
 
-std::string OrExpression::toString() const {
+string OrExpression::toString() const {
   return binaryOperatorToString(OR, children);
 }
 
-// std::unique_ptr<IMathObject> OrExpression::simplify(bool /*isPrecise*/) const {
-// std::unique_ptr<IMathObject> result = children.front()->clone();
+// unique_ptr<IMathObject> OrExpression::simplify(bool /*isPrecise*/) const {
+// unique_ptr<IMathObject> result = children.front()->clone();
 // for (size_t i = 1; i < children.size(); i++) {
 //   const auto &lhsPtr = result;
 //   const auto &rhsPtr = children[i];
@@ -28,7 +28,7 @@ std::string OrExpression::toString() const {
 
 //   if (const auto *lhsBool = cast<Boolean>(&lhs)) {
 //     if (*lhsBool == true) {
-//       result = std::make_unique<Boolean>(true);
+//       result = make_unique<Boolean>(true);
 //     } else {
 //       *result = *rhsPtr;
 //     }
@@ -37,7 +37,7 @@ std::string OrExpression::toString() const {
 
 //   if (const auto *rhsBool = cast<Boolean>(&rhs)) {
 //     if (*rhsBool == true) {
-//       result = std::make_unique<Boolean>(true);
+//       result = make_unique<Boolean>(true);
 //     } else {
 //       *result = *lhsPtr;
 //     }
@@ -45,7 +45,7 @@ std::string OrExpression::toString() const {
 //   }
 
 //   if (lhs == notL(rhs)) {
-//     result = std::make_unique<Boolean>(true);
+//     result = make_unique<Boolean>(true);
 //   }
 // }
 
@@ -59,12 +59,12 @@ void OrExpression::logicNegate() {
     negChildren.emplace_back(Expression::makeRawFunctionExpression(Not(), {child}));
   }
 
-  children = {std::make_shared<AndExpression>(negChildren)};
+  children = {make_shared<AndExpression>(negChildren)};
 }
 
-std::shared_ptr<IMathObject> OrExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  const std::shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
-  const std::shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
+shared_ptr<IMathObject> OrExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+  const shared_ptr<IMathObject> &lhsChild = children[lhsChildNum];
+  const shared_ptr<IMathObject> &rhsChild = children[rhsChildNum];
 
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {
     return *lhsBool ? lhsChild : rhsChild;
@@ -78,10 +78,10 @@ std::shared_ptr<IMathObject> OrExpression::postSimplify(size_t lhsChildNum, size
   }
 
   if (const auto lhsNot = cast<NotExpression>(lhsChild); lhsNot && *lhsNot->getChildren().front() == *rhsChild) {
-    return std::make_shared<Boolean>(true);
+    return make_shared<Boolean>(true);
   }
   if (const auto rhsNot = cast<NotExpression>(rhsChild); rhsNot && *rhsNot->getChildren().front() == *lhsChild) {
-    return std::make_shared<Boolean>(true);
+    return make_shared<Boolean>(true);
   }
 
   return {};

@@ -10,11 +10,11 @@ namespace fintamath {
 
 const Not NOT;
 
-NotExpression::NotExpression(const std::shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NOT, child) {
+NotExpression::NotExpression(const shared_ptr<IMathObject> &child) : IUnaryExpressionCRTP(NOT, child) {
 }
 
-// std::unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
-// auto exprObj = std::make_unique<NotExpression>(*this);
+// unique_ptr<IMathObject> NotExpression::simplify(bool isPrecise) const {
+// auto exprObj = make_unique<NotExpression>(*this);
 // exprObj->simplifyValue(isPrecise);
 
 // if (const auto *expr = cast<NotExpression>(exprObj->child)) {
@@ -24,7 +24,7 @@ NotExpression::NotExpression(const std::shared_ptr<IMathObject> &child) : IUnary
 // return exprObj;
 // }
 
-std::shared_ptr<IMathObject> NotExpression::preSimplify() const {
+shared_ptr<IMathObject> NotExpression::preSimplify() const {
   if (const auto expr = cast<NotExpression>(child)) {
     return expr->child;
   }
@@ -32,7 +32,7 @@ std::shared_ptr<IMathObject> NotExpression::preSimplify() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> NotExpression::postSimplify() const {
+shared_ptr<IMathObject> NotExpression::postSimplify() const {
   if (const auto expr = cast<ILogicNegatable>(child)) {
     expr->logicNegate();
     auto res = cast<IMathObject>(expr);

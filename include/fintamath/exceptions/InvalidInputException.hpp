@@ -13,7 +13,7 @@ public:
 
   ~InvalidInputException() override = default;
 
-  InvalidInputException(const std::string &input) {
+  InvalidInputException(const string &input) {
     content += ": " + input;
   }
 
@@ -22,7 +22,7 @@ public:
   }
 
 protected:
-  std::string content = "Invalid input";
+  string content = "Invalid input";
 };
 
 }

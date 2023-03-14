@@ -10,7 +10,7 @@ class InvalidInputBinaryOpearatorException : public InvalidInputException {
 public:
   ~InvalidInputBinaryOpearatorException() override = default;
 
-  InvalidInputBinaryOpearatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
+  InvalidInputBinaryOpearatorException(const string &oper, const string &lhs, const string &rhs) {
     content += ": (" + lhs + ")" + oper + "(" + rhs + ")";
   }
 };

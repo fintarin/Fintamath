@@ -8,10 +8,10 @@ namespace fintamath {
 
 class DerivativeExpression : public IUnaryExpressionCRTP<DerivativeExpression> {
 public:
-  explicit DerivativeExpression(const std::shared_ptr<IMathObject> &child);
+  explicit DerivativeExpression(const shared_ptr<IMathObject> &child);
 
 protected:
-  std::shared_ptr<IMathObject> postSimplify() const override;
+  shared_ptr<IMathObject> postSimplify() const override;
 };
 
 }

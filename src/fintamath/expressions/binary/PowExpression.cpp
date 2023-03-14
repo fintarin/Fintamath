@@ -16,12 +16,12 @@ namespace fintamath {
 
 const Pow POW;
 
-PowExpression::PowExpression(const std::shared_ptr<IMathObject> &lhsChild, const std::shared_ptr<IMathObject> &rhsChild)
+PowExpression::PowExpression(const shared_ptr<IMathObject> &lhsChild, const shared_ptr<IMathObject> &rhsChild)
     : IBinaryExpressionCRTP(POW, lhsChild, rhsChild) {
 }
 
-// std::unique_ptr<IMathObject> PowExpression::simplify(bool isPrecise) const {
-// auto exprObj = std::make_unique<PowExpression>(*this);
+// unique_ptr<IMathObject> PowExpression::simplify(bool isPrecise) const {
+// auto exprObj = make_unique<PowExpression>(*this);
 
 // auto *lhsPtr = cast<IExpression>(exprObj->lhsChild);
 // auto *rhsPtr = cast<Integer>(exprObj->rhsChild);
@@ -44,8 +44,8 @@ PowExpression::PowExpression(const std::shared_ptr<IMathObject> &lhsChild, const
 // return exprObj;
 // }
 
-// std::shared_ptr<IMathObject> PowExpression::mulSimplify() {
-//   std::shared_ptr<IMathObject> simplExpr = IBinaryExpression::simplify();
+// shared_ptr<IMathObject> PowExpression::mulSimplify() {
+//   shared_ptr<IMathObject> simplExpr = IBinaryExpression::simplify();
 
 //   if (!is<PowExpression>(simplExpr)) {
 //     return simplExpr;
@@ -55,16 +55,16 @@ PowExpression::PowExpression(const std::shared_ptr<IMathObject> &lhsChild, const
 
 //   if (auto mulExpr = cast<MulExpression>(powExpr->lhsChild)) {
 //     mulExpr->setPow(powExpr->rhsChild);
-//     std::shared_ptr<IMathObject> mulExprResult =
-//     std::make_shared<MulExpression>(ArgumentsPtrVector{powExpr->lhsChild}); simplifyChild(mulExprResult); return
+//     shared_ptr<IMathObject> mulExprResult =
+//     make_shared<MulExpression>(ArgumentsPtrVector{powExpr->lhsChild}); simplifyChild(mulExprResult); return
 //     mulExprResult;
 //   }
 
 //   return powExpr;
 // }
 
-// std::shared_ptr<IMathObject> PowExpression::sumSimplify() {
-//   std::shared_ptr<IMathObject> simplExpr = IBinaryExpression::simplify();
+// shared_ptr<IMathObject> PowExpression::sumSimplify() {
+//   shared_ptr<IMathObject> simplExpr = IBinaryExpression::simplify();
 //   if (!is<PowExpression>(simplExpr)) {
 //     return simplExpr;
 //   }
@@ -94,8 +94,8 @@ PowExpression::PowExpression(const std::shared_ptr<IMathObject> &lhsChild, const
 //   return n;
 // }
 
-// std::vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &variableCount) {
-//   std::vector<Integer> result;
+// vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &variableCount) {
+//   vector<Integer> result;
 //   Integer counter = 0;
 //   while (result.size() < variableCount) {
 //     if (bitNumber % 2 == 1) {
@@ -110,7 +110,7 @@ PowExpression::PowExpression(const std::shared_ptr<IMathObject> &lhsChild, const
 //   return result;
 // }
 
-// std::shared_ptr<IMathObject> PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Integer pow) {
+// shared_ptr<IMathObject> PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Integer pow) {
 //   ArgumentsPtrVector polynom = sumExpr.getPolynom();
 //   ArgumentsPtrVector newPolynom;
 //   Integer variableCount = int64_t(polynom.size());
@@ -123,40 +123,40 @@ PowExpression::PowExpression(const std::shared_ptr<IMathObject> &lhsChild, const
 
 //   Integer bitNumber = generateFirstNum(pow);
 //   for (int i = 0; i < combinations(pow + variableCount - 1, pow); i++) {
-//     std::vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
+//     vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
 //     bitNumber = generateNextNumber(bitNumber);
 
 //     ArgumentsPtrVector mulExprPolynom;
-//     mulExprPolynom.emplace_back(std::make_shared<Integer>(split(pow, vectOfPows)));
+//     mulExprPolynom.emplace_back(make_shared<Integer>(split(pow, vectOfPows)));
 //     for (size_t j = 0; j < variableCount; j++) {
-//       auto powExpr = std::make_shared<PowExpression>(polynom[j],
-//       std::make_shared<Integer>(std::move(vectOfPows[j]))); mulExprPolynom.emplace_back(powExpr->polynomSimplify());
+//       auto powExpr = make_shared<PowExpression>(polynom[j],
+//       make_shared<Integer>(move(vectOfPows[j]))); mulExprPolynom.emplace_back(powExpr->polynomSimplify());
 //     }
-//     std::shared_ptr<IMathObject> mulExpr = std::make_shared<MulExpression>(mulExprPolynom);
+//     shared_ptr<IMathObject> mulExpr = make_shared<MulExpression>(mulExprPolynom);
 //     simplifyChild(mulExpr);
 //     newPolynom.emplace_back(mulExpr);
 //   }
 
-//   std::shared_ptr<IMathObject> newSumExpr = std::make_shared<SumExpression>(newPolynom);
+//   shared_ptr<IMathObject> newSumExpr = make_shared<SumExpression>(newPolynom);
 //   simplifyChild(newSumExpr);
 //   if (invert) {
-//     std::shared_ptr<IMathObject> invertExpr = std::make_shared<InvExpression>(newSumExpr);
+//     shared_ptr<IMathObject> invertExpr = make_shared<InvExpression>(newSumExpr);
 //     simplifyChild(invertExpr);
 //     return invertExpr;
 //   }
 //   return newSumExpr;
 // }
 
-// std::shared_ptr<IMathObject> PowExpression::getValue() {
+// shared_ptr<IMathObject> PowExpression::getValue() {
 //   return lhsChild;
 // }
 
-// std::shared_ptr<IMathObject> PowExpression::getPow() {
+// shared_ptr<IMathObject> PowExpression::getPow() {
 //   return rhsChild;
 // }
 
-// std::shared_ptr<IMathObject> PowExpression::polynomSimplify() {
-//   std::shared_ptr<IMathObject> result = mulSimplify();
+// shared_ptr<IMathObject> PowExpression::polynomSimplify() {
+//   shared_ptr<IMathObject> result = mulSimplify();
 //   if (auto powExpr = cast<PowExpression>(result)) {
 //     return powExpr->sumSimplify();
 //   }
@@ -167,7 +167,7 @@ void PowExpression::invert() {
   rhsChild = Expression::makeRawFunctionExpression(Neg(), {rhsChild});
 }
 
-std::shared_ptr<IMathObject> PowExpression::postSimplify() const {
+shared_ptr<IMathObject> PowExpression::postSimplify() const {
   auto lhsExpr = cast<IExpression>(lhsChild);
   auto rhsInt = cast<Integer>(rhsChild);
 

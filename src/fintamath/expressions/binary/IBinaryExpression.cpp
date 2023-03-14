@@ -15,14 +15,14 @@ namespace fintamath {
 //   setMathObjectPrecision(rhsChild, precision);
 // }
 
-std::string IBinaryExpression::toString() const {
+string IBinaryExpression::toString() const {
   ArgumentsPtrVector values;
   values.emplace_back(lhsChild);
   values.emplace_back(rhsChild);
   return binaryOperatorToString(*cast<IOperator>(getFunction()), values);
 }
 
-std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {
+shared_ptr<IFunction> IBinaryExpression::getFunction() const {
   return func;
 }
 
@@ -30,15 +30,15 @@ ArgumentsPtrVector IBinaryExpression::getChildren() const {
   return {lhsChild, rhsChild};
 }
 
-std::shared_ptr<IMathObject> IBinaryExpression::preSimplify() const {
+shared_ptr<IMathObject> IBinaryExpression::preSimplify() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> IBinaryExpression::postSimplify() const {
+shared_ptr<IMathObject> IBinaryExpression::postSimplify() const {
   return {};
 }
 
-std::shared_ptr<IMathObject> IBinaryExpression::simplify() {
+shared_ptr<IMathObject> IBinaryExpression::simplify() {
   if (auto res = preSimplify()) {
     simplifyChild(res);
     return res;

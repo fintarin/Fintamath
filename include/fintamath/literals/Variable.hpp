@@ -6,12 +6,12 @@ namespace fintamath {
 
 class Variable : public ILiteralCRTP<Variable> {
 public:
-  explicit Variable(const std::string &str);
+  explicit Variable(const string &str);
 
-  std::string toString() const override;
+  string toString() const override;
 
 private:
-  std::string name;
+  string name;
 };
 
 }

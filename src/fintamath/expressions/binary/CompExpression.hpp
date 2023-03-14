@@ -11,23 +11,23 @@ namespace fintamath {
 
 class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
 public:
-  CompExpression(const IOperator &oper, const std::shared_ptr<IMathObject> &lhsChild,
-                 const std::shared_ptr<IMathObject> &rhsChild);
+  CompExpression(const IOperator &oper, const shared_ptr<IMathObject> &lhsChild,
+                 const shared_ptr<IMathObject> &rhsChild);
 
-  std::shared_ptr<IMathObject> solve() const;
+  shared_ptr<IMathObject> solve() const;
 
-  // std::string solve(uint8_t precision) const;
+  // string solve(uint8_t precision) const;
 
 protected:
-  std::shared_ptr<IMathObject> postSimplify() const override;
+  shared_ptr<IMathObject> postSimplify() const override;
 
-  // std::vector<std::unique_ptr<IMathObject>> solvePowEquation(const Variable &x) const;
+  // vector<unique_ptr<IMathObject>> solvePowEquation(const Variable &x) const;
 
-  // std::vector<std::unique_ptr<IMathObject>> solveQuadraticEquation(const std::unique_ptr<IMathObject> &v) const;
+  // vector<unique_ptr<IMathObject>> solveQuadraticEquation(const unique_ptr<IMathObject> &v) const;
 
-  // static bool sortFunc(const std::unique_ptr<IMathObject> &lhs, const std::unique_ptr<IMathObject> &rhs);
+  // static bool sortFunc(const unique_ptr<IMathObject> &lhs, const unique_ptr<IMathObject> &rhs);
 
-  // static std::vector<std::unique_ptr<IMathObject>> sortResult(std::vector<std::unique_ptr<IMathObject>> &result);
+  // static vector<unique_ptr<IMathObject>> sortResult(vector<unique_ptr<IMathObject>> &result);
 
   // bool detectOneVariable(Variable &v) const;
 };

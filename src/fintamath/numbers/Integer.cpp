@@ -12,7 +12,7 @@
 namespace fintamath {
 
 Integer::Integer() {
-  impl = std::make_unique<IntegerImpl>();
+  impl = make_unique<IntegerImpl>();
 }
 
 Integer::Integer(const Integer &rhs) : Integer() {
@@ -23,7 +23,7 @@ Integer::Integer(Integer &&) noexcept = default;
 
 Integer &Integer::operator=(const Integer &rhs) {
   if (this != &rhs) {
-    impl = std::make_unique<IntegerImpl>(*rhs.impl);
+    impl = make_unique<IntegerImpl>(*rhs.impl);
   }
   return *this;
 }
@@ -32,10 +32,10 @@ Integer &Integer::operator=(Integer &&) noexcept = default;
 
 Integer::~Integer() = default;
 
-Integer::Integer(const IntegerImpl &impl) : impl(std::make_unique<IntegerImpl>(impl)) {
+Integer::Integer(const IntegerImpl &impl) : impl(make_unique<IntegerImpl>(impl)) {
 }
 
-Integer::Integer(std::string str) : Integer() {
+Integer::Integer(string str) : Integer() {
   if (str.empty()) {
     throw InvalidInputException(str);
   }
@@ -65,7 +65,7 @@ Integer::Integer(int64_t val) : Integer() {
   impl->v.assign(val);
 }
 
-std::string Integer::toString() const {
+string Integer::toString() const {
   return impl->v.str();
 }
 
@@ -73,7 +73,7 @@ int Integer::sign() const {
   return impl->v.sign();
 }
 
-const std::unique_ptr<IntegerImpl> &Integer::getImpl() const {
+const unique_ptr<IntegerImpl> &Integer::getImpl() const {
   return impl;
 }
 

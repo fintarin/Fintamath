@@ -11,25 +11,25 @@ class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INega
 public:
   explicit SumExpression(const ArgumentsPtrVector &children);
 
-  std::string toString() const override;
+  string toString() const override;
 
-  // std::shared_ptr<IMathObject> getPowCoefficient(const std::shared_ptr<IMathObject> &powValue) const;
+  // shared_ptr<IMathObject> getPowCoefficient(const shared_ptr<IMathObject> &powValue) const;
 
-  // std::shared_ptr<IMathObject> getPow() const;
+  // shared_ptr<IMathObject> getPow() const;
 
   void negate() override;
 
-  // void multiplicate(const std::shared_ptr<IMathObject> &value);
+  // void multiplicate(const shared_ptr<IMathObject> &value);
 
 protected:
-  std::shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
+  shared_ptr<IMathObject> postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
 private:
   // TODO: Implement a new Expression and remove this
   // struct MulObject;
-  // using MulObjects = std::vector<MulObject>;
+  // using MulObjects = vector<MulObject>;
 
-  // bool static sortFunc(const std::shared_ptr<IMathObject> &lhs, const std::shared_ptr<IMathObject> &rhs);
+  // bool static sortFunc(const shared_ptr<IMathObject> &lhs, const shared_ptr<IMathObject> &rhs);
 
   // void simplifyPolynom();
 

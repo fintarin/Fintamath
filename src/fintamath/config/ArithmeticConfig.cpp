@@ -6,10 +6,10 @@
 
 namespace fintamath {
 
-MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiAdd;
-MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiSub;
-MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiMul;
-MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiDiv;
+MultiMethod<unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiAdd;
+MultiMethod<unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiSub;
+MultiMethod<unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiMul;
+MultiMethod<unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiDiv;
 
 }
 
