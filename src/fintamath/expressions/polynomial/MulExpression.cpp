@@ -643,27 +643,16 @@ ArgumentPtr MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
 
-  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
-    return lhsChild;
-  }
-  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ZERO) {
-    return rhsChild;
+  if (const auto& simplifyResult = simplifyNumber(lhsChild, rhsChild)) {
+    return simplifyResult;
   }
 
-  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ONE) {
-    return rhsChild;
-  }
-  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ONE) {
-    return lhsChild;
+  if (const auto& simplifyResult = simplifyDivisions(lhsChild, rhsChild)) {
+    return simplifyResult;
   }
 
-  if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr && is<Inv>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
-    return make_shared<Integer>(ONE);
-  }
-  if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Inv>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
-    return make_shared<Integer>(ONE);
+  if (const auto& simplifyResult = coefficientsProcessing(lhsChild, rhsChild)) {
+    return simplifyResult;
   }
 
   return {};
@@ -686,6 +675,37 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateAndValue(const Argumen
 ArgumentPtr MulExpression::addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const {
   ArgumentPtr rateSum = makeRawFunctionExpression(Add(), rate);
   return makeRawFunctionExpression(Pow(), {value, rateSum});
+}
+
+ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
+    return lhsChild;
+  }
+  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ZERO) {
+    return rhsChild;
+  }
+
+  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ONE) {
+    return rhsChild;
+  }
+  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ONE) {
+    return lhsChild;
+  }
+
+  return nullptr;
+}
+
+ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  if (const auto lhsExpr = cast<IExpression>(lhsChild);
+      lhsExpr && is<Inv>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
+    return make_shared<Integer>(ONE);
+  }
+  if (const auto rhsExpr = cast<IExpression>(rhsChild);
+      rhsExpr && is<Inv>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
+    return make_shared<Integer>(ONE);
+  }
+
+  return {};
 }
 
 }

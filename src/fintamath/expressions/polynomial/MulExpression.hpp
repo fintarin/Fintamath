@@ -33,6 +33,10 @@ private:
   // struct ObjectPow;
   // using Objects = vector<ObjectPow>;
 
+  static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
   // void simplifyNegations();
 
   // void simplifyPow();
