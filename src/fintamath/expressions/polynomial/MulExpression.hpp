@@ -24,6 +24,10 @@ public:
 protected:
   ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
+  std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild) const override;
+
+  ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const override;
+
 private:
   // TODO: Implement a new Expression and remove this
   // struct ObjectPow;

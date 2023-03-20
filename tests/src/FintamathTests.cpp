@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 TEST(FintamathTest, testTest) {
-  EXPECT_EQ(Expression("(a+b)/(a+b)^2").toString(), "");
+  EXPECT_EQ(Expression("a-a+3 b-b c + b +b^2 + 3 b^2").toString(), "");
 }
 
 TEST(FintamathTests, fintamathTests) {

@@ -1,37 +1,14 @@
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 
-#include <algorithm>
-#include <regex>
-
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
 const Add ADD;
-
-// struct SumExpression::MulObject {
-//   ArgumentPtr obj;
-//   SumExpression counter = SumExpression({});
-
-//   MulObject(ArgumentPtr obj) : obj(move(obj)) {
-//   }
-
-//   void simplifyCounter() {
-//     ArgumentPtr counterSimpl = counter.toMinimalObject(); // TODO: remove copy here
-//     counter = SumExpression({});
-//     counter.addElement(counterSimpl);
-//   }
-
-//   ArgumentPtr getCounterValue() const {
-//     ArgumentsPtrVector polynom = counter.getPolynom();
-//     const ArgumentPtr &countValue = polynom.front();
-//     return is<NegExpression>(polynom.front()) ? makeFunctionExpression(Neg(), {countValue}) : countValue;
-//   }
-// };
 
 SumExpression::SumExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(ADD, children) {
 }
@@ -323,6 +300,22 @@ ArgumentPtr SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
 
+  if (const auto &simplifyResult = simplifyNumber(lhsChild, rhsChild)) {
+    return simplifyResult;
+  }
+
+  if (const auto &simplifyResult = simplifyNegation(lhsChild, rhsChild)) {
+    return simplifyResult;
+  }
+
+  if (const auto &simplifyResult = coefficientsProcessing(lhsChild, rhsChild)) {
+    return simplifyResult;
+  }
+
+  return {};
+}
+
+ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
     return rhsChild;
   }
@@ -330,6 +323,10 @@ ArgumentPtr SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
     return lhsChild;
   }
 
+  return {};
+}
+
+ArgumentPtr SumExpression::simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto lhsExpr = cast<IExpression>(lhsChild);
       lhsExpr && is<Neg>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
     return make_shared<Integer>(ZERO);
@@ -342,4 +339,24 @@ ArgumentPtr SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   return {};
 }
 
+std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateAndValue(const ArgumentPtr &rhsChild) const {
+  if (const auto &exprValue = cast<IExpression>(rhsChild); exprValue && is<Mul>(exprValue->getFunction())) {
+    ArgumentsPtrVector args = exprValue->getChildren();
+    if (const auto &numberValue = cast<INumber>(args.front())) {
+      ArgumentPtr mulExpr = makeFunctionExpression(Mul(), ArgumentsPtrVector{args.begin() + 1, args.end()});
+      return {args.front(), mulExpr};
+    }
+  }
+  if (const auto &exprValue = cast<IExpression>(rhsChild); exprValue && is<Neg>(exprValue->getFunction())) {
+    ArgumentsPtrVector args = exprValue->getChildren();
+    return {NEG_ONE.clone(), args.front()};
+  }
+
+  return {ONE.clone(), rhsChild};
+}
+
+ArgumentPtr SumExpression::addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const {
+  ArgumentPtr rateSum = makeRawFunctionExpression(Add(), rate);
+  return makeFunctionExpression(Mul(), ArgumentsPtrVector{rateSum, value});
+}
 }

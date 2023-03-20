@@ -21,10 +21,18 @@ public:
 protected:
   ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
+  std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild) const override;
+
+  ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const override;
+
 private:
   // TODO: Implement a new Expression and remove this
   // struct MulObject;
   // using MulObjects = vector<MulObject>;
+
+  static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   // bool static sortFunc(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
