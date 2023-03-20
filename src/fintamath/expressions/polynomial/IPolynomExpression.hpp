@@ -25,6 +25,12 @@ protected:
 
   ArgumentPtr simplify() const final;
 
+  ArgumentPtr coefficientsProcessing(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) const;
+
+  virtual std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild) const;
+
+  virtual ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const;
+
 protected:
   // static void sortVector(ArgumentsPtrVector &vector, map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
   //                        ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);

@@ -7,6 +7,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
@@ -666,6 +667,25 @@ ArgumentPtr MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   }
 
   return {};
+}
+
+std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateAndValue(const ArgumentPtr &rhsChild) const {
+  if (const auto &exprVal = cast<IExpression>(rhsChild); exprVal && is<Pow>(exprVal->getFunction())) {
+    ArgumentsPtrVector args = exprVal->getChildren();
+    return {args[1], args.front()};
+  }
+
+  if (const auto &exprVal = cast<IExpression>(rhsChild); exprVal && is<Inv>(exprVal->getFunction())) {
+    ArgumentsPtrVector args = exprVal->getChildren();
+    return {NEG_ONE.clone(), args.front()};
+  }
+
+  return {ONE.clone(), rhsChild};
+}
+
+ArgumentPtr MulExpression::addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const {
+  ArgumentPtr rateSum = makeRawFunctionExpression(Add(), rate);
+  return makeRawFunctionExpression(Pow(), {value, rateSum});
 }
 
 }
