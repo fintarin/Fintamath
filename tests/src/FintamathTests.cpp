@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 TEST(FintamathTest, testTest) {
-  EXPECT_EQ(Expression("a*(a-b)").toString(), "");
+  EXPECT_EQ(Expression("(10+2+3-5)^1000000000*a/(9+1)^999999999").toString(), "");
 }
 
 TEST(FintamathTests, fintamathTests) {

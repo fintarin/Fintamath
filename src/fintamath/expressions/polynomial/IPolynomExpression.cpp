@@ -62,7 +62,8 @@ ArgumentsPtrVector IPolynomExpression::getPolynom() const {
 ArgumentPtr IPolynomExpression::simplify() const {
   auto simpl = cast<IPolynomExpression>(clone());
 
-  simpl->preSimplifyRec();
+  simpl->globalSimplifyRec();
+  // simpl->preSimplifyRec();
 
   {
     ArgumentsPtrVector oldChildren = simpl->children;
@@ -75,7 +76,7 @@ ArgumentPtr IPolynomExpression::simplify() const {
   }
 
   simpl->preSimplifyRec(); // TODO: try to remove this
-  simpl->postSimplifyRec();
+  //simpl->postSimplifyRec();
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
@@ -89,31 +90,6 @@ ArgumentPtr IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhs
 }
 
 ArgumentPtr IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
-  return {};
-}
-
-std::pair<ArgumentPtr, ArgumentPtr> IPolynomExpression::getRateAndValue(const ArgumentPtr & /*rhsChild*/) const {
-  return {};
-}
-
-ArgumentPtr IPolynomExpression::addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const {
-  return {};
-}
-
-ArgumentPtr IPolynomExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) const {
-  std::pair<ArgumentPtr, ArgumentPtr> lhsRateValue = getRateAndValue(lhsChild);
-  std::pair<ArgumentPtr, ArgumentPtr> rhsRateValue = getRateAndValue(rhsChild);
-
-  ArgumentPtr lhsChildRate = lhsRateValue.first;
-  ArgumentPtr rhsChildRate = rhsRateValue.first;
-
-  ArgumentPtr lhsChildValue = lhsRateValue.second;
-  ArgumentPtr rhsChildValue = rhsRateValue.second;
-
-  if (lhsChildValue->toString() == rhsChildValue->toString()) {
-    return addRateToValue({lhsChildRate, rhsChildRate}, lhsChildValue);
-  }
-
   return {};
 }
 
@@ -152,6 +128,32 @@ void IPolynomExpression::postSimplifyRec() {
 
   if (children.size() != childrenSize) {
     postSimplifyRec();
+  }
+}
+
+IPolynomExpression::FunctionsVector IPolynomExpression::getSimplifyFunctions() const {
+  return {};
+}
+
+void IPolynomExpression::globalSimplifyRec() {
+  size_t childrenSize = children.size();
+  FunctionsVector functions = getSimplifyFunctions();
+
+  for (const auto &function : functions) {
+    for (int64_t i = 0; i < children.size() - 1; i++) {
+      for (int64_t j = i + 1; j < children.size(); j++) {
+        const ArgumentPtr &lhsChild = children[i];
+        const ArgumentPtr &rhsChild = children[j];
+        if (auto res = function(lhsChild, rhsChild)) {
+          children[i] = res;
+          children.erase(children.begin() + j);
+        }
+      }
+    }
+  }
+
+  if (children.size() != childrenSize) {
+    globalSimplifyRec();
   }
 }
 

@@ -24,16 +24,22 @@ public:
 protected:
   ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
-  std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild) const override;
-
-  ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const override;
+  FunctionsVector getSimplifyFunctions() const override;
 
 private:
   static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
+  static ArgumentPtr simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
   static ArgumentPtr simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr multiplicateBraces(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr coefficientsProcessing(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value);
 
   // void simplifyNegations();
 

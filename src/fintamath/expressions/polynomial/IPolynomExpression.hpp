@@ -19,17 +19,16 @@ public:
   virtual void addElement(const ArgumentPtr &element) = 0;
 
 protected:
+  using FunctionsVector =
+      std::vector<std::function<ArgumentPtr(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)>>;
+
   virtual ArgumentPtr preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
   virtual ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
   ArgumentPtr simplify() const final;
 
-  ArgumentPtr coefficientsProcessing(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) const;
-
-  virtual std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild) const;
-
-  virtual ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const;
+  virtual FunctionsVector getSimplifyFunctions() const;
 
 protected:
   // static void sortVector(ArgumentsPtrVector &vector, map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
@@ -46,6 +45,8 @@ private:
   void preSimplifyRec();
 
   void postSimplifyRec();
+
+  void globalSimplifyRec();
 };
 
 template <typename Derived>
