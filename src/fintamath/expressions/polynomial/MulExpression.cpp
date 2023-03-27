@@ -643,15 +643,19 @@ ArgumentPtr MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
 
-  if (const auto& simplifyResult = simplifyNumber(lhsChild, rhsChild)) {
+  if (const auto &simplifyResult = simplifyNumber(lhsChild, rhsChild)) {
     return simplifyResult;
   }
 
-  if (const auto& simplifyResult = simplifyDivisions(lhsChild, rhsChild)) {
+  if (const auto &simplifyResult = simplifyDivisions(lhsChild, rhsChild)) {
     return simplifyResult;
   }
 
-  if (const auto& simplifyResult = coefficientsProcessing(lhsChild, rhsChild)) {
+  if (const auto &simplifyResult = coefficientsProcessing(lhsChild, rhsChild)) {
+    return simplifyResult;
+  }
+
+  if (const auto &simplifyResult = multiplicateBraces(lhsChild, rhsChild)) {
     return simplifyResult;
   }
 
@@ -705,6 +709,46 @@ ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const 
     return make_shared<Integer>(ONE);
   }
 
+  return {};
+}
+
+ArgumentPtr MulExpression::multiplicateBraces(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+
+  if (lhsExpr && rhsExpr && !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
+    return {};
+  }
+
+  ArgumentsPtrVector lhsVect;
+  ArgumentsPtrVector rhsVect;
+
+  if (lhsExpr && is<Add>(lhsExpr->getFunction())) {
+    lhsVect = lhsExpr->getChildren();
+  }
+  else {
+    lhsVect.emplace_back(lhsChild);
+  }
+
+  if (rhsExpr && is<Add>(rhsExpr->getFunction())) {
+    rhsVect = rhsExpr->getChildren();
+  }
+  else {
+    rhsVect.emplace_back(rhsChild);
+  }
+
+  if (lhsVect.size() == 1 && rhsVect.size() == 1) {
+    return {};
+  }
+
+  ArgumentsPtrVector resultVect;
+  for (const auto &lhsChildValue : lhsVect) {
+    for (const auto &rhsChildValue : rhsVect) {
+      resultVect.emplace_back(
+          makeFunctionExpression(Mul(), ArgumentsPtrVector{lhsChildValue->clone(), rhsChildValue->clone()}));
+    }
+  }
+  return makeFunctionExpression(Add(), resultVect);
   return {};
 }
 

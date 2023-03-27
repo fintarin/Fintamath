@@ -29,13 +29,11 @@ protected:
   ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const override;
 
 private:
-  // TODO: Implement a new Expression and remove this
-  // struct ObjectPow;
-  // using Objects = vector<ObjectPow>;
-
   static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr multiplicateBraces(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   // void simplifyNegations();
 

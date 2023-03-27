@@ -26,10 +26,6 @@ protected:
   ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const override;
 
 private:
-  // TODO: Implement a new Expression and remove this
-  // struct MulObject;
-  // using MulObjects = vector<MulObject>;
-
   static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
