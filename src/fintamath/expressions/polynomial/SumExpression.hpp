@@ -21,14 +21,16 @@ public:
 protected:
   ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
-  std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild) const override;
-
-  ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) const override;
-
 private:
   static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr coefficientsProcessing(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value);
 
   // bool static sortFunc(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
