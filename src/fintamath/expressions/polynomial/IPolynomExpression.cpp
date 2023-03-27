@@ -130,7 +130,7 @@ void IPolynomExpression::preSimplifyRec() {
   }
 
   if (children.size() != childrenSize) {
-    postSimplifyRec();
+    preSimplifyRec();
   }
 }
 
