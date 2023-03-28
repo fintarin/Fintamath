@@ -592,13 +592,13 @@ ArgumentPtr MulExpression::negate() const {
 }
 
 ArgumentPtr MulExpression::invert() const {
-  MulExpression inv = *this;
+  auto inv = cast<MulExpression>(clone());
 
-  for (auto &child : inv.children) {
-    child = makeRawFunctionExpression(Inv(), {child});
+  for (auto &child : inv->children) {
+    child = makeFunctionExpression(Inv(), {child});
   }
 
-  return inv.simplify();
+  return inv->simplify();
 }
 
 ArgumentPtr MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
@@ -641,7 +641,7 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateAndValue(const Argumen
 }
 
 ArgumentPtr MulExpression::addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) {
-  ArgumentPtr rateSum = makeRawFunctionExpression(Add(), rate);
+  ArgumentPtr rateSum = makeFunctionExpression(Add(), rate);
   return makeRawFunctionExpression(Pow(), {value, rateSum});
 }
 

@@ -50,21 +50,9 @@ ArgumentPtr IBinaryExpression::simplify() const {
   //   return res;
   // }
 
-  auto simpl = cast<IBinaryExpression>(clone());
-  simplifyChild(simpl->lhsChild);
-  simplifyChild(simpl->rhsChild);
-
-  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*simpl->lhsChild, *simpl->rhsChild})) {
-    return (*func)(*simpl->lhsChild, *simpl->rhsChild);
-  }
-
-  if (auto res = simpl->preSimplify()) { // TODO: try to remove this
-    return res;
-  }
-
-  if (auto res = simpl->postSimplify()) {
-    return res;
-  }
+  ArgumentPtr simpl = cast<IBinaryExpression>(clone());
+  preSimplifyChild(simpl);
+  postSimplifyChild(simpl);
 
   return simpl;
 }
