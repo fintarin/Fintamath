@@ -26,8 +26,8 @@ ArgumentsPtrVector IBinaryExpression::getChildren() const {
 
 ArgumentPtr IBinaryExpression::preSimplify() const {
   auto simpl = cast<IBinaryExpression>(clone());
-  postSimplifyChild(simpl->lhsChild);
-  postSimplifyChild(simpl->rhsChild);
+  preSimplifyChild(simpl->lhsChild);
+  preSimplifyChild(simpl->rhsChild);
 
   return simpl;
 }
@@ -45,11 +45,6 @@ ArgumentPtr IBinaryExpression::postSimplify() const {
 }
 
 ArgumentPtr IBinaryExpression::simplify() const {
-  // if (auto res = preSimplify()) {
-  //   simplifyChild(res);
-  //   return res;
-  // }
-
   ArgumentPtr simpl = cast<IBinaryExpression>(clone());
   preSimplifyChild(simpl);
   postSimplifyChild(simpl);
