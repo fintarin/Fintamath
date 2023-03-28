@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 TEST(FintamathTest, testTest) {
-  EXPECT_EQ(Expression("x / (y /z)").toString(), "");
+  EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "");
 }
 
 TEST(FintamathTests, fintamathTests) {

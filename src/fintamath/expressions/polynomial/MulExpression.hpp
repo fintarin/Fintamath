@@ -22,8 +22,6 @@ public:
   ArgumentPtr invert() const override;
 
 protected:
-  ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
-
   FunctionsVector getSimplifyFunctions() const override;
 
 private:

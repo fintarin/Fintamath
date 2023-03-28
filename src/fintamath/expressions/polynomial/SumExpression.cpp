@@ -297,25 +297,6 @@ ArgumentPtr SumExpression::negate() const {
   return neg.simplify();
 }
 
-ArgumentPtr SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  const ArgumentPtr &lhsChild = children[lhsChildNum];
-  const ArgumentPtr &rhsChild = children[rhsChildNum];
-
-  if (const auto &simplifyResult = simplifyNumber(lhsChild, rhsChild)) {
-    return simplifyResult;
-  }
-
-  if (const auto &simplifyResult = simplifyNegation(lhsChild, rhsChild)) {
-    return simplifyResult;
-  }
-
-  if (const auto &simplifyResult = coefficientsProcessing(lhsChild, rhsChild)) {
-    return simplifyResult;
-  }
-
-  return {};
-}
-
 SumExpression::FunctionsVector SumExpression::getSimplifyFunctions() const {
   return {&SumExpression::simplifyNumber, &SumExpression::simplifyNegation, &SumExpression::coefficientsProcessing};
 }
@@ -386,6 +367,9 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateAndValue(const Argumen
   if (const auto &exprValue = cast<IExpression>(rhsChild); exprValue && is<Mul>(exprValue->getFunction())) {
     ArgumentsPtrVector args = exprValue->getChildren();
     if (const auto &numberValue = cast<INumber>(args.front())) {
+      if (args.size() - 1 == 1) {
+        return {args.front(), args[1]};
+      }
       ArgumentPtr mulExpr = makeFunctionExpression(Mul(), ArgumentsPtrVector{args.begin() + 1, args.end()});
       return {args.front(), mulExpr};
     }
