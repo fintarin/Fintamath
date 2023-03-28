@@ -601,29 +601,6 @@ ArgumentPtr MulExpression::invert() const {
   return inv->simplify();
 }
 
-ArgumentPtr MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  // const ArgumentPtr &lhsChild = children[lhsChildNum];
-  // const ArgumentPtr &rhsChild = children[rhsChildNum];
-
-  // if (const auto &simplifyResult = simplifyNumber(lhsChild, rhsChild)) {
-  //   return simplifyResult;
-  // }
-
-  // if (const auto &simplifyResult = simplifyDivisions(lhsChild, rhsChild)) {
-  //   return simplifyResult;
-  // }
-
-  // if (const auto &simplifyResult = coefficientsProcessing(lhsChild, rhsChild)) {
-  //   return simplifyResult;
-  // }
-
-  // if (const auto &simplifyResult = multiplicateBraces(lhsChild, rhsChild)) {
-  //   return simplifyResult;
-  // }
-
-  return {};
-}
-
 std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateAndValue(const ArgumentPtr &rhsChild) {
   if (const auto &exprVal = cast<IExpression>(rhsChild); exprVal && is<Pow>(exprVal->getFunction())) {
     ArgumentsPtrVector args = exprVal->getChildren();

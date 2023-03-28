@@ -19,8 +19,6 @@ public:
   // void multiplicate(const ArgumentPtr &value);
 
 protected:
-  ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
-
   FunctionsVector getSimplifyFunctions() const override;
 
 private:
