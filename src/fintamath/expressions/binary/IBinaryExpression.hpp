@@ -15,9 +15,9 @@ public:
   ArgumentsPtrVector getChildren() const final;
 
 protected:
-  virtual ArgumentPtr preSimplify() const;
+  ArgumentPtr preSimplify() const override;
 
-  virtual ArgumentPtr postSimplify() const;
+  ArgumentPtr postSimplify() const override;
 
   ArgumentPtr simplify() const final;
 

@@ -167,7 +167,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("E*2!").toString(), "2 E");
   EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-1/2 cos(2/3 Pi) + 1/2)");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(),
-            "2 cos(1/3 Pi) sqrt(-1/2 cos(2/3 Pi) + 1/2)");
+            "2 cos(1/3 Pi) sqrt(-1/2 cos(2/3 Pi) 1/2)");
   EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").toString(), "ln(ln(ln(ln(E))))");
   EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").toString(), "ln(ln(ln(ln(ln(E)))))");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");

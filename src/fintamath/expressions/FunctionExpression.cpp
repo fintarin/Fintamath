@@ -115,4 +115,35 @@ ArgumentPtr FunctionExpression::simplify() const {
   return val;
 }
 
+ArgumentPtr FunctionExpression::preSimplify() const {
+  auto simpl = cast<FunctionExpression>(clone());
+  for (auto &child : simpl->children) {
+    preSimplifyChild(child);
+  }
+
+  return simpl;
+}
+
+ArgumentPtr FunctionExpression::postSimplify() const {
+  auto simpl = cast<FunctionExpression>(clone());
+  ArgumentsRefVector args;
+
+  for (auto &child : simpl->children) {
+    postSimplifyChild(child);
+    args.emplace_back(*child);
+  }
+
+  if (!func->isNonExressionEvaluatable() || !func->doArgsMatch(args)) {
+    return simpl;
+  }
+
+  ArgumentPtr val = (*func)(args);
+
+  if (const auto num = cast<INumber>(val); num && !num->isPrecise()) {
+    return simpl;
+  }
+
+  return val;
+}
+
 }

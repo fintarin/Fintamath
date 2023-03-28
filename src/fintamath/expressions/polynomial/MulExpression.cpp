@@ -602,24 +602,24 @@ ArgumentPtr MulExpression::invert() const {
 }
 
 ArgumentPtr MulExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  const ArgumentPtr &lhsChild = children[lhsChildNum];
-  const ArgumentPtr &rhsChild = children[rhsChildNum];
+  // const ArgumentPtr &lhsChild = children[lhsChildNum];
+  // const ArgumentPtr &rhsChild = children[rhsChildNum];
 
-  if (const auto &simplifyResult = simplifyNumber(lhsChild, rhsChild)) {
-    return simplifyResult;
-  }
+  // if (const auto &simplifyResult = simplifyNumber(lhsChild, rhsChild)) {
+  //   return simplifyResult;
+  // }
 
-  if (const auto &simplifyResult = simplifyDivisions(lhsChild, rhsChild)) {
-    return simplifyResult;
-  }
+  // if (const auto &simplifyResult = simplifyDivisions(lhsChild, rhsChild)) {
+  //   return simplifyResult;
+  // }
 
-  if (const auto &simplifyResult = coefficientsProcessing(lhsChild, rhsChild)) {
-    return simplifyResult;
-  }
+  // if (const auto &simplifyResult = coefficientsProcessing(lhsChild, rhsChild)) {
+  //   return simplifyResult;
+  // }
 
-  if (const auto &simplifyResult = multiplicateBraces(lhsChild, rhsChild)) {
-    return simplifyResult;
-  }
+  // if (const auto &simplifyResult = multiplicateBraces(lhsChild, rhsChild)) {
+  //   return simplifyResult;
+  // }
 
   return {};
 }
@@ -660,8 +660,8 @@ ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
     return lhsChild;
   }
 
-  bool inverted = false;
-  bool useDiv = false;
+  bool lhsInv = false;
+  bool rhsInv = false;
 
   const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
@@ -670,8 +670,7 @@ ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
   shared_ptr<const INumber> rhsNum = nullptr;
 
   if (lhsExpr && is<Inv>(lhsExpr->getFunction())) {
-    inverted = true;
-    useDiv = !useDiv;
+    lhsInv = true;
     lhsNum = cast<INumber>(lhsExpr->getChildren().front());
   }
   else {
@@ -679,8 +678,7 @@ ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
   }
 
   if (rhsExpr && is<Inv>(rhsExpr->getFunction())) {
-    inverted = true;
-    useDiv = !useDiv;
+    rhsInv = true;
     rhsNum = cast<INumber>(rhsExpr->getChildren().front());
   }
   else {
@@ -688,10 +686,13 @@ ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
   }
 
   if (lhsNum && rhsNum) {
-    if (useDiv) {
+    if (lhsInv) {
+      return Div()(*rhsNum, *lhsNum);
+    }
+    if (rhsInv) {
       return Div()(*lhsNum, *rhsNum);
     }
-    if (inverted) {
+    if (lhsInv && rhsInv) {
       return makeFunctionExpression(Inv(), {Mul()(*lhsNum, *rhsNum)});
     }
     return Mul()(*lhsNum, *rhsNum);
@@ -782,7 +783,8 @@ ArgumentPtr MulExpression::simplifyNegation(const ArgumentPtr &lhsChild, const A
 }
 
 MulExpression::FunctionsVector MulExpression::getSimplifyFunctions() const {
-  return {&MulExpression::simplifyNumber, &MulExpression::simplifyNegation, &MulExpression::simplifyDivisions,
+  return {&MulExpression::simplifyNegation,       &MulExpression::simplifyNumber,
+          &MulExpression::simplifyNegation,       &MulExpression::simplifyDivisions,
           &MulExpression::coefficientsProcessing, &MulExpression::multiplicateBraces};
 }
 

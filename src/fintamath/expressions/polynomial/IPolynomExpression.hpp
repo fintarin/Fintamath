@@ -30,6 +30,10 @@ protected:
 
   virtual FunctionsVector getSimplifyFunctions() const;
 
+  ArgumentPtr preSimplify() const override;
+
+  ArgumentPtr postSimplify() const override;
+
 protected:
   // static void sortVector(ArgumentsPtrVector &vector, map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
   //                        ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);

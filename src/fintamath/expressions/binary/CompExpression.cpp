@@ -199,8 +199,4 @@ vector<unique_ptr<IMathObject>> CompExpression::sortResult(vector<unique_ptr<IMa
 }
 */
 
-ArgumentPtr CompExpression::postSimplify() const {
-  return {};
-}
-
 }

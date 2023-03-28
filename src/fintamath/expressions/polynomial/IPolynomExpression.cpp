@@ -60,26 +60,25 @@ ArgumentsPtrVector IPolynomExpression::getPolynom() const {
 }
 
 ArgumentPtr IPolynomExpression::simplify() const {
-  auto simpl = cast<IPolynomExpression>(clone());
+  ArgumentPtr simpl = cast<IPolynomExpression>(clone());
 
-  simpl->globalSimplifyRec();
-  // simpl->preSimplifyRec();
+  preSimplifyChild(simpl);
+  // {
+  //   shared_ptr<IPolynomExpression> simplExpr = cast<IPolynomExpression>(simpl->clone());
+  //   ArgumentsPtrVector oldChildren = simplExpr->children;
+  //   simplExpr->children.clear();
 
-  {
-    ArgumentsPtrVector oldChildren = simpl->children;
-    simpl->children.clear();
+  //   for (auto &child : oldChildren) {
+  //     simplifyChild(child);
+  //     simplExpr->addElement(child);
+  //   }
 
-    for (auto &child : oldChildren) {
-      simplifyChild(child);
-      simpl->addElement(child);
-    }
-  }
+  //   simpl = simplExpr;
+  // }
+  postSimplifyChild(simpl);
 
-  simpl->preSimplifyRec(); // TODO: try to remove this
-  //simpl->postSimplifyRec();
-
-  if (simpl->children.size() == 1) {
-    return simpl->children.front();
+  if (auto simplExpr = cast<IPolynomExpression>(simpl->clone()); simplExpr && simplExpr->children.size() == 1) {
+    return simplExpr->children.front();
   }
 
   return simpl;
@@ -155,6 +154,50 @@ void IPolynomExpression::globalSimplifyRec() {
   if (children.size() != childrenSize) {
     globalSimplifyRec();
   }
+}
+
+ArgumentPtr IPolynomExpression::preSimplify() const {
+  auto simpl = cast<IPolynomExpression>(clone());
+
+  {
+    ArgumentsPtrVector oldChildren = simpl->children;
+    simpl->children.clear();
+
+    for (auto &child : oldChildren) {
+      preSimplifyChild(child);
+      simpl->addElement(child);
+    }
+  }
+
+  simpl->preSimplifyRec();
+  simpl->globalSimplifyRec();
+
+  if (simpl->children.size() == 1) {
+    return simpl->children.front();
+  }
+  return simpl;
+}
+
+ArgumentPtr IPolynomExpression::postSimplify() const {
+  auto simpl = cast<IPolynomExpression>(clone());
+
+  {
+    ArgumentsPtrVector oldChildren = simpl->children;
+    simpl->children.clear();
+
+    for (auto &child : oldChildren) {
+      postSimplifyChild(child);
+      simpl->addElement(child);
+    }
+  }
+
+  simpl->postSimplifyRec();
+  simpl->globalSimplifyRec();
+
+  if (simpl->children.size() == 1) {
+    return simpl->children.front();
+  }
+  return simpl;
 }
 
 // void IPolynomExpression::sortVector(ArgumentsPtrVector &vector,

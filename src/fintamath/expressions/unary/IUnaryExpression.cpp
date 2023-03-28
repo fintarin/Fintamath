@@ -92,10 +92,10 @@ ArgumentsPtrVector IUnaryExpression::getChildren() const {
 }
 
 ArgumentPtr IUnaryExpression::simplify() const {
-  if (auto res = preSimplify()) {
-    simplifyChild(res);
-    return res;
-  }
+  // if (auto res = preSimplify()) {
+  //   simplifyChild(res);
+  //   return res;
+  // }
 
   auto simpl = cast<IUnaryExpression>(clone());
   simplifyChild(simpl->child);
@@ -116,11 +116,21 @@ ArgumentPtr IUnaryExpression::simplify() const {
 }
 
 ArgumentPtr IUnaryExpression::preSimplify() const {
-  return {};
+  auto simpl = cast<IUnaryExpression>(clone());
+  preSimplifyChild(simpl->child);
+
+  return simpl;
 }
 
 ArgumentPtr IUnaryExpression::postSimplify() const {
-  return {};
+  auto simpl = cast<IUnaryExpression>(clone());
+  postSimplifyChild(simpl->child);
+
+  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*simpl->child})) {
+    return (*func)(*simpl->child);
+  }
+
+  return simpl;
 }
 
 }

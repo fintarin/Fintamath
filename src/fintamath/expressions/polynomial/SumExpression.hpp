@@ -21,6 +21,8 @@ public:
 protected:
   ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
+  FunctionsVector getSimplifyFunctions() const override;
+
 private:
   static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 

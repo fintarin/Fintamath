@@ -165,8 +165,15 @@ ArgumentPtr PowExpression::invert() const {
 }
 
 ArgumentPtr PowExpression::postSimplify() const {
-  auto lhsExpr = cast<IExpression>(lhsChild);
-  auto rhsInt = cast<Integer>(rhsChild);
+  auto simpl = IBinaryExpression::postSimplify();
+  auto simplExpr = cast<PowExpression>(simpl);
+
+  if (!simplExpr) {
+    return simpl;
+  }
+
+  auto lhsExpr = cast<IExpression>(simplExpr->lhsChild);
+  auto rhsInt = cast<Integer>(simplExpr->rhsChild);
 
   if (lhsExpr && rhsInt) {
     if (*rhsInt == ZERO) {
@@ -180,7 +187,7 @@ ArgumentPtr PowExpression::postSimplify() const {
     }
   }
 
-  return {};
+  return nullptr;
 }
 
 }

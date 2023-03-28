@@ -25,18 +25,30 @@ ArgumentsPtrVector IBinaryExpression::getChildren() const {
 }
 
 ArgumentPtr IBinaryExpression::preSimplify() const {
-  return {};
+  auto simpl = cast<IBinaryExpression>(clone());
+  postSimplifyChild(simpl->lhsChild);
+  postSimplifyChild(simpl->rhsChild);
+
+  return simpl;
 }
 
 ArgumentPtr IBinaryExpression::postSimplify() const {
-  return {};
+  auto simpl = cast<IBinaryExpression>(clone());
+  postSimplifyChild(simpl->lhsChild);
+  postSimplifyChild(simpl->rhsChild);
+
+  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*simpl->lhsChild, *simpl->rhsChild})) {
+    return (*func)(*simpl->lhsChild, *simpl->rhsChild);
+  }
+
+  return simpl;
 }
 
 ArgumentPtr IBinaryExpression::simplify() const {
-  if (auto res = preSimplify()) {
-    simplifyChild(res);
-    return res;
-  }
+  // if (auto res = preSimplify()) {
+  //   simplifyChild(res);
+  //   return res;
+  // }
 
   auto simpl = cast<IBinaryExpression>(clone());
   simplifyChild(simpl->lhsChild);

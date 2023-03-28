@@ -30,19 +30,32 @@ InvExpression::InvExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(IN
 // }
 
 ArgumentPtr InvExpression::preSimplify() const {
-  if (auto expr = cast<InvExpression>(child)) {
+  auto simpl = IUnaryExpression::preSimplify();
+
+  auto simplExpr = cast<InvExpression>(simpl);
+  if (!simplExpr) {
+    return simpl;
+  }
+  if (const auto expr = cast<InvExpression>(simplExpr->child)) {
     return expr->child;
   }
 
-  return {};
+  return simpl;
 }
 
 ArgumentPtr InvExpression::postSimplify() const {
-  if (auto expr = cast<IInvertable>(child)) {
+  auto simpl = IUnaryExpression::postSimplify();
+
+  auto simplExpr = cast<InvExpression>(simpl);
+  if (!simplExpr) {
+    return simpl;
+  }
+
+  if (auto expr = cast<IInvertable>(simplExpr->child)) {
     return expr->invert();
   }
 
-  return {};
+  return simpl;
 }
 
 }
