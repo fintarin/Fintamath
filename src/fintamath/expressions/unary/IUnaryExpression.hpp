@@ -19,9 +19,9 @@ public:
 protected:
   ArgumentPtr simplify() const final;
 
-  virtual ArgumentPtr preSimplify() const;
+  ArgumentPtr preSimplify() const override;
 
-  virtual ArgumentPtr postSimplify() const;
+  ArgumentPtr postSimplify() const override;
 
 private:
   string postfixToString() const;

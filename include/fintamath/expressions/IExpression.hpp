@@ -34,6 +34,14 @@ protected:
 
   static void simplifyChild(ArgumentPtr &child);
 
+  static void preSimplifyChild(ArgumentPtr &child);
+
+  static void postSimplifyChild(ArgumentPtr &child);
+
+  virtual ArgumentPtr postSimplify() const;
+
+  virtual ArgumentPtr preSimplify() const;
+
   // static void setMathObjectPrecision(ArgumentPtr &obj, uint8_t precision);
 
   virtual ArgumentPtr simplify() const = 0;

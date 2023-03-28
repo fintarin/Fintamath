@@ -31,19 +31,32 @@ NegExpression::NegExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(NE
 // }
 
 ArgumentPtr NegExpression::preSimplify() const {
-  if (const auto expr = cast<NegExpression>(child)) {
+  auto simpl = IUnaryExpression::preSimplify();
+
+  auto simplExpr = cast<NegExpression>(simpl);
+  if (!simplExpr) {
+    return simpl;
+  }
+  if (const auto expr = cast<NegExpression>(simplExpr->child)) {
     return expr->child;
   }
 
-  return {};
+  return simpl;
 }
 
 ArgumentPtr NegExpression::postSimplify() const {
-  if (auto expr = cast<INegatable>(child)) {
+  auto simpl = IUnaryExpression::postSimplify();
+
+  auto simplExpr = cast<NegExpression>(simpl);
+  if (!simplExpr) {
+    return simpl;
+  }
+
+  if (auto expr = cast<INegatable>(simplExpr->child)) {
     return expr->negate();
   }
 
-  return {};
+  return simpl;
 }
 
 }

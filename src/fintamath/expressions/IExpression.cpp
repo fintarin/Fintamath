@@ -44,6 +44,50 @@ void IExpression::simplifyChild(ArgumentPtr &child) {
   }
 }
 
+void IExpression::preSimplifyChild(ArgumentPtr &child) {
+  if (const auto exprChild = cast<IExpression>(child)) {
+    if (const auto simplObj = exprChild->preSimplify()) {
+      child = simplObj;
+    }
+  }
+  else if (const auto constChild = cast<IConstant>(child)) {
+    ArgumentPtr constVal = (*constChild)();
+
+    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
+      child = constChild;
+    }
+    else {
+      child = constVal;
+    }
+  }
+}
+
+void IExpression::postSimplifyChild(ArgumentPtr &child) {
+  if (const auto exprChild = cast<IExpression>(child)) {
+    if (const auto simplObj = exprChild->postSimplify()) {
+      child = simplObj;
+    }
+  }
+  else if (const auto constChild = cast<IConstant>(child)) {
+    ArgumentPtr constVal = (*constChild)();
+
+    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
+      child = constChild;
+    }
+    else {
+      child = constVal;
+    }
+  }
+}
+
+ArgumentPtr IExpression::postSimplify() const {
+  return nullptr;
+}
+
+ArgumentPtr IExpression::preSimplify() const {
+  return nullptr;
+}
+
 // void IExpression::setMathObjectPrecision(ArgumentPtr &obj, uint8_t precision) {
 //   if (is<INumber>(obj)) {
 //     obj = make_shared<Real>(convert<Real>(*obj).precise(precision));

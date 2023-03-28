@@ -4,6 +4,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
@@ -315,12 +316,54 @@ ArgumentPtr SumExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   return {};
 }
 
+SumExpression::FunctionsVector SumExpression::getSimplifyFunctions() const {
+  return {&SumExpression::simplifyNumber, &SumExpression::simplifyNegation, &SumExpression::coefficientsProcessing};
+}
+
 ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
     return rhsChild;
   }
   if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ZERO) {
     return lhsChild;
+  }
+
+  bool lhsNeg = false;
+  bool rhsNeg = false;
+
+  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+
+  shared_ptr<const INumber> lhsNum = nullptr;
+  shared_ptr<const INumber> rhsNum = nullptr;
+
+  if (lhsExpr && is<Neg>(lhsExpr->getFunction())) {
+    lhsNeg = true;
+    lhsNum = cast<INumber>(lhsExpr->getChildren().front());
+  }
+  else {
+    lhsNum = cast<INumber>(lhsChild);
+  }
+
+  if (rhsExpr && is<Neg>(rhsExpr->getFunction())) {
+    rhsNeg = true;
+    rhsNum = cast<INumber>(rhsExpr->getChildren().front());
+  }
+  else {
+    rhsNum = cast<INumber>(rhsChild);
+  }
+
+  if (lhsNum && rhsNum) {
+    if (lhsNeg) {
+      return Sub()(*rhsNum, *lhsNum);
+    }
+    if (rhsNeg) {
+      return Sub()(*lhsNum, *rhsNum);
+    }
+    if (lhsNeg && rhsNeg) {
+      return makeFunctionExpression(Neg(), {Add()(*lhsNum, *rhsNum)});
+    }
+    return Add()(*lhsNum, *rhsNum);
   }
 
   return {};

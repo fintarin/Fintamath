@@ -16,6 +16,10 @@ public:
 protected:
   ArgumentPtr simplify() const override;
 
+  ArgumentPtr preSimplify() const override;
+
+  ArgumentPtr postSimplify() const override;
+
   // void setPrecision(uint8_t precision) override;
 
 private:

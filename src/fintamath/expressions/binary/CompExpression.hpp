@@ -11,8 +11,6 @@ public:
   // string solve(uint8_t precision) const;
 
 protected:
-  ArgumentPtr postSimplify() const override;
-
   // vector<unique_ptr<IMathObject>> solvePowEquation(const Variable &x) const;
 
   // vector<unique_ptr<IMathObject>> solveQuadraticEquation(const unique_ptr<IMathObject> &v) const;
