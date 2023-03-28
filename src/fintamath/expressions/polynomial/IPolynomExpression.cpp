@@ -63,18 +63,6 @@ ArgumentPtr IPolynomExpression::simplify() const {
   ArgumentPtr simpl = cast<IPolynomExpression>(clone());
 
   preSimplifyChild(simpl);
-  // {
-  //   shared_ptr<IPolynomExpression> simplExpr = cast<IPolynomExpression>(simpl->clone());
-  //   ArgumentsPtrVector oldChildren = simplExpr->children;
-  //   simplExpr->children.clear();
-
-  //   for (auto &child : oldChildren) {
-  //     simplifyChild(child);
-  //     simplExpr->addElement(child);
-  //   }
-
-  //   simpl = simplExpr;
-  // }
   postSimplifyChild(simpl);
 
   if (auto simplExpr = cast<IPolynomExpression>(simpl->clone()); simplExpr && simplExpr->children.size() == 1) {

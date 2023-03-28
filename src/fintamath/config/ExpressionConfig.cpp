@@ -14,6 +14,7 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -139,6 +140,10 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Neg>([](const ArgumentsPtrVector &args) {
       return make_shared<NegExpression>(args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Inv>([](const ArgumentsPtrVector &args) {
+      return make_shared<InvExpression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<UnaryPlus>([](const ArgumentsPtrVector &args) {

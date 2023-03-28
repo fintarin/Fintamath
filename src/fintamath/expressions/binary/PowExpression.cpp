@@ -1,10 +1,13 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
@@ -39,108 +42,102 @@ PowExpression::PowExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhs
 // return exprObj;
 // }
 
-// ArgumentPtr PowExpression::mulSimplify() {
-//   ArgumentPtr simplExpr = IBinaryExpression::simplify();
+ArgumentPtr PowExpression::mulSimplify() const {
+  auto powExpr = cast<PowExpression>(clone());
 
-//   if (!is<PowExpression>(simplExpr)) {
-//     return simplExpr;
-//   }
+  if (auto mulExpr = cast<IExpression>(powExpr->lhsChild); mulExpr && is<Mul>(mulExpr->getFunction())) {
+    ArgumentsPtrVector args = mulExpr->getChildren();
+    for (auto &arg : args) {
+      arg = makeFunctionExpression(Pow(), {arg, powExpr->rhsChild->clone()});
+    }
+    return makeFunctionExpression(Mul(), args);
+  }
 
-//   auto powExpr = cast<PowExpression>(simplExpr);
+  return powExpr;
+}
 
-//   if (auto mulExpr = cast<MulExpression>(powExpr->lhsChild)) {
-//     mulExpr->setPow(powExpr->rhsChild);
-//     ArgumentPtr mulExprResult =
-//     make_shared<MulExpression>(ArgumentsPtrVector{powExpr->lhsChild}); simplifyChild(mulExprResult); return
-//     mulExprResult;
-//   }
+ArgumentPtr PowExpression::sumSimplify() const {
+  auto powExpr = cast<PowExpression>(clone());
 
-//   return powExpr;
-// }
+  if (const auto rhs = cast<Integer>(powExpr->rhsChild)) {
+    if (const auto &sumExpr = sumPolynomSimplify(powExpr->lhsChild, *rhs)) {
+      return sumExpr;
+    }
+  }
 
-// ArgumentPtr PowExpression::sumSimplify() {
-//   ArgumentPtr simplExpr = IBinaryExpression::simplify();
-//   if (!is<PowExpression>(simplExpr)) {
-//     return simplExpr;
-//   }
-//   auto powExpr = cast<PowExpression>(simplExpr);
+  return powExpr;
+}
 
-//   if (const auto rhs = cast<Integer>(powExpr->rhsChild)) {
-//     if (const auto sumExpr = cast<SumExpression>(powExpr->lhsChild)) {
-//       return sumPolynomSimplify(*sumExpr, *rhs);
-//     }
-//   }
+Integer PowExpression::generateNextNumber(Integer n) {
+  Integer u = n & -n;
+  Integer v = u + n;
+  n = v + (((v ^ n) / u) >> 2);
+  return n;
+}
 
-//   return powExpr;
-// }
+Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
+  Integer n = 0;
+  for (int i = 0; i < countOfOne; i++) {
+    n = n << 1 | 1;
+  }
+  return n;
+}
 
-// Integer PowExpression::generateNextNumber(Integer n) {
-//   Integer u = n & -n;
-//   Integer v = u + n;
-//   n = v + (((v ^ n) / u) >> 2);
-//   return n;
-// }
+vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &variableCount) {
+  vector<Integer> result;
+  Integer counter = 0;
+  while (result.size() < variableCount) {
+    if (bitNumber % 2 == 1) {
+      counter++;
+    }
+    if (bitNumber % 2 == 0) {
+      result.emplace_back(counter);
+      counter = 0;
+    }
+    bitNumber >>= 1;
+  }
+  return result;
+}
 
-// Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
-//   Integer n = 0;
-//   for (int i = 0; i < countOfOne; i++) {
-//     n = n << 1 | 1;
-//   }
-//   return n;
-// }
+ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer pow) {
+  auto sumExpr = cast<IExpression>(expr);
+  ArgumentsPtrVector polynom;
+  if (sumExpr && is<Add>(sumExpr->getFunction())) {
+    polynom = sumExpr->getChildren();
+  }
+  else {
+    return nullptr;
+  }
+  ArgumentsPtrVector newPolynom;
+  Integer variableCount = int64_t(polynom.size());
 
-// vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &variableCount) {
-//   vector<Integer> result;
-//   Integer counter = 0;
-//   while (result.size() < variableCount) {
-//     if (bitNumber % 2 == 1) {
-//       counter++;
-//     }
-//     if (bitNumber % 2 == 0) {
-//       result.emplace_back(counter);
-//       counter = 0;
-//     }
-//     bitNumber >>= 1;
-//   }
-//   return result;
-// }
+  bool invert = false;
+  if (pow < ZERO) {
+    pow = abs(pow);
+    invert = true;
+  }
 
-// ArgumentPtr PowExpression::sumPolynomSimplify(const SumExpression &sumExpr, Integer pow) {
-//   ArgumentsPtrVector polynom = sumExpr.getPolynom();
-//   ArgumentsPtrVector newPolynom;
-//   Integer variableCount = int64_t(polynom.size());
+  Integer bitNumber = generateFirstNum(pow);
+  for (int i = 0; i < combinations(pow + variableCount - 1, pow); i++) {
+    vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
+    bitNumber = generateNextNumber(bitNumber);
 
-//   bool invert = false;
-//   if (pow < ZERO) {
-//     pow = abs(pow);
-//     invert = true;
-//   }
+    ArgumentsPtrVector mulExprPolynom;
+    mulExprPolynom.emplace_back(make_shared<Integer>(split(pow, vectOfPows)));
+    for (size_t j = 0; j < variableCount; j++) {
+      auto powExpr = makeFunctionExpression(Pow(), {polynom[j], make_shared<Integer>(move(vectOfPows[j]))});
+      mulExprPolynom.emplace_back(powExpr);
+    }
+    ArgumentPtr mulExpr = makeFunctionExpression(Mul(), mulExprPolynom);
+    newPolynom.emplace_back(mulExpr);
+  }
 
-//   Integer bitNumber = generateFirstNum(pow);
-//   for (int i = 0; i < combinations(pow + variableCount - 1, pow); i++) {
-//     vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
-//     bitNumber = generateNextNumber(bitNumber);
-
-//     ArgumentsPtrVector mulExprPolynom;
-//     mulExprPolynom.emplace_back(make_shared<Integer>(split(pow, vectOfPows)));
-//     for (size_t j = 0; j < variableCount; j++) {
-//       auto powExpr = make_shared<PowExpression>(polynom[j],
-//       make_shared<Integer>(move(vectOfPows[j]))); mulExprPolynom.emplace_back(powExpr->polynomSimplify());
-//     }
-//     ArgumentPtr mulExpr = make_shared<MulExpression>(mulExprPolynom);
-//     simplifyChild(mulExpr);
-//     newPolynom.emplace_back(mulExpr);
-//   }
-
-//   ArgumentPtr newSumExpr = make_shared<SumExpression>(newPolynom);
-//   simplifyChild(newSumExpr);
-//   if (invert) {
-//     ArgumentPtr invertExpr = make_shared<InvExpression>(newSumExpr);
-//     simplifyChild(invertExpr);
-//     return invertExpr;
-//   }
-//   return newSumExpr;
-// }
+  ArgumentPtr newSumExpr = makeFunctionExpression(Add(), newPolynom);
+  if (invert) {
+    return makeFunctionExpression(Inv(), {newSumExpr});
+  }
+  return newSumExpr;
+}
 
 // ArgumentPtr PowExpression::getValue() {
 //   return lhsChild;
@@ -150,13 +147,13 @@ PowExpression::PowExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhs
 //   return rhsChild;
 // }
 
-// ArgumentPtr PowExpression::polynomSimplify() {
-//   ArgumentPtr result = mulSimplify();
-//   if (auto powExpr = cast<PowExpression>(result)) {
-//     return powExpr->sumSimplify();
-//   }
-//   return result;
-// }
+ArgumentPtr PowExpression::polynomSimplify() const {
+  ArgumentPtr result = mulSimplify();
+  if (auto powExpr = cast<PowExpression>(result)) {
+    return powExpr->sumSimplify();
+  }
+  return result;
+}
 
 ArgumentPtr PowExpression::invert() const {
   auto inv = make_shared<PowExpression>(*this);
@@ -172,22 +169,21 @@ ArgumentPtr PowExpression::postSimplify() const {
     return simpl;
   }
 
-  auto lhsExpr = cast<IExpression>(simplExpr->lhsChild);
   auto rhsInt = cast<Integer>(simplExpr->rhsChild);
 
-  if (lhsExpr && rhsInt) {
+  if (rhsInt) {
     if (*rhsInt == ZERO) {
       return ONE.clone();
     }
-    if (*lhsExpr == ONE || *rhsInt == ONE) {
-      return lhsChild;
+    if (*simplExpr->lhsChild == ONE || *rhsInt == ONE) {
+      return simplExpr->lhsChild;
     }
     if (*rhsInt == NEG_ONE) {
-      return makeFunctionExpression(Inv(), {lhsChild});
+      return makeFunctionExpression(Inv(), {simplExpr->lhsChild});
     }
   }
 
-  return nullptr;
+  return polynomSimplify();
 }
 
 }
