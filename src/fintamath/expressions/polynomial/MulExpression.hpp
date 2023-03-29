@@ -9,8 +9,6 @@ class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INega
 public:
   explicit MulExpression(const ArgumentsPtrVector &children);
 
-  string toString() const override;
-
   // ArgumentPtr getPowCoefficient(const ArgumentPtr &powValue) const;
 
   // ArgumentPtr getPow() const;
@@ -25,6 +23,8 @@ protected:
   FunctionsVector getSimplifyFunctions() const override;
 
 private:
+  string childToString(const ArgumentPtr &child, bool isFirst = false) const override;
+
   static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);

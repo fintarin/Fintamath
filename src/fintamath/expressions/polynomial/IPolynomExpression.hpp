@@ -10,6 +10,8 @@ public:
 
   ArgumentsPtrVector getChildren() const final;
 
+  string toString() const final;
+
   // void setPrecision(uint8_t precision) final;
 
   ArgumentsPtrVector getVariables() const final;
@@ -29,6 +31,8 @@ protected:
   ArgumentPtr simplify() const final;
 
   virtual FunctionsVector getSimplifyFunctions() const;
+
+  virtual string childToString(const ArgumentPtr &child, bool isFirst = false) const;
 
   ArgumentPtr preSimplify() const override;
 
