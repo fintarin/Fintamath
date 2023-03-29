@@ -12,10 +12,6 @@ const And AND;
 AndExpression::AndExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(AND, children) {
 }
 
-string AndExpression::toString() const {
-  return binaryOperatorToString(AND, children);
-}
-
 // unique_ptr<IMathObject> AndExpression::simplify(bool /*isPrecise*/) const {
 // unique_ptr<IMathObject> result = polynomVect.front()->clone();
 // for (size_t i = 1; i < polynomVect.size(); i++) {

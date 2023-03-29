@@ -12,10 +12,6 @@ const Or OR;
 OrExpression::OrExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(OR, children) {
 }
 
-string OrExpression::toString() const {
-  return binaryOperatorToString(OR, children);
-}
-
 // unique_ptr<IMathObject> OrExpression::simplify(bool /*isPrecise*/) const {
 // unique_ptr<IMathObject> result = children.front()->clone();
 // for (size_t i = 1; i < children.size(); i++) {

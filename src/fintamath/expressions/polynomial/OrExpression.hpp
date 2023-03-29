@@ -9,8 +9,6 @@ class OrExpression : public IPolynomExpressionCRTP<OrExpression>, public ILogicN
 public:
   explicit OrExpression(const ArgumentsPtrVector &children);
 
-  string toString() const override;
-
   ArgumentPtr logicNegate() const override;
 
 protected:

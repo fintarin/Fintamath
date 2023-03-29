@@ -9,8 +9,6 @@ class AndExpression : public IPolynomExpressionCRTP<AndExpression>, public ILogi
 public:
   explicit AndExpression(const ArgumentsPtrVector &children);
 
-  string toString() const override;
-
   ArgumentPtr logicNegate() const override;
 
 protected:

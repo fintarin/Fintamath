@@ -28,26 +28,30 @@ string MulExpression::sumExprToString(const ArgumentPtr &obj) {
   return obj->toString();
 }
 
-string MulExpression::toString() const {
-  string result;
-
-  if (const auto invExpr = cast<IExpression>(children.front()); invExpr && is<Inv>(invExpr->getFunction())) {
-    result += "1/";
-    result += sumExprToString(invExpr->getChildren().front());
+string MulExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
+  bool invert = false;
+  ArgumentPtr childToStr;
+  if (auto invExpr = cast<IExpression>(child); invExpr && is<Inv>(invExpr->getFunction())) {
+    childToStr = invExpr->getChildren()[0];
+    invert = true;
   }
   else {
-    result += sumExprToString(children.front());
+    childToStr = child;
   }
 
-  for (size_t i = 1; i < children.size(); i++) {
-    if (const auto invExpr = cast<IExpression>(children[i]); invExpr && is<Inv>(invExpr->getFunction())) {
-      result += "/";
-      result += sumExprToString(invExpr->getChildren().front());
-    }
-    else {
-      result += ' ';
-      result += sumExprToString(children[i]);
-    }
+  string result;
+  if (auto sumExpr = cast<IExpression>(childToStr); sumExpr && is<Add>(sumExpr->getFunction())) {
+    result = "(" + sumExpr->getChildren()[0]->toString() + ")";
+  }
+  else {
+    result = childToStr->toString();
+  }
+
+  if (invert) {
+    result = (isFirst ? "1/" : "/") + result;
+  }
+  else {
+    result = (isFirst ? "" : " ") + result;
   }
 
   return result;

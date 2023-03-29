@@ -1,5 +1,6 @@
 #include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
 
@@ -17,6 +18,25 @@ shared_ptr<IFunction> IPolynomExpression::getFunction() const {
 
 ArgumentsPtrVector IPolynomExpression::getChildren() const {
   return children;
+}
+
+string IPolynomExpression::toString() const {
+  string result;
+
+  result += childToString(children.front(), true);
+
+  for (size_t i = 1; i < children.size(); i++) {
+    result += childToString(children[i]);
+  }
+
+  if (result.empty()) {
+    return binaryOperatorToString(*func, children);
+  }
+  return result;
+}
+
+string IPolynomExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
+  return {};
 }
 
 // void IPolynomExpression::setPrecision(uint8_t precision) {
