@@ -38,6 +38,8 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
+  virtual bool comparator(const ArgumentPtr &left, const ArgumentPtr &right) const;
+
 protected:
   // static void sortVector(ArgumentsPtrVector &vector, map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
   //                        ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);

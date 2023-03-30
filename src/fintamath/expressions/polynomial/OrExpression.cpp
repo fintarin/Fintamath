@@ -12,40 +12,6 @@ const Or OR;
 OrExpression::OrExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(OR, children) {
 }
 
-// unique_ptr<IMathObject> OrExpression::simplify(bool /*isPrecise*/) const {
-// unique_ptr<IMathObject> result = children.front()->clone();
-// for (size_t i = 1; i < children.size(); i++) {
-//   const auto &lhsPtr = result;
-//   const auto &rhsPtr = children[i];
-//   const auto &lhs = *lhsPtr;
-//   const auto &rhs = *rhsPtr;
-
-//   if (const auto *lhsBool = cast<Boolean>(&lhs)) {
-//     if (*lhsBool == true) {
-//       result = make_unique<Boolean>(true);
-//     } else {
-//       *result = *rhsPtr;
-//     }
-//     continue;
-//   }
-
-//   if (const auto *rhsBool = cast<Boolean>(&rhs)) {
-//     if (*rhsBool == true) {
-//       result = make_unique<Boolean>(true);
-//     } else {
-//       *result = *lhsPtr;
-//     }
-//     continue;
-//   }
-
-//   if (lhs == notL(rhs)) {
-//     result = make_unique<Boolean>(true);
-//   }
-// }
-
-// return result;
-// }
-
 ArgumentPtr OrExpression::logicNegate() const {
   ArgumentsPtrVector negChildren;
 
