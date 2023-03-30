@@ -179,6 +179,9 @@ ArgumentPtr IPolynomExpression::preSimplify() const {
 
   simpl->preSimplifyRec();
   simpl->globalSimplifyRec();
+  std::sort(simpl->children.begin(), simpl->children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+    return comparator(lhs, rhs);
+  });
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
@@ -201,11 +204,18 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
 
   simpl->postSimplifyRec();
   simpl->globalSimplifyRec();
+  std::sort(simpl->children.begin(), simpl->children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+    return comparator(lhs, rhs);
+  });
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
   }
   return simpl;
+}
+
+bool IPolynomExpression::comparator(const ArgumentPtr &left, const ArgumentPtr &right) const {
+  return left->toString() < right->toString();
 }
 
 // void IPolynomExpression::sortVector(ArgumentsPtrVector &vector,

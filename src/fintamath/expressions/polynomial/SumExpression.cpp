@@ -6,6 +6,8 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
@@ -416,4 +418,113 @@ ArgumentPtr SumExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, c
 
   return {};
 }
+
+ArgumentPtr unwrapUnary(const ArgumentPtr &child) {
+  if (auto expr = cast<IExpression>(child); expr && is<Neg>(expr->getFunction()) || is<Inv>(expr->getFunction())) {
+    return expr->getChildren()[0];
+  }
+  return child;
+}
+
+bool SumExpression::functionComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const {
+  auto leftExpr = cast<IExpression>(lhs);
+  auto rightExpr = cast<IExpression>(rhs);
+  auto leftFunction = leftExpr->getFunction();
+  auto rightFunction = rightExpr->getFunction();
+
+  if (leftFunction->toString() == rightFunction->toString()) {
+    return comparator(leftExpr->getChildren()[0], rightExpr->getChildren()[0]);
+  }
+
+  return leftFunction->toString() < rightFunction->toString();
+}
+
+bool SumExpression::powComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const {
+  auto leftExpr = cast<IExpression>(lhs);
+  auto rightExpr = cast<IExpression>(rhs);
+
+  if (leftExpr->getChildren()[0]->toString() == rightExpr->getChildren()[0]->toString()) {
+    return leftExpr->getChildren()[1]->toString() > rightExpr->getChildren()[1]->toString();
+  }
+
+  return leftExpr->getChildren()[0]->toString() < rightExpr->getChildren()[0]->toString();
+}
+
+bool SumExpression::literalComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const {
+  auto leftLit = cast<ILiteral>(lhs);
+  auto rightLit = cast<ILiteral>(rhs);
+
+  if (!leftLit && !rightLit) {
+    return lhs->toString() < rhs->toString();
+  }
+
+  if (!leftLit) {
+    return true;
+  }
+
+  if(!rightLit){
+    return false;
+  }
+
+  auto leftConst = cast<IConstant>(lhs);
+  auto rightConst = cast<IConstant>(rhs);
+
+  if ((!leftConst || rightConst) && (!rightConst || leftConst)) { //logic equivalent operator (leftConst <-> rightConst)
+    return lhs->toString() < rhs->toString();
+  }
+
+  if (!leftConst) {
+    return true;
+  }
+
+  if (!rightConst) {
+    return false;
+  }
+}
+
+bool SumExpression::operatorComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const {
+  auto leftExpr = cast<IExpression>(lhs);
+  auto rightExpr = cast<IExpression>(rhs);
+  auto leftOp = cast<IOperator>(leftExpr->getFunction());
+  auto rightOp = cast<IOperator>(rightExpr->getFunction());
+
+  if (!leftOp) {
+    return false;
+  }
+
+  if (!rightOp) {
+    return true;
+  }
+
+  if (leftOp->getOperatorPriority() == rightOp->getOperatorPriority()) {
+    if (leftOp->getOperatorPriority() == IOperator::Priority::Exponentiation) {
+      return powComparator(lhs, rhs);
+    }
+    return leftExpr->getChildren()[0]->toString() < rightExpr->getChildren()[0]->toString();
+  }
+
+  return leftOp->getOperatorPriority() < rightOp->getOperatorPriority();
+}
+
+
+bool SumExpression::comparator(const ArgumentPtr &left, const ArgumentPtr &right) const {
+  auto leftExpr = cast<IExpression>(left);
+  auto rightExpr = cast<IExpression>(right);
+  if (leftExpr && rightExpr) {
+    auto leftFunction = leftExpr->getFunction();
+    auto rightFunction = rightExpr->getFunction();
+    if (!is<IOperator>(leftFunction) && !is<IOperator>(rightFunction)) {
+      return functionComparator(left, right);
+    }
+
+    return operatorComparator(left, right);
+  }
+  
+  if (!leftExpr && !rightExpr) {
+    return literalComparator(left, right);
+  }
+
+  return rightExpr == nullptr;
+}
+
 }

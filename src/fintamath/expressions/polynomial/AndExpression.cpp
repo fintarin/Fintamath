@@ -12,40 +12,6 @@ const And AND;
 AndExpression::AndExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(AND, children) {
 }
 
-// unique_ptr<IMathObject> AndExpression::simplify(bool /*isPrecise*/) const {
-// unique_ptr<IMathObject> result = polynomVect.front()->clone();
-// for (size_t i = 1; i < polynomVect.size(); i++) {
-//   const unique_ptr<IMathObject> &lhsPtr = result;
-//   const unique_ptr<IMathObject> &rhsPtr = polynomVect[i];
-//   const IMathObject &lhs = *lhsPtr;
-//   const IMathObject &rhs = *rhsPtr;
-
-//   if (const auto *lhsBool = cast<Boolean>(&lhs)) {
-//     if (*lhsBool == true) {
-//       *result = *rhsPtr;
-//     } else {
-//       result = make_unique<Boolean>(false);
-//     }
-//     continue;
-//   }
-
-//   if (const auto *rhsBool = cast<Boolean>(&rhs)) {
-//     if (*rhsBool == true) {
-//       *result = *lhsPtr;
-//     } else {
-//       result = make_unique<Boolean>(false);
-//     }
-//     continue;
-//   }
-
-//   if (lhs == notL(rhs)) {
-//     result = make_unique<Boolean>(false);
-//   }
-// }
-
-// return result;
-// }
-
 ArgumentPtr AndExpression::logicNegate() const {
   ArgumentsPtrVector negChildren;
 

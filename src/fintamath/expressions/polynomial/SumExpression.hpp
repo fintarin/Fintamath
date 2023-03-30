@@ -19,7 +19,17 @@ public:
 protected:
   FunctionsVector getSimplifyFunctions() const override;
 
+  bool comparator(const ArgumentPtr &left, const ArgumentPtr &right) const override;
+
 private:
+  bool functionComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const;
+
+  bool operatorComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const;
+
+  bool powComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const;
+
+  bool literalComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const;
+
   string childToString(const ArgumentPtr &child, bool isFirst = false) const override;
 
   static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
