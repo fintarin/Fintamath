@@ -262,12 +262,15 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1-(sin(x)+1)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("1/(sin(x)+1)").toString(), "1/(sin(x) + 1)");
   EXPECT_EQ(Expression("(x+1)^3").toString(), "x^3 + 3 x^2 + 3 x + 1");
+  // TODO
   //EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x + 3 x^2 + 1)");
   EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1");
+  // TODO
   //EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1)");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
   EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
 
+  // TODO
   // EXPECT_EQ(Expression("a=a").toString(), "True");
   // EXPECT_EQ(Expression("a+a=2*a").toString(), "True");
   // EXPECT_EQ(Expression("a=b").toString(), "a - b = 0");
