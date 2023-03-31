@@ -1,12 +1,23 @@
 #include "fintamath/expressions/binary/CompExpression.hpp"
 
-#include <algorithm>
-#include <ios>
+#include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
 CompExpression::CompExpression(const IOperator &oper, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)
     : IBinaryExpressionCRTP(oper, lhsChild, rhsChild) {
+}
+
+ArgumentPtr CompExpression::preSimplify() const {
+  if (auto rhsInt = cast<Integer>(rhsChild); !rhsInt || *rhsInt != ZERO) {
+    ArgumentPtr resLhs = makeFunctionExpression(Sub(), {lhsChild, rhsChild});
+    return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
+  }
+
+  return {};
 }
 
 // unique_ptr<IMathObject> CompExpression::simplify(bool isPrecise) const {

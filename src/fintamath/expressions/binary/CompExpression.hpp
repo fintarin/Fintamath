@@ -20,6 +20,8 @@ protected:
   // static vector<unique_ptr<IMathObject>> sortResult(vector<unique_ptr<IMathObject>> &result);
 
   // bool detectOneVariable(Variable &v) const;
+
+  ArgumentPtr preSimplify() const override;
 };
 
 }
