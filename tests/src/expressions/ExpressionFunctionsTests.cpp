@@ -12,7 +12,7 @@ TEST(ExpressionFunctionsTests, sumTest) {
   EXPECT_EQ(sum(10, Expression("a+2")).toString(), "a + 12");
   EXPECT_EQ(sum(Variable("a"), Expression("a+2")).toString(), "2 a + 2");
   EXPECT_EQ(sum(Expression("b+2"), Expression("a+2")).toString(), "a + b + 4");
-  EXPECT_EQ(sum(Expression("10+a^3"), Expression("a^2")).toString(), "a^2 + a^3 + 10"); // TODO sort powers
+  EXPECT_EQ(sum(Expression("10+a^3"), Expression("a^2")).toString(), "a^3 + a^2 + 10");
   EXPECT_EQ(sum(Expression("a*b"), Expression("b*a")).toString(), "2 a b");
   EXPECT_EQ(sum(Expression("a+b"), Expression("a+b")).toString(), "2 a + 2 b");
 }
@@ -20,7 +20,7 @@ TEST(ExpressionFunctionsTests, sumTest) {
 TEST(ExpressionFunctionsTests, mulTest) {
   EXPECT_EQ(mul(Variable("a"), -1, Expression("a*2")).toString(), "-2 a^2");
   EXPECT_EQ(mul(10, Expression("a+2")).toString(), "10 a + 20");
-  EXPECT_EQ(mul(Variable("a"), Expression("a^3+a^2")).toString(), "a^3 + a^4");
+  EXPECT_EQ(mul(Variable("a"), Expression("a^3+a^2")).toString(), "a^4 + a^3");
   EXPECT_EQ(mul(5, Expression("a+3"), Expression("a+2")).toString(),
             "25 a + 5 a^2 + 30"); // TODO: replace to 2*a^2+25*a+30
   EXPECT_EQ(mul(Expression("a+b"), Expression("3 b + c")).toString(),
@@ -38,10 +38,10 @@ TEST(ExpressionFunctionsTests, subTest) {
 }
 
 TEST(ExpressionFunctionsTests, divTest) {
-  EXPECT_EQ(div(Variable("a"), Expression("b^2")).toString(), "b^-2 a");
+  EXPECT_EQ(div(Variable("a"), Expression("b^2")).toString(), "a b^-2");
   EXPECT_EQ(div(10, Expression("a+2")).toString(), "10/(a + 2)");
   EXPECT_EQ(div(Variable("a"), Expression("a+2")).toString(), "a/(a + 2)");
-  EXPECT_EQ(div(Expression("b+2"), Expression("a+2")).toString(), "(b + 2)/(a + 2)");
+  EXPECT_EQ(div(Expression("b+2"), Expression("a+2")).toString(), "2/(a + 2) + b/(a + 2)");
   EXPECT_EQ(div(Expression("10+a^3"), Expression("a^2")).toString(), "10 a^-2 + a");
   EXPECT_EQ(div(Expression("a*b"), Expression("b*a")).toString(), "1");
   EXPECT_EQ(div(Expression("a+b"), Expression("a+b")).toString(), "1");
