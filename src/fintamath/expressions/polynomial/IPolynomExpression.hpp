@@ -40,6 +40,14 @@ protected:
 
   virtual bool comparator(const ArgumentPtr &left, const ArgumentPtr &right) const;
 
+  virtual bool operatorComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  virtual bool literalComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  virtual bool powComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  virtual bool functionComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
 protected:
   // static void sortVector(ArgumentsPtrVector &vector, map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
   //                        ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);

@@ -10,6 +10,7 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
@@ -41,7 +42,7 @@ string MulExpression::childToString(const ArgumentPtr &child, bool isFirst) cons
 
   string result;
   if (auto sumExpr = cast<IExpression>(childToStr); sumExpr && is<Add>(sumExpr->getFunction())) {
-    result = "(" + sumExpr->getChildren()[0]->toString() + ")";
+    result = "(" + sumExpr->toString() + ")";
   }
   else {
     result = childToStr->toString();
@@ -769,4 +770,82 @@ MulExpression::FunctionsVector MulExpression::getSimplifyFunctions() const {
           &MulExpression::coefficientsProcessing, &MulExpression::multiplicateBraces};
 }
 
+bool MulExpression::literalComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  // if (is<INumber>(lhs)) {
+  //   return true;
+  // }
+
+  // if (is<INumber>(rhs)) {
+  //   return false;
+  // }
+  auto leftLit = cast<ILiteral>(lhs);
+  auto rightLit = cast<ILiteral>(rhs);
+
+  if (!leftLit && !rightLit) {
+    return lhs->toString() < rhs->toString();
+  }
+
+  if (!leftLit) {
+    return true;
+  }
+
+  if (!rightLit) {
+    return false;
+  }
+
+  auto leftConst = cast<IConstant>(lhs);
+  auto rightConst = cast<IConstant>(rhs);
+
+  if ((!leftConst || rightConst) && (!rightConst || leftConst)) { // logic equivalent operator (leftConst <->
+                                                                  // rightConst)
+    return lhs->toString() < rhs->toString();
+  }
+
+  if (!leftConst) {
+    return false;
+  }
+
+  if (!rightConst) {
+    return true;
+  }
+}
+
+bool MulExpression::powComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  if (is<INumber>(lhs)) {
+    return true;
+  }
+
+  if (is<INumber>(rhs)) {
+    return false;
+  }
+
+  auto leftExpr = cast<IExpression>(lhs);
+  auto rightExpr = cast<IExpression>(rhs);
+
+  if (!leftExpr) {
+    leftExpr = makeRawFunctionExpression(Pow(), {lhs, ONE.clone()});
+  }
+
+  if (!rightExpr) {
+    rightExpr = makeRawFunctionExpression(Pow(), {rhs, ONE.clone()});
+  }
+
+  if (is<Inv>(leftExpr->getFunction())) {
+    return false;
+  }
+
+  if (is<Inv>(rightExpr->getFunction())) {
+    return true;
+  }
+
+  if (!is<Pow>(leftExpr->getFunction())) {
+    leftExpr = makeRawFunctionExpression(Pow(), {leftExpr, ONE.clone()});
+  }
+
+  if (!is<Pow>(rightExpr->getFunction())) {
+    rightExpr = makeRawFunctionExpression(Pow(), {rightExpr, ONE.clone()});
+  }
+
+  return leftExpr->getChildren()[0]->toString() < rightExpr->getChildren()[0]->toString();
+}
 }

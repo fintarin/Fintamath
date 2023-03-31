@@ -3,6 +3,7 @@
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 
 namespace fintamath {
 
@@ -215,25 +216,108 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
 }
 
 bool IPolynomExpression::comparator(const ArgumentPtr &left, const ArgumentPtr &right) const {
-  return left->toString() < right->toString();
+  auto leftExpr = cast<IExpression>(left);
+  auto rightExpr = cast<IExpression>(right);
+  if (leftExpr && rightExpr) {
+    auto leftFunction = leftExpr->getFunction();
+    auto rightFunction = rightExpr->getFunction();
+    if (!is<IOperator>(leftFunction) && !is<IOperator>(rightFunction)) {
+      return functionComparator(left, right);
+    }
+
+    return operatorComparator(left, right);
+  }
+
+  if (!leftExpr && !rightExpr) {
+    return literalComparator(left, right);
+  }
+
+  return powComparator(left, right);
 }
 
-// void IPolynomExpression::sortVector(ArgumentsPtrVector &vector,
-//                                     map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
-//                                     ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector) {
-//   for (auto &child : vector) {
-//     if (const auto expr = cast<IExpression>(child)) {
-//       if (const auto op = cast<IOperator>(expr->getFunction())) {
-//         priorityMap[op->getOperatorPriority()].emplace_back(child);
-//         continue;
-//       }
-//       functionVector.emplace_back(child);
-//       continue;
-//     }
+bool IPolynomExpression::operatorComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  auto leftExpr = cast<IExpression>(lhs);
+  auto rightExpr = cast<IExpression>(rhs);
+  auto leftOp = cast<IOperator>(leftExpr->getFunction());
+  auto rightOp = cast<IOperator>(rightExpr->getFunction());
 
-//     if (is<Variable>(child)) {
-//       variableVector.emplace_back(child);
-//     }
-//   }
-// }
+  if (!leftOp) {
+    return false;
+  }
+
+  if (!rightOp) {
+    return true;
+  }
+
+  if (leftOp->getOperatorPriority() == rightOp->getOperatorPriority()) {
+    if (leftOp->getOperatorPriority() == IOperator::Priority::Exponentiation) {
+      return powComparator(lhs, rhs);
+    }
+    return leftExpr->getChildren()[0]->toString() < rightExpr->getChildren()[0]->toString();
+  }
+
+  return leftOp->getOperatorPriority() < rightOp->getOperatorPriority();
+}
+
+bool IPolynomExpression::literalComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  auto leftLit = cast<ILiteral>(lhs);
+  auto rightLit = cast<ILiteral>(rhs);
+
+  if (!leftLit && !rightLit) {
+    return lhs->toString() < rhs->toString();
+  }
+
+  if (!leftLit) {
+    return false;
+  }
+
+  if (!rightLit) {
+    return true;
+  }
+
+  auto leftConst = cast<IConstant>(lhs);
+  auto rightConst = cast<IConstant>(rhs);
+
+  if ((!leftConst || rightConst) && (!rightConst || leftConst)) { // logic equivalent operator (leftConst <->
+                                                                  // rightConst)
+    return lhs->toString() < rhs->toString();
+  }
+
+  if (!leftConst) {
+    return true;
+  }
+
+  if (!rightConst) {
+    return false;
+  }
+}
+
+bool IPolynomExpression::powComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  auto leftExpr = cast<IExpression>(lhs);
+  auto rightExpr = cast<IExpression>(rhs);
+
+  if (!leftExpr || !rightExpr) {
+    return rightExpr == nullptr;
+  }
+
+  if (leftExpr->getChildren()[0]->toString() == rightExpr->getChildren()[0]->toString()) {
+    return leftExpr->getChildren()[1]->toString() > rightExpr->getChildren()[1]->toString();
+  }
+
+  return leftExpr->getChildren()[0]->toString() < rightExpr->getChildren()[0]->toString();
+}
+
+bool IPolynomExpression::functionComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  auto leftExpr = cast<IExpression>(lhs);
+  auto rightExpr = cast<IExpression>(rhs);
+  auto leftFunction = leftExpr->getFunction();
+  auto rightFunction = rightExpr->getFunction();
+
+  if (leftFunction->toString() == rightFunction->toString()) {
+    return comparator(leftExpr->getChildren()[0], rightExpr->getChildren()[0]);
+  }
+
+  return leftFunction->toString() < rightFunction->toString();
+}
+
 }
