@@ -31,8 +31,9 @@ string IPolynomExpression::toString() const {
   }
 
   if (result.empty()) {
-    return binaryOperatorToString(*func, children);
+    return binaryOperatorToString(cast<IOperator>(*func), children);
   }
+
   return result;
 }
 
