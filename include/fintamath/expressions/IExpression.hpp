@@ -47,6 +47,9 @@ protected:
   virtual ArgumentPtr simplify() const = 0;
 
 private:
+  static void simplifyConstant(ArgumentPtr &child);
+
+private:
   static Parser::Vector<unique_ptr<IExpression>, const string &> parserVector;
 };
 
