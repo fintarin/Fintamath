@@ -74,10 +74,8 @@ string putInBrackets(const string &str) {
   return "(" + str + ")";
 }
 
-string binaryOperatorToString(const IFunction &func, const ArgumentsPtrVector &values) {
+string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values) {
   string result;
-
-  const auto &oper = cast<IOperator>(func);
 
   string operStr = oper.toString();
   IOperator::Priority operPriority = oper.getOperatorPriority();
