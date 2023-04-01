@@ -207,8 +207,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "15/a/(b + 2) + 3 b/a/(b + 2) + 5/(b + 2) + b/(b + 2)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
-  //TODO: polynomial division
-  //EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
+  EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
   EXPECT_EQ(Expression("1*(a+b)*1").toString(), "a + b");
   EXPECT_EQ(Expression("-1*(a+b)*1").toString(), "-a - b");
   EXPECT_EQ(Expression("1*(a+b)*-1").toString(), "-a - b");
@@ -216,7 +215,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1+(a+b)+1").toString(), "a + b + 2");
   EXPECT_EQ(Expression("-1+(a+b)+1").toString(), "a + b");
   EXPECT_EQ(Expression("1+(a+b)-1").toString(), "a + b");
-  //EXPECT_EQ(Expression("-1+(a+b)-1").toString(), "a + b - 2");
+  EXPECT_EQ(Expression("-1+(a+b)-1").toString(), "a + b - 2");
   EXPECT_EQ(Expression("2*(a+b)*2").toString(), "4 a + 4 b");
   EXPECT_EQ(Expression("-2*(a+b)*2").toString(), "-4 a - 4 b");
   EXPECT_EQ(Expression("2*(a+b)*-2").toString(), "-4 a - 4 b");
@@ -224,13 +223,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2+(a+b)+2").toString(), "a + b + 4");
   EXPECT_EQ(Expression("-2+(a+b)+2").toString(), "a + b");
   EXPECT_EQ(Expression("2+(a+b)-2").toString(), "a + b");
-  //EXPECT_EQ(Expression("-2+(a+b)-2").toString(), "a + b - 4");
+  EXPECT_EQ(Expression("-2+(a+b)-2").toString(), "a + b - 4");
   EXPECT_EQ(Expression("(a+b)+(a+b)-(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)+(a+b)+(-(a+b))").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)+(a+b)+(-(-(a+b)))").toString(), "3 a + 3 b");
   EXPECT_EQ(Expression("-a^2 + b").toString(), "-a^2 + b");
-  //EXPECT_EQ(Expression("-a^2 c + b").toString(), "-a^2 c + b");
-  //EXPECT_EQ(Expression("-a^2 d - a^2 c + b").toString(), "-a^2 c - a^2 d + b");
+  EXPECT_EQ(Expression("-a^2 c + b").toString(), "-a^2 c + b");
+  EXPECT_EQ(Expression("-a^2 d - a^2 c + b").toString(), "-a^2 c - a^2 d + b");
   EXPECT_EQ(Expression("abc").toString(), "a b c");
   EXPECT_EQ(Expression("d^abc").toString(), "b c d^a");
   EXPECT_EQ(Expression("abc^d").toString(), "a b c^d");
@@ -247,6 +246,7 @@ TEST(ExpressionTests, stringConstructorTest) {
             "3 a b^2 c d + 3 a b c d^2 + 3 a b c d v + 3 a b c d + 3 a b c^2 d + 3 a b c^2 d v + 3 a^2 b c^2 d + 3 a^5 b^2 c^4 d + 6 a^2 b c d");
   EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + b^2 + 2 a b");
   EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + b^2 + 2 a b");
+  // TODO: implement function minimization
   //EXPECT_EQ(Expression("sin(asin(a+b+1-1))^1000/(a+b+1-1)^998").toString(), "sin(asin(a+b))^1000/(a+b)^998");
 
   EXPECT_EQ(Expression("a(10^100)/10^99").toString(), "10 a");
@@ -262,28 +262,25 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1-(sin(x)+1)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("1/(sin(x)+1)").toString(), "1/(sin(x) + 1)");
   EXPECT_EQ(Expression("(x+1)^3").toString(), "x^3 + 3 x^2 + 3 x + 1");
-  // TODO
-  //EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x + 3 x^2 + 1)");
+  EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x + 3 x^2 + 1)");
   EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1");
-  // TODO
-  //EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1)");
+  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1)");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
   EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
 
-  // TODO
-  // EXPECT_EQ(Expression("a=a").toString(), "True");
-  // EXPECT_EQ(Expression("a+a=2*a").toString(), "True");
-  // EXPECT_EQ(Expression("a=b").toString(), "a - b = 0");
-  // EXPECT_EQ(Expression("a!=a").toString(), "False");
-  // EXPECT_EQ(Expression("a+a!=2*a").toString(), "False");
-  // EXPECT_EQ(Expression("a!=b").toString(), "a - b != 0");
-  // EXPECT_EQ(Expression("x<6").toString(), "x - 6 < 0");
-  // EXPECT_EQ(Expression("x<=6").toString(), "x - 6 <= 0");
-  // EXPECT_EQ(Expression("x>6").toString(), "x - 6 > 0");
-  // EXPECT_EQ(Expression("x>=6").toString(), "x - 6 >= 0");
-  // EXPECT_EQ(Expression("(5+5)=(2*5)").toString(), "True");
-  // EXPECT_EQ(Expression("((((5+5)=(2*5))))").toString(), "True");
-  // EXPECT_EQ(Expression("((1*1))(5+5)=((2*5)/(1/1))").toString(), "True");
+  EXPECT_EQ(Expression("a=a").toString(), "True");
+  EXPECT_EQ(Expression("a+a=2*a").toString(), "True");
+  EXPECT_EQ(Expression("a=b").toString(), "a - b = 0");
+  EXPECT_EQ(Expression("a!=a").toString(), "False");
+  EXPECT_EQ(Expression("a+a!=2*a").toString(), "False");
+  EXPECT_EQ(Expression("a!=b").toString(), "a - b != 0");
+  EXPECT_EQ(Expression("x<6").toString(), "x - 6 < 0");
+  EXPECT_EQ(Expression("x<=6").toString(), "x - 6 <= 0");
+  EXPECT_EQ(Expression("x>6").toString(), "x - 6 > 0");
+  EXPECT_EQ(Expression("x>=6").toString(), "x - 6 >= 0");
+  EXPECT_EQ(Expression("(5+5)=(2*5)").toString(), "True");
+  EXPECT_EQ(Expression("((((5+5)=(2*5))))").toString(), "True");
+  EXPECT_EQ(Expression("((1*1))(5+5)=((2*5)/(1/1))").toString(), "True");
 
   EXPECT_EQ(Expression("a'").toString(), "1");
   EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");
