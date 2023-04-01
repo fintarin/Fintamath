@@ -32,16 +32,6 @@ void IExpression::simplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
-  else if (const auto constChild = cast<IConstant>(child)) {
-    ArgumentPtr constVal = (*constChild)();
-
-    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
-      child = constChild;
-    }
-    else {
-      child = constVal;
-    }
-  }
 }
 
 void IExpression::preSimplifyChild(ArgumentPtr &child) {
@@ -50,16 +40,8 @@ void IExpression::preSimplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
-  else if (const auto constChild = cast<IConstant>(child)) {
-    ArgumentPtr constVal = (*constChild)();
 
-    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
-      child = constChild;
-    }
-    else {
-      child = constVal;
-    }
-  }
+  simplifyConstant(child);
 }
 
 void IExpression::postSimplifyChild(ArgumentPtr &child) {
@@ -68,7 +50,20 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
-  else if (const auto constChild = cast<IConstant>(child)) {
+
+  simplifyConstant(child);
+}
+
+ArgumentPtr IExpression::postSimplify() const {
+  return nullptr;
+}
+
+ArgumentPtr IExpression::preSimplify() const {
+  return nullptr;
+}
+
+void IExpression::simplifyConstant(ArgumentPtr &child) {
+  if (const auto constChild = cast<IConstant>(child)) {
     ArgumentPtr constVal = (*constChild)();
 
     if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
@@ -78,14 +73,6 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
       child = constVal;
     }
   }
-}
-
-ArgumentPtr IExpression::postSimplify() const {
-  return nullptr;
-}
-
-ArgumentPtr IExpression::preSimplify() const {
-  return nullptr;
 }
 
 // void IExpression::setMathObjectPrecision(ArgumentPtr &obj, uint8_t precision) {
