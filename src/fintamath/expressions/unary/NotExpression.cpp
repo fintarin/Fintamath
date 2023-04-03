@@ -22,7 +22,13 @@ NotExpression::NotExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(NO
 // }
 
 ArgumentPtr NotExpression::preSimplify() const {
-  if (const auto expr = cast<NotExpression>(child)) {
+  auto simpl = IUnaryExpression::preSimplify();
+
+  auto simplExpr = cast<NotExpression>(simpl);
+  if (!simplExpr) {
+    return simpl;
+  }
+  if (const auto expr = cast<NotExpression>(simplExpr->child)) {
     return expr->child;
   }
 
@@ -30,7 +36,13 @@ ArgumentPtr NotExpression::preSimplify() const {
 }
 
 ArgumentPtr NotExpression::postSimplify() const {
-  if (const auto expr = cast<ILogicNegatable>(child)) {
+  auto simpl = IUnaryExpression::postSimplify();
+
+  auto simplExpr = cast<NotExpression>(simpl);
+  if (!simplExpr) {
+    return simpl;
+  }
+  if (const auto expr = cast<ILogicNegatable>(simplExpr->child)) {
     return expr->logicNegate();
   }
 
