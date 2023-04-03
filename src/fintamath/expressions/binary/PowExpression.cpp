@@ -18,30 +18,6 @@ PowExpression::PowExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhs
     : IBinaryExpressionCRTP(POW, lhsChild, rhsChild) {
 }
 
-// unique_ptr<IMathObject> PowExpression::simplify(bool isPrecise) const {
-// auto exprObj = make_unique<PowExpression>(*this);
-
-// auto *lhsPtr = cast<IExpression>(exprObj->lhsChild);
-// auto *rhsPtr = cast<Integer>(exprObj->rhsChild);
-
-// if (lhsPtr && rhsPtr && !is<Expression>(lhsPtr)) {
-//   if (*rhsPtr == ZERO) {
-//     return ONE.clone();
-//   }
-//   if (*lhsPtr == ONE || *rhsPtr == ONE) {
-//     return lhsPtr->clone();
-//   }
-//   if (*rhsPtr == NEG_ONE) {
-//     return InvExpression(lhsPtr->clone()).simplify(isPrecise);
-//   }
-// }
-
-// if (is<INumber>(exprObj->lhsChild) && is<INumber>(exprObj->rhsChild)) {
-//   return POW(*exprObj->lhsChild, *exprObj->rhsChild);
-// }
-// return exprObj;
-// }
-
 ArgumentPtr PowExpression::mulSimplify() const {
   auto powExpr = cast<PowExpression>(clone());
 
@@ -139,14 +115,6 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
   return newSumExpr;
 }
 
-// ArgumentPtr PowExpression::getValue() {
-//   return lhsChild;
-// }
-
-// ArgumentPtr PowExpression::getPow() {
-//   return rhsChild;
-// }
-
 ArgumentPtr PowExpression::polynomSimplify() const {
   ArgumentPtr result = mulSimplify();
   if (auto powExpr = cast<PowExpression>(result)) {
@@ -183,7 +151,7 @@ ArgumentPtr PowExpression::postSimplify() const {
     }
   }
 
-  return polynomSimplify();
+  return simplExpr->polynomSimplify();
 }
 
 }

@@ -28,7 +28,7 @@ TEST(InvTests, callTest) {
             "1/2");
   EXPECT_EQ(f(Rational(1, 10))->toString(), "10");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "inv(a)");
+  EXPECT_EQ(f(Variable("a"))->toString(), "1/a");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(10), Integer(10), Integer(10)), InvalidInputFunctionException);
