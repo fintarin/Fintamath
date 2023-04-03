@@ -127,12 +127,12 @@ TEST(ExpressionFunctionsTests, expTest) {
 }
 
 TEST(ExpressionFunctionsTests, invTest) {
-  EXPECT_EQ(inv(Expression("a")).toString(), "inv(a)");
+  EXPECT_EQ(inv(Expression("a")).toString(), "1/a");
   EXPECT_EQ(inv(Expression("2")).toString(), "1/2");
   EXPECT_EQ(inv(Expression("10")).toString(), "1/10");
   EXPECT_EQ(inv(Expression("0.1")).toString(), "10");
   EXPECT_EQ(inv(Expression("0.2")).toString(), "5");
-  EXPECT_EQ(inv(Expression("ln(5)")).toString(), "inv(ln(5))");
+  EXPECT_EQ(inv(Expression("ln(5)")).toString(), "1/ln(5)");
 }
 
 TEST(ExpressionFunctionsTests, logTest) {
