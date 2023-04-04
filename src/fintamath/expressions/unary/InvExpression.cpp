@@ -49,5 +49,4 @@ string InvExpression::toString() const {
   return "1/" + childToStr;
 }
 
-
 }

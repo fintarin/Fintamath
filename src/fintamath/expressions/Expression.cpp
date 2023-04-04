@@ -15,7 +15,6 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
-
 namespace fintamath {
 
 Expression::Expression() : child(ZERO.clone()) {
