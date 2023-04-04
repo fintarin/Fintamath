@@ -79,10 +79,6 @@ string IUnaryExpression::functionToString() const {
   return func->toString() + "(" + child->toString() + ")";
 }
 
-// void IUnaryExpression::simplifyValue(bool isPrecise) {
-//   IExpression::simplifyChild(child);
-// }
-
 shared_ptr<IFunction> IUnaryExpression::getFunction() const {
   return func;
 }

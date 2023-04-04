@@ -10,26 +10,6 @@ const Neg NEG;
 NegExpression::NegExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(NEG, child) {
 }
 
-// unique_ptr<IMathObject> NegExpression::simplify(bool isPrecise) const {
-// auto exprObj = make_unique<NegExpression>(*this);
-// exprObj->simplifyValue(isPrecise);
-
-// if (const auto *expr = cast<INumber>(exprObj->child)) {
-//   return -(*expr);
-// }
-
-// if (auto *expr = cast<INegatable>(exprObj->child)) {
-//   expr->negate();
-//   return expr->clone();
-// }
-
-// if (const auto *expr = cast<NegExpression>(exprObj->child)) {
-//   return expr->child->clone();
-// }
-
-// return exprObj;
-// }
-
 ArgumentPtr NegExpression::preSimplify() const {
   auto simpl = IUnaryExpression::preSimplify();
 
