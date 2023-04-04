@@ -14,8 +14,6 @@ public:
 
   ArgumentsPtrVector getChildren() const override;
 
-  // void simplifyValue(bool isPrecise);
-
 protected:
   ArgumentPtr simplify() const final;
 
