@@ -1,6 +1,7 @@
 #include "fintamath/expressions/unary/InvExpression.hpp"
 
 #include "fintamath/expressions/interfaces/IInvertable.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 
 namespace fintamath {
@@ -38,5 +39,15 @@ ArgumentPtr InvExpression::postSimplify() const {
 
   return simpl;
 }
+
+string InvExpression::toString() const {
+  string childToStr = getChildren()[0]->toString();
+  if (const auto &sumChildExpr = cast<IExpression>(getChildren()[0]);
+      sumChildExpr && is<Add>(sumChildExpr->getFunction())) {
+    childToStr = ("(" + childToStr + ")");
+  }
+  return "1/" + childToStr;
+}
+
 
 }
