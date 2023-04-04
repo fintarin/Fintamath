@@ -7,16 +7,14 @@
 #include "fintamath/expressions/FunctionExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
-#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/meta/Converter.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
+
 
 namespace fintamath {
 
@@ -71,14 +69,6 @@ unique_ptr<IMathObject> Expression::toMinimalObject() const {
 // }
 
 string Expression::toString() const {
-  if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Inv>(childExpr->getFunction())) {
-    string childToStr = childExpr->getChildren()[0]->toString();
-    if (const auto &sumChildExpr = cast<IExpression>(childExpr->getChildren()[0]);
-        sumChildExpr && is<Add>(sumChildExpr->getFunction())) {
-      childToStr = ("(" + childToStr + ")");
-    }
-    return "1/" + childToStr;
-  }
   return child->toString();
 }
 

@@ -8,7 +8,7 @@ class IUnaryExpression : virtual public IExpression {
 public:
   // void setPrecision(uint8_t precision) final;
 
-  string toString() const final;
+  string toString() const override;
 
   shared_ptr<IFunction> getFunction() const final;
 
