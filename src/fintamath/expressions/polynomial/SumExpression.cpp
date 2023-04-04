@@ -51,257 +51,6 @@ string SumExpression::childToString(const ArgumentPtr &child, bool isFirst) cons
   return result;
 }
 
-// unique_ptr<IMathObject> SumExpression::simplify(bool isPrecise) const {
-// SumExpression exprObj = *this;
-// exprObj.compress();
-
-// if (exprObj.children.size() == 1) {
-//   simplifyChild(exprObj.children.front());
-//   return exprObj.children.front()->clone();
-// }
-
-// for (auto &obj : exprObj.children) {
-//   simplifyChild(obj);
-// }
-
-// exprObj.compress();
-// // exprObj.simplifyPolynom();
-
-// if (exprObj.children.size() == 1) {
-//   simplifyChild(exprObj.children.front());
-//   return exprObj.children.front()->clone();
-// }
-// return exprObj.clone();
-// }
-
-// bool SumExpression::sortFunc(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-//   if (is<IConstant>(lhs)) {
-//     return false;
-//   }
-
-//   if (is<IConstant>(rhs)) {
-//     return true;
-//   }
-
-//   return lhs->toString() < rhs->toString();
-// }
-
-// TODO: refactor
-// void SumExpression::simplifyPolynom() {
-// ArgumentsPtrVector numVect;
-// ArgumentsPtrVector powVect;
-// ArgumentsPtrVector literalVect;
-// ArgumentsPtrVector exprVect;
-// ArgumentsPtrVector funcVect;
-
-// // sortPolynom(children, numVect, exprVect, literalVect, funcVect, powVect);
-
-// numVect = sumNumbers(numVect);
-
-// simplifyMul(powVect, exprVect, literalVect, funcVect);
-// children.clear();
-
-// std::sort(funcVect.begin(), funcVect.end(), sortFunc);
-// std::sort(powVect.begin(), powVect.end(), sortFunc);
-// std::sort(literalVect.begin(), literalVect.end(), sortFunc);
-// std::sort(exprVect.begin(), exprVect.end(), sortFunc);
-
-// pushPolynomToPolynom(funcVect, children);
-// pushPolynomToPolynom(powVect, children);
-// pushPolynomToPolynom(exprVect, children);
-// pushPolynomToPolynom(literalVect, children);
-// if (numVect.front()->toString() != "0" || children.empty()) {
-//   pushPolynomToPolynom(numVect, children);
-// }
-// }
-
-// TODO: refactor
-// void SumExpression::sortMulObjects(MulObjects &objs, ArgumentsPtrVector &mulVect, ArgumentsPtrVector &literalVect,
-//  ArgumentsPtrVector &powVect) {
-/*for (auto &obj : objs) {
-  obj.simplifyCounter();
-  auto counter = obj.getCounterValue();
-  if (*counter == ZERO) {
-    continue;
-  }
-  if (*counter == ONE || *counter == NEG_ONE) {
-    if (is<ILiteral>(obj.obj)) {
-      literalVect.emplace_back(obj.obj->clone(), *counter == NEG_ONE);
-      continue;
-    }
-    if (is<Expression>(obj.obj)) {
-      powVect.emplace_back(obj.obj->clone(), *counter == NEG_ONE);
-      continue;
-    }
-    if (is<MulExpression>(obj.obj)) {
-      mulVect.emplace_back(obj.obj->clone(), *counter == NEG_ONE);
-      continue;
-    }
-  }
-  mulVect.emplace_back(MulExpression({{obj.obj->clone()}, {counter->clone()}}).toMinimalObject());
-}*/
-// }
-
-// TODO: refactor
-// void SumExpression::simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector &mulVect,
-// ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect) {
-/*MulObjects objs;
-for (const auto &mulObj : mulVect) {
-  bool added = false;
-  auto mulExprPolynom = cast<MulExpression>(mulObj)->getArgumentsPtrVector();
-  if (mulExprPolynom.empty()) {
-    added = true;
-  }
-  unique_ptr<IMathObject> number = ONE.clone();
-  if (is<INumber>(mulExprPolynom.front())) {
-    if (mulExprPolynom.front().inverted) {
-      number = Neg()(*mulExprPolynom.front());
-    } else {
-      number = mulExprPolynom.front()->clone();
-    }
-    mulExprPolynom = MulExpression::ArgumentsPtrVector(mulExprPolynom.begin() + 1, mulExprPolynom.end());
-  }
-
-  MulExpression mulExpr(mulExprPolynom);
-  for (auto &obj : objs) {
-    if (obj.obj->toString() == mulExpr.toString()) {
-      obj.counter.addElement(number->clone());
-      added = true;
-      break;
-    }
-  }
-  if (added) {
-    continue;
-  }
-  MulObject object(mulExpr.clone());
-  object.counter.addElement(SumElement(number->clone(), mulObj.inverted));
-  objs.emplace_back(object);
-}
-for (const auto &litObj : literalVect) {
-  bool added = false;
-  for (auto &obj : objs) {
-    if (obj.obj->toString() == litObj.info->toString()) {
-      obj.counter.addElement(SumElement(ONE.clone(), litObj.inverted));
-      added = true;
-      break;
-    }
-  }
-  if (added) {
-    continue;
-  }
-  MulObject object(litObj.info);
-  object.counter.addElement(SumElement(ONE.clone(), litObj.inverted));
-  objs.emplace_back(object);
-}
-for (const auto &funcObj : funcVect) {
-  bool added = false;
-  for (auto &obj : objs) {
-    if (obj.obj->toString() == funcObj.info->toString()) {
-      obj.counter.addElement(SumElement(ONE.clone(), funcObj.inverted));
-      added = true;
-      break;
-    }
-  }
-  if (added) {
-    continue;
-  }
-  MulObject object(funcObj.info);
-  object.counter.addElement(SumElement(ONE.clone(), funcObj.inverted));
-  objs.emplace_back(object);
-}
-
-for (const auto &powObj : powVect) {
-  bool added = false;
-  for (auto &obj : objs) {
-    if (obj.obj->toString() == powObj.info->toString()) {
-      obj.counter.addElement(SumElement(ONE.clone(), powObj.inverted));
-      added = true;
-      break;
-    }
-  }
-  if (added) {
-    continue;
-  }
-  MulObject object(powObj);
-  object.counter.addElement(SumElement(ONE.clone(), powObj.inverted));
-  objs.emplace_back(object);
-}
-
-literalVect.clear();
-mulVect.clear();
-powVect.clear();
-funcVect.clear();
-
-sortMulObjects(objs, mulVect, literalVect, powVect);*/
-// }
-
-// TODO: remove this and implement PowExpression
-// ArgumentPtr SumExpression::getPowCoefficient(const ArgumentPtr &powValue) const {
-/*if (*powValue == ZERO) {
-  for (const auto &child : children) {
-    if (is<INumber>(child.info)) {
-      return child.toMathObject(false);
-    }
-  }
-}
-
-if (*powValue == ONE) {
-  for (const auto &child : children) {
-    if (is<Variable>(child.info)) {
-      return child.inverted ? NEG_ONE.clone() : ONE.clone();
-    }
-  }
-}
-
-for (const auto &child : children) {
-  if (const auto *childExpr = cast<MulExpression>(child.info)) {
-    if (auto res = childExpr->getPowCoefficient(powValue)) {
-      return child.inverted ? Neg()(*res) : res->clone();
-    }
-  }
-
-  if (const auto *childExpr = cast<Expression>(child.info); childExpr && is<Pow>(childExpr->getInfo())) {
-    if (auto rightVal = childExpr->getChildren().back()->clone(); rightVal && *rightVal == *powValue) {
-      return child.inverted ? NEG_ONE.clone() : ONE.clone();
-    }
-  }
-}
-
-return ZERO.clone();*/
-// }
-
-// TODO: remove this and implement PowExpression
-// ArgumentPtr SumExpression::getPow() const {
-/*auto maxValue = ZERO;
-
-for (const auto &child : children) {
-  if (const auto *childExpr = cast<MulExpression>(child.info)) {
-    if (auto childPow = childExpr->getPow()) {
-      if (const auto *pow = cast<Integer>(childPow); *pow > maxValue) {
-        maxValue = *pow;
-      }
-    }
-  }
-
-  if (const auto *childExpr = cast<Expression>(child.info); childExpr && is<Pow>(childExpr->getInfo())) {
-    if (const auto *pow = cast<Integer>(childExpr->getChildren().back()); *pow > maxValue) {
-      maxValue = *pow;
-    }
-  }
-
-  if (is<Variable>(child.info)) {
-    if (ONE > maxValue) {
-      maxValue = ONE;
-    }
-  }
-}
-
-return maxValue.clone();*/
-// }
-
-// void SumExpression::multiplicate(const ArgumentPtr &value) {
-// }
-
 ArgumentPtr SumExpression::negate() const {
   SumExpression neg = *this;
 
@@ -334,32 +83,27 @@ ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
   shared_ptr<const INumber> rhsNum = nullptr;
 
   if (lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    lhsNeg = true;
     lhsNum = cast<INumber>(lhsExpr->getChildren().front());
+    if (lhsNum) {
+      lhsNum = -*lhsNum;
+    }
   }
   else {
     lhsNum = cast<INumber>(lhsChild);
   }
 
   if (rhsExpr && is<Neg>(rhsExpr->getFunction())) {
-    rhsNeg = true;
     rhsNum = cast<INumber>(rhsExpr->getChildren().front());
+    if (rhsNum) {
+      rhsNum = -*rhsNum;
+    }
   }
   else {
     rhsNum = cast<INumber>(rhsChild);
   }
 
   if (lhsNum && rhsNum) {
-    if (lhsNeg) {
-      return Sub()(*rhsNum, *lhsNum);
-    }
-    if (rhsNeg) {
-      return Sub()(*lhsNum, *rhsNum);
-    }
-    if (lhsNeg && rhsNeg) {
-      return makeFunctionExpression(Neg(), {Add()(*lhsNum, *rhsNum)});
-    }
-    return Add()(*lhsNum, *rhsNum);
+    return *lhsNum + *rhsNum;
   }
 
   return {};
@@ -418,106 +162,5 @@ ArgumentPtr SumExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, c
 
   return {};
 }
-
-// bool SumExpression::functionComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const {
-//   auto leftExpr = cast<IExpression>(lhs);
-//   auto rightExpr = cast<IExpression>(rhs);
-//   auto leftFunction = leftExpr->getFunction();
-//   auto rightFunction = rightExpr->getFunction();
-
-//   if (leftFunction->toString() == rightFunction->toString()) {
-//     return comparator(leftExpr->getChildren()[0], rightExpr->getChildren()[0]);
-//   }
-
-//   return leftFunction->toString() < rightFunction->toString();
-// }
-
-// bool SumExpression::powComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const {
-//   auto leftExpr = cast<IExpression>(lhs);
-//   auto rightExpr = cast<IExpression>(rhs);
-
-//   if (leftExpr->getChildren()[0]->toString() == rightExpr->getChildren()[0]->toString()) {
-//     return leftExpr->getChildren()[1]->toString() > rightExpr->getChildren()[1]->toString();
-//   }
-
-//   return leftExpr->getChildren()[0]->toString() < rightExpr->getChildren()[0]->toString();
-// }
-
-// bool SumExpression::literalComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const {
-//   auto leftLit = cast<ILiteral>(lhs);
-//   auto rightLit = cast<ILiteral>(rhs);
-
-//   if (!leftLit && !rightLit) {
-//     return lhs->toString() < rhs->toString();
-//   }
-
-//   if (!leftLit) {
-//     return true;
-//   }
-
-//   if(!rightLit){
-//     return false;
-//   }
-
-//   auto leftConst = cast<IConstant>(lhs);
-//   auto rightConst = cast<IConstant>(rhs);
-
-//   if ((!leftConst || rightConst) && (!rightConst || leftConst)) { //logic equivalent operator (leftConst <->
-//   rightConst)
-//     return lhs->toString() < rhs->toString();
-//   }
-
-//   if (!leftConst) {
-//     return true;
-//   }
-
-//   if (!rightConst) {
-//     return false;
-//   }
-// }
-
-// bool SumExpression::operatorComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const {
-//   auto leftExpr = cast<IExpression>(lhs);
-//   auto rightExpr = cast<IExpression>(rhs);
-//   auto leftOp = cast<IOperator>(leftExpr->getFunction());
-//   auto rightOp = cast<IOperator>(rightExpr->getFunction());
-
-//   if (!leftOp) {
-//     return false;
-//   }
-
-//   if (!rightOp) {
-//     return true;
-//   }
-
-//   if (leftOp->getOperatorPriority() == rightOp->getOperatorPriority()) {
-//     if (leftOp->getOperatorPriority() == IOperator::Priority::Exponentiation) {
-//       return powComparator(lhs, rhs);
-//     }
-//     return leftExpr->getChildren()[0]->toString() < rightExpr->getChildren()[0]->toString();
-//   }
-
-//   return leftOp->getOperatorPriority() < rightOp->getOperatorPriority();
-// }
-
-// bool SumExpression::comparator(const ArgumentPtr &left, const ArgumentPtr &right) const {
-//   auto leftExpr = cast<IExpression>(left);
-//   auto rightExpr = cast<IExpression>(right);
-//   if (leftExpr && rightExpr) {
-//     auto leftFunction = leftExpr->getFunction();
-//     auto rightFunction = rightExpr->getFunction();
-//     if (!is<IOperator>(leftFunction) && !is<IOperator>(rightFunction)) {
-//       return functionComparator(left, right);
-//     }
-
-//     return operatorComparator(left, right);
-//   }
-
-//   if (!leftExpr && !rightExpr) {
-//     return literalComparator(left, right);
-//   }
-
-//   return rightExpr == nullptr;
-// }
 
 }
