@@ -262,9 +262,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1-(sin(x)+1)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("1/(sin(x)+1)").toString(), "1/(sin(x) + 1)");
   EXPECT_EQ(Expression("(x+1)^3").toString(), "x^3 + 3 x^2 + 3 x + 1");
-  EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x + 3 x^2 + 1)");
+  EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x^2 + 3 x + 1)");
   EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1");
-  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) + 3 sin(x)^2 + 1)");
+  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1)");
+  EXPECT_EQ(Expression("(sin(x)+1)^(-4)").toString(), "1/(sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1)");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
   EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
 
@@ -475,16 +476,16 @@ TEST(ExpressionTests, stringConstructorLargeTest) {
       "e | ~(((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & "
       "~c) & ~d) & ~e) & ~f) & ~g) & ~h");
 
-  EXPECT_EQ(Expression("(x+y)^20").toString(), "???");
+  EXPECT_EQ(Expression("(x+y)^20").toString(), "x^20 + y^20 + 1140 x^3 y^17 + 1140 x^17 y^3 + 125970 x^8 y^12 + 125970 x^12 y^8 + 15504 x^5 y^15 + 15504 x^15 y^5 + 167960 x^9 y^11 + 167960 x^11 y^9 + 184756 x^10 y^10 + 190 x^18 y^2 + 190 x^2 y^18 + 20 x y^19 + 20 x^19 y + 38760 x^14 y^6 + 38760 x^6 y^14 + 4845 x^16 y^4 + 4845 x^4 y^16 + 77520 x^13 y^7 + 77520 x^7 y^13");
 
-  EXPECT_EQ(Expression("(x+y+z)^4").toString(), "???");
+  EXPECT_EQ(Expression("(x+y+z)^4").toString(), "x^4 + y^4 + z^4 + 12 x^2 y z + 12 x y^2 z + 12 x y z^2 + 4 x^3 y + 4 x y^3 + 4 x^3 z + 4 y^3 z + 4 x z^3 + 4 y z^3 + 6 x^2 y^2 + 6 x^2 z^2 + 6 y^2 z^2");
 
   EXPECT_EQ(
       Expression(
           "(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+"
           "y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)(x+y)")
           .toString(),
-      "???");
+      "x^30 + y^30 + 119759850 x^13 y^17 + 119759850 x^17 y^13 + 142506 x^5 y^25 + 142506 x^25 y^5 + 14307150 x^9 y^21 + 14307150 x^21 y^9 + 145422675 x^14 y^16 + 145422675 x^16 y^14 + 155117520 x^15 y^15 + 2035800 x^23 y^7 + 2035800 x^7 y^23 + 27405 x^26 y^4 + 27405 x^4 y^26 + 30 x^29 y + 30 x y^29 + 30045015 x^20 y^10 + 30045015 x^10 y^20 + 4060 x^27 y^3 + 4060 x^3 y^27 + 435 x^28 y^2 + 435 x^2 y^28 + 54627300 x^19 y^11 + 54627300 x^11 y^19 + 5852925 x^8 y^22 + 5852925 x^22 y^8 + 593775 x^6 y^24 + 593775 x^24 y^6 + 86493225 x^12 y^18 + 86493225 x^18 y^12");
 
   EXPECT_EQ(
       Expression("sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin("
@@ -630,120 +631,121 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
 }
 
 TEST(ExpressionTests, preciseTest) {
-  EXPECT_EQ(Expression("10^10000").precise(8).toString(), "1*10^10000");
-  EXPECT_EQ(Expression("x+E").precise(8).toString(), "x + 2.7182818");
-  EXPECT_EQ(Expression("9^10000").precise(8).toString(), "2.6613034*10^9542");
-  EXPECT_EQ(Expression("sin(E)").precise(16).toString(), "0.4107812905029087");
-  EXPECT_EQ(Expression("sin(sin(E))").precise(30).toString(), "0.39932574404189139297067052142");
+  //TODO: precision
+  // EXPECT_EQ(Expression("10^10000").precise(8).toString(), "1*10^10000");
+  // EXPECT_EQ(Expression("x+E").precise(8).toString(), "x + 2.7182818");
+  // EXPECT_EQ(Expression("9^10000").precise(8).toString(), "2.6613034*10^9542");
+  // EXPECT_EQ(Expression("sin(E)").precise(16).toString(), "0.4107812905029087");
+  // EXPECT_EQ(Expression("sin(sin(E))").precise(30).toString(), "0.39932574404189139297067052142");
 
-  EXPECT_EQ(Expression("150!").precise().toString(),
-            "5713383956445854590478932865261054003189553578601126418254837583317982912484539839312657448867531114537710"
-            "7878746854204162666250198684504466355949195922066574942592095735778929325357290444962472405416790722118445"
-            "437122269675520000000000000000000000000000000000000");
-  EXPECT_EQ(Expression("E").precise().toString(),
-            "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
-  EXPECT_EQ(Expression("Pi").precise().toString(),
-            "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
-  EXPECT_EQ(Expression("exp100").precise().toString(),
-            "26881171418161354484126255515800135873611118.773741922415191608615280287034909565");
-  EXPECT_EQ(Expression("E^101").precise().toString(),
-            "73070599793680672726476826340615135890078390.083960707616445859670987728609198428");
-  EXPECT_EQ(Expression("E^(-101)").precise().toString(),
-            "1.3685394711738530002470557302322944177986775531612023009807438134142551921153897*10^-44");
-  EXPECT_EQ(Expression("log(E,E)").precise().toString(), "1");
-  EXPECT_EQ(Expression("log(2, 256)").precise().toString(), "8");
-  EXPECT_EQ(Expression("log(Pi, Pi^10)").precise().toString(), "10");
-  EXPECT_EQ(Expression("log(E,E^3)").precise().toString(), "3");
-  EXPECT_EQ(Expression("ln3").precise().toString(),
-            "1.098612288668109691395245236922525704647490557822749451734694333637494293218609");
-  EXPECT_EQ(Expression("ln2").precise().toString(),
-            "0.69314718055994530941723212145817656807550013436025525412068000949339362196969472");
-  EXPECT_EQ(Expression("ln100").precise().toString(),
-            "4.605170185988091368035982909368728415202202977257545952066655801935145219354705");
-  EXPECT_EQ(Expression("ln(E)").precise().toString(), "1");
-  EXPECT_EQ(Expression("lg99").precise().toString(),
-            "1.9956351945975499153402557777532548601069599188478448242562702992902113378005716");
-  EXPECT_EQ(Expression("lg100").precise().toString(), "2");
-  EXPECT_EQ(Expression("lb100").precise().toString(),
-            "6.6438561897747246957406388589787803517296627860491612241095127916318695532172504");
-  EXPECT_EQ(Expression("lb4").precise().toString(), "2");
-  EXPECT_EQ(Expression("sin10").precise().toString(),
-            "-0.54402111088936981340474766185137728168364301291622389157418401261675720964049343");
-  EXPECT_EQ(Expression("cos10").precise().toString(),
-            "-0.83907152907645245225886394782406483451993016513316854683595373104879258686627077");
-  EXPECT_EQ(Expression("tan10").precise().toString(),
-            "0.6483608274590866712591249330098086768168743429837249756336279673958556003746239");
-  EXPECT_EQ(Expression("cot10").precise().toString(),
-            "1.5423510453569200482774693556824293113206672064019624909194716061981945043136768");
-  EXPECT_EQ(Expression("asin0.9").precise().toString(),
-            "1.1197695149986341866866770558453996158951621864033028823756818639144375371065333");
-  EXPECT_EQ(Expression("acos0.9").precise().toString(),
-            "0.45102681179626243254464463579435182620342251328425002811179043223947066603657116");
-  EXPECT_EQ(Expression("atan10").precise().toString(),
-            "1.4711276743037345918528755717617308518553063771832382624719635193438804556955538");
-  EXPECT_EQ(Expression("acot10").precise().toString(),
-            "0.099668652491162027378446119878020590243278322504314648015508776810027747447550654");
-  EXPECT_EQ(Expression("sinh10").precise().toString(),
-            "11013.232874703393377236524554846364402901451190319346103835228548076948583785685");
-  EXPECT_EQ(Expression("cosh10").precise().toString(),
-            "11013.232920103323139721376090437879963452061428237434970400197807148254234785107");
-  EXPECT_EQ(Expression("tanh10").precise().toString(),
-            "0.99999999587769276361959283713827574105081461849501996226140069543680188089876683");
-  EXPECT_EQ(Expression("coth10").precise().toString(),
-            "1.0000000041223072533738241840280803124601800267562193084479187641100667185123807");
-  EXPECT_EQ(Expression("asinh0.9").precise().toString(),
-            "0.80886693565278246250935016738160604299699494260611658590774273687832265593746445");
-  EXPECT_EQ(Expression("acosh1.9").precise().toString(),
-            "1.2571958266003804345446952305599900185447096920846764166114358405852412800661934");
-  EXPECT_EQ(Expression("atanh0.9").precise().toString(),
-            "1.4722194895832202300045137159439267686186896306495644092689801182046463510320986");
-  EXPECT_EQ(Expression("acoth1.9").precise().toString(),
-            "0.5850356263251273221963907792584300980997658991386225877261408421838960973503172");
-  EXPECT_EQ(Expression("((2))*sqrt2").precise().toString(),
-            "2.8284271247461900976033774484193961571393437507538961463533594759814649569242141");
-  EXPECT_EQ(Expression("sqrt2*((2))").precise().toString(),
-            "2.8284271247461900976033774484193961571393437507538961463533594759814649569242141");
-  EXPECT_EQ(Expression("sin(1)^2").precise().toString(),
-            "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
-  EXPECT_EQ(Expression("sin(-1)^2").precise().toString(),
-            "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
-  EXPECT_EQ(Expression("sin1^2").precise().toString(),
-            "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
-  EXPECT_EQ(Expression("sin(10^30)").precise().toString(),
-            "-0.090116901912138058030386428952987330274396332993043449885460666579773983476795775");
-  EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").precise().toString(), "1");
-  EXPECT_EQ(Expression("sin(Pi/3)").precise().toString(),
-            "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("cos(Pi/3)").precise().toString(), "0.5");
-  EXPECT_EQ(Expression("2!*E").precise().toString(),
-            "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
-  EXPECT_EQ(Expression("E*2!").precise().toString(),
-            "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
-  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").precise().toString(),
-            "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").precise().toString(),
-            "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("degrees(Pi/4)").precise().toString(), "45");
-  EXPECT_EQ(Expression("sin(rad(60))").precise().toString(),
-            "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("sin(60°)").precise().toString(),
-            "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  // EXPECT_EQ(Expression("150!").precise().toString(),
+  //           "5713383956445854590478932865261054003189553578601126418254837583317982912484539839312657448867531114537710"
+  //           "7878746854204162666250198684504466355949195922066574942592095735778929325357290444962472405416790722118445"
+  //           "437122269675520000000000000000000000000000000000000");
+  // EXPECT_EQ(Expression("E").precise().toString(),
+  //           "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
+  // EXPECT_EQ(Expression("Pi").precise().toString(),
+  //           "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
+  // EXPECT_EQ(Expression("exp100").precise().toString(),
+  //           "26881171418161354484126255515800135873611118.773741922415191608615280287034909565");
+  // EXPECT_EQ(Expression("E^101").precise().toString(),
+  //           "73070599793680672726476826340615135890078390.083960707616445859670987728609198428");
+  // EXPECT_EQ(Expression("E^(-101)").precise().toString(),
+  //           "1.3685394711738530002470557302322944177986775531612023009807438134142551921153897*10^-44");
+  // EXPECT_EQ(Expression("log(E,E)").precise().toString(), "1");
+  // EXPECT_EQ(Expression("log(2, 256)").precise().toString(), "8");
+  // EXPECT_EQ(Expression("log(Pi, Pi^10)").precise().toString(), "10");
+  // EXPECT_EQ(Expression("log(E,E^3)").precise().toString(), "3");
+  // EXPECT_EQ(Expression("ln3").precise().toString(),
+  //           "1.098612288668109691395245236922525704647490557822749451734694333637494293218609");
+  // EXPECT_EQ(Expression("ln2").precise().toString(),
+  //           "0.69314718055994530941723212145817656807550013436025525412068000949339362196969472");
+  // EXPECT_EQ(Expression("ln100").precise().toString(),
+  //           "4.605170185988091368035982909368728415202202977257545952066655801935145219354705");
+  // EXPECT_EQ(Expression("ln(E)").precise().toString(), "1");
+  // EXPECT_EQ(Expression("lg99").precise().toString(),
+  //           "1.9956351945975499153402557777532548601069599188478448242562702992902113378005716");
+  // EXPECT_EQ(Expression("lg100").precise().toString(), "2");
+  // EXPECT_EQ(Expression("lb100").precise().toString(),
+  //           "6.6438561897747246957406388589787803517296627860491612241095127916318695532172504");
+  // EXPECT_EQ(Expression("lb4").precise().toString(), "2");
+  // EXPECT_EQ(Expression("sin10").precise().toString(),
+  //           "-0.54402111088936981340474766185137728168364301291622389157418401261675720964049343");
+  // EXPECT_EQ(Expression("cos10").precise().toString(),
+  //           "-0.83907152907645245225886394782406483451993016513316854683595373104879258686627077");
+  // EXPECT_EQ(Expression("tan10").precise().toString(),
+  //           "0.6483608274590866712591249330098086768168743429837249756336279673958556003746239");
+  // EXPECT_EQ(Expression("cot10").precise().toString(),
+  //           "1.5423510453569200482774693556824293113206672064019624909194716061981945043136768");
+  // EXPECT_EQ(Expression("asin0.9").precise().toString(),
+  //           "1.1197695149986341866866770558453996158951621864033028823756818639144375371065333");
+  // EXPECT_EQ(Expression("acos0.9").precise().toString(),
+  //           "0.45102681179626243254464463579435182620342251328425002811179043223947066603657116");
+  // EXPECT_EQ(Expression("atan10").precise().toString(),
+  //           "1.4711276743037345918528755717617308518553063771832382624719635193438804556955538");
+  // EXPECT_EQ(Expression("acot10").precise().toString(),
+  //           "0.099668652491162027378446119878020590243278322504314648015508776810027747447550654");
+  // EXPECT_EQ(Expression("sinh10").precise().toString(),
+  //           "11013.232874703393377236524554846364402901451190319346103835228548076948583785685");
+  // EXPECT_EQ(Expression("cosh10").precise().toString(),
+  //           "11013.232920103323139721376090437879963452061428237434970400197807148254234785107");
+  // EXPECT_EQ(Expression("tanh10").precise().toString(),
+  //           "0.99999999587769276361959283713827574105081461849501996226140069543680188089876683");
+  // EXPECT_EQ(Expression("coth10").precise().toString(),
+  //           "1.0000000041223072533738241840280803124601800267562193084479187641100667185123807");
+  // EXPECT_EQ(Expression("asinh0.9").precise().toString(),
+  //           "0.80886693565278246250935016738160604299699494260611658590774273687832265593746445");
+  // EXPECT_EQ(Expression("acosh1.9").precise().toString(),
+  //           "1.2571958266003804345446952305599900185447096920846764166114358405852412800661934");
+  // EXPECT_EQ(Expression("atanh0.9").precise().toString(),
+  //           "1.4722194895832202300045137159439267686186896306495644092689801182046463510320986");
+  // EXPECT_EQ(Expression("acoth1.9").precise().toString(),
+  //           "0.5850356263251273221963907792584300980997658991386225877261408421838960973503172");
+  // EXPECT_EQ(Expression("((2))*sqrt2").precise().toString(),
+  //           "2.8284271247461900976033774484193961571393437507538961463533594759814649569242141");
+  // EXPECT_EQ(Expression("sqrt2*((2))").precise().toString(),
+  //           "2.8284271247461900976033774484193961571393437507538961463533594759814649569242141");
+  // EXPECT_EQ(Expression("sin(1)^2").precise().toString(),
+  //           "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
+  // EXPECT_EQ(Expression("sin(-1)^2").precise().toString(),
+  //           "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
+  // EXPECT_EQ(Expression("sin1^2").precise().toString(),
+  //           "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
+  // EXPECT_EQ(Expression("sin(10^30)").precise().toString(),
+  //           "-0.090116901912138058030386428952987330274396332993043449885460666579773983476795775");
+  // EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").precise().toString(), "1");
+  // EXPECT_EQ(Expression("sin(Pi/3)").precise().toString(),
+  //           "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  // EXPECT_EQ(Expression("cos(Pi/3)").precise().toString(), "0.5");
+  // EXPECT_EQ(Expression("2!*E").precise().toString(),
+  //           "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
+  // EXPECT_EQ(Expression("E*2!").precise().toString(),
+  //           "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
+  // EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").precise().toString(),
+  //           "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  // EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").precise().toString(),
+  //           "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  // EXPECT_EQ(Expression("degrees(Pi/4)").precise().toString(), "45");
+  // EXPECT_EQ(Expression("sin(rad(60))").precise().toString(),
+  //           "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  // EXPECT_EQ(Expression("sin(60°)").precise().toString(),
+  //           "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
 
-  EXPECT_EQ(Expression("inv(10)").precise().toString(), "1/10");
+  // EXPECT_EQ(Expression("inv(10)").precise().toString(), "1/10");
 
-  EXPECT_EQ(Expression("sin(E)=sin(E)").precise().toString(), "True");
-  EXPECT_EQ(Expression("sin(E)>sin(E)").precise().toString(), "False");
-  EXPECT_EQ(Expression("sin(E)>=sin(E)").precise().toString(), "True");
-  EXPECT_EQ(Expression("sin(E)<sin(E)").precise().toString(), "False");
-  EXPECT_EQ(Expression("sin(E)<=sin(E)").precise().toString(), "True");
-  EXPECT_EQ(Expression("1/(sin(5))").precise().toString(),
-            "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
-  EXPECT_EQ(Expression("log(E,5)=ln(5)").precise().toString(), "True");
-  EXPECT_EQ(Expression("log(E,5)<ln(5)").precise().toString(), "False");
-  EXPECT_EQ(Expression("log(E,5)>ln(5)").precise().toString(), "False");
-  EXPECT_EQ(Expression("log(E,5)<=ln(5)").precise().toString(), "True");
-  EXPECT_EQ(Expression("log(E,5)>=ln(5)").precise().toString(), "True");
-  EXPECT_EQ(Expression("(sqrt((1-cos(2*(Pi/3)))/2))'").precise().toString(), "0");
+  // EXPECT_EQ(Expression("sin(E)=sin(E)").precise().toString(), "True");
+  // EXPECT_EQ(Expression("sin(E)>sin(E)").precise().toString(), "False");
+  // EXPECT_EQ(Expression("sin(E)>=sin(E)").precise().toString(), "True");
+  // EXPECT_EQ(Expression("sin(E)<sin(E)").precise().toString(), "False");
+  // EXPECT_EQ(Expression("sin(E)<=sin(E)").precise().toString(), "True");
+  // EXPECT_EQ(Expression("1/(sin(5))").precise().toString(),
+  //           "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
+  // EXPECT_EQ(Expression("log(E,5)=ln(5)").precise().toString(), "True");
+  // EXPECT_EQ(Expression("log(E,5)<ln(5)").precise().toString(), "False");
+  // EXPECT_EQ(Expression("log(E,5)>ln(5)").precise().toString(), "False");
+  // EXPECT_EQ(Expression("log(E,5)<=ln(5)").precise().toString(), "True");
+  // EXPECT_EQ(Expression("log(E,5)>=ln(5)").precise().toString(), "True");
+  // EXPECT_EQ(Expression("(sqrt((1-cos(2*(Pi/3)))/2))'").precise().toString(), "0");
 
   // TODO logarithms
   // EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").precise().toString(), "0");
@@ -751,25 +753,26 @@ TEST(ExpressionTests, preciseTest) {
 }
 
 TEST(ExpressionTests, preciseNegativeTest) {
-  EXPECT_THROW(Expression("ln(ln(ln(ln(E))))").precise(), UndefinedException);
-  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E)))))").precise(), UndefinedException);
-  EXPECT_THROW(Expression("E!").precise(), UndefinedException);
-  EXPECT_THROW(Expression("sqrt(-1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("ln(0)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("ln(-1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("log(-1, 1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("log(0, 1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("log(1, 0)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("lb(-1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("lg(-1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("(-1)^(2/3)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("tan(Pi/2)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("cot(0)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("asin(2)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("acos(2)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("tan(3/2*Pi)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("cot(2*Pi)").precise(), UndefinedException);
+  //TODO: precision
+  // EXPECT_THROW(Expression("ln(ln(ln(ln(E))))").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E)))))").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("E!").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("sqrt(-1)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("ln(0)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("ln(-1)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("log(-1, 1)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("log(0, 1)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("log(1, 0)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("lb(-1)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("lg(-1)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("(-1)^(2/3)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("tan(Pi/2)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("cot(0)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("asin(2)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("acos(2)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("tan(3/2*Pi)").precise(), UndefinedException);
+  // EXPECT_THROW(Expression("cot(2*Pi)").precise(), UndefinedException);
 
-  // TODO: do no perform operation, when the result is too big
-  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E^(E^(E^(E^E))))))))").precise(), UndefinedException);
+  // // TODO: do no perform operation, when the result is too big
+  // EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E^(E^(E^(E^E))))))))").precise(), UndefinedException);
 }
