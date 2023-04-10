@@ -21,7 +21,7 @@ ArgumentPtr NotExpression::preSimplify() const {
     return expr->child;
   }
 
-  return {};
+  return simpl;
 }
 
 ArgumentPtr NotExpression::postSimplify() const {
@@ -35,7 +35,7 @@ ArgumentPtr NotExpression::postSimplify() const {
     return expr->logicNegate();
   }
 
-  return {};
+  return simpl;
 }
 
 }
