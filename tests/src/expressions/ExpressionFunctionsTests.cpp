@@ -21,14 +21,12 @@ TEST(ExpressionFunctionsTests, mulTest) {
   EXPECT_EQ(mul(Variable("a"), -1, Expression("a*2")).toString(), "-2 a^2");
   EXPECT_EQ(mul(10, Expression("a+2")).toString(), "10 a + 20");
   EXPECT_EQ(mul(Variable("a"), Expression("a^3+a^2")).toString(), "a^4 + a^3");
-  EXPECT_EQ(mul(5, Expression("a+3"), Expression("a+2")).toString(),
-            "25 a + 5 a^2 + 30"); // TODO: replace to 2*a^2+25*a+30
-  EXPECT_EQ(mul(Expression("a+b"), Expression("3 b + c")).toString(),
-            "3 a b + 3 b^2 + a c + b c"); // TODO: replace to 3*b^2+3*a*b+a*c+b*c
+  EXPECT_EQ(mul(5, Expression("a+3"), Expression("a+2")).toString(), "5 a^2 + 25 a + 30");
+  EXPECT_EQ(mul(Expression("a+b"), Expression("3 b + c")).toString(), "3 a b + a c + 3 b^2 + b c");
 }
 
 TEST(ExpressionFunctionsTests, subTest) {
-  EXPECT_EQ(sub(Variable("a"), Expression("b^2")).toString(), "-b^2 + a");
+  EXPECT_EQ(sub(Variable("a"), Expression("b^2")).toString(), "a - b^2");
   EXPECT_EQ(sub(10, Expression("a+2")).toString(), "-a + 8");
   EXPECT_EQ(sub(Variable("a"), Expression("a+2")).toString(), "-2");
   EXPECT_EQ(sub(Expression("b+2"), Expression("a+2")).toString(), "-a + b");
@@ -38,11 +36,11 @@ TEST(ExpressionFunctionsTests, subTest) {
 }
 
 TEST(ExpressionFunctionsTests, divTest) {
-  EXPECT_EQ(div(Variable("a"), Expression("b^2")).toString(), "a b^-2");
+  EXPECT_EQ(div(Variable("a"), Expression("b^2")).toString(), "a/b^2");
   EXPECT_EQ(div(10, Expression("a+2")).toString(), "10/(a + 2)");
   EXPECT_EQ(div(Variable("a"), Expression("a+2")).toString(), "a/(a + 2)");
-  EXPECT_EQ(div(Expression("b+2"), Expression("a+2")).toString(), "2/(a + 2) + b/(a + 2)"); // TODO: "b/(a + 2) + 2/(a + 2)"
-  EXPECT_EQ(div(Expression("10+a^3"), Expression("a^2")).toString(), "10 a^-2 + a");
+  EXPECT_EQ(div(Expression("b+2"), Expression("a+2")).toString(), "b/(a + 2) + 2/(a + 2)");
+  EXPECT_EQ(div(Expression("10+a^3"), Expression("a^2")).toString(), "10/a^2 + a");
   EXPECT_EQ(div(Expression("a*b"), Expression("b*a")).toString(), "1");
   EXPECT_EQ(div(Expression("a+b"), Expression("a+b")).toString(), "1");
 }
@@ -50,7 +48,7 @@ TEST(ExpressionFunctionsTests, divTest) {
 TEST(ExpressionFunctionsTests, negTest) {
   EXPECT_EQ(neg(Expression("a")).toString(), "-a");
   EXPECT_EQ(neg(Expression("a+3")).toString(), "-a - 3");
-  EXPECT_EQ(neg(Expression("(a+b)^2")).toString(), "-a^2 - b^2 - 2 a b");
+  EXPECT_EQ(neg(Expression("(a+b)^2")).toString(), "-a^2 - 2 a b - b^2");
 }
 
 TEST(ExpressionFunctionsTests, eqvTest) {
@@ -104,10 +102,9 @@ TEST(ExpressionFunctionsTests, factorialTest) {
 TEST(ExpressionFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Expression("4")).toString(), "2");
   EXPECT_EQ(sqrt(Expression("5")).toString(), "sqrt(5)");
-  // TODO: functions
-  EXPECT_EQ(sqrt(Expression("a^4")).toString(), "sqrt(a^4)");
+  EXPECT_EQ(sqrt(Expression("a^4")).toString(), "sqrt(a^4)"); // TODO: sqrt
   EXPECT_EQ(sqrt(Expression("a^2*b*b")).toString(), "sqrt(a^2 b^2)");
-  EXPECT_EQ(sqrt(Expression("a^2+b^2+2*a*b")).toString(), "sqrt(a^2 + b^2 + 2 a b)");
+  EXPECT_EQ(sqrt(Expression("a^2+b^2+2*a*b")).toString(), "sqrt(a^2 + 2 a b + b^2)");
 }
 
 TEST(ExpressionFunctionsTests, powTest) {
@@ -207,7 +204,7 @@ TEST(ExpressionFunctionsTests, derivativeTest) {
   EXPECT_EQ(derivative(Expression("1")).toString(), "0");
   EXPECT_EQ(derivative(Expression("E")).toString(), "0");
   EXPECT_EQ(derivative(Expression("a")).toString(), "1");
-  EXPECT_EQ(derivative(Expression("(a+5)")).toString(), "(a + 5)'");
+  EXPECT_EQ(derivative(Expression("(a+5)")).toString(), "(a + 5)'"); // TODO: derivative
 }
 
 TEST(ExpressionFunctionsTests, notTest) {
@@ -232,16 +229,16 @@ TEST(ExpressionFunctionsTests, orTest) {
 }
 
 TEST(ExpressionFunctionsTests, solveTest) {
-  //TODO: equations, precision
-  // EXPECT_EQ(solve(Expression("x-10=0")).toString(), "x in {10}");
-  // EXPECT_EQ(solve(Expression("x<-10")).toString(), "x + 10 < 0");
-  // EXPECT_EQ(solve(Expression("-10-x=0")).toString(), "x in {-10}");
-  // EXPECT_EQ(solve(Expression("x^2-10=39")).toString(), "x in {-7,7}");
-  // EXPECT_EQ(solve(Expression("x^2=0")).toString(), "x in {0}");
-  // EXPECT_EQ(solve(Expression("x^2=1")).toString(), "x in {-1,1}");
-  // EXPECT_EQ(solve(Expression("x^2=-1")).toString(), "x^2 + 1 = 0"); // TODO complex numbers
-  // EXPECT_EQ(solve(Expression("x^2-2x-3=0")).toString(), "x in {-1,3}");
-  // EXPECT_EQ(solve(Expression("15-2x-x^2=0")).toString(), "x in {-5,3}");
-  // EXPECT_EQ(solve(Expression("x^2+12x+36=0")).toString(), "x in {-6}");
-  // EXPECT_EQ(solve(Expression("15x^2+sin(25)x-10%=Ey")).toString(), "15 x^2 - 2.7183 y - 0.13235 x - 0.1 = 0");
+  // TODO: equations, precision
+  //  EXPECT_EQ(solve(Expression("x-10=0")).toString(), "x in {10}");
+  //  EXPECT_EQ(solve(Expression("x<-10")).toString(), "x + 10 < 0");
+  //  EXPECT_EQ(solve(Expression("-10-x=0")).toString(), "x in {-10}");
+  //  EXPECT_EQ(solve(Expression("x^2-10=39")).toString(), "x in {-7,7}");
+  //  EXPECT_EQ(solve(Expression("x^2=0")).toString(), "x in {0}");
+  //  EXPECT_EQ(solve(Expression("x^2=1")).toString(), "x in {-1,1}");
+  //  EXPECT_EQ(solve(Expression("x^2=-1")).toString(), "x^2 + 1 = 0"); // TODO complex numbers
+  //  EXPECT_EQ(solve(Expression("x^2-2x-3=0")).toString(), "x in {-1,3}");
+  //  EXPECT_EQ(solve(Expression("15-2x-x^2=0")).toString(), "x in {-5,3}");
+  //  EXPECT_EQ(solve(Expression("x^2+12x+36=0")).toString(), "x in {-6}");
+  //  EXPECT_EQ(solve(Expression("15x^2+sin(25)x-10%=Ey")).toString(), "15 x^2 - 2.7183 y - 0.13235 x - 0.1 = 0");
 }
