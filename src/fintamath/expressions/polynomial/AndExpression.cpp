@@ -33,16 +33,16 @@ ArgumentPtr AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
     return *rhsBool ? lhsChild : rhsChild;
   }
 
-  if (*lhsChild == *rhsChild) {
+  if (lhsChild->toString() == rhsChild->toString()) {
     return lhsChild;
   }
 
   if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr && is<Not>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
+      lhsExpr && is<Not>(lhsExpr->getFunction()) && lhsExpr->getChildren().front()->toString() == rhsChild->toString()) {
     return make_shared<Boolean>(false);
   }
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
+      rhsExpr && is<Not>(rhsExpr->getFunction()) && rhsExpr->getChildren().front()->toString() == lhsChild->toString()) {
     return make_shared<Boolean>(false);
   }
 
