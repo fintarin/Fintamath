@@ -142,6 +142,12 @@ ArgumentPtr PowExpression::preSimplify() const {
     auto rhsMul = makeFunctionExpression(Pow(), {lhsExpr->getChildren()[0], simplExpr->rhsChild});
     return makeFunctionExpression(Mul(), {lhsMul, rhsMul});
   }
+
+  if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
+    auto lhsPow = lhsExpr->getChildren().front();
+    auto rhsPow = makeFunctionExpression(Mul(), {lhsExpr->getChildren()[1], simplExpr->rhsChild});
+    return makeRawFunctionExpression(Pow(), {lhsPow, rhsPow});
+  }
   return simpl;
 }
 

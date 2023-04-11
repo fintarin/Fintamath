@@ -38,11 +38,13 @@ ArgumentPtr AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   }
 
   if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr && is<Not>(lhsExpr->getFunction()) && lhsExpr->getChildren().front()->toString() == rhsChild->toString()) {
+      lhsExpr && is<Not>(lhsExpr->getFunction()) &&
+      lhsExpr->getChildren().front()->toString() == rhsChild->toString()) {
     return make_shared<Boolean>(false);
   }
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Not>(rhsExpr->getFunction()) && rhsExpr->getChildren().front()->toString() == lhsChild->toString()) {
+      rhsExpr && is<Not>(rhsExpr->getFunction()) &&
+      rhsExpr->getChildren().front()->toString() == lhsChild->toString()) {
     return make_shared<Boolean>(false);
   }
 
