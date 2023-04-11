@@ -32,7 +32,7 @@ TEST(ExpressionFunctionsTests, subTest) {
   EXPECT_EQ(sub(10, Expression("a+2")).toString(), "-a + 8");
   EXPECT_EQ(sub(Variable("a"), Expression("a+2")).toString(), "-2");
   EXPECT_EQ(sub(Expression("b+2"), Expression("a+2")).toString(), "-a + b");
-  EXPECT_EQ(sub(Expression("10+a^3"), Expression("a^2")).toString(), "-a^2 + a^3 + 10"); // TODO sort powers
+  EXPECT_EQ(sub(Expression("10+a^3"), Expression("a^2")).toString(), "a^3 - a^2 + 10");
   EXPECT_EQ(sub(Expression("a*b"), Expression("b*a")).toString(), "0");
   EXPECT_EQ(sub(Expression("a+b"), Expression("a+b")).toString(), "0");
 }

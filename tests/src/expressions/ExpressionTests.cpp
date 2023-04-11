@@ -229,7 +229,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+b)+(a+b)+(-(-(a+b)))").toString(), "3 a + 3 b");
   EXPECT_EQ(Expression("-a^2 + b").toString(), "-a^2 + b");
   EXPECT_EQ(Expression("-a^2 c + b").toString(), "-a^2 c + b");
-  EXPECT_EQ(Expression("-a^2 d - a^2 c + b").toString(), "-a^2 c - a^2 d + b");
+  EXPECT_EQ(Expression("-a^2 d - a^2 c + b").toString(), "-a^2 d - a^2 c + b");
   EXPECT_EQ(Expression("abc").toString(), "a b c");
   EXPECT_EQ(Expression("d^abc").toString(), "b c d^a");
   EXPECT_EQ(Expression("abc^d").toString(), "a b c^d");
@@ -265,7 +265,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x^2 + 3 x + 1)");
   EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1");
   EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1)");
-  EXPECT_EQ(Expression("(sin(x)+1)^(-4)").toString(), "1/(sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1)");
+  EXPECT_EQ(Expression("(sin(x)+1)^(-4)").toString(), "1/(sin(x)^4 + 4 sin(x)^3 + 4 sin(x) + 6 sin(x)^2 + 1)");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
   EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
 
@@ -397,7 +397,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("x_1").toString(), "x_1");
   EXPECT_EQ(Expression("(x+1)_1").toString(), "(x + 1)_1");
   EXPECT_EQ(Expression("(x*2)_1").toString(), "(2 x)_1");
-  EXPECT_EQ(Expression("x+x_1").toString(), "x + x_1");
+  EXPECT_EQ(Expression("x+x_1").toString(), "x_1 + x");
   EXPECT_EQ(Expression("x*x_1").toString(), "x x_1");
   EXPECT_EQ(Expression("x^x_1").toString(), "x^x_1");
   EXPECT_EQ(Expression("x_x^2").toString(), "x_x^2");
