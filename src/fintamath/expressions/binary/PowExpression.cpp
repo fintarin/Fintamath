@@ -129,6 +129,22 @@ ArgumentPtr PowExpression::invert() const {
   return inv;
 }
 
+ArgumentPtr PowExpression::preSimplify() const {
+  auto simpl = IBinaryExpression::preSimplify();
+  auto simplExpr = cast<PowExpression>(simpl);
+
+  if (!simplExpr) {
+    return simpl;
+  }
+
+  if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
+    auto lhsMul = makeFunctionExpression(Pow(), {NEG_ONE.clone(), simplExpr->rhsChild});
+    auto rhsMul = makeFunctionExpression(Pow(), {lhsExpr->getChildren()[0], simplExpr->rhsChild});
+    return makeFunctionExpression(Mul(), {lhsMul, rhsMul});
+  }
+  return simpl;
+}
+
 ArgumentPtr PowExpression::postSimplify() const {
   auto simpl = IBinaryExpression::postSimplify();
   auto simplExpr = cast<PowExpression>(simpl);
