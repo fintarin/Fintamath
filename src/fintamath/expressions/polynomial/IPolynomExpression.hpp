@@ -63,7 +63,6 @@ private:
   void globalSimplifyRec();
 
   void sort();
-
 };
 
 template <typename Derived>

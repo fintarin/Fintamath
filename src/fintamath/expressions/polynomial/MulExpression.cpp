@@ -241,8 +241,8 @@ ArgumentPtr MulExpression::simplifyNegation(const ArgumentPtr &lhsChild, const A
 }
 
 MulExpression::FunctionsVector MulExpression::getSimplifyFunctions() const {
-  return {&MulExpression::simplifyNegation, &MulExpression::simplifyDivisions,
-          &MulExpression::coefficientsProcessing, &MulExpression::simplifyNumber, &MulExpression::multiplicateBraces};
+  return {&MulExpression::simplifyNegation, &MulExpression::simplifyDivisions, &MulExpression::coefficientsProcessing,
+          &MulExpression::simplifyNumber, &MulExpression::multiplicateBraces};
 }
 
 bool MulExpression::literalComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
@@ -322,7 +322,7 @@ void MulExpression::postSortProcessing() {
     return;
   }
 
-  if (auto num = cast<INumber>(children.front());num && *num == NEG_ONE) {
+  if (auto num = cast<INumber>(children.front()); num && *num == NEG_ONE) {
     children.erase(children.begin());
     children.front() = makeFunctionExpression(Neg(), {children.front()});
   }
