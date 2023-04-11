@@ -163,4 +163,25 @@ ArgumentPtr SumExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, c
   return {};
 }
 
+bool SumExpression::comparator(const ArgumentPtr &left, const ArgumentPtr &right) const {
+  ArgumentPtr lhs;
+  ArgumentPtr rhs;
+
+  if (auto lhsExpr = cast<IExpression>(left); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
+    lhs = lhsExpr->getChildren().front();
+  }
+  else {
+    lhs = left;
+  }
+
+  if (auto rhsExpr = cast<IExpression>(right); rhsExpr && is<Neg>(rhsExpr->getFunction())) {
+    rhs = rhsExpr->getChildren().front();
+  }
+  else {
+    rhs = right;
+  }
+
+  return IPolynomExpression::comparator(lhs, rhs);
+}
+
 }

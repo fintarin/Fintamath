@@ -8,18 +8,12 @@ class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INega
 public:
   explicit SumExpression(const ArgumentsPtrVector &children);
 
-  // ArgumentPtr getPowCoefficient(const ArgumentPtr &powValue) const;
-
-  // ArgumentPtr getPow() const;
-
   ArgumentPtr negate() const override;
-
-  // void multiplicate(const ArgumentPtr &value);
 
 protected:
   FunctionsVector getSimplifyFunctions() const override;
 
-  // bool comparator(const ArgumentPtr &left, const ArgumentPtr &right) const override;
+  bool comparator(const ArgumentPtr &left, const ArgumentPtr &right) const override;
 
 private:
   // bool functionComparator(const ArgumentPtr& lhs, const ArgumentPtr& rhs) const;
