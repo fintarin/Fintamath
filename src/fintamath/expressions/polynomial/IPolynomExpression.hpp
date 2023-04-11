@@ -48,11 +48,7 @@ protected:
 
   virtual bool functionComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
-protected:
-  // static void sortVector(ArgumentsPtrVector &vector, map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
-  //                        ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
-
-  // static void pushPolynomToPolynom(const ArgumentsPtrVector &from, ArgumentsPtrVector &to);
+  virtual void postSortProcessing();
 
 protected:
   shared_ptr<IFunction> func;
@@ -65,6 +61,9 @@ private:
   void postSimplifyRec();
 
   void globalSimplifyRec();
+
+  void sort();
+
 };
 
 template <typename Derived>
