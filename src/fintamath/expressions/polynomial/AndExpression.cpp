@@ -22,7 +22,7 @@ ArgumentPtr AndExpression::logicNegate() const {
   return makeFunctionExpression(Or(), negChildren);
 }
 
-ArgumentPtr AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+ArgumentPtr AndExpression::preSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
 
@@ -49,6 +49,31 @@ ArgumentPtr AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   }
 
   return {};
+}
+
+ArgumentPtr AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+  return preSimplify(lhsChildNum, rhsChildNum);
+}
+
+bool AndExpression::comparator(const ArgumentPtr &left, const ArgumentPtr &right) const {
+  ArgumentPtr lhs;
+  ArgumentPtr rhs;
+
+  if (auto lhsExpr = cast<IExpression>(left); lhsExpr && is<Not>(lhsExpr->getFunction())) {
+    lhs = lhsExpr->getChildren().front();
+  }
+  else {
+    lhs = left;
+  }
+
+  if (auto rhsExpr = cast<IExpression>(right); rhsExpr && is<Not>(rhsExpr->getFunction())) {
+    rhs = rhsExpr->getChildren().front();
+  }
+  else {
+    rhs = right;
+  }
+
+  return IPolynomExpression::comparator(lhs, rhs);
 }
 
 }
