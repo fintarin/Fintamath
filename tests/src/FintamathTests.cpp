@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 TEST(FintamathTest, testTest) {
-  EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "");
+  EXPECT_EQ(Expression("a^2 > a").toString(), "");
 }
 
 TEST(FintamathTests, fintamathTests) {
@@ -35,7 +35,7 @@ TEST(FintamathTests, fintamathTests) {
 
   expr = eqv(x * x + y * y * y, x * y);
 
-  EXPECT_EQ(expr.toString(), "y^3 + x^2 - x y = 0");
+  EXPECT_EQ(expr.toString(), "x^2 + y^3 - x y = 0");
 
   expr = eqv(x * x + y * y, x * y);
   EXPECT_EQ(expr.toString(), "x^2 + y^2 - x y = 0");
