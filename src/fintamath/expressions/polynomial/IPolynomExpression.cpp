@@ -158,6 +158,12 @@ void IPolynomExpression::globalSimplifyRec() {
           children.erase(children.begin() + j);
         }
       }
+      ArgumentsPtrVector oldChildren = children;
+      children.clear();
+
+      for (auto &child : oldChildren) {
+        addElement(child);
+      }
     }
   }
 
@@ -185,6 +191,8 @@ ArgumentPtr IPolynomExpression::preSimplify() const {
     return comparator(lhs, rhs);
   });
 
+  simpl->postSortProcessing();
+
   if (simpl->children.size() == 1) {
     return simpl->children.front();
   }
@@ -206,9 +214,7 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
 
   simpl->postSimplifyRec();
   simpl->globalSimplifyRec();
-  std::sort(simpl->children.begin(), simpl->children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-    return comparator(lhs, rhs);
-  });
+  simpl->sort();
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
@@ -319,6 +325,16 @@ bool IPolynomExpression::functionComparator(const ArgumentPtr &lhs, const Argume
   }
 
   return leftFunction->toString() < rightFunction->toString();
+}
+
+void IPolynomExpression::sort() {
+  std::sort(children.begin(), children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+    return comparator(lhs, rhs);
+  });
+  postSortProcessing();
+}
+
+void IPolynomExpression::postSortProcessing() {
 }
 
 }
