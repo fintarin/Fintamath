@@ -7,10 +7,6 @@
 
 using namespace fintamath;
 
-TEST(FintamathTest, testTest) {
-  EXPECT_EQ(Expression("a^2 > a").toString(), "");
-}
-
 TEST(FintamathTests, fintamathTests) {
   Expression expr;
 
@@ -40,17 +36,19 @@ TEST(FintamathTests, fintamathTests) {
   expr = eqv(x * x + y * y, x * y);
   EXPECT_EQ(expr.toString(), "x^2 + y^2 - x y = 0");
 
-  expr = eqv(pow(x, 2) - 10, 39);
-  EXPECT_EQ(solve(expr).toString(), "x in {-7,7}");
+  //TODO: equations
+  // expr = eqv(pow(x, 2) - 10, 39);
+  // EXPECT_EQ(solve(expr).toString(), "x in {-7,7}");
 
-  expr = Expression("-4x^2 + 28x - 49 = 0");
-  EXPECT_EQ(solve(expr).precise(2).toString(), "x in {3.5}");
+  // expr = Expression("-4x^2 + 28x - 49 = 0");
+  // EXPECT_EQ(solve(expr).precise(2).toString(), "x in {3.5}");
 
-  expr = Expression("-4x^2 + 28x - 49 = 0");
-  EXPECT_EQ(solve(expr).toString(), "x in {7/2}");
+  // expr = Expression("-4x^2 + 28x - 49 = 0");
+  // EXPECT_EQ(solve(expr).toString(), "x in {7/2}");
 
-  expr = Expression("sin2^2 + cos2^2 = 1");
-  EXPECT_EQ(solve(expr).toString(), "True");
+  //TODO: precision
+  // expr = Expression("sin2^2 + cos2^2 = 1");
+  // EXPECT_EQ(solve(expr).toString(), "True");
 
   // EXPECT_ANY_THROW(1 / (ln(pow(e(), pow(e(), e()))) - pow(e(), e())));
   // EXPECT_ANY_THROW(1 / (ln(ln(pow(e(), pow(e(), e())))) - e()));

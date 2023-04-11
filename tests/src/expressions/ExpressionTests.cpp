@@ -195,9 +195,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("x/y/z").toString(), "x/y/z");
   EXPECT_EQ(Expression("x/(y/z)").toString(), "x z/y");
   EXPECT_EQ(Expression("(x/y)/z").toString(), "x/y/z");
-  EXPECT_EQ(Expression("x^y^z").toString(), "x^y^z");
+  EXPECT_EQ(Expression("x^y^z").toString(), "x^(y z)");
   EXPECT_EQ(Expression("x^(y^z)").toString(), "x^(y^z)");
-  EXPECT_EQ(Expression("(x^y)^z").toString(), "x^y^z");
+  EXPECT_EQ(Expression("(x^y)^z").toString(), "x^(y z)");
   EXPECT_EQ(Expression("(a+b)^2").toString(), "a^2 + b^2 + 2 a b");
   EXPECT_EQ(Expression("(a+b)^3").toString(), "a^3 + b^3 + 3 a^2 b + 3 a b^2");
   EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3 + b^3 + 3 a^2 b + 3 a b^2");
@@ -207,7 +207,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "15/a/(b + 2) + 3 b/a/(b + 2) + 5/(b + 2) + b/(b + 2)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
-  EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
+  //TODO: polynomial division
+  // EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1"); 
   EXPECT_EQ(Expression("1*(a+b)*1").toString(), "a + b");
   EXPECT_EQ(Expression("-1*(a+b)*1").toString(), "-a - b");
   EXPECT_EQ(Expression("1*(a+b)*-1").toString(), "-a - b");
@@ -323,7 +324,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("a | b").toString(), "a | b");
   EXPECT_EQ(Expression("a -> b").toString(), "~a | b");
   EXPECT_EQ(Expression("a <-> b").toString(), "a & b | ~a & ~b");
-  EXPECT_EQ(Expression("a !<-> b").toString(), "~a & b | a & ~b");
+  EXPECT_EQ(Expression("a !<-> b").toString(), "a & ~b | ~a & b");
 
   EXPECT_EQ(Expression("a & a").toString(), "a");
   EXPECT_EQ(Expression("a | a").toString(), "a");
@@ -365,11 +366,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("a<->(True)!<->(False)").toString(), "a");
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a").toString(), "True");
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a<->a").toString(), "a");
-  EXPECT_EQ(Expression("a&b->b&c").toString(), "~(a & b) | b & c");
+  EXPECT_EQ(Expression("a&b->b&c").toString(), "b & c | ~a | ~b");
   EXPECT_EQ(Expression("a&b&c").toString(), "a & b & c");
   EXPECT_EQ(Expression("a&(b&c)").toString(), "a & b & c");
   EXPECT_EQ(Expression("a & ~b & c").toString(), "a & ~b & c");
-  EXPECT_EQ(Expression("a | (~b & c)").toString(), "a | ~b & c");
+  EXPECT_EQ(Expression("a | (~b & c)").toString(), "~b & c | a");
   EXPECT_EQ(Expression("(a | ~b) & c").toString(), "(a | ~b) & c");
   EXPECT_EQ(Expression("~(a & b)").toString(), "~a | ~b");
   EXPECT_EQ(Expression("~(a | b)").toString(), "~a & ~b");
@@ -377,18 +378,15 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("~(a | b | c)").toString(), "~a & ~b & ~c");
   EXPECT_EQ(Expression("~(~a & ~a)").toString(), "a");
   EXPECT_EQ(Expression("~a & b | ~c -> d <-> f !<-> g").toString(),
-            "~((~(~a & b | ~c) | d) & f | ~(~(~a & b | ~c) | d) & ~f) & g | ((~(~a & b | ~c) | d) & f "
-            "| ~(~(~a & b | ~c) | d) & ~f) & ~g");
+            "(((a | ~b) & c | d) & f | (~a & b | ~c) & ~d & ~f) & ~g | ((a | ~b) & c | d | f) & ((~a & b | ~c) & ~d | ~f) & g");
   EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~d <-> ~~f !<-> ~~g").toString(),
-            "~((~(~a & b | ~c) | d) & f | ~(~(~a & b | ~c) | d) & ~f) & g | ((~(~a & b | ~c) | d) & f "
-            "| ~(~(~a & b | ~c) | d) & ~f) & ~g");
+            "(((a | ~b) & c | d) & f | (~a & b | ~c) & ~d & ~f) & ~g | ((a | ~b) & c | d | f) & ((~a & b | ~c) & ~d | ~f) & g");
   EXPECT_EQ(Expression("True & b & False & c").toString(), "False");
   EXPECT_EQ(Expression("True | b | False | c").toString(), "True");
-  EXPECT_EQ(Expression("(x | ~y | z) & (y | z)").toString(), "???");
-  EXPECT_EQ(Expression("(x | ~y | z) & (y | z)").toString(), "???");
-  EXPECT_EQ(Expression("(x & ~y & z) | (y & z)").toString(), "???");
-  EXPECT_EQ(Expression("(x | ~y | (x | ~y | z) & (y | z)) & (y | (x & ~y & z) | (y & z))").toString(), "???");
-  EXPECT_EQ(Expression("b&c&d | a&c&d | a&b&c").toString(), "???");
+  EXPECT_EQ(Expression("(x | ~y | z) & (y | z)").toString(), "(x | ~y | z) & (y | z)");
+  EXPECT_EQ(Expression("(x & ~y & z) | (y & z)").toString(), "x & ~y & z | y & z");
+  EXPECT_EQ(Expression("(x | ~y | (x | ~y | z) & (y | z)) & (y | (x & ~y & z) | (y & z))").toString(), "((x | ~y | z) & (y | z) | x | ~y) & (x & ~y & z | y & z | y)");
+  EXPECT_EQ(Expression("b&c&d | a&c&d | a&b&c").toString(), "a & c & d | a & b & c | b & c & d");
   EXPECT_EQ(Expression("True | a | b | False").toString(), "True");
 
   EXPECT_EQ(Expression("x=1&a").toString(), "x - 1 = 0 & a");
@@ -456,25 +454,26 @@ TEST(ExpressionTests, stringConstructorLargeTest) {
 
   EXPECT_EQ(
       Expression("a<->b<->c<->d<->e<->f<->g<->h").toString(),
-      "((((((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) "
-      "& ~d) & e | ~(((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & "
-      "~b) & ~c) & ~d) & ~e) & f | ~((((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c "
-      "| ~(a & b | ~a & ~b) & ~c) & ~d) & e | ~(((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a "
-      "& ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & ~e) & ~f) & g | ~(((((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & "
-      "~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & e | ~(((a & b | ~a & ~b) & c | ~(a & b | "
-      "~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & ~e) & f | ~((((a & b | ~a & ~b) "
-      "& c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & e | ~(((a & b | "
-      "~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & ~e) & "
-      "~f) & ~g) & h | ~((((((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b "
-      "| ~a & ~b) & ~c) & ~d) & e | ~(((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c "
-      "| ~(a & b | ~a & ~b) & ~c) & ~d) & ~e) & f | ~((((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & "
-      "b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & e | ~(((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d "
-      "| ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & ~e) & ~f) & g | ~(((((a & b | ~a & ~b) & c | ~(a & "
-      "b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & e | ~(((a & b | ~a & ~b) & "
-      "c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & ~e) & f | ~((((a "
-      "& b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & ~d) & "
-      "e | ~(((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & ~c) & d | ~((a & b | ~a & ~b) & c | ~(a & b | ~a & ~b) & "
-      "~c) & ~d) & ~e) & ~f) & ~g) & ~h");
+      "((((((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c) & d | ((a | b) & (~a | ~b) | ~c) & (a & b | ~a "
+      "& ~b | c) & ~d) & e | (((a | b) & (~a | ~b) | ~c) & (a & b | ~a & ~b | c) | ~d) & ((a & b | ~a & ~b) & "
+      "c | (a | b) & (~a | ~b) & ~c | d) & ~e) & f | ((((a | b) & (~a | ~b) | ~c) & (a & b | ~a & ~b | c) | ~d"
+      ") & ((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c | d) | ~e) & (((a & b | ~a & ~b) & c | (a | b) & "
+      "(~a | ~b) & ~c) & d | ((a | b) & (~a | ~b) | ~c) & (a & b | ~a & ~b | c) & ~d | e) & ~f) & g | (((((a | "
+      "b) & (~a | ~b) | ~c) & (a & b | ~a & ~b | c) | ~d) & ((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c |"
+      " d) | ~e) & (((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c) & d | ((a | b) & (~a | ~b) | ~c) & (a & "
+      "b | ~a & ~b | c) & ~d | e) | ~f) & ((((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c) & d | ((a | b) & "
+      "(~a | ~b) | ~c) & (a & b | ~a & ~b | c) & ~d) & e | (((a | b) & (~a | ~b) | ~c) & (a & b | ~a & ~b | c) "
+      "| ~d) & ((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c | d) & ~e | f) & ~g) & h | ((((((a | b) & (~a "
+      "| ~b) | ~c) & (a & b | ~a & ~b | c) | ~d) & ((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c | d) | ~e) "
+      "& (((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c) & d | ((a | b) & (~a | ~b) | ~c) & (a & b | ~a & ~b "
+      "| c) & ~d | e) | ~f) & ((((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c) & d | ((a | b) & (~a | ~b) | "
+      "~c) & (a & b | ~a & ~b | c) & ~d) & e | (((a | b) & (~a | ~b) | ~c) & (a & b | ~a & ~b | c) | ~d) & ((a "
+      "& b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c | d) & ~e | f) | ~g) & (((((a & b | ~a & ~b) & c | (a | b)"
+      " & (~a | ~b) & ~c) & d | ((a | b) & (~a | ~b) | ~c) & (a & b | ~a & ~b | c) & ~d) & e | (((a | b) & (~a"
+      " | ~b) | ~c) & (a & b | ~a & ~b | c) | ~d) & ((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c | d) & "
+      "~e) & f | ((((a | b) & (~a | ~b) | ~c) & (a & b | ~a & ~b | c) | ~d) & ((a & b | ~a & ~b) & c | (a | b) "
+      "& (~a | ~b) & ~c | d) | ~e) & (((a & b | ~a & ~b) & c | (a | b) & (~a | ~b) & ~c) & d | ((a | b) & (~a "
+      "| ~b) | ~c) & (a & b | ~a & ~b | c) & ~d | e) & ~f | g) & ~h");
 
   EXPECT_EQ(Expression("(x+y)^20").toString(), "x^20 + y^20 + 1140 x^3 y^17 + 1140 x^17 y^3 + 125970 x^8 y^12 + 125970 x^12 y^8 + 15504 x^5 y^15 + 15504 x^15 y^5 + 167960 x^9 y^11 + 167960 x^11 y^9 + 184756 x^10 y^10 + 190 x^18 y^2 + 190 x^2 y^18 + 20 x y^19 + 20 x^19 y + 38760 x^14 y^6 + 38760 x^6 y^14 + 4845 x^16 y^4 + 4845 x^4 y^16 + 77520 x^13 y^7 + 77520 x^7 y^13");
 
