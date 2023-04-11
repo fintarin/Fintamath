@@ -47,7 +47,7 @@ Expression less(const Expression &lhs, const Expression &rhs) {
   return Expression(Less()(lhs, rhs));
 }
 
-Expression move(const Expression &lhs, const Expression &rhs) {
+Expression more(const Expression &lhs, const Expression &rhs) {
   return Expression(More()(lhs, rhs));
 }
 

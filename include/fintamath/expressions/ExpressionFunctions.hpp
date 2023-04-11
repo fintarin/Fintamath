@@ -33,7 +33,7 @@ Expression neqv(const Expression &lhs, const Expression &rhs);
 
 Expression less(const Expression &lhs, const Expression &rhs);
 
-Expression move(const Expression &lhs, const Expression &rhs);
+Expression more(const Expression &lhs, const Expression &rhs);
 
 Expression lessEqv(const Expression &lhs, const Expression &rhs);
 
