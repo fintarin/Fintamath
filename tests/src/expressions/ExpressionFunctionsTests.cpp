@@ -112,10 +112,9 @@ TEST(ExpressionFunctionsTests, sqrtTest) {
 
 TEST(ExpressionFunctionsTests, powTest) {
   EXPECT_EQ(pow(Expression("a+b"), Expression("0")).toString(), "1");
-  // TODO: functions
-  //  EXPECT_EQ(pow(Expression("a^4"), Expression("a")).toString(), "a^(4*a)");
-  //  EXPECT_EQ(pow(Expression("a^4"), Expression("2")).toString(), "a^8");
-  //  EXPECT_EQ(pow(Expression("a*b"), Expression("a+3")).toString(), "a^a*a^3*b^a*b^3");
+  EXPECT_EQ(pow(Expression("a^4"), Expression("a")).toString(), "a^(4 a)");
+  EXPECT_EQ(pow(Expression("a^4"), Expression("2")).toString(), "a^8");
+  EXPECT_EQ(pow(Expression("a*b"), Expression("a+3")).toString(), "a^(a + 3) b^(a + 3)");
   EXPECT_EQ(pow(Expression("a+2"), Expression("2")).toString(), "a^2 + 4 a + 4");
 }
 
