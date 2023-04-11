@@ -13,6 +13,8 @@ public:
   ArgumentPtr invert() const override;
 
 protected:
+  ArgumentPtr preSimplify() const override;
+
   ArgumentPtr postSimplify() const override;
 
 private:
