@@ -48,16 +48,61 @@ private:
 
   void sort();
 
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
   int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
-  int comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+  /**
+   * @brief
+   *
+   * @param lhsVariables
+   * @param rhsVariables
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorVariables(const ArgumentsPtrVector &lhsVariables, const ArgumentsPtrVector &rhsVariables) const;
 
-  int comparatorVariables(const ArgumentsPtrVector &lhsVars, const ArgumentsPtrVector &rhsVars) const;
-
+  /**
+   * @brief
+   *
+   * @param lhsChildren
+   * @param rhsChildren
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
   int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
 
+  /**
+   * @brief
+   *
+   * @param lhsExpr
+   * @param rhsExpr
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
   int comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
                           const std::shared_ptr<const IExpression> &rhsExpr) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 };
 
 template <typename Derived>
