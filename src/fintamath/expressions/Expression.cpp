@@ -63,17 +63,57 @@ unique_ptr<IMathObject> Expression::toMinimalObject() const {
   return child->clone();
 }
 
-// void Expression::setPrecisionRec(uint8_t precision) {
-//   setMathObjectPrecision(child, precision);
-// }
-
 string Expression::toString() const {
   return child->toString();
 }
 
-Expression Expression::precise(size_t precision) const {
+Expression Expression::precise(uint8_t precision) const {
   assert(precision <= FINTAMATH_ROUND_PRECISION);
-  return *this;
+  return Expression(preciseRec(child, precision, true));
+}
+
+ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify) {
+  if (const auto num = cast<INumber>(arg)) {
+    return make_shared<Real>(convert<Real>(*num).precise(precision));
+  }
+
+  if (shouldSimplify) {
+    if (const auto constant = cast<IConstant>(arg)) {
+      ArgumentPtr res = (*constant)();
+
+      if (const auto num = cast<INumber>(res)) {
+        return make_shared<Real>(convert<Real>(*num).precise(precision));
+      }
+
+      return res;
+    }
+  }
+
+  if (const auto expr = cast<IExpression>(arg)) {
+    return preciseExpressionRec(expr, precision, shouldSimplify);
+  }
+
+  return arg;
+}
+
+ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision, bool shouldSimplify) {
+  ArgumentsPtrVector newChildren;
+
+  for (const auto &child : expr->getChildren()) {
+    newChildren.emplace_back(preciseRec(child, precision, shouldSimplify));
+  }
+
+  ArgumentPtr res;
+
+  if (shouldSimplify) {
+    res = makeFunctionExpression(*expr->getFunction(), newChildren);
+    res = preciseRec(res, precision, false);
+  }
+  else {
+    res = makeRawFunctionExpression(*expr->getFunction(), newChildren);
+  }
+
+  return res;
 }
 
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
@@ -276,15 +316,6 @@ Expression &Expression::negate() {
   return *this;
 }
 
-// void Expression::setPrecision(uint8_t precision) {
-//   setPrecisionRec(precision);
-// }
-
-// unique_ptr<IMathObject> Expression::simplify(bool isPrecise) const {
-// simplifyValue(isPrecise, expr.info);
-// return child->clone();
-// }
-
 ArgumentsPtrVector Expression::getChildren() const {
   return {child};
 }
@@ -390,5 +421,4 @@ shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const A
   funcExpr->child = make_shared<FunctionExpression>(func, args);
   return funcExpr;
 }
-
 }

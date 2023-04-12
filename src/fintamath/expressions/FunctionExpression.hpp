@@ -20,8 +20,6 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  // void setPrecision(uint8_t precision) override;
-
 private:
   shared_ptr<IFunction> func;
 

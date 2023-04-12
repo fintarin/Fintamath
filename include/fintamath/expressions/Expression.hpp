@@ -22,18 +22,13 @@ public:
 
   string toString() const override;
 
-  Expression precise(size_t precision = FINTAMATH_ROUND_PRECISION) const;
+  Expression precise(uint8_t precision = FINTAMATH_ROUND_PRECISION) const;
 
   ArgumentsPtrVector getChildren() const override;
 
   shared_ptr<IFunction> getFunction() const override;
 
-  // void setPrecision(uint8_t precision) override;
-
   ArgumentsPtrVector getVariables() const override;
-
-  // TODO: make this private
-  // void setPrecisionRec(uint8_t precision);
 
   template <typename Function, bool isPolynomial = false,
             typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
@@ -87,7 +82,10 @@ private:
 
   void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const;
 
-  // void callPowSimplify();
+  static ArgumentPtr preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify);
+
+  static ArgumentPtr preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
+                                          bool shouldSimplify);
 
   friend unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 

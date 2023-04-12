@@ -6,8 +6,6 @@ namespace fintamath {
 
 class IBinaryExpression : virtual public IExpression {
 public:
-  // void setPrecision(uint8_t precision) final;
-
   string toString() const final;
 
   shared_ptr<IFunction> getFunction() const final;

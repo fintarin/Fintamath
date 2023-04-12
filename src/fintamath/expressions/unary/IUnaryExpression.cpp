@@ -6,21 +6,6 @@
 
 namespace fintamath {
 
-// void IUnaryExpression::setPrecision(uint8_t precision) {
-//   if (const auto expr = cast<IExpression>(child)) {
-//     expr->setPrecision(precision);
-//     return;
-//   }
-
-//   if (const auto constant = cast<IConstant>(child)) {
-//     child = (*constant)();
-//   }
-
-//   if (is<INumber>(child)) {
-//     child = make_shared<Real>(convert<Real>(*child).precise(precision));
-//   }
-// }
-
 string IUnaryExpression::toString() const {
   if (!func) {
     return {};
@@ -105,8 +90,8 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   postSimplifyChild(simpl->child);
 
-  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*simpl->child})) {
-    return (*func)(*simpl->child);
+  if (ArgumentPtr res = callFunction(*simpl->func, {simpl->child})) {
+    return res;
   }
 
   return simpl;

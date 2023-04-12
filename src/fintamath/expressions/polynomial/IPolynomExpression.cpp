@@ -41,23 +41,6 @@ string IPolynomExpression::childToString(const ArgumentPtr &child, bool isFirst)
   return {};
 }
 
-// void IPolynomExpression::setPrecision(uint8_t precision) {
-//   for (auto &child : children) {
-//     if (auto expr = cast<IExpression>(child)) {
-//       expr->setPrecision(precision);
-//       return;
-//     }
-
-//     if (const auto constant = cast<IConstant>(child)) {
-//       child = (*constant)();
-//     }
-
-//     if (is<INumber>(child)) {
-//       child = make_shared<Real>(convert<Real>(*child).precise(precision));
-//     }
-//   }
-// }
-
 ArgumentsPtrVector IPolynomExpression::getVariables() const {
   ArgumentsPtrVector vars;
 
@@ -124,8 +107,8 @@ void IPolynomExpression::postSimplifyRec() {
 
   for (int64_t i = 0; i < children.size() - 1; i++) {
     for (int64_t j = i + 1; j < children.size(); j++) {
-      if (func->isNonExressionEvaluatable() && func->doArgsMatch({*children[i], *children[j]})) {
-        children[i] = (*func)(*children[i], *children[j]);
+      if (ArgumentPtr res = callFunction(*func, {children[i], children[j]})) {
+        children[i] = res;
         children.erase(children.begin() + j);
       }
       else if (auto res = postSimplify(i, j)) {
@@ -336,5 +319,4 @@ void IPolynomExpression::sort() {
 
 void IPolynomExpression::postSortProcessing() {
 }
-
 }

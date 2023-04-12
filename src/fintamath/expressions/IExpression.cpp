@@ -54,6 +54,33 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
   simplifyConstant(child);
 }
 
+ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs) {
+  ArgumentsRefVector args;
+  bool areArgumentsPrecise = true;
+
+  for (const auto &argPtr : argPtrs) {
+    args.emplace_back(*argPtr);
+
+    if (const auto num = cast<INumber>(argPtr); num && !num->isPrecise()) {
+      areArgumentsPrecise = false;
+    }
+  }
+
+  if (!func.isNonExressionEvaluatable() || !func.doArgsMatch(args)) {
+    return {};
+  }
+
+  ArgumentPtr res = func(args);
+
+  if (areArgumentsPrecise) {
+    if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {
+      return {};
+    }
+  }
+
+  return res;
+}
+
 ArgumentPtr IExpression::postSimplify() const {
   return nullptr;
 }
@@ -74,17 +101,5 @@ void IExpression::simplifyConstant(ArgumentPtr &child) {
     }
   }
 }
-
-// void IExpression::setMathObjectPrecision(ArgumentPtr &obj, uint8_t precision) {
-//   if (is<INumber>(obj)) {
-//     obj = make_shared<Real>(convert<Real>(*obj).precise(precision));
-//     return;
-//   }
-
-//   if (auto expr = cast<IExpression>(obj)) {
-//     expr->setPrecision(precision);
-//     return;
-//   }
-// }
 
 }

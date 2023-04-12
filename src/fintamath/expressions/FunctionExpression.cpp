@@ -56,63 +56,18 @@ ArgumentsPtrVector FunctionExpression::getChildren() const {
   return children;
 }
 
-// void FunctionExpression::setPrecision(uint8_t precision) {
-//   for (auto &arg : children) {
-//     setMathObjectPrecision(arg, precision);
-//   }
-// }
-
-// unique_ptr<IMathObject> FunctionExpression::simplify(bool isPrecise) const {
-// ArgumentsRefVector arguments;
-// bool canCallFunction = true;
-
-// for (const auto &arg : args) {
-//   const auto *child = arg;
-
-//   if (!child) {
-//     continue;
-//   }
-
-//   if (is<Variable>(child) || is<IConstant>(child) || is<IExpression>(child)) {
-//     canCallFunction = false;
-//   }
-
-//   arguments.emplace_back(*child);
-// }
-
-// if (!canCallFunction) {
-//   return make_unique<FunctionExpression>(*this);
-// }
-
-// auto countResult = (*function)(arguments);
-
-// if (const auto *num = cast<INumber>(countResult); num && !num->isPrecise() && isPrecise) {
-//   return make_unique<FunctionExpression>(*this);
-// }
-
-// return countResult;
-// }
-
 ArgumentPtr FunctionExpression::simplify() const {
   auto simpl = cast<FunctionExpression>(clone());
-  ArgumentsRefVector arguments;
 
   for (auto &child : simpl->children) {
     simplifyChild(child);
-    arguments.emplace_back(*child);
   }
 
-  if (!func->isNonExressionEvaluatable() || !func->doArgsMatch(arguments)) {
-    return simpl;
+  if (ArgumentPtr res = callFunction(*simpl->func, simpl->children)) {
+    return res;
   }
 
-  ArgumentPtr val = (*func)(arguments);
-
-  if (const auto num = cast<INumber>(val); num && !num->isPrecise()) {
-    return simpl;
-  }
-
-  return val;
+  return simpl;
 }
 
 ArgumentPtr FunctionExpression::preSimplify() const {

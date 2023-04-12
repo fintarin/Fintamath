@@ -47,12 +47,6 @@ return res;*/
   this->validateArgs(*getFunction(), {*leftExpr, *rightExpr});
 }*/
 
-/*void CompExpression::setPrecision(uint8_t precision) {
-  if (auto *expr = cast<IExpression>(leftExpr)) {
-    expr->setPrecision(precision);
-  }
-}*/
-
 // string CompExpression::solve() const {
 /*Variable x("x");
 auto expr = simplify(false);
