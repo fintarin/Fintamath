@@ -55,25 +55,4 @@ ArgumentPtr AndExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) 
   return preSimplify(lhsChildNum, rhsChildNum);
 }
 
-bool AndExpression::comparator(const ArgumentPtr &left, const ArgumentPtr &right) const {
-  ArgumentPtr lhs;
-  ArgumentPtr rhs;
-
-  if (auto lhsExpr = cast<IExpression>(left); lhsExpr && is<Not>(lhsExpr->getFunction())) {
-    lhs = lhsExpr->getChildren().front();
-  }
-  else {
-    lhs = left;
-  }
-
-  if (auto rhsExpr = cast<IExpression>(right); rhsExpr && is<Not>(rhsExpr->getFunction())) {
-    rhs = rhsExpr->getChildren().front();
-  }
-  else {
-    rhs = right;
-  }
-
-  return IPolynomExpression::comparator(lhs, rhs);
-}
-
 }
