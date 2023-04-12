@@ -12,10 +12,6 @@ public:
 
   string toString() const final;
 
-  ArgumentsPtrVector getVariables() const final;
-
-  ArgumentsPtrVector getPolynom() const;
-
   virtual void addElement(const ArgumentPtr &element) = 0;
 
 protected:
@@ -36,17 +32,7 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  virtual bool comparator(const ArgumentPtr &left, const ArgumentPtr &right) const;
-
-  virtual bool operatorComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
-  virtual bool literalComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
-  virtual bool powComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
-  virtual bool functionComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
-  virtual void postSortProcessing();
+  virtual bool isTermsOrderInversed() const;
 
 protected:
   shared_ptr<IFunction> func;
@@ -61,6 +47,17 @@ private:
   void globalSimplifyRec();
 
   void sort();
+
+  int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  int comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  int comparatorVariables(const ArgumentsPtrVector &lhsVars, const ArgumentsPtrVector &rhsVars) const;
+
+  int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
+
+  int comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
+                          const std::shared_ptr<const IExpression> &rhsExpr) const;
 };
 
 template <typename Derived>

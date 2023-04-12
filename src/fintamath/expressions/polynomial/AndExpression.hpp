@@ -12,8 +12,6 @@ public:
   ArgumentPtr logicNegate() const override;
 
 protected:
-  bool comparator(const ArgumentPtr &left, const ArgumentPtr &right) const override;
-
   // TODO: refactor, implement other logic functionaluty
   ArgumentPtr preSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 

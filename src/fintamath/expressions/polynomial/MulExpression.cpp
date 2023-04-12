@@ -245,87 +245,8 @@ MulExpression::FunctionsVector MulExpression::getSimplifyFunctions() const {
           &MulExpression::simplifyNumber, &MulExpression::multiplicateBraces};
 }
 
-bool MulExpression::literalComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  auto leftLit = cast<ILiteral>(lhs);
-  auto rightLit = cast<ILiteral>(rhs);
-
-  if (!leftLit && !rightLit) {
-    return lhs->toString() < rhs->toString();
-  }
-
-  if (!leftLit) {
-    return true;
-  }
-
-  if (!rightLit) {
-    return false;
-  }
-
-  auto leftConst = cast<IConstant>(lhs);
-  auto rightConst = cast<IConstant>(rhs);
-
-  if ((!leftConst || rightConst) && (!rightConst || leftConst)) { // logic equivalent operator (leftConst <->
-                                                                  // rightConst)
-    return lhs->toString() < rhs->toString();
-  }
-
-  if (!leftConst) {
-    return false;
-  }
-
-  if (!rightConst) {
-    return true;
-  }
-}
-
-bool MulExpression::powComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  if (is<INumber>(lhs)) {
-    return true;
-  }
-
-  if (is<INumber>(rhs)) {
-    return false;
-  }
-
-  auto leftExpr = cast<IExpression>(lhs);
-  auto rightExpr = cast<IExpression>(rhs);
-
-  if (!leftExpr) {
-    leftExpr = makeRawFunctionExpression(Pow(), {lhs, ONE.clone()});
-  }
-
-  if (!rightExpr) {
-    rightExpr = makeRawFunctionExpression(Pow(), {rhs, ONE.clone()});
-  }
-
-  if (is<Inv>(leftExpr->getFunction())) {
-    return false;
-  }
-
-  if (is<Inv>(rightExpr->getFunction())) {
-    return true;
-  }
-
-  if (!is<Pow>(leftExpr->getFunction())) {
-    leftExpr = makeRawFunctionExpression(Pow(), {leftExpr, ONE.clone()});
-  }
-
-  if (!is<Pow>(rightExpr->getFunction())) {
-    rightExpr = makeRawFunctionExpression(Pow(), {rightExpr, ONE.clone()});
-  }
-
-  return leftExpr->getChildren()[0]->toString() < rightExpr->getChildren()[0]->toString();
-}
-
-void MulExpression::postSortProcessing() {
-  if (children.size() < 2) {
-    return;
-  }
-
-  if (auto num = cast<INumber>(children.front()); num && *num == NEG_ONE) {
-    children.erase(children.begin());
-    children.front() = makeFunctionExpression(Neg(), {children.front()});
-  }
+bool MulExpression::isTermsOrderInversed() const {
+  return true;
 }
 
 }

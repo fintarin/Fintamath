@@ -22,11 +22,7 @@ public:
 protected:
   FunctionsVector getSimplifyFunctions() const override;
 
-  bool literalComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
-
-  bool powComparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
-
-  void postSortProcessing() override;
+  bool isTermsOrderInversed() const override;
 
 private:
   string childToString(const ArgumentPtr &child, bool isFirst = false) const override;

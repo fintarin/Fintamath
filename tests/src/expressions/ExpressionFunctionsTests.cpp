@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 TEST(ExpressionFunctionsTests, sumTest) {
-  EXPECT_EQ(sum(Variable("a"), -1, Expression("b^2")).toString(), "b^2 + a - 1");
+  EXPECT_EQ(sum(Variable("a"), -1, Expression("b^2")).toString(), "a + b^2 - 1");
   EXPECT_EQ(sum(10, Expression("a+2")).toString(), "a + 12");
   EXPECT_EQ(sum(Variable("a"), Expression("a+2")).toString(), "2 a + 2");
   EXPECT_EQ(sum(Expression("b+2"), Expression("a+2")).toString(), "a + b + 4");

@@ -28,8 +28,6 @@ public:
 
   shared_ptr<IFunction> getFunction() const override;
 
-  ArgumentsPtrVector getVariables() const override;
-
   template <typename Function, bool isPolynomial = false,
             typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
   static void

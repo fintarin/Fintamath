@@ -15,7 +15,7 @@ public:
 
   virtual ArgumentsPtrVector getChildren() const = 0;
 
-  virtual ArgumentsPtrVector getVariables() const;
+  ArgumentsPtrVector getVariables() const;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
   static void registerType() {

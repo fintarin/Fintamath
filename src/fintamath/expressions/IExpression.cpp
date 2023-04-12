@@ -12,7 +12,22 @@
 namespace fintamath {
 
 ArgumentsPtrVector IExpression::getVariables() const {
-  return {};
+  ArgumentsPtrVector vars;
+
+  for (auto child : getChildren()) {
+    if (is<Variable>(child)){
+      vars.emplace_back(child);
+    }
+    else if (auto childExpr = cast<IExpression>(child)){
+      ArgumentsPtrVector childVars = childExpr->getVariables();
+
+      for (auto childVar : childVars) {
+        vars.emplace_back(childVar);
+      }
+    }
+  }
+
+  return vars;
 }
 
 void IExpression::compressChild(ArgumentPtr &child) {

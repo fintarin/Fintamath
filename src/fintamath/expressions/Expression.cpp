@@ -320,18 +320,6 @@ ArgumentsPtrVector Expression::getChildren() const {
   return {child};
 }
 
-ArgumentsPtrVector Expression::getVariables() const {
-  if (is<Variable>(child)) {
-    return {child};
-  }
-
-  if (const auto expr = cast<IExpression>(child)) {
-    return expr->getVariables();
-  }
-
-  return {};
-}
-
 ArgumentPtr Expression::simplify() const {
   return child;
 }
