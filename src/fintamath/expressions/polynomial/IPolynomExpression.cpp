@@ -179,7 +179,7 @@ bool IPolynomExpression::isTermsOrderInversed() const {
 
 void IPolynomExpression::sort() {
   std::sort(children.begin(), children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-    return comparator(lhs, rhs) < 0;
+    return comparator(lhs, rhs) <= 0;
   });
 }
 
@@ -265,47 +265,19 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
   return comparatorFunctions(lhsExpr, rhsExpr);
 }
 
-int IPolynomExpression::comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  if (is<Variable>(lhs) && !is<Variable>(rhs)) {
-    return !isTermsOrderInversed() ? -1 : 1;
-  }
-  if (!is<Variable>(lhs) && is<Variable>(rhs)) {
-    return isTermsOrderInversed() ? -1 : 1;
-  }
+int IPolynomExpression::comparatorVariables(const ArgumentsPtrVector &lhsVariables,
+                                            const ArgumentsPtrVector &rhsVariables) const {
 
-  if (is<ILiteral>(lhs) && !is<ILiteral>(rhs)) {
-    return !isTermsOrderInversed() ? -1 : 1;
-  }
-  if (!is<ILiteral>(lhs) && is<ILiteral>(rhs)) {
-    return isTermsOrderInversed() ? -1 : 1;
-  }
-
-  if (*lhs == *rhs) {
-    return 0;
-  }
-
-  if (auto lhsComp = cast<IComparable>(lhs)) {
-    if (auto rhsComp = cast<IComparable>(rhs)) {
-      return *lhsComp > *rhsComp ? -1 : 1;
+  for (size_t i = 0; i < std::min(lhsVariables.size(), rhsVariables.size()); i++) {
+    if (*lhsVariables[i] != *rhsVariables[i]) {
+      return (lhsVariables[i]->toString() < rhsVariables[i]->toString()) ? -1 : 1;
     }
   }
 
-  return lhs->toString() < rhs->toString() ? -1 : 1;
-}
-
-int IPolynomExpression::comparatorVariables(const ArgumentsPtrVector &lhsVars,
-                                            const ArgumentsPtrVector &rhsVars) const {
-
-  for (size_t i = 0; i < std::min(lhsVars.size(), rhsVars.size()); i++) {
-    if (*lhsVars[i] != *rhsVars[i]) {
-      return (lhsVars[i]->toString() < rhsVars[i]->toString()) ? -1 : 1;
-    }
-  }
-
-  if (!lhsVars.empty() && rhsVars.empty()) {
+  if (!lhsVariables.empty() && rhsVariables.empty()) {
     return !isTermsOrderInversed() ? -1 : 1;
   }
-  if (lhsVars.empty() && !rhsVars.empty()) {
+  if (lhsVariables.empty() && !rhsVariables.empty()) {
     return isTermsOrderInversed() ? -1 : 1;
   }
 
@@ -420,6 +392,34 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpress
   }
 
   return 0;
+}
+
+int IPolynomExpression::comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  if (is<Variable>(lhs) && !is<Variable>(rhs)) {
+    return !isTermsOrderInversed() ? -1 : 1;
+  }
+  if (!is<Variable>(lhs) && is<Variable>(rhs)) {
+    return isTermsOrderInversed() ? -1 : 1;
+  }
+
+  if (is<ILiteral>(lhs) && !is<ILiteral>(rhs)) {
+    return !isTermsOrderInversed() ? -1 : 1;
+  }
+  if (!is<ILiteral>(lhs) && is<ILiteral>(rhs)) {
+    return isTermsOrderInversed() ? -1 : 1;
+  }
+
+  if (*lhs == *rhs) {
+    return 0;
+  }
+
+  if (auto lhsComp = cast<IComparable>(lhs)) {
+    if (auto rhsComp = cast<IComparable>(rhs)) {
+      return *lhsComp > *rhsComp ? -1 : 1;
+    }
+  }
+
+  return lhs->toString() < rhs->toString() ? -1 : 1;
 }
 
 }
