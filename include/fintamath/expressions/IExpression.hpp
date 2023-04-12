@@ -15,9 +15,6 @@ public:
 
   virtual ArgumentsPtrVector getChildren() const = 0;
 
-  // TODO: make this protected
-  // virtual void setPrecision(uint8_t precision) = 0;
-
   virtual ArgumentsPtrVector getVariables() const;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
@@ -38,11 +35,11 @@ protected:
 
   static void postSimplifyChild(ArgumentPtr &child);
 
+  static ArgumentPtr callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs);
+
   virtual ArgumentPtr postSimplify() const;
 
   virtual ArgumentPtr preSimplify() const;
-
-  // static void setMathObjectPrecision(ArgumentPtr &obj, uint8_t precision);
 
   virtual ArgumentPtr simplify() const = 0;
 

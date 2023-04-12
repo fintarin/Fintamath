@@ -4,11 +4,6 @@
 
 namespace fintamath {
 
-// void IBinaryExpression::setPrecision(uint8_t precision) {
-//   setMathObjectPrecision(lhsChild, precision);
-//   setMathObjectPrecision(rhsChild, precision);
-// }
-
 string IBinaryExpression::toString() const {
   ArgumentsPtrVector values;
   values.emplace_back(lhsChild);
@@ -37,8 +32,8 @@ ArgumentPtr IBinaryExpression::postSimplify() const {
   postSimplifyChild(simpl->lhsChild);
   postSimplifyChild(simpl->rhsChild);
 
-  if (func->isNonExressionEvaluatable() && func->doArgsMatch({*simpl->lhsChild, *simpl->rhsChild})) {
-    return (*func)(*simpl->lhsChild, *simpl->rhsChild);
+  if (ArgumentPtr res = callFunction(*simpl->func, {simpl->lhsChild, simpl->rhsChild})) {
+    return res;
   }
 
   return simpl;

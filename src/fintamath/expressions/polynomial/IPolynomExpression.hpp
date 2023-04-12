@@ -12,8 +12,6 @@ public:
 
   string toString() const final;
 
-  // void setPrecision(uint8_t precision) final;
-
   ArgumentsPtrVector getVariables() const final;
 
   ArgumentsPtrVector getPolynom() const;
