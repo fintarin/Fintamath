@@ -15,7 +15,7 @@ public:
 
   virtual ArgumentsPtrVector getChildren() const = 0;
 
-  ArgumentsPtrVector getVariables() const;
+  virtual ArgumentsPtrVector getVariables() const;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
   static void registerType() {
@@ -62,7 +62,7 @@ public:
     }
 
     for (size_t i = 0; i < lhsChildren.size(); i++) {
-      if (lhsChildren[i] != rhsChildren[i] || *lhsChildren[i] != *rhsChildren[i]) {
+      if (lhsChildren[i] != rhsChildren[i] && *lhsChildren[i] != *rhsChildren[i]) {
         return false;
       }
     }

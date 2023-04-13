@@ -7,6 +7,8 @@ namespace fintamath {
 class IndexExpression : public IBinaryExpressionCRTP<IndexExpression> {
 public:
   explicit IndexExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  ArgumentsPtrVector getVariables() const override;
 };
 
 }
