@@ -96,7 +96,8 @@ ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bo
   return arg;
 }
 
-ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision, bool shouldSimplify) {
+ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
+                                             bool shouldSimplify) {
   ArgumentsPtrVector newChildren;
 
   for (const auto &child : expr->getChildren()) {

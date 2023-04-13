@@ -25,18 +25,6 @@ private:
   static std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild);
 
   static ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value);
-
-  // bool static sortFunc(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
-
-  // void simplifyPolynom();
-
-  // void simplifyNegations();
-
-  // static void sortMulObjects(MulObjects &objs, ArgumentsPtrVector &mulVect, ArgumentsPtrVector &literalVect,
-  //                            ArgumentsPtrVector &powVect);
-
-  // static void simplifyMul(ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect, ArgumentsPtrVector &literalVect,
-  //                         ArgumentsPtrVector &funcVect);
 };
 
 }

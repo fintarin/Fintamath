@@ -21,14 +21,6 @@ const Mul MUL;
 MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(MUL, children) {
 }
 
-// TODO: remove and use operator priority instead
-string MulExpression::sumExprToString(const ArgumentPtr &obj) {
-  if (const auto expr = cast<IExpression>(obj); expr && is<Add>(expr->getFunction())) {
-    return "(" + obj->toString() + ")";
-  }
-  return obj->toString();
-}
-
 string MulExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
   bool invert = false;
   ArgumentPtr childToStr;
