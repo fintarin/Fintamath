@@ -171,6 +171,10 @@ ArgumentPtr PowExpression::postSimplify() const {
     if (*rhsInt == NEG_ONE) {
       return makeFunctionExpression(Inv(), {simplExpr->lhsChild});
     }
+    if (*rhsInt < 0) {
+      return makeRawFunctionExpression(
+          Inv(), {makeFunctionExpression(Pow(), {simplExpr->lhsChild, makeFunctionExpression(Neg(), {rhsInt})})});
+    }
   }
 
   return simplExpr->polynomSimplify();
