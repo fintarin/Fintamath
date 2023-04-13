@@ -206,7 +206,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4 + 4 a^3 b + 6 a^2 b^2 + 4 a b^3 + b^4");
   EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "a/(b + 2) + 3/(b + 2)");
   EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(a b)/(a b + 2 a) + (3 b)/(a b + 2 a)");
-  EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "15/a/(b + 2) + 3/a b/(b + 2) + b/(b + 2) + 5/(b + 2)");
+  EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(),
+            "(a b)/(a b + 2 a) + (5 a)/(a b + 2 a) + (3 b)/(a b + 2 a) + 15/(a b + 2 a)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   // TODO: polynomial division
