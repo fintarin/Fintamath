@@ -31,10 +31,10 @@ TEST(FintamathTests, fintamathTests) {
 
   expr = eqv(x * x + y * y * y, x * y);
 
-  EXPECT_EQ(expr.toString(), "x^2 + y^3 - x y = 0");
+  EXPECT_EQ(expr.toString(), "x^2 - x y + y^3 = 0");
 
   expr = eqv(x * x + y * y, x * y);
-  EXPECT_EQ(expr.toString(), "x^2 + y^2 - x y = 0");
+  EXPECT_EQ(expr.toString(), "x^2 - x y + y^2 = 0");
 
   //TODO: equations
   // expr = eqv(pow(x, 2) - 10, 39);
