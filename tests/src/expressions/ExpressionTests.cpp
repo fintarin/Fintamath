@@ -294,6 +294,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(5+5)=(2*5)").toString(), "True");
   EXPECT_EQ(Expression("((((5+5)=(2*5))))").toString(), "True");
   EXPECT_EQ(Expression("((1*1))(5+5)=((2*5)/(1/1))").toString(), "True");
+  EXPECT_EQ(Expression("-x - 10 = 0").toString(), "x + 10 = 0");
 
   EXPECT_EQ(Expression("a'").toString(), "1");
   EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");

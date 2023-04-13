@@ -229,16 +229,16 @@ TEST(ExpressionFunctionsTests, orTest) {
 }
 
 TEST(ExpressionFunctionsTests, solveTest) {
-  // TODO: equations, precision
-  //  EXPECT_EQ(solve(Expression("x-10=0")).toString(), "x in {10}");
-  //  EXPECT_EQ(solve(Expression("x<-10")).toString(), "x + 10 < 0");
-  //  EXPECT_EQ(solve(Expression("-10-x=0")).toString(), "x in {-10}");
-  //  EXPECT_EQ(solve(Expression("x^2-10=39")).toString(), "x in {-7,7}");
-  //  EXPECT_EQ(solve(Expression("x^2=0")).toString(), "x in {0}");
-  //  EXPECT_EQ(solve(Expression("x^2=1")).toString(), "x in {-1,1}");
-  //  EXPECT_EQ(solve(Expression("x^2=-1")).toString(), "x^2 + 1 = 0"); // TODO complex numbers
-  //  EXPECT_EQ(solve(Expression("x^2-2x-3=0")).toString(), "x in {-1,3}");
-  //  EXPECT_EQ(solve(Expression("15-2x-x^2=0")).toString(), "x in {-5,3}");
-  //  EXPECT_EQ(solve(Expression("x^2+12x+36=0")).toString(), "x in {-6}");
-  //  EXPECT_EQ(solve(Expression("15x^2+sin(25)x-10%=Ey")).toString(), "15 x^2 - 2.7183 y - 0.13235 x - 0.1 = 0");
+  EXPECT_EQ(solve(Expression("x-10=0")).toString(), "x = 10");
+  EXPECT_EQ(solve(Expression("x<-10")).toString(), "x < -10");
+  EXPECT_EQ(solve(Expression("-10-x=0")).toString(), "x = -10");
+  EXPECT_EQ(solve(Expression("x^2-10=39")).toString(), "x = -7 | x = 7");
+  EXPECT_EQ(solve(Expression("x^2=0")).toString(), "x = 0");
+  EXPECT_EQ(solve(Expression("x^2=1")).toString(), "x = -1 | x = 1");
+  EXPECT_EQ(solve(Expression("x^2=-1")).toString(), "x^2 + 1 = 0"); // TODO complex numbers
+  EXPECT_EQ(solve(Expression("x^2-2x-3=0")).toString(), "x = -1 | x = 3");
+  EXPECT_EQ(solve(Expression("15-2x-x^2=0")).toString(), "x = -5 | x = 3");
+  EXPECT_EQ(solve(Expression("x^2+12x+36=0")).toString(), "x = -6");
+  EXPECT_EQ(solve(Expression("15x^2+sin(25)x-10%=Ey")).toString(), "15 x^2 + sin(25) x - E y - 1/10 = 0");
+  EXPECT_EQ(solve(Expression("x + x_1 + x_(x+1) + y + y_1 = 0")).toString(), "x + x_(x + 1) + x_1 + y + y_1 = 0");
 }

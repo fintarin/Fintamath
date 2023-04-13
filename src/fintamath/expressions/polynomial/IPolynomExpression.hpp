@@ -34,6 +34,8 @@ protected:
 
   virtual bool isTermsOrderInversed() const;
 
+  virtual bool isComparableOrderInversed() const;
+
 protected:
   shared_ptr<IFunction> func;
 
