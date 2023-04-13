@@ -22,7 +22,12 @@ string IPolynomExpression::toString() const {
   result += childToString(children.front(), true);
 
   for (size_t i = 1; i < children.size(); i++) {
-    result += childToString(children[i]);
+    if (result == "-") {
+      result += childToString(children[i], true);
+    }
+    else {
+      result += childToString(children[i]);
+    }
   }
 
   if (result.empty()) {

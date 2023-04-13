@@ -22,6 +22,10 @@ MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpre
 }
 
 string MulExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
+  if (const auto &number = cast<INumber>(child); number && isFirst && *number == NEG_ONE) {
+    return "-";
+  }
+
   bool invert = false;
   ArgumentPtr childToStr;
   if (auto invExpr = cast<IExpression>(child); invExpr && is<Inv>(invExpr->getFunction())) {
@@ -157,8 +161,19 @@ ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const 
 }
 
 ArgumentPtr MulExpression::multiplicateBraces(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
-  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+  bool inverted = false;
+  ArgumentPtr lhsVal = lhsChild;
+  ArgumentPtr rhsVal = rhsChild;
+  shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsVal);
+  shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsVal);
+
+  if (lhsExpr && rhsExpr && is<Inv>(lhsExpr->getFunction()) && is<Inv>(rhsExpr->getFunction())) {
+    inverted = true;
+    lhsVal = lhsExpr->getChildren()[0];
+    rhsVal = rhsExpr->getChildren()[0];
+    lhsExpr = cast<IExpression>(lhsVal);
+    rhsExpr = cast<IExpression>(rhsVal);
+  }
 
   if (lhsExpr && rhsExpr && !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
     return {};
@@ -171,14 +186,14 @@ ArgumentPtr MulExpression::multiplicateBraces(const ArgumentPtr &lhsChild, const
     lhsVect = lhsExpr->getChildren();
   }
   else {
-    lhsVect.emplace_back(lhsChild);
+    lhsVect.emplace_back(lhsVal);
   }
 
   if (rhsExpr && is<Add>(rhsExpr->getFunction())) {
     rhsVect = rhsExpr->getChildren();
   }
   else {
-    rhsVect.emplace_back(rhsChild);
+    rhsVect.emplace_back(rhsVal);
   }
 
   if (lhsVect.size() == 1 && rhsVect.size() == 1) {
@@ -192,6 +207,11 @@ ArgumentPtr MulExpression::multiplicateBraces(const ArgumentPtr &lhsChild, const
           makeFunctionExpression(Mul(), ArgumentsPtrVector{lhsChildValue->clone(), rhsChildValue->clone()}));
     }
   }
+
+  if (inverted) {
+    return makeFunctionExpression(Inv(), {makeFunctionExpression(Add(), resultVect)});
+  }
+
   return makeFunctionExpression(Add(), resultVect);
 }
 
