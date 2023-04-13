@@ -9,12 +9,6 @@ class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INega
 public:
   explicit MulExpression(const ArgumentsPtrVector &children);
 
-  // ArgumentPtr getPowCoefficient(const ArgumentPtr &powValue) const;
-
-  // ArgumentPtr getPow() const;
-
-  // void setPow(const ArgumentPtr &value);
-
   ArgumentPtr negate() const override;
 
   ArgumentPtr invert() const override;
@@ -40,43 +34,6 @@ private:
   static std::pair<ArgumentPtr, ArgumentPtr> getRateAndValue(const ArgumentPtr &rhsChild);
 
   static ArgumentPtr addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value);
-
-  // void simplifyNegations();
-
-  // void simplifyPow();
-
-  // void simplifyDivisions();
-
-  // void simplifyPolynom();
-
-  // static void simplifyPowCoefficients(map<IOperator::Priority, ArgumentsPtrVector> &priorityMap,
-  //                                     ArgumentsPtrVector &functionVector, ArgumentsPtrVector &variableVector);
-
-  // static void addValueToMaps(ArgumentPtr &lhs, ArgumentPtr &rhs,
-  //                            map<string, ArgumentPtr> &valuesMap,
-  //                            map<string, ArgumentsPtrVector> &powMap);
-
-  // static ArgumentsPtrVector coefficientProcessing(map<string, ArgumentPtr> &valuesMap,
-  //                                                 map<string, ArgumentsPtrVector> &powMap);
-
-  // TODO: remove
-  static string sumExprToString(const ArgumentPtr &obj);
-
-  // static void multiplicateBraces(const ArgumentsPtrVector &addVect, ArgumentsPtrVector &positive,
-  //                                ArgumentsPtrVector &negative);
-
-  // static ArgumentsPtrVector multiplicateTwoBraces(const ArgumentsPtrVector &lhs, const ArgumentsPtrVector &rhs);
-
-  // static void simplifyPow(ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect, ArgumentsPtrVector &literalVect,
-  //                         ArgumentsPtrVector &funcVect);
-
-  // static void multiplicatePolynom(ArgumentsPtrVector &vect, ArgumentsPtrVector &positive, ArgumentsPtrVector
-  // &negative);
-
-  // static void sortPowObjects(Objects &objs, ArgumentsPtrVector &powVect, ArgumentsPtrVector &addVect,
-  //                            ArgumentsPtrVector &literalVect, ArgumentsPtrVector &funcVect);
-
-  // static bool sortFunc(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 };
 
 }
