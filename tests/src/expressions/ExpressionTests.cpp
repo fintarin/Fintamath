@@ -125,7 +125,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("Pi8").toString(), "8 Pi");
   EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
   EXPECT_EQ(Expression("E^101").toString(), "E^101");
-  EXPECT_EQ(Expression("E^(-101)").toString(), "E^-101");
+  EXPECT_EQ(Expression("E^(-101)").toString(), "1/E^101");
   EXPECT_EQ(Expression("log(E,E)").toString(), "log(E, E)");
   EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "log(Pi, Pi^10)");
   EXPECT_EQ(Expression("log(E,E^3)").toString(), "log(E, E^3)");
@@ -195,7 +195,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a-b)-c").toString(), "a - b - c");
   EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "a^2 + 3 a b + b^2");
   EXPECT_EQ(Expression("x/y/z").toString(), "x/y/z");
-  EXPECT_EQ(Expression("x/(y/z)").toString(), "x/y z");
+  EXPECT_EQ(Expression("x/(y/z)").toString(), "(x z)/y");
   EXPECT_EQ(Expression("(x/y)/z").toString(), "x/y/z");
   EXPECT_EQ(Expression("x^y^z").toString(), "x^(y z)");
   EXPECT_EQ(Expression("x^(y^z)").toString(), "x^(y^z)");
@@ -205,7 +205,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3 + 3 a^2 b + 3 a b^2 + b^3");
   EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4 + 4 a^3 b + 6 a^2 b^2 + 4 a b^3 + b^4");
   EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "a/(b + 2) + 3/(b + 2)");
-  EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "3/a b/(b + 2) + b/(b + 2)");
+  EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(a b)/(a b + 2 a) + (3 b)/(a b + 2 a)");
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "15/a/(b + 2) + 3/a b/(b + 2) + b/(b + 2) + 5/(b + 2)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
@@ -414,7 +414,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("x_1").toString(), "x_1");
   EXPECT_EQ(Expression("x+x_1").toString(), "x + x_1");
   EXPECT_EQ(Expression("x*x_1").toString(), "x x_1");
-  EXPECT_EQ(Expression("x^x_1").toString(), "x^x_1");
   EXPECT_EQ(Expression("x_x^2").toString(), "x_x^2");
   EXPECT_EQ(Expression("sin(x_1)").toString(), "sin(x_1)");
 }
@@ -625,6 +624,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(x+1)_1"), InvalidInputException);
   EXPECT_THROW(Expression("(x*2)_1"), InvalidInputException);
   EXPECT_THROW(Expression("(x*2)_((x+2)_x)"), InvalidInputException);
+  EXPECT_THROW(Expression("x^x_1"), InvalidInputException);
 
   EXPECT_THROW(Expression("1/0"), UndefinedException);
   EXPECT_THROW(Expression("0^0"), UndefinedException);
