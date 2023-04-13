@@ -186,6 +186,10 @@ bool IPolynomExpression::isComparableOrderInversed() const {
   return false;
 }
 
+int IPolynomExpression::comparatorOverride(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  return 0;
+}
+
 void IPolynomExpression::sort() {
   std::sort(children.begin(), children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
     return comparator(lhs, rhs) <= 0;
@@ -193,6 +197,10 @@ void IPolynomExpression::sort() {
 }
 
 int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  if (int res = comparatorOverride(lhs, rhs); res != 0) {
+    return res;
+  }
+
   auto lhsExpr = cast<IExpression>(lhs);
   auto rhsExpr = cast<IExpression>(rhs);
 
