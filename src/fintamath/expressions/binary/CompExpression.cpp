@@ -17,14 +17,21 @@ CompExpression::CompExpression(const IOperator &oper, const ArgumentPtr &lhsChil
 string CompExpression::toString() const {
   if (isSolution) {
     if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && *lhsExpr->getFunction() == Add()) {
-      ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
+      ArgumentsPtrVector sumChildren = lhsExpr->getChildren();
 
-      if (lhsChildren.size() == 2) {
-        ArgumentPtr solLhs = lhsChildren.front();
-        ArgumentPtr solRhs = lhsChildren.back();
+      ArgumentPtr solLhs = sumChildren.front();
 
-        if (is<Variable>(solLhs) && is<INumber>(solRhs)) {
-          solRhs = makeFunctionExpression(Neg(), {solRhs});
+      if (is<Variable>(solLhs)) {
+        sumChildren.erase(sumChildren.begin());
+
+        ArgumentPtr solRhs = makeFunctionExpression(Neg(), {sumChildren});
+
+        if (const auto solRhsExpr = cast<IExpression>(solRhs)) {
+          if (solRhsExpr->getVariables().empty()) {
+            return CompExpression(cast<IOperator>(*func), solLhs, solRhs).toString();
+          }
+        }
+        else {
           return CompExpression(cast<IOperator>(*func), solLhs, solRhs).toString();
         }
       }
