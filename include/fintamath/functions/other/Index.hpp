@@ -2,10 +2,11 @@
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 
-class Index : public IOperatorCRTP<IComparable, Index, IComparable, IComparable> {
+class Index : public IOperatorCRTP<IComparable, Index, Variable, IComparable> {
 public:
   Index() : IOperatorCRTP(IOperator::Priority::Exponentiation, false, false) {
   }

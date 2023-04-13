@@ -276,6 +276,8 @@ TEST(ExpressionTests, stringConstructorTest) {
             "sin(a^4) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(4 a b^3) + b^4");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(sin(4 a b^3)) + b^4 + asin(sin(a^4)) + cos(6 a^2 b^2)").toString(),
             "asin(sin(a^4)) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(sin(4 a b^3)) + b^4");
+  EXPECT_EQ(Expression("tan(4 a_1^3 b) + cot(sin(4 a_1 b^3)) + b^4 + asin(sin(a_1^4)) + cos(6 a_1^2 b^2)").toString(),
+            "asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3)) + b^4");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
   EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "a! a!! a!!! a%");
 
@@ -409,14 +411,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("True & a = b").toString(), "a - b = 0");
 
   EXPECT_EQ(Expression("x_1").toString(), "x_1");
-  EXPECT_EQ(Expression("(x+1)_1").toString(), "(x + 1)_1");
-  EXPECT_EQ(Expression("(x*2)_1").toString(), "(2 x)_1");
-  EXPECT_EQ(Expression("x+x_1").toString(), "x_1 + x");
+  EXPECT_EQ(Expression("x+x_1").toString(), "x + x_1");
   EXPECT_EQ(Expression("x*x_1").toString(), "x x_1");
   EXPECT_EQ(Expression("x^x_1").toString(), "x^x_1");
   EXPECT_EQ(Expression("x_x^2").toString(), "x_x^2");
   EXPECT_EQ(Expression("sin(x_1)").toString(), "sin(x_1)");
-  EXPECT_EQ(Expression("(x*2)_((x+2)_x)").toString(), "(2 x)_((x + 2)_x)");
 }
 
 TEST(ExpressionTests, stringConstructorLargeTest) {
@@ -622,6 +621,9 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(x&y)'"), InvalidInputException);
   EXPECT_THROW(Expression("True'"), InvalidInputException);
   EXPECT_THROW(Expression("(a+1)_(a>2)"), InvalidInputException);
+  EXPECT_THROW(Expression("(x+1)_1"), InvalidInputException);
+  EXPECT_THROW(Expression("(x*2)_1"), InvalidInputException);
+  EXPECT_THROW(Expression("(x*2)_((x+2)_x)"), InvalidInputException);
 
   EXPECT_THROW(Expression("1/0"), UndefinedException);
   EXPECT_THROW(Expression("0^0"), UndefinedException);
