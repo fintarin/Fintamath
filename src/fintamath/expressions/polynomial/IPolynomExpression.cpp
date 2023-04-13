@@ -177,6 +177,10 @@ bool IPolynomExpression::isTermsOrderInversed() const {
   return false;
 }
 
+bool IPolynomExpression::isComparableOrderInversed() const {
+  return false;
+}
+
 void IPolynomExpression::sort() {
   std::sort(children.begin(), children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
     return comparator(lhs, rhs) <= 0;
@@ -195,7 +199,7 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     ArgumentsPtrVector lhsVars;
 
     if (lhsExpr) {
-      lhsVars = lhsExpr->getVariables();
+      lhsVars = lhsExpr->getVariablesUnsorted();
     }
     else if (is<Variable>(lhs)) {
       lhsVars = {lhs};
@@ -204,7 +208,7 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     ArgumentsPtrVector rhsVars;
 
     if (rhsExpr) {
-      rhsVars = rhsExpr->getVariables();
+      rhsVars = rhsExpr->getVariablesUnsorted();
     }
     else if (is<Variable>(rhs)) {
       rhsVars = {rhs};
@@ -293,7 +297,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
         break;
       }
       if (auto lhsChildExpr = cast<IExpression>(lhsChildren[i]);
-          lhsChildExpr && !lhsChildExpr->getVariables().empty()) {
+          lhsChildExpr && !lhsChildExpr->getVariablesUnsorted().empty()) {
         break;
       }
     }
@@ -307,7 +311,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
         break;
       }
       if (auto rhsChildExpr = cast<IExpression>(rhsChildren[j]);
-          rhsChildExpr && !rhsChildExpr->getVariables().empty()) {
+          rhsChildExpr && !rhsChildExpr->getVariablesUnsorted().empty()) {
         break;
       }
     }
@@ -415,6 +419,10 @@ int IPolynomExpression::comparatorTerms(const ArgumentPtr &lhs, const ArgumentPt
 
   if (auto lhsComp = cast<IComparable>(lhs)) {
     if (auto rhsComp = cast<IComparable>(rhs)) {
+      if (isComparableOrderInversed()) {
+        return *lhsComp < *rhsComp ? -1 : 1;
+      }
+
       return *lhsComp > *rhsComp ? -1 : 1;
     }
   }

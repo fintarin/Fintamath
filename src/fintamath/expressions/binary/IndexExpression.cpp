@@ -10,7 +10,7 @@ IndexExpression::IndexExpression(const ArgumentPtr &lhsChild, const ArgumentPtr 
     : IBinaryExpressionCRTP(INDEX, lhsChild, rhsChild) {
 }
 
-ArgumentsPtrVector IndexExpression::getVariables() const {
+ArgumentsPtrVector IndexExpression::getVariablesUnsorted() const {
   return {clone()};
 }
 

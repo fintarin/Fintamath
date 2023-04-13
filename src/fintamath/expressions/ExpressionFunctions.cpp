@@ -155,8 +155,4 @@ Expression orL(const Expression &lhs, const Expression &rhs) {
   return Expression(Or()(lhs, rhs));
 }
 
-Expression solve(const Expression &rhs) {
-  return rhs;
-}
-
 }

@@ -6,7 +6,7 @@ namespace fintamath {
 
 class IBinaryExpression : virtual public IExpression {
 public:
-  string toString() const final;
+  string toString() const override;
 
   shared_ptr<IFunction> getFunction() const final;
 

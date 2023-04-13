@@ -55,4 +55,8 @@ ArgumentPtr OrExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) c
   return preSimplify(lhsChildNum, rhsChildNum);
 }
 
+bool OrExpression::isComparableOrderInversed() const {
+  return true;
+}
+
 }

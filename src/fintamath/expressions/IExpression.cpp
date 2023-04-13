@@ -12,21 +12,37 @@
 
 namespace fintamath {
 
-ArgumentsPtrVector IExpression::getVariables() const {
+ArgumentsPtrVector IExpression::getVariablesUnsorted() const {
   ArgumentsPtrVector vars;
 
   for (auto child : getChildren()) {
-    if (is<Variable>(child)){
+    if (is<Variable>(child)) {
       vars.emplace_back(child);
     }
-    else if (auto childExpr = cast<IExpression>(child)){
-      ArgumentsPtrVector childVars = childExpr->getVariables();
+    else if (auto childExpr = cast<IExpression>(child)) {
+      ArgumentsPtrVector childVars = childExpr->getVariablesUnsorted();
 
       for (auto childVar : childVars) {
         vars.emplace_back(childVar);
       }
     }
   }
+
+  return vars;
+}
+
+ArgumentsPtrVector IExpression::getVariables() const {
+  ArgumentsPtrVector vars = getVariablesUnsorted();
+
+  vars.erase(std::unique(vars.begin(), vars.end(),
+                         [](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+                           return *lhs == *rhs;
+                         }),
+             vars.end());
+
+  std::sort(vars.begin(), vars.end(), [](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+    return lhs->toString() < rhs->toString();
+  });
 
   return vars;
 }
