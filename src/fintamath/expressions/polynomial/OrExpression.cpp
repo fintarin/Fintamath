@@ -59,4 +59,12 @@ bool OrExpression::isComparableOrderInversed() const {
   return true;
 }
 
+string OrExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
+  string result = child->toString();
+  if (const auto &childExpr = cast<IExpression>(child); childExpr && childExpr->getChildren().size() > 1) {
+    result = "(" + result + ")";
+  }
+
+  return isFirst ? result : (" " + func->toString() + " " + result);
+}
 }
