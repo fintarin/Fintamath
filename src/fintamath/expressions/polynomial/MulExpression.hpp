@@ -13,6 +13,8 @@ public:
 
   ArgumentPtr invert() const override;
 
+  string toString() const override;
+
 protected:
   FunctionsVector getSimplifyFunctions() const override;
 

@@ -21,6 +21,51 @@ const Mul MUL;
 MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(MUL, children) {
 }
 
+string MulExpression::toString() const {
+  ArgumentsPtrVector nonInvertedChild;
+  ArgumentsPtrVector invertedChild;
+  for (const auto &child : children) {
+    if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Inv>(childExpr->getFunction())) {
+      invertedChild.emplace_back(child);
+    }
+    else {
+      nonInvertedChild.emplace_back(child);
+    }
+  }
+
+  string result;
+  switch (nonInvertedChild.size()) {
+  case 0: {
+    result += childToString(invertedChild.front(), true);
+    for (size_t i = 1; i < invertedChild.size(); i++) {
+      result += childToString(invertedChild[i]);
+    }
+    break;
+  }
+  case 1: {
+    result += childToString(nonInvertedChild.front(), true);
+    for (const auto &child : invertedChild) {
+      result += childToString(child);
+    }
+    break;
+  }
+  default: {
+    result += childToString(nonInvertedChild.front(), true);
+    for (size_t i = 1; i < nonInvertedChild.size(); i++) {
+      result += childToString(nonInvertedChild[i], result == "-");
+    }
+    if (!invertedChild.empty()) {
+      result = "(" + result + ")";
+    }
+    for (const auto &child : invertedChild) {
+      result += childToString(child);
+    }
+  }
+  }
+
+  return result;
+}
+
 string MulExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
   if (const auto &number = cast<INumber>(child); number && isFirst && *number == NEG_ONE) {
     return "-";
@@ -263,16 +308,16 @@ bool MulExpression::isTermsOrderInversed() const {
 
 int MulExpression::comparatorOverride(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
   auto lhsExpr = cast<IExpression>(lhs);
-  bool isLhsInterted = lhsExpr && *lhsExpr->getFunction() == Inv();
+  bool isLhsInverted = lhsExpr && *lhsExpr->getFunction() == Inv();
 
   auto rhsExpr = cast<IExpression>(rhs);
-  bool isRhsInterted = rhsExpr && *rhsExpr->getFunction() == Inv();
+  bool isRhsInverted = rhsExpr && *rhsExpr->getFunction() == Inv();
 
-  if (isLhsInterted && !isRhsInterted) {
+  if (isLhsInverted && !isRhsInverted) {
     return 1;
   }
 
-  if (!isLhsInterted && isRhsInterted) {
+  if (!isLhsInverted && isRhsInverted) {
     return -1;
   }
 
