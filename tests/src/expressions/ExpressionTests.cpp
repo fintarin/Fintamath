@@ -251,6 +251,9 @@ TEST(ExpressionTests, stringConstructorTest) {
             "3 a b c d v + 3 a b c d");
   EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
+  EXPECT_EQ(Expression("2/(a + 2) + b/(a + 2)").toString(), "b/(a + 2) + 2/(a + 2)");
+  EXPECT_EQ(Expression("c * 2^(a + 2) + b^(a + 2)").toString(), "b^(a + 2) + 2^(a + 2) c");
+  EXPECT_EQ(Expression("2^(a + 2) * b^(a + 2)").toString(), "b^(a + 2) 2^(a + 2)");
   // TODO: implement function minimization
   // EXPECT_EQ(Expression("sin(asin(a+b+1-1))^1000/(a+b+1-1)^998").toString(), "sin(asin(a+b))^1000/(a+b)^998");
 
