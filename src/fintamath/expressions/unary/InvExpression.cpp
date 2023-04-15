@@ -3,6 +3,7 @@
 #include "fintamath/expressions/interfaces/IInvertable.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -18,6 +19,11 @@ ArgumentPtr InvExpression::preSimplify() const {
   if (!simplExpr) {
     return simpl;
   }
+
+  // TODO: change when inf will be implemented
+  if (const auto &number = cast<INumber>(simplExpr->child); number && *number == ZERO) {
+    auto error = Integer(1) / Integer(0);
+  }
   if (const auto expr = cast<InvExpression>(simplExpr->child)) {
     return expr->child;
   }
@@ -31,6 +37,11 @@ ArgumentPtr InvExpression::postSimplify() const {
   auto simplExpr = cast<InvExpression>(simpl);
   if (!simplExpr) {
     return simpl;
+  }
+
+  // TODO: change when inf will be implemented
+  if (const auto &number = cast<INumber>(simplExpr->child); number && *number == ZERO) {
+    auto error = Integer(1) / Integer(0);
   }
 
   if (auto expr = cast<IInvertable>(simplExpr->child)) {
