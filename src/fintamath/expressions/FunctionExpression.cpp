@@ -101,4 +101,11 @@ ArgumentPtr FunctionExpression::postSimplify() const {
   return val;
 }
 
+void FunctionExpression::setChildren(const ArgumentsPtrVector &childVect) {
+  if (childVect.size() != getChildren().size()) {
+    return;
+  }
+  children = childVect;
+}
+
 }

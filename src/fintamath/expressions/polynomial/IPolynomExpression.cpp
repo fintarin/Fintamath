@@ -438,4 +438,8 @@ int IPolynomExpression::comparatorTerms(const ArgumentPtr &lhs, const ArgumentPt
   return lhs->toString() < rhs->toString() ? -1 : 1;
 }
 
+void IPolynomExpression::setChildren(const ArgumentsPtrVector &childVect) {
+  children = childVect;
+}
+
 }

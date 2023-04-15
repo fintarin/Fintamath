@@ -61,6 +61,8 @@ protected:
 
   ArgumentPtr simplify() const override;
 
+  void setChildren(const ArgumentsPtrVector &childVect) override;
+
 private:
   explicit Expression(const TokenVector &tokens);
 
