@@ -245,6 +245,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("-12x^2 - 23x + 30 = 0")).toString(),
             "x = -23/24 - sqrt(1969)/24 | x = -23/24 + sqrt(1969)/24");
   EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(), "x = -34/33 | x = 1");
+  EXPECT_EQ(solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(), "x = -1/sqrt(2)");
 
   EXPECT_EQ(solve(Expression("x^3 - 3x^2 + 3x - 1 = 0")).toString(), "x = 1");
   EXPECT_EQ(solve(Expression("x^3 - 6x^2 + 11x - 6 = 0")).toString(), "x = 1 | x = 2 | x = 3");

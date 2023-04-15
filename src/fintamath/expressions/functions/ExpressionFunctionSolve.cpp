@@ -194,17 +194,17 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
   static const Expression firstRoot = div(sum(neg(*b), sqrt(discr)), mul(2, *a));
   static const Expression secondRoot = div(sub(neg(*b), sqrt(discr)), mul(2, *a));
 
-  ArgumentPtr discrValue = discr.setValueOfVariable({c, b, a}, coeffAtPow)->toMinimalObject();
+  ArgumentPtr discrValue = discr.setValuesOfVariables({c, b, a}, coeffAtPow)->toMinimalObject();
   if (const auto &number = cast<INumber>(discrValue)) {
     if (*number < ZERO) {
       return {};
     }
     if (*number == ZERO) {
-      return {firstRoot.setValueOfVariable({c, b, a}, coeffAtPow)->toMinimalObject()};
+      return {firstRoot.setValuesOfVariables({c, b, a}, coeffAtPow)->toMinimalObject()};
     }
   }
-  return {firstRoot.setValueOfVariable({c, b, a}, coeffAtPow)->toMinimalObject(),
-          secondRoot.setValueOfVariable({c, b, a}, coeffAtPow)->toMinimalObject()};
+  return {firstRoot.setValuesOfVariables({c, b, a}, coeffAtPow)->toMinimalObject(),
+          secondRoot.setValuesOfVariables({c, b, a}, coeffAtPow)->toMinimalObject()};
 }
 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {

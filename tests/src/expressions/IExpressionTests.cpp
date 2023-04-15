@@ -6,7 +6,22 @@
 
 using namespace fintamath;
 
-// TODO add tests for all public functions
+TEST(IExpressionTests, getFunctionTest) {
+  // TODO: implement
+}
 
-TEST(IExpressionTests, toStringTest) {
+TEST(IExpressionTests, getChildrenTest) {
+  // TODO: implement
+}
+
+TEST(IExpressionTests, getVariablesUnsortedTest) {
+  // TODO: implement
+}
+
+TEST(IExpressionTests, getVariablesTest) {
+  // TODO: implement
+}
+
+TEST(IExpressionTests, setValuesOfVariablesTest) {
+  // TODO: implement
 }

@@ -47,6 +47,35 @@ ArgumentsPtrVector IExpression::getVariables() const {
   return vars;
 }
 
+shared_ptr<const IExpression> IExpression::setValuesOfVariables(const ArgumentsPtrVector &vars,
+                                                                const ArgumentsPtrVector &vals) const {
+  auto valExpr = cast<IExpression>(clone());
+  auto children = valExpr->getChildren();
+
+  ArgumentsPtrVector newChildren;
+
+  for (auto &child : children) {
+    if (const auto &exprChild = cast<IExpression>(child)) {
+      newChildren.emplace_back(exprChild->setValuesOfVariables(vars, vals));
+      continue;
+    }
+
+    bool isAdded = false;
+    for (size_t i = 0; i < vars.size(); i++) {
+      if (const auto &varChild = cast<Variable>(child); varChild && *varChild == *cast<Variable>(vars[i])) {
+        newChildren.push_back(vals[i]->clone());
+        isAdded = true;
+        break;
+      }
+    }
+    if (!isAdded) {
+      newChildren.emplace_back(child);
+    }
+  }
+  valExpr->setChildren(newChildren);
+  return valExpr;
+}
+
 void IExpression::compressChild(ArgumentPtr &child) {
   for (;;) {
     if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
@@ -132,35 +161,6 @@ void IExpression::simplifyConstant(ArgumentPtr &child) {
       child = constVal;
     }
   }
-}
-
-shared_ptr<const IExpression> IExpression::setValueOfVariable(const ArgumentsPtrVector &vars,
-                                                              const ArgumentsPtrVector &vals) const {
-  auto valExpr = cast<IExpression>(clone());
-  auto children = valExpr->getChildren();
-
-  ArgumentsPtrVector newChildren;
-
-  for (auto &child : children) {
-    if (const auto &exprChild = cast<IExpression>(child)) {
-      newChildren.emplace_back(exprChild->setValueOfVariable(vars, vals));
-      continue;
-    }
-
-    bool isAdded = false;
-    for (size_t i = 0; i < vars.size(); i++) {
-      if (const auto &varChild = cast<Variable>(child); varChild && *varChild == *cast<Variable>(vars[i])) {
-        newChildren.push_back(vals[i]->clone());
-        isAdded = true;
-        break;
-      }
-    }
-    if (!isAdded) {
-      newChildren.emplace_back(child);
-    }
-  }
-  valExpr->setChildren(newChildren);
-  return valExpr;
 }
 
 }
