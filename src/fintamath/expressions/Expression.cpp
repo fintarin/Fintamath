@@ -53,7 +53,7 @@ Expression::Expression(const ArgumentPtr &obj) {
   }
 }
 
-Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
+Expression::Expression(const IMathObject &obj) : Expression(obj.toMinimalObject()) {
 }
 
 Expression::Expression(int64_t val) : child(make_shared<Integer>(val)) {
