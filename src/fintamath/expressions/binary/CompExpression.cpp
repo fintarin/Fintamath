@@ -44,7 +44,7 @@ string CompExpression::toString() const {
 }
 
 ArgumentPtr CompExpression::preSimplify() const {
-  if (auto rhsInt = cast<Integer>(rhsChild); !rhsInt || *rhsInt != ZERO) {
+  if (auto rhsInt = cast<Integer>(rhsChild); (!rhsInt || *rhsInt != ZERO) && !isSolution) {
     ArgumentPtr resLhs = makeFunctionExpression(Sub(), {lhsChild, rhsChild});
     return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
   }

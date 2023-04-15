@@ -61,7 +61,7 @@ bool OrExpression::isComparableOrderInversed() const {
 
 string OrExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
   string result = child->toString();
-  if (const auto &childExpr = cast<IExpression>(child); childExpr && childExpr->getChildren().size() > 1) {
+  if (const auto &childExpr = cast<IExpression>(child); childExpr && is<And>(childExpr->getFunction())) {
     result = "(" + result + ")";
   }
 
