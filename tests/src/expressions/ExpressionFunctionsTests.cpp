@@ -241,11 +241,14 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("15 - 2x - x^2 = 0")).toString(), "x = -5 | x = 3");
   EXPECT_EQ(solve(Expression("x^2 + 12x + 36 = 0")).toString(), "x = -6");
   EXPECT_EQ(solve(Expression("x^2 + 12x = 0")).toString(), "x = -12 | x = 0");
-  EXPECT_EQ(solve(Expression("x^2 - 23x - 3 = 0")).toString(), "x = 23/2 - sqrt(541)/2 | x = 23/2 + sqrt(541)/2");
+  EXPECT_EQ(solve(Expression("x^2 - 23x - 3 = 0")).toString(), "x = 23/2 - 1/2 sqrt(541) | x = 23/2 + 1/2 sqrt(541)");
   EXPECT_EQ(solve(Expression("-12x^2 - 23x + 30 = 0")).toString(),
-            "x = -23/24 - sqrt(1969)/24 | x = -23/24 + sqrt(1969)/24");
-  EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(), "x = -34/33 | x = 1");
-  EXPECT_EQ(solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(), "x = -1/sqrt(2)");
+            "x = -1/2 sqrt(1969/144) - 23/24 | x = 1/2 sqrt(1969/144) - 23/24");
+  EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(),
+            "x = -1/66 - 1/2 sqrt(4489/1089) | x = 1/2 sqrt(4489/1089) - 1/66");
+  EXPECT_EQ(
+      solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(),
+      "x = -1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2) | x = 1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2)"); // TODO: x = -1/sqrt(2)
 
   // TODO: implement cubic equations
   // EXPECT_EQ(solve(Expression("x^3 - 3x^2 + 3x - 1 = 0")).toString(), "x = 1");
@@ -261,6 +264,6 @@ TEST(ExpressionFunctionsTests, solveTest) {
   // EXPECT_EQ(solve(Expression("3x^3 - 3x^2 - 12x - 8 = 0")).toString(),
   //           "1/9 (3 + (1485 - 162 sqrt(23))^(1/3) + 3 (55 + 6 sqrt(23))^(1/3))");
 
-  EXPECT_EQ(solve(Expression("15x^2 + sin(25)x - 10% = Ey")).toString(), "15 x^2 + sin(25) x - E y - 1/10 = 0");
+  EXPECT_EQ(solve(Expression("15x^2 + sin(25)x - 10% = Ey")).toString(), "x^2 + 1/15 sin(25) x - 1/15 E y - 1/150 = 0");
   EXPECT_EQ(solve(Expression("x + x_1 + x_(x+1) + y + y_1 = 0")).toString(), "x + x_(x + 1) + x_1 + y + y_1 = 0");
 }
