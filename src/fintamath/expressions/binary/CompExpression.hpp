@@ -12,11 +12,19 @@ public:
 
   void markAsSolution();
 
+  static void setOppositeToFunction(const shared_ptr<IFunction> &function, const shared_ptr<IFunction> &opposite);
+
 protected:
   ArgumentPtr preSimplify() const override;
 
+  ArgumentPtr postSimplify() const override;
+
 private:
   bool isSolution = false;
+
+  static map<string, shared_ptr<IFunction>, std::less<>> functionOpposMap;
+
+  static shared_ptr<IFunction> getOpposite(const shared_ptr<IFunction> &function);
 };
 
 }
