@@ -256,6 +256,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2^(a + 2) * b^(a + 2)").toString(), "b^(a + 2) 2^(a + 2)");
   // TODO: implement function minimization
   // EXPECT_EQ(Expression("sin(asin(a+b+1-1))^1000/(a+b+1-1)^998").toString(), "sin(asin(a+b))^1000/(a+b)^998");
+  EXPECT_EQ(Expression("(1/0)/(1/0)").toString(), "b^(a + 2) 2^(a + 2)");
 
   EXPECT_EQ(Expression("a(10^100)/10^99").toString(), "10 a");
   EXPECT_EQ(Expression("(10+2+3-5)^1000000000a/(9+1)^999999999").toString(), "10 a");
@@ -633,6 +634,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("x^x_1"), InvalidInputException);
 
   EXPECT_THROW(Expression("1/0"), UndefinedException);
+  EXPECT_THROW(Expression("(1/0)/(1/0)"), UndefinedException);
   EXPECT_THROW(Expression("0^0"), UndefinedException);
   EXPECT_THROW(Expression("(-1)!"), UndefinedException);
   EXPECT_THROW(Expression("(2/3)!"), UndefinedException);
