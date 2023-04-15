@@ -8,12 +8,15 @@
 #include "fintamath/functions/comparison/Neqv.hpp"
 
 namespace fintamath {
+
 map<string, shared_ptr<IFunction>, std::less<>> CompExpression::functionOpposMap;
+
 }
 
 using namespace fintamath;
 
 namespace {
+
 struct CompExpressionConfig {
   CompExpressionConfig() {
     CompExpression::setOppositeToFunction(make_shared<Eqv>(), make_shared<Eqv>());
@@ -26,4 +29,5 @@ struct CompExpressionConfig {
 };
 
 const CompExpressionConfig config;
+
 }

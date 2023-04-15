@@ -19,6 +19,9 @@ public:
 
   ArgumentsPtrVector getVariables() const;
 
+  shared_ptr<const IExpression> setValuesOfVariables(const ArgumentsPtrVector &vars,
+                                                     const ArgumentsPtrVector &vals) const;
+
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
   static void registerType() {
     Parser::registerType<T>(parserVector);
@@ -27,9 +30,6 @@ public:
   static unique_ptr<IExpression> parse(const string &str) {
     return Parser::parse(parserVector, str);
   }
-
-  shared_ptr<const IExpression> setValueOfVariable(const ArgumentsPtrVector &vars,
-                                                   const ArgumentsPtrVector &vals) const;
 
 protected:
   virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
