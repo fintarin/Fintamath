@@ -56,15 +56,15 @@ shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem) {
 ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem) {
   if (const auto &elemExpr = cast<IExpression>(elem)) {
     if (is<Neg>(elemExpr->getFunction())) {
-      return cast<INumber>(NEG_ONE.clone());
+      return NEG_ONE.clone();
     }
     if (is<Mul>(elemExpr->getFunction())) {
-      return cast<INumber>(elemExpr->getChildren().front());
+      return elemExpr->getChildren().front();
     }
-    return cast<INumber>(ONE.clone());
+    return ONE.clone();
   }
   if (is<Variable>(elem)) {
-    return cast<INumber>(ONE.clone());
+    return ONE.clone();
   }
 
   return elem;
@@ -208,7 +208,7 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
 }
 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
-  return {makeFunctionExpression(Div(), {coeffAtPow[1], coeffAtPow[0]})};
+  return {makeFunctionExpression(Neg(), {makeFunctionExpression(Div(), {coeffAtPow[0], coeffAtPow[1]})})};
 }
 
 Expression solve(const Expression &rhs) {
@@ -247,6 +247,10 @@ Expression solve(const Expression &rhs) {
       auto rootAnswer = make_shared<CompExpression>(Eqv(), var->clone(), root);
       rootAnswer->markAsSolution();
       answer.emplace_back(rootAnswer);
+    }
+
+    if (answer.size() == 1) {
+      return Expression(answer.front());
     }
 
     return Expression(makeFunctionExpression(Or(), answer));
