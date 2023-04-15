@@ -19,6 +19,8 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
+  void setChildren(const ArgumentsPtrVector &childVect) override;
+
 private:
   string postfixToString() const;
 

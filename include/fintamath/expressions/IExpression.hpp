@@ -28,7 +28,12 @@ public:
     return Parser::parse(parserVector, str);
   }
 
+  shared_ptr<const IExpression> setValueOfVariable(const ArgumentsPtrVector &vars,
+                                                   const ArgumentsPtrVector &vals) const;
+
 protected:
+  virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
+
   static void compressChild(ArgumentPtr &child);
 
   static void simplifyChild(ArgumentPtr &child);

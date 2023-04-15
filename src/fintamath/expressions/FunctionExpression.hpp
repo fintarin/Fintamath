@@ -20,6 +20,8 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
+  void setChildren(const ArgumentsPtrVector &childVect) override;
+
 private:
   shared_ptr<IFunction> func;
 

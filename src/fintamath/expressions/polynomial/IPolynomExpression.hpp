@@ -61,6 +61,8 @@ private:
 
   void sort();
 
+  void setChildren(const ArgumentsPtrVector &childVect) override;
+
   /**
    * @brief
    *

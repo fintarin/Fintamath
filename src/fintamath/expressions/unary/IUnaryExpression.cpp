@@ -97,4 +97,11 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
   return simpl;
 }
 
+void IUnaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
+  if (childVect.size() != getChildren().size()) {
+    return;
+  }
+  child = childVect.front();
+}
+
 }

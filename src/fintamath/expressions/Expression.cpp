@@ -60,7 +60,9 @@ Expression::Expression(int64_t val) : child(make_shared<Integer>(val)) {
 }
 
 unique_ptr<IMathObject> Expression::toMinimalObject() const {
-  return child->clone();
+  ArgumentPtr childClone = child->clone();
+  simplifyChild(childClone);
+  return childClone->clone();
 }
 
 string Expression::toString() const {
@@ -410,4 +412,13 @@ shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const A
   funcExpr->child = make_shared<FunctionExpression>(func, args);
   return funcExpr;
 }
+
+void Expression::setChildren(const ArgumentsPtrVector &childVect) {
+  if (childVect.size() != getChildren().size()) {
+    return;
+  }
+
+  child = childVect.front();
+}
+
 }

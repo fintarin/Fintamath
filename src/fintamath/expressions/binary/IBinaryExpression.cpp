@@ -47,4 +47,13 @@ ArgumentPtr IBinaryExpression::simplify() const {
   return simpl;
 }
 
+void IBinaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
+  if (childVect.size() != getChildren().size()) {
+    return;
+  }
+
+  lhsChild = childVect[0];
+  rhsChild = childVect[1];
+}
+
 }

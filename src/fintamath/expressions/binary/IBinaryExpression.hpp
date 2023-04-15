@@ -19,6 +19,8 @@ protected:
 
   ArgumentPtr simplify() const final;
 
+  void setChildren(const ArgumentsPtrVector &childVect) override;
+
 protected:
   shared_ptr<IFunction> func;
 
