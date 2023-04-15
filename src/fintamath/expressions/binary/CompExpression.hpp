@@ -19,6 +19,8 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
+  void copyProperties(const CompExpression &rhs) override;
+
 private:
   bool isSolution = false;
 
