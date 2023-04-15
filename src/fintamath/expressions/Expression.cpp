@@ -116,6 +116,10 @@ ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpres
     res = makeRawFunctionExpression(*expr->getFunction(), newChildren);
   }
 
+  if (is<IExpression>(res)) {
+    copyPropertiesToChild(res, expr);
+  }
+
   return res;
 }
 
