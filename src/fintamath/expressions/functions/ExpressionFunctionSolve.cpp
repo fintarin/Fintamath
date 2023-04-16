@@ -225,51 +225,56 @@ ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
 }
 
 Expression solve(const Expression &rhs) {
-  if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone());
-      compExpr && is<Eqv>(compExpr->getFunction())) {
-    if (!validateEquation(*compExpr)) {
-      return rhs;
+  if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
+    compExpr->markAsSolution();
+
+    if (is<Eqv>(compExpr->getFunction())) {
+      if (!validateEquation(*compExpr)) {
+        return rhs;
+      }
+
+      ArgumentsPtrVector variables = compExpr->getVariables();
+
+      shared_ptr<const Variable> var = cast<Variable>(variables.front());
+
+      ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
+
+      ArgumentsPtrVector roots;
+
+      switch (coeffAtPow.size()) {
+      case 2:
+        roots = solveLinearEquation(coeffAtPow);
+        break;
+      case 3:
+        roots = solveQuadraticEquation(coeffAtPow);
+        break;
+      case 4:
+        roots = solveCubicEquation(coeffAtPow);
+        break;
+      default:
+        roots = {};
+      }
+
+      if (roots.empty()) {
+        return *compExpr;
+      }
+
+      ArgumentsPtrVector answer;
+
+      for (auto &root : roots) {
+        auto rootAnswer = make_shared<CompExpression>(Eqv(), var->clone(), root);
+        rootAnswer->markAsSolution();
+        answer.emplace_back(rootAnswer);
+      }
+
+      if (answer.size() == 1) {
+        return Expression(answer.front());
+      }
+
+      return Expression(makeFunctionExpression(Or(), answer));
     }
 
-    ArgumentsPtrVector variables = compExpr->getVariables();
-
-    shared_ptr<const Variable> var = cast<Variable>(variables.front());
-
-    ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
-
-    ArgumentsPtrVector roots;
-
-    switch (coeffAtPow.size()) {
-    case 2:
-      roots = solveLinearEquation(coeffAtPow);
-      break;
-    case 3:
-      roots = solveQuadraticEquation(coeffAtPow);
-      break;
-    case 4:
-      roots = solveCubicEquation(coeffAtPow);
-      break;
-    default:
-      roots = {};
-    }
-
-    if (roots.empty()) {
-      return *compExpr;
-    }
-
-    ArgumentsPtrVector answer;
-
-    for (auto &root : roots) {
-      auto rootAnswer = make_shared<CompExpression>(Eqv(), var->clone(), root);
-      rootAnswer->markAsSolution();
-      answer.emplace_back(rootAnswer);
-    }
-
-    if (answer.size() == 1) {
-      return Expression(answer.front());
-    }
-
-    return Expression(makeFunctionExpression(Or(), answer));
+    return *compExpr;
   }
 
   return rhs;
