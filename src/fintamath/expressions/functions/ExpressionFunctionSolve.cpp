@@ -13,64 +13,79 @@
 
 namespace fintamath {
 
-shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem) {
-  shared_ptr<const IExpression> powExpr;
+shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v);
+shared_ptr<const INumber> getPowOfMulElement(const shared_ptr<const IExpression> &elem,
+                                             const shared_ptr<const Variable> &v);
 
+shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v) {
+  if (const auto &var = cast<Variable>(elem); var && *var == *v) {
+    return cast<INumber>(ONE.clone());
+  }
   if (const auto &expr = cast<IExpression>(elem)) {
     if (is<Neg>(expr->getFunction())) {
-      if (is<Variable>(expr->getChildren()[0])) {
-        return cast<INumber>(ONE.clone());
-      }
-      powExpr = expr;
+      return getPowOfElement(expr->getChildren().front(), v);
     }
-
     if (is<Mul>(expr->getFunction())) {
-      for (const auto &child : expr->getChildren()) {
-        if (is<Variable>(child)) {
-          return cast<INumber>(ONE.clone());
-        }
-
-        if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
-          powExpr = childExpr;
-          break;
-        }
+      return getPowOfMulElement(expr, v);
+    }
+    if (is<Pow>(expr->getFunction())) {
+      if (const auto &var = cast<Variable>(expr->getChildren().front()); var && *var == *v) {
+        return cast<INumber>(expr->getChildren()[1]);
       }
     }
-    else {
-      powExpr = expr;
-    }
-
-    if (powExpr) {
-      if (is<Pow>(powExpr->getFunction())) {
-        return cast<INumber>(powExpr->getChildren()[1]);
-      }
-      return cast<INumber>(ZERO.clone());
-    }
-  }
-  if (is<Variable>(elem)) {
-    return cast<INumber>(ONE.clone());
   }
   return cast<INumber>(ZERO.clone());
 }
 
-ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem) {
+shared_ptr<const INumber> getPowOfMulElement(const shared_ptr<const IExpression> &elem,
+                                             const shared_ptr<const Variable> &v) {
+  for (const auto &child : elem->getChildren()) {
+    if (const auto &powValue = getPowOfElement(child, v); *powValue != ZERO) {
+      return powValue;
+    }
+  }
+  return cast<INumber>(ZERO.clone());
+}
+
+bool isContain(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var) {
+  for (const auto &child : expr->getChildren()) {
+    if (const auto &childExpr = cast<IExpression>(child); childExpr && isContain(childExpr, var)) {
+      return true;
+    }
+    if (const auto &childVar = cast<Variable>(child); childVar && *childVar == *var) {
+      return true;
+    }
+  }
+  return false;
+}
+
+ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v) {
   if (const auto &elemExpr = cast<IExpression>(elem)) {
     if (is<Neg>(elemExpr->getFunction())) {
-      return NEG_ONE.clone();
+      return makeFunctionExpression(Neg(), {getCoefficientOfElement(elemExpr->getChildren().front(), v)});
+    }
+    if (is<Pow>(elemExpr->getFunction())) {
+      if (isContain(elemExpr, v)) {
+        return ONE.clone();
+      }
+      return elem;
     }
     if (is<Mul>(elemExpr->getFunction())) {
-      return elemExpr->getChildren().front();
+      ArgumentsPtrVector coeff{ONE.clone()};
+      for (const auto &child : elemExpr->getChildren()) {
+        coeff.emplace_back(getCoefficientOfElement(child, v));
+      }
+      return makeFunctionExpression(Mul(), coeff);
     }
-    return ONE.clone();
-  }
-  if (is<Variable>(elem)) {
-    return ONE.clone();
   }
 
+  if (const auto &varElem = cast<Variable>(elem); varElem && *v == *varElem) {
+    return ONE.clone();
+  }
   return elem;
 }
 
-ArgumentsPtrVector getCoefficientsAtPows(const ArgumentPtr &rhs) {
+ArgumentsPtrVector getCoefficientsAtPows(const ArgumentPtr &rhs, const shared_ptr<const Variable> &v) {
   ArgumentsPtrVector result;
   ArgumentsPtrVector polynomVect;
 
@@ -82,8 +97,8 @@ ArgumentsPtrVector getCoefficientsAtPows(const ArgumentPtr &rhs) {
   }
 
   for (const auto &elem : polynomVect) {
-    shared_ptr<const INumber> pow = getPowOfElement(elem);
-    ArgumentPtr coefficient = getCoefficientOfElement(elem);
+    shared_ptr<const INumber> pow = getPowOfElement(elem, v);
+    ArgumentPtr coefficient = getCoefficientOfElement(elem, v);
 
     Integer intPow = cast<Integer>(*pow);
 
@@ -109,9 +124,6 @@ bool validatePowExpr(const shared_ptr<const IExpression> &powExpr) {
 }
 
 bool validateMulExpr(const shared_ptr<const IExpression> &mulExpr) {
-  if (mulExpr->getChildren().size() > 2) {
-    return false;
-  }
   for (const auto &child : mulExpr->getChildren()) {
     if (const auto &childExpr = cast<IExpression>(child);
         childExpr && is<Pow>(childExpr->getFunction()) && !validatePowExpr(childExpr)) {
@@ -149,6 +161,7 @@ bool validateAddExpr(const shared_ptr<const IExpression> &addExpr) {
 
 bool validateEquation(const CompExpression &expr) {
   ArgumentsPtrVector vars = expr.getVariables();
+  // TODO: remove for equation systems
   if (vars.size() != 1) {
     return false;
   }
@@ -218,7 +231,11 @@ Expression solve(const Expression &rhs) {
       return rhs;
     }
 
-    ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0]);
+    ArgumentsPtrVector variables = compExpr->getVariables();
+
+    shared_ptr<const Variable> var = cast<Variable>(variables.front());
+
+    ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
 
     ArgumentsPtrVector roots;
 
@@ -241,7 +258,6 @@ Expression solve(const Expression &rhs) {
     }
 
     ArgumentsPtrVector answer;
-    ArgumentPtr var = compExpr->getVariables()[0];
 
     for (auto &root : roots) {
       auto rootAnswer = make_shared<CompExpression>(Eqv(), var->clone(), root);
