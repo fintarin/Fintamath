@@ -372,7 +372,8 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
       const shared_ptr<IFunction> childFunc = childExpr->getFunction();
       const std::type_info &childType = childFunc->getReturnType();
 
-      if (!InheritanceTable::isBaseOf(type, childType) && !InheritanceTable::isBaseOf(childType, type)) {
+      if (childType != typeid(Variable) && !InheritanceTable::isBaseOf(type, childType) &&
+          !InheritanceTable::isBaseOf(childType, type)) {
         throw InvalidInputException(toString());
       }
     }
@@ -383,8 +384,12 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
         throw InvalidInputException(toString());
       }
     }
-    else if (!is<Variable>(child) && !InheritanceTable::isBaseOf(type, typeid(*child))) {
-      throw InvalidInputException(toString());
+    else {
+      const std::type_info &childType = typeid(*child);
+
+      if (childType != typeid(Variable) && !InheritanceTable::isBaseOf(type, childType)) {
+        throw InvalidInputException(toString());
+      }
     }
   }
 }
