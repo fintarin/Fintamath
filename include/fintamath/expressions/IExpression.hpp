@@ -82,7 +82,7 @@ public:
   }
 
 protected:
-  ArgumentPtr copyPropertiesAbstract(const ArgumentPtr &rhs) const override {
+  ArgumentPtr copyPropertiesAbstract(const ArgumentPtr &rhs) const final {
     if (const auto rhsDerived = cast<Derived>(rhs)) {
       auto res = cast<IExpressionCRTP<Derived>>(clone());
       res->copyProperties(*rhsDerived);
