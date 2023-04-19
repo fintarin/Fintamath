@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class Index : public IOperatorCRTP<IComparable, Index, Variable, IComparable> {
+class Index : public IOperatorCRTP<Variable, Index, Variable, IComparable> {
 public:
   Index() : IOperatorCRTP(IOperator::Priority::Exponentiation, false, false) {
   }
