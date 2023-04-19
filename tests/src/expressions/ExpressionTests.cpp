@@ -763,7 +763,6 @@ TEST(ExpressionTests, preciseTest) {
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
   EXPECT_EQ(Expression("sin(60°)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-
   EXPECT_EQ(Expression("inv(10)").precise().toString(), "0.1");
 
   EXPECT_EQ(Expression("sin(E)=sin(E)").precise().toString(), "True");
