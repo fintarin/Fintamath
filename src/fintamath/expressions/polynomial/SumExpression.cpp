@@ -36,7 +36,7 @@ string SumExpression::childToString(const ArgumentPtr &child, bool isFirst) cons
     result = childToStr->toString();
   }
 
-  if (!negate && result.front() == '-') {
+  if (!negate && result.size() > 1 && result.front() == '-') {
     negate = true;
     result = result.substr(1, result.size() - 1);
   }
@@ -126,7 +126,7 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateAndValue(const Argumen
   if (const auto &exprValue = cast<IExpression>(rhsChild); exprValue && is<Mul>(exprValue->getFunction())) {
     ArgumentsPtrVector args = exprValue->getChildren();
     if (const auto &numberValue = cast<INumber>(args.front())) {
-      if (args.size() - 1 == 1) {
+      if (args.size() == 2) {
         return {args.front(), args[1]};
       }
       ArgumentPtr mulExpr = makeFunctionExpression(Mul(), ArgumentsPtrVector{args.begin() + 1, args.end()});

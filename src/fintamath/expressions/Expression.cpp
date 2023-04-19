@@ -147,7 +147,7 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
 
     if (auto factor = cast<Factorial>(oper)) {
       for (; order < tokens.size(); order++) {
-        if (tokens[tokens.size() - order - 1] != oper->toString()) {
+        if (tokens[int64_t(tokens.size()) - order - 1] != oper->toString()) {
           break;
         }
       }
@@ -216,7 +216,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 }
 
 bool Expression::parseFiniteTerm(const TokenVector &tokens) {
-  if (tokens.front() == "(" && tokens.at(tokens.size() - 1) == ")") {
+  if (tokens.size() > 1 && tokens.front() == "(" && tokens.at(int64_t(tokens.size()) - 1) == ")") {
     *this = Expression(cutBraces(tokens));
     return true;
   }
@@ -276,7 +276,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
     }
 
     if (tokens.at(pos) == ",") {
-      if (pos == 0 || pos == tokens.size() - 1) {
+      if (pos == 0 || pos + 1 == tokens.size()) {
         throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
@@ -345,8 +345,8 @@ void Expression::validateChild(const ArgumentPtr &child) const {
     validateFunctionArgs(func, children);
   }
   else {
-    for (size_t i = 0; i < children.size() - 1; i++) {
-      for (size_t j = i + 1; j < children.size(); j++) {
+    for (int64_t i = 0; i < int64_t(children.size()) - 1; i++) {
+      for (int64_t j = i + 1; j < int64_t(children.size()); j++) {
         validateFunctionArgs(func, {children[i], children[j]});
       }
     }

@@ -108,11 +108,12 @@ ArgumentsPtrVector getCoefficientsAtPows(const ArgumentPtr &rhs, const shared_pt
       powVal++;
     }
 
-    if (result.size() - 1 < intPow) {
-      while (result.size() - 1 != intPow) {
+    if (result.size() < intPow + 1) {
+      while (result.size() != intPow + 1) {
         result.emplace_back(ZERO.clone());
       }
     }
+
     result[powVal] = coefficient;
   }
 
