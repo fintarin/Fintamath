@@ -133,4 +133,16 @@ string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lh
   return result + oper.toString();
 }
 
+bool isContain(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var) {
+  for (const auto &child : expr->getChildren()) {
+    if (const auto &childExpr = cast<IExpression>(child); childExpr && isContain(childExpr, var)) {
+      return true;
+    }
+    if (const auto &childVar = cast<Variable>(child); childVar && *childVar == *var) {
+      return true;
+    }
+  }
+  return false;
+}
+
 }

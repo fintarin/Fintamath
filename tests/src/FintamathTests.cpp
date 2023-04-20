@@ -47,7 +47,7 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(solve(expr).precise(2).toString(), "x = 3.5");
 
   expr = Expression("sin(x) + cos(x) = 0");
-  EXPECT_EQ(solve(expr).precise(2).toString(), "sin(x) + cos(x) = 0");
+  EXPECT_EQ(solve(expr).precise(2).toString(), "cos(x) + sin(x) = 0");
 
   {
     Expression expr1("(x+1)^6");

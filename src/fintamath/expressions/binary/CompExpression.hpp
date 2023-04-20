@@ -27,6 +27,8 @@ private:
   static map<string, shared_ptr<IFunction>, std::less<>> functionOpposMap;
 
   static shared_ptr<IFunction> getOpposite(const shared_ptr<IFunction> &function);
+
+  void convertToSolution();
 };
 
 }

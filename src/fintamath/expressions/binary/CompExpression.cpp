@@ -44,12 +44,18 @@ string CompExpression::toString() const {
 }
 
 ArgumentPtr CompExpression::preSimplify() const {
-  if (auto rhsInt = cast<Integer>(rhsChild); (!rhsInt || *rhsInt != ZERO) && !isSolution) {
-    ArgumentPtr resLhs = makeFunctionExpression(Sub(), {lhsChild, rhsChild});
+  auto simpl = IBinaryExpression::preSimplify();
+  auto simplExpr = cast<CompExpression>(simpl);
+
+  if (!simplExpr) {
+    return simpl;
+  }
+  if (auto rhsInt = cast<Integer>(simplExpr->rhsChild); (!rhsInt || *rhsInt != ZERO) && !simplExpr->isSolution) {
+    ArgumentPtr resLhs = makeFunctionExpression(Sub(), {simplExpr->lhsChild, simplExpr->rhsChild});
     return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
   }
 
-  return {};
+  return simplExpr;
 }
 
 ArgumentPtr CompExpression::postSimplify() const {
@@ -112,10 +118,14 @@ ArgumentPtr CompExpression::postSimplify() const {
 
 void CompExpression::copyProperties(const CompExpression &rhs) {
   isSolution = rhs.isSolution;
+  if (isSolution) {
+    convertToSolution();
+  }
 }
 
 void CompExpression::markAsSolution() {
   isSolution = true;
+  convertToSolution();
 }
 
 void CompExpression::setOppositeToFunction(const shared_ptr<IFunction> &function,
@@ -125,6 +135,35 @@ void CompExpression::setOppositeToFunction(const shared_ptr<IFunction> &function
 
 shared_ptr<IFunction> CompExpression::getOpposite(const shared_ptr<IFunction> &function) {
   return cast<IFunction>(functionOpposMap[function->toString()]->clone());
+}
+
+void CompExpression::convertToSolution() {
+  auto vars = getVariables();
+  if (vars.size() != 1) {
+    return;
+  }
+
+  shared_ptr<const Variable> var = cast<Variable>(vars.front());
+
+  if (auto lhsAddExpr = cast<IExpression>(lhsChild); lhsAddExpr && is<Add>(lhsAddExpr->getFunction())) {
+    ArgumentsPtrVector lhsChildPolynom = lhsAddExpr->getChildren();
+    ArgumentsPtrVector rhsPolynom = {rhsChild};
+    ArgumentsPtrVector lhsPolynom = {ZERO.clone()};
+
+    for (const auto &child : lhsAddExpr->getChildren()) {
+      if (const auto &childExpr = cast<IExpression>(child); childExpr && isContain(childExpr, var)) {
+        lhsPolynom.emplace_back(child);
+        continue;
+      }
+      if (const auto &childVar = cast<Variable>(child); childVar && *childVar == *var) {
+        lhsPolynom.emplace_back(child);
+        continue;
+      }
+      rhsPolynom.emplace_back(makeFunctionExpression(Neg(), {child}));
+    }
+    lhsChild = makeFunctionExpression(Add(), lhsPolynom);
+    rhsChild = makeFunctionExpression(Add(), rhsPolynom);
+  }
 }
 
 }
