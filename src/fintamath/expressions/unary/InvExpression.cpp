@@ -1,6 +1,6 @@
 #include "fintamath/expressions/unary/InvExpression.hpp"
 
-#include "fintamath/expressions/interfaces/IInvertable.hpp"
+#include "fintamath/expressions/IInvertable.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"

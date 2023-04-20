@@ -1,7 +1,7 @@
 #pragma once
 
-#include "fintamath/expressions/interfaces/ILogicNegatable.hpp"
-#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
+#include "fintamath/expressions/ILogicNegatable.hpp"
+#include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
 
