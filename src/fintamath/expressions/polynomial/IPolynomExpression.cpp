@@ -3,6 +3,7 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 
@@ -221,8 +222,110 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     else if (is<Variable>(rhs)) {
       rhsVars = {rhs};
     }
+    if (lhsExpr && cast<IPolynomExpression>(lhsExpr) && rhsExpr && cast<IPolynomExpression>(rhsExpr)) {
+      bool lhsHasBinary = false;
+      bool rhsHasBinary = false;
 
-    if (int res = comparatorVariables(lhsVars, rhsVars); res != 0) {
+      for (const auto &child : lhsExpr->getChildren()) {
+        if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
+          lhsHasBinary = true;
+        }
+      }
+
+      for (const auto &child : rhsExpr->getChildren()) {
+        if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
+          rhsHasBinary = true;
+        }
+      }
+
+      if (!isTermsOrderInversed() && lhsVars.size() != rhsVars.size() && !rhsHasBinary && !lhsHasBinary) {
+        return lhsVars.size() > rhsVars.size() ? -1 : 1;
+      }
+    }
+
+    if (lhsExpr && rhsExpr && is<Pow>(lhsExpr->getFunction()) && is<Pow>(rhsExpr->getFunction())) {
+      if (lhsVars.size() != rhsVars.size()) {
+        return lhsVars.size() > rhsVars.size() ? -1 : 1;
+      }
+    }
+
+    if (lhsExpr && rhsExpr && is<IPolynomExpression>(lhsExpr) && is<Pow>(rhsExpr->getFunction())) {
+      ArgumentsPtrVector lhsChildren;
+
+      if (is<IPolynomExpression>(lhsExpr)) {
+        lhsChildren = lhsExpr->getChildren();
+      }
+      else {
+        lhsChildren = {lhs};
+      }
+
+      ArgumentsPtrVector rhsChildren;
+
+      if (is<IPolynomExpression>(rhsExpr)) {
+        rhsChildren = rhsExpr->getChildren();
+      }
+      else {
+        rhsChildren = {rhs};
+      }
+
+      if (lhsChildren.size() > 1 || rhsChildren.size() > 1) {
+        if (int res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
+          return res;
+        }
+      }
+    }
+
+    if (lhsExpr && rhsExpr && is<IPolynomExpression>(rhsExpr) && is<Pow>(lhsExpr->getFunction())) {
+      ArgumentsPtrVector lhsChildren;
+
+      if (is<IPolynomExpression>(lhsExpr)) {
+        lhsChildren = lhsExpr->getChildren();
+      }
+      else {
+        lhsChildren = {lhs};
+      }
+
+      ArgumentsPtrVector rhsChildren;
+
+      if (is<IPolynomExpression>(rhsExpr)) {
+        rhsChildren = rhsExpr->getChildren();
+      }
+      else {
+        rhsChildren = {rhs};
+      }
+
+      if (lhsChildren.size() > 1 || rhsChildren.size() > 1) {
+        if (int res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
+          return res;
+        }
+      }
+    }
+
+    if (int res = comparatorLiterals(lhsVars, rhsVars); res != 0) {
+      return res;
+    }
+  }
+
+  {
+    ArgumentsPtrVector lhsConst;
+
+    if (lhsExpr) {
+      lhsConst = lhsExpr->getConstantsUnsorted();
+    }
+    else if (is<IConstant>(lhs)) {
+      lhsConst = {lhs};
+    }
+
+    ArgumentsPtrVector rhsConst;
+
+    if (rhsExpr) {
+      rhsConst = rhsExpr->getConstantsUnsorted();
+    }
+    else if (is<IConstant>(rhs)) {
+      rhsConst = {rhs};
+    }
+
+    if (int res = comparatorLiterals(lhsConst, rhsConst); res != 0) {
       return res;
     }
   }
@@ -277,8 +380,8 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
   return comparatorFunctions(lhsExpr, rhsExpr);
 }
 
-int IPolynomExpression::comparatorVariables(const ArgumentsPtrVector &lhsVariables,
-                                            const ArgumentsPtrVector &rhsVariables) const {
+int IPolynomExpression::comparatorLiterals(const ArgumentsPtrVector &lhsVariables,
+                                           const ArgumentsPtrVector &rhsVariables) const {
 
   for (size_t i = 0; i < std::min(lhsVariables.size(), rhsVariables.size()); i++) {
     if (*lhsVariables[i] != *rhsVariables[i]) {
