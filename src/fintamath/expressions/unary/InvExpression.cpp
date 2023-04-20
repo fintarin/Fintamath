@@ -24,6 +24,7 @@ ArgumentPtr InvExpression::preSimplify() const {
   if (const auto &number = cast<INumber>(simplExpr->child); number && *number == ZERO) {
     auto error = Integer(1) / Integer(0);
   }
+
   if (const auto expr = cast<InvExpression>(simplExpr->child)) {
     return expr->child;
   }
@@ -53,10 +54,13 @@ ArgumentPtr InvExpression::postSimplify() const {
 
 string InvExpression::toString() const {
   string childToStr = getChildren()[0]->toString();
+
   if (const auto &sumChildExpr = cast<IExpression>(getChildren()[0]);
       sumChildExpr && is<Add>(sumChildExpr->getFunction())) {
-    childToStr = ("(" + childToStr + ")");
+
+    childToStr = "(" + childToStr + ")";
   }
+
   return "1/" + childToStr;
 }
 

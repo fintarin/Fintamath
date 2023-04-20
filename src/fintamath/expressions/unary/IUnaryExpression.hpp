@@ -12,14 +12,14 @@ public:
 
   ArgumentsPtrVector getChildren() const override;
 
+  void setChildren(const ArgumentsPtrVector &childVect) override;
+
 protected:
   ArgumentPtr simplify() const final;
 
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
-
-  void setChildren(const ArgumentsPtrVector &childVect) override;
 
 private:
   string postfixToString() const;

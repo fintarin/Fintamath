@@ -33,18 +33,16 @@ ArgumentPtr OrExpression::preSimplify(size_t lhsChildNum, size_t rhsChildNum) co
     return *rhsBool ? rhsChild : lhsChild;
   }
 
-  if (lhsChild->toString() == rhsChild->toString()) {
+  if (*lhsChild == *rhsChild) {
     return lhsChild;
   }
 
   if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr && is<Not>(lhsExpr->getFunction()) &&
-      lhsExpr->getChildren().front()->toString() == rhsChild->toString()) {
+      lhsExpr && is<Not>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
     return make_shared<Boolean>(true);
   }
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Not>(rhsExpr->getFunction()) &&
-      rhsExpr->getChildren().front()->toString() == lhsChild->toString()) {
+      rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
     return make_shared<Boolean>(true);
   }
 
@@ -61,6 +59,7 @@ bool OrExpression::isComparableOrderInversed() const {
 
 string OrExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
   string result = child->toString();
+
   if (const auto &childExpr = cast<IExpression>(child); childExpr && is<And>(childExpr->getFunction())) {
     result = "(" + result + ")";
   }

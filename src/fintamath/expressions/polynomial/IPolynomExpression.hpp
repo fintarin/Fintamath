@@ -6,11 +6,13 @@ namespace fintamath {
 
 class IPolynomExpression : virtual public IExpression {
 public:
+  string toString() const override;
+
   shared_ptr<IFunction> getFunction() const final;
 
   ArgumentsPtrVector getChildren() const final;
 
-  string toString() const override;
+  void setChildren(const ArgumentsPtrVector &childVect) final;
 
   virtual void addElement(const ArgumentPtr &element) = 0;
 
@@ -60,8 +62,6 @@ private:
   void globalSimplifyRec();
 
   void sort();
-
-  void setChildren(const ArgumentsPtrVector &childVect) override;
 
   /**
    * @brief

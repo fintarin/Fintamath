@@ -17,6 +17,7 @@ ArgumentPtr NotExpression::preSimplify() const {
   if (!simplExpr) {
     return simpl;
   }
+
   if (const auto expr = cast<NotExpression>(simplExpr->child)) {
     return expr->child;
   }
@@ -31,6 +32,7 @@ ArgumentPtr NotExpression::postSimplify() const {
   if (!simplExpr) {
     return simpl;
   }
+
   if (const auto expr = cast<ILogicNegatable>(simplExpr->child)) {
     return expr->logicNegate();
   }

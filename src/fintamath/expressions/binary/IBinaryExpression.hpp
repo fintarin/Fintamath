@@ -12,14 +12,14 @@ public:
 
   ArgumentsPtrVector getChildren() const final;
 
+  void setChildren(const ArgumentsPtrVector &childVect) final;
+
 protected:
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
 
   ArgumentPtr simplify() const final;
-
-  void setChildren(const ArgumentsPtrVector &childVect) override;
 
 protected:
   shared_ptr<IFunction> func;

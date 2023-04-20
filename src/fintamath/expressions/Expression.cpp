@@ -423,7 +423,7 @@ shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const A
 }
 
 void Expression::setChildren(const ArgumentsPtrVector &childVect) {
-  if (childVect.size() != getChildren().size()) {
+  if (childVect.size() != 1) {
     return;
   }
 
