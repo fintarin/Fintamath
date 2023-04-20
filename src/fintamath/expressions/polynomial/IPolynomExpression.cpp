@@ -1,4 +1,4 @@
-#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
+#include "fintamath/expressions/IPolynomExpression.hpp"
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/expressions/binary/IBinaryExpression.hpp"
+#include "fintamath/expressions/IBinaryExpression.hpp"
 
 namespace fintamath {
 

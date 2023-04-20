@@ -1,8 +1,8 @@
 #pragma once
 
-#include "fintamath/expressions/interfaces/IInvertable.hpp"
-#include "fintamath/expressions/interfaces/INegatable.hpp"
-#include "fintamath/expressions/polynomial/IPolynomExpression.hpp"
+#include "fintamath/expressions/IInvertable.hpp"
+#include "fintamath/expressions/INegatable.hpp"
+#include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
 class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatable, public IInvertable {
