@@ -217,7 +217,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 
 bool Expression::parseFiniteTerm(const TokenVector &tokens) {
   if (tokens.size() > 1 && tokens.front() == "(" && tokens.at(int64_t(tokens.size()) - 1) == ")") {
-    *this = Expression(cutBraces(tokens));
+    *this = Expression(cutBrackets(tokens));
     return true;
   }
 
@@ -270,7 +270,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
 
     if (pos == tokens.size()) {
       if (isBracketsSkip) {
-        return parseFunctionArgs(cutBraces(tokens));
+        return parseFunctionArgs(cutBrackets(tokens));
       }
       break;
     }

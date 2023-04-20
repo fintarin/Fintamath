@@ -13,7 +13,7 @@ class IExpression;
 
 bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
 
-TokenVector cutBraces(const TokenVector &tokens);
+TokenVector cutBrackets(const TokenVector &tokens);
 
 map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens);
 

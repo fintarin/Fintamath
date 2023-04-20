@@ -33,7 +33,7 @@ bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex) {
   throw InvalidInputException(Tokenizer::tokensToString(tokens));
 }
 
-TokenVector cutBraces(const TokenVector &tokens) {
+TokenVector cutBrackets(const TokenVector &tokens) {
   if (tokens.empty()) {
     return tokens;
   }
