@@ -53,7 +53,7 @@ ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem, const shared_ptr<co
       return makeFunctionExpression(Neg(), {getCoefficientOfElement(elemExpr->getChildren().front(), v)});
     }
     if (is<Pow>(elemExpr->getFunction())) {
-      if (isContain(elemExpr, v)) {
+      if (hasVariable(elemExpr, v)) {
         return ONE.clone();
       }
       return elem;

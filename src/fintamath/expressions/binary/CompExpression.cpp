@@ -151,7 +151,7 @@ void CompExpression::convertToSolution() {
     ArgumentsPtrVector lhsPolynom = {ZERO.clone()};
 
     for (const auto &child : lhsAddExpr->getChildren()) {
-      if (const auto &childExpr = cast<IExpression>(child); childExpr && isContain(childExpr, var)) {
+      if (const auto &childExpr = cast<IExpression>(child); childExpr && hasVariable(childExpr, var)) {
         lhsPolynom.emplace_back(child);
         continue;
       }
