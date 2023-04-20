@@ -47,18 +47,6 @@ shared_ptr<const INumber> getPowOfMulElement(const shared_ptr<const IExpression>
   return cast<INumber>(ZERO.clone());
 }
 
-bool isContain(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var) {
-  for (const auto &child : expr->getChildren()) {
-    if (const auto &childExpr = cast<IExpression>(child); childExpr && isContain(childExpr, var)) {
-      return true;
-    }
-    if (const auto &childVar = cast<Variable>(child); childVar && *childVar == *var) {
-      return true;
-    }
-  }
-  return false;
-}
-
 ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v) {
   if (const auto &elemExpr = cast<IExpression>(elem)) {
     if (is<Neg>(elemExpr->getFunction())) {
@@ -227,8 +215,23 @@ ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
 
 Expression solve(const Expression &rhs) {
   if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
-    compExpr->markAsSolution();
+    // TODO: remove this if when inequalities will be implemented
+    if (!is<Eqv>(compExpr->getFunction())) {
+      if (!validateEquation(*compExpr)) {
+        return rhs;
+      }
 
+      ArgumentsPtrVector variables = compExpr->getVariables();
+
+      shared_ptr<const Variable> var = cast<Variable>(variables.front());
+
+      ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
+
+      if (coeffAtPow.size() == 2) {
+        compExpr->markAsSolution();
+        return *compExpr;
+      }
+    }
     if (is<Eqv>(compExpr->getFunction())) {
       if (!validateEquation(*compExpr)) {
         return rhs;

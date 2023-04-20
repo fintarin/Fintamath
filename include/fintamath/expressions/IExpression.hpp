@@ -31,9 +31,9 @@ public:
     return Parser::parse(parserVector, str);
   }
 
-protected:
   virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
 
+protected:
   static void compressChild(ArgumentPtr &child);
 
   static void simplifyChild(ArgumentPtr &child);

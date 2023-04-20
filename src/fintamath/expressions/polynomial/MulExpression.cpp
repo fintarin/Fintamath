@@ -137,17 +137,17 @@ ArgumentPtr MulExpression::addRateToValue(const ArgumentsPtrVector &rate, const 
 }
 
 ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ZERO) {
+  if (const auto lhsInt = cast<INumber>(lhsChild); lhsInt && *lhsInt == ZERO) {
     return lhsChild;
   }
-  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ZERO) {
+  if (const auto rhsInt = cast<INumber>(rhsChild); rhsInt && *rhsInt == ZERO) {
     return rhsChild;
   }
 
-  if (const auto lhsInt = cast<Integer>(lhsChild); lhsInt && *lhsInt == ONE) {
+  if (const auto lhsInt = cast<INumber>(lhsChild); lhsInt && *lhsInt == ONE) {
     return rhsChild;
   }
-  if (const auto rhsInt = cast<Integer>(rhsChild); rhsInt && *rhsInt == ONE) {
+  if (const auto rhsInt = cast<INumber>(rhsChild); rhsInt && *rhsInt == ONE) {
     return lhsChild;
   }
 

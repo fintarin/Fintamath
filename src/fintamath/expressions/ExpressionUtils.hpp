@@ -4,6 +4,7 @@
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/Variable.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
@@ -27,5 +28,7 @@ extern unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, con
 extern ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
 extern shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+
+bool isContain(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var);
 
 }
