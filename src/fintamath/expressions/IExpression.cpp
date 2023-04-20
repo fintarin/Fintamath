@@ -61,6 +61,7 @@ shared_ptr<const IExpression> IExpression::setValuesOfVariables(const ArgumentsP
     }
 
     bool isAdded = false;
+
     for (size_t i = 0; i < vars.size(); i++) {
       if (const auto &varChild = cast<Variable>(child); varChild && *varChild == *cast<Variable>(vars[i])) {
         newChildren.push_back(vals[i]->clone());
@@ -68,10 +69,12 @@ shared_ptr<const IExpression> IExpression::setValuesOfVariables(const ArgumentsP
         break;
       }
     }
+
     if (!isAdded) {
       newChildren.emplace_back(child);
     }
   }
+
   valExpr->setChildren(newChildren);
   return valExpr;
 }

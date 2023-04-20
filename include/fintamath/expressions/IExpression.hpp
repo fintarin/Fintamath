@@ -15,6 +15,8 @@ public:
 
   virtual ArgumentsPtrVector getChildren() const = 0;
 
+  virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
+
   virtual ArgumentsPtrVector getVariablesUnsorted() const;
 
   ArgumentsPtrVector getVariables() const;
@@ -30,8 +32,6 @@ public:
   static unique_ptr<IExpression> parse(const string &str) {
     return Parser::parse(parserVector, str);
   }
-
-  virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
 
 protected:
   static void compressChild(ArgumentPtr &child);

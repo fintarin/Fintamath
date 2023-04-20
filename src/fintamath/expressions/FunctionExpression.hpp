@@ -3,6 +3,7 @@
 #include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
+
 class FunctionExpression : public IExpressionCRTP<FunctionExpression> {
 public:
   explicit FunctionExpression(const IFunction &function, const ArgumentsPtrVector &children);
@@ -13,14 +14,14 @@ public:
 
   ArgumentsPtrVector getChildren() const override;
 
+  void setChildren(const ArgumentsPtrVector &childVect) override;
+
 protected:
   ArgumentPtr simplify() const override;
 
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
-
-  void setChildren(const ArgumentsPtrVector &childVect) override;
 
 private:
   shared_ptr<IFunction> func;

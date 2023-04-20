@@ -24,9 +24,11 @@ public:
 
   Expression precise(uint8_t precision = FINTAMATH_ROUND_PRECISION) const;
 
+  shared_ptr<IFunction> getFunction() const override;
+
   ArgumentsPtrVector getChildren() const override;
 
-  shared_ptr<IFunction> getFunction() const override;
+  void setChildren(const ArgumentsPtrVector &childVect) override;
 
   template <typename Function, bool isPolynomial = false,
             typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
@@ -60,8 +62,6 @@ protected:
   Expression &negate() override;
 
   ArgumentPtr simplify() const override;
-
-  void setChildren(const ArgumentsPtrVector &childVect) override;
 
 private:
   explicit Expression(const TokenVector &tokens);
