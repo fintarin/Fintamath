@@ -19,6 +19,8 @@ public:
 
   virtual ArgumentsPtrVector getVariablesUnsorted() const;
 
+  virtual ArgumentsPtrVector getConstantsUnsorted() const;
+
   ArgumentsPtrVector getVariables() const;
 
   shared_ptr<const IExpression> setValuesOfVariables(const ArgumentsPtrVector &vars,

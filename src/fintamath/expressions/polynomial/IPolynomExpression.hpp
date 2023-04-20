@@ -83,7 +83,7 @@ private:
    * @return  1 if we should swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorVariables(const ArgumentsPtrVector &lhsVariables, const ArgumentsPtrVector &rhsVariables) const;
+  int comparatorLiterals(const ArgumentsPtrVector &lhsVariables, const ArgumentsPtrVector &rhsVariables) const;
 
   /**
    * @brief
