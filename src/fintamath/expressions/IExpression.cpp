@@ -103,7 +103,9 @@ unique_ptr<IMathObject> IExpression::toMinimalObject() const {
     return getChildren().front()->toMinimalObject();
   }
 
-  return clone();
+  ArgumentPtr cloneExpr = clone();
+  simplifyChild(cloneExpr);
+  return cloneExpr->clone();
 }
 
 void IExpression::compressChild(ArgumentPtr &child) {
