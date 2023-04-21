@@ -1,10 +1,10 @@
 #pragma once
 
-#include "fintamath/expressions/INegatable.hpp"
+#include "fintamath/expressions/INegatableExpression.hpp"
 #include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
-class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatable {
+class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatableExpression {
 public:
   explicit SumExpression(const ArgumentsPtrVector &children);
 

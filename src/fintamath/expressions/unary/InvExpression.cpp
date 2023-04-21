@@ -1,6 +1,6 @@
 #include "fintamath/expressions/unary/InvExpression.hpp"
 
-#include "fintamath/expressions/IInvertable.hpp"
+#include "fintamath/expressions/IInvertableExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -45,7 +45,7 @@ ArgumentPtr InvExpression::postSimplify() const {
     auto error = Integer(1) / Integer(0);
   }
 
-  if (auto expr = cast<IInvertable>(simplExpr->child)) {
+  if (auto expr = cast<IInvertableExpression>(simplExpr->child)) {
     return expr->invert();
   }
 

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "fintamath/expressions/IInvertable.hpp"
-#include "fintamath/expressions/INegatable.hpp"
+#include "fintamath/expressions/IInvertableExpression.hpp"
+#include "fintamath/expressions/INegatableExpression.hpp"
 #include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
-class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatable, public IInvertable {
+class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatableExpression, public IInvertableExpression {
 public:
   explicit MulExpression(const ArgumentsPtrVector &children);
 

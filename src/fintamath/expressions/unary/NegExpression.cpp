@@ -1,6 +1,6 @@
 #include "fintamath/expressions/unary/NegExpression.hpp"
 
-#include "fintamath/expressions/INegatable.hpp"
+#include "fintamath/expressions/INegatableExpression.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 
 namespace fintamath {
@@ -33,7 +33,7 @@ ArgumentPtr NegExpression::postSimplify() const {
     return simpl;
   }
 
-  if (auto expr = cast<INegatable>(simplExpr->child)) {
+  if (auto expr = cast<INegatableExpression>(simplExpr->child)) {
     return expr->negate();
   }
 
