@@ -98,6 +98,14 @@ shared_ptr<const IExpression> IExpression::setValuesOfVariables(const ArgumentsP
   return valExpr;
 }
 
+unique_ptr<IMathObject> IExpression::toMinimalObject() const {
+  if (getFunction() == nullptr) {
+    return getChildren().front()->toMinimalObject();
+  }
+
+  return clone();
+}
+
 void IExpression::compressChild(ArgumentPtr &child) {
   for (;;) {
     if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
