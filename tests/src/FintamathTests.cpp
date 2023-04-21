@@ -25,14 +25,20 @@ TEST(FintamathTests, fintamathTests) {
   // expr = pow(sin(Expression(2)), 2) + pow(cos(Expression(2)), 2);
   // EXPECT_EQ(expr.toString(), "1");
 
-  Expression x("x");
-  Expression y("y");
+  Variable x("x");
+  Variable y("y");
+
+  expr = x * x * x * y;
+  EXPECT_EQ(expr.toString(), "x^3 y");
 
   expr = eqv(x * x + y * y * y, x * y);
   EXPECT_EQ(expr.toString(), "x^2 - x y + y^3 = 0");
 
   expr = eqv(x * x + y * y, x * y);
   EXPECT_EQ(expr.toString(), "x^2 - x y + y^2 = 0");
+
+  expr = eqv(x / x - y / y, x / y);
+  EXPECT_EQ(expr.toString(), "x/y = 0");
 
   expr = eqv(pow(x, 2) - 10, 39);
   EXPECT_EQ(solve(expr).toString(), "x = -7 | x = 7");
