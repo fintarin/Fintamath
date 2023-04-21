@@ -222,18 +222,21 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     else if (is<Variable>(rhs)) {
       rhsVars = {rhs};
     }
-    if (lhsExpr && cast<IPolynomExpression>(lhsExpr) && rhsExpr && cast<IPolynomExpression>(rhsExpr)) {
+
+    if (is<IPolynomExpression>(lhsExpr) && is<IPolynomExpression>(rhsExpr)) {
       bool lhsHasBinary = false;
       bool rhsHasBinary = false;
 
-      for (const auto &child : lhsExpr->getChildren()) {
-        if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
+      ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
+      for (const auto &child : lhsChildren) {
+        if (const auto childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
           lhsHasBinary = true;
         }
       }
 
-      for (const auto &child : rhsExpr->getChildren()) {
-        if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
+      ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
+      for (const auto &child : rhsChildren) {
+        if (const auto childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
           rhsHasBinary = true;
         }
       }
@@ -255,7 +258,7 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
       }
     }
 
-    if (lhsExpr && rhsExpr && is<IPolynomExpression>(rhsExpr) && is<Pow>(lhsExpr->getFunction())) {
+    if (lhsExpr && is<IPolynomExpression>(rhsExpr) && is<Pow>(lhsExpr->getFunction())) {
       if (int res = comparatorChildren(lhsExpr, rhsExpr); res != 0) {
         return res;
       }

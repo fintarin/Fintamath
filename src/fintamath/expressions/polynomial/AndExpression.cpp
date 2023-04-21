@@ -22,6 +22,7 @@ ArgumentPtr AndExpression::logicNegate() const {
   return makeFunctionExpression(Or(), negChildren);
 }
 
+// TODO: improve logic minimization
 ArgumentPtr AndExpression::preSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];

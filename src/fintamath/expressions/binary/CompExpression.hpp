@@ -12,7 +12,9 @@ public:
 
   void markAsSolution();
 
-  static void setOppositeToFunction(const shared_ptr<IFunction> &function, const shared_ptr<IFunction> &opposite);
+  static void addOppositeFunctions(const shared_ptr<IFunction> &function, const shared_ptr<IFunction> &opposite);
+
+  static shared_ptr<IFunction> getOppositeFunction(const shared_ptr<IFunction> &function);
 
 protected:
   ArgumentPtr preSimplify() const override;
@@ -22,13 +24,12 @@ protected:
   void copyProperties(const CompExpression &rhs) override;
 
 private:
-  bool isSolution = false;
-
-  static map<string, shared_ptr<IFunction>, std::less<>> functionOpposMap;
-
-  static shared_ptr<IFunction> getOpposite(const shared_ptr<IFunction> &function);
+  static map<string, shared_ptr<IFunction>, std::less<>> oppositeFunctionsMap;
 
   void convertToSolution();
+
+private:
+  bool isSolution = false;
 };
 
 }
