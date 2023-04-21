@@ -28,8 +28,11 @@ TEST(FintamathTests, fintamathTests) {
   Variable x("x");
   Variable y("y");
 
-  expr = x * x * x * y;
-  EXPECT_EQ(expr.toString(), "x^3 y");
+  expr = x * x * x * y + 10 * x;
+  EXPECT_EQ(expr.toString(), "x^3 y + 10 x");
+
+  expr = x + 10 * x / 10 + (sqrt(x) * 2);
+  EXPECT_EQ(expr.toString(), "2 sqrt(x) + 2 x");
 
   expr = eqv(x * x + y * y * y, x * y);
   EXPECT_EQ(expr.toString(), "x^2 - x y + y^3 = 0");
