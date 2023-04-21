@@ -5,7 +5,9 @@
 #include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
-class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatableExpression, public IInvertableExpression {
+class MulExpression : public IPolynomExpressionCRTP<MulExpression>,
+                      public INegatableExpression,
+                      public IInvertableExpression {
 public:
   explicit MulExpression(const ArgumentsPtrVector &children);
 
