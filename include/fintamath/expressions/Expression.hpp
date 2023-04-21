@@ -3,6 +3,7 @@
 #include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 
@@ -96,5 +97,13 @@ private:
 
   static Parser::Map<shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionBuildersMap;
 };
+
+Expression operator+(const Variable &lhs, const Variable &rhs);
+
+Expression operator-(const Variable &lhs, const Variable &rhs);
+
+Expression operator*(const Variable &lhs, const Variable &rhs);
+
+Expression operator/(const Variable &lhs, const Variable &rhs);
 
 }

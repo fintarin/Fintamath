@@ -424,4 +424,20 @@ void Expression::setChildren(const ArgumentsPtrVector &childVect) {
   child = childVect.front();
 }
 
+Expression operator+(const Variable &lhs, const Variable &rhs) {
+  return Expression(makeFunctionExpression(Add(), {lhs.clone(), rhs.clone()}));
+}
+
+Expression operator-(const Variable &lhs, const Variable &rhs) {
+  return Expression(makeFunctionExpression(Sub(), {lhs.clone(), rhs.clone()}));
+}
+
+Expression operator*(const Variable &lhs, const Variable &rhs) {
+  return Expression(makeFunctionExpression(Mul(), {lhs.clone(), rhs.clone()}));
+}
+
+Expression operator/(const Variable &lhs, const Variable &rhs) {
+  return Expression(makeFunctionExpression(Div(), {lhs.clone(), rhs.clone()}));
+}
+
 }
