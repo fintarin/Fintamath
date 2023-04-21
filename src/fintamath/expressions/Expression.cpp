@@ -428,16 +428,48 @@ Expression operator+(const Variable &lhs, const Variable &rhs) {
   return Expression(makeFunctionExpression(Add(), {lhs.clone(), rhs.clone()}));
 }
 
+Expression operator+(const Expression &lhs, const Variable &rhs) {
+  return Expression(makeFunctionExpression(Add(), {lhs.getChildren().front(), rhs.clone()}));
+}
+
+Expression operator+(const Variable &lhs, const Expression &rhs) {
+  return Expression(makeFunctionExpression(Add(), {lhs.clone(), rhs.getChildren().front()}));
+}
+
 Expression operator-(const Variable &lhs, const Variable &rhs) {
   return Expression(makeFunctionExpression(Sub(), {lhs.clone(), rhs.clone()}));
+}
+
+Expression operator-(const Expression &lhs, const Variable &rhs) {
+  return Expression(makeFunctionExpression(Sub(), {lhs.getChildren().front(), rhs.clone()}));
+}
+
+Expression operator-(const Variable &lhs, const Expression &rhs) {
+  return Expression(makeFunctionExpression(Sub(), {lhs.clone(), rhs.getChildren().front()}));
 }
 
 Expression operator*(const Variable &lhs, const Variable &rhs) {
   return Expression(makeFunctionExpression(Mul(), {lhs.clone(), rhs.clone()}));
 }
 
+Expression operator*(const Expression &lhs, const Variable &rhs) {
+  return Expression(makeFunctionExpression(Mul(), {lhs.getChildren().front(), rhs.clone()}));
+}
+
+Expression operator*(const Variable &lhs, const Expression &rhs) {
+  return Expression(makeFunctionExpression(Mul(), {lhs.clone(), rhs.getChildren().front()}));
+}
+
 Expression operator/(const Variable &lhs, const Variable &rhs) {
   return Expression(makeFunctionExpression(Div(), {lhs.clone(), rhs.clone()}));
+}
+
+Expression operator/(const Expression &lhs, const Variable &rhs) {
+  return Expression(makeFunctionExpression(Div(), {lhs.getChildren().front(), rhs.clone()}));
+}
+
+Expression operator/(const Variable &lhs, const Expression &rhs) {
+  return Expression(makeFunctionExpression(Div(), {lhs.clone(), rhs.getChildren().front()}));
 }
 
 }

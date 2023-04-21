@@ -100,10 +100,26 @@ private:
 
 Expression operator+(const Variable &lhs, const Variable &rhs);
 
+Expression operator+(const Expression &lhs, const Variable &rhs);
+
+Expression operator+(const Variable &lhs, const Expression &rhs);
+
 Expression operator-(const Variable &lhs, const Variable &rhs);
+
+Expression operator-(const Expression &lhs, const Variable &rhs);
+
+Expression operator-(const Variable &lhs, const Expression &rhs);
 
 Expression operator*(const Variable &lhs, const Variable &rhs);
 
+Expression operator*(const Expression &lhs, const Variable &rhs);
+
+Expression operator*(const Variable &lhs, const Expression &rhs);
+
 Expression operator/(const Variable &lhs, const Variable &rhs);
+
+Expression operator/(const Expression &lhs, const Variable &rhs);
+
+Expression operator/(const Variable &lhs, const Expression &rhs);
 
 }
