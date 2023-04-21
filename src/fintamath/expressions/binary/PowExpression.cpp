@@ -23,9 +23,11 @@ ArgumentPtr PowExpression::mulSimplify() const {
 
   if (auto mulExpr = cast<IExpression>(powExpr->lhsChild); mulExpr && is<Mul>(mulExpr->getFunction())) {
     ArgumentsPtrVector args = mulExpr->getChildren();
+
     for (auto &arg : args) {
       arg = makeFunctionExpression(Pow(), {arg, powExpr->rhsChild->clone()});
     }
+
     return makeFunctionExpression(Mul(), args);
   }
 
@@ -53,73 +55,89 @@ Integer PowExpression::generateNextNumber(Integer n) {
 
 Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
   Integer n = 0;
+
   for (int i = 0; i < countOfOne; i++) {
     n = n << 1 | 1;
   }
+
   return n;
 }
 
 vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &variableCount) {
   vector<Integer> result;
   Integer counter = 0;
+
   while (result.size() < variableCount) {
     if (bitNumber % 2 == 1) {
       counter++;
     }
+
     if (bitNumber % 2 == 0) {
       result.emplace_back(counter);
       counter = 0;
     }
+
     bitNumber >>= 1;
   }
+
   return result;
 }
 
 ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer pow) {
   auto sumExpr = cast<IExpression>(expr);
   ArgumentsPtrVector polynom;
+
   if (sumExpr && is<Add>(sumExpr->getFunction())) {
     polynom = sumExpr->getChildren();
   }
   else {
     return nullptr;
   }
+
   ArgumentsPtrVector newPolynom;
   Integer variableCount = int64_t(polynom.size());
 
   bool invert = false;
+
   if (pow < ZERO) {
     pow = abs(pow);
     invert = true;
   }
 
   Integer bitNumber = generateFirstNum(pow);
+
   for (int i = 0; i < combinations(pow + variableCount - 1, pow); i++) {
     vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentsPtrVector mulExprPolynom;
     mulExprPolynom.emplace_back(make_shared<Integer>(split(pow, vectOfPows)));
+
     for (size_t j = 0; j < variableCount; j++) {
       auto powExpr = makeFunctionExpression(Pow(), {polynom[j], make_shared<Integer>(move(vectOfPows[j]))});
       mulExprPolynom.emplace_back(powExpr);
     }
+
     ArgumentPtr mulExpr = makeFunctionExpression(Mul(), mulExprPolynom);
     newPolynom.emplace_back(mulExpr);
   }
 
   ArgumentPtr newSumExpr = makeFunctionExpression(Add(), newPolynom);
+
   if (invert) {
     return makeFunctionExpression(Inv(), {newSumExpr});
   }
+
   return newSumExpr;
 }
 
 ArgumentPtr PowExpression::polynomSimplify() const {
   ArgumentPtr result = mulSimplify();
+
   if (auto powExpr = cast<PowExpression>(result)) {
     return powExpr->sumSimplify();
   }
+
   return result;
 }
 
@@ -148,6 +166,7 @@ ArgumentPtr PowExpression::preSimplify() const {
     auto rhsPow = makeFunctionExpression(Mul(), {lhsExpr->getChildren()[1], simplExpr->rhsChild});
     return makeRawFunctionExpression(Pow(), {lhsPow, rhsPow});
   }
+
   return simpl;
 }
 
@@ -165,12 +184,15 @@ ArgumentPtr PowExpression::postSimplify() const {
     if (*rhsInt == ZERO) {
       return ONE.clone();
     }
+
     if (*simplExpr->lhsChild == ONE || *rhsInt == ONE) {
       return simplExpr->lhsChild;
     }
+
     if (*rhsInt == NEG_ONE) {
       return makeFunctionExpression(Inv(), {simplExpr->lhsChild});
     }
+
     if (*rhsInt < 0) {
       return makeRawFunctionExpression(
           Inv(), {makeFunctionExpression(Pow(), {simplExpr->lhsChild, makeFunctionExpression(Neg(), {rhsInt})})});

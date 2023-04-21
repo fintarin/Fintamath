@@ -38,7 +38,6 @@ protected:
 
   virtual bool isComparableOrderInversed() const;
 
-protected:
   /**
    * @brief
    *
@@ -49,10 +48,6 @@ protected:
    * @return  0 if this comparator fails
    */
   virtual int comparatorOverride(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
-  shared_ptr<IFunction> func;
-
-  ArgumentsPtrVector children;
 
 private:
   void preSimplifyRec();
@@ -99,6 +94,17 @@ private:
   /**
    * @brief
    *
+   * @param lhsChildren
+   * @param rhsChildren
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
    * @param lhsExpr
    * @param rhsExpr
    * @return -1 if we should not swap the arguments
@@ -119,7 +125,10 @@ private:
    */
   int comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
-  int comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+protected:
+  shared_ptr<IFunction> func;
+
+  ArgumentsPtrVector children;
 };
 
 template <typename Derived>

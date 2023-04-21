@@ -165,7 +165,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("cos(Pi/3)").toString(), "cos(1/3 Pi)");
   EXPECT_EQ(Expression("2!*E").toString(), "2 E");
   EXPECT_EQ(Expression("E*2!").toString(), "2 E");
-  // TODO: The problem here is that 1/2 and 1/3 are Expressions not Rationals
   EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-1/2 cos(2/3 Pi) + 1/2)");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(),
             "2 cos(1/3 Pi) sqrt(-1/2 cos(2/3 Pi) + 1/2)");
