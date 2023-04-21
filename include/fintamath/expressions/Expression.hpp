@@ -18,8 +18,6 @@ public:
 
   Expression(int64_t val);
 
-  unique_ptr<IMathObject> toMinimalObject() const override;
-
   string toString() const override;
 
   Expression precise(uint8_t precision = FINTAMATH_ROUND_PRECISION) const;

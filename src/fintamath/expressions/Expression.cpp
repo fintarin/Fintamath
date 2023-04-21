@@ -59,12 +59,6 @@ Expression::Expression(const IMathObject &obj) : Expression(obj.toMinimalObject(
 Expression::Expression(int64_t val) : child(make_shared<Integer>(val)) {
 }
 
-unique_ptr<IMathObject> Expression::toMinimalObject() const {
-  ArgumentPtr childClone = child->clone();
-  simplifyChild(childClone);
-  return childClone->clone();
-}
-
 string Expression::toString() const {
   return child->toString();
 }
