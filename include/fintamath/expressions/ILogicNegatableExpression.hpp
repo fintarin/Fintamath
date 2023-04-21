@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class ILogicNegatable : virtual public IExpression {
+class ILogicNegatableExpression : virtual public IExpression {
 public:
   virtual ArgumentPtr logicNegate() const = 0;
 };

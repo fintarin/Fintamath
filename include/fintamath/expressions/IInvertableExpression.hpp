@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class IInvertable : virtual public IExpression {
+class IInvertableExpression : virtual public IExpression {
 public:
   virtual ArgumentPtr invert() const = 0;
 };

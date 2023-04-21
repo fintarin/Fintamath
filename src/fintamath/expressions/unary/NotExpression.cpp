@@ -1,6 +1,6 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 
-#include "fintamath/expressions/ILogicNegatable.hpp"
+#include "fintamath/expressions/ILogicNegatableExpression.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 
 namespace fintamath {
@@ -33,7 +33,7 @@ ArgumentPtr NotExpression::postSimplify() const {
     return simpl;
   }
 
-  if (const auto expr = cast<ILogicNegatable>(simplExpr->child)) {
+  if (const auto expr = cast<ILogicNegatableExpression>(simplExpr->child)) {
     return expr->logicNegate();
   }
 

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "fintamath/expressions/ILogicNegatable.hpp"
+#include "fintamath/expressions/ILogicNegatableExpression.hpp"
 #include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
 
-class AndExpression : public IPolynomExpressionCRTP<AndExpression>, public ILogicNegatable {
+class AndExpression : public IPolynomExpressionCRTP<AndExpression>, public ILogicNegatableExpression {
 public:
   explicit AndExpression(const ArgumentsPtrVector &children);
 
