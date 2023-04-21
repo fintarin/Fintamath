@@ -250,54 +250,14 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     }
 
     if (lhsExpr && rhsExpr && is<IPolynomExpression>(lhsExpr) && is<Pow>(rhsExpr->getFunction())) {
-      ArgumentsPtrVector lhsChildren;
-
-      if (is<IPolynomExpression>(lhsExpr)) {
-        lhsChildren = lhsExpr->getChildren();
-      }
-      else {
-        lhsChildren = {lhs};
-      }
-
-      ArgumentsPtrVector rhsChildren;
-
-      if (is<IPolynomExpression>(rhsExpr)) {
-        rhsChildren = rhsExpr->getChildren();
-      }
-      else {
-        rhsChildren = {rhs};
-      }
-
-      if (lhsChildren.size() > 1 || rhsChildren.size() > 1) {
-        if (int res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
-          return res;
-        }
+      if (int res = comparatorChildren(lhsExpr, rhsExpr); res != 0) {
+        return res;
       }
     }
 
     if (lhsExpr && rhsExpr && is<IPolynomExpression>(rhsExpr) && is<Pow>(lhsExpr->getFunction())) {
-      ArgumentsPtrVector lhsChildren;
-
-      if (is<IPolynomExpression>(lhsExpr)) {
-        lhsChildren = lhsExpr->getChildren();
-      }
-      else {
-        lhsChildren = {lhs};
-      }
-
-      ArgumentsPtrVector rhsChildren;
-
-      if (is<IPolynomExpression>(rhsExpr)) {
-        rhsChildren = rhsExpr->getChildren();
-      }
-      else {
-        rhsChildren = {rhs};
-      }
-
-      if (lhsChildren.size() > 1 || rhsChildren.size() > 1) {
-        if (int res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
-          return res;
-        }
+      if (int res = comparatorChildren(lhsExpr, rhsExpr); res != 0) {
+        return res;
       }
     }
 
@@ -330,30 +290,8 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     }
   }
 
-  {
-    ArgumentsPtrVector lhsChildren;
-
-    if (is<IPolynomExpression>(lhsExpr)) {
-      lhsChildren = lhsExpr->getChildren();
-    }
-    else {
-      lhsChildren = {lhs};
-    }
-
-    ArgumentsPtrVector rhsChildren;
-
-    if (is<IPolynomExpression>(rhsExpr)) {
-      rhsChildren = rhsExpr->getChildren();
-    }
-    else {
-      rhsChildren = {rhs};
-    }
-
-    if (lhsChildren.size() > 1 || rhsChildren.size() > 1) {
-      if (int res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
-        return res;
-      }
-    }
+  if (int res = comparatorChildren(lhsExpr, rhsExpr); res != 0) {
+    return res;
   }
 
   if (lhsExpr && !rhsExpr) {
@@ -378,6 +316,41 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
   }
 
   return comparatorFunctions(lhsExpr, rhsExpr);
+}
+
+int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+
+  if (!lhsExpr || !rhsExpr) {
+    return 0;
+  }
+
+  ArgumentsPtrVector lhsChildren;
+
+  if (is<IPolynomExpression>(lhsExpr)) {
+    lhsChildren = lhsExpr->getChildren();
+  }
+  else {
+    lhsChildren = {lhs};
+  }
+
+  ArgumentsPtrVector rhsChildren;
+
+  if (is<IPolynomExpression>(rhsExpr)) {
+    rhsChildren = rhsExpr->getChildren();
+  }
+  else {
+    rhsChildren = {rhs};
+  }
+
+  if (lhsChildren.size() > 1 || rhsChildren.size() > 1) {
+    if (int res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
+      return res;
+    }
+  }
+
+  return 0;
 }
 
 int IPolynomExpression::comparatorLiterals(const ArgumentsPtrVector &lhsVariables,

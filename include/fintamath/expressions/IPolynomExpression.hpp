@@ -118,6 +118,8 @@ private:
    * @return  0 if this comparator fails
    */
   int comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  int comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 };
 
 template <typename Derived>
