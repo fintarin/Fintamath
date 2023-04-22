@@ -188,7 +188,7 @@ int IPolynomExpression::comparatorOverride(const ArgumentPtr &lhs, const Argumen
 
 void IPolynomExpression::sort() {
   std::sort(children.begin(), children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-    return comparator(lhs, rhs) <= 0;
+    return comparator(lhs, rhs) < 0;
   });
 }
 
