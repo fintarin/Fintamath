@@ -55,7 +55,7 @@ string MulExpression::toString() const {
       result += childToString(nonInvertedChild[i], result == "-");
     }
     if (!invertedChild.empty()) {
-      result = "(" + result + ")";
+      result = putInBrackets(result);
     }
     for (const auto &child : invertedChild) {
       result += childToString(child);
@@ -66,27 +66,26 @@ string MulExpression::toString() const {
   return result;
 }
 
-string MulExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
-  if (const auto &number = cast<INumber>(child); number && isFirst && *number == NEG_ONE) {
-    return "-";
+string MulExpression::childToString(const ArgumentPtr &inChild, bool isFirst) const {
+  if (const auto &number = cast<INumber>(inChild); number && isFirst && *number == NEG_ONE) {
+    return Neg().toString();
   }
 
   bool invert = false;
-  ArgumentPtr childToStr;
-  if (auto invExpr = cast<IExpression>(child); invExpr && is<Inv>(invExpr->getFunction())) {
-    childToStr = invExpr->getChildren()[0];
+  ArgumentPtr child = inChild;
+
+  if (auto invExpr = cast<IExpression>(inChild); invExpr && is<Inv>(invExpr->getFunction())) {
+    child = invExpr->getChildren()[0];
     invert = true;
-  }
-  else {
-    childToStr = child;
   }
 
   string result;
-  if (auto sumExpr = cast<IExpression>(childToStr); sumExpr && is<Add>(sumExpr->getFunction())) {
-    result = "(" + sumExpr->toString() + ")";
+
+  if (auto sumExpr = cast<IExpression>(child); sumExpr && is<Add>(sumExpr->getFunction())) {
+    result = putInBrackets(sumExpr->toString());
   }
   else {
-    result = childToStr->toString();
+    result = child->toString();
   }
 
   if (invert) {
@@ -298,8 +297,13 @@ ArgumentPtr MulExpression::simplifyNegation(const ArgumentPtr &lhsChild, const A
 }
 
 MulExpression::FunctionsVector MulExpression::getSimplifyFunctions() const {
-  return {&MulExpression::simplifyNegation, &MulExpression::simplifyDivisions, &MulExpression::coefficientsProcessing,
-          &MulExpression::simplifyNumber, &MulExpression::multiplicateBraces};
+  return {
+      &MulExpression::simplifyNegation,       //
+      &MulExpression::simplifyDivisions,      //
+      &MulExpression::coefficientsProcessing, //
+      &MulExpression::simplifyNumber,         //
+      &MulExpression::multiplicateBraces,     //
+  };
 }
 
 bool MulExpression::isTermsOrderInversed() const {

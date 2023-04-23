@@ -19,6 +19,8 @@ map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens);
 
 string putInBrackets(const string &str);
 
+string putInSpaces(const string &str);
+
 string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
 
 string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs);

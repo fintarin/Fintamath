@@ -17,35 +17,44 @@ const Add ADD;
 SumExpression::SumExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(ADD, children) {
 }
 
-string SumExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
-  bool negate = false;
-  ArgumentPtr childToStr;
-  if (auto negExpr = cast<IExpression>(child); negExpr && is<Neg>(negExpr->getFunction())) {
-    childToStr = negExpr->getChildren()[0];
-    negate = true;
-  }
-  else {
-    childToStr = child;
+string SumExpression::childToString(const ArgumentPtr &inChild, bool isFirst) const {
+  ArgumentPtr child = inChild;
+  bool isChildNegated = false;
+
+  if (auto negExpr = cast<IExpression>(inChild); negExpr && is<Neg>(negExpr->getFunction())) {
+    child = negExpr->getChildren().front();
+    isChildNegated = true;
   }
 
   string result;
-  if (auto invExpr = cast<IExpression>(childToStr); invExpr && is<Inv>(invExpr->getFunction())) {
-    result = "1/" + invExpr->getChildren()[0]->toString();
+
+  if (auto powExpr = cast<IExpression>(child); powExpr && is<Inv>(powExpr->getFunction())) {
+    result = powExpr->getChildren().front()->toString();
   }
   else {
-    result = childToStr->toString();
+    result = child->toString();
   }
 
-  if (!negate && result.size() > 1 && result.front() == '-') {
-    negate = true;
+  if (!isChildNegated && result.size() > 1 && result.front() == Neg().toString().front()) {
+    isChildNegated = true;
     result = result.substr(1, result.size() - 1);
   }
 
-  if (negate) {
-    result = (isFirst ? "-" : " - ") + result;
+  string funcStr;
+
+  if (isChildNegated) {
+    funcStr = Sub().toString();
   }
-  else {
-    result = (isFirst ? "" : " + ") + result;
+  else if (!isFirst) {
+    funcStr = Add().toString();
+  }
+
+  if (!funcStr.empty()) {
+    if (!isFirst) {
+      funcStr = putInSpaces(funcStr);
+    }
+
+    result = funcStr + result;
   }
 
   return result;
@@ -62,14 +71,18 @@ ArgumentPtr SumExpression::negate() const {
 }
 
 SumExpression::FunctionsVector SumExpression::getSimplifyFunctions() const {
-  return {&SumExpression::simplifyNumber, &SumExpression::simplifyNegation, &SumExpression::coefficientsProcessing};
+  return {
+      &SumExpression::simplifyNumber,         //
+      &SumExpression::simplifyNegation,       //
+      &SumExpression::coefficientsProcessing, //
+  };
 }
 
 ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsInt = cast<INumber>(lhsChild); lhsInt && *lhsInt == ZERO) {
+  if (*lhsChild == ZERO) {
     return rhsChild;
   }
-  if (const auto rhsInt = cast<INumber>(rhsChild); rhsInt && *rhsInt == ZERO) {
+  if (*rhsChild == ZERO) {
     return lhsChild;
   }
 
@@ -84,8 +97,9 @@ ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
 
   if (lhsExpr && is<Neg>(lhsExpr->getFunction())) {
     lhsNum = cast<INumber>(lhsExpr->getChildren().front());
+
     if (lhsNum) {
-      lhsNum = -*lhsNum;
+      lhsNum = -(*lhsNum);
     }
   }
   else {
@@ -94,8 +108,9 @@ ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
 
   if (rhsExpr && is<Neg>(rhsExpr->getFunction())) {
     rhsNum = cast<INumber>(rhsExpr->getChildren().front());
+
     if (rhsNum) {
-      rhsNum = -*rhsNum;
+      rhsNum = -(*rhsNum);
     }
   }
   else {
@@ -112,33 +127,46 @@ ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
 ArgumentPtr SumExpression::simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto lhsExpr = cast<IExpression>(lhsChild);
       lhsExpr && is<Neg>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
-    return make_shared<Integer>(ZERO);
+    return ZERO.clone();
   }
+
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
       rhsExpr && is<Neg>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
-    return make_shared<Integer>(ZERO);
+    return ZERO.clone();
   }
 
   return {};
 }
 
-std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateAndValue(const ArgumentPtr &rhsChild) {
-  if (const auto &exprValue = cast<IExpression>(rhsChild); exprValue && is<Mul>(exprValue->getFunction())) {
-    ArgumentsPtrVector args = exprValue->getChildren();
-    if (const auto &numberValue = cast<INumber>(args.front())) {
-      if (args.size() == 2) {
-        return {args.front(), args[1]};
+std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const ArgumentPtr &inChild) {
+  ArgumentPtr rate;
+  ArgumentPtr value;
+
+  if (const auto mulExpr = cast<IExpression>(inChild); mulExpr && is<Mul>(mulExpr->getFunction())) {
+    const ArgumentsPtrVector mulExprChildren = mulExpr->getChildren();
+
+    if (is<INumber>(mulExprChildren.front())) {
+      rate = mulExprChildren.front();
+
+      if (mulExprChildren.size() == 2) {
+        value = mulExprChildren[1];
       }
-      ArgumentPtr mulExpr = makeFunctionExpression(Mul(), ArgumentsPtrVector{args.begin() + 1, args.end()});
-      return {args.front(), mulExpr};
+      else {
+        value = makeFunctionExpression(Mul(), ArgumentsPtrVector{mulExprChildren.begin() + 1, mulExprChildren.end()});
+      }
     }
   }
-  if (const auto &exprValue = cast<IExpression>(rhsChild); exprValue && is<Neg>(exprValue->getFunction())) {
-    ArgumentsPtrVector args = exprValue->getChildren();
-    return {NEG_ONE.clone(), args.front()};
+  else if (const auto negExpr = cast<IExpression>(inChild); negExpr && is<Neg>(negExpr->getFunction())) {
+    rate = NEG_ONE.clone();
+    value = negExpr->getChildren().front();
   }
 
-  return {ONE.clone(), rhsChild};
+  if (rate == nullptr || value == nullptr) {
+    rate = ONE.clone();
+    value = inChild;
+  }
+
+  return {rate, value};
 }
 
 ArgumentPtr SumExpression::addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) {
@@ -147,14 +175,14 @@ ArgumentPtr SumExpression::addRateToValue(const ArgumentsPtrVector &rate, const 
 }
 
 ArgumentPtr SumExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  std::pair<ArgumentPtr, ArgumentPtr> lhsRateValue = getRateAndValue(lhsChild);
-  std::pair<ArgumentPtr, ArgumentPtr> rhsRateValue = getRateAndValue(rhsChild);
+  std::pair<ArgumentPtr, ArgumentPtr> lhsRateValuePair = getRateValuePair(lhsChild);
+  std::pair<ArgumentPtr, ArgumentPtr> rhsRateValuePair = getRateValuePair(rhsChild);
 
-  ArgumentPtr lhsChildRate = lhsRateValue.first;
-  ArgumentPtr rhsChildRate = rhsRateValue.first;
+  ArgumentPtr lhsChildRate = lhsRateValuePair.first;
+  ArgumentPtr rhsChildRate = rhsRateValuePair.first;
 
-  ArgumentPtr lhsChildValue = lhsRateValue.second;
-  ArgumentPtr rhsChildValue = rhsRateValue.second;
+  ArgumentPtr lhsChildValue = lhsRateValuePair.second;
+  ArgumentPtr rhsChildValue = rhsRateValuePair.second;
 
   if (lhsChildValue->toString() == rhsChildValue->toString()) {
     return addRateToValue({lhsChildRate, rhsChildRate}, lhsChildValue);

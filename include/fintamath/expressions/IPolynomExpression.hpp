@@ -28,7 +28,7 @@ protected:
 
   virtual FunctionsVector getSimplifyFunctions() const;
 
-  virtual string childToString(const ArgumentPtr &child, bool isFirst = false) const;
+  virtual string childToString(const ArgumentPtr &inChild, bool isFirst = false) const;
 
   ArgumentPtr preSimplify() const override;
 
