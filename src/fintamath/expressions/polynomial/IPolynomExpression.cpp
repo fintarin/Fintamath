@@ -3,7 +3,6 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 
@@ -205,14 +204,18 @@ int IPolynomExpression::comparatorPolynom(const ArgumentPtr &lhs, const Argument
 
     ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
     for (const auto &child : lhsChildren) {
-      if (const auto childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
+      if (const auto childExpr = cast<IExpression>(child);
+          childExpr && !is<IPolynomExpression>(childExpr) &&
+          childExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) {
         lhsHasBinary = true;
       }
     }
 
     ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
     for (const auto &child : rhsChildren) {
-      if (const auto childExpr = cast<IExpression>(child); childExpr && is<Pow>(childExpr->getFunction())) {
+      if (const auto childExpr = cast<IExpression>(child);
+          childExpr && !is<IPolynomExpression>(childExpr) &&
+          childExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) {
         rhsHasBinary = true;
       }
     }
@@ -269,14 +272,16 @@ int IPolynomExpression::comparatorConstants(const ArgumentPtr &lhs, const Argume
   return 0;
 }
 
-int IPolynomExpression::comparatorPow(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+int IPolynomExpression::comparatorBinary(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
   ArgumentsPtrVector lhsVars = getVariables(lhs);
   ArgumentsPtrVector rhsVars = getVariables(rhs);
 
   auto lhsExpr = cast<IExpression>(lhs);
   auto rhsExpr = cast<IExpression>(rhs);
 
-  if (lhsExpr && rhsExpr && is<Pow>(lhsExpr->getFunction()) && is<Pow>(rhsExpr->getFunction())) {
+  if (lhsExpr && rhsExpr && !is<IPolynomExpression>(lhsExpr) && !is<IPolynomExpression>(rhsExpr) &&
+      lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary &&
+      rhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) {
     if (lhsVars.size() != rhsVars.size()) {
       return lhsVars.size() > rhsVars.size() ? -1 : 1;
     }
@@ -285,7 +290,7 @@ int IPolynomExpression::comparatorPow(const ArgumentPtr &lhs, const ArgumentPtr 
   return 0;
 }
 
-int IPolynomExpression::comparatorPowPolynom(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+int IPolynomExpression::comparatorVariableInPolynom(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
   auto lhsExpr = cast<IExpression>(lhs);
   auto rhsExpr = cast<IExpression>(rhs);
 
@@ -293,12 +298,14 @@ int IPolynomExpression::comparatorPowPolynom(const ArgumentPtr &lhs, const Argum
     return res;
   }
 
-  if (int res = comparatorPow(lhs, rhs); res != 0) {
+  if (int res = comparatorBinary(lhs, rhs); res != 0) {
     return res;
   }
 
-  if ((rhsExpr && is<IPolynomExpression>(lhsExpr) && is<Pow>(rhsExpr->getFunction())) ||
-      (lhsExpr && is<IPolynomExpression>(rhsExpr) && is<Pow>(lhsExpr->getFunction()))) {
+  if ((rhsExpr && is<IPolynomExpression>(lhsExpr) && !is<IPolynomExpression>(rhsExpr) &&
+       rhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) ||
+      (lhsExpr && is<IPolynomExpression>(rhsExpr) && !is<IPolynomExpression>(lhsExpr) &&
+       lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary)) {
     if (int res = comparatorChildren(lhs, rhs); res != 0) {
       return res;
     }
@@ -350,7 +357,7 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     return comparatorTerms(lhs, rhs);
   }
 
-  if (int res = comparatorPowPolynom(lhs, rhs); res != 0) {
+  if (int res = comparatorVariableInPolynom(lhs, rhs); res != 0) {
     return res;
   }
 
