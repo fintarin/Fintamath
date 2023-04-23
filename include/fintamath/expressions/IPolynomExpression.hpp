@@ -105,6 +105,17 @@ private:
   /**
    * @brief
    *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorPolynom(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
    * @param lhsExpr
    * @param rhsExpr
    * @return -1 if we should not swap the arguments
@@ -124,6 +135,65 @@ private:
    * @return  0 if this comparator fails
    */
   int comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorConstants(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorPow(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorPowPolynom(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should not swap the arguments
+   * @return  1 if we should swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorExprAndNonExpr(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  static ArgumentsPtrVector getVariables(const ArgumentPtr &rhs);
+
+  static ArgumentsPtrVector getConstants(const ArgumentPtr &rhs);
 
 protected:
   shared_ptr<IFunction> func;
