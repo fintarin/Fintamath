@@ -10,8 +10,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clan
       ${PROJECT_NAME}_coverage
       COMMAND cd build && ctest -CDebug && cd ..
       COMMAND mkdir -p build/coverage
-      COMMAND gcovr -r . -e ".*build/.*" -e ".*tests/.*" --exclude-throw-branches --html-details -o
-              "${CMAKE_BINARY_DIR}/coverage/coverage.html"
       COMMAND gcovr -r . -e ".*build/.*" -e ".*tests/.*" --exclude-throw-branches --xml -o
               "${CMAKE_BINARY_DIR}/coverage/coverage.xml"
       COMMAND gcovr -r . -e ".*build/.*" -e ".*tests/.*" --exclude-throw-branches --sonarqube -o
