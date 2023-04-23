@@ -167,7 +167,7 @@ private:
    * @return  1 if we should swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorPow(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+  int comparatorBinary(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
   /**
    * @brief
@@ -178,7 +178,7 @@ private:
    * @return  1 if we should swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorPowPolynom(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+  int comparatorVariableInPolynom(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
   /**
    * @brief
