@@ -33,7 +33,7 @@ string IPolynomExpression::toString() const {
   return result;
 }
 
-string IPolynomExpression::childToString(const ArgumentPtr & /*child*/, bool /*isFirst*/) const {
+string IPolynomExpression::childToString(const ArgumentPtr & /*inChild*/, bool /*isFirst*/) const {
   return {};
 }
 

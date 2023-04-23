@@ -11,10 +11,9 @@ public:
 
   ArgumentPtr logicNegate() const override;
 
-  string childToString(const ArgumentPtr &child, bool isFirst) const override;
+  string childToString(const ArgumentPtr &inChild, bool isFirst) const override;
 
 protected:
-  // TODO: refactor, implement other logic functionaluty
   ArgumentPtr preSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
   ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;

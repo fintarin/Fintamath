@@ -22,6 +22,7 @@ ArgumentPtr OrExpression::logicNegate() const {
   return makeFunctionExpression(And(), negChildren);
 }
 
+// TODO: improve logic minimization
 ArgumentPtr OrExpression::preSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
@@ -57,13 +58,14 @@ bool OrExpression::isComparableOrderInversed() const {
   return true;
 }
 
-string OrExpression::childToString(const ArgumentPtr &child, bool isFirst) const {
-  string result = child->toString();
+string OrExpression::childToString(const ArgumentPtr &inChild, bool isFirst) const {
+  string result = inChild->toString();
 
-  if (const auto &childExpr = cast<IExpression>(child); childExpr && is<And>(childExpr->getFunction())) {
-    result = "(" + result + ")";
+  if (const auto &childExpr = cast<IExpression>(inChild); childExpr && is<And>(childExpr->getFunction())) {
+    result = putInBrackets(result);
   }
 
-  return isFirst ? result : (" " + func->toString() + " " + result);
+  return isFirst ? result : (putInSpaces(func->toString()) + result);
 }
+
 }

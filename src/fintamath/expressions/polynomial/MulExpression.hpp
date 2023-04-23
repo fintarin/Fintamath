@@ -34,7 +34,7 @@ protected:
   int comparatorOverride(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
 
 private:
-  string childToString(const ArgumentPtr &child, bool isFirst = false) const override;
+  string childToString(const ArgumentPtr &inChild, bool isFirst = false) const override;
 
   static ArgumentPtr simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 

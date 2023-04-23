@@ -61,7 +61,7 @@ string IUnaryExpression::prefixToString() const {
 }
 
 string IUnaryExpression::functionToString() const {
-  return func->toString() + "(" + child->toString() + ")";
+  return func->toString() + putInBrackets(child->toString());
 }
 
 shared_ptr<IFunction> IUnaryExpression::getFunction() const {

@@ -1,7 +1,9 @@
 #include "fintamath/expressions/unary/InvExpression.hpp"
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/IInvertableExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
@@ -58,10 +60,10 @@ string InvExpression::toString() const {
   if (const auto &sumChildExpr = cast<IExpression>(getChildren()[0]);
       sumChildExpr && is<Add>(sumChildExpr->getFunction())) {
 
-    childToStr = "(" + childToStr + ")";
+    childToStr = putInBrackets(childToStr);
   }
 
-  return "1/" + childToStr;
+  return ONE.toString() + Div().toString() + childToStr;
 }
 
 }
