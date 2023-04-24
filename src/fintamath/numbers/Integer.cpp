@@ -73,6 +73,10 @@ int Integer::sign() const {
   return impl->v.sign();
 }
 
+Integer::operator long long() const {
+  return impl->v.convert_to<long long>();
+}
+
 const unique_ptr<IntegerImpl> &Integer::getImpl() const {
   return impl;
 }

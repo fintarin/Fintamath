@@ -33,6 +33,8 @@ public:
 
   int sign() const;
 
+  operator long long() const;
+
   const unique_ptr<IntegerImpl> &getImpl() const;
 
 protected:

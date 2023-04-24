@@ -18,9 +18,9 @@ shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem, const shared_
 shared_ptr<const INumber> getPowOfMulElement(const shared_ptr<const IExpression> &elem,
                                              const shared_ptr<const Variable> &v);
 
-ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v);
+ArgumentPtr getElementRate(const ArgumentPtr &elem, const shared_ptr<const Variable> &v);
 
-ArgumentsPtrVector getCoefficientsAtPows(const ArgumentPtr &rhs, const shared_ptr<const Variable> &v);
+ArgumentsPtrVector getPowerRates(const ArgumentPtr &rhs, const shared_ptr<const Variable> &v);
 
 bool validatePowExpr(const shared_ptr<const IExpression> &powExpr);
 
@@ -44,11 +44,8 @@ Expression solve(const Expression &rhs) {
         return rhs;
       }
 
-      ArgumentsPtrVector variables = compExpr->getVariables();
-
-      shared_ptr<const Variable> var = cast<Variable>(variables.front());
-
-      ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
+      auto var = cast<Variable>(compExpr->getVariables().front());
+      ArgumentsPtrVector coeffAtPow = getPowerRates(compExpr->getChildren().front(), var);
 
       if (coeffAtPow.size() == 2) {
         compExpr->markAsSolution();
@@ -60,23 +57,19 @@ Expression solve(const Expression &rhs) {
         return rhs;
       }
 
-      ArgumentsPtrVector variables = compExpr->getVariables();
-
-      shared_ptr<const Variable> var = cast<Variable>(variables.front());
-
-      ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
-
+      auto var = cast<Variable>(compExpr->getVariables().front());
+      ArgumentsPtrVector powerRates = getPowerRates(compExpr->getChildren()[0], var);
       ArgumentsPtrVector roots;
 
-      switch (coeffAtPow.size()) {
+      switch (powerRates.size()) {
       case 2:
-        roots = solveLinearEquation(coeffAtPow);
+        roots = solveLinearEquation(powerRates);
         break;
       case 3:
-        roots = solveQuadraticEquation(coeffAtPow);
+        roots = solveQuadraticEquation(powerRates);
         break;
       case 4:
-        roots = solveCubicEquation(coeffAtPow);
+        roots = solveCubicEquation(powerRates);
         break;
       default:
         roots = {};
@@ -141,10 +134,10 @@ shared_ptr<const INumber> getPowOfMulElement(const shared_ptr<const IExpression>
   return cast<INumber>(ZERO.clone());
 }
 
-ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v) {
+ArgumentPtr getElementRate(const ArgumentPtr &elem, const shared_ptr<const Variable> &v) {
   if (const auto elemExpr = cast<IExpression>(elem)) {
     if (is<Neg>(elemExpr->getFunction())) {
-      return makeFunctionExpression(Neg(), {getCoefficientOfElement(elemExpr->getChildren().front(), v)});
+      return makeFunctionExpression(Neg(), {getElementRate(elemExpr->getChildren().front(), v)});
     }
     if (is<Pow>(elemExpr->getFunction())) {
       if (hasVariable(elemExpr, v)) {
@@ -155,7 +148,7 @@ ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem, const shared_ptr<co
     if (is<Mul>(elemExpr->getFunction())) {
       ArgumentsPtrVector coeff{ONE.clone()};
       for (const auto &child : elemExpr->getChildren()) {
-        coeff.emplace_back(getCoefficientOfElement(child, v));
+        coeff.emplace_back(getElementRate(child, v));
       }
       return makeFunctionExpression(Mul(), coeff);
     }
@@ -167,8 +160,8 @@ ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem, const shared_ptr<co
   return elem;
 }
 
-ArgumentsPtrVector getCoefficientsAtPows(const ArgumentPtr &rhs, const shared_ptr<const Variable> &v) {
-  ArgumentsPtrVector result;
+ArgumentsPtrVector getPowerRates(const ArgumentPtr &rhs, const shared_ptr<const Variable> &v) {
+  ArgumentsPtrVector powerRates;
   ArgumentsPtrVector polynomVect;
 
   if (const auto exprVal = cast<IExpression>(rhs); exprVal && is<Add>(exprVal->getFunction())) {
@@ -179,27 +172,20 @@ ArgumentsPtrVector getCoefficientsAtPows(const ArgumentPtr &rhs, const shared_pt
   }
 
   for (const auto &elem : polynomVect) {
+    ArgumentPtr rate = getElementRate(elem, v);
     shared_ptr<const INumber> pow = getPowOfElement(elem, v);
-    ArgumentPtr coefficient = getCoefficientOfElement(elem, v);
-
     Integer intPow = cast<Integer>(*pow);
 
-    // TODO: add Integer to int conversion
-    int powVal = 0;
-    while (powVal < intPow) {
-      powVal++;
-    }
-
-    if (result.size() < intPow + 1) {
-      while (result.size() != intPow + 1) {
-        result.emplace_back(ZERO.clone());
+    if (powerRates.size() < intPow + 1) {
+      while (powerRates.size() != intPow + 1) {
+        powerRates.emplace_back(ZERO.clone());
       }
     }
 
-    result[powVal] = coefficient;
+    powerRates[intPow] = rate;
   }
 
-  return result;
+  return powerRates;
 }
 
 bool validatePowExpr(const shared_ptr<const IExpression> &powExpr) {
@@ -244,12 +230,14 @@ bool validateAddExpr(const shared_ptr<const IExpression> &addExpr) {
 
 bool validateEquation(const CompExpression &expr) {
   ArgumentsPtrVector vars = expr.getVariables();
+
   // TODO: remove for equation systems
   if (vars.size() != 1) {
     return false;
   }
 
   ArgumentPtr lhsVal = expr.getChildren().front();
+
   if (const auto lhsExpr = cast<IExpression>(lhsVal)) {
     shared_ptr<const IExpression> lhsExprNonNeg;
     if (is<Neg>(lhsExpr->getFunction())) {
@@ -300,7 +288,7 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
 }
 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
-  return {makeFunctionExpression(Neg(), {makeFunctionExpression(Div(), {coeffAtPow[0], coeffAtPow[1]})})};
+  return {makeFunctionExpression(Neg(), {makeRawFunctionExpression(Div(), {coeffAtPow[0], coeffAtPow[1]})})};
 }
 
 }
