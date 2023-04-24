@@ -66,16 +66,15 @@ ArgumentsPtrVector IExpression::getVariables() const {
   return vars;
 }
 
-shared_ptr<const IExpression> IExpression::setValuesOfVariables(const ArgumentsPtrVector &vars,
-                                                                const ArgumentsPtrVector &vals) const {
-  auto valExpr = cast<IExpression>(clone());
-  auto children = valExpr->getChildren();
+void IExpression::setValuesOfVariablesRec(const ArgumentsPtrVector &vars, const ArgumentsPtrVector &vals) {
+  auto children = getChildren();
 
   ArgumentsPtrVector newChildren;
 
   for (auto &child : children) {
-    if (const auto exprChild = cast<IExpression>(child)) {
-      newChildren.emplace_back(exprChild->setValuesOfVariables(vars, vals));
+    if (shared_ptr<IExpression> exprChild = cast<IExpression>(child->clone())) {
+      exprChild->setValuesOfVariablesRec(vars, vals);
+      newChildren.emplace_back(exprChild);
       continue;
     }
 
@@ -94,8 +93,14 @@ shared_ptr<const IExpression> IExpression::setValuesOfVariables(const ArgumentsP
     }
   }
 
-  valExpr->setChildren(newChildren);
-  return valExpr;
+  setChildren(newChildren);
+}
+
+ArgumentPtr IExpression::setValuesOfVariables(const ArgumentsPtrVector &vars, const ArgumentsPtrVector &vals) const {
+  shared_ptr<IExpression> copyExpr = cast<IExpression>(clone());
+  copyExpr->setValuesOfVariablesRec(vars, vals);
+
+  return copyExpr->toMinimalObject();
 }
 
 unique_ptr<IMathObject> IExpression::toMinimalObject() const {

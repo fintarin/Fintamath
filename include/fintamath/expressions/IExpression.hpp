@@ -23,8 +23,7 @@ public:
 
   ArgumentsPtrVector getVariables() const;
 
-  shared_ptr<const IExpression> setValuesOfVariables(const ArgumentsPtrVector &vars,
-                                                     const ArgumentsPtrVector &vals) const;
+  ArgumentPtr setValuesOfVariables(const ArgumentsPtrVector &vars, const ArgumentsPtrVector &vals) const;
 
   unique_ptr<IMathObject> toMinimalObject() const final;
 
@@ -38,6 +37,8 @@ public:
   }
 
 protected:
+  void setValuesOfVariablesRec(const ArgumentsPtrVector &vars, const ArgumentsPtrVector &vals);
+
   static void compressChild(ArgumentPtr &child);
 
   static void simplifyChild(ArgumentPtr &child);
