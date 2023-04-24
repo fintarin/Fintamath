@@ -14,26 +14,120 @@
 namespace fintamath {
 
 shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v);
+
 shared_ptr<const INumber> getPowOfMulElement(const shared_ptr<const IExpression> &elem,
                                              const shared_ptr<const Variable> &v);
+
+ArgumentPtr getCoefficientOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v);
+
+ArgumentsPtrVector getCoefficientsAtPows(const ArgumentPtr &rhs, const shared_ptr<const Variable> &v);
+
+bool validatePowExpr(const shared_ptr<const IExpression> &powExpr);
+
+bool validateMulExpr(const shared_ptr<const IExpression> &mulExpr);
+
+bool validateAddExpr(const shared_ptr<const IExpression> &addExpr);
+
+bool validateEquation(const CompExpression &expr);
+
+ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector &coeffAtPow);
+
+ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow);
+
+ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow);
+
+Expression solve(const Expression &rhs) {
+  if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
+    // TODO: remove this if when inequalities will be implemented
+    if (!is<Eqv>(compExpr->getFunction())) {
+      if (!validateEquation(*compExpr)) {
+        return rhs;
+      }
+
+      ArgumentsPtrVector variables = compExpr->getVariables();
+
+      shared_ptr<const Variable> var = cast<Variable>(variables.front());
+
+      ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
+
+      if (coeffAtPow.size() == 2) {
+        compExpr->markAsSolution();
+        return *compExpr;
+      }
+    }
+    if (is<Eqv>(compExpr->getFunction())) {
+      if (!validateEquation(*compExpr)) {
+        return rhs;
+      }
+
+      ArgumentsPtrVector variables = compExpr->getVariables();
+
+      shared_ptr<const Variable> var = cast<Variable>(variables.front());
+
+      ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
+
+      ArgumentsPtrVector roots;
+
+      switch (coeffAtPow.size()) {
+      case 2:
+        roots = solveLinearEquation(coeffAtPow);
+        break;
+      case 3:
+        roots = solveQuadraticEquation(coeffAtPow);
+        break;
+      case 4:
+        roots = solveCubicEquation(coeffAtPow);
+        break;
+      default:
+        roots = {};
+      }
+
+      if (roots.empty()) {
+        return *compExpr;
+      }
+
+      ArgumentsPtrVector answer;
+
+      for (auto &root : roots) {
+        auto rootAnswer = make_shared<CompExpression>(Eqv(), var->clone(), root);
+        rootAnswer->markAsSolution();
+        answer.emplace_back(rootAnswer);
+      }
+
+      if (answer.size() == 1) {
+        return Expression(answer.front());
+      }
+
+      return Expression(makeFunctionExpression(Or(), answer));
+    }
+
+    return *compExpr;
+  }
+
+  return rhs;
+}
 
 shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v) {
   if (const auto &var = cast<Variable>(elem); var && *var == *v) {
     return cast<INumber>(ONE.clone());
   }
+
   if (const auto &expr = cast<IExpression>(elem)) {
     if (is<Neg>(expr->getFunction())) {
       return getPowOfElement(expr->getChildren().front(), v);
     }
+
     if (is<Mul>(expr->getFunction())) {
       return getPowOfMulElement(expr, v);
     }
+
     if (is<Pow>(expr->getFunction())) {
       if (const auto &var = cast<Variable>(expr->getChildren().front()); var && *var == *v) {
         return cast<INumber>(expr->getChildren()[1]);
       }
     }
   }
+
   return cast<INumber>(ZERO.clone());
 }
 
@@ -211,77 +305,6 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
   return {makeFunctionExpression(Neg(), {makeFunctionExpression(Div(), {coeffAtPow[0], coeffAtPow[1]})})};
-}
-
-Expression solve(const Expression &rhs) {
-  if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
-    // TODO: remove this if when inequalities will be implemented
-    if (!is<Eqv>(compExpr->getFunction())) {
-      if (!validateEquation(*compExpr)) {
-        return rhs;
-      }
-
-      ArgumentsPtrVector variables = compExpr->getVariables();
-
-      shared_ptr<const Variable> var = cast<Variable>(variables.front());
-
-      ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
-
-      if (coeffAtPow.size() == 2) {
-        compExpr->markAsSolution();
-        return *compExpr;
-      }
-    }
-    if (is<Eqv>(compExpr->getFunction())) {
-      if (!validateEquation(*compExpr)) {
-        return rhs;
-      }
-
-      ArgumentsPtrVector variables = compExpr->getVariables();
-
-      shared_ptr<const Variable> var = cast<Variable>(variables.front());
-
-      ArgumentsPtrVector coeffAtPow = getCoefficientsAtPows(compExpr->getChildren()[0], var);
-
-      ArgumentsPtrVector roots;
-
-      switch (coeffAtPow.size()) {
-      case 2:
-        roots = solveLinearEquation(coeffAtPow);
-        break;
-      case 3:
-        roots = solveQuadraticEquation(coeffAtPow);
-        break;
-      case 4:
-        roots = solveCubicEquation(coeffAtPow);
-        break;
-      default:
-        roots = {};
-      }
-
-      if (roots.empty()) {
-        return *compExpr;
-      }
-
-      ArgumentsPtrVector answer;
-
-      for (auto &root : roots) {
-        auto rootAnswer = make_shared<CompExpression>(Eqv(), var->clone(), root);
-        rootAnswer->markAsSolution();
-        answer.emplace_back(rootAnswer);
-      }
-
-      if (answer.size() == 1) {
-        return Expression(answer.front());
-      }
-
-      return Expression(makeFunctionExpression(Or(), answer));
-    }
-
-    return *compExpr;
-  }
-
-  return rhs;
 }
 
 }
