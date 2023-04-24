@@ -13,9 +13,9 @@ public:
 protected:
   FunctionsVector getSimplifyFunctions() const override;
 
-private:
   string childToString(const ArgumentPtr &inChild, bool isFirst = false) const override;
 
+private:
   static ArgumentPtr simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyNegations(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
