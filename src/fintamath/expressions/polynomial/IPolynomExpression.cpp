@@ -25,15 +25,7 @@ string IPolynomExpression::toString() const {
     result += childToString(children[i]);
   }
 
-  if (result.empty()) {
-    return binaryOperatorToString(cast<IOperator>(*func), children);
-  }
-
   return result;
-}
-
-string IPolynomExpression::childToString(const ArgumentPtr & /*inChild*/, bool /*isFirst*/) const {
-  return {};
 }
 
 ArgumentPtr IPolynomExpression::simplify() const {

@@ -16,6 +16,8 @@ protected:
 
   ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
 
+  string childToString(const ArgumentPtr &inChild, bool isFirst = false) const override;
+
   bool isComparableOrderInversed() const override;
 };
 
