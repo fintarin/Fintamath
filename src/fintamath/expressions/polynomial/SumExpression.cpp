@@ -184,7 +184,7 @@ ArgumentPtr SumExpression::sumRates(const ArgumentPtr &lhsChild, const ArgumentP
   ArgumentPtr lhsChildValue = lhsRateValuePair.second;
   ArgumentPtr rhsChildValue = rhsRateValuePair.second;
 
-  if (lhsChildValue->toString() == rhsChildValue->toString()) {
+  if (*lhsChildValue == *rhsChildValue) {
     return addRatesToValue({lhsChildRate, rhsChildRate}, lhsChildValue);
   }
 

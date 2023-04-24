@@ -72,6 +72,17 @@ public:
     ArgumentsPtrVector lhsChildren = getChildren();
     ArgumentsPtrVector rhsChildren = rhs.getChildren();
 
+    ArgumentPtr lhsFunction = getFunction();
+    ArgumentPtr rhsFunction = rhs.getFunction();
+
+    if (lhsFunction && !rhsFunction || !lhsFunction && rhsFunction) {
+      return false;
+    }
+
+    if (lhsFunction && rhsFunction && lhsFunction->toString() != rhsFunction->toString()) {
+      return false;
+    }
+
     if (lhsChildren.size() != rhsChildren.size()) {
       return false;
     }
