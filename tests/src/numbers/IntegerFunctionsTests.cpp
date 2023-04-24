@@ -43,3 +43,11 @@ TEST(IntegerFunctionsTests, factorialTest) {
 
   EXPECT_THROW(factorial(Integer(-1)), UndefinedUnaryOpearatorException);
 }
+
+TEST(IntegerFunctionsTests, combinationsTest) {
+  // TODO: add tests
+}
+
+TEST(IntegerFunctionsTests, splitTest) {
+  // TODO: add tests
+}
