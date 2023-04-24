@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
+#include "fintamath/exceptions/InvalidInputUnaryOperatorException.hpp"
 
 #include "fintamath/functions/IOperator.hpp"
 
@@ -14,11 +14,11 @@ public:
   }
 
   void throwExceptionPrefix() const {
-    throw InvalidInputUnaryOpearatorException("!", "-10", InvalidInputUnaryOpearatorException::Type::Prefix);
+    throw InvalidInputUnaryOperatorException("!", "-10", InvalidInputUnaryOperatorException::Type::Prefix);
   }
 
   void throwExceptionPostfix() const {
-    throw InvalidInputUnaryOpearatorException("!", "-10", InvalidInputUnaryOpearatorException::Type::Postfix);
+    throw InvalidInputUnaryOperatorException("!", "-10", InvalidInputUnaryOperatorException::Type::Postfix);
   }
 
 protected:

@@ -1,6 +1,6 @@
 #include "fintamath/functions/other/Index.hpp"
 
-#include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
+#include "fintamath/exceptions/InvalidInputUnaryOperatorException.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {

@@ -2,7 +2,7 @@
 
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
@@ -222,7 +222,7 @@ private:
     if (unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
       return cast<IIntegral>(f2(cast<IIntegral>(*lhsPtr), rhs)->toMinimalObject());
     }
-    throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
+    throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
   }
 };
 

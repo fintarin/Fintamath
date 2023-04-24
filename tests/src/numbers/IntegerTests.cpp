@@ -3,7 +3,7 @@
 #include "fintamath/numbers/Integer.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 using namespace fintamath;
@@ -445,7 +445,7 @@ TEST(IntegerTests, divideAssignmentOperatorTest) {
                     "89266820855771268403147576567095701074005469808857005026436237359557162582162903447744543426516804"
                     "1405756975664327860057312868835959178663661834688407715795207372052181069795781487373087361"));
 
-  EXPECT_THROW(Integer(-25) /= Integer(0), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Integer(-25) /= Integer(0), UndefinedBinaryOperatorException);
 }
 
 TEST(IntegerTests, intDivideAssignmentOperatorTest) {
@@ -479,7 +479,7 @@ TEST(IntegerTests, moduloAssignmentOperatorTest) {
                     "83893847267328724673874") %= Integer("1738383928837528673287446238746237943"),
             Integer("1186817955126284001426922341829394317"));
 
-  EXPECT_THROW(Integer(-25) %= Integer(0), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Integer(-25) %= Integer(0), UndefinedBinaryOperatorException);
 }
 
 TEST(IntegerTests, intModuloAssignmentOperatorTest) {
@@ -589,8 +589,8 @@ TEST(IntegerTests, bitLeftShiftAssignmentOperatorTest) {
   EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") <<= 5,
             Integer("386924570874476799999999999999999999775479354813708569600022752"));
 
-  EXPECT_THROW(Integer(192) <<= Integer(-5), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(Integer(-192) <<= Integer(-5), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Integer(192) <<= Integer(-5), UndefinedBinaryOperatorException);
+  EXPECT_THROW(Integer(-192) <<= Integer(-5), UndefinedBinaryOperatorException);
 }
 
 TEST(IntegerTests, intBitLeftShiftAssignmentOperatorTest) {
@@ -616,8 +616,8 @@ TEST(IntegerTests, bitRightShiftAssignmentOperatorTest) {
   EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") >>= 5,
             Integer("377856026244606249999999999999999999780741557435262275000022"));
 
-  EXPECT_THROW(Integer(192) >>= Integer(-5), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(Integer(-192) >>= Integer(-5), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Integer(192) >>= Integer(-5), UndefinedBinaryOperatorException);
+  EXPECT_THROW(Integer(-192) >>= Integer(-5), UndefinedBinaryOperatorException);
 }
 
 TEST(IntegerTests, intBitRightShiftAssignmentOperatorTest) {

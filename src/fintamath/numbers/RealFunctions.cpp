@@ -1,6 +1,6 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/NumberImpls.hpp"
@@ -25,16 +25,16 @@ Real sqrt(const Real &rhs) {
 
 Real pow(const Real &lhs, const Real &rhs) {
   if (lhs.isNearZero() && rhs.isNearZero()) {
-    throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
   if (lhs < 0 && !is<Integer>(rhs.toMinimalObject())) {
-    throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
   RealImpl res = RealImpl(pow(lhs.getImpl()->v, rhs.getImpl()->v));
 
   if (res.v.backend().isinf() || res.v.backend().isnan()) {
-    throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
   return res;

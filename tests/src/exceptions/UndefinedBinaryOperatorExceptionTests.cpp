@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 
 #include "fintamath/functions/IOperator.hpp"
 
@@ -14,7 +14,7 @@ public:
   }
 
   void throwException() const {
-    throw InvalidInputBinaryOpearatorException("^", "a", "0");
+    throw UndefinedBinaryOperatorException("^", "0", "0");
   }
 
 protected:
@@ -25,11 +25,11 @@ protected:
 
 }
 
-TEST(InvalidInputBinaryOpearatorExceptionTests, whatTests) {
+TEST(UndefinedBinaryOpearatorExceptionTests, whatTests) {
   try {
     TestOperator().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(string(e.what()), "Invalid input: (a)^(0)");
+    EXPECT_EQ(string(e.what()), "Undefined: (0)^(0)");
   }
 }

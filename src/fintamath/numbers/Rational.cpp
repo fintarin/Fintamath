@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 
 namespace fintamath {
 
@@ -186,7 +186,7 @@ void Rational::fixNegative() {
 
 void Rational::toIrreducibleRational() {
   if (denominator == 0) {
-    throw UndefinedBinaryOpearatorException("/", numerator.toString(), denominator.toString());
+    throw UndefinedBinaryOperatorException("/", numerator.toString(), denominator.toString());
   }
   fixNegative();
   Integer gcdVal = gcd(numerator, denominator);

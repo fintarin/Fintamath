@@ -2,11 +2,11 @@
 
 #include <utility>
 
-#include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
 
-class UndefinedUnaryOpearatorException : public UndefinedException {
+class InvalidInputUnaryOperatorException : public InvalidInputException {
 public:
   enum class Type {
     Prefix,
@@ -14,9 +14,9 @@ public:
   };
 
 public:
-  ~UndefinedUnaryOpearatorException() override = default;
+  ~InvalidInputUnaryOperatorException() override = default;
 
-  UndefinedUnaryOpearatorException(const string &oper, const string &rhs, Type type) {
+  InvalidInputUnaryOperatorException(const string &oper, const string &rhs, Type type) {
     switch (type) {
     case Type::Prefix:
       content += ": " + oper + "(" + rhs + ")";

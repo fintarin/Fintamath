@@ -1,6 +1,6 @@
 #include "fintamath/expressions/binary/DivExpression.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -67,8 +67,8 @@ ArgumentPtr DivExpression::postSimplify() const {
   if (rhsInt) {
     if (*rhsInt == ZERO) {
       // TODO: return infinity or undefined
-      throw UndefinedBinaryOpearatorException(DIV.toString(), simplExpr->lhsChild->toString(),
-                                              simplExpr->rhsChild->toString());
+      throw UndefinedBinaryOperatorException(DIV.toString(), simplExpr->lhsChild->toString(),
+                                             simplExpr->rhsChild->toString());
     }
 
     if (*rhsInt == ONE) {

@@ -115,7 +115,7 @@ struct ExpressionConfig {
       const Index func;
 
       if (!func.doArgsMatch({*lhs, *rhs})) {
-        throw InvalidInputBinaryOpearatorException(func.toString(), lhs->toString(), rhs->toString());
+        throw InvalidInputBinaryOperatorException(func.toString(), lhs->toString(), rhs->toString());
       }
 
       ArgumentPtr res = func(*args.front(), *args.back());

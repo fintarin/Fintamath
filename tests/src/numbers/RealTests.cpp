@@ -3,7 +3,7 @@
 #include "fintamath/numbers/Real.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 
 using namespace fintamath;
 

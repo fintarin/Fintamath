@@ -2,7 +2,7 @@
 
 #include "fintamath/functions/calculus/Derivative.hpp"
 
-#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"

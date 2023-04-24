@@ -1,6 +1,6 @@
 #include "fintamath/expressions/unary/DerivativeExpression.hpp"
 
-#include "fintamath/exceptions/InvalidInputUnaryOpearatorException.hpp"
+#include "fintamath/exceptions/InvalidInputUnaryOperatorException.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"

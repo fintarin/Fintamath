@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/NumberImpls.hpp"
 
@@ -110,7 +110,7 @@ Integer &Integer::multiply(const Integer &rhs) {
 
 Integer &Integer::divide(const Integer &rhs) {
   if (rhs == 0) {
-    throw UndefinedBinaryOpearatorException("/", toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
   }
 
   impl->v /= rhs.impl->v;
@@ -119,7 +119,7 @@ Integer &Integer::divide(const Integer &rhs) {
 
 Integer &Integer::mod(const Integer &rhs) {
   if (rhs == 0) {
-    throw UndefinedBinaryOpearatorException("mod", toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException("mod", toString(), rhs.toString());
   }
 
   impl->v %= rhs.impl->v;
@@ -147,7 +147,7 @@ Integer &Integer::bitLeftShift(const Integer &rhs) {
     return *this;
   }
   catch (...) {
-    throw UndefinedBinaryOpearatorException("<<", toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException("<<", toString(), rhs.toString());
   }
 }
 
@@ -157,7 +157,7 @@ Integer &Integer::bitRightShift(const Integer &rhs) {
     return *this;
   }
   catch (...) {
-    throw UndefinedBinaryOpearatorException(">>", toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException(">>", toString(), rhs.toString());
   }
 }
 

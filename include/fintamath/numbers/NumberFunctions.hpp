@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -40,7 +40,7 @@ unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
 unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
   if (lhs == ZERO && rhs == ZERO) {
-    throw UndefinedBinaryOpearatorException("^", lhs.toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
   if (rhs < ZERO) {
