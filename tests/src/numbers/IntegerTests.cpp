@@ -808,3 +808,11 @@ TEST(IntegerTests, signTests) {
   EXPECT_EQ(Integer(1).sign(), 1);
   EXPECT_EQ(Integer(2).sign(), 1);
 }
+
+TEST(IntegerTests, intOperatorTests) {
+  EXPECT_EQ(int64_t(Integer(-2)), -2);
+  EXPECT_EQ(int64_t(Integer(10)), 10);
+  EXPECT_EQ(int64_t(Integer(0)), 0);
+  EXPECT_EQ(int64_t(Integer("100000000000000000000000000000000000000000000000000")), 9223372036854775807);
+  EXPECT_EQ(int64_t(Integer("-100000000000000000000000000000000000000000000000000")) + 1, -9223372036854775807);
+}
