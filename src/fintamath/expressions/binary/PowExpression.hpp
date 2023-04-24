@@ -27,7 +27,7 @@ private:
   // start set of methods for Multinomial theorem
   // https://en.wikipedia.org/wiki/Multinomial_theorem
   // https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)
-  static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, Integer pow);
+  static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, Integer powValue);
 
   static Integer generateNextNumber(Integer n);
 

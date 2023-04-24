@@ -83,7 +83,7 @@ vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &v
   return result;
 }
 
-ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer pow) {
+ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer powValue) {
   auto sumExpr = cast<IExpression>(expr);
   ArgumentsPtrVector polynom;
 
@@ -97,21 +97,21 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
   ArgumentsPtrVector newPolynom;
   Integer variableCount = int64_t(polynom.size());
 
-  bool invert = false;
+  bool isResultInverted = false;
 
-  if (pow < ZERO) {
-    pow = abs(pow);
-    invert = true;
+  if (powValue < ZERO) {
+    powValue = abs(powValue);
+    isResultInverted = true;
   }
 
-  Integer bitNumber = generateFirstNum(pow);
+  Integer bitNumber = generateFirstNum(powValue);
 
-  for (int i = 0; i < combinations(pow + variableCount - 1, pow); i++) {
+  for (int i = 0; i < combinations(powValue + variableCount - 1, powValue); i++) {
     vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentsPtrVector mulExprPolynom;
-    mulExprPolynom.emplace_back(make_shared<Integer>(split(pow, vectOfPows)));
+    mulExprPolynom.emplace_back(make_shared<Integer>(split(powValue, vectOfPows)));
 
     for (size_t j = 0; j < variableCount; j++) {
       auto powExpr = makeRawFunctionExpression(Pow(), {polynom[j], make_shared<Integer>(move(vectOfPows[j]))});
@@ -124,7 +124,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
 
   ArgumentPtr newSumExpr = makeRawFunctionExpression(Add(), newPolynom);
 
-  if (invert) {
+  if (isResultInverted) {
     return makeRawFunctionExpression(Inv(), {newSumExpr})->toMinimalObject();
   }
 
