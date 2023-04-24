@@ -18,7 +18,7 @@ public:
   string toString() const override;
 
 protected:
-  FunctionsVector getSimplifyFunctions() const override;
+  FunctionsVector getFunctionsForSimplify() const override;
 
   bool isTermsOrderInversed() const override;
 

@@ -70,7 +70,7 @@ ArgumentPtr SumExpression::negate() const {
   return neg.simplify();
 }
 
-SumExpression::FunctionsVector SumExpression::getSimplifyFunctions() const {
+SumExpression::FunctionsVector SumExpression::getFunctionsForSimplify() const {
   return {
       &SumExpression::simplifyNumbers,   //
       &SumExpression::simplifyNegations, //

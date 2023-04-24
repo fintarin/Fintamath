@@ -26,7 +26,7 @@ protected:
 
   ArgumentPtr simplify() const final;
 
-  virtual FunctionsVector getSimplifyFunctions() const;
+  virtual FunctionsVector getFunctionsForSimplify() const;
 
   virtual string childToString(const ArgumentPtr &inChild, bool isFirst = false) const;
 
