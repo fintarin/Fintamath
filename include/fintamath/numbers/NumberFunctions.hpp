@@ -35,6 +35,8 @@ unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
   return cast<INumber>(pow(convert<Real>(*lhsSimpl), convert<Real>(*rhsSimpl)).toMinimalObject());
 }
 
+// Use exponentiation by squaring with constant auxiliary memory (iterative version)
+// https://en.wikipedia.org/wiki/Exponentiation_by_squaring
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
 unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
   if (lhs == ZERO && rhs == ZERO) {
