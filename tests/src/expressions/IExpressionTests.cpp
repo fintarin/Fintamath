@@ -2,8 +2,6 @@
 
 #include "fintamath/expressions/IExpression.hpp"
 
-#include <fstream>
-
 using namespace fintamath;
 
 TEST(IExpressionTests, getFunctionTest) {
@@ -11,6 +9,14 @@ TEST(IExpressionTests, getFunctionTest) {
 }
 
 TEST(IExpressionTests, getChildrenTest) {
+  // TODO: implement
+}
+
+TEST(IExpressionTests, setChildrenTest) {
+  // TODO: implement
+}
+
+TEST(IExpressionTests, setConstantsTest) {
   // TODO: implement
 }
 
@@ -23,5 +29,9 @@ TEST(IExpressionTests, getVariablesTest) {
 }
 
 TEST(IExpressionTests, setValuesOfVariablesTest) {
+  // TODO: implement
+}
+
+TEST(IExpressionTests, toMinimalTest) {
   // TODO: implement
 }

@@ -139,10 +139,11 @@ string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lh
 
 bool hasVariable(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var) {
   for (const auto &child : expr->getChildren()) {
-    if (const auto &childExpr = cast<IExpression>(child); childExpr && hasVariable(childExpr, var)) {
+    if (const auto childExpr = cast<IExpression>(child); childExpr && hasVariable(childExpr, var)) {
       return true;
     }
-    if (const auto &childVar = cast<Variable>(child); childVar && *childVar == *var) {
+
+    if (const auto childVar = cast<Variable>(child); childVar && *childVar == *var) {
       return true;
     }
   }

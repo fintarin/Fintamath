@@ -181,7 +181,7 @@ bool IPolynomExpression::isComparableOrderInversed() const {
   return false;
 }
 
-int IPolynomExpression::comparatorOverride(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+int IPolynomExpression::comparatorOverride(const ArgumentPtr & /*lhs*/, const ArgumentPtr & /*rhs*/) const {
   return 0;
 }
 
@@ -491,35 +491,33 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpress
     auto lhsFunc = lhsExpr->getFunction();
     auto rhsFunc = rhsExpr->getFunction();
 
-    {
-      ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
-      ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
+    ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
+    ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
 
-      ArgumentPtr lhsChild = nullptr;
-      ArgumentPtr rhsChild = nullptr;
+    ArgumentPtr lhsChild = nullptr;
+    ArgumentPtr rhsChild = nullptr;
 
-      if (lhsChildren.size() == 1) {
-        lhsChild = lhsChildren.front();
+    if (lhsChildren.size() == 1) {
+      lhsChild = lhsChildren.front();
+    }
+    if (rhsChildren.size() == 1) {
+      rhsChild = rhsChildren.front();
+    }
+
+    if (lhsChild || rhsChild) {
+      if (!lhsChild) {
+        lhsChild = lhsExpr;
       }
-      if (rhsChildren.size() == 1) {
-        rhsChild = rhsChildren.front();
+      else if (!rhsChild) {
+        rhsChild = rhsExpr;
       }
 
-      if (lhsChild || rhsChild) {
-        if (!lhsChild) {
-          lhsChild = lhsExpr;
-        }
-        else if (!rhsChild) {
-          rhsChild = rhsExpr;
-        }
-
-        if (int res = comparator(lhsChild, rhsChild); res != 0) {
-          return res;
-        }
+      if (int res = comparator(lhsChild, rhsChild); res != 0) {
+        return res;
       }
-      else if (*lhsFunc == *rhsFunc) {
-        return comparatorChildren(lhsChildren, rhsChildren);
-      }
+    }
+    else if (*lhsFunc == *rhsFunc) {
+      return comparatorChildren(lhsChildren, rhsChildren);
     }
 
     if (auto lhsOper = cast<IOperator>(lhsFunc)) {

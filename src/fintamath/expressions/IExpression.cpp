@@ -74,7 +74,7 @@ shared_ptr<const IExpression> IExpression::setValuesOfVariables(const ArgumentsP
   ArgumentsPtrVector newChildren;
 
   for (auto &child : children) {
-    if (const auto &exprChild = cast<IExpression>(child)) {
+    if (const auto exprChild = cast<IExpression>(child)) {
       newChildren.emplace_back(exprChild->setValuesOfVariables(vars, vals));
       continue;
     }
@@ -82,7 +82,7 @@ shared_ptr<const IExpression> IExpression::setValuesOfVariables(const ArgumentsP
     bool isAdded = false;
 
     for (size_t i = 0; i < vars.size(); i++) {
-      if (const auto &varChild = cast<Variable>(child); varChild && *varChild == *cast<Variable>(vars[i])) {
+      if (const auto varChild = cast<Variable>(child); varChild && *varChild == *cast<Variable>(vars[i])) {
         newChildren.push_back(vals[i]->clone());
         isAdded = true;
         break;
@@ -181,11 +181,11 @@ ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrV
 }
 
 ArgumentPtr IExpression::postSimplify() const {
-  return nullptr;
+  return {};
 }
 
 ArgumentPtr IExpression::preSimplify() const {
-  return nullptr;
+  return {};
 }
 
 void IExpression::simplifyConstant(ArgumentPtr &child) {
