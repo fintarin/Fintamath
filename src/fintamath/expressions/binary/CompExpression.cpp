@@ -156,7 +156,7 @@ void CompExpression::convertToSolution() {
       if (const auto lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && hasVariable(lhsChildExpr, var)) {
         lhsPolynom.emplace_back(lhsChild);
       }
-      else if (const auto &lhsChildVar = cast<Variable>(lhsChild); lhsChildVar && *lhsChildVar == *var) {
+      else if (const auto lhsChildVar = cast<Variable>(lhsChild); lhsChildVar && *lhsChildVar == *var) {
         lhsPolynom.emplace_back(lhsChild);
       }
       else {

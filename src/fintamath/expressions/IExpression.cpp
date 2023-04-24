@@ -66,14 +66,14 @@ ArgumentsPtrVector IExpression::getVariables() const {
   return vars;
 }
 
-void IExpression::setValuesOfVariablesRec(const ArgumentsPtrVector &vars, const ArgumentsPtrVector &vals) {
+void IExpression::setValuesOfVariables(const vector<Variable> &vars, const ArgumentsPtrVector &vals) {
   auto children = getChildren();
 
   ArgumentsPtrVector newChildren;
 
   for (auto &child : children) {
     if (shared_ptr<IExpression> exprChild = cast<IExpression>(child->clone())) {
-      exprChild->setValuesOfVariablesRec(vars, vals);
+      exprChild->setValuesOfVariables(vars, vals);
       newChildren.emplace_back(exprChild);
       continue;
     }
@@ -81,7 +81,7 @@ void IExpression::setValuesOfVariablesRec(const ArgumentsPtrVector &vars, const 
     bool isAdded = false;
 
     for (size_t i = 0; i < vars.size(); i++) {
-      if (const auto varChild = cast<Variable>(child); varChild && *varChild == *cast<Variable>(vars[i])) {
+      if (const auto varChild = cast<Variable>(child); varChild && *varChild == vars[i]) {
         newChildren.push_back(vals[i]->clone());
         isAdded = true;
         break;
@@ -94,13 +94,6 @@ void IExpression::setValuesOfVariablesRec(const ArgumentsPtrVector &vars, const 
   }
 
   setChildren(newChildren);
-}
-
-ArgumentPtr IExpression::setValuesOfVariables(const ArgumentsPtrVector &vars, const ArgumentsPtrVector &vals) const {
-  shared_ptr<IExpression> copyExpr = cast<IExpression>(clone());
-  copyExpr->setValuesOfVariablesRec(vars, vals);
-
-  return copyExpr->toMinimalObject();
 }
 
 unique_ptr<IMathObject> IExpression::toMinimalObject() const {
@@ -191,7 +184,7 @@ void IExpression::simplifyConstant(ArgumentPtr &child) {
   if (const auto constChild = cast<IConstant>(child)) {
     ArgumentPtr constVal = (*constChild)();
 
-    if (const auto *num = cast<INumber>(constVal.get()); num && !num->isPrecise()) {
+    if (const auto num = cast<INumber>(constVal); num && !num->isPrecise()) {
       child = constChild;
     }
     else {
