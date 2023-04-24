@@ -38,7 +38,7 @@ ArgumentPtr PowExpression::sumSimplify() const {
   auto powExpr = cast<PowExpression>(clone());
 
   if (const auto rhs = cast<Integer>(powExpr->rhsChild)) {
-    if (const auto &sumExpr = sumPolynomSimplify(powExpr->lhsChild, *rhs)) {
+    if (auto sumExpr = sumPolynomSimplify(powExpr->lhsChild, *rhs)) {
       return sumExpr;
     }
   }
@@ -114,21 +114,21 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
     mulExprPolynom.emplace_back(make_shared<Integer>(split(pow, vectOfPows)));
 
     for (size_t j = 0; j < variableCount; j++) {
-      auto powExpr = makeFunctionExpression(Pow(), {polynom[j], make_shared<Integer>(move(vectOfPows[j]))});
+      auto powExpr = makeRawFunctionExpression(Pow(), {polynom[j], make_shared<Integer>(move(vectOfPows[j]))});
       mulExprPolynom.emplace_back(powExpr);
     }
 
-    ArgumentPtr mulExpr = makeFunctionExpression(Mul(), mulExprPolynom);
+    ArgumentPtr mulExpr = makeRawFunctionExpression(Mul(), mulExprPolynom);
     newPolynom.emplace_back(mulExpr);
   }
 
-  ArgumentPtr newSumExpr = makeFunctionExpression(Add(), newPolynom);
+  ArgumentPtr newSumExpr = makeRawFunctionExpression(Add(), newPolynom);
 
   if (invert) {
-    return makeFunctionExpression(Inv(), {newSumExpr});
+    return makeRawFunctionExpression(Inv(), {newSumExpr})->toMinimalObject();
   }
 
-  return newSumExpr;
+  return newSumExpr->toMinimalObject();
 }
 
 ArgumentPtr PowExpression::polynomSimplify() const {

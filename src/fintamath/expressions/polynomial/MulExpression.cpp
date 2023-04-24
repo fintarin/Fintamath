@@ -188,7 +188,7 @@ ArgumentPtr MulExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const Ar
 
   if (lhsNum && rhsNum) {
     if (isLhsInverted && isRhsInverted) {
-      return makeFunctionExpression(Inv(), {Mul()(*lhsNum, *rhsNum)});
+      return Inv()(*Mul()(*lhsNum, *rhsNum));
     }
 
     if (isLhsInverted) {
