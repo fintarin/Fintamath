@@ -121,14 +121,6 @@ ArgumentPtr CompExpression::postSimplify() const {
   return simpl;
 }
 
-void CompExpression::copyProperties(const CompExpression &rhs) {
-  isSolution = rhs.isSolution;
-
-  if (isSolution) {
-    convertToSolution();
-  }
-}
-
 void CompExpression::markAsSolution() {
   isSolution = true;
   convertToSolution();

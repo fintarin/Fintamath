@@ -47,8 +47,6 @@ protected:
 
   static void postSimplifyChild(ArgumentPtr &child);
 
-  static void copyPropertiesToChild(ArgumentPtr &lhs, const ArgumentPtr &rhs);
-
   static ArgumentPtr callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs);
 
   virtual ArgumentPtr postSimplify() const;
@@ -56,8 +54,6 @@ protected:
   virtual ArgumentPtr preSimplify() const;
 
   virtual ArgumentPtr simplify() const = 0;
-
-  virtual ArgumentPtr copyPropertiesAbstract(const ArgumentPtr &rhs) const = 0;
 
 private:
   static void simplifyConstant(ArgumentPtr &child);
@@ -95,20 +91,6 @@ public:
     }
 
     return true;
-  }
-
-protected:
-  ArgumentPtr copyPropertiesAbstract(const ArgumentPtr &rhs) const final {
-    if (const auto rhsDerived = cast<Derived>(rhs)) {
-      auto res = cast<IExpressionCRTP<Derived>>(clone());
-      res->copyProperties(*rhsDerived);
-      return res;
-    }
-
-    return clone();
-  }
-
-  virtual void copyProperties(const Derived & /*rhs*/) {
   }
 };
 

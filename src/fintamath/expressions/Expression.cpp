@@ -100,18 +100,13 @@ ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpres
     newChildren.emplace_back(preciseRec(child, precision, shouldSimplify));
   }
 
-  ArgumentPtr res;
+  std::shared_ptr<IExpression> res = cast<IExpression>(expr->clone());
+  res->setChildren(newChildren);
 
   if (shouldSimplify) {
-    res = makeFunctionExpression(*expr->getFunction(), newChildren);
-    res = preciseRec(res, precision, false);
-  }
-  else {
-    res = makeRawFunctionExpression(*expr->getFunction(), newChildren);
-  }
-
-  if (is<IExpression>(res)) {
-    copyPropertiesToChild(res, expr);
+    auto resSimpl = std::dynamic_pointer_cast<const IMathObject>(res);
+    simplifyChild(resSimpl);
+    return preciseRec(resSimpl, precision, false);
   }
 
   return res;

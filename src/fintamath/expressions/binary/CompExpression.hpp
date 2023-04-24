@@ -21,8 +21,6 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  void copyProperties(const CompExpression &rhs) override;
-
 private:
   static map<string, shared_ptr<IFunction>, std::less<>> oppositeFunctionsMap;
 
