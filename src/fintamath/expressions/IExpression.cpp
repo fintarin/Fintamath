@@ -152,12 +152,6 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
   simplifyConstant(child);
 }
 
-void IExpression::copyPropertiesToChild(ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (auto lhsExpr = cast<IExpression>(lhs)) {
-    lhs = lhsExpr->copyPropertiesAbstract(rhs);
-  }
-}
-
 ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs) {
   ArgumentsRefVector args;
   bool areArgumentsPrecise = true;
