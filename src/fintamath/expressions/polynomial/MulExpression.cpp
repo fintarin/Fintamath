@@ -315,7 +315,7 @@ ArgumentPtr MulExpression::simplifyNegations(const ArgumentPtr &lhsChild, const 
   return {};
 }
 
-MulExpression::FunctionsVector MulExpression::getSimplifyFunctions() const {
+MulExpression::FunctionsVector MulExpression::getFunctionsForSimplify() const {
   return {
       &MulExpression::simplifyNegations, //
       &MulExpression::simplifyDivisions, //

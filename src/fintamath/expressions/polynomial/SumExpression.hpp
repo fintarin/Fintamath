@@ -11,7 +11,7 @@ public:
   ArgumentPtr negate() const override;
 
 protected:
-  FunctionsVector getSimplifyFunctions() const override;
+  FunctionsVector getFunctionsForSimplify() const override;
 
   string childToString(const ArgumentPtr &inChild, bool isFirst = false) const override;
 

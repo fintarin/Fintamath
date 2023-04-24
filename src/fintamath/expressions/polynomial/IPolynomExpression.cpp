@@ -95,13 +95,13 @@ void IPolynomExpression::postSimplifyRec() {
   }
 }
 
-IPolynomExpression::FunctionsVector IPolynomExpression::getSimplifyFunctions() const {
+IPolynomExpression::FunctionsVector IPolynomExpression::getFunctionsForSimplify() const {
   return {};
 }
 
 void IPolynomExpression::globalSimplifyRec() {
   size_t childrenSize = children.size();
-  FunctionsVector functions = getSimplifyFunctions();
+  FunctionsVector functions = getFunctionsForSimplify();
 
   for (const auto &function : functions) {
     for (int64_t i = 0; i < int64_t(children.size()) - 1; i++) {
