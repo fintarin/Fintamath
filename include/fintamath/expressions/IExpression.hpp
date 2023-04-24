@@ -70,9 +70,6 @@ template <typename Derived>
 class IExpressionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IExpression {
 public:
   bool equals(const Derived &rhs) const override {
-    ArgumentsPtrVector lhsChildren = getChildren();
-    ArgumentsPtrVector rhsChildren = rhs.getChildren();
-
     ArgumentPtr lhsFunction = getFunction();
     ArgumentPtr rhsFunction = rhs.getFunction();
 
@@ -83,6 +80,9 @@ public:
     if (lhsFunction && rhsFunction && lhsFunction->toString() != rhsFunction->toString()) {
       return false;
     }
+
+    ArgumentsPtrVector lhsChildren = getChildren();
+    ArgumentsPtrVector rhsChildren = rhs.getChildren();
 
     if (lhsChildren.size() != rhsChildren.size()) {
       return false;
