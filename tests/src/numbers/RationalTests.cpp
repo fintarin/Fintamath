@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
@@ -42,7 +42,7 @@ TEST(RationalTests, integerIntegerConstructorTest) {
   EXPECT_EQ(Rational(2849300, 18493).toString(), "2849300/18493");
   EXPECT_EQ(Rational(2849300, -1893).toString(), "-2849300/1893");
 
-  EXPECT_THROW(Rational(23070, 0), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Rational(23070, 0), UndefinedBinaryOperatorException);
 }
 
 TEST(RationalTests, integerConstructorTest) {
@@ -153,7 +153,7 @@ TEST(RationalTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(Rational(738, 10) /= Rational(5, 2), Rational(738, 25));
   EXPECT_EQ(Rational(-738, 10) /= Rational(-5, 2), Rational(738, 25));
 
-  EXPECT_THROW(Rational(-738, -10) /= Rational("0"), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(Rational(-738, -10) /= Rational("0"), UndefinedBinaryOperatorException);
 }
 
 TEST(RationalTests, integerDivideAssignmentOperatorTest) {

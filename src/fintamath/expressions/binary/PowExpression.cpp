@@ -1,6 +1,6 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -178,8 +178,8 @@ ArgumentPtr PowExpression::postSimplify() const {
   if (rhsInt) {
     if (*rhsInt == ZERO) {
       if (lhsInt && *lhsInt == ZERO) {
-        throw UndefinedBinaryOpearatorException(POW.toString(), simplExpr->lhsChild->toString(),
-                                                simplExpr->rhsChild->toString());
+        throw UndefinedBinaryOperatorException(POW.toString(), simplExpr->lhsChild->toString(),
+                                               simplExpr->rhsChild->toString());
       }
 
       return ONE.clone();

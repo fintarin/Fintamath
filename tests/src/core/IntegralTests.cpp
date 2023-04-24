@@ -2,7 +2,7 @@
 
 #include "fintamath/core/IIntegral.hpp"
 
-#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -78,8 +78,8 @@ TEST(IntegralTests, modTest) {
   EXPECT_TRUE(is<Integer>(*m1 % *m2));
   EXPECT_TRUE(is<Integer>(*m2 % *m1));
 
-  EXPECT_THROW(*m1 % TestIntegral(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestIntegral() % *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 % TestIntegral(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestIntegral() % *m1, InvalidInputBinaryOperatorException);
 
   Integer a;
   EXPECT_EQ((a %= 3).toString(), "0");
@@ -99,8 +99,8 @@ TEST(IntegralTests, bitAndTest) {
   EXPECT_TRUE(is<Integer>(*m1 & *m2));
   EXPECT_TRUE(is<Integer>(*m2 & *m1));
 
-  EXPECT_THROW(*m1 & TestIntegral(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestIntegral() & *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 & TestIntegral(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestIntegral() & *m1, InvalidInputBinaryOperatorException);
 
   Integer a;
   EXPECT_EQ((a &= 3).toString(), "0");
@@ -120,8 +120,8 @@ TEST(IntegralTests, bitOrTest) {
   EXPECT_TRUE(is<Integer>(*m1 | *m2));
   EXPECT_TRUE(is<Integer>(*m2 | *m1));
 
-  EXPECT_THROW(*m1 | TestIntegral(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestIntegral() | *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 | TestIntegral(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestIntegral() | *m1, InvalidInputBinaryOperatorException);
 
   Integer a;
   EXPECT_EQ((a |= 3).toString(), "3");
@@ -141,8 +141,8 @@ TEST(IntegralTests, bitXorTest) {
   EXPECT_TRUE(is<Integer>(*m1 ^ *m2));
   EXPECT_TRUE(is<Integer>(*m2 ^ *m1));
 
-  EXPECT_THROW(*m1 ^ TestIntegral(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestIntegral() ^ *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 ^ TestIntegral(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestIntegral() ^ *m1, InvalidInputBinaryOperatorException);
 
   Integer a;
   EXPECT_EQ((a ^= 3).toString(), "3");
@@ -162,8 +162,8 @@ TEST(IntegralTests, bitLeftShiftTest) {
   EXPECT_TRUE(is<Integer>(*m1 << *m2));
   EXPECT_TRUE(is<Integer>(*m2 << *m1));
 
-  EXPECT_THROW(*m1 << TestIntegral(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestIntegral() << *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 << TestIntegral(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestIntegral() << *m1, InvalidInputBinaryOperatorException);
 
   Integer a;
   EXPECT_EQ((a <<= 3).toString(), "0");
@@ -183,8 +183,8 @@ TEST(IntegralTests, bitRightShiftTest) {
   EXPECT_TRUE(is<Integer>(*m1 >> *m2));
   EXPECT_TRUE(is<Integer>(*m2 >> *m1));
 
-  EXPECT_THROW(*m1 >> TestIntegral(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestIntegral() >> *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 >> TestIntegral(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestIntegral() >> *m1, InvalidInputBinaryOperatorException);
 
   Integer a;
   EXPECT_EQ((a >>= 3).toString(), "0");

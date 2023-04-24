@@ -1,6 +1,6 @@
 #include "fintamath/functions/other/Percent.hpp"
 
-#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {

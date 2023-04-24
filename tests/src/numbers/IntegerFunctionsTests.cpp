@@ -2,9 +2,9 @@
 
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
-#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 
 using namespace fintamath;
@@ -33,7 +33,7 @@ TEST(IntegerFunctionsTests, powTest) {
   EXPECT_EQ(pow(Integer(-5), 5), -3125);
   EXPECT_EQ(pow(Integer("6789"), 4), 2124336126051441);
 
-  EXPECT_THROW(pow(Integer(0), 0), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(pow(Integer(0), 0), UndefinedBinaryOperatorException);
 }
 
 TEST(IntegerFunctionsTests, factorialTest) {
@@ -41,7 +41,7 @@ TEST(IntegerFunctionsTests, factorialTest) {
   EXPECT_EQ(factorial(Integer(5)), 120);
   EXPECT_EQ(factorial(Integer("25")).toString(), "15511210043330985984000000");
 
-  EXPECT_THROW(factorial(Integer(-1)), UndefinedUnaryOpearatorException);
+  EXPECT_THROW(factorial(Integer(-1)), UndefinedUnaryOperatorException);
 }
 
 TEST(IntegerFunctionsTests, combinationsTest) {

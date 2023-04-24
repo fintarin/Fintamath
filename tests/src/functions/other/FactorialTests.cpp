@@ -2,7 +2,7 @@
 
 #include "fintamath/functions/other/Factorial.hpp"
 
-#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -29,8 +29,8 @@ TEST(FactorialTests, callTest) {
 
   EXPECT_EQ(f(Variable("a"))->toString(), "a!");
 
-  EXPECT_THROW(f(Integer(-10)), UndefinedUnaryOpearatorException);
-  EXPECT_THROW(f(Rational(1, 10)), UndefinedUnaryOpearatorException);
+  EXPECT_THROW(f(Integer(-10)), UndefinedUnaryOperatorException);
+  EXPECT_THROW(f(Rational(1, 10)), UndefinedUnaryOperatorException);
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

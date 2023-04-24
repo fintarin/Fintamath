@@ -2,7 +2,7 @@
 
 #include "fintamath/numbers/RealFunctions.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
@@ -48,9 +48,9 @@ TEST(RealFunctionsTests, powTest) {
   EXPECT_EQ(pow(Real("-20"), Real("-10000")).toString(),
             "5.012372749206452009297555933742977749321567781338425839421429042279239530950784*10^-13011");
 
-  EXPECT_THROW(pow(Real("0"), Real("0")), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(pow(Real("0"), Real("-10")), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(pow(Real("-10"), Real("-1.5")), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(pow(Real("0"), Real("0")), UndefinedBinaryOperatorException);
+  EXPECT_THROW(pow(Real("0"), Real("-10")), UndefinedBinaryOperatorException);
+  EXPECT_THROW(pow(Real("-10"), Real("-1.5")), UndefinedBinaryOperatorException);
 }
 
 TEST(RealFunctionsTests, expTest) {

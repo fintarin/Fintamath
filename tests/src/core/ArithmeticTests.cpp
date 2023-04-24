@@ -2,7 +2,7 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 
-#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -62,8 +62,8 @@ TEST(ArithmeticTests, addTest) {
   EXPECT_TRUE(is<Rational>(*m3 + *m2));
   EXPECT_TRUE(is<Integer>(*m3 + *m3));
 
-  EXPECT_THROW(*m1 + TestArithmetic(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestArithmetic() + *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 + TestArithmetic(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestArithmetic() + *m1, InvalidInputBinaryOperatorException);
 
   Integer a;
   EXPECT_EQ((a += 3).toString(), "3");
@@ -98,8 +98,8 @@ TEST(ArithmeticTests, subTest) {
   EXPECT_TRUE(is<Rational>(*m3 - *m2));
   EXPECT_TRUE(is<Integer>(*m3 - *m3));
 
-  EXPECT_THROW(*m1 - TestArithmetic(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestArithmetic() - *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 - TestArithmetic(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestArithmetic() - *m1, InvalidInputBinaryOperatorException);
 
   Integer a;
   EXPECT_EQ((a -= 3).toString(), "-3");
@@ -134,8 +134,8 @@ TEST(ArithmeticTests, mulTest) {
   EXPECT_TRUE(is<Integer>(*m3 * *m2));
   EXPECT_TRUE(is<Rational>(*m3 * *m3));
 
-  EXPECT_THROW(*m1 * TestArithmetic(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestArithmetic() * *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 * TestArithmetic(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestArithmetic() * *m1, InvalidInputBinaryOperatorException);
 
   Integer a = 2;
   EXPECT_EQ((a *= 3).toString(), "6");
@@ -170,8 +170,8 @@ TEST(ArithmeticTests, divTest) {
   EXPECT_TRUE(is<Rational>(*m3 / *m2));
   EXPECT_TRUE(is<Integer>(*m3 / *m3));
 
-  EXPECT_THROW(*m1 / TestArithmetic(), InvalidInputBinaryOpearatorException);
-  EXPECT_THROW(TestArithmetic() / *m1, InvalidInputBinaryOpearatorException);
+  EXPECT_THROW(*m1 / TestArithmetic(), InvalidInputBinaryOperatorException);
+  EXPECT_THROW(TestArithmetic() / *m1, InvalidInputBinaryOperatorException);
 
   Integer a = 4;
   EXPECT_EQ((a /= 2).toString(), "2");

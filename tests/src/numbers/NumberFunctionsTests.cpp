@@ -2,7 +2,7 @@
 
 #include "fintamath/numbers/NumberFunctions.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -90,7 +90,7 @@ TEST(NumberFunctionsTests, powTest) {
   EXPECT_EQ(pow(Rational("-1"), Real("-25"))->toString(), "-1");
   EXPECT_EQ(pow(Rational("-2.2"), Real("-5"))->toString(), "-3125/161051");
 
-  EXPECT_THROW(pow(Integer(0), Integer(0)), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(pow(Rational("0"), Rational("-10")), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(pow(Rational("-10"), Rational("-1.5")), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(pow(Integer(0), Integer(0)), UndefinedBinaryOperatorException);
+  EXPECT_THROW(pow(Rational("0"), Rational("-10")), UndefinedBinaryOperatorException);
+  EXPECT_THROW(pow(Rational("-10"), Rational("-1.5")), UndefinedBinaryOperatorException);
 }

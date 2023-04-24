@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/exceptions/InvalidInputBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
@@ -101,7 +101,7 @@ private:
     if (unique_ptr<IMathObject> lhsPtr = convert(rhs, *this); lhsPtr != nullptr) {
       return f2(cast<IComparable>(*lhsPtr), rhs);
     }
-    throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
+    throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
   }
 };
 

@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/NumberImpls.hpp"
@@ -182,7 +182,7 @@ Real &Real::multiply(const Real &rhs) {
 
 Real &Real::divide(const Real &rhs) {
   if (rhs.isNearZero()) {
-    throw UndefinedBinaryOpearatorException("/", toString(), rhs.toString());
+    throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
   }
 
   impl->v /= rhs.impl->v;

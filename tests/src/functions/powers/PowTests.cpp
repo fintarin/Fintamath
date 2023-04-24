@@ -3,7 +3,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -76,9 +76,9 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Rational("-1"), Rational("-25"))->toString(), "-1");
   EXPECT_EQ(f(Rational("-2.2"), Rational("-5"))->toString(), "-3125/161051");
 
-  EXPECT_THROW(f(Integer(0), Integer(0)), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(f(Rational("0"), Rational("-10")), UndefinedBinaryOpearatorException);
-  EXPECT_THROW(f(Rational("-10"), Rational("-1.5")), UndefinedBinaryOpearatorException);
+  EXPECT_THROW(f(Integer(0), Integer(0)), UndefinedBinaryOperatorException);
+  EXPECT_THROW(f(Rational("0"), Rational("-10")), UndefinedBinaryOperatorException);
+  EXPECT_THROW(f(Rational("-10"), Rational("-1.5")), UndefinedBinaryOperatorException);
 
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3^a");
 

@@ -1,8 +1,8 @@
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
-#include "fintamath/exceptions/UndefinedUnaryOpearatorException.hpp"
+#include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
 #include "fintamath/numbers/NumberImpls.hpp"
 
 namespace fintamath {
@@ -25,7 +25,7 @@ Integer sqrt(const Integer &rhs) {
 
 Integer pow(const Integer &lhs, uint64_t rhs) {
   if (lhs == 0 && rhs == 0) {
-    throw UndefinedBinaryOpearatorException("^", lhs.toString(), std::to_string(rhs));
+    throw UndefinedBinaryOperatorException("^", lhs.toString(), std::to_string(rhs));
   }
 
   return IntegerImpl(pow(lhs.getImpl()->v, rhs));
@@ -46,7 +46,7 @@ Integer factorialRec(const Integer &left, const Integer &right) {
 
 Integer factorial(const Integer &rhs) {
   if (rhs < 0) {
-    throw UndefinedUnaryOpearatorException("!", rhs.toString(), UndefinedUnaryOpearatorException::Type::Postfix);
+    throw UndefinedUnaryOperatorException("!", rhs.toString(), UndefinedUnaryOperatorException::Type::Postfix);
   }
 
   if (rhs < 2) {
@@ -60,8 +60,8 @@ Integer factorial(const Integer &rhs, int64_t order) {
   assert(order > 0);
 
   if (rhs < 0) {
-    throw UndefinedUnaryOpearatorException(string(order, '!'), rhs.toString(),
-                                           UndefinedUnaryOpearatorException::Type::Postfix);
+    throw UndefinedUnaryOperatorException(string(order, '!'), rhs.toString(),
+                                          UndefinedUnaryOperatorException::Type::Postfix);
   }
 
   if (order == 1) {
