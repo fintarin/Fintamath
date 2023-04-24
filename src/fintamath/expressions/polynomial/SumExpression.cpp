@@ -72,13 +72,13 @@ ArgumentPtr SumExpression::negate() const {
 
 SumExpression::FunctionsVector SumExpression::getSimplifyFunctions() const {
   return {
-      &SumExpression::simplifyNumber,         //
-      &SumExpression::simplifyNegation,       //
-      &SumExpression::coefficientsProcessing, //
+      &SumExpression::simplifyNumbers,   //
+      &SumExpression::simplifyNegations, //
+      &SumExpression::sumRates,          //
   };
 }
 
-ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (*lhsChild == ZERO) {
     return rhsChild;
   }
@@ -124,7 +124,7 @@ ArgumentPtr SumExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
   return {};
 }
 
-ArgumentPtr SumExpression::simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::simplifyNegations(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto lhsExpr = cast<IExpression>(lhsChild);
       lhsExpr && is<Neg>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
     return ZERO.clone();
@@ -169,12 +169,12 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const Argume
   return {rate, value};
 }
 
-ArgumentPtr SumExpression::addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) {
-  ArgumentPtr rateSum = makeRawFunctionExpression(Add(), rate);
-  return makeFunctionExpression(Mul(), ArgumentsPtrVector{rateSum, value});
+ArgumentPtr SumExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
+  ArgumentPtr ratesSum = makeRawFunctionExpression(Add(), rates);
+  return makeFunctionExpression(Mul(), ArgumentsPtrVector{ratesSum, value});
 }
 
-ArgumentPtr SumExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::sumRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   std::pair<ArgumentPtr, ArgumentPtr> lhsRateValuePair = getRateValuePair(lhsChild);
   std::pair<ArgumentPtr, ArgumentPtr> rhsRateValuePair = getRateValuePair(rhsChild);
 
@@ -185,7 +185,7 @@ ArgumentPtr SumExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, c
   ArgumentPtr rhsChildValue = rhsRateValuePair.second;
 
   if (lhsChildValue->toString() == rhsChildValue->toString()) {
-    return addRateToValue({lhsChildRate, rhsChildRate}, lhsChildValue);
+    return addRatesToValue({lhsChildRate, rhsChildRate}, lhsChildValue);
   }
 
   return {};

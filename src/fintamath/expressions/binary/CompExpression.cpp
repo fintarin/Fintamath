@@ -89,7 +89,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
     shared_ptr<const INumber> dividerNum;
 
-    if (const auto &polynomFirstChildExpr = cast<IExpression>(polynomFirstChild)) {
+    if (const auto polynomFirstChildExpr = cast<IExpression>(polynomFirstChild)) {
       if (is<Neg>(polynomFirstChildExpr->getFunction())) {
         dividerNum = cast<INumber>(NEG_ONE.clone());
       }
@@ -144,7 +144,7 @@ shared_ptr<IFunction> CompExpression::getOppositeFunction(const shared_ptr<IFunc
     return cast<IFunction>(res->second->clone());
   }
 
-  return nullptr;
+  return {};
 }
 
 void CompExpression::convertToSolution() {
@@ -161,7 +161,7 @@ void CompExpression::convertToSolution() {
     ArgumentsPtrVector lhsPolynom = {ZERO.clone()};
 
     for (const auto &lhsChild : lhsAddExpr->getChildren()) {
-      if (const auto &lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && hasVariable(lhsChildExpr, var)) {
+      if (const auto lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && hasVariable(lhsChildExpr, var)) {
         lhsPolynom.emplace_back(lhsChild);
       }
       else if (const auto &lhsChildVar = cast<Variable>(lhsChild); lhsChildVar && *lhsChildVar == *var) {

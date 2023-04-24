@@ -91,7 +91,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
     polynom = sumExpr->getChildren();
   }
   else {
-    return nullptr;
+    return {};
   }
 
   ArgumentsPtrVector newPolynom;

@@ -22,44 +22,55 @@ MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpre
 }
 
 string MulExpression::toString() const {
-  ArgumentsPtrVector nonInvertedChild;
-  ArgumentsPtrVector invertedChild;
+  ArgumentsPtrVector mulChildren;
+  ArgumentsPtrVector divChildren;
+
   for (const auto &child : children) {
     if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Inv>(childExpr->getFunction())) {
-      invertedChild.emplace_back(child);
+      divChildren.emplace_back(child);
     }
     else {
-      nonInvertedChild.emplace_back(child);
+      mulChildren.emplace_back(child);
     }
   }
 
   string result;
-  switch (nonInvertedChild.size()) {
+
+  switch (mulChildren.size()) {
   case 0: {
-    result += childToString(invertedChild.front(), true);
-    for (size_t i = 1; i < invertedChild.size(); i++) {
-      result += childToString(invertedChild[i]);
+    result += childToString(divChildren.front(), true);
+
+    for (size_t i = 1; i < divChildren.size(); i++) {
+      result += childToString(divChildren[i]);
     }
+
     break;
   }
   case 1: {
-    result += childToString(nonInvertedChild.front(), true);
-    for (const auto &child : invertedChild) {
+    result += childToString(mulChildren.front(), true);
+
+    for (const auto &child : divChildren) {
       result += childToString(child);
     }
+
     break;
   }
   default: {
-    result += childToString(nonInvertedChild.front(), true);
-    for (size_t i = 1; i < nonInvertedChild.size(); i++) {
-      result += childToString(nonInvertedChild[i], result == "-");
+    result += childToString(mulChildren.front(), true);
+
+    for (size_t i = 1; i < mulChildren.size(); i++) {
+      result += childToString(mulChildren[i], result == Neg().toString());
     }
-    if (!invertedChild.empty()) {
+
+    if (!divChildren.empty()) {
       result = putInBrackets(result);
     }
-    for (const auto &child : invertedChild) {
+
+    for (const auto &child : divChildren) {
       result += childToString(child);
     }
+
+    break;
   }
   }
 
@@ -67,16 +78,16 @@ string MulExpression::toString() const {
 }
 
 string MulExpression::childToString(const ArgumentPtr &inChild, bool isFirst) const {
-  if (const auto &number = cast<INumber>(inChild); number && isFirst && *number == NEG_ONE) {
+  if (isFirst && *inChild == NEG_ONE) {
     return Neg().toString();
   }
 
-  bool invert = false;
   ArgumentPtr child = inChild;
+  bool isChildInverted = false;
 
   if (auto invExpr = cast<IExpression>(inChild); invExpr && is<Inv>(invExpr->getFunction())) {
-    child = invExpr->getChildren()[0];
-    invert = true;
+    child = invExpr->getChildren().front();
+    isChildInverted = true;
   }
 
   string result;
@@ -88,8 +99,8 @@ string MulExpression::childToString(const ArgumentPtr &inChild, bool isFirst) co
     result = child->toString();
   }
 
-  if (invert) {
-    result = (isFirst ? "1/" : "/") + result;
+  if (isChildInverted) {
+    result = (isFirst ? ONE.toString() : "") + Div().toString() + result;
   }
   else {
     result = (isFirst ? "" : " ") + result;
@@ -99,30 +110,30 @@ string MulExpression::childToString(const ArgumentPtr &inChild, bool isFirst) co
 }
 
 ArgumentPtr MulExpression::negate() const {
-  MulExpression neg = *this;
-  neg.addElement(make_shared<Integer>(NEG_ONE));
-  return neg.simplify();
+  MulExpression mulExpr = *this;
+  mulExpr.addElement(NEG_ONE.clone());
+  return mulExpr.simplify();
 }
 
 ArgumentPtr MulExpression::invert() const {
-  auto inv = cast<MulExpression>(clone());
+  auto mulExpr = cast<MulExpression>(clone());
 
-  for (auto &child : inv->children) {
+  for (auto &child : mulExpr->children) {
     child = makeFunctionExpression(Inv(), {child});
   }
 
-  return inv->simplify();
+  return mulExpr->simplify();
 }
 
-std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateAndValue(const ArgumentPtr &rhsChild) {
-  if (const auto &exprVal = cast<IExpression>(rhsChild); exprVal && is<Pow>(exprVal->getFunction())) {
-    ArgumentsPtrVector args = exprVal->getChildren();
-    return {args[1], args.front()};
+std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
+  if (const auto &powExpr = cast<IExpression>(rhsChild); powExpr && is<Pow>(powExpr->getFunction())) {
+    ArgumentsPtrVector powExprChildren = powExpr->getChildren();
+    return {powExprChildren[1], powExprChildren.front()};
   }
 
-  if (const auto &exprVal = cast<IExpression>(rhsChild); exprVal && is<Inv>(exprVal->getFunction())) {
-    ArgumentsPtrVector args = exprVal->getChildren();
-    std::pair<ArgumentPtr, ArgumentPtr> result = getRateAndValue(args.front());
+  if (const auto &invExpr = cast<IExpression>(rhsChild); invExpr && is<Inv>(invExpr->getFunction())) {
+    ArgumentsPtrVector invExprChildren = invExpr->getChildren();
+    std::pair<ArgumentPtr, ArgumentPtr> result = getRateValuePair(invExprChildren.front());
     result.first = makeFunctionExpression(Neg(), {result.first});
     return result;
   }
@@ -130,28 +141,28 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateAndValue(const Argumen
   return {ONE.clone(), rhsChild};
 }
 
-ArgumentPtr MulExpression::addRateToValue(const ArgumentsPtrVector &rate, const ArgumentPtr &value) {
-  ArgumentPtr rateSum = makeFunctionExpression(Add(), rate);
-  return makeRawFunctionExpression(Pow(), {value, rateSum});
+ArgumentPtr MulExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
+  ArgumentPtr ratesSum = makeFunctionExpression(Add(), rates);
+  return makeRawFunctionExpression(Pow(), {value, ratesSum});
 }
 
-ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsInt = cast<INumber>(lhsChild); lhsInt && *lhsInt == ZERO) {
+ArgumentPtr MulExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  if (*lhsChild == ZERO) {
     return lhsChild;
   }
-  if (const auto rhsInt = cast<INumber>(rhsChild); rhsInt && *rhsInt == ZERO) {
+  if (*rhsChild == ZERO) {
     return rhsChild;
   }
 
-  if (const auto lhsInt = cast<INumber>(lhsChild); lhsInt && *lhsInt == ONE) {
+  if (*lhsChild == ONE) {
     return rhsChild;
   }
-  if (const auto rhsInt = cast<INumber>(rhsChild); rhsInt && *rhsInt == ONE) {
+  if (*rhsChild == ONE) {
     return lhsChild;
   }
 
-  bool lhsInv = false;
-  bool rhsInv = false;
+  bool isLhsInverted = false;
+  bool isRhsInverted = false;
 
   const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
@@ -160,7 +171,7 @@ ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
   shared_ptr<const INumber> rhsNum = nullptr;
 
   if (lhsExpr && is<Inv>(lhsExpr->getFunction())) {
-    lhsInv = true;
+    isLhsInverted = true;
     lhsNum = cast<INumber>(lhsExpr->getChildren().front());
   }
   else {
@@ -168,7 +179,7 @@ ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
   }
 
   if (rhsExpr && is<Inv>(rhsExpr->getFunction())) {
-    rhsInv = true;
+    isRhsInverted = true;
     rhsNum = cast<INumber>(rhsExpr->getChildren().front());
   }
   else {
@@ -176,92 +187,100 @@ ArgumentPtr MulExpression::simplifyNumber(const ArgumentPtr &lhsChild, const Arg
   }
 
   if (lhsNum && rhsNum) {
-    if (lhsInv) {
-      return Div()(*rhsNum, *lhsNum);
-    }
-    if (rhsInv) {
-      return Div()(*lhsNum, *rhsNum);
-    }
-    if (lhsInv && rhsInv) {
+    if (isLhsInverted && isRhsInverted) {
       return makeFunctionExpression(Inv(), {Mul()(*lhsNum, *rhsNum)});
     }
+
+    if (isLhsInverted) {
+      return Div()(*rhsNum, *lhsNum);
+    }
+
+    if (isRhsInverted) {
+      return Div()(*lhsNum, *rhsNum);
+    }
+
     return Mul()(*lhsNum, *rhsNum);
-  }
-
-  return nullptr;
-}
-
-ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr && is<Inv>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
-    return make_shared<Integer>(ONE);
-  }
-  if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Inv>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
-    return make_shared<Integer>(ONE);
   }
 
   return {};
 }
 
-ArgumentPtr MulExpression::multiplicateBraces(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  bool inverted = false;
-  ArgumentPtr lhsVal = lhsChild;
-  ArgumentPtr rhsVal = rhsChild;
-  shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsVal);
-  shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsVal);
+ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  if (const auto lhsExpr = cast<IExpression>(lhsChild);
+      lhsExpr && is<Inv>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
+    return ONE.clone();
+  }
+
+  if (const auto rhsExpr = cast<IExpression>(rhsChild);
+      rhsExpr && is<Inv>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
+    return ONE.clone();
+  }
+
+  return {};
+}
+
+ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  bool isResultInverted = false;
+
+  ArgumentPtr lhs = lhsChild;
+  ArgumentPtr rhs = rhsChild;
+
+  shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
   if (lhsExpr && rhsExpr && is<Inv>(lhsExpr->getFunction()) && is<Inv>(rhsExpr->getFunction())) {
-    inverted = true;
-    lhsVal = lhsExpr->getChildren()[0];
-    rhsVal = rhsExpr->getChildren()[0];
-    lhsExpr = cast<IExpression>(lhsVal);
-    rhsExpr = cast<IExpression>(rhsVal);
+    isResultInverted = true;
+
+    lhs = lhsExpr->getChildren().front();
+    rhs = rhsExpr->getChildren().front();
+
+    lhsExpr = cast<IExpression>(lhs);
+    rhsExpr = cast<IExpression>(rhs);
   }
 
   if (lhsExpr && rhsExpr && !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
     return {};
   }
 
-  ArgumentsPtrVector lhsVect;
-  ArgumentsPtrVector rhsVect;
+  ArgumentsPtrVector lhsChildren;
+  ArgumentsPtrVector rhsChildren;
 
   if (lhsExpr && is<Add>(lhsExpr->getFunction())) {
-    lhsVect = lhsExpr->getChildren();
+    lhsChildren = lhsExpr->getChildren();
   }
   else {
-    lhsVect.emplace_back(lhsVal);
+    lhsChildren.emplace_back(lhs);
   }
 
   if (rhsExpr && is<Add>(rhsExpr->getFunction())) {
-    rhsVect = rhsExpr->getChildren();
+    rhsChildren = rhsExpr->getChildren();
   }
   else {
-    rhsVect.emplace_back(rhsVal);
+    rhsChildren.emplace_back(rhs);
   }
 
-  if (lhsVect.size() == 1 && rhsVect.size() == 1) {
+  if (lhsChildren.size() == 1 && rhsChildren.size() == 1) {
     return {};
   }
 
   ArgumentsPtrVector resultVect;
-  for (const auto &lhsChildValue : lhsVect) {
-    for (const auto &rhsChildValue : rhsVect) {
-      resultVect.emplace_back(
-          makeFunctionExpression(Mul(), ArgumentsPtrVector{lhsChildValue->clone(), rhsChildValue->clone()}));
+
+  for (const auto &lhsChild : lhsChildren) {
+    for (const auto &rhsChild : rhsChildren) {
+      resultVect.emplace_back(makeFunctionExpression(Mul(), ArgumentsPtrVector{lhsChild->clone(), rhsChild->clone()}));
     }
   }
 
-  if (inverted) {
+  if (isResultInverted) {
     return makeFunctionExpression(Inv(), {makeFunctionExpression(Add(), resultVect)});
   }
 
   return makeFunctionExpression(Add(), resultVect);
 }
 
-ArgumentPtr MulExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  std::pair<ArgumentPtr, ArgumentPtr> lhsRateValue = getRateAndValue(lhsChild);
-  std::pair<ArgumentPtr, ArgumentPtr> rhsRateValue = getRateAndValue(rhsChild);
+ArgumentPtr MulExpression::mulRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  std::pair<ArgumentPtr, ArgumentPtr> lhsRateValue = getRateValuePair(lhsChild);
+  std::pair<ArgumentPtr, ArgumentPtr> rhsRateValue = getRateValuePair(rhsChild);
 
   ArgumentPtr lhsChildRate = lhsRateValue.first;
   ArgumentPtr rhsChildRate = rhsRateValue.first;
@@ -270,13 +289,13 @@ ArgumentPtr MulExpression::coefficientsProcessing(const ArgumentPtr &lhsChild, c
   ArgumentPtr rhsChildValue = rhsRateValue.second;
 
   if (lhsChildValue->toString() == rhsChildValue->toString()) {
-    return addRateToValue({lhsChildRate, rhsChildRate}, lhsChildValue);
+    return addRatesToValue({lhsChildRate, rhsChildRate}, lhsChildValue);
   }
 
   return {};
 }
 
-ArgumentPtr MulExpression::simplifyNegation(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr MulExpression::simplifyNegations(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   const auto &lhsExpr = cast<IExpression>(lhsChild);
   const auto &rhsExpr = cast<IExpression>(rhsChild);
 
@@ -298,11 +317,11 @@ ArgumentPtr MulExpression::simplifyNegation(const ArgumentPtr &lhsChild, const A
 
 MulExpression::FunctionsVector MulExpression::getSimplifyFunctions() const {
   return {
-      &MulExpression::simplifyNegation,       //
-      &MulExpression::simplifyDivisions,      //
-      &MulExpression::coefficientsProcessing, //
-      &MulExpression::simplifyNumber,         //
-      &MulExpression::multiplicateBraces,     //
+      &MulExpression::simplifyNegations, //
+      &MulExpression::simplifyDivisions, //
+      &MulExpression::mulRates,          //
+      &MulExpression::simplifyNumbers,   //
+      &MulExpression::mulPolynoms,       //
   };
 }
 
