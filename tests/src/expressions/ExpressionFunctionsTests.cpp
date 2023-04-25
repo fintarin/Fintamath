@@ -252,7 +252,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
       "x = -1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2) | x = 1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2)"); // TODO: x = -1/sqrt(2)
 
   // TODO: implement cubic equations
-  // EXPECT_EQ(solve(Expression("x^3 - 3x^2 + 3x - 1 = 0")).toString(), "x = 1");
+  EXPECT_EQ(solve(Expression("x^3 - 3x^2 + 3x - 1 = 0")).toString(), "x^3 - 3 x^2 + 3 x - 1 = 0"); // TODO: x = 1
   // EXPECT_EQ(solve(Expression("x^3 - 6x^2 + 11x - 6 = 0")).toString(), "x = 1 | x = 2 | x = 3");
   // EXPECT_EQ(solve(Expression("x^3 + 2x^2 - 5x - 6 = 0")).toString(), "x = -3 | x = -1 | x = 2");
   // EXPECT_EQ(solve(Expression("x^3 = 0")).toString(), "x = 0");
