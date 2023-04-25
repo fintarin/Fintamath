@@ -49,6 +49,12 @@ public:
     Parser::add<Function>(expressionBuildersMap, constructor);
   }
 
+  friend unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+
+  friend ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+
+  friend shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+
 protected:
   Expression &add(const Expression &rhs) override;
 
@@ -85,12 +91,6 @@ private:
 
   static ArgumentPtr preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
                                           bool shouldSimplify);
-
-  friend unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
-
-  friend ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
-
-  friend shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
 private:
   ArgumentPtr child;
