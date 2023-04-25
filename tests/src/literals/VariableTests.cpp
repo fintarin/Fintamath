@@ -5,13 +5,18 @@
 
 using namespace fintamath;
 
-TEST(VariableTest, stringConstructorTest) {
+TEST(VariableTest, stringIntegerConstructorTest) {
   EXPECT_EQ(Variable("a").toString(), "a");
   EXPECT_EQ(Variable("b").toString(), "b");
   EXPECT_EQ(Variable("e").toString(), "e");
   EXPECT_EQ(Variable("A").toString(), "A");
   EXPECT_EQ(Variable("B").toString(), "B");
   EXPECT_EQ(Variable("C").toString(), "C");
+
+  EXPECT_EQ(Variable("a", 1).toString(), "a_1");
+  EXPECT_EQ(Variable("a", 2).toString(), "a_2");
+  EXPECT_EQ(Variable("a", Integer("100000000000000000000000000000000000000")).toString(),
+            "a_100000000000000000000000000000000000000");
 
   EXPECT_THROW(Variable(""), InvalidInputException);
   EXPECT_THROW(Variable("1"), InvalidInputException);
@@ -26,4 +31,9 @@ TEST(VariableTest, stringConstructorTest) {
   EXPECT_THROW(Variable("A1"), InvalidInputException);
   EXPECT_THROW(Variable("Bb"), InvalidInputException);
   EXPECT_THROW(Variable("1C"), InvalidInputException);
+
+  EXPECT_THROW(Variable("a", 0), InvalidInputException);
+  EXPECT_THROW(Variable("a", -1), InvalidInputException);
+  EXPECT_THROW(Variable("a", -2), InvalidInputException);
+  EXPECT_THROW(Variable("a", Integer("-100000000000000000000000000000000000000")), InvalidInputException);
 }
