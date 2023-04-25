@@ -2,7 +2,6 @@
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
-#include "fintamath/expressions/binary/IndexExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
@@ -100,7 +99,16 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Index>([](const ArgumentsPtrVector &args) {
-      return make_shared<IndexExpression>(args.front(), args.back());
+      const ArgumentPtr &lhs = args.front();
+      const ArgumentPtr &rhs = args.back();
+      const Index func;
+
+      if (!func.doArgsMatch({*lhs, *rhs})) {
+        throw InvalidInputBinaryOpearatorException(func.toString(), lhs->toString(), rhs->toString());
+      }
+
+      ArgumentPtr res = func(*args.front(), *args.back());
+      return std::make_shared<Expression>(res);
     });
 
     Expression::registerFunctionExpressionMaker<Impl>([](const ArgumentsPtrVector &args) {

@@ -266,5 +266,5 @@ TEST(ExpressionFunctionsTests, solveTest) {
   //           "1/9 (3 + (1485 - 162 sqrt(23))^(1/3) + 3 (55 + 6 sqrt(23))^(1/3))");
 
   EXPECT_EQ(solve(Expression("15x^2 + sin(25)x - 10% = Ey")).toString(), "x^2 + 1/15 sin(25) x - 1/15 E y - 1/150 = 0");
-  EXPECT_EQ(solve(Expression("x + x_1 + x_(x+1) + y + y_1 = 0")).toString(), "x + x_(x + 1) + x_1 + y + y_1 = 0");
+  EXPECT_EQ(solve(Expression("x + x_1 + x_2 + y + y_1 = 0")).toString(), "x + x_1 + x_2 + y + y_1 = 0");
 }

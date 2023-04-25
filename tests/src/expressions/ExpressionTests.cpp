@@ -425,7 +425,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("x_1").toString(), "x_1");
   EXPECT_EQ(Expression("x+x_1").toString(), "x + x_1");
   EXPECT_EQ(Expression("x*x_1").toString(), "x x_1");
-  EXPECT_EQ(Expression("x_x^2").toString(), "x_x^2");
+  EXPECT_EQ(Expression("x_2^2").toString(), "x_2^2");
   EXPECT_EQ(Expression("sin(x_1)").toString(), "sin(x_1)");
 }
 

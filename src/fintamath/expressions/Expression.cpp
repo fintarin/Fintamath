@@ -191,8 +191,8 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 
   auto lhsExpr = shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + operPos)));
   auto rhsExpr = shared_ptr<Expression>(new Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end())));
-  shared_ptr<IExpression> funcExpr =
-      makeRawFunctionExpression(*cast<IFunction>(foundOperIt->second), {lhsExpr, rhsExpr});
+  shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(
+      *cast<IFunction>(foundOperIt->second), {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()});
 
   if (auto expr = cast<Expression>(funcExpr)) {
     *this = move(*expr);
