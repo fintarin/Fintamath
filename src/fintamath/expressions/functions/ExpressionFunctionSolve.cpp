@@ -13,14 +13,14 @@
 
 namespace fintamath {
 
-shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v);
+shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const shared_ptr<const Variable> &var);
 
-shared_ptr<const INumber> getPowOfMulElement(const shared_ptr<const IExpression> &elem,
-                                             const shared_ptr<const Variable> &v);
+shared_ptr<const INumber> getMulElementPower(const shared_ptr<const IExpression> &elem,
+                                             const shared_ptr<const Variable> &var);
 
-ArgumentPtr getElementRate(const ArgumentPtr &elem, const shared_ptr<const Variable> &v);
+ArgumentPtr getElementRate(const ArgumentPtr &elem, const shared_ptr<const Variable> &var);
 
-ArgumentsPtrVector getPowerRates(const ArgumentPtr &rhs, const shared_ptr<const Variable> &v);
+ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const shared_ptr<const Variable> &varar);
 
 bool validatePowExpr(const shared_ptr<const IExpression> &powExpr);
 
@@ -45,9 +45,9 @@ Expression solve(const Expression &rhs) {
       }
 
       auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentsPtrVector coeffAtPow = getPowerRates(compExpr->getChildren().front(), var);
+      ArgumentsPtrVector powerRate = getVariablePowerRates(compExpr->getChildren().front(), var);
 
-      if (coeffAtPow.size() == 2) {
+      if (powerRate.size() == 2) {
         compExpr->markAsSolution();
         return *compExpr;
       }
@@ -58,7 +58,7 @@ Expression solve(const Expression &rhs) {
       }
 
       auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentsPtrVector powerRates = getPowerRates(compExpr->getChildren()[0], var);
+      ArgumentsPtrVector powerRates = getVariablePowerRates(compExpr->getChildren()[0], var);
       ArgumentsPtrVector roots;
 
       switch (powerRates.size()) {
@@ -79,19 +79,19 @@ Expression solve(const Expression &rhs) {
         return *compExpr;
       }
 
-      ArgumentsPtrVector answer;
+      ArgumentsPtrVector answers;
 
       for (auto &root : roots) {
         auto rootAnswer = make_shared<CompExpression>(Eqv(), var->clone(), root);
         rootAnswer->markAsSolution();
-        answer.emplace_back(rootAnswer);
+        answers.emplace_back(rootAnswer);
       }
 
-      if (answer.size() == 1) {
-        return Expression(answer.front());
+      if (answers.size() == 1) {
+        return Expression(answers.front());
       }
 
-      return Expression(makeFunctionExpression(Or(), answer));
+      return Expression(makeFunctionExpression(Or(), answers));
     }
 
     return *compExpr;
@@ -100,22 +100,22 @@ Expression solve(const Expression &rhs) {
   return rhs;
 }
 
-shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem, const shared_ptr<const Variable> &v) {
-  if (const auto var = cast<Variable>(elem); var && *var == *v) {
+shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const shared_ptr<const Variable> &var) {
+  if (const auto elemVar = cast<Variable>(elem); elemVar && *elemVar == *var) {
     return cast<INumber>(ONE.clone());
   }
 
   if (const auto expr = cast<IExpression>(elem)) {
     if (is<Neg>(expr->getFunction())) {
-      return getPowOfElement(expr->getChildren().front(), v);
+      return getElementPower(expr->getChildren().front(), var);
     }
 
     if (is<Mul>(expr->getFunction())) {
-      return getPowOfMulElement(expr, v);
+      return getMulElementPower(expr, var);
     }
 
     if (is<Pow>(expr->getFunction())) {
-      if (const auto var = cast<Variable>(expr->getChildren().front()); var && *var == *v) {
+      if (const auto elemVar = cast<Variable>(expr->getChildren().front()); elemVar && *elemVar == *var) {
         return cast<INumber>(expr->getChildren()[1]);
       }
     }
@@ -124,57 +124,64 @@ shared_ptr<const INumber> getPowOfElement(const ArgumentPtr &elem, const shared_
   return cast<INumber>(ZERO.clone());
 }
 
-shared_ptr<const INumber> getPowOfMulElement(const shared_ptr<const IExpression> &elem,
-                                             const shared_ptr<const Variable> &v) {
+shared_ptr<const INumber> getMulElementPower(const shared_ptr<const IExpression> &elem,
+                                             const shared_ptr<const Variable> &var) {
   for (const auto &child : elem->getChildren()) {
-    if (auto powValue = getPowOfElement(child, v); *powValue != ZERO) {
+    if (auto powValue = getElementPower(child, var); *powValue != ZERO) {
       return powValue;
     }
   }
+
   return cast<INumber>(ZERO.clone());
 }
 
-ArgumentPtr getElementRate(const ArgumentPtr &elem, const shared_ptr<const Variable> &v) {
+ArgumentPtr getElementRate(const ArgumentPtr &elem, const shared_ptr<const Variable> &var) {
   if (const auto elemExpr = cast<IExpression>(elem)) {
     if (is<Neg>(elemExpr->getFunction())) {
-      return makeFunctionExpression(Neg(), {getElementRate(elemExpr->getChildren().front(), v)});
+      return makeFunctionExpression(Neg(), {getElementRate(elemExpr->getChildren().front(), var)});
     }
+
     if (is<Pow>(elemExpr->getFunction())) {
-      if (hasVariable(elemExpr, v)) {
+      if (hasVariable(elemExpr, var)) {
         return ONE.clone();
       }
+
       return elem;
     }
+
     if (is<Mul>(elemExpr->getFunction())) {
       ArgumentsPtrVector coeff{ONE.clone()};
+
       for (const auto &child : elemExpr->getChildren()) {
-        coeff.emplace_back(getElementRate(child, v));
+        coeff.emplace_back(getElementRate(child, var));
       }
+
       return makeFunctionExpression(Mul(), coeff);
     }
   }
 
-  if (const auto varElem = cast<Variable>(elem); varElem && *v == *varElem) {
+  if (const auto elemVar = cast<Variable>(elem); elemVar && *var == *elemVar) {
     return ONE.clone();
   }
+
   return elem;
 }
 
-ArgumentsPtrVector getPowerRates(const ArgumentPtr &rhs, const shared_ptr<const Variable> &v) {
+ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const shared_ptr<const Variable> &var) {
   ArgumentsPtrVector powerRates;
   ArgumentsPtrVector polynomVect;
 
-  if (const auto exprVal = cast<IExpression>(rhs); exprVal && is<Add>(exprVal->getFunction())) {
+  if (const auto exprVal = cast<IExpression>(elem); exprVal && is<Add>(exprVal->getFunction())) {
     polynomVect = exprVal->getChildren();
   }
   else {
-    polynomVect.emplace_back(rhs);
+    polynomVect.emplace_back(elem);
   }
 
   for (const auto &elem : polynomVect) {
-    ArgumentPtr rate = getElementRate(elem, v);
-    shared_ptr<const INumber> pow = getPowOfElement(elem, v);
-    Integer intPow = cast<Integer>(*pow);
+    ArgumentPtr rate = getElementRate(elem, var);
+    shared_ptr<const INumber> power = getElementPower(elem, var);
+    Integer intPow = cast<Integer>(*power);
 
     if (powerRates.size() < intPow + 1) {
       while (powerRates.size() != intPow + 1) {
@@ -199,32 +206,31 @@ bool validateMulExpr(const shared_ptr<const IExpression> &mulExpr) {
       return false;
     }
   }
+
   return true;
 }
 
 bool validateAddExpr(const shared_ptr<const IExpression> &addExpr) {
   for (const auto &child : addExpr->getChildren()) {
-    if (const auto childExpr = cast<IExpression>(child)) {
-      shared_ptr<const IExpression> childExprNonNeg;
+    if (auto childExpr = cast<IExpression>(child)) {
       if (is<Neg>(childExpr->getFunction())) {
-        childExprNonNeg = cast<IExpression>(childExpr->getChildren()[0]);
-      }
-      else {
-        childExprNonNeg = childExpr;
+        childExpr = cast<IExpression>(childExpr->getChildren()[0]);
       }
 
-      if (!childExprNonNeg) {
+      if (!childExpr) {
         return true;
       }
 
-      if (is<Pow>(childExprNonNeg->getFunction()) && !validatePowExpr(childExprNonNeg)) {
+      if (is<Pow>(childExpr->getFunction()) && !validatePowExpr(childExpr)) {
         return false;
       }
-      if (is<Mul>(childExprNonNeg->getFunction()) && !validateMulExpr(childExprNonNeg)) {
+
+      if (is<Mul>(childExpr->getFunction()) && !validateMulExpr(childExpr)) {
         return false;
       }
     }
   }
+
   return true;
 }
 
@@ -236,32 +242,32 @@ bool validateEquation(const CompExpression &expr) {
     return false;
   }
 
-  ArgumentPtr lhsVal = expr.getChildren().front();
+  ArgumentPtr firstChild = expr.getChildren().front();
 
-  if (const auto lhsExpr = cast<IExpression>(lhsVal)) {
-    shared_ptr<const IExpression> lhsExprNonNeg;
-    if (is<Neg>(lhsExpr->getFunction())) {
-      lhsExprNonNeg = cast<IExpression>(lhsExpr->getChildren()[0]);
-    }
-    else {
-      lhsExprNonNeg = lhsExpr;
+  if (auto firstChildExpr = cast<IExpression>(firstChild)) {
+    if (is<Neg>(firstChildExpr->getFunction())) {
+      firstChildExpr = cast<IExpression>(firstChildExpr->getChildren()[0]);
     }
 
-    if (!lhsExprNonNeg) {
+    if (!firstChildExpr) {
       return true;
     }
 
-    if (is<Add>(lhsExprNonNeg->getFunction())) {
-      return validateAddExpr(lhsExprNonNeg);
+    if (is<Add>(firstChildExpr->getFunction())) {
+      return validateAddExpr(firstChildExpr);
     }
-    if (is<Mul>(lhsExprNonNeg->getFunction())) {
-      return validateMulExpr(lhsExprNonNeg);
+
+    if (is<Mul>(firstChildExpr->getFunction())) {
+      return validateMulExpr(firstChildExpr);
     }
-    if (is<Pow>(lhsExprNonNeg->getFunction())) {
-      return validatePowExpr(lhsExprNonNeg);
+
+    if (is<Pow>(firstChildExpr->getFunction())) {
+      return validatePowExpr(firstChildExpr);
     }
+
     return false;
   }
+
   return true;
 }
 
