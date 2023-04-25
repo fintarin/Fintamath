@@ -125,10 +125,11 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
   ArgumentPtr newSumExpr = makeRawFunctionExpression(Add(), newPolynom);
 
   if (isResultInverted) {
-    return makeRawFunctionExpression(Inv(), {newSumExpr})->toMinimalObject();
+    newSumExpr = makeRawFunctionExpression(Inv(), {newSumExpr});
   }
 
-  return newSumExpr->toMinimalObject();
+  simplifyChild(newSumExpr);
+  return newSumExpr;
 }
 
 ArgumentPtr PowExpression::polynomSimplify() const {
