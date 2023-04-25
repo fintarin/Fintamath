@@ -866,3 +866,14 @@ TEST(ExpressionTests, expressionVariableDivideOperatorTest) {
   EXPECT_EQ(Expression("a/b") / Variable("a"), Expression("1/b"));
   EXPECT_EQ(Expression("b/c") / Variable("a"), Expression("b/c/a"));
 }
+
+TEST(ExpressionTests, makeFunctionExpressionTest) {
+  // TODO: add tests
+  //  friend unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+  //  friend ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+}
+
+TEST(ExpressionTests, makeRawFunctionExpressionTest) {
+  // TODO: add tests
+  // friend shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+}
