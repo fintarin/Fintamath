@@ -35,9 +35,15 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression(" 2 + 2 ").toString(), "4");
   EXPECT_EQ(Expression("-2 + 3").toString(), "1");
   EXPECT_EQ(Expression("2 * 2").toString(), "4");
+  EXPECT_EQ(Expression("-2 * 2").toString(), "-4");
+  EXPECT_EQ(Expression("2 * -2").toString(), "-4");
+  EXPECT_EQ(Expression("2 * 3!").toString(), "12");
   EXPECT_EQ(Expression("1 / 3").toString(), "1/3");
   EXPECT_EQ(Expression("0 / 3").toString(), "0");
   EXPECT_EQ(Expression("2 ^ 2").toString(), "4");
+  EXPECT_EQ(Expression("-2 ^ 2").toString(), "-4");
+  EXPECT_EQ(Expression("2 ^ -2").toString(), "1/4");
+  EXPECT_EQ(Expression("2 ^ 3!").toString(), "64");
   EXPECT_EQ(Expression("0^1").toString(), "0");
   EXPECT_EQ(Expression("2^0").toString(), "1");
   EXPECT_EQ(Expression("(-7)^10").toString(), "282475249");
