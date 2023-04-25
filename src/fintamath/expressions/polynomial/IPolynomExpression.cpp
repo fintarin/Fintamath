@@ -100,16 +100,11 @@ void IPolynomExpression::globalSimplifyRec() {
       for (int64_t j = i + 1; j < children.size(); j++) {
         const ArgumentPtr &lhsChild = children[i];
         const ArgumentPtr &rhsChild = children[j];
+
         if (auto res = function(lhsChild, rhsChild)) {
           children[i] = res;
           children.erase(children.begin() + j);
         }
-      }
-      ArgumentsPtrVector oldChildren = children;
-      children.clear();
-
-      for (auto &child : oldChildren) {
-        addElement(child);
       }
     }
   }
