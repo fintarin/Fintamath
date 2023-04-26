@@ -329,22 +329,4 @@ bool MulExpression::isTermsOrderInversed() const {
   return true;
 }
 
-int MulExpression::comparatorOverride(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  auto lhsExpr = cast<IExpression>(lhs);
-  bool isLhsInverted = lhsExpr && *lhsExpr->getFunction() == Inv();
-
-  auto rhsExpr = cast<IExpression>(rhs);
-  bool isRhsInverted = rhsExpr && *rhsExpr->getFunction() == Inv();
-
-  if (isLhsInverted && !isRhsInverted) {
-    return 1;
-  }
-
-  if (!isLhsInverted && isRhsInverted) {
-    return -1;
-  }
-
-  return 0;
-}
-
 }
