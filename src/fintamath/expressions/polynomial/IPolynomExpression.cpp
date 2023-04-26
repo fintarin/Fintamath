@@ -52,12 +52,11 @@ ArgumentPtr IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rh
 void IPolynomExpression::preSimplifyRec() {
   size_t childrenSize = children.size();
 
-  for (int64_t i = 0; i < int64_t(children.size()) - 1; i++) {
-    for (int64_t j = i + 1; j < children.size(); j++) {
-      if (auto res = preSimplify(i, j)) {
-        children[i] = res;
-        children.erase(children.begin() + j);
-      }
+  for (size_t i = 1; i < children.size(); i++) {
+    if (auto res = preSimplify(i - 1, i)) {
+      children[i - 1] = res;
+      children.erase(children.begin() + int64_t(i));
+      i--;
     }
   }
 
@@ -69,16 +68,16 @@ void IPolynomExpression::preSimplifyRec() {
 void IPolynomExpression::postSimplifyRec() {
   size_t childrenSize = children.size();
 
-  for (int64_t i = 0; i < int64_t(children.size()) - 1; i++) {
-    for (int64_t j = i + 1; j < int64_t(children.size()); j++) {
-      if (ArgumentPtr res = callFunction(*func, {children[i], children[j]})) {
-        children[i] = res;
-        children.erase(children.begin() + j);
-      }
-      else if (auto res = postSimplify(i, j)) {
-        children[i] = res;
-        children.erase(children.begin() + j);
-      }
+  for (size_t i = 1; i < children.size(); i++) {
+    if (ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]})) {
+      children[i - 1] = res;
+      children.erase(children.begin() + int64_t(i));
+      i--;
+    }
+    else if (auto res = postSimplify(i - 1, i)) {
+      children[i - 1] = res;
+      children.erase(children.begin() + int64_t(i));
+      i--;
     }
   }
 
@@ -87,24 +86,19 @@ void IPolynomExpression::postSimplifyRec() {
   }
 }
 
-IPolynomExpression::FunctionsVector IPolynomExpression::getFunctionsForSimplify() const {
-  return {};
-}
-
 void IPolynomExpression::globalSimplifyRec() {
   size_t childrenSize = children.size();
   FunctionsVector functions = getFunctionsForSimplify();
 
   for (const auto &function : functions) {
-    for (int64_t i = 0; i < int64_t(children.size()) - 1; i++) {
-      for (int64_t j = i + 1; j < children.size(); j++) {
-        const ArgumentPtr &lhsChild = children[i];
-        const ArgumentPtr &rhsChild = children[j];
+    for (size_t i = 1; i < children.size(); i++) {
+      const ArgumentPtr &lhsChild = children[i - 1];
+      const ArgumentPtr &rhsChild = children[i];
 
-        if (auto res = function(lhsChild, rhsChild)) {
-          children[i] = res;
-          children.erase(children.begin() + j);
-        }
+      if (auto res = function(lhsChild, rhsChild)) {
+        children[i - 1] = res;
+        children.erase(children.begin() + int64_t(i));
+        i--;
       }
     }
   }
@@ -127,12 +121,14 @@ ArgumentPtr IPolynomExpression::preSimplify() const {
     }
   }
 
+  simpl->sort();
   simpl->preSimplifyRec();
   simpl->globalSimplifyRec();
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
   }
+
   return simpl;
 }
 
@@ -149,9 +145,9 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
     }
   }
 
+  simpl->sort();
   simpl->postSimplifyRec();
   simpl->globalSimplifyRec();
-  simpl->sort();
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
@@ -160,16 +156,16 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
   return simpl;
 }
 
+IPolynomExpression::FunctionsVector IPolynomExpression::getFunctionsForSimplify() const {
+  return {};
+}
+
 bool IPolynomExpression::isTermsOrderInversed() const {
   return false;
 }
 
 bool IPolynomExpression::isComparableOrderInversed() const {
   return false;
-}
-
-int IPolynomExpression::comparatorOverride(const ArgumentPtr & /*lhs*/, const ArgumentPtr & /*rhs*/) const {
-  return 0;
 }
 
 void IPolynomExpression::sort() {
@@ -237,6 +233,33 @@ ArgumentsPtrVector IPolynomExpression::getConstants(const ArgumentPtr &rhs) {
     constants = {rhs};
   }
   return constants;
+}
+
+int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  auto lhsExpr = cast<IExpression>(lhs);
+  auto rhsExpr = cast<IExpression>(rhs);
+
+  if (!lhsExpr && !rhsExpr) {
+    return comparatorTerms(lhs, rhs);
+  }
+
+  if (int res = comparatorVariableInPolynom(lhs, rhs); res != 0) {
+    return res;
+  }
+
+  if (int res = comparatorConstants(lhs, rhs); res != 0) {
+    return res;
+  }
+
+  if (int res = comparatorChildren(lhsExpr, rhsExpr); res != 0) {
+    return res;
+  }
+
+  if (int res = comparatorExprAndNonExpr(lhs, rhs); res != 0) {
+    return res;
+  }
+
+  return comparatorFunctions(lhsExpr, rhsExpr);
 }
 
 int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
@@ -330,37 +353,6 @@ int IPolynomExpression::comparatorExprAndNonExpr(const ArgumentPtr &lhs, const A
   }
 
   return 0;
-}
-
-int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  if (int res = comparatorOverride(lhs, rhs); res != 0) {
-    return res;
-  }
-
-  auto lhsExpr = cast<IExpression>(lhs);
-  auto rhsExpr = cast<IExpression>(rhs);
-
-  if (!lhsExpr && !rhsExpr) {
-    return comparatorTerms(lhs, rhs);
-  }
-
-  if (int res = comparatorVariableInPolynom(lhs, rhs); res != 0) {
-    return res;
-  }
-
-  if (int res = comparatorConstants(lhs, rhs); res != 0) {
-    return res;
-  }
-
-  if (int res = comparatorChildren(lhsExpr, rhsExpr); res != 0) {
-    return res;
-  }
-
-  if (int res = comparatorExprAndNonExpr(lhs, rhs); res != 0) {
-    return res;
-  }
-
-  return comparatorFunctions(lhsExpr, rhsExpr);
 }
 
 int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {

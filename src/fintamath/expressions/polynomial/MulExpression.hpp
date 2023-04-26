@@ -22,17 +22,6 @@ protected:
 
   bool isTermsOrderInversed() const override;
 
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorOverride(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
-
 private:
   string childToString(const ArgumentPtr &inChild, bool isFirst = false) const override;
 
