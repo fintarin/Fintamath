@@ -2,7 +2,6 @@
 
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
@@ -77,10 +76,6 @@ Expression pow(const Expression &lhs, const Expression &rhs) {
 
 Expression exp(const Expression &rhs) {
   return Expression(Exp()(rhs));
-}
-
-Expression inv(const Expression &rhs) {
-  return Expression(Inv()(rhs));
 }
 
 Expression log(const Expression &lhs, const Expression &rhs) {

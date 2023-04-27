@@ -58,14 +58,14 @@ bool OrExpression::isComparableOrderInversed() const {
   return true;
 }
 
-string OrExpression::childToString(const ArgumentPtr &inChild, bool isFirst) const {
+string OrExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   string result = inChild->toString();
 
   if (const auto &childExpr = cast<IExpression>(inChild); childExpr && is<And>(childExpr->getFunction())) {
     result = putInBrackets(result);
   }
 
-  return isFirst ? result : (putInSpaces(func->toString()) + result);
+  return prevChild ? (putInSpaces(func->toString()) + result) : result;
 }
 
 }

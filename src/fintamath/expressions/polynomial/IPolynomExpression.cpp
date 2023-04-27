@@ -19,10 +19,10 @@ ArgumentsPtrVector IPolynomExpression::getChildren() const {
 string IPolynomExpression::toString() const {
   string result;
 
-  result += childToString(children.front(), true);
+  result += childToString(children.front(), {});
 
   for (size_t i = 1; i < children.size(); i++) {
-    result += childToString(children[i]);
+    result += childToString(children[i], children[i - 1]);
   }
 
   return result;

@@ -7,7 +7,6 @@
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
@@ -212,7 +211,6 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Acosh>(IFunction::parse("acosh")));
   EXPECT_TRUE(is<Atanh>(IFunction::parse("atanh")));
   EXPECT_TRUE(is<Acoth>(IFunction::parse("acoth")));
-  EXPECT_TRUE(is<Inv>(IFunction::parse("inv")));
 
   EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
   EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));

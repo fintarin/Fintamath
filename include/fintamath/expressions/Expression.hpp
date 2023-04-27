@@ -29,6 +29,8 @@ public:
 
   void setChildren(const ArgumentsPtrVector &childVect) override;
 
+  void setValuesOfVariables(const vector<Variable> &vars, const ArgumentsPtrVector &vals) override;
+
   template <typename Function, bool isPolynomial = false,
             typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
   static void

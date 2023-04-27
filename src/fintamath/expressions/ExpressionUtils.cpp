@@ -97,7 +97,8 @@ string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &v
     if (const auto childExpr = cast<IExpression>(child)) {
       if (const auto childOper = cast<IOperator>(childExpr->getFunction())) {
         if (IOperator::Priority priority = childOper->getOperatorPriority();
-            priority > operPriority || (priority == operPriority && !operIsAssociative && i > 0)) {
+            priority > operPriority ||
+            (priority == operPriority && !operIsAssociative && (*childOper != oper || i > 0))) {
           shouldPutInBrackets = true;
         }
       }

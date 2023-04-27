@@ -12,14 +12,14 @@ const And AND;
 AndExpression::AndExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(AND, children) {
 }
 
-string AndExpression::childToString(const ArgumentPtr &inChild, bool isFirst) const {
+string AndExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   string result = inChild->toString();
 
   if (const auto &childExpr = cast<IExpression>(inChild); childExpr && is<Or>(childExpr->getFunction())) {
     result = putInBrackets(result);
   }
 
-  return isFirst ? result : (putInSpaces(func->toString()) + result);
+  return prevChild ? (putInSpaces(func->toString()) + result) : result;
 }
 
 ArgumentPtr AndExpression::logicNegate() const {

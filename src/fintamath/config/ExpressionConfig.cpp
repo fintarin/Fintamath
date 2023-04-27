@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
+#include "fintamath/expressions/binary/DivExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
@@ -13,7 +14,6 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -71,7 +71,7 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Div>([](const ArgumentsPtrVector &args) {
-      return make_shared<MulExpression>(ArgumentsPtrVector{args.front(), make_shared<InvExpression>(args.back())});
+      return make_shared<DivExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<And, true>([](const ArgumentsPtrVector &args) {
@@ -160,10 +160,6 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Neg>([](const ArgumentsPtrVector &args) {
       return make_shared<NegExpression>(args.front());
-    });
-
-    Expression::registerFunctionExpressionMaker<Inv>([](const ArgumentsPtrVector &args) {
-      return make_shared<InvExpression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<UnaryPlus>([](const ArgumentsPtrVector &args) {
