@@ -109,7 +109,7 @@ protected:
     return makeFunctionExpression(*this, argsVect);
   }
 
-  virtual bool equals(const Derived &rhs) const {
+  bool equals(const Derived &rhs) const override {
     return getFunctionType() == rhs.getFunctionType() && toString() == rhs.toString();
   }
 
