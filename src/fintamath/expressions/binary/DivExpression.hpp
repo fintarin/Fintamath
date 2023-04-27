@@ -8,7 +8,7 @@ namespace fintamath {
 
 class DivExpression : public IBinaryExpressionCRTP<DivExpression>, public IInvertableExpression {
 public:
-  explicit DivExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  explicit DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
   ArgumentPtr invert() const override;
 

@@ -12,8 +12,41 @@ namespace fintamath {
 
 const Div DIV;
 
-DivExpression::DivExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)
-    : IBinaryExpressionCRTP(DIV, lhsChild, rhsChild) {
+DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
+    : IBinaryExpressionCRTP(DIV, inLhsChild, inRhsChild) {
+
+  ArgumentsPtrVector numeratorChildren;
+  ArgumentsPtrVector denominatorChildren;
+
+  if (auto lhsDivExpr = cast<DivExpression>(lhsChild)) {
+    numeratorChildren.emplace_back(lhsDivExpr->getChildren().front());
+    denominatorChildren.emplace_back(lhsDivExpr->getChildren().back());
+  }
+  else {
+    numeratorChildren.emplace_back(lhsChild);
+  }
+
+  if (auto rhsDivExpr = cast<DivExpression>(rhsChild)) {
+    denominatorChildren.emplace_back(rhsDivExpr->getChildren().front());
+    numeratorChildren.emplace_back(rhsDivExpr->getChildren().back());
+  }
+  else {
+    denominatorChildren.emplace_back(rhsChild);
+  }
+
+  if (numeratorChildren.size() == 1) {
+    lhsChild = numeratorChildren.front();
+  }
+  else {
+    lhsChild = makeRawFunctionExpression(Mul(), numeratorChildren);
+  }
+
+  if (denominatorChildren.size() == 1) {
+    rhsChild = denominatorChildren.front();
+  }
+  else {
+    rhsChild = makeRawFunctionExpression(Mul(), denominatorChildren);
+  }
 }
 
 ArgumentPtr DivExpression::invert() const {
