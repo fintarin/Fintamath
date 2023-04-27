@@ -87,11 +87,11 @@ private:
 
   void validateChild(const ArgumentPtr &child) const;
 
-  void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const;
+  void validateFunctionArgs(const shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const;
 
   static ArgumentPtr preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify);
 
-  static ArgumentPtr preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
+  static ArgumentPtr preciseExpressionRec(const shared_ptr<const IExpression> &expr, uint8_t precision,
                                           bool shouldSimplify);
 
 private:
