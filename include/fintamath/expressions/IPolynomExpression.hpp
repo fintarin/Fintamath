@@ -180,6 +180,8 @@ private:
    */
   int comparatorConstants(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
+  static ArgumentPtr findFirstPolynomChild(const ArgumentPtr &rhs);
+
   static ArgumentsPtrVector getVariables(const ArgumentPtr &rhs);
 
   static ArgumentsPtrVector getConstants(const ArgumentPtr &rhs);

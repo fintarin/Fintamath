@@ -168,30 +168,6 @@ bool IPolynomExpression::isComparableOrderInversed() const {
   return false;
 }
 
-ArgumentsPtrVector IPolynomExpression::getVariables(const ArgumentPtr &rhs) {
-  ArgumentsPtrVector vars;
-
-  if (const auto &rhsExpr = cast<IExpression>(rhs)) {
-    vars = rhsExpr->getVariablesUnsorted();
-  }
-  else if (is<Variable>(rhs)) {
-    vars = {rhs};
-  }
-  return vars;
-}
-
-ArgumentsPtrVector IPolynomExpression::getConstants(const ArgumentPtr &rhs) {
-  ArgumentsPtrVector constants;
-
-  if (const auto &rhsExpr = cast<IExpression>(rhs)) {
-    constants = rhsExpr->getConstantsUnsorted();
-  }
-  else if (is<IConstant>(rhs)) {
-    constants = {rhs};
-  }
-  return constants;
-}
-
 void IPolynomExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (!childVect.empty()) {
     children = childVect;
@@ -316,8 +292,8 @@ int IPolynomExpression::comparatorBinaryFunctions(const ArgumentPtr &lhs, const 
   return 0;
 }
 
-int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
-                                            const std::shared_ptr<const IExpression> &rhsExpr) const {
+int IPolynomExpression::comparatorFunctions(const shared_ptr<const IExpression> &lhsExpr,
+                                            const shared_ptr<const IExpression> &rhsExpr) const {
 
   if (!lhsExpr || !rhsExpr) {
     return 0;
@@ -475,6 +451,9 @@ int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const Argumen
   if (is<IPolynomExpression>(lhsExpr)) {
     lhsChildren = lhsExpr->getChildren();
   }
+  else if (const auto firstPolynomChild = findFirstPolynomChild(lhs)) {
+    lhsChildren = {firstPolynomChild};
+  }
   else {
     lhsChildren = {lhs};
   }
@@ -483,6 +462,9 @@ int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const Argumen
 
   if (is<IPolynomExpression>(rhsExpr)) {
     rhsChildren = rhsExpr->getChildren();
+  }
+  else if (const auto firstPolynomChild = findFirstPolynomChild(rhs)) {
+    rhsChildren = {firstPolynomChild};
   }
   else {
     rhsChildren = {rhs};
@@ -586,6 +568,44 @@ int IPolynomExpression::comparatorConstants(const ArgumentPtr &lhs, const Argume
   }
 
   return 0;
+}
+
+ArgumentPtr IPolynomExpression::findFirstPolynomChild(const ArgumentPtr &rhs) {
+  auto res = cast<IExpression>(rhs);
+
+  while (res && !is<IPolynomExpression>(res)) {
+    res = cast<IExpression>(res->getChildren().front());
+  }
+
+  if (is<IPolynomExpression>(res)) {
+    return res;
+  }
+
+  return {};
+}
+
+ArgumentsPtrVector IPolynomExpression::getVariables(const ArgumentPtr &rhs) {
+  ArgumentsPtrVector vars;
+
+  if (const auto &rhsExpr = cast<IExpression>(rhs)) {
+    vars = rhsExpr->getVariablesUnsorted();
+  }
+  else if (is<Variable>(rhs)) {
+    vars = {rhs};
+  }
+  return vars;
+}
+
+ArgumentsPtrVector IPolynomExpression::getConstants(const ArgumentPtr &rhs) {
+  ArgumentsPtrVector constants;
+
+  if (const auto &rhsExpr = cast<IExpression>(rhs)) {
+    constants = rhsExpr->getConstantsUnsorted();
+  }
+  else if (is<IConstant>(rhs)) {
+    constants = {rhs};
+  }
+  return constants;
 }
 
 }
