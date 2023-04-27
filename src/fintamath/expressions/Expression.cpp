@@ -418,6 +418,11 @@ void Expression::setChildren(const ArgumentsPtrVector &childVect) {
   child = childVect.front();
 }
 
+void Expression::setValuesOfVariables(const vector<Variable> &vars, const ArgumentsPtrVector &vals) {
+  IExpression::setValuesOfVariables(vars, vals);
+  simplifyChild(child);
+}
+
 Expression operator+(const Variable &lhs, const Variable &rhs) {
   return Expression(makeFunctionExpression(Add(), {lhs.clone(), rhs.clone()}));
 }

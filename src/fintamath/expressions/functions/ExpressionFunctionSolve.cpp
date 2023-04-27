@@ -284,13 +284,19 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
   static const Expression firstRoot = div(sum(neg(b), sqrt(discriminant)), mul(2, a));
   static const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));
 
-  Expression firstRootValue = firstRoot;
-  firstRootValue.setValuesOfVariables({c, b, a}, coeffAtPow);
+  // TODO: remove this try/catch when complex numbers will be implemented
+  try {
+    Expression firstRootValue = firstRoot;
+    firstRootValue.setValuesOfVariables({c, b, a}, coeffAtPow);
 
-  Expression secondRootValue = secondRoot;
-  secondRootValue.setValuesOfVariables({c, b, a}, coeffAtPow);
+    Expression secondRootValue = secondRoot;
+    secondRootValue.setValuesOfVariables({c, b, a}, coeffAtPow);
 
-  return {firstRootValue.getChildren().front(), secondRootValue.getChildren().front()};
+    return {firstRootValue.getChildren().front(), secondRootValue.getChildren().front()};
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {

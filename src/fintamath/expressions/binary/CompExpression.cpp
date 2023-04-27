@@ -2,7 +2,7 @@
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -100,7 +100,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
     if (dividerNum) {
       for (auto &child : dividendPolynom) {
-        child = makeFunctionExpression(Mul(), {child, makeFunctionExpression(Inv(), {dividerNum->clone()})});
+        child = makeFunctionExpression(Div(), {child, dividerNum});
       }
 
       ArgumentPtr newLhs = makeFunctionExpression(Add(), dividendPolynom); // TODO: add ZERO

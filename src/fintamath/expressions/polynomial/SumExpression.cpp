@@ -2,7 +2,6 @@
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -17,7 +16,7 @@ const Add ADD;
 SumExpression::SumExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(ADD, children) {
 }
 
-string SumExpression::childToString(const ArgumentPtr &inChild, bool isFirst) const {
+string SumExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   ArgumentPtr child = inChild;
   bool isChildNegated = false;
 
@@ -28,12 +27,12 @@ string SumExpression::childToString(const ArgumentPtr &inChild, bool isFirst) co
 
   string result;
 
-  if (auto powExpr = cast<IExpression>(child); powExpr && is<Inv>(powExpr->getFunction())) {
-    result = powExpr->getChildren().front()->toString();
-  }
-  else {
-    result = child->toString();
-  }
+  // if (auto powExpr = cast<IExpression>(child); powExpr && is<Inv>(powExpr->getFunction())) {
+  // result = powExpr->getChildren().front()->toString();
+  // }
+  // else {
+  result = child->toString();
+  // }
 
   if (!isChildNegated && result.size() > 1 && result.front() == Neg().toString().front()) {
     isChildNegated = true;
@@ -45,12 +44,12 @@ string SumExpression::childToString(const ArgumentPtr &inChild, bool isFirst) co
   if (isChildNegated) {
     funcStr = Sub().toString();
   }
-  else if (!isFirst) {
+  else if (prevChild) {
     funcStr = Add().toString();
   }
 
   if (!funcStr.empty()) {
-    if (!isFirst) {
+    if (prevChild) {
       funcStr = putInSpaces(funcStr);
     }
 

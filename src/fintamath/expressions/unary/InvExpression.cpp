@@ -1,69 +1,69 @@
-#include "fintamath/expressions/unary/InvExpression.hpp"
+// #include "fintamath/expressions/unary/InvExpression.hpp"
 
-#include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/IInvertableExpression.hpp"
-#include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
+// #include "fintamath/expressions/ExpressionUtils.hpp"
+// #include "fintamath/expressions/IInvertableExpression.hpp"
+// #include "fintamath/functions/arithmetic/Add.hpp"
+// #include "fintamath/functions/arithmetic/Div.hpp"
+// #include "fintamath/functions/arithmetic/Inv.hpp"
+// #include "fintamath/numbers/NumberConstants.hpp"
 
-namespace fintamath {
+// namespace fintamath {
 
-const Inv INV;
+// const Inv INV;
 
-InvExpression::InvExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(INV, child) {
-}
+// InvExpression::InvExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(INV, child) {
+// }
 
-ArgumentPtr InvExpression::preSimplify() const {
-  auto simpl = IUnaryExpression::preSimplify();
+// ArgumentPtr InvExpression::preSimplify() const {
+//   auto simpl = IUnaryExpression::preSimplify();
 
-  auto simplExpr = cast<InvExpression>(simpl);
-  if (!simplExpr) {
-    return simpl;
-  }
+//   auto simplExpr = cast<InvExpression>(simpl);
+//   if (!simplExpr) {
+//     return simpl;
+//   }
 
-  // TODO: change when inf will be implemented
-  if (const auto &number = cast<INumber>(simplExpr->child); number && *number == ZERO) {
-    auto error = Integer(1) / Integer(0);
-  }
+//   // TODO: change when inf will be implemented
+//   if (const auto &number = cast<INumber>(simplExpr->child); number && *number == ZERO) {
+//     auto error = Integer(1) / Integer(0);
+//   }
 
-  if (const auto expr = cast<InvExpression>(simplExpr->child)) {
-    return expr->child;
-  }
+//   if (const auto expr = cast<InvExpression>(simplExpr->child)) {
+//     return expr->child;
+//   }
 
-  return simpl;
-}
+//   return simpl;
+// }
 
-ArgumentPtr InvExpression::postSimplify() const {
-  auto simpl = IUnaryExpression::postSimplify();
+// ArgumentPtr InvExpression::postSimplify() const {
+//   auto simpl = IUnaryExpression::postSimplify();
 
-  auto simplExpr = cast<InvExpression>(simpl);
-  if (!simplExpr) {
-    return simpl;
-  }
+//   auto simplExpr = cast<InvExpression>(simpl);
+//   if (!simplExpr) {
+//     return simpl;
+//   }
 
-  // TODO: change when inf will be implemented
-  if (const auto &number = cast<INumber>(simplExpr->child); number && *number == ZERO) {
-    auto error = Integer(1) / Integer(0);
-  }
+//   // TODO: change when inf will be implemented
+//   if (const auto &number = cast<INumber>(simplExpr->child); number && *number == ZERO) {
+//     auto error = Integer(1) / Integer(0);
+//   }
 
-  if (auto expr = cast<IInvertableExpression>(simplExpr->child)) {
-    return expr->invert();
-  }
+//   if (auto expr = cast<IInvertableExpression>(simplExpr->child)) {
+//     return expr->invert();
+//   }
 
-  return simpl;
-}
+//   return simpl;
+// }
 
-string InvExpression::toString() const {
-  string childToStr = getChildren()[0]->toString();
+// string InvExpression::toString() const {
+//   string childToStr = getChildren()[0]->toString();
 
-  if (const auto &sumChildExpr = cast<IExpression>(getChildren()[0]);
-      sumChildExpr && is<Add>(sumChildExpr->getFunction())) {
+//   if (const auto &sumChildExpr = cast<IExpression>(getChildren()[0]);
+//       sumChildExpr && is<Add>(sumChildExpr->getFunction())) {
 
-    childToStr = putInBrackets(childToStr);
-  }
+//     childToStr = putInBrackets(childToStr);
+//   }
 
-  return ONE.toString() + Div().toString() + childToStr;
-}
+//   return ONE.toString() + Div().toString() + childToStr;
+// }
 
-}
+// }

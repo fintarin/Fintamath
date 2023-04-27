@@ -5,10 +5,7 @@
 namespace fintamath {
 
 string IBinaryExpression::toString() const {
-  ArgumentsPtrVector values;
-  values.emplace_back(lhsChild);
-  values.emplace_back(rhsChild);
-  return binaryOperatorToString(*cast<IOperator>(getFunction()), values);
+  return binaryOperatorToString(*cast<IOperator>(getFunction()), {lhsChild, rhsChild});
 }
 
 shared_ptr<IFunction> IBinaryExpression::getFunction() const {

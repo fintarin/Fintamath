@@ -22,9 +22,9 @@ public:
 
   virtual ArgumentsPtrVector getVariablesUnsorted() const;
 
-  ArgumentsPtrVector getVariables() const;
+  virtual void setValuesOfVariables(const vector<Variable> &vars, const ArgumentsPtrVector &vals);
 
-  void setValuesOfVariables(const vector<Variable> &vars, const ArgumentsPtrVector &vals);
+  ArgumentsPtrVector getVariables() const;
 
   unique_ptr<IMathObject> toMinimalObject() const final;
 

@@ -10,7 +10,6 @@
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
@@ -159,7 +158,6 @@ struct ParserConfig {
     IFunction::registerType<Acosh>();
     IFunction::registerType<Atanh>();
     IFunction::registerType<Acoth>();
-    IFunction::registerType<Inv>();
 
     IOperator::registerType<Add>();
     IOperator::registerType<Sub>();

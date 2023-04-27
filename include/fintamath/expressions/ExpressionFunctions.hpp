@@ -49,8 +49,6 @@ Expression pow(const Expression &lhs, const Expression &rhs);
 
 Expression exp(const Expression &rhs);
 
-Expression inv(const Expression &rhs);
-
 Expression log(const Expression &lhs, const Expression &rhs);
 
 Expression ln(const Expression &rhs);

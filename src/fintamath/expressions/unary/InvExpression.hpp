@@ -1,19 +1,19 @@
-#pragma once
+// #pragma once
 
-#include "fintamath/expressions/IUnaryExpression.hpp"
+// #include "fintamath/expressions/IUnaryExpression.hpp"
 
-namespace fintamath {
+// namespace fintamath {
 
-class InvExpression : public IUnaryExpressionCRTP<InvExpression> {
-public:
-  explicit InvExpression(const ArgumentPtr &child);
+// class InvExpression : public IUnaryExpressionCRTP<InvExpression> {
+// public:
+//   explicit InvExpression(const ArgumentPtr &child);
 
-  string toString() const override;
+//   string toString() const override;
 
-protected:
-  ArgumentPtr preSimplify() const override;
+// protected:
+//   ArgumentPtr preSimplify() const override;
 
-  ArgumentPtr postSimplify() const override;
-};
+//   ArgumentPtr postSimplify() const override;
+// };
 
-}
+// }

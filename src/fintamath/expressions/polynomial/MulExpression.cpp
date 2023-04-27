@@ -6,7 +6,6 @@
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -21,74 +20,74 @@ const Mul MUL;
 MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(MUL, children) {
 }
 
-string MulExpression::toString() const {
-  ArgumentsPtrVector mulChildren;
-  ArgumentsPtrVector divChildren;
+// string MulExpression::toString() const {
+//   ArgumentsPtrVector mulChildren;
+//   ArgumentsPtrVector divChildren;
 
-  for (const auto &child : children) {
-    if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Inv>(childExpr->getFunction())) {
-      divChildren.emplace_back(child);
-    }
-    else {
-      mulChildren.emplace_back(child);
-    }
-  }
+//   for (const auto &child : children) {
+//     if (const auto &childExpr = cast<IExpression>(child); childExpr && is<Inv>(childExpr->getFunction())) {
+//       divChildren.emplace_back(child);
+//     }
+//     else {
+//       mulChildren.emplace_back(child);
+//     }
+//   }
 
-  string result;
+//   string result;
 
-  switch (mulChildren.size()) {
-  case 0: {
-    result += childToString(divChildren.front(), true);
+//   switch (mulChildren.size()) {
+//   case 0: {
+//     result += childToString(divChildren.front(), true);
 
-    for (size_t i = 1; i < divChildren.size(); i++) {
-      result += childToString(divChildren[i]);
-    }
+//     for (size_t i = 1; i < divChildren.size(); i++) {
+//       result += childToString(divChildren[i]);
+//     }
 
-    break;
-  }
-  case 1: {
-    result += childToString(mulChildren.front(), true);
+//     break;
+//   }
+//   case 1: {
+//     result += childToString(mulChildren.front(), true);
 
-    for (const auto &child : divChildren) {
-      result += childToString(child);
-    }
+//     for (const auto &child : divChildren) {
+//       result += childToString(child);
+//     }
 
-    break;
-  }
-  default: {
-    result += childToString(mulChildren.front(), true);
+//     break;
+//   }
+//   default: {
+//     result += childToString(mulChildren.front(), true);
 
-    for (size_t i = 1; i < mulChildren.size(); i++) {
-      result += childToString(mulChildren[i], result == Neg().toString());
-    }
+//     for (size_t i = 1; i < mulChildren.size(); i++) {
+//       result += childToString(mulChildren[i], result == Neg().toString());
+//     }
 
-    if (!divChildren.empty()) {
-      result = putInBrackets(result);
-    }
+//     if (!divChildren.empty()) {
+//       result = putInBrackets(result);
+//     }
 
-    for (const auto &child : divChildren) {
-      result += childToString(child);
-    }
+//     for (const auto &child : divChildren) {
+//       result += childToString(child);
+//     }
 
-    break;
-  }
-  }
+//     break;
+//   }
+//   }
 
-  return result;
-}
+//   return result;
+// }
 
-string MulExpression::childToString(const ArgumentPtr &inChild, bool isFirst) const {
-  if (isFirst && *inChild == NEG_ONE) {
+string MulExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+  if (!prevChild && *inChild == NEG_ONE) {
     return Neg().toString();
   }
 
   ArgumentPtr child = inChild;
-  bool isChildInverted = false;
+  // bool isChildInverted = false;
 
-  if (auto invExpr = cast<IExpression>(inChild); invExpr && is<Inv>(invExpr->getFunction())) {
-    child = invExpr->getChildren().front();
-    isChildInverted = true;
-  }
+  // if (auto invExpr = cast<IExpression>(inChild); invExpr && is<Inv>(invExpr->getFunction())) {
+  //   child = invExpr->getChildren().front();
+  //   isChildInverted = true;
+  // }
 
   string result;
 
@@ -99,12 +98,12 @@ string MulExpression::childToString(const ArgumentPtr &inChild, bool isFirst) co
     result = child->toString();
   }
 
-  if (isChildInverted) {
-    result = (isFirst ? ONE.toString() : "") + Div().toString() + result;
-  }
-  else {
-    result = (isFirst ? "" : " ") + result;
-  }
+  // if (isChildInverted) {
+  // result = (isFirst ? ONE.toString() : "") + Div().toString() + result;
+  // }
+  // else {
+  result = (prevChild && *prevChild != NEG_ONE ? " " : "") + result;
+  // }
 
   return result;
 }
@@ -115,15 +114,15 @@ ArgumentPtr MulExpression::negate() const {
   return mulExpr.simplify();
 }
 
-ArgumentPtr MulExpression::invert() const {
-  auto mulExpr = cast<MulExpression>(clone());
+// ArgumentPtr MulExpression::invert() const {
+//   auto mulExpr = cast<MulExpression>(clone());
 
-  for (auto &child : mulExpr->children) {
-    child = makeFunctionExpression(Inv(), {child});
-  }
+//   for (auto &child : mulExpr->children) {
+//     child = makeFunctionExpression(Inv(), {child});
+//   }
 
-  return mulExpr->simplify();
-}
+//   return mulExpr->simplify();
+// }
 
 std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
   if (const auto &powExpr = cast<IExpression>(rhsChild); powExpr && is<Pow>(powExpr->getFunction())) {
@@ -131,12 +130,12 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
     return {powExprChildren[1], powExprChildren.front()};
   }
 
-  if (const auto &invExpr = cast<IExpression>(rhsChild); invExpr && is<Inv>(invExpr->getFunction())) {
-    ArgumentsPtrVector invExprChildren = invExpr->getChildren();
-    std::pair<ArgumentPtr, ArgumentPtr> result = getRateValuePair(invExprChildren.front());
-    result.first = makeFunctionExpression(Neg(), {result.first});
-    return result;
-  }
+  // if (const auto &invExpr = cast<IExpression>(rhsChild); invExpr && is<Inv>(invExpr->getFunction())) {
+  //   ArgumentsPtrVector invExprChildren = invExpr->getChildren();
+  //   std::pair<ArgumentPtr, ArgumentPtr> result = getRateValuePair(invExprChildren.front());
+  //   result.first = makeFunctionExpression(Neg(), {result.first});
+  //   return result;
+  // }
 
   return {ONE.clone(), rhsChild};
 }
@@ -161,43 +160,43 @@ ArgumentPtr MulExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const Ar
     return lhsChild;
   }
 
-  bool isLhsInverted = false;
-  bool isRhsInverted = false;
+  // bool isLhsInverted = false;
+  // bool isRhsInverted = false;
 
-  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
-  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+  // const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  // const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
   shared_ptr<const INumber> lhsNum = nullptr;
   shared_ptr<const INumber> rhsNum = nullptr;
 
-  if (lhsExpr && is<Inv>(lhsExpr->getFunction())) {
-    isLhsInverted = true;
-    lhsNum = cast<INumber>(lhsExpr->getChildren().front());
-  }
-  else {
-    lhsNum = cast<INumber>(lhsChild);
-  }
+  // if (lhsExpr && is<Inv>(lhsExpr->getFunction())) {
+  //   isLhsInverted = true;
+  //   lhsNum = cast<INumber>(lhsExpr->getChildren().front());
+  // }
+  // else {
+  lhsNum = cast<INumber>(lhsChild);
+  // }
 
-  if (rhsExpr && is<Inv>(rhsExpr->getFunction())) {
-    isRhsInverted = true;
-    rhsNum = cast<INumber>(rhsExpr->getChildren().front());
-  }
-  else {
-    rhsNum = cast<INumber>(rhsChild);
-  }
+  // if (rhsExpr && is<Inv>(rhsExpr->getFunction())) {
+  // isRhsInverted = true;
+  // rhsNum = cast<INumber>(rhsExpr->getChildren().front());
+  // }
+  // else {
+  rhsNum = cast<INumber>(rhsChild);
+  // }
 
   if (lhsNum && rhsNum) {
-    if (isLhsInverted && isRhsInverted) {
-      return Inv()(*Mul()(*lhsNum, *rhsNum));
-    }
+    // if (isLhsInverted && isRhsInverted) {
+    // return Inv()(*Mul()(*lhsNum, *rhsNum));
+    // }
 
-    if (isLhsInverted) {
-      return Div()(*rhsNum, *lhsNum);
-    }
+    // if (isLhsInverted) {
+    //   return Div()(*rhsNum, *lhsNum);
+    // }
 
-    if (isRhsInverted) {
-      return Div()(*lhsNum, *rhsNum);
-    }
+    // if (isRhsInverted) {
+    //   return Div()(*lhsNum, *rhsNum);
+    // }
 
     return Mul()(*lhsNum, *rhsNum);
   }
@@ -206,21 +205,44 @@ ArgumentPtr MulExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const Ar
 }
 
 ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr && is<Inv>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
-    return ONE.clone();
+  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+
+  bool isLhsDiv = false;
+  bool isRhsDiv = false;
+
+  if (lhsExpr && is<Div>(lhsExpr->getFunction())) {
+    isLhsDiv = true;
   }
 
-  if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Inv>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
-    return ONE.clone();
+  if (rhsExpr && is<Div>(rhsExpr->getFunction())) {
+    isRhsDiv = true;
   }
 
-  return {};
+  if (!isLhsDiv && !isRhsDiv) {
+    return {};
+  }
+
+  ArgumentPtr lhsNumerator = lhsExpr ? lhsExpr->getChildren().front() : lhsChild;
+  ArgumentPtr rhsNumerator = rhsExpr ? rhsExpr->getChildren().front() : rhsChild;
+  ArgumentPtr numerator = makeRawFunctionExpression(Mul(), {lhsNumerator, rhsNumerator});
+
+  ArgumentPtr denominator;
+  if (isLhsDiv && isRhsDiv) {
+    denominator = makeRawFunctionExpression(Mul(), {lhsExpr->getChildren().back(), rhsExpr->getChildren().back()});
+  }
+  else if (isLhsDiv) {
+    denominator = lhsExpr->getChildren().back();
+  }
+  else {
+    denominator = rhsExpr->getChildren().back();
+  }
+
+  return makeFunctionExpression(Div(), {numerator, denominator});
 }
 
 ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  bool isResultInverted = false;
+  // bool isResultInverted = false;
 
   ArgumentPtr lhs = lhsChild;
   ArgumentPtr rhs = rhsChild;
@@ -228,15 +250,15 @@ ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const Argume
   shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
   shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
-  if (lhsExpr && rhsExpr && is<Inv>(lhsExpr->getFunction()) && is<Inv>(rhsExpr->getFunction())) {
-    isResultInverted = true;
+  // if (lhsExpr && rhsExpr && is<Inv>(lhsExpr->getFunction()) && is<Inv>(rhsExpr->getFunction())) {
+  //   isResultInverted = true;
 
-    lhs = lhsExpr->getChildren().front();
-    rhs = rhsExpr->getChildren().front();
+  //   lhs = lhsExpr->getChildren().front();
+  //   rhs = rhsExpr->getChildren().front();
 
-    lhsExpr = cast<IExpression>(lhs);
-    rhsExpr = cast<IExpression>(rhs);
-  }
+  //   lhsExpr = cast<IExpression>(lhs);
+  //   rhsExpr = cast<IExpression>(rhs);
+  // }
 
   if (lhsExpr && rhsExpr && !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
     return {};
@@ -271,9 +293,9 @@ ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const Argume
     }
   }
 
-  if (isResultInverted) {
-    return makeFunctionExpression(Inv(), {makeFunctionExpression(Add(), resultVect)});
-  }
+  // if (isResultInverted) {
+  //   return makeFunctionExpression(Inv(), {makeFunctionExpression(Add(), resultVect)});
+  // }
 
   return makeFunctionExpression(Add(), resultVect);
 }

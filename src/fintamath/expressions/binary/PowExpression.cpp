@@ -1,8 +1,9 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
+#include "fintamath/exceptions/UndefinedBinaryOpearatorException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Inv.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -25,13 +26,13 @@ ArgumentPtr PowExpression::mulSimplify() const {
     ArgumentsPtrVector args = mulExpr->getChildren();
 
     for (auto &arg : args) {
-      arg = makeFunctionExpression(Pow(), {arg, powExpr->rhsChild->clone()});
+      arg = makeRawFunctionExpression(Pow(), {arg, powExpr->rhsChild->clone()});
     }
 
     return makeFunctionExpression(Mul(), args);
   }
 
-  return powExpr;
+  return {};
 }
 
 ArgumentPtr PowExpression::sumSimplify() const {
@@ -43,7 +44,7 @@ ArgumentPtr PowExpression::sumSimplify() const {
     }
   }
 
-  return powExpr;
+  return {};
 }
 
 Integer PowExpression::generateNextNumber(Integer n) {
@@ -101,7 +102,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
 
   if (powValue < ZERO) {
     powValue = abs(powValue);
-    isResultInverted = true;
+    // isResultInverted = true;
   }
 
   Integer bitNumber = generateFirstNum(powValue);
@@ -122,24 +123,25 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
     newPolynom.emplace_back(mulExpr);
   }
 
-  ArgumentPtr newSumExpr = makeRawFunctionExpression(Add(), newPolynom);
+  ArgumentPtr newSumExpr = makeFunctionExpression(Add(), newPolynom);
 
-  if (isResultInverted) {
-    newSumExpr = makeRawFunctionExpression(Inv(), {newSumExpr});
-  }
+  // if (isResultInverted) {
+  //   newSumExpr = makeFunctionExpression(Inv(), {newSumExpr});
+  // }
 
-  simplifyChild(newSumExpr);
   return newSumExpr;
 }
 
 ArgumentPtr PowExpression::polynomSimplify() const {
-  ArgumentPtr result = mulSimplify();
-
-  if (auto powExpr = cast<PowExpression>(result)) {
-    return powExpr->sumSimplify();
+  if (auto res = mulSimplify()) {
+    return res;
   }
 
-  return result;
+  if (auto res = sumSimplify()) {
+    return res;
+  }
+
+  return {};
 }
 
 ArgumentPtr PowExpression::invert() const {
@@ -157,15 +159,15 @@ ArgumentPtr PowExpression::preSimplify() const {
   }
 
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    auto lhsMul = makeFunctionExpression(Pow(), {NEG_ONE.clone(), simplExpr->rhsChild});
-    auto rhsMul = makeFunctionExpression(Pow(), {lhsExpr->getChildren()[0], simplExpr->rhsChild});
+    auto lhsMul = makeRawFunctionExpression(Pow(), {NEG_ONE.clone(), simplExpr->rhsChild});
+    auto rhsMul = makeRawFunctionExpression(Pow(), {lhsExpr->getChildren()[0], simplExpr->rhsChild});
     return makeFunctionExpression(Mul(), {lhsMul, rhsMul});
   }
 
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     auto lhsPow = lhsExpr->getChildren().front();
-    auto rhsPow = makeFunctionExpression(Mul(), {lhsExpr->getChildren()[1], simplExpr->rhsChild});
-    return makeRawFunctionExpression(Pow(), {lhsPow, rhsPow});
+    auto rhsPow = makeRawFunctionExpression(Mul(), {lhsExpr->getChildren()[1], simplExpr->rhsChild});
+    return makeFunctionExpression(Pow(), {lhsPow, rhsPow});
   }
 
   return simpl;
@@ -179,25 +181,36 @@ ArgumentPtr PowExpression::postSimplify() const {
     return simpl;
   }
 
+  auto lhsInt = cast<Integer>(simplExpr->lhsChild);
   auto rhsInt = cast<Integer>(simplExpr->rhsChild);
 
   if (rhsInt) {
     if (*rhsInt == ZERO) {
+      if (lhsInt && *lhsInt == ZERO) {
+        throw UndefinedBinaryOpearatorException(POW.toString(), simplExpr->lhsChild->toString(),
+                                                simplExpr->rhsChild->toString());
+      }
+
       return ONE.clone();
     }
 
-    if (*simplExpr->lhsChild == ONE || *rhsInt == ONE) {
+    if (*rhsInt == ONE || (lhsInt && *lhsInt == ONE)) {
       return simplExpr->lhsChild;
     }
 
     if (*rhsInt == NEG_ONE) {
-      return makeFunctionExpression(Inv(), {simplExpr->lhsChild});
+      return makeFunctionExpression(Div(), {ONE.clone(), simplExpr->lhsChild});
     }
 
-    if (*rhsInt < 0) {
-      return makeRawFunctionExpression(
-          Inv(), {makeFunctionExpression(Pow(), {simplExpr->lhsChild, makeFunctionExpression(Neg(), {rhsInt})})});
+    if (*rhsInt < ZERO) {
+      return makeFunctionExpression(
+          Div(),
+          {ONE.clone(), makeFunctionExpression(Pow(), {simplExpr->lhsChild, makeFunctionExpression(Neg(), {rhsInt})})});
     }
+  }
+
+  if (lhsInt && *lhsInt == ZERO) {
+    return simplExpr->lhsChild;
   }
 
   return simplExpr->polynomSimplify();

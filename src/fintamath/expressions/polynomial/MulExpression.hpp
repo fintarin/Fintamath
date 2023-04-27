@@ -5,17 +5,15 @@
 #include "fintamath/expressions/IPolynomExpression.hpp"
 
 namespace fintamath {
-class MulExpression : public IPolynomExpressionCRTP<MulExpression>,
-                      public INegatableExpression,
-                      public IInvertableExpression {
+class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatableExpression {
 public:
   explicit MulExpression(const ArgumentsPtrVector &children);
 
   ArgumentPtr negate() const override;
 
-  ArgumentPtr invert() const override;
+  // ArgumentPtr invert() const override;
 
-  string toString() const override;
+  // string toString() const override;
 
 protected:
   FunctionsVector getFunctionsForSimplify() const override;
@@ -23,7 +21,7 @@ protected:
   bool isTermsOrderInversed() const override;
 
 private:
-  string childToString(const ArgumentPtr &inChild, bool isFirst = false) const override;
+  string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
   static ArgumentPtr simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
