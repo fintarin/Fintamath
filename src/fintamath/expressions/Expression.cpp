@@ -92,7 +92,7 @@ ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bo
   return arg;
 }
 
-ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
+ArgumentPtr Expression::preciseExpressionRec(const shared_ptr<const IExpression> &expr, uint8_t precision,
                                              bool shouldSimplify) {
   ArgumentsPtrVector newChildren;
 
@@ -100,7 +100,7 @@ ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpres
     newChildren.emplace_back(preciseRec(child, precision, shouldSimplify));
   }
 
-  std::shared_ptr<IExpression> res = cast<IExpression>(expr->clone());
+  shared_ptr<IExpression> res = cast<IExpression>(expr->clone());
   res->setChildren(newChildren);
 
   if (shouldSimplify) {
@@ -347,7 +347,7 @@ void Expression::validateChild(const ArgumentPtr &child) const {
   }
 }
 
-void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const {
+void Expression::validateFunctionArgs(const shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const {
   const ArgumentsTypesVector childrenTypes = func->getArgsTypes();
 
   if (childrenTypes.size() != args.size()) {

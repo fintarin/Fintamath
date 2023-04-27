@@ -89,8 +89,8 @@ private:
    * @return  1 if we should swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
-                          const std::shared_ptr<const IExpression> &rhsExpr) const;
+  int comparatorFunctions(const shared_ptr<const IExpression> &lhsExpr,
+                          const shared_ptr<const IExpression> &rhsExpr) const;
 
   /**
    * @brief

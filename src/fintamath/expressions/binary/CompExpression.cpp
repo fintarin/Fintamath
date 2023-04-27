@@ -54,7 +54,7 @@ ArgumentPtr CompExpression::preSimplify() const {
   if (!simplExpr->isSolution) {
     if (!is<Integer>(rhsChild) || *rhsChild != ZERO) {
       ArgumentPtr resLhs = makeFunctionExpression(Sub(), {simplExpr->lhsChild, simplExpr->rhsChild});
-      return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
+      return make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
     }
   }
 
