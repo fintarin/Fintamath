@@ -100,7 +100,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
     if (dividerNum) {
       for (auto &child : dividendPolynom) {
-        child = makeFunctionExpression(Div(), {child, dividerNum});
+        child = makeRawFunctionExpression(Div(), {child, dividerNum});
       }
 
       ArgumentPtr newLhs = makeFunctionExpression(Add(), dividendPolynom); // TODO: add ZERO
