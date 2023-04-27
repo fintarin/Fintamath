@@ -219,23 +219,23 @@ ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const 
     isRhsDiv = true;
   }
 
-  if (!isLhsDiv && !isRhsDiv) {
-    return {};
-  }
-
-  ArgumentPtr lhsNumerator = lhsExpr ? lhsExpr->getChildren().front() : lhsChild;
-  ArgumentPtr rhsNumerator = rhsExpr ? rhsExpr->getChildren().front() : rhsChild;
-  ArgumentPtr numerator = makeRawFunctionExpression(Mul(), {lhsNumerator, rhsNumerator});
-
+  ArgumentPtr numerator;
   ArgumentPtr denominator;
+
   if (isLhsDiv && isRhsDiv) {
+    numerator = makeRawFunctionExpression(Mul(), {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()});
     denominator = makeRawFunctionExpression(Mul(), {lhsExpr->getChildren().back(), rhsExpr->getChildren().back()});
   }
   else if (isLhsDiv) {
+    numerator = rhsChild;
     denominator = lhsExpr->getChildren().back();
   }
-  else {
+  else if (isRhsDiv) {
+    numerator = lhsChild;
     denominator = rhsExpr->getChildren().back();
+  }
+  else {
+    return {};
   }
 
   return makeFunctionExpression(Div(), {numerator, denominator});
