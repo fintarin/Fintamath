@@ -199,9 +199,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("a-(b-c)").toString(), "a - b + c");
   EXPECT_EQ(Expression("(a-b)-c").toString(), "a - b - c");
   EXPECT_EQ(Expression("(a+b)*(a+b)+a*b*c-c*a*b+b*a").toString(), "a^2 + 3 a b + b^2");
-  EXPECT_EQ(Expression("x/y/z").toString(), "x/y/z");
+  EXPECT_EQ(Expression("x/y/z").toString(), "x/(y z)");
   EXPECT_EQ(Expression("x/(y/z)").toString(), "(x z)/y");
-  EXPECT_EQ(Expression("(x/y)/z").toString(), "x/y/z");
+  EXPECT_EQ(Expression("(x/y)/z").toString(), "x/(y z)");
   EXPECT_EQ(Expression("x^y^z").toString(), "x^(y z)");
   EXPECT_EQ(Expression("x^(y^z)").toString(), "x^(y^z)");
   EXPECT_EQ(Expression("(x^y)^z").toString(), "x^(y z)");
