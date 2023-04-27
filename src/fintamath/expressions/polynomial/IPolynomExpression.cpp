@@ -462,59 +462,86 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
 int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
                                             const std::shared_ptr<const IExpression> &rhsExpr) const {
 
-  if (!lhsExpr && !rhsExpr) {
+  if (!lhsExpr || !rhsExpr) {
     return 0;
   }
 
-  if (lhsExpr && rhsExpr) {
-    auto lhsFunc = lhsExpr->getFunction();
-    auto rhsFunc = rhsExpr->getFunction();
+  auto lhsFunc = lhsExpr->getFunction();
+  auto rhsFunc = rhsExpr->getFunction();
 
-    ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
-    ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
+  ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
+  ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
 
-    ArgumentPtr lhsChild = nullptr;
-    ArgumentPtr rhsChild = nullptr;
+  {
+    ArgumentPtr lhsToCompare = nullptr;
+    ArgumentPtr rhsToCompare = nullptr;
 
     if (lhsChildren.size() == 1) {
-      lhsChild = lhsChildren.front();
+      lhsToCompare = lhsChildren.front();
     }
     if (rhsChildren.size() == 1) {
-      rhsChild = rhsChildren.front();
+      rhsToCompare = rhsChildren.front();
     }
 
-    if (lhsChild || rhsChild) {
-      if (!lhsChild) {
-        lhsChild = lhsExpr;
+    if (lhsToCompare || rhsToCompare) {
+      if (!lhsToCompare) {
+        lhsToCompare = lhsExpr;
       }
-      else if (!rhsChild) {
-        rhsChild = rhsExpr;
+      else if (!rhsToCompare) {
+        rhsToCompare = rhsExpr;
       }
 
-      if (int res = comparator(lhsChild, rhsChild); res != 0) {
+      if (int res = comparator(lhsToCompare, rhsToCompare); res != 0) {
         return res;
       }
     }
     else if (*lhsFunc == *rhsFunc) {
       return comparatorChildren(lhsChildren, rhsChildren);
     }
-
-    if (auto lhsOper = cast<IOperator>(lhsFunc)) {
-      if (auto rhsOper = cast<IOperator>(rhsFunc)) {
-        return lhsOper->toString() < rhsOper->toString() ? -1 : 1;
-      }
-
-      return -1;
-    }
-
-    if (is<IOperator>(rhsFunc)) {
-      return 1;
-    }
-
-    return lhsFunc->toString() < rhsFunc->toString() ? -1 : 1;
   }
 
-  return 0;
+  if (auto lhsOper = cast<IOperator>(lhsFunc)) {
+    if (auto rhsOper = cast<IOperator>(rhsFunc)) {
+      IOperator::Priority lhsPriority = lhsOper->getOperatorPriority();
+      IOperator::Priority rhsPriority = rhsOper->getOperatorPriority();
+
+      if (lhsPriority == rhsPriority) {
+        if (auto res = comparatorChildren(lhsChildren, rhsChildren)) {
+          return res;
+        }
+      }
+      else {
+        ArgumentPtr childToCompare;
+        ArgumentsPtrVector childrenToCompare;
+        bool isResInverted = false;
+
+        if (lhsPriority > rhsPriority) {
+          childToCompare = rhsExpr;
+          childrenToCompare = lhsChildren;
+        }
+        else {
+          childToCompare = lhsExpr;
+          childrenToCompare = rhsChildren;
+          isResInverted = true;
+        }
+
+        for (const auto &lhsChild : childrenToCompare) {
+          if (auto res = comparator(lhsChild, childToCompare)) {
+            return isResInverted ? res * -1 : res;
+          }
+        }
+      }
+    }
+  }
+
+  if (is<IOperator>(lhsFunc) && !is<IOperator>(rhsFunc)) {
+    return -1;
+  }
+  if (!is<IOperator>(lhsFunc) && is<IOperator>(rhsFunc)) {
+    return 1;
+  }
+
+  return lhsFunc->toString() < rhsFunc->toString() ? -1 : 1;
 }
 
 int IPolynomExpression::comparatorTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
