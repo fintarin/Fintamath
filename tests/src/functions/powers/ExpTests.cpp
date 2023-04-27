@@ -27,7 +27,7 @@ TEST(ExpTests, callTest) {
   EXPECT_EQ(f(Rational(1, 3))->toString(),
             "1.3956124250860895286281253196025868375979065151994069826175167060317390156459518");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "exp(a)");
+  EXPECT_EQ(f(Variable("a"))->toString(), "E^a");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1)), InvalidInputFunctionException);

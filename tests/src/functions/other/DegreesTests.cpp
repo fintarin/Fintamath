@@ -25,7 +25,7 @@ TEST(DegreesTests, callTest) {
   EXPECT_EQ(f(Rational(-5, 2))->toString(),
             "-143.23944878270580219199538703526292583101368116641080387290060965300711787080388");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "degrees(a)");
+  EXPECT_EQ(f(Variable("a"))->toString(), "(180 a)/Pi");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

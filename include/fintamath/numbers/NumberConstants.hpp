@@ -13,11 +13,15 @@ extern const Integer TWO;
 
 extern const Integer THREE;
 
+extern const Integer TEN;
+
 extern const Integer NEG_ONE;
 
 extern const Integer NEG_TWO;
 
 extern const Integer NEG_THREE;
+
+extern const Integer NEG_TEN;
 
 extern const Real E_NUM;
 

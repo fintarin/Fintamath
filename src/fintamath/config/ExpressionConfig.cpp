@@ -25,14 +25,26 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
+#include "fintamath/functions/logarithms/Lb.hpp"
+#include "fintamath/functions/logarithms/Lg.hpp"
+#include "fintamath/functions/logarithms/Ln.hpp"
+#include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/functions/logic/Equiv.hpp"
 #include "fintamath/functions/logic/Impl.hpp"
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/other/Angle.hpp"
+#include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Index.hpp"
+#include "fintamath/functions/other/Percent.hpp"
+#include "fintamath/functions/other/Rad.hpp"
+#include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/constants/E.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -108,7 +120,7 @@ struct ExpressionConfig {
       }
 
       ArgumentPtr res = func(*args.front(), *args.back());
-      return std::make_shared<Expression>(res);
+      return make_shared<Expression>(res);
     });
 
     Expression::registerFunctionExpressionMaker<Impl>([](const ArgumentsPtrVector &args) {
@@ -165,9 +177,46 @@ struct ExpressionConfig {
     Expression::registerFunctionExpressionMaker<Derivative>([](const ArgumentsPtrVector &args) {
       return make_shared<DerivativeExpression>(args.front());
     });
+
+    Expression::registerFunctionExpressionMaker<Log>([](const ArgumentsPtrVector &args) {
+      return makeRawFunctionExpression(
+          Div(), {makeRawFunctionExpression(Ln(), {args.back()}), {makeRawFunctionExpression(Ln(), {args.front()})}});
+    });
+
+    Expression::registerFunctionExpressionMaker<Lb>([](const ArgumentsPtrVector &args) {
+      return makeRawFunctionExpression(
+          Div(), {makeRawFunctionExpression(Ln(), {args.back()}), {makeRawFunctionExpression(Ln(), {TWO.clone()})}});
+    });
+
+    Expression::registerFunctionExpressionMaker<Lg>([](const ArgumentsPtrVector &args) {
+      return makeRawFunctionExpression(
+          Div(), {makeRawFunctionExpression(Ln(), {args.back()}), {makeRawFunctionExpression(Ln(), {TEN.clone()})}});
+    });
+
+    Expression::registerFunctionExpressionMaker<Exp>([](const ArgumentsPtrVector &args) {
+      return makeRawFunctionExpression(Pow(), {E().clone(), args.front()});
+    });
+
+    Expression::registerFunctionExpressionMaker<Percent>([](const ArgumentsPtrVector &args) {
+      static const auto PERCENT_VALUE = make_shared<Integer>(100);
+      return makeRawFunctionExpression(Div(), {args.front(), PERCENT_VALUE});
+    });
+
+    Expression::registerFunctionExpressionMaker<Rad>([](const ArgumentsPtrVector &args) {
+      static const auto ANGLE = make_shared<Integer>(180);
+      return makeRawFunctionExpression(Mul(), {args.front(), makeRawFunctionExpression(Div(), {Pi().clone(), ANGLE})});
+    });
+
+    Expression::registerFunctionExpressionMaker<Degrees>([](const ArgumentsPtrVector &args) {
+      static const auto ANGLE = make_shared<Integer>(180);
+      return makeRawFunctionExpression(Mul(), {args.front(), makeRawFunctionExpression(Div(), {ANGLE, Pi().clone()})});
+    });
+
+    Expression::registerFunctionExpressionMaker<Angle>([](const ArgumentsPtrVector &args) {
+      return makeRawFunctionExpression(Rad(), {args.front()});
+    });
   }
 };
 
 const ExpressionConfig config;
-
 }

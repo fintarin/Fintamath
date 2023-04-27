@@ -25,7 +25,7 @@ TEST(AngleTests, callTest) {
   EXPECT_EQ(f(Rational(-5, 2))->toString(),
             "-0.043633231299858239423092269212215317836071797213543136402429786004275227865086236");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "a°");
+  EXPECT_EQ(f(Variable("a"))->toString(), "1/180 Pi a");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

@@ -118,7 +118,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sqrt4*2!").toString(), "4");
   EXPECT_EQ(Expression("abs(-5)").toString(), "5");
   EXPECT_EQ(Expression("abs((-5))").toString(), "5");
-  EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
+  EXPECT_EQ(Expression("log(2, 256)").toString(), "ln(256)/ln(2)");
   EXPECT_EQ(Expression("sign(10)").toString(), "1");
 
   EXPECT_EQ(Expression("E").toString(), "E");
@@ -129,21 +129,21 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("8Pi").toString(), "8 Pi");
   EXPECT_EQ(Expression("E8").toString(), "8 E");
   EXPECT_EQ(Expression("Pi8").toString(), "8 Pi");
-  EXPECT_EQ(Expression("exp100").toString(), "exp(100)");
+  EXPECT_EQ(Expression("exp100").toString(), "E^100");
   EXPECT_EQ(Expression("E^101").toString(), "E^101");
   EXPECT_EQ(Expression("E^(-101)").toString(), "1/E^101");
-  EXPECT_EQ(Expression("log(E,E)").toString(), "log(E, E)");
-  EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "log(Pi, Pi^10)");
-  EXPECT_EQ(Expression("log(E,E^3)").toString(), "log(E, E^3)");
-  EXPECT_EQ(Expression("log((Pi),(E)^((Pi)))").toString(), "log(Pi, E^Pi)");
+  EXPECT_EQ(Expression("log(E,E)").toString(), "1");
+  EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "ln(Pi^10)/ln(Pi)");
+  EXPECT_EQ(Expression("log(E,E^3)").toString(), "ln(E^3)/ln(E)");
+  EXPECT_EQ(Expression("log((Pi),(E)^((Pi)))").toString(), "ln(E^Pi)/ln(Pi)");
   EXPECT_EQ(Expression("ln3").toString(), "ln(3)");
   EXPECT_EQ(Expression("ln2").toString(), "ln(2)");
   EXPECT_EQ(Expression("ln100").toString(), "ln(100)");
   EXPECT_EQ(Expression("ln(E)").toString(), "ln(E)");
-  EXPECT_EQ(Expression("lg99").toString(), "lg(99)");
-  EXPECT_EQ(Expression("lg100").toString(), "2");
-  EXPECT_EQ(Expression("lb100").toString(), "lb(100)");
-  EXPECT_EQ(Expression("lb4").toString(), "2");
+  EXPECT_EQ(Expression("lg99").toString(), "ln(99)/ln(10)");
+  EXPECT_EQ(Expression("lg100").toString(), "ln(100)/ln(10)");
+  EXPECT_EQ(Expression("lb100").toString(), "ln(100)/ln(2)");
+  EXPECT_EQ(Expression("lb4").toString(), "ln(4)/ln(2)");
   EXPECT_EQ(Expression("sin10").toString(), "sin(10)");
   EXPECT_EQ(Expression("cos10").toString(), "cos(10)");
   EXPECT_EQ(Expression("tan10").toString(), "tan(10)");
@@ -254,18 +254,22 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("((a+b+(a+c)+(1+v))+((a+c(abc(aaa))+v)c+d))((c)((d+d+d)b)a)").toString(),
             "3 a^5 b^2 c^4 d + 3 a^2 b c^2 d + 6 a^2 b c d + 3 a b^2 c d + 3 a b c^2 d v + 3 a b c^2 d + 3 a b c d^2 + "
             "3 a b c d v + 3 a b c d");
-  EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
-  EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("2/(a + 2) + b/(a + 2)").toString(), "b/(a + 2) + 2/(a + 2)");
   EXPECT_EQ(Expression("c * 2^(a + 2) + b^(a + 2)").toString(), "b^(a + 2) + 2^(a + 2) c");
   EXPECT_EQ(Expression("2^(a + 2) * b^(a + 2)").toString(), "b^(a + 2) 2^(a + 2)");
+  EXPECT_EQ(Expression("5/(a+b) + 5/(2a+b) + 5/(a+b)").toString(), "5/(2 a + b) + 10/(a + b)");
+  EXPECT_EQ(Expression("(x+y)/(a+b) + 5/(2a+b) + (x+2y)/(a+b)").toString(),
+            "(2 x)/(a + b) + (3 y)/(a + b) + 5/(2 a + b)");
+
+  EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
+  EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
   // TODO: implement function minimization
   // EXPECT_EQ(Expression("sin(asin(a+b+1-1))^1000/(a+b+1-1)^998").toString(), "sin(asin(a+b))^1000/(a+b)^998");
-
   EXPECT_EQ(Expression("a(10^100)/10^99").toString(), "10 a");
   EXPECT_EQ(Expression("(10+2+3-5)^1000000000a/(9+1)^999999999").toString(), "10 a");
   EXPECT_EQ(Expression("10^(10^100/10^96)a/10^9999").toString(), "10 a");
   EXPECT_EQ(Expression("10^(10^100/10^90)a/10^9999999999").toString(), "10 a");
+  EXPECT_EQ(Expression("log(100000000000!,100000000000!)").toString(), "1");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-sin(x) + sin(2)").toString(), "-sin(x) + sin(2)");
@@ -288,7 +292,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(4 a_1^3 b) + cot(sin(4 a_1 b^3)) + b^4 + asin(sin(a_1^4)) + cos(6 a_1^2 b^2)").toString(),
             "asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3)) + b^4");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
-  EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "a! a!! a!!! a%");
+  EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "1/100 a! a!! a!!! a");
 
   EXPECT_EQ(Expression("a=a").toString(), "True");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "True");

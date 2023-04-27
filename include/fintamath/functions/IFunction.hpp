@@ -28,8 +28,6 @@ public:
 
   virtual bool doArgsMatch(const ArgumentsRefVector &argsVect) const = 0;
 
-  virtual bool isNonExressionEvaluatable() const = 0;
-
   template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
   unique_ptr<IMathObject> operator()(const Args &...args) const {
     ArgumentsRefVector argsVect = {args...};
@@ -65,9 +63,7 @@ private:
 template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IFunction {
 public:
-  IFunctionCRTP(bool isTypeAny = false, bool isNonExressionEvaluatable = true)
-      : isTypeAnyFunc(isTypeAny),
-        isNonExressionEvaluatableFunc(isNonExressionEvaluatable) {
+  IFunctionCRTP(bool isTypeAny = false) : isTypeAnyFunc(isTypeAny) {
   }
 
   IFunction::Type getFunctionType() const final {
@@ -90,10 +86,6 @@ public:
     }
 
     return doArgsMatch<0, Args...>(argsVect);
-  }
-
-  bool isNonExressionEvaluatable() const final {
-    return isNonExressionEvaluatableFunc;
   }
 
 protected:
@@ -163,8 +155,6 @@ private:
 
 private:
   const bool isTypeAnyFunc;
-
-  const bool isNonExressionEvaluatableFunc;
 };
 
 }

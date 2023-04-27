@@ -157,7 +157,7 @@ ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrV
     }
   }
 
-  if (!func.isNonExressionEvaluatable() || !func.doArgsMatch(args)) {
+  if (!func.doArgsMatch(args)) {
     return {};
   }
 
