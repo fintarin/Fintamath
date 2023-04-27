@@ -26,7 +26,7 @@ TEST(LgTests, callTest) {
             "0.30102999566398119521373889472449302676818988146210854131042746112710818927442451");
   EXPECT_EQ(f(Rational(1, 10))->toString(), "-1");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "lg(a)");
+  EXPECT_EQ(f(Variable("a"))->toString(), "ln(a)/ln(10)");
 
   EXPECT_THROW(f(Integer(-10)), UndefinedFunctionException);
 

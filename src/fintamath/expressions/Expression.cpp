@@ -233,7 +233,8 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   }
 
   if (auto func = IFunction::parse(tokens.front()); func && !is<IOperator>(func)) {
-    child = make_shared<FunctionExpression>(*func, parseFunctionArgs(TokenVector(tokens.begin() + 1, tokens.end())));
+    ArgumentsPtrVector args = parseFunctionArgs(TokenVector(tokens.begin() + 1, tokens.end()));
+    child = makeRawFunctionExpression(*func, args);
     return true;
   }
 
@@ -406,9 +407,7 @@ shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const A
     return expr;
   }
 
-  auto funcExpr = make_shared<Expression>();
-  funcExpr->child = make_shared<FunctionExpression>(func, args);
-  return funcExpr;
+  return make_shared<FunctionExpression>(func, args);
 }
 
 void Expression::setChildren(const ArgumentsPtrVector &childVect) {

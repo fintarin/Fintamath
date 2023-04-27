@@ -88,7 +88,7 @@ ArgumentPtr FunctionExpression::postSimplify() const {
     args.emplace_back(*child);
   }
 
-  if (!func->isNonExressionEvaluatable() || !func->doArgsMatch(args)) {
+  if (!func->doArgsMatch(args)) {
     return simpl;
   }
 

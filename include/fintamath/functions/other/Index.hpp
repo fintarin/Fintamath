@@ -9,7 +9,7 @@ namespace fintamath {
 
 class Index : public IOperatorCRTP<Variable, Index, Variable, Integer> {
 public:
-  Index() : IOperatorCRTP(IOperator::Priority::Exponentiation, false, false) {
+  Index() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
   }
 
   string toString() const override {
