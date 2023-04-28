@@ -107,7 +107,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentsPtrVector mulExprPolynom;
-    mulExprPolynom.emplace_back(make_shared<Integer>(split(powValue, vectOfPows)));
+    mulExprPolynom.emplace_back(make_shared<Integer>(multinomialCoefficient(powValue, vectOfPows)));
 
     for (size_t j = 0; j < variableCount; j++) {
       auto powExpr = makeRawFunctionExpression(Pow(), {polynom[j], make_shared<Integer>(move(vectOfPows[j]))});

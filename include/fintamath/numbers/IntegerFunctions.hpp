@@ -12,10 +12,10 @@ Integer pow(const Integer &lhs, uint64_t rhs);
 
 Integer factorial(const Integer &rhs);
 
-Integer factorial(const Integer &rhs, int64_t order);
+Integer factorial(const Integer &rhs, size_t order);
 
-Integer combinations(const Integer &n, const Integer &k);
+Integer combinations(const Integer &totalNumber, const Integer &choosedNumber);
 
-Integer split(const Integer &n, const vector<Integer> &k_values);
+Integer multinomialCoefficient(const Integer &totalNumber, const vector<Integer> &groupNumbers);
 
 }
