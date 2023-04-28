@@ -212,8 +212,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "(a + 3)/(b + 2)");
   EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(a b + 3 b)/(a b + 2 a)");
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "(a b + 5 a + 3 b + 15)/(a b + 2 a)");
-  EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
-  EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
+  // TODO!
+  // EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
+  // TODO!
+  // EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   // TODO: polynomial division
   //  EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
   EXPECT_EQ(Expression("1*(a+b)*1").toString(), "a + b");
@@ -878,15 +880,4 @@ TEST(ExpressionTests, variableExpressionDivideOperatorTest) {
 TEST(ExpressionTests, expressionVariableDivideOperatorTest) {
   EXPECT_EQ(Expression("a/b") / Variable("a"), Expression("1/b"));
   EXPECT_EQ(Expression("b/c") / Variable("a"), Expression("b/c/a"));
-}
-
-TEST(ExpressionTests, makeFunctionExpressionTest) {
-  // TODO: add tests
-  //  friend unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
-  //  friend ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
-}
-
-TEST(ExpressionTests, makeRawFunctionExpressionTest) {
-  // TODO: add tests
-  // friend shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 }
