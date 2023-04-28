@@ -11,13 +11,13 @@ class IMathObject;
 
 class Converter {
 public:
-  template <typename Value, typename Type>
-  static void add(const function<unique_ptr<IMathObject>(const Value &value, const Type &type)> &convertFunc) {
-    converter.add<Value, Type>(convertFunc);
+  template <typename Type, typename Value>
+  static void add(const function<unique_ptr<IMathObject>(const Type &type, const Value &value)> &convertFunc) {
+    converter.add<Type, Value>(convertFunc);
   }
 
-  static unique_ptr<IMathObject> convert(const IMathObject &from, const IMathObject &to) {
-    return converter(from, to);
+  static unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) {
+    return converter(to, from);
   }
 
 private:

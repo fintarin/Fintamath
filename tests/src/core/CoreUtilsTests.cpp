@@ -8,9 +8,15 @@
 
 using namespace fintamath;
 
-// TODO: implement tests
-
-TEST(CoreUtilsTests, castUniquePtrTest) {
+TEST(CoreUtilsTests, castTest) {
   EXPECT_NO_THROW(unique_ptr<IArithmetic> a = cast<IArithmetic>(ONE.clone()));
   EXPECT_FALSE(is<Rational>(ONE.clone()));
+}
+
+TEST(CoreUtilsTests, convertTest) {
+  EXPECT_TRUE(is<Rational>(convert(Rational(), Integer())));
+  EXPECT_FALSE(convert(Integer(), Rational()));
+
+  EXPECT_TRUE(is<Rational>(convert<Rational>(Integer())));
+  EXPECT_THROW(convert<Integer>(Rational()), std::bad_cast);
 }

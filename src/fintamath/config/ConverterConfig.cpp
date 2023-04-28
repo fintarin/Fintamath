@@ -16,24 +16,24 @@ namespace {
 
 struct ConverterConfig {
   ConverterConfig() {
-    Converter::add<Integer, Integer>([](const Integer &value, const Integer & /*type*/) {
+    Converter::add<Integer, Integer>([](const Integer & /*type*/, const Integer &value) {
       return make_unique<Integer>(value);
     });
 
-    Converter::add<Rational, Rational>([](const Rational &value, const Rational & /*type*/) {
+    Converter::add<Rational, Rational>([](const Rational & /*type*/, const Rational &value) {
       return make_unique<Rational>(value);
     });
-    Converter::add<Integer, Rational>([](const Integer &value, const Rational & /*type*/) {
+    Converter::add<Rational, Integer>([](const Rational & /*type*/, const Integer &value) {
       return make_unique<Rational>(value);
     });
 
-    Converter::add<Real, Real>([](const Real &value, const Real & /*type*/) {
+    Converter::add<Real, Real>([](const Real & /*type*/, const Real &value) {
       return make_unique<Real>(value);
     });
-    Converter::add<Integer, Real>([](const Integer &value, const Real & /*type*/) {
+    Converter::add<Real, Integer>([](const Real & /*type*/, const Integer &value) {
       return make_unique<Real>(value);
     });
-    Converter::add<Rational, Real>([](const Rational &value, const Real & /*type*/) {
+    Converter::add<Real, Rational>([](const Real & /*type*/, const Rational &value) {
       return make_unique<Real>(value);
     });
   }

@@ -51,14 +51,14 @@ shared_ptr<const To> cast(const shared_ptr<const From> &from) {
   return std::dynamic_pointer_cast<const To>(from);
 }
 
-inline unique_ptr<IMathObject> convert(const IMathObject &from, const IMathObject &to) {
-  return Converter::convert(from, to);
+inline unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) {
+  return Converter::convert(to, from);
 }
 
 template <typename To>
 To convert(const IMathObject &from) {
   static const To to;
-  return cast<To>(*convert(from, to));
+  return cast<To>(*convert(to, from));
 }
 
 template <typename To>

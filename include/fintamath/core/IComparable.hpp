@@ -95,10 +95,10 @@ private:
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return f1(*this, *rhsPtr);
     }
-    if (unique_ptr<IMathObject> rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
+    if (unique_ptr<IMathObject> rhsPtr = convert(*this, rhs); rhsPtr != nullptr) {
       return f1(*this, cast<Derived>(*rhsPtr));
     }
-    if (unique_ptr<IMathObject> lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
+    if (unique_ptr<IMathObject> lhsPtr = convert(rhs, *this); lhsPtr != nullptr) {
       return f2(cast<IComparable>(*lhsPtr), rhs);
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());
