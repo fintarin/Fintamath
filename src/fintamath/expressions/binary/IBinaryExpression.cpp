@@ -44,7 +44,13 @@ ArgumentPtr IBinaryExpression::simplify() const {
 
 void IBinaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.size() != 2) {
-    return;
+    vector<string> argNamesVect(childVect.size());
+
+    for (size_t i = 0; i < argNamesVect.size(); i++) {
+      argNamesVect[i] = childVect[i].get()->toString();
+    }
+
+    throw InvalidInputFunctionException(toString(), argNamesVect);
   }
 
   lhsChild = childVect[0];
