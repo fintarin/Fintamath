@@ -58,7 +58,13 @@ inline unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject 
 template <typename To>
 To convert(const IMathObject &from) {
   static const To to;
-  return cast<To>(*convert(to, from));
+  auto res = convert(to, from);
+
+  if (!res) {
+    throw std::bad_cast();
+  }
+
+  return cast<To>(*res);
 }
 
 template <typename To>
