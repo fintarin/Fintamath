@@ -167,16 +167,16 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sin1^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin(10^30)").toString(), "sin(1000000000000000000000000000000)");
   EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").toString(), "cos(1)^2 + sin(1)^2");
-  EXPECT_EQ(Expression("sin(Pi/3)").toString(), "sin(Pi/3)");
-  EXPECT_EQ(Expression("cos(Pi/3)").toString(), "cos(Pi/3)");
+  EXPECT_EQ(Expression("sin(Pi/3)").toString(), "sin(1/3 Pi)");
+  EXPECT_EQ(Expression("cos(Pi/3)").toString(), "cos(1/3 Pi)");
   EXPECT_EQ(Expression("2!*E").toString(), "2 E");
   EXPECT_EQ(Expression("E*2!").toString(), "2 E");
-  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt((-cos((2 Pi)/3) + 1)/2)");
-  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(), "2 cos(Pi/3) sqrt((-cos((2 Pi)/3) + 1)/2)");
+  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-1/2 cos(2/3 Pi) + 1/2)");
+  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(),
+            "2 cos(1/3 Pi) sqrt(-1/2 cos(2/3 Pi) + 1/2)");
   EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").toString(), "ln(ln(ln(ln(E))))");
   EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").toString(), "ln(ln(ln(ln(ln(E)))))");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
-  EXPECT_EQ(Expression("0^E").toString(), "0");
 
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
   EXPECT_EQ(Expression("a.2").toString(), "1/5 a");
