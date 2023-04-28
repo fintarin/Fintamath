@@ -202,12 +202,12 @@ protected:
         });
   }
 
-  unique_ptr<IArithmetic> unaryPlusAbstract() const final {
-    return make_unique<Derived>(+(*this));
-  }
-
   unique_ptr<IArithmetic> negateAbstract() const final {
     return make_unique<Derived>(-(*this));
+  }
+
+  unique_ptr<IArithmetic> unaryPlusAbstract() const final {
+    return make_unique<Derived>(+(*this));
   }
 
 private:
