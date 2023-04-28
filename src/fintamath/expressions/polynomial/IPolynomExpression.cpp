@@ -112,7 +112,7 @@ void IPolynomExpression::globalSimplifyRec() {
 }
 
 ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
-                                                      const ArgumentPtr &rhs) {
+                                                     const ArgumentPtr &rhs) {
   for (const auto &func : simplFuncs) {
     if (auto res = func(lhs, rhs)) {
       return res;
@@ -183,9 +183,11 @@ bool IPolynomExpression::isComparableOrderInversed() const {
 }
 
 void IPolynomExpression::setChildren(const ArgumentsPtrVector &childVect) {
-  if (!childVect.empty()) {
-    children = childVect;
+  if (childVect.empty()) {
+    throw InvalidInputFunctionException(toString(), {});
   }
+
+  children = childVect;
 }
 
 void IPolynomExpression::sort() {

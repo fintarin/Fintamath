@@ -99,7 +99,13 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
 
 void IUnaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.size() != 1) {
-    return;
+    vector<string> argNamesVect(childVect.size());
+
+    for (size_t i = 0; i < argNamesVect.size(); i++) {
+      argNamesVect[i] = childVect[i].get()->toString();
+    }
+
+    throw InvalidInputFunctionException(toString(), argNamesVect);
   }
 
   child = childVect.front();
