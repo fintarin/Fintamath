@@ -97,7 +97,7 @@ ArgumentPtr DivExpression::postSimplify() const {
 }
 
 ArgumentPtr DivExpression::globalSimplify() const {
-  if (DIV.doArgsMatch({*rhsChild, *rhsChild})) {
+  if (DIV.doArgsMatch({ONE, *rhsChild})) {
     return makeFunctionExpression(Mul(), {lhsChild, DIV(ONE, *rhsChild)});
   }
 
