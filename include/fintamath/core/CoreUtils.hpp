@@ -88,6 +88,11 @@ bool is(const shared_ptr<const From> &from) {
 
 template <typename To, typename From>
 bool is(const std::reference_wrapper<From> &from) {
+  return dynamic_cast<To *>(&from.get());
+}
+
+template <typename To, typename From>
+bool is(const std::reference_wrapper<const From> &from) {
   return dynamic_cast<const To *>(&from.get());
 }
 
