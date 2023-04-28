@@ -179,7 +179,7 @@ ArgumentPtr DivExpression::mulSimplify() const {
         break;
       }
 
-      if (DIV.doArgsMatch({*lhsChildren[i], *rhsChildren[j]})) {
+      if (auto res = callFunction(DIV, {lhsChildren[i], rhsChildren[j]})) {
         lhsChildren[i] = DIV(*lhsChildren[i], *rhsChildren[j]);
         rhsChildren.erase(rhsChildren.begin() + int64_t(j));
         break;

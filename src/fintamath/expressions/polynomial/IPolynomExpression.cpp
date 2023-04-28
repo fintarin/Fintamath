@@ -88,24 +88,38 @@ void IPolynomExpression::postSimplifyRec() {
 
 void IPolynomExpression::globalSimplifyRec() {
   size_t childrenSize = children.size();
-  FunctionsVector functions = getFunctionsForSimplify();
+  SimplifyFunctionsVector functions = getFunctionsForSimplify();
 
-  for (const auto &function : functions) {
-    for (size_t i = 1; i < children.size(); i++) {
-      const ArgumentPtr &lhsChild = children[i - 1];
-      const ArgumentPtr &rhsChild = children[i];
+  for (size_t i = 1; i < children.size(); i++) {
+    const ArgumentPtr &lhsChild = children[i - 1];
+    const ArgumentPtr &rhsChild = children[i];
 
-      if (auto res = function(lhsChild, rhsChild)) {
-        children[i - 1] = res;
-        children.erase(children.begin() + int64_t(i));
-        i--;
-      }
+    if (auto res = callFunction(*func, {lhsChild, rhsChild})) {
+      children[i - 1] = res;
+      children.erase(children.begin() + int64_t(i));
+      i--;
+    }
+    else if (auto res = useSimplifyFunctions(functions, lhsChild, rhsChild)) {
+      children[i - 1] = res;
+      children.erase(children.begin() + int64_t(i));
+      i--;
     }
   }
 
   if (children.size() != childrenSize) {
     globalSimplifyRec();
   }
+}
+
+ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
+                                                      const ArgumentPtr &rhs) {
+  for (const auto &func : simplFuncs) {
+    if (auto res = func(lhs, rhs)) {
+      return res;
+    }
+  }
+
+  return {};
 }
 
 ArgumentPtr IPolynomExpression::preSimplify() const {
@@ -156,7 +170,7 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
   return simpl;
 }
 
-IPolynomExpression::FunctionsVector IPolynomExpression::getFunctionsForSimplify() const {
+IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForSimplify() const {
   return {};
 }
 

@@ -17,8 +17,9 @@ public:
   virtual void addElement(const ArgumentPtr &element) = 0;
 
 protected:
-  using FunctionsVector =
-      std::vector<std::function<ArgumentPtr(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)>>;
+  using SimplifyFunction = std::function<ArgumentPtr(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)>;
+
+  using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
 
   virtual ArgumentPtr preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
 
@@ -26,7 +27,7 @@ protected:
 
   ArgumentPtr simplify() const final;
 
-  virtual FunctionsVector getFunctionsForSimplify() const;
+  virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
   virtual string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const = 0;
 
@@ -44,6 +45,9 @@ private:
   void postSimplifyRec();
 
   void globalSimplifyRec();
+
+  static ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
+                                    const ArgumentPtr &rhs);
 
   void sort();
 

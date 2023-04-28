@@ -31,6 +31,6 @@ extern ArgumentPtr makeFunctionExpression(const IFunction &func, const Arguments
 
 extern shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
-bool hasVariable(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var);
+bool hasVariables(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var);
 
 }

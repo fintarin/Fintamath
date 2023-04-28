@@ -11,12 +11,8 @@ public:
 
   ArgumentPtr negate() const override;
 
-  // ArgumentPtr invert() const override;
-
-  // string toString() const override;
-
 protected:
-  FunctionsVector getFunctionsForSimplify() const override;
+  SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
   bool isTermsOrderInversed() const override;
 

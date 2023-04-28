@@ -9,7 +9,6 @@
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/expressions/unary/DerivativeExpression.hpp"
-#include "fintamath/expressions/unary/InvExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -215,4 +214,5 @@ struct ExpressionConfig {
 };
 
 const ExpressionConfig config;
+
 }

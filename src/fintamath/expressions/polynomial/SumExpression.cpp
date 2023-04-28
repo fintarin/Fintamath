@@ -25,14 +25,7 @@ string SumExpression::childToString(const ArgumentPtr &inChild, const ArgumentPt
     isChildNegated = true;
   }
 
-  string result;
-
-  // if (auto powExpr = cast<IExpression>(child); powExpr && is<Inv>(powExpr->getFunction())) {
-  // result = powExpr->getChildren().front()->toString();
-  // }
-  // else {
-  result = child->toString();
-  // }
+  string result = child->toString();
 
   if (!isChildNegated && result.size() > 1 && result.front() == Neg().toString().front()) {
     isChildNegated = true;
@@ -69,7 +62,7 @@ ArgumentPtr SumExpression::negate() const {
   return neg.simplify();
 }
 
-SumExpression::FunctionsVector SumExpression::getFunctionsForSimplify() const {
+SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForSimplify() const {
   return {
       &SumExpression::simplifyNumbers,   //
       &SumExpression::simplifyNegations, //
@@ -87,38 +80,6 @@ ArgumentPtr SumExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const Ar
 
   bool lhsNeg = false;
   bool rhsNeg = false;
-
-  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
-  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
-
-  shared_ptr<const INumber> lhsNum = nullptr;
-  shared_ptr<const INumber> rhsNum = nullptr;
-
-  if (lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    lhsNum = cast<INumber>(lhsExpr->getChildren().front());
-
-    if (lhsNum) {
-      lhsNum = -(*lhsNum);
-    }
-  }
-  else {
-    lhsNum = cast<INumber>(lhsChild);
-  }
-
-  if (rhsExpr && is<Neg>(rhsExpr->getFunction())) {
-    rhsNum = cast<INumber>(rhsExpr->getChildren().front());
-
-    if (rhsNum) {
-      rhsNum = -(*rhsNum);
-    }
-  }
-  else {
-    rhsNum = cast<INumber>(rhsChild);
-  }
-
-  if (lhsNum && rhsNum) {
-    return *lhsNum + *rhsNum;
-  }
 
   return {};
 }
