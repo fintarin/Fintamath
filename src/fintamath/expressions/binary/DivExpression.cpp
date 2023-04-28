@@ -14,39 +14,6 @@ const Div DIV;
 
 DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
     : IBinaryExpressionCRTP(DIV, inLhsChild, inRhsChild) {
-
-  ArgumentsPtrVector numeratorChildren;
-  ArgumentsPtrVector denominatorChildren;
-
-  if (auto lhsDivExpr = cast<DivExpression>(lhsChild)) {
-    numeratorChildren.emplace_back(lhsDivExpr->getChildren().front());
-    denominatorChildren.emplace_back(lhsDivExpr->getChildren().back());
-  }
-  else {
-    numeratorChildren.emplace_back(lhsChild);
-  }
-
-  if (auto rhsDivExpr = cast<DivExpression>(rhsChild)) {
-    denominatorChildren.emplace_back(rhsDivExpr->getChildren().front());
-    numeratorChildren.emplace_back(rhsDivExpr->getChildren().back());
-  }
-  else {
-    denominatorChildren.emplace_back(rhsChild);
-  }
-
-  if (numeratorChildren.size() == 1) {
-    lhsChild = numeratorChildren.front();
-  }
-  else {
-    lhsChild = makeRawFunctionExpression(Mul(), numeratorChildren);
-  }
-
-  if (denominatorChildren.size() == 1) {
-    rhsChild = denominatorChildren.front();
-  }
-  else {
-    rhsChild = makeRawFunctionExpression(Mul(), denominatorChildren);
-  }
 }
 
 ArgumentPtr DivExpression::invert() const {
@@ -134,6 +101,10 @@ ArgumentPtr DivExpression::globalSimplify() const {
     return makeFunctionExpression(Mul(), {lhsChild, DIV(ONE, *rhsChild)});
   }
 
+  if (auto res = divSimplify()) {
+    return res;
+  }
+
   if (auto res = mulSimplify()) {
     return res;
   }
@@ -145,9 +116,51 @@ ArgumentPtr DivExpression::globalSimplify() const {
   return {};
 }
 
-ArgumentPtr DivExpression::sumSimplify() const {
-  // TODO: implement
-  return {};
+ArgumentPtr DivExpression::divSimplify() const {
+  ArgumentsPtrVector numeratorChildren;
+  ArgumentsPtrVector denominatorChildren;
+
+  bool containsDivExpression = false;
+
+  if (auto lhsDivExpr = cast<DivExpression>(lhsChild)) {
+    numeratorChildren.emplace_back(lhsDivExpr->getChildren().front());
+    denominatorChildren.emplace_back(lhsDivExpr->getChildren().back());
+    containsDivExpression = true;
+  }
+  else {
+    numeratorChildren.emplace_back(lhsChild);
+  }
+
+  if (auto rhsDivExpr = cast<DivExpression>(rhsChild)) {
+    denominatorChildren.emplace_back(rhsDivExpr->getChildren().front());
+    numeratorChildren.emplace_back(rhsDivExpr->getChildren().back());
+    containsDivExpression = true;
+  }
+  else {
+    denominatorChildren.emplace_back(rhsChild);
+  }
+
+  if (!containsDivExpression) {
+    return {};
+  }
+
+  ArgumentPtr numerator;
+  if (numeratorChildren.size() == 1) {
+    numerator = numeratorChildren.front();
+  }
+  else {
+    numerator = makeRawFunctionExpression(Mul(), numeratorChildren);
+  }
+
+  ArgumentPtr denominator;
+  if (denominatorChildren.size() == 1) {
+    denominator = denominatorChildren.front();
+  }
+  else {
+    denominator = makeRawFunctionExpression(Mul(), denominatorChildren);
+  }
+
+  return makeFunctionExpression(DIV, {numerator, denominator});
 }
 
 ArgumentPtr DivExpression::mulSimplify() const {
@@ -225,6 +238,11 @@ ArgumentPtr DivExpression::mulSimplify() const {
     return makeFunctionExpression(Div(), {numerator, denominator});
   }
 
+  return {};
+}
+
+ArgumentPtr DivExpression::sumSimplify() const {
+  // TODO: implement
   return {};
 }
 

@@ -22,9 +22,11 @@ protected:
 private:
   ArgumentPtr globalSimplify() const;
 
-  ArgumentPtr sumSimplify() const;
+  ArgumentPtr divSimplify() const;
 
   ArgumentPtr mulSimplify() const;
+
+  ArgumentPtr sumSimplify() const;
 };
 
 }

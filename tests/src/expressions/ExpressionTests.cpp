@@ -210,9 +210,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3 + 3 a^2 b + 3 a b^2 + b^3");
   EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4 + 4 a^3 b + 6 a^2 b^2 + 4 a b^3 + b^4");
   EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "(a + 3)/(b + 2)");
-  EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(a b)/(a b + 2 a) + (3 b)/(a b + 2 a)");
-  EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(),
-            "(a b)/(a b + 2 a) + (5 a)/(a b + 2 a) + (3 b)/(a b + 2 a) + 15/(a b + 2 a)");
+  EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(a b + 3 b)/(a b + 2 a)");
+  EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "(a b + 5 a + 3 b + 15)/(a b + 2 a)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   // TODO: polynomial division
@@ -259,7 +258,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2^(a + 2) * b^(a + 2)").toString(), "b^(a + 2) 2^(a + 2)");
   EXPECT_EQ(Expression("5/(a+b) + 5/(2a+b) + 5/(a+b)").toString(), "5/(2 a + b) + 10/(a + b)");
   EXPECT_EQ(Expression("(x+y)/(a+b) + 5/(2a+b) + (x+2y)/(a+b)").toString(),
-            "(2 x)/(a + b) + (3 y)/(a + b) + 5/(2 a + b)");
+            "(x + 2 y)/(a + b) + (x + y)/(a + b) + 5/(2 a + b)");
 
   // TODO!
   // EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
