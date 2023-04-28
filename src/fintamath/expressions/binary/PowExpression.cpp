@@ -100,11 +100,6 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
 
   bool isResultInverted = false;
 
-  if (powValue < ZERO) {
-    powValue = abs(powValue);
-    // isResultInverted = true;
-  }
-
   Integer bitNumber = generateFirstNum(powValue);
 
   for (int i = 0; i < combinations(powValue + variableCount - 1, powValue); i++) {
@@ -124,10 +119,6 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
   }
 
   ArgumentPtr newSumExpr = makeFunctionExpression(Add(), newPolynom);
-
-  // if (isResultInverted) {
-  //   newSumExpr = makeFunctionExpression(Inv(), {newSumExpr});
-  // }
 
   return newSumExpr;
 }

@@ -153,7 +153,7 @@ void CompExpression::convertToSolution() {
     ArgumentsPtrVector lhsPolynom = {ZERO.clone()};
 
     for (const auto &lhsChild : lhsAddExpr->getChildren()) {
-      if (const auto lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && hasVariable(lhsChildExpr, var)) {
+      if (const auto lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && hasVariables(lhsChildExpr, var)) {
         lhsPolynom.emplace_back(lhsChild);
       }
       else if (const auto lhsChildVar = cast<Variable>(lhsChild); lhsChildVar && *lhsChildVar == *var) {

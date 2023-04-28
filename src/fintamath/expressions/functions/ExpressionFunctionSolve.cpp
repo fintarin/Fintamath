@@ -142,7 +142,7 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const shared_ptr<const Varia
     }
 
     if (is<Pow>(elemExpr->getFunction())) {
-      if (hasVariable(elemExpr, var)) {
+      if (hasVariables(elemExpr, var)) {
         return ONE.clone();
       }
 
