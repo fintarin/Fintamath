@@ -25,14 +25,13 @@ string MulExpression::childToString(const ArgumentPtr &inChild, const ArgumentPt
     return Neg().toString();
   }
 
-  ArgumentPtr child = inChild;
   string result;
 
-  if (auto sumExpr = cast<IExpression>(child); sumExpr && is<Add>(sumExpr->getFunction())) {
+  if (auto sumExpr = cast<IExpression>(inChild); sumExpr && is<Add>(sumExpr->getFunction())) {
     result = putInBrackets(sumExpr->toString());
   }
   else {
-    result = child->toString();
+    result = inChild->toString();
   }
 
   result = (prevChild && *prevChild != NEG_ONE ? " " : "") + result;
