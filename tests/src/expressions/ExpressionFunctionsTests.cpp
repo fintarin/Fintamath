@@ -146,26 +146,26 @@ TEST(ExpressionFunctionsTests, lgTest) {
 
 TEST(ExpressionFunctionsTests, sinTest) {
   EXPECT_EQ(sin(Expression("5*Pi")).toString(), "sin(5 Pi)"); // TODO trigonometry
-  EXPECT_EQ(sin(Expression("Pi/2")).toString(), "sin(Pi/2)"); // TODO trigonometry
+  EXPECT_EQ(sin(Expression("Pi/2")).toString(), "sin(1/2 Pi)"); // TODO trigonometry
   EXPECT_EQ(sin(Expression("a+b")).toString(), "sin(a + b)");
 }
 
 TEST(ExpressionFunctionsTests, cosTest) {
-  EXPECT_EQ(cos(Expression("5*Pi")).toString(), "cos(5 Pi)");       // TODO trigonometry
-  EXPECT_EQ(cos(Expression("3*Pi/2")).toString(), "cos((3 Pi)/2)"); // TODO trigonometry
+  EXPECT_EQ(cos(Expression("5*Pi")).toString(), "cos(5 Pi)");     // TODO trigonometry
+  EXPECT_EQ(cos(Expression("3*Pi/2")).toString(), "cos(3/2 Pi)"); // TODO trigonometry
   EXPECT_EQ(cos(Expression("8*a")).toString(), "cos(8 a)");
 }
 
 TEST(ExpressionFunctionsTests, tanTest) {
   EXPECT_EQ(tan(Expression("0")).toString(), "0");
-  EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "tan((3 Pi)/4)"); // TODO trigonometry
+  EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "tan(3/4 Pi)"); // TODO trigonometry
   EXPECT_EQ(tan(Expression("a^3")).toString(), "tan(a^3)");
 }
 
 TEST(ExpressionFunctionsTests, cotTest) {
-  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "cot(Pi/4)"); // TODO trigonometry
-  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "cot(Pi/2)"); // TODO trigonometry
-  EXPECT_EQ(cot(Expression("a/5")).toString(), "cot(a/5)");
+  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "cot(1/4 Pi)"); // TODO trigonometry
+  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "cot(1/2 Pi)"); // TODO trigonometry
+  EXPECT_EQ(cot(Expression("a/5")).toString(), "cot(1/5 a)");
 }
 
 TEST(ExpressionFunctionsTests, asinTest) {
@@ -189,7 +189,7 @@ TEST(ExpressionFunctionsTests, atanTest) {
 TEST(ExpressionFunctionsTests, acotTest) {
   EXPECT_EQ(acot(Expression("1")).toString(), "acot(1)"); // TODO trigonometry
   EXPECT_EQ(acot(Expression("0")).toString(), "acot(0)"); // TODO trigonometry
-  EXPECT_EQ(acot(Expression("a/5")).toString(), "acot(a/5)");
+  EXPECT_EQ(acot(Expression("a/5")).toString(), "acot(1/5 a)");
 }
 
 TEST(ExpressionFunctionsTests, derivativeTest) {
@@ -233,10 +233,11 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("15 - 2x - x^2 = 0")).toString(), "x = -5 | x = 3");
   EXPECT_EQ(solve(Expression("x^2 + 12x + 36 = 0")).toString(), "x = -6");
   EXPECT_EQ(solve(Expression("x^2 + 12x = 0")).toString(), "x = -12 | x = 0");
-  EXPECT_EQ(solve(Expression("x^2 - 23x - 3 = 0")).toString(), "x = (-sqrt(541) + 23)/2 | x = (sqrt(541) + 23)/2");
+  EXPECT_EQ(solve(Expression("x^2 - 23x - 3 = 0")).toString(), "x = -1/2 sqrt(541) + 23/2 | x = 1/2 sqrt(541) + 23/2");
   EXPECT_EQ(solve(Expression("-12x^2 - 23x + 30 = 0")).toString(),
-            "x = (-sqrt(1969) - 23)/24 | x = (sqrt(1969) - 23)/24");
-  EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(), "x = -34/33 | x = 1");
+            "x = -1/2 sqrt(1969/144) - 23/24 | x = 1/2 sqrt(1969/144) - 23/24");
+  EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(),
+            "x = -1/2 sqrt(4489/1089) - 1/66 | x = 1/2 sqrt(4489/1089) - 1/66");
   EXPECT_EQ(
       solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(),
       "x = -1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2) | x = 1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2)"); // TODO: x = -1/sqrt(2)

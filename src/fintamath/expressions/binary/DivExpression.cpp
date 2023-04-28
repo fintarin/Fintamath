@@ -130,6 +130,10 @@ ArgumentPtr DivExpression::postSimplify() const {
 }
 
 ArgumentPtr DivExpression::globalSimplify() const {
+  if (DIV.doArgsMatch({*rhsChild, *rhsChild})) {
+    return makeFunctionExpression(Mul(), {lhsChild, DIV(ONE, *rhsChild)});
+  }
+
   if (auto res = mulSimplify()) {
     return res;
   }
@@ -172,6 +176,12 @@ ArgumentPtr DivExpression::mulSimplify() const {
         lhsChildren.erase(lhsChildren.begin() + int64_t(i));
         rhsChildren.erase(rhsChildren.begin() + int64_t(j));
         i--;
+        break;
+      }
+
+      if (DIV.doArgsMatch({*lhsChildren[i], *rhsChildren[j]})) {
+        lhsChildren[i] = DIV(*lhsChildren[i], *rhsChildren[j]);
+        rhsChildren.erase(rhsChildren.begin() + int64_t(j));
         break;
       }
     }
