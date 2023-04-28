@@ -101,11 +101,11 @@ ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const 
     denominator = makeRawFunctionExpression(Mul(), {lhsExpr->getChildren().back(), rhsExpr->getChildren().back()});
   }
   else if (isLhsDiv) {
-    numerator = rhsChild;
+    numerator = makeRawFunctionExpression(Mul(), {lhsExpr->getChildren().front(), rhsChild});
     denominator = lhsExpr->getChildren().back();
   }
   else if (isRhsDiv) {
-    numerator = lhsChild;
+    numerator = makeRawFunctionExpression(Mul(), {lhsChild, rhsExpr->getChildren().front()});
     denominator = rhsExpr->getChildren().back();
   }
   else {
