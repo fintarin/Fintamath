@@ -32,6 +32,6 @@ TEST(IExpressionTests, setValuesOfVariablesTest) {
   // TODO: implement
 }
 
-TEST(IExpressionTests, toMinimalTest) {
+TEST(IExpressionTests, toMinimalObjectTest) {
   // TODO: implement
 }
