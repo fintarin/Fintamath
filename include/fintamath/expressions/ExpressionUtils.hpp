@@ -15,6 +15,7 @@ bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
 
 TokenVector cutBrackets(const TokenVector &tokens);
 
+// TODO: remove
 map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens);
 
 string putInBrackets(const string &str);
