@@ -86,10 +86,10 @@ protected:
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }
-    if (unique_ptr<IMathObject> rhsPtr = convert(rhs, *this); rhsPtr != nullptr) {
+    if (unique_ptr<IMathObject> rhsPtr = convert(*this, rhs); rhsPtr != nullptr) {
       return equals(cast<Derived>(*rhsPtr));
     }
-    if (unique_ptr<IMathObject> lhsPtr = convert(*this, rhs); lhsPtr != nullptr) {
+    if (unique_ptr<IMathObject> lhsPtr = convert(rhs, *this); lhsPtr != nullptr) {
       return *lhsPtr == rhs;
     }
     return false;

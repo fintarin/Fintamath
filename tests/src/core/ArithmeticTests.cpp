@@ -179,7 +179,7 @@ TEST(ArithmeticTests, divTest) {
   EXPECT_EQ((-2 / Integer(2)).toString(), "-1");
 }
 
-TEST(ArithmeticTests, convertTest) {
+TEST(ArithmeticTests, unaryPlusTest) {
   unique_ptr<IArithmetic> m1 = make_unique<Integer>(1);
   EXPECT_EQ((+*m1)->toString(), "1");
 

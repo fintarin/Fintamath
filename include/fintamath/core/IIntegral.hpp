@@ -215,11 +215,11 @@ private:
       auto lhsPtr = cast<IIntegralCRTP<Derived>>(clone());
       return cast<IIntegral>(f1(*lhsPtr, *rhpPtr).toMinimalObject());
     }
-    if (unique_ptr<IMathObject> rhsPtr = convert(rhs, *this)) {
+    if (unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
       auto lhsPtr = cast<IIntegralCRTP<Derived>>(clone());
       return cast<IIntegral>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
     }
-    if (unique_ptr<IMathObject> lhsPtr = convert(*this, rhs)) {
+    if (unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
       return cast<IIntegral>(f2(cast<IIntegral>(*lhsPtr), rhs)->toMinimalObject());
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());

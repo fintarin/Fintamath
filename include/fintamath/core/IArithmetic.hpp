@@ -37,7 +37,7 @@ public:
   }
 
   friend inline unique_ptr<IArithmetic> operator+(const IArithmetic &rhs) {
-    return rhs.convertAbstract();
+    return rhs.unaryPlusAbstract();
   }
 
   friend inline unique_ptr<IArithmetic> operator-(const IArithmetic &rhs) {
@@ -87,9 +87,9 @@ protected:
 
   virtual unique_ptr<IArithmetic> divideAbstract(const IArithmetic &rhs) const = 0;
 
-  virtual unique_ptr<IArithmetic> convertAbstract() const = 0;
-
   virtual unique_ptr<IArithmetic> negateAbstract() const = 0;
+
+  virtual unique_ptr<IArithmetic> unaryPlusAbstract() const = 0;
 
 private:
   static MultiMethod<unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiAdd;
@@ -202,7 +202,7 @@ protected:
         });
   }
 
-  unique_ptr<IArithmetic> convertAbstract() const final {
+  unique_ptr<IArithmetic> unaryPlusAbstract() const final {
     return make_unique<Derived>(+(*this));
   }
 
@@ -219,11 +219,11 @@ private:
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
       return cast<IArithmetic>(f1(*lhsPtr, *rhpPtr).toMinimalObject());
     }
-    if (unique_ptr<IMathObject> rhsPtr = convert(rhs, *this)) {
+    if (unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
       return cast<IArithmetic>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
     }
-    if (unique_ptr<IMathObject> lhsPtr = convert(*this, rhs)) {
+    if (unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
       return cast<IArithmetic>(f2(cast<IArithmetic>(*lhsPtr), rhs)->toMinimalObject());
     }
     throw InvalidInputBinaryOpearatorException(oper, toString(), rhs.toString());

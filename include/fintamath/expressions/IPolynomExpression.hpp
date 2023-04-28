@@ -47,7 +47,7 @@ private:
   void globalSimplifyRec();
 
   static ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
-                                    const ArgumentPtr &rhs);
+                                          const ArgumentPtr &rhs);
 
   void sort();
 
