@@ -223,82 +223,38 @@ int IPolynomExpression::comparatorPolynomsAndBinaryFunctions(const ArgumentPtr &
   auto lhsExpr = cast<IExpression>(lhs);
   auto rhsExpr = cast<IExpression>(rhs);
 
-  if (int res = comparatorPolynoms(lhs, rhs); res != 0) {
-    return res;
+  if (lhsExpr && rhsExpr && !is<IPolynomExpression>(lhsExpr) && !is<IPolynomExpression>(rhsExpr) &&
+      lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary &&
+      rhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) {
+    {
+      std::vector<Variable> lhsVars = getVariables(lhsExpr->getChildren().front());
+      std::vector<Variable> rhsVars = getVariables(rhsExpr->getChildren().front());
+
+      if (auto res = comparatorVariables(lhsVars, rhsVars, false); res != 0) {
+        return res;
+      }
+    }
+
+    {
+      std::vector<Variable> lhsVars = getVariables(lhsExpr->getChildren().back());
+      std::vector<Variable> rhsVars = getVariables(rhsExpr->getChildren().back());
+
+      if (auto res = comparatorVariables(lhsVars, rhsVars, false); res != 0) {
+        return res;
+      }
+    }
   }
-
-  if (int res = comparatorBinaryFunctions(lhs, rhs); res != 0) {
-    return res;
-  }
-
-  if ((rhsExpr && is<IPolynomExpression>(lhsExpr) && !is<IPolynomExpression>(rhsExpr) &&
-       rhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) ||
-      (lhsExpr && is<IPolynomExpression>(rhsExpr) && !is<IPolynomExpression>(lhsExpr) &&
-       lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary)) {
-
+  else if (lhsExpr && rhsExpr && (is<IPolynomExpression>(lhsExpr) || is<IPolynomExpression>(rhsExpr))) {
     if (int res = comparatorChildren(lhs, rhs); res != 0) {
       return res;
     }
   }
 
-  if (int res = comparatorVariables(lhs, rhs); res != 0) {
+  std::vector<Variable> lhsVars = getVariables(lhs);
+  std::vector<Variable> rhsVars = getVariables(rhs);
+
+  if (int res = comparatorVariables(lhsVars, rhsVars, isTermsOrderInversed()); res != 0) {
     return res;
-  }
-
-  return 0;
-}
-
-int IPolynomExpression::comparatorPolynoms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  auto lhsExpr = cast<IExpression>(lhs);
-  auto rhsExpr = cast<IExpression>(rhs);
-
-  ArgumentsPtrVector lhsVars = getVariables(lhs);
-  ArgumentsPtrVector rhsVars = getVariables(rhs);
-
-  if (is<IPolynomExpression>(lhsExpr) && is<IPolynomExpression>(rhsExpr)) {
-    bool lhsHasBinary = false;
-    bool rhsHasBinary = false;
-
-    ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
-    for (const auto &child : lhsChildren) {
-      if (const auto childExpr = cast<IExpression>(child);
-          childExpr && !is<IPolynomExpression>(childExpr) &&
-          childExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) {
-        lhsHasBinary = true;
-      }
-    }
-
-    ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
-    for (const auto &child : rhsChildren) {
-      if (const auto childExpr = cast<IExpression>(child);
-          childExpr && !is<IPolynomExpression>(childExpr) &&
-          childExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) {
-        rhsHasBinary = true;
-      }
-    }
-
-    if (!isTermsOrderInversed() && lhsVars.size() != rhsVars.size() && !rhsHasBinary && !lhsHasBinary) {
-      return lhsVars.size() > rhsVars.size() ? -1 : 1;
-    }
-  }
-
-  return 0;
-}
-
-int IPolynomExpression::comparatorBinaryFunctions(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  ArgumentsPtrVector lhsVars = getVariables(lhs);
-  ArgumentsPtrVector rhsVars = getVariables(rhs);
-
-  auto lhsExpr = cast<IExpression>(lhs);
-  auto rhsExpr = cast<IExpression>(rhs);
-
-  if (lhsExpr && rhsExpr && !is<IPolynomExpression>(lhsExpr) && !is<IPolynomExpression>(rhsExpr) &&
-      lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary &&
-      rhsExpr->getFunction()->getFunctionType() == IFunction::Type::Binary) {
-
-    if (lhsVars.size() != rhsVars.size()) {
-      return lhsVars.size() > rhsVars.size() ? -1 : 1;
-    }
   }
 
   return 0;
@@ -541,31 +497,20 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
   return lhsChildren.size() > rhsChildren.size() ? -1 : 1;
 }
 
-int IPolynomExpression::comparatorLiterals(const ArgumentsPtrVector &lhsVariables,
-                                           const ArgumentsPtrVector &rhsVariables) const {
+int IPolynomExpression::comparatorVariables(const std::vector<Variable> &lhsVars, const std::vector<Variable> &rhsVars,
+                                            bool isTermsOrderInversed) {
 
-  for (size_t i = 0; i < std::min(lhsVariables.size(), rhsVariables.size()); i++) {
-    if (*lhsVariables[i] != *rhsVariables[i]) {
-      return (lhsVariables[i]->toString() < rhsVariables[i]->toString()) ? -1 : 1;
+  for (size_t i = 0; i < std::min(lhsVars.size(), rhsVars.size()); i++) {
+    if (lhsVars[i] != rhsVars[i]) {
+      return (lhsVars[i].toString() < rhsVars[i].toString()) ? -1 : 1;
     }
   }
 
-  if (!lhsVariables.empty() && rhsVariables.empty()) {
-    return !isTermsOrderInversed() ? -1 : 1;
+  if (!lhsVars.empty() && rhsVars.empty()) {
+    return !isTermsOrderInversed ? -1 : 1;
   }
-  if (lhsVariables.empty() && !rhsVariables.empty()) {
-    return isTermsOrderInversed() ? -1 : 1;
-  }
-
-  return 0;
-}
-
-int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  ArgumentsPtrVector lhsConst = getVariables(lhs);
-  ArgumentsPtrVector rhsConst = getVariables(rhs);
-
-  if (int res = comparatorLiterals(lhsConst, rhsConst); res != 0) {
-    return res;
+  if (lhsVars.empty() && !rhsVars.empty()) {
+    return isTermsOrderInversed ? -1 : 1;
   }
 
   return 0;
@@ -585,15 +530,16 @@ ArgumentPtr IPolynomExpression::findFirstPolynomChild(const ArgumentPtr &rhs) {
   return {};
 }
 
-ArgumentsPtrVector IPolynomExpression::getVariables(const ArgumentPtr &rhs) {
-  ArgumentsPtrVector vars;
+std::vector<Variable> IPolynomExpression::getVariables(const ArgumentPtr &rhs) {
+  std::vector<Variable> vars;
 
   if (const auto &rhsExpr = cast<IExpression>(rhs)) {
     vars = rhsExpr->getVariablesUnsorted();
   }
-  else if (is<Variable>(rhs)) {
-    vars = {rhs};
+  else if (auto var = cast<Variable>(rhs)) {
+    vars = {*var};
   }
+
   return vars;
 }
 

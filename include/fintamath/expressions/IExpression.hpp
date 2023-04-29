@@ -17,11 +17,11 @@ public:
 
   virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
 
-  virtual ArgumentsPtrVector getVariablesUnsorted() const;
+  virtual std::vector<Variable> getVariablesUnsorted() const;
+
+  std::vector<Variable> getVariables() const;
 
   virtual void setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals);
-
-  ArgumentsPtrVector getVariables() const;
 
   std::unique_ptr<IMathObject> toMinimalObject() const final;
 
@@ -53,6 +53,8 @@ protected:
 
 private:
   static void simplifyConstant(ArgumentPtr &child);
+
+  static bool isVariableUnique(const std::vector<Variable> &vars, const Variable &var);
 
 private:
   static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parserVector;

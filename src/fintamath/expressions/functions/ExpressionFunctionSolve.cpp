@@ -13,14 +13,13 @@
 
 namespace fintamath {
 
-std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const std::shared_ptr<const Variable> &var);
+std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var);
 
-std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem,
-                                                  const std::shared_ptr<const Variable> &var);
+std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var);
 
-ArgumentPtr getElementRate(const ArgumentPtr &elem, const std::shared_ptr<const Variable> &var);
+ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var);
 
-ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const std::shared_ptr<const Variable> &var);
+ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable &var);
 
 bool validatePowExpr(const std::shared_ptr<const IExpression> &powExpr);
 
@@ -82,7 +81,7 @@ Expression solve(const Expression &rhs) {
       ArgumentsPtrVector answers;
 
       for (auto &root : roots) {
-        auto rootAnswer = std::make_shared<CompExpression>(Eqv(), var->clone(), root);
+        auto rootAnswer = std::make_shared<CompExpression>(Eqv(), var.clone(), root);
         rootAnswer->markAsSolution();
         answers.emplace_back(rootAnswer);
       }
@@ -100,8 +99,8 @@ Expression solve(const Expression &rhs) {
   return rhs;
 }
 
-std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const std::shared_ptr<const Variable> &var) {
-  if (const auto elemVar = cast<Variable>(elem); elemVar && *elemVar == *var) {
+std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var) {
+  if (const auto elemVar = cast<Variable>(elem); elemVar && *elemVar == var) {
     return cast<INumber>(ONE.clone());
   }
 
@@ -115,7 +114,7 @@ std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const st
     }
 
     if (is<Pow>(expr->getFunction())) {
-      if (const auto elemVar = cast<Variable>(expr->getChildren().front()); elemVar && *elemVar == *var) {
+      if (const auto elemVar = cast<Variable>(expr->getChildren().front()); elemVar && *elemVar == var) {
         return cast<INumber>(expr->getChildren()[1]);
       }
     }
@@ -124,8 +123,7 @@ std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const st
   return cast<INumber>(ZERO.clone());
 }
 
-std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem,
-                                                  const std::shared_ptr<const Variable> &var) {
+std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var) {
   for (const auto &child : elem->getChildren()) {
     if (auto powValue = getElementPower(child, var); *powValue != ZERO) {
       return powValue;
@@ -135,7 +133,7 @@ std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IE
   return cast<INumber>(ZERO.clone());
 }
 
-ArgumentPtr getElementRate(const ArgumentPtr &elem, const std::shared_ptr<const Variable> &var) {
+ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
   if (const auto elemExpr = cast<IExpression>(elem)) {
     if (is<Neg>(elemExpr->getFunction())) {
       return makeFunctionExpression(Neg(), {getElementRate(elemExpr->getChildren().front(), var)});
@@ -160,14 +158,14 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const std::shared_ptr<const 
     }
   }
 
-  if (const auto elemVar = cast<Variable>(elem); elemVar && *var == *elemVar) {
+  if (const auto elemVar = cast<Variable>(elem); elemVar && var == *elemVar) {
     return ONE.clone();
   }
 
   return elem;
 }
 
-ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const std::shared_ptr<const Variable> &var) {
+ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable &var) {
   ArgumentsPtrVector powerRates;
   ArgumentsPtrVector polynomVect;
 
@@ -235,7 +233,7 @@ bool validateAddExpr(const std::shared_ptr<const IExpression> &addExpr) {
 }
 
 bool validateEquation(const CompExpression &expr) {
-  ArgumentsPtrVector vars = expr.getVariables();
+  std::vector<Variable> vars = expr.getVariables();
 
   // TODO: remove for equation systems
   if (vars.size() != 1) {
