@@ -178,6 +178,17 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").toString(), "ln(ln(ln(ln(ln(E)))))");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
 
+  EXPECT_EQ(Expression("a*0").toString(), "0");
+  EXPECT_EQ(Expression("0*a").toString(), "0");
+  EXPECT_EQ(Expression("1*a").toString(), "a");
+  EXPECT_EQ(Expression("a*1").toString(), "a");
+
+  EXPECT_EQ(Expression("(a/b)(c/d)").toString(), "(a c)/(b d)");
+  EXPECT_EQ(Expression("(ab/2)(ad/3)").toString(), "1/6 a^2 b d");
+  EXPECT_EQ(Expression("(-a)(-b)").toString(), "a b");
+  EXPECT_EQ(Expression("(a)(-b)").toString(), "-a b");
+  EXPECT_EQ(Expression("(-a)(b)").toString(), "-a b");
+
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
   EXPECT_EQ(Expression("a.2").toString(), "1/5 a");
   EXPECT_EQ(Expression("a+a").toString(), "2 a");

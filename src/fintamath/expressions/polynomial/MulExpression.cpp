@@ -25,18 +25,7 @@ std::string MulExpression::childToString(const ArgumentPtr &inChild, const Argum
     return Neg().toString();
   }
 
-  std::string result;
-
-  if (auto sumExpr = cast<IExpression>(inChild); sumExpr && is<Add>(sumExpr->getFunction())) {
-    result = putInBrackets(sumExpr->toString());
-  }
-  else {
-    result = inChild->toString();
-  }
-
-  result = (prevChild && *prevChild != NEG_ONE ? " " : "") + result;
-
-  return result;
+  return (prevChild && *prevChild != NEG_ONE ? " " : "") + inChild->toString();
 }
 
 ArgumentPtr MulExpression::negate() const {
@@ -63,15 +52,9 @@ ArgumentPtr MulExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const Ar
   if (*lhsChild == ZERO) {
     return lhsChild;
   }
-  if (*rhsChild == ZERO) {
-    return rhsChild;
-  }
 
   if (*lhsChild == ONE) {
     return rhsChild;
-  }
-  if (*rhsChild == ONE) {
-    return lhsChild;
   }
 
   return {};
@@ -190,13 +173,14 @@ ArgumentPtr MulExpression::simplifyNegations(const ArgumentPtr &lhsChild, const 
 }
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForSimplify() const {
-  return {
+  static const SimplifyFunctionsVector simplFuncVect = {
       &MulExpression::simplifyNegations, //
       &MulExpression::simplifyDivisions, //
       &MulExpression::mulRates,          //
       &MulExpression::simplifyNumbers,   //
       &MulExpression::mulPolynoms,       //
   };
+  return simplFuncVect;
 }
 
 bool MulExpression::isTermsOrderInversed() const {
