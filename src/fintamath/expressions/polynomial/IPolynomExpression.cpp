@@ -597,16 +597,4 @@ ArgumentsPtrVector IPolynomExpression::getVariables(const ArgumentPtr &rhs) {
   return vars;
 }
 
-ArgumentsPtrVector IPolynomExpression::getConstants(const ArgumentPtr &rhs) {
-  ArgumentsPtrVector constants;
-
-  if (const auto &rhsExpr = cast<IExpression>(rhs)) {
-    constants = rhsExpr->getConstantsUnsorted();
-  }
-  else if (is<IConstant>(rhs)) {
-    constants = {rhs};
-  }
-  return constants;
-}
-
 }
