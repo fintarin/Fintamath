@@ -6,8 +6,8 @@
 
 namespace fintamath {
 
-const std::string TRUE = "True";
-const std::string FALSE = "False";
+constexpr char TRUE[] = "True";
+constexpr char FALSE[] = "False";
 
 Boolean::Boolean(const std::string &str) {
   if (str != TRUE && str != FALSE) {
