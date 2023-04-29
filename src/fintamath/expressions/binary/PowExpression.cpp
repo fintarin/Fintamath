@@ -47,13 +47,10 @@ ArgumentPtr PowExpression::sumSimplify() const {
   return {};
 }
 
-Integer PowExpression::generateNextNumber(Integer n) {
-  Integer u = n & -n;
-  Integer v = u + n;
-  n = v + (((v ^ n) / u) >> 2);
-  return n;
-}
-
+// Use bites representation for generate all partitions of numbers, using stars and bars method
+// https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)
+// https://en.wikipedia.org/wiki/Partition_(number_theory)
+// This method generate first bit number in sequence of numbers for each partition
 Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
   Integer n = 0;
 
@@ -64,7 +61,17 @@ Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
   return n;
 }
 
-std::vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &variableCount) {
+// Use alghorithm for generating next number in sequence of partitions
+// https://en.wikipedia.org/wiki/Partition_(number_theory)
+// https://en.wikipedia.org/wiki/Combinatorial_number_system#Applications
+Integer PowExpression::generateNextNumber(Integer n) {
+  Integer u = n & -n;
+  Integer v = u + n;
+  n = v + (((v ^ n) / u) >> 2);
+  return n;
+}
+
+std::vector<Integer> PowExpression::getPartition(Integer bitNumber, const Integer &variableCount) {
   std::vector<Integer> result;
   Integer counter = 0;
 
@@ -84,6 +91,8 @@ std::vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integ
   return result;
 }
 
+// Use multinomial theorem for exponentiation of sum
+//  https://en.wikipedia.org/wiki/Multinomial_theorem
 ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer powValue) {
   auto sumExpr = cast<IExpression>(expr);
   ArgumentsPtrVector polynom;
@@ -101,7 +110,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
   Integer bitNumber = generateFirstNum(powValue);
 
   for (int i = 0; i < combinations(powValue + variableCount - 1, powValue); i++) {
-    std::vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
+    std::vector<Integer> vectOfPows = getPartition(bitNumber, variableCount);
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentsPtrVector mulExprPolynom;
