@@ -161,7 +161,7 @@ protected:
   std::unique_ptr<IArithmetic> addAbstract(const IArithmetic &inRhs) const final {
     return executeAbstract(
         inRhs, "+",
-        [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.add(rhs);
         },
         [](const IArithmetic &lhs, const IArithmetic &rhs) {
@@ -172,7 +172,7 @@ protected:
   std::unique_ptr<IArithmetic> substractAbstract(const IArithmetic &inRhs) const final {
     return executeAbstract(
         inRhs, "-",
-        [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.substract(rhs);
         },
         [](const IArithmetic &lhs, const IArithmetic &rhs) {
@@ -183,7 +183,7 @@ protected:
   std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &inRhs) const final {
     return executeAbstract(
         inRhs, "*",
-        [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.multiply(rhs);
         },
         [](const IArithmetic &lhs, const IArithmetic &rhs) {
@@ -194,7 +194,7 @@ protected:
   std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &inRhs) const final {
     return executeAbstract(
         inRhs, "/",
-        [this](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IArithmeticCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.divide(rhs);
         },
         [](const IArithmetic &lhs, const IArithmetic &rhs) {

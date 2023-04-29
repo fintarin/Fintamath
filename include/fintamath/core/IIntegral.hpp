@@ -139,7 +139,7 @@ protected:
   std::unique_ptr<IIntegral> modAbstract(const IIntegral &inRhs) const final {
     return executeAbstract(
         inRhs, "%",
-        [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.mod(rhs);
         },
         [](const IIntegral &lhs, const IIntegral &rhs) {
@@ -150,7 +150,7 @@ protected:
   std::unique_ptr<IIntegral> bitAndAbstract(const IIntegral &inRhs) const override {
     return executeAbstract(
         inRhs, "&",
-        [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.bitAnd(rhs);
         },
         [](const IIntegral &lhs, const IIntegral &rhs) {
@@ -161,7 +161,7 @@ protected:
   std::unique_ptr<IIntegral> bitOrAbstract(const IIntegral &inRhs) const override {
     return executeAbstract(
         inRhs, "|",
-        [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.bitOr(rhs);
         },
         [](const IIntegral &lhs, const IIntegral &rhs) {
@@ -172,7 +172,7 @@ protected:
   std::unique_ptr<IIntegral> bitXorAbstract(const IIntegral &inRhs) const override {
     return executeAbstract(
         inRhs, "^",
-        [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.bitXor(rhs);
         },
         [](const IIntegral &lhs, const IIntegral &rhs) {
@@ -183,7 +183,7 @@ protected:
   std::unique_ptr<IIntegral> bitLeftShiftAbstract(const IIntegral &inRhs) const override {
     return executeAbstract(
         inRhs, "<<",
-        [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.bitLeftShift(rhs);
         },
         [](const IIntegral &lhs, const IIntegral &rhs) {
@@ -194,7 +194,7 @@ protected:
   std::unique_ptr<IIntegral> bitRightShiftAbstract(const IIntegral &inRhs) const override {
     return executeAbstract(
         inRhs, ">>",
-        [this](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
+        [](IIntegralCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.bitRightShift(rhs);
         },
         [](const IIntegral &lhs, const IIntegral &rhs) {

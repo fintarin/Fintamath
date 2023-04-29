@@ -7,7 +7,7 @@
 
 namespace fintamath {
 
-class IntegerImpl;
+struct IntegerImpl;
 
 class Integer : public INumberCRTP<Integer>, public IIntegralCRTP<Integer>, public IIncrementalCRTP<Integer> {
 public:

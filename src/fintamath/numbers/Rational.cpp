@@ -8,8 +8,6 @@
 
 namespace fintamath {
 
-constexpr int64_t DEFAULT_PRECISION = 36;
-
 static Integer gcd(const Integer &lhs, const Integer &rhs);
 static Integer lcm(const Integer &lhs, const Integer &rhs);
 

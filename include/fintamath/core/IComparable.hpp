@@ -69,7 +69,7 @@ protected:
   bool lessAbstract(const IComparable &inRhs) const final {
     return executeAbstract(
         inRhs, "<",
-        [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
+        [](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.less(rhs);
         },
         [](const IComparable &lhs, const IComparable &rhs) {
@@ -80,7 +80,7 @@ protected:
   bool moreAbstract(const IComparable &inRhs) const final {
     return executeAbstract(
         inRhs, ">",
-        [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
+        [](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.more(rhs);
         },
         [](const IComparable &lhs, const IComparable &rhs) {
