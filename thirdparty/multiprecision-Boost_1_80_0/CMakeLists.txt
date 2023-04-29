@@ -11,7 +11,10 @@ project(boost_multiprecision VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES C
 add_library(boost_multiprecision INTERFACE)
 add_library(Boost::multiprecision ALIAS boost_multiprecision)
 
-target_include_directories(boost_multiprecision INTERFACE include)
+# --- FINTAMATH CHANGE START ---
+# target_include_directories(boost_multiprecision INTERFACE include)
+target_include_directories(boost_multiprecision SYSTEM INTERFACE include)
+# --- FINTAMATH CHANGE END ---
 
 include(CMakeDependentOption)
 

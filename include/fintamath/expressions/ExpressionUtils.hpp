@@ -16,22 +16,22 @@ bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
 TokenVector cutBrackets(const TokenVector &tokens);
 
 // TODO: remove
-map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens);
+std::map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens);
 
-string putInBrackets(const string &str);
+std::string putInBrackets(const std::string &str);
 
-string putInSpaces(const string &str);
+std::string putInSpaces(const std::string &str);
 
-string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
+std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
 
-string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs);
+std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs);
 
-extern unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+bool hasVariables(const std::shared_ptr<const IExpression> &expr, const std::shared_ptr<const Variable> &var);
+
+extern std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 
 extern ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
-extern shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
-
-bool hasVariables(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var);
+extern std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
 }

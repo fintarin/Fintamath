@@ -29,12 +29,12 @@ public:
   virtual bool doArgsMatch(const ArgumentsRefVector &argsVect) const = 0;
 
   template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-  unique_ptr<IMathObject> operator()(const Args &...args) const {
+  std::unique_ptr<IMathObject> operator()(const Args &...args) const {
     ArgumentsRefVector argsVect = {args...};
     return callAbstract(argsVect);
   }
 
-  unique_ptr<IMathObject> operator()(const ArgumentsRefVector &argsVect) const {
+  std::unique_ptr<IMathObject> operator()(const ArgumentsRefVector &argsVect) const {
     return callAbstract(argsVect);
   }
 
@@ -43,21 +43,21 @@ public:
     Parser::registerType<T>(parserMap);
   }
 
-  static unique_ptr<IFunction> parse(const string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-    Parser::Comparator<const unique_ptr<IFunction> &> comp = [type](const unique_ptr<IFunction> &func) {
+  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
+    Parser::Comparator<const std::unique_ptr<IFunction> &> comp = [type](const std::unique_ptr<IFunction> &func) {
       return type == IFunction::Type::Any || func->getFunctionType() == type;
     };
-    return Parser::parse<unique_ptr<IFunction>>(parserMap, comp, parsedStr);
+    return Parser::parse<std::unique_ptr<IFunction>>(parserMap, comp, parsedStr);
   }
 
 protected:
-  virtual unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
 
-  static const function<unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
+  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
       makeFunctionExpression;
 
 private:
-  static Parser::Map<unique_ptr<IFunction>> parserMap;
+  static Parser::Map<std::unique_ptr<IFunction>> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>
@@ -89,9 +89,9 @@ public:
   }
 
 protected:
-  virtual unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const = 0;
 
-  unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const final {
+  std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const final {
     validateArgsSize(argsVect);
 
     if (doArgsMatch(argsVect)) {
@@ -113,7 +113,7 @@ private:
   }
 
   template <size_t>
-  void getArgsTypes(ArgumentsTypesVector &outArgTypes) const {
+  void getArgsTypes(ArgumentsTypesVector & /*outArgTypes*/) const {
   }
 
   template <size_t i, typename Head, typename... Tail>
@@ -144,7 +144,7 @@ private:
   }
 
   void throwInvalidInputFunctionException(const ArgumentsRefVector &argsVect) const {
-    vector<string> argNamesVect(argsVect.size());
+    std::vector<std::string> argNamesVect(argsVect.size());
 
     for (size_t i = 0; i < argNamesVect.size(); i++) {
       argNamesVect[i] = argsVect[i].get().toString();

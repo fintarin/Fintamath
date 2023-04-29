@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-shared_ptr<IFunction> IPolynomExpression::getFunction() const {
+std::shared_ptr<IFunction> IPolynomExpression::getFunction() const {
   return func;
 }
 
@@ -16,8 +16,8 @@ ArgumentsPtrVector IPolynomExpression::getChildren() const {
   return children;
 }
 
-string IPolynomExpression::toString() const {
-  string result;
+std::string IPolynomExpression::toString() const {
+  std::string result;
 
   result += childToString(children.front(), {});
 
@@ -41,11 +41,11 @@ ArgumentPtr IPolynomExpression::simplify() const {
   return simpl;
 }
 
-ArgumentPtr IPolynomExpression::preSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
+ArgumentPtr IPolynomExpression::preSimplifyChildren(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
   return {};
 }
 
-ArgumentPtr IPolynomExpression::postSimplify(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
+ArgumentPtr IPolynomExpression::postSimplifyChildren(size_t /*lhsChildNum*/, size_t /*rhsChildNum*/) const {
   return {};
 }
 
@@ -53,7 +53,7 @@ void IPolynomExpression::preSimplifyRec() {
   size_t childrenSize = children.size();
 
   for (size_t i = 1; i < children.size(); i++) {
-    if (auto res = preSimplify(i - 1, i)) {
+    if (auto res = preSimplifyChildren(i - 1, i)) {
       children[i - 1] = res;
       children.erase(children.begin() + int64_t(i));
       i--;
@@ -69,13 +69,13 @@ void IPolynomExpression::postSimplifyRec() {
   size_t childrenSize = children.size();
 
   for (size_t i = 1; i < children.size(); i++) {
-    if (ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]})) {
-      children[i - 1] = res;
+    if (ArgumentPtr callFuncRes = callFunction(*func, {children[i - 1], children[i]})) {
+      children[i - 1] = callFuncRes;
       children.erase(children.begin() + int64_t(i));
       i--;
     }
-    else if (auto res = postSimplify(i - 1, i)) {
-      children[i - 1] = res;
+    else if (ArgumentPtr simplRes = postSimplifyChildren(i - 1, i)) {
+      children[i - 1] = simplRes;
       children.erase(children.begin() + int64_t(i));
       i--;
     }
@@ -94,13 +94,13 @@ void IPolynomExpression::globalSimplifyRec() {
     const ArgumentPtr &lhsChild = children[i - 1];
     const ArgumentPtr &rhsChild = children[i];
 
-    if (auto res = callFunction(*func, {lhsChild, rhsChild})) {
-      children[i - 1] = res;
+    if (auto callFuncRes = callFunction(*func, {lhsChild, rhsChild})) {
+      children[i - 1] = callFuncRes;
       children.erase(children.begin() + int64_t(i));
       i--;
     }
-    else if (auto res = useSimplifyFunctions(functions, lhsChild, rhsChild)) {
-      children[i - 1] = res;
+    else if (auto simplRes = useSimplifyFunctions(functions, lhsChild, rhsChild)) {
+      children[i - 1] = simplRes;
       children.erase(children.begin() + int64_t(i));
       i--;
     }
@@ -308,8 +308,8 @@ int IPolynomExpression::comparatorBinaryFunctions(const ArgumentPtr &lhs, const 
   return 0;
 }
 
-int IPolynomExpression::comparatorFunctions(const shared_ptr<const IExpression> &lhsExpr,
-                                            const shared_ptr<const IExpression> &rhsExpr) const {
+int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
+                                            const std::shared_ptr<const IExpression> &rhsExpr) const {
 
   if (!lhsExpr || !rhsExpr) {
     return 0;
@@ -455,8 +455,8 @@ int IPolynomExpression::comparatorNonExpressions(const ArgumentPtr &lhs, const A
 }
 
 int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
   if (!lhsExpr || !rhsExpr) {
     return 0;

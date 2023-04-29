@@ -22,7 +22,7 @@ public:
   }
 
 protected:
-  virtual unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
     return {};
   }
 };
@@ -34,13 +34,13 @@ TEST(UndefinedUnaryOpearatorExceptionTests, whatTests) {
     TestOperator().throwExceptionPrefix();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(string(e.what()), "Undefined: !(-10)");
+    EXPECT_EQ(std::string(e.what()), "Undefined: !(-10)");
   }
 
   try {
     TestOperator().throwExceptionPostfix();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(string(e.what()), "Undefined: (-10)!");
+    EXPECT_EQ(std::string(e.what()), "Undefined: (-10)!");
   }
 }

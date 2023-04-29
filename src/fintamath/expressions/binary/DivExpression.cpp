@@ -17,13 +17,13 @@ DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &i
 }
 
 ArgumentPtr DivExpression::invert() const {
-  auto inv = make_shared<DivExpression>(*this);
+  auto inv = std::make_shared<DivExpression>(*this);
   std::swap(inv->lhsChild, inv->rhsChild);
   return inv;
 }
 
-string DivExpression::toString() const {
-  string res = IBinaryExpression::toString();
+std::string DivExpression::toString() const {
+  std::string res = IBinaryExpression::toString();
 
   if (const auto lhsExpr = cast<IExpression>(lhsChild)) {
     if (const auto lhsOper = cast<IOperator>(lhsExpr->getFunction());

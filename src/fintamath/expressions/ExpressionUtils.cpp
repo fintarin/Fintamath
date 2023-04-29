@@ -45,8 +45,8 @@ TokenVector cutBrackets(const TokenVector &tokens) {
   return newTokens;
 }
 
-map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens) {
-  map<size_t, ArgumentPtr> operators;
+std::map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens) {
+  std::map<size_t, ArgumentPtr> operators;
 
   bool isPrevTokenOper = false;
 
@@ -55,7 +55,7 @@ map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens) {
       isPrevTokenOper = false;
       i--;
     }
-    else if (shared_ptr<IOperator> oper = IOperator::parse(tokens.at(i));
+    else if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.at(i));
              oper && oper->getFunctionType() == IFunction::Type::Binary) {
       if (!isPrevTokenOper) {
         operators.insert({i, oper});
@@ -70,18 +70,18 @@ map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens) {
   return operators;
 }
 
-string putInBrackets(const string &str) {
+std::string putInBrackets(const std::string &str) {
   return '(' + str + ')';
 }
 
-string putInSpaces(const string &str) {
+std::string putInSpaces(const std::string &str) {
   return ' ' + str + ' ';
 }
 
-string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values) {
-  string result;
+std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values) {
+  std::string result;
 
-  string operStr = oper.toString();
+  std::string operStr = oper.toString();
   IOperator::Priority operPriority = oper.getOperatorPriority();
   bool operIsAssociative = oper.isAssociative();
 
@@ -119,8 +119,8 @@ string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &v
   return result;
 }
 
-string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs) {
-  string result = lhs->toString();
+std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs) {
+  std::string result = lhs->toString();
 
   if (const auto child = cast<IExpression>(lhs)) {
     if (const auto childOper = cast<IOperator>(child->getFunction())) {
@@ -138,7 +138,7 @@ string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lh
   return result + oper.toString();
 }
 
-bool hasVariables(const shared_ptr<const IExpression> &expr, const shared_ptr<const Variable> &var) {
+bool hasVariables(const std::shared_ptr<const IExpression> &expr, const std::shared_ptr<const Variable> &var) {
   for (const auto &child : expr->getChildren()) {
     if (const auto childExpr = cast<IExpression>(child); childExpr && hasVariables(childExpr, var)) {
       return true;

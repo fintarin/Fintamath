@@ -4,11 +4,11 @@
 
 namespace fintamath {
 
-string IBinaryExpression::toString() const {
+std::string IBinaryExpression::toString() const {
   return binaryOperatorToString(*cast<IOperator>(getFunction()), {lhsChild, rhsChild});
 }
 
-shared_ptr<IFunction> IBinaryExpression::getFunction() const {
+std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {
   return func;
 }
 
@@ -44,7 +44,7 @@ ArgumentPtr IBinaryExpression::simplify() const {
 
 void IBinaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.size() != 2) {
-    vector<string> argNamesVect(childVect.size());
+    std::vector<std::string> argNamesVect(childVect.size());
 
     for (size_t i = 0; i < argNamesVect.size(); i++) {
       argNamesVect[i] = childVect[i].get()->toString();

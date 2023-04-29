@@ -6,9 +6,9 @@ namespace fintamath {
 
 class IBinaryExpression : virtual public IExpression {
 public:
-  string toString() const override;
+  std::string toString() const override;
 
-  shared_ptr<IFunction> getFunction() const final;
+  std::shared_ptr<IFunction> getFunction() const final;
 
   ArgumentsPtrVector getChildren() const final;
 
@@ -22,7 +22,7 @@ protected:
   ArgumentPtr simplify() const final;
 
 protected:
-  shared_ptr<IFunction> func;
+  std::shared_ptr<IFunction> func;
 
   ArgumentPtr lhsChild;
 
@@ -32,13 +32,14 @@ protected:
 template <typename Derived>
 class IBinaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IBinaryExpression {
 public:
-  explicit IBinaryExpressionCRTP(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-    this->func = cast<IFunction>(func.clone());
+  explicit IBinaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &inLhsChild,
+                                 const ArgumentPtr &inRhsChild) {
+    this->func = cast<IFunction>(inFunc.clone());
 
-    this->lhsChild = lhsChild;
+    this->lhsChild = inLhsChild;
     compressChild(this->lhsChild);
 
-    this->rhsChild = rhsChild;
+    this->rhsChild = inRhsChild;
     compressChild(this->rhsChild);
   }
 };

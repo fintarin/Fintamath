@@ -65,8 +65,8 @@ protected:
 }
 
 TEST(IntegralTests, modTest) {
-  unique_ptr<IIntegral> m1 = make_unique<Integer>(10);
-  unique_ptr<IIntegral> m2 = make_unique<Integer>(3);
+  std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
+  std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
   EXPECT_EQ((*m1 % *m1)->toString(), "0");
   EXPECT_EQ((*m2 % *m2)->toString(), "0");
@@ -86,8 +86,8 @@ TEST(IntegralTests, modTest) {
 }
 
 TEST(IntegralTests, bitAndTest) {
-  unique_ptr<IIntegral> m1 = make_unique<Integer>(10);
-  unique_ptr<IIntegral> m2 = make_unique<Integer>(3);
+  std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
+  std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
   EXPECT_EQ((*m1 & *m1)->toString(), "10");
   EXPECT_EQ((*m2 & *m2)->toString(), "3");
@@ -107,8 +107,8 @@ TEST(IntegralTests, bitAndTest) {
 }
 
 TEST(IntegralTests, bitOrTest) {
-  unique_ptr<IIntegral> m1 = make_unique<Integer>(10);
-  unique_ptr<IIntegral> m2 = make_unique<Integer>(3);
+  std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
+  std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
   EXPECT_EQ((*m1 | *m1)->toString(), "10");
   EXPECT_EQ((*m2 | *m2)->toString(), "3");
@@ -128,8 +128,8 @@ TEST(IntegralTests, bitOrTest) {
 }
 
 TEST(IntegralTests, bitXorTest) {
-  unique_ptr<IIntegral> m1 = make_unique<Integer>(10);
-  unique_ptr<IIntegral> m2 = make_unique<Integer>(3);
+  std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
+  std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
   EXPECT_EQ((*m1 ^ *m1)->toString(), "0");
   EXPECT_EQ((*m2 ^ *m2)->toString(), "0");
@@ -149,8 +149,8 @@ TEST(IntegralTests, bitXorTest) {
 }
 
 TEST(IntegralTests, bitLeftShiftTest) {
-  unique_ptr<IIntegral> m1 = make_unique<Integer>(10);
-  unique_ptr<IIntegral> m2 = make_unique<Integer>(3);
+  std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
+  std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
   EXPECT_EQ((*m1 << *m1)->toString(), "10240");
   EXPECT_EQ((*m2 << *m2)->toString(), "24");
@@ -170,8 +170,8 @@ TEST(IntegralTests, bitLeftShiftTest) {
 }
 
 TEST(IntegralTests, bitRightShiftTest) {
-  unique_ptr<IIntegral> m1 = make_unique<Integer>(10);
-  unique_ptr<IIntegral> m2 = make_unique<Integer>(3);
+  std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
+  std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
   EXPECT_EQ((*m1 >> *m1)->toString(), "0");
   EXPECT_EQ((*m2 >> *m2)->toString(), "0");
@@ -191,7 +191,7 @@ TEST(IntegralTests, bitRightShiftTest) {
 }
 
 TEST(IntegralTests, bitNotTest) {
-  unique_ptr<IIntegral> m1 = make_unique<Integer>(44);
+  std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(44);
   EXPECT_EQ((~*m1)->toString(), "-45");
 
   EXPECT_EQ((~Integer(1)).toString(), "-2");

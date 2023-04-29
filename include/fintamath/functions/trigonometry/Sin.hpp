@@ -9,12 +9,12 @@ class Sin : public IFunctionCRTP<INumber, Sin, INumber> {
 public:
   Sin() = default;
 
-  string toString() const override {
+  std::string toString() const override {
     return "sin";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

@@ -12,24 +12,24 @@ public:
   Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }
 
-  string toString() const override {
-    return string(order, '!');
+  std::string toString() const override {
+    return std::string(order, '!');
   }
 
-  uint64_t getOrder() const {
+  size_t getOrder() const {
     return order;
   }
 
-  void setOrder(int64_t order) {
-    assert(order > 0);
-    this->order = order;
+  void setOrder(size_t inOrder) {
+    assert(inOrder > 0);
+    order = inOrder;
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
-  int64_t order = 1;
+  size_t order = 1;
 };
 
 }

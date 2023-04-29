@@ -2,8 +2,8 @@
 
 namespace fintamath {
 
-unique_ptr<IMathObject> True::call() const {
-  return make_unique<Boolean>(true);
+std::unique_ptr<IMathObject> True::call() const {
+  return std::make_unique<Boolean>(true);
 }
 
 }

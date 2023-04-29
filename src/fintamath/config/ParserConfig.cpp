@@ -75,25 +75,25 @@
 
 namespace fintamath {
 
-multimap<TypeInfo, TypeInfo> InheritanceTable::table;
+std::multimap<TypeInfo, TypeInfo> InheritanceTable::table;
 
 TokenVector Tokenizer::registeredTokens;
 
-Parser::Vector<unique_ptr<IMathObject>, const string &> IMathObject::parserVector;
-Parser::Vector<unique_ptr<IArithmetic>, const string &> IArithmetic::parserVector;
-Parser::Vector<unique_ptr<IComparable>, const string &> IComparable::parserVector;
-Parser::Vector<unique_ptr<IIncremental>, const string &> IIncremental::parserVector;
-Parser::Vector<unique_ptr<IIntegral>, const string &> IIntegral::parserVector;
+Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> IMathObject::parserVector;
+Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> IArithmetic::parserVector;
+Parser::Vector<std::unique_ptr<IComparable>, const std::string &> IComparable::parserVector;
+Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> IIncremental::parserVector;
+Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> IIntegral::parserVector;
 
-Parser::Vector<unique_ptr<INumber>, const string &> INumber::parserVector;
+Parser::Vector<std::unique_ptr<INumber>, const std::string &> INumber::parserVector;
 
-Parser::Vector<unique_ptr<ILiteral>, const string &> ILiteral::parserVector;
-Parser::Map<unique_ptr<IConstant>> IConstant::parserMap;
+Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> ILiteral::parserVector;
+Parser::Map<std::unique_ptr<IConstant>> IConstant::parserMap;
 
-Parser::Map<unique_ptr<IFunction>> IFunction::parserMap;
-Parser::Map<unique_ptr<IOperator>> IOperator::parserMap;
+Parser::Map<std::unique_ptr<IFunction>> IFunction::parserMap;
+Parser::Map<std::unique_ptr<IOperator>> IOperator::parserMap;
 
-Parser::Vector<unique_ptr<IExpression>, const string &> IExpression::parserVector;
+Parser::Vector<std::unique_ptr<IExpression>, const std::string &> IExpression::parserVector;
 
 }
 
@@ -104,7 +104,7 @@ namespace {
 struct ParserConfig {
   ParserConfig() {
     IMathObject::registerType<ILiteral>(&ILiteral::parse);
-    IMathObject::registerType<IFunction>([](const string &str) {
+    IMathObject::registerType<IFunction>([](const std::string &str) {
       return IFunction::parse(str);
     });
     IMathObject::registerType<IArithmetic>(&IArithmetic::parse);

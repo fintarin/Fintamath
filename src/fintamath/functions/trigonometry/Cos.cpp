@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-unique_ptr<IMathObject> Cos::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Cos::call(const ArgumentsRefVector &argsVect) const {
   return cos(convert<Real>(argsVect.front())).toMinimalObject();
 }
 

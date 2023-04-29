@@ -23,19 +23,19 @@ public:
 
   ~Integer() override;
 
-  Integer(const IntegerImpl &impl);
+  Integer(const IntegerImpl &inImpl);
 
-  explicit Integer(string str);
+  explicit Integer(std::string str);
 
   Integer(int64_t val);
 
-  string toString() const override;
+  std::string toString() const override;
 
   int sign() const;
 
   operator long long() const;
 
-  const unique_ptr<IntegerImpl> &getImpl() const;
+  const std::unique_ptr<IntegerImpl> &getImpl() const;
 
 protected:
   bool equals(const Integer &rhs) const override;
@@ -73,7 +73,7 @@ protected:
   Integer &decrease() override;
 
 private:
-  unique_ptr<IntegerImpl> impl;
+  std::unique_ptr<IntegerImpl> impl;
 };
 
 }

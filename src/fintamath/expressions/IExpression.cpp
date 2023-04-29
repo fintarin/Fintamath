@@ -65,13 +65,13 @@ ArgumentsPtrVector IExpression::getVariables() const {
   return vars;
 }
 
-void IExpression::setValuesOfVariables(const vector<Variable> &vars, const ArgumentsPtrVector &vals) {
+void IExpression::setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) {
   auto children = getChildren();
 
   ArgumentsPtrVector newChildren;
 
   for (auto &child : children) {
-    if (shared_ptr<IExpression> exprChild = cast<IExpression>(child->clone())) {
+    if (std::shared_ptr<IExpression> exprChild = cast<IExpression>(child->clone())) {
       exprChild->setValuesOfVariables(vars, vals);
       newChildren.emplace_back(exprChild);
       continue;
@@ -95,7 +95,7 @@ void IExpression::setValuesOfVariables(const vector<Variable> &vars, const Argum
   setChildren(newChildren);
 }
 
-unique_ptr<IMathObject> IExpression::toMinimalObject() const {
+std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
   if (getFunction() == nullptr) {
     return getChildren().front()->toMinimalObject();
   }

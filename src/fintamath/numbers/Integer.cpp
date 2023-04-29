@@ -12,37 +12,44 @@
 namespace fintamath {
 
 Integer::Integer() {
-  impl = make_unique<IntegerImpl>();
+  impl = std::make_unique<IntegerImpl>();
 }
 
 Integer::Integer(const Integer &rhs) : Integer() {
   impl->v.assign(rhs.impl->v);
 }
 
-Integer::Integer(Integer &&) noexcept = default;
+Integer::Integer(Integer &&rhs) noexcept : Integer() {
+  impl = std::move(rhs.impl);
+}
 
 Integer &Integer::operator=(const Integer &rhs) {
   if (this != &rhs) {
-    impl = make_unique<IntegerImpl>(*rhs.impl);
+    impl = std::make_unique<IntegerImpl>(*rhs.impl);
   }
   return *this;
 }
 
-Integer &Integer::operator=(Integer &&) noexcept = default;
+Integer &Integer::operator=(Integer &&rhs) noexcept {
+  if (this != &rhs) {
+    impl = std::move(rhs.impl);
+  }
+  return *this;
+}
 
 Integer::~Integer() = default;
 
-Integer::Integer(const IntegerImpl &impl) : impl(make_unique<IntegerImpl>(impl)) {
+Integer::Integer(const IntegerImpl &inImpl) : impl(std::make_unique<IntegerImpl>(inImpl)) {
 }
 
-Integer::Integer(string str) : Integer() {
+Integer::Integer(std::string str) : Integer() {
   if (str.empty()) {
     throw InvalidInputException(str);
   }
 
   // Remove leading zeros
   {
-    int8_t i = 0;
+    size_t i = 0;
     if (str.front() == '-') {
       i++;
     }
@@ -65,7 +72,7 @@ Integer::Integer(int64_t val) : Integer() {
   impl->v.assign(val);
 }
 
-string Integer::toString() const {
+std::string Integer::toString() const {
   return impl->v.str();
 }
 
@@ -77,7 +84,7 @@ Integer::operator long long() const {
   return impl->v.convert_to<long long>();
 }
 
-const unique_ptr<IntegerImpl> &Integer::getImpl() const {
+const std::unique_ptr<IntegerImpl> &Integer::getImpl() const {
   return impl;
 }
 

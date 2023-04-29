@@ -16,24 +16,24 @@ namespace fintamath {
 class Parser {
 public:
   template <typename Return, typename... Args>
-  using Function = function<Return(Args...)>;
+  using Function = std::function<Return(Args...)>;
 
   template <typename... Args>
-  using Comparator = function<bool(Args...)>;
+  using Comparator = std::function<bool(Args...)>;
 
   template <typename Return, typename... Args>
-  using Map = multimap<string, Function<Return, Args...>>;
+  using Map = std::multimap<std::string, Function<Return, Args...>>;
 
   template <typename Return, typename... Args>
-  using Vector = vector<Function<Return, Args...>>;
+  using Vector = std::vector<Function<Return, Args...>>;
 
   template <typename Type, typename BasePtr, typename... Args>
   static void add(Map<BasePtr, Args...> &parserMap) {
     Function<BasePtr, Args...> constructor = [](const Args &...args) {
-      return make_unique<Type>(args...);
+      return std::make_unique<Type>(args...);
     };
 
-    string name = make_unique<Type>()->toString();
+    std::string name = std::make_unique<Type>()->toString();
     parserMap.insert({name, constructor});
 
     Tokenizer::registerToken(name);
@@ -41,7 +41,7 @@ public:
 
   template <typename Type, typename BasePtr, typename... Args>
   static void add(Map<BasePtr, Args...> &parserMap, const Function<BasePtr, Args...> &parserFunc) {
-    string name = make_unique<Type>()->toString();
+    std::string name = std::make_unique<Type>()->toString();
     parserMap.insert({name, parserFunc});
 
     Tokenizer::registerToken(name);
@@ -51,10 +51,10 @@ public:
   static void add(Vector<BasePtr, Args...> &parserVect) {
     Function<BasePtr, Args...> constructor = [](const Args &...args) {
       try {
-        return make_unique<Type>(args...);
+        return std::make_unique<Type>(args...);
       }
       catch (const InvalidInputException &) {
-        return unique_ptr<Type>();
+        return std::unique_ptr<Type>();
       }
     };
 
@@ -67,7 +67,8 @@ public:
   }
 
   template <typename Return, typename... Args>
-  static Return parse(const Map<Return, const Args &...> &parserMap, const string &parsedStr, const Args &...args) {
+  static Return parse(const Map<Return, const Args &...> &parserMap, const std::string &parsedStr,
+                      const Args &...args) {
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
@@ -80,7 +81,7 @@ public:
   }
 
   template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
-  static Return parse(const Map<Return, Args &&...> &parserMap, const string &parsedStr, Args &&...args) {
+  static Return parse(const Map<Return, Args &&...> &parserMap, const std::string &parsedStr, Args &&...args) {
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
@@ -94,7 +95,7 @@ public:
 
   template <typename Return, typename... Args>
   static Return parse(const Map<Return, const Args &...> &parserMap, const Comparator<const Return &> &comp,
-                      const string &parsedStr, const Args &...args) {
+                      const std::string &parsedStr, const Args &...args) {
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
@@ -108,7 +109,7 @@ public:
 
   template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
   static Return parse(const Map<Return, Args &&...> &parserMap, const Comparator<const Return &> &comp,
-                      const string &parsedStr, Args &&...args) {
+                      const std::string &parsedStr, Args &&...args) {
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {

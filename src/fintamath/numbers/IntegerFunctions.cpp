@@ -23,7 +23,7 @@ Integer sqrt(const Integer &rhs) {
   return IntegerImpl(sqrt(rhs.getImpl()->v));
 }
 
-Integer pow(const Integer &lhs, uint64_t rhs) {
+Integer pow(const Integer &lhs, uint32_t rhs) {
   if (lhs == 0 && rhs == 0) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), std::to_string(rhs));
   }
@@ -62,7 +62,7 @@ Integer factorial(const Integer &rhs, size_t order) {
   assert(order > 0);
 
   if (rhs < 0) {
-    throw UndefinedUnaryOperatorException(string(order, '!'), rhs.toString(),
+    throw UndefinedUnaryOperatorException(std::string(order, '!'), rhs.toString(),
                                           UndefinedUnaryOperatorException::Type::Postfix);
   }
 
@@ -74,7 +74,7 @@ Integer factorial(const Integer &rhs, size_t order) {
   // https://en.wikipedia.org/wiki/Double_factorial.
 
   Integer res = 1;
-  for (Integer i = rhs; i > 0; i -= order) {
+  for (Integer i = rhs; i > 0; i -= int64_t(order)) {
     res *= i;
   }
 
@@ -93,7 +93,7 @@ Integer combinations(const Integer &totalNumber, const Integer &choosedNumber) {
 
 // Use multinomial coefficients formula.
 // https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients.
-Integer multinomialCoefficient(const Integer &totalNumber, const vector<Integer> &groupNumbers) {
+Integer multinomialCoefficient(const Integer &totalNumber, const std::vector<Integer> &groupNumbers) {
   Integer checkValue;
 
   for (const auto &groupNumber : groupNumbers) {

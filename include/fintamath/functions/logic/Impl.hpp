@@ -10,12 +10,12 @@ public:
   Impl() : IOperatorCRTP(IOperator::Priority::Implication, false) {
   }
 
-  string toString() const override {
+  std::string toString() const override {
     return "->";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

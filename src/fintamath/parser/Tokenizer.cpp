@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-TokenVector Tokenizer::tokenize(string str) {
+TokenVector Tokenizer::tokenize(std::string str) {
   handleSpaces(str);
 
   TokenVector tokens;
@@ -54,8 +54,8 @@ TokenVector Tokenizer::tokenize(string str) {
   return tokens;
 }
 
-string Tokenizer::tokensToString(const TokenVector &tokens) {
-  string res;
+std::string Tokenizer::tokensToString(const TokenVector &tokens) {
+  std::string res;
 
   for (const auto &token : tokens) {
     res += token;
@@ -95,7 +95,7 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
   bool isPreviousTokenNested = true;
 
   while (!token.empty()) {
-    string nestedToken = token.substr(0, registeredTokens.front().length());
+    std::string nestedToken = token.substr(0, registeredTokens.front().length());
     bool isNestedTokenFind = false;
 
     for (const auto &registeredToken : registeredTokens) {
@@ -143,7 +143,7 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
   return true;
 }
 
-void Tokenizer::handleSpaces(string &str) {
+void Tokenizer::handleSpaces(std::string &str) {
   str = std::regex_replace(str, std::regex(R"([\s\r\n]+)"), "");
 }
 

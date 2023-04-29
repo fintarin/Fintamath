@@ -7,7 +7,7 @@ namespace fintamath {
 
 const Neg NEG;
 
-NegExpression::NegExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(NEG, child) {
+NegExpression::NegExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(NEG, inChild) {
 }
 
 ArgumentPtr NegExpression::preSimplify() const {

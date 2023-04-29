@@ -11,7 +11,7 @@ class InvalidInputFunctionException : public InvalidInputException {
 public:
   ~InvalidInputFunctionException() override = default;
 
-  InvalidInputFunctionException(const string &func, const vector<string> &argsVect) {
+  InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
     content += ": " + func + "(";
 
     if (!argsVect.empty()) {

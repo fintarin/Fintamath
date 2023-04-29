@@ -7,12 +7,12 @@ namespace fintamath {
 
 class True : public IConstantCRTP<Boolean, True> {
 public:
-  string toString() const override {
+  std::string toString() const override {
     return Boolean(true).toString();
   }
 
 protected:
-  unique_ptr<IMathObject> call() const override;
+  std::unique_ptr<IMathObject> call() const override;
 };
 
 }

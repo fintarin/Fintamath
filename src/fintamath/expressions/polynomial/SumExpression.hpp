@@ -6,14 +6,14 @@
 namespace fintamath {
 class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatableExpression {
 public:
-  explicit SumExpression(const ArgumentsPtrVector &children);
+  explicit SumExpression(const ArgumentsPtrVector &inChildren);
 
   ArgumentPtr negate() const override;
 
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
-  string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
+  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
 private:
   static ArgumentPtr simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);

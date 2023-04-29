@@ -6,7 +6,6 @@
 #include <boost/multiprecision/cpp_int.hpp>
 
 #include "fintamath/core/CoreConstants.hpp"
-#include "fintamath/core/CoreDefines.hpp"
 
 using namespace boost::multiprecision;
 
@@ -19,7 +18,7 @@ struct IntegerImpl {
 
   IntegerImpl() = default;
 
-  IntegerImpl(Backend inV) : v(move(inV)) {
+  IntegerImpl(Backend inV) : v(std::move(inV)) {
   }
 
   operator Backend() const {
@@ -34,7 +33,7 @@ struct RealImpl {
 
   RealImpl() = default;
 
-  RealImpl(Backend inV) : v(move(inV)) {
+  RealImpl(Backend inV) : v(std::move(inV)) {
   }
 
   operator Backend() const {

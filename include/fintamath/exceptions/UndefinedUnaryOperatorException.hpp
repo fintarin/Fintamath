@@ -16,7 +16,7 @@ public:
 public:
   ~UndefinedUnaryOperatorException() override = default;
 
-  UndefinedUnaryOperatorException(const string &oper, const string &rhs, Type type) {
+  UndefinedUnaryOperatorException(const std::string &oper, const std::string &rhs, Type type) {
     switch (type) {
     case Type::Prefix:
       content += ": " + oper + "(" + rhs + ")";

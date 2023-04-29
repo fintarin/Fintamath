@@ -9,12 +9,12 @@ class Tan : public IFunctionCRTP<INumber, Tan, INumber> {
 public:
   Tan() = default;
 
-  string toString() const override {
+  std::string toString() const override {
     return "tan";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

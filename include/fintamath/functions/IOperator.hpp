@@ -33,15 +33,16 @@ public:
     Parser::registerType<T>(parserMap);
   }
 
-  static unique_ptr<IOperator> parse(const string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
-    Parser::Comparator<const unique_ptr<IOperator> &> comp = [priority](const unique_ptr<IOperator> &oper) {
+  static std::unique_ptr<IOperator> parse(const std::string &parsedStr,
+                                          IOperator::Priority priority = IOperator::Priority::Any) {
+    Parser::Comparator<const std::unique_ptr<IOperator> &> comp = [priority](const std::unique_ptr<IOperator> &oper) {
       return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
     };
-    return Parser::parse<unique_ptr<IOperator>>(parserMap, comp, parsedStr);
+    return Parser::parse<std::unique_ptr<IOperator>>(parserMap, comp, parsedStr);
   }
 
 private:
-  static Parser::Map<unique_ptr<IOperator>> parserMap;
+  static Parser::Map<std::unique_ptr<IOperator>> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>

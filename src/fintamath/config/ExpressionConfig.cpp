@@ -47,7 +47,7 @@
 
 namespace fintamath {
 
-Parser::Map<shared_ptr<IExpression>, const ArgumentsPtrVector &> Expression::expressionBuildersMap;
+Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> Expression::expressionBuildersMap;
 
 }
 
@@ -58,55 +58,56 @@ namespace {
 struct ExpressionConfig {
   ExpressionConfig() {
     Expression::registerFunctionExpressionMaker<Add, true>([](const ArgumentsPtrVector &args) {
-      return make_shared<SumExpression>(args);
+      return std::make_shared<SumExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Sub>([](const ArgumentsPtrVector &args) {
-      return make_shared<SumExpression>(ArgumentsPtrVector{args.front(), make_shared<NegExpression>(args.back())});
+      return std::make_shared<SumExpression>(
+          ArgumentsPtrVector{args.front(), std::make_shared<NegExpression>(args.back())});
     });
 
     Expression::registerFunctionExpressionMaker<Mul, true>([](const ArgumentsPtrVector &args) {
-      return make_shared<MulExpression>(args);
+      return std::make_shared<MulExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Div>([](const ArgumentsPtrVector &args) {
-      return make_shared<DivExpression>(args.front(), args.back());
+      return std::make_shared<DivExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<And, true>([](const ArgumentsPtrVector &args) {
-      return make_shared<AndExpression>(args);
+      return std::make_shared<AndExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Or, true>([](const ArgumentsPtrVector &args) {
-      return make_shared<OrExpression>(args);
+      return std::make_shared<OrExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Pow>([](const ArgumentsPtrVector &args) {
-      return make_shared<PowExpression>(args.front(), args.back());
+      return std::make_shared<PowExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Eqv>([](const ArgumentsPtrVector &args) {
-      return make_shared<CompExpression>(Eqv(), args.front(), args.back());
+      return std::make_shared<CompExpression>(Eqv(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Neqv>([](const ArgumentsPtrVector &args) {
-      return make_shared<CompExpression>(Neqv(), args.front(), args.back());
+      return std::make_shared<CompExpression>(Neqv(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Less>([](const ArgumentsPtrVector &args) {
-      return make_shared<CompExpression>(Less(), args.front(), args.back());
+      return std::make_shared<CompExpression>(Less(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<More>([](const ArgumentsPtrVector &args) {
-      return make_shared<CompExpression>(More(), args.front(), args.back());
+      return std::make_shared<CompExpression>(More(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<LessEqv>([](const ArgumentsPtrVector &args) {
-      return make_shared<CompExpression>(LessEqv(), args.front(), args.back());
+      return std::make_shared<CompExpression>(LessEqv(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<MoreEqv>([](const ArgumentsPtrVector &args) {
-      return make_shared<CompExpression>(MoreEqv(), args.front(), args.back());
+      return std::make_shared<CompExpression>(MoreEqv(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Index>([](const ArgumentsPtrVector &args) {
@@ -119,7 +120,7 @@ struct ExpressionConfig {
       }
 
       ArgumentPtr res = func(*args.front(), *args.back());
-      return make_shared<Expression>(res);
+      return std::make_shared<Expression>(res);
     });
 
     Expression::registerFunctionExpressionMaker<Impl>([](const ArgumentsPtrVector &args) {
@@ -158,19 +159,19 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Neg>([](const ArgumentsPtrVector &args) {
-      return make_shared<NegExpression>(args.front());
+      return std::make_shared<NegExpression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<UnaryPlus>([](const ArgumentsPtrVector &args) {
-      return make_shared<Expression>(args.front());
+      return std::make_shared<Expression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Not>([](const ArgumentsPtrVector &args) {
-      return make_shared<NotExpression>(args.front());
+      return std::make_shared<NotExpression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Derivative>([](const ArgumentsPtrVector &args) {
-      return make_shared<DerivativeExpression>(args.front());
+      return std::make_shared<DerivativeExpression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Log>([](const ArgumentsPtrVector &args) {
@@ -193,17 +194,17 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Percent>([](const ArgumentsPtrVector &args) {
-      static const auto PERCENT_VALUE = make_shared<Integer>(100);
+      static const auto PERCENT_VALUE = std::make_shared<Integer>(100);
       return makeRawFunctionExpression(Div(), {args.front(), PERCENT_VALUE});
     });
 
     Expression::registerFunctionExpressionMaker<Rad>([](const ArgumentsPtrVector &args) {
-      static const auto ANGLE = make_shared<Integer>(180);
+      static const auto ANGLE = std::make_shared<Integer>(180);
       return makeRawFunctionExpression(Mul(), {args.front(), makeRawFunctionExpression(Div(), {Pi().clone(), ANGLE})});
     });
 
     Expression::registerFunctionExpressionMaker<Degrees>([](const ArgumentsPtrVector &args) {
-      static const auto ANGLE = make_shared<Integer>(180);
+      static const auto ANGLE = std::make_shared<Integer>(180);
       return makeRawFunctionExpression(Mul(), {args.front(), makeRawFunctionExpression(Div(), {ANGLE, Pi().clone()})});
     });
 

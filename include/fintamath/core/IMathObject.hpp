@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 
-#include "fintamath/core/CoreDefines.hpp"
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/parser/Parser.hpp"
 
@@ -15,15 +14,25 @@ namespace fintamath {
 
 class IMathObject {
 public:
+  IMathObject() = default;
+
+  IMathObject(const IMathObject & /*rhs*/) = default;
+
+  IMathObject(IMathObject && /*rhs*/) noexcept = delete;
+
+  IMathObject &operator=(const IMathObject & /*rhs*/) = default;
+
+  IMathObject &operator=(IMathObject && /*rhs*/) noexcept = delete;
+
   virtual ~IMathObject() = default;
 
-  virtual unique_ptr<IMathObject> clone() const = 0;
+  virtual std::unique_ptr<IMathObject> clone() const = 0;
 
-  virtual string toString() const {
+  virtual std::string toString() const {
     return {};
   }
 
-  virtual unique_ptr<IMathObject> toMinimalObject() const {
+  virtual std::unique_ptr<IMathObject> toMinimalObject() const {
     return clone();
   }
 
@@ -36,11 +45,11 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IMathObject, T>>>
-  static void registerType(Parser::Function<unique_ptr<IMathObject>, const string &> &&parserFunc) {
+  static void registerType(Parser::Function<std::unique_ptr<IMathObject>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
-  static unique_ptr<IMathObject> parse(const string &str) {
+  static std::unique_ptr<IMathObject> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -48,14 +57,14 @@ protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
 
 private:
-  static Parser::Vector<unique_ptr<IMathObject>, const string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> parserVector;
 };
 
 template <typename Derived>
 class IMathObjectCRTP : virtual public IMathObject {
 public:
-  unique_ptr<IMathObject> clone() const final {
-    return make_unique<Derived>(cast<Derived>(*this));
+  std::unique_ptr<IMathObject> clone() const final {
+    return std::make_unique<Derived>(cast<Derived>(*this));
   }
 
   bool operator==(const Derived &rhs) const {
@@ -86,10 +95,10 @@ protected:
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }
-    if (unique_ptr<IMathObject> rhsPtr = convert(*this, rhs); rhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs); rhsPtr != nullptr) {
       return equals(cast<Derived>(*rhsPtr));
     }
-    if (unique_ptr<IMathObject> lhsPtr = convert(rhs, *this); lhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this); lhsPtr != nullptr) {
       return *lhsPtr == rhs;
     }
     return false;

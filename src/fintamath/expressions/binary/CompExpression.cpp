@@ -12,11 +12,11 @@
 
 namespace fintamath {
 
-CompExpression::CompExpression(const IOperator &oper, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)
-    : IBinaryExpressionCRTP(oper, lhsChild, rhsChild) {
+CompExpression::CompExpression(const IOperator &inOper, const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
+    : IBinaryExpressionCRTP(inOper, inLhsChild, inRhsChild) {
 }
 
-string CompExpression::toString() const {
+std::string CompExpression::toString() const {
   if (isSolution) {
     if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && *lhsExpr->getFunction() == Add()) {
       ArgumentsPtrVector sumChildren = lhsExpr->getChildren();
@@ -54,7 +54,7 @@ ArgumentPtr CompExpression::preSimplify() const {
   if (!simplExpr->isSolution) {
     if (!is<Integer>(rhsChild) || *rhsChild != ZERO) {
       ArgumentPtr resLhs = makeFunctionExpression(Sub(), {simplExpr->lhsChild, simplExpr->rhsChild});
-      return make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
+      return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
     }
   }
 
@@ -74,7 +74,6 @@ ArgumentPtr CompExpression::postSimplify() const {
       return makeFunctionExpression(*getOppositeFunction(func), {lhsExpr->getChildren().front(), simplExpr->rhsChild});
     }
 
-    bool isAdd = false;
     ArgumentsPtrVector dividendPolynom;
     ArgumentPtr polynomFirstChild;
 
@@ -87,7 +86,7 @@ ArgumentPtr CompExpression::postSimplify() const {
       dividendPolynom.emplace_back(lhsExpr);
     }
 
-    shared_ptr<const INumber> dividerNum;
+    std::shared_ptr<const INumber> dividerNum;
 
     if (const auto polynomFirstChildExpr = cast<IExpression>(polynomFirstChild)) {
       if (is<Neg>(polynomFirstChildExpr->getFunction())) {
@@ -105,7 +104,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
       ArgumentPtr newLhs = makeFunctionExpression(Add(), dividendPolynom); // TODO: add ZERO
       ArgumentPtr newRhs = simplExpr->rhsChild;
-      shared_ptr<IFunction> newFunc;
+      std::shared_ptr<IFunction> newFunc;
 
       if (*dividerNum < ZERO) {
         newFunc = getOppositeFunction(func);
@@ -126,12 +125,12 @@ void CompExpression::markAsSolution() {
   convertToSolution();
 }
 
-void CompExpression::addOppositeFunctions(const shared_ptr<IFunction> &function,
-                                          const shared_ptr<IFunction> &opposite) {
+void CompExpression::addOppositeFunctions(const std::shared_ptr<IFunction> &function,
+                                          const std::shared_ptr<IFunction> &opposite) {
   oppositeFunctionsMap.try_emplace(function->toString(), opposite);
 }
 
-shared_ptr<IFunction> CompExpression::getOppositeFunction(const shared_ptr<IFunction> &function) {
+std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const std::shared_ptr<IFunction> &function) {
   if (auto res = oppositeFunctionsMap.find(function->toString()); res != oppositeFunctionsMap.end()) {
     return cast<IFunction>(res->second->clone());
   }
@@ -146,21 +145,22 @@ void CompExpression::convertToSolution() {
     return;
   }
 
-  shared_ptr<const Variable> var = cast<Variable>(vars.front());
+  auto var = cast<Variable>(vars.front());
 
-  if (auto lhsAddExpr = cast<IExpression>(lhsChild); lhsAddExpr && is<Add>(lhsAddExpr->getFunction())) {
+  if (auto lhsAdd = cast<IExpression>(lhsChild); lhsAdd && is<Add>(lhsAdd->getFunction())) {
     ArgumentsPtrVector rhsPolynom = {rhsChild};
     ArgumentsPtrVector lhsPolynom = {ZERO.clone()};
 
-    for (const auto &lhsChild : lhsAddExpr->getChildren()) {
-      if (const auto lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && hasVariables(lhsChildExpr, var)) {
-        lhsPolynom.emplace_back(lhsChild);
+    for (const auto &lhsAddChild : lhsAdd->getChildren()) {
+      if (const auto lhsAddChildExpr = cast<IExpression>(lhsAddChild);
+          lhsAddChildExpr && hasVariables(lhsAddChildExpr, var)) {
+        lhsPolynom.emplace_back(lhsAddChild);
       }
-      else if (const auto lhsChildVar = cast<Variable>(lhsChild); lhsChildVar && *lhsChildVar == *var) {
-        lhsPolynom.emplace_back(lhsChild);
+      else if (const auto lhsChildVar = cast<Variable>(lhsAddChild); lhsChildVar && *lhsChildVar == *var) {
+        lhsPolynom.emplace_back(lhsAddChild);
       }
       else {
-        rhsPolynom.emplace_back(makeFunctionExpression(Neg(), {lhsChild}));
+        rhsPolynom.emplace_back(makeFunctionExpression(Neg(), {lhsAddChild}));
       }
     }
 

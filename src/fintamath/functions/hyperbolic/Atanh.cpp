@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-unique_ptr<IMathObject> Atanh::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Atanh::call(const ArgumentsRefVector &argsVect) const {
   return atanh(convert<Real>(argsVect.front())).toMinimalObject();
 }
 

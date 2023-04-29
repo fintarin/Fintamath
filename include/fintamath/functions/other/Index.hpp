@@ -12,12 +12,12 @@ public:
   Index() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
   }
 
-  string toString() const override {
+  std::string toString() const override {
     return "_";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

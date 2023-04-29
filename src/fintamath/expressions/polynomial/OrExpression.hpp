@@ -7,18 +7,23 @@ namespace fintamath {
 
 class OrExpression : public IPolynomExpressionCRTP<OrExpression>, public ILogicNegatableExpression {
 public:
-  explicit OrExpression(const ArgumentsPtrVector &children);
+  explicit OrExpression(const ArgumentsPtrVector &inChildren);
 
   ArgumentPtr logicNegate() const override;
 
-  string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
-
 protected:
-  ArgumentPtr preSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
+  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
-  ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const override;
+  ArgumentPtr postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const override;
+
+  SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
   bool isComparableOrderInversed() const override;
+
+private:
+  static ArgumentPtr simplifyEqual(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr simplifyNot(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 };
 
 }

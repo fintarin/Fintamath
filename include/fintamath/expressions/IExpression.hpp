@@ -11,7 +11,7 @@ namespace fintamath {
 
 class IExpression : virtual public IMathObject {
 public:
-  virtual shared_ptr<IFunction> getFunction() const = 0;
+  virtual std::shared_ptr<IFunction> getFunction() const = 0;
 
   virtual ArgumentsPtrVector getChildren() const = 0;
 
@@ -21,18 +21,18 @@ public:
 
   virtual ArgumentsPtrVector getVariablesUnsorted() const;
 
-  virtual void setValuesOfVariables(const vector<Variable> &vars, const ArgumentsPtrVector &vals);
+  virtual void setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals);
 
   ArgumentsPtrVector getVariables() const;
 
-  unique_ptr<IMathObject> toMinimalObject() const final;
+  std::unique_ptr<IMathObject> toMinimalObject() const final;
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
   static void registerType() {
     Parser::registerType<T>(parserVector);
   }
 
-  static unique_ptr<IExpression> parse(const string &str) {
+  static std::unique_ptr<IExpression> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -57,7 +57,7 @@ private:
   static void simplifyConstant(ArgumentPtr &child);
 
 private:
-  static Parser::Vector<unique_ptr<IExpression>, const string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parserVector;
 };
 
 template <typename Derived>
@@ -67,7 +67,7 @@ public:
     ArgumentPtr lhsFunction = getFunction();
     ArgumentPtr rhsFunction = rhs.getFunction();
 
-    if (lhsFunction && !rhsFunction || !lhsFunction && rhsFunction) {
+    if ((lhsFunction && !rhsFunction) || (!lhsFunction && rhsFunction)) {
       return false;
     }
 

@@ -6,18 +6,18 @@ namespace fintamath {
 
 class Boolean : public ILiteralCRTP<Boolean> {
 public:
-  explicit Boolean(const string &str);
+  explicit Boolean(const std::string &str);
 
   Boolean(bool val);
 
-  string toString() const override;
+  std::string toString() const override;
 
   operator bool() const;
 
 private:
-  void parse(const string &str);
+  void parse(const std::string &str);
 
-  string name;
+  std::string name;
 };
 
 }

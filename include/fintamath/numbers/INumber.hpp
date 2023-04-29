@@ -18,41 +18,41 @@ public:
     Parser::registerType<T>(parserVector);
   }
 
-  static unique_ptr<INumber> parse(const string &str) {
+  static std::unique_ptr<INumber> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
 private:
-  static Parser::Vector<unique_ptr<INumber>, const string &> parserVector;
+  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> parserVector;
 };
 
-inline unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs) {
+inline std::unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs) {
   auto res = lhs + cast<IArithmetic>(rhs);
-  return cast<INumber>(move(res));
+  return cast<INumber>(std::move(res));
 }
 
-inline unique_ptr<INumber> operator-(const INumber &lhs, const INumber &rhs) {
+inline std::unique_ptr<INumber> operator-(const INumber &lhs, const INumber &rhs) {
   auto res = lhs - cast<IArithmetic>(rhs);
-  return cast<INumber>(move(res));
+  return cast<INumber>(std::move(res));
 }
 
-inline unique_ptr<INumber> operator*(const INumber &lhs, const INumber &rhs) {
+inline std::unique_ptr<INumber> operator*(const INumber &lhs, const INumber &rhs) {
   auto res = lhs * cast<IArithmetic>(rhs);
-  return cast<INumber>(move(res));
+  return cast<INumber>(std::move(res));
 }
 
-inline unique_ptr<INumber> operator/(const INumber &lhs, const INumber &rhs) {
+inline std::unique_ptr<INumber> operator/(const INumber &lhs, const INumber &rhs) {
   auto res = lhs / cast<IArithmetic>(rhs);
-  return cast<INumber>(move(res));
+  return cast<INumber>(std::move(res));
 }
 
 template <typename Rhs, typename = std::enable_if_t<std::is_same_v<INumber, Rhs>>>
-unique_ptr<INumber> operator+(const Rhs &rhs) {
+std::unique_ptr<INumber> operator+(const Rhs &rhs) {
   return cast<INumber>(+cast<IArithmetic>(rhs));
 }
 
 template <typename Rhs, typename = std::enable_if_t<std::is_same_v<INumber, Rhs>>>
-unique_ptr<INumber> operator-(const Rhs &rhs) {
+std::unique_ptr<INumber> operator-(const Rhs &rhs) {
   return cast<INumber>(-cast<IArithmetic>(rhs));
 }
 

@@ -7,7 +7,7 @@
 using namespace fintamath;
 
 TEST(IncrementalTests, incTest) {
-  unique_ptr<IIncremental> m1 = make_unique<Integer>(1);
+  std::unique_ptr<IIncremental> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((++*m1).toString(), "2");
   EXPECT_EQ(((*m1)++)->toString(), "2");
   EXPECT_EQ(m1->toString(), "3");
@@ -17,7 +17,7 @@ TEST(IncrementalTests, incTest) {
 }
 
 TEST(IncrementalTests, decTest) {
-  unique_ptr<IIncremental> m1 = make_unique<Integer>(1);
+  std::unique_ptr<IIncremental> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((--*m1).toString(), "0");
   EXPECT_EQ(((*m1)--)->toString(), "0");
   EXPECT_EQ(m1->toString(), "-1");

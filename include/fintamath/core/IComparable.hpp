@@ -25,11 +25,11 @@ public:
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
-  static void registerType(Parser::Function<unique_ptr<IComparable>, const string &> &&parserFunc) {
+  static void registerType(Parser::Function<std::unique_ptr<IComparable>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(parserVector, parserFunc);
   }
 
-  static unique_ptr<IComparable> parse(const string &str) {
+  static std::unique_ptr<IComparable> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -39,7 +39,7 @@ protected:
   virtual bool moreAbstract(const IComparable &rhs) const = 0;
 
 private:
-  static Parser::Vector<unique_ptr<IComparable>, const string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> parserVector;
 };
 
 template <typename Derived>
@@ -66,9 +66,9 @@ protected:
 
   virtual bool more(const Derived &rhs) const = 0;
 
-  bool lessAbstract(const IComparable &rhs) const final {
+  bool lessAbstract(const IComparable &inRhs) const final {
     return executeAbstract(
-        rhs, "<",
+        inRhs, "<",
         [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.less(rhs);
         },
@@ -77,9 +77,9 @@ protected:
         });
   }
 
-  bool moreAbstract(const IComparable &rhs) const final {
+  bool moreAbstract(const IComparable &inRhs) const final {
     return executeAbstract(
-        rhs, ">",
+        inRhs, ">",
         [this](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
           return lhs.more(rhs);
         },
@@ -89,16 +89,16 @@ protected:
   }
 
 private:
-  bool executeAbstract(const IComparable &rhs, const string &oper,
-                       function<bool(const IComparableCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
-                       function<bool(const IComparable &, const IComparable &)> &&f2) const {
+  bool executeAbstract(const IComparable &rhs, const std::string &oper,
+                       std::function<bool(const IComparableCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
+                       std::function<bool(const IComparable &, const IComparable &)> &&f2) const {
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return f1(*this, *rhsPtr);
     }
-    if (unique_ptr<IMathObject> rhsPtr = convert(*this, rhs); rhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs); rhsPtr != nullptr) {
       return f1(*this, cast<Derived>(*rhsPtr));
     }
-    if (unique_ptr<IMathObject> lhsPtr = convert(rhs, *this); lhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this); lhsPtr != nullptr) {
       return f2(cast<IComparable>(*lhsPtr), rhs);
     }
     throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());

@@ -9,7 +9,7 @@ namespace fintamath {
 
 const Or OR;
 
-OrExpression::OrExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(OR, children) {
+OrExpression::OrExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(OR, inChildren) {
 }
 
 ArgumentPtr OrExpression::logicNegate() const {
@@ -22,8 +22,17 @@ ArgumentPtr OrExpression::logicNegate() const {
   return makeFunctionExpression(And(), negChildren);
 }
 
-// TODO: improve logic minimization
-ArgumentPtr OrExpression::preSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
+std::string OrExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+  std::string result = inChild->toString();
+
+  if (const auto &childExpr = cast<IExpression>(inChild); childExpr && is<And>(childExpr->getFunction())) {
+    result = putInBrackets(result);
+  }
+
+  return prevChild ? (putInSpaces(func->toString()) + result) : result;
+}
+
+ArgumentPtr OrExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const {
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
 
@@ -34,38 +43,41 @@ ArgumentPtr OrExpression::preSimplify(size_t lhsChildNum, size_t rhsChildNum) co
     return *rhsBool ? rhsChild : lhsChild;
   }
 
-  if (*lhsChild == *rhsChild) {
-    return lhsChild;
-  }
-
-  if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr && is<Not>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
-    return make_shared<Boolean>(true);
-  }
-  if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
-    return make_shared<Boolean>(true);
-  }
-
   return {};
 }
 
-ArgumentPtr OrExpression::postSimplify(size_t lhsChildNum, size_t rhsChildNum) const {
-  return preSimplify(lhsChildNum, rhsChildNum);
+// TODO: improve logic minimization
+OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForSimplify() const {
+  return {
+      &OrExpression::simplifyEqual, //
+      &OrExpression::simplifyNot,   //
+  };
 }
 
 bool OrExpression::isComparableOrderInversed() const {
   return true;
 }
 
-string OrExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  string result = inChild->toString();
-
-  if (const auto &childExpr = cast<IExpression>(inChild); childExpr && is<And>(childExpr->getFunction())) {
-    result = putInBrackets(result);
+ArgumentPtr OrExpression::simplifyEqual(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  if (*lhsChild == *rhsChild) {
+    return lhsChild;
   }
 
-  return prevChild ? (putInSpaces(func->toString()) + result) : result;
+  return {};
+}
+
+ArgumentPtr OrExpression::simplifyNot(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  if (const auto lhsExpr = cast<IExpression>(lhsChild);
+      lhsExpr && is<Not>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
+    return std::make_shared<Boolean>(true);
+  }
+
+  if (const auto rhsExpr = cast<IExpression>(rhsChild);
+      rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
+    return std::make_shared<Boolean>(true);
+  }
+
+  return {};
 }
 
 }
