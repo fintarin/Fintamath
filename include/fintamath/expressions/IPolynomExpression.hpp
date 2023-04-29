@@ -56,8 +56,8 @@ private:
    *
    * @param lhs
    * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
@@ -67,8 +67,8 @@ private:
    *
    * @param lhs
    * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorPolynomsAndBinaryFunctions(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
@@ -78,8 +78,8 @@ private:
    *
    * @param lhs
    * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorPolynoms(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
@@ -89,8 +89,8 @@ private:
    *
    * @param lhsExpr
    * @param rhsExpr
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
@@ -101,8 +101,8 @@ private:
    *
    * @param lhs
    * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorBinaryFunctions(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
@@ -112,8 +112,8 @@ private:
    *
    * @param lhs
    * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorExpressionAndNonExpression(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
@@ -123,8 +123,8 @@ private:
    *
    * @param lhs
    * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorNonExpressions(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
@@ -134,8 +134,8 @@ private:
    *
    * @param lhsChildren
    * @param rhsChildren
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
@@ -145,8 +145,8 @@ private:
    *
    * @param lhsChildren
    * @param rhsChildren
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
@@ -156,8 +156,8 @@ private:
    *
    * @param lhsVariables
    * @param rhsVariables
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorLiterals(const ArgumentsPtrVector &lhsVariables, const ArgumentsPtrVector &rhsVariables) const;
@@ -167,8 +167,8 @@ private:
    *
    * @param lhs
    * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
@@ -178,8 +178,8 @@ private:
    *
    * @param lhs
    * @param rhs
-   * @return -1 if we should not swap the arguments
-   * @return  1 if we should swap the arguments
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
   int comparatorConstants(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
