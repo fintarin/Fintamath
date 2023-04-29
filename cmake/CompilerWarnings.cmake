@@ -29,6 +29,7 @@ function(set_project_warnings)
       /permissive- # standards conformance mode for MSVC compiler.
       # Ignored warnings
       /wd4250 # inherits via dominance warn
+      /wd4127 # conditional expression is constant, consider using 'if constexpr' statement instead
   )
 
   set(CLANG_WARNINGS
