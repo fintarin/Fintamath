@@ -64,6 +64,7 @@ function(set_project_warnings)
       -Wuseless-cast # warn if you perform a cast to the same type
       # Ignored warnings
       -Wno-nonnull-compare # nonnull compare warn
+      -Wno-null-dereference # null dereference warn
   )
 
   if(MSVC)
