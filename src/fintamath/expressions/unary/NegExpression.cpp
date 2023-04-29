@@ -21,6 +21,9 @@ ArgumentPtr NegExpression::preSimplify() const {
   if (const auto expr = cast<NegExpression>(simplExpr->child)) {
     return expr->child;
   }
+  if (ArgumentPtr res = callFunction(*simplExpr->func, {simplExpr->child})) {
+    return res;
+  }
 
   return simpl;
 }

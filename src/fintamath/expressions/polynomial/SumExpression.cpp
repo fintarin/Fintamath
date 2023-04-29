@@ -132,14 +132,8 @@ ArgumentPtr SumExpression::addRatesToValue(const ArgumentsPtrVector &rates, cons
 }
 
 ArgumentPtr SumExpression::sumRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  std::pair<ArgumentPtr, ArgumentPtr> lhsRateValuePair = getRateValuePair(lhsChild);
-  std::pair<ArgumentPtr, ArgumentPtr> rhsRateValuePair = getRateValuePair(rhsChild);
-
-  ArgumentPtr lhsChildRate = lhsRateValuePair.first;
-  ArgumentPtr rhsChildRate = rhsRateValuePair.first;
-
-  ArgumentPtr lhsChildValue = lhsRateValuePair.second;
-  ArgumentPtr rhsChildValue = rhsRateValuePair.second;
+  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
+  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
 
   if (*lhsChildValue == *rhsChildValue) {
     return addRatesToValue({lhsChildRate, rhsChildRate}, lhsChildValue);

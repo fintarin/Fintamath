@@ -2,10 +2,12 @@
 
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
@@ -163,9 +165,38 @@ ArgumentPtr DivExpression::divSimplify() const {
   return makeFunctionExpression(DIV, {numerator, denominator});
 }
 
+ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*lhs == *rhs) {
+    return ONE.clone();
+  }
+
+  auto [lhsRate, lhsValue] = getRateValuePair(lhs);
+  auto [rhsRate, rhsValue] = getRateValuePair(rhs);
+
+  if (*lhsValue == *rhsValue) {
+    return addRatesToValue({lhsRate, makeRawFunctionExpression(Neg(), {rhsRate})}, lhsValue);
+  }
+
+  return {};
+}
+
+std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
+  if (const auto &powExpr = cast<IExpression>(rhsChild); powExpr && is<Pow>(powExpr->getFunction())) {
+    ArgumentsPtrVector powExprChildren = powExpr->getChildren();
+    return {powExprChildren[1], powExprChildren.front()};
+  }
+
+  return {ONE.clone(), rhsChild};
+}
+
+ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
+  ArgumentPtr ratesSum = makeFunctionExpression(Add(), rates);
+  return makeRawFunctionExpression(Pow(), {value, ratesSum});
+}
+
 ArgumentPtr DivExpression::mulSimplify() const {
   ArgumentsPtrVector lhsChildren;
-  if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && *lhsExpr->getFunction() == Mul()) {
+  if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
   }
   else {
@@ -173,7 +204,7 @@ ArgumentPtr DivExpression::mulSimplify() const {
   }
 
   ArgumentsPtrVector rhsChildren;
-  if (const auto rhsExpr = cast<IExpression>(rhsChild); rhsExpr && *rhsExpr->getFunction() == Mul()) {
+  if (const auto rhsExpr = cast<IExpression>(rhsChild); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
   else {
@@ -181,14 +212,13 @@ ArgumentPtr DivExpression::mulSimplify() const {
   }
 
   size_t lhsChildrenSizeInitial = lhsChildren.size();
+  size_t rhsChildrenSizeInitial = rhsChildren.size();
 
   for (size_t i = 0; i < lhsChildren.size(); i++) {
     for (size_t j = 0; j < rhsChildren.size(); j++) {
-      if (*lhsChildren[i] == *rhsChildren[j]) {
-        // TODO: divide powers
-        lhsChildren.erase(lhsChildren.begin() + int64_t(i));
+      if (auto res = divPowerSimplify(lhsChildren[i], rhsChildren[j])) {
+        lhsChildren[i] = res;
         rhsChildren.erase(rhsChildren.begin() + int64_t(j));
-        i--;
         break;
       }
 
@@ -234,7 +264,7 @@ ArgumentPtr DivExpression::mulSimplify() const {
     return numerator;
   }
 
-  if (lhsChildren.size() != lhsChildrenSizeInitial) {
+  if (lhsChildren.size() != lhsChildrenSizeInitial || rhsChildren.size() != rhsChildrenSizeInitial) {
     return makeFunctionExpression(Div(), {numerator, denominator});
   }
 

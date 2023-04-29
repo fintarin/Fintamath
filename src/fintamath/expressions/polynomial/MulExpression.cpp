@@ -159,16 +159,10 @@ ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const Argume
 }
 
 ArgumentPtr MulExpression::mulRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  std::pair<ArgumentPtr, ArgumentPtr> lhsRateValue = getRateValuePair(lhsChild);
-  std::pair<ArgumentPtr, ArgumentPtr> rhsRateValue = getRateValuePair(rhsChild);
+  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
+  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
 
-  ArgumentPtr lhsChildRate = lhsRateValue.first;
-  ArgumentPtr rhsChildRate = rhsRateValue.first;
-
-  ArgumentPtr lhsChildValue = lhsRateValue.second;
-  ArgumentPtr rhsChildValue = rhsRateValue.second;
-
-  if (lhsChildValue->toString() == rhsChildValue->toString()) {
+  if (*lhsChildValue == *rhsChildValue) {
     return addRatesToValue({lhsChildRate, rhsChildRate}, lhsChildValue);
   }
 
