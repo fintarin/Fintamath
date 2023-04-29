@@ -17,6 +17,14 @@ namespace fintamath {
 
 const Mul MUL;
 
+const MulExpression::SimplifyFunctionsVector MulExpression::simplifyFunctions = {
+    &MulExpression::simplifyNegations, //
+    &MulExpression::simplifyDivisions, //
+    &MulExpression::mulRates,          //
+    &MulExpression::simplifyNumbers,   //
+    &MulExpression::mulPolynoms,       //
+};
+
 MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(MUL, inChildren) {
 }
 
@@ -173,14 +181,7 @@ ArgumentPtr MulExpression::simplifyNegations(const ArgumentPtr &lhsChild, const 
 }
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForSimplify() const {
-  static const SimplifyFunctionsVector simplFuncVect = {
-      &MulExpression::simplifyNegations, //
-      &MulExpression::simplifyDivisions, //
-      &MulExpression::mulRates,          //
-      &MulExpression::simplifyNumbers,   //
-      &MulExpression::mulPolynoms,       //
-  };
-  return simplFuncVect;
+  return simplifyFunctions;
 }
 
 bool MulExpression::isTermsOrderInversed() const {
