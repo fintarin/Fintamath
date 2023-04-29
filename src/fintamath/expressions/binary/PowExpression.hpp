@@ -24,16 +24,12 @@ private:
 
   ArgumentPtr mulSimplify() const;
 
-  // start set of methods for Multinomial theorem
-  // https://en.wikipedia.org/wiki/Multinomial_theorem
-  // https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)
   static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, Integer powValue);
 
   static Integer generateNextNumber(Integer n);
 
   static Integer generateFirstNum(const Integer &countOfOne);
 
-  static std::vector<Integer> generateSplit(Integer bitNumber, const Integer &variableCount);
-  // end set of methods for Newton's Polynomial decomposition
+  static std::vector<Integer> getPartition(Integer bitNumber, const Integer &variableCount);
 };
 }
