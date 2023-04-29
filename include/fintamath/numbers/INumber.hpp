@@ -57,6 +57,6 @@ std::unique_ptr<INumber> operator-(const Rhs &rhs) {
 }
 
 template <typename Derived>
-class INumberCRTP : public IComparableCRTP<Derived>, public INumber {};
+class INumberCRTP : virtual public IComparableCRTP<Derived>, virtual public INumber {};
 
 }
