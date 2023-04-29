@@ -102,7 +102,7 @@ ArgumentPtr CompExpression::postSimplify() const {
         child = makeRawFunctionExpression(Div(), {child, dividerNum});
       }
 
-      ArgumentPtr newLhs = makeFunctionExpression(Add(), dividendPolynom); // TODO: add ZERO
+      ArgumentPtr newLhs = makeFunctionExpression(Add(), dividendPolynom);
       ArgumentPtr newRhs = simplExpr->rhsChild;
       std::shared_ptr<IFunction> newFunc;
 
@@ -113,7 +113,7 @@ ArgumentPtr CompExpression::postSimplify() const {
         newFunc = func;
       }
 
-      return makeFunctionExpression(*newFunc, {newLhs, newRhs});
+      return makeRawFunctionExpression(*newFunc, {newLhs, newRhs});
     }
   }
 
