@@ -63,11 +63,12 @@ ArgumentPtr SumExpression::negate() const {
 }
 
 SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForSimplify() const {
-  return {
+  static const SimplifyFunctionsVector simplFuncVect = {
       &SumExpression::simplifyNumbers,   //
       &SumExpression::simplifyNegations, //
       &SumExpression::sumRates,          //
   };
+  return simplFuncVect;
 }
 
 ArgumentPtr SumExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {

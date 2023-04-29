@@ -45,9 +45,24 @@ TEST(IntegerFunctionsTests, factorialTest) {
 }
 
 TEST(IntegerFunctionsTests, combinationsTest) {
-  // TODO: add tests
+  EXPECT_EQ(combinations(Integer(6), Integer(2)), 15);
+  EXPECT_EQ(combinations(Integer(10), Integer(7)), 120);
+  EXPECT_EQ(combinations(Integer(15), Integer(2)), 105);
+
+  EXPECT_THROW(combinations(Integer(20), Integer(40)), UndefinedFunctionException);
+  EXPECT_THROW(combinations(Integer(-3), Integer(-8)), UndefinedUnaryOperatorException);
+  EXPECT_THROW(combinations(Integer(5), Integer(-3)), UndefinedUnaryOperatorException);
 }
 
-TEST(IntegerFunctionsTests, splitTest) {
-  // TODO: add tests
+TEST(IntegerFunctionsTests, multinomialCoefficientTest) {
+  EXPECT_EQ(multinomialCoefficient(Integer(6), {Integer(2), Integer(3), Integer(1)}), 60);
+  EXPECT_EQ(multinomialCoefficient(Integer(8), {Integer(8)}), 1);
+  EXPECT_EQ(multinomialCoefficient(Integer(5), {Integer(3), Integer(2)}), 10);
+  EXPECT_EQ(multinomialCoefficient(Integer(12), {Integer(3), Integer(9), Integer(0)}), 220);
+
+  EXPECT_THROW(multinomialCoefficient(Integer(12), {Integer(3)}), UndefinedFunctionException);
+  EXPECT_THROW(multinomialCoefficient(Integer(12), {Integer(3), Integer(19), Integer(0)}), UndefinedFunctionException);
+  EXPECT_THROW(multinomialCoefficient(Integer(12), {Integer(0)}), UndefinedFunctionException);
+  EXPECT_THROW(multinomialCoefficient(Integer(-12), {Integer(3), Integer(9), Integer(0)}), UndefinedFunctionException);
+  EXPECT_THROW(multinomialCoefficient(Integer(12), {Integer(-3), Integer(9), Integer(0)}), UndefinedFunctionException);
 }
