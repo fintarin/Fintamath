@@ -401,8 +401,6 @@ std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const
 
 ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
   Expression res(makeRawFunctionExpression(func, args));
-  res.validateChild(res.child);
-  Expression::simplifyChild(res.child);
   return res.child;
 }
 

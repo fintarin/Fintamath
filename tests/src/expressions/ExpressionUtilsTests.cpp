@@ -28,6 +28,10 @@ TEST(ExpressionUtilsTests, postfixUnaryOperatorToStringTest) {
   // TODO: implement
 }
 
+TEST(ExpressionUtilsTests, hasVariableTest) {
+  // TODO: implement
+}
+
 TEST(ExpressionUtilsTests, hasVariablesTest) {
   // TODO: implement
 }

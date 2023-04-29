@@ -450,41 +450,33 @@ int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const Argumen
 int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
                                            const ArgumentsPtrVector &rhsChildren) const {
 
-  for (size_t i = 0, j = 0; i < lhsChildren.size() && j < rhsChildren.size(); i++, j++) {
-    for (; i < lhsChildren.size(); i++) {
-      if (is<Variable>(lhsChildren[i])) {
-        break;
-      }
-      if (auto lhsChildExpr = cast<IExpression>(lhsChildren[i]);
-          lhsChildExpr && !lhsChildExpr->getVariablesUnsorted().empty()) {
-        break;
-      }
-    }
-
-    if (i >= lhsChildren.size()) {
+  size_t lhsStart = 0;
+  for (; lhsStart < lhsChildren.size(); lhsStart++) {
+    if (is<Variable>(lhsChildren[lhsStart])) {
       break;
     }
-
-    for (; j < rhsChildren.size(); j++) {
-      if (is<Variable>(rhsChildren[j])) {
-        break;
-      }
-      if (auto rhsChildExpr = cast<IExpression>(rhsChildren[j]);
-          rhsChildExpr && !rhsChildExpr->getVariablesUnsorted().empty()) {
-        break;
-      }
-    }
-
-    if (j >= rhsChildren.size()) {
+    if (auto lhsChildExpr = cast<IExpression>(lhsChildren[lhsStart]); lhsChildExpr && hasVariables(lhsChildExpr)) {
       break;
     }
+  }
 
+  size_t rhsStart = 0;
+  for (; rhsStart < rhsChildren.size(); rhsStart++) {
+    if (is<Variable>(rhsChildren[rhsStart])) {
+      break;
+    }
+    if (auto rhsChildExpr = cast<IExpression>(rhsChildren[rhsStart]); rhsChildExpr && hasVariables(rhsChildExpr)) {
+      break;
+    }
+  }
+
+  for (size_t i = lhsStart, j = rhsStart; i < lhsChildren.size() && j < rhsChildren.size(); i++, j++) {
     if (int res = comparator(lhsChildren[i], rhsChildren[j]); res != 0) {
       return res;
     }
   }
 
-  for (size_t i = 0; i < std::min(lhsChildren.size(), rhsChildren.size()); i++) {
+  for (size_t i = 0; i < std::min(lhsStart, rhsStart); i++) {
     if (int res = comparator(lhsChildren[i], rhsChildren[i]); res != 0) {
       return res;
     }
