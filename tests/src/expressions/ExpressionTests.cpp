@@ -508,7 +508,7 @@ TEST(ExpressionTests, stringConstructorLargeTest) {
       "+ 38760 x^6 y^14 + 15504 x^5 y^15 + 4845 x^4 y^16 + 1140 x^3 y^17 + 190 x^2 y^18 + 20 x y^19 + y^20");
 
   EXPECT_EQ(Expression("(x+y+z)^4").toString(),
-            "x^4 + 4 x^3 y + 6 x^2 y^2 + 12 x^2 y z + 4 x y^3 + 12 x y^2 z + 12 x y z^2 + 4 x^3 z + 6 x^2 z^2 + 4 x "
+            "x^4 + 4 x^3 y + 4 x^3 z + 6 x^2 y^2 + 12 x^2 y z + 6 x^2 z^2 + 4 x y^3 + 12 x y^2 z + 12 x y z^2 + 4 x "
             "z^3 + y^4 + 4 y^3 z + 6 y^2 z^2 + 4 y z^3 + z^4");
 
   // TODO: optimize

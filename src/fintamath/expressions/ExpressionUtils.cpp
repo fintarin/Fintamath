@@ -138,13 +138,13 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
   return result + oper.toString();
 }
 
-bool hasVariables(const std::shared_ptr<const IExpression> &expr, const std::shared_ptr<const Variable> &var) {
+bool hasVariables(const std::shared_ptr<const IExpression> &expr, const Variable &var) {
   for (const auto &child : expr->getChildren()) {
     if (const auto childExpr = cast<IExpression>(child); childExpr && hasVariables(childExpr, var)) {
       return true;
     }
 
-    if (const auto childVar = cast<Variable>(child); childVar && *childVar == *var) {
+    if (const auto childVar = cast<Variable>(child); childVar && *childVar == var) {
       return true;
     }
   }
