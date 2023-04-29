@@ -30,25 +30,6 @@ ArgumentsPtrVector IExpression::getVariablesUnsorted() const {
   return vars;
 }
 
-ArgumentsPtrVector IExpression::getConstantsUnsorted() const {
-  ArgumentsPtrVector vars;
-
-  for (auto child : getChildren()) {
-    if (is<IConstant>(child)) {
-      vars.emplace_back(child);
-    }
-    else if (auto childExpr = cast<IExpression>(child)) {
-      ArgumentsPtrVector childVars = childExpr->getConstantsUnsorted();
-
-      for (auto childVar : childVars) {
-        vars.emplace_back(childVar);
-      }
-    }
-  }
-
-  return vars;
-}
-
 ArgumentsPtrVector IExpression::getVariables() const {
   ArgumentsPtrVector vars = getVariablesUnsorted();
 

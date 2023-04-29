@@ -17,8 +17,6 @@ public:
 
   virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
 
-  virtual ArgumentsPtrVector getConstantsUnsorted() const;
-
   virtual ArgumentsPtrVector getVariablesUnsorted() const;
 
   virtual void setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals);

@@ -177,8 +177,6 @@ private:
 
   static ArgumentsPtrVector getVariables(const ArgumentPtr &rhs);
 
-  static ArgumentsPtrVector getConstants(const ArgumentPtr &rhs);
-
 protected:
   std::shared_ptr<IFunction> func;
 

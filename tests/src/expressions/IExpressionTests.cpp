@@ -16,10 +16,6 @@ TEST(IExpressionTests, setChildrenTest) {
   // TODO: implement
 }
 
-TEST(IExpressionTests, setConstantsTest) {
-  // TODO: implement
-}
-
 TEST(IExpressionTests, getVariablesUnsortedTest) {
   // TODO: implement
 }
