@@ -27,6 +27,12 @@ private:
   ArgumentPtr mulSimplify() const;
 
   ArgumentPtr sumSimplify() const;
+
+  static ArgumentPtr divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
 };
 
 }

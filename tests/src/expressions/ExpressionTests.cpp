@@ -212,10 +212,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "(a + 3)/(b + 2)");
   EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(a b + 3 b)/(a b + 2 a)");
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "(a b + 5 a + 3 b + 15)/(a b + 2 a)");
-  // TODO!
-  // EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
-  // TODO!
-  // EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
+  EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
+  EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   // TODO: polynomial division
   //  EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
   EXPECT_EQ(Expression("1*(a+b)*1").toString(), "a + b");
@@ -262,16 +260,15 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x+y)/(a+b) + 5/(2a+b) + (x+2y)/(a+b)").toString(),
             "(x + 2 y)/(a + b) + (x + y)/(a + b) + 5/(2 a + b)");
 
-  // TODO!
-  // EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
-  // EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
-  // // TODO: implement function minimization
-  // // EXPECT_EQ(Expression("sin(asin(a+b+1-1))^1000/(a+b+1-1)^998").toString(), "sin(asin(a+b))^1000/(a+b)^998");
-  // EXPECT_EQ(Expression("a(10^100)/10^99").toString(), "10 a");
-  // EXPECT_EQ(Expression("(10+2+3-5)^1000000000a/(9+1)^999999999").toString(), "10 a");
-  // EXPECT_EQ(Expression("10^(10^100/10^96)a/10^9999").toString(), "10 a");
-  // EXPECT_EQ(Expression("10^(10^100/10^90)a/10^9999999999").toString(), "10 a");
-  // EXPECT_EQ(Expression("log(100000000000!,100000000000!)").toString(), "1");
+  EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
+  EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
+  // TODO: implement function minimization
+  // EXPECT_EQ(Expression("sin(asin(a+b+1-1))^1000/(a+b+1-1)^998").toString(), "sin(asin(a+b))^1000/(a+b)^998");
+  EXPECT_EQ(Expression("a(10^100)/10^99").toString(), "10 a");
+  EXPECT_EQ(Expression("(10+2+3-5)^1000000000a/(9+1)^999999999").toString(), "10 a");
+  EXPECT_EQ(Expression("10^(10^100/10^96)a/10^9999").toString(), "10 a");
+  EXPECT_EQ(Expression("10^(10^100/10^90)a/10^9999999999").toString(), "10 a");
+  EXPECT_EQ(Expression("log(100000000000!,100000000000!)").toString(), "1");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-sin(x) + sin(2)").toString(), "-sin(x) + sin(2)");
