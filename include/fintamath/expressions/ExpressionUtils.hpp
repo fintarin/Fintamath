@@ -26,7 +26,9 @@ std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVect
 
 std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs);
 
-bool hasVariables(const std::shared_ptr<const IExpression> &expr, const Variable &var);
+bool hasVariables(const std::shared_ptr<const IExpression> &expr);
+
+bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable &var);
 
 extern std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 
