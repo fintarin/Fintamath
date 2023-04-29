@@ -208,10 +208,6 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     return res;
   }
 
-  if (int res = comparatorConstants(lhs, rhs); res != 0) {
-    return res;
-  }
-
   if (int res = comparatorChildren(lhsExpr, rhsExpr); res != 0) {
     return res;
   }
@@ -567,17 +563,6 @@ int IPolynomExpression::comparatorLiterals(const ArgumentsPtrVector &lhsVariable
 int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
   ArgumentsPtrVector lhsConst = getVariables(lhs);
   ArgumentsPtrVector rhsConst = getVariables(rhs);
-
-  if (int res = comparatorLiterals(lhsConst, rhsConst); res != 0) {
-    return res;
-  }
-
-  return 0;
-}
-
-int IPolynomExpression::comparatorConstants(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  ArgumentsPtrVector lhsConst = getConstants(lhs);
-  ArgumentsPtrVector rhsConst = getConstants(rhs);
 
   if (int res = comparatorLiterals(lhsConst, rhsConst); res != 0) {
     return res;

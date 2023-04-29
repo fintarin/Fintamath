@@ -173,17 +173,6 @@ private:
    */
   int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorConstants(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
   static ArgumentPtr findFirstPolynomChild(const ArgumentPtr &rhs);
 
   static ArgumentsPtrVector getVariables(const ArgumentPtr &rhs);
