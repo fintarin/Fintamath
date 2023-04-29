@@ -27,11 +27,12 @@ Real::Real() {
 
 Real::Real(const Real &rhs) : Real() {
   impl->v.assign(rhs.impl->v);
-  ouputPrecision = rhs.ouputPrecision; // NOLINT
+  ouputPrecision = rhs.ouputPrecision;
 }
 
 Real::Real(Real &&rhs) noexcept : Real() {
   impl = std::move(rhs.impl);
+  ouputPrecision = rhs.ouputPrecision;
 }
 
 Real &Real::operator=(const Real &rhs) {
@@ -45,6 +46,7 @@ Real &Real::operator=(const Real &rhs) {
 Real &Real::operator=(Real &&rhs) noexcept {
   if (this != &rhs) {
     impl = std::move(rhs.impl);
+    ouputPrecision = rhs.ouputPrecision;
   }
   return *this;
 }
