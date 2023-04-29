@@ -4,7 +4,6 @@
 #include <memory>
 #include <queue>
 
-#include "fintamath/core/CoreDefines.hpp"
 #include "fintamath/meta/TypeInfo.hpp"
 
 namespace fintamath {
@@ -26,7 +25,7 @@ private:
   static bool isBaseOf(std::queue<TypeInfo> &baseTypes, const TypeInfo &derivedType);
 
 private:
-  static multimap<TypeInfo, TypeInfo> table;
+  static std::multimap<TypeInfo, TypeInfo> table;
 };
 
 }

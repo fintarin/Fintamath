@@ -5,20 +5,20 @@
 
 namespace fintamath {
 
-FunctionExpression::FunctionExpression(const IFunction &function, const ArgumentsPtrVector &children)
-    : func(cast<IFunction>(function.clone())) {
+FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentsPtrVector &inChildren)
+    : func(cast<IFunction>(inFunc.clone())) {
 
-  for (const auto &child : children) {
+  for (const auto &child : inChildren) {
     if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
-      this->children.emplace_back(expr->getChildren().front());
+      children.emplace_back(expr->getChildren().front());
     }
     else {
-      this->children.emplace_back(child);
+      children.emplace_back(child);
     }
   }
 }
 
-string FunctionExpression::toString() const {
+std::string FunctionExpression::toString() const {
   if (const auto oper = cast<IOperator>(func)) {
     switch (oper->getOperatorPriority()) {
     case IOperator::Priority::PostfixUnary:
@@ -34,10 +34,10 @@ string FunctionExpression::toString() const {
   return functionToString();
 }
 
-string FunctionExpression::functionToString() const {
-  static const string delimiter = ", ";
+std::string FunctionExpression::functionToString() const {
+  static const std::string delimiter = ", ";
 
-  string result = func->toString() + "(";
+  std::string result = func->toString() + "(";
 
   for (const auto &arg : children) {
     result += arg->toString() + delimiter;
@@ -48,7 +48,7 @@ string FunctionExpression::functionToString() const {
   return result;
 }
 
-shared_ptr<IFunction> FunctionExpression::getFunction() const {
+std::shared_ptr<IFunction> FunctionExpression::getFunction() const {
   return func;
 }
 

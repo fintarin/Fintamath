@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-string IUnaryExpression::toString() const {
+std::string IUnaryExpression::toString() const {
   if (!func) {
     return {};
   }
@@ -23,8 +23,8 @@ string IUnaryExpression::toString() const {
   return functionToString();
 }
 
-string IUnaryExpression::postfixToString() const {
-  string result = child->toString();
+std::string IUnaryExpression::postfixToString() const {
+  std::string result = child->toString();
 
   if (const auto childExpr = cast<IExpression>(child)) {
     if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
@@ -42,8 +42,8 @@ string IUnaryExpression::postfixToString() const {
   return result + func->toString();
 }
 
-string IUnaryExpression::prefixToString() const {
-  string result = func->toString();
+std::string IUnaryExpression::prefixToString() const {
+  std::string result = func->toString();
 
   if (const auto childExpr = cast<IExpression>(child)) {
     if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
@@ -60,11 +60,11 @@ string IUnaryExpression::prefixToString() const {
   return result + child->toString();
 }
 
-string IUnaryExpression::functionToString() const {
+std::string IUnaryExpression::functionToString() const {
   return func->toString() + putInBrackets(child->toString());
 }
 
-shared_ptr<IFunction> IUnaryExpression::getFunction() const {
+std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {
   return func;
 }
 
@@ -99,7 +99,7 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
 
 void IUnaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.size() != 1) {
-    vector<string> argNamesVect(childVect.size());
+    std::vector<std::string> argNamesVect(childVect.size());
 
     for (size_t i = 0; i < argNamesVect.size(); i++) {
       argNamesVect[i] = childVect[i].get()->toString();

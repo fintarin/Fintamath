@@ -9,12 +9,12 @@ class Asinh : public IFunctionCRTP<INumber, Asinh, INumber> {
 public:
   Asinh() = default;
 
-  string toString() const override {
+  std::string toString() const override {
     return "asinh";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

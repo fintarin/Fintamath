@@ -16,7 +16,7 @@ public:
 public:
   ~InvalidInputUnaryOperatorException() override = default;
 
-  InvalidInputUnaryOperatorException(const string &oper, const string &rhs, Type type) {
+  InvalidInputUnaryOperatorException(const std::string &oper, const std::string &rhs, Type type) {
     switch (type) {
     case Type::Prefix:
       content += ": " + oper + "(" + rhs + ")";

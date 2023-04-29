@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-inline unique_ptr<INumber> abs(const INumber &rhs) {
+inline std::unique_ptr<INumber> abs(const INumber &rhs) {
   if (rhs < ZERO) {
     return -rhs;
   }
@@ -16,13 +16,13 @@ inline unique_ptr<INumber> abs(const INumber &rhs) {
   return cast<INumber>(rhs.clone());
 }
 
-inline unique_ptr<INumber> inv(const INumber &rhs) {
+inline std::unique_ptr<INumber> inv(const INumber &rhs) {
   return ONE / rhs;
 }
 
 template <typename Lhs, typename Rhs,
           typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs>>>
-unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
+std::unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
   auto lhsSimpl = cast<INumber>(lhs.toMinimalObject());
   auto rhsSimpl = cast<INumber>(rhs.toMinimalObject());
 
@@ -38,7 +38,7 @@ unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
 // Use exponentiation by squaring with constant auxiliary memory (iterative version).
 // https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
-unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
+std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
   if (lhs == ZERO && rhs == ZERO) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
@@ -47,8 +47,8 @@ unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
     return pow(*(ONE / cast<INumber>(lhs)), -rhs);
   }
 
-  unique_ptr<INumber> res = make_unique<Integer>(ONE);
-  unique_ptr<INumber> sqr = cast<INumber>(lhs.clone());
+  std::unique_ptr<INumber> res = std::make_unique<Integer>(ONE);
+  std::unique_ptr<INumber> sqr = cast<INumber>(lhs.clone());
 
   while (rhs != ZERO) {
     if ((*(rhs.toString().end() - 1) - '0') % 2 == 0) {

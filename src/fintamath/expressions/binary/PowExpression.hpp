@@ -8,7 +8,7 @@ namespace fintamath {
 
 class PowExpression : public IBinaryExpressionCRTP<PowExpression>, public IInvertableExpression {
 public:
-  explicit PowExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  explicit PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
   ArgumentPtr invert() const override;
 
@@ -33,7 +33,7 @@ private:
 
   static Integer generateFirstNum(const Integer &countOfOne);
 
-  static vector<Integer> generateSplit(Integer bitNumber, const Integer &variableCount);
+  static std::vector<Integer> generateSplit(Integer bitNumber, const Integer &variableCount);
   // end set of methods for Newton's Polynomial decomposition
 };
 }

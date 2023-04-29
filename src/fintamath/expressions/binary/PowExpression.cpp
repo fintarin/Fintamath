@@ -15,8 +15,8 @@ namespace fintamath {
 
 const Pow POW;
 
-PowExpression::PowExpression(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)
-    : IBinaryExpressionCRTP(POW, lhsChild, rhsChild) {
+PowExpression::PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
+    : IBinaryExpressionCRTP(POW, inLhsChild, inRhsChild) {
 }
 
 ArgumentPtr PowExpression::mulSimplify() const {
@@ -64,11 +64,11 @@ Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
   return n;
 }
 
-vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &variableCount) {
-  vector<Integer> result;
+std::vector<Integer> PowExpression::generateSplit(Integer bitNumber, const Integer &variableCount) {
+  std::vector<Integer> result;
   Integer counter = 0;
 
-  while (result.size() < variableCount) {
+  while (int64_t(result.size()) < variableCount) {
     if (bitNumber % 2 == 1) {
       counter++;
     }
@@ -98,19 +98,18 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
   ArgumentsPtrVector newPolynom;
   Integer variableCount = int64_t(polynom.size());
 
-  bool isResultInverted = false;
-
   Integer bitNumber = generateFirstNum(powValue);
 
   for (int i = 0; i < combinations(powValue + variableCount - 1, powValue); i++) {
-    vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
+    std::vector<Integer> vectOfPows = generateSplit(bitNumber, variableCount);
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentsPtrVector mulExprPolynom;
-    mulExprPolynom.emplace_back(make_shared<Integer>(multinomialCoefficient(powValue, vectOfPows)));
+    mulExprPolynom.emplace_back(std::make_shared<Integer>(multinomialCoefficient(powValue, vectOfPows)));
 
-    for (size_t j = 0; j < variableCount; j++) {
-      auto powExpr = makeRawFunctionExpression(Pow(), {polynom[j], make_shared<Integer>(move(vectOfPows[j]))});
+    for (size_t j = 0; j < size_t(variableCount); j++) {
+      auto powExpr =
+          makeRawFunctionExpression(Pow(), {polynom[j], std::make_shared<Integer>(std::move(vectOfPows[j]))});
       mulExprPolynom.emplace_back(powExpr);
     }
 
@@ -136,7 +135,7 @@ ArgumentPtr PowExpression::polynomSimplify() const {
 }
 
 ArgumentPtr PowExpression::invert() const {
-  auto inv = make_shared<PowExpression>(*this);
+  auto inv = std::make_shared<PowExpression>(*this);
   inv->rhsChild = makeFunctionExpression(Neg(), {inv->rhsChild});
   return inv;
 }

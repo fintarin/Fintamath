@@ -22,6 +22,6 @@ TEST(ExceptionTests, whatTests) {
     TestMathObject().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(string(e.what()), "Something went wrong...");
+    EXPECT_EQ(std::string(e.what()), "Something went wrong...");
   }
 }

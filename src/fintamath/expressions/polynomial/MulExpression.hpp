@@ -7,7 +7,7 @@
 namespace fintamath {
 class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatableExpression {
 public:
-  explicit MulExpression(const ArgumentsPtrVector &children);
+  explicit MulExpression(const ArgumentsPtrVector &inChildren);
 
   ArgumentPtr negate() const override;
 
@@ -17,7 +17,7 @@ protected:
   bool isTermsOrderInversed() const override;
 
 private:
-  string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
+  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
   static ArgumentPtr simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 

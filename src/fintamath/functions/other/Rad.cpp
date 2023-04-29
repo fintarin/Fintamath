@@ -9,7 +9,7 @@
 
 namespace fintamath {
 
-unique_ptr<IMathObject> Rad::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Rad::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
   static const Integer ANGLE = 180;
   return rhs * (PI_NUM / ANGLE);

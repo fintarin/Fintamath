@@ -7,7 +7,7 @@ namespace fintamath {
 
 const Not NOT;
 
-NotExpression::NotExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(NOT, child) {
+NotExpression::NotExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(NOT, inChild) {
 }
 
 ArgumentPtr NotExpression::preSimplify() const {

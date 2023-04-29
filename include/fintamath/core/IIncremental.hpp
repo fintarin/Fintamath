@@ -16,13 +16,13 @@ public:
     return rhs.decreaseAbstract();
   }
 
-  friend inline unique_ptr<IIncremental> operator++(IIncremental &lhs, int) {
+  friend inline std::unique_ptr<IIncremental> operator++(IIncremental &lhs, int) {
     auto res = cast<IIncremental>(lhs.clone());
     lhs.increaseAbstract();
     return res;
   }
 
-  friend inline unique_ptr<IIncremental> operator--(IIncremental &lhs, int) {
+  friend inline std::unique_ptr<IIncremental> operator--(IIncremental &lhs, int) {
     auto res = cast<IIncremental>(lhs.clone());
     lhs.decreaseAbstract();
     return res;
@@ -33,7 +33,7 @@ public:
     Parser::registerType<T>(parserVector);
   }
 
-  static unique_ptr<IIncremental> parse(const string &str) {
+  static std::unique_ptr<IIncremental> parse(const std::string &str) {
     return Parser::parse(parserVector, str);
   }
 
@@ -43,7 +43,7 @@ protected:
   virtual IIncremental &decreaseAbstract() = 0;
 
 private:
-  static Parser::Vector<unique_ptr<IIncremental>, const string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> parserVector;
 };
 
 template <typename Derived>

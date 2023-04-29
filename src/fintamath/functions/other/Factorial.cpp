@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-unique_ptr<IMathObject> Factorial::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Factorial::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = argsVect.front().get();
 
   if (!is<Integer>(rhs)) {

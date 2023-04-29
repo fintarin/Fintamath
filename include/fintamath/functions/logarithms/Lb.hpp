@@ -9,12 +9,12 @@ class Lb : public IFunctionCRTP<INumber, Lb, INumber> {
 public:
   Lb() = default;
 
-  string toString() const override {
+  std::string toString() const override {
     return "lb";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

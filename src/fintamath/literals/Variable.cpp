@@ -7,9 +7,9 @@
 
 namespace fintamath {
 
-static const string INDEX = "_";
+static const std::string INDEX = "_";
 
-Variable::Variable(string inName) {
+Variable::Variable(std::string inName) {
   if (inName.size() != 1) {
     throw InvalidInputException(inName);
   }
@@ -19,18 +19,18 @@ Variable::Variable(string inName) {
     throw InvalidInputException(inName);
   }
 
-  name = move(inName);
+  name = std::move(inName);
 }
 
-Variable::Variable(string inName, Integer inIndex) : Variable(move(inName)) {
+Variable::Variable(std::string inName, const Integer &inIndex) : Variable(std::move(inName)) {
   if (inIndex <= ZERO) {
     throw InvalidInputException(inName + "_" + inIndex.toString());
   }
 
-  index = move(inIndex);
+  index = std::move(inIndex);
 }
 
-string Variable::toString() const {
+std::string Variable::toString() const {
   return name + (index != ZERO ? "_" + index.toString() : "");
 }
 

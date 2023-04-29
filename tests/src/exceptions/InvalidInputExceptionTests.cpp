@@ -23,6 +23,6 @@ TEST(InvalidInputExceptionTests, whatTests) {
     TestMathObject().throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
-    EXPECT_EQ(string(e.what()), "Invalid input: 123");
+    EXPECT_EQ(std::string(e.what()), "Invalid input: 123");
   }
 }

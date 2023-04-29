@@ -7,12 +7,12 @@ namespace fintamath {
 
 class E : public IConstantCRTP<Real, E> {
 public:
-  string toString() const override {
+  std::string toString() const override {
     return "E";
   }
 
 protected:
-  unique_ptr<IMathObject> call() const override;
+  std::unique_ptr<IMathObject> call() const override;
 };
 
 }

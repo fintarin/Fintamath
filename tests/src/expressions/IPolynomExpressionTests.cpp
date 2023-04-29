@@ -15,7 +15,7 @@ public:
   }
 
 protected:
-  string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override {
+  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override {
     return (prevChild ? " " + func->toString() + " " : "") + inChild->toString();
   }
 };

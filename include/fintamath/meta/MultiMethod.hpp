@@ -16,8 +16,8 @@ class MultiMethod<Res(ArgsBase...)> {
   template <typename>
   using ArgId = TypeInfo;
   using CallbackId = std::tuple<ArgId<ArgsBase>...>;
-  using Callback = function<Res(const ArgsBase &...)>;
-  using Callbacks = map<CallbackId, Callback>;
+  using Callback = std::function<Res(const ArgsBase &...)>;
+  using Callbacks = std::map<CallbackId, Callback>;
 
 public:
   template <typename... Args, typename Func>

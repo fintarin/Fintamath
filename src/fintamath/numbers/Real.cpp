@@ -22,7 +22,7 @@ static RealImpl initDelta() {
 const RealImpl Real::DELTA = initDelta();
 
 Real::Real() {
-  impl = make_unique<RealImpl>();
+  impl = std::make_unique<RealImpl>();
 }
 
 Real::Real(const Real &rhs) : Real() {
@@ -30,24 +30,31 @@ Real::Real(const Real &rhs) : Real() {
   ouputPrecision = rhs.ouputPrecision; // NOLINT
 }
 
-Real::Real(Real &&) noexcept = default;
+Real::Real(Real &&rhs) noexcept : Real() {
+  impl = std::move(rhs.impl);
+}
 
 Real &Real::operator=(const Real &rhs) {
   if (this != &rhs) {
-    impl = make_unique<RealImpl>(*rhs.impl);
+    impl = std::make_unique<RealImpl>(*rhs.impl);
     ouputPrecision = rhs.ouputPrecision;
   }
   return *this;
 }
 
-Real &Real::operator=(Real &&) noexcept = default;
+Real &Real::operator=(Real &&rhs) noexcept {
+  if (this != &rhs) {
+    impl = std::move(rhs.impl);
+  }
+  return *this;
+}
 
 Real::~Real() = default;
 
-Real::Real(const RealImpl &impl) : impl(make_unique<RealImpl>(impl)) {
+Real::Real(const RealImpl &inImpl) : impl(std::make_unique<RealImpl>(inImpl)) {
 }
 
-Real::Real(string str) : Real() {
+Real::Real(std::string str) : Real() {
   if (str.empty() || str == ".") {
     throw InvalidInputException(str);
   }
@@ -97,16 +104,16 @@ Real::Real(double val) : Real() {
   impl->v.assign(val);
 }
 
-string Real::toString() const {
+std::string Real::toString() const {
   std::stringstream ss;
   ss.precision(ouputPrecision);
   ss << impl->v;
-  string res = ss.str();
+  std::string res = ss.str();
 
-  if (size_t ePos = res.find('e'); ePos != string::npos) {
+  if (size_t ePos = res.find('e'); ePos != std::string::npos) {
     res.replace(ePos, 1, "*10^");
 
-    if (size_t plusPos = res.find('+'); plusPos != string::npos) {
+    if (size_t plusPos = res.find('+'); plusPos != std::string::npos) {
       res.replace(plusPos, 1, "");
     }
   }
@@ -114,10 +121,10 @@ string Real::toString() const {
   return res;
 }
 
-unique_ptr<IMathObject> Real::toMinimalObject() const {
+std::unique_ptr<IMathObject> Real::toMinimalObject() const {
   if (impl->v.backend().isfinite()) {
-    if (string str = toString(); str.find('.') == string::npos && str.find('*') == string::npos) {
-      return make_unique<Integer>(str);
+    if (std::string str = toString(); str.find('.') == std::string::npos && str.find('*') == std::string::npos) {
+      return std::make_unique<Integer>(str);
     }
   }
 
@@ -143,7 +150,7 @@ bool Real::isNearZero() const {
   return abs(impl->v) < DELTA;
 }
 
-const unique_ptr<RealImpl> &Real::getImpl() const {
+const std::unique_ptr<RealImpl> &Real::getImpl() const {
   return impl;
 }
 

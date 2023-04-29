@@ -6,9 +6,9 @@ namespace fintamath {
 
 class IPolynomExpression : virtual public IExpression {
 public:
-  string toString() const override;
+  std::string toString() const override;
 
-  shared_ptr<IFunction> getFunction() const final;
+  std::shared_ptr<IFunction> getFunction() const final;
 
   ArgumentsPtrVector getChildren() const final;
 
@@ -21,15 +21,15 @@ protected:
 
   using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
 
-  virtual ArgumentPtr preSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
+  virtual ArgumentPtr preSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const;
 
-  virtual ArgumentPtr postSimplify(size_t lhsChildNum, size_t rhsChildNum) const;
+  virtual ArgumentPtr postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const;
 
   ArgumentPtr simplify() const final;
 
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
-  virtual string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const = 0;
+  virtual std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const = 0;
 
   ArgumentPtr preSimplify() const override;
 
@@ -93,8 +93,8 @@ private:
    * @return  1 if we should swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorFunctions(const shared_ptr<const IExpression> &lhsExpr,
-                          const shared_ptr<const IExpression> &rhsExpr) const;
+  int comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
+                          const std::shared_ptr<const IExpression> &rhsExpr) const;
 
   /**
    * @brief
@@ -191,7 +191,7 @@ private:
   static ArgumentsPtrVector getConstants(const ArgumentPtr &rhs);
 
 protected:
-  shared_ptr<IFunction> func;
+  std::shared_ptr<IFunction> func;
 
   ArgumentsPtrVector children;
 };
@@ -199,10 +199,10 @@ protected:
 template <typename Derived>
 class IPolynomExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IPolynomExpression {
 public:
-  explicit IPolynomExpressionCRTP(const IFunction &func, const ArgumentsPtrVector &children) {
-    this->func = cast<IFunction>(func.clone());
+  explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentsPtrVector &inChildren) {
+    this->func = cast<IFunction>(inFunc.clone());
 
-    for (const auto &child : children) {
+    for (const auto &child : inChildren) {
       addElement(child);
     }
   }

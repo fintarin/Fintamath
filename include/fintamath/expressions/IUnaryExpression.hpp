@@ -6,9 +6,9 @@ namespace fintamath {
 
 class IUnaryExpression : virtual public IExpression {
 public:
-  string toString() const override;
+  std::string toString() const override;
 
-  shared_ptr<IFunction> getFunction() const final;
+  std::shared_ptr<IFunction> getFunction() const final;
 
   ArgumentsPtrVector getChildren() const override;
 
@@ -22,14 +22,14 @@ protected:
   ArgumentPtr postSimplify() const override;
 
 private:
-  string postfixToString() const;
+  std::string postfixToString() const;
 
-  string prefixToString() const;
+  std::string prefixToString() const;
 
-  string functionToString() const;
+  std::string functionToString() const;
 
 protected:
-  shared_ptr<IFunction> func;
+  std::shared_ptr<IFunction> func;
 
   ArgumentPtr child;
 };
@@ -37,10 +37,10 @@ protected:
 template <typename Derived>
 class IUnaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IUnaryExpression {
 public:
-  explicit IUnaryExpressionCRTP(const IFunction &func, const ArgumentPtr &child) {
-    this->func = cast<IFunction>(func.clone());
+  explicit IUnaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &inChild) {
+    this->func = cast<IFunction>(inFunc.clone());
 
-    this->child = child;
+    this->child = inChild;
     compressChild(this->child);
   }
 };

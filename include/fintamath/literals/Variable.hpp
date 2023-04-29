@@ -7,14 +7,14 @@ namespace fintamath {
 
 class Variable : public ILiteralCRTP<Variable> {
 public:
-  explicit Variable(string inName);
+  explicit Variable(std::string inName);
 
-  explicit Variable(string inName, Integer index);
+  explicit Variable(std::string inName, const Integer &inIndex);
 
-  string toString() const override;
+  std::string toString() const override;
 
 private:
-  string name;
+  std::string name;
 
   Integer index;
 };

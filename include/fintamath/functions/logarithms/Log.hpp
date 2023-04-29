@@ -9,12 +9,12 @@ class Log : public IFunctionCRTP<INumber, Log, INumber, INumber> {
 public:
   Log() = default;
 
-  string toString() const override {
+  std::string toString() const override {
     return "log";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

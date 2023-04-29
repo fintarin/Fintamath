@@ -20,7 +20,7 @@ namespace fintamath {
 Expression::Expression() : child(ZERO.clone()) {
 }
 
-Expression::Expression(const string &str) : Expression(Tokenizer::tokenize(str)) {
+Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
   validateChild(child);
   simplifyChild(child);
 }
@@ -56,10 +56,10 @@ Expression::Expression(const ArgumentPtr &obj) {
 Expression::Expression(const IMathObject &obj) : Expression(obj.toMinimalObject()) {
 }
 
-Expression::Expression(int64_t val) : child(make_shared<Integer>(val)) {
+Expression::Expression(int64_t val) : child(std::make_shared<Integer>(val)) {
 }
 
-string Expression::toString() const {
+std::string Expression::toString() const {
   return child->toString();
 }
 
@@ -70,7 +70,7 @@ Expression Expression::precise(uint8_t precision) const {
 
 ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify) {
   if (const auto num = cast<INumber>(arg)) {
-    return make_shared<Real>(convert<Real>(*num).precise(precision));
+    return std::make_shared<Real>(convert<Real>(*num).precise(precision));
   }
 
   if (shouldSimplify) {
@@ -78,7 +78,7 @@ ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bo
       ArgumentPtr res = (*constant)();
 
       if (const auto num = cast<INumber>(res)) {
-        return make_shared<Real>(convert<Real>(*num).precise(precision));
+        return std::make_shared<Real>(convert<Real>(*num).precise(precision));
       }
 
       return res;
@@ -92,7 +92,7 @@ ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bo
   return arg;
 }
 
-ArgumentPtr Expression::preciseExpressionRec(const shared_ptr<const IExpression> &expr, uint8_t precision,
+ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
                                              bool shouldSimplify) {
   ArgumentsPtrVector newChildren;
 
@@ -100,7 +100,7 @@ ArgumentPtr Expression::preciseExpressionRec(const shared_ptr<const IExpression>
     newChildren.emplace_back(preciseRec(child, precision, shouldSimplify));
   }
 
-  shared_ptr<IExpression> res = cast<IExpression>(expr->clone());
+  std::shared_ptr<IExpression> res = cast<IExpression>(expr->clone());
   res->setChildren(newChildren);
 
   if (shouldSimplify) {
@@ -113,12 +113,12 @@ ArgumentPtr Expression::preciseExpressionRec(const shared_ptr<const IExpression>
 }
 
 bool Expression::parsePrefixOperator(const TokenVector &tokens) {
-  if (shared_ptr<IOperator> oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
-    auto rhsExpr = shared_ptr<Expression>(new Expression(TokenVector(tokens.begin() + 1, tokens.end())));
-    shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*oper, {rhsExpr});
+  if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
+    auto rhsExpr = std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin() + 1, tokens.end())));
+    std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*oper, {rhsExpr});
 
     if (auto expr = cast<Expression>(funcExpr)) {
-      *this = move(*expr);
+      *this = std::move(*expr);
     }
     else {
       child = funcExpr;
@@ -131,12 +131,12 @@ bool Expression::parsePrefixOperator(const TokenVector &tokens) {
 }
 
 bool Expression::parsePostfixOperator(const TokenVector &tokens) {
-  if (shared_ptr<IOperator> oper = IOperator::parse(tokens.back(), IOperator::Priority::PostfixUnary)) {
-    int64_t order = 1;
+  if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.back(), IOperator::Priority::PostfixUnary)) {
+    size_t order = 1;
 
     if (auto factor = cast<Factorial>(oper)) {
       for (; order < tokens.size(); order++) {
-        if (tokens[int64_t(tokens.size()) - order - 1] != oper->toString()) {
+        if (tokens[tokens.size() - order - 1] != oper->toString()) {
           break;
         }
       }
@@ -144,11 +144,12 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
       factor->setOrder(order);
     }
 
-    auto rhsExpr = shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.end() - order)));
-    shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*oper, {rhsExpr});
+    auto rhsExpr =
+        std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.end() - int64_t(order))));
+    std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*oper, {rhsExpr});
 
     if (auto expr = cast<Expression>(funcExpr)) {
-      *this = move(*expr);
+      *this = std::move(*expr);
     }
     else {
       child = funcExpr;
@@ -161,7 +162,7 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
 }
 
 bool Expression::parseBinaryOperator(const TokenVector &tokens) {
-  map<size_t, ArgumentPtr> operMap = findBinaryOperators(tokens);
+  std::map<size_t, ArgumentPtr> operMap = findBinaryOperators(tokens);
 
   if (operMap.empty()) {
     return false;
@@ -184,18 +185,20 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
     }
   }
 
-  auto operPos = int64_t(foundOperIt->first);
+  auto operPos = foundOperIt->first;
   if (operPos < 1 || operPos >= tokens.size()) {
     return false;
   }
 
-  auto lhsExpr = shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + operPos)));
-  auto rhsExpr = shared_ptr<Expression>(new Expression(TokenVector(tokens.begin() + operPos + 1, tokens.end())));
-  shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(
+  auto lhsExpr =
+      std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(operPos))));
+  auto rhsExpr =
+      std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin() + int64_t(operPos) + 1, tokens.end())));
+  std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(
       *cast<IFunction>(foundOperIt->second), {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()});
 
   if (auto expr = cast<Expression>(funcExpr)) {
-    *this = move(*expr);
+    *this = std::move(*expr);
   }
   else {
     child = funcExpr;
@@ -205,7 +208,7 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 }
 
 bool Expression::parseFiniteTerm(const TokenVector &tokens) {
-  if (tokens.size() > 1 && tokens.front() == "(" && tokens.at(int64_t(tokens.size()) - 1) == ")") {
+  if (tokens.size() > 1 && tokens.front() == "(" && tokens[tokens.size() - 1] == ")") {
     *this = Expression(cutBrackets(tokens));
     return true;
   }
@@ -241,7 +244,7 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   return false;
 }
 
-shared_ptr<IFunction> Expression::getFunction() const {
+std::shared_ptr<IFunction> Expression::getFunction() const {
   return {};
 }
 
@@ -250,7 +253,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
 
   for (size_t pos = 0; pos < tokens.size(); pos++) {
     bool isBracketsSkip = false;
-    if (tokens.at(pos) == "(") {
+    if (tokens[pos] == "(") {
       if (pos == 0) {
         isBracketsSkip = true;
       }
@@ -265,13 +268,13 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
       break;
     }
 
-    if (tokens.at(pos) == ",") {
+    if (tokens[pos] == ",") {
       if (pos == 0 || pos + 1 == tokens.size()) {
         throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
       args.emplace_back(
-          shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(pos)))));
+          std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(pos)))));
 
       ArgumentsPtrVector addArgs = parseFunctionArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
 
@@ -283,7 +286,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
     }
   }
 
-  args.emplace_back(shared_ptr<Expression>(new Expression(tokens)));
+  args.emplace_back(std::shared_ptr<Expression>(new Expression(tokens)));
 
   return args;
 }
@@ -321,14 +324,14 @@ ArgumentPtr Expression::simplify() const {
   return child;
 }
 
-void Expression::validateChild(const ArgumentPtr &child) const {
-  const auto childExpr = cast<IExpression>(child);
+void Expression::validateChild(const ArgumentPtr &inChild) const {
+  const auto childExpr = cast<IExpression>(inChild);
 
   if (!childExpr) {
     return;
   }
 
-  const shared_ptr<IFunction> func = childExpr->getFunction();
+  const std::shared_ptr<IFunction> func = childExpr->getFunction();
   const ArgumentsPtrVector children = childExpr->getChildren();
 
   if (children.size() <= size_t(func->getFunctionType())) {
@@ -337,7 +340,7 @@ void Expression::validateChild(const ArgumentPtr &child) const {
   else {
     for (int64_t i = 0; i < int64_t(children.size()) - 1; i++) {
       for (int64_t j = i + 1; j < int64_t(children.size()); j++) {
-        validateFunctionArgs(func, {children[i], children[j]});
+        validateFunctionArgs(func, {children[size_t(i)], children[size_t(j)]});
       }
     }
   }
@@ -347,7 +350,7 @@ void Expression::validateChild(const ArgumentPtr &child) const {
   }
 }
 
-void Expression::validateFunctionArgs(const shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const {
+void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const {
   const ArgumentsTypesVector childrenTypes = func->getArgsTypes();
 
   if (childrenTypes.size() != args.size()) {
@@ -355,11 +358,11 @@ void Expression::validateFunctionArgs(const shared_ptr<IFunction> &func, const A
   }
 
   for (size_t i = 0; i < args.size(); i++) {
-    const ArgumentPtr &child = args[i];
+    const ArgumentPtr &arg = args[i];
     const std::type_info &type = childrenTypes[i];
 
-    if (const auto childExpr = cast<IExpression>(child)) {
-      const shared_ptr<IFunction> childFunc = childExpr->getFunction();
+    if (const auto childExpr = cast<IExpression>(arg)) {
+      const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
       const std::type_info &childType = childFunc->getReturnType();
 
       if (childType != typeid(Variable) && !InheritanceTable::isBaseOf(type, childType) &&
@@ -367,7 +370,7 @@ void Expression::validateFunctionArgs(const shared_ptr<IFunction> &func, const A
         throw InvalidInputException(toString());
       }
     }
-    else if (const auto childConst = cast<IConstant>(child)) {
+    else if (const auto childConst = cast<IConstant>(arg)) {
       const std::type_info &childType = childConst->getReturnType();
 
       if (!InheritanceTable::isBaseOf(type, childType)) {
@@ -375,7 +378,8 @@ void Expression::validateFunctionArgs(const shared_ptr<IFunction> &func, const A
       }
     }
     else {
-      const std::type_info &childType = typeid(*child);
+      const auto &argRef = *arg;
+      const std::type_info &childType = typeid(argRef);
 
       if (childType != typeid(Variable) && !InheritanceTable::isBaseOf(type, childType)) {
         throw InvalidInputException(toString());
@@ -384,13 +388,13 @@ void Expression::validateFunctionArgs(const shared_ptr<IFunction> &func, const A
   }
 }
 
-unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args) {
+std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args) {
   ArgumentsPtrVector argsPtrVect;
   for (const auto &arg : args) {
     argsPtrVect.emplace_back(arg.get().toMinimalObject());
   }
 
-  auto res = make_unique<Expression>();
+  auto res = std::make_unique<Expression>();
   res->child = makeFunctionExpression(func, argsPtrVect);
   return res;
 }
@@ -402,12 +406,12 @@ ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVect
   return res.child;
 }
 
-shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
-  if (shared_ptr<IExpression> expr = Parser::parse(Expression::expressionBuildersMap, func.toString(), args)) {
+std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
+  if (std::shared_ptr<IExpression> expr = Parser::parse(Expression::expressionBuildersMap, func.toString(), args)) {
     return expr;
   }
 
-  return make_shared<FunctionExpression>(func, args);
+  return std::make_shared<FunctionExpression>(func, args);
 }
 
 void Expression::setChildren(const ArgumentsPtrVector &childVect) {
@@ -418,7 +422,7 @@ void Expression::setChildren(const ArgumentsPtrVector &childVect) {
   child = childVect.front();
 }
 
-void Expression::setValuesOfVariables(const vector<Variable> &vars, const ArgumentsPtrVector &vals) {
+void Expression::setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) {
   IExpression::setValuesOfVariables(vars, vals);
   simplifyChild(child);
 }

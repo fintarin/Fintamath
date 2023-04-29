@@ -6,7 +6,7 @@ namespace fintamath {
 
 class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
 public:
-  explicit NotExpression(const ArgumentPtr &child);
+  explicit NotExpression(const ArgumentPtr &inChild);
 
 protected:
   ArgumentPtr preSimplify() const override;

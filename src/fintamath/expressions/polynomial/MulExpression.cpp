@@ -17,15 +17,15 @@ namespace fintamath {
 
 const Mul MUL;
 
-MulExpression::MulExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(MUL, children) {
+MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(MUL, inChildren) {
 }
 
-string MulExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+std::string MulExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   if (!prevChild && *inChild == NEG_ONE) {
     return Neg().toString();
   }
 
-  string result;
+  std::string result;
 
   if (auto sumExpr = cast<IExpression>(inChild); sumExpr && is<Add>(sumExpr->getFunction())) {
     result = putInBrackets(sumExpr->toString());
@@ -78,8 +78,8 @@ ArgumentPtr MulExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const Ar
 }
 
 ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  const shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
-  const shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+  const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
   bool isLhsDiv = false;
   bool isRhsDiv = false;
@@ -118,8 +118,8 @@ ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const Argume
   ArgumentPtr lhs = lhsChild;
   ArgumentPtr rhs = rhsChild;
 
-  shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
   if (lhsExpr && rhsExpr && !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
     return {};
@@ -148,9 +148,10 @@ ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const Argume
 
   ArgumentsPtrVector resultVect;
 
-  for (const auto &lhsChild : lhsChildren) {
-    for (const auto &rhsChild : rhsChildren) {
-      resultVect.emplace_back(makeFunctionExpression(Mul(), ArgumentsPtrVector{lhsChild->clone(), rhsChild->clone()}));
+  for (const auto &lhsSubChild : lhsChildren) {
+    for (const auto &rhsSubChild : rhsChildren) {
+      resultVect.emplace_back(
+          makeFunctionExpression(Mul(), ArgumentsPtrVector{lhsSubChild->clone(), rhsSubChild->clone()}));
     }
   }
 

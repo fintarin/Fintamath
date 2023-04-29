@@ -9,7 +9,7 @@
 
 namespace fintamath {
 
-map<string, shared_ptr<IFunction>, std::less<>> CompExpression::oppositeFunctionsMap;
+std::map<std::string, std::shared_ptr<IFunction>, std::less<>> CompExpression::oppositeFunctionsMap;
 
 }
 
@@ -19,12 +19,12 @@ namespace {
 
 struct CompExpressionConfig {
   CompExpressionConfig() {
-    CompExpression::addOppositeFunctions(make_shared<Eqv>(), make_shared<Eqv>());
-    CompExpression::addOppositeFunctions(make_shared<Neqv>(), make_shared<Neqv>());
-    CompExpression::addOppositeFunctions(make_shared<More>(), make_shared<Less>());
-    CompExpression::addOppositeFunctions(make_shared<Less>(), make_shared<More>());
-    CompExpression::addOppositeFunctions(make_shared<MoreEqv>(), make_shared<LessEqv>());
-    CompExpression::addOppositeFunctions(make_shared<LessEqv>(), make_shared<MoreEqv>());
+    CompExpression::addOppositeFunctions(std::make_shared<Eqv>(), std::make_shared<Eqv>());
+    CompExpression::addOppositeFunctions(std::make_shared<Neqv>(), std::make_shared<Neqv>());
+    CompExpression::addOppositeFunctions(std::make_shared<More>(), std::make_shared<Less>());
+    CompExpression::addOppositeFunctions(std::make_shared<Less>(), std::make_shared<More>());
+    CompExpression::addOppositeFunctions(std::make_shared<MoreEqv>(), std::make_shared<LessEqv>());
+    CompExpression::addOppositeFunctions(std::make_shared<LessEqv>(), std::make_shared<MoreEqv>());
   }
 };
 

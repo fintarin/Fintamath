@@ -12,7 +12,7 @@ public:
 
   ArgumentPtr invert() const override;
 
-  string toString() const override;
+  std::string toString() const override;
 
 protected:
   ArgumentPtr preSimplify() const override;

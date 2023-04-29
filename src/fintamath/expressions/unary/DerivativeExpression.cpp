@@ -11,7 +11,7 @@ namespace fintamath {
 
 const Derivative DER;
 
-DerivativeExpression::DerivativeExpression(const ArgumentPtr &child) : IUnaryExpressionCRTP(DER, child) {
+DerivativeExpression::DerivativeExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(DER, inChild) {
 }
 
 ArgumentPtr DerivativeExpression::postSimplify() const {

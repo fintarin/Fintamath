@@ -44,9 +44,9 @@ protected:
 }
 
 TEST(ComparableTests, lessTest) {
-  unique_ptr<IComparable> m1 = make_unique<Integer>(1);
-  unique_ptr<IComparable> m2 = make_unique<Rational>(2);
-  unique_ptr<IComparable> m3 = make_unique<Rational>(1, 2);
+  std::unique_ptr<IComparable> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IComparable> m2 = std::make_unique<Rational>(2);
+  std::unique_ptr<IComparable> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_FALSE(*m1 < *m1);
   EXPECT_FALSE(*m2 < *m2);
@@ -69,9 +69,9 @@ TEST(ComparableTests, lessTest) {
 }
 
 TEST(ComparableTests, moreTest) {
-  unique_ptr<IComparable> m1 = make_unique<Integer>(1);
-  unique_ptr<IComparable> m2 = make_unique<Rational>(2);
-  unique_ptr<IComparable> m3 = make_unique<Rational>(1, 2);
+  std::unique_ptr<IComparable> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IComparable> m2 = std::make_unique<Rational>(2);
+  std::unique_ptr<IComparable> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_FALSE(*m1 > *m1);
   EXPECT_FALSE(*m2 > *m2);
@@ -94,9 +94,9 @@ TEST(ComparableTests, moreTest) {
 }
 
 TEST(ComparableTests, lessEqualsTest) {
-  unique_ptr<IComparable> m1 = make_unique<Integer>(1);
-  unique_ptr<IComparable> m2 = make_unique<Rational>(2);
-  unique_ptr<IComparable> m3 = make_unique<Rational>(1, 2);
+  std::unique_ptr<IComparable> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IComparable> m2 = std::make_unique<Rational>(2);
+  std::unique_ptr<IComparable> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_TRUE(*m1 <= *m1);
   EXPECT_TRUE(*m2 <= *m2);
@@ -119,9 +119,9 @@ TEST(ComparableTests, lessEqualsTest) {
 }
 
 TEST(ComparableTests, moreEqualsTest) {
-  unique_ptr<IComparable> m1 = make_unique<Integer>(1);
-  unique_ptr<IComparable> m2 = make_unique<Rational>(2);
-  unique_ptr<IComparable> m3 = make_unique<Rational>(1, 2);
+  std::unique_ptr<IComparable> m1 = std::make_unique<Integer>(1);
+  std::unique_ptr<IComparable> m2 = std::make_unique<Rational>(2);
+  std::unique_ptr<IComparable> m3 = std::make_unique<Rational>(1, 2);
 
   EXPECT_TRUE(*m1 >= *m1);
   EXPECT_TRUE(*m2 >= *m2);

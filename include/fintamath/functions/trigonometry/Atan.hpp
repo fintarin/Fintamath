@@ -9,12 +9,12 @@ class Atan : public IFunctionCRTP<INumber, Atan, INumber> {
 public:
   Atan() = default;
 
-  string toString() const override {
+  std::string toString() const override {
     return "atan";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

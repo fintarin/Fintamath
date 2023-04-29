@@ -6,15 +6,16 @@ namespace fintamath {
 
 class CompExpression : public IBinaryExpressionCRTP<CompExpression> {
 public:
-  CompExpression(const IOperator &oper, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  CompExpression(const IOperator &inOper, const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
-  string toString() const override;
+  std::string toString() const override;
 
   void markAsSolution();
 
-  static void addOppositeFunctions(const shared_ptr<IFunction> &function, const shared_ptr<IFunction> &opposite);
+  static void addOppositeFunctions(const std::shared_ptr<IFunction> &function,
+                                   const std::shared_ptr<IFunction> &opposite);
 
-  static shared_ptr<IFunction> getOppositeFunction(const shared_ptr<IFunction> &function);
+  static std::shared_ptr<IFunction> getOppositeFunction(const std::shared_ptr<IFunction> &function);
 
 protected:
   ArgumentPtr preSimplify() const override;
@@ -22,7 +23,7 @@ protected:
   ArgumentPtr postSimplify() const override;
 
 private:
-  static map<string, shared_ptr<IFunction>, std::less<>> oppositeFunctionsMap;
+  static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctionsMap;
 
   void convertToSolution();
 

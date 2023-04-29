@@ -6,11 +6,11 @@ namespace fintamath {
 
 class FunctionExpression : public IExpressionCRTP<FunctionExpression> {
 public:
-  explicit FunctionExpression(const IFunction &function, const ArgumentsPtrVector &children);
+  explicit FunctionExpression(const IFunction &inFunc, const ArgumentsPtrVector &inChildren);
 
-  string toString() const override;
+  std::string toString() const override;
 
-  shared_ptr<IFunction> getFunction() const override;
+  std::shared_ptr<IFunction> getFunction() const override;
 
   ArgumentsPtrVector getChildren() const override;
 
@@ -24,11 +24,11 @@ protected:
   ArgumentPtr postSimplify() const override;
 
 private:
-  shared_ptr<IFunction> func;
+  std::shared_ptr<IFunction> func;
 
   ArgumentsPtrVector children;
 
-  string functionToString() const;
+  std::string functionToString() const;
 };
 
 }

@@ -9,12 +9,12 @@ class Sinh : public IFunctionCRTP<INumber, Sinh, INumber> {
 public:
   Sinh() = default;
 
-  string toString() const override {
+  std::string toString() const override {
     return "sinh";
   }
 
 protected:
-  unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
 }

@@ -13,10 +13,10 @@ namespace fintamath {
 
 const Add ADD;
 
-SumExpression::SumExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(ADD, children) {
+SumExpression::SumExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(ADD, inChildren) {
 }
 
-string SumExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+std::string SumExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   ArgumentPtr child = inChild;
   bool isChildNegated = false;
 
@@ -25,14 +25,14 @@ string SumExpression::childToString(const ArgumentPtr &inChild, const ArgumentPt
     isChildNegated = true;
   }
 
-  string result = child->toString();
+  std::string result = child->toString();
 
   if (!isChildNegated && result.size() > 1 && result.front() == Neg().toString().front()) {
     isChildNegated = true;
     result = result.substr(1, result.size() - 1);
   }
 
-  string funcStr;
+  std::string funcStr;
 
   if (isChildNegated) {
     funcStr = Sub().toString();
@@ -77,9 +77,6 @@ ArgumentPtr SumExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const Ar
   if (*rhsChild == ZERO) {
     return lhsChild;
   }
-
-  bool lhsNeg = false;
-  bool rhsNeg = false;
 
   return {};
 }

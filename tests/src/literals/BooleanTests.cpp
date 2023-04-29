@@ -6,15 +6,15 @@
 using namespace fintamath;
 
 TEST(BooleanTests, stringConstructorTest) {
-  EXPECT_EQ(Boolean(string("True")), true);
-  EXPECT_EQ(Boolean(string("False")), false);
+  EXPECT_EQ(Boolean(std::string("True")), true);
+  EXPECT_EQ(Boolean(std::string("False")), false);
 
-  EXPECT_THROW(Boolean(string("true")), InvalidInputException);
-  EXPECT_THROW(Boolean(string("false")), InvalidInputException);
-  EXPECT_THROW(Boolean(string("10")), InvalidInputException);
-  EXPECT_THROW(Boolean(string("i")), InvalidInputException);
-  EXPECT_THROW(Boolean(string("")), InvalidInputException);
-  EXPECT_THROW(Boolean(string("")), InvalidInputException);
+  EXPECT_THROW(Boolean(std::string("true")), InvalidInputException);
+  EXPECT_THROW(Boolean(std::string("false")), InvalidInputException);
+  EXPECT_THROW(Boolean(std::string("10")), InvalidInputException);
+  EXPECT_THROW(Boolean(std::string("i")), InvalidInputException);
+  EXPECT_THROW(Boolean(std::string("")), InvalidInputException);
+  EXPECT_THROW(Boolean(std::string("")), InvalidInputException);
 }
 
 TEST(BooleanTests, boolConstructorTest) {
