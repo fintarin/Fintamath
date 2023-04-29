@@ -9,7 +9,7 @@
 
 namespace fintamath {
 
-class RealImpl;
+struct RealImpl;
 
 class Real : public INumberCRTP<Real> {
 public:
