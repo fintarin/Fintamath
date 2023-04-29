@@ -165,35 +165,6 @@ ArgumentPtr DivExpression::divSimplify() const {
   return makeFunctionExpression(DIV, {numerator, denominator});
 }
 
-ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*lhs == *rhs) {
-    return ONE.clone();
-  }
-
-  auto [lhsRate, lhsValue] = getRateValuePair(lhs);
-  auto [rhsRate, rhsValue] = getRateValuePair(rhs);
-
-  if (*lhsValue == *rhsValue) {
-    return addRatesToValue({lhsRate, makeRawFunctionExpression(Neg(), {rhsRate})}, lhsValue);
-  }
-
-  return {};
-}
-
-std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
-  if (const auto &powExpr = cast<IExpression>(rhsChild); powExpr && is<Pow>(powExpr->getFunction())) {
-    ArgumentsPtrVector powExprChildren = powExpr->getChildren();
-    return {powExprChildren[1], powExprChildren.front()};
-  }
-
-  return {ONE.clone(), rhsChild};
-}
-
-ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = makeFunctionExpression(Add(), rates);
-  return makeRawFunctionExpression(Pow(), {value, ratesSum});
-}
-
 ArgumentPtr DivExpression::mulSimplify() const {
   ArgumentsPtrVector lhsChildren;
   if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
@@ -274,6 +245,35 @@ ArgumentPtr DivExpression::mulSimplify() const {
 ArgumentPtr DivExpression::sumSimplify() const {
   // TODO: implement
   return {};
+}
+
+ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*lhs == *rhs) {
+    return ONE.clone();
+  }
+
+  auto [lhsRate, lhsValue] = getRateValuePair(lhs);
+  auto [rhsRate, rhsValue] = getRateValuePair(rhs);
+
+  if (*lhsValue == *rhsValue) {
+    return addRatesToValue({lhsRate, makeRawFunctionExpression(Neg(), {rhsRate})}, lhsValue);
+  }
+
+  return {};
+}
+
+std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
+  if (const auto &powExpr = cast<IExpression>(rhsChild); powExpr && is<Pow>(powExpr->getFunction())) {
+    ArgumentsPtrVector powExprChildren = powExpr->getChildren();
+    return {powExprChildren[1], powExprChildren[0]};
+  }
+
+  return {ONE.clone(), rhsChild};
+}
+
+ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
+  ArgumentPtr ratesSum = makeFunctionExpression(Add(), rates);
+  return makeRawFunctionExpression(Pow(), {value, ratesSum});
 }
 
 }

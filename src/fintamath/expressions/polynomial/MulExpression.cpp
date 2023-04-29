@@ -48,7 +48,7 @@ ArgumentPtr MulExpression::negate() const {
 std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
   if (const auto &powExpr = cast<IExpression>(rhsChild); powExpr && is<Pow>(powExpr->getFunction())) {
     ArgumentsPtrVector powExprChildren = powExpr->getChildren();
-    return {powExprChildren[1], powExprChildren.front()};
+    return {powExprChildren[1], powExprChildren[0]};
   }
 
   return {ONE.clone(), rhsChild};
