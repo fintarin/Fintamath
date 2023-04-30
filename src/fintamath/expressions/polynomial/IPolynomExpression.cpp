@@ -182,6 +182,10 @@ bool IPolynomExpression::isComparableOrderInversed() const {
   return false;
 }
 
+bool IPolynomExpression::isUnaryOperatorsOrderInversed() const {
+  return false;
+}
+
 void IPolynomExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.empty()) {
     throw InvalidInputFunctionException(toString(), {});
@@ -470,25 +474,41 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
     }
   }
 
+  int unaryComparator = 0;
+
   for (size_t i = lhsStart, j = rhsStart; i < lhsChildren.size() && j < rhsChildren.size(); i++, j++) {
     ArgumentPtr compLhs = lhsChildren[i];
     ArgumentPtr compRhs = rhsChildren[j];
 
     if (ignoreUnary) {
+      bool isLhsUnary = false;
+
       if (const auto lhsExpr = cast<IExpression>(compLhs);
           lhsExpr && lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
         compLhs = lhsExpr->getChildren().front();
+        isLhsUnary = true;
       }
+
+      bool isRhsUnary = false;
 
       if (const auto rhsExpr = cast<IExpression>(compRhs);
           rhsExpr && rhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
         compRhs = rhsExpr->getChildren().front();
+        isRhsUnary = true;
+      }
+
+      if (unaryComparator == 0 && isLhsUnary != isRhsUnary) {
+        unaryComparator = isLhsUnary ? -1 : 1;
       }
     }
 
     if (int res = comparator(compLhs, compRhs); res != 0) {
       return res;
     }
+  }
+
+  if (unaryComparator != 0 && lhsChildren.size() == rhsChildren.size()) {
+    return !isUnaryOperatorsOrderInversed() ? unaryComparator : unaryComparator * -1;
   }
 
   for (size_t i = 0; i < std::min(lhsStart, rhsStart); i++) {

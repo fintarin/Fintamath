@@ -39,6 +39,8 @@ protected:
 
   virtual bool isComparableOrderInversed() const;
 
+  virtual bool isUnaryOperatorsOrderInversed() const;
+
 private:
   void preSimplifyRec();
 

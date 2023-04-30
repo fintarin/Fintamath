@@ -87,6 +87,10 @@ bool OrExpression::isComparableOrderInversed() const {
   return true;
 }
 
+bool OrExpression::isUnaryOperatorsOrderInversed() const {
+  return true;
+}
+
 ArgumentPtr OrExpression::simplifyEqual(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (*lhsChild == *rhsChild) {
     return lhsChild;
