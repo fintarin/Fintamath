@@ -18,43 +18,65 @@
 
 Fintamath is an algebra & analysis library written in pure C++.
 
-## Requirements
+## Supported Platforms
 
-* C++ 17
-* CMake 3.16 or higher
-* C++ Compiler:
+* C++ 17 or higher
+* CMake 3.5 or higher
+* C++ Compilers:
   * GCC 9 or higher
   * Clang 11 or higher
   * MSVC v142 or higher
-* OS:
+* Operating systems:
   * Linux
   * Windows
   * macOS
+  * Android
 
 ## Build
 
-Clone repository
+Clone repository.
 
 ```sh
-git clone https://github.com/fintarin/Fintamath.git
+git clone https://github.com/fintarin/Fintamath.git fintamath
 ```
 
 ### Standalone Project
 
-Build
+Build.
 
 ```sh
-cd Fintamath
-cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
+cd fintamath
+cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -Dfintamath_build_shared=ON
 cmake --build build
 ```
 
-### Incorporating Into An Existing CMake Project
+### Incorporating into an Existing CMake Project
 
-Add to your CMakeLists.txt:
+Add the following lines to your CMakeLists.txt.
 
 ```cmake
-add_subdirectory(Fintamath)
+add_subdirectory(fintamath)
 add_executable(example example.cpp)
-target_link_libraries(example Fintamath)
+target_link_libraries(example fintamath)
+```
+
+## Development
+
+Build in Debug mode with tests enabled.
+```sh
+cmake -Bbuild -DCMAKE_BUILD_TYPE=Debug -Dfintamath_build_tests=ON
+cmake --build build
+```
+
+Run tests.
+```sh
+cd build
+ctest -CDEBUG --verbose
+cd ..
+```
+
+Run clang-format.
+```sh
+cmake -Bbuild -Dfintamath_enable_clangformat=ON
+cmake --build build --target clangformat
 ```
