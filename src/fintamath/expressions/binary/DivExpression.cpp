@@ -82,8 +82,8 @@ ArgumentPtr DivExpression::postSimplify() const {
     }
 
     if (*rhsInt < ZERO) {
-      return makeRawFunctionExpression(Div(), {makeFunctionExpression(Neg(), {simplExpr->lhsChild}),
-                                               makeFunctionExpression(Neg(), {simplExpr->rhsChild})});
+      return makeFunctionExpression(Div(), {makeRawFunctionExpression(Neg(), {simplExpr->lhsChild}),
+                                            makeRawFunctionExpression(Neg(), {simplExpr->rhsChild})});
     }
   }
 

@@ -160,7 +160,7 @@ void CompExpression::convertToSolution() {
         lhsPolynom.emplace_back(lhsAddChild);
       }
       else {
-        rhsPolynom.emplace_back(makeFunctionExpression(Neg(), {lhsAddChild}));
+        rhsPolynom.emplace_back(makeRawFunctionExpression(Neg(), {lhsAddChild}));
       }
     }
 

@@ -203,8 +203,8 @@ ArgumentPtr PowExpression::postSimplify() const {
 
     if (*rhsInt < ZERO) {
       return makeFunctionExpression(
-          Div(),
-          {ONE.clone(), makeFunctionExpression(Pow(), {simplExpr->lhsChild, makeFunctionExpression(Neg(), {rhsInt})})});
+          Div(), {ONE.clone(),
+                  makeRawFunctionExpression(Pow(), {simplExpr->lhsChild, makeRawFunctionExpression(Neg(), {rhsInt})})});
     }
   }
 
