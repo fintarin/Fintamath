@@ -55,7 +55,7 @@ void IPolynomExpression::preSimplifyRec() {
   for (size_t i = 1; i < children.size(); i++) {
     if (auto res = preSimplifyChildren(i - 1, i)) {
       children[i - 1] = res;
-      children.erase(children.begin() + int64_t(i));
+      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
     }
   }
@@ -71,12 +71,12 @@ void IPolynomExpression::postSimplifyRec() {
   for (size_t i = 1; i < children.size(); i++) {
     if (ArgumentPtr callFuncRes = callFunction(*func, {children[i - 1], children[i]})) {
       children[i - 1] = callFuncRes;
-      children.erase(children.begin() + int64_t(i));
+      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
     }
     else if (ArgumentPtr simplRes = postSimplifyChildren(i - 1, i)) {
       children[i - 1] = simplRes;
-      children.erase(children.begin() + int64_t(i));
+      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
     }
   }
@@ -96,12 +96,12 @@ void IPolynomExpression::globalSimplifyRec() {
 
     if (auto callFuncRes = callFunction(*func, {lhsChild, rhsChild})) {
       children[i - 1] = callFuncRes;
-      children.erase(children.begin() + int64_t(i));
+      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
     }
     else if (auto simplRes = useSimplifyFunctions(functions, lhsChild, rhsChild)) {
       children[i - 1] = simplRes;
-      children.erase(children.begin() + int64_t(i));
+      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
     }
   }

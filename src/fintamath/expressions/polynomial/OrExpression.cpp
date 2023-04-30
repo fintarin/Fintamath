@@ -47,7 +47,7 @@ ArgumentPtr OrExpression::postSimplify() const {
     for (size_t j = i + 1; j < simplChildren.size(); j++) {
       if (auto res = simplifyAbsorption(simplChildren[i], simplChildren[j])) {
         simplChildren[i] = res;
-        simplChildren.erase(simplChildren.begin() + int64_t(j));
+        simplChildren.erase(simplChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
         break;
       }
     }
@@ -128,7 +128,7 @@ ArgumentPtr OrExpression::simplifyAnd(const ArgumentPtr &lhsChild, const Argumen
     return {};
   }
 
-  int64_t resolutionIndex = -1;
+  size_t resolutionIndex = lhsChildren.size();
 
   for (size_t i = 0; i < lhsChildren.size(); i++) {
     ArgumentPtr lhsSubChild = lhsChildren[i];
@@ -157,20 +157,20 @@ ArgumentPtr OrExpression::simplifyAnd(const ArgumentPtr &lhsChild, const Argumen
     }
 
     if (isLhsSubChildNot != isRhsSubChildNot) {
-      if (resolutionIndex != -1) {
+      if (resolutionIndex != lhsChildren.size()) {
         return {};
       }
 
-      resolutionIndex = int64_t(i);
+      resolutionIndex = i;
     }
   }
 
-  if (resolutionIndex == -1) {
+  if (resolutionIndex == lhsChildren.size()) {
     return {};
   }
 
   ArgumentsPtrVector resultChildren = lhsChildren;
-  resultChildren.erase(resultChildren.begin() + resolutionIndex);
+  resultChildren.erase(resultChildren.begin() + ArgumentsPtrVector::iterator::difference_type(resolutionIndex));
 
   return resultChildren.size() > 1 ? makeFunctionExpression(And(), resultChildren) : resultChildren.front();
 }

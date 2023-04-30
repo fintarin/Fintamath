@@ -189,13 +189,13 @@ ArgumentPtr DivExpression::mulSimplify() const {
     for (size_t j = 0; j < rhsChildren.size(); j++) {
       if (auto res = divPowerSimplify(lhsChildren[i], rhsChildren[j])) {
         lhsChildren[i] = res;
-        rhsChildren.erase(rhsChildren.begin() + int64_t(j));
+        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
         break;
       }
 
       if (auto res = callFunction(DIV, {lhsChildren[i], rhsChildren[j]})) {
         lhsChildren[i] = DIV(*lhsChildren[i], *rhsChildren[j]);
-        rhsChildren.erase(rhsChildren.begin() + int64_t(j));
+        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
         break;
       }
     }

@@ -144,8 +144,8 @@ bool Expression::parsePostfixOperator(const TokenVector &tokens) {
       factor->setOrder(order);
     }
 
-    auto rhsExpr =
-        std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.end() - int64_t(order))));
+    auto rhsExpr = std::shared_ptr<Expression>(
+        new Expression(TokenVector(tokens.begin(), tokens.end() - TokenVector::iterator::difference_type(order))));
     std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*oper, {rhsExpr});
 
     if (auto expr = cast<Expression>(funcExpr)) {
@@ -190,10 +190,10 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
     return false;
   }
 
-  auto lhsExpr =
-      std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(operPos))));
-  auto rhsExpr =
-      std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin() + int64_t(operPos) + 1, tokens.end())));
+  auto lhsExpr = std::shared_ptr<Expression>(new Expression(
+      TokenVector(tokens.begin(), tokens.begin() + ArgumentsPtrVector::iterator::difference_type(operPos))));
+  auto rhsExpr = std::shared_ptr<Expression>(new Expression(
+      TokenVector(tokens.begin() + ArgumentsPtrVector::iterator::difference_type(operPos) + 1, tokens.end())));
   std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(
       *cast<IFunction>(foundOperIt->second), {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()});
 
@@ -273,10 +273,11 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
         throw InvalidInputException(Tokenizer::tokensToString(tokens));
       }
 
-      args.emplace_back(
-          std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin(), tokens.begin() + int64_t(pos)))));
+      args.emplace_back(std::shared_ptr<Expression>(new Expression(
+          TokenVector(tokens.begin(), tokens.begin() + ArgumentsPtrVector::iterator::difference_type(pos)))));
 
-      ArgumentsPtrVector addArgs = parseFunctionArgs(TokenVector(tokens.begin() + int64_t(pos) + 1, tokens.end()));
+      ArgumentsPtrVector addArgs = parseFunctionArgs(
+          TokenVector(tokens.begin() + ArgumentsPtrVector::iterator::difference_type(pos) + 1, tokens.end()));
 
       for (const auto &token : addArgs) {
         args.emplace_back(ArgumentPtr(token));
