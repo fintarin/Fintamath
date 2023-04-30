@@ -120,6 +120,12 @@ ArgumentPtr CompExpression::postSimplify() const {
   return simpl;
 }
 
+ArgumentPtr CompExpression::logicNegate() const {
+  auto res = cast<CompExpression>(clone());
+  res->func = getLogicOppositeFunction(func);
+  return res;
+}
+
 void CompExpression::markAsSolution() {
   isSolution = true;
   convertToSolution();
@@ -132,6 +138,19 @@ void CompExpression::addOppositeFunctions(const std::shared_ptr<IFunction> &func
 
 std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const std::shared_ptr<IFunction> &function) {
   if (auto res = oppositeFunctionsMap.find(function->toString()); res != oppositeFunctionsMap.end()) {
+    return cast<IFunction>(res->second->clone());
+  }
+
+  return {};
+}
+
+void CompExpression::addLogicOppositeFunctions(const std::shared_ptr<IFunction> &function,
+                                               const std::shared_ptr<IFunction> &opposite) {
+  logicOppositeFunctionsMap.try_emplace(function->toString(), opposite);
+}
+
+std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const std::shared_ptr<IFunction> &function) {
+  if (auto res = logicOppositeFunctionsMap.find(function->toString()); res != logicOppositeFunctionsMap.end()) {
     return cast<IFunction>(res->second->clone());
   }
 

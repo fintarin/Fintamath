@@ -363,6 +363,14 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("False|1=1").toString(), "True");
   EXPECT_EQ(Expression("1=1|False").toString(), "True");
 
+  EXPECT_EQ(Expression("~(x = 1)").toString(), "x - 1 != 0");
+  EXPECT_EQ(Expression("~(x != 1)").toString(), "x - 1 = 0");
+  EXPECT_EQ(Expression("~(x > 1)").toString(), "x - 1 <= 0");
+  EXPECT_EQ(Expression("~(x < 1)").toString(), "x - 1 >= 0");
+  EXPECT_EQ(Expression("~(x >= 1)").toString(), "x - 1 < 0");
+  EXPECT_EQ(Expression("~(x <= 1)").toString(), "x - 1 > 0");
+  EXPECT_EQ(Expression("~(x <= 1 | y >= 1)").toString(), "x - 1 > 0 & y - 1 < 0");
+
   EXPECT_EQ(Expression("~a").toString(), "~a");
   EXPECT_EQ(Expression("~~a").toString(), "a");
   EXPECT_EQ(Expression("~~~a").toString(), "~a");
