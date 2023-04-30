@@ -119,7 +119,7 @@ private:
    * @return  0 if this comparator fails
    */
   int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
-                         bool ignoreUnary = false) const;
+                         bool ignoreUnaryIfPossible = false) const;
 
   /**
    * @brief
@@ -130,7 +130,7 @@ private:
    * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool ignoreUnary = false) const;
+  int comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool ignoreUnaryIfPossible = false) const;
 
   /**
    * @brief

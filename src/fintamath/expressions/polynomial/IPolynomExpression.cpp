@@ -410,7 +410,8 @@ int IPolynomExpression::comparatorNonExpressions(const ArgumentPtr &lhs, const A
   return lhs->toString() < rhs->toString() ? -1 : 1;
 }
 
-int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool ignoreUnary) const {
+int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
+                                           bool ignoreUnaryIfPossible) const {
   const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
   const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
@@ -443,7 +444,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const Argumen
   }
 
   if (lhsChildren.size() > 1 || rhsChildren.size() > 1) {
-    if (int res = comparatorChildren(lhsChildren, rhsChildren, ignoreUnary); res != 0) {
+    if (int res = comparatorChildren(lhsChildren, rhsChildren, ignoreUnaryIfPossible); res != 0) {
       return res;
     }
   }
@@ -452,7 +453,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const Argumen
 }
 
 int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
-                                           bool ignoreUnary) const {
+                                           bool ignoreUnaryIfPossible) const {
 
   size_t lhsStart = 0;
   for (; lhsStart < lhsChildren.size(); lhsStart++) {
@@ -480,7 +481,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
     ArgumentPtr compLhs = lhsChildren[i];
     ArgumentPtr compRhs = rhsChildren[j];
 
-    if (ignoreUnary) {
+    if (ignoreUnaryIfPossible) {
       bool isLhsUnary = false;
 
       if (const auto lhsExpr = cast<IExpression>(compLhs);
