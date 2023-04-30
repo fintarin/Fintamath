@@ -5,7 +5,6 @@
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
-#include "fintamath/numbers/NumberFunctions.hpp"
 
 using namespace fintamath;
 
@@ -17,16 +16,21 @@ TEST(RealFunctionsTests, piNumTest) {
   EXPECT_EQ(PI_NUM.toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
 }
 
-TEST(RealFunctionsTests, absTest) {
-  EXPECT_EQ(abs(Real("8465132.321651651")).toString(), "8465132.321651651");
-  EXPECT_EQ(abs(Real("-98465136846516354684651.351")).toString(), "98465136846516354684651.351");
-  EXPECT_EQ(abs(Real("0")).toString(), "0");
-}
-
 TEST(RealFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Real(1)).toString(), "1");
   EXPECT_EQ(sqrt(Real(4)).toString(), "2");
+  EXPECT_EQ(sqrt(Real(144)).toString(), "12");
+  EXPECT_EQ(sqrt(Real("1000000000000000000")).toString(), "1000000000");
+
+  EXPECT_EQ(sqrt(Real(2)).toString(),
+            "1.414213562373095048801688724209698078569671875376948073176679737990732478462107");
+  EXPECT_EQ(sqrt(Real(3)).toString(), "1.7320508075688772935274463415058723669428052538103806280558069794519330169088");
+  EXPECT_EQ(sqrt(Real(13274)).toString(),
+            "115.21284650593439790572652382777691656117309945220258699979613263506905239760152");
+  EXPECT_EQ(sqrt(Real("1.44")).toString(), "1.2");
   EXPECT_EQ(sqrt(Real("44.3556")).toString(), "6.66");
+  EXPECT_EQ(sqrt(Real("23525.32323")).toString(),
+            "153.37967019784597254922041215127507814346477967726767479847319100257746203803536");
 
   EXPECT_THROW(sqrt(Real(-10)), UndefinedFunctionException);
 }

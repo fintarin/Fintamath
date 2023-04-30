@@ -5,27 +5,53 @@
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
-#include "fintamath/numbers/NumberFunctions.hpp"
 
 using namespace fintamath;
 
-TEST(IntegerFunctionsTests, absTest) {
-  EXPECT_EQ(abs(Integer("-210")).toString(), "210");
-  EXPECT_EQ(abs(Integer("4545628562")).toString(), "4545628562");
-  EXPECT_EQ(abs(Integer("0")).toString(), "0");
+TEST(IntegerFunctionsTests, intSqrtTest) {
+  EXPECT_EQ(intSqrt(Integer(25)), 5);
+  EXPECT_EQ(intSqrt(Integer(100)), 10);
+  EXPECT_EQ(intSqrt(Integer(144)), 12);
+  EXPECT_EQ(intSqrt(Integer("10000000000000000000000000000000000000000000000000000")),
+            Integer("100000000000000000000000000"));
+
+  EXPECT_EQ(intSqrt(Integer(35)), 5);
+  EXPECT_EQ(intSqrt(Integer(4212)), Integer(64));
+  EXPECT_EQ(intSqrt(Integer("992188888888")), Integer(996086));
+  EXPECT_EQ(intSqrt(Integer("68732648273642987365932706179432649827364")), Integer("262169121510606178721"));
+
+  EXPECT_THROW(intSqrt(Integer(-9289)), UndefinedFunctionException);
 }
 
-TEST(IntegerFunctionsTests, sqrtTest) {
-  EXPECT_EQ(sqrt(Integer(35)), 5);
-  EXPECT_EQ(sqrt(Integer(100)), 10);
-  EXPECT_EQ(sqrt(Integer(4212)), Integer(64));
+TEST(IntegerFunctionsTests, sqrtWithRemainderTest) {
+  Integer remainder;
 
-  EXPECT_EQ(sqrt(Integer("992188888888")), Integer(996086));
-  EXPECT_EQ(sqrt(Integer("10000000000000000000000000000000000000000000000000000")),
+  EXPECT_EQ(intSqrt(Integer(25), remainder), 5);
+  EXPECT_EQ(remainder.toString(), "0");
+
+  EXPECT_EQ(intSqrt(Integer(100), remainder), 10);
+  EXPECT_EQ(remainder.toString(), "0");
+
+  EXPECT_EQ(intSqrt(Integer(144), remainder), 12);
+  EXPECT_EQ(remainder.toString(), "0");
+
+  EXPECT_EQ(intSqrt(Integer("10000000000000000000000000000000000000000000000000000"), remainder),
             Integer("100000000000000000000000000"));
-  EXPECT_EQ(sqrt(Integer("68732648273642987365932706179432649827364")), Integer("262169121510606178721"));
+  EXPECT_EQ(remainder.toString(), "0");
 
-  EXPECT_THROW(sqrt(Integer(-9289)), UndefinedFunctionException);
+  EXPECT_EQ(intSqrt(Integer(35), remainder), 5);
+  EXPECT_EQ(remainder.toString(), "10");
+
+  EXPECT_EQ(intSqrt(Integer(4212), remainder), Integer(64));
+  EXPECT_EQ(remainder.toString(), "116");
+
+  EXPECT_EQ(intSqrt(Integer("992188888888"), remainder), Integer(996086));
+  EXPECT_EQ(remainder.toString(), "1569492");
+
+  EXPECT_EQ(intSqrt(Integer("68732648273642987365932706179432649827364"), remainder), Integer("262169121510606178721"));
+  EXPECT_EQ(remainder.toString(), "307087949370856631523");
+
+  EXPECT_THROW(intSqrt(Integer(-9289), remainder), UndefinedFunctionException);
 }
 
 TEST(IntegerFunctionsTests, powTest) {

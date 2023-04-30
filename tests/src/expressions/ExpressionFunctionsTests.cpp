@@ -236,8 +236,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^2 - 23x - 3 = 0")).toString(), "x = -1/2 sqrt(541) + 23/2 | x = 1/2 sqrt(541) + 23/2");
   EXPECT_EQ(solve(Expression("-12x^2 - 23x + 30 = 0")).toString(),
             "x = -1/2 sqrt(1969/144) - 23/24 | x = 1/2 sqrt(1969/144) - 23/24");
-  EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(),
-            "x = -1/2 sqrt(4489/1089) - 1/66 | x = 1/2 sqrt(4489/1089) - 1/66");
+  EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(), "x = -34/33 | x = 1");
   EXPECT_EQ(
       solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(),
       "x = -1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2) | x = 1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2)"); // TODO: x = -1/sqrt(2)

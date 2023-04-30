@@ -4,7 +4,9 @@
 
 namespace fintamath {
 
-Integer sqrt(const Integer &rhs);
+Integer intSqrt(const Integer &rhs);
+
+Integer intSqrt(const Integer &rhs, Integer &remainder);
 
 Integer pow(const Integer &lhs, uint32_t rhs);
 

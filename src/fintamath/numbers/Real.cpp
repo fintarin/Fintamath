@@ -92,11 +92,7 @@ Real::Real(std::string str) : Real() {
 }
 
 Real::Real(const Rational &val) : Real() {
-  *this = Real(val.getInteger()) + Real(val.getNumerator()) / Real(val.getDenominator());
-
-  if (val < 0) {
-    *this = -(*this);
-  }
+  *this = Real(val.getNumerator()) / Real(val.getDenominator());
 }
 
 Real::Real(const Integer &val) : Real(val.toString()) {

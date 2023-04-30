@@ -309,16 +309,10 @@ TEST(RationalTests, integerFriendMoreEqualOperatorTest) {
   EXPECT_FALSE(-5 >= Rational(50, 10));
 }
 
-TEST(RationalTests, getIntegerTest) {
-  EXPECT_EQ(Rational(5, 2).getInteger(), 2);
-  EXPECT_EQ(Rational(55).getInteger(), 55);
-  EXPECT_EQ(Rational(-10, 100).getInteger(), 0);
-}
-
 TEST(RationalTests, getNumeratorTest) {
-  EXPECT_EQ(Rational(5, 2).getNumerator(), 1);
-  EXPECT_EQ(Rational(55).getNumerator(), 0);
-  EXPECT_EQ(Rational(-10, 100).getNumerator(), 1);
+  EXPECT_EQ(Rational(5, 2).getNumerator(), 5);
+  EXPECT_EQ(Rational(55).getNumerator(), 55);
+  EXPECT_EQ(Rational(-10, 100).getNumerator(), -1);
 }
 
 TEST(RationalTests, getDenominatorTest) {

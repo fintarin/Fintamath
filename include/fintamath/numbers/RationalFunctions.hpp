@@ -2,6 +2,4 @@
 
 #include "fintamath/numbers/Rational.hpp"
 
-namespace fintamath {
-
-}
+namespace fintamath {}

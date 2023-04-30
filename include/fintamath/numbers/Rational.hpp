@@ -22,8 +22,6 @@ public:
 
   int sign() const;
 
-  Integer getInteger() const;
-
   Integer getNumerator() const;
 
   Integer getDenominator() const;

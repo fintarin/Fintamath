@@ -1,11 +1,11 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 
-#include "fintamath/numbers/RealFunctions.hpp"
+#include "fintamath/numbers/NumberFunctions.hpp"
 
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Sqrt::call(const ArgumentsRefVector &argsVect) const {
-  return sqrt(convert<Real>(argsVect.front())).toMinimalObject();
+  return sqrt(cast<INumber>(argsVect.front()));
 }
 
 }

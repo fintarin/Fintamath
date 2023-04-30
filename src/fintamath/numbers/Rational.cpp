@@ -31,12 +31,8 @@ Rational::Rational(int64_t rhs) : numerator(rhs) {
   fixNegative();
 }
 
-Integer Rational::getInteger() const {
-  return numerator / denominator;
-}
-
 Integer Rational::getNumerator() const {
-  return numerator % denominator;
+  return signVal ? -numerator : numerator;
 }
 
 Integer Rational::getDenominator() const {
@@ -56,7 +52,7 @@ std::string Rational::toString() const {
 
 std::unique_ptr<IMathObject> Rational::toMinimalObject() const {
   if (denominator == 1) {
-    return signVal ? (-getInteger()).clone() : getInteger().clone();
+    return signVal ? (-numerator).clone() : numerator.clone();
   }
   return clone();
 }

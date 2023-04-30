@@ -7,12 +7,18 @@
 
 namespace fintamath {
 
-Integer sqrt(const Integer &rhs) {
-  if (rhs < 0) {
+Integer intSqrt(const Integer &rhs) {
+  Integer remainder;
+  return intSqrt(rhs, remainder);
+}
+
+Integer intSqrt(const Integer &rhs, Integer &remainder) {
+  try {
+    return IntegerImpl(sqrt(rhs.getImpl()->v, remainder.getImpl()->v));
+  }
+  catch (const std::domain_error &) {
     throw UndefinedFunctionException("sqrt", {rhs.toString()});
   }
-
-  return IntegerImpl(sqrt(rhs.getImpl()->v));
 }
 
 Integer pow(const Integer &lhs, uint32_t rhs) {

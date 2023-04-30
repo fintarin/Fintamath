@@ -113,12 +113,13 @@ TEST(ExpressionTests, stringConstructorTest) {
 
   EXPECT_EQ(Expression("sqrt144").toString(), "12");
   EXPECT_EQ(Expression("sqrt0").toString(), "0");
+  EXPECT_EQ(Expression("sqrt(25)").toString(), "5");
+  EXPECT_EQ(Expression("sqrt(144/25)").toString(), "12/5");
   EXPECT_EQ(Expression("sqrt4!").toString(), "2");
   EXPECT_EQ(Expression("(sqrt4)!").toString(), "2");
   EXPECT_EQ(Expression("sqrt4*2!").toString(), "4");
   EXPECT_EQ(Expression("abs(-5)").toString(), "5");
   EXPECT_EQ(Expression("abs((-5))").toString(), "5");
-  EXPECT_EQ(Expression("log(2, 256)").toString(), "ln(256)/ln(2)");
   EXPECT_EQ(Expression("sign(10)").toString(), "1");
 
   EXPECT_EQ(Expression("E").toString(), "E");
@@ -177,6 +178,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").toString(), "ln(ln(ln(ln(E))))");
   EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").toString(), "ln(ln(ln(ln(ln(E)))))");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
+  EXPECT_EQ(Expression("sqrt(26)").toString(), "sqrt(26)");
+  EXPECT_EQ(Expression("sqrt(145/26)").toString(), "sqrt(145/26)");
+  EXPECT_EQ(Expression("sqrt(169/3)").toString(), "sqrt(169/3)");
+  EXPECT_EQ(Expression("sqrt(168/25)").toString(), "sqrt(168/25)");
+  EXPECT_EQ(Expression("log(2, 256)").toString(), "ln(256)/ln(2)");
 
   EXPECT_EQ(Expression("a*0").toString(), "0");
   EXPECT_EQ(Expression("0*a").toString(), "0");
