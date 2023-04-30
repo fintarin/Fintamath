@@ -27,6 +27,8 @@ private:
 
   static ArgumentPtr simplifyAnd(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
+  static ArgumentPtr simplifyAbsorption(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren);
+
   static ArgumentPtr simplifyResolution(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren);
 
   static ArgumentPtr simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);

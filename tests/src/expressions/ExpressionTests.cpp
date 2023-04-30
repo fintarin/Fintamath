@@ -430,15 +430,15 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("~(a | b | c)").toString(), "~a & ~b & ~c");
   EXPECT_EQ(Expression("~(~a & ~a)").toString(), "a");
   EXPECT_EQ(Expression("b&c&d | a&c&d | a&b&c").toString(), "(a & b & c) | (a & c & d) | (b & c & d)");
+  EXPECT_EQ(Expression("a | (a & b)").toString(), "a");
+  EXPECT_EQ(Expression("a & (a | b)").toString(), "a");
   EXPECT_EQ(Expression("(a & ~b) | (a & b)").toString(), "a");
-  EXPECT_EQ(Expression("(x | ~y | z) & (y | z)").toString(), "(x & y) | (x & z) | z");
+  EXPECT_EQ(Expression("(x | ~y | z) & (y | z)").toString(), "(x & y) | z");
   EXPECT_EQ(Expression("(x & ~y & z) | (y & z)").toString(), "(x & ~y & z) | (y & z)");
   EXPECT_EQ(Expression("(x | ~y | (x | ~y | z) & (y | z)) & (y | (x & ~y & z) | (y & z))").toString(),
-            "(x & y) | (x & z) | (y & z)");
-  EXPECT_EQ(Expression("~a & b | ~c -> a <-> b !<-> c").toString(),
-            "(a & b & ~c) | (a & ~b & c) | (~a & b & c) | (~a & c) | (~a & ~b) | (~b & c)");
-  EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~a <-> ~~b !<-> ~~c").toString(),
-            "(a & b & ~c) | (a & ~b & c) | (~a & b & c) | (~a & c) | (~a & ~b) | (~b & c)");
+            "(x & ~y & z) | (x & y) | (y & z)");
+  EXPECT_EQ(Expression("~a & b | ~c -> a <-> b !<-> c").toString(), "???");
+  EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~a <-> ~~b !<-> ~~c").toString(), "???");
 
   EXPECT_EQ(Expression("x=1&a").toString(), "a & x - 1 = 0");
   EXPECT_EQ(Expression("True & a = b").toString(), "a - b = 0");

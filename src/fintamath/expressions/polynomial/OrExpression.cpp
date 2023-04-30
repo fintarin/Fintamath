@@ -109,7 +109,43 @@ ArgumentPtr OrExpression::simplifyAnd(const ArgumentPtr &lhsChild, const Argumen
     return {};
   }
 
+  if (auto res = simplifyAbsorption(lhsChildren, rhsChildren)) {
+    return res;
+  }
+
   return simplifyResolution(lhsChildren, rhsChildren);
+}
+
+ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentsPtrVector &lhsChildren,
+                                             const ArgumentsPtrVector &rhsChildren) {
+  if (lhsChildren.size() == rhsChildren.size()) {
+    return {};
+  }
+
+  ArgumentsPtrVector maxChildren = lhsChildren.size() > rhsChildren.size() ? lhsChildren : rhsChildren;
+  ArgumentsPtrVector minChildren = lhsChildren.size() < rhsChildren.size() ? lhsChildren : rhsChildren;
+  bool absorptionFound = false;
+
+  for (size_t i = 0; i < maxChildren.size(); i += minChildren.size()) {
+    size_t j = 0;
+
+    for (; j < minChildren.size(); j++) {
+      if (*maxChildren[i + j] != *minChildren[j]) {
+        break;
+      }
+    }
+
+    if (j == minChildren.size()) {
+      absorptionFound = true;
+      break;
+    }
+  }
+
+  if (absorptionFound) {
+    return minChildren.size() > 1 ? makeFunctionExpression(And(), minChildren) : minChildren.front();
+  }
+
+  return {};
 }
 
 ArgumentPtr OrExpression::simplifyResolution(const ArgumentsPtrVector &lhsChildren,
