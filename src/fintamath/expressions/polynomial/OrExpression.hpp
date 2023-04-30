@@ -24,6 +24,10 @@ private:
   static ArgumentPtr simplifyEqual(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyNot(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr simplifyAnd(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+  static ArgumentPtr simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 };
 
 }

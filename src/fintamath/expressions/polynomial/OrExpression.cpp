@@ -36,11 +36,12 @@ ArgumentPtr OrExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChi
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
 
-  if (const auto lhsBool = cast<Boolean>(lhsChild)) {
-    return *lhsBool ? lhsChild : rhsChild;
+  if (auto res = simplifyBooleans(lhsChild, rhsChild)) {
+    return res;
   }
-  if (const auto rhsBool = cast<Boolean>(rhsChild)) {
-    return *rhsBool ? rhsChild : lhsChild;
+
+  if (auto res = simplifyAnd(lhsChild, rhsChild)) {
+    return res;
   }
 
   return {};
@@ -80,4 +81,73 @@ ArgumentPtr OrExpression::simplifyNot(const ArgumentPtr &lhsChild, const Argumen
   return {};
 }
 
+ArgumentPtr OrExpression::simplifyAnd(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+
+  if (!lhsExpr || !rhsExpr || !is<And>(lhsExpr->getFunction()) || !is<And>(rhsExpr->getFunction())) {
+    return {};
+  }
+
+  ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
+  ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
+
+  if (lhsChildren.size() != rhsChildren.size()) {
+    return {};
+  }
+
+  for (size_t i = 0; i < lhsChildren.size(); i++) {
+    ArgumentPtr lhsSubChild = lhsChildren[i];
+    ArgumentPtr rhsSubChild = rhsChildren[i];
+
+    bool isLhsSubChildNot = false;
+
+    if (auto lhsSubChildNotExpr = cast<IExpression>(lhsSubChild);
+        lhsSubChildNotExpr && is<Not>(lhsSubChildNotExpr->getFunction())) {
+
+      isLhsSubChildNot = true;
+      lhsSubChild = lhsSubChildNotExpr->getChildren().front();
+    }
+
+    bool isRhsSubChildNot = false;
+
+    if (auto rhsSubChildNotExpr = cast<IExpression>(rhsSubChild);
+        rhsSubChildNotExpr && is<Not>(rhsSubChildNotExpr->getFunction())) {
+
+      isRhsSubChildNot = true;
+      rhsSubChild = rhsSubChildNotExpr->getChildren().front();
+    }
+
+    if (*lhsSubChild != *rhsSubChild) {
+      return {};
+    }
+
+    if (isLhsSubChildNot != isRhsSubChildNot) {
+      lhsChildren.erase(lhsChildren.begin() + int64_t(i));
+      rhsChildren.erase(rhsChildren.begin() + int64_t(i));
+      break;
+    }
+  }
+
+  ArgumentPtr lhsRes = lhsChildren.size() > 1 ? makeRawFunctionExpression(And(), lhsChildren) : lhsChildren.front();
+  ArgumentPtr rhsRes = rhsChildren.size() > 1 ? makeRawFunctionExpression(And(), rhsChildren) : rhsChildren.front();
+
+  if (*lhsRes != *rhsRes) {
+    return {};
+  }
+
+  return lhsRes;
+}
+
+ArgumentPtr OrExpression::simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  if (const auto lhsBool = cast<Boolean>(lhsChild)) {
+    return *lhsBool ? lhsChild : rhsChild;
+  }
+
+  if (const auto rhsBool = cast<Boolean>(rhsChild)) {
+    return *rhsBool ? rhsChild : lhsChild;
+  }
+
+  return {};
+}
 }

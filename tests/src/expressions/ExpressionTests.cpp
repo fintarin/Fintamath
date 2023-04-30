@@ -413,6 +413,9 @@ TEST(ExpressionTests, stringConstructorTest) {
 
   EXPECT_EQ(Expression("a<->(True)<->(False)").toString(), "~a");
   EXPECT_EQ(Expression("a<->(True)!<->(False)").toString(), "a");
+  EXPECT_EQ(Expression("True & b & False & c").toString(), "False");
+  EXPECT_EQ(Expression("True | b | False | c").toString(), "True");
+  EXPECT_EQ(Expression("True | a | b | False").toString(), "True");
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a").toString(), "True");
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a<->a").toString(), "a");
   EXPECT_EQ(Expression("a&b->b&c").toString(), "~a | (b & c) | ~b");
@@ -420,30 +423,21 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("a&(b&c)").toString(), "a & b & c");
   EXPECT_EQ(Expression("a & ~b & c").toString(), "a & ~b & c");
   EXPECT_EQ(Expression("a | (~b & c)").toString(), "a | (~b & c)");
-  EXPECT_EQ(Expression("(a | ~b) & c").toString(), "(a | ~b) & c");
+  EXPECT_EQ(Expression("(a | ~b) & c").toString(), "(a & c) | (~b & c)");
   EXPECT_EQ(Expression("~(a & b)").toString(), "~a | ~b");
   EXPECT_EQ(Expression("~(a | b)").toString(), "~a & ~b");
   EXPECT_EQ(Expression("~(a & b & c)").toString(), "~a | ~b | ~c");
   EXPECT_EQ(Expression("~(a | b | c)").toString(), "~a & ~b & ~c");
   EXPECT_EQ(Expression("~(~a & ~a)").toString(), "a");
-  // TODO: improve logic expressions minimization
-  // EXPECT_EQ(Expression("~a & b | ~c -> d <-> f !<-> g").toString(),
-  //           "((a | ~b) & c | d | f) & ((~a & b | ~c) & ~d | ~f) & g | (((a | ~b) & c | d) & f | (~a & b | ~c) & ~d &
-  //           "
-  //           "~f) & ~g");
-  // EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~d <-> ~~f !<-> ~~g").toString(),
-  //           "((a | ~b) & c | d | f) & ((~a & b | ~c) & ~d | ~f) & g | (((a | ~b) & c | d) & f | (~a & b | ~c) & ~d &
-  //           "
-  //           "~f) & ~g");
-  EXPECT_EQ(Expression("True & b & False & c").toString(), "False");
-  EXPECT_EQ(Expression("True | b | False | c").toString(), "True");
-  EXPECT_EQ(Expression("(x | ~y | z) & (y | z)").toString(), "(x | ~y | z) & (y | z)");
-  EXPECT_EQ(Expression("(x & ~y & z) | (y & z)").toString(), "(x & ~y & z) | (y & z)");
-  // TODO: improve logic expressions minimization
-  // EXPECT_EQ(Expression("(x | ~y | (x | ~y | z) & (y | z)) & (y | (x & ~y & z) | (y & z))").toString(),
-  //           "(x | (x | ~y | z) & (y | z) | ~y) & (x & ~y & z | y | y & z)");
   EXPECT_EQ(Expression("b&c&d | a&c&d | a&b&c").toString(), "(a & b & c) | (a & c & d) | (b & c & d)");
-  EXPECT_EQ(Expression("True | a | b | False").toString(), "True");
+  EXPECT_EQ(Expression("(x | ~y | z) & (y | z)").toString(), "(x & y) | (x & z) | z");
+  EXPECT_EQ(Expression("(x & ~y & z) | (y & z)").toString(), "(x & ~y & z) | (y & z)");
+  EXPECT_EQ(Expression("(x | ~y | (x | ~y | z) & (y | z)) & (y | (x & ~y & z) | (y & z))").toString(),
+            "(x & y) | (x & z) | (y & z)");
+  EXPECT_EQ(Expression("~a & b | ~c -> a <-> b !<-> c").toString(),
+            "(a & b & ~c) | (a & ~b & c) | (~a & b & c) | (~a & c) | (~a & ~b) | (~b & c)");
+  EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~a <-> ~~b !<-> ~~c").toString(),
+            "(a & b & ~c) | (a & ~b & c) | (~a & b & c) | (~a & c) | (~a & ~b) | (~b & c)");
 
   EXPECT_EQ(Expression("x=1&a").toString(), "a & x - 1 = 0");
   EXPECT_EQ(Expression("True & a = b").toString(), "a - b = 0");
@@ -504,9 +498,6 @@ TEST(ExpressionTests, stringConstructorLargeTest) {
           .toString(),
       "~a");
 
-  // TODO: improve logic expressions minimization
-  // EXPECT_EQ(Expression("a<->b<->c<->d<->e<->f<->g<->h").toString(), "???");
-
   EXPECT_EQ(
       Expression("(x+y)^20").toString(),
       "x^20 + 20 x^19 y + 190 x^18 y^2 + 1140 x^17 y^3 + 4845 x^16 y^4 + 15504 x^15 y^5 + 38760 x^14 y^6 + 77520 x^13 "
@@ -565,6 +556,18 @@ TEST(ExpressionTests, stringConstructorLargeTest) {
       "sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(x)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))"
       ")))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))"
       ")");
+
+  EXPECT_EQ(Expression("a & b & c & d & e & f & g & h & i & j & k & l & m & n & o & p & q & r & s & t & u & v & w & x "
+                       "& y & z & x_1 & x_2 & x_3 | x_4")
+                .toString(),
+            "(a & b & c & d & e & f & g & h & i & j & k & l & m & n & o & p & q & r & s & t & u & v & w & x & x_1 & "
+            "x_2 & x_3 & y & z) | x_4");
+
+  EXPECT_EQ(Expression("a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x "
+                       "| y | z | x_1 | x_2 | x_3 & x_4")
+                .toString(),
+            "a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | x_1 | x_2 "
+            "| (x_3 & x_4) | y | z");
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
