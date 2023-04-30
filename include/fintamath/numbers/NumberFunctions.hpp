@@ -16,10 +16,6 @@ inline std::unique_ptr<INumber> abs(const INumber &rhs) {
   return cast<INumber>(rhs.clone());
 }
 
-inline std::unique_ptr<INumber> inv(const INumber &rhs) {
-  return ONE / rhs;
-}
-
 template <typename Lhs, typename Rhs,
           typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs>>>
 std::unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
