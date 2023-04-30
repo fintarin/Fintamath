@@ -32,6 +32,34 @@ std::string OrExpression::childToString(const ArgumentPtr &inChild, const Argume
   return prevChild ? (putInSpaces(func->toString()) + result) : result;
 }
 
+ArgumentPtr OrExpression::postSimplify() const {
+  auto simplObj = IPolynomExpression::postSimplify();
+  auto simpl = cast<OrExpression>(simplObj);
+
+  if (!simpl) {
+    return simplObj;
+  }
+
+  auto simplChildren = simpl->children;
+  auto simplChildrenSizeInitial = simplChildren.size();
+
+  for (size_t i = 0; i + 1 < simplChildren.size(); i++) {
+    for (size_t j = i + 1; j < simplChildren.size(); j++) {
+      if (auto res = simplifyAbsorption(simplChildren[i], simplChildren[j])) {
+        simplChildren[i] = res;
+        simplChildren.erase(simplChildren.begin() + int64_t(j));
+        break;
+      }
+    }
+  }
+
+  if (simplChildren.size() != simplChildrenSizeInitial) {
+    return simplChildren.size() > 1 ? makeFunctionExpression(Or(), simplChildren) : simplChildren.front();
+  }
+
+  return simpl;
+}
+
 ArgumentPtr OrExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const {
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
@@ -82,75 +110,17 @@ ArgumentPtr OrExpression::simplifyNot(const ArgumentPtr &lhsChild, const Argumen
 }
 
 ArgumentPtr OrExpression::simplifyAnd(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  ArgumentPtr lhs = lhsChild;
-  ArgumentPtr rhs = rhsChild;
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
-
-  ArgumentsPtrVector lhsChildren;
-  ArgumentsPtrVector rhsChildren;
-
-  if (lhsExpr && is<And>(lhsExpr->getFunction())) {
-    lhsChildren = lhsExpr->getChildren();
-  }
-  else {
-    lhsChildren.emplace_back(lhs);
-  }
-
-  if (rhsExpr && is<And>(rhsExpr->getFunction())) {
-    rhsChildren = rhsExpr->getChildren();
-  }
-  else {
-    rhsChildren.emplace_back(rhs);
-  }
-
-  if (lhsChildren.size() == 1 && rhsChildren.size() == 1) {
+  if (!lhsExpr || !rhsExpr || !is<And>(lhsExpr->getFunction()) || !is<And>(rhsExpr->getFunction())) {
     return {};
   }
 
-  if (auto res = simplifyAbsorption(lhsChildren, rhsChildren)) {
-    return res;
-  }
+  ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
+  ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
 
-  return simplifyResolution(lhsChildren, rhsChildren);
-}
-
-ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentsPtrVector &lhsChildren,
-                                             const ArgumentsPtrVector &rhsChildren) {
-  if (lhsChildren.size() == rhsChildren.size()) {
-    return {};
-  }
-
-  ArgumentsPtrVector maxChildren = lhsChildren.size() > rhsChildren.size() ? lhsChildren : rhsChildren;
-  ArgumentsPtrVector minChildren = lhsChildren.size() < rhsChildren.size() ? lhsChildren : rhsChildren;
-  bool absorptionFound = false;
-
-  for (size_t i = 0; i < maxChildren.size(); i += minChildren.size()) {
-    size_t j = 0;
-
-    for (; j < minChildren.size(); j++) {
-      if (*maxChildren[i + j] != *minChildren[j]) {
-        break;
-      }
-    }
-
-    if (j == minChildren.size()) {
-      absorptionFound = true;
-      break;
-    }
-  }
-
-  if (absorptionFound) {
-    return minChildren.size() > 1 ? makeFunctionExpression(And(), minChildren) : minChildren.front();
-  }
-
-  return {};
-}
-
-ArgumentPtr OrExpression::simplifyResolution(const ArgumentsPtrVector &lhsChildren,
-                                             const ArgumentsPtrVector &rhsChildren) {
-  if (lhsChildren.size() != rhsChildren.size()) {
+  if (rhsChildren.size() != lhsChildren.size()) {
     return {};
   }
 
@@ -199,6 +169,52 @@ ArgumentPtr OrExpression::simplifyResolution(const ArgumentsPtrVector &lhsChildr
   resultChildren.erase(resultChildren.begin() + resolutionIndex);
 
   return resultChildren.size() > 1 ? makeFunctionExpression(And(), resultChildren) : resultChildren.front();
+}
+
+ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  ArgumentPtr lhs = lhsChild;
+  ArgumentPtr rhs = rhsChild;
+
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+
+  ArgumentsPtrVector lhsChildren;
+  ArgumentsPtrVector rhsChildren;
+
+  if (lhsExpr && is<And>(lhsExpr->getFunction())) {
+    lhsChildren = lhsExpr->getChildren();
+  }
+  else {
+    lhsChildren.emplace_back(lhs);
+  }
+
+  if (rhsExpr && is<And>(rhsExpr->getFunction())) {
+    rhsChildren = rhsExpr->getChildren();
+  }
+  else {
+    rhsChildren.emplace_back(rhs);
+  }
+
+  if (lhsChildren.size() == rhsChildren.size()) {
+    return {};
+  }
+
+  ArgumentsPtrVector maxChildren = lhsChildren.size() > rhsChildren.size() ? lhsChildren : rhsChildren;
+  ArgumentsPtrVector minChildren = lhsChildren.size() < rhsChildren.size() ? lhsChildren : rhsChildren;
+  size_t matchCount = 0;
+
+  for (size_t i = 0, j = 0; i < maxChildren.size() && j < minChildren.size(); i++) {
+    if (*maxChildren[i] == *minChildren[j]) {
+      matchCount++;
+      j++;
+    }
+  }
+
+  if (matchCount == minChildren.size()) {
+    return minChildren.size() > 1 ? makeFunctionExpression(And(), minChildren) : minChildren.front();
+  }
+
+  return {};
 }
 
 ArgumentPtr OrExpression::simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {

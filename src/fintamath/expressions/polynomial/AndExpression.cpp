@@ -82,11 +82,8 @@ ArgumentPtr AndExpression::simplifyNot(const ArgumentPtr &lhsChild, const Argume
 }
 
 ArgumentPtr AndExpression::simplifyOr(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  ArgumentPtr lhs = lhsChild;
-  ArgumentPtr rhs = rhsChild;
-
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
   ArgumentsPtrVector lhsChildren;
   ArgumentsPtrVector rhsChildren;
@@ -95,30 +92,25 @@ ArgumentPtr AndExpression::simplifyOr(const ArgumentPtr &lhsChild, const Argumen
     lhsChildren = lhsExpr->getChildren();
   }
   else {
-    lhsChildren.emplace_back(lhs);
+    lhsChildren.emplace_back(lhsChild);
   }
 
   if (rhsExpr && is<Or>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
   else {
-    rhsChildren.emplace_back(rhs);
+    rhsChildren.emplace_back(rhsChild);
   }
 
   if (lhsChildren.size() == 1 && rhsChildren.size() == 1) {
     return {};
   }
 
-  return andPolynoms(lhsChildren, rhsChildren);
-}
-
-ArgumentPtr AndExpression::andPolynoms(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) {
   ArgumentsPtrVector resultVect;
 
   for (const auto &lhsSubChild : lhsChildren) {
     for (const auto &rhsSubChild : rhsChildren) {
-      resultVect.emplace_back(
-          makeRawFunctionExpression(And(), ArgumentsPtrVector{lhsSubChild->clone(), rhsSubChild->clone()}));
+      resultVect.emplace_back(makeRawFunctionExpression(And(), ArgumentsPtrVector{lhsSubChild, rhsSubChild}));
     }
   }
 

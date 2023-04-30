@@ -14,6 +14,8 @@ public:
 protected:
   std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
+  ArgumentPtr postSimplify() const override;
+
   ArgumentPtr postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const override;
 
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
@@ -27,9 +29,7 @@ private:
 
   static ArgumentPtr simplifyAnd(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyAbsorption(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren);
-
-  static ArgumentPtr simplifyResolution(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren);
+  static ArgumentPtr simplifyAbsorption(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 };

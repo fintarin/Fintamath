@@ -27,8 +27,6 @@ private:
 
   static ArgumentPtr simplifyOr(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr andPolynoms(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren);
-
   static ArgumentPtr simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 };
 
