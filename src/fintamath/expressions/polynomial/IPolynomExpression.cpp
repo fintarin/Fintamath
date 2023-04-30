@@ -245,7 +245,7 @@ int IPolynomExpression::comparatorPolynomsAndBinaryFunctions(const ArgumentPtr &
     }
   }
   else if (lhsExpr && rhsExpr && (is<IPolynomExpression>(lhsExpr) || is<IPolynomExpression>(rhsExpr))) {
-    if (int res = comparatorChildren(lhs, rhs); res != 0) {
+    if (int res = comparatorChildren(lhs, rhs, true); res != 0) {
       return res;
     }
   }
@@ -406,7 +406,7 @@ int IPolynomExpression::comparatorNonExpressions(const ArgumentPtr &lhs, const A
   return lhs->toString() < rhs->toString() ? -1 : 1;
 }
 
-int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool ignoreUnary) const {
   const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
   const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
@@ -439,7 +439,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const Argumen
   }
 
   if (lhsChildren.size() > 1 || rhsChildren.size() > 1) {
-    if (int res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
+    if (int res = comparatorChildren(lhsChildren, rhsChildren, ignoreUnary); res != 0) {
       return res;
     }
   }
@@ -447,8 +447,8 @@ int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const Argumen
   return 0;
 }
 
-int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
-                                           const ArgumentsPtrVector &rhsChildren) const {
+int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
+                                           bool ignoreUnary) const {
 
   size_t lhsStart = 0;
   for (; lhsStart < lhsChildren.size(); lhsStart++) {
@@ -471,7 +471,22 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
   }
 
   for (size_t i = lhsStart, j = rhsStart; i < lhsChildren.size() && j < rhsChildren.size(); i++, j++) {
-    if (int res = comparator(lhsChildren[i], rhsChildren[j]); res != 0) {
+    ArgumentPtr compLhs = lhsChildren[i];
+    ArgumentPtr compRhs = rhsChildren[j];
+
+    if (ignoreUnary) {
+      if (const auto lhsExpr = cast<IExpression>(compLhs);
+          lhsExpr && lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
+        compLhs = lhsExpr->getChildren().front();
+      }
+
+      if (const auto rhsExpr = cast<IExpression>(compRhs);
+          rhsExpr && rhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
+        compRhs = rhsExpr->getChildren().front();
+      }
+    }
+
+    if (int res = comparator(compLhs, compRhs); res != 0) {
       return res;
     }
   }
