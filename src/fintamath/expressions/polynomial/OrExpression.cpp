@@ -82,19 +82,43 @@ ArgumentPtr OrExpression::simplifyNot(const ArgumentPtr &lhsChild, const Argumen
 }
 
 ArgumentPtr OrExpression::simplifyAnd(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+  ArgumentPtr lhs = lhsChild;
+  ArgumentPtr rhs = rhsChild;
 
-  if (!lhsExpr || !rhsExpr || !is<And>(lhsExpr->getFunction()) || !is<And>(rhsExpr->getFunction())) {
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+
+  ArgumentsPtrVector lhsChildren;
+  ArgumentsPtrVector rhsChildren;
+
+  if (lhsExpr && is<And>(lhsExpr->getFunction())) {
+    lhsChildren = lhsExpr->getChildren();
+  }
+  else {
+    lhsChildren.emplace_back(lhs);
+  }
+
+  if (rhsExpr && is<And>(rhsExpr->getFunction())) {
+    rhsChildren = rhsExpr->getChildren();
+  }
+  else {
+    rhsChildren.emplace_back(rhs);
+  }
+
+  if (lhsChildren.size() == 1 && rhsChildren.size() == 1) {
     return {};
   }
 
-  ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
-  ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
+  return simplifyResolution(lhsChildren, rhsChildren);
+}
 
+ArgumentPtr OrExpression::simplifyResolution(const ArgumentsPtrVector &lhsChildren,
+                                             const ArgumentsPtrVector &rhsChildren) {
   if (lhsChildren.size() != rhsChildren.size()) {
     return {};
   }
+
+  int64_t resolutionIndex = -1;
 
   for (size_t i = 0; i < lhsChildren.size(); i++) {
     ArgumentPtr lhsSubChild = lhsChildren[i];
@@ -123,20 +147,22 @@ ArgumentPtr OrExpression::simplifyAnd(const ArgumentPtr &lhsChild, const Argumen
     }
 
     if (isLhsSubChildNot != isRhsSubChildNot) {
-      lhsChildren.erase(lhsChildren.begin() + int64_t(i));
-      rhsChildren.erase(rhsChildren.begin() + int64_t(i));
-      break;
+      if (resolutionIndex != -1) {
+        return {};
+      }
+
+      resolutionIndex = int64_t(i);
     }
   }
 
-  ArgumentPtr lhsRes = lhsChildren.size() > 1 ? makeRawFunctionExpression(And(), lhsChildren) : lhsChildren.front();
-  ArgumentPtr rhsRes = rhsChildren.size() > 1 ? makeRawFunctionExpression(And(), rhsChildren) : rhsChildren.front();
-
-  if (*lhsRes != *rhsRes) {
+  if (resolutionIndex == -1) {
     return {};
   }
 
-  return lhsRes;
+  ArgumentsPtrVector resultChildren = lhsChildren;
+  resultChildren.erase(resultChildren.begin() + resolutionIndex);
+
+  return resultChildren.size() > 1 ? makeFunctionExpression(And(), resultChildren) : resultChildren.front();
 }
 
 ArgumentPtr OrExpression::simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {

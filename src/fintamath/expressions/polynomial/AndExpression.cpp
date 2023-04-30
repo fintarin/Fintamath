@@ -109,6 +109,10 @@ ArgumentPtr AndExpression::simplifyOr(const ArgumentPtr &lhsChild, const Argumen
     return {};
   }
 
+  return andPolynoms(lhsChildren, rhsChildren);
+}
+
+ArgumentPtr AndExpression::andPolynoms(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) {
   ArgumentsPtrVector resultVect;
 
   for (const auto &lhsSubChild : lhsChildren) {
