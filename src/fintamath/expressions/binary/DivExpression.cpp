@@ -196,10 +196,6 @@ ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     }
   }
 
-  if (lhsChildren.empty() && rhsChildren.empty()) {
-    return ONE.clone();
-  }
-
   // TODO: pass negations from denominator to numerator: 28/(-x) => -28/x
 
   ArgumentPtr numerator;
@@ -216,10 +212,6 @@ ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   }
   else {
     denominator = rhsChildren.front();
-  }
-
-  if (lhsChildren.empty()) {
-    return makeFunctionExpression(Div(), {ONE.clone(), denominator});
   }
 
   if (rhsChildren.empty()) {

@@ -194,6 +194,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-a)(-b)").toString(), "a b");
   EXPECT_EQ(Expression("(a)(-b)").toString(), "-a b");
   EXPECT_EQ(Expression("(-a)(b)").toString(), "-a b");
+  EXPECT_EQ(Expression("(5 b)/(3 a)").toString(), "(5/3 b)/a");
+  EXPECT_EQ(Expression("(a b)/(a b)").toString(), "1");
 
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
   EXPECT_EQ(Expression("a.2").toString(), "1/5 a");

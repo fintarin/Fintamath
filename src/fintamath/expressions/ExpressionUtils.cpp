@@ -25,9 +25,6 @@ bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex) {
       openBracketIndex = i + 1;
       return true;
     }
-    if (brackets < 0) {
-      throw InvalidInputException(Tokenizer::tokensToString(tokens));
-    }
   }
 
   throw InvalidInputException(Tokenizer::tokensToString(tokens));
