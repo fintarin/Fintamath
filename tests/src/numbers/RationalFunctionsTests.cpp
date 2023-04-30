@@ -2,6 +2,8 @@
 
 #include "fintamath/numbers/RationalFunctions.hpp"
 
+#include "fintamath/numbers/NumberFunctions.hpp"
+
 using namespace fintamath;
 
 TEST(RationalFunctionsTests, absTest) {

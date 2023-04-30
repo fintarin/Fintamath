@@ -8,6 +8,15 @@
 
 namespace fintamath {
 
+template <typename Rhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Rhs> && !std::is_same_v<INumber, Rhs>>>
+inline Rhs abs(const Rhs &rhs) {
+  if (rhs < ZERO) {
+    return -rhs;
+  }
+
+  return rhs;
+}
+
 inline std::unique_ptr<INumber> abs(const INumber &rhs) {
   if (rhs < ZERO) {
     return -rhs;

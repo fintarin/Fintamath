@@ -5,7 +5,7 @@
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/numbers/NumberFunctions.hpp"
 
 using namespace fintamath;
 

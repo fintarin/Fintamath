@@ -4,6 +4,4 @@
 
 namespace fintamath {
 
-Rational abs(const Rational &rhs);
-
 }

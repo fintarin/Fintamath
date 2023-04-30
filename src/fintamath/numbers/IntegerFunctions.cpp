@@ -7,14 +7,6 @@
 
 namespace fintamath {
 
-Integer abs(const Integer &rhs) {
-  if (rhs < 0) {
-    return -rhs;
-  }
-
-  return rhs;
-}
-
 Integer sqrt(const Integer &rhs) {
   if (rhs < 0) {
     throw UndefinedFunctionException("sqrt", {rhs.toString()});
