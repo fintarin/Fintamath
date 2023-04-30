@@ -338,9 +338,9 @@ void Expression::validateChild(const ArgumentPtr &inChild) const {
     validateFunctionArgs(func, children);
   }
   else {
-    for (int64_t i = 0; i < int64_t(children.size()) - 1; i++) {
-      for (int64_t j = i + 1; j < int64_t(children.size()); j++) {
-        validateFunctionArgs(func, {children[size_t(i)], children[size_t(j)]});
+    for (size_t i = 0; i + 1 < children.size(); i++) {
+      for (size_t j = i + 1; j < children.size(); j++) {
+        validateFunctionArgs(func, {children[i], children[j]});
       }
     }
   }
