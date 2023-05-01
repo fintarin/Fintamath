@@ -42,7 +42,7 @@ git clone https://github.com/fintarin/Fintamath.git fintamath
 
 ### Standalone Project
 
-Build.
+Build shared in Release mode.
 
 ```sh
 cd fintamath
@@ -64,7 +64,7 @@ target_link_libraries(example fintamath)
 
 Build in Debug mode with tests enabled.
 ```sh
-cmake -Bbuild -DCMAKE_BUILD_TYPE=Debug -Dfintamath_build_tests=ON
+cmake -Bbuild -DCMAKE_BUILD_TYPE=Debug -Dfintamath_build_shared=OFF -Dfintamath_build_tests=ON
 cmake --build build
 ```
 
