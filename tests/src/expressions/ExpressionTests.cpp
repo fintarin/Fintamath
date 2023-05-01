@@ -444,7 +444,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a | b | c) & (a | b)").toString(), "a | b");
   EXPECT_EQ(Expression("(a & b & c) | (a & c)").toString(), "a & c");
   EXPECT_EQ(Expression("(a & ~b) | (a & b)").toString(), "a");
-  EXPECT_EQ(Expression("(x | ~y | z) & (y | z)").toString(), "(x & y) | z");
+  EXPECT_EQ(Expression("(a | b | c) & (a | b)").toString(), "a | b");
+  EXPECT_EQ(Expression("~(a & b) | ~(~a & c)").toString(), "True");
+  EXPECT_EQ(Expression("~(a | b) & ~(~a | c)").toString(), "False");
   EXPECT_EQ(Expression("(x & ~y & z) | (y & z)").toString(), "(x & ~y & z) | (y & z)");
   EXPECT_EQ(Expression("(x | ~y | (x | ~y | z) & (y | z)) & (y | (x & ~y & z) | (y & z))").toString(),
             "(x & ~y & z) | (x & y) | (y & z)");

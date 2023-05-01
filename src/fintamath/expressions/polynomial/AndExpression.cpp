@@ -35,18 +35,15 @@ ArgumentPtr AndExpression::logicNegate() const {
 // TODO: improve logic minimization
 AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForSimplify() const {
   return {
-      &AndExpression::simplifyEqual, //
-      &AndExpression::simplifyNot,   //
+      &AndExpression::simplifyBooleans, //
+      &AndExpression::simplifyEqual,    //
+      &AndExpression::simplifyNot,      //
   };
 }
 
 ArgumentPtr AndExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const {
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
-
-  if (auto res = simplifyBooleans(lhsChild, rhsChild)) {
-    return res;
-  }
 
   if (auto res = simplifyOr(lhsChild, rhsChild)) {
     return res;

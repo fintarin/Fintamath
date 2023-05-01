@@ -64,10 +64,6 @@ ArgumentPtr OrExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChi
   const ArgumentPtr &lhsChild = children[lhsChildNum];
   const ArgumentPtr &rhsChild = children[rhsChildNum];
 
-  if (auto res = simplifyBooleans(lhsChild, rhsChild)) {
-    return res;
-  }
-
   if (auto res = simplifyAnd(lhsChild, rhsChild)) {
     return res;
   }
@@ -78,8 +74,9 @@ ArgumentPtr OrExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChi
 // TODO: improve logic minimization
 OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForSimplify() const {
   return {
-      &OrExpression::simplifyEqual, //
-      &OrExpression::simplifyNot,   //
+      &OrExpression::simplifyBooleans, //
+      &OrExpression::simplifyEqual,    //
+      &OrExpression::simplifyNot,      //
   };
 }
 
