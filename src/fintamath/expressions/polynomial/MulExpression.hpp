@@ -12,6 +12,8 @@ public:
   ArgumentPtr negate() const override;
 
 protected:
+  ArgumentPtr postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const override;
+
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
   bool isTermsOrderInversed() const override;

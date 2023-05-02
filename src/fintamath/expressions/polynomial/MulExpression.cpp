@@ -22,7 +22,6 @@ const MulExpression::SimplifyFunctionsVector MulExpression::simplifyFunctions = 
     &MulExpression::simplifyDivisions, //
     &MulExpression::mulRates,          //
     &MulExpression::simplifyNumbers,   //
-    &MulExpression::mulPolynoms,       //
 };
 
 MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(MUL, inChildren) {
@@ -40,6 +39,17 @@ ArgumentPtr MulExpression::negate() const {
   MulExpression mulExpr = *this;
   mulExpr.addElement(NEG_ONE.clone());
   return mulExpr.simplify();
+}
+
+ArgumentPtr MulExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const {
+  const ArgumentPtr &lhsChild = children[lhsChildNum];
+  const ArgumentPtr &rhsChild = children[rhsChildNum];
+
+  if (auto res = mulPolynoms(lhsChild, rhsChild)) {
+    return res;
+  }
+
+  return {};
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
@@ -106,11 +116,8 @@ ArgumentPtr MulExpression::simplifyDivisions(const ArgumentPtr &lhsChild, const 
 }
 
 ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  ArgumentPtr lhs = lhsChild;
-  ArgumentPtr rhs = rhsChild;
-
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
   if (lhsExpr && rhsExpr && !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
     return {};
@@ -123,14 +130,14 @@ ArgumentPtr MulExpression::mulPolynoms(const ArgumentPtr &lhsChild, const Argume
     lhsChildren = lhsExpr->getChildren();
   }
   else {
-    lhsChildren.emplace_back(lhs);
+    lhsChildren.emplace_back(lhsChild);
   }
 
   if (rhsExpr && is<Add>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
   else {
-    rhsChildren.emplace_back(rhs);
+    rhsChildren.emplace_back(rhsChild);
   }
 
   if (lhsChildren.size() == 1 && rhsChildren.size() == 1) {
