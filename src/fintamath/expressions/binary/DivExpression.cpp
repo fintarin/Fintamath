@@ -59,12 +59,6 @@ ArgumentPtr DivExpression::postSimplify() const {
   auto rhsInt = cast<Integer>(simplExpr->rhsChild);
 
   if (rhsInt) {
-    if (*rhsInt == ZERO) {
-      // TODO: return infinity or undefined
-      throw UndefinedBinaryOperatorException(DIV.toString(), simplExpr->lhsChild->toString(),
-                                             simplExpr->rhsChild->toString());
-    }
-
     if (*rhsInt == ONE) {
       return simplExpr->lhsChild;
     }
@@ -91,6 +85,10 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() 
 }
 
 ArgumentPtr DivExpression::numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*rhs == ZERO) {
+    throw UndefinedBinaryOperatorException(DIV.toString(), lhs->toString(), rhs->toString());
+  }
+
   if (DIV.doArgsMatch({ONE, *rhs})) {
     return makeFunctionExpression(Mul(), {lhs, DIV(ONE, *rhs)});
   }
