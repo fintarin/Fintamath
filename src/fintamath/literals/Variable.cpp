@@ -14,15 +14,14 @@ Variable::Variable(std::string inName) {
     throw InvalidInputException(inName);
   }
 
-  char ch = inName.front();
-  if ((ch < 'a' || ch > 'z') && (ch < 'A' || ch > 'Z')) {
+  if (char ch = inName.front(); (ch < 'a' || ch > 'z') && (ch < 'A' || ch > 'Z')) {
     throw InvalidInputException(inName);
   }
 
   name = std::move(inName);
 }
 
-Variable::Variable(std::string inName, const Integer &inIndex) : Variable(std::move(inName)) {
+Variable::Variable(std::string inName, Integer inIndex) : Variable(std::move(inName)) {
   if (inIndex <= ZERO) {
     throw InvalidInputException(inName + "_" + inIndex.toString());
   }
