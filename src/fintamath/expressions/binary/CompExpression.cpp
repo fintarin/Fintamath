@@ -128,7 +128,6 @@ ArgumentPtr CompExpression::logicNegate() const {
 
 void CompExpression::markAsSolution() {
   isSolution = true;
-  convertToSolution();
 }
 
 void CompExpression::addOppositeFunctions(const std::shared_ptr<IFunction> &function,
@@ -155,37 +154,6 @@ std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const std::s
   }
 
   return {};
-}
-
-void CompExpression::convertToSolution() {
-  auto vars = getVariables();
-
-  if (vars.size() != 1) {
-    return;
-  }
-
-  auto var = cast<Variable>(vars.front());
-
-  if (auto lhsAdd = cast<IExpression>(lhsChild); lhsAdd && is<Add>(lhsAdd->getFunction())) {
-    ArgumentsPtrVector rhsPolynom = {rhsChild};
-    ArgumentsPtrVector lhsPolynom = {ZERO.clone()};
-
-    for (const auto &lhsAddChild : lhsAdd->getChildren()) {
-      if (const auto lhsAddChildExpr = cast<IExpression>(lhsAddChild);
-          lhsAddChildExpr && hasVariable(lhsAddChildExpr, var)) {
-        lhsPolynom.emplace_back(lhsAddChild);
-      }
-      else if (const auto lhsChildVar = cast<Variable>(lhsAddChild); lhsChildVar && *lhsChildVar == var) {
-        lhsPolynom.emplace_back(lhsAddChild);
-      }
-      else {
-        rhsPolynom.emplace_back(makeRawFunctionExpression(Neg(), {lhsAddChild}));
-      }
-    }
-
-    lhsChild = makeFunctionExpression(Add(), lhsPolynom);
-    rhsChild = makeFunctionExpression(Add(), rhsPolynom);
-  }
 }
 
 }

@@ -36,8 +36,6 @@ private:
 
   static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> logicOppositeFunctionsMap;
 
-  void convertToSolution();
-
 private:
   bool isSolution = false;
 };
