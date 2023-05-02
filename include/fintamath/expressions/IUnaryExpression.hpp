@@ -15,13 +15,21 @@ public:
   void setChildren(const ArgumentsPtrVector &childVect) override;
 
 protected:
+  using SimplifyFunction = std::function<ArgumentPtr(const ArgumentPtr &)>;
+
+  using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
+
   ArgumentPtr simplify() const final;
 
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
 
+  virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
+
 private:
+  ArgumentPtr globalSimplify() const;
+
   std::string postfixToString() const;
 
   std::string prefixToString() const;

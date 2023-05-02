@@ -15,11 +15,20 @@ public:
   void setChildren(const ArgumentsPtrVector &childVect) final;
 
 protected:
+  using SimplifyFunction = std::function<ArgumentPtr(const ArgumentPtr &, const ArgumentPtr &)>;
+
+  using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
+
+  virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
+
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
 
   ArgumentPtr simplify() const final;
+
+private:
+  ArgumentPtr globalSimplify() const;
 
 protected:
   std::shared_ptr<IFunction> func;

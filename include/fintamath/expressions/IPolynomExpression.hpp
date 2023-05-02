@@ -25,11 +25,11 @@ protected:
 
   virtual ArgumentPtr postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const;
 
-  ArgumentPtr simplify() const final;
-
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
   virtual std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const = 0;
+
+  ArgumentPtr simplify() const final;
 
   ArgumentPtr preSimplify() const override;
 

@@ -34,6 +34,9 @@ private:
   static ArgumentPtr simplifyAbsorption(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
+private:
+  static const OrExpression::SimplifyFunctionsVector simplifyFunctions;
 };
 
 }

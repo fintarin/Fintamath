@@ -14,6 +14,13 @@ namespace fintamath {
 
 const Div DIV;
 
+const DivExpression::SimplifyFunctionsVector DivExpression::simplifyFunctions = {
+    &DivExpression::numbersSimplify, //
+    &DivExpression::divSimplify,     //
+    &DivExpression::mulSimplify,     //
+    &DivExpression::sumSimplify,     //
+};
+
 DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
     : IBinaryExpressionCRTP(DIV, inLhsChild, inRhsChild) {
 }
@@ -46,10 +53,6 @@ ArgumentPtr DivExpression::preSimplify() const {
 
   if (!simplExpr || *simplExpr->getChildren().back() == ZERO) {
     return simpl;
-  }
-
-  if (auto res = simplExpr->globalSimplify()) {
-    return res;
   }
 
   return simpl;
@@ -91,55 +94,43 @@ ArgumentPtr DivExpression::postSimplify() const {
     return simplExpr->lhsChild;
   }
 
-  if (auto res = simplExpr->globalSimplify()) {
-    return res;
-  }
-
   return simpl;
 }
 
-ArgumentPtr DivExpression::globalSimplify() const {
-  if (DIV.doArgsMatch({ONE, *rhsChild})) {
-    return makeFunctionExpression(Mul(), {lhsChild, DIV(ONE, *rhsChild)});
-  }
+DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() const {
+  return simplifyFunctions;
+}
 
-  if (auto res = divSimplify()) {
-    return res;
-  }
-
-  if (auto res = mulSimplify()) {
-    return res;
-  }
-
-  if (auto res = sumSimplify()) {
-    return res;
+ArgumentPtr DivExpression::numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (DIV.doArgsMatch({ONE, *rhs})) {
+    return makeFunctionExpression(Mul(), {lhs, DIV(ONE, *rhs)});
   }
 
   return {};
 }
 
-ArgumentPtr DivExpression::divSimplify() const {
+ArgumentPtr DivExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentsPtrVector numeratorChildren;
   ArgumentsPtrVector denominatorChildren;
 
   bool containsDivExpression = false;
 
-  if (auto lhsDivExpr = cast<DivExpression>(lhsChild)) {
+  if (auto lhsDivExpr = cast<DivExpression>(lhs)) {
     numeratorChildren.emplace_back(lhsDivExpr->getChildren().front());
     denominatorChildren.emplace_back(lhsDivExpr->getChildren().back());
     containsDivExpression = true;
   }
   else {
-    numeratorChildren.emplace_back(lhsChild);
+    numeratorChildren.emplace_back(lhs);
   }
 
-  if (auto rhsDivExpr = cast<DivExpression>(rhsChild)) {
+  if (auto rhsDivExpr = cast<DivExpression>(rhs)) {
     denominatorChildren.emplace_back(rhsDivExpr->getChildren().front());
     numeratorChildren.emplace_back(rhsDivExpr->getChildren().back());
     containsDivExpression = true;
   }
   else {
-    denominatorChildren.emplace_back(rhsChild);
+    denominatorChildren.emplace_back(rhs);
   }
 
   if (!containsDivExpression) {
@@ -165,21 +156,21 @@ ArgumentPtr DivExpression::divSimplify() const {
   return makeFunctionExpression(DIV, {numerator, denominator});
 }
 
-ArgumentPtr DivExpression::mulSimplify() const {
+ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentsPtrVector lhsChildren;
-  if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
+  if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
   }
   else {
-    lhsChildren = {lhsChild};
+    lhsChildren = {lhs};
   }
 
   ArgumentsPtrVector rhsChildren;
-  if (const auto rhsExpr = cast<IExpression>(rhsChild); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
+  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
   else {
-    rhsChildren = {rhsChild};
+    rhsChildren = {rhs};
   }
 
   size_t lhsChildrenSizeInitial = lhsChildren.size();
@@ -242,7 +233,7 @@ ArgumentPtr DivExpression::mulSimplify() const {
   return {};
 }
 
-ArgumentPtr DivExpression::sumSimplify() const {
+ArgumentPtr DivExpression::sumSimplify(const ArgumentPtr & /*lhs*/, const ArgumentPtr & /*rhs*/) {
   // TODO: implement
   return {};
 }
@@ -262,18 +253,17 @@ ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const Argume
   return {};
 }
 
-std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
-  if (const auto &powExpr = cast<IExpression>(rhsChild); powExpr && is<Pow>(powExpr->getFunction())) {
+std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhs) {
+  if (const auto &powExpr = cast<IExpression>(rhs); powExpr && is<Pow>(powExpr->getFunction())) {
     ArgumentsPtrVector powExprChildren = powExpr->getChildren();
     return {powExprChildren[1], powExprChildren[0]};
   }
 
-  return {ONE.clone(), rhsChild};
+  return {ONE.clone(), rhs};
 }
 
 ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeFunctionExpression(Add(), rates);
   return makeRawFunctionExpression(Pow(), {value, ratesSum});
 }
-
 }

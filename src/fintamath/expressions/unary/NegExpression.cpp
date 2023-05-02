@@ -7,20 +7,21 @@ namespace fintamath {
 
 const Neg NEG;
 
+const NegExpression::SimplifyFunctionsVector NegExpression::simplifyFunctions = {
+    &NegExpression::simplifyNeg, //
+};
+
 NegExpression::NegExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(NEG, inChild) {
 }
 
 ArgumentPtr NegExpression::preSimplify() const {
   auto simpl = IUnaryExpression::preSimplify();
-
   auto simplExpr = cast<NegExpression>(simpl);
+
   if (!simplExpr) {
     return simpl;
   }
 
-  if (const auto expr = cast<NegExpression>(simplExpr->child)) {
-    return expr->child;
-  }
   if (ArgumentPtr res = callFunction(*simplExpr->func, {simplExpr->child})) {
     return res;
   }
@@ -30,8 +31,8 @@ ArgumentPtr NegExpression::preSimplify() const {
 
 ArgumentPtr NegExpression::postSimplify() const {
   auto simpl = IUnaryExpression::postSimplify();
-
   auto simplExpr = cast<NegExpression>(simpl);
+
   if (!simplExpr) {
     return simpl;
   }
@@ -41,6 +42,18 @@ ArgumentPtr NegExpression::postSimplify() const {
   }
 
   return simpl;
+}
+
+NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForSimplify() const {
+  return simplifyFunctions;
+}
+
+ArgumentPtr NegExpression::simplifyNeg(const ArgumentPtr &rhs) {
+  if (const auto expr = cast<NegExpression>(rhs)) {
+    return expr->child;
+  }
+
+  return {};
 }
 
 }

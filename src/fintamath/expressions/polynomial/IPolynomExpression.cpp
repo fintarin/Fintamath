@@ -88,7 +88,7 @@ void IPolynomExpression::postSimplifyRec() {
 
 void IPolynomExpression::globalSimplifyRec() {
   size_t childrenSize = children.size();
-  SimplifyFunctionsVector functions = getFunctionsForSimplify();
+  const SimplifyFunctionsVector functions = getFunctionsForSimplify();
 
   for (size_t i = 1; i < children.size(); i++) {
     const ArgumentPtr &lhsChild = children[i - 1];

@@ -12,6 +12,14 @@ protected:
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
+
+  SimplifyFunctionsVector getFunctionsForSimplify() const override;
+
+private:
+  static ArgumentPtr simplifyNeg(const ArgumentPtr &rhs);
+
+private:
+  static const SimplifyFunctionsVector simplifyFunctions;
 };
 
 }

@@ -23,6 +23,7 @@ std::string IUnaryExpression::toString() const {
   return functionToString();
 }
 
+// TODO: move to ExpressionsUtils
 std::string IUnaryExpression::postfixToString() const {
   std::string result = child->toString();
 
@@ -42,6 +43,7 @@ std::string IUnaryExpression::postfixToString() const {
   return result + func->toString();
 }
 
+// TODO: move to ExpressionsUtils
 std::string IUnaryExpression::prefixToString() const {
   std::string result = func->toString();
 
@@ -83,6 +85,10 @@ ArgumentPtr IUnaryExpression::preSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl->child);
 
+  if (auto res = simpl->globalSimplify()) {
+    return res;
+  }
+
   return simpl;
 }
 
@@ -94,7 +100,28 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
     return res;
   }
 
+  if (auto res = simpl->globalSimplify()) {
+    return res;
+  }
+
   return simpl;
+}
+
+IUnaryExpression::SimplifyFunctionsVector IUnaryExpression::getFunctionsForSimplify() const {
+  return {};
+}
+
+ArgumentPtr IUnaryExpression::globalSimplify() const {
+  auto simpl = cast<IUnaryExpression>(clone());
+  const SimplifyFunctionsVector simplFunctions = getFunctionsForSimplify();
+
+  for (const auto &simplFunc : simplFunctions) {
+    if (auto res = simplFunc(simpl->child)) {
+      return res;
+    }
+  }
+
+  return {};
 }
 
 void IUnaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
