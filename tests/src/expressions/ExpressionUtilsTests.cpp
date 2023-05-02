@@ -1,14 +1,18 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+
+#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/other/Percent.hpp"
+#include "fintamath/functions/trigonometry/Cos.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace fintamath;
 
 TEST(ExpressionUtilsTests, skipBracketsTest) {
   size_t openBracketIndex = 0;
-  TokenVector tokens = {"(","a","+","b","(","a","+","b","(","a","+","b",")",")",")", "a", "b"};
+  TokenVector tokens = {"(", "a", "+", "b", "(", "a", "+", "b", "(", "a", "+", "b", ")", ")", ")", "a", "b"};
 
   EXPECT_TRUE(skipBrackets(tokens, openBracketIndex));
   EXPECT_FALSE(skipBrackets(tokens, openBracketIndex));
@@ -49,12 +53,12 @@ TEST(ExpressionUtilsTests, putInSpacesTest) {
 }
 
 TEST(ExpressionUtilsTests, binaryOperatorToStringTest) {
-  
+  // TODO: implement
 }
 
 TEST(ExpressionUtilsTests, postfixUnaryOperatorToStringTest) {
   auto percent = std::make_shared<Percent>();
-  
+
   EXPECT_EQ(postfixUnaryOperatorToString(*percent, std::make_shared<Integer>(-5)), "(-5)%");
   EXPECT_EQ(postfixUnaryOperatorToString(*percent, std::make_shared<Integer>(3)), "3%");
   EXPECT_EQ(postfixUnaryOperatorToString(*percent, std::make_shared<Variable>("a")), "a%");
@@ -79,6 +83,9 @@ TEST(ExpressionUtilsTests, hasVariableTest) {
   expr = std::make_shared<Expression>("cos(a)");
   EXPECT_TRUE(hasVariable(expr, Variable("a")));
 
+  expr = std::make_shared<Expression>("cos(b) + a");
+  EXPECT_TRUE(hasVariable(expr, Variable("a")));
+
   expr = std::make_shared<Expression>("cos(b)");
   EXPECT_FALSE(hasVariable(expr, Variable("a")));
 
@@ -99,18 +106,45 @@ TEST(ExpressionUtilsTests, hasVariablesTest) {
   expr = std::make_shared<Expression>("cos(b)");
   EXPECT_TRUE(hasVariables(expr));
 
+  expr = std::make_shared<Expression>("cos(2) + a");
+  EXPECT_TRUE(hasVariables(expr));
+
   expr = std::make_shared<Expression>("10");
   EXPECT_FALSE(hasVariables(expr));
 }
 
 TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsVectorTest) {
-  // TODO: implement
+  auto expr = makeFunctionExpression(Add(), {ONE, TWO});
+  EXPECT_EQ(expr->toString(), "3");
+  EXPECT_TRUE(is<Expression>(expr));
+
+  Variable var("a");
+  expr = makeFunctionExpression(Cos(), {var});
+  EXPECT_EQ(expr->toString(), "cos(a)");
+  EXPECT_TRUE(is<Expression>(expr));
 }
 
 TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrTest) {
-  // TODO: implement
+  auto expr = makeFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
+  EXPECT_EQ(expr->toString(), "3");
+  EXPECT_TRUE(is<INumber>(expr));
+
+  Variable var("a");
+  expr = makeFunctionExpression(Cos(), {var.clone()});
+  EXPECT_EQ(expr->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr));
+  EXPECT_FALSE(is<Expression>(expr));
 }
 
 TEST(ExpressionUtilsTests, makeRawFunctionExpressionTest) {
-  // TODO: implement
+  auto expr = makeRawFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
+  EXPECT_EQ(expr->toString(), "1 + 2");
+  EXPECT_TRUE(is<IExpression>(expr));
+  EXPECT_FALSE(is<Expression>(expr));
+
+  Variable var("a");
+  expr = makeRawFunctionExpression(Cos(), {var.clone()});
+  EXPECT_EQ(expr->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr));
+  EXPECT_FALSE(is<Expression>(expr));
 }
