@@ -15,8 +15,6 @@ public:
   std::string toString() const override;
 
 protected:
-  ArgumentPtr preSimplify() const override;
-
   ArgumentPtr postSimplify() const override;
 
   SimplifyFunctionsVector getFunctionsForSimplify() const override;

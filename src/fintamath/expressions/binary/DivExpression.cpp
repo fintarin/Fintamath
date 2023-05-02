@@ -47,17 +47,6 @@ std::string DivExpression::toString() const {
   return res;
 }
 
-ArgumentPtr DivExpression::preSimplify() const {
-  auto simpl = IBinaryExpression::preSimplify();
-  auto simplExpr = cast<DivExpression>(simpl);
-
-  if (!simplExpr || *simplExpr->getChildren().back() == ZERO) {
-    return simpl;
-  }
-
-  return simpl;
-}
-
 ArgumentPtr DivExpression::postSimplify() const {
   auto simpl = IBinaryExpression::postSimplify();
   auto simplExpr = cast<DivExpression>(simpl);
