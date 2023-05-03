@@ -1,0 +1,59 @@
+name: coverage
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+
+    env:
+      SONAR_SCANNER_VERSION: 4.4.0.2170
+      SONAR_SERVER_URL: "https://sonarcloud.io"
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Install lcov
+        run: sudo apt-get install lcov
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON -Dfintamath_enable_coverage=ON
+        env:
+          CC: gcc
+          CXX: g++
+
+      - name: Build
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+
+      - name: Collect coverage report
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}} --target fintamath_coverage
+
+      - name: Upload coverage report to CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: ${{github.workspace}}/build
+          files: lcov.info
+          flags: unittests
+          fail_ci_if_error: true
+          name: codecov-umbrella
+          verbose: true

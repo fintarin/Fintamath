@@ -5,21 +5,21 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clan
   if(${PROJECT_NAME}_enable_coverage)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -O0 -g")
 
+    find_program(LCOV_TOOL NAMES lcov)
+
     add_custom_target(
       ${PROJECT_NAME}_coverage
+      COMMAND ${LCOV_TOOL} --capture --initial --directory . --output-file build/lcov_tmp.info --rc
+              lcov_branch_coverage=1
       COMMAND cd build && ctest -CDebug && cd ..
-      COMMAND mkdir -p build/coverage
-      COMMAND
-        gcovr -r . -e ".*build/.*" -e ".*tests/.*" -e ".*thirdparty/.*" --exclude-throw-branches
-        --exclude-unreachable-branches --exclude-noncode-lines --html-details -o
-        "${CMAKE_BINARY_DIR}/coverage/coverage.html"
-      COMMAND
-        gcovr -r . -e ".*build/.*" -e ".*tests/.*" -e ".*thirdparty/.*" --exclude-throw-branches
-        --exclude-unreachable-branches --exclude-noncode-lines --xml -o "${CMAKE_BINARY_DIR}/coverage/coverage.xml"
-      COMMAND
-        gcovr -r . -e ".*build/.*" -e ".*tests/.*" -e ".*thirdparty/.*" --exclude-throw-branches
-        --exclude-unreachable-branches --exclude-noncode-lines --sonarqube -o
-        "${CMAKE_BINARY_DIR}/coverage/coverage_sonar.xml"
+      COMMAND ${LCOV_TOOL} --capture --directory . --output-file build/lcov.info --rc lcov_branch_coverage=1
+      COMMAND ${LCOV_TOOL} --add-tracefile build/lcov_tmp.info --add-tracefile build/lcov.info --output-file
+              build/lcov.info --rc lcov_branch_coverage=1
+      COMMAND ${LCOV_TOOL} --remove build/lcov.info '*/usr/*' '*/build/*' '*/tests/*' '*/thirdparty/*' --output-file
+              build/lcov_tmp.info --rc lcov_branch_coverage=1
+      COMMAND ${CMAKE_SOURCE_DIR}/tests/scripts/coverage_filter.py build/lcov_tmp.info > build/lcov.info
+      COMMAND rm build/lcov_tmp.info
+      COMMAND genhtml --output-directory build/coverage --show-details --branch-coverage build/lcov.info
       DEPENDS ${PROJECT_NAME}_tests
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
   endif()

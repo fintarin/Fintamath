@@ -11,8 +11,8 @@
   <a href="https://sonarcloud.io/summary/new_code?id=fintarin_Fintamath">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/>
   </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=fintarin_Fintamath">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=coverage"/>
+  <a href="https://codecov.io/gh/fintarin/Fintamath" >
+    <img src="https://codecov.io/gh/fintarin/Fintamath/branch/master/graph/badge.svg?token=JL6F07XOK7"/>
   </a>
 </p>
 
@@ -63,12 +63,14 @@ target_link_libraries(example fintamath)
 ## Development
 
 Build in Debug mode with tests enabled.
+
 ```sh
 cmake -Bbuild -DCMAKE_BUILD_TYPE=Debug -Dfintamath_build_tests=ON
 cmake --build build
 ```
 
 Run tests.
+
 ```sh
 cd build
 ctest -CDEBUG --verbose
@@ -76,6 +78,7 @@ cd ..
 ```
 
 Run clang-format.
+
 ```sh
 cmake -Bbuild -Dfintamath_enable_clangformat=ON
 cmake --build build --target clangformat
