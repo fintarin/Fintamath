@@ -4,12 +4,6 @@
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
-namespace fintamath {
-
-MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> Converter::converter;
-
-}
-
 using namespace fintamath;
 
 namespace {

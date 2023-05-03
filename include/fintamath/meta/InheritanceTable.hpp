@@ -25,7 +25,7 @@ private:
   static bool isBaseOf(std::queue<TypeInfo> &baseTypes, const TypeInfo &derivedType);
 
 private:
-  static std::multimap<TypeInfo, TypeInfo> table;
+  inline static std::multimap<TypeInfo, TypeInfo> table;
 };
 
 }

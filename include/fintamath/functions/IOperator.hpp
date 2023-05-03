@@ -42,7 +42,7 @@ public:
   }
 
 private:
-  static Parser::Map<std::unique_ptr<IOperator>> parserMap;
+  inline static Parser::Map<std::unique_ptr<IOperator>> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>

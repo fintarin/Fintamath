@@ -92,15 +92,15 @@ protected:
   virtual std::unique_ptr<IArithmetic> unaryPlusAbstract() const = 0;
 
 private:
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiAdd;
+  inline static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiAdd;
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiSub;
+  inline static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiSub;
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiMul;
+  inline static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiMul;
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiDiv;
+  inline static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiDiv;
 
-  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> parserVector;
+  inline static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> parserVector;
 };
 
 template <typename Derived>

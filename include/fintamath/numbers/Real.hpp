@@ -49,6 +49,10 @@ public:
 
   const std::unique_ptr<RealImpl> &getImpl() const;
 
+  static Real getE();
+
+  static Real getPi();
+
 protected:
   bool equals(const Real &rhs) const override;
 

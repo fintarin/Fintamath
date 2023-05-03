@@ -50,14 +50,19 @@ public:
     return Parser::parse<std::unique_ptr<IFunction>>(parserMap, comp, parsedStr);
   }
 
+  static void registerFunctionExpressionMaker(
+      std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)> &&maker) {
+    makeFunctionExpression = maker;
+  }
+
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
 
-  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
+  inline static std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
       makeFunctionExpression;
 
 private:
-  static Parser::Map<std::unique_ptr<IFunction>> parserMap;
+  inline static Parser::Map<std::unique_ptr<IFunction>> parserMap;
 };
 
 template <typename Return, typename Derived, typename... Args>
