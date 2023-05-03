@@ -46,7 +46,7 @@ Build shared in Release mode.
 
 ```sh
 cd fintamath
-cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -Dfintamath_build_shared=ON
+cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
@@ -64,7 +64,7 @@ target_link_libraries(example fintamath)
 
 Build in Debug mode with tests enabled.
 ```sh
-cmake -Bbuild -DCMAKE_BUILD_TYPE=Debug -Dfintamath_build_shared=OFF -Dfintamath_build_tests=ON
+cmake -Bbuild -DCMAKE_BUILD_TYPE=Debug -Dfintamath_build_tests=ON
 cmake --build build
 ```
 
