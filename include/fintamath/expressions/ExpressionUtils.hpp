@@ -24,7 +24,9 @@ std::string putInSpaces(const std::string &str);
 
 std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
 
-std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs);
+std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
+
+std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
 
 bool hasVariables(const std::shared_ptr<const IExpression> &expr);
 

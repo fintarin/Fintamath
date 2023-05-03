@@ -257,4 +257,13 @@ TEST(ExpressionFunctionsTests, solveTest) {
 
   EXPECT_EQ(solve(Expression("15x^2 + sin(25)x - 10% = Ey")).toString(), "x^2 + 1/15 sin(25) x - 1/15 E y - 1/150 = 0");
   EXPECT_EQ(solve(Expression("x + x_1 + x_2 + y + y_1 = 0")).toString(), "x + x_1 + x_2 + y + y_1 = 0");
+  EXPECT_EQ(solve(Expression("-x^a = 0")).toString(), "x^a = 0");
+  EXPECT_EQ(solve(Expression("sin(x) = 0")).toString(), "sin(x) = 0");
+  EXPECT_EQ(solve(Expression("x^2 + y = 0")).toString(), "x^2 + y = 0");
+  EXPECT_EQ(solve(Expression("x y = 0")).toString(), "x y = 0");
+  EXPECT_EQ(solve(Expression("2 x^a = 0")).toString(), "x^a = 0");
+  EXPECT_EQ(solve(Expression("x^b a = 0")).toString(), "a x^b = 0");
+  EXPECT_EQ(solve(Expression("x/y = 0")).toString(), "x/y = 0");
+  EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = sqrt(2 sin(2)) | x = -sqrt(2 sin(2))");
+  // EXPECT_EQ(solve(Expression("x! = 0")).toString(), "x! = 0"); // TODO: tokenizer
 }

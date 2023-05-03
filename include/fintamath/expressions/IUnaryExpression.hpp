@@ -30,8 +30,6 @@ protected:
 private:
   ArgumentPtr globalSimplify() const;
 
-  std::string postfixToString() const;
-
   std::string prefixToString() const;
 
   std::string functionToString() const;

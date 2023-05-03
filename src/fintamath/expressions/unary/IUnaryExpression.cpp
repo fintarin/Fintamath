@@ -8,54 +8,14 @@ namespace fintamath {
 
 std::string IUnaryExpression::toString() const {
   if (const auto oper = cast<IOperator>(func)) {
-    switch (oper->getOperatorPriority()) {
-    case IOperator::Priority::PostfixUnary:
-      return postfixToString();
-    default:
-      return prefixToString();
+    if (oper->getOperatorPriority() == IOperator::Priority::PostfixUnary) {
+      return postfixUnaryOperatorToString(*oper, child);
     }
+
+    return prefixUnaryOperatorToString(*oper, child);
   }
 
   return functionToString();
-}
-
-// TODO: move to ExpressionsUtils
-std::string IUnaryExpression::postfixToString() const {
-  std::string result = child->toString();
-
-  if (const auto childExpr = cast<IExpression>(child)) {
-    if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
-      if (IOperator::Priority priority = exprOper->getOperatorPriority();
-          priority != IOperator::Priority::PostfixUnary) {
-        return putInBrackets(result) + func->toString();
-      }
-    }
-  }
-
-  if (const auto comp = cast<IComparable>(child); comp && *comp < ZERO) {
-    return putInBrackets(result) + func->toString();
-  }
-
-  return result + func->toString();
-}
-
-// TODO: move to ExpressionsUtils
-std::string IUnaryExpression::prefixToString() const {
-  std::string result = func->toString();
-
-  if (const auto childExpr = cast<IExpression>(child)) {
-    if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
-      if (IOperator::Priority priority = exprOper->getOperatorPriority();
-          priority == IOperator::Priority::PrefixUnary || priority == IOperator::Priority::Multiplication ||
-          priority == IOperator::Priority::Exponentiation) {
-        return result + child->toString();
-      }
-
-      return result + putInBrackets(child->toString());
-    }
-  }
-
-  return result + child->toString();
 }
 
 std::string IUnaryExpression::functionToString() const {

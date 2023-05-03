@@ -116,10 +116,27 @@ std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVect
   return result;
 }
 
-std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs) {
-  std::string result = lhs->toString();
+std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs) {
+  std::string result = oper.toString();
 
-  if (const auto child = cast<IExpression>(lhs)) {
+  if (const auto childExpr = cast<IExpression>(rhs)) {
+    if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
+      if (IOperator::Priority priority = exprOper->getOperatorPriority();
+          priority == IOperator::Priority::PrefixUnary) {
+        return result + rhs->toString();
+      }
+
+      return result + putInBrackets(rhs->toString());
+    }
+  }
+
+  return result + rhs->toString();
+}
+
+std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs) {
+  std::string result = rhs->toString();
+
+  if (const auto child = cast<IExpression>(rhs)) {
     if (const auto childOper = cast<IOperator>(child->getFunction())) {
       if (IOperator::Priority priority = childOper->getOperatorPriority();
           priority != IOperator::Priority::PostfixUnary) {
@@ -128,7 +145,7 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
     }
   }
 
-  if (const auto comp = cast<IComparable>(lhs); comp && *comp < ZERO) {
+  if (const auto comp = cast<IComparable>(rhs); comp && *comp < ZERO) {
     return putInBrackets(result) + oper.toString();
   }
 

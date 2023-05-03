@@ -13,6 +13,10 @@
 
 namespace fintamath {
 
+const Variable a("a");
+const Variable b("b");
+const Variable c("c");
+
 std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var);
 
 std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var);
@@ -20,12 +24,6 @@ std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IE
 ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var);
 
 ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable &var);
-
-bool validatePowExpr(const std::shared_ptr<const IExpression> &powExpr);
-
-bool validateMulExpr(const std::shared_ptr<const IExpression> &mulExpr);
-
-bool validateAddExpr(const std::shared_ptr<const IExpression> &addExpr);
 
 bool validateEquation(const CompExpression &expr);
 
@@ -92,8 +90,6 @@ Expression solve(const Expression &rhs) {
 
       return Expression(makeFunctionExpression(Or(), answers));
     }
-
-    return *compExpr;
   }
 
   return rhs;
@@ -105,10 +101,6 @@ std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Va
   }
 
   if (const auto expr = cast<IExpression>(elem)) {
-    if (is<Neg>(expr->getFunction())) {
-      return getElementPower(expr->getChildren().front(), var);
-    }
-
     if (is<Mul>(expr->getFunction())) {
       return getMulElementPower(expr, var);
     }
@@ -135,10 +127,6 @@ std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IE
 
 ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
   if (const auto elemExpr = cast<IExpression>(elem)) {
-    if (is<Neg>(elemExpr->getFunction())) {
-      return makeFunctionExpression(Neg(), {getElementRate(elemExpr->getChildren().front(), var)});
-    }
-
     if (is<Pow>(elemExpr->getFunction())) {
       if (hasVariable(elemExpr, var)) {
         return ONE.clone();
@@ -193,80 +181,10 @@ ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable
   return powerRates;
 }
 
-bool validatePowExpr(const std::shared_ptr<const IExpression> &powExpr) {
-  return is<Integer>(powExpr->getChildren()[1]);
-}
-
-bool validateMulExpr(const std::shared_ptr<const IExpression> &mulExpr) {
-  for (const auto &child : mulExpr->getChildren()) {
-    if (const auto childExpr = cast<IExpression>(child);
-        childExpr && is<Pow>(childExpr->getFunction()) && !validatePowExpr(childExpr)) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-bool validateAddExpr(const std::shared_ptr<const IExpression> &addExpr) {
-  for (const auto &child : addExpr->getChildren()) {
-    if (auto childExpr = cast<IExpression>(child)) {
-      if (is<Neg>(childExpr->getFunction())) {
-        childExpr = cast<IExpression>(childExpr->getChildren()[0]);
-      }
-
-      if (!childExpr) {
-        return true;
-      }
-
-      if (is<Pow>(childExpr->getFunction()) && !validatePowExpr(childExpr)) {
-        return false;
-      }
-
-      if (is<Mul>(childExpr->getFunction()) && !validateMulExpr(childExpr)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
 bool validateEquation(const CompExpression &expr) {
   std::vector<Variable> vars = expr.getVariables();
-
   // TODO: remove for equation systems
-  if (vars.size() != 1) {
-    return false;
-  }
-
-  ArgumentPtr firstChild = expr.getChildren().front();
-
-  if (auto firstChildExpr = cast<IExpression>(firstChild)) {
-    if (is<Neg>(firstChildExpr->getFunction())) {
-      firstChildExpr = cast<IExpression>(firstChildExpr->getChildren()[0]);
-    }
-
-    if (!firstChildExpr) {
-      return true;
-    }
-
-    if (is<Add>(firstChildExpr->getFunction())) {
-      return validateAddExpr(firstChildExpr);
-    }
-
-    if (is<Mul>(firstChildExpr->getFunction())) {
-      return validateMulExpr(firstChildExpr);
-    }
-
-    if (is<Pow>(firstChildExpr->getFunction())) {
-      return validatePowExpr(firstChildExpr);
-    }
-
-    return false;
-  }
-
-  return true;
+  return vars.size() == 1;
 }
 
 ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector & /*coeffAtPow*/) {
@@ -274,10 +192,6 @@ ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector & /*coeffAtPow*/)
 }
 
 ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) {
-  static const Variable a("a");
-  static const Variable b("b");
-  static const Variable c("c");
-
   static const Expression discriminant = sub(pow(b, 2), mul(4, a, c));
   static const Expression firstRoot = div(sum(neg(b), sqrt(discriminant)), mul(2, a));
   static const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));

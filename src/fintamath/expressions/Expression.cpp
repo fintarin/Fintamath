@@ -208,26 +208,24 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
 }
 
 bool Expression::parseFiniteTerm(const TokenVector &tokens) {
-  if (tokens.size() > 1 && tokens.front() == "(" && tokens[tokens.size() - 1] == ")") {
-    *this = Expression(cutBrackets(tokens));
-    return true;
-  }
+  bool res = false;
 
   if (tokens.size() > 1) {
-    return false;
+    if (tokens.front() == "(" && tokens[tokens.size() - 1] == ")") {
+      *this = Expression(cutBrackets(tokens));
+      res = true;
+    }
+  }
+  else if (ArgumentPtr literal = ILiteral::parse(tokens.front())) {
+    child = literal;
+    res = true;
+  }
+  else if (ArgumentPtr number = INumber::parse(tokens.front())) {
+    child = number;
+    res = true;
   }
 
-  if (ArgumentPtr parsed = ILiteral::parse(tokens.front())) {
-    child = parsed;
-    return true;
-  }
-
-  if (ArgumentPtr parsed = INumber::parse(tokens.front())) {
-    child = parsed;
-    return true;
-  }
-
-  return false;
+  return res;
 }
 
 bool Expression::parseFunction(const TokenVector &tokens) {

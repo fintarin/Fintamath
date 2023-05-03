@@ -43,6 +43,7 @@ public:
           if (type == IFunction::Type::Any || uint16_t(type) == args.size()) {
             return builder(args);
           }
+
           if (isPolynomial && uint16_t(type) < args.size()) {
             return builder(args);
           }

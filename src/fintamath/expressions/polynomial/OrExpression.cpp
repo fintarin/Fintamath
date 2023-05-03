@@ -98,11 +98,6 @@ ArgumentPtr OrExpression::simplifyEqual(const ArgumentPtr &lhsChild, const Argum
 }
 
 ArgumentPtr OrExpression::simplifyNot(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr && is<Not>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
-    return std::make_shared<Boolean>(true);
-  }
-
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
       rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
     return std::make_shared<Boolean>(true);
