@@ -15,7 +15,6 @@ public:
     None,    // 0 arguments
     Unary,   // 1 argument
     Binary,  // 2 arguments
-    Ternary, // 3 arguments
     Any,     // undefined number of arguments
   };
 
