@@ -43,6 +43,9 @@ TEST(MathObjectTests, equalsTest) {
 
   EXPECT_FALSE(Integer() == 1);
   EXPECT_FALSE(1 == Integer());
+
+  Integer m4;
+  EXPECT_TRUE(m4 == m4);
 }
 
 TEST(MathObjectTests, nequalsTest) {
@@ -68,6 +71,9 @@ TEST(MathObjectTests, nequalsTest) {
 
   EXPECT_TRUE(Integer() != 1);
   EXPECT_TRUE(1 != Integer());
+
+  Integer m4;
+  EXPECT_FALSE(m4 != m4);
 }
 
 TEST(MathObjectTests, outputTest) {
