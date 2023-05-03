@@ -85,6 +85,10 @@ public:
       return doAnyArgsMatch(argsVect);
     }
 
+    if (argsVect.size() != size_t(getFunctionType())) {
+      return false;
+    }
+
     return doArgsMatch<0, Args...>(argsVect);
   }
 
