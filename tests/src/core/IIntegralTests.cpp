@@ -92,7 +92,7 @@ const TestIntegralConvertableConfig config;
 
 }
 
-TEST(IntegralTests, modTest) {
+TEST(IIntegralTests, modTest) {
   std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
   std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
@@ -116,7 +116,7 @@ TEST(IntegralTests, modTest) {
   EXPECT_EQ((a %= 3).toString(), "0");
 }
 
-TEST(IntegralTests, bitAndTest) {
+TEST(IIntegralTests, bitAndTest) {
   std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
   std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
@@ -140,7 +140,7 @@ TEST(IntegralTests, bitAndTest) {
   EXPECT_EQ((a &= 3).toString(), "0");
 }
 
-TEST(IntegralTests, bitOrTest) {
+TEST(IIntegralTests, bitOrTest) {
   std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
   std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
@@ -164,7 +164,7 @@ TEST(IntegralTests, bitOrTest) {
   EXPECT_EQ((a |= 3).toString(), "3");
 }
 
-TEST(IntegralTests, bitXorTest) {
+TEST(IIntegralTests, bitXorTest) {
   std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
   std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
@@ -188,7 +188,7 @@ TEST(IntegralTests, bitXorTest) {
   EXPECT_EQ((a ^= 3).toString(), "3");
 }
 
-TEST(IntegralTests, bitLeftShiftTest) {
+TEST(IIntegralTests, bitLeftShiftTest) {
   std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
   std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
@@ -212,7 +212,7 @@ TEST(IntegralTests, bitLeftShiftTest) {
   EXPECT_EQ((a <<= 3).toString(), "0");
 }
 
-TEST(IntegralTests, bitRightShiftTest) {
+TEST(IIntegralTests, bitRightShiftTest) {
   std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(10);
   std::unique_ptr<IIntegral> m2 = std::make_unique<Integer>(3);
 
@@ -236,7 +236,7 @@ TEST(IntegralTests, bitRightShiftTest) {
   EXPECT_EQ((a >>= 3).toString(), "0");
 }
 
-TEST(IntegralTests, bitNotTest) {
+TEST(IIntegralTests, bitNotTest) {
   std::unique_ptr<IIntegral> m1 = std::make_unique<Integer>(44);
   EXPECT_EQ((~*m1)->toString(), "-45");
 

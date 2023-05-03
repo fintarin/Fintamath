@@ -43,7 +43,7 @@ protected:
 
 }
 
-TEST(ComparableTests, lessTest) {
+TEST(IComparableTests, lessTest) {
   std::unique_ptr<IComparable> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<IComparable> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<IComparable> m3 = std::make_unique<Rational>(1, 2);
@@ -68,7 +68,7 @@ TEST(ComparableTests, lessTest) {
   EXPECT_FALSE(1 < Integer());
 }
 
-TEST(ComparableTests, moreTest) {
+TEST(IComparableTests, moreTest) {
   std::unique_ptr<IComparable> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<IComparable> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<IComparable> m3 = std::make_unique<Rational>(1, 2);
@@ -93,7 +93,7 @@ TEST(ComparableTests, moreTest) {
   EXPECT_TRUE(1 > Integer());
 }
 
-TEST(ComparableTests, lessEqualsTest) {
+TEST(IComparableTests, lessEqualsTest) {
   std::unique_ptr<IComparable> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<IComparable> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<IComparable> m3 = std::make_unique<Rational>(1, 2);
@@ -118,7 +118,7 @@ TEST(ComparableTests, lessEqualsTest) {
   EXPECT_FALSE(1 <= Integer());
 }
 
-TEST(ComparableTests, moreEqualsTest) {
+TEST(IComparableTests, moreEqualsTest) {
   std::unique_ptr<IComparable> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<IComparable> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<IComparable> m3 = std::make_unique<Rational>(1, 2);

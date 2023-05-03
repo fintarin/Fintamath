@@ -31,7 +31,7 @@
 
 using namespace fintamath;
 
-TEST(FunctionTests, callTests) {
+TEST(IFunctionTests, callTests) {
   std::unique_ptr<IFunction> f = std::make_unique<Add>();
   Integer a = 3;
   Rational b(1, 2);
@@ -49,7 +49,7 @@ TEST(FunctionTests, callTests) {
   EXPECT_THROW((*f)(a, a, a, a, a, a, a), InvalidInputFunctionException);
 }
 
-TEST(FunctionTests, equalTests) {
+TEST(IFunctionTests, equalTests) {
   EXPECT_EQ(Add(), Add());
   EXPECT_NE(Add(), Sub());
   EXPECT_NE(Add(), UnaryPlus());

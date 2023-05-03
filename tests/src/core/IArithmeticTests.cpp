@@ -36,7 +36,7 @@ protected:
 
 }
 
-TEST(ArithmeticTests, addTest) {
+TEST(IArithmeticTests, addTest) {
   std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<IArithmetic> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<IArithmetic> m3 = std::make_unique<Rational>(1, 2);
@@ -72,7 +72,7 @@ TEST(ArithmeticTests, addTest) {
   EXPECT_EQ((-1 + Rational()).toString(), "-1");
 }
 
-TEST(ArithmeticTests, subTest) {
+TEST(IArithmeticTests, subTest) {
   std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<IArithmetic> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<IArithmetic> m3 = std::make_unique<Rational>(1, 2);
@@ -108,7 +108,7 @@ TEST(ArithmeticTests, subTest) {
   EXPECT_EQ((-1 - Integer()).toString(), "-1");
 }
 
-TEST(ArithmeticTests, mulTest) {
+TEST(IArithmeticTests, mulTest) {
   std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<IArithmetic> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<IArithmetic> m3 = std::make_unique<Rational>(1, 2);
@@ -144,7 +144,7 @@ TEST(ArithmeticTests, mulTest) {
   EXPECT_EQ((-2 * Integer(2)).toString(), "-4");
 }
 
-TEST(ArithmeticTests, divTest) {
+TEST(IArithmeticTests, divTest) {
   std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<IArithmetic> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<IArithmetic> m3 = std::make_unique<Rational>(1, 2);
@@ -180,21 +180,21 @@ TEST(ArithmeticTests, divTest) {
   EXPECT_EQ((-2 / Integer(2)).toString(), "-1");
 }
 
-TEST(ArithmeticTests, unaryPlusTest) {
+TEST(IArithmeticTests, unaryPlusTest) {
   std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((+*m1)->toString(), "1");
 
   EXPECT_EQ((+Integer(1)).toString(), "1");
 }
 
-TEST(ArithmeticTests, negateTest) {
+TEST(IArithmeticTests, negateTest) {
   std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((-*m1)->toString(), "-1");
 
   EXPECT_EQ((-Integer(1)).toString(), "-1");
 }
 
-TEST(ArithmeticTests, multimethodsTest) {
+TEST(IArithmeticTests, multimethodsTest) {
   IArithmetic::addMultiAddFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
     return cast<IArithmetic>(ZERO.clone());
   });

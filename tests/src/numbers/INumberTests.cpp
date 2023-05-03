@@ -7,7 +7,7 @@
 
 using namespace fintamath;
 
-TEST(NumberTests, addTest) {
+TEST(INumberTests, addTest) {
   std::unique_ptr<INumber> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<INumber> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<INumber> m3 = std::make_unique<Rational>(1, 2);
@@ -23,7 +23,7 @@ TEST(NumberTests, addTest) {
   EXPECT_EQ((*m3 + *m2)->toString(), "5/2");
 }
 
-TEST(NumberTests, subTest) {
+TEST(INumberTests, subTest) {
   std::unique_ptr<INumber> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<INumber> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<INumber> m3 = std::make_unique<Rational>(1, 2);
@@ -39,7 +39,7 @@ TEST(NumberTests, subTest) {
   EXPECT_EQ((*m3 - *m2)->toString(), "-3/2");
 }
 
-TEST(NumberTests, mulTest) {
+TEST(INumberTests, mulTest) {
   std::unique_ptr<INumber> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<INumber> m2 = std::make_unique<Rational>(2);
   std::unique_ptr<INumber> m3 = std::make_unique<Rational>(1, 2);
@@ -55,7 +55,7 @@ TEST(NumberTests, mulTest) {
   EXPECT_EQ((*m3 * *m2)->toString(), "1");
 }
 
-TEST(NumberTests, divTest) {
+TEST(INumberTests, divTest) {
   std::unique_ptr<INumber> m1 = std::make_unique<Integer>(1);
   std::unique_ptr<INumber> m2 = std::make_unique<Integer>(5);
   std::unique_ptr<INumber> m3 = std::make_unique<Rational>(2);
@@ -74,13 +74,13 @@ TEST(NumberTests, divTest) {
   EXPECT_EQ((*m4 / *m3)->toString(), "1/4");
 }
 
-TEST(NumberTests, convertTest) {
+TEST(INumberTests, convertTest) {
   std::unique_ptr<INumber> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((+*m1)->toString(), "1");
   EXPECT_TRUE(is<INumber>(+*m1));
 }
 
-TEST(NumberTests, negateTest) {
+TEST(INumberTests, negateTest) {
   std::unique_ptr<INumber> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((-*m1)->toString(), "-1");
   EXPECT_TRUE(is<INumber>(+*m1));
