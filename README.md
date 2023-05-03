@@ -42,7 +42,7 @@ git clone https://github.com/fintarin/Fintamath.git fintamath
 
 ### Standalone Project
 
-Build shared in Release mode.
+Build in Release mode.
 
 ```sh
 cd fintamath
