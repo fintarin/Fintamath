@@ -4,6 +4,7 @@
 
 #include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
@@ -191,4 +192,26 @@ TEST(ArithmeticTests, negateTest) {
   EXPECT_EQ((-*m1)->toString(), "-1");
 
   EXPECT_EQ((-Integer(1)).toString(), "-1");
+}
+
+TEST(ArithmeticTests, multimethodsTest) {
+  IArithmetic::addMultiAddFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
+    return cast<IArithmetic>(ZERO.clone());
+  });
+  EXPECT_EQ((TestArithmetic() + Integer(1))->toString(), ZERO.toString());
+
+  IArithmetic::addMultiSubFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
+    return cast<IArithmetic>(ZERO.clone());
+  });
+  EXPECT_EQ((TestArithmetic() - Integer(1))->toString(), ZERO.toString());
+
+  IArithmetic::addMultiMulFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
+    return cast<IArithmetic>(ZERO.clone());
+  });
+  EXPECT_EQ((TestArithmetic() * Integer(1))->toString(), ZERO.toString());
+
+  IArithmetic::addMultiDivFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
+    return cast<IArithmetic>(ZERO.clone());
+  });
+  EXPECT_EQ((TestArithmetic() / Integer(1))->toString(), ZERO.toString());
 }
