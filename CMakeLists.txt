@@ -15,7 +15,6 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-option(${PROJECT_NAME}_build_shared "Build shared" OFF)
 option(${PROJECT_NAME}_build_tests "Build tests" OFF)
 
 add_subdirectory(thirdparty)
