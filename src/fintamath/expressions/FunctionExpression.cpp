@@ -31,21 +31,7 @@ std::string FunctionExpression::toString() const {
     }
   }
 
-  return functionToString();
-}
-
-std::string FunctionExpression::functionToString() const {
-  static const std::string delimiter = ", ";
-
-  std::string result = func->toString() + "(";
-
-  for (const auto &arg : children) {
-    result += arg->toString() + delimiter;
-  }
-
-  result = result.substr(0, result.length() - delimiter.length()) + ")";
-
-  return result;
+  return functionToString(*func, children);
 }
 
 std::shared_ptr<IFunction> FunctionExpression::getFunction() const {

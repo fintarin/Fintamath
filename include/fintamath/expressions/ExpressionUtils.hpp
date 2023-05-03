@@ -22,6 +22,8 @@ std::string putInBrackets(const std::string &str);
 
 std::string putInSpaces(const std::string &str);
 
+std::string functionToString(const IFunction &func, const ArgumentsPtrVector &args);
+
 std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
 
 std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);

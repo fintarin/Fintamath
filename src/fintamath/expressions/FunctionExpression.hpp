@@ -27,8 +27,6 @@ private:
   std::shared_ptr<IFunction> func;
 
   ArgumentsPtrVector children;
-
-  std::string functionToString() const;
 };
 
 }

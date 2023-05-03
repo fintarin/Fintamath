@@ -12,10 +12,10 @@ namespace fintamath {
 class IFunction : virtual public IMathObject {
 public:
   enum class Type : uint16_t {
-    None,    // 0 arguments
-    Unary,   // 1 argument
-    Binary,  // 2 arguments
-    Any,     // undefined number of arguments
+    None,   // 0 arguments
+    Unary,  // 1 argument
+    Binary, // 2 arguments
+    Any,    // undefined number of arguments
   };
 
 public:

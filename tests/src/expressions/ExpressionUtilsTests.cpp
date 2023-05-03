@@ -52,6 +52,10 @@ TEST(ExpressionUtilsTests, putInSpacesTest) {
   EXPECT_EQ(putInSpaces("ab"), " ab ");
 }
 
+TEST(ExpressionUtilsTests, functionToStringTest) {
+  // TODO: implement
+}
+
 TEST(ExpressionUtilsTests, binaryOperatorToStringTest) {
   // TODO: implement
 }

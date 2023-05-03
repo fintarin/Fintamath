@@ -75,6 +75,20 @@ std::string putInSpaces(const std::string &str) {
   return ' ' + str + ' ';
 }
 
+std::string functionToString(const IFunction &func, const ArgumentsPtrVector &args) {
+  static const std::string delimiter = ", ";
+
+  std::string result = func.toString() + "(";
+
+  for (const auto &arg : args) {
+    result += arg->toString() + delimiter;
+  }
+
+  result = result.substr(0, result.length() - delimiter.length()) + ")";
+
+  return result;
+}
+
 std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values) {
   std::string result;
 

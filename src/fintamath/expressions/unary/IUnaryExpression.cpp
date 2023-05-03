@@ -15,11 +15,7 @@ std::string IUnaryExpression::toString() const {
     return prefixUnaryOperatorToString(*oper, child);
   }
 
-  return functionToString();
-}
-
-std::string IUnaryExpression::functionToString() const {
-  return func->toString() + putInBrackets(child->toString());
+  return functionToString(*func, {child});
 }
 
 std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {

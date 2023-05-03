@@ -30,10 +30,6 @@ protected:
 private:
   ArgumentPtr globalSimplify() const;
 
-  std::string prefixToString() const;
-
-  std::string functionToString() const;
-
 protected:
   std::shared_ptr<IFunction> func;
 
