@@ -7,10 +7,6 @@
 namespace fintamath {
 
 std::string IUnaryExpression::toString() const {
-  if (!func) {
-    return {};
-  }
-
   if (const auto oper = cast<IOperator>(func)) {
     switch (oper->getOperatorPriority()) {
     case IOperator::Priority::PostfixUnary:

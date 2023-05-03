@@ -1,6 +1,5 @@
 #pragma once
 
-#include "fintamath/expressions/IInvertableExpression.hpp"
 #include "fintamath/expressions/INegatableExpression.hpp"
 #include "fintamath/expressions/IPolynomExpression.hpp"
 

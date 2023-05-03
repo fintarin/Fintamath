@@ -31,3 +31,7 @@ TEST(IExpressionTests, setValuesOfVariablesTest) {
 TEST(IExpressionTests, toMinimalObjectTest) {
   // TODO: implement
 }
+
+TEST(IExpressionTests, equalsTest) {
+  // TODO: implement
+}

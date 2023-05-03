@@ -72,6 +72,7 @@ ArgumentPtr FunctionExpression::simplify() const {
 
 ArgumentPtr FunctionExpression::preSimplify() const {
   auto simpl = cast<FunctionExpression>(clone());
+
   for (auto &child : simpl->children) {
     preSimplifyChild(child);
   }

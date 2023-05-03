@@ -1,16 +1,13 @@
 #pragma once
 
 #include "fintamath/expressions/IBinaryExpression.hpp"
-#include "fintamath/expressions/IInvertableExpression.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 
-class PowExpression : public IBinaryExpressionCRTP<PowExpression>, public IInvertableExpression {
+class PowExpression : public IBinaryExpressionCRTP<PowExpression> {
 public:
   explicit PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
-
-  ArgumentPtr invert() const override;
 
 protected:
   ArgumentPtr preSimplify() const override;

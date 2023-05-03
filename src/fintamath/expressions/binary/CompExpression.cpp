@@ -28,12 +28,7 @@ std::string CompExpression::toString() const {
 
         ArgumentPtr solRhs = makeFunctionExpression(Neg(), {sumChildren});
 
-        if (const auto solRhsExpr = cast<IExpression>(solRhs)) {
-          if (solRhsExpr->getVariables().empty()) {
-            return CompExpression(cast<IOperator>(*func), solLhs, solRhs).toString();
-          }
-        }
-        else {
+        if (!is<IExpression>(solRhs)) {
           return CompExpression(cast<IOperator>(*func), solLhs, solRhs).toString();
         }
       }
@@ -136,11 +131,7 @@ void CompExpression::addOppositeFunctions(const std::shared_ptr<IFunction> &func
 }
 
 std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const std::shared_ptr<IFunction> &function) {
-  if (auto res = oppositeFunctionsMap.find(function->toString()); res != oppositeFunctionsMap.end()) {
-    return cast<IFunction>(res->second->clone());
-  }
-
-  return {};
+  return oppositeFunctionsMap[function->toString()];
 }
 
 void CompExpression::addLogicOppositeFunctions(const std::shared_ptr<IFunction> &function,
@@ -149,11 +140,7 @@ void CompExpression::addLogicOppositeFunctions(const std::shared_ptr<IFunction> 
 }
 
 std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const std::shared_ptr<IFunction> &function) {
-  if (auto res = logicOppositeFunctionsMap.find(function->toString()); res != logicOppositeFunctionsMap.end()) {
-    return cast<IFunction>(res->second->clone());
-  }
-
-  return {};
+  return logicOppositeFunctionsMap[function->toString()];
 }
 
 }

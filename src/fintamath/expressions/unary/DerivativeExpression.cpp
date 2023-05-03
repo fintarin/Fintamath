@@ -15,19 +15,18 @@ DerivativeExpression::DerivativeExpression(const ArgumentPtr &inChild) : IUnaryE
 }
 
 ArgumentPtr DerivativeExpression::postSimplify() const {
-  if (is<IExpression>(child)) {
-    // TODO: implement derivative of expression
-    return {};
-  }
+  ArgumentPtr res;
 
   if (is<INumber>(child) || is<IConstant>(child)) {
-    return ZERO.clone();
+    res = ZERO.clone();
   }
-  if (is<Variable>(child)) {
-    return ONE.clone();
+  else if (is<Variable>(child)) {
+    res = ONE.clone();
   }
+  // else if (is<IExpression>(child)) {
+  // }
 
-  return {};
+  return res;
 }
 
 }

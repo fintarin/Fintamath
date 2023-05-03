@@ -20,11 +20,6 @@ AndExpression::AndExpression(const ArgumentsPtrVector &inChildren) : IPolynomExp
 
 std::string AndExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   std::string result = inChild->toString();
-
-  if (const auto &childExpr = cast<IExpression>(inChild); childExpr && is<Or>(childExpr->getFunction())) {
-    result = putInBrackets(result);
-  }
-
   return prevChild ? (putInSpaces(func->toString()) + result) : result;
 }
 

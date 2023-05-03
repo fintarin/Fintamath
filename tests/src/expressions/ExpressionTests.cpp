@@ -196,6 +196,17 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-a)(b)").toString(), "-a b");
   EXPECT_EQ(Expression("(5 b)/(3 a)").toString(), "(5/3 b)/a");
   EXPECT_EQ(Expression("(a b)/(a b)").toString(), "1");
+  EXPECT_EQ(Expression("(a b)/1").toString(), "a b");
+  EXPECT_EQ(Expression("(a b)/-1").toString(), "-a b");
+  EXPECT_EQ(Expression("(a b)/-2").toString(), "-1/2 a b");
+  EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "(a b)/(-a - b)"); // TODO: simplify division
+
+  EXPECT_EQ(Expression("0^a").toString(), "0");
+  EXPECT_EQ(Expression("(a b)^0").toString(), "1");
+  EXPECT_EQ(Expression("(a + b)^-1").toString(), "1/(a + b)");
+  EXPECT_EQ(Expression("(a + b)^-2").toString(), "1/(a^2 + 2 a b + b^2)");
+  EXPECT_EQ(Expression("(a b)^-1").toString(), "1/(a b)");
+  EXPECT_EQ(Expression("(a b)^-2").toString(), "1/(a^2 b^2)");
 
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
   EXPECT_EQ(Expression("a.2").toString(), "1/5 a");

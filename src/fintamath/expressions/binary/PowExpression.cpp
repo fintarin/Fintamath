@@ -143,12 +143,6 @@ ArgumentPtr PowExpression::polynomSimplify() const {
   return {};
 }
 
-ArgumentPtr PowExpression::invert() const {
-  auto inv = std::make_shared<PowExpression>(*this);
-  inv->rhsChild = makeFunctionExpression(Neg(), {inv->rhsChild});
-  return inv;
-}
-
 ArgumentPtr PowExpression::preSimplify() const {
   auto simpl = IBinaryExpression::preSimplify();
   auto simplExpr = cast<PowExpression>(simpl);
@@ -185,11 +179,6 @@ ArgumentPtr PowExpression::postSimplify() const {
 
   if (rhsInt) {
     if (*rhsInt == ZERO) {
-      if (lhsInt && *lhsInt == ZERO) {
-        throw UndefinedBinaryOperatorException(POW.toString(), simplExpr->lhsChild->toString(),
-                                               simplExpr->rhsChild->toString());
-      }
-
       return ONE.clone();
     }
 

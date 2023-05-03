@@ -25,28 +25,6 @@ DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &i
     : IBinaryExpressionCRTP(DIV, inLhsChild, inRhsChild) {
 }
 
-ArgumentPtr DivExpression::invert() const {
-  auto inv = std::make_shared<DivExpression>(*this);
-  std::swap(inv->lhsChild, inv->rhsChild);
-  return inv;
-}
-
-std::string DivExpression::toString() const {
-  std::string res = IBinaryExpression::toString();
-
-  if (const auto lhsExpr = cast<IExpression>(lhsChild)) {
-    if (const auto lhsOper = cast<IOperator>(lhsExpr->getFunction());
-        lhsOper && lhsOper->getOperatorPriority() != Sub().getOperatorPriority()) {
-      if (res.size() > 1 && res[0] == '(' && res[1] == Sub().toString()[0]) {
-        res.erase(1, 1);
-        res = Sub().toString() + res;
-      }
-    }
-  }
-
-  return res;
-}
-
 ArgumentPtr DivExpression::postSimplify() const {
   auto simpl = IBinaryExpression::postSimplify();
   auto simplExpr = cast<DivExpression>(simpl);
@@ -55,25 +33,7 @@ ArgumentPtr DivExpression::postSimplify() const {
     return simpl;
   }
 
-  auto lhsInt = cast<Integer>(simplExpr->lhsChild);
-  auto rhsInt = cast<Integer>(simplExpr->rhsChild);
-
-  if (rhsInt) {
-    if (*rhsInt == ONE) {
-      return simplExpr->lhsChild;
-    }
-
-    if (*rhsInt == NEG_ONE) {
-      return makeFunctionExpression(Neg(), {simplExpr->lhsChild});
-    }
-
-    if (*rhsInt < ZERO) {
-      return makeFunctionExpression(Div(), {makeRawFunctionExpression(Neg(), {simplExpr->lhsChild}),
-                                            makeRawFunctionExpression(Neg(), {simplExpr->rhsChild})});
-    }
-  }
-
-  if (lhsInt && *lhsInt == ZERO) {
+  if (auto lhsInt = cast<Integer>(simplExpr->lhsChild); lhsInt && *lhsInt == ZERO) {
     return simplExpr->lhsChild;
   }
 
