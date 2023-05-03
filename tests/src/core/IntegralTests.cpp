@@ -11,6 +11,11 @@ using namespace fintamath;
 namespace {
 
 class TestIntegral : public IIntegralCRTP<TestIntegral> {
+public:
+  std::string toString() const override {
+    return "aaaaaa";
+  }
+
 protected:
   TestIntegral &mod(const TestIntegral & /* rhs */) override {
     return *this;
@@ -63,10 +68,10 @@ protected:
 
 class TestIntegralConvertable : public TestIntegral {
 public:
-  TestIntegralConvertable() {
+  TestIntegralConvertable() : TestIntegral() {
   }
 
-  TestIntegralConvertable(const Integer &rhs) {
+  TestIntegralConvertable(const Integer &rhs) : TestIntegralConvertable() {
   }
 };
 
@@ -101,8 +106,8 @@ TEST(IntegralTests, modTest) {
   EXPECT_TRUE(is<Integer>(*m1 % *m2));
   EXPECT_TRUE(is<Integer>(*m2 % *m1));
 
-  EXPECT_TRUE(is<TestIntegralConvertable>(*m1 % TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegralConvertable>(TestIntegralConvertable() % *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 % TestIntegralConvertable()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() % *m1));
 
   EXPECT_THROW(*m1 % TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() % *m1, InvalidInputBinaryOperatorException);
@@ -125,8 +130,8 @@ TEST(IntegralTests, bitAndTest) {
   EXPECT_TRUE(is<Integer>(*m1 & *m2));
   EXPECT_TRUE(is<Integer>(*m2 & *m1));
 
-  EXPECT_TRUE(is<TestIntegralConvertable>(*m1 & TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegralConvertable>(TestIntegralConvertable() & *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 & TestIntegralConvertable()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() & *m1));
 
   EXPECT_THROW(*m1 & TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() & *m1, InvalidInputBinaryOperatorException);
@@ -149,8 +154,8 @@ TEST(IntegralTests, bitOrTest) {
   EXPECT_TRUE(is<Integer>(*m1 | *m2));
   EXPECT_TRUE(is<Integer>(*m2 | *m1));
 
-  EXPECT_TRUE(is<TestIntegralConvertable>(*m1 | TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegralConvertable>(TestIntegralConvertable() | *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 | TestIntegralConvertable()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() | *m1));
 
   EXPECT_THROW(*m1 | TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() | *m1, InvalidInputBinaryOperatorException);
@@ -173,8 +178,8 @@ TEST(IntegralTests, bitXorTest) {
   EXPECT_TRUE(is<Integer>(*m1 ^ *m2));
   EXPECT_TRUE(is<Integer>(*m2 ^ *m1));
 
-  EXPECT_TRUE(is<TestIntegralConvertable>(*m1 ^ TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegralConvertable>(TestIntegralConvertable() ^ *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 ^ TestIntegralConvertable()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() ^ *m1));
 
   EXPECT_THROW(*m1 ^ TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() ^ *m1, InvalidInputBinaryOperatorException);
@@ -197,8 +202,8 @@ TEST(IntegralTests, bitLeftShiftTest) {
   EXPECT_TRUE(is<Integer>(*m1 << *m2));
   EXPECT_TRUE(is<Integer>(*m2 << *m1));
 
-  EXPECT_TRUE(is<TestIntegralConvertable>(*m1 << TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegralConvertable>(TestIntegralConvertable() << *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 << TestIntegralConvertable()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() << *m1));
 
   EXPECT_THROW(*m1 << TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() << *m1, InvalidInputBinaryOperatorException);
@@ -221,8 +226,8 @@ TEST(IntegralTests, bitRightShiftTest) {
   EXPECT_TRUE(is<Integer>(*m1 >> *m2));
   EXPECT_TRUE(is<Integer>(*m2 >> *m1));
 
-  EXPECT_TRUE(is<TestIntegralConvertable>(*m1 >> TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegralConvertable>(TestIntegralConvertable() >> *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 >> TestIntegralConvertable()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() >> *m1));
 
   EXPECT_THROW(*m1 >> TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() >> *m1, InvalidInputBinaryOperatorException);
