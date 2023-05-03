@@ -26,11 +26,7 @@ file(
   "src/*.hpp"
   "src/*.cpp")
 
-if(${PROJECT_NAME}_build_shared)
-  add_library(${PROJECT_NAME} SHARED ${SOURCES})
-else()
-  add_library(${PROJECT_NAME} ${SOURCES})
-endif()
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 target_include_directories(
   ${PROJECT_NAME}
