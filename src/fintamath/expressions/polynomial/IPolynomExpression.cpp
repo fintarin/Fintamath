@@ -34,10 +34,6 @@ ArgumentPtr IPolynomExpression::simplify() const {
   preSimplifyChild(simpl);
   postSimplifyChild(simpl);
 
-  if (auto simplExpr = cast<IPolynomExpression>(simpl->clone()); simplExpr && simplExpr->children.size() == 1) {
-    return simplExpr->children.front();
-  }
-
   return simpl;
 }
 
@@ -266,10 +262,6 @@ int IPolynomExpression::comparatorPolynomsAndBinaryFunctions(const ArgumentPtr &
 
 int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
                                             const std::shared_ptr<const IExpression> &rhsExpr) const {
-
-  if (!lhsExpr || !rhsExpr) {
-    return 0;
-  }
 
   auto lhsFunc = lhsExpr->getFunction();
   auto rhsFunc = rhsExpr->getFunction();
