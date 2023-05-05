@@ -5,26 +5,26 @@
 
 namespace fintamath {
 
-extern const Integer ZERO;
+inline static const Integer ZERO = 0;
 
-extern const Integer ONE;
+inline static const Integer ONE = 1;
 
-extern const Integer TWO;
+inline static const Integer TWO = 2;
 
-extern const Integer THREE;
+inline static const Integer THREE = 3;
 
-extern const Integer TEN;
+inline static const Integer TEN = 10;
 
-extern const Integer NEG_ONE;
+inline static const Integer NEG_ONE = -1;
 
-extern const Integer NEG_TWO;
+inline static const Integer NEG_TWO = -2;
 
-extern const Integer NEG_THREE;
+inline static const Integer NEG_THREE = -3;
 
-extern const Integer NEG_TEN;
+inline static const Integer NEG_TEN = -10;
 
-extern const Real E_NUM;
+inline static const Real E_NUM = Real::getE();
 
-extern const Real PI_NUM;
+inline static const Real PI_NUM = Real::getPi();
 
 }
