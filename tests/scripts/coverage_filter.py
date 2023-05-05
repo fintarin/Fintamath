@@ -39,7 +39,7 @@ def get_branch_data_line_nums(source_file: TextIO) -> Generator[int, None, None]
     if not line:
       continue
 
-    line = re.sub("\".*?\"|\".*?\"", "", line)
+    line = re.sub("(\".*?\")|(\'.*?\')", "", line)
 
     if open_brackets_num > 0:
       open_brackets_num += get_brackets_diff(line)
