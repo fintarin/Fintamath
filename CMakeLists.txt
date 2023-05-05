@@ -28,7 +28,11 @@ file(
   "src/*.hpp"
   "src/*.cpp")
 
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
+if(${PROJECT_NAME}_build_shared)
+  add_library(${PROJECT_NAME} SHARED ${SOURCES})
+else()
+  add_library(${PROJECT_NAME} ${SOURCES})
+endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
