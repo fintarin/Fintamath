@@ -23,10 +23,7 @@ public:
   }
 
 private:
-  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> &getParser() {
-    static Parser::Vector<std::unique_ptr<INumber>, const std::string &> parser;
-    return parser;
-  }
+  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> &getParser();
 };
 
 inline std::unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs) {

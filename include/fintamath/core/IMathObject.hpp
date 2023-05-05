@@ -57,10 +57,7 @@ protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> &getParser() {
-    static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> parser;
-    return parser;
-  }
+  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> &getParser();
 };
 
 template <typename Derived>

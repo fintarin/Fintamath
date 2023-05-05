@@ -62,10 +62,7 @@ protected:
   virtual std::unique_ptr<IIntegral> bitNotAbstract() const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> &getParser() {
-    static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> parser;
-    return parser;
-  }
+  static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> &getParser();
 };
 
 template <typename Derived>

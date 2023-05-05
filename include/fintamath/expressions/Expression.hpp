@@ -98,10 +98,7 @@ private:
   friend std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
 private:
-  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &getExpressionMakers() {
-    static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionMakers;
-    return expressionMakers;
-  }
+  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &getExpressionMakers();
 
 private:
   ArgumentPtr child;

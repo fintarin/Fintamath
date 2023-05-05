@@ -55,10 +55,7 @@ protected:
   static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &function, const ArgumentsRefVector &args);
 
 private:
-  static Parser::Map<std::unique_ptr<IFunction>> &getParser() {
-    static Parser::Map<std::unique_ptr<IFunction>> parser;
-    return parser;
-  }
+  static Parser::Map<std::unique_ptr<IFunction>> &getParser();
 };
 
 template <typename Return, typename Derived, typename... Args>

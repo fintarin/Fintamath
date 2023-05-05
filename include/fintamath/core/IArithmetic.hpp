@@ -92,30 +92,15 @@ protected:
   virtual std::unique_ptr<IArithmetic> unaryPlusAbstract() const = 0;
 
 private:
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiAdd() {
-    static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiAdd;
-    return multiAdd;
-  }
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiAdd();
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiSub() {
-    static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiSub;
-    return multiSub;
-  }
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiSub();
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiMul() {
-    static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiMul;
-    return multiMul;
-  }
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiMul();
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiDiv() {
-    static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiDiv;
-    return multiDiv;
-  }
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiDiv();
 
-  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> &getParser() {
-    static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> parser;
-    return parser;
-  }
+  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> &getParser();
 };
 
 template <typename Derived>

@@ -73,6 +73,75 @@
 #include "fintamath/parser/Parser.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
+namespace fintamath {
+
+std::multimap<TypeInfo, TypeInfo> &InheritanceTable::getTable() {
+  static std::multimap<TypeInfo, TypeInfo> table;
+  return table;
+}
+
+TokenVector &Tokenizer::getRegisteredTokens() {
+  static TokenVector registeredTokens;
+  return registeredTokens;
+}
+
+Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> &IMathObject::getParser() {
+  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> parser;
+  return parser;
+}
+
+Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> &IArithmetic::getParser() {
+  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> parser;
+  return parser;
+}
+
+Parser::Vector<std::unique_ptr<IComparable>, const std::string &> &IComparable::getParser() {
+  static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> parser;
+  return parser;
+}
+
+Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> &IIncremental::getParser() {
+  static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> parser;
+  return parser;
+}
+
+Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> &IIntegral::getParser() {
+  static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> parser;
+  return parser;
+}
+
+Parser::Vector<std::unique_ptr<INumber>, const std::string &> &INumber::getParser() {
+  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> parser;
+  return parser;
+}
+
+Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> &ILiteral::getParser() {
+  static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> parser;
+  return parser;
+}
+
+Parser::Map<std::unique_ptr<IConstant>> &IConstant::getParser() {
+  static Parser::Map<std::unique_ptr<IConstant>> parser;
+  return parser;
+}
+
+Parser::Map<std::unique_ptr<IFunction>> &IFunction::getParser() {
+  static Parser::Map<std::unique_ptr<IFunction>> parser;
+  return parser;
+}
+
+Parser::Map<std::unique_ptr<IOperator>> &IOperator::getParser() {
+  static Parser::Map<std::unique_ptr<IOperator>> parser;
+  return parser;
+}
+
+Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &IExpression::getParser() {
+  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parser;
+  return parser;
+}
+
+}
+
 using namespace fintamath;
 
 namespace {

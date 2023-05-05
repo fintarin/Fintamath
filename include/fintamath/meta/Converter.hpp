@@ -21,10 +21,7 @@ public:
   }
 
 private:
-  static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> &getConverter() {
-    static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> converter;
-    return converter;
-  }
+  static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> &getConverter();
 };
 
 }
