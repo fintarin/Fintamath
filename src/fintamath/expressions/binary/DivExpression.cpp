@@ -153,16 +153,16 @@ ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     numerator = lhsChildren.front();
   }
 
+  if (rhsChildren.empty()) {
+    return numerator;
+  }
+
   ArgumentPtr denominator;
   if (rhsChildren.size() > 1) {
     denominator = makeFunctionExpression(Mul(), rhsChildren);
   }
   else {
     denominator = rhsChildren.front();
-  }
-
-  if (rhsChildren.empty()) {
-    return numerator;
   }
 
   if (lhsChildren.size() != lhsChildrenSizeInitial || rhsChildren.size() != rhsChildrenSizeInitial) {
