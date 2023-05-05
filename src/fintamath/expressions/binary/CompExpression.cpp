@@ -127,20 +127,20 @@ void CompExpression::markAsSolution() {
 
 void CompExpression::addOppositeFunctions(const std::shared_ptr<IFunction> &function,
                                           const std::shared_ptr<IFunction> &opposite) {
-  oppositeFunctionsMap.try_emplace(function->toString(), opposite);
+  getOppositeFunctionsMap().try_emplace(function->toString(), opposite);
 }
 
 std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const std::shared_ptr<IFunction> &function) {
-  return oppositeFunctionsMap[function->toString()];
+  return getOppositeFunctionsMap()[function->toString()];
 }
 
 void CompExpression::addLogicOppositeFunctions(const std::shared_ptr<IFunction> &function,
                                                const std::shared_ptr<IFunction> &opposite) {
-  logicOppositeFunctionsMap.try_emplace(function->toString(), opposite);
+  getLogicOppositeFunctionsMap().try_emplace(function->toString(), opposite);
 }
 
 std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const std::shared_ptr<IFunction> &function) {
-  return logicOppositeFunctionsMap[function->toString()];
+  return getLogicOppositeFunctionsMap()[function->toString()];
 }
 
 }

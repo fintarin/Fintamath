@@ -7,13 +7,6 @@
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
 
-namespace fintamath {
-
-std::map<std::string, std::shared_ptr<IFunction>, std::less<>> CompExpression::oppositeFunctionsMap;
-std::map<std::string, std::shared_ptr<IFunction>, std::less<>> CompExpression::logicOppositeFunctionsMap;
-
-}
-
 using namespace fintamath;
 
 namespace {

@@ -26,11 +26,11 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
   static void registerType(Parser::Function<std::unique_ptr<IComparable>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(parserVector, parserFunc);
+    Parser::registerType<T>(getParser(), parserFunc);
   }
 
   static std::unique_ptr<IComparable> parse(const std::string &str) {
-    return Parser::parse(parserVector, str);
+    return Parser::parse(getParser(), str);
   }
 
 protected:
@@ -39,7 +39,10 @@ protected:
   virtual bool moreAbstract(const IComparable &rhs) const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> &getParser() {
+    static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> parser;
+    return parser;
+  }
 };
 
 template <typename Derived>

@@ -16,18 +16,21 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
   static void registerType() {
-    Parser::registerType<T>(parserMap);
+    Parser::registerType<T>(getParser());
   }
 
   static std::unique_ptr<IConstant> parse(const std::string &parsedStr) {
-    return Parser::parse<std::unique_ptr<IConstant>>(parserMap, parsedStr);
+    return Parser::parse<std::unique_ptr<IConstant>>(getParser(), parsedStr);
   }
 
 protected:
   virtual std::unique_ptr<IMathObject> call() const = 0;
 
 private:
-  static Parser::Map<std::unique_ptr<IConstant>> parserMap;
+  static Parser::Map<std::unique_ptr<IConstant>> &getParser() {
+    static Parser::Map<std::unique_ptr<IConstant>> parser;
+    return parser;
+  }
 };
 
 template <typename Return, typename Derived>

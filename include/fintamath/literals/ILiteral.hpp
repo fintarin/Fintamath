@@ -11,20 +11,23 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
   static void registerType() {
-    Parser::registerType<T>(parserVector);
+    Parser::registerType<T>(getParser());
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
   static void registerType(Parser::Function<std::unique_ptr<ILiteral>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(parserVector, parserFunc);
+    Parser::registerType<T>(getParser(), parserFunc);
   }
 
   static std::unique_ptr<ILiteral> parse(const std::string &str) {
-    return Parser::parse(parserVector, str);
+    return Parser::parse(getParser(), str);
   }
 
 private:
-  static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> &getParser() {
+    static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> parser;
+    return parser;
+  }
 };
 
 template <typename Derived>

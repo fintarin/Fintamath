@@ -15,15 +15,18 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
   static void registerType() {
-    Parser::registerType<T>(parserVector);
+    Parser::registerType<T>(getParser());
   }
 
   static std::unique_ptr<INumber> parse(const std::string &str) {
-    return Parser::parse(parserVector, str);
+    return Parser::parse(getParser(), str);
   }
 
 private:
-  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> &getParser() {
+    static Parser::Vector<std::unique_ptr<INumber>, const std::string &> parser;
+    return parser;
+  }
 };
 
 inline std::unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs) {

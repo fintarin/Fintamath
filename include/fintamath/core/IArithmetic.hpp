@@ -9,28 +9,28 @@ namespace fintamath {
 class IArithmetic : virtual public IMathObject {
 public:
   friend inline std::unique_ptr<IArithmetic> operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
-    if (auto res = IArithmetic::multiAdd(lhs, rhs)) {
+    if (auto res = IArithmetic::getMultiAdd()(lhs, rhs)) {
       return res;
     }
     return lhs.addAbstract(rhs);
   }
 
   friend inline std::unique_ptr<IArithmetic> operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
-    if (auto res = IArithmetic::multiSub(lhs, rhs)) {
+    if (auto res = IArithmetic::getMultiSub()(lhs, rhs)) {
       return res;
     }
     return lhs.substractAbstract(rhs);
   }
 
   friend inline std::unique_ptr<IArithmetic> operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
-    if (auto res = IArithmetic::multiMul(lhs, rhs)) {
+    if (auto res = IArithmetic::getMultiMul()(lhs, rhs)) {
       return res;
     }
     return lhs.multiplyAbstract(rhs);
   }
 
   friend inline std::unique_ptr<IArithmetic> operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
-    if (auto res = IArithmetic::multiDiv(lhs, rhs)) {
+    if (auto res = IArithmetic::getMultiDiv()(lhs, rhs)) {
       return res;
     }
     return lhs.divideAbstract(rhs);
@@ -46,36 +46,36 @@ public:
 
   template <typename Lhs, typename Rhs, typename Func>
   static void addMultiAddFunction(const Func &func) {
-    multiAdd.add<Lhs, Rhs>(func);
+    getMultiAdd().add<Lhs, Rhs>(func);
   }
 
   template <typename Lhs, typename Rhs, typename Func>
   static void addMultiSubFunction(const Func &func) {
-    multiSub.add<Lhs, Rhs>(func);
+    getMultiSub().add<Lhs, Rhs>(func);
   }
 
   template <typename Lhs, typename Rhs, typename Func>
   static void addMultiMulFunction(const Func &func) {
-    multiMul.add<Lhs, Rhs>(func);
+    getMultiMul().add<Lhs, Rhs>(func);
   }
 
   template <typename Lhs, typename Rhs, typename Func>
   static void addMultiDivFunction(const Func &func) {
-    multiDiv.add<Lhs, Rhs>(func);
+    getMultiDiv().add<Lhs, Rhs>(func);
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
   static void registerType() {
-    Parser::registerType<T>(parserVector);
+    Parser::registerType<T>(getParser());
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
   static void registerType(Parser::Function<std::unique_ptr<IArithmetic>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(parserVector, parserFunc);
+    Parser::registerType<T>(getParser(), parserFunc);
   }
 
   static std::unique_ptr<IArithmetic> parse(const std::string &str) {
-    return Parser::parse(parserVector, str);
+    return Parser::parse(getParser(), str);
   }
 
 protected:
@@ -92,15 +92,30 @@ protected:
   virtual std::unique_ptr<IArithmetic> unaryPlusAbstract() const = 0;
 
 private:
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiAdd;
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiAdd() {
+    static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiAdd;
+    return multiAdd;
+  }
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiSub;
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiSub() {
+    static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiSub;
+    return multiSub;
+  }
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiMul;
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiMul() {
+    static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiMul;
+    return multiMul;
+  }
 
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiDiv;
+  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiDiv() {
+    static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> multiDiv;
+    return multiDiv;
+  }
 
-  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> &getParser() {
+    static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> parser;
+    return parser;
+  }
 };
 
 template <typename Derived>

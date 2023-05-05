@@ -404,7 +404,7 @@ ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVect
 }
 
 std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {
-  if (std::shared_ptr<IExpression> expr = Parser::parse(Expression::expressionBuildersMap, func.toString(), args)) {
+  if (std::shared_ptr<IExpression> expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), args)) {
     return expr;
   }
 

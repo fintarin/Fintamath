@@ -13,15 +13,18 @@ public:
   template <typename Type, typename Value>
   static void
   add(const std::function<std::unique_ptr<IMathObject>(const Type &type, const Value &value)> &convertFunc) {
-    converter.add<Type, Value>(convertFunc);
+    getConverter().add<Type, Value>(convertFunc);
   }
 
   static std::unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) {
-    return converter(to, from);
+    return getConverter()(to, from);
   }
 
 private:
-  static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> converter;
+  static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> &getConverter() {
+    static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> converter;
+    return converter;
+  }
 };
 
 }

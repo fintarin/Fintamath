@@ -27,11 +27,11 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
   static void registerType() {
-    Parser::registerType<T>(parserVector);
+    Parser::registerType<T>(getParser());
   }
 
   static std::unique_ptr<IExpression> parse(const std::string &str) {
-    return Parser::parse(parserVector, str);
+    return Parser::parse(getParser(), str);
   }
 
 protected:
@@ -57,7 +57,10 @@ private:
   static bool isVariableUnique(const std::vector<Variable> &vars, const Variable &var);
 
 private:
-  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &getParser() {
+    static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parser;
+    return parser;
+  }
 };
 
 template <typename Derived>

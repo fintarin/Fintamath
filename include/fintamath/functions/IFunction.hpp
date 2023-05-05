@@ -39,24 +39,26 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
   static void registerType() {
-    Parser::registerType<T>(parserMap);
+    Parser::registerType<T>(getParser());
   }
 
   static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
     Parser::Comparator<const std::unique_ptr<IFunction> &> comp = [type](const std::unique_ptr<IFunction> &func) {
       return type == IFunction::Type::Any || func->getFunctionType() == type;
     };
-    return Parser::parse<std::unique_ptr<IFunction>>(parserMap, comp, parsedStr);
+    return Parser::parse<std::unique_ptr<IFunction>>(getParser(), comp, parsedStr);
   }
 
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
 
-  static const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
-      makeFunctionExpression;
+  static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &function, const ArgumentsRefVector &args);
 
 private:
-  static Parser::Map<std::unique_ptr<IFunction>> parserMap;
+  static Parser::Map<std::unique_ptr<IFunction>> &getParser() {
+    static Parser::Map<std::unique_ptr<IFunction>> parser;
+    return parser;
+  }
 };
 
 template <typename Return, typename Derived, typename... Args>

@@ -51,7 +51,7 @@ public:
           return std::shared_ptr<IExpression>();
         };
 
-    Parser::add<Function>(expressionBuildersMap, constructor);
+    Parser::add<Function>(getExpressionMakers(), constructor);
   }
 
 protected:
@@ -98,9 +98,13 @@ private:
   friend std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
 private:
-  ArgumentPtr child;
+  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &getExpressionMakers() {
+    static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionMakers;
+    return expressionMakers;
+  }
 
-  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionBuildersMap;
+private:
+  ArgumentPtr child;
 };
 
 Expression operator+(const Variable &lhs, const Variable &rhs);

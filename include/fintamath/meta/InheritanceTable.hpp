@@ -16,7 +16,7 @@ public:
       typename Base, typename Derived,
       typename = std::enable_if_t<std::is_base_of_v<IMathObject, Base> && std::is_base_of_v<IMathObject, Derived>>>
   static void add() {
-    table.insert({typeid(Base), typeid(Derived)});
+    getTable().insert({typeid(Base), typeid(Derived)});
   }
 
   static bool isBaseOf(const std::type_info &baseType, const std::type_info &derivedType);
@@ -24,8 +24,10 @@ public:
 private:
   static bool isBaseOf(std::queue<TypeInfo> &baseTypes, const TypeInfo &derivedType);
 
-private:
-  static std::multimap<TypeInfo, TypeInfo> table;
+  static std::multimap<TypeInfo, TypeInfo> &getTable() {
+    static std::multimap<TypeInfo, TypeInfo> table;
+    return table;
+  }
 };
 
 }

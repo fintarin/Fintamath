@@ -30,7 +30,7 @@ public:
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IOperator, T>>>
   static void registerType() {
     IFunction::registerType<T>();
-    Parser::registerType<T>(parserMap);
+    Parser::registerType<T>(getParser());
   }
 
   static std::unique_ptr<IOperator> parse(const std::string &parsedStr,
@@ -38,11 +38,14 @@ public:
     Parser::Comparator<const std::unique_ptr<IOperator> &> comp = [priority](const std::unique_ptr<IOperator> &oper) {
       return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
     };
-    return Parser::parse<std::unique_ptr<IOperator>>(parserMap, comp, parsedStr);
+    return Parser::parse<std::unique_ptr<IOperator>>(getParser(), comp, parsedStr);
   }
 
 private:
-  static Parser::Map<std::unique_ptr<IOperator>> parserMap;
+  static Parser::Map<std::unique_ptr<IOperator>> &getParser() {
+    static Parser::Map<std::unique_ptr<IOperator>> parser;
+    return parser;
+  }
 };
 
 template <typename Return, typename Derived, typename... Args>

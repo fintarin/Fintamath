@@ -39,11 +39,11 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IIntegral, T>>>
   static void registerType() {
-    Parser::registerType<T>(parserVector);
+    Parser::registerType<T>(getParser());
   }
 
   static std::unique_ptr<IIntegral> parse(const std::string &str) {
-    return Parser::parse(parserVector, str);
+    return Parser::parse(getParser(), str);
   }
 
 protected:
@@ -62,7 +62,10 @@ protected:
   virtual std::unique_ptr<IIntegral> bitNotAbstract() const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> &getParser() {
+    static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> parser;
+    return parser;
+  }
 };
 
 template <typename Derived>

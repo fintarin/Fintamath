@@ -18,8 +18,8 @@ bool InheritanceTable::isBaseOf(std::queue<TypeInfo> &baseTypes, const TypeInfo 
     return false;
   }
 
-  auto it = table.lower_bound(baseTypes.front());
-  auto end = table.upper_bound(baseTypes.front());
+  auto it = getTable().lower_bound(baseTypes.front());
+  auto end = getTable().upper_bound(baseTypes.front());
 
   while (it != end) {
     if (it->second == derivedType) {

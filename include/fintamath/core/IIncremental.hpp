@@ -30,11 +30,11 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IIncremental, T>>>
   static void registerType() {
-    Parser::registerType<T>(parserVector);
+    Parser::registerType<T>(getParser());
   }
 
   static std::unique_ptr<IIncremental> parse(const std::string &str) {
-    return Parser::parse(parserVector, str);
+    return Parser::parse(getParser(), str);
   }
 
 protected:
@@ -43,7 +43,10 @@ protected:
   virtual IIncremental &decreaseAbstract() = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> &getParser() {
+    static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> parser;
+    return parser;
+  }
 };
 
 template <typename Derived>

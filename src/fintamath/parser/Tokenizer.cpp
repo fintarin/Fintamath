@@ -25,8 +25,8 @@ TokenVector Tokenizer::tokenize(std::string str) {
 
       // TODO: do it in Expression
       if (!tokens.empty() && tokens.back() != "(" && tokens.back() != "," && ch == '(') {
-        if (tokens.back() == ")" ||
-            std::find(registeredTokens.begin(), registeredTokens.end(), tokens.back()) == registeredTokens.end()) {
+        if (tokens.back() == ")" || std::find(getRegisteredTokens().begin(), getRegisteredTokens().end(),
+                                              tokens.back()) == getRegisteredTokens().end()) {
           tokens.emplace_back("*");
         }
       }
@@ -66,8 +66,8 @@ std::string Tokenizer::tokensToString(const TokenVector &tokens) {
 
 void Tokenizer::registerToken(const Token &token) {
   // TODO: use more efficient algorithm to emplace
-  registeredTokens.emplace_back(token);
-  std::sort(registeredTokens.begin(), registeredTokens.end(), [](const Token &a, const Token &b) {
+  getRegisteredTokens().emplace_back(token);
+  std::sort(getRegisteredTokens().begin(), getRegisteredTokens().end(), [](const Token &a, const Token &b) {
     return a.length() > b.length();
   });
 }
@@ -80,8 +80,8 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
   if (!shouldSplit) {
     // TODO: do it in Expression
     if (!tokens.empty() && tokens.back() != "," && tokens.back() != "(") {
-      if (isUpperLetter(tokens.back().front()) ||
-          std::find(registeredTokens.begin(), registeredTokens.end(), tokens.back()) == registeredTokens.end()) {
+      if (isUpperLetter(tokens.back().front()) || std::find(getRegisteredTokens().begin(), getRegisteredTokens().end(),
+                                                            tokens.back()) == getRegisteredTokens().end()) {
         tokens.emplace_back("*");
       }
     }
@@ -95,10 +95,10 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
   bool isPreviousTokenNested = true;
 
   while (!token.empty()) {
-    std::string nestedToken = token.substr(0, registeredTokens.front().length());
+    std::string nestedToken = token.substr(0, getRegisteredTokens().front().length());
     bool isNestedTokenFind = false;
 
-    for (const auto &registeredToken : registeredTokens) {
+    for (const auto &registeredToken : getRegisteredTokens()) {
       if (nestedToken.length() < registeredToken.length()) {
         continue;
       }

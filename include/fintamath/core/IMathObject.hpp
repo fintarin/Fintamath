@@ -46,18 +46,21 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IMathObject, T>>>
   static void registerType(Parser::Function<std::unique_ptr<IMathObject>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(parserVector, parserFunc);
+    Parser::registerType<T>(getParser(), parserFunc);
   }
 
   static std::unique_ptr<IMathObject> parse(const std::string &str) {
-    return Parser::parse(parserVector, str);
+    return Parser::parse(getParser(), str);
   }
 
 protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> &getParser() {
+    static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> parser;
+    return parser;
+  }
 };
 
 template <typename Derived>
