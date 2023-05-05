@@ -35,8 +35,7 @@ private:
 
   static bool isCloseBracket(char c);
 
-private:
-  inline static TokenVector registeredTokens;
+  static TokenVector registeredTokens;
 };
 
 }

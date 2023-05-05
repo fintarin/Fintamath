@@ -73,6 +73,30 @@
 #include "fintamath/parser/Parser.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
+namespace fintamath {
+
+std::multimap<TypeInfo, TypeInfo> InheritanceTable::table;
+
+TokenVector Tokenizer::registeredTokens;
+
+Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> IMathObject::parserVector;
+Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> IArithmetic::parserVector;
+Parser::Vector<std::unique_ptr<IComparable>, const std::string &> IComparable::parserVector;
+Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> IIncremental::parserVector;
+Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> IIntegral::parserVector;
+
+Parser::Vector<std::unique_ptr<INumber>, const std::string &> INumber::parserVector;
+
+Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> ILiteral::parserVector;
+Parser::Map<std::unique_ptr<IConstant>> IConstant::parserMap;
+
+Parser::Map<std::unique_ptr<IFunction>> IFunction::parserMap;
+Parser::Map<std::unique_ptr<IOperator>> IOperator::parserMap;
+
+Parser::Vector<std::unique_ptr<IExpression>, const std::string &> IExpression::parserVector;
+
+}
+
 using namespace fintamath;
 
 namespace {

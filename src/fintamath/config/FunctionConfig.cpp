@@ -2,18 +2,11 @@
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 
-using namespace fintamath;
+namespace fintamath {
 
-namespace {
-
-struct FunctionConfig {
-  FunctionConfig() {
-    IFunction::registerFunctionExpressionMaker([](const IFunction &function, const ArgumentsRefVector &args) {
-      return makeFunctionExpression(function, args);
-    });
-  }
-};
-
-const FunctionConfig config;
+const std::function<std::unique_ptr<IMathObject>(const IFunction &function, const ArgumentsRefVector &args)>
+    IFunction::makeFunctionExpression = [](const IFunction &function, const ArgumentsRefVector &args) {
+      return fintamath::makeFunctionExpression(function, args);
+    };
 
 }

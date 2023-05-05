@@ -27,7 +27,7 @@ protected:
   virtual std::unique_ptr<IMathObject> call() const = 0;
 
 private:
-  inline static Parser::Map<std::unique_ptr<IConstant>> parserMap;
+  static Parser::Map<std::unique_ptr<IConstant>> parserMap;
 };
 
 template <typename Return, typename Derived>

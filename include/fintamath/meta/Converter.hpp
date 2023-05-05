@@ -21,7 +21,7 @@ public:
   }
 
 private:
-  inline static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> converter;
+  static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> converter;
 };
 
 }

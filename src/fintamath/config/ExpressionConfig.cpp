@@ -45,6 +45,12 @@
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
+namespace fintamath {
+
+Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> Expression::expressionBuildersMap;
+
+}
+
 using namespace fintamath;
 
 namespace {

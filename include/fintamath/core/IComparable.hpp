@@ -39,7 +39,7 @@ protected:
   virtual bool moreAbstract(const IComparable &rhs) const = 0;
 
 private:
-  inline static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> parserVector;
 };
 
 template <typename Derived>

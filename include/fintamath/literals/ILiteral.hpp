@@ -24,7 +24,7 @@ public:
   }
 
 private:
-  inline static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> parserVector;
 };
 
 template <typename Derived>

@@ -4,6 +4,15 @@
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
+namespace fintamath {
+
+MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiAdd;
+MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiSub;
+MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiMul;
+MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> IArithmetic::multiDiv;
+
+}
+
 using namespace fintamath;
 
 namespace {

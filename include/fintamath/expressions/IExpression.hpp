@@ -57,7 +57,7 @@ private:
   static bool isVariableUnique(const std::vector<Variable> &vars, const Variable &var);
 
 private:
-  inline static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parserVector;
 };
 
 template <typename Derived>

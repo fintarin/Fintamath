@@ -43,7 +43,7 @@ protected:
   virtual IIncremental &decreaseAbstract() = 0;
 
 private:
-  inline static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> parserVector;
+  static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> parserVector;
 };
 
 template <typename Derived>

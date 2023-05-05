@@ -32,9 +32,9 @@ protected:
   ArgumentPtr logicNegate() const override;
 
 private:
-  inline static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctionsMap;
+  static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctionsMap;
 
-  inline static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> logicOppositeFunctionsMap;
+  static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> logicOppositeFunctionsMap;
 
 private:
   bool isSolution = false;

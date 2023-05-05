@@ -100,7 +100,7 @@ private:
 private:
   ArgumentPtr child;
 
-  inline static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionBuildersMap;
+  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionBuildersMap;
 };
 
 Expression operator+(const Variable &lhs, const Variable &rhs);

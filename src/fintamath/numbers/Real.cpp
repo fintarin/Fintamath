@@ -152,14 +152,6 @@ const std::unique_ptr<RealImpl> &Real::getImpl() const {
   return impl;
 }
 
-Real Real::getE() {
-  return RealImpl(default_ops::get_constant_e<RealImpl::Backend::backend_type>());
-}
-
-Real Real::getPi() {
-  return RealImpl(default_ops::get_constant_pi<RealImpl::Backend::backend_type>());
-}
-
 bool Real::equals(const Real &rhs) const {
   return (*this - rhs).isNearZero();
 }
