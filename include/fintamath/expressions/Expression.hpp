@@ -89,27 +89,29 @@ protected:
 private:
   explicit Expression(const TermVector &terms);
 
+  explicit Expression(const TermVector &terms, size_t start, size_t end);
+
+  bool parseBinaryOperator(const TermVector &terms, size_t start, size_t end);
+
+  bool parsePrefixOperator(const TermVector &terms, size_t start, size_t end);
+
+  bool parsePostfixOperator(const TermVector &terms, size_t start, size_t end);
+
+  bool parseFunction(const TermVector &terms, size_t start, size_t end);
+
+  bool parseBrackets(const TermVector &terms, size_t start, size_t end);
+
+  bool parseFiniteTerm(const TermVector &terms, size_t start, size_t end);
+
+  static ArgumentsPtrVector parseFunctionArgs(const TermVector &terms, size_t start, size_t end);
+
   static TermVector tokensToTerms(const TokenVector &tokens);
 
   static void insertDelimiters(TermVector &terms);
 
-  bool parseBinaryOperator(const TermVector &terms);
-
-  bool parsePrefixOperator(const TermVector &terms);
-
-  bool parsePostfixOperator(const TermVector &terms);
-
-  bool parseFunction(const TermVector &terms);
-
-  bool parseBrackets(const TermVector &terms);
-
-  bool parseFiniteTerm(const TermVector &terms);
-
-  static ArgumentsPtrVector parseFunctionArgs(const TermVector &terms);
-
   static bool skipBrackets(const TermVector &terms, size_t &openBracketIndex);
 
-  static TermVector cutBrackets(const TermVector &terms);
+  static void cutBrackets(const TermVector &terms, size_t &start, size_t &end);
 
   static std::string termsToString(const TermVector &terms);
 
