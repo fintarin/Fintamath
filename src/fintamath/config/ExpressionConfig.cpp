@@ -47,11 +47,15 @@
 
 namespace fintamath {
 
-Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &Expression::getExpressionMakers() {
-  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> expressionMakers;
-  return expressionMakers;
+Parser::Vector<std::shared_ptr<Term>, const Token &> &Expression::getTermMakers() {
+  static Parser::Vector<std::shared_ptr<Term>, const Token &> maker;
+  return maker;
 }
 
+Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &Expression::getExpressionMakers() {
+  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> maker;
+  return maker;
+}
 }
 
 using namespace fintamath;
@@ -60,6 +64,40 @@ namespace {
 
 struct ExpressionConfig {
   ExpressionConfig() {
+    Expression::registerTermsMaker([](const Token &token) {
+      ArgumentsPtrVector args;
+
+      for (auto i = size_t(IFunction::Type::None); i < size_t(IFunction::Type::Any); i++) {
+        if (std::shared_ptr<IMathObject> arg = IFunction::parse(token, IFunction::Type(i))) {
+          args.emplace_back(arg);
+        }
+      }
+
+      if (!args.empty()) {
+        return std::make_shared<Term>(token, args);
+      }
+
+      return std::shared_ptr<Term>();
+    });
+
+    Expression::registerTermsMaker([](const Token &token) {
+      if (std::shared_ptr<IMathObject> arg = ILiteral::parse(token)) {
+        return std::make_shared<Term>(token, ArgumentsPtrVector{arg});
+      }
+
+      return std::shared_ptr<Term>();
+    });
+
+    Expression::registerTermsMaker([](const Token &token) {
+      if (std::shared_ptr<IMathObject> arg = INumber::parse(token)) {
+        return std::make_shared<Term>(token, ArgumentsPtrVector{arg});
+      }
+
+      return std::shared_ptr<Term>();
+    });
+
+    //---------------------------------------------------------------------------------------------------------//
+
     Expression::registerFunctionExpressionMaker<Add, true>([](const ArgumentsPtrVector &args) {
       return std::make_shared<SumExpression>(args);
     });
@@ -218,5 +256,4 @@ struct ExpressionConfig {
 };
 
 const ExpressionConfig config;
-
 }

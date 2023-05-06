@@ -6,67 +6,6 @@
 
 namespace fintamath {
 
-bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex) {
-  if (openBracketIndex >= tokens.size() || tokens.at(openBracketIndex) != "(") {
-    return false;
-  }
-
-  int64_t brackets = 0;
-
-  for (size_t i = openBracketIndex; i < tokens.size(); i++) {
-    if (tokens[i] == "(") {
-      brackets++;
-    }
-    else if (tokens[i] == ")") {
-      brackets--;
-    }
-
-    if (brackets == 0) {
-      openBracketIndex = i + 1;
-      return true;
-    }
-  }
-
-  throw InvalidInputException(Tokenizer::tokensToString(tokens));
-}
-
-TokenVector cutBrackets(const TokenVector &tokens) {
-  if (tokens.empty()) {
-    return tokens;
-  }
-  auto newTokens = tokens;
-  if (newTokens.front() == "(" && newTokens.back() == ")") {
-    newTokens.erase(newTokens.begin());
-    newTokens.erase(newTokens.end() - 1);
-  }
-  return newTokens;
-}
-
-std::map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens) {
-  std::map<size_t, ArgumentPtr> operators;
-
-  bool isPrevTokenOper = false;
-
-  for (size_t i = 0; i < tokens.size(); i++) {
-    if (skipBrackets(tokens, i)) {
-      isPrevTokenOper = false;
-      i--;
-    }
-    else if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.at(i));
-             oper && oper->getFunctionType() == IFunction::Type::Binary) {
-      if (!isPrevTokenOper) {
-        operators.insert({i, oper});
-        isPrevTokenOper = true;
-      }
-    }
-    else {
-      isPrevTokenOper = false;
-    }
-  }
-
-  return operators;
-}
-
 std::string putInBrackets(const std::string &str) {
   return '(' + str + ')';
 }

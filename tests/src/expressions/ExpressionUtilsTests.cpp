@@ -10,36 +10,6 @@
 
 using namespace fintamath;
 
-TEST(ExpressionUtilsTests, skipBracketsTest) {
-  size_t openBracketIndex = 0;
-  TokenVector tokens = {"(", "a", "+", "b", "(", "a", "+", "b", "(", "a", "+", "b", ")", ")", ")", "a", "b"};
-
-  EXPECT_TRUE(skipBrackets(tokens, openBracketIndex));
-  EXPECT_FALSE(skipBrackets(tokens, openBracketIndex));
-
-  EXPECT_EQ(openBracketIndex, 15);
-
-  openBracketIndex = 20;
-  EXPECT_FALSE(skipBrackets(tokens, openBracketIndex));
-  openBracketIndex = tokens.size();
-  EXPECT_FALSE(skipBrackets(tokens, openBracketIndex));
-
-  size_t index = 0;
-  EXPECT_THROW(skipBrackets(TokenVector{"(", "a"}, index), InvalidInputException);
-}
-
-TEST(ExpressionUtilsTests, cutBracketsTest) {
-  TokenVector emptyTokens = {};
-  TokenVector bracesTokens = {"(", "a", ")"};
-  TokenVector lhsBrace = {"(", "a"};
-  TokenVector rhsBrace = {"a", ")"};
-
-  EXPECT_EQ(cutBrackets(emptyTokens), TokenVector{});
-  EXPECT_EQ(cutBrackets(bracesTokens), TokenVector{"a"});
-  EXPECT_EQ(cutBrackets(lhsBrace), lhsBrace);
-  EXPECT_EQ(cutBrackets(rhsBrace), rhsBrace);
-}
-
 TEST(ExpressionUtilsTests, putInBracketsTest) {
   EXPECT_EQ(putInBrackets(""), "()");
   EXPECT_EQ(putInBrackets("a"), "(a)");

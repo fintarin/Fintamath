@@ -265,5 +265,5 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^b a = 0")).toString(), "a x^b = 0");
   EXPECT_EQ(solve(Expression("x/y = 0")).toString(), "x/y = 0");
   EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = sqrt(2 sin(2)) | x = -sqrt(2 sin(2))");
-  // EXPECT_EQ(solve(Expression("x! = 0")).toString(), "x! = 0"); // TODO: tokenizer
+  EXPECT_EQ(solve(Expression("x! = 0")).toString(), "x! = 0"); 
 }

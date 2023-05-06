@@ -12,28 +12,18 @@ class Tokenizer {
 public:
   static TokenVector tokenize(std::string str);
 
-  static std::string tokensToString(const TokenVector &tokens);
-
   static void registerToken(const Token &token);
 
 private:
-  static bool appendToken(TokenVector &tokens, Token &token, bool shouldSplit);
+  static bool appendToken(TokenVector &tokens, Token &token, bool shouldSplit = false);
 
   static TokenVector splitTokens(const Token &token);
 
   static void handleSpaces(std::string &str);
 
-  static bool isDigitOrPoint(char c);
+  static bool isDigitOrPoint(char ch);
 
-  static bool isLowerLetter(char c);
-
-  static bool isUpperLetter(char c);
-
-  static bool isBracket(char c);
-
-  static bool isOpenBracket(char c);
-
-  static bool isCloseBracket(char c);
+  static bool isSpace(char ch);
 
   static TokenVector &getRegisteredTokens();
 };

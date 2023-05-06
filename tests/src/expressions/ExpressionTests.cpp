@@ -80,7 +80,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2.35%").toString(), "47/2000");
   EXPECT_EQ(Expression("1100*4.76%").toString(), "1309/25");
   EXPECT_EQ(Expression("2.35%%%%").toString(), "47/2000000000");
-  // EXPECT_EQ(Expression("1100*4.76%1100*4.76%").toString(), "1713481/625"); // TODO: fix split tokens
+  EXPECT_EQ(Expression("1100*4.76%1100*4.76%").toString(), "1713481/625");
   // TODO: implement infinities
   // EXPECT_EQ(Expression("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))").toString(), "0");
 
@@ -208,6 +208,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)^-1").toString(), "1/(a b)");
   EXPECT_EQ(Expression("(a b)^-2").toString(), "1/(a^2 b^2)");
 
+  EXPECT_EQ(Expression("2%a").toString(), "1/50 a");
+  EXPECT_EQ(Expression("sin a").toString(), "sin(a)");
+  EXPECT_EQ(Expression("s i n a").toString(), "a i n s");
+
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
   EXPECT_EQ(Expression("a.2").toString(), "1/5 a");
   EXPECT_EQ(Expression("a+a").toString(), "2 a");
@@ -298,6 +302,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(10+2+3-5)^1000000000a/(9+1)^999999999").toString(), "10 a");
   EXPECT_EQ(Expression("10^(10^100/10^96)a/10^9999").toString(), "10 a");
   EXPECT_EQ(Expression("10^(10^100/10^90)a/10^9999999999").toString(), "10 a");
+  EXPECT_EQ(Expression("log(1000!,1000!)").toString(), "1");
   EXPECT_EQ(Expression("log(100000000000!,100000000000!)").toString(), "1");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");

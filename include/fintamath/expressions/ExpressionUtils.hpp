@@ -11,13 +11,6 @@ namespace fintamath {
 
 class IExpression;
 
-bool skipBrackets(const TokenVector &tokens, size_t &openBracketIndex);
-
-TokenVector cutBrackets(const TokenVector &tokens);
-
-// TODO: remove
-std::map<size_t, ArgumentPtr> findBinaryOperators(const TokenVector &tokens);
-
 std::string putInBrackets(const std::string &str);
 
 std::string putInSpaces(const std::string &str);

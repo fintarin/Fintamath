@@ -20,27 +20,9 @@ namespace fintamath {
 Expression::Expression() : child(ZERO.clone()) {
 }
 
-Expression::Expression(const std::string &str) : Expression(Tokenizer::tokenize(str)) {
+Expression::Expression(const std::string &str) : Expression(tokensToTerms(Tokenizer::tokenize(str))) {
   validateChild(child);
   simplifyChild(child);
-}
-
-Expression::Expression(const TokenVector &tokens) {
-  if (tokens.empty()) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
-
-  if (parseBinaryOperator(tokens) ||  //
-      parsePrefixOperator(tokens) ||  //
-      parsePostfixOperator(tokens) || //
-      parseFunction(tokens) ||        //
-      parseFiniteTerm(tokens)) {
-    return;
-  }
-
-  if (!child) {
-    throw InvalidInputException(Tokenizer::tokensToString(tokens));
-  }
 }
 
 Expression::Expression(const ArgumentPtr &obj) {
@@ -68,134 +50,104 @@ Expression Expression::precise(uint8_t precision) const {
   return Expression(preciseRec(child, precision, true));
 }
 
-ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify) {
-  if (const auto num = cast<INumber>(arg)) {
-    return std::make_shared<Real>(convert<Real>(*num).precise(precision));
+Expression::Expression(const TermVector &terms) {
+  if (terms.empty()) {
+    throw InvalidInputException(termsToString(terms));
   }
 
-  if (shouldSimplify) {
-    if (const auto constant = cast<IConstant>(arg)) {
-      ArgumentPtr res = (*constant)();
-
-      if (const auto num = cast<INumber>(res)) {
-        return std::make_shared<Real>(convert<Real>(*num).precise(precision));
-      }
-
-      return res;
-    }
+  if (parseBinaryOperator(terms) ||  //
+      parsePrefixOperator(terms) ||  //
+      parsePostfixOperator(terms) || //
+      parseFunction(terms) ||        //
+      parseBrackets(terms) ||        //
+      parseFiniteTerm(terms)         //
+  ) {
+    return;
   }
 
-  if (const auto expr = cast<IExpression>(arg)) {
-    return preciseExpressionRec(expr, precision, shouldSimplify);
-  }
-
-  return arg;
+  throw InvalidInputException(termsToString(terms));
 }
 
-ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
-                                             bool shouldSimplify) {
-  ArgumentsPtrVector newChildren;
+TermVector Expression::tokensToTerms(const TokenVector &tokens) {
+  TermVector terms(tokens.size());
 
-  for (const auto &child : expr->getChildren()) {
-    newChildren.emplace_back(preciseRec(child, precision, shouldSimplify));
-  }
-
-  std::shared_ptr<IExpression> res = cast<IExpression>(expr->clone());
-  res->setChildren(newChildren);
-
-  if (shouldSimplify) {
-    auto resSimpl = std::dynamic_pointer_cast<const IMathObject>(res);
-    simplifyChild(resSimpl);
-    return preciseRec(resSimpl, precision, false);
-  }
-
-  return res;
-}
-
-bool Expression::parsePrefixOperator(const TokenVector &tokens) {
-  if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.front(), IOperator::Priority::PrefixUnary)) {
-    auto rhsExpr = std::shared_ptr<Expression>(new Expression(TokenVector(tokens.begin() + 1, tokens.end())));
-    std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*oper, {rhsExpr});
-
-    if (auto expr = cast<Expression>(funcExpr)) {
-      *this = std::move(*expr);
+  for (size_t i = 0; i < tokens.size(); i++) {
+    if (auto term = Parser::parse(getTermMakers(), (tokens[i]))) {
+      terms[i] = term;
     }
     else {
-      child = funcExpr;
+      terms[i] = std::make_unique<Term>(tokens[i], ArgumentsPtrVector{});
     }
-
-    return true;
   }
 
-  return false;
+  insertDelimiters(terms);
+
+  return terms;
 }
 
-bool Expression::parsePostfixOperator(const TokenVector &tokens) {
-  if (std::shared_ptr<IOperator> oper = IOperator::parse(tokens.back(), IOperator::Priority::PostfixUnary)) {
-    size_t order = 1;
+void Expression::insertDelimiters(TermVector &terms) {
+  ArgumentPtr delimiter = std::make_unique<Mul>();
 
-    if (auto factor = cast<Factorial>(oper)) {
-      for (; order < tokens.size(); order++) {
-        if (tokens[tokens.size() - order - 1] != oper->toString()) {
-          break;
+  for (size_t i = 1; i < terms.size(); i++) {
+    if (!getTermValueIf(*terms[i - 1], isBinaryOperator) &&      //
+        !getTermValueIf(*terms[i - 1], isPrefixOperator) &&      //
+        !getTermValueIf(*terms[i - 1], isNonOperatorFunction) && //
+        terms[i - 1]->name != "(" &&                             //
+        terms[i - 1]->name != "," &&                             //
+        !getTermValueIf(*terms[i], isBinaryOperator) &&          //
+        !getTermValueIf(*terms[i], isPostfixOperator) &&         //
+        terms[i]->name != ")" &&                                 //
+        terms[i]->name != ","                                    //
+    ) {
+      terms.insert(terms.begin() + int64_t(i),
+                   std::make_shared<Term>(delimiter->toString(), ArgumentsPtrVector{delimiter}));
+      i++;
+    }
+  }
+}
+
+bool Expression::parseBinaryOperator(const TermVector &terms) {
+  size_t foundOperPos = 0;
+  IOperator::Priority foundPriority = IOperator::Priority::Any;
+  bool isPreviousBinaryOper = false;
+
+  for (size_t i = 0; i < terms.size(); i++) {
+    if (skipBrackets(terms, i)) {
+      isPreviousBinaryOper = false;
+      i--;
+      continue;
+    }
+
+    if (auto oper = cast<IOperator>(getTermValueIf(*terms[i], isBinaryOperator))) {
+      if (!isPreviousBinaryOper) {
+        IOperator::Priority priority = oper->getOperatorPriority();
+
+        if (foundPriority == IOperator::Priority::Any || foundPriority < priority ||
+            (foundPriority == priority && foundOperPos < i)) {
+          foundPriority = priority;
+          foundOperPos = i;
         }
       }
 
-      factor->setOrder(order);
-    }
-
-    auto rhsExpr = std::shared_ptr<Expression>(
-        new Expression(TokenVector(tokens.begin(), tokens.end() - TokenVector::iterator::difference_type(order))));
-    std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*oper, {rhsExpr});
-
-    if (auto expr = cast<Expression>(funcExpr)) {
-      *this = std::move(*expr);
+      isPreviousBinaryOper = true;
     }
     else {
-      child = funcExpr;
-    }
-
-    return true;
-  }
-
-  return false;
-}
-
-bool Expression::parseBinaryOperator(const TokenVector &tokens) {
-  std::map<size_t, ArgumentPtr> operMap = findBinaryOperators(tokens);
-
-  if (operMap.empty()) {
-    return false;
-  }
-
-  auto foundOperIt = operMap.begin();
-  size_t foundIndex = foundOperIt->first;
-  IOperator::Priority foundPriority = cast<IOperator>(foundOperIt->second)->getOperatorPriority();
-
-  auto it = operMap.begin();
-  ++it;
-
-  for (; it != operMap.end(); ++it) {
-    size_t index = it->first;
-    IOperator::Priority priority = cast<IOperator>(it->second)->getOperatorPriority();
-
-    if (foundPriority < priority || (foundPriority == priority && foundIndex < index)) {
-      foundPriority = priority;
-      foundOperIt = it;
+      isPreviousBinaryOper = false;
     }
   }
 
-  auto operPos = foundOperIt->first;
-  if (operPos < 1 || operPos >= tokens.size()) {
+  if (foundOperPos < 1 || foundOperPos + 1 >= terms.size()) {
     return false;
   }
+
+  auto foundOper = cast<IOperator>(getTermValueIf(*terms[foundOperPos], isBinaryOperator));
 
   auto lhsExpr = std::shared_ptr<Expression>(new Expression(
-      TokenVector(tokens.begin(), tokens.begin() + ArgumentsPtrVector::iterator::difference_type(operPos))));
+      TermVector(terms.begin(), terms.begin() + ArgumentsPtrVector::iterator::difference_type(foundOperPos))));
   auto rhsExpr = std::shared_ptr<Expression>(new Expression(
-      TokenVector(tokens.begin() + ArgumentsPtrVector::iterator::difference_type(operPos) + 1, tokens.end())));
-  std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(
-      *cast<IFunction>(foundOperIt->second), {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()});
+      TermVector(terms.begin() + ArgumentsPtrVector::iterator::difference_type(foundOperPos) + 1, terms.end())));
+  std::shared_ptr<IExpression> funcExpr =
+      makeRawFunctionExpression(*foundOper, {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()});
 
   if (auto expr = cast<Expression>(funcExpr)) {
     *this = std::move(*expr);
@@ -207,34 +159,57 @@ bool Expression::parseBinaryOperator(const TokenVector &tokens) {
   return true;
 }
 
-bool Expression::parseFiniteTerm(const TokenVector &tokens) {
-  bool res = false;
-
-  if (tokens.size() > 1) {
-    if (tokens.front() == "(" && tokens[tokens.size() - 1] == ")") {
-      *this = Expression(cutBrackets(tokens));
-      res = true;
-    }
-  }
-  else if (ArgumentPtr literal = ILiteral::parse(tokens.front())) {
-    child = literal;
-    res = true;
-  }
-  else if (ArgumentPtr number = INumber::parse(tokens.front())) {
-    child = number;
-    res = true;
-  }
-
-  return res;
-}
-
-bool Expression::parseFunction(const TokenVector &tokens) {
-  if (tokens.size() <= 1) {
+bool Expression::parsePrefixOperator(const TermVector &terms) {
+  if (terms.size() <= 1) {
     return false;
   }
 
-  if (auto func = IFunction::parse(tokens.front()); func && !is<IOperator>(func)) {
-    ArgumentsPtrVector args = parseFunctionArgs(TokenVector(tokens.begin() + 1, tokens.end()));
+  if (auto oper = cast<IOperator>(getTermValueIf(*terms.front(), isPrefixOperator))) {
+    Expression arg(TermVector(terms.begin() + 1, terms.end()));
+    child = makeRawFunctionExpression(*oper, {arg.child});
+    compressChild(child);
+    return true;
+  }
+
+  return false;
+}
+
+bool Expression::parsePostfixOperator(const TermVector &terms) {
+  if (terms.size() <= 1) {
+    return false;
+  }
+
+  if (std::shared_ptr<const IOperator> constOper = cast<IOperator>(getTermValueIf(*terms.back(), isPostfixOperator))) {
+    if (std::shared_ptr<IOperator> oper = cast<IOperator>(constOper->clone())) {
+      size_t order = 1;
+
+      if (auto factor = cast<Factorial>(oper)) {
+        for (; order < terms.size(); order++) {
+          if (terms[terms.size() - order - 1]->name != oper->toString()) {
+            break;
+          }
+        }
+
+        factor->setOrder(order);
+      }
+
+      Expression arg(TermVector(terms.begin(), terms.end() - TokenVector::iterator::difference_type(order)));
+      child = makeRawFunctionExpression(*oper, {arg.child});
+      compressChild(child);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool Expression::parseFunction(const TermVector &terms) {
+  if (terms.size() <= 1 || terms.front()->values.empty()) {
+    return false;
+  }
+
+  if (auto func = cast<IFunction>(terms.front()->values.front())) {
+    ArgumentsPtrVector args = parseFunctionArgs(TermVector(terms.begin() + 1, terms.end()));
     child = makeRawFunctionExpression(*func, args);
     return true;
   }
@@ -242,40 +217,62 @@ bool Expression::parseFunction(const TokenVector &tokens) {
   return false;
 }
 
+bool Expression::parseBrackets(const TermVector &terms) {
+  if (terms.size() <= 2) {
+    return false;
+  }
+
+  if (terms.front()->name == "(" && terms.back()->name == ")") {
+    *this = Expression(cutBrackets(terms));
+    return true;
+  }
+
+  return false;
+}
+
+bool Expression::parseFiniteTerm(const TermVector &terms) {
+  if (terms.size() != 1 || terms.front()->values.size() != 1) {
+    return false;
+  }
+
+  *this = Expression(terms.front()->values.front());
+  return true;
+}
+
 std::shared_ptr<IFunction> Expression::getFunction() const {
   return {};
 }
 
-ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
+ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms) {
   ArgumentsPtrVector args;
 
-  for (size_t pos = 0; pos < tokens.size(); pos++) {
+  for (size_t pos = 0; pos < terms.size(); pos++) {
     bool isBracketsSkip = false;
-    if (tokens[pos] == "(") {
+    if (terms[pos]->name == "(") {
       if (pos == 0) {
         isBracketsSkip = true;
       }
 
-      skipBrackets(tokens, pos);
+      skipBrackets(terms, pos);
     }
 
-    if (pos == tokens.size()) {
+    if (pos == terms.size()) {
       if (isBracketsSkip) {
-        return parseFunctionArgs(cutBrackets(tokens));
+        return parseFunctionArgs(cutBrackets(terms));
       }
       break;
     }
 
-    if (tokens[pos] == ",") {
-      if (pos == 0 || pos + 1 == tokens.size()) {
-        throw InvalidInputException(Tokenizer::tokensToString(tokens));
+    if (terms[pos]->name == ",") {
+      if (pos == 0 || pos + 1 == terms.size()) {
+        throw InvalidInputException(termsToString(terms));
       }
 
       args.emplace_back(std::shared_ptr<Expression>(new Expression(
-          TokenVector(tokens.begin(), tokens.begin() + ArgumentsPtrVector::iterator::difference_type(pos)))));
+          TermVector(terms.begin(), terms.begin() + ArgumentsPtrVector::iterator::difference_type(pos)))));
 
       ArgumentsPtrVector addArgs = parseFunctionArgs(
-          TokenVector(tokens.begin() + ArgumentsPtrVector::iterator::difference_type(pos) + 1, tokens.end()));
+          TermVector(terms.begin() + ArgumentsPtrVector::iterator::difference_type(pos) + 1, terms.end()));
 
       for (const auto &token : addArgs) {
         args.emplace_back(ArgumentPtr(token));
@@ -285,7 +282,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TokenVector &tokens) {
     }
   }
 
-  args.emplace_back(std::shared_ptr<Expression>(new Expression(tokens)));
+  args.emplace_back(std::shared_ptr<Expression>(new Expression(terms)));
 
   return args;
 }
@@ -321,6 +318,92 @@ ArgumentsPtrVector Expression::getChildren() const {
 
 ArgumentPtr Expression::simplify() const {
   return child;
+}
+
+bool Expression::skipBrackets(const TermVector &terms, size_t &openBracketIndex) {
+  if (openBracketIndex >= terms.size() || terms.at(openBracketIndex)->name != "(") {
+    return false;
+  }
+
+  int64_t brackets = 0;
+
+  for (size_t i = openBracketIndex; i < terms.size(); i++) {
+    if (terms[i]->name == "(") {
+      brackets++;
+    }
+    else if (terms[i]->name == ")") {
+      brackets--;
+    }
+
+    if (brackets == 0) {
+      openBracketIndex = i + 1;
+      return true;
+    }
+  }
+
+  throw InvalidInputException(termsToString(terms));
+}
+
+TermVector Expression::cutBrackets(const TermVector &terms) {
+  if (terms.empty()) {
+    return terms;
+  }
+
+  auto newTokens = terms;
+
+  if (newTokens.front()->name == "(" && newTokens.back()->name == ")") {
+    newTokens.erase(newTokens.begin());
+    newTokens.erase(newTokens.end() - 1);
+  }
+
+  return newTokens;
+}
+
+std::string Expression::termsToString(const TermVector &terms) {
+  std::string res;
+
+  for (const auto &term : terms) {
+    res += term->name;
+  }
+
+  return res;
+}
+
+ArgumentPtr Expression::getTermValueIf(const Term &term, std::function<bool(const ArgumentPtr &)> &&predicate) {
+  for (const auto &val : term.values) {
+    if (predicate(val)) {
+      return val;
+    }
+  }
+
+  return {};
+}
+
+void Expression::removeTermValuesIf(Term &term, std::function<bool(const ArgumentPtr &)> &&predicate) {
+  term.values.erase(std::remove_if(term.values.begin(), term.values.end(),
+                                   [predicate = std::move(predicate)](const ArgumentPtr &val) {
+                                     return predicate(val);
+                                   }),
+                    term.values.end());
+}
+
+bool Expression::isBinaryOperator(const ArgumentPtr &val) {
+  auto oper = cast<IOperator>(val);
+  return oper && oper->getFunctionType() == IFunction::Type::Binary;
+}
+
+bool Expression::isPrefixOperator(const ArgumentPtr &val) {
+  auto oper = cast<IOperator>(val);
+  return oper && oper->getOperatorPriority() == IOperator::Priority::PrefixUnary;
+}
+
+bool Expression::isPostfixOperator(const ArgumentPtr &val) {
+  auto oper = cast<IOperator>(val);
+  return oper && oper->getOperatorPriority() == IOperator::Priority::PostfixUnary;
+}
+
+bool Expression::isNonOperatorFunction(const ArgumentPtr &val) {
+  return is<IFunction>(val) && !is<IOperator>(val);
 }
 
 void Expression::validateChild(const ArgumentPtr &inChild) const {
@@ -385,6 +468,50 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
       }
     }
   }
+}
+
+ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify) {
+  if (const auto num = cast<INumber>(arg)) {
+    return std::make_shared<Real>(convert<Real>(*num).precise(precision));
+  }
+
+  if (shouldSimplify) {
+    if (const auto constant = cast<IConstant>(arg)) {
+      ArgumentPtr res = (*constant)();
+
+      if (const auto num = cast<INumber>(res)) {
+        return std::make_shared<Real>(convert<Real>(*num).precise(precision));
+      }
+
+      return res;
+    }
+  }
+
+  if (const auto expr = cast<IExpression>(arg)) {
+    return preciseExpressionRec(expr, precision, shouldSimplify);
+  }
+
+  return arg;
+}
+
+ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
+                                             bool shouldSimplify) {
+  ArgumentsPtrVector newChildren;
+
+  for (const auto &child : expr->getChildren()) {
+    newChildren.emplace_back(preciseRec(child, precision, shouldSimplify));
+  }
+
+  std::shared_ptr<IExpression> res = cast<IExpression>(expr->clone());
+  res->setChildren(newChildren);
+
+  if (shouldSimplify) {
+    auto resSimpl = std::dynamic_pointer_cast<const IMathObject>(res);
+    simplifyChild(resSimpl);
+    return preciseRec(resSimpl, precision, false);
+  }
+
+  return res;
 }
 
 std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args) {
@@ -471,5 +598,4 @@ Expression operator/(const Expression &lhs, const Variable &rhs) {
 Expression operator/(const Variable &lhs, const Expression &rhs) {
   return Expression(makeFunctionExpression(Div(), {lhs.clone(), rhs.getChildren().front()}));
 }
-
 }

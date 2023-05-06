@@ -7,6 +7,22 @@
 
 namespace fintamath {
 
+struct Term {
+  Token name;
+
+  ArgumentsPtrVector values;
+
+public:
+  Term() = default;
+
+  Term(std::string inName, ArgumentsPtrVector inValues) : name(std::move(inName)), values(std::move(inValues)) {
+  }
+};
+
+using TermVector = std::vector<std::shared_ptr<Term>>;
+
+//---------------------------------------------------------------------------------------------------------//
+
 class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
 public:
   Expression();
@@ -31,21 +47,24 @@ public:
 
   void setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) override;
 
+  static void registerTermsMaker(Parser::Function<std::shared_ptr<Term>, const Token &> &&maker) {
+    Parser::add<Token>(getTermMakers(), maker);
+  }
+
   template <typename Function, bool isPolynomial = false,
             typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
-  static void registerFunctionExpressionMaker(
-      Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &&builder) {
-
+  static void
+  registerFunctionExpressionMaker(Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &&maker) {
     Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> constructor =
-        [builder = std::move(builder)](const ArgumentsPtrVector &args) {
+        [maker = std::move(maker)](const ArgumentsPtrVector &args) {
           static const IFunction::Type type = Function().getFunctionType();
 
           if (type == IFunction::Type::Any || uint16_t(type) == args.size()) {
-            return builder(args);
+            return maker(args);
           }
 
           if (isPolynomial && uint16_t(type) < args.size()) {
-            return builder(args);
+            return maker(args);
           }
 
           return std::shared_ptr<IExpression>();
@@ -68,19 +87,43 @@ protected:
   ArgumentPtr simplify() const override;
 
 private:
-  explicit Expression(const TokenVector &tokens);
+  explicit Expression(const TermVector &terms);
 
-  bool parsePrefixOperator(const TokenVector &tokens);
+  static TermVector tokensToTerms(const TokenVector &tokens);
 
-  bool parsePostfixOperator(const TokenVector &tokens);
+  static void insertDelimiters(TermVector &terms);
 
-  bool parseBinaryOperator(const TokenVector &tokens);
+  bool parseBinaryOperator(const TermVector &terms);
 
-  bool parseFiniteTerm(const TokenVector &tokens);
+  bool parsePrefixOperator(const TermVector &terms);
 
-  bool parseFunction(const TokenVector &tokens);
+  bool parsePostfixOperator(const TermVector &terms);
 
-  static ArgumentsPtrVector parseFunctionArgs(const TokenVector &tokens);
+  bool parseFunction(const TermVector &terms);
+
+  bool parseBrackets(const TermVector &terms);
+
+  bool parseFiniteTerm(const TermVector &terms);
+
+  static ArgumentsPtrVector parseFunctionArgs(const TermVector &terms);
+
+  static bool skipBrackets(const TermVector &terms, size_t &openBracketIndex);
+
+  static TermVector cutBrackets(const TermVector &terms);
+
+  static std::string termsToString(const TermVector &terms);
+
+  static ArgumentPtr getTermValueIf(const Term &term, std::function<bool(const ArgumentPtr &)> &&predicate);
+
+  static void removeTermValuesIf(Term &term, std::function<bool(const ArgumentPtr &)> &&predicate);
+
+  static bool isBinaryOperator(const ArgumentPtr &val);
+
+  static bool isPrefixOperator(const ArgumentPtr &val);
+
+  static bool isPostfixOperator(const ArgumentPtr &val);
+
+  static bool isNonOperatorFunction(const ArgumentPtr &val);
 
   void validateChild(const ArgumentPtr &inChild) const;
 
@@ -97,7 +140,8 @@ private:
 
   friend std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
-private:
+  static Parser::Vector<std::shared_ptr<Term>, const Token &> &getTermMakers();
+
   static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &getExpressionMakers();
 
 private:
