@@ -106,10 +106,9 @@ bool Expression::parseBinaryOperator(const TermVector &terms, size_t start, size
   }
 
   auto foundOper = cast<IOperator>(getTermValueIf(*terms[foundOperPos], isBinaryOperator));
-  auto lhsExpr = std::shared_ptr<Expression>(new Expression(terms, start, foundOperPos));
-  auto rhsExpr = std::shared_ptr<Expression>(new Expression(terms, foundOperPos + 1, end));
-  std::shared_ptr<IExpression> funcExpr =
-      makeRawFunctionExpression(*foundOper, {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()});
+  ArgumentPtr lhsArg = Expression(terms, start, foundOperPos).child;
+  ArgumentPtr rhsArg = Expression(terms, foundOperPos + 1, end).child;
+  std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*foundOper, {lhsArg, rhsArg});
 
   if (auto expr = cast<Expression>(funcExpr)) {
     *this = std::move(*expr);

@@ -21,8 +21,6 @@ public:
 
 using TermVector = std::vector<std::shared_ptr<Term>>;
 
-//---------------------------------------------------------------------------------------------------------//
-
 class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
 public:
   Expression();
