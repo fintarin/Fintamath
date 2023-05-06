@@ -301,7 +301,7 @@ void Expression::insertDelimiters(TermVector &terms) {
         terms[i]->name != ")" &&                                 //
         terms[i]->name != ","                                    //
     ) {
-      terms.insert(terms.begin() + int64_t(i),
+      terms.insert(terms.begin() + TermVector::difference_type(i),
                    std::make_shared<Term>(delimiter->toString(), ArgumentsPtrVector{delimiter}));
       i++;
     }
