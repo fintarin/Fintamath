@@ -146,7 +146,7 @@ bool Expression::parsePostfixOperator(const TermVector &terms, size_t start, siz
       size_t order = 1;
 
       if (auto factor = cast<Factorial>(oper)) {
-        for (; order < terms.size(); order++) {
+        for (; order < end; order++) {
           if (terms[end - order - 1]->name != oper->toString()) {
             break;
           }
