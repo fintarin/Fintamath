@@ -367,14 +367,6 @@ ArgumentPtr Expression::getTermValueIf(const Term &term, std::function<bool(cons
   return {};
 }
 
-void Expression::removeTermValuesIf(Term &term, std::function<bool(const ArgumentPtr &)> &&predicate) {
-  term.values.erase(std::remove_if(term.values.begin(), term.values.end(),
-                                   [predicate = std::move(predicate)](const ArgumentPtr &val) {
-                                     return predicate(val);
-                                   }),
-                    term.values.end());
-}
-
 bool Expression::isBinaryOperator(const ArgumentPtr &val) {
   auto oper = cast<IOperator>(val);
   return oper && oper->getFunctionType() == IFunction::Type::Binary;

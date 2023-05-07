@@ -115,8 +115,6 @@ private:
 
   static ArgumentPtr getTermValueIf(const Term &term, std::function<bool(const ArgumentPtr &)> &&predicate);
 
-  static void removeTermValuesIf(Term &term, std::function<bool(const ArgumentPtr &)> &&predicate);
-
   static bool isBinaryOperator(const ArgumentPtr &val);
 
   static bool isPrefixOperator(const ArgumentPtr &val);
