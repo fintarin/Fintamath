@@ -8,6 +8,16 @@
 
 using namespace fintamath;
 
+namespace {
+
+class TestMathObject : public IMathObjectCRTP<TestMathObject> {};
+
+}
+
+TEST(IMathObjectTests, toStringTest) {
+  EXPECT_EQ(TestMathObject().toString(), typeid(TestMathObject).name());
+}
+
 TEST(IMathObjectTests, cloneTest) {
   std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>();
   std::unique_ptr<IMathObject> m2 = std::make_unique<Integer>(1);

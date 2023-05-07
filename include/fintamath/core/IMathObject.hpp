@@ -29,7 +29,7 @@ public:
   virtual std::unique_ptr<IMathObject> clone() const = 0;
 
   virtual std::string toString() const {
-    return {};
+    return typeid(*this).name();
   }
 
   virtual std::unique_ptr<IMathObject> toMinimalObject() const {
