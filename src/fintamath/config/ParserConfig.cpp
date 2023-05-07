@@ -16,6 +16,8 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
+#include "fintamath/functions/calculus/Max.hpp"
+#include "fintamath/functions/calculus/Min.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"
@@ -203,6 +205,8 @@ struct ParserConfig {
     IFunction::registerType<Acosh>();
     IFunction::registerType<Atanh>();
     IFunction::registerType<Acoth>();
+    IFunction::registerType<Min>();
+    IFunction::registerType<Max>();
 
     IOperator::registerType<Add>();
     IOperator::registerType<Sub>();

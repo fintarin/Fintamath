@@ -13,7 +13,7 @@ public:
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
-  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
+  std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
 private:
   static ArgumentPtr simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);

@@ -15,7 +15,7 @@ public:
     None,   // 0 arguments
     Unary,  // 1 argument
     Binary, // 2 arguments
-    Any,    // undefined number of arguments
+    Any,    // undefined number of arguments, but non 0
   };
 
 public:
@@ -65,6 +65,10 @@ public:
   }
 
   IFunction::Type getFunctionType() const final {
+    if (isTypeAnyFunc) {
+      return Type::Any;
+    }
+
     return IFunction::Type(sizeof...(Args));
   }
 
@@ -140,7 +144,12 @@ private:
   }
 
   void validateArgsSize(const ArgumentsRefVector &argsVect) const {
-    if (!isTypeAnyFunc && argsVect.size() != sizeof...(Args)) {
+    if (isTypeAnyFunc) {
+      if (argsVect.empty()) {
+        throwInvalidInputFunctionException(argsVect);
+      }
+    }
+    else if (argsVect.size() != sizeof...(Args)) {
       throwInvalidInputFunctionException(argsVect);
     }
   }

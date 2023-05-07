@@ -12,8 +12,6 @@ public:
   ArgumentPtr logicNegate() const override;
 
 protected:
-  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
-
   ArgumentPtr postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const override;
 
   SimplifyFunctionsVector getFunctionsForSimplify() const override;

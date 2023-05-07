@@ -12,7 +12,7 @@ public:
   ArgumentPtr logicNegate() const override;
 
 protected:
-  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
+  std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
   ArgumentPtr postSimplify() const override;
 

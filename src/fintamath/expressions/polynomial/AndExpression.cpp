@@ -18,11 +18,6 @@ const AndExpression::SimplifyFunctionsVector AndExpression::simplifyFunctions = 
 AndExpression::AndExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(AND, inChildren) {
 }
 
-std::string AndExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  std::string result = inChild->toString();
-  return prevChild ? (putInSpaces(func->toString()) + result) : result;
-}
-
 ArgumentPtr AndExpression::logicNegate() const {
   ArgumentsPtrVector negChildren;
 

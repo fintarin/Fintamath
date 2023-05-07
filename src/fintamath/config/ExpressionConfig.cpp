@@ -5,6 +5,7 @@
 #include "fintamath/expressions/binary/DivExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
+#include "fintamath/expressions/polynomial/MinMaxExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
@@ -18,6 +19,8 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
+#include "fintamath/functions/calculus/Max.hpp"
+#include "fintamath/functions/calculus/Min.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"
@@ -64,10 +67,15 @@ namespace {
 
 struct ExpressionConfig {
   ExpressionConfig() {
+    registerTermsMakers();
+    registerFunctionExpressionMakers();
+  }
+
+  static void registerTermsMakers() {
     Expression::registerTermsMaker([](const Token &token) {
       ArgumentsPtrVector args;
 
-      for (auto i = size_t(IFunction::Type::None); i < size_t(IFunction::Type::Any); i++) {
+      for (auto i = size_t(IFunction::Type::None); i <= size_t(IFunction::Type::Any); i++) {
         if (std::shared_ptr<IMathObject> arg = IFunction::parse(token, IFunction::Type(i))) {
           args.emplace_back(arg);
         }
@@ -95,9 +103,9 @@ struct ExpressionConfig {
 
       return std::shared_ptr<Term>();
     });
+  }
 
-    //---------------------------------------------------------------------------------------------------------//
-
+  static void registerFunctionExpressionMakers() {
     Expression::registerFunctionExpressionMaker<Add, true>([](const ArgumentsPtrVector &args) {
       return std::make_shared<SumExpression>(args);
     });
@@ -251,6 +259,14 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Angle>([](const ArgumentsPtrVector &args) {
       return makeRawFunctionExpression(Rad(), {args.front()});
+    });
+
+    Expression::registerFunctionExpressionMaker<Min>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<MinMaxExpression>(Min(), args);
+    });
+
+    Expression::registerFunctionExpressionMaker<Max>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<MinMaxExpression>(Max(), args);
     });
   }
 };

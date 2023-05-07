@@ -18,7 +18,7 @@ protected:
   bool isTermsOrderInversed() const override;
 
 private:
-  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
+  std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
   static ArgumentPtr simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 

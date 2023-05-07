@@ -17,12 +17,16 @@ ArgumentsPtrVector IPolynomExpression::getChildren() const {
 }
 
 std::string IPolynomExpression::toString() const {
+  if (!is<IOperator>(func)) {
+    return functionToString(*func, children);
+  }
+
   std::string result;
 
-  result += childToString(children.front(), {});
+  result += operatorChildToString(children.front(), {});
 
   for (size_t i = 1; i < children.size(); i++) {
-    result += childToString(children[i], children[i - 1]);
+    result += operatorChildToString(children[i], children[i - 1]);
   }
 
   return result;
@@ -168,6 +172,11 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
 
 IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForSimplify() const {
   return {};
+}
+
+std::string IPolynomExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+  std::string result = inChild->toString();
+  return prevChild ? (putInSpaces(func->toString()) + result) : result;
 }
 
 bool IPolynomExpression::isTermsOrderInversed() const {

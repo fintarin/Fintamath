@@ -209,6 +209,10 @@ std::shared_ptr<IFunction> Expression::getFunction() const {
 }
 
 ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t start, size_t end) {
+  if (start >= end) {
+    return {};
+  }
+
   ArgumentsPtrVector funcArgs;
 
   for (size_t i = start; i < end; i++) {
@@ -309,7 +313,7 @@ void Expression::insertDelimiters(TermVector &terms) {
 }
 
 bool Expression::skipBrackets(const TermVector &terms, size_t &openBracketIndex) {
-  if (openBracketIndex >= terms.size() || terms.at(openBracketIndex)->name != "(") {
+  if (openBracketIndex >= terms.size() || terms[openBracketIndex]->name != "(") {
     return false;
   }
 
@@ -333,7 +337,7 @@ bool Expression::skipBrackets(const TermVector &terms, size_t &openBracketIndex)
 }
 
 void Expression::cutBrackets(const TermVector &terms, size_t &start, size_t &end) {
-  if (start + 2 >= end) {
+  if (start + 1 >= end) {
     return;
   }
 
@@ -400,7 +404,7 @@ void Expression::validateChild(const ArgumentPtr &inChild) const {
   const std::shared_ptr<IFunction> func = childExpr->getFunction();
   const ArgumentsPtrVector children = childExpr->getChildren();
 
-  if (children.size() <= size_t(func->getFunctionType())) {
+  if (func->getFunctionType() == IFunction::Type::Any || children.size() <= size_t(func->getFunctionType())) {
     validateFunctionArgs(func, children);
   }
   else {
@@ -417,7 +421,15 @@ void Expression::validateChild(const ArgumentPtr &inChild) const {
 }
 
 void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const {
-  const ArgumentsTypesVector childrenTypes = func->getArgsTypes();
+  if (func->getFunctionType() == IFunction::Type::Any && args.empty()) {
+    throw InvalidInputException(toString());
+  }
+
+  ArgumentsTypesVector childrenTypes = func->getArgsTypes();
+
+  if (func->getFunctionType() == IFunction::Type::Any) {
+    childrenTypes = ArgumentsTypesVector(args.size(), childrenTypes.front());
+  }
 
   if (childrenTypes.size() != args.size()) {
     throw InvalidInputException(toString());

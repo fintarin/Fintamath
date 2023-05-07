@@ -28,7 +28,7 @@ ArgumentPtr OrExpression::logicNegate() const {
   return makeFunctionExpression(And(), negChildren);
 }
 
-std::string OrExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+std::string OrExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   std::string result = inChild->toString();
 
   if (const auto &childExpr = cast<IExpression>(inChild); childExpr && is<And>(childExpr->getFunction())) {

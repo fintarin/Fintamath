@@ -27,7 +27,7 @@ const MulExpression::SimplifyFunctionsVector MulExpression::simplifyFunctions = 
 MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(MUL, inChildren) {
 }
 
-std::string MulExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   if (!prevChild && *inChild == NEG_ONE) {
     return Neg().toString();
   }

@@ -22,7 +22,7 @@ const SumExpression::SimplifyFunctionsVector SumExpression::simplifyFunctions = 
 SumExpression::SumExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(ADD, inChildren) {
 }
 
-std::string SumExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+std::string SumExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   ArgumentPtr child = inChild;
   bool isChildNegated = false;
 

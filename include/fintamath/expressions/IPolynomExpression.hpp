@@ -6,7 +6,7 @@ namespace fintamath {
 
 class IPolynomExpression : virtual public IExpression {
 public:
-  std::string toString() const override;
+  std::string toString() const final;
 
   std::shared_ptr<IFunction> getFunction() const final;
 
@@ -27,7 +27,7 @@ protected:
 
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
-  virtual std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const = 0;
+  virtual std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
   ArgumentPtr simplify() const final;
 
