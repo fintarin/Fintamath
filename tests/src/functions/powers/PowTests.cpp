@@ -3,7 +3,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -55,14 +55,14 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Integer(10000000000), Rational(1, 100))->toString(),
             "1.258925411794167210423954106395800606093617409466931069107923019526647615782502");
 
-  EXPECT_EQ(f(Integer(4), Rational(-1, 2))->toString(), "0.5");
+  EXPECT_EQ(f(Integer(4), Rational(-1, 2))->toString(), "1/2");
   EXPECT_EQ(f(Integer(4), Rational(-1, 3))->toString(),
             "0.62996052494743658238360530363911417528512573235075399004098755607764983825697974");
   EXPECT_EQ(f(Integer(4), Rational(-1, 4))->toString(),
             "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352");
   EXPECT_EQ(f(Integer(8), Rational(-1, 3))->toString(), "0.5");
   EXPECT_EQ(f(Integer(16), Rational(-1, 4))->toString(), "0.5");
-  EXPECT_EQ(f(Integer(4), Rational(-5, 2))->toString(), "0.03125");
+  EXPECT_EQ(f(Integer(4), Rational(-5, 2))->toString(), "1/32");
   EXPECT_EQ(f(Integer(4), Rational(-5, 3))->toString(),
             "0.099212565748012467171981602454519266274468332993740813113017860114076031601513698");
   EXPECT_EQ(f(Integer(4), Rational(-5, 4))->toString(),
@@ -76,9 +76,9 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Rational("-1"), Rational("-25"))->toString(), "-1");
   EXPECT_EQ(f(Rational("-2.2"), Rational("-5"))->toString(), "-3125/161051");
 
-  EXPECT_THROW(f(Integer(0), Integer(0)), UndefinedBinaryOperatorException);
-  EXPECT_THROW(f(Rational("0"), Rational("-10")), UndefinedBinaryOperatorException);
-  EXPECT_THROW(f(Rational("-10"), Rational("-1.5")), UndefinedBinaryOperatorException);
+  EXPECT_THROW(f(Integer(0), Integer(0)), UndefinedException);
+  EXPECT_THROW(f(Rational("0"), Rational("-10")), UndefinedException);
+  EXPECT_THROW(f(Rational("-10"), Rational("-1.5")), UndefinedException);
 
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3^a");
 

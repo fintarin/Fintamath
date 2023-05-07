@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-template <typename Rhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Rhs> && !std::is_same_v<INumber, Rhs>>>
+template <typename Rhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Rhs>>>
 inline Rhs abs(const Rhs &rhs) {
   if (rhs < ZERO) {
     return -rhs;
@@ -19,18 +19,18 @@ inline Rhs abs(const Rhs &rhs) {
 
 inline std::unique_ptr<INumber> abs(const INumber &rhs) {
   static const auto multiAbs = [] {
-    static MultiMethod<std::unique_ptr<INumber>(const INumber &rhs)> outMultiAbs;
+    static MultiMethod<std::unique_ptr<INumber>(const INumber &)> outMultiAbs;
 
-    outMultiAbs.add<Integer>([](const Integer &intRhs) {
-      return std::make_unique<Integer>(abs(intRhs));
+    outMultiAbs.add<Integer>([](const Integer &inRhs) {
+      return std::make_unique<Integer>(abs(inRhs));
     });
 
-    outMultiAbs.add<Rational>([](const Rational &ratRhs) {
-      return std::make_unique<Rational>(abs(ratRhs));
+    outMultiAbs.add<Rational>([](const Rational &inRhs) {
+      return std::make_unique<Rational>(abs(inRhs));
     });
 
-    outMultiAbs.add<Real>([](const Real &realRhs) {
-      return std::make_unique<Real>(abs(realRhs));
+    outMultiAbs.add<Real>([](const Real &inRhs) {
+      return std::make_unique<Real>(abs(inRhs));
     });
 
     return outMultiAbs;
@@ -68,18 +68,18 @@ inline std::unique_ptr<INumber> sqrt(const Rational &rhs) {
 
 inline std::unique_ptr<INumber> sqrt(const INumber &rhs) {
   static const auto multiSqrt = [] {
-    static MultiMethod<std::unique_ptr<INumber>(const INumber &rhs)> outMultiSqrt;
+    static MultiMethod<std::unique_ptr<INumber>(const INumber &)> outMultiSqrt;
 
-    outMultiSqrt.add<Integer>([](const Integer &intRhs) {
-      return sqrt(intRhs);
+    outMultiSqrt.add<Integer>([](const Integer &inRhs) {
+      return sqrt(inRhs);
     });
 
-    outMultiSqrt.add<Rational>([](const Rational &ratRhs) {
-      return sqrt(ratRhs);
+    outMultiSqrt.add<Rational>([](const Rational &inRhs) {
+      return sqrt(inRhs);
     });
 
-    outMultiSqrt.add<Real>([](const Real &realRhs) {
-      return std::make_unique<Real>(sqrt(realRhs));
+    outMultiSqrt.add<Real>([](const Real &inRhs) {
+      return std::make_unique<Real>(sqrt(inRhs));
     });
 
     return outMultiSqrt;
@@ -88,25 +88,10 @@ inline std::unique_ptr<INumber> sqrt(const INumber &rhs) {
   return multiSqrt(rhs);
 }
 
-template <typename Lhs, typename Rhs,
-          typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs>>>
-std::unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
-  auto lhsSimpl = cast<INumber>(lhs.toMinimalObject());
-  auto rhsSimpl = cast<INumber>(rhs.toMinimalObject());
-
-  if (lhsSimpl->isPrecise()) {
-    if (const auto *rhsInt = cast<Integer>(rhsSimpl.get())) {
-      return pow(*lhsSimpl, *rhsInt);
-    }
-  }
-
-  return cast<INumber>(pow(convert<Real>(*lhsSimpl), convert<Real>(*rhsSimpl)).toMinimalObject());
-}
-
 // Use exponentiation by squaring with constant auxiliary memory (iterative version).
 // https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
-std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
+inline std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
   if (lhs == ZERO && rhs == ZERO) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
@@ -131,4 +116,50 @@ std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
 
   return cast<INumber>(res->toMinimalObject());
 }
+
+template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
+inline std::unique_ptr<INumber> pow(const Lhs &lhs, const Rational &rhs) {
+  Integer numerator = rhs.getNumerator();
+  Integer denominator = rhs.getDenominator();
+
+  if (denominator == ONE) {
+    return pow(lhs, numerator);
+  }
+
+  if (denominator == TWO) {
+    return sqrt(*pow(lhs, numerator));
+  }
+
+  return cast<INumber>(pow(convert<Real>(lhs), convert<Real>(rhs)).toMinimalObject());
+}
+
+template <typename Lhs, typename Rhs,
+          typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs> && std::is_base_of_v<INumber, Rhs>>>
+inline std::unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
+  static const auto multiPow = [] {
+    static MultiMethod<std::unique_ptr<INumber>(const INumber &, const INumber &)> outMultiPow;
+
+    outMultiPow.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
+      return pow(inLhs, inRhs);
+    });
+
+    outMultiPow.add<Rational, Rational>([](const Rational &inLhs, const Rational &inRhs) {
+      return pow(inLhs, inRhs);
+    });
+
+    outMultiPow.add<Real, Real>([](const Real &inLhs, const Real &inRhs) {
+      return cast<INumber>(pow(inLhs, inRhs).toMinimalObject());
+    });
+
+    return outMultiPow;
+  }();
+
+  if (auto rhsConv = cast<INumber>(convert(lhs, rhs))) {
+    return multiPow(lhs, *rhsConv);
+  }
+
+  auto lhsConv = cast<INumber>(convert(rhs, lhs));
+  return multiPow(*lhsConv, rhs);
+}
+
 }

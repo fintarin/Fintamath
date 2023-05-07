@@ -9,6 +9,8 @@ class PowExpression : public IBinaryExpressionCRTP<PowExpression> {
 public:
   explicit PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
+  std::string toString() const override;
+
 protected:
   ArgumentPtr preSimplify() const override;
 

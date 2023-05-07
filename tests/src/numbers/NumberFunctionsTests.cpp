@@ -2,8 +2,7 @@
 
 #include "fintamath/numbers/NumberFunctions.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -57,7 +56,7 @@ TEST(NumberFunctionsTests, sqrtIntTest) {
   EXPECT_EQ(sqrt(Integer("68732648273642987365932706179432649827364"))->toString(),
             "262169121510606178721.58566765529332797469887558257026225414531129497927294552571");
 
-  EXPECT_THROW(sqrt(Integer(-9289)), UndefinedFunctionException);
+  EXPECT_THROW(sqrt(Integer(-9289)), UndefinedException);
 }
 
 TEST(NumberFunctionsTests, sqrtRatTest) {
@@ -76,7 +75,7 @@ TEST(NumberFunctionsTests, sqrtRatTest) {
   EXPECT_EQ(sqrt(Rational("68732648273642987365932706179432649827364.144"))->toString(),
             "262169121510606178721.5856676552933279746991502144551506779910090326304113931067");
 
-  EXPECT_THROW(sqrt(Rational(-9289, 10)), UndefinedFunctionException);
+  EXPECT_THROW(sqrt(Rational(-9289, 10)), UndefinedException);
 }
 
 TEST(NumberFunctionsTests, sqrtTest) {
@@ -106,7 +105,7 @@ TEST(NumberFunctionsTests, sqrtTest) {
   EXPECT_EQ(res->toString(), "1.414213562373095048801688724209698078569671875376948073176679737990732478462107");
   EXPECT_TRUE(is<Real>(res));
 
-  EXPECT_THROW(sqrt(*INumber::parse("-9289")), UndefinedFunctionException);
+  EXPECT_THROW(sqrt(*INumber::parse("-9289")), UndefinedException);
 }
 
 TEST(NumberFunctionsTests, powTest) {
@@ -148,14 +147,14 @@ TEST(NumberFunctionsTests, powTest) {
   EXPECT_EQ(pow(Integer(10000000000), Rational(1, 100))->toString(),
             "1.258925411794167210423954106395800606093617409466931069107923019526647615782502");
 
-  EXPECT_EQ(pow(Integer(4), Rational(-1, 2))->toString(), "0.5");
+  EXPECT_EQ(pow(Integer(4), Rational(-1, 2))->toString(), "1/2");
   EXPECT_EQ(pow(Integer(4), Rational(-1, 3))->toString(),
             "0.62996052494743658238360530363911417528512573235075399004098755607764983825697974");
   EXPECT_EQ(pow(Integer(4), Rational(-1, 4))->toString(),
             "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352");
   EXPECT_EQ(pow(Integer(8), Rational(-1, 3))->toString(), "0.5");
   EXPECT_EQ(pow(Integer(16), Rational(-1, 4))->toString(), "0.5");
-  EXPECT_EQ(pow(Integer(4), Rational(-5, 2))->toString(), "0.03125");
+  EXPECT_EQ(pow(Integer(4), Rational(-5, 2))->toString(), "1/32");
   EXPECT_EQ(pow(Integer(4), Rational(-5, 3))->toString(),
             "0.099212565748012467171981602454519266274468332993740813113017860114076031601513698");
   EXPECT_EQ(pow(Integer(4), Rational(-5, 4))->toString(),
@@ -169,16 +168,17 @@ TEST(NumberFunctionsTests, powTest) {
   EXPECT_EQ(pow(Rational("-1"), Rational("-25"))->toString(), "-1");
   EXPECT_EQ(pow(Rational("-2.2"), Rational("-5"))->toString(), "-3125/161051");
 
-  EXPECT_EQ(pow(Real("-10"), Rational("-3"))->toString(), "-1/1000");
+  EXPECT_EQ(pow(Real("-10"), Rational("-3"))->toString(), "-0.001");
   EXPECT_EQ(pow(Real("-1"), Rational("-25"))->toString(), "-1");
   EXPECT_EQ(pow(Real("-2.2"), Rational("-5"))->toString(),
             "-0.019403791345598599201495178545926445660070412478034908196782385703907457886011264");
 
-  EXPECT_EQ(pow(Rational("-10"), Real("-3"))->toString(), "-1/1000");
+  EXPECT_EQ(pow(Rational("-10"), Real("-3"))->toString(), "-0.001");
   EXPECT_EQ(pow(Rational("-1"), Real("-25"))->toString(), "-1");
-  EXPECT_EQ(pow(Rational("-2.2"), Real("-5"))->toString(), "-3125/161051");
+  EXPECT_EQ(pow(Rational("-2.2"), Real("-5"))->toString(),
+            "-0.019403791345598599201495178545926445660070412478034908196782385703907457886011264");
 
-  EXPECT_THROW(pow(Integer(0), Integer(0)), UndefinedBinaryOperatorException);
-  EXPECT_THROW(pow(Rational("0"), Rational("-10")), UndefinedBinaryOperatorException);
-  EXPECT_THROW(pow(Rational("-10"), Rational("-1.5")), UndefinedBinaryOperatorException);
+  EXPECT_THROW(pow(Integer(0), Integer(0)), UndefinedException);
+  EXPECT_THROW(pow(Rational("0"), Rational("-10")), UndefinedException);
+  EXPECT_THROW(pow(Rational("-10"), Rational("-1.5")), UndefinedException);
 }

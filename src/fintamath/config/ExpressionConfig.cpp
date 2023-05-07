@@ -44,6 +44,7 @@
 #include "fintamath/functions/other/Rad.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -59,6 +60,7 @@ Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &Expressio
   static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> maker;
   return maker;
 }
+
 }
 
 using namespace fintamath;
@@ -267,6 +269,10 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Max>([](const ArgumentsPtrVector &args) {
       return std::make_shared<MinMaxExpression>(Max(), args);
+    });
+
+    Expression::registerFunctionExpressionMaker<Sqrt>([](const ArgumentsPtrVector &args) {
+      return makeRawFunctionExpression(Pow(), {args.front(), std::make_shared<Rational>(1, 2)});
     });
   }
 };

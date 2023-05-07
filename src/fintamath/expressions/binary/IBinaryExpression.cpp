@@ -5,7 +5,11 @@
 namespace fintamath {
 
 std::string IBinaryExpression::toString() const {
-  return binaryOperatorToString(*cast<IOperator>(getFunction()), {lhsChild, rhsChild});
+  if (auto oper = cast<IOperator>(func)) {
+    return binaryOperatorToString(*oper, {lhsChild, rhsChild});
+  }
+
+  return functionToString(*func, {lhsChild, rhsChild});
 }
 
 std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {

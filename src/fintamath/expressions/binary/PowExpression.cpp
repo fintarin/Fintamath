@@ -7,6 +7,7 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -17,6 +18,25 @@ const Pow POW;
 
 PowExpression::PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
     : IBinaryExpressionCRTP(POW, inLhsChild, inRhsChild) {
+}
+
+std::string PowExpression::toString() const {
+  if (auto val = cast<Rational>(rhsChild)) {
+    Integer numerator = val->getNumerator();
+    Integer denominator = val->getDenominator();
+
+    if (denominator == TWO) {
+      std::string sqrtStr = functionToString(Sqrt(), {lhsChild});
+
+      if (numerator == ONE) {
+        return sqrtStr;
+      }
+
+      return sqrtStr + POW.toString() + numerator.toString();
+    }
+  }
+
+  return IBinaryExpression::toString();
 }
 
 ArgumentPtr PowExpression::mulSimplify() const {

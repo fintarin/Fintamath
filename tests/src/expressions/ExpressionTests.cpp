@@ -161,8 +161,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("acosh1.9").toString(), "acosh(19/10)");
   EXPECT_EQ(Expression("atanh0.9").toString(), "atanh(9/10)");
   EXPECT_EQ(Expression("acoth1.9").toString(), "acoth(19/10)");
-  EXPECT_EQ(Expression("((2))*sqrt2").toString(), "2 sqrt(2)");
-  EXPECT_EQ(Expression("sqrt2*((2))").toString(), "2 sqrt(2)");
+  EXPECT_EQ(Expression("((2))*sqrt2").toString(), "sqrt(2)^3");
+  EXPECT_EQ(Expression("sqrt2*((2))").toString(), "sqrt(2)^3");
   EXPECT_EQ(Expression("sin(1)^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin(-1)^2").toString(), "sin(-1)^2");
   EXPECT_EQ(Expression("sin1^2").toString(), "sin(1)^2");
