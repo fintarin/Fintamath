@@ -1,1 +1,1 @@
-add_subdirectory(multiprecision-Boost_1_80_0)
+add_subdirectory(boost-multiprecision)
