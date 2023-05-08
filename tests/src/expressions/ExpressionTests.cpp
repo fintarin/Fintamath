@@ -137,6 +137,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "10");
   EXPECT_EQ(Expression("log(E,E^3)").toString(), "3");
   EXPECT_EQ(Expression("log((Pi),(E)^((Pi)))").toString(), "Pi log(Pi, E)");
+  EXPECT_EQ(Expression("log(E^3, E)").toString(), "1/3");
+  EXPECT_EQ(Expression("log(E^Pi, E)").toString(), "1/Pi");
   EXPECT_EQ(Expression("ln3").toString(), "ln(3)");
   EXPECT_EQ(Expression("ln2").toString(), "ln(2)");
   EXPECT_EQ(Expression("ln100").toString(), "ln(100)");

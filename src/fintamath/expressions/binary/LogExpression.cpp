@@ -78,10 +78,10 @@ ArgumentPtr LogExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
                                           makeRawFunctionExpression(Log(), {lhs, rhsExpr->getChildren().front()})});
   }
 
-  if (auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
+  if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     return makeFunctionExpression(Mul(),
-                                  {makeRawFunctionExpression(Div(), {ONE.clone(), rhsExpr->getChildren().back()}),
-                                   makeRawFunctionExpression(Log(), {lhs, rhsExpr->getChildren().front()})});
+                                  {makeRawFunctionExpression(Div(), {ONE.clone(), lhsExpr->getChildren().back()}),
+                                   makeRawFunctionExpression(Log(), {lhsExpr->getChildren().front(), rhs})});
   }
 
   return {};
