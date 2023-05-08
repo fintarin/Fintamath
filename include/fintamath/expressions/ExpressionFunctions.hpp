@@ -77,7 +77,7 @@ Expression e();
 
 Expression pi();
 
-Expression derivative(const Expression &rhs);
+Expression derivative(const Expression &lhs,const Expression &rhs);
 
 Expression notL(const Expression &rhs);
 

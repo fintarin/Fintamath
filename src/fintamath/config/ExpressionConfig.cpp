@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
+#include "fintamath/expressions/binary/DerivativeExpression.hpp"
 #include "fintamath/expressions/binary/DivExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
@@ -9,7 +10,6 @@
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
-#include "fintamath/expressions/unary/DerivativeExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -222,7 +222,7 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Derivative>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<DerivativeExpression>(args.front());
+      return std::make_shared<DerivativeExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Log>([](const ArgumentsPtrVector &args) {

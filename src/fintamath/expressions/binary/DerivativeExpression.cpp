@@ -1,4 +1,4 @@
-#include "fintamath/expressions/unary/DerivativeExpression.hpp"
+#include "fintamath/expressions/binary/DerivativeExpression.hpp"
 
 #include "fintamath/exceptions/InvalidInputUnaryOperatorException.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
@@ -11,20 +11,19 @@ namespace fintamath {
 
 const Derivative DER;
 
-DerivativeExpression::DerivativeExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(DER, inChild) {
+DerivativeExpression::DerivativeExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
+    : IBinaryExpressionCRTP(DER, inLhsChild, inRhsChild) {
 }
 
 ArgumentPtr DerivativeExpression::postSimplify() const {
   ArgumentPtr res;
 
-  if (is<INumber>(child) || is<IConstant>(child)) {
+  if (is<INumber>(lhsChild) || is<IConstant>(lhsChild)) {
     res = ZERO.clone();
   }
-  else if (is<Variable>(child)) {
+  else if (is<Variable>(lhsChild) && *lhsChild == *rhsChild) {
     res = ONE.clone();
   }
-  // else if (is<IExpression>(child)) {
-  // }
 
   return res;
 }

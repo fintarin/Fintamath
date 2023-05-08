@@ -207,6 +207,7 @@ struct ParserConfig {
     IFunction::registerType<Acoth>();
     IFunction::registerType<Min>();
     IFunction::registerType<Max>();
+    IFunction::registerType<Derivative>();
 
     IOperator::registerType<Add>();
     IOperator::registerType<Sub>();
@@ -223,7 +224,6 @@ struct ParserConfig {
     IOperator::registerType<More>();
     IOperator::registerType<LessEqv>();
     IOperator::registerType<MoreEqv>();
-    IOperator::registerType<Derivative>();
     IOperator::registerType<Not>();
     IOperator::registerType<And>();
     IOperator::registerType<Or>();

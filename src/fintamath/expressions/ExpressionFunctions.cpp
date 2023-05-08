@@ -134,8 +134,8 @@ Expression pi() {
   return Pi();
 }
 
-Expression derivative(const Expression &rhs) {
-  return Expression(Derivative()(rhs));
+Expression derivative(const Expression &lhs, const Expression &rhs) {
+  return Expression(Derivative()(lhs, rhs));
 }
 
 Expression notL(const Expression &rhs) {

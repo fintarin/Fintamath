@@ -211,6 +211,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Acosh>(IFunction::parse("acosh")));
   EXPECT_TRUE(is<Atanh>(IFunction::parse("atanh")));
   EXPECT_TRUE(is<Acoth>(IFunction::parse("acoth")));
+  EXPECT_TRUE(is<Derivative>(IFunction::parse("derivative")));
 
   EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
   EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));
@@ -237,7 +238,6 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(is<More>(IOperator::parse(">")));
   EXPECT_TRUE(is<LessEqv>(IOperator::parse("<=")));
   EXPECT_TRUE(is<MoreEqv>(IOperator::parse(">=")));
-  EXPECT_TRUE(is<Derivative>(IOperator::parse("'")));
   EXPECT_TRUE(is<Not>(IOperator::parse("~", IOperator::Priority::PrefixUnary)));
   EXPECT_TRUE(is<And>(IOperator::parse("&")));
   EXPECT_TRUE(is<Or>(IOperator::parse("|")));

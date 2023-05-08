@@ -192,10 +192,10 @@ TEST(ExpressionFunctionsTests, acotTest) {
 }
 
 TEST(ExpressionFunctionsTests, derivativeTest) {
-  EXPECT_EQ(derivative(Expression("1")).toString(), "0");
-  EXPECT_EQ(derivative(Expression("E")).toString(), "0");
-  EXPECT_EQ(derivative(Expression("a")).toString(), "1");
-  EXPECT_EQ(derivative(Expression("(a+5)")).toString(), "(a + 5)'"); // TODO: derivative
+  EXPECT_EQ(derivative(Expression("1"), Expression("a")).toString(), "0");
+  EXPECT_EQ(derivative(Expression("E"), Expression("1")).toString(), "0");
+  EXPECT_EQ(derivative(Expression("a"), Expression("a")).toString(), "1");
+  EXPECT_EQ(derivative(Expression("(a+5)"), Expression("a")).toString(), "derivative(a + 5, a)"); // TODO: derivative
 }
 
 TEST(ExpressionFunctionsTests, notTest) {
@@ -264,5 +264,5 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^b a = 0")).toString(), "a x^b = 0");
   EXPECT_EQ(solve(Expression("x/y = 0")).toString(), "x/y = 0");
   EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = sqrt(2 sin(2)) | x = -sqrt(2 sin(2))");
-  EXPECT_EQ(solve(Expression("x! = 0")).toString(), "x! = 0"); 
+  EXPECT_EQ(solve(Expression("x! = 0")).toString(), "x! = 0");
 }

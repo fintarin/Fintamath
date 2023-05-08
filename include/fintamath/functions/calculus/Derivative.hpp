@@ -2,16 +2,14 @@
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 
-class Derivative : public IOperatorCRTP<IComparable, Derivative, IComparable> {
+class Derivative : public IFunctionCRTP<IComparable, Derivative, IComparable, IComparable> {
 public:
-  Derivative() : IOperatorCRTP(IOperator::Priority::PostfixUnary, true) {
-  }
-
   std::string toString() const override {
-    return "'";
+    return "derivative";
   }
 
 protected:

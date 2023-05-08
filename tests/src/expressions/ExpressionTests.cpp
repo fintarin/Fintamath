@@ -352,10 +352,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2 a^5 b - 4 a b^5  = 0").toString(), "a^5 b - 2 a b^5 = 0");
   EXPECT_EQ(Expression("-2 a^5 b + 4 a b^5  = 0").toString(), "a^5 b - 2 a b^5 = 0");
 
-  EXPECT_EQ(Expression("a'").toString(), "1");
-  EXPECT_EQ(Expression("(a+a)'").toString(), "(2 a)'");
-  EXPECT_EQ(Expression("b'+a'").toString(), "2");
-  EXPECT_EQ(Expression("5'").toString(), "0");
+  EXPECT_EQ(Expression("derivative(a, a)").toString(), "1");
+  EXPECT_EQ(Expression("derivative(a+a, a)").toString(), "derivative(2 a, a)");
+  EXPECT_EQ(Expression("derivative(a, a) + derivative(b, b)").toString(), "2");
+  EXPECT_EQ(Expression("derivative(5, a^2)").toString(), "0");
+  EXPECT_EQ(Expression("derivative(a, a^2)").toString(), "derivative(a, a^2)");
 
   EXPECT_EQ(Expression("~True").toString(), "False");
   EXPECT_EQ(Expression("~False").toString(), "True");
@@ -750,9 +751,9 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("x+1&x"), InvalidInputException);
   EXPECT_THROW(Expression("x&x+2"), InvalidInputException);
   EXPECT_THROW(Expression("(x&y)=(y&z)"), InvalidInputException);
-  EXPECT_THROW(Expression("(x=y)'"), InvalidInputException);
-  EXPECT_THROW(Expression("(x&y)'"), InvalidInputException);
-  EXPECT_THROW(Expression("True'"), InvalidInputException);
+  EXPECT_THROW(Expression("derivative(x=y, x)"), InvalidInputException);
+  EXPECT_THROW(Expression("derivative(x&y,x)"), InvalidInputException);
+  EXPECT_THROW(Expression("derivative(True,a)"), InvalidInputException);
   EXPECT_THROW(Expression("(a+1)_(a>2)"), InvalidInputException);
   EXPECT_THROW(Expression("(x+1)_1"), InvalidInputException);
   EXPECT_THROW(Expression("(x*2)_1"), InvalidInputException);
@@ -903,7 +904,7 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("log(E,5)>ln(5)").precise().toString(), "False");
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").precise().toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").precise().toString(), "True");
-  EXPECT_EQ(Expression("(sqrt((1-cos(2*(Pi/3)))/2))'").precise().toString(), "0");
+  EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
 
   // TODO logarithms
   // EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").precise().toString(), "0");
