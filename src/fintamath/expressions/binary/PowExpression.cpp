@@ -22,8 +22,8 @@ PowExpression::PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &i
 
 std::string PowExpression::toString() const {
   if (auto val = cast<Rational>(rhsChild)) {
-    Integer numerator = val->getNumerator();
-    Integer denominator = val->getDenominator();
+  const  Integer &numerator = val->numerator();
+    const  Integer & denominator = val->denominator();
 
     if (denominator == TWO) {
       std::string sqrtStr = functionToString(Sqrt(), {lhsChild});

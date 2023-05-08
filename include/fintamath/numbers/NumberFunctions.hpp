@@ -53,12 +53,12 @@ inline std::unique_ptr<INumber> sqrt(const Integer &rhs) {
 inline std::unique_ptr<INumber> sqrt(const Rational &rhs) {
   Integer remainder;
 
-  Integer numerator = intSqrt(rhs.getNumerator(), remainder);
+  Integer numerator = intSqrt(rhs.numerator(), remainder);
   if (remainder != ZERO) {
     return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject());
   }
 
-  Integer denominator = intSqrt(rhs.getDenominator(), remainder);
+  Integer denominator = intSqrt(rhs.denominator(), remainder);
   if (remainder != ZERO) {
     return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject());
   }
@@ -119,8 +119,8 @@ inline std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
 
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
 inline std::unique_ptr<INumber> pow(const Lhs &lhs, const Rational &rhs) {
-  Integer numerator = rhs.getNumerator();
-  Integer denominator = rhs.getDenominator();
+  const Integer &numerator = rhs.numerator();
+  const Integer &denominator = rhs.denominator();
 
   if (denominator == ONE) {
     return pow(lhs, numerator);

@@ -10,7 +10,7 @@ public:
 
   explicit Rational(const std::string &str);
 
-  explicit Rational(Integer numerator, Integer denominator);
+  explicit Rational(Integer inNumer, Integer inDenom);
 
   Rational(Integer rhs);
 
@@ -22,9 +22,9 @@ public:
 
   int sign() const;
 
-  Integer getNumerator() const;
+  const Integer &numerator() const;
 
-  Integer getDenominator() const;
+  const Integer &denominator() const;
 
 protected:
   bool equals(const Rational &rhs) const override;
@@ -44,19 +44,12 @@ protected:
   Rational &negate() override;
 
 private:
-  void parse(const std::string &str);
-
-  void fixNegative();
-
-  void fixZero();
-
   void toIrreducibleRational();
 
   static void toCommonDenominators(Rational &lhs, Rational &rhs);
 
-  Integer numerator = 0;
-  Integer denominator = 1;
-  bool signVal{};
+  Integer numer = 0;
+  Integer denom = 1;
 };
 
 }

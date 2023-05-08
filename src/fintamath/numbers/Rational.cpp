@@ -14,118 +14,6 @@ Rational::Rational(const std::string &str) {
     throw InvalidInputException(str);
   }
 
-  parse(str);
-}
-
-Rational::Rational(Integer numer, Integer denom) : numerator(std::move(numer)), denominator(std::move(denom)) {
-  toIrreducibleRational();
-}
-
-Rational::Rational(Integer rhs) : numerator(std::move(rhs)) {
-  fixNegative();
-}
-
-Rational::Rational(int64_t rhs) : numerator(rhs) {
-  fixNegative();
-}
-
-Integer Rational::getNumerator() const {
-  return signVal ? -numerator : numerator;
-}
-
-Integer Rational::getDenominator() const {
-  return denominator;
-}
-
-std::string Rational::toString() const {
-  std::string res = signVal ? "-" : "";
-  res += numerator.toString();
-
-  if (denominator != 1) {
-    res += "/" + denominator.toString();
-  }
-
-  return res;
-}
-
-std::unique_ptr<IMathObject> Rational::toMinimalObject() const {
-  if (denominator == 1) {
-    return signVal ? (-numerator).clone() : numerator.clone();
-  }
-  return clone();
-}
-
-int Rational::sign() const {
-  if (*this == 0) {
-    return 0;
-  }
-
-  return signVal ? -1 : 1;
-}
-
-void Rational::fixZero() {
-  if (numerator == 0) {
-    signVal = false;
-    denominator = 1;
-  }
-}
-
-bool Rational::equals(const Rational &rhs) const {
-  return signVal == rhs.signVal && numerator == rhs.numerator && denominator == rhs.denominator;
-}
-
-bool Rational::less(const Rational &rhs) const {
-  Rational lhs = *this;
-  Rational tmpRhs = rhs;
-  toCommonDenominators(lhs, tmpRhs);
-  return (lhs.numerator < tmpRhs.numerator);
-}
-
-bool Rational::more(const Rational &rhs) const {
-  Rational lhs = *this;
-  Rational tmpRhs = rhs;
-  toCommonDenominators(lhs, tmpRhs);
-  return (lhs.numerator > tmpRhs.numerator);
-}
-
-Rational &Rational::add(const Rational &rhs) {
-  Rational tmpRhs = rhs;
-  toCommonDenominators(*this, tmpRhs);
-  numerator += tmpRhs.numerator;
-  toIrreducibleRational();
-  return *this;
-}
-
-Rational &Rational::substract(const Rational &rhs) {
-  Rational tmpRhs = rhs;
-  toCommonDenominators(*this, tmpRhs);
-  numerator -= tmpRhs.numerator;
-  toIrreducibleRational();
-  return *this;
-}
-
-Rational &Rational::multiply(const Rational &rhs) {
-  numerator *= rhs.numerator;
-  denominator *= rhs.denominator;
-  signVal = (!signVal || !rhs.signVal) && (signVal || rhs.signVal);
-  toIrreducibleRational();
-  return *this;
-}
-
-Rational &Rational::divide(const Rational &rhs) {
-  numerator *= rhs.denominator;
-  denominator *= rhs.numerator;
-  signVal = (!signVal || !rhs.signVal) && (signVal || rhs.signVal);
-  toIrreducibleRational();
-  return *this;
-}
-
-Rational &Rational::negate() {
-  signVal = !signVal;
-  return *this;
-}
-
-void Rational::parse(const std::string &str) {
   if (str.empty() || str == ".") {
     throw InvalidInputException(str);
   }
@@ -150,59 +38,137 @@ void Rational::parse(const std::string &str) {
     auto numeratorStr = str.substr(size_t(firstDotNum) + 1);
     std::string denominatorStr(numeratorStr.size() + 1, '0');
     denominatorStr.front() = '1';
-    numerator = Integer(numeratorStr);
-    denominator = Integer(denominatorStr);
+    numer = Integer(numeratorStr);
+    denom = Integer(denominatorStr);
   }
 
-  if (intPart < 0 || numerator < 0) {
+  if (intPart < 0 || numer < 0) {
     throw InvalidInputException(str);
   }
 
   toIrreducibleRational();
-  numerator += intPart * denominator;
-  if (numerator != 0) {
-    signVal = isNegative;
+  numer += intPart * denom;
+
+  if (isNegative) {
+    numer *= -1;
   }
 }
 
-void Rational::fixNegative() {
-  if (numerator < 0) {
-    numerator *= -1;
-    signVal = !signVal;
+Rational::Rational(Integer inNumer, Integer inDenom) : numer(std::move(inNumer)), denom(std::move(inDenom)) {
+  toIrreducibleRational();
+}
+
+Rational::Rational(Integer rhs) : numer(std::move(rhs)) {
+}
+
+Rational::Rational(int64_t rhs) : numer(rhs) {
+}
+
+const Integer &Rational::numerator() const {
+  return numer;
+}
+
+const Integer &Rational::denominator() const {
+  return denom;
+}
+
+std::string Rational::toString() const {
+  std::string res = numer.toString();
+
+  if (denom != 1) {
+    res += "/" + denom.toString();
   }
-  if (denominator < 0) {
-    denominator *= -1;
-    signVal = !signVal;
+
+  return res;
+}
+
+std::unique_ptr<IMathObject> Rational::toMinimalObject() const {
+  if (denom == 1) {
+    return numer.clone();
   }
+  return clone();
+}
+
+int Rational::sign() const {
+  return numer.sign();
+}
+
+bool Rational::equals(const Rational &rhs) const {
+  return numer == rhs.numer && denom == rhs.denom;
+}
+
+bool Rational::less(const Rational &rhs) const {
+  Rational lhs = *this;
+  Rational tmpRhs = rhs;
+  toCommonDenominators(lhs, tmpRhs);
+  return (lhs.numer < tmpRhs.numer);
+}
+
+bool Rational::more(const Rational &rhs) const {
+  Rational lhs = *this;
+  Rational tmpRhs = rhs;
+  toCommonDenominators(lhs, tmpRhs);
+  return (lhs.numer > tmpRhs.numer);
+}
+
+Rational &Rational::add(const Rational &rhs) {
+  Rational tmpRhs = rhs;
+  toCommonDenominators(*this, tmpRhs);
+  numer += tmpRhs.numer;
+  toIrreducibleRational();
+  return *this;
+}
+
+Rational &Rational::substract(const Rational &rhs) {
+  Rational tmpRhs = rhs;
+  toCommonDenominators(*this, tmpRhs);
+  numer -= tmpRhs.numer;
+  toIrreducibleRational();
+  return *this;
+}
+
+Rational &Rational::multiply(const Rational &rhs) {
+  numer *= rhs.numer;
+  denom *= rhs.denom;
+  toIrreducibleRational();
+  return *this;
+}
+
+Rational &Rational::divide(const Rational &rhs) {
+  numer *= rhs.denom;
+  denom *= rhs.numer;
+  toIrreducibleRational();
+  return *this;
+}
+
+Rational &Rational::negate() {
+  numer = -numer;
+  return *this;
 }
 
 void Rational::toIrreducibleRational() {
-  if (denominator == 0) {
-    throw UndefinedBinaryOperatorException("/", numerator.toString(), denominator.toString());
+  if (denom == 0) {
+    throw UndefinedBinaryOperatorException("/", numer.toString(), denom.toString());
   }
-  fixNegative();
-  Integer gcdVal = gcd(numerator, denominator);
-  numerator /= gcdVal;
-  denominator /= gcdVal;
-  fixZero();
+
+  if (denom < 0) {
+    numer *= -1;
+    denom *= -1;
+  }
+
+  Integer gcdVal = gcd(numer, denom);
+  numer /= gcdVal;
+  denom /= gcdVal;
 }
 
 void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {
-  Integer lcmVal = lcm(lhs.denominator, rhs.denominator);
+  Integer lcmVal = lcm(lhs.denom, rhs.denom);
 
-  if (lhs.signVal) {
-    lhs.numerator *= -1;
-  }
-  lhs.numerator *= (lcmVal / lhs.denominator);
-  lhs.denominator = lcmVal;
-  lhs.signVal = false;
+  lhs.numer *= (lcmVal / lhs.denom);
+  lhs.denom = lcmVal;
 
-  if (rhs.signVal) {
-    rhs.numerator *= -1;
-  }
-  rhs.numerator *= (lcmVal / rhs.denominator);
-  rhs.denominator = lcmVal;
-  rhs.signVal = false;
+  rhs.numer *= (lcmVal / rhs.denom);
+  rhs.denom = lcmVal;
 }
 
 }

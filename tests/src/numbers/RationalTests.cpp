@@ -11,6 +11,8 @@ TEST(RationalTests, constructorTest) {
 }
 
 TEST(RationalTests, stringConstructorTest) {
+  EXPECT_EQ(Rational("0"), 0);
+  EXPECT_EQ(Rational("2"), 2);
   EXPECT_EQ(Rational("-93"), -93);
   EXPECT_EQ(Rational("-9.3").toString(), "-93/10");
   EXPECT_EQ(Rational("0989929039237832000.9302930929333").toString(), "9899290392378320009302930929333/10000000000000");
@@ -309,16 +311,16 @@ TEST(RationalTests, integerFriendMoreEqualOperatorTest) {
   EXPECT_FALSE(-5 >= Rational(50, 10));
 }
 
-TEST(RationalTests, getNumeratorTest) {
-  EXPECT_EQ(Rational(5, 2).getNumerator(), 5);
-  EXPECT_EQ(Rational(55).getNumerator(), 55);
-  EXPECT_EQ(Rational(-10, 100).getNumerator(), -1);
+TEST(RationalTests, numeratorTest) {
+  EXPECT_EQ(Rational(5, 2).numerator(), 5);
+  EXPECT_EQ(Rational(55).numerator(), 55);
+  EXPECT_EQ(Rational(-10, 100).numerator(), -1);
 }
 
-TEST(RationalTests, getDenominatorTest) {
-  EXPECT_EQ(Rational(5, 2).getDenominator(), 2);
-  EXPECT_EQ(Rational(55).getDenominator(), 1);
-  EXPECT_EQ(Rational(-10, 100).getDenominator(), 10);
+TEST(RationalTests, denominatorTest) {
+  EXPECT_EQ(Rational(5, 2).denominator(), 2);
+  EXPECT_EQ(Rational(55).denominator(), 1);
+  EXPECT_EQ(Rational(-10, 100).denominator(), 10);
 }
 
 TEST(RationalTests, toStringTest) {
