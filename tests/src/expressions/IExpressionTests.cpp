@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 
 using namespace fintamath;

@@ -931,6 +931,12 @@ TEST(ExpressionTests, preciseNegativeTest) {
   // EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E^(E^(E^(E^E))))))))").precise(), UndefinedException);
 }
 
+TEST(ExpressionTests, toMinimalObjectTest) {
+  EXPECT_TRUE(is<Variable>(Expression("a").toMinimalObject()));
+  EXPECT_TRUE(is<INumber>(Expression("123.123").toMinimalObject()));
+  EXPECT_TRUE(is<IExpression>(Expression("a+a").toMinimalObject()));
+}
+
 TEST(ExpressionTests, variableVariablePlusOperatorTest) {
   EXPECT_EQ(Variable("a") + Variable("a"), Expression("2a"));
   EXPECT_EQ(Variable("a") + Variable("b"), Expression("a+b"));

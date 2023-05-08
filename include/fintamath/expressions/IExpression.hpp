@@ -67,10 +67,6 @@ public:
     ArgumentPtr lhsFunction = getFunction();
     ArgumentPtr rhsFunction = rhs.getFunction();
 
-    if ((lhsFunction && !rhsFunction) || (!lhsFunction && rhsFunction)) {
-      return false;
-    }
-
     if (lhsFunction && rhsFunction && lhsFunction->toString() != rhsFunction->toString()) {
       return false;
     }
