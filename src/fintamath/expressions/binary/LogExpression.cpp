@@ -35,7 +35,13 @@ LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() 
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
       &LogExpression::numbersSimplify, //
       &LogExpression::equalSimplify,   //
-      &LogExpression::powSimplify,     //
+  };
+  return simplifyFunctions;
+}
+
+LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPostSimplify() const {
+  static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &LogExpression::powSimplify, //
   };
   return simplifyFunctions;
 }

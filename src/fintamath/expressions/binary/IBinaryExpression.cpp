@@ -25,7 +25,11 @@ ArgumentPtr IBinaryExpression::preSimplify() const {
   preSimplifyChild(simpl->lhsChild);
   preSimplifyChild(simpl->rhsChild);
 
-  if (auto res = simpl->globalSimplify()) {
+  if (auto res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify())) {
+    return res;
+  }
+
+  if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
     return res;
   }
 
@@ -41,7 +45,11 @@ ArgumentPtr IBinaryExpression::postSimplify() const {
     return res;
   }
 
-  if (auto res = simpl->globalSimplify()) {
+  if (auto res = simpl->useSimplifyFunctions(getFunctionsForPostSimplify())) {
+    return res;
+  }
+
+  if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
     return res;
   }
 
@@ -55,11 +63,10 @@ ArgumentPtr IBinaryExpression::simplify() const {
   return simpl;
 }
 
-ArgumentPtr IBinaryExpression::globalSimplify() const {
+ArgumentPtr IBinaryExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const {
   auto simpl = cast<IBinaryExpression>(clone());
-  const SimplifyFunctionsVector simplFunctions = getFunctionsForSimplify();
 
-  for (const auto &simplFunc : simplFunctions) {
+  for (const auto &simplFunc : simplFuncs) {
     if (auto res = simplFunc(simpl->lhsChild, simpl->rhsChild)) {
       return res;
     }
@@ -69,6 +76,10 @@ ArgumentPtr IBinaryExpression::globalSimplify() const {
 }
 
 IBinaryExpression::SimplifyFunctionsVector IBinaryExpression::getFunctionsForSimplify() const {
+  return {};
+}
+
+IBinaryExpression::SimplifyFunctionsVector IBinaryExpression::getFunctionsForPreSimplify() const {
   return {};
 }
 

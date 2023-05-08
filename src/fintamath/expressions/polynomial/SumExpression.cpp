@@ -2,9 +2,11 @@
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -62,9 +64,10 @@ ArgumentPtr SumExpression::negate() const {
 
 SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForSimplify() const {
   static const SumExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &SumExpression::simplifyNumbers,   //
-      &SumExpression::simplifyNegations, //
-      &SumExpression::sumRates,          //
+      &SumExpression::simplifyNumbers,    //
+      &SumExpression::simplifyNegations,  //
+      &SumExpression::sumRates,           //
+      &SumExpression::simplifyLogarithms, //
   };
   return simplifyFunctions;
 }
@@ -89,6 +92,58 @@ ArgumentPtr SumExpression::simplifyNegations(const ArgumentPtr &lhsChild, const 
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
       rhsExpr && is<Neg>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
     return ZERO.clone();
+  }
+
+  return {};
+}
+
+ArgumentPtr SumExpression::simplifyLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  auto lhsExpr = cast<IExpression>(lhsChild);
+  auto rhsExpr = cast<IExpression>(rhsChild);
+
+  if (!lhsExpr || !rhsExpr) {
+    return {};
+  }
+
+  bool isLhsNeg = false;
+  if (is<Neg>(lhsExpr->getFunction())) {
+    isLhsNeg = true;
+    lhsExpr = cast<IExpression>(lhsExpr->getChildren().front());
+  }
+
+  bool isRhsNeg = false;
+  if (is<Neg>(rhsExpr->getFunction())) {
+    isRhsNeg = true;
+    rhsExpr = cast<IExpression>(rhsExpr->getChildren().front());
+  }
+
+  if (!lhsExpr || !rhsExpr || !is<Log>(lhsExpr->getFunction()) || !is<Log>(rhsExpr->getFunction())) {
+    return {};
+  }
+
+  ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
+  ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
+
+  if (*lhsChildren.front() == *rhsChildren.front()) {
+    if (!isLhsNeg && !isRhsNeg) {
+      return makeFunctionExpression(
+          Log(), {lhsChildren.front(), makeRawFunctionExpression(Mul(), {lhsChildren.back(), rhsChildren.back()})});
+    }
+
+    if (!isLhsNeg && isRhsNeg) {
+      return makeFunctionExpression(
+          Log(), {lhsChildren.front(), makeRawFunctionExpression(Div(), {lhsChildren.back(), rhsChildren.back()})});
+    }
+
+    if (isLhsNeg && !isRhsNeg) {
+      return makeFunctionExpression(
+          Log(), {lhsChildren.front(), makeRawFunctionExpression(Div(), {rhsChildren.back(), lhsChildren.back()})});
+    }
+
+    return makeFunctionExpression(
+        Neg(),
+        {makeRawFunctionExpression(
+            Log(), {lhsChildren.front(), makeRawFunctionExpression(Mul(), {lhsChildren.back(), rhsChildren.back()})})});
   }
 
   return {};

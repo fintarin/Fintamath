@@ -20,6 +20,8 @@ private:
 
   static ArgumentPtr simplifyNegations(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
+  static ArgumentPtr simplifyLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
   static ArgumentPtr sumRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &inChild);

@@ -21,6 +21,8 @@ protected:
 
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
+  virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
+
   virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
 
   ArgumentPtr preSimplify() const override;
@@ -30,7 +32,7 @@ protected:
   ArgumentPtr simplify() const final;
 
 private:
-  ArgumentPtr globalSimplify() const;
+  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const;
 
 protected:
   std::shared_ptr<IFunction> func;

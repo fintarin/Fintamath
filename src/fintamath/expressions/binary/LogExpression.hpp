@@ -13,6 +13,8 @@ public:
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
+  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+
 private:
   static ArgumentPtr numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 

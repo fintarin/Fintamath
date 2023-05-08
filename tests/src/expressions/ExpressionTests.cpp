@@ -512,6 +512,15 @@ TEST(ExpressionTests, stringConstructorTest) {
 
   EXPECT_EQ(Expression("tan(x)*cot(x)").toString(), "1");
   EXPECT_EQ(Expression("tanh(x)*coth(x)").toString(), "1");
+
+  EXPECT_EQ(Expression("ln(x) + ln(y)").toString(), "ln(x y)");
+  EXPECT_EQ(Expression("ln(x) - ln(y)").toString(), "ln(x/y)");
+  EXPECT_EQ(Expression("-ln(x) + ln(y)").toString(), "ln(y/x)");
+  EXPECT_EQ(Expression("-ln(x) - ln(y)").toString(), "-ln(x y)");
+  EXPECT_EQ(Expression("ln((E)/(20000.1EE)) + ln(20000.1E)").toString(), "0");
+  EXPECT_EQ(Expression("ln((10 E)^2) - ln(10 E 10 E)").toString(), "0");
+  // EXPECT_EQ(Expression("ln((10 E)^2) - 2 ln(10 E)").toString(), "0"); // TODO: fix
+  EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
 }
 
 TEST(ExpressionTests, stringConstructorLargeTest) {
