@@ -26,7 +26,7 @@ TEST(LogTests, callTest) {
             "1.5849625007211561814537389439478165087598144076924810604557526545410982277943586");
   EXPECT_EQ(f(Rational(1, 10), Integer(10))->toString(), "-1");
 
-  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "ln(b)/ln(a)");
+  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "log(a, b)");
 
   EXPECT_THROW(f(Integer(-10), Integer(10)), UndefinedFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(10)), UndefinedFunctionException);

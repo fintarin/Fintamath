@@ -4,6 +4,7 @@
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/binary/DerivativeExpression.hpp"
 #include "fintamath/expressions/binary/DivExpression.hpp"
+#include "fintamath/expressions/binary/LogExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
 #include "fintamath/expressions/polynomial/MinMaxExpression.hpp"
@@ -226,18 +227,19 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Log>([](const ArgumentsPtrVector &args) {
-      return makeRawFunctionExpression(
-          Div(), {makeRawFunctionExpression(Ln(), {args.back()}), {makeRawFunctionExpression(Ln(), {args.front()})}});
+      return std::make_shared<LogExpression>(args.front(), args.back());
+    });
+
+    Expression::registerFunctionExpressionMaker<Ln>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<LogExpression>(E().clone(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Lb>([](const ArgumentsPtrVector &args) {
-      return makeRawFunctionExpression(
-          Div(), {makeRawFunctionExpression(Ln(), {args.back()}), {makeRawFunctionExpression(Ln(), {TWO.clone()})}});
+      return std::make_shared<LogExpression>(TWO.clone(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Lg>([](const ArgumentsPtrVector &args) {
-      return makeRawFunctionExpression(
-          Div(), {makeRawFunctionExpression(Ln(), {args.back()}), {makeRawFunctionExpression(Ln(), {TEN.clone()})}});
+      return std::make_shared<LogExpression>(TEN.clone(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Exp>([](const ArgumentsPtrVector &args) {

@@ -134,17 +134,19 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("E^101").toString(), "E^101");
   EXPECT_EQ(Expression("E^(-101)").toString(), "1/E^101");
   EXPECT_EQ(Expression("log(E,E)").toString(), "1");
-  EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "ln(Pi^10)/ln(Pi)");
-  EXPECT_EQ(Expression("log(E,E^3)").toString(), "ln(E^3)/ln(E)");
-  EXPECT_EQ(Expression("log((Pi),(E)^((Pi)))").toString(), "ln(E^Pi)/ln(Pi)");
+  EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "10");
+  EXPECT_EQ(Expression("log(E,E^3)").toString(), "3");
+  EXPECT_EQ(Expression("log((Pi),(E)^((Pi)))").toString(), "Pi log(Pi, E)");
   EXPECT_EQ(Expression("ln3").toString(), "ln(3)");
   EXPECT_EQ(Expression("ln2").toString(), "ln(2)");
   EXPECT_EQ(Expression("ln100").toString(), "ln(100)");
-  EXPECT_EQ(Expression("ln(E)").toString(), "ln(E)");
-  EXPECT_EQ(Expression("lg99").toString(), "ln(99)/ln(10)");
-  EXPECT_EQ(Expression("lg100").toString(), "ln(100)/ln(10)");
-  EXPECT_EQ(Expression("lb100").toString(), "ln(100)/ln(2)");
-  EXPECT_EQ(Expression("lb4").toString(), "ln(4)/ln(2)");
+  EXPECT_EQ(Expression("ln(E)").toString(), "1");
+  EXPECT_EQ(Expression("lg99").toString(), "log(10, 99)");
+  EXPECT_EQ(Expression("lg100").toString(), "2");
+  EXPECT_EQ(Expression("lb100").toString(), "log(2, 100)");
+  EXPECT_EQ(Expression("lb4").toString(), "2");
+  EXPECT_EQ(Expression("ln(ln(E))").toString(), "0");
+  EXPECT_EQ(Expression("ln(E)!").toString(), "1");
   EXPECT_EQ(Expression("sin10").toString(), "sin(10)");
   EXPECT_EQ(Expression("cos10").toString(), "cos(10)");
   EXPECT_EQ(Expression("tan10").toString(), "tan(10)");
@@ -175,14 +177,12 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-1/2 cos(2/3 Pi) + 1/2)");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(),
             "2 cos(1/3 Pi) sqrt(-1/2 cos(2/3 Pi) + 1/2)");
-  EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").toString(), "ln(ln(ln(ln(E))))");
-  EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").toString(), "ln(ln(ln(ln(ln(E)))))");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
   EXPECT_EQ(Expression("sqrt(26)").toString(), "sqrt(26)");
   EXPECT_EQ(Expression("sqrt(145/26)").toString(), "sqrt(145/26)");
   EXPECT_EQ(Expression("sqrt(169/3)").toString(), "sqrt(169/3)");
   EXPECT_EQ(Expression("sqrt(168/25)").toString(), "sqrt(168/25)");
-  EXPECT_EQ(Expression("log(2, 256)").toString(), "ln(256)/ln(2)");
+  EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
 
   EXPECT_EQ(Expression("a*0").toString(), "0");
   EXPECT_EQ(Expression("0*a").toString(), "0");
@@ -219,7 +219,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("aEE").toString(), "E^2 a");
   EXPECT_EQ(Expression("EEa").toString(), "E^2 a");
   EXPECT_EQ(Expression("x123").toString(), "123 x");
-  EXPECT_EQ(Expression("lnE").toString(), "ln(E)");
+  EXPECT_EQ(Expression("lnE").toString(), "1");
   EXPECT_EQ(Expression("lncossinE").toString(), "ln(cos(sin(E)))");
   EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
 
@@ -905,10 +905,6 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").precise().toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").precise().toString(), "True");
   EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
-
-  // TODO logarithms
-  // EXPECT_EQ(Expression("ln(ln(ln(ln(E))))").precise().toString(), "0");
-  // EXPECT_EQ(Expression("ln(ln(ln(ln(ln(E)))))").precise().toString(), "1");
 }
 
 TEST(ExpressionTests, preciseNegativeTest) {

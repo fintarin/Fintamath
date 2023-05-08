@@ -123,24 +123,24 @@ TEST(ExpressionFunctionsTests, expTest) {
 }
 
 TEST(ExpressionFunctionsTests, logTest) {
-  EXPECT_EQ(log(Expression("a+b"), Expression("1")).toString(), "0");
-  EXPECT_EQ(log(Expression("2*a"), Expression("a+b")).toString(), "ln(a + b)/ln(2 a)");
-  EXPECT_EQ(log(Expression("a"), Expression("a^5")).toString(), "ln(a^5)/ln(a)"); // TODO logarithms
+  EXPECT_EQ(log(Expression("a+b"), Expression("1")).toString(), "log(a + b, 1)");
+  EXPECT_EQ(log(Expression("2*a"), Expression("a+b")).toString(), "log(2 a, a + b)");
+  EXPECT_EQ(log(Expression("a"), Expression("a^5")).toString(), "5");
 }
 
 TEST(ExpressionFunctionsTests, lnTest) {
-  EXPECT_EQ(ln(Expression("E*E")).toString(), "ln(E^2)"); // TODO logarithms
+  EXPECT_EQ(ln(Expression("E*E")).toString(), "2");
   EXPECT_EQ(ln(Expression("10")).toString(), "ln(10)");
 }
 
 TEST(ExpressionFunctionsTests, lbTest) {
-  EXPECT_EQ(lb(Expression("1024*a")).toString(), "ln(1024 a)/ln(2)"); // TODO logarithms
-  EXPECT_EQ(lb(Expression("2+a")).toString(), "ln(a + 2)/ln(2)");     // TODO logarithms
+  EXPECT_EQ(lb(Expression("1024*a")).toString(), "log(2, 1024 a)"); // TODO logarithms
+  EXPECT_EQ(lb(Expression("2+a")).toString(), "log(2, a + 2)");     // TODO logarithms
 }
 
 TEST(ExpressionFunctionsTests, lgTest) {
   EXPECT_EQ(lg(Expression("10")).toString(), "1");
-  EXPECT_EQ(lg(Expression("E*a")).toString(), "ln(E a)/ln(10)");
+  EXPECT_EQ(lg(Expression("E*a")).toString(), "log(10, E a)");
 }
 
 TEST(ExpressionFunctionsTests, sinTest) {
