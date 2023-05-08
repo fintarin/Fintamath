@@ -21,10 +21,11 @@ TEST(DerivativeTests, getFunctionTypeTest) {
 }
 
 TEST(DerivativeTests, callTest) {
-  EXPECT_EQ(f(Variable("a"),Variable("a"))->toString(), "1");
-  EXPECT_EQ(f(Variable("a"),Variable("b"))->toString(), "derivative(a, b)");
-  EXPECT_EQ(f(Expression("a+a"),Variable("a"))->toString(), "derivative(2 a, a)");
-  EXPECT_EQ(f(Integer(5),Variable("a"))->toString(), "0");
+  EXPECT_EQ(f(Variable("a"), Variable("a"))->toString(), "1");
+  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "derivative(a, b)");
+  EXPECT_EQ(f(Expression("a+a"), Variable("a"))->toString(), "derivative(2 a, a)");
+  EXPECT_EQ(f(Integer(5), Variable("a"))->toString(), "0");
+  EXPECT_EQ(f(Integer(5), Integer(1))->toString(), "0"); // TODO: undefined
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
