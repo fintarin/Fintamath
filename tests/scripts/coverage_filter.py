@@ -28,7 +28,7 @@ def get_data_line_nums(source_file: TextIO) -> Generator[int, None, None]:
 
     line = re.sub("\s+", "", line)
 
-    if line != "{" and line != "}":
+    if line != "{" and line != "}" and line != "};" and line.find(",//") == -1:
       yield line_num
 
 
