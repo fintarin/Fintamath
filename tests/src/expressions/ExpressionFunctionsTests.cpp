@@ -238,7 +238,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(), "x = -34/33 | x = 1");
   EXPECT_EQ(
       solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(),
-      "x = -1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2) | x = 1/2 sqrt(sqrt(2)^2 - 2) - 1/2 sqrt(2)"); // TODO: x = -1/sqrt(2)
+      "x = -1/4 sqrt(2)^3"); // TODO: x = -1/sqrt(2)
 
   // TODO: implement cubic equations
   EXPECT_EQ(solve(Expression("x^3 - 3x^2 + 3x - 1 = 0")).toString(), "x^3 - 3 x^2 + 3 x - 1 = 0"); // TODO: x = 1
@@ -263,6 +263,6 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("2 x^a = 0")).toString(), "x^a = 0");
   EXPECT_EQ(solve(Expression("x^b a = 0")).toString(), "a x^b = 0");
   EXPECT_EQ(solve(Expression("x/y = 0")).toString(), "x/y = 0");
-  EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = sqrt(2 sin(2)) | x = -sqrt(2 sin(2))");
+  EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = sqrt(2) sqrt(sin(2)) | x = -sqrt(2) sqrt(sin(2))");
   EXPECT_EQ(solve(Expression("x! = 0")).toString(), "x! = 0");
 }

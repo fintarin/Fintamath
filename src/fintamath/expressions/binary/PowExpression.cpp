@@ -221,7 +221,11 @@ ArgumentPtr PowExpression::postSimplify() const {
     return simplExpr->lhsChild;
   }
 
-  return simplExpr->polynomSimplify();
+  if (auto res = simplExpr->polynomSimplify()) {
+    return res;
+  }
+
+  return simpl;
 }
 
 }

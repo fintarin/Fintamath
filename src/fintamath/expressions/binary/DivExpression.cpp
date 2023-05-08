@@ -38,7 +38,13 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() 
       &DivExpression::numbersSimplify, //
       &DivExpression::divSimplify,     //
       &DivExpression::mulSimplify,     //
-      &DivExpression::sumSimplify,     //
+  };
+  return simplifyFunctions;
+}
+
+DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
+  static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &DivExpression::sumSimplify, //
   };
   return simplifyFunctions;
 }

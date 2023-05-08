@@ -72,6 +72,10 @@ IBinaryExpression::SimplifyFunctionsVector IBinaryExpression::getFunctionsForSim
   return {};
 }
 
+IBinaryExpression::SimplifyFunctionsVector IBinaryExpression::getFunctionsForPostSimplify() const {
+  return {};
+}
+
 void IBinaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.size() != 2) {
     std::vector<std::string> argNamesVect(childVect.size());
