@@ -4,6 +4,10 @@
 
 namespace fintamath {
 
+Integer gcd(const Integer &lhs, const Integer &rhs);
+
+Integer lcm(const Integer &lhs, const Integer &rhs);
+
 Integer intSqrt(const Integer &rhs);
 
 Integer intSqrt(const Integer &rhs, Integer &remainder);

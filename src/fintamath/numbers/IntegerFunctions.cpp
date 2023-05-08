@@ -7,6 +7,14 @@
 
 namespace fintamath {
 
+Integer gcd(const Integer &lhs, const Integer &rhs) {
+  return Integer(gcd(lhs.getImpl()->v, rhs.getImpl()->v));
+}
+
+Integer lcm(const Integer &lhs, const Integer &rhs) {
+  return Integer(lcm(lhs.getImpl()->v, rhs.getImpl()->v));
+}
+
 Integer intSqrt(const Integer &rhs) {
   Integer remainder;
   return intSqrt(rhs, remainder);

@@ -5,11 +5,9 @@
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
 
 namespace fintamath {
-
-static Integer gcd(const Integer &lhs, const Integer &rhs);
-static Integer lcm(const Integer &lhs, const Integer &rhs);
 
 Rational::Rational(const std::string &str) {
   if (str.empty()) {
@@ -205,23 +203,6 @@ void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {
   rhs.numerator *= (lcmVal / rhs.denominator);
   rhs.denominator = lcmVal;
   rhs.signVal = false;
-}
-
-// Using Euclid's algorithm
-static Integer gcd(const Integer &lhs, const Integer &rhs) {
-  Integer tmpLhs = lhs;
-  Integer tmpRhs = rhs;
-  while (tmpRhs != 0) {
-    Integer buff = tmpLhs % tmpRhs;
-    tmpLhs = tmpRhs;
-    tmpRhs = buff;
-  }
-  return tmpLhs;
-}
-
-// Using the formula lcm(a, b) = a * b / gcd(a, b)
-static Integer lcm(const Integer &lhs, const Integer &rhs) {
-  return lhs * rhs / gcd(lhs, rhs);
 }
 
 }

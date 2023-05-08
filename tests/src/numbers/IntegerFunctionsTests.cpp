@@ -8,6 +8,47 @@
 
 using namespace fintamath;
 
+TEST(IntegerFunctionsTests, gcdTest) {
+  EXPECT_EQ(gcd(Integer(12), Integer(18)), Integer(6));
+  EXPECT_EQ(gcd(Integer(30), Integer(45)), Integer(15));
+  EXPECT_EQ(gcd(Integer(25), Integer(35)), Integer(5));
+
+  EXPECT_EQ(gcd(Integer(-12), Integer(-18)), Integer(6));
+  EXPECT_EQ(gcd(Integer(-30), Integer(-45)), Integer(15));
+  EXPECT_EQ(gcd(Integer(-25), Integer(-35)), Integer(5));
+
+  EXPECT_EQ(gcd(Integer(0), Integer(10)), Integer(10));
+  EXPECT_EQ(gcd(Integer(0), Integer(-15)), Integer(15));
+
+  EXPECT_EQ(gcd(Integer(0), Integer(0)), Integer(0));
+
+  EXPECT_EQ(gcd(Integer("1234567890123456789012345678901234567890123456789012345678901234567890"),
+                Integer("9876543210987654321098765432109876543210987654321098765432109876543210"))
+                .toString(),
+            "90000000009000000000900000000090000000009000000000900000000090");
+}
+
+TEST(IntegerFunctionsTests, lcmTest) {
+  EXPECT_EQ(lcm(Integer(12), Integer(18)), Integer(36));
+  EXPECT_EQ(lcm(Integer(5), Integer(7)), Integer(35));
+  EXPECT_EQ(lcm(Integer(8), Integer(12)), Integer(24));
+  EXPECT_EQ(lcm(Integer(15), Integer(25)), Integer(75));
+  EXPECT_EQ(lcm(Integer(4), Integer(9)), Integer(36));
+
+  EXPECT_EQ(lcm(Integer(0), Integer(5)), Integer(0));
+  EXPECT_EQ(lcm(Integer(5), Integer(0)), Integer(0));
+  EXPECT_EQ(lcm(Integer(0), Integer(0)), Integer(0));
+
+  EXPECT_GE(lcm(Integer(-4), Integer(7)), Integer(0));
+  EXPECT_GE(lcm(Integer(3), Integer(-6)), Integer(0));
+  EXPECT_EQ(lcm(Integer(-2), Integer(0)), Integer(0));
+
+  EXPECT_EQ(lcm(Integer("1234567890123456789012345678901234567890123456789012345678901234567890"),
+                Integer("9876543210987654321098765432109876543210987654321098765432109876543210"))
+                .toString(),
+            "135480701249809480124980948012498094801249809480124980948012498094801236261410");
+}
+
 TEST(IntegerFunctionsTests, intSqrtTest) {
   EXPECT_EQ(intSqrt(Integer(25)), 5);
   EXPECT_EQ(intSqrt(Integer(100)), 10);
