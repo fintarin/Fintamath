@@ -19,10 +19,8 @@
 
 namespace fintamath {
 
-const Log LOG;
-
 LogExpression::LogExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(LOG, inLhsChild, inRhsChild) {
+    : IBinaryExpressionCRTP(Log(), inLhsChild, inRhsChild) {
 }
 
 std::string LogExpression::toString() const {
@@ -44,7 +42,7 @@ LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() 
 
 ArgumentPtr LogExpression::numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == ONE) {
-    throw UndefinedFunctionException(LOG.toString(), {lhs->toString(), rhs->toString()});
+    throw UndefinedFunctionException(Log().toString(), {lhs->toString(), rhs->toString()});
   }
 
   if (*lhs == E()) {

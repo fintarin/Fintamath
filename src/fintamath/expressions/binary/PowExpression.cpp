@@ -14,16 +14,14 @@
 
 namespace fintamath {
 
-const Pow POW;
-
 PowExpression::PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(POW, inLhsChild, inRhsChild) {
+    : IBinaryExpressionCRTP(Pow(), inLhsChild, inRhsChild) {
 }
 
 std::string PowExpression::toString() const {
   if (auto val = cast<Rational>(rhsChild)) {
-  const  Integer &numerator = val->numerator();
-    const  Integer & denominator = val->denominator();
+    const Integer &numerator = val->numerator();
+    const Integer &denominator = val->denominator();
 
     if (denominator == TWO) {
       std::string sqrtStr = functionToString(Sqrt(), {lhsChild});
@@ -32,7 +30,7 @@ std::string PowExpression::toString() const {
         return sqrtStr;
       }
 
-      return sqrtStr + POW.toString() + numerator.toString();
+      return sqrtStr + Pow().toString() + numerator.toString();
     }
   }
 

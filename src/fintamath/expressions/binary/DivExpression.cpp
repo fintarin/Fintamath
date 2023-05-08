@@ -12,10 +12,8 @@
 
 namespace fintamath {
 
-const Div DIV;
-
 DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(DIV, inLhsChild, inRhsChild) {
+    : IBinaryExpressionCRTP(Div(), inLhsChild, inRhsChild) {
 }
 
 ArgumentPtr DivExpression::postSimplify() const {
@@ -51,11 +49,11 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplif
 
 ArgumentPtr DivExpression::numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*rhs == ZERO) {
-    throw UndefinedBinaryOperatorException(DIV.toString(), lhs->toString(), rhs->toString());
+    throw UndefinedBinaryOperatorException(Div().toString(), lhs->toString(), rhs->toString());
   }
 
-  if (DIV.doArgsMatch({ONE, *rhs})) {
-    return makeFunctionExpression(Mul(), {lhs, DIV(ONE, *rhs)});
+  if (Div().doArgsMatch({ONE, *rhs})) {
+    return makeFunctionExpression(Mul(), {lhs, Div()(ONE, *rhs)});
   }
 
   return {};
@@ -105,7 +103,7 @@ ArgumentPtr DivExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     denominator = makeRawFunctionExpression(Mul(), denominatorChildren);
   }
 
-  return makeFunctionExpression(DIV, {numerator, denominator});
+  return makeFunctionExpression(Div(), {numerator, denominator});
 }
 
 ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -136,8 +134,8 @@ ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
         break;
       }
 
-      if (auto res = callFunction(DIV, {lhsChildren[i], rhsChildren[j]})) {
-        lhsChildren[i] = DIV(*lhsChildren[i], *rhsChildren[j]);
+      if (auto res = callFunction(Div(), {lhsChildren[i], rhsChildren[j]})) {
+        lhsChildren[i] = Div()(*lhsChildren[i], *rhsChildren[j]);
         rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
         break;
       }

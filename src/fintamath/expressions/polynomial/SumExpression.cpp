@@ -11,9 +11,7 @@
 
 namespace fintamath {
 
-const Add ADD;
-
-SumExpression::SumExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(ADD, inChildren) {
+SumExpression::SumExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(Add(), inChildren) {
 }
 
 std::string SumExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {

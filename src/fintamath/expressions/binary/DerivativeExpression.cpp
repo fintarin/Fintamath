@@ -9,10 +9,8 @@
 
 namespace fintamath {
 
-const Derivative DER;
-
 DerivativeExpression::DerivativeExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(DER, inLhsChild, inRhsChild) {
+    : IBinaryExpressionCRTP(Derivative(), inLhsChild, inRhsChild) {
 }
 
 ArgumentPtr DerivativeExpression::postSimplify() const {

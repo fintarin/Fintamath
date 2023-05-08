@@ -15,9 +15,7 @@
 
 namespace fintamath {
 
-const Mul MUL;
-
-MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(MUL, inChildren) {
+MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(Mul(), inChildren) {
 }
 
 std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {

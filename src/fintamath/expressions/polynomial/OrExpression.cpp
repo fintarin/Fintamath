@@ -7,9 +7,7 @@
 
 namespace fintamath {
 
-const Or OR;
-
-OrExpression::OrExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(OR, inChildren) {
+OrExpression::OrExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(Or(), inChildren) {
 }
 
 ArgumentPtr OrExpression::logicNegate() const {

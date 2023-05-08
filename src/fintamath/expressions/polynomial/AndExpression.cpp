@@ -7,9 +7,7 @@
 
 namespace fintamath {
 
-const And AND;
-
-AndExpression::AndExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(AND, inChildren) {
+AndExpression::AndExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(And(), inChildren) {
 }
 
 ArgumentPtr AndExpression::logicNegate() const {
