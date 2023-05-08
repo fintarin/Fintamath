@@ -152,7 +152,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sin10").toString(), "sin(10)");
   EXPECT_EQ(Expression("cos10").toString(), "cos(10)");
   EXPECT_EQ(Expression("tan10").toString(), "tan(10)");
-  EXPECT_EQ(Expression("cot10").toString(), "cot(10)");
+  EXPECT_EQ(Expression("cot10").toString(), "1/tan(10)");
   EXPECT_EQ(Expression("asin0.9").toString(), "asin(9/10)");
   EXPECT_EQ(Expression("acos0.9").toString(), "acos(9/10)");
   EXPECT_EQ(Expression("atan10").toString(), "atan(10)");
@@ -160,7 +160,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sinh10").toString(), "sinh(10)");
   EXPECT_EQ(Expression("cosh10").toString(), "cosh(10)");
   EXPECT_EQ(Expression("tanh10").toString(), "tanh(10)");
-  EXPECT_EQ(Expression("coth10").toString(), "coth(10)");
+  EXPECT_EQ(Expression("coth10").toString(), "1/tanh(10)");
   EXPECT_EQ(Expression("asinh0.9").toString(), "asinh(9/10)");
   EXPECT_EQ(Expression("acosh1.9").toString(), "acosh(19/10)");
   EXPECT_EQ(Expression("atanh0.9").toString(), "atanh(9/10)");
@@ -323,11 +323,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(sin(x)+1)^(-4)").toString(), "1/(sin(x)^4 + 4 sin(x)^3 + 6 sin(x)^2 + 4 sin(x) + 1)");
   EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(4 a b^3) + b^4 + sin(a^4) + cos(6 a^2 b^2)").toString(),
-            "sin(a^4) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(4 a b^3) + b^4");
+            "sin(a^4) + tan(4 a^3 b) + cos(6 a^2 b^2) + b^4 + 1/tan(4 a b^3)");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(sin(4 a b^3)) + b^4 + asin(sin(a^4)) + cos(6 a^2 b^2)").toString(),
-            "asin(sin(a^4)) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(sin(4 a b^3)) + b^4");
+            "asin(sin(a^4)) + tan(4 a^3 b) + cos(6 a^2 b^2) + b^4 + 1/tan(sin(4 a b^3))");
   EXPECT_EQ(Expression("tan(4 a_1^3 b) + cot(sin(4 a_1 b^3)) + b^4 + asin(sin(a_1^4)) + cos(6 a_1^2 b^2)").toString(),
-            "asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3)) + b^4");
+            "asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + b^4 + 1/tan(sin(4 a_1 b^3))");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
   EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "1/100 a! a!! a!!! a");
 
@@ -509,6 +509,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("max(1, 2, x, 4)").toString(), "max(x, 4)");
   EXPECT_EQ(Expression("max(-1, x, y, -4)").toString(), "max(x, y, -1)");
   EXPECT_EQ(Expression("max(E, x, y, z)").toString(), "max(x, y, z, E)");
+
+  EXPECT_EQ(Expression("tan(x)*cot(x)").toString(), "1");
+  EXPECT_EQ(Expression("tanh(x)*coth(x)").toString(), "1");
 }
 
 TEST(ExpressionTests, stringConstructorLargeTest) {

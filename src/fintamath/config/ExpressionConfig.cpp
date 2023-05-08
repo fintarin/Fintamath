@@ -28,6 +28,8 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
+#include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
@@ -46,6 +48,8 @@
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
+#include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -275,6 +279,14 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Sqrt>([](const ArgumentsPtrVector &args) {
       return makeRawFunctionExpression(Pow(), {args.front(), std::make_shared<Rational>(1, 2)});
+    });
+
+    Expression::registerFunctionExpressionMaker<Cot>([](const ArgumentsPtrVector &args) {
+      return makeRawFunctionExpression(Div(), {ONE.clone(), makeRawFunctionExpression(Tan(), {args.front()})});
+    });
+
+    Expression::registerFunctionExpressionMaker<Coth>([](const ArgumentsPtrVector &args) {
+      return makeRawFunctionExpression(Div(), {ONE.clone(), makeRawFunctionExpression(Tanh(), {args.front()})});
     });
   }
 };

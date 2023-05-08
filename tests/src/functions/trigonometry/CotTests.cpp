@@ -33,7 +33,7 @@ TEST(CotTests, callTest) {
   EXPECT_EQ(f(PI_NUM / 2)->toString(), "0");
   EXPECT_EQ(f(PI_NUM / 4)->toString(), "1");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "cot(a)");
+  EXPECT_EQ(f(Variable("a"))->toString(), "1/tan(a)");
 
   EXPECT_THROW(f(Integer(0)), UndefinedFunctionException);
 
