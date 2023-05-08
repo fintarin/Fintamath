@@ -9,12 +9,6 @@ namespace fintamath {
 
 const Or OR;
 
-const OrExpression::SimplifyFunctionsVector OrExpression::simplifyFunctions = {
-    &OrExpression::simplifyBooleans, //
-    &OrExpression::simplifyEqual,    //
-    &OrExpression::simplifyNot,      //
-};
-
 OrExpression::OrExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(OR, inChildren) {
 }
 
@@ -78,6 +72,11 @@ ArgumentPtr OrExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChi
 }
 
 OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForSimplify() const {
+  static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &OrExpression::simplifyBooleans, //
+      &OrExpression::simplifyEqual,    //
+      &OrExpression::simplifyNot,      //
+  };
   return simplifyFunctions;
 }
 

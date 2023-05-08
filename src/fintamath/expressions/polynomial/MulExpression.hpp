@@ -33,9 +33,6 @@ private:
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &rhsChild);
 
   static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
-
-private:
-  static const MulExpression::SimplifyFunctionsVector simplifyFunctions;
 };
 
 }

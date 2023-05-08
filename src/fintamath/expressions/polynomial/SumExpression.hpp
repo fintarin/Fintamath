@@ -25,9 +25,6 @@ private:
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &inChild);
 
   static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
-
-private:
-  static const SumExpression::SimplifyFunctionsVector simplifyFunctions;
 };
 
 }

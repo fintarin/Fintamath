@@ -13,12 +13,6 @@ namespace fintamath {
 
 const Add ADD;
 
-const SumExpression::SimplifyFunctionsVector SumExpression::simplifyFunctions = {
-    &SumExpression::simplifyNumbers,   //
-    &SumExpression::simplifyNegations, //
-    &SumExpression::sumRates,          //
-};
-
 SumExpression::SumExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(ADD, inChildren) {
 }
 
@@ -69,6 +63,11 @@ ArgumentPtr SumExpression::negate() const {
 }
 
 SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForSimplify() const {
+  static const SumExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &SumExpression::simplifyNumbers,   //
+      &SumExpression::simplifyNegations, //
+      &SumExpression::sumRates,          //
+  };
   return simplifyFunctions;
 }
 

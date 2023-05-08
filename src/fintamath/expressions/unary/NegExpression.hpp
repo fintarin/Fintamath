@@ -17,9 +17,6 @@ protected:
 
 private:
   static ArgumentPtr simplifyNeg(const ArgumentPtr &rhs);
-
-private:
-  static const SimplifyFunctionsVector simplifyFunctions;
 };
 
 }

@@ -14,13 +14,6 @@ namespace fintamath {
 
 const Div DIV;
 
-const DivExpression::SimplifyFunctionsVector DivExpression::simplifyFunctions = {
-    &DivExpression::numbersSimplify, //
-    &DivExpression::divSimplify,     //
-    &DivExpression::mulSimplify,     //
-    &DivExpression::sumSimplify,     //
-};
-
 DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
     : IBinaryExpressionCRTP(DIV, inLhsChild, inRhsChild) {
 }
@@ -41,6 +34,12 @@ ArgumentPtr DivExpression::postSimplify() const {
 }
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() const {
+  static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &DivExpression::numbersSimplify, //
+      &DivExpression::divSimplify,     //
+      &DivExpression::mulSimplify,     //
+      &DivExpression::sumSimplify,     //
+  };
   return simplifyFunctions;
 }
 

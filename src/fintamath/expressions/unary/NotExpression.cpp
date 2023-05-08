@@ -7,10 +7,6 @@ namespace fintamath {
 
 const Not NOT;
 
-const NotExpression::SimplifyFunctionsVector NotExpression::simplifyFunctions = {
-    &NotExpression::simplifyNot, //
-};
-
 NotExpression::NotExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(NOT, inChild) {
 }
 
@@ -45,6 +41,9 @@ ArgumentPtr NotExpression::postSimplify() const {
 }
 
 NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForSimplify() const {
+  static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &NotExpression::simplifyNot, //
+  };
   return simplifyFunctions;
 }
 

@@ -28,9 +28,6 @@ private:
   static ArgumentPtr simplifyOr(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
-
-private:
-  static const SimplifyFunctionsVector simplifyFunctions;
 };
 
 }

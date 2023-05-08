@@ -9,12 +9,6 @@ namespace fintamath {
 
 const And AND;
 
-const AndExpression::SimplifyFunctionsVector AndExpression::simplifyFunctions = {
-    &AndExpression::simplifyBooleans, //
-    &AndExpression::simplifyEqual,    //
-    &AndExpression::simplifyNot,      //
-};
-
 AndExpression::AndExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(AND, inChildren) {
 }
 
@@ -29,6 +23,11 @@ ArgumentPtr AndExpression::logicNegate() const {
 }
 
 AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForSimplify() const {
+  static const AndExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &AndExpression::simplifyBooleans, //
+      &AndExpression::simplifyEqual,    //
+      &AndExpression::simplifyNot,      //
+  };
   return simplifyFunctions;
 }
 

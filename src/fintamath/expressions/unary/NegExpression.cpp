@@ -7,10 +7,6 @@ namespace fintamath {
 
 const Neg NEG;
 
-const NegExpression::SimplifyFunctionsVector NegExpression::simplifyFunctions = {
-    &NegExpression::simplifyNeg, //
-};
-
 NegExpression::NegExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(NEG, inChild) {
 }
 
@@ -45,6 +41,9 @@ ArgumentPtr NegExpression::postSimplify() const {
 }
 
 NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForSimplify() const {
+  static const NegExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &NegExpression::simplifyNeg, //
+  };
   return simplifyFunctions;
 }
 
