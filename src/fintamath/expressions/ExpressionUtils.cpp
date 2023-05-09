@@ -2,6 +2,8 @@
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
@@ -41,24 +43,34 @@ std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVect
 
   for (size_t i = 0; i < values.size(); i++) {
     const ArgumentPtr &child = values[i];
+    std::string childStr = child->toString();
+
+    std::shared_ptr<const IOperator> childOper;
+    if (const auto childExpr = cast<IExpression>(child)) {
+      childOper = cast<IOperator>(childExpr->getFunction());
+    }
+    else if (childStr.find(Div().toString()) != std::string::npos) {
+      childOper = cast<IOperator>(Div().clone());
+    }
+    else if (childStr.find(Pow().toString()) != std::string::npos) {
+      childOper = cast<IOperator>(Pow().clone());
+    }
 
     bool shouldPutInBrackets = false;
+    if (childOper) {
+      IOperator::Priority childOperPriority = childOper->getOperatorPriority();
 
-    if (const auto childExpr = cast<IExpression>(child)) {
-      if (const auto childOper = cast<IOperator>(childExpr->getFunction())) {
-        if (IOperator::Priority priority = childOper->getOperatorPriority();
-            priority > operPriority ||
-            (priority == operPriority && !operIsAssociative && (*childOper != oper || i > 0))) {
-          shouldPutInBrackets = true;
-        }
+      if (childOperPriority > operPriority ||
+          (childOperPriority == operPriority && !operIsAssociative && (*childOper != oper || i > 0))) {
+        shouldPutInBrackets = true;
       }
     }
 
     if (shouldPutInBrackets) {
-      result += putInBrackets(child->toString());
+      result += putInBrackets(childStr);
     }
     else {
-      result += child->toString();
+      result += childStr;
     }
 
     result += operStr;

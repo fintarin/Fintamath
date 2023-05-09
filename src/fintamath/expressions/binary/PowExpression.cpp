@@ -24,13 +24,12 @@ std::string PowExpression::toString() const {
     const Integer &denominator = val->denominator();
 
     if (denominator == TWO) {
-      std::string sqrtStr = functionToString(Sqrt(), {lhsChild});
-
       if (numerator == ONE) {
-        return sqrtStr;
+        return functionToString(Sqrt(), {lhsChild});
       }
 
-      return sqrtStr + Pow().toString() + numerator.toString();
+      PowExpression res(std::make_shared<PowExpression>(lhsChild, Rational(1, 2).clone()), numerator.clone());
+      return res.IBinaryExpression::toString();
     }
   }
 

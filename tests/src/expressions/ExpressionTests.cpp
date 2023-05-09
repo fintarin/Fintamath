@@ -185,6 +185,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sqrt(169/3)").toString(), "sqrt(169/3)");
   EXPECT_EQ(Expression("sqrt(168/25)").toString(), "sqrt(168/25)");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
+  EXPECT_EQ(Expression("2^(3/2)").toString(), "sqrt(2)^3");
+  EXPECT_EQ(Expression("sqrt(sqrt5)").toString(), "5^(1/4)");
 
   EXPECT_EQ(Expression("a*0").toString(), "0");
   EXPECT_EQ(Expression("0*a").toString(), "0");
@@ -202,6 +204,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/-1").toString(), "-a b");
   EXPECT_EQ(Expression("(a b)/-2").toString(), "-1/2 a b");
   EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "(a b)/(-a - b)"); // TODO: simplify division
+  EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^5/(x - y)"); // TODO: simplify division
 
   EXPECT_EQ(Expression("0^a").toString(), "0");
   EXPECT_EQ(Expression("(a b)^0").toString(), "1");
