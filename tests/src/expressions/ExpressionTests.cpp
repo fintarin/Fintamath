@@ -203,8 +203,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/1").toString(), "a b");
   EXPECT_EQ(Expression("(a b)/-1").toString(), "-a b");
   EXPECT_EQ(Expression("(a b)/-2").toString(), "-1/2 a b");
-  EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-(b^2)/(-a - b) - b"); // TODO! b^2/(a + b) - b
-  EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^5/(x - y) + y^4");
+  EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b - (b^2)/(-a - b)"); // TODO! -b + b^2/(a + b)
+  EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^4 + y^5/(x - y)");
 
   EXPECT_EQ(Expression("0^a").toString(), "0");
   EXPECT_EQ(Expression("(a b)^0").toString(), "1");
@@ -261,9 +261,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4 + 4 a^3 b + 6 a^2 b^2 + 4 a b^3 + b^4");
   EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "(a + 3)/(b + 2)");
   EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(),
-            "((3 b)/a - 2)/(b + 2) + 1"); // TODO! make divisions non nested
+            "1 + (-2 + (3 b)/a)/(b + 2)"); // TODO! make divisions non nested
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(),
-            "(-30/(a b) - 6/a + 3)/(b + 2) + 15/(a b) + 3/a + 1"); // TODO! make divisions non nested
+            "1 + (-30/(a b) - 6/a + 3)/(b + 2) + 15/(a b) + 3/a"); // TODO! make divisions non nested
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");

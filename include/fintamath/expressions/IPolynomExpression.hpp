@@ -33,6 +33,17 @@ protected:
 
   virtual std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
+   * @return  0 if this comparator fails
+   */
+  virtual int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
   ArgumentPtr simplify() const final;
 
   ArgumentPtr preSimplify() const override;
@@ -56,17 +67,6 @@ private:
                                           const ArgumentPtr &rhs);
 
   void sort();
-
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
   /**
    * @brief

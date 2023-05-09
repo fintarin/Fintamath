@@ -53,6 +53,21 @@ std::string SumExpression::operatorChildToString(const ArgumentPtr &inChild, con
   return result;
 }
 
+int SumExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  auto lhsExpr = cast<IExpression>(lhs);
+  auto rhsExpr = cast<IExpression>(rhs);
+
+  if (lhsExpr && is<Div>(lhsExpr->getFunction()) && (!rhsExpr || !is<Div>(rhsExpr->getFunction()))) {
+    return 1;
+  }
+
+  if (rhsExpr && is<Div>(rhsExpr->getFunction()) && (!lhsExpr || !is<Div>(lhsExpr->getFunction()))) {
+    return -1;
+  }
+
+  return IPolynomExpression::comparator(lhs, rhs);
+}
+
 ArgumentPtr SumExpression::negate() const {
   SumExpression neg = *this;
 
@@ -68,7 +83,7 @@ SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForSimplify() 
       &SumExpression::simplifyNumbers,       //
       &SumExpression::simplifyNegations,     //
       &SumExpression::sumRates,              //
-      &SumExpression::sumDivisions,      //
+      &SumExpression::sumDivisions,          //
       &SumExpression::simplifyLogarithms,    //
       &SumExpression::simplifyMulLogarithms, //
   };
