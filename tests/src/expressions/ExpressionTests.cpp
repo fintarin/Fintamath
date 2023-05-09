@@ -303,6 +303,20 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("5/(a+b) + 5/(2a+b) + 5/(a+b)").toString(), "5/(2 a + b) + 10/(a + b)");
   EXPECT_EQ(Expression("(x+y)/(a+b) + 5/(2a+b) + (x+2y)/(a+b)").toString(), "(2 x + 3 y)/(a + b) + 5/(2 a + b)");
 
+  EXPECT_EQ(Expression("(4x^2 - 5x - 21) / (x - 3)").toString(), "4 x + 7");
+  EXPECT_EQ(Expression("(3x^3 - 5x^2 + 10x - 3) / (3x + 1)").toString(), "x^2 - 2 x + 4 - 7/(3 x + 1)");
+  EXPECT_EQ(Expression("(2x^3 - 9x^2 + 15) / (2x - 5)").toString(), "x^2 - 2 x - 5 - 10/(2 x - 5)");
+  EXPECT_EQ(Expression("(4x^4 + 1 + 3x^3 + 2x) / (x^2 + x + 2)").toString(),
+            "4 x^2 - x - 7 + (11 x + 15)/(x^2 + x + 2)");
+  EXPECT_EQ(Expression("(2x^4 - 3x^3 + 4x^2 - 5x + 6) / (x^2 + 2x - 3)").toString(),
+            "2 x^2 - 7 x + 24 + (-74 x + 78)/(x^2 + 2 x - 3)");
+  EXPECT_EQ(Expression("(4x^5 + 2x^4 - 6x^3 + 3x^2 + x - 2) / (2x^3 + x^2 - 3x + 2)").toString(),
+            "2 x^2 + (-x^2 + x - 2)/(2 x^3 + x^2 - 3 x + 2)");
+  EXPECT_EQ(Expression("(3x^6 + 5x^5 - 2x^4 + 4x^3 + x^2 + 3x - 5) / (x^4 + 3x^2 - 2)").toString(),
+            "3 x^2 + 5 x - 11 + (-11 x^3 + 40 x^2 + 13 x - 27)/(x^4 + 3 x^2 - 2)");
+  EXPECT_EQ(Expression("(6x^8 - 7x^6 + 9x^4 - 4x^2 + 8) / (2x^3 - x^2 + 3x - 1)").toString(),
+            "3 x^5 + 3/2 x^4 - 29/4 x^3 - 35/8 x^2 + 223/16 x + 317/32 + (-1289/32 x^2 - 505/32 x + 573/32)/(2 x^3 - x^2 + 3 x - 1)");
+
   EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
   // TODO: implement function minimization
