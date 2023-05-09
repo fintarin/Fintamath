@@ -27,6 +27,10 @@ protected:
 
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
+  virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
+
+  virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
+
   virtual std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
   ArgumentPtr simplify() const final;
@@ -46,7 +50,7 @@ private:
 
   void postSimplifyRec();
 
-  void globalSimplifyRec();
+  void globalSimplifyRec(bool useInPreSimplify); // true if useInPreSimplify, false if useInPostSimplify
 
   static ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
                                           const ArgumentPtr &rhs);

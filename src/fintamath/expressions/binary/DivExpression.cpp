@@ -198,11 +198,11 @@ ArgumentPtr DivExpression::sumSumSimplify(const ArgumentPtr &lhs, const Argument
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Add>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
   }
-  
+
   if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Add>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
-  
+
   if (lhsChildren.empty() || rhsChildren.empty()) {
     return {};
   }
@@ -227,7 +227,7 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
 
   for (const auto &child : lhsChildren) {
     ArgumentPtr divResult = makeFunctionExpression(Div(), {child, rhs});
-  
+
     if (const auto divResultExpr = cast<IExpression>(divResult);
         divResultExpr && is<Div>(divResultExpr->getFunction()) && *divResultExpr->getChildren().back() == *rhs) {
       divFailure.emplace_back(child);
@@ -246,36 +246,36 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
     divSuccess.emplace_back(divExpr);
   }
 
-  return makeRawFunctionExpression(Add(), divSuccess);
+  return makeFunctionExpression(Add(), divSuccess);
 }
 
 ArgumentPtr DivExpression::mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentsPtrVector rhsChildren;
-  
+
   if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Add>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
-  
+
   if (const auto lhsChildExpr = cast<IExpression>(lhs);
       (lhsChildExpr && is<Add>(lhsChildExpr->getFunction())) || rhsChildren.empty()) {
     return {};
   }
 
   ArgumentPtr divResult = makeFunctionExpression(Div(), {lhs, rhsChildren.front()});
-  
+
   if (const auto divExpr = cast<IExpression>(divResult); divExpr && is<Div>(divExpr->getFunction())) {
     return {};
   }
 
   ArgumentsPtrVector multiplicates;
-  
+
   for (size_t i = 1; i < rhsChildren.size(); i++) {
     multiplicates.emplace_back(makeRawFunctionExpression(Mul(), {rhsChildren[i], divResult}));
   }
 
   ArgumentPtr negSum = makeRawFunctionExpression(Neg(), {makeRawFunctionExpression(Add(), multiplicates)});
   ArgumentPtr div = makeRawFunctionExpression(Div(), {negSum, rhs});
-  return makeRawFunctionExpression(Add(), {divResult, div});
+  return makeFunctionExpression(Add(), {divResult, div});
 }
 
 ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

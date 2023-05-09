@@ -68,6 +68,7 @@ SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForSimplify() 
       &SumExpression::simplifyNumbers,       //
       &SumExpression::simplifyNegations,     //
       &SumExpression::sumRates,              //
+      &SumExpression::sumDivisions,      //
       &SumExpression::simplifyLogarithms,    //
       &SumExpression::simplifyMulLogarithms, //
   };
