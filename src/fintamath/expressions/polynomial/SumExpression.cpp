@@ -256,4 +256,19 @@ ArgumentPtr SumExpression::sumRates(const ArgumentPtr &lhsChild, const ArgumentP
   return {};
 }
 
+ArgumentPtr SumExpression::sumDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+
+  if (lhsExpr && rhsExpr && //
+      is<Div>(lhsExpr->getFunction()) && is<Div>(rhsExpr->getFunction()) &&
+      *lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
+    return makeFunctionExpression(
+        Div(), {makeRawFunctionExpression(Add(), {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()}),
+                lhsExpr->getChildren().back()});
+  }
+
+  return {};
+}
+
 }

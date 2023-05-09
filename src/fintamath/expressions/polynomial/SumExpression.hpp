@@ -20,6 +20,8 @@ private:
 
   static ArgumentPtr simplifyNegations(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
+  static ArgumentPtr sumDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
   static ArgumentPtr simplifyLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyMulLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);

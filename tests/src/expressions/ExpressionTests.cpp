@@ -296,12 +296,12 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("((a+b+(a+c)+(1+v))+((a+c(abc(aaa))+v)c+d))((c)((d+d+d)b)a)").toString(),
             "3 a^5 b^2 c^4 d + 3 a^2 b c^2 d + 6 a^2 b c d + 3 a b^2 c d + 3 a b c^2 d v + 3 a b c^2 d + 3 a b c d^2 + "
             "3 a b c d v + 3 a b c d");
-  EXPECT_EQ(Expression("2/(a + 2) + b/(a + 2)").toString(), "b/(a + 2) + 2/(a + 2)");
+  EXPECT_EQ(Expression("2/(a + 2) + b/(a + 2)").toString(), "(b + 2)/(a + 2)");
   EXPECT_EQ(Expression("c * 2^(a + 2) + b^(a + 2)").toString(), "b^(a + 2) + 2^(a + 2) c");
   EXPECT_EQ(Expression("2^(a + 2) * b^(a + 2)").toString(), "b^(a + 2) 2^(a + 2)");
   EXPECT_EQ(Expression("5/(a+b) + 5/(2a+b) + 5/(a+b)").toString(), "5/(2 a + b) + 10/(a + b)");
   EXPECT_EQ(Expression("(x+y)/(a+b) + 5/(2a+b) + (x+2y)/(a+b)").toString(),
-            "(x + 2 y)/(a + b) + (x + y)/(a + b) + 5/(2 a + b)");
+            "(2 x + 3 y)/(a + b) + 5/(2 a + b)");
 
   EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
