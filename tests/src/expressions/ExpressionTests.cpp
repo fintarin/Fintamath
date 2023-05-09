@@ -260,8 +260,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3 + 3 a^2 b + 3 a b^2 + b^3");
   EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4 + 4 a^3 b + 6 a^2 b^2 + 4 a b^3 + b^4");
   EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "(a + 3)/(b + 2)");
-  EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "(a b + 3 b)/(a b + 2 a)");
-  EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "(a b + 5 a + 3 b + 15)/(a b + 2 a)");
+  EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(), "((3 b)/a + b)/(b + 2)");
+  EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(), "((3 b + 15)/a + b + 5)/(b + 2)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   // TODO: polynomial division
