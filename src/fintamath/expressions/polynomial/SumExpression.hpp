@@ -22,11 +22,17 @@ private:
 
   static ArgumentPtr simplifyLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
+  static ArgumentPtr simplifyMulLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
   static ArgumentPtr sumRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &inChild);
 
   static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
+
+  static std::vector<size_t> findLogarithms(const ArgumentsPtrVector &children);
+
+  static std::shared_ptr<const IExpression> mulToLogarithm(const ArgumentsPtrVector &children, size_t i);
 };
 
 }

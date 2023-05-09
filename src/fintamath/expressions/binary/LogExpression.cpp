@@ -31,6 +31,10 @@ std::string LogExpression::toString() const {
   return IBinaryExpression::toString();
 }
 
+ArgumentPtr LogExpression::negate() const {
+  return makeFunctionExpression(Log(), {lhsChild, makeRawFunctionExpression(Div(), {ONE.clone(), rhsChild})});
+}
+
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
       &LogExpression::numbersSimplify, //

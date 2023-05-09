@@ -204,7 +204,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/-1").toString(), "-a b");
   EXPECT_EQ(Expression("(a b)/-2").toString(), "-1/2 a b");
   EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "(a b)/(-a - b)"); // TODO: simplify division
-  EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^5/(x - y)"); // TODO: simplify division
+  EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^5/(x - y)");     // TODO: simplify division
 
   EXPECT_EQ(Expression("0^a").toString(), "0");
   EXPECT_EQ(Expression("(a b)^0").toString(), "1");
@@ -519,10 +519,15 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln(x) + ln(y)").toString(), "ln(x y)");
   EXPECT_EQ(Expression("ln(x) - ln(y)").toString(), "ln(x/y)");
   EXPECT_EQ(Expression("-ln(x) + ln(y)").toString(), "ln(y/x)");
-  EXPECT_EQ(Expression("-ln(x) - ln(y)").toString(), "-ln(x y)");
+  EXPECT_EQ(Expression("-ln(x) - ln(y)").toString(), "ln(1/(x y))");
   EXPECT_EQ(Expression("ln((E)/(20000.1EE)) + ln(20000.1E)").toString(), "0");
   EXPECT_EQ(Expression("ln((10 E)^2) - ln(10 E 10 E)").toString(), "0");
-  // EXPECT_EQ(Expression("ln((10 E)^2) - 2 ln(10 E)").toString(), "0"); // TODO: fix
+  EXPECT_EQ(Expression("ln((10 E)^2) - 2 ln(10 E)").toString(), "0");
+  EXPECT_EQ(Expression("3 ln((10 E)^2) - 2 ln(10 E)").toString(), "ln(10000 E^4)");
+  EXPECT_EQ(Expression("ln((10 E)^(2ab)) - 2 a ln(10 E) b").toString(),
+            "ln(10^(2 a b) E^(2 a b) 10^(-2 a b) E^(-2 a b))"); // TODO: 0 - mul powers minimization
+  EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(),
+            "ln(10^(2 ln(2)) 2^(-2 ln(10 E)) E^(2 ln(2)))"); // TODO: 0 - mul powers minimization
   EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
 }
 
