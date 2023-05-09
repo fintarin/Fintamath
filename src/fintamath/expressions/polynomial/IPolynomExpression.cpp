@@ -86,9 +86,11 @@ void IPolynomExpression::postSimplifyRec() {
   }
 }
 
-void IPolynomExpression::globalSimplifyRec() {
+void IPolynomExpression::globalSimplifyRec(bool useInPreSimplify) {
   size_t childrenSize = children.size();
   const SimplifyFunctionsVector functions = getFunctionsForSimplify();
+  const SimplifyFunctionsVector addedFunctions =
+      useInPreSimplify ? getFunctionsForPreSimplify() : getFunctionsForPostSimplify();
 
   for (size_t i = 1; i < children.size(); i++) {
     const ArgumentPtr &lhsChild = children[i - 1];
@@ -104,10 +106,15 @@ void IPolynomExpression::globalSimplifyRec() {
       children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
     }
+    else if (auto addedSimplRes = useSimplifyFunctions(addedFunctions, lhsChild, rhsChild)) {
+      children[i - 1] = simplRes;
+      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
+      i--;
+    }
   }
 
   if (children.size() != childrenSize) {
-    globalSimplifyRec();
+    globalSimplifyRec(useInPreSimplify);
   }
 }
 
@@ -137,7 +144,7 @@ ArgumentPtr IPolynomExpression::preSimplify() const {
 
   simpl->sort();
   simpl->preSimplifyRec();
-  simpl->globalSimplifyRec();
+  simpl->globalSimplifyRec(true);
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
@@ -161,7 +168,7 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
 
   simpl->sort();
   simpl->postSimplifyRec();
-  simpl->globalSimplifyRec();
+  simpl->globalSimplifyRec(false);
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
@@ -171,6 +178,14 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
 }
 
 IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForSimplify() const {
+  return {};
+}
+
+IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForPreSimplify() const {
+  return {};
+}
+
+IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForPostSimplify() const {
   return {};
 }
 
