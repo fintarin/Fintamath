@@ -9,8 +9,7 @@
 using namespace fintamath;
 
 TEST(INegatableExpressionTests, invertTest) {
-  auto expr = cast<INegatableExpression>(
-      makeFunctionExpression(Mul(), {Variable("a").clone(), TWO.clone()})->clone());
+  auto expr = cast<INegatableExpression>(makeFunctionExpression(Mul(), Variable("a").clone(), TWO.clone()));
 
   EXPECT_EQ(expr->toString(), "2 a");
   EXPECT_EQ(expr->negate()->toString(), "-2 a");

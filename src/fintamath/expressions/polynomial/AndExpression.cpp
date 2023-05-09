@@ -14,7 +14,7 @@ ArgumentPtr AndExpression::logicNegate() const {
   ArgumentsPtrVector negChildren;
 
   for (const auto &child : children) {
-    negChildren.emplace_back(makeRawFunctionExpression(Not(), {child}));
+    negChildren.emplace_back(makeRawFunctionExpression(Not(), child));
   }
 
   return makeFunctionExpression(Or(), negChildren);
@@ -94,7 +94,7 @@ ArgumentPtr AndExpression::simplifyOr(const ArgumentPtr &lhsChild, const Argumen
 
   for (const auto &lhsSubChild : lhsChildren) {
     for (const auto &rhsSubChild : rhsChildren) {
-      resultVect.emplace_back(makeRawFunctionExpression(And(), ArgumentsPtrVector{lhsSubChild, rhsSubChild}));
+      resultVect.emplace_back(makeRawFunctionExpression(And(), lhsSubChild, rhsSubChild));
     }
   }
 

@@ -92,37 +92,73 @@ TEST(ExpressionUtilsTests, hasVariablesTest) {
 }
 
 TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsVectorTest) {
-  auto expr = makeFunctionExpression(Add(), {ONE, TWO});
-  EXPECT_EQ(expr->toString(), "3");
-  EXPECT_TRUE(is<Expression>(expr));
+  auto expr1 = makeFunctionExpression(Add(), {ONE, TWO});
+  EXPECT_EQ(expr1->toString(), "3");
+  EXPECT_TRUE(is<Expression>(expr1));
 
   Variable var("a");
-  expr = makeFunctionExpression(Cos(), {var});
-  EXPECT_EQ(expr->toString(), "cos(a)");
-  EXPECT_TRUE(is<Expression>(expr));
+  auto expr2 = makeFunctionExpression(Cos(), {var});
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<Expression>(expr2));
 }
 
 TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrTest) {
-  auto expr = makeFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
-  EXPECT_EQ(expr->toString(), "3");
-  EXPECT_TRUE(is<INumber>(expr));
+  auto expr1 = makeFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
+  EXPECT_EQ(expr1->toString(), "3");
+  EXPECT_TRUE(is<INumber>(expr1));
 
-  Variable var("a");
-  expr = makeFunctionExpression(Cos(), {var.clone()});
-  EXPECT_EQ(expr->toString(), "cos(a)");
-  EXPECT_TRUE(is<IExpression>(expr));
-  EXPECT_FALSE(is<Expression>(expr));
+  auto var = std::make_shared<Variable>("a");
+  auto expr2 = makeFunctionExpression(Cos(), {var});
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr2));
+  EXPECT_FALSE(is<Expression>(expr2));
 }
 
 TEST(ExpressionUtilsTests, makeRawFunctionExpressionTest) {
-  auto expr = makeRawFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
-  EXPECT_EQ(expr->toString(), "1 + 2");
-  EXPECT_TRUE(is<IExpression>(expr));
-  EXPECT_FALSE(is<Expression>(expr));
+  auto expr1 = makeRawFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
+  EXPECT_EQ(expr1->toString(), "1 + 2");
+  EXPECT_TRUE(is<IExpression>(expr1));
+  EXPECT_FALSE(is<Expression>(expr1));
+
+  auto var = std::make_shared<Variable>("a");
+  auto expr2 = makeRawFunctionExpression(Cos(), {var});
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr2));
+  EXPECT_FALSE(is<Expression>(expr2));
+}
+
+TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsVectorAnyArgsTest) {
+  auto expr1 = makeFunctionExpression(Add(), ONE, TWO);
+  EXPECT_EQ(expr1->toString(), "3");
+  EXPECT_TRUE(is<Expression>(expr1));
 
   Variable var("a");
-  expr = makeRawFunctionExpression(Cos(), {var.clone()});
-  EXPECT_EQ(expr->toString(), "cos(a)");
-  EXPECT_TRUE(is<IExpression>(expr));
-  EXPECT_FALSE(is<Expression>(expr));
+  auto expr2 = makeFunctionExpression(Cos(), var);
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<Expression>(expr2));
+}
+
+TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrAnyArgsTest) {
+  auto expr1 = makeFunctionExpression(Add(), ONE.clone(), TWO.clone());
+  EXPECT_EQ(expr1->toString(), "3");
+  EXPECT_TRUE(is<INumber>(expr1));
+
+  auto var = std::make_shared<Variable>("a");
+  auto expr2 = makeFunctionExpression(Cos(), var);
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr2));
+  EXPECT_FALSE(is<Expression>(expr2));
+}
+
+TEST(ExpressionUtilsTests, makeRawFunctionExpressionAnyArgsTest) {
+  auto expr1 = makeRawFunctionExpression(Add(), ONE.clone(), TWO.clone());
+  EXPECT_EQ(expr1->toString(), "1 + 2");
+  EXPECT_TRUE(is<IExpression>(expr1));
+  EXPECT_FALSE(is<Expression>(expr1));
+
+  auto var = std::make_shared<Variable>("a");
+  auto expr2 = makeRawFunctionExpression(Cos(), var);
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr2));
+  EXPECT_FALSE(is<Expression>(expr2));
 }

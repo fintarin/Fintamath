@@ -72,7 +72,7 @@ ArgumentPtr SumExpression::negate() const {
   SumExpression neg = *this;
 
   for (auto &child : neg.children) {
-    child = makeRawFunctionExpression(Neg(), {child});
+    child = makeRawFunctionExpression(Neg(), child);
   }
 
   return neg.simplify();
@@ -127,8 +127,8 @@ ArgumentPtr SumExpression::simplifyLogarithms(const ArgumentPtr &lhsChild, const
   ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
 
   if (*lhsChildren.front() == *rhsChildren.front()) {
-    return makeFunctionExpression(
-        Log(), {lhsChildren.front(), makeRawFunctionExpression(Mul(), {lhsChildren.back(), rhsChildren.back()})});
+    return makeFunctionExpression(Log(), lhsChildren.front(),
+                                  makeRawFunctionExpression(Mul(), lhsChildren.back(), rhsChildren.back()));
   }
 
   return {};
@@ -158,9 +158,9 @@ ArgumentPtr SumExpression::simplifyMulLogarithms(const ArgumentPtr &lhsChild, co
         if (*lhsLogExpr->getChildren().front() == *rhsLogExpr->getChildren().front()) {
           lhsLogExpr = mulToLogarithm(lhsExprChildren, i);
           rhsLogExpr = mulToLogarithm(rhsExprChildren, j);
-          return makeFunctionExpression(Log(), {lhsLogExpr->getChildren().front(),
-                                                makeRawFunctionExpression(Mul(), {lhsLogExpr->getChildren().back(),
-                                                                                  rhsLogExpr->getChildren().back()})});
+          return makeFunctionExpression(
+              Log(), lhsLogExpr->getChildren().front(),
+              makeRawFunctionExpression(Mul(), lhsLogExpr->getChildren().back(), rhsLogExpr->getChildren().back()));
         }
       }
     }
@@ -189,9 +189,9 @@ ArgumentPtr SumExpression::simplifyMulLogarithms(const ArgumentPtr &lhsChild, co
 
     if (*childLogExpr->getChildren().front() == *logExpr->getChildren().front()) {
       childLogExpr = mulToLogarithm(mulExprChildren, i);
-      return makeFunctionExpression(Log(), {logExpr->getChildren().front(),
-                                            makeRawFunctionExpression(Mul(), {logExpr->getChildren().back(),
-                                                                              childLogExpr->getChildren().back()})});
+      return makeFunctionExpression(
+          Log(), logExpr->getChildren().front(),
+          makeRawFunctionExpression(Mul(), logExpr->getChildren().back(), childLogExpr->getChildren().back()));
     }
   }
 
@@ -212,7 +212,7 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const Argume
         value = mulExprChildren[1];
       }
       else {
-        value = makeFunctionExpression(Mul(), ArgumentsPtrVector{mulExprChildren.begin() + 1, mulExprChildren.end()});
+        value = makeFunctionExpression(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
       }
     }
   }
@@ -231,7 +231,7 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const Argume
 
 ArgumentPtr SumExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeRawFunctionExpression(Add(), rates);
-  return makeFunctionExpression(Mul(), ArgumentsPtrVector{ratesSum, value});
+  return makeFunctionExpression(Mul(), ratesSum, value);
 }
 
 std::vector<size_t> SumExpression::findLogarithms(const ArgumentsPtrVector &children) {
@@ -256,9 +256,9 @@ std::shared_ptr<const IExpression> SumExpression::mulToLogarithm(const Arguments
   const ArgumentPtr powRate =
       mulChildren.size() > 1 ? makeRawFunctionExpression(Mul(), mulChildren) : mulChildren.front();
 
-  const ArgumentPtr powExpr = makeRawFunctionExpression(Pow(), {logExpr->getChildren().back(), powRate});
+  const ArgumentPtr powExpr = makeRawFunctionExpression(Pow(), logExpr->getChildren().back(), powRate);
 
-  return makeRawFunctionExpression(Log(), {logExpr->getChildren().front(), powExpr});
+  return makeRawFunctionExpression(Log(), logExpr->getChildren().front(), powExpr);
 }
 
 ArgumentPtr SumExpression::sumRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
@@ -280,8 +280,8 @@ ArgumentPtr SumExpression::sumDivisions(const ArgumentPtr &lhsChild, const Argum
       is<Div>(lhsExpr->getFunction()) && is<Div>(rhsExpr->getFunction()) &&
       *lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
     return makeFunctionExpression(
-        Div(), {makeRawFunctionExpression(Add(), {lhsExpr->getChildren().front(), rhsExpr->getChildren().front()}),
-                lhsExpr->getChildren().back()});
+        Div(), makeRawFunctionExpression(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front()),
+        lhsExpr->getChildren().back());
   }
 
   return {};

@@ -108,7 +108,7 @@ bool Expression::parseBinaryOperator(const TermVector &terms, size_t start, size
   auto foundOper = cast<IOperator>(getTermValueIf(*terms[foundOperPos], isBinaryOperator));
   ArgumentPtr lhsArg = Expression(terms, start, foundOperPos).child;
   ArgumentPtr rhsArg = Expression(terms, foundOperPos + 1, end).child;
-  std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*foundOper, {lhsArg, rhsArg});
+  std::shared_ptr<IExpression> funcExpr = makeRawFunctionExpression(*foundOper, lhsArg, rhsArg);
 
   if (auto expr = cast<Expression>(funcExpr)) {
     *this = std::move(*expr);
@@ -127,7 +127,7 @@ bool Expression::parsePrefixOperator(const TermVector &terms, size_t start, size
 
   if (auto oper = cast<IOperator>(getTermValueIf(*terms[start], isPrefixOperator))) {
     ArgumentPtr arg = Expression(terms, start + 1, end).child;
-    child = makeRawFunctionExpression(*oper, {arg});
+    child = makeRawFunctionExpression(*oper, arg);
     compressChild(child);
     return true;
   }
@@ -156,7 +156,7 @@ bool Expression::parsePostfixOperator(const TermVector &terms, size_t start, siz
       }
 
       ArgumentPtr arg = Expression(terms, start, end - order).child;
-      child = makeRawFunctionExpression(*oper, {arg});
+      child = makeRawFunctionExpression(*oper, arg);
       compressChild(child);
       return true;
     }
@@ -242,27 +242,27 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  child = makeFunctionExpression(Add(), {child, rhs.child});
+  child = makeFunctionExpression(Add(), child, rhs.child);
   return *this;
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  child = makeFunctionExpression(Sub(), {child, rhs.child});
+  child = makeFunctionExpression(Sub(), child, rhs.child);
   return *this;
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  child = makeFunctionExpression(Mul(), {child, rhs.child});
+  child = makeFunctionExpression(Mul(), child, rhs.child);
   return *this;
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  child = makeFunctionExpression(Div(), {child, rhs.child});
+  child = makeFunctionExpression(Div(), child, rhs.child);
   return *this;
 }
 
 Expression &Expression::negate() {
-  child = makeFunctionExpression(Neg(), {child});
+  child = makeFunctionExpression(Neg(), child);
   return *this;
 }
 
@@ -540,50 +540,51 @@ void Expression::setValuesOfVariables(const std::vector<Variable> &vars, const A
 }
 
 Expression operator+(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeFunctionExpression(Add(), {lhs.clone(), rhs.clone()}));
+  return Expression(makeFunctionExpression(Add(), lhs.clone(), rhs.clone()));
 }
 
 Expression operator+(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeFunctionExpression(Add(), {lhs.getChildren().front(), rhs.clone()}));
+  return Expression(makeFunctionExpression(Add(), lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator+(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeFunctionExpression(Add(), {lhs.clone(), rhs.getChildren().front()}));
+  return Expression(makeFunctionExpression(Add(), lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator-(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeFunctionExpression(Sub(), {lhs.clone(), rhs.clone()}));
+  return Expression(makeFunctionExpression(Sub(), lhs.clone(), rhs.clone()));
 }
 
 Expression operator-(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeFunctionExpression(Sub(), {lhs.getChildren().front(), rhs.clone()}));
+  return Expression(makeFunctionExpression(Sub(), lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator-(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeFunctionExpression(Sub(), {lhs.clone(), rhs.getChildren().front()}));
+  return Expression(makeFunctionExpression(Sub(), lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator*(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeFunctionExpression(Mul(), {lhs.clone(), rhs.clone()}));
+  return Expression(makeFunctionExpression(Mul(), lhs.clone(), rhs.clone()));
 }
 
 Expression operator*(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeFunctionExpression(Mul(), {lhs.getChildren().front(), rhs.clone()}));
+  return Expression(makeFunctionExpression(Mul(), lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator*(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeFunctionExpression(Mul(), {lhs.clone(), rhs.getChildren().front()}));
+  return Expression(makeFunctionExpression(Mul(), lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator/(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeFunctionExpression(Div(), {lhs.clone(), rhs.clone()}));
+  return Expression(makeFunctionExpression(Div(), lhs.clone(), rhs.clone()));
 }
 
 Expression operator/(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeFunctionExpression(Div(), {lhs.getChildren().front(), rhs.clone()}));
+  return Expression(makeFunctionExpression(Div(), lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator/(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeFunctionExpression(Div(), {lhs.clone(), rhs.getChildren().front()}));
+  return Expression(makeFunctionExpression(Div(), lhs.clone(), rhs.getChildren().front()));
 }
+
 }

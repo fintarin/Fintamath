@@ -26,7 +26,7 @@ std::string CompExpression::toString() const {
       if (is<Variable>(solLhs)) {
         sumChildren.erase(sumChildren.begin());
 
-        ArgumentPtr solRhs = makeFunctionExpression(Neg(), {sumChildren});
+        ArgumentPtr solRhs = makeFunctionExpression(Neg(), sumChildren);
 
         if (!is<IExpression>(solRhs)) {
           return CompExpression(cast<IOperator>(*func), solLhs, solRhs).toString();
@@ -48,7 +48,7 @@ ArgumentPtr CompExpression::preSimplify() const {
 
   if (!simplExpr->isSolution) {
     if (!is<Integer>(rhsChild) || *rhsChild != ZERO) {
-      ArgumentPtr resLhs = makeFunctionExpression(Sub(), {simplExpr->lhsChild, simplExpr->rhsChild});
+      ArgumentPtr resLhs = makeFunctionExpression(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
       return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
     }
   }
@@ -66,7 +66,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild)) {
     if (is<Neg>(lhsExpr->getFunction())) {
-      return makeFunctionExpression(*getOppositeFunction(func), {lhsExpr->getChildren().front(), simplExpr->rhsChild});
+      return makeFunctionExpression(*getOppositeFunction(func), lhsExpr->getChildren().front(), simplExpr->rhsChild);
     }
 
     ArgumentsPtrVector dividendPolynom;
@@ -94,7 +94,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
     if (dividerNum) {
       for (auto &child : dividendPolynom) {
-        child = makeRawFunctionExpression(Div(), {child, dividerNum});
+        child = makeRawFunctionExpression(Div(), child, dividerNum);
       }
 
       ArgumentPtr newLhs = makeFunctionExpression(Add(), dividendPolynom);
@@ -108,7 +108,7 @@ ArgumentPtr CompExpression::postSimplify() const {
         newFunc = func;
       }
 
-      return makeRawFunctionExpression(*newFunc, {newLhs, newRhs});
+      return makeRawFunctionExpression(*newFunc, newLhs, newRhs);
     }
   }
 

@@ -43,7 +43,7 @@ ArgumentPtr PowExpression::mulSimplify() const {
     ArgumentsPtrVector args = mulExpr->getChildren();
 
     for (auto &arg : args) {
-      arg = makeRawFunctionExpression(Pow(), {arg, powExpr->rhsChild->clone()});
+      arg = makeRawFunctionExpression(Pow(), arg, powExpr->rhsChild->clone());
     }
 
     return makeFunctionExpression(Mul(), args);
@@ -134,8 +134,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer p
     mulExprPolynom.emplace_back(std::make_shared<Integer>(multinomialCoefficient(powValue, vectOfPows)));
 
     for (size_t j = 0; j < size_t(variableCount); j++) {
-      auto powExpr =
-          makeRawFunctionExpression(Pow(), {polynom[j], std::make_shared<Integer>(std::move(vectOfPows[j]))});
+      auto powExpr = makeRawFunctionExpression(Pow(), polynom[j], std::make_shared<Integer>(std::move(vectOfPows[j])));
       mulExprPolynom.emplace_back(powExpr);
     }
 
@@ -169,15 +168,15 @@ ArgumentPtr PowExpression::preSimplify() const {
   }
 
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    auto lhsMul = makeRawFunctionExpression(Pow(), {NEG_ONE.clone(), simplExpr->rhsChild});
-    auto rhsMul = makeRawFunctionExpression(Pow(), {lhsExpr->getChildren()[0], simplExpr->rhsChild});
-    return makeFunctionExpression(Mul(), {lhsMul, rhsMul});
+    auto lhsMul = makeRawFunctionExpression(Pow(), NEG_ONE.clone(), simplExpr->rhsChild);
+    auto rhsMul = makeRawFunctionExpression(Pow(), lhsExpr->getChildren()[0], simplExpr->rhsChild);
+    return makeFunctionExpression(Mul(), lhsMul, rhsMul);
   }
 
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     auto lhsPow = lhsExpr->getChildren().front();
-    auto rhsPow = makeRawFunctionExpression(Mul(), {lhsExpr->getChildren()[1], simplExpr->rhsChild});
-    return makeFunctionExpression(Pow(), {lhsPow, rhsPow});
+    auto rhsPow = makeRawFunctionExpression(Mul(), lhsExpr->getChildren()[1], simplExpr->rhsChild);
+    return makeFunctionExpression(Pow(), lhsPow, rhsPow);
   }
 
   return simpl;
@@ -204,13 +203,13 @@ ArgumentPtr PowExpression::postSimplify() const {
     }
 
     if (*rhsInt == NEG_ONE) {
-      return makeFunctionExpression(Div(), {ONE.clone(), simplExpr->lhsChild});
+      return makeFunctionExpression(Div(), ONE.clone(), simplExpr->lhsChild);
     }
 
     if (*rhsInt < ZERO) {
       return makeFunctionExpression(
-          Div(), {ONE.clone(),
-                  makeRawFunctionExpression(Pow(), {simplExpr->lhsChild, makeRawFunctionExpression(Neg(), {rhsInt})})});
+          Div(), ONE.clone(),
+          makeRawFunctionExpression(Pow(), simplExpr->lhsChild, makeRawFunctionExpression(Neg(), rhsInt)));
     }
   }
 

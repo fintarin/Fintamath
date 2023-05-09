@@ -53,7 +53,7 @@ ArgumentPtr DivExpression::numbersSimplify(const ArgumentPtr &lhs, const Argumen
   }
 
   if (Div().doArgsMatch({ONE, *rhs})) {
-    return makeFunctionExpression(Mul(), {lhs, Div()(ONE, *rhs)});
+    return makeFunctionExpression(Mul(), lhs, Div()(ONE, *rhs));
   }
 
   return {};
@@ -103,7 +103,7 @@ ArgumentPtr DivExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     denominator = makeRawFunctionExpression(Mul(), denominatorChildren);
   }
 
-  return makeFunctionExpression(Div(), {numerator, denominator});
+  return makeFunctionExpression(Div(), numerator, denominator);
 }
 
 ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -169,7 +169,7 @@ ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   }
 
   if (lhsChildren.size() != lhsChildrenSizeInitial || rhsChildren.size() != rhsChildrenSizeInitial) {
-    return makeFunctionExpression(Div(), {numerator, denominator});
+    return makeFunctionExpression(Div(), numerator, denominator);
   }
 
   return {};
@@ -183,7 +183,7 @@ ArgumentPtr DivExpression::sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 
   if (auto [lhsRes, rhsRes] = mulSumSimplify(lhs, rhs); lhsRes) {
     if (rhsRes) {
-      return makeFunctionExpression(Add(), {lhsRes, rhsRes});
+      return makeFunctionExpression(Add(), lhsRes, rhsRes);
     }
     return lhsRes;
   }
@@ -232,7 +232,7 @@ ArgumentPtr DivExpression::sumSumSimplify(const ArgumentPtr &lhs, const Argument
   }
 
   auto restSimplResult = makeFunctionExpression(Add(), restVect);
-  answerVect.emplace_back(makeFunctionExpression(Div(), {restSimplResult, rhs}));
+  answerVect.emplace_back(makeFunctionExpression(Div(), restSimplResult, rhs));
 
   return makeFunctionExpression(Add(), answerVect);
 }
@@ -253,7 +253,7 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
   ArgumentsPtrVector divFailure;
 
   for (const auto &child : lhsChildren) {
-    ArgumentPtr divResult = makeFunctionExpression(Div(), {child, rhs});
+    ArgumentPtr divResult = makeFunctionExpression(Div(), child, rhs);
 
     if (const auto divResultExpr = cast<IExpression>(divResult);
         divResultExpr && is<Div>(divResultExpr->getFunction()) && *divResultExpr->getChildren().back() == *rhs) {
@@ -269,7 +269,7 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
   }
 
   if (!divFailure.empty()) {
-    ArgumentPtr divExpr = makeRawFunctionExpression(Div(), {makeRawFunctionExpression(Add(), divFailure), rhs});
+    ArgumentPtr divExpr = makeRawFunctionExpression(Div(), makeRawFunctionExpression(Add(), divFailure), rhs);
     divSuccess.emplace_back(divExpr);
   }
 
@@ -288,7 +288,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr divResult = makeFunctionExpression(Div(), {lhs, rhsChildren.front()});
+  ArgumentPtr divResult = makeFunctionExpression(Div(), lhs, rhsChildren.front());
 
   if (const auto number = cast<INumber>(divResult); number && *number == ZERO) {
     return {divResult, nullptr};
@@ -301,11 +301,11 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   ArgumentsPtrVector multiplicates;
 
   for (size_t i = 1; i < rhsChildren.size(); i++) {
-    multiplicates.emplace_back(makeRawFunctionExpression(Mul(), {rhsChildren[i], divResult}));
+    multiplicates.emplace_back(makeRawFunctionExpression(Mul(), rhsChildren[i], divResult));
   }
 
-  ArgumentPtr negSum = makeRawFunctionExpression(Neg(), {makeRawFunctionExpression(Add(), multiplicates)});
-  ArgumentPtr div = makeRawFunctionExpression(Div(), {negSum, rhs});
+  ArgumentPtr negSum = makeRawFunctionExpression(Neg(), makeRawFunctionExpression(Add(), multiplicates));
+  ArgumentPtr div = makeRawFunctionExpression(Div(), negSum, rhs);
   return {divResult, div};
 }
 
@@ -340,12 +340,12 @@ ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const Argume
 
   ArgumentPtr result;
   if (*lhsValue == *rhsValue) {
-    result = addRatesToValue({lhsRate, makeRawFunctionExpression(Neg(), {rhsRate})}, lhsValue);
+    result = addRatesToValue({lhsRate, makeRawFunctionExpression(Neg(), rhsRate)}, lhsValue);
   }
 
   if (result) {
     if (negation) {
-      return makeFunctionExpression(Neg(), {result});
+      return makeFunctionExpression(Neg(), result);
     }
 
     return result;
@@ -365,7 +365,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const Argume
 
 ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeFunctionExpression(Add(), rates);
-  return makeRawFunctionExpression(Pow(), {value, ratesSum});
+  return makeRawFunctionExpression(Pow(), value, ratesSum);
 }
 
 }

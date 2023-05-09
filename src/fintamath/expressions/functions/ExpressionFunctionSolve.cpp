@@ -212,7 +212,7 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
 }
 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
-  return {makeFunctionExpression(Neg(), {makeRawFunctionExpression(Div(), {coeffAtPow[0], coeffAtPow[1]})})};
+  return {makeFunctionExpression(Neg(), makeRawFunctionExpression(Div(), coeffAtPow[0], coeffAtPow[1]))};
 }
 
 }

@@ -32,7 +32,7 @@ std::string LogExpression::toString() const {
 }
 
 ArgumentPtr LogExpression::negate() const {
-  return makeFunctionExpression(Log(), {lhsChild, makeRawFunctionExpression(Div(), {ONE.clone(), rhsChild})});
+  return makeFunctionExpression(Log(), lhsChild, makeRawFunctionExpression(Div(), ONE.clone(), rhsChild));
 }
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() const {
@@ -84,14 +84,13 @@ ArgumentPtr LogExpression::equalSimplify(const ArgumentPtr &lhs, const ArgumentP
 
 ArgumentPtr LogExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
-    return makeFunctionExpression(Mul(), {rhsExpr->getChildren().back(),
-                                          makeRawFunctionExpression(Log(), {lhs, rhsExpr->getChildren().front()})});
+    return makeFunctionExpression(Mul(), rhsExpr->getChildren().back(),
+                                  makeRawFunctionExpression(Log(), lhs, rhsExpr->getChildren().front()));
   }
 
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
-    return makeFunctionExpression(Mul(),
-                                  {makeRawFunctionExpression(Div(), {ONE.clone(), lhsExpr->getChildren().back()}),
-                                   makeRawFunctionExpression(Log(), {lhsExpr->getChildren().front(), rhs})});
+    return makeFunctionExpression(Mul(), makeRawFunctionExpression(Div(), ONE.clone(), lhsExpr->getChildren().back()),
+                                  makeRawFunctionExpression(Log(), lhsExpr->getChildren().front(), rhs));
   }
 
   return {};
