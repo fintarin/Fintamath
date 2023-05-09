@@ -29,7 +29,7 @@ private:
 
   static ArgumentPtr sumMulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isPrecise = false);
 
-  static ArgumentPtr mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static std::pair<ArgumentPtr, ArgumentPtr> mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
