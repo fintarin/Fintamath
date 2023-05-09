@@ -32,15 +32,27 @@ ArgumentPtr MulExpression::negate() const {
   return mulExpr.simplify();
 }
 
-ArgumentPtr MulExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const {
-  const ArgumentPtr &lhsChild = children[lhsChildNum];
-  const ArgumentPtr &rhsChild = children[rhsChildNum];
+MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForSimplify() const {
+  static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &MulExpression::simplifyDivisions, //
+      &MulExpression::mulRates,          //
+      &MulExpression::simplifyNumbers,   //
+  };
+  return simplifyFunctions;
+}
 
-  if (auto res = mulPolynoms(lhsChild, rhsChild)) {
-    return res;
-  }
+MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {
+  static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &MulExpression::simplifyNegations, //
+  };
+  return simplifyFunctions;
+}
 
-  return {};
+MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPostSimplify() const {
+  static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &MulExpression::mulPolynoms, //
+  };
+  return simplifyFunctions;
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
@@ -174,16 +186,6 @@ ArgumentPtr MulExpression::simplifyNegations(const ArgumentPtr &lhsChild, const 
   }
 
   return {};
-}
-
-MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForSimplify() const {
-  static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &MulExpression::simplifyNegations, //
-      &MulExpression::simplifyDivisions, //
-      &MulExpression::mulRates,          //
-      &MulExpression::simplifyNumbers,   //
-  };
-  return simplifyFunctions;
 }
 
 bool MulExpression::isTermsOrderInversed() const {

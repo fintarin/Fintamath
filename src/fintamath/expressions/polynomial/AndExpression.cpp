@@ -29,15 +29,11 @@ AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForSimplify() 
   return simplifyFunctions;
 }
 
-ArgumentPtr AndExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const {
-  const ArgumentPtr &lhsChild = children[lhsChildNum];
-  const ArgumentPtr &rhsChild = children[rhsChildNum];
-
-  if (auto res = simplifyOr(lhsChild, rhsChild)) {
-    return res;
-  }
-
-  return {};
+AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForPostSimplify() const {
+  static const AndExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &AndExpression::simplifyOr, //
+  };
+  return simplifyFunctions;
 }
 
 bool AndExpression::isComparableOrderInversed() const {

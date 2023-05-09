@@ -58,22 +58,18 @@ ArgumentPtr OrExpression::postSimplify() const {
   return simpl;
 }
 
-ArgumentPtr OrExpression::postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const {
-  const ArgumentPtr &lhsChild = children[lhsChildNum];
-  const ArgumentPtr &rhsChild = children[rhsChildNum];
-
-  if (auto res = simplifyAnd(lhsChild, rhsChild)) {
-    return res;
-  }
-
-  return {};
-}
-
 OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForSimplify() const {
   static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &OrExpression::simplifyNot,      //
       &OrExpression::simplifyBooleans, //
       &OrExpression::simplifyEqual,    //
-      &OrExpression::simplifyNot,      //
+  };
+  return simplifyFunctions;
+}
+
+OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForPostSimplify() const {
+  static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &OrExpression::simplifyAnd, //
   };
   return simplifyFunctions;
 }

@@ -13,6 +13,10 @@ public:
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
+  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+
+  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+
   std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
   /**

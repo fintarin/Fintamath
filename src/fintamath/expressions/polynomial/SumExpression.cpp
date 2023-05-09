@@ -81,11 +81,23 @@ ArgumentPtr SumExpression::negate() const {
 SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForSimplify() const {
   static const SumExpression::SimplifyFunctionsVector simplifyFunctions = {
       &SumExpression::simplifyNumbers,       //
-      &SumExpression::simplifyNegations,     //
       &SumExpression::sumRates,              //
-      &SumExpression::sumDivisions,          //
       &SumExpression::simplifyLogarithms,    //
       &SumExpression::simplifyMulLogarithms, //
+  };
+  return simplifyFunctions;
+}
+
+SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForPreSimplify() const {
+  static const SumExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &SumExpression::simplifyNegations, //
+  };
+  return simplifyFunctions;
+}
+
+SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForPostSimplify() const {
+  static const SumExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &SumExpression::sumDivisions, //
   };
   return simplifyFunctions;
 }

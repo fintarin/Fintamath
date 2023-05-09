@@ -21,10 +21,6 @@ protected:
 
   using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
 
-  virtual ArgumentPtr preSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const;
-
-  virtual ArgumentPtr postSimplifyChildren(size_t lhsChildNum, size_t rhsChildNum) const;
-
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
   virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
@@ -61,7 +57,9 @@ private:
 
   void postSimplifyRec();
 
-  void globalSimplifyRec(bool useInPreSimplify); // true if useInPreSimplify, false if useInPostSimplify
+  void globalSimplifyRec();
+
+  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const;
 
   static ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
                                           const ArgumentPtr &rhs);
