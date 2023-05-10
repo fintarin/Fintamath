@@ -102,7 +102,8 @@ SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-ArgumentPtr SumExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::simplifyNumbers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                           const ArgumentPtr &rhsChild) {
   if (*lhsChild == ZERO) {
     return rhsChild;
   }
@@ -113,7 +114,8 @@ ArgumentPtr SumExpression::simplifyNumbers(const ArgumentPtr &lhsChild, const Ar
   return {};
 }
 
-ArgumentPtr SumExpression::simplifyNegations(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::simplifyNegations(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                             const ArgumentPtr &rhsChild) {
   if (const auto lhsExpr = cast<IExpression>(lhsChild);
       lhsExpr && is<Neg>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
     return ZERO.clone();
@@ -127,7 +129,8 @@ ArgumentPtr SumExpression::simplifyNegations(const ArgumentPtr &lhsChild, const 
   return {};
 }
 
-ArgumentPtr SumExpression::simplifyLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::simplifyLogarithms(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                              const ArgumentPtr &rhsChild) {
   auto lhsExpr = cast<IExpression>(lhsChild);
   auto rhsExpr = cast<IExpression>(rhsChild);
 
@@ -146,7 +149,8 @@ ArgumentPtr SumExpression::simplifyLogarithms(const ArgumentPtr &lhsChild, const
   return {};
 }
 
-ArgumentPtr SumExpression::simplifyMulLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::simplifyMulLogarithms(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                                 const ArgumentPtr &rhsChild) {
   auto lhsExpr = cast<IExpression>(lhsChild);
   auto rhsExpr = cast<IExpression>(rhsChild);
 
@@ -273,7 +277,8 @@ std::shared_ptr<const IExpression> SumExpression::mulToLogarithm(const Arguments
   return makeRawFunctionExpression(Log(), logExpr->getChildren().front(), powExpr);
 }
 
-ArgumentPtr SumExpression::sumRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::sumRates(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                    const ArgumentPtr &rhsChild) {
   auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
   auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
 
@@ -284,7 +289,8 @@ ArgumentPtr SumExpression::sumRates(const ArgumentPtr &lhsChild, const ArgumentP
   return {};
 }
 
-ArgumentPtr SumExpression::sumDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr SumExpression::sumDivisions(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                        const ArgumentPtr &rhsChild) {
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 

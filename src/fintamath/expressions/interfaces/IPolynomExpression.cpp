@@ -45,7 +45,7 @@ void IPolynomExpression::preSimplifyRec() {
   size_t childrenSize = children.size();
 
   for (size_t i = 1; i < children.size(); i++) {
-    if (ArgumentPtr simplRes = useSimplifyFunctions(getFunctionsForPreSimplify(), children[i - 1], children[i])) {
+    if (ArgumentPtr simplRes = useSimplifyFunctions(getFunctionsForPreSimplify(), i - 1, i)) {
       children[i - 1] = simplRes;
       children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
@@ -66,7 +66,7 @@ void IPolynomExpression::postSimplifyRec() {
       children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
     }
-    else if (ArgumentPtr simplRes = useSimplifyFunctions(getFunctionsForPostSimplify(), children[i - 1], children[i])) {
+    else if (ArgumentPtr simplRes = useSimplifyFunctions(getFunctionsForPostSimplify(), i - 1, i)) {
       children[i - 1] = simplRes;
       children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
@@ -91,7 +91,7 @@ void IPolynomExpression::simplifyRec() {
       children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
     }
-    else if (auto simplRes = useSimplifyFunctions(getFunctionsForSimplify(), lhsChild, rhsChild)) {
+    else if (auto simplRes = useSimplifyFunctions(getFunctionsForSimplify(), i - 1, i)) {
       children[i - 1] = simplRes;
       children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
       i--;
@@ -103,10 +103,13 @@ void IPolynomExpression::simplifyRec() {
   }
 }
 
-ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
-                                                     const ArgumentPtr &rhs) {
-  for (const auto &func : simplFuncs) {
-    if (auto res = func(lhs, rhs)) {
+ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, size_t lhsChildPos,
+                                                     size_t rhsChildPos) const {
+  const auto &lhs = children[lhsChildPos];
+  const auto &rhs = children[rhsChildPos];
+
+  for (const auto &simplFunc : simplFuncs) {
+    if (auto res = simplFunc(*func, lhs, rhs)) {
       return res;
     }
   }

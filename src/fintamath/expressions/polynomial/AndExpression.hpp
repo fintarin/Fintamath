@@ -21,13 +21,13 @@ protected:
   bool isUnaryOperatorsOrderInversed() const override;
 
 private:
-  static ArgumentPtr simplifyEqual(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyBooleans(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyNot(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyEqual(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyOr(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyNot(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyOr(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 };
 
 }

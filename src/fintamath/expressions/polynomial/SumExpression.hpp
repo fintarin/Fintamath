@@ -31,17 +31,19 @@ protected:
   int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
 
 private:
-  static ArgumentPtr simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyNumbers(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyNegations(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyNegations(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr sumDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr sumDivisions(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyLogarithms(const IFunction &func, const ArgumentPtr &lhsChild,
+                                        const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyMulLogarithms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyMulLogarithms(const IFunction &func, const ArgumentPtr &lhsChild,
+                                           const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr sumRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr sumRates(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &inChild);
 

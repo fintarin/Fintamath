@@ -17,7 +17,8 @@ public:
   virtual void addElement(const ArgumentPtr &element) = 0;
 
 protected:
-  using SimplifyFunction = std::function<ArgumentPtr(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)>;
+  using SimplifyFunction =
+      std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)>;
 
   using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
 
@@ -59,8 +60,8 @@ private:
 
   void simplifyRec();
 
-  static ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
-                                          const ArgumentPtr &rhs);
+  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, size_t lhsChildPos,
+                                   size_t rhsChildPos) const;
 
   void sort();
 

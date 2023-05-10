@@ -82,7 +82,21 @@ bool OrExpression::isUnaryOperatorsOrderInversed() const {
   return true;
 }
 
-ArgumentPtr OrExpression::simplifyEqual(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::simplifyBooleans(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                           const ArgumentPtr &rhsChild) {
+  if (const auto lhsBool = cast<Boolean>(lhsChild)) {
+    return *lhsBool ? lhsChild : rhsChild;
+  }
+
+  if (const auto rhsBool = cast<Boolean>(rhsChild)) {
+    return *rhsBool ? rhsChild : lhsChild;
+  }
+
+  return {};
+}
+
+ArgumentPtr OrExpression::simplifyEqual(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                        const ArgumentPtr &rhsChild) {
   if (*lhsChild == *rhsChild) {
     return lhsChild;
   }
@@ -90,7 +104,8 @@ ArgumentPtr OrExpression::simplifyEqual(const ArgumentPtr &lhsChild, const Argum
   return {};
 }
 
-ArgumentPtr OrExpression::simplifyNot(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::simplifyNot(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                      const ArgumentPtr &rhsChild) {
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
       rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
     return std::make_shared<Boolean>(true);
@@ -99,7 +114,8 @@ ArgumentPtr OrExpression::simplifyNot(const ArgumentPtr &lhsChild, const Argumen
   return {};
 }
 
-ArgumentPtr OrExpression::simplifyAnd(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::simplifyAnd(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                      const ArgumentPtr &rhsChild) {
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
@@ -207,15 +223,4 @@ ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentPtr &lhsChild, const 
   return {};
 }
 
-ArgumentPtr OrExpression::simplifyBooleans(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsBool = cast<Boolean>(lhsChild)) {
-    return *lhsBool ? lhsChild : rhsChild;
-  }
-
-  if (const auto rhsBool = cast<Boolean>(rhsChild)) {
-    return *rhsBool ? rhsChild : lhsChild;
-  }
-
-  return {};
-}
 }

@@ -11,6 +11,8 @@ public:
   ArgumentPtr negate() const override;
 
 protected:
+  std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
+
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
   SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
@@ -20,17 +22,15 @@ protected:
   bool isTermsOrderInversed() const override;
 
 private:
-  std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
+  static ArgumentPtr simplifyNumbers(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyNumbers(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyNegations(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyNegations(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyDivisions(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyDivisions(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr mulPolynoms(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr mulPolynoms(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
-
-  static ArgumentPtr mulRates(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr mulRates(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &rhsChild);
 
