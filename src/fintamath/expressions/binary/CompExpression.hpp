@@ -14,16 +14,6 @@ public:
 
   void markAsSolution();
 
-  static void addOppositeFunctions(const std::shared_ptr<IFunction> &function,
-                                   const std::shared_ptr<IFunction> &opposite);
-
-  static std::shared_ptr<IFunction> getOppositeFunction(const std::shared_ptr<IFunction> &function);
-
-  static void addLogicOppositeFunctions(const std::shared_ptr<IFunction> &function,
-                                        const std::shared_ptr<IFunction> &opposite);
-
-  static std::shared_ptr<IFunction> getLogicOppositeFunction(const std::shared_ptr<IFunction> &function);
-
 protected:
   ArgumentPtr logicNegate() const override;
 
@@ -40,6 +30,10 @@ protected:
   static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> &getOppositeFunctionsMap();
 
   static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> &getLogicOppositeFunctionsMap();
+
+  static std::shared_ptr<IFunction> getOppositeFunction(const IFunction &function);
+
+  static std::shared_ptr<IFunction> getLogicOppositeFunction(const IFunction &function);
 
 private:
   bool isSolution = false;

@@ -6,6 +6,12 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/comparison/Eqv.hpp"
+#include "fintamath/functions/comparison/Less.hpp"
+#include "fintamath/functions/comparison/LessEqv.hpp"
+#include "fintamath/functions/comparison/More.hpp"
+#include "fintamath/functions/comparison/MoreEqv.hpp"
+#include "fintamath/functions/comparison/Neqv.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
@@ -66,7 +72,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild)) {
     if (is<Neg>(lhsExpr->getFunction())) {
-      return makeFunctionExpression(*getOppositeFunction(func), lhsExpr->getChildren().front(), simplExpr->rhsChild);
+      return makeFunctionExpression(*getOppositeFunction(*func), lhsExpr->getChildren().front(), simplExpr->rhsChild);
     }
 
     ArgumentsPtrVector dividendPolynom;
@@ -102,7 +108,7 @@ ArgumentPtr CompExpression::postSimplify() const {
       std::shared_ptr<IFunction> newFunc;
 
       if (*dividerNum < ZERO) {
-        newFunc = getOppositeFunction(func);
+        newFunc = cast<IFunction>(getOppositeFunction(*func));
       }
       else {
         newFunc = func;
@@ -117,7 +123,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
 ArgumentPtr CompExpression::logicNegate() const {
   auto res = cast<CompExpression>(clone());
-  res->func = getLogicOppositeFunction(func);
+  res->func = cast<IFunction>(getLogicOppositeFunction(*func));
   return res;
 }
 
@@ -135,22 +141,28 @@ void CompExpression::markAsSolution() {
   isSolution = true;
 }
 
-void CompExpression::addOppositeFunctions(const std::shared_ptr<IFunction> &function,
-                                          const std::shared_ptr<IFunction> &opposite) {
-  getOppositeFunctionsMap().try_emplace(function->toString(), opposite);
+std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &function) {
+  static const std::map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+      {Eqv().toString(), std::make_shared<Eqv>()},         //
+      {Neqv().toString(), std::make_shared<Neqv>()},       //
+      {More().toString(), std::make_shared<Less>()},       //
+      {Less().toString(), std::make_shared<More>()},       //
+      {MoreEqv().toString(), std::make_shared<LessEqv>()}, //
+      {LessEqv().toString(), std::make_shared<MoreEqv>()}, //
+  };
+  return oppositeFunctions.at(function.toString());
 }
 
-std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const std::shared_ptr<IFunction> &function) {
-  return getOppositeFunctionsMap()[function->toString()];
-}
-
-void CompExpression::addLogicOppositeFunctions(const std::shared_ptr<IFunction> &function,
-                                               const std::shared_ptr<IFunction> &opposite) {
-  getLogicOppositeFunctionsMap().try_emplace(function->toString(), opposite);
-}
-
-std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const std::shared_ptr<IFunction> &function) {
-  return getLogicOppositeFunctionsMap()[function->toString()];
+std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const IFunction &function) {
+  static const std::map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+      {Eqv().toString(), std::make_shared<Neqv>()},     //
+      {Neqv().toString(), std::make_shared<Eqv>()},     //
+      {More().toString(), std::make_shared<LessEqv>()}, //
+      {Less().toString(), std::make_shared<MoreEqv>()}, //
+      {MoreEqv().toString(), std::make_shared<Less>()}, //
+      {LessEqv().toString(), std::make_shared<More>()}, //
+  };
+  return oppositeFunctions.at(function.toString());
 }
 
 }
