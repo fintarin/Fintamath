@@ -4,6 +4,7 @@
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/binary/DerivativeExpression.hpp"
 #include "fintamath/expressions/binary/DivExpression.hpp"
+#include "fintamath/expressions/binary/IntegralExpression.hpp"
 #include "fintamath/expressions/binary/LogExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
@@ -20,6 +21,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
+#include "fintamath/functions/calculus/Integral.hpp"
 #include "fintamath/functions/calculus/Max.hpp"
 #include "fintamath/functions/calculus/Min.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
@@ -228,6 +230,10 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Derivative>([](const ArgumentsPtrVector &args) {
       return std::make_shared<DerivativeExpression>(args.front(), args.back());
+    });
+
+    Expression::registerFunctionExpressionMaker<Integral>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<IntegralExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Log>([](const ArgumentsPtrVector &args) {

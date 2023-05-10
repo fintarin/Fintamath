@@ -378,6 +378,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   // EXPECT_EQ(Expression("derivative(5, a^2)").toString(), "0");
   // EXPECT_EQ(Expression("derivative(a, a^2)").toString(), "derivative(a, a^2)");
 
+  EXPECT_EQ(Expression("integral(a, a)").toString(), "1/2 a^2");
+  EXPECT_EQ(Expression("integral(a+a, a)").toString(), "integral(2 a, a)");
+  EXPECT_EQ(Expression("integral(a, a) + integral(b, b)").toString(), "1/2 a^2 + 1/2 b^2");
+  // TODO: integral
+  // EXPECT_EQ(Expression("integral(5, a^2)").toString(), "???");
+  // EXPECT_EQ(Expression("integral(a, a^2)").toString(), "???");
+
   EXPECT_EQ(Expression("~True").toString(), "False");
   EXPECT_EQ(Expression("~False").toString(), "True");
   EXPECT_EQ(Expression("True&False").toString(), "False");

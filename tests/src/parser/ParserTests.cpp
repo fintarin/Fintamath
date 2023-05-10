@@ -13,6 +13,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
+#include "fintamath/functions/calculus/Integral.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"
@@ -212,6 +213,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Atanh>(IFunction::parse("atanh")));
   EXPECT_TRUE(is<Acoth>(IFunction::parse("acoth")));
   EXPECT_TRUE(is<Derivative>(IFunction::parse("derivative")));
+  EXPECT_TRUE(is<Integral>(IFunction::parse("integral")));
 
   EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
   EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));
