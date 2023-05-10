@@ -9,13 +9,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clan
 
     add_custom_target(
       ${PROJECT_NAME}_coverage
-      COMMAND ${LCOV_TOOL} --capture --initial --directory . --output-file build/lcov_tmp.info --rc
-              lcov_branch_coverage=1
       COMMAND cd build && ctest -CDebug && cd ..
-      COMMAND ${LCOV_TOOL} --capture --directory . --output-file build/lcov.info --rc lcov_branch_coverage=1
-      COMMAND ${LCOV_TOOL} --add-tracefile build/lcov_tmp.info --add-tracefile build/lcov.info --output-file
-              build/lcov.info --rc lcov_branch_coverage=1
-      COMMAND ${LCOV_TOOL} --remove build/lcov.info '*/usr/*' '*/build/*' '*/tests/*' '*/thirdparty/*' --output-file
+      COMMAND ${LCOV_TOOL} --capture --directory . --output-file build/lcov_tmp.info --rc lcov_branch_coverage=1
+      COMMAND ${LCOV_TOOL} --remove build/lcov_tmp.info '*/usr/*' '*/build/*' '*/tests/*' '*/thirdparty/*' --output-file
               build/lcov_tmp.info --rc lcov_branch_coverage=1
       COMMAND ${CMAKE_SOURCE_DIR}/tests/scripts/coverage_filter.py build/lcov_tmp.info > build/lcov.info
       COMMAND rm build/lcov_tmp.info

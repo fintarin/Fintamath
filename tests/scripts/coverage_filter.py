@@ -12,7 +12,6 @@ condition_keywords = [
     " if ",
     " for ",
     " while ",
-    " switch ",
 ]
 condition_operators = [
     " && ",
@@ -51,7 +50,10 @@ def get_branch_data_line_nums(source_file: TextIO) -> Generator[int, None, None]
     for condition_keyword in condition_keywords:
       if line.find(condition_keyword) != -1:
         open_brackets_num += get_brackets_diff(line)
-        condition_found = True
+
+        if re.search("^.*if.+[^!<>=]=[^;=]+$", line) == None:
+          condition_found = True
+
         break
 
     if condition_found:
