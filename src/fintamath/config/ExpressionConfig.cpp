@@ -12,8 +12,10 @@
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
 #include "fintamath/expressions/polynomial/SumExpression.hpp"
+#include "fintamath/expressions/unary/HyperbolicExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
+#include "fintamath/expressions/unary/TrigonometryExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -30,7 +32,13 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
+#include "fintamath/functions/hyperbolic/Acosh.hpp"
+#include "fintamath/functions/hyperbolic/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Asinh.hpp"
+#include "fintamath/functions/hyperbolic/Atanh.hpp"
+#include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
@@ -50,7 +58,13 @@
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
+#include "fintamath/functions/trigonometry/Acos.hpp"
+#include "fintamath/functions/trigonometry/Acot.hpp"
+#include "fintamath/functions/trigonometry/Asin.hpp"
+#include "fintamath/functions/trigonometry/Atan.hpp"
+#include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
@@ -287,12 +301,68 @@ struct ExpressionConfig {
       return makeRawFunctionExpression(Pow(), args.front(), std::make_shared<Rational>(1, 2));
     });
 
+    Expression::registerFunctionExpressionMaker<Sin>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<TrigonometryExpression>(Sin(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Cos>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<TrigonometryExpression>(Cos(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Tan>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<TrigonometryExpression>(Tan(), args.front());
+    });
+
     Expression::registerFunctionExpressionMaker<Cot>([](const ArgumentsPtrVector &args) {
-      return makeRawFunctionExpression(Div(), ONE.clone(), makeRawFunctionExpression(Tan(), args.front()));
+      return std::make_shared<TrigonometryExpression>(Cot(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Asin>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<TrigonometryExpression>(Asin(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Acos>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<TrigonometryExpression>(Acos(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Atan>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<TrigonometryExpression>(Atan(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Acot>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<TrigonometryExpression>(Acot(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Sinh>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<HyperbolicExpression>(Sinh(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Cosh>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<HyperbolicExpression>(Cosh(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Tanh>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<HyperbolicExpression>(Tanh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Coth>([](const ArgumentsPtrVector &args) {
-      return makeRawFunctionExpression(Div(), ONE.clone(), makeRawFunctionExpression(Tanh(), args.front()));
+      return std::make_shared<HyperbolicExpression>(Coth(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Asinh>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<HyperbolicExpression>(Asinh(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Acosh>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<HyperbolicExpression>(Acosh(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Atanh>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<HyperbolicExpression>(Atanh(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Acoth>([](const ArgumentsPtrVector &args) {
+      return std::make_shared<HyperbolicExpression>(Acoth(), args.front());
     });
   }
 };

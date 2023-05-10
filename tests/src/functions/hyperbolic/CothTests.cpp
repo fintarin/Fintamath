@@ -31,7 +31,7 @@ TEST(CothTests, callTest) {
   EXPECT_EQ(f(Rational(11, 10))->toString(),
             "1.2492207645683124165906900933942574392975063373637126905395088619158358548674384");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "1/tanh(a)");
+  EXPECT_EQ(f(Variable("a"))->toString(), "coth(a)");
 
   EXPECT_THROW(f(Integer(0)), UndefinedFunctionException);
 

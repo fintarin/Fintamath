@@ -162,9 +162,9 @@ TEST(ExpressionFunctionsTests, tanTest) {
 }
 
 TEST(ExpressionFunctionsTests, cotTest) {
-  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "1/tan(1/4 Pi)"); // TODO trigonometry
-  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "1/tan(1/2 Pi)"); // TODO trigonometry
-  EXPECT_EQ(cot(Expression("a/5")).toString(), "1/tan(1/5 a)");
+  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "cot(1/4 Pi)"); // TODO trigonometry
+  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "cot(1/2 Pi)"); // TODO trigonometry
+  EXPECT_EQ(cot(Expression("a/5")).toString(), "cot(1/5 a)");
 }
 
 TEST(ExpressionFunctionsTests, asinTest) {
