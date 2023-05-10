@@ -9,14 +9,18 @@ public:
   explicit NotExpression(const ArgumentPtr &inChild);
 
 protected:
-  ArgumentPtr preSimplify() const override;
-
-  ArgumentPtr postSimplify() const override;
-
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
+  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+
+  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+
 private:
-  static ArgumentPtr simplifyNot(const ArgumentPtr &rhs);
+  static ArgumentPtr callNotFunction(const ArgumentPtr &rhs);
+
+  static ArgumentPtr simplifyLogicNegatable(const ArgumentPtr &rhs);
+
+  static ArgumentPtr simplifyNestedNot(const ArgumentPtr &rhs);
 };
 
 }

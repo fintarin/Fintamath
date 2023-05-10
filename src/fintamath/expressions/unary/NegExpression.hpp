@@ -9,14 +9,18 @@ public:
   explicit NegExpression(const ArgumentPtr &inChild);
 
 protected:
-  ArgumentPtr preSimplify() const override;
-
-  ArgumentPtr postSimplify() const override;
-
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
+  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+
+  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+
 private:
-  static ArgumentPtr simplifyNeg(const ArgumentPtr &rhs);
+  static ArgumentPtr callNegFunction(const ArgumentPtr &rhs);
+
+  static ArgumentPtr simplifyNegatable(const ArgumentPtr &rhs);
+
+  static ArgumentPtr simplifyNestedNeg(const ArgumentPtr &rhs);
 };
 
 }

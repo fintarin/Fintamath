@@ -19,16 +19,20 @@ protected:
 
   using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
 
+  virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
+
+  virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
+
+  virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
+
   ArgumentPtr simplify() const final;
 
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
 
-  virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
-
 private:
-  ArgumentPtr globalSimplify() const;
+  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const;
 
 protected:
   std::shared_ptr<IFunction> func;

@@ -8,44 +8,44 @@ namespace fintamath {
 NotExpression::NotExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(Not(), inChild) {
 }
 
-ArgumentPtr NotExpression::preSimplify() const {
-  auto simpl = IUnaryExpression::preSimplify();
-  auto simplExpr = cast<NotExpression>(simpl);
-
-  if (!simplExpr) {
-    return simpl;
-  }
-
-  if (ArgumentPtr res = callFunction(*simplExpr->func, {simplExpr->child})) {
-    return res;
-  }
-
-  return simpl;
-}
-
-ArgumentPtr NotExpression::postSimplify() const {
-  auto simpl = IUnaryExpression::postSimplify();
-  auto simplExpr = cast<NotExpression>(simpl);
-
-  if (!simplExpr) {
-    return simpl;
-  }
-
-  if (const auto expr = cast<ILogicNegatableExpression>(simplExpr->child)) {
-    return expr->logicNegate();
-  }
-
-  return simpl;
-}
-
 NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForSimplify() const {
   static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NotExpression::simplifyNot, //
+      &NotExpression::simplifyNestedNot, //
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr NotExpression::simplifyNot(const ArgumentPtr &rhs) {
+NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPreSimplify() const {
+  static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &NotExpression::callNotFunction, //
+  };
+  return simplifyFunctions;
+}
+
+NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPostSimplify() const {
+  static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &NotExpression::simplifyLogicNegatable, //
+  };
+  return simplifyFunctions;
+}
+
+ArgumentPtr NotExpression::callNotFunction(const ArgumentPtr &rhs) {
+  if (ArgumentPtr res = callFunction(Not(), {rhs})) {
+    return res;
+  }
+
+  return {};
+}
+
+ArgumentPtr NotExpression::simplifyLogicNegatable(const ArgumentPtr &rhs) {
+  if (auto expr = cast<ILogicNegatableExpression>(rhs)) {
+    return expr->logicNegate();
+  }
+
+  return {};
+}
+
+ArgumentPtr NotExpression::simplifyNestedNot(const ArgumentPtr &rhs) {
   if (const auto expr = cast<NotExpression>(rhs)) {
     return expr->child;
   }

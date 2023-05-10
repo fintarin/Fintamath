@@ -26,6 +26,18 @@ ArgumentsPtrVector IUnaryExpression::getChildren() const {
   return {child};
 }
 
+IUnaryExpression::SimplifyFunctionsVector IUnaryExpression::getFunctionsForSimplify() const {
+  return {};
+}
+
+IUnaryExpression::SimplifyFunctionsVector IUnaryExpression::getFunctionsForPreSimplify() const {
+  return {};
+}
+
+IUnaryExpression::SimplifyFunctionsVector IUnaryExpression::getFunctionsForPostSimplify() const {
+  return {};
+}
+
 ArgumentPtr IUnaryExpression::simplify() const {
   ArgumentPtr simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl);
@@ -37,7 +49,11 @@ ArgumentPtr IUnaryExpression::preSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl->child);
 
-  if (auto res = simpl->globalSimplify()) {
+  if (auto res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify())) {
+    return res;
+  }
+
+  if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
     return res;
   }
 
@@ -52,23 +68,20 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
     return res;
   }
 
-  if (auto res = simpl->globalSimplify()) {
+  if (auto res = simpl->useSimplifyFunctions(getFunctionsForPostSimplify())) {
+    return res;
+  }
+
+  if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
     return res;
   }
 
   return simpl;
 }
 
-IUnaryExpression::SimplifyFunctionsVector IUnaryExpression::getFunctionsForSimplify() const {
-  return {};
-}
-
-ArgumentPtr IUnaryExpression::globalSimplify() const {
-  auto simpl = cast<IUnaryExpression>(clone());
-  const SimplifyFunctionsVector simplFunctions = getFunctionsForSimplify();
-
-  for (const auto &simplFunc : simplFunctions) {
-    if (auto res = simplFunc(simpl->child)) {
+ArgumentPtr IUnaryExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const {
+  for (const auto &simplFunc : simplFuncs) {
+    if (auto res = simplFunc(child)) {
       return res;
     }
   }
