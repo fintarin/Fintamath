@@ -95,10 +95,10 @@ protected:
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }
-    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs); rhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
       return equals(cast<Derived>(*rhsPtr));
     }
-    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this); lhsPtr != nullptr) {
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
       return *lhsPtr == rhs;
     }
     return false;
