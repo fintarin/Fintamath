@@ -8,6 +8,12 @@
 
 using namespace fintamath;
 
+TEST(IntegerFunctionsTests, absTest) {
+  EXPECT_EQ(abs(Integer("-210")).toString(), "210");
+  EXPECT_EQ(abs(Integer("4545628562")).toString(), "4545628562");
+  EXPECT_EQ(abs(Integer("0")).toString(), "0");
+}
+
 TEST(IntegerFunctionsTests, gcdTest) {
   EXPECT_EQ(gcd(Integer(12), Integer(18)), Integer(6));
   EXPECT_EQ(gcd(Integer(30), Integer(45)), Integer(15));

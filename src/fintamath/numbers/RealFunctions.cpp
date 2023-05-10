@@ -7,6 +7,10 @@
 
 namespace fintamath {
 
+Real abs(const Real &rhs) {
+  return rhs < 0 ? -rhs : rhs;
+}
+
 Real sqrt(const Real &rhs) {
   if (rhs < 0) {
     throw UndefinedFunctionException("sqrt", {rhs.toString()});
@@ -19,7 +23,7 @@ Real pow(const Real &lhs, const Real &rhs) {
   if (lhs.isNearZero() && rhs.isNearZero()) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
-  if (lhs < 0 && !is<Integer>(rhs.toMinimalObject())) {
+  if (lhs < 0 && !is<Integer>(rhs.toMinimalObject())) { // TODO: do not use toMinimalObject
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 

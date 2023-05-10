@@ -2,4 +2,8 @@
 
 #include "fintamath/numbers/Rational.hpp"
 
-namespace fintamath {}
+namespace fintamath {
+
+Rational abs(const Rational &rhs);
+
+}

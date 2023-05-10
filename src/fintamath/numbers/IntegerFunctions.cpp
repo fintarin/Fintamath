@@ -7,6 +7,10 @@
 
 namespace fintamath {
 
+Integer abs(const Integer &rhs) {
+  return rhs < 0 ? -rhs : rhs;
+}
+
 Integer gcd(const Integer &lhs, const Integer &rhs) {
   return Integer(gcd(lhs.getImpl()->v, rhs.getImpl()->v));
 }

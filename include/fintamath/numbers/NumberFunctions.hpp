@@ -4,18 +4,10 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
+#include "fintamath/numbers/RationalFunctions.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
-
-template <typename Rhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Rhs>>>
-inline Rhs abs(const Rhs &rhs) {
-  if (rhs < ZERO) {
-    return -rhs;
-  }
-
-  return rhs;
-}
 
 inline std::unique_ptr<INumber> abs(const INumber &rhs) {
   static const auto multiAbs = [] {
@@ -47,7 +39,7 @@ inline std::unique_ptr<INumber> sqrt(const Integer &rhs) {
     return res;
   }
 
-  return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject());
+  return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
 }
 
 inline std::unique_ptr<INumber> sqrt(const Rational &rhs) {
@@ -55,12 +47,12 @@ inline std::unique_ptr<INumber> sqrt(const Rational &rhs) {
 
   Integer numerator = intSqrt(rhs.numerator(), remainder);
   if (remainder != ZERO) {
-    return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject());
+    return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
   }
 
   Integer denominator = intSqrt(rhs.denominator(), remainder);
   if (remainder != ZERO) {
-    return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject());
+    return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
   }
 
   return std::make_unique<Rational>(numerator, denominator);
@@ -130,7 +122,8 @@ inline std::unique_ptr<INumber> pow(const Lhs &lhs, const Rational &rhs) {
     return sqrt(*pow(lhs, numerator));
   }
 
-  return cast<INumber>(pow(convert<Real>(lhs), convert<Real>(rhs)).toMinimalObject());
+  return cast<INumber>(
+      pow(convert<Real>(lhs), convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
 }
 
 template <typename Lhs, typename Rhs,
@@ -148,7 +141,7 @@ inline std::unique_ptr<INumber> pow(const Lhs &lhs, const Rhs &rhs) {
     });
 
     outMultiPow.add<Real, Real>([](const Real &inLhs, const Real &inRhs) {
-      return cast<INumber>(pow(inLhs, inRhs).toMinimalObject());
+      return cast<INumber>(pow(inLhs, inRhs).toMinimalObject()); // TODO: do not use toMinimalObject
     });
 
     return outMultiPow;

@@ -4,6 +4,8 @@
 
 namespace fintamath {
 
+Integer abs(const Integer &rhs);
+
 Integer gcd(const Integer &lhs, const Integer &rhs);
 
 Integer lcm(const Integer &lhs, const Integer &rhs);
