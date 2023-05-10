@@ -231,7 +231,7 @@ ArgumentPtr DivExpression::sumSumSimplify(const ArgumentPtr &lhs, const Argument
   return makeFunctionExpression(Add(), answerVect);
 }
 
-ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isPrecise) {
+ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentsPtrVector lhsChildren;
 
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Add>(lhsExpr->getFunction())) {
@@ -258,7 +258,7 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
     }
   }
 
-  if (divFailure.size() == lhsChildren.size() || (isPrecise && !divFailure.empty())) {
+  if (divFailure.size() == lhsChildren.size()) {
     return {};
   }
 
