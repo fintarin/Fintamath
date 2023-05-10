@@ -21,12 +21,17 @@ DerivativeExpression::SimplifyFunctionsVector DerivativeExpression::getFunctions
 }
 
 ArgumentPtr DerivativeExpression::derivativeSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  // TODO: remove this and implement derivative with rhs !is Variable
+  if (!is<Variable>(rhs)) {
+    throw InvalidInputFunctionException(Derivative().toString(), {lhs->toString(), rhs->toString()});
+  }
+
   ArgumentPtr res;
 
   if (is<INumber>(lhs) || is<IConstant>(lhs)) {
     res = ZERO.clone();
   }
-  else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
+  else if (is<Variable>(lhs) && *lhs == *rhs) {
     res = ONE.clone();
   }
 

@@ -193,7 +193,6 @@ TEST(ExpressionFunctionsTests, acotTest) {
 
 TEST(ExpressionFunctionsTests, derivativeTest) {
   EXPECT_EQ(derivative(Expression("1"), Expression("a")).toString(), "0");
-  EXPECT_EQ(derivative(Expression("E"), Expression("1")).toString(), "0");
   EXPECT_EQ(derivative(Expression("a"), Expression("a")).toString(), "1");
   EXPECT_EQ(derivative(Expression("(a+5)"), Expression("a")).toString(), "derivative(a + 5, a)"); // TODO: derivative
 }
