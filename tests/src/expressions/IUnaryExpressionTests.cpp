@@ -41,3 +41,11 @@ TEST(IUnaryExpressionTests, setChildren) {
   EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
   EXPECT_THROW(expr.setChildren({ONE.clone(), ONE.clone()}), InvalidInputFunctionException);
 }
+
+TEST(IUnaryExpressionTests, toMinimalObjectTest) {
+  TestUnaryExpression expr1(Integer(4).clone());
+  EXPECT_EQ(expr1.toMinimalObject()->toString(), "2");
+
+  TestUnaryExpression expr2(Variable("a").clone());
+  EXPECT_EQ(expr2.toMinimalObject()->toString(), "sqrt(a)");
+}

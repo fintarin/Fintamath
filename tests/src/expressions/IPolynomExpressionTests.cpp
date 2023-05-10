@@ -64,3 +64,8 @@ TEST(IPolynomExpressionTests, addElement) {
   expr.addElement(ZERO.clone());
   EXPECT_EQ(expr.toString(), "1 + 2 + 3 + 0");
 }
+
+TEST(IPolynomExpressionTests, toMinimalObjectTest) {
+  TestPolynomExpression expr({ONE.clone(), TWO.clone(), Variable("a").clone()});
+  EXPECT_EQ(expr.toMinimalObject()->toString(), "a + 3");
+}

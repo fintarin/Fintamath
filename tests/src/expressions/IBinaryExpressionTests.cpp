@@ -45,3 +45,11 @@ TEST(IBinaryExpressionTests, setChildren) {
   EXPECT_THROW(expr.setChildren({ONE.clone()}), InvalidInputFunctionException);
   EXPECT_THROW(expr.setChildren({ONE.clone(), ONE.clone(), ONE.clone()}), InvalidInputFunctionException);
 }
+
+TEST(IBinaryExpressionTests, toMinimalObjectTest) {
+  TestBinaryExpression expr1(ONE.clone(), TWO.clone());
+  EXPECT_EQ(expr1.toMinimalObject()->toString(), "3");
+
+  TestBinaryExpression expr2(ONE.clone(), Variable("a").clone());
+  EXPECT_EQ(expr2.toMinimalObject()->toString(), "1 + a");
+}
