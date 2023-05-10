@@ -10,14 +10,14 @@ public:
   explicit DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
 protected:
-  ArgumentPtr postSimplify() const override;
-
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr zeroSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr numSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr divSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 

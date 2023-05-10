@@ -9,7 +9,10 @@ public:
   explicit DerivativeExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
 protected:
-  ArgumentPtr postSimplify() const override;
+  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+
+private:
+  static ArgumentPtr derivativeSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 };
 
 }

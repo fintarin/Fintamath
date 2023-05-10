@@ -128,6 +128,10 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
 }
 
 ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs) {
+  if (!func.isNonExressionEvaluatable()) {
+    return {};
+  }
+
   ArgumentsRefVector args;
   bool areArgumentsPrecise = true;
 

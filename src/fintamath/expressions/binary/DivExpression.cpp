@@ -16,38 +16,32 @@ DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &i
     : IBinaryExpressionCRTP(Div(), inLhsChild, inRhsChild) {
 }
 
-ArgumentPtr DivExpression::postSimplify() const {
-  auto simpl = IBinaryExpression::postSimplify();
-  auto simplExpr = cast<DivExpression>(simpl);
-
-  if (!simplExpr) {
-    return simpl;
-  }
-
-  if (auto lhsInt = cast<Integer>(simplExpr->lhsChild); lhsInt && *lhsInt == ZERO) {
-    return simplExpr->lhsChild;
-  }
-
-  return simpl;
-}
-
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::numbersSimplify, //
-      &DivExpression::divSimplify,     //
-      &DivExpression::mulSimplify,     //
+      &DivExpression::numSimplify, //
+      &DivExpression::divSimplify, //
+      &DivExpression::mulSimplify, //
   };
   return simplifyFunctions;
 }
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::sumSimplify, //
+      &DivExpression::zeroSimplify, //
+      &DivExpression::sumSimplify,  //
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr DivExpression::numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::zeroSimplify(const ArgumentPtr &lhs, const ArgumentPtr & /*rhs*/) {
+  if (auto lhsInt = cast<Integer>(lhs); lhsInt && *lhsInt == ZERO) {
+    return lhs;
+  }
+
+  return {};
+}
+
+ArgumentPtr DivExpression::numSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*rhs == ZERO) {
     throw UndefinedBinaryOperatorException(Div().toString(), lhs->toString(), rhs->toString());
   }
@@ -126,16 +120,16 @@ ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   size_t lhsChildrenSizeInitial = lhsChildren.size();
   size_t rhsChildrenSizeInitial = rhsChildren.size();
 
-  for (size_t i = 0; i < lhsChildren.size(); i++) {
+  for (auto &lhsChild : lhsChildren) {
     for (size_t j = 0; j < rhsChildren.size(); j++) {
-      if (auto res = divPowerSimplify(lhsChildren[i], rhsChildren[j])) {
-        lhsChildren[i] = res;
+      if (auto res = divPowerSimplify(lhsChild, rhsChildren[j])) {
+        lhsChild = res;
         rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
         break;
       }
 
-      if (auto res = callFunction(Div(), {lhsChildren[i], rhsChildren[j]})) {
-        lhsChildren[i] = Div()(*lhsChildren[i], *rhsChildren[j]);
+      if (auto res = callFunction(Div(), {lhsChild, rhsChildren[j]})) {
+        lhsChild = Div()(*lhsChild, *rhsChildren[j]);
         rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
         break;
       }

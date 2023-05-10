@@ -13,13 +13,20 @@ DerivativeExpression::DerivativeExpression(const ArgumentPtr &inLhsChild, const 
     : IBinaryExpressionCRTP(Derivative(), inLhsChild, inRhsChild) {
 }
 
-ArgumentPtr DerivativeExpression::postSimplify() const {
+DerivativeExpression::SimplifyFunctionsVector DerivativeExpression::getFunctionsForPostSimplify() const {
+  static const DerivativeExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &DerivativeExpression::derivativeSimplify, //
+  };
+  return simplifyFunctions;
+}
+
+ArgumentPtr DerivativeExpression::derivativeSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentPtr res;
 
-  if (is<INumber>(lhsChild) || is<IConstant>(lhsChild)) {
+  if (is<INumber>(lhs) || is<IConstant>(lhs)) {
     res = ZERO.clone();
   }
-  else if (is<Variable>(lhsChild) && *lhsChild == *rhsChild) {
+  else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
     res = ONE.clone();
   }
 

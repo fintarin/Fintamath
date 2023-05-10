@@ -121,6 +121,16 @@ ArgumentPtr CompExpression::logicNegate() const {
   return res;
 }
 
+CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPreSimplify() const {
+  // TODO! implement
+  return {};
+}
+
+CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPostSimplify() const {
+  // TODO! implement
+  return {};
+}
+
 void CompExpression::markAsSolution() {
   isSolution = true;
 }

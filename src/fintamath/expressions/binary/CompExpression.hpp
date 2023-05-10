@@ -25,11 +25,17 @@ public:
   static std::shared_ptr<IFunction> getLogicOppositeFunction(const std::shared_ptr<IFunction> &function);
 
 protected:
+  ArgumentPtr logicNegate() const override;
+
+  // TODO! remove
   ArgumentPtr preSimplify() const override;
 
+  // TODO! remove
   ArgumentPtr postSimplify() const override;
 
-  ArgumentPtr logicNegate() const override;
+  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+
+  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
   static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> &getOppositeFunctionsMap();
 

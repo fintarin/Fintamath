@@ -36,6 +36,16 @@ std::string PowExpression::toString() const {
   return IBinaryExpression::toString();
 }
 
+PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPreSimplify() const {
+  // TODO! implement
+  return {};
+}
+
+PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplify() const {
+  // TODO! implement
+  return {};
+}
+
 ArgumentPtr PowExpression::mulSimplify() const {
   auto powExpr = cast<PowExpression>(clone());
 

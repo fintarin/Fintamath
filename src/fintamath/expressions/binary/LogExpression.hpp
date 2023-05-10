@@ -19,7 +19,7 @@ protected:
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr numSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr equalSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 

@@ -12,9 +12,15 @@ public:
   std::string toString() const override;
 
 protected:
+  // TODO! remove
   ArgumentPtr preSimplify() const override;
 
+  // TODO! remove
   ArgumentPtr postSimplify() const override;
+
+  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+
+  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
 private:
   ArgumentPtr polynomSimplify() const;

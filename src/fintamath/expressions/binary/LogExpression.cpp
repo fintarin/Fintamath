@@ -37,8 +37,8 @@ ArgumentPtr LogExpression::negate() const {
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &LogExpression::numbersSimplify, //
-      &LogExpression::equalSimplify,   //
+      &LogExpression::numSimplify,   //
+      &LogExpression::equalSimplify, //
   };
   return simplifyFunctions;
 }
@@ -50,7 +50,7 @@ LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-ArgumentPtr LogExpression::numbersSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr LogExpression::numSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == ONE) {
     throw UndefinedFunctionException(Log().toString(), {lhs->toString(), rhs->toString()});
   }

@@ -8,6 +8,9 @@ namespace fintamath {
 
 class Derivative : public IFunctionCRTP<IComparable, Derivative, IComparable, IComparable> {
 public:
+  Derivative() : IFunctionCRTP(false, false) {
+  }
+
   std::string toString() const override {
     return "derivative";
   }
