@@ -29,7 +29,7 @@ NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-ArgumentPtr NotExpression::callNotFunction(const ArgumentPtr &rhs) {
+ArgumentPtr NotExpression::callNotFunction(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (ArgumentPtr res = callFunction(Not(), {rhs})) {
     return res;
   }
@@ -37,7 +37,7 @@ ArgumentPtr NotExpression::callNotFunction(const ArgumentPtr &rhs) {
   return {};
 }
 
-ArgumentPtr NotExpression::simplifyLogicNegatable(const ArgumentPtr &rhs) {
+ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (auto expr = cast<ILogicNegatableExpression>(rhs)) {
     return expr->logicNegate();
   }
@@ -45,7 +45,7 @@ ArgumentPtr NotExpression::simplifyLogicNegatable(const ArgumentPtr &rhs) {
   return {};
 }
 
-ArgumentPtr NotExpression::simplifyNestedNot(const ArgumentPtr &rhs) {
+ArgumentPtr NotExpression::simplifyNestedNot(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (const auto expr = cast<NotExpression>(rhs)) {
     return expr->child;
   }

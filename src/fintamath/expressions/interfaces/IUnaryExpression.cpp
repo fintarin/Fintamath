@@ -81,7 +81,7 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
 
 ArgumentPtr IUnaryExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const {
   for (const auto &simplFunc : simplFuncs) {
-    if (auto res = simplFunc(child)) {
+    if (auto res = simplFunc(*func, child)) {
       return res;
     }
   }

@@ -16,11 +16,11 @@ protected:
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr callNegFunction(const ArgumentPtr &rhs);
+  static ArgumentPtr callNegFunction(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr simplifyNegatable(const ArgumentPtr &rhs);
+  static ArgumentPtr simplifyNegatable(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr simplifyNestedNeg(const ArgumentPtr &rhs);
+  static ArgumentPtr simplifyNestedNeg(const IFunction &func, const ArgumentPtr &rhs);
 };
 
 }

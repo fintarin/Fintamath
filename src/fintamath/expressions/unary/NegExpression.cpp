@@ -29,7 +29,7 @@ NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-ArgumentPtr NegExpression::callNegFunction(const ArgumentPtr &rhs) {
+ArgumentPtr NegExpression::callNegFunction(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (ArgumentPtr res = callFunction(Neg(), {rhs})) {
     return res;
   }
@@ -37,7 +37,7 @@ ArgumentPtr NegExpression::callNegFunction(const ArgumentPtr &rhs) {
   return {};
 }
 
-ArgumentPtr NegExpression::simplifyNegatable(const ArgumentPtr &rhs) {
+ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (auto expr = cast<INegatableExpression>(rhs)) {
     return expr->negate();
   }
@@ -45,7 +45,7 @@ ArgumentPtr NegExpression::simplifyNegatable(const ArgumentPtr &rhs) {
   return {};
 }
 
-ArgumentPtr NegExpression::simplifyNestedNeg(const ArgumentPtr &rhs) {
+ArgumentPtr NegExpression::simplifyNestedNeg(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (const auto expr = cast<NegExpression>(rhs)) {
     return expr->child;
   }

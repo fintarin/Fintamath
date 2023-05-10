@@ -15,7 +15,7 @@ public:
   void setChildren(const ArgumentsPtrVector &childVect) override;
 
 protected:
-  using SimplifyFunction = std::function<ArgumentPtr(const ArgumentPtr &)>;
+  using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &)>;
 
   using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
 
