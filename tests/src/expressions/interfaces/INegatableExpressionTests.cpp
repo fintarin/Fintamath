@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/expressions/INegatableExpression.hpp"
+#include "fintamath/expressions/interfaces/INegatableExpression.hpp"
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"

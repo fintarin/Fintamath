@@ -1,7 +1,7 @@
 #pragma once
 
-#include "fintamath/expressions/INegatableExpression.hpp"
-#include "fintamath/expressions/IPolynomExpression.hpp"
+#include "fintamath/expressions/interfaces/INegatableExpression.hpp"
+#include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
 namespace fintamath {
 class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatableExpression {

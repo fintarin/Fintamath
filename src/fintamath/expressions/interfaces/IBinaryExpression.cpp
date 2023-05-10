@@ -1,4 +1,4 @@
-#include "fintamath/expressions/IBinaryExpression.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 

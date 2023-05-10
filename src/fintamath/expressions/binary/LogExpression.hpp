@@ -1,7 +1,7 @@
 #pragma once
 
-#include "fintamath/expressions/IBinaryExpression.hpp"
-#include "fintamath/expressions/INegatableExpression.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
+#include "fintamath/expressions/interfaces/INegatableExpression.hpp"
 
 namespace fintamath {
 

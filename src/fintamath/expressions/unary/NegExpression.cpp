@@ -1,6 +1,6 @@
 #include "fintamath/expressions/unary/NegExpression.hpp"
 
-#include "fintamath/expressions/INegatableExpression.hpp"
+#include "fintamath/expressions/interfaces/INegatableExpression.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 
 namespace fintamath {

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/expressions/IUnaryExpression.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"

@@ -1,4 +1,4 @@
-#include "fintamath/expressions/IUnaryExpression.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"

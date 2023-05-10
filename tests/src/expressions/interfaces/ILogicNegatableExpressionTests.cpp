@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/expressions/ILogicNegatableExpression.hpp"
+#include "fintamath/expressions/interfaces/ILogicNegatableExpression.hpp"
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/logic/And.hpp"

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/expressions/IBinaryExpression.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"

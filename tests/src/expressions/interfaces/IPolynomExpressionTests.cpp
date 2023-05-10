@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/expressions/IPolynomExpression.hpp"
+#include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"

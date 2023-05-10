@@ -1,8 +1,8 @@
 #pragma once
 
-#include "fintamath/expressions/IBinaryExpression.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 
-#include "fintamath/expressions/ILogicNegatableExpression.hpp"
+#include "fintamath/expressions/interfaces/ILogicNegatableExpression.hpp"
 
 namespace fintamath {
 
