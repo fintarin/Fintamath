@@ -78,7 +78,7 @@ void IPolynomExpression::postSimplifyRec() {
   }
 }
 
-void IPolynomExpression::globalSimplifyRec() {
+void IPolynomExpression::simplifyRec() {
   size_t childrenSize = children.size();
   const SimplifyFunctionsVector functions = getFunctionsForSimplify();
 
@@ -99,7 +99,7 @@ void IPolynomExpression::globalSimplifyRec() {
   }
 
   if (children.size() != childrenSize) {
-    globalSimplifyRec();
+    simplifyRec();
   }
 }
 
@@ -129,7 +129,7 @@ ArgumentPtr IPolynomExpression::preSimplify() const {
 
   simpl->sort();
   simpl->preSimplifyRec();
-  simpl->globalSimplifyRec();
+  simpl->simplifyRec();
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
@@ -153,7 +153,7 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
 
   simpl->sort();
   simpl->postSimplifyRec();
-  simpl->globalSimplifyRec();
+  simpl->simplifyRec();
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();

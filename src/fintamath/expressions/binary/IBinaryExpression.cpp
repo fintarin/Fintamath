@@ -64,10 +64,8 @@ ArgumentPtr IBinaryExpression::simplify() const {
 }
 
 ArgumentPtr IBinaryExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const {
-  auto simpl = cast<IBinaryExpression>(clone());
-
   for (const auto &simplFunc : simplFuncs) {
-    if (auto res = simplFunc(simpl->lhsChild, simpl->rhsChild)) {
+    if (auto res = simplFunc(lhsChild, rhsChild)) {
       return res;
     }
   }

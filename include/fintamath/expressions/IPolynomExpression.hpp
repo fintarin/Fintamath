@@ -57,9 +57,7 @@ private:
 
   void postSimplifyRec();
 
-  void globalSimplifyRec();
-
-  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const;
+  void simplifyRec();
 
   static ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, const ArgumentPtr &lhs,
                                           const ArgumentPtr &rhs);
