@@ -65,7 +65,7 @@ ArgumentPtr IBinaryExpression::simplify() const {
 
 ArgumentPtr IBinaryExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const {
   for (const auto &simplFunc : simplFuncs) {
-    if (auto res = simplFunc(lhsChild, rhsChild)) {
+    if (auto res = simplFunc(*func, lhsChild, rhsChild)) {
       return res;
     }
   }

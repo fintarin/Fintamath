@@ -25,7 +25,8 @@ IntegralExpression::SimplifyFunctionsVector IntegralExpression::getFunctionsForP
   return simplifyFunctions;
 }
 
-ArgumentPtr IntegralExpression::integralSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs,
+                                                 const ArgumentPtr &rhs) {
   // TODO: remove this and implement derivative with rhs !is Variable
   if (!is<Variable>(rhs)) {
     throw InvalidInputFunctionException(Integral().toString(), {lhs->toString(), rhs->toString()});

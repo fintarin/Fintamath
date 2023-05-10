@@ -33,7 +33,8 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-ArgumentPtr DivExpression::zeroSimplify(const ArgumentPtr &lhs, const ArgumentPtr & /*rhs*/) {
+ArgumentPtr DivExpression::zeroSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs,
+                                        const ArgumentPtr & /*rhs*/) {
   if (auto lhsInt = cast<Integer>(lhs); lhsInt && *lhsInt == ZERO) {
     return lhs;
   }
@@ -41,7 +42,7 @@ ArgumentPtr DivExpression::zeroSimplify(const ArgumentPtr &lhs, const ArgumentPt
   return {};
 }
 
-ArgumentPtr DivExpression::numSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*rhs == ZERO) {
     throw UndefinedBinaryOperatorException(Div().toString(), lhs->toString(), rhs->toString());
   }
@@ -53,7 +54,7 @@ ArgumentPtr DivExpression::numSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   return {};
 }
 
-ArgumentPtr DivExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentsPtrVector numeratorChildren;
   ArgumentsPtrVector denominatorChildren;
 
@@ -100,7 +101,7 @@ ArgumentPtr DivExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   return makeFunctionExpression(Div(), numerator, denominator);
 }
 
-ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentsPtrVector lhsChildren;
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
@@ -169,7 +170,7 @@ ArgumentPtr DivExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   return {};
 }
 
-ArgumentPtr DivExpression::sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto res = sumMulSimplify(lhs, rhs)) {
     simplifyChild(res);
     return res;

@@ -50,7 +50,7 @@ LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-ArgumentPtr LogExpression::numSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr LogExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == ONE) {
     throw UndefinedFunctionException(Log().toString(), {lhs->toString(), rhs->toString()});
   }
@@ -74,7 +74,7 @@ ArgumentPtr LogExpression::numSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   return {};
 }
 
-ArgumentPtr LogExpression::equalSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr LogExpression::equalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == *rhs) {
     return ONE.clone();
   }
@@ -82,7 +82,7 @@ ArgumentPtr LogExpression::equalSimplify(const ArgumentPtr &lhs, const ArgumentP
   return {};
 }
 
-ArgumentPtr LogExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr LogExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
     return makeFunctionExpression(Mul(), rhsExpr->getChildren().back(),
                                   makeRawFunctionExpression(Log(), lhs, rhsExpr->getChildren().front()));

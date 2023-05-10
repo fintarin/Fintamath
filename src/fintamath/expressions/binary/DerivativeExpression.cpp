@@ -20,7 +20,8 @@ DerivativeExpression::SimplifyFunctionsVector DerivativeExpression::getFunctions
   return simplifyFunctions;
 }
 
-ArgumentPtr DerivativeExpression::derivativeSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DerivativeExpression::derivativeSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs,
+                                                     const ArgumentPtr &rhs) {
   // TODO: remove this and implement derivative with rhs !is Variable
   if (!is<Variable>(rhs)) {
     throw InvalidInputFunctionException(Derivative().toString(), {lhs->toString(), rhs->toString()});
