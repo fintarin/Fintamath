@@ -26,7 +26,7 @@ public:
 
   ~Real() override;
 
-  explicit Real(const boost::multiprecision::cpp_dec_float_100 &inBackend);
+  explicit Real(boost::multiprecision::cpp_dec_float_100 inBackend);
 
   explicit Real(std::string str);
 

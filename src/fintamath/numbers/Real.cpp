@@ -32,7 +32,7 @@ Real &Real::operator=(Real &&rhs) noexcept = default;
 
 Real::~Real() = default;
 
-Real::Real(const cpp_dec_float_100 &inBackend) : backend(inBackend) {
+Real::Real(cpp_dec_float_100 inBackend) : backend(std::move(inBackend)) {
 }
 
 Real::Real(std::string str) : Real() {
@@ -70,11 +70,11 @@ Real::Real(std::string str) : Real() {
   backend.assign(str);
 }
 
-Real::Real(const Rational &val) : Real() {
+Real::Real(const Rational &val) {
   *this = Real(val.numerator()) / Real(val.denominator());
 }
 
-Real::Real(const Integer &val) : Real(val.toString()) {
+Real::Real(const Integer &val) : backend(val.getBackend()) {
 }
 
 Real::Real(double val) : backend(val) {
