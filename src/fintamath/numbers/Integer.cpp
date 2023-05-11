@@ -7,42 +7,27 @@
 
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
-#include "fintamath/numbers/NumberImpls.hpp"
+
+using namespace boost::multiprecision;
 
 namespace fintamath {
 
-Integer::Integer() {
-  impl = std::make_unique<IntegerImpl>();
-}
+Integer::Integer() = default;
 
-Integer::Integer(const Integer &rhs) : Integer() {
-  impl->v.assign(rhs.impl->v);
-}
+Integer::Integer(const Integer &rhs) = default;
 
-Integer::Integer(Integer &&rhs) noexcept : Integer() {
-  impl = std::move(rhs.impl);
-}
+Integer::Integer(Integer &&rhs) noexcept = default;
 
-Integer &Integer::operator=(const Integer &rhs) {
-  if (this != &rhs) {
-    impl = std::make_unique<IntegerImpl>(*rhs.impl);
-  }
-  return *this;
-}
+Integer &Integer::operator=(const Integer &rhs) = default;
 
-Integer &Integer::operator=(Integer &&rhs) noexcept {
-  if (this != &rhs) {
-    impl = std::move(rhs.impl);
-  }
-  return *this;
-}
+Integer &Integer::operator=(Integer &&rhs) noexcept = default;
 
 Integer::~Integer() = default;
 
-Integer::Integer(const IntegerImpl &inImpl) : impl(std::make_unique<IntegerImpl>(inImpl)) {
+Integer::Integer(cpp_int inBackend) : backend(std::move(inBackend)) {
 }
 
-Integer::Integer(std::string str) : Integer() {
+Integer::Integer(std::string str) {
   if (str.empty()) {
     throw InvalidInputException(str);
   }
@@ -61,57 +46,56 @@ Integer::Integer(std::string str) : Integer() {
   }
 
   try {
-    impl->v.assign(str);
+    backend.assign(str);
   }
   catch (const std::runtime_error &) {
     throw InvalidInputException(str);
   }
 }
 
-Integer::Integer(int64_t val) : Integer() {
-  impl->v.assign(val);
+Integer::Integer(int64_t val) : backend(val) {
 }
 
 std::string Integer::toString() const {
-  return impl->v.str();
+  return backend.str();
 }
 
 int Integer::sign() const {
-  return impl->v.sign();
+  return backend.sign();
 }
 
 Integer::operator long long() const {
-  return impl->v.convert_to<long long>();
+  return backend.convert_to<long long>();
 }
 
-const std::unique_ptr<IntegerImpl> &Integer::getImpl() const {
-  return impl;
+const boost::multiprecision::cpp_int &Integer::getBackend() const {
+  return backend;
 }
 
 bool Integer::equals(const Integer &rhs) const {
-  return impl->v == rhs.impl->v;
+  return backend == rhs.backend;
 }
 
 bool Integer::less(const Integer &rhs) const {
-  return impl->v < rhs.impl->v;
+  return backend < rhs.backend;
 }
 
 bool Integer::more(const Integer &rhs) const {
-  return impl->v > rhs.impl->v;
+  return backend > rhs.backend;
 }
 
 Integer &Integer::add(const Integer &rhs) {
-  impl->v += rhs.impl->v;
+  backend += rhs.backend;
   return *this;
 }
 
 Integer &Integer::substract(const Integer &rhs) {
-  impl->v -= rhs.impl->v;
+  backend -= rhs.backend;
   return *this;
 }
 
 Integer &Integer::multiply(const Integer &rhs) {
-  impl->v *= rhs.impl->v;
+  backend *= rhs.backend;
   return *this;
 }
 
@@ -120,7 +104,7 @@ Integer &Integer::divide(const Integer &rhs) {
     throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
   }
 
-  impl->v /= rhs.impl->v;
+  backend /= rhs.backend;
   return *this;
 }
 
@@ -129,28 +113,28 @@ Integer &Integer::mod(const Integer &rhs) {
     throw UndefinedBinaryOperatorException("mod", toString(), rhs.toString());
   }
 
-  impl->v %= rhs.impl->v;
+  backend %= rhs.backend;
   return *this;
 }
 
 Integer &Integer::bitAnd(const Integer &rhs) {
-  impl->v &= rhs.impl->v;
+  backend &= rhs.backend;
   return *this;
 }
 
 Integer &Integer::bitOr(const Integer &rhs) {
-  impl->v |= rhs.impl->v;
+  backend |= rhs.backend;
   return *this;
 }
 
 Integer &Integer::bitXor(const Integer &rhs) {
-  impl->v ^= rhs.impl->v;
+  backend ^= rhs.backend;
   return *this;
 }
 
 Integer &Integer::bitLeftShift(const Integer &rhs) {
   try {
-    impl->v <<= int64_t(rhs.impl->v);
+    backend <<= int64_t(rhs.backend);
     return *this;
   }
   catch (...) {
@@ -160,7 +144,7 @@ Integer &Integer::bitLeftShift(const Integer &rhs) {
 
 Integer &Integer::bitRightShift(const Integer &rhs) {
   try {
-    impl->v >>= int64_t(rhs.impl->v);
+    backend >>= int64_t(rhs.backend);
     return *this;
   }
   catch (...) {
@@ -169,22 +153,23 @@ Integer &Integer::bitRightShift(const Integer &rhs) {
 }
 
 Integer &Integer::bitNot() {
-  impl->v = ~impl->v;
+  backend = ~backend;
   return *this;
 }
 
 Integer &Integer::negate() {
-  impl->v = -impl->v;
+  backend = -backend;
   return *this;
 }
 
 Integer &Integer::increase() {
-  ++impl->v;
+  ++backend;
   return *this;
 }
 
 Integer &Integer::decrease() {
-  --impl->v;
+  --backend;
   return *this;
 }
+
 }

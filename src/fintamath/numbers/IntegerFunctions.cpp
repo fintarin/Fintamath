@@ -3,7 +3,8 @@
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
-#include "fintamath/numbers/NumberImpls.hpp"
+
+using namespace boost::multiprecision;
 
 namespace fintamath {
 
@@ -12,11 +13,11 @@ Integer abs(const Integer &rhs) {
 }
 
 Integer gcd(const Integer &lhs, const Integer &rhs) {
-  return Integer(gcd(lhs.getImpl()->v, rhs.getImpl()->v));
+  return Integer(gcd(lhs.getBackend(), rhs.getBackend()));
 }
 
 Integer lcm(const Integer &lhs, const Integer &rhs) {
-  return Integer(lcm(lhs.getImpl()->v, rhs.getImpl()->v));
+  return Integer(lcm(lhs.getBackend(), rhs.getBackend()));
 }
 
 Integer intSqrt(const Integer &rhs) {
@@ -25,8 +26,12 @@ Integer intSqrt(const Integer &rhs) {
 }
 
 Integer intSqrt(const Integer &rhs, Integer &remainder) {
+  cpp_int remainderBackend;
+
   try {
-    return IntegerImpl(sqrt(rhs.getImpl()->v, remainder.getImpl()->v));
+    Integer res = Integer(sqrt(rhs.getBackend(), remainderBackend));
+    remainder = Integer(std::move(remainderBackend));
+    return res;
   }
   catch (const std::domain_error &) {
     throw UndefinedFunctionException("sqrt", {rhs.toString()});
@@ -38,7 +43,7 @@ Integer pow(const Integer &lhs, uint32_t rhs) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), std::to_string(rhs));
   }
 
-  return IntegerImpl(pow(lhs.getImpl()->v, rhs));
+  return Integer(pow(lhs.getBackend(), rhs));
 }
 
 // Use binary splitting.
@@ -52,7 +57,7 @@ Integer factorialRec(const Integer &left, const Integer &right) {
     return left * right;
   }
 
-  Integer mid = (left + right) / 2;
+  Integer mid( (left + right) / 2);
   return factorialRec(left, mid) * factorialRec(mid + 1, right);
 }
 

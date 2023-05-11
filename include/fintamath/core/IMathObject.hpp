@@ -14,16 +14,6 @@ namespace fintamath {
 
 class IMathObject {
 public:
-  IMathObject() = default;
-
-  IMathObject(const IMathObject & /*rhs*/) = default;
-
-  IMathObject(IMathObject && /*rhs*/) noexcept = delete;
-
-  IMathObject &operator=(const IMathObject & /*rhs*/) = default;
-
-  IMathObject &operator=(IMathObject && /*rhs*/) noexcept = delete;
-
   virtual ~IMathObject() = default;
 
   virtual std::unique_ptr<IMathObject> clone() const = 0;

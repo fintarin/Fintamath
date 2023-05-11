@@ -2,12 +2,12 @@
 
 #include <memory>
 
+#include <boost/multiprecision/cpp_int.hpp>
+
 #include "fintamath/core/IIntegral.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
-
-struct IntegerImpl;
 
 class Integer : public INumberCRTP<Integer>, public IIntegralCRTP<Integer>, public IIncrementalCRTP<Integer> {
 public:
@@ -23,7 +23,7 @@ public:
 
   ~Integer() override;
 
-  Integer(const IntegerImpl &inImpl);
+  explicit Integer(boost::multiprecision::cpp_int inBackend);
 
   explicit Integer(std::string str);
 
@@ -35,7 +35,7 @@ public:
 
   operator long long() const;
 
-  const std::unique_ptr<IntegerImpl> &getImpl() const;
+  const boost::multiprecision::cpp_int &getBackend() const;
 
 protected:
   bool equals(const Integer &rhs) const override;
@@ -73,7 +73,7 @@ protected:
   Integer &decrease() override;
 
 private:
-  std::unique_ptr<IntegerImpl> impl;
+  boost::multiprecision::cpp_int backend;
 };
 
 }

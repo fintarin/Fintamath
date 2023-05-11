@@ -11,21 +11,6 @@ using namespace boost::multiprecision;
 
 namespace fintamath {
 
-struct IntegerImpl {
-  using Backend = cpp_int;
-
-  Backend v;
-
-  IntegerImpl() = default;
-
-  IntegerImpl(Backend inV) : v(std::move(inV)) {
-  }
-
-  operator Backend() const {
-    return v;
-  }
-};
-
 struct RealImpl {
   using Backend = number<cpp_dec_float<FINTAMATH_DEFAULT_PRECISION>>;
 
