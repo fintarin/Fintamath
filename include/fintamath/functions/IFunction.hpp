@@ -180,9 +180,9 @@ private:
   }
 
 private:
-  const bool isTypeAnyFunc;
+  bool isTypeAnyFunc;
 
-  const bool isNonExressionEvaluatableFunc;
+  bool isNonExressionEvaluatableFunc;
 };
 
 }

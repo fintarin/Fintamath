@@ -64,9 +64,9 @@ public:
   }
 
 private:
-  const IOperator::Priority priority;
+  IOperator::Priority priority;
 
-  const bool isAssociativeOper;
+  bool isAssociativeOper;
 };
 
 }
