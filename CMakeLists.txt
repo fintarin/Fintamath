@@ -43,7 +43,7 @@ target_include_directories(
   PUBLIC include
   PRIVATE src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Boost::multiprecision)
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::multiprecision)
 
 include(cmake/CompilerWarnings.cmake)
 include(cmake/Coverage.cmake)
