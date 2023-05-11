@@ -3,7 +3,6 @@
 #include <regex>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -22,7 +21,7 @@ Variable::Variable(std::string inName) {
 }
 
 Variable::Variable(std::string inName, Integer inIndex) : Variable(std::move(inName)) {
-  if (inIndex <= ZERO) {
+  if (inIndex <= 0) {
     throw InvalidInputException(inName + "_" + inIndex.toString());
   }
 
@@ -30,7 +29,7 @@ Variable::Variable(std::string inName, Integer inIndex) : Variable(std::move(inN
 }
 
 std::string Variable::toString() const {
-  return name + (index != ZERO ? "_" + index.toString() : "");
+  return name + (index != 0 ? "_" + index.toString() : "");
 }
 
 }

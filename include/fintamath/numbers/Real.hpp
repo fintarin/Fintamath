@@ -50,10 +50,6 @@ public:
 
   const boost::multiprecision::cpp_dec_float_100 &getBackend() const;
 
-  static Real getE();
-
-  static Real getPi();
-
 protected:
   bool equals(const Real &rhs) const override;
 

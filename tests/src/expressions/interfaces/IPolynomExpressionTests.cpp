@@ -3,7 +3,6 @@
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
 #include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace fintamath;
 
@@ -21,51 +20,51 @@ protected:
 };
 
 TEST(IPolynomExpressionTests, toStringTest) {
-  TestPolynomExpression expr({ONE.clone(), TWO.clone(), THREE.clone()});
+  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
   EXPECT_EQ(expr.toString(), "1 + 2 + 3");
 }
 
 TEST(IPolynomExpressionTests, getFunctionTest) {
-  TestPolynomExpression expr({ONE.clone(), TWO.clone(), THREE.clone()});
+  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
 TEST(IPolynomExpressionTests, getChildren) {
-  TestPolynomExpression expr({ONE.clone(), TWO.clone(), THREE.clone()});
+  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
   EXPECT_EQ(expr.getChildren().size(), 3);
-  EXPECT_EQ(*expr.getChildren()[0], ONE);
-  EXPECT_EQ(*expr.getChildren()[1], TWO);
-  EXPECT_EQ(*expr.getChildren()[2], THREE);
+  EXPECT_EQ(*expr.getChildren()[0], Integer(1));
+  EXPECT_EQ(*expr.getChildren()[1], Integer(2));
+  EXPECT_EQ(*expr.getChildren()[2], Integer(3));
 }
 
 TEST(IPolynomExpressionTests, setChildren) {
-  TestPolynomExpression expr({ONE.clone(), TWO.clone(), THREE.clone()});
+  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
 
-  expr.setChildren({ZERO.clone()});
+  expr.setChildren({std::make_shared<Integer>(0)});
   EXPECT_EQ(expr.getChildren().size(), 1);
-  EXPECT_EQ(*expr.getChildren().back(), ZERO);
+  EXPECT_EQ(*expr.getChildren().back(), Integer(0));
 
-  expr.setChildren({ZERO.clone(), ZERO.clone()});
+  expr.setChildren({std::make_shared<Integer>(0), std::make_shared<Integer>(0)});
   EXPECT_EQ(expr.getChildren().size(), 2);
-  EXPECT_EQ(*expr.getChildren().front(), ZERO);
-  EXPECT_EQ(*expr.getChildren().back(), ZERO);
+  EXPECT_EQ(*expr.getChildren().front(), Integer(0));
+  EXPECT_EQ(*expr.getChildren().back(), Integer(0));
 
-  expr.setChildren({ZERO.clone(), ZERO.clone(), ZERO.clone()});
+  expr.setChildren({std::make_shared<Integer>(0), std::make_shared<Integer>(0), std::make_shared<Integer>(0)});
   EXPECT_EQ(expr.getChildren().size(), 3);
-  EXPECT_EQ(*expr.getChildren()[0], ZERO);
-  EXPECT_EQ(*expr.getChildren()[1], ZERO);
-  EXPECT_EQ(*expr.getChildren()[2], ZERO);
+  EXPECT_EQ(*expr.getChildren()[0], Integer(0));
+  EXPECT_EQ(*expr.getChildren()[1], Integer(0));
+  EXPECT_EQ(*expr.getChildren()[2], Integer(0));
 
   EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
 }
 
 TEST(IPolynomExpressionTests, addElement) {
-  TestPolynomExpression expr({ONE.clone(), TWO.clone(), THREE.clone()});
-  expr.addElement(ZERO.clone());
+  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  expr.addElement(std::make_shared<Integer>(0));
   EXPECT_EQ(expr.toString(), "1 + 2 + 3 + 0");
 }
 
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {
-  TestPolynomExpression expr({ONE.clone(), TWO.clone(), Variable("a").clone()});
+  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), Variable("a").clone()});
   EXPECT_EQ(expr.toMinimalObject()->toString(), "a + 3");
 }

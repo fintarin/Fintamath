@@ -2,7 +2,6 @@
 
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/RationalFunctions.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -36,7 +35,7 @@ std::unique_ptr<INumber> sqrt(const Integer &rhs) {
   Integer remainder;
 
   auto res = std::make_unique<Integer>(intSqrt(rhs, remainder));
-  if (remainder == ZERO) {
+  if (remainder == 0) {
     return res;
   }
 
@@ -47,12 +46,12 @@ std::unique_ptr<INumber> sqrt(const Rational &rhs) {
   Integer remainder;
 
   Integer numerator = intSqrt(rhs.numerator(), remainder);
-  if (remainder != ZERO) {
+  if (remainder != 0) {
     return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
   }
 
   Integer denominator = intSqrt(rhs.denominator(), remainder);
-  if (remainder != ZERO) {
+  if (remainder != 0) {
     return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
   }
 
@@ -85,18 +84,18 @@ std::unique_ptr<INumber> sqrt(const INumber &rhs) {
 // https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
 inline std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
-  if (lhs == ZERO && rhs == ZERO) {
+  if (lhs == Integer(0) && rhs == 0) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
-  if (rhs < ZERO) {
-    return pow(*(ONE / cast<INumber>(lhs)), -rhs);
+  if (rhs < 0) {
+    return pow(*(Integer(1) / cast<INumber>(lhs)), -rhs);
   }
 
-  std::unique_ptr<INumber> res = std::make_unique<Integer>(ONE);
+  std::unique_ptr<INumber> res = std::make_unique<Integer>(1);
   std::unique_ptr<INumber> sqr = cast<INumber>(lhs.clone());
 
-  while (rhs != ZERO) {
+  while (rhs != 0) {
     if ((*(rhs.toString().end() - 1) - '0') % 2 == 0) {
       rhs /= 2;
       sqr = (*sqr) * (*sqr);
@@ -115,11 +114,11 @@ std::unique_ptr<INumber> pow(const Lhs &lhs, const Rational &rhs) {
   const Integer &numerator = rhs.numerator();
   const Integer &denominator = rhs.denominator();
 
-  if (denominator == ONE) {
+  if (denominator == 1) {
     return pow(lhs, numerator);
   }
 
-  if (denominator == TWO) {
+  if (denominator == 2) {
     return sqrt(*pow(lhs, numerator));
   }
 

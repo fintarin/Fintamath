@@ -4,7 +4,6 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -110,7 +109,7 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
     }
   }
 
-  if (const auto comp = cast<IComparable>(rhs); comp && *comp < ZERO) {
+  if (const auto comp = cast<IComparable>(rhs); comp && *comp < Integer(0)) {
     return putInBrackets(result) + oper.toString();
   }
 

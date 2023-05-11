@@ -4,7 +4,6 @@
 
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
@@ -31,11 +30,11 @@ TEST(TanTests, callTest) {
             "-3.3805150062465856369827058794473439087095692082854598771768209809183460102012061");
   EXPECT_EQ(f(Rational(1, 10))->toString(),
             "0.10033467208545054505808004578111153681900480457644204002220806579803211288567387");
-  EXPECT_EQ(f(PI_NUM / 4)->toString(), "1");
+  EXPECT_EQ(f(getPi() / 4)->toString(), "1");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "tan(a)");
 
-  EXPECT_THROW(f(PI_NUM / 2), UndefinedFunctionException);
+  EXPECT_THROW(f(getPi() / 2), UndefinedFunctionException);
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

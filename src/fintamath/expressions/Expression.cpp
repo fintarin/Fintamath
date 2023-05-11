@@ -13,11 +13,11 @@
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
-Expression::Expression() : child(ZERO.clone()) {
+Expression::Expression() : child(std::make_shared<Integer>(0)) {
 }
 
 Expression::Expression(const std::string &str) : Expression(tokensToTerms(Tokenizer::tokenize(str))) {

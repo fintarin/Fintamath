@@ -2,7 +2,6 @@
 
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace boost::multiprecision;
 
@@ -137,7 +136,7 @@ Real atan(const Real &rhs) {
 }
 
 Real acot(const Real &rhs) {
-  Real res = PI_NUM / 2;
+  Real res = getPi() / 2;
 
   if (rhs < 0) {
     res = -res;
@@ -196,6 +195,14 @@ Real acoth(const Real &rhs) {
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("acoth", {rhs.toString()});
   }
+}
+
+Real getE() {
+  return Real(cpp_dec_float_100(default_ops::get_constant_e<cpp_dec_float_100::backend_type>()));
+}
+
+Real getPi() {
+  return Real(cpp_dec_float_100(default_ops::get_constant_pi<cpp_dec_float_100::backend_type>()));
 }
 
 }

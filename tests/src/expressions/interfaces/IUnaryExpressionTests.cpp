@@ -3,7 +3,6 @@
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 
 #include "fintamath/functions/powers/Sqrt.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace fintamath;
 
@@ -16,30 +15,30 @@ public:
 };
 
 TEST(IUnaryExpressionTests, toStringTest) {
-  TestUnaryExpression expr(ONE.clone());
+  TestUnaryExpression expr(std::make_shared<Integer>(1));
   EXPECT_EQ(expr.toString(), "sqrt(1)");
 }
 
 TEST(IUnaryExpressionTests, getFunctionTest) {
-  TestUnaryExpression expr(ONE.clone());
+  TestUnaryExpression expr(std::make_shared<Integer>(1));
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
 TEST(IUnaryExpressionTests, getChildren) {
-  TestUnaryExpression expr(ONE.clone());
+  TestUnaryExpression expr(std::make_shared<Integer>(1));
   EXPECT_EQ(expr.getChildren().size(), 1);
-  EXPECT_EQ(*expr.getChildren().front(), ONE);
+  EXPECT_EQ(*expr.getChildren().front(), Integer(1));
 }
 
 TEST(IUnaryExpressionTests, setChildren) {
-  TestUnaryExpression expr(ONE.clone());
+  TestUnaryExpression expr(std::make_shared<Integer>(1));
 
-  expr.setChildren({ZERO.clone()});
+  expr.setChildren({std::make_shared<Integer>(0)});
   EXPECT_EQ(expr.getChildren().size(), 1);
-  EXPECT_EQ(*expr.getChildren().front(), ZERO);
+  EXPECT_EQ(*expr.getChildren().front(), Integer(0));
 
   EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
-  EXPECT_THROW(expr.setChildren({ONE.clone(), ONE.clone()}), InvalidInputFunctionException);
+  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1)}), InvalidInputFunctionException);
 }
 
 TEST(IUnaryExpressionTests, toMinimalObjectTest) {

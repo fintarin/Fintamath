@@ -5,7 +5,6 @@
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -30,10 +29,10 @@ ArgumentPtr DerivativeExpression::derivativeSimplify(const IFunction & /*func*/,
   ArgumentPtr res;
 
   if (is<INumber>(lhs) || is<IConstant>(lhs)) {
-    res = ZERO.clone();
+    res = std::make_shared<Integer>(0);
   }
   else if (is<Variable>(lhs) && *lhs == *rhs) {
-    res = ONE.clone();
+    res = std::make_shared<Integer>(1);
   }
 
   return res;

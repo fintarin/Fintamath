@@ -68,7 +68,6 @@
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -259,11 +258,11 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Lb>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<LogExpression>(TWO.clone(), args.front());
+      return std::make_shared<LogExpression>(std::make_shared<Integer>(2), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Lg>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<LogExpression>(TEN.clone(), args.front());
+      return std::make_shared<LogExpression>(std::make_shared<Integer>(10), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Exp>([](const ArgumentsPtrVector &args) {

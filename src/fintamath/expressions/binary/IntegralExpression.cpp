@@ -10,7 +10,6 @@
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -38,7 +37,8 @@ ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, con
     res = makeFunctionExpression(Mul(), lhs, rhs);
   }
   else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
-    res = makeFunctionExpression(Div(), makeRawFunctionExpression(Pow(), lhs, TWO.clone()), TWO.clone());
+    res = makeFunctionExpression(Div(), makeRawFunctionExpression(Pow(), lhs, std::make_shared<Integer>(2)),
+                                 std::make_shared<Integer>(2));
   }
 
   // TODO: res + integral constant

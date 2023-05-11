@@ -14,7 +14,6 @@
 #include "fintamath/functions/comparison/Neqv.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -53,9 +52,9 @@ ArgumentPtr CompExpression::preSimplify() const {
   }
 
   if (!simplExpr->isSolution) {
-    if (!is<Integer>(rhsChild) || *rhsChild != ZERO) {
+    if (!is<Integer>(rhsChild) || *rhsChild != Integer(0)) {
       ArgumentPtr resLhs = makeFunctionExpression(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
-      return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, ZERO.clone());
+      return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
     }
   }
 
@@ -91,7 +90,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
     if (const auto polynomFirstChildExpr = cast<IExpression>(polynomFirstChild)) {
       if (is<Neg>(polynomFirstChildExpr->getFunction())) {
-        dividerNum = cast<INumber>(NEG_ONE.clone());
+        dividerNum = cast<INumber>(std::make_shared<Integer>(-1));
       }
       else if (is<Mul>(polynomFirstChildExpr->getFunction())) {
         dividerNum = cast<INumber>(polynomFirstChildExpr->getChildren().front());
@@ -107,7 +106,7 @@ ArgumentPtr CompExpression::postSimplify() const {
       ArgumentPtr newRhs = simplExpr->rhsChild;
       std::shared_ptr<IFunction> newFunc;
 
-      if (*dividerNum < ZERO) {
+      if (*dividerNum < Integer(0)) {
         newFunc = cast<IFunction>(getOppositeFunction(*func));
       }
       else {

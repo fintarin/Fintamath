@@ -6,7 +6,6 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace fintamath;
 
@@ -92,7 +91,9 @@ TEST(ExpressionUtilsTests, hasVariablesTest) {
 }
 
 TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsTest) {
-  auto expr1 = makeFunctionExpression(Add(), {ONE, TWO});
+  Integer one = 1;
+  Integer two = 2;
+  auto expr1 = makeFunctionExpression(Add(), {one, two});
   EXPECT_EQ(expr1->toString(), "3");
   EXPECT_TRUE(is<INumber>(expr1));
 
@@ -103,7 +104,9 @@ TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsTest) {
 }
 
 TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromRefsTest) {
-  auto expr1 = makeRawFunctionExpression(Add(), {ONE, TWO});
+  Integer one = 1;
+  Integer two = 2;
+  auto expr1 = makeRawFunctionExpression(Add(), {one, two});
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));
 
@@ -114,7 +117,7 @@ TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromRefsTest) {
 }
 
 TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrsTest) {
-  auto expr1 = makeFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
+  auto expr1 = makeFunctionExpression(Add(), {std::make_shared<Integer>(1), std::make_shared<Integer>(2)});
   EXPECT_EQ(expr1->toString(), "3");
   EXPECT_TRUE(is<INumber>(expr1));
 
@@ -126,7 +129,7 @@ TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrsTest) {
 }
 
 TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromPtrsTest) {
-  auto expr1 = makeRawFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
+  auto expr1 = makeRawFunctionExpression(Add(), {std::make_shared<Integer>(1), std::make_shared<Integer>(2)});
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));
   EXPECT_FALSE(is<Expression>(expr1));
@@ -139,7 +142,9 @@ TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromPtrsTest) {
 }
 
 TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsAnyArgsTest) {
-  auto expr1 = makeRawFunctionExpression(Add(), ONE, TWO);
+  Integer one = 1;
+  Integer two = 2;
+  auto expr1 = makeRawFunctionExpression(Add(), one, two);
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));
 
@@ -150,7 +155,9 @@ TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsAnyArgsTest) {
 }
 
 TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromRefsAnyArgsTest) {
-  auto expr1 = makeFunctionExpression(Add(), ONE, TWO);
+  Integer one = 1;
+  Integer two = 2;
+  auto expr1 = makeFunctionExpression(Add(), one, two);
   EXPECT_EQ(expr1->toString(), "3");
   EXPECT_TRUE(is<INumber>(expr1));
 
@@ -161,7 +168,7 @@ TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromRefsAnyArgsTest) {
 }
 
 TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrsArgsTest) {
-  auto expr1 = makeFunctionExpression(Add(), ONE.clone(), TWO.clone());
+  auto expr1 = makeFunctionExpression(Add(), std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr1->toString(), "3");
   EXPECT_TRUE(is<INumber>(expr1));
 
@@ -173,7 +180,7 @@ TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrsArgsTest) {
 }
 
 TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromPtrsAnyArgsTest) {
-  auto expr1 = makeRawFunctionExpression(Add(), ONE.clone(), TWO.clone());
+  auto expr1 = makeRawFunctionExpression(Add(), std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));
   EXPECT_FALSE(is<Expression>(expr1));

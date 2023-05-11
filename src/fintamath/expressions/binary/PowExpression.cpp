@@ -10,7 +10,7 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 
@@ -23,8 +23,8 @@ std::string PowExpression::toString() const {
     const Integer &numerator = val->numerator();
     const Integer &denominator = val->denominator();
 
-    if (denominator == TWO) {
-      if (numerator == ONE) {
+    if (denominator == 2) {
+      if (numerator == 1) {
         return functionToString(Sqrt(), {lhsChild});
       }
 
@@ -178,7 +178,7 @@ ArgumentPtr PowExpression::preSimplify() const {
   }
 
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    auto lhsMul = makeRawFunctionExpression(Pow(), NEG_ONE.clone(), simplExpr->rhsChild);
+    auto lhsMul = makeRawFunctionExpression(Pow(), std::make_shared<Integer>(-1), simplExpr->rhsChild);
     auto rhsMul = makeRawFunctionExpression(Pow(), lhsExpr->getChildren()[0], simplExpr->rhsChild);
     return makeFunctionExpression(Mul(), lhsMul, rhsMul);
   }
@@ -204,26 +204,26 @@ ArgumentPtr PowExpression::postSimplify() const {
   auto rhsInt = cast<Integer>(simplExpr->rhsChild);
 
   if (rhsInt) {
-    if (*rhsInt == ZERO) {
-      return ONE.clone();
+    if (*rhsInt == 0) {
+      return std::make_shared<Integer>(1);
     }
 
-    if (*rhsInt == ONE || (lhsInt && *lhsInt == ONE)) {
+    if (*rhsInt == 1 || (lhsInt && *lhsInt == 1)) {
       return simplExpr->lhsChild;
     }
 
-    if (*rhsInt == NEG_ONE) {
-      return makeFunctionExpression(Div(), ONE.clone(), simplExpr->lhsChild);
+    if (*rhsInt == -1) {
+      return makeFunctionExpression(Div(), std::make_shared<Integer>(1), simplExpr->lhsChild);
     }
 
-    if (*rhsInt < ZERO) {
+    if (*rhsInt < 0) {
       return makeFunctionExpression(
-          Div(), ONE.clone(),
+          Div(), std::make_shared<Integer>(1),
           makeRawFunctionExpression(Pow(), simplExpr->lhsChild, makeRawFunctionExpression(Neg(), rhsInt)));
     }
   }
 
-  if (lhsInt && *lhsInt == ZERO) {
+  if (lhsInt && *lhsInt == 0) {
     return simplExpr->lhsChild;
   }
 

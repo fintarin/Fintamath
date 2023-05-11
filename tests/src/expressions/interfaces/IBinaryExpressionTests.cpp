@@ -3,7 +3,6 @@
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 
 #include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace fintamath;
 
@@ -17,39 +16,39 @@ public:
 };
 
 TEST(IBinaryExpressionTests, toStringTest) {
-  TestBinaryExpression expr(ONE.clone(), TWO.clone());
+  TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr.toString(), "1 + 2");
 }
 
 TEST(IBinaryExpressionTests, getFunctionTest) {
-  TestBinaryExpression expr(ONE.clone(), TWO.clone());
+  TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
 TEST(IBinaryExpressionTests, getChildren) {
-  TestBinaryExpression expr(ONE.clone(), TWO.clone());
+  TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr.getChildren().size(), 2);
-  EXPECT_EQ(*expr.getChildren().front(), ONE);
-  EXPECT_EQ(*expr.getChildren().back(), TWO);
+  EXPECT_EQ(*expr.getChildren().front(), Integer(1));
+  EXPECT_EQ(*expr.getChildren().back(), Integer(2));
 }
 
 TEST(IBinaryExpressionTests, setChildren) {
-  TestBinaryExpression expr(ONE.clone(), TWO.clone());
+  TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
 
-  expr.setChildren({ZERO.clone(), ZERO.clone()});
+  expr.setChildren({std::make_shared<Integer>(0), std::make_shared<Integer>(0)});
   EXPECT_EQ(expr.getChildren().size(), 2);
-  EXPECT_EQ(*expr.getChildren().front(), ZERO);
-  EXPECT_EQ(*expr.getChildren().back(), ZERO);
+  EXPECT_EQ(*expr.getChildren().front(), Integer(0));
+  EXPECT_EQ(*expr.getChildren().back(), Integer(0));
 
   EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
-  EXPECT_THROW(expr.setChildren({ONE.clone()}), InvalidInputFunctionException);
-  EXPECT_THROW(expr.setChildren({ONE.clone(), ONE.clone(), ONE.clone()}), InvalidInputFunctionException);
+  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1)}), InvalidInputFunctionException);
+  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1), std::make_shared<Integer>(1)}), InvalidInputFunctionException);
 }
 
 TEST(IBinaryExpressionTests, toMinimalObjectTest) {
-  TestBinaryExpression expr1(ONE.clone(), TWO.clone());
+  TestBinaryExpression expr1(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr1.toMinimalObject()->toString(), "3");
 
-  TestBinaryExpression expr2(ONE.clone(), Variable("a").clone());
+  TestBinaryExpression expr2(std::make_shared<Integer>(1), Variable("a").clone());
   EXPECT_EQ(expr2.toMinimalObject()->toString(), "1 + a");
 }

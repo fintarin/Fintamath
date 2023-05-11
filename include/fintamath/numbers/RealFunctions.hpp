@@ -52,4 +52,8 @@ Real atanh(const Real &rhs);
 
 Real acoth(const Real &rhs);
 
+Real getE();
+
+Real getPi();
+
 }

@@ -130,14 +130,6 @@ const cpp_dec_float_100 &Real::getBackend() const {
   return backend;
 }
 
-Real Real::getE() {
-  return Real(cpp_dec_float_100(default_ops::get_constant_e<cpp_dec_float_100::backend_type>()));
-}
-
-Real Real::getPi() {
-  return Real(cpp_dec_float_100(default_ops::get_constant_pi<cpp_dec_float_100::backend_type>()));
-}
-
 bool Real::equals(const Real &rhs) const {
   return (*this - rhs).isNearZero();
 }

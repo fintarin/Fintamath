@@ -57,7 +57,7 @@ Integer factorialRec(const Integer &left, const Integer &right) {
     return left * right;
   }
 
-  Integer mid( (left + right) / 2);
+  Integer mid((left + right) / 2);
   return factorialRec(left, mid) * factorialRec(mid + 1, right);
 }
 

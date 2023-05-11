@@ -4,12 +4,11 @@
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace fintamath;
 
 TEST(INegatableExpressionTests, invertTest) {
-  auto expr = cast<INegatableExpression>(makeFunctionExpression(Mul(), Variable("a").clone(), TWO.clone()));
+  auto expr = cast<INegatableExpression>(makeFunctionExpression(Mul(), Variable("a").clone(), std::make_shared<Integer>(2)));
 
   EXPECT_EQ(expr->toString(), "2 a");
   EXPECT_EQ(expr->negate()->toString(), "-2 a");

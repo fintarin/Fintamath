@@ -15,7 +15,6 @@
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -32,7 +31,8 @@ std::string LogExpression::toString() const {
 }
 
 ArgumentPtr LogExpression::negate() const {
-  return makeFunctionExpression(Log(), lhsChild, makeRawFunctionExpression(Div(), ONE.clone(), rhsChild));
+  return makeFunctionExpression(Log(), lhsChild,
+                                makeRawFunctionExpression(Div(), std::make_shared<Integer>(1), rhsChild));
 }
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() const {
@@ -51,7 +51,7 @@ LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPostSimplif
 }
 
 ArgumentPtr LogExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*lhs == ONE) {
+  if (*lhs == Integer(1)) {
     throw UndefinedFunctionException(Log().toString(), {lhs->toString(), rhs->toString()});
   }
 
@@ -60,11 +60,11 @@ ArgumentPtr LogExpression::numSimplify(const IFunction & /*func*/, const Argumen
   }
 
   if (Log().doArgsMatch({*lhs, *rhs})) {
-    if (*lhs == TWO) {
+    if (*lhs == Integer(2)) {
       return callFunction(Lb(), {rhs});
     }
 
-    if (*lhs == TEN) {
+    if (*lhs == Integer(10)) {
       return callFunction(Lg(), {rhs});
     }
 
@@ -76,7 +76,7 @@ ArgumentPtr LogExpression::numSimplify(const IFunction & /*func*/, const Argumen
 
 ArgumentPtr LogExpression::equalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == *rhs) {
-    return ONE.clone();
+    return std::make_shared<Integer>(1);
   }
 
   return {};
@@ -89,8 +89,9 @@ ArgumentPtr LogExpression::powSimplify(const IFunction & /*func*/, const Argumen
   }
 
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
-    return makeFunctionExpression(Mul(), makeRawFunctionExpression(Div(), ONE.clone(), lhsExpr->getChildren().back()),
-                                  makeRawFunctionExpression(Log(), lhsExpr->getChildren().front(), rhs));
+    return makeFunctionExpression(
+        Mul(), makeRawFunctionExpression(Div(), std::make_shared<Integer>(1), lhsExpr->getChildren().back()),
+        makeRawFunctionExpression(Log(), lhsExpr->getChildren().front(), rhs));
   }
 
   return {};

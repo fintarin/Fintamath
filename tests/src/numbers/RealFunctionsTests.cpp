@@ -4,7 +4,6 @@
 
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 using namespace fintamath;
 
@@ -123,7 +122,7 @@ TEST(RealFunctionsTests, tanTest) {
   EXPECT_EQ(tan(Real("1.5")).toString(),
             "14.101419947171719387646083651987756445659543577235861866123267586089696270414155");
 
-  EXPECT_THROW(tan(Real(PI_NUM / 2)), UndefinedFunctionException);
+  EXPECT_THROW(tan(Real(getPi() / 2)), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, cotTest) {
@@ -239,4 +238,12 @@ TEST(RealFunctionsTests, acothTest) {
   EXPECT_THROW(acoth(Real("-1")), UndefinedFunctionException);
   EXPECT_THROW(acoth(Real("0")), UndefinedFunctionException);
   EXPECT_THROW(acoth(Real("1")), UndefinedFunctionException);
+}
+
+TEST(RealFunctionsTests, getETest) {
+  EXPECT_EQ(getE().toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
+}
+
+TEST(RealFunctionsTests, getEPiTest) {
+  EXPECT_EQ(getPi().toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
 }

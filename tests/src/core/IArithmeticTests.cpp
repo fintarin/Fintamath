@@ -4,7 +4,6 @@
 
 #include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
@@ -196,22 +195,22 @@ TEST(IArithmeticTests, negateTest) {
 
 TEST(IArithmeticTests, multimethodsTest) {
   IArithmetic::addMultiAddFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
-    return cast<IArithmetic>(ZERO.clone());
+    return cast<IArithmetic>(std::make_unique<Integer>(0));
   });
-  EXPECT_EQ((TestArithmetic() + Integer(1))->toString(), ZERO.toString());
+  EXPECT_EQ(*(TestArithmetic() + Integer(1)), Integer(0));
 
   IArithmetic::addMultiSubFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
-    return cast<IArithmetic>(ZERO.clone());
+    return cast<IArithmetic>(std::make_unique<Integer>(0));
   });
-  EXPECT_EQ((TestArithmetic() - Integer(1))->toString(), ZERO.toString());
+  EXPECT_EQ(*(TestArithmetic() - Integer(1)), Integer(0));
 
   IArithmetic::addMultiMulFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
-    return cast<IArithmetic>(ZERO.clone());
+    return cast<IArithmetic>(std::make_unique<Integer>(0));
   });
-  EXPECT_EQ((TestArithmetic() * Integer(1))->toString(), ZERO.toString());
+  EXPECT_EQ(*(TestArithmetic() * Integer(1)), Integer(0));
 
   IArithmetic::addMultiDivFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
-    return cast<IArithmetic>(ZERO.clone());
+    return cast<IArithmetic>(std::make_unique<Integer>(0));
   });
-  EXPECT_EQ((TestArithmetic() / Integer(1))->toString(), ZERO.toString());
+  EXPECT_EQ(*(TestArithmetic() / Integer(1)), Integer(0));
 }

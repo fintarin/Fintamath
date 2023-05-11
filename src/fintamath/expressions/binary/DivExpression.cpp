@@ -8,7 +8,6 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -35,7 +34,7 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplif
 
 ArgumentPtr DivExpression::zeroSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs,
                                         const ArgumentPtr & /*rhs*/) {
-  if (auto lhsInt = cast<Integer>(lhs); lhsInt && *lhsInt == ZERO) {
+  if (auto lhsInt = cast<Integer>(lhs); lhsInt && *lhsInt == 0) {
     return lhs;
   }
 
@@ -43,12 +42,14 @@ ArgumentPtr DivExpression::zeroSimplify(const IFunction & /*func*/, const Argume
 }
 
 ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*rhs == ZERO) {
+  static const Integer one = 1;
+
+  if (*rhs == Integer(0)) {
     throw UndefinedBinaryOperatorException(Div().toString(), lhs->toString(), rhs->toString());
   }
 
-  if (Div().doArgsMatch({ONE, *rhs})) {
-    return makeFunctionExpression(Mul(), lhs, Div()(ONE, *rhs));
+  if (Div().doArgsMatch({one, *rhs})) {
+    return makeFunctionExpression(Mul(), lhs, Div()(one, *rhs));
   }
 
   return {};
@@ -285,7 +286,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
 
   ArgumentPtr divResult = makeFunctionExpression(Div(), lhs, rhsChildren.front());
 
-  if (const auto number = cast<INumber>(divResult); number && *number == ZERO) {
+  if (const auto number = cast<INumber>(divResult); number && *number == Integer(0)) {
     return {divResult, nullptr};
   }
 
@@ -306,7 +307,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
 
 ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == *rhs) {
-    return ONE.clone();
+    return std::make_shared<Integer>(1);
   }
 
   bool negation = false;
@@ -355,7 +356,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const Argume
     return {powExprChildren[1], powExprChildren[0]};
   }
 
-  return {ONE.clone(), rhs};
+  return {std::make_shared<Integer>(1), rhs};
 }
 
 ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {

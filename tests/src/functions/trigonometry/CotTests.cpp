@@ -4,7 +4,6 @@
 
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
@@ -30,8 +29,8 @@ TEST(CotTests, callTest) {
             "-0.29581291553274554042776716808248528606823479548153489533787776852195700157385241");
   EXPECT_EQ(f(Rational(1, 10))->toString(),
             "9.9666444232592378597941126892705939076302483291514474270066809743652342102525365");
-  EXPECT_EQ(f(PI_NUM / 2)->toString(), "0");
-  EXPECT_EQ(f(PI_NUM / 4)->toString(), "1");
+  EXPECT_EQ(f(getPi() / 2)->toString(), "0");
+  EXPECT_EQ(f(getPi() / 4)->toString(), "1");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "cot(a)");
 

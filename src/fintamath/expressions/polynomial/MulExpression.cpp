@@ -11,7 +11,6 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -19,16 +18,16 @@ MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExp
 }
 
 std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  if (!prevChild && *inChild == NEG_ONE) {
+  if (!prevChild && *inChild == Integer(-1)) {
     return Neg().toString();
   }
 
-  return (prevChild && *prevChild != NEG_ONE ? " " : "") + inChild->toString();
+  return (prevChild && *prevChild != Integer(-1) ? " " : "") + inChild->toString();
 }
 
 ArgumentPtr MulExpression::negate() const {
   MulExpression mulExpr = *this;
-  mulExpr.addElement(NEG_ONE.clone());
+  mulExpr.addElement(std::make_shared<Integer>(-1));
   return mulExpr.simplify();
 }
 
@@ -61,7 +60,7 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
     return {powExprChildren[1], powExprChildren[0]};
   }
 
-  return {ONE.clone(), rhsChild};
+  return {std::make_shared<Integer>(1), rhsChild};
 }
 
 ArgumentPtr MulExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
@@ -71,11 +70,11 @@ ArgumentPtr MulExpression::addRatesToValue(const ArgumentsPtrVector &rates, cons
 
 ArgumentPtr MulExpression::simplifyNumbers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                            const ArgumentPtr &rhsChild) {
-  if (*lhsChild == ZERO) {
+  if (*lhsChild == Integer(0)) {
     return lhsChild;
   }
 
-  if (*lhsChild == ONE) {
+  if (*lhsChild == Integer(1)) {
     return rhsChild;
   }
 
@@ -183,11 +182,11 @@ ArgumentPtr MulExpression::simplifyNegations(const IFunction & /*func*/, const A
   }
 
   if (lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    return makeRawFunctionExpression(Mul(), lhsExpr->getChildren().front(), NEG_ONE.clone(), rhsChild);
+    return makeRawFunctionExpression(Mul(), lhsExpr->getChildren().front(), std::make_shared<Integer>(-1), rhsChild);
   }
 
   if (rhsExpr && is<Neg>(rhsExpr->getFunction())) {
-    return makeRawFunctionExpression(Mul(), rhsExpr->getChildren().front(), NEG_ONE.clone(), lhsChild);
+    return makeRawFunctionExpression(Mul(), rhsExpr->getChildren().front(), std::make_shared<Integer>(-1), lhsChild);
   }
 
   return {};

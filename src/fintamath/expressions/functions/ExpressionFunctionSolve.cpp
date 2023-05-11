@@ -10,7 +10,6 @@
 #include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -98,7 +97,7 @@ Expression solve(const Expression &rhs) {
 
 std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var) {
   if (const auto elemVar = cast<Variable>(elem); elemVar && *elemVar == var) {
-    return cast<INumber>(ONE.clone());
+    return cast<INumber>(std::make_shared<Integer>(1));
   }
 
   if (const auto expr = cast<IExpression>(elem)) {
@@ -113,31 +112,31 @@ std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Va
     }
   }
 
-  return cast<INumber>(ZERO.clone());
+  return cast<INumber>(std::make_shared<Integer>(0));
 }
 
 std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var) {
   for (const auto &child : elem->getChildren()) {
-    if (auto powValue = getElementPower(child, var); *powValue != ZERO) {
+    if (auto powValue = getElementPower(child, var); *powValue != Integer(0)) {
       return powValue;
     }
   }
 
-  return cast<INumber>(ZERO.clone());
+  return cast<INumber>(std::make_shared<Integer>(0));
 }
 
 ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
   if (const auto elemExpr = cast<IExpression>(elem)) {
     if (is<Pow>(elemExpr->getFunction())) {
       if (hasVariable(elemExpr, var)) {
-        return ONE.clone();
+        return std::make_shared<Integer>(1);
       }
 
       return elem;
     }
 
     if (is<Mul>(elemExpr->getFunction())) {
-      ArgumentsPtrVector coeff{ONE.clone()};
+      ArgumentsPtrVector coeff{std::make_shared<Integer>(1)};
 
       for (const auto &child : elemExpr->getChildren()) {
         coeff.emplace_back(getElementRate(child, var));
@@ -148,7 +147,7 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
   }
 
   if (const auto elemVar = cast<Variable>(elem); elemVar && var == *elemVar) {
-    return ONE.clone();
+    return std::make_shared<Integer>(1);
   }
 
   return elem;
@@ -172,7 +171,7 @@ ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable
 
     if (int64_t(powerRates.size()) < intPow + 1) {
       while (int64_t(powerRates.size()) != intPow + 1) {
-        powerRates.emplace_back(ZERO.clone());
+        powerRates.emplace_back(std::make_shared<Integer>(0));
       }
     }
 

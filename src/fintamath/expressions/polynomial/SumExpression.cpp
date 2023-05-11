@@ -10,7 +10,6 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/NumberConstants.hpp"
 
 namespace fintamath {
 
@@ -104,10 +103,10 @@ SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForPostSimplif
 
 ArgumentPtr SumExpression::simplifyNumbers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                            const ArgumentPtr &rhsChild) {
-  if (*lhsChild == ZERO) {
+  if (*lhsChild == Integer(0)) {
     return rhsChild;
   }
-  if (*rhsChild == ZERO) {
+  if (*rhsChild == Integer(0)) {
     return lhsChild;
   }
 
@@ -118,12 +117,12 @@ ArgumentPtr SumExpression::simplifyNegations(const IFunction & /*func*/, const A
                                              const ArgumentPtr &rhsChild) {
   if (const auto lhsExpr = cast<IExpression>(lhsChild);
       lhsExpr && is<Neg>(lhsExpr->getFunction()) && *lhsExpr->getChildren().front() == *rhsChild) {
-    return ZERO.clone();
+    return std::make_shared<Integer>(0);
   }
 
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
       rhsExpr && is<Neg>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
-    return ZERO.clone();
+    return std::make_shared<Integer>(0);
   }
 
   return {};
@@ -233,12 +232,12 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const Argume
     }
   }
   else if (const auto negExpr = cast<IExpression>(inChild); negExpr && is<Neg>(negExpr->getFunction())) {
-    rate = NEG_ONE.clone();
+    rate = std::make_shared<Integer>(-1);
     value = negExpr->getChildren().front();
   }
 
   if (rate == nullptr || value == nullptr) {
-    rate = ONE.clone();
+    rate = std::make_shared<Integer>(1);
     value = inChild;
   }
 
