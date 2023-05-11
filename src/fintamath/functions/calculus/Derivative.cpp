@@ -3,7 +3,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Derivative::call(const ArgumentsRefVector &argsVect) const {
-  return makeFunctionExpression(*this, argsVect);
+  return makeExprSimpl(*this, argsVect);
 }
 
 }

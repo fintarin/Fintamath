@@ -8,7 +8,7 @@
 using namespace fintamath;
 
 TEST(INegatableExpressionTests, invertTest) {
-  auto expr = cast<INegatableExpression>(makeFunctionExpression(Mul(), Variable("a").clone(), std::make_shared<Integer>(2)));
+  auto expr = cast<INegatableExpression>(makeExprSimpl(Mul(), Variable("a").clone(), std::make_shared<Integer>(2)));
 
   EXPECT_EQ(expr->toString(), "2 a");
   EXPECT_EQ(expr->negate()->toString(), "-2 a");

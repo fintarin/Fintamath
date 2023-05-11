@@ -132,13 +132,13 @@ private:
   static ArgumentPtr preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
                                           bool shouldSimplify);
 
-  friend std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+  friend std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &func, const ArgumentsRefVector &args);
 
-  friend std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args);
 
-  friend ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+  friend ArgumentPtr makeExprSimpl(const IFunction &func, const ArgumentsPtrVector &args);
 
-  friend std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+  friend std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
 
   static Parser::Vector<std::shared_ptr<Term>, const Token &> &getTermMakers();
 

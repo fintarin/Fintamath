@@ -198,35 +198,35 @@ struct ExpressionConfig {
       const ArgumentPtr &lhs = args.front();
       const ArgumentPtr &rhs = args.back();
 
-      ArgumentPtr notLhs = makeRawFunctionExpression(Not(), lhs);
+      ArgumentPtr notLhs = makeExpr(Not(), lhs);
 
-      return makeRawFunctionExpression(Or(), notLhs, rhs);
+      return makeExpr(Or(), notLhs, rhs);
     });
 
     Expression::registerFunctionExpressionMaker<Equiv>([](const ArgumentsPtrVector &args) {
       const ArgumentPtr &lhs = args.front();
       const ArgumentPtr &rhs = args.back();
 
-      ArgumentPtr notLhs = makeRawFunctionExpression(Not(), lhs);
-      ArgumentPtr notRhs = makeRawFunctionExpression(Not(), rhs);
+      ArgumentPtr notLhs = makeExpr(Not(), lhs);
+      ArgumentPtr notRhs = makeExpr(Not(), rhs);
 
-      ArgumentPtr lhsAndRhs = makeRawFunctionExpression(And(), lhs, rhs);
-      ArgumentPtr notLhsAndNotRhs = makeRawFunctionExpression(And(), notLhs, notRhs);
+      ArgumentPtr lhsAndRhs = makeExpr(And(), lhs, rhs);
+      ArgumentPtr notLhsAndNotRhs = makeExpr(And(), notLhs, notRhs);
 
-      return makeRawFunctionExpression(Or(), lhsAndRhs, notLhsAndNotRhs);
+      return makeExpr(Or(), lhsAndRhs, notLhsAndNotRhs);
     });
 
     Expression::registerFunctionExpressionMaker<Nequiv>([](const ArgumentsPtrVector &args) {
       const ArgumentPtr &lhs = args.front();
       const ArgumentPtr &rhs = args.back();
 
-      ArgumentPtr notLhs = makeRawFunctionExpression(Not(), lhs);
-      ArgumentPtr notRhs = makeRawFunctionExpression(Not(), rhs);
+      ArgumentPtr notLhs = makeExpr(Not(), lhs);
+      ArgumentPtr notRhs = makeExpr(Not(), rhs);
 
-      ArgumentPtr notLhsAndRhs = makeRawFunctionExpression(And(), notLhs, rhs);
-      ArgumentPtr lhsAndNotRhs = makeRawFunctionExpression(And(), lhs, notRhs);
+      ArgumentPtr notLhsAndRhs = makeExpr(And(), notLhs, rhs);
+      ArgumentPtr lhsAndNotRhs = makeExpr(And(), lhs, notRhs);
 
-      return makeRawFunctionExpression(Or(), notLhsAndRhs, lhsAndNotRhs);
+      return makeExpr(Or(), notLhsAndRhs, lhsAndNotRhs);
     });
 
     Expression::registerFunctionExpressionMaker<Neg>([](const ArgumentsPtrVector &args) {
@@ -266,26 +266,26 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Exp>([](const ArgumentsPtrVector &args) {
-      return makeRawFunctionExpression(Pow(), E().clone(), args.front());
+      return makeExpr(Pow(), E().clone(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Percent>([](const ArgumentsPtrVector &args) {
       static const auto PERCENT_VALUE = std::make_shared<Integer>(100);
-      return makeRawFunctionExpression(Div(), args.front(), PERCENT_VALUE);
+      return makeExpr(Div(), args.front(), PERCENT_VALUE);
     });
 
     Expression::registerFunctionExpressionMaker<Rad>([](const ArgumentsPtrVector &args) {
       static const auto ANGLE = std::make_shared<Integer>(180);
-      return makeRawFunctionExpression(Mul(), args.front(), makeRawFunctionExpression(Div(), Pi().clone(), ANGLE));
+      return makeExpr(Mul(), args.front(), makeExpr(Div(), Pi().clone(), ANGLE));
     });
 
     Expression::registerFunctionExpressionMaker<Degrees>([](const ArgumentsPtrVector &args) {
       static const auto ANGLE = std::make_shared<Integer>(180);
-      return makeRawFunctionExpression(Mul(), args.front(), makeRawFunctionExpression(Div(), ANGLE, Pi().clone()));
+      return makeExpr(Mul(), args.front(), makeExpr(Div(), ANGLE, Pi().clone()));
     });
 
     Expression::registerFunctionExpressionMaker<Angle>([](const ArgumentsPtrVector &args) {
-      return makeRawFunctionExpression(Rad(), args.front());
+      return makeExpr(Rad(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Min>([](const ArgumentsPtrVector &args) {
@@ -297,7 +297,7 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Sqrt>([](const ArgumentsPtrVector &args) {
-      return makeRawFunctionExpression(Pow(), args.front(), std::make_shared<Rational>(1, 2));
+      return makeExpr(Pow(), args.front(), std::make_shared<Rational>(1, 2));
     });
 
     Expression::registerFunctionExpressionMaker<Sin>([](const ArgumentsPtrVector &args) {

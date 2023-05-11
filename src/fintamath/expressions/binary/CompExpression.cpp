@@ -31,7 +31,7 @@ std::string CompExpression::toString() const {
       if (is<Variable>(solLhs)) {
         sumChildren.erase(sumChildren.begin());
 
-        ArgumentPtr solRhs = makeFunctionExpression(Neg(), sumChildren);
+        ArgumentPtr solRhs = makeExprSimpl(Neg(), sumChildren);
 
         if (!is<IExpression>(solRhs)) {
           return CompExpression(cast<IOperator>(*func), solLhs, solRhs).toString();
@@ -53,7 +53,7 @@ ArgumentPtr CompExpression::preSimplify() const {
 
   if (!simplExpr->isSolution) {
     if (!is<Integer>(rhsChild) || *rhsChild != Integer(0)) {
-      ArgumentPtr resLhs = makeFunctionExpression(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
+      ArgumentPtr resLhs = makeExprSimpl(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
       return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
     }
   }
@@ -71,7 +71,7 @@ ArgumentPtr CompExpression::postSimplify() const {
 
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild)) {
     if (is<Neg>(lhsExpr->getFunction())) {
-      return makeFunctionExpression(*getOppositeFunction(*func), lhsExpr->getChildren().front(), simplExpr->rhsChild);
+      return makeExprSimpl(*getOppositeFunction(*func), lhsExpr->getChildren().front(), simplExpr->rhsChild);
     }
 
     ArgumentsPtrVector dividendPolynom;
@@ -99,10 +99,10 @@ ArgumentPtr CompExpression::postSimplify() const {
 
     if (dividerNum) {
       for (auto &child : dividendPolynom) {
-        child = makeRawFunctionExpression(Div(), child, dividerNum);
+        child = makeExpr(Div(), child, dividerNum);
       }
 
-      ArgumentPtr newLhs = makeFunctionExpression(Add(), dividendPolynom);
+      ArgumentPtr newLhs = makeExprSimpl(Add(), dividendPolynom);
       ArgumentPtr newRhs = simplExpr->rhsChild;
       std::shared_ptr<IFunction> newFunc;
 
@@ -113,7 +113,7 @@ ArgumentPtr CompExpression::postSimplify() const {
         newFunc = func;
       }
 
-      return makeRawFunctionExpression(*newFunc, newLhs, newRhs);
+      return makeExpr(*newFunc, newLhs, newRhs);
     }
   }
 

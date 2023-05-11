@@ -64,8 +64,8 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
 }
 
 ArgumentPtr MulExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = makeFunctionExpression(Add(), rates);
-  return makeRawFunctionExpression(Pow(), value, ratesSum);
+  ArgumentPtr ratesSum = makeExprSimpl(Add(), rates);
+  return makeExpr(Pow(), value, ratesSum);
 }
 
 ArgumentPtr MulExpression::simplifyNumbers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
@@ -101,22 +101,22 @@ ArgumentPtr MulExpression::simplifyDivisions(const IFunction & /*func*/, const A
   ArgumentPtr denominator;
 
   if (isLhsDiv && isRhsDiv) {
-    numerator = makeRawFunctionExpression(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
-    denominator = makeRawFunctionExpression(Mul(), lhsExpr->getChildren().back(), rhsExpr->getChildren().back());
+    numerator = makeExpr(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
+    denominator = makeExpr(Mul(), lhsExpr->getChildren().back(), rhsExpr->getChildren().back());
   }
   else if (isLhsDiv) {
-    numerator = makeRawFunctionExpression(Mul(), lhsExpr->getChildren().front(), rhsChild);
+    numerator = makeExpr(Mul(), lhsExpr->getChildren().front(), rhsChild);
     denominator = lhsExpr->getChildren().back();
   }
   else if (isRhsDiv) {
-    numerator = makeRawFunctionExpression(Mul(), lhsChild, rhsExpr->getChildren().front());
+    numerator = makeExpr(Mul(), lhsChild, rhsExpr->getChildren().front());
     denominator = rhsExpr->getChildren().back();
   }
   else {
     return {};
   }
 
-  return makeFunctionExpression(Div(), numerator, denominator);
+  return makeExprSimpl(Div(), numerator, denominator);
 }
 
 ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
@@ -153,11 +153,11 @@ ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const Argumen
 
   for (const auto &lhsSubChild : lhsChildren) {
     for (const auto &rhsSubChild : rhsChildren) {
-      resultVect.emplace_back(makeRawFunctionExpression(Mul(), lhsSubChild->clone(), rhsSubChild->clone()));
+      resultVect.emplace_back(makeExpr(Mul(), lhsSubChild->clone(), rhsSubChild->clone()));
     }
   }
 
-  return makeFunctionExpression(Add(), resultVect);
+  return makeExprSimpl(Add(), resultVect);
 }
 
 ArgumentPtr MulExpression::mulRates(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
@@ -178,15 +178,15 @@ ArgumentPtr MulExpression::simplifyNegations(const IFunction & /*func*/, const A
   const auto &rhsExpr = cast<IExpression>(rhsChild);
 
   if (lhsExpr && rhsExpr && is<Neg>(lhsExpr->getFunction()) && is<Neg>(rhsExpr->getFunction())) {
-    return makeFunctionExpression(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
+    return makeExprSimpl(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
   }
 
   if (lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    return makeRawFunctionExpression(Mul(), lhsExpr->getChildren().front(), std::make_shared<Integer>(-1), rhsChild);
+    return makeExpr(Mul(), lhsExpr->getChildren().front(), std::make_shared<Integer>(-1), rhsChild);
   }
 
   if (rhsExpr && is<Neg>(rhsExpr->getFunction())) {
-    return makeRawFunctionExpression(Mul(), rhsExpr->getChildren().front(), std::make_shared<Integer>(-1), lhsChild);
+    return makeExpr(Mul(), rhsExpr->getChildren().front(), std::make_shared<Integer>(-1), lhsChild);
   }
 
   return {};

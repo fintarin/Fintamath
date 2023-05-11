@@ -26,22 +26,22 @@ bool hasVariables(const std::shared_ptr<const IExpression> &expr);
 
 bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable &var);
 
-extern std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+extern std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &func, const ArgumentsRefVector &args);
 
-extern std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args);
 
-extern ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+extern ArgumentPtr makeExprSimpl(const IFunction &func, const ArgumentsPtrVector &args);
 
-extern std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
+extern std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
 
 template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const Args &...args) {
-  return makeFunctionExpression(func, ArgumentsRefVector{args...});
+std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &func, const Args &...args) {
+  return makeExprSimpl(func, ArgumentsRefVector{args...});
 }
 
 template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &func, const Args &...args) {
-  return makeRawFunctionExpression(func, ArgumentsRefVector{args...});
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const Args &...args) {
+  return makeExpr(func, ArgumentsRefVector{args...});
 }
 
 template <typename T, typename = std::enable_if_t<(std::is_convertible_v<T, ArgumentPtr>)>>
@@ -55,13 +55,13 @@ ArgumentPtr toArgumentPtr(T &arg) {
 }
 
 template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, ArgumentPtr> && ...)>>
-ArgumentPtr makeFunctionExpression(const IFunction &func, Args &&...args) {
-  return makeFunctionExpression(func, ArgumentsPtrVector{toArgumentPtr(args)...});
+ArgumentPtr makeExprSimpl(const IFunction &func, Args &&...args) {
+  return makeExprSimpl(func, ArgumentsPtrVector{toArgumentPtr(args)...});
 }
 
 template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, ArgumentPtr> && ...)>>
-std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, Args &&...args) {
-  return makeRawFunctionExpression(func, ArgumentsPtrVector{toArgumentPtr(args)...});
+std::shared_ptr<IExpression> makeExpr(const IFunction &func, Args &&...args) {
+  return makeExpr(func, ArgumentsPtrVector{toArgumentPtr(args)...});
 }
 
 }

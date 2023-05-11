@@ -3,7 +3,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Integral::call(const ArgumentsRefVector &argsVect) const {
-  return makeFunctionExpression(*this, argsVect);
+  return makeExprSimpl(*this, argsVect);
 }
 
 }

@@ -49,7 +49,7 @@ ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const Argumen
   }
 
   if (Div().doArgsMatch({one, *rhs})) {
-    return makeFunctionExpression(Mul(), lhs, Div()(one, *rhs));
+    return makeExprSimpl(Mul(), lhs, Div()(one, *rhs));
   }
 
   return {};
@@ -88,7 +88,7 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     numerator = numeratorChildren.front();
   }
   else {
-    numerator = makeRawFunctionExpression(Mul(), numeratorChildren);
+    numerator = makeExpr(Mul(), numeratorChildren);
   }
 
   ArgumentPtr denominator;
@@ -96,10 +96,10 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     denominator = denominatorChildren.front();
   }
   else {
-    denominator = makeRawFunctionExpression(Mul(), denominatorChildren);
+    denominator = makeExpr(Mul(), denominatorChildren);
   }
 
-  return makeFunctionExpression(Div(), numerator, denominator);
+  return makeExprSimpl(Div(), numerator, denominator);
 }
 
 ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -146,7 +146,7 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
   ArgumentPtr numerator;
   if (lhsChildren.size() > 1) {
-    numerator = makeFunctionExpression(Mul(), lhsChildren);
+    numerator = makeExprSimpl(Mul(), lhsChildren);
   }
   else {
     numerator = lhsChildren.front();
@@ -158,14 +158,14 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
   ArgumentPtr denominator;
   if (rhsChildren.size() > 1) {
-    denominator = makeFunctionExpression(Mul(), rhsChildren);
+    denominator = makeExprSimpl(Mul(), rhsChildren);
   }
   else {
     denominator = rhsChildren.front();
   }
 
   if (lhsChildren.size() != lhsChildrenSizeInitial || rhsChildren.size() != rhsChildrenSizeInitial) {
-    return makeFunctionExpression(Div(), numerator, denominator);
+    return makeExprSimpl(Div(), numerator, denominator);
   }
 
   return {};
@@ -179,7 +179,7 @@ ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const Argumen
 
   if (auto [lhsRes, rhsRes] = mulSumSimplify(lhs, rhs); lhsRes) {
     if (rhsRes) {
-      return makeFunctionExpression(Add(), lhsRes, rhsRes);
+      return makeExprSimpl(Add(), lhsRes, rhsRes);
     }
     return lhsRes;
   }
@@ -227,10 +227,10 @@ ArgumentPtr DivExpression::sumSumSimplify(const ArgumentPtr &lhs, const Argument
     return {};
   }
 
-  auto restSimplResult = makeFunctionExpression(Add(), restVect);
-  answerVect.emplace_back(makeFunctionExpression(Div(), restSimplResult, rhs));
+  auto restSimplResult = makeExprSimpl(Add(), restVect);
+  answerVect.emplace_back(makeExprSimpl(Div(), restSimplResult, rhs));
 
-  return makeFunctionExpression(Add(), answerVect);
+  return makeExprSimpl(Add(), answerVect);
 }
 
 ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -249,7 +249,7 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
   ArgumentsPtrVector divFailure;
 
   for (const auto &child : lhsChildren) {
-    ArgumentPtr divResult = makeFunctionExpression(Div(), child, rhs);
+    ArgumentPtr divResult = makeExprSimpl(Div(), child, rhs);
 
     if (const auto divResultExpr = cast<IExpression>(divResult);
         divResultExpr && is<Div>(divResultExpr->getFunction()) && *divResultExpr->getChildren().back() == *rhs) {
@@ -265,11 +265,11 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
   }
 
   if (!divFailure.empty()) {
-    ArgumentPtr divExpr = makeRawFunctionExpression(Div(), makeRawFunctionExpression(Add(), divFailure), rhs);
+    ArgumentPtr divExpr = makeExpr(Div(), makeExpr(Add(), divFailure), rhs);
     divSuccess.emplace_back(divExpr);
   }
 
-  return makeRawFunctionExpression(Add(), divSuccess);
+  return makeExpr(Add(), divSuccess);
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -284,7 +284,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr divResult = makeFunctionExpression(Div(), lhs, rhsChildren.front());
+  ArgumentPtr divResult = makeExprSimpl(Div(), lhs, rhsChildren.front());
 
   if (const auto number = cast<INumber>(divResult); number && *number == Integer(0)) {
     return {divResult, nullptr};
@@ -297,11 +297,11 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   ArgumentsPtrVector multiplicates;
 
   for (size_t i = 1; i < rhsChildren.size(); i++) {
-    multiplicates.emplace_back(makeRawFunctionExpression(Mul(), rhsChildren[i], divResult));
+    multiplicates.emplace_back(makeExpr(Mul(), rhsChildren[i], divResult));
   }
 
-  ArgumentPtr negSum = makeRawFunctionExpression(Neg(), makeRawFunctionExpression(Add(), multiplicates));
-  ArgumentPtr div = makeRawFunctionExpression(Div(), negSum, rhs);
+  ArgumentPtr negSum = makeExpr(Neg(), makeExpr(Add(), multiplicates));
+  ArgumentPtr div = makeExpr(Div(), negSum, rhs);
   return {divResult, div};
 }
 
@@ -336,12 +336,12 @@ ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const Argume
 
   ArgumentPtr result;
   if (*lhsValue == *rhsValue) {
-    result = addRatesToValue({lhsRate, makeRawFunctionExpression(Neg(), rhsRate)}, lhsValue);
+    result = addRatesToValue({lhsRate, makeExpr(Neg(), rhsRate)}, lhsValue);
   }
 
   if (result) {
     if (negation) {
-      return makeFunctionExpression(Neg(), result);
+      return makeExprSimpl(Neg(), result);
     }
 
     return result;
@@ -360,8 +360,8 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const Argume
 }
 
 ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = makeFunctionExpression(Add(), rates);
-  return makeRawFunctionExpression(Pow(), value, ratesSum);
+  ArgumentPtr ratesSum = makeExprSimpl(Add(), rates);
+  return makeExpr(Pow(), value, ratesSum);
 }
 
 }

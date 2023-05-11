@@ -9,7 +9,7 @@ using namespace fintamath;
 
 TEST(ILogicNegatableExpressionTests, invertTest) {
   auto expr =
-      cast<ILogicNegatableExpression>(makeFunctionExpression(And(), {Variable("a").clone(), Variable("b").clone()}));
+      cast<ILogicNegatableExpression>(makeExprSimpl(And(), {Variable("a").clone(), Variable("b").clone()}));
 
   EXPECT_EQ(expr->toString(), "a & b");
   EXPECT_EQ(expr->logicNegate()->toString(), "~a | ~b");

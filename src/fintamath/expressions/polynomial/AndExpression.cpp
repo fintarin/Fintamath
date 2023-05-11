@@ -14,10 +14,10 @@ ArgumentPtr AndExpression::logicNegate() const {
   ArgumentsPtrVector negChildren;
 
   for (const auto &child : children) {
-    negChildren.emplace_back(makeRawFunctionExpression(Not(), child));
+    negChildren.emplace_back(makeExpr(Not(), child));
   }
 
-  return makeFunctionExpression(Or(), negChildren);
+  return makeExprSimpl(Or(), negChildren);
 }
 
 AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForSimplify() const {
@@ -106,11 +106,11 @@ ArgumentPtr AndExpression::simplifyOr(const IFunction & /*func*/, const Argument
 
   for (const auto &lhsSubChild : lhsChildren) {
     for (const auto &rhsSubChild : rhsChildren) {
-      resultVect.emplace_back(makeRawFunctionExpression(And(), lhsSubChild, rhsSubChild));
+      resultVect.emplace_back(makeExpr(And(), lhsSubChild, rhsSubChild));
     }
   }
 
-  return makeFunctionExpression(Or(), resultVect);
+  return makeExprSimpl(Or(), resultVect);
 }
 
 }

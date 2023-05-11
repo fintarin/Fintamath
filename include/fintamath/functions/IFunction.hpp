@@ -54,10 +54,9 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
 
-  static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &function, const ArgumentsRefVector &args);
+  static std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &function, const ArgumentsRefVector &args);
 
-  static std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &function,
-                                                                const ArgumentsRefVector &args);
+  static std::unique_ptr<IMathObject> makeExpr(const IFunction &function, const ArgumentsRefVector &args);
 
 private:
   static Parser::Map<std::unique_ptr<IFunction>> &getParser();
@@ -115,7 +114,7 @@ protected:
       return call(argsVect);
     }
 
-    return makeFunctionExpression(*this, argsVect);
+    return makeExprSimpl(*this, argsVect);
   }
 
   bool equals(const Derived &rhs) const override {

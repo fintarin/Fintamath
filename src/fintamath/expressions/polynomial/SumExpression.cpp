@@ -71,7 +71,7 @@ ArgumentPtr SumExpression::negate() const {
   SumExpression neg = *this;
 
   for (auto &child : neg.children) {
-    child = makeRawFunctionExpression(Neg(), child);
+    child = makeExpr(Neg(), child);
   }
 
   return neg.simplify();
@@ -141,8 +141,7 @@ ArgumentPtr SumExpression::simplifyLogarithms(const IFunction & /*func*/, const 
   ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
 
   if (*lhsChildren.front() == *rhsChildren.front()) {
-    return makeFunctionExpression(Log(), lhsChildren.front(),
-                                  makeRawFunctionExpression(Mul(), lhsChildren.back(), rhsChildren.back()));
+    return makeExprSimpl(Log(), lhsChildren.front(), makeExpr(Mul(), lhsChildren.back(), rhsChildren.back()));
   }
 
   return {};
@@ -173,9 +172,8 @@ ArgumentPtr SumExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
         if (*lhsLogExpr->getChildren().front() == *rhsLogExpr->getChildren().front()) {
           lhsLogExpr = mulToLogarithm(lhsExprChildren, i);
           rhsLogExpr = mulToLogarithm(rhsExprChildren, j);
-          return makeFunctionExpression(
-              Log(), lhsLogExpr->getChildren().front(),
-              makeRawFunctionExpression(Mul(), lhsLogExpr->getChildren().back(), rhsLogExpr->getChildren().back()));
+          return makeExprSimpl(Log(), lhsLogExpr->getChildren().front(),
+                               makeExpr(Mul(), lhsLogExpr->getChildren().back(), rhsLogExpr->getChildren().back()));
         }
       }
     }
@@ -204,9 +202,8 @@ ArgumentPtr SumExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
 
     if (*childLogExpr->getChildren().front() == *logExpr->getChildren().front()) {
       childLogExpr = mulToLogarithm(mulExprChildren, i);
-      return makeFunctionExpression(
-          Log(), logExpr->getChildren().front(),
-          makeRawFunctionExpression(Mul(), logExpr->getChildren().back(), childLogExpr->getChildren().back()));
+      return makeExprSimpl(Log(), logExpr->getChildren().front(),
+                           makeExpr(Mul(), logExpr->getChildren().back(), childLogExpr->getChildren().back()));
     }
   }
 
@@ -227,7 +224,7 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const Argume
         value = mulExprChildren[1];
       }
       else {
-        value = makeFunctionExpression(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
+        value = makeExprSimpl(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
       }
     }
   }
@@ -245,8 +242,8 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const Argume
 }
 
 ArgumentPtr SumExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = makeRawFunctionExpression(Add(), rates);
-  return makeFunctionExpression(Mul(), ratesSum, value);
+  ArgumentPtr ratesSum = makeExpr(Add(), rates);
+  return makeExprSimpl(Mul(), ratesSum, value);
 }
 
 std::vector<size_t> SumExpression::findLogarithms(const ArgumentsPtrVector &children) {
@@ -268,12 +265,11 @@ std::shared_ptr<const IExpression> SumExpression::mulToLogarithm(const Arguments
 
   mulChildren.erase(mulChildren.begin() + ArgumentsPtrVector::difference_type(i));
 
-  const ArgumentPtr powRate =
-      mulChildren.size() > 1 ? makeRawFunctionExpression(Mul(), mulChildren) : mulChildren.front();
+  const ArgumentPtr powRate = mulChildren.size() > 1 ? makeExpr(Mul(), mulChildren) : mulChildren.front();
 
-  const ArgumentPtr powExpr = makeRawFunctionExpression(Pow(), logExpr->getChildren().back(), powRate);
+  const ArgumentPtr powExpr = makeExpr(Pow(), logExpr->getChildren().back(), powRate);
 
-  return makeRawFunctionExpression(Log(), logExpr->getChildren().front(), powExpr);
+  return makeExpr(Log(), logExpr->getChildren().front(), powExpr);
 }
 
 ArgumentPtr SumExpression::sumRates(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
@@ -296,9 +292,8 @@ ArgumentPtr SumExpression::sumDivisions(const IFunction & /*func*/, const Argume
   if (lhsExpr && rhsExpr && //
       is<Div>(lhsExpr->getFunction()) && is<Div>(rhsExpr->getFunction()) &&
       *lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
-    return makeFunctionExpression(
-        Div(), makeRawFunctionExpression(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front()),
-        lhsExpr->getChildren().back());
+    return makeExprSimpl(Div(), makeExpr(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front()),
+                         lhsExpr->getChildren().back());
   }
 
   return {};

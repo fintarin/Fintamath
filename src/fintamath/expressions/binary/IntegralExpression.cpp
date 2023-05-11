@@ -34,11 +34,10 @@ ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, con
   ArgumentPtr res;
 
   if (is<INumber>(lhs) || is<IConstant>(lhs)) {
-    res = makeFunctionExpression(Mul(), lhs, rhs);
+    res = makeExprSimpl(Mul(), lhs, rhs);
   }
   else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
-    res = makeFunctionExpression(Div(), makeRawFunctionExpression(Pow(), lhs, std::make_shared<Integer>(2)),
-                                 std::make_shared<Integer>(2));
+    res = makeExprSimpl(Div(), makeExpr(Pow(), lhs, std::make_shared<Integer>(2)), std::make_shared<Integer>(2));
   }
 
   // TODO: res + integral constant
