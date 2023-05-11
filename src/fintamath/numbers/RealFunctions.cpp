@@ -16,7 +16,7 @@ Real sqrt(const Real &rhs) {
     throw UndefinedFunctionException("sqrt", {rhs.toString()});
   }
 
-  return Real(sqrt(rhs.getBackend()));
+  return {sqrt(rhs.getBackend())};
 }
 
 Real pow(const Real &lhs, const Real &rhs) {
@@ -33,11 +33,11 @@ Real pow(const Real &lhs, const Real &rhs) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
-  return Real(res);
+  return {res};
 }
 
 Real exp(const Real &rhs) {
-  return Real(exp(rhs.getBackend()));
+  return {exp(rhs.getBackend())};
 }
 
 Real log(const Real &lhs, const Real &rhs) {
@@ -54,7 +54,7 @@ Real ln(const Real &rhs) {
     throw UndefinedFunctionException("ln", {rhs.toString()});
   }
 
-  return Real(log(rhs.getBackend()));
+  return {log(rhs.getBackend())};
 }
 
 Real lb(const Real &rhs) {
@@ -62,7 +62,7 @@ Real lb(const Real &rhs) {
     throw UndefinedFunctionException("lb", {rhs.toString()});
   }
 
-  return Real(log2(rhs.getBackend()));
+  return {log2(rhs.getBackend())};
 }
 
 Real lg(const Real &rhs) {
@@ -70,7 +70,7 @@ Real lg(const Real &rhs) {
     throw UndefinedFunctionException("lg", {rhs.toString()});
   }
 
-  return Real(log10(rhs.getBackend()));
+  return {log10(rhs.getBackend())};
 }
 
 Real sin(const Real &rhs) {
@@ -118,7 +118,7 @@ Real asin(const Real &rhs) {
     throw UndefinedFunctionException("asin", {rhs.toString()});
   }
 
-  return Real(res);
+  return {res};
 }
 
 Real acos(const Real &rhs) {
@@ -128,11 +128,11 @@ Real acos(const Real &rhs) {
     throw UndefinedFunctionException("acos", {rhs.toString()});
   }
 
-  return Real(res);
+  return {res};
 }
 
 Real atan(const Real &rhs) {
-  return Real(atan(rhs.getBackend()));
+  return {atan(rhs.getBackend())};
 }
 
 Real acot(const Real &rhs) {
@@ -146,15 +146,15 @@ Real acot(const Real &rhs) {
 }
 
 Real sinh(const Real &rhs) {
-  return Real(sinh(rhs.getBackend()));
+  return {sinh(rhs.getBackend())};
 }
 
 Real cosh(const Real &rhs) {
-  return Real(cosh(rhs.getBackend()));
+  return {cosh(rhs.getBackend())};
 }
 
 Real tanh(const Real &rhs) {
-  return Real(tanh(rhs.getBackend()));
+  return {tanh(rhs.getBackend())};
 }
 
 Real coth(const Real &rhs) {
@@ -198,11 +198,11 @@ Real acoth(const Real &rhs) {
 }
 
 Real getE() {
-  return Real(cpp_dec_float_100(default_ops::get_constant_e<cpp_dec_float_100::backend_type>()));
+  return {cpp_dec_float_100(default_ops::get_constant_e<cpp_dec_float_100::backend_type>())};
 }
 
 Real getPi() {
-  return Real(cpp_dec_float_100(default_ops::get_constant_pi<cpp_dec_float_100::backend_type>()));
+  return {cpp_dec_float_100(default_ops::get_constant_pi<cpp_dec_float_100::backend_type>())};
 }
 
 }

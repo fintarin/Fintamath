@@ -13,11 +13,11 @@ Integer abs(const Integer &rhs) {
 }
 
 Integer gcd(const Integer &lhs, const Integer &rhs) {
-  return Integer(gcd(lhs.getBackend(), rhs.getBackend()));
+  return {gcd(lhs.getBackend(), rhs.getBackend())};
 }
 
 Integer lcm(const Integer &lhs, const Integer &rhs) {
-  return Integer(lcm(lhs.getBackend(), rhs.getBackend()));
+  return {lcm(lhs.getBackend(), rhs.getBackend())};
 }
 
 Integer intSqrt(const Integer &rhs) {
@@ -43,7 +43,7 @@ Integer pow(const Integer &lhs, uint32_t rhs) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), std::to_string(rhs));
   }
 
-  return Integer(pow(lhs.getBackend(), rhs));
+  return {pow(lhs.getBackend(), rhs)};
 }
 
 // Use binary splitting.

@@ -23,7 +23,7 @@ public:
 
   ~Integer() override;
 
-  explicit Integer(boost::multiprecision::cpp_int inBackend);
+  Integer(boost::multiprecision::cpp_int inBackend);
 
   explicit Integer(std::string str);
 
