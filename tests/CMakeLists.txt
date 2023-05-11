@@ -12,3 +12,9 @@ set_target_properties(${PROJECT_NAME}_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}_tests)
+
+if(MSVC)
+  target_compile_options(${PROJECT_NAME}_tests PRIVATE /w)
+else()
+  target_compile_options(${PROJECT_NAME}_tests PRIVATE -w)
+endif()
