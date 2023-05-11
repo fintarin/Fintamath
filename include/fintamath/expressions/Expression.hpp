@@ -35,7 +35,7 @@ public:
 
   std::string toString() const override;
 
-  Expression precise(uint8_t precision = FINTAMATH_ROUND_PRECISION) const;
+  Expression precise(uint8_t precision = FINTAMATH_PRECISION) const;
 
   std::shared_ptr<IFunction> getFunction() const override;
 

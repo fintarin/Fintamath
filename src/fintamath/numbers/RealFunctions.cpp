@@ -3,7 +3,8 @@
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/NumberConstants.hpp"
-#include "fintamath/numbers/NumberImpls.hpp"
+
+using namespace boost::multiprecision;
 
 namespace fintamath {
 
@@ -16,7 +17,7 @@ Real sqrt(const Real &rhs) {
     throw UndefinedFunctionException("sqrt", {rhs.toString()});
   }
 
-  return RealImpl(sqrt(rhs.getImpl()->v));
+  return Real(sqrt(rhs.getBackend()));
 }
 
 Real pow(const Real &lhs, const Real &rhs) {
@@ -27,17 +28,17 @@ Real pow(const Real &lhs, const Real &rhs) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
-  RealImpl res = RealImpl(pow(lhs.getImpl()->v, rhs.getImpl()->v));
+  cpp_dec_float_100 res(pow(lhs.getBackend(), rhs.getBackend()));
 
-  if (res.v.backend().isinf() || res.v.backend().isnan()) {
+  if (res.backend().isinf() || res.backend().isnan()) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
-  return res;
+  return Real(res);
 }
 
 Real exp(const Real &rhs) {
-  return RealImpl(exp(rhs.getImpl()->v));
+  return Real(exp(rhs.getBackend()));
 }
 
 Real log(const Real &lhs, const Real &rhs) {
@@ -54,7 +55,7 @@ Real ln(const Real &rhs) {
     throw UndefinedFunctionException("ln", {rhs.toString()});
   }
 
-  return RealImpl(log(rhs.getImpl()->v));
+  return Real(log(rhs.getBackend()));
 }
 
 Real lb(const Real &rhs) {
@@ -62,7 +63,7 @@ Real lb(const Real &rhs) {
     throw UndefinedFunctionException("lb", {rhs.toString()});
   }
 
-  return RealImpl(log2(rhs.getImpl()->v));
+  return Real(log2(rhs.getBackend()));
 }
 
 Real lg(const Real &rhs) {
@@ -70,11 +71,11 @@ Real lg(const Real &rhs) {
     throw UndefinedFunctionException("lg", {rhs.toString()});
   }
 
-  return RealImpl(log10(rhs.getImpl()->v));
+  return Real(log10(rhs.getBackend()));
 }
 
 Real sin(const Real &rhs) {
-  Real res = RealImpl(sin(rhs.getImpl()->v));
+  Real res(sin(rhs.getBackend()));
 
   if (res.isNearZero()) {
     return 0;
@@ -84,7 +85,7 @@ Real sin(const Real &rhs) {
 }
 
 Real cos(const Real &rhs) {
-  Real res = RealImpl(cos(rhs.getImpl()->v));
+  Real res(cos(rhs.getBackend()));
 
   if (res.isNearZero()) {
     return 0;
@@ -112,27 +113,27 @@ Real cot(const Real &rhs) {
 }
 
 Real asin(const Real &rhs) {
-  RealImpl::Backend res = asin(rhs.getImpl()->v);
+  cpp_dec_float_100 res = asin(rhs.getBackend());
 
   if (res.backend().isnan()) {
     throw UndefinedFunctionException("asin", {rhs.toString()});
   }
 
-  return RealImpl(res);
+  return Real(res);
 }
 
 Real acos(const Real &rhs) {
-  RealImpl::Backend res = acos(rhs.getImpl()->v);
+  cpp_dec_float_100 res(acos(rhs.getBackend()));
 
   if (res.backend().isnan()) {
     throw UndefinedFunctionException("acos", {rhs.toString()});
   }
 
-  return RealImpl(res);
+  return Real(res);
 }
 
 Real atan(const Real &rhs) {
-  return RealImpl(atan(rhs.getImpl()->v));
+  return Real(atan(rhs.getBackend()));
 }
 
 Real acot(const Real &rhs) {
@@ -146,15 +147,15 @@ Real acot(const Real &rhs) {
 }
 
 Real sinh(const Real &rhs) {
-  return RealImpl(sinh(rhs.getImpl()->v));
+  return Real(sinh(rhs.getBackend()));
 }
 
 Real cosh(const Real &rhs) {
-  return RealImpl(cosh(rhs.getImpl()->v));
+  return Real(cosh(rhs.getBackend()));
 }
 
 Real tanh(const Real &rhs) {
-  return RealImpl(tanh(rhs.getImpl()->v));
+  return Real(tanh(rhs.getBackend()));
 }
 
 Real coth(const Real &rhs) {

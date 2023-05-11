@@ -8,52 +8,31 @@
 #include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
 #include "fintamath/exceptions/UndefinedFunctionException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
-#include "fintamath/numbers/NumberImpls.hpp"
 
 using namespace boost::multiprecision;
 
 namespace fintamath {
 
-static RealImpl initDelta() {
-  const RealImpl::Backend delta = pow(RealImpl::Backend(10), -FINTAMATH_ROUND_PRECISION);
+static cpp_dec_float_100 initDelta() {
+  static const cpp_dec_float_100 delta = pow(cpp_dec_float_100(10), -FINTAMATH_PRECISION);
   return delta;
 }
 
-const RealImpl Real::DELTA = initDelta();
+const cpp_dec_float_100 Real::DELTA = initDelta();
 
-Real::Real() {
-  impl = std::make_unique<RealImpl>();
-}
+Real::Real() = default;
 
-Real::Real(const Real &rhs) : Real() {
-  impl->v.assign(rhs.impl->v);
-  ouputPrecision = rhs.ouputPrecision;
-}
+Real::Real(const Real &rhs) = default;
 
-Real::Real(Real &&rhs) noexcept : Real() {
-  impl = std::move(rhs.impl);
-  ouputPrecision = rhs.ouputPrecision;
-}
+Real::Real(Real &&rhs) noexcept = default;
 
-Real &Real::operator=(const Real &rhs) {
-  if (this != &rhs) {
-    impl = std::make_unique<RealImpl>(*rhs.impl);
-    ouputPrecision = rhs.ouputPrecision;
-  }
-  return *this;
-}
+Real &Real::operator=(const Real &rhs) = default;
 
-Real &Real::operator=(Real &&rhs) noexcept {
-  if (this != &rhs) {
-    impl = std::move(rhs.impl);
-    ouputPrecision = rhs.ouputPrecision;
-  }
-  return *this;
-}
+Real &Real::operator=(Real &&rhs) noexcept = default;
 
 Real::~Real() = default;
 
-Real::Real(const RealImpl &inImpl) : impl(std::make_unique<RealImpl>(inImpl)) {
+Real::Real(const cpp_dec_float_100 &inBackend) : backend(inBackend) {
 }
 
 Real::Real(std::string str) : Real() {
@@ -88,7 +67,7 @@ Real::Real(std::string str) : Real() {
     }
   }
 
-  impl->v.assign(str);
+  backend.assign(str);
 }
 
 Real::Real(const Rational &val) : Real() {
@@ -98,14 +77,13 @@ Real::Real(const Rational &val) : Real() {
 Real::Real(const Integer &val) : Real(val.toString()) {
 }
 
-Real::Real(double val) : Real() {
-  impl->v.assign(val);
+Real::Real(double val) : backend(val) {
 }
 
 std::string Real::toString() const {
   std::stringstream ss;
   ss.precision(ouputPrecision);
-  ss << impl->v;
+  ss << backend;
   std::string res = ss.str();
 
   if (size_t ePos = res.find('e'); ePos != std::string::npos) {
@@ -120,7 +98,7 @@ std::string Real::toString() const {
 }
 
 std::unique_ptr<IMathObject> Real::toMinimalObject() const {
-  if (impl->v.backend().isfinite()) {
+  if (backend.backend().isfinite()) {
     if (std::string str = toString(); str.find('.') == std::string::npos && str.find('*') == std::string::npos) {
       return std::make_unique<Integer>(str);
     }
@@ -134,30 +112,30 @@ bool Real::isPrecise() const {
 }
 
 Real Real::precise(uint8_t precision) const {
-  assert(precision <= FINTAMATH_ROUND_PRECISION);
+  assert(precision <= FINTAMATH_PRECISION);
   Real res = *this;
   res.ouputPrecision = precision;
   return res;
 }
 
 int Real::sign() const {
-  return impl->v.sign();
+  return backend.sign();
 }
 
 bool Real::isNearZero() const {
-  return abs(impl->v) < DELTA;
+  return abs(backend) < DELTA;
 }
 
-const std::unique_ptr<RealImpl> &Real::getImpl() const {
-  return impl;
+const cpp_dec_float_100 &Real::getBackend() const {
+  return backend;
 }
 
 Real Real::getE() {
-  return RealImpl(default_ops::get_constant_e<RealImpl::Backend::backend_type>());
+  return Real(cpp_dec_float_100(default_ops::get_constant_e<cpp_dec_float_100::backend_type>()));
 }
 
 Real Real::getPi() {
-  return RealImpl(default_ops::get_constant_pi<RealImpl::Backend::backend_type>());
+  return Real(cpp_dec_float_100(default_ops::get_constant_pi<cpp_dec_float_100::backend_type>()));
 }
 
 bool Real::equals(const Real &rhs) const {
@@ -168,28 +146,28 @@ bool Real::less(const Real &rhs) const {
   if (*this == rhs) {
     return false;
   }
-  return impl->v < rhs.impl->v;
+  return backend < rhs.backend;
 }
 
 bool Real::more(const Real &rhs) const {
   if (*this == rhs) {
     return false;
   }
-  return impl->v > rhs.impl->v;
+  return backend > rhs.backend;
 }
 
 Real &Real::add(const Real &rhs) {
-  impl->v += rhs.impl->v;
+  backend += rhs.backend;
   return *this;
 }
 
 Real &Real::substract(const Real &rhs) {
-  impl->v -= rhs.impl->v;
+  backend -= rhs.backend;
   return *this;
 }
 
 Real &Real::multiply(const Real &rhs) {
-  impl->v *= rhs.impl->v;
+  backend *= rhs.backend;
   return *this;
 }
 
@@ -198,12 +176,12 @@ Real &Real::divide(const Real &rhs) {
     throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
   }
 
-  impl->v /= rhs.impl->v;
+  backend /= rhs.backend;
   return *this;
 }
 
 Real &Real::negate() {
-  impl->v = -impl->v;
+  backend = -backend;
   return *this;
 }
 

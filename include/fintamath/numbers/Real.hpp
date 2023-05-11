@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
 #include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -9,9 +11,8 @@
 
 namespace fintamath {
 
-struct RealImpl;
-
 class Real : public INumberCRTP<Real> {
+
 public:
   Real();
 
@@ -25,7 +26,7 @@ public:
 
   ~Real() override;
 
-  Real(const RealImpl &inImpl);
+  explicit Real(const boost::multiprecision::cpp_dec_float_100 &inBackend);
 
   explicit Real(std::string str);
 
@@ -47,7 +48,7 @@ public:
 
   bool isNearZero() const;
 
-  const std::unique_ptr<RealImpl> &getImpl() const;
+  const boost::multiprecision::cpp_dec_float_100 &getBackend() const;
 
   static Real getE();
 
@@ -71,11 +72,11 @@ protected:
   Real &negate() override;
 
 private:
-  std::unique_ptr<RealImpl> impl;
+  boost::multiprecision::cpp_dec_float_100 backend;
 
-  uint8_t ouputPrecision = FINTAMATH_ROUND_PRECISION;
+  uint8_t ouputPrecision = FINTAMATH_PRECISION;
 
-  static const RealImpl DELTA;
+  static const boost::multiprecision::cpp_dec_float_100 DELTA;
 };
 
 }

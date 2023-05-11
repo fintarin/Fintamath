@@ -46,7 +46,7 @@ std::string Expression::toString() const {
 }
 
 Expression Expression::precise(uint8_t precision) const {
-  assert(precision <= FINTAMATH_ROUND_PRECISION);
+  assert(precision <= FINTAMATH_PRECISION);
   return Expression(preciseRec(child, precision, true));
 }
 
