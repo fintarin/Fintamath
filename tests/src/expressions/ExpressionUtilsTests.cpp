@@ -91,18 +91,29 @@ TEST(ExpressionUtilsTests, hasVariablesTest) {
   EXPECT_FALSE(hasVariables(expr));
 }
 
-TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsVectorTest) {
+TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsTest) {
   auto expr1 = makeFunctionExpression(Add(), {ONE, TWO});
   EXPECT_EQ(expr1->toString(), "3");
-  EXPECT_TRUE(is<Expression>(expr1));
+  EXPECT_TRUE(is<INumber>(expr1));
 
   Variable var("a");
   auto expr2 = makeFunctionExpression(Cos(), {var});
   EXPECT_EQ(expr2->toString(), "cos(a)");
-  EXPECT_TRUE(is<Expression>(expr2));
+  EXPECT_TRUE(is<IExpression>(expr2));
 }
 
-TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrTest) {
+TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromRefsTest) {
+  auto expr1 = makeRawFunctionExpression(Add(), {ONE, TWO});
+  EXPECT_EQ(expr1->toString(), "1 + 2");
+  EXPECT_TRUE(is<IExpression>(expr1));
+
+  Variable var("a");
+  auto expr2 = makeRawFunctionExpression(Cos(), {var});
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr2));
+}
+
+TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrsTest) {
   auto expr1 = makeFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
   EXPECT_EQ(expr1->toString(), "3");
   EXPECT_TRUE(is<INumber>(expr1));
@@ -114,7 +125,7 @@ TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrTest) {
   EXPECT_FALSE(is<Expression>(expr2));
 }
 
-TEST(ExpressionUtilsTests, makeRawFunctionExpressionTest) {
+TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromPtrsTest) {
   auto expr1 = makeRawFunctionExpression(Add(), {ONE.clone(), TWO.clone()});
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));
@@ -127,18 +138,29 @@ TEST(ExpressionUtilsTests, makeRawFunctionExpressionTest) {
   EXPECT_FALSE(is<Expression>(expr2));
 }
 
-TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsVectorAnyArgsTest) {
+TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsAnyArgsTest) {
+  auto expr1 = makeRawFunctionExpression(Add(), ONE, TWO);
+  EXPECT_EQ(expr1->toString(), "1 + 2");
+  EXPECT_TRUE(is<IExpression>(expr1));
+
+  Variable var("a");
+  auto expr2 = makeRawFunctionExpression(Cos(), var);
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr2));
+}
+
+TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromRefsAnyArgsTest) {
   auto expr1 = makeFunctionExpression(Add(), ONE, TWO);
   EXPECT_EQ(expr1->toString(), "3");
-  EXPECT_TRUE(is<Expression>(expr1));
+  EXPECT_TRUE(is<INumber>(expr1));
 
   Variable var("a");
   auto expr2 = makeFunctionExpression(Cos(), var);
   EXPECT_EQ(expr2->toString(), "cos(a)");
-  EXPECT_TRUE(is<Expression>(expr2));
+  EXPECT_TRUE(is<IExpression>(expr2));
 }
 
-TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrAnyArgsTest) {
+TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrsArgsTest) {
   auto expr1 = makeFunctionExpression(Add(), ONE.clone(), TWO.clone());
   EXPECT_EQ(expr1->toString(), "3");
   EXPECT_TRUE(is<INumber>(expr1));
@@ -150,7 +172,7 @@ TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrAnyArgsTest) {
   EXPECT_FALSE(is<Expression>(expr2));
 }
 
-TEST(ExpressionUtilsTests, makeRawFunctionExpressionAnyArgsTest) {
+TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromPtrsAnyArgsTest) {
   auto expr1 = makeRawFunctionExpression(Add(), ONE.clone(), TWO.clone());
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));

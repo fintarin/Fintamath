@@ -134,6 +134,8 @@ private:
 
   friend std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 
+  friend std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+
   friend ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
   friend std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);

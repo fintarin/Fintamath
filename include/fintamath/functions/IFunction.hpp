@@ -56,6 +56,9 @@ protected:
 
   static std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &function, const ArgumentsRefVector &args);
 
+  static std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &function,
+                                                                const ArgumentsRefVector &args);
+
 private:
   static Parser::Map<std::unique_ptr<IFunction>> &getParser();
 };

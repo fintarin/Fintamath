@@ -504,13 +504,22 @@ ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpres
 
 std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args) {
   ArgumentsPtrVector argsPtrVect;
+
   for (const auto &arg : args) {
     argsPtrVect.emplace_back(arg.get().toMinimalObject());
   }
 
-  auto res = std::make_unique<Expression>();
-  res->child = makeFunctionExpression(func, argsPtrVect);
-  return res;
+  return makeFunctionExpression(func, argsPtrVect)->clone();
+}
+
+std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &func, const ArgumentsRefVector &args) {
+  ArgumentsPtrVector argsPtrVect;
+
+  for (const auto &arg : args) {
+    argsPtrVect.emplace_back(arg.get().toMinimalObject());
+  }
+
+  return makeRawFunctionExpression(func, argsPtrVect)->clone();
 }
 
 ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args) {

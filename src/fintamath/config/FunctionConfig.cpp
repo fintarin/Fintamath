@@ -9,4 +9,9 @@ std::unique_ptr<IMathObject> IFunction::makeFunctionExpression(const IFunction &
   return fintamath::makeFunctionExpression(function, args);
 }
 
+std::unique_ptr<IMathObject> IFunction::makeRawFunctionExpression(const IFunction &function,
+                                                                  const ArgumentsRefVector &args) {
+  return fintamath::makeRawFunctionExpression(function, args);
+}
+
 }

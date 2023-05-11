@@ -28,6 +28,8 @@ bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable 
 
 extern std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
 
+extern std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &func, const ArgumentsRefVector &args);
+
 extern ArgumentPtr makeFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
 
 extern std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &func, const ArgumentsPtrVector &args);
@@ -35,6 +37,11 @@ extern std::shared_ptr<IExpression> makeRawFunctionExpression(const IFunction &f
 template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
 std::unique_ptr<IMathObject> makeFunctionExpression(const IFunction &func, const Args &...args) {
   return makeFunctionExpression(func, ArgumentsRefVector{args...});
+}
+
+template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
+std::unique_ptr<IMathObject> makeRawFunctionExpression(const IFunction &func, const Args &...args) {
+  return makeRawFunctionExpression(func, ArgumentsRefVector{args...});
 }
 
 template <typename T, typename = std::enable_if_t<(std::is_convertible_v<T, ArgumentPtr>)>>
