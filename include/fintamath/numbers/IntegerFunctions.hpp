@@ -40,9 +40,9 @@ Integer gcd(const Integer &lhs, const Integer &rhs);
 
 Integer lcm(const Integer &lhs, const Integer &rhs);
 
-Integer intSqrt(const Integer &rhs);
+Integer sqrt(const Integer &rhs);
 
-Integer intSqrt(const Integer &rhs, Integer &remainder);
+Integer sqrt(const Integer &rhs, Integer &remainder);
 
 Integer factorial(const Integer &rhs);
 

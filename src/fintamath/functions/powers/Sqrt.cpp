@@ -15,7 +15,7 @@ std::unique_ptr<IMathObject> Sqrt::call(const ArgumentsRefVector &argsVect) cons
     outMultiSqrt.add<Integer>([](const Integer &rhs) {
       Integer remainder;
 
-      auto res = std::make_unique<Integer>(intSqrt(rhs, remainder));
+      auto res = std::make_unique<Integer>(sqrt(rhs, remainder));
       if (remainder == 0) {
         return res->toMinimalObject();
       }
@@ -26,12 +26,12 @@ std::unique_ptr<IMathObject> Sqrt::call(const ArgumentsRefVector &argsVect) cons
     outMultiSqrt.add<Rational>([](const Rational &rhs) {
       Integer remainder;
 
-      Integer numerator = intSqrt(rhs.numerator(), remainder);
+      Integer numerator = sqrt(rhs.numerator(), remainder);
       if (remainder != 0) {
         return sqrt(convert<Real>(rhs)).toMinimalObject();
       }
 
-      Integer denominator = intSqrt(rhs.denominator(), remainder);
+      Integer denominator = sqrt(rhs.denominator(), remainder);
       if (remainder != 0) {
         return sqrt(convert<Real>(rhs)).toMinimalObject();
       }

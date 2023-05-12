@@ -18,12 +18,12 @@ Integer lcm(const Integer &lhs, const Integer &rhs) {
   return {lcm(lhs.getBackend(), rhs.getBackend())};
 }
 
-Integer intSqrt(const Integer &rhs) {
+Integer sqrt(const Integer &rhs) {
   Integer remainder;
-  return intSqrt(rhs, remainder);
+  return sqrt(rhs, remainder);
 }
 
-Integer intSqrt(const Integer &rhs, Integer &remainder) {
+Integer sqrt(const Integer &rhs, Integer &remainder) {
   cpp_int remainderBackend;
 
   try {

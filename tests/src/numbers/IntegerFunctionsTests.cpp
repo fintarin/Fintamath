@@ -55,50 +55,50 @@ TEST(IntegerFunctionsTests, lcmTest) {
             "135480701249809480124980948012498094801249809480124980948012498094801236261410");
 }
 
-TEST(IntegerFunctionsTests, intSqrtTest) {
-  EXPECT_EQ(intSqrt(Integer(25)), 5);
-  EXPECT_EQ(intSqrt(Integer(100)), 10);
-  EXPECT_EQ(intSqrt(Integer(144)), 12);
-  EXPECT_EQ(intSqrt(Integer("10000000000000000000000000000000000000000000000000000")),
+TEST(IntegerFunctionsTests, sqrtTest) {
+  EXPECT_EQ(sqrt(Integer(25)), 5);
+  EXPECT_EQ(sqrt(Integer(100)), 10);
+  EXPECT_EQ(sqrt(Integer(144)), 12);
+  EXPECT_EQ(sqrt(Integer("10000000000000000000000000000000000000000000000000000")),
             Integer("100000000000000000000000000"));
 
-  EXPECT_EQ(intSqrt(Integer(35)), 5);
-  EXPECT_EQ(intSqrt(Integer(4212)), Integer(64));
-  EXPECT_EQ(intSqrt(Integer("992188888888")), Integer(996086));
-  EXPECT_EQ(intSqrt(Integer("68732648273642987365932706179432649827364")), Integer("262169121510606178721"));
+  EXPECT_EQ(sqrt(Integer(35)), 5);
+  EXPECT_EQ(sqrt(Integer(4212)), Integer(64));
+  EXPECT_EQ(sqrt(Integer("992188888888")), Integer(996086));
+  EXPECT_EQ(sqrt(Integer("68732648273642987365932706179432649827364")), Integer("262169121510606178721"));
 
-  EXPECT_THROW(intSqrt(Integer(-9289)), UndefinedFunctionException);
+  EXPECT_THROW(sqrt(Integer(-9289)), UndefinedFunctionException);
 }
 
 TEST(IntegerFunctionsTests, sqrtWithRemainderTest) {
   Integer remainder;
 
-  EXPECT_EQ(intSqrt(Integer(25), remainder), 5);
+  EXPECT_EQ(sqrt(Integer(25), remainder), 5);
   EXPECT_EQ(remainder, 0);
 
-  EXPECT_EQ(intSqrt(Integer(100), remainder), 10);
+  EXPECT_EQ(sqrt(Integer(100), remainder), 10);
   EXPECT_EQ(remainder, 0);
 
-  EXPECT_EQ(intSqrt(Integer(144), remainder), 12);
+  EXPECT_EQ(sqrt(Integer(144), remainder), 12);
   EXPECT_EQ(remainder, 0);
 
-  EXPECT_EQ(intSqrt(Integer("10000000000000000000000000000000000000000000000000000"), remainder),
+  EXPECT_EQ(sqrt(Integer("10000000000000000000000000000000000000000000000000000"), remainder),
             Integer("100000000000000000000000000"));
   EXPECT_EQ(remainder, 0);
 
-  EXPECT_EQ(intSqrt(Integer(35), remainder), 5);
+  EXPECT_EQ(sqrt(Integer(35), remainder), 5);
   EXPECT_EQ(remainder, 10);
 
-  EXPECT_EQ(intSqrt(Integer(4212), remainder), Integer(64));
+  EXPECT_EQ(sqrt(Integer(4212), remainder), Integer(64));
   EXPECT_EQ(remainder, 116);
 
-  EXPECT_EQ(intSqrt(Integer("992188888888"), remainder), Integer(996086));
+  EXPECT_EQ(sqrt(Integer("992188888888"), remainder), Integer(996086));
   EXPECT_EQ(remainder, 1569492);
 
-  EXPECT_EQ(intSqrt(Integer("68732648273642987365932706179432649827364"), remainder), Integer("262169121510606178721"));
+  EXPECT_EQ(sqrt(Integer("68732648273642987365932706179432649827364"), remainder), Integer("262169121510606178721"));
   EXPECT_EQ(remainder.toString(), "307087949370856631523");
 
-  EXPECT_THROW(intSqrt(Integer(-9289), remainder), UndefinedFunctionException);
+  EXPECT_THROW(sqrt(Integer(-9289), remainder), UndefinedFunctionException);
 }
 
 TEST(IntegerFunctionsTests, powTest) {
