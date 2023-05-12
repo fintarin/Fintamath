@@ -36,14 +36,6 @@ Integer intSqrt(const Integer &rhs, Integer &remainder) {
   }
 }
 
-Integer pow(const Integer &lhs, uint32_t rhs) {
-  if (lhs == 0 && rhs == 0) {
-    throw UndefinedBinaryOperatorException("^", lhs.toString(), std::to_string(rhs));
-  }
-
-  return {pow(lhs.getBackend(), rhs)};
-}
-
 // Use binary splitting.
 // http://numbers.computation.free.fr/Constants/Algorithms/splitting.html.
 Integer factorialRec(const Integer &left, const Integer &right) {

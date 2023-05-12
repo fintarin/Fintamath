@@ -39,7 +39,7 @@ std::unique_ptr<INumber> sqrt(const Integer &rhs) {
     return res;
   }
 
-  return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
+  return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject());
 }
 
 std::unique_ptr<INumber> sqrt(const Rational &rhs) {
@@ -47,12 +47,12 @@ std::unique_ptr<INumber> sqrt(const Rational &rhs) {
 
   Integer numerator = intSqrt(rhs.numerator(), remainder);
   if (remainder != 0) {
-    return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
+    return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject());
   }
 
   Integer denominator = intSqrt(rhs.denominator(), remainder);
   if (remainder != 0) {
-    return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
+    return cast<INumber>(sqrt(convert<Real>(rhs)).toMinimalObject());
   }
 
   return std::make_unique<Rational>(numerator, denominator);
@@ -80,50 +80,20 @@ std::unique_ptr<INumber> sqrt(const INumber &rhs) {
   return multiSqrt(rhs);
 }
 
-// Use exponentiation by squaring with constant auxiliary memory (iterative version).
-// https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.
-template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
-inline std::unique_ptr<INumber> pow(const Lhs &lhs, Integer rhs) {
-  if (lhs == Integer(0) && rhs == 0) {
-    throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
-  }
-
-  if (rhs < 0) {
-    return pow(*(Integer(1) / cast<INumber>(lhs)), -rhs);
-  }
-
-  std::unique_ptr<INumber> res = std::make_unique<Integer>(1);
-  std::unique_ptr<INumber> sqr = cast<INumber>(lhs.clone());
-
-  while (rhs != 0) {
-    if ((*(rhs.toString().end() - 1) - '0') % 2 == 0) {
-      rhs /= 2;
-      sqr = (*sqr) * (*sqr);
-    }
-    else {
-      --rhs;
-      res = (*res) * (*sqr);
-    }
-  }
-
-  return cast<INumber>(res->toMinimalObject());
-}
-
 template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
 std::unique_ptr<INumber> pow(const Lhs &lhs, const Rational &rhs) {
   const Integer &numerator = rhs.numerator();
   const Integer &denominator = rhs.denominator();
 
   if (denominator == 1) {
-    return pow(lhs, numerator);
+    return cast<INumber>(pow(lhs, numerator).toMinimalObject());
   }
 
   if (denominator == 2) {
-    return sqrt(*pow(lhs, numerator));
+    return sqrt(pow(lhs, numerator));
   }
 
-  return cast<INumber>(
-      pow(convert<Real>(lhs), convert<Real>(rhs)).toMinimalObject()); // TODO: do not use toMinimalObject
+  return cast<INumber>(pow(convert<Real>(lhs), convert<Real>(rhs)).toMinimalObject());
 }
 
 std::unique_ptr<INumber> pow(const INumber &lhs, const INumber &rhs) {
@@ -131,15 +101,15 @@ std::unique_ptr<INumber> pow(const INumber &lhs, const INumber &rhs) {
     static MultiMethod<std::unique_ptr<INumber>(const INumber &, const INumber &)> outMultiPow;
 
     outMultiPow.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
-      return pow(inLhs, inRhs);
+      return cast<INumber>(pow(inLhs, inRhs).toMinimalObject());
     });
 
     outMultiPow.add<Rational, Rational>([](const Rational &inLhs, const Rational &inRhs) {
-      return pow(inLhs, inRhs);
+      return cast<INumber>(pow(inLhs, inRhs)->toMinimalObject());
     });
 
     outMultiPow.add<Real, Real>([](const Real &inLhs, const Real &inRhs) {
-      return cast<INumber>(pow(inLhs, inRhs).toMinimalObject()); // TODO: do not use toMinimalObject
+      return cast<INumber>(pow(inLhs, inRhs).toMinimalObject());
     });
 
     return outMultiPow;

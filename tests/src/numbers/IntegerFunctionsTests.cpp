@@ -3,6 +3,8 @@
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 using namespace fintamath;
 
@@ -72,26 +74,26 @@ TEST(IntegerFunctionsTests, sqrtWithRemainderTest) {
   Integer remainder;
 
   EXPECT_EQ(intSqrt(Integer(25), remainder), 5);
-  EXPECT_EQ(remainder.toString(), "0");
+  EXPECT_EQ(remainder, 0);
 
   EXPECT_EQ(intSqrt(Integer(100), remainder), 10);
-  EXPECT_EQ(remainder.toString(), "0");
+  EXPECT_EQ(remainder, 0);
 
   EXPECT_EQ(intSqrt(Integer(144), remainder), 12);
-  EXPECT_EQ(remainder.toString(), "0");
+  EXPECT_EQ(remainder, 0);
 
   EXPECT_EQ(intSqrt(Integer("10000000000000000000000000000000000000000000000000000"), remainder),
             Integer("100000000000000000000000000"));
-  EXPECT_EQ(remainder.toString(), "0");
+  EXPECT_EQ(remainder, 0);
 
   EXPECT_EQ(intSqrt(Integer(35), remainder), 5);
-  EXPECT_EQ(remainder.toString(), "10");
+  EXPECT_EQ(remainder, 10);
 
   EXPECT_EQ(intSqrt(Integer(4212), remainder), Integer(64));
-  EXPECT_EQ(remainder.toString(), "116");
+  EXPECT_EQ(remainder, 116);
 
   EXPECT_EQ(intSqrt(Integer("992188888888"), remainder), Integer(996086));
-  EXPECT_EQ(remainder.toString(), "1569492");
+  EXPECT_EQ(remainder, 1569492);
 
   EXPECT_EQ(intSqrt(Integer("68732648273642987365932706179432649827364"), remainder), Integer("262169121510606178721"));
   EXPECT_EQ(remainder.toString(), "307087949370856631523");
@@ -100,17 +102,40 @@ TEST(IntegerFunctionsTests, sqrtWithRemainderTest) {
 }
 
 TEST(IntegerFunctionsTests, powTest) {
-  EXPECT_EQ(pow(Integer(5), 2), 25);
-  EXPECT_EQ(pow(Integer(-5), 5), -3125);
-  EXPECT_EQ(pow(Integer("6789"), 4), 2124336126051441);
+  EXPECT_EQ(pow(Integer(5), Integer(2)), 25);
+  EXPECT_EQ(pow(Integer(-5), Integer(5)), -3125);
+  EXPECT_EQ(pow(Integer(6789), Integer(4)).toString(), "2124336126051441");
+  EXPECT_EQ(pow(Integer(1), Integer("429837493286275623874628734628734")), 1);
+  EXPECT_EQ(
+      pow(Integer("135253468973498327423987498324729384"), Integer(3)).toString(),
+      "2474259452251333810348988009462181048257185161014872437371075550103119323428971486869861741659206806895104");
+  EXPECT_EQ(pow(Integer(6789), Integer(-4)), 0);
 
-  EXPECT_THROW(pow(Integer(0), 0), UndefinedBinaryOperatorException);
+  EXPECT_EQ(pow(Rational(5, 2), Integer(2)).toString(), "25/4");
+  EXPECT_EQ(pow(Rational(-5, 2), Integer(5)).toString(), "-3125/32");
+  EXPECT_EQ(pow(Rational(6789), Integer(4)).toString(), "2124336126051441");
+  EXPECT_EQ(pow(Rational("135253468973498327423987498324729384.12987349823749832"), Integer(3)).toString(),
+            "4832537992678386348337867205980822373798257851094432575433371642956047093945525418683507600681355491343220"
+            "122262032882136893556623485326120689398001084489/1953125000000000000000000000000000000000000000000");
+  EXPECT_EQ(pow(Rational(6789), Integer(-4)).toString(), "1/2124336126051441");
+
+  EXPECT_EQ(pow(Real(5), Integer(2)).toString(), "25");
+  EXPECT_EQ(pow(Real(-5), Integer(5)).toString(), "-3125");
+  EXPECT_EQ(pow(Real(6789), Integer(4)).toString(), "2124336126051441");
+  EXPECT_EQ(pow(Real("135253468973498327423987498324729384.12987349823749832"), Integer(3)).toString(),
+            "2.474259452251333810348988009462181055384708019760349478621886281193496112100109*10^105");
+  EXPECT_EQ(pow(Real(6789), Integer(-4)).toString(),
+            "4.7073529830645308411980456378106763573183149819028161454972767500068746591107477*10^-16");
+
+  EXPECT_THROW(pow(Integer(0), Integer(0)), UndefinedBinaryOperatorException);
+  EXPECT_THROW(pow(Rational(0), Integer(0)), UndefinedBinaryOperatorException);
+  EXPECT_THROW(pow(Rational(0), Integer(0)), UndefinedBinaryOperatorException);
 }
 
 TEST(IntegerFunctionsTests, factorialTest) {
   EXPECT_EQ(factorial(Integer(0)), 1);
   EXPECT_EQ(factorial(Integer(5)), 120);
-  EXPECT_EQ(factorial(Integer("25")).toString(), "15511210043330985984000000");
+  EXPECT_EQ(factorial(Integer(25)).toString(), "15511210043330985984000000");
 
   EXPECT_THROW(factorial(Integer(-1)), UndefinedUnaryOperatorException);
 }
