@@ -1,3 +1,4 @@
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
 #include "fintamath/expressions/ExpressionUtils.hpp"

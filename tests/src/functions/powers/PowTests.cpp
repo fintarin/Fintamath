@@ -78,15 +78,15 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Rational("-1"), Rational("-25"))->toString(), "-1");
   EXPECT_EQ(f(Rational("-2.2"), Rational("-5"))->toString(), "-3125/161051");
 
+  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3^a");
+
   EXPECT_THROW(f(Integer(0), Integer(0)), UndefinedException);
   EXPECT_THROW(f(Rational("0"), Rational("-10")), UndefinedException);
   EXPECT_THROW(f(Rational("-10"), Rational("-1.5")), UndefinedException);
 
-  EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3^a");
-
+  EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
   EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 

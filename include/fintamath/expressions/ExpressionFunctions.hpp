@@ -1,7 +1,6 @@
 #pragma once
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/numbers/NumberFunctions.hpp"
 
 namespace fintamath {
 
