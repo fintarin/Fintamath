@@ -8,8 +8,9 @@ std::unique_ptr<IMathObject> IFunction::makeExprSimpl(const IFunction &function,
   return fintamath::makeExprSimpl(function, args);
 }
 
-std::unique_ptr<IMathObject> IFunction::makeExpr(const IFunction &function, const ArgumentsRefVector &args) {
-  return fintamath::makeExpr(function, args);
-}
+// TODO: uncomment
+// std::unique_ptr<IMathObject> IFunction::makeExpr(const IFunction &function, const ArgumentsRefVector &args) {
+//   return fintamath::makeExpr(function, args);
+// }
 
 }

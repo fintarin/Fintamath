@@ -56,7 +56,8 @@ protected:
 
   static std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &function, const ArgumentsRefVector &args);
 
-  static std::unique_ptr<IMathObject> makeExpr(const IFunction &function, const ArgumentsRefVector &args);
+  // TODO: uncomment
+  // static std::unique_ptr<IMathObject> makeExpr(const IFunction &function, const ArgumentsRefVector &args);
 
 private:
   static Parser::Map<std::unique_ptr<IFunction>> &getParser();

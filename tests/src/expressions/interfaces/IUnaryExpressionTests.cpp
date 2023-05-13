@@ -8,11 +8,15 @@ using namespace fintamath;
 
 const Sqrt f;
 
+namespace {
+
 class TestUnaryExpression : public IUnaryExpressionCRTP<TestUnaryExpression> {
 public:
   explicit TestUnaryExpression(const ArgumentPtr &inRhsChild) : IUnaryExpressionCRTP(f, inRhsChild) {
   }
 };
+
+}
 
 TEST(IUnaryExpressionTests, toStringTest) {
   TestUnaryExpression expr(std::make_shared<Integer>(1));
@@ -38,7 +42,8 @@ TEST(IUnaryExpressionTests, setChildren) {
   EXPECT_EQ(*expr.getChildren().front(), Integer(0));
 
   EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
-  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1)}), InvalidInputFunctionException);
+  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1)}),
+               InvalidInputFunctionException);
 }
 
 TEST(IUnaryExpressionTests, toMinimalObjectTest) {

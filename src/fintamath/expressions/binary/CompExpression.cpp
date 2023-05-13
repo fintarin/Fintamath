@@ -47,10 +47,6 @@ ArgumentPtr CompExpression::preSimplify() const {
   auto simpl = IBinaryExpression::preSimplify();
   auto simplExpr = cast<CompExpression>(simpl);
 
-  if (!simplExpr) {
-    return simpl;
-  }
-
   if (!simplExpr->isSolution) {
     if (!is<Integer>(rhsChild) || *rhsChild != Integer(0)) {
       ArgumentPtr resLhs = makeExprSimpl(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);

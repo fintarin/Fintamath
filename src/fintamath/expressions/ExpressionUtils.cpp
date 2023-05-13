@@ -85,11 +85,6 @@ std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr
 
   if (const auto childExpr = cast<IExpression>(rhs)) {
     if (const auto exprOper = cast<IOperator>(childExpr->getFunction())) {
-      if (IOperator::Priority priority = exprOper->getOperatorPriority();
-          priority == IOperator::Priority::PrefixUnary) {
-        return result + rhs->toString();
-      }
-
       return result + putInBrackets(rhs->toString());
     }
   }

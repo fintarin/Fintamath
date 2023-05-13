@@ -78,13 +78,11 @@ void IExpression::setValuesOfVariables(const std::vector<Variable> &vars, const 
 }
 
 std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
-  if (getFunction() == nullptr) {
+  if (!getFunction()) {
     return getChildren().front()->toMinimalObject();
   }
 
-  ArgumentPtr cloneExpr = clone();
-  simplifyChild(cloneExpr);
-  return cloneExpr->clone();
+  return simplify()->clone();
 }
 
 void IExpression::compressChild(ArgumentPtr &child) {
@@ -157,11 +155,11 @@ ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrV
   return res;
 }
 
-ArgumentPtr IExpression::postSimplify() const {
+ArgumentPtr IExpression::preSimplify() const {
   return {};
 }
 
-ArgumentPtr IExpression::preSimplify() const {
+ArgumentPtr IExpression::postSimplify() const {
   return {};
 }
 

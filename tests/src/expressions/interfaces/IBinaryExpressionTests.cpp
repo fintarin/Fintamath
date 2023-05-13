@@ -8,12 +8,16 @@ using namespace fintamath;
 
 const Add f;
 
+namespace {
+
 class TestBinaryExpression : public IBinaryExpressionCRTP<TestBinaryExpression> {
 public:
   explicit TestBinaryExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
       : IBinaryExpressionCRTP(f, inLhsChild, inRhsChild) {
   }
 };
+
+}
 
 TEST(IBinaryExpressionTests, toStringTest) {
   TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
@@ -42,7 +46,9 @@ TEST(IBinaryExpressionTests, setChildren) {
 
   EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
   EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1)}), InvalidInputFunctionException);
-  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1), std::make_shared<Integer>(1)}), InvalidInputFunctionException);
+  EXPECT_THROW(
+      expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1), std::make_shared<Integer>(1)}),
+      InvalidInputFunctionException);
 }
 
 TEST(IBinaryExpressionTests, toMinimalObjectTest) {

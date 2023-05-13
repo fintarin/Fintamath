@@ -45,9 +45,9 @@ protected:
 
   static ArgumentPtr callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs);
 
-  virtual ArgumentPtr postSimplify() const;
-
   virtual ArgumentPtr preSimplify() const;
+
+  virtual ArgumentPtr postSimplify() const;
 
   virtual ArgumentPtr simplify() const = 0;
 

@@ -857,6 +857,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
 TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("10^10000").precise(8).toString(), "1*10^10000");
   EXPECT_EQ(Expression("x+E").precise(8).toString(), "x + 2.7182818");
+  EXPECT_EQ(Expression("x^(100!)").precise(8).toString(), "x^(9.3326215*10^157)");
   EXPECT_EQ(Expression("9^10000").precise(8).toString(), "2.6613034*10^9542");
   EXPECT_EQ(Expression("sin(E)").precise(16).toString(), "0.4107812905029087");
   EXPECT_EQ(Expression("sin(sin(E))").precise(30).toString(), "0.39932574404189139297067052142");

@@ -116,13 +116,16 @@ std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Va
 }
 
 std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var) {
+  std::shared_ptr<const INumber> res;
+
   for (const auto &child : elem->getChildren()) {
     if (auto powValue = getElementPower(child, var); *powValue != Integer(0)) {
-      return powValue;
+      res = powValue;
+      break;
     }
   }
 
-  return cast<INumber>(std::make_shared<Integer>(0));
+  return res;
 }
 
 ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {

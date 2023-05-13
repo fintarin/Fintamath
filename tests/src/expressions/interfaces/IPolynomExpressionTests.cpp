@@ -8,6 +8,8 @@ using namespace fintamath;
 
 const Add f;
 
+namespace {
+
 class TestPolynomExpression : public IPolynomExpressionCRTP<TestPolynomExpression> {
 public:
   explicit TestPolynomExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(f, children) {
@@ -18,6 +20,8 @@ protected:
     return (prevChild ? " " + func->toString() + " " : "") + inChild->toString();
   }
 };
+
+}
 
 TEST(IPolynomExpressionTests, toStringTest) {
   TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});

@@ -173,10 +173,6 @@ ArgumentPtr PowExpression::preSimplify() const {
   auto simpl = IBinaryExpression::preSimplify();
   auto simplExpr = cast<PowExpression>(simpl);
 
-  if (!simplExpr) {
-    return simpl;
-  }
-
   if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
     auto lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), simplExpr->rhsChild);
     auto rhsMul = makeExpr(Pow(), lhsExpr->getChildren()[0], simplExpr->rhsChild);
