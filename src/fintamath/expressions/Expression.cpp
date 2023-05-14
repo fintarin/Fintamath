@@ -221,7 +221,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t
     }
 
     if (terms[i]->name == ",") {
-      if (i == 0 || i + 1 == terms.size()) {
+      if (i == 0 || i + 1 == end) {
         throw InvalidInputException(termsToString(terms));
       }
 
@@ -468,7 +468,7 @@ ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bo
       ArgumentPtr res = (*constant)();
 
       if (const auto num = cast<INumber>(res)) {
-        return std::make_shared<Real>(convert<Real>(*num).precise(precision));
+        res = std::make_shared<Real>(convert<Real>(*num).precise(precision));
       }
 
       return res;
@@ -540,7 +540,7 @@ void Expression::setChildren(const ArgumentsPtrVector &childVect) {
     return;
   }
 
-  child = childVect.front();
+  child = childVect.front()->toMinimalObject();
 }
 
 void Expression::setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) {

@@ -548,6 +548,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(),
             "ln(10^(2 ln(2)) 2^(-2 ln(10 E)) E^(2 ln(2)))"); // TODO: 0 - mul powers minimization
   EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
+  EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
+  EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5 3^x)");
+  EXPECT_EQ(Expression("log(2, 3) + 3log(3, 4)").toString(), "log(2, 3) + 3 log(3, 4)");
+  EXPECT_EQ(Expression("3log(2x, 3) + log(3, 4)").toString(),
+            "log(3, 4) + 3 log(2 x, 3)"); // TODO! "3 log(2 x, 3) + log(3, 4)"
 
   EXPECT_EQ(Expression("sin(asin(x))").toString(), "x");
   EXPECT_EQ(Expression("cos(acos(x))").toString(), "x");
@@ -788,6 +793,9 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(a+b)*()"), InvalidInputException);
 
   EXPECT_THROW(Expression("sin(2,3)"), InvalidInputException);
+  EXPECT_THROW(Expression("sin(,)"), InvalidInputException);
+  EXPECT_THROW(Expression("sin(,2)"), InvalidInputException);
+  EXPECT_THROW(Expression("sin(2,)"), InvalidInputException);
   EXPECT_THROW(Expression("sin()"), InvalidInputException);
   EXPECT_THROW(Expression("log(1)"), InvalidInputException);
   EXPECT_THROW(Expression("log()"), InvalidInputException);
@@ -998,6 +1006,19 @@ TEST(ExpressionTests, toMinimalObjectTest) {
   EXPECT_TRUE(is<Variable>(Expression("a").toMinimalObject()));
   EXPECT_TRUE(is<INumber>(Expression("123.123").toMinimalObject()));
   EXPECT_TRUE(is<IExpression>(Expression("a+a").toMinimalObject()));
+}
+
+TEST(ExpressionTests, setChildrenTest) {
+  Expression expr;
+
+  expr.setChildren({Variable("a").clone()});
+  EXPECT_EQ(expr.toString(), "a");
+
+  expr.setChildren({Expression("a-a").clone()});
+  EXPECT_EQ(expr.toString(), "0");
+
+  expr.setChildren({Variable("a").clone(), Variable("b").clone()});
+  EXPECT_EQ(expr.toString(), "0");
 }
 
 TEST(ExpressionTests, variableVariablePlusOperatorTest) {

@@ -78,10 +78,6 @@ void IExpression::setValuesOfVariables(const std::vector<Variable> &vars, const 
 }
 
 std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
-  if (!getFunction()) {
-    return getChildren().front()->toMinimalObject();
-  }
-
   return simplify()->clone();
 }
 
