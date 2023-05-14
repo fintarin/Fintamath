@@ -537,7 +537,7 @@ std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrV
 
 void Expression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.size() != 1) {
-    return;
+    throw InvalidInputFunctionException("", argumentVectorToStringVector(childVect));
   }
 
   child = childVect.front()->toMinimalObject();

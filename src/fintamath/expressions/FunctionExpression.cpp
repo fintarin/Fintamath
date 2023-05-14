@@ -84,7 +84,7 @@ ArgumentPtr FunctionExpression::postSimplify() const {
 
 void FunctionExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.size() != size_t(func->getFunctionType())) {
-    return;
+    throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(childVect));
   }
 
   children = childVect;

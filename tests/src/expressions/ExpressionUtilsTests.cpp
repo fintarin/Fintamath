@@ -50,6 +50,10 @@ TEST(ExpressionUtilsTests, prefixOperatorToStringTest) {
   // TODO: implement
 }
 
+TEST(ExpressionUtilsTests, argumentVectorToStringVectorTest) {
+  // TODO: implement
+}
+
 TEST(ExpressionUtilsTests, hasVariableTest) {
   auto expr = std::make_shared<Expression>("cos(sin(a))");
   EXPECT_TRUE(hasVariable(expr, Variable("a")));

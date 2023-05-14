@@ -54,8 +54,7 @@ TEST(IExpressionTests, setChildrenTest) {
   expr->setChildren({Variable("b").clone()});
   EXPECT_EQ(expr->toString(), "b!");
 
-  expr->setChildren({Variable("b").clone(), Variable("c").clone()});
-  EXPECT_EQ(expr->toString(), "b!");
+  EXPECT_THROW(expr->setChildren({Variable("b").clone(), Variable("c").clone()}), InvalidInputException);
 
   // TODO: implement more tests
 }

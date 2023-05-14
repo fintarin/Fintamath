@@ -1017,8 +1017,7 @@ TEST(ExpressionTests, setChildrenTest) {
   expr.setChildren({Expression("a-a").clone()});
   EXPECT_EQ(expr.toString(), "0");
 
-  expr.setChildren({Variable("a").clone(), Variable("b").clone()});
-  EXPECT_EQ(expr.toString(), "0");
+  EXPECT_THROW(expr.setChildren({Variable("a").clone(), Variable("b").clone()}), InvalidInputException);
 }
 
 TEST(ExpressionTests, variableVariablePlusOperatorTest) {

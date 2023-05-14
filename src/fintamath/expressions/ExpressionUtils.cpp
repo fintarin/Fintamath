@@ -141,4 +141,14 @@ bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable 
   return false;
 }
 
+std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args) {
+  std::vector<std::string> argStrings(args.size());
+
+  for (size_t i = 0; i < argStrings.size(); i++) {
+    argStrings[i] = args[i].get()->toString();
+  }
+
+  return argStrings;
+}
+
 }

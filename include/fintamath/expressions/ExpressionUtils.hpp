@@ -26,6 +26,8 @@ bool hasVariables(const std::shared_ptr<const IExpression> &expr);
 
 bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable &var);
 
+std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args);
+
 extern std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &func, const ArgumentsRefVector &args);
 
 extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args);
