@@ -46,11 +46,10 @@ jobs:
         run: cmake --build build --config ${{env.BUILD_TYPE}} --target fintamath_coverage
 
       - name: Upload coverage report to CodeCov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           directory: ${{github.workspace}}/build
           files: lcov.info
-          flags: unittests
           fail_ci_if_error: true
-          name: codecov-umbrella
+          functionalities: fixes
           verbose: true
