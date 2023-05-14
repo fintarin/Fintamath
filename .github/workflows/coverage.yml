@@ -11,31 +11,26 @@ defaults:
     shell: bash
 
 env:
-  BUILD_TYPE: Debug
+  BUILD_TYPE: Release
 
 jobs:
   coverage:
     name: Coverage
     runs-on: ubuntu-latest
 
-    env:
-      SONAR_SCANNER_VERSION: 4.4.0.2170
-      SONAR_SERVER_URL: "https://sonarcloud.io"
-      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install lcov
-        run: sudo apt-get install lcov
+      - name: Install llvm & lcov
+        run: sudo apt-get install llvm lcov
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
         run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON -Dfintamath_enable_coverage=ON
         env:
-          CC: gcc
-          CXX: g++
+          CC: clang
+          CXX: clang++
 
       - name: Build
         working-directory: ${{github.workspace}}
@@ -51,5 +46,4 @@ jobs:
           directory: ${{github.workspace}}/build
           files: lcov.info
           fail_ci_if_error: true
-          functionalities: fixes
           verbose: true
