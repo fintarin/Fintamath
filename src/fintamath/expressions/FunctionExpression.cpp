@@ -79,13 +79,7 @@ ArgumentPtr FunctionExpression::postSimplify() const {
     return simpl;
   }
 
-  ArgumentPtr val = (*func)(args);
-
-  if (const auto num = cast<INumber>(val); num && !num->isPrecise()) {
-    return simpl;
-  }
-
-  return val;
+  return (*func)(args);
 }
 
 void FunctionExpression::setChildren(const ArgumentsPtrVector &childVect) {

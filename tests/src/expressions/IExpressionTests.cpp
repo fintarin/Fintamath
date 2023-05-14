@@ -3,7 +3,9 @@
 #include "fintamath/expressions/IExpression.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/other/Factorial.hpp"
 
 using namespace fintamath;
 
@@ -47,7 +49,15 @@ TEST(IExpressionTests, getChildrenTest) {
 }
 
 TEST(IExpressionTests, setChildrenTest) {
-  // TODO: implement
+  auto expr = cast<IExpression>(makeExprSimpl(Factorial(), Variable("a").clone())->clone());
+
+  expr->setChildren({Variable("b").clone()});
+  EXPECT_EQ(expr->toString(), "b!");
+
+  expr->setChildren({Variable("b").clone(), Variable("c").clone()});
+  EXPECT_EQ(expr->toString(), "b!");
+
+  // TODO: implement more tests
 }
 
 TEST(IExpressionTests, getVariablesUnsortedTest) {
