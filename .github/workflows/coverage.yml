@@ -23,7 +23,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install llvm & lcov
-        run: sudo apt-get install llvm lcov
+        run: |
+          sudo sed -i 's/azure\.//' /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install llvm lcov
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
@@ -40,10 +43,7 @@ jobs:
         working-directory: ${{github.workspace}}
         run: cmake --build build --config ${{env.BUILD_TYPE}} --target fintamath_coverage
 
-      - name: Upload coverage report to CodeCov
-        uses: codecov/codecov-action@v3
+      - name: Upload coverage report to Coveralls
+        uses: coverallsapp/github-action@v2
         with:
-          directory: ${{github.workspace}}/build
-          files: lcov.info
-          fail_ci_if_error: true
-          verbose: true
+          path-to-lcov: ${{github.workspace}}/build/lcov.info

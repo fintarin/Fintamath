@@ -11,8 +11,8 @@
   <a href="https://sonarcloud.io/summary/new_code?id=fintarin_Fintamath">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/>
   </a>
-  <a href="https://codecov.io/gh/fintarin/Fintamath" >
-    <img src="https://codecov.io/gh/fintarin/Fintamath/branch/master/graph/badge.svg?branch=master"/>
+  <a href='https://coveralls.io/github/fintarin/Fintamath'>
+    <img src='https://coveralls.io/repos/github/fintarin/Fintamath/badge.svg?branch=master&kill_cache=1' alt='Coverage Status' />
   </a>
 </p>
 
