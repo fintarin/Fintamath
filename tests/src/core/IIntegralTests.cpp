@@ -11,9 +11,11 @@ using namespace fintamath;
 namespace {
 
 class TestIntegral : public IIntegralCRTP<TestIntegral> {
+  FINTAMATH_CONVERTIBLE()
+
 public:
   std::string toString() const override {
-    return "aaaaaa";
+    return "test";
   }
 
 protected:
@@ -66,24 +68,24 @@ protected:
   }
 };
 
-class TestIntegralConvertable : public TestIntegral {
+class TestIntegralConvertible : public TestIntegral {
 public:
-  TestIntegralConvertable() : TestIntegral() {
+  TestIntegralConvertible() : TestIntegral() {
   }
 
-  TestIntegralConvertable(const Integer &rhs) : TestIntegralConvertable() {
+  TestIntegralConvertible(const Integer &rhs) : TestIntegralConvertible() {
   }
 };
 
 struct TestIntegralConvertableConfig {
   TestIntegralConvertableConfig() {
-    Converter::add<TestIntegralConvertable, TestIntegralConvertable>(
-        [](const TestIntegralConvertable & /*type*/, const TestIntegralConvertable &value) {
-          return std::make_unique<TestIntegralConvertable>(value);
+    Converter::add<TestIntegralConvertible, TestIntegralConvertible>(
+        [](const TestIntegralConvertible & /*type*/, const TestIntegralConvertible &value) {
+          return std::make_unique<TestIntegralConvertible>(value);
         });
-    Converter::add<TestIntegralConvertable, Integer>(
-        [](const TestIntegralConvertable & /*type*/, const Integer &value) {
-          return std::make_unique<TestIntegralConvertable>(value);
+    Converter::add<TestIntegralConvertible, Integer>(
+        [](const TestIntegralConvertible & /*type*/, const Integer &value) {
+          return std::make_unique<TestIntegralConvertible>(value);
         });
   }
 };
@@ -106,8 +108,8 @@ TEST(IIntegralTests, modTest) {
   EXPECT_TRUE(is<Integer>(*m1 % *m2));
   EXPECT_TRUE(is<Integer>(*m2 % *m1));
 
-  EXPECT_TRUE(is<TestIntegral>(*m1 % TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() % *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 % TestIntegralConvertible()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertible() % *m1));
 
   EXPECT_THROW(*m1 % TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() % *m1, InvalidInputBinaryOperatorException);
@@ -130,8 +132,8 @@ TEST(IIntegralTests, bitAndTest) {
   EXPECT_TRUE(is<Integer>(*m1 & *m2));
   EXPECT_TRUE(is<Integer>(*m2 & *m1));
 
-  EXPECT_TRUE(is<TestIntegral>(*m1 & TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() & *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 & TestIntegralConvertible()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertible() & *m1));
 
   EXPECT_THROW(*m1 & TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() & *m1, InvalidInputBinaryOperatorException);
@@ -154,8 +156,8 @@ TEST(IIntegralTests, bitOrTest) {
   EXPECT_TRUE(is<Integer>(*m1 | *m2));
   EXPECT_TRUE(is<Integer>(*m2 | *m1));
 
-  EXPECT_TRUE(is<TestIntegral>(*m1 | TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() | *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 | TestIntegralConvertible()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertible() | *m1));
 
   EXPECT_THROW(*m1 | TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() | *m1, InvalidInputBinaryOperatorException);
@@ -178,8 +180,8 @@ TEST(IIntegralTests, bitXorTest) {
   EXPECT_TRUE(is<Integer>(*m1 ^ *m2));
   EXPECT_TRUE(is<Integer>(*m2 ^ *m1));
 
-  EXPECT_TRUE(is<TestIntegral>(*m1 ^ TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() ^ *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 ^ TestIntegralConvertible()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertible() ^ *m1));
 
   EXPECT_THROW(*m1 ^ TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() ^ *m1, InvalidInputBinaryOperatorException);
@@ -202,8 +204,8 @@ TEST(IIntegralTests, bitLeftShiftTest) {
   EXPECT_TRUE(is<Integer>(*m1 << *m2));
   EXPECT_TRUE(is<Integer>(*m2 << *m1));
 
-  EXPECT_TRUE(is<TestIntegral>(*m1 << TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() << *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 << TestIntegralConvertible()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertible() << *m1));
 
   EXPECT_THROW(*m1 << TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() << *m1, InvalidInputBinaryOperatorException);
@@ -226,8 +228,8 @@ TEST(IIntegralTests, bitRightShiftTest) {
   EXPECT_TRUE(is<Integer>(*m1 >> *m2));
   EXPECT_TRUE(is<Integer>(*m2 >> *m1));
 
-  EXPECT_TRUE(is<TestIntegral>(*m1 >> TestIntegralConvertable()));
-  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertable() >> *m1));
+  EXPECT_TRUE(is<TestIntegral>(*m1 >> TestIntegralConvertible()));
+  EXPECT_TRUE(is<TestIntegral>(TestIntegralConvertible() >> *m1));
 
   EXPECT_THROW(*m1 >> TestIntegral(), InvalidInputBinaryOperatorException);
   EXPECT_THROW(TestIntegral() >> *m1, InvalidInputBinaryOperatorException);

@@ -6,6 +6,18 @@
 
 namespace fintamath {
 
+#define FINTAMATH_CONVERTIBLE()                                                                                        \
+public:                                                                                                                \
+  inline static const bool IS_CONVERTIBLE = true;                                                                      \
+                                                                                                                       \
+private:
+
+template <typename T, typename U = bool>
+struct IsConvertible : std::false_type {};
+
+template <typename T>
+struct IsConvertible<T, decltype((void)T::IS_CONVERTIBLE, true)> : std::true_type {};
+
 template <typename To>
 To *cast(IMathObject *from) {
   return dynamic_cast<To *>(from);
@@ -57,6 +69,8 @@ inline std::unique_ptr<IMathObject> convert(const IMathObject &to, const IMathOb
 
 template <typename To>
 To convert(const IMathObject &from) {
+  static_assert(IsConvertible<To>::value, "To must be convertible");
+
   static const To to;
   auto res = convert(to, from);
 

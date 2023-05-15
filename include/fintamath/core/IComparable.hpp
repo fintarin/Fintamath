@@ -97,12 +97,14 @@ private:
       return funcCommonTypes(*this, *rhsPtr);
     }
 
-    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
-      return funcCommonTypes(*this, cast<Derived>(*rhsPtr));
-    }
+    if constexpr (IsConvertible<Derived>::value) {
+      if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
+        return funcCommonTypes(*this, cast<Derived>(*rhsPtr));
+      }
 
-    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-      return funcDifferentTypes(cast<IComparable>(*lhsPtr), rhs);
+      if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
+        return funcDifferentTypes(cast<IComparable>(*lhsPtr), rhs);
+      }
     }
 
     throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
