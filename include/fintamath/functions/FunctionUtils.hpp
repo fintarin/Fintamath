@@ -2,13 +2,13 @@
 
 #include <algorithm>
 
-namespace fintamath {
-
 #define FINTAMATH_FUNCTION_TYPE_ANY()                                                                                  \
 public:                                                                                                                \
   inline static const bool IS_FUNCTION_TYPE_ANY = true;                                                                \
                                                                                                                        \
 private:
+
+namespace fintamath {
 
 template <typename T, typename U = bool>
 struct IsFunctionTypeAny : std::false_type {};

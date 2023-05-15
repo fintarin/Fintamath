@@ -4,13 +4,13 @@
 
 #include "fintamath/meta/Converter.hpp"
 
-namespace fintamath {
-
 #define FINTAMATH_CONVERTIBLE()                                                                                        \
 public:                                                                                                                \
   inline static const bool IS_CONVERTIBLE = true;                                                                      \
                                                                                                                        \
 private:
+
+namespace fintamath {
 
 template <typename T, typename U = bool>
 struct IsConvertible : std::false_type {};
