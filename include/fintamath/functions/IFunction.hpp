@@ -67,16 +67,12 @@ template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IFunction {
 public:
   IFunctionCRTP(bool isTypeAny = false, bool isNonExressionEvaluatable = true)
-      : isTypeAnyFunc(isTypeAny),
+      : type(isTypeAny ? IFunction::Type::Any : IFunction::Type(sizeof...(Args))),
         isNonExressionEvaluatableFunc(isNonExressionEvaluatable) {
   }
 
   IFunction::Type getFunctionType() const final {
-    if (isTypeAnyFunc) {
-      return Type::Any;
-    }
-
-    return IFunction::Type(sizeof...(Args));
+    return type;
   }
 
   const std::type_info &getReturnType() const final {
@@ -90,7 +86,7 @@ public:
   }
 
   bool doArgsMatch(const ArgumentsRefVector &argsVect) const override {
-    if (isTypeAnyFunc) {
+    if (type == IFunction::Type::Any) {
       return doAnyArgsMatch(argsVect);
     }
 
@@ -119,7 +115,7 @@ protected:
   }
 
   bool equals(const Derived &rhs) const override {
-    return getFunctionType() == rhs.getFunctionType() && toString() == rhs.toString();
+    return type == rhs.type && toString() == rhs.toString();
   }
 
 private:
@@ -155,7 +151,7 @@ private:
   }
 
   void validateArgsSize(const ArgumentsRefVector &argsVect) const {
-    if (isTypeAnyFunc) {
+    if (type == IFunction::Type::Any) {
       if (argsVect.empty()) {
         throwInvalidInputFunctionException(argsVect);
       }
@@ -176,7 +172,7 @@ private:
   }
 
 private:
-  bool isTypeAnyFunc;
+  IFunction::Type type;
 
   bool isNonExressionEvaluatableFunc;
 };
