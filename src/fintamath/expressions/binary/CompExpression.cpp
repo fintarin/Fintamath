@@ -47,11 +47,9 @@ ArgumentPtr CompExpression::preSimplify() const {
   auto simpl = IBinaryExpression::preSimplify();
   auto simplExpr = cast<CompExpression>(simpl);
 
-  if (!simplExpr->isSolution) {
-    if (!is<Integer>(rhsChild) || *rhsChild != Integer(0)) {
-      ArgumentPtr resLhs = makeExprSimpl(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
-      return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
-    }
+  if (!simplExpr->isSolution && (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
+    ArgumentPtr resLhs = makeExprSimpl(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
+    return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
   }
 
   return simplExpr;

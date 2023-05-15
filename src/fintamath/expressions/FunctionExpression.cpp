@@ -20,15 +20,11 @@ FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentsP
 
 std::string FunctionExpression::toString() const {
   if (const auto oper = cast<IOperator>(func)) {
-    switch (oper->getOperatorPriority()) {
-    case IOperator::Priority::PostfixUnary:
+    if (oper->getOperatorPriority() == IOperator::Priority::PostfixUnary) {
       return postfixUnaryOperatorToString(*oper, children.front());
-    default:
-      ArgumentsPtrVector values;
-      values.emplace_back(children.front());
-      values.emplace_back(children.back());
-      return binaryOperatorToString(*oper, values);
     }
+
+    return binaryOperatorToString(*oper, {children.front(), children.back()});
   }
 
   return functionToString(*func, children);
@@ -89,5 +85,4 @@ void FunctionExpression::setChildren(const ArgumentsPtrVector &childVect) {
 
   children = childVect;
 }
-
 }

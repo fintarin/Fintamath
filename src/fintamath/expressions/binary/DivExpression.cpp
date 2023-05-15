@@ -125,15 +125,20 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
   for (auto &lhsChild : lhsChildren) {
     for (size_t j = 0; j < rhsChildren.size(); j++) {
-      if (auto res = divPowerSimplify(lhsChild, rhsChildren[j])) {
-        lhsChild = res;
-        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
-        break;
-      }
+      bool isResFound = false;
 
-      if (auto res = callFunction(Div(), {lhsChild, rhsChildren[j]})) {
+      if (auto divPowRes = divPowSimplify(lhsChild, rhsChildren[j])) {
+        lhsChild = divPowRes;
+        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
+        isResFound = true;
+      }
+      else if (auto callFuncRes = callFunction(Div(), {lhsChild, rhsChildren[j]})) {
         lhsChild = Div()(*lhsChild, *rhsChildren[j]);
         rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
+        isResFound = true;
+      }
+
+      if (isResFound) {
         break;
       }
     }
@@ -322,7 +327,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   return {divResult, div};
 }
 
-ArgumentPtr DivExpression::divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::divPowSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == *rhs) {
     return std::make_shared<Integer>(1);
   }

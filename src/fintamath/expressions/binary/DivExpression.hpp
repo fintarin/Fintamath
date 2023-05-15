@@ -33,7 +33,7 @@ private:
 
   static std::pair<ArgumentPtr, ArgumentPtr> mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr divPowerSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr divPowSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &rhs);
 

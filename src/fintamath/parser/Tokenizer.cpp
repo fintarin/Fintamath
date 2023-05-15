@@ -12,7 +12,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
   Token numberToken;
   Token specialToken;
 
-  for (char &ch : str) {
+  for (char ch : str) {
     if (isDigitOrPoint(ch)) {
       appendToken(tokens, specialToken, true);
       numberToken.push_back(ch);

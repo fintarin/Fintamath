@@ -461,20 +461,16 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
 
   size_t lhsStart = 0;
   for (; lhsStart < lhsChildren.size(); lhsStart++) {
-    if (is<Variable>(lhsChildren[lhsStart])) {
-      break;
-    }
-    if (auto lhsChildExpr = cast<IExpression>(lhsChildren[lhsStart]); lhsChildExpr && hasVariables(lhsChildExpr)) {
+    auto lhsChildExpr = cast<IExpression>(lhsChildren[lhsStart]);
+    if (is<Variable>(lhsChildren[lhsStart]) || (lhsChildExpr && hasVariables(lhsChildExpr))) {
       break;
     }
   }
 
   size_t rhsStart = 0;
   for (; rhsStart < rhsChildren.size(); rhsStart++) {
-    if (is<Variable>(rhsChildren[rhsStart])) {
-      break;
-    }
-    if (auto rhsChildExpr = cast<IExpression>(rhsChildren[rhsStart]); rhsChildExpr && hasVariables(rhsChildExpr)) {
+    auto rhsChildExpr = cast<IExpression>(rhsChildren[rhsStart]);
+    if (is<Variable>(rhsChildren[rhsStart]) || (rhsChildExpr && hasVariables(rhsChildExpr))) {
       break;
     }
   }
