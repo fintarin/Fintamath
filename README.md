@@ -12,7 +12,7 @@
     <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/>
   </a>
   <a href='https://coveralls.io/github/fintarin/Fintamath'>
-    <img src='https://coveralls.io/repos/github/fintarin/Fintamath/badge.svg?branch=master&kill_cache=1' alt='Coverage Status' />
+    <img src='https://coveralls.io/repos/github/fintarin/Fintamath/badge.svg?branch=master' alt='Coverage Status' />
   </a>
 </p>
 
