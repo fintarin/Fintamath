@@ -148,8 +148,7 @@ private:
     return true;
   }
 
-  template <typename ArgumentsRefVectorType>
-  bool doAnyArgsMatch(const ArgumentsRefVectorType &argsVect) const {
+  bool doAnyArgsMatch(const ArgumentsRefVector &argsVect) const {
     return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
       return (is<Args>(arg) || ...);
     });
