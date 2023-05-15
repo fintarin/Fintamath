@@ -26,9 +26,9 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() 
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::zeroSimplify,   //
-      &DivExpression::negSimplify, //
-      &DivExpression::sumSimplify,    //
+      &DivExpression::zeroSimplify, //
+      &DivExpression::negSimplify,  //
+      &DivExpression::sumSimplify,  //
   };
   return simplifyFunctions;
 }
@@ -192,10 +192,6 @@ bool DivExpression::isNeg(const ArgumentPtr &expr) {
     return true;
   }
 
-  if (auto numberValue = cast<INumber>(checkValue); numberValue && *numberValue < Integer(0)) {
-    return true;
-  }
-
   return false;
 }
 
@@ -206,10 +202,7 @@ ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const Argumen
   }
 
   if (auto [lhsRes, rhsRes] = mulSumSimplify(lhs, rhs); lhsRes) {
-    if (rhsRes) {
-      return makeExprSimpl(Add(), lhsRes, rhsRes);
-    }
-    return lhsRes;
+    return makeExprSimpl(Add(), lhsRes, rhsRes);
   }
 
   if (auto res = sumSumSimplify(lhs, rhs)) {
@@ -313,10 +306,6 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   }
 
   ArgumentPtr divResult = makeExprSimpl(Div(), lhs, rhsChildren.front());
-
-  if (const auto number = cast<INumber>(divResult); number && *number == Integer(0)) {
-    return {divResult, nullptr};
-  }
 
   if (const auto divExpr = cast<IExpression>(divResult); divExpr && is<Div>(divExpr->getFunction())) {
     return {};
