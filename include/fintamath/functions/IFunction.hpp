@@ -5,6 +5,7 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
@@ -66,9 +67,13 @@ private:
 template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IFunction {
 public:
-  IFunctionCRTP(bool isTypeAny = false, bool isNonExressionEvaluatable = true)
-      : type(isTypeAny ? IFunction::Type::Any : IFunction::Type(sizeof...(Args))),
-        isNonExressionEvaluatableFunc(isNonExressionEvaluatable) {
+  IFunctionCRTP(bool isNonExressionEvaluatable = true) : isNonExressionEvaluatableFunc(isNonExressionEvaluatable) {
+    if constexpr (IsFunctionTypeAny<Derived>::value) {
+      type = Type::Any;
+    }
+    else {
+      type = Type(sizeof...(Args));
+    }
   }
 
   IFunction::Type getFunctionType() const final {
@@ -90,15 +95,16 @@ public:
       return false;
     }
 
-    if (type == IFunction::Type::Any) {
+    if constexpr (IsFunctionTypeAny<Derived>::value) {
       return doAnyArgsMatch(argsVect);
     }
+    else {
+      if (argsVect.size() != size_t(getFunctionType())) {
+        return false;
+      }
 
-    if (argsVect.size() != size_t(getFunctionType())) {
-      return false;
+      return doArgsMatch<0, Args...>(argsVect);
     }
-
-    return doArgsMatch<0, Args...>(argsVect);
   }
 
   bool isNonExressionEvaluatable() const final {
@@ -157,7 +163,7 @@ private:
   }
 
   void validateArgsSize(const ArgumentsRefVector &argsVect) const {
-    if (type == IFunction::Type::Any) {
+    if constexpr (IsFunctionTypeAny<Derived>::value) {
       if (argsVect.empty()) {
         throwInvalidInputFunctionException(argsVect);
       }

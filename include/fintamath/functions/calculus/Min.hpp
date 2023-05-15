@@ -6,6 +6,8 @@
 namespace fintamath {
 
 class Min : public IFunctionCRTP<IComparable, Min, IComparable> {
+  FINTAMATH_FUNCTION_TYPE_ANY()
+
 public:
   Min() : IFunctionCRTP(true) {
   }

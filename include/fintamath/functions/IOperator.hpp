@@ -50,7 +50,7 @@ class IOperatorCRTP : public IFunctionCRTP<Return, Derived, Args...>, virtual pu
 public:
   IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any, bool isAssociative = true,
                 bool isNonExressionEvaluatable = true)
-      : IFunctionCRTP<Return, Derived, Args...>(false, isNonExressionEvaluatable),
+      : IFunctionCRTP<Return, Derived, Args...>(isNonExressionEvaluatable),
         priority(inPriority),
         isAssociativeOper(isAssociative) {
   }

@@ -8,7 +8,7 @@ namespace fintamath {
 
 class Integral : public IFunctionCRTP<IComparable, Integral, IComparable, IComparable> {
 public:
-  Integral() : IFunctionCRTP(false, false) {
+  Integral() : IFunctionCRTP(false) {
   }
 
   std::string toString() const override {

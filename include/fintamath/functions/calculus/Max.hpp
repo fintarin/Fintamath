@@ -6,6 +6,8 @@
 namespace fintamath {
 
 class Max : public IFunctionCRTP<IComparable, Max, IComparable> {
+  FINTAMATH_FUNCTION_TYPE_ANY()
+
 public:
   Max() : IFunctionCRTP(true) {
   }
