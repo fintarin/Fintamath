@@ -119,9 +119,9 @@ private:
 
   static bool isNonOperatorFunction(const ArgumentPtr &val);
 
-  void validateChild(const ArgumentPtr &inChild) const;
+  static void validateChild(const ArgumentPtr &inChild);
 
-  void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const;
+  static void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args);
 
   static ArgumentPtr preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify);
 

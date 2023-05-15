@@ -31,6 +31,7 @@ Expression::Expression(const ArgumentPtr &obj) {
   }
   else {
     child = obj;
+    validateChild(child);
     simplifyChild(child);
   }
 }
@@ -376,7 +377,7 @@ bool Expression::isNonOperatorFunction(const ArgumentPtr &val) {
   return is<IFunction>(val) && !is<IOperator>(val);
 }
 
-void Expression::validateChild(const ArgumentPtr &inChild) const {
+void Expression::validateChild(const ArgumentPtr &inChild) {
   const auto childExpr = cast<IExpression>(inChild);
 
   if (!childExpr) {
@@ -402,9 +403,9 @@ void Expression::validateChild(const ArgumentPtr &inChild) const {
   }
 }
 
-void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) const {
+void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) {
   if (func->getFunctionType() == IFunction::Type::Any && args.empty()) {
-    throw InvalidInputException(toString());
+    throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
   }
 
   ArgumentsTypesVector childrenTypes = func->getArgsTypes();
@@ -414,7 +415,7 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
   }
 
   if (childrenTypes.size() != args.size()) {
-    throw InvalidInputException(toString());
+    throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
   }
 
   for (size_t i = 0; i < args.size(); i++) {
@@ -427,14 +428,14 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
 
       if (childType != typeid(Variable) && !InheritanceTable::isBaseOf(type, childType) &&
           !InheritanceTable::isBaseOf(childType, type)) {
-        throw InvalidInputException(toString());
+        throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }
     else if (const auto childConst = cast<IConstant>(arg)) {
       const std::type_info &childType = childConst->getReturnType();
 
       if (!InheritanceTable::isBaseOf(type, childType)) {
-        throw InvalidInputException(toString());
+        throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }
     else {
@@ -442,7 +443,7 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
       const std::type_info &childType = typeid(argRef);
 
       if (childType != typeid(Variable) && !InheritanceTable::isBaseOf(type, childType)) {
-        throw InvalidInputException(toString());
+        throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }
   }
