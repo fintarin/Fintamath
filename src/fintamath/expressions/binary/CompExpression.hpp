@@ -17,13 +17,7 @@ public:
 protected:
   ArgumentPtr logicNegate() const override;
 
-  // TODO! remove
   ArgumentPtr preSimplify() const override;
-
-  // TODO! remove
-  ArgumentPtr postSimplify() const override;
-
-  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
 
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
@@ -36,6 +30,8 @@ protected:
   static std::shared_ptr<IFunction> getLogicOppositeFunction(const IFunction &function);
 
 private:
+  static ArgumentPtr coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
   bool isSolution = false;
 };
 

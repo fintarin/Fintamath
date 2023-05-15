@@ -12,23 +12,11 @@ public:
   std::string toString() const override;
 
 protected:
-  // TODO! remove
-  ArgumentPtr preSimplify() const override;
-
-  // TODO! remove
-  ArgumentPtr postSimplify() const override;
-
   SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
 
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
 private:
-  ArgumentPtr polynomSimplify() const;
-
-  ArgumentPtr sumSimplify() const;
-
-  ArgumentPtr mulSimplify() const;
-
   static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, const Integer &powValue);
 
   static Integer generateNextNumber(Integer n);
@@ -36,5 +24,17 @@ private:
   static Integer generateFirstNum(const Integer &countOfOne);
 
   static std::vector<Integer> getPartition(Integer bitNumber, const Integer &variableCount);
+
+  static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr powSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr numSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr polynomSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 };
 }
