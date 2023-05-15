@@ -12,7 +12,7 @@
     <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/>
   </a>
   <a href="https://codecov.io/gh/fintarin/Fintamath" >
-    <img src="https://codecov.io/gh/fintarin/Fintamath/branch/master/graph/badge.svg?token=JL6F07XOK7"/>
+    <img src="https://codecov.io/gh/fintarin/Fintamath/branch/master/graph/badge.svg?branch=master"/>
   </a>
 </p>
 
