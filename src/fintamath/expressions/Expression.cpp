@@ -237,7 +237,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t
     }
   }
 
-  funcArgs.emplace_back(std::shared_ptr<Expression>(new Expression(terms, start, end)));
+  funcArgs.emplace_back(Expression(terms, start, end).child);
   return funcArgs;
 }
 
@@ -355,16 +355,6 @@ std::string Expression::termsToString(const TermVector &terms) {
   }
 
   return res;
-}
-
-ArgumentPtr Expression::getTermValueIf(const Term &term, std::function<bool(const ArgumentPtr &)> &&predicate) {
-  for (const auto &val : term.values) {
-    if (predicate(val)) {
-      return val;
-    }
-  }
-
-  return {};
 }
 
 bool Expression::isBinaryOperator(const ArgumentPtr &val) {

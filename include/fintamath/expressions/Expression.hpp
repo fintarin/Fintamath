@@ -111,8 +111,6 @@ private:
 
   static std::string termsToString(const TermVector &terms);
 
-  static ArgumentPtr getTermValueIf(const Term &term, std::function<bool(const ArgumentPtr &)> &&predicate);
-
   static bool isBinaryOperator(const ArgumentPtr &val);
 
   static bool isPrefixOperator(const ArgumentPtr &val);
@@ -141,6 +139,17 @@ private:
   static Parser::Vector<std::shared_ptr<Term>, const Token &> &getTermMakers();
 
   static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &getExpressionMakers();
+
+  template <typename Predicate>
+  static ArgumentPtr getTermValueIf(const Term &term, Predicate &&predicate) {
+    for (const auto &val : term.values) {
+      if (predicate(val)) {
+        return val;
+      }
+    }
+
+    return {};
+  }
 
 private:
   ArgumentPtr child;

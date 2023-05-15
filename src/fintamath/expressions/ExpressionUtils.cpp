@@ -112,33 +112,40 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
 }
 
 bool hasVariables(const std::shared_ptr<const IExpression> &expr) {
-  for (const auto &child : expr->getChildren()) {
-    if (is<Variable>(child)) {
-      return true;
-    }
+  ArgumentsPtrVector children = expr->getChildren();
 
-    if (const auto childExpr = cast<IExpression>(child)) {
+  return std::any_of(children.begin(), children.end(), [](const auto &child) {
+    bool res = false;
+
+    if (is<Variable>(child)) {
+      res = true;
+    }
+    else if (const auto childExpr = cast<IExpression>(child)) {
       if (hasVariables(childExpr)) {
-        return true;
+        res = true;
       }
     }
-  }
 
-  return false;
+    return res;
+  });
 }
 
 bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable &var) {
-  for (const auto &child : expr->getChildren()) {
+  ArgumentsPtrVector children = expr->getChildren();
+
+  return std::any_of(children.begin(), children.end(), [&var](const auto &child) {
+    bool res = false;
+
     if (const auto childVar = cast<Variable>(child); childVar && *childVar == var) {
-      return true;
+      res = true;
     }
 
     if (const auto childExpr = cast<IExpression>(child); childExpr && hasVariable(childExpr, var)) {
-      return true;
+      res = true;
     }
-  }
 
-  return false;
+    return res;
+  });
 }
 
 std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args) {

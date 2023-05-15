@@ -150,13 +150,9 @@ private:
 
   template <typename ArgumentsRefVectorType>
   bool doAnyArgsMatch(const ArgumentsRefVectorType &argsVect) const {
-    for (const auto &arg : argsVect) {
-      if (!(is<Args>(arg) || ...)) {
-        return false;
-      }
-    }
-
-    return true;
+    return std::all_of(argsVect.begin(), argsVect.end(), [](const auto &arg) {
+      return (is<Args>(arg) || ...);
+    });
   }
 
   void validateArgsSize(const ArgumentsRefVector &argsVect) const {
