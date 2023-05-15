@@ -86,6 +86,10 @@ public:
   }
 
   bool doArgsMatch(const ArgumentsRefVector &argsVect) const override {
+    if (argsVect.empty()) {
+      return false;
+    }
+
     if (type == IFunction::Type::Any) {
       return doAnyArgsMatch(argsVect);
     }
