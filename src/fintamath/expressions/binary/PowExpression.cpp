@@ -37,41 +37,19 @@ std::string PowExpression::toString() const {
 }
 
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPreSimplify() const {
-  // TODO! implement
-  return {};
+  static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &PowExpression::negSimplify, //
+      &PowExpression::powSimplify, //
+  };
+  return simplifyFunctions;
 }
 
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplify() const {
-  // TODO! implement
-  return {};
-}
-
-ArgumentPtr PowExpression::mulSimplify() const {
-  auto powExpr = cast<PowExpression>(clone());
-
-  if (auto mulExpr = cast<IExpression>(powExpr->lhsChild); mulExpr && is<Mul>(mulExpr->getFunction())) {
-    ArgumentsPtrVector args = mulExpr->getChildren();
-
-    for (auto &arg : args) {
-      arg = makeExpr(Pow(), arg, powExpr->rhsChild->clone());
-    }
-
-    return makeExprSimpl(Mul(), args);
-  }
-
-  return {};
-}
-
-ArgumentPtr PowExpression::sumSimplify() const {
-  auto powExpr = cast<PowExpression>(clone());
-
-  if (const auto rhs = cast<Integer>(powExpr->rhsChild)) {
-    if (auto sumExpr = sumPolynomSimplify(powExpr->lhsChild, *rhs)) {
-      return sumExpr;
-    }
-  }
-
-  return {};
+  static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &PowExpression::numSimplify,     //
+      &PowExpression::polynomSimplify, //
+  };
+  return simplifyFunctions;
 }
 
 // Use bites representation for generate all partitions of numbers, using stars and bars method
@@ -157,47 +135,29 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
   return newSumExpr;
 }
 
-ArgumentPtr PowExpression::polynomSimplify() const {
-  if (auto res = mulSimplify()) {
-    return res;
-  }
-
-  if (auto res = sumSimplify()) {
-    return res;
+ArgumentPtr PowExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
+    auto lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), rhs);
+    auto rhsMul = makeExpr(Pow(), lhsExpr->getChildren().front(), rhs);
+    return makeExprSimpl(Mul(), lhsMul, rhsMul);
   }
 
   return {};
 }
 
-ArgumentPtr PowExpression::preSimplify() const {
-  auto simpl = IBinaryExpression::preSimplify();
-  auto simplExpr = cast<PowExpression>(simpl);
-
-  if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    auto lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), simplExpr->rhsChild);
-    auto rhsMul = makeExpr(Pow(), lhsExpr->getChildren()[0], simplExpr->rhsChild);
-    return makeExprSimpl(Mul(), lhsMul, rhsMul);
-  }
-
-  if (auto lhsExpr = cast<IExpression>(simplExpr->lhsChild); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
+ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     auto lhsPow = lhsExpr->getChildren().front();
-    auto rhsPow = makeExpr(Mul(), lhsExpr->getChildren()[1], simplExpr->rhsChild);
+    auto rhsPow = makeExpr(Mul(), lhsExpr->getChildren().back(), rhs);
     return makeExprSimpl(Pow(), lhsPow, rhsPow);
   }
 
-  return simpl;
+  return {};
 }
 
-ArgumentPtr PowExpression::postSimplify() const {
-  auto simpl = IBinaryExpression::postSimplify();
-  auto simplExpr = cast<PowExpression>(simpl);
-
-  if (!simplExpr) {
-    return simpl;
-  }
-
-  auto lhsInt = cast<Integer>(simplExpr->lhsChild);
-  auto rhsInt = cast<Integer>(simplExpr->rhsChild);
+ArgumentPtr PowExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  auto lhsInt = cast<Integer>(lhs);
+  auto rhsInt = cast<Integer>(rhs);
 
   if (rhsInt) {
     if (*rhsInt == 0) {
@@ -205,28 +165,59 @@ ArgumentPtr PowExpression::postSimplify() const {
     }
 
     if (*rhsInt == 1 || (lhsInt && *lhsInt == 1)) {
-      return simplExpr->lhsChild;
+      return lhs;
     }
 
     if (*rhsInt == -1) {
-      return makeExprSimpl(Div(), std::make_shared<Integer>(1), simplExpr->lhsChild);
+      return makeExprSimpl(Div(), std::make_shared<Integer>(1), lhs);
     }
 
     if (*rhsInt < 0) {
-      return makeExprSimpl(Div(), std::make_shared<Integer>(1),
-                           makeExpr(Pow(), simplExpr->lhsChild, makeExpr(Neg(), rhsInt)));
+      return makeExprSimpl(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhsInt)));
     }
   }
 
   if (lhsInt && *lhsInt == 0) {
-    return simplExpr->lhsChild;
+    return lhs;
   }
 
-  if (auto res = simplExpr->polynomSimplify()) {
+  return {};
+}
+
+ArgumentPtr PowExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (auto res = mulSimplify(lhs, rhs)) {
     return res;
   }
 
-  return simpl;
+  if (auto res = sumSimplify(lhs, rhs)) {
+    return res;
+  }
+
+  return {};
+}
+
+ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (auto mulExpr = cast<IExpression>(lhs); mulExpr && is<Mul>(mulExpr->getFunction())) {
+    ArgumentsPtrVector args = mulExpr->getChildren();
+
+    for (auto &arg : args) {
+      arg = makeExpr(Pow(), arg, rhs->clone());
+    }
+
+    return makeExprSimpl(Mul(), args);
+  }
+
+  return {};
+}
+
+ArgumentPtr PowExpression::sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (const auto rhsInt = cast<Integer>(rhs)) {
+    if (auto sumExpr = sumPolynomSimplify(lhs, *rhsInt)) {
+      return sumExpr;
+    }
+  }
+
+  return {};
 }
 
 }
