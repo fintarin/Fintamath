@@ -58,18 +58,10 @@ public:
   }
 
   bool operator==(const Derived &rhs) const {
-    if (this == &rhs) {
-      return true;
-    }
-
     return equals(rhs);
   }
 
   bool operator!=(const Derived &rhs) const {
-    if (this == &rhs) {
-      return false;
-    }
-
     return !equals(rhs);
   }
 
@@ -79,18 +71,18 @@ protected:
   }
 
   bool equalsAbstract(const IMathObject &rhs) const final {
-    if (this == &rhs) {
-      return true;
-    }
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }
+
     if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
       return equals(cast<Derived>(*rhsPtr));
     }
+
     if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
       return *lhsPtr == rhs;
     }
+
     return false;
   }
 };
