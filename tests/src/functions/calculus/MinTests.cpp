@@ -2,7 +2,11 @@
 
 #include "fintamath/functions/calculus/Min.hpp"
 
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
+#include "fintamath/functions/calculus/Max.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -27,4 +31,26 @@ TEST(MinTests, callTest) {
   EXPECT_EQ(f(Rational(-1), Variable("x"), Variable("y"), Integer(1))->toString(), "min(x, y, -1)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Boolean()), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(), Boolean()), InvalidInputFunctionException);
+  EXPECT_THROW(f(Boolean(), Integer()), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(), Integer(), Boolean()), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(), Boolean(), Integer()), InvalidInputFunctionException);
+  EXPECT_THROW(f(Boolean(), Integer(), Integer()), InvalidInputFunctionException);
+}
+
+TEST(MinTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(MinTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Min());
+  EXPECT_EQ(Min(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
+  EXPECT_NE(f, Max());
+  EXPECT_NE(Max(), f);
 }

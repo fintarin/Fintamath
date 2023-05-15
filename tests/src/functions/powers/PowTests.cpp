@@ -4,6 +4,8 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -86,4 +88,18 @@ TEST(PowTests, callTest) {
   EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(PowTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(PowTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Pow());
+  EXPECT_EQ(Pow(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

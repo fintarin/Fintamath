@@ -3,6 +3,8 @@
 #include "fintamath/functions/other/Percent.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -32,4 +34,18 @@ TEST(PercentTests, callTest) {
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(PercentTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(PercentTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Percent());
+  EXPECT_EQ(Percent(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

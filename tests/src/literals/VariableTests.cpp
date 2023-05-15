@@ -2,6 +2,7 @@
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/E.hpp"
 
 using namespace fintamath;
 
@@ -36,4 +37,16 @@ TEST(VariableTest, stringIntegerConstructorTest) {
   EXPECT_THROW(Variable("a", -1), InvalidInputException);
   EXPECT_THROW(Variable("a", -2), InvalidInputException);
   EXPECT_THROW(Variable("a", Integer("-100000000000000000000000000000000000000")), InvalidInputException);
+}
+
+TEST(VariableTest, equalsTest) {
+  Variable a("a");
+
+  EXPECT_EQ(a, a);
+  EXPECT_EQ(a, Variable("a"));
+  EXPECT_EQ(Variable("a"), a);
+  EXPECT_NE(a, Variable("b"));
+  EXPECT_NE(Variable("b"), a);
+  EXPECT_NE(a, E());
+  EXPECT_NE(E(), a);
 }

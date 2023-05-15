@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/trigonometry/Sin.hpp"
 
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -34,4 +36,18 @@ TEST(SinTests, callTest) {
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(SinTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(SinTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Sin());
+  EXPECT_EQ(Sin(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

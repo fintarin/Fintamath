@@ -2,6 +2,7 @@
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/literals/Boolean.hpp"
+#include "fintamath/literals/constants/E.hpp"
 
 using namespace fintamath;
 
@@ -41,4 +42,16 @@ TEST(BooleanTests, opearatorsTest) {
   EXPECT_EQ(Boolean(true) || Boolean(false), true);
   EXPECT_EQ(Boolean(false) || Boolean(true), true);
   EXPECT_EQ(Boolean(true) || Boolean(true), true);
+}
+
+TEST(BooleanTest, equalsTest) {
+  Boolean a;
+
+  EXPECT_EQ(a, a);
+  EXPECT_EQ(a, Boolean(false));
+  EXPECT_EQ(Boolean(false), a);
+  EXPECT_NE(a, Boolean(true));
+  EXPECT_NE(Boolean(true), a);
+  EXPECT_NE(a, E());
+  EXPECT_NE(E(), a);
 }

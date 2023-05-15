@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/logic/Or.hpp"
 
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 
@@ -32,4 +34,18 @@ TEST(OrTests, callTest) {
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Boolean(true)), InvalidInputFunctionException);
   EXPECT_THROW(f(Boolean(true), Boolean(true), Boolean(true)), InvalidInputFunctionException);
+}
+
+TEST(OrTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(OrTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Or());
+  EXPECT_EQ(Or(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

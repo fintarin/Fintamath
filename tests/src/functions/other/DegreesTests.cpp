@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/other/Degrees.hpp"
 
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -29,4 +31,18 @@ TEST(DegreesTests, callTest) {
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(DegreesTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(DegreesTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Degrees());
+  EXPECT_EQ(Degrees(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

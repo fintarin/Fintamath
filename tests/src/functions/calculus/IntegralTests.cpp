@@ -4,6 +4,8 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -33,4 +35,18 @@ TEST(IntegralTests, callTest) {
   EXPECT_THROW(f(), InvalidInputException);
   EXPECT_THROW(f(Integer(1)), InvalidInputException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputException);
+}
+
+TEST(IntegralTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(IntegralTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Integral());
+  EXPECT_EQ(Integral(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

@@ -1020,6 +1020,18 @@ TEST(ExpressionTests, setChildrenTest) {
   EXPECT_THROW(expr.setChildren({Variable("a").clone(), Variable("b").clone()}), InvalidInputException);
 }
 
+TEST(ExpressionTests, equalsTest) {
+  Expression a;
+
+  EXPECT_EQ(a, a);
+  EXPECT_EQ(a, Expression());
+  EXPECT_EQ(Expression(), a);
+  EXPECT_NE(a, Variable("a"));
+  EXPECT_NE(Variable("a"), a);
+
+  // TODO: implement more tests
+}
+
 TEST(ExpressionTests, variableVariablePlusOperatorTest) {
   EXPECT_EQ(Variable("a") + Variable("a"), Expression("2a"));
   EXPECT_EQ(Variable("a") + Variable("b"), Expression("a+b"));

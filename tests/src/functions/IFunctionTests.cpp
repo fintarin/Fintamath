@@ -54,7 +54,11 @@ TEST(IFunctionTests, calVectTest) {
 TEST(IFunctionTests, equalsTest) {
   EXPECT_EQ(Add(), Add());
   EXPECT_NE(Add(), Sub());
+  EXPECT_NE(Sub(), Add());
   EXPECT_NE(Add(), UnaryPlus());
+  EXPECT_NE(UnaryPlus(), Add());
+  EXPECT_NE(Add(), Sin());
+  EXPECT_NE(Sin(), Add());
 }
 
 TEST(IFunctionTests, getFunctionTypeTest) {

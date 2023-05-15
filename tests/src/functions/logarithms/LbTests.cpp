@@ -3,6 +3,8 @@
 #include "fintamath/functions/logarithms/Lb.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -32,4 +34,18 @@ TEST(LbTests, callTest) {
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(10), Integer(10), Integer(10)), InvalidInputFunctionException);
+}
+
+TEST(LbTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(LbTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Lb());
+  EXPECT_EQ(Lb(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

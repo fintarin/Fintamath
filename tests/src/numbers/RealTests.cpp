@@ -872,3 +872,17 @@ TEST(RealTests, signTests) {
   EXPECT_EQ(Real(1).sign(), 1);
   EXPECT_EQ(Real(2).sign(), 1);
 }
+
+TEST(RealTests, equalsTest) {
+  Real a(0);
+  Integer b(0);
+  Integer c(1);
+
+  EXPECT_EQ(a, a);
+  EXPECT_EQ(a, Real());
+  EXPECT_EQ(Real(), a);
+  EXPECT_EQ(a, b);
+  EXPECT_EQ(b, a);
+  EXPECT_NE(a, c);
+  EXPECT_NE(c, a);
+}

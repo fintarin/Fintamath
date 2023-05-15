@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/logic/Not.hpp"
 
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 
@@ -30,4 +32,18 @@ TEST(NotTests, callTest) {
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Boolean(true), Boolean(true)), InvalidInputFunctionException);
   EXPECT_THROW(f(Boolean(true), Boolean(true), Boolean(true)), InvalidInputFunctionException);
+}
+
+TEST(NotTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(NotTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Not());
+  EXPECT_EQ(Not(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

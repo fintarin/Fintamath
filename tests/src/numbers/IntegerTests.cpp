@@ -4,6 +4,7 @@
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
@@ -814,4 +815,18 @@ TEST(IntegerTests, intOperatorTests) {
   EXPECT_EQ(int64_t(Integer(0)), 0);
   EXPECT_EQ(int64_t(Integer("100000000000000000000000000000000000000000000000000")), 9223372036854775807);
   EXPECT_EQ(int64_t(Integer("-100000000000000000000000000000000000000000000000000")) + 1, -9223372036854775807);
+}
+
+TEST(IntegerTests, equalsTest) {
+  Integer a(0);
+  Rational b(0);
+  Rational c(1);
+
+  EXPECT_EQ(a, a);
+  EXPECT_EQ(a, Integer());
+  EXPECT_EQ(Integer(), a);
+  EXPECT_EQ(a, b);
+  EXPECT_EQ(b, a);
+  EXPECT_NE(a, c);
+  EXPECT_NE(c, a);
 }

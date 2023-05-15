@@ -3,6 +3,8 @@
 #include "fintamath/functions/hyperbolic/Asinh.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -31,4 +33,18 @@ TEST(AsinhTests, callTest) {
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(AsinhTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(AsinhTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Asinh());
+  EXPECT_EQ(Asinh(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

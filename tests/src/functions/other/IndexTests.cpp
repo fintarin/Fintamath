@@ -1,8 +1,10 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/other/Index.hpp"
 
+#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
@@ -36,4 +38,18 @@ TEST(IndexTests, callTest) {
   EXPECT_THROW(f(Expression("a+1"), Integer(2))->toString(), InvalidInputException);
   EXPECT_THROW(f(Expression("a+1"), Expression("a+1"))->toString(), InvalidInputException);
   EXPECT_THROW(f(Expression("a"), Expression("a>1"))->toString(), InvalidInputException);
+}
+
+TEST(IndexTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(IndexTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Index());
+  EXPECT_EQ(Index(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

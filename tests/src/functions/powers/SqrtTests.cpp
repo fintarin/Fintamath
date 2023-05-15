@@ -3,6 +3,8 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -33,4 +35,18 @@ TEST(SqrtTests, callTest) {
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(SqrtTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(SqrtTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Sqrt());
+  EXPECT_EQ(Sqrt(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

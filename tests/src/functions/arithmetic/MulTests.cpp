@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/arithmetic/Mul.hpp"
 
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -33,4 +35,18 @@ TEST(MulTests, callTest) {
   EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(MulTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(MulTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Mul());
+  EXPECT_EQ(Mul(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

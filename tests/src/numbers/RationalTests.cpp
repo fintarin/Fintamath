@@ -347,3 +347,17 @@ TEST(RationalTests, signTests) {
   EXPECT_EQ(Rational(1).sign(), 1);
   EXPECT_EQ(Rational(2).sign(), 1);
 }
+
+TEST(RationalTests, equalsTest) {
+  Rational a(0);
+  Integer b(0);
+  Integer c(1);
+
+  EXPECT_EQ(a, a);
+  EXPECT_EQ(a, Rational());
+  EXPECT_EQ(Rational(), a);
+  EXPECT_EQ(a, b);
+  EXPECT_EQ(b, a);
+  EXPECT_NE(a, c);
+  EXPECT_NE(c, a);
+}

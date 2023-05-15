@@ -2,6 +2,8 @@
 
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -35,4 +37,18 @@ TEST(MoreEqvTests, callTest) {
   EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(MoreEqvTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(MoreEqvTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, MoreEqv());
+  EXPECT_EQ(MoreEqv(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }

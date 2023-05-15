@@ -1,8 +1,11 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -34,4 +37,18 @@ TEST(DivTests, callTest) {
   EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(DivTests, doArgsMatchTest) {
+  EXPECT_FALSE(f.doArgsMatch({}));
+}
+
+TEST(DivTests, equalsTest) {
+  EXPECT_EQ(f, f);
+  EXPECT_EQ(f, Div());
+  EXPECT_EQ(Div(), f);
+  EXPECT_NE(f, Sub());
+  EXPECT_NE(Sub(), f);
+  EXPECT_NE(f, UnaryPlus());
+  EXPECT_NE(UnaryPlus(), f);
 }
