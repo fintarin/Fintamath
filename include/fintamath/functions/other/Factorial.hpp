@@ -16,10 +16,6 @@ public:
     return std::string(order, '!');
   }
 
-  size_t getOrder() const {
-    return order;
-  }
-
   void setOrder(size_t inOrder) {
     assert(inOrder > 0);
     order = inOrder;

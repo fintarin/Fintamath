@@ -10,8 +10,12 @@ namespace {
 
 class TestFunction : public IFunctionCRTP<IMathObject, TestFunction, IMathObject> {
 public:
-  void throwException() const {
+  void throwException1() const {
     throw UndefinedException();
+  }
+
+  void throwException2() const {
+    throw UndefinedException("undefined");
   }
 
 protected:
@@ -24,9 +28,18 @@ protected:
 
 TEST(UndefinedExceptionTests, whatTests) {
   try {
-    TestFunction().throwException();
+    TestFunction().throwException1();
     EXPECT_TRUE(false);
-  } catch (const Exception &e) {
+  }
+  catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Undefined");
+  }
+
+  try {
+    TestFunction().throwException2();
+    EXPECT_TRUE(false);
+  }
+  catch (const Exception &e) {
+    EXPECT_EQ(std::string(e.what()), "Undefined: undefined");
   }
 }

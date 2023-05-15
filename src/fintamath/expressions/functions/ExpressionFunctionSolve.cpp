@@ -25,8 +25,6 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var);
 
 ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable &var);
 
-bool validateEquation(const CompExpression &expr);
-
 ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector &coeffAtPow);
 
 ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow);
@@ -37,10 +35,6 @@ Expression solve(const Expression &rhs) {
   if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
     // TODO: remove this if when inequalities will be implemented
     if (!is<Eqv>(compExpr->getFunction())) {
-      if (!validateEquation(*compExpr)) {
-        return rhs;
-      }
-
       auto var = cast<Variable>(compExpr->getVariables().front());
       ArgumentsPtrVector powerRate = getVariablePowerRates(compExpr->getChildren().front(), var);
 
@@ -50,7 +44,7 @@ Expression solve(const Expression &rhs) {
       }
     }
     if (is<Eqv>(compExpr->getFunction())) {
-      if (!validateEquation(*compExpr)) {
+      if (compExpr->getVariablesUnsorted().size() != 1) {
         return rhs;
       }
 
@@ -182,12 +176,6 @@ ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable
   }
 
   return powerRates;
-}
-
-bool validateEquation(const CompExpression &expr) {
-  std::vector<Variable> vars = expr.getVariables();
-  // TODO: remove for equation systems
-  return vars.size() == 1;
 }
 
 ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector & /*coeffAtPow*/) {
