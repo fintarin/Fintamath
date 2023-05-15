@@ -9,6 +9,9 @@ namespace fintamath {
 constexpr char TRUE[] = "True";
 constexpr char FALSE[] = "False";
 
+Boolean::Boolean() : name(FALSE) {
+}
+
 Boolean::Boolean(const std::string &str) {
   if (str != TRUE && str != FALSE) {
     throw InvalidInputException(str);

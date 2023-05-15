@@ -5,6 +5,10 @@
 
 using namespace fintamath;
 
+TEST(BooleanTests, constructorTest) {
+  EXPECT_EQ(Boolean(std::string("False")), false);
+}
+
 TEST(BooleanTests, stringConstructorTest) {
   EXPECT_EQ(Boolean(std::string("True")), true);
   EXPECT_EQ(Boolean(std::string("False")), false);

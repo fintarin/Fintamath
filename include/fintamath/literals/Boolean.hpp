@@ -6,6 +6,8 @@ namespace fintamath {
 
 class Boolean : public ILiteralCRTP<Boolean> {
 public:
+  Boolean();
+
   explicit Boolean(const std::string &str);
 
   Boolean(bool val);
