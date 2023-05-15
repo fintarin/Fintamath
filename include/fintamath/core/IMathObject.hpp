@@ -36,7 +36,7 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IMathObject, T>>>
   static void registerType(Parser::Function<std::unique_ptr<IMathObject>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(getParser(), parserFunc);
+    Parser::registerType<T>(getParser(), std::move(parserFunc));
   }
 
   static std::unique_ptr<IMathObject> parse(const std::string &str) {

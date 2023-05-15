@@ -29,7 +29,7 @@ private:
 
   ArgumentPtr mulSimplify() const;
 
-  static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, Integer powValue);
+  static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, const Integer &powValue);
 
   static Integer generateNextNumber(Integer n);
 

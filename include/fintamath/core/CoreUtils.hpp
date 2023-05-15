@@ -23,20 +23,18 @@ const To &cast(const IMathObject &from) {
 
 template <typename To>
 To &&cast(IMathObject &&from) {
-  return dynamic_cast<To &&>(from);
+  return dynamic_cast<To &&>(std::move(from));
 }
 
 template <typename To, typename From>
 std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
-  From *fromRawPtr = from.release();
-  To *toRawPtr = dynamic_cast<To *>(fromRawPtr);
+  std::unique_ptr<From> fromMoved = std::move(from);
+  From *fromRawPtr = fromMoved.release();
+  auto *toRawPtr = dynamic_cast<To *>(fromRawPtr);
 
   if (toRawPtr) {
-    from = nullptr;
     return std::unique_ptr<To>(toRawPtr);
   }
-
-  from.reset(fromRawPtr);
 
   return std::unique_ptr<To>();
 }

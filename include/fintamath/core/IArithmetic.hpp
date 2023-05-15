@@ -71,7 +71,7 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
   static void registerType(Parser::Function<std::unique_ptr<IArithmetic>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(getParser(), parserFunc);
+    Parser::registerType<T>(getParser(), std::move(parserFunc));
   }
 
   static std::unique_ptr<IArithmetic> parse(const std::string &str) {
@@ -211,21 +211,25 @@ protected:
   }
 
 private:
-  std::unique_ptr<IArithmetic>
-  executeAbstract(const IArithmetic &rhs, const std::string &oper,
-                  std::function<Derived(IArithmeticCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
-                  std::function<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &&f2) const {
+  template <typename FunctionCommonTypes, typename FunctionDifferentTypes>
+  std::unique_ptr<IArithmetic> executeAbstract(const IArithmetic &rhs, const std::string &oper,
+                                               FunctionCommonTypes &&funcCommonTypes,
+                                               FunctionDifferentTypes &&funcDifferentTypes) const {
+
     if (const auto *rhpPtr = cast<Derived>(&rhs)) {
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
-      return cast<IArithmetic>(f1(*lhsPtr, *rhpPtr).toMinimalObject());
+      return cast<IArithmetic>(funcCommonTypes(*lhsPtr, *rhpPtr).toMinimalObject());
     }
+
     if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
       auto lhsPtr = cast<IArithmeticCRTP<Derived>>(clone());
-      return cast<IArithmetic>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
+      return cast<IArithmetic>(funcCommonTypes(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
     }
+
     if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-      return cast<IArithmetic>(f2(cast<IArithmetic>(*lhsPtr), rhs)->toMinimalObject());
+      return cast<IArithmetic>(funcDifferentTypes(cast<IArithmetic>(*lhsPtr), rhs)->toMinimalObject());
     }
+
     throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
   }
 };

@@ -47,7 +47,7 @@ ArgumentPtr TrigonometryExpression::constantsSimplify(const IFunction & /*func*/
 }
 
 std::shared_ptr<IFunction> TrigonometryExpression::getOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
       {Sin().toString(), std::make_shared<Asin>()}, //
       {Cos().toString(), std::make_shared<Acos>()}, //
       {Tan().toString(), std::make_shared<Atan>()}, //

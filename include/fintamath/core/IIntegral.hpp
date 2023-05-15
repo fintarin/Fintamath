@@ -207,21 +207,25 @@ protected:
   }
 
 private:
-  std::unique_ptr<IIntegral>
-  executeAbstract(const IIntegral &rhs, const std::string &oper,
-                  std::function<Derived(IIntegralCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
-                  std::function<std::unique_ptr<IIntegral>(const IIntegral &, const IIntegral &)> &&f2) const {
+  template <typename FunctionCommonTypes, typename FunctionDifferentTypes>
+  std::unique_ptr<IIntegral> executeAbstract(const IIntegral &rhs, const std::string &oper,
+                                             FunctionCommonTypes &&funcCommonTypes,
+                                             FunctionDifferentTypes &&funcDifferentTypes) const {
+
     if (const auto *rhpPtr = cast<Derived>(&rhs)) {
       auto lhsPtr = cast<IIntegralCRTP<Derived>>(clone());
-      return cast<IIntegral>(f1(*lhsPtr, *rhpPtr).toMinimalObject());
+      return cast<IIntegral>(funcCommonTypes(*lhsPtr, *rhpPtr).toMinimalObject());
     }
+
     if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
       auto lhsPtr = cast<IIntegralCRTP<Derived>>(clone());
-      return cast<IIntegral>(f1(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
+      return cast<IIntegral>(funcCommonTypes(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
     }
+
     if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-      return cast<IIntegral>(f2(cast<IIntegral>(*lhsPtr), rhs)->toMinimalObject());
+      return cast<IIntegral>(funcDifferentTypes(cast<IIntegral>(*lhsPtr), rhs)->toMinimalObject());
     }
+
     throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
   }
 };

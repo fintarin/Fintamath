@@ -40,9 +40,9 @@ public:
   }
 
   template <typename Type, typename BasePtr, typename... Args>
-  static void add(Map<BasePtr, Args...> &parserMap, const Function<BasePtr, Args...> &parserFunc) {
+  static void add(Map<BasePtr, Args...> &parserMap, Function<BasePtr, Args...> &&parserFunc) {
     std::string name = std::make_unique<Type>()->toString();
-    parserMap.insert({name, parserFunc});
+    parserMap.insert({name, std::move(parserFunc)});
 
     Tokenizer::registerToken(name);
   }
@@ -58,12 +58,12 @@ public:
       }
     };
 
-    parserVect.push_back(constructor);
+    parserVect.emplace_back(constructor);
   }
 
   template <typename Type, typename BasePtr, typename... Args>
-  static void add(Vector<BasePtr, Args...> &parserVect, const Function<BasePtr, Args...> &parserFunc) {
-    parserVect.push_back(parserFunc);
+  static void add(Vector<BasePtr, Args...> &parserVect, Function<BasePtr, Args...> &&parserFunc) {
+    parserVect.emplace_back(std::move(parserFunc));
   }
 
   template <typename Return, typename... Args>
@@ -162,9 +162,9 @@ public:
   }
 
   template <typename Type, typename BasePtr, typename... Args>
-  static void registerType(Vector<BasePtr, Args...> &parserVect, const Function<BasePtr, Args...> &parserFunc) {
+  static void registerType(Vector<BasePtr, Args...> &parserVect, Function<BasePtr, Args...> &&parserFunc) {
     InheritanceTable::add<typename BasePtr::element_type, Type>();
-    add<Type>(parserVect, parserFunc);
+    add<Type>(parserVect, std::move(parserFunc));
   }
 };
 

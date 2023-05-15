@@ -137,7 +137,7 @@ void CompExpression::markAsSolution() {
 }
 
 std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
       {Eqv().toString(), std::make_shared<Eqv>()},         //
       {Neqv().toString(), std::make_shared<Neqv>()},       //
       {More().toString(), std::make_shared<Less>()},       //
@@ -149,7 +149,7 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
 }
 
 std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
       {Eqv().toString(), std::make_shared<Neqv>()},     //
       {Neqv().toString(), std::make_shared<Eqv>()},     //
       {More().toString(), std::make_shared<LessEqv>()}, //

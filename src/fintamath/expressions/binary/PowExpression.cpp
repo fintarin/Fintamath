@@ -120,7 +120,7 @@ std::vector<Integer> PowExpression::getPartition(Integer bitNumber, const Intege
 
 // Use multinomial theorem for exponentiation of sum
 //  https://en.wikipedia.org/wiki/Multinomial_theorem
-ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, Integer powValue) {
+ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &powValue) {
   auto sumExpr = cast<IExpression>(expr);
   ArgumentsPtrVector polynom;
 

@@ -47,7 +47,7 @@ ArgumentPtr HyperbolicExpression::constantsSimplify(const IFunction & /*func*/, 
 }
 
 std::shared_ptr<IFunction> HyperbolicExpression::getOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
       {Sinh().toString(), std::make_unique<Asinh>()}, //
       {Cosh().toString(), std::make_unique<Acosh>()}, //
       {Tanh().toString(), std::make_unique<Atanh>()}, //

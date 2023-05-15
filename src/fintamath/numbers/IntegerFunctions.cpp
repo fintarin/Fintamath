@@ -27,7 +27,7 @@ Integer intSqrt(const Integer &rhs, Integer &remainder) {
   cpp_int remainderBackend;
 
   try {
-    Integer res = Integer(sqrt(rhs.getBackend(), remainderBackend));
+    Integer res(sqrt(rhs.getBackend(), remainderBackend));
     remainder = Integer(std::move(remainderBackend));
     return res;
   }

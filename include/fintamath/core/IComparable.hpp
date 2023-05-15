@@ -26,7 +26,7 @@ public:
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
   static void registerType(Parser::Function<std::unique_ptr<IComparable>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(getParser(), parserFunc);
+    Parser::registerType<T>(getParser(), std::move(parserFunc));
   }
 
   static std::unique_ptr<IComparable> parse(const std::string &str) {
@@ -89,18 +89,22 @@ protected:
   }
 
 private:
-  bool executeAbstract(const IComparable &rhs, const std::string &oper,
-                       std::function<bool(const IComparableCRTP<Derived> &lhs, const Derived &rhs)> &&f1,
-                       std::function<bool(const IComparable &, const IComparable &)> &&f2) const {
+  template <typename FunctionCommonTypes, typename FunctionDifferentTypes>
+  bool executeAbstract(const IComparable &rhs, const std::string &oper, FunctionCommonTypes &&funcCommonTypes,
+                       FunctionDifferentTypes &&funcDifferentTypes) const {
+
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
-      return f1(*this, *rhsPtr);
+      return funcCommonTypes(*this, *rhsPtr);
     }
+
     if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
-      return f1(*this, cast<Derived>(*rhsPtr));
+      return funcCommonTypes(*this, cast<Derived>(*rhsPtr));
     }
+
     if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-      return f2(cast<IComparable>(*lhsPtr), rhs);
+      return funcDifferentTypes(cast<IComparable>(*lhsPtr), rhs);
     }
+
     throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
   }
 };

@@ -46,29 +46,27 @@ public:
   void setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) override;
 
   static void registerTermsMaker(Parser::Function<std::shared_ptr<Term>, const Token &> &&maker) {
-    Parser::add<Token>(getTermMakers(), maker);
+    Parser::add<Token>(getTermMakers(), std::move(maker));
   }
 
-  template <typename Function, bool isPolynomial = false,
-            typename = std::enable_if_t<std::is_base_of_v<IFunction, Function>>>
-  static void
-  registerFunctionExpressionMaker(Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &&maker) {
+  template <typename Function, bool isPolynomial = false, typename Maker>
+  static void registerFunctionExpressionMaker(Maker &&maker) {
     Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> constructor =
-        [maker = std::move(maker)](const ArgumentsPtrVector &args) {
-          static const IFunction::Type type = Function().getFunctionType();
+        [maker = std::forward<Maker>(maker)](const ArgumentsPtrVector &args) -> std::shared_ptr<IExpression> {
+      static const IFunction::Type type = Function().getFunctionType();
 
-          if (type == IFunction::Type::Any || uint16_t(type) == args.size()) {
-            return maker(args);
-          }
+      if (type == IFunction::Type::Any || uint16_t(type) == args.size()) {
+        return maker(args);
+      }
 
-          if (isPolynomial && uint16_t(type) < args.size()) {
-            return maker(args);
-          }
+      if (isPolynomial && uint16_t(type) < args.size()) {
+        return maker(args);
+      }
 
-          return std::shared_ptr<IExpression>();
-        };
+      return {};
+    };
 
-    Parser::add<Function>(getExpressionMakers(), constructor);
+    Parser::add<Function>(getExpressionMakers(), std::move(constructor));
   }
 
 protected:
