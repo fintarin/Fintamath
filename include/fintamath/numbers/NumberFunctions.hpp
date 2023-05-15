@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {

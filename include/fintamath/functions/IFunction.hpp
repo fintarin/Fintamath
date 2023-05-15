@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/InvalidInputFunctionException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/parser/Parser.hpp"
 

@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 namespace fintamath {

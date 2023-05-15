@@ -2,7 +2,7 @@
 
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;

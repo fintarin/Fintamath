@@ -2,7 +2,7 @@
 
 #include "fintamath/functions/hyperbolic/Asinh.hpp"
 
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 

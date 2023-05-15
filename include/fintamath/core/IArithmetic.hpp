@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {

@@ -1,6 +1,6 @@
 #include "fintamath/functions/other/Factorial.hpp"
 
-#include "fintamath/exceptions/UndefinedUnaryOperatorException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 namespace fintamath {

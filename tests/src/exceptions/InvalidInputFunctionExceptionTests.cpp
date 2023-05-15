@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/InvalidInputFunctionException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 
 #include "fintamath/functions/IFunction.hpp"
 

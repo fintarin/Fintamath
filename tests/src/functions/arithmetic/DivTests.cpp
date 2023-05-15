@@ -2,7 +2,7 @@
 
 #include "fintamath/functions/arithmetic/Div.hpp"
 
-#include "fintamath/exceptions/InvalidInputFunctionException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 

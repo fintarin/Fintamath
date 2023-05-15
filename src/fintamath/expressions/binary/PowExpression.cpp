@@ -1,6 +1,6 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"

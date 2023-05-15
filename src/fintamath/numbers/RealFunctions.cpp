@@ -1,7 +1,6 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
-#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 
 using namespace boost::multiprecision;
 

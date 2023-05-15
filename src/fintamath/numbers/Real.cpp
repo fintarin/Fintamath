@@ -5,8 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "fintamath/exceptions/UndefinedBinaryOperatorException.hpp"
-#include "fintamath/exceptions/UndefinedFunctionException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 using namespace boost::multiprecision;

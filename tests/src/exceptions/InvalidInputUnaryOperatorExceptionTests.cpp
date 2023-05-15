@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/InvalidInputUnaryOperatorException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 
 #include "fintamath/functions/IOperator.hpp"
 
@@ -33,14 +33,16 @@ TEST(InvalidInputUnaryOpearatorExceptionTests, whatTests) {
   try {
     TestOperator().throwExceptionPrefix();
     EXPECT_TRUE(false);
-  } catch (const Exception &e) {
+  }
+  catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Invalid input: !(-10)");
   }
 
   try {
     TestOperator().throwExceptionPostfix();
     EXPECT_TRUE(false);
-  } catch (const Exception &e) {
+  }
+  catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Invalid input: (-10)!");
   }
 }

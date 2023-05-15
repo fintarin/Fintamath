@@ -1,7 +1,5 @@
 #include "fintamath/functions/other/Index.hpp"
 
-#include "fintamath/exceptions/InvalidInputUnaryOperatorException.hpp"
-
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Index::call(const ArgumentsRefVector &argsVect) const {

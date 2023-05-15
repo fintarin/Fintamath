@@ -2,7 +2,7 @@
 
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {

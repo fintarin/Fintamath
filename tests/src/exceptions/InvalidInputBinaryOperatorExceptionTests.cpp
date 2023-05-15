@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/exceptions/InvalidInputBinaryOperatorException.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 
 #include "fintamath/functions/IOperator.hpp"
 
@@ -29,7 +29,8 @@ TEST(InvalidInputBinaryOpearatorExceptionTests, whatTests) {
   try {
     TestOperator().throwException();
     EXPECT_TRUE(false);
-  } catch (const Exception &e) {
+  }
+  catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Invalid input: (a)^(0)");
   }
 }
