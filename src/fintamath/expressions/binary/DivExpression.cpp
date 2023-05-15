@@ -26,8 +26,9 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() 
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::zeroSimplify, //
-      &DivExpression::sumSimplify,  //
+      &DivExpression::zeroSimplify,   //
+      &DivExpression::negSimplify, //
+      &DivExpression::sumSimplify,    //
   };
   return simplifyFunctions;
 }
@@ -142,8 +143,6 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
     }
   }
 
-  // TODO: pass negations from denominator to numerator: 28/(-x) => -28/x
-
   ArgumentPtr numerator;
   if (lhsChildren.size() > 1) {
     numerator = makeExprSimpl(Mul(), lhsChildren);
@@ -157,6 +156,7 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
   }
 
   ArgumentPtr denominator;
+
   if (rhsChildren.size() > 1) {
     denominator = makeExprSimpl(Mul(), rhsChildren);
   }
@@ -169,6 +169,34 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
   }
 
   return {};
+}
+
+ArgumentPtr DivExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (isNeg(rhs)) {
+    return makeExprSimpl(Div(), makeExpr(Neg(), lhs), makeExpr(Neg(), rhs));
+  }
+
+  return {};
+}
+
+bool DivExpression::isNeg(const ArgumentPtr &expr) {
+  ArgumentPtr checkValue;
+  if (auto exprChild = cast<IExpression>(expr); exprChild && is<Add>(exprChild->getFunction())) {
+    checkValue = exprChild->getChildren().front();
+  }
+  else {
+    checkValue = expr;
+  }
+
+  if (auto exprValue = cast<IExpression>(checkValue); exprValue && is<Neg>(exprValue->getFunction())) {
+    return true;
+  }
+
+  if (auto numberValue = cast<INumber>(checkValue); numberValue && *numberValue < Integer(0)) {
+    return true;
+  }
+
+  return false;
 }
 
 ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

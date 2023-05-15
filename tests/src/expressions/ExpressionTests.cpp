@@ -203,7 +203,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/1").toString(), "a b");
   EXPECT_EQ(Expression("(a b)/-1").toString(), "-a b");
   EXPECT_EQ(Expression("(a b)/-2").toString(), "-1/2 a b");
-  EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b - (b^2)/(-a - b)"); // TODO! -b + b^2/(a + b)
+  EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b + b^2/(a + b)");
   EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^4 + y^5/(x - y)");
 
   EXPECT_EQ(Expression("0^a").toString(), "0");
