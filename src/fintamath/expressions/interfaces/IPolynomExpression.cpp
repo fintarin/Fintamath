@@ -307,7 +307,7 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpress
       IOperator::Priority rhsPriority = rhsOper->getOperatorPriority();
 
       if (lhsPriority == rhsPriority) {
-        if (auto res = comparatorChildren(lhsChildren, rhsChildren)) {
+        if (auto res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
           return res;
         }
       }
