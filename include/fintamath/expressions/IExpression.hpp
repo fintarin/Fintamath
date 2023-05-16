@@ -60,15 +60,14 @@ private:
   static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &getParser();
 };
 
-template <typename Derived>
+template <typename Derived, bool isMultiFunction = false>
 class IExpressionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IExpression {
 public:
   bool equals(const Derived &rhs) const override {
-    ArgumentPtr lhsFunction = getFunction();
-    ArgumentPtr rhsFunction = rhs.getFunction();
-
-    if (lhsFunction && rhsFunction && *lhsFunction != *rhsFunction) {
-      return false;
+    if constexpr (isMultiFunction) {
+      if (*getFunction() != *rhs.getFunction()) {
+        return false;
+      }
     }
 
     ArgumentsPtrVector lhsChildren = getChildren();

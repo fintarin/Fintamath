@@ -125,7 +125,7 @@ protected:
   }
 
   bool equals(const Derived &rhs) const override {
-    return type == rhs.type && toString() == rhs.toString();
+    return toString() == rhs.toString();
   }
 
 private:

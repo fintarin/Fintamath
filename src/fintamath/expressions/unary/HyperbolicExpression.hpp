@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class HyperbolicExpression : public IUnaryExpressionCRTP<HyperbolicExpression> {
+class HyperbolicExpression : public IUnaryExpressionCRTP<HyperbolicExpression, true> {
 public:
   explicit HyperbolicExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 

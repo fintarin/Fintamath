@@ -42,8 +42,9 @@ protected:
   ArgumentPtr rhsChild;
 };
 
-template <typename Derived>
-class IBinaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IBinaryExpression {
+template <typename Derived, bool isMultiFunction = false>
+class IBinaryExpressionCRTP : virtual public IExpressionCRTP<Derived, isMultiFunction>,
+                              virtual public IBinaryExpression {
 public:
   explicit IBinaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &inLhsChild,
                                  const ArgumentPtr &inRhsChild) {

@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class CompExpression : public IBinaryExpressionCRTP<CompExpression>, public ILogicNegatableExpression {
+class CompExpression : public IBinaryExpressionCRTP<CompExpression, true>, public ILogicNegatableExpression {
 public:
   CompExpression(const IOperator &inOper, const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 

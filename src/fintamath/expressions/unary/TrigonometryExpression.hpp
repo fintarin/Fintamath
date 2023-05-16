@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class TrigonometryExpression : public IUnaryExpressionCRTP<TrigonometryExpression> {
+class TrigonometryExpression : public IUnaryExpressionCRTP<TrigonometryExpression, true> {
 public:
   explicit TrigonometryExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 

@@ -40,8 +40,8 @@ protected:
   ArgumentPtr child;
 };
 
-template <typename Derived>
-class IUnaryExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IUnaryExpression {
+template <typename Derived, bool isMultiFunction = false>
+class IUnaryExpressionCRTP : virtual public IExpressionCRTP<Derived, isMultiFunction>, virtual public IUnaryExpression {
 public:
   explicit IUnaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &inChild) {
     this->func = cast<IFunction>(inFunc.clone());

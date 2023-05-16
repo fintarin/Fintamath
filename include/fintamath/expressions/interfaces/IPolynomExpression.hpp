@@ -155,8 +155,9 @@ protected:
   ArgumentsPtrVector children;
 };
 
-template <typename Derived>
-class IPolynomExpressionCRTP : virtual public IExpressionCRTP<Derived>, virtual public IPolynomExpression {
+template <typename Derived, bool isMultiFunction = false>
+class IPolynomExpressionCRTP : virtual public IExpressionCRTP<Derived, isMultiFunction>,
+                               virtual public IPolynomExpression {
 public:
   explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentsPtrVector &inChildren) {
     this->func = cast<IFunction>(inFunc.clone());
