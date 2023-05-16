@@ -51,6 +51,8 @@ TEST(FactorialTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Factorial());
   EXPECT_EQ(Factorial(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Factorial()));
+  EXPECT_EQ(cast<IMathObject>(Factorial()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

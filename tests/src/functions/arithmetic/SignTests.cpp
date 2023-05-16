@@ -44,6 +44,8 @@ TEST(SignTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Sign());
   EXPECT_EQ(Sign(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Sign()));
+  EXPECT_EQ(cast<IMathObject>(Sign()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

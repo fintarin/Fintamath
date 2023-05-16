@@ -5,22 +5,22 @@
 
 using namespace fintamath;
 
-const Pi f;
+const Pi c;
 
 TEST(PiTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "Pi");
+  EXPECT_EQ(c.toString(), "Pi");
 }
 
 TEST(PiTests, callTest) {
-  EXPECT_EQ(f()->toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
+  EXPECT_EQ(c()->toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
 }
 
 TEST(PiTests, equalsTest) {
-  Pi a;
-
-  EXPECT_EQ(a, a);
-  EXPECT_EQ(a, Pi());
-  EXPECT_EQ(Pi(), a);
-  EXPECT_NE(a, E());
-  EXPECT_NE(E(), a);
+  EXPECT_EQ(c, c);
+  EXPECT_EQ(c, Pi());
+  EXPECT_EQ(Pi(), c);
+  EXPECT_EQ(c, cast<IMathObject>(Pi()));
+  EXPECT_EQ(cast<IMathObject>(Pi()), c);
+  EXPECT_NE(c, E());
+  EXPECT_NE(E(), c);
 }

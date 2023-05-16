@@ -55,6 +55,8 @@ TEST(TanTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Tan());
   EXPECT_EQ(Tan(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Tan()));
+  EXPECT_EQ(cast<IMathObject>(Tan()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

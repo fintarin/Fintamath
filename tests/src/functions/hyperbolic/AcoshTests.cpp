@@ -50,6 +50,8 @@ TEST(AcoshTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Acosh());
   EXPECT_EQ(Acosh(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Acosh()));
+  EXPECT_EQ(cast<IMathObject>(Acosh()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

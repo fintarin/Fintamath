@@ -51,6 +51,8 @@ TEST(SubTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Sub());
   EXPECT_EQ(Sub(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Sub()));
+  EXPECT_EQ(cast<IMathObject>(Sub()), f);
   EXPECT_NE(f, Mul());
   EXPECT_NE(Mul(), f);
   EXPECT_NE(f, Neg());

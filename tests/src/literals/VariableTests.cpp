@@ -45,6 +45,8 @@ TEST(VariableTest, equalsTest) {
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Variable("a"));
   EXPECT_EQ(Variable("a"), a);
+  EXPECT_EQ(a, cast<IMathObject>(Variable("a")));
+  EXPECT_EQ(cast<IMathObject>(Variable("a")), a);
   EXPECT_NE(a, Variable("b"));
   EXPECT_NE(Variable("b"), a);
   EXPECT_NE(a, E());

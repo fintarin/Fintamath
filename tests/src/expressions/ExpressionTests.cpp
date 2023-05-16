@@ -1026,6 +1026,8 @@ TEST(ExpressionTests, equalsTest) {
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Expression());
   EXPECT_EQ(Expression(), a);
+  EXPECT_EQ(a, cast<IMathObject>(Expression()));
+  EXPECT_EQ(cast<IMathObject>(Expression()), a);
   EXPECT_NE(a, Variable("a"));
   EXPECT_NE(Variable("a"), a);
 

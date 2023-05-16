@@ -795,13 +795,7 @@ TEST(IntegerTests, toStringTest) {
   EXPECT_EQ(Integer("-738").toString(), "-738");
 }
 
-TEST(IntegerTests, equalsTests) {
-  EXPECT_TRUE(Integer(100) == Integer("100"));
-  EXPECT_FALSE(Integer(100) == Integer("-100"));
-  EXPECT_FALSE(Integer(100) == Integer("1"));
-}
-
-TEST(IntegerTests, signTests) {
+TEST(IntegerTests, signTest) {
   EXPECT_EQ(Integer(-2).sign(), -1);
   EXPECT_EQ(Integer(-1).sign(), -1);
   EXPECT_EQ(Integer(0).sign(), 0);
@@ -809,7 +803,7 @@ TEST(IntegerTests, signTests) {
   EXPECT_EQ(Integer(2).sign(), 1);
 }
 
-TEST(IntegerTests, intOperatorTests) {
+TEST(IntegerTests, intOperatorTest) {
   EXPECT_EQ(int64_t(Integer(-2)), -2);
   EXPECT_EQ(int64_t(Integer(10)), 10);
   EXPECT_EQ(int64_t(Integer(0)), 0);
@@ -818,13 +812,15 @@ TEST(IntegerTests, intOperatorTests) {
 }
 
 TEST(IntegerTests, equalsTest) {
-  Integer a(0);
-  Rational b(0);
+  Integer a;
+  Rational b;
   Rational c(1);
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Integer());
   EXPECT_EQ(Integer(), a);
+  EXPECT_EQ(a, cast<IMathObject>(Integer()));
+  EXPECT_EQ(cast<IMathObject>(Integer()), a);
   EXPECT_EQ(a, b);
   EXPECT_EQ(b, a);
   EXPECT_NE(a, c);

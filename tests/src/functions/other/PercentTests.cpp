@@ -49,6 +49,8 @@ TEST(PercentTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Percent());
   EXPECT_EQ(Percent(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Percent()));
+  EXPECT_EQ(cast<IMathObject>(Percent()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

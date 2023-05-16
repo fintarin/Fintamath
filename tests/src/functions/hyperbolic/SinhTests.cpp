@@ -49,6 +49,8 @@ TEST(SinhTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Sinh());
   EXPECT_EQ(Sinh(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Sinh()));
+  EXPECT_EQ(cast<IMathObject>(Sinh()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

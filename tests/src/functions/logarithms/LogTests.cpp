@@ -51,6 +51,8 @@ TEST(LogTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Log());
   EXPECT_EQ(Log(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Log()));
+  EXPECT_EQ(cast<IMathObject>(Log()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

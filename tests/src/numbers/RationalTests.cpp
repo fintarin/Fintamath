@@ -349,13 +349,15 @@ TEST(RationalTests, signTests) {
 }
 
 TEST(RationalTests, equalsTest) {
-  Rational a(0);
-  Integer b(0);
+  Rational a;
+  Integer b;
   Integer c(1);
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Rational());
   EXPECT_EQ(Rational(), a);
+  EXPECT_EQ(a, cast<IMathObject>(Rational()));
+  EXPECT_EQ(cast<IMathObject>(Rational()), a);
   EXPECT_EQ(a, b);
   EXPECT_EQ(b, a);
   EXPECT_NE(a, c);

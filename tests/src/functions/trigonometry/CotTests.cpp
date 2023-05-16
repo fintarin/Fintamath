@@ -55,6 +55,8 @@ TEST(CotTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Cot());
   EXPECT_EQ(Cot(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Cot()));
+  EXPECT_EQ(cast<IMathObject>(Cot()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

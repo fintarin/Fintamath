@@ -54,6 +54,8 @@ TEST(LnTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Ln());
   EXPECT_EQ(Ln(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Ln()));
+  EXPECT_EQ(cast<IMathObject>(Ln()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

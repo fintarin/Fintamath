@@ -49,6 +49,8 @@ TEST(OrTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Or());
   EXPECT_EQ(Or(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Or()));
+  EXPECT_EQ(cast<IMathObject>(Or()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

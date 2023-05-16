@@ -874,13 +874,15 @@ TEST(RealTests, signTests) {
 }
 
 TEST(RealTests, equalsTest) {
-  Real a(0);
-  Integer b(0);
+  Real a;
+  Integer b;
   Integer c(1);
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Real());
   EXPECT_EQ(Real(), a);
+  EXPECT_EQ(a, cast<IMathObject>(Real()));
+  EXPECT_EQ(cast<IMathObject>(Real()), a);
   EXPECT_EQ(a, b);
   EXPECT_EQ(b, a);
   EXPECT_NE(a, c);

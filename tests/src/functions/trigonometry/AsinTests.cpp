@@ -50,6 +50,8 @@ TEST(AsinTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Asin());
   EXPECT_EQ(Asin(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Asin()));
+  EXPECT_EQ(cast<IMathObject>(Asin()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

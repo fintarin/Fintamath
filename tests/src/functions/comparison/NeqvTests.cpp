@@ -52,6 +52,8 @@ TEST(NeqvTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Neqv());
   EXPECT_EQ(Neqv(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Neqv()));
+  EXPECT_EQ(cast<IMathObject>(Neqv()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

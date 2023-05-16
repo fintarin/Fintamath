@@ -43,6 +43,8 @@ TEST(AbsTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Abs());
   EXPECT_EQ(Abs(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Abs()));
+  EXPECT_EQ(cast<IMathObject>(Abs()), f);
   EXPECT_NE(f, Sin());
   EXPECT_NE(Sin(), f);
   EXPECT_NE(f, Sub());

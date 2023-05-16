@@ -50,6 +50,8 @@ TEST(SqrtTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Sqrt());
   EXPECT_EQ(Sqrt(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Sqrt()));
+  EXPECT_EQ(cast<IMathObject>(Sqrt()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

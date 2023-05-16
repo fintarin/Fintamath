@@ -50,6 +50,8 @@ TEST(BooleanTest, equalsTest) {
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Boolean(false));
   EXPECT_EQ(Boolean(false), a);
+  EXPECT_EQ(a, cast<IMathObject>(Boolean(false)));
+  EXPECT_EQ(cast<IMathObject>(Boolean(false)), a);
   EXPECT_NE(a, Boolean(true));
   EXPECT_NE(Boolean(true), a);
   EXPECT_NE(a, E());

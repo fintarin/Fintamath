@@ -53,6 +53,8 @@ TEST(AtanhTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Atanh());
   EXPECT_EQ(Atanh(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Atanh()));
+  EXPECT_EQ(cast<IMathObject>(Atanh()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

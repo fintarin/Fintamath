@@ -48,6 +48,8 @@ TEST(NegTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Neg());
   EXPECT_EQ(Neg(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Neg()));
+  EXPECT_EQ(cast<IMathObject>(Neg()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

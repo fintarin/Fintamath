@@ -103,6 +103,8 @@ TEST(PowTests, equalsTest) {
   EXPECT_EQ(f, f);
   EXPECT_EQ(f, Pow());
   EXPECT_EQ(Pow(), f);
+  EXPECT_EQ(f, cast<IMathObject>(Pow()));
+  EXPECT_EQ(cast<IMathObject>(Pow()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());

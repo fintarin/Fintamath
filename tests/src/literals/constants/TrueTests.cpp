@@ -6,23 +6,23 @@
 
 using namespace fintamath;
 
-const True f;
+const True c;
 
 TEST(TrueTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "True");
+  EXPECT_EQ(c.toString(), "True");
 }
 
 TEST(TrueTests, callTest) {
-  EXPECT_EQ(f()->toString(), "True");
-  EXPECT_TRUE(is<Boolean>(f()));
+  EXPECT_EQ(c()->toString(), "True");
+  EXPECT_TRUE(is<Boolean>(c()));
 }
 
 TEST(TrueTests, equalsTest) {
-  True a;
-
-  EXPECT_EQ(a, a);
-  EXPECT_EQ(a, True());
-  EXPECT_EQ(True(), a);
-  EXPECT_NE(a, E());
-  EXPECT_NE(E(), a);
+  EXPECT_EQ(c, c);
+  EXPECT_EQ(c, True());
+  EXPECT_EQ(True(), c);
+  EXPECT_EQ(c, cast<IMathObject>(True()));
+  EXPECT_EQ(cast<IMathObject>(True()), c);
+  EXPECT_NE(c, E());
+  EXPECT_NE(E(), c);
 }
