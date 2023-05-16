@@ -58,8 +58,6 @@ private:
 
   void postSimplifyRec();
 
-  void simplifyRec();
-
   ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, size_t lhsChildPos,
                                    size_t rhsChildPos) const;
 
