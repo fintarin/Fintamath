@@ -17,7 +17,7 @@ ArgumentPtr OrExpression::logicNegate() const {
     negChildren.emplace_back(makeExpr(Not(), child));
   }
 
-  return makeExprSimpl(And(), negChildren);
+  return makeExpr(And(), negChildren)->toMinimalObject();
 }
 
 std::string OrExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
@@ -52,7 +52,8 @@ ArgumentPtr OrExpression::postSimplify() const {
   }
 
   if (simplChildren.size() != simplChildrenSizeInitial) {
-    return simplChildren.size() > 1 ? makeExprSimpl(Or(), simplChildren) : simplChildren.front();
+    return simplChildren.size() > 1 ? makeExpr(Or(), simplChildren)->toMinimalObject()
+                                    : simplChildren.front()->toMinimalObject();
   }
 
   return simpl;
@@ -174,7 +175,8 @@ ArgumentPtr OrExpression::simplifyAnd(const IFunction & /*func*/, const Argument
   ArgumentsPtrVector resultChildren = lhsChildren;
   resultChildren.erase(resultChildren.begin() + ArgumentsPtrVector::iterator::difference_type(resolutionIndex));
 
-  return resultChildren.size() > 1 ? makeExprSimpl(And(), resultChildren) : resultChildren.front();
+  return resultChildren.size() > 1 ? makeExpr(And(), resultChildren)->toMinimalObject()
+                                   : resultChildren.front()->toMinimalObject();
 }
 
 ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
@@ -217,7 +219,8 @@ ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentPtr &lhsChild, const 
   }
 
   if (matchCount == minChildren.size()) {
-    return minChildren.size() > 1 ? makeExprSimpl(And(), minChildren) : minChildren.front();
+    return minChildren.size() > 1 ? makeExpr(And(), minChildren)->toMinimalObject()
+                                  : minChildren.front()->toMinimalObject();
   }
 
   return {};

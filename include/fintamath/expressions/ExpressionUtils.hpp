@@ -28,23 +28,9 @@ bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable 
 
 std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args);
 
-extern std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &func, const ArgumentsRefVector &args);
-
-extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args);
-
-extern ArgumentPtr makeExprSimpl(const IFunction &func, const ArgumentsPtrVector &args);
+extern std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args);
 
 extern std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
-
-template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &func, const Args &...args) {
-  return makeExprSimpl(func, ArgumentsRefVector{args...});
-}
-
-template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const Args &...args) {
-  return makeExpr(func, ArgumentsRefVector{args...});
-}
 
 template <typename T, typename = std::enable_if_t<(std::is_convertible_v<T, ArgumentPtr>)>>
 ArgumentPtr toArgumentPtr(T &arg) {
@@ -56,9 +42,9 @@ ArgumentPtr toArgumentPtr(T &arg) {
   }
 }
 
-template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, ArgumentPtr> && ...)>>
-ArgumentPtr makeExprSimpl(const IFunction &func, Args &&...args) {
-  return makeExprSimpl(func, ArgumentsPtrVector{toArgumentPtr(args)...});
+template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
+std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const Args &...args) {
+  return makeExprChecked(func, ArgumentsRefVector{args...});
 }
 
 template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, ArgumentPtr> && ...)>>

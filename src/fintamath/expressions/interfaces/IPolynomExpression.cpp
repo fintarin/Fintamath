@@ -41,58 +41,6 @@ ArgumentPtr IPolynomExpression::simplify() const {
   return simpl;
 }
 
-void IPolynomExpression::preSimplifyRec() {
-  size_t childrenSize = children.size();
-
-  for (size_t i = 1; i < children.size(); i++) {
-    ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]});
-
-    if (!res) {
-      res = useSimplifyFunctions(getFunctionsForPreSimplify(), i - 1, i);
-    }
-
-    if (!res) {
-      res = useSimplifyFunctions(getFunctionsForSimplify(), i - 1, i);
-    }
-
-    if (res) {
-      children[i - 1] = res;
-      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
-      i--;
-    }
-  }
-
-  if (children.size() != childrenSize) {
-    preSimplifyRec();
-  }
-}
-
-void IPolynomExpression::postSimplifyRec() {
-  size_t childrenSize = children.size();
-
-  for (size_t i = 1; i < children.size(); i++) {
-    ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]});
-
-    if (!res) {
-      res = useSimplifyFunctions(getFunctionsForPostSimplify(), i - 1, i);
-    }
-
-    if (!res) {
-      res = useSimplifyFunctions(getFunctionsForSimplify(), i - 1, i);
-    }
-
-    if (res) {
-      children[i - 1] = res;
-      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
-      i--;
-    }
-  }
-
-  if (children.size() != childrenSize) {
-    postSimplifyRec();
-  }
-}
-
 ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, size_t lhsChildPos,
                                                      size_t rhsChildPos) const {
   const auto &lhs = children[lhsChildPos];
@@ -120,7 +68,6 @@ ArgumentPtr IPolynomExpression::preSimplify() const {
     }
   }
 
-  simpl->sort();
   simpl->preSimplifyRec();
 
   if (simpl->children.size() == 1) {
@@ -128,6 +75,34 @@ ArgumentPtr IPolynomExpression::preSimplify() const {
   }
 
   return simpl;
+}
+
+void IPolynomExpression::preSimplifyRec() {
+  sort();
+
+  size_t childrenSize = children.size();
+
+  for (size_t i = 1; i < children.size(); i++) {
+    ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]});
+
+    if (!res) {
+      res = useSimplifyFunctions(getFunctionsForPreSimplify(), i - 1, i);
+    }
+
+    if (!res) {
+      res = useSimplifyFunctions(getFunctionsForSimplify(), i - 1, i);
+    }
+
+    if (res) {
+      children[i - 1] = res;
+      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
+      i--;
+    }
+  }
+
+  if (children.size() != childrenSize) {
+    preSimplifyRec();
+  }
 }
 
 ArgumentPtr IPolynomExpression::postSimplify() const {
@@ -143,7 +118,6 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
     }
   }
 
-  simpl->sort();
   simpl->postSimplifyRec();
 
   if (simpl->children.size() == 1) {
@@ -151,6 +125,34 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
   }
 
   return simpl;
+}
+
+void IPolynomExpression::postSimplifyRec() {
+  sort();
+
+  size_t childrenSize = children.size();
+
+  for (size_t i = 1; i < children.size(); i++) {
+    ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]});
+
+    if (!res) {
+      res = useSimplifyFunctions(getFunctionsForPostSimplify(), i - 1, i);
+    }
+
+    if (!res) {
+      res = useSimplifyFunctions(getFunctionsForSimplify(), i - 1, i);
+    }
+
+    if (res) {
+      children[i - 1] = res;
+      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
+      i--;
+    }
+  }
+
+  if (children.size() != childrenSize) {
+    postSimplifyRec();
+  }
 }
 
 IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForSimplify() const {

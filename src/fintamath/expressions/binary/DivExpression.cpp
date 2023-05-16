@@ -50,7 +50,7 @@ ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const Argumen
   }
 
   if (Div().doArgsMatch({one, *rhs})) {
-    return makeExprSimpl(Mul(), lhs, Div()(one, *rhs));
+    return makeExpr(Mul(), lhs, Div()(one, *rhs))->toMinimalObject();
   }
 
   return {};
@@ -100,7 +100,7 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     denominator = makeExpr(Mul(), denominatorChildren);
   }
 
-  return makeExprSimpl(Div(), numerator, denominator);
+  return makeExpr(Div(), numerator, denominator)->toMinimalObject();
 }
 
 ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -150,7 +150,7 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
   ArgumentPtr numerator;
   if (lhsChildren.size() > 1) {
-    numerator = makeExprSimpl(Mul(), lhsChildren);
+    numerator = makeExpr(Mul(), lhsChildren)->toMinimalObject();
   }
   else {
     numerator = lhsChildren.front();
@@ -163,14 +163,14 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
   ArgumentPtr denominator;
 
   if (rhsChildren.size() > 1) {
-    denominator = makeExprSimpl(Mul(), rhsChildren);
+    denominator = makeExpr(Mul(), rhsChildren)->toMinimalObject();
   }
   else {
     denominator = rhsChildren.front();
   }
 
   if (lhsChildren.size() != lhsChildrenSizeInitial || rhsChildren.size() != rhsChildrenSizeInitial) {
-    return makeExprSimpl(Div(), numerator, denominator);
+    return makeExpr(Div(), numerator, denominator)->toMinimalObject();
   }
 
   return {};
@@ -178,7 +178,7 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
 ArgumentPtr DivExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (isNeg(rhs)) {
-    return makeExprSimpl(Div(), makeExpr(Neg(), lhs), makeExpr(Neg(), rhs));
+    return makeExpr(Div(), makeExpr(Neg(), lhs), makeExpr(Neg(), rhs))->toMinimalObject();
   }
 
   return {};
@@ -207,7 +207,7 @@ ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const Argumen
   }
 
   if (auto [lhsRes, rhsRes] = mulSumSimplify(lhs, rhs); lhsRes) {
-    return makeExprSimpl(Add(), lhsRes, rhsRes);
+    return makeExpr(Add(), lhsRes, rhsRes)->toMinimalObject();
   }
 
   if (auto res = sumSumSimplify(lhs, rhs)) {
@@ -253,10 +253,9 @@ ArgumentPtr DivExpression::sumSumSimplify(const ArgumentPtr &lhs, const Argument
     return {};
   }
 
-  auto restSimplResult = makeExprSimpl(Add(), restVect);
-  answerVect.emplace_back(makeExprSimpl(Div(), restSimplResult, rhs));
-
-  return makeExprSimpl(Add(), answerVect);
+  auto restSimplResult = makeExpr(Add(), restVect);
+  answerVect.emplace_back(makeExpr(Div(), restSimplResult, rhs));
+  return makeExpr(Add(), answerVect)->toMinimalObject();
 }
 
 ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -275,7 +274,7 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
   ArgumentsPtrVector divFailure;
 
   for (const auto &child : lhsChildren) {
-    ArgumentPtr divResult = makeExprSimpl(Div(), child, rhs);
+    ArgumentPtr divResult = makeExpr(Div(), child, rhs)->toMinimalObject();
 
     if (const auto divResultExpr = cast<IExpression>(divResult);
         divResultExpr && is<Div>(divResultExpr->getFunction()) && *divResultExpr->getChildren().back() == *rhs) {
@@ -310,7 +309,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr divResult = makeExprSimpl(Div(), lhs, rhsChildren.front());
+  ArgumentPtr divResult = makeExpr(Div(), lhs, rhsChildren.front())->toMinimalObject();
 
   if (const auto divExpr = cast<IExpression>(divResult); divExpr && is<Div>(divExpr->getFunction())) {
     return {};
@@ -363,7 +362,7 @@ ArgumentPtr DivExpression::divPowSimplify(const ArgumentPtr &lhs, const Argument
 
   if (result) {
     if (negation) {
-      return makeExprSimpl(Neg(), result);
+      return makeExpr(Neg(), result)->toMinimalObject();
     }
 
     return result;
@@ -382,7 +381,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const Argume
 }
 
 ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = makeExprSimpl(Add(), rates);
+  ArgumentPtr ratesSum = makeExpr(Add(), rates)->toMinimalObject();
   return makeExpr(Pow(), value, ratesSum);
 }
 

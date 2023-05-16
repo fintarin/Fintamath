@@ -31,7 +31,7 @@ std::string CompExpression::toString() const {
       if (is<Variable>(solLhs)) {
         sumChildren.erase(sumChildren.begin());
 
-        ArgumentPtr solRhs = makeExprSimpl(Neg(), sumChildren);
+        ArgumentPtr solRhs = makeExpr(Neg(), sumChildren)->toMinimalObject();
 
         if (!is<IExpression>(solRhs)) {
           return CompExpression(cast<IOperator>(*func), solLhs, solRhs).toString();
@@ -48,7 +48,7 @@ ArgumentPtr CompExpression::preSimplify() const {
   auto simplExpr = cast<CompExpression>(simpl);
 
   if (!simplExpr->isSolution && (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
-    ArgumentPtr resLhs = makeExprSimpl(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
+    ArgumentPtr resLhs = makeExpr(Sub(), simplExpr->lhsChild, simplExpr->rhsChild)->toMinimalObject();
     return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
   }
 
@@ -99,7 +99,7 @@ std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const IFunct
 ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto lhsExpr = cast<IExpression>(lhs)) {
     if (is<Neg>(lhsExpr->getFunction())) {
-      return makeExprSimpl(*getOppositeFunction(func), lhsExpr->getChildren().front(), rhs);
+      return makeExpr(*getOppositeFunction(func), lhsExpr->getChildren().front(), rhs)->toMinimalObject();
     }
 
     ArgumentsPtrVector dividendPolynom;
@@ -130,7 +130,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
         child = makeExpr(Div(), child, dividerNum);
       }
 
-      ArgumentPtr newLhs = makeExprSimpl(Add(), dividendPolynom);
+      ArgumentPtr newLhs = makeExpr(Add(), dividendPolynom)->toMinimalObject();
       ArgumentPtr newRhs = rhs;
       if (*dividerNum < Integer(0)) {
         return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, newRhs);

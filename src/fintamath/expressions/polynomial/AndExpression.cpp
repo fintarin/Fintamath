@@ -17,7 +17,7 @@ ArgumentPtr AndExpression::logicNegate() const {
     negChildren.emplace_back(makeExpr(Not(), child));
   }
 
-  return makeExprSimpl(Or(), negChildren);
+  return makeExpr(Or(), negChildren)->toMinimalObject();
 }
 
 AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForSimplify() const {
@@ -110,7 +110,7 @@ ArgumentPtr AndExpression::simplifyOr(const IFunction & /*func*/, const Argument
     }
   }
 
-  return makeExprSimpl(Or(), resultVect);
+  return makeExpr(Or(), resultVect)->toMinimalObject();
 }
 
 }

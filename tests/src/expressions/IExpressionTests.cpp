@@ -49,7 +49,7 @@ TEST(IExpressionTests, getChildrenTest) {
 }
 
 TEST(IExpressionTests, setChildrenTest) {
-  auto expr = cast<IExpression>(makeExprSimpl(Factorial(), Variable("a").clone())->clone());
+  auto expr = cast<IExpression>(makeExpr(Factorial(), Variable("a").clone())->clone());
 
   expr->setChildren({Variable("b").clone()});
   EXPECT_EQ(expr->toString(), "b!");

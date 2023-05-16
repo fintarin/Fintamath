@@ -10,6 +10,7 @@ FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentsP
 
   for (const auto &child : inChildren) {
     children.emplace_back(child);
+    compressChild(children.back());
   }
 }
 

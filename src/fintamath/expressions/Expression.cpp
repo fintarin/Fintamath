@@ -243,27 +243,27 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  child = makeExprSimpl(Add(), child, rhs.child);
+  child = makeExprChecked(Add(), *child, *rhs.child);
   return *this;
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  child = makeExprSimpl(Sub(), child, rhs.child);
+  child = makeExprChecked(Sub(), *child, *rhs.child);
   return *this;
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  child = makeExprSimpl(Mul(), child, rhs.child);
+  child = makeExprChecked(Mul(), *child, *rhs.child);
   return *this;
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  child = makeExprSimpl(Div(), child, rhs.child);
+  child = makeExprChecked(Div(), *child, *rhs.child);
   return *this;
 }
 
 Expression &Expression::negate() {
-  child = makeExprSimpl(Neg(), child);
+  child = makeExprChecked(Neg(), *child);
   return *this;
 }
 
@@ -493,29 +493,15 @@ ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpres
   return res;
 }
 
-std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &func, const ArgumentsRefVector &args) {
+std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args) {
   ArgumentsPtrVector argsPtrVect;
 
   for (const auto &arg : args) {
-    argsPtrVect.emplace_back(arg.get().toMinimalObject());
+    argsPtrVect.emplace_back(arg.get().clone());
   }
 
-  return makeExprSimpl(func, argsPtrVect)->clone();
-}
-
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args) {
-  ArgumentsPtrVector argsPtrVect;
-
-  for (const auto &arg : args) {
-    argsPtrVect.emplace_back(arg.get().toMinimalObject());
-  }
-
-  return makeExpr(func, argsPtrVect)->clone();
-}
-
-ArgumentPtr makeExprSimpl(const IFunction &func, const ArgumentsPtrVector &args) {
-  Expression res(makeExpr(func, args));
-  return res.child;
+  Expression res(makeExpr(func, argsPtrVect));
+  return res.getChildren().front()->clone();
 }
 
 std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrVector &args) {
@@ -540,51 +526,51 @@ void Expression::setValuesOfVariables(const std::vector<Variable> &vars, const A
 }
 
 Expression operator+(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExprSimpl(Add(), lhs.clone(), rhs.clone()));
+  return Expression(makeExpr(Add(), lhs.clone(), rhs.clone()));
 }
 
 Expression operator+(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeExprSimpl(Add(), lhs.getChildren().front(), rhs.clone()));
+  return Expression(makeExpr(Add(), lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator+(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeExprSimpl(Add(), lhs.clone(), rhs.getChildren().front()));
+  return Expression(makeExpr(Add(), lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator-(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExprSimpl(Sub(), lhs.clone(), rhs.clone()));
+  return Expression(makeExpr(Sub(), lhs.clone(), rhs.clone()));
 }
 
 Expression operator-(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeExprSimpl(Sub(), lhs.getChildren().front(), rhs.clone()));
+  return Expression(makeExpr(Sub(), lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator-(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeExprSimpl(Sub(), lhs.clone(), rhs.getChildren().front()));
+  return Expression(makeExpr(Sub(), lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator*(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExprSimpl(Mul(), lhs.clone(), rhs.clone()));
+  return Expression(makeExpr(Mul(), lhs.clone(), rhs.clone()));
 }
 
 Expression operator*(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeExprSimpl(Mul(), lhs.getChildren().front(), rhs.clone()));
+  return Expression(makeExpr(Mul(), lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator*(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeExprSimpl(Mul(), lhs.clone(), rhs.getChildren().front()));
+  return Expression(makeExpr(Mul(), lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator/(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExprSimpl(Div(), lhs.clone(), rhs.clone()));
+  return Expression(makeExpr(Div(), lhs.clone(), rhs.clone()));
 }
 
 Expression operator/(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeExprSimpl(Div(), lhs.getChildren().front(), rhs.clone()));
+  return Expression(makeExpr(Div(), lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator/(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeExprSimpl(Div(), lhs.clone(), rhs.getChildren().front()));
+  return Expression(makeExpr(Div(), lhs.clone(), rhs.getChildren().front()));
 }
 
 }

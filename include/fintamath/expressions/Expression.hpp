@@ -135,11 +135,7 @@ private:
   static ArgumentPtr preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
                                           bool shouldSimplify);
 
-  friend std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &func, const ArgumentsRefVector &args);
-
-  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args);
-
-  friend ArgumentPtr makeExprSimpl(const IFunction &func, const ArgumentsPtrVector &args);
+  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args);
 
   friend std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
 

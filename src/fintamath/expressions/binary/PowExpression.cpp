@@ -130,16 +130,14 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     newPolynom.emplace_back(mulExpr);
   }
 
-  ArgumentPtr newSumExpr = makeExprSimpl(Add(), newPolynom);
-
-  return newSumExpr;
+  return makeExpr(Add(), newPolynom)->toMinimalObject();
 }
 
 ArgumentPtr PowExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
     auto lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), rhs);
     auto rhsMul = makeExpr(Pow(), lhsExpr->getChildren().front(), rhs);
-    return makeExprSimpl(Mul(), lhsMul, rhsMul);
+    return makeExpr(Mul(), lhsMul, rhsMul)->toMinimalObject();
   }
 
   return {};
@@ -149,7 +147,7 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     auto lhsPow = lhsExpr->getChildren().front();
     auto rhsPow = makeExpr(Mul(), lhsExpr->getChildren().back(), rhs);
-    return makeExprSimpl(Pow(), lhsPow, rhsPow);
+    return makeExpr(Pow(), lhsPow, rhsPow)->toMinimalObject();
   }
 
   return {};
@@ -169,11 +167,12 @@ ArgumentPtr PowExpression::numSimplify(const IFunction & /*func*/, const Argumen
     }
 
     if (*rhsInt == -1) {
-      return makeExprSimpl(Div(), std::make_shared<Integer>(1), lhs);
+      return makeExpr(Div(), std::make_shared<Integer>(1), lhs)->toMinimalObject();
     }
 
     if (*rhsInt < 0) {
-      return makeExprSimpl(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhsInt)));
+      return makeExpr(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhsInt)))
+          ->toMinimalObject();
     }
   }
 
@@ -204,7 +203,7 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
       arg = makeExpr(Pow(), arg, rhs->clone());
     }
 
-    return makeExprSimpl(Mul(), args);
+    return makeExpr(Mul(), args)->toMinimalObject();
   }
 
   return {};

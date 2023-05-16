@@ -55,7 +55,7 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
 
-  static std::unique_ptr<IMathObject> makeExprSimpl(const IFunction &function, const ArgumentsRefVector &args);
+  static std::unique_ptr<IMathObject> makeExprChecked(const IFunction &function, const ArgumentsRefVector &args);
 
   // TODO: uncomment
   // static std::unique_ptr<IMathObject> makeExpr(const IFunction &function, const ArgumentsRefVector &args);
@@ -121,7 +121,7 @@ protected:
       return call(argsVect);
     }
 
-    return makeExprSimpl(*this, argsVect);
+    return makeExprChecked(*this, argsVect);
   }
 
   bool equals(const Derived &rhs) const override {

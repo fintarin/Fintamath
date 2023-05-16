@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> IFunction::makeExprSimpl(const IFunction &function, const ArgumentsRefVector &args) {
-  return fintamath::makeExprSimpl(function, args);
+std::unique_ptr<IMathObject> IFunction::makeExprChecked(const IFunction &function, const ArgumentsRefVector &args) {
+  return fintamath::makeExprChecked(function, args);
 }
 
 // TODO: uncomment

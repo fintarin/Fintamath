@@ -34,10 +34,11 @@ ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, con
   ArgumentPtr res;
 
   if (is<INumber>(lhs) || is<IConstant>(lhs)) {
-    res = makeExprSimpl(Mul(), lhs, rhs);
+    res = makeExpr(Mul(), lhs, rhs)->toMinimalObject();
   }
   else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
-    res = makeExprSimpl(Div(), makeExpr(Pow(), lhs, std::make_shared<Integer>(2)), std::make_shared<Integer>(2));
+    res = makeExpr(Div(), makeExpr(Pow(), lhs, std::make_shared<Integer>(2)), std::make_shared<Integer>(2))
+              ->toMinimalObject();
   }
 
   // TODO: res + integral constant

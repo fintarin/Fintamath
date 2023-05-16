@@ -94,45 +94,20 @@ TEST(ExpressionUtilsTests, hasVariablesTest) {
   EXPECT_FALSE(hasVariables(expr));
 }
 
-TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsTest) {
+TEST(ExpressionUtilsTests, makeExpressionCheckedTest) {
   Integer one = 1;
   Integer two = 2;
-  auto expr1 = makeExprSimpl(Add(), {one, two});
+  auto expr1 = makeExprChecked(Add(), {one, two});
   EXPECT_EQ(expr1->toString(), "3");
   EXPECT_TRUE(is<INumber>(expr1));
 
   Variable var("a");
-  auto expr2 = makeExprSimpl(Cos(), {var});
+  auto expr2 = makeExprChecked(Cos(), {var});
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 }
 
-TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromRefsTest) {
-  Integer one = 1;
-  Integer two = 2;
-  auto expr1 = makeExpr(Add(), {one, two});
-  EXPECT_EQ(expr1->toString(), "1 + 2");
-  EXPECT_TRUE(is<IExpression>(expr1));
-
-  Variable var("a");
-  auto expr2 = makeExpr(Cos(), {var});
-  EXPECT_EQ(expr2->toString(), "cos(a)");
-  EXPECT_TRUE(is<IExpression>(expr2));
-}
-
-TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrsTest) {
-  auto expr1 = makeExprSimpl(Add(), {std::make_shared<Integer>(1), std::make_shared<Integer>(2)});
-  EXPECT_EQ(expr1->toString(), "3");
-  EXPECT_TRUE(is<INumber>(expr1));
-
-  auto var = std::make_shared<Variable>("a");
-  auto expr2 = makeExprSimpl(Cos(), {var});
-  EXPECT_EQ(expr2->toString(), "cos(a)");
-  EXPECT_TRUE(is<IExpression>(expr2));
-  EXPECT_FALSE(is<Expression>(expr2));
-}
-
-TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromPtrsTest) {
+TEST(ExpressionUtilsTests, makeExpressionTest) {
   auto expr1 = makeExpr(Add(), {std::make_shared<Integer>(1), std::make_shared<Integer>(2)});
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));
@@ -145,45 +120,20 @@ TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromPtrsTest) {
   EXPECT_FALSE(is<Expression>(expr2));
 }
 
-TEST(ExpressionUtilsTests, makeFunctionExpressionFromRefsAnyArgsTest) {
+TEST(ExpressionUtilsTests, makeExpressionCheckedAnyArgsTest) {
   Integer one = 1;
   Integer two = 2;
-  auto expr1 = makeExpr(Add(), one, two);
-  EXPECT_EQ(expr1->toString(), "1 + 2");
-  EXPECT_TRUE(is<IExpression>(expr1));
-
-  Variable var("a");
-  auto expr2 = makeExpr(Cos(), var);
-  EXPECT_EQ(expr2->toString(), "cos(a)");
-  EXPECT_TRUE(is<IExpression>(expr2));
-}
-
-TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromRefsAnyArgsTest) {
-  Integer one = 1;
-  Integer two = 2;
-  auto expr1 = makeExprSimpl(Add(), one, two);
+  auto expr1 = makeExprChecked(Add(), one, two);
   EXPECT_EQ(expr1->toString(), "3");
   EXPECT_TRUE(is<INumber>(expr1));
 
   Variable var("a");
-  auto expr2 = makeExprSimpl(Cos(), var);
+  auto expr2 = makeExprChecked(Cos(), var);
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 }
 
-TEST(ExpressionUtilsTests, makeFunctionExpressionFromPtrsArgsTest) {
-  auto expr1 = makeExprSimpl(Add(), std::make_shared<Integer>(1), std::make_shared<Integer>(2));
-  EXPECT_EQ(expr1->toString(), "3");
-  EXPECT_TRUE(is<INumber>(expr1));
-
-  auto var = std::make_shared<Variable>("a");
-  auto expr2 = makeExprSimpl(Cos(), var);
-  EXPECT_EQ(expr2->toString(), "cos(a)");
-  EXPECT_TRUE(is<IExpression>(expr2));
-  EXPECT_FALSE(is<Expression>(expr2));
-}
-
-TEST(ExpressionUtilsTests, makeRawFunctionExpressionFromPtrsAnyArgsTest) {
+TEST(ExpressionUtilsTests, makeExpressionAnyArgsTest) {
   auto expr1 = makeExpr(Add(), std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));

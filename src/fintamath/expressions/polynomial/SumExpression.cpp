@@ -141,7 +141,8 @@ ArgumentPtr SumExpression::simplifyLogarithms(const IFunction & /*func*/, const 
   ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
 
   if (*lhsChildren.front() == *rhsChildren.front()) {
-    return makeExprSimpl(Log(), lhsChildren.front(), makeExpr(Mul(), lhsChildren.back(), rhsChildren.back()));
+    return makeExpr(Log(), lhsChildren.front(), makeExpr(Mul(), lhsChildren.back(), rhsChildren.back()))
+        ->toMinimalObject();
   }
 
   return {};
@@ -172,8 +173,9 @@ ArgumentPtr SumExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
         if (*lhsLogExpr->getChildren().front() == *rhsLogExpr->getChildren().front()) {
           lhsLogExpr = mulToLogarithm(lhsExprChildren, i);
           rhsLogExpr = mulToLogarithm(rhsExprChildren, j);
-          return makeExprSimpl(Log(), lhsLogExpr->getChildren().front(),
-                               makeExpr(Mul(), lhsLogExpr->getChildren().back(), rhsLogExpr->getChildren().back()));
+          return makeExpr(Log(), lhsLogExpr->getChildren().front(),
+                          makeExpr(Mul(), lhsLogExpr->getChildren().back(), rhsLogExpr->getChildren().back()))
+              ->toMinimalObject();
         }
       }
     }
@@ -202,8 +204,9 @@ ArgumentPtr SumExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
 
     if (*childLogExpr->getChildren().front() == *logExpr->getChildren().front()) {
       childLogExpr = mulToLogarithm(mulExprChildren, i);
-      return makeExprSimpl(Log(), logExpr->getChildren().front(),
-                           makeExpr(Mul(), logExpr->getChildren().back(), childLogExpr->getChildren().back()));
+      return makeExpr(Log(), logExpr->getChildren().front(),
+                      makeExpr(Mul(), logExpr->getChildren().back(), childLogExpr->getChildren().back()))
+          ->toMinimalObject();
     }
   }
 
@@ -224,7 +227,8 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const Argume
         value = mulExprChildren[1];
       }
       else {
-        value = makeExprSimpl(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
+        value =
+            makeExpr(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()))->toMinimalObject();
       }
     }
   }
@@ -243,7 +247,7 @@ std::pair<ArgumentPtr, ArgumentPtr> SumExpression::getRateValuePair(const Argume
 
 ArgumentPtr SumExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeExpr(Add(), rates);
-  return makeExprSimpl(Mul(), ratesSum, value);
+  return makeExpr(Mul(), ratesSum, value)->toMinimalObject();
 }
 
 std::vector<size_t> SumExpression::findLogarithms(const ArgumentsPtrVector &children) {
@@ -292,8 +296,9 @@ ArgumentPtr SumExpression::sumDivisions(const IFunction & /*func*/, const Argume
   if (lhsExpr && rhsExpr && //
       is<Div>(lhsExpr->getFunction()) && is<Div>(rhsExpr->getFunction()) &&
       *lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
-    return makeExprSimpl(Div(), makeExpr(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front()),
-                         lhsExpr->getChildren().back());
+    return makeExpr(Div(),
+                    makeExpr(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front())->toMinimalObject(),
+                    lhsExpr->getChildren().back());
   }
 
   return {};

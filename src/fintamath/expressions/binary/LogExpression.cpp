@@ -31,7 +31,7 @@ std::string LogExpression::toString() const {
 }
 
 ArgumentPtr LogExpression::negate() const {
-  return makeExprSimpl(Log(), lhsChild, makeExpr(Div(), std::make_shared<Integer>(1), rhsChild));
+  return makeExpr(Log(), lhsChild, makeExpr(Div(), std::make_shared<Integer>(1), rhsChild))->toMinimalObject();
 }
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() const {
@@ -83,12 +83,14 @@ ArgumentPtr LogExpression::equalSimplify(const IFunction & /*func*/, const Argum
 
 ArgumentPtr LogExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
-    return makeExprSimpl(Mul(), rhsExpr->getChildren().back(), makeExpr(Log(), lhs, rhsExpr->getChildren().front()));
+    return makeExpr(Mul(), rhsExpr->getChildren().back(), makeExpr(Log(), lhs, rhsExpr->getChildren().front()))
+        ->toMinimalObject();
   }
 
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
-    return makeExprSimpl(Mul(), makeExpr(Div(), std::make_shared<Integer>(1), lhsExpr->getChildren().back()),
-                         makeExpr(Log(), lhsExpr->getChildren().front(), rhs));
+    return makeExpr(Mul(), makeExpr(Div(), std::make_shared<Integer>(1), lhsExpr->getChildren().back()),
+                    makeExpr(Log(), lhsExpr->getChildren().front(), rhs))
+        ->toMinimalObject();
   }
 
   return {};
