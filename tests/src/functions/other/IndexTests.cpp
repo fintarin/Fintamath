@@ -41,7 +41,13 @@ TEST(IndexTests, callTest) {
 }
 
 TEST(IndexTests, doArgsMatchTest) {
+  Variable a("a");
+  Integer b(1);
+
   EXPECT_FALSE(f.doArgsMatch({}));
+  EXPECT_FALSE(f.doArgsMatch({a}));
+  EXPECT_TRUE(f.doArgsMatch({a, b}));
+  EXPECT_FALSE(f.doArgsMatch({a, b, b}));
 }
 
 TEST(IndexTests, equalsTest) {

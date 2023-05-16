@@ -37,7 +37,12 @@ TEST(EquivTests, callTest) {
 }
 
 TEST(EquivTests, doArgsMatchTest) {
+  Boolean a;
+
   EXPECT_FALSE(f.doArgsMatch({}));
+  EXPECT_FALSE(f.doArgsMatch({a}));
+  EXPECT_TRUE(f.doArgsMatch({a, a}));
+  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
 }
 
 TEST(EquivTests, equalsTest) {

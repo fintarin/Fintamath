@@ -40,7 +40,12 @@ TEST(DivTests, callTest) {
 }
 
 TEST(DivTests, doArgsMatchTest) {
+  Integer a;
+
   EXPECT_FALSE(f.doArgsMatch({}));
+  EXPECT_FALSE(f.doArgsMatch({a}));
+  EXPECT_TRUE(f.doArgsMatch({a, a}));
+  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
 }
 
 TEST(DivTests, equalsTest) {

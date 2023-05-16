@@ -39,7 +39,12 @@ TEST(CosTests, callTest) {
 }
 
 TEST(CosTests, doArgsMatchTest) {
+  Integer a;
+
   EXPECT_FALSE(f.doArgsMatch({}));
+  EXPECT_TRUE(f.doArgsMatch({a}));
+  EXPECT_FALSE(f.doArgsMatch({a, a}));
+  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
 }
 
 TEST(CosTests, equalsTest) {
