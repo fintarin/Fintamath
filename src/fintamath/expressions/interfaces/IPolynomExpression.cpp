@@ -406,6 +406,7 @@ int IPolynomExpression::comparatorNonExpressions(const ArgumentPtr &lhs, const A
 
 int IPolynomExpression::comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
                                            bool ignoreUnaryIfPossible) const {
+
   const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
   const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
@@ -476,6 +477,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
 
       if (const auto lhsExpr = cast<IExpression>(compLhs);
           lhsExpr && lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
+
         compLhs = lhsExpr->getChildren().front();
         isLhsUnary = true;
       }
@@ -484,6 +486,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
 
       if (const auto rhsExpr = cast<IExpression>(compRhs);
           rhsExpr && rhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
+
         compRhs = rhsExpr->getChildren().front();
         isRhsUnary = true;
       }
