@@ -8,7 +8,7 @@ class FunctionExpression : public IExpressionCRTP<FunctionExpression, true> {
 public:
   explicit FunctionExpression(const IFunction &inFunc, const ArgumentsPtrVector &inChildren);
 
-  std::string toString() const override;  
+  std::string toString() const override;
 
   std::shared_ptr<IFunction> getFunction() const override;
 
