@@ -91,7 +91,7 @@ public:
   }
 
   bool doArgsMatch(const ArgumentsRefVector &argsVect) const override {
-    if (argsVect.empty()) {
+    if (argsVect.empty()) { // TODO: support None type functions
       return false;
     }
 
