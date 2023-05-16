@@ -54,16 +54,23 @@ public:
     Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> constructor =
         [maker = std::forward<Maker>(maker)](const ArgumentsPtrVector &args) -> std::shared_ptr<IExpression> {
       static const IFunction::Type type = Function().getFunctionType();
+      std::shared_ptr<IExpression> res;
 
-      if (type == IFunction::Type::Any || uint16_t(type) == args.size()) {
-        return maker(args);
+      if constexpr (IsFunctionTypeAny<Function>::value) {
+        res = maker(args);
+      }
+      else if constexpr (isPolynomial) {
+        if (uint16_t(type) <= args.size()) {
+          res = maker(args);
+        }
+      }
+      else {
+        if (size_t(type) == args.size()) {
+          res = maker(args);
+        }
       }
 
-      if (isPolynomial && uint16_t(type) < args.size()) {
-        return maker(args);
-      }
-
-      return {};
+      return res;
     };
 
     Parser::add<Function>(getExpressionMakers(), std::move(constructor));
@@ -178,5 +185,4 @@ Expression operator/(const Variable &lhs, const Variable &rhs);
 Expression operator/(const Expression &lhs, const Variable &rhs);
 
 Expression operator/(const Variable &lhs, const Expression &rhs);
-
 }

@@ -168,8 +168,10 @@ private:
         throwInvalidInputFunctionException(argsVect);
       }
     }
-    else if (argsVect.size() != sizeof...(Args)) {
-      throwInvalidInputFunctionException(argsVect);
+    else {
+      if (argsVect.size() != sizeof...(Args)) {
+        throwInvalidInputFunctionException(argsVect);
+      }
     }
   }
 
