@@ -34,12 +34,6 @@ std::vector<Variable> IExpression::getVariablesUnsorted() const {
 std::vector<Variable> IExpression::getVariables() const {
   std::vector<Variable> vars = getVariablesUnsorted();
 
-  vars.erase(std::unique(vars.begin(), vars.end(),
-                         [](const Variable &lhs, const Variable &rhs) {
-                           return lhs == rhs;
-                         }),
-             vars.end());
-
   std::sort(vars.begin(), vars.end(), [](const Variable &lhs, const Variable &rhs) {
     return lhs.toString() < rhs.toString();
   });

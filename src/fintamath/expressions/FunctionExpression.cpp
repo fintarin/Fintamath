@@ -9,12 +9,7 @@ FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentsP
     : func(cast<IFunction>(inFunc.clone())) {
 
   for (const auto &child : inChildren) {
-    if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
-      children.emplace_back(expr->getChildren().front());
-    }
-    else {
-      children.emplace_back(child);
-    }
+    children.emplace_back(child);
   }
 }
 

@@ -64,7 +64,13 @@ TEST(IExpressionTests, getVariablesUnsortedTest) {
 }
 
 TEST(IExpressionTests, getVariablesTest) {
-  // TODO: implement
+  auto expr = cast<IExpression>(Expression("x^2+y^2+a").clone());
+  auto vars = expr->getVariables();
+  EXPECT_EQ(vars[0].toString(), "a");
+  EXPECT_EQ(vars[1].toString(), "x");
+  EXPECT_EQ(vars[2].toString(), "y");
+
+  // TODO: implement more tests
 }
 
 TEST(IExpressionTests, setValuesOfVariablesTest) {
