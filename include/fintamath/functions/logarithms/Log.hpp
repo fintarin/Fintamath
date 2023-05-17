@@ -13,6 +13,10 @@ public:
     return "log";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Log;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

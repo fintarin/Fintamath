@@ -50,6 +50,10 @@ public:
 
   const boost::multiprecision::cpp_dec_float_100 &getBackend() const;
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Real;
+  }
+
 protected:
   bool equals(const Real &rhs) const override;
 

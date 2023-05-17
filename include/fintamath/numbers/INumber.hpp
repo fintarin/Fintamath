@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class INumber : virtual public IComparable {
+class INumber : public IComparable {
   FINTAMATH_CONVERTIBLE()
 
 public:
@@ -63,6 +63,10 @@ std::unique_ptr<INumber> operator-(const Rhs &rhs) {
 }
 
 template <typename Derived>
-class INumberCRTP : virtual public IComparableCRTP<Derived>, virtual public INumber {};
+class INumberCRTP : public INumber {
+#define FINTAMATH_I_NUMBER_CRTP INumberCRTP<Derived>
+#include "fintamath/numbers/INumberCRTP.hpp"
+#undef FINTAMATH_I_NUMBER_CRTP
+};
 
 }

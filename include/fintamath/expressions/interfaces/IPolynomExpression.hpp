@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class IPolynomExpression : virtual public IExpression {
+class IPolynomExpression : public IExpression {
 public:
   std::string toString() const final;
 
@@ -15,6 +15,10 @@ public:
   void setChildren(const ArgumentsPtrVector &childVect) final;
 
   virtual void addElement(const ArgumentPtr &element) = 0;
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IPolynomExpression;
+  }
 
 protected:
   using SimplifyFunction =
@@ -152,8 +156,18 @@ protected:
 };
 
 template <typename Derived, bool isMultiFunction = false>
-class IPolynomExpressionCRTP : virtual public IExpressionCRTP<Derived, isMultiFunction>,
-                               virtual public IPolynomExpression {
+class IPolynomExpressionBaseCRTP : public IPolynomExpression {
+#define FINTAMATH_I_EXPRESSION_BASE_CRTP IPolynomExpressionBaseCRTP<Derived, isMultiFunction>
+#include "fintamath/expressions/IExpressionBaseCRTP.hpp"
+#undef FINTAMATH_I_EXPRESSION_BASE_CRTP
+};
+
+template <typename Derived, bool isMultiFunction = false>
+class IPolynomExpressionCRTP : public IPolynomExpressionBaseCRTP<Derived, isMultiFunction> {
+#define FINTAMATH_I_EXPRESSION_CRTP IPolynomExpressionCRTP<Derived, isMultiFunction>
+#include "fintamath/expressions/IExpressionCRTP.hpp"
+#undef FINTAMATH_I_EXPRESSION_CRTP
+
 public:
   explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentsPtrVector &inChildren) {
     this->func = cast<IFunction>(inFunc.clone());
@@ -165,7 +179,7 @@ public:
 
   void addElement(const ArgumentPtr &element) final {
     ArgumentPtr elem = element;
-    compressChild(elem);
+    this->compressChild(elem);
 
     ArgumentsPtrVector elemPolynom;
 
@@ -175,11 +189,11 @@ public:
 
     if (!elemPolynom.empty()) {
       for (auto &child : elemPolynom) {
-        children.emplace_back(child);
+        this->children.emplace_back(child);
       }
     }
     else {
-      children.emplace_back(elem);
+      this->children.emplace_back(elem);
     }
   }
 };

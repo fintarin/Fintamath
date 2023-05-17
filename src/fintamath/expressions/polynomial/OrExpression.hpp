@@ -1,15 +1,19 @@
 #pragma once
 
-#include "fintamath/expressions/interfaces/ILogicNegatableExpression.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
 namespace fintamath {
 
-class OrExpression : public IPolynomExpressionCRTP<OrExpression>, public ILogicNegatableExpression {
+class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
   explicit OrExpression(const ArgumentsPtrVector &inChildren);
 
-  ArgumentPtr logicNegate() const override;
+  // TODO!!! reimplement
+  // ArgumentPtr logicNegate() const override;
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::OrExpression;
+  }
 
 protected:
   std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;

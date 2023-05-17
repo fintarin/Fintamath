@@ -123,6 +123,10 @@ ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrV
   bool areArgumentsPrecise = true;
 
   for (const auto &argPtr : argPtrs) {
+    if (is<IExpression>(argPtr)) {
+      return {};
+    }
+
     args.emplace_back(*argPtr);
 
     if (const auto num = cast<INumber>(argPtr); num && !num->isPrecise()) {

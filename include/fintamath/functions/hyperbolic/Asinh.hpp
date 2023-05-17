@@ -13,6 +13,10 @@ public:
     return "asinh";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Asinh;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

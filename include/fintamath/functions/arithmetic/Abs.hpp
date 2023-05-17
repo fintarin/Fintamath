@@ -13,6 +13,10 @@ public:
     return "abs";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Abs;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

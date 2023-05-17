@@ -5,7 +5,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Sinh::call(const ArgumentsRefVector &argsVect) const {
-  return sinh(convert<Real>(argsVect.front())).toMinimalObject();
+  return sinh(convert<Real>(argsVect.front().get())).toMinimalObject();
 }
 
 }

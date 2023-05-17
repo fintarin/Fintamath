@@ -9,7 +9,7 @@
 
 namespace fintamath {
 
-class IExpression : virtual public IMathObject {
+class IExpression : public IArithmetic {
 public:
   virtual std::shared_ptr<IFunction> getFunction() const = 0;
 
@@ -32,6 +32,10 @@ public:
 
   static std::unique_ptr<IExpression> parse(const std::string &str) {
     return Parser::parse(getParser(), str);
+  }
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IExpression;
   }
 
 protected:
@@ -61,30 +65,17 @@ private:
 };
 
 template <typename Derived, bool isMultiFunction = false>
-class IExpressionCRTP : virtual public IMathObjectCRTP<Derived>, virtual public IExpression {
-public:
-  bool equals(const Derived &rhs) const override {
-    if constexpr (isMultiFunction) {
-      if (*getFunction() != *rhs.getFunction()) {
-        return false;
-      }
-    }
+class IExpressionBaseCRTP : public IExpression {
+#define FINTAMATH_I_EXPRESSION_BASE_CRTP IExpressionBaseCRTP<Derived, isMultiFunction>
+#include "fintamath/expressions/IExpressionBaseCRTP.hpp"
+#undef FINTAMATH_I_EXPRESSION_BASE_CRTP
+};
 
-    ArgumentsPtrVector lhsChildren = getChildren();
-    ArgumentsPtrVector rhsChildren = rhs.getChildren();
-
-    if (lhsChildren.size() != rhsChildren.size()) {
-      return false;
-    }
-
-    for (size_t i = 0; i < lhsChildren.size(); i++) {
-      if (lhsChildren[i] != rhsChildren[i] && *lhsChildren[i] != *rhsChildren[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
+template <typename Derived, bool isMultiFunction = false>
+class IExpressionCRTP : public IExpressionBaseCRTP<Derived, isMultiFunction> {
+#define FINTAMATH_I_EXPRESSION_CRTP IExpressionCRTP<Derived, isMultiFunction>
+#include "fintamath/expressions/IExpressionCRTP.hpp"
+#undef FINTAMATH_I_EXPRESSION_CRTP
 };
 
 }

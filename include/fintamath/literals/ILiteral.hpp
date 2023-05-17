@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class ILiteral : virtual public IMathObject {
+class ILiteral : public IMathObject {
 public:
   ~ILiteral() override = default;
 
@@ -23,11 +23,19 @@ public:
     return Parser::parse(getParser(), str);
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::ILiteral;
+  }
+
 private:
   static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> &getParser();
 };
 
 template <typename Derived>
-class ILiteralCRTP : virtual public IMathObjectCRTP<Derived>, virtual public ILiteral {};
+class ILiteralCRTP : public ILiteral {
+#define FINTAMATH_I_LITERAL_CRTP ILiteralCRTP<Derived>
+#include "fintamath/literals/ILiteralCRTP.hpp"
+#undef FINTAMATH_I_LITERAL_CRTP
+};
 
 }

@@ -36,6 +36,10 @@ public:
 
   const boost::multiprecision::cpp_int &getBackend() const;
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Integer;
+  }
+
 protected:
   bool equals(const Integer &rhs) const override;
 

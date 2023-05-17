@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/meta/InheritanceTable.hpp"
 #include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
@@ -145,25 +144,21 @@ public:
 
   template <typename Type, typename BasePtr, typename... Args>
   static void registerType(Map<BasePtr, Args...> &parserMap) {
-    InheritanceTable::add<typename BasePtr::element_type, Type>();
     add<Type>(parserMap);
   }
 
   template <typename Type, typename BasePtr, typename... Args>
   static void registerType(Map<BasePtr, Args...> &parserMap, const Function<BasePtr, Args...> &parserFunc) {
-    InheritanceTable::add<typename BasePtr::element_type, Type>();
     add<Type>(parserMap, parserFunc);
   }
 
   template <typename Type, typename BasePtr, typename... Args>
   static void registerType(Vector<BasePtr, Args...> &parserVect) {
-    InheritanceTable::add<typename BasePtr::element_type, Type>();
     add<Type>(parserVect);
   }
 
   template <typename Type, typename BasePtr, typename... Args>
   static void registerType(Vector<BasePtr, Args...> &parserVect, Function<BasePtr, Args...> &&parserFunc) {
-    InheritanceTable::add<typename BasePtr::element_type, Type>();
     add<Type>(parserVect, std::move(parserFunc));
   }
 };

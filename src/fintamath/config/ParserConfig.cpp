@@ -66,7 +66,6 @@
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/literals/constants/True.hpp"
-#include "fintamath/meta/InheritanceTable.hpp"
 #include "fintamath/numbers/IInteger.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -76,11 +75,6 @@
 #include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
-
-std::multimap<TypeInfo, TypeInfo> &InheritanceTable::getTable() {
-  static std::multimap<TypeInfo, TypeInfo> table;
-  return table;
-}
 
 TokenVector &Tokenizer::getRegisteredTokens() {
   static TokenVector registeredTokens;
@@ -155,8 +149,6 @@ struct ParserConfig {
     IArithmetic::registerType<Expression>();
 
     IComparable::registerType<INumber>(&INumber::parse);
-
-    IInteger::registerType<Integer>();
 
     INumber::registerType<IInteger>(&IInteger::parse);
     INumber::registerType<Rational>();

@@ -8,6 +8,10 @@ class TrigonometryExpression : public IUnaryExpressionCRTP<TrigonometryExpressio
 public:
   explicit TrigonometryExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::TrigonometryExpression;
+  }
+
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 

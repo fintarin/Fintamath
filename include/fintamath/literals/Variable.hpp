@@ -13,6 +13,10 @@ public:
 
   std::string toString() const override;
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Variable;
+  }
+
 private:
   std::string name;
 

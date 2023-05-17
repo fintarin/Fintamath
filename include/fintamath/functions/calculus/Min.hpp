@@ -16,6 +16,10 @@ public:
     return "min";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Min;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

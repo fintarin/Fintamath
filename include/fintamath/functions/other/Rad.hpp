@@ -13,6 +13,10 @@ public:
     return "rad";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Rad;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

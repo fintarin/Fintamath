@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class IBinaryExpression : virtual public IExpression {
+class IBinaryExpression : public IExpression {
 public:
   std::string toString() const override;
 
@@ -13,6 +13,10 @@ public:
   ArgumentsPtrVector getChildren() const final;
 
   void setChildren(const ArgumentsPtrVector &childVect) final;
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IBinaryExpression;
+  }
 
 protected:
   using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &, const ArgumentPtr &)>;
@@ -43,18 +47,28 @@ protected:
 };
 
 template <typename Derived, bool isMultiFunction = false>
-class IBinaryExpressionCRTP : virtual public IExpressionCRTP<Derived, isMultiFunction>,
-                              virtual public IBinaryExpression {
+class IBinaryExpressionBaseCRTP : public IBinaryExpression {
+#define FINTAMATH_I_EXPRESSION_BASE_CRTP IBinaryExpressionBaseCRTP<Derived, isMultiFunction>
+#include "fintamath/expressions/IExpressionBaseCRTP.hpp"
+#undef FINTAMATH_I_EXPRESSION_BASE_CRTP
+};
+
+template <typename Derived, bool isMultiFunction = false>
+class IBinaryExpressionCRTP : public IBinaryExpressionBaseCRTP<Derived, isMultiFunction> {
+#define FINTAMATH_I_EXPRESSION_CRTP IBinaryExpressionCRTP<Derived, isMultiFunction>
+#include "fintamath/expressions/IExpressionCRTP.hpp"
+#undef FINTAMATH_I_EXPRESSION_CRTP
+
 public:
   explicit IBinaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &inLhsChild,
                                  const ArgumentPtr &inRhsChild) {
     this->func = cast<IFunction>(inFunc.clone());
 
     this->lhsChild = inLhsChild;
-    compressChild(this->lhsChild);
+    this->compressChild(this->lhsChild);
 
     this->rhsChild = inRhsChild;
-    compressChild(this->rhsChild);
+    this->compressChild(this->rhsChild);
   }
 };
 

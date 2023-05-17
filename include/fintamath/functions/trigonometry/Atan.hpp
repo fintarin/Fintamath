@@ -13,6 +13,10 @@ public:
     return "atan";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Atan;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

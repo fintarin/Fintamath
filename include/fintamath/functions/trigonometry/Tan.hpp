@@ -13,6 +13,10 @@ public:
     return "tan";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Tan;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

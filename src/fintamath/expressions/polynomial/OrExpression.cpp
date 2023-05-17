@@ -10,15 +10,16 @@ namespace fintamath {
 OrExpression::OrExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(Or(), inChildren) {
 }
 
-ArgumentPtr OrExpression::logicNegate() const {
-  ArgumentsPtrVector negChildren;
+// TODO!!! reimplement
+// ArgumentPtr OrExpression::logicNegate() const {
+//   ArgumentsPtrVector negChildren;
 
-  for (const auto &child : children) {
-    negChildren.emplace_back(makeExpr(Not(), child));
-  }
+//   for (const auto &child : children) {
+//     negChildren.emplace_back(makeExpr(Not(), child));
+//   }
 
-  return makeExpr(And(), negChildren)->toMinimalObject();
-}
+//   return makeExpr(And(), negChildren)->toMinimalObject();
+// }
 
 std::string OrExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   std::string result = inChild->toString();

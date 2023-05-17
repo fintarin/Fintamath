@@ -16,6 +16,10 @@ public:
 
   operator bool() const;
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Boolean;
+  }
+
 private:
   void parse(const std::string &str);
 

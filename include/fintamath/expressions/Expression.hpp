@@ -21,7 +21,7 @@ public:
 
 using TermVector = std::vector<std::shared_ptr<Term>>;
 
-class Expression : public IExpressionCRTP<Expression>, public IArithmeticCRTP<Expression> {
+class Expression : public IExpressionCRTP<Expression> {
 public:
   Expression();
 
@@ -74,6 +74,10 @@ public:
     };
 
     Parser::add<Function>(getExpressionMakers(), std::move(constructor));
+  }
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Expression;
   }
 
 protected:
@@ -181,4 +185,5 @@ Expression operator/(const Variable &lhs, const Variable &rhs);
 Expression operator/(const Expression &lhs, const Variable &rhs);
 
 Expression operator/(const Variable &lhs, const Expression &rhs);
+
 }

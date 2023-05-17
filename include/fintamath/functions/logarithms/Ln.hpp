@@ -13,6 +13,10 @@ public:
     return "ln";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Ln;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

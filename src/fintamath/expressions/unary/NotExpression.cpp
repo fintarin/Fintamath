@@ -1,6 +1,5 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 
-#include "fintamath/expressions/interfaces/ILogicNegatableExpression.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 
 namespace fintamath {
@@ -37,10 +36,11 @@ ArgumentPtr NotExpression::callNotFunction(const IFunction & /*func*/, const Arg
   return {};
 }
 
-ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, const ArgumentPtr &rhs) {
-  if (auto expr = cast<ILogicNegatableExpression>(rhs)) {
-    return expr->logicNegate();
-  }
+ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
+  // TODO!!! reimplement
+  // if (auto expr = cast<ILogicNegatableExpression>(rhs)) {
+  //   return expr->logicNegate();
+  // }
 
   return {};
 }

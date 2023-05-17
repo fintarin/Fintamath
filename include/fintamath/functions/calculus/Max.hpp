@@ -16,6 +16,10 @@ public:
     return "max";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Max;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

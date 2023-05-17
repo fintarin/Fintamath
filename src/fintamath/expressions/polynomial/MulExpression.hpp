@@ -1,14 +1,18 @@
 #pragma once
 
-#include "fintamath/expressions/interfaces/INegatableExpression.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
 namespace fintamath {
-class MulExpression : public IPolynomExpressionCRTP<MulExpression>, public INegatableExpression {
+class MulExpression : public IPolynomExpressionCRTP<MulExpression> {
 public:
   explicit MulExpression(const ArgumentsPtrVector &inChildren);
 
-  ArgumentPtr negate() const override;
+  // TODO!!! reimplement
+  // ArgumentPtr negate() const override;
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::MulExpression;
+  }
 
 protected:
   std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;

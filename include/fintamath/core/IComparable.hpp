@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class IComparable : virtual public IArithmetic {
+class IComparable : public IArithmetic {
 public:
   friend inline bool operator<(const IComparable &lhs, const IComparable &rhs) {
     return lhs.lessAbstract(rhs);
@@ -33,6 +33,10 @@ public:
     return Parser::parse(getParser(), str);
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IComparable;
+  }
+
 protected:
   virtual bool lessAbstract(const IComparable &rhs) const = 0;
 
@@ -43,72 +47,10 @@ private:
 };
 
 template <typename Derived>
-class IComparableCRTP : virtual public IArithmeticCRTP<Derived>, virtual public IComparable {
-public:
-  bool operator<(const Derived &rhs) const {
-    return less(rhs);
-  }
-
-  bool operator>(const Derived &rhs) const {
-    return more(rhs);
-  }
-
-  bool operator<=(const Derived &rhs) const {
-    return !more(rhs);
-  }
-
-  bool operator>=(const Derived &rhs) const {
-    return !less(rhs);
-  }
-
-protected:
-  virtual bool less(const Derived &rhs) const = 0;
-
-  virtual bool more(const Derived &rhs) const = 0;
-
-  bool lessAbstract(const IComparable &inRhs) const final {
-    return executeAbstract(
-        inRhs, "<",
-        [](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
-          return lhs.less(rhs);
-        },
-        [](const IComparable &lhs, const IComparable &rhs) {
-          return lhs < rhs;
-        });
-  }
-
-  bool moreAbstract(const IComparable &inRhs) const final {
-    return executeAbstract(
-        inRhs, ">",
-        [](const IComparableCRTP<Derived> &lhs, const Derived &rhs) {
-          return lhs.more(rhs);
-        },
-        [](const IComparable &lhs, const IComparable &rhs) {
-          return lhs > rhs;
-        });
-  }
-
-private:
-  template <typename FunctionCommonTypes, typename FunctionDifferentTypes>
-  bool executeAbstract(const IComparable &rhs, const std::string &oper, FunctionCommonTypes &&funcCommonTypes,
-                       FunctionDifferentTypes &&funcDifferentTypes) const {
-
-    if (const auto *rhsPtr = cast<Derived>(&rhs)) {
-      return funcCommonTypes(*this, *rhsPtr);
-    }
-
-    if constexpr (IsConvertible<Derived>::value) {
-      if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
-        return funcCommonTypes(*this, cast<Derived>(*rhsPtr));
-      }
-
-      if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-        return funcDifferentTypes(cast<IComparable>(*lhsPtr), rhs);
-      }
-    }
-
-    throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
-  }
+class IComparableCRTP : public IComparable {
+#define FINTAMATH_I_COMPARABLE_CRTP IComparableCRTP<Derived>
+#include "fintamath/core/IComparableCRTP.hpp"
+#undef FINTAMATH_I_COMPARABLE_CRTP
 };
 
 template <typename LhsType, typename RhsType,

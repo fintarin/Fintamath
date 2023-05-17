@@ -11,6 +11,10 @@ public:
     return "E";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::E;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call() const override;
 };

@@ -8,6 +8,10 @@ class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
   explicit NegExpression(const ArgumentPtr &inChild);
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::NegExpression;
+  }
+
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 

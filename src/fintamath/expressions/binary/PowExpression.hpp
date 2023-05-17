@@ -11,6 +11,10 @@ public:
 
   std::string toString() const override;
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::PowExpression;
+  }
+
 protected:
   SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
 

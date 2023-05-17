@@ -1,17 +1,21 @@
 #pragma once
 
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
-#include "fintamath/expressions/interfaces/INegatableExpression.hpp"
 
 namespace fintamath {
 
-class LogExpression : public IBinaryExpressionCRTP<LogExpression>, public INegatableExpression {
+class LogExpression : public IBinaryExpressionCRTP<LogExpression> {
 public:
   explicit LogExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
   std::string toString() const override;
 
-  ArgumentPtr negate() const override;
+  // TODO!!! reimplement
+  // ArgumentPtr negate() const override;
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::LogExpression;
+  }
 
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;

@@ -14,6 +14,10 @@ public:
     return "°";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Angle;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

@@ -15,6 +15,10 @@ public:
     return "=";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Eqv;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

@@ -13,6 +13,10 @@ public:
     return "sign";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Sign;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

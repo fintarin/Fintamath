@@ -15,6 +15,10 @@ public:
     return "derivative";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Derivative;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
