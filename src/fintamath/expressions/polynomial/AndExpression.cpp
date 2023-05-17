@@ -40,10 +40,6 @@ bool AndExpression::isComparableOrderInversed() const {
   return true;
 }
 
-bool AndExpression::isUnaryOperatorsOrderInversed() const {
-  return true;
-}
-
 ArgumentPtr AndExpression::simplifyBooleans(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                             const ArgumentPtr &rhsChild) {
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {

@@ -79,10 +79,6 @@ bool OrExpression::isComparableOrderInversed() const {
   return true;
 }
 
-bool OrExpression::isUnaryOperatorsOrderInversed() const {
-  return true;
-}
-
 ArgumentPtr OrExpression::simplifyBooleans(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                            const ArgumentPtr &rhsChild) {
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {

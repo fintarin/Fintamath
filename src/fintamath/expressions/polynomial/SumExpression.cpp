@@ -184,11 +184,13 @@ ArgumentPtr SumExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
   std::shared_ptr<const IExpression> mulExpr;
   std::shared_ptr<const IExpression> logExpr;
 
-  if (is<Mul>(lhsExpr->getFunction()) && is<Log>(rhsExpr->getFunction())) {
-    mulExpr = lhsExpr;
-    logExpr = rhsExpr;
-  }
-  else if (is<Mul>(rhsExpr->getFunction()) && is<Log>(lhsExpr->getFunction())) {
+  // TODO! uncomment
+  // if (is<Mul>(lhsExpr->getFunction()) && is<Log>(rhsExpr->getFunction())) {
+  //   mulExpr = lhsExpr;
+  //   logExpr = rhsExpr;
+  // }
+  // else
+  if (is<Mul>(rhsExpr->getFunction()) && is<Log>(lhsExpr->getFunction())) {
     mulExpr = rhsExpr;
     logExpr = lhsExpr;
   }

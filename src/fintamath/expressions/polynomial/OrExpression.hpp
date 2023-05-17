@@ -22,8 +22,6 @@ protected:
 
   bool isComparableOrderInversed() const override;
 
-  bool isUnaryOperatorsOrderInversed() const override;
-
 private:
   static ArgumentPtr simplifyBooleans(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 

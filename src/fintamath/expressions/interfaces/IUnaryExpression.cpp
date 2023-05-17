@@ -71,9 +71,10 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
     return res;
   }
 
-  if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
-    return res;
-  }
+  // TODO! uncomment and implement tests for this
+  // if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
+  //   return res;
+  // }
 
   return simpl;
 }

@@ -180,10 +180,6 @@ bool IPolynomExpression::isComparableOrderInversed() const {
   return false;
 }
 
-bool IPolynomExpression::isUnaryOperatorsOrderInversed() const {
-  return false;
-}
-
 void IPolynomExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.empty()) {
     throw InvalidInputFunctionException(toString(), {});
@@ -306,40 +302,20 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpress
       IOperator::Priority lhsPriority = lhsOper->getOperatorPriority();
       IOperator::Priority rhsPriority = rhsOper->getOperatorPriority();
 
-      if (lhsPriority == rhsPriority) {
-        if (auto res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
+      ArgumentPtr childToCompare;
+      ArgumentsPtrVector childrenToCompare;
+
+      if (lhsPriority > rhsPriority) {
+        childToCompare = rhsExpr;
+        childrenToCompare = lhsChildren;
+      }
+
+      for (const auto &lhsChild : childrenToCompare) {
+        if (auto res = comparator(lhsChild, childToCompare)) {
           return res;
         }
       }
-      else {
-        ArgumentPtr childToCompare;
-        ArgumentsPtrVector childrenToCompare;
-        bool isResInverted = false;
-
-        if (lhsPriority > rhsPriority) {
-          childToCompare = rhsExpr;
-          childrenToCompare = lhsChildren;
-        }
-        else {
-          childToCompare = lhsExpr;
-          childrenToCompare = rhsChildren;
-          isResInverted = true;
-        }
-
-        for (const auto &lhsChild : childrenToCompare) {
-          if (auto res = comparator(lhsChild, childToCompare)) {
-            return isResInverted ? res * -1 : res;
-          }
-        }
-      }
     }
-  }
-
-  if (is<IOperator>(lhsFunc) && !is<IOperator>(rhsFunc)) {
-    return -1;
-  }
-  if (!is<IOperator>(lhsFunc) && is<IOperator>(rhsFunc)) {
-    return 1;
   }
 
   return lhsFunc->toString() < rhsFunc->toString() ? -1 : 1;
@@ -494,7 +470,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
       }
 
       if (unaryComparator == 0 && isLhsUnary != isRhsUnary) {
-        unaryComparator = isLhsUnary ? -1 : 1;
+        unaryComparator = !isLhsUnary ? -1 : 1;
       }
     }
 
@@ -504,7 +480,7 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
   }
 
   if (unaryComparator != 0 && lhsChildren.size() == rhsChildren.size()) {
-    return !isUnaryOperatorsOrderInversed() ? unaryComparator : unaryComparator * -1;
+    return unaryComparator;
   }
 
   for (size_t i = 0; i < std::min(lhsStart, rhsStart); i++) {
