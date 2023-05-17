@@ -4,12 +4,11 @@
 
 #include <boost/multiprecision/cpp_int.hpp>
 
-#include "fintamath/core/IIntegral.hpp"
-#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/IInteger.hpp"
 
 namespace fintamath {
 
-class Integer : public INumberCRTP<Integer>, public IIntegralCRTP<Integer>, public IIncrementalCRTP<Integer> {
+class Integer : public IIntegerCRTP<Integer> {
 public:
   Integer();
 

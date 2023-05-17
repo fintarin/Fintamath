@@ -2,7 +2,6 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
-#include "fintamath/core/IIncremental.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
@@ -18,6 +17,11 @@ public:
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
   static void registerType() {
     Parser::registerType<T>(getParser());
+  }
+
+  template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
+  static void registerType(Parser::Function<std::unique_ptr<INumber>, const std::string &> &&parserFunc) {
+    Parser::registerType<T>(getParser(), std::move(parserFunc));
   }
 
   static std::unique_ptr<INumber> parse(const std::string &str) {

@@ -1,7 +1,5 @@
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
-#include "fintamath/core/IIncremental.hpp"
-#include "fintamath/core/IIntegral.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
@@ -69,6 +67,7 @@
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/literals/constants/True.hpp"
 #include "fintamath/meta/InheritanceTable.hpp"
+#include "fintamath/numbers/IInteger.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -103,18 +102,13 @@ Parser::Vector<std::unique_ptr<IComparable>, const std::string &> &IComparable::
   return parser;
 }
 
-Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> &IIncremental::getParser() {
-  static Parser::Vector<std::unique_ptr<IIncremental>, const std::string &> parser;
-  return parser;
-}
-
-Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> &IIntegral::getParser() {
-  static Parser::Vector<std::unique_ptr<IIntegral>, const std::string &> parser;
-  return parser;
-}
-
 Parser::Vector<std::unique_ptr<INumber>, const std::string &> &INumber::getParser() {
   static Parser::Vector<std::unique_ptr<INumber>, const std::string &> parser;
+  return parser;
+}
+
+Parser::Vector<std::unique_ptr<IInteger>, const std::string &> &IInteger::getParser() {
+  static Parser::Vector<std::unique_ptr<IInteger>, const std::string &> parser;
   return parser;
 }
 
@@ -158,22 +152,21 @@ struct ParserConfig {
     IMathObject::registerType<IArithmetic>(&IArithmetic::parse);
 
     IArithmetic::registerType<IComparable>(&IComparable::parse);
-    IArithmetic::registerType<IIncremental>(&IIncremental::parse);
-    IArithmetic::registerType<IIntegral>(&IIntegral::parse);
     IArithmetic::registerType<Expression>();
 
     IComparable::registerType<INumber>(&INumber::parse);
 
-    IIncremental::registerType<Integer>();
+    IInteger::registerType<Integer>();
 
-    IIntegral::registerType<Integer>();
-
-    INumber::registerType<Integer>();
+    INumber::registerType<IInteger>(&IInteger::parse);
     INumber::registerType<Rational>();
     INumber::registerType<Real>();
 
+    IInteger::registerType<Integer>();
+
     ILiteral::registerType<IConstant>(&IConstant::parse);
     ILiteral::registerType<Variable>();
+    ILiteral::registerType<Boolean>();
 
     IConstant::registerType<E>();
     IConstant::registerType<Pi>();
