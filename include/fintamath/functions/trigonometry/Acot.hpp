@@ -13,6 +13,10 @@ public:
     return "acot";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Acot;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

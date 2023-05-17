@@ -2,11 +2,9 @@
 
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 
-#include "fintamath/expressions/interfaces/ILogicNegatableExpression.hpp"
-
 namespace fintamath {
 
-class CompExpression : public IBinaryExpressionCRTP<CompExpression, true>, public ILogicNegatableExpression {
+class CompExpression : public IBinaryExpressionCRTP<CompExpression, true> {
 public:
   CompExpression(const IOperator &inOper, const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
@@ -14,8 +12,13 @@ public:
 
   void markAsSolution();
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::CompExpression;
+  }
+
 protected:
-  ArgumentPtr logicNegate() const override;
+  // TODO!!! reimplement
+  // ArgumentPtr logicNegate() const override;
 
   ArgumentPtr preSimplify() const override;
 

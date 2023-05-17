@@ -15,6 +15,10 @@ public:
     return "integral";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Integral;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

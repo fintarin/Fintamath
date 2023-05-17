@@ -13,6 +13,10 @@ public:
     return "degrees";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Degrees;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

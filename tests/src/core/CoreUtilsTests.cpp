@@ -19,10 +19,10 @@ TEST(CoreUtilsTests, castTest) {
   EXPECT_FALSE(cast<IArithmetic>(const_cast<const IMathObject *>(E().clone().get())));
 
   EXPECT_NO_THROW(cast<IArithmetic>(INT));
-  EXPECT_THROW(cast<IArithmetic>(CONST), std::bad_cast);
+  EXPECT_THROW(cast<IArithmetic>(cast<IMathObject>(CONST)), std::bad_cast);
 
   EXPECT_NO_THROW(cast<IArithmetic>(Integer(1)));
-  EXPECT_THROW(cast<IArithmetic>(E()), std::bad_cast);
+  EXPECT_THROW(cast<IArithmetic>(cast<IMathObject>(E())), std::bad_cast);
 
   EXPECT_TRUE(cast<IArithmetic>(INT.clone()));
   EXPECT_FALSE(cast<IArithmetic>(E().clone()));

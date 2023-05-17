@@ -11,6 +11,10 @@ public:
     return Boolean(false).toString();
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::False;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call() const override;
 };

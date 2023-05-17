@@ -5,7 +5,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Acosh::call(const ArgumentsRefVector &argsVect) const {
-  return acosh(convert<Real>(argsVect.front())).toMinimalObject();
+  return acosh(convert<Real>(argsVect.front().get())).toMinimalObject();
 }
 
 }

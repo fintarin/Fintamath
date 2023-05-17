@@ -13,6 +13,10 @@ public:
     return "exp";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Exp;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

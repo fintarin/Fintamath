@@ -1,9 +1,12 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 #include <string>
 #include <typeinfo>
 #include <vector>
+
+#include "fintamath/core/MathObjectTypes.hpp"
 
 namespace fintamath {
 
@@ -14,6 +17,6 @@ using ArgumentPtr = std::shared_ptr<const IMathObject>;
 
 using ArgumentsRefVector = std::vector<ArgumentRef>;
 using ArgumentsPtrVector = std::vector<ArgumentPtr>;
-using ArgumentsTypesVector = std::vector<std::reference_wrapper<const std::type_info>>;
+using ArgumentsTypesVector = std::vector<MathObjectType>;
 
 }

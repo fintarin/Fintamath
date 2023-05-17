@@ -1,15 +1,19 @@
 #pragma once
 
-#include "fintamath/expressions/interfaces/ILogicNegatableExpression.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
 namespace fintamath {
 
-class AndExpression : public IPolynomExpressionCRTP<AndExpression>, public ILogicNegatableExpression {
+class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
   explicit AndExpression(const ArgumentsPtrVector &inChildren);
 
-  ArgumentPtr logicNegate() const override;
+  // TODO!!! reimplement
+  // ArgumentPtr logicNegate() const override;
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::AndExpression;
+  }
 
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;

@@ -13,6 +13,10 @@ public:
     return "cot";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Cot;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

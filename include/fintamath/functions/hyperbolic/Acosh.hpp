@@ -13,6 +13,10 @@ public:
     return "acosh";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Acosh;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

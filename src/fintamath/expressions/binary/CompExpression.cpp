@@ -55,11 +55,12 @@ ArgumentPtr CompExpression::preSimplify() const {
   return simplExpr;
 }
 
-ArgumentPtr CompExpression::logicNegate() const {
-  auto res = cast<CompExpression>(clone());
-  res->func = cast<IFunction>(getLogicOppositeFunction(*func));
-  return res;
-}
+// TODO!!! reimplement
+// ArgumentPtr CompExpression::logicNegate() const {
+//   auto res = cast<CompExpression>(clone());
+//   res->func = cast<IFunction>(getLogicOppositeFunction(*func));
+//   return res;
+// }
 
 CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPostSimplify() const {
   static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {

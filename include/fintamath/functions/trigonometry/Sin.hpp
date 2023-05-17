@@ -13,6 +13,10 @@ public:
     return "sin";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Sin;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

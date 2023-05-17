@@ -1,6 +1,5 @@
 #include "fintamath/expressions/unary/NegExpression.hpp"
 
-#include "fintamath/expressions/interfaces/INegatableExpression.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 
 namespace fintamath {
@@ -37,10 +36,11 @@ ArgumentPtr NegExpression::callNegFunction(const IFunction & /*func*/, const Arg
   return {};
 }
 
-ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const ArgumentPtr &rhs) {
-  if (auto expr = cast<INegatableExpression>(rhs)) {
-    return expr->negate();
-  }
+ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
+  // TODO!!! reimplement
+  // if (auto expr = cast<INegatableExpression>(rhs)) {
+  //   return expr->negate();
+  // }
 
   return {};
 }

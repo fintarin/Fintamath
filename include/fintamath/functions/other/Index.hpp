@@ -16,6 +16,10 @@ public:
     return "_";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Index;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

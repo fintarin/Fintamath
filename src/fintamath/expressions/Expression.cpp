@@ -420,29 +420,27 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
 
   for (size_t i = 0; i < args.size(); i++) {
     const ArgumentPtr &arg = args[i];
-    const std::type_info &type = childrenTypes[i];
+    const MathObjectType type = childrenTypes[i];
 
     if (const auto childExpr = cast<IExpression>(arg)) {
       const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
-      const std::type_info &childType = childFunc->getReturnType();
+      const MathObjectType childType = childFunc->getReturnType();
 
-      if (childType != typeid(Variable) && !InheritanceTable::isBaseOf(type, childType) &&
-          !InheritanceTable::isBaseOf(childType, type)) {
+      if (childType != Variable::getTypeStatic() && !is(type, childType) && !is(childType, type)) {
         throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }
     else if (const auto childConst = cast<IConstant>(arg)) {
-      const std::type_info &childType = childConst->getReturnType();
+      MathObjectType childType = childConst->getReturnType();
 
-      if (!InheritanceTable::isBaseOf(type, childType)) {
+      if (!is(type, childType)) {
         throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }
     else {
-      const auto &argRef = *arg;
-      const std::type_info &childType = typeid(argRef);
+      MathObjectType childType = arg->getType();
 
-      if (childType != typeid(Variable) && !InheritanceTable::isBaseOf(type, childType)) {
+      if (childType != Variable::getTypeStatic() && !is(type, childType)) {
         throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }

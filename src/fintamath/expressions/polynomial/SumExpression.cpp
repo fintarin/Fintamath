@@ -67,15 +67,16 @@ int SumExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) co
   return IPolynomExpression::comparator(lhs, rhs);
 }
 
-ArgumentPtr SumExpression::negate() const {
-  SumExpression neg = *this;
+// TODO!!! reimplement
+// ArgumentPtr SumExpression::negate() const {
+//   SumExpression neg = *this;
 
-  for (auto &child : neg.children) {
-    child = makeExpr(Neg(), child);
-  }
+//   for (auto &child : neg.children) {
+//     child = makeExpr(Neg(), child);
+//   }
 
-  return neg.simplify();
-}
+//   return neg.simplify();
+// }
 
 SumExpression::SimplifyFunctionsVector SumExpression::getFunctionsForSimplify() const {
   static const SumExpression::SimplifyFunctionsVector simplifyFunctions = {

@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/meta/Converter.hpp"
 
 #define FINTAMATH_CONVERTIBLE()                                                                                        \
@@ -9,6 +10,10 @@ public:                                                                         
   inline static const bool IS_CONVERTIBLE = true;                                                                      \
                                                                                                                        \
 private:
+
+#define REQUIRE_MATH_OBJECTS(To, From)                                                                                 \
+  template <typename To, typename From,                                                                                \
+            typename = std::enable_if_t<std::is_base_of_v<IMathObject, To> && std::is_base_of_v<IMathObject, From>>>
 
 namespace fintamath {
 
@@ -18,57 +23,102 @@ struct IsConvertible : std::false_type {};
 template <typename T>
 struct IsConvertible<T, decltype((void)T::IS_CONVERTIBLE, true)> : std::true_type {};
 
-template <typename To>
-To *cast(IMathObject *from) {
-  return dynamic_cast<To *>(from);
+REQUIRE_MATH_OBJECTS(To, From) bool is(const From &from) {
+  return is(To::getTypeStatic(), from.getType());
 }
 
-template <typename To>
-const To *cast(const IMathObject *from) {
-  return dynamic_cast<const To *>(from);
-}
-
-template <typename To>
-const To &cast(const IMathObject &from) {
-  return dynamic_cast<const To &>(from);
-}
-
-template <typename To>
-To &&cast(IMathObject &&from) {
-  return dynamic_cast<To &&>(from);
-}
-
-template <typename To, typename From>
-std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
-  From *fromRawPtr = from.release();
-  auto *toRawPtr = dynamic_cast<To *>(fromRawPtr);
-
-  if (toRawPtr) {
-    from = nullptr;
-    return std::unique_ptr<To>(toRawPtr);
+REQUIRE_MATH_OBJECTS(To, From) bool is(const From *from) {
+  if (!from) {
+    return false;
   }
 
-  from.reset(fromRawPtr);
-
-  return std::unique_ptr<To>();
+  return is<To>(*from);
 }
 
-template <typename To, typename From>
-std::shared_ptr<To> cast(const std::shared_ptr<From> &from) {
-  return std::dynamic_pointer_cast<To>(from);
+REQUIRE_MATH_OBJECTS(To, From) bool is(const std::unique_ptr<From> &from) {
+  return is<To>(from.get());
 }
 
-template <typename To, typename From>
-std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) {
-  return std::dynamic_pointer_cast<const To>(from);
+REQUIRE_MATH_OBJECTS(To, From) bool is(const std::shared_ptr<From> &from) {
+  return is<To>(from.get());
 }
 
-inline std::unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) {
+REQUIRE_MATH_OBJECTS(To, From) bool is(const std::shared_ptr<const From> &from) {
+  return is<To>(from.get());
+}
+
+REQUIRE_MATH_OBJECTS(To, From) bool is(const std::reference_wrapper<From> &from) {
+  return is<To>(from.get());
+}
+
+REQUIRE_MATH_OBJECTS(To, From) bool is(const std::reference_wrapper<const From> &from) {
+  return is<To>(from.get());
+}
+
+REQUIRE_MATH_OBJECTS(To, From) const To &cast(const From &from) {
+  if (!is<To>(from)) {
+    throw std::bad_cast();
+  }
+
+  return static_cast<const To &>(from);
+}
+
+REQUIRE_MATH_OBJECTS(To, From) To *cast(From *from) {
+  if (!is<To>(from)) {
+    return {};
+  }
+
+  return static_cast<To *>(from);
+}
+
+REQUIRE_MATH_OBJECTS(To, From) const To *cast(const From *from) {
+  if (!is<To>(from)) {
+    return {};
+  }
+
+  return static_cast<const To *>(from);
+}
+
+REQUIRE_MATH_OBJECTS(To, From) To &&cast(IMathObject &&from) {
+  if (!is<To>(from)) {
+    return {};
+  }
+
+  return static_cast<To &&>(from);
+}
+
+REQUIRE_MATH_OBJECTS(To, From) std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
+  if (!is<To>(from)) {
+    from.reset();
+    return {};
+  }
+
+  From *fromRawPtr = from.release();
+  auto *toRawPtr = static_cast<To *>(fromRawPtr);
+  return std::unique_ptr<To>(toRawPtr);
+}
+
+REQUIRE_MATH_OBJECTS(To, From) std::shared_ptr<To> cast(const std::shared_ptr<From> &from) {
+  if (!is<To>(from)) {
+    return std::shared_ptr<To>();
+  }
+
+  return std::static_pointer_cast<To>(from);
+}
+
+REQUIRE_MATH_OBJECTS(To, From) std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) {
+  if (!is<To>(from)) {
+    return std::shared_ptr<const To>();
+  }
+
+  return std::static_pointer_cast<const To>(from);
+}
+
+REQUIRE_MATH_OBJECTS(To, From) std::unique_ptr<IMathObject> convert(const To &to, const From &from) {
   return Converter::convert(to, from);
 }
 
-template <typename To>
-To convert(const IMathObject &from) {
+REQUIRE_MATH_OBJECTS(To, From) To convert(const From &from) {
   static_assert(IsConvertible<To>::value, "To must be convertible");
 
   static const To to;
@@ -81,39 +131,6 @@ To convert(const IMathObject &from) {
   return cast<To>(*res);
 }
 
-template <typename To>
-bool is(const IMathObject *from) {
-  return dynamic_cast<const To *>(from);
 }
 
-template <typename To>
-bool is(const IMathObject &from) {
-  return dynamic_cast<const To *>(&from);
-}
-
-template <typename To, typename From>
-bool is(const std::unique_ptr<From> &from) {
-  return dynamic_cast<const To *>(from.get());
-}
-
-template <typename To, typename From>
-bool is(const std::shared_ptr<From> &from) {
-  return std::dynamic_pointer_cast<To>(from) != nullptr;
-}
-
-template <typename To, typename From>
-bool is(const std::shared_ptr<const From> &from) {
-  return std::dynamic_pointer_cast<const To>(from) != nullptr;
-}
-
-template <typename To, typename From>
-bool is(const std::reference_wrapper<From> &from) {
-  return dynamic_cast<To *>(&from.get());
-}
-
-template <typename To, typename From>
-bool is(const std::reference_wrapper<const From> &from) {
-  return dynamic_cast<const To *>(&from.get());
-}
-
-}
+#undef REQUIRE_MATH_OBJECTS

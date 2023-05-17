@@ -11,6 +11,10 @@ public:
     return "Pi";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Pi;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call() const override;
 };

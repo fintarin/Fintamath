@@ -9,6 +9,10 @@ class DivExpression : public IBinaryExpressionCRTP<DivExpression> {
 public:
   explicit DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::DivExpression;
+  }
+
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 

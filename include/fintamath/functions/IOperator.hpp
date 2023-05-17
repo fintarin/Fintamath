@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class IOperator : virtual public IFunction {
+class IOperator : public IFunction {
 
 public:
   enum class Priority : uint16_t {
@@ -41,32 +41,34 @@ public:
     return Parser::parse<std::unique_ptr<IOperator>>(getParser(), comp, parsedStr);
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IOperator;
+  }
+
 private:
   static Parser::Map<std::unique_ptr<IOperator>> &getParser();
 };
 
 template <typename Return, typename Derived, typename... Args>
-class IOperatorCRTP : public IFunctionCRTP<Return, Derived, Args...>, virtual public IOperator {
+class IOperatorCRTP : public IOperator {
+#define FINTAMATH_I_OPERATOR_CRTP IOperatorCRTP<Return, Derived, Args...>
+#include "fintamath/functions/IOperatorCRTP.hpp"
+#undef FINTAMATH_I_OPERATOR_CRTP
+
 public:
   IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any, bool isAssociative = true,
                 bool isNonExressionEvaluatable = true)
-      : IFunctionCRTP<Return, Derived, Args...>(isNonExressionEvaluatable),
+      : isNonExressionEvaluatableFunc(isNonExressionEvaluatable),
         priority(inPriority),
         isAssociativeOper(isAssociative) {
+
+    if constexpr (IsFunctionTypeAny<Derived>::value) {
+      type = Type::Any;
+    }
+    else {
+      type = Type(sizeof...(Args));
+    }
   }
-
-  IOperator::Priority getOperatorPriority() const final {
-    return priority;
-  }
-
-  bool isAssociative() const final {
-    return isAssociativeOper;
-  }
-
-private:
-  IOperator::Priority priority;
-
-  bool isAssociativeOper;
 };
 
 }

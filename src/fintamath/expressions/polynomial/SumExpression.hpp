@@ -1,14 +1,19 @@
 #pragma once
 
-#include "fintamath/expressions/interfaces/INegatableExpression.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
 namespace fintamath {
-class SumExpression : public IPolynomExpressionCRTP<SumExpression>, public INegatableExpression {
+
+class SumExpression : public IPolynomExpressionCRTP<SumExpression> {
 public:
   explicit SumExpression(const ArgumentsPtrVector &inChildren);
 
-  ArgumentPtr negate() const override;
+  // TODO!!! reimplement
+  // ArgumentPtr negate() const override;
+
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::SumExpression;
+  }
 
 protected:
   SimplifyFunctionsVector getFunctionsForSimplify() const override;

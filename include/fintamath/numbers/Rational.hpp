@@ -26,6 +26,10 @@ public:
 
   const Integer &denominator() const;
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Rational;
+  }
+
 protected:
   bool equals(const Rational &rhs) const override;
 

@@ -6,9 +6,9 @@
 
 namespace fintamath {
 
-class IConstant : virtual public ILiteral {
+class IConstant : public ILiteral {
 public:
-  virtual const std::type_info &getReturnType() const = 0;
+  virtual MathObjectType getReturnType() const = 0;
 
   std::unique_ptr<IMathObject> operator()() const {
     return call();
@@ -23,6 +23,10 @@ public:
     return Parser::parse<std::unique_ptr<IConstant>>(getParser(), parsedStr);
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IConstant;
+  }
+
 protected:
   virtual std::unique_ptr<IMathObject> call() const = 0;
 
@@ -31,10 +35,10 @@ private:
 };
 
 template <typename Return, typename Derived>
-class IConstantCRTP : virtual public ILiteralCRTP<Derived>, virtual public IConstant {
-  const std::type_info &getReturnType() const final {
-    return typeid(Return);
-  }
+class IConstantCRTP : public IConstant {
+#define FINTAMATH_I_CONSTANT_CRTP IConstantCRTP<Return, Derived>
+#include "fintamath/literals/constants/IConstantCRTP.hpp"
+#undef FINTAMATH_I_CONSTANT_CRTP
 };
 
 }

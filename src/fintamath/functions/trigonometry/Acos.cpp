@@ -5,7 +5,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Acos::call(const ArgumentsRefVector &argsVect) const {
-  return acos(convert<Real>(argsVect.front())).toMinimalObject();
+  return acos(convert<Real>(argsVect.front().get())).toMinimalObject();
 }
 
 }

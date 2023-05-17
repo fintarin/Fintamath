@@ -5,7 +5,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Sqrt::call(const ArgumentsRefVector &argsVect) const {
-  return sqrt(cast<INumber>(argsVect.front()));
+  return sqrt(cast<INumber>(argsVect.front().get()));
 }
 
 }

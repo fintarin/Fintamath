@@ -13,6 +13,10 @@ public:
     return "lb";
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Lb;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };

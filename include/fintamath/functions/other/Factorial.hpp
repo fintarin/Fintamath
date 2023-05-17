@@ -21,6 +21,10 @@ public:
     order = inOrder;
   }
 
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Factorial;
+  }
+
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
