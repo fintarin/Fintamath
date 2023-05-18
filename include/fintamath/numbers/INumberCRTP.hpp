@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_NUMBER_CRTP
+#if !defined(FINTAMATH_I_NUMBER_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/numbers/INumber.hpp"
 
@@ -14,7 +14,7 @@ class INumberCRTP_ : public INumber {
 #undef FINTAMATH_I_COMPARABLE_CRTP
 
 private:
-#ifndef FINTAMATH_I_NUMBER_CRTP
+#if !defined(FINTAMATH_I_NUMBER_CRTP) && !defined(NDEBUG)
 };
 }
 

@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_OPERATOR_CRTP
+#if !defined(FINTAMATH_I_OPERATOR_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/functions/IOperator.hpp"
 
@@ -28,7 +28,7 @@ private:
   bool isAssociativeOper;
 
 private:
-#ifndef FINTAMATH_I_OPERATOR_CRTP
+#if !defined(FINTAMATH_I_OPERATOR_CRTP) && !defined(NDEBUG)
 };
 }
 

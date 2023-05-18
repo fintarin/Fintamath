@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_CONSTANT_CRTP
+#if !defined(FINTAMATH_I_CONSTANT_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/literals/constants/IConstant.hpp"
 
@@ -19,7 +19,7 @@ public:
   }
 
 private:
-#ifndef FINTAMATH_I_CONSTANT_CRTP
+#if !defined(FINTAMATH_I_CONSTANT_CRTP) && !defined(NDEBUG)
 };
 }
 

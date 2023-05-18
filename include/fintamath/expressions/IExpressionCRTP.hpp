@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_EXPRESSION_CRTP
+#if !defined(FINTAMATH_I_EXPRESSION_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/expressions/IExpression.hpp"
 
@@ -55,7 +55,7 @@ protected:
   }
 
 private:
-#ifndef FINTAMATH_I_EXPRESSION_CRTP
+#if !defined(FINTAMATH_I_EXPRESSION_CRTP) && !defined(NDEBUG)
 };
 }
 

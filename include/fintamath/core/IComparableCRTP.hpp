@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_COMPARABLE_CRTP
+#if !defined(FINTAMATH_I_COMPARABLE_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/core/IComparable.hpp"
 
@@ -80,7 +80,7 @@ private:
   }
 
 private:
-#ifndef FINTAMATH_I_COMPARABLE_CRTP
+#if !defined(FINTAMATH_I_COMPARABLE_CRTP) && !defined(NDEBUG)
 };
 }
 

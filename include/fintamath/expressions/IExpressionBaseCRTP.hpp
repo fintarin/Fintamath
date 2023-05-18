@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_EXPRESSION_BASE_CRTP
+#if !defined(FINTAMATH_I_EXPRESSION_BASE_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/expressions/IExpression.hpp"
 
@@ -14,7 +14,7 @@ class IExpressionBaseCRTP_ : public IExpression {
 #undef FINTAMATH_I_ARITHMETIC_CRTP
 
 private:
-#ifndef FINTAMATH_I_EXPRESSION_BASE_CRTP
+#if !defined(FINTAMATH_I_EXPRESSION_BASE_CRTP) && !defined(NDEBUG)
 };
 }
 

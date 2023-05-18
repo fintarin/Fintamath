@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_FUNCTION_CRTP
+#if !defined(FINTAMATH_I_FUNCTION_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/functions/IFunction.hpp"
 
@@ -125,7 +125,7 @@ private:
   bool isNonExressionEvaluatableFunc;
 
 private:
-#ifndef FINTAMATH_I_FUNCTION_CRTP
+#if !defined(FINTAMATH_I_FUNCTION_CRTP) && !defined(NDEBUG)
 };
 }
 

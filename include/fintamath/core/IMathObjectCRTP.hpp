@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_MATH_OBJECT_CRTP
+#if !defined(FINTAMATH_I_MATH_OBJECT_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/core/IMathObject.hpp"
 
@@ -50,7 +50,7 @@ protected:
   }
 
 private:
-#ifndef FINTAMATH_I_MATH_OBJECT_CRTP
+#if !defined(FINTAMATH_I_MATH_OBJECT_CRTP) && !defined(NDEBUG)
 };
 }
 

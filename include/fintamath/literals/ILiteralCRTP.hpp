@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_LITERAL_CRTP
+#if !defined(FINTAMATH_I_LITERAL_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/literals/ILiteral.hpp"
 
@@ -14,7 +14,7 @@ class ILiteralCRTP_ : public ILiteral {
 #undef FINTAMATH_I_MATH_OBJECT_CRTP
 
 private:
-#ifndef FINTAMATH_I_LITERAL_CRTP
+#if !defined(FINTAMATH_I_LITERAL_CRTP) && !defined(NDEBUG)
 };
 }
 
