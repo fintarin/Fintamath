@@ -8,9 +8,6 @@ class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
   explicit OrExpression(const ArgumentsPtrVector &inChildren);
 
-  // TODO!!! reimplement
-  // ArgumentPtr logicNegate() const override;
-
   static MathObjectTypeId getTypeIdStatic() {
     return MathObjectTypeId(MathObjectType::OrExpression);
   }
