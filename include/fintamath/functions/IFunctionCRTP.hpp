@@ -76,7 +76,7 @@ private:
 
   template <size_t i, typename Head, typename... Tail>
   bool doArgsMatch(const ArgumentsRefVector &argsVect) const {
-    if (!is<Head>(argsVect[i])) {
+    if (!is<Head>(argsVect[i]) || isExpression(argsVect[i])) {
       return false;
     }
 

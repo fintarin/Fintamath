@@ -63,6 +63,8 @@ protected:
   // TODO: uncomment
   // static std::unique_ptr<IMathObject> makeExpr(const IFunction &function, const ArgumentsRefVector &args);
 
+  static bool isExpression(const ArgumentRef &arg);
+
 private:
   static Parser::Map<std::unique_ptr<IFunction>> &getParser();
 };
