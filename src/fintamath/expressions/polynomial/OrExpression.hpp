@@ -11,8 +11,8 @@ public:
   // TODO!!! reimplement
   // ArgumentPtr logicNegate() const override;
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::OrExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::OrExpression);
   }
 
 protected:

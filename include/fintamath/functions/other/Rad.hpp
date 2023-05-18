@@ -13,8 +13,8 @@ public:
     return "rad";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Rad;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Rad);
   }
 
 protected:

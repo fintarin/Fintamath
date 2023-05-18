@@ -9,8 +9,8 @@ class DivExpression : public IBinaryExpressionCRTP<DivExpression> {
 public:
   explicit DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::DivExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::DivExpression);
   }
 
 protected:

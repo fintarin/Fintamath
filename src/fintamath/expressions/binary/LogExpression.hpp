@@ -13,8 +13,8 @@ public:
   // TODO!!! reimplement
   // ArgumentPtr negate() const override;
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::LogExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::LogExpression);
   }
 
 protected:

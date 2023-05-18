@@ -8,8 +8,8 @@ class HyperbolicExpression : public IUnaryExpressionCRTP<HyperbolicExpression, t
 public:
   explicit HyperbolicExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::HyperbolicExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::HyperbolicExpression);
   }
 
 protected:

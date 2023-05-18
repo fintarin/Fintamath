@@ -15,8 +15,8 @@ public:
     return "<=";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::LessEqv;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::LessEqv);
   }
 
 protected:

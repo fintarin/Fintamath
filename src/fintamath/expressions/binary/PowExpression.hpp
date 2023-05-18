@@ -11,8 +11,8 @@ public:
 
   std::string toString() const override;
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::PowExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::PowExpression);
   }
 
 protected:

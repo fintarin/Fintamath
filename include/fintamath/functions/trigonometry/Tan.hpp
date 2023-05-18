@@ -13,8 +13,8 @@ public:
     return "tan";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Tan;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Tan);
   }
 
 protected:

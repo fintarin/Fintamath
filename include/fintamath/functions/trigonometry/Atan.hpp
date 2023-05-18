@@ -13,8 +13,8 @@ public:
     return "atan";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Atan;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Atan);
   }
 
 protected:

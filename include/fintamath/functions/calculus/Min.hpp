@@ -16,8 +16,8 @@ public:
     return "min";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Min;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Min);
   }
 
 protected:

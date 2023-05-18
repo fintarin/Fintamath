@@ -36,8 +36,8 @@ public:
 
   const boost::multiprecision::cpp_int &getBackend() const;
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Integer;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Integer);
   }
 
 protected:

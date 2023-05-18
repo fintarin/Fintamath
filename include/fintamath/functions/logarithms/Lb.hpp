@@ -13,8 +13,8 @@ public:
     return "lb";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Lb;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Lb);
   }
 
 protected:

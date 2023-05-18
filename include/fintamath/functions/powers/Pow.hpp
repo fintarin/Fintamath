@@ -14,8 +14,8 @@ public:
     return "^";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Pow;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Pow);
   }
 
 protected:

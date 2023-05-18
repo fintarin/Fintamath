@@ -13,8 +13,8 @@ public:
     return "tanh";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Tanh;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Tanh);
   }
 
 protected:

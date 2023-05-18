@@ -13,8 +13,8 @@ public:
     return "acot";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Acot;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Acot);
   }
 
 protected:

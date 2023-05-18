@@ -13,7 +13,7 @@
 namespace fintamath {
 
 REQUIRE_MATH_OBJECTS(To, From) bool is(const From &from) {
-  return is(To::getTypeStatic(), from.getType());
+  return isBaseOf(To::getTypeIdStatic(), from.getTypeId());
 }
 
 REQUIRE_MATH_OBJECTS(To, From) bool is(const From *from) {

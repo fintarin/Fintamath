@@ -14,8 +14,8 @@ public:
     return "*";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Mul;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Mul);
   }
 
 protected:

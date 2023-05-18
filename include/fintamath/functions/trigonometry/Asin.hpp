@@ -13,8 +13,8 @@ public:
     return "asin";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Asin;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Asin);
   }
 
 protected:

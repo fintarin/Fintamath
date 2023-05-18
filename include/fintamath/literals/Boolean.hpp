@@ -16,8 +16,8 @@ public:
 
   operator bool() const;
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Boolean;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Boolean);
   }
 
 private:

@@ -14,8 +14,8 @@ public:
     return "°";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Angle;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Angle);
   }
 
 protected:

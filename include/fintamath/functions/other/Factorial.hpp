@@ -21,8 +21,8 @@ public:
     order = inOrder;
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Factorial;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Factorial);
   }
 
 protected:

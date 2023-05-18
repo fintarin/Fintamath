@@ -1,27 +1,30 @@
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
+#include <limits>
 #include <unordered_map>
 
 namespace fintamath {
 
-enum class MathObjectType : uint32_t {
-  IMathObject,
+using MathObjectTypeId = size_t;
 
-  IArithmetic,
+enum class MathObjectType : MathObjectTypeId {
+  IMathObject = 0,
 
-  IExpression,
+  IArithmetic = 1000,
+
+  IExpression = 2000,
 
   Expression,
 
-  IUnaryExpression,
+  IUnaryExpression = 3000,
 
   NegExpression,
   NotExpression,
   TrigonometryExpression,
   HyperbolicExpression,
 
-  IBinaryExpression,
+  IBinaryExpression = 4000,
 
   PowExpression,
   DivExpression,
@@ -30,7 +33,7 @@ enum class MathObjectType : uint32_t {
   DerivativeExpression,
   IntegralExpression,
 
-  IPolynomExpression,
+  IPolynomExpression = 5000,
 
   SumExpression,
   MulExpression,
@@ -38,30 +41,30 @@ enum class MathObjectType : uint32_t {
   OrExpression,
   MinMaxExpression,
 
-  IComparable,
+  IComparable = 6000,
 
-  INumber,
+  INumber = 7000,
 
   Rational,
   Real,
 
-  IIntegral,
+  IInteger = 8000,
 
   Integer,
 
-  ILiteral,
+  ILiteral = 9000,
 
   Boolean,
   Variable,
 
-  IConstant,
+  IConstant = 10000,
 
   E,
   Pi,
   True,
   False,
 
-  IFunction,
+  IFunction = 11000,
 
   Abs,
   Log,
@@ -94,7 +97,7 @@ enum class MathObjectType : uint32_t {
   Derivative,
   Integral,
 
-  IOperator,
+  IOperator = 12000,
 
   Add,
   Sub,
@@ -120,31 +123,38 @@ enum class MathObjectType : uint32_t {
   Index,
   Angle,
 
-  None,
+  None = std::numeric_limits<size_t>::max(),
 };
 
-static const std::unordered_map<MathObjectType, MathObjectType> MATH_OBJECT_TYPES{
-    {MathObjectType::IMathObject, MathObjectType::None},                     //
-    {MathObjectType::IArithmetic, MathObjectType::ILiteral},                 //
-    {MathObjectType::IExpression, MathObjectType::IComparable},              //
-    {MathObjectType::IUnaryExpression, MathObjectType::IBinaryExpression},   //
-    {MathObjectType::IBinaryExpression, MathObjectType::IPolynomExpression}, //
-    {MathObjectType::IPolynomExpression, MathObjectType::IComparable},       //
-    {MathObjectType::IComparable, MathObjectType::ILiteral},                 //
-    {MathObjectType::INumber, MathObjectType::ILiteral},                     //
-    {MathObjectType::IIntegral, MathObjectType::ILiteral},                   //
-    {MathObjectType::ILiteral, MathObjectType::IFunction},                   //
-    {MathObjectType::IConstant, MathObjectType::IFunction},                  //
-    {MathObjectType::IFunction, MathObjectType::None},                       //
-    {MathObjectType::IOperator, MathObjectType::None},                       //
-};
+inline const std::unordered_map<MathObjectTypeId, MathObjectTypeId> &getBoundTypeIds() {
+  using Id = MathObjectTypeId;
+  using Type = MathObjectType;
 
-inline bool is(MathObjectType to, MathObjectType from) {
-  if (auto toTypeBoundaries = MATH_OBJECT_TYPES.find(to); toTypeBoundaries != MATH_OBJECT_TYPES.end()) {
-    return from >= toTypeBoundaries->first && from < toTypeBoundaries->second;
+  static const std::unordered_map<Id, Id> ids{
+      {Id(Type::IMathObject), Id(Type::None)},                     //
+      {Id(Type::IArithmetic), Id(Type::ILiteral)},                 //
+      {Id(Type::IExpression), Id(Type::IComparable)},              //
+      {Id(Type::IUnaryExpression), Id(Type::IBinaryExpression)},   //
+      {Id(Type::IBinaryExpression), Id(Type::IPolynomExpression)}, //
+      {Id(Type::IPolynomExpression), Id(Type::IComparable)},       //
+      {Id(Type::IComparable), Id(Type::ILiteral)},                 //
+      {Id(Type::INumber), Id(Type::ILiteral)},                     //
+      {Id(Type::IInteger), Id(Type::ILiteral)},                   //
+      {Id(Type::ILiteral), Id(Type::IFunction)},                   //
+      {Id(Type::IConstant), Id(Type::IFunction)},                  //
+      {Id(Type::IFunction), Id(Type::None)},                       //
+      {Id(Type::IOperator), Id(Type::None)},                       //
+  };
+
+  return ids;
+}
+
+inline bool isBaseOf(size_t toTypeId, size_t fromTypeId) {
+  if (auto toTypeBoundaries = getBoundTypeIds().find(toTypeId); toTypeBoundaries != getBoundTypeIds().end()) {
+    return fromTypeId >= toTypeBoundaries->first && fromTypeId < toTypeBoundaries->second;
   }
 
-  return from == to;
+  return toTypeId == fromTypeId;
 }
 
 }

@@ -63,6 +63,10 @@ public:
     return Parser::parse(getParser(), str);
   }
 
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::IInteger);
+  }
+
 protected:
   virtual std::unique_ptr<IInteger> modAbstract(const IInteger &rhs) const = 0;
 

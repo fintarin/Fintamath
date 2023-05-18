@@ -8,7 +8,7 @@ namespace fintamath {
 
 class IConstant : public ILiteral {
 public:
-  virtual MathObjectType getReturnType() const = 0;
+  virtual size_t getReturnTypeId() const = 0;
 
   std::unique_ptr<IMathObject> operator()() const {
     return call();
@@ -23,8 +23,8 @@ public:
     return Parser::parse<std::unique_ptr<IConstant>>(getParser(), parsedStr);
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::IConstant;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::IConstant);
   }
 
 protected:

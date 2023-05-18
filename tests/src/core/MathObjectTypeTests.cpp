@@ -12,36 +12,36 @@
 
 using namespace fintamath;
 
-TEST(MathObjectTypesTests, isTest) {
-  EXPECT_TRUE(is(INumber::getTypeStatic(), Integer::getTypeStatic()));
-  EXPECT_TRUE(is(INumber::getTypeStatic(), Rational::getTypeStatic()));
-  EXPECT_TRUE(is(IArithmetic::getTypeStatic(), Integer::getTypeStatic()));
-  EXPECT_TRUE(is(IMathObject::getTypeStatic(), Integer::getTypeStatic()));
-  EXPECT_TRUE(is(IArithmetic::getTypeStatic(), INumber::getTypeStatic()));
-  EXPECT_TRUE(is(IMathObject::getTypeStatic(), INumber::getTypeStatic()));
-  EXPECT_TRUE(is(IMathObject::getTypeStatic(), IArithmetic::getTypeStatic()));
-  EXPECT_TRUE(is(IConstant::getTypeStatic(), True::getTypeStatic()));
-  EXPECT_TRUE(is(ILiteral::getTypeStatic(), Variable::getTypeStatic()));
-  EXPECT_TRUE(is(ILiteral::getTypeStatic(), IConstant::getTypeStatic()));
-  EXPECT_TRUE(is(ILiteral::getTypeStatic(), True::getTypeStatic()));
-  EXPECT_TRUE(is(ILiteral::getTypeStatic(), E::getTypeStatic()));
+TEST(MathObjectTypesTests, isBaseOfTest) {
+  EXPECT_TRUE(isBaseOf(INumber::getTypeIdStatic(), Integer::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(INumber::getTypeIdStatic(), Rational::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(IArithmetic::getTypeIdStatic(), Integer::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(IMathObject::getTypeIdStatic(), Integer::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(IArithmetic::getTypeIdStatic(), INumber::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(IMathObject::getTypeIdStatic(), INumber::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(IMathObject::getTypeIdStatic(), IArithmetic::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(IConstant::getTypeIdStatic(), True::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(ILiteral::getTypeIdStatic(), Variable::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(ILiteral::getTypeIdStatic(), IConstant::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(ILiteral::getTypeIdStatic(), True::getTypeIdStatic()));
+  EXPECT_TRUE(isBaseOf(ILiteral::getTypeIdStatic(), E::getTypeIdStatic()));
 
-  EXPECT_FALSE(is(Integer::getTypeStatic(), INumber::getTypeStatic()));
-  EXPECT_FALSE(is(Rational::getTypeStatic(), INumber::getTypeStatic()));
-  EXPECT_FALSE(is(Integer::getTypeStatic(), IArithmetic::getTypeStatic()));
-  EXPECT_FALSE(is(Integer::getTypeStatic(), IMathObject::getTypeStatic()));
-  EXPECT_FALSE(is(INumber::getTypeStatic(), IArithmetic::getTypeStatic()));
-  EXPECT_FALSE(is(INumber::getTypeStatic(), IMathObject::getTypeStatic()));
-  EXPECT_FALSE(is(IArithmetic::getTypeStatic(), IMathObject::getTypeStatic()));
-  EXPECT_FALSE(is(True::getTypeStatic(), IConstant::getTypeStatic()));
-  EXPECT_FALSE(is(Variable::getTypeStatic(), ILiteral::getTypeStatic()));
-  EXPECT_FALSE(is(IConstant::getTypeStatic(), ILiteral::getTypeStatic()));
-  EXPECT_FALSE(is(True::getTypeStatic(), ILiteral::getTypeStatic()));
-  EXPECT_FALSE(is(E::getTypeStatic(), ILiteral::getTypeStatic()));
+  EXPECT_FALSE(isBaseOf(Integer::getTypeIdStatic(), INumber::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(Rational::getTypeIdStatic(), INumber::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(Integer::getTypeIdStatic(), IArithmetic::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(Integer::getTypeIdStatic(), IMathObject::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(INumber::getTypeIdStatic(), IArithmetic::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(INumber::getTypeIdStatic(), IMathObject::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(IArithmetic::getTypeIdStatic(), IMathObject::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(True::getTypeIdStatic(), IConstant::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(Variable::getTypeIdStatic(), ILiteral::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(IConstant::getTypeIdStatic(), ILiteral::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(True::getTypeIdStatic(), ILiteral::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(E::getTypeIdStatic(), ILiteral::getTypeIdStatic()));
 
-  EXPECT_FALSE(is(ILiteral::getTypeStatic(), Integer::getTypeStatic()));
-  EXPECT_FALSE(is(ILiteral::getTypeStatic(), Rational::getTypeStatic()));
-  EXPECT_FALSE(is(ILiteral::getTypeStatic(), INumber::getTypeStatic()));
-  EXPECT_FALSE(is(IConstant::getTypeStatic(), INumber::getTypeStatic()));
-  EXPECT_FALSE(is(Boolean::getTypeStatic(), INumber::getTypeStatic()));
+  EXPECT_FALSE(isBaseOf(ILiteral::getTypeIdStatic(), Integer::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(ILiteral::getTypeIdStatic(), Rational::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(ILiteral::getTypeIdStatic(), INumber::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(IConstant::getTypeIdStatic(), INumber::getTypeIdStatic()));
+  EXPECT_FALSE(isBaseOf(Boolean::getTypeIdStatic(), INumber::getTypeIdStatic()));
 }

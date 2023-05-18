@@ -22,8 +22,8 @@ public:
     return !equals(rhs);
   }
 
-  MathObjectType getType() const override {
-    return Derived::getTypeStatic();
+  MathObjectTypeId getTypeId() const override {
+    return Derived::getTypeIdStatic();
   }
 
 protected:
