@@ -826,3 +826,8 @@ TEST(IntegerTests, equalsTest) {
   EXPECT_NE(a, c);
   EXPECT_NE(c, a);
 }
+
+TEST(IntegerTests, getTypeIdTest) {
+  EXPECT_EQ(Integer::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Integer));
+  EXPECT_EQ(Integer().getTypeId(), MathObjectTypeId(MathObjectType::Integer));
+}

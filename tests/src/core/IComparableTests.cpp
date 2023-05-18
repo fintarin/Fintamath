@@ -147,3 +147,7 @@ TEST(IComparableTests, moreEqualsTest) {
   EXPECT_TRUE(Integer() >= 0);
   EXPECT_TRUE(1 >= Integer());
 }
+
+TEST(IComparableTests, getTypeIdTest) {
+  EXPECT_EQ(IComparable::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IComparable));
+}

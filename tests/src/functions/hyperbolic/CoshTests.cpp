@@ -56,3 +56,8 @@ TEST(CoshTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(CoshTests, getTypeIdTest) {
+  EXPECT_EQ(Cosh::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Cosh));
+  EXPECT_EQ(Cosh().getTypeId(), MathObjectTypeId(MathObjectType::Cosh));
+}

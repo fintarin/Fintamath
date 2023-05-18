@@ -1093,3 +1093,8 @@ TEST(ExpressionTests, expressionVariableDivideOperatorTest) {
   EXPECT_EQ(Expression("a/b") / Variable("a"), Expression("1/b"));
   EXPECT_EQ(Expression("b/c") / Variable("a"), Expression("b/c/a"));
 }
+
+TEST(ExpressionTests, getTypeIdTest) {
+  EXPECT_EQ(Expression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Expression));
+  EXPECT_EQ(Expression().getTypeId(), MathObjectTypeId(MathObjectType::Expression));
+}

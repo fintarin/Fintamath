@@ -56,3 +56,8 @@ TEST(AndTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(AndTests, getTypeIdTest) {
+  EXPECT_EQ(And::getTypeIdStatic(), MathObjectTypeId(MathObjectType::And));
+  EXPECT_EQ(And().getTypeId(), MathObjectTypeId(MathObjectType::And));
+}

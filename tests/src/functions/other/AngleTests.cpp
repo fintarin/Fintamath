@@ -53,3 +53,8 @@ TEST(AngleTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(AngleTests, getTypeIdTest) {
+  EXPECT_EQ(Angle::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Angle));
+  EXPECT_EQ(Angle().getTypeId(), MathObjectTypeId(MathObjectType::Angle));
+}

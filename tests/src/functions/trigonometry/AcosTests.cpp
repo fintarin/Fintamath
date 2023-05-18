@@ -57,3 +57,8 @@ TEST(AcosTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(AcosTests, getTypeIdTest) {
+  EXPECT_EQ(Acos::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Acos));
+  EXPECT_EQ(Acos().getTypeId(), MathObjectTypeId(MathObjectType::Acos));
+}

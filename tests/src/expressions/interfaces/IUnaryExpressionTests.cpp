@@ -56,3 +56,7 @@ TEST(IUnaryExpressionTests, toMinimalObjectTest) {
   TestUnaryExpression expr3(TestUnaryExpression(Variable("a").clone()).clone());
   EXPECT_EQ(expr3.toMinimalObject()->toString(), "a!!");
 }
+
+TEST(IUnaryExpressionTests, getTypeIdTest) {
+  EXPECT_EQ(IUnaryExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IUnaryExpression));
+}

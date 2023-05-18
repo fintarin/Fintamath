@@ -24,17 +24,20 @@ protected:
 }
 
 TEST(IPolynomExpressionTests, toStringTest) {
-  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  TestPolynomExpression expr(
+      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
   EXPECT_EQ(expr.toString(), "1 + 2 + 3");
 }
 
 TEST(IPolynomExpressionTests, getFunctionTest) {
-  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  TestPolynomExpression expr(
+      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
 TEST(IPolynomExpressionTests, getChildren) {
-  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  TestPolynomExpression expr(
+      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
   EXPECT_EQ(expr.getChildren().size(), 3);
   EXPECT_EQ(*expr.getChildren()[0], Integer(1));
   EXPECT_EQ(*expr.getChildren()[1], Integer(2));
@@ -42,7 +45,8 @@ TEST(IPolynomExpressionTests, getChildren) {
 }
 
 TEST(IPolynomExpressionTests, setChildren) {
-  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  TestPolynomExpression expr(
+      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
 
   expr.setChildren({std::make_shared<Integer>(0)});
   EXPECT_EQ(expr.getChildren().size(), 1);
@@ -63,7 +67,8 @@ TEST(IPolynomExpressionTests, setChildren) {
 }
 
 TEST(IPolynomExpressionTests, addElement) {
-  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  TestPolynomExpression expr(
+      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
   expr.addElement(std::make_shared<Integer>(0));
   EXPECT_EQ(expr.toString(), "1 + 2 + 3 + 0");
 }
@@ -71,4 +76,8 @@ TEST(IPolynomExpressionTests, addElement) {
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {
   TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), Variable("a").clone()});
   EXPECT_EQ(expr.toMinimalObject()->toString(), "a + 3");
+}
+
+TEST(IPolynomExpressionTests, getTypeIdTest) {
+  EXPECT_EQ(IPolynomExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IPolynomExpression));
 }

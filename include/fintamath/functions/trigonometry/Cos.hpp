@@ -14,7 +14,7 @@ public:
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Cot);
+    return MathObjectTypeId(MathObjectType::Cos);
   }
 
 protected:

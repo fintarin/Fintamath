@@ -28,3 +28,7 @@ TEST(ILiteralTests, equalsTests) {
   EXPECT_NE(*c1, *v1);
   EXPECT_NE(*c1, *v1);
 }
+
+TEST(ILiteralTests, getTypeIdTest) {
+  EXPECT_EQ(ILiteral::getTypeIdStatic(), MathObjectTypeId(MathObjectType::ILiteral));
+}

@@ -16,6 +16,10 @@ public:
 
   void setChildren(const ArgumentsPtrVector &childVect) override;
 
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::FunctionExpression);
+  }
+
 protected:
   ArgumentPtr simplify() const override;
 

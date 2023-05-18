@@ -59,3 +59,8 @@ TEST(EqvTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(EqvTests, getTypeIdTest) {
+  EXPECT_EQ(Eqv::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Eqv));
+  EXPECT_EQ(Eqv().getTypeId(), MathObjectTypeId(MathObjectType::Eqv));
+}

@@ -57,3 +57,8 @@ TEST(AsinTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(AsinTests, getTypeIdTest) {
+  EXPECT_EQ(Asin::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Asin));
+  EXPECT_EQ(Asin().getTypeId(), MathObjectTypeId(MathObjectType::Asin));
+}

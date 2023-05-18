@@ -219,3 +219,7 @@ TEST(IArithmeticTests, multimethodsTest) {
   });
   EXPECT_EQ(*(TestArithmetic() / Integer(1)), Integer(0));
 }
+
+TEST(IArithmeticTests, getTypeIdTest) {
+  EXPECT_EQ(IArithmetic::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IArithmetic));
+}
