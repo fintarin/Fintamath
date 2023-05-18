@@ -110,3 +110,8 @@ TEST(PowTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(PowTests, getTypeIdTest) {
+  EXPECT_EQ(Pow::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Pow));
+  EXPECT_EQ(Pow().getTypeId(), MathObjectTypeId(MathObjectType::Pow));
+}

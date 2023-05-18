@@ -53,3 +53,8 @@ TEST(DegreesTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(DegreesTests, getTypeIdTest) {
+  EXPECT_EQ(Degrees::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Degrees));
+  EXPECT_EQ(Degrees().getTypeId(), MathObjectTypeId(MathObjectType::Degrees));
+}

@@ -57,3 +57,8 @@ TEST(DerivativeTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(DerivativeTests, getTypeIdTest) {
+  EXPECT_EQ(Derivative::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Derivative));
+  EXPECT_EQ(Derivative().getTypeId(), MathObjectTypeId(MathObjectType::Derivative));
+}

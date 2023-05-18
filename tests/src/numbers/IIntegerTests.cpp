@@ -283,3 +283,7 @@ TEST(IIntegerTests, decTest) {
   EXPECT_EQ((--Integer(1)).toString(), "0");
   EXPECT_EQ((Integer(1)--).toString(), "1");
 }
+
+TEST(IIntegerTests, getTypeIdTest) {
+  EXPECT_EQ(IInteger::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IInteger));
+}

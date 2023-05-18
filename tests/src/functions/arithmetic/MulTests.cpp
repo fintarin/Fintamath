@@ -57,3 +57,8 @@ TEST(MulTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(MulTests, getTypeIdTest) {
+  EXPECT_EQ(Mul::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Mul));
+  EXPECT_EQ(Mul().getTypeId(), MathObjectTypeId(MathObjectType::Mul));
+}

@@ -86,3 +86,7 @@ TEST(IExpressionTests, toMinimalObjectTest) {
 TEST(IExpressionTests, equalsTest) {
   // TODO: implement
 }
+
+TEST(IExpressionTests, getTypeIdTest) {
+  EXPECT_EQ(IExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IExpression));
+}

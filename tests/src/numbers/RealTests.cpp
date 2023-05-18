@@ -888,3 +888,8 @@ TEST(RealTests, equalsTest) {
   EXPECT_NE(a, c);
   EXPECT_NE(c, a);
 }
+
+TEST(RealTests, getTypeIdTest) {
+  EXPECT_EQ(Real::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Real));
+  EXPECT_EQ(Real().getTypeId(), MathObjectTypeId(MathObjectType::Real));
+}

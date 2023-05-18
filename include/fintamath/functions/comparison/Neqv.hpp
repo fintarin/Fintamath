@@ -16,7 +16,7 @@ public:
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Nequiv);
+    return MathObjectTypeId(MathObjectType::Neqv);
   }
 
 protected:

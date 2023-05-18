@@ -28,6 +28,10 @@ public:
     return Parser::parse(getParser(), str);
   }
 
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::INumber);
+  }
+
 private:
   static Parser::Vector<std::unique_ptr<INumber>, const std::string &> &getParser();
 };

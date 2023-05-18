@@ -16,6 +16,7 @@ enum class MathObjectType : MathObjectTypeId {
   IExpression = 2000,
 
   Expression,
+  FunctionExpression,
 
   IUnaryExpression = 3000,
 

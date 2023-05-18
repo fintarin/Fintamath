@@ -61,3 +61,8 @@ TEST(IndexTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(IndexTests, getTypeIdTest) {
+  EXPECT_EQ(Index::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Index));
+  EXPECT_EQ(Index().getTypeId(), MathObjectTypeId(MathObjectType::Index));
+}

@@ -60,3 +60,8 @@ TEST(AtanhTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(AtanhTests, getTypeIdTest) {
+  EXPECT_EQ(Atanh::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Atanh));
+  EXPECT_EQ(Atanh().getTypeId(), MathObjectTypeId(MathObjectType::Atanh));
+}

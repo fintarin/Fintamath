@@ -58,3 +58,7 @@ TEST(IBinaryExpressionTests, toMinimalObjectTest) {
   TestBinaryExpression expr2(std::make_shared<Integer>(1), Variable("a").clone());
   EXPECT_EQ(expr2.toMinimalObject()->toString(), "1 + a");
 }
+
+TEST(IBinaryExpressionTests, getTypeIdTest) {
+  EXPECT_EQ(IBinaryExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IBinaryExpression));
+}

@@ -363,3 +363,8 @@ TEST(RationalTests, equalsTest) {
   EXPECT_NE(a, c);
   EXPECT_NE(c, a);
 }
+
+TEST(RationalTests, getTypeIdTest) {
+  EXPECT_EQ(Rational::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Rational));
+  EXPECT_EQ(Rational().getTypeId(), MathObjectTypeId(MathObjectType::Rational));
+}

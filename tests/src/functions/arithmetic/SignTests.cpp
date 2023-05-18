@@ -51,3 +51,8 @@ TEST(SignTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(SignTests, getTypeIdTest) {
+  EXPECT_EQ(Sign::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Sign));
+  EXPECT_EQ(Sign().getTypeId(), MathObjectTypeId(MathObjectType::Sign));
+}

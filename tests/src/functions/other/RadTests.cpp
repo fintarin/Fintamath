@@ -53,3 +53,8 @@ TEST(RadTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(RadTests, getTypeIdTest) {
+  EXPECT_EQ(Rad::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Rad));
+  EXPECT_EQ(Rad().getTypeId(), MathObjectTypeId(MathObjectType::Rad));
+}

@@ -52,3 +52,8 @@ TEST(VariableTest, equalsTest) {
   EXPECT_NE(a, E());
   EXPECT_NE(E(), a);
 }
+
+TEST(VariableTest, getTypeIdTest) {
+  EXPECT_EQ(Variable::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Variable));
+  EXPECT_EQ(Variable("a").getTypeId(), MathObjectTypeId(MathObjectType::Variable));
+}

@@ -92,3 +92,7 @@ TEST(IMathObjectTests, outputTest) {
   out << *m1;
   EXPECT_EQ(out.str(), "123");
 }
+
+TEST(IMathObjectTests, getTypeIdTest) {
+  EXPECT_EQ(IMathObject::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IMathObject));
+}

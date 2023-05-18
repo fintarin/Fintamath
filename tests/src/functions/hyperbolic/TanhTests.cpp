@@ -57,3 +57,8 @@ TEST(TanhTests, equalsTest) {
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
+
+TEST(TanhTests, getTypeIdTest) {
+  EXPECT_EQ(Tanh::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Tanh));
+  EXPECT_EQ(Tanh().getTypeId(), MathObjectTypeId(MathObjectType::Tanh));
+}
