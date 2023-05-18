@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_INTEGER_CRTP
+#if !defined(FINTAMATH_I_INTEGER_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/numbers/IInteger.hpp"
 
@@ -212,7 +212,7 @@ private:
   }
 
 private:
-#ifndef FINTAMATH_I_INTEGER_CRTP
+#if !defined(FINTAMATH_I_INTEGER_CRTP) && !defined(NDEBUG)
 };
 }
 

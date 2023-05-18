@@ -1,4 +1,4 @@
-#ifndef FINTAMATH_I_ARITHMETIC_CRTP
+#if !defined(FINTAMATH_I_ARITHMETIC_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/core/IArithmetic.hpp"
 
@@ -144,7 +144,7 @@ private:
   }
 
 private:
-#ifndef FINTAMATH_I_ARITHMETIC_CRTP
+#if !defined(FINTAMATH_I_ARITHMETIC_CRTP) && !defined(NDEBUG)
 };
 }
 
