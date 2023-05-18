@@ -2,26 +2,15 @@
 
 #include <memory>
 
+#include "fintamath/core/CoreTraits.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/meta/Converter.hpp"
-
-#define FINTAMATH_CONVERTIBLE()                                                                                        \
-public:                                                                                                                \
-  inline static const bool IS_CONVERTIBLE = true;                                                                      \
-                                                                                                                       \
-private:
 
 #define REQUIRE_MATH_OBJECTS(To, From)                                                                                 \
   template <typename To, typename From,                                                                                \
             typename = std::enable_if_t<std::is_base_of_v<IMathObject, To> && std::is_base_of_v<IMathObject, From>>>
 
 namespace fintamath {
-
-template <typename T, typename U = bool>
-struct IsConvertible : std::false_type {};
-
-template <typename T>
-struct IsConvertible<T, decltype((void)T::IS_CONVERTIBLE, true)> : std::true_type {};
 
 REQUIRE_MATH_OBJECTS(To, From) bool is(const From &from) {
   return is(To::getTypeStatic(), from.getType());

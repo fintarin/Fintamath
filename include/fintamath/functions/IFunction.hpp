@@ -5,7 +5,6 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
-#include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
