@@ -19,7 +19,7 @@ public:
   }
 
   Derived operator%(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) %= rhs;
+    return Derived(cast<Derived>(*this)) %= rhs;
   }
 
   Derived &operator&=(const Derived &rhs) {
@@ -27,7 +27,7 @@ public:
   }
 
   Derived operator&(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) &= rhs;
+    return Derived(cast<Derived>(*this)) &= rhs;
   }
 
   Derived &operator|=(const Derived &rhs) {
@@ -35,7 +35,7 @@ public:
   }
 
   Derived operator|(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) |= rhs;
+    return Derived(cast<Derived>(*this)) |= rhs;
   }
 
   Derived &operator^=(const Derived &rhs) {
@@ -43,7 +43,7 @@ public:
   }
 
   Derived operator^(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) ^= rhs;
+    return Derived(cast<Derived>(*this)) ^= rhs;
   }
 
   Derived &operator<<=(const Derived &rhs) {
@@ -51,7 +51,7 @@ public:
   }
 
   Derived operator<<(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) <<= rhs;
+    return Derived(cast<Derived>(*this)) <<= rhs;
   }
 
   Derived &operator>>=(const Derived &rhs) {
@@ -59,12 +59,12 @@ public:
   }
 
   Derived operator>>(const Derived &rhs) const {
-    return Derived(static_cast<const Derived &>(*this)) >>= rhs;
+    return Derived(cast<Derived>(*this)) >>= rhs;
   }
 
   Derived operator~() const {
     Derived tmp = Derived(cast<Derived>(*this));
-    return static_cast<IIntegerCRTP<Derived> &>(tmp).bitNot();
+    return cast<IIntegerCRTP<Derived>>(tmp).bitNot();
   }
 
   Derived &operator++() {
