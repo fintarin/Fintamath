@@ -139,7 +139,7 @@ inline const std::unordered_map<MathObjectTypeId, MathObjectTypeId> &getBoundTyp
       {Id(Type::IPolynomExpression), Id(Type::IComparable)},       //
       {Id(Type::IComparable), Id(Type::ILiteral)},                 //
       {Id(Type::INumber), Id(Type::ILiteral)},                     //
-      {Id(Type::IInteger), Id(Type::ILiteral)},                   //
+      {Id(Type::IInteger), Id(Type::ILiteral)},                    //
       {Id(Type::ILiteral), Id(Type::IFunction)},                   //
       {Id(Type::IConstant), Id(Type::IFunction)},                  //
       {Id(Type::IFunction), Id(Type::None)},                       //

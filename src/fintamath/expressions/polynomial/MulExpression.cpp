@@ -25,13 +25,6 @@ std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, con
   return (prevChild && *prevChild != Integer(-1) ? " " : "") + inChild->toString();
 }
 
-// TODO!!! reimplement
-// ArgumentPtr MulExpression::negate() const {
-//   MulExpression mulExpr = *this;
-//   mulExpr.addElement(std::make_shared<Integer>(-1));
-//   return mulExpr.simplify();
-// }
-
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
       &MulExpression::simplifyDivisions, //

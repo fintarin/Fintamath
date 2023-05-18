@@ -8,9 +8,6 @@ class SumExpression : public IPolynomExpressionCRTP<SumExpression> {
 public:
   explicit SumExpression(const ArgumentsPtrVector &inChildren);
 
-  // TODO!!! reimplement
-  // ArgumentPtr negate() const override;
-
   static MathObjectTypeId getTypeIdStatic() {
     return MathObjectTypeId(MathObjectType::SumExpression);
   }
