@@ -52,6 +52,14 @@ REQUIRE_MATH_OBJECTS(To, From) bool is(const std::reference_wrapper<const From> 
   return is<To>(from.get());
 }
 
+REQUIRE_MATH_OBJECTS(To, From) To &cast(From &from) {
+  if (!is<To>(from)) {
+    throw std::bad_cast();
+  }
+
+  return static_cast<To &>(from);
+}
+
 REQUIRE_MATH_OBJECTS(To, From) const To &cast(const From &from) {
   if (!is<To>(from)) {
     throw std::bad_cast();
