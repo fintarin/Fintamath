@@ -13,7 +13,15 @@
 namespace fintamath {
 
 REQUIRE_MATH_OBJECTS(To, From) bool is(const From &from) {
-  return isBaseOf(To::getTypeIdStatic(), from.getTypeId());
+  if constexpr (std::is_base_of_v<To, From>) {
+    return true;
+  }
+  else if constexpr (!std::is_base_of_v<From, To>) {
+    return false;
+  }
+  else {
+    return isBaseOf(To::getTypeIdStatic(), from.getTypeId());
+  }
 }
 
 REQUIRE_MATH_OBJECTS(To, From) bool is(const From *from) {
@@ -108,7 +116,7 @@ REQUIRE_MATH_OBJECTS(To, From) std::unique_ptr<IMathObject> convert(const To &to
 }
 
 REQUIRE_MATH_OBJECTS(To, From) To convert(const From &from) {
-  static_assert(IsConvertible<To>::value, "To must be convertible");
+  static_assert(IsConvertible<To>::value, "To must be Convertible");
 
   static const To to;
   auto res = convert(to, from);
