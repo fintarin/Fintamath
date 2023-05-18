@@ -55,13 +55,6 @@ ArgumentPtr CompExpression::preSimplify() const {
   return simplExpr;
 }
 
-// TODO!!! reimplement
-// ArgumentPtr CompExpression::logicNegate() const {
-//   auto res = cast<CompExpression>(clone());
-//   res->func = cast<IFunction>(getLogicOppositeFunction(*func));
-//   return res;
-// }
-
 CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPostSimplify() const {
   static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {
       &CompExpression::coeffSimplify, //
@@ -81,18 +74,6 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
       {Less().toString(), std::make_shared<More>()},       //
       {MoreEqv().toString(), std::make_shared<LessEqv>()}, //
       {LessEqv().toString(), std::make_shared<MoreEqv>()}, //
-  };
-  return oppositeFunctions.at(function.toString());
-}
-
-std::shared_ptr<IFunction> CompExpression::getLogicOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Eqv().toString(), std::make_shared<Neqv>()},     //
-      {Neqv().toString(), std::make_shared<Eqv>()},     //
-      {More().toString(), std::make_shared<LessEqv>()}, //
-      {Less().toString(), std::make_shared<MoreEqv>()}, //
-      {MoreEqv().toString(), std::make_shared<Less>()}, //
-      {LessEqv().toString(), std::make_shared<More>()}, //
   };
   return oppositeFunctions.at(function.toString());
 }

@@ -17,9 +17,6 @@ public:
   }
 
 protected:
-  // TODO!!! reimplement
-  // ArgumentPtr logicNegate() const override;
-
   ArgumentPtr preSimplify() const override;
 
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;

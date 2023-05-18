@@ -25,6 +25,8 @@ private:
   static ArgumentPtr simplifyLogicNegatable(const IFunction &func, const ArgumentPtr &rhs);
 
   static ArgumentPtr simplifyNestedNot(const IFunction &func, const ArgumentPtr &rhs);
+
+  static std::shared_ptr<IFunction> getLogicOppositeFunction(const IFunction &function);
 };
 
 }

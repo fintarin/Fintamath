@@ -8,9 +8,6 @@ class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
   explicit AndExpression(const ArgumentsPtrVector &inChildren);
 
-  // TODO!!! reimplement
-  // ArgumentPtr logicNegate() const override;
-
   static MathObjectTypeId getTypeIdStatic() {
     return MathObjectTypeId(MathObjectType::AndExpression);
   }

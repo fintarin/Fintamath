@@ -10,17 +10,6 @@ namespace fintamath {
 AndExpression::AndExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(And(), inChildren) {
 }
 
-// TODO!!! reimplement
-// ArgumentPtr AndExpression::logicNegate() const {
-//   ArgumentsPtrVector negChildren;
-
-//   for (const auto &child : children) {
-//     negChildren.emplace_back(makeExpr(Not(), child));
-//   }
-
-//   return makeExpr(Or(), negChildren)->toMinimalObject();
-// }
-
 AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForSimplify() const {
   static const AndExpression::SimplifyFunctionsVector simplifyFunctions = {
       &AndExpression::simplifyBooleans, //
