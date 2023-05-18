@@ -1,6 +1,11 @@
 #include "fintamath/expressions/unary/NegExpression.hpp"
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/logarithms/Log.hpp"
 
 namespace fintamath {
 
@@ -36,11 +41,33 @@ ArgumentPtr NegExpression::callNegFunction(const IFunction & /*func*/, const Arg
   return {};
 }
 
-ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
-  // TODO!!! reimplement
-  // if (auto expr = cast<INegatableExpression>(rhs)) {
-  //   return expr->negate();
-  // }
+ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+  const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+
+  if (!rhsExpr) {
+    return {};
+  }
+
+  if (is<Add>(rhsExpr->getFunction())) {
+    ArgumentsPtrVector children = rhsExpr->getChildren();
+    for (auto &child : children) {
+      child = makeExpr(Neg(), child);
+    }
+
+    return makeExpr(Add(), children)->toMinimalObject();
+  }
+
+  if (is<Mul>(rhsExpr->getFunction())) {
+    ArgumentsPtrVector children = rhsExpr->getChildren();
+    children.emplace_back(std::make_shared<Integer>(-1));
+    return makeExpr(Mul(), children)->toMinimalObject();
+  }
+
+  if (is<Log>(rhsExpr->getFunction())) {
+    ArgumentsPtrVector children = rhsExpr->getChildren();
+    return makeExpr(Log(), children.front(), makeExpr(Div(), std::make_shared<Integer>(1), children.back()))
+        ->toMinimalObject();
+  }
 
   return {};
 }

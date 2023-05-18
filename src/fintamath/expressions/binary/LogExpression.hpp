@@ -10,9 +10,6 @@ public:
 
   std::string toString() const override;
 
-  // TODO!!! reimplement
-  // ArgumentPtr negate() const override;
-
   static MathObjectTypeId getTypeIdStatic() {
     return MathObjectTypeId(MathObjectType::LogExpression);
   }

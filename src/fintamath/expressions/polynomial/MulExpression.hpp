@@ -7,9 +7,6 @@ class MulExpression : public IPolynomExpressionCRTP<MulExpression> {
 public:
   explicit MulExpression(const ArgumentsPtrVector &inChildren);
 
-  // TODO!!! reimplement
-  // ArgumentPtr negate() const override;
-
   static MathObjectTypeId getTypeIdStatic() {
     return MathObjectTypeId(MathObjectType::MulExpression);
   }
