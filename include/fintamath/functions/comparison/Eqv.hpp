@@ -15,8 +15,8 @@ public:
     return "=";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Eqv;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Eqv);
   }
 
 protected:

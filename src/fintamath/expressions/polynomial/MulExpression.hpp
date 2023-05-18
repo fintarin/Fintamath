@@ -10,8 +10,8 @@ public:
   // TODO!!! reimplement
   // ArgumentPtr negate() const override;
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::MulExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::MulExpression);
   }
 
 protected:

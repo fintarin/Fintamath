@@ -50,8 +50,8 @@ public:
 
   const boost::multiprecision::cpp_dec_float_100 &getBackend() const;
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Real;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Real);
   }
 
 protected:

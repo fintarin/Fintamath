@@ -15,8 +15,8 @@ public:
     return ">";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::More;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::More);
   }
 
 protected:

@@ -13,8 +13,8 @@ public:
     return "cosh";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Cosh;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Cosh);
   }
 
 protected:

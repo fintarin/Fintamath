@@ -11,6 +11,11 @@ using namespace fintamath;
 namespace {
 
 class TestComparable : public IComparableCRTP<TestComparable> {
+public:
+  static MathObjectTypeId getTypeIdStatic() {
+    return size_t(getBoundTypeIds().at(MathObjectTypeId(MathObjectType::IComparable))) - 1;
+  }
+
 protected:
   bool less(const TestComparable & /* rhs */) const override {
     return true;

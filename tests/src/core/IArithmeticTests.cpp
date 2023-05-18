@@ -11,6 +11,11 @@ using namespace fintamath;
 namespace {
 
 class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
+public:
+  static MathObjectTypeId getTypeIdStatic() {
+    return size_t(getBoundTypeIds().at(MathObjectTypeId(MathObjectType::IArithmetic))) - 1;
+  }
+
 protected:
   TestArithmetic &add(const TestArithmetic & /* rhs */) override {
     return *this;

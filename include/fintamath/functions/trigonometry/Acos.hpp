@@ -13,8 +13,8 @@ public:
     return "acos";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Acos;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Acos);
   }
 
 protected:

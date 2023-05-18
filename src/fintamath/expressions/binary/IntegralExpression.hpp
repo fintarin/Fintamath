@@ -8,8 +8,8 @@ class IntegralExpression : public IBinaryExpressionCRTP<IntegralExpression> {
 public:
   explicit IntegralExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::IntegralExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::IntegralExpression);
   }
 
 protected:

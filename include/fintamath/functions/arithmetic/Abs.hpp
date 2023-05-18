@@ -13,8 +13,8 @@ public:
     return "abs";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Abs;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Abs);
   }
 
 protected:

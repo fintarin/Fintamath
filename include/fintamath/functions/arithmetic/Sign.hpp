@@ -13,8 +13,8 @@ public:
     return "sign";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Sign;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Sign);
   }
 
 protected:

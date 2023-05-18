@@ -8,8 +8,8 @@ class NegExpression : public IUnaryExpressionCRTP<NegExpression> {
 public:
   explicit NegExpression(const ArgumentPtr &inChild);
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::NegExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::NegExpression);
   }
 
 protected:

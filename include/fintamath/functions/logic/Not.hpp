@@ -14,8 +14,8 @@ public:
     return "~";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Not;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Not);
   }
 
 protected:

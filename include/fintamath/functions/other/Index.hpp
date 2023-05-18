@@ -16,8 +16,8 @@ public:
     return "_";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Index;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Index);
   }
 
 protected:

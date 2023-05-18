@@ -15,8 +15,8 @@ public:
     return "derivative";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Derivative;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Derivative);
   }
 
 protected:

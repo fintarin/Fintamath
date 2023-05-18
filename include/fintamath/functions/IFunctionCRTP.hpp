@@ -18,13 +18,13 @@ public:
     return type;
   }
 
-  MathObjectType getReturnType() const final {
-    return Return::getTypeStatic();
+  size_t getReturnTypeId() const final {
+    return size_t(Return::getTypeIdStatic());
   }
 
-  ArgumentsTypesVector getArgsTypes() const final {
-    ArgumentsTypesVector argsTypes;
-    getArgsTypes<0, Args...>(argsTypes);
+  ArgumentsTypeIdsVector getArgsTypeIds() const final {
+    ArgumentsTypeIdsVector argsTypes;
+    getArgsTypeIds<0, Args...>(argsTypes);
     return argsTypes;
   }
 
@@ -64,13 +64,13 @@ protected:
 
 private:
   template <size_t i, typename Head, typename... Tail>
-  void getArgsTypes(ArgumentsTypesVector &outArgsTypes) const {
-    outArgsTypes.emplace_back(Head::getTypeStatic());
-    getArgsTypes<i + 1, Tail...>(outArgsTypes);
+  void getArgsTypeIds(ArgumentsTypeIdsVector &outArgsTypes) const {
+    outArgsTypes.emplace_back(Head::getTypeIdStatic());
+    getArgsTypeIds<i + 1, Tail...>(outArgsTypes);
   }
 
   template <size_t>
-  void getArgsTypes(ArgumentsTypesVector & /*outArgTypes*/) const {
+  void getArgsTypeIds(ArgumentsTypeIdsVector & /*outArgTypes*/) const {
     // The end of unpacking.
   }
 

@@ -11,8 +11,8 @@ public:
     return "Pi";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Pi;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Pi);
   }
 
 protected:

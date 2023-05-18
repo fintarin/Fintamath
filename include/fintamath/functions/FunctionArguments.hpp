@@ -17,6 +17,6 @@ using ArgumentPtr = std::shared_ptr<const IMathObject>;
 
 using ArgumentsRefVector = std::vector<ArgumentRef>;
 using ArgumentsPtrVector = std::vector<ArgumentPtr>;
-using ArgumentsTypesVector = std::vector<MathObjectType>;
+using ArgumentsTypeIdsVector = std::vector<size_t>;
 
 }

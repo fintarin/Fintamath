@@ -13,8 +13,8 @@ public:
     return "exp";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Exp;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Exp);
   }
 
 protected:

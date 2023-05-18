@@ -13,8 +13,8 @@ public:
     return "cot";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Cot;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Cot);
   }
 
 protected:

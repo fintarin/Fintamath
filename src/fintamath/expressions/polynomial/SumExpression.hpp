@@ -11,8 +11,8 @@ public:
   // TODO!!! reimplement
   // ArgumentPtr negate() const override;
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::SumExpression;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::SumExpression);
   }
 
 protected:

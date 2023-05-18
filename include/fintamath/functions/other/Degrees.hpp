@@ -13,8 +13,8 @@ public:
     return "degrees";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::Degrees;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::Degrees);
   }
 
 protected:

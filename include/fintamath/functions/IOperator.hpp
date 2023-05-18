@@ -36,13 +36,13 @@ public:
   static std::unique_ptr<IOperator> parse(const std::string &parsedStr,
                                           IOperator::Priority priority = IOperator::Priority::Any) {
     Parser::Comparator<const std::unique_ptr<IOperator> &> comp = [priority](const std::unique_ptr<IOperator> &oper) {
-      return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
+      return size_t(priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority);
     };
     return Parser::parse<std::unique_ptr<IOperator>>(getParser(), comp, parsedStr);
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectType::IOperator;
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::IOperator);
   }
 
 private:

@@ -18,6 +18,10 @@ public:
     return "test";
   }
 
+  static MathObjectTypeId getTypeIdStatic() {
+    return size_t(getBoundTypeIds().at(MathObjectTypeId(MathObjectType::IInteger))) - 1;
+  }
+
 protected:
   TestInteger &mod(const TestInteger & /* rhs */) override {
     return *this;
