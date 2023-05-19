@@ -13,7 +13,7 @@ namespace {
 class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
 public:
   static MathObjectTypeId getTypeIdStatic() {
-    return size_t(getBoundTypeIds().at(MathObjectTypeId(MathObjectType::IArithmetic))) - 1;
+    return size_t(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IArithmetic))) - 30;
   }
 
 protected:

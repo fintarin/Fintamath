@@ -4,13 +4,14 @@
 
 #include "fintamath/core/CoreTraits.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
-#include "fintamath/meta/Converter.hpp"
 
 #define REQUIRE_MATH_OBJECTS(To, From)                                                                                 \
   template <typename To, typename From,                                                                                \
             typename = std::enable_if_t<std::is_base_of_v<IMathObject, To> && std::is_base_of_v<IMathObject, From>>>
 
 namespace fintamath {
+
+class IMathObject;
 
 REQUIRE_MATH_OBJECTS(To, From) bool is(const From &from) {
   if constexpr (std::is_base_of_v<To, From>) {
@@ -103,23 +104,6 @@ REQUIRE_MATH_OBJECTS(To, From) std::shared_ptr<const To> cast(const std::shared_
 
 REQUIRE_MATH_OBJECTS(To, From) std::shared_ptr<To> cast(const std::shared_ptr<From> &from) {
   return std::const_pointer_cast<To>(cast<To>(std::const_pointer_cast<const From>(from)));
-}
-
-REQUIRE_MATH_OBJECTS(To, From) std::unique_ptr<IMathObject> convert(const To &to, const From &from) {
-  return Converter::convert(to, from);
-}
-
-REQUIRE_MATH_OBJECTS(To, From) To convert(const From &from) {
-  static_assert(IsConvertible<To>::value, "To must be Convertible");
-
-  static const To to;
-  auto res = convert(to, from);
-
-  if (!res) {
-    throw std::bad_cast();
-  }
-
-  return cast<To>(*res);
 }
 
 }

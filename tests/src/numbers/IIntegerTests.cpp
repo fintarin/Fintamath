@@ -11,15 +11,13 @@ using namespace fintamath;
 namespace {
 
 class TestInteger : public IIntegerCRTP<TestInteger> {
-  FINTAMATH_CONVERTIBLE()
-
 public:
   std::string toString() const override {
     return "test";
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return size_t(getBoundTypeIds().at(MathObjectTypeId(MathObjectType::IInteger))) - 1;
+    return size_t(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IInteger))) - 10;
   }
 
 protected:
@@ -89,16 +87,29 @@ protected:
 };
 
 class TestIntegerConvertible : public TestInteger {
+  FINTAMATH_CONVERTIBLE()
+
 public:
   TestIntegerConvertible() : TestInteger() {
   }
 
   TestIntegerConvertible(const Integer &rhs) : TestIntegerConvertible() {
   }
+
+  static MathObjectTypeId getTypeIdStatic() {
+    return TestInteger::getTypeIdStatic() + 1;
+  }
+
+  MathObjectTypeId getTypeId() const override {
+    return getTypeIdStatic();
+  }
 };
 
 struct TestIntegerConvertableConfig {
   TestIntegerConvertableConfig() {
+    MathObjectBoundTypeIds::reg(TestInteger::getTypeIdStatic(),
+                                MathObjectBoundTypeIds::get().at(IInteger::getTypeIdStatic()));
+
     Converter::add<TestIntegerConvertible, TestIntegerConvertible>(
         [](const TestIntegerConvertible & /*type*/, const TestIntegerConvertible &value) {
           return std::make_unique<TestIntegerConvertible>(value);

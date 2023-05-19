@@ -4,7 +4,7 @@
 #include <map>
 #include <tuple>
 
-#include "fintamath/meta/TypeInfo.hpp"
+#include "fintamath/core/CoreUtils.hpp"
 
 namespace fintamath {
 
@@ -14,25 +14,30 @@ class MultiMethod;
 template <typename Res, typename... ArgsBase>
 class MultiMethod<Res(ArgsBase...)> {
   template <typename>
-  using ArgId = TypeInfo;
+  using ArgId = MathObjectTypeId;
+
   using CallbackId = std::tuple<ArgId<ArgsBase>...>;
+
   using Callback = std::function<Res(const ArgsBase &...)>;
+
   using Callbacks = std::map<CallbackId, Callback>;
 
 public:
   template <typename... Args, typename Func>
   void add(const Func &func) {
-    callbacks[CallbackId(TypeInfo(typeid(Args))...)] = [func](const ArgsBase &...args) {
-      return func(dynamic_cast<const Args &>(args)...);
+    callbacks[CallbackId(Args::getTypeIdStatic()...)] = [func](const ArgsBase &...args) {
+      return func(cast<Args>(args)...);
     };
   }
 
   template <typename... Args>
   Res operator()(const Args &...args) const {
-    auto it = callbacks.find(CallbackId(TypeInfo(typeid(args))...));
+    auto it = callbacks.find(CallbackId(args.getTypeId()...));
+
     if (it != callbacks.end()) {
       return it->second(args...);
     }
+
     return {};
   }
 
