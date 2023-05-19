@@ -291,9 +291,7 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IExpress
       }
     }
     else if (*lhsFunc == *rhsFunc) {
-      if (int res = comparatorChildren(lhsChildren, rhsChildren); res != 0) {
-        return res;
-      }
+      return comparatorChildren(lhsChildren, rhsChildren);
     }
   }
 
