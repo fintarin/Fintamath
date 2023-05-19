@@ -484,7 +484,7 @@ ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpres
   res->setChildren(newChildren);
 
   if (shouldSimplify) {
-    auto resSimpl = std::dynamic_pointer_cast<const IMathObject>(res);
+    auto resSimpl = std::static_pointer_cast<const IMathObject>(res);
     simplifyChild(resSimpl);
     return preciseRec(resSimpl, precision, false);
   }
