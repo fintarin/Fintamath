@@ -4,6 +4,11 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
+#define REQUIRE_ARITHMETICS(Lhs, Rhs)                                                                                  \
+  template <typename Lhs, typename Rhs,                                                                                \
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, Lhs> && std::is_convertible_v<Rhs, Lhs> &&      \
+                                        !std::is_same_v<Lhs, Rhs>>>
+
 namespace fintamath {
 
 class IArithmetic : public IMathObject {
@@ -114,88 +119,54 @@ class IArithmeticCRTP : public IArithmetic {
 #undef FINTAMATH_I_ARITHMETIC_CRTP
 };
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator+=(LhsType &lhs, const RhsType &rhs) {
-  return lhs += LhsType(rhs);
+REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs &operator+=(Lhs &lhs, const Rhs &rhs) {
+  return lhs += Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator-=(LhsType &lhs, const RhsType &rhs) {
-  return lhs -= LhsType(rhs);
+REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs &operator-=(Lhs &lhs, const Rhs &rhs) {
+  return lhs -= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator*=(LhsType &lhs, const RhsType &rhs) {
-  return lhs *= LhsType(rhs);
+REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs &operator*=(Lhs &lhs, const Rhs &rhs) {
+  return lhs *= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator/=(LhsType &lhs, const RhsType &rhs) {
-  return lhs /= LhsType(rhs);
+REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs &operator/=(Lhs &lhs, const Rhs &rhs) {
+  return lhs /= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-LhsType operator+(const LhsType &lhs, const RhsType &rhs) {
-  return lhs + LhsType(rhs);
+REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs operator+(const Lhs &lhs, const Rhs &rhs) {
+  return lhs + Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-RhsType operator+(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) + rhs;
+REQUIRE_ARITHMETICS(Rhs, Lhs) Rhs operator+(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) + rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-LhsType operator-(const LhsType &lhs, const RhsType &rhs) {
-  return lhs - LhsType(rhs);
+REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs operator-(const Lhs &lhs, const Rhs &rhs) {
+  return lhs - Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-RhsType operator-(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) - rhs;
+REQUIRE_ARITHMETICS(Rhs, Lhs) Rhs operator-(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) - rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-LhsType operator*(const LhsType &lhs, const RhsType &rhs) {
-  return lhs * LhsType(rhs);
+REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs operator*(const Lhs &lhs, const Rhs &rhs) {
+  return lhs * Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-RhsType operator*(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) * rhs;
+REQUIRE_ARITHMETICS(Rhs, Lhs) Rhs operator*(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) * rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-LhsType operator/(const LhsType &lhs, const RhsType &rhs) {
-  return lhs / LhsType(rhs);
+REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs operator/(const Lhs &lhs, const Rhs &rhs) {
+  return lhs / Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IArithmetic, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-RhsType operator/(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) / rhs;
+REQUIRE_ARITHMETICS(Rhs, Lhs) Rhs operator/(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) / rhs;
 }
 
 }
+
+#undef REQUIRE_ARITHMETICS
