@@ -1,6 +1,6 @@
 #include "fintamath/core/IArithmetic.hpp"
 
-#include "fintamath/meta/MultiMethod.hpp"
+#include "fintamath/core/MultiMethod.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 

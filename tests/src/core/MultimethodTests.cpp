@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/meta/MultiMethod.hpp"
+#include "fintamath/core/MultiMethod.hpp"
 
 using namespace fintamath;
 

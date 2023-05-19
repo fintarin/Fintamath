@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/meta/MultiMethod.hpp"
+#include "fintamath/core/MultiMethod.hpp"
 
 #define REQUIRE_MATH_OBJECTS(To, From)                                                                                 \
   template <typename To, typename From,                                                                                \

@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "fintamath/core/Converter.hpp"
 #include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/meta/Converter.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 #define REQUIRE_MATH_OBJECTS(Lhs, Rhs)                                                                                 \
