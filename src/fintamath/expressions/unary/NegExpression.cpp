@@ -48,28 +48,29 @@ ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const A
     return {};
   }
 
+  ArgumentPtr res;
+
   if (is<Add>(rhsExpr->getFunction())) {
     ArgumentsPtrVector children = rhsExpr->getChildren();
+
     for (auto &child : children) {
       child = makeExpr(Neg(), child);
     }
 
-    return makeExpr(Add(), children)->toMinimalObject();
+    res = makeExpr(Add(), children)->toMinimalObject();
   }
-
-  if (is<Mul>(rhsExpr->getFunction())) {
+  else if (is<Mul>(rhsExpr->getFunction())) {
     ArgumentsPtrVector children = rhsExpr->getChildren();
     children.emplace_back(std::make_shared<Integer>(-1));
-    return makeExpr(Mul(), children)->toMinimalObject();
+    res = makeExpr(Mul(), children)->toMinimalObject();
   }
-
-  if (is<Log>(rhsExpr->getFunction())) {
+  else if (is<Log>(rhsExpr->getFunction())) {
     ArgumentsPtrVector children = rhsExpr->getChildren();
-    return makeExpr(Log(), children.front(), makeExpr(Div(), std::make_shared<Integer>(1), children.back()))
-        ->toMinimalObject();
+    res = makeExpr(Log(), children.front(), makeExpr(Div(), std::make_shared<Integer>(1), children.back()))
+              ->toMinimalObject();
   }
 
-  return {};
+  return res;
 }
 
 ArgumentPtr NegExpression::simplifyNestedNeg(const IFunction & /*func*/, const ArgumentPtr &rhs) {
