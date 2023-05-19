@@ -17,6 +17,7 @@ TEST(CoreUtilsTests, isTest) {
 
   EXPECT_TRUE(is<IArithmetic>(INT.clone().get()));
   EXPECT_FALSE(is<IArithmetic>(E().clone().get()));
+  EXPECT_FALSE(is<IArithmetic>(std::unique_ptr<IArithmetic>().get()));
 
   EXPECT_TRUE(is<IArithmetic>(INT.clone()));
   EXPECT_FALSE(is<IArithmetic>(E().clone()));
