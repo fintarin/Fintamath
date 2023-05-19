@@ -2,6 +2,11 @@
 
 #include "fintamath/numbers/INumber.hpp"
 
+#define REQUIRE_INTEGERS(Lhs, Rhs)                                                                                     \
+  template <typename Lhs, typename Rhs,                                                                                \
+            typename = std::enable_if_t<std::is_base_of_v<IInteger, Lhs> && std::is_convertible_v<Rhs, Lhs> &&         \
+                                        !std::is_same_v<Lhs, Rhs>>>
+
 namespace fintamath {
 
 class IInteger : public INumber {
@@ -97,130 +102,78 @@ class IIntegerCRTP : public IInteger {
 #undef FINTAMATH_I_INTEGER_CRTP
 };
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator%=(LhsType &lhs, const RhsType &rhs) {
-  return lhs %= LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs &operator%=(Lhs &lhs, const Rhs &rhs) {
+  return lhs %= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType operator%(const LhsType &lhs, const RhsType &rhs) {
-  return lhs % LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs operator%(const Lhs &lhs, const Rhs &rhs) {
+  return lhs % Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, RhsType> && std::is_convertible_v<LhsType, RhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-RhsType operator%(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) % rhs;
+REQUIRE_INTEGERS(Rhs, Lhs) Rhs operator%(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) % rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator&=(LhsType &lhs, const RhsType &rhs) {
-  return lhs &= LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs &operator&=(Lhs &lhs, const Rhs &rhs) {
+  return lhs &= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType operator&(const LhsType &lhs, const RhsType &rhs) {
-  return lhs & LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs operator&(const Lhs &lhs, const Rhs &rhs) {
+  return lhs & Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, RhsType> && std::is_convertible_v<LhsType, RhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-RhsType operator&(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) & rhs;
+REQUIRE_INTEGERS(Rhs, Lhs) Rhs operator&(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) & rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator|=(LhsType &lhs, const RhsType &rhs) {
-  return lhs |= LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs &operator|=(Lhs &lhs, const Rhs &rhs) {
+  return lhs |= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType operator|(const LhsType &lhs, const RhsType &rhs) {
-  return lhs | LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs operator|(const Lhs &lhs, const Rhs &rhs) {
+  return lhs | Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, RhsType> && std::is_convertible_v<LhsType, RhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-RhsType operator|(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) | rhs;
+REQUIRE_INTEGERS(Rhs, Lhs) Rhs operator|(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) | rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator^=(LhsType &lhs, const RhsType &rhs) {
-  return lhs ^= LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs &operator^=(Lhs &lhs, const Rhs &rhs) {
+  return lhs ^= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType operator^(const LhsType &lhs, const RhsType &rhs) {
-  return lhs ^ LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs operator^(const Lhs &lhs, const Rhs &rhs) {
+  return lhs ^ Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, RhsType> && std::is_convertible_v<LhsType, RhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-RhsType operator^(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) ^ rhs;
+REQUIRE_INTEGERS(Rhs, Lhs) Rhs operator^(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) ^ rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator<<=(LhsType &lhs, const RhsType &rhs) {
-  return lhs <<= LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs &operator<<=(Lhs &lhs, const Rhs &rhs) {
+  return lhs <<= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType operator<<(const LhsType &lhs, const RhsType &rhs) {
-  return lhs << LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs operator<<(const Lhs &lhs, const Rhs &rhs) {
+  return lhs << Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, RhsType> && std::is_convertible_v<LhsType, RhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-RhsType operator<<(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) << rhs;
+REQUIRE_INTEGERS(Rhs, Lhs) Rhs operator<<(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) << rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType &operator>>=(LhsType &lhs, const RhsType &rhs) {
-  return lhs >>= LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs &operator>>=(Lhs &lhs, const Rhs &rhs) {
+  return lhs >>= Lhs(rhs);
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, LhsType> && std::is_convertible_v<RhsType, LhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-LhsType operator>>(const LhsType &lhs, const RhsType &rhs) {
-  return lhs >> LhsType(rhs);
+REQUIRE_INTEGERS(Lhs, Rhs) Lhs operator>>(const Lhs &lhs, const Rhs &rhs) {
+  return lhs >> Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IInteger, RhsType> && std::is_convertible_v<LhsType, RhsType> &&
-                                      !std::is_same_v<LhsType, RhsType>>>
-RhsType operator>>(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) >> rhs;
+REQUIRE_INTEGERS(Rhs, Lhs) Rhs operator>>(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) >> rhs;
 }
 
 }
+
+#undef REQUIRE_INTEGERS

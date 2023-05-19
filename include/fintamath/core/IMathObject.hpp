@@ -10,6 +10,11 @@
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/parser/Parser.hpp"
 
+#define REQUIRE_MATH_OBJECTS(Lhs, Rhs)                                                                                 \
+  template <typename Lhs, typename Rhs,                                                                                \
+            typename = std::enable_if_t<std::is_base_of_v<IMathObject, Lhs> && std::is_convertible_v<Rhs, Lhs> &&      \
+                                        !std::is_same_v<Lhs, Rhs>>>
+
 namespace fintamath {
 
 class IMathObject {
@@ -63,32 +68,20 @@ class IMathObjectCRTP : public IMathObject {
 #undef FINTAMATH_I_MATH_OBJECT_CRTP
 };
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IMathObject, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator==(const LhsType &lhs, const RhsType &rhs) {
-  return lhs == LhsType(rhs);
+REQUIRE_MATH_OBJECTS(Lhs, Rhs) bool operator==(const Lhs &lhs, const Rhs &rhs) {
+  return lhs == Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IMathObject, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator==(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) == rhs;
+REQUIRE_MATH_OBJECTS(Rhs, Lhs) bool operator==(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) == rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IMathObject, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator!=(const LhsType &lhs, const RhsType &rhs) {
-  return lhs != LhsType(rhs);
+REQUIRE_MATH_OBJECTS(Lhs, Rhs) bool operator!=(const Lhs &lhs, const Rhs &rhs) {
+  return lhs != Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IMathObject, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator!=(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) != rhs;
+REQUIRE_MATH_OBJECTS(Rhs, Lhs) bool operator!=(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) != rhs;
 }
 
 inline std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {
@@ -96,3 +89,5 @@ inline std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {
 }
 
 }
+
+#undef REQUIRE_MATH_OBJECTS

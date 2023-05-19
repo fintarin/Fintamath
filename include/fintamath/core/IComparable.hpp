@@ -4,6 +4,11 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
+#define REQUIRE_COMPARABLES(Lhs, Rhs)                                                                                  \
+  template <typename Lhs, typename Rhs,                                                                                \
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, Lhs> && std::is_convertible_v<Rhs, Lhs> &&      \
+                                        !std::is_same_v<Lhs, Rhs>>>
+
 namespace fintamath {
 
 class IComparable : public IArithmetic {
@@ -53,60 +58,38 @@ class IComparableCRTP : public IComparable {
 #undef FINTAMATH_I_COMPARABLE_CRTP
 };
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IComparable, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator<(const LhsType &lhs, const RhsType &rhs) {
-  return lhs < LhsType(rhs);
+REQUIRE_COMPARABLES(Lhs, Rhs) bool operator<(const Lhs &lhs, const Rhs &rhs) {
+  return lhs < Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IComparable, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator<(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) < rhs;
+REQUIRE_COMPARABLES(Rhs, Lhs) bool operator<(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) < rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IComparable, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator>(const LhsType &lhs, const RhsType &rhs) {
-  return lhs > LhsType(rhs);
+REQUIRE_COMPARABLES(Lhs, Rhs) bool operator>(const Lhs &lhs, const Rhs &rhs) {
+  return lhs > Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IComparable, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator>(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) > rhs;
+REQUIRE_COMPARABLES(Rhs, Lhs) bool operator>(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) > rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IComparable, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator<=(const LhsType &lhs, const RhsType &rhs) {
-  return lhs <= LhsType(rhs);
+REQUIRE_COMPARABLES(Lhs, Rhs) bool operator<=(const Lhs &lhs, const Rhs &rhs) {
+  return lhs <= Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IComparable, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator<=(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) <= rhs;
+REQUIRE_COMPARABLES(Rhs, Lhs) bool operator<=(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) <= rhs;
 }
 
-template <typename LhsType, typename RhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IComparable, LhsType> &&
-                                      std::is_convertible_v<RhsType, LhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator>=(const LhsType &lhs, const RhsType &rhs) {
-  return lhs >= LhsType(rhs);
+REQUIRE_COMPARABLES(Lhs, Rhs) bool operator>=(const Lhs &lhs, const Rhs &rhs) {
+  return lhs >= Lhs(rhs);
 }
 
-template <typename RhsType, typename LhsType,
-          typename = std::enable_if_t<std::is_base_of_v<IComparable, RhsType> &&
-                                      std::is_convertible_v<LhsType, RhsType> && !std::is_same_v<LhsType, RhsType>>>
-bool operator>=(const LhsType &lhs, const RhsType &rhs) {
-  return RhsType(lhs) >= rhs;
+REQUIRE_COMPARABLES(Rhs, Lhs) bool operator>=(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) >= rhs;
 }
 
 }
+
+#undef REQUIRE_COMPARABLES

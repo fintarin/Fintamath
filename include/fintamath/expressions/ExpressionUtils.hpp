@@ -32,7 +32,7 @@ extern std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const
 
 extern std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
 
-template <typename T, typename = std::enable_if_t<(std::is_convertible_v<T, ArgumentPtr>)>>
+template <typename T, typename = std::enable_if_t<std::is_convertible_v<T, ArgumentPtr>>>
 ArgumentPtr toArgumentPtr(T &arg) {
   if constexpr (std::is_copy_constructible_v<T>) {
     return arg;
