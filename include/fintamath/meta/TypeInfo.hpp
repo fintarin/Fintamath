@@ -19,10 +19,6 @@ private:
 inline TypeInfo::TypeInfo(const std::type_info &tinfo) : info(tinfo) {
 }
 
-inline bool operator==(const TypeInfo &lhs, const TypeInfo &rhs) {
-  return lhs.info == rhs.info;
-}
-
 inline bool operator<(const TypeInfo &lhs, const TypeInfo &rhs) {
   return lhs.info.before(rhs.info);
 }
