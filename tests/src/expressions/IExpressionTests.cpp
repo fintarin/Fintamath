@@ -6,6 +6,7 @@
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
+#include "fintamath/functions/trigonometry/Sin.hpp"
 
 using namespace fintamath;
 
@@ -89,4 +90,12 @@ TEST(IExpressionTests, equalsTest) {
 
 TEST(IExpressionTests, getTypeIdTest) {
   EXPECT_EQ(IExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IExpression));
+}
+
+TEST(IExpressionTests, arithmeticTest) {
+  EXPECT_THROW(*makeExpr(Sin(), Integer(1).clone()) + *makeExpr(Sin(), Integer(1).clone()), InvalidInputException);
+  EXPECT_THROW(*makeExpr(Sin(), Integer(1).clone()) - *makeExpr(Sin(), Integer(1).clone()), InvalidInputException);
+  EXPECT_THROW(*makeExpr(Sin(), Integer(1).clone()) * *makeExpr(Sin(), Integer(1).clone()), InvalidInputException);
+  EXPECT_THROW(*makeExpr(Sin(), Integer(1).clone()) / *makeExpr(Sin(), Integer(1).clone()), InvalidInputException);
+  EXPECT_THROW(-(*makeExpr(Sin(), Integer(1).clone())), InvalidInputException);
 }
