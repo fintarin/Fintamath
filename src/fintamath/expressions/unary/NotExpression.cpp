@@ -52,32 +52,32 @@ ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, co
     return {};
   }
 
+  ArgumentPtr res;
+
   if (const auto op = cast<IOperator>(rhsExpr->getFunction());
       op && op->getOperatorPriority() == IOperator::Priority::Comparison) {
-    return makeExpr(*cast<IFunction>(getLogicOppositeFunction(*op)), rhsExpr->getChildren());
+    res = makeExpr(*cast<IFunction>(getLogicOppositeFunction(*op)), rhsExpr->getChildren());
   }
-
-  if (is<Or>(rhsExpr->getFunction())) {
+  else if (is<Or>(rhsExpr->getFunction())) {
     ArgumentsPtrVector children = rhsExpr->getChildren();
 
     for (auto &child : children) {
       child = makeExpr(Not(), child);
     }
 
-    return makeExpr(And(), children)->toMinimalObject();
+    res = makeExpr(And(), children)->toMinimalObject();
   }
-
-  if (is<And>(rhsExpr->getFunction())) {
+  else if (is<And>(rhsExpr->getFunction())) {
     ArgumentsPtrVector children = rhsExpr->getChildren();
 
     for (auto &child : children) {
       child = makeExpr(Not(), child);
     }
 
-    return makeExpr(Or(), children)->toMinimalObject();
+    res = makeExpr(Or(), children)->toMinimalObject();
   }
 
-  return {};
+  return res;
 }
 
 ArgumentPtr NotExpression::simplifyNestedNot(const IFunction & /*func*/, const ArgumentPtr &rhs) {
