@@ -347,6 +347,8 @@ TEST(ExpressionTests, stringConstructorTest) {
             "asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3)) + b^4");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
   EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "1/100 a! a!! a!!! a");
+  // EXPECT_EQ(Expression("(x + y^(3))^(2) * (sin(x))/(ln(2))  /  x^(2) - (2 sin(x) y^(3))/(x ln(2))").toString(),
+  //           "TODO"); // TODO! fix sort
 
   EXPECT_EQ(Expression("a=a").toString(), "True");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "True");
