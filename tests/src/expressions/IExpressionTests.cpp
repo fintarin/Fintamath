@@ -60,10 +60,6 @@ TEST(IExpressionTests, setChildrenTest) {
   // TODO: implement more tests
 }
 
-TEST(IExpressionTests, getVariablesUnsortedTest) {
-  // TODO: implement
-}
-
 TEST(IExpressionTests, getVariablesTest) {
   auto expr = cast<IExpression>(Expression("x^2+y^2+a").clone());
   auto vars = expr->getVariables();

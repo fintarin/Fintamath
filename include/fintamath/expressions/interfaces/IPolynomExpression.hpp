@@ -74,41 +74,54 @@ private:
    * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorPolynomsAndBinaryFunctions(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
-  /**
-   * @brief
-   *
-   * @param lhsExpr
-   * @param rhsExpr
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorFunctions(const std::shared_ptr<const IExpression> &lhsExpr,
-                          const std::shared_ptr<const IExpression> &rhsExpr) const;
-
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorExpressionAndNonExpression(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
   int comparatorNonExpressions(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorPolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
+                         const std::shared_ptr<const IPolynomExpression> &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorPolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
+                                     const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs, const ArgumentPtr &rhs) const;
+
+  /**
+   * @brief
+   *
+   * @param lhs
+   * @param rhs
+   * @return -1 if we should swap the arguments
+   * @return  1 if we should not swap the arguments
+   * @return  0 if this comparator fails
+   */
+  int comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
+                            const std::shared_ptr<const IExpression> &rhs) const;
 
   /**
    * @brief
@@ -120,34 +133,21 @@ private:
    * @return  0 if this comparator fails
    */
   int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
-                         bool ignoreUnaryIfPossible = false) const;
+                         bool ignoreUnaryIfPossible) const;
 
   /**
    * @brief
    *
-   * @param lhsChildren
-   * @param rhsChildren
+   * @param lhsExpr
+   * @param rhsExpr
    * @return -1 if we should swap the arguments
    * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorChildren(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool ignoreUnaryIfPossible = false) const;
+  static int comparatorFunctions(const std::shared_ptr<const IFunction> &lhs,
+                                 const std::shared_ptr<const IFunction> &rhs);
 
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  static int comparatorVariables(const std::vector<Variable> &lhsVars, const std::vector<Variable> &rhsVars,
-                                 bool isTermsOrderInversed);
-
-  static ArgumentPtr findFirstPolynomChild(const ArgumentPtr &rhs);
-
-  static std::vector<Variable> getVariables(const ArgumentPtr &rhs);
+  // static ArgumentPtr findFirstPolynomChild(const ArgumentPtr &rhs);
 
 protected:
   std::shared_ptr<IFunction> func;

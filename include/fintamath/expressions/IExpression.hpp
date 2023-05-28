@@ -17,8 +17,6 @@ public:
 
   virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
 
-  virtual std::vector<Variable> getVariablesUnsorted() const;
-
   std::vector<Variable> getVariables() const;
 
   virtual void setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals);
@@ -57,8 +55,6 @@ protected:
 
 private:
   static void simplifyConstant(ArgumentPtr &child);
-
-  static bool isVariableUnique(const std::vector<Variable> &vars, const Variable &var);
 
 private:
   static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &getParser();
