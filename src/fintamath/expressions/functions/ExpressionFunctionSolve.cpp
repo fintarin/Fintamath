@@ -50,7 +50,7 @@ Expression solve(const Expression &rhs) {
       }
 
       auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentsPtrVector powerRates = getVariablePowerRates(compExpr->getChildren()[0], var);
+      ArgumentsPtrVector powerRates = getVariablePowerRates(compExpr->getChildren().front(), var);
       ArgumentsPtrVector roots;
 
       switch (powerRates.size()) {
@@ -102,7 +102,7 @@ std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Va
 
     if (is<Pow>(expr->getFunction())) {
       if (const auto elemVar = cast<Variable>(expr->getChildren().front()); elemVar && *elemVar == var) {
-        return cast<INumber>(expr->getChildren()[1]);
+        return cast<INumber>(expr->getChildren().back());
       }
     }
   }
@@ -111,16 +111,13 @@ std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Va
 }
 
 std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var) {
-  std::shared_ptr<const INumber> res;
-
   for (const auto &child : elem->getChildren()) {
     if (auto powValue = getElementPower(child, var); *powValue != Integer(0)) {
-      res = powValue;
-      break;
+      return powValue;
     }
   }
 
-  return res;
+  return std::make_shared<Integer>(0);
 }
 
 ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {

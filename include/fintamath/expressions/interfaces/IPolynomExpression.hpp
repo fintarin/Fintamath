@@ -138,7 +138,7 @@ private:
   int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
                          bool ignoreUnaryIfPossible) const;
 
-  int comparatorChildrenByVars(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
+  int comparatorFunctionChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
 
   int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
   /**
