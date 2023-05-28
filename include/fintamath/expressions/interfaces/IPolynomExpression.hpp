@@ -22,8 +22,7 @@ public:
   }
 
 protected:
-  using SimplifyFunction =
-      std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)>;
+  using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &, const ArgumentPtr &)>;
 
   using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
 
