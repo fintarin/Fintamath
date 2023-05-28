@@ -45,7 +45,7 @@ Expression solve(const Expression &rhs) {
       }
     }
     if (is<Eqv>(compExpr->getFunction())) {
-      if (compExpr->getVariablesUnsorted().size() != 1) {
+      if (compExpr->getVariables().size() != 1) {
         return rhs;
       }
 

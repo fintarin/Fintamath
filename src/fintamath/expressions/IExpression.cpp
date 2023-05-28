@@ -10,33 +10,24 @@
 
 namespace fintamath {
 
-std::vector<Variable> IExpression::getVariablesUnsorted() const {
+std::vector<Variable> IExpression::getVariables() const {
   std::vector<Variable> vars;
 
   for (const auto &child : getChildren()) {
-    if (auto var = cast<Variable>(child); var && isVariableUnique(vars, *var)) {
+    if (auto var = cast<Variable>(child)) {
       vars.emplace_back(*var);
     }
     else if (auto childExpr = cast<IExpression>(child)) {
-      std::vector<Variable> childVars = childExpr->getVariablesUnsorted();
-
-      for (const auto &childVar : childVars) {
-        if (isVariableUnique(vars, childVar)) {
-          vars.emplace_back(childVar);
-        }
-      }
+      std::vector<Variable> childVars = childExpr->getVariables();
+      vars.insert(vars.end(), childVars.begin(), childVars.end());
     }
   }
 
-  return vars;
-}
-
-std::vector<Variable> IExpression::getVariables() const {
-  std::vector<Variable> vars = getVariablesUnsorted();
-
-  std::sort(vars.begin(), vars.end(), [](const Variable &lhs, const Variable &rhs) {
-    return lhs.toString() < rhs.toString();
-  });
+  vars.erase(std::unique(vars.begin(), vars.end(),
+                         [](const Variable &lhs, const Variable &rhs) {
+                           return lhs == rhs;
+                         }),
+             vars.end());
 
   return vars;
 }
@@ -164,10 +155,6 @@ void IExpression::simplifyConstant(ArgumentPtr &child) {
       child = constVal;
     }
   }
-}
-
-bool IExpression::isVariableUnique(const std::vector<Variable> &vars, const Variable &var) {
-  return std::find(vars.begin(), vars.end(), var) == vars.end();
 }
 
 }
