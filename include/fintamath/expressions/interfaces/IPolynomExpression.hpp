@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/expressions/IExpression.hpp"
+#include <stack>
 
 namespace fintamath {
 
@@ -25,6 +26,8 @@ protected:
       std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild)>;
 
   using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
+
+  using ExprTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
 
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
@@ -135,6 +138,9 @@ private:
   int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
                          bool ignoreUnaryIfPossible) const;
 
+  int comparatorChildrenByVars(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
+
+  int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
   /**
    * @brief
    *
@@ -148,6 +154,8 @@ private:
                                  const std::shared_ptr<const IFunction> &rhs);
 
   // static ArgumentPtr findFirstPolynomChild(const ArgumentPtr &rhs);
+
+  std::shared_ptr<const Variable> getNextVar(ExprTreePathStack &stack) const;
 
 protected:
   std::shared_ptr<IFunction> func;
