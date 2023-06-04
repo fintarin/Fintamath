@@ -1,9 +1,9 @@
-.cache/*
-.vscode/*
-[Bb]uild/*
+.cache
+.vscode
+[Bb]uild
 CMakeCache.*
-CMakeFiles/*
-[Tt]esting/*
+CMakeFiles
+[Tt]esting
 
 # Prerequisites
 *.d
