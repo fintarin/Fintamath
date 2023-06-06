@@ -10,6 +10,10 @@
 using namespace fintamath;
 
 TEST(FintamathTests, fintamathTests) {
+  EXPECT_EQ(Expression("3 log(3, 4) + log(2, 3)").toString(), "a + b + E + Pi");
+  EXPECT_EQ(Expression("3log(2x, 3) + log(3, 4)").toString(), "a + b + E + Pi");
+  EXPECT_EQ(Expression("2^(a + 2) c + b^(a + 2)").toString(), "a + b + E + Pi");
+
   Expression expr;
 
   expr = sum(e(), pi(), Variable("a"), Variable("b"));

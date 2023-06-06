@@ -190,6 +190,7 @@ void IPolynomExpression::setChildren(const ArgumentsPtrVector &childVect) {
 
 void IPolynomExpression::sort() {
   std::sort(children.begin(), children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+    int res = comparator(lhs, rhs);
     return comparator(lhs, rhs) < 0;
   });
 }
@@ -267,7 +268,11 @@ int IPolynomExpression::comparatorPolynoms(const std::shared_ptr<const IPolynomE
     return res;
   }
 
-  if (int res = comparatorVariables(lhs, rhs); res != 0) {
+  if (int res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
+    return res;
+  }
+
+  if (int res = comparatorChildren(lhs->getChildren(), rhs->getChildren(), true, false); res != 0) {
     return res;
   }
 
@@ -276,15 +281,12 @@ int IPolynomExpression::comparatorPolynoms(const std::shared_ptr<const IPolynomE
 
 int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
                                                        const ArgumentPtr &rhs) const {
-  if (int res = comparatorVariables(lhs, rhs); res != 0) {
+
+  if (int res = comparatorChildren(lhs->getChildren(), {rhs}, true); res != 0) {
     return res;
   }
 
-  if (!is<IExpression>(rhs)) {
-    return comparatorExpressionAndNonExpression(lhs, rhs);
-  }
-
-  if (int res = comparatorChildren(lhs->getChildren(), {rhs}, true); res != 0) {
+  if (int res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
     return res;
   }
 
@@ -295,8 +297,7 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
                                                              const ArgumentPtr &rhs) const {
 
   if (auto oper = cast<IOperator>(lhs->getFunction());
-      oper && oper->getOperatorPriority() <= IOperator::Priority::PrefixUnary &&
-      !is<IExpression>(lhs->getChildren().front())) {
+      oper && oper->getOperatorPriority() <= IOperator::Priority::PrefixUnary) {
 
     if (int res = comparator(lhs->getChildren().front(), rhs); res != 0) {
       return res;
@@ -305,12 +306,8 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
     return 1;
   }
 
-  if (auto res = comparatorVariables(lhs, rhs); res != 0) {
+  if (auto res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
     return res;
-  }
-
-  if (!hasVariables(lhs) && is<Variable>(rhs)) {
-    return isTermsOrderInversed() ? -1 : 1;
   }
 
   return !isTermsOrderInversed() ? -1 : 1;
@@ -318,13 +315,16 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
 
 int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
                                               const std::shared_ptr<const IExpression> &rhs) const {
-  // TODO: compare variables in functions here
 
   if (int res = comparatorFunctionChildren(lhs->getChildren(), rhs->getChildren()); res != 0) {
     return res;
   }
 
-  if (int res = comparatorChildren(lhs->getChildren(), rhs->getChildren(), false); res != 0) {
+  if (int res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
+    return res;
+  }
+
+  if (int res = comparatorChildren(lhs->getChildren(), rhs->getChildren(), false, false); res != 0) {
     return res;
   }
 
@@ -357,7 +357,8 @@ std::shared_ptr<const Variable> IPolynomExpression::getNextVar(ExprTreePathStack
   return {};
 }
 
-int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
+                                            bool isTermsOrderInversed) const {
   ExprTreePathStack lhsPath;
   ExprTreePathStack rhsPath;
 
@@ -380,8 +381,12 @@ int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const Argume
     rhsVar = var;
   }
 
-  if (!lhsVar || !rhsVar) {
-    return 0;
+  if (lhsVar && !rhsVar) {
+    return !isTermsOrderInversed ? -1 : 1;
+  }
+
+  if (!lhsVar && rhsVar) {
+    return isTermsOrderInversed ? -1 : 1;
   }
 
   while (lhsVar && rhsVar) {
@@ -402,20 +407,7 @@ int IPolynomExpression::comparatorFunctionChildren(const ArgumentsPtrVector &lhs
   }
 
   for (size_t i = 0; i < lhsChildren.size(); i++) {
-    if (int res = comparator(lhsChildren[i], rhsChildren[i]); res != 0) {
-      std::shared_ptr<const INumber> lhsNum = cast<INumber>(lhsChildren[i]);
-      std::shared_ptr<const INumber> rhsNum = cast<INumber>(rhsChildren[i]);
-
-      std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChildren[i]);
-      std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChildren[i]);
-
-      bool lhsNonVar = lhsNum || (lhsExpr && !hasVariables(lhsExpr));
-      bool rhsNonVar = rhsNum || (rhsExpr && !hasVariables(rhsExpr));
-
-      if ((lhsNonVar && !rhsNonVar) || (!lhsNonVar && rhsNonVar)) {
-        return !isTermsOrderInversed() ? res : res * -1;
-      }
-
+    if (int res = comparatorVariables(lhsChildren[i], rhsChildren[i], false); res != 0) {
       return res;
     }
   }
@@ -424,7 +416,7 @@ int IPolynomExpression::comparatorFunctionChildren(const ArgumentsPtrVector &lhs
 }
 
 int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
-                                           bool ignoreUnaryIfPossible) const {
+                                           bool ignoreUnaryIfPossible, bool ignoreChildWithoutVars) const {
 
   size_t lhsStart = 0;
   for (; lhsStart < lhsChildren.size(); lhsStart++) {
@@ -481,9 +473,11 @@ int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren
     return comparatorUnary;
   }
 
-  for (size_t i = 0; i < std::min(lhsChildren.size(), rhsChildren.size()); i++) {
-    if (int res = comparator(lhsChildren[i], rhsChildren[i]); res != 0) {
-      return res;
+  if (!ignoreChildWithoutVars) {
+    for (size_t i = 0; i < std::min(lhsChildren.size(), rhsChildren.size()); i++) {
+      if (int res = comparator(lhsChildren[i], rhsChildren[i]); res != 0) {
+        return res;
+      }
     }
   }
 
