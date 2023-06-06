@@ -190,7 +190,6 @@ void IPolynomExpression::setChildren(const ArgumentsPtrVector &childVect) {
 
 void IPolynomExpression::sort() {
   std::sort(children.begin(), children.end(), [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-    int res = comparator(lhs, rhs);
     return comparator(lhs, rhs) < 0;
   });
 }
@@ -402,8 +401,12 @@ int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const Argume
 
 int IPolynomExpression::comparatorFunctionChildren(const ArgumentsPtrVector &lhsChildren,
                                                    const ArgumentsPtrVector &rhsChildren) const {
-  if (lhsChildren.size() != rhsChildren.size()) {
+  if (lhsChildren.size() < rhsChildren.size()) {
     return isTermsOrderInversed() ? -1 : 1;
+  }
+
+  if (rhsChildren.size() < lhsChildren.size()) {
+    return !isTermsOrderInversed() ? -1 : 1;
   }
 
   for (size_t i = 0; i < lhsChildren.size(); i++) {
