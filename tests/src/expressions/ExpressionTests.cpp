@@ -263,7 +263,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(),
             "1 + (-2 + (3 b)/a)/(b + 2)"); // TODO! make divisions non nested
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(),
-            "1 + (-30/(a b) - 6/a + 3)/(b + 2) + 15/(a b) + 3/a"); // TODO! make divisions non nested
+            "1 + (3 - 30/(a b) - 6/a)/(b + 2) + 15/(a b) + 3/a"); // TODO! make divisions non nested
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
@@ -346,9 +346,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(4 a_1^3 b) + cot(sin(4 a_1 b^3)) + b^4 + asin(sin(a_1^4)) + cos(6 a_1^2 b^2)").toString(),
             "asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3)) + b^4");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
-  EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "1/100 a! a!! a!!! a");
-  // EXPECT_EQ(Expression("(x + y^(3))^(2) * (sin(x))/(ln(2))  /  x^(2) - (2 sin(x) y^(3))/(x ln(2))").toString(),
-  //           "TODO"); // TODO! fix sort
+  EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "1/100 a a! a!! a!!!");
+  EXPECT_EQ(Expression("(x + y^(3))^(2) * (sin(x))/(ln(2))  /  x^(2) - (2 sin(x) y^(3))/(x ln(2))").toString(),
+            "TODO"); // TODO! fix sort
 
   EXPECT_EQ(Expression("a=a").toString(), "True");
   EXPECT_EQ(Expression("a+a=2*a").toString(), "True");
@@ -548,13 +548,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln((10 E)^(2ab)) - 2 a ln(10 E) b").toString(),
             "ln(10^(2 a b) E^(2 a b) 10^(-2 a b) E^(-2 a b))"); // TODO: 0 - mul powers minimization
   EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(),
-            "ln(10^(2 ln(2)) 2^(-2 ln(10 E)) E^(2 ln(2)))"); // TODO: 0 - mul powers minimization
+            "ln(10^0 E^0)"); // TODO: 0 - mul powers minimization
   EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
   EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5 3^x)");
-  EXPECT_EQ(Expression("log(2, 3) + 3log(3, 4)").toString(), "log(2, 3) + 3 log(3, 4)");
+  EXPECT_EQ(Expression("log(2, 3) + 3log(3, 4)").toString(), "3 log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("3log(2x, 3) + log(3, 4)").toString(),
-            "log(3, 4) + 3 log(2 x, 3)"); // TODO! "3 log(2 x, 3) + log(3, 4)"
+            "3 log(2 x, 3) + log(3, 4)");
 
   EXPECT_EQ(Expression("sin(asin(x))").toString(), "x");
   EXPECT_EQ(Expression("cos(acos(x))").toString(), "x");
