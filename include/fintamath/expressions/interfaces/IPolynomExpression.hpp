@@ -135,11 +135,11 @@ private:
    * @return  0 if this comparator fails
    */
   int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
-                         bool ignoreUnaryIfPossible) const;
+                         bool ignoreUnaryIfPossible, bool ignoreChildWithoutVars = true) const;
 
   int comparatorFunctionChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
 
-  int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+  int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isTermsOrderInversed) const;
   /**
    * @brief
    *
