@@ -315,6 +315,37 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
 int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
                                               const std::shared_ptr<const IExpression> &rhs) const {
 
+  auto lhsFunc = lhs->getFunction();
+  auto rhsFunc = rhs->getFunction();
+
+  ArgumentsPtrVector lhsChildren = lhs->getChildren();
+  ArgumentsPtrVector rhsChildren = rhs->getChildren();
+
+  {
+    ArgumentPtr lhsToCompare = nullptr;
+    ArgumentPtr rhsToCompare = nullptr;
+
+    if (lhsChildren.size() == 1) {
+      lhsToCompare = lhsChildren.front();
+    }
+    if (rhsChildren.size() == 1) {
+      rhsToCompare = rhsChildren.front();
+    }
+
+    if (lhsToCompare || rhsToCompare) {
+      if (!lhsToCompare) {
+        lhsToCompare = lhs;
+      }
+      else if (!rhsToCompare) {
+        rhsToCompare = rhs;
+      }
+
+      if (int res = comparator(lhsToCompare, rhsToCompare); res != 0) {
+        return res;
+      }
+    }
+  }
+
   if (int res = comparatorFunctionChildren(lhs->getChildren(), rhs->getChildren()); res != 0) {
     return res;
   }
