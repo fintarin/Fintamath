@@ -361,32 +361,6 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   return comparatorFunctions(lhs->getFunction(), rhs->getFunction());
 }
 
-std::shared_ptr<const Variable> IPolynomExpression::getNextVar(ExprTreePathStack &stack) const {
-  while (!stack.empty()) {
-    ArgumentsPtrVector childVect = stack.top().first->getChildren();
-    size_t &idx = stack.top().second;
-    bool isStackPushed = false;
-
-    idx++;
-    for (; idx < childVect.size(); idx++) {
-      if (const auto &exprChild = cast<IExpression>(childVect[idx]); exprChild && hasVariables(exprChild)) {
-        stack.emplace(exprChild, -1);
-        isStackPushed = true;
-        break;
-      }
-      if (const auto &varChild = cast<Variable>(childVect[idx])) {
-        return varChild;
-      }
-    }
-    if (isStackPushed) {
-      continue;
-    }
-    stack.pop();
-  }
-
-  return {};
-}
-
 int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
                                             bool isTermsOrderInversed) const {
   ExprTreePathStack lhsPath;
@@ -423,6 +397,7 @@ int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const Argume
     if (int res = comparatorNonExpressions(lhsVar, rhsVar); res != 0) {
       return res;
     }
+
     lhsVar = getNextVar(lhsPath);
     rhsVar = getNextVar(rhsPath);
   }
@@ -539,18 +514,35 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IFunctio
   return lhs->toString() < rhs->toString() ? -1 : 1;
 }
 
-// ArgumentPtr IPolynomExpression::findFirstPolynomChild(const ArgumentPtr &rhs) {
-//   auto res = cast<IExpression>(rhs);
+std::shared_ptr<const Variable> IPolynomExpression::getNextVar(ExprTreePathStack &stack) {
+  while (!stack.empty()) {
+    ArgumentsPtrVector children = stack.top().first->getChildren();
 
-//   while (res && !is<IPolynomExpression>(res)) {
-//     res = cast<IExpression>(res->getChildren().front());
-//   }
+    size_t &exprIndex = stack.top().second;
+    exprIndex++;
 
-//   if (is<IPolynomExpression>(res)) {
-//     return res;
-//   }
+    bool hasExprChild = false;
 
-//   return {};
-// }
+    for (; exprIndex < children.size(); exprIndex++) {
+      if (const auto &exprChild = cast<IExpression>(children[exprIndex]); exprChild && hasVariables(exprChild)) {
+        stack.emplace(exprChild, -1);
+        hasExprChild = true;
+        break;
+      }
+
+      if (const auto &varChild = cast<Variable>(children[exprIndex])) {
+        return varChild;
+      }
+    }
+
+    if (hasExprChild) {
+      continue;
+    }
+
+    stack.pop();
+  }
+
+  return {};
+}
 
 }

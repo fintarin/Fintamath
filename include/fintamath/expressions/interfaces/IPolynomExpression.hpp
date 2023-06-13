@@ -152,9 +152,7 @@ private:
   static int comparatorFunctions(const std::shared_ptr<const IFunction> &lhs,
                                  const std::shared_ptr<const IFunction> &rhs);
 
-  // static ArgumentPtr findFirstPolynomChild(const ArgumentPtr &rhs);
-
-  std::shared_ptr<const Variable> getNextVar(ExprTreePathStack &stack) const;
+  static std::shared_ptr<const Variable> getNextVar(ExprTreePathStack &stack);
 
 protected:
   std::shared_ptr<IFunction> func;
