@@ -220,7 +220,6 @@ TEST(ExpressionFunctionsTests, orTest) {
 
 TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x - 10 = 0")).toString(), "x = 10");
-  EXPECT_EQ(solve(Expression("x < -10")).toString(), "x < -10");
   EXPECT_EQ(solve(Expression("-10 - x = 0")).toString(), "x = -10");
 
   EXPECT_EQ(solve(Expression("x^2 - 10 = 39")).toString(), "x = -7 | x = 7");
@@ -252,8 +251,11 @@ TEST(ExpressionFunctionsTests, solveTest) {
   // EXPECT_EQ(solve(Expression("3x^3 - 3x^2 - 12x - 8 = 0")).toString(),
   //           "1/9 (3 + (1485 - 162 sqrt(23))^(1/3) + 3 (55 + 6 sqrt(23))^(1/3))");
 
-  // TODO: implement inequalities
   EXPECT_EQ(solve(Expression("x < 1")).toString(), "x < 1");
+  EXPECT_EQ(solve(Expression("x < -10")).toString(), "x < -10");
+  EXPECT_EQ(solve(Expression("x! = 0")).toString(), "x! = 0");
+
+  // TODO: implement quadric inequalities
   EXPECT_EQ(solve(Expression("x^2 + 2 x - 1 < 0")).toString(), "x^2 + 2 x - 1 < 0");
 
   EXPECT_EQ(solve(Expression("15x^2 + sin(25)x - 10% = Ey")).toString(), "x^2 + 1/15 sin(25) x - 1/15 E y - 1/150 = 0");
@@ -266,5 +268,6 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^b a = 0")).toString(), "a x^b = 0");
   EXPECT_EQ(solve(Expression("x/y = 0")).toString(), "x/y = 0");
   EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = -sqrt(2) sqrt(sin(2)) | x = sqrt(2) sqrt(sin(2))");
-  EXPECT_EQ(solve(Expression("x! = 0")).toString(), "x! = 0");
+
+  EXPECT_EQ(solve(Expression("E >= Ey")).toString(), "E y - E <= 0");
 }
