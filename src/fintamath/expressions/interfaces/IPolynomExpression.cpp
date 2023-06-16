@@ -273,11 +273,11 @@ int IPolynomExpression::comparatorPolynoms(const std::shared_ptr<const IPolynomE
   if (childrenComp.unary != 0) {
     return childrenComp.unary;
   }
-  if (childrenComp.def != 0) {
-    return childrenComp.def;
-  }
   if (childrenComp.allVariables != 0) {
     return childrenComp.allVariables;
+  }
+  if (childrenComp.size != 0) {
+    return childrenComp.size;
   }
   if (childrenComp.all != 0) {
     return childrenComp.all;
@@ -295,7 +295,7 @@ int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<con
     return childrenComp.unwrapped;
   }
 
-  return childrenComp.def;
+  return -1;
 }
 
 int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
@@ -332,8 +332,11 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   if (childrenComp.allVariables != 0) {
     return childrenComp.allVariables;
   }
-  if (childrenComp.def != 0) {
-    return childrenComp.def;
+  if (childrenComp.size != 0) {
+    return childrenComp.size;
+  }
+  if (childrenComp.unwrapped != 0) {
+    return childrenComp.unwrapped;
   }
   if (childrenComp.all != 0) {
     return childrenComp.all;
@@ -347,13 +350,6 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
                                        const ArgumentsPtrVector &rhsChildren) const {
 
   ChildrenComparatorResult result = {};
-
-  if (lhsChildren.size() < rhsChildren.size()) {
-    result.allVariables = isTermsOrderInversed() ? -1 : 1;
-  }
-  if (rhsChildren.size() < lhsChildren.size()) {
-    result.allVariables = !isTermsOrderInversed() ? -1 : 1;
-  }
 
   size_t lhsStart = getPositionOfFirstChildWithVariable(lhsChildren);
   size_t rhsStart = getPositionOfFirstChildWithVariable(rhsChildren);
@@ -369,12 +365,11 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
       result.unary = !isLhsUnary ? -1 : 1;
     }
 
-    if (result.def == 0) {
-      result.def = comparator(compLhs, compRhs);
-      result.unwrapped = result.def;
+    if (result.unwrapped == 0) {
+      result.unwrapped = comparator(compLhs, compRhs);
     }
 
-    if (result.def != 0) {
+    if (result.unwrapped != 0) {
       break;
     }
   }
@@ -399,8 +394,8 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
     }
   }
 
-  if (result.def == 0 && lhsChildren.size() != rhsChildren.size()) {
-    result.def = lhsChildren.size() > rhsChildren.size() ? -1 : 1;
+  if (lhsChildren.size() != rhsChildren.size()) {
+    result.size = lhsChildren.size() > rhsChildren.size() ? -1 : 1;
   }
 
   return result;

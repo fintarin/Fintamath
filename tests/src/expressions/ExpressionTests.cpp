@@ -178,7 +178,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("E*2!").toString(), "2 E");
   EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-1/2 cos(2/3 Pi) + 1/2)");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(),
-            "2 cos(1/3 Pi) sqrt(-1/2 cos(2/3 Pi) + 1/2)");
+            "2 sqrt(-1/2 cos(2/3 Pi) + 1/2) cos(1/3 Pi)");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
   EXPECT_EQ(Expression("sqrt(26)").toString(), "sqrt(26)");
   EXPECT_EQ(Expression("sqrt(145/26)").toString(), "sqrt(145/26)");
@@ -352,6 +352,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sin(a) a").toString(), "a sin(a)");
   EXPECT_EQ(Expression("a sin(a)").toString(), "a sin(a)");
   EXPECT_EQ(Expression("cos(b) sin(a)").toString(), "sin(a) cos(b)");
+  EXPECT_EQ(Expression("cos(b) log(b, a)").toString(), "log(b, a) cos(b)");
   // EXPECT_EQ(Expression("(x + y^(3))^(2) * (sin(x))/(ln(2))  /  x^(2) - (2 sin(x) y^(3))/(x ln(2))").toString(),
   //           "TODO"); // TODO! fix sort
 

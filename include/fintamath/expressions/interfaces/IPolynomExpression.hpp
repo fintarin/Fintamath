@@ -31,11 +31,11 @@ protected:
   using ExprTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
 
   struct ChildrenComparatorResult {
-    int unary;
-    int unwrapped;
-    int all;
-    int allVariables;
-    int def;
+    int unary = 0;
+    int unwrapped = 0;
+    int all = 0;
+    int allVariables = 0;
+    int size = 0;
   };
 
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
