@@ -29,6 +29,15 @@ protected:
 
   using ExprTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
 
+  struct CompareResult {
+    int unary;
+    int unwrapped;
+    int all;
+    int allVariables;
+    int def;
+    int size;
+  };
+
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
 
   virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
@@ -126,19 +135,7 @@ private:
   int comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
                             const std::shared_ptr<const IExpression> &rhs) const;
 
-  /**
-   * @brief
-   *
-   * @param lhsChildren
-   * @param rhsChildren
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
-                         bool ignoreUnaryIfPossible, bool ignoreChildWithoutVars = true) const;
-
-  int comparatorFunctionChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
+  CompareResult comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
 
   int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isTermsOrderInversed) const;
   /**
@@ -156,6 +153,8 @@ private:
   static std::shared_ptr<const Variable> getNextVar(ExprTreePathStack &stack);
 
   static size_t getFirstVarChildPosition(const ArgumentsPtrVector &children);
+
+  static bool unwrapUnary(ArgumentPtr &lhs);
 
 protected:
   std::shared_ptr<IFunction> func;
