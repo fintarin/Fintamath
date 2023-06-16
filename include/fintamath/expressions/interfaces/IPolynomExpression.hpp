@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
+
 #include <stack>
 
 namespace fintamath {
@@ -29,13 +30,12 @@ protected:
 
   using ExprTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
 
-  struct CompareResult {
+  struct ChildrenComparatorResult {
     int unary;
     int unwrapped;
     int all;
     int allVariables;
     int def;
-    int size;
   };
 
   virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
@@ -135,9 +135,9 @@ private:
   int comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
                             const std::shared_ptr<const IExpression> &rhs) const;
 
-  CompareResult comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren) const;
+  ChildrenComparatorResult comparatorChildren(const ArgumentsPtrVector &lhsChildren,
+                                              const ArgumentsPtrVector &rhsChildren) const;
 
-  int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isTermsOrderInversed) const;
   /**
    * @brief
    *
@@ -150,9 +150,11 @@ private:
   static int comparatorFunctions(const std::shared_ptr<const IFunction> &lhs,
                                  const std::shared_ptr<const IFunction> &rhs);
 
-  static std::shared_ptr<const Variable> getNextVar(ExprTreePathStack &stack);
+  int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isTermsOrderInversed) const;
 
-  static size_t getFirstVarChildPosition(const ArgumentsPtrVector &children);
+  static std::shared_ptr<const Variable> getNextVariable(ExprTreePathStack &stack);
+
+  static size_t getPositionOfFirstChildWithVariable(const ArgumentsPtrVector &children);
 
   static bool unwrapUnary(ArgumentPtr &lhs);
 

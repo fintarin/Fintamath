@@ -340,13 +340,18 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(sin(x)+1)^(-4)").toString(), "1/(sin(x)^4 + 4 sin(x)^3 + 6 sin(x)^2 + 4 sin(x) + 1)");
   EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(4 a b^3) + b^4 + sin(a^4) + cos(6 a^2 b^2)").toString(),
-            "sin(a^4) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(4 a b^3) + b^4");
+            "b^4 + sin(a^4) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(4 a b^3)");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(sin(4 a b^3)) + b^4 + asin(sin(a^4)) + cos(6 a^2 b^2)").toString(),
-            "asin(sin(a^4)) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(sin(4 a b^3)) + b^4");
+            "b^4 + asin(sin(a^4)) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(sin(4 a b^3))");
   EXPECT_EQ(Expression("tan(4 a_1^3 b) + cot(sin(4 a_1 b^3)) + b^4 + asin(sin(a_1^4)) + cos(6 a_1^2 b^2)").toString(),
-            "asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3)) + b^4");
+            "b^4 + asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3))");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
   EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "1/100 a a! a!! a!!!");
+  EXPECT_EQ(Expression("a! sin(a)").toString(), "a! sin(a)");
+  EXPECT_EQ(Expression("sin(a) a!").toString(), "a! sin(a)");
+  EXPECT_EQ(Expression("sin(a) a").toString(), "a sin(a)");
+  EXPECT_EQ(Expression("a sin(a)").toString(), "a sin(a)");
+  EXPECT_EQ(Expression("cos(b) sin(a)").toString(), "sin(a) cos(b)");
   // EXPECT_EQ(Expression("(x + y^(3))^(2) * (sin(x))/(ln(2))  /  x^(2) - (2 sin(x) y^(3))/(x ln(2))").toString(),
   //           "TODO"); // TODO! fix sort
 
@@ -553,8 +558,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5 3^x)");
   EXPECT_EQ(Expression("log(2, 3) + 3log(3, 4)").toString(), "3 log(3, 4) + log(2, 3)");
-  EXPECT_EQ(Expression("3log(2x, 3) + log(3, 4)").toString(),
-            "3 log(2 x, 3) + log(3, 4)");
+  EXPECT_EQ(Expression("3log(2x, 3) + log(3, 4)").toString(), "3 log(2 x, 3) + log(3, 4)");
 
   EXPECT_EQ(Expression("sin(asin(x))").toString(), "x");
   EXPECT_EQ(Expression("cos(acos(x))").toString(), "x");
