@@ -70,7 +70,7 @@ TEST(IExpressionTests, getVariablesTest) {
   // TODO: implement more tests
 }
 
-TEST(IExpressionTests, setValuesOfVariablesTest) {
+TEST(IExpressionTests, setVariablesTest) {
   // TODO: implement
 }
 

@@ -19,7 +19,7 @@ public:
 
   std::vector<Variable> getVariables() const;
 
-  virtual void setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals);
+  virtual void setVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals);
 
   std::unique_ptr<IMathObject> toMinimalObject() const final;
 

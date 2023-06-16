@@ -43,7 +43,7 @@ public:
 
   void setChildren(const ArgumentsPtrVector &childVect) override;
 
-  void setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) override;
+  void setVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) override;
 
   static void registerTermsMaker(Parser::Function<std::shared_ptr<Term>, const Token &> &&maker) {
     Parser::add<Token>(getTermMakers(), std::move(maker));

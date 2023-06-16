@@ -519,8 +519,8 @@ void Expression::setChildren(const ArgumentsPtrVector &childVect) {
   child = childVect.front()->toMinimalObject();
 }
 
-void Expression::setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) {
-  IExpression::setValuesOfVariables(vars, vals);
+void Expression::setVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) {
+  IExpression::setVariables(vars, vals);
   simplifyChild(child);
 }
 

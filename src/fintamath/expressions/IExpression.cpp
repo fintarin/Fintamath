@@ -32,14 +32,14 @@ std::vector<Variable> IExpression::getVariables() const {
   return vars;
 }
 
-void IExpression::setValuesOfVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) {
+void IExpression::setVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) {
   auto children = getChildren();
 
   ArgumentsPtrVector newChildren;
 
   for (auto &child : children) {
     if (std::shared_ptr<IExpression> exprChild = cast<IExpression>(child->clone())) {
-      exprChild->setValuesOfVariables(vars, vals);
+      exprChild->setVariables(vars, vals);
       newChildren.emplace_back(exprChild);
       continue;
     }
