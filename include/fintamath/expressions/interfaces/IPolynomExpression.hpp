@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include <stack>
 
 namespace fintamath {
@@ -153,6 +154,8 @@ private:
                                  const std::shared_ptr<const IFunction> &rhs);
 
   static std::shared_ptr<const Variable> getNextVar(ExprTreePathStack &stack);
+
+  static size_t getFirstVarChildPosition(const ArgumentsPtrVector &children);
 
 protected:
   std::shared_ptr<IFunction> func;
