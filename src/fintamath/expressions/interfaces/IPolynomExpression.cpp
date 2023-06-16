@@ -424,24 +424,22 @@ int IPolynomExpression::comparatorFunctionChildren(const ArgumentsPtrVector &lhs
   return 0;
 }
 
+size_t IPolynomExpression::getFirstVarChildPosition(const ArgumentsPtrVector &children) {
+  for (size_t position = 0; position < children.size(); position++) {
+    auto lhsChildExpr = cast<IExpression>(children[position]);
+    if (is<Variable>(children[position]) || (lhsChildExpr && hasVariables(lhsChildExpr))) {
+      return position;
+    }
+  }
+  return children.size();
+}
+
 int IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren, const ArgumentsPtrVector &rhsChildren,
                                            bool ignoreUnaryIfPossible, bool ignoreChildWithoutVars) const {
 
-  size_t lhsStart = 0;
-  for (; lhsStart < lhsChildren.size(); lhsStart++) {
-    auto lhsChildExpr = cast<IExpression>(lhsChildren[lhsStart]);
-    if (is<Variable>(lhsChildren[lhsStart]) || (lhsChildExpr && hasVariables(lhsChildExpr))) {
-      break;
-    }
-  }
+  size_t lhsStart = getFirstVarChildPosition(lhsChildren);
 
-  size_t rhsStart = 0;
-  for (; rhsStart < rhsChildren.size(); rhsStart++) {
-    auto rhsChildExpr = cast<IExpression>(rhsChildren[rhsStart]);
-    if (is<Variable>(rhsChildren[rhsStart]) || (rhsChildExpr && hasVariables(rhsChildExpr))) {
-      break;
-    }
-  }
+  size_t rhsStart = getFirstVarChildPosition(rhsChildren);
 
   int comparatorUnary = 0;
 
