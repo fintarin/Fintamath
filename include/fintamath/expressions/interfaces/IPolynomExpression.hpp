@@ -31,10 +31,10 @@ protected:
   using ExprTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
 
   struct ChildrenComparatorResult {
+    int value = 0;
     int unary = 0;
-    int unwrapped = 0;
-    int all = 0;
-    int allVariables = 0;
+    int prefix = 0;
+    int prefixVariables = 0;
     int size = 0;
   };
 
