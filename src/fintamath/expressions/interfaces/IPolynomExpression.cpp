@@ -265,30 +265,22 @@ int IPolynomExpression::comparatorNonExpressions(const ArgumentPtr &lhs, const A
 int IPolynomExpression::comparatorPolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
                                            const std::shared_ptr<const IPolynomExpression> &rhs) const {
 
-  CompareResult compare = comparatorChildren(lhs->getChildren(), rhs->getChildren());
+  ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), rhs->getChildren());
 
-  if (compare.unwrapped != 0) {
-    return compare.unwrapped;
+  if (childrenComp.unwrapped != 0) {
+    return childrenComp.unwrapped;
   }
-
-  if (compare.unary != 0) {
-    return compare.unary;
+  if (childrenComp.unary != 0) {
+    return childrenComp.unary;
   }
-
-  if (compare.def != 0) {
-    return compare.def;
+  if (childrenComp.def != 0) {
+    return childrenComp.def;
   }
-
-  if (compare.size != 0) {
-    return compare.size;
+  if (childrenComp.allVariables != 0) {
+    return childrenComp.allVariables;
   }
-
-  if (int res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
-    return res;
-  }
-
-  if (compare.all != 0) {
-    return compare.all;
+  if (childrenComp.all != 0) {
+    return childrenComp.all;
   }
 
   return comparatorFunctions(lhs->getFunction(), rhs->getFunction());
@@ -297,25 +289,13 @@ int IPolynomExpression::comparatorPolynoms(const std::shared_ptr<const IPolynomE
 int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
                                                        const ArgumentPtr &rhs) const {
 
-  CompareResult compare = comparatorChildren(lhs->getChildren(), {rhs});
+  ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), {rhs});
 
-  if (compare.unwrapped != 0) {
-    return compare.unwrapped;
+  if (childrenComp.unwrapped != 0) {
+    return childrenComp.unwrapped;
   }
 
-  if (compare.unary != 0) {
-    return compare.unary;
-  }
-
-  if (compare.def != 0) {
-    return compare.def;
-  }
-
-  if (int res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
-    return res;
-  }
-
-  return -1;
+  return childrenComp.def;
 }
 
 int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
@@ -347,133 +327,36 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   ArgumentsPtrVector lhsChildren = lhs->getChildren();
   ArgumentsPtrVector rhsChildren = rhs->getChildren();
 
-  {
-    ArgumentPtr lhsToCompare = nullptr;
-    ArgumentPtr rhsToCompare = nullptr;
+  ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), rhs->getChildren());
 
-    if (lhsChildren.size() == 1) {
-      lhsToCompare = lhsChildren.front();
-    }
-    if (rhsChildren.size() == 1) {
-      rhsToCompare = rhsChildren.front();
-    }
-
-    if (lhsToCompare || rhsToCompare) {
-      if (!lhsToCompare) {
-        lhsToCompare = lhs;
-      }
-      else if (!rhsToCompare) {
-        rhsToCompare = rhs;
-      }
-
-      if (int res = comparator(lhsToCompare, rhsToCompare); res != 0) {
-        return res;
-      }
-    }
+  if (childrenComp.allVariables != 0) {
+    return childrenComp.allVariables;
   }
-
-  CompareResult compare = comparatorChildren(lhs->getChildren(), rhs->getChildren());
-
-  if (compare.allVariables != 0) {
-    return compare.allVariables;
+  if (childrenComp.def != 0) {
+    return childrenComp.def;
   }
-
-  if (int res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
-    return res;
-  }
-
-  if (compare.def != 0) {
-    return compare.def;
-  }
-
-  if (compare.all != 0) {
-    return compare.all;
-  }
-
-  if (compare.size != 0) {
-    return compare.size;
+  if (childrenComp.all != 0) {
+    return childrenComp.all;
   }
 
   return comparatorFunctions(lhs->getFunction(), rhs->getFunction());
 }
 
-int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
-                                            bool isTermsOrderInversed) const {
-  ExprTreePathStack lhsPath;
-  ExprTreePathStack rhsPath;
+IPolynomExpression::ChildrenComparatorResult
+IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
+                                       const ArgumentsPtrVector &rhsChildren) const {
 
-  std::shared_ptr<const Variable> lhsVar;
-  std::shared_ptr<const Variable> rhsVar;
+  ChildrenComparatorResult result = {};
 
-  if (const auto &expr = cast<IExpression>(lhs)) {
-    lhsPath.emplace(expr, -1);
-    lhsVar = getNextVar(lhsPath);
-  }
-  else if (const auto &var = cast<Variable>(lhs)) {
-    lhsVar = var;
-  }
-
-  if (const auto &expr = cast<IExpression>(rhs)) {
-    rhsPath.emplace(expr, -1);
-    rhsVar = getNextVar(rhsPath);
-  }
-  else if (const auto &var = cast<Variable>(rhs)) {
-    rhsVar = var;
-  }
-
-  if (lhsVar && !rhsVar) {
-    return !isTermsOrderInversed ? -1 : 1;
-  }
-
-  if (!lhsVar && rhsVar) {
-    return isTermsOrderInversed ? -1 : 1;
-  }
-
-  while (lhsVar && rhsVar) {
-    if (int res = comparatorNonExpressions(lhsVar, rhsVar); res != 0) {
-      return res;
-    }
-
-    lhsVar = getNextVar(lhsPath);
-    rhsVar = getNextVar(rhsPath);
-  }
-
-  return 0;
-}
-
-size_t IPolynomExpression::getFirstVarChildPosition(const ArgumentsPtrVector &children) {
-  for (size_t position = 0; position < children.size(); position++) {
-    auto lhsChildExpr = cast<IExpression>(children[position]);
-    if (is<Variable>(children[position]) || (lhsChildExpr && hasVariables(lhsChildExpr))) {
-      return position;
-    }
-  }
-  return children.size();
-}
-
-bool IPolynomExpression::unwrapUnary(ArgumentPtr &lhs) {
-  if (const auto lhsExpr = cast<IExpression>(lhs);
-      lhsExpr && lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
-
-    lhs = lhsExpr->getChildren().front();
-    return true;
-  }
-  return false;
-}
-
-IPolynomExpression::CompareResult IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
-                                                                         const ArgumentsPtrVector &rhsChildren) const {
-  CompareResult result = {};
   if (lhsChildren.size() < rhsChildren.size()) {
     result.allVariables = isTermsOrderInversed() ? -1 : 1;
   }
-
   if (rhsChildren.size() < lhsChildren.size()) {
     result.allVariables = !isTermsOrderInversed() ? -1 : 1;
   }
 
-  size_t lhsStart = getFirstVarChildPosition(lhsChildren);
-  size_t rhsStart = getFirstVarChildPosition(rhsChildren);
+  size_t lhsStart = getPositionOfFirstChildWithVariable(lhsChildren);
+  size_t rhsStart = getPositionOfFirstChildWithVariable(rhsChildren);
 
   for (size_t i = lhsStart, j = rhsStart; i < lhsChildren.size() && j < rhsChildren.size(); i++, j++) {
     ArgumentPtr compLhs = lhsChildren[i];
@@ -503,19 +386,14 @@ IPolynomExpression::CompareResult IPolynomExpression::comparatorChildren(const A
     if (result.all == 0) {
       result.all = comparator(lhsChildren[i], rhsChildren[i]);
     }
+
     if (result.allVariables == 0) {
       result.allVariables = comparatorVariables(lhsChildren[i], rhsChildren[i], false);
     }
   }
 
-  if (lhsChildren.size() != rhsChildren.size()) {
-    result.size = lhsChildren.size() > rhsChildren.size() ? -1 : 1;
-  }
-
-  if (result.unwrapped == 0) {
-    if (lhsChildren.size() != rhsChildren.size()) {
-      result.def = lhsChildren.size() > rhsChildren.size() ? -1 : 1;
-    }
+  if (result.unwrapped == 0 && lhsChildren.size() != rhsChildren.size()) {
+    result.def = lhsChildren.size() > rhsChildren.size() ? -1 : 1;
   }
 
   return result;
@@ -538,7 +416,52 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IFunctio
   return lhs->toString() < rhs->toString() ? -1 : 1;
 }
 
-std::shared_ptr<const Variable> IPolynomExpression::getNextVar(ExprTreePathStack &stack) {
+int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
+                                            bool isTermsOrderInversed) const {
+
+  ExprTreePathStack lhsPath;
+  ExprTreePathStack rhsPath;
+
+  std::shared_ptr<const Variable> lhsVar;
+  std::shared_ptr<const Variable> rhsVar;
+
+  if (const auto &expr = cast<IExpression>(lhs)) {
+    lhsPath.emplace(expr, -1);
+    lhsVar = getNextVariable(lhsPath);
+  }
+  else if (const auto &var = cast<Variable>(lhs)) {
+    lhsVar = var;
+  }
+
+  if (const auto &expr = cast<IExpression>(rhs)) {
+    rhsPath.emplace(expr, -1);
+    rhsVar = getNextVariable(rhsPath);
+  }
+  else if (const auto &var = cast<Variable>(rhs)) {
+    rhsVar = var;
+  }
+
+  if (lhsVar && !rhsVar) {
+    return !isTermsOrderInversed ? -1 : 1;
+  }
+
+  if (!lhsVar && rhsVar) {
+    return isTermsOrderInversed ? -1 : 1;
+  }
+
+  while (lhsVar && rhsVar) {
+    if (int res = comparatorNonExpressions(lhsVar, rhsVar); res != 0) {
+      return res;
+    }
+
+    lhsVar = getNextVariable(lhsPath);
+    rhsVar = getNextVariable(rhsPath);
+  }
+
+  return 0;
+}
+
+std::shared_ptr<const Variable> IPolynomExpression::getNextVariable(ExprTreePathStack &stack) {
   while (!stack.empty()) {
     ArgumentsPtrVector children = stack.top().first->getChildren();
 
@@ -567,6 +490,29 @@ std::shared_ptr<const Variable> IPolynomExpression::getNextVar(ExprTreePathStack
   }
 
   return {};
+}
+
+size_t IPolynomExpression::getPositionOfFirstChildWithVariable(const ArgumentsPtrVector &children) {
+  for (size_t i = 0; i < children.size(); i++) {
+    auto lhsChildExpr = cast<IExpression>(children[i]);
+
+    if (is<Variable>(children[i]) || (lhsChildExpr && hasVariables(lhsChildExpr))) {
+      return i;
+    }
+  }
+
+  return children.size();
+}
+
+bool IPolynomExpression::unwrapUnary(ArgumentPtr &lhs) {
+  if (const auto lhsExpr = cast<IExpression>(lhs);
+      lhsExpr && lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
+
+    lhs = lhsExpr->getChildren().front();
+    return true;
+  }
+
+  return false;
 }
 
 }
