@@ -45,6 +45,8 @@ public:
 
   void setVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) override;
 
+  void setVariable(const Variable &var, const Expression &val);
+
   static void registerTermsMaker(Parser::Function<std::shared_ptr<Term>, const Token &> &&maker) {
     Parser::add<Token>(getTermMakers(), std::move(maker));
   }

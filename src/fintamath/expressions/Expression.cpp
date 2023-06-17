@@ -524,6 +524,10 @@ void Expression::setVariables(const std::vector<Variable> &vars, const Arguments
   simplifyChild(child);
 }
 
+void Expression::setVariable(const Variable &var, const Expression &val) {
+  setVariables({var}, ArgumentsPtrVector{val.getChildren().front()});
+}
+
 Expression operator+(const Variable &lhs, const Variable &rhs) {
   return Expression(makeExpr(Add(), lhs.clone(), rhs.clone()));
 }

@@ -1103,6 +1103,29 @@ TEST(ExpressionTests, expressionVariableDivideOperatorTest) {
   EXPECT_EQ(Expression("b/c") / Variable("a"), Expression("b/c/a"));
 }
 
+TEST(ExpressionTests, setVariablesTest) {
+  // TODO: implement
+}
+
+TEST(ExpressionTests, setVariableTest) {
+  Expression a("a+b+c");
+  Expression b = a;
+  Expression c = a;
+
+  a.setVariable(Variable("a"), 1);
+  a.setVariable(Variable("b"), 2);
+  a.setVariable(Variable("c"), 3);
+  EXPECT_EQ(a.toString(), "6");
+
+  b.setVariable(Variable("d"), 1);
+  EXPECT_EQ(b.toString(), "a + b + c");
+
+  c.setVariable(Variable("a"), Expression("ln(b)"));
+  c.setVariable(Variable("b"), Expression("E"));
+  c.setVariable(Variable("c"), Expression("(a+b)^2"));
+  EXPECT_EQ(c.toString(), "a^2 + 2 a b + b^2 + E + 1");
+}
+
 TEST(ExpressionTests, getTypeIdTest) {
   EXPECT_EQ(Expression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Expression));
   EXPECT_EQ(Expression().getTypeId(), MathObjectTypeId(MathObjectType::Expression));
