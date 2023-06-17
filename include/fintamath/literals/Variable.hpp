@@ -20,7 +20,7 @@ public:
 private:
   std::string name;
 
-  Integer index;
+  Integer index = -1;
 };
 
 }

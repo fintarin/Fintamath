@@ -14,6 +14,7 @@ TEST(VariableTest, stringIntegerConstructorTest) {
   EXPECT_EQ(Variable("B").toString(), "B");
   EXPECT_EQ(Variable("C").toString(), "C");
 
+  EXPECT_EQ(Variable("a", 0).toString(), "a_0");
   EXPECT_EQ(Variable("a", 1).toString(), "a_1");
   EXPECT_EQ(Variable("a", 2).toString(), "a_2");
   EXPECT_EQ(Variable("a", Integer("100000000000000000000000000000000000000")).toString(),
@@ -33,7 +34,6 @@ TEST(VariableTest, stringIntegerConstructorTest) {
   EXPECT_THROW(Variable("Bb"), InvalidInputException);
   EXPECT_THROW(Variable("1C"), InvalidInputException);
 
-  EXPECT_THROW(Variable("a", 0), InvalidInputException);
   EXPECT_THROW(Variable("a", -1), InvalidInputException);
   EXPECT_THROW(Variable("a", -2), InvalidInputException);
   EXPECT_THROW(Variable("a", Integer("-100000000000000000000000000000000000000")), InvalidInputException);

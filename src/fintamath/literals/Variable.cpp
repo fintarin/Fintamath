@@ -21,7 +21,7 @@ Variable::Variable(std::string inName) {
 }
 
 Variable::Variable(std::string inName, Integer inIndex) : Variable(std::move(inName)) {
-  if (inIndex <= 0) {
+  if (inIndex < 0) {
     throw InvalidInputException(inName + "_" + inIndex.toString());
   }
 
@@ -29,7 +29,7 @@ Variable::Variable(std::string inName, Integer inIndex) : Variable(std::move(inN
 }
 
 std::string Variable::toString() const {
-  return name + (index != 0 ? "_" + index.toString() : "");
+  return name + (index != -1 ? "_" + index.toString() : "");
 }
 
 }
