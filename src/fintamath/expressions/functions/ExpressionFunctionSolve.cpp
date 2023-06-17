@@ -162,15 +162,16 @@ ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable
   for (const auto &polynomChild : polynomVect) {
     ArgumentPtr rate = getElementRate(polynomChild, var);
     std::shared_ptr<const INumber> power = getElementPower(polynomChild, var);
-    Integer intPow = cast<Integer>(*power);
 
-    if (int64_t(powerRates.size()) < intPow + 1) {
-      while (int64_t(powerRates.size()) != intPow + 1) {
-        powerRates.emplace_back(std::make_shared<Integer>(0));
+    if (auto intPow = cast<Integer>(power)) {
+      if (int64_t(powerRates.size()) < *intPow + 1) {
+        while (int64_t(powerRates.size()) != *intPow + 1) {
+          powerRates.emplace_back(std::make_shared<Integer>(0));
+        }
       }
-    }
 
-    powerRates[size_t(intPow)] = rate;
+      powerRates[size_t(*intPow)] = rate;
+    }
   }
 
   return powerRates;
@@ -203,5 +204,4 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
   return {makeExpr(Neg(), makeExpr(Div(), coeffAtPow[0], coeffAtPow[1]))->toMinimalObject()};
 }
-
 }

@@ -282,4 +282,6 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = -sqrt(2) sqrt(sin(2)) | x = sqrt(2) sqrt(sin(2))");
 
   EXPECT_EQ(solve(Expression("E >= Ey")).toString(), "E y - E <= 0");
+  EXPECT_EQ(solve(Expression("x >= x sqrt(x)")).toString(), "sqrt(x)^3 - x <= 0");
+  EXPECT_EQ(solve(Expression("x >= x^(1/100)")).toString(), "x^(1/100) - x <= 0");
 }
