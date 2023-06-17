@@ -42,7 +42,7 @@ ArgumentPtr HyperbolicExpression::oppositeFunctionsSimplify(const IFunction &fun
 }
 
 ArgumentPtr HyperbolicExpression::constantsSimplify(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
-  // TODO! implement
+  // TODO: implement
   return {};
 }
 

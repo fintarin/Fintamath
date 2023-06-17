@@ -233,6 +233,7 @@ TEST(ExpressionFunctionsTests, orTest) {
 TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x - 10 = 0")).toString(), "x = 10");
   EXPECT_EQ(solve(Expression("-10 - x = 0")).toString(), "x = -10");
+  // EXPECT_EQ(solve(Expression("x = x sqrt(x)")).toString(), "x = 0 | x = 1"); // TODO! fix
 
   EXPECT_EQ(solve(Expression("x^2 - 10 = 39")).toString(), "x = -7 | x = 7");
   EXPECT_EQ(solve(Expression("x^2 = 0")).toString(), "x = 0");
