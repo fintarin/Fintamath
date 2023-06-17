@@ -321,9 +321,6 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
 int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
                                               const std::shared_ptr<const IExpression> &rhs) const {
 
-  auto lhsFunc = lhs->getFunction();
-  auto rhsFunc = rhs->getFunction();
-
   ArgumentsPtrVector lhsChildren = lhs->getChildren();
   ArgumentsPtrVector rhsChildren = rhs->getChildren();
 

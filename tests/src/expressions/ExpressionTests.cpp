@@ -353,6 +353,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("a sin(a)").toString(), "a sin(a)");
   EXPECT_EQ(Expression("cos(b) sin(a)").toString(), "sin(a) cos(b)");
   EXPECT_EQ(Expression("cos(b) log(b, a)").toString(), "log(b, a) cos(b)");
+  EXPECT_EQ(Expression("cos(a) log(b, c)").toString(), "log(b, c) cos(a)");
+  EXPECT_EQ(Expression("cos(b^2) log(b, c)").toString(), "log(b, c) cos(b^2)");
   // EXPECT_EQ(Expression("(x + y^(3))^(2) * (sin(x))/(ln(2))  /  x^(2) - (2 sin(x) y^(3))/(x ln(2))").toString(),
   //           "TODO"); // TODO! fix sort
 
