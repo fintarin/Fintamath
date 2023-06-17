@@ -267,11 +267,11 @@ int IPolynomExpression::comparatorPolynoms(const std::shared_ptr<const IPolynomE
 
   ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), rhs->getChildren());
 
-  if (childrenComp.value != 0) {
-    return childrenComp.value;
+  if (childrenComp.postfix != 0) {
+    return childrenComp.postfix;
   }
-  if (childrenComp.unary != 0) {
-    return childrenComp.unary;
+  if (childrenComp.postfixUnary != 0) {
+    return childrenComp.postfixUnary;
   }
   if (childrenComp.prefixVariables != 0) {
     return childrenComp.prefixVariables;
@@ -291,8 +291,8 @@ int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<con
 
   ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), {rhs});
 
-  if (childrenComp.value != 0) {
-    return childrenComp.value;
+  if (childrenComp.postfix != 0) {
+    return childrenComp.postfix;
   }
 
   return -1;
@@ -335,8 +335,8 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   if (childrenComp.size != 0) {
     return childrenComp.size;
   }
-  if (childrenComp.value != 0) {
-    return childrenComp.value;
+  if (childrenComp.postfix != 0) {
+    return childrenComp.postfix;
   }
   if (childrenComp.prefix != 0) {
     return childrenComp.prefix;
@@ -361,21 +361,21 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
     bool isLhsUnary = unwrapUnary(compLhs);
     bool isRhsUnary = unwrapUnary(compRhs);
 
-    if (result.unary == 0 && isLhsUnary != isRhsUnary) {
-      result.unary = !isLhsUnary ? -1 : 1;
+    if (result.postfixUnary == 0 && isLhsUnary != isRhsUnary) {
+      result.postfixUnary = !isLhsUnary ? -1 : 1;
     }
 
-    if (result.value == 0) {
-      result.value = comparator(compLhs, compRhs);
+    if (result.postfix == 0) {
+      result.postfix = comparator(compLhs, compRhs);
     }
 
-    if (result.value != 0) {
+    if (result.postfix != 0) {
       break;
     }
   }
 
   if (lhsChildren.size() != rhsChildren.size()) {
-    result.unary = 0;
+    result.postfixUnary = 0;
   }
 
   for (size_t i = 0; i < std::min(std::max(lhsStart, rhsStart), std::min(lhsChildren.size(), rhsChildren.size()));
