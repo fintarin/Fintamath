@@ -4,7 +4,9 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/other/Percent.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 
 using namespace fintamath;
@@ -118,6 +120,11 @@ TEST(ExpressionUtilsTests, makeExpressionTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
   EXPECT_FALSE(is<Expression>(expr2));
+
+  EXPECT_THROW(makeExpr(Mul(), {var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Mul(), {})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), {var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), {})->toString(), InvalidInputException);
 }
 
 TEST(ExpressionUtilsTests, makeExpressionCheckedAnyArgsTest) {
