@@ -56,6 +56,10 @@ Expression lb(const Expression &rhs);
 
 Expression lg(const Expression &rhs);
 
+Expression rad(const Expression &rhs);
+
+Expression degrees(const Expression &rhs);
+
 Expression sin(const Expression &rhs);
 
 Expression cos(const Expression &rhs);
