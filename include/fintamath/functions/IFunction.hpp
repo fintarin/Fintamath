@@ -12,10 +12,15 @@ namespace fintamath {
 class IFunction : public IMathObject {
 public:
   enum class Type : uint16_t {
-    None,   // 0 arguments
-    Unary,  // 1 argument
-    Binary, // 2 arguments
-    Any,    // undefined number of arguments, but non 0
+    None,       // 0 arguments
+    Unary,      // 1 argument
+    Binary,     // 2 arguments
+    Ternary,    // 3 arguments
+    Quaternary, // 4 arguments
+    Quinary,    // 5 arguments
+    Senary,     // 6 arguments
+    Septenary,  // 7 arguments
+    Any,        // undefined number of arguments, but non 0
   };
 
 public:
