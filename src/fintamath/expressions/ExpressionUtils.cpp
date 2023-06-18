@@ -89,10 +89,6 @@ std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr
     }
   }
 
-  if (const auto comp = cast<IComparable>(rhs); comp && *comp < Integer(0)) {
-    return result + putInBrackets(rhs->toString());
-  }
-
   return result + rhs->toString();
 }
 
@@ -103,10 +99,6 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
     if (is<IOperator>(child->getFunction())) {
       return putInBrackets(result) + oper.toString();
     }
-  }
-
-  if (const auto comp = cast<IComparable>(rhs); comp && *comp < Integer(0)) {
-    return putInBrackets(result) + oper.toString();
   }
 
   return result + oper.toString();
