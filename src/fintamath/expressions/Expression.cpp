@@ -167,46 +167,39 @@ bool Expression::parsePostfixOperator(const TermVector &terms, size_t start, siz
 }
 
 bool Expression::parseFunction(const TermVector &terms, size_t start, size_t end) {
-  if (start + 1 >= end || terms[start]->values.empty()) {
+  size_t funcPos = start;
+
+  if (start + 1 >= end || terms[funcPos]->values.empty()) {
     return false;
   }
 
-  if (auto func = cast<IFunction>(terms[start]->values.front())) {
-    start++;
-    cutBrackets(terms, start, end);
-    ArgumentsPtrVector args = parseFunctionArgs(terms, start, end);
-    child = makeExpr(*func, args);
-    return true;
-  }
-
-  return false;
-}
-
-bool Expression::parseBrackets(const TermVector &terms, size_t start, size_t end) {
-  if (start + 2 >= end) {
+  if (auto termFirstValue = terms[funcPos]->values.front();
+      !is<IFunction>(termFirstValue) || is<IOperator>(termFirstValue)) {
     return false;
   }
 
-  if (terms[start]->name == "(" && terms[end - 1]->name == ")") {
-    cutBrackets(terms, start, end);
-    *this = Expression(terms, start, end);
-    return true;
+  start++;
+  cutBrackets(terms, start, end);
+
+  ArgumentsPtrVector args = parseFunctionArgs(terms, start, end);
+  std::shared_ptr<const IFunction> func;
+
+  for (const auto &value : terms[funcPos]->values) {
+    auto valueFunc = cast<IFunction>(value);
+
+    if (valueFunc->getFunctionType() == IFunction::Type(args.size()) ||
+        valueFunc->getFunctionType() == IFunction::Type::Any) {
+      func = valueFunc;
+    }
   }
 
-  return false;
-}
-
-bool Expression::parseFiniteTerm(const TermVector &terms, size_t start, size_t end) {
-  if (start + 1 != end || terms[start]->values.size() != 1) {
+  if (!func) {
     return false;
   }
 
-  *this = Expression(terms[start]->values.front());
+  child = makeExpr(*func, args);
+
   return true;
-}
-
-std::shared_ptr<IFunction> Expression::getFunction() const {
-  return {};
 }
 
 ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t start, size_t end) {
@@ -240,6 +233,33 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t
 
   funcArgs.emplace_back(Expression(terms, start, end).child);
   return funcArgs;
+}
+
+bool Expression::parseBrackets(const TermVector &terms, size_t start, size_t end) {
+  if (start + 2 >= end) {
+    return false;
+  }
+
+  if (terms[start]->name == "(" && terms[end - 1]->name == ")") {
+    cutBrackets(terms, start, end);
+    *this = Expression(terms, start, end);
+    return true;
+  }
+
+  return false;
+}
+
+bool Expression::parseFiniteTerm(const TermVector &terms, size_t start, size_t end) {
+  if (start + 1 != end || terms[start]->values.size() != 1) {
+    return false;
+  }
+
+  *this = Expression(terms[start]->values.front());
+  return true;
+}
+
+std::shared_ptr<IFunction> Expression::getFunction() const {
+  return {};
 }
 
 Expression &Expression::add(const Expression &rhs) {
