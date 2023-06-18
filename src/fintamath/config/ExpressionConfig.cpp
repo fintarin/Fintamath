@@ -97,9 +97,17 @@ struct ExpressionConfig {
     Expression::registerTermsMaker([](const Token &token) {
       ArgumentsPtrVector args;
 
-      for (auto i = size_t(IFunction::Type::None); i <= size_t(IFunction::Type::Any); i++) {
-        if (std::shared_ptr<IMathObject> arg = IFunction::parse(token, IFunction::Type(i))) {
+      for (auto i = size_t(IFunction::Type::None); i <= size_t(IOperator::Priority::Any); i++) {
+        if (std::shared_ptr<IMathObject> arg = IOperator::parse(token, IOperator::Priority(i))) {
           args.emplace_back(arg);
+        }
+      }
+
+      if (args.empty()) {
+        for (auto i = size_t(IFunction::Type::None); i <= size_t(IFunction::Type::Any); i++) {
+          if (std::shared_ptr<IMathObject> arg = IFunction::parse(token, IFunction::Type(i))) {
+            args.emplace_back(arg);
+          }
         }
       }
 

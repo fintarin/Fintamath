@@ -414,10 +414,6 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
     childrenTypeIds = ArgumentsTypeIdsVector(args.size(), childrenTypeIds.front());
   }
 
-  if (childrenTypeIds.size() != args.size()) {
-    throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
-  }
-
   for (size_t i = 0; i < args.size(); i++) {
     const ArgumentPtr &arg = args[i];
     const MathObjectTypeId typeId = childrenTypeIds[i];

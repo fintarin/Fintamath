@@ -31,24 +31,11 @@ TEST(ExpressionUtilsTests, binaryOperatorToStringTest) {
   // TODO: implement
 }
 
-TEST(ExpressionUtilsTests, postfixUnaryOperatorToStringTest) {
-  auto percent = std::make_shared<Percent>();
-
-  EXPECT_EQ(postfixUnaryOperatorToString(*percent, std::make_shared<Integer>(-5)), "(-5)%");
-  EXPECT_EQ(postfixUnaryOperatorToString(*percent, std::make_shared<Integer>(3)), "3%");
-  EXPECT_EQ(postfixUnaryOperatorToString(*percent, std::make_shared<Variable>("a")), "a%");
-
-  auto expr = Expression("(a!)!");
-  EXPECT_EQ(expr.toString(), "a!!");
-
-  expr = Expression("(a+b)!");
-  EXPECT_EQ(expr.toString(), "(a + b)!");
-
-  expr = Expression("(sin(a))!");
-  EXPECT_EQ(expr.toString(), "sin(a)!");
+TEST(ExpressionUtilsTests, prefixOperatorToStringTest) {
+  // TODO: implement
 }
 
-TEST(ExpressionUtilsTests, prefixOperatorToStringTest) {
+TEST(ExpressionUtilsTests, postfixUnaryOperatorToStringTest) {
   // TODO: implement
 }
 

@@ -24,6 +24,10 @@ std::string FunctionExpression::toString() const {
       return postfixUnaryOperatorToString(*oper, children.front());
     }
 
+    if (oper->getOperatorPriority() == IOperator::Priority::PrefixUnary) {
+      return prefixUnaryOperatorToString(*oper, children.front());
+    }
+
     return binaryOperatorToString(*oper, {children.front(), children.back()});
   }
 
