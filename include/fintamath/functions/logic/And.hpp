@@ -7,7 +7,7 @@ namespace fintamath {
 
 class And : public IOperatorCRTP<Boolean, And, Boolean, Boolean> {
 public:
-  And() : IOperatorCRTP(IOperator::Priority::And) {
+  And() : IOperatorCRTP(IOperator::Priority::Conjunction) {
   }
 
   std::string toString() const override {

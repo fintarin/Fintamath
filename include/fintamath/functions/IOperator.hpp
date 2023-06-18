@@ -15,8 +15,8 @@ public:
     Multiplication, // multiplication operators
     Addition,       // addition operators
     Comparison,     // comparison operators
-    And,            // conjunction operators
-    Or,             // disjunction operators
+    Conjunction,    // conjunction operators
+    Disjunction,    // disjunction operators
     Implication,    // implication operators
     Equivalence,    // equivalence operators
     Any,            // any priority operators

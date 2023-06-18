@@ -14,7 +14,7 @@ TEST(IOperatorTests, getOperatorPriorityTest) {
   EXPECT_EQ(Add().getOperatorPriority(), IOperator::Priority::Addition);
   EXPECT_EQ(Neg().getOperatorPriority(), IOperator::Priority::PrefixUnary);
   EXPECT_EQ(Factorial().getOperatorPriority(), IOperator::Priority::PostfixUnary);
-  EXPECT_EQ(Or().getOperatorPriority(), IOperator::Priority::Or);
+  EXPECT_EQ(Or().getOperatorPriority(), IOperator::Priority::Disjunction);
 }
 
 TEST(IOperatorTests, isAssociativeTest) {

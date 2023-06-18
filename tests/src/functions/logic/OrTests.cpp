@@ -20,7 +20,7 @@ TEST(OrTests, getFunctionTypeTest) {
 }
 
 TEST(OrTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Or);
+  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Disjunction);
 }
 
 TEST(OrTests, callTest) {
