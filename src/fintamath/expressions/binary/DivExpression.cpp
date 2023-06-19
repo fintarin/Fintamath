@@ -8,6 +8,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 
@@ -26,9 +27,9 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() 
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::zeroSimplify, //
-      &DivExpression::negSimplify,  //
-      &DivExpression::sumSimplify,  //
+      &DivExpression::zeroSimplify,    //
+      &DivExpression::negSimplify,     //
+      &DivExpression::sumSimplify,     //
   };
   return simplifyFunctions;
 }
@@ -385,4 +386,27 @@ ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, cons
   return makeExpr(Pow(), value, ratesSum);
 }
 
+ArgumentPtr DivExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (const auto &lhsExpr = cast<IExpression>(lhs)) {
+    if (is<Add>(lhsExpr->getFunction())) {
+      return sumPolynomSimplify(lhsExpr->getChildren(), rhs);
+    }
+    if (is<Mul>(lhsExpr->getFunction())) {
+      return mulPolynomSimplify(lhsExpr->getChildren(), rhs);
+    }
+  }
+  return {};
+}
+
+ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhs, const ArgumentPtr &rhs) {
+  return {};
+}
+
+ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
+  for (const auto &child: lhsChildren) {
+    if (const auto &divChild = cast<DivExpression>(child)) {
+      
+    }
+  }
+}
 }

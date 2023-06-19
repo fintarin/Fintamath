@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
@@ -30,6 +31,12 @@ private:
   static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr sumSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr polynomSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr sumPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+
+  static ArgumentPtr mulPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
   static ArgumentPtr sumSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
