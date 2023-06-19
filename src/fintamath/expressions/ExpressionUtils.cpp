@@ -3,7 +3,10 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -29,55 +32,48 @@ std::string functionToString(const IFunction &func, const ArgumentsPtrVector &ar
   return result;
 }
 
-std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values) {
+std::string binaryOperatorChildToString(const IOperator &oper, const ArgumentPtr &child) {
+  std::string childStr = child->toString();
+  std::shared_ptr<IOperator> childOper;
+
+  if (const auto childExpr = cast<IExpression>(child)) {
+    childOper = cast<IOperator>(childExpr->getFunction());
+  }
+  else if (is<Rational>(child)) {
+    childOper = std::make_shared<Div>();
+  }
+  else if (is<Real>(child)) {
+    if (childStr.find(Mul().toString()) != std::string::npos) {
+      childOper = std::make_shared<Mul>();
+    }
+  }
+
+  if (childOper) {
+    IOperator::Priority operPriority = oper.getOperatorPriority();
+    IOperator::Priority lhsOperPriority = childOper->getOperatorPriority();
+
+    if (lhsOperPriority > operPriority || (lhsOperPriority == operPriority && !oper.isAssociative())) {
+      return putInBrackets(childStr);
+    }
+  }
+
+  return childStr;
+}
+
+std::string binaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   std::string result;
 
   std::string operStr = oper.toString();
-  IOperator::Priority operPriority = oper.getOperatorPriority();
-  bool operIsAssociative = oper.isAssociative();
+  const IOperator::Priority operPriority = oper.getOperatorPriority();
 
   if (operPriority != IOperator::Priority::Multiplication && operPriority != IOperator::Priority::Exponentiation) {
     operStr = ' ' + operStr + ' ';
   }
 
-  for (size_t i = 0; i < values.size(); i++) {
-    const ArgumentPtr &child = values[i];
-    std::string childStr = child->toString();
+  std::string lhsStr = binaryOperatorChildToString(oper, lhs);
+  std::string rhsStr = binaryOperatorChildToString(oper, rhs);
 
-    std::shared_ptr<const IOperator> childOper;
-    if (const auto childExpr = cast<IExpression>(child)) {
-      childOper = cast<IOperator>(childExpr->getFunction());
-    }
-    else if (childStr.find(Div().toString()) != std::string::npos) {
-      childOper = cast<IOperator>(Div().clone());
-    }
-    else if (childStr.find(Pow().toString()) != std::string::npos) {
-      childOper = cast<IOperator>(Pow().clone());
-    }
-
-    bool shouldPutInBrackets = false;
-    if (childOper) {
-      IOperator::Priority childOperPriority = childOper->getOperatorPriority();
-
-      if (childOperPriority > operPriority ||
-          (childOperPriority == operPriority && !operIsAssociative && (*childOper != oper || i > 0))) {
-        shouldPutInBrackets = true;
-      }
-    }
-
-    if (shouldPutInBrackets) {
-      result += putInBrackets(childStr);
-    }
-    else {
-      result += childStr;
-    }
-
-    result += operStr;
-  }
-
-  result = result.substr(0, result.length() - operStr.length());
-
-  return result;
+  return lhsStr + operStr + rhsStr;
 }
 
 std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs) {
@@ -150,5 +146,4 @@ std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &
 
   return argStrings;
 }
-
 }

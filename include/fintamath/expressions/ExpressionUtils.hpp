@@ -16,7 +16,7 @@ std::string putInSpaces(const std::string &str);
 
 std::string functionToString(const IFunction &func, const ArgumentsPtrVector &args);
 
-std::string binaryOperatorToString(const IOperator &oper, const ArgumentsPtrVector &values);
+std::string binaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
 std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
 

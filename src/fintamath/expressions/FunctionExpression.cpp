@@ -28,7 +28,7 @@ std::string FunctionExpression::toString() const {
       return prefixUnaryOperatorToString(*oper, children.front());
     }
 
-    return binaryOperatorToString(*oper, {children.front(), children.back()});
+    return binaryOperatorToString(*oper, children.front(), children.back());
   }
 
   return functionToString(*func, children);
