@@ -880,6 +880,8 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("sin(sin(E))").precise(30).toString(), "0.39932574404189139297067052142");
   EXPECT_EQ(Expression("(sqrt(2) + 1)^2").precise(5).toString(), "5.8284");
   EXPECT_EQ(Expression("(sqrt(2) - a - 1)^2").precise(5).toString(), "a^2 - 0.82843 a + 0.17157");
+  EXPECT_EQ(Expression("2^200/x").precise(10).toString(), "(1.606938044*10^60)/x");
+  EXPECT_EQ(Expression("x/2^200").precise(10).toString(), "6.223015278*10^-61 x");
 
   EXPECT_EQ(Expression("150!").precise().toString(),
             "5.7133839564458545904789328652610540031895535786011264182548375833179829124845398*10^262");
@@ -984,6 +986,7 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("log(E,5)>ln(5)").precise().toString(), "False");
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").precise().toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").precise().toString(), "True");
+
   EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
 }
 
