@@ -36,6 +36,14 @@ std::string PowExpression::toString() const {
   return IBinaryExpression::toString();
 }
 
+std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
+  if (*rhsChild == Rational(1, 2)) {
+    return std::make_shared<Sqrt>();
+  }
+
+  return IBinaryExpression::getFunction();
+}
+
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPreSimplify() const {
   static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
       &PowExpression::negSimplify, //

@@ -30,6 +30,14 @@ std::string LogExpression::toString() const {
   return IBinaryExpression::toString();
 }
 
+std::shared_ptr<IFunction> LogExpression::getOutputFunction() const {
+  if (*lhsChild == E()) {
+    return std::make_shared<Ln>();
+  }
+
+  return IBinaryExpression::getFunction();
+}
+
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
       &LogExpression::numSimplify,   //

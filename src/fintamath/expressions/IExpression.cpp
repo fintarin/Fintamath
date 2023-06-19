@@ -66,6 +66,10 @@ std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
   return simplify()->clone();
 }
 
+std::shared_ptr<IFunction> IExpression::getOutputFunction() const {
+  return getFunction();
+}
+
 void IExpression::compressChild(ArgumentPtr &child) {
   for (;;) {
     if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
