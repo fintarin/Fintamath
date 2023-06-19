@@ -23,6 +23,8 @@ public:
 
   std::unique_ptr<IMathObject> toMinimalObject() const final;
 
+  virtual std::shared_ptr<IFunction> getOutputFunction() const;
+
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
   static void registerType() {
     Parser::registerType<T>(getParser());

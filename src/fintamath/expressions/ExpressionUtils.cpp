@@ -37,7 +37,7 @@ std::string binaryOperatorChildToString(const IOperator &oper, const ArgumentPtr
   std::shared_ptr<IOperator> childOper;
 
   if (const auto childExpr = cast<IExpression>(child)) {
-    childOper = cast<IOperator>(childExpr->getFunction());
+    childOper = cast<IOperator>(childExpr->getOutputFunction());
   }
   else if (is<Rational>(child)) {
     childOper = std::make_shared<Div>();
