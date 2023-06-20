@@ -34,6 +34,10 @@ ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow);
 
 Expression solve(const Expression &rhs) {
   if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
+    if (compExpr->getVariables().size() != 1) {
+      return rhs;
+    }
+
     // TODO: remove this if when inequalities will be implemented
     if (!is<Eqv>(compExpr->getFunction())) {
       auto var = cast<Variable>(compExpr->getVariables().front());
@@ -45,10 +49,6 @@ Expression solve(const Expression &rhs) {
       }
     }
     if (is<Eqv>(compExpr->getFunction())) {
-      if (compExpr->getVariables().size() != 1) {
-        return rhs;
-      }
-
       auto var = cast<Variable>(compExpr->getVariables().front());
       ArgumentsPtrVector powerRates = getVariablePowerRates(compExpr->getChildren().front(), var);
       ArgumentsPtrVector roots;
