@@ -27,6 +27,8 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
+  ArgumentPtr preciseSimplify() const override;
+
 private:
   std::shared_ptr<IFunction> func;
 

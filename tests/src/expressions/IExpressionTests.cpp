@@ -37,6 +37,10 @@ protected:
 
     return clone();
   }
+
+  ArgumentPtr preciseSimplify() const override {
+    return clone();
+  }
 };
 
 }

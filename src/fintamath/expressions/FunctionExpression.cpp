@@ -82,6 +82,16 @@ ArgumentPtr FunctionExpression::postSimplify() const {
   return (*func)(args);
 }
 
+ArgumentPtr FunctionExpression::preciseSimplify() const {
+  auto preciseExpr = cast<FunctionExpression>(clone());
+
+  for (auto &child : preciseExpr->children) {
+    preciseSimplifyChild(child);
+  }
+
+  return preciseExpr;
+}
+
 void FunctionExpression::setChildren(const ArgumentsPtrVector &childVect) {
   if (childVect.size() != size_t(func->getFunctionType())) {
     throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(childVect));

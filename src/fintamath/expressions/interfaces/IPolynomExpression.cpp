@@ -129,6 +129,16 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
   return simpl;
 }
 
+ArgumentPtr IPolynomExpression::preciseSimplify() const {
+  auto preciseExpr = cast<IPolynomExpression>(clone());
+
+  for (auto &child : preciseExpr->children) {
+    preciseSimplifyChild(child);
+  }
+
+  return preciseExpr;
+}
+
 void IPolynomExpression::postSimplifyRec() {
   sort();
 

@@ -47,8 +47,9 @@ std::string Expression::toString() const {
 }
 
 Expression Expression::precise(uint8_t precision) const {
-  assert(precision <= FINTAMATH_PRECISION);
-  return Expression(preciseRec(child, precision, true));
+  Expression preciseExpr(preciseSimplify());
+  preciseRec(preciseExpr.child, precision);
+  return preciseExpr;
 }
 
 Expression::Expression(const TermVector &terms) : Expression(terms, 0, terms.size()) {
@@ -295,6 +296,12 @@ ArgumentPtr Expression::simplify() const {
   return child;
 }
 
+ArgumentPtr Expression::preciseSimplify() const {
+  ArgumentPtr preciseChild = child;
+  preciseSimplifyChild(preciseChild);
+  return preciseChild;
+}
+
 TermVector Expression::tokensToTerms(const TokenVector &tokens) {
   TermVector terms(tokens.size());
 
@@ -464,48 +471,21 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
   }
 }
 
-ArgumentPtr Expression::preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify) {
-  if (const auto num = cast<INumber>(arg)) {
-    return std::make_shared<Real>(convert<Real>(*num).precise(precision));
+void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
+  if (const auto realArg = cast<Real>(arg)) {
+    arg = std::make_shared<Real>(realArg->precise(precision));
   }
+  else if (const auto exprArg = cast<IExpression>(arg)) {
+    ArgumentsPtrVector newChildren = exprArg->getChildren();
 
-  if (shouldSimplify) {
-    if (const auto constant = cast<IConstant>(arg)) {
-      ArgumentPtr res = (*constant)();
-
-      if (const auto num = cast<INumber>(res)) {
-        res = std::make_shared<Real>(convert<Real>(*num).precise(precision));
-      }
-
-      return res;
+    for (auto &child : newChildren) {
+      preciseRec(child, precision);
     }
+
+    auto newExprArg = cast<IExpression>(exprArg->clone());
+    newExprArg->setChildren(newChildren);
+    arg = ArgumentPtr(std::move(newExprArg));
   }
-
-  if (const auto expr = cast<IExpression>(arg)) {
-    return preciseExpressionRec(expr, precision, shouldSimplify);
-  }
-
-  return arg;
-}
-
-ArgumentPtr Expression::preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
-                                             bool shouldSimplify) {
-  ArgumentsPtrVector newChildren;
-
-  for (const auto &child : expr->getChildren()) {
-    newChildren.emplace_back(preciseRec(child, precision, shouldSimplify));
-  }
-
-  std::shared_ptr<IExpression> res = cast<IExpression>(expr->clone());
-  res->setChildren(newChildren);
-
-  if (shouldSimplify) {
-    auto resSimpl = std::static_pointer_cast<const IMathObject>(res);
-    simplifyChild(resSimpl);
-    return preciseRec(resSimpl, precision, false);
-  }
-
-  return res;
 }
 
 std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args) {

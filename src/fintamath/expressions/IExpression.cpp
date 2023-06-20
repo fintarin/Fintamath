@@ -109,6 +109,18 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
   simplifyConstant(child);
 }
 
+void IExpression::preciseSimplifyChild(ArgumentPtr &child) {
+  if (const auto exprChild = cast<IExpression>(child)) {
+    child = exprChild->preciseSimplify();
+  }
+  else if (const auto numChild = cast<INumber>(child)) {
+    child = std::make_shared<Real>(convert<Real>(*numChild));
+  }
+  else if (const auto constChild = cast<IConstant>(child)) {
+    child = (*constChild)();
+  }
+}
+
 ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs) {
   if (!func.isNonExressionEvaluatable()) {
     return {};

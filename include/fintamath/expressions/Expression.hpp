@@ -95,6 +95,8 @@ protected:
 
   ArgumentPtr simplify() const override;
 
+  ArgumentPtr preciseSimplify() const override;
+
 private:
   explicit Expression(const TermVector &terms);
 
@@ -136,10 +138,7 @@ private:
 
   static void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args);
 
-  static ArgumentPtr preciseRec(const ArgumentPtr &arg, uint8_t precision, bool shouldSimplify);
-
-  static ArgumentPtr preciseExpressionRec(const std::shared_ptr<const IExpression> &expr, uint8_t precision,
-                                          bool shouldSimplify);
+  static void preciseRec(ArgumentPtr &arg, uint8_t precision);
 
   friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args);
 

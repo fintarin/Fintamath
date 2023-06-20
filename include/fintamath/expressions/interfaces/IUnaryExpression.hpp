@@ -35,6 +35,8 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
+  ArgumentPtr preciseSimplify() const override;
+
 private:
   ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const;
 

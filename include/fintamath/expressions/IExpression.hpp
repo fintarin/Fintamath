@@ -39,6 +39,14 @@ public:
   }
 
 protected:
+  virtual ArgumentPtr simplify() const = 0;
+
+  virtual ArgumentPtr preSimplify() const;
+
+  virtual ArgumentPtr postSimplify() const;
+
+  virtual ArgumentPtr preciseSimplify() const = 0;
+
   static void compressChild(ArgumentPtr &child);
 
   static void simplifyChild(ArgumentPtr &child);
@@ -47,13 +55,9 @@ protected:
 
   static void postSimplifyChild(ArgumentPtr &child);
 
+  static void preciseSimplifyChild(ArgumentPtr &child);
+
   static ArgumentPtr callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs);
-
-  virtual ArgumentPtr preSimplify() const;
-
-  virtual ArgumentPtr postSimplify() const;
-
-  virtual ArgumentPtr simplify() const = 0;
 
 private:
   static void simplifyConstant(ArgumentPtr &child);

@@ -29,11 +29,13 @@ protected:
 
   virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
 
+  ArgumentPtr simplify() const final;
+
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
 
-  ArgumentPtr simplify() const final;
+  ArgumentPtr preciseSimplify() const override;
 
 private:
   ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const;

@@ -63,6 +63,8 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
+  ArgumentPtr preciseSimplify() const override;
+
   virtual bool isTermsOrderInversed() const;
 
   virtual bool isComparableOrderInversed() const;
