@@ -129,12 +129,12 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
       if (auto divPowRes = divPowSimplify(lhsChild, rhsChildren[j])) {
         lhsChild = divPowRes;
-        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
+        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::difference_type(j));
         isResFound = true;
       }
       else if (auto callFuncRes = callFunction(Div(), {lhsChild, rhsChildren[j]})) {
         lhsChild = Div()(*lhsChild, *rhsChildren[j]);
-        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
+        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::difference_type(j));
         isResFound = true;
       }
 

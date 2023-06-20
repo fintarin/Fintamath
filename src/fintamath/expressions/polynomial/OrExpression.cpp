@@ -35,7 +35,7 @@ ArgumentPtr OrExpression::postSimplify() const {
     for (size_t j = i + 1; j < simplChildren.size(); j++) {
       if (auto res = simplifyAbsorption(simplChildren[i], simplChildren[j])) {
         simplChildren[i] = res;
-        simplChildren.erase(simplChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
+        simplChildren.erase(simplChildren.begin() + ArgumentsPtrVector::difference_type(j));
         break;
       }
     }
@@ -159,7 +159,7 @@ ArgumentPtr OrExpression::simplifyAnd(const IFunction & /*func*/, const Argument
   }
 
   ArgumentsPtrVector resultChildren = lhsChildren;
-  resultChildren.erase(resultChildren.begin() + ArgumentsPtrVector::iterator::difference_type(resolutionIndex));
+  resultChildren.erase(resultChildren.begin() + ArgumentsPtrVector::difference_type(resolutionIndex));
 
   return resultChildren.size() > 1 ? makeExpr(And(), resultChildren)->toMinimalObject()
                                    : resultChildren.front()->toMinimalObject();

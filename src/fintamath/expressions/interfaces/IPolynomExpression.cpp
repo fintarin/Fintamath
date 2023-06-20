@@ -97,7 +97,7 @@ void IPolynomExpression::preSimplifyRec() {
 
     if (res) {
       children[i - 1] = res;
-      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
+      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i));
       i--;
     }
   }
@@ -157,7 +157,7 @@ void IPolynomExpression::postSimplifyRec() {
 
     if (res) {
       children[i - 1] = res;
-      children.erase(children.begin() + ArgumentsPtrVector::iterator::difference_type(i));
+      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i));
       i--;
     }
   }
