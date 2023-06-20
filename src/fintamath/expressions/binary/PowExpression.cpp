@@ -44,6 +44,16 @@ std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
   return IBinaryExpression::getFunction();
 }
 
+ArgumentPtr PowExpression::preciseSimplify() const {
+  if (*rhsChild == Rational(1, 2)) {
+    auto preciseExpr = cast<PowExpression>(clone());
+    preciseSimplifyChild(preciseExpr->lhsChild);
+    return preciseExpr;
+  }
+
+  return IBinaryExpression::preciseSimplify();
+}
+
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPreSimplify() const {
   static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
       &PowExpression::negSimplify, //

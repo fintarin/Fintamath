@@ -38,6 +38,16 @@ std::shared_ptr<IFunction> LogExpression::getOutputFunction() const {
   return IBinaryExpression::getFunction();
 }
 
+ArgumentPtr LogExpression::preciseSimplify() const {
+  if (*lhsChild == E()) {
+    auto preciseExpr = cast<LogExpression>(clone());
+    preciseSimplifyChild(preciseExpr->rhsChild);
+    return preciseExpr;
+  }
+
+  return IBinaryExpression::preciseSimplify();
+}
+
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
       &LogExpression::numSimplify,   //

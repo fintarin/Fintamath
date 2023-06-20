@@ -17,6 +17,8 @@ public:
   }
 
 protected:
+  ArgumentPtr preciseSimplify() const override;
+
   SimplifyFunctionsVector getFunctionsForSimplify() const override;
 
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;

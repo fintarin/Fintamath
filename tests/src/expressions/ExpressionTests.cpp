@@ -988,6 +988,11 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").precise().toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").precise().toString(), "True");
 
+  EXPECT_EQ(Expression("ln(x)").precise().toString(), "ln(x)");
+  EXPECT_EQ(Expression("sqrt(x)").precise().toString(), "sqrt(x)");
+  // TODO: to uncomment when the root is implemented
+  // EXPECT_EQ(Expression("root(x, 3)").precise().toString(), "root(x, 3)");
+
   EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
 }
 
