@@ -511,6 +511,7 @@ TEST(ExpressionTests, stringConstructorTest) {
             "(a & b & ~c) | (~a & ~b & ~c) | (~a & c) | (~b & c)");
   EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~a <-> ~~b !<-> ~~c").toString(),
             "(a & b & ~c) | (~a & ~b & ~c) | (~a & c) | (~b & c)");
+  EXPECT_EQ(Expression("((a | b) & (a -> c)) <-> (~a -> b)").toString(), "(a & c) | ~a | (b & c)");
 
   EXPECT_EQ(Expression("x=1&a").toString(), "a & x - 1 = 0");
   EXPECT_EQ(Expression("True & a = b").toString(), "a - b = 0");

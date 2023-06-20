@@ -82,7 +82,7 @@ ArgumentPtr IPolynomExpression::preSimplify() const {
 void IPolynomExpression::preSimplifyRec() {
   sort();
 
-  const size_t childrenSize = children.size();
+  bool isSimplified = true;
 
   for (size_t i = 1; i < children.size(); i++) {
     ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]});
@@ -96,13 +96,15 @@ void IPolynomExpression::preSimplifyRec() {
     }
 
     if (res) {
-      children[i - 1] = res;
-      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i));
+      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
+      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
+      addElement(res);
       i--;
+      isSimplified = false;
     }
   }
 
-  if (children.size() != childrenSize) {
+  if (!isSimplified) {
     preSimplifyRec();
   }
 }
@@ -142,7 +144,7 @@ ArgumentPtr IPolynomExpression::preciseSimplify() const {
 void IPolynomExpression::postSimplifyRec() {
   sort();
 
-  const size_t childrenSize = children.size();
+  bool isSimplified = true;
 
   for (size_t i = 1; i < children.size(); i++) {
     ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]});
@@ -156,13 +158,15 @@ void IPolynomExpression::postSimplifyRec() {
     }
 
     if (res) {
-      children[i - 1] = res;
-      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i));
+      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
+      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
+      addElement(res);
       i--;
+      isSimplified = false;
     }
   }
 
-  if (children.size() != childrenSize) {
+  if (!isSimplified) {
     postSimplifyRec();
   }
 }
@@ -180,7 +184,17 @@ IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForP
 }
 
 std::string IPolynomExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  const std::string result = inChild->toString();
+  std::string result = inChild->toString();
+
+  if (const auto exprChild = cast<IExpression>(inChild)) {
+    const auto oper = cast<IOperator>(func);
+    const auto childOper = cast<IOperator>(exprChild->getFunction());
+
+    if (oper && childOper && oper->getOperatorPriority() <= childOper->getOperatorPriority()) {
+      result = putInBrackets(result);
+    }
+  }
+
   return prevChild ? (putInSpaces(func->toString()) + result) : result;
 }
 
