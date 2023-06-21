@@ -444,17 +444,12 @@ ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChild
   ArgumentsPtrVector newNumerator;
   ArgumentsPtrVector newDenominator;
   for (const auto &child : lhsChildren) {
-    if (const auto &divChild = cast<DivExpression>(child)) {
-      newNumerator.emplace_back(divChild->lhsChild);
-      newDenominator.emplace_back(divChild->rhsChild);
-    }
-    else if (const auto &rationalChild = cast<Rational>(child)) {
+    if (const auto &rationalChild = cast<Rational>(child)) {
       newNumerator.emplace_back(std::make_shared<const Integer>(rationalChild->numerator()));
       newDenominator.emplace_back(std::make_shared<const Integer>(rationalChild->denominator()));
+      continue;
     }
-    else {
-      newNumerator.emplace_back(child);
-    }
+    newNumerator.emplace_back(child);
   }
 
   if (!newDenominator.empty()) {
