@@ -8,6 +8,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 
@@ -26,9 +27,10 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() 
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::zeroSimplify, //
-      &DivExpression::negSimplify,  //
-      &DivExpression::sumSimplify,  //
+      &DivExpression::zeroSimplify,    //
+      &DivExpression::negSimplify,     //
+      &DivExpression::sumSimplify,     //
+      &DivExpression::polynomSimplify, //
   };
   return simplifyFunctions;
 }
@@ -132,7 +134,8 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
         rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::difference_type(j));
         isResFound = true;
       }
-      else if (auto callFuncRes = callFunction(Div(), {lhsChild, rhsChildren[j]})) {
+      else if (auto callFuncRes = callFunction(Div(), {lhsChild, rhsChildren[j]});
+               callFuncRes && !is<Rational>(callFuncRes)) {
         lhsChild = Div()(*lhsChild, *rhsChildren[j]);
         rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::difference_type(j));
         isResFound = true;
@@ -383,6 +386,88 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const Argume
 ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeExpr(Add(), rates)->toMinimalObject();
   return makeExpr(Pow(), value, ratesSum);
+}
+
+ArgumentPtr DivExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr result;
+  if (const auto &lhsExpr = cast<IExpression>(lhs)) {
+    if (is<Add>(lhsExpr->getFunction())) {
+      result = sumPolynomSimplify(lhsExpr->getChildren(), rhs);
+    }
+    if (is<Mul>(lhsExpr->getFunction())) {
+      result = mulPolynomSimplify(lhsExpr->getChildren(), rhs);
+    }
+  }
+  return result != nullptr ? result->toMinimalObject() : result;
+}
+
+ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
+  ArgumentsPtrVector newNumerator;
+  ArgumentsPtrVector resultPolynom;
+  for (const auto &child : lhsChildren) {
+    ArgumentPtr childForCheck = child;
+    bool isNeg = unwrapNeg(childForCheck);
+    if (const auto &exprChild = cast<IExpression>(childForCheck); exprChild && is<Mul>(exprChild->getFunction())) {
+      if (auto result = mulPolynomSimplify(exprChild->getChildren(), rhs)) {
+        resultPolynom.emplace_back(result);
+        continue;
+      }
+    }
+    else if (const auto &divChild = cast<DivExpression>(childForCheck)) {
+      ArgumentPtr childForAdd = makeExpr(Div(), divChild->lhsChild, makeExpr(Mul(), divChild->rhsChild, rhs));
+      resultPolynom.emplace_back(isNeg ? makeExpr(Neg(), childForAdd) : childForAdd);
+      continue;
+    }
+    else if (const auto &rationalChild = cast<Rational>(childForCheck)) {
+      ArgumentPtr childForAdd =
+          makeExpr(Div(), std::make_shared<const Integer>(rationalChild->numerator()),
+                   makeExpr(Mul(), std::make_shared<const Integer>(rationalChild->denominator()), rhs));
+      resultPolynom.emplace_back(isNeg ? makeExpr(Neg(), childForAdd) : childForAdd);
+      continue;
+    }
+    newNumerator.emplace_back(child);
+  }
+
+  if (resultPolynom.empty()) {
+    return {};
+  }
+
+  if (!newNumerator.empty()) {
+    resultPolynom.emplace_back(
+        makeExpr(Div(), newNumerator.size() > 1 ? makeExpr(Add(), newNumerator) : newNumerator.front(), rhs));
+  }
+
+  return makeExpr(Add(), resultPolynom);
+}
+
+ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
+  ArgumentsPtrVector newNumerator;
+  ArgumentsPtrVector newDenominator;
+  for (const auto &child : lhsChildren) {
+    if (const auto &rationalChild = cast<Rational>(child)) {
+      newNumerator.emplace_back(std::make_shared<const Integer>(rationalChild->numerator()));
+      newDenominator.emplace_back(std::make_shared<const Integer>(rationalChild->denominator()));
+      continue;
+    }
+    newNumerator.emplace_back(child);
+  }
+
+  if (!newDenominator.empty()) {
+    newDenominator.emplace_back(rhs);
+    auto denominator = makeExpr(Mul(), newDenominator);
+    auto numerator = makeExpr(Mul(), newNumerator);
+    return makeExpr(Div(), numerator, denominator);
+  }
+
+  return {};
+}
+
+bool DivExpression::unwrapNeg(ArgumentPtr &lhs) {
+  if (const auto &exprLhs = cast<IExpression>(lhs); exprLhs && is<Neg>(exprLhs->getFunction())) {
+    lhs = exprLhs->getChildren().front();
+    return true;
+  }
+  return false;
 }
 
 }

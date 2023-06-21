@@ -198,7 +198,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-a)(-b)").toString(), "a b");
   EXPECT_EQ(Expression("(a)(-b)").toString(), "-a b");
   EXPECT_EQ(Expression("(-a)(b)").toString(), "-a b");
-  EXPECT_EQ(Expression("(5 b)/(3 a)").toString(), "(5/3 b)/a");
+  EXPECT_EQ(Expression("(5/3 b)/a").toString(), "(5 b)/(3 a)");
   EXPECT_EQ(Expression("(a b)/(a b)").toString(), "1");
   EXPECT_EQ(Expression("(a b)/1").toString(), "a b");
   EXPECT_EQ(Expression("(a b)/-1").toString(), "-a b");
@@ -261,9 +261,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4 + 4 a^3 b + 6 a^2 b^2 + 4 a b^3 + b^4");
   EXPECT_EQ(Expression("(a+3)/(b+2)").toString(), "(a + 3)/(b + 2)");
   EXPECT_EQ(Expression("b/a*(a+3)/(b+2)").toString(),
-            "1 + (-2 + (3 b)/a)/(b + 2)"); // TODO! make divisions non nested
+            "1 + (3 b)/(a b + 2 a) - 2/(b + 2)");
   EXPECT_EQ(Expression("(5+b)/a*(a+3)/(b+2)").toString(),
-            "1 + (3 - 30/(a b) - 6/a)/(b + 2) + 15/(a b) + 3/a"); // TODO! make divisions non nested
+            "1 - 30/(a b^2 + 2 a b) - 6/(a b + 2 a) + 15/(a b) + 3/a + 3/(b + 2)");
   EXPECT_EQ(Expression("(a+b)*(a+b)/(a+b)").toString(), "a + b");
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
@@ -314,9 +314,7 @@ TEST(ExpressionTests, stringConstructorTest) {
             "2 x^2 + (-x^2 + x - 2)/(2 x^3 + x^2 - 3 x + 2)");
   EXPECT_EQ(Expression("(3x^6 + 5x^5 - 2x^4 + 4x^3 + x^2 + 3x - 5) / (x^4 + 3x^2 - 2)").toString(),
             "3 x^2 + 5 x - 11 + (-11 x^3 + 40 x^2 + 13 x - 27)/(x^4 + 3 x^2 - 2)");
-  EXPECT_EQ(Expression("(6x^8 - 7x^6 + 9x^4 - 4x^2 + 8) / (2x^3 - x^2 + 3x - 1)").toString(),
-            "3 x^5 + 3/2 x^4 - 29/4 x^3 - 35/8 x^2 + 223/16 x + 317/32 + (-1289/32 x^2 - 505/32 x + 573/32)/(2 x^3 - "
-            "x^2 + 3 x - 1)");
+  EXPECT_EQ(Expression("(6x^8 - 7x^6 + 9x^4 - 4x^2 + 8) / (2x^3 - x^2 + 3x - 1)").toString(),"3 x^5 + 3/2 x^4 - 29/4 x^3 - 35/8 x^2 + 223/16 x + 317/32 + (-1289 x^2 - 505 x + 573)/(64 x^3 - 32 x^2 + 96 x - 32)");
 
   EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
