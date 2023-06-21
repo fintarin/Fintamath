@@ -30,6 +30,7 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplif
       &DivExpression::zeroSimplify,    //
       &DivExpression::negSimplify,     //
       &DivExpression::sumSimplify,     //
+      &DivExpression::polynomSimplify, //
   };
   return simplifyFunctions;
 }
@@ -133,7 +134,8 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
         rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
         isResFound = true;
       }
-      else if (auto callFuncRes = callFunction(Div(), {lhsChild, rhsChildren[j]})) {
+      else if (auto callFuncRes = callFunction(Div(), {lhsChild, rhsChildren[j]});
+               callFuncRes && !is<Rational>(callFuncRes)) {
         lhsChild = Div()(*lhsChild, *rhsChildren[j]);
         rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::iterator::difference_type(j));
         isResFound = true;
@@ -403,10 +405,29 @@ ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhs, con
 }
 
 ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
-  for (const auto &child: lhsChildren) {
+  ArgumentsPtrVector newNumerator;
+  ArgumentsPtrVector newDenominator;
+  for (const auto &child : lhsChildren) {
     if (const auto &divChild = cast<DivExpression>(child)) {
-      
+      newNumerator.emplace_back(divChild->lhsChild);
+      newDenominator.emplace_back(divChild->rhsChild);
+    }
+    else if (const auto &rationalChild = cast<Rational>(child)) {
+      newNumerator.emplace_back(std::make_shared<Integer>(rationalChild->numerator()));
+      newDenominator.emplace_back(std::make_shared<Integer>(rationalChild->denominator()));
+    }
+    else {
+      newNumerator.emplace_back(child);
     }
   }
+
+  if (!newDenominator.empty()) {
+    newDenominator.emplace_back(rhs);
+    auto denominator = makeExpr(Mul(), newDenominator);
+    auto numerator = makeExpr(Mul(), newNumerator);
+    return makeExpr(Div(), numerator, denominator)->toMinimalObject();
+  }
+
+  return {};
 }
 }
