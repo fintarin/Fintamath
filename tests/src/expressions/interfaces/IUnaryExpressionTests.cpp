@@ -14,6 +14,10 @@ class TestUnaryExpression : public IUnaryExpressionCRTP<TestUnaryExpression> {
 public:
   explicit TestUnaryExpression(const ArgumentPtr &inRhsChild) : IUnaryExpressionCRTP(f, inRhsChild) {
   }
+
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::IUnaryExpression) + 999;
+  }
 };
 
 }

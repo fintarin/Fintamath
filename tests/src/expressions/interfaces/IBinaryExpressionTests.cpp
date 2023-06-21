@@ -15,6 +15,10 @@ public:
   explicit TestBinaryExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
       : IBinaryExpressionCRTP(f, inLhsChild, inRhsChild) {
   }
+
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::IBinaryExpression) + 999;
+  }
 };
 
 }

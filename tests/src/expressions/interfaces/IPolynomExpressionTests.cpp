@@ -2,11 +2,13 @@
 
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 
 using namespace fintamath;
 
-const Add f;
+const Mul f;
 
 namespace {
 
@@ -15,29 +17,28 @@ public:
   explicit TestPolynomExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(f, children) {
   }
 
-protected:
-  std::string operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override {
-    return (prevChild ? " " + func->toString() + " " : "") + inChild->toString();
+  static MathObjectTypeId getTypeIdStatic() {
+    return MathObjectTypeId(MathObjectType::IPolynomExpression) + 999;
   }
 };
 
 }
 
 TEST(IPolynomExpressionTests, toStringTest) {
-  TestPolynomExpression expr(
-      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
-  EXPECT_EQ(expr.toString(), "1 + 2 + 3");
+  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
+  EXPECT_EQ(expr.toString(), "1 * 2 * 3");
+
+  expr = TestPolynomExpression({makeExpr(Add(), Variable("x").clone(), Variable("y").clone()), Variable("a").clone()});
+  EXPECT_EQ(expr.toString(), "(x + y) * a");
 }
 
 TEST(IPolynomExpressionTests, getFunctionTest) {
-  TestPolynomExpression expr(
-      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
 TEST(IPolynomExpressionTests, getChildren) {
-  TestPolynomExpression expr(
-      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
   EXPECT_EQ(expr.getChildren().size(), 3);
   EXPECT_EQ(*expr.getChildren()[0], Integer(1));
   EXPECT_EQ(*expr.getChildren()[1], Integer(2));
@@ -45,19 +46,18 @@ TEST(IPolynomExpressionTests, getChildren) {
 }
 
 TEST(IPolynomExpressionTests, setChildren) {
-  TestPolynomExpression expr(
-      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
+  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
 
-  expr.setChildren({std::make_shared<Integer>(0)});
+  expr.setChildren({Integer(0).clone()});
   EXPECT_EQ(expr.getChildren().size(), 1);
   EXPECT_EQ(*expr.getChildren().back(), Integer(0));
 
-  expr.setChildren({std::make_shared<Integer>(0), std::make_shared<Integer>(0)});
+  expr.setChildren({Integer(0).clone(), Integer(0).clone()});
   EXPECT_EQ(expr.getChildren().size(), 2);
   EXPECT_EQ(*expr.getChildren().front(), Integer(0));
   EXPECT_EQ(*expr.getChildren().back(), Integer(0));
 
-  expr.setChildren({std::make_shared<Integer>(0), std::make_shared<Integer>(0), std::make_shared<Integer>(0)});
+  expr.setChildren({Integer(0).clone(), Integer(0).clone(), Integer(0).clone()});
   EXPECT_EQ(expr.getChildren().size(), 3);
   EXPECT_EQ(*expr.getChildren()[0], Integer(0));
   EXPECT_EQ(*expr.getChildren()[1], Integer(0));
@@ -67,15 +67,14 @@ TEST(IPolynomExpressionTests, setChildren) {
 }
 
 TEST(IPolynomExpressionTests, addElement) {
-  TestPolynomExpression expr(
-      {std::make_shared<Integer>(1), std::make_shared<Integer>(2), std::make_shared<Integer>(3)});
-  expr.addElement(std::make_shared<Integer>(0));
-  EXPECT_EQ(expr.toString(), "1 + 2 + 3 + 0");
+  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
+  expr.addElement(Integer(0).clone());
+  EXPECT_EQ(expr.toString(), "1 * 2 * 3 * 0");
 }
 
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {
-  TestPolynomExpression expr({std::make_shared<Integer>(1), std::make_shared<Integer>(2), Variable("a").clone()});
-  EXPECT_EQ(expr.toMinimalObject()->toString(), "a + 3");
+  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Variable("a").clone()});
+  EXPECT_EQ(expr.toMinimalObject()->toString(), "a * 2");
 }
 
 TEST(IPolynomExpressionTests, getTypeIdTest) {
