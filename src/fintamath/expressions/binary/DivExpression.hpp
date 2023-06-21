@@ -51,6 +51,8 @@ private:
   static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
 
   static bool isNeg(const ArgumentPtr &expr);
+
+  static bool unwrapNeg(ArgumentPtr &lhs);
 };
 
 }

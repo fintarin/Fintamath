@@ -389,19 +389,55 @@ ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, cons
 }
 
 ArgumentPtr DivExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr result;
   if (const auto &lhsExpr = cast<IExpression>(lhs)) {
     if (is<Add>(lhsExpr->getFunction())) {
-      return sumPolynomSimplify(lhsExpr->getChildren(), rhs);
+      result = sumPolynomSimplify(lhsExpr->getChildren(), rhs);
     }
     if (is<Mul>(lhsExpr->getFunction())) {
-      return mulPolynomSimplify(lhsExpr->getChildren(), rhs);
+      result = mulPolynomSimplify(lhsExpr->getChildren(), rhs);
     }
   }
-  return {};
+  return result != nullptr ? result->toMinimalObject() : result;
 }
 
-ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhs, const ArgumentPtr &rhs) {
-  return {};
+ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
+  ArgumentsPtrVector newNumerator;
+  ArgumentsPtrVector resultPolynom;
+  for (const auto &child : lhsChildren) {
+    ArgumentPtr childForCheck = child;
+    bool isNeg = unwrapNeg(childForCheck);
+    if (const auto &exprChild = cast<IExpression>(childForCheck); exprChild && is<Mul>(exprChild->getFunction())) {
+      if (auto result = mulPolynomSimplify(exprChild->getChildren(), rhs)) {
+        resultPolynom.emplace_back(result);
+        continue;
+      }
+    }
+    else if (const auto &divChild = cast<DivExpression>(childForCheck)) {
+      ArgumentPtr childForAdd = makeExpr(Div(), divChild->lhsChild, makeExpr(Mul(), divChild->rhsChild, rhs));
+      resultPolynom.emplace_back(isNeg ? makeExpr(Neg(), childForAdd) : childForAdd);
+      continue;
+    }
+    else if (const auto &rationalChild = cast<Rational>(childForCheck)) {
+      ArgumentPtr childForAdd =
+          makeExpr(Div(), std::make_shared<const Integer>(rationalChild->numerator()),
+                   makeExpr(Mul(), std::make_shared<const Integer>(rationalChild->denominator()), rhs));
+      resultPolynom.emplace_back(isNeg ? makeExpr(Neg(), childForAdd) : childForAdd);
+      continue;
+    }
+    newNumerator.emplace_back(child);
+  }
+
+  if (resultPolynom.empty()) {
+    return {};
+  }
+
+  if (!newNumerator.empty()) {
+    resultPolynom.emplace_back(
+        makeExpr(Div(), newNumerator.size() > 1 ? makeExpr(Add(), newNumerator) : newNumerator.front(), rhs));
+  }
+
+  return makeExpr(Add(), resultPolynom);
 }
 
 ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
@@ -413,8 +449,8 @@ ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChild
       newDenominator.emplace_back(divChild->rhsChild);
     }
     else if (const auto &rationalChild = cast<Rational>(child)) {
-      newNumerator.emplace_back(std::make_shared<Integer>(rationalChild->numerator()));
-      newDenominator.emplace_back(std::make_shared<Integer>(rationalChild->denominator()));
+      newNumerator.emplace_back(std::make_shared<const Integer>(rationalChild->numerator()));
+      newDenominator.emplace_back(std::make_shared<const Integer>(rationalChild->denominator()));
     }
     else {
       newNumerator.emplace_back(child);
@@ -425,9 +461,18 @@ ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChild
     newDenominator.emplace_back(rhs);
     auto denominator = makeExpr(Mul(), newDenominator);
     auto numerator = makeExpr(Mul(), newNumerator);
-    return makeExpr(Div(), numerator, denominator)->toMinimalObject();
+    return makeExpr(Div(), numerator, denominator);
   }
 
   return {};
 }
+
+bool DivExpression::unwrapNeg(ArgumentPtr &lhs) {
+  if (const auto &exprLhs = cast<IExpression>(lhs); exprLhs && is<Neg>(exprLhs->getFunction())) {
+    lhs = exprLhs->getChildren().front();
+    return true;
+  }
+  return false;
+}
+
 }
