@@ -4,12 +4,12 @@
 
 namespace fintamath {
 
-class SumExpression : public IPolynomExpressionCRTP<SumExpression> {
+class AddExpression : public IPolynomExpressionCRTP<AddExpression> {
 public:
-  explicit SumExpression(const ArgumentsPtrVector &inChildren);
+  explicit AddExpression(const ArgumentsPtrVector &inChildren);
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::SumExpression);
+    return MathObjectTypeId(MathObjectType::AddExpression);
   }
 
 protected:

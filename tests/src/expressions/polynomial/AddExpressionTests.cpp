@@ -7,7 +7,7 @@
 
 using namespace fintamath;
 
-TEST(SumExpressionTests, getTypeIdTest) {
+TEST(AddExpressionTests, getTypeIdTest) {
   EXPECT_EQ(makeExpr(Add(), Integer(0).clone(), Integer(0).clone())->getTypeId(),
-            MathObjectTypeId(MathObjectType::SumExpression));
+            MathObjectTypeId(MathObjectType::AddExpression));
 }

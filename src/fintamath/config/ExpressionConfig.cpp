@@ -7,11 +7,11 @@
 #include "fintamath/expressions/binary/IntegralExpression.hpp"
 #include "fintamath/expressions/binary/LogExpression.hpp"
 #include "fintamath/expressions/binary/PowExpression.hpp"
+#include "fintamath/expressions/polynomial/AddExpression.hpp"
 #include "fintamath/expressions/polynomial/AndExpression.hpp"
 #include "fintamath/expressions/polynomial/MinMaxExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
-#include "fintamath/expressions/polynomial/SumExpression.hpp"
 #include "fintamath/expressions/unary/HyperbolicExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
@@ -137,11 +137,11 @@ struct ExpressionConfig {
 
   static void registerFunctionExpressionMakers() {
     Expression::registerFunctionExpressionMaker<Add, true>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<SumExpression>(args);
+      return std::make_shared<AddExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Sub>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<SumExpression>(
+      return std::make_shared<AddExpression>(
           ArgumentsPtrVector{args.front(), std::make_shared<NegExpression>(args.back())});
     });
 

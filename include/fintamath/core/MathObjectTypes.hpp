@@ -36,7 +36,7 @@ enum class MathObjectType : MathObjectTypeId {
 
   IPolynomExpression = 5000,
 
-  SumExpression,
+  AddExpression,
   MulExpression,
   AndExpression,
   OrExpression,
