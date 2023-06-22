@@ -390,23 +390,28 @@ ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, cons
 
 ArgumentPtr DivExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentPtr result;
+
   if (const auto &lhsExpr = cast<IExpression>(lhs)) {
     if (is<Add>(lhsExpr->getFunction())) {
       result = sumPolynomSimplify(lhsExpr->getChildren(), rhs);
     }
+
     if (is<Mul>(lhsExpr->getFunction())) {
       result = mulPolynomSimplify(lhsExpr->getChildren(), rhs);
     }
   }
+
   return result != nullptr ? result->toMinimalObject() : result;
 }
 
 ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
   ArgumentsPtrVector newNumerator;
   ArgumentsPtrVector resultPolynom;
+
   for (const auto &child : lhsChildren) {
     ArgumentPtr childForCheck = child;
     bool isNeg = unwrapNeg(childForCheck);
+
     if (const auto &exprChild = cast<IExpression>(childForCheck); exprChild && is<Mul>(exprChild->getFunction())) {
       if (auto result = mulPolynomSimplify(exprChild->getChildren(), rhs)) {
         resultPolynom.emplace_back(result);
@@ -425,6 +430,7 @@ ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhsChild
       resultPolynom.emplace_back(isNeg ? makeExpr(Neg(), childForAdd) : childForAdd);
       continue;
     }
+
     newNumerator.emplace_back(child);
   }
 
@@ -441,21 +447,23 @@ ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhsChild
 }
 
 ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
-  ArgumentsPtrVector newNumerator;
-  ArgumentsPtrVector newDenominator;
+  ArgumentsPtrVector numeratorChildren;
+  ArgumentsPtrVector denominatorChildren;
+
   for (const auto &child : lhsChildren) {
     if (const auto &rationalChild = cast<Rational>(child)) {
-      newNumerator.emplace_back(std::make_shared<const Integer>(rationalChild->numerator()));
-      newDenominator.emplace_back(std::make_shared<const Integer>(rationalChild->denominator()));
+      numeratorChildren.emplace_back(std::make_shared<const Integer>(rationalChild->numerator()));
+      denominatorChildren.emplace_back(std::make_shared<const Integer>(rationalChild->denominator()));
       continue;
     }
-    newNumerator.emplace_back(child);
+
+    numeratorChildren.emplace_back(child);
   }
 
-  if (!newDenominator.empty()) {
-    newDenominator.emplace_back(rhs);
-    auto denominator = makeExpr(Mul(), newDenominator);
-    auto numerator = makeExpr(Mul(), newNumerator);
+  if (!denominatorChildren.empty()) {
+    denominatorChildren.emplace_back(rhs);
+    auto numerator = makeExpr(Mul(), numeratorChildren);
+    auto denominator = makeExpr(Mul(), denominatorChildren);
     return makeExpr(Div(), numerator, denominator);
   }
 

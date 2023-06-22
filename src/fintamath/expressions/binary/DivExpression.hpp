@@ -1,7 +1,6 @@
 #pragma once
 
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
