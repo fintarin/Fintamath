@@ -508,7 +508,6 @@ ArgumentPtr DivExpression::denominatorSumSimplify(const ArgumentPtr &lhs, const 
       if (const auto &childForAdd = denominatorMulSimplify(exprChild->getChildren())) {
         multiplicator.emplace_back(childForAdd);
       }
-      continue;
     }
   }
 
@@ -528,13 +527,8 @@ ArgumentPtr DivExpression::denominatorSumSimplify(const ArgumentPtr &lhs, const 
 ArgumentPtr DivExpression::denominatorMulSimplify(const ArgumentsPtrVector &rhsChildren) {
   ArgumentsPtrVector multiplicator;
   for (const auto &child : rhsChildren) {
-    if (const auto &divChild = cast<DivExpression>(child)) {
-      multiplicator.emplace_back(divChild->rhsChild);
-      continue;
-    }
     if (const auto &rationalChild = cast<Rational>(child)) {
       multiplicator.emplace_back(std::make_shared<Integer>(rationalChild->denominator()));
-      continue;
     }
   }
 
