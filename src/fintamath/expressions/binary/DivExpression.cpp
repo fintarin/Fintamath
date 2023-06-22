@@ -393,18 +393,28 @@ ArgumentPtr DivExpression::polynomSimplify(const IFunction & /*func*/, const Arg
 
   if (const auto &lhsExpr = cast<IExpression>(lhs)) {
     if (is<Add>(lhsExpr->getFunction())) {
-      result = sumPolynomSimplify(lhsExpr->getChildren(), rhs);
+      result = numeratorSumSimplify(lhsExpr->getChildren(), rhs);
     }
 
     if (is<Mul>(lhsExpr->getFunction())) {
-      result = mulPolynomSimplify(lhsExpr->getChildren(), rhs);
+      result = numeratorMulSimplify(lhsExpr->getChildren(), rhs);
+    }
+  }
+
+  if (result) {
+    return result->toMinimalObject();
+  }
+
+  if (const auto &rhsExpr = cast<IExpression>(rhs)) {
+    if (is<Add>(rhsExpr->getFunction())) {
+      result = denominatorSumSimplify(lhs, rhs, rhsExpr->getChildren());
     }
   }
 
   return result != nullptr ? result->toMinimalObject() : result;
 }
 
-ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::numeratorSumSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
   ArgumentsPtrVector newNumerator;
   ArgumentsPtrVector resultPolynom;
 
@@ -413,7 +423,7 @@ ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhsChild
     bool isNeg = unwrapNeg(childForCheck);
 
     if (const auto &exprChild = cast<IExpression>(childForCheck); exprChild && is<Mul>(exprChild->getFunction())) {
-      if (auto result = mulPolynomSimplify(exprChild->getChildren(), rhs)) {
+      if (auto result = numeratorMulSimplify(exprChild->getChildren(), rhs)) {
         resultPolynom.emplace_back(result);
         continue;
       }
@@ -446,7 +456,7 @@ ArgumentPtr DivExpression::sumPolynomSimplify(const ArgumentsPtrVector &lhsChild
   return makeExpr(Add(), resultPolynom);
 }
 
-ArgumentPtr DivExpression::mulPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::numeratorMulSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs) {
   ArgumentsPtrVector numeratorChildren;
   ArgumentsPtrVector denominatorChildren;
 
@@ -476,6 +486,63 @@ bool DivExpression::unwrapNeg(ArgumentPtr &lhs) {
     return true;
   }
   return false;
+}
+
+ArgumentPtr DivExpression::denominatorSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
+                                                  const ArgumentsPtrVector &rhsChildren) {
+  ArgumentsPtrVector multiplicator;
+
+  for (const auto &child : rhsChildren) {
+    ArgumentPtr childForCheck = child;
+    unwrapNeg(childForCheck);
+    if (const auto &divChild = cast<DivExpression>(childForCheck)) {
+      multiplicator.emplace_back(divChild->rhsChild);
+      continue;
+    }
+    if (const auto &rationalChild = cast<Rational>(childForCheck)) {
+      multiplicator.emplace_back(std::make_shared<Integer>(rationalChild->denominator()));
+      continue;
+    }
+
+    if (const auto &exprChild = cast<IExpression>(childForCheck); exprChild && is<Mul>(exprChild->getFunction())) {
+      if (const auto &childForAdd = denominatorMulSimplify(exprChild->getChildren())) {
+        multiplicator.emplace_back(childForAdd);
+      }
+      continue;
+    }
+  }
+
+  if (multiplicator.empty()) {
+    return {};
+  }
+
+  ArgumentsPtrVector newNumerator = multiplicator;
+  newNumerator.emplace_back(lhs);
+  ArgumentsPtrVector newDenominator = multiplicator;
+  newDenominator.emplace_back(rhs);
+
+  return makeExpr(Div(), makeExpr(Mul(), newNumerator)->toMinimalObject(),
+                  makeExpr(Mul(), newDenominator)->toMinimalObject());
+}
+
+ArgumentPtr DivExpression::denominatorMulSimplify(const ArgumentsPtrVector &rhsChildren) {
+  ArgumentsPtrVector multiplicator;
+  for (const auto &child : rhsChildren) {
+    if (const auto &divChild = cast<DivExpression>(child)) {
+      multiplicator.emplace_back(divChild->rhsChild);
+      continue;
+    }
+    if (const auto &rationalChild = cast<Rational>(child)) {
+      multiplicator.emplace_back(std::make_shared<Integer>(rationalChild->denominator()));
+      continue;
+    }
+  }
+
+  if (multiplicator.empty()) {
+    return {};
+  }
+
+  return multiplicator.size() == 1 ? multiplicator.front() : makeExpr(Mul(), multiplicator);
 }
 
 }
