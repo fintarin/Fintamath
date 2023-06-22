@@ -33,9 +33,14 @@ private:
 
   static ArgumentPtr polynomSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr sumPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+  static ArgumentPtr numeratorSumSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
-  static ArgumentPtr mulPolynomSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+  static ArgumentPtr numeratorMulSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+
+  static ArgumentPtr denominatorMulSimplify(const ArgumentsPtrVector &rhsChildren);
+
+  static ArgumentPtr denominatorSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
+                                            const ArgumentsPtrVector &rhsChildren);
 
   static ArgumentPtr sumSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
