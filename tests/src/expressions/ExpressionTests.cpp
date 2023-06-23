@@ -206,6 +206,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b + b^2/(a + b)");
   EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^4 + y^5/(x - y)");
   EXPECT_EQ(Expression("(3 x + 5/9)/(2y - 9/x + 3/2 x + 1/2 + 2 y / x)").toString(), "2 - (16 y - 72)/(6 x^2 + 8 x y + 2 x + 8 y - 36) + (-16 x^2 y)/(6 x^3 + 8 x^2 y + 2 x^2 + 8 x y - 36 x) + (-16 x)/(54 x^2 + 72 x y + 18 x + 72 y - 324)");
+  EXPECT_EQ(Expression("(a/x + b/(y+3/r)/4)/(3+t/5)").toString(), "(5 a)/(t x + 15 x) + (25 b r)/(20 r t y + 300 r y + 60 t + 900)");
+  EXPECT_EQ(Expression("(x/a - (b+5)/(y-8/(12 y))/4)/(8-a/5)").toString(), "-(300 b y + 1500 y)/(-240 a y^2 + 160 a + 9600 y^2 - 6400) + (5 x)/(-a^2 + 40 a)");
 
   EXPECT_EQ(Expression("0^a").toString(), "0");
   EXPECT_EQ(Expression("(a b)^0").toString(), "1");
