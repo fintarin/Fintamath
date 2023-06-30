@@ -7,14 +7,14 @@
 
 using namespace fintamath;
 
-TEST(ExpressionFunctionsTests, sumTest) {
-  EXPECT_EQ(sum(Variable("a"), -1, Expression("b^2")).toString(), "a + b^2 - 1");
-  EXPECT_EQ(sum(10, Expression("a+2")).toString(), "a + 12");
-  EXPECT_EQ(sum(Variable("a"), Expression("a+2")).toString(), "2 a + 2");
-  EXPECT_EQ(sum(Expression("b+2"), Expression("a+2")).toString(), "a + b + 4");
-  EXPECT_EQ(sum(Expression("10+a^3"), Expression("a^2")).toString(), "a^3 + a^2 + 10");
-  EXPECT_EQ(sum(Expression("a*b"), Expression("b*a")).toString(), "2 a b");
-  EXPECT_EQ(sum(Expression("a+b"), Expression("a+b")).toString(), "2 a + 2 b");
+TEST(ExpressionFunctionsTests, addTest) {
+  EXPECT_EQ(add(Variable("a"), -1, Expression("b^2")).toString(), "a + b^2 - 1");
+  EXPECT_EQ(add(10, Expression("a+2")).toString(), "a + 12");
+  EXPECT_EQ(add(Variable("a"), Expression("a+2")).toString(), "2 a + 2");
+  EXPECT_EQ(add(Expression("b+2"), Expression("a+2")).toString(), "a + b + 4");
+  EXPECT_EQ(add(Expression("10+a^3"), Expression("a^2")).toString(), "a^3 + a^2 + 10");
+  EXPECT_EQ(add(Expression("a*b"), Expression("b*a")).toString(), "2 a b");
+  EXPECT_EQ(add(Expression("a+b"), Expression("a+b")).toString(), "2 a + 2 b");
 }
 
 TEST(ExpressionFunctionsTests, mulTest) {

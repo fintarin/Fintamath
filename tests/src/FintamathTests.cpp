@@ -12,7 +12,7 @@ using namespace fintamath;
 TEST(FintamathTests, fintamathTests) {
   Expression expr;
 
-  expr = sum(e(), pi(), Variable("a"), Variable("b"));
+  expr = add(e(), pi(), Variable("a"), Variable("b"));
   EXPECT_EQ(expr.toString(), "a + b + E + Pi");
 
   expr = mul(e(), pi(), Variable("a"), Variable("b"));

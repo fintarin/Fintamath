@@ -183,7 +183,7 @@ ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector & /*coeffAtPow*/)
 
 ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) {
   static const Expression discriminant = sub(pow(b, 2), mul(4, a, c));
-  static const Expression firstRoot = div(sum(neg(b), sqrt(discriminant)), mul(2, a));
+  static const Expression firstRoot = div(add(neg(b), sqrt(discriminant)), mul(2, a));
   static const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));
 
   // TODO: remove this try/catch when complex numbers will be implemented
