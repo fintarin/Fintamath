@@ -43,7 +43,7 @@ public:
 
   void setChildren(const ArgumentsPtrVector &childVect) override;
 
-  void setVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) override;
+  void setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) override;
 
   void setVariable(const Variable &var, const Expression &val);
 

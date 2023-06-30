@@ -517,13 +517,13 @@ void Expression::setChildren(const ArgumentsPtrVector &childVect) {
   child = childVect.front()->toMinimalObject();
 }
 
-void Expression::setVariables(const std::vector<Variable> &vars, const ArgumentsPtrVector &vals) {
-  IExpression::setVariables(vars, vals);
+void Expression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
+  IExpression::setVariables(varsToVals);
   simplifyChild(child);
 }
 
 void Expression::setVariable(const Variable &var, const Expression &val) {
-  setVariables({var}, ArgumentsPtrVector{val.getChildren().front()});
+  setVariables({{var, val.child}});
 }
 
 Expression operator+(const Variable &lhs, const Variable &rhs) {

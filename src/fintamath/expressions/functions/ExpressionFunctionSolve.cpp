@@ -189,13 +189,22 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
   // TODO: remove this try/catch when complex numbers will be implemented
   try {
     Expression firstRootValue = firstRoot;
-    firstRootValue.setVariables({c, b, a}, coeffAtPow);
+    firstRootValue.setVariables({
+        {c, coeffAtPow[0]}, //
+        {b, coeffAtPow[1]}, //
+        {a, coeffAtPow[2]}, //
+    });
 
     Expression secondRootValue = secondRoot;
-    secondRootValue.setVariables({c, b, a}, coeffAtPow);
+    secondRootValue.setVariables({
+        {c, coeffAtPow[0]}, //
+        {b, coeffAtPow[1]}, //
+        {a, coeffAtPow[2]}, //
+    });
 
     return {firstRootValue.getChildren().front(), secondRootValue.getChildren().front()};
   }
+
   catch (const UndefinedException &) {
     return {};
   }
