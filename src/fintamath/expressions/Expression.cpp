@@ -74,6 +74,8 @@ Expression::Expression(const TermVector &terms, size_t start, size_t end) {
 }
 
 bool Expression::parseBinaryOperator(const TermVector &terms, size_t start, size_t end) {
+  // TODO! use more efficient algorithm
+
   size_t foundOperPos = 0;
   IOperator::Priority foundPriority = IOperator::Priority::Any;
   bool isPreviousBinaryOper = false;
