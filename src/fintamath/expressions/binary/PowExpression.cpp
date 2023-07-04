@@ -140,7 +140,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     mulExprPolynom.emplace_back(std::make_shared<Integer>(multinomialCoefficient(powValue, vectOfPows)));
 
     for (size_t j = 0; j < size_t(variableCount); j++) {
-      auto powExpr = makeExpr(Pow(), polynom[j], std::make_shared<Integer>(std::move(vectOfPows[j])));
+      ArgumentPtr powExpr = makeExpr(Pow(), polynom[j], std::make_shared<Integer>(std::move(vectOfPows[j])));
       mulExprPolynom.emplace_back(powExpr);
     }
 
@@ -153,8 +153,8 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
 
 ArgumentPtr PowExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    auto lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), rhs);
-    auto rhsMul = makeExpr(Pow(), lhsExpr->getChildren().front(), rhs);
+    ArgumentPtr lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), rhs);
+    ArgumentPtr rhsMul = makeExpr(Pow(), lhsExpr->getChildren().front(), rhs);
     return makeExpr(Mul(), lhsMul, rhsMul)->toMinimalObject();
   }
 
@@ -163,8 +163,8 @@ ArgumentPtr PowExpression::negSimplify(const IFunction & /*func*/, const Argumen
 
 ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
-    auto lhsPow = lhsExpr->getChildren().front();
-    auto rhsPow = makeExpr(Mul(), lhsExpr->getChildren().back(), rhs);
+    ArgumentPtr lhsPow = lhsExpr->getChildren().front();
+    ArgumentPtr rhsPow = makeExpr(Mul(), lhsExpr->getChildren().back(), rhs);
     return makeExpr(Pow(), lhsPow, rhsPow)->toMinimalObject();
   }
 

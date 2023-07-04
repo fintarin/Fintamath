@@ -71,13 +71,13 @@
 
 namespace fintamath {
 
-Parser::Vector<std::shared_ptr<Term>, const Token &> &Expression::getTermMakers() {
-  static Parser::Vector<std::shared_ptr<Term>, const Token &> maker;
+Parser::Vector<std::unique_ptr<Term>, const Token &> &Expression::getTermMakers() {
+  static Parser::Vector<std::unique_ptr<Term>, const Token &> maker;
   return maker;
 }
 
-Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &Expression::getExpressionMakers() {
-  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> maker;
+Parser::Map<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> &Expression::getExpressionMakers() {
+  static Parser::Map<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> maker;
   return maker;
 }
 
@@ -98,95 +98,95 @@ struct ExpressionConfig {
       ArgumentsPtrVector args;
 
       for (auto i = size_t(IFunction::Type::None); i <= size_t(IOperator::Priority::Any); i++) {
-        if (std::shared_ptr<IMathObject> arg = IOperator::parse(token, IOperator::Priority(i))) {
+        if (ArgumentPtr arg = IOperator::parse(token, IOperator::Priority(i))) {
           args.emplace_back(arg);
         }
       }
 
       if (args.empty()) {
         for (auto i = size_t(IFunction::Type::None); i <= size_t(IFunction::Type::Any); i++) {
-          if (std::shared_ptr<IMathObject> arg = IFunction::parse(token, IFunction::Type(i))) {
+          if (ArgumentPtr arg = IFunction::parse(token, IFunction::Type(i))) {
             args.emplace_back(arg);
           }
         }
       }
 
       if (!args.empty()) {
-        return std::make_shared<Term>(token, args);
+        return std::make_unique<Term>(token, args);
       }
 
-      return std::shared_ptr<Term>();
+      return std::unique_ptr<Term>();
     });
 
     Expression::registerTermsMaker([](const Token &token) {
-      if (std::shared_ptr<IMathObject> arg = ILiteral::parse(token)) {
-        return std::make_shared<Term>(token, ArgumentsPtrVector{arg});
+      if (ArgumentPtr arg = ILiteral::parse(token)) {
+        return std::make_unique<Term>(token, ArgumentsPtrVector{arg});
       }
 
-      return std::shared_ptr<Term>();
+      return std::unique_ptr<Term>();
     });
 
     Expression::registerTermsMaker([](const Token &token) {
-      if (std::shared_ptr<IMathObject> arg = INumber::parse(token)) {
-        return std::make_shared<Term>(token, ArgumentsPtrVector{arg});
+      if (ArgumentPtr arg = INumber::parse(token)) {
+        return std::make_unique<Term>(token, ArgumentsPtrVector{arg});
       }
 
-      return std::shared_ptr<Term>();
+      return std::unique_ptr<Term>();
     });
   }
 
   static void registerFunctionExpressionMakers() {
     Expression::registerFunctionExpressionMaker<Add, true>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<AddExpression>(args);
+      return std::make_unique<AddExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Sub>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<AddExpression>(
+      return std::make_unique<AddExpression>(
           ArgumentsPtrVector{args.front(), std::make_shared<NegExpression>(args.back())});
     });
 
     Expression::registerFunctionExpressionMaker<Mul, true>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<MulExpression>(args);
+      return std::make_unique<MulExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Div>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<DivExpression>(args.front(), args.back());
+      return std::make_unique<DivExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<And, true>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<AndExpression>(args);
+      return std::make_unique<AndExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Or, true>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<OrExpression>(args);
+      return std::make_unique<OrExpression>(args);
     });
 
     Expression::registerFunctionExpressionMaker<Pow>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<PowExpression>(args.front(), args.back());
+      return std::make_unique<PowExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Eqv>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<CompExpression>(Eqv(), args.front(), args.back());
+      return std::make_unique<CompExpression>(Eqv(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Neqv>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<CompExpression>(Neqv(), args.front(), args.back());
+      return std::make_unique<CompExpression>(Neqv(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Less>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<CompExpression>(Less(), args.front(), args.back());
+      return std::make_unique<CompExpression>(Less(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<More>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<CompExpression>(More(), args.front(), args.back());
+      return std::make_unique<CompExpression>(More(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<LessEqv>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<CompExpression>(LessEqv(), args.front(), args.back());
+      return std::make_unique<CompExpression>(LessEqv(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<MoreEqv>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<CompExpression>(MoreEqv(), args.front(), args.back());
+      return std::make_unique<CompExpression>(MoreEqv(), args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Index>([](const ArgumentsPtrVector &args) {
@@ -199,7 +199,7 @@ struct ExpressionConfig {
       }
 
       ArgumentPtr res = func(*args.front(), *args.back());
-      return std::make_shared<Expression>(res);
+      return std::make_unique<Expression>(res);
     });
 
     Expression::registerFunctionExpressionMaker<Impl>([](const ArgumentsPtrVector &args) {
@@ -238,39 +238,39 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Neg>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<NegExpression>(args.front());
+      return std::make_unique<NegExpression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<UnaryPlus>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<Expression>(args.front());
+      return std::make_unique<Expression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Not>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<NotExpression>(args.front());
+      return std::make_unique<NotExpression>(args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Derivative>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<DerivativeExpression>(args.front(), args.back());
+      return std::make_unique<DerivativeExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Integral>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<IntegralExpression>(args.front(), args.back());
+      return std::make_unique<IntegralExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Log>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<LogExpression>(args.front(), args.back());
+      return std::make_unique<LogExpression>(args.front(), args.back());
     });
 
     Expression::registerFunctionExpressionMaker<Ln>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<LogExpression>(E().clone(), args.front());
+      return std::make_unique<LogExpression>(E().clone(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Lb>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<LogExpression>(std::make_shared<Integer>(2), args.front());
+      return std::make_unique<LogExpression>(std::make_shared<Integer>(2), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Lg>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<LogExpression>(std::make_shared<Integer>(10), args.front());
+      return std::make_unique<LogExpression>(std::make_shared<Integer>(10), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Exp>([](const ArgumentsPtrVector &args) {
@@ -297,11 +297,11 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Min>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<MinMaxExpression>(Min(), args);
+      return std::make_unique<MinMaxExpression>(Min(), args);
     });
 
     Expression::registerFunctionExpressionMaker<Max>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<MinMaxExpression>(Max(), args);
+      return std::make_unique<MinMaxExpression>(Max(), args);
     });
 
     Expression::registerFunctionExpressionMaker<Sqrt>([](const ArgumentsPtrVector &args) {
@@ -309,67 +309,67 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Sin>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<TrigonometryExpression>(Sin(), args.front());
+      return std::make_unique<TrigonometryExpression>(Sin(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Cos>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<TrigonometryExpression>(Cos(), args.front());
+      return std::make_unique<TrigonometryExpression>(Cos(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Tan>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<TrigonometryExpression>(Tan(), args.front());
+      return std::make_unique<TrigonometryExpression>(Tan(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Cot>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<TrigonometryExpression>(Cot(), args.front());
+      return std::make_unique<TrigonometryExpression>(Cot(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Asin>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<TrigonometryExpression>(Asin(), args.front());
+      return std::make_unique<TrigonometryExpression>(Asin(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Acos>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<TrigonometryExpression>(Acos(), args.front());
+      return std::make_unique<TrigonometryExpression>(Acos(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Atan>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<TrigonometryExpression>(Atan(), args.front());
+      return std::make_unique<TrigonometryExpression>(Atan(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Acot>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<TrigonometryExpression>(Acot(), args.front());
+      return std::make_unique<TrigonometryExpression>(Acot(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Sinh>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<HyperbolicExpression>(Sinh(), args.front());
+      return std::make_unique<HyperbolicExpression>(Sinh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Cosh>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<HyperbolicExpression>(Cosh(), args.front());
+      return std::make_unique<HyperbolicExpression>(Cosh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Tanh>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<HyperbolicExpression>(Tanh(), args.front());
+      return std::make_unique<HyperbolicExpression>(Tanh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Coth>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<HyperbolicExpression>(Coth(), args.front());
+      return std::make_unique<HyperbolicExpression>(Coth(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Asinh>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<HyperbolicExpression>(Asinh(), args.front());
+      return std::make_unique<HyperbolicExpression>(Asinh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Acosh>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<HyperbolicExpression>(Acosh(), args.front());
+      return std::make_unique<HyperbolicExpression>(Acosh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Atanh>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<HyperbolicExpression>(Atanh(), args.front());
+      return std::make_unique<HyperbolicExpression>(Atanh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Acoth>([](const ArgumentsPtrVector &args) {
-      return std::make_shared<HyperbolicExpression>(Acoth(), args.front());
+      return std::make_unique<HyperbolicExpression>(Acoth(), args.front());
     });
   }
 };

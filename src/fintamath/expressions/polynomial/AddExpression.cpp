@@ -161,8 +161,9 @@ ArgumentPtr AddExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
         auto rhsLogExpr = cast<IExpression>(rhsExprChildren[j]);
 
         if (*lhsLogExpr->getChildren().front() == *rhsLogExpr->getChildren().front()) {
-          lhsLogExpr = mulToLogarithm(lhsExprChildren, i);
-          rhsLogExpr = mulToLogarithm(rhsExprChildren, j);
+          lhsLogExpr = cast<IExpression>(mulToLogarithm(lhsExprChildren, i));
+          rhsLogExpr = cast<IExpression>(mulToLogarithm(rhsExprChildren, j));
+
           return makeExpr(Log(), lhsLogExpr->getChildren().front(),
                           makeExpr(Mul(), lhsLogExpr->getChildren().back(), rhsLogExpr->getChildren().back()))
               ->toMinimalObject();
@@ -260,10 +261,9 @@ std::shared_ptr<const IExpression> AddExpression::mulToLogarithm(const Arguments
   mulChildren.erase(mulChildren.begin() + ArgumentsPtrVector::difference_type(i));
 
   const ArgumentPtr powRate = mulChildren.size() > 1 ? makeExpr(Mul(), mulChildren) : mulChildren.front();
-
   const ArgumentPtr powExpr = makeExpr(Pow(), logExpr->getChildren().back(), powRate);
 
-  return makeExpr(Log(), logExpr->getChildren().front(), powExpr);
+  return cast<IExpression>(makeExpr(Log(), logExpr->getChildren().front(), powExpr));
 }
 
 ArgumentPtr AddExpression::sumRates(const IFunction & /*func*/, const ArgumentPtr &lhsChild,

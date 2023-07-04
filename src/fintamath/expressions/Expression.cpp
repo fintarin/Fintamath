@@ -112,7 +112,7 @@ bool Expression::parseBinaryOperator(const TermVector &terms, size_t start, size
   auto foundOper = cast<IOperator>(getTermValueIf(*terms[foundOperPos], isBinaryOperator));
   ArgumentPtr lhsArg = Expression(terms, start, foundOperPos).child;
   ArgumentPtr rhsArg = Expression(terms, foundOperPos + 1, end).child;
-  std::shared_ptr<IExpression> funcExpr = makeExpr(*foundOper, lhsArg, rhsArg);
+  std::shared_ptr<IExpression> funcExpr = cast<IExpression>(makeExpr(*foundOper, lhsArg, rhsArg));
 
   if (auto expr = cast<Expression>(funcExpr)) {
     *this = std::move(*expr);
@@ -309,7 +309,7 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
 
   for (size_t i = 0; i < tokens.size(); i++) {
     if (auto term = Parser::parse(getTermMakers(), (tokens[i]))) {
-      terms[i] = term;
+      terms[i] = std::move(term);
     }
     else {
       terms[i] = std::make_unique<Term>(tokens[i], ArgumentsPtrVector{});
@@ -501,12 +501,12 @@ std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const Argume
   return res.getChildren().front()->clone();
 }
 
-std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrVector &args) {
-  if (std::shared_ptr<IExpression> expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), args)) {
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrVector &args) {
+  if (auto expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), args)) {
     return expr;
   }
 
-  return std::make_shared<FunctionExpression>(func, args);
+  return std::make_unique<FunctionExpression>(func, args);
 }
 
 void Expression::setChildren(const ArgumentsPtrVector &childVect) {

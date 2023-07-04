@@ -5,6 +5,7 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
@@ -62,13 +63,6 @@ public:
 
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
-
-  static std::unique_ptr<IMathObject> makeExprChecked(const IFunction &function, const ArgumentsRefVector &args);
-
-  // TODO: uncomment
-  // static std::unique_ptr<IMathObject> makeExpr(const IFunction &function, const ArgumentsRefVector &args);
-
-  static bool isExpression(const ArgumentRef &arg);
 
 private:
   static Parser::Map<std::unique_ptr<IFunction>> &getParser();

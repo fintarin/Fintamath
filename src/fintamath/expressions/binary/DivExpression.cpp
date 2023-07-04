@@ -256,7 +256,7 @@ ArgumentPtr DivExpression::sumSumSimplify(const ArgumentPtr &lhs, const Argument
     return {};
   }
 
-  auto restSimplResult = makeExpr(Add(), restVect);
+  ArgumentPtr restSimplResult = makeExpr(Add(), restVect);
   answerVect.emplace_back(makeExpr(Div(), restSimplResult, rhs));
   return makeExpr(Add(), answerVect)->toMinimalObject();
 }
@@ -472,8 +472,8 @@ ArgumentPtr DivExpression::numeratorMulSimplify(const ArgumentsPtrVector &lhsChi
 
   if (!denominatorChildren.empty()) {
     denominatorChildren.emplace_back(rhs);
-    auto numerator = makeExpr(Mul(), numeratorChildren);
-    auto denominator = makeExpr(Mul(), denominatorChildren);
+    ArgumentPtr numerator = makeExpr(Mul(), numeratorChildren);
+    ArgumentPtr denominator = makeExpr(Mul(), denominatorChildren);
     return makeExpr(Div(), numerator, denominator);
   }
 

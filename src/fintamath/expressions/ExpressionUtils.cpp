@@ -146,4 +146,9 @@ std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &
 
   return argStrings;
 }
+
+bool isExpression(const IMathObject &arg) {
+  return is<IExpression>(arg);
+}
+
 }

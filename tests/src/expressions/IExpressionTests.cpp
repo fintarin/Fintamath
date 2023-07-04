@@ -97,9 +97,17 @@ TEST(IExpressionTests, getTypeIdTest) {
 }
 
 TEST(IExpressionTests, arithmeticTest) {
-  EXPECT_THROW(*makeExpr(Sin(), Integer(1).clone()) + *makeExpr(Sin(), Integer(1).clone()), InvalidInputException);
-  EXPECT_THROW(*makeExpr(Sin(), Integer(1).clone()) - *makeExpr(Sin(), Integer(1).clone()), InvalidInputException);
-  EXPECT_THROW(*makeExpr(Sin(), Integer(1).clone()) * *makeExpr(Sin(), Integer(1).clone()), InvalidInputException);
-  EXPECT_THROW(*makeExpr(Sin(), Integer(1).clone()) / *makeExpr(Sin(), Integer(1).clone()), InvalidInputException);
-  EXPECT_THROW(-(*makeExpr(Sin(), Integer(1).clone())), InvalidInputException);
+  EXPECT_THROW(cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())) +
+                   cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())),
+               InvalidInputException);
+  EXPECT_THROW(cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())) -
+                   cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())),
+               InvalidInputException);
+  EXPECT_THROW(cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())) *
+                   cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())),
+               InvalidInputException);
+  EXPECT_THROW(cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())) /
+                   cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())),
+               InvalidInputException);
+  EXPECT_THROW(-cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())), InvalidInputException);
 }

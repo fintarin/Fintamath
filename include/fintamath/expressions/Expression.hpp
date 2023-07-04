@@ -47,16 +47,16 @@ public:
 
   void setVariable(const Variable &var, const Expression &val);
 
-  static void registerTermsMaker(Parser::Function<std::shared_ptr<Term>, const Token &> &&maker) {
+  static void registerTermsMaker(Parser::Function<std::unique_ptr<Term>, const Token &> &&maker) {
     Parser::add<Token>(getTermMakers(), std::move(maker));
   }
 
   template <typename Function, bool isPolynomial = false, typename Maker>
   static void registerFunctionExpressionMaker(Maker &&maker) {
-    Parser::Function<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> constructor =
-        [maker = std::forward<Maker>(maker)](const ArgumentsPtrVector &args) -> std::shared_ptr<IExpression> {
+    Parser::Function<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> constructor =
+        [maker = std::forward<Maker>(maker)](const ArgumentsPtrVector &args) -> std::unique_ptr<IMathObject> {
       static const IFunction::Type type = Function().getFunctionType();
-      std::shared_ptr<IExpression> res;
+      std::unique_ptr<IMathObject> res;
 
       if constexpr (IsFunctionTypeAny<Function>::value) {
         res = maker(args);
@@ -142,11 +142,11 @@ private:
 
   friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args);
 
-  friend std::shared_ptr<IExpression> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
+  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
 
-  static Parser::Vector<std::shared_ptr<Term>, const Token &> &getTermMakers();
+  static Parser::Vector<std::unique_ptr<Term>, const Token &> &getTermMakers();
 
-  static Parser::Map<std::shared_ptr<IExpression>, const ArgumentsPtrVector &> &getExpressionMakers();
+  static Parser::Map<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> &getExpressionMakers();
 
   template <typename Predicate>
   static ArgumentPtr getTermValueIf(const Term &term, Predicate &&predicate) {
