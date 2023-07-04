@@ -43,6 +43,7 @@
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
@@ -188,6 +189,7 @@ TEST(ParseTests, parseConstantTest) {
 
 TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Sqrt>(IFunction::parse("sqrt")));
+  EXPECT_TRUE(is<Root>(IFunction::parse("root")));
   EXPECT_TRUE(is<Exp>(IFunction::parse("exp")));
   EXPECT_TRUE(is<Log>(IFunction::parse("log")));
   EXPECT_TRUE(is<Ln>(IFunction::parse("ln")));

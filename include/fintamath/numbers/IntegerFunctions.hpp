@@ -48,6 +48,8 @@ Integer factorial(const Integer &rhs);
 
 Integer factorial(const Integer &rhs, size_t order);
 
+std::map<Integer, Integer> factors(Integer rhs, Integer limit = -1);
+
 Integer combinations(const Integer &totalNumber, const Integer &choosedNumber);
 
 Integer multinomialCoefficient(const Integer &totalNumber, const std::vector<Integer> &groupNumbers);

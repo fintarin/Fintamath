@@ -136,6 +136,10 @@ TEST(FunctionExpressionTests, toStringTest) {
   EXPECT_EQ(Expression("testfunction(a+1,b+1)").toString(), "testfunction(a + 1, b + 1)");
 }
 
+TEST(FunctionExpressionTests, preciseTest) {
+  EXPECT_EQ(Expression("testfunction(a + 2^100)").precise(10).toString(), "testfunction(a + 1.2676506*10^30)");
+}
+
 TEST(FunctionExpressionTests, getTypeIdTest) {
   EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0), Integer(0))->getTypeId(),
             MathObjectTypeId(MathObjectType::FunctionExpression));

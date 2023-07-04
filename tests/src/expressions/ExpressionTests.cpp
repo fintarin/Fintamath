@@ -115,12 +115,20 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sqrt0").toString(), "0");
   EXPECT_EQ(Expression("sqrt(25)").toString(), "5");
   EXPECT_EQ(Expression("sqrt(144/25)").toString(), "12/5");
-  EXPECT_EQ(Expression("sqrt4!").toString(), "2");
-  EXPECT_EQ(Expression("(sqrt4)!").toString(), "2");
-  EXPECT_EQ(Expression("sqrt4*2!").toString(), "4");
-  EXPECT_EQ(Expression("abs(-5)").toString(), "5");
-  EXPECT_EQ(Expression("abs((-5))").toString(), "5");
-  EXPECT_EQ(Expression("sign(10)").toString(), "1");
+  EXPECT_EQ(Expression("sqrt(50)").toString(), "5 sqrt(2)");
+  EXPECT_EQ(Expression("root(4, 2)").toString(), "2");
+  EXPECT_EQ(Expression("root(8, 3)").toString(), "2");
+  EXPECT_EQ(Expression("root(16, 4)").toString(), "2");
+  EXPECT_EQ(Expression("root(27, 3)").toString(), "3");
+  EXPECT_EQ(Expression("4^(1/2)").toString(), "2");
+  EXPECT_EQ(Expression("8^(1/3)").toString(), "2");
+  EXPECT_EQ(Expression("8^(4/3)").toString(), "16");
+  EXPECT_EQ(Expression("7 2^(2/3)").toString(), "7 root(4, 3)");
+  EXPECT_EQ(Expression("2^(2/3) 3^(2/3)").toString(), "root(9, 3) root(4, 3)"); // TODO! root(36, 3)
+  EXPECT_EQ(Expression("2^(2/3) 7^(2/3) 3^(3/4)").toString(),
+            "root(49, 3) root(27, 4) root(4, 3)"); // TODO! 12 root(27, 4) root(80, 3)
+  EXPECT_EQ(Expression("2^(2/3) 1/7^(2/3) 3^(3/4)").toString(),
+            "(root(27, 4) root(4, 3))/root(49, 3)"); // TODO! root(27, 4) root(4/49, 3)
 
   EXPECT_EQ(Expression("E").toString(), "E");
   EXPECT_EQ(Expression("Pi").toString(), "Pi");
@@ -165,8 +173,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("acosh1.9").toString(), "acosh(19/10)");
   EXPECT_EQ(Expression("atanh0.9").toString(), "atanh(9/10)");
   EXPECT_EQ(Expression("acoth1.9").toString(), "acoth(19/10)");
-  EXPECT_EQ(Expression("((2))*sqrt2").toString(), "sqrt(2)^3");
-  EXPECT_EQ(Expression("sqrt2*((2))").toString(), "sqrt(2)^3");
+  EXPECT_EQ(Expression("((2))*sqrt2").toString(), "2 sqrt(2)");
+  EXPECT_EQ(Expression("sqrt2*((2))").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sin(1)^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin(-1)^2").toString(), "sin(-1)^2");
   EXPECT_EQ(Expression("sin1^2").toString(), "sin(1)^2");
@@ -181,12 +189,18 @@ TEST(ExpressionTests, stringConstructorTest) {
             "2 sqrt(-1/2 cos(2/3 Pi) + 1/2) cos(1/3 Pi)");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
   EXPECT_EQ(Expression("sqrt(26)").toString(), "sqrt(26)");
-  EXPECT_EQ(Expression("sqrt(145/26)").toString(), "sqrt(145/26)");
-  EXPECT_EQ(Expression("sqrt(169/3)").toString(), "sqrt(169/3)");
-  EXPECT_EQ(Expression("sqrt(168/25)").toString(), "sqrt(168/25)");
+  EXPECT_EQ(Expression("sqrt(145/26)").toString(), "sqrt(145)/sqrt(26)");
+  EXPECT_EQ(Expression("sqrt(169/3)").toString(), "13/sqrt(3)");
+  EXPECT_EQ(Expression("sqrt(168/25)").toString(), "2/5 sqrt(42)");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
-  EXPECT_EQ(Expression("2^(3/2)").toString(), "sqrt(2)^3");
-  EXPECT_EQ(Expression("sqrt(sqrt5)").toString(), "5^(1/4)");
+  EXPECT_EQ(Expression("2^(3/2)").toString(), "2 sqrt(2)");
+  EXPECT_EQ(Expression("sqrt(sqrt5)").toString(), "root(5, 4)");
+  EXPECT_EQ(Expression("sqrt4!").toString(), "2");
+  EXPECT_EQ(Expression("(sqrt4)!").toString(), "2");
+  EXPECT_EQ(Expression("sqrt4*2!").toString(), "4");
+  EXPECT_EQ(Expression("abs(-5)").toString(), "5");
+  EXPECT_EQ(Expression("abs((-5))").toString(), "5");
+  EXPECT_EQ(Expression("sign(10)").toString(), "1");
 
   EXPECT_EQ(Expression("a*0").toString(), "0");
   EXPECT_EQ(Expression("0*a").toString(), "0");
@@ -386,6 +400,17 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("-6x^2 + 4x - 20 = 15x - 9").toString(), "x^2 + 11/6 x + 11/6 = 0");
   EXPECT_EQ(Expression("2 a^5 b - 4 a b^5  = 0").toString(), "a^5 b - 2 a b^5 = 0");
   EXPECT_EQ(Expression("-2 a^5 b + 4 a b^5  = 0").toString(), "a^5 b - 2 a b^5 = 0");
+
+  EXPECT_EQ(Expression("sin(E)=sin(E)").toString(), "True");
+  EXPECT_EQ(Expression("sin(E)>sin(E)").toString(), "False");
+  EXPECT_EQ(Expression("sin(E)>=sin(E)").toString(), "True");
+  EXPECT_EQ(Expression("sin(E)<sin(E)").toString(), "False");
+  EXPECT_EQ(Expression("sin(E)<=sin(E)").toString(), "True");
+  EXPECT_EQ(Expression("log(E,5)=ln(5)").toString(), "True");
+  EXPECT_EQ(Expression("log(E,5)<ln(5)").toString(), "False");
+  EXPECT_EQ(Expression("log(E,5)>ln(5)").toString(), "False");
+  EXPECT_EQ(Expression("log(E,5)<=ln(5)").toString(), "True");
+  EXPECT_EQ(Expression("log(E,5)>=ln(5)").toString(), "True");
 
   EXPECT_EQ(Expression("derivative(a, a)").toString(), "1");
   EXPECT_EQ(Expression("derivative(a+a, a)").toString(), "derivative(2 a, a)");
@@ -883,7 +908,14 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("log(1, 0)"), UndefinedException);
   EXPECT_THROW(Expression("lb(-1)"), UndefinedException);
   EXPECT_THROW(Expression("lg(-1)"), UndefinedException);
+  EXPECT_THROW(Expression("sqrt(-1)"), UndefinedException);
   EXPECT_THROW(Expression("(-1)^(2/3)"), UndefinedException);
+  EXPECT_THROW(Expression("ln(0)"), UndefinedException);
+  EXPECT_THROW(Expression("ln(-1)"), UndefinedException);
+  EXPECT_THROW(Expression("log(-1, 1)"), UndefinedException);
+  EXPECT_THROW(Expression("log(0, 1)"), UndefinedException);
+  EXPECT_THROW(Expression("log(1, 0)"), UndefinedException);
+  EXPECT_THROW(Expression("lb(-1)"), UndefinedException);
   // TODO constants
   // EXPECT_THROW(Expression("E!"), UndefinedException);
   // EXPECT_THROW(Expression("tan(Pi/2)"), UndefinedException);
@@ -918,17 +950,12 @@ TEST(ExpressionTests, preciseTest) {
             "73070599793680672726476826340615135890078390.083960707616445859670987728609198428");
   EXPECT_EQ(Expression("E^(-101)").precise().toString(),
             "1.3685394711738530002470557302322944177986775531612023009807438134142551921153897*10^-44");
-  EXPECT_EQ(Expression("log(E,E)").precise().toString(), "1");
-  EXPECT_EQ(Expression("log(2, 256)").precise().toString(), "8");
-  EXPECT_EQ(Expression("log(Pi, Pi^10)").precise().toString(), "10");
-  EXPECT_EQ(Expression("log(E,E^3)").precise().toString(), "3");
   EXPECT_EQ(Expression("ln3").precise().toString(),
             "1.098612288668109691395245236922525704647490557822749451734694333637494293218609");
   EXPECT_EQ(Expression("ln2").precise().toString(),
             "0.69314718055994530941723212145817656807550013436025525412068000949339362196969472");
   EXPECT_EQ(Expression("ln100").precise().toString(),
             "4.605170185988091368035982909368728415202202977257545952066655801935145219354705");
-  EXPECT_EQ(Expression("ln(E)").precise().toString(), "1");
   EXPECT_EQ(Expression("lg99").precise().toString(),
             "1.9956351945975499153402557777532548601069599188478448242562702992902113378005716");
   EXPECT_EQ(Expression("lg100").precise().toString(), "2");
@@ -979,10 +1006,10 @@ TEST(ExpressionTests, preciseTest) {
             "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
   EXPECT_EQ(Expression("sin(10^30)").precise().toString(),
             "-0.090116901912138058030386428952987330274396332993043449885460666579773983476795775");
-  EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").precise().toString(), "1");
+  EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").precise().toString(), "1"); // TODO: move to str constructor tests
   EXPECT_EQ(Expression("sin(Pi/3)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("cos(Pi/3)").precise().toString(), "0.5");
+  EXPECT_EQ(Expression("cos(Pi/3)").precise().toString(), "0.5"); // TODO: move to str constructor tests
   EXPECT_EQ(Expression("2!*E").precise().toString(),
             "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
   EXPECT_EQ(Expression("E*2!").precise().toString(),
@@ -991,43 +1018,24 @@ TEST(ExpressionTests, preciseTest) {
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  EXPECT_EQ(Expression("1/(sin(5))").precise().toString(),
+            "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
   EXPECT_EQ(Expression("sin(60Deg)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
 
-  EXPECT_EQ(Expression("sin(E)=sin(E)").precise().toString(), "True");
-  EXPECT_EQ(Expression("sin(E)>sin(E)").precise().toString(), "False");
-  EXPECT_EQ(Expression("sin(E)>=sin(E)").precise().toString(), "True");
-  EXPECT_EQ(Expression("sin(E)<sin(E)").precise().toString(), "False");
-  EXPECT_EQ(Expression("sin(E)<=sin(E)").precise().toString(), "True");
-  EXPECT_EQ(Expression("1/(sin(5))").precise().toString(),
-            "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
-  EXPECT_EQ(Expression("log(E,5)=ln(5)").precise().toString(), "True");
-  EXPECT_EQ(Expression("log(E,5)<ln(5)").precise().toString(), "False");
-  EXPECT_EQ(Expression("log(E,5)>ln(5)").precise().toString(), "False");
-  EXPECT_EQ(Expression("log(E,5)<=ln(5)").precise().toString(), "True");
-  EXPECT_EQ(Expression("log(E,5)>=ln(5)").precise().toString(), "True");
-
   EXPECT_EQ(Expression("ln(x)").precise().toString(), "ln(x)");
   EXPECT_EQ(Expression("sqrt(x)").precise().toString(), "sqrt(x)");
-  // TODO: to uncomment when the root is implemented
-  // EXPECT_EQ(Expression("root(x, 3)").precise().toString(), "root(x, 3)");
+  EXPECT_EQ(Expression("root(x, 3)").precise().toString(), "root(x, 3)");
+  EXPECT_EQ(Expression("root(x, 10)").precise().toString(), "x^0.1");
+  EXPECT_EQ(Expression("root(x, 33)").precise().toString(),
+            "x^0.03030303030303030303030303030303030303030303030303030303030303030303030303030303");
 
+  // TODO: move to str constructor tests
   EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
 }
 
 TEST(ExpressionTests, preciseNegativeTest) {
-  EXPECT_THROW(Expression("ln(ln(ln(ln(E))))").precise(), UndefinedException);
-  EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E)))))").precise(), UndefinedException);
-  EXPECT_THROW(Expression("E!").precise(), UndefinedException);
-  EXPECT_THROW(Expression("sqrt(-1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("ln(0)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("ln(-1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("log(-1, 1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("log(0, 1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("log(1, 0)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("lb(-1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("lg(-1)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("(-1)^(2/3)").precise(), UndefinedException);
+  // TODO: move to str constructor negative tests
   EXPECT_THROW(Expression("tan(Pi/2)").precise(), UndefinedException);
   EXPECT_THROW(Expression("cot(0)").precise(), UndefinedException);
   EXPECT_THROW(Expression("asin(2)").precise(), UndefinedException);

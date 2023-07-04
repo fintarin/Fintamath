@@ -140,6 +140,54 @@ TEST(IntegerFunctionsTests, factorialTest) {
   EXPECT_THROW(factorial(Integer(-1)), UndefinedUnaryOperatorException);
 }
 
+TEST(IntegerFunctionsTests, factorsTest) {
+  std::map<Integer, Integer> factorRates;
+
+  factorRates = factors(2);
+  EXPECT_EQ(factorRates.size(), 1);
+  EXPECT_EQ(factorRates[2], 1);
+
+  factorRates = factors(32);
+  EXPECT_EQ(factorRates.size(), 1);
+  EXPECT_EQ(factorRates[2], 5);
+
+  factorRates = factors(144);
+  EXPECT_EQ(factorRates.size(), 2);
+  EXPECT_EQ(factorRates[2], 4);
+  EXPECT_EQ(factorRates[3], 2);
+
+  factorRates = factors(123);
+  EXPECT_EQ(factorRates.size(), 2);
+  EXPECT_EQ(factorRates[3], 1);
+  EXPECT_EQ(factorRates[41], 1);
+
+  factorRates = factors(Integer("139826427468275632"), 1000);
+  EXPECT_EQ(factorRates.size(), 5);
+  EXPECT_EQ(factorRates[2], 4);
+  EXPECT_EQ(factorRates[7], 1);
+  EXPECT_EQ(factorRates[17], 1);
+  EXPECT_EQ(factorRates[31], 1);
+  EXPECT_EQ(factorRates[Integer("2368975797443")], 1);
+
+  factorRates = factors(Integer("139826427468275632"), 10000);
+  EXPECT_EQ(factorRates[2], 4);
+  EXPECT_EQ(factorRates[7], 1);
+  EXPECT_EQ(factorRates[17], 1);
+  EXPECT_EQ(factorRates[31], 1);
+  EXPECT_EQ(factorRates[1093], 1);
+  EXPECT_EQ(factorRates[Integer("2167406951")], 1);
+
+  factorRates = factors(Integer("13982642746827562949728"), 1000);
+  EXPECT_EQ(factorRates.size(), 3);
+  EXPECT_EQ(factorRates[2], 5);
+  EXPECT_EQ(factorRates[59], 1);
+  EXPECT_EQ(factorRates[Integer("7406060776921378681")], 1);
+
+  EXPECT_THROW(factors(-1), UndefinedFunctionException);
+  EXPECT_THROW(factors(0), UndefinedFunctionException);
+  EXPECT_THROW(factors(1), UndefinedFunctionException);
+}
+
 TEST(IntegerFunctionsTests, combinationsTest) {
   EXPECT_EQ(combinations(Integer(6), Integer(2)), 15);
   EXPECT_EQ(combinations(Integer(10), Integer(7)), 120);

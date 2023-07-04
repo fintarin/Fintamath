@@ -7,6 +7,7 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
@@ -23,13 +24,12 @@ std::string PowExpression::toString() const {
     const Integer &numerator = val->numerator();
     const Integer &denominator = val->denominator();
 
-    if (denominator == 2) {
-      if (numerator == 1) {
+    if (numerator == 1) {
+      if (denominator == 2) {
         return functionToString(Sqrt(), {lhsChild});
       }
 
-      PowExpression res(std::make_shared<PowExpression>(lhsChild, Rational(1, 2).clone()), numerator.clone());
-      return res.IBinaryExpression::toString();
+      return functionToString(Root(), {lhsChild, denominator.clone()});
     }
   }
 
@@ -45,7 +45,9 @@ std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
 }
 
 ArgumentPtr PowExpression::preciseSimplify() const {
-  if (*rhsChild == Rational(1, 2)) {
+  static const int64_t maxPreciseRoot = 9;
+
+  if (const auto ratRhsChild = cast<Rational>(rhsChild); ratRhsChild && ratRhsChild->denominator() <= maxPreciseRoot) {
     auto preciseExpr = cast<PowExpression>(clone());
     preciseSimplifyChild(preciseExpr->lhsChild);
     return preciseExpr;
@@ -236,5 +238,4 @@ ArgumentPtr PowExpression::sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 
   return {};
 }
-
 }
