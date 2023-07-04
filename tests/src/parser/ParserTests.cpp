@@ -38,12 +38,9 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include "fintamath/functions/other/Angle.hpp"
-#include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
-#include "fintamath/functions/other/Rad.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -58,6 +55,7 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/Deg.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -164,8 +162,8 @@ TEST(ParserTests, parseLiteralTest) {
   EXPECT_TRUE(is<Pi>(ILiteral::parse("Pi")));
   EXPECT_TRUE(is<Variable>(ILiteral::parse("a")));
   EXPECT_TRUE(is<Variable>(ILiteral::parse("z")));
-  EXPECT_TRUE(is<True>(ILiteral::parse("True")));
-  EXPECT_TRUE(is<False>(ILiteral::parse("False")));
+  EXPECT_TRUE(is<Variable>(ILiteral::parse("A")));
+  EXPECT_TRUE(is<Variable>(ILiteral::parse("Z")));
 
   EXPECT_EQ(ILiteral::parse("1"), nullptr);
   EXPECT_EQ(ILiteral::parse("a_"), nullptr);
@@ -174,8 +172,11 @@ TEST(ParserTests, parseLiteralTest) {
 }
 
 TEST(ParseTests, parseConstantTest) {
+  EXPECT_TRUE(is<Deg>(IConstant::parse("Deg")));
   EXPECT_TRUE(is<E>(IConstant::parse("E")));
   EXPECT_TRUE(is<Pi>(IConstant::parse("Pi")));
+  EXPECT_TRUE(is<True>(ILiteral::parse("True")));
+  EXPECT_TRUE(is<False>(ILiteral::parse("False")));
 
   EXPECT_EQ(IConstant::parse("a"), nullptr);
   EXPECT_EQ(IConstant::parse("z"), nullptr);
@@ -201,8 +202,6 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Atan>(IFunction::parse("atan")));
   EXPECT_TRUE(is<Acot>(IFunction::parse("acot")));
   EXPECT_TRUE(is<Abs>(IFunction::parse("abs")));
-  EXPECT_TRUE(is<Degrees>(IFunction::parse("degrees")));
-  EXPECT_TRUE(is<Rad>(IFunction::parse("rad")));
   EXPECT_TRUE(is<Sign>(IFunction::parse("sign")));
   EXPECT_TRUE(is<Sinh>(IFunction::parse("sinh")));
   EXPECT_TRUE(is<Cosh>(IFunction::parse("cosh")));
@@ -247,7 +246,6 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(is<Equiv>(IOperator::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IOperator::parse("!<->")));
   EXPECT_TRUE(is<Index>(IOperator::parse("_")));
-  EXPECT_TRUE(is<Angle>(IOperator::parse("°")));
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);

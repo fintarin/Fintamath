@@ -143,18 +143,6 @@ TEST(ExpressionFunctionsTests, lgTest) {
   EXPECT_EQ(lg(Expression("E*a")).toString(), "log(10, E a)");
 }
 
-TEST(ExpressionFunctionsTests, radTest) {
-  EXPECT_EQ(rad(Expression("60")).toString(), "1/3 Pi");
-  EXPECT_EQ(rad(Expression("-30")).toString(), "-1/6 Pi");
-  EXPECT_EQ(rad(Expression("0")).toString(), "0");
-}
-
-TEST(ExpressionFunctionsTests, degreesTest) {
-  EXPECT_EQ(degrees(Expression("1/3 Pi")).toString(), "60");
-  EXPECT_EQ(degrees(Expression("-1/6 Pi")).toString(), "-30");
-  EXPECT_EQ(degrees(Expression("0")).toString(), "0");
-}
-
 TEST(ExpressionFunctionsTests, sinTest) {
   EXPECT_EQ(sin(Expression("5*Pi")).toString(), "sin(5 Pi)");   // TODO trigonometry
   EXPECT_EQ(sin(Expression("Pi/2")).toString(), "sin(1/2 Pi)"); // TODO trigonometry

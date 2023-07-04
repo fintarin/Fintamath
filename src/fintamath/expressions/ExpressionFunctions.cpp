@@ -16,9 +16,7 @@
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
-#include "fintamath/functions/other/Rad.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -94,14 +92,6 @@ Expression lb(const Expression &rhs) {
 
 Expression lg(const Expression &rhs) {
   return Expression(Lg()(rhs));
-}
-
-Expression rad(const Expression &rhs) {
-  return Expression(Rad()(rhs));
-}
-
-Expression degrees(const Expression &rhs) {
-  return Expression(Degrees()(rhs));
 }
 
 Expression sin(const Expression &rhs) {

@@ -41,12 +41,9 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include "fintamath/functions/other/Angle.hpp"
-#include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
-#include "fintamath/functions/other/Rad.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -61,6 +58,7 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants//Deg.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -160,6 +158,7 @@ struct ParserConfig {
     ILiteral::registerType<Variable>();
     ILiteral::registerType<Boolean>();
 
+    IConstant::registerType<Deg>();
     IConstant::registerType<E>();
     IConstant::registerType<Pi>();
     IConstant::registerType<True>();
@@ -180,8 +179,6 @@ struct ParserConfig {
     IFunction::registerType<Acos>();
     IFunction::registerType<Atan>();
     IFunction::registerType<Acot>();
-    IFunction::registerType<Degrees>();
-    IFunction::registerType<Rad>();
     IFunction::registerType<Sign>();
     IFunction::registerType<Sinh>();
     IFunction::registerType<Cosh>();
@@ -218,7 +215,6 @@ struct ParserConfig {
     IOperator::registerType<Equiv>();
     IOperator::registerType<Nequiv>();
     IOperator::registerType<Index>();
-    IOperator::registerType<Angle>();
 
     IExpression::registerType<Expression>();
   }

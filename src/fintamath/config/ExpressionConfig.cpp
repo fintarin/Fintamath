@@ -50,11 +50,8 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include "fintamath/functions/other/Angle.hpp"
-#include "fintamath/functions/other/Degrees.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
-#include "fintamath/functions/other/Rad.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -280,20 +277,6 @@ struct ExpressionConfig {
     Expression::registerFunctionExpressionMaker<Percent>([](const ArgumentsPtrVector &args) {
       static const auto PERCENT_VALUE = std::make_shared<Integer>(100);
       return makeExpr(Div(), args.front(), PERCENT_VALUE);
-    });
-
-    Expression::registerFunctionExpressionMaker<Rad>([](const ArgumentsPtrVector &args) {
-      static const auto ANGLE = std::make_shared<Integer>(180);
-      return makeExpr(Mul(), args.front(), makeExpr(Div(), Pi().clone(), ANGLE));
-    });
-
-    Expression::registerFunctionExpressionMaker<Degrees>([](const ArgumentsPtrVector &args) {
-      static const auto ANGLE = std::make_shared<Integer>(180);
-      return makeExpr(Mul(), args.front(), makeExpr(Div(), ANGLE, Pi().clone()));
-    });
-
-    Expression::registerFunctionExpressionMaker<Angle>([](const ArgumentsPtrVector &args) {
-      return makeExpr(Rad(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Min>([](const ArgumentsPtrVector &args) {

@@ -60,6 +60,7 @@ enum class MathObjectType : MathObjectTypeId {
 
   IConstant = 10000,
 
+  Deg,
   E,
   Pi,
   True,
@@ -82,8 +83,6 @@ enum class MathObjectType : MathObjectTypeId {
   Acos,
   Atan,
   Acot,
-  Degrees,
-  Rad,
   Sign,
   Sinh,
   Cosh,
@@ -122,7 +121,6 @@ enum class MathObjectType : MathObjectTypeId {
   Equiv,
   Nequiv,
   Index,
-  Angle,
 
   None = std::numeric_limits<size_t>::max(),
 };
