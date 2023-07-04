@@ -232,11 +232,12 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^2 + 12x + 36 = 0")).toString(), "x = -6");
   EXPECT_EQ(solve(Expression("x^2 + 12x = 0")).toString(), "x = -12 | x = 0");
   EXPECT_EQ(solve(Expression("x^2 - 23x - 3 = 0")).toString(), "x = -1/2 sqrt(541) + 23/2 | x = 1/2 sqrt(541) + 23/2");
+  // TODO! x = -sqrt(1969)/24 - 23/24 | x = sqrt(1969)/24 - 23/24
   EXPECT_EQ(solve(Expression("-12x^2 - 23x + 30 = 0")).toString(),
-            "x = -1/2 sqrt(1969/144) - 23/24 | x = 1/2 sqrt(1969/144) - 23/24");
+            "x = -1/24 sqrt(1969) - 23/24 | x = 1/24 sqrt(1969) - 23/24");
   EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(), "x = -34/33 | x = 1");
   EXPECT_EQ(solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(),
-            "x = -1/4 sqrt(2)^3"); // TODO: x = -1/sqrt(2)
+            "x = -1/2 sqrt(2)"); // TODO! x = -sqrt(2)/2
 
   // TODO: implement cubic equations
   EXPECT_EQ(solve(Expression("x^3 - 3x^2 + 3x - 1 = 0")).toString(), "x^3 - 3 x^2 + 3 x - 1 = 0"); // TODO: x = 1
@@ -271,7 +272,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = -sqrt(2) sqrt(sin(2)) | x = sqrt(2) sqrt(sin(2))");
 
   EXPECT_EQ(solve(Expression("E >= Ey")).toString(), "E y - E <= 0");
-  EXPECT_EQ(solve(Expression("x >= x sqrt(x)")).toString(), "sqrt(x)^3 - x <= 0");
-  EXPECT_EQ(solve(Expression("x >= x^(1/100)")).toString(), "x^(1/100) - x <= 0");
+  EXPECT_EQ(solve(Expression("x >= x sqrt(x)")).toString(), "x^(3/2) - x <= 0");
+  EXPECT_EQ(solve(Expression("x >= x^(1/100)")).toString(), "root(x, 100) - x <= 0");
   EXPECT_EQ(solve(Expression("E^Pi > Pi^E")).toString(), "E^Pi - Pi^E > 0");
 }

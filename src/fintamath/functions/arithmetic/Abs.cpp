@@ -28,9 +28,7 @@ std::unique_ptr<IMathObject> Abs::call(const ArgumentsRefVector &argsVect) const
     return outMultiAbs;
   }();
 
-  const auto &rhs = cast<INumber>(argsVect.front().get());
-
-  return multiAbs(rhs);
+  return multiAbs(cast<INumber>(argsVect.front().get()));
 }
 
 }

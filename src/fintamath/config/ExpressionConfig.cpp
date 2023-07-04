@@ -54,6 +54,7 @@
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
@@ -289,6 +290,14 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Sqrt>([](const ArgumentsPtrVector &args) {
       return makeExpr(Pow(), args.front(), std::make_shared<Rational>(1, 2));
+    });
+
+    Expression::registerFunctionExpressionMaker<Root>([](const ArgumentsPtrVector &args) {
+      if (const auto num = cast<INumber>(args.back())) {
+        return makeExpr(Pow(), args.front(), Integer(1) / (*num));
+      }
+
+      return makeExpr(Pow(), args.front(), makeExpr(Div(), std::make_shared<Integer>(1), args.back()));
     });
 
     Expression::registerFunctionExpressionMaker<Sin>([](const ArgumentsPtrVector &args) {

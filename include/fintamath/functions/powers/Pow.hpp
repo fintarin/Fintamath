@@ -5,6 +5,10 @@
 
 namespace fintamath {
 
+class Integer;
+class Rational;
+class Real;
+
 class Pow : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
 public:
   Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
@@ -20,6 +24,12 @@ public:
 
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+
+  static std::unique_ptr<IMathObject> powSimpl(const Integer &lhs, const Integer &rhs);
+
+  static std::unique_ptr<IMathObject> powSimpl(const Rational &lhs, const Rational &rhs);
+
+  static std::unique_ptr<IMathObject> powSimpl(const Real &lhs, const Real &rhs);
 };
 
 }
