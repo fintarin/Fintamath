@@ -7,6 +7,5 @@
 using namespace fintamath;
 
 TEST(OrExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Or(), Integer(0).clone(), Integer(0).clone())->getTypeId(),
-            MathObjectTypeId(MathObjectType::OrExpression));
+  EXPECT_EQ(makeExpr(Or(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::OrExpression));
 }

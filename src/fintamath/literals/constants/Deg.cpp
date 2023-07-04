@@ -7,7 +7,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Deg::call() const {
-  static std::unique_ptr<IMathObject> res = makeExpr(Div(), Pi().clone(), Integer(180).clone());
+  static std::unique_ptr<IMathObject> res = makeExpr(Div(), Pi(), Integer(180));
   return res->clone();
 }
 

@@ -7,6 +7,5 @@
 using namespace fintamath;
 
 TEST(AndExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(And(), Integer(0).clone(), Integer(0).clone())->getTypeId(),
-            MathObjectTypeId(MathObjectType::AndExpression));
+  EXPECT_EQ(makeExpr(And(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::AndExpression));
 }

@@ -147,7 +147,7 @@ ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const Argumen
 
   for (const auto &lhsSubChild : lhsChildren) {
     for (const auto &rhsSubChild : rhsChildren) {
-      resultVect.emplace_back(makeExpr(Mul(), lhsSubChild->clone(), rhsSubChild->clone()));
+      resultVect.emplace_back(makeExpr(Mul(), lhsSubChild, rhsSubChild));
     }
   }
 

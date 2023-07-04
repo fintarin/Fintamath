@@ -137,6 +137,6 @@ TEST(FunctionExpressionTests, toStringTest) {
 }
 
 TEST(FunctionExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0).clone(), Integer(0).clone())->getTypeId(),
+  EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0), Integer(0))->getTypeId(),
             MathObjectTypeId(MathObjectType::FunctionExpression));
 }

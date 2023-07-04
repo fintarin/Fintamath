@@ -7,6 +7,5 @@
 using namespace fintamath;
 
 TEST(LogExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Log(), Integer(0).clone(), Integer(0).clone())->getTypeId(),
-            MathObjectTypeId(MathObjectType::LogExpression));
+  EXPECT_EQ(makeExpr(Log(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::LogExpression));
 }

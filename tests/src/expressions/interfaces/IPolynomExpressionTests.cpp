@@ -28,7 +28,7 @@ TEST(IPolynomExpressionTests, toStringTest) {
   TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
   EXPECT_EQ(expr.toString(), "1 * 2 * 3");
 
-  expr = TestPolynomExpression({makeExpr(Add(), Variable("x").clone(), Variable("y").clone()), Variable("a").clone()});
+  expr = TestPolynomExpression({makeExpr(Add(), Variable("x"), Variable("y")), Variable("a").clone()});
   EXPECT_EQ(expr.toString(), "(x + y) * a");
 }
 

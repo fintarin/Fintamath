@@ -527,7 +527,7 @@ void Expression::setVariable(const Variable &var, const Expression &val) {
 }
 
 Expression operator+(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Add(), lhs.clone(), rhs.clone()));
+  return Expression(makeExpr(Add(), lhs, rhs));
 }
 
 Expression operator+(const Expression &lhs, const Variable &rhs) {
@@ -539,7 +539,7 @@ Expression operator+(const Variable &lhs, const Expression &rhs) {
 }
 
 Expression operator-(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Sub(), lhs.clone(), rhs.clone()));
+  return Expression(makeExpr(Sub(), lhs, rhs));
 }
 
 Expression operator-(const Expression &lhs, const Variable &rhs) {
@@ -551,7 +551,7 @@ Expression operator-(const Variable &lhs, const Expression &rhs) {
 }
 
 Expression operator*(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Mul(), lhs.clone(), rhs.clone()));
+  return Expression(makeExpr(Mul(), lhs, rhs));
 }
 
 Expression operator*(const Expression &lhs, const Variable &rhs) {
@@ -563,7 +563,7 @@ Expression operator*(const Variable &lhs, const Expression &rhs) {
 }
 
 Expression operator/(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Div(), lhs.clone(), rhs.clone()));
+  return Expression(makeExpr(Div(), lhs, rhs));
 }
 
 Expression operator/(const Expression &lhs, const Variable &rhs) {

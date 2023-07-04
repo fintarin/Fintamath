@@ -32,6 +32,11 @@ std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const Args &
   return makeExprChecked(func, ArgumentsRefVector{args...});
 }
 
+template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const Args &...args) {
+  return makeExpr(func, ArgumentsPtrVector{args.clone()...});
+}
+
 template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, ArgumentPtr> && ...)>>
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, Args &&...args) {
   return makeExpr(func, ArgumentsPtrVector{toArgumentPtr(args)...});
