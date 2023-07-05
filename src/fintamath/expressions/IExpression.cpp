@@ -89,6 +89,8 @@ void IExpression::simplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
+
+  simplifyConstant(child);
 }
 
 void IExpression::preSimplifyChild(ArgumentPtr &child) {
@@ -97,8 +99,6 @@ void IExpression::preSimplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
-
-  simplifyConstant(child);
 }
 
 void IExpression::postSimplifyChild(ArgumentPtr &child) {
@@ -107,8 +107,6 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
-
-  simplifyConstant(child);
 }
 
 void IExpression::preciseSimplifyChild(ArgumentPtr &child) {

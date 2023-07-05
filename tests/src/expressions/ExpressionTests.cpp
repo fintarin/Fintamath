@@ -130,6 +130,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2^(2/3) 1/7^(2/3) 3^(3/4)").toString(),
             "(root(27, 4) root(4, 3))/root(49, 3)"); // TODO! root(27, 4) root(4/49, 3)
 
+  EXPECT_EQ(Expression("Deg").toString(), "1/180 Pi");
+  EXPECT_EQ(Expression("60Deg").toString(), "1/3 Pi");
   EXPECT_EQ(Expression("E").toString(), "E");
   EXPECT_EQ(Expression("Pi").toString(), "Pi");
   EXPECT_EQ(Expression("E^101-E^101").toString(), "0");

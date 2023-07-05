@@ -57,10 +57,9 @@ protected:
 
   static void preciseSimplifyChild(ArgumentPtr &child);
 
-  static ArgumentPtr callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs);
-
-private:
   static void simplifyConstant(ArgumentPtr &child);
+
+  static ArgumentPtr callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs);
 
 private:
   static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &getParser();
