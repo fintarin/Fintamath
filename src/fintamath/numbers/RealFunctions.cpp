@@ -22,9 +22,6 @@ Real pow(const Real &lhs, const Real &rhs) {
   if (lhs.isNearZero() && rhs.isNearZero()) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
-  if (lhs < 0 && !is<Integer>(rhs.toMinimalObject())) { // TODO: do not use toMinimalObject
-    throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
-  }
 
   cpp_dec_float_100 res(pow(lhs.getBackend(), rhs.getBackend()));
 

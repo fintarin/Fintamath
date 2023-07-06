@@ -96,16 +96,6 @@ std::string Real::toString() const {
   return res;
 }
 
-std::unique_ptr<IMathObject> Real::toMinimalObject() const {
-  if (backend.backend().isfinite()) {
-    if (std::string str = toString(); str.find('.') == std::string::npos && str.find('*') == std::string::npos) {
-      return std::make_unique<Integer>(str);
-    }
-  }
-
-  return clone();
-}
-
 bool Real::isPrecise() const {
   return false;
 }

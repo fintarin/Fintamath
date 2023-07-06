@@ -38,8 +38,6 @@ public:
 
   std::string toString() const override;
 
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
-
   bool isPrecise() const override;
 
   Real precise(uint8_t precision) const;
