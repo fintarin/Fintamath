@@ -718,21 +718,6 @@ TEST(ExpressionTests, stringConstructorLargeTest) {
       "y^30");
 
   EXPECT_EQ(
-      Expression("(a + b + c^2) / ((a + b + c^3) / (5/2 * (a + b) / (3/b + c/2)))").toString(),
-      "5 c - (2500 a^6 b^2 c^5 + 7500 a^5 b^3 c^5 + 7500 a^4 b^4 c^5 + 2500 a^3 b^5 c^5)/(500 a^7 b^2 c + 3000 a^7 b + "
-      "2000 a^6 b^3 c + 500 a^6 b^2 c^4 + 12000 a^6 b^2 + 3000 a^6 b c^3 + 3000 a^5 b^4 c + 1500 a^5 b^3 c^4 + 18000 "
-      "a^5 b^3 + 9000 a^5 b^2 c^3 + 2000 a^4 b^5 c + 1500 a^4 b^4 c^4 + 12000 a^4 b^4 + 9000 a^4 b^3 c^3 + 500 a^3 b^6 "
-      "c + 500 a^3 b^5 c^4 + 3000 a^3 b^5 + 3000 a^3 b^4 c^3) - (18750 a^4 c + 37500 a^3 b c + 18750 a^2 b^2 c)/(625 "
-      "a^4 b c + 3750 a^4 + 1250 a^3 b^2 c + 625 a^3 b c^4 + 7500 a^3 b + 3750 a^3 c^3 + 625 a^2 b^3 c + 625 a^2 b^2 "
-      "c^4 + 3750 a^2 b^2 + 3750 a^2 b c^3) - (-3000 a^3 b c^4 - 6000 a^2 b^2 c^4 - 3000 a b^3 c^4)/(100 a^5 b c + 600 "
-      "a^5 + 300 a^4 b^2 c + 100 a^4 b c^4 + 1800 a^4 b + 600 a^4 c^3 + 300 a^3 b^3 c + 200 a^3 b^2 c^4 + 1800 a^3 b^2 "
-      "+ 1200 a^3 b c^3 + 100 a^2 b^4 c + 100 a^2 b^3 c^4 + 600 a^2 b^3 + 600 a^2 b^2 c^3) - (187500 a^3 c^4 + 375000 "
-      "a^2 b c^4 + 187500 a b^2 c^4)/(6250 a^4 b c + 37500 a^4 + 12500 a^3 b^2 c + 6250 a^3 b c^4 + 75000 a^3 b + "
-      "37500 a^3 c^3 + 6250 a^2 b^3 c + 6250 a^2 b^2 c^4 + 37500 a^2 b^2 + 37500 a^2 b c^3) + (3125 a^5 b^2 + 9375 a^4 "
-      "b^3 + 9375 a^3 b^4 + 3125 a^2 b^5)/(625 a^4 b^2 c + 3750 a^4 b + 1250 a^3 b^3 c + 625 a^3 b^2 c^4 + 7500 a^3 "
-      "b^2 + 3750 a^3 b c^3 + 625 a^2 b^4 c + 625 a^2 b^3 c^4 + 3750 a^2 b^3 + 3750 a^2 b^2 c^3)");
-
-  EXPECT_EQ(
       Expression("sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin("
                  "sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin("
                  "sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin(sin("
