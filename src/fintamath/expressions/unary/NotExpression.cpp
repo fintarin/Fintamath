@@ -65,7 +65,8 @@ ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, co
       child = makeExpr(Not(), child);
     }
 
-    res = makeExpr(And(), children)->toMinimalObject();
+    res = makeExpr(And(), children);
+    simplifyChild(res);
   }
   else if (is<And>(rhsExpr->getFunction())) {
     ArgumentsPtrVector children = rhsExpr->getChildren();
@@ -74,7 +75,8 @@ ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, co
       child = makeExpr(Not(), child);
     }
 
-    res = makeExpr(Or(), children)->toMinimalObject();
+    res = makeExpr(Or(), children);
+    simplifyChild(res);
   }
 
   return res;

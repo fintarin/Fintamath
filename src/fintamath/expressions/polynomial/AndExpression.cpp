@@ -96,7 +96,9 @@ ArgumentPtr AndExpression::simplifyOr(const IFunction & /*func*/, const Argument
     }
   }
 
-  return makeExpr(Or(), resultVect)->toMinimalObject();
+  ArgumentPtr res = makeExpr(Or(), resultVect);
+  simplifyChild(res);
+  return res;
 }
 
 }

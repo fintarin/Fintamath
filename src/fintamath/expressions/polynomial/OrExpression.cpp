@@ -42,8 +42,13 @@ ArgumentPtr OrExpression::postSimplify() const {
   }
 
   if (simplChildren.size() != simplChildrenSizeInitial) {
-    return simplChildren.size() > 1 ? makeExpr(Or(), simplChildren)->toMinimalObject()
-                                    : simplChildren.front()->toMinimalObject();
+    if (simplChildren.size() > 1) {
+      ArgumentPtr res = makeExpr(Or(), simplChildren);
+      simplifyChild(res);
+      return res;
+    }
+
+    return simplChildren.front();
   }
 
   return simpl;
@@ -161,8 +166,13 @@ ArgumentPtr OrExpression::simplifyAnd(const IFunction & /*func*/, const Argument
   ArgumentsPtrVector resultChildren = lhsChildren;
   resultChildren.erase(resultChildren.begin() + ArgumentsPtrVector::difference_type(resolutionIndex));
 
-  return resultChildren.size() > 1 ? makeExpr(And(), resultChildren)->toMinimalObject()
-                                   : resultChildren.front()->toMinimalObject();
+  if (resultChildren.size() > 1) {
+    ArgumentPtr res = makeExpr(And(), resultChildren);
+    simplifyChild(res);
+    return res;
+  }
+
+  return resultChildren.front();
 }
 
 ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
@@ -205,8 +215,13 @@ ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentPtr &lhsChild, const 
   }
 
   if (matchCount == minChildren.size()) {
-    return minChildren.size() > 1 ? makeExpr(And(), minChildren)->toMinimalObject()
-                                  : minChildren.front()->toMinimalObject();
+    if (minChildren.size() > 1) {
+      ArgumentPtr res = makeExpr(And(), minChildren);
+      simplifyChild(res);
+      return res;
+    }
+
+    return minChildren.front();
   }
 
   return {};

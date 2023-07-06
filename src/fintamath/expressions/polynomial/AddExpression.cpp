@@ -131,8 +131,11 @@ ArgumentPtr AddExpression::simplifyLogarithms(const IFunction & /*func*/, const 
   ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
 
   if (*lhsChildren.front() == *rhsChildren.front()) {
-    return makeExpr(Log(), lhsChildren.front(), makeExpr(Mul(), lhsChildren.back(), rhsChildren.back()))
-        ->toMinimalObject();
+    ArgumentPtr logLhs = lhsChildren.front();
+    ArgumentPtr logRhs = makeExpr(Mul(), lhsChildren.back(), rhsChildren.back());
+    ArgumentPtr res = makeExpr(Log(), logLhs, logRhs);
+    simplifyChild(res);
+    return res;
   }
 
   return {};
@@ -151,22 +154,24 @@ ArgumentPtr AddExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
     ArgumentsPtrVector lhsExprChildren = lhsExpr->getChildren();
     ArgumentsPtrVector rhsExprChildren = rhsExpr->getChildren();
 
-    std::vector<size_t> lhsLogarithmsIndexes = findLogarithms(lhsExprChildren);
-    std::vector<size_t> rhsLogarithmsIndexes = findLogarithms(rhsExprChildren);
+    std::vector<size_t> lhsLogChildrenIndexes = findLogarithms(lhsExprChildren);
+    std::vector<size_t> rhsLogChildrenIndexes = findLogarithms(rhsExprChildren);
 
-    for (size_t i : lhsLogarithmsIndexes) {
-      auto lhsLogExpr = cast<IExpression>(lhsExprChildren[i]);
+    for (size_t i : lhsLogChildrenIndexes) {
+      auto lhsLogChild = cast<IExpression>(lhsExprChildren[i]);
 
-      for (size_t j : rhsLogarithmsIndexes) {
-        auto rhsLogExpr = cast<IExpression>(rhsExprChildren[j]);
+      for (size_t j : rhsLogChildrenIndexes) {
+        auto rhsLogChild = cast<IExpression>(rhsExprChildren[j]);
 
-        if (*lhsLogExpr->getChildren().front() == *rhsLogExpr->getChildren().front()) {
-          lhsLogExpr = cast<IExpression>(mulToLogarithm(lhsExprChildren, i));
-          rhsLogExpr = cast<IExpression>(mulToLogarithm(rhsExprChildren, j));
+        if (*lhsLogChild->getChildren().front() == *rhsLogChild->getChildren().front()) {
+          lhsLogChild = cast<IExpression>(mulToLogarithm(lhsExprChildren, i));
+          rhsLogChild = cast<IExpression>(mulToLogarithm(rhsExprChildren, j));
 
-          return makeExpr(Log(), lhsLogExpr->getChildren().front(),
-                          makeExpr(Mul(), lhsLogExpr->getChildren().back(), rhsLogExpr->getChildren().back()))
-              ->toMinimalObject();
+          ArgumentPtr logLhs = lhsLogChild->getChildren().front();
+          ArgumentPtr logRhs = makeExpr(Mul(), lhsLogChild->getChildren().back(), rhsLogChild->getChildren().back());
+          ArgumentPtr res = makeExpr(Log(), logLhs, logRhs);
+          simplifyChild(res);
+          return res;
         }
       }
     }
@@ -188,16 +193,19 @@ ArgumentPtr AddExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
   }
 
   ArgumentsPtrVector mulExprChildren = mulExpr->getChildren();
-  std::vector<size_t> logarithmsIndexes = findLogarithms(mulExprChildren);
+  std::vector<size_t> logChildrenIndexes = findLogarithms(mulExprChildren);
 
-  for (size_t i : logarithmsIndexes) {
-    auto childLogExpr = cast<IExpression>(mulExprChildren[i]);
+  for (size_t i : logChildrenIndexes) {
+    auto logChild = cast<IExpression>(mulExprChildren[i]);
 
-    if (*childLogExpr->getChildren().front() == *logExpr->getChildren().front()) {
-      childLogExpr = mulToLogarithm(mulExprChildren, i);
-      return makeExpr(Log(), logExpr->getChildren().front(),
-                      makeExpr(Mul(), logExpr->getChildren().back(), childLogExpr->getChildren().back()))
-          ->toMinimalObject();
+    if (*logChild->getChildren().front() == *logExpr->getChildren().front()) {
+      logChild = mulToLogarithm(mulExprChildren, i);
+
+      ArgumentPtr logLhs = logExpr->getChildren().front();
+      ArgumentPtr logRhs = makeExpr(Mul(), logExpr->getChildren().back(), logChild->getChildren().back());
+      ArgumentPtr res = makeExpr(Log(), logLhs, logRhs);
+      simplifyChild(res);
+      return res;
     }
   }
 
@@ -218,8 +226,8 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
         value = mulExprChildren[1];
       }
       else {
-        value =
-            makeExpr(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()))->toMinimalObject();
+        value = makeExpr(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
+        simplifyChild(value);
       }
     }
   }
@@ -238,7 +246,9 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
 
 ArgumentPtr AddExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeExpr(Add(), rates);
-  return makeExpr(Mul(), ratesSum, value)->toMinimalObject();
+  ArgumentPtr res = makeExpr(Mul(), ratesSum, value);
+  simplifyChild(res);
+  return res;
 }
 
 std::vector<size_t> AddExpression::findLogarithms(const ArgumentsPtrVector &children) {
@@ -280,15 +290,19 @@ ArgumentPtr AddExpression::sumRates(const IFunction & /*func*/, const ArgumentPt
 
 ArgumentPtr AddExpression::sumDivisions(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                         const ArgumentPtr &rhsChild) {
+
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
-  if (lhsExpr && rhsExpr && //
-      is<Div>(lhsExpr->getFunction()) && is<Div>(rhsExpr->getFunction()) &&
-      *lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
-    return makeExpr(Div(),
-                    makeExpr(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front())->toMinimalObject(),
-                    lhsExpr->getChildren().back());
+  if (lhsExpr && is<Div>(lhsExpr->getFunction()) && rhsExpr && is<Div>(rhsExpr->getFunction())) {
+    if (*lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
+      ArgumentPtr divLhs = makeExpr(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
+      simplifyChild(divLhs);
+
+      ArgumentPtr divRhs = lhsExpr->getChildren().back();
+
+      return makeExpr(Div(), divLhs, divRhs);
+    }
   }
 
   return {};

@@ -213,4 +213,5 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
   return {makeExpr(Neg(), makeExpr(Div(), coeffAtPow[0], coeffAtPow[1]))->toMinimalObject()};
 }
+
 }

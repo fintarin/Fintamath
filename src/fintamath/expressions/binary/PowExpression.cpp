@@ -72,7 +72,7 @@ PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-// Use bites representation for generate all partitions of numbers, using stars and bars method
+// Uses bites representation for generate all partitions of numbers, using stars and bars method.
 // https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)
 // https://en.wikipedia.org/wiki/Partition_(number_theory)
 // This method generate first bit number in sequence of numbers for each partition
@@ -86,7 +86,7 @@ Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
   return n;
 }
 
-// Use alghorithm for generating next number in sequence of partitions
+// Uses algorithm for generating next number in sequence of partitions.
 // https://en.wikipedia.org/wiki/Partition_(number_theory)
 // https://en.wikipedia.org/wiki/Combinatorial_number_system#Applications
 Integer PowExpression::generateNextNumber(Integer n) {
@@ -116,8 +116,8 @@ std::vector<Integer> PowExpression::getPartition(Integer bitNumber, const Intege
   return result;
 }
 
-// Use multinomial theorem for exponentiation of sum
-//  https://en.wikipedia.org/wiki/Multinomial_theorem
+// Uses multinomial theorem for exponentiation of sum.
+// https://en.wikipedia.org/wiki/Multinomial_theorem
 ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &powValue) {
   auto sumExpr = cast<IExpression>(expr);
   ArgumentsPtrVector polynom;
@@ -150,27 +150,35 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     newPolynom.emplace_back(mulExpr);
   }
 
-  return makeExpr(Add(), newPolynom)->toMinimalObject();
+  ArgumentPtr res = makeExpr(Add(), newPolynom);
+  simplifyChild(res);
+  return res;
 }
 
 ArgumentPtr PowExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr res;
+
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
     ArgumentPtr lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), rhs);
     ArgumentPtr rhsMul = makeExpr(Pow(), lhsExpr->getChildren().front(), rhs);
-    return makeExpr(Mul(), lhsMul, rhsMul)->toMinimalObject();
+    res = makeExpr(Mul(), lhsMul, rhsMul);
+    simplifyChild(res);
   }
 
-  return {};
+  return res;
 }
 
 ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr res;
+
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     ArgumentPtr lhsPow = lhsExpr->getChildren().front();
     ArgumentPtr rhsPow = makeExpr(Mul(), lhsExpr->getChildren().back(), rhs);
-    return makeExpr(Pow(), lhsPow, rhsPow)->toMinimalObject();
+    res = makeExpr(Pow(), lhsPow, rhsPow);
+    simplifyChild(res);
   }
 
-  return {};
+  return res;
 }
 
 ArgumentPtr PowExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -187,12 +195,15 @@ ArgumentPtr PowExpression::numSimplify(const IFunction & /*func*/, const Argumen
     }
 
     if (*rhsInt == -1) {
-      return makeExpr(Div(), std::make_shared<Integer>(1), lhs)->toMinimalObject();
+      ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), lhs);
+      simplifyChild(res);
+      return res;
     }
 
     if (*rhsInt < 0) {
-      return makeExpr(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhsInt)))
-          ->toMinimalObject();
+      ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhsInt)));
+      simplifyChild(res);
+      return res;
     }
   }
 
@@ -216,6 +227,8 @@ ArgumentPtr PowExpression::polynomSimplify(const IFunction & /*func*/, const Arg
 }
 
 ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr res;
+
   if (auto mulExpr = cast<IExpression>(lhs); mulExpr && is<Mul>(mulExpr->getFunction())) {
     ArgumentsPtrVector args = mulExpr->getChildren();
 
@@ -223,10 +236,11 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
       arg = makeExpr(Pow(), arg, rhs->clone());
     }
 
-    return makeExpr(Mul(), args)->toMinimalObject();
+    res = makeExpr(Mul(), args);
+    simplifyChild(res);
   }
 
-  return {};
+  return res;
 }
 
 ArgumentPtr PowExpression::sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -238,4 +252,5 @@ ArgumentPtr PowExpression::sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 
   return {};
 }
+
 }

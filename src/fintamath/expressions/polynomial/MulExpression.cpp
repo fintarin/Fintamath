@@ -58,7 +58,8 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
 }
 
 ArgumentPtr MulExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = makeExpr(Add(), rates)->toMinimalObject();
+  ArgumentPtr ratesSum = makeExpr(Add(), rates);
+  simplifyChild(ratesSum);
   return makeExpr(Pow(), value, ratesSum);
 }
 
@@ -110,11 +111,14 @@ ArgumentPtr MulExpression::simplifyDivisions(const IFunction & /*func*/, const A
     return {};
   }
 
-  return makeExpr(Div(), numerator, denominator)->toMinimalObject();
+  ArgumentPtr res = makeExpr(Div(), numerator, denominator);
+  simplifyChild(res);
+  return res;
 }
 
 ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                        const ArgumentPtr &rhsChild) {
+
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
@@ -151,7 +155,9 @@ ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const Argumen
     }
   }
 
-  return makeExpr(Add(), resultVect)->toMinimalObject();
+  ArgumentPtr res = makeExpr(Add(), resultVect);
+  simplifyChild(res);
+  return res;
 }
 
 ArgumentPtr MulExpression::mulRates(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
@@ -172,7 +178,9 @@ ArgumentPtr MulExpression::simplifyNegations(const IFunction & /*func*/, const A
   const auto &rhsExpr = cast<IExpression>(rhsChild);
 
   if (lhsExpr && rhsExpr && is<Neg>(lhsExpr->getFunction()) && is<Neg>(rhsExpr->getFunction())) {
-    return makeExpr(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front())->toMinimalObject();
+    ArgumentPtr res = makeExpr(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
+    simplifyChild(res);
+    return res;
   }
 
   if (lhsExpr && is<Neg>(lhsExpr->getFunction())) {

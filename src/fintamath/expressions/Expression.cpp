@@ -514,7 +514,7 @@ void Expression::setChildren(const ArgumentsPtrVector &childVect) {
     throw InvalidInputFunctionException("", argumentVectorToStringVector(childVect));
   }
 
-  child = childVect.front()->toMinimalObject();
+  *this = Expression(childVect.front());
 }
 
 void Expression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {

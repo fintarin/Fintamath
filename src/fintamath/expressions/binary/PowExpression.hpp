@@ -45,4 +45,5 @@ private:
 
   static ArgumentPtr sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 };
+
 }

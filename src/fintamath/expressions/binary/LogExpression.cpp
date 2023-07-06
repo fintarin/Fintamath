@@ -96,18 +96,21 @@ ArgumentPtr LogExpression::equalSimplify(const IFunction & /*func*/, const Argum
 }
 
 ArgumentPtr LogExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr res;
+
   if (auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
-    return makeExpr(Mul(), rhsExpr->getChildren().back(), makeExpr(Log(), lhs, rhsExpr->getChildren().front()))
-        ->toMinimalObject();
+    ArgumentPtr multiplier = rhsExpr->getChildren().back();
+    ArgumentPtr logExpr = makeExpr(Log(), lhs, rhsExpr->getChildren().front());
+    res = makeExpr(Mul(), multiplier, logExpr);
+  }
+  else if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
+    ArgumentPtr multiplier = makeExpr(Div(), std::make_shared<Integer>(1), lhsExpr->getChildren().back());
+    ArgumentPtr logExpr = makeExpr(Log(), lhsExpr->getChildren().front(), rhs);
+    res = makeExpr(Mul(), multiplier, logExpr);
   }
 
-  if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
-    return makeExpr(Mul(), makeExpr(Div(), std::make_shared<Integer>(1), lhsExpr->getChildren().back()),
-                    makeExpr(Log(), lhsExpr->getChildren().front(), rhs))
-        ->toMinimalObject();
-  }
-
-  return {};
+  simplifyChild(res);
+  return res;
 }
 
 }
