@@ -31,16 +31,16 @@ private:
 
   static ArgumentPtr sumSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr polynomSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedDivSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr numeratorSumSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedDivInNumeratorSumSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
-  static ArgumentPtr numeratorMulSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedDivInNumeratorMulSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
-  static ArgumentPtr denominatorMulSimplify(const ArgumentsPtrVector &rhsChildren);
+  static ArgumentPtr nestedDivInDenominatorSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
+                                                       const ArgumentsPtrVector &rhsChildren);
 
-  static ArgumentPtr denominatorSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
-                                            const ArgumentsPtrVector &rhsChildren);
+  static ArgumentPtr nestedDivInDenominatorMulSimplify(const ArgumentsPtrVector &rhsChildren);
 
   static ArgumentPtr sumSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
