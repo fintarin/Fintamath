@@ -873,6 +873,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(x*2)_1"), InvalidInputException);
   EXPECT_THROW(Expression("(x*2)_((x+2)_x)"), InvalidInputException);
   EXPECT_THROW(Expression("x^x_1"), InvalidInputException);
+  EXPECT_THROW(Expression("E&a"), InvalidInputException);
 
   EXPECT_THROW(Expression("min()"), InvalidInputException);
   EXPECT_THROW(Expression("min(True, False)"), InvalidInputException);
