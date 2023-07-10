@@ -42,7 +42,6 @@ ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, con
 
   // TODO: res + integral constant
 
-  simplifyChild(res);
   return res;
 }
 

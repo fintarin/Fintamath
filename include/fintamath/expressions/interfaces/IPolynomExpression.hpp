@@ -70,9 +70,9 @@ protected:
   virtual bool isComparableOrderInversed() const;
 
 private:
-  void preSimplifyRec();
+  void simplifyRec(bool isPostSimplify);
 
-  void postSimplifyRec();
+  void simplifyChildren(bool isPostSimplify);
 
   ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, size_t lhsChildPos,
                                    size_t rhsChildPos) const;

@@ -35,6 +35,8 @@ protected:
 private:
   static ArgumentPtr simplifyNumbers(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
+  static ArgumentPtr simplifyCallFunction(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+
   static ArgumentPtr simplifyNegations(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr sumDivisions(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);

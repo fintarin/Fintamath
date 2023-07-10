@@ -60,69 +60,21 @@ ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVect
 ArgumentPtr IPolynomExpression::preSimplify() const {
   auto simpl = cast<IPolynomExpression>(clone());
 
-  {
-    ArgumentsPtrVector oldChildren = simpl->children;
-    simpl->children.clear();
-
-    for (auto &child : oldChildren) {
-      preSimplifyChild(child);
-      simpl->addElement(child);
-    }
-  }
-
-  simpl->preSimplifyRec();
+  simpl->simplifyChildren(false);
+  simpl->simplifyRec(false);
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
   }
 
   return simpl;
-}
-
-void IPolynomExpression::preSimplifyRec() {
-  sort();
-
-  bool isSimplified = true;
-
-  for (size_t i = 1; i < children.size(); i++) {
-    ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]});
-
-    if (!res) {
-      res = useSimplifyFunctions(getFunctionsForPreSimplify(), i - 1, i);
-    }
-
-    if (!res) {
-      res = useSimplifyFunctions(getFunctionsForSimplify(), i - 1, i);
-    }
-
-    if (res) {
-      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
-      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
-      addElement(res);
-      i--;
-      isSimplified = false;
-    }
-  }
-
-  if (!isSimplified) {
-    preSimplifyRec();
-  }
 }
 
 ArgumentPtr IPolynomExpression::postSimplify() const {
   auto simpl = cast<IPolynomExpression>(clone());
 
-  {
-    ArgumentsPtrVector oldChildren = simpl->children;
-    simpl->children.clear();
-
-    for (auto &child : oldChildren) {
-      postSimplifyChild(child);
-      simpl->addElement(child);
-    }
-  }
-
-  simpl->postSimplifyRec();
+  simpl->simplifyChildren(true);
+  simpl->simplifyRec(true);
 
   if (simpl->children.size() == 1) {
     return simpl->children.front();
@@ -131,43 +83,82 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
   return simpl;
 }
 
-ArgumentPtr IPolynomExpression::preciseSimplify() const {
-  auto preciseExpr = cast<IPolynomExpression>(clone());
-
-  for (auto &child : preciseExpr->children) {
-    preciseSimplifyChild(child);
-  }
-
-  return preciseExpr;
-}
-
-void IPolynomExpression::postSimplifyRec() {
+void IPolynomExpression::simplifyRec(bool isPostSimplify) {
   sort();
 
   bool isSimplified = true;
 
   for (size_t i = 1; i < children.size(); i++) {
-    ArgumentPtr res = callFunction(*func, {children[i - 1], children[i]});
+    const ArgumentPtr &lhs = children[i - 1];
+    const ArgumentPtr &rhs = children[i];
+
+    ArgumentPtr res;
+    bool isResSimplified = false;
+
+    if (isPostSimplify) {
+      res = callFunction(*func, {lhs, rhs});
+      isResSimplified = res != nullptr;
+    }
 
     if (!res) {
-      res = useSimplifyFunctions(getFunctionsForPostSimplify(), i - 1, i);
+      res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(), i - 1, i)
+                           : useSimplifyFunctions(getFunctionsForPreSimplify(), i - 1, i);
     }
 
     if (!res) {
       res = useSimplifyFunctions(getFunctionsForSimplify(), i - 1, i);
     }
 
-    if (res) {
-      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
-      children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
-      addElement(res);
-      i--;
-      isSimplified = false;
+    if (!res) {
+      continue;
     }
+
+    if (!isResSimplified) {
+      ArgumentPtr prevExpr = makeExpr(*getFunction(), lhs, rhs);
+
+      if (*prevExpr == *res) {
+        continue;
+      }
+
+      if (isPostSimplify) {
+        postSimplifyChild(res);
+      }
+      else {
+        preSimplifyChild(res);
+      }
+
+      if (*prevExpr == *res) {
+        continue;
+      }
+    }
+
+    children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
+    children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
+    addElement(res);
+
+    i--;
+    isSimplified = false;
   }
 
   if (!isSimplified) {
-    postSimplifyRec();
+    simplifyRec(isPostSimplify);
+  }
+}
+
+void IPolynomExpression::simplifyChildren(bool isPostSimplify) {
+  ArgumentsPtrVector oldChildren = children;
+
+  children.clear();
+
+  for (auto &child : oldChildren) {
+    if (isPostSimplify) {
+      postSimplifyChild(child);
+    }
+    else {
+      preSimplifyChild(child);
+    }
+
+    addElement(child);
   }
 }
 
@@ -181,6 +172,16 @@ IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForP
 
 IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForPostSimplify() const {
   return {};
+}
+
+ArgumentPtr IPolynomExpression::preciseSimplify() const {
+  auto preciseExpr = cast<IPolynomExpression>(clone());
+
+  for (auto &child : preciseExpr->children) {
+    preciseSimplifyChild(child);
+  }
+
+  return preciseExpr;
 }
 
 std::string IPolynomExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {

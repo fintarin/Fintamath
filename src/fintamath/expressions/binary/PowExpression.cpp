@@ -89,11 +89,10 @@ Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
 // Uses algorithm for generating next number in sequence of partitions.
 // https://en.wikipedia.org/wiki/Partition_(number_theory)
 // https://en.wikipedia.org/wiki/Combinatorial_number_system#Applications
-Integer PowExpression::generateNextNumber(Integer n) {
+Integer PowExpression::generateNextNumber(const Integer &n) {
   Integer u = n & -n;
   Integer v = u + n;
-  n = v + (((v ^ n) / u) >> 2);
-  return n;
+  return v + (((v ^ n) / u) >> 2);
 }
 
 std::vector<Integer> PowExpression::getPartition(Integer bitNumber, const Integer &variableCount) {
@@ -151,7 +150,6 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
   }
 
   ArgumentPtr res = makeExpr(Add(), newPolynom);
-  simplifyChild(res);
   return res;
 }
 
@@ -162,7 +160,6 @@ ArgumentPtr PowExpression::negSimplify(const IFunction & /*func*/, const Argumen
     ArgumentPtr lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), rhs);
     ArgumentPtr rhsMul = makeExpr(Pow(), lhsExpr->getChildren().front(), rhs);
     res = makeExpr(Mul(), lhsMul, rhsMul);
-    simplifyChild(res);
   }
 
   return res;
@@ -175,7 +172,6 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
     ArgumentPtr lhsPow = lhsExpr->getChildren().front();
     ArgumentPtr rhsPow = makeExpr(Mul(), lhsExpr->getChildren().back(), rhs);
     res = makeExpr(Pow(), lhsPow, rhsPow);
-    simplifyChild(res);
   }
 
   return res;
@@ -196,13 +192,11 @@ ArgumentPtr PowExpression::numSimplify(const IFunction & /*func*/, const Argumen
 
     if (*rhsInt == -1) {
       ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), lhs);
-      simplifyChild(res);
       return res;
     }
 
     if (*rhsInt < 0) {
       ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhsInt)));
-      simplifyChild(res);
       return res;
     }
   }
@@ -237,7 +231,6 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     }
 
     res = makeExpr(Mul(), args);
-    simplifyChild(res);
   }
 
   return res;

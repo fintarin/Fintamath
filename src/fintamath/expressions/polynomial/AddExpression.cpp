@@ -79,7 +79,8 @@ AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForSimplify() 
 
 AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify() const {
   static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &AddExpression::simplifyNegations, //
+      &AddExpression::simplifyNegations,    //
+      &AddExpression::simplifyCallFunction, //
   };
   return simplifyFunctions;
 }
@@ -101,6 +102,11 @@ ArgumentPtr AddExpression::simplifyNumbers(const IFunction & /*func*/, const Arg
   }
 
   return {};
+}
+
+ArgumentPtr AddExpression::simplifyCallFunction(const IFunction &func, const ArgumentPtr &lhsChild,
+                                                const ArgumentPtr &rhsChild) {
+  return callFunction(func, {lhsChild, rhsChild});
 }
 
 ArgumentPtr AddExpression::simplifyNegations(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
@@ -134,7 +140,6 @@ ArgumentPtr AddExpression::simplifyLogarithms(const IFunction & /*func*/, const 
     ArgumentPtr logLhs = lhsChildren.front();
     ArgumentPtr logRhs = makeExpr(Mul(), lhsChildren.back(), rhsChildren.back());
     ArgumentPtr res = makeExpr(Log(), logLhs, logRhs);
-    simplifyChild(res);
     return res;
   }
 
@@ -170,7 +175,6 @@ ArgumentPtr AddExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
           ArgumentPtr logLhs = lhsLogChild->getChildren().front();
           ArgumentPtr logRhs = makeExpr(Mul(), lhsLogChild->getChildren().back(), rhsLogChild->getChildren().back());
           ArgumentPtr res = makeExpr(Log(), logLhs, logRhs);
-          simplifyChild(res);
           return res;
         }
       }
@@ -204,7 +208,6 @@ ArgumentPtr AddExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
       ArgumentPtr logLhs = logExpr->getChildren().front();
       ArgumentPtr logRhs = makeExpr(Mul(), logExpr->getChildren().back(), logChild->getChildren().back());
       ArgumentPtr res = makeExpr(Log(), logLhs, logRhs);
-      simplifyChild(res);
       return res;
     }
   }
@@ -227,7 +230,6 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
       }
       else {
         value = makeExpr(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
-        simplifyChild(value);
       }
     }
   }
@@ -247,7 +249,6 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
 ArgumentPtr AddExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeExpr(Add(), rates);
   ArgumentPtr res = makeExpr(Mul(), ratesSum, value);
-  simplifyChild(res);
   return res;
 }
 
@@ -278,6 +279,7 @@ std::shared_ptr<const IExpression> AddExpression::mulToLogarithm(const Arguments
 
 ArgumentPtr AddExpression::sumRates(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                     const ArgumentPtr &rhsChild) {
+
   auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
   auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
 
@@ -297,10 +299,7 @@ ArgumentPtr AddExpression::sumDivisions(const IFunction & /*func*/, const Argume
   if (lhsExpr && is<Div>(lhsExpr->getFunction()) && rhsExpr && is<Div>(rhsExpr->getFunction())) {
     if (*lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
       ArgumentPtr divLhs = makeExpr(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
-      simplifyChild(divLhs);
-
       ArgumentPtr divRhs = lhsExpr->getChildren().back();
-
       return makeExpr(Div(), divLhs, divRhs);
     }
   }

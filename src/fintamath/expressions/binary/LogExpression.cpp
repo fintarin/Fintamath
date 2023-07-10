@@ -109,7 +109,6 @@ ArgumentPtr LogExpression::powSimplify(const IFunction & /*func*/, const Argumen
     res = makeExpr(Mul(), multiplier, logExpr);
   }
 
-  simplifyChild(res);
   return res;
 }
 

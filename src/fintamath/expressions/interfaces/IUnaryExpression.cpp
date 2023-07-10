@@ -48,11 +48,14 @@ ArgumentPtr IUnaryExpression::preSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl->child);
 
-  if (auto res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify())) {
-    return res;
+  ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify());
+
+  if (!res) {
+    res = simpl->useSimplifyFunctions(getFunctionsForSimplify());
   }
 
-  if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
+  if (res && *res != *simpl) {
+    preSimplifyChild(res);
     return res;
   }
 
@@ -67,14 +70,16 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
     return res;
   }
 
-  if (auto res = simpl->useSimplifyFunctions(getFunctionsForPostSimplify())) {
-    return res;
+  ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPostSimplify());
+
+  if (!res) {
+    res = simpl->useSimplifyFunctions(getFunctionsForSimplify());
   }
 
-  // TODO! uncomment and implement tests for this
-  // if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
-  //   return res;
-  // }
+  if (res && *res != *simpl) {
+    postSimplifyChild(res);
+    return res;
+  }
 
   return simpl;
 }
