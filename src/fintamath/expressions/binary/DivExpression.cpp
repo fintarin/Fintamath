@@ -53,7 +53,6 @@ ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const Argumen
 
   if (Div().doArgsMatch({one, *rhs})) {
     ArgumentPtr res = makeExpr(Mul(), lhs, Div()(one, *rhs));
-    simplifyChild(res);
     return res;
   }
 
@@ -105,7 +104,6 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
   }
 
   ArgumentPtr res = makeExpr(Div(), numerator, denominator);
-  simplifyChild(res);
   return res;
 }
 
@@ -158,7 +156,6 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
   ArgumentPtr numerator;
   if (lhsChildren.size() > 1) {
     numerator = makeExpr(Mul(), lhsChildren);
-    simplifyChild(numerator);
   }
   else {
     numerator = lhsChildren.front();
@@ -171,7 +168,6 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
   ArgumentPtr denominator;
   if (rhsChildren.size() > 1) {
     denominator = makeExpr(Mul(), rhsChildren);
-    simplifyChild(denominator);
   }
   else {
     denominator = rhsChildren.front();
@@ -179,7 +175,6 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
   if (lhsChildren.size() != lhsChildrenSizeInitial || rhsChildren.size() != rhsChildrenSizeInitial) {
     ArgumentPtr res = makeExpr(Div(), numerator, denominator);
-    simplifyChild(res);
     return res;
   }
 
@@ -189,7 +184,6 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 ArgumentPtr DivExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (isNeg(rhs)) {
     ArgumentPtr res = makeExpr(Div(), makeExpr(Neg(), lhs), makeExpr(Neg(), rhs));
-    simplifyChild(res);
     return res;
   }
 
@@ -214,13 +208,11 @@ bool DivExpression::isNeg(const ArgumentPtr &expr) {
 
 ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto res = sumMulSimplify(lhs, rhs)) {
-    simplifyChild(res);
     return res;
   }
 
   if (auto [lhsRes, rhsRes] = mulSumSimplify(lhs, rhs); lhsRes) {
     ArgumentPtr res = makeExpr(Add(), lhsRes, rhsRes);
-    simplifyChild(res);
     return res;
   }
 
@@ -272,7 +264,6 @@ ArgumentPtr DivExpression::sumSumSimplify(const ArgumentPtr &lhs, const Argument
   resultVect.emplace_back(makeExpr(Div(), makeExpr(Add(), remainderVect), rhs));
 
   ArgumentPtr result = makeExpr(Add(), resultVect);
-  simplifyChild(result);
   return result;
 }
 
@@ -293,7 +284,6 @@ ArgumentPtr DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const Argument
 
   for (const auto &child : lhsChildren) {
     ArgumentPtr divResult = makeExpr(Div(), child, rhs);
-    simplifyChild(divResult);
 
     if (const auto divResultExpr = cast<IExpression>(divResult);
         divResultExpr && is<Div>(divResultExpr->getFunction()) && *divResultExpr->getChildren().back() == *rhs) {
@@ -329,7 +319,6 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   }
 
   ArgumentPtr result = makeExpr(Div(), lhs, rhsChildren.front());
-  simplifyChild(result);
 
   if (const auto divExpr = cast<IExpression>(result); divExpr && is<Div>(divExpr->getFunction())) {
     return {};
@@ -382,7 +371,6 @@ ArgumentPtr DivExpression::divPowSimplify(const ArgumentPtr &lhs, const Argument
 
     if (isResultNegated) {
       result = makeExpr(Neg(), result);
-      simplifyChild(result);
     }
   }
 
@@ -400,7 +388,6 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const Argume
 
 ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeExpr(Add(), rates);
-  simplifyChild(ratesSum);
   return makeExpr(Pow(), value, ratesSum);
 }
 
@@ -411,11 +398,9 @@ ArgumentPtr DivExpression::nestedDivSimplify(const IFunction & /*func*/, const A
   if (const auto &lhsExpr = cast<IExpression>(lhs)) {
     if (is<Mul>(lhsExpr->getFunction())) {
       result = nestedDivInNumeratorMulSimplify(lhsExpr->getChildren(), rhs);
-      simplifyChild(result);
     }
     else if (is<Add>(lhsExpr->getFunction())) {
       result = nestedDivInNumeratorSumSimplify(lhsExpr->getChildren(), rhs);
-      simplifyChild(result);
     }
   }
 
@@ -539,15 +524,11 @@ ArgumentPtr DivExpression::nestedDivInDenominatorSumSimplify(const ArgumentPtr &
 
   ArgumentsPtrVector numeratorChildren = multiplicator;
   numeratorChildren.emplace_back(lhs);
-
   ArgumentPtr numerator = makeExpr(Mul(), numeratorChildren);
-  simplifyChild(numerator);
 
   ArgumentsPtrVector denominatorChildren = multiplicator;
   denominatorChildren.emplace_back(rhs);
-
   ArgumentPtr denominator = makeExpr(Mul(), denominatorChildren);
-  simplifyChild(denominator);
 
   return makeExpr(Div(), numerator, denominator);
 }

@@ -25,11 +25,14 @@ ArgumentPtr IBinaryExpression::preSimplify() const {
   preSimplifyChild(simpl->lhsChild);
   preSimplifyChild(simpl->rhsChild);
 
-  if (auto res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify())) {
-    return res;
+  ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify());
+
+  if (!res) {
+    res = simpl->useSimplifyFunctions(getFunctionsForSimplify());
   }
 
-  if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
+  if (res && *res != *simpl) {
+    preSimplifyChild(res);
     return res;
   }
 
@@ -45,11 +48,14 @@ ArgumentPtr IBinaryExpression::postSimplify() const {
     return res;
   }
 
-  if (auto res = simpl->useSimplifyFunctions(getFunctionsForPostSimplify())) {
-    return res;
+  ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPostSimplify());
+
+  if (!res) {
+    res = simpl->useSimplifyFunctions(getFunctionsForSimplify());
   }
 
-  if (auto res = simpl->useSimplifyFunctions(getFunctionsForSimplify())) {
+  if (res && *res != *simpl) {
+    postSimplifyChild(res);
     return res;
   }
 

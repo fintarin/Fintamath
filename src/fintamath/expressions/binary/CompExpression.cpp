@@ -50,7 +50,7 @@ ArgumentPtr CompExpression::preSimplify() const {
 
   if (!simplExpr->isSolution && (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
     ArgumentPtr resLhs = makeExpr(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
-    simplifyChild(resLhs);
+    preSimplifyChild(resLhs);
     return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
   }
 
@@ -84,7 +84,6 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
   if (auto lhsExpr = cast<IExpression>(lhs)) {
     if (is<Neg>(lhsExpr->getFunction())) {
       ArgumentPtr res = makeExpr(*getOppositeFunction(func), lhsExpr->getChildren().front(), rhs);
-      simplifyChild(res);
       return res;
     }
 
@@ -117,7 +116,6 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
       }
 
       ArgumentPtr newLhs = makeExpr(Add(), dividendPolynom);
-      simplifyChild(newLhs);
 
       if (*dividerNum < Integer(0)) {
         return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);

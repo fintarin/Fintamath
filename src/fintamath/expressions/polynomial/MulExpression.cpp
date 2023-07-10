@@ -30,13 +30,14 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForSimplify() 
       &MulExpression::simplifyDivisions, //
       &MulExpression::mulRates,          //
       &MulExpression::simplifyNumbers,   //
+      &MulExpression::simplifyNegations, //
   };
   return simplifyFunctions;
 }
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &MulExpression::simplifyNegations, //
+      &MulExpression::simplifyCallFunction, //
   };
   return simplifyFunctions;
 }
@@ -59,7 +60,6 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
 
 ArgumentPtr MulExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = makeExpr(Add(), rates);
-  simplifyChild(ratesSum);
   return makeExpr(Pow(), value, ratesSum);
 }
 
@@ -74,6 +74,11 @@ ArgumentPtr MulExpression::simplifyNumbers(const IFunction & /*func*/, const Arg
   }
 
   return {};
+}
+
+ArgumentPtr MulExpression::simplifyCallFunction(const IFunction &func, const ArgumentPtr &lhsChild,
+                                                const ArgumentPtr &rhsChild) {
+  return callFunction(func, {lhsChild, rhsChild});
 }
 
 ArgumentPtr MulExpression::simplifyDivisions(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
@@ -112,7 +117,6 @@ ArgumentPtr MulExpression::simplifyDivisions(const IFunction & /*func*/, const A
   }
 
   ArgumentPtr res = makeExpr(Div(), numerator, denominator);
-  simplifyChild(res);
   return res;
 }
 
@@ -156,7 +160,6 @@ ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const Argumen
   }
 
   ArgumentPtr res = makeExpr(Add(), resultVect);
-  simplifyChild(res);
   return res;
 }
 
@@ -179,7 +182,6 @@ ArgumentPtr MulExpression::simplifyNegations(const IFunction & /*func*/, const A
 
   if (lhsExpr && rhsExpr && is<Neg>(lhsExpr->getFunction()) && is<Neg>(rhsExpr->getFunction())) {
     ArgumentPtr res = makeExpr(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
-    simplifyChild(res);
     return res;
   }
 

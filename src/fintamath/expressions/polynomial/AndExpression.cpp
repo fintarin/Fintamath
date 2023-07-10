@@ -97,7 +97,6 @@ ArgumentPtr AndExpression::simplifyOr(const IFunction & /*func*/, const Argument
   }
 
   ArgumentPtr res = makeExpr(Or(), resultVect);
-  simplifyChild(res);
   return res;
 }
 

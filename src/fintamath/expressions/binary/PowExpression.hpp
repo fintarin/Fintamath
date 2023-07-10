@@ -27,7 +27,7 @@ protected:
 private:
   static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, const Integer &powValue);
 
-  static Integer generateNextNumber(Integer n);
+  static Integer generateNextNumber(const Integer &n);
 
   static Integer generateFirstNum(const Integer &countOfOne);
 

@@ -66,7 +66,6 @@ ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, co
     }
 
     res = makeExpr(And(), children);
-    simplifyChild(res);
   }
   else if (is<And>(rhsExpr->getFunction())) {
     ArgumentsPtrVector children = rhsExpr->getChildren();
@@ -76,7 +75,6 @@ ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, co
     }
 
     res = makeExpr(Or(), children);
-    simplifyChild(res);
   }
 
   return res;
