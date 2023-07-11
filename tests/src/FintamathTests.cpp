@@ -57,7 +57,7 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(expr.toString(), "x^2 - x y + y^2 = 0");
 
   expr = eqv(x / x - y / y, x / y);
-  EXPECT_EQ(expr.toString(), "x/y = 0");
+  EXPECT_EQ(expr.toString(), "x = 0");
 
   expr = eqv(pow(x, 2) - 10, 39);
   EXPECT_EQ(solve(expr).toString(), "x = -7 | x = 7");
