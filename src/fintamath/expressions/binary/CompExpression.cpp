@@ -59,6 +59,7 @@ ArgumentPtr CompExpression::preSimplify() const {
 
 CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPostSimplify() const {
   static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &CompExpression::divSimplify,   //
       &CompExpression::coeffSimplify, //
   };
   return simplifyFunctions;
@@ -78,6 +79,14 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
       {LessEqv().toString(), std::make_shared<MoreEqv>()}, //
   };
   return oppositeFunctions.at(function.toString());
+}
+
+ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Div>(lhsExpr->getFunction())) {
+    return makeExpr(func, lhsExpr->getChildren().front(), rhs);
+  }
+
+  return {};
 }
 
 ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

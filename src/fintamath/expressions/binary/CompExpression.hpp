@@ -30,6 +30,8 @@ protected:
   static std::shared_ptr<IFunction> getLogicOppositeFunction(const IFunction &function);
 
 private:
+  static ArgumentPtr divSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
   static ArgumentPtr coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   bool isSolution = false;
