@@ -31,16 +31,12 @@ private:
 
   static ArgumentPtr sumSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr nestedDivSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedRationalsSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr nestedDivInNumeratorSumSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedRationalsInNumeratorSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
-  static ArgumentPtr nestedDivInNumeratorMulSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
-
-  static ArgumentPtr nestedDivInDenominatorSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
-                                                       const ArgumentsPtrVector &rhsChildren);
-
-  static ArgumentPtr nestedDivInDenominatorMulSimplify(const ArgumentsPtrVector &rhsChildren);
+  static ArgumentPtr nestedRationalsInDenominatorSimplify(const ArgumentPtr &lhs,
+                                                          const ArgumentsPtrVector &rhsChildren);
 
   static ArgumentPtr sumSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
@@ -48,15 +44,13 @@ private:
 
   static std::pair<ArgumentPtr, ArgumentPtr> mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr divPowSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr powSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &rhs);
 
   static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
 
   static bool isNeg(const ArgumentPtr &expr);
-
-  static bool unwrapNeg(ArgumentPtr &lhs);
 };
 
 }

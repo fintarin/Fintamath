@@ -10,6 +10,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 
@@ -81,13 +82,7 @@ AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify
   static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
       &AddExpression::simplifyNegations,    //
       &AddExpression::simplifyCallFunction, //
-  };
-  return simplifyFunctions;
-}
-
-AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPostSimplify() const {
-  static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &AddExpression::sumDivisions, //
+      &AddExpression::sumDivisions,         //
   };
   return simplifyFunctions;
 }
@@ -296,15 +291,48 @@ ArgumentPtr AddExpression::sumDivisions(const IFunction & /*func*/, const Argume
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
-  if (lhsExpr && is<Div>(lhsExpr->getFunction()) && rhsExpr && is<Div>(rhsExpr->getFunction())) {
-    if (*lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
-      ArgumentPtr divLhs = makeExpr(Add(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
-      ArgumentPtr divRhs = lhsExpr->getChildren().back();
-      return makeExpr(Div(), divLhs, divRhs);
-    }
+  if (const auto rhsRat = cast<Rational>(rhsChild)) {
+    rhsExpr = cast<IExpression>(makeExpr(Div(), rhsRat->numerator(), rhsRat->denominator()));
   }
 
-  return {};
+  ArgumentPtr res;
+
+  if (lhsExpr && is<Div>(lhsExpr->getFunction()) && rhsExpr && is<Div>(rhsExpr->getFunction())) {
+    if (*lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
+      ArgumentPtr lhsNumerator = lhsExpr->getChildren().front();
+      ArgumentPtr rhsNumerator = rhsExpr->getChildren().front();
+      ArgumentPtr rhsDenominator = rhsExpr->getChildren().back();
+
+      ArgumentPtr numerator = makeExpr(Add(), lhsNumerator, rhsNumerator);
+      ArgumentPtr denominator = rhsDenominator;
+      res = makeExpr(Div(), numerator, denominator);
+    }
+    else {
+      ArgumentPtr lhsNumerator = lhsExpr->getChildren().front();
+      ArgumentPtr rhsNumerator = rhsExpr->getChildren().front();
+      ArgumentPtr lhsDenominator = lhsExpr->getChildren().back();
+      ArgumentPtr rhsDenominator = rhsExpr->getChildren().back();
+
+      ArgumentPtr lhsNumeratorMulRhsDenominator = makeExpr(Mul(), lhsNumerator, rhsDenominator);
+      ArgumentPtr rhsNumeratorMulLhsDenominator = makeExpr(Mul(), rhsNumerator, lhsDenominator);
+
+      ArgumentPtr numerator = makeExpr(Add(), lhsNumeratorMulRhsDenominator, rhsNumeratorMulLhsDenominator);
+      ArgumentPtr denominator = makeExpr(Mul(), lhsDenominator, rhsDenominator);
+      res = makeExpr(Div(), numerator, denominator);
+    }
+  }
+  else if (rhsExpr && is<Div>(rhsExpr->getFunction())) {
+    ArgumentPtr rhsNumerator = rhsExpr->getChildren().front();
+    ArgumentPtr rhsDenominator = rhsExpr->getChildren().back();
+
+    ArgumentPtr lhsMulRhsDenominator = makeExpr(Mul(), lhsChild, rhsDenominator);
+
+    ArgumentPtr numerator = makeExpr(Add(), lhsMulRhsDenominator, rhsNumerator);
+    ArgumentPtr denominator = rhsDenominator;
+    res = makeExpr(Div(), numerator, denominator);
+  }
+
+  return res;
 }
 
 }
