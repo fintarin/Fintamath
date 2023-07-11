@@ -68,8 +68,11 @@ int AddExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) co
   return IPolynomExpression::comparator(lhs, rhs);
 }
 
-AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForSimplify() const {
+AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify() const {
   static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &AddExpression::simplifyNegations,     //
+      &AddExpression::simplifyCallFunction,  //
+      &AddExpression::sumDivisions,          //
       &AddExpression::simplifyNumbers,       //
       &AddExpression::sumRates,              //
       &AddExpression::simplifyLogarithms,    //
@@ -78,11 +81,12 @@ AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForSimplify() 
   return simplifyFunctions;
 }
 
-AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify() const {
+AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPostSimplify() const {
   static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &AddExpression::simplifyNegations,    //
-      &AddExpression::simplifyCallFunction, //
-      &AddExpression::sumDivisions,         //
+      &AddExpression::simplifyNumbers,       //
+      &AddExpression::sumRates,              //
+      &AddExpression::simplifyLogarithms,    //
+      &AddExpression::simplifyMulLogarithms, //
   };
   return simplifyFunctions;
 }

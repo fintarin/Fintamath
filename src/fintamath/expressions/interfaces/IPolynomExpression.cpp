@@ -106,19 +106,11 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
     }
 
     if (!res) {
-      res = useSimplifyFunctions(getFunctionsForSimplify(), i - 1, i);
-    }
-
-    if (!res) {
       continue;
     }
 
     if (!isResSimplified) {
       ArgumentPtr prevExpr = makeExpr(*getFunction(), lhs, rhs);
-
-      if (*prevExpr == *res) {
-        continue;
-      }
 
       if (isPostSimplify) {
         postSimplifyChild(res);
@@ -160,10 +152,6 @@ void IPolynomExpression::simplifyChildren(bool isPostSimplify) {
 
     addElement(child);
   }
-}
-
-IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForSimplify() const {
-  return {};
 }
 
 IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForPreSimplify() const {

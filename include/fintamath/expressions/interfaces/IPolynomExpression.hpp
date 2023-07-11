@@ -38,8 +38,6 @@ protected:
     int size = 0;
   };
 
-  virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
-
   virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
 
   virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;

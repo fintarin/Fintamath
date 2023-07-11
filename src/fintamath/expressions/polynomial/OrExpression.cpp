@@ -54,7 +54,7 @@ ArgumentPtr OrExpression::postSimplify() const {
   return simpl;
 }
 
-OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForSimplify() const {
+OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForPreSimplify() const {
   static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
       &OrExpression::simplifyNot,      //
       &OrExpression::simplifyBooleans, //
@@ -65,7 +65,10 @@ OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForSimplify() co
 
 OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForPostSimplify() const {
   static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &OrExpression::simplifyAnd, //
+      &OrExpression::simplifyAnd,      //
+      &OrExpression::simplifyNot,      //
+      &OrExpression::simplifyBooleans, //
+      &OrExpression::simplifyEqual,    //
   };
   return simplifyFunctions;
 }

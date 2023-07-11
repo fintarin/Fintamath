@@ -48,7 +48,7 @@ ArgumentPtr LogExpression::preciseSimplify() const {
   return IBinaryExpression::preciseSimplify();
 }
 
-LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() const {
+LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPreSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
       &LogExpression::numSimplify,   //
       &LogExpression::equalSimplify, //
@@ -58,7 +58,9 @@ LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForSimplify() 
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPostSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &LogExpression::powSimplify, //
+      &LogExpression::powSimplify,   //
+      &LogExpression::numSimplify,   //
+      &LogExpression::equalSimplify, //
   };
   return simplifyFunctions;
 }

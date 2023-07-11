@@ -15,7 +15,7 @@ HyperbolicExpression::HyperbolicExpression(const IFunction &inFunc, const Argume
     : IUnaryExpressionCRTP(inFunc, inChild) {
 }
 
-HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctionsForSimplify() const {
+HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctionsForPreSimplify() const {
   static const HyperbolicExpression::SimplifyFunctionsVector simplifyFunctions = {
       &HyperbolicExpression::oppositeFunctionsSimplify, //
   };
@@ -24,7 +24,8 @@ HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctions
 
 HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctionsForPostSimplify() const {
   static const HyperbolicExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &HyperbolicExpression::constantsSimplify, //
+      &HyperbolicExpression::constantsSimplify,         //
+      &HyperbolicExpression::oppositeFunctionsSimplify, //
   };
   return simplifyFunctions;
 }

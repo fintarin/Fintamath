@@ -15,7 +15,7 @@ TrigonometryExpression::TrigonometryExpression(const IFunction &inFunc, const Ar
     : IUnaryExpressionCRTP(inFunc, inChild) {
 }
 
-TrigonometryExpression::SimplifyFunctionsVector TrigonometryExpression::getFunctionsForSimplify() const {
+TrigonometryExpression::SimplifyFunctionsVector TrigonometryExpression::getFunctionsForPreSimplify() const {
   static const TrigonometryExpression::SimplifyFunctionsVector simplifyFunctions = {
       &TrigonometryExpression::oppositeFunctionsSimplify, //
   };
@@ -24,7 +24,8 @@ TrigonometryExpression::SimplifyFunctionsVector TrigonometryExpression::getFunct
 
 TrigonometryExpression::SimplifyFunctionsVector TrigonometryExpression::getFunctionsForPostSimplify() const {
   static const TrigonometryExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &TrigonometryExpression::constantsSimplify, //
+      &TrigonometryExpression::constantsSimplify,         //
+      &TrigonometryExpression::oppositeFunctionsSimplify, //
   };
   return simplifyFunctions;
 }

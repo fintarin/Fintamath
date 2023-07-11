@@ -68,6 +68,8 @@ PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplif
   static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
       &PowExpression::numSimplify,     //
       &PowExpression::polynomSimplify, //
+      &PowExpression::negSimplify,     //
+      &PowExpression::powSimplify,     //
   };
   return simplifyFunctions;
 }
