@@ -126,7 +126,7 @@ struct ExpressionConfig {
 
     Expression::registerTermsMaker([](const Token &token) {
       if (ArgumentPtr arg = INumber::parse(token)) {
-        return std::make_unique<Term>(token, ArgumentsPtrVector{arg});
+        return std::make_unique<Term>(token, ArgumentsPtrVector{arg->toMinimalObject()});
       }
 
       return std::unique_ptr<Term>();
