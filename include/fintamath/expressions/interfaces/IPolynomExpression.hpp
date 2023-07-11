@@ -9,7 +9,7 @@ namespace fintamath {
 
 class IPolynomExpression : public IExpression {
 public:
-  std::string toString() const final;
+  std::string toString() const override;
 
   std::shared_ptr<IFunction> getFunction() const final;
 
