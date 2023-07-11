@@ -57,6 +57,11 @@ ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const A
     rhsChildren.emplace_back(std::make_shared<Integer>(-1));
     res = makeExpr(Mul(), rhsChildren);
   }
+  else if (is<Div>(rhsExpr->getFunction())) {
+    ArgumentPtr divLhs = makeExpr(Neg(), rhsChildren.front());
+    ArgumentPtr divRhs = rhsChildren.back();
+    res = makeExpr(Div(), divLhs, divRhs);
+  }
   else if (is<Log>(rhsExpr->getFunction())) {
     ArgumentPtr logLhs = rhsChildren.front();
     ArgumentPtr logRhs = makeExpr(Div(), std::make_shared<Integer>(1), rhsChildren.back());
