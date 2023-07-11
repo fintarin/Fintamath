@@ -11,11 +11,39 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 
 MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(Mul(), inChildren) {
+}
+
+std::string MulExpression::toString() const {
+  if (const auto firstChildRat = cast<Rational>(children.front())) {
+    ArgumentsPtrVector numeratorChildren = children;
+
+    if (const Integer firstChildNumeratorAbs = abs(firstChildRat->numerator()); firstChildNumeratorAbs != 1) {
+      numeratorChildren.front() = firstChildNumeratorAbs.clone();
+    }
+    else {
+      numeratorChildren.erase(numeratorChildren.begin());
+    }
+
+    ArgumentPtr numerator =
+        numeratorChildren.size() > 1 ? makeExpr(Mul(), numeratorChildren) : numeratorChildren.front();
+    ArgumentPtr denominator = firstChildRat->denominator().clone();
+    ArgumentPtr res = makeExpr(Div(), numerator, denominator);
+
+    std::string resStr = res->toString();
+    if (firstChildRat->numerator() < Integer(0)) {
+      resStr.insert(0, Neg().toString());
+    }
+
+    return resStr;
+  }
+
+  return IPolynomExpression::toString();
 }
 
 std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {

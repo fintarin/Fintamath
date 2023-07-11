@@ -40,7 +40,7 @@ TEST(SqrtTests, callTest) {
   EXPECT_EQ(f(Rational("1.44"))->toString(), "6/5");
   EXPECT_EQ(f(Rational(1, 10))->toString(), "1/sqrt(10)");
   EXPECT_EQ(f(Rational(25, 48))->toString(), "5/(4 sqrt(3))");
-  EXPECT_EQ(f(Rational(26, 49))->toString(), "1/7 sqrt(26)");
+  EXPECT_EQ(f(Rational(26, 49))->toString(), "sqrt(26)/7");
   EXPECT_EQ(f(Rational(45, 67))->toString(), "(3 sqrt(5))/sqrt(67)"); // TODO! 3 sqrt(5/67)
   EXPECT_EQ(f(Rational("68732648273642987365932706179432649827364.144"))->toString(),
             "sqrt(8591581034205373420741588272429081228420518)/(5 sqrt(5))");

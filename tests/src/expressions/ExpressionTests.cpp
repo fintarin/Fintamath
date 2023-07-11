@@ -130,8 +130,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2^(2/3) 1/7^(2/3) 3^(3/4)").toString(),
             "(root(27, 4) root(4, 3))/root(49, 3)"); // TODO! root(27, 4) root(4/49, 3)
 
-  EXPECT_EQ(Expression("Deg").toString(), "1/180 Pi");
-  EXPECT_EQ(Expression("60Deg").toString(), "1/3 Pi");
+  EXPECT_EQ(Expression("Deg").toString(), "Pi/180");
+  EXPECT_EQ(Expression("60Deg").toString(), "Pi/3");
   EXPECT_EQ(Expression("E").toString(), "E");
   EXPECT_EQ(Expression("Pi").toString(), "Pi");
   EXPECT_EQ(Expression("E^101-E^101").toString(), "0");
@@ -182,18 +182,17 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sin1^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin(10^30)").toString(), "sin(1000000000000000000000000000000)");
   EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").toString(), "cos(1)^2 + sin(1)^2");
-  EXPECT_EQ(Expression("sin(Pi/3)").toString(), "sin(1/3 Pi)");
-  EXPECT_EQ(Expression("cos(Pi/3)").toString(), "cos(1/3 Pi)");
+  EXPECT_EQ(Expression("sin(Pi/3)").toString(), "sin(Pi/3)");
+  EXPECT_EQ(Expression("cos(Pi/3)").toString(), "cos(Pi/3)");
   EXPECT_EQ(Expression("2!*E").toString(), "2 E");
   EXPECT_EQ(Expression("E*2!").toString(), "2 E");
-  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-1/2 cos(2/3 Pi) + 1/2)");
-  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(),
-            "2 sqrt(-1/2 cos(2/3 Pi) + 1/2) cos(1/3 Pi)");
+  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-cos((2 Pi)/3)/2 + 1/2)");
+  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(), "2 sqrt(-cos((2 Pi)/3)/2 + 1/2) cos(Pi/3)");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
   EXPECT_EQ(Expression("sqrt(26)").toString(), "sqrt(26)");
   EXPECT_EQ(Expression("sqrt(145/26)").toString(), "sqrt(145)/sqrt(26)");
   EXPECT_EQ(Expression("sqrt(169/3)").toString(), "13/sqrt(3)");
-  EXPECT_EQ(Expression("sqrt(168/25)").toString(), "2/5 sqrt(42)");
+  EXPECT_EQ(Expression("sqrt(168/25)").toString(), "(2 sqrt(42))/5");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
   EXPECT_EQ(Expression("2^(3/2)").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sqrt(sqrt5)").toString(), "root(5, 4)");
@@ -216,7 +215,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)^-1").toString(), "1/(a b)");
   EXPECT_EQ(Expression("(a b)^-2").toString(), "1/(a^2 b^2)");
 
-  EXPECT_EQ(Expression("2%a").toString(), "1/50 a");
+  EXPECT_EQ(Expression("2%a").toString(), "a/50");
   EXPECT_EQ(Expression("2!!!!a!!!").toString(), "2 a!!!");
   EXPECT_EQ(Expression("sin a").toString(), "sin(a)");
   EXPECT_EQ(Expression("s i n a").toString(), "a i n s");
@@ -232,7 +231,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
 
   EXPECT_EQ(Expression("2.a").toString(), "2 a");
-  EXPECT_EQ(Expression("a.2").toString(), "1/5 a");
+  EXPECT_EQ(Expression("a.2").toString(), "a/5");
   EXPECT_EQ(Expression("a+a").toString(), "2 a");
   EXPECT_EQ(Expression("a-a").toString(), "0");
   EXPECT_EQ(Expression("-a").toString(), "-a");
@@ -325,7 +324,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("5/(a+b) + 5/(2a+b) + 5/(a+b)").toString(), "5/(2 a + b) + 10/(a + b)");
   EXPECT_EQ(Expression("(x+y)/(a+b) + 5/(2a+b) + (x+2y)/(a+b)").toString(), "(2 x + 3 y)/(a + b) + 5/(2 a + b)");
   EXPECT_EQ(Expression("(a/b)(c/d)").toString(), "(a c)/(b d)");
-  EXPECT_EQ(Expression("(ab/2)(ad/3)").toString(), "1/6 a^2 b d");
+  EXPECT_EQ(Expression("(ab/2)(ad/3)").toString(), "(a^2 b d)/6");
   EXPECT_EQ(Expression("(-a)(-b)").toString(), "a b");
   EXPECT_EQ(Expression("(a)(-b)").toString(), "-a b");
   EXPECT_EQ(Expression("(-a)(b)").toString(), "-a b");
@@ -334,7 +333,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/(a b)").toString(), "1");
   EXPECT_EQ(Expression("(a b)/1").toString(), "a b");
   EXPECT_EQ(Expression("(a b)/-1").toString(), "-a b");
-  EXPECT_EQ(Expression("(a b)/-2").toString(), "-1/2 a b");
+  EXPECT_EQ(Expression("(a b)/-2").toString(), "-(a b)/2");
   EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b + b^2/(a + b)");
   EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^4 + y^5/(x - y)");
   EXPECT_EQ(Expression("(3 x + 5/9)/(2y - 9/x + 3/2 x + 1/2 + 2 y / x)").toString(),
@@ -389,7 +388,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(4 a_1^3 b) + cot(sin(4 a_1 b^3)) + b^4 + asin(sin(a_1^4)) + cos(6 a_1^2 b^2)").toString(),
             "b^4 + asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3))");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(), "a!!!!!!!!!!");
-  EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "1/100 a a! a!! a!!!");
+  EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(), "(a a! a!! a!!!)/100");
   EXPECT_EQ(Expression("a! sin(a)").toString(), "a! sin(a)");
   EXPECT_EQ(Expression("sin(a) a!").toString(), "a! sin(a)");
   EXPECT_EQ(Expression("sin(a) a").toString(), "a sin(a)");
@@ -442,9 +441,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   // EXPECT_EQ(Expression("derivative(5, a^2)").toString(), "0");
   // EXPECT_EQ(Expression("derivative(a, a^2)").toString(), "derivative(a, a^2)");
 
-  EXPECT_EQ(Expression("integral(a, a)").toString(), "1/2 a^2");
+  EXPECT_EQ(Expression("integral(a, a)").toString(), "a^2/2");
   EXPECT_EQ(Expression("integral(a+a, a)").toString(), "integral(2 a, a)");
-  EXPECT_EQ(Expression("integral(a, a) + integral(b, b)").toString(), "1/2 a^2 + 1/2 b^2");
+  EXPECT_EQ(Expression("integral(a, a) + integral(b, b)").toString(), "a^2/2 + b^2/2");
   // TODO: integral
   // EXPECT_EQ(Expression("integral(5, a^2)").toString(), "???");
   // EXPECT_EQ(Expression("integral(a, a^2)").toString(), "???");
