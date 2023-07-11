@@ -237,7 +237,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
             "x = -1/24 sqrt(1969) - 23/24 | x = 1/24 sqrt(1969) - 23/24");
   EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(), "x = -34/33 | x = 1");
   EXPECT_EQ(solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(),
-            "x = -1/2 sqrt(2)"); // TODO! x = -sqrt(2)/2
+            "x = -1/sqrt(2)"); // TODO! x = -sqrt(2)/2
 
   // TODO: implement cubic equations
   EXPECT_EQ(solve(Expression("x^3 - 3x^2 + 3x - 1 = 0")).toString(), "x^3 - 3 x^2 + 3 x - 1 = 0"); // TODO: x = 1

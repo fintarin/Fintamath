@@ -11,6 +11,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 
@@ -38,6 +39,7 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForSimplify() 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
       &MulExpression::simplifyCallFunction, //
+      &MulExpression::simplifyRationals,    //
   };
   return simplifyFunctions;
 }
@@ -76,6 +78,18 @@ ArgumentPtr MulExpression::simplifyNumbers(const IFunction & /*func*/, const Arg
   return {};
 }
 
+ArgumentPtr MulExpression::simplifyRationals(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                             const ArgumentPtr &rhsChild) {
+
+  if (const auto lhsRat = cast<Rational>(lhsChild)) {
+    ArgumentPtr numerator = makeExpr(Mul(), lhsRat->numerator().clone(), rhsChild);
+    ArgumentPtr denominator = lhsRat->denominator().clone();
+    return makeExpr(Div(), numerator, denominator);
+  }
+
+  return {};
+}
+
 ArgumentPtr MulExpression::simplifyCallFunction(const IFunction &func, const ArgumentPtr &lhsChild,
                                                 const ArgumentPtr &rhsChild) {
   return callFunction(func, {lhsChild, rhsChild});
@@ -83,6 +97,7 @@ ArgumentPtr MulExpression::simplifyCallFunction(const IFunction &func, const Arg
 
 ArgumentPtr MulExpression::simplifyDivisions(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                              const ArgumentPtr &rhsChild) {
+
   const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
