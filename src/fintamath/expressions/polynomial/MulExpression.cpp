@@ -54,27 +54,25 @@ std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, con
   return (prevChild && *prevChild != Integer(-1) ? " " : "") + inChild->toString();
 }
 
-MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForSimplify() const {
-  static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &MulExpression::simplifyDivisions, //
-      &MulExpression::mulRates,          //
-      &MulExpression::simplifyNumbers,   //
-      &MulExpression::simplifyNegations, //
-  };
-  return simplifyFunctions;
-}
-
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
       &MulExpression::simplifyCallFunction, //
       &MulExpression::simplifyRationals,    //
+      &MulExpression::simplifyDivisions,    //
+      &MulExpression::mulRates,             //
+      &MulExpression::simplifyNumbers,      //
+      &MulExpression::simplifyNegations,    //
   };
   return simplifyFunctions;
 }
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPostSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &MulExpression::mulPolynoms, //
+      &MulExpression::mulPolynoms,       //
+      &MulExpression::simplifyDivisions, //
+      &MulExpression::mulRates,          //
+      &MulExpression::simplifyNumbers,   //
+      &MulExpression::simplifyNegations, //
   };
   return simplifyFunctions;
 }

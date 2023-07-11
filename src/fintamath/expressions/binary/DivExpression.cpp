@@ -16,19 +16,22 @@ DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &i
     : IBinaryExpressionCRTP(Div(), inLhsChild, inRhsChild) {
 }
 
-DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForSimplify() const {
+DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPreSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &DivExpression::zeroSimplify, //
       &DivExpression::divSimplify,  //
       &DivExpression::mulSimplify,  //
-      &DivExpression::zeroSimplify, //
   };
   return simplifyFunctions;
 }
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::numSimplify,             //
+      &DivExpression::zeroSimplify,            //
       &DivExpression::negSimplify,             //
+      &DivExpression::numSimplify,             //
+      &DivExpression::divSimplify,             //
+      &DivExpression::mulSimplify,             //
       &DivExpression::nestedRationalsSimplify, //
       &DivExpression::sumSimplify,             //
   };

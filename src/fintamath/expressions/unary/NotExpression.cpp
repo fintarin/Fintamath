@@ -16,16 +16,10 @@ namespace fintamath {
 NotExpression::NotExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(Not(), inChild) {
 }
 
-NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForSimplify() const {
-  static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NotExpression::simplifyNestedNot, //
-  };
-  return simplifyFunctions;
-}
-
 NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPreSimplify() const {
   static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NotExpression::callNotFunction, //
+      &NotExpression::callNotFunction,   //
+      &NotExpression::simplifyNestedNot, //
   };
   return simplifyFunctions;
 }
@@ -33,6 +27,7 @@ NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPreSimplify
 NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPostSimplify() const {
   static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
       &NotExpression::simplifyLogicNegatable, //
+      &NotExpression::simplifyNestedNot,      //
   };
   return simplifyFunctions;
 }

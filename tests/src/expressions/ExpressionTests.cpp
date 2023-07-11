@@ -337,8 +337,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b + b^2/(a + b)");
   EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^4 + y^5/(x - y)");
   EXPECT_EQ(Expression("(3 x + 5/9)/(2y - 9/x + 3/2 x + 1/2 + 2 y / x)").toString(),
-            "2 - (16 y - 72)/(6 x^2 + 8 x y + 2 x + 8 y - 36) + (-16 x^2 y)/(6 x^3 + 8 x^2 y + 2 x^2 + 8 x y - 36 x) + "
-            "(-16 x)/(54 x^2 + 72 x y + 18 x + 72 y - 324)");
+            "2 + (-72 x y - 8 x - 72 y + 324)/(27 x^2 + 36 x y + 9 x + 36 y - 162)");
   EXPECT_EQ(Expression("(a/x + b/(y+3/r)/4)/(3+t/5)").toString(),
             "(5 a)/(t x + 15 x) + (25 b r)/(20 r t y + 300 r y + 60 t + 900)");
   EXPECT_EQ(Expression("(x/a - (b+5)/(y-8/(12 y))/4)/(8-a/5)").toString(),
@@ -397,7 +396,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("cos(b) log(b, a)").toString(), "log(b, a) cos(b)");
   EXPECT_EQ(Expression("cos(a) log(b, c)").toString(), "log(b, c) cos(a)");
   EXPECT_EQ(Expression("cos(b^2) log(b, c)").toString(), "log(b, c) cos(b^2)");
-  EXPECT_EQ(Expression("(x + y^(3))^(2) * (sin(x))/(ln(2))  /  x^(2) - (2 sin(x) y^(3))/(x ln(2))").toString(),
+  EXPECT_EQ(Expression("(x + y^3)^2 * sin(x)/ln(2)/x^2 - (2 sin(x) y^3)/(x ln(2))").toString(),
             "sin(x)/ln(2) + (y^6 sin(x))/(x^2 ln(2))");
 
   EXPECT_EQ(Expression("a=a").toString(), "True");
@@ -419,7 +418,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("-a > 0").toString(), "a < 0");
   EXPECT_EQ(Expression("-2a + 5 > 6").toString(), "a + 1/2 < 0");
   EXPECT_EQ(Expression("-2a+5>6").toString(), "a + 1/2 < 0");
-  EXPECT_EQ(Expression("-6x^2 + 4x - 20 = 15x - 9").toString(), "x^2 + 11/6 x + 11/6 = 0");
+  EXPECT_EQ(Expression("-6x^2 + 4x - 20 = 15x - 9").toString(), "x^2 + (11 x)/6 + 11/6 = 0");
   EXPECT_EQ(Expression("2 a^5 b - 4 a b^5  = 0").toString(), "a^5 b - 2 a b^5 = 0");
   EXPECT_EQ(Expression("-2 a^5 b + 4 a b^5  = 0").toString(), "a^5 b - 2 a b^5 = 0");
 
@@ -610,8 +609,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("3 ln((10 E)^2) - 2 ln(10 E)").toString(), "ln(10000 E^4)");
   EXPECT_EQ(Expression("ln((10 E)^(2ab)) - 2 a ln(10 E) b").toString(),
             "ln(10^(2 a b) E^(2 a b) 10^(-2 a b) E^(-2 a b))"); // TODO! 0
-  EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(),
-            "ln(10^0 E^0)"); // TODO! 0
+  EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(), "0");
   EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
   EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5 3^x)");

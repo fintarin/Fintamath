@@ -12,16 +12,10 @@ namespace fintamath {
 NegExpression::NegExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(Neg(), inChild) {
 }
 
-NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForSimplify() const {
-  static const NegExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NegExpression::simplifyNestedNeg, //
-  };
-  return simplifyFunctions;
-}
-
 NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPreSimplify() const {
   static const NegExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NegExpression::callNegFunction, //
+      &NegExpression::callNegFunction,   //
+      &NegExpression::simplifyNestedNeg, //
   };
   return simplifyFunctions;
 }
@@ -29,6 +23,7 @@ NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPreSimplify
 NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPostSimplify() const {
   static const NegExpression::SimplifyFunctionsVector simplifyFunctions = {
       &NegExpression::simplifyNegatable, //
+      &NegExpression::simplifyNestedNeg, //
   };
   return simplifyFunctions;
 }

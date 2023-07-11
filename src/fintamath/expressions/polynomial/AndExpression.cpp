@@ -10,7 +10,7 @@ namespace fintamath {
 AndExpression::AndExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(And(), inChildren) {
 }
 
-AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForSimplify() const {
+AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForPreSimplify() const {
   static const AndExpression::SimplifyFunctionsVector simplifyFunctions = {
       &AndExpression::simplifyBooleans, //
       &AndExpression::simplifyEqual,    //
@@ -21,7 +21,10 @@ AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForSimplify() 
 
 AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForPostSimplify() const {
   static const AndExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &AndExpression::simplifyOr, //
+      &AndExpression::simplifyOr,       //
+      &AndExpression::simplifyBooleans, //
+      &AndExpression::simplifyEqual,    //
+      &AndExpression::simplifyNot,      //
   };
   return simplifyFunctions;
 }

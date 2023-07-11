@@ -23,8 +23,6 @@ protected:
 
   using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
 
-  virtual SimplifyFunctionsVector getFunctionsForSimplify() const;
-
   virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
 
   virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
