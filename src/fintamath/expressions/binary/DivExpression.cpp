@@ -8,6 +8,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
@@ -33,6 +34,7 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplif
       &DivExpression::divSimplify,             //
       &DivExpression::mulSimplify,             //
       &DivExpression::nestedRationalsSimplify, //
+      &DivExpression::gcdSimplify,             //
       &DivExpression::sumSimplify,             //
   };
   return simplifyFunctions;
@@ -209,16 +211,20 @@ bool DivExpression::isNeg(const ArgumentPtr &expr) {
 }
 
 ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (auto [result, remainder] = sumMulSimplify(lhs, rhs); result) {
+  if (auto [result, remainder] = mulSumSimplify(lhs, rhs); result) {
     return makeExpr(Add(), result, remainder);
   }
 
-  if (auto [result, remainder] = mulSumSimplify(lhs, rhs); result) {
+  if (auto [result, remainder] = sumMulSimplify(lhs, rhs); result) {
     return makeExpr(Add(), result, remainder);
   }
 
   if (auto [result, remainder] = sumSumSimplify(lhs, rhs); result) {
     return makeExpr(Add(), result, remainder);
+  }
+
+  if (auto [result, remainder] = sumSumSimplify(rhs, lhs); result && !is<IExpression>(remainder)) {
+    return makeExpr(Div(), Integer(1).clone(), makeExpr(Add(), result, remainder));
   }
 
   return {};
@@ -426,6 +432,66 @@ ArgumentPtr DivExpression::nestedRationalsSimplify(const IFunction & /*func*/, c
   return {};
 }
 
+ArgumentPtr DivExpression::gcdSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentsPtrVector lhsChildren;
+  ArgumentsPtrVector rhsChildren;
+
+  if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Add>(lhsExpr->getFunction())) {
+    lhsChildren = lhsExpr->getChildren();
+  }
+  else {
+    lhsChildren = {lhs};
+  }
+
+  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Add>(rhsExpr->getFunction())) {
+    rhsChildren = rhsExpr->getChildren();
+  }
+  else {
+    rhsChildren = {rhs};
+  }
+
+  Integer lhsGcdNum = getGcd(lhsChildren);
+  Integer rhsGcdNum = getGcd(rhsChildren);
+
+  if (lhsGcdNum <= 1 || rhsGcdNum <= 1) {
+    return {};
+  }
+
+  Integer gcdNum = gcd(lhsGcdNum, rhsGcdNum);
+
+  if (gcdNum <= 1) {
+    return {};
+  }
+
+  ArgumentPtr numerator = makeExpr(Div(), lhs, gcdNum.clone());
+  simplifyChild(numerator);
+
+  ArgumentPtr denominator = makeExpr(Div(), rhs, gcdNum.clone());
+  simplifyChild(denominator);
+
+  return makeExpr(Div(), numerator, denominator);
+}
+
+Integer DivExpression::getGcd(ArgumentsPtrVector &lhsChildren) {
+  Integer gcdNum;
+
+  for (auto child : lhsChildren) {
+    if (const auto childExpr = cast<IExpression>(child); childExpr && is<Mul>(childExpr->getFunction())) {
+      child = childExpr->getChildren().front();
+    }
+
+    if (const auto childInt = cast<Integer>(child)) {
+      Integer childIntAbs = abs(*childInt);
+      gcdNum = gcdNum != 0 ? gcd(gcdNum, childIntAbs) : childIntAbs;
+    }
+    else {
+      return 1;
+    }
+  }
+
+  return gcdNum;
+}
+
 ArgumentPtr DivExpression::nestedRationalsInNumeratorSimplify(const ArgumentsPtrVector &lhsChildren,
                                                               const ArgumentPtr &rhs) {
 
@@ -478,5 +544,4 @@ ArgumentPtr DivExpression::nestedRationalsInDenominatorSimplify(const ArgumentPt
 
   return {};
 }
-
 }
