@@ -90,7 +90,7 @@ TEST(RootTests, callTest) {
   EXPECT_EQ(f(Variable("a"), Integer(2))->toString(), "sqrt(a)");
   EXPECT_EQ(f(Variable("a"), Integer(3))->toString(), "root(a, 3)");
   EXPECT_EQ(f(Variable("a"), Integer(123))->toString(), "root(a, 123)");
-  EXPECT_EQ(f(Integer(2), Variable("a"))->toString(), "2^(1/a)");
+  EXPECT_EQ(f(Integer(2), Variable("a"))->toString(), "root(2, a)");
 
   EXPECT_THROW(f(Integer(-10), Integer(2)), UndefinedException);
   EXPECT_THROW(f(Rational(-9289, 10), Rational(2, 3)), UndefinedException);
