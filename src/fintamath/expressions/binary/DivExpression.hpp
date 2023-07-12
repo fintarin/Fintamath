@@ -33,6 +33,8 @@ private:
 
   static ArgumentPtr nestedRationalsSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
+  static ArgumentPtr gcdSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
   static ArgumentPtr nestedRationalsInNumeratorSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
   static ArgumentPtr nestedRationalsInDenominatorSimplify(const ArgumentPtr &lhs,
@@ -51,6 +53,8 @@ private:
   static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
 
   static bool isNeg(const ArgumentPtr &expr);
+
+  static Integer getGcd(ArgumentsPtrVector &children);
 };
 
 }
