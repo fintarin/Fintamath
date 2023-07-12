@@ -62,20 +62,16 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Integer &lhs, const Integer &
   ArgumentsPtrVector mulChildren;
 
   std::map<Integer, Integer> rootFactors = roots(lhs, rhs);
-  auto rootFactorIter = rootFactors.begin();
 
-  if (rootFactorIter->first == 1) {
-    if (rootFactorIter->second != 1) {
-      mulChildren.emplace_back(rootFactorIter->second.clone());
+  if (rootFactors.begin()->first == 1) {
+    if (rootFactors.begin()->second != 1) {
+      mulChildren.emplace_back(rootFactors.begin()->second.clone());
     }
 
-    rootFactorIter++;
+    rootFactors.erase(rootFactors.begin());
   }
 
-  for (; rootFactorIter != rootFactors.end(); rootFactorIter++) {
-    Integer root = rootFactorIter->first;
-    Integer factor = rootFactorIter->second;
-
+  for (auto [root, factor] : rootFactors) {
     if (factor != 1) {
       mulChildren.emplace_back(makeExpr(Root(), factor, root));
     }
