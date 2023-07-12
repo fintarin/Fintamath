@@ -20,9 +20,9 @@ PowExpression::PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &i
 }
 
 std::string PowExpression::toString() const {
-  if (auto val = cast<Rational>(rhsChild)) {
-    const Integer &numerator = val->numerator();
-    const Integer &denominator = val->denominator();
+  if (auto rhsChildRat = cast<Rational>(rhsChild)) {
+    const Integer &numerator = rhsChildRat->numerator();
+    const Integer &denominator = rhsChildRat->denominator();
 
     if (numerator == 1) {
       if (denominator == 2) {
@@ -30,6 +30,12 @@ std::string PowExpression::toString() const {
       }
 
       return functionToString(Root(), {lhsChild, denominator.clone()});
+    }
+  }
+
+  if (auto rhsChildExpr = cast<IExpression>(rhsChild); rhsChildExpr && is<Div>(rhsChildExpr->getFunction())) {
+    if (*rhsChildExpr->getChildren().front() == Integer(1)) {
+      return functionToString(Root(), {lhsChild, rhsChildExpr->getChildren().back()});
     }
   }
 
@@ -219,6 +225,10 @@ ArgumentPtr PowExpression::polynomSimplify(const IFunction & /*func*/, const Arg
     return res;
   }
 
+  if (auto res = divSimplify(lhs, rhs)) {
+    return res;
+  }
+
   return {};
 }
 
@@ -233,6 +243,18 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     }
 
     res = makeExpr(Mul(), args);
+  }
+
+  return res;
+}
+
+ArgumentPtr PowExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr res;
+
+  if (auto divExpr = cast<IExpression>(lhs); divExpr && is<Div>(divExpr->getFunction())) {
+    ArgumentPtr numerator = makeExpr(Pow(), divExpr->getChildren().front(), rhs);
+    ArgumentPtr denominator = makeExpr(Pow(), divExpr->getChildren().back(), rhs);
+    res = makeExpr(Div(), numerator, denominator);
   }
 
   return res;

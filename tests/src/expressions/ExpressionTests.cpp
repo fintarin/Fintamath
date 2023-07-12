@@ -351,8 +351,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
 
+  EXPECT_EQ(Expression("(x/y)^2").toString(), "x^2/y^2");
+  EXPECT_EQ(Expression("(x/y)^(1/2)").toString(), "sqrt(x)/sqrt(y)");
+  EXPECT_EQ(Expression("(x/y)^(1/3)").toString(), "root(x, 3)/root(y, 3)");
+  EXPECT_EQ(Expression("(x/y)^x").toString(), "x^x/y^x");
+  EXPECT_EQ(Expression("(x/y)^(1/x)").toString(), "root(x, x)/root(y, x)");
+
   // TODO! implement this
-  // EXPECT_EQ(Expression("(x/y)^2").toString(), "(x^2)/(y^2)");
   // EXPECT_EQ(Expression("sqrt(x^2)").toString(), "abs(x)");
   // EXPECT_EQ(Expression("(x^10)^(1/10))").toString(), "abs(x)");
   // EXPECT_EQ(Expression("(x^3)^(1/3)").toString(), "x");

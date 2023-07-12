@@ -43,6 +43,8 @@ private:
 
   static ArgumentPtr mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
+  static ArgumentPtr divSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
   static ArgumentPtr sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 };
 
