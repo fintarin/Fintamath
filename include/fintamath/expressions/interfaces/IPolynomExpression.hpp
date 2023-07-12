@@ -33,7 +33,8 @@ protected:
   struct ChildrenComparatorResult {
     int postfix = 0;
     int postfixUnary = 0;
-    int prefix = 0;
+    int prefixFirst = 0;
+    int prefixLast = 0;
     int prefixVariables = 0;
     int size = 0;
   };

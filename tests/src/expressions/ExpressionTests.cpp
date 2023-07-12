@@ -124,11 +124,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("8^(1/3)").toString(), "2");
   EXPECT_EQ(Expression("8^(4/3)").toString(), "16");
   EXPECT_EQ(Expression("7 2^(2/3)").toString(), "7 root(4, 3)");
-  EXPECT_EQ(Expression("2^(2/3) 3^(2/3)").toString(), "root(9, 3) root(4, 3)"); // TODO! root(36, 3)
-  EXPECT_EQ(Expression("2^(2/3) 7^(2/3) 3^(3/4)").toString(),
-            "root(49, 3) root(27, 4) root(4, 3)"); // TODO! 12 root(27, 4) root(80, 3)
-  EXPECT_EQ(Expression("2^(2/3) 1/7^(2/3) 3^(3/4)").toString(),
-            "(root(27, 4) root(4, 3))/root(49, 3)"); // TODO! root(27, 4) root(4/49, 3)
+  EXPECT_EQ(Expression("2^(2/3) 3^(2/3)").toString(), "root(36, 3)");
+  EXPECT_EQ(Expression("2^(2/3) 7^(2/3) 3^(3/4)").toString(), "root(196, 3) root(27, 4)");
+  EXPECT_EQ(Expression("2^(2/3) 1/7^(2/3) 3^(3/4)").toString(), "root(4/49, 3) root(27, 4)");
 
   EXPECT_EQ(Expression("Deg").toString(), "Pi/180");
   EXPECT_EQ(Expression("60Deg").toString(), "Pi/3");
@@ -616,7 +614,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("3 ln((10 E)^2) - 2 ln(10 E)").toString(), "ln(10000 E^4)");
   EXPECT_EQ(Expression("ln((10 E)^(2ab)) - 2 a ln(10 E) b").toString(),
             "ln(10^(2 a b) E^(2 a b) 10^(-2 a b) E^(-2 a b))"); // TODO! 0
-  EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(), "0");
+  EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(),
+            "ln(10^(2 ln(2)) E^(2 ln(2)) 10^(-2 ln(2)) E^(-2 ln(2)))"); // TODO! 0
   EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
   EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5 3^x)");

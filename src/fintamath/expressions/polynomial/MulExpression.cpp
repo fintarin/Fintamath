@@ -59,7 +59,7 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify
       &MulExpression::simplifyCallFunction, //
       &MulExpression::simplifyRationals,    //
       &MulExpression::simplifyDivisions,    //
-      &MulExpression::mulRates,             //
+      &MulExpression::simplifyPowers,       //
       &MulExpression::simplifyNumbers,      //
       &MulExpression::simplifyNegations,    //
   };
@@ -70,7 +70,7 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPostSimplif
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
       &MulExpression::mulPolynoms,       //
       &MulExpression::simplifyDivisions, //
-      &MulExpression::mulRates,          //
+      &MulExpression::simplifyPowers,    //
       &MulExpression::simplifyNumbers,   //
       &MulExpression::simplifyNegations, //
   };
@@ -84,11 +84,6 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
   }
 
   return {std::make_shared<Integer>(1), rhsChild};
-}
-
-ArgumentPtr MulExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = makeExpr(Add(), rates);
-  return makeExpr(Pow(), value, ratesSum);
 }
 
 ArgumentPtr MulExpression::simplifyNumbers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
@@ -204,13 +199,22 @@ ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const Argumen
   return res;
 }
 
-ArgumentPtr MulExpression::mulRates(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                    const ArgumentPtr &rhsChild) {
+ArgumentPtr MulExpression::simplifyPowers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                          const ArgumentPtr &rhsChild) {
+
   auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
   auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
 
   if (*lhsChildValue == *rhsChildValue) {
-    return addRatesToValue({lhsChildRate, rhsChildRate}, lhsChildValue);
+    ArgumentPtr ratesSum = makeExpr(Add(), lhsChildRate, rhsChildRate);
+    return makeExpr(Pow(), lhsChildValue, ratesSum);
+  }
+
+  if (*lhsChildRate == *rhsChildRate && *rhsChildRate != Integer(1) && is<INumber>(lhsChildValue) &&
+      is<INumber>(rhsChildValue)) {
+
+    ArgumentPtr valuesMul = makeExpr(Mul(), lhsChildValue, rhsChildValue);
+    return makeExpr(Pow(), valuesMul, lhsChildRate);
   }
 
   return {};
