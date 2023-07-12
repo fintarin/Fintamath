@@ -117,6 +117,10 @@ std::map<Integer, Integer> Root::roots(const Integer &lhs, const Integer &rhs) {
 }
 
 std::unique_ptr<IMathObject> Root::perfectRoot(const Integer &lhs, const Integer &rhs) {
+  if (lhs == 1) {
+    return lhs.clone();
+  }
+
   if (rhs == 2) { // TODO: implement perfect nth-roots minimization
     Integer remainder;
     Integer lhsSqrt = sqrt(lhs, remainder);
@@ -130,8 +134,91 @@ std::unique_ptr<IMathObject> Root::perfectRoot(const Integer &lhs, const Integer
 }
 
 std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer &rhs) {
-  return makeExpr(Div(), makeExpr(Root(), lhs.numerator(), rhs), makeExpr(Root(), lhs.denominator(), rhs))
-      ->toMinimalObject();
+  if (lhs.denominator() == 1) {
+    return Root()(lhs.numerator(), rhs);
+  }
+
+  if (ArgumentPtr numeratorRes = perfectRoot(lhs.numerator(), rhs)) {
+    if (ArgumentPtr denominatorRes = perfectRoot(lhs.denominator(), rhs)) {
+      return Rational(cast<Integer>(*numeratorRes), cast<Integer>(*denominatorRes)).toMinimalObject();
+    }
+
+    ArgumentPtr denominatorRes = Root()(lhs.denominator(), rhs);
+    return makeExpr(Div(), numeratorRes, denominatorRes);
+  }
+
+  if (ArgumentPtr denominatorRes = perfectRoot(lhs.denominator(), rhs)) {
+    return makeExpr(Div(), Root()(lhs.numerator(), rhs), denominatorRes);
+  }
+
+  ArgumentsPtrVector numeratorChildren;
+  ArgumentsPtrVector denominatorChildren;
+
+  std::map<Integer, Integer> numeratorRootFactors = roots(lhs.numerator(), rhs);
+  std::map<Integer, Integer> denominatorRootFactors = roots(lhs.denominator(), rhs);
+
+  if (numeratorRootFactors.begin()->first == 1) {
+    if (numeratorRootFactors.begin()->second != 1) {
+      numeratorChildren.emplace_back(numeratorRootFactors.begin()->second.clone());
+    }
+
+    numeratorRootFactors.erase(numeratorRootFactors.begin());
+  }
+
+  if (denominatorRootFactors.begin()->first == 1) {
+    if (denominatorRootFactors.begin()->second != 1) {
+      denominatorChildren.emplace_back(denominatorRootFactors.begin()->second.clone());
+    }
+
+    denominatorRootFactors.erase(denominatorRootFactors.begin());
+  }
+
+  for (auto [root, numeratorFactor] : numeratorRootFactors) {
+    if (const auto denominatorFactorIter = denominatorRootFactors.find(root);
+        denominatorFactorIter != denominatorRootFactors.end()) {
+
+      Integer denominatorFactor = denominatorFactorIter->second;
+
+      denominatorRootFactors.erase(denominatorFactorIter);
+
+      if (denominatorFactor != 1) {
+        numeratorChildren.emplace_back(makeExpr(Root(), Rational(numeratorFactor, denominatorFactor), root));
+        continue;
+      }
+    }
+
+    if (numeratorFactor != 1) {
+      numeratorChildren.emplace_back(makeExpr(Root(), numeratorFactor, root));
+    }
+  }
+
+  for (auto [root, denominatorFactor] : denominatorRootFactors) {
+    if (denominatorFactor != 1) {
+      denominatorChildren.emplace_back(makeExpr(Root(), denominatorFactor, root));
+    }
+  }
+
+  ArgumentPtr numerator;
+  if (numeratorChildren.size() == 1) {
+    numerator = numeratorChildren.front();
+  }
+  else {
+    numerator = makeExpr(Mul(), numeratorChildren);
+  }
+
+  if (!denominatorChildren.empty()) {
+    ArgumentPtr denominator;
+    if (denominatorChildren.size() == 1) {
+      denominator = denominatorChildren.front();
+    }
+    else {
+      denominator = makeExpr(Mul(), denominatorChildren);
+    }
+
+    return makeExpr(Div(), numerator, denominator);
+  }
+
+  return numerator->clone();
 }
 
 std::unique_ptr<IMathObject> Root::rootSimpl(const Real &lhs, const Integer &rhs) {

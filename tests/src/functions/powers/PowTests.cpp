@@ -69,7 +69,7 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Rational(-10), Rational(-3))->toString(), "-1/1000");
   EXPECT_EQ(f(Rational(-1), Rational(-25))->toString(), "-1");
   EXPECT_EQ(f(Rational("-2.2"), Rational(-5))->toString(), "-3125/161051");
-  EXPECT_EQ(f(Rational("2.2"), Rational(-5, 2))->toString(), "(25 sqrt(5))/(121 sqrt(11))");
+  EXPECT_EQ(f(Rational("2.2"), Rational(-5, 2))->toString(), "(25 sqrt(5/11))/121");
 
   EXPECT_EQ(f(Real("2.2"), Real("2"))->toString(), "4.84");
   EXPECT_EQ(f(Real("2.2"), Real("0.5"))->toString(),
