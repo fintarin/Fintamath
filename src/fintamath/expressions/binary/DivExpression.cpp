@@ -380,17 +380,24 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     rhsChild = rhs;
   }
 
-  auto [lhsRate, lhsValue] = getRateValuePair(lhsChild);
-  auto [rhsRate, rhsValue] = getRateValuePair(rhsChild);
+  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
+  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
 
   ArgumentPtr result;
 
-  if (*lhsValue == *rhsValue) {
-    result = addRatesToValue({lhsRate, makeExpr(Neg(), rhsRate)}, lhsValue);
+  if (*lhsChildValue == *rhsChildValue) {
+    result = addRatesToValue({lhsChildRate, makeExpr(Neg(), rhsChildRate)}, lhsChildValue);
 
     if (isResultNegated) {
       result = makeExpr(Neg(), result);
     }
+  }
+
+  if (*lhsChildRate == *rhsChildRate && *rhsChildRate != Integer(1) && is<INumber>(lhsChildValue) &&
+      is<INumber>(rhsChildValue)) {
+
+    ArgumentPtr valuesDiv = makeExpr(Div(), lhsChildValue, rhsChildValue);
+    return makeExpr(Pow(), valuesDiv, lhsChildRate);
   }
 
   return result;
