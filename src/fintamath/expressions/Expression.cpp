@@ -519,7 +519,6 @@ void Expression::setChildren(const ArgumentsPtrVector &childVect) {
 
 void Expression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
   IExpression::setVariables(varsToVals);
-  simplifyChild(child);
 }
 
 void Expression::setVariable(const Variable &var, const Expression &val) {
