@@ -292,8 +292,8 @@ int IPolynomExpression::comparatorPolynoms(const std::shared_ptr<const IPolynomE
   if (childrenComp.size != 0) {
     return childrenComp.size;
   }
-  if (childrenComp.prefix != 0) {
-    return childrenComp.prefix;
+  if (childrenComp.prefixFirst != 0) {
+    return childrenComp.prefixFirst;
   }
 
   return comparatorFunctions(lhs->getFunction(), rhs->getFunction());
@@ -352,8 +352,16 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   if (childrenComp.postfix != 0) {
     return childrenComp.postfix;
   }
-  if (childrenComp.prefix != 0) {
-    return childrenComp.prefix;
+
+  if (is<IOperator>(lhs->getFunction()) && is<IOperator>(rhs->getFunction())) {
+    if (childrenComp.prefixLast != 0) {
+      return childrenComp.prefixLast;
+    }
+  }
+  else {
+    if (childrenComp.prefixFirst != 0) {
+      return childrenComp.prefixFirst;
+    }
   }
 
   return comparatorFunctions(lhs->getFunction(), rhs->getFunction());
@@ -395,15 +403,21 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
   for (size_t i = 0; i < std::min(std::max(lhsStart, rhsStart), std::min(lhsChildren.size(), rhsChildren.size()));
        i++) {
 
-    if (result.prefix == 0) {
-      result.prefix = comparator(lhsChildren[i], rhsChildren[i]);
+    int childrenComp = comparator(lhsChildren[i], rhsChildren[i]);
+
+    if (childrenComp != 0) {
+      result.prefixLast = childrenComp;
+    }
+
+    if (result.prefixFirst == 0) {
+      result.prefixFirst = childrenComp;
     }
 
     if (result.prefixVariables == 0) {
       result.prefixVariables = comparatorVariables(lhsChildren[i], rhsChildren[i], false);
     }
 
-    if (result.prefixVariables != 0 && result.prefix != 0) {
+    if (result.prefixVariables != 0 && result.prefixLast != 0) {
       break;
     }
   }

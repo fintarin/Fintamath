@@ -39,7 +39,7 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(expr.toString(), "2 sqrt(2)");
 
   expr = pow(Expression("244706656946119777797996531655819747089832578"), Rational(1, 4));
-  EXPECT_EQ(expr.toString(), "root(2022369065670411386760301914510907000742418, 4) sqrt(11)");
+  EXPECT_EQ(expr.toString(), "sqrt(11) root(2022369065670411386760301914510907000742418, 4)");
 
   expr = Expression("(4x^4 + 1 + 3x^3 + 2x) / (x^2 + x + 2)");
   EXPECT_EQ(expr.toString(), "4 x^2 - x - 7 + (11 x + 15)/(x^2 + x + 2)");
