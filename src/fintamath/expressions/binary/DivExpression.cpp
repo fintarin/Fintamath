@@ -428,14 +428,6 @@ ArgumentPtr DivExpression::nestedRationalsSimplify(const IFunction & /*func*/, c
     }
   }
 
-  if (const auto &rhsExpr = cast<IExpression>(rhs)) {
-    if (is<Mul>(rhsExpr->getFunction())) {
-      if (auto res = nestedRationalsInDenominatorSimplify(lhs, rhsExpr->getChildren())) {
-        return res;
-      }
-    }
-  }
-
   return {};
 }
 
@@ -526,29 +518,4 @@ ArgumentPtr DivExpression::nestedRationalsInNumeratorSimplify(const ArgumentsPtr
   return {};
 }
 
-ArgumentPtr DivExpression::nestedRationalsInDenominatorSimplify(const ArgumentPtr &lhs,
-                                                                const ArgumentsPtrVector &rhsChildren) {
-  ArgumentsPtrVector numeratorChildren;
-  ArgumentsPtrVector denominatorChildren;
-
-  for (const auto &child : rhsChildren) {
-    if (const auto &rationalChild = cast<Rational>(child)) {
-      numeratorChildren.emplace_back(rationalChild->denominator().clone());
-      denominatorChildren.emplace_back(rationalChild->numerator().clone());
-      continue;
-    }
-
-    denominatorChildren.emplace_back(child);
-  }
-
-  if (!numeratorChildren.empty()) {
-    numeratorChildren.emplace_back(lhs);
-
-    ArgumentPtr numerator = makeExpr(Mul(), numeratorChildren);
-    ArgumentPtr denominator = makeExpr(Mul(), denominatorChildren);
-    return makeExpr(Div(), numerator, denominator);
-  }
-
-  return {};
-}
 }
