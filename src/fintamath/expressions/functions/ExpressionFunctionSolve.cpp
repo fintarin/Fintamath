@@ -24,7 +24,7 @@ std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IE
 
 ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var);
 
-ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable &var);
+ArgumentsPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variable &var);
 
 ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector &coeffAtPow);
 
@@ -41,7 +41,7 @@ Expression solve(const Expression &rhs) {
     // TODO: remove this if when inequalities will be implemented
     if (!is<Eqv>(compExpr->getFunction())) {
       auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentsPtrVector powerRate = getVariablePowerRates(compExpr->getChildren().front(), var);
+      ArgumentsPtrVector powerRate = getVariableIntPowerRates(compExpr->getChildren().front(), var);
 
       if (powerRate.size() == 2) {
         compExpr->markAsSolution();
@@ -50,7 +50,7 @@ Expression solve(const Expression &rhs) {
     }
     if (is<Eqv>(compExpr->getFunction())) {
       auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentsPtrVector powerRates = getVariablePowerRates(compExpr->getChildren().front(), var);
+      ArgumentsPtrVector powerRates = getVariableIntPowerRates(compExpr->getChildren().front(), var);
       ArgumentsPtrVector roots;
 
       switch (powerRates.size()) {
@@ -148,7 +148,7 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
   return elem;
 }
 
-ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable &var) {
+ArgumentsPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variable &var) {
   ArgumentsPtrVector powerRates;
   ArgumentsPtrVector polynomVect;
 
@@ -171,6 +171,9 @@ ArgumentsPtrVector getVariablePowerRates(const ArgumentPtr &elem, const Variable
       }
 
       powerRates[size_t(*intPow)] = rate;
+    }
+    else {
+      return {};
     }
   }
 
