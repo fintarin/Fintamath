@@ -52,6 +52,10 @@ std::string binaryOperatorChildToString(const IOperator &oper, const ArgumentPtr
     IOperator::Priority operPriority = oper.getOperatorPriority();
     IOperator::Priority lhsOperPriority = childOper->getOperatorPriority();
 
+    if (operPriority == IOperator::Priority::Multiplication) {
+      return putInBrackets(childStr);
+    }
+
     if (lhsOperPriority > operPriority || (lhsOperPriority == operPriority && !oper.isAssociative())) {
       return putInBrackets(childStr);
     }

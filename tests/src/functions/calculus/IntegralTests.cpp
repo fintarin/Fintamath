@@ -23,7 +23,7 @@ TEST(IntegralTests, getFunctionTypeTest) {
 }
 
 TEST(IntegralTests, callTest) {
-  EXPECT_EQ(f(Variable("a"), Variable("a"))->toString(), "a^2/2");
+  EXPECT_EQ(f(Variable("a"), Variable("a"))->toString(), "(a^2)/2");
   EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "integral(a, b)");
   EXPECT_EQ(f(Expression("a+a"), Variable("a"))->toString(), "integral(2 a, a)"); // TODO: integral
   EXPECT_EQ(f(Integer(5), Variable("a"))->toString(), "5 a");

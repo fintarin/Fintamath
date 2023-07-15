@@ -43,8 +43,23 @@ std::string PowExpression::toString() const {
 }
 
 std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
-  if (*rhsChild == Rational(1, 2)) {
-    return std::make_shared<Sqrt>();
+  if (auto rhsChildRat = cast<Rational>(rhsChild)) {
+    const Integer &numerator = rhsChildRat->numerator();
+    const Integer &denominator = rhsChildRat->denominator();
+
+    if (numerator == 1) {
+      if (denominator == 2) {
+        return std::make_shared<Sqrt>();
+      }
+
+      return std::make_shared<Root>();
+    }
+  }
+
+  if (auto rhsChildExpr = cast<IExpression>(rhsChild); rhsChildExpr && is<Div>(rhsChildExpr->getFunction())) {
+    if (*rhsChildExpr->getChildren().front() == Integer(1)) {
+      return std::make_shared<Root>();
+    }
   }
 
   return IBinaryExpression::getFunction();

@@ -36,11 +36,11 @@ TEST(ExpressionFunctionsTests, subTest) {
 }
 
 TEST(ExpressionFunctionsTests, divTest) {
-  EXPECT_EQ(div(Variable("a"), Expression("b^2")).toString(), "a/b^2");
+  EXPECT_EQ(div(Variable("a"), Expression("b^2")).toString(), "a/(b^2)");
   EXPECT_EQ(div(10, Expression("a+2")).toString(), "10/(a + 2)");
   EXPECT_EQ(div(Variable("a"), Expression("a+2")).toString(), "1 - 2/(a + 2)");
   EXPECT_EQ(div(Expression("b+2"), Expression("a+2")).toString(), "(b + 2)/(a + 2)");
-  EXPECT_EQ(div(Expression("10+a^3"), Expression("a^2")).toString(), "a + 10/a^2");
+  EXPECT_EQ(div(Expression("10+a^3"), Expression("a^2")).toString(), "a + 10/(a^2)");
   EXPECT_EQ(div(Expression("a*b"), Expression("b*a")).toString(), "1");
   EXPECT_EQ(div(Expression("a+b"), Expression("a+b")).toString(), "1");
 }

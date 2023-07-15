@@ -144,7 +144,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("Pi8").toString(), "8 Pi");
   EXPECT_EQ(Expression("exp100").toString(), "E^100");
   EXPECT_EQ(Expression("E^101").toString(), "E^101");
-  EXPECT_EQ(Expression("E^(-101)").toString(), "1/E^101");
+  EXPECT_EQ(Expression("E^(-101)").toString(), "1/(E^101)");
   EXPECT_EQ(Expression("log(E,E)").toString(), "1");
   EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "10");
   EXPECT_EQ(Expression("log(E,E^3)").toString(), "3");
@@ -328,8 +328,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/1").toString(), "a b");
   EXPECT_EQ(Expression("(a b)/-1").toString(), "-a b");
   EXPECT_EQ(Expression("(a b)/-2").toString(), "-(a b)/2");
-  EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b + b^2/(a + b)");
-  EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^4 + y^5/(x - y)");
+  EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b + (b^2)/(a + b)");
+  EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^4 + (y^5)/(x - y)");
   EXPECT_EQ(Expression("(3 x + 5/9)/(2y - 9/x + 3/2 x + 1/2 + 2 y / x)").toString(),
             "2 + (-72 x y - 8 x - 72 y + 324)/(27 x^2 + 36 x y + 9 x + 36 y - 162)");
   EXPECT_EQ(Expression("(a/x + b/(y+3/r)/4)/(3+t/5)").toString(),
@@ -349,10 +349,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+b)*(a+b)*(1/(a+b))").toString(), "a + b");
   EXPECT_EQ(Expression("(x^2+2x+1)/(x+1)").toString(), "x + 1");
 
-  EXPECT_EQ(Expression("(x/y)^2").toString(), "x^2/y^2");
+  EXPECT_EQ(Expression("(x/y)^2").toString(), "(x^2)/(y^2)");
   EXPECT_EQ(Expression("(x/y)^(1/2)").toString(), "sqrt(x)/sqrt(y)");
   EXPECT_EQ(Expression("(x/y)^(1/3)").toString(), "root(x, 3)/root(y, 3)");
-  EXPECT_EQ(Expression("(x/y)^x").toString(), "x^x/y^x");
+  EXPECT_EQ(Expression("(x/y)^x").toString(), "(x^x)/(y^x)");
   EXPECT_EQ(Expression("(x/y)^(1/x)").toString(), "root(x, x)/root(y, x)");
 
   // TODO! implement this
@@ -445,9 +445,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   // EXPECT_EQ(Expression("derivative(5, a^2)").toString(), "0");
   // EXPECT_EQ(Expression("derivative(a, a^2)").toString(), "derivative(a, a^2)");
 
-  EXPECT_EQ(Expression("integral(a, a)").toString(), "a^2/2");
+  EXPECT_EQ(Expression("integral(a, a)").toString(), "(a^2)/2");
   EXPECT_EQ(Expression("integral(a+a, a)").toString(), "integral(2 a, a)");
-  EXPECT_EQ(Expression("integral(a, a) + integral(b, b)").toString(), "a^2/2 + b^2/2");
+  EXPECT_EQ(Expression("integral(a, a) + integral(b, b)").toString(), "(a^2)/2 + (b^2)/2");
   // TODO: integral
   // EXPECT_EQ(Expression("integral(5, a^2)").toString(), "???");
   // EXPECT_EQ(Expression("integral(a, a^2)").toString(), "???");
