@@ -75,6 +75,7 @@ enum class MathObjectType : MathObjectTypeId {
   Lg,
   Exp,
   Sqrt,
+  Root,
   Sin,
   Cos,
   Tan,
