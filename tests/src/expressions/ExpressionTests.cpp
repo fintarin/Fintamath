@@ -354,6 +354,14 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x/y)^(1/3)").toString(), "root(x, 3)/root(y, 3)");
   EXPECT_EQ(Expression("(x/y)^x").toString(), "(x^x)/(y^x)");
   EXPECT_EQ(Expression("(x/y)^(1/x)").toString(), "root(x, x)/root(y, x)");
+  
+  // TODO! fix
+  // EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "TODO");
+  // EXPECT_EQ(Expression("(x-1)/(sqrt(x) - x)").toString(), "TODO");
+  // EXPECT_EQ(Expression("(x-1)/(2 sqrt(x) - x)").toString(), "TODO");
+  // EXPECT_EQ(Expression("(x-1)/(sqrt(x)/2 - x)").toString(), "TODO");
+  // EXPECT_EQ(Expression("(x-1)/(2 root(x, 3) - x)").toString(), "TODO");
+  // EXPECT_EQ(Expression("(x-1)/(2 x^(4/3) - x)").toString(), "TODO");
 
   // TODO! implement this
   // EXPECT_EQ(Expression("sqrt(x^2)").toString(), "abs(x)");
