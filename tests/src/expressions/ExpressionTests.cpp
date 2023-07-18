@@ -361,7 +361,7 @@ TEST(ExpressionTests, stringConstructorTest) {
 
   EXPECT_EQ(Expression("sqrt(x) + x").toString(), "x + sqrt(x)");
   EXPECT_EQ(Expression("sqrt(x) - x").toString(), "-x + sqrt(x)");
-  EXPECT_EQ(Expression("x/(sqrt(x) - x)").toString(), "-1 + (-(sqrt(x)))/(x - sqrt(x))"); // TODO! strange output
+  EXPECT_EQ(Expression("x/(sqrt(x) - x)").toString(), "-1 - (sqrt(x)/(x - sqrt(x)))");
   EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "-1 + (-2 sqrt(x))/(x - 2 sqrt(x))");
   EXPECT_EQ(Expression("(x-1)/(sqrt(x) - x)").toString(), "-1 - 1/sqrt(x)");
   EXPECT_EQ(Expression("(x-1)/(2 sqrt(x) - x)").toString(), "-1 + (-2 sqrt(x) + 1)/(x - 2 sqrt(x))");

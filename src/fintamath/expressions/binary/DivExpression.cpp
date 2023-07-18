@@ -17,6 +17,15 @@ DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &i
     : IBinaryExpressionCRTP(Div(), inLhsChild, inRhsChild) {
 }
 
+std::string DivExpression::toString() const {
+  if (auto lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && is<Neg>(lhsChildExpr->getFunction())) {
+    ArgumentPtr innerDiv = makeExpr(Div(), lhsChildExpr->getChildren().front(), rhsChild);
+    return makeExpr(Neg(), innerDiv)->toString();
+  }
+
+  return IBinaryExpression::toString();
+}
+
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPreSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
       &DivExpression::zeroSimplify, //

@@ -84,7 +84,7 @@ std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr
   std::string result = oper.toString();
 
   if (const auto child = cast<IExpression>(rhs)) {
-    if (is<IOperator>(child->getFunction())) {
+    if (is<IOperator>(child->getOutputFunction())) {
       return result + putInBrackets(rhs->toString());
     }
   }
@@ -96,7 +96,7 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
   std::string result = rhs->toString();
 
   if (const auto child = cast<IExpression>(rhs)) {
-    if (is<IOperator>(child->getFunction())) {
+    if (is<IOperator>(child->getOutputFunction())) {
       return putInBrackets(result) + oper.toString();
     }
   }
