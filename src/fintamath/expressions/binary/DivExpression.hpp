@@ -9,6 +9,8 @@ class DivExpression : public IBinaryExpressionCRTP<DivExpression> {
 public:
   explicit DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
+  std::string toString() const override;
+
   static MathObjectTypeId getTypeIdStatic() {
     return MathObjectTypeId(MathObjectType::DivExpression);
   }
