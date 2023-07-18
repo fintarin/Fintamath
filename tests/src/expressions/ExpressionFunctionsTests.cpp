@@ -271,5 +271,5 @@ TEST(ExpressionFunctionsTests, solveTest) {
 
   EXPECT_EQ(solve(Expression("E >= Ey")).toString(), "E y - E <= 0");
   EXPECT_EQ(solve(Expression("x >= x sqrt(x)")).toString(), "x^(3/2) - x <= 0");
-  EXPECT_EQ(solve(Expression("x >= x^(1/100)")).toString(), "root(x, 100) - x <= 0");
+  EXPECT_EQ(solve(Expression("x >= x^(1/100)")).toString(), "x - root(x, 100) >= 0");
 }

@@ -359,13 +359,18 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x/y)^x").toString(), "(x^x)/(y^x)");
   EXPECT_EQ(Expression("(x/y)^(1/x)").toString(), "root(x, x)/root(y, x)");
 
-  // TODO! fix
-  // EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "TODO");
-  // EXPECT_EQ(Expression("(x-1)/(sqrt(x) - x)").toString(), "TODO");
-  // EXPECT_EQ(Expression("(x-1)/(2 sqrt(x) - x)").toString(), "TODO");
-  // EXPECT_EQ(Expression("(x-1)/(sqrt(x)/2 - x)").toString(), "TODO");
-  // EXPECT_EQ(Expression("(x-1)/(2 root(x, 3) - x)").toString(), "TODO");
-  // EXPECT_EQ(Expression("(x-1)/(2 x^(4/3) - x)").toString(), "TODO");
+  EXPECT_EQ(Expression("sqrt(x) + x").toString(), "x + sqrt(x)");
+  EXPECT_EQ(Expression("sqrt(x) - x").toString(), "-x + sqrt(x)");
+  EXPECT_EQ(Expression("x/(sqrt(x) - x)").toString(), "-1 + (-(sqrt(x)))/(x - sqrt(x))"); // TODO! strange output
+  EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "-1 + (-2 sqrt(x))/(x - 2 sqrt(x))");
+  EXPECT_EQ(Expression("(x-1)/(sqrt(x) - x)").toString(), "-1 - 1/sqrt(x)");
+  EXPECT_EQ(Expression("(x-1)/(2 sqrt(x) - x)").toString(), "-1 + (-2 sqrt(x) + 1)/(x - 2 sqrt(x))");
+  EXPECT_EQ(Expression("(x-1)/(sqrt(x)/2 - x)").toString(), "-1 + (sqrt(x) - 2)/(-2 x + sqrt(x))");
+  EXPECT_EQ(Expression("(x-1)/(root(x, 3) - x)").toString(), "-1 + (-root(x, 3) + 1)/(x - root(x, 3))");
+  EXPECT_EQ(Expression("(x-1)/(2 root(x, 3) - x)").toString(), "-1 + (-2 root(x, 3) + 1)/(x - 2 root(x, 3))");
+  EXPECT_EQ(Expression("(x-1)/(root(x, 3)/2 - x)").toString(), "-1 + (root(x, 3) - 2)/(-2 x + root(x, 3))");
+  EXPECT_EQ(Expression("(x-1)/(x^(4/3) - x)").toString(), "(x - 1)/(x^(4/3) - x)");
+  EXPECT_EQ(Expression("(x-1)/(2 x^(4/3) - x)").toString(), "(x - 1)/(2 x^(4/3) - x)");
 
   // TODO! implement this
   // EXPECT_EQ(Expression("sqrt(x^2)").toString(), "abs(x)");
@@ -450,8 +455,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").toString(), "True");
   EXPECT_EQ(Expression("log(Deg, Deg^Deg) = Deg").toString(), "True");
-  EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "E^Pi - Pi^E > 0"); // TODO: True
-  EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "Pi^E - E^Pi < 0"); // TODO: True
+  EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "-Pi^E + E^Pi > 0"); // TODO: True
+  EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "Pi^E - E^Pi < 0");  // TODO: True
 
   EXPECT_EQ(Expression("derivative(a, a)").toString(), "1");
   EXPECT_EQ(Expression("derivative(a+a, a)").toString(), "derivative(2 a, a)");

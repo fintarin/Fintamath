@@ -318,18 +318,40 @@ int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<con
 int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
                                                              const ArgumentPtr &rhs) const {
 
-  if (auto oper = cast<IOperator>(lhs->getFunction());
-      oper && oper->getOperatorPriority() <= IOperator::Priority::PrefixUnary) {
-
-    if (int res = comparator(lhs->getChildren().front(), rhs); res != 0) {
-      return res;
-    }
-
-    return 1;
+  if (!is<Variable>(rhs)) {
+    return !isTermsOrderInversed() ? -1 : 1;
   }
 
   if (auto res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
     return res;
+  }
+
+  if (auto lhsOper = cast<IOperator>(lhs->getFunction())) {
+    auto lhsOperPriority = lhsOper->getOperatorPriority();
+
+    switch (lhsOperPriority) {
+    case IOperator::Priority::PostfixUnary:
+    case IOperator::Priority::PrefixUnary: {
+      if (int res = comparator(lhs->getChildren().front(), rhs); res != 0) {
+        return res;
+      }
+
+      return 1;
+    }
+    case IOperator::Priority::Exponentiation:
+    case IOperator::Priority::Multiplication: {
+      static const ArgumentPtr one = Integer(1).clone();
+      ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, one);
+
+      if (int comp = comparator(lhs, rhsExpr)) {
+        return isTermsOrderInversed() ? comp * -1 : comp;
+      }
+
+      break;
+    }
+    default:
+      break;
+    }
   }
 
   return !isTermsOrderInversed() ? -1 : 1;
@@ -338,8 +360,27 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
 int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
                                               const std::shared_ptr<const IExpression> &rhs) const {
 
+  auto lhsOper = cast<IOperator>(lhs->getFunction());
+  auto rhsOper = cast<IOperator>(rhs->getFunction());
+
   ArgumentsPtrVector lhsChildren = lhs->getChildren();
   ArgumentsPtrVector rhsChildren = rhs->getChildren();
+
+  if (lhsOper && lhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
+      (!rhsOper || rhsOper->getOperatorPriority() != IOperator::Priority::PrefixUnary)) {
+
+    if (int res = comparator(lhsChildren.front(), rhs); res != 0) {
+      return res;
+    }
+  }
+
+  if (rhsOper && rhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
+      (!lhsOper || lhsOper->getOperatorPriority() != IOperator::Priority::PrefixUnary)) {
+
+    if (int res = comparator(lhs, rhsChildren.front()); res != 0) {
+      return res;
+    }
+  }
 
   ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), rhs->getChildren());
 
