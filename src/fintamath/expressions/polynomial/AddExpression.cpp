@@ -187,7 +187,7 @@ ArgumentPtr AddExpression::simplifyMulLogarithms(const IFunction & /*func*/, con
     mulExpr = lhsExpr;
     logExpr = rhsExpr;
   }
-  else if (is<Mul>(rhsExpr->getFunction()) && is<Log>(lhsExpr->getFunction())) {
+  else if (is<Log>(lhsExpr->getFunction()) && is<Mul>(rhsExpr->getFunction())) {
     mulExpr = rhsExpr;
     logExpr = lhsExpr;
   }

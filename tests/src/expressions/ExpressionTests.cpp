@@ -496,6 +496,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("((1=2) -> (1=2) & ~(1=1)) !<-> ((1=1) <-> ~((1=2) | (1=1)))").toString(), "True");
   EXPECT_EQ(Expression("False|1=1").toString(), "True");
   EXPECT_EQ(Expression("1=1|False").toString(), "True");
+  EXPECT_EQ(Expression("a>b|a").toString(), "a - b > 0 | a");
 
   EXPECT_EQ(Expression("~(x = 1)").toString(), "x - 1 != 0");
   EXPECT_EQ(Expression("~(x != 1)").toString(), "x - 1 = 0");
@@ -637,8 +638,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
   EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5 3^x)");
+  EXPECT_EQ(Expression("x log(2, 3) + log(2, 5a)").toString(), "log(2, 5 a 3^x)");
   EXPECT_EQ(Expression("log(2, 3) + 3log(3, 4)").toString(), "3 log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("3log(2x, 3) + log(3, 4)").toString(), "3 log(2 x, 3) + log(3, 4)");
+  EXPECT_EQ(Expression("3log(2x, 3) + 4log(3, 4)").toString(), "3 log(2 x, 3) + 4 log(3, 4)");
+  EXPECT_EQ(Expression("3log(2x, 3) + 5log(2x, 4)").toString(), "log(2 x, 27648)");
 
   EXPECT_EQ(Expression("sin(asin(x))").toString(), "x");
   EXPECT_EQ(Expression("cos(acos(x))").toString(), "x");
