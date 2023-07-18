@@ -63,10 +63,6 @@ int Integer::sign() const {
   return backend.sign();
 }
 
-Integer::operator long long() const {
-  return backend.convert_to<long long>();
-}
-
 const boost::multiprecision::cpp_int &Integer::getBackend() const {
   return backend;
 }

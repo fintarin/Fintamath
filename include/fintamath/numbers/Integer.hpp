@@ -32,9 +32,12 @@ public:
 
   int sign() const;
 
-  operator long long() const;
-
   const boost::multiprecision::cpp_int &getBackend() const;
+
+  template <typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+  explicit operator T() const {
+    return backend.convert_to<T>();
+  }
 
   static MathObjectTypeId getTypeIdStatic() {
     return MathObjectTypeId(MathObjectType::Integer);
