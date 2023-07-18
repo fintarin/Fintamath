@@ -445,6 +445,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E,5)>ln(5)").toString(), "False");
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").toString(), "True");
+  EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "E^Pi - Pi^E > 0"); // TODO: True
+  EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "Pi^E - E^Pi < 0"); // TODO: True
 
   EXPECT_EQ(Expression("derivative(a, a)").toString(), "1");
   EXPECT_EQ(Expression("derivative(a+a, a)").toString(), "derivative(2 a, a)");
