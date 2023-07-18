@@ -217,15 +217,15 @@ ArgumentPtr PowExpression::numSimplify(const IFunction & /*func*/, const Argumen
       ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), lhs);
       return res;
     }
-
-    if (*rhsInt < 0) {
-      ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhsInt)));
-      return res;
-    }
   }
 
   if (lhsInt && *lhsInt == 0) {
     return lhs;
+  }
+
+  if (const auto rhsComp = cast<IComparable>(rhs); rhsComp && *rhsComp < Integer(0)) {
+    ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhs)));
+    return res;
   }
 
   return {};

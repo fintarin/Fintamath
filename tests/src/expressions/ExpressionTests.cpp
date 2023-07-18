@@ -352,6 +352,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x/y)^2").toString(), "(x^2)/(y^2)");
   EXPECT_EQ(Expression("(x/y)^(1/2)").toString(), "sqrt(x)/sqrt(y)");
   EXPECT_EQ(Expression("(x/y)^(1/3)").toString(), "root(x, 3)/root(y, 3)");
+  EXPECT_EQ(Expression("(x/y)^(-1/2)").toString(), "sqrt(y)/sqrt(x)");
+  EXPECT_EQ(Expression("(x/y)^(-1/3)").toString(), "root(y, 3)/root(x, 3)");
   EXPECT_EQ(Expression("(x/y)^x").toString(), "(x^x)/(y^x)");
   EXPECT_EQ(Expression("(x/y)^(1/x)").toString(), "root(x, x)/root(y, x)");
 
