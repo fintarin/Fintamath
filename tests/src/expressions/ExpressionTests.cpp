@@ -354,7 +354,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x/y)^(1/3)").toString(), "root(x, 3)/root(y, 3)");
   EXPECT_EQ(Expression("(x/y)^x").toString(), "(x^x)/(y^x)");
   EXPECT_EQ(Expression("(x/y)^(1/x)").toString(), "root(x, x)/root(y, x)");
-  
+
   // TODO! fix
   // EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "TODO");
   // EXPECT_EQ(Expression("(x-1)/(sqrt(x) - x)").toString(), "TODO");
@@ -445,6 +445,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E,5)>ln(5)").toString(), "False");
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").toString(), "True");
+  EXPECT_EQ(Expression("log(Deg, Deg^Deg) = Deg").toString(), "True");
   EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "E^Pi - Pi^E > 0"); // TODO: True
   EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "Pi^E - E^Pi < 0"); // TODO: True
 
@@ -621,11 +622,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln((E)/(20000.1EE)) + ln(20000.1E)").toString(), "0");
   EXPECT_EQ(Expression("ln((10 E)^2) - ln(10 E 10 E)").toString(), "0");
   EXPECT_EQ(Expression("ln((10 E)^2) - 2 ln(10 E)").toString(), "0");
-  EXPECT_EQ(Expression("3 ln((10 E)^2) - 2 ln(10 E)").toString(), "ln(10000 E^4)");
-  EXPECT_EQ(Expression("ln((10 E)^(2ab)) - 2 a ln(10 E) b").toString(),
-            "ln(10^(2 a b) E^(2 a b) 10^(-2 a b) E^(-2 a b))"); // TODO! 0
-  EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(),
-            "ln(10^(2 ln(2)) E^(2 ln(2)) 10^(-2 ln(2)) E^(-2 ln(2)))"); // TODO! 0
+  EXPECT_EQ(Expression("3 ln((10 E)^2) - 2 ln(10 E)").toString(), "4 ln(10 E)");
+  EXPECT_EQ(Expression("ln((10 E)^(2ab)) - 2 a ln(10 E) b").toString(), "0");
+  EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(), "0");
   EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
   EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5 3^x)");
