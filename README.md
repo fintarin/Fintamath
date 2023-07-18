@@ -18,6 +18,8 @@
 
 Fintamath is an algebra & analysis library written in pure C++.
 
+[Usage Examples](tests/src/FintamathTests.cpp)
+
 ## Supported Platforms
 
 * C++ 17 or higher
