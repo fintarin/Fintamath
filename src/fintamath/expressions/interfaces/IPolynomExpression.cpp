@@ -342,12 +342,8 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
     case IOperator::Priority::Multiplication: {
       static const ArgumentPtr one = Integer(1).clone();
       ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, one);
-
-      if (int comp = comparator(lhs, rhsExpr)) {
-        return isTermsOrderInversed() ? comp * -1 : comp;
-      }
-
-      break;
+      int comp = comparator(lhs, rhsExpr);
+      return isTermsOrderInversed() ? comp * -1 : comp;
     }
     default:
       break;
