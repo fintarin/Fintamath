@@ -17,7 +17,7 @@ public:
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return size_t(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IInteger))) - 10;
+    return MathObjectTypeId(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IInteger))) - 2;
   }
 
 protected:
@@ -97,7 +97,7 @@ public:
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return TestInteger::getTypeIdStatic() + 1;
+    return MathObjectTypeId(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IInteger))) - 1;
   }
 
   MathObjectTypeId getTypeId() const override {

@@ -18,7 +18,7 @@ public:
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IOperator) + 1'234'567;
+    return MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IOperator)) - 1;
   }
 
 protected:
@@ -37,7 +37,7 @@ public:
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IOperator) + 1'234'568;
+    return MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IOperator)) - 2;
   }
 
 protected:
@@ -56,7 +56,7 @@ public:
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IOperator) + 1'234'569;
+    return MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IOperator)) - 3;
   }
 
 protected:

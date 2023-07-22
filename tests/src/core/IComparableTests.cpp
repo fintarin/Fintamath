@@ -13,7 +13,7 @@ namespace {
 class TestComparable : public IComparableCRTP<TestComparable> {
 public:
   static MathObjectTypeId getTypeIdStatic() {
-    return size_t(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IComparable))) - 20;
+    return size_t(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IComparable))) - 3;
   }
 
 protected:
