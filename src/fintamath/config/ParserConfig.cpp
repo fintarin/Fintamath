@@ -8,6 +8,7 @@
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Frac.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
@@ -194,6 +195,7 @@ struct ParserConfig {
     IFunction::registerType<Max>();
     IFunction::registerType<Derivative>();
     IFunction::registerType<Integral>();
+    IFunction::registerType<Frac>();
 
     IOperator::registerType<Add>();
     IOperator::registerType<Sub>();

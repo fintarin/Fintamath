@@ -202,6 +202,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sign(10)").toString(), "1");
   EXPECT_EQ(Expression("sign(0)").toString(), "0");
   EXPECT_EQ(Expression("sign(-5)").toString(), "-1");
+  EXPECT_EQ(Expression("frac(2,4)").toString(), "1/2");
+  EXPECT_EQ(Expression("frac(x,y)").toString(), "x/y");
 
   EXPECT_EQ(Expression("a*0").toString(), "0");
   EXPECT_EQ(Expression("0*a").toString(), "0");
