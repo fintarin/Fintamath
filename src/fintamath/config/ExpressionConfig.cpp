@@ -55,6 +55,7 @@
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/PowF.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
@@ -165,6 +166,10 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Pow>([](const ArgumentsPtrVector &args) {
+      return std::make_unique<PowExpression>(args.front(), args.back());
+    });
+
+    Expression::registerFunctionExpressionMaker<PowF>([](const ArgumentsPtrVector &args) {
       return std::make_unique<PowExpression>(args.front(), args.back());
     });
 
