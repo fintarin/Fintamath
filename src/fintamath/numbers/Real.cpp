@@ -91,6 +91,10 @@ std::string Real::toString() const {
     if (size_t plusPos = res.find('+'); plusPos != std::string::npos) {
       res.replace(plusPos, 1, "");
     }
+
+    if (size_t negZeroPos = res.find("-0"); negZeroPos != std::string::npos) {
+      res.replace(negZeroPos + 1, 1, "");
+    }
   }
 
   return res;

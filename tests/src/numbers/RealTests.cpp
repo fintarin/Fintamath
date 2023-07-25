@@ -17,6 +17,10 @@ TEST(RealTests, stringConstructorTest) {
   EXPECT_EQ(Real("0989929039237832000.9302930929333").toString(), "989929039237832000.9302930929333");
   EXPECT_EQ(Real(".1").toString(), "0.1");
   EXPECT_EQ(Real("1.").toString(), "1");
+  EXPECT_EQ(Real("0.000000001").toString(), "1*10^-9");
+  EXPECT_EQ(Real("10000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+                .toString(),
+            "1.00000000002*10^94");
 
   EXPECT_THROW(Real("--10"), InvalidInputException);
   EXPECT_THROW(Real("test"), InvalidInputException);
