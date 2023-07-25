@@ -221,19 +221,20 @@ bool DivExpression::isNeg(const ArgumentPtr &expr) {
 
 ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto [result, remainder] = mulSumSimplify(lhs, rhs); result) {
-    return makeExpr(Add(), result, remainder);
+    return remainder ? makeExpr(Add(), result, remainder) : result;
   }
 
   if (auto [result, remainder] = sumMulSimplify(lhs, rhs); result) {
-    return makeExpr(Add(), result, remainder);
+    return remainder ? makeExpr(Add(), result, remainder) : result;
   }
 
   if (auto [result, remainder] = sumSumSimplify(lhs, rhs); result) {
-    return makeExpr(Add(), result, remainder);
+    return remainder ? makeExpr(Add(), result, remainder) : result;
   }
 
   if (auto [result, remainder] = sumSumSimplify(rhs, lhs); result && !is<IExpression>(remainder)) {
-    return makeExpr(Div(), Integer(1).clone(), makeExpr(Add(), result, remainder));
+    ArgumentPtr denominator = remainder ? makeExpr(Add(), result, remainder) : result;
+    return makeExpr(Div(), Integer(1).clone(), denominator);
   }
 
   return {};

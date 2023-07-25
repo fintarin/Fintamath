@@ -1060,6 +1060,8 @@ TEST(ExpressionTests, preciseTest) {
             "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
   EXPECT_EQ(Expression("sin(60Deg)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
+  EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").precise().toString(),
+            "(0.125 x^3)/y + (-0.25 x^2 z)/y + (0.125 x z^2)/y");
 
   EXPECT_EQ(Expression("ln(x)").precise().toString(), "ln(x)");
   EXPECT_EQ(Expression("sqrt(x)").precise().toString(), "sqrt(x)");
