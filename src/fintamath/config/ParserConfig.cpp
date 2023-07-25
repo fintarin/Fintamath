@@ -47,6 +47,7 @@
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/PowF.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
@@ -196,6 +197,7 @@ struct ParserConfig {
     IFunction::registerType<Derivative>();
     IFunction::registerType<Integral>();
     IFunction::registerType<Frac>();
+    IFunction::registerType<PowF>();
 
     IOperator::registerType<Add>();
     IOperator::registerType<Sub>();

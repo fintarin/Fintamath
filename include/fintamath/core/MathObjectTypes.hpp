@@ -98,6 +98,7 @@ enum class MathObjectType : MathObjectTypeId {
   Derivative,
   Integral,
   Frac,
+  PowF,
 
   IOperator = 12000,
 
