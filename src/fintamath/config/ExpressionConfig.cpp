@@ -18,6 +18,7 @@
 #include "fintamath/expressions/unary/TrigonometryExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Frac.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -148,6 +149,10 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Div>([](const ArgumentsPtrVector &args) {
+      return std::make_unique<DivExpression>(args.front(), args.back());
+    });
+
+    Expression::registerFunctionExpressionMaker<Frac>([](const ArgumentsPtrVector &args) {
       return std::make_unique<DivExpression>(args.front(), args.back());
     });
 

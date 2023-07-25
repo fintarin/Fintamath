@@ -97,6 +97,7 @@ enum class MathObjectType : MathObjectTypeId {
   Max,
   Derivative,
   Integral,
+  Frac,
 
   IOperator = 12000,
 
