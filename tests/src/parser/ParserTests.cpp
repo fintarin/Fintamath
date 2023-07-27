@@ -165,13 +165,13 @@ TEST(ParserTests, parseLiteralTest) {
   EXPECT_TRUE(is<Pi>(ILiteral::parse("Pi")));
   EXPECT_TRUE(is<Variable>(ILiteral::parse("a")));
   EXPECT_TRUE(is<Variable>(ILiteral::parse("z")));
-  EXPECT_TRUE(is<Variable>(ILiteral::parse("A")));
-  EXPECT_TRUE(is<Variable>(ILiteral::parse("Z")));
 
   EXPECT_EQ(ILiteral::parse("1"), nullptr);
   EXPECT_EQ(ILiteral::parse("a_"), nullptr);
   EXPECT_EQ(ILiteral::parse("a1"), nullptr);
   EXPECT_EQ(ILiteral::parse("aa"), nullptr);
+  EXPECT_EQ(ILiteral::parse("A"), nullptr);
+  EXPECT_EQ(ILiteral::parse("Z"), nullptr);
 }
 
 TEST(ParseTests, parseConstantTest) {

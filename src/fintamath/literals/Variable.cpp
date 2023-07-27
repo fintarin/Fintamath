@@ -13,7 +13,7 @@ Variable::Variable(std::string inName) {
     throw InvalidInputException(inName);
   }
 
-  if (char ch = inName.front(); (ch < 'a' || ch > 'z') && (ch < 'A' || ch > 'Z')) {
+  if (char ch = inName.front(); ch < 'a' || ch > 'z') {
     throw InvalidInputException(inName);
   }
 
