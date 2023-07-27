@@ -14,30 +14,18 @@ namespace fintamath {
 class IArithmetic : public IMathObject {
 public:
   friend inline std::unique_ptr<IArithmetic> operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
-    if (auto res = IArithmetic::getMultiAdd()(lhs, rhs)) {
-      return res;
-    }
     return lhs.addAbstract(rhs);
   }
 
   friend inline std::unique_ptr<IArithmetic> operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
-    if (auto res = IArithmetic::getMultiSub()(lhs, rhs)) {
-      return res;
-    }
     return lhs.substractAbstract(rhs);
   }
 
   friend inline std::unique_ptr<IArithmetic> operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
-    if (auto res = IArithmetic::getMultiMul()(lhs, rhs)) {
-      return res;
-    }
     return lhs.multiplyAbstract(rhs);
   }
 
   friend inline std::unique_ptr<IArithmetic> operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
-    if (auto res = IArithmetic::getMultiDiv()(lhs, rhs)) {
-      return res;
-    }
     return lhs.divideAbstract(rhs);
   }
 
@@ -47,26 +35,6 @@ public:
 
   friend inline std::unique_ptr<IArithmetic> operator-(const IArithmetic &rhs) {
     return rhs.negateAbstract();
-  }
-
-  template <typename Lhs, typename Rhs, typename Func>
-  static void addMultiAddFunction(const Func &func) {
-    getMultiAdd().add<Lhs, Rhs>(func);
-  }
-
-  template <typename Lhs, typename Rhs, typename Func>
-  static void addMultiSubFunction(const Func &func) {
-    getMultiSub().add<Lhs, Rhs>(func);
-  }
-
-  template <typename Lhs, typename Rhs, typename Func>
-  static void addMultiMulFunction(const Func &func) {
-    getMultiMul().add<Lhs, Rhs>(func);
-  }
-
-  template <typename Lhs, typename Rhs, typename Func>
-  static void addMultiDivFunction(const Func &func) {
-    getMultiDiv().add<Lhs, Rhs>(func);
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
@@ -101,14 +69,6 @@ protected:
   virtual std::unique_ptr<IArithmetic> unaryPlusAbstract() const = 0;
 
 private:
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiAdd();
-
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiSub();
-
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiMul();
-
-  static MultiMethod<std::unique_ptr<IArithmetic>(const IArithmetic &, const IArithmetic &)> &getMultiDiv();
-
   static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> &getParser();
 };
 

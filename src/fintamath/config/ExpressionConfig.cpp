@@ -305,7 +305,7 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Root>([](const ArgumentsPtrVector &args) {
       if (const auto num = cast<INumber>(args.back())) {
-        return makeExpr(Pow(), args.front(), Integer(1) / (*num));
+        return makeExpr(Pow(), args.front(), Rational(1) / (*num));
       }
 
       return makeExpr(Pow(), args.front(), makeExpr(Div(), std::make_shared<Integer>(1), args.back()));

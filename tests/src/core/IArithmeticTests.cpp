@@ -198,28 +198,6 @@ TEST(IArithmeticTests, negateTest) {
   EXPECT_EQ((-Integer(1)).toString(), "-1");
 }
 
-TEST(IArithmeticTests, multimethodsTest) {
-  IArithmetic::addMultiAddFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
-    return cast<IArithmetic>(std::make_unique<Integer>(0));
-  });
-  EXPECT_EQ(*(TestArithmetic() + Integer(1)), Integer(0));
-
-  IArithmetic::addMultiSubFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
-    return cast<IArithmetic>(std::make_unique<Integer>(0));
-  });
-  EXPECT_EQ(*(TestArithmetic() - Integer(1)), Integer(0));
-
-  IArithmetic::addMultiMulFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
-    return cast<IArithmetic>(std::make_unique<Integer>(0));
-  });
-  EXPECT_EQ(*(TestArithmetic() * Integer(1)), Integer(0));
-
-  IArithmetic::addMultiDivFunction<TestArithmetic, Integer>([](const TestArithmetic &lhs, const Integer &rhs) {
-    return cast<IArithmetic>(std::make_unique<Integer>(0));
-  });
-  EXPECT_EQ(*(TestArithmetic() / Integer(1)), Integer(0));
-}
-
 TEST(IArithmeticTests, getTypeIdTest) {
   EXPECT_EQ(IArithmetic::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IArithmetic));
 }

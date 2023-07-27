@@ -222,7 +222,7 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer 
 }
 
 std::unique_ptr<IMathObject> Root::rootSimpl(const Real &lhs, const Integer &rhs) {
-  return Pow()(lhs, 1 / Rational(rhs));
+  return Pow()(lhs, Rational(1, rhs));
 }
 
 }
