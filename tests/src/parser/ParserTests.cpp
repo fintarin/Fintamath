@@ -62,6 +62,9 @@
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/literals/constants/True.hpp"
 #include "fintamath/numbers/INumber.hpp"
@@ -162,7 +165,6 @@ TEST(ParserTests, parseNumberTest) {
 
 TEST(ParserTests, parseLiteralTest) {
   EXPECT_TRUE(is<E>(ILiteral::parse("E")));
-  EXPECT_TRUE(is<Pi>(ILiteral::parse("Pi")));
   EXPECT_TRUE(is<Variable>(ILiteral::parse("a")));
   EXPECT_TRUE(is<Variable>(ILiteral::parse("z")));
 
@@ -177,8 +179,11 @@ TEST(ParserTests, parseLiteralTest) {
 TEST(ParseTests, parseConstantTest) {
   EXPECT_TRUE(is<E>(IConstant::parse("E")));
   EXPECT_TRUE(is<Pi>(IConstant::parse("Pi")));
-  EXPECT_TRUE(is<True>(ILiteral::parse("True")));
-  EXPECT_TRUE(is<False>(ILiteral::parse("False")));
+  EXPECT_TRUE(is<True>(IConstant::parse("True")));
+  EXPECT_TRUE(is<False>(IConstant::parse("False")));
+  EXPECT_TRUE(is<Inf>(IConstant::parse("Inf")));
+  EXPECT_TRUE(is<NegInf>(IConstant::parse("-Inf")));
+  EXPECT_TRUE(is<Indeterminate>(IConstant::parse("Indeterminate")));
 
   EXPECT_EQ(IConstant::parse("a"), nullptr);
   EXPECT_EQ(IConstant::parse("z"), nullptr);

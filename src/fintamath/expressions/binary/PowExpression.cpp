@@ -9,6 +9,9 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
+#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -87,7 +90,7 @@ PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPreSimplify
 
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplify() const {
   static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &PowExpression::numSimplify,     //
+      &PowExpression::constSimplify,   //
       &PowExpression::polynomSimplify, //
       &PowExpression::negSimplify,     //
       &PowExpression::powSimplify,     //
@@ -200,32 +203,51 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
   return res;
 }
 
-ArgumentPtr PowExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto lhsInt = cast<Integer>(lhs);
-  auto rhsInt = cast<Integer>(rhs);
-
-  if (rhsInt) {
-    if (*rhsInt == 0) {
-      return std::make_shared<Integer>(1);
-    }
-
-    if (*rhsInt == 1 || (lhsInt && *lhsInt == 1)) {
-      return lhs;
-    }
-
-    if (*rhsInt == -1) {
-      ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), lhs);
-      return res;
-    }
-  }
-
-  if (lhsInt && *lhsInt == 0) {
+ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*rhs == Integer(1)) {
     return lhs;
   }
 
-  if (const auto rhsComp = cast<IComparable>(rhs); rhsComp && *rhsComp < Integer(0)) {
-    ArgumentPtr res = makeExpr(Div(), std::make_shared<Integer>(1), makeExpr(Pow(), lhs, makeExpr(Neg(), rhs)));
-    return res;
+  if (*rhs == Integer(-1)) {
+    ArgumentPtr divLhs = Integer(1).clone();
+    ArgumentPtr divRhs = lhs;
+    return makeExpr(Div(), divLhs, divRhs);
+  }
+
+  if (const auto rhsComp = cast<IComparable>(rhs); is<NegInf>(rhs) || (rhsComp && *rhsComp < Integer(0))) {
+    ArgumentPtr divLhs = Integer(1).clone();
+    ArgumentPtr divRhs = makeExpr(Pow(), lhs, makeExpr(Neg(), rhs));
+    return makeExpr(Div(), divLhs, divRhs);
+  }
+
+  if (is<NegInf>(lhs)) {
+    ArgumentPtr mulLhs = makeExpr(Pow(), Integer(-1).clone(), rhs);
+    ArgumentPtr mulRhs = makeExpr(Pow(), Inf().clone(), rhs);
+    return makeExpr(Mul(), mulLhs, mulRhs);
+  }
+
+  if (is<Inf>(lhs)) {
+    if (*rhs == Integer(0)) {
+      return Indeterminate().clone();
+    }
+
+    return lhs;
+  }
+
+  if (*lhs == Integer(0)) {
+    return lhs;
+  }
+
+  if (*lhs == Integer(1)) {
+    if (is<Inf>(rhs)) {
+      return Indeterminate().clone();
+    }
+
+    return lhs;
+  }
+
+  if (*rhs == Integer(0)) {
+    return Integer(1).clone();
   }
 
   return {};

@@ -7,6 +7,7 @@
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/literals/constants/Indeterminate.hpp"
 
 namespace fintamath {
 
@@ -91,6 +92,11 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
   for (size_t i = 1; i < children.size(); i++) {
     const ArgumentPtr &lhs = children[i - 1];
     const ArgumentPtr &rhs = children[i];
+
+    if (is<Indeterminate>(lhs) || is<Indeterminate>(rhs)) {
+      children = {Indeterminate().clone()};
+      break;
+    }
 
     ArgumentPtr res;
     bool isResSimplified = false;

@@ -81,8 +81,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1100*4.76%").toString(), "1309/25");
   EXPECT_EQ(Expression("2.35%%%%").toString(), "47/2000000000");
   EXPECT_EQ(Expression("1100*4.76%1100*4.76%").toString(), "1713481/625");
-  // TODO: implement infinities
-  // EXPECT_EQ(Expression("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))").toString(), "0");
+  EXPECT_EQ(Expression("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))").toString(), "0");
 
   EXPECT_EQ(Expression("9!").toString(), "362880");
   EXPECT_EQ(Expression("-1!").toString(), "-1");
@@ -214,6 +213,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("a*1").toString(), "a");
 
   EXPECT_EQ(Expression("0^a").toString(), "0");
+  EXPECT_EQ(Expression("1^a").toString(), "1");
   EXPECT_EQ(Expression("(a b)^0").toString(), "1");
   EXPECT_EQ(Expression("(a + b)^-1").toString(), "1/(a + b)");
   EXPECT_EQ(Expression("(a + b)^-2").toString(), "1/(a^2 + 2 a b + b^2)");
@@ -669,6 +669,78 @@ TEST(ExpressionTests, stringConstructorTest) {
   // EXPECT_EQ(Expression("sin(x)^2 + cos(x)^2").toString(), "1"); // TODO: implement
   // EXPECT_EQ(Expression("tan(x)*cot(x)").toString(), "1"); // TODO: implement
   // EXPECT_EQ(Expression("tanh(x)*coth(x)").toString(), "1"); // TODO: implement
+
+  EXPECT_EQ(Expression("Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("-Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("1/0").toString(), "Inf");
+  EXPECT_EQ(Expression("a/0").toString(), "Inf");
+  EXPECT_EQ(Expression("1/Inf").toString(), "0");
+  EXPECT_EQ(Expression("1/-Inf").toString(), "0");
+  EXPECT_EQ(Expression("a/Inf").toString(), "0");
+  EXPECT_EQ(Expression("a/-Inf").toString(), "0");
+  EXPECT_EQ(Expression("Inf + Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("-Inf - Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("10 + Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("-10 + Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("10 - Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("-10 - Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("10 * Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("-10 * Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("-2/3 * Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("Inf * Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("Inf * -Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("-Inf * -Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("Inf^2").toString(), "Inf");
+  EXPECT_EQ(Expression("Inf^(2/3)").toString(), "Inf");
+  EXPECT_EQ(Expression("(-Inf)^2").toString(), "Inf");
+  EXPECT_EQ(Expression("(-Inf)^3").toString(), "-Inf");
+  // EXPECT_EQ(Expression("(-Inf)^(2/3)").toString(), "-Inf"); // TODO! complex numbers
+  EXPECT_EQ(Expression("0^Inf").toString(), "0");
+  EXPECT_EQ(Expression("0^-Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("sqrt(2) * Inf").toString(), "Inf sqrt(2)");   // TODO! Inf
+  EXPECT_EQ(Expression("-sqrt(2) * Inf").toString(), "-Inf sqrt(2)"); // TODO! -Inf
+  EXPECT_EQ(Expression("sin(Inf)").toString(), "sin(Inf)");           // TODO: [-1, 1]
+  EXPECT_EQ(Expression("x = Inf").toString(), "x - Inf = 0");
+  EXPECT_EQ(Expression("x = -Inf").toString(), "x + Inf = 0");
+
+  EXPECT_EQ(Expression("0*Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("0*-Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf - Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("0/0").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf/Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("0/Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf/0").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("-Inf/-Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("0/-Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("-Inf/0").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf/-Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("-Inf/Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("-Inf + Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf - Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("0^0").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf^0").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("1^Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("1^-Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf = Inf").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf - Inf = 0").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Inf - Inf = 0 | a").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("~Indeterminate").toString(), "Indeterminate");
+
+  EXPECT_EQ(Expression("Indeterminate").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("-Indeterminate").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Indeterminate + 10").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Indeterminate - 10").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("0/Indeterminate").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("1/Indeterminate").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("sin(Indeterminate)").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("sin(0/0)").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("1 + 0^0").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("1 + sin(asin(0^0)) + x").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("1 + (2^2 - 4)^0").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("0^((2^2 - 4)^0)").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("-((2^2 - 4)^0)").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("Indeterminate = Indeterminate").toString(), "Indeterminate");
+  EXPECT_EQ(Expression("0/0 = 0/0").toString(), "Indeterminate");
 }
 
 TEST(ExpressionTests, stringConstructorLargeTest) {
@@ -925,16 +997,13 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(x*2)_((x+2)_x)"), InvalidInputException);
   EXPECT_THROW(Expression("x^x_1"), InvalidInputException);
   EXPECT_THROW(Expression("E&a"), InvalidInputException);
+  EXPECT_THROW(Expression("~Inf"), InvalidInputException);
 
   EXPECT_THROW(Expression("min()"), InvalidInputException);
   EXPECT_THROW(Expression("min(True, False)"), InvalidInputException);
   EXPECT_THROW(Expression("max()"), InvalidInputException);
   EXPECT_THROW(Expression("max(True, False)"), InvalidInputException);
 
-  EXPECT_THROW(Expression("1/0"), UndefinedException);
-  EXPECT_THROW(Expression("a/0"), UndefinedException);
-  EXPECT_THROW(Expression("(a/0)/(a/0)"), UndefinedException);
-  EXPECT_THROW(Expression("0^0"), UndefinedException);
   EXPECT_THROW(Expression("(-1)!"), UndefinedException);
   EXPECT_THROW(Expression("(2/3)!"), UndefinedException);
   EXPECT_THROW(Expression("(-1)!!"), UndefinedException);
