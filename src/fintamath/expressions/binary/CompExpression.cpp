@@ -46,15 +46,16 @@ std::string CompExpression::toString() const {
 
 ArgumentPtr CompExpression::preSimplify() const {
   auto simpl = IBinaryExpression::preSimplify();
-  auto simplExpr = cast<CompExpression>(simpl);
 
-  if (!simplExpr->isSolution && (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
-    ArgumentPtr resLhs = makeExpr(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
-    preSimplifyChild(resLhs);
-    return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
+  if (auto simplExpr = cast<CompExpression>(simpl)) {
+    if (!simplExpr->isSolution && (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
+      ArgumentPtr resLhs = makeExpr(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
+      preSimplifyChild(resLhs);
+      return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
+    }
   }
 
-  return simplExpr;
+  return simpl;
 }
 
 CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPostSimplify() const {

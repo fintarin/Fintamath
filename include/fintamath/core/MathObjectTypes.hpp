@@ -64,6 +64,9 @@ enum class MathObjectType : MathObjectTypeId {
   Pi,
   True,
   False,
+  Inf,
+  NegInf,
+  Indeterminate,
 
   IFunction = 11000,
 
@@ -144,19 +147,19 @@ private:
     using Type = MathObjectType;
 
     static std::unordered_map<Id, Id> ids{
-        {Id(Type::IMathObject), Id(Type::None)},                     //
-        {Id(Type::IArithmetic), Id(Type::ILiteral)},                 //
-        {Id(Type::IExpression), Id(Type::IComparable)},              //
-        {Id(Type::IUnaryExpression), Id(Type::IBinaryExpression)},   //
-        {Id(Type::IBinaryExpression), Id(Type::IPolynomExpression)}, //
-        {Id(Type::IPolynomExpression), Id(Type::IComparable)},       //
-        {Id(Type::IComparable), Id(Type::ILiteral)},                 //
-        {Id(Type::INumber), Id(Type::ILiteral)},                     //
-        {Id(Type::IInteger), Id(Type::ILiteral)},                    //
-        {Id(Type::ILiteral), Id(Type::IFunction)},                   //
-        {Id(Type::IConstant), Id(Type::IFunction)},                  //
-        {Id(Type::IFunction), Id(Type::None)},                       //
-        {Id(Type::IOperator), Id(Type::None)},                       //
+        {Id(Type::IMathObject), Id(Type::None)},
+        {Id(Type::IArithmetic), Id(Type::ILiteral)},
+        {Id(Type::IExpression), Id(Type::IComparable)},
+        {Id(Type::IUnaryExpression), Id(Type::IBinaryExpression)},
+        {Id(Type::IBinaryExpression), Id(Type::IPolynomExpression)},
+        {Id(Type::IPolynomExpression), Id(Type::IComparable)},
+        {Id(Type::IComparable), Id(Type::ILiteral)},
+        {Id(Type::INumber), Id(Type::ILiteral)},
+        {Id(Type::IInteger), Id(Type::ILiteral)},
+        {Id(Type::ILiteral), Id(Type::IFunction)},
+        {Id(Type::IConstant), Id(Type::IFunction)},
+        {Id(Type::IFunction), Id(Type::None)},
+        {Id(Type::IOperator), Id(Type::None)},
     };
 
     return ids;
@@ -166,6 +169,7 @@ private:
 inline bool isBaseOf(size_t toTypeId, size_t fromTypeId) {
   if (auto toTypeBoundaries = MathObjectBoundTypeIds::get().find(toTypeId);
       toTypeBoundaries != MathObjectBoundTypeIds::get().end()) {
+
     return fromTypeId >= toTypeBoundaries->first && fromTypeId < toTypeBoundaries->second;
   }
 

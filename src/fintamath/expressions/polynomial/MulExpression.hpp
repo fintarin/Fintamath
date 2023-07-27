@@ -23,7 +23,7 @@ protected:
   bool isTermsOrderInversed() const override;
 
 private:
-  static ArgumentPtr simplifyNumbers(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyConst(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyRationals(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 

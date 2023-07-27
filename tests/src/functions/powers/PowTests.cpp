@@ -79,7 +79,8 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Variable("a"), Rational(1, 2))->toString(), "sqrt(a)");
   EXPECT_EQ(f(Variable("a"), Rational(3, 2))->toString(), "a^(3/2)");
 
-  EXPECT_THROW(f(Integer(0), Integer(0)), UndefinedException);
+  EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "Indeterminate");
+
   EXPECT_THROW(f(Rational("0"), Rational("-10")), UndefinedException);
   EXPECT_THROW(f(Rational("-10"), Rational("-1.5")), UndefinedException);
 

@@ -10,6 +10,9 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -56,11 +59,11 @@ std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, con
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &MulExpression::simplifyConst,        //
       &MulExpression::simplifyCallFunction, //
       &MulExpression::simplifyRationals,    //
       &MulExpression::simplifyDivisions,    //
       &MulExpression::simplifyPowers,       //
-      &MulExpression::simplifyNumbers,      //
       &MulExpression::simplifyNegations,    //
   };
   return simplifyFunctions;
@@ -68,10 +71,10 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPostSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &MulExpression::simplifyConst,     //
       &MulExpression::mulPolynoms,       //
       &MulExpression::simplifyDivisions, //
       &MulExpression::simplifyPowers,    //
-      &MulExpression::simplifyNumbers,   //
       &MulExpression::simplifyNegations, //
   };
   return simplifyFunctions;
@@ -86,8 +89,23 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
   return {std::make_shared<Integer>(1), rhsChild};
 }
 
-ArgumentPtr MulExpression::simplifyNumbers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                           const ArgumentPtr &rhsChild) {
+ArgumentPtr MulExpression::simplifyConst(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                         const ArgumentPtr &rhsChild) {
+
+  if (*lhsChild == Integer(0) && (is<Inf>(rhsChild) || is<NegInf>(rhsChild))) {
+    return Indeterminate().clone();
+  }
+
+  if (is<NegInf>(lhsChild) && is<Inf>(rhsChild)) {
+    return lhsChild;
+  }
+
+  if (is<Inf>(rhsChild) || is<NegInf>(rhsChild)) {
+    if (const auto lhsNum = cast<INumber>(lhsChild)) {
+      return *lhsNum < Integer(0) ? makeExpr(Neg(), rhsChild) : rhsChild;
+    }
+  }
+
   if (*lhsChild == Integer(0)) {
     return lhsChild;
   }

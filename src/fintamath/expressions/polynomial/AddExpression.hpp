@@ -31,7 +31,7 @@ protected:
   int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
 
 private:
-  static ArgumentPtr simplifyNumbers(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr simplifyConst(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static ArgumentPtr simplifyCallFunction(const IFunction &func, const ArgumentPtr &lhsChild,
                                           const ArgumentPtr &rhsChild);

@@ -23,6 +23,8 @@ private:
   static ArgumentPtr simplifyNegatable(const IFunction &func, const ArgumentPtr &rhs);
 
   static ArgumentPtr simplifyNestedNeg(const IFunction &func, const ArgumentPtr &rhs);
+
+  static ArgumentPtr simplifyConst(const IFunction &func, const ArgumentPtr &rhs);
 };
 
 }

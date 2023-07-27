@@ -8,6 +8,9 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -28,16 +31,16 @@ std::string DivExpression::toString() const {
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPreSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::zeroSimplify, //
-      &DivExpression::divSimplify,  //
-      &DivExpression::mulSimplify,  //
+      &DivExpression::constSimplify, //
+      &DivExpression::divSimplify,   //
+      &DivExpression::mulSimplify,   //
   };
   return simplifyFunctions;
 }
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::zeroSimplify,            //
+      &DivExpression::constSimplify,           //
       &DivExpression::negSimplify,             //
       &DivExpression::numSimplify,             //
       &DivExpression::divSimplify,             //
@@ -49,19 +52,29 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-ArgumentPtr DivExpression::zeroSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if ((*lhs == Integer(0) || is<Inf>(lhs) || is<NegInf>(lhs)) &&
+      (*rhs == Integer(0) || is<Inf>(rhs) || is<NegInf>(rhs))) {
+
+    return Indeterminate().clone();
+  }
+
+  if (*lhs == Integer(0)) {
+    return lhs;
+  }
+
   if (*rhs == Integer(0)) {
-    throw UndefinedBinaryOperatorException(Div().toString(), lhs->toString(), rhs->toString());
+    return Inf().clone();
+  }
+
+  if (is<Inf>(rhs) || is<NegInf>(rhs)) {
+    return Integer(0).clone();
   }
 
   return {};
 }
 
 ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*lhs == Integer(0)) {
-    return lhs;
-  }
-
   static const Integer one = 1;
 
   if (Div().doArgsMatch({one, *rhs})) {

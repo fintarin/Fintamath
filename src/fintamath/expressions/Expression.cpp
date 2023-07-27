@@ -459,7 +459,7 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
     else if (const auto childConst = cast<IConstant>(arg)) {
       const MathObjectTypeId childTypeId = childConst->getReturnTypeId();
 
-      if (!isBaseOf(typeId, childTypeId)) {
+      if (!isBaseOf(typeId, childTypeId) && !isBaseOf(childTypeId, typeId)) {
         throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }

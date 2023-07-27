@@ -33,6 +33,8 @@ TEST(DivTests, callTest) {
 
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3/a");
 
+  EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "Indeterminate");
+
   EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
   EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
   EXPECT_THROW(f(), InvalidInputFunctionException);

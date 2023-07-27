@@ -6,6 +6,8 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 
 namespace fintamath {
 
@@ -14,6 +16,7 @@ NegExpression::NegExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(
 
 NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPreSimplify() const {
   static const NegExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &NegExpression::simplifyConst,     //
       &NegExpression::callNegFunction,   //
       &NegExpression::simplifyNestedNeg, //
   };
@@ -22,6 +25,7 @@ NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPreSimplify
 
 NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPostSimplify() const {
   static const NegExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &NegExpression::simplifyConst,     //
       &NegExpression::simplifyNegatable, //
       &NegExpression::simplifyNestedNeg, //
   };
@@ -74,6 +78,18 @@ ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const A
 ArgumentPtr NegExpression::simplifyNestedNeg(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (const auto expr = cast<NegExpression>(rhs)) {
     return expr->child;
+  }
+
+  return {};
+}
+
+ArgumentPtr NegExpression::simplifyConst(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+  if (is<Inf>(rhs)) {
+    return NegInf().clone();
+  }
+
+  if (is<NegInf>(rhs)) {
+    return Inf().clone();
   }
 
   return {};

@@ -10,6 +10,9 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
@@ -73,7 +76,7 @@ AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify
       &AddExpression::simplifyNegations,     //
       &AddExpression::simplifyCallFunction,  //
       &AddExpression::sumDivisions,          //
-      &AddExpression::simplifyNumbers,       //
+      &AddExpression::simplifyConst,         //
       &AddExpression::sumRates,              //
       &AddExpression::simplifyLogarithms,    //
       &AddExpression::simplifyMulLogarithms, //
@@ -83,7 +86,7 @@ AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify
 
 AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPostSimplify() const {
   static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &AddExpression::simplifyNumbers,       //
+      &AddExpression::simplifyConst,         //
       &AddExpression::sumRates,              //
       &AddExpression::simplifyLogarithms,    //
       &AddExpression::simplifyMulLogarithms, //
@@ -91,12 +94,21 @@ AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-ArgumentPtr AddExpression::simplifyNumbers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                           const ArgumentPtr &rhsChild) {
+ArgumentPtr AddExpression::simplifyConst(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+                                         const ArgumentPtr &rhsChild) {
   if (*lhsChild == Integer(0)) {
     return rhsChild;
   }
+
   if (*rhsChild == Integer(0)) {
+    return lhsChild;
+  }
+
+  if (is<NegInf>(lhsChild) && is<Inf>(rhsChild)) {
+    return Indeterminate().clone();
+  }
+
+  if (is<Inf>(lhsChild) || is<NegInf>(lhsChild)) {
     return lhsChild;
   }
 
