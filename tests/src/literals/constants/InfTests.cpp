@@ -1,0 +1,31 @@
+#include <gtest/gtest.h>
+
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
+
+using namespace fintamath;
+
+const Inf c;
+
+TEST(InfTests, toStringTest) {
+  EXPECT_EQ(c.toString(), "Inf");
+}
+
+TEST(InfTests, callTest) {
+  EXPECT_EQ(c()->toString(), "Inf");
+}
+
+TEST(InfTests, equalsTest) {
+  EXPECT_EQ(c, c);
+  EXPECT_EQ(c, Inf());
+  EXPECT_EQ(Inf(), c);
+  EXPECT_EQ(c, cast<IMathObject>(Inf()));
+  EXPECT_EQ(cast<IMathObject>(Inf()), c);
+  EXPECT_NE(c, Pi());
+  EXPECT_NE(Pi(), c);
+}
+
+TEST(InfTests, getTypeIdTest) {
+  EXPECT_EQ(Inf::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Inf));
+  EXPECT_EQ(Inf().getTypeId(), MathObjectTypeId(MathObjectType::Inf));
+}
