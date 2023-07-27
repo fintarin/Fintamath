@@ -42,6 +42,7 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/other/Deg.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
@@ -61,7 +62,6 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants//Deg.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -161,7 +161,6 @@ struct ParserConfig {
     ILiteral::registerType<Variable>();
     ILiteral::registerType<Boolean>();
 
-    IConstant::registerType<Deg>();
     IConstant::registerType<E>();
     IConstant::registerType<Pi>();
     IConstant::registerType<True>();
@@ -221,6 +220,7 @@ struct ParserConfig {
     IOperator::registerType<Equiv>();
     IOperator::registerType<Nequiv>();
     IOperator::registerType<Index>();
+    IOperator::registerType<Deg>();
 
     IExpression::registerType<Expression>();
   }

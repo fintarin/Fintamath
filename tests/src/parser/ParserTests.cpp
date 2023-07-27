@@ -39,11 +39,13 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/other/Deg.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/PowF.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
@@ -57,7 +59,6 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/Deg.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -174,7 +175,6 @@ TEST(ParserTests, parseLiteralTest) {
 }
 
 TEST(ParseTests, parseConstantTest) {
-  EXPECT_TRUE(is<Deg>(IConstant::parse("Deg")));
   EXPECT_TRUE(is<E>(IConstant::parse("E")));
   EXPECT_TRUE(is<Pi>(IConstant::parse("Pi")));
   EXPECT_TRUE(is<True>(ILiteral::parse("True")));
@@ -217,6 +217,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Derivative>(IFunction::parse("derivative")));
   EXPECT_TRUE(is<Integral>(IFunction::parse("integral")));
   EXPECT_TRUE(is<Frac>(IFunction::parse("frac")));
+  EXPECT_TRUE(is<PowF>(IFunction::parse("pow")));
 
   EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
   EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));
@@ -250,6 +251,7 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_TRUE(is<Equiv>(IOperator::parse("<->")));
   EXPECT_TRUE(is<Nequiv>(IOperator::parse("!<->")));
   EXPECT_TRUE(is<Index>(IOperator::parse("_")));
+  EXPECT_TRUE(is<Deg>(IOperator::parse("deg")));
 
   EXPECT_EQ(IOperator::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
