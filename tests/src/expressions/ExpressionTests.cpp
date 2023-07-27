@@ -132,8 +132,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2^(2/3) 7^(2/3) 3^(3/4)").toString(), "root(196, 3) root(27, 4)");
   EXPECT_EQ(Expression("2^(2/3) 1/7^(2/3) 3^(3/4)").toString(), "root(4/49, 3) root(27, 4)");
 
-  EXPECT_EQ(Expression("Deg").toString(), "Pi/180");
-  EXPECT_EQ(Expression("60Deg").toString(), "Pi/3");
   EXPECT_EQ(Expression("E").toString(), "E");
   EXPECT_EQ(Expression("Pi").toString(), "Pi");
   EXPECT_EQ(Expression("E^101-E^101").toString(), "0");
@@ -206,6 +204,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("frac(x,y)").toString(), "x/y");
   EXPECT_EQ(Expression("pow(2,4)").toString(), "16");
   EXPECT_EQ(Expression("pow(x,y)").toString(), "x^y");
+  EXPECT_EQ(Expression("1deg").toString(), "Pi/180");
+  EXPECT_EQ(Expression("60deg").toString(), "Pi/3");
+  EXPECT_EQ(Expression("adeg").toString(), "(Pi a)/180");
 
   EXPECT_EQ(Expression("a*0").toString(), "0");
   EXPECT_EQ(Expression("0*a").toString(), "0");
@@ -458,7 +459,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E,5)>ln(5)").toString(), "False");
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").toString(), "True");
-  EXPECT_EQ(Expression("log(Deg, Deg^Deg) = Deg").toString(), "True");
+  EXPECT_EQ(Expression("log(1deg, 1deg^1deg) = 1deg").toString(), "True");
   EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "-Pi^E + E^Pi > 0"); // TODO: True
   EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "Pi^E - E^Pi < 0");  // TODO: True
 
@@ -1058,7 +1059,7 @@ TEST(ExpressionTests, preciseTest) {
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
   EXPECT_EQ(Expression("1/(sin(5))").precise().toString(),
             "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
-  EXPECT_EQ(Expression("sin(60Deg)").precise().toString(),
+  EXPECT_EQ(Expression("sin(60deg)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
   EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").precise().toString(),
             "(0.125 x^3)/y + (-0.25 x^2 z)/y + (0.125 x z^2)/y");

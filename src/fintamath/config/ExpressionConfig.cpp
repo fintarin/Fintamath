@@ -51,6 +51,7 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/other/Deg.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
@@ -372,6 +373,11 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Acoth>([](const ArgumentsPtrVector &args) {
       return std::make_unique<HyperbolicExpression>(Acoth(), args.front());
+    });
+
+    Expression::registerFunctionExpressionMaker<Deg>([](const ArgumentsPtrVector &args) {
+      static const ArgumentPtr deg1 = Deg()(Integer(1));
+      return makeExpr(Mul(), args.front(), deg1);
     });
   }
 };
