@@ -2,7 +2,7 @@
 #include "fintamath/numbers/INumber.hpp"
 
 #include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -23,7 +23,7 @@ std::unique_ptr<IMathObject> Div::call(const ArgumentsRefVector &argsVect) const
   const auto &rhs = cast<IArithmetic>(argsVect.back().get());
 
   if (lhs == Integer(0) && rhs == Integer(0)) {
-    return Indeterminate().clone();
+    return Undefined().clone();
   }
 
   if (rhs == Integer(0)) {

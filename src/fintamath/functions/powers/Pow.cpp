@@ -2,7 +2,7 @@
 
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -34,7 +34,7 @@ std::unique_ptr<IMathObject> Pow::call(const ArgumentsRefVector &argsVect) const
   const auto &rhs = cast<INumber>(argsVect.back().get());
 
   if (lhs == Integer(0) && rhs == Integer(0)) {
-    return Indeterminate().clone();
+    return Undefined().clone();
   }
 
   if (rhs < Integer(0)) {

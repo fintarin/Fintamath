@@ -5,7 +5,7 @@
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Real.hpp"
 

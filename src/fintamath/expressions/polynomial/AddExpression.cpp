@@ -10,7 +10,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -105,7 +105,7 @@ ArgumentPtr AddExpression::simplifyConst(const IFunction & /*func*/, const Argum
   }
 
   if (is<NegInf>(lhsChild) && is<Inf>(rhsChild)) {
-    return Indeterminate().clone();
+    return Undefined().clone();
   }
 
   if (is<Inf>(lhsChild) || is<NegInf>(lhsChild)) {

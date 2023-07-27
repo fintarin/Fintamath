@@ -62,7 +62,7 @@
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
@@ -183,7 +183,7 @@ TEST(ParseTests, parseConstantTest) {
   EXPECT_TRUE(is<False>(IConstant::parse("False")));
   EXPECT_TRUE(is<Inf>(IConstant::parse("Inf")));
   EXPECT_TRUE(is<NegInf>(IConstant::parse("-Inf")));
-  EXPECT_TRUE(is<Indeterminate>(IConstant::parse("Indeterminate")));
+  EXPECT_TRUE(is<Undefined>(IConstant::parse("Undefined")));
 
   EXPECT_EQ(IConstant::parse("a"), nullptr);
   EXPECT_EQ(IConstant::parse("z"), nullptr);

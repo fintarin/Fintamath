@@ -4,14 +4,14 @@
 
 namespace fintamath {
 
-class Indeterminate : public IConstantCRTP<IMathObject, Indeterminate> {
+class Undefined : public IConstantCRTP<IMathObject, Undefined> {
 public:
   std::string toString() const override {
-    return "Indeterminate";
+    return "Undefined";
   }
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Indeterminate);
+    return MathObjectTypeId(MathObjectType::Undefined);
   }
 
 protected:

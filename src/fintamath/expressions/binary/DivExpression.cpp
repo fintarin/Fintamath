@@ -8,7 +8,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
@@ -56,7 +56,7 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
   if ((*lhs == Integer(0) || is<Inf>(lhs) || is<NegInf>(lhs)) &&
       (*rhs == Integer(0) || is<Inf>(rhs) || is<NegInf>(rhs))) {
 
-    return Indeterminate().clone();
+    return Undefined().clone();
   }
 
   if (*lhs == Integer(0)) {

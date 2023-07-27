@@ -1,7 +1,7 @@
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 
 namespace fintamath {
 
@@ -26,8 +26,8 @@ ArgumentPtr IBinaryExpression::preSimplify() const {
   preSimplifyChild(simpl->lhsChild);
   preSimplifyChild(simpl->rhsChild);
 
-  if (is<Indeterminate>(simpl->lhsChild) || is<Indeterminate>(simpl->rhsChild)) {
-    return Indeterminate().clone();
+  if (is<Undefined>(simpl->lhsChild) || is<Undefined>(simpl->rhsChild)) {
+    return Undefined().clone();
   }
 
   ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify());
@@ -45,8 +45,8 @@ ArgumentPtr IBinaryExpression::postSimplify() const {
   postSimplifyChild(simpl->lhsChild);
   postSimplifyChild(simpl->rhsChild);
 
-  if (is<Indeterminate>(simpl->lhsChild) || is<Indeterminate>(simpl->rhsChild)) {
-    return Indeterminate().clone();
+  if (is<Undefined>(simpl->lhsChild) || is<Undefined>(simpl->rhsChild)) {
+    return Undefined().clone();
   }
 
   if (ArgumentPtr res = callFunction(*simpl->func, {simpl->lhsChild, simpl->rhsChild})) {

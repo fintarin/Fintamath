@@ -66,7 +66,7 @@ enum class MathObjectType : MathObjectTypeId {
   False,
   Inf,
   NegInf,
-  Indeterminate,
+  Undefined,
 
   IFunction = 11000,
 

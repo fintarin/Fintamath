@@ -9,7 +9,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -228,7 +228,7 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
 
   if (is<Inf>(lhs)) {
     if (*rhs == Integer(0)) {
-      return Indeterminate().clone();
+      return Undefined().clone();
     }
 
     return lhs;
@@ -240,7 +240,7 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
 
   if (*lhs == Integer(1)) {
     if (is<Inf>(rhs)) {
-      return Indeterminate().clone();
+      return Undefined().clone();
     }
 
     return lhs;

@@ -10,7 +10,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -93,7 +93,7 @@ ArgumentPtr MulExpression::simplifyConst(const IFunction & /*func*/, const Argum
                                          const ArgumentPtr &rhsChild) {
 
   if (*lhsChild == Integer(0) && (is<Inf>(rhsChild) || is<NegInf>(rhsChild))) {
-    return Indeterminate().clone();
+    return Undefined().clone();
   }
 
   if (is<NegInf>(lhsChild) && is<Inf>(rhsChild)) {

@@ -2,7 +2,7 @@
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 
 namespace fintamath {
 
@@ -45,8 +45,8 @@ ArgumentPtr IUnaryExpression::preSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl->child);
 
-  if (is<Indeterminate>(simpl->child)) {
-    return Indeterminate().clone();
+  if (is<Undefined>(simpl->child)) {
+    return Undefined().clone();
   }
 
   ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify());
@@ -63,8 +63,8 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   postSimplifyChild(simpl->child);
 
-  if (is<Indeterminate>(simpl->child)) {
-    return Indeterminate().clone();
+  if (is<Undefined>(simpl->child)) {
+    return Undefined().clone();
   }
 
   if (ArgumentPtr res = callFunction(*simpl->func, {simpl->child})) {

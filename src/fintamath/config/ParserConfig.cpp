@@ -65,7 +65,7 @@
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/literals/constants/Indeterminate.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
@@ -170,7 +170,7 @@ struct ParserConfig {
     IConstant::registerType<False>();
     IConstant::registerType<Inf>();
     IConstant::registerType<NegInf>();
-    IConstant::registerType<Indeterminate>();
+    IConstant::registerType<Undefined>();
 
     IFunction::registerType<Abs>();
     IFunction::registerType<Log>();
