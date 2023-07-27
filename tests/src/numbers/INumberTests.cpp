@@ -61,7 +61,7 @@ TEST(INumberTests, divTest) {
   std::unique_ptr<INumber> m3 = std::make_unique<Rational>(2);
   std::unique_ptr<INumber> m4 = std::make_unique<Rational>(1, 2);
 
-  EXPECT_EQ((*m1 / *m2)->toString(), "1/5");
+  EXPECT_EQ((*m1 / *m2)->toString(), "0");
 
   EXPECT_EQ((*m1 / *m1)->toString(), "1");
   EXPECT_EQ((*m3 / *m3)->toString(), "1");

@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Integer;
+
 class Div : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
 public:
   Div() : IOperatorCRTP(IOperator::Priority::Multiplication, false) {
@@ -20,6 +22,9 @@ public:
 
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+
+private:
+  static std::unique_ptr<IMathObject> divSimpl(const Integer &lhs, const Integer &rhs);
 };
 
 }
