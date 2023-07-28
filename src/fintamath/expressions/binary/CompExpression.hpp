@@ -19,6 +19,8 @@ public:
 protected:
   ArgumentPtr preSimplify() const override;
 
+  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
   static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> &getOppositeFunctionsMap();
@@ -30,6 +32,8 @@ protected:
   static std::shared_ptr<IFunction> getLogicOppositeFunction(const IFunction &function);
 
 private:
+  static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
   static ArgumentPtr divSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);

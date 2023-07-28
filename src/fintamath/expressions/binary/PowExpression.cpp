@@ -2,6 +2,7 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -9,6 +10,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
@@ -226,7 +228,7 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
     return makeExpr(Mul(), mulLhs, mulRhs);
   }
 
-  if (is<Inf>(lhs)) {
+  if (is<Inf>(lhs) || is<ComplexInf>(lhs)) {
     if (*rhs == Integer(0)) {
       return Undefined().clone();
     }
@@ -238,11 +240,23 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
     return lhs;
   }
 
-  if (*lhs == Integer(1)) {
-    if (is<Inf>(rhs)) {
-      return Undefined().clone();
-    }
+  if (is<Inf>(rhs) || is<ComplexInf>(rhs)) {
+    if (const auto lhsNum = cast<INumber>(lhs)) {
+      auto lhsNumAbs = cast<INumber>(Abs()(*lhsNum));
 
+      if (*lhsNumAbs == Integer(1)) {
+        return Undefined().clone();
+      }
+
+      if (*lhsNumAbs > Integer(1)) {
+        return ComplexInf().clone();
+      }
+
+      return Integer(0).clone();
+    }
+  }
+
+  if (*lhs == Integer(1)) {
     return lhs;
   }
 

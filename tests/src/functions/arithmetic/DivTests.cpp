@@ -33,6 +33,7 @@ TEST(DivTests, callTest) {
 
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3/a");
 
+  EXPECT_EQ(f(Integer(1), Integer(0))->toString(), "ComplexInf");
   EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "Undefined");
 
   EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);

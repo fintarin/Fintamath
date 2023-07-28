@@ -9,6 +9,7 @@
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
@@ -104,12 +105,16 @@ ArgumentPtr AddExpression::simplifyConst(const IFunction & /*func*/, const Argum
     return lhsChild;
   }
 
-  if (is<NegInf>(lhsChild) && is<Inf>(rhsChild)) {
+  if ((is<NegInf>(lhsChild) || is<ComplexInf>(lhsChild)) && (is<Inf>(rhsChild) || is<ComplexInf>(rhsChild))) {
     return Undefined().clone();
   }
 
   if (is<Inf>(lhsChild) || is<NegInf>(lhsChild)) {
     return lhsChild;
+  }
+
+  if (is<Inf>(rhsChild) || is<NegInf>(rhsChild)) {
+    return rhsChild;
   }
 
   return {};
