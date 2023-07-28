@@ -109,11 +109,11 @@ ArgumentPtr AddExpression::simplifyConst(const IFunction & /*func*/, const Argum
     return Undefined().clone();
   }
 
-  if (is<Inf>(lhsChild) || is<NegInf>(lhsChild)) {
+  if (is<Inf>(lhsChild) || is<NegInf>(lhsChild) || is<ComplexInf>(lhsChild)) {
     return lhsChild;
   }
 
-  if (is<Inf>(rhsChild) || is<NegInf>(rhsChild)) {
+  if (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild)) {
     return rhsChild;
   }
 

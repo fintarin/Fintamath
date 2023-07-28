@@ -690,6 +690,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("-10 - Inf").toString(), "-Inf");
   EXPECT_EQ(Expression("a + Inf").toString(), "Inf");
   EXPECT_EQ(Expression("-a - Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("a + ComplexInf").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("a - ComplexInf").toString(), "ComplexInf");
   EXPECT_EQ(Expression("10 * Inf").toString(), "Inf");
   EXPECT_EQ(Expression("-10 * Inf").toString(), "-Inf");
   EXPECT_EQ(Expression("-2/3 * Inf").toString(), "-Inf");
@@ -729,6 +731,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ComplexInf + ComplexInf").toString(), "Undefined");
   EXPECT_EQ(Expression("ComplexInf + Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("ComplexInf - Inf").toString(), "Undefined");
+  EXPECT_EQ(Expression("Inf + ComplexInf").toString(), "Undefined");
+  EXPECT_EQ(Expression("-Inf + ComplexInf").toString(), "Undefined");
   EXPECT_EQ(Expression("0/0").toString(), "Undefined");
   EXPECT_EQ(Expression("Inf/Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("0/Inf").toString(), "Undefined");
