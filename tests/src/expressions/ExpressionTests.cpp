@@ -724,7 +724,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("Inf = Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("Inf - Inf = 0").toString(), "Undefined");
   EXPECT_EQ(Expression("Inf - Inf = 0 | a").toString(), "Undefined");
-  EXPECT_EQ(Expression("~Undefined").toString(), "Undefined");
 
   EXPECT_EQ(Expression("Undefined").toString(), "Undefined");
   EXPECT_EQ(Expression("-Undefined").toString(), "Undefined");
@@ -998,6 +997,8 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("x^x_1"), InvalidInputException);
   EXPECT_THROW(Expression("E&a"), InvalidInputException);
   EXPECT_THROW(Expression("~Inf"), InvalidInputException);
+  EXPECT_THROW(Expression("~Undefined"), InvalidInputException);
+  EXPECT_THROW(Expression("a | Undefined"), InvalidInputException);
 
   EXPECT_THROW(Expression("min()"), InvalidInputException);
   EXPECT_THROW(Expression("min(True, False)"), InvalidInputException);
