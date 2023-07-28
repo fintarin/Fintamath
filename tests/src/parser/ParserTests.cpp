@@ -59,6 +59,7 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -183,6 +184,7 @@ TEST(ParseTests, parseConstantTest) {
   EXPECT_TRUE(is<False>(IConstant::parse("False")));
   EXPECT_TRUE(is<Inf>(IConstant::parse("Inf")));
   EXPECT_TRUE(is<NegInf>(IConstant::parse("-Inf")));
+  EXPECT_TRUE(is<ComplexInf>(IConstant::parse("ComplexInf")));
   EXPECT_TRUE(is<Undefined>(IConstant::parse("Undefined")));
 
   EXPECT_EQ(IConstant::parse("a"), nullptr);

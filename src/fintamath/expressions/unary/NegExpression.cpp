@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 
@@ -90,6 +91,10 @@ ArgumentPtr NegExpression::simplifyConst(const IFunction & /*func*/, const Argum
 
   if (is<NegInf>(rhs)) {
     return Inf().clone();
+  }
+
+  if (is<ComplexInf>(rhs)) {
+    return rhs;
   }
 
   return {};

@@ -62,6 +62,7 @@
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -170,6 +171,7 @@ struct ParserConfig {
     IConstant::registerType<False>();
     IConstant::registerType<Inf>();
     IConstant::registerType<NegInf>();
+    IConstant::registerType<ComplexInf>();
     IConstant::registerType<Undefined>();
 
     IFunction::registerType<Abs>();

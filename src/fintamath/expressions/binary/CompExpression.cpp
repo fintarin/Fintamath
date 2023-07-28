@@ -13,6 +13,10 @@
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
@@ -58,8 +62,16 @@ ArgumentPtr CompExpression::preSimplify() const {
   return simpl;
 }
 
+CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPreSimplify() const {
+  static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &CompExpression::constSimplify, //
+  };
+  return simplifyFunctions;
+}
+
 CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPostSimplify() const {
   static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &CompExpression::constSimplify, //
       &CompExpression::divSimplify,   //
       &CompExpression::coeffSimplify, //
   };
@@ -80,6 +92,28 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
       {LessEqv().toString(), std::make_shared<MoreEqv>()}, //
   };
   return oppositeFunctions.at(function.toString());
+}
+
+ArgumentPtr CompExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (is<ComplexInf>(lhs) && (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
+    return Undefined().clone();
+  }
+
+  if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) && is<ComplexInf>(rhs)) {
+    return Undefined().clone();
+  }
+
+  if ((is<Inf>(lhs) && is<Inf>(rhs)) || (is<NegInf>(lhs) && is<NegInf>(rhs))) {
+    return Boolean(true).clone();
+  }
+
+  if (is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs) || //
+      is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
+
+    return Boolean(false).clone();
+  }
+
+  return {};
 }
 
 ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

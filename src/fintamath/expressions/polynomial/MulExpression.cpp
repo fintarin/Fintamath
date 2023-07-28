@@ -9,6 +9,7 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
@@ -92,15 +93,19 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
 ArgumentPtr MulExpression::simplifyConst(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
                                          const ArgumentPtr &rhsChild) {
 
-  if (*lhsChild == Integer(0) && (is<Inf>(rhsChild) || is<NegInf>(rhsChild))) {
+  if (*lhsChild == Integer(0) && (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild))) {
     return Undefined().clone();
+  }
+
+  if (is<ComplexInf>(lhsChild) || is<ComplexInf>(rhsChild)) {
+    return ComplexInf().clone();
   }
 
   if (is<NegInf>(lhsChild) && is<Inf>(rhsChild)) {
     return lhsChild;
   }
 
-  if (is<Inf>(rhsChild) || is<NegInf>(rhsChild)) {
+  if (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild)) {
     if (const auto lhsNum = cast<INumber>(lhsChild)) {
       return *lhsNum < Integer(0) ? makeExpr(Neg(), rhsChild) : rhsChild;
     }

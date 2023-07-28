@@ -8,6 +8,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
@@ -53,8 +54,8 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplif
 }
 
 ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if ((*lhs == Integer(0) || is<Inf>(lhs) || is<NegInf>(lhs)) &&
-      (*rhs == Integer(0) || is<Inf>(rhs) || is<NegInf>(rhs))) {
+  if ((*lhs == Integer(0) || is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
+      (*rhs == Integer(0) || is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
 
     return Undefined().clone();
   }
@@ -64,10 +65,10 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if (*rhs == Integer(0)) {
-    return Inf().clone();
+    return ComplexInf().clone();
   }
 
-  if (is<Inf>(rhs) || is<NegInf>(rhs)) {
+  if (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
     return Integer(0).clone();
   }
 

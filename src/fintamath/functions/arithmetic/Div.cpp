@@ -1,8 +1,8 @@
-#include "fintamath/literals/constants/Inf.hpp"
-#include "fintamath/numbers/INumber.hpp"
-
 #include "fintamath/functions/arithmetic/Div.hpp"
+
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -27,7 +27,7 @@ std::unique_ptr<IMathObject> Div::call(const ArgumentsRefVector &argsVect) const
   }
 
   if (rhs == Integer(0)) {
-    return Inf().clone();
+    return ComplexInf().clone();
   }
 
   if (auto res = multiPow(lhs, rhs)) {
