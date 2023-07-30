@@ -13,6 +13,30 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) const {
+  const auto &lhs = cast<INumber>(argsVect.front().get());
+  const auto &rhs = cast<INumber>(argsVect.back().get());
+
+  if (lhs == Integer(1)) {
+    return lhs.clone();
+  }
+
+  if (const auto *rhsIntPtr = cast<Integer>(&rhs)) {
+    const auto &rhsInt = *rhsIntPtr;
+
+    if (rhsInt > Integer(1)) {
+      // TODO: cast to Complex, when it is implemented
+      if (lhs < Integer(0)) {
+        throw UndefinedFunctionException(toString(), {lhs.toString(), rhs.toString()});
+      }
+
+      return multiRootSimpl(lhs, rhsInt);
+    }
+  }
+
+  return Pow()(lhs, *(Rational(1) / rhs));
+}
+
+std::unique_ptr<IMathObject> Root::multiRootSimpl(const INumber &lhs, const INumber &rhs) {
   static const auto multiRoot = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const INumber &)> outMultiRoot;
 
@@ -31,27 +55,7 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) cons
     return outMultiRoot;
   }();
 
-  const auto &lhs = cast<INumber>(argsVect.front().get());
-  const auto &rhs = cast<INumber>(argsVect.back().get());
-
-  if (lhs == Integer(1)) {
-    return lhs.clone();
-  }
-
-  if (const auto *rhsIntPtr = cast<Integer>(&rhs)) {
-    const auto &rhsInt = *rhsIntPtr;
-
-    if (rhsInt > Integer(1)) {
-      // TODO: cast to Complex, when it is implemented
-      if (lhs < Integer(0)) {
-        throw UndefinedFunctionException(toString(), {lhs.toString(), rhs.toString()});
-      }
-
-      return multiRoot(lhs, rhsInt);
-    }
-  }
-
-  return Pow()(lhs, *(Rational(1) / rhs));
+  return multiRoot(lhs, rhs);
 }
 
 std::unique_ptr<IMathObject> Root::rootSimpl(const Integer &lhs, const Integer &rhs) {

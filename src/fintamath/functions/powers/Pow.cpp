@@ -12,6 +12,21 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Pow::call(const ArgumentsRefVector &argsVect) const {
+  const auto &lhs = cast<INumber>(argsVect.front().get());
+  const auto &rhs = cast<INumber>(argsVect.back().get());
+
+  if (lhs == Integer(0) && rhs == Integer(0)) {
+    return Undefined().clone();
+  }
+
+  if (rhs < Integer(0)) {
+    return multiPowSimpl(*(Rational(1) / lhs), *(-rhs));
+  }
+
+  return multiPowSimpl(lhs, rhs);
+}
+
+std::unique_ptr<IMathObject> Pow::multiPowSimpl(const INumber &lhs, const INumber &rhs) {
   static const auto multiPow = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const INumber &)> outMultiPow;
 
@@ -29,17 +44,6 @@ std::unique_ptr<IMathObject> Pow::call(const ArgumentsRefVector &argsVect) const
 
     return outMultiPow;
   }();
-
-  const auto &lhs = cast<INumber>(argsVect.front().get());
-  const auto &rhs = cast<INumber>(argsVect.back().get());
-
-  if (lhs == Integer(0) && rhs == Integer(0)) {
-    return Undefined().clone();
-  }
-
-  if (rhs < Integer(0)) {
-    return Pow()(*(Rational(1) / lhs), *(-rhs));
-  }
 
   if (auto rhsConv = cast<INumber>(convert(lhs, rhs))) {
     return multiPow(lhs, *rhsConv);
@@ -73,10 +77,10 @@ std::unique_ptr<IMathObject> Pow::powSimpl(const Rational &lhs, const Rational &
   }
 
   if (lhsDenominator == 1) {
-    return Root()(*Pow()(lhsNumerator, rhsNumerator), rhsDenominator);
+    return Root()(*multiPowSimpl(lhsNumerator, rhsNumerator), rhsDenominator);
   }
 
-  return Root()(*Pow()(lhs, rhsNumerator), rhsDenominator);
+  return Root()(*multiPowSimpl(lhs, rhsNumerator), rhsDenominator);
 }
 
 std::unique_ptr<IMathObject> Pow::powSimpl(const Real &lhs, const Real &rhs) {

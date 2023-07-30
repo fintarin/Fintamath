@@ -25,6 +25,8 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
+  static std::unique_ptr<IMathObject> multiRootSimpl(const INumber &lhs, const INumber &rhs);
+
   static std::unique_ptr<IMathObject> rootSimpl(const Integer &lhs, const Integer &rhs);
 
   static std::unique_ptr<IMathObject> rootSimpl(const Rational &lhs, const Integer &rhs);

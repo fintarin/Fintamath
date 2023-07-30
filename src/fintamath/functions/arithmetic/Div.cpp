@@ -9,16 +9,6 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Div::call(const ArgumentsRefVector &argsVect) const {
-  static const auto multiPow = [] {
-    static MultiMethod<std::unique_ptr<IMathObject>(const IArithmetic &, const IArithmetic &)> outMultiPow;
-
-    outMultiPow.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
-      return divSimpl(lhs, rhs);
-    });
-
-    return outMultiPow;
-  }();
-
   const auto &lhs = cast<IArithmetic>(argsVect.front().get());
   const auto &rhs = cast<IArithmetic>(argsVect.back().get());
 
@@ -30,7 +20,21 @@ std::unique_ptr<IMathObject> Div::call(const ArgumentsRefVector &argsVect) const
     return ComplexInf().clone();
   }
 
-  if (auto res = multiPow(lhs, rhs)) {
+  return multiDivSimpl(lhs, rhs);
+}
+
+std::unique_ptr<IMathObject> Div::multiDivSimpl(const IArithmetic &lhs, const IArithmetic &rhs) {
+  static const auto multiDiv = [] {
+    static MultiMethod<std::unique_ptr<IMathObject>(const IArithmetic &, const IArithmetic &)> outMultiPow;
+
+    outMultiPow.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
+      return divSimpl(lhs, rhs);
+    });
+
+    return outMultiPow;
+  }();
+
+  if (auto res = multiDiv(lhs, rhs)) {
     return res;
   }
 

@@ -6,6 +6,7 @@
 namespace fintamath {
 
 class Integer;
+class INumber;
 
 class Div : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
 public:
@@ -24,6 +25,8 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
+  static std::unique_ptr<IMathObject> multiDivSimpl(const IArithmetic &lhs, const IArithmetic &rhs);
+
   static std::unique_ptr<IMathObject> divSimpl(const Integer &lhs, const Integer &rhs);
 };
 
