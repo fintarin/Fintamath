@@ -11,7 +11,9 @@ add_library(boost_math INTERFACE)
 
 add_library(Boost::math ALIAS boost_math)
 
-target_include_directories(boost_math INTERFACE include)
+# --- FINTAMATH CHANGE START ---
+target_include_directories(boost_math SYSTEM INTERFACE include)
+# --- FINTAMATH CHANGE END ---
 
 include(CMakeDependentOption)
 
