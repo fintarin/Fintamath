@@ -40,16 +40,16 @@ std::unique_ptr<IMathObject> Root::multiRootSimpl(const INumber &lhs, const INum
   static const auto multiRoot = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const INumber &)> outMultiRoot;
 
-    outMultiRoot.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
-      return rootSimpl(lhs, rhs);
+    outMultiRoot.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
+      return rootSimpl(inLhs, inRhs);
     });
 
-    outMultiRoot.add<Rational, Integer>([](const Rational &lhs, const Integer &rhs) {
-      return rootSimpl(lhs, rhs);
+    outMultiRoot.add<Rational, Integer>([](const Rational &inLhs, const Integer &inRhs) {
+      return rootSimpl(inLhs, inRhs);
     });
 
-    outMultiRoot.add<Real, Integer>([](const Real &lhs, const Integer &rhs) {
-      return rootSimpl(lhs, rhs);
+    outMultiRoot.add<Real, Integer>([](const Real &inLhs, const Integer &inRhs) {
+      return rootSimpl(inLhs, inRhs);
     });
 
     return outMultiRoot;

@@ -27,8 +27,8 @@ std::unique_ptr<IMathObject> Div::multiDivSimpl(const IArithmetic &lhs, const IA
   static const auto multiDiv = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const IArithmetic &, const IArithmetic &)> outMultiPow;
 
-    outMultiPow.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
-      return divSimpl(lhs, rhs);
+    outMultiPow.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
+      return divSimpl(inLhs, inRhs);
     });
 
     return outMultiPow;

@@ -30,16 +30,16 @@ std::unique_ptr<IMathObject> Pow::multiPowSimpl(const INumber &lhs, const INumbe
   static const auto multiPow = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const INumber &)> outMultiPow;
 
-    outMultiPow.add<Integer, Integer>([](const Integer &lhs, const Integer &rhs) {
-      return powSimpl(lhs, rhs);
+    outMultiPow.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
+      return powSimpl(inLhs, inRhs);
     });
 
-    outMultiPow.add<Rational, Rational>([](const Rational &lhs, const Rational &rhs) {
-      return powSimpl(lhs, rhs);
+    outMultiPow.add<Rational, Rational>([](const Rational &inLhs, const Rational &inRhs) {
+      return powSimpl(inLhs, inRhs);
     });
 
-    outMultiPow.add<Real, Real>([](const Real &lhs, const Real &rhs) {
-      return powSimpl(lhs, rhs);
+    outMultiPow.add<Real, Real>([](const Real &inLhs, const Real &inRhs) {
+      return powSimpl(inLhs, inRhs);
     });
 
     return outMultiPow;
