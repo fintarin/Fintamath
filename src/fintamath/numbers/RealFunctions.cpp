@@ -135,13 +135,12 @@ Real atan(const Real &rhs) {
 }
 
 Real acot(const Real &rhs) {
-  Real res = getPi() / 2;
-
-  if (rhs < 0) {
-    res = -res;
+  try {
+    return atan(1 / rhs);
   }
-
-  return res - atan(rhs);
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("acot", {rhs.toString()});
+  }
 }
 
 Real sinh(const Real &rhs) {
@@ -166,30 +165,33 @@ Real coth(const Real &rhs) {
 }
 
 Real asinh(const Real &rhs) {
-  return ln(sqrt(rhs * rhs + 1) + rhs);
+  return boost::math::asinh(rhs.getBackend());
 }
 
 Real acosh(const Real &rhs) {
   try {
-    return ln(rhs + sqrt(rhs - 1) * sqrt(rhs + 1));
+    return boost::math::acosh(rhs.getBackend());
   }
-  catch (const UndefinedException &) {
+  catch (const std::domain_error &) {
     throw UndefinedFunctionException("acoth", {rhs.toString()});
   }
 }
 
 Real atanh(const Real &rhs) {
   try {
-    return (ln(1 + rhs) - ln(1 - rhs)) / 2;
+    return boost::math::atanh(rhs.getBackend());
   }
-  catch (const UndefinedException &) {
+  catch (const std::domain_error &) {
+    throw UndefinedFunctionException("acoth", {rhs.toString()});
+  }
+  catch (const std::overflow_error &) {
     throw UndefinedFunctionException("acoth", {rhs.toString()});
   }
 }
 
 Real acoth(const Real &rhs) {
   try {
-    return (ln(1 + 1 / rhs) - ln(1 - 1 / rhs)) / 2;
+    return atanh(1 / rhs);
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("acoth", {rhs.toString()});
