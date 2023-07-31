@@ -123,7 +123,7 @@ TEST(ExpressionFunctionsTests, expTest) {
 }
 
 TEST(ExpressionFunctionsTests, logTest) {
-  EXPECT_EQ(log(Expression("a+b"), Expression("1")).toString(), "log(a + b, 1)");
+  EXPECT_EQ(log(Expression("a+b"), Expression("1")).toString(), "0");
   EXPECT_EQ(log(Expression("2*a"), Expression("a+b")).toString(), "log(2 a, a + b)");
   EXPECT_EQ(log(Expression("a"), Expression("a^5")).toString(), "5");
 }
@@ -134,8 +134,8 @@ TEST(ExpressionFunctionsTests, lnTest) {
 }
 
 TEST(ExpressionFunctionsTests, lbTest) {
-  EXPECT_EQ(lb(Expression("1024*a")).toString(), "log(2, 1024 a)"); // TODO logarithms
-  EXPECT_EQ(lb(Expression("2+a")).toString(), "log(2, a + 2)");     // TODO logarithms
+  EXPECT_EQ(lb(Expression("1024*a")).toString(), "log(2, 1024 a)");
+  EXPECT_EQ(lb(Expression("2+a")).toString(), "log(2, a + 2)");
 }
 
 TEST(ExpressionFunctionsTests, lgTest) {
