@@ -50,41 +50,33 @@ ArgumentPtr LogExpression::preciseSimplify() const {
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPreSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &LogExpression::numSimplify,   //
-      &LogExpression::equalSimplify, //
-      &LogExpression::powSimplify,   //
+      &LogExpression::callFuncSimplify, //
+      &LogExpression::equalSimplify,    //
+      &LogExpression::powSimplify,      //
   };
   return simplifyFunctions;
 }
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPostSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &LogExpression::constSimplify, //
       &LogExpression::powSimplify,   //
-      &LogExpression::numSimplify,   //
       &LogExpression::equalSimplify, //
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr LogExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*lhs == Integer(1)) {
-    throw UndefinedFunctionException(Log().toString(), {lhs->toString(), rhs->toString()});
+ArgumentPtr LogExpression::callFuncSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  return callFunction(func, {lhs, rhs});
+}
+
+ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*rhs == Integer(1)) {
+    return Integer(0).clone();
   }
 
   if (*lhs == E()) {
     return callFunction(Ln(), {rhs});
-  }
-
-  if (Log().doArgsMatch({*lhs, *rhs})) {
-    if (*lhs == Integer(2)) {
-      return callFunction(Lb(), {rhs});
-    }
-
-    if (*lhs == Integer(10)) {
-      return callFunction(Lg(), {rhs});
-    }
-
-    return callFunction(Log(), {lhs, rhs});
   }
 
   return {};

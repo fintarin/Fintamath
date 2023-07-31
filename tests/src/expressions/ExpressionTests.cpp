@@ -30,6 +30,8 @@ TEST(ExpressionTests, copyTest) {
 }
 
 TEST(ExpressionTests, stringConstructorTest) {
+  // TODO! split these tests
+
   EXPECT_EQ(Expression("2").toString(), "2");
   EXPECT_EQ(Expression("2 + 2").toString(), "4");
   EXPECT_EQ(Expression(" 2 + 2 ").toString(), "4");
@@ -142,22 +144,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("exp100").toString(), "E^100");
   EXPECT_EQ(Expression("E^101").toString(), "E^101");
   EXPECT_EQ(Expression("E^(-101)").toString(), "1/(E^101)");
-  EXPECT_EQ(Expression("log(E,E)").toString(), "1");
-  EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "10");
-  EXPECT_EQ(Expression("log(E,E^3)").toString(), "3");
-  EXPECT_EQ(Expression("log((Pi),(E)^((Pi)))").toString(), "Pi log(Pi, E)");
-  EXPECT_EQ(Expression("log(E^3, E)").toString(), "1/3");
-  EXPECT_EQ(Expression("log(E^Pi, E)").toString(), "1/Pi");
-  EXPECT_EQ(Expression("ln3").toString(), "ln(3)");
-  EXPECT_EQ(Expression("ln2").toString(), "ln(2)");
-  EXPECT_EQ(Expression("ln100").toString(), "ln(100)");
-  EXPECT_EQ(Expression("ln(E)").toString(), "1");
-  EXPECT_EQ(Expression("lg99").toString(), "log(10, 99)");
-  EXPECT_EQ(Expression("lg100").toString(), "2");
-  EXPECT_EQ(Expression("lb100").toString(), "log(2, 100)");
-  EXPECT_EQ(Expression("lb4").toString(), "2");
-  EXPECT_EQ(Expression("ln(ln(E))").toString(), "0");
-  EXPECT_EQ(Expression("ln(E)!").toString(), "1");
   EXPECT_EQ(Expression("sin10").toString(), "sin(10)");
   EXPECT_EQ(Expression("cos10").toString(), "cos(10)");
   EXPECT_EQ(Expression("tan10").toString(), "tan(10)");
@@ -188,7 +174,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-cos((2 Pi)/3)/2 + 1/2)");
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(), "2 sqrt(-cos((2 Pi)/3)/2 + 1/2) cos(Pi/3)");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
-  EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
   EXPECT_EQ(Expression("2^(3/2)").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sqrt(sqrt5)").toString(), "root(5, 4)");
   EXPECT_EQ(Expression("sqrt4!").toString(), "2");
@@ -376,6 +361,33 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x-1)/(root(x, 3)/2 - x)").toString(), "-1 + (root(x, 3) - 2)/(-2 x + root(x, 3))");
   EXPECT_EQ(Expression("(x-1)/(x^(4/3) - x)").toString(), "(x - 1)/(x^(4/3) - x)");
   EXPECT_EQ(Expression("(x-1)/(2 x^(4/3) - x)").toString(), "(x - 1)/(2 x^(4/3) - x)");
+
+  EXPECT_EQ(Expression("log(2, 2)").toString(), "1");
+  EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
+  EXPECT_EQ(Expression("log(3, 515377520732011331036461129765621272702107522001)").toString(), "100");
+  EXPECT_EQ(Expression("log(515377520732011331036461129765621272702107522001, 3)").toString(), "1/100");
+  EXPECT_EQ(Expression("log(2/3, 4/9)").toString(), "2");
+  EXPECT_EQ(Expression("log(9/4, 3/2)").toString(), "1/2");
+  EXPECT_EQ(Expression("log(4/9, 2/3)").toString(), "1/2");
+  EXPECT_EQ(Expression("log(4/11, 2/3)").toString(), "log(4/11, 2/3)");
+  EXPECT_EQ(Expression("ln1").toString(), "0");
+  EXPECT_EQ(Expression("ln3").toString(), "ln(3)");
+  EXPECT_EQ(Expression("ln2").toString(), "ln(2)");
+  EXPECT_EQ(Expression("ln100").toString(), "ln(100)");
+  EXPECT_EQ(Expression("ln(E)").toString(), "1");
+  EXPECT_EQ(Expression("lg99").toString(), "log(10, 99)");
+  EXPECT_EQ(Expression("lg100").toString(), "2");
+  EXPECT_EQ(Expression("lb100").toString(), "log(2, 100)");
+  EXPECT_EQ(Expression("lb4").toString(), "2");
+  EXPECT_EQ(Expression("ln(ln(E))").toString(), "0");
+  EXPECT_EQ(Expression("ln(E)!").toString(), "1");
+  EXPECT_EQ(Expression("log(0, 1)").toString(), "0");
+  EXPECT_EQ(Expression("log(E,E)").toString(), "1");
+  EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "10");
+  EXPECT_EQ(Expression("log(E,E^3)").toString(), "3");
+  EXPECT_EQ(Expression("log((Pi),(E)^((Pi)))").toString(), "Pi log(Pi, E)");
+  EXPECT_EQ(Expression("log(E^3, E)").toString(), "1/3");
+  EXPECT_EQ(Expression("log(E^Pi, E)").toString(), "1/Pi");
 
   // TODO! implement this
   // EXPECT_EQ(Expression("sqrt(x^2)").toString(), "abs(x)");
@@ -722,6 +734,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("x = -Inf").toString(), "False");
   EXPECT_EQ(Expression("Inf = Inf").toString(), "True");
   EXPECT_EQ(Expression("Inf = -Inf").toString(), "False");
+  EXPECT_EQ(Expression("log(1, 0)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("log(1, 10)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("log(10, 0)").toString(), "-Inf");
+  EXPECT_EQ(Expression("log(1/10, 0)").toString(), "Inf");
 
   EXPECT_EQ(Expression("0*Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("0*-Inf").toString(), "Undefined");
@@ -770,6 +786,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ComplexInf = -Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("Inf = ComplexInf").toString(), "Undefined");
   EXPECT_EQ(Expression("-Inf = ComplexInf").toString(), "Undefined");
+  EXPECT_EQ(Expression("log(1, 1)").toString(), "Undefined");
+  EXPECT_EQ(Expression("log(0, 0)").toString(), "Undefined");
 
   EXPECT_EQ(Expression("Undefined").toString(), "Undefined");
   EXPECT_EQ(Expression("-Undefined").toString(), "Undefined");
@@ -1051,21 +1069,14 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(-1)!!"), UndefinedException);
   EXPECT_THROW(Expression("(2/3)!!"), UndefinedException);
   EXPECT_THROW(Expression("sqrt(-1)"), UndefinedException);
-  EXPECT_THROW(Expression("ln(0)"), UndefinedException);
-  EXPECT_THROW(Expression("ln(-1)"), UndefinedException);
-  EXPECT_THROW(Expression("log(-1, 1)"), UndefinedException);
-  EXPECT_THROW(Expression("log(0, 1)"), UndefinedException);
-  EXPECT_THROW(Expression("log(1, 0)"), UndefinedException);
-  EXPECT_THROW(Expression("lb(-1)"), UndefinedException);
-  EXPECT_THROW(Expression("lg(-1)"), UndefinedException);
   EXPECT_THROW(Expression("sqrt(-1)"), UndefinedException);
   EXPECT_THROW(Expression("(-1)^(2/3)"), UndefinedException);
   EXPECT_THROW(Expression("ln(0)"), UndefinedException);
   EXPECT_THROW(Expression("ln(-1)"), UndefinedException);
   EXPECT_THROW(Expression("log(-1, 1)"), UndefinedException);
-  EXPECT_THROW(Expression("log(0, 1)"), UndefinedException);
-  EXPECT_THROW(Expression("log(1, 0)"), UndefinedException);
   EXPECT_THROW(Expression("lb(-1)"), UndefinedException);
+  EXPECT_THROW(Expression("lg(-1)"), UndefinedException);
+  EXPECT_THROW(Expression("log(-1, 1)"), UndefinedException);
   // TODO constants
   // EXPECT_THROW(Expression("E!"), UndefinedException);
   // EXPECT_THROW(Expression("tan(Pi/2)"), UndefinedException);

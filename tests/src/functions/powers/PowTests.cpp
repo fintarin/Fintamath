@@ -75,11 +75,11 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Real("2.2"), Real("0.5"))->toString(),
             "1.48323969741913258974227948816014261219598086381950031974652465286876603686277");
 
+  EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "Undefined");
+
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3^a");
   EXPECT_EQ(f(Variable("a"), Rational(1, 2))->toString(), "sqrt(a)");
   EXPECT_EQ(f(Variable("a"), Rational(3, 2))->toString(), "a^(3/2)");
-
-  EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "Undefined");
 
   EXPECT_THROW(f(Rational("0"), Rational("-10")), UndefinedException);
   EXPECT_THROW(f(Rational("-10"), Rational("-1.5")), UndefinedException);
