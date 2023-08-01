@@ -35,13 +35,15 @@ std::string functionToString(const IFunction &func, const ArgumentsPtrVector &ar
 }
 
 std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &child) {
+  IOperator::Priority operPriority = oper.getOperatorPriority();
+
   std::string childStr = child->toString();
   std::shared_ptr<IOperator> childOper;
 
   if (const auto childExpr = cast<IExpression>(child)) {
     childOper = cast<IOperator>(childExpr->getOutputFunction());
   }
-  else if (oper.getFunctionType() == IFunction::Type::Unary && childStr.front() == Neg().toString().front()) {
+  else if (operPriority <= IOperator::Priority::PrefixUnary && childStr.front() == Neg().toString().front()) {
     childOper = std::make_shared<Neg>();
   }
   else if (is<Rational>(child)) {
@@ -54,7 +56,6 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
   }
 
   if (childOper) {
-    IOperator::Priority operPriority = oper.getOperatorPriority();
     IOperator::Priority lhsOperPriority = childOper->getOperatorPriority();
 
     if (operPriority == IOperator::Priority::Multiplication) {

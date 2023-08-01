@@ -387,6 +387,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln(ln(E))").toString(), "0");
   EXPECT_EQ(Expression("ln(E)!").toString(), "1");
   EXPECT_EQ(Expression("log(0, 1)").toString(), "0");
+  EXPECT_EQ(Expression("log(-1, 1)").toString(), "0");
   EXPECT_EQ(Expression("log(E,E)").toString(), "1");
   EXPECT_EQ(Expression("log(Pi, Pi^10)").toString(), "10");
   EXPECT_EQ(Expression("log(E,E^3)").toString(), "3");
@@ -687,6 +688,17 @@ TEST(ExpressionTests, stringConstructorTest) {
   // EXPECT_EQ(Expression("tan(x)*cot(x)").toString(), "1"); // TODO: implement
   // EXPECT_EQ(Expression("tanh(x)*coth(x)").toString(), "1"); // TODO: implement
 
+  EXPECT_EQ(Expression("sqrt(-1)").toString(), "sqrt(-1)");
+  EXPECT_EQ(Expression("sqrt(-1)").toString(), "sqrt(-1)");
+  EXPECT_EQ(Expression("(-1)^(2/3)").toString(), "(-1)^(2/3)");
+
+  EXPECT_EQ(Expression("ln(-1)").toString(), "ln(-1)");
+  EXPECT_EQ(Expression("lb(-1)").toString(), "log(2, -1)");
+  EXPECT_EQ(Expression("lg(-1)").toString(), "log(10, -1)");
+
+  EXPECT_EQ(Expression("asin(2)").toString(), "asin(2)");
+  EXPECT_EQ(Expression("acos(2)").toString(), "acos(2)");
+
   EXPECT_EQ(Expression("Inf").toString(), "Inf");
   EXPECT_EQ(Expression("-Inf").toString(), "-Inf");
   EXPECT_EQ(Expression("ComplexInf").toString(), "ComplexInf");
@@ -723,9 +735,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("Inf^(2/3)").toString(), "Inf");
   EXPECT_EQ(Expression("(-Inf)^2").toString(), "Inf");
   EXPECT_EQ(Expression("(-Inf)^3").toString(), "-Inf");
-  // EXPECT_EQ(Expression("(-Inf)^(2/3)").toString(), "-Inf"); // TODO! complex numbers
+  EXPECT_EQ(Expression("(-Inf)^(2/3)").toString(), "Inf (-1)^(2/3)");
   EXPECT_EQ(Expression("0^Inf").toString(), "0");
   EXPECT_EQ(Expression("0^-Inf").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("0^-1").toString(), "ComplexInf");
   EXPECT_EQ(Expression("2^Inf").toString(), "ComplexInf");
   EXPECT_EQ(Expression("2^-Inf").toString(), "0");
   EXPECT_EQ(Expression("2^ComplexInf").toString(), "ComplexInf");
@@ -743,7 +756,12 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(1, 10)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(10, 0)").toString(), "-Inf");
   EXPECT_EQ(Expression("log(1/10, 0)").toString(), "Inf");
+  EXPECT_EQ(Expression("ln(0)").toString(), "-Inf");
   EXPECT_EQ(Expression("(-1)!").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("tan(Pi/2)").toString(), "tan(Pi/2)");       // TODO! ComplexInf
+  EXPECT_EQ(Expression("tan(3/2*Pi)").toString(), "tan((3 Pi)/2)"); // TODO! ComplexInf
+  EXPECT_EQ(Expression("cot(0)").toString(), "cot(0)");             // TODO! ComplexInf
+  EXPECT_EQ(Expression("cot(2*Pi)").toString(), "cot(2 Pi)");       // TODO! ComplexInf
 
   EXPECT_EQ(Expression("0*Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("0*-Inf").toString(), "Undefined");
@@ -1069,37 +1087,9 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("min(True, False)"), InvalidInputException);
   EXPECT_THROW(Expression("max()"), InvalidInputException);
   EXPECT_THROW(Expression("max(True, False)"), InvalidInputException);
-
-  EXPECT_THROW(Expression("sqrt(-1)"), UndefinedException);
-  EXPECT_THROW(Expression("sqrt(-1)"), UndefinedException);
-  EXPECT_THROW(Expression("(-1)^(2/3)"), UndefinedException);
-  EXPECT_THROW(Expression("ln(0)"), UndefinedException);
-  EXPECT_THROW(Expression("ln(-1)"), UndefinedException);
-  EXPECT_THROW(Expression("log(-1, 1)"), UndefinedException);
-  EXPECT_THROW(Expression("lb(-1)"), UndefinedException);
-  EXPECT_THROW(Expression("lg(-1)"), UndefinedException);
-  EXPECT_THROW(Expression("log(-1, 1)"), UndefinedException);
-  // TODO constants
-  // EXPECT_THROW(Expression("tan(Pi/2)"), UndefinedException);
-  // EXPECT_THROW(Expression("cot(0)"), UndefinedException);
-  // EXPECT_THROW(Expression("asin(2)"), UndefinedException);
-  // EXPECT_THROW(Expression("acos(2)"), UndefinedException);
-  // EXPECT_THROW(Expression("tan(3/2*Pi)"), UndefinedException);
-  // EXPECT_THROW(Expression("cot(2*Pi)"), UndefinedException);
 }
 
 TEST(ExpressionTests, preciseTest) {
-  EXPECT_EQ(Expression("10^10000").precise(8).toString(), "1*10^10000");
-  EXPECT_EQ(Expression("x+E").precise(8).toString(), "x + 2.7182818");
-  EXPECT_EQ(Expression("x^(100!)").precise(8).toString(), "x^(9.3326215*10^157)");
-  EXPECT_EQ(Expression("9^10000").precise(8).toString(), "2.6613034*10^9542");
-  EXPECT_EQ(Expression("sin(E)").precise(16).toString(), "0.4107812905029087");
-  EXPECT_EQ(Expression("sin(sin(E))").precise(30).toString(), "0.39932574404189139297067052142");
-  EXPECT_EQ(Expression("(sqrt(2) + 1)^2").precise(5).toString(), "5.8284");
-  EXPECT_EQ(Expression("(sqrt(2) - a - 1)^2").precise(5).toString(), "a^2 - 0.82843 a + 0.17157");
-  EXPECT_EQ(Expression("2^200/x").precise(10).toString(), "(1.606938044*10^60)/x");
-  EXPECT_EQ(Expression("x/2^200").precise(10).toString(), "6.223015278*10^-61 x");
-
   EXPECT_EQ(Expression("150!").precise().toString(),
             "5.7133839564458545904789328652610540031895535786011264182548375833179829124845398*10^262");
   EXPECT_EQ(Expression("E").precise().toString(),
@@ -1168,10 +1158,10 @@ TEST(ExpressionTests, preciseTest) {
             "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
   EXPECT_EQ(Expression("sin(10^30)").precise().toString(),
             "-0.090116901912138058030386428952987330274396332993043449885460666579773983476795775");
-  EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").precise().toString(), "1"); // TODO: move to str constructor tests
+  EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").precise().toString(), "1");
   EXPECT_EQ(Expression("sin(Pi/3)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("cos(Pi/3)").precise().toString(), "0.5"); // TODO: move to str constructor tests
+  EXPECT_EQ(Expression("cos(Pi/3)").precise().toString(), "0.5");
   EXPECT_EQ(Expression("2!*E").precise().toString(),
             "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
   EXPECT_EQ(Expression("E*2!").precise().toString(),
@@ -1184,8 +1174,21 @@ TEST(ExpressionTests, preciseTest) {
             "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
   EXPECT_EQ(Expression("sin(60deg)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").precise().toString(),
-            "(0.125 x^3)/y + (-0.25 x^2 z)/y + (0.125 x z^2)/y");
+
+  EXPECT_EQ(Expression("tan(Pi/2)").precise().toString(),
+            "tan(1.5707963267948966192313216916397514420985846996875529104874722961539082031431045)");
+  EXPECT_EQ(Expression("cot(0)").precise().toString(), "cot(0)");
+  EXPECT_EQ(Expression("asin(2)").precise().toString(), "asin(2)");
+  EXPECT_EQ(Expression("acos(2)").precise().toString(), "acos(2)");
+  EXPECT_EQ(Expression("tan(3/2*Pi)").precise().toString(),
+            "tan(4.7123889803846898576939650749192543262957540990626587314624168884617246094293135)");
+  EXPECT_EQ(Expression("cot(2*Pi)").precise().toString(),
+            "cot(6.283185307179586476925286766559005768394338798750211641949889184615632812572418)");
+
+  EXPECT_EQ(Expression("E^(E^(E^(E^(E^E))))").precise().toString(),
+            "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476^(2."
+            "7182818284590452353602874713526624977572470936999595749669676277240766303535476^(2."
+            "3315043990071954622896899110121376663320174289635168232800545468180794366424973*10^1656520))");
 
   EXPECT_EQ(Expression("(2/3)!").precise().toString(),
             "0.90274529295093361129685868543634252367955151070452913226268164530918864360116169");
@@ -1196,6 +1199,19 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("(1/1000000000000000000000000000000000000000)!!").precise().toString(), "(1*10^-39)!!");
   EXPECT_EQ(Expression("(-1)!!").precise().toString(), "(-1)!!");
 
+  EXPECT_EQ(Expression("10^10000").precise(8).toString(), "1*10^10000");
+  EXPECT_EQ(Expression("x+E").precise(8).toString(), "x + 2.7182818");
+  EXPECT_EQ(Expression("x^(100!)").precise(8).toString(), "x^(9.3326215*10^157)");
+  EXPECT_EQ(Expression("9^10000").precise(8).toString(), "2.6613034*10^9542");
+  EXPECT_EQ(Expression("sin(E)").precise(16).toString(), "0.4107812905029087");
+  EXPECT_EQ(Expression("sin(sin(E))").precise(30).toString(), "0.39932574404189139297067052142");
+  EXPECT_EQ(Expression("(sqrt(2) + 1)^2").precise(5).toString(), "5.8284");
+  EXPECT_EQ(Expression("(sqrt(2) - a - 1)^2").precise(5).toString(), "a^2 - 0.82843 a + 0.17157");
+  EXPECT_EQ(Expression("2^200/x").precise(10).toString(), "(1.606938044*10^60)/x");
+  EXPECT_EQ(Expression("x/2^200").precise(10).toString(), "6.223015278*10^-61 x");
+  EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").precise().toString(),
+            "(0.125 x^3)/y + (-0.25 x^2 z)/y + (0.125 x z^2)/y");
+
   EXPECT_EQ(Expression("ln(x)").precise().toString(), "ln(x)");
   EXPECT_EQ(Expression("sqrt(x)").precise().toString(), "sqrt(x)");
   EXPECT_EQ(Expression("root(x, 3)").precise().toString(), "root(x, 3)");
@@ -1205,19 +1221,6 @@ TEST(ExpressionTests, preciseTest) {
 
   // TODO: move to str constructor tests
   EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
-}
-
-TEST(ExpressionTests, preciseNegativeTest) {
-  // TODO: move to str constructor negative tests
-  EXPECT_THROW(Expression("tan(Pi/2)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("cot(0)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("asin(2)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("acos(2)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("tan(3/2*Pi)").precise(), UndefinedException);
-  EXPECT_THROW(Expression("cot(2*Pi)").precise(), UndefinedException);
-
-  // TODO: do no perform operation, when the result is too big
-  // EXPECT_THROW(Expression("ln(ln(ln(ln(ln(E^(E^(E^(E^E))))))))").precise(), UndefinedException);
 }
 
 TEST(ExpressionTests, toMinimalObjectTest) {

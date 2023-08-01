@@ -1,4 +1,3 @@
-#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
@@ -189,28 +188,21 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
   static const Expression firstRoot = div(add(neg(b), sqrt(discriminant)), mul(2, a));
   static const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));
 
-  // TODO: remove this try/catch when complex numbers will be implemented
-  try {
-    Expression firstRootValue = firstRoot;
-    firstRootValue.setVariables({
-        {c, coeffAtPow[0]}, //
-        {b, coeffAtPow[1]}, //
-        {a, coeffAtPow[2]}, //
-    });
+  Expression firstRootValue = firstRoot;
+  firstRootValue.setVariables({
+      {c, coeffAtPow[0]}, //
+      {b, coeffAtPow[1]}, //
+      {a, coeffAtPow[2]}, //
+  });
 
-    Expression secondRootValue = secondRoot;
-    secondRootValue.setVariables({
-        {c, coeffAtPow[0]}, //
-        {b, coeffAtPow[1]}, //
-        {a, coeffAtPow[2]}, //
-    });
+  Expression secondRootValue = secondRoot;
+  secondRootValue.setVariables({
+      {c, coeffAtPow[0]}, //
+      {b, coeffAtPow[1]}, //
+      {a, coeffAtPow[2]}, //
+  });
 
-    return {firstRootValue.getChildren().front(), secondRootValue.getChildren().front()};
-  }
-
-  catch (const UndefinedException &) {
-    return {};
-  }
+  return {firstRootValue.getChildren().front(), secondRootValue.getChildren().front()};
 }
 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {

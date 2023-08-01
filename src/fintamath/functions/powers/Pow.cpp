@@ -2,6 +2,7 @@
 
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
@@ -20,6 +21,10 @@ std::unique_ptr<IMathObject> Pow::call(const ArgumentsRefVector &argsVect) const
   }
 
   if (rhs < Integer(0)) {
+    if (lhs == Integer(0)) {
+      return ComplexInf().clone();
+    }
+
     return multiPowSimpl(*(Rational(1) / lhs), *(-rhs));
   }
 
@@ -73,7 +78,8 @@ std::unique_ptr<IMathObject> Pow::powSimpl(const Rational &lhs, const Rational &
   }
 
   if (lhs < Integer(0)) {
-    throw UndefinedBinaryOperatorException(Pow().toString(), lhs.toString(), rhs.toString());
+    // TODO: complex numbers
+    return makeExpr(Pow(), lhs, rhs);
   }
 
   if (lhsDenominator == 1) {
@@ -84,7 +90,12 @@ std::unique_ptr<IMathObject> Pow::powSimpl(const Rational &lhs, const Rational &
 }
 
 std::unique_ptr<IMathObject> Pow::powSimpl(const Real &lhs, const Real &rhs) {
-  return pow(lhs, rhs).toMinimalObject();
+  try {
+    return pow(lhs, rhs).toMinimalObject();
+  }
+  catch (const UndefinedException &) {
+    return makeExpr(Pow(), lhs, rhs);
+  }
 }
 
 }

@@ -226,7 +226,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^2 - 10 = 39")).toString(), "x = -7 | x = 7");
   EXPECT_EQ(solve(Expression("x^2 = 0")).toString(), "x = 0");
   EXPECT_EQ(solve(Expression("x^2 = 1")).toString(), "x = -1 | x = 1");
-  EXPECT_EQ(solve(Expression("x^2 = -1")).toString(), "x^2 + 1 = 0"); // TODO complex numbers
+  EXPECT_EQ(solve(Expression("x^2 = -1")).toString(), "x = -sqrt(-4)/2 | x = sqrt(-4)/2");
   EXPECT_EQ(solve(Expression("x^2 - 2x - 3 = 0")).toString(), "x = -1 | x = 3");
   EXPECT_EQ(solve(Expression("15 - 2x - x^2 = 0")).toString(), "x = -5 | x = 3");
   EXPECT_EQ(solve(Expression("x^2 + 12x + 36 = 0")).toString(), "x = -6");

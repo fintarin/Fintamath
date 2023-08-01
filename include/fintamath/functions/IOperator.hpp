@@ -9,9 +9,9 @@ class IOperator : public IFunction {
 
 public:
   enum class Priority : uint16_t {
+    Exponentiation, // exponentiation operators
     PostfixUnary,   // postfix unary operators
     PrefixUnary,    // prefix unary operators
-    Exponentiation, // exponentiation operators
     Multiplication, // multiplication operators
     Addition,       // addition operators
     Comparison,     // comparison operators

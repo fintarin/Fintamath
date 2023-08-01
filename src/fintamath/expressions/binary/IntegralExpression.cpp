@@ -1,7 +1,6 @@
 #include "fintamath/expressions/binary/IntegralExpression.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"

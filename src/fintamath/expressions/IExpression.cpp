@@ -1,5 +1,6 @@
 #include "fintamath/expressions/IExpression.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/other/Index.hpp"
@@ -142,7 +143,13 @@ ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrV
     return {};
   }
 
-  ArgumentPtr res = func(args);
+  ArgumentPtr res;
+  try {
+    res = func(args);
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 
   if (areArgumentsPrecise) {
     if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {

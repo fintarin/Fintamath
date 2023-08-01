@@ -1,6 +1,5 @@
 #include "fintamath/functions/other/Percent.hpp"
 
-#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {

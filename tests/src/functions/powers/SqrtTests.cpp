@@ -48,11 +48,11 @@ TEST(SqrtTests, callTest) {
   EXPECT_EQ(f(Real(144))->toString(), "12");
   EXPECT_EQ(f(Real(2))->toString(), "1.414213562373095048801688724209698078569671875376948073176679737990732478462107");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "sqrt(a)");
+  EXPECT_EQ(f(Integer(-10))->toString(), "sqrt(-10)");
+  EXPECT_EQ(f(Rational(-9289, 10))->toString(), "sqrt(-9289/10)");
+  EXPECT_EQ(f(Real(-9289))->toString(), "sqrt(-9289)");
 
-  EXPECT_THROW(f(Integer(-10)), UndefinedFunctionException);
-  EXPECT_THROW(f(Rational(-9289, 10)), UndefinedException);
-  EXPECT_THROW(f(Real(-9289)), UndefinedException);
+  EXPECT_EQ(f(Variable("a"))->toString(), "sqrt(a)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

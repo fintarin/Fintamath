@@ -24,9 +24,9 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) cons
     const auto &rhsInt = *rhsIntPtr;
 
     if (rhsInt > Integer(1)) {
-      // TODO: cast to Complex, when it is implemented
       if (lhs < Integer(0)) {
-        throw UndefinedFunctionException(toString(), {lhs.toString(), rhs.toString()});
+        // TODO: complex numbers
+        return makeExpr(Root(), lhs, rhs);
       }
 
       return multiRootSimpl(lhs, rhsInt);
