@@ -56,8 +56,8 @@ TEST(FactorialTests, callTest) {
 
   EXPECT_EQ(f(Real("0.1"))->toString(),
             "0.9513507698668731836292487177265402192550578626088377343050000770434265383322821");
-  EXPECT_EQ(f(Real("10"))->toString(), "3628800");
-  EXPECT_EQ(f(Real(-10))->toString(), "(-10)!");
+  EXPECT_EQ(f(Real("10"))->toString(), "3628800.0");
+  EXPECT_EQ(f(Real(-10))->toString(), "(-10.0)!");
 
   EXPECT_EQ(f(Integer(-10))->toString(), "ComplexInf");
   EXPECT_EQ(f(Rational(-10))->toString(), "ComplexInf");
@@ -89,11 +89,11 @@ TEST(FactorialTests, call2Test) {
   EXPECT_EQ(f2(Rational(-1, 10))->toString(), "(-1/10)!!");
 
   EXPECT_EQ(f2(Real("0.1"))->toString(), "0.1!!");
-  EXPECT_EQ(f2(Real("10"))->toString(), "10!!");
+  EXPECT_EQ(f2(Real("10"))->toString(), "10.0!!");
 
   EXPECT_EQ(f2(Integer(-10))->toString(), "(-10)!!");
   EXPECT_EQ(f2(Rational(-10))->toString(), "(-10)!!");
-  EXPECT_EQ(f2(Real(-10))->toString(), "(-10)!!");
+  EXPECT_EQ(f2(Real(-10))->toString(), "(-10.0)!!");
 
   EXPECT_EQ(f2(Variable("a"))->toString(), "a!!");
 
@@ -120,11 +120,11 @@ TEST(FactorialTests, call3Test) {
   EXPECT_EQ(f3(Rational(-1, 10))->toString(), "(-1/10)!!!");
 
   EXPECT_EQ(f3(Real("0.1"))->toString(), "0.1!!!");
-  EXPECT_EQ(f3(Real("10"))->toString(), "10!!!");
+  EXPECT_EQ(f3(Real("10"))->toString(), "10.0!!!");
 
   EXPECT_EQ(f3(Integer(-10))->toString(), "(-10)!!!");
   EXPECT_EQ(f3(Rational(-10))->toString(), "(-10)!!!");
-  EXPECT_EQ(f3(Real(-10))->toString(), "(-10)!!!");
+  EXPECT_EQ(f3(Real(-10))->toString(), "(-10.0)!!!");
 
   EXPECT_EQ(f3(Variable("a"))->toString(), "a!!!");
 

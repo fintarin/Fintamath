@@ -23,7 +23,7 @@ TEST(TanTests, getFunctionTypeTest) {
 }
 
 TEST(TanTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(0))->toString(), "0.0");
   EXPECT_EQ(f(Integer(10))->toString(),
             "0.6483608274590866712591249330098086768168743429837249756336279673958556003746239");
   EXPECT_EQ(f(Integer(-10))->toString(),
@@ -32,11 +32,11 @@ TEST(TanTests, callTest) {
             "-3.3805150062465856369827058794473439087095692082854598771768209809183460102012061");
   EXPECT_EQ(f(Rational(1, 10))->toString(),
             "0.10033467208545054505808004578111153681900480457644204002220806579803211288567387");
-  EXPECT_EQ(f(getPi() / 4)->toString(), "1");
+  EXPECT_EQ(f(getPi() / 4)->toString(), "1.0");
+  EXPECT_EQ(f(getPi() / 2)->toString(),
+            "1.8284132705300082902317661058105479684239284072480833124982117000101510968883506*10^120");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "tan(a)");
-
-  EXPECT_THROW(f(getPi() / 2), UndefinedFunctionException);
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

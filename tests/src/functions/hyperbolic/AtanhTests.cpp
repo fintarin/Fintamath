@@ -21,7 +21,7 @@ TEST(AtanhTests, getFunctionTypeTest) {
 }
 
 TEST(AtanhTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(0))->toString(), "0.0");
   EXPECT_EQ(f(Rational(10, 11))->toString(),
             "1.5222612188617114982502989901828527171422876437023053200970422417875370779853391");
   EXPECT_EQ(f(Rational(-10, 11))->toString(),

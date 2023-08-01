@@ -23,7 +23,7 @@ TEST(TanhTests, getFunctionTypeTest) {
 }
 
 TEST(TanhTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(0))->toString(), "0.0");
   EXPECT_EQ(f(Integer(5))->toString(),
             "0.99990920426259513121099044753447302108981261599054786273642887226256101633392102");
   EXPECT_EQ(f(Integer(-5))->toString(),

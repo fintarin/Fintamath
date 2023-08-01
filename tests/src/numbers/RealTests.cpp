@@ -16,8 +16,8 @@ TEST(RealTests, stringConstructorTest) {
   EXPECT_EQ(Real("-9.3").toString(), "-9.3");
   EXPECT_EQ(Real("0989929039237832000.9302930929333").toString(), "989929039237832000.9302930929333");
   EXPECT_EQ(Real(".1").toString(), "0.1");
-  EXPECT_EQ(Real("1.").toString(), "1");
-  EXPECT_EQ(Real("0.000000001").toString(), "1*10^-9");
+  EXPECT_EQ(Real("1.").toString(), "1.0");
+  EXPECT_EQ(Real("0.000000001").toString(), "1.0*10^-9");
   EXPECT_EQ(Real("10000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000")
                 .toString(),
             "1.00000000002*10^94");
@@ -390,11 +390,11 @@ TEST(RealTests, doubleFriendMultiplyOperatorTest) {
 
 TEST(RealTests, divideAssignmentOperatorTest) {
   auto a = Real(10) /= Real(2);
-  EXPECT_EQ(a.toString(), "5");
+  EXPECT_EQ(a.toString(), "5.0");
   a = Real("-2.255") /= Real("-1.1");
   EXPECT_EQ(a.toString(), "2.05");
   a = Real("12.1") /= Real("-1.1");
-  EXPECT_EQ(a.toString(), "-11");
+  EXPECT_EQ(a.toString(), "-11.0");
 }
 
 TEST(RealTests, rationalDivideAssignmentOperatorTest) {
@@ -403,14 +403,14 @@ TEST(RealTests, rationalDivideAssignmentOperatorTest) {
   a = Real("-2.255") /= Rational(-11, 10);
   EXPECT_EQ(a.toString(), "2.05");
   a = Real("12.1") /= Rational(-11, 10);
-  EXPECT_EQ(a.toString(), "-11");
+  EXPECT_EQ(a.toString(), "-11.0");
 }
 
 TEST(RealTests, integerDivideAssignmentOperatorTest) {
   auto a = Real(10) /= Integer(2);
-  EXPECT_EQ(a.toString(), "5");
+  EXPECT_EQ(a.toString(), "5.0");
   a = Real(10) /= Integer(-2);
-  EXPECT_EQ(a.toString(), "-5");
+  EXPECT_EQ(a.toString(), "-5.0");
   a = Real("22.5") /= Integer(-11);
   EXPECT_EQ(a.toString(), "-2.0454545454545454545454545454545454545454545454545454545454545454545454545454545");
   a = Real("-27.5") /= Integer(-11);
@@ -419,7 +419,7 @@ TEST(RealTests, integerDivideAssignmentOperatorTest) {
 
 TEST(RealTests, doubleDivideAssignmentOperatorTest) {
   auto a = Real("12.5") /= 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "5");
+  EXPECT_EQ(a.precise(3).toString(), "5.0");
   a = Real("2.255") /= -1.1;
   EXPECT_EQ(a.precise(3).toString(), "-2.05");
   a = Real("-2.75") /= -1.1;
@@ -428,11 +428,11 @@ TEST(RealTests, doubleDivideAssignmentOperatorTest) {
 
 TEST(RealTests, divideOperatorTest) {
   auto a = Real(10) / Real(2);
-  EXPECT_EQ(a.toString(), "5");
+  EXPECT_EQ(a.toString(), "5.0");
   a = Real("-2.255") / Real("-1.1");
   EXPECT_EQ(a.toString(), "2.05");
   a = Real("12.1") / Real("-1.1");
-  EXPECT_EQ(a.toString(), "-11");
+  EXPECT_EQ(a.toString(), "-11.0");
 }
 
 TEST(RealTests, rationalDivideOperatorTest) {
@@ -441,14 +441,14 @@ TEST(RealTests, rationalDivideOperatorTest) {
   a = Real("-2.255") / Rational(-11, 10);
   EXPECT_EQ(a.toString(), "2.05");
   a = Real("12.1") / Rational(-11, 10);
-  EXPECT_EQ(a.toString(), "-11");
+  EXPECT_EQ(a.toString(), "-11.0");
 }
 
 TEST(RealTests, integerDivideOperatorTest) {
   auto a = Real(10) / Integer(2);
-  EXPECT_EQ(a.toString(), "5");
+  EXPECT_EQ(a.toString(), "5.0");
   a = Real(10) / Integer(-2);
-  EXPECT_EQ(a.toString(), "-5");
+  EXPECT_EQ(a.toString(), "-5.0");
   a = Real("22.5") / Integer(-11);
   EXPECT_EQ(a.toString(), "-2.0454545454545454545454545454545454545454545454545454545454545454545454545454545");
   a = Real("-27.5") / Integer(-11);
@@ -457,7 +457,7 @@ TEST(RealTests, integerDivideOperatorTest) {
 
 TEST(RealTests, doubleDivideOperatorTest) {
   auto a = Real("12.5") / 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "5");
+  EXPECT_EQ(a.precise(3).toString(), "5.0");
   a = Real("2.255") / -1.1;
   EXPECT_EQ(a.precise(3).toString(), "-2.05");
   a = Real("-2.75") / -1.1;
@@ -470,14 +470,14 @@ TEST(RealTests, rationalFriendDivideOperatorTest) {
   a = Rational(-11, 10) / Real("-2.5");
   EXPECT_EQ(a.toString(), "0.44");
   a = Rational(-11, 10) / Real("0.1");
-  EXPECT_EQ(a.toString(), "-11");
+  EXPECT_EQ(a.toString(), "-11.0");
 }
 
 TEST(RealTests, integerFriendDivideOperatorTest) {
   auto a = Integer(10) / Real(2);
-  EXPECT_EQ(a.toString(), "5");
+  EXPECT_EQ(a.toString(), "5.0");
   a = Integer(10) / Real(-2);
-  EXPECT_EQ(a.toString(), "-5");
+  EXPECT_EQ(a.toString(), "-5.0");
   a = Integer(-6) / Real("1.6");
   EXPECT_EQ(a.toString(), "-3.75");
   a = Integer(-6) / Real("-1.6");
@@ -490,7 +490,7 @@ TEST(RealTests, doubleFriendDivideOperatorTest) {
   a = -1.1 / Real("-2.5");
   EXPECT_EQ(a.precise(3).toString(), "0.44");
   a = -1.1 / Real("0.1");
-  EXPECT_EQ(a.precise(3).toString(), "-11");
+  EXPECT_EQ(a.precise(3).toString(), "-11.0");
 }
 
 TEST(RealTests, unaryPlusOperatorTest) {
@@ -837,19 +837,20 @@ TEST(RealTests, doubleFriendMoreEqualOperatorTest) {
 
 TEST(RealTests, toStringTest) {
   EXPECT_EQ(Real("2.334455").toString(), "2.334455");
-  EXPECT_EQ(Real(-11).toString(), "-11");
-}
-
-TEST(RealTests, simplifyTest) {
-  EXPECT_TRUE(is<Real>(Real(2.5).toMinimalObject()));
-  EXPECT_TRUE(is<Integer>(Real(11).toMinimalObject()));
-  EXPECT_TRUE(is<Real>(Real(-2.5).toMinimalObject()));
-  EXPECT_TRUE(is<Integer>(Real(-11).toMinimalObject()));
-
-  EXPECT_EQ(Real(2.5).toMinimalObject()->toString(), "2.5");
-  EXPECT_EQ(Real(11).toMinimalObject()->toString(), "11");
-  EXPECT_EQ(Real(-2.5).toMinimalObject()->toString(), "-2.5");
-  EXPECT_EQ(Real(-11).toMinimalObject()->toString(), "-11");
+  EXPECT_EQ(Real(11).toString(), "11.0");
+  EXPECT_EQ(Real(-11).toString(), "-11.0");
+  EXPECT_EQ(
+      Real("118219374329847329874632874628734532864532645263452364532614523864152352353214454587245272").toString(),
+      "1.1821937432984732987463287462873453286453264526345236453261452386415235235321445*10^89");
+  EXPECT_EQ(
+      Real("-118219374329847329874632874628734532864532645263452364532614523864152352353214454587245272").toString(),
+      "-1.1821937432984732987463287462873453286453264526345236453261452386415235235321445*10^89");
+  EXPECT_EQ(
+      Real("1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000").toString(),
+      "1.0*10^90");
+  EXPECT_EQ(
+      Real("-1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000").toString(),
+      "-1.0*10^90");
 }
 
 TEST(RealTests, preciseTests) {

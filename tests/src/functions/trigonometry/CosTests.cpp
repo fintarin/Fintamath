@@ -22,15 +22,16 @@ TEST(CosTests, getFunctionTypeTest) {
 }
 
 TEST(CosTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "1");
+  EXPECT_EQ(f(Integer(0))->toString(), "1.0");
   EXPECT_EQ(f(Integer(10))->toString(),
             "-0.83907152907645245225886394782406483451993016513316854683595373104879258686627077");
   EXPECT_EQ(f(Integer(5))->toString(),
             "0.2836621854632262644666391715135573083344225922522159449303590665861514567673827");
   EXPECT_EQ(f(Rational(1, 10))->toString(),
             "0.99500416527802576609556198780387029483857622541508403595935274468526591021824047");
-  EXPECT_EQ(f(getPi() / 2)->toString(), "0");
-  EXPECT_EQ(f(getPi())->toString(), "-1");
+  EXPECT_EQ(f(getPi() / 2)->toString(),
+            "5.4692230477529111586267970406424055872514205135096926055277982231147447746519098*10^-121");
+  EXPECT_EQ(f(getPi())->toString(), "-1.0");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "cos(a)");
 

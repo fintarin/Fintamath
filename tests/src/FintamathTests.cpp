@@ -67,7 +67,7 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(solve(expr).toString(), "x = 7/2");
 
   expr = Expression("-3x^2 + 28x - 49 = 0");
-  EXPECT_EQ(solve(expr).precise(2).toString(), "x = 2.3 | x = 7");
+  EXPECT_EQ(solve(expr).precise(2).toString(), "x = 2.3 | x = 7.0");
 
   //-------------------------------------------------------------------------------------//
 
@@ -78,7 +78,7 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(expr.toString(), "x^6 + 6 x^5 + 15 x^4 + 20 x^3 + 15 x^2 + 6 x + 1");
 
   expr = expr.precise(10);
-  EXPECT_EQ(expr.toString(), "x^6 + 6 x^5 + 15 x^4 + 20 x^3 + 15 x^2 + 6 x + 1");
+  EXPECT_EQ(expr.toString(), "x^6.0 + 6.0 x^5.0 + 15.0 x^4.0 + 20.0 x^3.0 + 15.0 x^2.0 + 6.0 x + 1.0");
 
   expr = pow(x + 1, 7);
   EXPECT_EQ(expr.toString(), "x^7 + 7 x^6 + 21 x^5 + 35 x^4 + 35 x^3 + 21 x^2 + 7 x + 1");
@@ -87,5 +87,5 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(expr.toString(), "x^7 + 7 x^6 + 21 x^5 + 35 x^4 + 35 x^3 + 21 x^2 + 7 x + 1");
 
   expr = expr.precise(10);
-  EXPECT_EQ(expr.toString(), "x^7 + 7 x^6 + 21 x^5 + 35 x^4 + 35 x^3 + 21 x^2 + 7 x + 1");
+  EXPECT_EQ(expr.toString(), "x^7.0 + 7.0 x^6.0 + 21.0 x^5.0 + 35.0 x^4.0 + 35.0 x^3.0 + 21.0 x^2.0 + 7.0 x + 1.0");
 }

@@ -21,7 +21,7 @@ TEST(AsinhTests, getFunctionTypeTest) {
 }
 
 TEST(AsinhTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(0))->toString(), "0.0");
   EXPECT_EQ(f(Integer(1))->toString(),
             "0.88137358701954302523260932497979230902816032826163541075329560865337718422202609");
   EXPECT_EQ(f(Rational(1, 10))->toString(),

@@ -22,7 +22,7 @@ TEST(SinhTests, getFunctionTypeTest) {
 }
 
 TEST(SinhTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(0))->toString(), "0.0");
   EXPECT_EQ(f(Integer(5))->toString(),
             "74.203210577788758977009471996064565599619409004425816980661269789669690649221486");
   EXPECT_EQ(f(Integer(-5))->toString(),
