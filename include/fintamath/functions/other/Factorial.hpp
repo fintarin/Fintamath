@@ -7,9 +7,17 @@
 
 namespace fintamath {
 
+class Integer;
+class Rational;
+class Real;
+
 class Factorial : public IOperatorCRTP<INumber, Factorial, INumber> {
 public:
   Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
+  }
+
+  Factorial(size_t inOrder) : Factorial() {
+    setOrder(inOrder);
   }
 
   std::string toString() const override {
@@ -27,6 +35,15 @@ public:
 
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+
+private:
+  static std::unique_ptr<IMathObject> multiFactorialSimpl(const INumber &lhs, size_t order);
+
+  static std::unique_ptr<IMathObject> factorialSimpl(const Integer &rhs, size_t order);
+
+  static std::unique_ptr<IMathObject> factorialSimpl(const Rational &rhs, size_t order);
+
+  static std::unique_ptr<IMathObject> factorialSimpl(const Real &rhs, size_t order);
 
 private:
   size_t order = 1;

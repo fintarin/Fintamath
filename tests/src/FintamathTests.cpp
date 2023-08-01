@@ -43,7 +43,7 @@ TEST(FintamathTests, fintamathTests) {
   expr = Expression("(4x^4 + 1 + 3x^3 + 2x) / (x^2 + x + 2)");
   EXPECT_EQ(expr.toString(), "4 x^2 - x - 7 + (11 x + 15)/(x^2 + x + 2)");
 
-  expr = log(2, 256) + ln(pow(E(), 2));
+  expr = log(2, 256) + ln(pow(e(), 2));
   EXPECT_EQ(expr.toString(), "10");
 
   expr = sqrt(Expression(8));
