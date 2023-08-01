@@ -2,7 +2,7 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 
-using namespace boost::multiprecision;
+using boost::multiprecision::cpp_dec_float_100;
 
 namespace fintamath {
 
@@ -26,7 +26,7 @@ Real pow(const Real &lhs, const Real &rhs) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
-  cpp_dec_float_100 res(pow(lhs.getBackend(), rhs.getBackend()));
+  cpp_dec_float_100 res = pow(lhs.getBackend(), rhs.getBackend());
 
   if (res.backend().isinf() || res.backend().isnan()) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
@@ -121,7 +121,7 @@ Real asin(const Real &rhs) {
 }
 
 Real acos(const Real &rhs) {
-  cpp_dec_float_100 res(acos(rhs.getBackend()));
+  cpp_dec_float_100 res = acos(rhs.getBackend());
 
   if (res.backend().isnan()) {
     throw UndefinedFunctionException("acos", {rhs.toString()});
@@ -199,11 +199,13 @@ Real acoth(const Real &rhs) {
 }
 
 Real getE() {
-  return {cpp_dec_float_100(default_ops::get_constant_e<cpp_dec_float_100::backend_type>())};
+  using boost::multiprecision::default_ops::get_constant_e;
+  return {cpp_dec_float_100(get_constant_e<cpp_dec_float_100::backend_type>())};
 }
 
 Real getPi() {
-  return {cpp_dec_float_100(default_ops::get_constant_pi<cpp_dec_float_100::backend_type>())};
+  using boost::multiprecision::default_ops::get_constant_pi;
+  return {cpp_dec_float_100(get_constant_pi<cpp_dec_float_100::backend_type>())};
 }
 
 }
