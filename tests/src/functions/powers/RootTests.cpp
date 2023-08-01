@@ -72,13 +72,13 @@ TEST(RootTests, callTest) {
             "6341898279505748220737558733036392804899042006384472743062801876828565493307610084438050180592269960571521"
             "04826353254809443231832/5, 4)/25");
 
-  EXPECT_EQ(f(Real(144), Integer(2))->toString(), "12");
+  EXPECT_EQ(f(Real(144), Integer(2))->toString(), "12.0");
   EXPECT_EQ(f(Real(144), Integer(4))->toString(),
             "3.4641016151377545870548926830117447338856105076207612561116139589038660338176001");
   EXPECT_EQ(f(Real(2), Integer(3))->toString(),
             "1.2599210498948731647672106072782283505702514647015079800819751121552996765139595");
 
-  EXPECT_EQ(f(Real(144), Rational(2, 3))->toString(), "1728");
+  EXPECT_EQ(f(Real(144), Rational(2, 3))->toString(), "1728.0");
   EXPECT_EQ(f(Real(144), Rational(4, 3))->toString(),
             "41.569219381653055044658712196140936806627326091449135073339367506846392405811201");
   EXPECT_EQ(f(Real(2), Rational(3, 5))->toString(),
@@ -94,7 +94,7 @@ TEST(RootTests, callTest) {
 
   EXPECT_EQ(f(Integer(-10), Integer(2))->toString(), "sqrt(-10)");
   EXPECT_EQ(f(Rational(-9289, 10), Rational(2, 3))->toString(), "(-9289/10)^(3/2)");
-  EXPECT_EQ(f(Real(-9289), Rational(2, 3))->toString(), "(-9289)^1.5");
+  EXPECT_EQ(f(Real(-9289), Rational(2, 3))->toString(), "(-9289.0)^1.5");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

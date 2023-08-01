@@ -22,15 +22,15 @@ TEST(SinTests, getFunctionTypeTest) {
 }
 
 TEST(SinTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(0))->toString(), "0.0");
   EXPECT_EQ(f(Integer(10))->toString(),
             "-0.54402111088936981340474766185137728168364301291622389157418401261675720964049343");
   EXPECT_EQ(f(Integer(5))->toString(),
             "-0.9589242746631384688931544061559939733524615439646017781316724542351025580865596");
   EXPECT_EQ(f(Rational(1, 10))->toString(),
             "0.099833416646828152306814198410622026989915388017982259992766861561651744283292428");
-  EXPECT_EQ(f(getPi() / 2)->toString(), "1");
-  EXPECT_EQ(f(getPi())->toString(), "0");
+  EXPECT_EQ(f(getPi() / 2)->toString(), "1.0");
+  EXPECT_EQ(f(getPi())->toString(), "9.3844609550582231725359408128481117450284102701938521105559644622948954930381964*10^-122");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "sin(a)");
 

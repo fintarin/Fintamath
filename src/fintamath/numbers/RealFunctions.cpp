@@ -19,16 +19,13 @@ Real sqrt(const Real &rhs) {
 }
 
 Real pow(const Real &lhs, const Real &rhs) {
-  if (lhs.isNearZero() && rhs.isNearZero()) {
-    throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
-  }
-  if (lhs < 0 && !is<Integer>(rhs.toMinimalObject())) { // TODO: do not use toMinimalObject
+  if (lhs == 0 && rhs == 0) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
   cpp_dec_float_100 res = pow(lhs.getBackend(), rhs.getBackend());
 
-  if (res.backend().isinf() || res.backend().isnan()) {
+  if (!res.backend().isfinite()) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
@@ -73,37 +70,20 @@ Real lg(const Real &rhs) {
 }
 
 Real sin(const Real &rhs) {
-  Real res(sin(rhs.getBackend()));
-
-  if (res.isNearZero()) {
-    return 0;
-  }
-
-  return res;
+  return {sin(rhs.getBackend())};
 }
 
 Real cos(const Real &rhs) {
-  Real res(cos(rhs.getBackend()));
-
-  if (res.isNearZero()) {
-    return 0;
-  }
-
-  return res;
+  return {cos(rhs.getBackend())};
 }
 
 Real tan(const Real &rhs) {
-  try {
-    return sin(rhs) / cos(rhs);
-  }
-  catch (const UndefinedException &) {
-    throw UndefinedFunctionException("tan", {rhs.toString()});
-  }
+  return {tan(rhs.getBackend())};
 }
 
 Real cot(const Real &rhs) {
   try {
-    return cos(rhs) / sin(rhs);
+    return 1 / tan(rhs);
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("cot", {rhs.toString()});
@@ -113,7 +93,7 @@ Real cot(const Real &rhs) {
 Real asin(const Real &rhs) {
   cpp_dec_float_100 res = asin(rhs.getBackend());
 
-  if (res.backend().isnan()) {
+  if (!res.backend().isfinite()) {
     throw UndefinedFunctionException("asin", {rhs.toString()});
   }
 
@@ -123,7 +103,7 @@ Real asin(const Real &rhs) {
 Real acos(const Real &rhs) {
   cpp_dec_float_100 res = acos(rhs.getBackend());
 
-  if (res.backend().isnan()) {
+  if (!res.backend().isfinite()) {
     throw UndefinedFunctionException("acos", {rhs.toString()});
   }
 

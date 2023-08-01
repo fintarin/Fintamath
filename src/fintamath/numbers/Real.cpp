@@ -12,13 +12,6 @@ using namespace boost::multiprecision;
 
 namespace fintamath {
 
-static cpp_dec_float_100 initDelta() {
-  static const cpp_dec_float_100 delta = pow(cpp_dec_float_100(10), -FINTAMATH_PRECISION);
-  return delta;
-}
-
-const cpp_dec_float_100 Real::DELTA = initDelta();
-
 Real::Real() = default;
 
 Real::Real(const Real &rhs) = default;
@@ -85,8 +78,10 @@ std::string Real::toString() const {
   ss << backend;
   std::string res = ss.str();
 
-  if (size_t ePos = res.find('e'); ePos != std::string::npos) {
-    res.replace(ePos, 1, "*10^");
+  size_t expPos = res.find('e');
+
+  if (expPos != std::string::npos) {
+    res.replace(expPos, 1, "*10^");
 
     if (size_t plusPos = res.find('+'); plusPos != std::string::npos) {
       res.replace(plusPos, 1, "");
@@ -96,18 +91,15 @@ std::string Real::toString() const {
       res.replace(negZeroPos + 1, 1, "");
     }
   }
-
-  return res;
-}
-
-std::unique_ptr<IMathObject> Real::toMinimalObject() const {
-  if (backend.backend().isfinite()) {
-    if (std::string str = toString(); str.find('.') == std::string::npos && str.find('*') == std::string::npos) {
-      return std::make_unique<Integer>(str);
-    }
+  else {
+    expPos = res.length();
   }
 
-  return clone();
+  if (res.find('.') == std::string::npos) {
+    res.insert(expPos, ".0");
+  }
+
+  return res;
 }
 
 bool Real::isPrecise() const {
@@ -125,16 +117,12 @@ int Real::sign() const {
   return backend.sign();
 }
 
-bool Real::isNearZero() const {
-  return abs(backend) < DELTA;
-}
-
 const cpp_dec_float_100 &Real::getBackend() const {
   return backend;
 }
 
 bool Real::equals(const Real &rhs) const {
-  return (*this - rhs).isNearZero();
+  return backend == rhs.backend;
 }
 
 bool Real::less(const Real &rhs) const {
@@ -167,11 +155,12 @@ Real &Real::multiply(const Real &rhs) {
 }
 
 Real &Real::divide(const Real &rhs) {
-  if (rhs.isNearZero()) {
+  backend /= rhs.backend;
+
+  if (!backend.backend().isfinite()) {
     throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
   }
 
-  backend /= rhs.backend;
   return *this;
 }
 
@@ -179,5 +168,4 @@ Real &Real::negate() {
   backend = -backend;
   return *this;
 }
-
 }

@@ -21,12 +21,12 @@ TEST(LbTests, getFunctionTypeTest) {
 }
 
 TEST(LbTests, callTest) {
-  EXPECT_EQ(f(Integer(2))->toString(), "1");
+  EXPECT_EQ(f(Integer(2))->toString(), "1.0");
   EXPECT_EQ(f(Integer(10))->toString(),
             "3.3219280948873623478703194294893901758648313930245806120547563958159347766086252");
   EXPECT_EQ(f(Integer(3))->toString(),
             "1.5849625007211561814537389439478165087598144076924810604557526545410982277943586");
-  EXPECT_EQ(f(Rational(1, 16))->toString(), "-4");
+  EXPECT_EQ(f(Rational(1, 16))->toString(), "-4.0");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "log(2, a)");
 

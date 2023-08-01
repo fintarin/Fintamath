@@ -144,50 +144,58 @@ TEST(ExpressionFunctionsTests, lgTest) {
 }
 
 TEST(ExpressionFunctionsTests, sinTest) {
-  EXPECT_EQ(sin(Expression("5*Pi")).toString(), "sin(5 Pi)"); // TODO trigonometry
-  EXPECT_EQ(sin(Expression("Pi/2")).toString(), "sin(Pi/2)"); // TODO trigonometry
+  // TODO trigonometry
+  EXPECT_EQ(sin(Expression("5*Pi")).toString(), "sin(5 Pi)");
+  EXPECT_EQ(sin(Expression("Pi/2")).toString(), "sin(Pi/2)");
   EXPECT_EQ(sin(Expression("a+b")).toString(), "sin(a + b)");
 }
 
 TEST(ExpressionFunctionsTests, cosTest) {
-  EXPECT_EQ(cos(Expression("5*Pi")).toString(), "cos(5 Pi)");       // TODO trigonometry
-  EXPECT_EQ(cos(Expression("3*Pi/2")).toString(), "cos((3 Pi)/2)"); // TODO trigonometry
+  // TODO trigonometry
+  EXPECT_EQ(cos(Expression("5*Pi")).toString(), "cos(5 Pi)");
+  EXPECT_EQ(cos(Expression("3*Pi/2")).toString(), "cos((3 Pi)/2)");
   EXPECT_EQ(cos(Expression("8*a")).toString(), "cos(8 a)");
 }
 
 TEST(ExpressionFunctionsTests, tanTest) {
-  EXPECT_EQ(tan(Expression("0")).toString(), "0");
-  EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "tan((3 Pi)/4)"); // TODO trigonometry
+  // TODO trigonometry
+  EXPECT_EQ(tan(Expression("0")).toString(), "tan(0)");
+  EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "tan((3 Pi)/4)");
   EXPECT_EQ(tan(Expression("a^3")).toString(), "tan(a^3)");
 }
 
 TEST(ExpressionFunctionsTests, cotTest) {
-  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "cot(Pi/4)"); // TODO trigonometry
-  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "cot(Pi/2)"); // TODO trigonometry
+  // TODO trigonometry
+  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "cot(Pi/4)");
+  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "cot(Pi/2)");
   EXPECT_EQ(cot(Expression("a/5")).toString(), "cot(a/5)");
 }
 
 TEST(ExpressionFunctionsTests, asinTest) {
-  EXPECT_EQ(asin(Expression("0")).toString(), "0");
-  EXPECT_EQ(asin(Expression("1")).toString(), "asin(1)"); // TODO trigonometry
+  // TODO trigonometry
+  EXPECT_EQ(asin(Expression("0")).toString(), "asin(0)");
+  EXPECT_EQ(asin(Expression("1")).toString(), "asin(1)");
   EXPECT_EQ(asin(Expression("a+b")).toString(), "asin(a + b)");
 }
 
 TEST(ExpressionFunctionsTests, acosTest) {
-  EXPECT_EQ(acos(Expression("0")).toString(), "acos(0)"); // TODO trigonometry
-  EXPECT_EQ(acos(Expression("1")).toString(), "0");
+  // TODO trigonometry
+  EXPECT_EQ(acos(Expression("0")).toString(), "acos(0)");
+  EXPECT_EQ(acos(Expression("1")).toString(), "acos(1)");
   EXPECT_EQ(acos(Expression("8*a")).toString(), "acos(8 a)");
 }
 
 TEST(ExpressionFunctionsTests, atanTest) {
-  EXPECT_EQ(atan(Expression("0")).toString(), "0");
-  EXPECT_EQ(atan(Expression("-1")).toString(), "atan(-1)"); // TODO trigonometry
+  // TODO trigonometry
+  EXPECT_EQ(atan(Expression("0")).toString(), "atan(0)");
+  EXPECT_EQ(atan(Expression("-1")).toString(), "atan(-1)");
   EXPECT_EQ(atan(Expression("a^3")).toString(), "atan(a^3)");
 }
 
 TEST(ExpressionFunctionsTests, acotTest) {
-  EXPECT_EQ(acot(Expression("1")).toString(), "acot(1)"); // TODO trigonometry
-  // EXPECT_EQ(acot(Expression("0")).toString(), "acot(0)"); // TODO trigonometry
+  // TODO trigonometry
+  EXPECT_EQ(acot(Expression("1")).toString(), "acot(1)");
+  EXPECT_EQ(acot(Expression("0")).toString(), "acot(0)");
   EXPECT_EQ(acot(Expression("a/5")).toString(), "acot(a/5)");
 }
 

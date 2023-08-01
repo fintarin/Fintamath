@@ -38,15 +38,11 @@ public:
 
   std::string toString() const override;
 
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
-
   bool isPrecise() const override;
 
   Real precise(uint8_t precision) const;
 
   int sign() const;
-
-  bool isNearZero() const;
 
   const boost::multiprecision::cpp_dec_float_100 &getBackend() const;
 
@@ -75,8 +71,6 @@ private:
   boost::multiprecision::cpp_dec_float_100 backend;
 
   uint8_t ouputPrecision = FINTAMATH_PRECISION;
-
-  static const boost::multiprecision::cpp_dec_float_100 DELTA;
 };
 
 }

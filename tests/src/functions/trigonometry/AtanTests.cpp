@@ -20,7 +20,7 @@ TEST(AtanTests, getFunctionTypeTest) {
 }
 
 TEST(AtanTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(0))->toString(), "0.0");
   EXPECT_EQ(f(Integer(1))->toString(),
             "0.78539816339744830961566084581987572104929234984377645524373614807695410157155225");
   EXPECT_EQ(f(Integer(10))->toString(),

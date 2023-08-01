@@ -119,9 +119,9 @@ TEST(IntegerFunctionsTests, powTest) {
             "122262032882136893556623485326120689398001084489/1953125000000000000000000000000000000000000000000");
   EXPECT_EQ(pow(Rational(6789), Integer(-4)).toString(), "1/2124336126051441");
 
-  EXPECT_EQ(pow(Real(5), Integer(2)).toString(), "25");
-  EXPECT_EQ(pow(Real(-5), Integer(5)).toString(), "-3125");
-  EXPECT_EQ(pow(Real(6789), Integer(4)).toString(), "2124336126051441");
+  EXPECT_EQ(pow(Real(5), Integer(2)).toString(), "25.0");
+  EXPECT_EQ(pow(Real(-5), Integer(5)).toString(), "-3125.0");
+  EXPECT_EQ(pow(Real(6789), Integer(4)).toString(), "2124336126051441.0");
   EXPECT_EQ(pow(Real("135253468973498327423987498324729384.12987349823749832"), Integer(3)).toString(),
             "2.474259452251333810348988009462181055384708019760349478621886281193496112100109*10^105");
   EXPECT_EQ(pow(Real(6789), Integer(-4)).toString(),

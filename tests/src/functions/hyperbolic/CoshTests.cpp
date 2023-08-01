@@ -22,7 +22,7 @@ TEST(CoshTests, getFunctionTypeTest) {
 }
 
 TEST(CoshTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "1");
+  EXPECT_EQ(f(Integer(0))->toString(), "1.0");
   EXPECT_EQ(f(Integer(5))->toString(),
             "74.20994852478784444410610804448771402386825858945317206609157532124237417173709");
   EXPECT_EQ(f(Integer(-5))->toString(),
