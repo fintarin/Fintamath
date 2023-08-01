@@ -24,6 +24,13 @@ TEST(IntegerTests, stringConstructorTest) {
   EXPECT_THROW(Integer("+"), InvalidInputException);
 }
 
+TEST(IntegerTests, templateConstructorTest) {
+  EXPECT_EQ(Integer(std::numeric_limits<uint64_t>::max()).toString(), "18446744073709551615");
+  EXPECT_EQ(Integer(std::numeric_limits<int64_t>::min()).toString(), "-9223372036854775808");
+  EXPECT_EQ(Integer(std::numeric_limits<uint8_t>::max()).toString(), "255");
+  EXPECT_EQ(Integer(std::numeric_limits<int8_t>::min()).toString(), "-128");
+}
+
 TEST(IntegerTests, intConstructorTest) {
   EXPECT_EQ(Integer(10), 10);
 

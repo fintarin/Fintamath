@@ -26,6 +26,10 @@ public:
 
   explicit Integer(std::string str);
 
+  template <typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+  explicit Integer(T val) : backend(val) {
+  }
+
   Integer(int64_t val);
 
   std::string toString() const override;

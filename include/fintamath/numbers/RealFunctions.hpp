@@ -56,4 +56,6 @@ Real getE();
 
 Real getPi();
 
+Real tgamma(const Real &rhs);
+
 }

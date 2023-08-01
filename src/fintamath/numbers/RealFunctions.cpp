@@ -208,4 +208,16 @@ Real getPi() {
   return {cpp_dec_float_100(get_constant_pi<cpp_dec_float_100::backend_type>())};
 }
 
+Real tgamma(const Real &rhs) {
+  try {
+    return boost::math::tgamma(rhs.getBackend());
+  }
+  catch (const std::domain_error &) {
+    throw UndefinedFunctionException("tgamma", {rhs.toString()});
+  }
+  catch (const std::overflow_error &) {
+    throw UndefinedFunctionException("tgamma", {rhs.toString()});
+  }
+}
+
 }

@@ -134,10 +134,59 @@ TEST(IntegerFunctionsTests, powTest) {
 
 TEST(IntegerFunctionsTests, factorialTest) {
   EXPECT_EQ(factorial(Integer(0)), 1);
+  EXPECT_EQ(factorial(Integer(1)), 1);
+  EXPECT_EQ(factorial(Integer(2)), 2);
+  EXPECT_EQ(factorial(Integer(3)), 6);
+  EXPECT_EQ(factorial(Integer(4)), 24);
   EXPECT_EQ(factorial(Integer(5)), 120);
+  EXPECT_EQ(factorial(Integer(10)), 3628800);
   EXPECT_EQ(factorial(Integer(25)).toString(), "15511210043330985984000000");
 
   EXPECT_THROW(factorial(Integer(-1)), UndefinedUnaryOperatorException);
+  EXPECT_THROW(factorial(Integer(-2)), UndefinedUnaryOperatorException);
+}
+
+TEST(IntegerFunctionsTests, nthFactorialTest) {
+  EXPECT_EQ(factorial(Integer(0), 1), 1);
+  EXPECT_EQ(factorial(Integer(1), 1), 1);
+  EXPECT_EQ(factorial(Integer(2), 1), 2);
+  EXPECT_EQ(factorial(Integer(3), 1), 6);
+  EXPECT_EQ(factorial(Integer(4), 1), 24);
+  EXPECT_EQ(factorial(Integer(5), 1), 120);
+  EXPECT_EQ(factorial(Integer(10), 1), 3628800);
+  EXPECT_EQ(factorial(Integer(25), 1).toString(), "15511210043330985984000000");
+
+  EXPECT_EQ(factorial(Integer(0), 2), 1);
+  EXPECT_EQ(factorial(Integer(1), 2), 1);
+  EXPECT_EQ(factorial(Integer(2), 2), 2);
+  EXPECT_EQ(factorial(Integer(3), 2), 3);
+  EXPECT_EQ(factorial(Integer(4), 2), 8);
+  EXPECT_EQ(factorial(Integer(5), 2), 15);
+  EXPECT_EQ(factorial(Integer(10), 2), 3840);
+  EXPECT_EQ(factorial(Integer(25), 2).toString(), "7905853580625");
+
+  EXPECT_EQ(factorial(Integer(0), 3), 1);
+  EXPECT_EQ(factorial(Integer(1), 3), 1);
+  EXPECT_EQ(factorial(Integer(2), 3), 2);
+  EXPECT_EQ(factorial(Integer(3), 3), 3);
+  EXPECT_EQ(factorial(Integer(4), 3), 4);
+  EXPECT_EQ(factorial(Integer(5), 3), 10);
+  EXPECT_EQ(factorial(Integer(10), 3), 280);
+  EXPECT_EQ(factorial(Integer(25), 3).toString(), "608608000");
+
+  EXPECT_EQ(factorial(Integer(0), 10), 1);
+  EXPECT_EQ(factorial(Integer(1), 10), 1);
+  EXPECT_EQ(factorial(Integer(2), 10), 2);
+  EXPECT_EQ(factorial(Integer(3), 10), 3);
+  EXPECT_EQ(factorial(Integer(4), 10), 4);
+  EXPECT_EQ(factorial(Integer(5), 10), 5);
+  EXPECT_EQ(factorial(Integer(10), 10), 10);
+  EXPECT_EQ(factorial(Integer(25), 10).toString(), "1875");
+
+  EXPECT_THROW(factorial(Integer(-1), 1), UndefinedUnaryOperatorException);
+  EXPECT_THROW(factorial(Integer(-1), 20), UndefinedUnaryOperatorException);
+  EXPECT_THROW(factorial(Integer(-2), 1), UndefinedUnaryOperatorException);
+  EXPECT_THROW(factorial(Integer(-2), 20), UndefinedUnaryOperatorException);
 }
 
 TEST(IntegerFunctionsTests, factorsTest) {
