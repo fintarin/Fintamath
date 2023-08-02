@@ -76,10 +76,6 @@ ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if (*lhs == E()) {
-    if (*rhs == Integer(0)) {
-      return NegInf().clone();
-    }
-
     return callFunction(Ln(), {rhs});
   }
 
