@@ -98,10 +98,6 @@ protected:
   ArgumentPtr preciseSimplify() const override;
 
 private:
-  explicit Expression(const TermVector &terms);
-
-  explicit Expression(const TermVector &terms, size_t start, size_t end);
-
   bool parseBinaryOperator(const TermVector &terms, size_t start, size_t end);
 
   bool parsePrefixOperator(const TermVector &terms, size_t start, size_t end);
@@ -144,6 +140,12 @@ private:
 
   friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
 
+  friend ArgumentPtr parseExpr(const std::string &str);
+
+  friend ArgumentPtr parseExpr(const TermVector &terms);
+
+  friend ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end);
+
   static Parser::Vector<std::unique_ptr<Term>, const Token &> &getTermMakers();
 
   static Parser::Map<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> &getExpressionMakers();
@@ -162,6 +164,12 @@ private:
 private:
   ArgumentPtr child;
 };
+
+ArgumentPtr parseExpr(const std::string &str);
+
+ArgumentPtr parseExpr(const TermVector &terms);
+
+ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end);
 
 Expression operator+(const Variable &lhs, const Variable &rhs);
 

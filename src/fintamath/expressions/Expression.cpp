@@ -20,7 +20,7 @@ namespace fintamath {
 Expression::Expression() : child(std::make_shared<Integer>(0)) {
 }
 
-Expression::Expression(const std::string &str) : Expression(tokensToTerms(Tokenizer::tokenize(str))) {
+Expression::Expression(const std::string &str) : child(fintamath::parseExpr(str)) {
   validateChild(child);
   simplifyChild(child);
 }
@@ -52,25 +52,32 @@ Expression Expression::precise(uint8_t precision) const {
   return preciseExpr;
 }
 
-Expression::Expression(const TermVector &terms) : Expression(terms, 0, terms.size()) {
+ArgumentPtr parseExpr(const std::string &str) {
+  return parseExpr(Expression::tokensToTerms(Tokenizer::tokenize(str)));
 }
 
-Expression::Expression(const TermVector &terms, size_t start, size_t end) {
+ArgumentPtr parseExpr(const TermVector &terms) {
+  return parseExpr(terms, 0, terms.size());
+}
+
+ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end) {
   if (start >= end) {
-    throw InvalidInputException(termsToString(terms));
+    throw InvalidInputException(Expression::termsToString(terms));
   }
 
-  if (parseBinaryOperator(terms, start, end) ||  //
-      parsePrefixOperator(terms, start, end) ||  //
-      parsePostfixOperator(terms, start, end) || //
-      parseFunction(terms, start, end) ||        //
-      parseBrackets(terms, start, end) ||        //
-      parseFiniteTerm(terms, start, end)         //
+  Expression res;
+
+  if (res.parseBinaryOperator(terms, start, end) ||  //
+      res.parsePrefixOperator(terms, start, end) ||  //
+      res.parsePostfixOperator(terms, start, end) || //
+      res.parseFunction(terms, start, end) ||        //
+      res.parseBrackets(terms, start, end) ||        //
+      res.parseFiniteTerm(terms, start, end)         //
   ) {
-    return;
+    return res.child;
   }
 
-  throw InvalidInputException(termsToString(terms));
+  throw InvalidInputException(Expression::termsToString(terms));
 }
 
 bool Expression::parseBinaryOperator(const TermVector &terms, size_t start, size_t end) {
@@ -110,8 +117,8 @@ bool Expression::parseBinaryOperator(const TermVector &terms, size_t start, size
   }
 
   auto foundOper = cast<IOperator>(getTermValueIf(*terms[foundOperPos], isBinaryOperator));
-  ArgumentPtr lhsArg = Expression(terms, start, foundOperPos).child;
-  ArgumentPtr rhsArg = Expression(terms, foundOperPos + 1, end).child;
+  ArgumentPtr lhsArg = parseExpr(terms, start, foundOperPos);
+  ArgumentPtr rhsArg = parseExpr(terms, foundOperPos + 1, end);
   std::shared_ptr<IExpression> funcExpr = cast<IExpression>(makeExpr(*foundOper, lhsArg, rhsArg));
 
   if (auto expr = cast<Expression>(funcExpr)) {
@@ -130,7 +137,7 @@ bool Expression::parsePrefixOperator(const TermVector &terms, size_t start, size
   }
 
   if (auto oper = cast<IOperator>(getTermValueIf(*terms[start], isPrefixOperator))) {
-    ArgumentPtr arg = Expression(terms, start + 1, end).child;
+    ArgumentPtr arg = parseExpr(terms, start + 1, end);
     child = makeExpr(*oper, arg);
     compressChild(child);
     return true;
@@ -159,7 +166,7 @@ bool Expression::parsePostfixOperator(const TermVector &terms, size_t start, siz
         factor->setOrder(order);
       }
 
-      ArgumentPtr arg = Expression(terms, start, end - order).child;
+      ArgumentPtr arg = parseExpr(terms, start, end - order);
       child = makeExpr(*oper, arg);
       compressChild(child);
       return true;
@@ -222,7 +229,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t
         throw InvalidInputException(termsToString(terms));
       }
 
-      ArgumentPtr lhsArg = Expression(terms, start, i).child;
+      ArgumentPtr lhsArg = parseExpr(terms, start, i);
       ArgumentsPtrVector rhsArgs = parseFunctionArgs(terms, i + 1, end);
 
       funcArgs.emplace_back(lhsArg);
@@ -234,7 +241,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t
     }
   }
 
-  funcArgs.emplace_back(Expression(terms, start, end).child);
+  funcArgs.emplace_back(parseExpr(terms, start, end));
   return funcArgs;
 }
 
@@ -245,7 +252,7 @@ bool Expression::parseBrackets(const TermVector &terms, size_t start, size_t end
 
   if (terms[start]->name == "(" && terms[end - 1]->name == ")") {
     cutBrackets(terms, start, end);
-    *this = Expression(terms, start, end);
+    child = parseExpr(terms, start, end);
     return true;
   }
 

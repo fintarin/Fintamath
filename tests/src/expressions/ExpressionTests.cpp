@@ -1343,3 +1343,17 @@ TEST(ExpressionTests, getTypeIdTest) {
   EXPECT_EQ(Expression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Expression));
   EXPECT_EQ(Expression().getTypeId(), MathObjectTypeId(MathObjectType::Expression));
 }
+
+TEST(ExpressionTests, parseExprTest) {
+  EXPECT_EQ(parseExpr("36/(8-6)3")->toString(), "36/(8 - 6) 3");
+  EXPECT_EQ(parseExpr("2%")->toString(), "2/100");
+  EXPECT_EQ(parseExpr("2.35%")->toString(), "(47/20)/100");
+  EXPECT_EQ(parseExpr("1100*4.76%")->toString(), "1100 (119/25)/100");
+  EXPECT_EQ(parseExpr("2.35%%%%")->toString(), "((((47/20)/100)/100)/100)/100");
+  EXPECT_EQ(parseExpr("1100*4.76%1100*4.76%")->toString(), "1100 (119/25)/100 1100 (119/25)/100");
+  EXPECT_EQ(parseExpr("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))")->toString(), "((5/8)/1)/(((9/4)/0)/5)");
+
+  EXPECT_EQ(parseExpr("(1 = 1) / 2")->toString(), "(1 = 1)/2");
+
+  EXPECT_THROW(parseExpr("1+"), InvalidInputException);
+}
