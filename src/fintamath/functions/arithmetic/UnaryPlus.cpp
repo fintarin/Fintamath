@@ -3,7 +3,9 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> UnaryPlus::call(const ArgumentsRefVector &argsVect) const {
-  return +cast<IArithmetic>(argsVect.front().get());
+  const auto &rhs = cast<IArithmetic>(argsVect.front().get());
+
+  return +rhs;
 }
 
 }

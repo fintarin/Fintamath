@@ -3,7 +3,10 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Sub::call(const ArgumentsRefVector &argsVect) const {
-  return cast<IArithmetic>(argsVect.front().get()) - cast<IArithmetic>(argsVect.back().get());
+  const auto &lhs = cast<IArithmetic>(argsVect.front().get());
+  const auto &rhs = cast<IArithmetic>(argsVect.back().get());
+
+  return lhs - rhs;
 }
 
 }
