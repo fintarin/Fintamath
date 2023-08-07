@@ -5,7 +5,31 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Coth::call(const ArgumentsRefVector &argsVect) const {
-  return coth(convert<Real>(argsVect.front().get())).toMinimalObject();
+  const auto &rhs = cast<INumber>(argsVect.front().get());
+
+  return multiCothSimpl(rhs);
+}
+
+std::unique_ptr<IMathObject> Coth::multiCothSimpl(const INumber &rhs) {
+  static const auto multiCoth = [] {
+    static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiCoth;
+
+    outMultiCoth.add<Integer>([](const Integer &inRhs) {
+      return multiCothSimpl(Real(inRhs));
+    });
+
+    outMultiCoth.add<Rational>([](const Rational &inRhs) {
+      return multiCothSimpl(Real(inRhs));
+    });
+
+    outMultiCoth.add<Real>([](const Real &inRhs) {
+      return coth(inRhs).toMinimalObject();
+    });
+
+    return outMultiCoth;
+  }();
+
+  return multiCoth(rhs);
 }
 
 }

@@ -19,6 +19,9 @@ public:
 
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+
+private:
+  static std::unique_ptr<IMathObject> multiAcoshSimpl(const INumber &rhs);
 };
 
 }
