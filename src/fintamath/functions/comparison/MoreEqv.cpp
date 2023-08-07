@@ -3,8 +3,15 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> MoreEqv::call(const ArgumentsRefVector &argsVect) const {
-  return std::make_unique<Boolean>(cast<IComparable>(argsVect.front().get()) >=
-                                   cast<IComparable>(argsVect.back().get()));
+  const auto &lhs = cast<IComparable>(argsVect.front().get());
+  const auto &rhs = cast<IComparable>(argsVect.back().get());
+
+  // TODO! uncomment
+  // if (is<Complex>(lhs) || is<Complex>(rhs)) {
+  //   return {};
+  // }
+
+  return std::make_unique<Boolean>(lhs >= rhs);
 }
 
 }
