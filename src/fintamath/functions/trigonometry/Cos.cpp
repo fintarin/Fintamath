@@ -5,7 +5,31 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Cos::call(const ArgumentsRefVector &argsVect) const {
-  return cos(convert<Real>(argsVect.front().get())).toMinimalObject();
+  const auto &rhs = cast<INumber>(argsVect.front().get());
+
+  return multiCosSimpl(rhs);
+}
+
+std::unique_ptr<IMathObject> Cos::multiCosSimpl(const INumber &rhs) {
+  static const auto multiCos = [] {
+    static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiCos;
+
+    outMultiCos.add<Integer>([](const Integer &inRhs) {
+      return multiCosSimpl(Real(inRhs));
+    });
+
+    outMultiCos.add<Rational>([](const Rational &inRhs) {
+      return multiCosSimpl(Real(inRhs));
+    });
+
+    outMultiCos.add<Real>([](const Real &inRhs) {
+      return cos(inRhs).toMinimalObject();
+    });
+
+    return outMultiCos;
+  }();
+
+  return multiCos(rhs);
 }
 
 }
