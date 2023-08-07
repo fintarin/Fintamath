@@ -5,7 +5,31 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Sinh::call(const ArgumentsRefVector &argsVect) const {
-  return sinh(convert<Real>(argsVect.front().get())).toMinimalObject();
+  const auto &rhs = cast<INumber>(argsVect.front().get());
+
+  return multiSinhSimpl(rhs);
+}
+
+std::unique_ptr<IMathObject> Sinh::multiSinhSimpl(const INumber &rhs) {
+  static const auto multiSinh = [] {
+    static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiSinh;
+
+    outMultiSinh.add<Integer>([](const Integer &inRhs) {
+      return multiSinhSimpl(Real(inRhs));
+    });
+
+    outMultiSinh.add<Rational>([](const Rational &inRhs) {
+      return multiSinhSimpl(Real(inRhs));
+    });
+
+    outMultiSinh.add<Real>([](const Real &inRhs) {
+      return sinh(inRhs).toMinimalObject();
+    });
+
+    return outMultiSinh;
+  }();
+
+  return multiSinh(rhs);
 }
 
 }
