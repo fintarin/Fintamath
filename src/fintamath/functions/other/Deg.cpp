@@ -9,7 +9,8 @@ namespace fintamath {
 std::unique_ptr<IMathObject> Deg::call(const ArgumentsRefVector &argsVect) const {
   static const ArgumentPtr degVal = makeExpr(Div(), Pi(), Integer(180));
   const auto &rhs = argsVect.front().get();
-  return makeExpr(Mul(), rhs.clone(), degVal)->toMinimalObject();
+
+  return makeExpr(Mul(), rhs, *degVal)->toMinimalObject();
 }
 
 }
