@@ -6,7 +6,31 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Sign::call(const ArgumentsRefVector &argsVect) const {
-  return std::make_unique<Integer>(convert<Real>(argsVect.front().get()).sign());
+  const auto &rhs = cast<INumber>(argsVect.front().get());
+
+  return multiSignSimpl(rhs);
+}
+
+std::unique_ptr<IMathObject> Sign::multiSignSimpl(const INumber &rhs) {
+  static const auto multiSign = [] {
+    static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiSign;
+
+    outMultiSign.add<Integer>([](const Integer &inRhs) {
+      return std::make_unique<Integer>(inRhs.sign());
+    });
+
+    outMultiSign.add<Rational>([](const Rational &inRhs) {
+      return std::make_unique<Integer>(inRhs.sign());
+    });
+
+    outMultiSign.add<Real>([](const Real &inRhs) {
+      return std::make_unique<Integer>(inRhs.sign());
+    });
+
+    return outMultiSign;
+  }();
+
+  return multiSign(rhs);
 }
 
 }
