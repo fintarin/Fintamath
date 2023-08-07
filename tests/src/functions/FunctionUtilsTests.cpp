@@ -18,7 +18,25 @@
 
 using namespace fintamath;
 
-TEST(FunctionUtilsTests, makeExpressionCheckedTest) {
+TEST(FunctionUtilsTests, makeExpressionCheckedPtrsTest) {
+  ArgumentPtr one = std::make_unique<Integer>(1);
+  ArgumentPtr two = std::make_unique<Integer>(2);
+  auto expr1 = makeExprChecked(Add(), {one, two});
+  EXPECT_EQ(expr1->toString(), "3");
+  EXPECT_TRUE(is<INumber>(expr1));
+
+  ArgumentPtr var = std::make_unique<Variable>("a");
+  ArgumentPtr expr2 = makeExprChecked(Cos(), {var});
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr2));
+
+  EXPECT_THROW(makeExprChecked(Mul(), ArgumentsPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Mul(), ArgumentsPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Pow(), ArgumentsPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Pow(), ArgumentsPtrVector{})->toString(), InvalidInputException);
+}
+
+TEST(FunctionUtilsTests, makeExpressionCheckedRefsTest) {
   Integer one = 1;
   Integer two = 2;
   auto expr1 = makeExprChecked(Add(), {one, two});
@@ -29,24 +47,47 @@ TEST(FunctionUtilsTests, makeExpressionCheckedTest) {
   auto expr2 = makeExprChecked(Cos(), {var});
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
+
+  EXPECT_THROW(makeExprChecked(Mul(), ArgumentsRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Mul(), ArgumentsRefVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Pow(), ArgumentsRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Pow(), ArgumentsRefVector{})->toString(), InvalidInputException);
 }
 
-TEST(FunctionUtilsTests, makeExpressionTest) {
-  auto expr1 = makeExpr(Add(), {std::make_shared<Integer>(1), std::make_shared<Integer>(2)});
+TEST(FunctionUtilsTests, makeExpressionPtrsTest) {
+  ArgumentPtr one = std::make_unique<Integer>(1);
+  ArgumentPtr two = std::make_unique<Integer>(2);
+  auto expr1 = makeExpr(Add(), {one, two});
   EXPECT_EQ(expr1->toString(), "1 + 2");
-  EXPECT_TRUE(is<IExpression>(expr1));
-  EXPECT_FALSE(is<Expression>(expr1));
+  EXPECT_FALSE(is<INumber>(expr1));
 
-  auto var = std::make_shared<Variable>("a");
+  ArgumentPtr var = std::make_unique<Variable>("a");
+  ArgumentPtr expr2 = makeExpr(Cos(), {var});
+  EXPECT_EQ(expr2->toString(), "cos(a)");
+  EXPECT_TRUE(is<IExpression>(expr2));
+
+  EXPECT_THROW(makeExpr(Mul(), ArgumentsPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Mul(), ArgumentsPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), ArgumentsPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), ArgumentsPtrVector{})->toString(), InvalidInputException);
+}
+
+TEST(FunctionUtilsTests, makeExpressionRefsTest) {
+  Integer one = 1;
+  Integer two = 2;
+  auto expr1 = makeExpr(Add(), {one, two});
+  EXPECT_EQ(expr1->toString(), "1 + 2");
+  EXPECT_FALSE(is<INumber>(expr1));
+
+  Variable var("a");
   auto expr2 = makeExpr(Cos(), {var});
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
-  EXPECT_FALSE(is<Expression>(expr2));
 
-  EXPECT_THROW(makeExpr(Mul(), {var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Mul(), {})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), {var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), {})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Mul(), ArgumentsRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Mul(), ArgumentsRefVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), ArgumentsRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), ArgumentsRefVector{})->toString(), InvalidInputException);
 }
 
 TEST(FunctionUtilsTests, makeExpressionCheckedAnyArgsTest) {

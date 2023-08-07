@@ -136,7 +136,11 @@ private:
 
   static void preciseRec(ArgumentPtr &arg, uint8_t precision);
 
+  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsPtrVector &args);
+
   friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args);
+
+  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsPtrVector &args);
 
   friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
 

@@ -75,7 +75,7 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Real("2.2"), Real("0.5"))->toString(),
             "1.48323969741913258974227948816014261219598086381950031974652465286876603686277");
 
-  EXPECT_EQ(f(Rational(-10), Rational("-1.5"))->toString(), "(-1/10)^(3/2)");
+  EXPECT_EQ(f(Rational(-10), Rational("-1.5"))->toString(), "(-10)^(-3/2)");
 
   EXPECT_EQ(f(Integer(0), Integer(-1))->toString(), "ComplexInf");
   EXPECT_EQ(f(Integer(0), Integer(-10))->toString(), "ComplexInf");

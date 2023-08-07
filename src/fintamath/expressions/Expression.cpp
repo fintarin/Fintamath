@@ -497,15 +497,13 @@ void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
   }
 }
 
-std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args) {
-  ArgumentsPtrVector argsPtrVect;
-
-  for (const auto &arg : args) {
-    argsPtrVect.emplace_back(arg.get().clone());
-  }
-
-  Expression res(makeExpr(func, argsPtrVect));
+std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsPtrVector &args) {
+  Expression res(makeExpr(func, args));
   return res.getChildren().front()->clone();
+}
+
+std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args) {
+  return makeExprChecked(func, argumentRefVectorToArgumentPtrVector(args));
 }
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrVector &args) {
@@ -514,6 +512,10 @@ std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrV
   }
 
   return std::make_unique<FunctionExpression>(func, args);
+}
+
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args) {
+  return makeExpr(func, argumentRefVectorToArgumentPtrVector(args));
 }
 
 void Expression::setChildren(const ArgumentsPtrVector &childVect) {

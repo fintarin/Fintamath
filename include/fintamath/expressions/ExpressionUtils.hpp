@@ -28,4 +28,6 @@ bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable 
 
 std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args);
 
+ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args);
+
 }

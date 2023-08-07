@@ -56,7 +56,11 @@ protected:
     validateArgsSize(argsVect);
 
     if (doArgsMatch(argsVect)) {
-      return call(argsVect);
+      if (auto res = call(argsVect)) {
+        return res;
+      }
+
+      return makeExpr(*this, argsVect);
     }
 
     return makeExprChecked(*this, argsVect);

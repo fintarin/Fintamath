@@ -141,6 +141,16 @@ std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &
   return argStrings;
 }
 
+ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args) {
+  ArgumentsPtrVector argsPtrVect;
+
+  for (const auto &arg : args) {
+    argsPtrVect.emplace_back(arg.get().clone());
+  }
+
+  return argsPtrVect;
+}
+
 bool isExpression(const IMathObject &arg) {
   return is<IExpression>(arg);
 }

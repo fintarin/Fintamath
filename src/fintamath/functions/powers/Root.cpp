@@ -26,7 +26,7 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) cons
     if (rhsInt > Integer(1)) {
       if (lhs < Integer(0)) {
         // TODO: complex numbers
-        return makeExpr(Root(), lhs, rhs);
+        return {};
       }
 
       return multiRootSimpl(lhs, rhsInt);

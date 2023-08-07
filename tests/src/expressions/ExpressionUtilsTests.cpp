@@ -43,6 +43,10 @@ TEST(ExpressionUtilsTests, argumentVectorToStringVectorTest) {
   // TODO: implement
 }
 
+TEST(ExpressionUtilsTests, argumentRefVectorToArgumentPtrVector) {
+  // TODO: implement
+}
+
 TEST(ExpressionUtilsTests, hasVariableTest) {
   auto expr = std::make_shared<Expression>("cos(sin(a))");
   EXPECT_TRUE(hasVariable(expr, Variable("a")));

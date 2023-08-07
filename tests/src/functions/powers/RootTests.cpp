@@ -94,7 +94,7 @@ TEST(RootTests, callTest) {
 
   EXPECT_EQ(f(Integer(-10), Integer(2))->toString(), "sqrt(-10)");
   EXPECT_EQ(f(Rational(-9289, 10), Rational(2, 3))->toString(), "(-9289/10)^(3/2)");
-  EXPECT_EQ(f(Real(-9289), Rational(2, 3))->toString(), "(-9289.0)^1.5");
+  EXPECT_EQ(f(Real(-9289), Rational(2, 3))->toString(), "(-9289.0)^(3/2)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

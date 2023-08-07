@@ -79,7 +79,7 @@ std::unique_ptr<IMathObject> Pow::powSimpl(const Rational &lhs, const Rational &
 
   if (lhs < Integer(0)) {
     // TODO: complex numbers
-    return makeExpr(Pow(), lhs, rhs);
+    return {};
   }
 
   if (lhsDenominator == 1) {
@@ -94,7 +94,7 @@ std::unique_ptr<IMathObject> Pow::powSimpl(const Real &lhs, const Real &rhs) {
     return pow(lhs, rhs).toMinimalObject();
   }
   catch (const UndefinedException &) {
-    return makeExpr(Pow(), lhs, rhs);
+    return {};
   }
 }
 

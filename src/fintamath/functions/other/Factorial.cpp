@@ -38,7 +38,7 @@ std::unique_ptr<IMathObject> Factorial::multiFactorialSimpl(const INumber &lhs, 
 std::unique_ptr<IMathObject> Factorial::factorialSimpl(const Integer &rhs, size_t order) {
   if (rhs < 0) {
     if (order != 1) {
-      return makeExpr(Factorial(order), rhs);
+      return {};
     }
 
     return ComplexInf().clone();
@@ -53,7 +53,7 @@ std::unique_ptr<IMathObject> Factorial::factorialSimpl(const Rational &rhs, size
   }
 
   if (order != 1) {
-    return makeExpr(Factorial(order), rhs);
+    return {};
   }
 
   return factorialSimpl(Real(rhs), order);
@@ -61,14 +61,14 @@ std::unique_ptr<IMathObject> Factorial::factorialSimpl(const Rational &rhs, size
 
 std::unique_ptr<IMathObject> Factorial::factorialSimpl(const Real &rhs, size_t order) {
   if (order != 1) {
-    return makeExpr(Factorial(order), rhs);
+    return {};
   }
 
   try {
     return tgamma(rhs + 1).toMinimalObject();
   }
   catch (const UndefinedException &) {
-    return makeExpr(Factorial(order), rhs);
+    return {};
   }
 }
 
