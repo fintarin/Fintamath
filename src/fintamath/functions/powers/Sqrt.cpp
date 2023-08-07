@@ -10,7 +10,10 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Sqrt::call(const ArgumentsRefVector &argsVect) const {
-  return Root()(argsVect.front().get(), Integer(2));
+  const auto &lhs = argsVect.front().get();
+  static const Integer rhs = 2;
+
+  return Root()(lhs, rhs);
 }
 
 }
