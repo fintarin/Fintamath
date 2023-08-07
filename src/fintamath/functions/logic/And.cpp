@@ -3,7 +3,10 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> And::call(const ArgumentsRefVector &argsVect) const {
-  return std::make_unique<Boolean>(cast<Boolean>(argsVect.front().get()) && cast<Boolean>(argsVect.back().get()));
+  const auto &lhs = cast<Boolean>(argsVect.front().get());
+  const auto &rhs = cast<Boolean>(argsVect.back().get());
+
+  return std::make_unique<Boolean>(lhs && rhs);
 }
 
 }
