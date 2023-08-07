@@ -8,6 +8,11 @@ std::unique_ptr<IMathObject> Max::call(const ArgumentsRefVector &argsVect) const
   for (size_t i = 1; i < argsVect.size(); i++) {
     std::reference_wrapper<const IComparable> arg = cast<IComparable>(argsVect[i].get());
 
+    // TODO! uncomment
+    // if (is<Complex>(arg)) {
+    //   return {};
+    // }
+
     if (res < arg) {
       res = arg;
     }
