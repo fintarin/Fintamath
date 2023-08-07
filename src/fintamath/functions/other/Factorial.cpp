@@ -10,6 +10,7 @@ namespace fintamath {
 
 std::unique_ptr<IMathObject> Factorial::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
+
   return multiFactorialSimpl(rhs, order);
 }
 
