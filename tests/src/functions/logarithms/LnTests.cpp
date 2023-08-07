@@ -24,7 +24,7 @@ TEST(LnTests, getFunctionTypeTest) {
 }
 
 TEST(LnTests, callTest) {
-  EXPECT_EQ(f(Integer(1))->toString(), "0.0");
+  EXPECT_EQ(f(Integer(1))->toString(), "0");
   EXPECT_EQ(f(Integer(10))->toString(),
             "2.3025850929940456840179914546843642076011014886287729760333279009675726096773525");
   EXPECT_EQ(f(Integer(5))->toString(),

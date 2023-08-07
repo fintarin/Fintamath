@@ -1,11 +1,14 @@
 #include "fintamath/functions/logarithms/Lg.hpp"
 
-#include "fintamath/numbers/RealFunctions.hpp"
+#include "fintamath/functions/logarithms/Log.hpp"
 
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Lg::call(const ArgumentsRefVector &argsVect) const {
-  return lg(convert<Real>(argsVect.front().get())).toMinimalObject();
+  static const Integer lhs = 10;
+  const auto &rhs = argsVect.front().get();
+
+  return Log()(lhs, rhs);
 }
 
 }
