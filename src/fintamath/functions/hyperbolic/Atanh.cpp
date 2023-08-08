@@ -1,11 +1,26 @@
 #include "fintamath/functions/hyperbolic/Atanh.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Atanh::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
+
+  if (rhs == Integer(-1)) {
+    return NegInf().clone();
+  }
+
+  if (rhs == Integer(0)) {
+    return rhs.clone();
+  }
+
+  if (rhs == Integer(1)) {
+    return Inf().clone();
+  }
 
   return multiAtanhSimpl(rhs);
 }
@@ -23,13 +38,22 @@ std::unique_ptr<IMathObject> Atanh::multiAtanhSimpl(const INumber &rhs) {
     });
 
     outMultiAtanh.add<Real>([](const Real &inRhs) {
-      return atanh(inRhs).toMinimalObject();
+      return atanhSimpl(inRhs);
     });
 
     return outMultiAtanh;
   }();
 
   return multiAtanh(rhs);
+}
+
+std::unique_ptr<IMathObject> Atanh::atanhSimpl(const Real &rhs) {
+  try {
+    return atanh(rhs).toMinimalObject();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

@@ -7,6 +7,10 @@ namespace fintamath {
 std::unique_ptr<IMathObject> Asinh::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
+  if (rhs == Integer(0)) {
+    return rhs.clone();
+  }
+
   return multiAsinhSimpl(rhs);
 }
 
