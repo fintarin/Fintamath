@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Real;
+
 class Acosh : public IFunctionCRTP<INumber, Acosh, INumber> {
 public:
   Acosh() = default;
@@ -22,6 +24,8 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAcoshSimpl(const INumber &rhs);
+
+  static std::unique_ptr<IMathObject> acoshSimpl(const Real &rhs);
 };
 
 }

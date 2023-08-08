@@ -1,11 +1,16 @@
 #include "fintamath/functions/hyperbolic/Coth.hpp"
 
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Coth::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
+
+  if (rhs == Integer(0)) {
+    return ComplexInf().clone();
+  }
 
   return multiCothSimpl(rhs);
 }

@@ -7,6 +7,7 @@
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 using namespace fintamath;
 
@@ -21,7 +22,11 @@ TEST(AtanhTests, getFunctionTypeTest) {
 }
 
 TEST(AtanhTests, callTest) {
-  EXPECT_EQ(f(Integer(0))->toString(), "0.0");
+  EXPECT_EQ(f(Integer(-1))->toString(), "-Inf");
+  EXPECT_EQ(f(Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(1))->toString(), "Inf");
+  EXPECT_EQ(f(Integer(2))->toString(), "atanh(2)");
+
   EXPECT_EQ(f(Rational(10, 11))->toString(),
             "1.5222612188617114982502989901828527171422876437023053200970422417875370779853391");
   EXPECT_EQ(f(Rational(-10, 11))->toString(),
@@ -29,12 +34,10 @@ TEST(AtanhTests, callTest) {
   EXPECT_EQ(f(Rational(1, 10))->toString(),
             "0.10033534773107558063572655206003894526336286914595913587458952092779251873800939");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "atanh(a)");
+  EXPECT_EQ(f(Real("0.5"))->toString(),
+            "0.54930614433405484569762261846126285232374527891137472586734716681874714660930448");
 
-  EXPECT_THROW(f(Integer(-2)), UndefinedFunctionException);
-  EXPECT_THROW(f(Integer(-1)), UndefinedFunctionException);
-  EXPECT_THROW(f(Integer(1)), UndefinedFunctionException);
-  EXPECT_THROW(f(Integer(2)), UndefinedFunctionException);
+  EXPECT_EQ(f(Variable("a"))->toString(), "atanh(a)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

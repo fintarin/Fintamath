@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Real;
+
 class Atanh : public IFunctionCRTP<INumber, Atanh, INumber> {
 public:
   Atanh() = default;
@@ -22,6 +24,8 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAtanhSimpl(const INumber &rhs);
+
+  static std::unique_ptr<IMathObject> atanhSimpl(const Real &rhs);
 };
 
 }
