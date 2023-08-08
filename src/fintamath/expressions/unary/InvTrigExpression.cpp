@@ -13,7 +13,7 @@ InvTrigExpression::SimplifyFunctionsVector InvTrigExpression::getFunctionsForPos
   return simplifyFunctions;
 }
 
-ArgumentPtr InvTrigExpression::constantsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+ArgumentPtr InvTrigExpression::constantsSimplify(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
   // TODO! implement
   return {};
 }
