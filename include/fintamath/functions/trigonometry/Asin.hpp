@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Real;
+
 class Asin : public IFunctionCRTP<INumber, Asin, INumber> {
 public:
   Asin() = default;
@@ -22,6 +24,8 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAsinSimpl(const INumber &rhs);
+
+  static std::unique_ptr<IMathObject> asinSimpl(const Real &rhs);
 };
 
 }

@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Real;
+
 class Acos : public IFunctionCRTP<INumber, Acos, INumber> {
 public:
   Acos() = default;
@@ -22,6 +24,8 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAcosSimpl(const INumber &rhs);
+
+  static std::unique_ptr<IMathObject> acosSimpl(const Real &rhs);
 };
 
 }

@@ -159,7 +159,7 @@ TEST(ExpressionFunctionsTests, cosTest) {
 
 TEST(ExpressionFunctionsTests, tanTest) {
   // TODO trigonometry
-  EXPECT_EQ(tan(Expression("0")).toString(), "tan(0)");
+  EXPECT_EQ(tan(Expression("0")).toString(), "0");
   EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "tan((3 Pi)/4)");
   EXPECT_EQ(tan(Expression("a^3")).toString(), "tan(a^3)");
 }
@@ -172,30 +172,30 @@ TEST(ExpressionFunctionsTests, cotTest) {
 }
 
 TEST(ExpressionFunctionsTests, asinTest) {
-  // TODO trigonometry
-  EXPECT_EQ(asin(Expression("0")).toString(), "asin(0)");
-  EXPECT_EQ(asin(Expression("1")).toString(), "asin(1)");
+  EXPECT_EQ(asin(Expression("-1")).toString(), "-Pi/2");
+  EXPECT_EQ(asin(Expression("0")).toString(), "0");
+  EXPECT_EQ(asin(Expression("1")).toString(), "Pi/2");
   EXPECT_EQ(asin(Expression("a+b")).toString(), "asin(a + b)");
 }
 
 TEST(ExpressionFunctionsTests, acosTest) {
-  // TODO trigonometry
-  EXPECT_EQ(acos(Expression("0")).toString(), "acos(0)");
-  EXPECT_EQ(acos(Expression("1")).toString(), "acos(1)");
+  EXPECT_EQ(acos(Expression("-1")).toString(), "Pi");
+  EXPECT_EQ(acos(Expression("0")).toString(), "Pi/2");
+  EXPECT_EQ(acos(Expression("1")).toString(), "0");
   EXPECT_EQ(acos(Expression("8*a")).toString(), "acos(8 a)");
 }
 
 TEST(ExpressionFunctionsTests, atanTest) {
-  // TODO trigonometry
-  EXPECT_EQ(atan(Expression("0")).toString(), "atan(0)");
-  EXPECT_EQ(atan(Expression("-1")).toString(), "atan(-1)");
+  EXPECT_EQ(atan(Expression("-1")).toString(), "-Pi/4");
+  EXPECT_EQ(atan(Expression("0")).toString(), "0");
+  EXPECT_EQ(atan(Expression("1")).toString(), "Pi/4");
   EXPECT_EQ(atan(Expression("a^3")).toString(), "atan(a^3)");
 }
 
 TEST(ExpressionFunctionsTests, acotTest) {
-  // TODO trigonometry
-  EXPECT_EQ(acot(Expression("1")).toString(), "acot(1)");
-  EXPECT_EQ(acot(Expression("0")).toString(), "acot(0)");
+  EXPECT_EQ(acot(Expression("-1")).toString(), "-Pi/4");
+  EXPECT_EQ(acot(Expression("0")).toString(), "Pi/2");
+  EXPECT_EQ(acot(Expression("1")).toString(), "Pi/4");
   EXPECT_EQ(acot(Expression("a/5")).toString(), "acot(a/5)");
 }
 

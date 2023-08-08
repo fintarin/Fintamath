@@ -760,8 +760,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-1)!").toString(), "ComplexInf");
   EXPECT_EQ(Expression("tan(Pi/2)").toString(), "tan(Pi/2)");       // TODO! ComplexInf
   EXPECT_EQ(Expression("tan(3/2*Pi)").toString(), "tan((3 Pi)/2)"); // TODO! ComplexInf
-  EXPECT_EQ(Expression("cot(0)").toString(), "cot(0)");             // TODO! ComplexInf
-  EXPECT_EQ(Expression("cot(2*Pi)").toString(), "cot(2 Pi)");       // TODO! ComplexInf
+  EXPECT_EQ(Expression("cot(0)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("cot(2*Pi)").toString(), "cot(2 Pi)"); // TODO! ComplexInf
 
   EXPECT_EQ(Expression("0*Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("0*-Inf").toString(), "Undefined");

@@ -7,6 +7,7 @@
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 using namespace fintamath;
 
@@ -21,18 +22,23 @@ TEST(AcotTests, getFunctionTypeTest) {
 }
 
 TEST(AcotTests, callTest) {
-  EXPECT_EQ(f(Integer(1))->toString(),
-            "0.78539816339744830961566084581987572104929234984377645524373614807695410157155225");
-  EXPECT_EQ(f(Integer(10))->toString(),
-            "0.099668652491162027378446119878020590243278322504314648015508776810027747447550654");
-  EXPECT_EQ(f(Integer(-10))->toString(),
-            "-0.099668652491162027378446119878020590243278322504314648015508776810027747447550654");
+  EXPECT_EQ(f(Integer(-1))->toString(), "-Pi/4");
+  EXPECT_EQ(f(Integer(0))->toString(), "Pi/2");
+  EXPECT_EQ(f(Integer(1))->toString(), "Pi/4");
+  EXPECT_EQ(f(Integer(-2))->toString(),
+            "-0.46364760900080611621425623146121440202853705428612026381093308872019786416574171");
+  EXPECT_EQ(f(Integer(2))->toString(),
+            "0.46364760900080611621425623146121440202853705428612026381093308872019786416574171");
+
   EXPECT_EQ(f(Rational(1, 10))->toString(),
             "1.4711276743037345918528755717617308518553063771832382624719635193438804556955538");
+  EXPECT_EQ(f(Rational(-1, 5))->toString(),
+            "-1.3734007669450158608612719264449611486509995958997008089697833559128742331648607");
+
+  EXPECT_EQ(f(Real("0.5"))->toString(),
+            "1.1071487177940905030170654601785370400700476454014326466765392074337103389773628");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "acot(a)");
-
-  EXPECT_THROW(f(Integer(0)), UndefinedFunctionException);
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

@@ -7,6 +7,10 @@ namespace fintamath {
 std::unique_ptr<IMathObject> Cos::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
+  if (rhs == Integer(0)) {
+    return Integer(1).clone();
+  }
+
   return multiCosSimpl(rhs);
 }
 
