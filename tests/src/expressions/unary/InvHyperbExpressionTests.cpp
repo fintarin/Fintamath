@@ -6,7 +6,6 @@
 
 using namespace fintamath;
 
-TEST(InvHyperbolicExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Asinh(), Integer(0).clone())->getTypeId(),
-            MathObjectTypeId(MathObjectType::InvHyperbolicExpression));
+TEST(InvHyperbExpressionTests, getTypeIdTest) {
+  EXPECT_EQ(makeExpr(Asinh(), Integer(0).clone())->getTypeId(), MathObjectTypeId(MathObjectType::InvHyperbExpression));
 }

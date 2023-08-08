@@ -12,8 +12,8 @@
 #include "fintamath/expressions/polynomial/MinMaxExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
-#include "fintamath/expressions/unary/HyperbolicExpression.hpp"
-#include "fintamath/expressions/unary/InvHyperbolicExpression.hpp"
+#include "fintamath/expressions/unary/HyperbExpression.hpp"
+#include "fintamath/expressions/unary/InvHyperbExpression.hpp"
 #include "fintamath/expressions/unary/InvTrigExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
@@ -346,35 +346,35 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Sinh>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<HyperbolicExpression>(Sinh(), args.front());
+      return std::make_unique<HyperbExpression>(Sinh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Cosh>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<HyperbolicExpression>(Cosh(), args.front());
+      return std::make_unique<HyperbExpression>(Cosh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Tanh>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<HyperbolicExpression>(Tanh(), args.front());
+      return std::make_unique<HyperbExpression>(Tanh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Coth>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<HyperbolicExpression>(Coth(), args.front());
+      return std::make_unique<HyperbExpression>(Coth(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Asinh>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<InvHyperbolicExpression>(Asinh(), args.front());
+      return std::make_unique<InvHyperbExpression>(Asinh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Acosh>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<InvHyperbolicExpression>(Acosh(), args.front());
+      return std::make_unique<InvHyperbExpression>(Acosh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Atanh>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<InvHyperbolicExpression>(Atanh(), args.front());
+      return std::make_unique<InvHyperbExpression>(Atanh(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Acoth>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<InvHyperbolicExpression>(Acoth(), args.front());
+      return std::make_unique<InvHyperbExpression>(Acoth(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Deg>([](const ArgumentsPtrVector &args) {

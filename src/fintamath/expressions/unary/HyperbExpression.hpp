@@ -4,12 +4,12 @@
 
 namespace fintamath {
 
-class HyperbolicExpression : public IUnaryExpressionCRTP<HyperbolicExpression, true> {
+class HyperbExpression : public IUnaryExpressionCRTP<HyperbExpression, true> {
 public:
-  explicit HyperbolicExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
+  explicit HyperbExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::HyperbolicExpression);
+    return MathObjectTypeId(MathObjectType::HyperbExpression);
   }
 
 protected:

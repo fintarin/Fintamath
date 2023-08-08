@@ -1,4 +1,4 @@
-#include "fintamath/expressions/unary/HyperbolicExpression.hpp"
+#include "fintamath/expressions/unary/HyperbExpression.hpp"
 
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/hyperbolic/Acoth.hpp"
@@ -11,25 +11,25 @@
 
 namespace fintamath {
 
-HyperbolicExpression::HyperbolicExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
+HyperbExpression::HyperbExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
     : IUnaryExpressionCRTP(inFunc, inChild) {
 }
 
-HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctionsForPreSimplify() const {
-  static const HyperbolicExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &HyperbolicExpression::oppositeFunctionsSimplify, //
+HyperbExpression::SimplifyFunctionsVector HyperbExpression::getFunctionsForPreSimplify() const {
+  static const HyperbExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &HyperbExpression::oppositeFunctionsSimplify, //
   };
   return simplifyFunctions;
 }
 
-HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctionsForPostSimplify() const {
-  static const HyperbolicExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &HyperbolicExpression::oppositeFunctionsSimplify, //
+HyperbExpression::SimplifyFunctionsVector HyperbExpression::getFunctionsForPostSimplify() const {
+  static const HyperbExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &HyperbExpression::oppositeFunctionsSimplify, //
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr HyperbolicExpression::oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+ArgumentPtr HyperbExpression::oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (const auto expr = cast<IExpression>(rhs)) {
     if (auto oppositeFunc = getOppositeFunction(func)) {
       if (*expr->getFunction() == *oppositeFunc) {
@@ -41,7 +41,7 @@ ArgumentPtr HyperbolicExpression::oppositeFunctionsSimplify(const IFunction &fun
   return {};
 }
 
-std::shared_ptr<IFunction> HyperbolicExpression::getOppositeFunction(const IFunction &function) {
+std::shared_ptr<IFunction> HyperbExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
       {Sinh().toString(), std::make_unique<Asinh>()}, //
       {Cosh().toString(), std::make_unique<Acosh>()}, //
