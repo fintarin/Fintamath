@@ -14,10 +14,10 @@
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
 #include "fintamath/expressions/unary/HyperbolicExpression.hpp"
 #include "fintamath/expressions/unary/InvHyperbolicExpression.hpp"
-#include "fintamath/expressions/unary/InvTrigonometryExpression.hpp"
+#include "fintamath/expressions/unary/InvTrigExpression.hpp"
 #include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
-#include "fintamath/expressions/unary/TrigonometryExpression.hpp"
+#include "fintamath/expressions/unary/TrigExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Frac.hpp"
@@ -314,35 +314,35 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Sin>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<TrigonometryExpression>(Sin(), args.front());
+      return std::make_unique<TrigExpression>(Sin(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Cos>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<TrigonometryExpression>(Cos(), args.front());
+      return std::make_unique<TrigExpression>(Cos(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Tan>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<TrigonometryExpression>(Tan(), args.front());
+      return std::make_unique<TrigExpression>(Tan(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Cot>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<TrigonometryExpression>(Cot(), args.front());
+      return std::make_unique<TrigExpression>(Cot(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Asin>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<InvTrigonometryExpression>(Asin(), args.front());
+      return std::make_unique<InvTrigExpression>(Asin(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Acos>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<InvTrigonometryExpression>(Acos(), args.front());
+      return std::make_unique<InvTrigExpression>(Acos(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Atan>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<InvTrigonometryExpression>(Atan(), args.front());
+      return std::make_unique<InvTrigExpression>(Atan(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Acot>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<InvTrigonometryExpression>(Acot(), args.front());
+      return std::make_unique<InvTrigExpression>(Acot(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Sinh>([](const ArgumentsPtrVector &args) {

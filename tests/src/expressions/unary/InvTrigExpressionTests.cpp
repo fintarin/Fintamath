@@ -6,7 +6,6 @@
 
 using namespace fintamath;
 
-TEST(InvTrigonometryExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Asin(), Integer(0).clone())->getTypeId(),
-            MathObjectTypeId(MathObjectType::InvTrigonometryExpression));
+TEST(InvTrigExpressionTests, getTypeIdTest) {
+  EXPECT_EQ(makeExpr(Asin(), Integer(0).clone())->getTypeId(), MathObjectTypeId(MathObjectType::InvTrigExpression));
 }

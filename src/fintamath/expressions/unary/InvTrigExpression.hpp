@@ -4,12 +4,12 @@
 
 namespace fintamath {
 
-class InvTrigonometryExpression : public IUnaryExpressionCRTP<InvTrigonometryExpression, true> {
+class InvTrigExpression : public IUnaryExpressionCRTP<InvTrigExpression, true> {
 public:
-  explicit InvTrigonometryExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
+  explicit InvTrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 
   static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::InvTrigonometryExpression);
+    return MathObjectTypeId(MathObjectType::InvTrigExpression);
   }
 
 protected:

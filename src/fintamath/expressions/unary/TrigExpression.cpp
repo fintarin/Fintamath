@@ -1,4 +1,4 @@
-#include "fintamath/expressions/unary/TrigonometryExpression.hpp"
+#include "fintamath/expressions/unary/TrigExpression.hpp"
 
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
@@ -11,26 +11,26 @@
 
 namespace fintamath {
 
-TrigonometryExpression::TrigonometryExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
+TrigExpression::TrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
     : IUnaryExpressionCRTP(inFunc, inChild) {
 }
 
-TrigonometryExpression::SimplifyFunctionsVector TrigonometryExpression::getFunctionsForPreSimplify() const {
-  static const TrigonometryExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &TrigonometryExpression::oppositeFunctionsSimplify, //
+TrigExpression::SimplifyFunctionsVector TrigExpression::getFunctionsForPreSimplify() const {
+  static const TrigExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &TrigExpression::oppositeFunctionsSimplify, //
   };
   return simplifyFunctions;
 }
 
-TrigonometryExpression::SimplifyFunctionsVector TrigonometryExpression::getFunctionsForPostSimplify() const {
-  static const TrigonometryExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &TrigonometryExpression::constantsSimplify,         //
-      &TrigonometryExpression::oppositeFunctionsSimplify, //
+TrigExpression::SimplifyFunctionsVector TrigExpression::getFunctionsForPostSimplify() const {
+  static const TrigExpression::SimplifyFunctionsVector simplifyFunctions = {
+      &TrigExpression::constantsSimplify,         //
+      &TrigExpression::oppositeFunctionsSimplify, //
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr TrigonometryExpression::oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+ArgumentPtr TrigExpression::oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (const auto expr = cast<IExpression>(rhs)) {
     if (auto oppositeFunc = getOppositeFunction(func)) {
       if (*expr->getFunction() == *oppositeFunc) {
@@ -42,12 +42,12 @@ ArgumentPtr TrigonometryExpression::oppositeFunctionsSimplify(const IFunction &f
   return {};
 }
 
-ArgumentPtr TrigonometryExpression::constantsSimplify(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
+ArgumentPtr TrigExpression::constantsSimplify(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
   // TODO! implement
   return {};
 }
 
-std::shared_ptr<IFunction> TrigonometryExpression::getOppositeFunction(const IFunction &function) {
+std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
       {Sin().toString(), std::make_shared<Asin>()}, //
       {Cos().toString(), std::make_shared<Acos>()}, //
