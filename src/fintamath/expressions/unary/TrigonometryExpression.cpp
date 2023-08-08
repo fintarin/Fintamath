@@ -31,10 +31,10 @@ TrigonometryExpression::SimplifyFunctionsVector TrigonometryExpression::getFunct
 }
 
 ArgumentPtr TrigonometryExpression::oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (const auto expr = cast<TrigonometryExpression>(rhs)) {
+  if (const auto expr = cast<IExpression>(rhs)) {
     if (auto oppositeFunc = getOppositeFunction(func)) {
       if (*expr->getFunction() == *oppositeFunc) {
-        return expr->child;
+        return expr->getChildren().front();
       }
     }
   }

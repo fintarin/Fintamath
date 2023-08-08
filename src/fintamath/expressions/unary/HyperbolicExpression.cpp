@@ -30,10 +30,10 @@ HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctions
 }
 
 ArgumentPtr HyperbolicExpression::oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (const auto expr = cast<HyperbolicExpression>(rhs)) {
+  if (const auto expr = cast<IExpression>(rhs)) {
     if (auto oppositeFunc = getOppositeFunction(func)) {
       if (*expr->getFunction() == *oppositeFunc) {
-        return expr->child;
+        return expr->getChildren().front();
       }
     }
   }

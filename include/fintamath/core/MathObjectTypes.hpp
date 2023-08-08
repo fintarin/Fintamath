@@ -23,7 +23,9 @@ enum class MathObjectType : MathObjectTypeId {
   NegExpression,
   NotExpression,
   TrigonometryExpression,
+  InvTrigonometryExpression,
   HyperbolicExpression,
+  InvHyperbolicExpression,
 
   IBinaryExpression = 4000,
 
