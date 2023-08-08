@@ -24,7 +24,6 @@ HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctions
 
 HyperbolicExpression::SimplifyFunctionsVector HyperbolicExpression::getFunctionsForPostSimplify() const {
   static const HyperbolicExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &HyperbolicExpression::constantsSimplify,         //
       &HyperbolicExpression::oppositeFunctionsSimplify, //
   };
   return simplifyFunctions;
@@ -39,11 +38,6 @@ ArgumentPtr HyperbolicExpression::oppositeFunctionsSimplify(const IFunction &fun
     }
   }
 
-  return {};
-}
-
-ArgumentPtr HyperbolicExpression::constantsSimplify(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
-  // TODO: implement
   return {};
 }
 

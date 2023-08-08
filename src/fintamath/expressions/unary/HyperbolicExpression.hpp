@@ -20,8 +20,6 @@ protected:
 private:
   static ArgumentPtr oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr constantsSimplify(const IFunction &func, const ArgumentPtr &rhs);
-
   static std::shared_ptr<IFunction> getOppositeFunction(const IFunction &function);
 };
 
