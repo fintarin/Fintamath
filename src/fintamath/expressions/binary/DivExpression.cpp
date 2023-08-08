@@ -155,21 +155,15 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
   for (auto &lhsChild : lhsChildren) {
     for (size_t j = 0; j < rhsChildren.size(); j++) {
-      bool isResFound = false;
+      ArgumentPtr res = powSimplify(lhsChild, rhsChildren[j]);
 
-      if (auto divPowRes = powSimplify(lhsChild, rhsChildren[j])) {
-        lhsChild = divPowRes;
-        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::difference_type(j));
-        isResFound = true;
-      }
-      else if (auto callFuncRes = callFunction(Div(), {lhsChild, rhsChildren[j]});
-               callFuncRes && !is<Rational>(callFuncRes)) {
-        lhsChild = Div()(*lhsChild, *rhsChildren[j]);
-        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::difference_type(j));
-        isResFound = true;
+      if (!res) {
+        res = callFunction(Div(), {lhsChild, rhsChildren[j]});
       }
 
-      if (isResFound) {
+      if (res && !is<Rational>(res)) {
+        lhsChild = res;
+        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::difference_type(j));
         break;
       }
     }
