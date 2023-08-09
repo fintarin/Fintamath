@@ -156,7 +156,7 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer 
   }
 
   ArgumentsPtrVector numeratorChildren;
-  ArgumentsPtrVector denominatorChildren;
+  Rational denominator = 1;
 
   std::map<Integer, Integer> numeratorRootFactors = roots(lhs.numerator(), rhs);
   std::map<Integer, Integer> denominatorRootFactors = roots(lhs.denominator(), rhs);
@@ -171,7 +171,7 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer 
 
   if (denominatorRootFactors.begin()->first == 1) {
     if (denominatorRootFactors.begin()->second != 1) {
-      denominatorChildren.emplace_back(denominatorRootFactors.begin()->second.clone());
+      denominator *= denominatorRootFactors.begin()->second;
     }
 
     denominatorRootFactors.erase(denominatorRootFactors.begin());
@@ -186,7 +186,11 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer 
       denominatorRootFactors.erase(denominatorFactorIter);
 
       if (denominatorFactor != 1) {
-        numeratorChildren.emplace_back(makeExpr(Root(), Rational(numeratorFactor, denominatorFactor), root));
+        denominator *= denominatorFactor;
+
+        Integer numeratorChild = numeratorFactor * pow(denominatorFactor, root - 1);
+        numeratorChildren.emplace_back(makeExpr(Root(), numeratorChild, root));
+
         continue;
       }
     }
@@ -198,7 +202,10 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer 
 
   for (auto [root, denominatorFactor] : denominatorRootFactors) {
     if (denominatorFactor != 1) {
-      denominatorChildren.emplace_back(makeExpr(Root(), denominatorFactor, root));
+      denominator *= denominatorFactor;
+
+      Integer numeratorChild = pow(denominatorFactor, root - 1);
+      numeratorChildren.emplace_back(makeExpr(Root(), numeratorChild, root));
     }
   }
 
@@ -210,16 +217,8 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer 
     numerator = makeExpr(Mul(), numeratorChildren);
   }
 
-  if (!denominatorChildren.empty()) {
-    ArgumentPtr denominator;
-    if (denominatorChildren.size() == 1) {
-      denominator = denominatorChildren.front();
-    }
-    else {
-      denominator = makeExpr(Mul(), denominatorChildren);
-    }
-
-    return makeExpr(Div(), numerator, denominator);
+  if (denominator != 1) {
+    return makeExpr(Div(), numerator, denominator.toMinimalObject());
   }
 
   return numerator->clone();

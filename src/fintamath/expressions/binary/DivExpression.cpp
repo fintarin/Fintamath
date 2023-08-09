@@ -400,24 +400,40 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
   auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
 
-  ArgumentPtr result;
+  auto lhsChildValueNum = cast<INumber>(lhsChildValue);
+  auto lhsChildRateNum = cast<INumber>(lhsChildRate);
+  auto rhsChildValueNum = cast<INumber>(rhsChildValue);
+  auto rhsChildRateNum = cast<INumber>(rhsChildRate);
+
+  if (lhsChildValueNum && rhsChildRateNum && lhsChildRateNum && rhsChildRateNum &&
+      *lhsChildRateNum < *rhsChildRateNum) {
+    return {};
+  }
 
   if (*lhsChildValue == *rhsChildValue) {
-    result = addRatesToValue({lhsChildRate, makeExpr(Neg(), rhsChildRate)}, lhsChildValue);
+    ArgumentPtr result = addRatesToValue({lhsChildRate, makeExpr(Neg(), rhsChildRate)}, lhsChildValue);
 
     if (isResultNegated) {
       result = makeExpr(Neg(), result);
     }
+
+    return result;
   }
 
-  if (*lhsChildRate == *rhsChildRate && *rhsChildRate != Integer(1) && is<INumber>(lhsChildValue) &&
-      is<INumber>(rhsChildValue)) {
-
+  if (*lhsChildRate == *rhsChildRate && *rhsChildRate != Integer(1) && lhsChildValueNum && rhsChildValueNum) {
     ArgumentPtr valuesDiv = makeExpr(Div(), lhsChildValue, rhsChildValue);
     return makeExpr(Pow(), valuesDiv, lhsChildRate);
   }
 
-  return result;
+  if (rhsChildValueNum) {
+    if (const auto rhsChildRateRat = cast<Rational>(rhsChildRate)) {
+      ArgumentPtr numeratorPow = Pow()(*rhsChildValue, 1 - (*rhsChildRateRat));
+      ArgumentPtr numerator = makeExpr(Mul(), lhsChild, numeratorPow);
+      return makeExpr(Div(), numerator, rhsChildValue);
+    }
+  }
+
+  return {};
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhs) {
@@ -534,5 +550,4 @@ ArgumentPtr DivExpression::nestedRationalsInNumeratorSimplify(const ArgumentsPtr
 
   return {};
 }
-
 }
