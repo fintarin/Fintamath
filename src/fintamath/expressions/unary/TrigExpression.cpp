@@ -54,11 +54,7 @@ std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &
       {Tan().toString(), std::make_shared<Atan>()}, //
       {Cot().toString(), std::make_shared<Acot>()}, //
   };
-
-  if (auto res = oppositeFunctions.find(function.toString()); res != oppositeFunctions.end()) {
-    return res->second;
-  }
-
-  return {};
+  return oppositeFunctions.at(function.toString());
 }
+
 }

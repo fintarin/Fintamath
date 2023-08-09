@@ -48,12 +48,7 @@ std::shared_ptr<IFunction> HyperbExpression::getOppositeFunction(const IFunction
       {Tanh().toString(), std::make_unique<Atanh>()}, //
       {Coth().toString(), std::make_unique<Acoth>()}, //
   };
-
-  if (auto res = oppositeFunctions.find(function.toString()); res != oppositeFunctions.end()) {
-    return res->second;
-  }
-
-  return {};
+  return oppositeFunctions.at(function.toString());
 }
 
 }
