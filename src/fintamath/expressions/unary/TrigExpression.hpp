@@ -35,6 +35,14 @@ private:
   static ArgumentPtr trigTableCotSimplify(Rational rhs);
 
   static std::shared_ptr<IFunction> getOppositeFunction(const IFunction &function);
+
+  static ArgumentPtr getSqrt2();
+
+  static ArgumentPtr getNegSqrt2();
+
+  static ArgumentPtr getSqrt3();
+
+  static ArgumentPtr getNegSqrt3();
 };
 
 }
