@@ -12,6 +12,7 @@
 #include "fintamath/functions/trigonometry/Cot.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 
 namespace fintamath {
@@ -152,7 +153,34 @@ ArgumentPtr TrigExpression::trigTableCosSimplify(Rational rhs) {
   return {};
 }
 
-ArgumentPtr TrigExpression::trigTableTanSimplify(Rational /*rhs*/) {
+ArgumentPtr TrigExpression::trigTableTanSimplify(Rational rhs) {
+  static const TrigonometryTable trigTable = {
+      {Rational(0), Integer(0).clone()},                                    // 0    | 0
+      {Rational(1, 6), makeExpr(Div(), getSqrt3(), Integer(3).clone())},    // π/6  | √3/3
+      {Rational(1, 4), Integer(1).clone()},                                 // π/4  | 1
+      {Rational(1, 3), getSqrt3()},                                         // π/3  | √3
+      {Rational(1, 2), ComplexInf().clone()},                               // π/2  | ComplexInf
+      {Rational(2, 3), getNegSqrt3()},                                      // 2π/3 | -√3
+      {Rational(3, 4), Integer(-1).clone()},                                // 3π/4 | -1
+      {Rational(5, 6), makeExpr(Div(), getNegSqrt3(), Integer(3).clone())}, // 5π/6 | -√3/3
+      {Rational(1), Integer(0).clone()},                                    // π    | 0
+  };
+
+  bool isResNegated = false;
+
+  if (rhs < 0) {
+    rhs = -rhs;
+    isResNegated = !isResNegated;
+  }
+
+  if (rhs.numerator() > rhs.denominator()) {
+    rhs = Rational(rhs.numerator() % rhs.denominator(), rhs.denominator());
+  }
+
+  if (auto res = trigTable.find(rhs); res != trigTable.end()) {
+    return isResNegated ? makeExpr(Neg(), res->second) : res->second;
+  }
+
   return {};
 }
 

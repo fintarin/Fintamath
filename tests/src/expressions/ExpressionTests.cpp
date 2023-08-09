@@ -761,6 +761,42 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("cos(2Pi)").toString(), "1");
   EXPECT_EQ(Expression("cos(13Pi/6)").toString(), "sqrt(3)/2");
 
+  EXPECT_EQ(Expression("tan(-13Pi/6)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(-2Pi)").toString(), "0");
+  EXPECT_EQ(Expression("tan(-11Pi/6)").toString(), "sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(-7Pi/4)").toString(), "1");
+  EXPECT_EQ(Expression("tan(-5Pi/3)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("tan(-3Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("tan(-4Pi/3)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("tan(-5Pi/4)").toString(), "-1");
+  EXPECT_EQ(Expression("tan(-7Pi/6)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(-Pi)").toString(), "0");
+  EXPECT_EQ(Expression("tan(-5Pi/6)").toString(), "sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(-3Pi/4)").toString(), "1");
+  EXPECT_EQ(Expression("tan(-2Pi/3)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("tan(-Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("tan(-Pi/3)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("tan(-Pi/4)").toString(), "-1");
+  EXPECT_EQ(Expression("tan(-Pi/6)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(0)").toString(), "0");
+  EXPECT_EQ(Expression("tan(Pi/6)").toString(), "sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(Pi/4)").toString(), "1");
+  EXPECT_EQ(Expression("tan(Pi/3)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("tan(Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("tan(2Pi/3)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("tan(3Pi/4)").toString(), "-1");
+  EXPECT_EQ(Expression("tan(5Pi/6)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(Pi)").toString(), "0");
+  EXPECT_EQ(Expression("tan(7Pi/6)").toString(), "sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(5Pi/4)").toString(), "1");
+  EXPECT_EQ(Expression("tan(4Pi/3)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("tan(3Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("tan(5Pi/3)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("tan(7Pi/4)").toString(), "-1");
+  EXPECT_EQ(Expression("tan(11Pi/6)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("tan(2Pi)").toString(), "0");
+  EXPECT_EQ(Expression("tan(13Pi/6)").toString(), "sqrt(3)/3");
+
   EXPECT_EQ(Expression("sin(E Pi)").toString(), "sin(E Pi)");
   EXPECT_EQ(Expression("cos(E Pi)").toString(), "cos(E Pi)");
   EXPECT_EQ(Expression("tan(E Pi)").toString(), "tan(E Pi)");
@@ -840,8 +876,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(1/10, 0)").toString(), "Inf");
   EXPECT_EQ(Expression("ln(0)").toString(), "-Inf");
   EXPECT_EQ(Expression("(-1)!").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("tan(Pi/2)").toString(), "tan(Pi/2)");       // TODO! ComplexInf
-  EXPECT_EQ(Expression("tan(3/2*Pi)").toString(), "tan((3 Pi)/2)"); // TODO! ComplexInf
+  EXPECT_EQ(Expression("tan(Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("tan(3/2*Pi)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("cot(0)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("cot(2*Pi)").toString(), "cot(2 Pi)"); // TODO! ComplexInf
 
