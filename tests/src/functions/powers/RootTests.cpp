@@ -49,28 +49,28 @@ TEST(RootTests, callTest) {
   EXPECT_EQ(f(Integer(1024), Integer(10))->toString(), "2");
 
   EXPECT_EQ(f(Rational(25), Integer(4))->toString(), "sqrt(5)");
-  EXPECT_EQ(f(Rational(25, 169), Integer(4))->toString(), "sqrt(5/13)");
-  EXPECT_EQ(f(Rational(144, 49), Integer(4))->toString(), "2 sqrt(3/7)");
-  EXPECT_EQ(f(Rational("1.44"), Integer(4))->toString(), "sqrt(6/5)");
+  EXPECT_EQ(f(Rational(25, 169), Integer(4))->toString(), "sqrt(65)/13");
+  EXPECT_EQ(f(Rational(144, 49), Integer(4))->toString(), "(2 sqrt(21))/7");
+  EXPECT_EQ(f(Rational("1.44"), Integer(4))->toString(), "sqrt(30)/5");
   EXPECT_EQ(f(Rational(1, 10), Integer(4))->toString(), "1/root(10, 4)");
-  EXPECT_EQ(f(Rational(25, 48), Integer(4))->toString(), "sqrt(5)/(2 root(3, 4))");
-  EXPECT_EQ(f(Rational(26, 49), Integer(4))->toString(), "root(26, 4)/sqrt(7)");
-  EXPECT_EQ(f(Rational(45, 67), Integer(4))->toString(), "sqrt(3) root(5/67, 4)");
+  EXPECT_EQ(f(Rational(25, 48), Integer(4))->toString(), "(sqrt(5) root(27, 4))/6");
+  EXPECT_EQ(f(Rational(26, 49), Integer(4))->toString(), "(root(26, 4) sqrt(7))/7");
+  EXPECT_EQ(f(Rational(45, 67), Integer(4))->toString(), "(sqrt(3) root(1503815, 4))/67");
   EXPECT_EQ(f(Rational("68732648273642987365932706179432649827364.144"), Integer(4))->toString(),
-            "root(8591581034205373420741588272429081228420518/125, 4)");
+            "root(16780431707432369962385914594588049274258824218750, 4)/125");
 
   EXPECT_EQ(f(Rational(25), Rational(4, 3))->toString(), "5 sqrt(5)");
-  EXPECT_EQ(f(Rational(25, 169), Rational(4, 3))->toString(), "(5 sqrt(5/13))/13");
-  EXPECT_EQ(f(Rational(144, 49), Rational(4, 3))->toString(), "(24 sqrt(3/7))/7");
-  EXPECT_EQ(f(Rational("1.44"), Rational(4, 3))->toString(), "(6 sqrt(6/5))/5");
+  EXPECT_EQ(f(Rational(25, 169), Rational(4, 3))->toString(), "(5 sqrt(65))/169");
+  EXPECT_EQ(f(Rational(144, 49), Rational(4, 3))->toString(), "(24 sqrt(21))/49");
+  EXPECT_EQ(f(Rational("1.44"), Rational(4, 3))->toString(), "(6 sqrt(30))/25");
   EXPECT_EQ(f(Rational(1, 10), Rational(4, 3))->toString(), "1/root(1000, 4)");
-  EXPECT_EQ(f(Rational(25, 48), Rational(4, 3))->toString(), "(5 sqrt(5))/(8 root(27, 4))");
-  EXPECT_EQ(f(Rational(26, 49), Rational(4, 3))->toString(), "root(17576, 4)/(7 sqrt(7))");
-  EXPECT_EQ(f(Rational(45, 67), Rational(4, 3))->toString(), "3 sqrt(3) root(125/300763, 4)");
+  EXPECT_EQ(f(Rational(25, 48), Rational(4, 3))->toString(), "(5 sqrt(5) root(19683, 4))/216");
+  EXPECT_EQ(f(Rational(26, 49), Rational(4, 3))->toString(), "(root(17576, 4) sqrt(7))/49");
+  EXPECT_EQ(f(Rational(45, 67), Rational(4, 3))->toString(), "(3 sqrt(3) root(3400816799536868375, 4))/300763");
   EXPECT_EQ(f(Rational("68732648273642987365932706179432649827364.144"), Rational(4, 3))->toString(),
             "root("
-            "6341898279505748220737558733036392804899042006384472743062801876828565493307610084438050180592269960571521"
-            "04826353254809443231832/5, 4)/25");
+            "7927372849382185275921948416295491006123802507980590928828502346035706866634512605547562725740337450714401"
+            "3103294156851180403979000, 4)/125");
 
   EXPECT_EQ(f(Real(144), Integer(2))->toString(), "12.0");
   EXPECT_EQ(f(Real(144), Integer(4))->toString(),
