@@ -144,28 +144,24 @@ TEST(ExpressionFunctionsTests, lgTest) {
 }
 
 TEST(ExpressionFunctionsTests, sinTest) {
-  // TODO trigonometry
   EXPECT_EQ(sin(Expression("5*Pi")).toString(), "0");
   EXPECT_EQ(sin(Expression("Pi/2")).toString(), "1");
   EXPECT_EQ(sin(Expression("a+b")).toString(), "sin(a + b)");
 }
 
 TEST(ExpressionFunctionsTests, cosTest) {
-  // TODO trigonometry
   EXPECT_EQ(cos(Expression("5*Pi")).toString(), "cos(5 Pi)");
   EXPECT_EQ(cos(Expression("3*Pi/2")).toString(), "cos((3 Pi)/2)");
   EXPECT_EQ(cos(Expression("8*a")).toString(), "cos(8 a)");
 }
 
 TEST(ExpressionFunctionsTests, tanTest) {
-  // TODO trigonometry
   EXPECT_EQ(tan(Expression("0")).toString(), "0");
   EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "tan((3 Pi)/4)");
   EXPECT_EQ(tan(Expression("a^3")).toString(), "tan(a^3)");
 }
 
 TEST(ExpressionFunctionsTests, cotTest) {
-  // TODO trigonometry
   EXPECT_EQ(cot(Expression("Pi/4")).toString(), "cot(Pi/4)");
   EXPECT_EQ(cot(Expression("Pi/2")).toString(), "cot(Pi/2)");
   EXPECT_EQ(cot(Expression("a/5")).toString(), "cot(a/5)");
