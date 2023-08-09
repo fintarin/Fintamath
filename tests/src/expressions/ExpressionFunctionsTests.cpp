@@ -150,8 +150,8 @@ TEST(ExpressionFunctionsTests, sinTest) {
 }
 
 TEST(ExpressionFunctionsTests, cosTest) {
-  EXPECT_EQ(cos(Expression("5*Pi")).toString(), "cos(5 Pi)");
-  EXPECT_EQ(cos(Expression("3*Pi/2")).toString(), "cos((3 Pi)/2)");
+  EXPECT_EQ(cos(Expression("5*Pi")).toString(), "-1");
+  EXPECT_EQ(cos(Expression("3*Pi/2")).toString(), "0");
   EXPECT_EQ(cos(Expression("8*a")).toString(), "cos(8 a)");
 }
 

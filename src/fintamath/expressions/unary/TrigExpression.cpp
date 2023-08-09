@@ -91,15 +91,15 @@ ArgumentPtr TrigExpression::trigTableSimplify(const IFunction &func, const Ratio
 
 ArgumentPtr TrigExpression::trigTableSinSimplify(Rational rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(0), Integer(0).clone()},                                            // 0    | 0
-      {Rational(1, 6), Rational(1, 2).clone()},                                     // π/6  | 1/2
-      {Rational(1, 4), makeExpr(Div(), *makeExpr(Sqrt(), Integer(2)), Integer(2))}, // π/4  | √2/2
-      {Rational(1, 3), makeExpr(Div(), *makeExpr(Sqrt(), Integer(3)), Integer(2))}, // π/3  | √3/2
-      {Rational(1, 2), Integer(1).clone()},                                         // π/2  | 1
-      {Rational(2, 3), makeExpr(Div(), *makeExpr(Sqrt(), Integer(3)), Integer(2))}, // 2π/3 | √3/2
-      {Rational(3, 4), makeExpr(Div(), *makeExpr(Sqrt(), Integer(2)), Integer(2))}, // 3π/4 | √2/2
-      {Rational(5, 6), Rational(1, 2).clone()},                                     // 5π/6 | 1/2
-      {Rational(1), Integer(0).clone()},                                            // π    | 0
+      {Rational(0), Integer(0).clone()},                                                   // 0    | 0
+      {Rational(1, 6), Rational(1, 2).clone()},                                            // π/6  | 1/2
+      {Rational(1, 4), makeExpr(Div(), makeExpr(Sqrt(), Integer(2)), Integer(2).clone())}, // π/4  | √2/2
+      {Rational(1, 3), makeExpr(Div(), makeExpr(Sqrt(), Integer(3)), Integer(2).clone())}, // π/3  | √3/2
+      {Rational(1, 2), Integer(1).clone()},                                                // π/2  | 1
+      {Rational(2, 3), makeExpr(Div(), makeExpr(Sqrt(), Integer(3)), Integer(2).clone())}, // 2π/3 | √3/2
+      {Rational(3, 4), makeExpr(Div(), makeExpr(Sqrt(), Integer(2)), Integer(2).clone())}, // 3π/4 | √2/2
+      {Rational(5, 6), Rational(1, 2).clone()},                                            // 5π/6 | 1/2
+      {Rational(1), Integer(0).clone()},                                                   // π    | 0
   };
 
   bool isResNegated = false;
@@ -121,7 +121,34 @@ ArgumentPtr TrigExpression::trigTableSinSimplify(Rational rhs) {
   return {};
 }
 
-ArgumentPtr TrigExpression::trigTableCosSimplify(Rational /*rhs*/) {
+ArgumentPtr TrigExpression::trigTableCosSimplify(Rational rhs) {
+  static const TrigonometryTable trigTable = {
+      {Rational(0), Integer(1).clone()},                                                             // 0    | 1
+      {Rational(1, 6), makeExpr(Div(), *makeExpr(Sqrt(), Integer(3)), Integer(2))},                  // π/6  | √3/2
+      {Rational(1, 4), makeExpr(Div(), *makeExpr(Sqrt(), Integer(2)), Integer(2))},                  // π/4  | √2/2
+      {Rational(1, 3), Rational(1, 2).clone()},                                                      // π/3  | 1/2
+      {Rational(1, 2), Integer(0).clone()},                                                          // π/2  | 0
+      {Rational(2, 3), Rational(-1, 2).clone()},                                                     // 2π/3 | -1/2
+      {Rational(3, 4), makeExpr(Div(), *makeExpr(Neg(), makeExpr(Sqrt(), Integer(2))), Integer(2))}, // 3π/4 | -√2/2
+      {Rational(5, 6), makeExpr(Div(), *makeExpr(Neg(), makeExpr(Sqrt(), Integer(3))), Integer(2))}, // 5π/6 | -√3/2
+      {Rational(1), Integer(-1).clone()},                                                            // π    | -1
+  };
+
+  bool isResNegated = false;
+
+  if (rhs < 0) {
+    rhs = -rhs;
+  }
+
+  if (rhs.numerator() > rhs.denominator()) {
+    rhs = Rational(rhs.numerator() % rhs.denominator(), rhs.denominator());
+    isResNegated = !isResNegated;
+  }
+
+  if (auto res = trigTable.find(rhs); res != trigTable.end()) {
+    return isResNegated ? makeExpr(Neg(), res->second) : res->second;
+  }
+
   return {};
 }
 
