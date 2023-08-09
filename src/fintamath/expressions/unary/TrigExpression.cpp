@@ -184,7 +184,34 @@ ArgumentPtr TrigExpression::trigTableTanSimplify(Rational rhs) {
   return {};
 }
 
-ArgumentPtr TrigExpression::trigTableCotSimplify(Rational /*rhs*/) {
+ArgumentPtr TrigExpression::trigTableCotSimplify(Rational rhs) {
+  static const TrigonometryTable trigTable = {
+      {Rational(0), ComplexInf().clone()},                                  // 0    | ComplexInf
+      {Rational(1, 6), getSqrt3()},                                         // π/6  | √3
+      {Rational(1, 4), Integer(1).clone()},                                 // π/4  | 1
+      {Rational(1, 3), makeExpr(Div(), getSqrt3(), Integer(3).clone())},    // π/3  | √3/3
+      {Rational(1, 2), Integer(0).clone()},                                 // π/2  | 0
+      {Rational(2, 3), makeExpr(Div(), getNegSqrt3(), Integer(3).clone())}, // 2π/3 | -√3/3
+      {Rational(3, 4), Integer(-1).clone()},                                // 3π/4 | -1
+      {Rational(5, 6), getNegSqrt3()},                                      // 5π/6 | -√3
+      {Rational(1), ComplexInf().clone()},                                  // π    | ComplexInf
+  };
+
+  bool isResNegated = false;
+
+  if (rhs < 0) {
+    rhs = -rhs;
+    isResNegated = !isResNegated;
+  }
+
+  if (rhs.numerator() > rhs.denominator()) {
+    rhs = Rational(rhs.numerator() % rhs.denominator(), rhs.denominator());
+  }
+
+  if (auto res = trigTable.find(rhs); res != trigTable.end()) {
+    return isResNegated ? makeExpr(Neg(), res->second) : res->second;
+  }
+
   return {};
 }
 

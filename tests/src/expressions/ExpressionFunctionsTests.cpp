@@ -162,8 +162,8 @@ TEST(ExpressionFunctionsTests, tanTest) {
 }
 
 TEST(ExpressionFunctionsTests, cotTest) {
-  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "cot(Pi/4)");
-  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "cot(Pi/2)");
+  EXPECT_EQ(cot(Expression("Pi/4")).toString(), "1");
+  EXPECT_EQ(cot(Expression("Pi/2")).toString(), "0");
   EXPECT_EQ(cot(Expression("a/5")).toString(), "cot(a/5)");
 }
 
