@@ -157,7 +157,7 @@ TEST(ExpressionFunctionsTests, cosTest) {
 
 TEST(ExpressionFunctionsTests, tanTest) {
   EXPECT_EQ(tan(Expression("0")).toString(), "0");
-  EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "tan((3 Pi)/4)");
+  EXPECT_EQ(tan(Expression("3*Pi/4")).toString(), "-1");
   EXPECT_EQ(tan(Expression("a^3")).toString(), "tan(a^3)");
 }
 
