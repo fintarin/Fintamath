@@ -145,8 +145,8 @@ TEST(ExpressionFunctionsTests, lgTest) {
 
 TEST(ExpressionFunctionsTests, sinTest) {
   // TODO trigonometry
-  EXPECT_EQ(sin(Expression("5*Pi")).toString(), "sin(5 Pi)");
-  EXPECT_EQ(sin(Expression("Pi/2")).toString(), "sin(Pi/2)");
+  EXPECT_EQ(sin(Expression("5*Pi")).toString(), "0");
+  EXPECT_EQ(sin(Expression("Pi/2")).toString(), "1");
   EXPECT_EQ(sin(Expression("a+b")).toString(), "sin(a + b)");
 }
 

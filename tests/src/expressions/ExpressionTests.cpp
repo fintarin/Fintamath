@@ -172,8 +172,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sin1^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin(10^30)").toString(), "sin(1000000000000000000000000000000)");
   EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").toString(), "cos(1)^2 + sin(1)^2");
-  EXPECT_EQ(Expression("sin(Pi/3)").toString(), "sin(Pi/3)");
-  EXPECT_EQ(Expression("cos(Pi/3)").toString(), "cos(Pi/3)");
   EXPECT_EQ(Expression("2!*E").toString(), "2 E");
   EXPECT_EQ(Expression("E*2!").toString(), "2 E");
   EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").toString(), "sqrt(-cos((2 Pi)/3)/2 + 1/2)");
@@ -683,6 +681,47 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("acosh(cosh(x))").toString(), "acosh(cosh(x))");
   EXPECT_EQ(Expression("atanh(tanh(x))").toString(), "atanh(tanh(x))");
   EXPECT_EQ(Expression("acoth(coth(x))").toString(), "acoth(coth(x))");
+
+  EXPECT_EQ(Expression("sin(-13Pi/6)").toString(), "-1/2");
+  EXPECT_EQ(Expression("sin(-2Pi)").toString(), "0");
+  EXPECT_EQ(Expression("sin(-11Pi/6)").toString(), "1/2");
+  EXPECT_EQ(Expression("sin(-7Pi/4)").toString(), "sqrt(2)/2");
+  EXPECT_EQ(Expression("sin(-5Pi/3)").toString(), "sqrt(3)/2");
+  EXPECT_EQ(Expression("sin(-3Pi/2)").toString(), "1");
+  EXPECT_EQ(Expression("sin(-4Pi/3)").toString(), "sqrt(3)/2");
+  EXPECT_EQ(Expression("sin(-5Pi/4)").toString(), "sqrt(2)/2");
+  EXPECT_EQ(Expression("sin(-7Pi/6)").toString(), "1/2");
+  EXPECT_EQ(Expression("sin(-Pi)").toString(), "0");
+  EXPECT_EQ(Expression("sin(-5Pi/6)").toString(), "-1/2");
+  EXPECT_EQ(Expression("sin(-3Pi/4)").toString(), "-sqrt(2)/2");
+  EXPECT_EQ(Expression("sin(-2Pi/3)").toString(), "-sqrt(3)/2");
+  EXPECT_EQ(Expression("sin(-Pi/2)").toString(), "-1");
+  EXPECT_EQ(Expression("sin(-Pi/3)").toString(), "-sqrt(3)/2");
+  EXPECT_EQ(Expression("sin(-Pi/4)").toString(), "-sqrt(2)/2");
+  EXPECT_EQ(Expression("sin(-Pi/6)").toString(), "-1/2");
+  EXPECT_EQ(Expression("sin(0)").toString(), "0");
+  EXPECT_EQ(Expression("sin(Pi/6)").toString(), "1/2");
+  EXPECT_EQ(Expression("sin(Pi/4)").toString(), "sqrt(2)/2");
+  EXPECT_EQ(Expression("sin(Pi/3)").toString(), "sqrt(3)/2");
+  EXPECT_EQ(Expression("sin(Pi/2)").toString(), "1");
+  EXPECT_EQ(Expression("sin(2Pi/3)").toString(), "sqrt(3)/2");
+  EXPECT_EQ(Expression("sin(3Pi/4)").toString(), "sqrt(2)/2");
+  EXPECT_EQ(Expression("sin(5Pi/6)").toString(), "1/2");
+  EXPECT_EQ(Expression("sin(Pi)").toString(), "0");
+  EXPECT_EQ(Expression("sin(7Pi/6)").toString(), "-1/2");
+  EXPECT_EQ(Expression("sin(5Pi/4)").toString(), "-sqrt(2)/2");
+  EXPECT_EQ(Expression("sin(4Pi/3)").toString(), "-sqrt(3)/2");
+  EXPECT_EQ(Expression("sin(3Pi/2)").toString(), "-1");
+  EXPECT_EQ(Expression("sin(5Pi/3)").toString(), "-sqrt(3)/2");
+  EXPECT_EQ(Expression("sin(7Pi/4)").toString(), "-sqrt(2)/2");
+  EXPECT_EQ(Expression("sin(11Pi/6)").toString(), "-1/2");
+  EXPECT_EQ(Expression("sin(2Pi)").toString(), "0");
+  EXPECT_EQ(Expression("sin(13Pi/6)").toString(), "1/2");
+
+  EXPECT_EQ(Expression("sin(E Pi)").toString(), "sin(E Pi)");
+  EXPECT_EQ(Expression("cos(E Pi)").toString(), "cos(E Pi)");
+  EXPECT_EQ(Expression("tan(E Pi)").toString(), "tan(E Pi)");
+  EXPECT_EQ(Expression("cot(E Pi)").toString(), "cot(E Pi)");
 
   // EXPECT_EQ(Expression("sin(x)^2 + cos(x)^2").toString(), "1"); // TODO: implement
   // EXPECT_EQ(Expression("tan(x)*cot(x)").toString(), "1"); // TODO: implement
