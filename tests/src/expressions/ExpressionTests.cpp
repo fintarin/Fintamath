@@ -1221,17 +1221,6 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("sin(60deg)").precise().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
 
-  // TODO! trigonometry
-  // EXPECT_EQ(Expression("tan(Pi/2)").precise().toString(),
-  //           "tan(1.5707963267948966192313216916397514420985846996875529104874722961539082031431045)");
-  // EXPECT_EQ(Expression("cot(0)").precise().toString(), "cot(0)");
-  // EXPECT_EQ(Expression("asin(2)").precise().toString(), "asin(2)");
-  // EXPECT_EQ(Expression("acos(2)").precise().toString(), "acos(2)");
-  // EXPECT_EQ(Expression("tan(3/2*Pi)").precise().toString(),
-  //           "tan(4.7123889803846898576939650749192543262957540990626587314624168884617246094293135)");
-  // EXPECT_EQ(Expression("cot(2*Pi)").precise().toString(),
-  //           "cot(6.283185307179586476925286766559005768394338798750211641949889184615632812572418)");
-
   EXPECT_EQ(Expression("E^(E^(E^(E^(E^E))))").precise().toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476^(2."
             "7182818284590452353602874713526624977572470936999595749669676277240766303535476^(2."
