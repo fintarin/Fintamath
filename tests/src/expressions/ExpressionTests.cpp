@@ -797,6 +797,42 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(2Pi)").toString(), "0");
   EXPECT_EQ(Expression("tan(13Pi/6)").toString(), "sqrt(3)/3");
 
+  EXPECT_EQ(Expression("cot(-13Pi/6)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("cot(-2Pi)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("cot(-11Pi/6)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("cot(-7Pi/4)").toString(), "1");
+  EXPECT_EQ(Expression("cot(-5Pi/3)").toString(), "sqrt(3)/3");
+  EXPECT_EQ(Expression("cot(-3Pi/2)").toString(), "0");
+  EXPECT_EQ(Expression("cot(-4Pi/3)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("cot(-5Pi/4)").toString(), "-1");
+  EXPECT_EQ(Expression("cot(-7Pi/6)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("cot(-Pi)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("cot(-5Pi/6)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("cot(-3Pi/4)").toString(), "1");
+  EXPECT_EQ(Expression("cot(-2Pi/3)").toString(), "sqrt(3)/3");
+  EXPECT_EQ(Expression("cot(-Pi/2)").toString(), "0");
+  EXPECT_EQ(Expression("cot(-Pi/3)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("cot(-Pi/4)").toString(), "-1");
+  EXPECT_EQ(Expression("cot(-Pi/6)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("cot(0)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("cot(Pi/6)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("cot(Pi/4)").toString(), "1");
+  EXPECT_EQ(Expression("cot(Pi/3)").toString(), "sqrt(3)/3");
+  EXPECT_EQ(Expression("cot(Pi/2)").toString(), "0");
+  EXPECT_EQ(Expression("cot(2Pi/3)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("cot(3Pi/4)").toString(), "-1");
+  EXPECT_EQ(Expression("cot(5Pi/6)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("cot(Pi)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("cot(7Pi/6)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("cot(5Pi/4)").toString(), "1");
+  EXPECT_EQ(Expression("cot(4Pi/3)").toString(), "sqrt(3)/3");
+  EXPECT_EQ(Expression("cot(3Pi/2)").toString(), "0");
+  EXPECT_EQ(Expression("cot(5Pi/3)").toString(), "-sqrt(3)/3");
+  EXPECT_EQ(Expression("cot(7Pi/4)").toString(), "-1");
+  EXPECT_EQ(Expression("cot(11Pi/6)").toString(), "-sqrt(3)");
+  EXPECT_EQ(Expression("cot(2Pi)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("cot(13Pi/6)").toString(), "sqrt(3)");
+
   EXPECT_EQ(Expression("sin(Pi/7)").toString(), "sin(Pi/7)");
   EXPECT_EQ(Expression("cos(Pi/7)").toString(), "cos(Pi/7)");
   EXPECT_EQ(Expression("tan(Pi/7)").toString(), "tan(Pi/7)");
@@ -884,7 +920,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(Pi/2)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("tan(3/2*Pi)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("cot(0)").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("cot(2*Pi)").toString(), "cot(2 Pi)"); // TODO! ComplexInf
+  EXPECT_EQ(Expression("cot(2*Pi)").toString(), "ComplexInf");
 
   EXPECT_EQ(Expression("0*Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("0*-Inf").toString(), "Undefined");
