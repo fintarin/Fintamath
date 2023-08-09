@@ -797,6 +797,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(2Pi)").toString(), "0");
   EXPECT_EQ(Expression("tan(13Pi/6)").toString(), "sqrt(3)/3");
 
+  EXPECT_EQ(Expression("sin(Pi/7)").toString(), "sin(Pi/7)");
+  EXPECT_EQ(Expression("cos(Pi/7)").toString(), "cos(Pi/7)");
+  EXPECT_EQ(Expression("tan(Pi/7)").toString(), "tan(Pi/7)");
+  EXPECT_EQ(Expression("cot(Pi/7)").toString(), "cot(Pi/7)");
+
   EXPECT_EQ(Expression("sin(E Pi)").toString(), "sin(E Pi)");
   EXPECT_EQ(Expression("cos(E Pi)").toString(), "cos(E Pi)");
   EXPECT_EQ(Expression("tan(E Pi)").toString(), "tan(E Pi)");
