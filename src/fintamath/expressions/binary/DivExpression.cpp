@@ -405,7 +405,7 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   auto rhsChildValueNum = cast<INumber>(rhsChildValue);
   auto rhsChildRateNum = cast<INumber>(rhsChildRate);
 
-  if (lhsChildValueNum && rhsChildRateNum && lhsChildRateNum && rhsChildRateNum &&
+  if (lhsChildValueNum && rhsChildValueNum && lhsChildRateNum && rhsChildRateNum &&
       *lhsChildRateNum < *rhsChildRateNum) {
     return {};
   }
