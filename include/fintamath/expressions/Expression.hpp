@@ -15,7 +15,9 @@ struct Term {
 public:
   Term() = default;
 
-  Term(std::string inName, ArgumentsPtrVector inValues) : name(std::move(inName)), values(std::move(inValues)) {
+  Term(std::string inName, ArgumentsPtrVector inValues)
+      : name(std::move(inName)),
+        values(std::move(inValues)) {
   }
 };
 
@@ -54,7 +56,9 @@ public:
   template <typename Function, bool isPolynomial = false, typename Maker>
   static void registerFunctionExpressionMaker(Maker &&maker) {
     Parser::Function<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> constructor =
-        [maker = std::forward<Maker>(maker)](const ArgumentsPtrVector &args) -> std::unique_ptr<IMathObject> {
+        [maker = std::forward<Maker>(maker)](const ArgumentsPtrVector &args)
+        -> std::unique_ptr<IMathObject> {
+      //
       static const IFunction::Type type = Function().getFunctionType();
       std::unique_ptr<IMathObject> res;
 

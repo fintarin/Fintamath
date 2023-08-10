@@ -66,8 +66,10 @@ public:
   }
 
   template <typename Return, typename... Args>
-  static Return parse(const Map<Return, const Args &...> &parserMap, const std::string &parsedStr,
+  static Return parse(const Map<Return, const Args &...> &parserMap,
+                      const std::string &parsedStr,
                       const Args &...args) {
+
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
@@ -80,7 +82,10 @@ public:
   }
 
   template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
-  static Return parse(const Map<Return, Args &&...> &parserMap, const std::string &parsedStr, Args &&...args) {
+  static Return parse(const Map<Return, Args &&...> &parserMap,
+                      const std::string &parsedStr,
+                      Args &&...args) {
+
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
@@ -93,8 +98,11 @@ public:
   }
 
   template <typename Return, typename... Args>
-  static Return parse(const Map<Return, const Args &...> &parserMap, const Comparator<const Return &> &comp,
-                      const std::string &parsedStr, const Args &...args) {
+  static Return parse(const Map<Return, const Args &...> &parserMap,
+                      const Comparator<const Return &> &comp,
+                      const std::string &parsedStr,
+                      const Args &...args) {
+
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
@@ -107,8 +115,11 @@ public:
   }
 
   template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
-  static Return parse(const Map<Return, Args &&...> &parserMap, const Comparator<const Return &> &comp,
-                      const std::string &parsedStr, Args &&...args) {
+  static Return parse(const Map<Return, Args &&...> &parserMap,
+                      const Comparator<const Return &> &comp,
+                      const std::string &parsedStr,
+                      Args &&...args) {
+
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {

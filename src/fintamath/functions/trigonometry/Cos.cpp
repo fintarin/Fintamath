@@ -11,19 +11,19 @@ std::unique_ptr<IMathObject> Cos::call(const ArgumentsRefVector &argsVect) const
     return Integer(1).clone();
   }
 
-  return multiCosSimpl(rhs);
+  return multiCosSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Cos::multiCosSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Cos::multiCosSimplify(const INumber &rhs) {
   static const auto multiCos = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiCos;
 
     outMultiCos.add<Integer>([](const Integer &inRhs) {
-      return multiCosSimpl(Real(inRhs));
+      return multiCosSimplify(Real(inRhs));
     });
 
     outMultiCos.add<Rational>([](const Rational &inRhs) {
-      return multiCosSimpl(Real(inRhs));
+      return multiCosSimplify(Real(inRhs));
     });
 
     outMultiCos.add<Real>([](const Real &inRhs) {

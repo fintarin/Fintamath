@@ -54,7 +54,10 @@ Rational::Rational(const std::string &str) {
   }
 }
 
-Rational::Rational(Integer inNumer, Integer inDenom) : numer(std::move(inNumer)), denom(std::move(inDenom)) {
+Rational::Rational(Integer inNumer, Integer inDenom)
+    : numer(std::move(inNumer)),
+      denom(std::move(inDenom)) {
+
   toIrreducibleRational();
 }
 

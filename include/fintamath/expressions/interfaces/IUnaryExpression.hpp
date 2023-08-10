@@ -58,10 +58,10 @@ class IUnaryExpressionCRTP : public IUnaryExpressionBaseCRTP<Derived, isMultiFun
 #undef FINTAMATH_I_EXPRESSION_CRTP
 
 public:
-  explicit IUnaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &inChild) {
+  explicit IUnaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &arg) {
     this->func = cast<IFunction>(inFunc.clone());
 
-    this->child = inChild;
+    this->child = arg;
     this->compressChild(this->child);
   }
 };

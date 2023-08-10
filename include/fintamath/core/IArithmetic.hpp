@@ -4,9 +4,10 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
-#define REQUIRE_ARITHMETICS(Lhs, Rhs)                                                                                  \
-  template <typename Lhs, typename Rhs,                                                                                \
-            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, Lhs> && std::is_convertible_v<Rhs, Lhs> &&      \
+#define REQUIRE_ARITHMETICS(Lhs, Rhs)                                          \
+  template <typename Lhs, typename Rhs,                                        \
+            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, Lhs> && \
+                                        std::is_convertible_v<Rhs, Lhs> &&     \
                                         !std::is_same_v<Lhs, Rhs>>>
 
 namespace fintamath {
@@ -79,51 +80,63 @@ class IArithmeticCRTP : public IArithmetic {
 #undef FINTAMATH_I_ARITHMETIC_CRTP
 };
 
-REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs &operator+=(Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Lhs, Rhs)
+Lhs &operator+=(Lhs &lhs, const Rhs &rhs) {
   return lhs += Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs &operator-=(Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Lhs, Rhs)
+Lhs &operator-=(Lhs &lhs, const Rhs &rhs) {
   return lhs -= Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs &operator*=(Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Lhs, Rhs)
+Lhs &operator*=(Lhs &lhs, const Rhs &rhs) {
   return lhs *= Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs &operator/=(Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Lhs, Rhs)
+Lhs &operator/=(Lhs &lhs, const Rhs &rhs) {
   return lhs /= Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs operator+(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Lhs, Rhs)
+Lhs operator+(const Lhs &lhs, const Rhs &rhs) {
   return lhs + Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Rhs, Lhs) Rhs operator+(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Rhs, Lhs)
+Rhs operator+(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) + rhs;
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs operator-(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Lhs, Rhs)
+Lhs operator-(const Lhs &lhs, const Rhs &rhs) {
   return lhs - Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Rhs, Lhs) Rhs operator-(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Rhs, Lhs)
+Rhs operator-(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) - rhs;
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs operator*(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Lhs, Rhs)
+Lhs operator*(const Lhs &lhs, const Rhs &rhs) {
   return lhs * Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Rhs, Lhs) Rhs operator*(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Rhs, Lhs)
+Rhs operator*(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) * rhs;
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs) Lhs operator/(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Lhs, Rhs)
+Lhs operator/(const Lhs &lhs, const Rhs &rhs) {
   return lhs / Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Rhs, Lhs) Rhs operator/(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_ARITHMETICS(Rhs, Lhs)
+Rhs operator/(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) / rhs;
 }
 

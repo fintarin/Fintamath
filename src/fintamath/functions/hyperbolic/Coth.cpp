@@ -12,19 +12,19 @@ std::unique_ptr<IMathObject> Coth::call(const ArgumentsRefVector &argsVect) cons
     return ComplexInf().clone();
   }
 
-  return multiCothSimpl(rhs);
+  return multiCothSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Coth::multiCothSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Coth::multiCothSimplify(const INumber &rhs) {
   static const auto multiCoth = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiCoth;
 
     outMultiCoth.add<Integer>([](const Integer &inRhs) {
-      return multiCothSimpl(Real(inRhs));
+      return multiCothSimplify(Real(inRhs));
     });
 
     outMultiCoth.add<Rational>([](const Rational &inRhs) {
-      return multiCothSimpl(Real(inRhs));
+      return multiCothSimplify(Real(inRhs));
     });
 
     outMultiCoth.add<Real>([](const Real &inRhs) {

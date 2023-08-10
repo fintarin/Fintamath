@@ -20,7 +20,8 @@
 
 namespace fintamath {
 
-MulExpression::MulExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(Mul(), inChildren) {
+MulExpression::MulExpression(const ArgumentsPtrVector &inChildren)
+    : IPolynomExpressionCRTP(Mul(), inChildren) {
 }
 
 std::string MulExpression::toString() const {
@@ -60,29 +61,31 @@ std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, con
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &MulExpression::simplifyConst,        //
-      &MulExpression::simplifyCallFunction, //
-      &MulExpression::simplifyRationals,    //
-      &MulExpression::simplifyDivisions,    //
-      &MulExpression::simplifyPowers,       //
-      &MulExpression::simplifyNegations,    //
+      &MulExpression::constSimplify,
+      &MulExpression::callFunctionSimplify,
+      &MulExpression::rationalSimplify,
+      &MulExpression::divSimplify,
+      &MulExpression::powSimplify,
+      &MulExpression::negSimplify,
   };
   return simplifyFunctions;
 }
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPostSimplify() const {
   static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &MulExpression::simplifyConst,     //
-      &MulExpression::mulPolynoms,       //
-      &MulExpression::simplifyDivisions, //
-      &MulExpression::simplifyPowers,    //
-      &MulExpression::simplifyNegations, //
+      &MulExpression::constSimplify,
+      &MulExpression::polynomSimplify,
+      &MulExpression::divSimplify,
+      &MulExpression::powSimplify,
+      &MulExpression::negSimplify,
   };
   return simplifyFunctions;
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
-  if (const auto &powExpr = cast<IExpression>(rhsChild); powExpr && is<Pow>(powExpr->getFunction())) {
+  if (const auto &powExpr = cast<IExpression>(rhsChild);
+      powExpr && is<Pow>(powExpr->getFunction())) {
+
     ArgumentsPtrVector powExprChildren = powExpr->getChildren();
     return {powExprChildren[1], powExprChildren[0]};
   }
@@ -90,10 +93,12 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
   return {std::make_shared<Integer>(1), rhsChild};
 }
 
-ArgumentPtr MulExpression::simplifyConst(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
+ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,
+                                         const ArgumentPtr &lhsChild,
                                          const ArgumentPtr &rhsChild) {
 
-  if (*lhsChild == Integer(0) && (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild))) {
+  if (*lhsChild == Integer(0) &&
+      (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild))) {
     return Undefined().clone();
   }
 
@@ -122,9 +127,7 @@ ArgumentPtr MulExpression::simplifyConst(const IFunction & /*func*/, const Argum
   return {};
 }
 
-ArgumentPtr MulExpression::simplifyRationals(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                             const ArgumentPtr &rhsChild) {
-
+ArgumentPtr MulExpression::rationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto lhsRat = cast<Rational>(lhsChild)) {
     ArgumentPtr numerator = makeExpr(Mul(), lhsRat->numerator().clone(), rhsChild);
     ArgumentPtr denominator = lhsRat->denominator().clone();
@@ -134,14 +137,11 @@ ArgumentPtr MulExpression::simplifyRationals(const IFunction & /*func*/, const A
   return {};
 }
 
-ArgumentPtr MulExpression::simplifyCallFunction(const IFunction &func, const ArgumentPtr &lhsChild,
-                                                const ArgumentPtr &rhsChild) {
+ArgumentPtr MulExpression::callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   return callFunction(func, {lhsChild, rhsChild});
 }
 
-ArgumentPtr MulExpression::simplifyDivisions(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                             const ArgumentPtr &rhsChild) {
-
+ArgumentPtr MulExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
@@ -179,13 +179,12 @@ ArgumentPtr MulExpression::simplifyDivisions(const IFunction & /*func*/, const A
   return res;
 }
 
-ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                       const ArgumentPtr &rhsChild) {
-
+ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
-  if (lhsExpr && rhsExpr && !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
+  if (lhsExpr && rhsExpr &&
+      !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
     return {};
   }
 
@@ -222,9 +221,7 @@ ArgumentPtr MulExpression::mulPolynoms(const IFunction & /*func*/, const Argumen
   return res;
 }
 
-ArgumentPtr MulExpression::simplifyPowers(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                          const ArgumentPtr &rhsChild) {
-
+ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
   auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
 
@@ -233,8 +230,10 @@ ArgumentPtr MulExpression::simplifyPowers(const IFunction & /*func*/, const Argu
     return makeExpr(Pow(), lhsChildValue, ratesSum);
   }
 
-  if (*lhsChildRate == *rhsChildRate && *rhsChildRate != Integer(1) && is<INumber>(lhsChildValue) &&
-      is<INumber>(rhsChildValue)) {
+  if (is<INumber>(lhsChildValue) &&
+      is<INumber>(rhsChildValue) &&
+      *lhsChildRate == *rhsChildRate &&
+      *rhsChildRate != Integer(1)) {
 
     ArgumentPtr valuesMul = makeExpr(Mul(), lhsChildValue, rhsChildValue);
     return makeExpr(Pow(), valuesMul, lhsChildRate);
@@ -243,12 +242,13 @@ ArgumentPtr MulExpression::simplifyPowers(const IFunction & /*func*/, const Argu
   return {};
 }
 
-ArgumentPtr MulExpression::simplifyNegations(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                             const ArgumentPtr &rhsChild) {
+ArgumentPtr MulExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   const auto &lhsExpr = cast<IExpression>(lhsChild);
   const auto &rhsExpr = cast<IExpression>(rhsChild);
 
-  if (lhsExpr && rhsExpr && is<Neg>(lhsExpr->getFunction()) && is<Neg>(rhsExpr->getFunction())) {
+  if (lhsExpr && rhsExpr &&
+      is<Neg>(lhsExpr->getFunction()) && is<Neg>(rhsExpr->getFunction())) {
+
     ArgumentPtr res = makeExpr(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
     return res;
   }

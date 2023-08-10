@@ -59,7 +59,9 @@ protected:
 
 private:
   template <typename FunctionCommonTypes, typename FunctionDifferentTypes>
-  bool executeAbstract(const IComparable &rhs, const std::string &oper, FunctionCommonTypes &&funcCommonTypes,
+  bool executeAbstract(const IComparable &rhs,
+                       const std::string &oper,
+                       FunctionCommonTypes &&funcCommonTypes,
                        FunctionDifferentTypes &&funcDifferentTypes) const {
 
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {

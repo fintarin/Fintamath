@@ -37,15 +37,15 @@ TrigExpression::TrigExpression(const IFunction &inFunc, const ArgumentPtr &inChi
 
 TrigExpression::SimplifyFunctionsVector TrigExpression::getFunctionsForPreSimplify() const {
   static const TrigExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &TrigExpression::oppositeFunctionsSimplify, //
+      &TrigExpression::oppositeFunctionsSimplify,
   };
   return simplifyFunctions;
 }
 
 TrigExpression::SimplifyFunctionsVector TrigExpression::getFunctionsForPostSimplify() const {
   static const TrigExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &TrigExpression::constantsSimplify,         //
-      &TrigExpression::oppositeFunctionsSimplify, //
+      &TrigExpression::constSimplify,
+      &TrigExpression::oppositeFunctionsSimplify,
   };
   return simplifyFunctions;
 }
@@ -62,7 +62,7 @@ ArgumentPtr TrigExpression::oppositeFunctionsSimplify(const IFunction &func, con
   return {};
 }
 
-ArgumentPtr TrigExpression::constantsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+ArgumentPtr TrigExpression::constSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (*rhs == Pi()) {
     return trigTableSimplify(func, 1);
   }
@@ -85,6 +85,7 @@ ArgumentPtr TrigExpression::constantsSimplify(const IFunction &func, const Argum
   if (!rhsChildRat) {
     return {};
   }
+
   return trigTableSimplify(func, *rhsChildRat);
 }
 
@@ -222,10 +223,10 @@ Rational TrigExpression::phaseShiftPeriod(const Rational &rhs) {
 
 std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Sin().toString(), std::make_shared<Asin>()}, //
-      {Cos().toString(), std::make_shared<Acos>()}, //
-      {Tan().toString(), std::make_shared<Atan>()}, //
-      {Cot().toString(), std::make_shared<Acot>()}, //
+      {Sin().toString(), std::make_shared<Asin>()},
+      {Cos().toString(), std::make_shared<Acos>()},
+      {Tan().toString(), std::make_shared<Atan>()},
+      {Cot().toString(), std::make_shared<Acot>()},
   };
   return oppositeFunctions.at(function.toString());
 }

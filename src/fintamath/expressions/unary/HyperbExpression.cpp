@@ -17,14 +17,14 @@ HyperbExpression::HyperbExpression(const IFunction &inFunc, const ArgumentPtr &i
 
 HyperbExpression::SimplifyFunctionsVector HyperbExpression::getFunctionsForPreSimplify() const {
   static const HyperbExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &HyperbExpression::oppositeFunctionsSimplify, //
+      &HyperbExpression::oppositeFunctionsSimplify,
   };
   return simplifyFunctions;
 }
 
 HyperbExpression::SimplifyFunctionsVector HyperbExpression::getFunctionsForPostSimplify() const {
   static const HyperbExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &HyperbExpression::oppositeFunctionsSimplify, //
+      &HyperbExpression::oppositeFunctionsSimplify,
   };
   return simplifyFunctions;
 }
@@ -43,10 +43,10 @@ ArgumentPtr HyperbExpression::oppositeFunctionsSimplify(const IFunction &func, c
 
 std::shared_ptr<IFunction> HyperbExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Sinh().toString(), std::make_unique<Asinh>()}, //
-      {Cosh().toString(), std::make_unique<Acosh>()}, //
-      {Tanh().toString(), std::make_unique<Atanh>()}, //
-      {Coth().toString(), std::make_unique<Acoth>()}, //
+      {Sinh().toString(), std::make_unique<Asinh>()},
+      {Cosh().toString(), std::make_unique<Acosh>()},
+      {Tanh().toString(), std::make_unique<Atanh>()},
+      {Coth().toString(), std::make_unique<Acoth>()},
   };
   return oppositeFunctions.at(function.toString());
 }

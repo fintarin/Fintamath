@@ -23,23 +23,23 @@ std::unique_ptr<IMathObject> Acoth::call(const ArgumentsRefVector &argsVect) con
     return Inf().clone();
   }
 
-  return multiAcothSimpl(rhs);
+  return multiAcothSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Acoth::multiAcothSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Acoth::multiAcothSimplify(const INumber &rhs) {
   static const auto multiAcoth = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiAcoth;
 
     outMultiAcoth.add<Integer>([](const Integer &inRhs) {
-      return multiAcothSimpl(Real(inRhs));
+      return multiAcothSimplify(Real(inRhs));
     });
 
     outMultiAcoth.add<Rational>([](const Rational &inRhs) {
-      return multiAcothSimpl(Real(inRhs));
+      return multiAcothSimplify(Real(inRhs));
     });
 
     outMultiAcoth.add<Real>([](const Real &inRhs) {
-      return acothSimpl(inRhs);
+      return acothSimplify(inRhs);
     });
 
     return outMultiAcoth;
@@ -48,7 +48,7 @@ std::unique_ptr<IMathObject> Acoth::multiAcothSimpl(const INumber &rhs) {
   return multiAcoth(rhs);
 }
 
-std::unique_ptr<IMathObject> Acoth::acothSimpl(const Real &rhs) {
+std::unique_ptr<IMathObject> Acoth::acothSimplify(const Real &rhs) {
   try {
     return acoth(rhs).toMinimalObject();
   }

@@ -8,10 +8,10 @@ namespace fintamath {
 std::unique_ptr<IMathObject> Sign::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
-  return multiSignSimpl(rhs);
+  return multiSignSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Sign::multiSignSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Sign::multiSignSimplify(const INumber &rhs) {
   static const auto multiSign = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiSign;
 

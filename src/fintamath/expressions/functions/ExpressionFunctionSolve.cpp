@@ -190,16 +190,16 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
 
   Expression firstRootValue = firstRoot;
   firstRootValue.setVariables({
-      {c, coeffAtPow[0]}, //
-      {b, coeffAtPow[1]}, //
-      {a, coeffAtPow[2]}, //
+      {c, coeffAtPow[0]},
+      {b, coeffAtPow[1]},
+      {a, coeffAtPow[2]},
   });
 
   Expression secondRootValue = secondRoot;
   secondRootValue.setVariables({
-      {c, coeffAtPow[0]}, //
-      {b, coeffAtPow[1]}, //
-      {a, coeffAtPow[2]}, //
+      {c, coeffAtPow[0]},
+      {b, coeffAtPow[1]},
+      {a, coeffAtPow[2]},
   });
 
   return {firstRootValue.getChildren().front(), secondRootValue.getChildren().front()};

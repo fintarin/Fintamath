@@ -120,7 +120,8 @@ protected:
 
 private:
   template <typename FunctionCommonTypes, typename FunctionDifferentTypes>
-  std::unique_ptr<IArithmetic> executeAbstract(const IArithmetic &rhs, const std::string &oper,
+  std::unique_ptr<IArithmetic> executeAbstract(const IArithmetic &rhs,
+                                               const std::string &oper,
                                                FunctionCommonTypes &&funcCommonTypes,
                                                FunctionDifferentTypes &&funcDifferentTypes) const {
 

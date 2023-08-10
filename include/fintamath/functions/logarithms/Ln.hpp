@@ -21,7 +21,7 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
-  static std::unique_ptr<IMathObject> multiLnSimpl(const INumber &rhs);
+  static std::unique_ptr<IMathObject> multiLnSimplify(const INumber &rhs);
 };
 
 }

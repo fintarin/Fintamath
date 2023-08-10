@@ -33,8 +33,7 @@ public:
     Parser::registerType<T>(getParser());
   }
 
-  static std::unique_ptr<IOperator> parse(const std::string &parsedStr,
-                                          IOperator::Priority priority = IOperator::Priority::Any) {
+  static std::unique_ptr<IOperator> parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
     Parser::Comparator<const std::unique_ptr<IOperator> &> comp = [priority](const std::unique_ptr<IOperator> &oper) {
       return size_t(priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority);
     };
@@ -56,7 +55,8 @@ class IOperatorCRTP : public IOperator {
 #undef FINTAMATH_I_OPERATOR_CRTP
 
 public:
-  IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any, bool isAssociative = true,
+  IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any,
+                bool isAssociative = true,
                 bool isNonExressionEvaluatable = true)
       : isNonExressionEvaluatableFunc(isNonExressionEvaluatable),
         priority(inPriority),

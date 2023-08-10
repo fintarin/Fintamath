@@ -31,22 +31,19 @@ protected:
   int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
 
 private:
-  static ArgumentPtr simplifyConst(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyCallFunction(const IFunction &func, const ArgumentPtr &lhsChild,
-                                          const ArgumentPtr &rhsChild);
+  static ArgumentPtr callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyNegations(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr sumDivisions(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr sumSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyLogarithms(const IFunction &func, const ArgumentPtr &lhsChild,
-                                        const ArgumentPtr &rhsChild);
+  static ArgumentPtr logSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyMulLogarithms(const IFunction &func, const ArgumentPtr &lhsChild,
-                                           const ArgumentPtr &rhsChild);
+  static ArgumentPtr mulLogSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr sumRates(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr powSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &inChild);
 

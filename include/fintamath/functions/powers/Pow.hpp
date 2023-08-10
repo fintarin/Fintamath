@@ -26,13 +26,13 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
-  static std::unique_ptr<IMathObject> multiPowSimpl(const INumber &lhs, const INumber &rhs);
+  static std::unique_ptr<IMathObject> multiPowSimplify(const INumber &lhs, const INumber &rhs);
 
-  static std::unique_ptr<IMathObject> powSimpl(const Integer &lhs, const Integer &rhs);
+  static std::unique_ptr<IMathObject> powSimplify(const Integer &lhs, const Integer &rhs);
 
-  static std::unique_ptr<IMathObject> powSimpl(const Rational &lhs, const Rational &rhs);
+  static std::unique_ptr<IMathObject> powSimplify(const Rational &lhs, const Rational &rhs);
 
-  static std::unique_ptr<IMathObject> powSimpl(const Real &lhs, const Real &rhs);
+  static std::unique_ptr<IMathObject> powSimplify(const Real &lhs, const Real &rhs);
 };
 
 }

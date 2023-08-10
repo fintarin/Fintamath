@@ -7,24 +7,25 @@
 
 namespace fintamath {
 
-AndExpression::AndExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(And(), inChildren) {
+AndExpression::AndExpression(const ArgumentsPtrVector &inChildren)
+    : IPolynomExpressionCRTP(And(), inChildren) {
 }
 
 AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForPreSimplify() const {
   static const AndExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &AndExpression::simplifyBooleans, //
-      &AndExpression::simplifyEqual,    //
-      &AndExpression::simplifyNot,      //
+      &AndExpression::boolSimplify,
+      &AndExpression::equalSimplify,
+      &AndExpression::notSimplify,
   };
   return simplifyFunctions;
 }
 
 AndExpression::SimplifyFunctionsVector AndExpression::getFunctionsForPostSimplify() const {
   static const AndExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &AndExpression::simplifyOr,       //
-      &AndExpression::simplifyBooleans, //
-      &AndExpression::simplifyEqual,    //
-      &AndExpression::simplifyNot,      //
+      &AndExpression::orSimplify,
+      &AndExpression::boolSimplify,
+      &AndExpression::equalSimplify,
+      &AndExpression::notSimplify,
   };
   return simplifyFunctions;
 }
@@ -33,8 +34,7 @@ bool AndExpression::isComparableOrderInversed() const {
   return true;
 }
 
-ArgumentPtr AndExpression::simplifyBooleans(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                            const ArgumentPtr &rhsChild) {
+ArgumentPtr AndExpression::boolSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {
     return *lhsBool ? rhsChild : lhsChild;
   }
@@ -46,8 +46,7 @@ ArgumentPtr AndExpression::simplifyBooleans(const IFunction & /*func*/, const Ar
   return {};
 }
 
-ArgumentPtr AndExpression::simplifyEqual(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                         const ArgumentPtr &rhsChild) {
+ArgumentPtr AndExpression::equalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (*lhsChild == *rhsChild) {
     return lhsChild;
   }
@@ -55,18 +54,19 @@ ArgumentPtr AndExpression::simplifyEqual(const IFunction & /*func*/, const Argum
   return {};
 }
 
-ArgumentPtr AndExpression::simplifyNot(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                       const ArgumentPtr &rhsChild) {
+ArgumentPtr AndExpression::notSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
+      rhsExpr &&
+      is<Not>(rhsExpr->getFunction()) &&
+      *rhsExpr->getChildren().front() == *lhsChild) {
+
     return std::make_shared<Boolean>(false);
   }
 
   return {};
 }
 
-ArgumentPtr AndExpression::simplifyOr(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                      const ArgumentPtr &rhsChild) {
+ArgumentPtr AndExpression::orSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 

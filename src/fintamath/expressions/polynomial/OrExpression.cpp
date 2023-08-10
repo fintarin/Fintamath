@@ -7,13 +7,16 @@
 
 namespace fintamath {
 
-OrExpression::OrExpression(const ArgumentsPtrVector &inChildren) : IPolynomExpressionCRTP(Or(), inChildren) {
+OrExpression::OrExpression(const ArgumentsPtrVector &inChildren)
+    : IPolynomExpressionCRTP(Or(), inChildren) {
 }
 
 std::string OrExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   std::string result = inChild->toString();
 
-  if (const auto &childExpr = cast<IExpression>(inChild); childExpr && is<And>(childExpr->getFunction())) {
+  if (const auto &childExpr = cast<IExpression>(inChild);
+      childExpr && is<And>(childExpr->getFunction())) {
+
     result = putInBrackets(result);
   }
 
@@ -33,7 +36,7 @@ ArgumentPtr OrExpression::postSimplify() const {
 
   for (size_t i = 0; i + 1 < simplChildren.size(); i++) {
     for (size_t j = i + 1; j < simplChildren.size(); j++) {
-      if (auto res = simplifyAbsorption(simplChildren[i], simplChildren[j])) {
+      if (auto res = absorptionSimplify(simplChildren[i], simplChildren[j])) {
         simplChildren[i] = res;
         simplChildren.erase(simplChildren.begin() + ArgumentsPtrVector::difference_type(j));
         break;
@@ -56,19 +59,19 @@ ArgumentPtr OrExpression::postSimplify() const {
 
 OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForPreSimplify() const {
   static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &OrExpression::simplifyNot,      //
-      &OrExpression::simplifyBooleans, //
-      &OrExpression::simplifyEqual,    //
+      &OrExpression::notSimplify,
+      &OrExpression::boolSimplify,
+      &OrExpression::equalSimplify,
   };
   return simplifyFunctions;
 }
 
 OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForPostSimplify() const {
   static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &OrExpression::simplifyAnd,      //
-      &OrExpression::simplifyNot,      //
-      &OrExpression::simplifyBooleans, //
-      &OrExpression::simplifyEqual,    //
+      &OrExpression::andSimplify,
+      &OrExpression::notSimplify,
+      &OrExpression::boolSimplify,
+      &OrExpression::equalSimplify,
   };
   return simplifyFunctions;
 }
@@ -77,8 +80,8 @@ bool OrExpression::isComparableOrderInversed() const {
   return true;
 }
 
-ArgumentPtr OrExpression::simplifyBooleans(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                           const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::boolSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+
   if (const auto lhsBool = cast<Boolean>(lhsChild)) {
     return *lhsBool ? lhsChild : rhsChild;
   }
@@ -90,8 +93,7 @@ ArgumentPtr OrExpression::simplifyBooleans(const IFunction & /*func*/, const Arg
   return {};
 }
 
-ArgumentPtr OrExpression::simplifyEqual(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                        const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::equalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (*lhsChild == *rhsChild) {
     return lhsChild;
   }
@@ -99,22 +101,24 @@ ArgumentPtr OrExpression::simplifyEqual(const IFunction & /*func*/, const Argume
   return {};
 }
 
-ArgumentPtr OrExpression::simplifyNot(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                      const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::notSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr && is<Not>(rhsExpr->getFunction()) && *rhsExpr->getChildren().front() == *lhsChild) {
+      rhsExpr &&
+      is<Not>(rhsExpr->getFunction()) &&
+      *rhsExpr->getChildren().front() == *lhsChild) {
+
     return std::make_shared<Boolean>(true);
   }
 
   return {};
 }
 
-ArgumentPtr OrExpression::simplifyAnd(const IFunction & /*func*/, const ArgumentPtr &lhsChild,
-                                      const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
-  if (!lhsExpr || !rhsExpr || !is<And>(lhsExpr->getFunction()) || !is<And>(rhsExpr->getFunction())) {
+  if (!lhsExpr || !rhsExpr ||
+      !is<And>(lhsExpr->getFunction()) || !is<And>(rhsExpr->getFunction())) {
     return {};
   }
 
@@ -177,7 +181,7 @@ ArgumentPtr OrExpression::simplifyAnd(const IFunction & /*func*/, const Argument
   return resultChildren.front();
 }
 
-ArgumentPtr OrExpression::simplifyAbsorption(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   ArgumentPtr lhs = lhsChild;
   ArgumentPtr rhs = rhsChild;
 

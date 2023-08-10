@@ -23,9 +23,9 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
-  static std::unique_ptr<IMathObject> multiAcosSimpl(const INumber &rhs);
+  static std::unique_ptr<IMathObject> multiAcosSimplify(const INumber &rhs);
 
-  static std::unique_ptr<IMathObject> acosSimpl(const Real &rhs);
+  static std::unique_ptr<IMathObject> acosSimplify(const Real &rhs);
 };
 
 }

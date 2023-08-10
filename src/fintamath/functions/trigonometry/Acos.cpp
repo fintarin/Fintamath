@@ -23,23 +23,23 @@ std::unique_ptr<IMathObject> Acos::call(const ArgumentsRefVector &argsVect) cons
     return Integer(0).clone();
   }
 
-  return multiAcosSimpl(rhs);
+  return multiAcosSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Acos::multiAcosSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Acos::multiAcosSimplify(const INumber &rhs) {
   static const auto multiAcos = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiAcos;
 
     outMultiAcos.add<Integer>([](const Integer &inRhs) {
-      return multiAcosSimpl(Real(inRhs));
+      return multiAcosSimplify(Real(inRhs));
     });
 
     outMultiAcos.add<Rational>([](const Rational &inRhs) {
-      return multiAcosSimpl(Real(inRhs));
+      return multiAcosSimplify(Real(inRhs));
     });
 
     outMultiAcos.add<Real>([](const Real &inRhs) {
-      return acosSimpl(inRhs);
+      return acosSimplify(inRhs);
     });
 
     return outMultiAcos;
@@ -48,7 +48,7 @@ std::unique_ptr<IMathObject> Acos::multiAcosSimpl(const INumber &rhs) {
   return multiAcos(rhs);
 }
 
-std::unique_ptr<IMathObject> Acos::acosSimpl(const Real &rhs) {
+std::unique_ptr<IMathObject> Acos::acosSimplify(const Real &rhs) {
   try {
     return acos(rhs).toMinimalObject();
   }

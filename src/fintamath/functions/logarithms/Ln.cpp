@@ -18,19 +18,19 @@ std::unique_ptr<IMathObject> Ln::call(const ArgumentsRefVector &argsVect) const 
     return Integer(0).clone();
   }
 
-  return multiLnSimpl(rhs);
+  return multiLnSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Ln::multiLnSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Ln::multiLnSimplify(const INumber &rhs) {
   static const auto multiLn = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiLn;
 
     outMultiLn.add<Integer>([](const Integer &inRhs) {
-      return multiLnSimpl(Real(inRhs));
+      return multiLnSimplify(Real(inRhs));
     });
 
     outMultiLn.add<Rational>([](const Rational &inRhs) {
-      return multiLnSimpl(Real(inRhs));
+      return multiLnSimplify(Real(inRhs));
     });
 
     outMultiLn.add<Real>([](const Real &inRhs) {

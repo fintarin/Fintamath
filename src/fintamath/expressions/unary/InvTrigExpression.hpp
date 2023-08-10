@@ -16,7 +16,7 @@ protected:
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr constantsSimplify(const IFunction &func, const ArgumentPtr &rhs);
+  static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
 };
 
 }

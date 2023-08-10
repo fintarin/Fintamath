@@ -31,23 +31,23 @@ std::string DivExpression::toString() const {
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPreSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::constSimplify, //
-      &DivExpression::divSimplify,   //
-      &DivExpression::mulSimplify,   //
+      &DivExpression::constSimplify,
+      &DivExpression::divSimplify,
+      &DivExpression::mulSimplify,
   };
   return simplifyFunctions;
 }
 
 DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
   static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &DivExpression::constSimplify,           //
-      &DivExpression::negSimplify,             //
-      &DivExpression::numSimplify,             //
-      &DivExpression::divSimplify,             //
-      &DivExpression::mulSimplify,             //
-      &DivExpression::nestedRationalsSimplify, //
-      &DivExpression::gcdSimplify,             //
-      &DivExpression::sumSimplify,             //
+      &DivExpression::constSimplify,
+      &DivExpression::negSimplify,
+      &DivExpression::numSimplify,
+      &DivExpression::divSimplify,
+      &DivExpression::mulSimplify,
+      &DivExpression::nestedRationalSimplify,
+      &DivExpression::gcdSimplify,
+      &DivExpression::sumSimplify,
   };
   return simplifyFunctions;
 }
@@ -303,7 +303,8 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
   }
 
   if (const auto rhsChildExpr = cast<IExpression>(rhs);
-      (rhsChildExpr && is<Add>(rhsChildExpr->getFunction())) || lhsChildren.empty()) {
+      (rhsChildExpr && is<Add>(rhsChildExpr->getFunction())) ||
+      lhsChildren.empty()) {
     return {};
   }
 
@@ -315,7 +316,10 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
     simplifyChild(divResult);
 
     if (const auto divResultExpr = cast<IExpression>(divResult);
-        divResultExpr && is<Div>(divResultExpr->getFunction()) && *divResultExpr->getChildren().back() == *rhs) {
+        divResultExpr &&
+        is<Div>(divResultExpr->getFunction()) &&
+        *divResultExpr->getChildren().back() == *rhs) {
+
       remainderChildren.emplace_back(child);
     }
     else {
@@ -347,7 +351,8 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   }
 
   if (const auto lhsChildExpr = cast<IExpression>(lhs);
-      (lhsChildExpr && is<Add>(lhsChildExpr->getFunction())) || rhsChildren.empty()) {
+      (lhsChildExpr && is<Add>(lhsChildExpr->getFunction())) ||
+      rhsChildren.empty()) {
     return {};
   }
 
@@ -405,7 +410,8 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   auto rhsChildValueNum = cast<INumber>(rhsChildValue);
   auto rhsChildRateNum = cast<INumber>(rhsChildRate);
 
-  if (lhsChildValueNum && rhsChildValueNum && lhsChildRateNum && rhsChildRateNum &&
+  if (lhsChildValueNum && rhsChildValueNum &&
+      lhsChildRateNum && rhsChildRateNum &&
       *lhsChildRateNum < *rhsChildRateNum) {
     return {};
   }
@@ -420,7 +426,11 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     return result;
   }
 
-  if (*lhsChildRate == *rhsChildRate && *rhsChildRate != Integer(1) && lhsChildValueNum && rhsChildValueNum) {
+  if (lhsChildValueNum &&
+      rhsChildValueNum &&
+      *lhsChildRate == *rhsChildRate &&
+      *rhsChildRate != Integer(1)) {
+
     ArgumentPtr valuesDiv = makeExpr(Div(), lhsChildValue, rhsChildValue);
     return makeExpr(Pow(), valuesDiv, lhsChildRate);
   }
@@ -450,12 +460,10 @@ ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, cons
   return makeExpr(Pow(), value, ratesSum);
 }
 
-ArgumentPtr DivExpression::nestedRationalsSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs,
-                                                   const ArgumentPtr &rhs) {
-
+ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (const auto &lhsExpr = cast<IExpression>(lhs)) {
     if (is<Mul>(lhsExpr->getFunction())) {
-      if (auto res = nestedRationalsInNumeratorSimplify(lhsExpr->getChildren(), rhs)) {
+      if (auto res = nestedNumeratorRationalSimplify(lhsExpr->getChildren(), rhs)) {
         return res;
       }
     }
@@ -524,13 +532,11 @@ Integer DivExpression::getGcd(ArgumentsPtrVector &lhsChildren) {
   return gcdNum;
 }
 
-ArgumentPtr DivExpression::nestedRationalsInNumeratorSimplify(const ArgumentsPtrVector &lhsChildren,
-                                                              const ArgumentPtr &rhs) {
-
+ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentsPtrVector &lhs, const ArgumentPtr &rhs) {
   ArgumentsPtrVector numeratorChildren;
   ArgumentsPtrVector denominatorChildren;
 
-  for (const auto &child : lhsChildren) {
+  for (const auto &child : lhs) {
     if (const auto &rationalChild = cast<Rational>(child)) {
       numeratorChildren.emplace_back(rationalChild->numerator().clone());
       denominatorChildren.emplace_back(rationalChild->denominator().clone());

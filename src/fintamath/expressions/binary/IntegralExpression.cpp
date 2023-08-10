@@ -18,13 +18,12 @@ IntegralExpression::IntegralExpression(const ArgumentPtr &inLhsChild, const Argu
 
 IntegralExpression::SimplifyFunctionsVector IntegralExpression::getFunctionsForPostSimplify() const {
   static const IntegralExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &IntegralExpression::integralSimplify, //
+      &IntegralExpression::integralSimplify,
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs,
-                                                 const ArgumentPtr &rhs) {
+ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   // TODO: remove this and implement derivative with rhs !is Variable
   if (!is<Variable>(rhs)) {
     throw InvalidInputFunctionException(Integral().toString(), {lhs->toString(), rhs->toString()});

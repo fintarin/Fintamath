@@ -52,7 +52,9 @@ ArgumentPtr CompExpression::preSimplify() const {
   auto simpl = IBinaryExpression::preSimplify();
 
   if (auto simplExpr = cast<CompExpression>(simpl)) {
-    if (!simplExpr->isSolution && (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
+    if (!simplExpr->isSolution &&
+        (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
+
       ArgumentPtr resLhs = makeExpr(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
       preSimplifyChild(resLhs);
       return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
@@ -64,16 +66,16 @@ ArgumentPtr CompExpression::preSimplify() const {
 
 CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPreSimplify() const {
   static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &CompExpression::constSimplify, //
+      &CompExpression::constSimplify,
   };
   return simplifyFunctions;
 }
 
 CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPostSimplify() const {
   static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &CompExpression::constSimplify, //
-      &CompExpression::divSimplify,   //
-      &CompExpression::coeffSimplify, //
+      &CompExpression::constSimplify,
+      &CompExpression::divSimplify,
+      &CompExpression::coeffSimplify,
   };
   return simplifyFunctions;
 }
@@ -84,32 +86,34 @@ void CompExpression::markAsSolution() {
 
 std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Eqv().toString(), std::make_shared<Eqv>()},         //
-      {Neqv().toString(), std::make_shared<Neqv>()},       //
-      {More().toString(), std::make_shared<Less>()},       //
-      {Less().toString(), std::make_shared<More>()},       //
-      {MoreEqv().toString(), std::make_shared<LessEqv>()}, //
-      {LessEqv().toString(), std::make_shared<MoreEqv>()}, //
+      {Eqv().toString(), std::make_shared<Eqv>()},
+      {Neqv().toString(), std::make_shared<Neqv>()},
+      {More().toString(), std::make_shared<Less>()},
+      {Less().toString(), std::make_shared<More>()},
+      {MoreEqv().toString(), std::make_shared<LessEqv>()},
+      {LessEqv().toString(), std::make_shared<MoreEqv>()},
   };
   return oppositeFunctions.at(function.toString());
 }
 
 ArgumentPtr CompExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (is<ComplexInf>(lhs) && (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
+  if (is<ComplexInf>(lhs) &&
+      (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
     return Undefined().clone();
   }
 
-  if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) && is<ComplexInf>(rhs)) {
+  if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
+      is<ComplexInf>(rhs)) {
     return Undefined().clone();
   }
 
-  if ((is<Inf>(lhs) && is<Inf>(rhs)) || (is<NegInf>(lhs) && is<NegInf>(rhs))) {
+  if ((is<Inf>(lhs) && is<Inf>(rhs)) ||
+      (is<NegInf>(lhs) && is<NegInf>(rhs))) {
     return Boolean(true).clone();
   }
 
-  if (is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs) || //
+  if (is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs) ||
       is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
-
     return Boolean(false).clone();
   }
 

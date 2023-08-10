@@ -11,9 +11,10 @@
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/parser/Parser.hpp"
 
-#define REQUIRE_MATH_OBJECTS(Lhs, Rhs)                                                                                 \
-  template <typename Lhs, typename Rhs,                                                                                \
-            typename = std::enable_if_t<std::is_base_of_v<IMathObject, Lhs> && std::is_convertible_v<Rhs, Lhs> &&      \
+#define REQUIRE_MATH_OBJECTS(Lhs, Rhs)                                         \
+  template <typename Lhs, typename Rhs,                                        \
+            typename = std::enable_if_t<std::is_base_of_v<IMathObject, Lhs> && \
+                                        std::is_convertible_v<Rhs, Lhs> &&     \
                                         !std::is_same_v<Lhs, Rhs>>>
 
 namespace fintamath {
@@ -69,19 +70,23 @@ class IMathObjectCRTP : public IMathObject {
 #undef FINTAMATH_I_MATH_OBJECT_CRTP
 };
 
-REQUIRE_MATH_OBJECTS(Lhs, Rhs) bool operator==(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_MATH_OBJECTS(Lhs, Rhs)
+bool operator==(const Lhs &lhs, const Rhs &rhs) {
   return lhs == Lhs(rhs);
 }
 
-REQUIRE_MATH_OBJECTS(Rhs, Lhs) bool operator==(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_MATH_OBJECTS(Rhs, Lhs)
+bool operator==(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) == rhs;
 }
 
-REQUIRE_MATH_OBJECTS(Lhs, Rhs) bool operator!=(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_MATH_OBJECTS(Lhs, Rhs)
+bool operator!=(const Lhs &lhs, const Rhs &rhs) {
   return lhs != Lhs(rhs);
 }
 
-REQUIRE_MATH_OBJECTS(Rhs, Lhs) bool operator!=(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_MATH_OBJECTS(Rhs, Lhs)
+bool operator!=(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) != rhs;
 }
 

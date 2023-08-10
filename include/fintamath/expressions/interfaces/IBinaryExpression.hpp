@@ -60,14 +60,13 @@ class IBinaryExpressionCRTP : public IBinaryExpressionBaseCRTP<Derived, isMultiF
 #undef FINTAMATH_I_EXPRESSION_CRTP
 
 public:
-  explicit IBinaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &inLhsChild,
-                                 const ArgumentPtr &inRhsChild) {
+  explicit IBinaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
     this->func = cast<IFunction>(inFunc.clone());
 
-    this->lhsChild = inLhsChild;
+    this->lhsChild = lhs;
     this->compressChild(this->lhsChild);
 
-    this->rhsChild = inRhsChild;
+    this->rhsChild = rhs;
     this->compressChild(this->rhsChild);
   }
 };

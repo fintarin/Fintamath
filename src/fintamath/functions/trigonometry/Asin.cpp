@@ -23,23 +23,23 @@ std::unique_ptr<IMathObject> Asin::call(const ArgumentsRefVector &argsVect) cons
     return makeExpr(Div(), Pi(), Integer(2))->toMinimalObject();
   }
 
-  return multiAsinSimpl(rhs);
+  return multiAsinSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Asin::multiAsinSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Asin::multiAsinSimplify(const INumber &rhs) {
   static const auto multiAsin = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiAsin;
 
     outMultiAsin.add<Integer>([](const Integer &inRhs) {
-      return multiAsinSimpl(Real(inRhs));
+      return multiAsinSimplify(Real(inRhs));
     });
 
     outMultiAsin.add<Rational>([](const Rational &inRhs) {
-      return multiAsinSimpl(Real(inRhs));
+      return multiAsinSimplify(Real(inRhs));
     });
 
     outMultiAsin.add<Real>([](const Real &inRhs) {
-      return asinSimpl(inRhs);
+      return asinSimplify(inRhs);
     });
 
     return outMultiAsin;
@@ -48,7 +48,7 @@ std::unique_ptr<IMathObject> Asin::multiAsinSimpl(const INumber &rhs) {
   return multiAsin(rhs);
 }
 
-std::unique_ptr<IMathObject> Asin::asinSimpl(const Real &rhs) {
+std::unique_ptr<IMathObject> Asin::asinSimplify(const Real &rhs) {
   try {
     return asin(rhs).toMinimalObject();
   }

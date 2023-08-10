@@ -21,7 +21,7 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
-  static std::unique_ptr<IMathObject> multiTanSimpl(const INumber &rhs);
+  static std::unique_ptr<IMathObject> multiTanSimplify(const INumber &rhs);
 };
 
 }

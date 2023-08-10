@@ -56,34 +56,34 @@ std::unique_ptr<IMathObject> Log::call(const ArgumentsRefVector &argsVect) const
 
     if (rhs < Integer(1)) {
       auto newRhs = Rational(1) / rhs;
-      return multiLogSimpl(*newLhs, *newRhs);
+      return multiLogSimplify(*newLhs, *newRhs);
     }
 
-    return Neg()(*multiLogSimpl(*newLhs, rhs));
+    return Neg()(*multiLogSimplify(*newLhs, rhs));
   }
 
   if (rhs < Integer(1)) {
     auto newRhs = Rational(1) / rhs;
-    return Neg()(*multiLogSimpl(lhs, *newRhs));
+    return Neg()(*multiLogSimplify(lhs, *newRhs));
   }
 
-  return multiLogSimpl(lhs, rhs);
+  return multiLogSimplify(lhs, rhs);
 }
 
-std::unique_ptr<IMathObject> Log::multiLogSimpl(const INumber &lhs, const INumber &rhs) {
+std::unique_ptr<IMathObject> Log::multiLogSimplify(const INumber &lhs, const INumber &rhs) {
   static const auto multiLog = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const INumber &)> outMultiPow;
 
     outMultiPow.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
-      return logSimpl(inLhs, inRhs);
+      return logSimplify(inLhs, inRhs);
     });
 
     outMultiPow.add<Rational, Rational>([](const Rational &inLhs, const Rational &inRhs) {
-      return logSimpl(inLhs, inRhs);
+      return logSimplify(inLhs, inRhs);
     });
 
     outMultiPow.add<Real, Real>([](const Real &inLhs, const Real &inRhs) {
-      return logSimpl(inLhs, inRhs);
+      return logSimplify(inLhs, inRhs);
     });
 
     return outMultiPow;
@@ -97,11 +97,11 @@ std::unique_ptr<IMathObject> Log::multiLogSimpl(const INumber &lhs, const INumbe
   return multiLog(*lhsConv, rhs);
 }
 
-std::unique_ptr<IMathObject> Log::logSimpl(const Integer &lhs, const Integer &rhs) {
-  return logSimpl(Rational(lhs), Rational(rhs));
+std::unique_ptr<IMathObject> Log::logSimplify(const Integer &lhs, const Integer &rhs) {
+  return logSimplify(Rational(lhs), Rational(rhs));
 }
 
-std::unique_ptr<IMathObject> Log::logSimpl(const Rational &lhs, const Rational &rhs) {
+std::unique_ptr<IMathObject> Log::logSimplify(const Rational &lhs, const Rational &rhs) {
   const bool isResInverted = lhs > rhs;
   const Rational divider = isResInverted ? rhs : lhs;
   Rational remainder = isResInverted ? lhs : rhs;
@@ -122,10 +122,10 @@ std::unique_ptr<IMathObject> Log::logSimpl(const Rational &lhs, const Rational &
     return res.toMinimalObject();
   }
 
-  return logSimpl(Real(lhs), Real(rhs));
+  return logSimplify(Real(lhs), Real(rhs));
 }
 
-std::unique_ptr<IMathObject> Log::logSimpl(const Real &lhs, const Real &rhs) {
+std::unique_ptr<IMathObject> Log::logSimplify(const Real &lhs, const Real &rhs) {
   return log(lhs, rhs).toMinimalObject();
 }
 

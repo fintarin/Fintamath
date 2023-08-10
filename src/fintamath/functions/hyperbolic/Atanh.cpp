@@ -22,23 +22,23 @@ std::unique_ptr<IMathObject> Atanh::call(const ArgumentsRefVector &argsVect) con
     return Inf().clone();
   }
 
-  return multiAtanhSimpl(rhs);
+  return multiAtanhSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Atanh::multiAtanhSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Atanh::multiAtanhSimplify(const INumber &rhs) {
   static const auto multiAtanh = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiAtanh;
 
     outMultiAtanh.add<Integer>([](const Integer &inRhs) {
-      return multiAtanhSimpl(Real(inRhs));
+      return multiAtanhSimplify(Real(inRhs));
     });
 
     outMultiAtanh.add<Rational>([](const Rational &inRhs) {
-      return multiAtanhSimpl(Real(inRhs));
+      return multiAtanhSimplify(Real(inRhs));
     });
 
     outMultiAtanh.add<Real>([](const Real &inRhs) {
-      return atanhSimpl(inRhs);
+      return atanhSimplify(inRhs);
     });
 
     return outMultiAtanh;
@@ -47,7 +47,7 @@ std::unique_ptr<IMathObject> Atanh::multiAtanhSimpl(const INumber &rhs) {
   return multiAtanh(rhs);
 }
 
-std::unique_ptr<IMathObject> Atanh::atanhSimpl(const Real &rhs) {
+std::unique_ptr<IMathObject> Atanh::atanhSimplify(const Real &rhs) {
   try {
     return atanh(rhs).toMinimalObject();
   }

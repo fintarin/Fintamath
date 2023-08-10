@@ -13,26 +13,27 @@
 
 namespace fintamath {
 
-NotExpression::NotExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(Not(), inChild) {
+NotExpression::NotExpression(const ArgumentPtr &inChild)
+    : IUnaryExpressionCRTP(Not(), inChild) {
 }
 
 NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPreSimplify() const {
   static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NotExpression::callNotFunction,   //
-      &NotExpression::simplifyNestedNot, //
+      &NotExpression::callFunctionSimplify,
+      &NotExpression::nestedNotSimplify,
   };
   return simplifyFunctions;
 }
 
 NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPostSimplify() const {
   static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NotExpression::simplifyLogicNegatable, //
-      &NotExpression::simplifyNestedNot,      //
+      &NotExpression::logicNegatableSimplify,
+      &NotExpression::nestedNotSimplify,
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr NotExpression::callNotFunction(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+ArgumentPtr NotExpression::callFunctionSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (ArgumentPtr res = callFunction(Not(), {rhs})) {
     return res;
   }
@@ -40,7 +41,7 @@ ArgumentPtr NotExpression::callNotFunction(const IFunction & /*func*/, const Arg
   return {};
 }
 
-ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+ArgumentPtr NotExpression::logicNegatableSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
   if (!rhsExpr) {
@@ -51,6 +52,7 @@ ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, co
 
   if (const auto op = cast<IOperator>(rhsExpr->getFunction());
       op && op->getOperatorPriority() == IOperator::Priority::Comparison) {
+
     res = makeExpr(*cast<IFunction>(getLogicOppositeFunction(*op)), rhsExpr->getChildren());
   }
   else if (is<Or>(rhsExpr->getFunction())) {
@@ -75,7 +77,7 @@ ArgumentPtr NotExpression::simplifyLogicNegatable(const IFunction & /*func*/, co
   return res;
 }
 
-ArgumentPtr NotExpression::simplifyNestedNot(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+ArgumentPtr NotExpression::nestedNotSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (const auto expr = cast<NotExpression>(rhs)) {
     return expr->child;
   }
@@ -85,12 +87,12 @@ ArgumentPtr NotExpression::simplifyNestedNot(const IFunction & /*func*/, const A
 
 std::shared_ptr<IFunction> NotExpression::getLogicOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Eqv().toString(), std::make_shared<Neqv>()},     //
-      {Neqv().toString(), std::make_shared<Eqv>()},     //
-      {More().toString(), std::make_shared<LessEqv>()}, //
-      {Less().toString(), std::make_shared<MoreEqv>()}, //
-      {MoreEqv().toString(), std::make_shared<Less>()}, //
-      {LessEqv().toString(), std::make_shared<More>()}, //
+      {Eqv().toString(), std::make_shared<Neqv>()},
+      {Neqv().toString(), std::make_shared<Eqv>()},
+      {More().toString(), std::make_shared<LessEqv>()},
+      {Less().toString(), std::make_shared<MoreEqv>()},
+      {MoreEqv().toString(), std::make_shared<Less>()},
+      {LessEqv().toString(), std::make_shared<More>()},
   };
   return oppositeFunctions.at(function.toString());
 }

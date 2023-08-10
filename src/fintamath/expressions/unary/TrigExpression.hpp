@@ -22,7 +22,7 @@ protected:
 private:
   static ArgumentPtr oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr constantsSimplify(const IFunction &func, const ArgumentPtr &rhs);
+  static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
   static ArgumentPtr trigTableSimplify(const IFunction &func, const Rational &rhs);
 

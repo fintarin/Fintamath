@@ -11,19 +11,19 @@ std::unique_ptr<IMathObject> Cosh::call(const ArgumentsRefVector &argsVect) cons
     return Integer(1).clone();
   }
 
-  return multiCoshSimpl(rhs);
+  return multiCoshSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Cosh::multiCoshSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Cosh::multiCoshSimplify(const INumber &rhs) {
   static const auto multiCosh = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiCosh;
 
     outMultiCosh.add<Integer>([](const Integer &inRhs) {
-      return multiCoshSimpl(Real(inRhs));
+      return multiCoshSimplify(Real(inRhs));
     });
 
     outMultiCosh.add<Rational>([](const Rational &inRhs) {
-      return multiCoshSimpl(Real(inRhs));
+      return multiCoshSimplify(Real(inRhs));
     });
 
     outMultiCosh.add<Real>([](const Real &inRhs) {

@@ -167,4 +167,4 @@ Integer &Integer::decrease() {
   return *this;
 }
 
-}
+} // namespace fintamath

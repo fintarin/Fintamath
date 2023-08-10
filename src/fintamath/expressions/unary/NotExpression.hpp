@@ -18,11 +18,11 @@ protected:
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr callNotFunction(const IFunction &func, const ArgumentPtr &rhs);
+  static ArgumentPtr callFunctionSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr simplifyLogicNegatable(const IFunction &func, const ArgumentPtr &rhs);
+  static ArgumentPtr logicNegatableSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr simplifyNestedNot(const IFunction &func, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedNotSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
   static std::shared_ptr<IFunction> getLogicOppositeFunction(const IFunction &function);
 };

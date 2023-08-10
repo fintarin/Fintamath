@@ -1,14 +1,12 @@
 BasedOnStyle: LLVM
-ColumnLimit: 120
+ColumnLimit: 0
 AlwaysBreakTemplateDeclarations: true
-AllowShortFunctionsOnASingleLine: false
-AllowShortLambdasOnASingleLine: false
+AllowShortLambdasOnASingleLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
-PackConstructorInitializers: CurrentLine
-SeparateDefinitionBlocks: Always
 NamespaceIndentation: None
 FixNamespaceComments: false
+BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeCatch: true
   BeforeElse: true
-BreakBeforeBraces: Custom
+  BeforeWhile: true

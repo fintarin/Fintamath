@@ -25,26 +25,26 @@ std::unique_ptr<IMathObject> Pow::call(const ArgumentsRefVector &argsVect) const
       return ComplexInf().clone();
     }
 
-    return multiPowSimpl(*(Rational(1) / lhs), *(-rhs));
+    return multiPowSimplify(*(Rational(1) / lhs), *(-rhs));
   }
 
-  return multiPowSimpl(lhs, rhs);
+  return multiPowSimplify(lhs, rhs);
 }
 
-std::unique_ptr<IMathObject> Pow::multiPowSimpl(const INumber &lhs, const INumber &rhs) {
+std::unique_ptr<IMathObject> Pow::multiPowSimplify(const INumber &lhs, const INumber &rhs) {
   static const auto multiPow = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const INumber &)> outMultiPow;
 
     outMultiPow.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
-      return powSimpl(inLhs, inRhs);
+      return powSimplify(inLhs, inRhs);
     });
 
     outMultiPow.add<Rational, Rational>([](const Rational &inLhs, const Rational &inRhs) {
-      return powSimpl(inLhs, inRhs);
+      return powSimplify(inLhs, inRhs);
     });
 
     outMultiPow.add<Real, Real>([](const Real &inLhs, const Real &inRhs) {
-      return powSimpl(inLhs, inRhs);
+      return powSimplify(inLhs, inRhs);
     });
 
     return outMultiPow;
@@ -58,11 +58,11 @@ std::unique_ptr<IMathObject> Pow::multiPowSimpl(const INumber &lhs, const INumbe
   return multiPow(*lhsConv, rhs);
 }
 
-std::unique_ptr<IMathObject> Pow::powSimpl(const Integer &lhs, const Integer &rhs) {
+std::unique_ptr<IMathObject> Pow::powSimplify(const Integer &lhs, const Integer &rhs) {
   return pow(lhs, rhs).toMinimalObject();
 }
 
-std::unique_ptr<IMathObject> Pow::powSimpl(const Rational &lhs, const Rational &rhs) {
+std::unique_ptr<IMathObject> Pow::powSimplify(const Rational &lhs, const Rational &rhs) {
   const Integer &lhsNumerator = lhs.numerator();
   const Integer &lhsDenominator = lhs.denominator();
 
@@ -83,13 +83,13 @@ std::unique_ptr<IMathObject> Pow::powSimpl(const Rational &lhs, const Rational &
   }
 
   if (lhsDenominator == 1) {
-    return Root()(*multiPowSimpl(lhsNumerator, rhsNumerator), rhsDenominator);
+    return Root()(*multiPowSimplify(lhsNumerator, rhsNumerator), rhsDenominator);
   }
 
-  return Root()(*multiPowSimpl(lhs, rhsNumerator), rhsDenominator);
+  return Root()(*multiPowSimplify(lhs, rhsNumerator), rhsDenominator);
 }
 
-std::unique_ptr<IMathObject> Pow::powSimpl(const Real &lhs, const Real &rhs) {
+std::unique_ptr<IMathObject> Pow::powSimplify(const Real &lhs, const Real &rhs) {
   try {
     return pow(lhs, rhs).toMinimalObject();
   }

@@ -22,19 +22,19 @@ std::unique_ptr<IMathObject> Atan::call(const ArgumentsRefVector &argsVect) cons
     return makeExpr(Div(), Pi(), Integer(4))->toMinimalObject();
   }
 
-  return multiAtanSimpl(rhs);
+  return multiAtanSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Atan::multiAtanSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Atan::multiAtanSimplify(const INumber &rhs) {
   static const auto multiAtan = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiAtan;
 
     outMultiAtan.add<Integer>([](const Integer &inRhs) {
-      return multiAtanSimpl(Real(inRhs));
+      return multiAtanSimplify(Real(inRhs));
     });
 
     outMultiAtan.add<Rational>([](const Rational &inRhs) {
-      return multiAtanSimpl(Real(inRhs));
+      return multiAtanSimplify(Real(inRhs));
     });
 
     outMultiAtan.add<Real>([](const Real &inRhs) {

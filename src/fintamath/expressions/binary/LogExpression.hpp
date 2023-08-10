@@ -24,7 +24,7 @@ protected:
   SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr callFuncSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 

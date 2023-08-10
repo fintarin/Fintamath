@@ -12,28 +12,29 @@
 
 namespace fintamath {
 
-NegExpression::NegExpression(const ArgumentPtr &inChild) : IUnaryExpressionCRTP(Neg(), inChild) {
+NegExpression::NegExpression(const ArgumentPtr &inChild)
+    : IUnaryExpressionCRTP(Neg(), inChild) {
 }
 
 NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPreSimplify() const {
   static const NegExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NegExpression::simplifyConst,     //
-      &NegExpression::callNegFunction,   //
-      &NegExpression::simplifyNestedNeg, //
+      &NegExpression::constSimplify,
+      &NegExpression::callFunctionSimplify,
+      &NegExpression::nestedNegSimplify,
   };
   return simplifyFunctions;
 }
 
 NegExpression::SimplifyFunctionsVector NegExpression::getFunctionsForPostSimplify() const {
   static const NegExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &NegExpression::simplifyConst,     //
-      &NegExpression::simplifyNegatable, //
-      &NegExpression::simplifyNestedNeg, //
+      &NegExpression::constSimplify,
+      &NegExpression::negatableSimplify,
+      &NegExpression::nestedNegSimplify,
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr NegExpression::callNegFunction(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+ArgumentPtr NegExpression::callFunctionSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (ArgumentPtr res = callFunction(Neg(), {rhs})) {
     return res;
   }
@@ -41,7 +42,7 @@ ArgumentPtr NegExpression::callNegFunction(const IFunction & /*func*/, const Arg
   return {};
 }
 
-ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+ArgumentPtr NegExpression::negatableSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
   if (!rhsExpr) {
@@ -76,7 +77,7 @@ ArgumentPtr NegExpression::simplifyNegatable(const IFunction & /*func*/, const A
   return res;
 }
 
-ArgumentPtr NegExpression::simplifyNestedNeg(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+ArgumentPtr NegExpression::nestedNegSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (const auto expr = cast<NegExpression>(rhs)) {
     return expr->child;
   }
@@ -84,7 +85,7 @@ ArgumentPtr NegExpression::simplifyNestedNeg(const IFunction & /*func*/, const A
   return {};
 }
 
-ArgumentPtr NegExpression::simplifyConst(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+ArgumentPtr NegExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (is<Inf>(rhs)) {
     return NegInf().clone();
   }

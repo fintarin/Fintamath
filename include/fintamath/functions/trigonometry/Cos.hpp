@@ -21,7 +21,7 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
-  static std::unique_ptr<IMathObject> multiCosSimpl(const INumber &rhs);
+  static std::unique_ptr<IMathObject> multiCosSimplify(const INumber &rhs);
 };
 
 }

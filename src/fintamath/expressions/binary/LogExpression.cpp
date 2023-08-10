@@ -50,23 +50,23 @@ ArgumentPtr LogExpression::preciseSimplify() const {
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPreSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &LogExpression::callFuncSimplify, //
-      &LogExpression::equalSimplify,    //
-      &LogExpression::powSimplify,      //
+      &LogExpression::callFunctionSimplify,
+      &LogExpression::equalSimplify,
+      &LogExpression::powSimplify,
   };
   return simplifyFunctions;
 }
 
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPostSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &LogExpression::constSimplify, //
-      &LogExpression::powSimplify,   //
-      &LogExpression::equalSimplify, //
+      &LogExpression::constSimplify,
+      &LogExpression::powSimplify,
+      &LogExpression::equalSimplify,
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr LogExpression::callFuncSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr LogExpression::callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   return callFunction(func, {lhs, rhs});
 }
 

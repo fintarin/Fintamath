@@ -62,7 +62,9 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
       return putInBrackets(childStr);
     }
 
-    if (lhsOperPriority >= operPriority || (lhsOperPriority == operPriority && !oper.isAssociative())) {
+    if (lhsOperPriority >= operPriority ||
+        (lhsOperPriority == operPriority && !oper.isAssociative())) {
+
       return putInBrackets(childStr);
     }
   }

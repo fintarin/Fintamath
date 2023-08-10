@@ -67,13 +67,12 @@ ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end) {
 
   Expression res;
 
-  if (res.parseBinaryOperator(terms, start, end) ||  //
-      res.parsePrefixOperator(terms, start, end) ||  //
-      res.parsePostfixOperator(terms, start, end) || //
-      res.parseFunction(terms, start, end) ||        //
-      res.parseBrackets(terms, start, end) ||        //
-      res.parseFiniteTerm(terms, start, end)         //
-  ) {
+  if (res.parseBinaryOperator(terms, start, end) ||
+      res.parsePrefixOperator(terms, start, end) ||
+      res.parsePostfixOperator(terms, start, end) ||
+      res.parseFunction(terms, start, end) ||
+      res.parseBrackets(terms, start, end) ||
+      res.parseFiniteTerm(terms, start, end)) {
     return res.child;
   }
 
@@ -98,8 +97,10 @@ bool Expression::parseBinaryOperator(const TermVector &terms, size_t start, size
       if (!isPreviousBinaryOper) {
         IOperator::Priority priority = oper->getOperatorPriority();
 
-        if (foundPriority == IOperator::Priority::Any || foundPriority < priority ||
+        if (foundPriority == IOperator::Priority::Any ||
+            foundPriority < priority ||
             (foundPriority == priority && foundOperPos < i)) {
+
           foundPriority = priority;
           foundOperPos = i;
         }
@@ -332,18 +333,18 @@ void Expression::insertDelimiters(TermVector &terms) {
   ArgumentPtr delimiter = std::make_unique<Mul>();
 
   for (size_t i = 1; i < terms.size(); i++) {
-    if (!getTermValueIf(*terms[i - 1], isBinaryOperator) &&      //
-        !getTermValueIf(*terms[i - 1], isPrefixOperator) &&      //
-        !getTermValueIf(*terms[i - 1], isNonOperatorFunction) && //
-        terms[i - 1]->name != "(" &&                             //
-        terms[i - 1]->name != "," &&                             //
-        !getTermValueIf(*terms[i], isBinaryOperator) &&          //
-        !getTermValueIf(*terms[i], isPostfixOperator) &&         //
-        terms[i]->name != ")" &&                                 //
-        terms[i]->name != ","                                    //
-    ) {
-      terms.insert(terms.begin() + TermVector::difference_type(i),
-                   std::make_shared<Term>(delimiter->toString(), ArgumentsPtrVector{delimiter}));
+    if (!getTermValueIf(*terms[i - 1], isBinaryOperator) &&
+        !getTermValueIf(*terms[i - 1], isPrefixOperator) &&
+        !getTermValueIf(*terms[i - 1], isNonOperatorFunction) &&
+        terms[i - 1]->name != "(" &&
+        terms[i - 1]->name != "," &&
+        !getTermValueIf(*terms[i], isBinaryOperator) &&
+        !getTermValueIf(*terms[i], isPostfixOperator) &&
+        terms[i]->name != ")" &&
+        terms[i]->name != ",") {
+
+      auto term = std::make_shared<Term>(delimiter->toString(), ArgumentsPtrVector{delimiter});
+      terms.insert(terms.begin() + TermVector::difference_type(i), term);
       i++;
     }
   }
@@ -458,8 +459,10 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
       const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
       const MathObjectTypeId childTypeId = childFunc->getReturnTypeId();
 
-      if (childTypeId != Variable::getTypeIdStatic() && !isBaseOf(typeId, childTypeId) &&
+      if (childTypeId != Variable::getTypeIdStatic() &&
+          !isBaseOf(typeId, childTypeId) &&
           !isBaseOf(childTypeId, typeId)) {
+
         throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }

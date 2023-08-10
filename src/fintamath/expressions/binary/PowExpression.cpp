@@ -83,18 +83,18 @@ ArgumentPtr PowExpression::preciseSimplify() const {
 
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPreSimplify() const {
   static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &PowExpression::negSimplify, //
-      &PowExpression::powSimplify, //
+      &PowExpression::negSimplify,
+      &PowExpression::powSimplify,
   };
   return simplifyFunctions;
 }
 
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplify() const {
   static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &PowExpression::constSimplify,   //
-      &PowExpression::polynomSimplify, //
-      &PowExpression::negSimplify,     //
-      &PowExpression::powSimplify,     //
+      &PowExpression::constSimplify,
+      &PowExpression::polynomSimplify,
+      &PowExpression::negSimplify,
+      &PowExpression::powSimplify,
   };
   return simplifyFunctions;
 }
@@ -215,7 +215,10 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
     return makeExpr(Div(), divLhs, divRhs);
   }
 
-  if (const auto rhsComp = cast<IComparable>(rhs); is<NegInf>(rhs) || (rhsComp && *rhsComp < Integer(0))) {
+  if (const auto rhsComp = cast<IComparable>(rhs);
+      is<NegInf>(rhs) ||
+      (rhsComp && *rhsComp < Integer(0))) {
+
     ArgumentPtr divLhs = Integer(1).clone();
     ArgumentPtr divRhs = makeExpr(Pow(), lhs, makeExpr(Neg(), rhs));
     return makeExpr(Div(), divLhs, divRhs);

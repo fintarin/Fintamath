@@ -8,12 +8,12 @@ InvTrigExpression::InvTrigExpression(const IFunction &inFunc, const ArgumentPtr 
 
 InvTrigExpression::SimplifyFunctionsVector InvTrigExpression::getFunctionsForPostSimplify() const {
   static const InvTrigExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &InvTrigExpression::constantsSimplify, //
+      &InvTrigExpression::constSimplify,
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr InvTrigExpression::constantsSimplify(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
+ArgumentPtr InvTrigExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr & /*rhs*/) {
   // TODO! implement
   return {};
 }

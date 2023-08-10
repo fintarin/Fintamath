@@ -11,19 +11,19 @@ std::unique_ptr<IMathObject> Sinh::call(const ArgumentsRefVector &argsVect) cons
     return rhs.clone();
   }
 
-  return multiSinhSimpl(rhs);
+  return multiSinhSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Sinh::multiSinhSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Sinh::multiSinhSimplify(const INumber &rhs) {
   static const auto multiSinh = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiSinh;
 
     outMultiSinh.add<Integer>([](const Integer &inRhs) {
-      return multiSinhSimpl(Real(inRhs));
+      return multiSinhSimplify(Real(inRhs));
     });
 
     outMultiSinh.add<Rational>([](const Rational &inRhs) {
-      return multiSinhSimpl(Real(inRhs));
+      return multiSinhSimplify(Real(inRhs));
     });
 
     outMultiSinh.add<Real>([](const Real &inRhs) {

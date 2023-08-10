@@ -179,10 +179,10 @@ class IPolynomExpressionCRTP : public IPolynomExpressionBaseCRTP<Derived, isMult
 #undef FINTAMATH_I_EXPRESSION_CRTP
 
 public:
-  explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentsPtrVector &inChildren) {
+  explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentsPtrVector &args) {
     this->func = cast<IFunction>(inFunc.clone());
 
-    for (const auto &child : inChildren) {
+    for (const auto &child : args) {
       addElement(child);
     }
   }

@@ -92,7 +92,7 @@ void IExpression::simplifyChild(ArgumentPtr &child) {
     }
   }
 
-  simplifyConstant(child);
+  constSimplifyant(child);
 }
 
 void IExpression::preSimplifyChild(ArgumentPtr &child) {
@@ -168,7 +168,7 @@ ArgumentPtr IExpression::postSimplify() const {
   return {};
 }
 
-void IExpression::simplifyConstant(ArgumentPtr &child) {
+void IExpression::constSimplifyant(ArgumentPtr &child) {
   if (const auto constChild = cast<IConstant>(child)) {
     ArgumentPtr constVal = (*constChild)();
 

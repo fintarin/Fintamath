@@ -23,13 +23,13 @@ public:
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
-  static std::unique_ptr<IMathObject> multiLogSimpl(const INumber &lhs, const INumber &rhs);
+  static std::unique_ptr<IMathObject> multiLogSimplify(const INumber &lhs, const INumber &rhs);
 
-  static std::unique_ptr<IMathObject> logSimpl(const Integer &lhs, const Integer &rhs);
+  static std::unique_ptr<IMathObject> logSimplify(const Integer &lhs, const Integer &rhs);
 
-  static std::unique_ptr<IMathObject> logSimpl(const Rational &lhs, const Rational &rhs);
+  static std::unique_ptr<IMathObject> logSimplify(const Rational &lhs, const Rational &rhs);
 
-  static std::unique_ptr<IMathObject> logSimpl(const Real &lhs, const Real &rhs);
+  static std::unique_ptr<IMathObject> logSimplify(const Real &lhs, const Real &rhs);
 };
 
 }

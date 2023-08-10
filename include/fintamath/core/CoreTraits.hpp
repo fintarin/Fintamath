@@ -2,16 +2,16 @@
 
 #include <type_traits>
 
-#define FINTAMATH_CONVERTIBLE()                                                                                        \
-public:                                                                                                                \
-  inline static const bool IS_CONVERTIBLE = true;                                                                      \
-                                                                                                                       \
+#define FINTAMATH_CONVERTIBLE()                   \
+public:                                           \
+  inline static const bool IS_CONVERTIBLE = true; \
+                                                  \
 private:
 
-#define FINTAMATH_FUNCTION_TYPE_ANY()                                                                                  \
-public:                                                                                                                \
-  inline static const bool IS_FUNCTION_TYPE_ANY = true;                                                                \
-                                                                                                                       \
+#define FINTAMATH_FUNCTION_TYPE_ANY()                   \
+public:                                                 \
+  inline static const bool IS_FUNCTION_TYPE_ANY = true; \
+                                                        \
 private:
 
 namespace fintamath {

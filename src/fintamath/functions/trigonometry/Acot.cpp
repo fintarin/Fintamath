@@ -22,19 +22,19 @@ std::unique_ptr<IMathObject> Acot::call(const ArgumentsRefVector &argsVect) cons
     return makeExpr(Div(), Pi(), Integer(4))->toMinimalObject();
   }
 
-  return multiAcotSimpl(rhs);
+  return multiAcotSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Acot::multiAcotSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Acot::multiAcotSimplify(const INumber &rhs) {
   static const auto multiAcot = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiAcot;
 
     outMultiAcot.add<Integer>([](const Integer &inRhs) {
-      return multiAcotSimpl(Real(inRhs));
+      return multiAcotSimplify(Real(inRhs));
     });
 
     outMultiAcot.add<Rational>([](const Rational &inRhs) {
-      return multiAcotSimpl(Real(inRhs));
+      return multiAcotSimplify(Real(inRhs));
     });
 
     outMultiAcot.add<Real>([](const Real &inRhs) {

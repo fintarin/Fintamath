@@ -11,19 +11,19 @@ std::unique_ptr<IMathObject> Sin::call(const ArgumentsRefVector &argsVect) const
     return rhs.clone();
   }
 
-  return multiSinSimpl(rhs);
+  return multiSinSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Sin::multiSinSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Sin::multiSinSimplify(const INumber &rhs) {
   static const auto multiSin = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiSin;
 
     outMultiSin.add<Integer>([](const Integer &inRhs) {
-      return multiSinSimpl(Real(inRhs));
+      return multiSinSimplify(Real(inRhs));
     });
 
     outMultiSin.add<Rational>([](const Rational &inRhs) {
-      return multiSinSimpl(Real(inRhs));
+      return multiSinSimplify(Real(inRhs));
     });
 
     outMultiSin.add<Real>([](const Real &inRhs) {

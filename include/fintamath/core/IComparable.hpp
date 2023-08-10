@@ -4,9 +4,10 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
-#define REQUIRE_COMPARABLES(Lhs, Rhs)                                                                                  \
-  template <typename Lhs, typename Rhs,                                                                                \
-            typename = std::enable_if_t<std::is_base_of_v<IComparable, Lhs> && std::is_convertible_v<Rhs, Lhs> &&      \
+#define REQUIRE_COMPARABLES(Lhs, Rhs)                                          \
+  template <typename Lhs, typename Rhs,                                        \
+            typename = std::enable_if_t<std::is_base_of_v<IComparable, Lhs> && \
+                                        std::is_convertible_v<Rhs, Lhs> &&     \
                                         !std::is_same_v<Lhs, Rhs>>>
 
 namespace fintamath {
@@ -58,35 +59,43 @@ class IComparableCRTP : public IComparable {
 #undef FINTAMATH_I_COMPARABLE_CRTP
 };
 
-REQUIRE_COMPARABLES(Lhs, Rhs) bool operator<(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_COMPARABLES(Lhs, Rhs)
+bool operator<(const Lhs &lhs, const Rhs &rhs) {
   return lhs < Lhs(rhs);
 }
 
-REQUIRE_COMPARABLES(Rhs, Lhs) bool operator<(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_COMPARABLES(Rhs, Lhs)
+bool operator<(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) < rhs;
 }
 
-REQUIRE_COMPARABLES(Lhs, Rhs) bool operator>(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_COMPARABLES(Lhs, Rhs)
+bool operator>(const Lhs &lhs, const Rhs &rhs) {
   return lhs > Lhs(rhs);
 }
 
-REQUIRE_COMPARABLES(Rhs, Lhs) bool operator>(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_COMPARABLES(Rhs, Lhs)
+bool operator>(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) > rhs;
 }
 
-REQUIRE_COMPARABLES(Lhs, Rhs) bool operator<=(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_COMPARABLES(Lhs, Rhs)
+bool operator<=(const Lhs &lhs, const Rhs &rhs) {
   return lhs <= Lhs(rhs);
 }
 
-REQUIRE_COMPARABLES(Rhs, Lhs) bool operator<=(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_COMPARABLES(Rhs, Lhs)
+bool operator<=(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) <= rhs;
 }
 
-REQUIRE_COMPARABLES(Lhs, Rhs) bool operator>=(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_COMPARABLES(Lhs, Rhs)
+bool operator>=(const Lhs &lhs, const Rhs &rhs) {
   return lhs >= Lhs(rhs);
 }
 
-REQUIRE_COMPARABLES(Rhs, Lhs) bool operator>=(const Lhs &lhs, const Rhs &rhs) {
+REQUIRE_COMPARABLES(Rhs, Lhs)
+bool operator>=(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) >= rhs;
 }
 

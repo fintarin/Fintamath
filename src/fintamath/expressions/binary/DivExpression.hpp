@@ -33,11 +33,11 @@ private:
 
   static ArgumentPtr sumSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr nestedRationalsSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedRationalSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr gcdSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr nestedRationalsInNumeratorSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedNumeratorRationalSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
   static std::pair<ArgumentPtr, ArgumentPtr> sumSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 

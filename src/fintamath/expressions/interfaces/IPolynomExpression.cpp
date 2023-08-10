@@ -44,8 +44,10 @@ ArgumentPtr IPolynomExpression::simplify() const {
   return simpl;
 }
 
-ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, size_t lhsChildPos,
+ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs,
+                                                     size_t lhsChildPos,
                                                      size_t rhsChildPos) const {
+
   const auto &lhs = children[lhsChildPos];
   const auto &rhs = children[rhsChildPos];
 
@@ -185,7 +187,10 @@ std::string IPolynomExpression::operatorChildToString(const ArgumentPtr &inChild
     const auto oper = cast<IOperator>(func);
     const auto childOper = cast<IOperator>(exprChild->getFunction());
 
-    if (oper && childOper && oper->getOperatorPriority() <= childOper->getOperatorPriority()) {
+    if (oper &&
+        childOper &&
+        oper->getOperatorPriority() <= childOper->getOperatorPriority()) {
+
       result = putInBrackets(result);
     }
   }
@@ -368,7 +373,8 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   ArgumentsPtrVector lhsChildren = lhs->getChildren();
   ArgumentsPtrVector rhsChildren = rhs->getChildren();
 
-  if (lhsOper && lhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
+  if (lhsOper &&
+      lhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
       (!rhsOper || rhsOper->getOperatorPriority() != IOperator::Priority::PrefixUnary)) {
 
     if (int res = comparator(lhsChildren.front(), rhs); res != 0) {
@@ -376,7 +382,8 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
     }
   }
 
-  if (rhsOper && rhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
+  if (rhsOper &&
+      rhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
       (!lhsOper || lhsOper->getOperatorPriority() != IOperator::Priority::PrefixUnary)) {
 
     if (int res = comparator(lhs, rhsChildren.front()); res != 0) {
@@ -443,9 +450,7 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
     result.postfixUnary = 0;
   }
 
-  for (size_t i = 0; i < std::min(std::max(lhsStart, rhsStart), std::min(lhsChildren.size(), rhsChildren.size()));
-       i++) {
-
+  for (size_t i = 0; i < std::min(std::max(lhsStart, rhsStart), std::min(lhsChildren.size(), rhsChildren.size())); i++) {
     int childrenComp = comparator(lhsChildren[i], rhsChildren[i]);
 
     if (childrenComp != 0) {
@@ -489,9 +494,7 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IFunctio
   return lhs->toString() < rhs->toString() ? -1 : 1;
 }
 
-int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs,
-                                            bool isTermsOrderInversed) const {
-
+int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isTermsOrderInversed) const {
   ExprTreePathStack lhsPath;
   ExprTreePathStack rhsPath;
 
@@ -569,7 +572,8 @@ size_t IPolynomExpression::getPositionOfFirstChildWithVariable(const ArgumentsPt
   for (size_t i = 0; i < children.size(); i++) {
     auto lhsChildExpr = cast<IExpression>(children[i]);
 
-    if (is<Variable>(children[i]) || (lhsChildExpr && hasVariables(lhsChildExpr))) {
+    if (is<Variable>(children[i]) ||
+        (lhsChildExpr && hasVariables(lhsChildExpr))) {
       return i;
     }
   }

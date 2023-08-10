@@ -23,9 +23,9 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
-  static std::unique_ptr<IMathObject> multiAtanhSimpl(const INumber &rhs);
+  static std::unique_ptr<IMathObject> multiAtanhSimplify(const INumber &rhs);
 
-  static std::unique_ptr<IMathObject> atanhSimpl(const Real &rhs);
+  static std::unique_ptr<IMathObject> atanhSimplify(const Real &rhs);
 };
 
 }

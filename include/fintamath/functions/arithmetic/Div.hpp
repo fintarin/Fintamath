@@ -25,9 +25,9 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 
 private:
-  static std::unique_ptr<IMathObject> multiDivSimpl(const IArithmetic &lhs, const IArithmetic &rhs);
+  static std::unique_ptr<IMathObject> multiDivSimplify(const IArithmetic &lhs, const IArithmetic &rhs);
 
-  static std::unique_ptr<IMathObject> divSimpl(const Integer &lhs, const Integer &rhs);
+  static std::unique_ptr<IMathObject> divSimplify(const Integer &lhs, const Integer &rhs);
 };
 
 }

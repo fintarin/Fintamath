@@ -29,27 +29,27 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) cons
         return {};
       }
 
-      return multiRootSimpl(lhs, rhsInt);
+      return multiRootSimplify(lhs, rhsInt);
     }
   }
 
   return Pow()(lhs, *(Rational(1) / rhs));
 }
 
-std::unique_ptr<IMathObject> Root::multiRootSimpl(const INumber &lhs, const INumber &rhs) {
+std::unique_ptr<IMathObject> Root::multiRootSimplify(const INumber &lhs, const INumber &rhs) {
   static const auto multiRoot = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const INumber &)> outMultiRoot;
 
     outMultiRoot.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
-      return rootSimpl(inLhs, inRhs);
+      return rootSimplify(inLhs, inRhs);
     });
 
     outMultiRoot.add<Rational, Integer>([](const Rational &inLhs, const Integer &inRhs) {
-      return rootSimpl(inLhs, inRhs);
+      return rootSimplify(inLhs, inRhs);
     });
 
     outMultiRoot.add<Real, Integer>([](const Real &inLhs, const Integer &inRhs) {
-      return rootSimpl(inLhs, inRhs);
+      return rootSimplify(inLhs, inRhs);
     });
 
     return outMultiRoot;
@@ -58,7 +58,7 @@ std::unique_ptr<IMathObject> Root::multiRootSimpl(const INumber &lhs, const INum
   return multiRoot(lhs, rhs);
 }
 
-std::unique_ptr<IMathObject> Root::rootSimpl(const Integer &lhs, const Integer &rhs) {
+std::unique_ptr<IMathObject> Root::rootSimplify(const Integer &lhs, const Integer &rhs) {
   if (auto res = perfectRoot(lhs, rhs)) {
     return res;
   }
@@ -137,7 +137,7 @@ std::unique_ptr<IMathObject> Root::perfectRoot(const Integer &lhs, const Integer
   return {};
 }
 
-std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer &rhs) {
+std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integer &rhs) {
   if (lhs.denominator() == 1) {
     return Root()(lhs.numerator(), rhs);
   }
@@ -220,7 +220,7 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer 
   return makeExpr(Div(), numerator, denominator.toMinimalObject());
 }
 
-std::unique_ptr<IMathObject> Root::rootSimpl(const Real &lhs, const Integer &rhs) {
+std::unique_ptr<IMathObject> Root::rootSimplify(const Real &lhs, const Integer &rhs) {
   return Pow()(lhs, Rational(1, rhs));
 }
 

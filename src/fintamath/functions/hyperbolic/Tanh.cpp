@@ -11,19 +11,19 @@ std::unique_ptr<IMathObject> Tanh::call(const ArgumentsRefVector &argsVect) cons
     return rhs.clone();
   }
 
-  return multiTanhSimpl(rhs);
+  return multiTanhSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Tanh::multiTanhSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Tanh::multiTanhSimplify(const INumber &rhs) {
   static const auto multiTanh = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiTanh;
 
     outMultiTanh.add<Integer>([](const Integer &inRhs) {
-      return multiTanhSimpl(Real(inRhs));
+      return multiTanhSimplify(Real(inRhs));
     });
 
     outMultiTanh.add<Rational>([](const Rational &inRhs) {
-      return multiTanhSimpl(Real(inRhs));
+      return multiTanhSimplify(Real(inRhs));
     });
 
     outMultiTanh.add<Real>([](const Real &inRhs) {

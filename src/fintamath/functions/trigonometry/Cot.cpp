@@ -12,19 +12,19 @@ std::unique_ptr<IMathObject> Cot::call(const ArgumentsRefVector &argsVect) const
     return ComplexInf().clone();
   }
 
-  return multiCotSimpl(rhs);
+  return multiCotSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Cot::multiCotSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Cot::multiCotSimplify(const INumber &rhs) {
   static const auto multiCot = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiCot;
 
     outMultiCot.add<Integer>([](const Integer &inRhs) {
-      return multiCotSimpl(Real(inRhs));
+      return multiCotSimplify(Real(inRhs));
     });
 
     outMultiCot.add<Rational>([](const Rational &inRhs) {
-      return multiCotSimpl(Real(inRhs));
+      return multiCotSimplify(Real(inRhs));
     });
 
     outMultiCot.add<Real>([](const Real &inRhs) {

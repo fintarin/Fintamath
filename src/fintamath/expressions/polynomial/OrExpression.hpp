@@ -24,15 +24,15 @@ protected:
   bool isComparableOrderInversed() const override;
 
 private:
-  static ArgumentPtr simplifyBooleans(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr boolSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyEqual(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr equalSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyNot(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr notSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyAnd(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr andSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyAbsorption(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr absorptionSimplify(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 };
 
 }

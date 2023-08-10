@@ -23,20 +23,19 @@ protected:
   bool isTermsOrderInversed() const override;
 
 private:
-  static ArgumentPtr simplifyConst(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyRationals(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr rationalSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyCallFunction(const IFunction &func, const ArgumentPtr &lhsChild,
-                                          const ArgumentPtr &rhsChild);
+  static ArgumentPtr callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyNegations(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyDivisions(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr divSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr mulPolynoms(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr polynomSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static ArgumentPtr simplifyPowers(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
+  static ArgumentPtr powSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &rhsChild);
 };

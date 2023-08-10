@@ -12,10 +12,10 @@ namespace fintamath {
 std::unique_ptr<IMathObject> Abs::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
-  return multiAbsSimpl(rhs);
+  return multiAbsSimplify(rhs);
 }
 
-std::unique_ptr<IMathObject> Abs::multiAbsSimpl(const INumber &rhs) {
+std::unique_ptr<IMathObject> Abs::multiAbsSimplify(const INumber &rhs) {
   static const auto multiAbs = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiAbs;
 
