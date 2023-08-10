@@ -26,23 +26,25 @@ private:
 
   static ArgumentPtr trigTableSimplify(const IFunction &func, const Rational &rhs);
 
-  static ArgumentPtr trigTableSinSimplify(Rational rhs);
+  static ArgumentPtr trigTableSinSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableCosSimplify(Rational rhs);
+  static ArgumentPtr trigTableCosSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableTanSimplify(Rational rhs);
+  static ArgumentPtr trigTableTanSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableCotSimplify(Rational rhs);
+  static ArgumentPtr trigTableCotSimplify(const Rational &rhs);
+
+  static std::tuple<Rational, bool> phaseShiftSin(const Rational &rhs);
+
+  static std::tuple<Rational, bool> phaseShiftCos(const Rational &rhs);
+
+  static std::tuple<Rational, bool> phaseShiftTan(const Rational &rhs);
+
+  static std::tuple<Rational, bool> phaseShiftCot(const Rational &rhs);
+
+  static Rational phaseShiftPeriod(const Rational &rhs);
 
   static std::shared_ptr<IFunction> getOppositeFunction(const IFunction &function);
-
-  static ArgumentPtr getSqrt2();
-
-  static ArgumentPtr getNegSqrt2();
-
-  static ArgumentPtr getSqrt3();
-
-  static ArgumentPtr getNegSqrt3();
 };
 
 }

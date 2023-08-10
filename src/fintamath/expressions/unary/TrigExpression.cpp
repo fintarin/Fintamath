@@ -17,9 +17,19 @@
 
 namespace fintamath {
 
-using TrigonometryFunctionsTable = std::map<std::string, std::function<ArgumentPtr(Rational)>>;
+using TrigonometryFunctionsTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>>;
 
 using TrigonometryTable = std::map<Rational, ArgumentPtr>;
+
+ArgumentPtr getSqrt2();
+
+ArgumentPtr getNegSqrt2();
+
+ArgumentPtr getSqrt3();
+
+ArgumentPtr getNegSqrt3();
+
+ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, bool isNegated);
 
 TrigExpression::TrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
     : IUnaryExpressionCRTP(inFunc, inChild) {
@@ -75,9 +85,7 @@ ArgumentPtr TrigExpression::constantsSimplify(const IFunction &func, const Argum
   if (!rhsChildRat) {
     return {};
   }
-
-  Rational piCoeff = Rational(rhsChildRat->numerator() % (rhsChildRat->denominator() * 2), rhsChildRat->denominator());
-  return trigTableSimplify(func, piCoeff);
+  return trigTableSimplify(func, *rhsChildRat);
 }
 
 ArgumentPtr TrigExpression::trigTableSimplify(const IFunction &func, const Rational &rhs) {
@@ -87,10 +95,11 @@ ArgumentPtr TrigExpression::trigTableSimplify(const IFunction &func, const Ratio
       {Tan().toString(), &trigTableTanSimplify},
       {Cot().toString(), &trigTableCotSimplify},
   };
-  return trigTable.at(func.toString())(rhs);
+  Rational rhsShifted = phaseShiftPeriod(rhs);
+  return trigTable.at(func.toString())(rhsShifted);
 }
 
-ArgumentPtr TrigExpression::trigTableSinSimplify(Rational rhs) {
+ArgumentPtr TrigExpression::trigTableSinSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
       {Rational(0), Integer(0).clone()},                                 // 0    | 0
       {Rational(1, 6), Rational(1, 2).clone()},                          // π/6  | 1/2
@@ -102,27 +111,11 @@ ArgumentPtr TrigExpression::trigTableSinSimplify(Rational rhs) {
       {Rational(5, 6), Rational(1, 2).clone()},                          // 5π/6 | 1/2
       {Rational(1), Integer(0).clone()},                                 // π    | 0
   };
-
-  bool isResNegated = false;
-
-  if (rhs < 0) {
-    rhs = -rhs;
-    isResNegated = !isResNegated;
-  }
-
-  if (rhs.numerator() > rhs.denominator()) {
-    rhs = Rational(rhs.numerator() % rhs.denominator(), rhs.denominator());
-    isResNegated = !isResNegated;
-  }
-
-  if (auto res = trigTable.find(rhs); res != trigTable.end()) {
-    return isResNegated ? makeExpr(Neg(), res->second) : res->second;
-  }
-
-  return {};
+  auto [rhsShifted, isNegated] = phaseShiftSin(rhs);
+  return findValue(trigTable, rhsShifted, isNegated);
 }
 
-ArgumentPtr TrigExpression::trigTableCosSimplify(Rational rhs) {
+ArgumentPtr TrigExpression::trigTableCosSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
       {Rational(0), Integer(1).clone()},                                    // 0    | 1
       {Rational(1, 6), makeExpr(Div(), getSqrt3(), Integer(2).clone())},    // π/6  | √3/2
@@ -134,26 +127,11 @@ ArgumentPtr TrigExpression::trigTableCosSimplify(Rational rhs) {
       {Rational(5, 6), makeExpr(Div(), getNegSqrt3(), Integer(2).clone())}, // 5π/6 | -√3/2
       {Rational(1), Integer(-1).clone()},                                   // π    | -1
   };
-
-  bool isResNegated = false;
-
-  if (rhs < 0) {
-    rhs = -rhs;
-  }
-
-  if (rhs.numerator() > rhs.denominator()) {
-    rhs = Rational(rhs.numerator() % rhs.denominator(), rhs.denominator());
-    isResNegated = !isResNegated;
-  }
-
-  if (auto res = trigTable.find(rhs); res != trigTable.end()) {
-    return isResNegated ? makeExpr(Neg(), res->second) : res->second;
-  }
-
-  return {};
+  auto [rhsShifted, isNegated] = phaseShiftCos(rhs);
+  return findValue(trigTable, rhsShifted, isNegated);
 }
 
-ArgumentPtr TrigExpression::trigTableTanSimplify(Rational rhs) {
+ArgumentPtr TrigExpression::trigTableTanSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
       {Rational(0), Integer(0).clone()},                                    // 0    | 0
       {Rational(1, 6), makeExpr(Div(), getSqrt3(), Integer(3).clone())},    // π/6  | √3/3
@@ -165,26 +143,11 @@ ArgumentPtr TrigExpression::trigTableTanSimplify(Rational rhs) {
       {Rational(5, 6), makeExpr(Div(), getNegSqrt3(), Integer(3).clone())}, // 5π/6 | -√3/3
       {Rational(1), Integer(0).clone()},                                    // π    | 0
   };
-
-  bool isResNegated = false;
-
-  if (rhs < 0) {
-    rhs = -rhs;
-    isResNegated = !isResNegated;
-  }
-
-  if (rhs.numerator() > rhs.denominator()) {
-    rhs = Rational(rhs.numerator() % rhs.denominator(), rhs.denominator());
-  }
-
-  if (auto res = trigTable.find(rhs); res != trigTable.end()) {
-    return isResNegated ? makeExpr(Neg(), res->second) : res->second;
-  }
-
-  return {};
+  auto [rhsShifted, isNegated] = phaseShiftTan(rhs);
+  return findValue(trigTable, rhsShifted, isNegated);
 }
 
-ArgumentPtr TrigExpression::trigTableCotSimplify(Rational rhs) {
+ArgumentPtr TrigExpression::trigTableCotSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
       {Rational(0), ComplexInf().clone()},                                  // 0    | ComplexInf
       {Rational(1, 6), getSqrt3()},                                         // π/6  | √3
@@ -196,23 +159,65 @@ ArgumentPtr TrigExpression::trigTableCotSimplify(Rational rhs) {
       {Rational(5, 6), getNegSqrt3()},                                      // 5π/6 | -√3
       {Rational(1), ComplexInf().clone()},                                  // π    | ComplexInf
   };
+  auto [rhsShifted, isNegated] = phaseShiftCot(rhs);
+  return findValue(trigTable, rhsShifted, isNegated);
+}
 
-  bool isResNegated = false;
+std::tuple<Rational, bool> TrigExpression::phaseShiftSin(const Rational &rhs) {
+  Rational rhsShifted = rhs;
+  bool isNegated = false;
 
-  if (rhs < 0) {
-    rhs = -rhs;
-    isResNegated = !isResNegated;
+  if (rhsShifted < 0) {
+    rhsShifted = -rhsShifted;
+    isNegated = !isNegated;
   }
 
-  if (rhs.numerator() > rhs.denominator()) {
-    rhs = Rational(rhs.numerator() % rhs.denominator(), rhs.denominator());
+  if (rhsShifted.numerator() > rhsShifted.denominator()) {
+    rhsShifted = Rational(rhsShifted.numerator() % rhsShifted.denominator(), rhsShifted.denominator());
+    isNegated = !isNegated;
   }
 
-  if (auto res = trigTable.find(rhs); res != trigTable.end()) {
-    return isResNegated ? makeExpr(Neg(), res->second) : res->second;
+  return {rhsShifted, isNegated};
+}
+
+std::tuple<Rational, bool> TrigExpression::phaseShiftCos(const Rational &rhs) {
+  Rational rhsShifted = rhs;
+  bool isNegated = false;
+
+  if (rhsShifted < 0) {
+    rhsShifted = -rhsShifted;
   }
 
-  return {};
+  if (rhsShifted.numerator() > rhsShifted.denominator()) {
+    rhsShifted = Rational(rhsShifted.numerator() % rhsShifted.denominator(), rhsShifted.denominator());
+    isNegated = !isNegated;
+  }
+
+  return {rhsShifted, isNegated};
+}
+
+std::tuple<Rational, bool> TrigExpression::phaseShiftTan(const Rational &rhs) {
+  Rational rhsShifted = rhs;
+  bool isNegated = false;
+
+  if (rhsShifted < 0) {
+    rhsShifted = -rhsShifted;
+    isNegated = !isNegated;
+  }
+
+  if (rhsShifted.numerator() > rhsShifted.denominator()) {
+    rhsShifted = Rational(rhsShifted.numerator() % rhsShifted.denominator(), rhsShifted.denominator());
+  }
+
+  return {rhsShifted, isNegated};
+}
+
+std::tuple<Rational, bool> TrigExpression::phaseShiftCot(const Rational &rhs) {
+  return phaseShiftTan(rhs);
+}
+
+Rational TrigExpression::phaseShiftPeriod(const Rational &rhs) {
+  return Rational(rhs.numerator() % (rhs.denominator() * 2), rhs.denominator());
 }
 
 std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &function) {
@@ -225,24 +230,32 @@ std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &
   return oppositeFunctions.at(function.toString());
 }
 
-ArgumentPtr TrigExpression::getSqrt2() {
+ArgumentPtr getSqrt2() {
   static const ArgumentPtr res = makeExpr(Sqrt(), Integer(2));
   return res;
 }
 
-ArgumentPtr TrigExpression::getNegSqrt2() {
+ArgumentPtr getNegSqrt2() {
   static const ArgumentPtr res = makeExpr(Neg(), getSqrt2());
   return res;
 }
 
-ArgumentPtr TrigExpression::getSqrt3() {
+ArgumentPtr getSqrt3() {
   static const ArgumentPtr res = makeExpr(Sqrt(), Integer(3));
   return res;
 }
 
-ArgumentPtr TrigExpression::getNegSqrt3() {
+ArgumentPtr getNegSqrt3() {
   static const ArgumentPtr res = makeExpr(Neg(), getSqrt3());
   return res;
+}
+
+ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, bool isNegated) {
+  if (auto res = trigTable.find(key); res != trigTable.end()) {
+    return isNegated ? makeExpr(Neg(), res->second) : res->second;
+  }
+
+  return {};
 }
 
 }

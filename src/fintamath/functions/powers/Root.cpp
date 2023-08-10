@@ -217,11 +217,7 @@ std::unique_ptr<IMathObject> Root::rootSimpl(const Rational &lhs, const Integer 
     numerator = makeExpr(Mul(), numeratorChildren);
   }
 
-  if (denominator != 1) {
-    return makeExpr(Div(), numerator, denominator.toMinimalObject());
-  }
-
-  return numerator->clone();
+  return makeExpr(Div(), numerator, denominator.toMinimalObject());
 }
 
 std::unique_ptr<IMathObject> Root::rootSimpl(const Real &lhs, const Integer &rhs) {
