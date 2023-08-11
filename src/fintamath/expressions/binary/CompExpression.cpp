@@ -12,6 +12,7 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
+#include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
@@ -96,28 +97,37 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
   return oppositeFunctions.at(function.toString());
 }
 
-ArgumentPtr CompExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr res;
+
   if (is<ComplexInf>(lhs) &&
       (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
-    return Undefined().clone();
+
+    res = Undefined().clone();
+  }
+  else if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
+           is<ComplexInf>(rhs)) {
+
+    res = Undefined().clone();
+  }
+  else if ((is<Inf>(lhs) && is<Inf>(rhs)) ||
+           (is<NegInf>(lhs) && is<NegInf>(rhs))) {
+
+    res = Boolean(true).clone();
+  }
+  else if (is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs) ||
+           is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
+
+    res = Boolean(false).clone();
   }
 
-  if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
-      is<ComplexInf>(rhs)) {
-    return Undefined().clone();
+  if (res) {
+    if (is<Neqv>(func) || is<More>(func) || is<Less>(func)) {
+      return Not()(*res);
+    }
   }
 
-  if ((is<Inf>(lhs) && is<Inf>(rhs)) ||
-      (is<NegInf>(lhs) && is<NegInf>(rhs))) {
-    return Boolean(true).clone();
-  }
-
-  if (is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs) ||
-      is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
-    return Boolean(false).clone();
-  }
-
-  return {};
+  return res;
 }
 
 ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

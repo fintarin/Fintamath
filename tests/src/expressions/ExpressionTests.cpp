@@ -1042,6 +1042,12 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("-Inf = ComplexInf").toString(), "Undefined");
   EXPECT_EQ(Expression("log(1, 1)").toString(), "Undefined");
   EXPECT_EQ(Expression("log(0, 0)").toString(), "Undefined");
+  EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% = Inf").toString(), "True");
+  EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% != Inf").toString(), "False");
+  EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% < Inf").toString(), "False");
+  EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% > Inf").toString(), "False");
+  EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% <= Inf").toString(), "True");
+  EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% >= Inf").toString(), "True");
 
   EXPECT_EQ(Expression("Undefined").toString(), "Undefined");
   EXPECT_EQ(Expression("-Undefined").toString(), "Undefined");
