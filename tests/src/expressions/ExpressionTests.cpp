@@ -843,6 +843,77 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(E Pi)").toString(), "tan(E Pi)");
   EXPECT_EQ(Expression("cot(E Pi)").toString(), "cot(E Pi)");
 
+  EXPECT_EQ(Expression("asin(-1)").toString(), "-Pi/2");
+  EXPECT_EQ(Expression("asin(-sqrt(3)/2)").toString(), "-Pi/3");
+  EXPECT_EQ(Expression("asin(-sqrt(2)/2)").toString(), "-Pi/4");
+  EXPECT_EQ(Expression("asin(-1/2)").toString(), "-Pi/6");
+  EXPECT_EQ(Expression("asin(0)").toString(), "0");
+  EXPECT_EQ(Expression("asin(1/2)").toString(), "Pi/6");
+  EXPECT_EQ(Expression("asin(sqrt(2)/2)").toString(), "Pi/4");
+  EXPECT_EQ(Expression("asin(sqrt(3)/2)").toString(), "Pi/3");
+  EXPECT_EQ(Expression("asin(1)").toString(), "Pi/2");
+
+  EXPECT_EQ(Expression("acos(-1)").toString(), "Pi");
+  EXPECT_EQ(Expression("acos(-sqrt(3)/2)").toString(), "(5 Pi)/6");
+  EXPECT_EQ(Expression("acos(-sqrt(2)/2)").toString(), "(3 Pi)/4");
+  EXPECT_EQ(Expression("acos(-1/2)").toString(), "(2 Pi)/3");
+  EXPECT_EQ(Expression("acos(0)").toString(), "Pi/2");
+  EXPECT_EQ(Expression("acos(1/2)").toString(), "Pi/3");
+  EXPECT_EQ(Expression("acos(sqrt(2)/2)").toString(), "Pi/4");
+  EXPECT_EQ(Expression("acos(sqrt(3)/2)").toString(), "Pi/6");
+  EXPECT_EQ(Expression("acos(1)").toString(), "0");
+
+  EXPECT_EQ(Expression("atan(-sqrt(3))").toString(), "-Pi/3");
+  EXPECT_EQ(Expression("atan(-1)").toString(), "-Pi/4");
+  EXPECT_EQ(Expression("atan(-sqrt(3)/3)").toString(), "-Pi/6");
+  EXPECT_EQ(Expression("atan(0)").toString(), "0");
+  EXPECT_EQ(Expression("atan(sqrt(3)/3)").toString(), "Pi/6");
+  EXPECT_EQ(Expression("atan(1)").toString(), "Pi/4");
+  EXPECT_EQ(Expression("atan(sqrt(3))").toString(), "Pi/3");
+
+  EXPECT_EQ(Expression("acot(-sqrt(3))").toString(), "-Pi/6");
+  EXPECT_EQ(Expression("acot(-1)").toString(), "-Pi/4");
+  EXPECT_EQ(Expression("acot(-sqrt(3)/3)").toString(), "-Pi/3");
+  EXPECT_EQ(Expression("acot(0)").toString(), "Pi/2");
+  EXPECT_EQ(Expression("acot(sqrt(3)/3)").toString(), "Pi/3");
+  EXPECT_EQ(Expression("acot(1)").toString(), "Pi/4");
+  EXPECT_EQ(Expression("acot(sqrt(3))").toString(), "Pi/6");
+
+  EXPECT_EQ(Expression("asin(sqrt(5)/10)").toString(), "asin(sqrt(5)/10)");
+  EXPECT_EQ(Expression("acos(sqrt(5)/10)").toString(), "acos(sqrt(5)/10)");
+  EXPECT_EQ(Expression("atan(sqrt(5)/10)").toString(), "atan(sqrt(5)/10)");
+  EXPECT_EQ(Expression("acot(sqrt(5)/10)").toString(), "acot(sqrt(5)/10)");
+
+  EXPECT_EQ(Expression("asin(x)").toString(), "asin(x)");
+  EXPECT_EQ(Expression("acos(x)").toString(), "acos(x)");
+  EXPECT_EQ(Expression("atan(x)").toString(), "atan(x)");
+  EXPECT_EQ(Expression("acot(x)").toString(), "acot(x)");
+
+  EXPECT_EQ(Expression("asin(sqrt(x))").toString(), "asin(sqrt(x))");
+  EXPECT_EQ(Expression("acos(sqrt(x))").toString(), "acos(sqrt(x))");
+  EXPECT_EQ(Expression("atan(sqrt(x))").toString(), "atan(sqrt(x))");
+  EXPECT_EQ(Expression("acot(sqrt(x))").toString(), "acot(sqrt(x))");
+
+  EXPECT_EQ(Expression("asin(sqrt(x)/2)").toString(), "asin(sqrt(x)/2)");
+  EXPECT_EQ(Expression("acos(sqrt(x)/2)").toString(), "acos(sqrt(x)/2)");
+  EXPECT_EQ(Expression("atan(sqrt(x)/2)").toString(), "atan(sqrt(x)/2)");
+  EXPECT_EQ(Expression("acot(sqrt(x)/2)").toString(), "acot(sqrt(x)/2)");
+
+  EXPECT_EQ(Expression("asin(-x)").toString(), "asin(-x)");
+  EXPECT_EQ(Expression("acos(-x)").toString(), "acos(-x)");
+  EXPECT_EQ(Expression("atan(-x)").toString(), "atan(-x)");
+  EXPECT_EQ(Expression("acot(-x)").toString(), "acot(-x)");
+
+  EXPECT_EQ(Expression("asin(-sqrt(x))").toString(), "asin(-sqrt(x))");
+  EXPECT_EQ(Expression("acos(-sqrt(x))").toString(), "acos(-sqrt(x))");
+  EXPECT_EQ(Expression("atan(-sqrt(x))").toString(), "atan(-sqrt(x))");
+  EXPECT_EQ(Expression("acot(-sqrt(x))").toString(), "acot(-sqrt(x))");
+
+  EXPECT_EQ(Expression("asin(-sqrt(x)/2)").toString(), "asin(-sqrt(x)/2)");
+  EXPECT_EQ(Expression("acos(-sqrt(x)/2)").toString(), "acos(-sqrt(x)/2)");
+  EXPECT_EQ(Expression("atan(-sqrt(x)/2)").toString(), "atan(-sqrt(x)/2)");
+  EXPECT_EQ(Expression("acot(-sqrt(x)/2)").toString(), "acot(-sqrt(x)/2)");
+
   // EXPECT_EQ(Expression("sin(x)^2 + cos(x)^2").toString(), "1"); // TODO: implement
   // EXPECT_EQ(Expression("tan(x)*cot(x)").toString(), "1"); // TODO: implement
   // EXPECT_EQ(Expression("tanh(x)*coth(x)").toString(), "1"); // TODO: implement

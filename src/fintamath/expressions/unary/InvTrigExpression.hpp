@@ -4,6 +4,8 @@
 
 namespace fintamath {
 
+class Rational;
+
 class InvTrigExpression : public IUnaryExpressionCRTP<InvTrigExpression, true> {
 public:
   explicit InvTrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
@@ -17,6 +19,16 @@ protected:
 
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
+  static ArgumentPtr trigTableSimplify(const IFunction &func, const Rational &rhs);
+
+  static ArgumentPtr trigTableAsinSimplify(const Rational &rhs);
+
+  static ArgumentPtr trigTableAcosSimplify(const Rational &rhs);
+
+  static ArgumentPtr trigTableAtanSimplify(const Rational &rhs);
+
+  static ArgumentPtr trigTableAcotSimplify(const Rational &rhs);
 };
 
 }
