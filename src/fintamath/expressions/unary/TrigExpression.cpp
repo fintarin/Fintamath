@@ -1,6 +1,5 @@
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 
-#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -20,14 +19,6 @@ namespace fintamath {
 using TrigonometryFunctionsTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>>;
 
 using TrigonometryTable = std::map<Rational, ArgumentPtr>;
-
-ArgumentPtr getSqrt2();
-
-ArgumentPtr getNegSqrt2();
-
-ArgumentPtr getSqrt3();
-
-ArgumentPtr getNegSqrt3();
 
 ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, bool isNegated);
 
@@ -102,15 +93,15 @@ ArgumentPtr TrigExpression::trigTableSimplify(const IFunction &func, const Ratio
 
 ArgumentPtr TrigExpression::trigTableSinSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(0), Integer(0).clone()},                                 // 0    | 0
-      {Rational(1, 6), Rational(1, 2).clone()},                          // π/6  | 1/2
-      {Rational(1, 4), makeExpr(Div(), getSqrt2(), Integer(2).clone())}, // π/4  | √2/2
-      {Rational(1, 3), makeExpr(Div(), getSqrt3(), Integer(2).clone())}, // π/3  | √3/2
-      {Rational(1, 2), Integer(1).clone()},                              // π/2  | 1
-      {Rational(2, 3), makeExpr(Div(), getSqrt3(), Integer(2).clone())}, // 2π/3 | √3/2
-      {Rational(3, 4), makeExpr(Div(), getSqrt2(), Integer(2).clone())}, // 3π/4 | √2/2
-      {Rational(5, 6), Rational(1, 2).clone()},                          // 5π/6 | 1/2
-      {Rational(1), Integer(0).clone()},                                 // π    | 0
+      {Rational(0), Integer(0).clone()},                                                       // 0    | 0
+      {Rational(1, 6), Rational(1, 2).clone()},                                                // π/6  | 1/2
+      {Rational(1, 4), makeExpr(Mul(), Rational(1, 2).clone(), makeExpr(Sqrt(), Integer(2)))}, // π/4  | √2/2
+      {Rational(1, 3), makeExpr(Mul(), Rational(1, 2).clone(), makeExpr(Sqrt(), Integer(3)))}, // π/3  | √3/2
+      {Rational(1, 2), Integer(1).clone()},                                                    // π/2  | 1
+      {Rational(2, 3), makeExpr(Mul(), Rational(1, 2).clone(), makeExpr(Sqrt(), Integer(3)))}, // 2π/3 | √3/2
+      {Rational(3, 4), makeExpr(Mul(), Rational(1, 2).clone(), makeExpr(Sqrt(), Integer(2)))}, // 3π/4 | √2/2
+      {Rational(5, 6), Rational(1, 2).clone()},                                                // 5π/6 | 1/2
+      {Rational(1), Integer(0).clone()},                                                       // π    | 0
   };
   auto [rhsShifted, isNegated] = phaseShiftSin(rhs);
   return findValue(trigTable, rhsShifted, isNegated);
@@ -118,15 +109,15 @@ ArgumentPtr TrigExpression::trigTableSinSimplify(const Rational &rhs) {
 
 ArgumentPtr TrigExpression::trigTableCosSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(0), Integer(1).clone()},                                    // 0    | 1
-      {Rational(1, 6), makeExpr(Div(), getSqrt3(), Integer(2).clone())},    // π/6  | √3/2
-      {Rational(1, 4), makeExpr(Div(), getSqrt2(), Integer(2).clone())},    // π/4  | √2/2
-      {Rational(1, 3), Rational(1, 2).clone()},                             // π/3  | 1/2
-      {Rational(1, 2), Integer(0).clone()},                                 // π/2  | 0
-      {Rational(2, 3), Rational(-1, 2).clone()},                            // 2π/3 | -1/2
-      {Rational(3, 4), makeExpr(Div(), getNegSqrt2(), Integer(2).clone())}, // 3π/4 | -√2/2
-      {Rational(5, 6), makeExpr(Div(), getNegSqrt3(), Integer(2).clone())}, // 5π/6 | -√3/2
-      {Rational(1), Integer(-1).clone()},                                   // π    | -1
+      {Rational(0), Integer(1).clone()},                                                        // 0    | 1
+      {Rational(1, 6), makeExpr(Mul(), Rational(1, 2).clone(), makeExpr(Sqrt(), Integer(3)))},  // π/6  | √3/2
+      {Rational(1, 4), makeExpr(Mul(), Rational(1, 2).clone(), makeExpr(Sqrt(), Integer(2)))},  // π/4  | √2/2
+      {Rational(1, 3), Rational(1, 2).clone()},                                                 // π/3  | 1/2
+      {Rational(1, 2), Integer(0).clone()},                                                     // π/2  | 0
+      {Rational(2, 3), Rational(-1, 2).clone()},                                                // 2π/3 | -1/2
+      {Rational(3, 4), makeExpr(Mul(), Rational(-1, 2).clone(), makeExpr(Sqrt(), Integer(2)))}, // 3π/4 | -√2/2
+      {Rational(5, 6), makeExpr(Mul(), Rational(-1, 2).clone(), makeExpr(Sqrt(), Integer(3)))}, // 5π/6 | -√3/2
+      {Rational(1), Integer(-1).clone()},                                                       // π    | -1
   };
   auto [rhsShifted, isNegated] = phaseShiftCos(rhs);
   return findValue(trigTable, rhsShifted, isNegated);
@@ -134,15 +125,15 @@ ArgumentPtr TrigExpression::trigTableCosSimplify(const Rational &rhs) {
 
 ArgumentPtr TrigExpression::trigTableTanSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(0), Integer(0).clone()},                                    // 0    | 0
-      {Rational(1, 6), makeExpr(Div(), getSqrt3(), Integer(3).clone())},    // π/6  | √3/3
-      {Rational(1, 4), Integer(1).clone()},                                 // π/4  | 1
-      {Rational(1, 3), getSqrt3()},                                         // π/3  | √3
-      {Rational(1, 2), ComplexInf().clone()},                               // π/2  | ComplexInf
-      {Rational(2, 3), getNegSqrt3()},                                      // 2π/3 | -√3
-      {Rational(3, 4), Integer(-1).clone()},                                // 3π/4 | -1
-      {Rational(5, 6), makeExpr(Div(), getNegSqrt3(), Integer(3).clone())}, // 5π/6 | -√3/3
-      {Rational(1), Integer(0).clone()},                                    // π    | 0
+      {Rational(0), Integer(0).clone()},                                                        // 0    | 0
+      {Rational(1, 6), makeExpr(Mul(), Rational(1, 3).clone(), makeExpr(Sqrt(), Integer(3)))},  // π/6  | √3/3
+      {Rational(1, 4), Integer(1).clone()},                                                     // π/4  | 1
+      {Rational(1, 3), makeExpr(Sqrt(), Integer(3))},                                           // π/3  | √3
+      {Rational(1, 2), ComplexInf().clone()},                                                   // π/2  | ComplexInf
+      {Rational(2, 3), makeExpr(Neg(), makeExpr(Sqrt(), Integer(3)))},                          // 2π/3 | -√3
+      {Rational(3, 4), Integer(-1).clone()},                                                    // 3π/4 | -1
+      {Rational(5, 6), makeExpr(Mul(), Rational(-1, 3).clone(), makeExpr(Sqrt(), Integer(3)))}, // 5π/6 | -√3/3
+      {Rational(1), Integer(0).clone()},                                                        // π    | 0
   };
   auto [rhsShifted, isNegated] = phaseShiftTan(rhs);
   return findValue(trigTable, rhsShifted, isNegated);
@@ -150,15 +141,15 @@ ArgumentPtr TrigExpression::trigTableTanSimplify(const Rational &rhs) {
 
 ArgumentPtr TrigExpression::trigTableCotSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(0), ComplexInf().clone()},                                  // 0    | ComplexInf
-      {Rational(1, 6), getSqrt3()},                                         // π/6  | √3
-      {Rational(1, 4), Integer(1).clone()},                                 // π/4  | 1
-      {Rational(1, 3), makeExpr(Div(), getSqrt3(), Integer(3).clone())},    // π/3  | √3/3
-      {Rational(1, 2), Integer(0).clone()},                                 // π/2  | 0
-      {Rational(2, 3), makeExpr(Div(), getNegSqrt3(), Integer(3).clone())}, // 2π/3 | -√3/3
-      {Rational(3, 4), Integer(-1).clone()},                                // 3π/4 | -1
-      {Rational(5, 6), getNegSqrt3()},                                      // 5π/6 | -√3
-      {Rational(1), ComplexInf().clone()},                                  // π    | ComplexInf
+      {Rational(0), ComplexInf().clone()},                                                      // 0    | ComplexInf
+      {Rational(1, 6), makeExpr(Sqrt(), Integer(3))},                                           // π/6  | √3
+      {Rational(1, 4), Integer(1).clone()},                                                     // π/4  | 1
+      {Rational(1, 3), makeExpr(Mul(), Rational(1, 3).clone(), makeExpr(Sqrt(), Integer(3)))},  // π/3  | √3/3
+      {Rational(1, 2), Integer(0).clone()},                                                     // π/2  | 0
+      {Rational(2, 3), makeExpr(Mul(), Rational(-1, 3).clone(), makeExpr(Sqrt(), Integer(3)))}, // 2π/3 | -√3/3
+      {Rational(3, 4), Integer(-1).clone()},                                                    // 3π/4 | -1
+      {Rational(5, 6), makeExpr(Neg(), makeExpr(Sqrt(), Integer(3)))},                          // 5π/6 | -√3
+      {Rational(1), ComplexInf().clone()},                                                      // π    | ComplexInf
   };
   auto [rhsShifted, isNegated] = phaseShiftCot(rhs);
   return findValue(trigTable, rhsShifted, isNegated);
@@ -229,26 +220,6 @@ std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &
       {Cot().toString(), std::make_shared<Acot>()},
   };
   return oppositeFunctions.at(function.toString());
-}
-
-ArgumentPtr getSqrt2() {
-  static const ArgumentPtr res = makeExpr(Sqrt(), Integer(2));
-  return res;
-}
-
-ArgumentPtr getNegSqrt2() {
-  static const ArgumentPtr res = makeExpr(Neg(), getSqrt2());
-  return res;
-}
-
-ArgumentPtr getSqrt3() {
-  static const ArgumentPtr res = makeExpr(Sqrt(), Integer(3));
-  return res;
-}
-
-ArgumentPtr getNegSqrt3() {
-  static const ArgumentPtr res = makeExpr(Neg(), getSqrt3());
-  return res;
 }
 
 ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, bool isNegated) {
