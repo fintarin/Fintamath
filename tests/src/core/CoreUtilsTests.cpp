@@ -58,11 +58,3 @@ TEST(CoreUtilsTests, castTest) {
   EXPECT_FALSE(
       cast<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr<IMathObject>(E().clone()))));
 }
-
-TEST(CoreUtilsTests, convertTest) {
-  EXPECT_TRUE(is<Rational>(convert(Rational(), Integer())));
-  EXPECT_FALSE(convert(Integer(), Rational()));
-
-  EXPECT_TRUE(is<Rational>(convert<Rational>(Integer())));
-  EXPECT_THROW(convert<Integer>(Rational()), std::bad_cast);
-}

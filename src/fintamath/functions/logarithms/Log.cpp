@@ -89,11 +89,11 @@ std::unique_ptr<IMathObject> Log::multiLogSimplify(const INumber &lhs, const INu
     return outMultiPow;
   }();
 
-  if (auto rhsConv = cast<INumber>(convert(lhs, rhs))) {
+  if (auto rhsConv = convert(lhs, rhs)) {
     return multiLog(lhs, *rhsConv);
   }
 
-  auto lhsConv = cast<INumber>(convert(rhs, lhs));
+  auto lhsConv = convert(rhs, lhs);
   return multiLog(*lhsConv, rhs);
 }
 

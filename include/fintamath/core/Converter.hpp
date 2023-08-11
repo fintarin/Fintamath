@@ -32,22 +32,16 @@ private:
 };
 
 REQUIRE_MATH_OBJECTS(To, From)
-std::unique_ptr<IMathObject> convert(const To &to, const From &from) {
-  return Converter::convert(to, from);
+std::unique_ptr<To> convert(const To &to, const From &from) {
+  return cast<To>(Converter::convert(to, from));
 }
 
 REQUIRE_MATH_OBJECTS(To, From)
-To convert(const From &from) {
+std::unique_ptr<To> convert(const From &from) {
   static_assert(IsConvertible<To>::value, "To must be Convertible");
 
   static const To to;
-  auto res = convert(to, from);
-
-  if (!res) {
-    throw std::bad_cast();
-  }
-
-  return cast<To>(*res);
+  return convert(to, from);
 }
 
 }

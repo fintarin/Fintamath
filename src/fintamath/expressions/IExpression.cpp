@@ -116,7 +116,7 @@ void IExpression::preciseSimplifyChild(ArgumentPtr &child) {
     child = exprChild->preciseSimplify();
   }
   else if (const auto numChild = cast<INumber>(child)) {
-    child = std::make_shared<Real>(convert<Real>(*numChild));
+    child = convert<Real>(*numChild);
   }
   else if (const auto constChild = cast<IConstant>(child)) {
     child = (*constChild)();

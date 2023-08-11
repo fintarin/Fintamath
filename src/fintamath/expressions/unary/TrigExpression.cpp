@@ -72,7 +72,7 @@ ArgumentPtr TrigExpression::constSimplify(const IFunction &func, const ArgumentP
     return {};
   }
 
-  const auto rhsChildRat = cast<Rational>(convert(Rational(), *rhsChildren.front()));
+  const auto rhsChildRat = convert<Rational>(*rhsChildren.front());
   if (!rhsChildRat) {
     return {};
   }

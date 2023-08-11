@@ -50,11 +50,11 @@ std::unique_ptr<IMathObject> Pow::multiPowSimplify(const INumber &lhs, const INu
     return outMultiPow;
   }();
 
-  if (auto rhsConv = cast<INumber>(convert(lhs, rhs))) {
+  if (auto rhsConv = convert(lhs, rhs)) {
     return multiPow(lhs, *rhsConv);
   }
 
-  auto lhsConv = cast<INumber>(convert(rhs, lhs));
+  auto lhsConv = convert(rhs, lhs);
   return multiPow(*lhsConv, rhs);
 }
 
