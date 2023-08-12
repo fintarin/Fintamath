@@ -98,36 +98,40 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
 }
 
 ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentPtr res;
-
   if (is<ComplexInf>(lhs) &&
       (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
 
-    res = Undefined().clone();
-  }
-  else if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
-           is<ComplexInf>(rhs)) {
-
-    res = Undefined().clone();
-  }
-  else if ((is<Inf>(lhs) && is<Inf>(rhs)) ||
-           (is<NegInf>(lhs) && is<NegInf>(rhs))) {
-
-    res = Boolean(true).clone();
-  }
-  else if (is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs) ||
-           is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
-
-    res = Boolean(false).clone();
+    return Undefined().clone();
   }
 
-  if (res) {
-    if (is<Neqv>(func) || is<More>(func) || is<Less>(func)) {
-      return Not()(*res);
-    }
+  if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
+      is<ComplexInf>(rhs)) {
+
+    return Undefined().clone();
   }
 
-  return res;
+  if ((is<Inf>(lhs) || is<NegInf>(lhs)) &&
+      (is<Inf>(rhs) || is<NegInf>(rhs))) {
+
+    Boolean res = (*rhs == *lhs) == (is<Eqv>(func) || is<MoreEqv>(func) || is<LessEqv>(func));
+    return res.clone();
+  }
+
+  if (is<Inf>(lhs) &&
+      (!is<IExpression>(rhs) || !hasInfinity(cast<IExpression>(rhs)))) {
+
+    Boolean res = is<More>(func) || is<MoreEqv>(func);
+    return res.clone();
+  }
+
+  if (is<NegInf>(lhs) &&
+      (!is<IExpression>(rhs) || !hasInfinity(cast<IExpression>(rhs)))) {
+
+    Boolean res = is<Less>(func) || is<LessEqv>(func);
+    return res.clone();
+  }
+
+  return {};
 }
 
 ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

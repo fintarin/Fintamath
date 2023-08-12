@@ -26,6 +26,8 @@ bool hasVariables(const std::shared_ptr<const IExpression> &expr);
 
 bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable &var);
 
+bool hasInfinity(const std::shared_ptr<const IExpression> &expr);
+
 std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args);
 
 ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args);

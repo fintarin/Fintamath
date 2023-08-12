@@ -114,14 +114,25 @@ ArgumentPtr AddExpression::constSimplify(const IFunction & /*func*/, const Argum
 
   if ((is<NegInf>(lhsChild) || is<ComplexInf>(lhsChild)) &&
       (is<Inf>(rhsChild) || is<ComplexInf>(rhsChild))) {
+
     return Undefined().clone();
   }
 
-  if (is<Inf>(lhsChild) || is<NegInf>(lhsChild) || is<ComplexInf>(lhsChild)) {
+  if ((is<Inf>(lhsChild) && is<Inf>(rhsChild)) ||
+      (is<NegInf>(lhsChild) && is<NegInf>(rhsChild))) {
+
     return lhsChild;
   }
 
-  if (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild)) {
+  if ((is<Inf>(lhsChild) || is<NegInf>(lhsChild) || is<ComplexInf>(lhsChild)) &&
+      (!is<IExpression>(rhsChild) || !hasInfinity(cast<IExpression>(rhsChild)))) {
+
+    return lhsChild;
+  }
+
+  if ((is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild)) &&
+      (!is<IExpression>(lhsChild) || !hasInfinity(cast<IExpression>(lhsChild)))) {
+
     return rhsChild;
   }
 

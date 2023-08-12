@@ -86,3 +86,7 @@ TEST(ExpressionUtilsTests, hasVariablesTest) {
   expr = std::make_shared<Expression>("10");
   EXPECT_FALSE(hasVariables(expr));
 }
+
+TEST(ExpressionUtilsTests, hasInfinityTest) {
+  // TODO: implement
+}

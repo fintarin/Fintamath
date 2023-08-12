@@ -6,6 +6,8 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -127,6 +129,25 @@ bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable 
 
     if (const auto childExpr = cast<IExpression>(child); childExpr && hasVariable(childExpr, var)) {
       res = true;
+    }
+
+    return res;
+  });
+}
+
+bool hasInfinity(const std::shared_ptr<const IExpression> &expr) {
+  ArgumentsPtrVector children = expr->getChildren();
+
+  return std::any_of(children.begin(), children.end(), [](const auto &child) {
+    bool res = false;
+
+    if (is<Inf>(child) || is<NegInf>(child) || is<ComplexInf>(child)) {
+      res = true;
+    }
+    else if (const auto childExpr = cast<IExpression>(child)) {
+      if (hasInfinity(childExpr)) {
+        res = true;
+      }
     }
 
     return res;

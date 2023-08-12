@@ -231,11 +231,15 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if (is<Inf>(lhs) || is<ComplexInf>(lhs)) {
-    if (*rhs == Integer(0)) {
-      return Undefined().clone();
+    if (is<INumber>(rhs)) {
+      if (*rhs == Integer(0)) {
+        return Undefined().clone();
+      }
+
+      return lhs;
     }
 
-    return lhs;
+    return {};
   }
 
   if (*lhs == Integer(0)) {

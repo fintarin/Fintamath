@@ -11,9 +11,12 @@
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
@@ -51,6 +54,7 @@ ArgumentPtr LogExpression::preciseSimplify() const {
 LogExpression::SimplifyFunctionsVector LogExpression::getFunctionsForPreSimplify() const {
   static const LogExpression::SimplifyFunctionsVector simplifyFunctions = {
       &LogExpression::callFunctionSimplify,
+      &LogExpression::constSimplify,
       &LogExpression::equalSimplify,
       &LogExpression::powSimplify,
   };
@@ -71,11 +75,21 @@ ArgumentPtr LogExpression::callFunctionSimplify(const IFunction &func, const Arg
 }
 
 ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if ((*lhs == Integer(0) || is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
+      (*rhs == Integer(0) || is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
+
+    return Undefined().clone();
+  }
+
   if (*rhs == Integer(1)) {
     return Integer(0).clone();
   }
 
   if (*lhs == E()) {
+    if (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
+      return Inf().clone();
+    }
+
     return callFunction(Ln(), {rhs});
   }
 

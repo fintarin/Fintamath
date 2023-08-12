@@ -67,7 +67,9 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
     return ComplexInf().clone();
   }
 
-  if (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
+  if ((is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) &&
+      (!is<IExpression>(lhs) || !hasInfinity(cast<IExpression>(lhs)))) {
+
     return Integer(0).clone();
   }
 
@@ -133,7 +135,7 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
   return res;
 }
 
-ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentsPtrVector lhsChildren;
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
@@ -155,10 +157,14 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 
   for (auto &lhsChild : lhsChildren) {
     for (size_t j = 0; j < rhsChildren.size(); j++) {
-      ArgumentPtr res = powSimplify(lhsChild, rhsChildren[j]);
+      ArgumentPtr res = constSimplify(func, lhsChild, rhsChildren[j]);
 
       if (!res) {
         res = callFunction(Div(), {lhsChild, rhsChildren[j]});
+      }
+
+      if (!res) {
+        res = powSimplify(lhsChild, rhsChildren[j]);
       }
 
       if (res && !is<Rational>(res)) {
