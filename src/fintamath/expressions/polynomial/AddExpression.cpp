@@ -125,13 +125,13 @@ ArgumentPtr AddExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if ((is<Inf>(lhsChild) || is<NegInf>(lhsChild) || is<ComplexInf>(lhsChild)) &&
-      (!is<IExpression>(rhsChild) || !hasInfinity(cast<IExpression>(rhsChild)))) {
+      !hasInfinity(cast<IExpression>(rhsChild))) {
 
     return lhsChild;
   }
 
   if ((is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild)) &&
-      (!is<IExpression>(lhsChild) || !hasInfinity(cast<IExpression>(lhsChild)))) {
+      !hasInfinity(cast<IExpression>(lhsChild))) {
 
     return rhsChild;
   }

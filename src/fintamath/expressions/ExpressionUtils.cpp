@@ -98,36 +98,45 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
   return operatorChildToString(oper, rhs) + oper.toString();
 }
 
-bool hasVariables(const std::shared_ptr<const IExpression> &expr) {
+bool hasVariable(const ArgumentPtr &arg) {
+  if (is<Variable>(arg)) {
+    return true;
+  }
+
+  auto expr = cast<IExpression>(arg);
+  if (!expr) {
+    return false;
+  }
+
   ArgumentsPtrVector children = expr->getChildren();
 
   return std::any_of(children.begin(), children.end(), [](const auto &child) {
     bool res = false;
 
-    if (is<Variable>(child)) {
+    if (hasVariable(child)) {
       res = true;
-    }
-    else if (const auto childExpr = cast<IExpression>(child)) {
-      if (hasVariables(childExpr)) {
-        res = true;
-      }
     }
 
     return res;
   });
 }
 
-bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable &var) {
+bool hasVariable(const ArgumentPtr &arg, const Variable &var) {
+  if (*arg == var) {
+    return true;
+  }
+
+  auto expr = cast<IExpression>(arg);
+  if (!expr) {
+    return false;
+  }
+
   ArgumentsPtrVector children = expr->getChildren();
 
   return std::any_of(children.begin(), children.end(), [&var](const auto &child) {
     bool res = false;
 
-    if (const auto childVar = cast<Variable>(child); childVar && *childVar == var) {
-      res = true;
-    }
-
-    if (const auto childExpr = cast<IExpression>(child); childExpr && hasVariable(childExpr, var)) {
+    if (hasVariable(child, var)) {
       res = true;
     }
 
@@ -135,23 +144,31 @@ bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable 
   });
 }
 
-bool hasInfinity(const std::shared_ptr<const IExpression> &expr) {
+bool hasInfinity(const ArgumentPtr &arg) {
+  if (isInfinity(arg)) {
+    return true;
+  }
+
+  auto expr = cast<IExpression>(arg);
+  if (!expr) {
+    return false;
+  }
+
   ArgumentsPtrVector children = expr->getChildren();
 
   return std::any_of(children.begin(), children.end(), [](const auto &child) {
     bool res = false;
 
-    if (is<Inf>(child) || is<NegInf>(child) || is<ComplexInf>(child)) {
+    if (hasInfinity(child)) {
       res = true;
-    }
-    else if (const auto childExpr = cast<IExpression>(child)) {
-      if (hasInfinity(childExpr)) {
-        res = true;
-      }
     }
 
     return res;
   });
+}
+
+bool isInfinity(const ArgumentPtr &arg) {
+  return is<Inf>(arg) || is<NegInf>(arg) || is<ComplexInf>(arg);
 }
 
 std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args) {

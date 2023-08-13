@@ -547,7 +547,7 @@ std::shared_ptr<const Variable> IPolynomExpression::getNextVariable(ExprTreePath
     bool hasExprChild = false;
 
     for (; exprIndex < children.size(); exprIndex++) {
-      if (const auto &exprChild = cast<IExpression>(children[exprIndex]); exprChild && hasVariables(exprChild)) {
+      if (const auto &exprChild = cast<IExpression>(children[exprIndex]); exprChild && hasVariable(exprChild)) {
         stack.emplace(exprChild, -1);
         hasExprChild = true;
         break;
@@ -573,7 +573,7 @@ size_t IPolynomExpression::getPositionOfFirstChildWithVariable(const ArgumentsPt
     auto lhsChildExpr = cast<IExpression>(children[i]);
 
     if (is<Variable>(children[i]) ||
-        (lhsChildExpr && hasVariables(lhsChildExpr))) {
+        (lhsChildExpr && hasVariable(lhsChildExpr))) {
       return i;
     }
   }

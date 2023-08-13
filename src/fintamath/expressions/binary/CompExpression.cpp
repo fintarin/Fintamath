@@ -56,9 +56,11 @@ ArgumentPtr CompExpression::preSimplify() const {
     if (!simplExpr->isSolution &&
         (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
 
-      ArgumentPtr resLhs = makeExpr(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
-      preSimplifyChild(resLhs);
-      return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
+      if (!hasInfinity(lhsChild) && !hasInfinity(rhsChild)) {
+        ArgumentPtr resLhs = makeExpr(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
+        preSimplifyChild(resLhs);
+        return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
+      }
     }
   }
 
@@ -117,18 +119,16 @@ ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentP
     return res.clone();
   }
 
-  if (is<Inf>(lhs) &&
-      (!is<IExpression>(rhs) || !hasInfinity(cast<IExpression>(rhs)))) {
+  if ((isInfinity(lhs) && !hasInfinity(rhs)) ||
+      (isInfinity(rhs) && !hasInfinity(lhs))) {
 
-    Boolean res = is<More>(func) || is<MoreEqv>(func);
-    return res.clone();
-  }
+    if (is<Eqv>(func)) {
+      return Boolean(false).clone();
+    }
 
-  if (is<NegInf>(lhs) &&
-      (!is<IExpression>(rhs) || !hasInfinity(cast<IExpression>(rhs)))) {
-
-    Boolean res = is<Less>(func) || is<LessEqv>(func);
-    return res.clone();
+    if (is<Neqv>(func)) {
+      return Boolean(true).clone();
+    }
   }
 
   return {};
@@ -172,7 +172,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
       }
     }
 
-    if (dividerNum && hasVariables(lhsExpr)) {
+    if (dividerNum && hasVariable(lhsExpr)) {
       for (auto &child : dividendPolynom) {
         child = makeExpr(Div(), child, dividerNum);
       }

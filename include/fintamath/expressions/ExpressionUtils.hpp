@@ -8,8 +8,6 @@
 
 namespace fintamath {
 
-class IExpression;
-
 std::string putInBrackets(const std::string &str);
 
 std::string putInSpaces(const std::string &str);
@@ -22,11 +20,13 @@ std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr
 
 std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
 
-bool hasVariables(const std::shared_ptr<const IExpression> &expr);
+bool hasVariable(const ArgumentPtr &arg);
 
-bool hasVariable(const std::shared_ptr<const IExpression> &expr, const Variable &var);
+bool hasVariable(const ArgumentPtr &arg, const Variable &var);
 
-bool hasInfinity(const std::shared_ptr<const IExpression> &expr);
+bool hasInfinity(const ArgumentPtr &arg);
+
+bool isInfinity(const ArgumentPtr &arg);
 
 std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args);
 
