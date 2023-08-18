@@ -1093,6 +1093,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1 + (2^2 - 4)^0").toString(), "Undefined");
   EXPECT_EQ(Expression("0^((2^2 - 4)^0)").toString(), "Undefined");
   EXPECT_EQ(Expression("-((2^2 - 4)^0)").toString(), "Undefined");
+  EXPECT_EQ(Expression("sin(-((2^2 - 4)^0))").toString(), "Undefined");
   EXPECT_EQ(Expression("ComplexInf = ComplexInf").toString(), "Undefined");
   EXPECT_EQ(Expression("ComplexInf = Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("ComplexInf = -Inf").toString(), "Undefined");
