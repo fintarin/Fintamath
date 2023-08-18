@@ -108,13 +108,14 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,
     return lhsChild;
   }
 
-  if (const auto lhsNum = cast<INumber>(lhsChild); lhsNum && *lhsNum < Integer(0)) {
+  if (const auto lhsNum = cast<INumber>(lhsChild)) {
+    bool isNegated = *lhsNum < Integer(0);
     if (is<Inf>(rhsChild)) {
-      return NegInf().clone();
+      return isNegated ? NegInf().clone() : rhsChild;
     }
 
     if (is<NegInf>(rhsChild)) {
-      return Inf().clone();
+      return isNegated ? Inf().clone() : rhsChild;
     }
   }
 
