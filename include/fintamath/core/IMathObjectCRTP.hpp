@@ -10,8 +10,12 @@ class IMathObjectCRTP_ : public IMathObject {
 #endif // FINTAMATH_I_MATH_OBJECT_CRTP
 
 public:
-  std::unique_ptr<IMathObject> clone() const final {
+  std::unique_ptr<IMathObject> clone() const & final {
     return std::make_unique<Derived>(cast<Derived>(*this));
+  }
+
+  std::unique_ptr<IMathObject> clone() && final {
+    return std::make_unique<Derived>(std::move(cast<Derived>(*this)));
   }
 
   bool operator==(const Derived &rhs) const {

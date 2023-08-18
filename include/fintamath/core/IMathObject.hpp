@@ -23,7 +23,9 @@ class IMathObject {
 public:
   virtual ~IMathObject() = default;
 
-  virtual std::unique_ptr<IMathObject> clone() const = 0;
+  virtual std::unique_ptr<IMathObject> clone() const & = 0;
+
+  virtual std::unique_ptr<IMathObject> clone() && = 0;
 
   virtual std::string toString() const {
     return typeid(*this).name();
