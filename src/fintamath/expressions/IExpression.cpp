@@ -2,7 +2,6 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -179,17 +178,6 @@ void IExpression::constSimplifyant(ArgumentPtr &child) {
       child = constVal;
     }
   }
-}
-
-bool IExpression::isNegativeExpression() const {
-  if (is<Mul>(getFunction())) {
-    ArgumentPtr firstChild = getChildren().front();
-    if (auto number = cast<INumber>(firstChild); number && *number < Integer(0)) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 }
