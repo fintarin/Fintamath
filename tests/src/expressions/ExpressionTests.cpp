@@ -294,6 +294,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2/(a + 2) + b/(a + 2)").toString(), "(b + 2)/(a + 2)");
   EXPECT_EQ(Expression("c * 2^(a + 2) + b^(a + 2)").toString(), "b^(a + 2) + 2^(a + 2) c");
   EXPECT_EQ(Expression("2^(a + 2) * b^(a + 2)").toString(), "b^(a + 2) 2^(a + 2)");
+  EXPECT_EQ(Expression("2 a b c + a b + a b c").toString(), "3 a b c + a b");
 
   EXPECT_EQ(Expression("-9 / (3x+3)").toString(), "-3/(x + 1)");
   EXPECT_EQ(Expression("(4x^2 - 5x - 21) / (x - 3)").toString(), "4 x + 7");

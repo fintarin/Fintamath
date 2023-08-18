@@ -446,6 +446,14 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
     }
   }
 
+  if (result.postfix == 0) {
+    size_t lhsPostfixSize = lhsChildren.size() - lhsStart;
+    size_t rhsPostfixSize = rhsChildren.size() - rhsStart;
+    if (lhsPostfixSize != rhsPostfixSize) {
+      result.prefixVariables = lhsPostfixSize > rhsPostfixSize ? -1 : 1;
+    }
+  }
+
   if (lhsChildren.size() != rhsChildren.size()) {
     result.postfixUnary = 0;
   }
