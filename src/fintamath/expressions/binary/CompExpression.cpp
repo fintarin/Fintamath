@@ -169,7 +169,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
       }
     }
 
-    if (dividerNum && hasVariable(lhsExpr)) {
+    if (dividerNum) {
       for (auto &child : dividendPolynom) {
         child = makeExpr(Div(), child, dividerNum);
       }

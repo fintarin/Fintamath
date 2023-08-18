@@ -323,7 +323,7 @@ int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<con
     return res;
   }
 
-  return -1;
+  return isNegative(lhs) ? 1 : -1;
 }
 
 int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
