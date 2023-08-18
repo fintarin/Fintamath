@@ -28,10 +28,10 @@ bool hasInfinity(const ArgumentPtr &arg);
 
 bool isInfinity(const ArgumentPtr &arg);
 
+bool isNegated(const ArgumentPtr &arg);
+
 std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args);
 
 ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args);
-
-bool isNegative(const ArgumentPtr &arg);
 
 }

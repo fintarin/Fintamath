@@ -39,8 +39,6 @@ ArgumentPtr InvTrigExpression::constSimplify(const IFunction &func, const Argume
   }
 
   if (auto expr = cast<IExpression>(rhs)) {
-    int sign = 1;
-
     if (is<Sqrt>(expr->getOutputFunction())) {
       if (const auto sqrtChildInt = cast<Integer>(expr->getChildren().front())) {
         Rational sqr = (*sqrtChildInt);
@@ -56,8 +54,7 @@ ArgumentPtr InvTrigExpression::constSimplify(const IFunction &func, const Argume
           is<Sqrt>(childExpr->getOutputFunction())) {
 
         if (const auto sqrtChildInt = cast<Integer>(childExpr->getChildren().front())) {
-          sign *= childRat->sign();
-          Rational sqr = pow(*childRat, 2) * (*sqrtChildInt) * sign;
+          Rational sqr = pow(*childRat, 2) * (*sqrtChildInt) * childRat->sign();
           return trigTableSimplify(func, sqr);
         }
       }

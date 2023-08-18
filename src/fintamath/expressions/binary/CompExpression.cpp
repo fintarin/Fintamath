@@ -143,45 +143,48 @@ ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr
 }
 
 ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (isNegative(lhs)) {
+  if (isNegated(lhs)) {
     ArgumentPtr res = makeExpr(*getOppositeFunction(func), makeExpr(Neg(), lhs), rhs);
     return res;
   }
 
-  if (auto lhsExpr = cast<IExpression>(lhs)) {
-    ArgumentsPtrVector dividendPolynom;
-    ArgumentPtr polynomFirstChild;
+  auto lhsExpr = cast<IExpression>(lhs);
+  if (!lhsExpr) {
+    return {};
+  }
 
-    if (is<Add>(lhsExpr->getFunction())) {
-      polynomFirstChild = lhsExpr->getChildren().front();
-      dividendPolynom = lhsExpr->getChildren();
+  ArgumentsPtrVector dividendPolynom;
+  ArgumentPtr polynomFirstChild;
+
+  if (is<Add>(lhsExpr->getFunction())) {
+    polynomFirstChild = lhsExpr->getChildren().front();
+    dividendPolynom = lhsExpr->getChildren();
+  }
+  else {
+    polynomFirstChild = lhsExpr;
+    dividendPolynom.emplace_back(lhsExpr);
+  }
+
+  std::shared_ptr<const INumber> dividerNum;
+
+  if (const auto polynomFirstChildExpr = cast<IExpression>(polynomFirstChild)) {
+    if (is<Mul>(polynomFirstChildExpr->getFunction())) {
+      dividerNum = cast<INumber>(polynomFirstChildExpr->getChildren().front());
     }
-    else {
-      polynomFirstChild = lhsExpr;
-      dividendPolynom.emplace_back(lhsExpr);
+  }
+
+  if (dividerNum && hasVariable(lhsExpr)) {
+    for (auto &child : dividendPolynom) {
+      child = makeExpr(Div(), child, dividerNum);
     }
 
-    std::shared_ptr<const INumber> dividerNum;
+    ArgumentPtr newLhs = makeExpr(Add(), dividendPolynom);
 
-    if (const auto polynomFirstChildExpr = cast<IExpression>(polynomFirstChild)) {
-      if (is<Mul>(polynomFirstChildExpr->getFunction())) {
-        dividerNum = cast<INumber>(polynomFirstChildExpr->getChildren().front());
-      }
+    if (*dividerNum < Integer(0)) {
+      return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
     }
 
-    if (dividerNum) {
-      for (auto &child : dividendPolynom) {
-        child = makeExpr(Div(), child, dividerNum);
-      }
-
-      ArgumentPtr newLhs = makeExpr(Add(), dividendPolynom);
-
-      if (*dividerNum < Integer(0)) {
-        return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
-      }
-
-      return makeExpr(func, newLhs, rhs);
-    }
+    return makeExpr(func, newLhs, rhs);
   }
 
   return {};
