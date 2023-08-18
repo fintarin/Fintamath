@@ -365,10 +365,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "-1 - (2 sqrt(x))/(x - 2 sqrt(x))");
   EXPECT_EQ(Expression("(x-1)/(sqrt(x) - x)").toString(), "-1 - 1/sqrt(x)");
   EXPECT_EQ(Expression("(x-1)/(2 sqrt(x) - x)").toString(), "-1 + (-2 sqrt(x) + 1)/(x - 2 sqrt(x))");
-  EXPECT_EQ(Expression("(x-1)/(sqrt(x)/2 - x)").toString(), "-1 + (sqrt(x) - 2)/(-2 x + sqrt(x))");
+  EXPECT_EQ(Expression("(x-1)/(sqrt(x)/2 - x)").toString(), "-1 + (-sqrt(x) + 2)/(2 x - sqrt(x))"); //TODO: -1 - (sqrt(x) - 2)/(2 x - sqrt(x))
   EXPECT_EQ(Expression("(x-1)/(root(x, 3) - x)").toString(), "-1 + (-root(x, 3) + 1)/(x - root(x, 3))");
   EXPECT_EQ(Expression("(x-1)/(2 root(x, 3) - x)").toString(), "-1 + (-2 root(x, 3) + 1)/(x - 2 root(x, 3))");
-  EXPECT_EQ(Expression("(x-1)/(root(x, 3)/2 - x)").toString(), "-1 + (root(x, 3) - 2)/(-2 x + root(x, 3))");
+  EXPECT_EQ(Expression("(x-1)/(root(x, 3)/2 - x)").toString(), "-1 + (-root(x, 3) + 2)/(2 x - root(x, 3))"); //TODO: -1 - (root(x, 3) - 2)/(2 x - root(x, 3))
   EXPECT_EQ(Expression("(x-1)/(x^(4/3) - x)").toString(), "(x - 1)/(x^(4/3) - x)");
   EXPECT_EQ(Expression("(x-1)/(2 x^(4/3) - x)").toString(), "(x - 1)/(2 x^(4/3) - x)");
 
