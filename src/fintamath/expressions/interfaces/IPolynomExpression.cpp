@@ -319,10 +319,6 @@ int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<con
     return childrenComp.postfix;
   }
 
-  if (auto res = comparatorVariables(lhs, rhs, isTermsOrderInversed()); res != 0) {
-    return res;
-  }
-
   return -1;
 }
 

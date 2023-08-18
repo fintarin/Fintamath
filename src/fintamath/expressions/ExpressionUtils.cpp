@@ -2,6 +2,7 @@
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
@@ -177,9 +178,16 @@ bool isNegated(const ArgumentPtr &arg) {
     return false;
   }
 
+  if (is<Add>(expr->getFunction())) {
+    expr = cast<IExpression>(expr->getChildren().front());
+
+    if (!expr) {
+      return false;
+    }
+  }
+
   if (is<Mul>(expr->getFunction())) {
-    ArgumentPtr firstChild = expr->getChildren().front();
-    if (auto number = cast<INumber>(firstChild); number && *number < Integer(0)) {
+    if (auto num = cast<INumber>(expr->getChildren().front()); num && *num < Integer(0)) {
       return true;
     }
   }

@@ -51,8 +51,6 @@ private:
 
   static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
 
-  static bool isNeg(const ArgumentPtr &expr);
-
   static Integer getGcd(ArgumentsPtrVector &children);
 };
 
