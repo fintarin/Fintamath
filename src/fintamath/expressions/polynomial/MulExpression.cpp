@@ -110,6 +110,7 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,
 
   if (const auto lhsNum = cast<INumber>(lhsChild)) {
     bool isNegated = *lhsNum < Integer(0);
+
     if (is<Inf>(rhsChild)) {
       return isNegated ? NegInf().clone() : rhsChild;
     }

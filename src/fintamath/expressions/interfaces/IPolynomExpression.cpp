@@ -323,7 +323,7 @@ int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<con
     return res;
   }
 
-  return isNegative(lhs) ? 1 : -1;
+  return -1;
 }
 
 int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
@@ -449,8 +449,9 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
   if (result.postfix == 0) {
     size_t lhsPostfixSize = lhsChildren.size() - lhsStart;
     size_t rhsPostfixSize = rhsChildren.size() - rhsStart;
+
     if (lhsPostfixSize != rhsPostfixSize) {
-      result.prefixVariables = lhsPostfixSize > rhsPostfixSize ? -1 : 1;
+      result.postfix = lhsPostfixSize > rhsPostfixSize ? -1 : 1;
     }
   }
 
