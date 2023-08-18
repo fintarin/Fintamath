@@ -195,4 +195,15 @@ bool isExpression(const IMathObject &arg) {
   return is<IExpression>(arg);
 }
 
+bool isNegative(const std::shared_ptr<const IExpression> &expr) {
+  if (is<Mul>(expr->getFunction())) {
+    ArgumentPtr firstChild = expr->getChildren().front();
+    if (auto number = cast<INumber>(firstChild); number && *number < Integer(0)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 }

@@ -38,8 +38,6 @@ public:
     return MathObjectTypeId(MathObjectType::IExpression);
   }
 
-  bool isNegativeExpression() const;
-
 protected:
   virtual ArgumentPtr simplify() const = 0;
 

@@ -225,7 +225,7 @@ bool DivExpression::isNeg(const ArgumentPtr &expr) {
     checkValue = expr;
   }
 
-  if (auto exprValue = cast<IExpression>(checkValue); exprValue && exprValue->isNegativeExpression()) {
+  if (auto exprValue = cast<IExpression>(checkValue); exprValue && isNegative(exprValue)) {
     return true;
   }
 
