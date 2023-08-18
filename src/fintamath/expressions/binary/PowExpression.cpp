@@ -83,7 +83,6 @@ ArgumentPtr PowExpression::preciseSimplify() const {
 
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPreSimplify() const {
   static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &PowExpression::negSimplify,
       &PowExpression::powSimplify,
   };
   return simplifyFunctions;
@@ -93,7 +92,6 @@ PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplif
   static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
       &PowExpression::constSimplify,
       &PowExpression::polynomSimplify,
-      &PowExpression::negSimplify,
       &PowExpression::powSimplify,
   };
   return simplifyFunctions;
@@ -177,18 +175,6 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
   }
 
   ArgumentPtr res = makeExpr(Add(), newPolynom);
-  return res;
-}
-
-ArgumentPtr PowExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentPtr res;
-
-  if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    ArgumentPtr lhsMul = makeExpr(Pow(), std::make_shared<Integer>(-1), rhs);
-    ArgumentPtr rhsMul = makeExpr(Pow(), lhsExpr->getChildren().front(), rhs);
-    res = makeExpr(Mul(), lhsMul, rhsMul);
-  }
-
   return res;
 }
 

@@ -337,7 +337,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a/x + b/(y+3/r)/4)/(3+t/5)").toString(),
             "(20 a r y + 60 a + 5 b r x)/(4 r t x y + 60 r x y + 12 t x + 180 x)");
   EXPECT_EQ(Expression("(x/a - (b+5)/(y-8/(12 y))/4)/(8-a/5)").toString(),
-            "(-a b - 5 a + 4 x y + (-8 x)/(3 y))/(-(4 a^2 y)/5 + 32 a y + (8 a^2)/(15 y) + (-64 a)/(3 y))");
+            "(15 a b y + 75 a y - 60 x y^2 + 40 x)/(12 a^2 y^2 - 8 a^2 - 480 a y^2 + 320 a)");
   EXPECT_EQ(Expression("(a + b + c^2) / ((a + b + c^3) / (5/2 * (a + b) / (3/b + c/2)))").toString(),
             "5 c + (5 a^2 b + 10 a b^2 - 30 a c + 5 b^3 - 5 b c^5 - 30 b c - 30 c^4)/(a b c + 6 a + b^2 c + b c^4 + 6 "
             "b + 6 c^3)");
@@ -361,8 +361,8 @@ TEST(ExpressionTests, stringConstructorTest) {
 
   EXPECT_EQ(Expression("sqrt(x) + x").toString(), "x + sqrt(x)");
   EXPECT_EQ(Expression("sqrt(x) - x").toString(), "-x + sqrt(x)");
-  EXPECT_EQ(Expression("x/(sqrt(x) - x)").toString(), "-1 - (sqrt(x)/(x - sqrt(x)))");
-  EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "-1 + (-2 sqrt(x))/(x - 2 sqrt(x))");
+  EXPECT_EQ(Expression("x/(sqrt(x) - x)").toString(), "-1 - sqrt(x)/(x - sqrt(x))");
+  EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "-1 - (2 sqrt(x))/(x - 2 sqrt(x))");
   EXPECT_EQ(Expression("(x-1)/(sqrt(x) - x)").toString(), "-1 - 1/sqrt(x)");
   EXPECT_EQ(Expression("(x-1)/(2 sqrt(x) - x)").toString(), "-1 + (-2 sqrt(x) + 1)/(x - 2 sqrt(x))");
   EXPECT_EQ(Expression("(x-1)/(sqrt(x)/2 - x)").toString(), "-1 + (sqrt(x) - 2)/(-2 x + sqrt(x))");

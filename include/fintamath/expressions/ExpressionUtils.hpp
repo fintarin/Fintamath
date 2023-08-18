@@ -32,6 +32,6 @@ std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &
 
 ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args);
 
-bool isNegative(const std::shared_ptr<const IExpression> &expr);
+bool isNegative(const ArgumentPtr &arg);
 
 }
