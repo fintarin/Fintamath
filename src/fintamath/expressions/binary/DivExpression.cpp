@@ -21,8 +21,8 @@ DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &i
 }
 
 std::string DivExpression::toString() const {
-  if (auto lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && is<Neg>(lhsChildExpr->getFunction())) {
-    ArgumentPtr innerDiv = makeExpr(Div(), lhsChildExpr->getChildren().front(), rhsChild);
+  if (auto lhsChildExpr = cast<IExpression>(lhsChild); lhsChildExpr && isNegative(lhsChildExpr)) {
+    ArgumentPtr innerDiv = makeExpr(Div(), makeExpr(Neg(), lhsChildExpr)->toMinimalObject(), rhsChild);
     return makeExpr(Neg(), innerDiv)->toString();
   }
 
@@ -392,17 +392,17 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   ArgumentPtr lhsChild;
   ArgumentPtr rhsChild;
 
-  if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Neg>(lhsExpr->getFunction())) {
+  if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && isNegative(lhsExpr)) {
     isResultNegated = !isResultNegated;
-    lhsChild = lhsExpr->getChildren().front();
+    lhsChild = makeExpr(Neg(), lhsExpr);
   }
   else {
     lhsChild = lhs;
   }
 
-  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Neg>(rhsExpr->getFunction())) {
+  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && isNegative(rhsExpr)) {
     isResultNegated = !isResultNegated;
-    rhsChild = rhsExpr->getChildren().front();
+    rhsChild = makeExpr(Neg(), rhsExpr);
   }
   else {
     rhsChild = rhs;
