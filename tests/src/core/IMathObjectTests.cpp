@@ -22,12 +22,16 @@ TEST(IMathObjectTests, cloneTest) {
   std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>();
   std::unique_ptr<IMathObject> m2 = std::make_unique<Integer>(1);
   std::unique_ptr<IMathObject> m3 = m1->clone();
+  std::unique_ptr<IMathObject> m4 = Integer(1).clone();
 
   EXPECT_EQ(*m3, *m1);
+  EXPECT_EQ(*m4, *m2);
 
   EXPECT_NE(*m3, *m2);
+  EXPECT_NE(*m4, *m1);
 
   EXPECT_NE(m3, m1);
+  EXPECT_NE(m4, m2);
 }
 
 TEST(IMathObjectTests, equalsTest) {
