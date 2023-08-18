@@ -27,7 +27,7 @@ std::string AddExpression::operatorChildToString(const ArgumentPtr &inChild, con
   bool isChildNegated = false;
 
   if (isNegative(child)) {
-    child = makeExpr(Neg(), child);
+    child = makeExpr(Neg(), child)->toMinimalObject();
     isChildNegated = true;
   }
 
