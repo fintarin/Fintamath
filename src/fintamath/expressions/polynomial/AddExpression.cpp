@@ -23,18 +23,11 @@ AddExpression::AddExpression(const ArgumentsPtrVector &inChildren)
 }
 
 std::string AddExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  ArgumentPtr child = inChild;
   bool isChildNegated = false;
 
-  if (isNegative(child)) {
-    child = makeExpr(Neg(), child)->toMinimalObject();
-    isChildNegated = true;
-  }
+  std::string result = inChild->toString();
 
-  std::string result = child->toString();
-
-  if (!isChildNegated &&
-      result.size() > 1 &&
+  if (result.size() > 1 &&
       result.front() == Neg().toString().front()) {
 
     isChildNegated = true;
