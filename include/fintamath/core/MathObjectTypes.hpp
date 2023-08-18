@@ -20,7 +20,6 @@ enum class MathObjectType : MathObjectTypeId {
 
   IUnaryExpression = 3000,
 
-  NegExpression,
   NotExpression,
   TrigExpression,
   InvTrigExpression,

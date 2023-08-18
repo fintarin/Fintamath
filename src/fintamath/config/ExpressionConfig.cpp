@@ -15,7 +15,6 @@
 #include "fintamath/expressions/unary/HyperbExpression.hpp"
 #include "fintamath/expressions/unary/InvHyperbExpression.hpp"
 #include "fintamath/expressions/unary/InvTrigExpression.hpp"
-#include "fintamath/expressions/unary/NegExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -145,7 +144,7 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Sub>([](const ArgumentsPtrVector &args) {
       return std::make_unique<AddExpression>(
-          ArgumentsPtrVector{args.front(), std::make_shared<NegExpression>(args.back())});
+          ArgumentsPtrVector{args.front(), makeExpr(Neg(), args.back())});
     });
 
     Expression::registerFunctionExpressionMaker<Mul, true>([](const ArgumentsPtrVector &args) {
@@ -249,7 +248,7 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Neg>([](const ArgumentsPtrVector &args) {
-      return std::make_unique<NegExpression>(args.front());
+      return makeExpr(Mul(), std::make_shared<Integer>(-1), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<UnaryPlus>([](const ArgumentsPtrVector &args) {
