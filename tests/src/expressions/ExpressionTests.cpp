@@ -1503,7 +1503,7 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("2^200/x").precise(10).toString(), "(1.606938044*10^60)/x");
   EXPECT_EQ(Expression("x/2^200").precise(10).toString(), "6.223015278*10^-61 x");
   EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").precise().toString(),
-            "(0.125 x^3.0)/y + (-0.25 x^2.0 z)/y + (0.125 x z^2.0)/y");
+            "(0.125 x^3.0)/y - (0.25 x^2.0 z)/y + (0.125 x z^2.0)/y");
 
   EXPECT_EQ(Expression("ln(x)").precise().toString(), "ln(x)");
   EXPECT_EQ(Expression("sqrt(x)").precise().toString(), "sqrt(x)");
