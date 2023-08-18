@@ -143,11 +143,6 @@ ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr
 }
 
 ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (isNegated(lhs)) {
-    ArgumentPtr res = makeExpr(*getOppositeFunction(func), makeExpr(Neg(), lhs), rhs);
-    return res;
-  }
-
   auto lhsExpr = cast<IExpression>(lhs);
   if (!lhsExpr) {
     return {};

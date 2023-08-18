@@ -208,28 +208,12 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr 
 }
 
 ArgumentPtr DivExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (isNeg(rhs)) {
+  if (isNegated(rhs)) {
     ArgumentPtr res = makeExpr(Div(), makeExpr(Neg(), lhs), makeExpr(Neg(), rhs));
     return res;
   }
 
   return {};
-}
-
-bool DivExpression::isNeg(const ArgumentPtr &expr) {
-  ArgumentPtr checkValue;
-  if (auto exprChild = cast<IExpression>(expr); exprChild && is<Add>(exprChild->getFunction())) {
-    checkValue = exprChild->getChildren().front();
-  }
-  else {
-    checkValue = expr;
-  }
-
-  if (isNegated(checkValue)) {
-    return true;
-  }
-
-  return false;
 }
 
 ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -387,29 +371,8 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
     return std::make_shared<Integer>(1);
   }
 
-  bool isResultNegated = false;
-
-  ArgumentPtr lhsChild;
-  ArgumentPtr rhsChild;
-
-  if (isNegated(lhs)) {
-    isResultNegated = !isResultNegated;
-    lhsChild = makeExpr(Neg(), lhs);
-  }
-  else {
-    lhsChild = lhs;
-  }
-
-  if (isNegated(rhs)) {
-    isResultNegated = !isResultNegated;
-    rhsChild = makeExpr(Neg(), rhs);
-  }
-  else {
-    rhsChild = rhs;
-  }
-
-  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
-  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
+  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhs);
+  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhs);
 
   auto lhsChildValueNum = cast<INumber>(lhsChildValue);
   auto lhsChildRateNum = cast<INumber>(lhsChildRate);
@@ -423,13 +386,7 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   }
 
   if (*lhsChildValue == *rhsChildValue) {
-    ArgumentPtr result = addRatesToValue({lhsChildRate, makeExpr(Neg(), rhsChildRate)}, lhsChildValue);
-
-    if (isResultNegated) {
-      result = makeExpr(Neg(), result);
-    }
-
-    return result;
+    return addRatesToValue({lhsChildRate, makeExpr(Neg(), rhsChildRate)}, lhsChildValue);
   }
 
   if (lhsChildValueNum &&
@@ -444,7 +401,7 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   if (rhsChildValueNum) {
     if (const auto rhsChildRateRat = cast<Rational>(rhsChildRate)) {
       ArgumentPtr numeratorPow = Pow()(*rhsChildValue, 1 - (*rhsChildRateRat));
-      ArgumentPtr numerator = makeExpr(Mul(), lhsChild, numeratorPow);
+      ArgumentPtr numerator = makeExpr(Mul(), lhs, numeratorPow);
       return makeExpr(Div(), numerator, rhsChildValue);
     }
   }
