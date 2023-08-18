@@ -26,8 +26,8 @@ std::string AddExpression::operatorChildToString(const ArgumentPtr &inChild, con
   ArgumentPtr child = inChild;
   bool isChildNegated = false;
 
-  if (auto negExpr = cast<IExpression>(inChild); negExpr && is<Neg>(negExpr->getFunction())) {
-    child = negExpr->getChildren().front();
+  if (isNegative(child)) {
+    child = makeExpr(Neg(), child);
     isChildNegated = true;
   }
 
@@ -82,7 +82,6 @@ int AddExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) co
 
 AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify() const {
   static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &AddExpression::negSimplify,
       &AddExpression::callFunctionSimplify,
       &AddExpression::sumSimplify,
       &AddExpression::constSimplify,
@@ -141,24 +140,6 @@ ArgumentPtr AddExpression::constSimplify(const IFunction & /*func*/, const Argum
 
 ArgumentPtr AddExpression::callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
   return callFunction(func, {lhsChild, rhsChild});
-}
-
-ArgumentPtr AddExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsExpr = cast<IExpression>(lhsChild);
-      lhsExpr &&
-      is<Neg>(lhsExpr->getFunction()) &&
-      *lhsExpr->getChildren().front() == *rhsChild) {
-    return std::make_shared<Integer>(0);
-  }
-
-  if (const auto rhsExpr = cast<IExpression>(rhsChild);
-      rhsExpr &&
-      is<Neg>(rhsExpr->getFunction()) &&
-      *rhsExpr->getChildren().front() == *lhsChild) {
-    return std::make_shared<Integer>(0);
-  }
-
-  return {};
 }
 
 ArgumentPtr AddExpression::logSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
@@ -268,10 +249,6 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
         value = makeExpr(Mul(), ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
       }
     }
-  }
-  else if (const auto negExpr = cast<IExpression>(inChild); negExpr && is<Neg>(negExpr->getFunction())) {
-    rate = std::make_shared<Integer>(-1);
-    value = negExpr->getChildren().front();
   }
 
   if (!rate || !value) {

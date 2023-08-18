@@ -143,12 +143,12 @@ ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr
 }
 
 ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (auto lhsExpr = cast<IExpression>(lhs)) {
-    if (isNegative(lhsExpr)) {
-      ArgumentPtr res = makeExpr(*getOppositeFunction(func), makeExpr(Neg(), lhs), rhs);
-      return res;
-    }
+  if (isNegative(lhs)) {
+    ArgumentPtr res = makeExpr(*getOppositeFunction(func), makeExpr(Neg(), lhs), rhs);
+    return res;
+  }
 
+  if (auto lhsExpr = cast<IExpression>(lhs)) {
     ArgumentsPtrVector dividendPolynom;
     ArgumentPtr polynomFirstChild;
 

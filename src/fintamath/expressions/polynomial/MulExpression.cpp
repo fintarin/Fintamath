@@ -66,7 +66,6 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify
       &MulExpression::rationalSimplify,
       &MulExpression::divSimplify,
       &MulExpression::powSimplify,
-      &MulExpression::negSimplify,
   };
   return simplifyFunctions;
 }
@@ -77,7 +76,6 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPostSimplif
       &MulExpression::polynomSimplify,
       &MulExpression::divSimplify,
       &MulExpression::powSimplify,
-      &MulExpression::negSimplify,
   };
   return simplifyFunctions;
 }
@@ -110,9 +108,13 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,
     return lhsChild;
   }
 
-  if (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild)) {
-    if (const auto lhsNum = cast<INumber>(lhsChild)) {
-      return *lhsNum < Integer(0) ? makeExpr(Neg(), rhsChild) : rhsChild;
+  if (const auto lhsNum = cast<INumber>(lhsChild); lhsNum && *lhsNum < Integer(0)) {
+    if (is<Inf>(rhsChild)) {
+      return NegInf().clone();
+    }
+
+    if (is<NegInf>(rhsChild)) {
+      return Inf().clone();
     }
   }
 
@@ -237,28 +239,6 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
 
     ArgumentPtr valuesMul = makeExpr(Mul(), lhsChildValue, rhsChildValue);
     return makeExpr(Pow(), valuesMul, lhsChildRate);
-  }
-
-  return {};
-}
-
-ArgumentPtr MulExpression::negSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  const auto &lhsExpr = cast<IExpression>(lhsChild);
-  const auto &rhsExpr = cast<IExpression>(rhsChild);
-
-  if (lhsExpr && rhsExpr &&
-      is<Neg>(lhsExpr->getFunction()) && is<Neg>(rhsExpr->getFunction())) {
-
-    ArgumentPtr res = makeExpr(Mul(), lhsExpr->getChildren().front(), rhsExpr->getChildren().front());
-    return res;
-  }
-
-  if (lhsExpr && is<Neg>(lhsExpr->getFunction())) {
-    return makeExpr(Mul(), lhsExpr->getChildren().front(), std::make_shared<Integer>(-1), rhsChild);
-  }
-
-  if (rhsExpr && is<Neg>(rhsExpr->getFunction())) {
-    return makeExpr(Mul(), rhsExpr->getChildren().front(), std::make_shared<Integer>(-1), lhsChild);
   }
 
   return {};
