@@ -4,6 +4,7 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -47,6 +48,10 @@ std::unique_ptr<IMathObject> Pow::multiPowSimplify(const INumber &lhs, const INu
       return powSimplify(inLhs, inRhs);
     });
 
+    outMultiPow.add<Complex, Complex>([](const Complex &inLhs, const Complex &inRhs) {
+      return powSimplify(inLhs, inRhs);
+    });
+
     return outMultiPow;
   }();
 
@@ -77,8 +82,8 @@ std::unique_ptr<IMathObject> Pow::powSimplify(const Rational &lhs, const Rationa
     return pow(lhs, rhsNumerator).toMinimalObject();
   }
 
-  if (lhs < Integer(0)) {
-    // TODO: complex numbers
+  // TODO: complex nth roots
+  if (lhs < Integer(0) && rhsDenominator != Integer(2)) {
     return {};
   }
 
@@ -96,6 +101,16 @@ std::unique_ptr<IMathObject> Pow::powSimplify(const Real &lhs, const Real &rhs) 
   catch (const UndefinedException &) {
     return {};
   }
+}
+
+std::unique_ptr<IMathObject> Pow::powSimplify(const Complex &lhs, const Complex &rhs) {
+  if (rhs.imag() == Integer(0)) {
+    if (const auto *rhsInt = cast<Integer>(&rhs.real())) {
+      return pow(lhs, *rhsInt).toMinimalObject();
+    }
+  }
+
+  return {};
 }
 
 }

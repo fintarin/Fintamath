@@ -1,5 +1,6 @@
 #include "fintamath/functions/logarithms/Ln.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
@@ -34,7 +35,12 @@ std::unique_ptr<IMathObject> Ln::multiLnSimplify(const INumber &rhs) {
     });
 
     outMultiLn.add<Real>([](const Real &inRhs) {
-      return ln(inRhs).toMinimalObject();
+      try {
+        return ln(inRhs).toMinimalObject();
+      }
+      catch (const UndefinedException &) {
+        return std::unique_ptr<IMathObject>{};
+      }
     });
 
     return outMultiLn;

@@ -6,11 +6,13 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -47,7 +49,20 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
   if (const auto childExpr = cast<IExpression>(child)) {
     childOper = cast<IOperator>(childExpr->getOutputFunction());
   }
-  else if (operPriority <= IOperator::Priority::PrefixUnary && childStr.front() == Neg().toString().front()) {
+  else if (const auto childComplex = cast<Complex>(child)) {
+    if (childComplex->real() != Integer(0)) {
+      childOper = std::make_shared<Add>();
+    }
+    else if (childComplex->imag() != Integer(1)) {
+      if (childComplex->imag() == Integer(-1)) {
+        childOper = std::make_shared<Neg>();
+      }
+      else {
+        childOper = std::make_shared<Mul>();
+      }
+    }
+  }
+  else if (childStr.front() == Neg().toString().front()) {
     childOper = std::make_shared<Neg>();
   }
   else if (is<Rational>(child)) {
@@ -62,12 +77,11 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
   if (childOper) {
     IOperator::Priority lhsOperPriority = childOper->getOperatorPriority();
 
-    if (operPriority == IOperator::Priority::Multiplication) {
-      return putInBrackets(childStr);
-    }
-
-    if (lhsOperPriority >= operPriority ||
-        (lhsOperPriority == operPriority && !oper.isAssociative())) {
+    if (lhsOperPriority > operPriority ||
+        (lhsOperPriority == operPriority &&
+         childOper->getFunctionType() == IFunction::Type::Unary) ||
+        (!oper.isAssociative() &&
+         childOper->getFunctionType() != IFunction::Type::Unary)) {
 
       return putInBrackets(childStr);
     }
@@ -162,6 +176,29 @@ bool hasInfinity(const ArgumentPtr &arg) {
     bool res = false;
 
     if (hasInfinity(child)) {
+      res = true;
+    }
+
+    return res;
+  });
+}
+
+bool hasComplex(const ArgumentPtr &arg) {
+  if (const auto num = cast<INumber>(arg); num && num->isComplex()) {
+    return true;
+  }
+
+  auto expr = cast<IExpression>(arg);
+  if (!expr) {
+    return false;
+  }
+
+  ArgumentsPtrVector children = expr->getChildren();
+
+  return std::any_of(children.begin(), children.end(), [](const auto &child) {
+    bool res = false;
+
+    if (hasComplex(child)) {
       res = true;
     }
 

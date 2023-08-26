@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -26,6 +27,8 @@ TEST(AtanhTests, callTest) {
   EXPECT_EQ(f(Integer(0))->toString(), "0");
   EXPECT_EQ(f(Integer(1))->toString(), "Inf");
   EXPECT_EQ(f(Integer(2))->toString(), "atanh(2)");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "atanh(1 + I)");
 
   EXPECT_EQ(f(Rational(10, 11))->toString(),
             "1.5222612188617114982502989901828527171422876437023053200970422417875370779853391");

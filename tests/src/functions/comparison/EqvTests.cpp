@@ -5,6 +5,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
@@ -29,6 +30,11 @@ TEST(EqvTests, callTest) {
   EXPECT_EQ(f(Integer(3), Integer(3))->toString(), "True");
   EXPECT_EQ(f(Integer(3), Rational(3, 1))->toString(), "True");
   EXPECT_EQ(f(Rational(5, 2), Integer(2))->toString(), "False");
+
+  EXPECT_EQ(f(Complex(1, 1), Complex(1, 1))->toString(), "True");
+  EXPECT_EQ(f(Complex(1, 1), Complex(1, 2))->toString(), "False");
+  EXPECT_EQ(f(Complex(1, 1), Complex(2, 1))->toString(), "False");
+  EXPECT_EQ(f(Complex(1, 1), Complex(2, 2))->toString(), "False");
 
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "a - 3 = 0");
   EXPECT_EQ(f(Variable("a"), Variable("a"))->toString(), "True");

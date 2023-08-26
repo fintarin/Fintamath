@@ -1,8 +1,12 @@
 #include "fintamath/functions/hyperbolic/Acoth.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/literals/constants/I.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -14,10 +18,10 @@ std::unique_ptr<IMathObject> Acoth::call(const ArgumentsRefVector &argsVect) con
     return NegInf().clone();
   }
 
-  // TODO! uncomment
-  // if (rhs == Integer(0)) {
-  //   return I Pi / 2;
-  // }
+  if (rhs == Integer(0)) {
+    static const auto res = divExpr(mulExpr(I(), Pi()), Integer(2).clone())->toMinimalObject();
+    return res->clone();
+  }
 
   if (rhs == Integer(1)) {
     return Inf().clone();

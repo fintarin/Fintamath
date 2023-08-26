@@ -85,6 +85,7 @@ TEST(IExpressionTests, setVariablesTest) {
 TEST(IExpressionTests, toMinimalObjectTest) {
   TestIExpression a;
   EXPECT_EQ(*a.toMinimalObject(), a);
+
   // TODO: implement more tests
 }
 

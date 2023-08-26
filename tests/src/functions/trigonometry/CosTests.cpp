@@ -5,6 +5,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
@@ -36,6 +37,8 @@ TEST(CosTests, callTest) {
   EXPECT_EQ(f(getPi() / 2)->toString(),
             "5.4692230477529111586267970406424055872514205135096926055277982231147447746519098*10^-121");
   EXPECT_EQ(f(getPi())->toString(), "-1.0");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "cos(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "cos(a)");
 

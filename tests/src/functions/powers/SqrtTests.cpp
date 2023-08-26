@@ -48,9 +48,9 @@ TEST(SqrtTests, callTest) {
   EXPECT_EQ(f(Real(144))->toString(), "12.0");
   EXPECT_EQ(f(Real(2))->toString(), "1.414213562373095048801688724209698078569671875376948073176679737990732478462107");
 
-  EXPECT_EQ(f(Integer(-10))->toString(), "sqrt(-10)");
-  EXPECT_EQ(f(Rational(-9289, 10))->toString(), "sqrt(-9289/10)");
-  EXPECT_EQ(f(Real(-9289))->toString(), "sqrt(-9289.0)");
+  EXPECT_EQ(f(Integer(-10))->toString(), "I sqrt(10)");
+  EXPECT_EQ(f(Rational(-9289, 10))->toString(), "(I sqrt(92890))/10");
+  EXPECT_EQ(f(Real(-9289))->toString(), "96.379458392335863966326568498632217265291077134379132716928952438952915972901934 I");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "sqrt(a)");
 

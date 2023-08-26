@@ -918,16 +918,93 @@ TEST(ExpressionTests, stringConstructorTest) {
   // EXPECT_EQ(Expression("tan(x)*cot(x)").toString(), "1"); // TODO: implement
   // EXPECT_EQ(Expression("tanh(x)*coth(x)").toString(), "1"); // TODO: implement
 
-  EXPECT_EQ(Expression("sqrt(-1)").toString(), "sqrt(-1)");
-  EXPECT_EQ(Expression("sqrt(-1)").toString(), "sqrt(-1)");
+  EXPECT_EQ(Expression("(1 + 2I) + (2 + 3I)").toString(), "3 + 5 I");
+  EXPECT_EQ(Expression("(1 + 2I) - (2 + 3I)").toString(), "-1 - I");
+  EXPECT_EQ(Expression("(1 + 2I) * (2 + 3I)").toString(), "-4 + 7 I");
+  EXPECT_EQ(Expression("(1 + 2I) / (2 + 3I)").toString(), "8/13 + 1/13 I");
+  EXPECT_EQ(Expression("-(2 + 3I)").toString(), "-2 - 3 I");
+  EXPECT_EQ(Expression("+(2 + 3I)").toString(), "2 + 3 I");
+
+  EXPECT_EQ(Expression("(-5 + 2I)^0").toString(), "1");
+  EXPECT_EQ(Expression("(-5 + 2I)^1").toString(), "-5 + 2 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^2").toString(), "21 - 20 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^3").toString(), "-65 + 142 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^4").toString(), "41 - 840 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^5").toString(), "1475 + 4282 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^6").toString(), "-15939 - 18460 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^7").toString(), "116615 + 60422 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^8").toString(), "-703919 - 68880 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^32").toString(), "231439382100320515840321 + 95179357018581597343680 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^-1").toString(), "-5/29 - 2/29 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^-5").toString(), "1475/20511149 - 4282/20511149 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^-6").toString(), "-15939/594823321 + 18460/594823321 I");
+  EXPECT_EQ(Expression("(-5 + 2I)^-32").toString(), "231439382100320515840321/62623297589448778360828428329074752308805325441 - 95179357018581597343680/62623297589448778360828428329074752308805325441 I");
+
+  EXPECT_EQ(Expression("sqrt(-1)").toString(), "I");
   EXPECT_EQ(Expression("(-1)^(2/3)").toString(), "(-1)^(2/3)");
 
+  // TODO: solve this
   EXPECT_EQ(Expression("ln(-1)").toString(), "ln(-1)");
   EXPECT_EQ(Expression("lb(-1)").toString(), "log(2, -1)");
   EXPECT_EQ(Expression("lg(-1)").toString(), "log(10, -1)");
 
+  // TODO: solve this
   EXPECT_EQ(Expression("asin(2)").toString(), "asin(2)");
   EXPECT_EQ(Expression("acos(2)").toString(), "acos(2)");
+
+  // TODO! implement abs
+  EXPECT_EQ(Expression("abs(I)").toString(), "abs(I)");
+  EXPECT_EQ(Expression("abs(I + 1)").toString(), "abs(1 + I)");
+  EXPECT_EQ(Expression("abs(3I + 2)").toString(), "abs(2 + 3 I)");
+
+  // TODO: implement
+  EXPECT_EQ(Expression("sin(I + 1)").toString(), "sin(1 + I)");
+  EXPECT_EQ(Expression("cos(I + 1)").toString(), "cos(1 + I)");
+  EXPECT_EQ(Expression("tan(I + 1)").toString(), "tan(1 + I)");
+  EXPECT_EQ(Expression("cot(I + 1)").toString(), "cot(1 + I)");
+  EXPECT_EQ(Expression("asin(I + 1)").toString(), "asin(1 + I)");
+  EXPECT_EQ(Expression("acos(I + 1)").toString(), "acos(1 + I)");
+  EXPECT_EQ(Expression("atan(I + 1)").toString(), "atan(1 + I)");
+  EXPECT_EQ(Expression("acot(I + 1)").toString(), "acot(1 + I)");
+  EXPECT_EQ(Expression("sinh(I + 1)").toString(), "sinh(1 + I)");
+  EXPECT_EQ(Expression("cosh(I + 1)").toString(), "cosh(1 + I)");
+  EXPECT_EQ(Expression("tanh(I + 1)").toString(), "tanh(1 + I)");
+  EXPECT_EQ(Expression("coth(I + 1)").toString(), "coth(1 + I)");
+  EXPECT_EQ(Expression("asinh(I + 1)").toString(), "asinh(1 + I)");
+  EXPECT_EQ(Expression("acosh(I + 1)").toString(), "acosh(1 + I)");
+  EXPECT_EQ(Expression("atanh(I + 1)").toString(), "atanh(1 + I)");
+  EXPECT_EQ(Expression("acoth(I + 1)").toString(), "acoth(1 + I)");
+
+  EXPECT_EQ(Expression("I = I").toString(), "True");
+  EXPECT_EQ(Expression("I = 2 I").toString(), "False");
+  EXPECT_EQ(Expression("I = I x").toString(), "x - 1 = 0");
+
+  EXPECT_EQ(Expression("I != I").toString(), "False");
+  EXPECT_EQ(Expression("I != 2 I").toString(), "True");
+  EXPECT_EQ(Expression("I != I x").toString(), "x - 1 != 0");
+
+  EXPECT_EQ(Expression("I < I").toString(), "I < I");
+  EXPECT_EQ(Expression("I < 2 I").toString(), "I < 2 I");
+  EXPECT_EQ(Expression("I < I x").toString(), "I < I x");
+
+  EXPECT_EQ(Expression("I > I").toString(), "I > I");
+  EXPECT_EQ(Expression("I > 2 I").toString(), "I > 2 I");
+  EXPECT_EQ(Expression("I > I x").toString(), "I > I x");
+
+  EXPECT_EQ(Expression("I <= I").toString(), "I <= I");
+  EXPECT_EQ(Expression("I <= 2 I").toString(), "I <= 2 I");
+  EXPECT_EQ(Expression("I <= I x").toString(), "I <= I x");
+
+  EXPECT_EQ(Expression("I >= I").toString(), "I >= I");
+  EXPECT_EQ(Expression("I >= 2 I").toString(), "I >= 2 I");
+  EXPECT_EQ(Expression("I >= I x").toString(), "I >= I x");
+
+  EXPECT_EQ(Expression("x (2 + I)").toString(), "(2 + I) x");                         // TODO! simplify
+  EXPECT_EQ(Expression("sqrt(3) (2/3 + 1/2 I)").toString(), "(2/3 + 1/2 I) sqrt(3)"); // TODO! simplify
+  EXPECT_EQ(Expression("I / x").toString(), "I/x");
+  EXPECT_EQ(Expression("-I / x").toString(), "-I/x");
+  EXPECT_EQ(Expression("2I / x").toString(), "(2 I)/x");
+  EXPECT_EQ(Expression("-2I / x").toString(), "(-2 I)/x"); // TODO! -(2 I)/x
 
   EXPECT_EQ(Expression("Inf").toString(), "Inf");
   EXPECT_EQ(Expression("-Inf").toString(), "-Inf");
@@ -1385,7 +1462,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("Inf - Inf = 0"), InvalidInputException);
   EXPECT_THROW(Expression("Inf - Inf = 0 | a"), InvalidInputException);
   EXPECT_THROW(Expression("0/0 = 0/0"), InvalidInputException);
-  EXPECT_THROW(Expression("Undefined = Undefined"),InvalidInputException);
+  EXPECT_THROW(Expression("Undefined = Undefined"), InvalidInputException);
 
   EXPECT_THROW(Expression("min()"), InvalidInputException);
   EXPECT_THROW(Expression("min(True, False)"), InvalidInputException);
@@ -1513,7 +1590,6 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("root(x, 33)").precise().toString(),
             "x^0.03030303030303030303030303030303030303030303030303030303030303030303030303030303");
 
-  // TODO: move to str constructor tests
   EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
 }
 

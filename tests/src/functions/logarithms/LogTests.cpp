@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
@@ -60,16 +61,21 @@ TEST(LogTests, callTest) {
   EXPECT_EQ(f(Integer(10), 1 / Real(121))->toString(),
             "-2.0827853703164500815003999424860484834134043809329061891930780373595060644664987");
 
+  EXPECT_EQ(f(Complex(1, 1), Complex(1, 1))->toString(), "1");
+  EXPECT_EQ(f(Complex(1, 1), Complex(1, 2))->toString(), "log(1 + I, 1 + 2 I)");
+  EXPECT_EQ(f(Complex(1, 1), Integer(1))->toString(), "0");
+
   EXPECT_EQ(f(Integer(10), Integer(0))->toString(), "-Inf");
   EXPECT_EQ(f(Rational(1, 10), Integer(0))->toString(), "Inf");
   EXPECT_EQ(f(Integer(1), Integer(10))->toString(), "ComplexInf");
+  EXPECT_EQ(f(Integer(1), Complex(1, 1))->toString(), "ComplexInf");
   EXPECT_EQ(f(Integer(1), Integer(1))->toString(), "Undefined");
   EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "Undefined");
 
-  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "log(a, b)");
+  EXPECT_EQ(f(Integer(-10), Integer(10))->toString(), "log(-10, 10)");
+  EXPECT_EQ(f(Integer(10), Integer(-10))->toString(), "log(10, -10)");
 
-  EXPECT_THROW(f(Integer(-10), Integer(10)), UndefinedFunctionException);
-  EXPECT_THROW(f(Integer(10), Integer(-10)), UndefinedFunctionException);
+  EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "log(a, b)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(10)), InvalidInputFunctionException);

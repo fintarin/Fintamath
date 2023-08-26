@@ -5,6 +5,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -36,6 +37,8 @@ TEST(AtanTests, callTest) {
 
   EXPECT_EQ(f(Real("0.5"))->toString(),
             "0.46364760900080611621425623146121440202853705428612026381093308872019786416574171");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "atan(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "atan(a)");
 

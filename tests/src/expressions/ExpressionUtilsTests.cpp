@@ -101,6 +101,10 @@ TEST(ExpressionUtilsTests, hasInfinityTest) {
   // TODO: implement
 }
 
+TEST(ExpressionUtilsTests, hasComplexTest) {
+  // TODO: implement
+}
+
 TEST(ExpressionUtilsTests, isInfinityTest) {
   // TODO: implement
 }

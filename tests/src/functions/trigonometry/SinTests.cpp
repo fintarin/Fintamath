@@ -5,6 +5,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
@@ -36,6 +37,8 @@ TEST(SinTests, callTest) {
   EXPECT_EQ(f(getPi() / 2)->toString(), "1.0");
   EXPECT_EQ(f(getPi())->toString(),
             "9.3844609550582231725359408128481117450284102701938521105559644622948954930381964*10^-122");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "sin(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "sin(a)");
 

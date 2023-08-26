@@ -2,12 +2,13 @@
 
 #include "fintamath/functions/calculus/Min.hpp"
 
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Max.hpp"
-#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
@@ -27,6 +28,9 @@ TEST(MinTests, callTest) {
   EXPECT_EQ(f(Integer(1), Integer(-1))->toString(), "-1");
   EXPECT_EQ(f(Integer(1), Integer(-1), Rational(-5, 2))->toString(), "-5/2");
   EXPECT_EQ(f(Integer(1), Rational(5, 2), Rational(-5, 2), Integer(-1))->toString(), "-5/2");
+
+  EXPECT_EQ(f(Integer(1), Rational(5, 2), Complex(1, 1))->toString(), "min(1, 5/2, 1 + I)");
+  EXPECT_EQ(f(Integer(1), Complex(1, 1), Rational(5, 2))->toString(), "min(1, 1 + I, 5/2)");
 
   EXPECT_EQ(f(Rational(-1), Variable("x"), Variable("y"), Integer(1))->toString(), "min(x, y, -1)");
 

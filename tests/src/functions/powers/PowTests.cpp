@@ -7,6 +7,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -75,7 +76,13 @@ TEST(PowTests, callTest) {
   EXPECT_EQ(f(Real("2.2"), Real("0.5"))->toString(),
             "1.48323969741913258974227948816014261219598086381950031974652465286876603686277");
 
-  EXPECT_EQ(f(Rational(-10), Rational("-1.5"))->toString(), "(-10)^(-3/2)");
+  EXPECT_EQ(f(Integer(-10), Rational(1, 2))->toString(), "I sqrt(10)");
+  EXPECT_EQ(f(Rational(-10), Real("-1.5"))->toString(), "(-10)^(-1.5)"); // TODO: solve this
+
+  EXPECT_EQ(f(Complex(1, 1), Integer(1))->toString(), "1 + I");
+  EXPECT_EQ(f(Complex(1, 1), Rational(1, 2))->toString(), "sqrt(1 + I)");
+  EXPECT_EQ(f(Complex(1, 1), Real("1.2"))->toString(), "(1 + I)^1.2");
+  EXPECT_EQ(f(Complex(1, 1), Complex(1, 1))->toString(), "(1 + I)^(1 + I)");
 
   EXPECT_EQ(f(Integer(0), Integer(-1))->toString(), "ComplexInf");
   EXPECT_EQ(f(Integer(0), Integer(-10))->toString(), "ComplexInf");

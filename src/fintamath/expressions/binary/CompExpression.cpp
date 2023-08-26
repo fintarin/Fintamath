@@ -55,6 +55,12 @@ ArgumentPtr CompExpression::preSimplify() const {
     if (!simplExpr->isSolution &&
         (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
 
+      if (*func != Eqv() && *func != Neqv() &&
+          (hasComplex(lhsChild) || hasComplex(rhsChild))) {
+
+        return simpl;
+      }
+
       if (!hasInfinity(lhsChild) && !hasInfinity(rhsChild)) {
         ArgumentPtr resLhs = subExpr(simplExpr->lhsChild, simplExpr->rhsChild);
         preSimplifyChild(resLhs);

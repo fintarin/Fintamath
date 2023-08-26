@@ -8,6 +8,7 @@ namespace fintamath {
 class Integer;
 class Rational;
 class Real;
+class Complex;
 
 class Pow : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
 public:
@@ -33,6 +34,8 @@ private:
   static std::unique_ptr<IMathObject> powSimplify(const Rational &lhs, const Rational &rhs);
 
   static std::unique_ptr<IMathObject> powSimplify(const Real &lhs, const Real &rhs);
+
+  static std::unique_ptr<IMathObject> powSimplify(const Complex &lhs, const Complex &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Pow, powExpr);

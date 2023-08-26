@@ -33,9 +33,9 @@ TEST(LnTests, callTest) {
             "-2.3025850929940456840179914546843642076011014886287729760333279009675726096773525");
   EXPECT_EQ(f(getE())->toString(), "1.0");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "ln(a)");
+  EXPECT_EQ(f(Integer(-10))->toString(), "ln(-10)");
 
-  EXPECT_THROW(f(Integer(-10)), UndefinedFunctionException);
+  EXPECT_EQ(f(Variable("a"))->toString(), "ln(a)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);

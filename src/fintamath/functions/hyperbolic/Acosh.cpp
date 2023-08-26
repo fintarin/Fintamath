@@ -1,6 +1,10 @@
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/literals/constants/I.hpp"
+#include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -8,15 +12,15 @@ namespace fintamath {
 std::unique_ptr<IMathObject> Acosh::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
-  // TODO! uncomment
-  // if (rhs == Integer(-1)) {
-  //   return I Pi;
-  // }
+  if (rhs == Integer(-1)) {
+    static const auto res = mulExpr(I(), Pi())->toMinimalObject();
+    return res->clone();
+  }
 
-  // TODO! uncomment
-  // if (rhs == Integer(0)) {
-  //   return I Pi / 2;
-  // }
+  if (rhs == Integer(0)) {
+    static const auto res = divExpr(mulExpr(I(), Pi()), Integer(2).clone())->toMinimalObject();
+    return res->clone();
+  }
 
   if (rhs == Integer(1)) {
     return Integer(0).clone();
