@@ -22,4 +22,6 @@ protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Deg, degExpr);
+
 }

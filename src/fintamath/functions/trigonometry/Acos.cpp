@@ -16,7 +16,7 @@ std::unique_ptr<IMathObject> Acos::call(const ArgumentsRefVector &argsVect) cons
   }
 
   if (rhs == Integer(0)) {
-    return makeExpr(Div(), Pi(), Integer(2))->toMinimalObject();
+    return divExpr(Pi(), Integer(2))->toMinimalObject();
   }
 
   if (rhs == Integer(1)) {

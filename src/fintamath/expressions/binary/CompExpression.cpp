@@ -36,7 +36,7 @@ std::string CompExpression::toString() const {
       if (is<Variable>(solLhs)) {
         sumChildren.erase(sumChildren.begin());
 
-        ArgumentPtr solRhs = makeExpr(Neg(), sumChildren);
+        ArgumentPtr solRhs = negExpr(sumChildren);
         simplifyChild(solRhs);
 
         if (!is<IExpression>(solRhs)) {
@@ -57,7 +57,7 @@ ArgumentPtr CompExpression::preSimplify() const {
         (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
 
       if (!hasInfinity(lhsChild) && !hasInfinity(rhsChild)) {
-        ArgumentPtr resLhs = makeExpr(Sub(), simplExpr->lhsChild, simplExpr->rhsChild);
+        ArgumentPtr resLhs = subExpr(simplExpr->lhsChild, simplExpr->rhsChild);
         preSimplifyChild(resLhs);
         return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
       }
@@ -170,10 +170,10 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
 
   if (dividerNum && hasVariable(lhsExpr)) {
     for (auto &child : dividendPolynom) {
-      child = makeExpr(Div(), child, dividerNum);
+      child = divExpr(child, dividerNum);
     }
 
-    ArgumentPtr newLhs = makeExpr(Add(), dividendPolynom);
+    ArgumentPtr newLhs = addExpr(dividendPolynom);
 
     if (*dividerNum < Integer(0)) {
       return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);

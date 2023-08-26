@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(InvTrigExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Asin(), Integer(0).clone())->getTypeId(), MathObjectTypeId(MathObjectType::InvTrigExpression));
+  EXPECT_EQ(asinExpr(Integer(0).clone())->getTypeId(), MathObjectTypeId(MathObjectType::InvTrigExpression));
 }

@@ -95,11 +95,11 @@ ArgumentPtr AndExpression::orSimplify(const IFunction & /*func*/, const Argument
 
   for (const auto &lhsSubChild : lhsChildren) {
     for (const auto &rhsSubChild : rhsChildren) {
-      resultVect.emplace_back(makeExpr(And(), lhsSubChild, rhsSubChild));
+      resultVect.emplace_back(andExpr(lhsSubChild, rhsSubChild));
     }
   }
 
-  ArgumentPtr res = makeExpr(Or(), resultVect);
+  ArgumentPtr res = orExpr(resultVect);
   return res;
 }
 

@@ -24,4 +24,6 @@ private:
   static std::unique_ptr<IMathObject> multiSignSimplify(const INumber &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Sign, signExpr);
+
 }

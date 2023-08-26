@@ -77,7 +77,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Integer &lhs, const Intege
 
   for (auto [root, factor] : rootFactors) {
     if (factor != 1) {
-      mulChildren.emplace_back(makeExpr(Root(), factor, root));
+      mulChildren.emplace_back(rootExpr(factor, root));
     }
   }
 
@@ -85,7 +85,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Integer &lhs, const Intege
     return mulChildren.front()->clone();
   }
 
-  return makeExpr(Mul(), mulChildren);
+  return mulExpr(mulChildren);
 }
 
 std::map<Integer, Integer> Root::roots(const Integer &lhs, const Integer &rhs) {
@@ -148,11 +148,11 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     }
 
     ArgumentPtr denominatorRes = Root()(lhs.denominator(), rhs);
-    return makeExpr(Div(), numeratorRes, denominatorRes);
+    return divExpr(numeratorRes, denominatorRes);
   }
 
   if (ArgumentPtr denominatorRes = perfectRoot(lhs.denominator(), rhs)) {
-    return makeExpr(Div(), Root()(lhs.numerator(), rhs), denominatorRes);
+    return divExpr(Root()(lhs.numerator(), rhs), denominatorRes);
   }
 
   ArgumentsPtrVector numeratorChildren;
@@ -189,14 +189,14 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
         denominator *= denominatorFactor;
 
         Integer numeratorChild = numeratorFactor * pow(denominatorFactor, root - 1);
-        numeratorChildren.emplace_back(makeExpr(Root(), numeratorChild, root));
+        numeratorChildren.emplace_back(rootExpr(numeratorChild, root));
 
         continue;
       }
     }
 
     if (numeratorFactor != 1) {
-      numeratorChildren.emplace_back(makeExpr(Root(), numeratorFactor, root));
+      numeratorChildren.emplace_back(rootExpr(numeratorFactor, root));
     }
   }
 
@@ -205,7 +205,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
       denominator *= denominatorFactor;
 
       Integer numeratorChild = pow(denominatorFactor, root - 1);
-      numeratorChildren.emplace_back(makeExpr(Root(), numeratorChild, root));
+      numeratorChildren.emplace_back(rootExpr(numeratorChild, root));
     }
   }
 
@@ -214,10 +214,10 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     numerator = numeratorChildren.front();
   }
   else {
-    numerator = makeExpr(Mul(), numeratorChildren);
+    numerator = mulExpr(numeratorChildren);
   }
 
-  return makeExpr(Div(), numerator, denominator.toMinimalObject());
+  return divExpr(numerator, denominator.toMinimalObject());
 }
 
 std::unique_ptr<IMathObject> Root::rootSimplify(const Real &lhs, const Integer &rhs) {

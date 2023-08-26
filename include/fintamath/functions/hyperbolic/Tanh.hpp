@@ -24,4 +24,6 @@ private:
   static std::unique_ptr<IMathObject> multiTanhSimplify(const INumber &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Tanh, tanhExpr);
+
 }

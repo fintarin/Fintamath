@@ -58,7 +58,7 @@ TEST(IExpressionTests, getChildrenTest) {
 }
 
 TEST(IExpressionTests, setChildrenTest) {
-  auto expr = cast<IExpression>(makeExpr(Factorial(), Variable("a"))->clone());
+  auto expr = cast<IExpression>(factorialExpr(Variable("a"))->clone());
 
   expr->setChildren({Variable("b").clone()});
   EXPECT_EQ(expr->toString(), "b!");
@@ -97,17 +97,9 @@ TEST(IExpressionTests, getTypeIdTest) {
 }
 
 TEST(IExpressionTests, arithmeticTest) {
-  EXPECT_THROW(cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())) +
-                   cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())),
-               InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())) -
-                   cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())),
-               InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())) *
-                   cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())),
-               InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())) /
-                   cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())),
-               InvalidInputException);
-  EXPECT_THROW(-cast<IExpression>(*makeExpr(Sin(), Integer(1).clone())), InvalidInputException);
+  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) + cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
+  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) - cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
+  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) * cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
+  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) / cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
+  EXPECT_THROW(-cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
 }

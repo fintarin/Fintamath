@@ -144,7 +144,7 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Sub>([](const ArgumentsPtrVector &args) {
       return std::make_unique<AddExpression>(
-          ArgumentsPtrVector{args.front(), makeExpr(Neg(), args.back())});
+          ArgumentsPtrVector{args.front(), negExpr(args.back())});
     });
 
     Expression::registerFunctionExpressionMaker<Mul, true>([](const ArgumentsPtrVector &args) {
@@ -216,39 +216,39 @@ struct ExpressionConfig {
       const ArgumentPtr &lhs = args.front();
       const ArgumentPtr &rhs = args.back();
 
-      ArgumentPtr notLhs = makeExpr(Not(), lhs);
+      ArgumentPtr notLhs = notExpr(lhs);
 
-      return makeExpr(Or(), notLhs, rhs);
+      return orExpr(notLhs, rhs);
     });
 
     Expression::registerFunctionExpressionMaker<Equiv>([](const ArgumentsPtrVector &args) {
       const ArgumentPtr &lhs = args.front();
       const ArgumentPtr &rhs = args.back();
 
-      ArgumentPtr notLhs = makeExpr(Not(), lhs);
-      ArgumentPtr notRhs = makeExpr(Not(), rhs);
+      ArgumentPtr notLhs = notExpr(lhs);
+      ArgumentPtr notRhs = notExpr(rhs);
 
-      ArgumentPtr lhsAndRhs = makeExpr(And(), lhs, rhs);
-      ArgumentPtr notLhsAndNotRhs = makeExpr(And(), notLhs, notRhs);
+      ArgumentPtr lhsAndRhs = andExpr(lhs, rhs);
+      ArgumentPtr notLhsAndNotRhs = andExpr(notLhs, notRhs);
 
-      return makeExpr(Or(), lhsAndRhs, notLhsAndNotRhs);
+      return orExpr(lhsAndRhs, notLhsAndNotRhs);
     });
 
     Expression::registerFunctionExpressionMaker<Nequiv>([](const ArgumentsPtrVector &args) {
       const ArgumentPtr &lhs = args.front();
       const ArgumentPtr &rhs = args.back();
 
-      ArgumentPtr notLhs = makeExpr(Not(), lhs);
-      ArgumentPtr notRhs = makeExpr(Not(), rhs);
+      ArgumentPtr notLhs = notExpr(lhs);
+      ArgumentPtr notRhs = notExpr(rhs);
 
-      ArgumentPtr notLhsAndRhs = makeExpr(And(), notLhs, rhs);
-      ArgumentPtr lhsAndNotRhs = makeExpr(And(), lhs, notRhs);
+      ArgumentPtr notLhsAndRhs = andExpr(notLhs, rhs);
+      ArgumentPtr lhsAndNotRhs = andExpr(lhs, notRhs);
 
-      return makeExpr(Or(), notLhsAndRhs, lhsAndNotRhs);
+      return orExpr(notLhsAndRhs, lhsAndNotRhs);
     });
 
     Expression::registerFunctionExpressionMaker<Neg>([](const ArgumentsPtrVector &args) {
-      return makeExpr(Mul(), std::make_shared<Integer>(-1), args.front());
+      return mulExpr(std::make_shared<Integer>(-1), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<UnaryPlus>([](const ArgumentsPtrVector &args) {
@@ -284,12 +284,12 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Exp>([](const ArgumentsPtrVector &args) {
-      return makeExpr(Pow(), E().clone(), args.front());
+      return powExpr(E().clone(), args.front());
     });
 
     Expression::registerFunctionExpressionMaker<Percent>([](const ArgumentsPtrVector &args) {
       static const auto PERCENT_VALUE = std::make_shared<Integer>(100);
-      return makeExpr(Div(), args.front(), PERCENT_VALUE);
+      return divExpr(args.front(), PERCENT_VALUE);
     });
 
     Expression::registerFunctionExpressionMaker<Min>([](const ArgumentsPtrVector &args) {
@@ -301,15 +301,15 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Sqrt>([](const ArgumentsPtrVector &args) {
-      return makeExpr(Pow(), args.front(), std::make_shared<Rational>(1, 2));
+      return powExpr(args.front(), std::make_shared<Rational>(1, 2));
     });
 
     Expression::registerFunctionExpressionMaker<Root>([](const ArgumentsPtrVector &args) {
       if (const auto num = cast<INumber>(args.back())) {
-        return makeExpr(Pow(), args.front(), Rational(1) / (*num));
+        return powExpr(args.front(), Rational(1) / (*num));
       }
 
-      return makeExpr(Pow(), args.front(), makeExpr(Div(), std::make_shared<Integer>(1), args.back()));
+      return powExpr(args.front(), divExpr(std::make_shared<Integer>(1), args.back()));
     });
 
     Expression::registerFunctionExpressionMaker<Sin>([](const ArgumentsPtrVector &args) {
@@ -378,7 +378,7 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Deg>([](const ArgumentsPtrVector &args) {
       static const ArgumentPtr deg1 = Deg()(Integer(1));
-      return makeExpr(Mul(), args.front(), deg1);
+      return mulExpr(args.front(), deg1);
     });
   }
 };

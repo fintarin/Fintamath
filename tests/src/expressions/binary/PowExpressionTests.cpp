@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(PowExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Pow(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::PowExpression));
+  EXPECT_EQ(powExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::PowExpression));
 }

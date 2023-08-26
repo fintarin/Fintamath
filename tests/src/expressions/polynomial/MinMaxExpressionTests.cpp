@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(MinMaxExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Min(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::MinMaxExpression));
+  EXPECT_EQ(minExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::MinMaxExpression));
 }

@@ -8,5 +8,5 @@
 using namespace fintamath;
 
 TEST(AddExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Add(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::AddExpression));
+  EXPECT_EQ(addExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::AddExpression));
 }

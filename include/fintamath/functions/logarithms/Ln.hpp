@@ -24,4 +24,6 @@ private:
   static std::unique_ptr<IMathObject> multiLnSimplify(const INumber &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Ln, lnExpr);
+
 }
