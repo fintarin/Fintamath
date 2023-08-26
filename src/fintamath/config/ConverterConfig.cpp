@@ -20,24 +20,24 @@ namespace {
 struct ConverterConfig {
   ConverterConfig() {
     Converter::add<Integer, Integer>([](const Integer & /*type*/, const Integer &value) {
-      return std::make_unique<Integer>(value);
+      return Integer(value).clone();
     });
 
     Converter::add<Rational, Rational>([](const Rational & /*type*/, const Rational &value) {
-      return std::make_unique<Rational>(value);
+      return Rational(value).clone();
     });
     Converter::add<Rational, Integer>([](const Rational & /*type*/, const Integer &value) {
-      return std::make_unique<Rational>(value);
+      return Rational(value).clone();
     });
 
     Converter::add<Real, Real>([](const Real & /*type*/, const Real &value) {
-      return std::make_unique<Real>(value);
+      return Real(value).clone();
     });
     Converter::add<Real, Integer>([](const Real & /*type*/, const Integer &value) {
-      return std::make_unique<Real>(value);
+      return Real(value).clone();
     });
     Converter::add<Real, Rational>([](const Real & /*type*/, const Rational &value) {
-      return std::make_unique<Real>(value);
+      return Real(value).clone();
     });
   }
 };

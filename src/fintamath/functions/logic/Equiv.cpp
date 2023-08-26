@@ -6,7 +6,7 @@ std::unique_ptr<IMathObject> Equiv::call(const ArgumentsRefVector &argsVect) con
   const auto &lhs = cast<Boolean>(argsVect.front().get());
   const auto &rhs = cast<Boolean>(argsVect.back().get());
 
-  return std::make_unique<Boolean>(lhs == rhs);
+  return Boolean(lhs == rhs).clone();
 }
 
 }

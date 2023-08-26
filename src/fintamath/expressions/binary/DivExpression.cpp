@@ -368,7 +368,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
 
 ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == *rhs) {
-    return std::make_shared<Integer>(1);
+    return Integer(1).clone();
   }
 
   auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhs);
@@ -415,7 +415,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const Argume
     return {powExprChildren[1], powExprChildren[0]};
   }
 
-  return {std::make_shared<Integer>(1), rhs};
+  return {Integer(1).clone(), rhs};
 }
 
 ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {

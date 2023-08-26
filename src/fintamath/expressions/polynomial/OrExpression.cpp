@@ -107,7 +107,7 @@ ArgumentPtr OrExpression::notSimplify(const IFunction & /*func*/, const Argument
       is<Not>(rhsExpr->getFunction()) &&
       *rhsExpr->getChildren().front() == *lhsChild) {
 
-    return std::make_shared<Boolean>(true);
+    return Boolean(true).clone();
   }
 
   return {};

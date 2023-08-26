@@ -28,10 +28,10 @@ ArgumentPtr DerivativeExpression::derivativeSimplify(const IFunction & /*func*/,
   ArgumentPtr res;
 
   if (is<INumber>(lhs) || is<IConstant>(lhs)) {
-    res = std::make_shared<Integer>(0);
+    res = Integer(0).clone();
   }
   else if (is<Variable>(lhs) && *lhs == *rhs) {
-    res = std::make_shared<Integer>(1);
+    res = Integer(1).clone();
   }
 
   return res;

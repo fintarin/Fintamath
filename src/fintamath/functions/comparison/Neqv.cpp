@@ -6,7 +6,7 @@ std::unique_ptr<IMathObject> Neqv::call(const ArgumentsRefVector &argsVect) cons
   const auto &lhs = argsVect.front().get();
   const auto &rhs = argsVect.back().get();
 
-  return std::make_unique<Boolean>(lhs != rhs);
+  return Boolean(lhs != rhs).clone();
 }
 
 }

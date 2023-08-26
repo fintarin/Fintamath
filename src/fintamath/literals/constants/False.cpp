@@ -3,7 +3,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> False::call() const {
-  return std::make_unique<Boolean>(false);
+  return Boolean(false).clone();
 }
 
 }

@@ -6,7 +6,7 @@ std::unique_ptr<IMathObject> Impl::call(const ArgumentsRefVector &argsVect) cons
   const auto &lhs = cast<Boolean>(argsVect.front().get());
   const auto &rhs = cast<Boolean>(argsVect.back().get());
 
-  return std::make_unique<Boolean>(!lhs || rhs);
+  return Boolean(!lhs || rhs).clone();
 }
 
 }

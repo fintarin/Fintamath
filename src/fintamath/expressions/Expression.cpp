@@ -17,7 +17,7 @@
 
 namespace fintamath {
 
-Expression::Expression() : child(std::make_shared<Integer>(0)) {
+Expression::Expression() : child(Integer(0).clone()) {
 }
 
 Expression::Expression(const std::string &str) : child(fintamath::parseExpr(str)) {
@@ -39,7 +39,7 @@ Expression::Expression(const ArgumentPtr &obj) {
 Expression::Expression(const IMathObject &obj) : Expression(obj.toMinimalObject()) {
 }
 
-Expression::Expression(int64_t val) : child(std::make_shared<Integer>(val)) {
+Expression::Expression(int64_t val) : child(Integer(val).clone()) {
 }
 
 std::string Expression::toString() const {
@@ -330,7 +330,7 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
 }
 
 void Expression::insertDelimiters(TermVector &terms) {
-  ArgumentPtr delimiter = std::make_unique<Mul>();
+  static const ArgumentPtr delimiter = Mul().clone();
 
   for (size_t i = 1; i < terms.size(); i++) {
     if (!getTermValueIf(*terms[i - 1], isBinaryOperator) &&
@@ -485,7 +485,7 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
 
 void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
   if (const auto realArg = cast<Real>(arg)) {
-    arg = std::make_shared<Real>(realArg->precise(precision));
+    arg = realArg->precise(precision).clone();
   }
   else if (const auto exprArg = cast<IExpression>(arg)) {
     ArgumentsPtrVector newChildren = exprArg->getChildren();
@@ -514,7 +514,7 @@ std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrV
     return expr;
   }
 
-  return std::make_unique<FunctionExpression>(func, args);
+  return FunctionExpression(func, args).clone();
 }
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args) {

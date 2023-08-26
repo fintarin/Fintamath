@@ -60,7 +60,7 @@ ArgumentPtr AndExpression::notSimplify(const IFunction & /*func*/, const Argumen
       is<Not>(rhsExpr->getFunction()) &&
       *rhsExpr->getChildren().front() == *lhsChild) {
 
-    return std::make_shared<Boolean>(false);
+    return Boolean(false).clone();
   }
 
   return {};

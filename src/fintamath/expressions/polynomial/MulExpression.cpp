@@ -87,7 +87,7 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
     return {powExprChildren[1], powExprChildren[0]};
   }
 
-  return {std::make_shared<Integer>(1), rhsChild};
+  return {Integer(1).clone(), rhsChild};
 }
 
 ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,

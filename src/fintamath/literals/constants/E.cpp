@@ -5,7 +5,7 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> E::call() const {
-  return std::make_unique<Real>(getE());
+  return getE().clone();
 }
 
 }

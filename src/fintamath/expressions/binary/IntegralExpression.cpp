@@ -35,7 +35,7 @@ ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, con
     res = mulExpr(lhs, rhs);
   }
   else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
-    res = divExpr(powExpr(lhs, std::make_shared<Integer>(2)), std::make_shared<Integer>(2));
+    res = divExpr(powExpr(lhs, Integer(2).clone()), Integer(2).clone());
   }
 
   // TODO: res + integral constant
