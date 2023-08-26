@@ -91,6 +91,10 @@ TEST(PowTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(PowTests, exprTest) {
+  EXPECT_EQ(powExpr(Integer(10), Integer(10))->toString(), "10^10");
+}
+
 TEST(PowTests, doArgsMatchTest) {
   Integer a;
 

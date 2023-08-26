@@ -37,6 +37,10 @@ TEST(LgTests, callTest) {
   EXPECT_THROW(f(Integer(10), Integer(10), Integer(10)), InvalidInputFunctionException);
 }
 
+TEST(LgTests, exprTest) {
+  EXPECT_EQ(lgExpr(Integer(10))->toString(), "log(10, 10)");
+}
+
 TEST(LgTests, doArgsMatchTest) {
   Integer a;
 

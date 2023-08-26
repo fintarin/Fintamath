@@ -42,6 +42,10 @@ TEST(AcosTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(AcosTests, exprTest) {
+  EXPECT_EQ(acosExpr(Integer(10))->toString(), "acos(10)");
+}
+
 TEST(AcosTests, doArgsMatchTest) {
   Integer a;
 

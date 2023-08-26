@@ -39,6 +39,10 @@ TEST(NeqvTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(NeqvTests, exprTest) {
+  EXPECT_EQ(neqvExpr(Integer(10), Integer(10))->toString(), "10 != 10");
+}
+
 TEST(NeqvTests, doArgsMatchTest) {
   Integer a;
 

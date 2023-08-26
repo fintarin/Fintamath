@@ -40,6 +40,10 @@ TEST(AbsTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(AbsTests, exprTest) {
+  EXPECT_EQ(absExpr(Integer(10))->toString(), "abs(10)");
+}
+
 TEST(AbsTests, doArgsMatchTest) {
   Integer a;
 

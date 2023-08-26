@@ -42,6 +42,10 @@ TEST(DivTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(DivTests, exprTest) {
+  EXPECT_EQ(divExpr(Integer(10), Integer(10))->toString(), "10/10");
+}
+
 TEST(DivTests, doArgsMatchTest) {
   Integer a;
 

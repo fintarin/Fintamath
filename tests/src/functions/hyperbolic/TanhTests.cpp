@@ -41,6 +41,10 @@ TEST(TanhTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(TanhTests, exprTest) {
+  EXPECT_EQ(tanhExpr(Integer(10))->toString(), "tanh(10)");
+}
+
 TEST(TanhTests, doArgsMatchTest) {
   Integer a;
 

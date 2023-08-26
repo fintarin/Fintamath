@@ -68,6 +68,10 @@ TEST(FactorialTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(FactorialTests, exprTest) {
+  EXPECT_EQ(factorialExpr(Integer(10))->toString(), "10!");
+}
+
 TEST(FactorialTests, call2Test) {
   EXPECT_EQ(f2(Integer(0))->toString(), "1");
   EXPECT_EQ(f2(Integer(1))->toString(), "1");

@@ -40,6 +40,10 @@ TEST(IndexTests, callTest) {
   EXPECT_THROW(f(Expression("a"), Expression("a>1"))->toString(), InvalidInputException);
 }
 
+TEST(IndexTests, exprTest) {
+  EXPECT_EQ(indexExpr(Variable("a"), Integer(1))->toString(), "a_1");
+}
+
 TEST(IndexTests, doArgsMatchTest) {
   Variable a("a");
   Integer b(1);

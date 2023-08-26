@@ -39,6 +39,10 @@ TEST(MinTests, callTest) {
   EXPECT_THROW(f(Boolean(), Integer(), Integer()), InvalidInputFunctionException);
 }
 
+TEST(MinTests, exprTest) {
+  EXPECT_EQ(minExpr(Variable("a"), Variable("a"))->toString(), "min(a, a)");
+}
+
 TEST(MinTests, doArgsMatchTest) {
   EXPECT_FALSE(f.doArgsMatch({}));
 }

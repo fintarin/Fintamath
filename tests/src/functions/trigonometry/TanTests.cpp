@@ -46,6 +46,10 @@ TEST(TanTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(TanTests, exprTest) {
+  EXPECT_EQ(tanExpr(Integer(10))->toString(), "tan(10)");
+}
+
 TEST(TanTests, doArgsMatchTest) {
   Integer a;
 

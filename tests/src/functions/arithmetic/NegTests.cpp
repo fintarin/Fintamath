@@ -35,6 +35,10 @@ TEST(NegTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(NegTests, exprTest) {
+  EXPECT_EQ(negExpr(Integer(10))->toString(), "-10");
+}
+
 TEST(NegTests, doArgsMatchTest) {
   Integer a;
 

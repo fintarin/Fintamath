@@ -37,6 +37,10 @@ TEST(DegTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(DegTests, degTest) {
+  EXPECT_EQ(degExpr(Integer(10))->toString(), "10*1/180 Pi");
+}
+
 TEST(DegTests, doArgsMatchTest) {
   Integer a;
 

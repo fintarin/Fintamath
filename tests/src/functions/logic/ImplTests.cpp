@@ -36,6 +36,10 @@ TEST(ImplTests, callTest) {
   EXPECT_THROW(f(Boolean(true), Boolean(true), Boolean(true)), InvalidInputFunctionException);
 }
 
+TEST(ImplTests, exprTest) {
+  EXPECT_EQ(implExpr(Boolean(true), Boolean(false))->toString(), "~True | False");
+}
+
 TEST(ImplTests, doArgsMatchTest) {
   Boolean a;
 

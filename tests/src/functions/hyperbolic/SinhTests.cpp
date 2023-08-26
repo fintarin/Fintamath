@@ -40,6 +40,10 @@ TEST(SinhTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(SinhTests, exprTest) {
+  EXPECT_EQ(sinhExpr(Integer(10))->toString(), "sinh(10)");
+}
+
 TEST(SinhTests, doArgsMatchTest) {
   Integer a;
 

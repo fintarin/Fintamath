@@ -40,6 +40,10 @@ TEST(AsinhTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(AsinhTests, exprTest) {
+  EXPECT_EQ(asinhExpr(Integer(10))->toString(), "asinh(10)");
+}
+
 TEST(AsinhTests, doArgsMatchTest) {
   Integer a;
 

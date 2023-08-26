@@ -43,6 +43,10 @@ TEST(CosTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(CosTests, exprTest) {
+  EXPECT_EQ(cosExpr(Integer(10))->toString(), "cos(10)");
+}
+
 TEST(CosTests, doArgsMatchTest) {
   Integer a;
 

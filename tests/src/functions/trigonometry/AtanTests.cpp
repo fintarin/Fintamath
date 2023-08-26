@@ -43,6 +43,10 @@ TEST(AtanTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(AtanTests, exprTest) {
+  EXPECT_EQ(atanExpr(Integer(10))->toString(), "atan(10)");
+}
+
 TEST(AtanTests, doArgsMatchTest) {
   Integer a;
 

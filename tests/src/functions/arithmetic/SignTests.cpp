@@ -31,6 +31,10 @@ TEST(SignTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(SignTests, exprTest) {
+  EXPECT_EQ(signExpr(Integer(10))->toString(), "sign(10)");
+}
+
 TEST(SignTests, doArgsMatchTest) {
   Integer a;
 

@@ -40,6 +40,10 @@ TEST(CoshTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(CoshTests, exprTest) {
+  EXPECT_EQ(coshExpr(Integer(10))->toString(), "cosh(10)");
+}
+
 TEST(CoshTests, doArgsMatchTest) {
   Integer a;
 

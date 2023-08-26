@@ -39,6 +39,10 @@ TEST(MoreEqvTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(MoreEqvTests, exprTest) {
+  EXPECT_EQ(moreEqvExpr(Integer(10), Integer(10))->toString(), "10 >= 10");
+}
+
 TEST(MoreEqvTests, doArgsMatchTest) {
   Integer a;
 
