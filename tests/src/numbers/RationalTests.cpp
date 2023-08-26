@@ -493,6 +493,14 @@ TEST(RationalTests, signTests) {
   EXPECT_EQ(Rational(2).sign(), 1);
 }
 
+TEST(RationalTests, isPreciseTests) {
+  EXPECT_TRUE(Rational(1, 2).isPrecise());
+}
+
+TEST(RationalTests, isComplexTests) {
+  EXPECT_FALSE(Rational(1, 2).isComplex());
+}
+
 TEST(RationalTests, equalsTest) {
   Rational a;
   Integer b;

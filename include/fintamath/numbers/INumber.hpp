@@ -14,6 +14,10 @@ public:
     return true;
   }
 
+  virtual bool isComplex() const {
+    return false;
+  }
+
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
   static void registerType() {
     Parser::registerType<T>(getParser());

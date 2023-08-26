@@ -818,6 +818,14 @@ TEST(IntegerTests, intOperatorTest) {
   EXPECT_EQ(int64_t(Integer("-100000000000000000000000000000000000000000000000000")) + 1, -9223372036854775807);
 }
 
+TEST(IntegerTests, isPreciseTests) {
+  EXPECT_TRUE(Integer(1).isPrecise());
+}
+
+TEST(IntegerTests, isComplexTests) {
+  EXPECT_FALSE(Integer(1).isComplex());
+}
+
 TEST(IntegerTests, equalsTest) {
   Integer a;
   Rational b;
