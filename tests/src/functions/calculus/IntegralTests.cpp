@@ -37,6 +37,10 @@ TEST(IntegralTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputException);
 }
 
+TEST(IntegralTests, exprTest) {
+  EXPECT_EQ(integralExpr(Variable("a"), Variable("a"))->toString(), "integral(a, a)");
+}
+
 TEST(IntegralTests, doArgsMatchTest) {
   Integer a;
 

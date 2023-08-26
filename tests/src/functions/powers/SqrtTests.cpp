@@ -58,6 +58,10 @@ TEST(SqrtTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(SqrtTests, exprTest) {
+  EXPECT_EQ(sqrtExpr(Integer(10))->toString(), "sqrt(10)");
+}
+
 TEST(SqrtTests, doArgsMatchTest) {
   Integer a;
 

@@ -46,6 +46,10 @@ TEST(CotTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(CotTests, exprTest) {
+  EXPECT_EQ(cotExpr(Integer(10))->toString(), "cot(10)");
+}
+
 TEST(CotTests, doArgsMatchTest) {
   Integer a;
 

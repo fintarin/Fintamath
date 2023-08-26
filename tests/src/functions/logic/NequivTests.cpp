@@ -36,6 +36,10 @@ TEST(NequivTests, callTest) {
   EXPECT_THROW(f(Boolean(true), Boolean(true), Boolean(true)), InvalidInputFunctionException);
 }
 
+TEST(NequivTests, exprTest) {
+  EXPECT_EQ(nequivExpr(Boolean(true), Boolean(false))->toString(), "(~True & False) | (True & ~False)");
+}
+
 TEST(NequivTests, doArgsMatchTest) {
   Boolean a;
 

@@ -36,6 +36,10 @@ TEST(OrTests, callTest) {
   EXPECT_THROW(f(Boolean(true), Boolean(true), Boolean(true)), InvalidInputFunctionException);
 }
 
+TEST(OrTests, exprTest) {
+  EXPECT_EQ(orExpr(Boolean(true), Boolean(false))->toString(), "True | False");
+}
+
 TEST(OrTests, doArgsMatchTest) {
   Boolean a;
 

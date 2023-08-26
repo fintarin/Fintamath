@@ -43,6 +43,10 @@ TEST(SinTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(SinTests, exprTest) {
+  EXPECT_EQ(sinExpr(Integer(10))->toString(), "sin(10)");
+}
+
 TEST(SinTests, doArgsMatchTest) {
   Integer a;
 

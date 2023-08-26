@@ -34,6 +34,10 @@ TEST(NotTests, callTest) {
   EXPECT_THROW(f(Boolean(true), Boolean(true), Boolean(true)), InvalidInputFunctionException);
 }
 
+TEST(NotTests, exprTest) {
+  EXPECT_EQ(notExpr(Boolean(true))->toString(), "~True");
+}
+
 TEST(NotTests, doArgsMatchTest) {
   Boolean a;
 

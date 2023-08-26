@@ -76,6 +76,10 @@ TEST(LogTests, callTest) {
   EXPECT_THROW(f(Integer(10), Integer(10), Integer(10)), InvalidInputFunctionException);
 }
 
+TEST(LogTests, exprTest) {
+  EXPECT_EQ(logExpr(Integer(10), Integer(10))->toString(), "log(10, 10)");
+}
+
 TEST(LogTests, doArgsMatchTest) {
   Integer a;
 

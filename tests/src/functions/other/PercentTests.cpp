@@ -36,6 +36,10 @@ TEST(PercentTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(PercentTests, degTest) {
+  EXPECT_EQ(percentExpr(Integer(10))->toString(), "10/100");
+}
+
 TEST(PercentTests, doArgsMatchTest) {
   Integer a;
 

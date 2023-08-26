@@ -42,6 +42,10 @@ TEST(AsinTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(AsinTests, exprTest) {
+  EXPECT_EQ(asinExpr(Integer(10))->toString(), "asin(10)");
+}
+
 TEST(AsinTests, doArgsMatchTest) {
   Integer a;
 

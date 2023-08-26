@@ -37,6 +37,10 @@ TEST(DerivativeTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputException);
 }
 
+TEST(DerivativeTests, exprTest) {
+  EXPECT_EQ(derivativeExpr(Variable("a"), Variable("a"))->toString(), "derivative(a, a)");
+}
+
 TEST(DerivativeTests, doArgsMatchTest) {
   Integer a;
 

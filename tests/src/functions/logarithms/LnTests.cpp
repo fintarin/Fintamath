@@ -41,6 +41,10 @@ TEST(LnTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(LnTests, exprTest) {
+  EXPECT_EQ(lnExpr(Integer(10))->toString(), "ln(10)");
+}
+
 TEST(LnTests, doArgsMatchTest) {
   Integer a;
 

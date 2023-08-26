@@ -42,6 +42,10 @@ TEST(AcothTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(AcothTests, exprTest) {
+  EXPECT_EQ(acothExpr(Integer(10))->toString(), "acoth(10)");
+}
+
 TEST(AcothTests, doArgsMatchTest) {
   Integer a;
 

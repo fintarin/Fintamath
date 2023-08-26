@@ -30,6 +30,10 @@ TEST(ExpTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(ExpTests, exprTest) {
+  EXPECT_EQ(expExpr(Integer(10))->toString(), "E^10");
+}
+
 TEST(ExpTests, doArgsMatchTest) {
   Integer a;
 

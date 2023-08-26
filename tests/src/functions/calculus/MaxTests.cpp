@@ -39,6 +39,10 @@ TEST(MaxTests, callTest) {
   EXPECT_THROW(f(Boolean(), Integer(), Integer()), InvalidInputFunctionException);
 }
 
+TEST(MaxTests, exprTest) {
+  EXPECT_EQ(maxExpr(Variable("a"), Variable("a"))->toString(), "max(a, a)");
+}
+
 TEST(MaxTests, doArgsMatchTest) {
   EXPECT_FALSE(f.doArgsMatch({}));
 }

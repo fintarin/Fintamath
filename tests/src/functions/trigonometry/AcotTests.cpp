@@ -44,6 +44,10 @@ TEST(AcotTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
+TEST(AcotTests, exprTest) {
+  EXPECT_EQ(acotExpr(Integer(10))->toString(), "acot(10)");
+}
+
 TEST(AcotTests, doArgsMatchTest) {
   Integer a;
 
