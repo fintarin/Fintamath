@@ -45,8 +45,8 @@ ArgumentPtr IUnaryExpression::preSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl->child);
 
-  if (is<Undefined>(simpl->child)) {
-    return Undefined().clone();
+  if (auto res = simplifyUndefined(*simpl->func, simpl->child)) {
+    return res;
   }
 
   ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify());
@@ -63,8 +63,8 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   postSimplifyChild(simpl->child);
 
-  if (is<Undefined>(simpl->child)) {
-    return Undefined().clone();
+  if (auto res = simplifyUndefined(*simpl->func, simpl->child)) {
+    return res;
   }
 
   if (ArgumentPtr res = callFunction(*simpl->func, {simpl->child})) {

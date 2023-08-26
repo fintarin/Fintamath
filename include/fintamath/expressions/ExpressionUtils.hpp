@@ -5,6 +5,7 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 
 namespace fintamath {
 
@@ -33,5 +34,21 @@ bool isNegated(const ArgumentPtr &arg);
 std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args);
 
 ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args);
+
+template <typename... Args>
+ArgumentPtr simplifyUndefined(const IFunction &func, const Args &...args) {
+  if ((is<Undefined>(args) || ...)) {
+    static const size_t undefinedReturnTypeId = Undefined().getReturnTypeId();
+    const size_t funcReturnTypeId = func.getReturnTypeId();
+
+    if (!isBaseOf(undefinedReturnTypeId, funcReturnTypeId) && !isBaseOf(funcReturnTypeId, undefinedReturnTypeId)) {
+      throw InvalidInputFunctionException(func.toString(), {(args->toString(), ...)});
+    }
+
+    return Undefined().clone();
+  }
+
+  return {};
+}
 
 }

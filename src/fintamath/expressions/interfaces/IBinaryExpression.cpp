@@ -26,8 +26,8 @@ ArgumentPtr IBinaryExpression::preSimplify() const {
   preSimplifyChild(simpl->lhsChild);
   preSimplifyChild(simpl->rhsChild);
 
-  if (is<Undefined>(simpl->lhsChild) || is<Undefined>(simpl->rhsChild)) {
-    return Undefined().clone();
+  if (auto res = simplifyUndefined(*simpl->func, simpl->lhsChild, simpl->rhsChild)) {
+    return res;
   }
 
   ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify());
@@ -45,8 +45,8 @@ ArgumentPtr IBinaryExpression::postSimplify() const {
   postSimplifyChild(simpl->lhsChild);
   postSimplifyChild(simpl->rhsChild);
 
-  if (is<Undefined>(simpl->lhsChild) || is<Undefined>(simpl->rhsChild)) {
-    return Undefined().clone();
+  if (auto res = simplifyUndefined(*simpl->func, simpl->lhsChild, simpl->rhsChild)) {
+    return res;
   }
 
   if (ArgumentPtr res = callFunction(*simpl->func, {simpl->lhsChild, simpl->rhsChild})) {

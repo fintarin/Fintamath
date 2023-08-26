@@ -1043,6 +1043,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ComplexInf > x").toString(), "ComplexInf > x");
   EXPECT_EQ(Expression("ComplexInf <= x").toString(), "ComplexInf <= x");
   EXPECT_EQ(Expression("ComplexInf >= x").toString(), "ComplexInf >= x");
+  EXPECT_EQ(Expression("ComplexInf = ComplexInf").toString(), "ComplexInf = ComplexInf");
+  EXPECT_EQ(Expression("ComplexInf = Inf").toString(), "ComplexInf = Inf");
+  EXPECT_EQ(Expression("ComplexInf = -Inf").toString(), "ComplexInf = -Inf");
+  EXPECT_EQ(Expression("Inf = ComplexInf").toString(), "Inf = ComplexInf");
+  EXPECT_EQ(Expression("-Inf = ComplexInf").toString(), "-Inf = ComplexInf");
   EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% = Inf").toString(), "True");
   EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% != Inf").toString(), "False");
   EXPECT_EQ(Expression("Inf * Inf + Inf - Inf * -1% < Inf").toString(), "False");
@@ -1084,9 +1089,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1^Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("1^-Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("1^ComplexInf").toString(), "Undefined");
-  EXPECT_EQ(Expression("Inf - Inf = 0").toString(), "Undefined");
-  EXPECT_EQ(Expression("Inf - Inf = 0 | a").toString(), "Undefined");
-  EXPECT_EQ(Expression("0/0 = 0/0").toString(), "Undefined");
   EXPECT_EQ(Expression("sin(0/0)").toString(), "Undefined");
   EXPECT_EQ(Expression("1 + 0^0").toString(), "Undefined");
   EXPECT_EQ(Expression("1 + sin(asin(0^0)) + x").toString(), "Undefined");
@@ -1094,11 +1096,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("0^((2^2 - 4)^0)").toString(), "Undefined");
   EXPECT_EQ(Expression("-((2^2 - 4)^0)").toString(), "Undefined");
   EXPECT_EQ(Expression("sin(-((2^2 - 4)^0))").toString(), "Undefined");
-  EXPECT_EQ(Expression("ComplexInf = ComplexInf").toString(), "Undefined");
-  EXPECT_EQ(Expression("ComplexInf = Inf").toString(), "Undefined");
-  EXPECT_EQ(Expression("ComplexInf = -Inf").toString(), "Undefined");
-  EXPECT_EQ(Expression("Inf = ComplexInf").toString(), "Undefined");
-  EXPECT_EQ(Expression("-Inf = ComplexInf").toString(), "Undefined");
   EXPECT_EQ(Expression("log(1, 1)").toString(), "Undefined");
   EXPECT_EQ(Expression("log(0, 0)").toString(), "Undefined");
   EXPECT_EQ(Expression("log(Inf, Inf)").toString(), "Undefined");
@@ -1126,7 +1123,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("Undefined^1").toString(), "Undefined");
   EXPECT_EQ(Expression("Undefined^0").toString(), "Undefined");
   EXPECT_EQ(Expression("sin(Undefined)").toString(), "Undefined");
-  EXPECT_EQ(Expression("Undefined = Undefined").toString(), "Undefined");
 }
 
 TEST(ExpressionTests, stringConstructorLargeTest) {
@@ -1386,6 +1382,10 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("~Inf"), InvalidInputException);
   EXPECT_THROW(Expression("~Undefined"), InvalidInputException);
   EXPECT_THROW(Expression("a | Undefined"), InvalidInputException);
+  EXPECT_THROW(Expression("Inf - Inf = 0"), InvalidInputException);
+  EXPECT_THROW(Expression("Inf - Inf = 0 | a"), InvalidInputException);
+  EXPECT_THROW(Expression("0/0 = 0/0"), InvalidInputException);
+  EXPECT_THROW(Expression("Undefined = Undefined"),InvalidInputException);
 
   EXPECT_THROW(Expression("min()"), InvalidInputException);
   EXPECT_THROW(Expression("min(True, False)"), InvalidInputException);

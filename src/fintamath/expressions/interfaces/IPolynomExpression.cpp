@@ -95,8 +95,8 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
     const ArgumentPtr &lhs = children[i - 1];
     const ArgumentPtr &rhs = children[i];
 
-    if (is<Undefined>(lhs) || is<Undefined>(rhs)) {
-      children = {Undefined().clone()};
+    if (auto res = simplifyUndefined(*func, lhs, rhs)) {
+      children = {res};
       break;
     }
 

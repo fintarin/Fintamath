@@ -17,7 +17,6 @@
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
-#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
@@ -103,13 +102,13 @@ ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentP
   if (is<ComplexInf>(lhs) &&
       (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
 
-    return Undefined().clone();
+    return {};
   }
 
   if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
       is<ComplexInf>(rhs)) {
 
-    return Undefined().clone();
+    return {};
   }
 
   if ((is<Inf>(lhs) || is<NegInf>(lhs)) &&
