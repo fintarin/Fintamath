@@ -106,6 +106,7 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,
 
   if (*lhsChild == Integer(0) &&
       (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild))) {
+
     return Undefined().clone();
   }
 
@@ -118,14 +119,21 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,
   }
 
   if (const auto lhsNum = cast<INumber>(lhsChild)) {
-    bool isNegated = *lhsNum < Integer(0);
+    if (!lhsNum->isComplex()) {
+      bool isNegated = *lhsNum < Integer(0);
 
-    if (is<Inf>(rhsChild)) {
-      return isNegated ? NegInf().clone() : rhsChild;
+      if (is<Inf>(rhsChild)) {
+        return isNegated ? NegInf().clone() : rhsChild;
+      }
+
+      if (is<NegInf>(rhsChild)) {
+        return isNegated ? Inf().clone() : rhsChild;
+      }
     }
-
-    if (is<NegInf>(rhsChild)) {
-      return isNegated ? Inf().clone() : rhsChild;
+    else {
+      if (is<NegInf>(rhsChild)) {
+        return mulExpr(negExpr(lhsNum), Inf().clone());
+      }
     }
   }
 

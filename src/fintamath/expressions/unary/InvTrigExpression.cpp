@@ -8,7 +8,6 @@
 #include "fintamath/functions/trigonometry/Acot.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
-#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
