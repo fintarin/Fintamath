@@ -878,6 +878,14 @@ TEST(RealTests, signTests) {
   EXPECT_EQ(Real(2).sign(), 1);
 }
 
+TEST(RealTests, isPreciseTests) {
+  EXPECT_FALSE(Real(2).isPrecise());
+}
+
+TEST(RealTests, isComplexTests) {
+  EXPECT_FALSE(Real(2).isComplex());
+}
+
 TEST(RealTests, equalsTest) {
   Real a;
   Integer b;

@@ -49,6 +49,7 @@ enum class MathObjectType : MathObjectTypeId {
 
   Rational,
   Real,
+  Complex,
 
   IInteger = 8000,
 
@@ -69,6 +70,7 @@ enum class MathObjectType : MathObjectTypeId {
   NegInf,
   ComplexInf,
   Undefined,
+  I,
 
   IFunction = 11000,
 

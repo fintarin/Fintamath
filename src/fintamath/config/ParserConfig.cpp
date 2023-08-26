@@ -65,6 +65,7 @@
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
+#include "fintamath/literals/constants/I.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
@@ -157,7 +158,6 @@ struct ParserConfig {
 
     INumber::registerType<IInteger>(&IInteger::parse);
     INumber::registerType<Rational>();
-    INumber::registerType<Real>();
 
     IInteger::registerType<Integer>();
 
@@ -169,6 +169,7 @@ struct ParserConfig {
     IConstant::registerType<Pi>();
     IConstant::registerType<True>();
     IConstant::registerType<False>();
+    IConstant::registerType<I>();
     IConstant::registerType<Inf>();
     IConstant::registerType<NegInf>();
     IConstant::registerType<ComplexInf>();

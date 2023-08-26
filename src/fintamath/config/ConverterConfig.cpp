@@ -1,5 +1,6 @@
 #include "fintamath/core/Converter.hpp"
 
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -38,6 +39,19 @@ struct ConverterConfig {
     });
     Converter::add<Real, Rational>([](const Real & /*type*/, const Rational &value) {
       return Real(value).clone();
+    });
+
+    Converter::add<Complex, Complex>([](const Complex & /*type*/, const Complex &value) {
+      return std::make_unique<Complex>(value);
+    });
+    Converter::add<Complex, Integer>([](const Complex & /*type*/, const Integer &value) {
+      return std::make_unique<Complex>(value);
+    });
+    Converter::add<Complex, Rational>([](const Complex & /*type*/, const Rational &value) {
+      return std::make_unique<Complex>(value);
+    });
+    Converter::add<Complex, Real>([](const Complex & /*type*/, const Real &value) {
+      return std::make_unique<Complex>(value);
     });
   }
 };
