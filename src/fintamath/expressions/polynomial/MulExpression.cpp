@@ -55,7 +55,17 @@ std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, con
     return Neg().toString();
   }
 
-  return (prevChild && *prevChild != Integer(-1) ? " " : "") + inChild->toString();
+  std::string operStr;
+  if (prevChild && *prevChild != Integer(-1)) {
+    if (is<INumber>(inChild) && is<INumber>(prevChild)) {
+      operStr = "*";
+    }
+    else {
+      operStr = " ";
+    }
+  }
+
+  return operStr + inChild->toString();
 }
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {
