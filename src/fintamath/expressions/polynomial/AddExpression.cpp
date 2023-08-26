@@ -22,8 +22,8 @@ AddExpression::AddExpression(const ArgumentsPtrVector &inChildren)
     : IPolynomExpressionCRTP(Add(), inChildren) {
 }
 
-std::string AddExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  std::string result = operatorChildToString(Add(), inChild);
+std::string AddExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+  std::string result = operatorChildToString(oper, inChild);
   bool isChildNegated = false;
 
   if (result.size() > 1 &&
@@ -39,7 +39,7 @@ std::string AddExpression::childToString(const ArgumentPtr &inChild, const Argum
     funcStr = Sub().toString();
   }
   else if (prevChild) {
-    funcStr = Add().toString();
+    funcStr = oper.toString();
   }
 
   if (!funcStr.empty()) {

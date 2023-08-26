@@ -43,7 +43,7 @@ protected:
 
   virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
 
-  virtual std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
+  virtual std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
   /**
    * @brief

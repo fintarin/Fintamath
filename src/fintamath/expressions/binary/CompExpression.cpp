@@ -55,7 +55,8 @@ ArgumentPtr CompExpression::preSimplify() const {
     if (!simplExpr->isSolution &&
         (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
 
-      if (*func != Eqv() && *func != Neqv() &&
+      if (*func != Eqv() &&
+          *func != Neqv() &&
           (hasComplex(lhsChild) || hasComplex(rhsChild))) {
 
         return simpl;
@@ -150,6 +151,13 @@ ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr
 ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   auto lhsExpr = cast<IExpression>(lhs);
   if (!lhsExpr) {
+    return {};
+  }
+
+  if (func != Eqv() &&
+      func != Neqv() &&
+      (hasComplex(lhs) || hasComplex(rhs))) {
+
     return {};
   }
 
