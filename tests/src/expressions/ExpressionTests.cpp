@@ -952,10 +952,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("asin(2)").toString(), "asin(2)");
   EXPECT_EQ(Expression("acos(2)").toString(), "acos(2)");
 
-  // TODO! implement abs
-  EXPECT_EQ(Expression("abs(I)").toString(), "abs(I)");
-  EXPECT_EQ(Expression("abs(I + 1)").toString(), "abs(1 + I)");
-  EXPECT_EQ(Expression("abs(3I + 2)").toString(), "abs(2 + 3 I)");
+  EXPECT_EQ(Expression("abs(I)").toString(), "1");
+  EXPECT_EQ(Expression("abs(I + 1)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("abs(3I + 2)").toString(), "sqrt(13)");
 
   // TODO: implement
   EXPECT_EQ(Expression("sin(I + 1)").toString(), "sin(1 + I)");
