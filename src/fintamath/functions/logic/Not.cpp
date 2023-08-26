@@ -5,7 +5,7 @@ namespace fintamath {
 std::unique_ptr<IMathObject> Not::call(const ArgumentsRefVector &argsVect) const {
   const auto &rhs = cast<Boolean>(argsVect.front().get());
 
-  return std::make_unique<Boolean>(!rhs);
+  return Boolean(!rhs).clone();
 }
 
 }

@@ -16,15 +16,15 @@ std::unique_ptr<IMathObject> Sign::multiSignSimplify(const INumber &rhs) {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiSign;
 
     outMultiSign.add<Integer>([](const Integer &inRhs) {
-      return std::make_unique<Integer>(inRhs.sign());
+      return Integer(inRhs.sign()).clone();
     });
 
     outMultiSign.add<Rational>([](const Rational &inRhs) {
-      return std::make_unique<Integer>(inRhs.sign());
+      return Integer(inRhs.sign()).clone();
     });
 
     outMultiSign.add<Real>([](const Real &inRhs) {
-      return std::make_unique<Integer>(inRhs.sign());
+      return Integer(inRhs.sign()).clone();
     });
 
     return outMultiSign;

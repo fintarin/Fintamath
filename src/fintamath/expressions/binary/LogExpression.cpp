@@ -98,7 +98,7 @@ ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const Argum
 
 ArgumentPtr LogExpression::equalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == *rhs) {
-    return std::make_shared<Integer>(1);
+    return Integer(1).clone();
   }
 
   return {};

@@ -247,7 +247,7 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
   }
 
   if (!rate || !value) {
-    rate = std::make_shared<Integer>(1);
+    rate = Integer(1).clone();
     value = inChild;
   }
 

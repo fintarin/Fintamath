@@ -11,7 +11,7 @@ std::unique_ptr<IMathObject> MoreEqv::call(const ArgumentsRefVector &argsVect) c
   //   return {};
   // }
 
-  return std::make_unique<Boolean>(lhs >= rhs);
+  return Boolean(lhs >= rhs).clone();
 }
 
 }

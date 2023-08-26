@@ -163,7 +163,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentsPtrVector mulExprPolynom;
-    mulExprPolynom.emplace_back(std::make_shared<Integer>(multinomialCoefficient(powValue, vectOfPows)));
+    mulExprPolynom.emplace_back(multinomialCoefficient(powValue, vectOfPows).clone());
 
     for (size_t j = 0; j < size_t(variableCount); j++) {
       ArgumentPtr powExprChild = powExpr(polynom[j], vectOfPows[j].clone());

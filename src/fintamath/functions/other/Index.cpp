@@ -6,7 +6,7 @@ std::unique_ptr<IMathObject> Index::call(const ArgumentsRefVector &argsVect) con
   const auto &lhs = cast<Variable>(argsVect.front().get());
   const auto &rhs = cast<Integer>(argsVect.back().get());
 
-  return std::make_unique<Variable>(lhs.toString(), rhs);
+  return Variable(lhs.toString(), rhs).clone();
 }
 
 }

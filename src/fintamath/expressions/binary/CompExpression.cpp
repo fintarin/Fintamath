@@ -59,7 +59,7 @@ ArgumentPtr CompExpression::preSimplify() const {
       if (!hasInfinity(lhsChild) && !hasInfinity(rhsChild)) {
         ArgumentPtr resLhs = subExpr(simplExpr->lhsChild, simplExpr->rhsChild);
         preSimplifyChild(resLhs);
-        return std::make_shared<CompExpression>(cast<IOperator>(*func), resLhs, std::make_shared<Integer>(0));
+        return CompExpression(cast<IOperator>(*func), resLhs, Integer(0).clone()).clone();
       }
     }
   }

@@ -32,7 +32,7 @@ public:
       return std::make_unique<Type>(args...);
     };
 
-    std::string name = std::make_unique<Type>()->toString();
+    static const std::string name = Type().toString();
     parserMap.insert({name, constructor});
 
     Tokenizer::registerToken(name);
@@ -40,7 +40,7 @@ public:
 
   template <typename Type, typename BasePtr, typename... Args>
   static void add(Map<BasePtr, Args...> &parserMap, Function<BasePtr, Args...> &&parserFunc) {
-    std::string name = std::make_unique<Type>()->toString();
+    static const std::string name = Type().toString();
     parserMap.insert({name, std::move(parserFunc)});
 
     Tokenizer::registerToken(name);

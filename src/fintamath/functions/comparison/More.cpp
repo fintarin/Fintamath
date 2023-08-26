@@ -11,7 +11,7 @@ std::unique_ptr<IMathObject> More::call(const ArgumentsRefVector &argsVect) cons
   //   return {};
   // }
 
-  return std::make_unique<Boolean>(lhs > rhs);
+  return Boolean(lhs > rhs).clone();
 }
 
 }
