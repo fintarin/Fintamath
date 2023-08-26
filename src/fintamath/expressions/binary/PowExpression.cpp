@@ -166,15 +166,15 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     mulExprPolynom.emplace_back(std::make_shared<Integer>(multinomialCoefficient(powValue, vectOfPows)));
 
     for (size_t j = 0; j < size_t(variableCount); j++) {
-      ArgumentPtr powExpr = makeExpr(Pow(), polynom[j], std::make_shared<Integer>(std::move(vectOfPows[j])));
-      mulExprPolynom.emplace_back(powExpr);
+      ArgumentPtr powExprChild = powExpr(polynom[j], vectOfPows[j].clone());
+      mulExprPolynom.emplace_back(powExprChild);
     }
 
-    ArgumentPtr mulExpr = makeExpr(Mul(), mulExprPolynom);
-    newPolynom.emplace_back(mulExpr);
+    ArgumentPtr mulExprChild = mulExpr(mulExprPolynom);
+    newPolynom.emplace_back(mulExprChild);
   }
 
-  ArgumentPtr res = makeExpr(Add(), newPolynom);
+  ArgumentPtr res = addExpr(newPolynom);
   return res;
 }
 
@@ -183,8 +183,8 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
 
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     ArgumentPtr lhsPow = lhsExpr->getChildren().front();
-    ArgumentPtr rhsPow = makeExpr(Mul(), lhsExpr->getChildren().back(), rhs);
-    res = makeExpr(Pow(), lhsPow, rhsPow);
+    ArgumentPtr rhsPow = mulExpr(lhsExpr->getChildren().back(), rhs);
+    res = powExpr(lhsPow, rhsPow);
   }
 
   return res;
@@ -198,7 +198,7 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
   if (*rhs == Integer(-1)) {
     ArgumentPtr divLhs = Integer(1).clone();
     ArgumentPtr divRhs = lhs;
-    return makeExpr(Div(), divLhs, divRhs);
+    return divExpr(divLhs, divRhs);
   }
 
   if (const auto rhsComp = cast<IComparable>(rhs);
@@ -206,14 +206,14 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
       (rhsComp && *rhsComp < Integer(0))) {
 
     ArgumentPtr divLhs = Integer(1).clone();
-    ArgumentPtr divRhs = makeExpr(Pow(), lhs, makeExpr(Neg(), rhs));
-    return makeExpr(Div(), divLhs, divRhs);
+    ArgumentPtr divRhs = powExpr(lhs, negExpr(rhs));
+    return divExpr(divLhs, divRhs);
   }
 
   if (is<NegInf>(lhs)) {
-    ArgumentPtr mulLhs = makeExpr(Pow(), Integer(-1).clone(), rhs);
-    ArgumentPtr mulRhs = makeExpr(Pow(), Inf().clone(), rhs);
-    return makeExpr(Mul(), mulLhs, mulRhs);
+    ArgumentPtr mulLhs = powExpr(Integer(-1).clone(), rhs);
+    ArgumentPtr mulRhs = powExpr(Inf().clone(), rhs);
+    return mulExpr(mulLhs, mulRhs);
   }
 
   if (is<Inf>(lhs) || is<ComplexInf>(lhs)) {
@@ -278,14 +278,14 @@ ArgumentPtr PowExpression::polynomSimplify(const IFunction & /*func*/, const Arg
 ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentPtr res;
 
-  if (auto mulExpr = cast<IExpression>(lhs); mulExpr && is<Mul>(mulExpr->getFunction())) {
-    ArgumentsPtrVector args = mulExpr->getChildren();
+  if (auto mulExprChild = cast<IExpression>(lhs); mulExprChild && is<Mul>(mulExprChild->getFunction())) {
+    ArgumentsPtrVector args = mulExprChild->getChildren();
 
     for (auto &arg : args) {
-      arg = makeExpr(Pow(), arg, rhs->clone());
+      arg = powExpr(arg, rhs->clone());
     }
 
-    res = makeExpr(Mul(), args);
+    res = mulExpr(args);
   }
 
   return res;
@@ -294,10 +294,10 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 ArgumentPtr PowExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentPtr res;
 
-  if (auto divExpr = cast<IExpression>(lhs); divExpr && is<Div>(divExpr->getFunction())) {
-    ArgumentPtr numerator = makeExpr(Pow(), divExpr->getChildren().front(), rhs);
-    ArgumentPtr denominator = makeExpr(Pow(), divExpr->getChildren().back(), rhs);
-    res = makeExpr(Div(), numerator, denominator);
+  if (auto divExprChild = cast<IExpression>(lhs); divExprChild && is<Div>(divExprChild->getFunction())) {
+    ArgumentPtr numerator = powExpr(divExprChild->getChildren().front(), rhs);
+    ArgumentPtr denominator = powExpr(divExprChild->getChildren().back(), rhs);
+    res = divExpr(numerator, denominator);
   }
 
   return res;

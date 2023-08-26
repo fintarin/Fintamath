@@ -82,7 +82,7 @@ Expression solve(const Expression &rhs) {
         return Expression(answers.front());
       }
 
-      return Expression(makeExpr(Or(), answers));
+      return Expression(orExpr(answers));
     }
   }
 
@@ -136,7 +136,7 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
         coeff.emplace_back(getElementRate(child, var));
       }
 
-      return makeExpr(Mul(), coeff)->toMinimalObject();
+      return mulExpr(coeff)->toMinimalObject();
     }
   }
 
@@ -206,7 +206,7 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
 }
 
 ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
-  return {makeExpr(Neg(), makeExpr(Div(), coeffAtPow[0], coeffAtPow[1]))->toMinimalObject()};
+  return {negExpr(divExpr(coeffAtPow[0], coeffAtPow[1]))->toMinimalObject()};
 }
 
 }

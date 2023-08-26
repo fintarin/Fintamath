@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(CompExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Eqv(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::CompExpression));
+  EXPECT_EQ(eqvExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::CompExpression));
 }

@@ -35,4 +35,6 @@ private:
   static std::unique_ptr<IMathObject> powSimplify(const Real &lhs, const Real &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Pow, powExpr);
+
 }

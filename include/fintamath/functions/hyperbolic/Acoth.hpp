@@ -28,4 +28,6 @@ private:
   static std::unique_ptr<IMathObject> acothSimplify(const Real &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Acoth, acothExpr);
+
 }

@@ -59,19 +59,19 @@ ArgumentPtr NotExpression::logicNegatableSimplify(const IFunction & /*func*/, co
     ArgumentsPtrVector children = rhsExpr->getChildren();
 
     for (auto &child : children) {
-      child = makeExpr(Not(), child);
+      child = notExpr(child);
     }
 
-    res = makeExpr(And(), children);
+    res = andExpr(children);
   }
   else if (is<And>(rhsExpr->getFunction())) {
     ArgumentsPtrVector children = rhsExpr->getChildren();
 
     for (auto &child : children) {
-      child = makeExpr(Not(), child);
+      child = notExpr(child);
     }
 
-    res = makeExpr(Or(), children);
+    res = orExpr(children);
   }
 
   return res;

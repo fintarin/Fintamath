@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(HyperbExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Sinh(), Integer(0).clone())->getTypeId(), MathObjectTypeId(MathObjectType::HyperbExpression));
+  EXPECT_EQ(sinhExpr(Integer(0).clone())->getTypeId(), MathObjectTypeId(MathObjectType::HyperbExpression));
 }

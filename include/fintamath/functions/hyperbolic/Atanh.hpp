@@ -28,4 +28,6 @@ private:
   static std::unique_ptr<IMathObject> atanhSimplify(const Real &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Atanh, atanhExpr);
+
 }

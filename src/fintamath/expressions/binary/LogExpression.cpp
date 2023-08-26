@@ -109,13 +109,13 @@ ArgumentPtr LogExpression::powSimplify(const IFunction & /*func*/, const Argumen
 
   if (auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
     ArgumentPtr multiplier = rhsExpr->getChildren().back();
-    ArgumentPtr logExpr = makeExpr(Log(), lhs, rhsExpr->getChildren().front());
-    res = makeExpr(Mul(), multiplier, logExpr);
+    ArgumentPtr logExprChild = logExpr(lhs, rhsExpr->getChildren().front());
+    res = mulExpr(multiplier, logExprChild);
   }
   else if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
-    ArgumentPtr multiplier = makeExpr(Div(), std::make_shared<Integer>(1), lhsExpr->getChildren().back());
-    ArgumentPtr logExpr = makeExpr(Log(), lhsExpr->getChildren().front(), rhs);
-    res = makeExpr(Mul(), multiplier, logExpr);
+    ArgumentPtr multiplier = divExpr(Integer(1).clone(), lhsExpr->getChildren().back());
+    ArgumentPtr logExprChild = logExpr(lhsExpr->getChildren().front(), rhs);
+    res = mulExpr(multiplier, logExprChild);
   }
 
   return res;

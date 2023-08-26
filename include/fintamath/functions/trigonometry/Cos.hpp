@@ -24,4 +24,9 @@ private:
   static std::unique_ptr<IMathObject> multiCosSimplify(const INumber &rhs);
 };
 
+template <typename... Args>
+std ::unique_ptr<IMathObject> cosExpr(Args &&...args) {
+  static const Cos f;
+  return makeExpr(f, std ::forward<Args>(args)...);
+};
 }

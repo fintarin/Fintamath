@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(MulExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(Mul(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::MulExpression));
+  EXPECT_EQ(mulExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::MulExpression));
 }

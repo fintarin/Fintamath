@@ -32,4 +32,6 @@ protected:
   static std::unique_ptr<IMathObject> logSimplify(const Real &lhs, const Real &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Log, logExpr);
+
 }

@@ -30,4 +30,6 @@ private:
   static std::unique_ptr<IMathObject> divSimplify(const Integer &lhs, const Integer &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Div, divExpr);
+
 }

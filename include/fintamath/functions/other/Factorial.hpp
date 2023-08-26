@@ -49,4 +49,6 @@ private:
   size_t order = 1;
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Factorial, factorialExpr);
+
 }

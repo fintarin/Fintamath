@@ -28,4 +28,6 @@ private:
   static std::unique_ptr<IMathObject> asinSimplify(const Real &rhs);
 };
 
+FINTAMATH_FUNCTION_EXPRESSION(Asin, asinExpr);
+
 }

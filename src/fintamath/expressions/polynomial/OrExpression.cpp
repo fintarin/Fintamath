@@ -46,7 +46,7 @@ ArgumentPtr OrExpression::postSimplify() const {
 
   if (simplChildren.size() != simplChildrenSizeInitial) {
     if (simplChildren.size() > 1) {
-      ArgumentPtr res = makeExpr(Or(), simplChildren);
+      ArgumentPtr res = orExpr(simplChildren);
       postSimplifyChild(res);
       return res;
     }
@@ -174,7 +174,7 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
   resultChildren.erase(resultChildren.begin() + ArgumentsPtrVector::difference_type(resolutionIndex));
 
   if (resultChildren.size() > 1) {
-    ArgumentPtr res = makeExpr(And(), resultChildren);
+    ArgumentPtr res = andExpr(resultChildren);
     return res;
   }
 
@@ -222,7 +222,7 @@ ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhsChild, const 
 
   if (matchCount == minChildren.size()) {
     if (minChildren.size() > 1) {
-      ArgumentPtr res = makeExpr(And(), minChildren);
+      ArgumentPtr res = andExpr(minChildren);
       return res;
     }
 

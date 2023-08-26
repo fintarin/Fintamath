@@ -538,51 +538,51 @@ void Expression::setVariable(const Variable &var, const Expression &val) {
 }
 
 Expression operator+(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Add(), lhs, rhs));
+  return Expression(addExpr(lhs, rhs));
 }
 
 Expression operator+(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Add(), lhs.getChildren().front(), rhs.clone()));
+  return Expression(addExpr(lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator+(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeExpr(Add(), lhs.clone(), rhs.getChildren().front()));
+  return Expression(addExpr(lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator-(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Sub(), lhs, rhs));
+  return Expression(subExpr(lhs, rhs));
 }
 
 Expression operator-(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Sub(), lhs.getChildren().front(), rhs.clone()));
+  return Expression(subExpr(lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator-(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeExpr(Sub(), lhs.clone(), rhs.getChildren().front()));
+  return Expression(subExpr(lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator*(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Mul(), lhs, rhs));
+  return Expression(mulExpr(lhs, rhs));
 }
 
 Expression operator*(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Mul(), lhs.getChildren().front(), rhs.clone()));
+  return Expression(mulExpr(lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator*(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeExpr(Mul(), lhs.clone(), rhs.getChildren().front()));
+  return Expression(mulExpr(lhs.clone(), rhs.getChildren().front()));
 }
 
 Expression operator/(const Variable &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Div(), lhs, rhs));
+  return Expression(divExpr(lhs, rhs));
 }
 
 Expression operator/(const Expression &lhs, const Variable &rhs) {
-  return Expression(makeExpr(Div(), lhs.getChildren().front(), rhs.clone()));
+  return Expression(divExpr(lhs.getChildren().front(), rhs.clone()));
 }
 
 Expression operator/(const Variable &lhs, const Expression &rhs) {
-  return Expression(makeExpr(Div(), lhs.clone(), rhs.getChildren().front()));
+  return Expression(divExpr(lhs.clone(), rhs.getChildren().front()));
 }
 
 }

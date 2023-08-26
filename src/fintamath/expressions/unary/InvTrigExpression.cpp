@@ -76,56 +76,56 @@ ArgumentPtr InvTrigExpression::trigTableSimplify(const IFunction &func, const Ra
 
 ArgumentPtr InvTrigExpression::trigTableAsinSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(-1), makeExpr(Mul(), Rational(-1, 2), Pi())},    // -1    | -π/2
-      {Rational(-3, 4), makeExpr(Mul(), Rational(-1, 3), Pi())}, // -√3/2 | -π/3
-      {Rational(-1, 2), makeExpr(Mul(), Rational(-1, 4), Pi())}, // -√2/2 | -π/4
-      {Rational(-1, 4), makeExpr(Mul(), Rational(-1, 6), Pi())}, // -1/2  | -π/6
-      {Rational(0), Integer(0).clone()},                         // 0     | 0
-      {Rational(1, 4), makeExpr(Mul(), Rational(1, 6), Pi())},   // 1/2   | π/6
-      {Rational(1, 2), makeExpr(Mul(), Rational(1, 4), Pi())},   // √2/2  | π/4
-      {Rational(3, 4), makeExpr(Mul(), Rational(1, 3), Pi())},   // √3/2  | π/3
-      {Rational(1), makeExpr(Mul(), Rational(-1, 2), Pi())},     // 1    | -π/2
+      {Rational(-1), mulExpr(Rational(-1, 2), Pi())},    // -1    | -π/2
+      {Rational(-3, 4), mulExpr(Rational(-1, 3), Pi())}, // -√3/2 | -π/3
+      {Rational(-1, 2), mulExpr(Rational(-1, 4), Pi())}, // -√2/2 | -π/4
+      {Rational(-1, 4), mulExpr(Rational(-1, 6), Pi())}, // -1/2  | -π/6
+      {Rational(0), Integer(0).clone()},                 // 0     | 0
+      {Rational(1, 4), mulExpr(Rational(1, 6), Pi())},   // 1/2   | π/6
+      {Rational(1, 2), mulExpr(Rational(1, 4), Pi())},   // √2/2  | π/4
+      {Rational(3, 4), mulExpr(Rational(1, 3), Pi())},   // √3/2  | π/3
+      {Rational(1), mulExpr(Rational(-1, 2), Pi())},     // 1    | -π/2
   };
   return findValue(trigTable, rhs);
 }
 
 ArgumentPtr InvTrigExpression::trigTableAcosSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(-1), Pi().clone()},                             // -1    | π
-      {Rational(-3, 4), makeExpr(Mul(), Rational(5, 6), Pi())}, // -√3/2 | 5π/6
-      {Rational(-1, 2), makeExpr(Mul(), Rational(3, 4), Pi())}, // -√2/2 | 3π/4
-      {Rational(-1, 4), makeExpr(Mul(), Rational(2, 3), Pi())}, // -1/2  | 2π/3
-      {Rational(0), makeExpr(Mul(), Rational(1, 2), Pi())},     // 0     | π/2
-      {Rational(1, 4), makeExpr(Mul(), Rational(1, 3), Pi())},  // 1/2   | π/3
-      {Rational(1, 2), makeExpr(Mul(), Rational(1, 4), Pi())},  // √2/2  | π/4
-      {Rational(3, 4), makeExpr(Mul(), Rational(1, 6), Pi())},  // √3/2  | π/6
-      {Rational(1), Integer(0).clone()},                        // 1     | 0
+      {Rational(-1), Pi().clone()},                     // -1    | π
+      {Rational(-3, 4), mulExpr(Rational(5, 6), Pi())}, // -√3/2 | 5π/6
+      {Rational(-1, 2), mulExpr(Rational(3, 4), Pi())}, // -√2/2 | 3π/4
+      {Rational(-1, 4), mulExpr(Rational(2, 3), Pi())}, // -1/2  | 2π/3
+      {Rational(0), mulExpr(Rational(1, 2), Pi())},     // 0     | π/2
+      {Rational(1, 4), mulExpr(Rational(1, 3), Pi())},  // 1/2   | π/3
+      {Rational(1, 2), mulExpr(Rational(1, 4), Pi())},  // √2/2  | π/4
+      {Rational(3, 4), mulExpr(Rational(1, 6), Pi())},  // √3/2  | π/6
+      {Rational(1), Integer(0).clone()},                // 1     | 0
   };
   return findValue(trigTable, rhs);
 }
 
 ArgumentPtr InvTrigExpression::trigTableAtanSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(-3), makeExpr(Mul(), Rational(-1, 3), Pi())},    // -√3   | -π/3
-      {Rational(-1), makeExpr(Mul(), Rational(-1, 4), Pi())},    // -1    | -π/4
-      {Rational(-1, 3), makeExpr(Mul(), Rational(-1, 6), Pi())}, // -√3/3 | -π/6
-      {Rational(0), Integer(0).clone()},                         // 0     | 0
-      {Rational(1, 3), makeExpr(Mul(), Rational(1, 6), Pi())},   // √3/3  | π/6
-      {Rational(1), makeExpr(Mul(), Rational(1, 4), Pi())},      // 1     | π/4
-      {Rational(3), makeExpr(Mul(), Rational(1, 3), Pi())},      // √3    | π/3
+      {Rational(-3), mulExpr(Rational(-1, 3), Pi())},    // -√3   | -π/3
+      {Rational(-1), mulExpr(Rational(-1, 4), Pi())},    // -1    | -π/4
+      {Rational(-1, 3), mulExpr(Rational(-1, 6), Pi())}, // -√3/3 | -π/6
+      {Rational(0), Integer(0).clone()},                 // 0     | 0
+      {Rational(1, 3), mulExpr(Rational(1, 6), Pi())},   // √3/3  | π/6
+      {Rational(1), mulExpr(Rational(1, 4), Pi())},      // 1     | π/4
+      {Rational(3), mulExpr(Rational(1, 3), Pi())},      // √3    | π/3
   };
   return findValue(trigTable, rhs);
 }
 
 ArgumentPtr InvTrigExpression::trigTableAcotSimplify(const Rational &rhs) {
   static const TrigonometryTable trigTable = {
-      {Rational(-3), makeExpr(Mul(), Rational(-1, 6), Pi())},    // -√3   | -π/6
-      {Rational(-1), makeExpr(Mul(), Rational(-1, 4), Pi())},    // -1    | -π/4
-      {Rational(-1, 3), makeExpr(Mul(), Rational(-1, 3), Pi())}, // -√3/3 | -π/3
-      {Rational(0), makeExpr(Mul(), Rational(1, 2), Pi())},      // 0     | π/2
-      {Rational(1, 3), makeExpr(Mul(), Rational(1, 3), Pi())},   // √3/3  | π/3
-      {Rational(1), makeExpr(Mul(), Rational(1, 4), Pi())},      // 1     | π/4
-      {Rational(3), makeExpr(Mul(), Rational(1, 6), Pi())},      // √3    | π/6
+      {Rational(-3), mulExpr(Rational(-1, 6), Pi())},    // -√3   | -π/6
+      {Rational(-1), mulExpr(Rational(-1, 4), Pi())},    // -1    | -π/4
+      {Rational(-1, 3), mulExpr(Rational(-1, 3), Pi())}, // -√3/3 | -π/3
+      {Rational(0), mulExpr(Rational(1, 2), Pi())},      // 0     | π/2
+      {Rational(1, 3), mulExpr(Rational(1, 3), Pi())},   // √3/3  | π/3
+      {Rational(1), mulExpr(Rational(1, 4), Pi())},      // 1     | π/4
+      {Rational(3), mulExpr(Rational(1, 6), Pi())},      // √3    | π/6
   };
   return findValue(trigTable, rhs);
 }
