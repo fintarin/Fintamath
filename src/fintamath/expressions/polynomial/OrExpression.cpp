@@ -11,8 +11,8 @@ OrExpression::OrExpression(const ArgumentsPtrVector &inChildren)
     : IPolynomExpressionCRTP(Or(), inChildren) {
 }
 
-std::string OrExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  std::string result = inChild->toString();
+std::string OrExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+  std::string result = operatorChildToString(Or(), inChild);
 
   if (const auto &childExpr = cast<IExpression>(inChild);
       childExpr && is<And>(childExpr->getFunction())) {

@@ -3,7 +3,9 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/constants/I.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -16,21 +18,27 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) cons
   const auto &lhs = cast<INumber>(argsVect.front().get());
   const auto &rhs = cast<INumber>(argsVect.back().get());
 
-  if (lhs == Integer(1)) {
+  if (lhs == Integer(1) || rhs == Integer(1)) {
     return lhs.clone();
   }
 
   if (const auto *rhsIntPtr = cast<Integer>(&rhs)) {
     const auto &rhsInt = *rhsIntPtr;
 
-    if (rhsInt > Integer(1)) {
-      if (lhs < Integer(0)) {
-        // TODO: complex numbers
-        return {};
+    if (!lhs.isComplex() && lhs < Integer(0)) {
+      if (rhsInt % 2 == 1) {
+        return Neg()(*multiRootSimplify(*(-lhs), rhsInt));
       }
 
-      return multiRootSimplify(lhs, rhsInt);
+      if (rhsInt == Integer(2)) {
+        return Mul()(*multiRootSimplify(*(-lhs), rhsInt), I());
+      }
+
+      // TODO: solve complex nth roots
+      return {};
     }
+
+    return multiRootSimplify(lhs, rhsInt);
   }
 
   return Pow()(lhs, *(Rational(1) / rhs));

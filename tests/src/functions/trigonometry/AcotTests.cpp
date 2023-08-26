@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -37,6 +38,8 @@ TEST(AcotTests, callTest) {
 
   EXPECT_EQ(f(Real("0.5"))->toString(),
             "1.1071487177940905030170654601785370400700476454014326466765392074337103389773628");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "acot(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "acot(a)");
 

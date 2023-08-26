@@ -29,9 +29,9 @@ TEST(LgTests, callTest) {
 
   EXPECT_EQ(f(Rational(1, 10))->toString(), "-1");
 
-  EXPECT_EQ(f(Variable("a"))->toString(), "log(10, a)");
+  EXPECT_EQ(f(Integer(-10))->toString(), "log(10, -10)");
 
-  EXPECT_THROW(f(Integer(-10)), UndefinedFunctionException);
+  EXPECT_EQ(f(Variable("a"))->toString(), "log(10, a)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(10), Integer(10), Integer(10)), InvalidInputFunctionException);

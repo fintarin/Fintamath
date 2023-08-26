@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -35,6 +36,8 @@ TEST(AcosTests, callTest) {
 
   EXPECT_EQ(f(Real("0.5"))->toString(),
             "1.0471975511965977461542144610931676280657231331250352736583148641026054687620697");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "acos(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "acos(a)");
 

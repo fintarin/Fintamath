@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -22,8 +23,8 @@ TEST(AcoshTests, getFunctionTypeTest) {
 }
 
 TEST(AcoshTests, callTest) {
-  EXPECT_EQ(f(Integer(-1))->toString(), "acosh(-1)");
-  EXPECT_EQ(f(Integer(0))->toString(), "acosh(0)");
+  EXPECT_EQ(f(Integer(-1))->toString(), "I Pi");
+  EXPECT_EQ(f(Integer(0))->toString(), "(I Pi)/2");
   EXPECT_EQ(f(Integer(1))->toString(), "0");
   EXPECT_EQ(f(Integer(2))->toString(),
             "1.316957896924816708625046347307968444026981971467516479768472256920460185416444");
@@ -35,6 +36,8 @@ TEST(AcoshTests, callTest) {
 
   EXPECT_EQ(f(Real("1.5"))->toString(),
             "0.96242365011920689499551782684873684627036866877132103932203633768032773521644355");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "acosh(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "acosh(a)");
 

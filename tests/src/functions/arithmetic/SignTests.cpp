@@ -5,6 +5,7 @@
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -24,6 +25,7 @@ TEST(SignTests, callTest) {
   EXPECT_EQ(f(Integer(10))->toString(), "1");
   EXPECT_EQ(f(Rational(-10))->toString(), "-1");
   EXPECT_EQ(f(Real(0))->toString(), "0");
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "sign(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "sign(a)");
 

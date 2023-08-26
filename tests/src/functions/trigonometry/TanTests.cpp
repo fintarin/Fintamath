@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
@@ -39,6 +40,8 @@ TEST(TanTests, callTest) {
   EXPECT_EQ(f(getPi() / 4)->toString(), "1.0");
   EXPECT_EQ(f(getPi() / 2)->toString(),
             "1.8284132705300082902317661058105479684239284072480833124982117000101510968883506*10^120");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "tan(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "tan(a)");
 

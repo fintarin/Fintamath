@@ -22,11 +22,6 @@ std::unique_ptr<IMathObject> Log::call(const ArgumentsRefVector &argsVect) const
     return ComplexInf().clone();
   }
 
-  if (lhs < Integer(0) || rhs < Integer(0)) {
-    // TODO: cast to Complex, when it is implemented
-    throw UndefinedFunctionException(toString(), {lhs.toString(), rhs.toString()});
-  }
-
   if (lhs == Integer(0)) {
     if (rhs == Integer(0)) {
       return Undefined().clone();
@@ -51,6 +46,11 @@ std::unique_ptr<IMathObject> Log::call(const ArgumentsRefVector &argsVect) const
     return Integer(1).clone();
   }
 
+  if (lhs < Integer(0) || rhs < Integer(0)) {
+    // TODO: complex log
+    return {};
+  }
+
   if (lhs < Integer(1)) {
     auto newLhs = Rational(1) / lhs;
 
@@ -59,12 +59,16 @@ std::unique_ptr<IMathObject> Log::call(const ArgumentsRefVector &argsVect) const
       return multiLogSimplify(*newLhs, *newRhs);
     }
 
-    return Neg()(*multiLogSimplify(*newLhs, rhs));
+    if (auto res = multiLogSimplify(*newLhs, rhs)) {
+      return negExpr(std::move(res))->toMinimalObject();
+    }
   }
 
   if (rhs < Integer(1)) {
     auto newRhs = Rational(1) / rhs;
-    return Neg()(*multiLogSimplify(lhs, *newRhs));
+    if (auto res = multiLogSimplify(lhs, *newRhs)) {
+      return negExpr(std::move(res))->toMinimalObject();
+    }
   }
 
   return multiLogSimplify(lhs, rhs);
@@ -126,7 +130,12 @@ std::unique_ptr<IMathObject> Log::logSimplify(const Rational &lhs, const Rationa
 }
 
 std::unique_ptr<IMathObject> Log::logSimplify(const Real &lhs, const Real &rhs) {
-  return log(lhs, rhs).toMinimalObject();
+  try {
+    return log(lhs, rhs).toMinimalObject();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

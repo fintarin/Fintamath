@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -35,6 +36,8 @@ TEST(AsinTests, callTest) {
 
   EXPECT_EQ(f(Real("0.5"))->toString(),
             "0.52359877559829887307710723054658381403286156656251763682915743205130273438103483");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "asin(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "asin(a)");
 

@@ -8,6 +8,7 @@
 #include "fintamath/functions/calculus/Min.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
@@ -27,6 +28,9 @@ TEST(MaxTests, callTest) {
   EXPECT_EQ(f(Integer(1), Integer(-1))->toString(), "1");
   EXPECT_EQ(f(Integer(1), Integer(-1), Rational(-5, 2))->toString(), "1");
   EXPECT_EQ(f(Integer(1), Rational(5, 2), Rational(-5, 2), Integer(-1))->toString(), "5/2");
+
+  EXPECT_EQ(f(Integer(1), Rational(5, 2), Complex(1, 1))->toString(), "max(1, 5/2, 1 + I)");
+  EXPECT_EQ(f(Integer(1), Complex(1, 1), Rational(5, 2))->toString(), "max(1, 1 + I, 5/2)");
 
   EXPECT_EQ(f(Rational(-1), Variable("x"), Variable("y"), Integer(1))->toString(), "max(x, y, 1)");
 

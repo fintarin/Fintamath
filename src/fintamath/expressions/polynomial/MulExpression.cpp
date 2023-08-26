@@ -50,7 +50,7 @@ std::string MulExpression::toString() const {
   return IPolynomExpression::toString();
 }
 
-std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+std::string MulExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   if (!prevChild && *inChild == Integer(-1)) {
     return Neg().toString();
   }
@@ -65,7 +65,7 @@ std::string MulExpression::operatorChildToString(const ArgumentPtr &inChild, con
     }
   }
 
-  return operStr + inChild->toString();
+  return operStr + operatorChildToString(Mul(), inChild);
 }
 
 MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {

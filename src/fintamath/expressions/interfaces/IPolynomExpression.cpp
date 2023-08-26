@@ -26,10 +26,10 @@ std::string IPolynomExpression::toString() const {
 
   std::string result;
 
-  result += operatorChildToString(children.front(), {});
+  result += childToString(children.front(), {});
 
   for (size_t i = 1; i < children.size(); i++) {
-    result += operatorChildToString(children[i], children[i - 1]);
+    result += childToString(children[i], children[i - 1]);
   }
 
   return result;
@@ -180,22 +180,16 @@ ArgumentPtr IPolynomExpression::preciseSimplify() const {
   return preciseExpr;
 }
 
-std::string IPolynomExpression::operatorChildToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  std::string result = inChild->toString();
-
-  if (const auto exprChild = cast<IExpression>(inChild)) {
-    const auto oper = cast<IOperator>(func);
-    const auto childOper = cast<IOperator>(exprChild->getFunction());
-
-    if (oper &&
-        childOper &&
-        oper->getOperatorPriority() <= childOper->getOperatorPriority()) {
-
-      result = putInBrackets(result);
-    }
+std::string IPolynomExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+  std::string childStr;
+  if (const auto oper = cast<IOperator>(func)) {
+    childStr = operatorChildToString(*oper, inChild);
+  }
+  else {
+    childStr = inChild->toString();
   }
 
-  return prevChild ? (putInSpaces(func->toString()) + result) : result;
+  return prevChild ? (putInSpaces(func->toString()) + childStr) : childStr;
 }
 
 bool IPolynomExpression::isTermsOrderInversed() const {

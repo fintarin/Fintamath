@@ -142,13 +142,7 @@ ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrV
     return {};
   }
 
-  ArgumentPtr res;
-  try {
-    res = func(args);
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
+  ArgumentPtr res = func(args);
 
   if (areArgumentsPrecise) {
     if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {
