@@ -39,6 +39,8 @@ TEST(AcoshTests, callTest) {
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "acosh(1 + I)");
 
+  EXPECT_EQ(f(Integer(-2))->toString(), "acosh(-2)");
+
   EXPECT_EQ(f(Variable("a"))->toString(), "acosh(a)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);

@@ -978,26 +978,31 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("I = I").toString(), "True");
   EXPECT_EQ(Expression("I = 2 I").toString(), "False");
   EXPECT_EQ(Expression("I = I x").toString(), "x - 1 = 0");
+  EXPECT_EQ(Expression("I x = I").toString(), "x - 1 = 0");
 
   EXPECT_EQ(Expression("I != I").toString(), "False");
   EXPECT_EQ(Expression("I != 2 I").toString(), "True");
   EXPECT_EQ(Expression("I != I x").toString(), "x - 1 != 0");
+  EXPECT_EQ(Expression("I x != I").toString(), "x - 1 != 0");
 
   EXPECT_EQ(Expression("I < I").toString(), "I < I");
   EXPECT_EQ(Expression("I < 2 I").toString(), "I < 2 I");
   EXPECT_EQ(Expression("I < I x").toString(), "I < I x");
+  EXPECT_EQ(Expression("I x < I").toString(), "I x < I");
 
   EXPECT_EQ(Expression("I > I").toString(), "I > I");
   EXPECT_EQ(Expression("I > 2 I").toString(), "I > 2 I");
-  EXPECT_EQ(Expression("I > I x").toString(), "I > I x");
+  EXPECT_EQ(Expression("I x > I").toString(), "I x > I");
 
   EXPECT_EQ(Expression("I <= I").toString(), "I <= I");
   EXPECT_EQ(Expression("I <= 2 I").toString(), "I <= 2 I");
   EXPECT_EQ(Expression("I <= I x").toString(), "I <= I x");
+  EXPECT_EQ(Expression("I x <= I").toString(), "I x <= I");
 
   EXPECT_EQ(Expression("I >= I").toString(), "I >= I");
   EXPECT_EQ(Expression("I >= 2 I").toString(), "I >= 2 I");
   EXPECT_EQ(Expression("I >= I x").toString(), "I >= I x");
+  EXPECT_EQ(Expression("I x >= I").toString(), "I x >= I");
 
   EXPECT_EQ(Expression("x (2 + I)").toString(), "(2 + I) x");                         // TODO! simplify
   EXPECT_EQ(Expression("sqrt(3) (2/3 + 1/2 I)").toString(), "(2/3 + 1/2 I) sqrt(3)"); // TODO! simplify

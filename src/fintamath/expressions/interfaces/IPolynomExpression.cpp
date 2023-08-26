@@ -20,16 +20,17 @@ ArgumentsPtrVector IPolynomExpression::getChildren() const {
 }
 
 std::string IPolynomExpression::toString() const {
-  if (!is<IOperator>(func)) {
+  const auto oper = cast<IOperator>(func);
+  if (!oper) {
     return functionToString(*func, children);
   }
 
   std::string result;
 
-  result += childToString(children.front(), {});
+  result += childToString(*oper, children.front(), {});
 
   for (size_t i = 1; i < children.size(); i++) {
-    result += childToString(children[i], children[i - 1]);
+    result += childToString(*oper, children[i], children[i - 1]);
   }
 
   return result;
@@ -180,15 +181,8 @@ ArgumentPtr IPolynomExpression::preciseSimplify() const {
   return preciseExpr;
 }
 
-std::string IPolynomExpression::childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  std::string childStr;
-  if (const auto oper = cast<IOperator>(func)) {
-    childStr = operatorChildToString(*oper, inChild);
-  }
-  else {
-    childStr = inChild->toString();
-  }
-
+std::string IPolynomExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
+  std::string childStr = operatorChildToString(oper, inChild);
   return prevChild ? (putInSpaces(func->toString()) + childStr) : childStr;
 }
 

@@ -74,6 +74,7 @@ TEST(LogTests, callTest) {
 
   EXPECT_EQ(f(Integer(-10), Integer(10))->toString(), "log(-10, 10)");
   EXPECT_EQ(f(Integer(10), Integer(-10))->toString(), "log(10, -10)");
+  EXPECT_EQ(f(Real("-10.2"), Integer(-10))->toString(), "log(-10.2, -10)");
 
   EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "log(a, b)");
 

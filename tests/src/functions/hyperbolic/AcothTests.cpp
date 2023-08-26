@@ -39,6 +39,8 @@ TEST(AcothTests, callTest) {
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "acoth(1 + I)");
 
+  EXPECT_EQ(f(Real("0.5"))->toString(), "acoth(0.5)");
+
   EXPECT_EQ(f(Variable("a"))->toString(), "acoth(a)");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);

@@ -13,7 +13,7 @@ public:
   }
 
 protected:
-  std::string childToString(const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
+  std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
   ArgumentPtr postSimplify() const override;
 
