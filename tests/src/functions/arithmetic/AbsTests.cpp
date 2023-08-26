@@ -35,18 +35,17 @@ TEST(AbsTests, callTest) {
   EXPECT_EQ(f(Real("8465132.321651651"))->toString(), "8465132.321651651");
   EXPECT_EQ(f(Real("-98465136846516354684651.351"))->toString(), "98465136846516354684651.351");
 
-  // TODO! implement
-  EXPECT_EQ(f(Complex(2, 0))->toString(), "abs(2)");
-  EXPECT_EQ(f(Complex(0, 2))->toString(), "abs(2 I)");
-  EXPECT_EQ(f(Complex(2, 2))->toString(), "abs(2 + 2 I)");
-  EXPECT_EQ(f(Complex(3, 2))->toString(), "abs(3 + 2 I)");
-  EXPECT_EQ(f(Complex(2, 3))->toString(), "abs(2 + 3 I)");
-  EXPECT_EQ(f(Complex(-2, 0))->toString(), "abs(-2)");
-  EXPECT_EQ(f(Complex(0, -2))->toString(), "abs(-2 I)");
-  EXPECT_EQ(f(Complex(2, -2))->toString(), "abs(2 - 2 I)");
-  EXPECT_EQ(f(Complex(-3, 2))->toString(), "abs(-3 + 2 I)");
-  EXPECT_EQ(f(Complex(2, -3))->toString(), "abs(2 - 3 I)");
-  EXPECT_EQ(f(Complex(-2, -3))->toString(), "abs(-2 - 3 I)");
+  EXPECT_EQ(f(Complex(2, 0))->toString(), "2");
+  EXPECT_EQ(f(Complex(0, 2))->toString(), "2");
+  EXPECT_EQ(f(Complex(2, 2))->toString(), "2 sqrt(2)");
+  EXPECT_EQ(f(Complex(3, 2))->toString(), "sqrt(13)");
+  EXPECT_EQ(f(Complex(2, 3))->toString(), "sqrt(13)");
+  EXPECT_EQ(f(Complex(-2, 0))->toString(), "2");
+  EXPECT_EQ(f(Complex(0, -2))->toString(), "2");
+  EXPECT_EQ(f(Complex(2, -2))->toString(), "2 sqrt(2)");
+  EXPECT_EQ(f(Complex(-3, 2))->toString(), "sqrt(13)");
+  EXPECT_EQ(f(Complex(2, -3))->toString(), "sqrt(13)");
+  EXPECT_EQ(f(Complex(-2, -3))->toString(), "sqrt(13)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "abs(a)");
 
