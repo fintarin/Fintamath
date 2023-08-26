@@ -22,10 +22,10 @@ public:
     return size_t(Return::getTypeIdStatic());
   }
 
-  ArgumentsTypeIdsVector getArgsTypeIds() const final {
-    ArgumentsTypeIdsVector argsTypes;
-    getArgsTypeIds<0, Args...>(argsTypes);
-    return argsTypes;
+  ArgumentTypeIdsVector getArgTypeIds() const final {
+    ArgumentTypeIdsVector argTypes;
+    getArgTypeIds<0, Args...>(argTypes);
+    return argTypes;
   }
 
   bool doArgsMatch(const ArgumentsRefVector &argsVect) const override {
@@ -68,13 +68,13 @@ protected:
 
 private:
   template <size_t i, typename Head, typename... Tail>
-  void getArgsTypeIds(ArgumentsTypeIdsVector &outArgsTypes) const {
+  void getArgTypeIds(ArgumentTypeIdsVector &outArgsTypes) const {
     outArgsTypes.emplace_back(Head::getTypeIdStatic());
-    getArgsTypeIds<i + 1, Tail...>(outArgsTypes);
+    getArgTypeIds<i + 1, Tail...>(outArgsTypes);
   }
 
   template <size_t>
-  void getArgsTypeIds(ArgumentsTypeIdsVector & /*outArgTypes*/) const {
+  void getArgTypeIds(ArgumentTypeIdsVector & /*outArgTypes*/) const {
     // The end of unpacking.
   }
 

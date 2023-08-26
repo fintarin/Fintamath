@@ -445,10 +445,10 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
     throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
   }
 
-  ArgumentsTypeIdsVector childrenTypeIds = func->getArgsTypeIds();
+  ArgumentTypeIdsVector childrenTypeIds = func->getArgTypeIds();
 
   if (func->getFunctionType() == IFunction::Type::Any) {
-    childrenTypeIds = ArgumentsTypeIdsVector(args.size(), childrenTypeIds.front());
+    childrenTypeIds = ArgumentTypeIdsVector(args.size(), childrenTypeIds.front());
   }
 
   for (size_t i = 0; i < args.size(); i++) {

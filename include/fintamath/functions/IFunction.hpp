@@ -29,7 +29,7 @@ public:
 
   virtual size_t getReturnTypeId() const = 0;
 
-  virtual ArgumentsTypeIdsVector getArgsTypeIds() const = 0;
+  virtual ArgumentTypeIdsVector getArgTypeIds() const = 0;
 
   virtual bool doArgsMatch(const ArgumentsRefVector &argsVect) const = 0;
 
