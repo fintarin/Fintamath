@@ -6,6 +6,7 @@
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -115,7 +116,13 @@ void IExpression::preciseSimplifyChild(ArgumentPtr &child) {
     child = exprChild->preciseSimplify();
   }
   else if (const auto numChild = cast<INumber>(child)) {
-    child = convert<Real>(*numChild);
+    // TODO! use multimethod
+    if (const auto complexChild = cast<Complex>(numChild)) {
+      child = Complex(*convert<Real>(complexChild->real()), *convert<Real>(complexChild->imag())).clone();
+    }
+    else {
+      child = convert<Real>(*numChild);
+    }
   }
   else if (const auto constChild = cast<IConstant>(child)) {
     child = (*constChild)();

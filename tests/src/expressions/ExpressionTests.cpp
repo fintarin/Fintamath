@@ -1598,6 +1598,19 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("(1/1000000000000000000000000000000000000000)!!").precise().toString(), "(1.0*10^-39)!!");
   EXPECT_EQ(Expression("(-1)!!").precise().toString(), "(-1.0)!!");
 
+  EXPECT_EQ(Expression("I").precise().toString(), "I");
+  EXPECT_EQ(Expression("5 + I").precise().toString(), "5.0 + I");
+  EXPECT_EQ(Expression("5 I").precise().toString(), "5.0 I");
+  EXPECT_EQ(Expression("5 + 5 I").precise().toString(), "5.0 + 5.0 I");
+  EXPECT_EQ(Expression("5/I").precise().toString(), "-5.0 I");
+  EXPECT_EQ(Expression("E/I").precise().toString(), "-2.7182818284590452353602874713526624977572470936999595749669676277240766303535476 I");
+  EXPECT_EQ(Expression("-I").precise().toString(), "-I");
+  EXPECT_EQ(Expression("5 - I").precise().toString(), "5.0 - I");
+  EXPECT_EQ(Expression("5 -I").precise().toString(), "5.0 - I");
+  EXPECT_EQ(Expression("5 - 5 I").precise().toString(), "5.0 - 5.0 I");
+  EXPECT_EQ(Expression("5/-I").precise().toString(), "5.0 I");
+  EXPECT_EQ(Expression("E/-I").precise().toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476 I");
+
   EXPECT_EQ(Expression("10^10000").precise(8).toString(), "1.0*10^10000");
   EXPECT_EQ(Expression("x+E").precise(8).toString(), "x + 2.7182818");
   EXPECT_EQ(Expression("x^(100!)").precise(8).toString(), "x^(9.3326215*10^157)");

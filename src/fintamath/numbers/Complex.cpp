@@ -74,7 +74,7 @@ std::string Complex::toString() const {
       isImNeg = true;
     }
 
-    if (imStr == "1") {
+    if (*im == Integer(1) || *im == Integer(-1)) {
       imStr.clear();
     }
     else {
