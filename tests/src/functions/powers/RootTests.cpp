@@ -47,10 +47,10 @@ TEST(RootTests, callTest) {
   EXPECT_EQ(f(Integer(1024), Integer(3))->toString(), "8 root(2, 3)");
   EXPECT_EQ(f(Integer(1024), Integer(5))->toString(), "4");
   EXPECT_EQ(f(Integer(1024), Integer(10))->toString(), "2");
-  EXPECT_EQ(f(Integer(-1000), Integer(3))->toString(), "-10");
-  EXPECT_EQ(f(Integer(-10), Integer(3))->toString(), "-root(10, 3)");
-  EXPECT_EQ(f(Integer(-100000), Integer(5))->toString(), "-10");
-  EXPECT_EQ(f(Integer(-10), Integer(5))->toString(), "-root(10, 5)");
+  EXPECT_EQ(f(Integer(-1000), Integer(3))->toString(), "root(-1000, 3)");
+  EXPECT_EQ(f(Integer(-10), Integer(3))->toString(), "root(-10, 3)");
+  EXPECT_EQ(f(Integer(-100000), Integer(5))->toString(), "root(-100000, 5)");
+  EXPECT_EQ(f(Integer(-10), Integer(5))->toString(), "root(-10, 5)");
 
   EXPECT_EQ(f(Rational(25), Integer(4))->toString(), "sqrt(5)");
   EXPECT_EQ(f(Rational(25, 169), Integer(4))->toString(), "sqrt(65)/13");
@@ -94,7 +94,7 @@ TEST(RootTests, callTest) {
   EXPECT_EQ(f(Integer(-10), Integer(2))->toString(), "I sqrt(10)");
   EXPECT_EQ(f(Integer(-10), Integer(4))->toString(), "root(-10, 4)");
   EXPECT_EQ(f(Integer(-10), Integer(6))->toString(), "root(-10, 6)");
-  EXPECT_EQ(f(Rational(-9289, 10), Rational(2, 3))->toString(), "(9289 I sqrt(92890))/100");
+  EXPECT_EQ(f(Rational(-9289, 10), Rational(2, 3))->toString(), "(-9289/10)^(3/2)");
   EXPECT_EQ(f(Real(-9289), Rational(2, 3))->toString(), "(-9289.0)^(3/2)"); // TODO: solve this
 
   EXPECT_EQ(f(Variable("a"), Integer(2))->toString(), "sqrt(a)");

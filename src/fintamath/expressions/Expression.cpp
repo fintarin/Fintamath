@@ -13,6 +13,7 @@
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
@@ -486,6 +487,11 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
 void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
   if (const auto realArg = cast<Real>(arg)) {
     arg = realArg->precise(precision).clone();
+  }
+  else if (const auto complexArg = cast<Complex>(arg)) {
+    arg = Complex(convert<Real>(complexArg->real())->precise(precision),
+                  convert<Real>(complexArg->imag())->precise(precision))
+              .clone();
   }
   else if (const auto exprArg = cast<IExpression>(arg)) {
     ArgumentsPtrVector newChildren = exprArg->getChildren();

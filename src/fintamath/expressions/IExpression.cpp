@@ -118,7 +118,9 @@ void IExpression::preciseSimplifyChild(ArgumentPtr &child) {
   else if (const auto numChild = cast<INumber>(child)) {
     // TODO! use multimethod
     if (const auto complexChild = cast<Complex>(numChild)) {
-      child = Complex(*convert<Real>(complexChild->real()), *convert<Real>(complexChild->imag())).clone();
+      child = Complex(*convert<Real>(complexChild->real()),
+                      *convert<Real>(complexChild->imag()))
+                  .clone();
     }
     else {
       child = convert<Real>(*numChild);

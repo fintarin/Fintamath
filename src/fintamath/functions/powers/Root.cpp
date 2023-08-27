@@ -26,10 +26,6 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) cons
     const auto &rhsInt = *rhsIntPtr;
 
     if (!lhs.isComplex() && lhs < Integer(0)) {
-      if (rhsInt % 2 == 1) {
-        return Neg()(*multiRootSimplify(*(-lhs), rhsInt));
-      }
-
       if (rhsInt == Integer(2)) {
         return Mul()(*multiRootSimplify(*(-lhs), rhsInt), I());
       }

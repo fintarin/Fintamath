@@ -940,15 +940,26 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-5 + 2I)^-6").toString(), "-15939/594823321 + 18460/594823321 I");
   EXPECT_EQ(Expression("(-5 + 2I)^-32").toString(), "231439382100320515840321/62623297589448778360828428329074752308805325441 - 95179357018581597343680/62623297589448778360828428329074752308805325441 I");
 
+  // TODO: implement
   EXPECT_EQ(Expression("sqrt(-1)").toString(), "I");
+  EXPECT_EQ(Expression("root(-1, 3)").toString(), "root(-1, 3)");
+  EXPECT_EQ(Expression("root(-1, 4)").toString(), "root(-1, 4)");
+  EXPECT_EQ(Expression("root(-1, 5)").toString(), "root(-1, 5)");
+  EXPECT_EQ(Expression("root(-1, 6)").toString(), "root(-1, 6)");
+  EXPECT_EQ(Expression("root(-1, 7)").toString(), "root(-1, 7)");
+  EXPECT_EQ(Expression("(-1)^(3/2)").toString(), "(-1)^(3/2)");
   EXPECT_EQ(Expression("(-1)^(2/3)").toString(), "(-1)^(2/3)");
+  EXPECT_EQ(Expression("(-1)^(3/4)").toString(), "(-1)^(3/4)");
+  EXPECT_EQ(Expression("(-1)^(4/5)").toString(), "(-1)^(4/5)");
+  EXPECT_EQ(Expression("(-1)^(5/6)").toString(), "(-1)^(5/6)");
+  EXPECT_EQ(Expression("(-1)^(6/7)").toString(), "(-1)^(6/7)");
 
-  // TODO: solve this
+  // TODO: implement
   EXPECT_EQ(Expression("ln(-1)").toString(), "ln(-1)");
   EXPECT_EQ(Expression("lb(-1)").toString(), "log(2, -1)");
   EXPECT_EQ(Expression("lg(-1)").toString(), "log(10, -1)");
 
-  // TODO: solve this
+  // TODO: implement
   EXPECT_EQ(Expression("asin(2)").toString(), "asin(2)");
   EXPECT_EQ(Expression("acos(2)").toString(), "acos(2)");
 
@@ -1619,10 +1630,8 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("sin(sin(E))").precise(30).toString(), "0.39932574404189139297067052142");
   EXPECT_EQ(Expression("(sqrt(2) + 1)^2").precise(5).toString(), "5.8284");
   EXPECT_EQ(Expression("(sqrt(2) - a - 1)^2").precise(5).toString(), "a^2.0 - 0.82843 a + 0.17157");
-  EXPECT_EQ(Expression("2^200/x").precise(10).toString(), "(1.606938044*10^60)/x");
-  EXPECT_EQ(Expression("x/2^200").precise(10).toString(), "6.223015278*10^-61 x");
-  EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").precise().toString(),
-            "(0.125 x^3.0)/y - (0.25 x^2.0 z)/y + (0.125 x z^2.0)/y");
+  EXPECT_EQ(Expression("E/I").precise(5).toString(), "-2.7183 I");
+  EXPECT_EQ(Expression("E/-I").precise(5).toString(), "2.7183 I");
 
   EXPECT_EQ(Expression("ln(x)").precise().toString(), "ln(x)");
   EXPECT_EQ(Expression("sqrt(x)").precise().toString(), "sqrt(x)");
@@ -1630,6 +1639,9 @@ TEST(ExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("root(x, 10)").precise().toString(), "x^0.1");
   EXPECT_EQ(Expression("root(x, 33)").precise().toString(),
             "x^0.03030303030303030303030303030303030303030303030303030303030303030303030303030303");
+  EXPECT_EQ(Expression("2^200/x").precise(10).toString(), "(1.606938044*10^60)/x");
+  EXPECT_EQ(Expression("x/2^200").precise(10).toString(), "6.223015278*10^-61 x");
+  EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").precise().toString(), "(0.125 x^3.0)/y - (0.25 x^2.0 z)/y + (0.125 x z^2.0)/y");
 
   EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
 }

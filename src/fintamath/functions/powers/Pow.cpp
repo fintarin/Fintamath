@@ -83,7 +83,9 @@ std::unique_ptr<IMathObject> Pow::powSimplify(const Rational &lhs, const Rationa
   }
 
   // TODO: complex nth roots
-  if (lhs < Integer(0) && rhsDenominator != Integer(2)) {
+  if (lhs < Integer(0) &&
+      (rhsNumerator != Integer(1) || rhsDenominator != Integer(2))) {
+
     return {};
   }
 
