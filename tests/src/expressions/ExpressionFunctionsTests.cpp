@@ -243,9 +243,9 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(), "x = -sqrt(2)/2");
 
   EXPECT_EQ(solve(Expression("x^2 = -1")).toString(), "x = -I | x = I");
-  EXPECT_EQ(solve(Expression("x^2 + 4x + 5 = 0")).toString(), "x = -I - 2 | x = I - 2");
-  EXPECT_EQ(solve(Expression("2x^2 + x + 1 = 0")).toString(), "x = -(I sqrt(7))/4 - 1/4 | x = (I sqrt(7))/4 - 1/4");
-  EXPECT_EQ(solve(Expression("x^2 + 3x + 5 = 0")).toString(), "x = -(I sqrt(11))/2 - 3/2 | x = (I sqrt(11))/2 - 3/2");
+  EXPECT_EQ(solve(Expression("x^2 + 4x + 5 = 0")).toString(), "x = -2 - I | x = -2 + I");
+  EXPECT_EQ(solve(Expression("2x^2 + x + 1 = 0")).toString(), "x = -1/4 I sqrt(7) - 1/4 | x = 1/4 I sqrt(7) - 1/4");
+  EXPECT_EQ(solve(Expression("x^2 + 3x + 5 = 0")).toString(), "x = -1/2 I sqrt(11) - 3/2 | x = 1/2 I sqrt(11) - 3/2");
 
   // TODO: implement cubic equations
   EXPECT_EQ(solve(Expression("x^3 - 3x^2 + 3x - 1 = 0")).toString(), "x^3 - 3 x^2 + 3 x - 1 = 0"); // TODO: x = 1

@@ -27,7 +27,7 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) cons
 
     if (!lhs.isComplex() && lhs < Integer(0)) {
       if (rhsInt == Integer(2)) {
-        return Mul()(*multiRootSimplify(*(-lhs), rhsInt), I());
+        return mulExpr(multiRootSimplify(*(-lhs), rhsInt), I()())->toMinimalObject();
       }
 
       // TODO: solve complex nth roots

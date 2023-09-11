@@ -940,8 +940,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-5 + 2I)^-6").toString(), "-15939/594823321 + 18460/594823321 I");
   EXPECT_EQ(Expression("(-5 + 2I)^-32").toString(), "231439382100320515840321/62623297589448778360828428329074752308805325441 - 95179357018581597343680/62623297589448778360828428329074752308805325441 I");
 
-  // TODO: implement
   EXPECT_EQ(Expression("sqrt(-1)").toString(), "I");
+  EXPECT_EQ(Expression("sqrt(-4) - 5").toString(), "-5 + 2 I");
+  // TODO: implement
   EXPECT_EQ(Expression("root(-1, 3)").toString(), "root(-1, 3)");
   EXPECT_EQ(Expression("root(-1, 4)").toString(), "root(-1, 4)");
   EXPECT_EQ(Expression("root(-1, 5)").toString(), "root(-1, 5)");
