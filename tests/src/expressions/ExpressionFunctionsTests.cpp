@@ -284,3 +284,26 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x >= x sqrt(x)")).toString(), "x^(3/2) - x <= 0");
   EXPECT_EQ(solve(Expression("x >= x^(1/100)")).toString(), "x - root(x, 100) >= 0");
 }
+
+TEST(ExpressionFunctionsTests, solvePreciseTest) {
+  Expression expr;
+  Variable x("x");
+
+  expr = pow(x + 1, 6);
+  EXPECT_EQ(expr.toString(), "x^6 + 6 x^5 + 15 x^4 + 20 x^3 + 15 x^2 + 6 x + 1");
+
+  expr = solve(expr);
+  EXPECT_EQ(expr.toString(), "x^6 + 6 x^5 + 15 x^4 + 20 x^3 + 15 x^2 + 6 x + 1");
+
+  expr = expr.precise(10);
+  EXPECT_EQ(expr.toString(), "x^6.0 + 6.0 x^5.0 + 15.0 x^4.0 + 20.0 x^3.0 + 15.0 x^2.0 + 6.0 x + 1.0");
+
+  expr = pow(x + 1, 7);
+  EXPECT_EQ(expr.toString(), "x^7 + 7 x^6 + 21 x^5 + 35 x^4 + 35 x^3 + 21 x^2 + 7 x + 1");
+
+  expr = solve(expr);
+  EXPECT_EQ(expr.toString(), "x^7 + 7 x^6 + 21 x^5 + 35 x^4 + 35 x^3 + 21 x^2 + 7 x + 1");
+
+  expr = expr.precise(10);
+  EXPECT_EQ(expr.toString(), "x^7.0 + 7.0 x^6.0 + 21.0 x^5.0 + 35.0 x^4.0 + 35.0 x^3.0 + 21.0 x^2.0 + 7.0 x + 1.0");
+}
