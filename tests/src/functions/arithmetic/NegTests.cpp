@@ -23,6 +23,10 @@ TEST(NegTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PrefixUnary);
 }
 
+TEST(NegTests, isAssociativeTest) {
+  EXPECT_FALSE(f.isAssociative());
+}
+
 TEST(NegTests, callTest) {
   EXPECT_EQ(f(Integer(3))->toString(), "-3");
   EXPECT_EQ(f(Rational(5, 2))->toString(), "-5/2");

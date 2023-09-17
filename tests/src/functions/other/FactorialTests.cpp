@@ -28,6 +28,10 @@ TEST(FactorialTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PostfixUnary);
 }
 
+TEST(FactorialTests, isAssociativeTest) {
+  EXPECT_FALSE(f.isAssociative());
+}
+
 TEST(FactorialTests, callTest) {
   EXPECT_EQ(f(Integer(0))->toString(), "1");
   EXPECT_EQ(f(Integer(1))->toString(), "1");
@@ -69,10 +73,6 @@ TEST(FactorialTests, callTest) {
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
-}
-
-TEST(FactorialTests, exprTest) {
-  EXPECT_EQ(factorialExpr(Integer(10))->toString(), "10!");
 }
 
 TEST(FactorialTests, call2Test) {
@@ -137,6 +137,18 @@ TEST(FactorialTests, call3Test) {
 
   EXPECT_THROW(f3(), InvalidInputFunctionException);
   EXPECT_THROW(f3(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+}
+
+TEST(FactorialTests, getSetOrderTest) {
+  Factorial fnth;
+  EXPECT_EQ(fnth.getOrder(), 1);
+
+  fnth.setOrder(123);
+  EXPECT_EQ(fnth.getOrder(), 123);
+}
+
+TEST(FactorialTests, exprTest) {
+  EXPECT_EQ(factorialExpr(Integer(10))->toString(), "10!");
 }
 
 TEST(FactorialTests, doArgsMatchTest) {

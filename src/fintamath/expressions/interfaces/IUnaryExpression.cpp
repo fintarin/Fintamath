@@ -34,13 +34,6 @@ IUnaryExpression::SimplifyFunctionsVector IUnaryExpression::getFunctionsForPostS
   return {};
 }
 
-ArgumentPtr IUnaryExpression::simplify() const {
-  ArgumentPtr simpl = cast<IUnaryExpression>(clone());
-  preSimplifyChild(simpl);
-  postSimplifyChild(simpl);
-  return simpl;
-}
-
 ArgumentPtr IUnaryExpression::preSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl->child);

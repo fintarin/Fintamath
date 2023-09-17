@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Or : public IOperatorCRTP<Boolean, Or, Boolean, Boolean> {
 public:
-  Or() : IOperatorCRTP(IOperator::Priority::Disjunction) {
+  Or() : IOperatorCRTP(IOperator::Priority::Disjunction, true) {
   }
 
   std::string toString() const override {

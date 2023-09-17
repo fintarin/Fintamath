@@ -8,7 +8,7 @@ namespace fintamath {
 
 class LessEqv : public IOperatorCRTP<Boolean, LessEqv, IComparable, IComparable> {
 public:
-  LessEqv() : IOperatorCRTP(IOperator::Priority::Comparison) {
+  LessEqv() : IOperatorCRTP(IOperator::Priority::Comparison, true) {
   }
 
   std::string toString() const override {

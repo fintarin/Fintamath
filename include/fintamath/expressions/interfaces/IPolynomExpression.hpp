@@ -56,8 +56,6 @@ protected:
    */
   virtual int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
-  ArgumentPtr simplify() const final;
-
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;

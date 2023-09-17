@@ -19,7 +19,7 @@ TEST(IOperatorTests, getOperatorPriorityTest) {
 
 TEST(IOperatorTests, isAssociativeTest) {
   EXPECT_TRUE(Add().isAssociative());
-  EXPECT_TRUE(Neg().isAssociative());
+  EXPECT_FALSE(Neg().isAssociative());
   EXPECT_TRUE(Or().isAssociative());
   EXPECT_FALSE(Pow().isAssociative());
 }

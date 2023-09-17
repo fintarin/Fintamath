@@ -24,6 +24,10 @@ TEST(DegTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PostfixUnary);
 }
 
+TEST(DegTests, isAssociativeTest) {
+  EXPECT_FALSE(f.isAssociative());
+}
+
 TEST(DegTests, callTest) {
   EXPECT_EQ(f(Integer(0))->toString(), "0");
   EXPECT_EQ(f(Integer(1))->toString(), "Pi/180");

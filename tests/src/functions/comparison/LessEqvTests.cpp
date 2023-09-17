@@ -24,6 +24,10 @@ TEST(LessEqvTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Comparison);
 }
 
+TEST(LessEqvTests, isAssociativeTest) {
+  EXPECT_TRUE(f.isAssociative());
+}
+
 TEST(LessEqvTests, callTest) {
   EXPECT_EQ(f(Integer(5), Integer(3))->toString(), "False");
   EXPECT_EQ(f(Integer(3), Integer(5))->toString(), "True");

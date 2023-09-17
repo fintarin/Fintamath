@@ -39,7 +39,7 @@ public:
   }
 
 protected:
-  virtual ArgumentPtr simplify() const = 0;
+  virtual ArgumentPtr simplify() const;
 
   virtual ArgumentPtr preSimplify() const;
 
@@ -57,7 +57,7 @@ protected:
 
   static void preciseSimplifyChild(ArgumentPtr &child);
 
-  static void constSimplifyant(ArgumentPtr &child);
+  static void constSimplifyChild(ArgumentPtr &child);
 
   static ArgumentPtr callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs);
 

@@ -23,6 +23,10 @@ TEST(NequivTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Equivalence);
 }
 
+TEST(NequivTests, isAssociativeTest) {
+  EXPECT_TRUE(f.isAssociative());
+}
+
 TEST(NequivTests, callTest) {
   EXPECT_EQ(f(Boolean(false), Boolean(false))->toString(), "False");
   EXPECT_EQ(f(Boolean(false), Boolean(true))->toString(), "True");

@@ -23,6 +23,10 @@ TEST(NotTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PrefixUnary);
 }
 
+TEST(NotTests, isAssociativeTest) {
+  EXPECT_FALSE(f.isAssociative());
+}
+
 TEST(NotTests, callTest) {
   EXPECT_EQ(f(Boolean(true))->toString(), "False");
   EXPECT_EQ(f(Boolean(false))->toString(), "True");

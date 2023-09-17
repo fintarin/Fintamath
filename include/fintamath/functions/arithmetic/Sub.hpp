@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Sub : public IOperatorCRTP<IArithmetic, Sub, IArithmetic, IArithmetic> {
 public:
-  Sub() : IOperatorCRTP(IOperator::Priority::Addition, false) {
+  Sub() : IOperatorCRTP(IOperator::Priority::Addition) {
   }
 
   std::string toString() const override {

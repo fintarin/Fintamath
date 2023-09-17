@@ -98,24 +98,12 @@ struct ExpressionConfig {
 
   static void registerTermsMakers() {
     Expression::registerTermsMaker([](const Token &token) {
-      ArgumentsPtrVector args;
-
-      for (auto i = size_t(IFunction::Type::None); i <= size_t(IOperator::Priority::Any); i++) {
-        if (ArgumentPtr arg = IOperator::parse(token, IOperator::Priority(i))) {
-          args.emplace_back(arg);
-        }
+      if (ArgumentPtr arg = IFunction::parse(token, IFunction::Type::Binary)) {
+        return std::make_unique<Term>(token, arg);
       }
 
-      if (args.empty()) {
-        for (auto i = size_t(IFunction::Type::None); i <= size_t(IFunction::Type::Any); i++) {
-          if (ArgumentPtr arg = IFunction::parse(token, IFunction::Type(i))) {
-            args.emplace_back(arg);
-          }
-        }
-      }
-
-      if (!args.empty()) {
-        return std::make_unique<Term>(token, args);
+      if (ArgumentPtr arg = IFunction::parse(token)) {
+        return std::make_unique<Term>(token, arg);
       }
 
       return std::unique_ptr<Term>();
@@ -123,7 +111,7 @@ struct ExpressionConfig {
 
     Expression::registerTermsMaker([](const Token &token) {
       if (ArgumentPtr arg = ILiteral::parse(token)) {
-        return std::make_unique<Term>(token, ArgumentsPtrVector{arg});
+        return std::make_unique<Term>(token, arg);
       }
 
       return std::unique_ptr<Term>();
@@ -131,7 +119,7 @@ struct ExpressionConfig {
 
     Expression::registerTermsMaker([](const Token &token) {
       if (ArgumentPtr arg = INumber::parse(token)) {
-        return std::make_unique<Term>(token, ArgumentsPtrVector{arg->toMinimalObject()});
+        return std::make_unique<Term>(token, arg->toMinimalObject());
       }
 
       return std::unique_ptr<Term>();

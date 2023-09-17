@@ -23,6 +23,10 @@ TEST(AndTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Conjunction);
 }
 
+TEST(AndTests, isAssociativeTest) {
+  EXPECT_TRUE(f.isAssociative());
+}
+
 TEST(AndTests, callTest) {
   EXPECT_EQ(f(Boolean(false), Boolean(false))->toString(), "False");
   EXPECT_EQ(f(Boolean(false), Boolean(true))->toString(), "False");

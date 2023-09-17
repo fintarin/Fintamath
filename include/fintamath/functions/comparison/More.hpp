@@ -8,7 +8,7 @@ namespace fintamath {
 
 class More : public IOperatorCRTP<Boolean, More, IComparable, IComparable> {
 public:
-  More() : IOperatorCRTP(IOperator::Priority::Comparison) {
+  More() : IOperatorCRTP(IOperator::Priority::Comparison, true) {
   }
 
   std::string toString() const override {

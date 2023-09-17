@@ -41,8 +41,6 @@ std::string functionToString(const IFunction &func, const ArgumentsPtrVector &ar
 }
 
 std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &child) {
-  IOperator::Priority operPriority = oper.getOperatorPriority();
-
   std::string childStr = child->toString();
   std::shared_ptr<IOperator> childOper;
 
@@ -74,20 +72,19 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
     }
   }
 
+  bool shouldPutInBrackets = false;
+
   if (childOper) {
-    IOperator::Priority lhsOperPriority = childOper->getOperatorPriority();
+    shouldPutInBrackets = oper.getOperatorPriority() == IOperator::Priority::PostfixUnary ||
+                          childOper->getOperatorPriority() > oper.getOperatorPriority();
 
-    if (lhsOperPriority > operPriority ||
-        (lhsOperPriority == operPriority &&
-         childOper->getFunctionType() == IFunction::Type::Unary) ||
-        (!oper.isAssociative() &&
-         childOper->getFunctionType() != IFunction::Type::Unary)) {
-
-      return putInBrackets(childStr);
-    }
+    shouldPutInBrackets = shouldPutInBrackets ||
+                          (childOper->getFunctionType() == IFunction::Type::Unary
+                               ? childOper->getOperatorPriority() == oper.getOperatorPriority()
+                               : !oper.isAssociative());
   }
 
-  return childStr;
+  return shouldPutInBrackets ? putInBrackets(childStr) : childStr;
 }
 
 std::string binaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

@@ -24,7 +24,7 @@ TEST(AcothTests, getFunctionTypeTest) {
 
 TEST(AcothTests, callTest) {
   EXPECT_EQ(f(Integer(-1))->toString(), "-Inf");
-  EXPECT_EQ(f(Integer(0))->toString(), "(I Pi)/2");
+  EXPECT_EQ(f(Integer(0))->toString(), "1/2 I Pi");
   EXPECT_EQ(f(Integer(1))->toString(), "Inf");
   EXPECT_EQ(f(Integer(2))->toString(),
             "0.54930614433405484569762261846126285232374527891137472586734716681874714660930448");

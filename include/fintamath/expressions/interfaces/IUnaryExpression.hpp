@@ -27,8 +27,6 @@ protected:
 
   virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
 
-  ArgumentPtr simplify() const final;
-
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;

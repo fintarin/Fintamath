@@ -36,15 +36,6 @@ std::string IPolynomExpression::toString() const {
   return result;
 }
 
-ArgumentPtr IPolynomExpression::simplify() const {
-  ArgumentPtr simpl = cast<IPolynomExpression>(clone());
-
-  preSimplifyChild(simpl);
-  postSimplifyChild(simpl);
-
-  return simpl;
-}
-
 ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs,
                                                      size_t lhsChildPos,
                                                      size_t rhsChildPos) const {
