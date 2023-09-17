@@ -21,8 +21,6 @@ public:
   }
 
 protected:
-  ArgumentPtr simplify() const override;
-
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;

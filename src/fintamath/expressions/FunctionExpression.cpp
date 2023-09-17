@@ -42,20 +42,6 @@ ArgumentsPtrVector FunctionExpression::getChildren() const {
   return children;
 }
 
-ArgumentPtr FunctionExpression::simplify() const {
-  auto simpl = cast<FunctionExpression>(clone());
-
-  for (auto &child : simpl->children) {
-    simplifyChild(child);
-  }
-
-  if (ArgumentPtr res = callFunction(*simpl->func, simpl->children)) {
-    return res;
-  }
-
-  return simpl;
-}
-
 ArgumentPtr FunctionExpression::preSimplify() const {
   auto simpl = cast<FunctionExpression>(clone());
 
@@ -79,7 +65,7 @@ ArgumentPtr FunctionExpression::postSimplify() const {
     return simpl;
   }
 
-  return (*func)(args);
+  return callFunction(*simpl->func, argumentRefVectorToArgumentPtrVector(args));
 }
 
 ArgumentPtr FunctionExpression::preciseSimplify() const {

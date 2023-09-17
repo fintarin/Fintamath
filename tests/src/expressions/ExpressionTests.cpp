@@ -45,7 +45,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2 ^ 2").toString(), "4");
   EXPECT_EQ(Expression("-2 ^ 2").toString(), "-4");
   EXPECT_EQ(Expression("2 ^ -2").toString(), "1/4");
-  EXPECT_EQ(Expression("2 ^ 3!").toString(), "64");
+  EXPECT_EQ(Expression("2 ^ 3!").toString(), "40320");
   EXPECT_EQ(Expression("0^1").toString(), "0");
   EXPECT_EQ(Expression("2^0").toString(), "1");
   EXPECT_EQ(Expression("(-7)^10").toString(), "282475249");
@@ -226,6 +226,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("aEE").toString(), "E^2 a");
   EXPECT_EQ(Expression("EEa").toString(), "E^2 a");
   EXPECT_EQ(Expression("x123").toString(), "123 x");
+  EXPECT_EQ(Expression("x^y!").toString(), "(x^y)!");
   EXPECT_EQ(Expression("lnE").toString(), "1");
   EXPECT_EQ(Expression("lncossinE").toString(), "ln(cos(sin(E)))");
   EXPECT_EQ(Expression("ln cos sin a").toString(), "ln(cos(sin(a)))");
@@ -401,13 +402,20 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E^Pi, E)").toString(), "1/Pi");
 
   // TODO! implement this
+  // EXPECT_EQ(Expression("sqrt((-1)^2)").toString(), "abs(x)");
+  // EXPECT_EQ(Expression("sqrt((-1)^2)").toString(), "abs(x)");
   // EXPECT_EQ(Expression("sqrt(x^2)").toString(), "abs(x)");
   // EXPECT_EQ(Expression("(x^10)^(1/10))").toString(), "abs(x)");
   // EXPECT_EQ(Expression("(x^3)^(1/3)").toString(), "x");
   // EXPECT_EQ(Expression("sqrt(x)^2").toString(), "x");
   // EXPECT_EQ(Expression("sqrt(x) * sqrt(x)").toString(), "x");
+  // EXPECT_EQ(Expression("root(x^(-2), )").toString(), "abs(1/x)");
   // EXPECT_EQ(Expression("abs(x)^3").toString(), "abs(x^3)");
   // EXPECT_EQ(Expression("abs(x^3)").toString(), "abs(x^3)");
+  // EXPECT_EQ(Expression("abs(x)^I").toString(), "abs(x)^I");
+  // EXPECT_EQ(Expression("abs(x^I)").toString(), "abs(x^I)");
+  // EXPECT_EQ(Expression("abs(x)^x").toString(), "abs(x)^x");
+  // EXPECT_EQ(Expression("abs(x^x)").toString(), "abs(x^x)");
 
   EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
@@ -482,7 +490,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E,5)>ln(5)").toString(), "False");
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").toString(), "True");
-  EXPECT_EQ(Expression("log(1deg, 1deg^1deg) = 1deg").toString(), "True");
+  EXPECT_EQ(Expression("log(1deg, (1deg)^(1deg)) = 1deg").toString(), "True");
   EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "-Pi^E + E^Pi > 0"); // TODO: True
   EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "-E^Pi + Pi^E < 0"); // TODO: True
 
@@ -1402,6 +1410,7 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression(" +   "), InvalidInputException);
   EXPECT_THROW(Expression("(1+2))"), InvalidInputException);
   EXPECT_THROW(Expression("5-*3"), InvalidInputException);
+  EXPECT_THROW(Expression("5 3 +"), InvalidInputException);
   EXPECT_THROW(Expression("((()()))"), InvalidInputException);
   EXPECT_THROW(Expression("2.2.2"), InvalidInputException);
   EXPECT_THROW(Expression("--"), InvalidInputException);

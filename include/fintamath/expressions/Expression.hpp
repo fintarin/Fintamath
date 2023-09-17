@@ -10,18 +10,18 @@ namespace fintamath {
 struct Term {
   Token name;
 
-  ArgumentsPtrVector values;
+  ArgumentPtr value;
 
 public:
   Term() = default;
 
-  Term(std::string inName, ArgumentsPtrVector inValues)
+  Term(std::string inName, ArgumentPtr inValue)
       : name(std::move(inName)),
-        values(std::move(inValues)) {
+        value(std::move(inValue)) {
   }
 };
 
-using TermVector = std::vector<std::shared_ptr<Term>>;
+using TermsVector = std::vector<std::shared_ptr<Term>>;
 
 class Expression : public IExpressionCRTP<Expression> {
 public:
@@ -102,29 +102,33 @@ protected:
   ArgumentPtr preciseSimplify() const override;
 
 private:
-  bool parseBinaryOperator(const TermVector &terms, size_t start, size_t end);
+  bool parseOperator(const TermsVector &terms, size_t start, size_t end);
 
-  bool parsePrefixOperator(const TermVector &terms, size_t start, size_t end);
+  bool parseFunction(const TermsVector &terms, size_t start, size_t end);
 
-  bool parsePostfixOperator(const TermVector &terms, size_t start, size_t end);
+  bool parseBrackets(const TermsVector &terms, size_t start, size_t end);
 
-  bool parseFunction(const TermVector &terms, size_t start, size_t end);
+  bool parseTerm(const TermsVector &terms, size_t start, size_t end);
 
-  bool parseBrackets(const TermVector &terms, size_t start, size_t end);
+  static ArgumentsPtrVector parseFunctionArgs(const TermsVector &terms, size_t start, size_t end);
 
-  bool parseFiniteTerm(const TermVector &terms, size_t start, size_t end);
+  static TermsVector tokensToTerms(const TokenVector &tokens);
 
-  static ArgumentsPtrVector parseFunctionArgs(const TermVector &terms, size_t start, size_t end);
+  static void insertMultiplications(TermsVector &terms);
 
-  static TermVector tokensToTerms(const TokenVector &tokens);
+  static void fixOperatorTypes(TermsVector &terms);
 
-  static void insertDelimiters(TermVector &terms);
+  static void collapseFactorials(TermsVector &terms);
 
-  static bool skipBrackets(const TermVector &terms, size_t &openBracketIndex);
+  static bool canNextTermBeBinaryOperator(const Term &term);
 
-  static void cutBrackets(const TermVector &terms, size_t &start, size_t &end);
+  static bool canPrevTermBeBinaryOperator(const Term &term);
 
-  static std::string termsToString(const TermVector &terms);
+  static bool skipBrackets(const TermsVector &terms, size_t &openBracketIndex);
+
+  static void cutBrackets(const TermsVector &terms, size_t &start, size_t &end);
+
+  static std::string termsToString(const TermsVector &terms);
 
   static bool isBinaryOperator(const ArgumentPtr &val);
 
@@ -150,24 +154,13 @@ private:
 
   friend ArgumentPtr parseExpr(const std::string &str);
 
-  friend ArgumentPtr parseExpr(const TermVector &terms);
+  friend ArgumentPtr parseExpr(const TermsVector &terms);
 
-  friend ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end);
+  friend ArgumentPtr parseExpr(const TermsVector &terms, size_t start, size_t end);
 
   static Parser::Vector<std::unique_ptr<Term>, const Token &> &getTermMakers();
 
   static Parser::Map<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> &getExpressionMakers();
-
-  template <typename Predicate>
-  static ArgumentPtr getTermValueIf(const Term &term, Predicate &&predicate) {
-    for (const auto &val : term.values) {
-      if (predicate(val)) {
-        return val;
-      }
-    }
-
-    return {};
-  }
 
 private:
   ArgumentPtr child;
@@ -175,9 +168,9 @@ private:
 
 ArgumentPtr parseExpr(const std::string &str);
 
-ArgumentPtr parseExpr(const TermVector &terms);
+ArgumentPtr parseExpr(const TermsVector &terms);
 
-ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end);
+ArgumentPtr parseExpr(const TermsVector &terms, size_t start, size_t end);
 
 Expression operator+(const Variable &lhs, const Variable &rhs);
 

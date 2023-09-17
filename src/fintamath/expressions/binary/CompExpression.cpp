@@ -53,16 +53,16 @@ ArgumentPtr CompExpression::preSimplify() const {
 
   if (auto simplExpr = cast<CompExpression>(simpl)) {
     if (!simplExpr->isSolution &&
-        (!is<Integer>(rhsChild) || *rhsChild != Integer(0))) {
+        (!is<Integer>(simplExpr->rhsChild) || *simplExpr->rhsChild != Integer(0))) {
 
       if (*func != Eqv() &&
           *func != Neqv() &&
-          (hasComplex(lhsChild) || hasComplex(rhsChild))) {
+          (hasComplex(simplExpr->lhsChild) || hasComplex(simplExpr->rhsChild))) {
 
         return simpl;
       }
 
-      if (!hasInfinity(lhsChild) && !hasInfinity(rhsChild)) {
+      if (!hasInfinity(simplExpr->lhsChild) && !hasInfinity(simplExpr->rhsChild)) {
         ArgumentPtr resLhs = subExpr(simplExpr->lhsChild, simplExpr->rhsChild);
         preSimplifyChild(resLhs);
         return CompExpression(cast<IOperator>(*func), resLhs, Integer(0).clone()).clone();

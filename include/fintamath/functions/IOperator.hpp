@@ -9,17 +9,17 @@ class IOperator : public IFunction {
 
 public:
   enum class Priority : uint16_t {
-    Exponentiation, // exponentiation operators
-    PostfixUnary,   // postfix unary operators
-    PrefixUnary,    // prefix unary operators
-    Multiplication, // multiplication operators
-    Addition,       // addition operators
-    Comparison,     // comparison operators
-    Conjunction,    // conjunction operators
-    Disjunction,    // disjunction operators
-    Implication,    // implication operators
-    Equivalence,    // equivalence operators
-    Any,            // any priority operators
+    Exponentiation, // e.g.  a ^ b
+    PostfixUnary,   // e.g.  a!
+    PrefixUnary,    // e.g.  -a
+    Multiplication, // e.g.  a * b
+    Addition,       // e.g.  a + b
+    Comparison,     // e.g.  a = b
+    Conjunction,    // e.g.  a & b
+    Disjunction,    // e.g.  a | b
+    Implication,    // e.g.  a -> b
+    Equivalence,    // e.g.  a <-> b
+    Any,
   };
 
 public:
@@ -56,7 +56,7 @@ class IOperatorCRTP : public IOperator {
 
 public:
   IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any,
-                bool isAssociative = true,
+                bool isAssociative = false,
                 bool isNonExressionEvaluatable = true)
       : isNonExressionEvaluatableFunc(isNonExressionEvaluatable),
         priority(inPriority),

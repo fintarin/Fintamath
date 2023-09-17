@@ -24,6 +24,10 @@ TEST(PercentTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PostfixUnary);
 }
 
+TEST(PercentTests, isAssociativeTest) {
+  EXPECT_FALSE(f.isAssociative());
+}
+
 TEST(PercentTests, callTest) {
   EXPECT_EQ(f(Integer(1))->toString(), "1/100");
   EXPECT_EQ(f(Integer(1000))->toString(), "10");

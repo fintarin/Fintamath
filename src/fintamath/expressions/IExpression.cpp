@@ -74,6 +74,13 @@ std::shared_ptr<IFunction> IExpression::getOutputFunction() const {
   return getFunction();
 }
 
+ArgumentPtr IExpression::simplify() const {
+  ArgumentPtr simpl = cast<IExpression>(clone());
+  preSimplifyChild(simpl);
+  postSimplifyChild(simpl);
+  return simpl;
+}
+
 void IExpression::compressChild(ArgumentPtr &child) {
   for (;;) {
     if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
@@ -91,8 +98,6 @@ void IExpression::simplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
-
-  constSimplifyant(child);
 }
 
 void IExpression::preSimplifyChild(ArgumentPtr &child) {
@@ -101,6 +106,8 @@ void IExpression::preSimplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
+
+  constSimplifyChild(child);
 }
 
 void IExpression::postSimplifyChild(ArgumentPtr &child) {
@@ -112,22 +119,41 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
 }
 
 void IExpression::preciseSimplifyChild(ArgumentPtr &child) {
-  if (const auto exprChild = cast<IExpression>(child)) {
-    child = exprChild->preciseSimplify();
-  }
-  else if (const auto numChild = cast<INumber>(child)) {
-    // TODO! use multimethod
-    if (const auto complexChild = cast<Complex>(numChild)) {
-      child = Complex(*convert<Real>(complexChild->real()),
-                      *convert<Real>(complexChild->imag()))
-                  .clone();
-    }
-    else {
-      child = convert<Real>(*numChild);
+  static const auto multiPrecise = [] {
+    static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiPrecise;
+
+    outMultiPrecise.add<Integer>([](const Integer &inRhs) {
+      return Real(inRhs).clone();
+    });
+
+    outMultiPrecise.add<Rational>([](const Rational &inRhs) {
+      return Real(inRhs).clone();
+    });
+
+    outMultiPrecise.add<Real>([](const Real &inRhs) {
+      return inRhs.clone();
+    });
+
+    outMultiPrecise.add<Complex>([](const Complex &inRhs) {
+      return Complex(
+                 *convert<Real>(inRhs.real()),
+                 *convert<Real>(inRhs.imag()))
+          .clone();
+    });
+
+    return outMultiPrecise;
+  }();
+
+  if (const auto numChild = cast<INumber>(child)) {
+    if (auto res = multiPrecise(*numChild)) {
+      child = std::move(res);
     }
   }
   else if (const auto constChild = cast<IConstant>(child)) {
     child = (*constChild)();
+  }
+  else if (const auto exprChild = cast<IExpression>(child)) {
+    child = exprChild->preciseSimplify();
   }
 }
 
@@ -170,7 +196,7 @@ ArgumentPtr IExpression::postSimplify() const {
   return {};
 }
 
-void IExpression::constSimplifyant(ArgumentPtr &child) {
+void IExpression::constSimplifyChild(ArgumentPtr &child) {
   if (const auto constChild = cast<IConstant>(child)) {
     ArgumentPtr constVal = (*constChild)();
 

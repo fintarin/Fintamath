@@ -24,6 +24,10 @@ TEST(IndexTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Exponentiation);
 }
 
+TEST(IndexTests, isAssociativeTest) {
+  EXPECT_FALSE(f.isAssociative());
+}
+
 TEST(IndexTests, callTest) {
   EXPECT_EQ(f(Variable("a"), Integer(1))->toString(), "a_1");
   EXPECT_EQ(f(Variable("a"), Integer(2))->toString(), "a_2");

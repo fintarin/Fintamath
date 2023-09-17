@@ -27,6 +27,10 @@ TEST(PowTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Exponentiation);
 }
 
+TEST(PowTests, isAssociativeTest) {
+  EXPECT_FALSE(f.isAssociative());
+}
+
 TEST(PowTests, callTest) {
   EXPECT_EQ(f(Integer(3), Integer(2))->toString(), "9");
   EXPECT_EQ(f(Integer(-3), Integer(2))->toString(), "9");

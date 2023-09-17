@@ -25,6 +25,10 @@ TEST(AddTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Addition);
 }
 
+TEST(AddTests, isAssociativeTest) {
+  EXPECT_TRUE(f.isAssociative());
+}
+
 TEST(AddTests, callTest) {
   EXPECT_EQ(f(Integer(3), Integer(5))->toString(), "8");
   EXPECT_EQ(f(Integer(3), Rational(5, 2))->toString(), "11/2");

@@ -25,6 +25,10 @@ TEST(DivTests, getOperatorPriorityTest) {
   EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Multiplication);
 }
 
+TEST(DivTests, isAssociativeTest) {
+  EXPECT_FALSE(f.isAssociative());
+}
+
 TEST(DivTests, callTest) {
   EXPECT_EQ(f(Integer(3), Integer(5))->toString(), "3/5");
   EXPECT_EQ(f(Integer(3), Rational(5, 2))->toString(), "6/5");

@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Mul : public IOperatorCRTP<IArithmetic, Mul, IArithmetic, IArithmetic> {
 public:
-  Mul() : IOperatorCRTP(IOperator::Priority::Multiplication) {
+  Mul() : IOperatorCRTP(IOperator::Priority::Multiplication, true) {
   }
 
   std::string toString() const override {
