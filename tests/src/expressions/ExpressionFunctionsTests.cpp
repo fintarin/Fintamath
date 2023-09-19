@@ -195,6 +195,14 @@ TEST(ExpressionFunctionsTests, acotTest) {
   EXPECT_EQ(acot(Expression("a/5")).toString(), "acot(a/5)");
 }
 
+TEST(ExpressionFunctionsTests, eTest) {
+  EXPECT_EQ(e().toString(), "E");
+}
+
+TEST(ExpressionFunctionsTests, piTest) {
+  EXPECT_EQ(pi().toString(), "Pi");
+}
+
 TEST(ExpressionFunctionsTests, derivativeTest) {
   EXPECT_EQ(derivative(Expression("1"), Expression("a")).toString(), "0");
   EXPECT_EQ(derivative(Expression("a"), Expression("a")).toString(), "1");

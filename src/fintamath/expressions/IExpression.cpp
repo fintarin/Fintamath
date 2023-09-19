@@ -130,10 +130,6 @@ void IExpression::preciseSimplifyChild(ArgumentPtr &child) {
       return Real(inRhs).clone();
     });
 
-    outMultiPrecise.add<Real>([](const Real &inRhs) {
-      return inRhs.clone();
-    });
-
     outMultiPrecise.add<Complex>([](const Complex &inRhs) {
       return Complex(
                  *convert<Real>(inRhs.real()),
