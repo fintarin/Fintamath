@@ -185,7 +185,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").toString(), "sqrt(3)/2");
   EXPECT_EQ(Expression("-sin(2)").toString(), "-sin(2)");
   EXPECT_EQ(Expression("2^(3/2)").toString(), "2 sqrt(2)");
+  EXPECT_EQ(Expression("sqrt((-1)^2)").toString(), "1");
   EXPECT_EQ(Expression("sqrt(sqrt5)").toString(), "root(5, 4)");
+  EXPECT_EQ(Expression("sqrt(sqrt(-5))").toString(), "sqrt(I) root(5, 4)");
   EXPECT_EQ(Expression("sqrt4!").toString(), "2");
   EXPECT_EQ(Expression("(sqrt4)!").toString(), "2");
   EXPECT_EQ(Expression("sqrt4*2!").toString(), "4");
@@ -255,9 +257,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("x/y/z").toString(), "x/(y z)");
   EXPECT_EQ(Expression("x/(y/z)").toString(), "(x z)/y");
   EXPECT_EQ(Expression("(x/y)/z").toString(), "x/(y z)");
-  EXPECT_EQ(Expression("x^y^z").toString(), "x^(y z)");
+  EXPECT_EQ(Expression("x^y^z").toString(), "(x^y)^z");
   EXPECT_EQ(Expression("x^(y^z)").toString(), "x^(y^z)");
-  EXPECT_EQ(Expression("(x^y)^z").toString(), "x^(y z)");
+  EXPECT_EQ(Expression("(x^y)^z").toString(), "(x^y)^z");
   EXPECT_EQ(Expression("(a+b)^2").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("(a+b)^3").toString(), "a^3 + 3 a^2 b + 3 a b^2 + b^3");
   EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3 + 3 a^2 b + 3 a b^2 + b^3");
@@ -362,6 +364,7 @@ TEST(ExpressionTests, stringConstructorTest) {
 
   EXPECT_EQ(Expression("sqrt(x) + x").toString(), "x + sqrt(x)");
   EXPECT_EQ(Expression("sqrt(x) - x").toString(), "-x + sqrt(x)");
+  EXPECT_EQ(Expression("sqrt(x) * sqrt(x)").toString(), "x");
   EXPECT_EQ(Expression("x/(sqrt(x) - x)").toString(), "-1 - sqrt(x)/(x - sqrt(x))");
   EXPECT_EQ(Expression("x/(2 sqrt(x) - x)").toString(), "-1 - (2 sqrt(x))/(x - 2 sqrt(x))");
   EXPECT_EQ(Expression("(x-1)/(sqrt(x) - x)").toString(), "-1 - 1/sqrt(x)");
@@ -401,15 +404,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E^3, E)").toString(), "1/3");
   EXPECT_EQ(Expression("log(E^Pi, E)").toString(), "1/Pi");
 
-  // TODO! implement this
-  // EXPECT_EQ(Expression("sqrt((-1)^2)").toString(), "abs(x)");
-  // EXPECT_EQ(Expression("sqrt((-1)^2)").toString(), "abs(x)");
-  // EXPECT_EQ(Expression("sqrt(x^2)").toString(), "abs(x)");
-  // EXPECT_EQ(Expression("(x^10)^(1/10))").toString(), "abs(x)");
-  // EXPECT_EQ(Expression("(x^3)^(1/3)").toString(), "x");
-  // EXPECT_EQ(Expression("sqrt(x)^2").toString(), "x");
-  // EXPECT_EQ(Expression("sqrt(x) * sqrt(x)").toString(), "x");
-  // EXPECT_EQ(Expression("root(x^(-2), )").toString(), "abs(1/x)");
+  EXPECT_EQ(Expression("sqrt(x^2)").toString(), "sqrt(x^2)");
+  EXPECT_EQ(Expression("(x^10)^(1/10)").toString(), "root(x^10, 10)");
+  EXPECT_EQ(Expression("(x^3)^(1/3)").toString(), "root(x^3, 3)");
+  EXPECT_EQ(Expression("sqrt(x)^2").toString(), "sqrt(x)^2");
+  EXPECT_EQ(Expression("root(x^(-2), -2)").toString(), "sqrt(x^2)");
+
+  // TODO: implement
   // EXPECT_EQ(Expression("abs(x)^3").toString(), "abs(x^3)");
   // EXPECT_EQ(Expression("abs(x^3)").toString(), "abs(x^3)");
   // EXPECT_EQ(Expression("abs(x)^I").toString(), "abs(x)^I");

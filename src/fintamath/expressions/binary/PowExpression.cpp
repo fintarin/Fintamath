@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -79,13 +80,6 @@ ArgumentPtr PowExpression::preciseSimplify() const {
   }
 
   return IBinaryExpression::preciseSimplify();
-}
-
-PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPreSimplify() const {
-  static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
-      &PowExpression::powSimplify,
-  };
-  return simplifyFunctions;
 }
 
 PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplify() const {
@@ -182,9 +176,21 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
   ArgumentPtr res;
 
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
-    ArgumentPtr lhsPow = lhsExpr->getChildren().front();
-    ArgumentPtr rhsPow = mulExpr(lhsExpr->getChildren().back(), rhs);
-    res = powExpr(lhsPow, rhsPow);
+    auto lhsExprLhsChild = lhsExpr->getChildren().front();
+    auto lhsExprRhsChild = lhsExpr->getChildren().back();
+
+    bool canMul = is<Integer>(rhs) && is<Integer>(lhsExprRhsChild);
+
+    if (auto lhsExprLhsChildNum = cast<INumber>(lhsExprLhsChild)) {
+      canMul = canMul ||
+               *MoreEqv()(*lhsExprLhsChildNum, Integer(0)) == Boolean(true);
+    }
+
+    if (canMul) {
+      ArgumentPtr newLhs = lhsExprLhsChild;
+      ArgumentPtr newRhs = mulExpr(lhsExprRhsChild, rhs);
+      res = powExpr(newLhs, newRhs);
+    }
   }
 
   return res;

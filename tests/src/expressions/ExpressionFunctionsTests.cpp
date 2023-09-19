@@ -102,14 +102,14 @@ TEST(ExpressionFunctionsTests, factorialTest) {
 TEST(ExpressionFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Expression("4")).toString(), "2");
   EXPECT_EQ(sqrt(Expression("5")).toString(), "sqrt(5)");
-  EXPECT_EQ(sqrt(Expression("a^4")).toString(), "a^2");
-  EXPECT_EQ(sqrt(Expression("a^2*b*b")).toString(), "a b");
+  EXPECT_EQ(sqrt(Expression("a^4")).toString(), "sqrt(a^4)");
+  EXPECT_EQ(sqrt(Expression("a^2*b*b")).toString(), "sqrt(a^2) sqrt(b^2)");
   EXPECT_EQ(sqrt(Expression("a^2+b^2+2*a*b")).toString(), "sqrt(a^2 + 2 a b + b^2)");
 }
 
 TEST(ExpressionFunctionsTests, powTest) {
   EXPECT_EQ(pow(Expression("a+b"), Expression("0")).toString(), "1");
-  EXPECT_EQ(pow(Expression("a^4"), Expression("a")).toString(), "a^(4 a)");
+  EXPECT_EQ(pow(Expression("a^4"), Expression("a")).toString(), "(a^4)^a");
   EXPECT_EQ(pow(Expression("a^4"), Expression("2")).toString(), "a^8");
   EXPECT_EQ(pow(Expression("a*b"), Expression("a+3")).toString(), "a^(a + 3) b^(a + 3)");
   EXPECT_EQ(pow(Expression("a+2"), Expression("2")).toString(), "a^2 + 4 a + 4");
