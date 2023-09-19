@@ -315,15 +315,14 @@ void Expression::insertMultiplications(TermsVector &terms) {
 }
 
 void Expression::fixOperatorTypes(TermsVector &terms) {
+  bool isFixed = true;
+
   if (auto &term = terms.front();
       is<IOperator>(term->value) &&
       !isPrefixOperator(term->value)) {
 
     term->value = IOperator::parse(term->name, IOperator::Priority::PrefixUnary);
-
-    if (!term->value) {
-      throw InvalidInputException(termsToString(terms));
-    }
+    isFixed = isFixed && term->value;
   }
 
   if (auto &term = terms.back();
@@ -331,10 +330,7 @@ void Expression::fixOperatorTypes(TermsVector &terms) {
       !isPostfixOperator(term->value)) {
 
     term->value = IOperator::parse(term->name, IOperator::Priority::PostfixUnary);
-
-    if (!term->value) {
-      throw InvalidInputException(termsToString(terms));
-    }
+    isFixed = isFixed && term->value;
   }
 
   if (terms.size() < 3) {
@@ -350,10 +346,7 @@ void Expression::fixOperatorTypes(TermsVector &terms) {
         !canNextTermBeBinaryOperator(*termPrev)) {
 
       term->value = IOperator::parse(term->name, IOperator::Priority::PrefixUnary);
-
-      if (!term->value) {
-        throw InvalidInputException(termsToString(terms));
-      }
+      isFixed = isFixed && term->value;
     }
   }
 
@@ -366,11 +359,12 @@ void Expression::fixOperatorTypes(TermsVector &terms) {
         !canPrevTermBeBinaryOperator(*termNext)) {
 
       term->value = IOperator::parse(term->name, IOperator::Priority::PostfixUnary);
-
-      if (!term->value) {
-        throw InvalidInputException(termsToString(terms));
-      }
+      isFixed = isFixed && term->value;
     }
+  }
+
+  if (!isFixed) {
+    throw InvalidInputException(termsToString(terms));
   }
 }
 

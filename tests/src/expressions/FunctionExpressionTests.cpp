@@ -125,9 +125,13 @@ TEST(FunctionExpressionTests, toStringTest) {
 
   EXPECT_EQ(Expression("$a").toString(), "$a");
   EXPECT_EQ(Expression("$(a+1)").toString(), "$(a + 1)");
+  EXPECT_EQ(Expression("($a)").toString(), "$a");
+  EXPECT_EQ(Expression("($(a+1))").toString(), "$(a + 1)");
 
   EXPECT_EQ(Expression("a$").toString(), "a$");
   EXPECT_EQ(Expression("(a+1)$").toString(), "(a + 1)$");
+  EXPECT_EQ(Expression("(a$)").toString(), "a$");
+  EXPECT_EQ(Expression("((a+1)$)").toString(), "(a + 1)$");
 
   EXPECT_EQ(Expression("testfunction(a)").toString(), "testfunction(a)");
   EXPECT_EQ(Expression("testfunction(a+1)").toString(), "testfunction(a + 1)");
