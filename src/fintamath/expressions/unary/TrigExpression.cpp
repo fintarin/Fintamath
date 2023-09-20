@@ -1,5 +1,6 @@
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 
+#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -29,6 +30,8 @@ TrigExpression::TrigExpression(const IFunction &inFunc, const ArgumentPtr &inChi
 TrigExpression::SimplifyFunctionsVector TrigExpression::getFunctionsForPreSimplify() const {
   static const TrigExpression::SimplifyFunctionsVector simplifyFunctions = {
       &TrigExpression::oppositeFunctionsSimplify,
+      &TrigExpression::tanSimplify,
+      &TrigExpression::cotSimplify,
   };
   return simplifyFunctions;
 }
@@ -48,6 +51,22 @@ ArgumentPtr TrigExpression::oppositeFunctionsSimplify(const IFunction &func, con
         return expr->getChildren().front();
       }
     }
+  }
+
+  return {};
+}
+
+ArgumentPtr TrigExpression::tanSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  if (is<Tan>(func)) {
+    return divExpr(sinExpr(rhs), cosExpr(rhs));
+  }
+
+  return {};
+}
+
+ArgumentPtr TrigExpression::cotSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  if (is<Cot>(func)) {
+    return divExpr(cosExpr(rhs), sinExpr(rhs));
   }
 
   return {};

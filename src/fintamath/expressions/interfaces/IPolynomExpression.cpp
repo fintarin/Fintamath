@@ -416,6 +416,11 @@ IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
     bool isLhsUnary = unwrapUnary(compLhs);
     bool isRhsUnary = unwrapUnary(compRhs);
 
+    if (isLhsUnary && isRhsUnary) {
+      compLhs = lhsChildren[i];
+      compRhs = rhsChildren[j];
+    }
+
     if (result.postfixUnary == 0 && isLhsUnary != isRhsUnary) {
       result.postfixUnary = !isLhsUnary ? -1 : 1;
     }

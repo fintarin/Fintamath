@@ -39,6 +39,8 @@ private:
 
   static ArgumentPtr nestedNumeratorRationalSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
+  static ArgumentPtr trigSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
   static std::pair<ArgumentPtr, ArgumentPtr> sumSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static std::pair<ArgumentPtr, ArgumentPtr> sumMulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);

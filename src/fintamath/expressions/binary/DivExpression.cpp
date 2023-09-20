@@ -7,6 +7,10 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/trigonometry/Cos.hpp"
+#include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Sin.hpp"
+#include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
@@ -48,6 +52,7 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplif
       &DivExpression::nestedRationalSimplify,
       &DivExpression::gcdSimplify,
       &DivExpression::sumSimplify,
+      &DivExpression::trigSimplify,
   };
   return simplifyFunctions;
 }
@@ -519,4 +524,31 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentsPtrVec
 
   return {};
 }
+
+ArgumentPtr DivExpression::trigSimplify(const IFunction & /* func */, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhs);
+  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhs);
+
+  if (*lhsChildRate != *rhsChildRate) {
+    return {};
+  }
+
+  auto lhsChildValueExpr = cast<IExpression>(lhsChildValue);
+  auto rhsChildValueExpr = cast<IExpression>(rhsChildValue);
+
+  if (lhsChildValueExpr && rhsChildValueExpr &&
+      *lhsChildValueExpr->getChildren().front() == *rhsChildValueExpr->getChildren().front()) {
+
+    if (is<Sin>(lhsChildValueExpr->getFunction()) && is<Cos>(rhsChildValueExpr->getFunction())) {
+      return powExpr(tanExpr(*lhsChildValueExpr->getChildren().front()), lhsChildRate);
+    }
+
+    if (is<Cos>(lhsChildValueExpr->getFunction()) && is<Sin>(rhsChildValueExpr->getFunction())) {
+      return powExpr(cotExpr(*lhsChildValueExpr->getChildren().front()), lhsChildRate);
+    }
+  }
+
+  return {};
+}
+
 }
