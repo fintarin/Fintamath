@@ -34,17 +34,9 @@ private:
 
   static ArgumentPtr trigTableCosSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableTanSimplify(const Rational &rhs);
-
-  static ArgumentPtr trigTableCotSimplify(const Rational &rhs);
-
   static std::tuple<Rational, bool> phaseShiftSin(const Rational &rhs);
 
   static std::tuple<Rational, bool> phaseShiftCos(const Rational &rhs);
-
-  static std::tuple<Rational, bool> phaseShiftTan(const Rational &rhs);
-
-  static std::tuple<Rational, bool> phaseShiftCot(const Rational &rhs);
 
   static Rational phaseShiftPeriod(const Rational &rhs);
 
