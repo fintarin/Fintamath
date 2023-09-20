@@ -8,6 +8,8 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/trigonometry/Cos.hpp"
+#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -90,6 +92,7 @@ AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPostSimplif
       &AddExpression::powSimplify,
       &AddExpression::logSimplify,
       &AddExpression::mulLogSimplify,
+      &AddExpression::trigSimplify,
   };
   return simplifyFunctions;
 }
@@ -346,6 +349,28 @@ ArgumentPtr AddExpression::sumSimplify(const IFunction & /*func*/, const Argumen
   }
 
   return res;
+}
+
+ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+  auto lhsExpr = cast<IExpression>(lhsChild);
+  auto rhsExpr = cast<IExpression>(rhsChild);
+
+  if (lhsExpr && rhsExpr &&
+      is<Pow>(lhsExpr->getFunction()) && is<Pow>(rhsExpr->getFunction()) &&
+      *lhsExpr->getChildren().back() == Integer(2) && *rhsExpr->getChildren().back() == Integer(2)) {
+
+    auto lhsExprChildExpr = cast<IExpression>(lhsExpr->getChildren().front());
+    auto rhsExprChildExpr = cast<IExpression>(rhsExpr->getChildren().front());
+
+    if (lhsExprChildExpr && rhsExprChildExpr &&
+        is<Cos>(lhsExprChildExpr->getFunction()) && is<Sin>(rhsExprChildExpr->getFunction()) &&
+        *lhsExprChildExpr->getChildren().front() == *rhsExprChildExpr->getChildren().front()) {
+
+      return Integer(1).clone();
+    }
+  }
+
+  return {};
 }
 
 }
