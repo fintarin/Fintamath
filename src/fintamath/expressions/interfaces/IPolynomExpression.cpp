@@ -5,6 +5,7 @@
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
@@ -30,7 +31,14 @@ std::string IPolynomExpression::toString() const {
   result += childToString(*oper, children.front(), {});
 
   for (size_t i = 1; i < children.size(); i++) {
-    result += childToString(*oper, children[i], children[i - 1]);
+    const std::string childStr = childToString(*oper, children[i], children[i - 1]);
+
+    if (childStr.length() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {
+      result += Mul().toString() + childStr.substr(1);
+    }
+    else {
+      result += childStr;
+    }
   }
 
   return result;

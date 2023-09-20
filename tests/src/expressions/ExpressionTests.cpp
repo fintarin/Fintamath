@@ -264,6 +264,16 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a+b)^3").toString(), "a^3 + 3 a^2 b + 3 a b^2 + b^3");
   EXPECT_EQ(Expression("1*(a+b)^3").toString(), "a^3 + 3 a^2 b + 3 a b^2 + b^3");
   EXPECT_EQ(Expression("(a+b)^4").toString(), "a^4 + 4 a^3 b + 6 a^2 b^2 + 4 a b^3 + b^4");
+  EXPECT_EQ(Expression("5^x 9").toString(), "9*5^x");
+  EXPECT_EQ(Expression("9 5^x").toString(), "9*5^x");
+  EXPECT_EQ(Expression("9 5^x 9").toString(), "81*5^x");
+  EXPECT_EQ(Expression("5^x 99").toString(), "99*5^x");
+  EXPECT_EQ(Expression("99 5^x").toString(), "99*5^x");
+  EXPECT_EQ(Expression("99 5^x 99").toString(), "9801*5^x");
+  EXPECT_EQ(Expression("5^x a").toString(), "a 5^x");
+  EXPECT_EQ(Expression("a 5^x").toString(), "a 5^x");
+  EXPECT_EQ(Expression("a 5^x a").toString(), "a^2*5^x");
+  EXPECT_EQ(Expression("2 5^x 6^y 7^z x^2 y^3").toString(), "2 x^2 y^3*5^x 6^y 7^z");
   EXPECT_EQ(Expression("1*(a+b)*1").toString(), "a + b");
   EXPECT_EQ(Expression("-1*(a+b)*1").toString(), "-a - b");
   EXPECT_EQ(Expression("1*(a+b)*-1").toString(), "-a - b");
@@ -674,7 +684,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln((10 E)^(2 ln(2))) - 2 ln(2) ln(10 E)").toString(), "0");
   EXPECT_EQ(Expression("log(2.3,(E)/(20000.1EE)) + log(2.3,20000.1E)").toString(), "0");
   EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
-  EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5 3^x)");
+  EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5*3^x)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5a)").toString(), "log(2, 5 a 3^x)");
   EXPECT_EQ(Expression("log(2, 3) + 3log(3, 4)").toString(), "3 log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("3log(2x, 3) + log(3, 4)").toString(), "3 log(2 x, 3) + log(3, 4)");
@@ -1786,7 +1796,7 @@ TEST(ExpressionTests, parseExprTest) {
   EXPECT_EQ(parseExpr("2.35%")->toString(), "(47/20)/100");
   EXPECT_EQ(parseExpr("1100*4.76%")->toString(), "1100 (119/25)/100");
   EXPECT_EQ(parseExpr("2.35%%%%")->toString(), "((((47/20)/100)/100)/100)/100");
-  EXPECT_EQ(parseExpr("1100*4.76%1100*4.76%")->toString(), "1100 (119/25)/100 1100 (119/25)/100");
+  EXPECT_EQ(parseExpr("1100*4.76%1100*4.76%")->toString(), "1100 (119/25)/100*1100 (119/25)/100");
   EXPECT_EQ(parseExpr("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))")->toString(), "((5/8)/1)/(((9/4)/0)/5)");
 
   EXPECT_EQ(parseExpr("(1 = 1) / 2")->toString(), "(1 = 1)/2");
