@@ -89,15 +89,8 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPostSimplif
   return simplifyFunctions;
 }
 
-std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
-  if (const auto &powExpr = cast<IExpression>(rhsChild);
-      powExpr && is<Pow>(powExpr->getFunction())) {
-
-    ArgumentsPtrVector powExprChildren = powExpr->getChildren();
-    return {powExprChildren[1], powExprChildren[0]};
-  }
-
-  return {Integer(1).clone(), rhsChild};
+bool MulExpression::isTermsOrderInversed() const {
+  return true;
 }
 
 ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,
@@ -263,8 +256,15 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
   return {};
 }
 
-bool MulExpression::isTermsOrderInversed() const {
-  return true;
+std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
+  if (const auto &powExpr = cast<IExpression>(rhsChild);
+      powExpr && is<Pow>(powExpr->getFunction())) {
+
+    ArgumentsPtrVector powExprChildren = powExpr->getChildren();
+    return {powExprChildren[1], powExprChildren[0]};
+  }
+
+  return {Integer(1).clone(), rhsChild};
 }
 
 }
