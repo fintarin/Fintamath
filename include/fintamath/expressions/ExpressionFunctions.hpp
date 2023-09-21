@@ -4,27 +4,19 @@
 
 namespace fintamath {
 
-template <typename... Args>
-Expression add(const Args &...args) {
+Expression add(const auto &...args) {
   return (Expression(args) + ...);
 }
 
-template <typename... Args>
-Expression mul(const Args &...args) {
+Expression mul(const auto &...args) {
   return (Expression(args) * ...);
 }
 
-inline Expression sub(const Expression &lhs, const Expression &rhs) {
-  return lhs - rhs;
-}
+Expression sub(const Expression &lhs, const Expression &rhs);
 
-inline Expression div(const Expression &lhs, const Expression &rhs) {
-  return lhs / rhs;
-}
+Expression div(const Expression &lhs, const Expression &rhs);
 
-inline Expression neg(const Expression &rhs) {
-  return -rhs;
-}
+Expression neg(const Expression &rhs);
 
 Expression eqv(const Expression &lhs, const Expression &rhs);
 

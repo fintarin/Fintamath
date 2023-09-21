@@ -7,11 +7,10 @@
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/parser/Parser.hpp"
 
-#define FINTAMATH_FUNCTION_EXPRESSION(Function, name) \
-  template <typename... Args>                         \
-  std::unique_ptr<IMathObject> name(Args &&...args) { \
-    static const Function f;                          \
-    return makeExpr(f, std::forward<Args>(args)...);  \
+#define FINTAMATH_FUNCTION_EXPRESSION(Function, name)          \
+  std::unique_ptr<IMathObject> name(auto &&...args) {          \
+    static const Function f;                                   \
+    return makeExpr(f, std::forward<decltype(args)>(args)...); \
   }
 
 namespace fintamath {
