@@ -51,9 +51,7 @@ public:
 protected:
   bool equals(const Complex &rhs) const override;
 
-  bool less(const Complex &rhs) const override;
-
-  bool more(const Complex &rhs) const override;
+  std::strong_ordering compare(const Complex &rhs) const override;
 
   Complex &add(const Complex &rhs) override;
 

@@ -125,18 +125,8 @@ bool Real::equals(const Real &rhs) const {
   return backend == rhs.backend;
 }
 
-bool Real::less(const Real &rhs) const {
-  if (*this == rhs) {
-    return false;
-  }
-  return backend < rhs.backend;
-}
-
-bool Real::more(const Real &rhs) const {
-  if (*this == rhs) {
-    return false;
-  }
-  return backend > rhs.backend;
+std::strong_ordering Real::compare(const Real &rhs) const {
+  return backend.compare(rhs.backend) <=> 0;
 }
 
 Real &Real::add(const Real &rhs) {

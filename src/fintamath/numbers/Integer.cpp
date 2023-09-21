@@ -71,12 +71,8 @@ bool Integer::equals(const Integer &rhs) const {
   return backend == rhs.backend;
 }
 
-bool Integer::less(const Integer &rhs) const {
-  return backend < rhs.backend;
-}
-
-bool Integer::more(const Integer &rhs) const {
-  return backend > rhs.backend;
+std::strong_ordering Integer::compare(const Integer &rhs) const {
+  return backend.compare(rhs.backend) <=> 0;
 }
 
 Integer &Integer::add(const Integer &rhs) {

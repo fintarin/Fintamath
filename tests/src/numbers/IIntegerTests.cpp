@@ -69,12 +69,8 @@ protected:
     return *this;
   }
 
-  bool less(const TestInteger &rhs) const override {
-    return false;
-  }
-
-  bool more(const TestInteger &rhs) const override {
-    return false;
+  std::strong_ordering compare(const TestInteger &rhs) const override {
+    return 0 <=> 1;
   }
 
   TestInteger &increase() override {

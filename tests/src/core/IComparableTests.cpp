@@ -17,12 +17,8 @@ public:
   }
 
 protected:
-  bool less(const TestComparable & /* rhs */) const override {
-    return true;
-  }
-
-  bool more(const TestComparable & /* rhs */) const override {
-    return true;
+  std::strong_ordering compare(const TestComparable & /* rhs */) const override {
+    return 0 <=> 1;
   }
 
   TestComparable &add(const TestComparable &rhs) override {

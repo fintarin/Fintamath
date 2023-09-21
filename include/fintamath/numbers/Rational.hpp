@@ -33,9 +33,7 @@ public:
 protected:
   bool equals(const Rational &rhs) const override;
 
-  bool less(const Rational &rhs) const override;
-
-  bool more(const Rational &rhs) const override;
+  std::strong_ordering compare(const Rational &rhs) const override;
 
   Rational &add(const Rational &rhs) override;
 
