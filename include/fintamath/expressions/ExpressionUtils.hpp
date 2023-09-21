@@ -1,7 +1,5 @@
 #pragma once
 
-#include <map>
-
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -39,8 +37,7 @@ std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &
 
 ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args);
 
-template <typename... Args>
-ArgumentPtr simplifyUndefined(const IFunction &func, const Args &...args) {
+ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<ArgumentPtr> auto &...args) {
   if ((is<Undefined>(args) || ...)) {
     static const size_t undefinedReturnType = Undefined().getReturnType();
     const size_t funcReturnType = func.getReturnType();

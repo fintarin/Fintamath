@@ -187,10 +187,10 @@ protected:
   }
 
 private:
-  template <typename FunctionCommonTypes, typename FunctionDifferentTypes>
-  std::unique_ptr<IInteger> executeAbstract(const IInteger &rhs, const std::string &oper,
-                                            FunctionCommonTypes &&funcCommonTypes,
-                                            FunctionDifferentTypes &&funcDifferentTypes) const {
+  std::unique_ptr<IInteger> executeAbstract(const IInteger &rhs,
+                                            const std::string &oper,
+                                            std::invocable<I_INTEGER_CRTP &, const Derived &> auto funcCommonTypes,
+                                            std::invocable<const IInteger &, const IInteger &> auto funcDifferentTypes) const {
 
     if (const auto *rhpPtr = cast<Derived>(&rhs)) {
       auto lhsPtr = cast<Derived>(clone());

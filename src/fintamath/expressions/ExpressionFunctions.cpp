@@ -34,6 +34,18 @@
 
 namespace fintamath {
 
+Expression sub(const Expression &lhs, const Expression &rhs) {
+  return lhs - rhs;
+}
+
+Expression div(const Expression &lhs, const Expression &rhs) {
+  return lhs / rhs;
+}
+
+Expression neg(const Expression &rhs) {
+  return -rhs;
+}
+
 Expression eqv(const Expression &lhs, const Expression &rhs) {
   return Expression(Eqv()(lhs, rhs));
 }
