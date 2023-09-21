@@ -6,8 +6,6 @@
 
 namespace fintamath {
 
-static const std::string INDEX = "_";
-
 Variable::Variable(std::string inName) {
   if (inName.size() != 1) {
     throw InvalidInputException(inName);
