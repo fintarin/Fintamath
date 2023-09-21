@@ -1,4 +1,4 @@
-#if !defined(FINTAMATH_I_ARITHMETIC_CRTP) && !defined(NDEBUG)
+#if !defined(I_ARITHMETIC_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/core/IArithmetic.hpp"
 
@@ -7,11 +7,11 @@ namespace fintamath {
 template <typename Derived>
 class IArithmeticCRTP_ : public IArithmetic {
 
-#endif // FINTAMATH_I_ARITHMETIC_CRTP
+#endif // I_ARITHMETIC_CRTP
 
-#define FINTAMATH_I_MATH_OBJECT_CRTP FINTAMATH_I_ARITHMETIC_CRTP
+#define I_MATH_OBJECT_CRTP I_ARITHMETIC_CRTP
 #include "fintamath/core/IMathObjectCRTP.hpp"
-#undef FINTAMATH_I_MATH_OBJECT_CRTP
+#undef I_MATH_OBJECT_CRTP
 
 public:
   Derived &operator+=(const Derived &rhs) {
@@ -52,7 +52,7 @@ public:
 
   Derived operator-() const {
     Derived tmp = Derived(cast<Derived>(*this));
-    return cast<FINTAMATH_I_ARITHMETIC_CRTP>(tmp).negate();
+    return cast<I_ARITHMETIC_CRTP>(tmp).negate();
   }
 
 protected:
@@ -69,7 +69,7 @@ protected:
   std::unique_ptr<IArithmetic> addAbstract(const IArithmetic &inRhs) const final {
     return executeAbstract(
         inRhs, "+",
-        [](FINTAMATH_I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
+        [](I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
           return lhs.add(rhs);
         },
         [](const IArithmetic &lhs, const IArithmetic &rhs) {
@@ -80,7 +80,7 @@ protected:
   std::unique_ptr<IArithmetic> substractAbstract(const IArithmetic &inRhs) const final {
     return executeAbstract(
         inRhs, "-",
-        [](FINTAMATH_I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
+        [](I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
           return lhs.substract(rhs);
         },
         [](const IArithmetic &lhs, const IArithmetic &rhs) {
@@ -91,7 +91,7 @@ protected:
   std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &inRhs) const final {
     return executeAbstract(
         inRhs, "*",
-        [](FINTAMATH_I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
+        [](I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
           return lhs.multiply(rhs);
         },
         [](const IArithmetic &lhs, const IArithmetic &rhs) {
@@ -102,7 +102,7 @@ protected:
   std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &inRhs) const final {
     return executeAbstract(
         inRhs, "/",
-        [](FINTAMATH_I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
+        [](I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
           return lhs.divide(rhs);
         },
         [](const IArithmetic &lhs, const IArithmetic &rhs) {
@@ -145,8 +145,8 @@ private:
   }
 
 private:
-#if !defined(FINTAMATH_I_ARITHMETIC_CRTP) && !defined(NDEBUG)
+#if !defined(I_ARITHMETIC_CRTP) && !defined(NDEBUG)
 };
 }
 
-#endif // FINTAMATH_I_ARITHMETIC_CRTP
+#endif // I_ARITHMETIC_CRTP

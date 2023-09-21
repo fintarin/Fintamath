@@ -40,9 +40,9 @@ private:
 
 template <typename Derived>
 class IComparableCRTP : public IComparable {
-#define FINTAMATH_I_COMPARABLE_CRTP IComparableCRTP<Derived>
+#define I_COMPARABLE_CRTP IComparableCRTP<Derived>
 #include "fintamath/core/IComparableCRTP.hpp"
-#undef FINTAMATH_I_COMPARABLE_CRTP
+#undef I_COMPARABLE_CRTP
 };
 
 REQUIRE_COMPARABLES(Lhs, Rhs)

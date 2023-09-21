@@ -70,9 +70,9 @@ private:
 
 template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : public IFunction {
-#define FINTAMATH_I_FUNCTION_CRTP IFunctionCRTP<Return, Derived, Args...>
+#define I_FUNCTION_CRTP IFunctionCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IFunctionCRTP.hpp"
-#undef FINTAMATH_I_FUNCTION_CRTP
+#undef I_FUNCTION_CRTP
 
 public:
   IFunctionCRTP(bool isNonExressionEvaluatable = true) : isNonExressionEvaluatableFunc(isNonExressionEvaluatable) {

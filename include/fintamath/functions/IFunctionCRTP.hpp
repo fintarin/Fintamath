@@ -1,4 +1,4 @@
-#if !defined(FINTAMATH_I_FUNCTION_CRTP) && !defined(NDEBUG)
+#if !defined(I_FUNCTION_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/functions/IFunction.hpp"
 
@@ -7,11 +7,11 @@ namespace fintamath {
 template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP_ : public IFunction {
 
-#endif // FINTAMATH_I_FUNCTION_CRTP
+#endif // I_FUNCTION_CRTP
 
-#define FINTAMATH_I_MATH_OBJECT_CRTP FINTAMATH_I_FUNCTION_CRTP
+#define I_MATH_OBJECT_CRTP I_FUNCTION_CRTP
 #include "fintamath/core/IMathObjectCRTP.hpp"
-#undef FINTAMATH_I_MATH_OBJECT_CRTP
+#undef I_MATH_OBJECT_CRTP
 
 public:
   IFunction::Type getFunctionType() const final {
@@ -129,8 +129,8 @@ private:
   bool isNonExressionEvaluatableFunc;
 
 private:
-#if !defined(FINTAMATH_I_FUNCTION_CRTP) && !defined(NDEBUG)
+#if !defined(I_FUNCTION_CRTP) && !defined(NDEBUG)
 };
 }
 
-#endif // FINTAMATH_I_FUNCTION_CRTP
+#endif // I_FUNCTION_CRTP

@@ -33,9 +33,9 @@ private:
 
 template <typename Derived>
 class ILiteralCRTP : public ILiteral {
-#define FINTAMATH_I_LITERAL_CRTP ILiteralCRTP<Derived>
+#define I_LITERAL_CRTP ILiteralCRTP<Derived>
 #include "fintamath/literals/ILiteralCRTP.hpp"
-#undef FINTAMATH_I_LITERAL_CRTP
+#undef I_LITERAL_CRTP
 };
 
 }

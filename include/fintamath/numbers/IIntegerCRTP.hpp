@@ -1,4 +1,4 @@
-#if !defined(FINTAMATH_I_INTEGER_CRTP) && !defined(NDEBUG)
+#if !defined(I_INTEGER_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/numbers/IInteger.hpp"
 
@@ -7,11 +7,11 @@ namespace fintamath {
 template <typename Derived>
 class IIntegerCRTP_ : public IInteger {
 
-#endif // FINTAMATH_I_INTEGER_CRTP
+#endif // I_INTEGER_CRTP
 
-#define FINTAMATH_I_NUMBER_CRTP FINTAMATH_I_INTEGER_CRTP
+#define I_NUMBER_CRTP I_INTEGER_CRTP
 #include "fintamath/numbers/INumberCRTP.hpp"
-#undef FINTAMATH_I_NUMBER_CRTP
+#undef I_NUMBER_CRTP
 
 public:
   Derived &operator%=(const Derived &rhs) {
@@ -64,7 +64,7 @@ public:
 
   Derived operator~() const {
     Derived tmp = Derived(cast<Derived>(*this));
-    return cast<FINTAMATH_I_INTEGER_CRTP>(tmp).bitNot();
+    return cast<I_INTEGER_CRTP>(tmp).bitNot();
   }
 
   Derived &operator++() {
@@ -109,7 +109,7 @@ protected:
   std::unique_ptr<IInteger> modAbstract(const IInteger &inRhs) const final {
     return executeAbstract(
         inRhs, "%",
-        [](FINTAMATH_I_INTEGER_CRTP &lhs, const Derived &rhs) {
+        [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.mod(rhs);
         },
         [](const IInteger &lhs, const IInteger &rhs) {
@@ -120,7 +120,7 @@ protected:
   std::unique_ptr<IInteger> bitAndAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
         inRhs, "&",
-        [](FINTAMATH_I_INTEGER_CRTP &lhs, const Derived &rhs) {
+        [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitAnd(rhs);
         },
         [](const IInteger &lhs, const IInteger &rhs) {
@@ -131,7 +131,7 @@ protected:
   std::unique_ptr<IInteger> bitOrAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
         inRhs, "|",
-        [](FINTAMATH_I_INTEGER_CRTP &lhs, const Derived &rhs) {
+        [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitOr(rhs);
         },
         [](const IInteger &lhs, const IInteger &rhs) {
@@ -142,7 +142,7 @@ protected:
   std::unique_ptr<IInteger> bitXorAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
         inRhs, "^",
-        [](FINTAMATH_I_INTEGER_CRTP &lhs, const Derived &rhs) {
+        [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitXor(rhs);
         },
         [](const IInteger &lhs, const IInteger &rhs) {
@@ -153,7 +153,7 @@ protected:
   std::unique_ptr<IInteger> bitLeftShiftAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
         inRhs, "<<",
-        [](FINTAMATH_I_INTEGER_CRTP &lhs, const Derived &rhs) {
+        [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitLeftShift(rhs);
         },
         [](const IInteger &lhs, const IInteger &rhs) {
@@ -164,7 +164,7 @@ protected:
   std::unique_ptr<IInteger> bitRightShiftAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
         inRhs, ">>",
-        [](FINTAMATH_I_INTEGER_CRTP &lhs, const Derived &rhs) {
+        [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitRightShift(rhs);
         },
         [](const IInteger &lhs, const IInteger &rhs) {
@@ -199,7 +199,7 @@ private:
 
     if constexpr (IsConvertible<Derived>::value) {
       if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
-        auto lhsPtr = cast<FINTAMATH_I_INTEGER_CRTP>(clone());
+        auto lhsPtr = cast<I_INTEGER_CRTP>(clone());
         return cast<IInteger>(funcCommonTypes(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
       }
 
@@ -212,8 +212,8 @@ private:
   }
 
 private:
-#if !defined(FINTAMATH_I_INTEGER_CRTP) && !defined(NDEBUG)
+#if !defined(I_INTEGER_CRTP) && !defined(NDEBUG)
 };
 }
 
-#endif // FINTAMATH_I_INTEGER_CRTP
+#endif // I_INTEGER_CRTP

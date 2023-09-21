@@ -44,16 +44,16 @@ protected:
 
 template <typename Derived, bool isMultiFunction = false>
 class IUnaryExpressionBaseCRTP : public IUnaryExpression {
-#define FINTAMATH_I_EXPRESSION_BASE_CRTP IUnaryExpressionBaseCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_BASE_CRTP IUnaryExpressionBaseCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
-#undef FINTAMATH_I_EXPRESSION_BASE_CRTP
+#undef I_EXPRESSION_BASE_CRTP
 };
 
 template <typename Derived, bool isMultiFunction = false>
 class IUnaryExpressionCRTP : public IUnaryExpressionBaseCRTP<Derived, isMultiFunction> {
-#define FINTAMATH_I_EXPRESSION_CRTP IUnaryExpressionCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_CRTP IUnaryExpressionCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionCRTP.hpp"
-#undef FINTAMATH_I_EXPRESSION_CRTP
+#undef I_EXPRESSION_CRTP
 
 public:
   explicit IUnaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &arg) {

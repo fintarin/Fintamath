@@ -165,16 +165,16 @@ protected:
 
 template <typename Derived, bool isMultiFunction = false>
 class IPolynomExpressionBaseCRTP : public IPolynomExpression {
-#define FINTAMATH_I_EXPRESSION_BASE_CRTP IPolynomExpressionBaseCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_BASE_CRTP IPolynomExpressionBaseCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
-#undef FINTAMATH_I_EXPRESSION_BASE_CRTP
+#undef I_EXPRESSION_BASE_CRTP
 };
 
 template <typename Derived, bool isMultiFunction = false>
 class IPolynomExpressionCRTP : public IPolynomExpressionBaseCRTP<Derived, isMultiFunction> {
-#define FINTAMATH_I_EXPRESSION_CRTP IPolynomExpressionCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_CRTP IPolynomExpressionCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionCRTP.hpp"
-#undef FINTAMATH_I_EXPRESSION_CRTP
+#undef I_EXPRESSION_CRTP
 
 public:
   explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentsPtrVector &args) {
