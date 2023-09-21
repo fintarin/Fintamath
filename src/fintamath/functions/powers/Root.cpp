@@ -30,7 +30,7 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) cons
         return mulExpr(multiRootSimplify(*(-lhs), rhsInt), I()())->toMinimalObject();
       }
 
-      // TODO: solve complex nth roots
+      // TODO: complex nth roots
       return {};
     }
 
@@ -129,7 +129,7 @@ std::unique_ptr<IMathObject> Root::perfectRoot(const Integer &lhs, const Integer
     return lhs.clone();
   }
 
-  if (rhs == 2) { // TODO: implement perfect nth-roots minimization
+  if (rhs == 2) { // TODO: perfect nth-roots
     Integer remainder;
     Integer lhsSqrt = sqrt(lhs, remainder);
 
