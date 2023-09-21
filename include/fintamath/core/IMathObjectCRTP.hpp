@@ -18,12 +18,8 @@ public:
     return std::make_unique<Derived>(std::move(cast<Derived>(*this)));
   }
 
-  bool operator==(const Derived &rhs) const {
-    return equals(rhs);
-  }
-
-  bool operator!=(const Derived &rhs) const {
-    return !equals(rhs);
+  bool operator==(const FINTAMATH_I_MATH_OBJECT_CRTP &rhs) const {
+    return equals(cast<Derived>(rhs));
   }
 
   MathObjectTypeId getTypeId() const override {
