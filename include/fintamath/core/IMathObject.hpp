@@ -41,10 +41,6 @@ public:
     return lhs.equalsAbstract(rhs);
   }
 
-  friend inline bool operator!=(const IMathObject &lhs, const IMathObject &rhs) {
-    return !lhs.equalsAbstract(rhs);
-  }
-
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IMathObject, T>>>
   static void registerType(Parser::Function<std::unique_ptr<IMathObject>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(getParser(), std::move(parserFunc));
@@ -75,21 +71,6 @@ class IMathObjectCRTP : public IMathObject {
 REQUIRE_MATH_OBJECTS(Lhs, Rhs)
 bool operator==(const Lhs &lhs, const Rhs &rhs) {
   return lhs == Lhs(rhs);
-}
-
-REQUIRE_MATH_OBJECTS(Rhs, Lhs)
-bool operator==(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) == rhs;
-}
-
-REQUIRE_MATH_OBJECTS(Lhs, Rhs)
-bool operator!=(const Lhs &lhs, const Rhs &rhs) {
-  return lhs != Lhs(rhs);
-}
-
-REQUIRE_MATH_OBJECTS(Rhs, Lhs)
-bool operator!=(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) != rhs;
 }
 
 inline std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {
