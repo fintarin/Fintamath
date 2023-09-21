@@ -25,6 +25,7 @@ std::vector<Variable> IExpression::getVariables() const {
     }
   }
 
+  // TODO! use more efficient algorithm
   vars.erase(std::unique(vars.begin(), vars.end(),
                          [](const Variable &lhs, const Variable &rhs) {
                            return lhs == rhs;
