@@ -8,8 +8,8 @@ class DerivativeExpression : public IBinaryExpressionCRTP<DerivativeExpression> 
 public:
   explicit DerivativeExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::DerivativeExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::DerivativeExpression;
   }
 
 protected:

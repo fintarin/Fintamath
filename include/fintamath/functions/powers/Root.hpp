@@ -17,8 +17,8 @@ public:
     return "root";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Root);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Root;
   }
 
 protected:

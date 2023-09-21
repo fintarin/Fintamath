@@ -16,8 +16,8 @@ public:
     return "log";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Log);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Log;
   }
 
 protected:

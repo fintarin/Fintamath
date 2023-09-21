@@ -110,7 +110,7 @@ TEST(RootTests, exprTest) {
   EXPECT_EQ(rootExpr(Integer(10), Integer(10))->toString(), "root(10, 10)");
 }
 
-TEST(RootTests, getTypeIdTest) {
-  EXPECT_EQ(Root::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Root));
-  EXPECT_EQ(Root().getTypeId(), MathObjectTypeId(MathObjectType::Root));
+TEST(RootTests, getTypeTest) {
+  EXPECT_EQ(Root::getTypeStatic(), MathObjectType::Root);
+  EXPECT_EQ(Root().getType(), MathObjectType::Root);
 }

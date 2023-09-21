@@ -8,8 +8,8 @@ class InvHyperbExpression : public IUnaryExpressionCRTP<InvHyperbExpression, tru
 public:
   explicit InvHyperbExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::InvHyperbExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::InvHyperbExpression;
   }
 };
 

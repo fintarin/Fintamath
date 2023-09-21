@@ -6,6 +6,6 @@
 
 using namespace fintamath;
 
-TEST(NotExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(notExpr(Integer(0).clone())->getTypeId(), MathObjectTypeId(MathObjectType::NotExpression));
+TEST(NotExpressionTests, getTypeTest) {
+  EXPECT_EQ(notExpr(Integer(0).clone())->getType(), MathObjectType::NotExpression);
 }

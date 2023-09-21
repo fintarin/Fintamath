@@ -11,8 +11,8 @@ public:
     return "Undefined";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Undefined);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Undefined;
   }
 
 protected:

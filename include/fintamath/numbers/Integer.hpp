@@ -43,8 +43,8 @@ public:
     return backend.convert_to<T>();
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Integer);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Integer;
   }
 
 protected:

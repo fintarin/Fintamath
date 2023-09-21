@@ -14,8 +14,8 @@ public:
     return "&";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::And);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::And;
   }
 
 protected:

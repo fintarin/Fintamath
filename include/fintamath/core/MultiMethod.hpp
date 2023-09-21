@@ -14,7 +14,7 @@ class MultiMethod;
 template <typename Res, typename... ArgsBase>
 class MultiMethod<Res(ArgsBase...)> {
   template <typename>
-  using ArgId = MathObjectTypeId;
+  using ArgId = MathObjectType;
 
   using CallbackId = std::tuple<ArgId<ArgsBase>...>;
 
@@ -25,14 +25,14 @@ class MultiMethod<Res(ArgsBase...)> {
 public:
   template <typename... Args, typename Func>
   void add(const Func &func) {
-    callbacks[CallbackId(Args::getTypeIdStatic()...)] = [func](const ArgsBase &...args) {
+    callbacks[CallbackId(Args::getTypeStatic()...)] = [func](const ArgsBase &...args) {
       return func(cast<Args>(args)...);
     };
   }
 
   template <typename... Args>
   Res operator()(const Args &...args) const {
-    auto it = callbacks.find(CallbackId(args.getTypeId()...));
+    auto it = callbacks.find(CallbackId(args.getType()...));
 
     if (it != callbacks.end()) {
       return it->second(args...);

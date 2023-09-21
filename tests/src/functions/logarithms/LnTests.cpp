@@ -66,7 +66,7 @@ TEST(LnTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(LnTests, getTypeIdTest) {
-  EXPECT_EQ(Ln::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Ln));
-  EXPECT_EQ(Ln().getTypeId(), MathObjectTypeId(MathObjectType::Ln));
+TEST(LnTests, getTypeTest) {
+  EXPECT_EQ(Ln::getTypeStatic(), MathObjectType::Ln);
+  EXPECT_EQ(Ln().getType(), MathObjectType::Ln);
 }

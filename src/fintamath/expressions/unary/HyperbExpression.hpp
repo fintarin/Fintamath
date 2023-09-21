@@ -8,8 +8,8 @@ class HyperbExpression : public IUnaryExpressionCRTP<HyperbExpression, true> {
 public:
   explicit HyperbExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::HyperbExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::HyperbExpression;
   }
 
 protected:

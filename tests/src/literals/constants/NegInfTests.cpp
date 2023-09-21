@@ -25,7 +25,7 @@ TEST(NegInfTests, equalsTest) {
   EXPECT_NE(Pi(), c);
 }
 
-TEST(NegInfTests, getTypeIdTest) {
-  EXPECT_EQ(NegInf::getTypeIdStatic(), MathObjectTypeId(MathObjectType::NegInf));
-  EXPECT_EQ(NegInf().getTypeId(), MathObjectTypeId(MathObjectType::NegInf));
+TEST(NegInfTests, getTypeTest) {
+  EXPECT_EQ(NegInf::getTypeStatic(), MathObjectType::NegInf);
+  EXPECT_EQ(NegInf().getType(), MathObjectType::NegInf);
 }

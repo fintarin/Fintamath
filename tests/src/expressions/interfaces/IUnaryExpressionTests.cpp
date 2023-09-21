@@ -15,8 +15,8 @@ public:
   explicit TestUnaryExpression(const ArgumentPtr &inRhsChild) : IUnaryExpressionCRTP(f, inRhsChild) {
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IUnaryExpression) + 999;
+  static MathObjectType getTypeStatic() {
+    return MathObjectBoundTypes::get().at(IUnaryExpression::getTypeStatic()) - 1;
   }
 };
 
@@ -61,6 +61,6 @@ TEST(IUnaryExpressionTests, toMinimalObjectTest) {
   EXPECT_EQ(expr3.toMinimalObject()->toString(), "(a!)!");
 }
 
-TEST(IUnaryExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(IUnaryExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IUnaryExpression));
+TEST(IUnaryExpressionTests, getTypeTest) {
+  EXPECT_EQ(IUnaryExpression::getTypeStatic(), MathObjectType::IUnaryExpression);
 }

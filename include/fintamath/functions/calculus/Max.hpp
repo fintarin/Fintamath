@@ -16,8 +16,8 @@ public:
     return "max";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Max);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Max;
   }
 
 protected:

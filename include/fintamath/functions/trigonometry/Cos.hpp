@@ -13,8 +13,8 @@ public:
     return "cos";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Cos);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Cos;
   }
 
 protected:

@@ -27,9 +27,9 @@ public:
 public:
   virtual IFunction::Type getFunctionType() const = 0;
 
-  virtual size_t getReturnTypeId() const = 0;
+  virtual size_t getReturnType() const = 0;
 
-  virtual ArgumentTypeIdsVector getArgTypeIds() const = 0;
+  virtual ArgumentTypesVector getArgType() const = 0;
 
   virtual bool doArgsMatch(const ArgumentsRefVector &argsVect) const = 0;
 
@@ -57,8 +57,8 @@ public:
     return Parser::parse<std::unique_ptr<IFunction>>(getParser(), comp, parsedStr);
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IFunction);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IFunction;
   }
 
 protected:

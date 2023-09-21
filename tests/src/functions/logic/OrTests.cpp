@@ -65,7 +65,7 @@ TEST(OrTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(OrTests, getTypeIdTest) {
-  EXPECT_EQ(Or::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Or));
-  EXPECT_EQ(Or().getTypeId(), MathObjectTypeId(MathObjectType::Or));
+TEST(OrTests, getTypeTest) {
+  EXPECT_EQ(Or::getTypeStatic(), MathObjectType::Or);
+  EXPECT_EQ(Or().getType(), MathObjectType::Or);
 }

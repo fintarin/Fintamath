@@ -10,8 +10,8 @@ class InvTrigExpression : public IUnaryExpressionCRTP<InvTrigExpression, true> {
 public:
   explicit InvTrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::InvTrigExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::InvTrigExpression;
   }
 
 protected:

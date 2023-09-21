@@ -13,8 +13,8 @@ public:
     return "sqrt";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Sqrt);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Sqrt;
   }
 
 protected:

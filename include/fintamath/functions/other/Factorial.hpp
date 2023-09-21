@@ -33,8 +33,8 @@ public:
     order = inOrder;
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Factorial);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Factorial;
   }
 
 protected:

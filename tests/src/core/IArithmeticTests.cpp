@@ -12,8 +12,8 @@ namespace {
 
 class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
 public:
-  static MathObjectTypeId getTypeIdStatic() {
-    return size_t(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IArithmetic))) - 2;
+  static MathObjectType getTypeStatic() {
+    return size_t(MathObjectBoundTypes::get().at(MathObjectType::IArithmetic)) - 2;
   }
 
 protected:
@@ -198,6 +198,6 @@ TEST(IArithmeticTests, negateTest) {
   EXPECT_EQ((-Integer(1)).toString(), "-1");
 }
 
-TEST(IArithmeticTests, getTypeIdTest) {
-  EXPECT_EQ(IArithmetic::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IArithmetic));
+TEST(IArithmeticTests, getTypeTest) {
+  EXPECT_EQ(IArithmetic::getTypeStatic(), MathObjectType::IArithmetic);
 }

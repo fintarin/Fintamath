@@ -15,6 +15,6 @@ TEST(IConstantTests, callTests) {
   EXPECT_EQ((*c2)()->toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
 }
 
-TEST(IConstantTests, getTypeIdTest) {
-  EXPECT_EQ(IConstant::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IConstant));
+TEST(IConstantTests, getTypeTest) {
+  EXPECT_EQ(IConstant::getTypeStatic(), MathObjectType::IConstant);
 }

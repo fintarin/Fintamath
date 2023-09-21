@@ -902,7 +902,7 @@ TEST(RealTests, equalsTest) {
   EXPECT_NE(c, a);
 }
 
-TEST(RealTests, getTypeIdTest) {
-  EXPECT_EQ(Real::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Real));
-  EXPECT_EQ(Real().getTypeId(), MathObjectTypeId(MathObjectType::Real));
+TEST(RealTests, getTypeTest) {
+  EXPECT_EQ(Real::getTypeStatic(), MathObjectType::Real);
+  EXPECT_EQ(Real().getType(), MathObjectType::Real);
 }

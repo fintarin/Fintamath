@@ -7,6 +7,6 @@
 
 using namespace fintamath;
 
-TEST(AddExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(addExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::AddExpression));
+TEST(AddExpressionTests, getTypeTest) {
+  EXPECT_EQ(addExpr(Integer(0), Integer(0))->getType(), MathObjectType::AddExpression);
 }

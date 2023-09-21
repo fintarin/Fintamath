@@ -78,7 +78,7 @@ TEST(AbsTests, equalsTest) {
   EXPECT_NE(Sub(), f);
 }
 
-TEST(AbsTests, getTypeIdTest) {
-  EXPECT_EQ(Abs::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Abs));
-  EXPECT_EQ(Abs().getTypeId(), MathObjectTypeId(MathObjectType::Abs));
+TEST(AbsTests, getTypeTest) {
+  EXPECT_EQ(Abs::getTypeStatic(), MathObjectType::Abs);
+  EXPECT_EQ(Abs().getType(), MathObjectType::Abs);
 }

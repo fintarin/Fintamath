@@ -74,7 +74,7 @@ TEST(LessEqvTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(LessEqvTests, getTypeIdTest) {
-  EXPECT_EQ(LessEqv::getTypeIdStatic(), MathObjectTypeId(MathObjectType::LessEqv));
-  EXPECT_EQ(LessEqv().getTypeId(), MathObjectTypeId(MathObjectType::LessEqv));
+TEST(LessEqvTests, getTypeTest) {
+  EXPECT_EQ(LessEqv::getTypeStatic(), MathObjectType::LessEqv);
+  EXPECT_EQ(LessEqv().getType(), MathObjectType::LessEqv);
 }

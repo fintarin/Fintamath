@@ -65,7 +65,7 @@ TEST(PercentTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(PercentTests, getTypeIdTest) {
-  EXPECT_EQ(Percent::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Percent));
-  EXPECT_EQ(Percent().getTypeId(), MathObjectTypeId(MathObjectType::Percent));
+TEST(PercentTests, getTypeTest) {
+  EXPECT_EQ(Percent::getTypeStatic(), MathObjectType::Percent);
+  EXPECT_EQ(Percent().getType(), MathObjectType::Percent);
 }

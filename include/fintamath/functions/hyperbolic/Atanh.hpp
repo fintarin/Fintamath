@@ -15,8 +15,8 @@ public:
     return "atanh";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Atanh);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Atanh;
   }
 
 protected:

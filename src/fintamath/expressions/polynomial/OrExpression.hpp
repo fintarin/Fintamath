@@ -8,8 +8,8 @@ class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
   explicit OrExpression(const ArgumentsPtrVector &inChildren);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::OrExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::OrExpression;
   }
 
 protected:

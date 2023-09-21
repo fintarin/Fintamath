@@ -517,7 +517,7 @@ TEST(RationalTests, equalsTest) {
   EXPECT_NE(c, a);
 }
 
-TEST(RationalTests, getTypeIdTest) {
-  EXPECT_EQ(Rational::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Rational));
-  EXPECT_EQ(Rational().getTypeId(), MathObjectTypeId(MathObjectType::Rational));
+TEST(RationalTests, getTypeTest) {
+  EXPECT_EQ(Rational::getTypeStatic(), MathObjectType::Rational);
+  EXPECT_EQ(Rational().getType(), MathObjectType::Rational);
 }

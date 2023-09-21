@@ -6,178 +6,233 @@
 
 namespace fintamath {
 
-using MathObjectTypeId = size_t;
-
-enum class MathObjectType : MathObjectTypeId {
-  IMathObject = 0,
-
-  IArithmetic = 1000,
-
-  IExpression = 2000,
-
-  Expression,
-  FunctionExpression,
-
-  IUnaryExpression = 3000,
-
-  NotExpression,
-  TrigExpression,
-  InvTrigExpression,
-  HyperbExpression,
-  InvHyperbExpression,
-
-  IBinaryExpression = 4000,
-
-  PowExpression,
-  DivExpression,
-  LogExpression,
-  CompExpression,
-  DerivativeExpression,
-  IntegralExpression,
-
-  IPolynomExpression = 5000,
-
-  AddExpression,
-  MulExpression,
-  AndExpression,
-  OrExpression,
-  MinMaxExpression,
-
-  IComparable = 6000,
-
-  INumber = 7000,
-
-  Rational,
-  Real,
-  Complex,
-
-  IInteger = 8000,
-
-  Integer,
-
-  ILiteral = 9000,
-
-  Boolean,
-  Variable,
-
-  IConstant = 10000,
-
-  E,
-  Pi,
-  True,
-  False,
-  Inf,
-  NegInf,
-  ComplexInf,
-  Undefined,
-  I,
-
-  IFunction = 11000,
-
-  Abs,
-  Log,
-  Ln,
-  Lb,
-  Lg,
-  Exp,
-  Sqrt,
-  Root,
-  Sin,
-  Cos,
-  Tan,
-  Cot,
-  Asin,
-  Acos,
-  Atan,
-  Acot,
-  Sign,
-  Sinh,
-  Cosh,
-  Tanh,
-  Coth,
-  Asinh,
-  Acosh,
-  Atanh,
-  Acoth,
-  Min,
-  Max,
-  Derivative,
-  Integral,
-  Frac,
-  PowF,
-
-  IOperator = 12000,
-
-  Add,
-  Sub,
-  Mul,
-  Div,
-  Neg,
-  UnaryPlus,
-  Factorial,
-  Percent,
-  Pow,
-  Eqv,
-  Neqv,
-  Less,
-  More,
-  LessEqv,
-  MoreEqv,
-  Not,
-  And,
-  Or,
-  Impl,
-  Equiv,
-  Nequiv,
-  Index,
-  Deg,
-
-  None = std::numeric_limits<size_t>::max(),
-};
-
-class MathObjectBoundTypeIds {
+class MathObjectType {
 public:
-  static const auto &get() {
-    return getBoundTypeIds();
+  enum class Id : size_t {
+    IMathObject = 0,
+
+    IArithmetic = 1000,
+
+    IExpression = 2000,
+
+    Expression,
+    FunctionExpression,
+
+    IUnaryExpression = 3000,
+
+    NotExpression,
+    TrigExpression,
+    InvTrigExpression,
+    HyperbExpression,
+    InvHyperbExpression,
+
+    IBinaryExpression = 4000,
+
+    PowExpression,
+    DivExpression,
+    LogExpression,
+    CompExpression,
+    DerivativeExpression,
+    IntegralExpression,
+
+    IPolynomExpression = 5000,
+
+    AddExpression,
+    MulExpression,
+    AndExpression,
+    OrExpression,
+    MinMaxExpression,
+
+    IComparable = 6000,
+
+    INumber = 7000,
+
+    Rational,
+    Real,
+    Complex,
+
+    IInteger = 8000,
+
+    Integer,
+
+    ILiteral = 9000,
+
+    Boolean,
+    Variable,
+
+    IConstant = 10000,
+
+    E,
+    Pi,
+    True,
+    False,
+    Inf,
+    NegInf,
+    ComplexInf,
+    Undefined,
+    I,
+
+    IFunction = 11000,
+
+    Abs,
+    Log,
+    Ln,
+    Lb,
+    Lg,
+    Exp,
+    Sqrt,
+    Root,
+    Sin,
+    Cos,
+    Tan,
+    Cot,
+    Asin,
+    Acos,
+    Atan,
+    Acot,
+    Sign,
+    Sinh,
+    Cosh,
+    Tanh,
+    Coth,
+    Asinh,
+    Acosh,
+    Atanh,
+    Acoth,
+    Min,
+    Max,
+    Derivative,
+    Integral,
+    Frac,
+    PowF,
+
+    IOperator = 12000,
+
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Neg,
+    UnaryPlus,
+    Factorial,
+    Percent,
+    Pow,
+    Eqv,
+    Neqv,
+    Less,
+    More,
+    LessEqv,
+    MoreEqv,
+    Not,
+    And,
+    Or,
+    Impl,
+    Equiv,
+    Nequiv,
+    Index,
+    Deg,
+
+    None = std::numeric_limits<size_t>::max(),
+  };
+
+  using enum Id;
+
+public:
+  MathObjectType(Id rhs) : id(size_t(rhs)) {
   }
 
-  static void reg(size_t toTypeId, size_t fromTypeId) {
-    getBoundTypeIds().insert({toTypeId, fromTypeId});
+  MathObjectType(size_t rhs) : id(rhs) {
+  }
+
+  bool operator==(const MathObjectType &rhs) const = default;
+
+  bool operator==(Id rhs) const {
+    return id == size_t(rhs);
+  }
+
+  bool operator==(size_t rhs) const {
+    return id == rhs;
+  }
+
+  std::strong_ordering operator<=>(const MathObjectType &rhs) const = default;
+
+  std::strong_ordering operator<=>(Id rhs) const {
+    return id <=> size_t(rhs);
+  }
+
+  std::strong_ordering operator<=>(size_t rhs) const {
+    return id <=> rhs;
+  }
+
+  operator size_t() const {
+    return id;
   }
 
 private:
-  static std::unordered_map<MathObjectTypeId, MathObjectTypeId> &getBoundTypeIds() {
-    using Id = MathObjectTypeId;
-    using Type = MathObjectType;
+  size_t id = size_t(None);
+};
 
-    static std::unordered_map<Id, Id> ids{
-        {Id(Type::IMathObject), Id(Type::None)},
-        {Id(Type::IArithmetic), Id(Type::ILiteral)},
-        {Id(Type::IExpression), Id(Type::IComparable)},
-        {Id(Type::IUnaryExpression), Id(Type::IBinaryExpression)},
-        {Id(Type::IBinaryExpression), Id(Type::IPolynomExpression)},
-        {Id(Type::IPolynomExpression), Id(Type::IComparable)},
-        {Id(Type::IComparable), Id(Type::ILiteral)},
-        {Id(Type::INumber), Id(Type::ILiteral)},
-        {Id(Type::IInteger), Id(Type::ILiteral)},
-        {Id(Type::ILiteral), Id(Type::IFunction)},
-        {Id(Type::IConstant), Id(Type::IFunction)},
-        {Id(Type::IFunction), Id(Type::None)},
-        {Id(Type::IOperator), Id(Type::None)},
+}
+
+namespace std {
+
+template <>
+struct hash<fintamath::MathObjectType> {
+  size_t operator()(const fintamath::MathObjectType &rhs) const {
+    return hash<size_t>()(size_t(rhs));
+  }
+};
+
+}
+
+namespace fintamath {
+
+class MathObjectBoundTypes {
+  static constexpr auto getTypeHash = [](const MathObjectType &type) { return size_t(type); };
+
+  using TypesMap = std::unordered_map<MathObjectType, MathObjectType>;
+
+  using enum MathObjectType::Id;
+
+public:
+  static const TypesMap &get() {
+    return getMutable();
+  }
+
+  static void reg(const MathObjectType &type, const MathObjectType &boundType) {
+    getMutable().emplace(type, boundType);
+  }
+
+private:
+  static TypesMap &getMutable() {
+    static TypesMap ids{
+        {IMathObject, None},
+        {IArithmetic, ILiteral},
+        {IExpression, IComparable},
+        {IUnaryExpression, IBinaryExpression},
+        {IBinaryExpression, IPolynomExpression},
+        {IPolynomExpression, IComparable},
+        {IComparable, ILiteral},
+        {INumber, ILiteral},
+        {IInteger, ILiteral},
+        {ILiteral, IFunction},
+        {IConstant, IFunction},
+        {IFunction, None},
+        {IOperator, None},
     };
 
     return ids;
   }
 };
 
-inline bool isBaseOf(size_t toTypeId, size_t fromTypeId) {
-  if (auto toTypeBoundaries = MathObjectBoundTypeIds::get().find(toTypeId);
-      toTypeBoundaries != MathObjectBoundTypeIds::get().end()) {
+inline bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType) {
+  const auto &ids = MathObjectBoundTypes::get();
 
-    return fromTypeId >= toTypeBoundaries->first && fromTypeId < toTypeBoundaries->second;
+  if (auto toTypeBoundaries = ids.find(toType); toTypeBoundaries != ids.end()) {
+    return fromType >= toTypeBoundaries->first && fromType < toTypeBoundaries->second;
   }
 
-  return toTypeId == fromTypeId;
+  return toType == fromType;
 }
 
 }

@@ -13,8 +13,8 @@ public:
     return "lg";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Lg);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Lg;
   }
 
 protected:

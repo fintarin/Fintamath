@@ -13,8 +13,8 @@ public:
 
   std::string toString() const override;
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Variable);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Variable;
   }
 
 private:

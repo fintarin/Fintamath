@@ -74,7 +74,7 @@ TEST(CotTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(CotTests, getTypeIdTest) {
-  EXPECT_EQ(Cot::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Cot));
-  EXPECT_EQ(Cot().getTypeId(), MathObjectTypeId(MathObjectType::Cot));
+TEST(CotTests, getTypeTest) {
+  EXPECT_EQ(Cot::getTypeStatic(), MathObjectType::Cot);
+  EXPECT_EQ(Cot().getType(), MathObjectType::Cot);
 }

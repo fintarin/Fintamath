@@ -14,8 +14,8 @@ public:
     return "deg";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Deg);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Deg;
   }
 
 protected:

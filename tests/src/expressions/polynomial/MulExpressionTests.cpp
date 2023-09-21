@@ -6,6 +6,6 @@
 
 using namespace fintamath;
 
-TEST(MulExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(mulExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::MulExpression));
+TEST(MulExpressionTests, getTypeTest) {
+  EXPECT_EQ(mulExpr(Integer(0), Integer(0))->getType(), MathObjectType::MulExpression);
 }

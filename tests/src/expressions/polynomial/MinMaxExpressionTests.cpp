@@ -6,6 +6,6 @@
 
 using namespace fintamath;
 
-TEST(MinMaxExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(minExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::MinMaxExpression));
+TEST(MinMaxExpressionTests, getTypeTest) {
+  EXPECT_EQ(minExpr(Integer(0), Integer(0))->getType(), MathObjectType::MinMaxExpression);
 }

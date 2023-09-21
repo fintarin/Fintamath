@@ -23,8 +23,8 @@ public:
     return Parser::parse(getParser(), str);
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::ILiteral);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::ILiteral;
   }
 
 private:

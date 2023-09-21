@@ -8,8 +8,8 @@ class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
 public:
   explicit NotExpression(const ArgumentPtr &inChild);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::NotExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::NotExpression;
   }
 
 protected:

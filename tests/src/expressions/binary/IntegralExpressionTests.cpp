@@ -6,6 +6,6 @@
 
 using namespace fintamath;
 
-TEST(IntegralExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(integralExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::IntegralExpression));
+TEST(IntegralExpressionTests, getTypeTest) {
+  EXPECT_EQ(integralExpr(Integer(0), Integer(0))->getType(), MathObjectType::IntegralExpression);
 }

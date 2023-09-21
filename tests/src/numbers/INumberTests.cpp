@@ -86,6 +86,6 @@ TEST(INumberTests, negateTest) {
   EXPECT_TRUE(is<INumber>(+*m1));
 }
 
-TEST(INumberTests, getTypeIdTest) {
-  EXPECT_EQ(INumber::getTypeIdStatic(), MathObjectTypeId(MathObjectType::INumber));
+TEST(INumberTests, getTypeTest) {
+  EXPECT_EQ(INumber::getTypeStatic(), MathObjectType::INumber);
 }

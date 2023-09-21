@@ -71,7 +71,7 @@ TEST(DivTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(DivTests, getTypeIdTest) {
-  EXPECT_EQ(Div::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Div));
-  EXPECT_EQ(Div().getTypeId(), MathObjectTypeId(MathObjectType::Div));
+TEST(DivTests, getTypeTest) {
+  EXPECT_EQ(Div::getTypeStatic(), MathObjectType::Div);
+  EXPECT_EQ(Div().getType(), MathObjectType::Div);
 }

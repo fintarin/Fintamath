@@ -67,7 +67,7 @@ TEST(SubTests, equalsTest) {
   EXPECT_NE(Neg(), f);
 }
 
-TEST(SubTests, getTypeIdTest) {
-  EXPECT_EQ(Sub::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Sub));
-  EXPECT_EQ(Sub().getTypeId(), MathObjectTypeId(MathObjectType::Sub));
+TEST(SubTests, getTypeTest) {
+  EXPECT_EQ(Sub::getTypeStatic(), MathObjectType::Sub);
+  EXPECT_EQ(Sub().getType(), MathObjectType::Sub);
 }

@@ -16,8 +16,8 @@ public:
     return "test";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IInteger))) - 2;
+  static MathObjectType getTypeStatic() {
+    return MathObjectBoundTypes::get().at(IInteger::getTypeStatic()) - 2;
   }
 
 protected:
@@ -92,27 +92,30 @@ public:
   TestIntegerConvertible(const Integer &rhs) : TestIntegerConvertible() {
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IInteger))) - 1;
+  static MathObjectType getTypeStatic() {
+    return MathObjectBoundTypes::get().at(IInteger::getTypeStatic()) - 1;
   }
 
-  MathObjectTypeId getTypeId() const override {
-    return getTypeIdStatic();
+  MathObjectType getType() const override {
+    return getTypeStatic();
   }
 };
 
 struct TestIntegerConvertableConfig {
   TestIntegerConvertableConfig() {
-    MathObjectBoundTypeIds::reg(TestInteger::getTypeIdStatic(),
-                                MathObjectBoundTypeIds::get().at(IInteger::getTypeIdStatic()));
+    MathObjectBoundTypes::reg(
+        TestInteger::getTypeStatic(),
+        MathObjectBoundTypes::get().at(IInteger::getTypeStatic()));
 
     Converter::add<TestIntegerConvertible, TestIntegerConvertible>(
         [](const TestIntegerConvertible & /*type*/, const TestIntegerConvertible &value) {
           return std::make_unique<TestIntegerConvertible>(value);
         });
-    Converter::add<TestIntegerConvertible, Integer>([](const TestIntegerConvertible & /*type*/, const Integer &value) {
-      return std::make_unique<TestIntegerConvertible>(value);
-    });
+
+    Converter::add<TestIntegerConvertible, Integer>(
+        [](const TestIntegerConvertible & /*type*/, const Integer &value) {
+          return std::make_unique<TestIntegerConvertible>(value);
+        });
   }
 };
 
@@ -291,6 +294,6 @@ TEST(IIntegerTests, decTest) {
   EXPECT_EQ((Integer(1)--).toString(), "1");
 }
 
-TEST(IIntegerTests, getTypeIdTest) {
-  EXPECT_EQ(IInteger::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IInteger));
+TEST(IIntegerTests, getTypeTest) {
+  EXPECT_EQ(IInteger::getTypeStatic(), MathObjectType::IInteger);
 }

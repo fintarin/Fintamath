@@ -108,7 +108,7 @@ TEST(LogTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(LogTests, getTypeIdTest) {
-  EXPECT_EQ(Log::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Log));
-  EXPECT_EQ(Log().getTypeId(), MathObjectTypeId(MathObjectType::Log));
+TEST(LogTests, getTypeTest) {
+  EXPECT_EQ(Log::getTypeStatic(), MathObjectType::Log);
+  EXPECT_EQ(Log().getType(), MathObjectType::Log);
 }

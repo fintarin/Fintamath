@@ -16,8 +16,8 @@ public:
       : IBinaryExpressionCRTP(f, inLhsChild, inRhsChild) {
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IBinaryExpression) + 999;
+  static MathObjectType getTypeStatic() {
+    return MathObjectBoundTypes::get().at(IBinaryExpression::getTypeStatic()) - 1;
   }
 };
 
@@ -63,6 +63,6 @@ TEST(IBinaryExpressionTests, toMinimalObjectTest) {
   EXPECT_EQ(expr2.toMinimalObject()->toString(), "1 + a");
 }
 
-TEST(IBinaryExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(IBinaryExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IBinaryExpression));
+TEST(IBinaryExpressionTests, getTypeTest) {
+  EXPECT_EQ(IBinaryExpression::getTypeStatic(), MathObjectType::IBinaryExpression);
 }

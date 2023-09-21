@@ -9,8 +9,8 @@ public:
 
   std::string toString() const override;
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::MulExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::MulExpression;
   }
 
 protected:

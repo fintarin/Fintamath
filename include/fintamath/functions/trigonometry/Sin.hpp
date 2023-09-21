@@ -13,8 +13,8 @@ public:
     return "sin";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Sin);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Sin;
   }
 
 protected:

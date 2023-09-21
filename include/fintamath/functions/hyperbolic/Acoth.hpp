@@ -15,8 +15,8 @@ public:
     return "acoth";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Acoth);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Acoth;
   }
 
 protected:

@@ -8,8 +8,8 @@ class MinMaxExpression : public IPolynomExpressionCRTP<MinMaxExpression, true> {
 public:
   explicit MinMaxExpression(const IFunction &inFunc, const ArgumentsPtrVector &inChildren);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::MinMaxExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::MinMaxExpression;
   }
 };
 

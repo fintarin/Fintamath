@@ -15,8 +15,8 @@ public:
     return "integral";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Integral);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Integral;
   }
 
 protected:

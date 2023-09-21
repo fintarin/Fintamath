@@ -70,7 +70,7 @@ TEST(IndexTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(IndexTests, getTypeIdTest) {
-  EXPECT_EQ(Index::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Index));
-  EXPECT_EQ(Index().getTypeId(), MathObjectTypeId(MathObjectType::Index));
+TEST(IndexTests, getTypeTest) {
+  EXPECT_EQ(Index::getTypeStatic(), MathObjectType::Index);
+  EXPECT_EQ(Index().getType(), MathObjectType::Index);
 }
