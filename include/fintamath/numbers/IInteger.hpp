@@ -2,12 +2,6 @@
 
 #include "fintamath/numbers/INumber.hpp"
 
-#define REQUIRE_INTEGERS(Lhs, Rhs)                                          \
-  template <typename Lhs, typename Rhs,                                     \
-            typename = std::enable_if_t<std::is_base_of_v<IInteger, Lhs> && \
-                                        std::is_convertible_v<Rhs, Lhs> &&  \
-                                        !std::is_same_v<Lhs, Rhs>>>
-
 namespace fintamath {
 
 class IInteger : public INumber {
@@ -60,7 +54,7 @@ public:
     return res;
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IInteger, T>>>
+  template <std::derived_from<IInteger> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
   }
@@ -103,96 +97,94 @@ class IIntegerCRTP : public IInteger {
 #undef I_INTEGER_CRTP
 };
 
-REQUIRE_INTEGERS(Lhs, Rhs)
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator%=(Lhs &lhs, const Rhs &rhs) {
   return lhs %= Lhs(rhs);
 }
 
-REQUIRE_INTEGERS(Lhs, Rhs)
-Lhs operator%(const Lhs &lhs, const Rhs &rhs) {
-  return lhs % Lhs(rhs);
-}
-
-REQUIRE_INTEGERS(Rhs, Lhs)
-Rhs operator%(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) % rhs;
-}
-
-REQUIRE_INTEGERS(Lhs, Rhs)
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator&=(Lhs &lhs, const Rhs &rhs) {
   return lhs &= Lhs(rhs);
 }
 
-REQUIRE_INTEGERS(Lhs, Rhs)
-Lhs operator&(const Lhs &lhs, const Rhs &rhs) {
-  return lhs & Lhs(rhs);
-}
-
-REQUIRE_INTEGERS(Rhs, Lhs)
-Rhs operator&(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) & rhs;
-}
-
-REQUIRE_INTEGERS(Lhs, Rhs)
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator|=(Lhs &lhs, const Rhs &rhs) {
   return lhs |= Lhs(rhs);
 }
 
-REQUIRE_INTEGERS(Lhs, Rhs)
-Lhs operator|(const Lhs &lhs, const Rhs &rhs) {
-  return lhs | Lhs(rhs);
-}
-
-REQUIRE_INTEGERS(Rhs, Lhs)
-Rhs operator|(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) | rhs;
-}
-
-REQUIRE_INTEGERS(Lhs, Rhs)
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator^=(Lhs &lhs, const Rhs &rhs) {
   return lhs ^= Lhs(rhs);
 }
 
-REQUIRE_INTEGERS(Lhs, Rhs)
-Lhs operator^(const Lhs &lhs, const Rhs &rhs) {
-  return lhs ^ Lhs(rhs);
-}
-
-REQUIRE_INTEGERS(Rhs, Lhs)
-Rhs operator^(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) ^ rhs;
-}
-
-REQUIRE_INTEGERS(Lhs, Rhs)
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator<<=(Lhs &lhs, const Rhs &rhs) {
   return lhs <<= Lhs(rhs);
 }
 
-REQUIRE_INTEGERS(Lhs, Rhs)
-Lhs operator<<(const Lhs &lhs, const Rhs &rhs) {
-  return lhs << Lhs(rhs);
-}
-
-REQUIRE_INTEGERS(Rhs, Lhs)
-Rhs operator<<(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) << rhs;
-}
-
-REQUIRE_INTEGERS(Lhs, Rhs)
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator>>=(Lhs &lhs, const Rhs &rhs) {
   return lhs >>= Lhs(rhs);
 }
 
-REQUIRE_INTEGERS(Lhs, Rhs)
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+Lhs operator%(const Lhs &lhs, const Rhs &rhs) {
+  return lhs % Lhs(rhs);
+}
+
+template <std::derived_from<IInteger> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+Rhs operator%(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) % rhs;
+}
+
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+Lhs operator&(const Lhs &lhs, const Rhs &rhs) {
+  return lhs & Lhs(rhs);
+}
+
+template <std::derived_from<IInteger> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+Rhs operator&(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) & rhs;
+}
+
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+Lhs operator|(const Lhs &lhs, const Rhs &rhs) {
+  return lhs | Lhs(rhs);
+}
+
+template <std::derived_from<IInteger> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+Rhs operator|(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) | rhs;
+}
+
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+Lhs operator^(const Lhs &lhs, const Rhs &rhs) {
+  return lhs ^ Lhs(rhs);
+}
+
+template <std::derived_from<IInteger> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+Rhs operator^(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) ^ rhs;
+}
+
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+Lhs operator<<(const Lhs &lhs, const Rhs &rhs) {
+  return lhs << Lhs(rhs);
+}
+
+template <std::derived_from<IInteger> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+Rhs operator<<(const Lhs &lhs, const Rhs &rhs) {
+  return Rhs(lhs) << rhs;
+}
+
+template <std::derived_from<IInteger> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs operator>>(const Lhs &lhs, const Rhs &rhs) {
   return lhs >> Lhs(rhs);
 }
 
-REQUIRE_INTEGERS(Rhs, Lhs)
+template <std::derived_from<IInteger> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
 Rhs operator>>(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) >> rhs;
 }
 
 }
-
-#undef REQUIRE_INTEGERS

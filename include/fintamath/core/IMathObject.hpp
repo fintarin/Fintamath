@@ -11,12 +11,6 @@
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/parser/Parser.hpp"
 
-#define REQUIRE_MATH_OBJECTS(Lhs, Rhs)                                         \
-  template <typename Lhs, typename Rhs,                                        \
-            typename = std::enable_if_t<std::is_base_of_v<IMathObject, Lhs> && \
-                                        std::is_convertible_v<Rhs, Lhs> &&     \
-                                        !std::is_same_v<Lhs, Rhs>>>
-
 namespace fintamath {
 
 class IMathObject {
@@ -41,7 +35,7 @@ public:
     return lhs.equalsAbstract(rhs);
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IMathObject, T>>>
+  template <std::derived_from<IMathObject> T>
   static void registerType(Parser::Function<std::unique_ptr<IMathObject>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(getParser(), std::move(parserFunc));
   }
@@ -68,7 +62,7 @@ class IMathObjectCRTP : public IMathObject {
 #undef I_MATH_OBJECT_CRTP
 };
 
-REQUIRE_MATH_OBJECTS(Lhs, Rhs)
+template <std::derived_from<IMathObject> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 bool operator==(const Lhs &lhs, const Rhs &rhs) {
   return lhs == Lhs(rhs);
 }
@@ -78,5 +72,3 @@ inline std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {
 }
 
 }
-
-#undef REQUIRE_MATH_OBJECTS

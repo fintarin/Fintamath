@@ -4,16 +4,14 @@
 
 #include "fintamath/core/MathObjectTypes.hpp"
 
-#define REQUIRE_MATH_OBJECTS(To, From)                                        \
-  template <typename To, typename From,                                       \
-            typename = std::enable_if_t<std::is_base_of_v<IMathObject, To> && \
-                                        std::is_base_of_v<IMathObject, From>>>
-
 namespace fintamath {
 
 class IMathObject;
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <typename From, typename To>
+concept ConvertibleToAndNotSameAs = std::convertible_to<From, To> && !std::same_as<From, To>;
+
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const From &from) {
   if constexpr (std::is_base_of_v<To, From>) {
     return true;
@@ -26,7 +24,7 @@ bool is(const From &from) {
   }
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const From *from) {
   if (!from) {
     return false;
@@ -35,32 +33,32 @@ bool is(const From *from) {
   return is<To>(*from);
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const std::unique_ptr<From> &from) {
   return is<To>(from.get());
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const std::shared_ptr<From> &from) {
   return is<To>(from.get());
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const std::shared_ptr<const From> &from) {
   return is<To>(from.get());
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const std::reference_wrapper<From> &from) {
   return is<To>(from.get());
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const std::reference_wrapper<const From> &from) {
   return is<To>(from.get());
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 const To &cast(const From &from) {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
@@ -71,12 +69,12 @@ const To &cast(const From &from) {
   return static_cast<const To &>(from);
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 To &cast(From &from) {
   return const_cast<To &>(cast<To>(const_cast<const From &>(from)));
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 const To *cast(const From *from) {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
@@ -87,12 +85,12 @@ const To *cast(const From *from) {
   return static_cast<const To *>(from);
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 To *cast(From *from) {
   return const_cast<To *>(cast<To>(const_cast<const From *>(from)));
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
@@ -106,7 +104,7 @@ std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
   return std::unique_ptr<To>(toRawPtr);
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
@@ -117,11 +115,9 @@ std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) {
   return std::static_pointer_cast<const To>(from);
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 std::shared_ptr<To> cast(const std::shared_ptr<From> &from) {
   return std::const_pointer_cast<To>(cast<To>(std::const_pointer_cast<const From>(from)));
 }
 
 }
-
-#undef REQUIRE_MATH_OBJECTS

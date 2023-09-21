@@ -4,23 +4,18 @@
 
 #include "fintamath/core/MultiMethod.hpp"
 
-#define REQUIRE_MATH_OBJECTS(To, From)                                        \
-  template <typename To, typename From,                                       \
-            typename = std::enable_if_t<std::is_base_of_v<IMathObject, To> && \
-                                        std::is_base_of_v<IMathObject, From>>>
-
 namespace fintamath {
 
 class IMathObject;
 
 class Converter {
-  REQUIRE_MATH_OBJECTS(Type, Value)
-  using ConverterFunction = std::function<std::unique_ptr<IMathObject>(const Type &type, const Value &value)>;
+  template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
+  using ConverterFunction = std::function<std::unique_ptr<IMathObject>(const To &to, const From &from)>;
 
 public:
-  REQUIRE_MATH_OBJECTS(Type, Value)
-  static void add(const ConverterFunction<Type, Value> &convertFunc) {
-    getConverter().add<Type, Value>(convertFunc);
+  template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
+  static void add(const ConverterFunction<To, From> &convertFunc) {
+    getConverter().add<To, From>(convertFunc);
   }
 
   static std::unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) {
@@ -31,17 +26,15 @@ private:
   static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> &getConverter();
 };
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 std::unique_ptr<To> convert(const To &to, const From &from) {
   return cast<To>(Converter::convert(to, from));
 }
 
-REQUIRE_MATH_OBJECTS(To, From)
+template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 std::unique_ptr<To> convert(const From &from) {
   static const To to;
   return convert(to, from);
 }
 
 }
-
-#undef REQUIRE_MATH_OBJECTS

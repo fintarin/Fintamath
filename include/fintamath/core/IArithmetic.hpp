@@ -4,12 +4,6 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
-#define REQUIRE_ARITHMETICS(Lhs, Rhs)                                          \
-  template <typename Lhs, typename Rhs,                                        \
-            typename = std::enable_if_t<std::is_base_of_v<IArithmetic, Lhs> && \
-                                        std::is_convertible_v<Rhs, Lhs> &&     \
-                                        !std::is_same_v<Lhs, Rhs>>>
-
 namespace fintamath {
 
 class IArithmetic : public IMathObject {
@@ -38,12 +32,12 @@ public:
     return rhs.negateAbstract();
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
+  template <std::derived_from<IArithmetic> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IArithmetic, T>>>
+  template <std::derived_from<IArithmetic> T>
   static void registerType(Parser::Function<std::unique_ptr<IArithmetic>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(getParser(), std::move(parserFunc));
   }
@@ -80,66 +74,64 @@ class IArithmeticCRTP : public IArithmetic {
 #undef I_ARITHMETIC_CRTP
 };
 
-REQUIRE_ARITHMETICS(Lhs, Rhs)
+template <std::derived_from<IArithmetic> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator+=(Lhs &lhs, const Rhs &rhs) {
   return lhs += Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs)
+template <std::derived_from<IArithmetic> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator-=(Lhs &lhs, const Rhs &rhs) {
   return lhs -= Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs)
+template <std::derived_from<IArithmetic> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator*=(Lhs &lhs, const Rhs &rhs) {
   return lhs *= Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs)
+template <std::derived_from<IArithmetic> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs &operator/=(Lhs &lhs, const Rhs &rhs) {
   return lhs /= Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs)
+template <std::derived_from<IArithmetic> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs operator+(const Lhs &lhs, const Rhs &rhs) {
   return lhs + Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Rhs, Lhs)
+template <std::derived_from<IArithmetic> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
 Rhs operator+(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) + rhs;
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs)
+template <std::derived_from<IArithmetic> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs operator-(const Lhs &lhs, const Rhs &rhs) {
   return lhs - Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Rhs, Lhs)
+template <std::derived_from<IArithmetic> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
 Rhs operator-(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) - rhs;
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs)
+template <std::derived_from<IArithmetic> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs operator*(const Lhs &lhs, const Rhs &rhs) {
   return lhs * Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Rhs, Lhs)
+template <std::derived_from<IArithmetic> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
 Rhs operator*(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) * rhs;
 }
 
-REQUIRE_ARITHMETICS(Lhs, Rhs)
+template <std::derived_from<IArithmetic> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 Lhs operator/(const Lhs &lhs, const Rhs &rhs) {
   return lhs / Lhs(rhs);
 }
 
-REQUIRE_ARITHMETICS(Rhs, Lhs)
+template <std::derived_from<IArithmetic> Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
 Rhs operator/(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) / rhs;
 }
 
 }
-
-#undef REQUIRE_ARITHMETICS

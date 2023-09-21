@@ -7,7 +7,7 @@ namespace fintamath {
 
 // Use exponentiation by squaring with constant auxiliary memory (iterative version).
 // https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.
-template <typename Lhs, typename = std::enable_if_t<std::is_base_of_v<INumber, Lhs>>>
+template <std::derived_from<INumber> Lhs>
 Lhs pow(const Lhs &lhs, Integer rhs) {
   if (lhs == 0 && rhs == 0) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());

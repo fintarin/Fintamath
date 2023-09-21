@@ -23,15 +23,14 @@ class MultiMethod<Res(ArgsBase...)> {
   using Callbacks = std::map<CallbackId, Callback>;
 
 public:
-  template <typename... Args, typename Func>
-  void add(const Func &func) {
+  template <typename... Args>
+  void add(const auto &func) {
     callbacks[CallbackId(Args::getTypeStatic()...)] = [func](const ArgsBase &...args) {
       return func(cast<Args>(args)...);
     };
   }
 
-  template <typename... Args>
-  Res operator()(const Args &...args) const {
+  Res operator()(const auto &...args) const {
     auto it = callbacks.find(CallbackId(args.getType()...));
 
     if (it != callbacks.end()) {

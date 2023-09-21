@@ -5,6 +5,7 @@ AllowShortLambdasOnASingleLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
 NamespaceIndentation: None
 IndentCaseLabels: True
+IndentRequires: True
 FixNamespaceComments: false
 BreakBeforeBraces: Custom
 BraceWrapping:
