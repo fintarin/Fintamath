@@ -324,23 +324,23 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
     auto lhsOperPriority = lhsOper->getOperatorPriority();
 
     switch (lhsOperPriority) {
-    case IOperator::Priority::PostfixUnary:
-    case IOperator::Priority::PrefixUnary: {
-      if (int res = comparator(lhs->getChildren().front(), rhs); res != 0) {
-        return res;
-      }
+      case IOperator::Priority::PostfixUnary:
+      case IOperator::Priority::PrefixUnary: {
+        if (int res = comparator(lhs->getChildren().front(), rhs); res != 0) {
+          return res;
+        }
 
-      return 1;
-    }
-    case IOperator::Priority::Exponentiation:
-    case IOperator::Priority::Multiplication: {
-      static const ArgumentPtr one = Integer(1).clone();
-      ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, one);
-      int comp = comparator(lhs, rhsExpr);
-      return isTermsOrderInversed() ? comp * -1 : comp;
-    }
-    default:
-      break;
+        return 1;
+      }
+      case IOperator::Priority::Exponentiation:
+      case IOperator::Priority::Multiplication: {
+        static const ArgumentPtr one = Integer(1).clone();
+        ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, one);
+        int comp = comparator(lhs, rhsExpr);
+        return isTermsOrderInversed() ? comp * -1 : comp;
+      }
+      default:
+        break;
     }
   }
 

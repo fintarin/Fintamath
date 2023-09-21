@@ -70,12 +70,12 @@ public:
 
   UndefinedUnaryOperatorException(const std::string &oper, const std::string &rhs, Type type) {
     switch (type) {
-    case Type::Prefix:
-      content += ": " + oper + "(" + rhs + ")";
-      break;
-    case Type::Postfix:
-      content += ": (" + rhs + ")" + oper;
-      break;
+      case Type::Prefix:
+        content += ": " + oper + "(" + rhs + ")";
+        break;
+      case Type::Postfix:
+        content += ": (" + rhs + ")" + oper;
+        break;
     }
   }
 };
