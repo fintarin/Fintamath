@@ -174,7 +174,7 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr 
 
       if (res && !is<Rational>(res)) {
         lhsChild = res;
-        rhsChildren.erase(rhsChildren.begin() + ArgumentsPtrVector::difference_type(j));
+        rhsChildren.erase(rhsChildren.begin() + ptrdiff_t(j));
         break;
       }
     }

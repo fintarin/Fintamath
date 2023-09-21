@@ -280,7 +280,7 @@ std::shared_ptr<const IExpression> AddExpression::mulToLogarithm(const Arguments
   ArgumentsPtrVector mulChildren = children;
   auto logExprChild = cast<const IExpression>(mulChildren[i]);
 
-  mulChildren.erase(mulChildren.begin() + ArgumentsPtrVector::difference_type(i));
+  mulChildren.erase(mulChildren.begin() + ptrdiff_t(i));
 
   const ArgumentPtr powRate = mulChildren.size() > 1 ? mulExpr(mulChildren) : mulChildren.front();
   const ArgumentPtr logRhsChild = powExpr(logExprChild->getChildren().back(), powRate);

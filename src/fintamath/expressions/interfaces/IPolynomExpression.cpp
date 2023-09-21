@@ -132,8 +132,8 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
       }
     }
 
-    children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
-    children.erase(children.begin() + ArgumentsPtrVector::difference_type(i - 1));
+    children.erase(children.begin() + ptrdiff_t(i) - 1);
+    children.erase(children.begin() + ptrdiff_t(i) - 1);
     addElement(res);
 
     i--;

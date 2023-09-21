@@ -308,7 +308,7 @@ void Expression::insertMultiplications(TermsVector &terms) {
         canPrevTermBeBinaryOperator(*terms[i])) {
 
       auto term = std::make_shared<Term>(mul->toString(), mul);
-      terms.insert(terms.begin() + TermsVector::difference_type(i), term);
+      terms.insert(terms.begin() + ptrdiff_t(i), term);
       i++;
     }
   }
@@ -381,7 +381,7 @@ void Expression::collapseFactorials(TermsVector &terms) {
       newFactorial.setOrder(factorial->getOrder() + 1);
       term->value = newFactorial.clone();
 
-      terms.erase(terms.begin() + TermsVector::difference_type(i + 1));
+      terms.erase(terms.begin() + ptrdiff_t(i) + 1);
       i--;
     }
   }
