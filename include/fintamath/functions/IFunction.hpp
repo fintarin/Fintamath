@@ -38,8 +38,7 @@ public:
 
   virtual bool isNonExressionEvaluatable() const = 0;
 
-  template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-  std::unique_ptr<IMathObject> operator()(const Args &...args) const {
+  std::unique_ptr<IMathObject> operator()(const std::derived_from<IMathObject> auto &...args) const {
     ArgumentsRefVector argsVect = {args...};
     return callAbstract(argsVect);
   }
@@ -48,7 +47,7 @@ public:
     return callAbstract(argsVect);
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IFunction, T>>>
+  template <std::derived_from<IFunction> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
   }

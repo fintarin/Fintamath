@@ -16,12 +16,12 @@ public:
     return false;
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
+  template <std::derived_from<INumber> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<INumber, T>>>
+  template <std::derived_from<INumber> T>
   static void registerType(Parser::Function<std::unique_ptr<INumber>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(getParser(), std::move(parserFunc));
   }
@@ -58,12 +58,12 @@ inline std::unique_ptr<INumber> operator/(const INumber &lhs, const INumber &rhs
   return cast<INumber>(std::move(res));
 }
 
-template <typename Rhs, typename = std::enable_if_t<std::is_same_v<INumber, Rhs>>>
+template <std::same_as<INumber> Rhs>
 std::unique_ptr<INumber> operator+(const Rhs &rhs) {
   return cast<INumber>(+cast<IArithmetic>(rhs));
 }
 
-template <typename Rhs, typename = std::enable_if_t<std::is_same_v<INumber, Rhs>>>
+template <std::same_as<INumber> Rhs>
 std::unique_ptr<INumber> operator-(const Rhs &rhs) {
   return cast<INumber>(-cast<IArithmetic>(rhs));
 }

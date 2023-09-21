@@ -53,10 +53,10 @@ public:
     Parser::add<Token>(getTermMakers(), std::move(maker));
   }
 
-  template <typename Function, bool isPolynomial = false, typename Maker>
-  static void registerFunctionExpressionMaker(Maker &&maker) {
+  template <typename Function, bool isPolynomial = false>
+  static void registerFunctionExpressionMaker(auto &&maker) {
     Parser::Function<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> constructor =
-        [maker = std::forward<Maker>(maker)](const ArgumentsPtrVector &args)
+        [maker = std::forward<decltype(maker)>(maker)](const ArgumentsPtrVector &args)
         -> std::unique_ptr<IMathObject> {
       //
       static const IFunction::Type type = Function().getFunctionType();

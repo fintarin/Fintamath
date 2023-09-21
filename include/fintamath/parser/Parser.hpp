@@ -81,7 +81,8 @@ public:
     return nullptr;
   }
 
-  template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
+  template <typename Return, typename... Args>
+    requires(sizeof...(Args) > 0)
   static Return parse(const Map<Return, Args &&...> &parserMap,
                       const std::string &parsedStr,
                       Args &&...args) {
@@ -114,7 +115,8 @@ public:
     return nullptr;
   }
 
-  template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
+  template <typename Return, typename... Args>
+    requires(sizeof...(Args) > 0)
   static Return parse(const Map<Return, Args &&...> &parserMap,
                       const Comparator<const Return &> &comp,
                       const std::string &parsedStr,
@@ -142,7 +144,8 @@ public:
     return nullptr;
   }
 
-  template <typename Return, typename... Args, typename = std::enable_if_t<(sizeof...(Args) > 0)>>
+  template <typename Return, typename... Args>
+    requires(sizeof...(Args) > 0)
   static Return parse(const Vector<Return, Args &&...> &parserVect, Args &&...args) {
     for (const auto &constructor : parserVect) {
       if (Return value = constructor(move(args)...)) {

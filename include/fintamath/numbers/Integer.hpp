@@ -26,8 +26,7 @@ public:
 
   explicit Integer(std::string str);
 
-  template <typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
-  explicit Integer(T val) : backend(val) {
+  explicit Integer(std::integral auto val) : backend(val) {
   }
 
   Integer(int64_t val);
@@ -38,7 +37,7 @@ public:
 
   const boost::multiprecision::cpp_int &getBackend() const;
 
-  template <typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+  template <std::integral T>
   explicit operator T() const {
     return backend.convert_to<T>();
   }

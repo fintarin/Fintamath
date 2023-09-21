@@ -4,12 +4,6 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/parser/Parser.hpp"
 
-#define REQUIRE_COMPARABLES(Lhs, Rhs)                                          \
-  template <typename Lhs, typename Rhs,                                        \
-            typename = std::enable_if_t<std::is_base_of_v<IComparable, Lhs> && \
-                                        std::is_convertible_v<Rhs, Lhs> &&     \
-                                        !std::is_same_v<Lhs, Rhs>>>
-
 namespace fintamath {
 
 class IComparable : public IArithmetic {
@@ -18,7 +12,7 @@ public:
     return lhs.compareAbstract(rhs);
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
+  template <std::derived_from<IComparable> T>
   static void registerType(Parser::Function<std::unique_ptr<IComparable>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(getParser(), std::move(parserFunc));
   }
@@ -45,11 +39,9 @@ class IComparableCRTP : public IComparable {
 #undef I_COMPARABLE_CRTP
 };
 
-REQUIRE_COMPARABLES(Lhs, Rhs)
+template <std::derived_from<IComparable> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
 std::strong_ordering operator<=>(const Lhs &lhs, const Rhs &rhs) {
   return lhs <=> Lhs(rhs);
 }
 
 }
-
-#undef REQUIRE_COMPARABLES

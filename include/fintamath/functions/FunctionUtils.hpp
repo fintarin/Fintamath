@@ -27,7 +27,7 @@ extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const Argume
 
 extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args);
 
-template <typename T, typename = std::enable_if_t<std::is_convertible_v<T, ArgumentPtr>>>
+template <std::convertible_to<ArgumentPtr> T>
 ArgumentPtr toArgumentPtr(T &arg) {
   if constexpr (std::is_copy_constructible_v<T>) {
     return arg;
@@ -37,18 +37,15 @@ ArgumentPtr toArgumentPtr(T &arg) {
   }
 }
 
-template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const Args &...args) {
+std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const std::derived_from<IMathObject> auto &...args) {
   return makeExprChecked(func, ArgumentsRefVector{args...});
 }
 
-template <typename... Args, typename = std::enable_if_t<(std::is_base_of_v<IMathObject, Args> && ...)>>
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const Args &...args) {
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const std::derived_from<IMathObject> auto &...args) {
   return makeExpr(func, ArgumentsPtrVector{args.clone()...});
 }
 
-template <typename... Args, typename = std::enable_if_t<(std::is_convertible_v<Args, ArgumentPtr> && ...)>>
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, Args &&...args) {
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, std::convertible_to<ArgumentPtr> auto &&...args) {
   return makeExpr(func, ArgumentsPtrVector{toArgumentPtr(args)...});
 }
 

@@ -14,7 +14,7 @@ public:
     return call();
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IConstant, T>>>
+  template <std::derived_from<IConstant> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
   }

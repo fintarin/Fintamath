@@ -9,12 +9,12 @@ class ILiteral : public IMathObject {
 public:
   ~ILiteral() override = default;
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
+  template <std::derived_from<ILiteral> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
   }
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<ILiteral, T>>>
+  template <std::derived_from<ILiteral> T>
   static void registerType(Parser::Function<std::unique_ptr<ILiteral>, const std::string &> &&parserFunc) {
     Parser::registerType<T>(getParser(), std::move(parserFunc));
   }

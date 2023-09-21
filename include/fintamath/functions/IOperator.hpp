@@ -27,7 +27,7 @@ public:
 
   virtual bool isAssociative() const = 0;
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IOperator, T>>>
+  template <std::derived_from<IOperator> T>
   static void registerType() {
     IFunction::registerType<T>();
     Parser::registerType<T>(getParser());

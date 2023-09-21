@@ -25,7 +25,7 @@ public:
 
   virtual std::shared_ptr<IFunction> getOutputFunction() const;
 
-  template <typename T, typename = std::enable_if_t<std::is_base_of_v<IExpression, T>>>
+  template <std::derived_from<IExpression> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
   }
