@@ -21,7 +21,7 @@ Lhs pow(const Lhs &lhs, Integer rhs) {
   Lhs sqr = lhs;
 
   while (rhs != 0) {
-    if ((*(rhs.toString().end() - 1) - '0') % 2 == 0) {
+    if ((rhs.toString().back() - '0') % 2 == 0) {
       rhs /= 2;
       sqr = sqr * sqr;
     }
