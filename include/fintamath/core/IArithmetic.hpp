@@ -75,9 +75,9 @@ private:
 
 template <typename Derived>
 class IArithmeticCRTP : public IArithmetic {
-#define FINTAMATH_I_ARITHMETIC_CRTP IArithmeticCRTP<Derived>
+#define I_ARITHMETIC_CRTP IArithmeticCRTP<Derived>
 #include "fintamath/core/IArithmeticCRTP.hpp"
-#undef FINTAMATH_I_ARITHMETIC_CRTP
+#undef I_ARITHMETIC_CRTP
 };
 
 REQUIRE_ARITHMETICS(Lhs, Rhs)

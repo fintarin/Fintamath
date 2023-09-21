@@ -1,4 +1,4 @@
-#if !defined(FINTAMATH_I_COMPARABLE_CRTP) && !defined(NDEBUG)
+#if !defined(I_COMPARABLE_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/core/IComparable.hpp"
 
@@ -7,14 +7,14 @@ namespace fintamath {
 template <typename Derived>
 class IComparableCRTP_ : public IComparable {
 
-#endif // FINTAMATH_I_COMPARABLE_CRTP
+#endif // I_COMPARABLE_CRTP
 
-#define FINTAMATH_I_ARITHMETIC_CRTP FINTAMATH_I_COMPARABLE_CRTP
+#define I_ARITHMETIC_CRTP I_COMPARABLE_CRTP
 #include "fintamath/core/IArithmeticCRTP.hpp"
-#undef FINTAMATH_I_ARITHMETIC_CRTP
+#undef I_ARITHMETIC_CRTP
 
 public:
-  std::strong_ordering operator<=>(const FINTAMATH_I_COMPARABLE_CRTP &rhs) const {
+  std::strong_ordering operator<=>(const I_COMPARABLE_CRTP &rhs) const {
     return compare(cast<Derived>(rhs));
   }
 
@@ -40,8 +40,8 @@ protected:
   }
 
 private:
-#if !defined(FINTAMATH_I_COMPARABLE_CRTP) && !defined(NDEBUG)
+#if !defined(I_COMPARABLE_CRTP) && !defined(NDEBUG)
 };
 }
 
-#endif // FINTAMATH_I_COMPARABLE_CRTP
+#endif // I_COMPARABLE_CRTP

@@ -98,9 +98,9 @@ private:
 
 template <typename Derived>
 class IIntegerCRTP : public IInteger {
-#define FINTAMATH_I_INTEGER_CRTP IIntegerCRTP<Derived>
+#define I_INTEGER_CRTP IIntegerCRTP<Derived>
 #include "fintamath/numbers/IIntegerCRTP.hpp"
-#undef FINTAMATH_I_INTEGER_CRTP
+#undef I_INTEGER_CRTP
 };
 
 REQUIRE_INTEGERS(Lhs, Rhs)

@@ -46,16 +46,16 @@ protected:
 
 template <typename Derived, bool isMultiFunction = false>
 class IBinaryExpressionBaseCRTP : public IBinaryExpression {
-#define FINTAMATH_I_EXPRESSION_BASE_CRTP IBinaryExpressionBaseCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_BASE_CRTP IBinaryExpressionBaseCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
-#undef FINTAMATH_I_EXPRESSION_BASE_CRTP
+#undef I_EXPRESSION_BASE_CRTP
 };
 
 template <typename Derived, bool isMultiFunction = false>
 class IBinaryExpressionCRTP : public IBinaryExpressionBaseCRTP<Derived, isMultiFunction> {
-#define FINTAMATH_I_EXPRESSION_CRTP IBinaryExpressionCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_CRTP IBinaryExpressionCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionCRTP.hpp"
-#undef FINTAMATH_I_EXPRESSION_CRTP
+#undef I_EXPRESSION_CRTP
 
 public:
   explicit IBinaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

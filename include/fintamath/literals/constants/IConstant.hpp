@@ -36,9 +36,9 @@ private:
 
 template <typename Return, typename Derived>
 class IConstantCRTP : public IConstant {
-#define FINTAMATH_I_CONSTANT_CRTP IConstantCRTP<Return, Derived>
+#define I_CONSTANT_CRTP IConstantCRTP<Return, Derived>
 #include "fintamath/literals/constants/IConstantCRTP.hpp"
-#undef FINTAMATH_I_CONSTANT_CRTP
+#undef I_CONSTANT_CRTP
 };
 
 }

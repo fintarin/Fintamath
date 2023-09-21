@@ -63,9 +63,9 @@ private:
 
 template <typename Derived>
 class IMathObjectCRTP : public IMathObject {
-#define FINTAMATH_I_MATH_OBJECT_CRTP IMathObjectCRTP
+#define I_MATH_OBJECT_CRTP IMathObjectCRTP
 #include "fintamath/core/IMathObjectCRTP.hpp"
-#undef FINTAMATH_I_MATH_OBJECT_CRTP
+#undef I_MATH_OBJECT_CRTP
 };
 
 REQUIRE_MATH_OBJECTS(Lhs, Rhs)

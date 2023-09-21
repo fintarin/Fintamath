@@ -50,9 +50,9 @@ private:
 
 template <typename Return, typename Derived, typename... Args>
 class IOperatorCRTP : public IOperator {
-#define FINTAMATH_I_OPERATOR_CRTP IOperatorCRTP<Return, Derived, Args...>
+#define I_OPERATOR_CRTP IOperatorCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IOperatorCRTP.hpp"
-#undef FINTAMATH_I_OPERATOR_CRTP
+#undef I_OPERATOR_CRTP
 
 public:
   IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any,

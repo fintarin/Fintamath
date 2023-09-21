@@ -67,16 +67,16 @@ private:
 
 template <typename Derived, bool isMultiFunction = false>
 class IExpressionBaseCRTP : public IExpression {
-#define FINTAMATH_I_EXPRESSION_BASE_CRTP IExpressionBaseCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_BASE_CRTP IExpressionBaseCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
-#undef FINTAMATH_I_EXPRESSION_BASE_CRTP
+#undef I_EXPRESSION_BASE_CRTP
 };
 
 template <typename Derived, bool isMultiFunction = false>
 class IExpressionCRTP : public IExpressionBaseCRTP<Derived, isMultiFunction> {
-#define FINTAMATH_I_EXPRESSION_CRTP IExpressionCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_CRTP IExpressionCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionCRTP.hpp"
-#undef FINTAMATH_I_EXPRESSION_CRTP
+#undef I_EXPRESSION_CRTP
 };
 
 }

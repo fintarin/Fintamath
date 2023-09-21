@@ -72,9 +72,9 @@ std::unique_ptr<INumber> operator-(const Rhs &rhs) {
 
 template <typename Derived>
 class INumberCRTP : public INumber {
-#define FINTAMATH_I_NUMBER_CRTP INumberCRTP<Derived>
+#define I_NUMBER_CRTP INumberCRTP<Derived>
 #include "fintamath/numbers/INumberCRTP.hpp"
-#undef FINTAMATH_I_NUMBER_CRTP
+#undef I_NUMBER_CRTP
 };
 
 }

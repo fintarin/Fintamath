@@ -1,4 +1,4 @@
-#if !defined(FINTAMATH_I_EXPRESSION_CRTP) && !defined(NDEBUG)
+#if !defined(I_EXPRESSION_CRTP) && !defined(NDEBUG)
 
 #include "fintamath/expressions/IExpression.hpp"
 
@@ -7,7 +7,7 @@ namespace fintamath {
 template <typename Derived, bool isMultiFunction = false>
 class IExpressionCRTP_ : public IExpressionBaseCRTP<Derived, isMultiFunction> {
 
-#endif // FINTAMATH_I_EXPRESSION_CRTP
+#endif // I_EXPRESSION_CRTP
 
 public:
   bool equals(const Derived &rhs) const override {
@@ -55,8 +55,8 @@ protected:
   }
 
 private:
-#if !defined(FINTAMATH_I_EXPRESSION_CRTP) && !defined(NDEBUG)
+#if !defined(I_EXPRESSION_CRTP) && !defined(NDEBUG)
 };
 }
 
-#endif // FINTAMATH_I_EXPRESSION_CRTP
+#endif // I_EXPRESSION_CRTP
