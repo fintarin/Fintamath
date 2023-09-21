@@ -53,17 +53,17 @@ Expression solve(const Expression &rhs) {
       ArgumentsPtrVector roots;
 
       switch (powerRates.size()) {
-      case 2:
-        roots = solveLinearEquation(powerRates);
-        break;
-      case 3:
-        roots = solveQuadraticEquation(powerRates);
-        break;
-      case 4:
-        roots = solveCubicEquation(powerRates);
-        break;
-      default:
-        roots = {};
+        case 2:
+          roots = solveLinearEquation(powerRates);
+          break;
+        case 3:
+          roots = solveQuadraticEquation(powerRates);
+          break;
+        case 4:
+          roots = solveCubicEquation(powerRates);
+          break;
+        default:
+          roots = {};
       }
 
       if (roots.empty()) {
