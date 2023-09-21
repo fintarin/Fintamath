@@ -10,6 +10,9 @@
 
 namespace fintamath {
 
+template <typename T>
+struct IsFunctionTypeAny : std::false_type {};
+
 class IFunction : public IMathObject {
 public:
   enum class Type : uint16_t {

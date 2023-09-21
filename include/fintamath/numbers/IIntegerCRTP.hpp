@@ -197,15 +197,13 @@ private:
       return cast<IInteger>(funcCommonTypes(*lhsPtr, *rhpPtr).toMinimalObject());
     }
 
-    if constexpr (IsConvertible<Derived>::value) {
-      if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
-        auto lhsPtr = cast<I_INTEGER_CRTP>(clone());
-        return cast<IInteger>(funcCommonTypes(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
-      }
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
+      auto lhsPtr = cast<I_INTEGER_CRTP>(clone());
+      return cast<IInteger>(funcCommonTypes(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
+    }
 
-      if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-        return cast<IInteger>(funcDifferentTypes(cast<IInteger>(*lhsPtr), rhs)->toMinimalObject());
-      }
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
+      return cast<IInteger>(funcDifferentTypes(cast<IInteger>(*lhsPtr), rhs)->toMinimalObject());
     }
 
     throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());

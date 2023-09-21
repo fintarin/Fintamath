@@ -36,14 +36,12 @@ protected:
       return equals(*rhsPtr);
     }
 
-    if constexpr (IsConvertible<Derived>::value) {
-      if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
-        return equals(cast<Derived>(*rhsPtr));
-      }
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
+      return equals(cast<Derived>(*rhsPtr));
+    }
 
-      if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-        return *lhsPtr == rhs;
-      }
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
+      return *lhsPtr == rhs;
     }
 
     return false;

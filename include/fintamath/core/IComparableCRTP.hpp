@@ -26,14 +26,12 @@ protected:
       return compare(*rhsPtr);
     }
 
-    if constexpr (IsConvertible<Derived>::value) {
-      if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
-        return compare(cast<Derived>(*rhsPtr));
-      }
+    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
+      return compare(cast<Derived>(*rhsPtr));
+    }
 
-      if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-        return cast<IComparable>(*lhsPtr) <=> rhs;
-      }
+    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
+      return cast<IComparable>(*lhsPtr) <=> rhs;
     }
 
     throw InvalidInputBinaryOperatorException("<=>", toString(), rhs.toString());

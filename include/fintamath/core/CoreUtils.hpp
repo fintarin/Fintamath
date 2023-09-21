@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "fintamath/core/CoreTraits.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
 
 #define REQUIRE_MATH_OBJECTS(To, From)                                        \

@@ -6,8 +6,6 @@
 namespace fintamath {
 
 class Max : public IFunctionCRTP<IComparable, Max, IComparable> {
-  FINTAMATH_FUNCTION_TYPE_ANY()
-
 public:
   Max() : IFunctionCRTP(true) {
   }
@@ -23,6 +21,9 @@ public:
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
+
+template <>
+struct IsFunctionTypeAny<Max> : std::true_type {};
 
 FINTAMATH_FUNCTION_EXPRESSION(Max, maxExpr);
 

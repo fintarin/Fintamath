@@ -83,8 +83,6 @@ protected:
 };
 
 class TestIntegerConvertible : public TestInteger {
-  FINTAMATH_CONVERTIBLE()
-
 public:
   TestIntegerConvertible() : TestInteger() {
   }
