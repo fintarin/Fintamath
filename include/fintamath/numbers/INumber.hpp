@@ -7,8 +7,6 @@
 namespace fintamath {
 
 class INumber : public IComparable {
-  FINTAMATH_CONVERTIBLE()
-
 public:
   virtual bool isPrecise() const {
     return true;

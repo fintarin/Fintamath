@@ -38,8 +38,6 @@ std::unique_ptr<To> convert(const To &to, const From &from) {
 
 REQUIRE_MATH_OBJECTS(To, From)
 std::unique_ptr<To> convert(const From &from) {
-  static_assert(IsConvertible<To>::value, "To must be Convertible");
-
   static const To to;
   return convert(to, from);
 }

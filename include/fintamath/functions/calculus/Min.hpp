@@ -6,8 +6,6 @@
 namespace fintamath {
 
 class Min : public IFunctionCRTP<IComparable, Min, IComparable> {
-  FINTAMATH_FUNCTION_TYPE_ANY()
-
 public:
   Min() : IFunctionCRTP(true) {
   }
@@ -23,6 +21,9 @@ public:
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
 };
+
+template <>
+struct IsFunctionTypeAny<Min> : std::true_type {};
 
 FINTAMATH_FUNCTION_EXPRESSION(Min, minExpr);
 
