@@ -100,18 +100,11 @@ bool Rational::equals(const Rational &rhs) const {
   return numer == rhs.numer && denom == rhs.denom;
 }
 
-bool Rational::less(const Rational &rhs) const {
+std::strong_ordering Rational::compare(const Rational &rhs) const {
   Rational lhs = *this;
   Rational tmpRhs = rhs;
   toCommonDenominators(lhs, tmpRhs);
-  return (lhs.numer < tmpRhs.numer);
-}
-
-bool Rational::more(const Rational &rhs) const {
-  Rational lhs = *this;
-  Rational tmpRhs = rhs;
-  toCommonDenominators(lhs, tmpRhs);
-  return (lhs.numer > tmpRhs.numer);
+  return lhs.numer <=> tmpRhs.numer;
 }
 
 Rational &Rational::add(const Rational &rhs) {

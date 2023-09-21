@@ -14,20 +14,8 @@ namespace fintamath {
 
 class IComparable : public IArithmetic {
 public:
-  friend inline bool operator<(const IComparable &lhs, const IComparable &rhs) {
-    return lhs.lessAbstract(rhs);
-  }
-
-  friend inline bool operator>(const IComparable &lhs, const IComparable &rhs) {
-    return lhs.moreAbstract(rhs);
-  }
-
-  friend inline bool operator<=(const IComparable &lhs, const IComparable &rhs) {
-    return !lhs.moreAbstract(rhs);
-  }
-
-  friend inline bool operator>=(const IComparable &lhs, const IComparable &rhs) {
-    return !lhs.lessAbstract(rhs);
+  friend inline std::strong_ordering operator<=>(const IComparable &lhs, const IComparable &rhs) {
+    return lhs.compareAbstract(rhs);
   }
 
   template <typename T, typename = std::enable_if_t<std::is_base_of_v<IComparable, T>>>
@@ -44,9 +32,7 @@ public:
   }
 
 protected:
-  virtual bool lessAbstract(const IComparable &rhs) const = 0;
-
-  virtual bool moreAbstract(const IComparable &rhs) const = 0;
+  virtual std::strong_ordering compareAbstract(const IComparable &rhs) const = 0;
 
 private:
   static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> &getParser();
@@ -60,43 +46,8 @@ class IComparableCRTP : public IComparable {
 };
 
 REQUIRE_COMPARABLES(Lhs, Rhs)
-bool operator<(const Lhs &lhs, const Rhs &rhs) {
-  return lhs < Lhs(rhs);
-}
-
-REQUIRE_COMPARABLES(Rhs, Lhs)
-bool operator<(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) < rhs;
-}
-
-REQUIRE_COMPARABLES(Lhs, Rhs)
-bool operator>(const Lhs &lhs, const Rhs &rhs) {
-  return lhs > Lhs(rhs);
-}
-
-REQUIRE_COMPARABLES(Rhs, Lhs)
-bool operator>(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) > rhs;
-}
-
-REQUIRE_COMPARABLES(Lhs, Rhs)
-bool operator<=(const Lhs &lhs, const Rhs &rhs) {
-  return lhs <= Lhs(rhs);
-}
-
-REQUIRE_COMPARABLES(Rhs, Lhs)
-bool operator<=(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) <= rhs;
-}
-
-REQUIRE_COMPARABLES(Lhs, Rhs)
-bool operator>=(const Lhs &lhs, const Rhs &rhs) {
-  return lhs >= Lhs(rhs);
-}
-
-REQUIRE_COMPARABLES(Rhs, Lhs)
-bool operator>=(const Lhs &lhs, const Rhs &rhs) {
-  return Rhs(lhs) >= rhs;
+std::strong_ordering operator<=>(const Lhs &lhs, const Rhs &rhs) {
+  return lhs <=> Lhs(rhs);
 }
 
 }

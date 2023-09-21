@@ -53,9 +53,7 @@ public:
 protected:
   bool equals(const Real &rhs) const override;
 
-  bool less(const Real &rhs) const override;
-
-  bool more(const Real &rhs) const override;
+  std::strong_ordering compare(const Real &rhs) const override;
 
   Real &add(const Real &rhs) override;
 

@@ -126,20 +126,12 @@ bool Complex::equals(const Complex &rhs) const {
   return *re == *rhs.re && *im == *rhs.im;
 }
 
-bool Complex::less(const Complex &rhs) const {
+std::strong_ordering Complex::compare(const Complex &rhs) const {
   if (*re == *rhs.re) {
-    return *im < *rhs.im;
+    return *im <=> *rhs.im;
   }
 
-  return *re < *rhs.re;
-}
-
-bool Complex::more(const Complex &rhs) const {
-  if (*re == *rhs.re) {
-    return *im > *rhs.im;
-  }
-
-  return *re > *rhs.re;
+  return *re <=> *rhs.re;
 }
 
 Complex &Complex::add(const Complex &rhs) {

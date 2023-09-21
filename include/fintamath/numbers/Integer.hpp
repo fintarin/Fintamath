@@ -50,9 +50,7 @@ public:
 protected:
   bool equals(const Integer &rhs) const override;
 
-  bool less(const Integer &rhs) const override;
-
-  bool more(const Integer &rhs) const override;
+  std::strong_ordering compare(const Integer &rhs) const override;
 
   Integer &add(const Integer &rhs) override;
 
