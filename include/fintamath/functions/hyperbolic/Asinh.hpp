@@ -13,8 +13,8 @@ public:
     return "asinh";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Asinh);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Asinh;
   }
 
 protected:

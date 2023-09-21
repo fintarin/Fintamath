@@ -13,8 +13,8 @@ public:
     return "sinh";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Sinh);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Sinh;
   }
 
 protected:

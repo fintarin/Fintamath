@@ -35,7 +35,7 @@ public:
     return clone();
   }
 
-  virtual MathObjectTypeId getTypeId() const = 0;
+  virtual MathObjectType getType() const = 0;
 
   friend inline bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
     return lhs.equalsAbstract(rhs);
@@ -50,8 +50,8 @@ public:
     return Parser::parse(getParser(), str);
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IMathObject);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IMathObject;
   }
 
 protected:

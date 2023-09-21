@@ -24,6 +24,6 @@ TEST(IOperatorTests, isAssociativeTest) {
   EXPECT_FALSE(Pow().isAssociative());
 }
 
-TEST(IOperatorTests, getTypeIdTest) {
-  EXPECT_EQ(IOperator::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IOperator));
+TEST(IOperatorTests, getTypeTest) {
+  EXPECT_EQ(IOperator::getTypeStatic(), MathObjectType::IOperator);
 }

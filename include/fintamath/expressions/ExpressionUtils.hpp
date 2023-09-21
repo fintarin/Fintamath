@@ -42,10 +42,10 @@ ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector
 template <typename... Args>
 ArgumentPtr simplifyUndefined(const IFunction &func, const Args &...args) {
   if ((is<Undefined>(args) || ...)) {
-    static const size_t undefinedReturnTypeId = Undefined().getReturnTypeId();
-    const size_t funcReturnTypeId = func.getReturnTypeId();
+    static const size_t undefinedReturnType = Undefined().getReturnType();
+    const size_t funcReturnType = func.getReturnType();
 
-    if (!isBaseOf(undefinedReturnTypeId, funcReturnTypeId) && !isBaseOf(funcReturnTypeId, undefinedReturnTypeId)) {
+    if (!isBaseOf(undefinedReturnType, funcReturnType) && !isBaseOf(funcReturnType, undefinedReturnType)) {
       throw InvalidInputFunctionException(func.toString(), {(args->toString(), ...)});
     }
 

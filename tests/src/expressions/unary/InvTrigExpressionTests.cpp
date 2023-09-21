@@ -6,6 +6,6 @@
 
 using namespace fintamath;
 
-TEST(InvTrigExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(asinExpr(Integer(0).clone())->getTypeId(), MathObjectTypeId(MathObjectType::InvTrigExpression));
+TEST(InvTrigExpressionTests, getTypeTest) {
+  EXPECT_EQ(asinExpr(Integer(0).clone())->getType(), MathObjectType::InvTrigExpression);
 }

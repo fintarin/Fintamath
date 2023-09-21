@@ -11,8 +11,8 @@ public:
     return "-Inf";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::NegInf);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::NegInf;
   }
 
 protected:

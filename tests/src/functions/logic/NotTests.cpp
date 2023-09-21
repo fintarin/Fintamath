@@ -63,7 +63,7 @@ TEST(NotTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(NotTests, getTypeIdTest) {
-  EXPECT_EQ(Not::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Not));
-  EXPECT_EQ(Not().getTypeId(), MathObjectTypeId(MathObjectType::Not));
+TEST(NotTests, getTypeTest) {
+  EXPECT_EQ(Not::getTypeStatic(), MathObjectType::Not);
+  EXPECT_EQ(Not().getType(), MathObjectType::Not);
 }

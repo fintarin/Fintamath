@@ -44,8 +44,8 @@ public:
 
   const INumber &imag() const;
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Complex);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Complex;
   }
 
 protected:

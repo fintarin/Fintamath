@@ -172,7 +172,7 @@ TEST(FactorialTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(FactorialTests, getTypeIdTest) {
-  EXPECT_EQ(Factorial::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Factorial));
-  EXPECT_EQ(Factorial().getTypeId(), MathObjectTypeId(MathObjectType::Factorial));
+TEST(FactorialTests, getTypeTest) {
+  EXPECT_EQ(Factorial::getTypeStatic(), MathObjectType::Factorial);
+  EXPECT_EQ(Factorial().getType(), MathObjectType::Factorial);
 }

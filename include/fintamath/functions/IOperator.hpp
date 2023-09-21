@@ -40,8 +40,8 @@ public:
     return Parser::parse<std::unique_ptr<IOperator>>(getParser(), comp, parsedStr);
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IOperator);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IOperator;
   }
 
 private:

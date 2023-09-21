@@ -27,7 +27,7 @@ TEST(TrueTests, equalsTest) {
   EXPECT_NE(E(), c);
 }
 
-TEST(TrueTests, getTypeIdTest) {
-  EXPECT_EQ(True::getTypeIdStatic(), MathObjectTypeId(MathObjectType::True));
-  EXPECT_EQ(True().getTypeId(), MathObjectTypeId(MathObjectType::True));
+TEST(TrueTests, getTypeTest) {
+  EXPECT_EQ(True::getTypeStatic(), MathObjectType::True);
+  EXPECT_EQ(True().getType(), MathObjectType::True);
 }

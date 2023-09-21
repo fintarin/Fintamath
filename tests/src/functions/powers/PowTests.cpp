@@ -127,7 +127,7 @@ TEST(PowTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(PowTests, getTypeIdTest) {
-  EXPECT_EQ(Pow::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Pow));
-  EXPECT_EQ(Pow().getTypeId(), MathObjectTypeId(MathObjectType::Pow));
+TEST(PowTests, getTypeTest) {
+  EXPECT_EQ(Pow::getTypeStatic(), MathObjectType::Pow);
+  EXPECT_EQ(Pow().getType(), MathObjectType::Pow);
 }

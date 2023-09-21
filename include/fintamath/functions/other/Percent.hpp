@@ -14,8 +14,8 @@ public:
     return "%";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Percent);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Percent;
   }
 
 protected:

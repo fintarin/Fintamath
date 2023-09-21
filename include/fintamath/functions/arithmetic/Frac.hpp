@@ -11,8 +11,8 @@ public:
     return "frac";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Frac);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Frac;
   }
 
 protected:

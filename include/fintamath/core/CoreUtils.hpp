@@ -23,7 +23,7 @@ bool is(const From &from) {
     return false;
   }
   else {
-    return isBaseOf(To::getTypeIdStatic(), from.getTypeId());
+    return isBaseOf(To::getTypeStatic(), from.getType());
   }
 }
 

@@ -93,8 +93,8 @@ TEST(IExpressionTests, equalsTest) {
   // TODO: implement
 }
 
-TEST(IExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(IExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IExpression));
+TEST(IExpressionTests, getTypeTest) {
+  EXPECT_EQ(IExpression::getTypeStatic(), MathObjectType::IExpression);
 }
 
 TEST(IExpressionTests, arithmeticTest) {

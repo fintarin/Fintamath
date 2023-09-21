@@ -11,8 +11,8 @@ public:
     return "E";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::E);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::E;
   }
 
 protected:

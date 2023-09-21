@@ -17,8 +17,8 @@ public:
     return "/";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Div);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Div;
   }
 
 protected:

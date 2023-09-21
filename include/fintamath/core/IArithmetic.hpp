@@ -52,8 +52,8 @@ public:
     return Parser::parse(getParser(), str);
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IArithmetic);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IArithmetic;
   }
 
 protected:

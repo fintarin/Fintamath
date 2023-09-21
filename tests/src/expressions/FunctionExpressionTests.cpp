@@ -17,8 +17,8 @@ public:
     return "$";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IOperator)) - 1;
+  static MathObjectType getTypeStatic() {
+    return MathObjectBoundTypes::get().at(IOperator::getTypeStatic()) - 1;
   }
 
 protected:
@@ -36,8 +36,8 @@ public:
     return "$";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IOperator)) - 2;
+  static MathObjectType getTypeStatic() {
+    return MathObjectBoundTypes::get().at(IOperator::getTypeStatic()) - 2;
   }
 
 protected:
@@ -55,8 +55,8 @@ public:
     return "$";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IOperator)) - 3;
+  static MathObjectType getTypeStatic() {
+    return MathObjectBoundTypes::get().at(IOperator::getTypeStatic()) - 3;
   }
 
 protected:
@@ -74,8 +74,8 @@ public:
     return "testfunction";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IOperator) - 1;
+  static MathObjectType getTypeStatic() {
+    return size_t(IOperator::getTypeStatic()) - 1;
   }
 
 protected:
@@ -93,8 +93,8 @@ public:
     return "testfunction";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IOperator) - 2;
+  static MathObjectType getTypeStatic() {
+    return size_t(IOperator::getTypeStatic()) - 2;
   }
 
 protected:
@@ -144,6 +144,6 @@ TEST(FunctionExpressionTests, preciseTest) {
   EXPECT_EQ(Expression("testfunction(a + 2^100)").precise(10).toString(), "testfunction(a + 1.2676506*10^30)");
 }
 
-TEST(FunctionExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::FunctionExpression));
+TEST(FunctionExpressionTests, getTypeTest) {
+  EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0), Integer(0))->getType(), MathObjectType::FunctionExpression);
 }

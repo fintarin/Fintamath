@@ -12,8 +12,8 @@ namespace {
 
 class TestComparable : public IComparableCRTP<TestComparable> {
 public:
-  static MathObjectTypeId getTypeIdStatic() {
-    return size_t(MathObjectBoundTypeIds::get().at(MathObjectTypeId(MathObjectType::IComparable))) - 3;
+  static MathObjectType getTypeStatic() {
+    return size_t(MathObjectBoundTypes::get().at(IComparable::getTypeStatic())) - 3;
   }
 
 protected:
@@ -144,6 +144,6 @@ TEST(IComparableTests, moreEqualsTest) {
   EXPECT_TRUE(1 >= Integer());
 }
 
-TEST(IComparableTests, getTypeIdTest) {
-  EXPECT_EQ(IComparable::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IComparable));
+TEST(IComparableTests, getTypeTest) {
+  EXPECT_EQ(IComparable::getTypeStatic(), MathObjectType::IComparable);
 }

@@ -25,7 +25,7 @@ TEST(PiTests, equalsTest) {
   EXPECT_NE(E(), c);
 }
 
-TEST(PiTests, getTypeIdTest) {
-  EXPECT_EQ(Pi::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Pi));
-  EXPECT_EQ(Pi().getTypeId(), MathObjectTypeId(MathObjectType::Pi));
+TEST(PiTests, getTypeTest) {
+  EXPECT_EQ(Pi::getTypeStatic(), MathObjectType::Pi);
+  EXPECT_EQ(Pi().getType(), MathObjectType::Pi);
 }

@@ -6,6 +6,6 @@
 
 using namespace fintamath;
 
-TEST(DerivativeExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(derivativeExpr(Integer(0), Integer(0))->getTypeId(), MathObjectTypeId(MathObjectType::DerivativeExpression));
+TEST(DerivativeExpressionTests, getTypeTest) {
+  EXPECT_EQ(derivativeExpr(Integer(0), Integer(0))->getType(), MathObjectType::DerivativeExpression);
 }

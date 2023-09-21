@@ -25,7 +25,7 @@ TEST(ComplexInfTests, equalsTest) {
   EXPECT_NE(Pi(), c);
 }
 
-TEST(ComplexInfTests, getTypeIdTest) {
-  EXPECT_EQ(ComplexInf::getTypeIdStatic(), MathObjectTypeId(MathObjectType::ComplexInf));
-  EXPECT_EQ(ComplexInf().getTypeId(), MathObjectTypeId(MathObjectType::ComplexInf));
+TEST(ComplexInfTests, getTypeTest) {
+  EXPECT_EQ(ComplexInf::getTypeStatic(), MathObjectType::ComplexInf);
+  EXPECT_EQ(ComplexInf().getType(), MathObjectType::ComplexInf);
 }

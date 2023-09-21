@@ -924,7 +924,7 @@ TEST(ComplexTests, equalsTest) {
   EXPECT_NE(c, a);
 }
 
-TEST(ComplexTests, getTypeIdTest) {
-  EXPECT_EQ(Complex::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Complex));
-  EXPECT_EQ(Complex().getTypeId(), MathObjectTypeId(MathObjectType::Complex));
+TEST(ComplexTests, getTypeTest) {
+  EXPECT_EQ(Complex::getTypeStatic(), MathObjectType::Complex);
+  EXPECT_EQ(Complex().getType(), MathObjectType::Complex);
 }

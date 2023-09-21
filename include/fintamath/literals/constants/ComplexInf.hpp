@@ -11,8 +11,8 @@ public:
     return "ComplexInf";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::ComplexInf);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::ComplexInf;
   }
 
 protected:

@@ -65,7 +65,7 @@ TEST(MinTests, equalsTest) {
   EXPECT_NE(Max(), f);
 }
 
-TEST(MinTests, getTypeIdTest) {
-  EXPECT_EQ(Min::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Min));
-  EXPECT_EQ(Min().getTypeId(), MathObjectTypeId(MathObjectType::Min));
+TEST(MinTests, getTypeTest) {
+  EXPECT_EQ(Min::getTypeStatic(), MathObjectType::Min);
+  EXPECT_EQ(Min().getType(), MathObjectType::Min);
 }

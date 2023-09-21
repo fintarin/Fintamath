@@ -71,7 +71,7 @@ TEST(AtanhTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(AtanhTests, getTypeIdTest) {
-  EXPECT_EQ(Atanh::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Atanh));
-  EXPECT_EQ(Atanh().getTypeId(), MathObjectTypeId(MathObjectType::Atanh));
+TEST(AtanhTests, getTypeTest) {
+  EXPECT_EQ(Atanh::getTypeStatic(), MathObjectType::Atanh);
+  EXPECT_EQ(Atanh().getType(), MathObjectType::Atanh);
 }

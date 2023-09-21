@@ -14,8 +14,8 @@ public:
 
   void setChildren(const ArgumentsPtrVector &childVect) override;
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IUnaryExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IUnaryExpression;
   }
 
 protected:

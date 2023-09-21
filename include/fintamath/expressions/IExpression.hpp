@@ -34,8 +34,8 @@ public:
     return Parser::parse(getParser(), str);
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IExpression;
   }
 
 protected:

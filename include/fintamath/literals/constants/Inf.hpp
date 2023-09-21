@@ -11,8 +11,8 @@ public:
     return "Inf";
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Inf);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Inf;
   }
 
 protected:

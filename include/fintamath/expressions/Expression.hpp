@@ -82,8 +82,8 @@ public:
     Parser::add<Function>(getExpressionMakers(), std::move(constructor));
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Expression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Expression;
   }
 
 protected:

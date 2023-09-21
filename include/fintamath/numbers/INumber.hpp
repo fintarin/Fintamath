@@ -32,8 +32,8 @@ public:
     return Parser::parse(getParser(), str);
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::INumber);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::INumber;
   }
 
 private:

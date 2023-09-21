@@ -11,8 +11,8 @@ public:
 
   std::string toString() const override;
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::DivExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::DivExpression;
   }
 
 protected:

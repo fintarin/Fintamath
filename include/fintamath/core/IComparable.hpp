@@ -27,8 +27,8 @@ public:
     return Parser::parse(getParser(), str);
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IComparable);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IComparable;
   }
 
 protected:

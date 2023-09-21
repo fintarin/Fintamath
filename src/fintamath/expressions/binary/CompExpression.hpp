@@ -12,8 +12,8 @@ public:
 
   void markAsSolution();
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::CompExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::CompExpression;
   }
 
 protected:

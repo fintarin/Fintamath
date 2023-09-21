@@ -19,8 +19,8 @@ public:
 
   virtual void addElement(const ArgumentPtr &element) = 0;
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IPolynomExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::IPolynomExpression;
   }
 
 protected:

@@ -8,8 +8,8 @@ class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
   explicit AndExpression(const ArgumentsPtrVector &inChildren);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::AndExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::AndExpression;
   }
 
 protected:

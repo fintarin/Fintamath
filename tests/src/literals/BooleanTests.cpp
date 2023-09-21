@@ -58,7 +58,7 @@ TEST(BooleanTest, equalsTest) {
   EXPECT_NE(E(), a);
 }
 
-TEST(BooleanTest, getTypeIdTest) {
-  EXPECT_EQ(Boolean::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Boolean));
-  EXPECT_EQ(Boolean().getTypeId(), MathObjectTypeId(MathObjectType::Boolean));
+TEST(BooleanTest, getTypeTest) {
+  EXPECT_EQ(Boolean::getTypeStatic(), MathObjectType::Boolean);
+  EXPECT_EQ(Boolean().getType(), MathObjectType::Boolean);
 }

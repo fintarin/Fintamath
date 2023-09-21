@@ -71,7 +71,7 @@ TEST(AtanTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(AtanTests, getTypeIdTest) {
-  EXPECT_EQ(Atan::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Atan));
-  EXPECT_EQ(Atan().getTypeId(), MathObjectTypeId(MathObjectType::Atan));
+TEST(AtanTests, getTypeTest) {
+  EXPECT_EQ(Atan::getTypeStatic(), MathObjectType::Atan);
+  EXPECT_EQ(Atan().getType(), MathObjectType::Atan);
 }

@@ -72,7 +72,7 @@ TEST(AcotTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(AcotTests, getTypeIdTest) {
-  EXPECT_EQ(Acot::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Acot));
-  EXPECT_EQ(Acot().getTypeId(), MathObjectTypeId(MathObjectType::Acot));
+TEST(AcotTests, getTypeTest) {
+  EXPECT_EQ(Acot::getTypeStatic(), MathObjectType::Acot);
+  EXPECT_EQ(Acot().getType(), MathObjectType::Acot);
 }

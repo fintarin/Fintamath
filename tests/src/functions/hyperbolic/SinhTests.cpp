@@ -68,7 +68,7 @@ TEST(SinhTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(SinhTests, getTypeIdTest) {
-  EXPECT_EQ(Sinh::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Sinh));
-  EXPECT_EQ(Sinh().getTypeId(), MathObjectTypeId(MathObjectType::Sinh));
+TEST(SinhTests, getTypeTest) {
+  EXPECT_EQ(Sinh::getTypeStatic(), MathObjectType::Sinh);
+  EXPECT_EQ(Sinh().getType(), MathObjectType::Sinh);
 }

@@ -74,7 +74,7 @@ TEST(TanTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(TanTests, getTypeIdTest) {
-  EXPECT_EQ(Tan::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Tan));
-  EXPECT_EQ(Tan().getTypeId(), MathObjectTypeId(MathObjectType::Tan));
+TEST(TanTests, getTypeTest) {
+  EXPECT_EQ(Tan::getTypeStatic(), MathObjectType::Tan);
+  EXPECT_EQ(Tan().getType(), MathObjectType::Tan);
 }

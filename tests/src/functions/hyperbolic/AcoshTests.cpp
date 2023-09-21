@@ -72,7 +72,7 @@ TEST(AcoshTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(AcoshTests, getTypeIdTest) {
-  EXPECT_EQ(Acosh::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Acosh));
-  EXPECT_EQ(Acosh().getTypeId(), MathObjectTypeId(MathObjectType::Acosh));
+TEST(AcoshTests, getTypeTest) {
+  EXPECT_EQ(Acosh::getTypeStatic(), MathObjectType::Acosh);
+  EXPECT_EQ(Acosh().getType(), MathObjectType::Acosh);
 }

@@ -56,7 +56,7 @@ TEST(FracTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(FracTests, getTypeIdTest) {
-  EXPECT_EQ(Frac::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Frac));
-  EXPECT_EQ(Frac().getTypeId(), MathObjectTypeId(MathObjectType::Frac));
+TEST(FracTests, getTypeTest) {
+  EXPECT_EQ(Frac::getTypeStatic(), MathObjectType::Frac);
+  EXPECT_EQ(Frac().getType(), MathObjectType::Frac);
 }

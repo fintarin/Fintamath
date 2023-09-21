@@ -65,7 +65,7 @@ TEST(ImplTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(ImplTests, getTypeIdTest) {
-  EXPECT_EQ(Impl::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Impl));
-  EXPECT_EQ(Impl().getTypeId(), MathObjectTypeId(MathObjectType::Impl));
+TEST(ImplTests, getTypeTest) {
+  EXPECT_EQ(Impl::getTypeStatic(), MathObjectType::Impl);
+  EXPECT_EQ(Impl().getType(), MathObjectType::Impl);
 }

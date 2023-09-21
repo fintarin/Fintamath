@@ -499,38 +499,38 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
     throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
   }
 
-  ArgumentTypeIdsVector childrenTypeIds = func->getArgTypeIds();
+  ArgumentTypesVector childrenTypes = func->getArgType();
 
   if (func->getFunctionType() == IFunction::Type::Any) {
-    childrenTypeIds = ArgumentTypeIdsVector(args.size(), childrenTypeIds.front());
+    childrenTypes = ArgumentTypesVector(args.size(), childrenTypes.front());
   }
 
   for (size_t i = 0; i < args.size(); i++) {
     const ArgumentPtr &arg = args[i];
-    const MathObjectTypeId typeId = childrenTypeIds[i];
+    const MathObjectType Type = childrenTypes[i];
 
     if (const auto childExpr = cast<IExpression>(arg)) {
       const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
-      const MathObjectTypeId childTypeId = childFunc->getReturnTypeId();
+      const MathObjectType childType = childFunc->getReturnType();
 
-      if (childTypeId != Variable::getTypeIdStatic() &&
-          !isBaseOf(typeId, childTypeId) &&
-          !isBaseOf(childTypeId, typeId)) {
+      if (childType != Variable::getTypeStatic() &&
+          !isBaseOf(Type, childType) &&
+          !isBaseOf(childType, Type)) {
 
         throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }
     else if (const auto childConst = cast<IConstant>(arg)) {
-      const MathObjectTypeId childTypeId = childConst->getReturnTypeId();
+      const MathObjectType childType = childConst->getReturnType();
 
-      if (!isBaseOf(typeId, childTypeId) && !isBaseOf(childTypeId, typeId)) {
+      if (!isBaseOf(Type, childType) && !isBaseOf(childType, Type)) {
         throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }
     else {
-      MathObjectTypeId childTypeId = arg->getTypeId();
+      MathObjectType childType = arg->getType();
 
-      if (childTypeId != Variable::getTypeIdStatic() && !isBaseOf(typeId, childTypeId)) {
+      if (childType != Variable::getTypeStatic() && !isBaseOf(Type, childType)) {
         throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
       }
     }

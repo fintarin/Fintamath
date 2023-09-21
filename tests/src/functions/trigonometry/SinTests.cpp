@@ -71,7 +71,7 @@ TEST(SinTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(SinTests, getTypeIdTest) {
-  EXPECT_EQ(Sin::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Sin));
-  EXPECT_EQ(Sin().getTypeId(), MathObjectTypeId(MathObjectType::Sin));
+TEST(SinTests, getTypeTest) {
+  EXPECT_EQ(Sin::getTypeStatic(), MathObjectType::Sin);
+  EXPECT_EQ(Sin().getType(), MathObjectType::Sin);
 }

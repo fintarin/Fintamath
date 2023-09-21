@@ -10,8 +10,8 @@ class TrigExpression : public IUnaryExpressionCRTP<TrigExpression, true> {
 public:
   explicit TrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::TrigExpression);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::TrigExpression;
   }
 
 protected:

@@ -11,8 +11,8 @@ public:
     return Boolean(false).toString();
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::False);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::False;
   }
 
 protected:

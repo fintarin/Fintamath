@@ -67,17 +67,17 @@ TEST(IFunctionTests, getFunctionTypeTest) {
   EXPECT_EQ(Sin().getFunctionType(), IFunction::Type::Unary);
 }
 
-TEST(IFunctionTests, getReturnTypeIdTest) {
-  EXPECT_EQ(Add().getReturnTypeId(), IArithmetic::getTypeIdStatic());
-  EXPECT_EQ(Neg().getReturnTypeId(), IArithmetic::getTypeIdStatic());
-  EXPECT_EQ(Sin().getReturnTypeId(), INumber::getTypeIdStatic());
+TEST(IFunctionTests, getReturnTypeTest) {
+  EXPECT_EQ(Add().getReturnType(), IArithmetic::getTypeStatic());
+  EXPECT_EQ(Neg().getReturnType(), IArithmetic::getTypeStatic());
+  EXPECT_EQ(Sin().getReturnType(), INumber::getTypeStatic());
 }
 
-TEST(IFunctionTests, getArgTypeIdsTest) {
-  EXPECT_EQ(Add().getArgTypeIds()[0], IArithmetic::getTypeIdStatic());
-  EXPECT_EQ(Add().getArgTypeIds()[1], IArithmetic::getTypeIdStatic());
-  EXPECT_EQ(Neg().getArgTypeIds()[0], IArithmetic::getTypeIdStatic());
-  EXPECT_EQ(Sin().getArgTypeIds()[0], INumber::getTypeIdStatic());
+TEST(IFunctionTests, getArgTypeTest) {
+  EXPECT_EQ(Add().getArgType()[0], IArithmetic::getTypeStatic());
+  EXPECT_EQ(Add().getArgType()[1], IArithmetic::getTypeStatic());
+  EXPECT_EQ(Neg().getArgType()[0], IArithmetic::getTypeStatic());
+  EXPECT_EQ(Sin().getArgType()[0], INumber::getTypeStatic());
 }
 
 TEST(IFunctionTests, doArgsMatchTest) {
@@ -94,6 +94,6 @@ TEST(IFunctionTests, doArgsMatchTest) {
   EXPECT_FALSE(Add().doArgsMatch({a, b, a, b}));
 }
 
-TEST(IFunctionTests, getTypeIdTest) {
-  EXPECT_EQ(IFunction::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IFunction));
+TEST(IFunctionTests, getTypeTest) {
+  EXPECT_EQ(IFunction::getTypeStatic(), MathObjectType::IFunction);
 }

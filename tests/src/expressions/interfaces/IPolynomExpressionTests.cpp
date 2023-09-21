@@ -17,8 +17,8 @@ public:
   explicit TestPolynomExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(f, children) {
   }
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::IPolynomExpression) + 999;
+  static MathObjectType getTypeStatic() {
+    return MathObjectBoundTypes::get().at(IPolynomExpression::getTypeStatic()) - 1;
   }
 };
 
@@ -77,6 +77,6 @@ TEST(IPolynomExpressionTests, toMinimalObjectTest) {
   EXPECT_EQ(expr.toMinimalObject()->toString(), "a * 2");
 }
 
-TEST(IPolynomExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(IPolynomExpression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::IPolynomExpression));
+TEST(IPolynomExpressionTests, getTypeTest) {
+  EXPECT_EQ(IPolynomExpression::getTypeStatic(), MathObjectType::IPolynomExpression);
 }

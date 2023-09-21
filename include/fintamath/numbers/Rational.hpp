@@ -26,8 +26,8 @@ public:
 
   const Integer &denominator() const;
 
-  static MathObjectTypeId getTypeIdStatic() {
-    return MathObjectTypeId(MathObjectType::Rational);
+  static MathObjectType getTypeStatic() {
+    return MathObjectType::Rational;
   }
 
 protected:

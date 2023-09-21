@@ -83,7 +83,7 @@ TEST(SqrtTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(SqrtTests, getTypeIdTest) {
-  EXPECT_EQ(Sqrt::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Sqrt));
-  EXPECT_EQ(Sqrt().getTypeId(), MathObjectTypeId(MathObjectType::Sqrt));
+TEST(SqrtTests, getTypeTest) {
+  EXPECT_EQ(Sqrt::getTypeStatic(), MathObjectType::Sqrt);
+  EXPECT_EQ(Sqrt().getType(), MathObjectType::Sqrt);
 }

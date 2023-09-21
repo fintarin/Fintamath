@@ -64,7 +64,7 @@ TEST(NegTests, equalsTest) {
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(NegTests, getTypeIdTest) {
-  EXPECT_EQ(Neg::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Neg));
-  EXPECT_EQ(Neg().getTypeId(), MathObjectTypeId(MathObjectType::Neg));
+TEST(NegTests, getTypeTest) {
+  EXPECT_EQ(Neg::getTypeStatic(), MathObjectType::Neg);
+  EXPECT_EQ(Neg().getType(), MathObjectType::Neg);
 }

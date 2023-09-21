@@ -1808,9 +1808,9 @@ TEST(ExpressionTests, setVariableTest) {
   EXPECT_EQ(c.toString(), "a^2 + 2 a b + b^2 + E + 1");
 }
 
-TEST(ExpressionTests, getTypeIdTest) {
-  EXPECT_EQ(Expression::getTypeIdStatic(), MathObjectTypeId(MathObjectType::Expression));
-  EXPECT_EQ(Expression().getTypeId(), MathObjectTypeId(MathObjectType::Expression));
+TEST(ExpressionTests, getTypeTest) {
+  EXPECT_EQ(Expression::getTypeStatic(), MathObjectType::Expression);
+  EXPECT_EQ(Expression().getType(), MathObjectType::Expression);
 }
 
 TEST(ExpressionTests, parseExprTest) {
