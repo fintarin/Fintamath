@@ -11,9 +11,7 @@ class InvalidInputException : public Exception {
 public:
   InvalidInputException() = default;
 
-  ~InvalidInputException() override = default;
-
-  InvalidInputException(const std::string &input) {
+  explicit InvalidInputException(const std::string &input) {
     content += ": " + input;
   }
 
@@ -27,9 +25,7 @@ protected:
 
 class InvalidInputFunctionException : public InvalidInputException {
 public:
-  ~InvalidInputFunctionException() override = default;
-
-  InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
+  explicit InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
     content += ": " + func + "(";
 
     if (!argsVect.empty()) {
@@ -50,9 +46,7 @@ public:
 
 class InvalidInputBinaryOperatorException : public InvalidInputException {
 public:
-  ~InvalidInputBinaryOperatorException() override = default;
-
-  InvalidInputBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
+  explicit InvalidInputBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
     content += ": (" + lhs + ")" + oper + "(" + rhs + ")";
   }
 };
@@ -65,9 +59,7 @@ public:
   };
 
 public:
-  ~InvalidInputUnaryOperatorException() override = default;
-
-  InvalidInputUnaryOperatorException(const std::string &oper, const std::string &rhs, Type type) {
+  explicit InvalidInputUnaryOperatorException(const std::string &oper, const std::string &rhs, Type type) {
     switch (type) {
       case Type::Prefix:
         content += ": " + oper + "(" + rhs + ")";

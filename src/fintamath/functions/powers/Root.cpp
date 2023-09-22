@@ -117,7 +117,7 @@ std::map<Integer, Integer> Root::roots(const Integer &lhs, const Integer &rhs) {
       rootIter->second *= factor;
     }
     else {
-      rootFactors.emplace(power.denominator(), factor);
+      rootFactors.try_emplace(power.denominator(), factor);
     }
   }
 

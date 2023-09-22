@@ -77,7 +77,7 @@ class IFunctionCRTP : public IFunction {
 #undef I_FUNCTION_CRTP
 
 public:
-  IFunctionCRTP(bool isNonExressionEvaluatable = true) : isNonExressionEvaluatableFunc(isNonExressionEvaluatable) {
+  explicit IFunctionCRTP(bool isNonExressionEvaluatable = true) : isNonExressionEvaluatableFunc(isNonExressionEvaluatable) {
     if constexpr (IsFunctionTypeAny<Derived>::value) {
       type = Type::Any;
     }

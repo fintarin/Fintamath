@@ -16,7 +16,7 @@ public:
   Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }
 
-  Factorial(size_t inOrder) : Factorial() {
+  explicit Factorial(size_t inOrder) : Factorial() {
     setOrder(inOrder);
   }
 

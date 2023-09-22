@@ -31,10 +31,8 @@ public:
   }
 
   Res operator()(const auto &...args) const {
-    auto it = callbacks.find(CallbackId(args.getType()...));
-
-    if (it != callbacks.end()) {
-      return it->second(args...);
+    if (auto iter = callbacks.find(CallbackId(args.getType()...)); iter != callbacks.end()) {
+      return iter->second(args...);
     }
 
     return {};

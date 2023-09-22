@@ -55,9 +55,9 @@ class IOperatorCRTP : public IOperator {
 #undef I_OPERATOR_CRTP
 
 public:
-  IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any,
-                bool isAssociative = false,
-                bool isNonExressionEvaluatable = true)
+  explicit IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any,
+                         bool isAssociative = false,
+                         bool isNonExressionEvaluatable = true)
       : isNonExressionEvaluatableFunc(isNonExressionEvaluatable),
         priority(inPriority),
         isAssociativeOper(isAssociative) {

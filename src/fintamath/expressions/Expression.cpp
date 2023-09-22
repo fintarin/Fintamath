@@ -314,7 +314,7 @@ void Expression::insertMultiplications(TermsVector &terms) {
 void Expression::fixOperatorTypes(TermsVector &terms) {
   bool isFixed = true;
 
-  if (auto &term = terms.front();
+  if (const auto &term = terms.front();
       is<IOperator>(term->value) &&
       !isPrefixOperator(term->value)) {
 

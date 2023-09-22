@@ -11,8 +11,6 @@ class UndefinedException : public Exception {
 public:
   UndefinedException() = default;
 
-  ~UndefinedException() override = default;
-
   explicit UndefinedException(const std::string &input) {
     content += ": " + input;
   }
@@ -27,9 +25,7 @@ protected:
 
 class UndefinedFunctionException : public UndefinedException {
 public:
-  ~UndefinedFunctionException() override = default;
-
-  UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
+  explicit UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
     content += ": " + func + "(";
 
     if (!argsVect.empty()) {
@@ -50,9 +46,7 @@ public:
 
 class UndefinedBinaryOperatorException : public UndefinedException {
 public:
-  ~UndefinedBinaryOperatorException() override = default;
-
-  UndefinedBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
+  explicit UndefinedBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
     content += ": (" + lhs + ")" + oper + "(" + rhs + ")";
   }
 };
@@ -65,9 +59,7 @@ public:
   };
 
 public:
-  ~UndefinedUnaryOperatorException() override = default;
-
-  UndefinedUnaryOperatorException(const std::string &oper, const std::string &rhs, Type type) {
+  explicit UndefinedUnaryOperatorException(const std::string &oper, const std::string &rhs, Type type) {
     switch (type) {
       case Type::Prefix:
         content += ": " + oper + "(" + rhs + ")";
