@@ -71,7 +71,13 @@ const To &cast(const From &from) {
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 To &cast(From &from) {
-  return const_cast<To &>(cast<To>(const_cast<const From &>(from)));
+  if constexpr (!std::is_base_of_v<To, From>) {
+    if (!is<To>(from)) {
+      throw std::bad_cast();
+    }
+  }
+
+  return static_cast<To &>(from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
@@ -87,7 +93,13 @@ const To *cast(const From *from) {
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 To *cast(From *from) {
-  return const_cast<To *>(cast<To>(const_cast<const From *>(from)));
+  if constexpr (!std::is_base_of_v<To, From>) {
+    if (!is<To>(from)) {
+      return {};
+    }
+  }
+
+  return static_cast<To *>(from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
