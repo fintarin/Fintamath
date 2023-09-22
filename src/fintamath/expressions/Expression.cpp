@@ -1,8 +1,5 @@
 #include "fintamath/expressions/Expression.hpp"
 
-#include <algorithm>
-#include <regex>
-
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/FunctionExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"

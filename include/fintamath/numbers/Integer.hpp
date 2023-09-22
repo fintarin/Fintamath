@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include <boost/multiprecision/cpp_int.hpp>
 
 #include "fintamath/numbers/IInteger.hpp"

@@ -1,10 +1,5 @@
 #include "fintamath/numbers/Integer.hpp"
 
-#include <algorithm>
-#include <cmath>
-#include <stdexcept>
-#include <string>
-
 #include "fintamath/exceptions/UndefinedException.hpp"
 
 using namespace boost::multiprecision;

@@ -1,11 +1,8 @@
 #pragma once
 
-#include <cassert>
-#include <functional>
 #include <memory>
 #include <sstream>
 #include <string>
-#include <vector>
 
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/CoreUtils.hpp"

@@ -1,9 +1,7 @@
 #pragma once
 
-#include <functional>
 #include <memory>
 #include <string>
-#include <typeinfo>
 #include <vector>
 
 #include "fintamath/core/MathObjectTypes.hpp"

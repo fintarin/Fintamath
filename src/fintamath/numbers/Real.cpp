@@ -1,10 +1,5 @@
 #include "fintamath/numbers/Real.hpp"
 
-#include <algorithm>
-#include <cmath>
-#include <stdexcept>
-#include <string>
-
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 

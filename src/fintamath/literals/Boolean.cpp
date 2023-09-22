@@ -1,7 +1,5 @@
 #include "fintamath/literals/Boolean.hpp"
 
-#include <regex>
-
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {

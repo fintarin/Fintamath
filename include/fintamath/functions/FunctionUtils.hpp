@@ -1,7 +1,5 @@
 #pragma once
 
-#include <algorithm>
-
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"

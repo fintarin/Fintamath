@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "fintamath/literals/ILiteral.hpp"
 
 namespace fintamath {

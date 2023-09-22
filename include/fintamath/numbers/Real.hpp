@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
 #include "fintamath/core/CoreConstants.hpp"

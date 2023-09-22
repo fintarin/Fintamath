@@ -1,8 +1,5 @@
 #include "fintamath/numbers/Rational.hpp"
 
-#include <algorithm>
-#include <stdexcept>
-
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"

@@ -1,8 +1,5 @@
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 
-#include <algorithm>
-#include <set>
-
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
