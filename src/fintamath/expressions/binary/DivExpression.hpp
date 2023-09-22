@@ -53,7 +53,7 @@ private:
 
   static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
 
-  static Integer getGcd(ArgumentsPtrVector &children);
+  static Integer getGcd(const ArgumentsPtrVector &children);
 };
 
 }

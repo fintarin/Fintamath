@@ -480,7 +480,7 @@ ArgumentPtr DivExpression::gcdSimplify(const IFunction & /*func*/, const Argumen
   return divExpr(numerator, denominator);
 }
 
-Integer DivExpression::getGcd(ArgumentsPtrVector &lhsChildren) {
+Integer DivExpression::getGcd(const ArgumentsPtrVector &lhsChildren) {
   Integer gcdNum;
 
   for (auto child : lhsChildren) {

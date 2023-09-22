@@ -152,10 +152,10 @@ Complex &Complex::substract(const Complex &rhs) {
 Complex &Complex::multiply(const Complex &rhs) {
   Complex lhs = *this;
 
-  auto &x = *lhs.re;
-  auto &y = *lhs.im;
-  auto &u = *rhs.re;
-  auto &v = *rhs.im;
+  const auto &x = *lhs.re;
+  const auto &y = *lhs.im;
+  const auto &u = *rhs.re;
+  const auto &v = *rhs.im;
 
   re = *(x * u) - *(y * v);
   im = *(x * v) + *(y * u);
@@ -167,10 +167,10 @@ Complex &Complex::multiply(const Complex &rhs) {
 Complex &Complex::divide(const Complex &rhs) {
   Complex lhs = *this;
 
-  auto &x = *lhs.re;
-  auto &y = *lhs.im;
-  auto &u = *rhs.re;
-  auto &v = *rhs.im;
+  const auto &x = *lhs.re;
+  const auto &y = *lhs.im;
+  const auto &u = *rhs.re;
+  const auto &v = *rhs.im;
 
   auto divisor = *(u * u) + *(v * v);
 

@@ -33,7 +33,7 @@ public:
     };
 
     static const std::string name = Type().toString();
-    parserMap.insert({name, constructor});
+    parserMap.emplace(name, constructor);
 
     Tokenizer::registerToken(name);
   }
@@ -41,7 +41,7 @@ public:
   template <typename Type, typename BasePtr, typename... Args>
   static void add(Map<BasePtr, Args...> &parserMap, Function<BasePtr, Args...> &&parserFunc) {
     static const std::string name = Type().toString();
-    parserMap.insert({name, std::move(parserFunc)});
+    parserMap.emplace(name, std::move(parserFunc));
 
     Tokenizer::registerToken(name);
   }

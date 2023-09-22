@@ -56,28 +56,26 @@ public:
   template <typename Function, bool isPolynomial = false>
   static void registerFunctionExpressionMaker(auto &&maker) {
     Parser::Function<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> constructor =
-        [maker = std::forward<decltype(maker)>(maker)](const ArgumentsPtrVector &args)
-        -> std::unique_ptr<IMathObject> {
-      //
-      static const IFunction::Type type = Function().getFunctionType();
-      std::unique_ptr<IMathObject> res;
+        [maker = std::forward<decltype(maker)>(maker)](const ArgumentsPtrVector &args) {
+          static const IFunction::Type type = Function().getFunctionType();
+          std::unique_ptr<IMathObject> res;
 
-      if constexpr (IsFunctionTypeAny<Function>::value) {
-        res = maker(args);
-      }
-      else if constexpr (isPolynomial) {
-        if (uint16_t(type) <= args.size()) {
-          res = maker(args);
-        }
-      }
-      else {
-        if (size_t(type) == args.size()) {
-          res = maker(args);
-        }
-      }
+          if constexpr (IsFunctionTypeAny<Function>::value) {
+            res = maker(args);
+          }
+          else if constexpr (isPolynomial) {
+            if (uint16_t(type) <= args.size()) {
+              res = maker(args);
+            }
+          }
+          else {
+            if (size_t(type) == args.size()) {
+              res = maker(args);
+            }
+          }
 
-      return res;
-    };
+          return res;
+        };
 
     Parser::add<Function>(getExpressionMakers(), std::move(constructor));
   }

@@ -50,9 +50,9 @@ void IExpression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr
     bool isAdded = false;
 
     if (const auto varChild = cast<Variable>(child)) {
-      for (const auto &varsToVal : varsToVals) {
-        if (*varChild == varsToVal.first) {
-          newChildren.push_back(varsToVal.second);
+      for (const auto &[var, val] : varsToVals) {
+        if (*varChild == var) {
+          newChildren.push_back(val);
           isAdded = true;
           break;
         }

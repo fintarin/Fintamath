@@ -117,7 +117,7 @@ std::map<Integer, Integer> Root::roots(const Integer &lhs, const Integer &rhs) {
       rootIter->second *= factor;
     }
     else {
-      rootFactors.insert({power.denominator(), factor});
+      rootFactors.emplace(power.denominator(), factor);
     }
   }
 
@@ -204,7 +204,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     }
   }
 
-  for (auto [root, denominatorFactor] : denominatorRootFactors) {
+  for (const auto &[root, denominatorFactor] : denominatorRootFactors) {
     if (denominatorFactor != 1) {
       denominator *= denominatorFactor;
 

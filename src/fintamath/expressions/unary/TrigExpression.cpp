@@ -17,7 +17,7 @@
 
 namespace fintamath {
 
-using TrigonometryFunctionsTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>>;
+using TrigonometryFunctionsTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
 
 using TrigonometryTable = std::map<Rational, ArgumentPtr>;
 

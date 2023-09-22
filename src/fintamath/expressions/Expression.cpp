@@ -325,7 +325,7 @@ void Expression::fixOperatorTypes(TermsVector &terms) {
     isFixed = isFixed && term->value;
   }
 
-  if (auto &term = terms.back();
+  if (const auto &term = terms.back();
       is<IOperator>(term->value) &&
       !isPostfixOperator(term->value)) {
 
@@ -338,7 +338,7 @@ void Expression::fixOperatorTypes(TermsVector &terms) {
   }
 
   for (size_t i = 1; i < terms.size() - 1; i++) {
-    auto &term = terms[i];
+    const auto &term = terms[i];
     const auto &termPrev = terms[i - 1];
 
     if (is<IOperator>(term->value) &&
@@ -351,7 +351,7 @@ void Expression::fixOperatorTypes(TermsVector &terms) {
   }
 
   for (size_t i = terms.size() - 2; i > 1; i--) {
-    auto &term = terms[i];
+    const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
     if (is<IOperator>(term->value) &&
@@ -370,7 +370,7 @@ void Expression::fixOperatorTypes(TermsVector &terms) {
 
 void Expression::collapseFactorials(TermsVector &terms) {
   for (size_t i = 1; i < terms.size() - 1; i++) {
-    auto &term = terms[i];
+    const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
     if (auto factorial = cast<Factorial>(term->value);
