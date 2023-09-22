@@ -24,10 +24,10 @@ Fintamath is an algebra & analysis library written in pure C++.
 
 * C++ 20 or higher
 * CMake 3.5 or higher
-* C++ Compilers:
-  * GCC 11.3 or higher
-  * Clang 14.0 or higher
-  * MSVC 17.0 or higher
+* C++ compilers:
+  * GCC 11 or higher
+  * Clang 14 or higher
+  * MSVC 17 or higher
 * Operating systems:
   * Linux
   * Windows
