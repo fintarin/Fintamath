@@ -34,11 +34,11 @@ TokenVector Tokenizer::tokenize(std::string str) {
 }
 
 void Tokenizer::registerToken(const Token &token) {
-  // TODO: use more efficient algorithm to emplace
-  getRegisteredTokens().emplace_back(token);
-  std::sort(getRegisteredTokens().begin(), getRegisteredTokens().end(), [](const Token &a, const Token &b) {
-    return a.length() > b.length();
-  });
+  auto &tokens = getRegisteredTokens();
+  tokens.insert(std::ranges::upper_bound(tokens, token, [](const Token &lhs, const Token &rhs) {
+                  return lhs.length() > rhs.length();
+                }),
+                token);
 }
 
 bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit) {
