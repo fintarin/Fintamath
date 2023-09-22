@@ -23,8 +23,9 @@ jobs:
         config:
           - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
           - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
-          - { name: macOS GCC, os: macOS-latest, cc: gcc, cxx: g++ }
-          - { name: macOS Clang, os: macOS-latest, cc: clang, cxx: clang++ }
+          # TODO: remove version specifiers after macOS-latest upgrades to version 13
+          - { name: macOS GCC, os: macOS-13, cc: gcc, cxx: g++ }
+          - { name: macOS Clang, os: macOS-13, cc: clang, cxx: clang++ }
           - { name: Windows GCC, os: windows-latest, cc: gcc, cxx: g++ }
           - { name: Windows Clang, os: windows-latest, cc: clang, cxx: clang++ }
           - { name: Windows MSVC, os: windows-latest, cc: msvc, cxx: msvc }
@@ -32,6 +33,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      # TODO: remove this step after the default Clang is updated to version 16
+      - name: Install LLVM and Clang
+        if: matrix.config.os == 'ubuntu-latest'
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "16.0"
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
