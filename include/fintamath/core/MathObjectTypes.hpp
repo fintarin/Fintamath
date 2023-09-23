@@ -188,22 +188,10 @@ struct hash<fintamath::MathObjectType> {
 namespace fintamath {
 
 class MathObjectBoundTypes {
-  static constexpr auto getTypeHash = [](const MathObjectType &type) { return size_t(type); };
+  using enum MathObjectType::Id;
 
   using TypeMap = std::unordered_map<MathObjectType, MathObjectType>;
 
-  using enum MathObjectType::Id;
-
-public:
-  static const TypeMap &get() {
-    return getMutable();
-  }
-
-  static void reg(const MathObjectType &type, const MathObjectType &boundType) {
-    getMutable().emplace(type, boundType);
-  }
-
-private:
   static TypeMap &getMutable() {
     static TypeMap ids{
         {IMathObject, None},
@@ -222,6 +210,15 @@ private:
     };
 
     return ids;
+  }
+
+public:
+  static const TypeMap &get() {
+    return getMutable();
+  }
+
+  static void reg(const MathObjectType &type, const MathObjectType &boundType) {
+    getMutable().emplace(type, boundType);
   }
 };
 
