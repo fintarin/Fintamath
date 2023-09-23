@@ -79,7 +79,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Integer &lhs, const Intege
     rootFactors.erase(rootFactors.begin());
   }
 
-  for (auto [root, factor] : rootFactors) {
+  for (const auto &[root, factor] : rootFactors) {
     if (factor != 1) {
       mulChildren.emplace_back(rootExpr(factor, root));
     }
@@ -181,7 +181,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     denominatorRootFactors.erase(denominatorRootFactors.begin());
   }
 
-  for (auto [root, numeratorFactor] : numeratorRootFactors) {
+  for (const auto &[root, numeratorFactor] : numeratorRootFactors) {
     if (const auto denominatorFactorIter = denominatorRootFactors.find(root);
         denominatorFactorIter != denominatorRootFactors.end()) {
 

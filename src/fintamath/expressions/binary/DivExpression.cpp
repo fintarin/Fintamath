@@ -160,16 +160,20 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr 
   size_t lhsChildrenSizeInitial = lhsChildren.size();
   size_t rhsChildrenSizeInitial = rhsChildren.size();
 
-  for (auto &lhsChild : lhsChildren) {
-    for (size_t j = 0; j < rhsChildren.size(); j++) {
-      ArgumentPtr res = constSimplify(func, lhsChild, rhsChildren[j]);
+  // TODO: use more efficient algorithm
+  for (auto i : std::views::iota(0U, lhsChildren.size())) {
+    auto &lhsChild = lhsChildren[i];
+
+    for (auto j : std::views::iota(0U, rhsChildren.size())) {
+      const auto &rhsChild = rhsChildren[j];
+      ArgumentPtr res = constSimplify(func, lhsChild, rhsChild);
 
       if (!res) {
-        res = callFunction(Div(), {lhsChild, rhsChildren[j]});
+        res = callFunction(Div(), {lhsChild, rhsChild});
       }
 
       if (!res) {
-        res = powSimplify(lhsChild, rhsChildren[j]);
+        res = powSimplify(lhsChild, rhsChild);
       }
 
       if (res && !is<Rational>(res)) {
@@ -360,7 +364,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
 
   ArgumentPtrVector multiplicator;
 
-  for (size_t i = 1; i < rhsChildren.size(); i++) {
+  for (auto i : std::views::iota(1U, rhsChildren.size())) {
     multiplicator.emplace_back(mulExpr(rhsChildren[i], result));
   }
 

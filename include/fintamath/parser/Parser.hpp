@@ -3,6 +3,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <ranges>
 #include <string>
 #include <vector>
 
@@ -71,7 +72,7 @@ public:
 
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
-    for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
+    for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
       if (Return value = pair->second(args...)) {
         return value;
       }
@@ -88,7 +89,7 @@ public:
 
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
-    for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
+    for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
       if (Return value = pair->second(move(args)...)) {
         return value;
       }
@@ -105,7 +106,7 @@ public:
 
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
-    for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
+    for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
       if (Return value = pair->second(args...); value && comp(value)) {
         return value;
       }
@@ -123,7 +124,7 @@ public:
 
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
-    for (auto pair = valuePairs.first; pair != valuePairs.second; pair++) {
+    for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
       if (Return value = pair->second(move(args)...); value && comp(value)) {
         return value;
       }

@@ -265,7 +265,7 @@ ArgumentPtr AddExpression::addRatesToValue(const ArgumentPtrVector &rates, const
 std::vector<size_t> AddExpression::findLogarithms(const ArgumentPtrVector &children) {
   std::vector<size_t> indexes;
 
-  for (size_t i = 0; i < children.size(); i++) {
+  for (auto i : std::views::iota(0U, children.size())) {
     if (const auto childExpr = cast<const IExpression>(children[i]);
         childExpr && is<Log>(childExpr->getFunction())) {
 

@@ -29,18 +29,18 @@ Real::Real(std::string str) : Real() {
 
   // Validate input and remove leading zeros
   {
-    size_t i = 0;
+    size_t firstDigitPos = 0;
     if (str.front() == '-') {
-      i++;
+      firstDigitPos++;
     }
 
-    str.erase(i, str.find_first_not_of('0'));
+    str.erase(firstDigitPos, str.find_first_not_of('0'));
     if (str.empty()) {
       str = "0";
     }
 
     size_t dotsNum = 0;
-    for (; i < str.size(); ++i) {
+    for (auto i : std::views::iota(firstDigitPos, str.size())) {
       if (str[i] == '.') {
         dotsNum++;
       }

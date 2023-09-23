@@ -30,7 +30,7 @@ std::string IPolynomExpression::toString() const {
 
   result += childToString(*oper, children.front(), {});
 
-  for (size_t i = 1; i < children.size(); i++) {
+  for (auto i : std::views::iota(1U, children.size())) {
     const std::string childStr = childToString(*oper, children[i], children[i - 1]);
 
     if (childStr.length() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {
@@ -91,6 +91,7 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
 
   bool isSimplified = true;
 
+  // TODO: refactor this loop
   for (size_t i = 1; i < children.size(); i++) {
     const ArgumentPtr &lhs = children[i - 1];
     const ArgumentPtr &rhs = children[i];
@@ -447,7 +448,9 @@ IPolynomExpression::comparatorChildren(const ArgumentPtrVector &lhsChildren,
     result.postfixUnary = 0;
   }
 
-  for (size_t i = 0; i < std::min(std::max(lhsStart, rhsStart), std::min(lhsChildren.size(), rhsChildren.size())); i++) {
+  for (auto end = std::min(std::max(lhsStart, rhsStart), std::min(lhsChildren.size(), rhsChildren.size()));
+       auto i : std::views::iota(0U, end)) {
+
     int childrenComp = comparator(lhsChildren[i], rhsChildren[i]);
 
     if (childrenComp != 0) {
@@ -538,6 +541,7 @@ std::shared_ptr<const Variable> IPolynomExpression::getNextVariable(ExpressionTr
   while (!stack.empty()) {
     ArgumentPtrVector children = stack.top().first->getChildren();
 
+    // TODO: looks weird
     size_t &exprIndex = stack.top().second;
     exprIndex++;
 
@@ -566,11 +570,12 @@ std::shared_ptr<const Variable> IPolynomExpression::getNextVariable(ExpressionTr
 }
 
 size_t IPolynomExpression::getPositionOfFirstChildWithVariable(const ArgumentPtrVector &children) {
-  for (size_t i = 0; i < children.size(); i++) {
+  for (auto i : std::views::iota(0U, children.size())) {
     auto lhsChildExpr = cast<IExpression>(children[i]);
 
     if (is<Variable>(children[i]) ||
         (lhsChildExpr && hasVariable(lhsChildExpr))) {
+
       return i;
     }
   }

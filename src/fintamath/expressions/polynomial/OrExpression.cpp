@@ -34,12 +34,13 @@ ArgumentPtr OrExpression::postSimplify() const {
   auto simplChildren = simpl->children;
   auto simplChildrenSizeInitial = simplChildren.size();
 
+  // TODO: use more efficient algorithm
   for (size_t i = 0; i + 1 < simplChildren.size(); i++) {
     for (size_t j = i + 1; j < simplChildren.size(); j++) {
       if (auto res = absorptionSimplify(simplChildren[i], simplChildren[j])) {
         simplChildren[i] = res;
         simplChildren.erase(simplChildren.begin() + ptrdiff_t(j));
-        break;
+        j--;
       }
     }
   }
@@ -131,7 +132,7 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
 
   size_t resolutionIndex = lhsChildren.size();
 
-  for (size_t i = 0; i < lhsChildren.size(); i++) {
+  for (auto i : std::views::iota(0U, lhsChildren.size())) {
     ArgumentPtr lhsSubChild = lhsChildren[i];
     ArgumentPtr rhsSubChild = rhsChildren[i];
 
@@ -213,10 +214,17 @@ ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhsChild, const 
   ArgumentPtrVector minChildren = lhsChildren.size() < rhsChildren.size() ? lhsChildren : rhsChildren;
   size_t matchCount = 0;
 
-  for (size_t i = 0, j = 0; i < maxChildren.size() && j < minChildren.size(); i++) {
-    if (*maxChildren[i] == *minChildren[j]) {
-      matchCount++;
-      j++;
+  {
+    size_t i = 0;
+    size_t j = 0;
+
+    while (i < maxChildren.size() && j < minChildren.size()) {
+      if (*maxChildren[i] == *minChildren[j]) {
+        matchCount++;
+        j++;
+      }
+
+      i++;
     }
   }
 

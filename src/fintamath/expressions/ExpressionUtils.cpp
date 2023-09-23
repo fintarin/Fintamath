@@ -233,7 +233,7 @@ bool isNegated(const ArgumentPtr &arg) {
 std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args) {
   std::vector<std::string> argStrings(args.size());
 
-  for (size_t i = 0; i < argStrings.size(); i++) {
+  for (auto i : std::views::iota(0U, argStrings.size())) {
     argStrings[i] = args[i].get()->toString();
   }
 
