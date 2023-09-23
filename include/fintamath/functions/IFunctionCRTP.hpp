@@ -116,7 +116,7 @@ private:
   void throwInvalidInputFunctionException(const ArgumentRefVector &argsVect) const {
     std::vector<std::string> argNamesVect(argsVect.size());
 
-    for (size_t i = 0; i < argNamesVect.size(); i++) {
+    for (auto i : std::views::iota(0U, argNamesVect.size())) {
       argNamesVect[i] = argsVect[i].get().toString();
     }
 

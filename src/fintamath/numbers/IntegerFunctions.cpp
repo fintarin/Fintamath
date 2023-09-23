@@ -79,7 +79,7 @@ Integer factorial(const Integer &rhs, size_t order) {
   // https://en.wikipedia.org/wiki/Double_factorial.
 
   Integer res = 1;
-  for (Integer i = rhs; i > 0; i -= int64_t(order)) {
+  for (Integer i = rhs; i > 0; i -= order) {
     res *= i;
   }
 

@@ -163,8 +163,8 @@ ArgumentPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variab
     std::shared_ptr<const INumber> power = getElementPower(polynomChild, var);
 
     if (auto intPow = cast<Integer>(power)) {
-      if (int64_t(powerRates.size()) < *intPow + 1) {
-        while (int64_t(powerRates.size()) != *intPow + 1) {
+      if (powerRates.size() < *intPow + 1) {
+        while (powerRates.size() != *intPow + 1) {
           powerRates.emplace_back(Integer(0).clone());
         }
       }

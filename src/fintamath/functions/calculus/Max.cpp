@@ -7,7 +7,7 @@ namespace fintamath {
 std::unique_ptr<IMathObject> Max::call(const ArgumentRefVector &argsVect) const {
   std::reference_wrapper<const IComparable> res = cast<IComparable>(argsVect.front().get());
 
-  for (size_t i = 1; i < argsVect.size(); i++) {
+  for (auto i : std::views::iota(1U, argsVect.size())) {
     std::reference_wrapper<const IComparable> arg = cast<IComparable>(argsVect[i].get());
 
     if (is<Complex>(arg)) {

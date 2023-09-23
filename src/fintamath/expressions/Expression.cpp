@@ -281,7 +281,7 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
 
   TermVector terms(tokens.size());
 
-  for (size_t i = 0; i < tokens.size(); i++) {
+  for (auto i : std::views::iota(0U, terms.size())) {
     if (auto term = Parser::parse(getTermMakers(), (tokens[i]))) {
       terms[i] = std::move(term);
     }
@@ -334,7 +334,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     return;
   }
 
-  for (size_t i = 1; i < terms.size() - 1; i++) {
+  for (auto i : std::views::iota(1U, terms.size() - 1)) {
     const auto &term = terms[i];
     const auto &termPrev = terms[i - 1];
 
@@ -347,7 +347,8 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     }
   }
 
-  for (size_t i = terms.size() - 2; i > 1; i--) {
+  // TODO: use reverse(iota(1, terms.size() - 1)) when it is work
+  for (size_t i = terms.size() - 2; i > 0; i--) {
     const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
@@ -406,7 +407,7 @@ bool Expression::skipBrackets(const TermVector &terms, size_t &openBracketIndex)
 
   int64_t brackets = 0;
 
-  for (size_t i = openBracketIndex; i < terms.size(); i++) {
+  for (auto i : std::views::iota(openBracketIndex, terms.size())) {
     const auto &term = terms[i];
 
     if (term->name == "(") {
@@ -479,8 +480,8 @@ void Expression::validateChild(const ArgumentPtr &inChild) {
     validateFunctionArgs(func, children);
   }
   else {
-    for (size_t i = 0; i + 1 < children.size(); i++) {
-      for (size_t j = i + 1; j < children.size(); j++) {
+    for (auto i : std::views::iota(0U, children.size() - 1)) {
+      for (auto j : std::views::iota(i + 1, children.size())) {
         validateFunctionArgs(func, {children[i], children[j]});
       }
     }
@@ -502,7 +503,7 @@ void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, co
     childrenTypes = ArgumentTypeVector(args.size(), childrenTypes.front());
   }
 
-  for (size_t i = 0; i < args.size(); i++) {
+  for (auto i : std::views::iota(0U, args.size())) {
     const ArgumentPtr &arg = args[i];
     const MathObjectType Type = childrenTypes[i];
 
