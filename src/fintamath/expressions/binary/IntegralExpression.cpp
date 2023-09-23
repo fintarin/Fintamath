@@ -16,8 +16,8 @@ IntegralExpression::IntegralExpression(const ArgumentPtr &inLhsChild, const Argu
     : IBinaryExpressionCRTP(Integral(), inLhsChild, inRhsChild) {
 }
 
-IntegralExpression::SimplifyFunctionsVector IntegralExpression::getFunctionsForPostSimplify() const {
-  static const IntegralExpression::SimplifyFunctionsVector simplifyFunctions = {
+IntegralExpression::SimplifyFunctionVector IntegralExpression::getFunctionsForPostSimplify() const {
+  static const IntegralExpression::SimplifyFunctionVector simplifyFunctions = {
       &IntegralExpression::integralSimplify,
   };
   return simplifyFunctions;

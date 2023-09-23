@@ -14,7 +14,7 @@
 
 namespace fintamath {
 
-using TrigonometryFunctionsTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
+using TrigonometryFunctionTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
 
 using TrigonometryTable = std::map<Rational, ArgumentPtr>;
 
@@ -24,8 +24,8 @@ InvTrigExpression::InvTrigExpression(const IFunction &inFunc, const ArgumentPtr 
     : IUnaryExpressionCRTP(inFunc, inChild) {
 }
 
-InvTrigExpression::SimplifyFunctionsVector InvTrigExpression::getFunctionsForPostSimplify() const {
-  static const InvTrigExpression::SimplifyFunctionsVector simplifyFunctions = {
+InvTrigExpression::SimplifyFunctionVector InvTrigExpression::getFunctionsForPostSimplify() const {
+  static const InvTrigExpression::SimplifyFunctionVector simplifyFunctions = {
       &InvTrigExpression::constSimplify,
   };
   return simplifyFunctions;
@@ -64,7 +64,7 @@ ArgumentPtr InvTrigExpression::constSimplify(const IFunction &func, const Argume
 }
 
 ArgumentPtr InvTrigExpression::trigTableSimplify(const IFunction &func, const Rational &rhs) {
-  static const TrigonometryFunctionsTable trigTable = {
+  static const TrigonometryFunctionTable trigTable = {
       {Asin().toString(), &trigTableAsinSimplify},
       {Acos().toString(), &trigTableAcosSimplify},
       {Atan().toString(), &trigTableAtanSimplify},

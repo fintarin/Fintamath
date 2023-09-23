@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Div::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Div::call(const ArgumentRefVector &argsVect) const {
   const auto &lhs = cast<IArithmetic>(argsVect.front().get());
   const auto &rhs = cast<IArithmetic>(argsVect.back().get());
 

@@ -17,16 +17,16 @@ NotExpression::NotExpression(const ArgumentPtr &inChild)
     : IUnaryExpressionCRTP(Not(), inChild) {
 }
 
-NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPreSimplify() const {
-  static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
+NotExpression::SimplifyFunctionVector NotExpression::getFunctionsForPreSimplify() const {
+  static const NotExpression::SimplifyFunctionVector simplifyFunctions = {
       &NotExpression::callFunctionSimplify,
       &NotExpression::nestedNotSimplify,
   };
   return simplifyFunctions;
 }
 
-NotExpression::SimplifyFunctionsVector NotExpression::getFunctionsForPostSimplify() const {
-  static const NotExpression::SimplifyFunctionsVector simplifyFunctions = {
+NotExpression::SimplifyFunctionVector NotExpression::getFunctionsForPostSimplify() const {
+  static const NotExpression::SimplifyFunctionVector simplifyFunctions = {
       &NotExpression::logicNegatableSimplify,
       &NotExpression::nestedNotSimplify,
   };
@@ -56,7 +56,7 @@ ArgumentPtr NotExpression::logicNegatableSimplify(const IFunction & /*func*/, co
     res = makeExpr(*cast<IFunction>(getLogicOppositeFunction(*op)), rhsExpr->getChildren());
   }
   else if (is<Or>(rhsExpr->getFunction())) {
-    ArgumentsPtrVector children = rhsExpr->getChildren();
+    ArgumentPtrVector children = rhsExpr->getChildren();
 
     for (auto &child : children) {
       child = notExpr(child);
@@ -65,7 +65,7 @@ ArgumentPtr NotExpression::logicNegatableSimplify(const IFunction & /*func*/, co
     res = andExpr(children);
   }
   else if (is<And>(rhsExpr->getFunction())) {
-    ArgumentsPtrVector children = rhsExpr->getChildren();
+    ArgumentPtrVector children = rhsExpr->getChildren();
 
     for (auto &child : children) {
       child = notExpr(child);

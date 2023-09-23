@@ -17,13 +17,13 @@
 
 namespace fintamath {
 
-MulExpression::MulExpression(const ArgumentsPtrVector &inChildren)
+MulExpression::MulExpression(const ArgumentPtrVector &inChildren)
     : IPolynomExpressionCRTP(Mul(), inChildren) {
 }
 
 std::string MulExpression::toString() const {
   if (const auto firstChildRat = cast<Rational>(children.front())) {
-    ArgumentsPtrVector numeratorChildren = children;
+    ArgumentPtrVector numeratorChildren = children;
 
     if (const Integer firstChildNumeratorAbs = abs(firstChildRat->numerator()); firstChildNumeratorAbs != 1) {
       numeratorChildren.front() = firstChildNumeratorAbs.clone();
@@ -65,8 +65,8 @@ std::string MulExpression::childToString(const IOperator &oper, const ArgumentPt
   return operStr + operatorChildToString(oper, inChild);
 }
 
-MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify() const {
-  static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
+MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPreSimplify() const {
+  static const MulExpression::SimplifyFunctionVector simplifyFunctions = {
       &MulExpression::constSimplify,
       &MulExpression::callFunctionSimplify,
       &MulExpression::rationalSimplify,
@@ -76,8 +76,8 @@ MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPreSimplify
   return simplifyFunctions;
 }
 
-MulExpression::SimplifyFunctionsVector MulExpression::getFunctionsForPostSimplify() const {
-  static const MulExpression::SimplifyFunctionsVector simplifyFunctions = {
+MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPostSimplify() const {
+  static const MulExpression::SimplifyFunctionVector simplifyFunctions = {
       &MulExpression::constSimplify,
       &MulExpression::polynomSimplify,
       &MulExpression::divSimplify,
@@ -199,8 +199,8 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
     return {};
   }
 
-  ArgumentsPtrVector lhsChildren;
-  ArgumentsPtrVector rhsChildren;
+  ArgumentPtrVector lhsChildren;
+  ArgumentPtrVector rhsChildren;
 
   if (lhsExpr && is<Add>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
@@ -220,7 +220,7 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
     return {};
   }
 
-  ArgumentsPtrVector resultVect;
+  ArgumentPtrVector resultVect;
 
   for (const auto &lhsSubChild : lhsChildren) {
     for (const auto &rhsSubChild : rhsChildren) {
@@ -257,7 +257,7 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
   if (const auto &powExpr = cast<IExpression>(rhsChild);
       powExpr && is<Pow>(powExpr->getFunction())) {
 
-    ArgumentsPtrVector powExprChildren = powExpr->getChildren();
+    ArgumentPtrVector powExprChildren = powExpr->getChildren();
     return {powExprChildren[1], powExprChildren[0]};
   }
 

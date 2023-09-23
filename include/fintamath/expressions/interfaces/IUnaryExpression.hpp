@@ -10,9 +10,9 @@ public:
 
   std::shared_ptr<IFunction> getFunction() const final;
 
-  ArgumentsPtrVector getChildren() const override;
+  ArgumentPtrVector getChildren() const override;
 
-  void setChildren(const ArgumentsPtrVector &childVect) override;
+  void setChildren(const ArgumentPtrVector &childVect) override;
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::IUnaryExpression;
@@ -21,11 +21,11 @@ public:
 protected:
   using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &)>;
 
-  using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
+  using SimplifyFunctionVector = std::vector<SimplifyFunction>;
 
-  virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
+  virtual SimplifyFunctionVector getFunctionsForPreSimplify() const;
 
-  virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
+  virtual SimplifyFunctionVector getFunctionsForPostSimplify() const;
 
   ArgumentPtr preSimplify() const override;
 
@@ -34,7 +34,7 @@ protected:
   ArgumentPtr preciseSimplify() const override;
 
 private:
-  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const;
+  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const;
 
 protected:
   std::shared_ptr<IFunction> func;

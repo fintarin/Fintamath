@@ -5,7 +5,7 @@
 namespace fintamath {
 class MulExpression : public IPolynomExpressionCRTP<MulExpression> {
 public:
-  explicit MulExpression(const ArgumentsPtrVector &inChildren);
+  explicit MulExpression(const ArgumentPtrVector &inChildren);
 
   std::string toString() const override;
 
@@ -16,9 +16,9 @@ public:
 protected:
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
-  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
   bool isTermsOrderInversed() const override;
 

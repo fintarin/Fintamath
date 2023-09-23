@@ -82,8 +82,8 @@ ArgumentPtr PowExpression::preciseSimplify() const {
   return IBinaryExpression::preciseSimplify();
 }
 
-PowExpression::SimplifyFunctionsVector PowExpression::getFunctionsForPostSimplify() const {
-  static const PowExpression::SimplifyFunctionsVector simplifyFunctions = {
+PowExpression::SimplifyFunctionVector PowExpression::getFunctionsForPostSimplify() const {
+  static const PowExpression::SimplifyFunctionVector simplifyFunctions = {
       &PowExpression::constSimplify,
       &PowExpression::polynomSimplify,
       &PowExpression::powSimplify,
@@ -138,7 +138,7 @@ std::vector<Integer> PowExpression::getPartition(Integer bitNumber, const Intege
 // https://en.wikipedia.org/wiki/Multinomial_theorem
 ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &powValue) {
   auto sumExpr = cast<IExpression>(expr);
-  ArgumentsPtrVector polynom;
+  ArgumentPtrVector polynom;
 
   if (sumExpr && is<Add>(sumExpr->getFunction())) {
     polynom = sumExpr->getChildren();
@@ -147,7 +147,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     return {};
   }
 
-  ArgumentsPtrVector newPolynom;
+  ArgumentPtrVector newPolynom;
   Integer variableCount = int64_t(polynom.size());
 
   Integer bitNumber = generateFirstNum(powValue);
@@ -156,7 +156,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     std::vector<Integer> vectOfPows = getPartition(bitNumber, variableCount);
     bitNumber = generateNextNumber(bitNumber);
 
-    ArgumentsPtrVector mulExprPolynom;
+    ArgumentPtrVector mulExprPolynom;
     mulExprPolynom.emplace_back(multinomialCoefficient(powValue, vectOfPows).clone());
 
     for (size_t j = 0; j < size_t(variableCount); j++) {
@@ -293,7 +293,7 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   ArgumentPtr res;
 
   if (auto mulExprChild = cast<IExpression>(lhs); mulExprChild && is<Mul>(mulExprChild->getFunction())) {
-    ArgumentsPtrVector args = mulExprChild->getChildren();
+    ArgumentPtrVector args = mulExprChild->getChildren();
 
     for (auto &arg : args) {
       arg = powExpr(arg, rhs->clone());

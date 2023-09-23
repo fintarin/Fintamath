@@ -11,7 +11,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Abs::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Abs::call(const ArgumentRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
   return multiAbsSimplify(rhs);

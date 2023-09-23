@@ -13,9 +13,9 @@ public:
 
   std::shared_ptr<IFunction> getFunction() const final;
 
-  ArgumentsPtrVector getChildren() const final;
+  ArgumentPtrVector getChildren() const final;
 
-  void setChildren(const ArgumentsPtrVector &childVect) final;
+  void setChildren(const ArgumentPtrVector &childVect) final;
 
   virtual void addElement(const ArgumentPtr &element) = 0;
 
@@ -26,9 +26,9 @@ public:
 protected:
   using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &, const ArgumentPtr &)>;
 
-  using SimplifyFunctionsVector = std::vector<SimplifyFunction>;
+  using SimplifyFunctionVector = std::vector<SimplifyFunction>;
 
-  using ExprTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
+  using ExpressionTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
 
   struct ChildrenComparatorResult {
     int postfix = 0;
@@ -39,9 +39,9 @@ protected:
     int size = 0;
   };
 
-  virtual SimplifyFunctionsVector getFunctionsForPreSimplify() const;
+  virtual SimplifyFunctionVector getFunctionsForPreSimplify() const;
 
-  virtual SimplifyFunctionsVector getFunctionsForPostSimplify() const;
+  virtual SimplifyFunctionVector getFunctionsForPostSimplify() const;
 
   virtual std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
@@ -71,7 +71,7 @@ private:
 
   void simplifyChildren(bool isPostSimplify);
 
-  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs, size_t lhsChildPos,
+  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs, size_t lhsChildPos,
                                    size_t rhsChildPos) const;
 
   void sort();
@@ -134,8 +134,8 @@ private:
   int comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
                             const std::shared_ptr<const IExpression> &rhs) const;
 
-  ChildrenComparatorResult comparatorChildren(const ArgumentsPtrVector &lhsChildren,
-                                              const ArgumentsPtrVector &rhsChildren) const;
+  ChildrenComparatorResult comparatorChildren(const ArgumentPtrVector &lhsChildren,
+                                              const ArgumentPtrVector &rhsChildren) const;
 
   /**
    * @brief
@@ -151,16 +151,16 @@ private:
 
   int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isTermsOrderInversed) const;
 
-  static std::shared_ptr<const Variable> getNextVariable(ExprTreePathStack &stack);
+  static std::shared_ptr<const Variable> getNextVariable(ExpressionTreePathStack &stack);
 
-  static size_t getPositionOfFirstChildWithVariable(const ArgumentsPtrVector &children);
+  static size_t getPositionOfFirstChildWithVariable(const ArgumentPtrVector &children);
 
   static bool unwrapUnary(ArgumentPtr &lhs);
 
 protected:
   std::shared_ptr<IFunction> func;
 
-  ArgumentsPtrVector children;
+  ArgumentPtrVector children;
 };
 
 template <typename Derived, bool isMultiFunction = false>
@@ -177,7 +177,7 @@ class IPolynomExpressionCRTP : public IPolynomExpressionBaseCRTP<Derived, isMult
 #undef I_EXPRESSION_CRTP
 
 public:
-  explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentsPtrVector &args) {
+  explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentPtrVector &args) {
     this->func = cast<IFunction>(inFunc.clone());
 
     for (const auto &child : args) {
@@ -189,7 +189,7 @@ public:
     ArgumentPtr elem = element;
     this->compressChild(elem);
 
-    ArgumentsPtrVector elemPolynom;
+    ArgumentPtrVector elemPolynom;
 
     if (auto expr = cast<Derived>(elem)) {
       elemPolynom = expr->children;

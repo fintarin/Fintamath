@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Tanh::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Tanh::call(const ArgumentRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
   if (rhs == Integer(0)) {

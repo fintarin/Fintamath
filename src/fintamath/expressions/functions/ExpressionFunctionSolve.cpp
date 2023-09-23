@@ -23,13 +23,13 @@ std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IE
 
 ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var);
 
-ArgumentsPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variable &var);
+ArgumentPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variable &var);
 
-ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector &coeffAtPow);
+ArgumentPtrVector solveCubicEquation(const ArgumentPtrVector &coeffAtPow);
 
-ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow);
+ArgumentPtrVector solveQuadraticEquation(const ArgumentPtrVector &coeffAtPow);
 
-ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow);
+ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow);
 
 Expression solve(const Expression &rhs) {
   if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
@@ -40,7 +40,7 @@ Expression solve(const Expression &rhs) {
     // TODO: remove this if when inequalities will be implemented
     if (!is<Eqv>(compExpr->getFunction())) {
       auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentsPtrVector powerRate = getVariableIntPowerRates(compExpr->getChildren().front(), var);
+      ArgumentPtrVector powerRate = getVariableIntPowerRates(compExpr->getChildren().front(), var);
 
       if (powerRate.size() == 2) {
         compExpr->markAsSolution();
@@ -49,8 +49,8 @@ Expression solve(const Expression &rhs) {
     }
     if (is<Eqv>(compExpr->getFunction())) {
       auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentsPtrVector powerRates = getVariableIntPowerRates(compExpr->getChildren().front(), var);
-      ArgumentsPtrVector roots;
+      ArgumentPtrVector powerRates = getVariableIntPowerRates(compExpr->getChildren().front(), var);
+      ArgumentPtrVector roots;
 
       switch (powerRates.size()) {
         case 2:
@@ -70,7 +70,7 @@ Expression solve(const Expression &rhs) {
         return *compExpr;
       }
 
-      ArgumentsPtrVector answers;
+      ArgumentPtrVector answers;
 
       for (auto &root : roots) {
         auto rootAnswer = std::make_shared<CompExpression>(Eqv(), var.clone(), root);
@@ -130,7 +130,7 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
     }
 
     if (is<Mul>(elemExpr->getFunction())) {
-      ArgumentsPtrVector coeff = {Integer(1).clone()};
+      ArgumentPtrVector coeff = {Integer(1).clone()};
 
       for (const auto &child : elemExpr->getChildren()) {
         coeff.emplace_back(getElementRate(child, var));
@@ -147,9 +147,9 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
   return elem;
 }
 
-ArgumentsPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variable &var) {
-  ArgumentsPtrVector powerRates;
-  ArgumentsPtrVector polynomVect;
+ArgumentPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variable &var) {
+  ArgumentPtrVector powerRates;
+  ArgumentPtrVector polynomVect;
 
   if (const auto exprVal = cast<IExpression>(elem); exprVal && is<Add>(exprVal->getFunction())) {
     polynomVect = exprVal->getChildren();
@@ -179,11 +179,11 @@ ArgumentsPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Varia
   return powerRates;
 }
 
-ArgumentsPtrVector solveCubicEquation(const ArgumentsPtrVector & /*coeffAtPow*/) {
+ArgumentPtrVector solveCubicEquation(const ArgumentPtrVector & /*coeffAtPow*/) {
   return {};
 }
 
-ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) {
+ArgumentPtrVector solveQuadraticEquation(const ArgumentPtrVector &coeffAtPow) {
   static const Expression discriminant = sub(pow(b, 2), mul(4, a, c));
   static const Expression firstRoot = div(add(neg(b), sqrt(discriminant)), mul(2, a));
   static const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));
@@ -205,7 +205,7 @@ ArgumentsPtrVector solveQuadraticEquation(const ArgumentsPtrVector &coeffAtPow) 
   return {firstRootValue.getChildren().front(), secondRootValue.getChildren().front()};
 }
 
-ArgumentsPtrVector solveLinearEquation(const ArgumentsPtrVector &coeffAtPow) {
+ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow) {
   return {negExpr(divExpr(coeffAtPow[0], coeffAtPow[1]))->toMinimalObject()};
 }
 

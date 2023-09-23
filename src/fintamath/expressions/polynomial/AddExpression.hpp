@@ -6,16 +6,16 @@ namespace fintamath {
 
 class AddExpression : public IPolynomExpressionCRTP<AddExpression> {
 public:
-  explicit AddExpression(const ArgumentsPtrVector &inChildren);
+  explicit AddExpression(const ArgumentPtrVector &inChildren);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::AddExpression;
   }
 
 protected:
-  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
@@ -47,11 +47,11 @@ private:
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &inChild);
 
-  static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
+  static ArgumentPtr addRatesToValue(const ArgumentPtrVector &rates, const ArgumentPtr &value);
 
-  static std::vector<size_t> findLogarithms(const ArgumentsPtrVector &children);
+  static std::vector<size_t> findLogarithms(const ArgumentPtrVector &children);
 
-  static std::shared_ptr<const IExpression> mulToLogarithm(const ArgumentsPtrVector &children, size_t i);
+  static std::shared_ptr<const IExpression> mulToLogarithm(const ArgumentPtrVector &children, size_t i);
 };
 
 }

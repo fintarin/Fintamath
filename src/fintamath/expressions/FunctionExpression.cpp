@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentsPtrVector &inChildren)
+FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentPtrVector &inChildren)
     : func(cast<IFunction>(inFunc.clone())) {
 
   if (inChildren.size() != uint16_t(inFunc.getFunctionType())) {
@@ -38,7 +38,7 @@ std::shared_ptr<IFunction> FunctionExpression::getFunction() const {
   return func;
 }
 
-ArgumentsPtrVector FunctionExpression::getChildren() const {
+ArgumentPtrVector FunctionExpression::getChildren() const {
   return children;
 }
 
@@ -54,7 +54,7 @@ ArgumentPtr FunctionExpression::preSimplify() const {
 
 ArgumentPtr FunctionExpression::postSimplify() const {
   auto simpl = cast<FunctionExpression>(clone());
-  ArgumentsRefVector args;
+  ArgumentRefVector args;
 
   for (auto &child : simpl->children) {
     postSimplifyChild(child);
@@ -78,7 +78,7 @@ ArgumentPtr FunctionExpression::preciseSimplify() const {
   return preciseExpr;
 }
 
-void FunctionExpression::setChildren(const ArgumentsPtrVector &childVect) {
+void FunctionExpression::setChildren(const ArgumentPtrVector &childVect) {
   if (childVect.size() != size_t(func->getFunctionType())) {
     throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(childVect));
   }

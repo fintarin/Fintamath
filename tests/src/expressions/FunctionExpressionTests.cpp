@@ -22,7 +22,7 @@ public:
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override {
     return std::make_unique<Integer>(1);
   }
 };
@@ -41,7 +41,7 @@ public:
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override {
     return std::make_unique<Integer>(1);
   }
 };
@@ -60,7 +60,7 @@ public:
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override {
     return std::make_unique<Integer>(1);
   }
 };
@@ -79,7 +79,7 @@ public:
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override {
     return std::make_unique<Integer>(1);
   }
 };
@@ -98,7 +98,7 @@ public:
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override {
     return std::make_unique<Integer>(1);
   }
 };

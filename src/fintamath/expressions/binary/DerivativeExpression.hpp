@@ -13,7 +13,7 @@ public:
   }
 
 protected:
-  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
 private:
   static ArgumentPtr derivativeSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);

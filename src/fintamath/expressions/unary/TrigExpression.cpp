@@ -17,7 +17,7 @@
 
 namespace fintamath {
 
-using TrigonometryFunctionsTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
+using TrigonometryFunctionTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
 
 using TrigonometryTable = std::map<Rational, ArgumentPtr>;
 
@@ -27,8 +27,8 @@ TrigExpression::TrigExpression(const IFunction &inFunc, const ArgumentPtr &inChi
     : IUnaryExpressionCRTP(inFunc, inChild) {
 }
 
-TrigExpression::SimplifyFunctionsVector TrigExpression::getFunctionsForPreSimplify() const {
-  static const TrigExpression::SimplifyFunctionsVector simplifyFunctions = {
+TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPreSimplify() const {
+  static const TrigExpression::SimplifyFunctionVector simplifyFunctions = {
       &TrigExpression::oppositeFunctionsSimplify,
       &TrigExpression::tanSimplify,
       &TrigExpression::cotSimplify,
@@ -36,8 +36,8 @@ TrigExpression::SimplifyFunctionsVector TrigExpression::getFunctionsForPreSimpli
   return simplifyFunctions;
 }
 
-TrigExpression::SimplifyFunctionsVector TrigExpression::getFunctionsForPostSimplify() const {
-  static const TrigExpression::SimplifyFunctionsVector simplifyFunctions = {
+TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPostSimplify() const {
+  static const TrigExpression::SimplifyFunctionVector simplifyFunctions = {
       &TrigExpression::constSimplify,
       &TrigExpression::oppositeFunctionsSimplify,
   };
@@ -100,7 +100,7 @@ ArgumentPtr TrigExpression::constSimplify(const IFunction &func, const ArgumentP
 }
 
 ArgumentPtr TrigExpression::trigTableSimplify(const IFunction &func, const Rational &rhs) {
-  static const TrigonometryFunctionsTable trigTable = {
+  static const TrigonometryFunctionTable trigTable = {
       {Sin().toString(), &trigTableSinSimplify},
       {Cos().toString(), &trigTableCosSimplify},
   };

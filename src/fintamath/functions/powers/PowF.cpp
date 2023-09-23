@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> PowF::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> PowF::call(const ArgumentRefVector &argsVect) const {
   return Pow()(argsVect);
 }
 

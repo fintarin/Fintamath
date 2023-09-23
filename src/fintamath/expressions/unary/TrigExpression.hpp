@@ -15,9 +15,9 @@ public:
   }
 
 protected:
-  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
 private:
   static ArgumentPtr oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs);

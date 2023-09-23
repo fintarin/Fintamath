@@ -7,7 +7,7 @@
 
 namespace fintamath {
 
-OrExpression::OrExpression(const ArgumentsPtrVector &inChildren)
+OrExpression::OrExpression(const ArgumentPtrVector &inChildren)
     : IPolynomExpressionCRTP(Or(), inChildren) {
 }
 
@@ -57,8 +57,8 @@ ArgumentPtr OrExpression::postSimplify() const {
   return simpl;
 }
 
-OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForPreSimplify() const {
-  static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
+OrExpression::SimplifyFunctionVector OrExpression::getFunctionsForPreSimplify() const {
+  static const OrExpression::SimplifyFunctionVector simplifyFunctions = {
       &OrExpression::notSimplify,
       &OrExpression::boolSimplify,
       &OrExpression::equalSimplify,
@@ -66,8 +66,8 @@ OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForPreSimplify()
   return simplifyFunctions;
 }
 
-OrExpression::SimplifyFunctionsVector OrExpression::getFunctionsForPostSimplify() const {
-  static const OrExpression::SimplifyFunctionsVector simplifyFunctions = {
+OrExpression::SimplifyFunctionVector OrExpression::getFunctionsForPostSimplify() const {
+  static const OrExpression::SimplifyFunctionVector simplifyFunctions = {
       &OrExpression::andSimplify,
       &OrExpression::notSimplify,
       &OrExpression::boolSimplify,
@@ -122,8 +122,8 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
     return {};
   }
 
-  ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
-  ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
+  ArgumentPtrVector lhsChildren = lhsExpr->getChildren();
+  ArgumentPtrVector rhsChildren = rhsExpr->getChildren();
 
   if (rhsChildren.size() != lhsChildren.size()) {
     return {};
@@ -170,7 +170,7 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
     return {};
   }
 
-  ArgumentsPtrVector resultChildren = lhsChildren;
+  ArgumentPtrVector resultChildren = lhsChildren;
   resultChildren.erase(resultChildren.begin() + ptrdiff_t(resolutionIndex));
 
   if (resultChildren.size() > 1) {
@@ -188,8 +188,8 @@ ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhsChild, const 
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
-  ArgumentsPtrVector lhsChildren;
-  ArgumentsPtrVector rhsChildren;
+  ArgumentPtrVector lhsChildren;
+  ArgumentPtrVector rhsChildren;
 
   if (lhsExpr && is<And>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
@@ -209,8 +209,8 @@ ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhsChild, const 
     return {};
   }
 
-  ArgumentsPtrVector maxChildren = lhsChildren.size() > rhsChildren.size() ? lhsChildren : rhsChildren;
-  ArgumentsPtrVector minChildren = lhsChildren.size() < rhsChildren.size() ? lhsChildren : rhsChildren;
+  ArgumentPtrVector maxChildren = lhsChildren.size() > rhsChildren.size() ? lhsChildren : rhsChildren;
+  ArgumentPtrVector minChildren = lhsChildren.size() < rhsChildren.size() ? lhsChildren : rhsChildren;
   size_t matchCount = 0;
 
   for (size_t i = 0, j = 0; i < maxChildren.size() && j < minChildren.size(); i++) {

@@ -22,15 +22,15 @@ std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {
   return func;
 }
 
-ArgumentsPtrVector IUnaryExpression::getChildren() const {
+ArgumentPtrVector IUnaryExpression::getChildren() const {
   return {child};
 }
 
-IUnaryExpression::SimplifyFunctionsVector IUnaryExpression::getFunctionsForPreSimplify() const {
+IUnaryExpression::SimplifyFunctionVector IUnaryExpression::getFunctionsForPreSimplify() const {
   return {};
 }
 
-IUnaryExpression::SimplifyFunctionsVector IUnaryExpression::getFunctionsForPostSimplify() const {
+IUnaryExpression::SimplifyFunctionVector IUnaryExpression::getFunctionsForPostSimplify() const {
   return {};
 }
 
@@ -80,7 +80,7 @@ ArgumentPtr IUnaryExpression::preciseSimplify() const {
   return preciseExpr;
 }
 
-ArgumentPtr IUnaryExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const {
+ArgumentPtr IUnaryExpression::useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const {
   for (const auto &simplFunc : simplFuncs) {
     if (auto res = simplFunc(*func, child)) {
       return res;
@@ -90,7 +90,7 @@ ArgumentPtr IUnaryExpression::useSimplifyFunctions(const SimplifyFunctionsVector
   return {};
 }
 
-void IUnaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
+void IUnaryExpression::setChildren(const ArgumentPtrVector &childVect) {
   if (childVect.size() != 1) {
     throw InvalidInputFunctionException(toString(), argumentVectorToStringVector(childVect));
   }

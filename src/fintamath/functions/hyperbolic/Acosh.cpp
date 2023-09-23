@@ -9,7 +9,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Acosh::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Acosh::call(const ArgumentRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
   if (rhs == Integer(-1)) {

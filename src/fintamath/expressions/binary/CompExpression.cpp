@@ -28,7 +28,7 @@ CompExpression::CompExpression(const IOperator &inOper, const ArgumentPtr &inLhs
 std::string CompExpression::toString() const {
   if (isSolution) {
     if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && *lhsExpr->getFunction() == Add()) {
-      ArgumentsPtrVector sumChildren = lhsExpr->getChildren();
+      ArgumentPtrVector sumChildren = lhsExpr->getChildren();
 
       ArgumentPtr solLhs = sumChildren.front();
 
@@ -73,15 +73,15 @@ ArgumentPtr CompExpression::preSimplify() const {
   return simpl;
 }
 
-CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPreSimplify() const {
-  static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {
+CompExpression::SimplifyFunctionVector CompExpression::getFunctionsForPreSimplify() const {
+  static const CompExpression::SimplifyFunctionVector simplifyFunctions = {
       &CompExpression::constSimplify,
   };
   return simplifyFunctions;
 }
 
-CompExpression::SimplifyFunctionsVector CompExpression::getFunctionsForPostSimplify() const {
-  static const CompExpression::SimplifyFunctionsVector simplifyFunctions = {
+CompExpression::SimplifyFunctionVector CompExpression::getFunctionsForPostSimplify() const {
+  static const CompExpression::SimplifyFunctionVector simplifyFunctions = {
       &CompExpression::constSimplify,
       &CompExpression::divSimplify,
       &CompExpression::coeffSimplify,
@@ -161,7 +161,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
     return {};
   }
 
-  ArgumentsPtrVector dividendPolynom;
+  ArgumentPtrVector dividendPolynom;
   ArgumentPtr polynomFirstChild;
 
   if (is<Add>(lhsExpr->getFunction())) {

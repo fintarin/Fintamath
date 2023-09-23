@@ -15,15 +15,15 @@ HyperbExpression::HyperbExpression(const IFunction &inFunc, const ArgumentPtr &i
     : IUnaryExpressionCRTP(inFunc, inChild) {
 }
 
-HyperbExpression::SimplifyFunctionsVector HyperbExpression::getFunctionsForPreSimplify() const {
-  static const HyperbExpression::SimplifyFunctionsVector simplifyFunctions = {
+HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPreSimplify() const {
+  static const HyperbExpression::SimplifyFunctionVector simplifyFunctions = {
       &HyperbExpression::oppositeFunctionsSimplify,
   };
   return simplifyFunctions;
 }
 
-HyperbExpression::SimplifyFunctionsVector HyperbExpression::getFunctionsForPostSimplify() const {
-  static const HyperbExpression::SimplifyFunctionsVector simplifyFunctions = {
+HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPostSimplify() const {
+  static const HyperbExpression::SimplifyFunctionVector simplifyFunctions = {
       &HyperbExpression::oppositeFunctionsSimplify,
   };
   return simplifyFunctions;

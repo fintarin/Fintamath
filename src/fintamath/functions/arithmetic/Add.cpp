@@ -2,7 +2,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Add::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Add::call(const ArgumentRefVector &argsVect) const {
   const auto &lhs = cast<IArithmetic>(argsVect.front().get());
   const auto &rhs = cast<IArithmetic>(argsVect.back().get());
 

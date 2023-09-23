@@ -11,7 +11,7 @@ std::string putInBrackets(const std::string &str);
 
 std::string putInSpaces(const std::string &str);
 
-std::string functionToString(const IFunction &func, const ArgumentsPtrVector &args);
+std::string functionToString(const IFunction &func, const ArgumentPtrVector &args);
 
 std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &child);
 
@@ -33,9 +33,9 @@ bool isInfinity(const ArgumentPtr &arg);
 
 bool isNegated(const ArgumentPtr &arg);
 
-std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args);
+std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args);
 
-ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args);
+ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args);
 
 ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<ArgumentPtr> auto &...args) {
   if ((is<Undefined>(args) || ...)) {

@@ -13,9 +13,9 @@ class IMathObject;
 using ArgumentRef = std::reference_wrapper<const IMathObject>;
 using ArgumentPtr = std::shared_ptr<const IMathObject>;
 
-using ArgumentsRefVector = std::vector<ArgumentRef>;
-using ArgumentsPtrVector = std::vector<ArgumentPtr>;
+using ArgumentRefVector = std::vector<ArgumentRef>;
+using ArgumentPtrVector = std::vector<ArgumentPtr>;
 
-using ArgumentTypesVector = std::vector<MathObjectType>;
+using ArgumentTypeVector = std::vector<MathObjectType>;
 
 }

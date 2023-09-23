@@ -18,11 +18,11 @@ public:
     return std::make_shared<Add>();
   }
 
-  ArgumentsPtrVector getChildren() const override {
+  ArgumentPtrVector getChildren() const override {
     return {};
   }
 
-  void setChildren(const ArgumentsPtrVector &childVect) override {
+  void setChildren(const ArgumentPtrVector &childVect) override {
   }
 
 protected:

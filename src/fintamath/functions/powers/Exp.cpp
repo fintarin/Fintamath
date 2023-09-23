@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Exp::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Exp::call(const ArgumentRefVector &argsVect) const {
   static const E lhs;
   const auto &rhs = argsVect.front().get();
 

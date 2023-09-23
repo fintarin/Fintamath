@@ -38,7 +38,7 @@ public:
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override;
 
 private:
   static std::unique_ptr<IMathObject> multiFactorialSimplify(const INumber &lhs, size_t order);

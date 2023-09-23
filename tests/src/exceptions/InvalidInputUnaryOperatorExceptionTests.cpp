@@ -22,7 +22,7 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const override {
+  virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override {
     return {};
   }
 };

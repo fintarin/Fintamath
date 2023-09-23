@@ -7,7 +7,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Atan::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Atan::call(const ArgumentRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
   if (rhs == Integer(-1)) {

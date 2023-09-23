@@ -16,9 +16,9 @@ public:
   }
 
 protected:
-  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
@@ -37,7 +37,7 @@ private:
 
   static ArgumentPtr gcdSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr nestedNumeratorRationalSimplify(const ArgumentsPtrVector &lhsChildren, const ArgumentPtr &rhs);
+  static ArgumentPtr nestedNumeratorRationalSimplify(const ArgumentPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
   static ArgumentPtr trigSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
@@ -51,9 +51,9 @@ private:
 
   static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &rhs);
 
-  static ArgumentPtr addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value);
+  static ArgumentPtr addRatesToValue(const ArgumentPtrVector &rates, const ArgumentPtr &value);
 
-  static Integer getGcd(const ArgumentsPtrVector &children);
+  static Integer getGcd(const ArgumentPtrVector &children);
 };
 
 }

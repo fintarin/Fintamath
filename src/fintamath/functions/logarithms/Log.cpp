@@ -10,7 +10,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Log::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Log::call(const ArgumentRefVector &argsVect) const {
   const auto &lhs = cast<INumber>(argsVect.front().get());
   const auto &rhs = cast<INumber>(argsVect.back().get());
 

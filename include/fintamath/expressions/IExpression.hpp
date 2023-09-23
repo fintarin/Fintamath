@@ -13,9 +13,9 @@ class IExpression : public IArithmetic {
 public:
   virtual std::shared_ptr<IFunction> getFunction() const = 0;
 
-  virtual ArgumentsPtrVector getChildren() const = 0;
+  virtual ArgumentPtrVector getChildren() const = 0;
 
-  virtual void setChildren(const ArgumentsPtrVector &childVect) = 0;
+  virtual void setChildren(const ArgumentPtrVector &childVect) = 0;
 
   std::vector<Variable> getVariables() const;
 
@@ -59,7 +59,7 @@ protected:
 
   static void constSimplifyChild(ArgumentPtr &child);
 
-  static ArgumentPtr callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs);
+  static ArgumentPtr callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs);
 
 private:
   static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &getParser();

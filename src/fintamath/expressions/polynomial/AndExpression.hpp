@@ -6,16 +6,16 @@ namespace fintamath {
 
 class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
-  explicit AndExpression(const ArgumentsPtrVector &inChildren);
+  explicit AndExpression(const ArgumentPtrVector &inChildren);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::AndExpression;
   }
 
 protected:
-  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
   bool isComparableOrderInversed() const override;
 

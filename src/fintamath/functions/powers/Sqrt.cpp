@@ -9,7 +9,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Sqrt::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Sqrt::call(const ArgumentRefVector &argsVect) const {
   const auto &lhs = argsVect.front().get();
   static const Integer rhs = 2;
 

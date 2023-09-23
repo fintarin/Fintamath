@@ -19,9 +19,9 @@ public:
 protected:
   ArgumentPtr preSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
   static std::map<std::string, std::shared_ptr<IFunction>, std::less<>> &getOppositeFunctionsMap();
 

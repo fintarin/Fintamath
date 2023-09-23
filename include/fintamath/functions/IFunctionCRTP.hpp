@@ -22,13 +22,13 @@ public:
     return size_t(Return::getTypeStatic());
   }
 
-  ArgumentTypesVector getArgType() const final {
-    ArgumentTypesVector argTypes;
+  ArgumentTypeVector getArgType() const final {
+    ArgumentTypeVector argTypes;
     getArgType<0, Args...>(argTypes);
     return argTypes;
   }
 
-  bool doArgsMatch(const ArgumentsRefVector &argsVect) const override {
+  bool doArgsMatch(const ArgumentRefVector &argsVect) const override {
     if (argsVect.empty()) { // TODO: support None type functions
       return false;
     }
@@ -50,9 +50,9 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentsRefVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const = 0;
 
-  std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const final {
+  std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argsVect) const final {
     validateArgsSize(argsVect);
 
     if (doArgsMatch(argsVect)) {
@@ -68,18 +68,18 @@ protected:
 
 private:
   template <size_t i, typename Head, typename... Tail>
-  void getArgType(ArgumentTypesVector &outArgsTypes) const {
+  void getArgType(ArgumentTypeVector &outArgsTypes) const {
     outArgsTypes.emplace_back(Head::getTypeStatic());
     getArgType<i + 1, Tail...>(outArgsTypes);
   }
 
   template <size_t>
-  void getArgType(ArgumentTypesVector & /*outArgTypes*/) const {
+  void getArgType(ArgumentTypeVector & /*outArgTypes*/) const {
     // The end of unpacking.
   }
 
   template <size_t i, typename Head, typename... Tail>
-  bool doArgsMatch(const ArgumentsRefVector &argsVect) const {
+  bool doArgsMatch(const ArgumentRefVector &argsVect) const {
     if (!is<Head>(argsVect[i]) || isExpression(argsVect[i])) {
       return false;
     }
@@ -88,11 +88,11 @@ private:
   }
 
   template <size_t>
-  bool doArgsMatch(const ArgumentsRefVector & /*unused*/) const {
+  bool doArgsMatch(const ArgumentRefVector & /*unused*/) const {
     return true;
   }
 
-  bool doAnyArgsMatch(const ArgumentsRefVector &argsVect) const {
+  bool doAnyArgsMatch(const ArgumentRefVector &argsVect) const {
     using AnyArgsType = typename std::tuple_element_t<0, std::tuple<Args...>>;
 
     return std::ranges::all_of(argsVect, [](const auto &arg) {
@@ -100,7 +100,7 @@ private:
     });
   }
 
-  void validateArgsSize(const ArgumentsRefVector &argsVect) const {
+  void validateArgsSize(const ArgumentRefVector &argsVect) const {
     if constexpr (IsFunctionTypeAny<Derived>::value) {
       if (argsVect.empty()) {
         throwInvalidInputFunctionException(argsVect);
@@ -113,7 +113,7 @@ private:
     }
   }
 
-  void throwInvalidInputFunctionException(const ArgumentsRefVector &argsVect) const {
+  void throwInvalidInputFunctionException(const ArgumentRefVector &argsVect) const {
     std::vector<std::string> argNamesVect(argsVect.size());
 
     for (size_t i = 0; i < argNamesVect.size(); i++) {

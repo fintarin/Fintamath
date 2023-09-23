@@ -16,7 +16,7 @@ std::shared_ptr<IFunction> IPolynomExpression::getFunction() const {
   return func;
 }
 
-ArgumentsPtrVector IPolynomExpression::getChildren() const {
+ArgumentPtrVector IPolynomExpression::getChildren() const {
   return children;
 }
 
@@ -44,7 +44,7 @@ std::string IPolynomExpression::toString() const {
   return result;
 }
 
-ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs,
+ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs,
                                                      size_t lhsChildPos,
                                                      size_t rhsChildPos) const {
 
@@ -146,7 +146,7 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
 }
 
 void IPolynomExpression::simplifyChildren(bool isPostSimplify) {
-  ArgumentsPtrVector oldChildren = children;
+  ArgumentPtrVector oldChildren = children;
 
   children.clear();
 
@@ -162,11 +162,11 @@ void IPolynomExpression::simplifyChildren(bool isPostSimplify) {
   }
 }
 
-IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForPreSimplify() const {
+IPolynomExpression::SimplifyFunctionVector IPolynomExpression::getFunctionsForPreSimplify() const {
   return {};
 }
 
-IPolynomExpression::SimplifyFunctionsVector IPolynomExpression::getFunctionsForPostSimplify() const {
+IPolynomExpression::SimplifyFunctionVector IPolynomExpression::getFunctionsForPostSimplify() const {
   return {};
 }
 
@@ -193,7 +193,7 @@ bool IPolynomExpression::isComparableOrderInversed() const {
   return false;
 }
 
-void IPolynomExpression::setChildren(const ArgumentsPtrVector &childVect) {
+void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
   if (childVect.empty()) {
     throw InvalidInputFunctionException(toString(), {});
   }
@@ -353,8 +353,8 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   auto lhsOper = cast<IOperator>(lhs->getFunction());
   auto rhsOper = cast<IOperator>(rhs->getFunction());
 
-  ArgumentsPtrVector lhsChildren = lhs->getChildren();
-  ArgumentsPtrVector rhsChildren = rhs->getChildren();
+  ArgumentPtrVector lhsChildren = lhs->getChildren();
+  ArgumentPtrVector rhsChildren = rhs->getChildren();
 
   if (lhsOper &&
       lhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
@@ -401,8 +401,8 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
 }
 
 IPolynomExpression::ChildrenComparatorResult
-IPolynomExpression::comparatorChildren(const ArgumentsPtrVector &lhsChildren,
-                                       const ArgumentsPtrVector &rhsChildren) const {
+IPolynomExpression::comparatorChildren(const ArgumentPtrVector &lhsChildren,
+                                       const ArgumentPtrVector &rhsChildren) const {
 
   ChildrenComparatorResult result = {};
 
@@ -492,8 +492,8 @@ int IPolynomExpression::comparatorFunctions(const std::shared_ptr<const IFunctio
 }
 
 int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isTermsOrderInversed) const {
-  ExprTreePathStack lhsPath;
-  ExprTreePathStack rhsPath;
+  ExpressionTreePathStack lhsPath;
+  ExpressionTreePathStack rhsPath;
 
   std::shared_ptr<const Variable> lhsVar;
   std::shared_ptr<const Variable> rhsVar;
@@ -534,9 +534,9 @@ int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const Argume
   return 0;
 }
 
-std::shared_ptr<const Variable> IPolynomExpression::getNextVariable(ExprTreePathStack &stack) {
+std::shared_ptr<const Variable> IPolynomExpression::getNextVariable(ExpressionTreePathStack &stack) {
   while (!stack.empty()) {
-    ArgumentsPtrVector children = stack.top().first->getChildren();
+    ArgumentPtrVector children = stack.top().first->getChildren();
 
     size_t &exprIndex = stack.top().second;
     exprIndex++;
@@ -565,7 +565,7 @@ std::shared_ptr<const Variable> IPolynomExpression::getNextVariable(ExprTreePath
   return {};
 }
 
-size_t IPolynomExpression::getPositionOfFirstChildWithVariable(const ArgumentsPtrVector &children) {
+size_t IPolynomExpression::getPositionOfFirstChildWithVariable(const ArgumentPtrVector &children) {
   for (size_t i = 0; i < children.size(); i++) {
     auto lhsChildExpr = cast<IExpression>(children[i]);
 

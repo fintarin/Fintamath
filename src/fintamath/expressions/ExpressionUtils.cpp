@@ -26,7 +26,7 @@ std::string putInSpaces(const std::string &str) {
   return ' ' + str + ' ';
 }
 
-std::string functionToString(const IFunction &func, const ArgumentsPtrVector &args) {
+std::string functionToString(const IFunction &func, const ArgumentPtrVector &args) {
   static const std::string delimiter = ", ";
 
   std::string result = func.toString() + "(";
@@ -121,7 +121,7 @@ bool hasVariable(const ArgumentPtr &arg) {
     return false;
   }
 
-  ArgumentsPtrVector children = expr->getChildren();
+  ArgumentPtrVector children = expr->getChildren();
 
   return std::ranges::any_of(children, [](const auto &child) {
     bool res = false;
@@ -144,7 +144,7 @@ bool hasVariable(const ArgumentPtr &arg, const Variable &var) {
     return false;
   }
 
-  ArgumentsPtrVector children = expr->getChildren();
+  ArgumentPtrVector children = expr->getChildren();
 
   return std::ranges::any_of(children, [&var](const auto &child) {
     bool res = false;
@@ -167,7 +167,7 @@ bool hasInfinity(const ArgumentPtr &arg) {
     return false;
   }
 
-  ArgumentsPtrVector children = expr->getChildren();
+  ArgumentPtrVector children = expr->getChildren();
 
   return std::ranges::any_of(children, [](const auto &child) {
     bool res = false;
@@ -190,7 +190,7 @@ bool hasComplex(const ArgumentPtr &arg) {
     return false;
   }
 
-  ArgumentsPtrVector children = expr->getChildren();
+  ArgumentPtrVector children = expr->getChildren();
 
   return std::ranges::any_of(children, [](const auto &child) {
     bool res = false;
@@ -230,7 +230,7 @@ bool isNegated(const ArgumentPtr &arg) {
   return false;
 }
 
-std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &args) {
+std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args) {
   std::vector<std::string> argStrings(args.size());
 
   for (size_t i = 0; i < argStrings.size(); i++) {
@@ -240,8 +240,8 @@ std::vector<std::string> argumentVectorToStringVector(const ArgumentsPtrVector &
   return argStrings;
 }
 
-ArgumentsPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentsRefVector &args) {
-  ArgumentsPtrVector argsPtrVect;
+ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args) {
+  ArgumentPtrVector argsPtrVect;
 
   for (const auto &arg : args) {
     argsPtrVect.emplace_back(arg.get().clone());

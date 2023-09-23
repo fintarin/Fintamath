@@ -12,8 +12,8 @@ DerivativeExpression::DerivativeExpression(const ArgumentPtr &inLhsChild, const 
     : IBinaryExpressionCRTP(Derivative(), inLhsChild, inRhsChild) {
 }
 
-DerivativeExpression::SimplifyFunctionsVector DerivativeExpression::getFunctionsForPostSimplify() const {
-  static const DerivativeExpression::SimplifyFunctionsVector simplifyFunctions = {
+DerivativeExpression::SimplifyFunctionVector DerivativeExpression::getFunctionsForPostSimplify() const {
+  static const DerivativeExpression::SimplifyFunctionVector simplifyFunctions = {
       &DerivativeExpression::derivativeSimplify,
   };
   return simplifyFunctions;

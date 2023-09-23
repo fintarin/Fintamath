@@ -14,7 +14,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Root::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Root::call(const ArgumentRefVector &argsVect) const {
   const auto &lhs = cast<INumber>(argsVect.front().get());
   const auto &rhs = cast<INumber>(argsVect.back().get());
 
@@ -67,7 +67,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Integer &lhs, const Intege
     return res;
   }
 
-  ArgumentsPtrVector mulChildren;
+  ArgumentPtrVector mulChildren;
 
   std::map<Integer, Integer> rootFactors = roots(lhs, rhs);
 
@@ -159,7 +159,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     return divExpr(Root()(lhs.numerator(), rhs), denominatorRes);
   }
 
-  ArgumentsPtrVector numeratorChildren;
+  ArgumentPtrVector numeratorChildren;
   Rational denominator = 1;
 
   std::map<Integer, Integer> numeratorRootFactors = roots(lhs.numerator(), rhs);

@@ -32,18 +32,18 @@ public:
 
   virtual size_t getReturnType() const = 0;
 
-  virtual ArgumentTypesVector getArgType() const = 0;
+  virtual ArgumentTypeVector getArgType() const = 0;
 
-  virtual bool doArgsMatch(const ArgumentsRefVector &argsVect) const = 0;
+  virtual bool doArgsMatch(const ArgumentRefVector &argsVect) const = 0;
 
   virtual bool isNonExressionEvaluatable() const = 0;
 
   std::unique_ptr<IMathObject> operator()(const std::derived_from<IMathObject> auto &...args) const {
-    ArgumentsRefVector argsVect = {args...};
+    ArgumentRefVector argsVect = {args...};
     return callAbstract(argsVect);
   }
 
-  std::unique_ptr<IMathObject> operator()(const ArgumentsRefVector &argsVect) const {
+  std::unique_ptr<IMathObject> operator()(const ArgumentRefVector &argsVect) const {
     return callAbstract(argsVect);
   }
 
@@ -64,7 +64,7 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentsRefVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argsVect) const = 0;
 
 private:
   static Parser::Map<std::unique_ptr<IFunction>> &getParser();

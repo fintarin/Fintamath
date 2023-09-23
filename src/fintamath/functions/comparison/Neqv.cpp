@@ -2,7 +2,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Neqv::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Neqv::call(const ArgumentRefVector &argsVect) const {
   const auto &lhs = argsVect.front().get();
   const auto &rhs = argsVect.back().get();
 

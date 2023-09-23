@@ -21,7 +21,7 @@ public:
   }
 };
 
-using TermsVector = std::vector<std::shared_ptr<Term>>;
+using TermVector = std::vector<std::shared_ptr<Term>>;
 
 class Expression : public IExpressionCRTP<Expression> {
 public:
@@ -41,9 +41,9 @@ public:
 
   std::shared_ptr<IFunction> getFunction() const override;
 
-  ArgumentsPtrVector getChildren() const override;
+  ArgumentPtrVector getChildren() const override;
 
-  void setChildren(const ArgumentsPtrVector &childVect) override;
+  void setChildren(const ArgumentPtrVector &childVect) override;
 
   void setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) override;
 
@@ -55,8 +55,8 @@ public:
 
   template <typename Function, bool isPolynomial = false>
   static void registerFunctionExpressionMaker(auto &&maker) {
-    Parser::Function<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> constructor =
-        [maker = std::forward<decltype(maker)>(maker)](const ArgumentsPtrVector &args) {
+    Parser::Function<std::unique_ptr<IMathObject>, const ArgumentPtrVector &> constructor =
+        [maker = std::forward<decltype(maker)>(maker)](const ArgumentPtrVector &args) {
           static const IFunction::Type type = Function().getFunctionType();
           std::unique_ptr<IMathObject> res;
 
@@ -100,33 +100,33 @@ protected:
   ArgumentPtr preciseSimplify() const override;
 
 private:
-  bool parseOperator(const TermsVector &terms, size_t start, size_t end);
+  bool parseOperator(const TermVector &terms, size_t start, size_t end);
 
-  bool parseFunction(const TermsVector &terms, size_t start, size_t end);
+  bool parseFunction(const TermVector &terms, size_t start, size_t end);
 
-  bool parseBrackets(const TermsVector &terms, size_t start, size_t end);
+  bool parseBrackets(const TermVector &terms, size_t start, size_t end);
 
-  bool parseTerm(const TermsVector &terms, size_t start, size_t end);
+  bool parseTerm(const TermVector &terms, size_t start, size_t end);
 
-  static ArgumentsPtrVector parseFunctionArgs(const TermsVector &terms, size_t start, size_t end);
+  static ArgumentPtrVector parseFunctionArgs(const TermVector &terms, size_t start, size_t end);
 
-  static TermsVector tokensToTerms(const TokenVector &tokens);
+  static TermVector tokensToTerms(const TokenVector &tokens);
 
-  static void insertMultiplications(TermsVector &terms);
+  static void insertMultiplications(TermVector &terms);
 
-  static void fixOperatorTypes(TermsVector &terms);
+  static void fixOperatorTypes(TermVector &terms);
 
-  static void collapseFactorials(TermsVector &terms);
+  static void collapseFactorials(TermVector &terms);
 
   static bool canNextTermBeBinaryOperator(const Term &term);
 
   static bool canPrevTermBeBinaryOperator(const Term &term);
 
-  static bool skipBrackets(const TermsVector &terms, size_t &openBracketIndex);
+  static bool skipBrackets(const TermVector &terms, size_t &openBracketIndex);
 
-  static void cutBrackets(const TermsVector &terms, size_t &start, size_t &end);
+  static void cutBrackets(const TermVector &terms, size_t &start, size_t &end);
 
-  static std::string termsToString(const TermsVector &terms);
+  static std::string termsToString(const TermVector &terms);
 
   static bool isBinaryOperator(const ArgumentPtr &val);
 
@@ -138,27 +138,27 @@ private:
 
   static void validateChild(const ArgumentPtr &inChild);
 
-  static void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args);
+  static void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentPtrVector &args);
 
   static void preciseRec(ArgumentPtr &arg, uint8_t precision);
 
-  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsPtrVector &args);
+  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentPtrVector &args);
 
-  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args);
+  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentRefVector &args);
 
-  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsPtrVector &args);
+  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentPtrVector &args);
 
-  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrVector &args);
+  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args);
 
   friend ArgumentPtr parseExpr(const std::string &str);
 
-  friend ArgumentPtr parseExpr(const TermsVector &terms);
+  friend ArgumentPtr parseExpr(const TermVector &terms);
 
-  friend ArgumentPtr parseExpr(const TermsVector &terms, size_t start, size_t end);
+  friend ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end);
 
   static Parser::Vector<std::unique_ptr<Term>, const Token &> &getTermMakers();
 
-  static Parser::Map<std::unique_ptr<IMathObject>, const ArgumentsPtrVector &> &getExpressionMakers();
+  static Parser::Map<std::unique_ptr<IMathObject>, const ArgumentPtrVector &> &getExpressionMakers();
 
 private:
   ArgumentPtr child;
@@ -166,9 +166,9 @@ private:
 
 ArgumentPtr parseExpr(const std::string &str);
 
-ArgumentPtr parseExpr(const TermsVector &terms);
+ArgumentPtr parseExpr(const TermVector &terms);
 
-ArgumentPtr parseExpr(const TermsVector &terms, size_t start, size_t end);
+ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end);
 
 Expression operator+(const Variable &lhs, const Variable &rhs);
 

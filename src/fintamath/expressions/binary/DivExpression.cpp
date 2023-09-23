@@ -33,8 +33,8 @@ std::string DivExpression::toString() const {
   return IBinaryExpression::toString();
 }
 
-DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPreSimplify() const {
-  static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
+DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPreSimplify() const {
+  static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
       &DivExpression::constSimplify,
       &DivExpression::divSimplify,
       &DivExpression::mulSimplify,
@@ -42,8 +42,8 @@ DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPreSimplify
   return simplifyFunctions;
 }
 
-DivExpression::SimplifyFunctionsVector DivExpression::getFunctionsForPostSimplify() const {
-  static const DivExpression::SimplifyFunctionsVector simplifyFunctions = {
+DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPostSimplify() const {
+  static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
       &DivExpression::constSimplify,
       &DivExpression::negSimplify,
       &DivExpression::numSimplify,
@@ -93,8 +93,8 @@ ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentsPtrVector numeratorChildren;
-  ArgumentsPtrVector denominatorChildren;
+  ArgumentPtrVector numeratorChildren;
+  ArgumentPtrVector denominatorChildren;
 
   bool containsDivExpression = false;
 
@@ -141,7 +141,7 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentsPtrVector lhsChildren;
+  ArgumentPtrVector lhsChildren;
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
   }
@@ -149,7 +149,7 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr 
     lhsChildren = {lhs};
   }
 
-  ArgumentsPtrVector rhsChildren;
+  ArgumentPtrVector rhsChildren;
   if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
@@ -243,8 +243,8 @@ ArgumentPtr DivExpression::sumSimplify(const IFunction & /*func*/, const Argumen
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentsPtrVector lhsChildren;
-  ArgumentsPtrVector rhsChildren;
+  ArgumentPtrVector lhsChildren;
+  ArgumentPtrVector rhsChildren;
 
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Add>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
@@ -258,8 +258,8 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumSumSimplify(const Argument
     return {};
   }
 
-  ArgumentsPtrVector resultVect;
-  ArgumentsPtrVector remainderVect;
+  ArgumentPtrVector resultVect;
+  ArgumentPtrVector remainderVect;
 
   for (const auto &child : lhsChildren) {
     auto [result, remainder] = mulSumSimplify(child, rhs);
@@ -291,7 +291,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumSumSimplify(const Argument
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentsPtrVector lhsChildren;
+  ArgumentPtrVector lhsChildren;
 
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Add>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
@@ -303,8 +303,8 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
     return {};
   }
 
-  ArgumentsPtrVector resultChildren;
-  ArgumentsPtrVector remainderChildren;
+  ArgumentPtrVector resultChildren;
+  ArgumentPtrVector remainderChildren;
 
   for (const auto &child : lhsChildren) {
     ArgumentPtr divResult = divExpr(child, rhs);
@@ -339,7 +339,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentsPtrVector rhsChildren;
+  ArgumentPtrVector rhsChildren;
 
   if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Add>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
@@ -358,7 +358,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     return {};
   }
 
-  ArgumentsPtrVector multiplicator;
+  ArgumentPtrVector multiplicator;
 
   for (size_t i = 1; i < rhsChildren.size(); i++) {
     multiplicator.emplace_back(mulExpr(rhsChildren[i], result));
@@ -416,14 +416,14 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 
 std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhs) {
   if (const auto &powExpr = cast<IExpression>(rhs); powExpr && is<Pow>(powExpr->getFunction())) {
-    ArgumentsPtrVector powExprChildren = powExpr->getChildren();
+    ArgumentPtrVector powExprChildren = powExpr->getChildren();
     return {powExprChildren[1], powExprChildren[0]};
   }
 
   return {Integer(1).clone(), rhs};
 }
 
-ArgumentPtr DivExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
+ArgumentPtr DivExpression::addRatesToValue(const ArgumentPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = addExpr(rates);
   return powExpr(value, ratesSum);
 }
@@ -441,8 +441,8 @@ ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, co
 }
 
 ArgumentPtr DivExpression::gcdSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentsPtrVector lhsChildren;
-  ArgumentsPtrVector rhsChildren;
+  ArgumentPtrVector lhsChildren;
+  ArgumentPtrVector rhsChildren;
 
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Add>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
@@ -480,7 +480,7 @@ ArgumentPtr DivExpression::gcdSimplify(const IFunction & /*func*/, const Argumen
   return divExpr(numerator, denominator);
 }
 
-Integer DivExpression::getGcd(const ArgumentsPtrVector &lhsChildren) {
+Integer DivExpression::getGcd(const ArgumentPtrVector &lhsChildren) {
   Integer gcdNum;
 
   for (auto child : lhsChildren) {
@@ -500,9 +500,9 @@ Integer DivExpression::getGcd(const ArgumentsPtrVector &lhsChildren) {
   return gcdNum;
 }
 
-ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentsPtrVector &lhs, const ArgumentPtr &rhs) {
-  ArgumentsPtrVector numeratorChildren;
-  ArgumentsPtrVector denominatorChildren;
+ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVector &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtrVector numeratorChildren;
+  ArgumentPtrVector denominatorChildren;
 
   for (const auto &child : lhs) {
     if (const auto &rationalChild = cast<Rational>(child)) {

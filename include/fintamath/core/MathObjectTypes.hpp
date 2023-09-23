@@ -190,12 +190,12 @@ namespace fintamath {
 class MathObjectBoundTypes {
   static constexpr auto getTypeHash = [](const MathObjectType &type) { return size_t(type); };
 
-  using TypesMap = std::unordered_map<MathObjectType, MathObjectType>;
+  using TypeMap = std::unordered_map<MathObjectType, MathObjectType>;
 
   using enum MathObjectType::Id;
 
 public:
-  static const TypesMap &get() {
+  static const TypeMap &get() {
     return getMutable();
   }
 
@@ -204,8 +204,8 @@ public:
   }
 
 private:
-  static TypesMap &getMutable() {
-    static TypesMap ids{
+  static TypeMap &getMutable() {
+    static TypeMap ids{
         {IMathObject, None},
         {IArithmetic, ILiteral},
         {IExpression, IComparable},

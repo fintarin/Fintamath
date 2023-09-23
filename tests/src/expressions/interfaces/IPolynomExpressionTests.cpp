@@ -14,7 +14,7 @@ namespace {
 
 class TestPolynomExpression : public IPolynomExpressionCRTP<TestPolynomExpression> {
 public:
-  explicit TestPolynomExpression(const ArgumentsPtrVector &children) : IPolynomExpressionCRTP(f, children) {
+  explicit TestPolynomExpression(const ArgumentPtrVector &children) : IPolynomExpressionCRTP(f, children) {
   }
 
   static MathObjectType getTypeStatic() {

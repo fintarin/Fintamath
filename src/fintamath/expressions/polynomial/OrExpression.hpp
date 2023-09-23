@@ -6,7 +6,7 @@ namespace fintamath {
 
 class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
-  explicit OrExpression(const ArgumentsPtrVector &inChildren);
+  explicit OrExpression(const ArgumentPtrVector &inChildren);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::OrExpression;
@@ -17,9 +17,9 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPreSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
-  SimplifyFunctionsVector getFunctionsForPostSimplify() const override;
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
   bool isComparableOrderInversed() const override;
 

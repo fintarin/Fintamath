@@ -17,7 +17,7 @@ std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {
   return func;
 }
 
-ArgumentsPtrVector IBinaryExpression::getChildren() const {
+ArgumentPtrVector IBinaryExpression::getChildren() const {
   return {lhsChild, rhsChild};
 }
 
@@ -70,7 +70,7 @@ ArgumentPtr IBinaryExpression::preciseSimplify() const {
   return preciseExpr;
 }
 
-ArgumentPtr IBinaryExpression::useSimplifyFunctions(const SimplifyFunctionsVector &simplFuncs) const {
+ArgumentPtr IBinaryExpression::useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const {
   for (const auto &simplFunc : simplFuncs) {
     if (auto res = simplFunc(*func, lhsChild, rhsChild)) {
       return res;
@@ -80,15 +80,15 @@ ArgumentPtr IBinaryExpression::useSimplifyFunctions(const SimplifyFunctionsVecto
   return {};
 }
 
-IBinaryExpression::SimplifyFunctionsVector IBinaryExpression::getFunctionsForPreSimplify() const {
+IBinaryExpression::SimplifyFunctionVector IBinaryExpression::getFunctionsForPreSimplify() const {
   return {};
 }
 
-IBinaryExpression::SimplifyFunctionsVector IBinaryExpression::getFunctionsForPostSimplify() const {
+IBinaryExpression::SimplifyFunctionVector IBinaryExpression::getFunctionsForPostSimplify() const {
   return {};
 }
 
-void IBinaryExpression::setChildren(const ArgumentsPtrVector &childVect) {
+void IBinaryExpression::setChildren(const ArgumentPtrVector &childVect) {
   if (childVect.size() != 2) {
     throw InvalidInputFunctionException(toString(), argumentVectorToStringVector(childVect));
   }

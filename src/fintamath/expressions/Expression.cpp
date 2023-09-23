@@ -54,11 +54,11 @@ ArgumentPtr parseExpr(const std::string &str) {
   return parseExpr(Expression::tokensToTerms(Tokenizer::tokenize(str)));
 }
 
-ArgumentPtr parseExpr(const TermsVector &terms) {
+ArgumentPtr parseExpr(const TermVector &terms) {
   return parseExpr(terms, 0, terms.size());
 }
 
-ArgumentPtr parseExpr(const TermsVector &terms, size_t start, size_t end) {
+ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end) {
   if (start >= end) {
     throw InvalidInputException(Expression::termsToString(terms));
   }
@@ -76,7 +76,7 @@ ArgumentPtr parseExpr(const TermsVector &terms, size_t start, size_t end) {
   throw InvalidInputException(Expression::termsToString(terms));
 }
 
-bool Expression::parseOperator(const TermsVector &terms, size_t start, size_t end) {
+bool Expression::parseOperator(const TermVector &terms, size_t start, size_t end) {
   // TODO! use more efficient algorithm
 
   size_t foundOperPos = std::numeric_limits<size_t>::max();
@@ -139,7 +139,7 @@ bool Expression::parseOperator(const TermsVector &terms, size_t start, size_t en
   return true;
 }
 
-bool Expression::parseFunction(const TermsVector &terms, size_t start, size_t end) {
+bool Expression::parseFunction(const TermVector &terms, size_t start, size_t end) {
   const auto &term = terms[start];
 
   if (start + 1 >= end) {
@@ -155,7 +155,7 @@ bool Expression::parseFunction(const TermsVector &terms, size_t start, size_t en
   start++;
   cutBrackets(terms, start, end);
 
-  ArgumentsPtrVector args = parseFunctionArgs(terms, start, end);
+  ArgumentPtrVector args = parseFunctionArgs(terms, start, end);
   std::shared_ptr<const IFunction> func = cast<IFunction>(term->value);
 
   if (func->getFunctionType() != IFunction::Type(args.size()) &&
@@ -174,12 +174,12 @@ bool Expression::parseFunction(const TermsVector &terms, size_t start, size_t en
   return true;
 }
 
-ArgumentsPtrVector Expression::parseFunctionArgs(const TermsVector &terms, size_t start, size_t end) {
+ArgumentPtrVector Expression::parseFunctionArgs(const TermVector &terms, size_t start, size_t end) {
   if (start >= end) {
     return {};
   }
 
-  ArgumentsPtrVector funcArgs;
+  ArgumentPtrVector funcArgs;
 
   for (size_t i = start; i < end; i++) {
     if (terms[i]->name == "(") {
@@ -192,7 +192,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermsVector &terms, size_
       }
 
       ArgumentPtr lhsArg = parseExpr(terms, start, i);
-      ArgumentsPtrVector rhsArgs = parseFunctionArgs(terms, i + 1, end);
+      ArgumentPtrVector rhsArgs = parseFunctionArgs(terms, i + 1, end);
 
       funcArgs.emplace_back(lhsArg);
 
@@ -208,7 +208,7 @@ ArgumentsPtrVector Expression::parseFunctionArgs(const TermsVector &terms, size_
   return funcArgs;
 }
 
-bool Expression::parseBrackets(const TermsVector &terms, size_t start, size_t end) {
+bool Expression::parseBrackets(const TermVector &terms, size_t start, size_t end) {
   if (start + 2 >= end) {
     return false;
   }
@@ -222,7 +222,7 @@ bool Expression::parseBrackets(const TermsVector &terms, size_t start, size_t en
   return false;
 }
 
-bool Expression::parseTerm(const TermsVector &terms, size_t start, size_t end) {
+bool Expression::parseTerm(const TermVector &terms, size_t start, size_t end) {
   if (start + 1 != end || !terms[start]->value) {
     return false;
   }
@@ -260,7 +260,7 @@ Expression &Expression::negate() {
   return *this;
 }
 
-ArgumentsPtrVector Expression::getChildren() const {
+ArgumentPtrVector Expression::getChildren() const {
   return {child};
 }
 
@@ -274,12 +274,12 @@ ArgumentPtr Expression::preciseSimplify() const {
   return preciseChild;
 }
 
-TermsVector Expression::tokensToTerms(const TokenVector &tokens) {
+TermVector Expression::tokensToTerms(const TokenVector &tokens) {
   if (tokens.empty()) {
     return {};
   }
 
-  TermsVector terms(tokens.size());
+  TermVector terms(tokens.size());
 
   for (size_t i = 0; i < tokens.size(); i++) {
     if (auto term = Parser::parse(getTermMakers(), (tokens[i]))) {
@@ -297,7 +297,7 @@ TermsVector Expression::tokensToTerms(const TokenVector &tokens) {
   return terms;
 }
 
-void Expression::insertMultiplications(TermsVector &terms) {
+void Expression::insertMultiplications(TermVector &terms) {
   static const ArgumentPtr mul = Mul().clone();
 
   for (size_t i = 1; i < terms.size(); i++) {
@@ -311,7 +311,7 @@ void Expression::insertMultiplications(TermsVector &terms) {
   }
 }
 
-void Expression::fixOperatorTypes(TermsVector &terms) {
+void Expression::fixOperatorTypes(TermVector &terms) {
   bool isFixed = true;
 
   if (const auto &term = terms.front();
@@ -365,7 +365,7 @@ void Expression::fixOperatorTypes(TermsVector &terms) {
   }
 }
 
-void Expression::collapseFactorials(TermsVector &terms) {
+void Expression::collapseFactorials(TermVector &terms) {
   for (size_t i = 1; i < terms.size() - 1; i++) {
     const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
@@ -399,7 +399,7 @@ bool Expression::canPrevTermBeBinaryOperator(const Term &term) {
            term.name == ",");
 }
 
-bool Expression::skipBrackets(const TermsVector &terms, size_t &openBracketIndex) {
+bool Expression::skipBrackets(const TermVector &terms, size_t &openBracketIndex) {
   if (openBracketIndex >= terms.size() || terms[openBracketIndex]->name != "(") {
     return false;
   }
@@ -425,7 +425,7 @@ bool Expression::skipBrackets(const TermsVector &terms, size_t &openBracketIndex
   throw InvalidInputException(termsToString(terms));
 }
 
-void Expression::cutBrackets(const TermsVector &terms, size_t &start, size_t &end) {
+void Expression::cutBrackets(const TermVector &terms, size_t &start, size_t &end) {
   if (start + 1 >= end) {
     return;
   }
@@ -436,7 +436,7 @@ void Expression::cutBrackets(const TermsVector &terms, size_t &start, size_t &en
   }
 }
 
-std::string Expression::termsToString(const TermsVector &terms) {
+std::string Expression::termsToString(const TermVector &terms) {
   std::string res;
 
   for (const auto &term : terms) {
@@ -473,7 +473,7 @@ void Expression::validateChild(const ArgumentPtr &inChild) {
   }
 
   const std::shared_ptr<IFunction> func = childExpr->getFunction();
-  const ArgumentsPtrVector children = childExpr->getChildren();
+  const ArgumentPtrVector children = childExpr->getChildren();
 
   if (func->getFunctionType() == IFunction::Type::Any || children.size() <= size_t(func->getFunctionType())) {
     validateFunctionArgs(func, children);
@@ -491,15 +491,15 @@ void Expression::validateChild(const ArgumentPtr &inChild) {
   }
 }
 
-void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentsPtrVector &args) {
+void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentPtrVector &args) {
   if (func->getFunctionType() == IFunction::Type::Any && args.empty()) {
     throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
   }
 
-  ArgumentTypesVector childrenTypes = func->getArgType();
+  ArgumentTypeVector childrenTypes = func->getArgType();
 
   if (func->getFunctionType() == IFunction::Type::Any) {
-    childrenTypes = ArgumentTypesVector(args.size(), childrenTypes.front());
+    childrenTypes = ArgumentTypeVector(args.size(), childrenTypes.front());
   }
 
   for (size_t i = 0; i < args.size(); i++) {
@@ -544,7 +544,7 @@ void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
               .clone();
   }
   else if (const auto exprArg = cast<IExpression>(arg)) {
-    ArgumentsPtrVector newChildren = exprArg->getChildren();
+    ArgumentPtrVector newChildren = exprArg->getChildren();
 
     for (auto &child : newChildren) {
       preciseRec(child, precision);
@@ -556,16 +556,16 @@ void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
   }
 }
 
-std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsPtrVector &args) {
+std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentPtrVector &args) {
   Expression res(makeExpr(func, args));
   return res.getChildren().front()->clone();
 }
 
-std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentsRefVector &args) {
+std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentRefVector &args) {
   return makeExprChecked(func, argumentRefVectorToArgumentPtrVector(args));
 }
 
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrVector &args) {
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args) {
   if (auto expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), args)) {
     return expr;
   }
@@ -573,11 +573,11 @@ std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsPtrV
   return FunctionExpression(func, args).clone();
 }
 
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentsRefVector &args) {
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args) {
   return makeExpr(func, argumentRefVectorToArgumentPtrVector(args));
 }
 
-void Expression::setChildren(const ArgumentsPtrVector &childVect) {
+void Expression::setChildren(const ArgumentPtrVector &childVect) {
   if (childVect.size() != 1) {
     throw InvalidInputFunctionException("", argumentVectorToStringVector(childVect));
   }

@@ -20,7 +20,7 @@
 
 namespace fintamath {
 
-AddExpression::AddExpression(const ArgumentsPtrVector &inChildren)
+AddExpression::AddExpression(const ArgumentPtrVector &inChildren)
     : IPolynomExpressionCRTP(Add(), inChildren) {
 }
 
@@ -74,8 +74,8 @@ int AddExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) co
   return IPolynomExpression::comparator(lhs, rhs);
 }
 
-AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify() const {
-  static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
+AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPreSimplify() const {
+  static const AddExpression::SimplifyFunctionVector simplifyFunctions = {
       &AddExpression::callFunctionSimplify,
       &AddExpression::sumSimplify,
       &AddExpression::constSimplify,
@@ -86,8 +86,8 @@ AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPreSimplify
   return simplifyFunctions;
 }
 
-AddExpression::SimplifyFunctionsVector AddExpression::getFunctionsForPostSimplify() const {
-  static const AddExpression::SimplifyFunctionsVector simplifyFunctions = {
+AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPostSimplify() const {
+  static const AddExpression::SimplifyFunctionVector simplifyFunctions = {
       &AddExpression::constSimplify,
       &AddExpression::powSimplify,
       &AddExpression::logSimplify,
@@ -146,8 +146,8 @@ ArgumentPtr AddExpression::logSimplify(const IFunction & /*func*/, const Argumen
     return {};
   }
 
-  ArgumentsPtrVector lhsChildren = lhsExpr->getChildren();
-  ArgumentsPtrVector rhsChildren = rhsExpr->getChildren();
+  ArgumentPtrVector lhsChildren = lhsExpr->getChildren();
+  ArgumentPtrVector rhsChildren = rhsExpr->getChildren();
 
   if (*lhsChildren.front() == *rhsChildren.front()) {
     ArgumentPtr logLhs = lhsChildren.front();
@@ -168,8 +168,8 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
   }
 
   if (is<Mul>(lhsExpr->getFunction()) && is<Mul>(rhsExpr->getFunction())) {
-    ArgumentsPtrVector lhsExprChildren = lhsExpr->getChildren();
-    ArgumentsPtrVector rhsExprChildren = rhsExpr->getChildren();
+    ArgumentPtrVector lhsExprChildren = lhsExpr->getChildren();
+    ArgumentPtrVector rhsExprChildren = rhsExpr->getChildren();
 
     std::vector<size_t> lhsLogChildrenIndexes = findLogarithms(lhsExprChildren);
     std::vector<size_t> rhsLogChildrenIndexes = findLogarithms(rhsExprChildren);
@@ -208,7 +208,7 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
     return {};
   }
 
-  ArgumentsPtrVector mulExprChildren = mulExprChild->getChildren();
+  ArgumentPtrVector mulExprChildren = mulExprChild->getChildren();
   std::vector<size_t> logChildrenIndexes = findLogarithms(mulExprChildren);
 
   for (size_t i : logChildrenIndexes) {
@@ -234,7 +234,7 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
   if (const auto mulExprChild = cast<IExpression>(inChild);
       mulExprChild && is<Mul>(mulExprChild->getFunction())) {
 
-    const ArgumentsPtrVector mulExprChildren = mulExprChild->getChildren();
+    const ArgumentPtrVector mulExprChildren = mulExprChild->getChildren();
 
     if (is<INumber>(mulExprChildren.front())) {
       rate = mulExprChildren.front();
@@ -243,7 +243,7 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
         value = mulExprChildren[1];
       }
       else {
-        value = mulExpr(ArgumentsPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
+        value = mulExpr(ArgumentPtrVector(mulExprChildren.begin() + 1, mulExprChildren.end()));
       }
     }
   }
@@ -256,13 +256,13 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
   return {rate, value};
 }
 
-ArgumentPtr AddExpression::addRatesToValue(const ArgumentsPtrVector &rates, const ArgumentPtr &value) {
+ArgumentPtr AddExpression::addRatesToValue(const ArgumentPtrVector &rates, const ArgumentPtr &value) {
   ArgumentPtr ratesSum = addExpr(rates);
   ArgumentPtr res = mulExpr(ratesSum, value);
   return res;
 }
 
-std::vector<size_t> AddExpression::findLogarithms(const ArgumentsPtrVector &children) {
+std::vector<size_t> AddExpression::findLogarithms(const ArgumentPtrVector &children) {
   std::vector<size_t> indexes;
 
   for (size_t i = 0; i < children.size(); i++) {
@@ -276,8 +276,8 @@ std::vector<size_t> AddExpression::findLogarithms(const ArgumentsPtrVector &chil
   return indexes;
 }
 
-std::shared_ptr<const IExpression> AddExpression::mulToLogarithm(const ArgumentsPtrVector &children, size_t i) {
-  ArgumentsPtrVector mulChildren = children;
+std::shared_ptr<const IExpression> AddExpression::mulToLogarithm(const ArgumentPtrVector &children, size_t i) {
+  ArgumentPtrVector mulChildren = children;
   auto logExprChild = cast<const IExpression>(mulChildren[i]);
 
   mulChildren.erase(mulChildren.begin() + ptrdiff_t(i));

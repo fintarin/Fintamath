@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Factorial::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Factorial::call(const ArgumentRefVector &argsVect) const {
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
   return multiFactorialSimplify(rhs, order);

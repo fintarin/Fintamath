@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Lg::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Lg::call(const ArgumentRefVector &argsVect) const {
   static const Integer lhs = 10;
   const auto &rhs = argsVect.front().get();
 

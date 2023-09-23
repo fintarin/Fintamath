@@ -37,7 +37,7 @@ std::vector<Variable> IExpression::getVariables() const {
 void IExpression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
   auto children = getChildren();
 
-  ArgumentsPtrVector newChildren;
+  ArgumentPtrVector newChildren;
 
   for (auto &child : children) {
     if (std::shared_ptr<IExpression> exprChild = cast<IExpression>(child->clone())) {
@@ -153,12 +153,12 @@ void IExpression::preciseSimplifyChild(ArgumentPtr &child) {
   }
 }
 
-ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentsPtrVector &argPtrs) {
+ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs) {
   if (!func.isNonExressionEvaluatable()) {
     return {};
   }
 
-  ArgumentsRefVector args;
+  ArgumentRefVector args;
   bool areArgumentsPrecise = true;
 
   for (const auto &argPtr : argPtrs) {

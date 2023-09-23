@@ -30,10 +30,10 @@ TEST(FunctionUtilsTests, makeExpressionCheckedPtrsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExprChecked(Mul(), ArgumentsPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExprChecked(Mul(), ArgumentsPtrVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExprChecked(Pow(), ArgumentsPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExprChecked(Pow(), ArgumentsPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Mul(), ArgumentPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Mul(), ArgumentPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Pow(), ArgumentPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Pow(), ArgumentPtrVector{})->toString(), InvalidInputException);
 }
 
 TEST(FunctionUtilsTests, makeExpressionCheckedRefsTest) {
@@ -48,10 +48,10 @@ TEST(FunctionUtilsTests, makeExpressionCheckedRefsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExprChecked(Mul(), ArgumentsRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExprChecked(Mul(), ArgumentsRefVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExprChecked(Pow(), ArgumentsRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExprChecked(Pow(), ArgumentsRefVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Mul(), ArgumentRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Mul(), ArgumentRefVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Pow(), ArgumentRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExprChecked(Pow(), ArgumentRefVector{})->toString(), InvalidInputException);
 }
 
 TEST(FunctionUtilsTests, makeExpressionPtrsTest) {
@@ -66,10 +66,10 @@ TEST(FunctionUtilsTests, makeExpressionPtrsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExpr(Mul(), ArgumentsPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Mul(), ArgumentsPtrVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentsPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentsPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Mul(), ArgumentPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Mul(), ArgumentPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), ArgumentPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), ArgumentPtrVector{})->toString(), InvalidInputException);
 }
 
 TEST(FunctionUtilsTests, makeExpressionRefsTest) {
@@ -84,10 +84,10 @@ TEST(FunctionUtilsTests, makeExpressionRefsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExpr(Mul(), ArgumentsRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Mul(), ArgumentsRefVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentsRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentsRefVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Mul(), ArgumentRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Mul(), ArgumentRefVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), ArgumentRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(Pow(), ArgumentRefVector{})->toString(), InvalidInputException);
 }
 
 TEST(FunctionUtilsTests, makeExpressionCheckedAnyArgsTest) {

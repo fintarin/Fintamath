@@ -2,7 +2,7 @@
 
 namespace fintamath {
 
-MinMaxExpression::MinMaxExpression(const IFunction &inFunc, const ArgumentsPtrVector &inChildren)
+MinMaxExpression::MinMaxExpression(const IFunction &inFunc, const ArgumentPtrVector &inChildren)
     : IPolynomExpressionCRTP(inFunc, inChildren) {
 }
 

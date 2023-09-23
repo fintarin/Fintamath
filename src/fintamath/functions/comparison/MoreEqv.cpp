@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> MoreEqv::call(const ArgumentsRefVector &argsVect) const {
+std::unique_ptr<IMathObject> MoreEqv::call(const ArgumentRefVector &argsVect) const {
   const auto &lhs = cast<IComparable>(argsVect.front().get());
   const auto &rhs = cast<IComparable>(argsVect.back().get());
 
