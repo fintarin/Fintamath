@@ -25,9 +25,7 @@ std::vector<Variable> IExpression::getVariables() const {
     }
   }
 
-  std::ranges::sort(vars, [](const Variable &lhs, const Variable &rhs) {
-    return lhs.toString() < rhs.toString();
-  });
+  std::ranges::sort(vars, std::less(), &Variable::toString);
   auto unique = std::ranges::unique(vars);
   vars.erase(unique.begin(), unique.end());
 
