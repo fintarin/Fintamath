@@ -35,7 +35,7 @@ std::string functionToString(const IFunction &func, const ArgumentPtrVector &arg
     result += arg->toString() + delimiter;
   }
 
-  result = result.substr(0, result.length() - delimiter.length()) + ")";
+  result = result.substr(0, result.size() - delimiter.size()) + ")";
 
   return result;
 }

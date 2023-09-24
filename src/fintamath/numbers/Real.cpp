@@ -87,7 +87,7 @@ std::string Real::toString() const {
     }
   }
   else {
-    expPos = res.length();
+    expPos = res.size();
   }
 
   if (res.find('.') == std::string::npos) {

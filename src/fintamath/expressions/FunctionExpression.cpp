@@ -8,7 +8,7 @@ namespace fintamath {
 FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentPtrVector &inChildren)
     : func(cast<IFunction>(inFunc.clone())) {
 
-  if (inChildren.size() != uint16_t(inFunc.getFunctionType())) {
+  if (inChildren.size() != size_t(inFunc.getFunctionType())) {
     throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(inChildren));
   }
 

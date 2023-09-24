@@ -367,7 +367,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
 }
 
 void Expression::collapseFactorials(TermVector &terms) {
-  for (size_t i = 1; i < terms.size() - 1; i++) {
+  for (size_t i = 1; i + 1 < terms.size(); i++) {
     const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 

@@ -33,7 +33,7 @@ std::string IPolynomExpression::toString() const {
   for (auto i : std::views::iota(1U, children.size())) {
     const std::string childStr = childToString(*oper, children[i], children[i - 1]);
 
-    if (childStr.length() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {
+    if (childStr.size() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {
       result += Mul().toString() + childStr.substr(1);
     }
     else {

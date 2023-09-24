@@ -19,7 +19,7 @@ Complex &Complex::operator=(const Complex &rhs) {
 
 Complex::Complex(const std::string &str) {
   if (!str.empty() && str.back() == 'I') {
-    im = INumber::parse(str.substr(0, str.length() - 1));
+    im = INumber::parse(str.substr(0, str.size() - 1));
   }
   else {
     re = INumber::parse(str);

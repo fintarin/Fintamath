@@ -36,7 +36,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
 void Tokenizer::registerToken(const Token &token) {
   auto &tokens = getRegisteredTokens();
   tokens.insert(std::ranges::upper_bound(tokens, token, [](const Token &lhs, const Token &rhs) {
-                  return lhs.length() > rhs.length();
+                  return lhs.size() > rhs.size();
                 }),
                 token);
 }
@@ -53,16 +53,16 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit)
   }
 
   while (!token.empty()) {
-    std::string nestedToken = token.substr(0, getRegisteredTokens().front().length());
+    std::string nestedToken = token.substr(0, getRegisteredTokens().front().size());
     bool isNestedTokenFind = false;
 
     for (const auto &registeredToken : getRegisteredTokens()) {
-      if (nestedToken.length() < registeredToken.length()) {
+      if (nestedToken.size() < registeredToken.size()) {
         continue;
       }
 
-      if (nestedToken.length() > registeredToken.length()) {
-        nestedToken = token.substr(0, registeredToken.length());
+      if (nestedToken.size() > registeredToken.size()) {
+        nestedToken = token.substr(0, registeredToken.size());
       }
 
       if (nestedToken == registeredToken) {

@@ -64,7 +64,7 @@ public:
             res = maker(args);
           }
           else if constexpr (isPolynomial) {
-            if (uint16_t(type) <= args.size()) {
+            if (size_t(type) <= args.size()) {
               res = maker(args);
             }
           }

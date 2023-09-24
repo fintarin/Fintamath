@@ -31,7 +31,7 @@ Rational::Rational(const std::string &str) {
     intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
   }
 
-  if (firstDotNum + 1 < int64_t(str.size())) {
+  if (firstDotNum + 1 < std::ssize(str)) {
     auto numeratorStr = str.substr(size_t(firstDotNum) + 1);
     std::string denominatorStr(numeratorStr.size() + 1, '0');
     denominatorStr.front() = '1';
