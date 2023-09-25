@@ -19,7 +19,6 @@ Expression::Expression() : child(Integer(0).clone()) {
 }
 
 Expression::Expression(const std::string &str) : child(fintamath::parseExpr(str)) {
-  validateChild(child);
   simplifyChild(child);
 }
 
@@ -29,7 +28,6 @@ Expression::Expression(const ArgumentPtr &obj) {
   }
   else {
     child = obj;
-    validateChild(child);
     simplifyChild(child);
   }
 }
@@ -236,32 +234,48 @@ std::shared_ptr<IFunction> Expression::getFunction() const {
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  child = makeExprChecked(Add(), *child, *rhs.child);
+  child = makeExpr(Add(), *child, *rhs.child)->toMinimalObject();
   return *this;
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  child = makeExprChecked(Sub(), *child, *rhs.child);
+  child = makeExpr(Sub(), *child, *rhs.child)->toMinimalObject();
   return *this;
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  child = makeExprChecked(Mul(), *child, *rhs.child);
+  child = makeExpr(Mul(), *child, *rhs.child)->toMinimalObject();
   return *this;
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  child = makeExprChecked(Div(), *child, *rhs.child);
+  child = makeExpr(Div(), *child, *rhs.child)->toMinimalObject();
   return *this;
 }
 
 Expression &Expression::negate() {
-  child = makeExprChecked(Neg(), *child);
+  child = makeExpr(Neg(), *child)->toMinimalObject();
   return *this;
 }
 
 ArgumentPtrVector Expression::getChildren() const {
   return {child};
+}
+
+void Expression::setChildren(const ArgumentPtrVector &childVect) {
+  if (childVect.size() != 1) {
+    throw InvalidInputFunctionException("", argumentVectorToStringVector(childVect));
+  }
+
+  *this = Expression(childVect.front());
+}
+
+void Expression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
+  IExpression::setVariables(varsToVals);
+}
+
+void Expression::setVariable(const Variable &var, const Expression &val) {
+  setVariables({{var, val.child}});
 }
 
 ArgumentPtr Expression::simplify() const {
@@ -466,75 +480,6 @@ bool Expression::isNonOperatorFunction(const ArgumentPtr &val) {
   return is<IFunction>(val) && !is<IOperator>(val);
 }
 
-void Expression::validateChild(const ArgumentPtr &inChild) {
-  const auto childExpr = cast<IExpression>(inChild);
-
-  if (!childExpr) {
-    return;
-  }
-
-  const std::shared_ptr<IFunction> func = childExpr->getFunction();
-  const ArgumentPtrVector children = childExpr->getChildren();
-
-  if (func->getFunctionType() == IFunction::Type::Any || children.size() <= size_t(func->getFunctionType())) {
-    validateFunctionArgs(func, children);
-  }
-  else {
-    for (auto i : std::views::iota(0U, children.size() - 1)) {
-      for (auto j : std::views::iota(i + 1, children.size())) {
-        validateFunctionArgs(func, {children[i], children[j]});
-      }
-    }
-  }
-
-  for (const auto &arg : children) {
-    validateChild(arg);
-  }
-}
-
-void Expression::validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentPtrVector &args) {
-  if (func->getFunctionType() == IFunction::Type::Any && args.empty()) {
-    throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
-  }
-
-  ArgumentTypeVector childrenTypes = func->getArgType();
-
-  if (func->getFunctionType() == IFunction::Type::Any) {
-    childrenTypes = ArgumentTypeVector(args.size(), childrenTypes.front());
-  }
-
-  for (auto i : std::views::iota(0U, args.size())) {
-    const ArgumentPtr &arg = args[i];
-    const MathObjectType Type = childrenTypes[i];
-
-    if (const auto childExpr = cast<IExpression>(arg)) {
-      const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
-      const MathObjectType childType = childFunc->getReturnType();
-
-      if (childType != Variable::getTypeStatic() &&
-          !isBaseOf(Type, childType) &&
-          !isBaseOf(childType, Type)) {
-
-        throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
-      }
-    }
-    else if (const auto childConst = cast<IConstant>(arg)) {
-      const MathObjectType childType = childConst->getReturnType();
-
-      if (!isBaseOf(Type, childType) && !isBaseOf(childType, Type)) {
-        throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
-      }
-    }
-    else {
-      MathObjectType childType = arg->getType();
-
-      if (childType != Variable::getTypeStatic() && !isBaseOf(Type, childType)) {
-        throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(args));
-      }
-    }
-  }
-}
-
 void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
   if (const auto realArg = cast<Real>(arg)) {
     arg = realArg->precise(precision).clone();
@@ -557,16 +502,9 @@ void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
   }
 }
 
-std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentPtrVector &args) {
-  Expression res(makeExpr(func, args));
-  return res.getChildren().front()->clone();
-}
-
-std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentRefVector &args) {
-  return makeExprChecked(func, argumentRefVectorToArgumentPtrVector(args));
-}
-
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args) {
+  Expression::validateFunctionArgs(func, args);
+
   if (auto expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), args)) {
     return expr;
   }
@@ -578,20 +516,62 @@ std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVe
   return makeExpr(func, argumentRefVectorToArgumentPtrVector(args));
 }
 
-void Expression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.size() != 1) {
-    throw InvalidInputFunctionException("", argumentVectorToStringVector(childVect));
+void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args) {
+  IFunction::Type funcType = func.getFunctionType();
+
+  if ((funcType != IFunction::Type::None && args.empty()) ||
+      (funcType != IFunction::Type::Any && args.size() < size_t(funcType))) {
+
+    throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
   }
 
-  *this = Expression(childVect.front());
+  bool doesArgSizeMatch = funcType != IFunction::Type::Any && args.size() == size_t(funcType);
+
+  ArgumentTypeVector expectedArgTypes = func.getArgTypes();
+  MathObjectType expectedType = expectedArgTypes.front();
+
+  for (auto i : std::views::iota(0U, args.size())) {
+    if (doesArgSizeMatch) {
+      expectedType = expectedArgTypes[i];
+    }
+
+    ArgumentPtr arg = args[i];
+    compressChild(arg);
+
+    if (!doesArgMatch(expectedType, arg)) {
+      throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
+    }
+  }
 }
 
-void Expression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
-  IExpression::setVariables(varsToVals);
-}
+bool Expression::doesArgMatch(const MathObjectType &expectedType, const ArgumentPtr &arg) {
+  if (const auto childExpr = cast<IExpression>(arg)) {
+    const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
+    const MathObjectType childType = childFunc->getReturnType();
 
-void Expression::setVariable(const Variable &var, const Expression &val) {
-  setVariables({{var, val.child}});
+    if (childType != Variable::getTypeStatic() &&
+        !isBaseOf(expectedType, childType) &&
+        !isBaseOf(childType, expectedType)) {
+
+      return false;
+    }
+  }
+  else if (const auto childConst = cast<IConstant>(arg)) {
+    const MathObjectType childType = childConst->getReturnType();
+
+    if (!isBaseOf(expectedType, childType) && !isBaseOf(childType, expectedType)) {
+      return false;
+    }
+  }
+  else {
+    MathObjectType childType = arg->getType();
+
+    if (childType != Variable::getTypeStatic() && !isBaseOf(expectedType, childType)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 Expression operator+(const Variable &lhs, const Variable &rhs) {

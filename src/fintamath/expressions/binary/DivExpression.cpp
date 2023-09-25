@@ -285,8 +285,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumSumSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr result = addExpr(resultVect);
-
+  ArgumentPtr result = resultVect.size() > 1 ? addExpr(resultVect) : resultVect.front();
   ArgumentPtr remainderAdd = addExpr(remainderVect);
   ArgumentPtr remainder = divExpr(remainderAdd, rhs);
   simplifyChild(remainder);
@@ -330,11 +329,11 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr result = addExpr(resultChildren);
+  ArgumentPtr result = resultChildren.size() > 1 ? addExpr(resultChildren) : resultChildren.front();
 
   ArgumentPtr remainder;
   if (!remainderChildren.empty()) {
-    ArgumentPtr remainderAdd = addExpr(remainderChildren);
+    ArgumentPtr remainderAdd = remainderChildren.size() > 1 ? addExpr(remainderChildren) : remainderChildren.front();
     remainder = divExpr(remainderAdd, rhs);
     simplifyChild(remainder);
   }
@@ -368,7 +367,8 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     multiplicator.emplace_back(mulExpr(rhsChildren[i], result));
   }
 
-  ArgumentPtr remainderNegAdd = negExpr(addExpr(multiplicator));
+  ArgumentPtr remainderAdd = multiplicator.size() > 1 ? addExpr(multiplicator) : multiplicator.front();
+  ArgumentPtr remainderNegAdd = negExpr(remainderAdd);
   simplifyChild(remainderNegAdd);
   ArgumentPtr remainder = divExpr(remainderNegAdd, rhs);
 

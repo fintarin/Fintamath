@@ -186,7 +186,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
       child = divExpr(child, dividerNum);
     }
 
-    ArgumentPtr newLhs = addExpr(dividendPolynom);
+    ArgumentPtr newLhs = dividendPolynom.size() > 1 ? addExpr(dividendPolynom) : dividendPolynom.front();
 
     if (*dividerNum < Integer(0)) {
       return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);

@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(AndExpressionTests, getTypeTest) {
-  EXPECT_EQ(andExpr(Integer(0), Integer(0))->getType(), MathObjectType::AndExpression);
+  EXPECT_EQ(andExpr(Boolean(), Boolean())->getType(), MathObjectType::AndExpression);
 }

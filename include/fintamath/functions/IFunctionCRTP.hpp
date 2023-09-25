@@ -18,13 +18,13 @@ public:
     return type;
   }
 
-  size_t getReturnType() const final {
-    return size_t(Return::getTypeStatic());
+  MathObjectType getReturnType() const final {
+    return Return::getTypeStatic();
   }
 
-  ArgumentTypeVector getArgType() const final {
+  ArgumentTypeVector getArgTypes() const final {
     ArgumentTypeVector argTypes;
-    getArgType<0, Args...>(argTypes);
+    getArgTypes<0, Args...>(argTypes);
     return argTypes;
   }
 
@@ -63,18 +63,18 @@ protected:
       return makeExpr(*this, argsVect);
     }
 
-    return makeExprChecked(*this, argsVect);
+    return makeExpr(*this, argsVect)->toMinimalObject();
   }
 
 private:
   template <size_t i, typename Head, typename... Tail>
-  void getArgType(ArgumentTypeVector &outArgsTypes) const {
+  void getArgTypes(ArgumentTypeVector &outArgsTypes) const {
     outArgsTypes.emplace_back(Head::getTypeStatic());
-    getArgType<i + 1, Tail...>(outArgsTypes);
+    getArgTypes<i + 1, Tail...>(outArgsTypes);
   }
 
   template <size_t>
-  void getArgType(ArgumentTypeVector & /*outArgTypes*/) const {
+  void getArgTypes(ArgumentTypeVector & /*outArgTypes*/) const {
     // The end of unpacking.
   }
 

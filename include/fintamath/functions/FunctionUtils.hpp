@@ -17,10 +17,6 @@ class IFunction;
 
 extern bool isExpression(const IMathObject &arg);
 
-extern std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentPtrVector &args);
-
-extern std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentRefVector &args);
-
 extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args);
 
 extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args);
@@ -33,10 +29,6 @@ ArgumentPtr toArgumentPtr(T &arg) {
   else {
     return std::move(arg);
   }
-}
-
-std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const std::derived_from<IMathObject> auto &...args) {
-  return makeExprChecked(func, ArgumentRefVector{args...});
 }
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const std::derived_from<IMathObject> auto &...args) {

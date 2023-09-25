@@ -6,7 +6,7 @@ namespace fintamath {
 
 class IConstant : public ILiteral {
 public:
-  virtual size_t getReturnType() const = 0;
+  virtual MathObjectType getReturnType() const = 0;
 
   std::unique_ptr<IMathObject> operator()() const {
     return call();
