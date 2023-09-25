@@ -171,16 +171,6 @@ IPolynomExpression::SimplifyFunctionVector IPolynomExpression::getFunctionsForPo
   return {};
 }
 
-ArgumentPtr IPolynomExpression::preciseSimplify() const {
-  auto preciseExpr = cast<IPolynomExpression>(clone());
-
-  for (auto &child : preciseExpr->children) {
-    preciseSimplifyChild(child);
-  }
-
-  return preciseExpr;
-}
-
 std::string IPolynomExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   std::string childStr = operatorChildToString(oper, inChild);
   return prevChild ? (putInSpaces(func->toString()) + childStr) : childStr;

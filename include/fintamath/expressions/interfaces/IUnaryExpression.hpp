@@ -31,8 +31,6 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  ArgumentPtr preciseSimplify() const override;
-
 private:
   ArgumentPtr useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const;
 
@@ -58,9 +56,7 @@ class IUnaryExpressionCRTP : public IUnaryExpressionBaseCRTP<Derived, isMultiFun
 public:
   explicit IUnaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &arg) {
     this->func = cast<IFunction>(inFunc.clone());
-
     this->child = arg;
-    this->compressChild(this->child);
   }
 };
 

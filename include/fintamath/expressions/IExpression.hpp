@@ -45,9 +45,7 @@ protected:
 
   virtual ArgumentPtr postSimplify() const;
 
-  virtual ArgumentPtr preciseSimplify() const = 0;
-
-  static void compressChild(ArgumentPtr &child);
+  virtual ArgumentPtr preciseSimplify() const;
 
   static void simplifyChild(ArgumentPtr &child);
 

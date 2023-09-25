@@ -1509,48 +1509,48 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("log(1)"), InvalidInputException);
   EXPECT_THROW(Expression("log()"), InvalidInputException);
 
-  EXPECT_THROW(Expression("(1 = 1) / 2"), InvalidInputException);
-  EXPECT_THROW(Expression("2 + (1 = 2)"), InvalidInputException);
-  EXPECT_THROW(Expression("sin(1 = 1)"), InvalidInputException);
-  EXPECT_THROW(Expression("sin(sin(1 = 1))"), InvalidInputException);
-  EXPECT_THROW(Expression("sin(sin(sin(1 = 1)))"), InvalidInputException);
-  EXPECT_THROW(Expression("True/True"), InvalidInputException);
-  EXPECT_THROW(Expression("((1 == 1)) + ((1 == 2))"), InvalidInputException);
-  EXPECT_THROW(Expression("((1 == 1)) - ((1 == 1))"), InvalidInputException);
-  EXPECT_THROW(Expression("((1 == 1)) / ((1 == 1))"), InvalidInputException);
-  EXPECT_THROW(Expression("(5+5)=(2=5)"), InvalidInputException);
-  EXPECT_THROW(Expression("1+(sin(x)<2)"), InvalidInputException);
-  EXPECT_THROW(Expression("1/(sin(x)<2)"), InvalidInputException);
-  EXPECT_THROW(Expression("1+False"), InvalidInputException);
-  EXPECT_THROW(Expression("False+1"), InvalidInputException);
-  EXPECT_THROW(Expression("1=False"), InvalidInputException);
-  EXPECT_THROW(Expression("False=1"), InvalidInputException);
-  EXPECT_THROW(Expression("1&2"), InvalidInputException);
-  EXPECT_THROW(Expression("x+1&x+2"), InvalidInputException);
-  EXPECT_THROW(Expression("x+1&x"), InvalidInputException);
-  EXPECT_THROW(Expression("x&x+2"), InvalidInputException);
-  EXPECT_THROW(Expression("(x&y)=(y&z)"), InvalidInputException);
-  EXPECT_THROW(Expression("derivative(x=y, x)"), InvalidInputException);
-  EXPECT_THROW(Expression("derivative(x&y,x)"), InvalidInputException);
-  EXPECT_THROW(Expression("derivative(True,a)"), InvalidInputException);
-  EXPECT_THROW(Expression("(a+1)_(a>2)"), InvalidInputException);
-  EXPECT_THROW(Expression("(x+1)_1"), InvalidInputException);
-  EXPECT_THROW(Expression("(x*2)_1"), InvalidInputException);
-  EXPECT_THROW(Expression("(x*2)_((x+2)_x)"), InvalidInputException);
-  EXPECT_THROW(Expression("x^x_1"), InvalidInputException);
-  EXPECT_THROW(Expression("E&a"), InvalidInputException);
-  EXPECT_THROW(Expression("~Inf"), InvalidInputException);
-  EXPECT_THROW(Expression("~Undefined"), InvalidInputException);
-  EXPECT_THROW(Expression("a | Undefined"), InvalidInputException);
-  EXPECT_THROW(Expression("Inf - Inf = 0"), InvalidInputException);
-  EXPECT_THROW(Expression("Inf - Inf = 0 | a"), InvalidInputException);
-  EXPECT_THROW(Expression("0/0 = 0/0"), InvalidInputException);
-  EXPECT_THROW(Expression("Undefined = Undefined"), InvalidInputException);
+  EXPECT_THROW(Expression("(1 = 1) / 2").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("2 + (1 = 2)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("sin(1 = 1)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("sin(sin(1 = 1))").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("sin(sin(sin(1 = 1)))").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("True/True").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("((1 == 1)) + ((1 == 2))").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("((1 == 1)) - ((1 == 1))").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("((1 == 1)) / ((1 == 1))").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("(5+5)=(2=5)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("1+(sin(x)<2)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("1/(sin(x)<2)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("1+False").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("False+1").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("1=False").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("False=1").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("1&2").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("x+1&x+2").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("x+1&x").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("x&x+2").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("(x&y)=(y&z)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("derivative(x=y, x)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("derivative(x&y,x)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("derivative(True,a)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("(a+1)_(a>2)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("(x+1)_1").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("(x*2)_1").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("(x*2)_((x+2)_x)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("x^x_1").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("E&a").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("~Inf").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("~Undefined").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("a | Undefined").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("Inf - Inf = 0").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("Inf - Inf = 0 | a").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("0/0 = 0/0").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("Undefined = Undefined").toString(), InvalidInputException);
 
-  EXPECT_THROW(Expression("min()"), InvalidInputException);
-  EXPECT_THROW(Expression("min(True, False)"), InvalidInputException);
-  EXPECT_THROW(Expression("max()"), InvalidInputException);
-  EXPECT_THROW(Expression("max(True, False)"), InvalidInputException);
+  EXPECT_THROW(Expression("min()").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("min(True, False)").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("max()").toString(), InvalidInputException);
+  EXPECT_THROW(Expression("max(True, False)").toString(), InvalidInputException);
 }
 
 TEST(ExpressionTests, preciseTest) {
@@ -1711,6 +1711,37 @@ TEST(ExpressionTests, setChildrenTest) {
   EXPECT_THROW(expr.setChildren({Variable("a").clone(), Variable("b").clone()}), InvalidInputException);
 }
 
+TEST(ExpressionTests, getFunctionTest) {
+  EXPECT_EQ(Expression().getFunction(), nullptr);
+}
+
+TEST(ExpressionTests, getChildrenTest) {
+  // TODO: implement
+}
+
+TEST(ExpressionTests, setVariablesTest) {
+  // TODO: implement
+}
+
+TEST(ExpressionTests, setVariableTest) {
+  Expression a("a+b+c");
+  Expression b = a;
+  Expression c = a;
+
+  a.setVariable(Variable("a"), 1);
+  a.setVariable(Variable("b"), 2);
+  a.setVariable(Variable("c"), 3);
+  EXPECT_EQ(a.toString(), "6");
+
+  b.setVariable(Variable("d"), 1);
+  EXPECT_EQ(b.toString(), "a + b + c");
+
+  c.setVariable(Variable("a"), Expression("ln(b)"));
+  c.setVariable(Variable("b"), Expression("E"));
+  c.setVariable(Variable("c"), Expression("(a+b)^2"));
+  EXPECT_EQ(c.toString(), "a^2 + 2 a b + b^2 + E + 1");
+}
+
 TEST(ExpressionTests, equalsTest) {
   Expression a;
 
@@ -1723,6 +1754,24 @@ TEST(ExpressionTests, equalsTest) {
   EXPECT_NE(Variable("a"), a);
 
   // TODO: implement more tests
+}
+
+TEST(ExpressionTests, getTypeTest) {
+  EXPECT_EQ(Expression::getTypeStatic(), MathObjectType::Expression);
+  EXPECT_EQ(Expression().getType(), MathObjectType::Expression);
+}
+
+TEST(ExpressionTests, parseExprTest) {
+  EXPECT_EQ(parseExpr("36/(8-6)3")->toString(), "36/(8 - 6) 3");
+  EXPECT_EQ(parseExpr("2%")->toString(), "2/100");
+  EXPECT_EQ(parseExpr("2.35%")->toString(), "(47/20)/100");
+  EXPECT_EQ(parseExpr("1100*4.76%")->toString(), "1100 (119/25)/100");
+  EXPECT_EQ(parseExpr("2.35%%%%")->toString(), "((((47/20)/100)/100)/100)/100");
+  EXPECT_EQ(parseExpr("1100*4.76%1100*4.76%")->toString(), "1100 (119/25)/100*1100 (119/25)/100");
+  EXPECT_EQ(parseExpr("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))")->toString(), "((5/8)/1)/(((9/4)/0)/5)");
+
+  EXPECT_THROW(parseExpr("(1 = 1) / 2"), InvalidInputException);
+  EXPECT_THROW(parseExpr("1+"), InvalidInputException);
 }
 
 TEST(ExpressionTests, variableVariablePlusOperatorTest) {
@@ -1783,45 +1832,4 @@ TEST(ExpressionTests, variableExpressionDivideOperatorTest) {
 TEST(ExpressionTests, expressionVariableDivideOperatorTest) {
   EXPECT_EQ(Expression("a/b") / Variable("a"), Expression("1/b"));
   EXPECT_EQ(Expression("b/c") / Variable("a"), Expression("b/c/a"));
-}
-
-TEST(ExpressionTests, setVariablesTest) {
-  // TODO: implement
-}
-
-TEST(ExpressionTests, setVariableTest) {
-  Expression a("a+b+c");
-  Expression b = a;
-  Expression c = a;
-
-  a.setVariable(Variable("a"), 1);
-  a.setVariable(Variable("b"), 2);
-  a.setVariable(Variable("c"), 3);
-  EXPECT_EQ(a.toString(), "6");
-
-  b.setVariable(Variable("d"), 1);
-  EXPECT_EQ(b.toString(), "a + b + c");
-
-  c.setVariable(Variable("a"), Expression("ln(b)"));
-  c.setVariable(Variable("b"), Expression("E"));
-  c.setVariable(Variable("c"), Expression("(a+b)^2"));
-  EXPECT_EQ(c.toString(), "a^2 + 2 a b + b^2 + E + 1");
-}
-
-TEST(ExpressionTests, getTypeTest) {
-  EXPECT_EQ(Expression::getTypeStatic(), MathObjectType::Expression);
-  EXPECT_EQ(Expression().getType(), MathObjectType::Expression);
-}
-
-TEST(ExpressionTests, parseExprTest) {
-  EXPECT_EQ(parseExpr("36/(8-6)3")->toString(), "36/(8 - 6) 3");
-  EXPECT_EQ(parseExpr("2%")->toString(), "2/100");
-  EXPECT_EQ(parseExpr("2.35%")->toString(), "(47/20)/100");
-  EXPECT_EQ(parseExpr("1100*4.76%")->toString(), "1100 (119/25)/100");
-  EXPECT_EQ(parseExpr("2.35%%%%")->toString(), "((((47/20)/100)/100)/100)/100");
-  EXPECT_EQ(parseExpr("1100*4.76%1100*4.76%")->toString(), "1100 (119/25)/100*1100 (119/25)/100");
-  EXPECT_EQ(parseExpr("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))")->toString(), "((5/8)/1)/(((9/4)/0)/5)");
-
-  EXPECT_THROW(parseExpr("(1 = 1) / 2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1+"), InvalidInputException);
 }

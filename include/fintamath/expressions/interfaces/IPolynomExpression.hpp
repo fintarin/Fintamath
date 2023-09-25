@@ -60,8 +60,6 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  ArgumentPtr preciseSimplify() const override;
-
   virtual bool isTermsOrderInversed() const;
 
   virtual bool isComparableOrderInversed() const;
@@ -187,7 +185,6 @@ public:
 
   void addElement(const ArgumentPtr &element) final {
     ArgumentPtr elem = element;
-    this->compressChild(elem);
 
     ArgumentPtrVector elemPolynom;
 

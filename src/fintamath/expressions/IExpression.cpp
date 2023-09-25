@@ -79,17 +79,6 @@ ArgumentPtr IExpression::simplify() const {
   return simpl;
 }
 
-void IExpression::compressChild(ArgumentPtr &child) {
-  for (;;) {
-    if (const auto expr = cast<IExpression>(child); expr && !expr->getFunction()) {
-      child = expr->getChildren().front();
-    }
-    else {
-      break;
-    }
-  }
-}
-
 void IExpression::simplifyChild(ArgumentPtr &child) {
   if (const auto exprChild = cast<IExpression>(child)) {
     if (const auto simplObj = exprChild->simplify()) {
@@ -188,6 +177,18 @@ ArgumentPtr IExpression::preSimplify() const {
 
 ArgumentPtr IExpression::postSimplify() const {
   return {};
+}
+
+ArgumentPtr IExpression::preciseSimplify() const {
+  ArgumentPtrVector children = getChildren();
+
+  for (auto &child : children) {
+    preciseSimplifyChild(child);
+  }
+
+  auto res = cast<IExpression>(clone());
+  res->setChildren(children);
+  return res;
 }
 
 void IExpression::constSimplifyChild(ArgumentPtr &child) {

@@ -63,13 +63,6 @@ ArgumentPtr IBinaryExpression::postSimplify() const {
   return simpl;
 }
 
-ArgumentPtr IBinaryExpression::preciseSimplify() const {
-  auto preciseExpr = cast<IBinaryExpression>(clone());
-  preciseSimplifyChild(preciseExpr->lhsChild);
-  preciseSimplifyChild(preciseExpr->rhsChild);
-  return preciseExpr;
-}
-
 ArgumentPtr IBinaryExpression::useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const {
   for (const auto &simplFunc : simplFuncs) {
     if (auto res = simplFunc(*func, lhsChild, rhsChild)) {
