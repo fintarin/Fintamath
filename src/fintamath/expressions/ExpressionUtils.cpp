@@ -121,7 +121,7 @@ bool hasVariable(const ArgumentPtr &arg) {
     return false;
   }
 
-  ArgumentPtrVector children = expr->getChildren();
+  const ArgumentPtrVector &children = expr->getChildren();
 
   return std::ranges::any_of(children, [](const auto &child) {
     bool res = false;
@@ -144,7 +144,7 @@ bool hasVariable(const ArgumentPtr &arg, const Variable &var) {
     return false;
   }
 
-  ArgumentPtrVector children = expr->getChildren();
+  const ArgumentPtrVector &children = expr->getChildren();
 
   return std::ranges::any_of(children, [&var](const auto &child) {
     bool res = false;
@@ -167,7 +167,7 @@ bool hasInfinity(const ArgumentPtr &arg) {
     return false;
   }
 
-  ArgumentPtrVector children = expr->getChildren();
+  const ArgumentPtrVector &children = expr->getChildren();
 
   return std::ranges::any_of(children, [](const auto &child) {
     bool res = false;
@@ -190,7 +190,7 @@ bool hasComplex(const ArgumentPtr &arg) {
     return false;
   }
 
-  ArgumentPtrVector children = expr->getChildren();
+  const ArgumentPtrVector &children = expr->getChildren();
 
   return std::ranges::any_of(children, [](const auto &child) {
     bool res = false;

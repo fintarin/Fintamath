@@ -29,11 +29,11 @@ std::string FunctionExpression::toString() const {
   return functionToString(*func, children);
 }
 
-std::shared_ptr<IFunction> FunctionExpression::getFunction() const {
+const std::shared_ptr<IFunction> &FunctionExpression::getFunction() const {
   return func;
 }
 
-ArgumentPtrVector FunctionExpression::getChildren() const {
+const ArgumentPtrVector &FunctionExpression::getChildren() const {
   return children;
 }
 

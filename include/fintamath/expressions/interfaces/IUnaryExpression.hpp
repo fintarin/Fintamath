@@ -8,9 +8,9 @@ class IUnaryExpression : public IExpression {
 public:
   std::string toString() const override;
 
-  std::shared_ptr<IFunction> getFunction() const final;
+  const std::shared_ptr<IFunction> &getFunction() const final;
 
-  ArgumentPtrVector getChildren() const override;
+  const ArgumentPtrVector &getChildren() const override;
 
   void setChildren(const ArgumentPtrVector &childVect) override;
 
@@ -38,6 +38,9 @@ protected:
   std::shared_ptr<IFunction> func;
 
   ArgumentPtr child;
+
+private:
+  mutable ArgumentPtrVector childrenCached = {{}};
 };
 
 template <typename Derived, bool isMultiFunction = false>

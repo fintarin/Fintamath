@@ -227,8 +227,9 @@ bool Expression::parseTerm(const TermVector &terms, size_t start, size_t end) {
   return true;
 }
 
-std::shared_ptr<IFunction> Expression::getFunction() const {
-  return {};
+const std::shared_ptr<IFunction> &Expression::getFunction() const {
+  static const std::shared_ptr<IFunction> func;
+  return func;
 }
 
 Expression &Expression::add(const Expression &rhs) {
@@ -261,9 +262,10 @@ Expression &Expression::negate() {
   return *this;
 }
 
-ArgumentPtrVector Expression::getChildren() const {
+const ArgumentPtrVector &Expression::getChildren() const {
   simplifyMutable();
-  return {child};
+  childrenCached.front() = child;
+  return childrenCached;
 }
 
 void Expression::setChildren(const ArgumentPtrVector &childVect) {
@@ -572,7 +574,7 @@ void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVe
 
 bool Expression::doesArgMatch(const MathObjectType &expectedType, const ArgumentPtr &arg) {
   if (const auto childExpr = cast<IExpression>(arg)) {
-    const std::shared_ptr<IFunction> childFunc = childExpr->getFunction();
+    const std::shared_ptr<IFunction> &childFunc = childExpr->getFunction();
     const MathObjectType childType = childFunc->getReturnType();
 
     if (childType != Variable::getTypeStatic() &&

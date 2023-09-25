@@ -18,12 +18,13 @@ std::string IUnaryExpression::toString() const {
   return functionToString(*func, {child});
 }
 
-std::shared_ptr<IFunction> IUnaryExpression::getFunction() const {
+const std::shared_ptr<IFunction> &IUnaryExpression::getFunction() const {
   return func;
 }
 
-ArgumentPtrVector IUnaryExpression::getChildren() const {
-  return {child};
+const ArgumentPtrVector &IUnaryExpression::getChildren() const {
+  childrenCached.front() = child;
+  return childrenCached;
 }
 
 IUnaryExpression::SimplifyFunctionVector IUnaryExpression::getFunctionsForPreSimplify() const {

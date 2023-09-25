@@ -257,7 +257,7 @@ std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const Argume
   if (const auto &powExpr = cast<IExpression>(rhsChild);
       powExpr && is<Pow>(powExpr->getFunction())) {
 
-    ArgumentPtrVector powExprChildren = powExpr->getChildren();
+    const ArgumentPtrVector &powExprChildren = powExpr->getChildren();
     return {powExprChildren[1], powExprChildren[0]};
   }
 

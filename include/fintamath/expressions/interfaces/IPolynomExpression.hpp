@@ -11,9 +11,9 @@ class IPolynomExpression : public IExpression {
 public:
   std::string toString() const override;
 
-  std::shared_ptr<IFunction> getFunction() const final;
+  const std::shared_ptr<IFunction> &getFunction() const final;
 
-  ArgumentPtrVector getChildren() const final;
+  const ArgumentPtrVector &getChildren() const final;
 
   void setChildren(const ArgumentPtrVector &childVect) final;
 

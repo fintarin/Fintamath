@@ -146,8 +146,8 @@ ArgumentPtr AddExpression::logSimplify(const IFunction & /*func*/, const Argumen
     return {};
   }
 
-  ArgumentPtrVector lhsChildren = lhsExpr->getChildren();
-  ArgumentPtrVector rhsChildren = rhsExpr->getChildren();
+  const ArgumentPtrVector &lhsChildren = lhsExpr->getChildren();
+  const ArgumentPtrVector &rhsChildren = rhsExpr->getChildren();
 
   if (*lhsChildren.front() == *rhsChildren.front()) {
     ArgumentPtr logLhs = lhsChildren.front();
@@ -168,8 +168,8 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
   }
 
   if (is<Mul>(lhsExpr->getFunction()) && is<Mul>(rhsExpr->getFunction())) {
-    ArgumentPtrVector lhsExprChildren = lhsExpr->getChildren();
-    ArgumentPtrVector rhsExprChildren = rhsExpr->getChildren();
+    const ArgumentPtrVector &lhsExprChildren = lhsExpr->getChildren();
+    const ArgumentPtrVector &rhsExprChildren = rhsExpr->getChildren();
 
     std::vector<size_t> lhsLogChildrenIndexes = findLogarithms(lhsExprChildren);
     std::vector<size_t> rhsLogChildrenIndexes = findLogarithms(rhsExprChildren);
@@ -208,7 +208,7 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
     return {};
   }
 
-  ArgumentPtrVector mulExprChildren = mulExprChild->getChildren();
+  const ArgumentPtrVector &mulExprChildren = mulExprChild->getChildren();
   std::vector<size_t> logChildrenIndexes = findLogarithms(mulExprChildren);
 
   for (size_t i : logChildrenIndexes) {
@@ -234,7 +234,7 @@ std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getRateValuePair(const Argume
   if (const auto mulExprChild = cast<IExpression>(inChild);
       mulExprChild && is<Mul>(mulExprChild->getFunction())) {
 
-    const ArgumentPtrVector mulExprChildren = mulExprChild->getChildren();
+    const ArgumentPtrVector &mulExprChildren = mulExprChild->getChildren();
 
     if (is<INumber>(mulExprChildren.front())) {
       rate = mulExprChildren.front();
@@ -315,19 +315,19 @@ ArgumentPtr AddExpression::sumSimplify(const IFunction & /*func*/, const Argumen
       is<Div>(lhsExpr->getFunction()) && is<Div>(rhsExpr->getFunction())) {
 
     if (*lhsExpr->getChildren().back() == *rhsExpr->getChildren().back()) {
-      ArgumentPtr lhsNumerator = lhsExpr->getChildren().front();
-      ArgumentPtr rhsNumerator = rhsExpr->getChildren().front();
-      ArgumentPtr rhsDenominator = rhsExpr->getChildren().back();
+      const ArgumentPtr &lhsNumerator = lhsExpr->getChildren().front();
+      const ArgumentPtr &rhsNumerator = rhsExpr->getChildren().front();
+      const ArgumentPtr &rhsDenominator = rhsExpr->getChildren().back();
 
       ArgumentPtr numerator = addExpr(lhsNumerator, rhsNumerator);
       ArgumentPtr denominator = rhsDenominator;
       res = divExpr(numerator, denominator);
     }
     else {
-      ArgumentPtr lhsNumerator = lhsExpr->getChildren().front();
-      ArgumentPtr rhsNumerator = rhsExpr->getChildren().front();
-      ArgumentPtr lhsDenominator = lhsExpr->getChildren().back();
-      ArgumentPtr rhsDenominator = rhsExpr->getChildren().back();
+      const ArgumentPtr &lhsNumerator = lhsExpr->getChildren().front();
+      const ArgumentPtr &rhsNumerator = rhsExpr->getChildren().front();
+      const ArgumentPtr &lhsDenominator = lhsExpr->getChildren().back();
+      const ArgumentPtr &rhsDenominator = rhsExpr->getChildren().back();
 
       ArgumentPtr lhsNumeratorMulRhsDenominator = mulExpr(lhsNumerator, rhsDenominator);
       ArgumentPtr rhsNumeratorMulLhsDenominator = mulExpr(rhsNumerator, lhsDenominator);
@@ -338,8 +338,8 @@ ArgumentPtr AddExpression::sumSimplify(const IFunction & /*func*/, const Argumen
     }
   }
   else if (rhsExpr && is<Div>(rhsExpr->getFunction())) {
-    ArgumentPtr rhsNumerator = rhsExpr->getChildren().front();
-    ArgumentPtr rhsDenominator = rhsExpr->getChildren().back();
+    const ArgumentPtr &rhsNumerator = rhsExpr->getChildren().front();
+    const ArgumentPtr &rhsDenominator = rhsExpr->getChildren().back();
 
     ArgumentPtr lhsMulRhsDenominator = mulExpr(lhsChild, rhsDenominator);
 
