@@ -1441,11 +1441,12 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("1-"), InvalidInputException);
   EXPECT_THROW(Expression("1*"), InvalidInputException);
   EXPECT_THROW(Expression("1/"), InvalidInputException);
+  EXPECT_THROW(Expression("*1"), InvalidInputException);
+  EXPECT_THROW(Expression("/1"), InvalidInputException);
   EXPECT_THROW(Expression(" +   "), InvalidInputException);
   EXPECT_THROW(Expression("(1+2))"), InvalidInputException);
   EXPECT_THROW(Expression("5-*3"), InvalidInputException);
   EXPECT_THROW(Expression("5 3 +"), InvalidInputException);
-  EXPECT_THROW(Expression("((()()))"), InvalidInputException);
   EXPECT_THROW(Expression("2.2.2"), InvalidInputException);
   EXPECT_THROW(Expression("--"), InvalidInputException);
   EXPECT_THROW(Expression("."), InvalidInputException);
@@ -1485,9 +1486,11 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(2"), InvalidInputException);
   EXPECT_THROW(Expression("((2)"), InvalidInputException);
   EXPECT_THROW(Expression("((2"), InvalidInputException);
-  EXPECT_THROW(Expression("(()())"), InvalidInputException);
-  EXPECT_THROW(Expression("((((()))))"), InvalidInputException);
   EXPECT_THROW(Expression("((((2)((2))))"), InvalidInputException);
+  EXPECT_THROW(Expression("(()())"), InvalidInputException);
+  EXPECT_THROW(Expression("((()()))"), InvalidInputException);
+  EXPECT_THROW(Expression("((((()))))"), InvalidInputException);
+  EXPECT_THROW(Expression("(,) + (,)"), InvalidInputException);
 
   EXPECT_THROW(Expression("!2"), InvalidInputException);
   EXPECT_THROW(Expression("!!2"), InvalidInputException);
@@ -1502,6 +1505,8 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
   EXPECT_THROW(Expression("(a+b)*()"), InvalidInputException);
 
   EXPECT_THROW(Expression("sin(2,3)"), InvalidInputException);
+  EXPECT_THROW(Expression("sin(2,3) + 2"), InvalidInputException);
+  EXPECT_THROW(Expression("cos(sin(2,3))"), InvalidInputException);
   EXPECT_THROW(Expression("sin(,)"), InvalidInputException);
   EXPECT_THROW(Expression("sin(,2)"), InvalidInputException);
   EXPECT_THROW(Expression("sin(2,)"), InvalidInputException);

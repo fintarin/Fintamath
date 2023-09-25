@@ -42,6 +42,9 @@ TEST(IndexTests, callTest) {
   EXPECT_THROW(f(Expression("a+1"), Integer(2))->toString(), InvalidInputException);
   EXPECT_THROW(f(Expression("a+1"), Expression("a+1"))->toString(), InvalidInputException);
   EXPECT_THROW(f(Expression("a"), Expression("a>1"))->toString(), InvalidInputException);
+
+  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
 TEST(IndexTests, exprTest) {

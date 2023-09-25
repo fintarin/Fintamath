@@ -9,6 +9,7 @@ class IOperator : public IFunction {
 
 public:
   enum class Priority : uint16_t {
+    Highest,
     Exponentiation, // e.g.  a ^ b
     PostfixUnary,   // e.g.  a!
     PrefixUnary,    // e.g.  -a
@@ -19,7 +20,8 @@ public:
     Disjunction,    // e.g.  a | b
     Implication,    // e.g.  a -> b
     Equivalence,    // e.g.  a <-> b
-    Any,
+    Comma,          // e.g.  a , b
+    Lowest,
   };
 
 public:
@@ -33,9 +35,9 @@ public:
     Parser::registerType<T>(getParser());
   }
 
-  static std::unique_ptr<IOperator> parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Any) {
+  static std::unique_ptr<IOperator> parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Lowest) {
     Parser::Comparator<const std::unique_ptr<IOperator> &> comp = [priority](const std::unique_ptr<IOperator> &oper) {
-      return priority == IOperator::Priority::Any || oper->getOperatorPriority() == priority;
+      return priority == IOperator::Priority::Lowest || oper->getOperatorPriority() == priority;
     };
     return Parser::parse<std::unique_ptr<IOperator>>(getParser(), comp, parsedStr);
   }
@@ -55,7 +57,7 @@ class IOperatorCRTP : public IOperator {
 #undef I_OPERATOR_CRTP
 
 public:
-  explicit IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Any,
+  explicit IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Lowest,
                          bool isAssociative = false,
                          bool isNonExressionEvaluatable = true)
       : isNonExressionEvaluatableFunc(isNonExressionEvaluatable),
