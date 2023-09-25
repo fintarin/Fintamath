@@ -13,12 +13,14 @@ std::string IBinaryExpression::toString() const {
   return functionToString(*func, {lhsChild, rhsChild});
 }
 
-std::shared_ptr<IFunction> IBinaryExpression::getFunction() const {
+const std::shared_ptr<IFunction> &IBinaryExpression::getFunction() const {
   return func;
 }
 
-ArgumentPtrVector IBinaryExpression::getChildren() const {
-  return {lhsChild, rhsChild};
+const ArgumentPtrVector &IBinaryExpression::getChildren() const {
+  childrenCached.front() = lhsChild;
+  childrenCached.back() = rhsChild;
+  return childrenCached;
 }
 
 ArgumentPtr IBinaryExpression::preSimplify() const {

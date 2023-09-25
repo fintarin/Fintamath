@@ -33,11 +33,10 @@ std::vector<Variable> IExpression::getVariables() const {
 }
 
 void IExpression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
-  auto children = getChildren();
-
+  const ArgumentPtrVector &children = getChildren();
   ArgumentPtrVector newChildren;
 
-  for (auto &child : children) {
+  for (const auto &child : children) {
     if (std::shared_ptr<IExpression> exprChild = cast<IExpression>(child->clone())) {
       exprChild->setVariables(varsToVals);
       newChildren.emplace_back(exprChild);

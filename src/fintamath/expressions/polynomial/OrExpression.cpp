@@ -123,8 +123,8 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
     return {};
   }
 
-  ArgumentPtrVector lhsChildren = lhsExpr->getChildren();
-  ArgumentPtrVector rhsChildren = rhsExpr->getChildren();
+  const ArgumentPtrVector &lhsChildren = lhsExpr->getChildren();
+  const ArgumentPtrVector &rhsChildren = rhsExpr->getChildren();
 
   if (rhsChildren.size() != lhsChildren.size()) {
     return {};

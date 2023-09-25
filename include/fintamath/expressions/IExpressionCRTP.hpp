@@ -17,8 +17,8 @@ public:
       }
     }
 
-    ArgumentPtrVector lhsChildren = this->getChildren();
-    ArgumentPtrVector rhsChildren = rhs.getChildren();
+    const ArgumentPtrVector &lhsChildren = this->getChildren();
+    const ArgumentPtrVector &rhsChildren = rhs.getChildren();
 
     if (lhsChildren.size() != rhsChildren.size()) {
       return false;

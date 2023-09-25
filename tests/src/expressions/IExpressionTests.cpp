@@ -14,12 +14,14 @@ namespace {
 
 class TestIExpression : public IExpressionCRTP<TestIExpression> {
 public:
-  std::shared_ptr<IFunction> getFunction() const override {
-    return std::make_shared<Add>();
+  const std::shared_ptr<IFunction> &getFunction() const override {
+    static const std::shared_ptr<IFunction> func = cast<IFunction>(Add().clone());
+    return func;
   }
 
-  ArgumentPtrVector getChildren() const override {
-    return {};
+  const ArgumentPtrVector &getChildren() const override {
+    static const ArgumentPtrVector children;
+    return children;
   }
 
   void setChildren(const ArgumentPtrVector &childVect) override {

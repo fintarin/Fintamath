@@ -10,9 +10,9 @@ public:
 
   std::string toString() const override;
 
-  std::shared_ptr<IFunction> getFunction() const override;
+  const std::shared_ptr<IFunction> &getFunction() const override;
 
-  ArgumentPtrVector getChildren() const override;
+  const ArgumentPtrVector &getChildren() const override;
 
   void setChildren(const ArgumentPtrVector &childVect) override;
 

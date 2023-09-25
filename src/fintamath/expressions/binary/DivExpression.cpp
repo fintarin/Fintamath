@@ -420,7 +420,7 @@ ArgumentPtr DivExpression::powSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 
 std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhs) {
   if (const auto &powExpr = cast<IExpression>(rhs); powExpr && is<Pow>(powExpr->getFunction())) {
-    ArgumentPtrVector powExprChildren = powExpr->getChildren();
+    const ArgumentPtrVector &powExprChildren = powExpr->getChildren();
     return {powExprChildren[1], powExprChildren[0]};
   }
 

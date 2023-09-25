@@ -11,9 +11,9 @@ namespace fintamath {
 
 class IExpression : public IArithmetic {
 public:
-  virtual std::shared_ptr<IFunction> getFunction() const = 0;
+  virtual const std::shared_ptr<IFunction> &getFunction() const = 0;
 
-  virtual ArgumentPtrVector getChildren() const = 0;
+  virtual const ArgumentPtrVector &getChildren() const = 0;
 
   virtual void setChildren(const ArgumentPtrVector &childVect) = 0;
 

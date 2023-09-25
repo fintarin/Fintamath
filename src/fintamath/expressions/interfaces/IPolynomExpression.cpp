@@ -12,11 +12,11 @@
 
 namespace fintamath {
 
-std::shared_ptr<IFunction> IPolynomExpression::getFunction() const {
+const std::shared_ptr<IFunction> &IPolynomExpression::getFunction() const {
   return func;
 }
 
-ArgumentPtrVector IPolynomExpression::getChildren() const {
+const ArgumentPtrVector &IPolynomExpression::getChildren() const {
   return children;
 }
 
@@ -344,8 +344,8 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   auto lhsOper = cast<IOperator>(lhs->getFunction());
   auto rhsOper = cast<IOperator>(rhs->getFunction());
 
-  ArgumentPtrVector lhsChildren = lhs->getChildren();
-  ArgumentPtrVector rhsChildren = rhs->getChildren();
+  const ArgumentPtrVector &lhsChildren = lhs->getChildren();
+  const ArgumentPtrVector &rhsChildren = rhs->getChildren();
 
   if (lhsOper &&
       lhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
@@ -529,7 +529,7 @@ int IPolynomExpression::comparatorVariables(const ArgumentPtr &lhs, const Argume
 
 std::shared_ptr<const Variable> IPolynomExpression::getNextVariable(ExpressionTreePathStack &stack) {
   while (!stack.empty()) {
-    ArgumentPtrVector children = stack.top().first->getChildren();
+    const ArgumentPtrVector &children = stack.top().first->getChildren();
 
     // TODO: looks weird
     size_t &exprIndex = stack.top().second;

@@ -178,8 +178,8 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
   ArgumentPtr res;
 
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
-    auto lhsExprLhsChild = lhsExpr->getChildren().front();
-    auto lhsExprRhsChild = lhsExpr->getChildren().back();
+    const ArgumentPtr &lhsExprLhsChild = lhsExpr->getChildren().front();
+    const ArgumentPtr &lhsExprRhsChild = lhsExpr->getChildren().back();
 
     bool canMul = is<Integer>(rhs) && is<Integer>(lhsExprRhsChild);
 
