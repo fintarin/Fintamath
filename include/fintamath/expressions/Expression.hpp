@@ -136,17 +136,11 @@ private:
 
   static bool isNonOperatorFunction(const ArgumentPtr &val);
 
-  static void validateChild(const ArgumentPtr &inChild);
+  static void validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args);
 
-  static void validateFunctionArgs(const std::shared_ptr<IFunction> &func, const ArgumentPtrVector &args);
+  static bool doesArgMatch(const MathObjectType &expectedType, const ArgumentPtr &arg);
 
   static void preciseRec(ArgumentPtr &arg, uint8_t precision);
-
-  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentPtrVector &args);
-
-  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentRefVector &args);
-
-  friend std::unique_ptr<IMathObject> makeExprChecked(const IFunction &func, const ArgumentPtrVector &args);
 
   friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args);
 

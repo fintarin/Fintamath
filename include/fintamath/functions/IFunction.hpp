@@ -30,9 +30,9 @@ public:
 public:
   virtual IFunction::Type getFunctionType() const = 0;
 
-  virtual size_t getReturnType() const = 0;
+  virtual MathObjectType getReturnType() const = 0;
 
-  virtual ArgumentTypeVector getArgType() const = 0;
+  virtual ArgumentTypeVector getArgTypes() const = 0;
 
   virtual bool doArgsMatch(const ArgumentRefVector &argsVect) const = 0;
 

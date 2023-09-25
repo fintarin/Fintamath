@@ -119,7 +119,7 @@ const FunctionExpressionConfig testOperatorConfig;
 
 }
 
-TEST(FunctionExpressionTests, toStringTest) {
+TEST(FunctionExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("a$a").toString(), "a$a");
   EXPECT_EQ(Expression("(a+1)$(b+1)").toString(), "(a + 1)$(b + 1)");
 

@@ -73,11 +73,11 @@ TEST(IFunctionTests, getReturnTypeTest) {
   EXPECT_EQ(Sin().getReturnType(), INumber::getTypeStatic());
 }
 
-TEST(IFunctionTests, getArgTypeTest) {
-  EXPECT_EQ(Add().getArgType()[0], IArithmetic::getTypeStatic());
-  EXPECT_EQ(Add().getArgType()[1], IArithmetic::getTypeStatic());
-  EXPECT_EQ(Neg().getArgType()[0], IArithmetic::getTypeStatic());
-  EXPECT_EQ(Sin().getArgType()[0], INumber::getTypeStatic());
+TEST(IFunctionTests, getArgTypesTest) {
+  EXPECT_EQ(Add().getArgTypes()[0], IArithmetic::getTypeStatic());
+  EXPECT_EQ(Add().getArgTypes()[1], IArithmetic::getTypeStatic());
+  EXPECT_EQ(Neg().getArgTypes()[0], IArithmetic::getTypeStatic());
+  EXPECT_EQ(Sin().getArgTypes()[0], INumber::getTypeStatic());
 }
 
 TEST(IFunctionTests, doArgsMatchTest) {
