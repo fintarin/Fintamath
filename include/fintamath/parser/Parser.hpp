@@ -21,7 +21,7 @@ public:
   using Comparator = std::function<bool(Args...)>;
 
   template <typename Return, typename... Args>
-  using Map = std::multimap<std::string, Function<Return, Args...>>;
+  using Map = std::unordered_multimap<std::string, Function<Return, Args...>>;
 
   template <typename Return, typename... Args>
   using Vector = std::vector<Function<Return, Args...>>;
