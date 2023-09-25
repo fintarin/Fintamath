@@ -131,6 +131,7 @@ public:
     Nequiv,
     Index,
     Deg,
+    Comma,
 
     None = std::numeric_limits<size_t>::max(),
   };

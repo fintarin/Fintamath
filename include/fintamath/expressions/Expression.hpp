@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stack>
+
 #include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/expressions/IExpression.hpp"
@@ -22,6 +24,7 @@ public:
 };
 
 using TermVector = std::vector<std::shared_ptr<Term>>;
+using OperandStack = std::stack<ArgumentPtr>;
 
 class Expression : public IExpressionCRTP<Expression> {
 public:
@@ -80,17 +83,13 @@ private:
 
   void updateStringMutable() const;
 
-  bool parseOperator(const TermVector &terms, size_t start, size_t end);
-
-  bool parseFunction(const TermVector &terms, size_t start, size_t end);
-
-  bool parseBrackets(const TermVector &terms, size_t start, size_t end);
-
-  bool parseTerm(const TermVector &terms, size_t start, size_t end);
-
-  static ArgumentPtrVector parseFunctionArgs(const TermVector &terms, size_t start, size_t end);
-
   static TermVector tokensToTerms(const TokenVector &tokens);
+
+  static OperandStack termsToOperands(const TermVector &terms);
+
+  static ArgumentPtr operandsToExpr(OperandStack &operands);
+
+  static ArgumentPtrVector unwrapComma(const ArgumentPtr &child);
 
   static void insertMultiplications(TermVector &terms);
 
@@ -101,12 +100,6 @@ private:
   static bool canNextTermBeBinaryOperator(const Term &term);
 
   static bool canPrevTermBeBinaryOperator(const Term &term);
-
-  static bool skipBrackets(const TermVector &terms, size_t &openBracketIndex);
-
-  static void cutBrackets(const TermVector &terms, size_t &start, size_t &end);
-
-  static std::string termsToString(const TermVector &terms);
 
   static bool isBinaryOperator(const ArgumentPtr &val);
 
@@ -128,10 +121,6 @@ private:
 
   friend ArgumentPtr parseExpr(const std::string &str);
 
-  friend ArgumentPtr parseExpr(const TermVector &terms);
-
-  friend ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end);
-
   static Parser::Vector<std::unique_ptr<Term>, const Token &> &getTermMakers();
 
   static Parser::Map<std::unique_ptr<IMathObject>, const ArgumentPtrVector &> &getExpressionMakers();
@@ -147,10 +136,6 @@ private:
 };
 
 ArgumentPtr parseExpr(const std::string &str);
-
-ArgumentPtr parseExpr(const TermVector &terms);
-
-ArgumentPtr parseExpr(const TermVector &terms, size_t start, size_t end);
 
 Expression operator+(const Variable &lhs, const Variable &rhs);
 

@@ -42,6 +42,7 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/other/Comma.hpp"
 #include "fintamath/functions/other/Deg.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
@@ -230,6 +231,7 @@ struct ParserConfig {
     IOperator::registerType<Nequiv>();
     IOperator::registerType<Index>();
     IOperator::registerType<Deg>();
+    IOperator::registerType<Comma>();
 
     IExpression::registerType<Expression>();
   }
