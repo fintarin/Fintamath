@@ -31,8 +31,6 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  ArgumentPtr preciseSimplify() const override;
-
 private:
   ArgumentPtr useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const;
 
@@ -60,12 +58,8 @@ class IBinaryExpressionCRTP : public IBinaryExpressionBaseCRTP<Derived, isMultiF
 public:
   explicit IBinaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
     this->func = cast<IFunction>(inFunc.clone());
-
     this->lhsChild = lhs;
-    this->compressChild(this->lhsChild);
-
     this->rhsChild = rhs;
-    this->compressChild(this->rhsChild);
   }
 };
 

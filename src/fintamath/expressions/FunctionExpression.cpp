@@ -10,7 +10,6 @@ FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentPt
 
   for (const auto &child : inChildren) {
     children.emplace_back(child);
-    compressChild(children.back());
   }
 }
 
@@ -62,16 +61,6 @@ ArgumentPtr FunctionExpression::postSimplify() const {
   }
 
   return callFunction(*simpl->func, argumentRefVectorToArgumentPtrVector(args));
-}
-
-ArgumentPtr FunctionExpression::preciseSimplify() const {
-  auto preciseExpr = cast<FunctionExpression>(clone());
-
-  for (auto &child : preciseExpr->children) {
-    preciseSimplifyChild(child);
-  }
-
-  return preciseExpr;
 }
 
 void FunctionExpression::setChildren(const ArgumentPtrVector &childVect) {

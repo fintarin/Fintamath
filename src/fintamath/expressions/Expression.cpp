@@ -19,32 +19,30 @@ Expression::Expression() : child(Integer(0).clone()) {
 }
 
 Expression::Expression(const std::string &str) : child(fintamath::parseExpr(str)) {
-  simplifyChild(child);
 }
 
-Expression::Expression(const ArgumentPtr &obj) {
-  if (auto expr = cast<Expression>(obj)) {
-    child = expr->child;
-  }
-  else {
-    child = obj;
-    simplifyChild(child);
-  }
+Expression::Expression(const ArgumentPtr &obj) : child(compress(obj)) {
 }
 
-Expression::Expression(const IMathObject &obj) : Expression(obj.toMinimalObject()) {
+Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 }
 
 Expression::Expression(int64_t val) : child(Integer(val).clone()) {
 }
 
 std::string Expression::toString() const {
-  return child->toString();
+  simplifyMutable();
+  return stringCached;
 }
 
 Expression Expression::precise(uint8_t precision) const {
+  // TODO: rework so that small ints don't convert to reals
+  // TODO: move this transfer to the approximation function
+  simplifyMutable();
   Expression preciseExpr(preciseSimplify());
+  preciseExpr.simplifyMutable();
   preciseRec(preciseExpr.child, precision);
+  preciseExpr.updateStringMutable();
   return preciseExpr;
 }
 
@@ -132,7 +130,7 @@ bool Expression::parseOperator(const TermVector &terms, size_t start, size_t end
     child = makeExpr(*foundOper, lhsArg, rhsArg);
   }
 
-  compressChild(child);
+  child = compress(child);
 
   return true;
 }
@@ -234,31 +232,37 @@ std::shared_ptr<IFunction> Expression::getFunction() const {
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  child = makeExpr(Add(), *child, *rhs.child)->toMinimalObject();
+  child = makeExpr(Add(), *child, *rhs.child);
+  isSimplified = false;
   return *this;
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  child = makeExpr(Sub(), *child, *rhs.child)->toMinimalObject();
+  child = makeExpr(Sub(), *child, *rhs.child);
+  isSimplified = false;
   return *this;
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  child = makeExpr(Mul(), *child, *rhs.child)->toMinimalObject();
+  child = makeExpr(Mul(), *child, *rhs.child);
+  isSimplified = false;
   return *this;
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  child = makeExpr(Div(), *child, *rhs.child)->toMinimalObject();
+  child = makeExpr(Div(), *child, *rhs.child);
+  isSimplified = false;
   return *this;
 }
 
 Expression &Expression::negate() {
-  child = makeExpr(Neg(), *child)->toMinimalObject();
+  child = makeExpr(Neg(), *child);
+  isSimplified = false;
   return *this;
 }
 
 ArgumentPtrVector Expression::getChildren() const {
+  simplifyMutable();
   return {child};
 }
 
@@ -286,6 +290,18 @@ ArgumentPtr Expression::preciseSimplify() const {
   ArgumentPtr preciseChild = child;
   preciseSimplifyChild(preciseChild);
   return preciseChild;
+}
+
+void Expression::simplifyMutable() const {
+  if (!isSimplified) {
+    simplifyChild(child);
+    isSimplified = true;
+    updateStringMutable();
+  }
+}
+
+void Expression::updateStringMutable() const {
+  stringCached = child->toString();
 }
 
 TermVector Expression::tokensToTerms(const TokenVector &tokens) {
@@ -502,14 +518,25 @@ void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
   }
 }
 
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args) {
-  Expression::validateFunctionArgs(func, args);
+ArgumentPtr Expression::compress(const ArgumentPtr &child) {
+  if (const auto expr = cast<Expression>(child)) {
+    return expr->child;
+  }
 
-  if (auto expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), args)) {
+  return child;
+}
+
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args) {
+  auto argsView = args | std::views::transform(&Expression::compress);
+  ArgumentPtrVector compressedArgs(argsView.begin(), argsView.end());
+
+  Expression::validateFunctionArgs(func, compressedArgs);
+
+  if (auto expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), compressedArgs)) {
     return expr;
   }
 
-  return FunctionExpression(func, args).clone();
+  return FunctionExpression(func, compressedArgs).clone();
 }
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args) {
@@ -535,8 +562,7 @@ void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVe
       expectedType = expectedArgTypes[i];
     }
 
-    ArgumentPtr arg = args[i];
-    compressChild(arg);
+    const ArgumentPtr &arg = args[i];
 
     if (!doesArgMatch(expectedType, arg)) {
       throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
@@ -579,11 +605,11 @@ Expression operator+(const Variable &lhs, const Variable &rhs) {
 }
 
 Expression operator+(const Expression &lhs, const Variable &rhs) {
-  return Expression(addExpr(lhs.getChildren().front(), rhs.clone()));
+  return Expression(addExpr(lhs, rhs));
 }
 
 Expression operator+(const Variable &lhs, const Expression &rhs) {
-  return Expression(addExpr(lhs.clone(), rhs.getChildren().front()));
+  return Expression(addExpr(lhs, rhs));
 }
 
 Expression operator-(const Variable &lhs, const Variable &rhs) {
@@ -591,11 +617,11 @@ Expression operator-(const Variable &lhs, const Variable &rhs) {
 }
 
 Expression operator-(const Expression &lhs, const Variable &rhs) {
-  return Expression(subExpr(lhs.getChildren().front(), rhs.clone()));
+  return Expression(subExpr(lhs, rhs));
 }
 
 Expression operator-(const Variable &lhs, const Expression &rhs) {
-  return Expression(subExpr(lhs.clone(), rhs.getChildren().front()));
+  return Expression(subExpr(lhs, rhs));
 }
 
 Expression operator*(const Variable &lhs, const Variable &rhs) {
@@ -603,11 +629,11 @@ Expression operator*(const Variable &lhs, const Variable &rhs) {
 }
 
 Expression operator*(const Expression &lhs, const Variable &rhs) {
-  return Expression(mulExpr(lhs.getChildren().front(), rhs.clone()));
+  return Expression(mulExpr(lhs, rhs));
 }
 
 Expression operator*(const Variable &lhs, const Expression &rhs) {
-  return Expression(mulExpr(lhs.clone(), rhs.getChildren().front()));
+  return Expression(mulExpr(lhs, rhs));
 }
 
 Expression operator/(const Variable &lhs, const Variable &rhs) {
@@ -615,10 +641,10 @@ Expression operator/(const Variable &lhs, const Variable &rhs) {
 }
 
 Expression operator/(const Expression &lhs, const Variable &rhs) {
-  return Expression(divExpr(lhs.getChildren().front(), rhs.clone()));
+  return Expression(divExpr(lhs, rhs));
 }
 
 Expression operator/(const Variable &lhs, const Expression &rhs) {
-  return Expression(divExpr(lhs.clone(), rhs.getChildren().front()));
+  return Expression(divExpr(lhs, rhs));
 }
 }

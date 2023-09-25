@@ -43,6 +43,7 @@ TEST(ExpressionFunctionsTests, divTest) {
   EXPECT_EQ(div(Expression("10+a^3"), Expression("a^2")).toString(), "a + 10/(a^2)");
   EXPECT_EQ(div(Expression("a*b"), Expression("b*a")).toString(), "1");
   EXPECT_EQ(div(Expression("a+b"), Expression("a+b")).toString(), "1");
+  EXPECT_EQ(div(Expression("(10^1000)!"), Expression("(10^1000)!")).toString(), "1");
 }
 
 TEST(ExpressionFunctionsTests, negTest) {

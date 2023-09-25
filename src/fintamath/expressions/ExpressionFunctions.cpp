@@ -47,95 +47,95 @@ Expression neg(const Expression &rhs) {
 }
 
 Expression eqv(const Expression &lhs, const Expression &rhs) {
-  return Expression(Eqv()(lhs, rhs));
+  return Expression(eqvExpr(lhs, rhs));
 }
 
 Expression neqv(const Expression &lhs, const Expression &rhs) {
-  return Expression(Neqv()(lhs, rhs));
+  return Expression(neqvExpr(lhs, rhs));
 }
 
 Expression less(const Expression &lhs, const Expression &rhs) {
-  return Expression(Less()(lhs, rhs));
+  return Expression(lessExpr(lhs, rhs));
 }
 
 Expression more(const Expression &lhs, const Expression &rhs) {
-  return Expression(More()(lhs, rhs));
+  return Expression(moreExpr(lhs, rhs));
 }
 
 Expression lessEqv(const Expression &lhs, const Expression &rhs) {
-  return Expression(LessEqv()(lhs, rhs));
+  return Expression(lessEqvExpr(lhs, rhs));
 }
 
 Expression moveEqv(const Expression &lhs, const Expression &rhs) {
-  return Expression(MoreEqv()(lhs, rhs));
+  return Expression(moreEqvExpr(lhs, rhs));
 }
 
 Expression abs(const Expression &rhs) {
-  return Expression(Abs()(rhs));
+  return Expression(absExpr(rhs));
 }
 
 Expression factorial(const Expression &rhs) {
-  return Expression(Factorial()(rhs));
+  return Expression(factorialExpr(rhs));
 }
 
 Expression sqrt(const Expression &rhs) {
-  return Expression(Sqrt()(rhs));
+  return Expression(sqrtExpr(rhs));
 }
 
 Expression pow(const Expression &lhs, const Expression &rhs) {
-  return Expression(Pow()(lhs, rhs));
+  return Expression(powExpr(lhs, rhs));
 }
 
 Expression exp(const Expression &rhs) {
-  return Expression(Exp()(rhs));
+  return Expression(expExpr(rhs));
 }
 
 Expression log(const Expression &lhs, const Expression &rhs) {
-  return Expression(Log()(lhs, rhs));
+  return Expression(logExpr(lhs, rhs));
 }
 
 Expression ln(const Expression &rhs) {
-  return Expression(Ln()(rhs));
+  return Expression(lnExpr(rhs));
 }
 
 Expression lb(const Expression &rhs) {
-  return Expression(Lb()(rhs));
+  return Expression(lbExpr(rhs));
 }
 
 Expression lg(const Expression &rhs) {
-  return Expression(Lg()(rhs));
+  return Expression(lgExpr(rhs));
 }
 
 Expression sin(const Expression &rhs) {
-  return Expression(Sin()(rhs));
+  return Expression(sinExpr(rhs));
 }
 
 Expression cos(const Expression &rhs) {
-  return Expression(Cos()(rhs));
+  return Expression(cosExpr(rhs));
 }
 
 Expression tan(const Expression &rhs) {
-  return Expression(Tan()(rhs));
+  return Expression(tanExpr(rhs));
 }
 
 Expression cot(const Expression &rhs) {
-  return Expression(Cot()(rhs));
+  return Expression(cotExpr(rhs));
 }
 
 Expression asin(const Expression &rhs) {
-  return Expression(Asin()(rhs));
+  return Expression(asinExpr(rhs));
 }
 
 Expression acos(const Expression &rhs) {
-  return Expression(Acos()(rhs));
+  return Expression(acosExpr(rhs));
 }
 
 Expression atan(const Expression &rhs) {
-  return Expression(Atan()(rhs));
+  return Expression(atanExpr(rhs));
 }
 
 Expression acot(const Expression &rhs) {
-  return Expression(Acot()(rhs));
+  return Expression(acotExpr(rhs));
 }
 
 Expression e() {
@@ -147,19 +147,19 @@ Expression pi() {
 }
 
 Expression derivative(const Expression &lhs, const Expression &rhs) {
-  return Expression(Derivative()(lhs, rhs));
+  return Expression(derivativeExpr(lhs, rhs));
 }
 
 Expression notL(const Expression &rhs) {
-  return Expression(Not()(rhs));
+  return Expression(notExpr(rhs));
 }
 
 Expression andL(const Expression &lhs, const Expression &rhs) {
-  return Expression(And()(lhs, rhs));
+  return Expression(andExpr(lhs, rhs));
 }
 
 Expression orL(const Expression &lhs, const Expression &rhs) {
-  return Expression(Or()(lhs, rhs));
+  return Expression(orExpr(lhs, rhs));
 }
 
 }

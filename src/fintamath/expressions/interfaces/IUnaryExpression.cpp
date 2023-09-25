@@ -74,12 +74,6 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
   return simpl;
 }
 
-ArgumentPtr IUnaryExpression::preciseSimplify() const {
-  auto preciseExpr = cast<IUnaryExpression>(clone());
-  preciseSimplifyChild(preciseExpr->child);
-  return preciseExpr;
-}
-
 ArgumentPtr IUnaryExpression::useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const {
   for (const auto &simplFunc : simplFuncs) {
     if (auto res = simplFunc(*func, child)) {
