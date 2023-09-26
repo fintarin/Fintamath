@@ -125,7 +125,7 @@ public:
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
-      if (Return value = pair->second(move(args)...); value && comp(value)) {
+      if (Return value = pair->second(std::move(args)...); value && comp(value)) {
         return value;
       }
     }
@@ -148,7 +148,7 @@ public:
     requires(sizeof...(Args) > 0)
   static Return parse(const Vector<Return, Args &&...> &parserVect, Args &&...args) {
     for (const auto &constructor : parserVect) {
-      if (Return value = constructor(move(args)...)) {
+      if (Return value = constructor(std::move(args)...)) {
         return value;
       }
     }
