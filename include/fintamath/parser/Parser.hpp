@@ -90,7 +90,7 @@ public:
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
     for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
-      if (Return value = pair->second(move(args)...)) {
+      if (Return value = pair->second(std::move(args)...)) {
         return value;
       }
     }

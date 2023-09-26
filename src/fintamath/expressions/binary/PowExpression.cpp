@@ -152,26 +152,25 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
   Integer bitNumber = generateFirstNum(powValue);
   Integer combins = combinations(powValue + variableCount - 1, powValue);
 
-  ArgumentPtrVector newPolynom;
+  ArgumentPtrVector newChildren;
 
   for ([[maybe_unused]] auto _ : std::views::iota(0U, combins)) {
     std::vector<Integer> vectOfPows = getPartition(bitNumber, Integer(variableCount));
     bitNumber = generateNextNumber(bitNumber);
 
-    ArgumentPtrVector mulExprPolynom;
-    mulExprPolynom.emplace_back(multinomialCoefficient(powValue, vectOfPows).clone());
+    ArgumentPtrVector mulExprChildren;
+    mulExprChildren.emplace_back(multinomialCoefficient(powValue, vectOfPows).clone());
 
     for (auto i : std::views::iota(0U, variableCount)) {
       ArgumentPtr powExprChild = powExpr(polynom[i], vectOfPows[i].clone());
-      mulExprPolynom.emplace_back(powExprChild);
+      mulExprChildren.emplace_back(powExprChild);
     }
 
-    ArgumentPtr mulExprChild = mulExpr(mulExprPolynom);
-    newPolynom.emplace_back(mulExprChild);
+    ArgumentPtr mulExprChild = mulExpr(std::move(mulExprChildren));
+    newChildren.emplace_back(mulExprChild);
   }
 
-  ArgumentPtr res = addExpr(newPolynom);
-  return res;
+  return addExpr(std::move(newChildren));
 }
 
 ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -301,7 +300,7 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
       arg = powExpr(arg, rhs->clone());
     }
 
-    res = mulExpr(args);
+    res = mulExpr(std::move(args));
   }
 
   return res;

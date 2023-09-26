@@ -32,7 +32,7 @@ std::string MulExpression::toString() const {
       numeratorChildren.erase(numeratorChildren.begin());
     }
 
-    ArgumentPtr numerator = numeratorChildren.size() > 1 ? mulExpr(numeratorChildren) : numeratorChildren.front();
+    ArgumentPtr numerator = numeratorChildren.size() > 1 ? mulExpr(std::move(numeratorChildren)) : numeratorChildren.front();
     ArgumentPtr denominator = firstChildRat->denominator().clone();
     ArgumentPtr res = divExpr(numerator, denominator);
 
@@ -228,7 +228,7 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
     }
   }
 
-  ArgumentPtr res = addExpr(resultVect);
+  ArgumentPtr res = addExpr(std::move(resultVect));
   return res;
 }
 

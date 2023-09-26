@@ -24,15 +24,15 @@ std::string OrExpression::childToString(const IOperator &oper, const ArgumentPtr
 }
 
 ArgumentPtr OrExpression::postSimplify() const {
-  auto simplObj = IPolynomExpression::postSimplify();
+  ArgumentPtr simplObj = IPolynomExpression::postSimplify();
   auto simpl = cast<OrExpression>(simplObj);
 
   if (!simpl) {
     return simplObj;
   }
 
-  auto simplChildren = simpl->children;
-  auto simplChildrenSizeInitial = simplChildren.size();
+  ArgumentPtrVector simplChildren = simpl->children;
+  size_t simplChildrenSizeInitial = simplChildren.size();
 
   // TODO: use more efficient algorithm
   for (size_t i = 0; i + 1 < simplChildren.size(); i++) {
@@ -47,7 +47,7 @@ ArgumentPtr OrExpression::postSimplify() const {
 
   if (simplChildren.size() != simplChildrenSizeInitial) {
     if (simplChildren.size() > 1) {
-      ArgumentPtr res = orExpr(simplChildren);
+      ArgumentPtr res = orExpr(std::move(simplChildren));
       postSimplifyChild(res);
       return res;
     }
@@ -175,7 +175,7 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
   resultChildren.erase(resultChildren.begin() + ptrdiff_t(resolutionIndex));
 
   if (resultChildren.size() > 1) {
-    ArgumentPtr res = andExpr(resultChildren);
+    ArgumentPtr res = andExpr(std::move(resultChildren));
     return res;
   }
 
@@ -230,7 +230,7 @@ ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhsChild, const 
 
   if (matchCount == minChildren.size()) {
     if (minChildren.size() > 1) {
-      ArgumentPtr res = andExpr(minChildren);
+      ArgumentPtr res = andExpr(std::move(minChildren));
       return res;
     }
 

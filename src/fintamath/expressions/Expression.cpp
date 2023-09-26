@@ -269,7 +269,7 @@ ArgumentPtr Expression::operandsToExpr(OperandStack &operands) {
       }
     }
 
-    return makeExpr(*func, children);
+    return makeExpr(*func, std::move(children));
   }
 
   return arg;
@@ -447,17 +447,21 @@ ArgumentPtr Expression::compress(const ArgumentPtr &child) {
   return child;
 }
 
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args) {
-  ArgumentPtrVector compressedArgs = args;
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector &&args) {
+  ArgumentPtrVector compressedArgs = std::move(args);
   std::ranges::transform(compressedArgs, compressedArgs.begin(), &Expression::compress);
 
   Expression::validateFunctionArgs(func, compressedArgs);
 
-  if (auto expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), compressedArgs)) {
+  if (auto expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), std::move(compressedArgs))) {
     return expr;
   }
 
   return FunctionExpression(func, compressedArgs).clone();
+}
+
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args) {
+  return makeExpr(func, ArgumentPtrVector(args));
 }
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args) {

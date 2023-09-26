@@ -1138,6 +1138,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sqrt(2) * Inf").toString(), "Inf sqrt(2)");   // TODO: Inf
   EXPECT_EQ(Expression("-sqrt(2) * Inf").toString(), "-Inf sqrt(2)"); // TODO: -Inf
   EXPECT_EQ(Expression("sin(Inf)").toString(), "sin(Inf)");           // TODO: [-1, 1]
+  EXPECT_EQ(Expression("root(2, 0)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(1, 0)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(1, 10)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(10, 0)").toString(), "-Inf");

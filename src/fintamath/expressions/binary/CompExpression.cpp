@@ -29,13 +29,12 @@ std::string CompExpression::toString() const {
   if (isSolution) {
     if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && *lhsExpr->getFunction() == Add()) {
       ArgumentPtrVector sumChildren = lhsExpr->getChildren();
-
       ArgumentPtr solLhs = sumChildren.front();
 
       if (is<Variable>(solLhs)) {
         sumChildren.erase(sumChildren.begin());
 
-        ArgumentPtr solRhs = negExpr(sumChildren);
+        ArgumentPtr solRhs = negExpr(std::move(sumChildren));
         simplifyChild(solRhs);
 
         if (!is<IExpression>(solRhs)) {
@@ -186,7 +185,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
       child = divExpr(child, dividerNum);
     }
 
-    ArgumentPtr newLhs = dividendPolynom.size() > 1 ? addExpr(dividendPolynom) : dividendPolynom.front();
+    ArgumentPtr newLhs = dividendPolynom.size() > 1 ? addExpr(std::move(dividendPolynom)) : dividendPolynom.front();
 
     if (*dividerNum < Integer(0)) {
       return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);

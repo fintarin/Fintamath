@@ -99,7 +99,7 @@ ArgumentPtr AndExpression::orSimplify(const IFunction & /*func*/, const Argument
     }
   }
 
-  ArgumentPtr res = orExpr(resultVect);
+  ArgumentPtr res = orExpr(std::move(resultVect));
   return res;
 }
 
