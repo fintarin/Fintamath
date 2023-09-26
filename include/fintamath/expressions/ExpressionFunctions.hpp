@@ -28,7 +28,7 @@ Expression more(const Expression &lhs, const Expression &rhs);
 
 Expression lessEqv(const Expression &lhs, const Expression &rhs);
 
-Expression moveEqv(const Expression &lhs, const Expression &rhs);
+Expression moreEqv(const Expression &lhs, const Expression &rhs);
 
 Expression abs(const Expression &rhs);
 

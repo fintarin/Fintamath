@@ -83,9 +83,9 @@ TEST(ExpressionFunctionsTests, lessEqvTest) {
 }
 
 TEST(ExpressionFunctionsTests, moreEqvTest) {
-  EXPECT_EQ(moveEqv(Expression("a+3"), Expression("3+a")).toString(), "True");
-  EXPECT_EQ(moveEqv(Expression("a^2"), Expression("a*a+0")).toString(), "True");
-  EXPECT_EQ(moveEqv(Expression("a^2"), Expression("a")).toString(), "a^2 - a >= 0");
+  EXPECT_EQ(moreEqv(Expression("a+3"), Expression("3+a")).toString(), "True");
+  EXPECT_EQ(moreEqv(Expression("a^2"), Expression("a*a+0")).toString(), "True");
+  EXPECT_EQ(moreEqv(Expression("a^2"), Expression("a")).toString(), "a^2 - a >= 0");
 }
 
 TEST(ExpressionFunctionsTests, absTest) {
