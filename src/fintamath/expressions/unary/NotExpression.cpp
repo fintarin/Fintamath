@@ -13,8 +13,8 @@
 
 namespace fintamath {
 
-NotExpression::NotExpression(const ArgumentPtr &inChild)
-    : IUnaryExpressionCRTP(Not(), inChild) {
+NotExpression::NotExpression(ArgumentPtr inChild)
+    : IUnaryExpressionCRTP(Not(), std::move(inChild)) {
 }
 
 NotExpression::SimplifyFunctionVector NotExpression::getFunctionsForPreSimplify() const {

@@ -5,7 +5,7 @@
 namespace fintamath {
 class MulExpression : public IPolynomExpressionCRTP<MulExpression> {
 public:
-  explicit MulExpression(const ArgumentPtrVector &inChildren);
+  explicit MulExpression(ArgumentPtrVector inChildren);
 
   std::string toString() const override;
 

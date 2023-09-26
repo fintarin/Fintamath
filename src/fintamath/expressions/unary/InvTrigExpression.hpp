@@ -8,7 +8,7 @@ class Rational;
 
 class InvTrigExpression : public IUnaryExpressionCRTP<InvTrigExpression, true> {
 public:
-  explicit InvTrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
+  explicit InvTrigExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::InvTrigExpression;

@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-HyperbExpression::HyperbExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
-    : IUnaryExpressionCRTP(inFunc, inChild) {
+HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
+    : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
 }
 
 HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPreSimplify() const {

@@ -21,8 +21,8 @@
 
 namespace fintamath {
 
-CompExpression::CompExpression(const IOperator &inOper, const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(inOper, inLhsChild, inRhsChild) {
+CompExpression::CompExpression(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
+    : IBinaryExpressionCRTP(inOper, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 std::string CompExpression::toString() const {

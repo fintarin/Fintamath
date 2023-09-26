@@ -6,6 +6,8 @@ namespace fintamath {
 
 class IBinaryExpression : public IExpression {
 public:
+  explicit IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs);
+
   std::string toString() const override;
 
   const std::shared_ptr<IFunction> &getFunction() const final;
@@ -50,6 +52,10 @@ class IBinaryExpressionBaseCRTP : public IBinaryExpression {
 #define I_EXPRESSION_BASE_CRTP IBinaryExpressionBaseCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
 #undef I_EXPRESSION_BASE_CRTP
+
+public:
+  explicit IBinaryExpressionBaseCRTP(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs)
+      : IBinaryExpression(inFunc, std::move(lhs), std::move(rhs)) {}
 };
 
 template <typename Derived, bool isMultiFunction = false>
@@ -59,11 +65,8 @@ class IBinaryExpressionCRTP : public IBinaryExpressionBaseCRTP<Derived, isMultiF
 #undef I_EXPRESSION_CRTP
 
 public:
-  explicit IBinaryExpressionCRTP(const IFunction &inFunc, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-    this->func = cast<IFunction>(inFunc.clone());
-    this->lhsChild = lhs;
-    this->rhsChild = rhs;
-  }
+  explicit IBinaryExpressionCRTP(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs)
+      : IBinaryExpressionBaseCRTP<Derived, isMultiFunction>(inFunc, std::move(lhs), std::move(rhs)) {}
 };
 
 }

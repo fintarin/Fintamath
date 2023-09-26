@@ -8,7 +8,7 @@ class Rational;
 
 class TrigExpression : public IUnaryExpressionCRTP<TrigExpression, true> {
 public:
-  explicit TrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
+  explicit TrigExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::TrigExpression;

@@ -20,8 +20,8 @@ using TrigonometryTable = std::map<Rational, ArgumentPtr>;
 
 ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key);
 
-InvTrigExpression::InvTrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
-    : IUnaryExpressionCRTP(inFunc, inChild) {
+InvTrigExpression::InvTrigExpression(const IFunction &inFunc, ArgumentPtr inChild)
+    : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
 }
 
 InvTrigExpression::SimplifyFunctionVector InvTrigExpression::getFunctionsForPostSimplify() const {

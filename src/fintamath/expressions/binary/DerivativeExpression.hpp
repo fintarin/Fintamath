@@ -6,7 +6,7 @@ namespace fintamath {
 
 class DerivativeExpression : public IBinaryExpressionCRTP<DerivativeExpression> {
 public:
-  explicit DerivativeExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
+  explicit DerivativeExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::DerivativeExpression;

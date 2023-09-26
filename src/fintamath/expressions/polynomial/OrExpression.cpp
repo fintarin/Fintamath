@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-OrExpression::OrExpression(const ArgumentPtrVector &inChildren)
-    : IPolynomExpressionCRTP(Or(), inChildren) {
+OrExpression::OrExpression(ArgumentPtrVector inChildren)
+    : IPolynomExpressionCRTP(Or(), std::move(inChildren)) {
 }
 
 std::string OrExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {

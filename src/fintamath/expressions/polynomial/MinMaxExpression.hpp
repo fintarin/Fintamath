@@ -6,7 +6,7 @@ namespace fintamath {
 
 class MinMaxExpression : public IPolynomExpressionCRTP<MinMaxExpression, true> {
 public:
-  explicit MinMaxExpression(const IFunction &inFunc, const ArgumentPtrVector &inChildren);
+  explicit MinMaxExpression(const IFunction &inFunc, ArgumentPtrVector inChildren);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::MinMaxExpression;

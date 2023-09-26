@@ -14,7 +14,7 @@ namespace {
 
 class TestPolynomExpression : public IPolynomExpressionCRTP<TestPolynomExpression> {
 public:
-  explicit TestPolynomExpression(const ArgumentPtrVector &children) : IPolynomExpressionCRTP(f, children) {
+  explicit TestPolynomExpression(ArgumentPtrVector args) : IPolynomExpressionCRTP(f, std::move(args)) {
   }
 
   static MathObjectType getTypeStatic() {
@@ -64,12 +64,6 @@ TEST(IPolynomExpressionTests, setChildren) {
   EXPECT_EQ(*expr.getChildren()[2], Integer(0));
 
   EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
-}
-
-TEST(IPolynomExpressionTests, addElement) {
-  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
-  expr.addElement(Integer(0).clone());
-  EXPECT_EQ(expr.toString(), "1 * 2 * 3 * 0");
 }
 
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {

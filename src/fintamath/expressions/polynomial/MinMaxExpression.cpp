@@ -2,8 +2,8 @@
 
 namespace fintamath {
 
-MinMaxExpression::MinMaxExpression(const IFunction &inFunc, const ArgumentPtrVector &inChildren)
-    : IPolynomExpressionCRTP(inFunc, inChildren) {
+MinMaxExpression::MinMaxExpression(const IFunction &inFunc, ArgumentPtrVector inChildren)
+    : IPolynomExpressionCRTP(inFunc, std::move(inChildren)) {
 }
 
 }

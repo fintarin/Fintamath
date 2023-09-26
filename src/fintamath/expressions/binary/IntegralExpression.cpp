@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-IntegralExpression::IntegralExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(Integral(), inLhsChild, inRhsChild) {
+IntegralExpression::IntegralExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
+    : IBinaryExpressionCRTP(Integral(), std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 IntegralExpression::SimplifyFunctionVector IntegralExpression::getFunctionsForPostSimplify() const {

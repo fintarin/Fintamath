@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-AndExpression::AndExpression(const ArgumentPtrVector &inChildren)
-    : IPolynomExpressionCRTP(And(), inChildren) {
+AndExpression::AndExpression(ArgumentPtrVector inChildren)
+    : IPolynomExpressionCRTP(And(), std::move(inChildren)) {
 }
 
 AndExpression::SimplifyFunctionVector AndExpression::getFunctionsForPreSimplify() const {

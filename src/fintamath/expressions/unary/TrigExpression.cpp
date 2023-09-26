@@ -23,8 +23,8 @@ using TrigonometryTable = std::map<Rational, ArgumentPtr>;
 
 ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, bool isNegated);
 
-TrigExpression::TrigExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
-    : IUnaryExpressionCRTP(inFunc, inChild) {
+TrigExpression::TrigExpression(const IFunction &inFunc, ArgumentPtr inChild)
+    : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
 }
 
 TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPreSimplify() const {

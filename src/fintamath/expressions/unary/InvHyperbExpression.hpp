@@ -6,7 +6,7 @@ namespace fintamath {
 
 class InvHyperbExpression : public IUnaryExpressionCRTP<InvHyperbExpression, true> {
 public:
-  explicit InvHyperbExpression(const IFunction &inFunc, const ArgumentPtr &inChild);
+  explicit InvHyperbExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::InvHyperbExpression;

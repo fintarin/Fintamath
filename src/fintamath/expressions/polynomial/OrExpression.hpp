@@ -6,7 +6,7 @@ namespace fintamath {
 
 class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
 public:
-  explicit OrExpression(const ArgumentPtrVector &inChildren);
+  explicit OrExpression(ArgumentPtrVector inChildren);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::OrExpression;

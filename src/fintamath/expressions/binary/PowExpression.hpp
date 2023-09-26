@@ -7,7 +7,7 @@ namespace fintamath {
 
 class PowExpression : public IBinaryExpressionCRTP<PowExpression> {
 public:
-  explicit PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
+  explicit PowExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   std::string toString() const override;
 

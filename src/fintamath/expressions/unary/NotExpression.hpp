@@ -6,7 +6,7 @@ namespace fintamath {
 
 class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
 public:
-  explicit NotExpression(const ArgumentPtr &inChild);
+  explicit NotExpression(ArgumentPtr inChild);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::NotExpression;

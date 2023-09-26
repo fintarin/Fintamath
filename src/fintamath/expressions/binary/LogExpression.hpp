@@ -6,7 +6,7 @@ namespace fintamath {
 
 class LogExpression : public IBinaryExpressionCRTP<LogExpression> {
 public:
-  explicit LogExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
+  explicit LogExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   std::string toString() const override;
 
