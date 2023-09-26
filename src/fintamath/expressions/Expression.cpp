@@ -308,7 +308,7 @@ void Expression::insertMultiplications(TermVector &terms) {
 void Expression::fixOperatorTypes(TermVector &terms) {
   bool isFixed = true;
 
-  if (auto &term = terms.front();
+  if (const auto &term = terms.front();
       is<IOperator>(term->value) &&
       !isPrefixOperator(term->value)) {
 
@@ -316,7 +316,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     isFixed = isFixed && term->value;
   }
 
-  if (auto &term = terms.back();
+  if (const auto &term = terms.back();
       is<IOperator>(term->value) &&
       !isPostfixOperator(term->value)) {
 
@@ -333,7 +333,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
   }
 
   for (auto i : std::views::iota(1U, terms.size() - 1)) {
-    auto &term = terms[i];
+    const auto &term = terms[i];
     const auto &termPrev = terms[i - 1];
 
     if (is<IOperator>(term->value) &&
@@ -347,7 +347,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
 
   // TODO: use reverse(iota(1, terms.size() - 1)) when it is work
   for (size_t i = terms.size() - 2; i > 0; i--) {
-    auto &term = terms[i];
+    const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
     if (is<IOperator>(term->value) &&
@@ -366,7 +366,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
 
 void Expression::collapseFactorials(TermVector &terms) {
   for (size_t i = 1; i + 1 < terms.size(); i++) {
-    auto &term = terms[i];
+    const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
     if (auto factorial = cast<Factorial>(term->value);
