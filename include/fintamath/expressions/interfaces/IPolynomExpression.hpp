@@ -9,6 +9,8 @@ namespace fintamath {
 
 class IPolynomExpression : public IExpression {
 public:
+  explicit IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args);
+
   std::string toString() const override;
 
   const std::shared_ptr<IFunction> &getFunction() const final;
@@ -16,8 +18,6 @@ public:
   const ArgumentPtrVector &getChildren() const final;
 
   void setChildren(const ArgumentPtrVector &childVect) final;
-
-  virtual void addElement(const ArgumentPtr &element) = 0;
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::IPolynomExpression;
@@ -71,6 +71,8 @@ private:
 
   ArgumentPtr useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs, size_t lhsChildPos,
                                    size_t rhsChildPos) const;
+
+  void compress();
 
   void sort();
 
@@ -166,6 +168,10 @@ class IPolynomExpressionBaseCRTP : public IPolynomExpression {
 #define I_EXPRESSION_BASE_CRTP IPolynomExpressionBaseCRTP<Derived, isMultiFunction>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
 #undef I_EXPRESSION_BASE_CRTP
+
+public:
+  explicit IPolynomExpressionBaseCRTP(const IFunction &inFunc, ArgumentPtrVector args)
+      : IPolynomExpression(inFunc, std::move(args)) {}
 };
 
 template <typename Derived, bool isMultiFunction = false>
@@ -175,32 +181,8 @@ class IPolynomExpressionCRTP : public IPolynomExpressionBaseCRTP<Derived, isMult
 #undef I_EXPRESSION_CRTP
 
 public:
-  explicit IPolynomExpressionCRTP(const IFunction &inFunc, const ArgumentPtrVector &args) {
-    this->func = cast<IFunction>(inFunc.clone());
-
-    for (const auto &child : args) {
-      addElement(child);
-    }
-  }
-
-  void addElement(const ArgumentPtr &element) final {
-    ArgumentPtr elem = element;
-
-    ArgumentPtrVector elemPolynom;
-
-    if (auto expr = cast<Derived>(elem)) {
-      elemPolynom = expr->children;
-    }
-
-    if (!elemPolynom.empty()) {
-      for (auto &child : elemPolynom) {
-        this->children.emplace_back(child);
-      }
-    }
-    else {
-      this->children.emplace_back(elem);
-    }
-  }
+  explicit IPolynomExpressionCRTP(const IFunction &inFunc, ArgumentPtrVector args)
+      : IPolynomExpressionBaseCRTP<Derived, isMultiFunction>(inFunc, std::move(args)) {}
 };
 
 }

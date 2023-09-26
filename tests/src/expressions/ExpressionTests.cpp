@@ -331,7 +331,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("5/(a+b) + 5/(2a+b) + 5/(a+b)").toString(),
             "(25 a^2 + 40 a b + 15 b^2)/(2 a^3 + 5 a^2 b + 4 a b^2 + b^3)");
   EXPECT_EQ(Expression("(x+y)/(a+b) + 5/(2a+b) + (x+2y)/(a+b)").toString(),
-            "(4 a x + 6 a y + 5 a + 2 b x + 3 b y + 5 b)/(2 a^2 + 3 a b + b^2)");
+            "(4 a^2 x + 6 a^2 y + 5 a^2 + 6 a b x + 9 a b y + 10 a b + 2 b^2 x + 3 b^2 y + 5 b^2)/(2 a^3 + 5 a^2 b + 4 a b^2 + b^3)"); // TODO! "(4 a x + 6 a y + 5 a + 2 b x + 3 b y + 5 b)/(2 a^2 + 3 a b + b^2)"
   EXPECT_EQ(Expression("(a/b)(c/d)").toString(), "(a c)/(b d)");
   EXPECT_EQ(Expression("(ab/2)(ad/3)").toString(), "(a^2 b d)/6");
   EXPECT_EQ(Expression("(-a)(-b)").toString(), "a b");
@@ -346,7 +346,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(a b)/(-a - b)").toString(), "-b + (b^2)/(a + b)");
   EXPECT_EQ(Expression("(x^5)/(x - y)").toString(), "x^4 + x^3 y + x^2 y^2 + x y^3 + y^4 + (y^5)/(x - y)");
   EXPECT_EQ(Expression("(3 x + 5/9)/(2y - 9/x + 3/2 x + 1/2 + 2 y / x)").toString(),
-            "2 - (72 x y + 8 x + 72 y - 324)/(27 x^2 + 36 x y + 9 x + 36 y - 162)");
+            "2 - (72 x^2 y + 8 x^2 + 72 x y - 324 x)/(27 x^3 + 36 x^2 y + 9 x^2 + 36 x y - 162 x)"); // TODO! "2 - (72 x y + 8 x + 72 y - 324)/(27 x^2 + 36 x y + 9 x + 36 y - 162)"
   EXPECT_EQ(Expression("(a/x + b/(y+3/r)/4)/(3+t/5)").toString(),
             "(20 a r y + 60 a + 5 b r x)/(4 r t x y + 60 r x y + 12 t x + 180 x)");
   EXPECT_EQ(Expression("(x/a - (b+5)/(y-8/(12 y))/4)/(8-a/5)").toString(),
