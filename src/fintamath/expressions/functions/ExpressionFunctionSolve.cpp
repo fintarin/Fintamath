@@ -82,7 +82,7 @@ Expression solve(const Expression &rhs) {
         return Expression(answers.front());
       }
 
-      return Expression(orExpr(answers));
+      return Expression(orExpr(std::move(answers)));
     }
   }
 
@@ -130,13 +130,13 @@ ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
     }
 
     if (is<Mul>(elemExpr->getFunction())) {
-      ArgumentPtrVector coeff = {Integer(1).clone()};
+      ArgumentPtrVector coeffs = {Integer(1).clone()};
 
       for (const auto &child : elemExpr->getChildren()) {
-        coeff.emplace_back(getElementRate(child, var));
+        coeffs.emplace_back(getElementRate(child, var));
       }
 
-      return mulExpr(coeff)->toMinimalObject();
+      return mulExpr(std::move(coeffs))->toMinimalObject();
     }
   }
 

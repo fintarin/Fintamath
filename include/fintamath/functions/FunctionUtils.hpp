@@ -17,26 +17,18 @@ class IFunction;
 
 extern bool isExpression(const IMathObject &arg);
 
+extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector &&args);
+
 extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args);
 
 extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args);
-
-template <std::convertible_to<ArgumentPtr> T>
-ArgumentPtr toArgumentPtr(T &arg) {
-  if constexpr (std::is_copy_constructible_v<T>) {
-    return arg;
-  }
-  else {
-    return std::move(arg);
-  }
-}
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const std::derived_from<IMathObject> auto &...args) {
   return makeExpr(func, ArgumentPtrVector{args.clone()...});
 }
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, std::convertible_to<ArgumentPtr> auto &&...args) {
-  return makeExpr(func, ArgumentPtrVector{toArgumentPtr(args)...});
+  return makeExpr(func, ArgumentPtrVector{ArgumentPtr(std::forward<decltype(args)>(args))...});
 }
 
 }

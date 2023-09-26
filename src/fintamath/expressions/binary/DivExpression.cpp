@@ -125,7 +125,7 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     numerator = numeratorChildren.front();
   }
   else {
-    numerator = mulExpr(numeratorChildren);
+    numerator = mulExpr(std::move(numeratorChildren));
   }
 
   ArgumentPtr denominator;
@@ -133,7 +133,7 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     denominator = denominatorChildren.front();
   }
   else {
-    denominator = mulExpr(denominatorChildren);
+    denominator = mulExpr(std::move(denominatorChildren));
   }
 
   ArgumentPtr res = divExpr(numerator, denominator);
@@ -285,8 +285,8 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumSumSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr result = resultVect.size() > 1 ? addExpr(resultVect) : resultVect.front();
-  ArgumentPtr remainderAdd = addExpr(remainderVect);
+  ArgumentPtr result = resultVect.size() > 1 ? addExpr(std::move(resultVect)) : resultVect.front();
+  ArgumentPtr remainderAdd = addExpr(std::move(remainderVect));
   ArgumentPtr remainder = divExpr(remainderAdd, rhs);
   simplifyChild(remainder);
 
@@ -329,11 +329,11 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr result = resultChildren.size() > 1 ? addExpr(resultChildren) : resultChildren.front();
+  ArgumentPtr result = resultChildren.size() > 1 ? addExpr(std::move(resultChildren)) : resultChildren.front();
 
   ArgumentPtr remainder;
   if (!remainderChildren.empty()) {
-    ArgumentPtr remainderAdd = remainderChildren.size() > 1 ? addExpr(remainderChildren) : remainderChildren.front();
+    ArgumentPtr remainderAdd = remainderChildren.size() > 1 ? addExpr(std::move(remainderChildren)) : remainderChildren.front();
     remainder = divExpr(remainderAdd, rhs);
     simplifyChild(remainder);
   }
@@ -361,13 +361,13 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     return {};
   }
 
-  ArgumentPtrVector multiplicator;
+  ArgumentPtrVector multiplicators;
 
   for (auto i : std::views::iota(1U, rhsChildren.size())) {
-    multiplicator.emplace_back(mulExpr(rhsChildren[i], result));
+    multiplicators.emplace_back(mulExpr(rhsChildren[i], result));
   }
 
-  ArgumentPtr remainderAdd = multiplicator.size() > 1 ? addExpr(multiplicator) : multiplicator.front();
+  ArgumentPtr remainderAdd = multiplicators.size() > 1 ? addExpr(std::move(multiplicators)) : multiplicators.front();
   ArgumentPtr remainderNegAdd = negExpr(remainderAdd);
   simplifyChild(remainderNegAdd);
   ArgumentPtr remainder = divExpr(remainderNegAdd, rhs);
@@ -521,8 +521,8 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVect
   if (!denominatorChildren.empty()) {
     denominatorChildren.emplace_back(rhs);
 
-    ArgumentPtr numerator = mulExpr(numeratorChildren);
-    ArgumentPtr denominator = mulExpr(denominatorChildren);
+    ArgumentPtr numerator = mulExpr(std::move(numeratorChildren));
+    ArgumentPtr denominator = mulExpr(std::move(denominatorChildren));
     return divExpr(numerator, denominator);
   }
 
