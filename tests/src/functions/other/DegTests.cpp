@@ -42,7 +42,7 @@ TEST(DegTests, callTest) {
 }
 
 TEST(DegTests, degTest) {
-  EXPECT_EQ(degExpr(Integer(10))->toString(), "10*1/180 Pi");
+  EXPECT_EQ(degExpr(Integer(10))->toString(), "10 Pi/180");
 }
 
 TEST(DegTests, doArgsMatchTest) {

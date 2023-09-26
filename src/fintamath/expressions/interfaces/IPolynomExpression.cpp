@@ -12,6 +12,11 @@
 
 namespace fintamath {
 
+IPolynomExpression::IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args)
+    : func(cast<IFunction>(inFunc.clone())),
+      children(std::move(args)) {
+}
+
 const std::shared_ptr<IFunction> &IPolynomExpression::getFunction() const {
   return func;
 }
@@ -60,6 +65,26 @@ ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionVecto
   return {};
 }
 
+void IPolynomExpression::compress() {
+  size_t i = 0;
+
+  while (i < children.size()) {
+    auto &child = children[i];
+
+    if (const auto childPolynom = cast<IPolynomExpression>(child); childPolynom && *childPolynom->func == *func) {
+      std::swap(child, children.back());
+      children.pop_back();
+
+      children.insert(children.end(),
+                      childPolynom->children.begin(),
+                      childPolynom->children.end());
+    }
+    else {
+      i++;
+    }
+  }
+}
+
 ArgumentPtr IPolynomExpression::preSimplify() const {
   auto simpl = cast<IPolynomExpression>(clone());
 
@@ -87,6 +112,7 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
 }
 
 void IPolynomExpression::simplifyRec(bool isPostSimplify) {
+  compress();
   sort();
 
   bool isSimplified = true;
@@ -135,7 +161,7 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
 
     children.erase(children.begin() + ptrdiff_t(i) - 1);
     children.erase(children.begin() + ptrdiff_t(i) - 1);
-    addElement(res);
+    children.emplace_back(res);
 
     i--;
     isSimplified = false;
@@ -159,7 +185,7 @@ void IPolynomExpression::simplifyChildren(bool isPostSimplify) {
       preSimplifyChild(child);
     }
 
-    addElement(child);
+    children.emplace_back(child);
   }
 }
 
