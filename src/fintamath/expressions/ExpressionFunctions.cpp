@@ -66,7 +66,7 @@ Expression lessEqv(const Expression &lhs, const Expression &rhs) {
   return Expression(lessEqvExpr(lhs, rhs));
 }
 
-Expression moveEqv(const Expression &lhs, const Expression &rhs) {
+Expression moreEqv(const Expression &lhs, const Expression &rhs) {
   return Expression(moreEqvExpr(lhs, rhs));
 }
 
