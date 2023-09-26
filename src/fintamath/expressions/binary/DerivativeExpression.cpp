@@ -8,8 +8,8 @@
 
 namespace fintamath {
 
-DerivativeExpression::DerivativeExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(Derivative(), inLhsChild, inRhsChild) {
+DerivativeExpression::DerivativeExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
+    : IBinaryExpressionCRTP(Derivative(), std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 DerivativeExpression::SimplifyFunctionVector DerivativeExpression::getFunctionsForPostSimplify() const {

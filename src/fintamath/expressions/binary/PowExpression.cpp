@@ -20,8 +20,8 @@
 
 namespace fintamath {
 
-PowExpression::PowExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(Pow(), inLhsChild, inRhsChild) {
+PowExpression::PowExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
+    : IBinaryExpressionCRTP(Pow(), std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 std::string PowExpression::toString() const {

@@ -6,7 +6,7 @@ namespace fintamath {
 
 class IntegralExpression : public IBinaryExpressionCRTP<IntegralExpression> {
 public:
-  explicit IntegralExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
+  explicit IntegralExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::IntegralExpression;

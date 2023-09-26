@@ -7,7 +7,7 @@ namespace fintamath {
 
 class DivExpression : public IBinaryExpressionCRTP<DivExpression> {
 public:
-  explicit DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
+  explicit DivExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   std::string toString() const override;
 

@@ -20,8 +20,8 @@
 
 namespace fintamath {
 
-DivExpression::DivExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(Div(), inLhsChild, inRhsChild) {
+DivExpression::DivExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
+    : IBinaryExpressionCRTP(Div(), std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 std::string DivExpression::toString() const {

@@ -21,8 +21,8 @@
 
 namespace fintamath {
 
-LogExpression::LogExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-    : IBinaryExpressionCRTP(Log(), inLhsChild, inRhsChild) {
+LogExpression::LogExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
+    : IBinaryExpressionCRTP(Log(), std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 std::string LogExpression::toString() const {

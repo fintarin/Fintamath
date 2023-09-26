@@ -6,7 +6,7 @@ namespace fintamath {
 
 class AndExpression : public IPolynomExpressionCRTP<AndExpression> {
 public:
-  explicit AndExpression(const ArgumentPtrVector &inChildren);
+  explicit AndExpression(ArgumentPtrVector inChildren);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::AndExpression;

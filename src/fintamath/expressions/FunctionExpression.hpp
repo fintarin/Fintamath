@@ -6,7 +6,7 @@ namespace fintamath {
 
 class FunctionExpression : public IExpressionCRTP<FunctionExpression, true> {
 public:
-  explicit FunctionExpression(const IFunction &inFunc, const ArgumentPtrVector &inChildren);
+  explicit FunctionExpression(const IFunction &inFunc, ArgumentPtrVector inChildren);
 
   std::string toString() const override;
 

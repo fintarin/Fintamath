@@ -6,7 +6,7 @@ namespace fintamath {
 
 class AddExpression : public IPolynomExpressionCRTP<AddExpression> {
 public:
-  explicit AddExpression(const ArgumentPtrVector &inChildren);
+  explicit AddExpression(ArgumentPtrVector inChildren);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::AddExpression;

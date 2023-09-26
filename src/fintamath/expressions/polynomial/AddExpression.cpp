@@ -20,8 +20,8 @@
 
 namespace fintamath {
 
-AddExpression::AddExpression(const ArgumentPtrVector &inChildren)
-    : IPolynomExpressionCRTP(Add(), inChildren) {
+AddExpression::AddExpression(ArgumentPtrVector inChildren)
+    : IPolynomExpressionCRTP(Add(), std::move(inChildren)) {
 }
 
 std::string AddExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {

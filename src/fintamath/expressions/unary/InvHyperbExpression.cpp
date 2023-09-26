@@ -2,8 +2,8 @@
 
 namespace fintamath {
 
-InvHyperbExpression::InvHyperbExpression(const IFunction &inFunc, const ArgumentPtr &inChild)
-    : IUnaryExpressionCRTP(inFunc, inChild) {
+InvHyperbExpression::InvHyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
+    : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
 }
 
 }

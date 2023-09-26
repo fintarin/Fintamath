@@ -6,6 +6,11 @@
 
 namespace fintamath {
 
+IUnaryExpression::IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs)
+    : func(cast<IFunction>(inFunc.clone())),
+      child(std::move(rhs)) {
+}
+
 std::string IUnaryExpression::toString() const {
   if (const auto oper = cast<IOperator>(func)) {
     if (oper->getOperatorPriority() == IOperator::Priority::PostfixUnary) {

@@ -12,8 +12,8 @@ namespace {
 
 class TestBinaryExpression : public IBinaryExpressionCRTP<TestBinaryExpression> {
 public:
-  explicit TestBinaryExpression(const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild)
-      : IBinaryExpressionCRTP(f, inLhsChild, inRhsChild) {
+  explicit TestBinaryExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
+      : IBinaryExpressionCRTP(f, std::move(inLhsChild), std::move(inRhsChild)) {
   }
 
   static MathObjectType getTypeStatic() {

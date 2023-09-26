@@ -5,6 +5,12 @@
 
 namespace fintamath {
 
+IBinaryExpression::IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs)
+    : func(cast<IFunction>(inFunc.clone())),
+      lhsChild(std::move(lhs)),
+      rhsChild(std::move(rhs)) {
+}
+
 std::string IBinaryExpression::toString() const {
   if (auto oper = cast<IOperator>(func)) {
     return binaryOperatorToString(*oper, lhsChild, rhsChild);

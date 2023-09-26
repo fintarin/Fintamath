@@ -12,7 +12,8 @@ namespace {
 
 class TestUnaryExpression : public IUnaryExpressionCRTP<TestUnaryExpression> {
 public:
-  explicit TestUnaryExpression(const ArgumentPtr &inRhsChild) : IUnaryExpressionCRTP(f, inRhsChild) {
+  explicit TestUnaryExpression(ArgumentPtr inRhsChild)
+      : IUnaryExpressionCRTP(f, std::move(inRhsChild)) {
   }
 
   static MathObjectType getTypeStatic() {

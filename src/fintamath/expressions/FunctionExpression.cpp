@@ -5,11 +5,11 @@
 
 namespace fintamath {
 
-FunctionExpression::FunctionExpression(const IFunction &inFunc, const ArgumentPtrVector &inChildren)
+FunctionExpression::FunctionExpression(const IFunction &inFunc, ArgumentPtrVector inChildren)
     : func(cast<IFunction>(inFunc.clone())) {
 
-  for (const auto &child : inChildren) {
-    children.emplace_back(child);
+  for (auto &&child : std::move(inChildren)) {
+    children.emplace_back(std::move(child));
   }
 }
 

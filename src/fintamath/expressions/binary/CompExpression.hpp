@@ -6,7 +6,7 @@ namespace fintamath {
 
 class CompExpression : public IBinaryExpressionCRTP<CompExpression, true> {
 public:
-  CompExpression(const IOperator &inOper, const ArgumentPtr &inLhsChild, const ArgumentPtr &inRhsChild);
+  CompExpression(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   std::string toString() const override;
 
