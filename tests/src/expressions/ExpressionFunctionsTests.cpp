@@ -196,12 +196,52 @@ TEST(ExpressionFunctionsTests, acotTest) {
   EXPECT_EQ(acot(Expression("a/5")).toString(), "acot(a/5)");
 }
 
-TEST(ExpressionFunctionsTests, eTest) {
-  EXPECT_EQ(e().toString(), "E");
+TEST(ExpressionFunctionsTests, sinhTest) {
+  EXPECT_EQ(sinh(Expression("-0.5")).toString(), "sinh(-1/2)");
+  EXPECT_EQ(sinh(Expression("0")).toString(), "0");
+  EXPECT_EQ(sinh(Expression("0.5")).toString(), "sinh(1/2)");
 }
 
-TEST(ExpressionFunctionsTests, piTest) {
-  EXPECT_EQ(pi().toString(), "Pi");
+TEST(ExpressionFunctionsTests, coshTest) {
+  EXPECT_EQ(cosh(Expression("-0.5")).toString(), "cosh(-1/2)");
+  EXPECT_EQ(cosh(Expression("0")).toString(), "1");
+  EXPECT_EQ(cosh(Expression("0.5")).toString(), "cosh(1/2)");
+}
+
+TEST(ExpressionFunctionsTests, tanhTest) {
+  EXPECT_EQ(tanh(Expression("-0.5")).toString(), "tanh(-1/2)");
+  EXPECT_EQ(tanh(Expression("0")).toString(), "0");
+  EXPECT_EQ(tanh(Expression("0.5")).toString(), "tanh(1/2)");
+}
+
+TEST(ExpressionFunctionsTests, cothTest) {
+  EXPECT_EQ(coth(Expression("-0.5")).toString(), "coth(-1/2)");
+  EXPECT_EQ(coth(Expression("0")).toString(), "ComplexInf");
+  EXPECT_EQ(coth(Expression("0.5")).toString(), "coth(1/2)");
+}
+
+TEST(ExpressionFunctionsTests, asinhTest) {
+  EXPECT_EQ(asinh(Expression("-0.5")).toString(), "asinh(-1/2)");
+  EXPECT_EQ(asinh(Expression("0")).toString(), "0");
+  EXPECT_EQ(asinh(Expression("0.5")).toString(), "asinh(1/2)");
+}
+
+TEST(ExpressionFunctionsTests, acoshTest) {
+  EXPECT_EQ(acosh(Expression("-0.5")).toString(), "acosh(-1/2)");
+  EXPECT_EQ(acosh(Expression("0")).toString(), "1/2 I Pi");
+  EXPECT_EQ(acosh(Expression("0.5")).toString(), "acosh(1/2)");
+}
+
+TEST(ExpressionFunctionsTests, atanhTest) {
+  EXPECT_EQ(atanh(Expression("-0.5")).toString(), "atanh(-1/2)");
+  EXPECT_EQ(atanh(Expression("0")).toString(), "0");
+  EXPECT_EQ(atanh(Expression("0.5")).toString(), "atanh(1/2)");
+}
+
+TEST(ExpressionFunctionsTests, acothTest) {
+  EXPECT_EQ(acoth(Expression("-0.5")).toString(), "acoth(-1/2)");
+  EXPECT_EQ(acoth(Expression("0")).toString(), "1/2 I Pi");
+  EXPECT_EQ(acoth(Expression("0.5")).toString(), "acoth(1/2)");
 }
 
 // TODO! implement derivative
@@ -230,6 +270,26 @@ TEST(ExpressionFunctionsTests, orTest) {
   EXPECT_EQ(orL(Expression("False"), Expression("True")).toString(), "True");
   EXPECT_EQ(orL(Expression("a"), Expression("b")).toString(), "a | b");
   EXPECT_EQ(orL(Expression("a!=a"), Expression("b!=b")).toString(), "False");
+}
+
+TEST(ExpressionFunctionsTests, eTest) {
+  EXPECT_EQ(e().toString(), "E");
+}
+
+TEST(ExpressionFunctionsTests, piTest) {
+  EXPECT_EQ(pi().toString(), "Pi");
+}
+
+TEST(ExpressionFunctionsTests, infTest) {
+  EXPECT_EQ(inf().toString(), "Inf");
+}
+
+TEST(ExpressionFunctionsTests, negInfTest) {
+  EXPECT_EQ(negInf().toString(), "-Inf");
+}
+
+TEST(ExpressionFunctionsTests, complexInfTest) {
+  EXPECT_EQ(complexInf().toString(), "ComplexInf");
 }
 
 TEST(ExpressionFunctionsTests, solveTest) {

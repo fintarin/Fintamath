@@ -64,15 +64,37 @@ Expression atan(const Expression &rhs);
 
 Expression acot(const Expression &rhs);
 
-Expression e();
+Expression sinh(const Expression &rhs);
 
-Expression pi();
+Expression cosh(const Expression &rhs);
+
+Expression tanh(const Expression &rhs);
+
+Expression coth(const Expression &rhs);
+
+Expression asinh(const Expression &rhs);
+
+Expression acosh(const Expression &rhs);
+
+Expression atanh(const Expression &rhs);
+
+Expression acoth(const Expression &rhs);
 
 Expression notL(const Expression &rhs);
 
 Expression andL(const Expression &lhs, const Expression &rhs);
 
 Expression orL(const Expression &lhs, const Expression &rhs);
+
+Expression e();
+
+Expression pi();
+
+Expression inf();
+
+Expression negInf();
+
+Expression complexInf();
 
 Expression solve(const Expression &rhs);
 
