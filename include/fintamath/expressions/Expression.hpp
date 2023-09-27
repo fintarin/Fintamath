@@ -40,7 +40,7 @@ public:
 
   std::string toString() const override;
 
-  Expression precise(uint8_t precision = FINTAMATH_PRECISION) const;
+  Expression approximate(uint8_t precision = FINTAMATH_PRECISION) const;
 
   const std::shared_ptr<IFunction> &getFunction() const override;
 
@@ -113,7 +113,7 @@ private:
 
   static bool doesArgMatch(const MathObjectType &expectedType, const ArgumentPtr &arg);
 
-  static void preciseRec(ArgumentPtr &arg, uint8_t precision);
+  static void approximateRec(ArgumentPtr &arg, uint8_t precision);
 
   static ArgumentPtr compress(const ArgumentPtr &child);
 

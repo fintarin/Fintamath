@@ -1560,143 +1560,143 @@ TEST(ExpressionTests, stringConstructorNegativeTest) {
 }
 
 TEST(ExpressionTests, preciseTest) {
-  EXPECT_EQ(Expression("150!").precise().toString(),
+  EXPECT_EQ(Expression("150!").approximate().toString(),
             "5.7133839564458545904789328652610540031895535786011264182548375833179829124845398*10^262");
-  EXPECT_EQ(Expression("E").precise().toString(),
+  EXPECT_EQ(Expression("E").approximate().toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
-  EXPECT_EQ(Expression("Pi").precise().toString(),
+  EXPECT_EQ(Expression("Pi").approximate().toString(),
             "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
-  EXPECT_EQ(Expression("exp100").precise().toString(),
+  EXPECT_EQ(Expression("exp100").approximate().toString(),
             "26881171418161354484126255515800135873611118.773741922415191608615280287034909565");
-  EXPECT_EQ(Expression("E^101").precise().toString(),
+  EXPECT_EQ(Expression("E^101").approximate().toString(),
             "73070599793680672726476826340615135890078390.083960707616445859670987728609198428");
-  EXPECT_EQ(Expression("E^(-101)").precise().toString(),
+  EXPECT_EQ(Expression("E^(-101)").approximate().toString(),
             "1.3685394711738530002470557302322944177986775531612023009807438134142551921153897*10^-44");
-  EXPECT_EQ(Expression("ln3").precise().toString(),
+  EXPECT_EQ(Expression("ln3").approximate().toString(),
             "1.098612288668109691395245236922525704647490557822749451734694333637494293218609");
-  EXPECT_EQ(Expression("ln2").precise().toString(),
+  EXPECT_EQ(Expression("ln2").approximate().toString(),
             "0.69314718055994530941723212145817656807550013436025525412068000949339362196969472");
-  EXPECT_EQ(Expression("ln100").precise().toString(),
+  EXPECT_EQ(Expression("ln100").approximate().toString(),
             "4.605170185988091368035982909368728415202202977257545952066655801935145219354705");
-  EXPECT_EQ(Expression("lg99").precise().toString(),
+  EXPECT_EQ(Expression("lg99").approximate().toString(),
             "1.9956351945975499153402557777532548601069599188478448242562702992902113378005716");
-  EXPECT_EQ(Expression("lg100").precise().toString(), "2.0");
-  EXPECT_EQ(Expression("lb100").precise().toString(),
+  EXPECT_EQ(Expression("lg100").approximate().toString(), "2.0");
+  EXPECT_EQ(Expression("lb100").approximate().toString(),
             "6.6438561897747246957406388589787803517296627860491612241095127916318695532172504");
-  EXPECT_EQ(Expression("lb4").precise().toString(), "2.0");
-  EXPECT_EQ(Expression("sin10").precise().toString(),
+  EXPECT_EQ(Expression("lb4").approximate().toString(), "2.0");
+  EXPECT_EQ(Expression("sin10").approximate().toString(),
             "-0.54402111088936981340474766185137728168364301291622389157418401261675720964049343");
-  EXPECT_EQ(Expression("cos10").precise().toString(),
+  EXPECT_EQ(Expression("cos10").approximate().toString(),
             "-0.83907152907645245225886394782406483451993016513316854683595373104879258686627077");
-  EXPECT_EQ(Expression("tan10").precise().toString(),
+  EXPECT_EQ(Expression("tan10").approximate().toString(),
             "0.6483608274590866712591249330098086768168743429837249756336279673958556003746239");
-  EXPECT_EQ(Expression("cot10").precise().toString(),
+  EXPECT_EQ(Expression("cot10").approximate().toString(),
             "1.5423510453569200482774693556824293113206672064019624909194716061981945043136768");
-  EXPECT_EQ(Expression("asin0.9").precise().toString(),
+  EXPECT_EQ(Expression("asin0.9").approximate().toString(),
             "1.1197695149986341866866770558453996158951621864033028823756818639144375371065333");
-  EXPECT_EQ(Expression("acos0.9").precise().toString(),
+  EXPECT_EQ(Expression("acos0.9").approximate().toString(),
             "0.45102681179626243254464463579435182620342251328425002811179043223947066603657116");
-  EXPECT_EQ(Expression("atan10").precise().toString(),
+  EXPECT_EQ(Expression("atan10").approximate().toString(),
             "1.4711276743037345918528755717617308518553063771832382624719635193438804556955538");
-  EXPECT_EQ(Expression("acot10").precise().toString(),
+  EXPECT_EQ(Expression("acot10").approximate().toString(),
             "0.099668652491162027378446119878020590243278322504314648015508776810027747447550654");
-  EXPECT_EQ(Expression("sinh10").precise().toString(),
+  EXPECT_EQ(Expression("sinh10").approximate().toString(),
             "11013.232874703393377236524554846364402901451190319346103835228548076948583785685");
-  EXPECT_EQ(Expression("cosh10").precise().toString(),
+  EXPECT_EQ(Expression("cosh10").approximate().toString(),
             "11013.232920103323139721376090437879963452061428237434970400197807148254234785107");
-  EXPECT_EQ(Expression("tanh10").precise().toString(),
+  EXPECT_EQ(Expression("tanh10").approximate().toString(),
             "0.99999999587769276361959283713827574105081461849501996226140069543680188089876683");
-  EXPECT_EQ(Expression("coth10").precise().toString(),
+  EXPECT_EQ(Expression("coth10").approximate().toString(),
             "1.0000000041223072533738241840280803124601800267562193084479187641100667185123807");
-  EXPECT_EQ(Expression("asinh0.9").precise().toString(),
+  EXPECT_EQ(Expression("asinh0.9").approximate().toString(),
             "0.80886693565278246250935016738160604299699494260611658590774273687832265593746445");
-  EXPECT_EQ(Expression("acosh1.9").precise().toString(),
+  EXPECT_EQ(Expression("acosh1.9").approximate().toString(),
             "1.2571958266003804345446952305599900185447096920846764166114358405852412800661934");
-  EXPECT_EQ(Expression("atanh0.9").precise().toString(),
+  EXPECT_EQ(Expression("atanh0.9").approximate().toString(),
             "1.4722194895832202300045137159439267686186896306495644092689801182046463510320986");
-  EXPECT_EQ(Expression("acoth1.9").precise().toString(),
+  EXPECT_EQ(Expression("acoth1.9").approximate().toString(),
             "0.5850356263251273221963907792584300980997658991386225877261408421838960973503172");
-  EXPECT_EQ(Expression("((2))*sqrt2").precise().toString(),
+  EXPECT_EQ(Expression("((2))*sqrt2").approximate().toString(),
             "2.8284271247461900976033774484193961571393437507538961463533594759814649569242141");
-  EXPECT_EQ(Expression("sqrt2*((2))").precise().toString(),
+  EXPECT_EQ(Expression("sqrt2*((2))").approximate().toString(),
             "2.8284271247461900976033774484193961571393437507538961463533594759814649569242141");
-  EXPECT_EQ(Expression("sin(1)^2").precise().toString(),
+  EXPECT_EQ(Expression("sin(1)^2").approximate().toString(),
             "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
-  EXPECT_EQ(Expression("sin(-1)^2").precise().toString(),
+  EXPECT_EQ(Expression("sin(-1)^2").approximate().toString(),
             "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
-  EXPECT_EQ(Expression("sin1^2").precise().toString(),
+  EXPECT_EQ(Expression("sin1^2").approximate().toString(),
             "0.70807341827357119349878411475038109488300038553777244537757498689098246806203958");
-  EXPECT_EQ(Expression("sin(10^30)").precise().toString(),
+  EXPECT_EQ(Expression("sin(10^30)").approximate().toString(),
             "-0.090116901912138058030386428952987330274396332993043449885460666579773983476795775");
-  EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").precise().toString(), "1.0");
-  EXPECT_EQ(Expression("sin(Pi/3)").precise().toString(),
+  EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").approximate().toString(), "1.0");
+  EXPECT_EQ(Expression("sin(Pi/3)").approximate().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("cos(Pi/3)").precise().toString(), "0.5");
-  EXPECT_EQ(Expression("2!*E").precise().toString(),
+  EXPECT_EQ(Expression("cos(Pi/3)").approximate().toString(), "0.5");
+  EXPECT_EQ(Expression("2!*E").approximate().toString(),
             "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
-  EXPECT_EQ(Expression("E*2!").precise().toString(),
+  EXPECT_EQ(Expression("E*2!").approximate().toString(),
             "5.4365636569180904707205749427053249955144941873999191499339352554481532607070952");
-  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").precise().toString(),
+  EXPECT_EQ(Expression("sqrt((1-cos(2*(Pi/3)))/2)").approximate().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").precise().toString(),
+  EXPECT_EQ(Expression("2*sqrt((1-cos(2*(Pi/3)))/2)*cos(Pi/3)").approximate().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
-  EXPECT_EQ(Expression("1/(sin(5))").precise().toString(),
+  EXPECT_EQ(Expression("1/(sin(5))").approximate().toString(),
             "-1.0428352127714058197831198559077598439723517523645461744044708582222288573346961");
-  EXPECT_EQ(Expression("sin(60deg)").precise().toString(),
+  EXPECT_EQ(Expression("sin(60deg)").approximate().toString(),
             "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002");
 
-  EXPECT_EQ(Expression("E").precise().precise().toString(),
+  EXPECT_EQ(Expression("E").approximate().approximate().toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
 
-  EXPECT_EQ(Expression("E^(E^(E^(E^(E^E))))").precise().toString(),
+  EXPECT_EQ(Expression("E^(E^(E^(E^(E^E))))").approximate().toString(),
             "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476^(2."
             "7182818284590452353602874713526624977572470936999595749669676277240766303535476^(2."
             "3315043990071954622896899110121376663320174289635168232800545468180794366424973*10^1656520))");
 
-  EXPECT_EQ(Expression("(2/3)!").precise().toString(),
+  EXPECT_EQ(Expression("(2/3)!").approximate().toString(),
             "0.90274529295093361129685868543634252367955151070452913226268164530918864360116169");
-  EXPECT_EQ(Expression("E!").precise().toString(),
+  EXPECT_EQ(Expression("E!").approximate().toString(),
             "4.2608204763570033817001212246457024649334243739593219749116048935993443487275001");
-  EXPECT_EQ(Expression("(2/3)!!").precise().toString(),
+  EXPECT_EQ(Expression("(2/3)!!").approximate().toString(),
             "0.66666666666666666666666666666666666666666666666666666666666666666666666666666667!!");
-  EXPECT_EQ(Expression("(1/1000000000000000000000000000000000000000)!!").precise().toString(), "(1.0*10^-39)!!");
-  EXPECT_EQ(Expression("(-1)!!").precise().toString(), "(-1.0)!!");
+  EXPECT_EQ(Expression("(1/1000000000000000000000000000000000000000)!!").approximate().toString(), "(1.0*10^-39)!!");
+  EXPECT_EQ(Expression("(-1)!!").approximate().toString(), "(-1.0)!!");
 
-  EXPECT_EQ(Expression("I").precise().toString(), "I");
-  EXPECT_EQ(Expression("5 + I").precise().toString(), "5.0 + I");
-  EXPECT_EQ(Expression("5 I").precise().toString(), "5.0 I");
-  EXPECT_EQ(Expression("5 + 5 I").precise().toString(), "5.0 + 5.0 I");
-  EXPECT_EQ(Expression("5/I").precise().toString(), "-5.0 I");
-  EXPECT_EQ(Expression("E/I").precise().toString(), "-2.7182818284590452353602874713526624977572470936999595749669676277240766303535476 I");
-  EXPECT_EQ(Expression("-I").precise().toString(), "-I");
-  EXPECT_EQ(Expression("5 - I").precise().toString(), "5.0 - I");
-  EXPECT_EQ(Expression("5 -I").precise().toString(), "5.0 - I");
-  EXPECT_EQ(Expression("5 - 5 I").precise().toString(), "5.0 - 5.0 I");
-  EXPECT_EQ(Expression("5/-I").precise().toString(), "5.0 I");
-  EXPECT_EQ(Expression("E/-I").precise().toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476 I");
+  EXPECT_EQ(Expression("I").approximate().toString(), "I");
+  EXPECT_EQ(Expression("5 + I").approximate().toString(), "5.0 + I");
+  EXPECT_EQ(Expression("5 I").approximate().toString(), "5.0 I");
+  EXPECT_EQ(Expression("5 + 5 I").approximate().toString(), "5.0 + 5.0 I");
+  EXPECT_EQ(Expression("5/I").approximate().toString(), "-5.0 I");
+  EXPECT_EQ(Expression("E/I").approximate().toString(), "-2.7182818284590452353602874713526624977572470936999595749669676277240766303535476 I");
+  EXPECT_EQ(Expression("-I").approximate().toString(), "-I");
+  EXPECT_EQ(Expression("5 - I").approximate().toString(), "5.0 - I");
+  EXPECT_EQ(Expression("5 -I").approximate().toString(), "5.0 - I");
+  EXPECT_EQ(Expression("5 - 5 I").approximate().toString(), "5.0 - 5.0 I");
+  EXPECT_EQ(Expression("5/-I").approximate().toString(), "5.0 I");
+  EXPECT_EQ(Expression("E/-I").approximate().toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476 I");
 
-  EXPECT_EQ(Expression("10^10000").precise(8).toString(), "1.0*10^10000");
-  EXPECT_EQ(Expression("x+E").precise(8).toString(), "x + 2.7182818");
-  EXPECT_EQ(Expression("x^(100!)").precise(8).toString(), "x^(9.3326215*10^157)");
-  EXPECT_EQ(Expression("9^10000").precise(8).toString(), "2.6613034*10^9542");
-  EXPECT_EQ(Expression("sin(E)").precise(16).toString(), "0.4107812905029087");
-  EXPECT_EQ(Expression("sin(sin(E))").precise(30).toString(), "0.39932574404189139297067052142");
-  EXPECT_EQ(Expression("(sqrt(2) + 1)^2").precise(5).toString(), "5.8284");
-  EXPECT_EQ(Expression("(sqrt(2) - a - 1)^2").precise(5).toString(), "a^2.0 - 0.82843 a + 0.17157");
-  EXPECT_EQ(Expression("E/I").precise(5).toString(), "-2.7183 I");
-  EXPECT_EQ(Expression("E/-I").precise(5).toString(), "2.7183 I");
+  EXPECT_EQ(Expression("10^10000").approximate(8).toString(), "1.0*10^10000");
+  EXPECT_EQ(Expression("x+E").approximate(8).toString(), "x + 2.7182818");
+  EXPECT_EQ(Expression("x^(100!)").approximate(8).toString(), "x^(9.3326215*10^157)");
+  EXPECT_EQ(Expression("9^10000").approximate(8).toString(), "2.6613034*10^9542");
+  EXPECT_EQ(Expression("sin(E)").approximate(16).toString(), "0.4107812905029087");
+  EXPECT_EQ(Expression("sin(sin(E))").approximate(30).toString(), "0.39932574404189139297067052142");
+  EXPECT_EQ(Expression("(sqrt(2) + 1)^2").approximate(5).toString(), "5.8284");
+  EXPECT_EQ(Expression("(sqrt(2) - a - 1)^2").approximate(5).toString(), "a^2.0 - 0.82843 a + 0.17157");
+  EXPECT_EQ(Expression("E/I").approximate(5).toString(), "-2.7183 I");
+  EXPECT_EQ(Expression("E/-I").approximate(5).toString(), "2.7183 I");
 
-  EXPECT_EQ(Expression("ln(x)").precise().toString(), "ln(x)");
-  EXPECT_EQ(Expression("sqrt(x)").precise().toString(), "sqrt(x)");
-  EXPECT_EQ(Expression("root(x, 3)").precise().toString(), "root(x, 3)");
-  EXPECT_EQ(Expression("root(x, 10)").precise().toString(), "x^0.1");
-  EXPECT_EQ(Expression("root(x, 33)").precise().toString(),
+  EXPECT_EQ(Expression("ln(x)").approximate().toString(), "ln(x)");
+  EXPECT_EQ(Expression("sqrt(x)").approximate().toString(), "sqrt(x)");
+  EXPECT_EQ(Expression("root(x, 3)").approximate().toString(), "root(x, 3)");
+  EXPECT_EQ(Expression("root(x, 10)").approximate().toString(), "x^0.1");
+  EXPECT_EQ(Expression("root(x, 33)").approximate().toString(),
             "x^0.03030303030303030303030303030303030303030303030303030303030303030303030303030303");
-  EXPECT_EQ(Expression("2^200/x").precise(10).toString(), "(1.606938044*10^60)/x");
-  EXPECT_EQ(Expression("x/2^200").precise(10).toString(), "6.223015278*10^-61 x");
-  EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").precise().toString(), "(0.125 x^3.0)/y - (0.25 x^2.0 z)/y + (0.125 x z^2.0)/y");
+  EXPECT_EQ(Expression("2^200/x").approximate(10).toString(), "(1.606938044*10^60)/x");
+  EXPECT_EQ(Expression("x/2^200").approximate(10).toString(), "6.223015278*10^-61 x");
+  EXPECT_EQ(Expression("((x - z)^2 / 8) * (x / y)").approximate().toString(), "(0.125 x^3.0)/y - (0.25 x^2.0 z)/y + (0.125 x z^2.0)/y");
 
-  EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").precise().toString(), "0");
+  EXPECT_EQ(Expression("derivative(sqrt((1-cos(2*(Pi/3)))/2), x)").approximate().toString(), "0");
 }
 
 TEST(ExpressionTests, toMinimalObjectTest) {

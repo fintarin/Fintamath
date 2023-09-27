@@ -50,15 +50,15 @@ std::string Expression::toString() const {
   return stringCached;
 }
 
-Expression Expression::precise(uint8_t precision) const {
+Expression Expression::approximate(uint8_t precision) const {
   // TODO: rework so that small ints don't convert to reals
-  // TODO: move this transfer to the approximation function
+  // TODO: move this to ExpressionFunctions
   simplifyMutable();
-  Expression preciseExpr(preciseSimplify());
-  preciseExpr.simplifyMutable();
-  preciseRec(preciseExpr.child, precision);
-  preciseExpr.updateStringMutable();
-  return preciseExpr;
+  Expression approxExpr(preciseSimplify());
+  approxExpr.simplifyMutable();
+  approximateRec(approxExpr.child, precision);
+  approxExpr.updateStringMutable();
+  return approxExpr;
 }
 
 const std::shared_ptr<IFunction> &Expression::getFunction() const {
@@ -417,20 +417,20 @@ bool Expression::isNonOperatorFunction(const ArgumentPtr &val) {
   return is<IFunction>(val) && !is<IOperator>(val);
 }
 
-void Expression::preciseRec(ArgumentPtr &arg, uint8_t precision) {
+void Expression::approximateRec(ArgumentPtr &arg, uint8_t precision) {
   if (const auto realArg = cast<Real>(arg)) {
-    arg = realArg->precise(precision).clone();
+    arg = realArg->setPrecision(precision).clone();
   }
   else if (const auto complexArg = cast<Complex>(arg)) {
-    arg = Complex(convert<Real>(complexArg->real())->precise(precision),
-                  convert<Real>(complexArg->imag())->precise(precision))
+    arg = Complex(convert<Real>(complexArg->real())->setPrecision(precision),
+                  convert<Real>(complexArg->imag())->setPrecision(precision))
               .clone();
   }
   else if (const auto exprArg = cast<IExpression>(arg)) {
     ArgumentPtrVector newChildren = exprArg->getChildren();
 
     for (auto &child : newChildren) {
-      preciseRec(child, precision);
+      approximateRec(child, precision);
     }
 
     auto newExprArg = cast<IExpression>(exprArg->clone());
