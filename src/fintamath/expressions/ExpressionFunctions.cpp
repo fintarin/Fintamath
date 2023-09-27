@@ -9,6 +9,14 @@
 #include "fintamath/functions/comparison/More.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/comparison/Neqv.hpp"
+#include "fintamath/functions/hyperbolic/Acosh.hpp"
+#include "fintamath/functions/hyperbolic/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Asinh.hpp"
+#include "fintamath/functions/hyperbolic/Atanh.hpp"
+#include "fintamath/functions/hyperbolic/Cosh.hpp"
+#include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Sinh.hpp"
+#include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
 #include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
@@ -29,7 +37,10 @@
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/Boolean.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/E.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 
 namespace fintamath {
@@ -138,12 +149,36 @@ Expression acot(const Expression &rhs) {
   return Expression(acotExpr(rhs));
 }
 
-Expression e() {
-  return E();
+Expression sinh(const Expression &rhs) {
+  return Expression(sinhExpr(rhs));
 }
 
-Expression pi() {
-  return Pi();
+Expression cosh(const Expression &rhs) {
+  return Expression(coshExpr(rhs));
+}
+
+Expression tanh(const Expression &rhs) {
+  return Expression(tanhExpr(rhs));
+}
+
+Expression coth(const Expression &rhs) {
+  return Expression(cothExpr(rhs));
+}
+
+Expression asinh(const Expression &rhs) {
+  return Expression(asinhExpr(rhs));
+}
+
+Expression acosh(const Expression &rhs) {
+  return Expression(acoshExpr(rhs));
+}
+
+Expression atanh(const Expression &rhs) {
+  return Expression(atanhExpr(rhs));
+}
+
+Expression acoth(const Expression &rhs) {
+  return Expression(acothExpr(rhs));
 }
 
 Expression notL(const Expression &rhs) {
@@ -156,6 +191,26 @@ Expression andL(const Expression &lhs, const Expression &rhs) {
 
 Expression orL(const Expression &lhs, const Expression &rhs) {
   return Expression(orExpr(lhs, rhs));
+}
+
+Expression e() {
+  return E();
+}
+
+Expression pi() {
+  return Pi();
+}
+
+Expression inf() {
+  return Inf();
+}
+
+Expression negInf() {
+  return NegInf();
+}
+
+Expression complexInf() {
+  return ComplexInf();
 }
 
 }
