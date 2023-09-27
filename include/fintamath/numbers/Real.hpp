@@ -38,7 +38,7 @@ public:
 
   bool isPrecise() const override;
 
-  Real precise(uint8_t precision) const;
+  Real setPrecision(uint8_t precision) const;
 
   int sign() const;
 

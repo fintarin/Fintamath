@@ -79,5 +79,5 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(solve(expr).toString(), "x = -1/6 I sqrt(59) - 11/6 | x = 1/6 I sqrt(59) - 11/6");
 
   expr = Expression("-3x^2 + 28x - 49 = 0");
-  EXPECT_EQ(solve(expr).precise(2).toString(), "x = 2.3 | x = 7.0");
+  EXPECT_EQ(solve(expr).approximate(2).toString(), "x = 2.3 | x = 7.0");
 }

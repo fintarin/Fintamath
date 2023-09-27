@@ -101,7 +101,7 @@ bool Real::isPrecise() const {
   return false;
 }
 
-Real Real::precise(uint8_t precision) const {
+Real Real::setPrecision(uint8_t precision) const {
   assert(precision <= FINTAMATH_PRECISION);
   Real res = *this;
   res.ouputPrecision = precision;

@@ -141,7 +141,7 @@ TEST(FunctionExpressionTests, stringConstructorTest) {
 }
 
 TEST(FunctionExpressionTests, preciseTest) {
-  EXPECT_EQ(Expression("testfunction(a + 2^100)").precise(10).toString(), "testfunction(a + 1.2676506*10^30)");
+  EXPECT_EQ(Expression("testfunction(a + 2^100)").approximate(10).toString(), "testfunction(a + 1.2676506*10^30)");
 }
 
 TEST(FunctionExpressionTests, getTypeTest) {

@@ -110,13 +110,13 @@ TEST(RealTests, integerPlusAssignmentOperatorTest) {
 
 TEST(RealTests, doublePlusAssignmentOperatorTest) {
   auto a = Real("0.66") += 0.33;
-  EXPECT_EQ(a.precise(3).toString(), "0.99");
+  EXPECT_EQ(a.setPrecision(3).toString(), "0.99");
   a = Real("-73.85") += 2.55;
-  EXPECT_EQ(a.precise(3).toString(), "-71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-71.3");
   a = Real("73.8") += 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "76.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "76.3");
   a = Real("-73.8") += -2.5;
-  EXPECT_EQ(a.precise(3).toString(), "-76.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-76.3");
 }
 
 TEST(RealTests, plusOperatorTest) {
@@ -151,13 +151,13 @@ TEST(RealTests, integerPlusOperatorTest) {
 
 TEST(RealTests, doublePlusOperatorTest) {
   auto a = Real("0.66") + 0.33;
-  EXPECT_EQ(a.precise(3).toString(), "0.99");
+  EXPECT_EQ(a.setPrecision(3).toString(), "0.99");
   a = Real("-73.85") + 2.55;
-  EXPECT_EQ(a.precise(3).toString(), "-71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-71.3");
   a = Real("73.8") + 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "76.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "76.3");
   a = Real("-73.8") + -2.5;
-  EXPECT_EQ(a.precise(3).toString(), "-76.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-76.3");
 }
 
 TEST(RealTests, rationalFriendPlusOperatorTest) {
@@ -185,13 +185,13 @@ TEST(RealTests, integerFriendPlusOperatorTest) {
 
 TEST(RealTests, doubleFriendPlusOperatorTest) {
   auto a = 0.33 + Real("0.66");
-  EXPECT_EQ(a.precise(3).toString(), "0.99");
+  EXPECT_EQ(a.setPrecision(3).toString(), "0.99");
   a = 2.55 + Real("-73.85");
-  EXPECT_EQ(a.precise(3).toString(), "-71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-71.3");
   a = 2.5 + Real("73.8");
-  EXPECT_EQ(a.precise(3).toString(), "76.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "76.3");
   a = -2.5 + Real("-73.8");
-  EXPECT_EQ(a.precise(3).toString(), "-76.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-76.3");
 }
 
 TEST(RealTests, minusAssignmentOperatorTest) {
@@ -226,13 +226,13 @@ TEST(RealTests, integerMinusAssignmentOperatorTest) {
 
 TEST(RealTests, doubleMinusAssignmentOperatorTest) {
   auto a = Real("0.66") -= 0.22;
-  EXPECT_EQ(a.precise(3).toString(), "0.44");
+  EXPECT_EQ(a.setPrecision(3).toString(), "0.44");
   a = Real("-73.85") -= 2.55;
-  EXPECT_EQ(a.precise(3).toString(), "-76.4");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-76.4");
   a = Real("73.8") -= 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "71.3");
   a = Real("-73.8") -= -2.5;
-  EXPECT_EQ(a.precise(3).toString(), "-71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-71.3");
 }
 
 TEST(RealTests, minusOperatorTest) {
@@ -267,13 +267,13 @@ TEST(RealTests, integerMinusOperatorTest) {
 
 TEST(RealTests, doubleMinusOperatorTest) {
   auto a = Real("0.66") - 0.22;
-  EXPECT_EQ(a.precise(3).toString(), "0.44");
+  EXPECT_EQ(a.setPrecision(3).toString(), "0.44");
   a = Real("-73.85") - 2.55;
-  EXPECT_EQ(a.precise(3).toString(), "-76.4");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-76.4");
   a = Real("73.8") - 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "71.3");
   a = Real("-73.8") - -2.5;
-  EXPECT_EQ(a.precise(3).toString(), "-71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-71.3");
 }
 
 TEST(RealTests, rationalFriendMinusOperatorTest) {
@@ -301,13 +301,13 @@ TEST(RealTests, integerFriendMinusOperatorTest) {
 
 TEST(RealTests, doubleFriendMinusOperatorTest) {
   auto a = 0.22 - Real("0.66");
-  EXPECT_EQ(a.precise(3).toString(), "-0.44");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-0.44");
   a = 2.55 - Real("-73.85");
-  EXPECT_EQ(a.precise(3).toString(), "76.4");
+  EXPECT_EQ(a.setPrecision(3).toString(), "76.4");
   a = 2.5 - Real("73.8");
-  EXPECT_EQ(a.precise(3).toString(), "-71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-71.3");
   a = -2.5 - Real("-73.8");
-  EXPECT_EQ(a.precise(3).toString(), "71.3");
+  EXPECT_EQ(a.setPrecision(3).toString(), "71.3");
 }
 
 TEST(RealTests, multiplyAssignmentOperatorTest) {
@@ -331,11 +331,11 @@ TEST(RealTests, integerMultiplyAssignmentOperatorTest) {
 
 TEST(RealTests, doubleMultiplyAssignmentOperatorTest) {
   auto a = Real(5) *= 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "12.5");
+  EXPECT_EQ(a.setPrecision(3).toString(), "12.5");
   a = Real("-2.05") *= -1.1;
-  EXPECT_EQ(a.precise(3).toString(), "2.26");
+  EXPECT_EQ(a.setPrecision(3).toString(), "2.26");
   a = Real("2.5") *= -1.1;
-  EXPECT_EQ(a.precise(3).toString(), "-2.75");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-2.75");
 }
 
 TEST(RealTests, multiplyOperatorTest) {
@@ -359,11 +359,11 @@ TEST(RealTests, integerMultiplyOperatorTest) {
 
 TEST(RealTests, doubleMultiplyOperatorTest) {
   auto a = Real(5) * 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "12.5");
+  EXPECT_EQ(a.setPrecision(3).toString(), "12.5");
   a = Real("-2.05") * -1.1;
-  EXPECT_EQ(a.precise(3).toString(), "2.26");
+  EXPECT_EQ(a.setPrecision(3).toString(), "2.26");
   a = Real("2.5") * -1.1;
-  EXPECT_EQ(a.precise(3).toString(), "-2.75");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-2.75");
 }
 
 TEST(RealTests, rationalFriendMultiplyOperatorTest) {
@@ -381,11 +381,11 @@ TEST(RealTests, integerFriendMultiplyOperatorTest) {
 
 TEST(RealTests, doubleFriendMultiplyOperatorTest) {
   auto a = 2.5 * Real(5);
-  EXPECT_EQ(a.precise(3).toString(), "12.5");
+  EXPECT_EQ(a.setPrecision(3).toString(), "12.5");
   a = -1.1 * Real("-2.05");
-  EXPECT_EQ(a.precise(3).toString(), "2.26");
+  EXPECT_EQ(a.setPrecision(3).toString(), "2.26");
   a = -1.1 * Real("2.5");
-  EXPECT_EQ(a.precise(3).toString(), "-2.75");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-2.75");
 }
 
 TEST(RealTests, divideAssignmentOperatorTest) {
@@ -419,11 +419,11 @@ TEST(RealTests, integerDivideAssignmentOperatorTest) {
 
 TEST(RealTests, doubleDivideAssignmentOperatorTest) {
   auto a = Real("12.5") /= 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "5.0");
+  EXPECT_EQ(a.setPrecision(3).toString(), "5.0");
   a = Real("2.255") /= -1.1;
-  EXPECT_EQ(a.precise(3).toString(), "-2.05");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-2.05");
   a = Real("-2.75") /= -1.1;
-  EXPECT_EQ(a.precise(3).toString(), "2.5");
+  EXPECT_EQ(a.setPrecision(3).toString(), "2.5");
 }
 
 TEST(RealTests, divideOperatorTest) {
@@ -457,11 +457,11 @@ TEST(RealTests, integerDivideOperatorTest) {
 
 TEST(RealTests, doubleDivideOperatorTest) {
   auto a = Real("12.5") / 2.5;
-  EXPECT_EQ(a.precise(3).toString(), "5.0");
+  EXPECT_EQ(a.setPrecision(3).toString(), "5.0");
   a = Real("2.255") / -1.1;
-  EXPECT_EQ(a.precise(3).toString(), "-2.05");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-2.05");
   a = Real("-2.75") / -1.1;
-  EXPECT_EQ(a.precise(2).toString(), "2.5");
+  EXPECT_EQ(a.setPrecision(2).toString(), "2.5");
 }
 
 TEST(RealTests, rationalFriendDivideOperatorTest) {
@@ -486,11 +486,11 @@ TEST(RealTests, integerFriendDivideOperatorTest) {
 
 TEST(RealTests, doubleFriendDivideOperatorTest) {
   auto a = 2.5 / Real("5");
-  EXPECT_EQ(a.precise(3).toString(), "0.5");
+  EXPECT_EQ(a.setPrecision(3).toString(), "0.5");
   a = -1.1 / Real("-2.5");
-  EXPECT_EQ(a.precise(3).toString(), "0.44");
+  EXPECT_EQ(a.setPrecision(3).toString(), "0.44");
   a = -1.1 / Real("0.1");
-  EXPECT_EQ(a.precise(3).toString(), "-11.0");
+  EXPECT_EQ(a.setPrecision(3).toString(), "-11.0");
 }
 
 TEST(RealTests, unaryPlusOperatorTest) {
@@ -856,18 +856,18 @@ TEST(RealTests, toStringTest) {
 TEST(RealTests, preciseTests) {
   Real val = Rational(1, 3);
 
-  EXPECT_EQ(val.precise(1).toString(), "0.3");
-  EXPECT_EQ(val.precise(2).toString(), "0.33");
-  EXPECT_EQ(val.precise(3).toString(), "0.333");
-  EXPECT_EQ(val.precise(10).toString(), "0.3333333333");
+  EXPECT_EQ(val.setPrecision(1).toString(), "0.3");
+  EXPECT_EQ(val.setPrecision(2).toString(), "0.33");
+  EXPECT_EQ(val.setPrecision(3).toString(), "0.333");
+  EXPECT_EQ(val.setPrecision(10).toString(), "0.3333333333");
 
-  EXPECT_EQ((-val).precise(1).toString(), "-0.3");
-  EXPECT_EQ((-val).precise(2).toString(), "-0.33");
-  EXPECT_EQ((-val).precise(3).toString(), "-0.333");
-  EXPECT_EQ((-val).precise(10).toString(), "-0.3333333333");
+  EXPECT_EQ((-val).setPrecision(1).toString(), "-0.3");
+  EXPECT_EQ((-val).setPrecision(2).toString(), "-0.33");
+  EXPECT_EQ((-val).setPrecision(3).toString(), "-0.333");
+  EXPECT_EQ((-val).setPrecision(10).toString(), "-0.3333333333");
 
-  EXPECT_EQ(Real("10000000000000000000.37841620837012").precise(22).toString(), "10000000000000000000.38");
-  EXPECT_EQ(Real("10000000000000000000.375").precise(22).toString(), "10000000000000000000.38");
+  EXPECT_EQ(Real("10000000000000000000.37841620837012").setPrecision(22).toString(), "10000000000000000000.38");
+  EXPECT_EQ(Real("10000000000000000000.375").setPrecision(22).toString(), "10000000000000000000.38");
 }
 
 TEST(RealTests, signTests) {
