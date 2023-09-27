@@ -66,18 +66,18 @@ TEST(FintamathTests, fintamathTests) {
 
   //-------------------------------------------------------------------------------------//
 
-  expr = eqv(pow(x, 2) - 10, 39);
-  EXPECT_EQ(solve(expr).toString(), "x = -7 | x = 7");
+  expr = solve(eqv(pow(x, 2) - 10, 39));
+  EXPECT_EQ(expr.toString(), "x = -7 | x = 7");
 
-  expr = Expression("-4x^2 + 28x - 49 = 0");
-  EXPECT_EQ(solve(expr).toString(), "x = 7/2");
+  expr = solve(Expression("-4x^2 + 28x - 49 = 0"));
+  EXPECT_EQ(expr.toString(), "x = 7/2");
 
-  expr = Expression("x^2 + 4x + 5 = 0");
-  EXPECT_EQ(solve(expr).toString(), "x = -2 - I | x = -2 + I");
+  expr = solve(Expression("x^2 + 4x + 5 = 0"));
+  EXPECT_EQ(expr.toString(), "x = -2 - I | x = -2 + I");
 
-  expr = Expression("3x^2 + 11x + 15 = 0");
-  EXPECT_EQ(solve(expr).toString(), "x = -1/6 I sqrt(59) - 11/6 | x = 1/6 I sqrt(59) - 11/6");
+  expr = solve(Expression("3x^2 + 11x + 15 = 0"));
+  EXPECT_EQ(expr.toString(), "x = -1/6 I sqrt(59) - 11/6 | x = 1/6 I sqrt(59) - 11/6");
 
-  expr = Expression("-3x^2 + 28x - 49 = 0");
-  EXPECT_EQ(solve(expr).approximate(2).toString(), "x = 2.3 | x = 7.0");
+  expr = solve(Expression("-3x^2 + 28x - 49 = 0")).approximate(2);
+  EXPECT_EQ(expr.toString(), "x = 2.3 | x = 7.0");
 }
