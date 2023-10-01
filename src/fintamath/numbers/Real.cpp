@@ -98,6 +98,10 @@ std::string Real::toString() const {
     res.insert(expPos, ".0");
   }
 
+  if (res.ends_with("^1")) {
+    res.erase(res.size() - 2, 2);
+  }
+
   return res;
 }
 

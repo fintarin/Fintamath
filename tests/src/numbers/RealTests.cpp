@@ -976,6 +976,10 @@ TEST(RealTests, setPrecisionTests) {
   val = Real("1000000000.1");
   val.setPrecision(1);
   EXPECT_EQ(val.toString(), "1.0*10^9");
+  
+  val = Real("10.1");
+  val.setPrecision(1);
+  EXPECT_EQ(val.toString(), "1.0*10");
 }
 
 TEST(RealTests, signTests) {
