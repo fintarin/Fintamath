@@ -71,20 +71,28 @@ std::string Real::toString() const {
   std::stringstream ss;
   ss.precision(ouputPrecision);
   ss << backend;
+
   std::string res = ss.str();
 
   size_t expPos = res.find('e');
 
   if (expPos != std::string::npos) {
+    {
+      size_t expNextPos = expPos + 1;
+
+      if (res[expNextPos] == '+') {
+        res.erase(expNextPos, 1);
+      }
+      else {
+        expNextPos++;
+      }
+
+      if (res[expNextPos] == '0') {
+        res.erase(expNextPos, 1);
+      }
+    }
+
     res.replace(expPos, 1, "*10^");
-
-    if (size_t plusPos = res.find('+'); plusPos != std::string::npos) {
-      res.replace(plusPos, 1, "");
-    }
-
-    if (size_t negZeroPos = res.find("-0"); negZeroPos != std::string::npos) {
-      res.replace(negZeroPos + 1, 1, "");
-    }
   }
   else {
     expPos = res.size();

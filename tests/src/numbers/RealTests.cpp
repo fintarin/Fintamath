@@ -17,7 +17,6 @@ TEST(RealTests, stringConstructorTest) {
   EXPECT_EQ(Real("0989929039237832000.9302930929333").toString(), "989929039237832000.9302930929333");
   EXPECT_EQ(Real(".1").toString(), "0.1");
   EXPECT_EQ(Real("1.").toString(), "1.0");
-  EXPECT_EQ(Real("0.000000001").toString(), "1.0*10^-9");
   EXPECT_EQ(Real("10000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000")
                 .toString(),
             "1.00000000002*10^94");
@@ -853,7 +852,7 @@ TEST(RealTests, toStringTest) {
       "-1.0*10^90");
 }
 
-TEST(RealTests, preciseTests) {
+TEST(RealTests, setPrecisionTests) {
   Real val = Rational(1, 3);
 
   EXPECT_EQ(val.setPrecision(1).toString(), "0.3");
@@ -868,6 +867,9 @@ TEST(RealTests, preciseTests) {
 
   EXPECT_EQ(Real("10000000000000000000.37841620837012").setPrecision(22).toString(), "10000000000000000000.38");
   EXPECT_EQ(Real("10000000000000000000.375").setPrecision(22).toString(), "10000000000000000000.38");
+
+  EXPECT_EQ(Real("0.000000001").setPrecision(1).toString(), "1.0*10^-9");
+  EXPECT_EQ(Real("1000000000.1").setPrecision(1).toString(), "1.0*10^9");
 }
 
 TEST(RealTests, signTests) {
