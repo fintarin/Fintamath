@@ -419,12 +419,18 @@ bool Expression::isNonOperatorFunction(const ArgumentPtr &val) {
 
 void Expression::approximateRec(ArgumentPtr &arg, uint8_t precision) {
   if (const auto realArg = cast<Real>(arg)) {
-    arg = realArg->setPrecision(precision).clone();
+    Real val = *realArg;
+    val.setPrecision(precision);
+    arg = val.clone();
   }
   else if (const auto complexArg = cast<Complex>(arg)) {
-    arg = Complex(convert<Real>(complexArg->real())->setPrecision(precision),
-                  convert<Real>(complexArg->imag())->setPrecision(precision))
-              .clone();
+    Real re = *convert<Real>(complexArg->real());
+    re.setPrecision(precision);
+
+    Real im = *convert<Real>(complexArg->imag());
+    im.setPrecision(precision);
+
+    arg = Complex(re, im).clone();
   }
   else if (const auto exprArg = cast<IExpression>(arg)) {
     ArgumentPtrVector newChildren = exprArg->getChildren();

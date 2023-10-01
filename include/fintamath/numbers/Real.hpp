@@ -38,7 +38,9 @@ public:
 
   bool isPrecise() const override;
 
-  Real setPrecision(uint8_t precision) const;
+  uint8_t getPrecision() const;
+
+  void setPrecision(uint8_t precision);
 
   int sign() const;
 
@@ -66,7 +68,7 @@ protected:
 private:
   boost::multiprecision::cpp_dec_float_100 backend;
 
-  uint8_t ouputPrecision = FINTAMATH_PRECISION;
+  uint8_t outputPrecision = FINTAMATH_PRECISION;
 };
 
 }
