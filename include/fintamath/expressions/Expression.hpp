@@ -12,19 +12,19 @@ namespace fintamath {
 struct Term {
   Token name;
 
-  ArgumentPtr value;
+  std::unique_ptr<IMathObject> value;
 
 public:
   Term() = default;
 
-  Term(std::string inName, ArgumentPtr inValue)
+  Term(std::string inName, std::unique_ptr<IMathObject> inValue)
       : name(std::move(inName)),
         value(std::move(inValue)) {
   }
 };
 
-using TermVector = std::vector<std::shared_ptr<Term>>;
-using OperandStack = std::stack<ArgumentPtr>;
+using TermVector = std::vector<std::unique_ptr<Term>>;
+using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 
 class Expression : public IExpressionCRTP<Expression> {
 public:
@@ -85,9 +85,9 @@ private:
 
   static TermVector tokensToTerms(const TokenVector &tokens);
 
-  static OperandStack termsToOperands(const TermVector &terms);
+  static OperandStack termsToOperands(TermVector &terms);
 
-  static ArgumentPtr operandsToExpr(OperandStack &operands);
+  static std::unique_ptr<IMathObject> operandsToObject(OperandStack &operands);
 
   static ArgumentPtrVector unwrapComma(const ArgumentPtr &child);
 
@@ -101,13 +101,13 @@ private:
 
   static bool canPrevTermBeBinaryOperator(const Term &term);
 
-  static bool isBinaryOperator(const ArgumentPtr &val);
+  static bool isBinaryOperator(const IMathObject *val);
 
-  static bool isPrefixOperator(const ArgumentPtr &val);
+  static bool isPrefixOperator(const IMathObject *val);
 
-  static bool isPostfixOperator(const ArgumentPtr &val);
+  static bool isPostfixOperator(const IMathObject *val);
 
-  static bool isNonOperatorFunction(const ArgumentPtr &val);
+  static bool isNonOperatorFunction(const IMathObject *val);
 
   static void validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args);
 
@@ -121,7 +121,7 @@ private:
 
   friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args);
 
-  friend ArgumentPtr parseExpr(const std::string &str);
+  friend std::unique_ptr<IMathObject> parseFintamath(const std::string &str);
 
   static Parser::Vector<std::unique_ptr<Term>, const Token &> &getTermMakers();
 
@@ -136,8 +136,6 @@ private:
 
   mutable bool isSimplified = false;
 };
-
-ArgumentPtr parseExpr(const std::string &str);
 
 Expression operator+(const Variable &lhs, const Variable &rhs);
 

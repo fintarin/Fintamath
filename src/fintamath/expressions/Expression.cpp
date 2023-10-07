@@ -1,5 +1,6 @@
 #include "fintamath/expressions/Expression.hpp"
 
+#include "fintamath/expressions/ExpressionParser.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/FunctionExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
@@ -17,14 +18,14 @@
 namespace fintamath {
 
 struct TermWithPriority {
-  std::shared_ptr<Term> term;
+  std::unique_ptr<Term> term;
 
   IOperator::Priority priority = IOperator::Priority::Lowest;
 
 public:
   TermWithPriority() = default;
 
-  TermWithPriority(std::shared_ptr<Term> inTerm, IOperator::Priority inPriority)
+  TermWithPriority(std::unique_ptr<Term> inTerm, IOperator::Priority inPriority)
       : term(std::move(inTerm)),
         priority(inPriority) {
   }
@@ -33,7 +34,7 @@ public:
 Expression::Expression() : child(Integer(0).clone()) {
 }
 
-Expression::Expression(const std::string &str) : child(parseExpr(str)) {
+Expression::Expression(const std::string &str) : child(parseFintamath(str)) {
 }
 
 Expression::Expression(const ArgumentPtr &obj) : child(compress(obj)) {
@@ -140,13 +141,13 @@ void Expression::updateStringMutable() const {
   stringCached = child->toString();
 }
 
-ArgumentPtr parseExpr(const std::string &str) {
+std::unique_ptr<IMathObject> parseFintamath(const std::string &str) {
   try {
     auto tokens = Tokenizer::tokenize(str);
     auto terms = Expression::tokensToTerms(tokens);
     auto stack = Expression::termsToOperands(terms);
-    auto expr = Expression::operandsToExpr(stack);
-    return expr;
+    auto obj = Expression::operandsToObject(stack);
+    return obj;
   }
   catch (const InvalidInputException &) {
     throw InvalidInputException(str);
@@ -165,7 +166,7 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
       terms[i] = std::move(term);
     }
     else {
-      terms[i] = std::make_unique<Term>(tokens[i], ArgumentPtr());
+      terms[i] = std::make_unique<Term>(tokens[i], std::unique_ptr<IMathObject>());
     }
   }
 
@@ -178,20 +179,20 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
 
 // Use the shunting yard algorithm
 // https://en.m.wikipedia.org/wiki/Shunting_yard_algorithm
-OperandStack Expression::termsToOperands(const TermVector &terms) {
-  std::stack<ArgumentPtr> outStack;
+OperandStack Expression::termsToOperands(TermVector &terms) {
+  OperandStack outStack;
   std::stack<TermWithPriority> operStack;
 
-  for (const auto &term : terms) {
+  for (auto &&term : terms) {
     if (!term->value) {
       if (term->name == "(") {
-        operStack.emplace(term, IOperator::Priority::Lowest);
+        operStack.emplace(std::move(term), IOperator::Priority::Lowest);
       }
       else if (term->name == ")") {
         while (!operStack.empty() &&
                operStack.top().term->name != "(") {
 
-          outStack.emplace(operStack.top().term->value);
+          outStack.emplace(std::move(operStack.top().term->value));
           operStack.pop();
         }
 
@@ -207,24 +208,24 @@ OperandStack Expression::termsToOperands(const TermVector &terms) {
     }
     else {
       if (is<IFunction>(term->value)) {
-        if (auto oper = cast<IOperator>(term->value)) {
+        if (const auto *oper = cast<IOperator>(term->value.get())) {
           while (!operStack.empty() &&
                  operStack.top().term->name != "(" &&
                  operStack.top().priority <= oper->getOperatorPriority() &&
                  !isPrefixOperator(oper)) {
 
-            outStack.emplace(operStack.top().term->value);
+            outStack.emplace(std::move(operStack.top().term->value));
             operStack.pop();
           }
 
-          operStack.emplace(term, oper->getOperatorPriority());
+          operStack.emplace(std::move(term), oper->getOperatorPriority());
         }
         else {
-          operStack.emplace(term, IOperator::Priority::Highest);
+          operStack.emplace(std::move(term), IOperator::Priority::Highest);
         }
       }
       else {
-        outStack.emplace(term->value);
+        outStack.emplace(std::move(term->value));
       }
     }
   }
@@ -234,26 +235,27 @@ OperandStack Expression::termsToOperands(const TermVector &terms) {
       throw InvalidInputException("");
     }
 
-    outStack.emplace(operStack.top().term->value);
+    outStack.emplace(std::move(operStack.top().term->value));
     operStack.pop();
   }
 
   return outStack;
 }
 
-ArgumentPtr Expression::operandsToExpr(OperandStack &operands) {
+std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands) {
   if (operands.empty()) {
     throw InvalidInputException("");
   }
 
-  ArgumentPtr arg = operands.top();
+  std::unique_ptr<IMathObject> arg = std::move(operands.top());
   operands.pop();
 
-  if (auto func = cast<IFunction>(arg)) {
-    ArgumentPtr rhsChild = operandsToExpr(operands);
+  if (is<IFunction>(arg)) {
+    auto func = cast<IFunction>(std::move(arg));
+    ArgumentPtr rhsChild = operandsToObject(operands);
 
-    if (isBinaryOperator(func)) {
-      ArgumentPtr lhsChild = operandsToExpr(operands);
+    if (isBinaryOperator(func.get())) {
+      ArgumentPtr lhsChild = operandsToObject(operands);
       return makeExpr(*func, {lhsChild, rhsChild});
     }
 
@@ -298,8 +300,8 @@ void Expression::insertMultiplications(TermVector &terms) {
     if (canNextTermBeBinaryOperator(*terms[i - 1]) &&
         canPrevTermBeBinaryOperator(*terms[i])) {
 
-      auto term = std::make_shared<Term>(mul->toString(), mul);
-      terms.insert(terms.begin() + ptrdiff_t(i), term);
+      auto term = std::make_unique<Term>(mul->toString(), mul->clone());
+      terms.insert(terms.begin() + ptrdiff_t(i), std::move(term));
       i++;
     }
   }
@@ -310,7 +312,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
 
   if (const auto &term = terms.front();
       is<IOperator>(term->value) &&
-      !isPrefixOperator(term->value)) {
+      !isPrefixOperator(term->value.get())) {
 
     term->value = IOperator::parse(term->name, IOperator::Priority::PrefixUnary);
     isFixed = isFixed && term->value;
@@ -318,7 +320,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
 
   if (const auto &term = terms.back();
       is<IOperator>(term->value) &&
-      !isPostfixOperator(term->value)) {
+      !isPostfixOperator(term->value.get())) {
 
     term->value = IOperator::parse(term->name, IOperator::Priority::PostfixUnary);
     isFixed = isFixed && term->value;
@@ -337,7 +339,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     const auto &termPrev = terms[i - 1];
 
     if (is<IOperator>(term->value) &&
-        !isPrefixOperator(term->value) &&
+        !isPrefixOperator(term->value.get()) &&
         !canNextTermBeBinaryOperator(*termPrev)) {
 
       term->value = IOperator::parse(term->name, IOperator::Priority::PrefixUnary);
@@ -351,7 +353,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     const auto &termNext = terms[i + 1];
 
     if (is<IOperator>(term->value) &&
-        !isPostfixOperator(term->value) &&
+        !isPostfixOperator(term->value.get()) &&
         !canPrevTermBeBinaryOperator(*termNext)) {
 
       term->value = IOperator::parse(term->name, IOperator::Priority::PostfixUnary);
@@ -369,12 +371,9 @@ void Expression::collapseFactorials(TermVector &terms) {
     const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
-    if (auto factorial = cast<Factorial>(term->value);
-        factorial &&
-        is<Factorial>(termNext->value)) {
-
-      Factorial newFactorial;
-      newFactorial.setOrder(factorial->getOrder() + 1);
+    if (is<Factorial>(term->value) && is<Factorial>(termNext->value)) {
+      const auto &oldFactorial = cast<Factorial>(*term->value);
+      Factorial newFactorial(oldFactorial.getOrder() + 1);
       term->value = newFactorial.clone();
 
       terms.erase(terms.begin() + ptrdiff_t(i) + 1);
@@ -384,36 +383,36 @@ void Expression::collapseFactorials(TermVector &terms) {
 }
 
 bool Expression::canNextTermBeBinaryOperator(const Term &term) {
-  return !(isPrefixOperator(term.value) ||
-           isBinaryOperator(term.value) ||
-           isNonOperatorFunction(term.value) ||
+  return !(isPrefixOperator(term.value.get()) ||
+           isBinaryOperator(term.value.get()) ||
+           isNonOperatorFunction(term.value.get()) ||
            term.name == "(" ||
            term.name == ",");
 }
 
 bool Expression::canPrevTermBeBinaryOperator(const Term &term) {
-  return !(isPostfixOperator(term.value) ||
-           isBinaryOperator(term.value) ||
+  return !(isPostfixOperator(term.value.get()) ||
+           isBinaryOperator(term.value.get()) ||
            term.name == ")" ||
            term.name == ",");
 }
 
-bool Expression::isBinaryOperator(const ArgumentPtr &val) {
-  auto oper = cast<IOperator>(val);
+bool Expression::isBinaryOperator(const IMathObject *val) {
+  const auto *oper = cast<IOperator>(val);
   return oper && oper->getFunctionType() == IFunction::Type::Binary;
 }
 
-bool Expression::isPrefixOperator(const ArgumentPtr &val) {
-  auto oper = cast<IOperator>(val);
+bool Expression::isPrefixOperator(const IMathObject *val) {
+  const auto *oper = cast<IOperator>(val);
   return oper && oper->getOperatorPriority() == IOperator::Priority::PrefixUnary;
 }
 
-bool Expression::isPostfixOperator(const ArgumentPtr &val) {
-  auto oper = cast<IOperator>(val);
+bool Expression::isPostfixOperator(const IMathObject *val) {
+  const auto *oper = cast<IOperator>(val);
   return oper && oper->getOperatorPriority() == IOperator::Priority::PostfixUnary;
 }
 
-bool Expression::isNonOperatorFunction(const ArgumentPtr &val) {
+bool Expression::isNonOperatorFunction(const IMathObject *val) {
   return is<IFunction>(val) && !is<IOperator>(val);
 }
 

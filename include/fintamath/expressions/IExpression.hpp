@@ -55,8 +55,6 @@ protected:
 
   static void preciseSimplifyChild(ArgumentPtr &child);
 
-  static void constSimplifyChild(ArgumentPtr &child);
-
   static ArgumentPtr callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs);
 
 private:
