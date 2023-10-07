@@ -98,28 +98,28 @@ struct ExpressionConfig {
 
   static void registerTermsMakers() {
     Expression::registerTermsMaker([](const Token &token) {
-      if (ArgumentPtr arg = IFunction::parse(token, IFunction::Type::Binary)) {
-        return std::make_unique<Term>(token, arg);
+      if (auto arg = IFunction::parse(token, IFunction::Type::Binary)) {
+        return std::make_unique<Term>(token, std::move(arg));
       }
 
-      if (ArgumentPtr arg = IFunction::parse(token)) {
-        return std::make_unique<Term>(token, arg);
-      }
-
-      return std::unique_ptr<Term>();
-    });
-
-    Expression::registerTermsMaker([](const Token &token) {
-      if (ArgumentPtr arg = ILiteral::parse(token)) {
-        return std::make_unique<Term>(token, arg);
+      if (auto arg = IFunction::parse(token)) {
+        return std::make_unique<Term>(token, std::move(arg));
       }
 
       return std::unique_ptr<Term>();
     });
 
     Expression::registerTermsMaker([](const Token &token) {
-      if (ArgumentPtr arg = INumber::parse(token)) {
-        return std::make_unique<Term>(token, arg->toMinimalObject());
+      if (auto arg = ILiteral::parse(token)) {
+        return std::make_unique<Term>(token, std::move(arg));
+      }
+
+      return std::unique_ptr<Term>();
+    });
+
+    Expression::registerTermsMaker([](const Token &token) {
+      if (auto arg = INumber::parse(token)) {
+        return std::make_unique<Term>(token, std::move(arg));
       }
 
       return std::unique_ptr<Term>();

@@ -78,6 +78,10 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
     return Integer(0).clone();
   }
 
+  if (*rhs == Integer(1)) {
+    return lhs;
+  }
+
   return {};
 }
 

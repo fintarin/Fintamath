@@ -92,8 +92,20 @@ void IExpression::preSimplifyChild(ArgumentPtr &child) {
       child = simplObj;
     }
   }
+  else {
+    if (const auto constChild = cast<IConstant>(child)) {
+      ArgumentPtr constVal = (*constChild)();
 
-  constSimplifyChild(child);
+      if (const auto num = cast<INumber>(constVal); num && !num->isPrecise()) {
+        child = constChild;
+      }
+      else {
+        child = constVal;
+      }
+    }
+
+    child = child->toMinimalObject();
+  }
 }
 
 void IExpression::postSimplifyChild(ArgumentPtr &child) {
@@ -188,19 +200,6 @@ ArgumentPtr IExpression::preciseSimplify() const {
   auto res = cast<IExpression>(clone());
   res->setChildren(children);
   return res;
-}
-
-void IExpression::constSimplifyChild(ArgumentPtr &child) {
-  if (const auto constChild = cast<IConstant>(child)) {
-    ArgumentPtr constVal = (*constChild)();
-
-    if (const auto num = cast<INumber>(constVal); num && !num->isPrecise()) {
-      child = constChild;
-    }
-    else {
-      child = constVal;
-    }
-  }
 }
 
 }
