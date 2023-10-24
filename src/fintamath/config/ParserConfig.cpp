@@ -26,10 +26,14 @@
 #include "fintamath/functions/comparison/Neqv.hpp"
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/hyperbolic/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Acsch.hpp"
+#include "fintamath/functions/hyperbolic/Asech.hpp"
 #include "fintamath/functions/hyperbolic/Asinh.hpp"
 #include "fintamath/functions/hyperbolic/Atanh.hpp"
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Csch.hpp"
+#include "fintamath/functions/hyperbolic/Sech.hpp"
 #include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
@@ -54,10 +58,14 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
+#include "fintamath/functions/trigonometry/Acsc.hpp"
+#include "fintamath/functions/trigonometry/Asec.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Csc.hpp"
+#include "fintamath/functions/trigonometry/Sec.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/Boolean.hpp"
@@ -188,19 +196,27 @@ struct ParserConfig {
     IFunction::registerType<Cos>();
     IFunction::registerType<Tan>();
     IFunction::registerType<Cot>();
+    IFunction::registerType<Sec>();
+    IFunction::registerType<Csc>();
     IFunction::registerType<Asin>();
     IFunction::registerType<Acos>();
     IFunction::registerType<Atan>();
     IFunction::registerType<Acot>();
+    IFunction::registerType<Asec>();
+    IFunction::registerType<Acsc>();
     IFunction::registerType<Sign>();
     IFunction::registerType<Sinh>();
     IFunction::registerType<Cosh>();
     IFunction::registerType<Tanh>();
     IFunction::registerType<Coth>();
+    IFunction::registerType<Sech>();
+    IFunction::registerType<Csch>();
     IFunction::registerType<Asinh>();
     IFunction::registerType<Acosh>();
     IFunction::registerType<Atanh>();
     IFunction::registerType<Acoth>();
+    IFunction::registerType<Asech>();
+    IFunction::registerType<Acsch>();
     IFunction::registerType<Min>();
     IFunction::registerType<Max>();
     IFunction::registerType<Derivative>();

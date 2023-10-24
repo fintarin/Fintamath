@@ -23,10 +23,14 @@
 #include "fintamath/functions/comparison/Neqv.hpp"
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/hyperbolic/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Acsch.hpp"
+#include "fintamath/functions/hyperbolic/Asech.hpp"
 #include "fintamath/functions/hyperbolic/Asinh.hpp"
 #include "fintamath/functions/hyperbolic/Atanh.hpp"
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Csch.hpp"
+#include "fintamath/functions/hyperbolic/Sech.hpp"
 #include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
@@ -50,10 +54,14 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
+#include "fintamath/functions/trigonometry/Acsc.hpp"
+#include "fintamath/functions/trigonometry/Asec.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Csc.hpp"
+#include "fintamath/functions/trigonometry/Sec.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/Boolean.hpp"
@@ -62,13 +70,13 @@
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/False.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/I.hpp"
-#include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/literals/constants/True.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -209,20 +217,28 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Cos>(IFunction::parse("cos")));
   EXPECT_TRUE(is<Tan>(IFunction::parse("tan")));
   EXPECT_TRUE(is<Cot>(IFunction::parse("cot")));
+  EXPECT_TRUE(is<Sec>(IFunction::parse("sec")));
+  EXPECT_TRUE(is<Csc>(IFunction::parse("csc")));
   EXPECT_TRUE(is<Asin>(IFunction::parse("asin")));
   EXPECT_TRUE(is<Acos>(IFunction::parse("acos")));
   EXPECT_TRUE(is<Atan>(IFunction::parse("atan")));
   EXPECT_TRUE(is<Acot>(IFunction::parse("acot")));
+  EXPECT_TRUE(is<Asec>(IFunction::parse("asec")));
+  EXPECT_TRUE(is<Acsc>(IFunction::parse("acsc")));
   EXPECT_TRUE(is<Abs>(IFunction::parse("abs")));
   EXPECT_TRUE(is<Sign>(IFunction::parse("sign")));
   EXPECT_TRUE(is<Sinh>(IFunction::parse("sinh")));
   EXPECT_TRUE(is<Cosh>(IFunction::parse("cosh")));
   EXPECT_TRUE(is<Tanh>(IFunction::parse("tanh")));
   EXPECT_TRUE(is<Coth>(IFunction::parse("coth")));
+  EXPECT_TRUE(is<Sech>(IFunction::parse("sech")));
+  EXPECT_TRUE(is<Csch>(IFunction::parse("csch")));
   EXPECT_TRUE(is<Asinh>(IFunction::parse("asinh")));
   EXPECT_TRUE(is<Acosh>(IFunction::parse("acosh")));
   EXPECT_TRUE(is<Atanh>(IFunction::parse("atanh")));
   EXPECT_TRUE(is<Acoth>(IFunction::parse("acoth")));
+  EXPECT_TRUE(is<Asech>(IFunction::parse("asech")));
+  EXPECT_TRUE(is<Acsch>(IFunction::parse("acsch")));
   EXPECT_TRUE(is<Derivative>(IFunction::parse("derivative")));
   EXPECT_TRUE(is<Integral>(IFunction::parse("integral")));
   EXPECT_TRUE(is<Frac>(IFunction::parse("frac")));
