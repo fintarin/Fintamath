@@ -4,6 +4,10 @@
 
 namespace fintamath {
 
+Integer floor(const Real &rhs);
+
+Integer ceil(const Real &rhs);
+
 Real abs(const Real &rhs);
 
 Real sqrt(const Real &rhs);

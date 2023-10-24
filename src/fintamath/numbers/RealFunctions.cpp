@@ -3,8 +3,19 @@
 #include "fintamath/exceptions/UndefinedException.hpp"
 
 using boost::multiprecision::cpp_dec_float_100;
+using boost::multiprecision::cpp_int;
 
 namespace fintamath {
+
+Integer floor(const Real &rhs) {
+  cpp_dec_float_100 res = boost::multiprecision::floor(rhs.getBackend());
+  return res.convert_to<cpp_int>();
+}
+
+Integer ceil(const Real &rhs) {
+  cpp_dec_float_100 res = boost::multiprecision::ceil(rhs.getBackend());
+  return res.convert_to<cpp_int>();
+}
 
 Real abs(const Real &rhs) {
   return rhs < 0 ? -rhs : rhs;
