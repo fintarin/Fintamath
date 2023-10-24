@@ -33,9 +33,6 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-private:
-  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const;
-
 protected:
   std::shared_ptr<IFunction> func;
 

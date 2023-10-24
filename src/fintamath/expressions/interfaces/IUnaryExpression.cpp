@@ -48,7 +48,9 @@ ArgumentPtr IUnaryExpression::preSimplify() const {
     return res;
   }
 
-  ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPreSimplify());
+  ArgumentPtr res = useSimplifyFunctions(getFunctionsForPreSimplify(),
+                                         *simpl->func,
+                                         simpl->child);
 
   if (res && *res != *simpl) {
     preSimplifyChild(res);
@@ -70,7 +72,9 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
     return res;
   }
 
-  ArgumentPtr res = simpl->useSimplifyFunctions(getFunctionsForPostSimplify());
+  ArgumentPtr res = useSimplifyFunctions(getFunctionsForPostSimplify(),
+                                         *simpl->func,
+                                         simpl->child);
 
   if (res && *res != *simpl) {
     postSimplifyChild(res);
@@ -78,16 +82,6 @@ ArgumentPtr IUnaryExpression::postSimplify() const {
   }
 
   return simpl;
-}
-
-ArgumentPtr IUnaryExpression::useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs) const {
-  for (const auto &simplFunc : simplFuncs) {
-    if (auto res = simplFunc(*func, child)) {
-      return res;
-    }
-  }
-
-  return {};
 }
 
 void IUnaryExpression::setChildren(const ArgumentPtrVector &childVect) {

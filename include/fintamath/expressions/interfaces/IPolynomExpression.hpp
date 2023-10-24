@@ -69,9 +69,6 @@ private:
 
   void simplifyChildren(bool isPostSimplify);
 
-  ArgumentPtr useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs, size_t lhsChildPos,
-                                   size_t rhsChildPos) const;
-
   void compress();
 
   void sort();
