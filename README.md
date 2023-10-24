@@ -23,11 +23,11 @@ Fintamath is a C++ library for symbolic mathematics, supporting both the input o
 ## Features
 
 * [Expression](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/expressions/Expression.hpp) — the main class representing mathematical expressions
-  * Parse from string
-  * Get string representation
-  * Approximate
-  * Set variables
-  * Arithmetic operations
+  * Parsing from string
+  * Getting string representation
+  * Approximating
+  * Setting variables
+  * Arithmetic operators
 
 * [ExpressionFunctions](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/expressions/ExpressionFunctions.hpp) — a set of functions on expressions
   * Arithmetic functions
@@ -37,34 +37,42 @@ Fintamath is a C++ library for symbolic mathematics, supporting both the input o
   * Hyperbolic functions
   * Logic functions
   * Mathematical constants
-  * Solve equations
+  * Rounding functions
+  * Percent, degrees, factorial, index
+  * Solving equations
 
 * [Integer](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/Integer.hpp) — a class representing integers of arbitrary precision
-  * Arithmetic operations
-  * Comparison operations
-  * Bitwise operations
+  * Arithmetic operators
+  * Comparison operators
+  * Bitwise operators
 
 * [IntegerFunctions](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/IntegerFunctions.hpp) — a set of functions on integers
+  * Power and absolute value
   * Number theory functions
   * Combinatorics functions
 
 * [Rational](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/Rational.hpp) — a class representing exact fractions
-  * Get numerator and denominator
-  * Arithmetic operations
-  * Comparison operations
+  * Arithmetic operators
+  * Comparison operators
+
+* [RationalFunctions](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/RationalFunctions.hpp) — a set of functions on rationals
+  * Rounding functions
+  * Absolute value
 
 * [Real](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/Real.hpp) — a class representing high precision floats (up to 80 decimal places)
-  * Arithmetic operations
-  * Comparison operations
+  * Arithmetic operators
+  * Comparison operators
 
 * [RealFunctions](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/RealFunctions.hpp) — a set of functions on reals
+  * Rounding functions
+  * Absolute value
   * Powers and logarithms
   * Trigonometric functions
   * Mathematical constants
+  * Gamma function
 
 * [Complex](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/Complex.hpp) — a class representing complex numbers
-  * Get real and imaginary parts
-  * Arithmetic operations
+  * Arithmetic operators
 
 * [Variable](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/literals/Variable.hpp) — a class representing a letter of the English alphabet with or without unsigned integer index
 
