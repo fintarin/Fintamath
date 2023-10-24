@@ -15,6 +15,7 @@ public:
     PrefixUnary,    // e.g.  -a
     Multiplication, // e.g.  a * b
     Addition,       // e.g.  a + b
+    Modulo,         // e.g.  a mod b
     Comparison,     // e.g.  a = b
     Conjunction,    // e.g.  a & b
     Disjunction,    // e.g.  a | b

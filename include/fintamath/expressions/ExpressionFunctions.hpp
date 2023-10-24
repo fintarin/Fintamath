@@ -16,6 +16,8 @@ Expression sub(const Expression &lhs, const Expression &rhs);
 
 Expression div(const Expression &lhs, const Expression &rhs);
 
+Expression mod(const Expression &lhs, const Expression &rhs);
+
 Expression neg(const Expression &rhs);
 
 Expression eqv(const Expression &lhs, const Expression &rhs);
@@ -29,6 +31,10 @@ Expression more(const Expression &lhs, const Expression &rhs);
 Expression lessEqv(const Expression &lhs, const Expression &rhs);
 
 Expression moreEqv(const Expression &lhs, const Expression &rhs);
+
+Expression floor(const Expression &rhs);
+
+Expression ceil(const Expression &rhs);
 
 Expression abs(const Expression &rhs);
 
