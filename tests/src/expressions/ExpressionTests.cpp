@@ -703,18 +703,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("cos(acos(x))").toString(), "x");
   EXPECT_EQ(Expression("tan(atan(x))").toString(), "x");
   EXPECT_EQ(Expression("cot(acot(x))").toString(), "x");
-  EXPECT_EQ(Expression("sinh(asinh(x))").toString(), "x");
-  EXPECT_EQ(Expression("cosh(acosh(x))").toString(), "x");
-  EXPECT_EQ(Expression("tanh(atanh(x))").toString(), "x");
-  EXPECT_EQ(Expression("coth(acoth(x))").toString(), "x");
   EXPECT_EQ(Expression("asin(sin(x))").toString(), "asin(sin(x))");
   EXPECT_EQ(Expression("acos(cos(x))").toString(), "acos(cos(x))");
   EXPECT_EQ(Expression("atan(tan(x))").toString(), "atan(tan(x))");
   EXPECT_EQ(Expression("acot(cot(x))").toString(), "acot(cot(x))");
-  EXPECT_EQ(Expression("asinh(sinh(x))").toString(), "asinh(sinh(x))");
-  EXPECT_EQ(Expression("acosh(cosh(x))").toString(), "acosh(cosh(x))");
-  EXPECT_EQ(Expression("atanh(tanh(x))").toString(), "atanh(tanh(x))");
-  EXPECT_EQ(Expression("acoth(coth(x))").toString(), "acoth(coth(x))");
 
   EXPECT_EQ(Expression("sin(x)/cos(x)").toString(), "tan(x)");
   EXPECT_EQ(Expression("2sin(x)/(3cos(x))").toString(), "(2 tan(x))/3");
@@ -966,9 +958,30 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("atan(-sqrt(x)/2)").toString(), "atan(-sqrt(x)/2)");
   EXPECT_EQ(Expression("acot(-sqrt(x)/2)").toString(), "acot(-sqrt(x)/2)");
 
+  EXPECT_EQ(Expression("sinh(asinh(x))").toString(), "x");
+  EXPECT_EQ(Expression("cosh(acosh(x))").toString(), "x");
+  EXPECT_EQ(Expression("tanh(atanh(x))").toString(), "x");
+  EXPECT_EQ(Expression("coth(acoth(x))").toString(), "x");
+  EXPECT_EQ(Expression("asinh(sinh(x))").toString(), "asinh(sinh(x))");
+  EXPECT_EQ(Expression("acosh(cosh(x))").toString(), "acosh(cosh(x))");
+  EXPECT_EQ(Expression("atanh(tanh(x))").toString(), "atanh(tanh(x))");
+  EXPECT_EQ(Expression("acoth(coth(x))").toString(), "acoth(coth(x))");
+
+  EXPECT_EQ(Expression("sinh(x)/cosh(x)").toString(), "tanh(x)");
+  EXPECT_EQ(Expression("2sinh(x)/(3cosh(x))").toString(), "(2 tanh(x))/3");
+  EXPECT_EQ(Expression("sinh(x)^2/cosh(x)").toString(), "(sinh(x)^2)/cosh(x)");
+  EXPECT_EQ(Expression("sinh(x)/cosh(x)^2").toString(), "sinh(x)/(cosh(x)^2)");
+  EXPECT_EQ(Expression("sinh(x)^2/cosh(x)^2").toString(), "tanh(x)^2");
+  EXPECT_EQ(Expression("(2sinh(x))^2/(3cosh(x)^2)").toString(), "(4 tanh(x)^2)/3");
+  EXPECT_EQ(Expression("cosh(x)/sinh(x)").toString(), "coth(x)");
+  EXPECT_EQ(Expression("cosh(x)^2/sinh(x)").toString(), "(cosh(x)^2)/sinh(x)");
+  EXPECT_EQ(Expression("cosh(x)/sinh(x)^2").toString(), "cosh(x)/(sinh(x)^2)");
+  EXPECT_EQ(Expression("cosh(x)^2/sinh(x)^2").toString(), "coth(x)^2");
+
+  EXPECT_EQ(Expression("tanh(x) * coth(x)").toString(), "1");
+  EXPECT_EQ(Expression("coth(x) * tanh(x)").toString(), "1");
   // TODO: implement
   // EXPECT_EQ(Expression("cosh(x)^2 - sinh(x)^2").toString(), "1");
-  // EXPECT_EQ(Expression("tanh(x) * coth(x)").toString(), "1");
 
   EXPECT_EQ(Expression("(1 + 2I) + (2 + 3I)").toString(), "3 + 5 I");
   EXPECT_EQ(Expression("(1 + 2I) - (2 + 3I)").toString(), "-1 - I");
