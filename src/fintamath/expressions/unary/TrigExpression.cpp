@@ -6,10 +6,14 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
+#include "fintamath/functions/trigonometry/Acsc.hpp"
+#include "fintamath/functions/trigonometry/Asec.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Csc.hpp"
+#include "fintamath/functions/trigonometry/Sec.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
@@ -32,6 +36,8 @@ TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPreSimplif
       &TrigExpression::oppositeFunctionsSimplify,
       &TrigExpression::tanSimplify,
       &TrigExpression::cotSimplify,
+      &TrigExpression::secSimplify,
+      &TrigExpression::cscSimplify,
   };
   return simplifyFunctions;
 }
@@ -67,6 +73,22 @@ ArgumentPtr TrigExpression::tanSimplify(const IFunction &func, const ArgumentPtr
 ArgumentPtr TrigExpression::cotSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (is<Cot>(func)) {
     return divExpr(cosExpr(rhs), sinExpr(rhs));
+  }
+
+  return {};
+}
+
+ArgumentPtr TrigExpression::secSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  if (is<Sec>(func)) {
+    return divExpr(Integer(1).clone(), cosExpr(rhs));
+  }
+
+  return {};
+}
+
+ArgumentPtr TrigExpression::cscSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  if (is<Csc>(func)) {
+    return divExpr(Integer(1).clone(), sinExpr(rhs));
   }
 
   return {};
@@ -188,6 +210,8 @@ std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &
       {Cos().toString(), std::make_shared<Acos>()},
       {Tan().toString(), std::make_shared<Atan>()},
       {Cot().toString(), std::make_shared<Acot>()},
+      {Sec().toString(), std::make_shared<Asec>()},
+      {Csc().toString(), std::make_shared<Acsc>()},
   };
   return oppositeFunctions.at(function.toString());
 }

@@ -8,11 +8,15 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Csch.hpp"
+#include "fintamath/functions/hyperbolic/Sech.hpp"
 #include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Csc.hpp"
+#include "fintamath/functions/trigonometry/Sec.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
@@ -56,6 +60,7 @@ DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPostSimplify
       &DivExpression::nestedRationalSimplify,
       &DivExpression::gcdSimplify,
       &DivExpression::sumSimplify,
+      &DivExpression::mulSecCscSimplify,
   };
   return simplifyFunctions;
 }
@@ -168,7 +173,13 @@ ArgumentPtr DivExpression::mulPostSimplify(const IFunction &func, const Argument
       &DivExpression::powSimplify,
       &DivExpression::tanCotSimplify,
   };
+  return mulSimplify(simplifyFunctions, func, lhs, rhs);
+}
 
+ArgumentPtr DivExpression::mulSecCscSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
+      &DivExpression::secCscSimplify,
+  };
   return mulSimplify(simplifyFunctions, func, lhs, rhs);
 }
 
@@ -390,6 +401,10 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     return {};
   }
 
+  if (secCscSimplify(Div(), lhs, rhsChildren.front())) {
+    return {};
+  }
+
   ArgumentPtr result = divExpr(lhs, rhsChildren.front());
   simplifyChild(result);
 
@@ -593,6 +608,30 @@ ArgumentPtr DivExpression::tanCotSimplify(const IFunction & /*func*/, const Argu
 
     if (is<Cosh>(lhsChildValueExpr->getFunction()) && is<Sinh>(rhsChildValueExpr->getFunction())) {
       return powExpr(cothExpr(*lhsChildValueExpr->getChildren().front()), lhsChildRate);
+    }
+  }
+
+  return {};
+}
+
+ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhs);
+
+  if (auto rhsChildValueExpr = cast<IExpression>(rhsChildValue)) {
+    if (is<Sin>(rhsChildValueExpr->getFunction())) {
+      return mulExpr(lhs, powExpr(cscExpr(*rhsChildValueExpr->getChildren().front()), rhsChildRate));
+    }
+
+    if (is<Cos>(rhsChildValueExpr->getFunction())) {
+      return mulExpr(lhs, powExpr(secExpr(*rhsChildValueExpr->getChildren().front()), rhsChildRate));
+    }
+
+    if (is<Sinh>(rhsChildValueExpr->getFunction())) {
+      return mulExpr(lhs, powExpr(cschExpr(*rhsChildValueExpr->getChildren().front()), rhsChildRate));
+    }
+
+    if (is<Cosh>(rhsChildValueExpr->getFunction())) {
+      return mulExpr(lhs, powExpr(sechExpr(*rhsChildValueExpr->getChildren().front()), rhsChildRate));
     }
   }
 

@@ -3,12 +3,18 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/hyperbolic/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Acsch.hpp"
+#include "fintamath/functions/hyperbolic/Asech.hpp"
 #include "fintamath/functions/hyperbolic/Asinh.hpp"
 #include "fintamath/functions/hyperbolic/Atanh.hpp"
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Csch.hpp"
+#include "fintamath/functions/hyperbolic/Sech.hpp"
 #include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/hyperbolic/Tanh.hpp"
+#include "fintamath/functions/trigonometry/Csc.hpp"
+#include "fintamath/functions/trigonometry/Sec.hpp"
 
 namespace fintamath {
 
@@ -21,6 +27,8 @@ HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPreSim
       &HyperbExpression::oppositeFunctionsSimplify,
       &HyperbExpression::tanhSimplify,
       &HyperbExpression::cothSimplify,
+      &HyperbExpression::sechSimplify,
+      &HyperbExpression::cschSimplify,
   };
   return simplifyFunctions;
 }
@@ -60,12 +68,30 @@ ArgumentPtr HyperbExpression::cothSimplify(const IFunction &func, const Argument
   return {};
 }
 
+ArgumentPtr HyperbExpression::sechSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  if (is<Sech>(func)) {
+    return divExpr(Integer(1).clone(), coshExpr(rhs));
+  }
+
+  return {};
+}
+
+ArgumentPtr HyperbExpression::cschSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  if (is<Csch>(func)) {
+    return divExpr(Integer(1).clone(), sinhExpr(rhs));
+  }
+
+  return {};
+}
+
 std::shared_ptr<IFunction> HyperbExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
       {Sinh().toString(), std::make_unique<Asinh>()},
       {Cosh().toString(), std::make_unique<Acosh>()},
       {Tanh().toString(), std::make_unique<Atanh>()},
       {Coth().toString(), std::make_unique<Acoth>()},
+      {Sech().toString(), std::make_shared<Asech>()},
+      {Csch().toString(), std::make_shared<Acsch>()},
   };
   return oppositeFunctions.at(function.toString());
 }

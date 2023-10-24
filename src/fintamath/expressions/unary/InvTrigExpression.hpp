@@ -29,6 +29,10 @@ private:
   static ArgumentPtr trigTableAtanSimplify(const Rational &rhs);
 
   static ArgumentPtr trigTableAcotSimplify(const Rational &rhs);
+
+  static ArgumentPtr trigTableAsecSimplify(const Rational &rhs);
+
+  static ArgumentPtr trigTableAcscSimplify(const Rational &rhs);
 };
 
 }

@@ -33,6 +33,8 @@ private:
 
   static ArgumentPtr mulPostSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
+  static ArgumentPtr mulSecCscSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
   static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr sumSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
@@ -44,6 +46,8 @@ private:
   static ArgumentPtr powSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr tanCotSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr secCscSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr mulSimplify(const SimplifyFunctionVector &simplFuncs,
                                  const IFunction &func,

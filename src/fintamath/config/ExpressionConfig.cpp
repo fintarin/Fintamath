@@ -37,10 +37,14 @@
 #include "fintamath/functions/comparison/Neqv.hpp"
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/hyperbolic/Acoth.hpp"
+#include "fintamath/functions/hyperbolic/Acsch.hpp"
+#include "fintamath/functions/hyperbolic/Asech.hpp"
 #include "fintamath/functions/hyperbolic/Asinh.hpp"
 #include "fintamath/functions/hyperbolic/Atanh.hpp"
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Csch.hpp"
+#include "fintamath/functions/hyperbolic/Sech.hpp"
 #include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/logarithms/Lb.hpp"
@@ -63,10 +67,14 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
+#include "fintamath/functions/trigonometry/Acsc.hpp"
+#include "fintamath/functions/trigonometry/Asec.hpp"
 #include "fintamath/functions/trigonometry/Asin.hpp"
 #include "fintamath/functions/trigonometry/Atan.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
+#include "fintamath/functions/trigonometry/Csc.hpp"
+#include "fintamath/functions/trigonometry/Sec.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/constants/E.hpp"
@@ -332,6 +340,14 @@ struct ExpressionConfig {
       return TrigExpression(Cot(), std::move(args.front())).clone();
     });
 
+    Expression::registerFunctionExpressionMaker<Sec>([](ArgumentPtrVector &&args) {
+      return TrigExpression(Sec(), std::move(args.front())).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Csc>([](ArgumentPtrVector &&args) {
+      return TrigExpression(Csc(), std::move(args.front())).clone();
+    });
+
     Expression::registerFunctionExpressionMaker<Asin>([](ArgumentPtrVector &&args) {
       return InvTrigExpression(Asin(), std::move(args.front())).clone();
     });
@@ -346,6 +362,14 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Acot>([](ArgumentPtrVector &&args) {
       return InvTrigExpression(Acot(), std::move(args.front())).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Asec>([](ArgumentPtrVector &&args) {
+      return InvTrigExpression(Asec(), std::move(args.front())).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Acsc>([](ArgumentPtrVector &&args) {
+      return InvTrigExpression(Acsc(), std::move(args.front())).clone();
     });
 
     Expression::registerFunctionExpressionMaker<Sinh>([](ArgumentPtrVector &&args) {
@@ -364,6 +388,14 @@ struct ExpressionConfig {
       return HyperbExpression(Coth(), std::move(args.front())).clone();
     });
 
+    Expression::registerFunctionExpressionMaker<Sech>([](ArgumentPtrVector &&args) {
+      return HyperbExpression(Sech(), std::move(args.front())).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Csch>([](ArgumentPtrVector &&args) {
+      return HyperbExpression(Csch(), std::move(args.front())).clone();
+    });
+
     Expression::registerFunctionExpressionMaker<Asinh>([](ArgumentPtrVector &&args) {
       return InvHyperbExpression(Asinh(), std::move(args.front())).clone();
     });
@@ -378,6 +410,14 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Acoth>([](ArgumentPtrVector &&args) {
       return InvHyperbExpression(Acoth(), std::move(args.front())).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Asech>([](ArgumentPtrVector &&args) {
+      return InvHyperbExpression(Asech(), std::move(args.front())).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Acsch>([](ArgumentPtrVector &&args) {
+      return InvHyperbExpression(Acsch(), std::move(args.front())).clone();
     });
 
     Expression::registerFunctionExpressionMaker<Deg>([](ArgumentPtrVector &&args) {
