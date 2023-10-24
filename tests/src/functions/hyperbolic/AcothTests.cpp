@@ -36,10 +36,10 @@ TEST(AcothTests, callTest) {
 
   EXPECT_EQ(f(Real("1.5"))->toString(),
             "0.80471895621705018730037966661309381976280067713425886095632394573708949385382888");
+  EXPECT_EQ(f(Real("0.5"))->toString(),
+            "acoth(0.5)");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "acoth(1 + I)");
-
-  EXPECT_EQ(f(Real("0.5"))->toString(), "acoth(0.5)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "acoth(a)");
 
