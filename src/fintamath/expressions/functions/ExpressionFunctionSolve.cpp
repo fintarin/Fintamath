@@ -122,7 +122,7 @@ std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IE
 ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
   if (const auto elemExpr = cast<IExpression>(elem)) {
     if (is<Pow>(elemExpr->getFunction())) {
-      if (hasVariable(elemExpr, var)) {
+      if (containsVariable(elemExpr, var)) {
         return Integer(1).clone();
       }
 

@@ -111,8 +111,8 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
   return operatorChildToString(oper, rhs) + oper.toString();
 }
 
-bool hasVariable(const ArgumentPtr &arg) {
-  if (is<Variable>(arg)) {
+bool containsIf(const ArgumentPtr &arg, std::invocable<ArgumentPtr> auto comp) {
+  if (comp(arg)) {
     return true;
   }
 
@@ -123,10 +123,10 @@ bool hasVariable(const ArgumentPtr &arg) {
 
   const ArgumentPtrVector &children = expr->getChildren();
 
-  return std::ranges::any_of(children, [](const auto &child) {
+  return std::ranges::any_of(children, [comp](const auto &child) {
     bool res = false;
 
-    if (hasVariable(child)) {
+    if (containsIf(child, comp)) {
       res = true;
     }
 
@@ -134,72 +134,28 @@ bool hasVariable(const ArgumentPtr &arg) {
   });
 }
 
-bool hasVariable(const ArgumentPtr &arg, const Variable &var) {
-  if (*arg == var) {
-    return true;
-  }
-
-  auto expr = cast<IExpression>(arg);
-  if (!expr) {
-    return false;
-  }
-
-  const ArgumentPtrVector &children = expr->getChildren();
-
-  return std::ranges::any_of(children, [&var](const auto &child) {
-    bool res = false;
-
-    if (hasVariable(child, var)) {
-      res = true;
-    }
-
-    return res;
+bool containsVariable(const ArgumentPtr &arg) {
+  return containsIf(arg, [](const ArgumentPtr &compArg) {
+    return is<Variable>(compArg);
   });
 }
 
-bool hasInfinity(const ArgumentPtr &arg) {
-  if (isInfinity(arg)) {
-    return true;
-  }
-
-  auto expr = cast<IExpression>(arg);
-  if (!expr) {
-    return false;
-  }
-
-  const ArgumentPtrVector &children = expr->getChildren();
-
-  return std::ranges::any_of(children, [](const auto &child) {
-    bool res = false;
-
-    if (hasInfinity(child)) {
-      res = true;
-    }
-
-    return res;
+bool containsVariable(const ArgumentPtr &arg, const Variable &var) {
+  return containsIf(arg, [&var](const ArgumentPtr &compArg) {
+    return *compArg == var;
   });
 }
 
-bool hasComplex(const ArgumentPtr &arg) {
-  if (const auto num = cast<INumber>(arg); num && num->isComplex()) {
-    return true;
-  }
+bool containsInfinity(const ArgumentPtr &arg) {
+  return containsIf(arg, [](const ArgumentPtr &compArg) {
+    return isInfinity(compArg);
+  });
+}
 
-  auto expr = cast<IExpression>(arg);
-  if (!expr) {
-    return false;
-  }
-
-  const ArgumentPtrVector &children = expr->getChildren();
-
-  return std::ranges::any_of(children, [](const auto &child) {
-    bool res = false;
-
-    if (hasComplex(child)) {
-      res = true;
-    }
-
-    return res;
+bool containsComplex(const ArgumentPtr &arg) {
+  return containsIf(arg, [](const ArgumentPtr &compArg) {
+    const auto num = cast<INumber>(compArg);
+    return num && num->isComplex();
   });
 }
 

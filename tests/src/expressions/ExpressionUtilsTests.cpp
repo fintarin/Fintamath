@@ -47,61 +47,65 @@ TEST(ExpressionUtilsTests, argumentRefVectorToArgumentPtrVector) {
   // TODO: implement
 }
 
-TEST(ExpressionUtilsTests, hasVariableTest) {
-  EXPECT_TRUE(hasVariable(Variable("a").clone(), Variable("a")));
+TEST(ExpressionUtilsTests, containsIfTest) {
 
-  EXPECT_FALSE(hasVariable(Variable("b").clone(), Variable("a")));
+}
 
-  EXPECT_FALSE(hasVariable(Integer(1).clone(), Variable("a")));
+TEST(ExpressionUtilsTests, containsVariableTest) {
+  EXPECT_TRUE(containsVariable(Variable("a").clone(), Variable("a")));
+
+  EXPECT_FALSE(containsVariable(Variable("b").clone(), Variable("a")));
+
+  EXPECT_FALSE(containsVariable(Integer(1).clone(), Variable("a")));
 
   auto expr = std::make_shared<Expression>("cos(sin(a))");
-  EXPECT_TRUE(hasVariable(expr, Variable("a")));
+  EXPECT_TRUE(containsVariable(expr, Variable("a")));
 
   expr = std::make_shared<Expression>("cos(sin(b))");
-  EXPECT_FALSE(hasVariable(expr, Variable("a")));
+  EXPECT_FALSE(containsVariable(expr, Variable("a")));
 
   expr = std::make_shared<Expression>("cos(a)");
-  EXPECT_TRUE(hasVariable(expr, Variable("a")));
+  EXPECT_TRUE(containsVariable(expr, Variable("a")));
 
   expr = std::make_shared<Expression>("cos(b) + a");
-  EXPECT_TRUE(hasVariable(expr, Variable("a")));
+  EXPECT_TRUE(containsVariable(expr, Variable("a")));
 
   expr = std::make_shared<Expression>("cos(b)");
-  EXPECT_FALSE(hasVariable(expr, Variable("a")));
+  EXPECT_FALSE(containsVariable(expr, Variable("a")));
 
   expr = std::make_shared<Expression>("10");
-  EXPECT_FALSE(hasVariable(expr, Variable("a")));
+  EXPECT_FALSE(containsVariable(expr, Variable("a")));
 }
 
-TEST(ExpressionUtilsTests, hasVariablesTest) {
-  EXPECT_TRUE(hasVariable(Variable("a").clone()));
+TEST(ExpressionUtilsTests, containsVariablesTest) {
+  EXPECT_TRUE(containsVariable(Variable("a").clone()));
 
-  EXPECT_FALSE(hasVariable(Integer(1).clone()));
+  EXPECT_FALSE(containsVariable(Integer(1).clone()));
 
   auto expr = std::make_shared<Expression>("cos(sin(a))");
-  EXPECT_TRUE(hasVariable(expr));
+  EXPECT_TRUE(containsVariable(expr));
 
   expr = std::make_shared<Expression>("cos(sin(b))");
-  EXPECT_TRUE(hasVariable(expr));
+  EXPECT_TRUE(containsVariable(expr));
 
   expr = std::make_shared<Expression>("cos(a)");
-  EXPECT_TRUE(hasVariable(expr));
+  EXPECT_TRUE(containsVariable(expr));
 
   expr = std::make_shared<Expression>("cos(b)");
-  EXPECT_TRUE(hasVariable(expr));
+  EXPECT_TRUE(containsVariable(expr));
 
   expr = std::make_shared<Expression>("cos(2) + a");
-  EXPECT_TRUE(hasVariable(expr));
+  EXPECT_TRUE(containsVariable(expr));
 
   expr = std::make_shared<Expression>("10");
-  EXPECT_FALSE(hasVariable(expr));
+  EXPECT_FALSE(containsVariable(expr));
 }
 
-TEST(ExpressionUtilsTests, hasInfinityTest) {
+TEST(ExpressionUtilsTests, constainsInfinityTest) {
   // TODO: implement
 }
 
-TEST(ExpressionUtilsTests, hasComplexTest) {
+TEST(ExpressionUtilsTests, containsComplexTest) {
   // TODO: implement
 }
 

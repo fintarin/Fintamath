@@ -56,12 +56,12 @@ ArgumentPtr CompExpression::preSimplify() const {
 
       if (*func != Eqv() &&
           *func != Neqv() &&
-          (hasComplex(simplExpr->lhsChild) || hasComplex(simplExpr->rhsChild))) {
+          (containsComplex(simplExpr->lhsChild) || containsComplex(simplExpr->rhsChild))) {
 
         return simpl;
       }
 
-      if (!hasInfinity(simplExpr->lhsChild) && !hasInfinity(simplExpr->rhsChild)) {
+      if (!containsInfinity(simplExpr->lhsChild) && !containsInfinity(simplExpr->rhsChild)) {
         ArgumentPtr resLhs = subExpr(simplExpr->lhsChild, simplExpr->rhsChild);
         preSimplifyChild(resLhs);
         return CompExpression(cast<IOperator>(*func), resLhs, Integer(0).clone()).clone();
@@ -124,8 +124,8 @@ ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentP
     return res.clone();
   }
 
-  if ((isInfinity(lhs) && !hasInfinity(rhs)) ||
-      (isInfinity(rhs) && !hasInfinity(lhs))) {
+  if ((isInfinity(lhs) && !containsInfinity(rhs)) ||
+      (isInfinity(rhs) && !containsInfinity(lhs))) {
 
     if (is<Eqv>(func)) {
       return Boolean(false).clone();
@@ -155,7 +155,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
 
   if (func != Eqv() &&
       func != Neqv() &&
-      (hasComplex(lhs) || hasComplex(rhs))) {
+      (containsComplex(lhs) || containsComplex(rhs))) {
 
     return {};
   }
@@ -180,7 +180,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
     }
   }
 
-  if (dividerNum && hasVariable(lhsExpr)) {
+  if (dividerNum && containsVariable(lhsExpr)) {
     for (auto &child : dividendPolynom) {
       child = divExpr(child, dividerNum);
     }

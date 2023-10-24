@@ -21,13 +21,15 @@ std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr
 
 std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
 
-bool hasVariable(const ArgumentPtr &arg);
+bool containsIf(const ArgumentPtr &arg, std::invocable<ArgumentPtr> auto comp);
 
-bool hasVariable(const ArgumentPtr &arg, const Variable &var);
+bool containsVariable(const ArgumentPtr &arg);
 
-bool hasInfinity(const ArgumentPtr &arg);
+bool containsVariable(const ArgumentPtr &arg, const Variable &var);
 
-bool hasComplex(const ArgumentPtr &arg);
+bool containsInfinity(const ArgumentPtr &arg);
+
+bool containsComplex(const ArgumentPtr &arg);
 
 bool isInfinity(const ArgumentPtr &arg);
 
