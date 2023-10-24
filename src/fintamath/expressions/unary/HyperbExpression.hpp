@@ -24,6 +24,10 @@ private:
 
   static ArgumentPtr cothSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
+  static ArgumentPtr sechSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
+  static ArgumentPtr cschSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
   static std::shared_ptr<IFunction> getOppositeFunction(const IFunction &function);
 };
 

@@ -160,18 +160,26 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("cos10").toString(), "cos(10)");
   EXPECT_EQ(Expression("tan10").toString(), "tan(10)");
   EXPECT_EQ(Expression("cot10").toString(), "cot(10)");
+  EXPECT_EQ(Expression("sec10").toString(), "sec(10)");
+  EXPECT_EQ(Expression("csc10").toString(), "csc(10)");
   EXPECT_EQ(Expression("asin0.9").toString(), "asin(9/10)");
   EXPECT_EQ(Expression("acos0.9").toString(), "acos(9/10)");
   EXPECT_EQ(Expression("atan10").toString(), "atan(10)");
   EXPECT_EQ(Expression("acot10").toString(), "acot(10)");
+  EXPECT_EQ(Expression("asec10").toString(), "asec(10)");
+  EXPECT_EQ(Expression("acsc10").toString(), "acsc(10)");
   EXPECT_EQ(Expression("sinh10").toString(), "sinh(10)");
   EXPECT_EQ(Expression("cosh10").toString(), "cosh(10)");
   EXPECT_EQ(Expression("tanh10").toString(), "tanh(10)");
   EXPECT_EQ(Expression("coth10").toString(), "coth(10)");
+  EXPECT_EQ(Expression("sech10").toString(), "sech(10)");
+  EXPECT_EQ(Expression("csch10").toString(), "csch(10)");
   EXPECT_EQ(Expression("asinh0.9").toString(), "asinh(9/10)");
   EXPECT_EQ(Expression("acosh1.9").toString(), "acosh(19/10)");
   EXPECT_EQ(Expression("atanh0.9").toString(), "atanh(9/10)");
   EXPECT_EQ(Expression("acoth1.9").toString(), "acoth(19/10)");
+  EXPECT_EQ(Expression("asech0.9").toString(), "asech(9/10)");
+  EXPECT_EQ(Expression("acsch1.9").toString(), "acsch(19/10)");
   EXPECT_EQ(Expression("((2))*sqrt2").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sqrt2*((2))").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sin(1)^2").toString(), "sin(1)^2");
@@ -703,27 +711,47 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("cos(acos(x))").toString(), "x");
   EXPECT_EQ(Expression("tan(atan(x))").toString(), "x");
   EXPECT_EQ(Expression("cot(acot(x))").toString(), "x");
+  EXPECT_EQ(Expression("sec(asec(x))").toString(), "x");
+  EXPECT_EQ(Expression("csc(acsc(x))").toString(), "x");
   EXPECT_EQ(Expression("asin(sin(x))").toString(), "asin(sin(x))");
   EXPECT_EQ(Expression("acos(cos(x))").toString(), "acos(cos(x))");
   EXPECT_EQ(Expression("atan(tan(x))").toString(), "atan(tan(x))");
   EXPECT_EQ(Expression("acot(cot(x))").toString(), "acot(cot(x))");
+  EXPECT_EQ(Expression("asec(sec(x))").toString(), "asec(sec(x))");
+  EXPECT_EQ(Expression("acsc(csc(x))").toString(), "acsc(csc(x))");
 
   EXPECT_EQ(Expression("sin(x)/cos(x)").toString(), "tan(x)");
-  EXPECT_EQ(Expression("2sin(x)/(3cos(x))").toString(), "(2 tan(x))/3");
-  EXPECT_EQ(Expression("sin(x)^2/cos(x)").toString(), "(sin(x)^2)/cos(x)");
-  EXPECT_EQ(Expression("sin(x)/cos(x)^2").toString(), "sin(x)/(cos(x)^2)");
+  EXPECT_EQ(Expression("(-2sin(x))/cos(x)").toString(), "-2 tan(x)");
+  EXPECT_EQ(Expression("(2sin(x))/(3cos(x))").toString(), "(2 tan(x))/3");
+  EXPECT_EQ(Expression("sin(x)^2/cos(x)").toString(), "sin(x)^2 sec(x)");
+  EXPECT_EQ(Expression("sin(x)/cos(x)^2").toString(), "sec(x)^2 sin(x)");
   EXPECT_EQ(Expression("sin(x)^2/cos(x)^2").toString(), "tan(x)^2");
-  EXPECT_EQ(Expression("(2sin(x))^2/(3cos(x)^2)").toString(), "(4 tan(x)^2)/3");
+  EXPECT_EQ(Expression("(2sin(x))^2/cos(x)^2").toString(), "4 tan(x)^2");
+  EXPECT_EQ(Expression("(2sin(x))^2/(3cos(x))^2").toString(), "(4 tan(x)^2)/9");
+
   EXPECT_EQ(Expression("cos(x)/sin(x)").toString(), "cot(x)");
-  EXPECT_EQ(Expression("cos(x)^2/sin(x)").toString(), "(cos(x)^2)/sin(x)");
-  EXPECT_EQ(Expression("cos(x)/sin(x)^2").toString(), "cos(x)/(sin(x)^2)");
+  EXPECT_EQ(Expression("(-2cos(x))/sin(x)").toString(), "-2 cot(x)");
+  EXPECT_EQ(Expression("(2cos(x))/(3sin(x))").toString(), "(2 cot(x))/3");
+  EXPECT_EQ(Expression("cos(x)^2/sin(x)").toString(), "cos(x)^2 csc(x)");
+  EXPECT_EQ(Expression("cos(x)/sin(x)^2").toString(), "csc(x)^2 cos(x)");
   EXPECT_EQ(Expression("cos(x)^2/sin(x)^2").toString(), "cot(x)^2");
+  EXPECT_EQ(Expression("(2cos(x))^2/sin(x)^2").toString(), "4 cot(x)^2");
+  EXPECT_EQ(Expression("(2cos(x))^2/(3sin(x))^2").toString(), "(4 cot(x)^2)/9");
+
+  EXPECT_EQ(Expression("sec(x)/csc(x)").toString(), "tan(x)");
+  EXPECT_EQ(Expression("csc(x)/sec(x)").toString(), "cot(x)");
+  EXPECT_EQ(Expression("sec(x)*cot(x)").toString(), "csc(x)");
+  EXPECT_EQ(Expression("csc(x)*tan(x)").toString(), "sec(x)");
 
   EXPECT_EQ(Expression("sin(x)^2 + cos(x)^2").toString(), "1");
   EXPECT_EQ(Expression("cos(x)^2 + sin(x)^2").toString(), "1");
   EXPECT_EQ(Expression("sin(x) * sin(x) + cos(x) * cos(x)").toString(), "1");
   EXPECT_EQ(Expression("tan(x) * cot(x)").toString(), "1");
   EXPECT_EQ(Expression("cot(x) * tan(x)").toString(), "1");
+  EXPECT_EQ(Expression("sec(x) * cos(x)").toString(), "1");
+  EXPECT_EQ(Expression("cos(x) * sec(x)").toString(), "1");
+  EXPECT_EQ(Expression("csc(x) * sin(x)").toString(), "1");
+  EXPECT_EQ(Expression("sin(x) * csc(x)").toString(), "1");
   // TODO: implement
   // EXPECT_EQ(Expression("tan(x)^5 * cot(x)^5").toString(), "1");
   // EXPECT_EQ(Expression("tan(x)^4 * (sin(x)/cos(x)) * cot(x)^5").toString(), "1");
@@ -841,51 +869,91 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(2Pi)").toString(), "0");
   EXPECT_EQ(Expression("tan(13Pi/6)").toString(), "sqrt(3)/3");
 
-  EXPECT_EQ(Expression("cot(-13Pi/6)").toString(), "-sqrt(3)");
-  EXPECT_EQ(Expression("cot(-2Pi)").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("cot(-11Pi/6)").toString(), "sqrt(3)");
-  EXPECT_EQ(Expression("cot(-7Pi/4)").toString(), "1");
-  EXPECT_EQ(Expression("cot(-5Pi/3)").toString(), "sqrt(3)/3");
-  EXPECT_EQ(Expression("cot(-3Pi/2)").toString(), "0");
-  EXPECT_EQ(Expression("cot(-4Pi/3)").toString(), "-sqrt(3)/3");
-  EXPECT_EQ(Expression("cot(-5Pi/4)").toString(), "-1");
-  EXPECT_EQ(Expression("cot(-7Pi/6)").toString(), "-sqrt(3)");
-  EXPECT_EQ(Expression("cot(-Pi)").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("cot(-5Pi/6)").toString(), "sqrt(3)");
-  EXPECT_EQ(Expression("cot(-3Pi/4)").toString(), "1");
-  EXPECT_EQ(Expression("cot(-2Pi/3)").toString(), "sqrt(3)/3");
-  EXPECT_EQ(Expression("cot(-Pi/2)").toString(), "0");
-  EXPECT_EQ(Expression("cot(-Pi/3)").toString(), "-sqrt(3)/3");
-  EXPECT_EQ(Expression("cot(-Pi/4)").toString(), "-1");
-  EXPECT_EQ(Expression("cot(-Pi/6)").toString(), "-sqrt(3)");
-  EXPECT_EQ(Expression("cot(0)").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("cot(Pi/6)").toString(), "sqrt(3)");
-  EXPECT_EQ(Expression("cot(Pi/4)").toString(), "1");
-  EXPECT_EQ(Expression("cot(Pi/3)").toString(), "sqrt(3)/3");
-  EXPECT_EQ(Expression("cot(Pi/2)").toString(), "0");
-  EXPECT_EQ(Expression("cot(2Pi/3)").toString(), "-sqrt(3)/3");
-  EXPECT_EQ(Expression("cot(3Pi/4)").toString(), "-1");
-  EXPECT_EQ(Expression("cot(5Pi/6)").toString(), "-sqrt(3)");
-  EXPECT_EQ(Expression("cot(Pi)").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("cot(7Pi/6)").toString(), "sqrt(3)");
-  EXPECT_EQ(Expression("cot(5Pi/4)").toString(), "1");
-  EXPECT_EQ(Expression("cot(4Pi/3)").toString(), "sqrt(3)/3");
-  EXPECT_EQ(Expression("cot(3Pi/2)").toString(), "0");
-  EXPECT_EQ(Expression("cot(5Pi/3)").toString(), "-sqrt(3)/3");
-  EXPECT_EQ(Expression("cot(7Pi/4)").toString(), "-1");
-  EXPECT_EQ(Expression("cot(11Pi/6)").toString(), "-sqrt(3)");
-  EXPECT_EQ(Expression("cot(2Pi)").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("cot(13Pi/6)").toString(), "sqrt(3)");
+  EXPECT_EQ(Expression("sec(-13Pi/6)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(-2Pi)").toString(), "1");
+  EXPECT_EQ(Expression("sec(-11Pi/6)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(-7Pi/4)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("sec(-5Pi/3)").toString(), "2");
+  EXPECT_EQ(Expression("sec(-3Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("sec(-4Pi/3)").toString(), "-2");
+  EXPECT_EQ(Expression("sec(-5Pi/4)").toString(), "-sqrt(2)");
+  EXPECT_EQ(Expression("sec(-7Pi/6)").toString(), "-(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(-Pi)").toString(), "-1");
+  EXPECT_EQ(Expression("sec(-5Pi/6)").toString(), "-(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(-3Pi/4)").toString(), "-sqrt(2)");
+  EXPECT_EQ(Expression("sec(-2Pi/3)").toString(), "-2");
+  EXPECT_EQ(Expression("sec(-Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("sec(-Pi/3)").toString(), "2");
+  EXPECT_EQ(Expression("sec(-Pi/4)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("sec(-Pi/6)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(0)").toString(), "1");
+  EXPECT_EQ(Expression("sec(Pi/6)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(Pi/4)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("sec(Pi/3)").toString(), "2");
+  EXPECT_EQ(Expression("sec(Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("sec(2Pi/3)").toString(), "-2");
+  EXPECT_EQ(Expression("sec(3Pi/4)").toString(), "-sqrt(2)");
+  EXPECT_EQ(Expression("sec(5Pi/6)").toString(), "-(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(Pi)").toString(), "-1");
+  EXPECT_EQ(Expression("sec(7Pi/6)").toString(), "-(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(5Pi/4)").toString(), "-sqrt(2)");
+  EXPECT_EQ(Expression("sec(4Pi/3)").toString(), "-2");
+  EXPECT_EQ(Expression("sec(3Pi/2)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("sec(5Pi/3)").toString(), "2");
+  EXPECT_EQ(Expression("sec(7Pi/4)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("sec(11Pi/6)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("sec(2Pi)").toString(), "1");
+  EXPECT_EQ(Expression("sec(13Pi/6)").toString(), "(2 sqrt(3))/3");
+
+  EXPECT_EQ(Expression("csc(-13Pi/6)").toString(), "-2");
+  EXPECT_EQ(Expression("csc(-2Pi)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("csc(-11Pi/6)").toString(), "2");
+  EXPECT_EQ(Expression("csc(-7Pi/4)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("csc(-5Pi/3)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("csc(-3Pi/2)").toString(), "1");
+  EXPECT_EQ(Expression("csc(-4Pi/3)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("csc(-5Pi/4)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("csc(-7Pi/6)").toString(), "2");
+  EXPECT_EQ(Expression("csc(-Pi)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("csc(-5Pi/6)").toString(), "-2");
+  EXPECT_EQ(Expression("csc(-3Pi/4)").toString(), "-sqrt(2)");
+  EXPECT_EQ(Expression("csc(-2Pi/3)").toString(), "-(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("csc(-Pi/2)").toString(), "-1");
+  EXPECT_EQ(Expression("csc(-Pi/3)").toString(), "-(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("csc(-Pi/4)").toString(), "-sqrt(2)");
+  EXPECT_EQ(Expression("csc(-Pi/6)").toString(), "-2");
+  EXPECT_EQ(Expression("csc(0)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("csc(Pi/6)").toString(), "2");
+  EXPECT_EQ(Expression("csc(Pi/4)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("csc(Pi/3)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("csc(Pi/2)").toString(), "1");
+  EXPECT_EQ(Expression("csc(2Pi/3)").toString(), "(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("csc(3Pi/4)").toString(), "sqrt(2)");
+  EXPECT_EQ(Expression("csc(5Pi/6)").toString(), "2");
+  EXPECT_EQ(Expression("csc(Pi)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("csc(7Pi/6)").toString(), "-2");
+  EXPECT_EQ(Expression("csc(5Pi/4)").toString(), "-sqrt(2)");
+  EXPECT_EQ(Expression("csc(4Pi/3)").toString(), "-(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("csc(3Pi/2)").toString(), "-1");
+  EXPECT_EQ(Expression("csc(5Pi/3)").toString(), "-(2 sqrt(3))/3");
+  EXPECT_EQ(Expression("csc(7Pi/4)").toString(), "-sqrt(2)");
+  EXPECT_EQ(Expression("csc(11Pi/6)").toString(), "-2");
+  EXPECT_EQ(Expression("csc(2Pi)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("csc(13Pi/6)").toString(), "2");
 
   EXPECT_EQ(Expression("sin(Pi/7)").toString(), "sin(Pi/7)");
   EXPECT_EQ(Expression("cos(Pi/7)").toString(), "cos(Pi/7)");
   EXPECT_EQ(Expression("tan(Pi/7)").toString(), "tan(Pi/7)");
   EXPECT_EQ(Expression("cot(Pi/7)").toString(), "cot(Pi/7)");
+  EXPECT_EQ(Expression("sec(Pi/7)").toString(), "sec(Pi/7)");
+  EXPECT_EQ(Expression("csc(Pi/7)").toString(), "csc(Pi/7)");
 
   EXPECT_EQ(Expression("sin(E Pi)").toString(), "sin(E Pi)");
   EXPECT_EQ(Expression("cos(E Pi)").toString(), "cos(E Pi)");
   EXPECT_EQ(Expression("tan(E Pi)").toString(), "tan(E Pi)");
   EXPECT_EQ(Expression("cot(E Pi)").toString(), "cot(E Pi)");
+  EXPECT_EQ(Expression("sec(E Pi)").toString(), "sec(E Pi)");
+  EXPECT_EQ(Expression("csc(E Pi)").toString(), "csc(E Pi)");
 
   EXPECT_EQ(Expression("asin(-1)").toString(), "-Pi/2");
   EXPECT_EQ(Expression("asin(-sqrt(3)/2)").toString(), "-Pi/3");
@@ -923,60 +991,109 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("acot(1)").toString(), "Pi/4");
   EXPECT_EQ(Expression("acot(sqrt(3))").toString(), "Pi/6");
 
+  EXPECT_EQ(Expression("asec(-1)").toString(), "Pi");
+  EXPECT_EQ(Expression("asec(-2/sqrt(3))").toString(), "(5 Pi)/6");
+  EXPECT_EQ(Expression("asec(-2/sqrt(2))").toString(), "(3 Pi)/4");
+  EXPECT_EQ(Expression("asec(-2)").toString(), "(2 Pi)/3");
+  EXPECT_EQ(Expression("asec(0)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("asec(2)").toString(), "Pi/3");
+  EXPECT_EQ(Expression("asec(2/sqrt(2))").toString(), "Pi/4");
+  EXPECT_EQ(Expression("asec(2/sqrt(3))").toString(), "Pi/6");
+  EXPECT_EQ(Expression("asec(1)").toString(), "0");
+
+  EXPECT_EQ(Expression("acsc(-1)").toString(), "-Pi/2");
+  EXPECT_EQ(Expression("acsc(-2/sqrt(3))").toString(), "-Pi/3");
+  EXPECT_EQ(Expression("acsc(-2/sqrt(2))").toString(), "-Pi/4");
+  EXPECT_EQ(Expression("acsc(-2)").toString(), "-Pi/6");
+  EXPECT_EQ(Expression("acsc(0)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("acsc(2)").toString(), "Pi/6");
+  EXPECT_EQ(Expression("acsc(2/sqrt(2))").toString(), "Pi/4");
+  EXPECT_EQ(Expression("acsc(2/sqrt(3))").toString(), "Pi/3");
+  EXPECT_EQ(Expression("acsc(1)").toString(), "Pi/2");
+
   EXPECT_EQ(Expression("asin(sqrt(5)/10)").toString(), "asin(sqrt(5)/10)");
   EXPECT_EQ(Expression("acos(sqrt(5)/10)").toString(), "acos(sqrt(5)/10)");
   EXPECT_EQ(Expression("atan(sqrt(5)/10)").toString(), "atan(sqrt(5)/10)");
   EXPECT_EQ(Expression("acot(sqrt(5)/10)").toString(), "acot(sqrt(5)/10)");
+  EXPECT_EQ(Expression("asec(sqrt(5)/10)").toString(), "asec(sqrt(5)/10)");
+  EXPECT_EQ(Expression("acsc(sqrt(5)/10)").toString(), "acsc(sqrt(5)/10)");
 
   EXPECT_EQ(Expression("asin(x)").toString(), "asin(x)");
   EXPECT_EQ(Expression("acos(x)").toString(), "acos(x)");
   EXPECT_EQ(Expression("atan(x)").toString(), "atan(x)");
   EXPECT_EQ(Expression("acot(x)").toString(), "acot(x)");
+  EXPECT_EQ(Expression("asec(x)").toString(), "asec(x)");
+  EXPECT_EQ(Expression("acsc(x)").toString(), "acsc(x)");
 
   EXPECT_EQ(Expression("asin(sqrt(x))").toString(), "asin(sqrt(x))");
   EXPECT_EQ(Expression("acos(sqrt(x))").toString(), "acos(sqrt(x))");
   EXPECT_EQ(Expression("atan(sqrt(x))").toString(), "atan(sqrt(x))");
   EXPECT_EQ(Expression("acot(sqrt(x))").toString(), "acot(sqrt(x))");
+  EXPECT_EQ(Expression("asec(sqrt(x))").toString(), "asec(sqrt(x))");
+  EXPECT_EQ(Expression("acsc(sqrt(x))").toString(), "acsc(sqrt(x))");
 
   EXPECT_EQ(Expression("asin(sqrt(x)/2)").toString(), "asin(sqrt(x)/2)");
   EXPECT_EQ(Expression("acos(sqrt(x)/2)").toString(), "acos(sqrt(x)/2)");
   EXPECT_EQ(Expression("atan(sqrt(x)/2)").toString(), "atan(sqrt(x)/2)");
-  EXPECT_EQ(Expression("acot(sqrt(x)/2)").toString(), "acot(sqrt(x)/2)");
+  EXPECT_EQ(Expression("asec(sqrt(x)/2)").toString(), "asec(sqrt(x)/2)");
+  EXPECT_EQ(Expression("acsc(sqrt(x)/2)").toString(), "acsc(sqrt(x)/2)");
 
   EXPECT_EQ(Expression("asin(-x)").toString(), "asin(-x)");
   EXPECT_EQ(Expression("acos(-x)").toString(), "acos(-x)");
   EXPECT_EQ(Expression("atan(-x)").toString(), "atan(-x)");
   EXPECT_EQ(Expression("acot(-x)").toString(), "acot(-x)");
+  EXPECT_EQ(Expression("asec(-x)").toString(), "asec(-x)");
+  EXPECT_EQ(Expression("acsc(-x)").toString(), "acsc(-x)");
 
   EXPECT_EQ(Expression("asin(-sqrt(x))").toString(), "asin(-sqrt(x))");
   EXPECT_EQ(Expression("acos(-sqrt(x))").toString(), "acos(-sqrt(x))");
   EXPECT_EQ(Expression("atan(-sqrt(x))").toString(), "atan(-sqrt(x))");
   EXPECT_EQ(Expression("acot(-sqrt(x))").toString(), "acot(-sqrt(x))");
+  EXPECT_EQ(Expression("asec(-sqrt(x))").toString(), "asec(-sqrt(x))");
+  EXPECT_EQ(Expression("acsc(-sqrt(x))").toString(), "acsc(-sqrt(x))");
 
   EXPECT_EQ(Expression("asin(-sqrt(x)/2)").toString(), "asin(-sqrt(x)/2)");
   EXPECT_EQ(Expression("acos(-sqrt(x)/2)").toString(), "acos(-sqrt(x)/2)");
   EXPECT_EQ(Expression("atan(-sqrt(x)/2)").toString(), "atan(-sqrt(x)/2)");
   EXPECT_EQ(Expression("acot(-sqrt(x)/2)").toString(), "acot(-sqrt(x)/2)");
+  EXPECT_EQ(Expression("asec(-sqrt(x)/2)").toString(), "asec(-sqrt(x)/2)");
+  EXPECT_EQ(Expression("acsc(-sqrt(x)/2)").toString(), "acsc(-sqrt(x)/2)");
 
   EXPECT_EQ(Expression("sinh(asinh(x))").toString(), "x");
   EXPECT_EQ(Expression("cosh(acosh(x))").toString(), "x");
   EXPECT_EQ(Expression("tanh(atanh(x))").toString(), "x");
   EXPECT_EQ(Expression("coth(acoth(x))").toString(), "x");
+  EXPECT_EQ(Expression("sech(asech(x))").toString(), "x");
+  EXPECT_EQ(Expression("csch(acsch(x))").toString(), "x");
   EXPECT_EQ(Expression("asinh(sinh(x))").toString(), "asinh(sinh(x))");
   EXPECT_EQ(Expression("acosh(cosh(x))").toString(), "acosh(cosh(x))");
   EXPECT_EQ(Expression("atanh(tanh(x))").toString(), "atanh(tanh(x))");
   EXPECT_EQ(Expression("acoth(coth(x))").toString(), "acoth(coth(x))");
+  EXPECT_EQ(Expression("asech(sech(x))").toString(), "asech(sech(x))");
+  EXPECT_EQ(Expression("acsch(csch(x))").toString(), "acsch(csch(x))");
 
   EXPECT_EQ(Expression("sinh(x)/cosh(x)").toString(), "tanh(x)");
-  EXPECT_EQ(Expression("2sinh(x)/(3cosh(x))").toString(), "(2 tanh(x))/3");
-  EXPECT_EQ(Expression("sinh(x)^2/cosh(x)").toString(), "(sinh(x)^2)/cosh(x)");
-  EXPECT_EQ(Expression("sinh(x)/cosh(x)^2").toString(), "sinh(x)/(cosh(x)^2)");
+  EXPECT_EQ(Expression("(-2sinh(x))/cosh(x)").toString(), "-2 tanh(x)");
+  EXPECT_EQ(Expression("(2sinh(x))/(3cosh(x))").toString(), "(2 tanh(x))/3");
+  EXPECT_EQ(Expression("sinh(x)^2/cosh(x)").toString(), "sinh(x)^2 sech(x)");
+  EXPECT_EQ(Expression("sinh(x)/cosh(x)^2").toString(), "sech(x)^2 sinh(x)");
   EXPECT_EQ(Expression("sinh(x)^2/cosh(x)^2").toString(), "tanh(x)^2");
-  EXPECT_EQ(Expression("(2sinh(x))^2/(3cosh(x)^2)").toString(), "(4 tanh(x)^2)/3");
+  EXPECT_EQ(Expression("(2sinh(x))^2/cosh(x)^2").toString(), "4 tanh(x)^2");
+  EXPECT_EQ(Expression("(2sinh(x))^2/(3cosh(x))^2").toString(), "(4 tanh(x)^2)/9");
+
   EXPECT_EQ(Expression("cosh(x)/sinh(x)").toString(), "coth(x)");
-  EXPECT_EQ(Expression("cosh(x)^2/sinh(x)").toString(), "(cosh(x)^2)/sinh(x)");
-  EXPECT_EQ(Expression("cosh(x)/sinh(x)^2").toString(), "cosh(x)/(sinh(x)^2)");
+  EXPECT_EQ(Expression("(-2cosh(x))/sinh(x)").toString(), "-2 coth(x)");
+  EXPECT_EQ(Expression("(2cosh(x))/(3sinh(x))").toString(), "(2 coth(x))/3");
+  EXPECT_EQ(Expression("cosh(x)^2/sinh(x)").toString(), "cosh(x)^2 csch(x)");
+  EXPECT_EQ(Expression("cosh(x)/sinh(x)^2").toString(), "csch(x)^2 cosh(x)");
   EXPECT_EQ(Expression("cosh(x)^2/sinh(x)^2").toString(), "coth(x)^2");
+  EXPECT_EQ(Expression("(2cosh(x))^2/sinh(x)^2").toString(), "4 coth(x)^2");
+  EXPECT_EQ(Expression("(2cosh(x))^2/(3sinh(x))^2").toString(), "(4 coth(x)^2)/9");
+
+  EXPECT_EQ(Expression("sech(x)/csch(x)").toString(), "tanh(x)");
+  EXPECT_EQ(Expression("csch(x)/sech(x)").toString(), "coth(x)");
+  EXPECT_EQ(Expression("sech(x)*coth(x)").toString(), "csch(x)");
+  EXPECT_EQ(Expression("csch(x)*tanh(x)").toString(), "sech(x)");
 
   EXPECT_EQ(Expression("tanh(x) * coth(x)").toString(), "1");
   EXPECT_EQ(Expression("coth(x) * tanh(x)").toString(), "1");
@@ -1038,18 +1155,26 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("cos(I + 1)").toString(), "cos(1 + I)");
   EXPECT_EQ(Expression("tan(I + 1)").toString(), "tan(1 + I)");
   EXPECT_EQ(Expression("cot(I + 1)").toString(), "cot(1 + I)");
+  EXPECT_EQ(Expression("sec(I + 1)").toString(), "sec(1 + I)");
+  EXPECT_EQ(Expression("csc(I + 1)").toString(), "csc(1 + I)");
   EXPECT_EQ(Expression("asin(I + 1)").toString(), "asin(1 + I)");
   EXPECT_EQ(Expression("acos(I + 1)").toString(), "acos(1 + I)");
   EXPECT_EQ(Expression("atan(I + 1)").toString(), "atan(1 + I)");
   EXPECT_EQ(Expression("acot(I + 1)").toString(), "acot(1 + I)");
+  EXPECT_EQ(Expression("asec(I + 1)").toString(), "asec(1 + I)");
+  EXPECT_EQ(Expression("acsc(I + 1)").toString(), "acsc(1 + I)");
   EXPECT_EQ(Expression("sinh(I + 1)").toString(), "sinh(1 + I)");
   EXPECT_EQ(Expression("cosh(I + 1)").toString(), "cosh(1 + I)");
   EXPECT_EQ(Expression("tanh(I + 1)").toString(), "tanh(1 + I)");
   EXPECT_EQ(Expression("coth(I + 1)").toString(), "coth(1 + I)");
+  EXPECT_EQ(Expression("sech(I + 1)").toString(), "sech(1 + I)");
+  EXPECT_EQ(Expression("csch(I + 1)").toString(), "csch(1 + I)");
   EXPECT_EQ(Expression("asinh(I + 1)").toString(), "asinh(1 + I)");
   EXPECT_EQ(Expression("acosh(I + 1)").toString(), "acosh(1 + I)");
   EXPECT_EQ(Expression("atanh(I + 1)").toString(), "atanh(1 + I)");
   EXPECT_EQ(Expression("acoth(I + 1)").toString(), "acoth(1 + I)");
+  EXPECT_EQ(Expression("asech(I + 1)").toString(), "asech(1 + I)");
+  EXPECT_EQ(Expression("acsch(I + 1)").toString(), "acsch(1 + I)");
 
   EXPECT_EQ(Expression("I = I").toString(), "True");
   EXPECT_EQ(Expression("I = 2 I").toString(), "False");
@@ -1615,6 +1740,10 @@ TEST(ExpressionTests, preciseTest) {
             "0.6483608274590866712591249330098086768168743429837249756336279673958556003746239");
   EXPECT_EQ(Expression("cot10").approximate().toString(),
             "1.5423510453569200482774693556824293113206672064019624909194716061981945043136768");
+  EXPECT_EQ(Expression("sec10").approximate().toString(),
+            "-1.1917935066878958108796938984273465902047299220035186727706136445417481901426913");
+  EXPECT_EQ(Expression("csc10").approximate().toString(),
+            "-1.8381639608896655887052365237649145973889020018834973862573493747201515058875292");
   EXPECT_EQ(Expression("asin0.9").approximate().toString(),
             "1.1197695149986341866866770558453996158951621864033028823756818639144375371065333");
   EXPECT_EQ(Expression("acos0.9").approximate().toString(),
@@ -1623,6 +1752,10 @@ TEST(ExpressionTests, preciseTest) {
             "1.4711276743037345918528755717617308518553063771832382624719635193438804556955538");
   EXPECT_EQ(Expression("acot10").approximate().toString(),
             "0.099668652491162027378446119878020590243278322504314648015508776810027747447550654");
+  EXPECT_EQ(Expression("asec10").approximate().toString(),
+            "1.4706289056333368228857985121870581235299087274579233690964484411175055294922419");
+  EXPECT_EQ(Expression("acsc10").approximate().toString(),
+            "0.10016742116155979634552317945269331856867597222962954139102385503640267365086255");
   EXPECT_EQ(Expression("sinh10").approximate().toString(),
             "11013.232874703393377236524554846364402901451190319346103835228548076948583785685");
   EXPECT_EQ(Expression("cosh10").approximate().toString(),
@@ -1631,6 +1764,10 @@ TEST(ExpressionTests, preciseTest) {
             "0.99999999587769276361959283713827574105081461849501996226140069543680188089876683");
   EXPECT_EQ(Expression("coth10").approximate().toString(),
             "1.0000000041223072533738241840280803124601800267562193084479187641100667185123807");
+  EXPECT_EQ(Expression("sech10").approximate().toString(),
+            "9.0799859337817244080129507820478187068803766001825381516397080560420174468338146*10^-5");
+  EXPECT_EQ(Expression("csch10").approximate().toString(),
+            "9.0799859712122162833736493607291370367410765671445711489891847505702178459640405*10^-5");
   EXPECT_EQ(Expression("asinh0.9").approximate().toString(),
             "0.80886693565278246250935016738160604299699494260611658590774273687832265593746445");
   EXPECT_EQ(Expression("acosh1.9").approximate().toString(),
@@ -1639,6 +1776,10 @@ TEST(ExpressionTests, preciseTest) {
             "1.4722194895832202300045137159439267686186896306495644092689801182046463510320986");
   EXPECT_EQ(Expression("acoth1.9").approximate().toString(),
             "0.5850356263251273221963907792584300980997658991386225877261408421838960973503172");
+  EXPECT_EQ(Expression("asech0.9").approximate().toString(),
+            "0.46714530810326201812838149166592294470091920423633277925539967947899330501299865");
+  EXPECT_EQ(Expression("acsch1.9").approximate().toString(),
+            "0.50462466551048371741604715782227695355849782672942308840662278634723539375892107");
   EXPECT_EQ(Expression("((2))*sqrt2").approximate().toString(),
             "2.8284271247461900976033774484193961571393437507538961463533594759814649569242141");
   EXPECT_EQ(Expression("sqrt2*((2))").approximate().toString(),

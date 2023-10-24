@@ -26,6 +26,10 @@ private:
 
   static ArgumentPtr cotSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
+  static ArgumentPtr secSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
+  static ArgumentPtr cscSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
   static ArgumentPtr trigTableSimplify(const IFunction &func, const Rational &rhs);
