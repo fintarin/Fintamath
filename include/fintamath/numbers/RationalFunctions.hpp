@@ -4,6 +4,10 @@
 
 namespace fintamath {
 
+Integer floor(const Rational &rhs);
+
+Integer ceil(const Rational &rhs);
+
 Rational abs(const Rational &rhs);
 
 }
