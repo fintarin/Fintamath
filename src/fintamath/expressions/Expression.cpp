@@ -347,8 +347,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     }
   }
 
-  // TODO: use reverse(iota(1, terms.size() - 1)) when it is work
-  for (size_t i = terms.size() - 2; i > 0; i--) {
+  for (auto i : std::views::iota(1U, terms.size() - 1) | std::views::reverse) {
     const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
