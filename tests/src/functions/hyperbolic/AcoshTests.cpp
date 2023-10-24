@@ -28,6 +28,7 @@ TEST(AcoshTests, callTest) {
   EXPECT_EQ(f(Integer(1))->toString(), "0");
   EXPECT_EQ(f(Integer(2))->toString(),
             "1.316957896924816708625046347307968444026981971467516479768472256920460185416444");
+  EXPECT_EQ(f(Integer(-2))->toString(), "acosh(-2)");
 
   EXPECT_EQ(f(Rational(11, 10))->toString(),
             "0.44356825438511518913291106635249808664900116609997546389342095580766881611303472");
@@ -38,8 +39,6 @@ TEST(AcoshTests, callTest) {
             "0.96242365011920689499551782684873684627036866877132103932203633768032773521644355");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "acosh(1 + I)");
-
-  EXPECT_EQ(f(Integer(-2))->toString(), "acosh(-2)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "acosh(a)");
 

@@ -28,8 +28,6 @@ TEST(AtanhTests, callTest) {
   EXPECT_EQ(f(Integer(1))->toString(), "Inf");
   EXPECT_EQ(f(Integer(2))->toString(), "atanh(2)");
 
-  EXPECT_EQ(f(Complex(1, 1))->toString(), "atanh(1 + I)");
-
   EXPECT_EQ(f(Rational(10, 11))->toString(),
             "1.5222612188617114982502989901828527171422876437023053200970422417875370779853391");
   EXPECT_EQ(f(Rational(-10, 11))->toString(),
@@ -39,6 +37,8 @@ TEST(AtanhTests, callTest) {
 
   EXPECT_EQ(f(Real("0.5"))->toString(),
             "0.54930614433405484569762261846126285232374527891137472586734716681874714660930448");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "atanh(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "atanh(a)");
 

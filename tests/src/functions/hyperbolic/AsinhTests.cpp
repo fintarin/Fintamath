@@ -32,10 +32,10 @@ TEST(AsinhTests, callTest) {
   EXPECT_EQ(f(Rational(-1, 5))->toString(),
             "-0.19869011034924140647463691595020696822130879422445377302126322228548564789597237");
 
-  EXPECT_EQ(f(Complex(1, 1))->toString(), "asinh(1 + I)");
-
   EXPECT_EQ(f(Real("0.5"))->toString(),
             "0.48121182505960344749775891342436842313518433438566051966101816884016386760822177");
+
+  EXPECT_EQ(f(Complex(1, 1))->toString(), "asinh(1 + I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "asinh(a)");
 
