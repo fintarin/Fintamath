@@ -113,6 +113,8 @@ public:
     Integral,
     Frac,
     PowF,
+    Floor,
+    Ceil,
 
     IOperator = 12000,
 
@@ -140,6 +142,7 @@ public:
     Index,
     Deg,
     Comma,
+    Mod,
 
     None = std::numeric_limits<size_t>::max(),
   };

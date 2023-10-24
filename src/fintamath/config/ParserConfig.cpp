@@ -46,6 +46,9 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/ntheory/Ceil.hpp"
+#include "fintamath/functions/ntheory/Floor.hpp"
+#include "fintamath/functions/ntheory/Mod.hpp"
 #include "fintamath/functions/other/Comma.hpp"
 #include "fintamath/functions/other/Deg.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
@@ -223,6 +226,8 @@ struct ParserConfig {
     IFunction::registerType<Integral>();
     IFunction::registerType<Frac>();
     IFunction::registerType<PowF>();
+    IFunction::registerType<Floor>();
+    IFunction::registerType<Ceil>();
 
     IOperator::registerType<Add>();
     IOperator::registerType<Sub>();
@@ -248,6 +253,7 @@ struct ParserConfig {
     IOperator::registerType<Index>();
     IOperator::registerType<Deg>();
     IOperator::registerType<Comma>();
+    IOperator::registerType<Mod>();
 
     IExpression::registerType<Expression>();
   }

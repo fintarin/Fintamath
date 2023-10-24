@@ -88,6 +88,29 @@ TEST(ExpressionFunctionsTests, moreEqvTest) {
   EXPECT_EQ(moreEqv(Expression("a^2"), Expression("a")).toString(), "a^2 - a >= 0");
 }
 
+TEST(ExpressionFunctionsTests, modTest) {
+  EXPECT_EQ(mod(Variable("a"), Expression("b^2")).toString(), "a mod (b^2)");
+  EXPECT_EQ(mod(10, Expression("a+2")).toString(), "10 mod (a + 2)");
+  EXPECT_EQ(mod(Expression("5/2"), Expression("3")).toString(), "(5/2) mod 3");
+  EXPECT_EQ(mod(Expression("5"), Expression("3")).toString(), "2");
+}
+
+TEST(ExpressionFunctionsTests, floorTest) {
+  EXPECT_EQ(floor(Expression("a+3")).toString(), "floor(a + 3)");
+  EXPECT_EQ(floor(Expression("a^4")).toString(), "floor(a^4)");
+  EXPECT_EQ(floor(Expression("-333")).toString(), "-333");
+  EXPECT_EQ(floor(Expression("2/3")).toString(), "0");
+  EXPECT_EQ(floor(Expression("-2/3")).toString(), "-1");
+}
+
+TEST(ExpressionFunctionsTests, ceilTest) {
+  EXPECT_EQ(ceil(Expression("a+3")).toString(), "ceil(a + 3)");
+  EXPECT_EQ(ceil(Expression("a^4")).toString(), "ceil(a^4)");
+  EXPECT_EQ(ceil(Expression("-333")).toString(), "-333");
+  EXPECT_EQ(ceil(Expression("2/3")).toString(), "1");
+  EXPECT_EQ(ceil(Expression("-2/3")).toString(), "0");
+}
+
 TEST(ExpressionFunctionsTests, absTest) {
   EXPECT_EQ(abs(Expression("a+3")).toString(), "abs(a + 3)");
   EXPECT_EQ(abs(Expression("a^4")).toString(), "abs(a^4)");

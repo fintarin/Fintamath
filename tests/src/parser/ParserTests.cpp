@@ -43,6 +43,8 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/ntheory/Ceil.hpp"
+#include "fintamath/functions/ntheory/Floor.hpp"
 #include "fintamath/functions/other/Deg.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/other/Index.hpp"
@@ -243,6 +245,8 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Integral>(IFunction::parse("integral")));
   EXPECT_TRUE(is<Frac>(IFunction::parse("frac")));
   EXPECT_TRUE(is<PowF>(IFunction::parse("pow")));
+  EXPECT_TRUE(is<Floor>(IFunction::parse("floor")));
+  EXPECT_TRUE(is<Ceil>(IFunction::parse("ceil")));
 
   EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
   EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));

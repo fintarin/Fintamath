@@ -24,6 +24,9 @@
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/ntheory/Ceil.hpp"
+#include "fintamath/functions/ntheory/Floor.hpp"
+#include "fintamath/functions/ntheory/Mod.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
@@ -53,6 +56,10 @@ Expression div(const Expression &lhs, const Expression &rhs) {
   return lhs / rhs;
 }
 
+Expression mod(const Expression &lhs, const Expression &rhs) {
+  return Expression(modExpr(lhs, rhs));
+}
+
 Expression neg(const Expression &rhs) {
   return -rhs;
 }
@@ -79,6 +86,14 @@ Expression lessEqv(const Expression &lhs, const Expression &rhs) {
 
 Expression moreEqv(const Expression &lhs, const Expression &rhs) {
   return Expression(moreEqvExpr(lhs, rhs));
+}
+
+Expression floor(const Expression &rhs) {
+  return Expression(floorExpr(rhs));
+}
+
+Expression ceil(const Expression &rhs) {
+  return Expression(ceilExpr(rhs));
 }
 
 Expression abs(const Expression &rhs) {

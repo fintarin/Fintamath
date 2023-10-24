@@ -78,12 +78,22 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1/10^---20").toString(), "100000000000000000000");
   EXPECT_EQ(Expression("36/3(8-6)").toString(), "24");
   EXPECT_EQ(Expression("36/(8-6)3").toString(), "54");
+  EXPECT_EQ(Expression("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))").toString(), "0");
+
+  EXPECT_EQ(Expression("2 mod 2").toString(), "0");
+  EXPECT_EQ(Expression("5 mod -3").toString(), "-1");
+  EXPECT_EQ(Expression("-10 mod 4").toString(), "2");
+  EXPECT_EQ(Expression("-51 mod -11").toString(), "-7");
+  EXPECT_EQ(Expression("2 mod 3 * 4 / 2").toString(), "2");
+  EXPECT_EQ(Expression("2 + 3 * 4 mod 5").toString(), "4");
+  EXPECT_EQ(Expression("2^3 mod 3^2").toString(), "8");
+  EXPECT_EQ(Expression("2 + 3 * 4 mod 5 / 6").toString(), "14 mod (5/6)");
+
   EXPECT_EQ(Expression("2%").toString(), "1/50");
   EXPECT_EQ(Expression("2.35%").toString(), "47/2000");
   EXPECT_EQ(Expression("1100*4.76%").toString(), "1309/25");
   EXPECT_EQ(Expression("2.35%%%%").toString(), "47/2000000000");
   EXPECT_EQ(Expression("1100*4.76%1100*4.76%").toString(), "1713481/625");
-  EXPECT_EQ(Expression("((((((5)/(8)))/(1)))/(((((((9)/(4)))/(0)))/(5))))").toString(), "0");
 
   EXPECT_EQ(Expression("9!").toString(), "362880");
   EXPECT_EQ(Expression("-1!").toString(), "-1");
@@ -211,6 +221,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1deg").toString(), "Pi/180");
   EXPECT_EQ(Expression("60deg").toString(), "Pi/3");
   EXPECT_EQ(Expression("adeg").toString(), "(Pi a)/180");
+  EXPECT_EQ(Expression("floor(2/3)").toString(), "0");
+  EXPECT_EQ(Expression("floor(-2/3)").toString(), "-1");
+  EXPECT_EQ(Expression("ceil(2/3)").toString(), "1");
+  EXPECT_EQ(Expression("ceil(-2/3)").toString(), "0");
 
   EXPECT_EQ(Expression("a*0").toString(), "0");
   EXPECT_EQ(Expression("0*a").toString(), "0");
