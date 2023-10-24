@@ -27,7 +27,11 @@ private:
 
   static ArgumentPtr divSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr mulSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr mulSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isPostSimplify);
+
+  static ArgumentPtr mulPreSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr mulPostSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
@@ -39,7 +43,7 @@ private:
 
   static ArgumentPtr nestedNumeratorRationalSimplify(const ArgumentPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
-  static ArgumentPtr trigSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr trigSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static std::pair<ArgumentPtr, ArgumentPtr> sumSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
