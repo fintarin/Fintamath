@@ -717,9 +717,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("acoth(coth(x))").toString(), "acoth(coth(x))");
 
   EXPECT_EQ(Expression("sin(x)/cos(x)").toString(), "tan(x)");
+  EXPECT_EQ(Expression("2sin(x)/(3cos(x))").toString(), "(2 tan(x))/3");
   EXPECT_EQ(Expression("sin(x)^2/cos(x)").toString(), "(sin(x)^2)/cos(x)");
   EXPECT_EQ(Expression("sin(x)/cos(x)^2").toString(), "sin(x)/(cos(x)^2)");
   EXPECT_EQ(Expression("sin(x)^2/cos(x)^2").toString(), "tan(x)^2");
+  EXPECT_EQ(Expression("(2sin(x))^2/(3cos(x)^2)").toString(), "(4 tan(x)^2)/3");
   EXPECT_EQ(Expression("cos(x)/sin(x)").toString(), "cot(x)");
   EXPECT_EQ(Expression("cos(x)^2/sin(x)").toString(), "(cos(x)^2)/sin(x)");
   EXPECT_EQ(Expression("cos(x)/sin(x)^2").toString(), "cos(x)/(sin(x)^2)");

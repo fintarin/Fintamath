@@ -37,7 +37,7 @@ DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPreSimplify(
   static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
       &DivExpression::constSimplify,
       &DivExpression::divSimplify,
-      &DivExpression::mulSimplify,
+      &DivExpression::mulPreSimplify,
   };
   return simplifyFunctions;
 }
@@ -48,11 +48,10 @@ DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPostSimplify
       &DivExpression::negSimplify,
       &DivExpression::numSimplify,
       &DivExpression::divSimplify,
-      &DivExpression::mulSimplify,
+      &DivExpression::mulPostSimplify,
       &DivExpression::nestedRationalSimplify,
       &DivExpression::gcdSimplify,
       &DivExpression::sumSimplify,
-      &DivExpression::trigSimplify,
   };
   return simplifyFunctions;
 }
@@ -144,7 +143,15 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
   return res;
 }
 
-ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::mulPreSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  return mulSimplify(func, lhs, rhs, false);
+}
+
+ArgumentPtr DivExpression::mulPostSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  return mulSimplify(func, lhs, rhs, true);
+}
+
+ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isPostSimplify) {
   ArgumentPtrVector lhsChildren;
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
@@ -178,6 +185,12 @@ ArgumentPtr DivExpression::mulSimplify(const IFunction &func, const ArgumentPtr 
 
       if (!res) {
         res = powSimplify(lhsChild, rhsChild);
+      }
+
+      if (isPostSimplify) {
+        if (!res) {
+          res = trigSimplify(lhsChild, rhsChild);
+        }
       }
 
       if (res && !is<Rational>(res)) {
@@ -537,7 +550,7 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVect
   return {};
 }
 
-ArgumentPtr DivExpression::trigSimplify(const IFunction & /* func */, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::trigSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhs);
   auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhs);
 
