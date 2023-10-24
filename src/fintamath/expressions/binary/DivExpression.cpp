@@ -80,7 +80,7 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if ((is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) &&
-      !hasInfinity(lhs)) {
+      !containsInfinity(lhs)) {
 
     return Integer(0).clone();
   }
@@ -374,7 +374,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (!hasVariable(rhs)) {
+  if (!containsVariable(rhs)) {
     return {};
   }
 
