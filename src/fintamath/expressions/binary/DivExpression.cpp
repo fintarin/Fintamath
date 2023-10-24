@@ -6,6 +6,10 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
+#include "fintamath/functions/hyperbolic/Cosh.hpp"
+#include "fintamath/functions/hyperbolic/Coth.hpp"
+#include "fintamath/functions/hyperbolic/Sinh.hpp"
+#include "fintamath/functions/hyperbolic/Tanh.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Cot.hpp"
@@ -570,6 +574,14 @@ ArgumentPtr DivExpression::trigSimplify(const ArgumentPtr &lhs, const ArgumentPt
 
     if (is<Cos>(lhsChildValueExpr->getFunction()) && is<Sin>(rhsChildValueExpr->getFunction())) {
       return powExpr(cotExpr(*lhsChildValueExpr->getChildren().front()), lhsChildRate);
+    }
+
+    if (is<Sinh>(lhsChildValueExpr->getFunction()) && is<Cosh>(rhsChildValueExpr->getFunction())) {
+      return powExpr(tanhExpr(*lhsChildValueExpr->getChildren().front()), lhsChildRate);
+    }
+
+    if (is<Cosh>(lhsChildValueExpr->getFunction()) && is<Sinh>(rhsChildValueExpr->getFunction())) {
+      return powExpr(cothExpr(*lhsChildValueExpr->getChildren().front()), lhsChildRate);
     }
   }
 

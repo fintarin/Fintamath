@@ -1,5 +1,6 @@
 #include "fintamath/expressions/unary/HyperbExpression.hpp"
 
+#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/hyperbolic/Acoth.hpp"
 #include "fintamath/functions/hyperbolic/Asinh.hpp"
@@ -18,6 +19,8 @@ HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
 HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPreSimplify() const {
   static const HyperbExpression::SimplifyFunctionVector simplifyFunctions = {
       &HyperbExpression::oppositeFunctionsSimplify,
+      &HyperbExpression::tanhSimplify,
+      &HyperbExpression::cothSimplify,
   };
   return simplifyFunctions;
 }
@@ -36,6 +39,22 @@ ArgumentPtr HyperbExpression::oppositeFunctionsSimplify(const IFunction &func, c
         return expr->getChildren().front();
       }
     }
+  }
+
+  return {};
+}
+
+ArgumentPtr HyperbExpression::tanhSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  if (is<Tanh>(func)) {
+    return divExpr(sinhExpr(rhs), coshExpr(rhs));
+  }
+
+  return {};
+}
+
+ArgumentPtr HyperbExpression::cothSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  if (is<Coth>(func)) {
+    return divExpr(coshExpr(rhs), sinhExpr(rhs));
   }
 
   return {};
