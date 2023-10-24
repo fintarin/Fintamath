@@ -49,22 +49,6 @@ std::string IPolynomExpression::toString() const {
   return result;
 }
 
-ArgumentPtr IPolynomExpression::useSimplifyFunctions(const SimplifyFunctionVector &simplFuncs,
-                                                     size_t lhsChildPos,
-                                                     size_t rhsChildPos) const {
-
-  const auto &lhs = children[lhsChildPos];
-  const auto &rhs = children[rhsChildPos];
-
-  for (const auto &simplFunc : simplFuncs) {
-    if (auto res = simplFunc(*func, lhs, rhs)) {
-      return res;
-    }
-  }
-
-  return {};
-}
-
 void IPolynomExpression::compress() {
   size_t i = 0;
 
@@ -136,8 +120,14 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
     }
 
     if (!res) {
-      res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(), i - 1, i)
-                           : useSimplifyFunctions(getFunctionsForPreSimplify(), i - 1, i);
+      res = !isPostSimplify ? useSimplifyFunctions(getFunctionsForPreSimplify(),
+                                                   *func,
+                                                   children[i - 1],
+                                                   children[i])
+                            : useSimplifyFunctions(getFunctionsForPostSimplify(),
+                                                   *func,
+                                                   children[i - 1],
+                                                   children[i]);
     }
 
     if (!res) {

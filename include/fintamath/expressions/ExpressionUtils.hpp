@@ -37,6 +37,20 @@ std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &a
 
 ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args);
 
+template <std::same_as<ArgumentPtr>... Args, std::invocable<IFunction, Args...> SimplifyFunction>
+ArgumentPtr useSimplifyFunctions(const std::vector<SimplifyFunction> &simplFuncs,
+                                 const IFunction &func,
+                                 const Args &...args) {
+
+  for (const auto &simplFunc : simplFuncs) {
+    if (auto res = simplFunc(func, args...)) {
+      return res;
+    }
+  }
+
+  return {};
+}
+
 ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<ArgumentPtr> auto &...args) {
   if ((is<Undefined>(args) || ...)) {
     static const size_t undefinedReturnType = Undefined().getReturnType();
@@ -51,5 +65,4 @@ ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<Argument
 
   return {};
 }
-
 }
