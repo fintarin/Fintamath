@@ -2,7 +2,7 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 
-using namespace boost::multiprecision;
+using boost::multiprecision::cpp_int;
 
 namespace fintamath {
 
