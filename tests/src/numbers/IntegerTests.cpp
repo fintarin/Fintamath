@@ -474,9 +474,38 @@ TEST(IntegerTests, intFriendDivideOperatorTest) {
 }
 
 TEST(IntegerTests, moduloAssignmentOperatorTest) {
+  EXPECT_EQ(Integer(0) %= Integer(2), Integer(0));
+  EXPECT_EQ(Integer(0) %= Integer(-2), Integer(0));
+
+  EXPECT_EQ(Integer(10) %= Integer(1), Integer(0));
+  EXPECT_EQ(Integer(10) %= Integer(-1), Integer(0));
+  EXPECT_EQ(Integer(-10) %= Integer(1), Integer(0));
+  EXPECT_EQ(Integer(-10) %= Integer(-1), Integer(0));
+
+  EXPECT_EQ(Integer(2) %= Integer(3), Integer(2));
+  EXPECT_EQ(Integer(2) %= Integer(-3), Integer(2));
+  EXPECT_EQ(Integer(-2) %= Integer(3), Integer(-2));
+  EXPECT_EQ(Integer(-2) %= Integer(-3), Integer(-2));
+
+  EXPECT_EQ(Integer(19) %= Integer(11), Integer(8));
+  EXPECT_EQ(Integer(19) %= Integer(-11), Integer(8));
+  EXPECT_EQ(Integer(-19) %= Integer(11), Integer(-8));
+  EXPECT_EQ(Integer(-19) %= Integer(-11), Integer(-8));
+
   EXPECT_EQ(Integer(25) %= Integer(368273929), 25);
+  EXPECT_EQ(Integer(25) %= Integer(-368273929), 25);
+  EXPECT_EQ(Integer(-25) %= Integer(368273929), -25);
+  EXPECT_EQ(Integer(-25) %= Integer(-368273929), -25);
+
+  EXPECT_EQ(Integer(25) %= Integer(3), 1);
+  EXPECT_EQ(Integer(25) %= Integer(-3), 1);
   EXPECT_EQ(Integer(-25) %= Integer(3), -1);
+  EXPECT_EQ(Integer(-25) %= Integer(-3), -1);
+
+  EXPECT_EQ(Integer(2000) %= Integer(36), Integer(20));
   EXPECT_EQ(Integer(2000) %= Integer(-36), Integer(20));
+  EXPECT_EQ(Integer(-2000) %= Integer(36), Integer(-20));
+  EXPECT_EQ(Integer(-2000) %= Integer(-36), Integer(-20));
 
   EXPECT_EQ(Integer(0) %= Integer("368273929654738476473823743829388329882"), 0);
   EXPECT_EQ(Integer("54732897657873247528747287294738765738746547387476327946763287467387267328724673874") %=
