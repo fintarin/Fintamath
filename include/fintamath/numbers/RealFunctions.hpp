@@ -28,6 +28,10 @@ Real tan(const Real &rhs);
 
 Real cot(const Real &rhs);
 
+Real sec(const Real &rhs);
+
+Real csc(const Real &rhs);
+
 Real asin(const Real &rhs);
 
 Real acos(const Real &rhs);
@@ -35,6 +39,10 @@ Real acos(const Real &rhs);
 Real atan(const Real &rhs);
 
 Real acot(const Real &rhs);
+
+Real asec(const Real &rhs);
+
+Real acsc(const Real &rhs);
 
 Real sinh(const Real &rhs);
 
@@ -44,6 +52,10 @@ Real tanh(const Real &rhs);
 
 Real coth(const Real &rhs);
 
+Real sech(const Real &rhs);
+
+Real csch(const Real &rhs);
+
 Real asinh(const Real &rhs);
 
 Real acosh(const Real &rhs);
@@ -51,6 +63,10 @@ Real acosh(const Real &rhs);
 Real atanh(const Real &rhs);
 
 Real acoth(const Real &rhs);
+
+Real asech(const Real &rhs);
+
+Real acsch(const Real &rhs);
 
 Real getE();
 

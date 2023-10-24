@@ -90,6 +90,19 @@ Real cot(const Real &rhs) {
   }
 }
 
+Real sec(const Real &rhs) {
+  return 1 / cos(rhs);
+}
+
+Real csc(const Real &rhs) {
+  try {
+    return 1 / sin(rhs);
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("csc", {rhs.toString()});
+  }
+}
+
 Real asin(const Real &rhs) {
   cpp_dec_float_100 res = asin(rhs.getBackend());
 
@@ -123,6 +136,24 @@ Real acot(const Real &rhs) {
   }
 }
 
+Real asec(const Real &rhs) {
+  try {
+    return acos(1 / rhs);
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("asec", {rhs.toString()});
+  }
+}
+
+Real acsc(const Real &rhs) {
+  try {
+    return asin(1 / rhs);
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("acsc", {rhs.toString()});
+  }
+}
+
 Real sinh(const Real &rhs) {
   return {sinh(rhs.getBackend())};
 }
@@ -141,6 +172,19 @@ Real coth(const Real &rhs) {
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("coth", {rhs.toString()});
+  }
+}
+
+Real sech(const Real &rhs) {
+  return 1 / cosh(rhs);
+}
+
+Real csch(const Real &rhs) {
+  try {
+    return 1 / sinh(rhs);
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("csch", {rhs.toString()});
   }
 }
 
@@ -175,6 +219,24 @@ Real acoth(const Real &rhs) {
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("acoth", {rhs.toString()});
+  }
+}
+
+Real asech(const Real &rhs) {
+  try {
+    return acosh(1 / rhs);
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("asech", {rhs.toString()});
+  }
+}
+
+Real acsch(const Real &rhs) {
+  try {
+    return asinh(1 / rhs);
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("acsch", {rhs.toString()});
   }
 }
 
