@@ -112,6 +112,7 @@ public:
     Derivative,
     Integral,
     Frac,
+    FracMixed,
     PowFunction,
     Floor,
     Ceil,
