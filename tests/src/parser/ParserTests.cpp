@@ -51,7 +51,7 @@
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/functions/powers/PowF.hpp"
+#include "fintamath/functions/powers/PowFunction.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
@@ -244,7 +244,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Derivative>(IFunction::parse("derivative")));
   EXPECT_TRUE(is<Integral>(IFunction::parse("integral")));
   EXPECT_TRUE(is<Frac>(IFunction::parse("frac")));
-  EXPECT_TRUE(is<PowF>(IFunction::parse("pow")));
+  EXPECT_TRUE(is<PowFunction>(IFunction::parse("pow")));
   EXPECT_TRUE(is<Floor>(IFunction::parse("floor")));
   EXPECT_TRUE(is<Ceil>(IFunction::parse("ceil")));
 

@@ -5,14 +5,14 @@
 
 namespace fintamath {
 
-class PowF : public IFunctionCRTP<IArithmetic, PowF, IArithmetic, IArithmetic> {
+class PowFunction : public IFunctionCRTP<IArithmetic, PowFunction, IArithmetic, IArithmetic> {
 public:
   std::string toString() const override {
     return "pow";
   }
 
   static MathObjectType getTypeStatic() {
-    return MathObjectType::PowF;
+    return MathObjectType::PowFunction;
   }
 
 protected:

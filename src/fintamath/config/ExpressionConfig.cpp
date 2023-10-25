@@ -62,7 +62,7 @@
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/functions/powers/PowF.hpp"
+#include "fintamath/functions/powers/PowFunction.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
@@ -172,7 +172,7 @@ struct ExpressionConfig {
       return PowExpression(std::move(args.front()), std::move(args.back())).clone();
     });
 
-    Expression::registerFunctionExpressionMaker<PowF>([](ArgumentPtrVector &&args) {
+    Expression::registerFunctionExpressionMaker<PowFunction>([](ArgumentPtrVector &&args) {
       return PowExpression(std::move(args.front()), std::move(args.back())).clone();
     });
 
