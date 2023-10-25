@@ -36,6 +36,8 @@ public:
 
   std::string toString() const override;
 
+  std::string toString(uint8_t precision) const;
+
   bool isPrecise() const override;
 
   uint8_t getPrecision() const;
@@ -68,7 +70,7 @@ protected:
 private:
   boost::multiprecision::cpp_dec_float_100 backend;
 
-  uint8_t outputPrecision = FINTAMATH_PRECISION;
+  uint8_t precision = FINTAMATH_PRECISION;
 };
 
 }

@@ -68,7 +68,13 @@ Real::Real(double val) : backend(val) {
 }
 
 std::string Real::toString() const {
-  std::string res = backend.str(outputPrecision);
+  return toString(precision);
+}
+
+std::string Real::toString(uint8_t inPrecision) const {
+  assert(inPrecision <= inPrecision && inPrecision != 0);
+
+  std::string res = backend.str(inPrecision);
 
   size_t expPos = res.find('e');
 
@@ -110,12 +116,13 @@ bool Real::isPrecise() const {
 }
 
 uint8_t Real::getPrecision() const {
-  return outputPrecision;
+  return precision;
 }
 
-void Real::setPrecision(uint8_t precision) {
-  assert(precision <= FINTAMATH_PRECISION && precision != 0);
-  outputPrecision = precision;
+void Real::setPrecision(uint8_t inPrecision) {
+  assert(inPrecision <= FINTAMATH_PRECISION && inPrecision != 0);
+  backend.precision(inPrecision);
+  precision = inPrecision;
 }
 
 int Real::sign() const {
