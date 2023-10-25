@@ -9,6 +9,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Frac.hpp"
+#include "fintamath/functions/arithmetic/FracMixed.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
@@ -225,6 +226,7 @@ struct ParserConfig {
     IFunction::registerType<Derivative>();
     IFunction::registerType<Integral>();
     IFunction::registerType<Frac>();
+    IFunction::registerType<FracMixed>();
     IFunction::registerType<PowFunction>();
     IFunction::registerType<Floor>();
     IFunction::registerType<Ceil>();

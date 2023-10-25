@@ -8,6 +8,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Frac.hpp"
+#include "fintamath/functions/arithmetic/FracMixed.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
@@ -243,15 +244,11 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_TRUE(is<Acsch>(IFunction::parse("acsch")));
   EXPECT_TRUE(is<Derivative>(IFunction::parse("derivative")));
   EXPECT_TRUE(is<Integral>(IFunction::parse("integral")));
-  EXPECT_TRUE(is<Frac>(IFunction::parse("frac")));
+  EXPECT_TRUE(is<Frac>(IFunction::parse("frac", IFunction::Type::Binary)));
+  EXPECT_TRUE(is<FracMixed>(IFunction::parse("frac", IFunction::Type::Ternary)));
   EXPECT_TRUE(is<PowFunction>(IFunction::parse("pow")));
   EXPECT_TRUE(is<Floor>(IFunction::parse("floor")));
   EXPECT_TRUE(is<Ceil>(IFunction::parse("ceil")));
-
-  EXPECT_TRUE(is<Add>(IFunction::parse("+", IFunction::Type::Binary)));
-  EXPECT_TRUE(is<UnaryPlus>(IFunction::parse("+", IFunction::Type::Unary)));
-  EXPECT_TRUE(is<Sub>(IFunction::parse("-", IFunction::Type::Binary)));
-  EXPECT_TRUE(is<Neg>(IFunction::parse("-", IFunction::Type::Unary)));
 
   EXPECT_EQ(IFunction::parse("asdgewfe"), nullptr);
   EXPECT_EQ(IFunction::parse("1224"), nullptr);

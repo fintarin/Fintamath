@@ -21,6 +21,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Frac.hpp"
+#include "fintamath/functions/arithmetic/FracMixed.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -158,6 +159,14 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Frac>([](ArgumentPtrVector &&args) {
       return divExpr(std::move(args));
+    });
+
+    Expression::registerFunctionExpressionMaker<FracMixed>([](ArgumentPtrVector &&args) {
+      ArgumentPtr integ = args[0];
+      ArgumentPtr numer = args[1];
+      ArgumentPtr denom = args[2];
+
+      return addExpr(integ, divExpr(numer, denom));
     });
 
     Expression::registerFunctionExpressionMaker<And, true>([](ArgumentPtrVector &&args) {
