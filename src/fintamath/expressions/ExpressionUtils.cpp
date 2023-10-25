@@ -75,13 +75,16 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
   bool shouldPutInBrackets = false;
 
   if (childOper) {
-    shouldPutInBrackets = oper.getOperatorPriority() == IOperator::Priority::PostfixUnary ||
-                          childOper->getOperatorPriority() > oper.getOperatorPriority();
-
-    shouldPutInBrackets = shouldPutInBrackets ||
-                          (childOper->getFunctionType() == IFunction::Type::Unary
-                               ? childOper->getOperatorPriority() == oper.getOperatorPriority()
-                               : !oper.isAssociative());
+    if (oper.getOperatorPriority() == IOperator::Priority::PostfixUnary) {
+      shouldPutInBrackets = true;
+    }
+    else if (childOper->getFunctionType() == IFunction::Type::Unary) {
+      shouldPutInBrackets = childOper->getOperatorPriority() >= oper.getOperatorPriority();
+    }
+    else {
+      shouldPutInBrackets = childOper->getOperatorPriority() > oper.getOperatorPriority() ||
+                            !oper.isAssociative();
+    }
   }
 
   return shouldPutInBrackets ? putInBrackets(childStr) : childStr;
