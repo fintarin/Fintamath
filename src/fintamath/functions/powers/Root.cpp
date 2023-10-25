@@ -18,8 +18,12 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentRefVector &argsVect) const
   const auto &lhs = cast<INumber>(argsVect.front().get());
   const auto &rhs = cast<INumber>(argsVect.back().get());
 
-  if (lhs == Integer(1) || rhs == Integer(1)) {
-    return lhs.clone();
+  if (lhs == Integer(0) ||
+      rhs == Integer(0) ||
+      lhs == Integer(1) ||
+      rhs == Integer(1)) {
+
+    return Pow()(lhs, *Div()(Rational(1), rhs));
   }
 
   if (const auto *rhsIntPtr = cast<Integer>(&rhs)) {
@@ -125,7 +129,7 @@ std::map<Integer, Integer> Root::roots(const Integer &lhs, const Integer &rhs) {
 }
 
 std::unique_ptr<IMathObject> Root::perfectRoot(const Integer &lhs, const Integer &rhs) {
-  if (lhs == 1) {
+  if (lhs < 2) {
     return lhs.clone();
   }
 

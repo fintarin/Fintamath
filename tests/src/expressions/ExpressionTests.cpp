@@ -140,6 +140,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("root(8, 3)").toString(), "2");
   EXPECT_EQ(Expression("root(16, 4)").toString(), "2");
   EXPECT_EQ(Expression("root(27, 3)").toString(), "3");
+  EXPECT_EQ(Expression("root(0, 3)").toString(), "0");
 
   EXPECT_EQ(Expression("4^(1/2)").toString(), "2");
   EXPECT_EQ(Expression("8^(1/3)").toString(), "2");
@@ -451,6 +452,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x^3)^(1/3)").toString(), "root(x^3, 3)");
   EXPECT_EQ(Expression("sqrt(x)^2").toString(), "sqrt(x)^2");
   EXPECT_EQ(Expression("root(x^(-2), -2)").toString(), "sqrt(x^2)");
+  EXPECT_EQ(Expression("root(0, x)").toString(), "0");
 
   // TODO: implement
   // EXPECT_EQ(Expression("abs(x)^3").toString(), "abs(x^3)");

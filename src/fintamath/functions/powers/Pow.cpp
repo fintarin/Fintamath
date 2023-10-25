@@ -21,12 +21,20 @@ std::unique_ptr<IMathObject> Pow::call(const ArgumentRefVector &argsVect) const 
     return Undefined().clone();
   }
 
+  if (rhs == Integer(0)) {
+    return Integer(1).clone();
+  }
+
   if (rhs < Integer(0)) {
     if (lhs == Integer(0)) {
       return ComplexInf().clone();
     }
 
     return multiPowSimplify(*(Rational(1) / lhs), *(-rhs));
+  }
+
+  if (lhs == Integer(0) || lhs == Integer(1) || rhs == Integer(1)) {
+    return lhs.clone();
   }
 
   return multiPowSimplify(lhs, rhs);

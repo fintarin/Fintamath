@@ -32,6 +32,7 @@ TEST(PowTests, isAssociativeTest) {
 }
 
 TEST(PowTests, callTest) {
+  EXPECT_EQ(f(Integer(3), Integer(0))->toString(), "1");
   EXPECT_EQ(f(Integer(3), Integer(2))->toString(), "9");
   EXPECT_EQ(f(Integer(-3), Integer(2))->toString(), "9");
   EXPECT_EQ(f(Integer(3), Integer(-2))->toString(), "1/9");
@@ -40,6 +41,7 @@ TEST(PowTests, callTest) {
             "1899052764604618242121820463954116340585832240009877848127251456103762646167989140750662066593328455813588"
             "1805238401044949435868367905913020005911442340062387227375955664576836341689587626164144676307968892001");
 
+  EXPECT_EQ(f(Integer(0), Rational(1, 2))->toString(), "0");
   EXPECT_EQ(f(Integer(4), Rational(1, 2))->toString(), "2");
   EXPECT_EQ(f(Integer(4), Rational(1, 3))->toString(), "root(4, 3)");
   EXPECT_EQ(f(Integer(4), Rational(1, 4))->toString(), "sqrt(2)");
