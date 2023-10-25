@@ -25,7 +25,14 @@ TEST(FracMixedTests, callTest) {
   EXPECT_EQ(f(Integer(0), Integer(3), Integer(5))->toString(), "3/5");
   EXPECT_EQ(f(Integer(0), Integer(3), Rational(5, 2))->toString(), "6/5");
   EXPECT_EQ(f(Integer(0), Rational(5, 2), Integer(3))->toString(), "5/6");
-  EXPECT_EQ(f(Integer(0), Rational(5, 2), Rational(5, 3))->toString(), "3/2");
+  EXPECT_EQ(f(Integer(0), Rational(-5, 2), Rational(5, 3))->toString(), "-3/2");
+  EXPECT_EQ(f(Integer(2), Integer(3), Integer(5))->toString(), "13/5");
+  EXPECT_EQ(f(Integer(2), Integer(3), Integer(-5))->toString(), "7/5");
+  EXPECT_EQ(f(Integer(2), Integer(-3), Integer(5))->toString(), "7/5");
+  EXPECT_EQ(f(Integer(-2), Integer(3), Integer(5))->toString(), "-7/5");
+  EXPECT_EQ(f(Integer(-5), Integer(3), Rational(5, 2))->toString(), "-19/5");
+  EXPECT_EQ(f(Integer(14), Rational(-5, 2), Integer(-3))->toString(), "89/6");
+  EXPECT_EQ(f(Integer(-12), Rational(15, 5), Rational(5, -3))->toString(), "-69/5");
 
   EXPECT_EQ(f(Integer(0), Integer(3), Variable("a"))->toString(), "3/a");
 
