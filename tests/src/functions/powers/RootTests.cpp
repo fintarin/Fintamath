@@ -20,6 +20,7 @@ TEST(RootTests, getFunctionTypeTest) {
 }
 
 TEST(RootTests, callTest) {
+  EXPECT_EQ(f(Integer(0), Integer(3))->toString(), "0");
   EXPECT_EQ(f(Integer(10), Integer(1))->toString(), "10");
   EXPECT_EQ(f(Integer(-10), Integer(1))->toString(), "-10");
   EXPECT_EQ(f(Integer(100), Integer(2))->toString(), "10");
@@ -96,6 +97,11 @@ TEST(RootTests, callTest) {
   EXPECT_EQ(f(Integer(-10), Integer(6))->toString(), "root(-10, 6)");
   EXPECT_EQ(f(Rational(-9289, 10), Rational(2, 3))->toString(), "(-9289/10)^(3/2)");
   EXPECT_EQ(f(Real(-9289), Rational(2, 3))->toString(), "(-9289.0)^(3/2)"); // TODO: solve this
+
+  EXPECT_EQ(f(Integer(0), Integer(-1))->toString(), "ComplexInf");
+  EXPECT_EQ(f(Integer(0), Integer(-10))->toString(), "ComplexInf");
+  EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "0");
+  EXPECT_EQ(f(Integer(2), Integer(0))->toString(), "ComplexInf");
 
   EXPECT_EQ(f(Variable("a"), Integer(2))->toString(), "sqrt(a)");
   EXPECT_EQ(f(Variable("a"), Integer(3))->toString(), "root(a, 3)");
