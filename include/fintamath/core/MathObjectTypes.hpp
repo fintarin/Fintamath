@@ -112,7 +112,7 @@ public:
     Derivative,
     Integral,
     Frac,
-    PowF,
+    PowFunction,
     Floor,
     Ceil,
 

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "fintamath/functions/powers/PowF.hpp"
+#include "fintamath/functions/powers/PowFunction.hpp"
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
@@ -12,17 +12,17 @@
 
 using namespace fintamath;
 
-const PowF f;
+const PowFunction f;
 
-TEST(PowFTests, toStringTest) {
+TEST(PowFunctionTests, toStringTest) {
   EXPECT_EQ(f.toString(), "pow");
 }
 
-TEST(PowFTests, getFunctionTypeTest) {
+TEST(PowFunctionTests, getFunctionTypeTest) {
   EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
 }
 
-TEST(PowFTests, callTest) {
+TEST(PowFunctionTests, callTest) {
   EXPECT_EQ(f(Integer(3), Integer(2))->toString(), "9");
   EXPECT_EQ(f(Rational(-10), Rational(-3))->toString(), "-1/1000");
 
@@ -36,7 +36,7 @@ TEST(PowFTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(PowFTests, doArgsMatchTest) {
+TEST(PowFunctionTests, doArgsMatchTest) {
   Integer a;
 
   EXPECT_FALSE(f.doArgsMatch({}));
@@ -45,19 +45,19 @@ TEST(PowFTests, doArgsMatchTest) {
   EXPECT_FALSE(f.doArgsMatch({a, a, a}));
 }
 
-TEST(PowFTests, equalsTest) {
+TEST(PowFunctionTests, equalsTest) {
   EXPECT_EQ(f, f);
-  EXPECT_EQ(f, PowF());
-  EXPECT_EQ(PowF(), f);
-  EXPECT_EQ(f, cast<IMathObject>(PowF()));
-  EXPECT_EQ(cast<IMathObject>(PowF()), f);
+  EXPECT_EQ(f, PowFunction());
+  EXPECT_EQ(PowFunction(), f);
+  EXPECT_EQ(f, cast<IMathObject>(PowFunction()));
+  EXPECT_EQ(cast<IMathObject>(PowFunction()), f);
   EXPECT_NE(f, Sub());
   EXPECT_NE(Sub(), f);
   EXPECT_NE(f, UnaryPlus());
   EXPECT_NE(UnaryPlus(), f);
 }
 
-TEST(PowFTests, getTypeTest) {
-  EXPECT_EQ(PowF::getTypeStatic(), MathObjectType::PowF);
-  EXPECT_EQ(PowF().getType(), MathObjectType::PowF);
+TEST(PowFunctionTests, getTypeTest) {
+  EXPECT_EQ(PowFunction::getTypeStatic(), MathObjectType::PowFunction);
+  EXPECT_EQ(PowFunction().getType(), MathObjectType::PowFunction);
 }
