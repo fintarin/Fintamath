@@ -18,7 +18,9 @@ public:
   }
 
 protected:
-  ArgumentPtr preciseSimplify() const override;
+  ArgumentPtr approximateSimplify() const override;
+
+  ArgumentPtr setPrecision(uint8_t precision, const Integer &maxInt) const override;
 
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 

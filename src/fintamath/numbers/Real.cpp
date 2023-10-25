@@ -72,7 +72,7 @@ std::string Real::toString() const {
 }
 
 std::string Real::toString(uint8_t inPrecision) const {
-  assert(inPrecision <= inPrecision && inPrecision != 0);
+  assert(inPrecision <= FINTAMATH_PRECISION && inPrecision != 0);
 
   std::string res = backend.str(inPrecision);
 

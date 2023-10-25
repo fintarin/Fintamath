@@ -45,7 +45,9 @@ protected:
 
   virtual ArgumentPtr postSimplify() const;
 
-  virtual ArgumentPtr preciseSimplify() const;
+  virtual ArgumentPtr approximateSimplify() const;
+
+  virtual ArgumentPtr setPrecision(uint8_t precision, const Integer &maxInt) const;
 
   static void simplifyChild(ArgumentPtr &child);
 
@@ -53,9 +55,16 @@ protected:
 
   static void postSimplifyChild(ArgumentPtr &child);
 
-  static void preciseSimplifyChild(ArgumentPtr &child);
+  static void approximateSimplifyChild(ArgumentPtr &child, bool convertNumbers = false);
+
+  static void setPrecisionChild(ArgumentPtr &child, uint8_t precision, const Integer &maxInt);
 
   static ArgumentPtr callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs);
+
+private:
+  static std::unique_ptr<INumber> convertToApproximated(const INumber &num);
+
+  static std::unique_ptr<INumber> convertToApproximated(const INumber &num, uint8_t precision, const Integer &maxInt);
 
 private:
   static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &getParser();

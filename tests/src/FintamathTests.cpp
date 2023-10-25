@@ -61,6 +61,12 @@ TEST(FintamathTests, fintamathTests) {
   expr = sin(Expression("-3Pi/2")) + cos(Expression("Pi/4"));
   EXPECT_EQ(expr.toString(), "sqrt(2)/2 + 1");
 
+  expr = sin(Expression("123")).approximate();
+  EXPECT_EQ(expr.toString(), "-0.45990349068959125129243571529323181080858060738104258092774286802995864335938568");
+
+  expr = cos(Expression("-256")).approximate();
+  EXPECT_EQ(expr.toString(), "-0.03979075993115770952448155799687436467725547418710853642067732094296726801190103");
+
   expr = Expression("~a & b | ~c -> a <-> b !<-> c");
   EXPECT_EQ(expr.toString(), "(a & b & ~c) | (~a & ~b & ~c) | (~a & c) | (~b & c)");
 
@@ -79,5 +85,5 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(expr.toString(), "x = -1/6 I sqrt(59) - 11/6 | x = 1/6 I sqrt(59) - 11/6");
 
   expr = solve(Expression("-3x^2 + 28x - 49 = 0")).approximate(2);
-  EXPECT_EQ(expr.toString(), "x = 2.3 | x = 7.0");
+  EXPECT_EQ(expr.toString(), "x = 2.3 | x = 7");
 }

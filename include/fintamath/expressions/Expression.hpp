@@ -40,6 +40,7 @@ public:
 
   std::string toString() const override;
 
+  // TODO: move this function to ExpressionFunctions
   Expression approximate(uint8_t precision = FINTAMATH_PRECISION) const;
 
   const std::shared_ptr<IFunction> &getFunction() const override;
@@ -76,8 +77,6 @@ protected:
 
   ArgumentPtr simplify() const override;
 
-  ArgumentPtr preciseSimplify() const override;
-
 private:
   void simplifyMutable() const;
 
@@ -112,8 +111,6 @@ private:
   static void validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args);
 
   static bool doesArgMatch(const MathObjectType &expectedType, const ArgumentPtr &arg);
-
-  static void approximateRec(ArgumentPtr &arg, uint8_t precision);
 
   static ArgumentPtr compress(const ArgumentPtr &child);
 

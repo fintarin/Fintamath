@@ -13,6 +13,7 @@
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Complex.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
@@ -52,13 +53,13 @@ std::string Expression::toString() const {
 }
 
 Expression Expression::approximate(uint8_t precision) const {
-  // TODO: rework so that small ints don't convert to reals
-  // TODO: move this to ExpressionFunctions
-  simplifyMutable();
-  Expression approxExpr(preciseSimplify());
-  approxExpr.simplifyMutable();
-  approximateRec(approxExpr.child, precision);
+  const Integer maxInt = pow(Integer(10), precision);
+
+  Expression approxExpr = *this;
+  approximateSimplifyChild(approxExpr.child);
+  setPrecisionChild(approxExpr.child, precision, maxInt);
   approxExpr.updateStringMutable();
+
   return approxExpr;
 }
 
@@ -121,12 +122,6 @@ void Expression::setVariable(const Variable &var, const Expression &val) {
 
 ArgumentPtr Expression::simplify() const {
   return child;
-}
-
-ArgumentPtr Expression::preciseSimplify() const {
-  ArgumentPtr preciseChild = child;
-  preciseSimplifyChild(preciseChild);
-  return preciseChild;
 }
 
 void Expression::simplifyMutable() const {
@@ -413,34 +408,6 @@ bool Expression::isPostfixOperator(const IMathObject *val) {
 
 bool Expression::isNonOperatorFunction(const IMathObject *val) {
   return is<IFunction>(val) && !is<IOperator>(val);
-}
-
-void Expression::approximateRec(ArgumentPtr &arg, uint8_t precision) {
-  if (const auto realArg = cast<Real>(arg)) {
-    Real val = *realArg;
-    val.setPrecision(precision);
-    arg = val.clone();
-  }
-  else if (const auto complexArg = cast<Complex>(arg)) {
-    Real re = *convert<Real>(complexArg->real());
-    re.setPrecision(precision);
-
-    Real im = *convert<Real>(complexArg->imag());
-    im.setPrecision(precision);
-
-    arg = Complex(re, im).clone();
-  }
-  else if (const auto exprArg = cast<IExpression>(arg)) {
-    ArgumentPtrVector newChildren = exprArg->getChildren();
-
-    for (auto &child : newChildren) {
-      approximateRec(child, precision);
-    }
-
-    auto newExprArg = cast<IExpression>(exprArg->clone());
-    newExprArg->setChildren(newChildren);
-    arg = ArgumentPtr(std::move(newExprArg));
-  }
 }
 
 ArgumentPtr Expression::compress(const ArgumentPtr &child) {

@@ -41,14 +41,29 @@ std::shared_ptr<IFunction> LogExpression::getOutputFunction() const {
   return IBinaryExpression::getFunction();
 }
 
-ArgumentPtr LogExpression::preciseSimplify() const {
+ArgumentPtr LogExpression::approximateSimplify() const {
   if (*lhsChild == E()) {
-    auto preciseExpr = cast<LogExpression>(clone());
-    preciseSimplifyChild(preciseExpr->rhsChild);
-    return preciseExpr;
+    auto approxExpr = cast<LogExpression>(clone());
+    approximateSimplifyChild(approxExpr->rhsChild);
+
+    if (is<INumber>(approxExpr->rhsChild)) {
+      return approxExpr->IBinaryExpression::approximateSimplify();
+    }
+
+    return approxExpr->simplify();
   }
 
-  return IBinaryExpression::preciseSimplify();
+  return IBinaryExpression::approximateSimplify();
+}
+
+ArgumentPtr LogExpression::setPrecision(uint8_t precision, const Integer &maxInt) const {
+  if (*lhsChild == E()) {
+    auto approxExpr = cast<LogExpression>(clone());
+    setPrecisionChild(approxExpr->rhsChild, precision, maxInt);
+    return approxExpr->simplify();
+  }
+
+  return IBinaryExpression::setPrecision(precision, maxInt);
 }
 
 LogExpression::SimplifyFunctionVector LogExpression::getFunctionsForPreSimplify() const {

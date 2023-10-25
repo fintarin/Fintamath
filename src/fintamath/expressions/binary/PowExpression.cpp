@@ -20,6 +20,8 @@
 
 namespace fintamath {
 
+constexpr int64_t maxPreciseRoot = 9;
+
 PowExpression::PowExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
     : IBinaryExpressionCRTP(Pow(), std::move(inLhsChild), std::move(inRhsChild)) {
 }
@@ -70,16 +72,29 @@ std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
   return IBinaryExpression::getFunction();
 }
 
-ArgumentPtr PowExpression::preciseSimplify() const {
-  static const int64_t maxPreciseRoot = 9;
-
+ArgumentPtr PowExpression::approximateSimplify() const {
   if (const auto ratRhsChild = cast<Rational>(rhsChild); ratRhsChild && ratRhsChild->denominator() <= maxPreciseRoot) {
-    auto preciseExpr = cast<PowExpression>(clone());
-    preciseSimplifyChild(preciseExpr->lhsChild);
-    return preciseExpr;
+    auto approxExpr = cast<PowExpression>(clone());
+    approximateSimplifyChild(approxExpr->lhsChild);
+
+    if (is<INumber>(approxExpr->lhsChild)) {
+      return approxExpr->IBinaryExpression::approximateSimplify();
+    }
+
+    return approxExpr;
   }
 
-  return IBinaryExpression::preciseSimplify();
+  return IBinaryExpression::approximateSimplify();
+}
+
+ArgumentPtr PowExpression::setPrecision(uint8_t precision, const Integer &maxInt) const {
+  if (const auto ratRhsChild = cast<Rational>(rhsChild); ratRhsChild && ratRhsChild->denominator() <= maxPreciseRoot) {
+    auto approxExpr = cast<PowExpression>(clone());
+    setPrecisionChild(approxExpr->lhsChild, precision, maxInt);
+    return approxExpr;
+  }
+
+  return IBinaryExpression::setPrecision(precision, maxInt);
 }
 
 PowExpression::SimplifyFunctionVector PowExpression::getFunctionsForPostSimplify() const {
