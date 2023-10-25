@@ -116,39 +116,121 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
   }
 }
 
-void IExpression::preciseSimplifyChild(ArgumentPtr &child) {
-  static const auto multiPrecise = [] {
-    static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiPrecise;
-
-    outMultiPrecise.add<Integer>([](const Integer &inRhs) {
-      return Real(inRhs).clone();
-    });
-
-    outMultiPrecise.add<Rational>([](const Rational &inRhs) {
-      return Real(inRhs).clone();
-    });
-
-    outMultiPrecise.add<Complex>([](const Complex &inRhs) {
-      return Complex(
-                 *convert<Real>(inRhs.real()),
-                 *convert<Real>(inRhs.imag()))
-          .clone();
-    });
-
-    return outMultiPrecise;
-  }();
-
+void IExpression::approximateSimplifyChild(ArgumentPtr &child, bool convertNumbers) {
   if (const auto numChild = cast<INumber>(child)) {
-    if (auto res = multiPrecise(*numChild)) {
-      child = std::move(res);
+    if (convertNumbers) {
+      if (auto res = convertToApproximated(*numChild)) {
+        child = std::move(res);
+      }
     }
   }
   else if (const auto constChild = cast<IConstant>(child)) {
     child = (*constChild)();
   }
   else if (const auto exprChild = cast<IExpression>(child)) {
-    child = exprChild->preciseSimplify();
+    child = exprChild->approximateSimplify();
   }
+}
+
+void IExpression::setPrecisionChild(ArgumentPtr &child, uint8_t precision, const Integer &maxInt) {
+  if (const auto numChild = cast<INumber>(child)) {
+    if (auto res = convertToApproximated(*numChild, precision, maxInt)) {
+      child = std::move(res);
+    }
+  }
+  else if (const auto exprChild = cast<IExpression>(child)) {
+    child = exprChild->setPrecision(precision, maxInt);
+  }
+}
+
+std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num) {
+  static const auto multiApproximate = [] {
+    static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiApproximate;
+
+    outMultiApproximate.add<Integer>([](const Integer &inRhs) {
+      return Real(inRhs).clone();
+    });
+
+    outMultiApproximate.add<Rational>([](const Rational &inRhs) {
+      return Real(inRhs).clone();
+    });
+
+    outMultiApproximate.add<Complex>([](const Complex &inRhs) {
+      return Complex(
+                 *convert<Real>(inRhs.real()),
+                 *convert<Real>(inRhs.imag()))
+          .clone();
+    });
+
+    return outMultiApproximate;
+  }();
+
+  return cast<INumber>(multiApproximate(num));
+}
+
+std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
+                                                            uint8_t precision,
+                                                            const Integer &maxInt) {
+
+  static const auto multiSetPrecision = [] {
+    static MultiMethod<std::unique_ptr<IMathObject>(const INumber &,
+                                                    const Integer &,
+                                                    const Integer &)>
+        outMultiSetPrecision;
+
+    outMultiSetPrecision.add<Integer, Integer, Integer>([](const Integer &inRhs,
+                                                           const Integer & /*inPrecision*/,
+                                                           const Integer &inMaxInt) {
+      if (inRhs >= inMaxInt) {
+        return Real(inRhs).clone();
+      }
+
+      return std::unique_ptr<IMathObject>();
+    });
+
+    outMultiSetPrecision.add<Rational, Integer, Integer>([](const Rational &inRhs,
+                                                            const Integer & /*inPrecision*/,
+                                                            const Integer & /*inMaxInt*/) {
+      return Real(inRhs).clone();
+    });
+
+    outMultiSetPrecision.add<Real, Integer, Integer>([](const Real &inRhs,
+                                                        const Integer & /*inPrecision*/,
+                                                        const Integer & /*inMaxInt*/) {
+      return inRhs.clone();
+    });
+
+    outMultiSetPrecision.add<Complex, Integer, Integer>([](const Complex &inRhs,
+                                                           const Integer &inPrecision,
+                                                           const Integer &inMaxInt) {
+      auto approxReal = convertToApproximated(inRhs.real(), uint8_t(inPrecision), inMaxInt);
+      auto approxImag = convertToApproximated(inRhs.imag(), uint8_t(inPrecision), inMaxInt);
+
+      if (!approxReal && !approxImag) {
+        return std::unique_ptr<IMathObject>();
+      }
+
+      if (!approxReal) {
+        return Complex(inRhs.real(), *approxImag).clone();
+      }
+
+      if (!approxImag) {
+        return Complex(*approxReal, inRhs.imag()).clone();
+      }
+
+      return Complex(*approxReal, *approxImag).clone();
+    });
+
+    return outMultiSetPrecision;
+  }();
+
+  auto res = cast<INumber>(multiSetPrecision(num, Integer(precision), maxInt));
+
+  if (is<Real>(res)) {
+    cast<Real>(*res).setPrecision(precision);
+  }
+
+  return res;
 }
 
 ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs) {
@@ -190,16 +272,58 @@ ArgumentPtr IExpression::postSimplify() const {
   return {};
 }
 
-ArgumentPtr IExpression::preciseSimplify() const {
-  ArgumentPtrVector children = getChildren();
+ArgumentPtr IExpression::approximateSimplify() const {
+  ArgumentPtr simpl = simplify();
 
-  for (auto &child : children) {
-    preciseSimplifyChild(child);
+  if (!is<IExpression>(simpl)) {
+    approximateSimplifyChild(simpl);
+    return simpl;
   }
 
-  auto res = cast<IExpression>(clone());
-  res->setChildren(children);
-  return res;
+  auto simplExpr = cast<IExpression>(simpl);
+  ArgumentPtrVector approxChildren = simplExpr->getChildren();
+  bool containsVar = containsVariable(simplExpr);
+  bool areNumberChilrenPrecise = true;
+  size_t numberChildrenCount = 0;
+
+  for (auto &child : approxChildren) {
+    approximateSimplifyChild(child, !containsVar);
+
+    if (const auto childNum = cast<INumber>(child)) {
+      numberChildrenCount++;
+
+      if (!childNum->isPrecise()) {
+        areNumberChilrenPrecise = false;
+      }
+    }
+  }
+
+  auto approxExpr = cast<IExpression>(simplExpr->clone());
+  approxExpr->setChildren(approxChildren);
+
+  if (containsVar) {
+    if (IFunction::Type(approxChildren.size()) == getFunction()->getFunctionType() ||
+        numberChildrenCount < 2) {
+      return approxExpr;
+    }
+  }
+  else if (areNumberChilrenPrecise) {
+    return approxExpr->approximateSimplify();
+  }
+
+  return approxExpr->simplify();
+}
+
+ArgumentPtr IExpression::setPrecision(uint8_t precision, const Integer &maxInt) const {
+  ArgumentPtrVector newChildren = getChildren();
+
+  for (auto &child : newChildren) {
+    setPrecisionChild(child, precision, maxInt);
+  }
+
+  auto newExprArg = cast<IExpression>(clone());
+  newExprArg->setChildren(newChildren);
+  return newExprArg;
 }
 
 }

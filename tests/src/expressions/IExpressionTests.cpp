@@ -40,7 +40,7 @@ protected:
     return clone();
   }
 
-  ArgumentPtr preciseSimplify() const override {
+  ArgumentPtr approximateSimplify() const override {
     return clone();
   }
 };
