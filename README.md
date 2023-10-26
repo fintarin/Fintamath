@@ -5,15 +5,9 @@
 ---
 
 <p align="center">
-  <a href="https://github.com/fintarin/Fintamath/actions/workflows/build.yml">
-    <img src="https://github.com/fintarin/Fintamath/actions/workflows/build.yml/badge.svg"/>
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=fintarin_Fintamath">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/>
-  </a>
-  <a href='https://coveralls.io/github/fintarin/Fintamath'>
-    <img src='https://coveralls.io/repos/github/fintarin/Fintamath/badge.svg?branch=master' alt='Coverage Status' />
-  </a>
+  <a href="https://github.com/fintarin/Fintamath/actions/workflows/build.yml"><img src="https://github.com/fintarin/Fintamath/actions/workflows/build.yml/badge.svg"></a>
+  <a href="https://sonarcloud.io/summary/new_code?id=fintarin_Fintamath"><img src="https://sonarcloud.io/api/project_badges/measure?project=fintarin_Fintamath&metric=alert_status"/></a>
+  <a href='https://coveralls.io/github/fintarin/Fintamath'><img src='https://coveralls.io/repos/github/fintarin/Fintamath/badge.svg?branch=master' alt='Coverage Status'/></a>
 </p>
 
 Fintamath is a C++ library for symbolic mathematics, supporting both the input of expressions in mathematical format and the use of functions from the library. It is fully featured performing operations on mathematical expressions (polynomials, powers, logarithms, trigonometry, etc.) and solving equations. Using arbitrary precision integers, exact fractions and floating point numbers, Fintamath yields highly accurate numerical results. The library is extensively tested and has 100% line coverage.
