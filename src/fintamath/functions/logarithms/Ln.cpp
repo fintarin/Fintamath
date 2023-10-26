@@ -35,12 +35,7 @@ std::unique_ptr<IMathObject> Ln::multiLnSimplify(const INumber &rhs) {
     });
 
     outMultiLn.add<Real>([](const Real &inRhs) {
-      try {
-        return ln(inRhs).toMinimalObject();
-      }
-      catch (const UndefinedException &) {
-        return std::unique_ptr<IMathObject>{};
-      }
+      return ln(inRhs).clone();
     });
 
     return outMultiLn;

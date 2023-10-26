@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAsinSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> asinSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Asin, asinExpr);

@@ -32,7 +32,7 @@ std::unique_ptr<IMathObject> Acsch::multiAcschSimplify(const INumber &rhs) {
     });
 
     outMultiAcsch.add<Real>([](const Real &inRhs) {
-      return acsch(inRhs).toMinimalObject();
+      return acsch(inRhs).clone();
     });
 
     return outMultiAcsch;

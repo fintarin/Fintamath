@@ -39,22 +39,13 @@ std::unique_ptr<IMathObject> Asin::multiAsinSimplify(const INumber &rhs) {
     });
 
     outMultiAsin.add<Real>([](const Real &inRhs) {
-      return asinSimplify(inRhs);
+      return asin(inRhs).clone();
     });
 
     return outMultiAsin;
   }();
 
   return multiAsin(rhs);
-}
-
-std::unique_ptr<IMathObject> Asin::asinSimplify(const Real &rhs) {
-  try {
-    return asin(rhs).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

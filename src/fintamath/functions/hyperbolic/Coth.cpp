@@ -28,7 +28,7 @@ std::unique_ptr<IMathObject> Coth::multiCothSimplify(const INumber &rhs) {
     });
 
     outMultiCoth.add<Real>([](const Real &inRhs) {
-      return coth(inRhs).toMinimalObject();
+      return coth(inRhs).clone();
     });
 
     return outMultiCoth;

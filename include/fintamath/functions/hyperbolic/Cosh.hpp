@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiCoshSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> coshSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Cosh, coshExpr);

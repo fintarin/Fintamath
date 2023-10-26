@@ -38,7 +38,7 @@ std::unique_ptr<IMathObject> Acot::multiAcotSimplify(const INumber &rhs) {
     });
 
     outMultiAcot.add<Real>([](const Real &inRhs) {
-      return acot(inRhs).toMinimalObject();
+      return acot(inRhs).clone();
     });
 
     return outMultiAcot;

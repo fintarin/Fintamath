@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiSinhSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> sinhSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Sinh, sinhExpr);

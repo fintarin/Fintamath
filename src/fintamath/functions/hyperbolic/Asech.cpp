@@ -41,22 +41,13 @@ std::unique_ptr<IMathObject> Asech::multiAsechSimplify(const INumber &rhs) {
     });
 
     outMultiAsech.add<Real>([](const Real &inRhs) {
-      return asechSimplify(inRhs);
+      return asech(inRhs).clone();
     });
 
     return outMultiAsech;
   }();
 
   return multiAsech(rhs);
-}
-
-std::unique_ptr<IMathObject> Asech::asechSimplify(const Real &rhs) {
-  try {
-    return asech(rhs).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

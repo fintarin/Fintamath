@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiCschSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> cschSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Csch, cschExpr);

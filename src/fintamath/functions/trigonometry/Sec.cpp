@@ -28,22 +28,13 @@ std::unique_ptr<IMathObject> Sec::multiSecSimplify(const INumber &rhs) {
     });
 
     outMultiSec.add<Real>([](const Real &inRhs) {
-      return secSimplify(inRhs);
+      return sec(inRhs).clone();
     });
 
     return outMultiSec;
   }();
 
   return multiSec(rhs);
-}
-
-std::unique_ptr<IMathObject> Sec::secSimplify(const Real &rhs) {
-  try {
-    return sec(rhs).clone();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

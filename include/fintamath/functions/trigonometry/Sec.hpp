@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiSecSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> secSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Sec, secExpr);

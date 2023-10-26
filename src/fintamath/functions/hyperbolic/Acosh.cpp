@@ -42,22 +42,13 @@ std::unique_ptr<IMathObject> Acosh::multiAcoshSimplify(const INumber &rhs) {
     });
 
     outMultiAcosh.add<Real>([](const Real &inRhs) {
-      return acoshSimplify(inRhs);
+      return acosh(inRhs).clone();
     });
 
     return outMultiAcosh;
   }();
 
   return multiAcosh(rhs);
-}
-
-std::unique_ptr<IMathObject> Acosh::acoshSimplify(const Real &rhs) {
-  try {
-    return acosh(rhs).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

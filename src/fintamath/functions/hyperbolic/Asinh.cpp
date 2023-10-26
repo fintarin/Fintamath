@@ -27,7 +27,7 @@ std::unique_ptr<IMathObject> Asinh::multiAsinhSimplify(const INumber &rhs) {
     });
 
     outMultiAsinh.add<Real>([](const Real &inRhs) {
-      return asinh(inRhs).toMinimalObject();
+      return asinh(inRhs).clone();
     });
 
     return outMultiAsinh;

@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiCotSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> cotSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Cot, cotExpr);

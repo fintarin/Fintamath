@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAtanhSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> atanhSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Atanh, atanhExpr);

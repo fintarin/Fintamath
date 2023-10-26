@@ -130,7 +130,7 @@ std::unique_ptr<IMathObject> Log::logSimplify(const Rational &lhs, const Rationa
 }
 
 std::unique_ptr<IMathObject> Log::logSimplify(const Real &lhs, const Real &rhs) {
-  return log(lhs, rhs).toMinimalObject();
+  return log(lhs, rhs).clone();
 }
 
 }

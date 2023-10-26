@@ -29,22 +29,13 @@ std::unique_ptr<IMathObject> Csch::multiCschSimplify(const INumber &rhs) {
     });
 
     outMultiCsch.add<Real>([](const Real &inRhs) {
-      return cschSimplify(inRhs);
+      return csch(inRhs).clone();
     });
 
     return outMultiCsch;
   }();
 
   return multiCsch(rhs);
-}
-
-std::unique_ptr<IMathObject> Csch::cschSimplify(const Real &rhs) {
-  try {
-    return csch(rhs).clone();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }
