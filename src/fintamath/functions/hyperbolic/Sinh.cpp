@@ -1,5 +1,6 @@
 #include "fintamath/functions/hyperbolic/Sinh.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -27,13 +28,22 @@ std::unique_ptr<IMathObject> Sinh::multiSinhSimplify(const INumber &rhs) {
     });
 
     outMultiSinh.add<Real>([](const Real &inRhs) {
-      return sinh(inRhs).toMinimalObject();
+      return sinhSimplify(inRhs);
     });
 
     return outMultiSinh;
   }();
 
   return multiSinh(rhs);
+}
+
+std::unique_ptr<IMathObject> Sinh::sinhSimplify(const Real &rhs) {
+  try {
+    return sinh(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }
