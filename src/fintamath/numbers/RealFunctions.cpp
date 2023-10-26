@@ -7,6 +7,8 @@ using boost::multiprecision::cpp_int;
 
 namespace fintamath {
 
+const Real maxTrigArgument = pow(10, FINTAMATH_PRECISION);
+
 Integer floor(const Real &rhs) {
   cpp_dec_float_100 res = boost::multiprecision::floor(rhs.getBackend());
   return res.convert_to<cpp_int>();
@@ -81,15 +83,39 @@ Real lg(const Real &rhs) {
 }
 
 Real sin(const Real &rhs) {
-  return {sin(rhs.getBackend())};
+  static const Real zeroValue = 0;
+
+  cpp_dec_float_100 res = sin(rhs.getBackend());
+
+  if (res == zeroValue && abs(rhs) >= maxTrigArgument) {
+    throw UndefinedFunctionException("sin", {rhs.toString()});
+  }
+
+  return res;
 }
 
 Real cos(const Real &rhs) {
-  return {cos(rhs.getBackend())};
+  static const Real zeroValue = 1;
+
+  cpp_dec_float_100 res = cos(rhs.getBackend());
+
+  if (res == zeroValue && abs(rhs) >= maxTrigArgument) {
+    throw UndefinedFunctionException("cos", {rhs.toString()});
+  }
+
+  return res;
 }
 
 Real tan(const Real &rhs) {
-  return {tan(rhs.getBackend())};
+  static const Real zeroValue = 0;
+
+  cpp_dec_float_100 res = tan(rhs.getBackend());
+
+  if (res == zeroValue && abs(rhs) >= maxTrigArgument) {
+    throw UndefinedFunctionException("tan", {rhs.toString()});
+  }
+
+  return res;
 }
 
 Real cot(const Real &rhs) {
@@ -102,7 +128,12 @@ Real cot(const Real &rhs) {
 }
 
 Real sec(const Real &rhs) {
-  return 1 / cos(rhs);
+  try {
+    return 1 / cos(rhs);
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("sec", {rhs.toString()});
+  }
 }
 
 Real csc(const Real &rhs) {

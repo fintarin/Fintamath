@@ -1,5 +1,6 @@
 #include "fintamath/functions/trigonometry/Tan.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -27,13 +28,22 @@ std::unique_ptr<IMathObject> Tan::multiTanSimplify(const INumber &rhs) {
     });
 
     outMultiTan.add<Real>([](const Real &inRhs) {
-      return tan(inRhs).toMinimalObject();
+      return tanSimplify(inRhs);
     });
 
     return outMultiTan;
   }();
 
   return multiTan(rhs);
+}
+
+std::unique_ptr<IMathObject> Tan::tanSimplify(const Real &rhs) {
+  try {
+    return tan(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

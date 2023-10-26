@@ -1,5 +1,6 @@
 #include "fintamath/functions/trigonometry/Cos.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -27,13 +28,22 @@ std::unique_ptr<IMathObject> Cos::multiCosSimplify(const INumber &rhs) {
     });
 
     outMultiCos.add<Real>([](const Real &inRhs) {
-      return cos(inRhs).toMinimalObject();
+      return cosSimplify(inRhs);
     });
 
     return outMultiCos;
   }();
 
   return multiCos(rhs);
+}
+
+std::unique_ptr<IMathObject> Cos::cosSimplify(const Real &rhs) {
+  try {
+    return cos(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

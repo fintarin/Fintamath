@@ -1,5 +1,6 @@
 #include "fintamath/functions/trigonometry/Cot.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
@@ -28,13 +29,22 @@ std::unique_ptr<IMathObject> Cot::multiCotSimplify(const INumber &rhs) {
     });
 
     outMultiCot.add<Real>([](const Real &inRhs) {
-      return cot(inRhs).toMinimalObject();
+      return cotSimplify(inRhs);
     });
 
     return outMultiCot;
   }();
 
   return multiCot(rhs);
+}
+
+std::unique_ptr<IMathObject> Cot::cotSimplify(const Real &rhs) {
+  try {
+    return cot(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

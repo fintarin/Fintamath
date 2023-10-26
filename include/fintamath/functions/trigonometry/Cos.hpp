@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Real;
+
 class Cos : public IFunctionCRTP<INumber, Cos, INumber> {
 public:
   Cos() = default;
@@ -22,6 +24,8 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiCosSimplify(const INumber &rhs);
+
+  static std::unique_ptr<IMathObject> cosSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Cos, cosExpr);

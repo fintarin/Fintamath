@@ -1,5 +1,6 @@
 #include "fintamath/functions/trigonometry/Sin.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -27,13 +28,22 @@ std::unique_ptr<IMathObject> Sin::multiSinSimplify(const INumber &rhs) {
     });
 
     outMultiSin.add<Real>([](const Real &inRhs) {
-      return sin(inRhs).toMinimalObject();
+      return sinSimplify(inRhs);
     });
 
     return outMultiSin;
   }();
 
   return multiSin(rhs);
+}
+
+std::unique_ptr<IMathObject> Sin::sinSimplify(const Real &rhs) {
+  try {
+    return sin(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

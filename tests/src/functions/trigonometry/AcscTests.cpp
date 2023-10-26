@@ -9,6 +9,7 @@
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 
@@ -34,7 +35,16 @@ TEST(AcscTests, callTest) {
   EXPECT_EQ(f(Rational(1, 10))->toString(), "acsc(1/10)");
   EXPECT_EQ(f(Rational(-1, 5))->toString(), "acsc(-1/5)");
 
-  EXPECT_EQ(f(Real("0.5"))->toString(), "acsc(0.5)");
+  EXPECT_EQ(f(Real("0.5"))->toString(),
+            "acsc(0.5)");
+  EXPECT_EQ(f(pow(Real(11), -100))->toString(),
+            "acsc(7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105)");
+  EXPECT_EQ(f(-pow(Real(11), -100))->toString(),
+            "acsc(-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105)");
+  EXPECT_EQ(f(pow(Real(11), 100))->toString(),
+            "7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(f(-pow(Real(11), 100))->toString(),
+            "-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "acsc(1 + I)");
 
