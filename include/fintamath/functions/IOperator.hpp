@@ -60,8 +60,8 @@ class IOperatorCRTP : public IOperator {
 public:
   explicit IOperatorCRTP(IOperator::Priority inPriority = IOperator::Priority::Lowest,
                          bool isAssociative = false,
-                         bool isNonExressionEvaluatable = true)
-      : isNonExressionEvaluatableFunc(isNonExressionEvaluatable),
+                         bool isEvaluatable = true)
+      : isEvaluatableFunc(isEvaluatable),
         priority(inPriority),
         isAssociativeOper(isAssociative) {
 

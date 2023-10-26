@@ -36,7 +36,7 @@ public:
 
   virtual bool doArgsMatch(const ArgumentRefVector &argsVect) const = 0;
 
-  virtual bool isNonExressionEvaluatable() const = 0;
+  virtual bool isEvaluatable() const = 0;
 
   std::unique_ptr<IMathObject> operator()(const std::derived_from<IMathObject> auto &...args) const {
     ArgumentRefVector argsVect = {args...};
@@ -77,7 +77,7 @@ class IFunctionCRTP : public IFunction {
 #undef I_FUNCTION_CRTP
 
 public:
-  explicit IFunctionCRTP(bool isNonExressionEvaluatable = true) : isNonExressionEvaluatableFunc(isNonExressionEvaluatable) {
+  explicit IFunctionCRTP(bool isEvaluatable = true) : isEvaluatableFunc(isEvaluatable) {
     if constexpr (IsFunctionTypeAny<Derived>::value) {
       type = Type::Any;
     }

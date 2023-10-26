@@ -234,7 +234,7 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
 }
 
 ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs) {
-  if (!func.isNonExressionEvaluatable()) {
+  if (!func.isEvaluatable()) {
     return {};
   }
 

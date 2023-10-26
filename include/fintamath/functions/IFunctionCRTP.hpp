@@ -45,8 +45,8 @@ public:
     }
   }
 
-  bool isNonExressionEvaluatable() const final {
-    return isNonExressionEvaluatableFunc;
+  bool isEvaluatable() const final {
+    return isEvaluatableFunc;
   }
 
 protected:
@@ -126,7 +126,7 @@ private:
 private:
   IFunction::Type type;
 
-  bool isNonExressionEvaluatableFunc;
+  bool isEvaluatableFunc;
 
 private:
 #if !defined(I_FUNCTION_CRTP) && !defined(NDEBUG)
