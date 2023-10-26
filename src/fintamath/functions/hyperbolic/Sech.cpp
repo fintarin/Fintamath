@@ -1,5 +1,6 @@
 #include "fintamath/functions/hyperbolic/Sech.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -27,13 +28,22 @@ std::unique_ptr<IMathObject> Sech::multiSechSimplify(const INumber &rhs) {
     });
 
     outMultiSech.add<Real>([](const Real &inRhs) {
-      return sech(inRhs).toMinimalObject();
+      return sechSimplify(inRhs);
     });
 
     return outMultiSech;
   }();
 
   return multiSech(rhs);
+}
+
+std::unique_ptr<IMathObject> Sech::sechSimplify(const Real &rhs) {
+  try {
+    return sech(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

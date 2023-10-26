@@ -373,6 +373,13 @@ TEST(RealFunctionsTests, sinhTest) {
             "-1.1752011936438014568823818505956008151557179813340958702295654130133075673043239");
   EXPECT_EQ(sinh(Real("360")).toString(),
             "1.1091326487692776999948329517793349595727082777083535707260458682053441771196906*10^156");
+  EXPECT_EQ(sinh(pow(Real(11), -100)).toString(),
+            "7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(sinh(-pow(Real(11), -100)).toString(),
+            "-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+
+  EXPECT_THROW(sinh(pow(Real(11), 100)), UndefinedFunctionException);
+  EXPECT_THROW(sinh(-pow(Real(11), 100)), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, coshTest) {
@@ -381,6 +388,13 @@ TEST(RealFunctionsTests, coshTest) {
             "1.5430806348152437784779056207570616826015291123658637047374022147107690630492237");
   EXPECT_EQ(cosh(Real("125")).toString(),
             "967788021017861284360312245263743609428141503861911628.64033144120749560890919683");
+  EXPECT_EQ(cosh(pow(Real(11), -100)).toString(),
+            "1.0");
+  EXPECT_EQ(cosh(-pow(Real(11), -100)).toString(),
+            "1.0");
+
+  EXPECT_THROW(cosh(pow(Real(11), 100)), UndefinedFunctionException);
+  EXPECT_THROW(cosh(-pow(Real(11), 100)), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, tanhTest) {
@@ -389,6 +403,14 @@ TEST(RealFunctionsTests, tanhTest) {
             "-0.99999999587769276361959283713827574105081461849501996226140069543680188089876683");
   EXPECT_EQ(tanh(Real("1.5")).toString(),
             "0.90514825364486643824230369645649559722764113515878179856422398245110257699457953");
+  EXPECT_EQ(tanh(pow(Real(11), -100)).toString(),
+            "7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(tanh(-pow(Real(11), -100)).toString(),
+            "-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(tanh(pow(Real(11), 100)).toString(),
+            "1.0");
+  EXPECT_EQ(tanh(-pow(Real(11), 100)).toString(),
+            "-1.0");
 }
 
 TEST(RealFunctionsTests, cothTest) {
@@ -397,6 +419,14 @@ TEST(RealFunctionsTests, cothTest) {
   EXPECT_EQ(coth(Real("200")).toString(), "1.0");
   EXPECT_EQ(coth(Real("0.001")).toString(),
             "1000.0003333333111111132275130158730372508128641887448236432439795543114729807153");
+  EXPECT_EQ(coth(pow(Real(11), -100)).toString(),
+            "1.3780612339822270184118337172089636776264331200038466433146477552154985209552308*10^104");
+  EXPECT_EQ(coth(-pow(Real(11), -100)).toString(),
+            "-1.3780612339822270184118337172089636776264331200038466433146477552154985209552308*10^104");
+  EXPECT_EQ(coth(pow(Real(11), 100)).toString(),
+            "1.0");
+  EXPECT_EQ(coth(-pow(Real(11), 100)).toString(),
+            "-1.0");
 
   EXPECT_THROW(coth(Real("0")), UndefinedFunctionException);
 }
@@ -407,6 +437,13 @@ TEST(RealFunctionsTests, sechTest) {
             "0.64805427366388539957497735322615032310848931207194202303786533731871759564671283");
   EXPECT_EQ(sech(Real("360")).toString(),
             "9.0160541312134836868594093056048781135886063264031045543166320171424640100585883*10^-157");
+  EXPECT_EQ(sech(pow(Real(11), -100)).toString(),
+            "1.0");
+  EXPECT_EQ(sech(-pow(Real(11), -100)).toString(),
+            "1.0");
+
+  EXPECT_THROW(sech(pow(Real(11), 100)), UndefinedFunctionException);
+  EXPECT_THROW(sech(-pow(Real(11), 100)), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, cschTest) {
@@ -416,8 +453,14 @@ TEST(RealFunctionsTests, cschTest) {
             "0.8509181282393215451338427632871752841817246609103396169904211517290033643214651");
   EXPECT_EQ(csch(Real("125")).toString(),
             "1.0332841265675721960505437214715115728551601889626861910405726604708228332416093*10^-54");
+  EXPECT_EQ(csch(pow(Real(11), -100)).toString(),
+            "1.3780612339822270184118337172089636776264331200038466433146477552154985209552308*10^104");
+  EXPECT_EQ(csch(-pow(Real(11), -100)).toString(),
+            "-1.3780612339822270184118337172089636776264331200038466433146477552154985209552308*10^104");
 
   EXPECT_THROW(csch(Real("0")).toString(), UndefinedFunctionException);
+  EXPECT_THROW(csch(pow(Real(11), 100)), UndefinedFunctionException);
+  EXPECT_THROW(csch(-pow(Real(11), 100)), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, asinhTest) {
@@ -426,24 +469,52 @@ TEST(RealFunctionsTests, asinhTest) {
             "2.9982229502979697388465955375964534766070580548773036557344592627530896573521661");
   EXPECT_EQ(asinh(Real("-10")).toString(),
             "-2.9982229502979697388465955375964534766070580548773036557344592627530896573521661");
+  EXPECT_EQ(asinh(pow(Real(11), -100)).toString(),
+            "7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(asinh(-pow(Real(11), -100)).toString(),
+            "-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(asinh(pow(Real(11), 100)).toString(),
+            "240.48267446039699971561158991797110655024618552810197277597745092255075601329337");
+  EXPECT_EQ(asinh(-pow(Real(11), 100)).toString(),
+            "-240.48267446039699971561158991797110655024618552810197277597745092255075601329337");
 }
 
 TEST(RealFunctionsTests, acoshTest) {
   EXPECT_EQ(acosh(Real("1")).toString(), "0.0");
   EXPECT_EQ(acosh(Real("10")).toString(),
             "2.9932228461263808979126677137741829130836604511809806426851456009774992267097399");
+  EXPECT_EQ(acosh(1 + pow(Real(11), -100)).toString(),
+            "1.2047050751240487739227843386018166895553773908567102047465696750792188150593125*10^-52");
+  EXPECT_EQ(acosh(pow(Real(11), 100)).toString(),
+            "240.48267446039699971561158991797110655024618552810197277597745092255075601329337");
 
   EXPECT_THROW(acosh(Real("-1")), UndefinedFunctionException);
   EXPECT_THROW(acosh(Real("0")), UndefinedFunctionException);
+  EXPECT_THROW(acosh(-1 + pow(Real(11), -100)), UndefinedFunctionException);
+  EXPECT_THROW(acosh(-1 - pow(Real(11), -100)).toString(), UndefinedFunctionException);
+  EXPECT_THROW(acosh(1 - pow(Real(11), -100)), UndefinedFunctionException);
+  EXPECT_THROW(acosh(-pow(Real(11), 100)), UndefinedFunctionException);
+  EXPECT_THROW(acosh(pow(Real(11), -100)), UndefinedFunctionException);
+  EXPECT_THROW(acosh(-pow(Real(11), -100)), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, atanhTest) {
   EXPECT_EQ(atanh(Real("0")).toString(), "0.0");
   EXPECT_EQ(atanh(Real("0.5")).toString(),
             "0.54930614433405484569762261846126285232374527891137472586734716681874714660930448");
+  EXPECT_EQ(atanh(pow(Real(11), -100)).toString(),
+            "7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(atanh(-pow(Real(11), -100)).toString(),
+            "-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
 
   EXPECT_THROW(atanh(Real("-1")), UndefinedFunctionException);
   EXPECT_THROW(atanh(Real("1")), UndefinedFunctionException);
+  EXPECT_THROW(atanh(-1 + pow(Real(11), -100)), UndefinedFunctionException);
+  EXPECT_THROW(atanh(-1 - pow(Real(11), -100)).toString(), UndefinedFunctionException);
+  EXPECT_THROW(atanh(1 + pow(Real(11), -100)).toString(), UndefinedFunctionException);
+  EXPECT_THROW(atanh(1 - pow(Real(11), -100)), UndefinedFunctionException);
+  EXPECT_THROW(atanh(pow(Real(11), 100)).toString(), UndefinedFunctionException);
+  EXPECT_THROW(atanh(-pow(Real(11), 100)).toString(), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, acothTest) {
@@ -451,10 +522,20 @@ TEST(RealFunctionsTests, acothTest) {
             "0.10033534773107558063572655206003894526336286914595913587458952092779251873800939");
   EXPECT_EQ(acoth(Real("-10")).toString(),
             "-0.10033534773107558063572655206003894526336286914595913587458952092779251873800939");
+  EXPECT_EQ(acoth(pow(Real(11), 100)).toString(),
+            "7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(acoth(-pow(Real(11), 100)).toString(),
+            "-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
 
   EXPECT_THROW(acoth(Real("-1")), UndefinedFunctionException);
   EXPECT_THROW(acoth(Real("0")), UndefinedFunctionException);
   EXPECT_THROW(acoth(Real("1")), UndefinedFunctionException);
+  EXPECT_THROW(acoth(-1 + pow(Real(11), -100)), UndefinedFunctionException);
+  EXPECT_THROW(acoth(-1 - pow(Real(11), -100)).toString(), UndefinedFunctionException);
+  EXPECT_THROW(acoth(1 + pow(Real(11), -100)).toString(), UndefinedFunctionException);
+  EXPECT_THROW(acoth(1 - pow(Real(11), -100)), UndefinedFunctionException);
+  EXPECT_THROW(acoth(pow(Real(11), -100)).toString(), UndefinedFunctionException);
+  EXPECT_THROW(acoth(-pow(Real(11), -100)).toString(), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, asechTest) {
@@ -463,9 +544,14 @@ TEST(RealFunctionsTests, asechTest) {
             "1.8738202425274144249769979852084091960595966794746295241858217517040005820158279");
   EXPECT_EQ(asech(Real("0.5")).toString(),
             "1.316957896924816708625046347307968444026981971467516479768472256920460185416444");
+  EXPECT_EQ(asech(1 - pow(Real(11), -100)).toString(),
+            "1.2047050676410388537815742365190888195060803599521175782305679940978031876598796*10^-52");
 
   EXPECT_THROW(asech(Real("-1")), UndefinedFunctionException);
   EXPECT_THROW(asech(Real("0")), UndefinedFunctionException);
+  EXPECT_THROW(asech(-1 + pow(Real(11), -100)), UndefinedFunctionException);
+  EXPECT_THROW(asech(-1 - pow(Real(11), -100)).toString(), UndefinedFunctionException);
+  EXPECT_THROW(asech(1 + pow(Real(11), -100)).toString(), UndefinedFunctionException);
 }
 
 TEST(RealFunctionsTests, acschTest) {
@@ -475,6 +561,14 @@ TEST(RealFunctionsTests, acschTest) {
             "0.099834078899207563327303124704769443267712911708825010742382695651591768393613465");
   EXPECT_EQ(acsch(Real("-10")).toString(),
             "-0.099834078899207563327303124704769443267712911708825010742382695651591768393613465");
+  EXPECT_EQ(acsch(pow(Real(11), -100)).toString(),
+            "240.48267446039699971561158991797110655024618552810197277597745092255075601329337");
+  EXPECT_EQ(acsch(-pow(Real(11), -100)).toString(),
+            "-240.48267446039699971561158991797110655024618552810197277597745092255075601329337");
+  EXPECT_EQ(acsch(pow(Real(11), 100)).toString(),
+            "7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(acsch(-pow(Real(11), 100)).toString(),
+            "-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
 
   EXPECT_THROW(acsch(Real("0")), UndefinedFunctionException);
 }

@@ -1,5 +1,6 @@
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -27,13 +28,22 @@ std::unique_ptr<IMathObject> Cosh::multiCoshSimplify(const INumber &rhs) {
     });
 
     outMultiCosh.add<Real>([](const Real &inRhs) {
-      return cosh(inRhs).toMinimalObject();
+      return coshSimplify(inRhs);
     });
 
     return outMultiCosh;
   }();
 
   return multiCosh(rhs);
+}
+
+std::unique_ptr<IMathObject> Cosh::coshSimplify(const Real &rhs) {
+  try {
+    return cosh(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

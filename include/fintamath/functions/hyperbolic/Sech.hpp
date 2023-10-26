@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Real;
+
 class Sech : public IFunctionCRTP<INumber, Sech, INumber> {
 public:
   Sech() = default;
@@ -22,6 +24,8 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiSechSimplify(const INumber &rhs);
+
+  static std::unique_ptr<IMathObject> sechSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Sech, sechExpr);

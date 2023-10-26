@@ -9,6 +9,7 @@
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 
@@ -34,6 +35,14 @@ TEST(AsinhTests, callTest) {
 
   EXPECT_EQ(f(Real("0.5"))->toString(),
             "0.48121182505960344749775891342436842313518433438566051966101816884016386760822177");
+  EXPECT_EQ(f(pow(Real(11), -100))->toString(),
+            "7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(f(-pow(Real(11), -100))->toString(),
+            "-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105");
+  EXPECT_EQ(f(pow(Real(11), 100))->toString(),
+            "240.48267446039699971561158991797110655024618552810197277597745092255075601329337");
+  EXPECT_EQ(f(-pow(Real(11), 100))->toString(),
+            "-240.48267446039699971561158991797110655024618552810197277597745092255075601329337");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "asinh(1 + I)");
 

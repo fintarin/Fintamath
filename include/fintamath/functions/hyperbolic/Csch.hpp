@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Real;
+
 class Csch : public IFunctionCRTP<INumber, Csch, INumber> {
 public:
   Csch() = default;
@@ -22,6 +24,8 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiCschSimplify(const INumber &rhs);
+
+  static std::unique_ptr<IMathObject> cschSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Csch, cschExpr);

@@ -1,5 +1,6 @@
 #include "fintamath/functions/hyperbolic/Csch.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
@@ -28,13 +29,22 @@ std::unique_ptr<IMathObject> Csch::multiCschSimplify(const INumber &rhs) {
     });
 
     outMultiCsch.add<Real>([](const Real &inRhs) {
-      return csch(inRhs).toMinimalObject();
+      return cschSimplify(inRhs);
     });
 
     return outMultiCsch;
   }();
 
   return multiCsch(rhs);
+}
+
+std::unique_ptr<IMathObject> Csch::cschSimplify(const Real &rhs) {
+  try {
+    return csch(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

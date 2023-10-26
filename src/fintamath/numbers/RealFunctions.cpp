@@ -197,11 +197,23 @@ Real acsc(const Real &rhs) {
 }
 
 Real sinh(const Real &rhs) {
-  return {sinh(rhs.getBackend())};
+  cpp_dec_float_100 res = sinh(rhs.getBackend());
+
+  if (!res.backend().isfinite()) {
+    throw UndefinedFunctionException("sinh", {rhs.toString()});
+  }
+
+  return res;
 }
 
 Real cosh(const Real &rhs) {
-  return {cosh(rhs.getBackend())};
+  cpp_dec_float_100 res = cosh(rhs.getBackend());
+
+  if (!res.backend().isfinite()) {
+    throw UndefinedFunctionException("cosh", {rhs.toString()});
+  }
+
+  return res;
 }
 
 Real tanh(const Real &rhs) {
@@ -239,7 +251,7 @@ Real acosh(const Real &rhs) {
     return boost::math::acosh(rhs.getBackend());
   }
   catch (const std::domain_error &) {
-    throw UndefinedFunctionException("acoth", {rhs.toString()});
+    throw UndefinedFunctionException("acosh", {rhs.toString()});
   }
 }
 
@@ -248,10 +260,10 @@ Real atanh(const Real &rhs) {
     return boost::math::atanh(rhs.getBackend());
   }
   catch (const std::domain_error &) {
-    throw UndefinedFunctionException("acoth", {rhs.toString()});
+    throw UndefinedFunctionException("atanh", {rhs.toString()});
   }
   catch (const std::overflow_error &) {
-    throw UndefinedFunctionException("acoth", {rhs.toString()});
+    throw UndefinedFunctionException("atanh", {rhs.toString()});
   }
 }
 

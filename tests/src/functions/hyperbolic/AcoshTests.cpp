@@ -9,6 +9,7 @@
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
+#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 
@@ -37,6 +38,14 @@ TEST(AcoshTests, callTest) {
 
   EXPECT_EQ(f(Real("1.5"))->toString(),
             "0.96242365011920689499551782684873684627036866877132103932203633768032773521644355");
+  EXPECT_EQ(f(pow(Real(11), -100))->toString(),
+            "acosh(7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105)");
+  EXPECT_EQ(f(-pow(Real(11), -100))->toString(),
+            "acosh(-7.2565715901482001294471610439840355719482218080717617311921652840489155583363378*10^-105)");
+  EXPECT_EQ(f(pow(Real(11), 100))->toString(),
+            "240.48267446039699971561158991797110655024618552810197277597745092255075601329337");
+  EXPECT_EQ(f(-pow(Real(11), 100))->toString(),
+            "acosh(-1.3780612339822270184118337172089636776264331200038466433146477552154985209552308*10^104)");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "acosh(1 + I)");
 
