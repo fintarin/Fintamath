@@ -1,5 +1,6 @@
 #include "fintamath/functions/trigonometry/Csc.hpp"
 
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
@@ -28,13 +29,22 @@ std::unique_ptr<IMathObject> Csc::multiCscSimplify(const INumber &rhs) {
     });
 
     outMultiCsc.add<Real>([](const Real &inRhs) {
-      return csc(inRhs).toMinimalObject();
+      return cscSimplify(inRhs);
     });
 
     return outMultiCsc;
   }();
 
   return multiCsc(rhs);
+}
+
+std::unique_ptr<IMathObject> Csc::cscSimplify(const Real &rhs) {
+  try {
+    return csc(rhs).clone();
+  }
+  catch (const UndefinedException &) {
+    return {};
+  }
 }
 
 }

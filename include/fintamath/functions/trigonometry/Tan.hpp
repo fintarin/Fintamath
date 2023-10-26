@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+class Real;
+
 class Tan : public IFunctionCRTP<INumber, Tan, INumber> {
 public:
   Tan() = default;
@@ -22,6 +24,8 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiTanSimplify(const INumber &rhs);
+
+  static std::unique_ptr<IMathObject> tanSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Tan, tanExpr);
