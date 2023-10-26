@@ -4,6 +4,7 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/parser/Parser.hpp"

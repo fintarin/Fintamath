@@ -56,11 +56,16 @@ protected:
     validateArgsSize(argsVect);
 
     if (doArgsMatch(argsVect)) {
-      if (auto res = call(argsVect)) {
-        return res;
-      }
+      try {
+        if (auto res = call(argsVect)) {
+          return res;
+        }
 
-      return makeExpr(*this, argsVect);
+        return makeExpr(*this, argsVect);
+      }
+      catch (const UndefinedException &) {
+        return makeExpr(*this, argsVect);
+      }
     }
 
     return makeExpr(*this, argsVect)->toMinimalObject();

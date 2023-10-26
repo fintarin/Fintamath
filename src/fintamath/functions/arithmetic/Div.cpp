@@ -43,10 +43,10 @@ std::unique_ptr<IMathObject> Div::multiDivSimplify(const IArithmetic &lhs, const
 
 std::unique_ptr<IMathObject> Div::divSimplify(const Integer &lhs, const Integer &rhs) {
   if (lhs % rhs != 0) {
-    return Rational(lhs, rhs).toMinimalObject();
+    return Rational(lhs, rhs).clone();
   }
 
-  return (lhs / rhs).toMinimalObject();
+  return (lhs / rhs).clone();
 }
 
 }

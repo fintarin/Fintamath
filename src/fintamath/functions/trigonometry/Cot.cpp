@@ -29,22 +29,13 @@ std::unique_ptr<IMathObject> Cot::multiCotSimplify(const INumber &rhs) {
     });
 
     outMultiCot.add<Real>([](const Real &inRhs) {
-      return cotSimplify(inRhs);
+      return cot(inRhs).clone();
     });
 
     return outMultiCot;
   }();
 
   return multiCot(rhs);
-}
-
-std::unique_ptr<IMathObject> Cot::cotSimplify(const Real &rhs) {
-  try {
-    return cot(rhs).clone();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

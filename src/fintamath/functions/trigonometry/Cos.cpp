@@ -28,22 +28,13 @@ std::unique_ptr<IMathObject> Cos::multiCosSimplify(const INumber &rhs) {
     });
 
     outMultiCos.add<Real>([](const Real &inRhs) {
-      return cosSimplify(inRhs);
+      return cos(inRhs).clone();
     });
 
     return outMultiCos;
   }();
 
   return multiCos(rhs);
-}
-
-std::unique_ptr<IMathObject> Cos::cosSimplify(const Real &rhs) {
-  try {
-    return cos(rhs).clone();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

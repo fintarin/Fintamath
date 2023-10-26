@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAcscSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> acscSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Acsc, acscExpr);

@@ -28,22 +28,13 @@ std::unique_ptr<IMathObject> Sinh::multiSinhSimplify(const INumber &rhs) {
     });
 
     outMultiSinh.add<Real>([](const Real &inRhs) {
-      return sinhSimplify(inRhs);
+      return sinh(inRhs).clone();
     });
 
     return outMultiSinh;
   }();
 
   return multiSinh(rhs);
-}
-
-std::unique_ptr<IMathObject> Sinh::sinhSimplify(const Real &rhs) {
-  try {
-    return sinh(rhs).clone();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

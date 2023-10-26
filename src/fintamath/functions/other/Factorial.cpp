@@ -45,7 +45,7 @@ std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Integer &rhs, si
     return ComplexInf().clone();
   }
 
-  return factorial(rhs, order).toMinimalObject();
+  return factorial(rhs, order).clone();
 }
 
 std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Rational &rhs, size_t order) {
@@ -65,12 +65,7 @@ std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Real &rhs, size_
     return {};
   }
 
-  try {
-    return tgamma(rhs + 1).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
+  return tgamma(rhs + 1).clone();
 }
 
 }

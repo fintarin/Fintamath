@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAsechSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> asechSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Asech, asechExpr);

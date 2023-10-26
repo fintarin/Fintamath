@@ -27,7 +27,7 @@ std::unique_ptr<IMathObject> Tanh::multiTanhSimplify(const INumber &rhs) {
     });
 
     outMultiTanh.add<Real>([](const Real &inRhs) {
-      return tanh(inRhs).toMinimalObject();
+      return tanh(inRhs).clone();
     });
 
     return outMultiTanh;

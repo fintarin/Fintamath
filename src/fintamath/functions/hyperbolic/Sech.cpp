@@ -28,22 +28,13 @@ std::unique_ptr<IMathObject> Sech::multiSechSimplify(const INumber &rhs) {
     });
 
     outMultiSech.add<Real>([](const Real &inRhs) {
-      return sechSimplify(inRhs);
+      return sech(inRhs).clone();
     });
 
     return outMultiSech;
   }();
 
   return multiSech(rhs);
-}
-
-std::unique_ptr<IMathObject> Sech::sechSimplify(const Real &rhs) {
-  try {
-    return sech(rhs).clone();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

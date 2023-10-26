@@ -40,22 +40,13 @@ std::unique_ptr<IMathObject> Acsc::multiAcscSimplify(const INumber &rhs) {
     });
 
     outMultiAcsc.add<Real>([](const Real &inRhs) {
-      return acscSimplify(inRhs);
+      return acsc(inRhs).clone();
     });
 
     return outMultiAcsc;
   }();
 
   return multiAcsc(rhs);
-}
-
-std::unique_ptr<IMathObject> Acsc::acscSimplify(const Real &rhs) {
-  try {
-    return acsc(rhs).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

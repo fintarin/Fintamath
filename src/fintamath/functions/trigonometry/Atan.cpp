@@ -38,7 +38,7 @@ std::unique_ptr<IMathObject> Atan::multiAtanSimplify(const INumber &rhs) {
     });
 
     outMultiAtan.add<Real>([](const Real &inRhs) {
-      return atan(inRhs).toMinimalObject();
+      return atan(inRhs).clone();
     });
 
     return outMultiAtan;

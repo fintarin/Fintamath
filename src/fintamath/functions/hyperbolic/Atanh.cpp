@@ -38,22 +38,13 @@ std::unique_ptr<IMathObject> Atanh::multiAtanhSimplify(const INumber &rhs) {
     });
 
     outMultiAtanh.add<Real>([](const Real &inRhs) {
-      return atanhSimplify(inRhs);
+      return atanh(inRhs).clone();
     });
 
     return outMultiAtanh;
   }();
 
   return multiAtanh(rhs);
-}
-
-std::unique_ptr<IMathObject> Atanh::atanhSimplify(const Real &rhs) {
-  try {
-    return atanh(rhs).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

@@ -38,22 +38,13 @@ std::unique_ptr<IMathObject> Asec::multiAsecSimplify(const INumber &rhs) {
     });
 
     outMultiAsec.add<Real>([](const Real &inRhs) {
-      return asecSimplify(inRhs);
+      return asec(inRhs).clone();
     });
 
     return outMultiAsec;
   }();
 
   return multiAsec(rhs);
-}
-
-std::unique_ptr<IMathObject> Asec::asecSimplify(const Real &rhs) {
-  try {
-    return asec(rhs).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

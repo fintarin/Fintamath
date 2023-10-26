@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiAcoshSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> acoshSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Acosh, acoshExpr);

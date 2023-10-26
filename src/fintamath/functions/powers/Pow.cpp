@@ -72,7 +72,7 @@ std::unique_ptr<IMathObject> Pow::multiPowSimplify(const INumber &lhs, const INu
 }
 
 std::unique_ptr<IMathObject> Pow::powSimplify(const Integer &lhs, const Integer &rhs) {
-  return pow(lhs, rhs).toMinimalObject();
+  return pow(lhs, rhs).clone();
 }
 
 std::unique_ptr<IMathObject> Pow::powSimplify(const Rational &lhs, const Rational &rhs) {
@@ -105,12 +105,7 @@ std::unique_ptr<IMathObject> Pow::powSimplify(const Rational &lhs, const Rationa
 }
 
 std::unique_ptr<IMathObject> Pow::powSimplify(const Real &lhs, const Real &rhs) {
-  try {
-    return pow(lhs, rhs).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
+  return pow(lhs, rhs).clone();
 }
 
 std::unique_ptr<IMathObject> Pow::powSimplify(const Complex &lhs, const Complex &rhs) {

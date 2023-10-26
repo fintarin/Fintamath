@@ -12,7 +12,7 @@ std::unique_ptr<IMathObject> Acos::call(const ArgumentRefVector &argsVect) const
   const auto &rhs = cast<INumber>(argsVect.front().get());
 
   if (rhs == Integer(-1)) {
-    return Pi().toMinimalObject();
+    return Pi().clone();
   }
 
   if (rhs == Integer(0)) {
@@ -39,22 +39,13 @@ std::unique_ptr<IMathObject> Acos::multiAcosSimplify(const INumber &rhs) {
     });
 
     outMultiAcos.add<Real>([](const Real &inRhs) {
-      return acosSimplify(inRhs);
+      return acos(inRhs).clone();
     });
 
     return outMultiAcos;
   }();
 
   return multiAcos(rhs);
-}
-
-std::unique_ptr<IMathObject> Acos::acosSimplify(const Real &rhs) {
-  try {
-    return acos(rhs).toMinimalObject();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

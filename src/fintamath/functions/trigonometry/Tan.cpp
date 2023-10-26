@@ -28,22 +28,13 @@ std::unique_ptr<IMathObject> Tan::multiTanSimplify(const INumber &rhs) {
     });
 
     outMultiTan.add<Real>([](const Real &inRhs) {
-      return tanSimplify(inRhs);
+      return tan(inRhs).clone();
     });
 
     return outMultiTan;
   }();
 
   return multiTan(rhs);
-}
-
-std::unique_ptr<IMathObject> Tan::tanSimplify(const Real &rhs) {
-  try {
-    return tan(rhs).clone();
-  }
-  catch (const UndefinedException &) {
-    return {};
-  }
 }
 
 }

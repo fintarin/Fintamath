@@ -24,8 +24,6 @@ protected:
 
 private:
   static std::unique_ptr<IMathObject> multiTanSimplify(const INumber &rhs);
-
-  static std::unique_ptr<IMathObject> tanSimplify(const Real &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Tan, tanExpr);

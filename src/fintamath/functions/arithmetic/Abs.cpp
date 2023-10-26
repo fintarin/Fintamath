@@ -22,15 +22,15 @@ std::unique_ptr<IMathObject> Abs::multiAbsSimplify(const INumber &rhs) {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &)> outMultiAbs;
 
     outMultiAbs.add<Integer>([](const Integer &inRhs) {
-      return abs(inRhs).toMinimalObject();
+      return abs(inRhs).clone();
     });
 
     outMultiAbs.add<Rational>([](const Rational &inRhs) {
-      return abs(inRhs).toMinimalObject();
+      return abs(inRhs).clone();
     });
 
     outMultiAbs.add<Real>([](const Real &inRhs) {
-      return abs(inRhs).toMinimalObject();
+      return abs(inRhs).clone();
     });
 
     outMultiAbs.add<Complex>([](const Complex &inRhs) {
