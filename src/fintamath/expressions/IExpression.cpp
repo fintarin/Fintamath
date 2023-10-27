@@ -116,15 +116,8 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
   }
 }
 
-void IExpression::approximateSimplifyChild(ArgumentPtr &child, bool convertNumbers) {
-  if (const auto numChild = cast<INumber>(child)) {
-    if (convertNumbers) {
-      if (auto res = convertToApproximated(*numChild)) {
-        child = std::move(res);
-      }
-    }
-  }
-  else if (const auto constChild = cast<IConstant>(child)) {
+void IExpression::approximateSimplifyChild(ArgumentPtr &child) {
+  if (const auto constChild = cast<IConstant>(child)) {
     child = (*constChild)();
   }
   else if (const auto exprChild = cast<IExpression>(child)) {
@@ -233,6 +226,20 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
   return res;
 }
 
+ArgumentPtrVector fintamath::IExpression::convertToApproximatedNumbers(const ArgumentPtrVector &args) {
+  ArgumentPtrVector approxArgs = args;
+
+  for (auto &arg : approxArgs) {
+    if (const auto argNum = cast<INumber>(arg); argNum) {
+      if (auto argConv = convertToApproximated(*argNum)) {
+        arg = std::move(argConv);
+      }
+    }
+  }
+
+  return approxArgs;
+}
+
 ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs) {
   if (!func.isEvaluatable()) {
     return {};
@@ -282,12 +289,12 @@ ArgumentPtr IExpression::approximateSimplify() const {
 
   auto simplExpr = cast<IExpression>(simpl);
   ArgumentPtrVector approxChildren = simplExpr->getChildren();
-  bool containsVar = containsVariable(simplExpr);
+
   bool areNumberChilrenPrecise = true;
   size_t numberChildrenCount = 0;
 
   for (auto &child : approxChildren) {
-    approximateSimplifyChild(child, !containsVar);
+    approximateSimplifyChild(child);
 
     if (const auto childNum = cast<INumber>(child)) {
       numberChildrenCount++;
@@ -301,17 +308,31 @@ ArgumentPtr IExpression::approximateSimplify() const {
   auto approxExpr = cast<IExpression>(simplExpr->clone());
   approxExpr->setChildren(approxChildren);
 
+  bool containsVar = containsVariable(simplExpr);
+
   if (containsVar) {
-    if (IFunction::Type(approxChildren.size()) == getFunction()->getFunctionType() ||
-        numberChildrenCount < 2) {
+    if (numberChildrenCount < 2 || IFunction::Type(approxChildren.size()) == getFunction()->getFunctionType()) {
       return approxExpr;
     }
   }
-  else if (areNumberChilrenPrecise) {
-    return approxExpr->approximateSimplify();
+
+  ArgumentPtr approxSimpl = approxExpr->simplify();
+  auto approxSimplExpr = cast<IExpression>(approxSimpl);
+
+  if (!approxSimplExpr || *approxSimplExpr != *approxExpr) {
+    return approxSimpl;
   }
 
-  return approxExpr->simplify();
+  if (!containsVar && areNumberChilrenPrecise) {
+    auto res = callFunction(*approxSimplExpr->getFunction(),
+                            convertToApproximatedNumbers(approxSimplExpr->getChildren()));
+
+    if (is<INumber>(res)) {
+      return res;
+    }
+  }
+
+  return approxSimpl;
 }
 
 ArgumentPtr IExpression::setPrecision(uint8_t precision, const Integer &maxInt) const {

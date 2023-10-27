@@ -55,7 +55,7 @@ protected:
 
   static void postSimplifyChild(ArgumentPtr &child);
 
-  static void approximateSimplifyChild(ArgumentPtr &child, bool convertNumbers = false);
+  static void approximateSimplifyChild(ArgumentPtr &child);
 
   static void setPrecisionChild(ArgumentPtr &child, uint8_t precision, const Integer &maxInt);
 
@@ -65,6 +65,8 @@ private:
   static std::unique_ptr<INumber> convertToApproximated(const INumber &num);
 
   static std::unique_ptr<INumber> convertToApproximated(const INumber &num, uint8_t precision, const Integer &maxInt);
+
+  static ArgumentPtrVector convertToApproximatedNumbers(const ArgumentPtrVector &args);
 
 private:
   static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &getParser();

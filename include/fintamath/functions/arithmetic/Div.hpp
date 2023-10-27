@@ -23,11 +23,6 @@ public:
 
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override;
-
-private:
-  static std::unique_ptr<IMathObject> multiDivSimplify(const IArithmetic &lhs, const IArithmetic &rhs);
-
-  static std::unique_ptr<IMathObject> divSimplify(const Integer &lhs, const Integer &rhs);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Div, divExpr);

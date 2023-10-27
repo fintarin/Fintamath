@@ -55,7 +55,11 @@ protected:
 
   Integer &multiply(const Integer &rhs) override;
 
+  std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &rhs) const override;
+
   Integer &divide(const Integer &rhs) override;
+
+  std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &rhs) const override;
 
   Integer &mod(const Integer &rhs) override;
 
