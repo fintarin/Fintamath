@@ -180,7 +180,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
     }
   }
 
-  if (dividerNum && containsVariable(lhsExpr)) {
+  if (dividerNum && (!is<Add>(lhsExpr->getFunction()) || containsVariable(lhsExpr))) {
     for (auto &child : dividendPolynom) {
       child = divExpr(child, dividerNum);
     }

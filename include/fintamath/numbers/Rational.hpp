@@ -41,7 +41,11 @@ protected:
 
   Rational &multiply(const Rational &rhs) override;
 
+  std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &rhs) const override;
+
   Rational &divide(const Rational &rhs) override;
+
+  std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &rhs) const override;
 
   Rational &negate() override;
 

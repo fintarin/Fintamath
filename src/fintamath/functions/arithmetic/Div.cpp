@@ -20,33 +20,7 @@ std::unique_ptr<IMathObject> Div::call(const ArgumentRefVector &argsVect) const 
     return ComplexInf().clone();
   }
 
-  return multiDivSimplify(lhs, rhs);
-}
-
-std::unique_ptr<IMathObject> Div::multiDivSimplify(const IArithmetic &lhs, const IArithmetic &rhs) {
-  static const auto multiDiv = [] {
-    static MultiMethod<std::unique_ptr<IMathObject>(const IArithmetic &, const IArithmetic &)> outMultiPow;
-
-    outMultiPow.add<Integer, Integer>([](const Integer &inLhs, const Integer &inRhs) {
-      return divSimplify(inLhs, inRhs);
-    });
-
-    return outMultiPow;
-  }();
-
-  if (auto res = multiDiv(lhs, rhs)) {
-    return res;
-  }
-
   return lhs / rhs;
-}
-
-std::unique_ptr<IMathObject> Div::divSimplify(const Integer &lhs, const Integer &rhs) {
-  if (lhs % rhs != 0) {
-    return Rational(lhs, rhs).clone();
-  }
-
-  return (lhs / rhs).clone();
 }
 
 }

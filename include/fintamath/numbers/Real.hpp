@@ -55,13 +55,19 @@ public:
 protected:
   bool equals(const Real &rhs) const override;
 
+  bool equalsAbstract(const IMathObject &rhs) const override;
+
   std::strong_ordering compare(const Real &rhs) const override;
+
+  std::strong_ordering compareAbstract(const IComparable &rhs) const override;
 
   Real &add(const Real &rhs) override;
 
   Real &substract(const Real &rhs) override;
 
   Real &multiply(const Real &rhs) override;
+
+  std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &rhs) const override;
 
   Real &divide(const Real &rhs) override;
 

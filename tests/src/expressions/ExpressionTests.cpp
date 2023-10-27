@@ -1885,7 +1885,58 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("(1/1000000000000000000000000000000000000000)!!").approximate().toString(),
             "(1.0*10^-39)!!");
   EXPECT_EQ(Expression("(-1)!!").approximate().toString(),
-            "(-1.0)!!");
+            "(-1)!!");
+
+  // EXPECT_EQ(Expression("1 / (1 - tanh(11^10))").toString(), "0.0");
+  // EXPECT_EQ(Expression("1 / (1 - coth(11^10))").toString(), "0.0");
+  // EXPECT_EQ(Expression("1 / (1 - cosh(11^-10))").toString(), "0.0");
+  // EXPECT_EQ(Expression("1 / (1 - sech(11^-10))").toString(), "0.0");
+  EXPECT_EQ(Expression("1 / (ln(2)^1000000000)").approximate().toString(), "1/0.0");
+  EXPECT_EQ(Expression("sin(ln(2)^1000000000)").approximate().toString(), "0.0");
+  EXPECT_EQ(Expression("cos(ln(2)^1000000000)").approximate().toString(), "1.0");
+  EXPECT_EQ(Expression("tan(ln(2)^1000000000)").approximate().toString(), "0.0");
+  EXPECT_EQ(Expression("cot(ln(2)^1000000000)").approximate().toString(), "1.0/0.0");
+  EXPECT_EQ(Expression("sec(ln(2)^1000000000)").approximate().toString(), "1.0");
+  EXPECT_EQ(Expression("csc(ln(2)^1000000000)").approximate().toString(), "1/0.0");
+  EXPECT_EQ(Expression("root(ln(2)^1000000000, 3)").approximate().toString(), "0.0");
+
+  EXPECT_EQ(Expression("ln(2)^1000000000 = 0").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 != 0").approximate().toString(), "True");
+  EXPECT_EQ(Expression("ln(2)^1000000000 < 0").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 > 0").approximate().toString(), "True");
+  EXPECT_EQ(Expression("ln(2)^1000000000 <= 0").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 >= 0").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 = 0").approximate().toString(), "False");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 != 0").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 < 0").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 > 0").approximate().toString(), "False");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 <= 0").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 >= 0").approximate().toString(), "False");
+
+  EXPECT_EQ(Expression("ln(2)^1000000000 = ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 != ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("ln(2)^1000000000 < ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("ln(2)^1000000000 > ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 <= ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("ln(2)^1000000000 >= ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 = ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 != ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 < ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 > ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 <= ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 >= ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 = -ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 != -ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("ln(2)^1000000000 < -ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 > -ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("ln(2)^1000000000 <= -ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("ln(2)^1000000000 >= -ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 = -ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 != -ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 < -ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 > -ln(2)^100000000").approximate().toString(), "True");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 <= -ln(2)^100000000").approximate().toString(), "False");
+  EXPECT_EQ(Expression("-ln(2)^1000000000 >= -ln(2)^100000000").approximate().toString(), "True");
 
   EXPECT_EQ(Expression("I").approximate().toString(), "I");
   EXPECT_EQ(Expression("5 + I").approximate().toString(), "5 + I");
@@ -1905,6 +1956,9 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("5/2 - 2 I").approximate().toString(), "2.5 - 2 I");
   EXPECT_EQ(Expression("5/-I").approximate().toString(), "5 I");
   EXPECT_EQ(Expression("E/-I").approximate().toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476 I");
+  EXPECT_EQ(Expression("sin(I)").approximate().toString(), "sin(I)");
+  EXPECT_EQ(Expression("sin(5 + I)").approximate().toString(), "sin(5 + I)");
+  EXPECT_EQ(Expression("sin(5/2 + 1/2 I)").approximate().toString(), "sin(2.5 + 0.5 I)");
 
   EXPECT_EQ(Expression("ln(x)").approximate().toString(), "ln(x)");
   EXPECT_EQ(Expression("lb(x)").approximate().toString(), "log(2, x)");
