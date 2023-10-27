@@ -21,7 +21,7 @@ public:
 protected:
   virtual std::strong_ordering compare(const Derived &rhs) const = 0;
 
-  std::strong_ordering compareAbstract(const IComparable &rhs) const final {
+  std::strong_ordering compareAbstract(const IComparable &rhs) const override {
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return compare(*rhsPtr);
     }
@@ -30,8 +30,8 @@ protected:
       return compare(cast<Derived>(*rhsPtr));
     }
 
-    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-      return cast<IComparable>(*lhsPtr) <=> rhs;
+    if (isConvertible(rhs, *this)) {
+      return 0 <=> (rhs <=> *this);
     }
 
     throw InvalidInputBinaryOperatorException("<=>", toString(), rhs.toString());

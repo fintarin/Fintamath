@@ -31,7 +31,7 @@ protected:
     return toString() == rhs.toString();
   }
 
-  bool equalsAbstract(const IMathObject &rhs) const final {
+  bool equalsAbstract(const IMathObject &rhs) const override {
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }
@@ -40,8 +40,8 @@ protected:
       return equals(cast<Derived>(*rhsPtr));
     }
 
-    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-      return *lhsPtr == rhs;
+    if (isConvertible(rhs, *this)) {
+      return rhs == *this;
     }
 
     return false;

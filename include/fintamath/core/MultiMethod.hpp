@@ -38,6 +38,10 @@ public:
     return {};
   }
 
+  bool contains(const auto &...args) const {
+    return callbacks.find(CallbackId(args.getType()...)) != callbacks.end();
+  }
+
 private:
   Callbacks callbacks;
 };

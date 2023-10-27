@@ -52,7 +52,7 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const = 0;
 
-  std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argsVect) const final {
+  std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argsVect) const override {
     validateArgsSize(argsVect);
 
     if (doArgsMatch(argsVect)) {
