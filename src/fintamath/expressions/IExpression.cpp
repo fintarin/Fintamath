@@ -310,10 +310,11 @@ ArgumentPtr IExpression::approximateSimplify() const {
 
   bool containsVar = containsVariable(simplExpr);
 
-  if (containsVar) {
-    if (numberChildrenCount < 2 || IFunction::Type(approxChildren.size()) == getFunction()->getFunctionType()) {
-      return approxExpr;
-    }
+  if (containsVar &&
+      (numberChildrenCount < 2 ||
+       IFunction::Type(approxChildren.size()) == getFunction()->getFunctionType())) {
+
+    return approxExpr;
   }
 
   ArgumentPtr approxSimpl = approxExpr->simplify();

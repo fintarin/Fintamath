@@ -152,8 +152,8 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
 
   if (ArgumentPtr numeratorRes = perfectRoot(lhs.numerator(), rhs)) {
     if (ArgumentPtr denominatorRes = perfectRoot(lhs.denominator(), rhs)) {
-      auto numer = cast<Integer>(*numeratorRes);
-      auto denom = cast<Integer>(*denominatorRes);
+      const auto &numer = cast<Integer>(*numeratorRes);
+      const auto &denom = cast<Integer>(*denominatorRes);
       return Rational(numer, denom).toMinimalObject();
     }
 
