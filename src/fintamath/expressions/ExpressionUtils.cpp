@@ -175,7 +175,7 @@ bool isNegated(const ArgumentPtr &arg) {
   if (is<Add>(expr->getFunction())) {
     expr = cast<IExpression>(expr->getChildren().front());
 
-    if (!expr) {
+    if (!expr || !containsVariable(expr)) {
       return false;
     }
   }

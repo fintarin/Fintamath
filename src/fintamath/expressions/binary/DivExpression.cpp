@@ -162,7 +162,6 @@ ArgumentPtr DivExpression::mulPreSimplify(const IFunction &func, const ArgumentP
       &DivExpression::callFunctionSimplify,
       &DivExpression::powSimplify,
   };
-
   return mulSimplify(simplifyFunctions, func, lhs, rhs);
 }
 
