@@ -39,7 +39,7 @@ public:
   }
 
   bool contains(const auto &...args) const {
-    return callbacks.find(CallbackId(args.getType()...)) != callbacks.end();
+    return callbacks.contains(CallbackId(args.getType()...));
   }
 
 private:
