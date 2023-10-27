@@ -51,3 +51,15 @@ TEST(ConverterTests, convertTemplateTest) {
   EXPECT_TRUE(is<Complex>(convert<Complex>(Real())));
   EXPECT_FALSE(convert<Real>(Complex()));
 }
+
+TEST(ConverterTests, isConvertibleTest) {
+  EXPECT_TRUE(isConvertible(Rational(), Rational()));
+  EXPECT_TRUE(isConvertible(Rational(), Integer()));
+  EXPECT_FALSE(isConvertible(Integer(), Rational()));
+}
+
+TEST(ConverterTests, isConvertibleTemplateTest) {
+  EXPECT_TRUE(isConvertible<Rational>(Rational()));
+  EXPECT_TRUE(isConvertible<Rational>(Integer()));
+  EXPECT_FALSE(isConvertible<Integer>(Rational()));
+}

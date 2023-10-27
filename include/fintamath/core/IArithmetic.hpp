@@ -25,7 +25,7 @@ public:
   }
 
   friend inline std::unique_ptr<IArithmetic> operator+(const IArithmetic &rhs) {
-    return rhs.unaryPlusAbstract();
+    return cast<IArithmetic>(rhs.clone());
   }
 
   friend inline std::unique_ptr<IArithmetic> operator-(const IArithmetic &rhs) {
@@ -60,8 +60,6 @@ protected:
   virtual std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &rhs) const = 0;
 
   virtual std::unique_ptr<IArithmetic> negateAbstract() const = 0;
-
-  virtual std::unique_ptr<IArithmetic> unaryPlusAbstract() const = 0;
 
 private:
   static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> &getParser();

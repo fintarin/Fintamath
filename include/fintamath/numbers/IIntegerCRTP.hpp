@@ -106,9 +106,9 @@ protected:
 
   virtual Derived &decrease() = 0;
 
-  std::unique_ptr<IInteger> modAbstract(const IInteger &inRhs) const final {
+  std::unique_ptr<IInteger> modAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
-        inRhs, "%",
+        "%", inRhs,
         [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.mod(rhs);
         },
@@ -119,7 +119,7 @@ protected:
 
   std::unique_ptr<IInteger> bitAndAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
-        inRhs, "&",
+        "&", inRhs,
         [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitAnd(rhs);
         },
@@ -130,7 +130,7 @@ protected:
 
   std::unique_ptr<IInteger> bitOrAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
-        inRhs, "|",
+        "|", inRhs,
         [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitOr(rhs);
         },
@@ -141,7 +141,7 @@ protected:
 
   std::unique_ptr<IInteger> bitXorAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
-        inRhs, "^",
+        "^", inRhs,
         [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitXor(rhs);
         },
@@ -152,7 +152,7 @@ protected:
 
   std::unique_ptr<IInteger> bitLeftShiftAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
-        inRhs, "<<",
+        "<<", inRhs,
         [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitLeftShift(rhs);
         },
@@ -163,7 +163,7 @@ protected:
 
   std::unique_ptr<IInteger> bitRightShiftAbstract(const IInteger &inRhs) const override {
     return executeAbstract(
-        inRhs, ">>",
+        ">>", inRhs,
         [](I_INTEGER_CRTP &lhs, const Derived &rhs) {
           return lhs.bitRightShift(rhs);
         },
@@ -172,41 +172,44 @@ protected:
         });
   }
 
-  std::unique_ptr<IInteger> bitNotAbstract() const final {
+  std::unique_ptr<IInteger> bitNotAbstract() const override {
     return std::make_unique<Derived>(~(*this));
   }
 
-  IInteger &increaseAbstract() final {
+  IInteger &increaseAbstract() override {
     increase();
     return *this;
   }
 
-  IInteger &decreaseAbstract() final {
+  IInteger &decreaseAbstract() override {
     decrease();
     return *this;
   }
 
 private:
-  std::unique_ptr<IInteger> executeAbstract(const IInteger &rhs,
-                                            const std::string &oper,
-                                            std::invocable<I_INTEGER_CRTP &, const Derived &> auto funcCommonTypes,
-                                            std::invocable<const IInteger &, const IInteger &> auto funcDifferentTypes) const {
+  std::unique_ptr<IInteger> executeAbstract(const std::string &operStr,
+                                            const IInteger &rhs,
+                                            std::invocable<I_INTEGER_CRTP &, const Derived &> auto callFunc,
+                                            std::invocable<const IInteger &, const IInteger &> auto callOper) const {
 
-    if (const auto *rhpPtr = cast<Derived>(&rhs)) {
-      auto lhsPtr = cast<Derived>(clone());
-      return cast<IInteger>(funcCommonTypes(*lhsPtr, *rhpPtr).toMinimalObject());
-    }
-
-    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
+    if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       auto lhsPtr = cast<I_INTEGER_CRTP>(clone());
-      return cast<IInteger>(funcCommonTypes(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
+      auto res = callFunc(*lhsPtr, *rhsPtr);
+      return cast<IInteger>(res.toMinimalObject());
     }
 
-    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-      return cast<IInteger>(funcDifferentTypes(cast<IInteger>(*lhsPtr), rhs)->toMinimalObject());
+    if (const auto rhsPtr = cast<Derived>(convert(*this, rhs))) {
+      auto lhsPtr = cast<I_INTEGER_CRTP>(clone());
+      auto res = callFunc(*lhsPtr, *rhsPtr);
+      return cast<IInteger>(res.toMinimalObject());
     }
 
-    throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
+    if (const auto lhsPtr = cast<IInteger>(convert(rhs, *this))) {
+      auto res = callOper(*lhsPtr, rhs);
+      return cast<IInteger>(res->toMinimalObject());
+    }
+
+    throw InvalidInputBinaryOperatorException(operStr, toString(), rhs.toString());
   }
 
 private:

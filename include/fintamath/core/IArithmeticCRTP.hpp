@@ -66,9 +66,9 @@ protected:
 
   virtual Derived &negate() = 0;
 
-  std::unique_ptr<IArithmetic> addAbstract(const IArithmetic &inRhs) const final {
+  std::unique_ptr<IArithmetic> addAbstract(const IArithmetic &inRhs) const override {
     return executeAbstract(
-        inRhs, "+",
+        "+", inRhs,
         [](I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
           return lhs.add(rhs);
         },
@@ -77,9 +77,9 @@ protected:
         });
   }
 
-  std::unique_ptr<IArithmetic> substractAbstract(const IArithmetic &inRhs) const final {
+  std::unique_ptr<IArithmetic> substractAbstract(const IArithmetic &inRhs) const override {
     return executeAbstract(
-        inRhs, "-",
+        "-", inRhs,
         [](I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
           return lhs.substract(rhs);
         },
@@ -88,9 +88,9 @@ protected:
         });
   }
 
-  std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &inRhs) const final {
+  std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &inRhs) const override {
     return executeAbstract(
-        inRhs, "*",
+        "*", inRhs,
         [](I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
           return lhs.multiply(rhs);
         },
@@ -99,9 +99,9 @@ protected:
         });
   }
 
-  std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &inRhs) const final {
+  std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &inRhs) const override {
     return executeAbstract(
-        inRhs, "/",
+        "/", inRhs,
         [](I_ARITHMETIC_CRTP &lhs, const Derived &rhs) {
           return lhs.divide(rhs);
         },
@@ -110,35 +110,34 @@ protected:
         });
   }
 
-  std::unique_ptr<IArithmetic> negateAbstract() const final {
+  std::unique_ptr<IArithmetic> negateAbstract() const override {
     return std::make_unique<Derived>(-(*this));
   }
 
-  std::unique_ptr<IArithmetic> unaryPlusAbstract() const final {
-    return std::make_unique<Derived>(+(*this));
-  }
-
 private:
-  std::unique_ptr<IArithmetic> executeAbstract(const IArithmetic &rhs,
-                                               const std::string &oper,
-                                               std::invocable<I_ARITHMETIC_CRTP &, const Derived &> auto funcCommonTypes,
-                                               std::invocable<const IArithmetic &, const IArithmetic &> auto funcDifferentTypes) const {
+  std::unique_ptr<IArithmetic> executeAbstract(const std::string &operStr,
+                                               const IArithmetic &rhs,
+                                               std::invocable<I_ARITHMETIC_CRTP &, const Derived &> auto callFunc,
+                                               std::invocable<const IArithmetic &, const IArithmetic &> auto callOper) const {
 
-    if (const auto *rhpPtr = cast<Derived>(&rhs)) {
-      auto lhsPtr = cast<Derived>(clone());
-      return cast<IArithmetic>(funcCommonTypes(*lhsPtr, *rhpPtr).toMinimalObject());
+    if (const auto *rhsPtr = cast<Derived>(&rhs)) {
+      auto lhsPtr = cast<I_ARITHMETIC_CRTP>(clone());
+      auto res = callFunc(*lhsPtr, *rhsPtr);
+      return cast<IArithmetic>(res.toMinimalObject());
     }
 
-    if (std::unique_ptr<IMathObject> rhsPtr = convert(*this, rhs)) {
-      auto lhsPtr = cast<Derived>(clone());
-      return cast<IArithmetic>(funcCommonTypes(*lhsPtr, cast<Derived>(*rhsPtr)).toMinimalObject());
+    if (const auto rhsPtr = cast<Derived>(convert(*this, rhs))) {
+      auto lhsPtr = cast<I_ARITHMETIC_CRTP>(clone());
+      auto res = callFunc(*lhsPtr, *rhsPtr);
+      return cast<IArithmetic>(res.toMinimalObject());
     }
 
-    if (std::unique_ptr<IMathObject> lhsPtr = convert(rhs, *this)) {
-      return cast<IArithmetic>(funcDifferentTypes(cast<IArithmetic>(*lhsPtr), rhs)->toMinimalObject());
+    if (const auto lhsPtr = cast<IArithmetic>(convert(rhs, *this))) {
+      auto res = callOper(*lhsPtr, rhs);
+      return cast<IArithmetic>(res->toMinimalObject());
     }
 
-    throw InvalidInputBinaryOperatorException(oper, toString(), rhs.toString());
+    throw InvalidInputBinaryOperatorException(operStr, toString(), rhs.toString());
   }
 
 private:
