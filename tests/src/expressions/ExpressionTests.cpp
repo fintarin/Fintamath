@@ -472,6 +472,19 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(1000!,1000!)").toString(), "1");
   EXPECT_EQ(Expression("log(100000000000!,100000000000!)").toString(), "1");
 
+  EXPECT_EQ(Expression("floor(E)").toString(), "2");
+  EXPECT_EQ(Expression("ceil(E)").toString(), "3");
+  EXPECT_EQ(Expression("floor(E^10)").toString(), "22026");
+  EXPECT_EQ(Expression("ceil(E^10)").toString(), "22027");
+  EXPECT_EQ(Expression("floor(11^10)").toString(), "25937424601");
+  EXPECT_EQ(Expression("ceil(11^10)").toString(), "25937424601");
+  EXPECT_EQ(Expression("tan(floor(E/3))").toString(), "0");
+  EXPECT_EQ(Expression("tan(ceil(-E/3))").toString(), "0");
+  EXPECT_EQ(Expression("ln(floor(E/3))").toString(), "-Inf");
+  EXPECT_EQ(Expression("root(ceil(-E/3), 3)").toString(), "0");
+  EXPECT_EQ(Expression("floor(E + I)").toString(), "2 + I");
+  EXPECT_EQ(Expression("floor(E + x)").toString(), "floor(x + E)");
+
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-sin(x) + sin(2)").toString(), "-sin(x) + sin(2)");
   EXPECT_EQ(Expression("-3sin(E)").toString(), "-3 sin(E)");
@@ -547,6 +560,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(1deg, (1deg)^(1deg)) = 1deg").toString(), "True");
   EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "-Pi^E + E^Pi > 0"); // TODO: True
   EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "-E^Pi + Pi^E < 0"); // TODO: True
+  EXPECT_EQ(Expression("log(floor(E), E) = lb(E)").toString(), "True");
 
   EXPECT_EQ(Expression("derivative(a, a)").toString(), "1");
   EXPECT_EQ(Expression("derivative(a+a, a)").toString(), "derivative(2 a, a)");
@@ -1849,18 +1863,6 @@ TEST(ExpressionTests, approximateTest) {
             "7182818284590452353602874713526624977572470936999595749669676277240766303535476^(2."
             "3315043990071954622896899110121376663320174289635168232800545468180794366424973*10^1656520))");
 
-  EXPECT_EQ(Expression("floor(E)").approximate().toString(),
-            "2");
-  EXPECT_EQ(Expression("ceil(E)").approximate().toString(),
-            "3");
-  EXPECT_EQ(Expression("floor(E^10)").approximate().toString(),
-            "22026");
-  EXPECT_EQ(Expression("ceil(E^10)").approximate().toString(),
-            "22027");
-  EXPECT_EQ(Expression("floor(11^10)").approximate().toString(),
-            "25937424601");
-  EXPECT_EQ(Expression("ceil(11^10)").approximate().toString(),
-            "25937424601");
   EXPECT_EQ(Expression("sin(floor(E^10))").approximate().toString(),
             "-0.28969263040207500615366554669422425489060452363910610917250538601423874640051459");
   EXPECT_EQ(Expression("sin(ceil(E^10))").approximate().toString(),
@@ -1869,10 +1871,6 @@ TEST(ExpressionTests, approximateTest) {
             "-0.4398324432476489878621537810397255512584110903388962591029029773506989984056853");
   EXPECT_EQ(Expression("cos(ceil(11^10))").approximate().toString(),
             "-0.4398324432476489878621537810397255512584110903388962591029029773506989984056853");
-  EXPECT_EQ(Expression("tan(floor(E/3))").approximate().toString(),
-            "0");
-  EXPECT_EQ(Expression("tan(ceil(-E/3))").approximate().toString(),
-            "0");
   EXPECT_EQ(Expression("ln(floor(E^10))").approximate().toString(),
             "9.9999788527248892938130978462467834105024172271892998574080180654845967473754541");
   EXPECT_EQ(Expression("root(ceil(E^10), 3)").approximate().toString(),
@@ -1881,10 +1879,6 @@ TEST(ExpressionTests, approximateTest) {
             "23.978952727983705440619435779651292998217068539374171752185677091305736239132367");
   EXPECT_EQ(Expression("root(ceil(11^10), 3)").approximate().toString(),
             "2960.117500547758958671098654417191228566388539497004587135829271326993708483441");
-  EXPECT_EQ(Expression("ln(floor(E/3))").approximate().toString(),
-            "-Inf");
-  EXPECT_EQ(Expression("root(ceil(-E/3), 3)").approximate().toString(),
-            "0");
 
   EXPECT_EQ(Expression("(2/3)!").approximate().toString(),
             "0.90274529295093361129685868543634252367955151070452913226268164530918864360116169");

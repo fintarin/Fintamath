@@ -325,10 +325,10 @@ ArgumentPtr IExpression::approximateSimplify() const {
   }
 
   if (!containsVar && areNumberChilrenPrecise) {
-    auto res = callFunction(*approxSimplExpr->getFunction(),
-                            convertToApproximatedNumbers(approxSimplExpr->getChildren()));
+    if (auto res = callFunction(*approxSimplExpr->getFunction(),
+                                convertToApproximatedNumbers(approxSimplExpr->getChildren()));
+        is<INumber>(res)) {
 
-    if (is<INumber>(res)) {
       return res;
     }
   }

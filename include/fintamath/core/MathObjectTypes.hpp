@@ -25,6 +25,7 @@ public:
     InvTrigExpression,
     HyperbExpression,
     InvHyperbExpression,
+    RoundExpression,
 
     IBinaryExpression = 4000,
 

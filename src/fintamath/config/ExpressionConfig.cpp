@@ -17,6 +17,7 @@
 #include "fintamath/expressions/unary/InvHyperbExpression.hpp"
 #include "fintamath/expressions/unary/InvTrigExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
+#include "fintamath/expressions/unary/RoundExpression.hpp"
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -58,6 +59,8 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/ntheory/Ceil.hpp"
+#include "fintamath/functions/ntheory/Floor.hpp"
 #include "fintamath/functions/other/Deg.hpp"
 #include "fintamath/functions/other/Index.hpp"
 #include "fintamath/functions/other/Percent.hpp"
@@ -433,8 +436,17 @@ struct ExpressionConfig {
       static const ArgumentPtr deg1 = Deg()(Integer(1));
       return mulExpr(args.front(), deg1);
     });
+
+    Expression::registerFunctionExpressionMaker<Floor>([](ArgumentPtrVector &&args) {
+      return RoundExpression(Floor(), args.front()).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Ceil>([](ArgumentPtrVector &&args) {
+      return RoundExpression(Ceil(), args.front()).clone();
+    });
   }
 };
 
 const ExpressionConfig config;
+
 }
