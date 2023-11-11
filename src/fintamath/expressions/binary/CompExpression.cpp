@@ -18,6 +18,7 @@
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -180,7 +181,9 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
     }
   }
 
-  if (dividerNum && (!is<Add>(lhsExpr->getFunction()) || containsVariable(lhsExpr))) {
+  if (dividerNum && dividerNum->isPrecise() &&
+      (!is<Add>(lhsExpr->getFunction()) || containsVariable(lhsExpr))) {
+
     for (auto &child : dividendPolynom) {
       child = divExpr(child, dividerNum);
     }
