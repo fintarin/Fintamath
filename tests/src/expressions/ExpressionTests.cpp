@@ -1971,6 +1971,7 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("root(x, 33)").approximate().toString(), "x^0.03030303030303030303030303030303030303030303030303030303030303030303030303030303");
 
   EXPECT_EQ(Expression("ln(9/40) a + 1 > 0").approximate().toString(), "-1.491654876777716920061965223755665934457120641703784580805299252679371267179524 a + 1 > 0");
+  // EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a < 0").approximate().toString(), ""); // TODO! fix
 
   EXPECT_EQ(Expression("123").approximate(2).toString(), "1.2*10^2");
   EXPECT_EQ(Expression("123").approximate(3).toString(), "123");
