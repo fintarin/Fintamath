@@ -20,11 +20,6 @@ DerivativeExpression::SimplifyFunctionVector DerivativeExpression::getFunctionsF
 }
 
 ArgumentPtr DerivativeExpression::derivativeSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  // TODO: remove this and implement derivative with rhs !is Variable
-  if (!is<Variable>(rhs)) {
-    throw InvalidInputFunctionException(Derivative().toString(), {lhs->toString(), rhs->toString()});
-  }
-
   ArgumentPtr res;
 
   if (is<INumber>(lhs) || is<IConstant>(lhs)) {
