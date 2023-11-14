@@ -30,7 +30,7 @@ TEST(DerivativeTests, callTest) {
 
   EXPECT_THROW(f(Integer(5), Integer(1)), InvalidInputException);
   EXPECT_THROW(f(Variable("a"), Integer(1)), InvalidInputException);
-  EXPECT_THROW(f(Variable("a"), Expression("a+a")), InvalidInputException); // TODO: derivative
+  EXPECT_THROW(f(Variable("a"), Expression("a+a")), InvalidInputException);
 
   EXPECT_THROW(f(), InvalidInputException);
   EXPECT_THROW(f(Integer(1)), InvalidInputException);
@@ -43,10 +43,11 @@ TEST(DerivativeTests, exprTest) {
 
 TEST(DerivativeTests, doArgsMatchTest) {
   Integer a;
+  Variable b("b");
 
   EXPECT_FALSE(f.doArgsMatch({}));
   EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
+  EXPECT_TRUE(f.doArgsMatch({a, b}));
   EXPECT_FALSE(f.doArgsMatch({a, a, a}));
 }
 

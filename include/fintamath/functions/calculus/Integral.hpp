@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class Integral : public IFunctionCRTP<IComparable, Integral, IComparable, IComparable> {
+class Integral : public IFunctionCRTP<IComparable, Integral, IComparable, Variable> {
 public:
   Integral() : IFunctionCRTP(false) {
   }
