@@ -23,24 +23,26 @@ IntegralExpression::SimplifyFunctionVector IntegralExpression::getFunctionsForPo
   return simplifyFunctions;
 }
 
-ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  // TODO: remove this and implement derivative with rhs !is Variable
-  if (!is<Variable>(rhs)) {
-    throw InvalidInputFunctionException(Integral().toString(), {lhs->toString(), rhs->toString()});
-  }
+ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, const ArgumentPtr & /*lhs*/, const ArgumentPtr & /*rhs*/) {
+  return {};
 
-  ArgumentPtr res;
+  // // TODO: remove this and implement derivative with rhs !is Variable
+  // if (!is<Variable>(rhs)) {
+  //   throw InvalidInputFunctionException(Integral().toString(), {lhs->toString(), rhs->toString()});
+  // }
 
-  if (is<INumber>(lhs) || is<IConstant>(lhs)) {
-    res = mulExpr(lhs, rhs);
-  }
-  else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
-    res = divExpr(powExpr(lhs, Integer(2).clone()), Integer(2).clone());
-  }
+  // ArgumentPtr res;
 
-  // TODO: res + integral constant
+  // if (is<INumber>(lhs) || is<IConstant>(lhs)) {
+  //   res = mulExpr(lhs, rhs);
+  // }
+  // else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
+  //   res = divExpr(powExpr(lhs, Integer(2).clone()), Integer(2).clone());
+  // }
 
-  return res;
+  // // TODO: res + integral constant
+
+  // return res;
 }
 
 }
