@@ -137,6 +137,12 @@ bool containsIf(const ArgumentPtr &arg, std::invocable<ArgumentPtr> auto comp) {
   });
 }
 
+bool containsChild(const ArgumentPtr &arg, const ArgumentPtr &child) {
+  return containsIf(arg, [&child](const ArgumentPtr &compArg) {
+    return *compArg == *child;
+  });
+}
+
 bool containsVariable(const ArgumentPtr &arg) {
   return containsIf(arg, [](const ArgumentPtr &compArg) {
     return is<Variable>(compArg);
@@ -167,6 +173,10 @@ bool isInfinity(const ArgumentPtr &arg) {
 }
 
 bool isNegated(const ArgumentPtr &arg) {
+  if (isNegativeNumber(arg)) {
+    return true;
+  }
+
   auto expr = cast<IExpression>(arg);
   if (!expr) {
     return false;
@@ -181,12 +191,15 @@ bool isNegated(const ArgumentPtr &arg) {
   }
 
   if (is<Mul>(expr->getFunction())) {
-    if (auto num = cast<INumber>(expr->getChildren().front()); num && *num < Integer(0)) {
-      return true;
-    }
+    return isNegativeNumber(expr->getChildren().front());
   }
 
   return false;
+}
+
+bool isNegativeNumber(const ArgumentPtr &arg) {
+  auto argNum = cast<INumber>(arg);
+  return argNum && *argNum < Integer(0);
 }
 
 std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args) {

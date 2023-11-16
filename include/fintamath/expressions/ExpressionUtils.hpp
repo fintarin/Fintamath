@@ -23,6 +23,8 @@ std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPt
 
 bool containsIf(const ArgumentPtr &arg, std::invocable<ArgumentPtr> auto comp);
 
+bool containsChild(const ArgumentPtr &arg, const ArgumentPtr &child);
+
 bool containsVariable(const ArgumentPtr &arg);
 
 bool containsVariable(const ArgumentPtr &arg, const Variable &var);
@@ -34,6 +36,8 @@ bool containsComplex(const ArgumentPtr &arg);
 bool isInfinity(const ArgumentPtr &arg);
 
 bool isNegated(const ArgumentPtr &arg);
+
+bool isNegativeNumber(const ArgumentPtr &arg);
 
 std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args);
 

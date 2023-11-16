@@ -85,6 +85,7 @@ CompExpression::SimplifyFunctionVector CompExpression::getFunctionsForPostSimpli
       &CompExpression::constSimplify,
       &CompExpression::divSimplify,
       &CompExpression::coeffSimplify,
+      &CompExpression::approxSimplify,
   };
   return simplifyFunctions;
 }
@@ -149,6 +150,10 @@ ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr
 }
 
 ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*rhs != Integer(0)) {
+    return {};
+  }
+
   auto lhsExpr = cast<IExpression>(lhs);
   if (!lhsExpr) {
     return {};
@@ -162,39 +167,75 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
   }
 
   ArgumentPtrVector dividendPolynom;
-  ArgumentPtr polynomFirstChild;
+  std::shared_ptr<const IExpression> polynomFirstChildExpr;
 
   if (is<Add>(lhsExpr->getFunction())) {
-    polynomFirstChild = lhsExpr->getChildren().front();
+    polynomFirstChildExpr = cast<IExpression>(lhsExpr->getChildren().front());
     dividendPolynom = lhsExpr->getChildren();
   }
   else {
-    polynomFirstChild = lhsExpr;
+    polynomFirstChildExpr = lhsExpr;
     dividendPolynom.emplace_back(lhsExpr);
   }
 
-  std::shared_ptr<const INumber> dividerNum;
+  ArgumentPtr coeff = getMulCoeff(polynomFirstChildExpr);
 
-  if (const auto polynomFirstChildExpr = cast<IExpression>(polynomFirstChild)) {
-    if (is<Mul>(polynomFirstChildExpr->getFunction())) {
-      dividerNum = cast<INumber>(polynomFirstChildExpr->getChildren().front());
+  if (!coeff || containsVariable(coeff) || containsInfinity(coeff) || *coeff == Integer(0)) {
+    return {};
+  }
+
+  for (auto &child : std::views::drop(dividendPolynom, 1)) {
+    child = divExpr(child, coeff);
+  }
+
+  {
+    ArgumentPtrVector newChildren = polynomFirstChildExpr->getChildren();
+    newChildren.erase(newChildren.begin());
+
+    if (newChildren.size() == 1) {
+      dividendPolynom.front() = newChildren.front();
+    }
+    else {
+      dividendPolynom.front() = makeExpr(*polynomFirstChildExpr->getFunction(), newChildren);
     }
   }
 
-  if (dividerNum && dividerNum->isPrecise() &&
-      (!is<Add>(lhsExpr->getFunction()) || containsVariable(lhsExpr))) {
+  ArgumentPtr newLhs = dividendPolynom.size() > 1 ? addExpr(std::move(dividendPolynom)) : dividendPolynom.front();
+  simplifyChild(newLhs);
 
-    for (auto &child : dividendPolynom) {
-      child = divExpr(child, dividerNum);
+  if (const auto newLhsExpr = cast<IExpression>(newLhs); newLhsExpr && is<Add>(newLhsExpr->getFunction())) {
+    ArgumentPtr newCoeff = getMulCoeff(newLhsExpr->getChildren().front());
+
+    if (newCoeff && containsChild(newCoeff, coeff)) {
+      return {};
     }
+  }
 
-    ArgumentPtr newLhs = dividendPolynom.size() > 1 ? addExpr(std::move(dividendPolynom)) : dividendPolynom.front();
+  if (isNegativeNumber(coeff)) {
+    return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
+  }
 
-    if (*dividerNum < Integer(0)) {
-      return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
-    }
+  return makeExpr(func, newLhs, rhs);
+}
 
-    return makeExpr(func, newLhs, rhs);
+ArgumentPtr CompExpression::approxSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*rhs != Integer(0) || containsVariable(lhs)) {
+    return {};
+  }
+
+  ArgumentPtr approxLhs = lhs;
+  approximateSimplifyChild(approxLhs);
+
+  if (auto approxLhsNum = cast<INumber>(approxLhs); approxLhsNum && !approxLhsNum->isComplex()) {
+    return func(*approxLhsNum, *rhs);
+  }
+
+  return {};
+}
+
+ArgumentPtr CompExpression::getMulCoeff(const ArgumentPtr &rhs) {
+  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
+    return rhsExpr->getChildren().front();
   }
 
   return {};

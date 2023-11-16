@@ -38,6 +38,10 @@ private:
 
   static ArgumentPtr coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
+  static ArgumentPtr approxSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr getMulCoeff(const ArgumentPtr &rhs);
+
   bool isSolution = false;
 };
 

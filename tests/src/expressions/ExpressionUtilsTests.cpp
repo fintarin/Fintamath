@@ -48,7 +48,11 @@ TEST(ExpressionUtilsTests, argumentRefVectorToArgumentPtrVector) {
 }
 
 TEST(ExpressionUtilsTests, containsIfTest) {
+  // TODO: implement
+}
 
+TEST(ExpressionUtilsTests, containsChildTest) {
+  // TODO: implement
 }
 
 TEST(ExpressionUtilsTests, containsVariableTest) {
@@ -110,5 +114,13 @@ TEST(ExpressionUtilsTests, containsComplexTest) {
 }
 
 TEST(ExpressionUtilsTests, isInfinityTest) {
+  // TODO: implement
+}
+
+TEST(ExpressionUtilsTests, isNegatedExpressionTest) {
+  // TODO: implement
+}
+
+TEST(ExpressionUtilsTests, isNegativeNumberTest) {
   // TODO: implement
 }
