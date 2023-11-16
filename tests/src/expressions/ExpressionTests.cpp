@@ -558,8 +558,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E,5)<=ln(5)").toString(), "True");
   EXPECT_EQ(Expression("log(E,5)>=ln(5)").toString(), "True");
   EXPECT_EQ(Expression("log(1deg, (1deg)^(1deg)) = 1deg").toString(), "True");
-  EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "-Pi^E + E^Pi > 0"); // TODO: True
-  EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "-E^Pi + Pi^E < 0"); // TODO: True
+  EXPECT_EQ(Expression("E^Pi > Pi^E").toString(), "True");
+  EXPECT_EQ(Expression("Pi^E < E^Pi").toString(), "True");
   EXPECT_EQ(Expression("log(floor(E), E) = lb(E)").toString(), "True");
 
   EXPECT_EQ(Expression("derivative(a, a)").toString(), "1");
@@ -1252,7 +1252,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("I / x").toString(), "I/x");
   EXPECT_EQ(Expression("-I / x").toString(), "-I/x");
   EXPECT_EQ(Expression("2I / x").toString(), "(2 I)/x");
-  EXPECT_EQ(Expression("-2I / x").toString(), "(-2 I)/x"); // TODO! -(2 I)/x
+  EXPECT_EQ(Expression("-2I / x").toString(), "-(2 I)/x");
 
   EXPECT_EQ(Expression("Inf").toString(), "Inf");
   EXPECT_EQ(Expression("-Inf").toString(), "-Inf");
@@ -1970,8 +1970,10 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("root(x, 10)").approximate().toString(), "x^0.1");
   EXPECT_EQ(Expression("root(x, 33)").approximate().toString(), "x^0.03030303030303030303030303030303030303030303030303030303030303030303030303030303");
 
-  EXPECT_EQ(Expression("ln(9/40) a + 1 > 0").approximate().toString(), "-1.491654876777716920061965223755665934457120641703784580805299252679371267179524 a + 1 > 0");
-  // EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a < 0").approximate().toString(), ""); // TODO! fix
+  EXPECT_EQ(Expression("ln(9/40) a + 1 > 0").approximate().toString(), "a - 0.67039636015551187562980441234433718448357469016083894454851276080981791123695912 > 0");
+  EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a < 0").approximate().toString(), "a < 0");
+  EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a - sqrt(3) a < 0").approximate().toString(), "a < 0");
+  EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a - sqrt(3) a + 1 < 0").approximate().toString(), "a + 0.0074060245747335632557466509014062540940313639927954137165613831918681276118864391 < 0");
 
   EXPECT_EQ(Expression("123").approximate(2).toString(), "1.2*10^2");
   EXPECT_EQ(Expression("123").approximate(3).toString(), "123");
