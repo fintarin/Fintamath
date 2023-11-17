@@ -11,11 +11,21 @@ const Real maxTrigArgument = pow(10, FINTAMATH_PRECISION);
 
 Integer floor(const Real &rhs) {
   cpp_dec_float_100 res = boost::multiprecision::floor(rhs.getBackend());
+
+  if (rhs < 0 && rhs == res) {
+    res--;
+  }
+
   return res.convert_to<cpp_int>();
 }
 
 Integer ceil(const Real &rhs) {
   cpp_dec_float_100 res = boost::multiprecision::ceil(rhs.getBackend());
+
+  if (rhs >= 0 && rhs == res) {
+    res++;
+  }
+
   return res.convert_to<cpp_int>();
 }
 

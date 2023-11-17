@@ -36,7 +36,7 @@ TEST(FloorTests, callTest) {
 
   EXPECT_EQ(f(Real("-2.9"))->toString(), "-3");
   EXPECT_EQ(f(Real("-2.2"))->toString(), "-3");
-  EXPECT_EQ(f(Real("-2"))->toString(), "-2");
+  EXPECT_EQ(f(Real("-2"))->toString(), "-3");
   EXPECT_EQ(f(Real("0"))->toString(), "0");
   EXPECT_EQ(f(Real("2"))->toString(), "2");
   EXPECT_EQ(f(Real("2.2"))->toString(), "2");

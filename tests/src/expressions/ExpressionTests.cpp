@@ -485,6 +485,16 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("floor(E + I)").toString(), "2 + I");
   EXPECT_EQ(Expression("floor(E + x)").toString(), "floor(x + E)");
 
+  EXPECT_EQ(Expression("floor(-x)").toString(), "-ceil(x)");
+  EXPECT_EQ(Expression("floor(-a + Pi^4 sqrt(2) a)").toString(), "floor(Pi^4 sqrt(2) a - a)");
+  EXPECT_EQ(Expression("ceil(-x)").toString(), "-floor(x)");
+  EXPECT_EQ(Expression("ceil(-a + Pi^4 sqrt(2) a)").toString(), "ceil(Pi^4 sqrt(2) a - a)");
+
+  EXPECT_EQ(Expression("floor(ln(2)^1000000000)").approximate().toString(), "0");
+  EXPECT_EQ(Expression("floor(-ln(2)^1000000000)").approximate().toString(), "-1");
+  EXPECT_EQ(Expression("ceil(ln(2)^1000000000)").approximate().toString(), "1");
+  EXPECT_EQ(Expression("ceil(-ln(2)^1000000000)").approximate().toString(), "0");
+
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-sin(x) + sin(2)").toString(), "-sin(x) + sin(2)");
   EXPECT_EQ(Expression("-3sin(E)").toString(), "-3 sin(E)");
