@@ -291,9 +291,6 @@ int IPolynomExpression::comparatorPolynoms(const std::shared_ptr<const IPolynomE
   if (childrenComp.postfixUnary != 0) {
     return childrenComp.postfixUnary;
   }
-  if (childrenComp.prefixVariables != 0) {
-    return childrenComp.prefixVariables;
-  }
   if (childrenComp.size != 0) {
     return childrenComp.size;
   }
