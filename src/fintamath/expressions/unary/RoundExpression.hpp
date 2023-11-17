@@ -19,6 +19,10 @@ protected:
 
 private:
   static ArgumentPtr intApproximateSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
+  static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
+  static std::shared_ptr<IFunction> getOppositeFunction(const IFunction &function);
 };
 
 }
