@@ -341,10 +341,15 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
   if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Add>(lhsExpr->getFunction())) {
     lhsChildren = lhsExpr->getChildren();
   }
+  else {
+    return {};
+  }
 
   if (const auto rhsChildExpr = cast<IExpression>(rhs);
-      (rhsChildExpr && is<Add>(rhsChildExpr->getFunction())) ||
-      lhsChildren.empty()) {
+      rhsChildExpr &&
+      is<Add>(rhsChildExpr->getFunction()) &&
+      !containsChild(lhs, rhs)) {
+
     return {};
   }
 

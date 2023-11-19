@@ -43,6 +43,8 @@ std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &a
 
 ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args);
 
+ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args);
+
 template <std::same_as<ArgumentPtr>... Args, std::invocable<IFunction, Args...> SimplifyFunction>
 ArgumentPtr useSimplifyFunctions(const std::vector<SimplifyFunction> &simplFuncs,
                                  const IFunction &func,

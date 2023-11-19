@@ -194,8 +194,11 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
 
-  if (lhsExpr && rhsExpr &&
-      !is<Add>(lhsExpr->getFunction()) && !is<Add>(rhsExpr->getFunction())) {
+  if (lhsExpr &&
+      rhsExpr &&
+      !is<Add>(lhsExpr->getFunction()) &&
+      !is<Add>(rhsExpr->getFunction())) {
+
     return {};
   }
 
@@ -213,6 +216,10 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
     rhsChildren = rhsExpr->getChildren();
   }
   else {
+    if (!containsVariable(lhsChild) && containsVariable(rhsChild)) {
+      return {};
+    }
+
     rhsChildren.emplace_back(rhsChild);
   }
 
