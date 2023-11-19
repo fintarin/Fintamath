@@ -222,6 +222,18 @@ ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &
   return argsPtrVect;
 }
 
+ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {
+  if (args.empty()) {
+    return {};
+  }
+
+  if (args.size() == 1) {
+    return args.front();
+  }
+
+  return makeExpr(func, args);
+}
+
 bool isExpression(const IMathObject &arg) {
   return is<IExpression>(arg);
 }

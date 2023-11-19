@@ -124,3 +124,7 @@ TEST(ExpressionUtilsTests, isNegatedExpressionTest) {
 TEST(ExpressionUtilsTests, isNegativeNumberTest) {
   // TODO: implement
 }
+
+TEST(ExpressionUtilsTests, makePolynomTest) {
+  // TODO: implement
+}

@@ -307,7 +307,7 @@ int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<con
   ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), {rhs});
 
   if (childrenComp.postfix != 0) {
-    return childrenComp.postfix;
+    return childrenComp.postfix * (isTermsOrderInversed() ? -1 : 1);
   }
 
   return -1;

@@ -161,7 +161,8 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
 
   if (func != Eqv() &&
       func != Neqv() &&
-      (containsComplex(lhs) || containsComplex(rhs))) {
+      (containsComplex(lhs) ||
+       containsComplex(rhs))) {
 
     return {};
   }
@@ -191,13 +192,7 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
   {
     ArgumentPtrVector newChildren = polynomFirstChildExpr->getChildren();
     newChildren.erase(newChildren.begin());
-
-    if (newChildren.size() == 1) {
-      dividendPolynom.front() = newChildren.front();
-    }
-    else {
-      dividendPolynom.front() = makeExpr(*polynomFirstChildExpr->getFunction(), newChildren);
-    }
+    dividendPolynom.front() = makePolynom(Mul(), newChildren);
   }
 
   ArgumentPtr newLhs = dividendPolynom.size() > 1 ? addExpr(std::move(dividendPolynom)) : dividendPolynom.front();

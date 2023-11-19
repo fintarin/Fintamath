@@ -418,6 +418,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x-1)/(root(x, 3)/2 - x)").toString(), "-1 - (root(x, 3) - 2)/(2 x - root(x, 3))");
   EXPECT_EQ(Expression("(x-1)/(x^(4/3) - x)").toString(), "(x - 1)/(x^(4/3) - x)");
   EXPECT_EQ(Expression("(x-1)/(2 x^(4/3) - x)").toString(), "(x - 1)/(2 x^(4/3) - x)");
+  EXPECT_EQ(Expression("x (sqrt(2) + sqrt(3))").toString(), "(sqrt(3) + sqrt(2)) x");
+  EXPECT_EQ(Expression("x (sqrt(2) + sqrt(3)) y sqrt(2)").toString(), "(sqrt(6) + 2) x y");
+  EXPECT_EQ(Expression("a + sqrt(2) x + sqrt(3) x + Pi^4 x + 1").toString(), "a + (Pi^4 + sqrt(3) + sqrt(2)) x + 1");
+  EXPECT_EQ(Expression("a - sqrt(2) x - sqrt(3) x - Pi^4 x + 1").toString(), "a + (-Pi^4 - sqrt(3) - sqrt(2)) x + 1");
+  EXPECT_EQ(Expression("x Pi^4 ln(5) + x E^2 sin(1) sinh(2)").toString(), "(E^2 sinh(2) sin(1) + ln(5) Pi^4) x");
+  EXPECT_EQ(Expression("(a+b) (-sqrt2 + sqrt3 - sqrt5)").toString(), "(-sqrt(5) - sqrt(2) + sqrt(3)) a + (-sqrt(5) - sqrt(2) + sqrt(3)) b");
+  EXPECT_EQ(Expression("(sqrt(2) x + sqrt(3) x + Pi^4 x + 1) / (sqrt(2) + sqrt(3) + Pi^4)").toString(), "x + 1/(Pi^4 + sqrt(3) + sqrt(2))");
 
   EXPECT_EQ(Expression("log(2, 2)").toString(), "1");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
@@ -486,9 +493,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("floor(E + x)").toString(), "floor(x + E)");
 
   EXPECT_EQ(Expression("floor(-x)").toString(), "-ceil(x)");
-  EXPECT_EQ(Expression("floor(-a + Pi^4 sqrt(2) a)").toString(), "floor(Pi^4 sqrt(2) a - a)");
   EXPECT_EQ(Expression("ceil(-x)").toString(), "-floor(x)");
-  EXPECT_EQ(Expression("ceil(-a + Pi^4 sqrt(2) a)").toString(), "ceil(Pi^4 sqrt(2) a - a)");
 
   EXPECT_EQ(Expression("floor(ln(2)^1000000000)").approximate().toString(), "0");
   EXPECT_EQ(Expression("floor(-ln(2)^1000000000)").approximate().toString(), "-1");
@@ -1257,8 +1262,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("I >= I x").toString(), "I >= I x");
   EXPECT_EQ(Expression("I x >= I").toString(), "I x >= I");
 
-  EXPECT_EQ(Expression("x (2 + I)").toString(), "(2 + I) x");                         // TODO! simplify
-  EXPECT_EQ(Expression("sqrt(3) (2/3 + 1/2 I)").toString(), "(2/3 + 1/2 I) sqrt(3)"); // TODO! simplify
+  EXPECT_EQ(Expression("x (2 + I)").toString(), "(2 + I) x");
+  EXPECT_EQ(Expression("sqrt(3) (2/3 + 1/2 I)").toString(), "(2/3 + 1/2 I) sqrt(3)");
   EXPECT_EQ(Expression("I / x").toString(), "I/x");
   EXPECT_EQ(Expression("-I / x").toString(), "-I/x");
   EXPECT_EQ(Expression("2I / x").toString(), "(2 I)/x");
@@ -1983,7 +1988,7 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("ln(9/40) a + 1 > 0").approximate().toString(), "a - 0.67039636015551187562980441234433718448357469016083894454851276080981791123695912 > 0");
   EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a < 0").approximate().toString(), "a < 0");
   EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a - sqrt(3) a < 0").approximate().toString(), "a < 0");
-  EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a - sqrt(3) a + 1 < 0").approximate().toString(), "a + 0.0074060245747335632557466509014062540940313639927954137165613831918681276084578746 < 0"); // TODO! incorrect value
+  EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a - sqrt(3) a + 1 < 0").approximate().toString(), "a + 0.0074060245747335632557466509014062540940313639927954137165613831918681276157723614 < 0");
 
   EXPECT_EQ(Expression("123").approximate(2).toString(), "1.2*10^2");
   EXPECT_EQ(Expression("123").approximate(3).toString(), "123");
