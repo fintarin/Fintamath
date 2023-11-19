@@ -17,7 +17,7 @@
 
 namespace fintamath {
 
-using TrigonometryFunctionTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
+using TrigonometryFunctionMap = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
 
 using TrigonometryTable = std::map<Rational, ArgumentPtr>;
 
@@ -67,7 +67,7 @@ ArgumentPtr InvTrigExpression::constSimplify(const IFunction &func, const Argume
 }
 
 ArgumentPtr InvTrigExpression::trigTableSimplify(const IFunction &func, const Rational &rhs) {
-  static const TrigonometryFunctionTable trigTable = {
+  static const TrigonometryFunctionMap trigTable = {
       {Asin().toString(), &trigTableAsinSimplify},
       {Acos().toString(), &trigTableAcosSimplify},
       {Atan().toString(), &trigTableAtanSimplify},
