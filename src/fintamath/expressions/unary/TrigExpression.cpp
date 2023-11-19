@@ -21,7 +21,9 @@
 
 namespace fintamath {
 
-using TrigonometryFunctionTable = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
+using ExpandFunctionMap = std::map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>, std::less<>>;
+
+using TrigonometryFunctionMap = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
 
 using TrigonometryTable = std::map<Rational, ArgumentPtr>;
 
@@ -34,10 +36,7 @@ TrigExpression::TrigExpression(const IFunction &inFunc, ArgumentPtr inChild)
 TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPreSimplify() const {
   static const TrigExpression::SimplifyFunctionVector simplifyFunctions = {
       &TrigExpression::oppositeFunctionsSimplify,
-      &TrigExpression::tanSimplify,
-      &TrigExpression::cotSimplify,
-      &TrigExpression::secSimplify,
-      &TrigExpression::cscSimplify,
+      &TrigExpression::expandSimplify,
   };
   return simplifyFunctions;
 }
@@ -62,33 +61,28 @@ ArgumentPtr TrigExpression::oppositeFunctionsSimplify(const IFunction &func, con
   return {};
 }
 
-ArgumentPtr TrigExpression::tanSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (is<Tan>(func)) {
-    return divExpr(sinExpr(rhs), cosExpr(rhs));
-  }
+ArgumentPtr TrigExpression::expandSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  static const ExpandFunctionMap expandFunctionsMap = {
+      {Tan().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return divExpr(sinExpr(inRhs), cosExpr(inRhs));
+       }},
+      {Cot().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return divExpr(cosExpr(inRhs), sinExpr(inRhs));
+       }},
+      {Sec().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return divExpr(Integer(1).clone(), cosExpr(inRhs));
+       }},
+      {Csc().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return divExpr(Integer(1).clone(), sinExpr(inRhs));
+       }},
+  };
 
-  return {};
-}
-
-ArgumentPtr TrigExpression::cotSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (is<Cot>(func)) {
-    return divExpr(cosExpr(rhs), sinExpr(rhs));
-  }
-
-  return {};
-}
-
-ArgumentPtr TrigExpression::secSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (is<Sec>(func)) {
-    return divExpr(Integer(1).clone(), cosExpr(rhs));
-  }
-
-  return {};
-}
-
-ArgumentPtr TrigExpression::cscSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (is<Csc>(func)) {
-    return divExpr(Integer(1).clone(), sinExpr(rhs));
+  if (const auto expandFunc = expandFunctionsMap.find(func.toString()); expandFunc != expandFunctionsMap.end()) {
+    return expandFunc->second(rhs);
   }
 
   return {};
@@ -122,7 +116,7 @@ ArgumentPtr TrigExpression::constSimplify(const IFunction &func, const ArgumentP
 }
 
 ArgumentPtr TrigExpression::trigTableSimplify(const IFunction &func, const Rational &rhs) {
-  static const TrigonometryFunctionTable trigTable = {
+  static const TrigonometryFunctionMap trigTable = {
       {Sin().toString(), &trigTableSinSimplify},
       {Cos().toString(), &trigTableCosSimplify},
   };
@@ -223,5 +217,4 @@ ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, b
 
   return {};
 }
-
 }

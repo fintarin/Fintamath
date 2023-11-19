@@ -13,10 +13,10 @@
 #include "fintamath/functions/hyperbolic/Sech.hpp"
 #include "fintamath/functions/hyperbolic/Sinh.hpp"
 #include "fintamath/functions/hyperbolic/Tanh.hpp"
-#include "fintamath/functions/trigonometry/Csc.hpp"
-#include "fintamath/functions/trigonometry/Sec.hpp"
 
 namespace fintamath {
+
+using ExpandFunctionMap = std::map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>, std::less<>>;
 
 HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
     : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
@@ -25,10 +25,7 @@ HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
 HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPreSimplify() const {
   static const HyperbExpression::SimplifyFunctionVector simplifyFunctions = {
       &HyperbExpression::oppositeFunctionsSimplify,
-      &HyperbExpression::tanhSimplify,
-      &HyperbExpression::cothSimplify,
-      &HyperbExpression::sechSimplify,
-      &HyperbExpression::cschSimplify,
+      &HyperbExpression::expandSimplify,
   };
   return simplifyFunctions;
 }
@@ -52,33 +49,28 @@ ArgumentPtr HyperbExpression::oppositeFunctionsSimplify(const IFunction &func, c
   return {};
 }
 
-ArgumentPtr HyperbExpression::tanhSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (is<Tanh>(func)) {
-    return divExpr(sinhExpr(rhs), coshExpr(rhs));
-  }
+ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  static const ExpandFunctionMap expandFunctionsMap = {
+      {Tanh().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return divExpr(sinhExpr(inRhs), coshExpr(inRhs));
+       }},
+      {Coth().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return divExpr(coshExpr(inRhs), sinhExpr(inRhs));
+       }},
+      {Sech().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return divExpr(Integer(1).clone(), coshExpr(inRhs));
+       }},
+      {Csch().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return divExpr(Integer(1).clone(), sinhExpr(inRhs));
+       }},
+  };
 
-  return {};
-}
-
-ArgumentPtr HyperbExpression::cothSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (is<Coth>(func)) {
-    return divExpr(coshExpr(rhs), sinhExpr(rhs));
-  }
-
-  return {};
-}
-
-ArgumentPtr HyperbExpression::sechSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (is<Sech>(func)) {
-    return divExpr(Integer(1).clone(), coshExpr(rhs));
-  }
-
-  return {};
-}
-
-ArgumentPtr HyperbExpression::cschSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (is<Csch>(func)) {
-    return divExpr(Integer(1).clone(), sinhExpr(rhs));
+  if (const auto expandFunc = expandFunctionsMap.find(func.toString()); expandFunc != expandFunctionsMap.end()) {
+    return expandFunc->second(rhs);
   }
 
   return {};
