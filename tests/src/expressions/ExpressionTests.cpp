@@ -194,7 +194,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("((2))*sqrt2").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sqrt2*((2))").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sin(1)^2").toString(), "sin(1)^2");
-  EXPECT_EQ(Expression("sin(-1)^2").toString(), "sin(-1)^2");
+  EXPECT_EQ(Expression("sin(-1)^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin1^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin(10^30)").toString(), "sin(1000000000000000000000000000000)");
   EXPECT_EQ(Expression("sin(1)^2+cos(1)^2").toString(), "1");
@@ -228,6 +228,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("floor(-2/3)").toString(), "-1");
   EXPECT_EQ(Expression("ceil(2/3)").toString(), "1");
   EXPECT_EQ(Expression("ceil(-2/3)").toString(), "0");
+  EXPECT_EQ(Expression("cos(5) - cos(-5)").toString(), "0");
 
   EXPECT_EQ(Expression("a*0").toString(), "0");
   EXPECT_EQ(Expression("0*a").toString(), "0");
@@ -772,6 +773,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("asec(sec(x))").toString(), "asec(sec(x))");
   EXPECT_EQ(Expression("acsc(csc(x))").toString(), "acsc(csc(x))");
 
+  EXPECT_EQ(Expression("sin(-x)").toString(), "-sin(x)");
+  EXPECT_EQ(Expression("cos(-x)").toString(), "cos(x)");
+  EXPECT_EQ(Expression("tan(-x)").toString(), "-tan(x)");
+  EXPECT_EQ(Expression("cot(-x)").toString(), "-cot(x)");
+  EXPECT_EQ(Expression("sec(-x)").toString(), "sec(x)");
+  EXPECT_EQ(Expression("csc(-x)").toString(), "-csc(x)");
+
   EXPECT_EQ(Expression("sin(x)/cos(x)").toString(), "tan(x)");
   EXPECT_EQ(Expression("(-2sin(x))/cos(x)").toString(), "-2 tan(x)");
   EXPECT_EQ(Expression("(2sin(x))/(3cos(x))").toString(), "(2 tan(x))/3");
@@ -1110,6 +1118,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("acot(-sqrt(x)/2)").toString(), "acot(-sqrt(x)/2)");
   EXPECT_EQ(Expression("asec(-sqrt(x)/2)").toString(), "asec(-sqrt(x)/2)");
   EXPECT_EQ(Expression("acsc(-sqrt(x)/2)").toString(), "acsc(-sqrt(x)/2)");
+
+  EXPECT_EQ(Expression("sinh(-x)").toString(), "-sinh(x)");
+  EXPECT_EQ(Expression("cosh(-x)").toString(), "cosh(x)");
+  EXPECT_EQ(Expression("tanh(-x)").toString(), "-tanh(x)");
+  EXPECT_EQ(Expression("coth(-x)").toString(), "-coth(x)");
+  EXPECT_EQ(Expression("sech(-x)").toString(), "sech(x)");
+  EXPECT_EQ(Expression("csch(-x)").toString(), "-csch(x)");
 
   EXPECT_EQ(Expression("sinh(asinh(x))").toString(), "x");
   EXPECT_EQ(Expression("cosh(acosh(x))").toString(), "x");

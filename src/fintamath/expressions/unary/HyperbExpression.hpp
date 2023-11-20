@@ -22,6 +22,8 @@ private:
 
   static ArgumentPtr expandSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
+  static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
   static ArgumentPtr tanhSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
   static ArgumentPtr cothSimplify(const IFunction &func, const ArgumentPtr &rhs);

@@ -46,6 +46,7 @@ TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPostSimpli
   static const TrigExpression::SimplifyFunctionVector simplifyFunctions = {
       &TrigExpression::constSimplify,
       &TrigExpression::oppositeFunctionsSimplify,
+      &TrigExpression::negSimplify,
   };
   return simplifyFunctions;
 }
@@ -84,6 +85,27 @@ ArgumentPtr TrigExpression::expandSimplify(const IFunction &func, const Argument
 
   if (const auto iter = expandFunctionMap.find(func.toString()); iter != expandFunctionMap.end()) {
     return iter->second(rhs);
+  }
+
+  return {};
+}
+
+ArgumentPtr TrigExpression::negSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  static const SimplifyFunctionMap negFunctionsMap = {
+      {Sin().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return negExpr(sinExpr(negExpr(inRhs)));
+       }},
+      {Cos().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return cosExpr(negExpr(inRhs));
+       }},
+  };
+
+  if (isNegated(rhs)) {
+    if (const auto iter = negFunctionsMap.find(func.toString()); iter != negFunctionsMap.end()) {
+      return iter->second(rhs);
+    }
   }
 
   return {};

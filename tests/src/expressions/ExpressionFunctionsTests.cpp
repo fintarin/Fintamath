@@ -220,25 +220,25 @@ TEST(ExpressionFunctionsTests, acotTest) {
 }
 
 TEST(ExpressionFunctionsTests, sinhTest) {
-  EXPECT_EQ(sinh(Expression("-0.5")).toString(), "sinh(-1/2)");
+  EXPECT_EQ(sinh(Expression("-0.5")).toString(), "-sinh(1/2)");
   EXPECT_EQ(sinh(Expression("0")).toString(), "0");
   EXPECT_EQ(sinh(Expression("0.5")).toString(), "sinh(1/2)");
 }
 
 TEST(ExpressionFunctionsTests, coshTest) {
-  EXPECT_EQ(cosh(Expression("-0.5")).toString(), "cosh(-1/2)");
+  EXPECT_EQ(cosh(Expression("-0.5")).toString(), "cosh(1/2)");
   EXPECT_EQ(cosh(Expression("0")).toString(), "1");
   EXPECT_EQ(cosh(Expression("0.5")).toString(), "cosh(1/2)");
 }
 
 TEST(ExpressionFunctionsTests, tanhTest) {
-  EXPECT_EQ(tanh(Expression("-0.5")).toString(), "tanh(-1/2)");
+  EXPECT_EQ(tanh(Expression("-0.5")).toString(), "-tanh(1/2)");
   EXPECT_EQ(tanh(Expression("0")).toString(), "0");
   EXPECT_EQ(tanh(Expression("0.5")).toString(), "tanh(1/2)");
 }
 
 TEST(ExpressionFunctionsTests, cothTest) {
-  EXPECT_EQ(coth(Expression("-0.5")).toString(), "coth(-1/2)");
+  EXPECT_EQ(coth(Expression("-0.5")).toString(), "-coth(1/2)");
   EXPECT_EQ(coth(Expression("0")).toString(), "ComplexInf");
   EXPECT_EQ(coth(Expression("0.5")).toString(), "coth(1/2)");
 }
