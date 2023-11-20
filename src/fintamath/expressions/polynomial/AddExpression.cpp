@@ -8,8 +8,6 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/functions/trigonometry/Cos.hpp"
-#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -92,7 +90,6 @@ AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPostSimplify
       &AddExpression::mulSimplify,
       &AddExpression::logSimplify,
       &AddExpression::mulLogSimplify,
-      &AddExpression::trigSimplify,
   };
   return simplifyFunctions;
 }
@@ -186,8 +183,7 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
 
           ArgumentPtr logLhs = lhsLogChild->getChildren().front();
           ArgumentPtr logRhs = mulExpr(lhsLogChild->getChildren().back(), rhsLogChild->getChildren().back());
-          ArgumentPtr res = logExpr(logLhs, logRhs);
-          return res;
+          return logExpr(logLhs, logRhs);
         }
       }
     }
@@ -219,8 +215,7 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
 
       ArgumentPtr logLhs = logExprChild->getChildren().front();
       ArgumentPtr logRhs = mulExpr(logExprChild->getChildren().back(), logChild->getChildren().back());
-      ArgumentPtr res = logExpr(logLhs, logRhs);
-      return res;
+      return logExpr(logLhs, logRhs);
     }
   }
 
@@ -323,28 +318,6 @@ ArgumentPtr AddExpression::divSimplify(const IFunction & /*func*/, const Argumen
   }
 
   return res;
-}
-
-ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto lhsExpr = cast<IExpression>(lhs);
-  auto rhsExpr = cast<IExpression>(rhs);
-
-  if (lhsExpr && rhsExpr &&
-      is<Pow>(lhsExpr->getFunction()) && is<Pow>(rhsExpr->getFunction()) &&
-      *lhsExpr->getChildren().back() == Integer(2) && *rhsExpr->getChildren().back() == Integer(2)) {
-
-    auto lhsExprChildExpr = cast<IExpression>(lhsExpr->getChildren().front());
-    auto rhsExprChildExpr = cast<IExpression>(rhsExpr->getChildren().front());
-
-    if (lhsExprChildExpr && rhsExprChildExpr &&
-        is<Cos>(lhsExprChildExpr->getFunction()) && is<Sin>(rhsExprChildExpr->getFunction()) &&
-        *lhsExprChildExpr->getChildren().front() == *rhsExprChildExpr->getChildren().front()) {
-
-      return Integer(1).clone();
-    }
-  }
-
-  return {};
 }
 
 }

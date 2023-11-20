@@ -6,6 +6,8 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/trigonometry/Cos.hpp"
+#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
@@ -82,6 +84,7 @@ MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPostSimplify
       &MulExpression::polynomSimplify,
       &MulExpression::divSimplify,
       &MulExpression::powSimplify,
+      &MulExpression::trigDoubleAngleSimplify,
   };
   return simplifyFunctions;
 }
@@ -255,6 +258,31 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
   }
 
   return {};
+}
+
+ArgumentPtr MulExpression::trigDoubleAngleSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  auto lhsExpr = cast<IExpression>(lhs);
+  auto rhsExpr = cast<IExpression>(rhs);
+
+  if (!lhsExpr ||
+      !rhsExpr ||
+      !is<Cos>(lhsExpr->getFunction()) ||
+      !is<Sin>(rhsExpr->getFunction())) {
+
+    return {};
+  }
+
+  auto lhsChild = lhsExpr->getChildren().front();
+  auto rhsChild = rhsExpr->getChildren().front();
+
+  if (*lhsChild != *rhsChild || containsInfinity(lhsChild)) {
+    return {};
+  }
+
+  ArgumentPtr doubleSin = sinExpr(
+      mulExpr(lhsChild, Integer(2).clone()));
+
+  return divExpr(doubleSin, Integer(2).clone());
 }
 
 }

@@ -42,7 +42,7 @@ bool isNegated(const ArgumentPtr &arg);
 
 bool isNegativeNumber(const ArgumentPtr &arg);
 
-bool containsIf(const ArgumentPtr &arg, std::invocable<const ArgumentPtr &> auto comp);
+bool containsIf(const ArgumentPtr &arg, std::function<bool(const ArgumentPtr &)> comp);
 
 bool containsChild(const ArgumentPtr &arg, const ArgumentPtr &child);
 

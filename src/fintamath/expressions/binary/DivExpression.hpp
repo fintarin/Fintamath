@@ -63,6 +63,8 @@ private:
   static ArgumentPtr nestedNumeratorRationalSimplify(const ArgumentPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
   static Integer getGcd(const ArgumentPtrVector &children);
+
+  static bool containsDivFunction(const ArgumentPtr &arg);
 };
 
 }
