@@ -7,44 +7,6 @@
 
 namespace fintamath {
 
-std::string putInBrackets(const std::string &str);
-
-std::string putInSpaces(const std::string &str);
-
-std::string functionToString(const IFunction &func, const ArgumentPtrVector &args);
-
-std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &child);
-
-std::string binaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
-
-std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
-
-std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
-
-bool containsIf(const ArgumentPtr &arg, std::invocable<ArgumentPtr> auto comp);
-
-bool containsChild(const ArgumentPtr &arg, const ArgumentPtr &child);
-
-bool containsVariable(const ArgumentPtr &arg);
-
-bool containsVariable(const ArgumentPtr &arg, const Variable &var);
-
-bool containsInfinity(const ArgumentPtr &arg);
-
-bool containsComplex(const ArgumentPtr &arg);
-
-bool isInfinity(const ArgumentPtr &arg);
-
-bool isNegated(const ArgumentPtr &arg);
-
-bool isNegativeNumber(const ArgumentPtr &arg);
-
-std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args);
-
-ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args);
-
-ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args);
-
 template <std::same_as<ArgumentPtr>... Args, std::invocable<IFunction, Args...> SimplifyFunction>
 ArgumentPtr useSimplifyFunctions(const std::vector<SimplifyFunction> &simplFuncs,
                                  const IFunction &func,
@@ -73,4 +35,43 @@ ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<Argument
 
   return {};
 }
+
+bool isInfinity(const ArgumentPtr &arg);
+
+bool isNegated(const ArgumentPtr &arg);
+
+bool isNegativeNumber(const ArgumentPtr &arg);
+
+bool containsIf(const ArgumentPtr &arg, std::invocable<const ArgumentPtr &> auto comp);
+
+bool containsChild(const ArgumentPtr &arg, const ArgumentPtr &child);
+
+bool containsVariable(const ArgumentPtr &arg);
+
+bool containsVariable(const ArgumentPtr &arg, const Variable &var);
+
+bool containsInfinity(const ArgumentPtr &arg);
+
+bool containsComplex(const ArgumentPtr &arg);
+
+ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args);
+
+std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args);
+
+ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args);
+
+std::string putInBrackets(const std::string &str);
+
+std::string putInSpaces(const std::string &str);
+
+std::string functionToString(const IFunction &func, const ArgumentPtrVector &args);
+
+std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &child);
+
+std::string binaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+std::string prefixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
+
+std::string postfixUnaryOperatorToString(const IOperator &oper, const ArgumentPtr &rhs);
+
 }
