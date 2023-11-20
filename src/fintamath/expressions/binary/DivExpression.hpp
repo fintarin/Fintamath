@@ -62,10 +62,6 @@ private:
 
   static ArgumentPtr nestedNumeratorRationalSimplify(const ArgumentPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
-  static std::pair<ArgumentPtr, ArgumentPtr> getRateValuePair(const ArgumentPtr &rhs);
-
-  static ArgumentPtr addRatesToValue(const ArgumentPtrVector &rates, const ArgumentPtr &value);
-
   static Integer getGcd(const ArgumentPtrVector &children);
 };
 

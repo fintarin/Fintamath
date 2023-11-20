@@ -84,7 +84,8 @@ CompExpression::SimplifyFunctionVector CompExpression::getFunctionsForPostSimpli
   static const CompExpression::SimplifyFunctionVector simplifyFunctions = {
       &CompExpression::constSimplify,
       &CompExpression::divSimplify,
-      &CompExpression::coeffSimplify,
+      &CompExpression::negSimplify,
+      &CompExpression::rateSimplify,
       &CompExpression::approxSimplify,
   };
   return simplifyFunctions;
@@ -149,7 +150,20 @@ ArgumentPtr CompExpression::divSimplify(const IFunction &func, const ArgumentPtr
   return {};
 }
 
-ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr CompExpression::negSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*rhs != Integer(0)) {
+    return {};
+  }
+
+  if (isNegated(lhs)) {
+    ArgumentPtr newLhs = negExpr(lhs);
+    return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
+  }
+
+  return {};
+}
+
+ArgumentPtr CompExpression::rateSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*rhs != Integer(0)) {
     return {};
   }
@@ -159,10 +173,8 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
     return {};
   }
 
-  if (func != Eqv() &&
-      func != Neqv() &&
-      (containsComplex(lhs) ||
-       containsComplex(rhs))) {
+  if (func != Eqv() && func != Neqv() &&
+      (containsComplex(lhs) || containsComplex(rhs))) {
 
     return {};
   }
@@ -179,14 +191,13 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
     dividendPolynom.emplace_back(lhsExpr);
   }
 
-  ArgumentPtr coeff = getMulCoeff(polynomFirstChildExpr);
-
-  if (!coeff || containsVariable(coeff) || containsInfinity(coeff) || *coeff == Integer(0)) {
+  auto [rate, value] = splitMulExpr(polynomFirstChildExpr);
+  if (*rate == Integer(1) || containsInfinity(rate)) {
     return {};
   }
 
   for (auto &child : std::views::drop(dividendPolynom, 1)) {
-    child = divExpr(child, coeff);
+    child = divExpr(child, rate);
   }
 
   {
@@ -199,14 +210,16 @@ ArgumentPtr CompExpression::coeffSimplify(const IFunction &func, const ArgumentP
   simplifyChild(newLhs);
 
   if (const auto newLhsExpr = cast<IExpression>(newLhs); newLhsExpr && is<Add>(newLhsExpr->getFunction())) {
-    ArgumentPtr newCoeff = getMulCoeff(newLhsExpr->getChildren().front());
+    auto [newRate, newValue] = splitMulExpr(newLhsExpr->getChildren().front());
 
-    if (newCoeff && containsChild(newCoeff, coeff)) {
+    if (newRate && *newRate != Integer(1) && containsChild(newRate, rate)) {
       return {};
     }
   }
 
-  if (isNegativeNumber(coeff)) {
+  approximateSimplifyChild(rate);
+
+  if (isNegativeNumber(rate)) {
     return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
   }
 
@@ -223,14 +236,6 @@ ArgumentPtr CompExpression::approxSimplify(const IFunction &func, const Argument
 
   if (auto approxLhsNum = cast<INumber>(approxLhs); approxLhsNum && !approxLhsNum->isComplex()) {
     return func(*approxLhsNum, *rhs);
-  }
-
-  return {};
-}
-
-ArgumentPtr CompExpression::getMulCoeff(const ArgumentPtr &rhs) {
-  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
-    return rhsExpr->getChildren().front();
   }
 
   return {};

@@ -36,11 +36,11 @@ private:
 
   static ArgumentPtr divSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr coeffSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
+  static ArgumentPtr rateSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
   static ArgumentPtr approxSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
-
-  static ArgumentPtr getMulCoeff(const ArgumentPtr &rhs);
 
   bool isSolution = false;
 };

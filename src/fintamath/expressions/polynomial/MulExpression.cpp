@@ -240,8 +240,8 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
 }
 
 ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhsChild);
-  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhsChild);
+  auto [lhsChildRate, lhsChildValue] = splitPowExpr(lhsChild);
+  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhsChild);
 
   if (*lhsChildValue == *rhsChildValue) {
     ArgumentPtr ratesSum = addExpr(lhsChildRate, rhsChildRate);
@@ -258,17 +258,6 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
   }
 
   return {};
-}
-
-std::pair<ArgumentPtr, ArgumentPtr> MulExpression::getRateValuePair(const ArgumentPtr &rhsChild) {
-  if (const auto &powExpr = cast<IExpression>(rhsChild);
-      powExpr && is<Pow>(powExpr->getFunction())) {
-
-    const ArgumentPtrVector &powExprChildren = powExpr->getChildren();
-    return {powExprChildren[1], powExprChildren[0]};
-  }
-
-  return {Integer(1).clone(), rhsChild};
 }
 
 }

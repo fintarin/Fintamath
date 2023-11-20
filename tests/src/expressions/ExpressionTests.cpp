@@ -1985,7 +1985,7 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("root(x, 10)").approximate().toString(), "x^0.1");
   EXPECT_EQ(Expression("root(x, 33)").approximate().toString(), "x^0.03030303030303030303030303030303030303030303030303030303030303030303030303030303");
 
-  EXPECT_EQ(Expression("ln(9/40) a + 1 > 0").approximate().toString(), "a - 0.67039636015551187562980441234433718448357469016083894454851276080981791123695912 > 0");
+  EXPECT_EQ(Expression("ln(9/40) a + 1 > 0").approximate().toString(), "a - 0.67039636015551187562980441234433718448357469016083894454851276080981791123695912 < 0");
   EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a < 0").approximate().toString(), "a < 0");
   EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a - sqrt(3) a < 0").approximate().toString(), "a < 0");
   EXPECT_EQ(Expression("-a + Pi^4 sqrt(2) a - sqrt(3) a + 1 < 0").approximate().toString(), "a + 0.0074060245747335632557466509014062540940313639927954137165613831918681276157723614 < 0");

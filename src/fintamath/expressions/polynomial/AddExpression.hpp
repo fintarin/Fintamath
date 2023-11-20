@@ -45,10 +45,6 @@ private:
 
   static ArgumentPtr trigSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild);
 
-  static std::pair<ArgumentPtr, ArgumentPtr> getMulRateValuePair(const ArgumentPtr &inChild, bool checkVariables);
-
-  static ArgumentPtr makeMulExpr(const ArgumentPtrVector &rates, const ArgumentPtr &value);
-
   static std::vector<size_t> findLogarithms(const ArgumentPtrVector &children);
 
   static std::shared_ptr<const IExpression> mulToLogarithm(const ArgumentPtrVector &children, size_t i);

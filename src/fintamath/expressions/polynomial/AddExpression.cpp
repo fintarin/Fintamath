@@ -227,53 +227,6 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
   return {};
 }
 
-std::pair<ArgumentPtr, ArgumentPtr> AddExpression::getMulRateValuePair(const ArgumentPtr &inChild, bool checkVariables) {
-  auto mulExprChild = cast<IExpression>(inChild);
-
-  if (!mulExprChild || !is<Mul>(mulExprChild->getFunction())) {
-    return {Integer(1).clone(), inChild};
-  }
-
-  const ArgumentPtrVector &mulExprChildren = mulExprChild->getChildren();
-  size_t i = 0;
-
-  if (checkVariables) {
-    for (i = 0; i < mulExprChildren.size(); i++) {
-      if (containsVariable(mulExprChildren[i])) {
-        break;
-      }
-    }
-  }
-  else {
-    for (i = 0; i < mulExprChildren.size(); i++) {
-      if (!is<INumber>(mulExprChildren[i])) {
-        break;
-      }
-    }
-  }
-
-  ArgumentPtr rate = makePolynom(Mul(), ArgumentPtrVector(mulExprChildren.begin(),
-                                                          mulExprChildren.begin() + ptrdiff_t(i)));
-  ArgumentPtr value = makePolynom(Mul(), ArgumentPtrVector(mulExprChildren.begin() + ptrdiff_t(i),
-                                                           mulExprChildren.end()));
-
-  if (!rate) {
-    rate = Integer(1).clone();
-  }
-
-  if (!value) {
-    value = checkVariables ? Integer(1).clone() : inChild;
-  }
-
-  return {rate, value};
-}
-
-ArgumentPtr AddExpression::makeMulExpr(const ArgumentPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = addExpr(rates);
-  ArgumentPtr res = mulExpr(ratesSum, value);
-  return res;
-}
-
 std::vector<size_t> AddExpression::findLogarithms(const ArgumentPtrVector &children) {
   std::vector<size_t> indexes;
 
@@ -304,8 +257,8 @@ ArgumentPtr AddExpression::mulSimplify(const IFunction & /*func*/, const Argumen
                                        const ArgumentPtr &rhsChild) {
 
   {
-    auto [lhsChildRate, lhsChildValue] = getMulRateValuePair(lhsChild, false);
-    auto [rhsChildRate, rhsChildValue] = getMulRateValuePair(rhsChild, false);
+    auto [lhsChildRate, lhsChildValue] = splitMulExpr(lhsChild, false);
+    auto [rhsChildRate, rhsChildValue] = splitMulExpr(rhsChild, false);
 
     if (*lhsChildValue == *rhsChildValue) {
       return makeMulExpr({lhsChildRate, rhsChildRate}, lhsChildValue);
@@ -313,8 +266,8 @@ ArgumentPtr AddExpression::mulSimplify(const IFunction & /*func*/, const Argumen
   }
 
   {
-    auto [lhsChildRate, lhsChildValue] = getMulRateValuePair(lhsChild, true);
-    auto [rhsChildRate, rhsChildValue] = getMulRateValuePair(rhsChild, true);
+    auto [lhsChildRate, lhsChildValue] = splitMulExpr(lhsChild);
+    auto [rhsChildRate, rhsChildValue] = splitMulExpr(rhsChild);
 
     if (*lhsChildValue == *rhsChildValue && *lhsChildValue != Integer(1)) {
       return makeMulExpr({lhsChildRate, rhsChildRate}, lhsChildValue);

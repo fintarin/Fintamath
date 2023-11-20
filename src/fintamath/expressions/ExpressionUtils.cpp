@@ -18,6 +18,8 @@
 
 namespace fintamath {
 
+const ArgumentPtr one = Integer(1).clone();
+
 bool isExpression(const IMathObject &arg) {
   return is<IExpression>(arg);
 }
@@ -104,6 +106,64 @@ bool containsComplex(const ArgumentPtr &arg) {
     const auto num = cast<INumber>(compArg);
     return num && num->isComplex();
   });
+}
+
+std::pair<ArgumentPtr, ArgumentPtr> splitMulExpr(const ArgumentPtr &inChild, bool checkVariables) {
+  auto mulExprChild = cast<IExpression>(inChild);
+
+  if (!mulExprChild || !is<Mul>(mulExprChild->getFunction())) {
+    return {one, inChild};
+  }
+
+  const ArgumentPtrVector &mulExprChildren = mulExprChild->getChildren();
+  size_t i = 0;
+
+  if (checkVariables) {
+    for (i = 0; i < mulExprChildren.size(); i++) {
+      if (containsVariable(mulExprChildren[i])) {
+        break;
+      }
+    }
+  }
+  else {
+    for (i = 0; i < mulExprChildren.size(); i++) {
+      if (!is<INumber>(mulExprChildren[i])) {
+        break;
+      }
+    }
+  }
+
+  ArgumentPtr rate = makePolynom(Mul(), ArgumentPtrVector(mulExprChildren.begin(),
+                                                          mulExprChildren.begin() + ptrdiff_t(i)));
+  ArgumentPtr value = makePolynom(Mul(), ArgumentPtrVector(mulExprChildren.begin() + ptrdiff_t(i),
+                                                           mulExprChildren.end()));
+
+  if (!rate) {
+    rate = one;
+  }
+
+  if (!value) {
+    value = checkVariables ? one : inChild;
+  }
+
+  return {rate, value};
+}
+
+std::pair<ArgumentPtr, ArgumentPtr> splitPowExpr(const ArgumentPtr &rhs) {
+  if (const auto &powExpr = cast<IExpression>(rhs); powExpr && is<Pow>(powExpr->getFunction())) {
+    const ArgumentPtrVector &powExprChildren = powExpr->getChildren();
+    return {powExprChildren[1], powExprChildren[0]};
+  }
+
+  return {one, rhs};
+}
+
+ArgumentPtr makeMulExpr(const ArgumentPtrVector &rates, const ArgumentPtr &value) {
+  return mulExpr(addExpr(rates), value);
+}
+
+ArgumentPtr makePowExpr(const ArgumentPtrVector &rates, const ArgumentPtr &value) {
+  return powExpr(value, addExpr(rates));
 }
 
 ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {
