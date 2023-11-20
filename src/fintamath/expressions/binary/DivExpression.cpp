@@ -1,5 +1,7 @@
 #include "fintamath/expressions/binary/DivExpression.hpp"
 
+#include <set>
+
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -384,21 +386,21 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Add>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
-
-  if (const auto lhsChildExpr = cast<IExpression>(lhs);
-      (lhsChildExpr && is<Add>(lhsChildExpr->getFunction())) ||
-      rhsChildren.empty()) {
+  else {
     return {};
   }
 
-  if (secCscSimplify(Div(), lhs, rhsChildren.front())) {
+  if (const auto lhsChildExpr = cast<IExpression>(lhs);
+      lhsChildExpr &&
+      is<Add>(lhsChildExpr->getFunction())) {
+
     return {};
   }
 
   ArgumentPtr result = divExpr(lhs, rhsChildren.front());
   simplifyChild(result);
 
-  if (const auto divExpr = cast<IExpression>(result); divExpr && is<Div>(divExpr->getFunction())) {
+  if (containsDivFunction(result)) {
     return {};
   }
 
@@ -461,12 +463,32 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (const auto &lhsExpr = cast<IExpression>(lhs)) {
-    if (is<Mul>(lhsExpr->getFunction())) {
-      if (auto res = nestedNumeratorRationalSimplify(lhsExpr->getChildren(), rhs)) {
-        return res;
-      }
-    }
+  // TODO! refactor
+
+  ArgumentPtrVector numeratorChildren;
+  if (const auto &lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
+    numeratorChildren = lhsExpr->getChildren();
+  }
+  else {
+    numeratorChildren = {lhs};
+  }
+
+  if (auto res = nestedNumeratorRationalSimplify(numeratorChildren, rhs)) {
+    return res;
+  }
+
+  ArgumentPtrVector denominatorChildren;
+  if (const auto &rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
+    denominatorChildren = rhsExpr->getChildren();
+  }
+  else {
+    denominatorChildren = {rhs};
+  }
+
+  if (auto res = nestedNumeratorRationalSimplify(denominatorChildren, lhs)) {
+    auto resDiv = cast<DivExpression>(res->clone());
+    std::swap(resDiv->lhsChild, resDiv->rhsChild);
+    return resDiv;
   }
 
   return {};
@@ -532,25 +554,25 @@ Integer DivExpression::getGcd(const ArgumentPtrVector &lhsChildren) {
   return gcdNum;
 }
 
-ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVector &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVector &lhsChildren, const ArgumentPtr &rhs) {
   ArgumentPtrVector numeratorChildren;
   ArgumentPtrVector denominatorChildren;
 
-  for (const auto &child : lhs) {
+  for (const auto &child : lhsChildren) {
     if (const auto &rationalChild = cast<Rational>(child)) {
       numeratorChildren.emplace_back(rationalChild->numerator().clone());
       denominatorChildren.emplace_back(rationalChild->denominator().clone());
-      continue;
     }
-
-    numeratorChildren.emplace_back(child);
+    else {
+      numeratorChildren.emplace_back(child);
+    }
   }
 
   if (!denominatorChildren.empty()) {
     denominatorChildren.emplace_back(rhs);
 
-    ArgumentPtr numerator = mulExpr(std::move(numeratorChildren));
-    ArgumentPtr denominator = mulExpr(std::move(denominatorChildren));
+    ArgumentPtr numerator = makePolynom(Mul(), numeratorChildren);
+    ArgumentPtr denominator = makePolynom(Mul(), denominatorChildren);
     return divExpr(numerator, denominator);
   }
 
@@ -615,4 +637,22 @@ ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const Argu
   return {};
 }
 
+bool DivExpression::containsDivFunction(const ArgumentPtr &arg) {
+  static const std::set<std::string> divFunctionStrings = {
+      Div().toString(),
+      Tan().toString(),
+      Cot().toString(),
+      Sec().toString(),
+      Csc().toString(),
+      Tanh().toString(),
+      Coth().toString(),
+      Sech().toString(),
+      Csch().toString(),
+  };
+
+  return containsIf(arg, [](const ArgumentPtr &inArg) {
+    const auto expr = cast<IExpression>(inArg);
+    return expr && divFunctionStrings.contains(expr->getFunction()->toString());
+  });
+}
 }

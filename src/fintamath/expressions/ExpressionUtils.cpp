@@ -54,7 +54,7 @@ bool isNegativeNumber(const ArgumentPtr &arg) {
   return argNum && *argNum < Integer(0);
 }
 
-bool containsIf(const ArgumentPtr &arg, std::invocable<const ArgumentPtr &> auto comp) {
+bool containsIf(const ArgumentPtr &arg, std::function<bool(const ArgumentPtr &)> comp) {
   if (comp(arg)) {
     return true;
   }

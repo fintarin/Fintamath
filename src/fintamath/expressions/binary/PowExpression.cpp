@@ -10,6 +10,8 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
+#include "fintamath/functions/trigonometry/Cos.hpp"
+#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
@@ -102,6 +104,7 @@ PowExpression::SimplifyFunctionVector PowExpression::getFunctionsForPostSimplify
       &PowExpression::constSimplify,
       &PowExpression::polynomSimplify,
       &PowExpression::powSimplify,
+      &PowExpression::trigDoubleAngleSimplify,
   };
   return simplifyFunctions;
 }
@@ -289,6 +292,39 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
   return {};
 }
 
+ArgumentPtr PowExpression::trigDoubleAngleSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*rhs != Integer(2)) {
+    return {};
+  }
+
+  const auto lhsExpr = cast<IExpression>(lhs);
+  if (!lhsExpr) {
+    return {};
+  }
+
+  auto lhsChild = lhsExpr->getChildren().front();
+  if (containsInfinity(lhsChild)) {
+    return {};
+  }
+
+  ArgumentPtr doubleCos = cosExpr(
+      mulExpr(lhsChild, Integer(2).clone()));
+
+  if (is<Cos>(lhsExpr->getFunction())) {
+    return divExpr(
+        addExpr(doubleCos, Integer(1).clone()),
+        Integer(2).clone());
+  }
+
+  if (is<Sin>(lhsExpr->getFunction())) {
+    return divExpr(
+        addExpr(doubleCos, Integer(-1).clone()),
+        Integer(-2).clone());
+  }
+
+  return {};
+}
+
 ArgumentPtr PowExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (auto res = mulSimplify(lhs, rhs)) {
     return res;
@@ -342,5 +378,4 @@ ArgumentPtr PowExpression::sumSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 
   return {};
 }
-
 }
