@@ -24,6 +24,8 @@ private:
 
   static ArgumentPtr expandSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
+  static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
   static ArgumentPtr trigTableSimplify(const IFunction &func, const Rational &rhs);

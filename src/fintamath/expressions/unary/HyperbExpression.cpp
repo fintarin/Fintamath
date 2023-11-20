@@ -1,6 +1,8 @@
 #include "fintamath/expressions/unary/HyperbExpression.hpp"
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 #include "fintamath/functions/hyperbolic/Acoth.hpp"
 #include "fintamath/functions/hyperbolic/Acsch.hpp"
@@ -33,6 +35,7 @@ HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPreSim
 HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPostSimplify() const {
   static const HyperbExpression::SimplifyFunctionVector simplifyFunctions = {
       &HyperbExpression::oppositeFunctionsSimplify,
+      &HyperbExpression::negSimplify,
   };
   return simplifyFunctions;
 }
@@ -71,6 +74,27 @@ ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const Argume
 
   if (const auto iter = expandFunctionMap.find(func.toString()); iter != expandFunctionMap.end()) {
     return iter->second(rhs);
+  }
+
+  return {};
+}
+
+ArgumentPtr HyperbExpression::negSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+  static const SimplifyFunctionMap negFunctionsMap = {
+      {Sinh().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return negExpr(sinhExpr(negExpr(inRhs)));
+       }},
+      {Cosh().toString(),
+       [](const ArgumentPtr &inRhs) {
+         return coshExpr(negExpr(inRhs));
+       }},
+  };
+
+  if (isNegated(rhs)) {
+    if (const auto iter = negFunctionsMap.find(func.toString()); iter != negFunctionsMap.end()) {
+      return iter->second(rhs);
+    }
   }
 
   return {};
