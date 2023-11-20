@@ -1,5 +1,6 @@
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 
+#include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
@@ -21,7 +22,7 @@
 
 namespace fintamath {
 
-using ExpandFunctionMap = std::map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>, std::less<>>;
+using SimplifyFunctionMap = std::map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>, std::less<>>;
 
 using TrigonometryFunctionMap = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
 
@@ -62,7 +63,7 @@ ArgumentPtr TrigExpression::oppositeFunctionsSimplify(const IFunction &func, con
 }
 
 ArgumentPtr TrigExpression::expandSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  static const ExpandFunctionMap expandFunctionsMap = {
+  static const SimplifyFunctionMap expandFunctionMap = {
       {Tan().toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(sinExpr(inRhs), cosExpr(inRhs));
@@ -81,8 +82,8 @@ ArgumentPtr TrigExpression::expandSimplify(const IFunction &func, const Argument
        }},
   };
 
-  if (const auto expandFunc = expandFunctionsMap.find(func.toString()); expandFunc != expandFunctionsMap.end()) {
-    return expandFunc->second(rhs);
+  if (const auto iter = expandFunctionMap.find(func.toString()); iter != expandFunctionMap.end()) {
+    return iter->second(rhs);
   }
 
   return {};

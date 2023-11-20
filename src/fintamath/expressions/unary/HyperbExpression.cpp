@@ -16,7 +16,7 @@
 
 namespace fintamath {
 
-using ExpandFunctionMap = std::map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>, std::less<>>;
+using SimplifyFunctionMap = std::map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>, std::less<>>;
 
 HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
     : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
@@ -50,7 +50,7 @@ ArgumentPtr HyperbExpression::oppositeFunctionsSimplify(const IFunction &func, c
 }
 
 ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  static const ExpandFunctionMap expandFunctionsMap = {
+  static const SimplifyFunctionMap expandFunctionMap = {
       {Tanh().toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(sinhExpr(inRhs), coshExpr(inRhs));
@@ -69,8 +69,8 @@ ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const Argume
        }},
   };
 
-  if (const auto expandFunc = expandFunctionsMap.find(func.toString()); expandFunc != expandFunctionsMap.end()) {
-    return expandFunc->second(rhs);
+  if (const auto iter = expandFunctionMap.find(func.toString()); iter != expandFunctionMap.end()) {
+    return iter->second(rhs);
   }
 
   return {};

@@ -90,57 +90,54 @@ bool MulExpression::isTermsOrderInversed() const {
   return true;
 }
 
-ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/,
-                                         const ArgumentPtr &lhsChild,
-                                         const ArgumentPtr &rhsChild) {
-
-  if (*lhsChild == Integer(0) &&
-      (is<Inf>(rhsChild) || is<NegInf>(rhsChild) || is<ComplexInf>(rhsChild))) {
+ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*lhs == Integer(0) &&
+      (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
 
     return Undefined().clone();
   }
 
-  if (is<ComplexInf>(lhsChild) || is<ComplexInf>(rhsChild)) {
+  if (is<ComplexInf>(lhs) || is<ComplexInf>(rhs)) {
     return ComplexInf().clone();
   }
 
-  if (is<NegInf>(lhsChild) && is<Inf>(rhsChild)) {
-    return lhsChild;
+  if (is<NegInf>(lhs) && is<Inf>(rhs)) {
+    return lhs;
   }
 
-  if (const auto lhsNum = cast<INumber>(lhsChild)) {
+  if (const auto lhsNum = cast<INumber>(lhs)) {
     if (!lhsNum->isComplex()) {
       bool isNegated = *lhsNum < Integer(0);
 
-      if (is<Inf>(rhsChild)) {
-        return isNegated ? NegInf().clone() : rhsChild;
+      if (is<Inf>(rhs)) {
+        return isNegated ? NegInf().clone() : rhs;
       }
 
-      if (is<NegInf>(rhsChild)) {
-        return isNegated ? Inf().clone() : rhsChild;
+      if (is<NegInf>(rhs)) {
+        return isNegated ? Inf().clone() : rhs;
       }
     }
     else {
-      if (is<NegInf>(rhsChild)) {
+      if (is<NegInf>(rhs)) {
         return mulExpr(negExpr(lhsNum), Inf().clone());
       }
     }
   }
 
-  if (*lhsChild == Integer(0)) {
-    return lhsChild;
+  if (*lhs == Integer(0)) {
+    return lhs;
   }
 
-  if (*lhsChild == Integer(1)) {
-    return rhsChild;
+  if (*lhs == Integer(1)) {
+    return rhs;
   }
 
   return {};
 }
 
-ArgumentPtr MulExpression::rationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto lhsRat = cast<Rational>(lhsChild)) {
-    ArgumentPtr numerator = mulExpr(lhsRat->numerator().clone(), rhsChild);
+ArgumentPtr MulExpression::rationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (const auto lhsRat = cast<Rational>(lhs)) {
+    ArgumentPtr numerator = mulExpr(lhsRat->numerator().clone(), rhs);
     ArgumentPtr denominator = lhsRat->denominator().clone();
     return divExpr(numerator, denominator);
   }
@@ -148,13 +145,13 @@ ArgumentPtr MulExpression::rationalSimplify(const IFunction & /*func*/, const Ar
   return {};
 }
 
-ArgumentPtr MulExpression::callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  return callFunction(func, {lhsChild, rhsChild});
+ArgumentPtr MulExpression::callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  return callFunction(func, {lhs, rhs});
 }
 
-ArgumentPtr MulExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
-  const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+ArgumentPtr MulExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  const std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  const std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
   bool isLhsDiv = false;
   bool isRhsDiv = false;
@@ -175,11 +172,11 @@ ArgumentPtr MulExpression::divSimplify(const IFunction & /*func*/, const Argumen
     denominator = mulExpr(lhsExpr->getChildren().back(), rhsExpr->getChildren().back());
   }
   else if (isLhsDiv) {
-    numerator = mulExpr(lhsExpr->getChildren().front(), rhsChild);
+    numerator = mulExpr(lhsExpr->getChildren().front(), rhs);
     denominator = lhsExpr->getChildren().back();
   }
   else if (isRhsDiv) {
-    numerator = mulExpr(lhsChild, rhsExpr->getChildren().front());
+    numerator = mulExpr(lhs, rhsExpr->getChildren().front());
     denominator = rhsExpr->getChildren().back();
   }
   else {
@@ -190,9 +187,9 @@ ArgumentPtr MulExpression::divSimplify(const IFunction & /*func*/, const Argumen
   return res;
 }
 
-ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
   if (lhsExpr &&
       rhsExpr &&
@@ -209,18 +206,18 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
     lhsChildren = lhsExpr->getChildren();
   }
   else {
-    lhsChildren.emplace_back(lhsChild);
+    lhsChildren.emplace_back(lhs);
   }
 
   if (rhsExpr && is<Add>(rhsExpr->getFunction())) {
     rhsChildren = rhsExpr->getChildren();
   }
   else {
-    if (!containsVariable(lhsChild) && containsVariable(rhsChild)) {
+    if (!containsVariable(lhs) && containsVariable(rhs)) {
       return {};
     }
 
-    rhsChildren.emplace_back(rhsChild);
+    rhsChildren.emplace_back(rhs);
   }
 
   if (lhsChildren.size() == 1 && rhsChildren.size() == 1) {
@@ -239,9 +236,9 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
   return res;
 }
 
-ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  auto [lhsChildRate, lhsChildValue] = splitPowExpr(lhsChild);
-  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhsChild);
+ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  auto [lhsChildRate, lhsChildValue] = splitPowExpr(lhs);
+  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhs);
 
   if (*lhsChildValue == *rhsChildValue) {
     ArgumentPtr ratesSum = addExpr(lhsChildRate, rhsChildRate);
