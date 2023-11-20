@@ -54,6 +54,14 @@ bool containsInfinity(const ArgumentPtr &arg);
 
 bool containsComplex(const ArgumentPtr &arg);
 
+std::pair<ArgumentPtr, ArgumentPtr> splitMulExpr(const ArgumentPtr &inChild, bool checkVariables = true);
+
+std::pair<ArgumentPtr, ArgumentPtr> splitPowExpr(const ArgumentPtr &rhs);
+
+ArgumentPtr makeMulExpr(const ArgumentPtrVector &rates, const ArgumentPtr &value);
+
+ArgumentPtr makePowExpr(const ArgumentPtrVector &rates, const ArgumentPtr &value);
+
 ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args);
 
 std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args);

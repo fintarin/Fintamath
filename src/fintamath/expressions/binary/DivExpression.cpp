@@ -421,8 +421,8 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
     return Integer(1).clone();
   }
 
-  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhs);
-  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhs);
+  auto [lhsChildRate, lhsChildValue] = splitPowExpr(lhs);
+  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhs);
 
   auto lhsChildValueNum = cast<INumber>(lhsChildValue);
   auto lhsChildRateNum = cast<INumber>(lhsChildRate);
@@ -436,7 +436,7 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
   }
 
   if (*lhsChildValue == *rhsChildValue) {
-    return addRatesToValue({lhsChildRate, negExpr(rhsChildRate)}, lhsChildValue);
+    return makePowExpr({lhsChildRate, negExpr(rhsChildRate)}, lhsChildValue);
   }
 
   if (lhsChildValueNum &&
@@ -457,20 +457,6 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
   }
 
   return {};
-}
-
-std::pair<ArgumentPtr, ArgumentPtr> DivExpression::getRateValuePair(const ArgumentPtr &rhs) {
-  if (const auto &powExpr = cast<IExpression>(rhs); powExpr && is<Pow>(powExpr->getFunction())) {
-    const ArgumentPtrVector &powExprChildren = powExpr->getChildren();
-    return {powExprChildren[1], powExprChildren[0]};
-  }
-
-  return {Integer(1).clone(), rhs};
-}
-
-ArgumentPtr DivExpression::addRatesToValue(const ArgumentPtrVector &rates, const ArgumentPtr &value) {
-  ArgumentPtr ratesSum = addExpr(rates);
-  return powExpr(value, ratesSum);
 }
 
 ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
@@ -571,8 +557,8 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVect
 }
 
 ArgumentPtr DivExpression::tanCotSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto [lhsChildRate, lhsChildValue] = getRateValuePair(lhs);
-  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhs);
+  auto [lhsChildRate, lhsChildValue] = splitPowExpr(lhs);
+  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhs);
 
   if (*lhsChildRate != *rhsChildRate) {
     return {};
@@ -605,7 +591,7 @@ ArgumentPtr DivExpression::tanCotSimplify(const IFunction & /*func*/, const Argu
 }
 
 ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto [rhsChildRate, rhsChildValue] = getRateValuePair(rhs);
+  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhs);
 
   if (auto rhsChildValueExpr = cast<IExpression>(rhsChildValue)) {
     if (is<Sin>(rhsChildValueExpr->getFunction())) {
