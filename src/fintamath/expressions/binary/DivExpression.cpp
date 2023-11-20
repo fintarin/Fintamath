@@ -136,22 +136,8 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     return {};
   }
 
-  ArgumentPtr numerator;
-  if (numeratorChildren.size() == 1) {
-    numerator = numeratorChildren.front();
-  }
-  else {
-    numerator = mulExpr(std::move(numeratorChildren));
-  }
-
-  ArgumentPtr denominator;
-  if (denominatorChildren.size() == 1) {
-    denominator = denominatorChildren.front();
-  }
-  else {
-    denominator = mulExpr(std::move(denominatorChildren));
-  }
-
+  ArgumentPtr numerator = makePolynom(Mul(), numeratorChildren);
+  ArgumentPtr denominator = makePolynom(Mul(), denominatorChildren);
   ArgumentPtr res = divExpr(numerator, denominator);
   return res;
 }
