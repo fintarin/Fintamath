@@ -259,7 +259,7 @@ ArgumentPtr AddExpression::mulSimplify(const IFunction & /*func*/, const Argumen
     auto [rhsChildRate, rhsChildValue] = splitMulExpr(rhs, false);
 
     if (*lhsChildValue == *rhsChildValue) {
-      return makeMulExpr({lhsChildRate, rhsChildRate}, lhsChildValue);
+      return mulExpr(addExpr(lhsChildRate, rhsChildRate), lhsChildValue);
     }
   }
 
@@ -268,7 +268,7 @@ ArgumentPtr AddExpression::mulSimplify(const IFunction & /*func*/, const Argumen
     auto [rhsChildRate, rhsChildValue] = splitMulExpr(rhs);
 
     if (*lhsChildValue == *rhsChildValue && *lhsChildValue != Integer(1)) {
-      return makeMulExpr({lhsChildRate, rhsChildRate}, lhsChildValue);
+      return mulExpr(addExpr(lhsChildRate, rhsChildRate), lhsChildValue);
     }
   }
 

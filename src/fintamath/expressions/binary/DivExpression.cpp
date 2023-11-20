@@ -432,11 +432,12 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
   if (lhsChildValueNum && rhsChildValueNum &&
       lhsChildRateNum && rhsChildRateNum &&
       *lhsChildRateNum < *rhsChildRateNum) {
+
     return {};
   }
 
   if (*lhsChildValue == *rhsChildValue) {
-    return makePowExpr({lhsChildRate, negExpr(rhsChildRate)}, lhsChildValue);
+    return powExpr(lhsChildValue, addExpr(lhsChildRate, negExpr(rhsChildRate)));
   }
 
   if (lhsChildValueNum &&
