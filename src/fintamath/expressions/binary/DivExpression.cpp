@@ -33,7 +33,7 @@ DivExpression::DivExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
 }
 
 std::string DivExpression::toString() const {
-  if (isNegated(lhsChild)) { // TODO: find more efficient solution
+  if (isNegated(lhsChild)) { // TODO! find more efficient solution
     ArgumentPtr innerDiv = divExpr(negExpr(lhsChild)->toMinimalObject(), rhsChild);
     return negExpr(innerDiv)->toString();
   }

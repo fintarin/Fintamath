@@ -423,7 +423,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("a + sqrt(2) x + sqrt(3) x + Pi^4 x + 1").toString(), "a + (Pi^4 + sqrt(3) + sqrt(2)) x + 1");
   EXPECT_EQ(Expression("a - sqrt(2) x - sqrt(3) x - Pi^4 x + 1").toString(), "a + (-Pi^4 - sqrt(3) - sqrt(2)) x + 1");
   EXPECT_EQ(Expression("x Pi^4 ln(5) + x E^2 sin(1) sinh(2)").toString(), "(E^2 sinh(2) sin(1) + ln(5) Pi^4) x");
-  EXPECT_EQ(Expression("(a+b) (-sqrt2 + sqrt3 - sqrt5)").toString(), "(-sqrt(5) - sqrt(2) + sqrt(3)) a + (-sqrt(5) - sqrt(2) + sqrt(3)) b");
+  EXPECT_EQ(Expression("(a+b) (-sqrt2 + sqrt3 - sqrt5)").toString(), "(sqrt(3) - sqrt(5) - sqrt(2)) a + (sqrt(3) - sqrt(5) - sqrt(2)) b");
   EXPECT_EQ(Expression("(sqrt(2) x + sqrt(3) x + Pi^4 x + 1) / (sqrt(2) + sqrt(3) + Pi^4)").toString(), "x + 1/(Pi^4 + sqrt(3) + sqrt(2))");
 
   EXPECT_EQ(Expression("log(2, 2)").toString(), "1");
@@ -530,10 +530,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x + y^3)^2 * sin(x)/ln(2)/x^2 - (2 sin(x) y^3)/(x ln(2))").toString(),
             "sin(x)/ln(2) + (y^6 sin(x))/(x^2 ln(2))");
 
-  EXPECT_EQ(Expression("1 / (1 - tan(2))").toString(), "cos(2)/(-sin(2) + cos(2))");
-  EXPECT_EQ(Expression("1 / (1 - cot(2))").toString(), "sin(2)/(-cos(2) + sin(2))");
-  EXPECT_EQ(Expression("1 / (1 - tanh(2))").toString(), "cosh(2)/(-sinh(2) + cosh(2))");
-  EXPECT_EQ(Expression("1 / (1 - coth(2))").toString(), "sinh(2)/(-cosh(2) + sinh(2))");
+  EXPECT_EQ(Expression("1 / (1 - tan(2))").toString(), "cos(2)/(cos(2) - sin(2))");
+  EXPECT_EQ(Expression("1 / (1 - cot(2))").toString(), "sin(2)/(sin(2) - cos(2))");
+  EXPECT_EQ(Expression("1 / (1 - tanh(2))").toString(), "cosh(2)/(cosh(2) - sinh(2))");
+  EXPECT_EQ(Expression("1 / (1 - coth(2))").toString(), "sinh(2)/(sinh(2) - cosh(2))");
   EXPECT_EQ(Expression("1 / (1 - sec(2))").toString(), "cos(2)/(cos(2) - 1)");
   EXPECT_EQ(Expression("1 / (1 - csc(2))").toString(), "sin(2)/(sin(2) - 1)");
   EXPECT_EQ(Expression("1 / (1 - sech(2))").toString(), "cosh(2)/(cosh(2) - 1)");
@@ -759,7 +759,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(2, 3) + log(3, 4)").toString(), "log(3, 4) + log(2, 3)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5)").toString(), "log(2, 5*3^x)");
   EXPECT_EQ(Expression("x log(2, 3) + log(2, 5a)").toString(), "log(2, 5 a 3^x)");
-  EXPECT_EQ(Expression("log(2, 3) + 3log(3, 4)").toString(), "3 log(3, 4) + log(2, 3)");
+  EXPECT_EQ(Expression("log(2, 3) + 3log(3, 4)").toString(), "log(2, 3) + 3 log(3, 4)");
   EXPECT_EQ(Expression("3log(2x, 3) + log(3, 4)").toString(), "3 log(2 x, 3) + log(3, 4)");
   EXPECT_EQ(Expression("3log(2x, 3) + 4log(3, 4)").toString(), "3 log(2 x, 3) + 4 log(3, 4)");
   EXPECT_EQ(Expression("3log(2x, 3) + 5log(2x, 4)").toString(), "log(2 x, 27648)");
@@ -1906,8 +1906,8 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("(-1)!!").approximate().toString(),
             "(-1)!!");
 
-  EXPECT_EQ(Expression("1 / (1 - tanh(11^10))").approximate().toString(), "cosh(25937424601)/(-sinh(25937424601) + cosh(25937424601))");
-  EXPECT_EQ(Expression("1 / (1 - coth(11^10))").approximate().toString(), "sinh(25937424601)/(-cosh(25937424601) + sinh(25937424601))");
+  EXPECT_EQ(Expression("1 / (1 - tanh(11^10))").approximate().toString(), "cosh(25937424601)/(cosh(25937424601) - sinh(25937424601))");
+  EXPECT_EQ(Expression("1 / (1 - coth(11^10))").approximate().toString(), "sinh(25937424601)/(sinh(25937424601) - cosh(25937424601))");
   EXPECT_EQ(Expression("1 / (ln(2)^1000000000)").approximate().approximate().toString(), "1/0.0");
 
   EXPECT_EQ(Expression("sin(ln(2)^1000000000)").approximate().toString(), "0.0");

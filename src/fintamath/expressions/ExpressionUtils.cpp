@@ -183,11 +183,7 @@ bool isNegated(const ArgumentPtr &arg) {
   }
 
   if (is<Add>(expr->getFunction())) {
-    expr = cast<IExpression>(expr->getChildren().front());
-
-    if (!expr || !containsVariable(expr)) {
-      return false;
-    }
+    return isNegated(expr->getChildren().front());
   }
 
   if (is<Mul>(expr->getFunction())) {
