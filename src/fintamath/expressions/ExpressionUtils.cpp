@@ -158,14 +158,6 @@ std::pair<ArgumentPtr, ArgumentPtr> splitPowExpr(const ArgumentPtr &rhs) {
   return {one, rhs};
 }
 
-ArgumentPtr makeMulExpr(const ArgumentPtrVector &rates, const ArgumentPtr &value) {
-  return mulExpr(addExpr(rates), value);
-}
-
-ArgumentPtr makePowExpr(const ArgumentPtrVector &rates, const ArgumentPtr &value) {
-  return powExpr(value, addExpr(rates));
-}
-
 ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {
   if (args.empty()) {
     return {};
