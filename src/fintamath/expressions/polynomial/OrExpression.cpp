@@ -81,32 +81,32 @@ bool OrExpression::isComparableOrderInversed() const {
   return true;
 }
 
-ArgumentPtr OrExpression::boolSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
+ArgumentPtr OrExpression::boolSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
 
-  if (const auto lhsBool = cast<Boolean>(lhsChild)) {
-    return *lhsBool ? lhsChild : rhsChild;
+  if (const auto lhsBool = cast<Boolean>(lhs)) {
+    return *lhsBool ? lhs : rhs;
   }
 
-  if (const auto rhsBool = cast<Boolean>(rhsChild)) {
-    return *rhsBool ? rhsChild : lhsChild;
-  }
-
-  return {};
-}
-
-ArgumentPtr OrExpression::equalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (*lhsChild == *rhsChild) {
-    return lhsChild;
+  if (const auto rhsBool = cast<Boolean>(rhs)) {
+    return *rhsBool ? rhs : lhs;
   }
 
   return {};
 }
 
-ArgumentPtr OrExpression::notSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  if (const auto rhsExpr = cast<IExpression>(rhsChild);
+ArgumentPtr OrExpression::equalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (*lhs == *rhs) {
+    return lhs;
+  }
+
+  return {};
+}
+
+ArgumentPtr OrExpression::notSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (const auto rhsExpr = cast<IExpression>(rhs);
       rhsExpr &&
       is<Not>(rhsExpr->getFunction()) &&
-      *rhsExpr->getChildren().front() == *lhsChild) {
+      *rhsExpr->getChildren().front() == *lhs) {
 
     return Boolean(true).clone();
   }
@@ -114,9 +114,9 @@ ArgumentPtr OrExpression::notSimplify(const IFunction & /*func*/, const Argument
   return {};
 }
 
-ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhsChild);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhsChild);
+ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
+  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
   if (!lhsExpr || !rhsExpr ||
       !is<And>(lhsExpr->getFunction()) || !is<And>(rhsExpr->getFunction())) {
@@ -182,10 +182,7 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
   return resultChildren.front();
 }
 
-ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhsChild, const ArgumentPtr &rhsChild) {
-  ArgumentPtr lhs = lhsChild;
-  ArgumentPtr rhs = rhsChild;
-
+ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
   std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
 
