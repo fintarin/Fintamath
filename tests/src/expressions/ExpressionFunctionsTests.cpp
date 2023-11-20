@@ -330,8 +330,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x^2 + 12x + 36 = 0")).toString(), "x = -6");
   EXPECT_EQ(solve(Expression("x^2 + 12x = 0")).toString(), "x = -12 | x = 0");
   EXPECT_EQ(solve(Expression("x^2 - 23x - 3 = 0")).toString(), "x = -sqrt(541)/2 + 23/2 | x = sqrt(541)/2 + 23/2");
-  EXPECT_EQ(solve(Expression("-12x^2 - 23x + 30 = 0")).toString(),
-            "x = -sqrt(1969)/24 - 23/24 | x = sqrt(1969)/24 - 23/24");
+  EXPECT_EQ(solve(Expression("-12x^2 - 23x + 30 = 0")).toString(), "x = -sqrt(1969)/24 - 23/24 | x = sqrt(1969)/24 - 23/24");
   EXPECT_EQ(solve(Expression("-33x^2 - x + 34 = 0")).toString(), "x = -34/33 | x = 1");
   EXPECT_EQ(solve(Expression("2x^2 + 2sqrt(2)x + 1 = 0")).toString(), "x = -sqrt(2)/2");
 

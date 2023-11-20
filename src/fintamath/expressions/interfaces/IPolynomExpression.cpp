@@ -229,20 +229,20 @@ int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rh
     return comparatorPolynoms(lhsPolynom, rhsPolynom);
   }
 
-  if (lhsPolynom && !rhsPolynom) {
-    return comparatorPolynomAndNonPolynom(lhsPolynom, rhs);
-  }
-
-  if (!lhsPolynom && rhsPolynom) {
-    return comparatorPolynomAndNonPolynom(rhsPolynom, lhs) * -1;
-  }
-
   if (lhsExpr && !rhsExpr) {
     return comparatorExpressionAndNonExpression(lhsExpr, rhs);
   }
 
   if (!lhsExpr && rhsExpr) {
     return comparatorExpressionAndNonExpression(rhsExpr, lhs) * -1;
+  }
+
+  if (lhsPolynom && !rhsPolynom) {
+    return comparatorPolynomAndNonPolynom(lhsPolynom, rhs);
+  }
+
+  if (!lhsPolynom && rhsPolynom) {
+    return comparatorPolynomAndNonPolynom(rhsPolynom, lhs) * -1;
   }
 
   return comparatorExpressions(lhsExpr, rhsExpr);
@@ -305,12 +305,16 @@ int IPolynomExpression::comparatorPolynomAndNonPolynom(const std::shared_ptr<con
                                                        const ArgumentPtr &rhs) const {
 
   ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), {rhs});
+  int res = -1;
 
   if (childrenComp.postfix != 0) {
-    return childrenComp.postfix * (isTermsOrderInversed() ? -1 : 1);
+    res = childrenComp.postfix;
+  }
+  else if (childrenComp.prefixFirst != 0) {
+    res = childrenComp.prefixFirst;
   }
 
-  return -1;
+  return res * (isTermsOrderInversed() ? -1 : 1);
 }
 
 int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
@@ -338,13 +342,12 @@ int IPolynomExpression::comparatorExpressionAndNonExpression(const std::shared_p
       }
       case IOperator::Priority::Exponentiation:
       case IOperator::Priority::Multiplication: {
-        static const ArgumentPtr one = Integer(1).clone();
-        ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, one);
-        int comp = comparator(lhs, rhsExpr);
-        return isTermsOrderInversed() ? comp * -1 : comp;
+        ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, Integer(1).clone());
+        return comparator(lhs, rhsExpr) * (isTermsOrderInversed() ? -1 : 1);
       }
-      default:
+      default: {
         break;
+      }
     }
   }
 

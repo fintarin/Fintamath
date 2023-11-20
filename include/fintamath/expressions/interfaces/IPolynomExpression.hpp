@@ -117,7 +117,8 @@ private:
    * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
-  int comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs, const ArgumentPtr &rhs) const;
+  int comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
+                                           const ArgumentPtr &rhs) const;
 
   /**
    * @brief
