@@ -358,27 +358,6 @@ int IPolynomExpression::comparatorExpressions(const std::shared_ptr<const IExpre
   auto lhsOper = cast<IOperator>(lhs->getFunction());
   auto rhsOper = cast<IOperator>(rhs->getFunction());
 
-  const ArgumentPtrVector &lhsChildren = lhs->getChildren();
-  const ArgumentPtrVector &rhsChildren = rhs->getChildren();
-
-  if (lhsOper &&
-      lhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
-      (!rhsOper || rhsOper->getOperatorPriority() != IOperator::Priority::PrefixUnary)) {
-
-    if (int res = comparator(lhsChildren.front(), rhs); res != 0) {
-      return res;
-    }
-  }
-
-  if (rhsOper &&
-      rhsOper->getOperatorPriority() == IOperator::Priority::PrefixUnary &&
-      (!lhsOper || lhsOper->getOperatorPriority() != IOperator::Priority::PrefixUnary)) {
-
-    if (int res = comparator(lhs, rhsChildren.front()); res != 0) {
-      return res;
-    }
-  }
-
   ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), rhs->getChildren());
 
   if (childrenComp.prefixVariables != 0) {
