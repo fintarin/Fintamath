@@ -30,7 +30,13 @@ std::unique_ptr<IMathObject> Ceil::multiCeilSimplify(const INumber &rhs) {
     });
 
     outMultiCeil.add<Real>([](const Real &inRhs) {
-      return ceil(inRhs).clone();
+      Integer res = ceil(inRhs);
+
+      if (inRhs >= 0 && inRhs == res) {
+        res++;
+      }
+
+      return res.clone();
     });
 
     outMultiCeil.add<Complex>([](const Complex &inRhs) {

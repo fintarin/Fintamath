@@ -30,7 +30,13 @@ std::unique_ptr<IMathObject> Floor::multiFloorSimplify(const INumber &rhs) {
     });
 
     outMultiFloor.add<Real>([](const Real &inRhs) {
-      return floor(inRhs).clone();
+      Integer res = floor(inRhs);
+
+      if (inRhs < 0 && inRhs == res) {
+        res--;
+      }
+
+      return res.clone();
     });
 
     outMultiFloor.add<Complex>([](const Complex &inRhs) {
