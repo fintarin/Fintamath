@@ -19,7 +19,6 @@ NotExpression::NotExpression(ArgumentPtr inChild)
 
 NotExpression::SimplifyFunctionVector NotExpression::getFunctionsForPreSimplify() const {
   static const NotExpression::SimplifyFunctionVector simplifyFunctions = {
-      &NotExpression::callFunctionSimplify,
       &NotExpression::nestedNotSimplify,
   };
   return simplifyFunctions;
@@ -31,14 +30,6 @@ NotExpression::SimplifyFunctionVector NotExpression::getFunctionsForPostSimplify
       &NotExpression::nestedNotSimplify,
   };
   return simplifyFunctions;
-}
-
-ArgumentPtr NotExpression::callFunctionSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
-  if (ArgumentPtr res = callFunction(Not(), {rhs})) {
-    return res;
-  }
-
-  return {};
 }
 
 ArgumentPtr NotExpression::logicNegatableSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {

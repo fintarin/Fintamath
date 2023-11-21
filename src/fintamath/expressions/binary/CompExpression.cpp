@@ -108,14 +108,8 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
 }
 
 ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (is<ComplexInf>(lhs) &&
-      (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
-
-    return {};
-  }
-
-  if ((is<Inf>(lhs) || is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
-      is<ComplexInf>(rhs)) {
+  if ((is<ComplexInf>(lhs) && containsInfinity(rhs)) ||
+      (is<ComplexInf>(rhs) && containsInfinity(lhs))) {
 
     return {};
   }

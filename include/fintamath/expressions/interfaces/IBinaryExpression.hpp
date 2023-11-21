@@ -33,6 +33,9 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
+private:
+  ArgumentPtr simplifyRec(bool isPostSimplify) const;
+
 protected:
   std::shared_ptr<IFunction> func;
 

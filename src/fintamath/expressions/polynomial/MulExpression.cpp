@@ -69,8 +69,6 @@ std::string MulExpression::childToString(const IOperator &oper, const ArgumentPt
 
 MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPreSimplify() const {
   static const MulExpression::SimplifyFunctionVector simplifyFunctions = {
-      &MulExpression::constSimplify,
-      &MulExpression::callFunctionSimplify,
       &MulExpression::rationalSimplify,
       &MulExpression::divSimplify,
       &MulExpression::powSimplify,
@@ -146,10 +144,6 @@ ArgumentPtr MulExpression::rationalSimplify(const IFunction & /*func*/, const Ar
   }
 
   return {};
-}
-
-ArgumentPtr MulExpression::callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  return callFunction(func, {lhs, rhs});
 }
 
 ArgumentPtr MulExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

@@ -39,6 +39,9 @@ protected:
   ArgumentPtr child;
 
 private:
+  ArgumentPtr simplifyRec(bool isPostSimplify) const;
+
+private:
   mutable ArgumentPtrVector childrenCached = {{}};
 };
 
