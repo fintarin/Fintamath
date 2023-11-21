@@ -175,21 +175,8 @@ ArgumentPtr DivExpression::mulSimplify(const SimplifyFunctionVector &simplFuncs,
                                        const ArgumentPtr &lhs,
                                        const ArgumentPtr &rhs) {
 
-  ArgumentPtrVector lhsChildren;
-  if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
-    lhsChildren = lhsExpr->getChildren();
-  }
-  else {
-    lhsChildren = {lhs};
-  }
-
-  ArgumentPtrVector rhsChildren;
-  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
-    rhsChildren = rhsExpr->getChildren();
-  }
-  else {
-    rhsChildren = {rhs};
-  }
+  ArgumentPtrVector lhsChildren = getPolynomChildren(Mul(), lhs);
+  ArgumentPtrVector rhsChildren = getPolynomChildren(Mul(), rhs);
 
   size_t lhsChildrenSizeInitial = lhsChildren.size();
   size_t rhsChildrenSizeInitial = rhsChildren.size();
@@ -463,29 +450,14 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  // TODO! refactor
+  ArgumentPtrVector lhsChildren = getPolynomChildren(Mul(), lhs);
+  ArgumentPtrVector rhsChildren = getPolynomChildren(Mul(), rhs);
 
-  ArgumentPtrVector numeratorChildren;
-  if (const auto &lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Mul>(lhsExpr->getFunction())) {
-    numeratorChildren = lhsExpr->getChildren();
-  }
-  else {
-    numeratorChildren = {lhs};
-  }
-
-  if (auto res = nestedNumeratorRationalSimplify(numeratorChildren, rhs)) {
+  if (auto res = nestedNumeratorRationalSimplify(lhsChildren, rhs)) {
     return res;
   }
 
-  ArgumentPtrVector denominatorChildren;
-  if (const auto &rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Mul>(rhsExpr->getFunction())) {
-    denominatorChildren = rhsExpr->getChildren();
-  }
-  else {
-    denominatorChildren = {rhs};
-  }
-
-  if (auto res = nestedNumeratorRationalSimplify(denominatorChildren, lhs)) {
+  if (auto res = nestedNumeratorRationalSimplify(rhsChildren, lhs)) {
     auto resDiv = cast<DivExpression>(res->clone());
     std::swap(resDiv->lhsChild, resDiv->rhsChild);
     return resDiv;
@@ -495,22 +467,8 @@ ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, co
 }
 
 ArgumentPtr DivExpression::gcdSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentPtrVector lhsChildren;
-  ArgumentPtrVector rhsChildren;
-
-  if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Add>(lhsExpr->getFunction())) {
-    lhsChildren = lhsExpr->getChildren();
-  }
-  else {
-    lhsChildren = {lhs};
-  }
-
-  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Add>(rhsExpr->getFunction())) {
-    rhsChildren = rhsExpr->getChildren();
-  }
-  else {
-    rhsChildren = {rhs};
-  }
+  ArgumentPtrVector lhsChildren = getPolynomChildren(Add(), lhs);
+  ArgumentPtrVector rhsChildren = getPolynomChildren(Add(), rhs);
 
   Integer lhsGcdNum = getGcd(lhsChildren);
   Integer rhsGcdNum = getGcd(rhsChildren);

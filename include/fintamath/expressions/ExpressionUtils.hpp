@@ -60,6 +60,8 @@ std::pair<ArgumentPtr, ArgumentPtr> splitPowExpr(const ArgumentPtr &rhs);
 
 ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args);
 
+ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &arg);
+
 std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args);
 
 ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args);

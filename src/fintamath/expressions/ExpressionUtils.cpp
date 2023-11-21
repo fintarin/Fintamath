@@ -170,6 +170,14 @@ ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {
   return makeExpr(func, args);
 }
 
+ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &arg) {
+  if (const auto expr = cast<IExpression>(arg); expr && *expr->getFunction() == func) {
+    return expr->getChildren();
+  }
+
+  return {arg};
+}
+
 std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args) {
   std::vector<std::string> argStrings(args.size());
 
