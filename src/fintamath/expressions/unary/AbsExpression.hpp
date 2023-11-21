@@ -18,8 +18,6 @@ protected:
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr intApproximateSimplify(const IFunction &func, const ArgumentPtr &rhs);
-
   static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &rhs);
 };
 

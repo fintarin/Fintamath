@@ -21,7 +21,6 @@ AbsExpression::SimplifyFunctionVector AbsExpression::getFunctionsForPostSimplify
   static const AbsExpression::SimplifyFunctionVector simplifyFunctions = {
       &AbsExpression::constSimplify,
       &AbsExpression::negSimplify,
-      &AbsExpression::intApproximateSimplify,
   };
   return simplifyFunctions;
 }
@@ -29,21 +28,6 @@ AbsExpression::SimplifyFunctionVector AbsExpression::getFunctionsForPostSimplify
 ArgumentPtr AbsExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (isInfinity(rhs)) {
     return Inf().clone();
-  }
-
-  return {};
-}
-
-ArgumentPtr AbsExpression::intApproximateSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
-  if (containsVariable(rhs)) {
-    return {};
-  }
-
-  ArgumentPtr approx = rhs->clone();
-  approximateSimplifyChild(approx);
-
-  if (const auto approxNum = cast<INumber>(approx); approxNum && *approxNum < Integer(0)) {
-    return absExpr(negExpr(rhs));
   }
 
   return {};
