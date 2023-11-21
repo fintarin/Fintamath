@@ -18,8 +18,6 @@ protected:
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr callFunctionSimplify(const IFunction &func, const ArgumentPtr &rhs);
-
   static ArgumentPtr logicNegatableSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
   static ArgumentPtr nestedNotSimplify(const IFunction &func, const ArgumentPtr &rhs);

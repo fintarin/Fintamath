@@ -43,45 +43,43 @@ IUnaryExpression::SimplifyFunctionVector IUnaryExpression::getFunctionsForPostSi
 ArgumentPtr IUnaryExpression::preSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl->child);
-
-  if (auto res = simplifyUndefined(*simpl->func, simpl->child)) {
-    return res;
-  }
-
-  ArgumentPtr res = useSimplifyFunctions(getFunctionsForPreSimplify(),
-                                         *simpl->func,
-                                         simpl->child);
-
-  if (res && *res != *simpl) {
-    preSimplifyChild(res);
-    return res;
-  }
-
-  return simpl;
+  return simpl->simplifyRec(false);
 }
 
 ArgumentPtr IUnaryExpression::postSimplify() const {
   auto simpl = cast<IUnaryExpression>(clone());
   postSimplifyChild(simpl->child);
+  return simpl->simplifyRec(true);
+}
 
-  if (auto res = simplifyUndefined(*simpl->func, simpl->child)) {
+ArgumentPtr IUnaryExpression::simplifyRec(bool isPostSimplify) const {
+  if (ArgumentPtr res = simplifyUndefined(*func, child)) {
     return res;
   }
 
-  if (ArgumentPtr res = callFunction(*simpl->func, {simpl->child})) {
+  if (ArgumentPtr res = callFunction(*func, {child})) {
     return res;
   }
 
-  ArgumentPtr res = useSimplifyFunctions(getFunctionsForPostSimplify(),
-                                         *simpl->func,
-                                         simpl->child);
+  ArgumentPtr res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(),
+                                                          *func,
+                                                          child)
+                                   : useSimplifyFunctions(getFunctionsForPreSimplify(),
+                                                          *func,
+                                                          child);
 
-  if (res && *res != *simpl) {
-    postSimplifyChild(res);
+  if (res && *res != *this) {
+    if (isPostSimplify) {
+      postSimplifyChild(res);
+    }
+    else {
+      preSimplifyChild(res);
+    }
+
     return res;
   }
 
-  return simpl;
+  return clone();
 }
 
 void IUnaryExpression::setChildren(const ArgumentPtrVector &childVect) {

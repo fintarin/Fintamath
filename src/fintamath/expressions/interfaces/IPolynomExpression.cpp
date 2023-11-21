@@ -99,7 +99,7 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
   compress();
   sort();
 
-  bool isSimplified = true;
+  bool isExprSimplified = true;
 
   // TODO: refactor this loop
   for (size_t i = 1; i < children.size(); i++) {
@@ -114,20 +114,18 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
     ArgumentPtr res;
     bool isResSimplified = false;
 
-    if (isPostSimplify) {
-      res = callFunction(*func, {lhs, rhs});
-      isResSimplified = res != nullptr;
-    }
+    res = callFunction(*func, {lhs, rhs});
+    isResSimplified = res != nullptr;
 
     if (!res) {
-      res = !isPostSimplify ? useSimplifyFunctions(getFunctionsForPreSimplify(),
-                                                   *func,
-                                                   children[i - 1],
-                                                   children[i])
-                            : useSimplifyFunctions(getFunctionsForPostSimplify(),
-                                                   *func,
-                                                   children[i - 1],
-                                                   children[i]);
+      res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(),
+                                                  *func,
+                                                  children[i - 1],
+                                                  children[i])
+                           : useSimplifyFunctions(getFunctionsForPreSimplify(),
+                                                  *func,
+                                                  children[i - 1],
+                                                  children[i]);
     }
 
     if (!res) {
@@ -154,10 +152,10 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
     children.emplace_back(res);
 
     i--;
-    isSimplified = false;
+    isExprSimplified = false;
   }
 
-  if (!isSimplified) {
+  if (!isExprSimplified) {
     simplifyRec(isPostSimplify);
   }
 }

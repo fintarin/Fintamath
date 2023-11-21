@@ -74,7 +74,6 @@ int AddExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) co
 
 AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPreSimplify() const {
   static const AddExpression::SimplifyFunctionVector simplifyFunctions = {
-      &AddExpression::callFunctionSimplify,
       &AddExpression::divSimplify,
       &AddExpression::constSimplify,
       &AddExpression::mulSimplify,
@@ -128,10 +127,6 @@ ArgumentPtr AddExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   return {};
-}
-
-ArgumentPtr AddExpression::callFunctionSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  return callFunction(func, {lhs, rhs});
 }
 
 ArgumentPtr AddExpression::logSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

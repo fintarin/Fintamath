@@ -33,47 +33,46 @@ ArgumentPtr IBinaryExpression::preSimplify() const {
   auto simpl = cast<IBinaryExpression>(clone());
   preSimplifyChild(simpl->lhsChild);
   preSimplifyChild(simpl->rhsChild);
-
-  if (auto res = simplifyUndefined(*simpl->func, simpl->lhsChild, simpl->rhsChild)) {
-    return res;
-  }
-
-  ArgumentPtr res = useSimplifyFunctions(getFunctionsForPreSimplify(),
-                                         *simpl->func,
-                                         simpl->lhsChild,
-                                         simpl->rhsChild);
-  if (res && *res != *simpl) {
-    preSimplifyChild(res);
-    return res;
-  }
-
-  return simpl;
+  return simpl->simplifyRec(false);
 }
 
 ArgumentPtr IBinaryExpression::postSimplify() const {
   auto simpl = cast<IBinaryExpression>(clone());
   postSimplifyChild(simpl->lhsChild);
   postSimplifyChild(simpl->rhsChild);
+  return simpl->simplifyRec(true);
+}
 
-  if (auto res = simplifyUndefined(*simpl->func, simpl->lhsChild, simpl->rhsChild)) {
+ArgumentPtr IBinaryExpression::simplifyRec(bool isPostSimplify) const {
+  if (ArgumentPtr res = simplifyUndefined(*func, lhsChild, rhsChild)) {
     return res;
   }
 
-  if (ArgumentPtr res = callFunction(*simpl->func, {simpl->lhsChild, simpl->rhsChild})) {
+  if (ArgumentPtr res = callFunction(*func, {lhsChild, rhsChild})) {
     return res;
   }
 
-  ArgumentPtr res = useSimplifyFunctions(getFunctionsForPostSimplify(),
-                                         *func,
-                                         simpl->lhsChild,
-                                         simpl->rhsChild);
+  ArgumentPtr res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(),
+                                                          *func,
+                                                          lhsChild,
+                                                          rhsChild)
+                                   : useSimplifyFunctions(getFunctionsForPreSimplify(),
+                                                          *func,
+                                                          lhsChild,
+                                                          rhsChild);
 
-  if (res && *res != *simpl) {
-    postSimplifyChild(res);
+  if (res && *res != *this) {
+    if (isPostSimplify) {
+      postSimplifyChild(res);
+    }
+    else {
+      preSimplifyChild(res);
+    }
+
     return res;
   }
 
-  return simpl;
+  return clone();
 }
 
 IBinaryExpression::SimplifyFunctionVector IBinaryExpression::getFunctionsForPreSimplify() const {
