@@ -13,18 +13,22 @@
 #include "fintamath/expressions/polynomial/MinMaxExpression.hpp"
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
+#include "fintamath/expressions/unary/AbsExpression.hpp"
 #include "fintamath/expressions/unary/HyperbExpression.hpp"
 #include "fintamath/expressions/unary/InvHyperbExpression.hpp"
 #include "fintamath/expressions/unary/InvTrigExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/expressions/unary/RoundExpression.hpp"
+#include "fintamath/expressions/unary/SignExpression.hpp"
 #include "fintamath/expressions/unary/TrigExpression.hpp"
+#include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Frac.hpp"
 #include "fintamath/functions/arithmetic/FracMixed.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
@@ -443,6 +447,14 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Ceil>([](ArgumentPtrVector &&args) {
       return RoundExpression(Ceil(), args.front()).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Abs>([](ArgumentPtrVector &&args) {
+      return AbsExpression(args.front()).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Sign>([](ArgumentPtrVector &&args) {
+      return SignExpression(args.front()).clone();
     });
   }
 };

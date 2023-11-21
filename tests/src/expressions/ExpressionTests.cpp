@@ -494,13 +494,26 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("floor(E + I)").toString(), "2 + I");
   EXPECT_EQ(Expression("floor(E + x)").toString(), "floor(x + E)");
 
+  EXPECT_EQ(Expression("abs(E)").toString(), "abs(E)");
+  EXPECT_EQ(Expression("sign(E)").toString(), "1");
+  EXPECT_EQ(Expression("abs(-E)").toString(), "abs(E)");
+  EXPECT_EQ(Expression("sign(-E)").toString(), "-1");
+  EXPECT_EQ(Expression("abs(E + I)").toString(), "abs(E + I)");
+  EXPECT_EQ(Expression("sign(E + I)").toString(), "sign(E + I)");
+
   EXPECT_EQ(Expression("floor(-x)").toString(), "-ceil(x)");
   EXPECT_EQ(Expression("ceil(-x)").toString(), "-floor(x)");
+  EXPECT_EQ(Expression("abs(-x)").toString(), "abs(x)");
+  EXPECT_EQ(Expression("sign(-x)").toString(), "-sign(x)");
 
-  EXPECT_EQ(Expression("floor(ln(2)^1000000000)").approximate().toString(), "0");
-  EXPECT_EQ(Expression("floor(-ln(2)^1000000000)").approximate().toString(), "-1");
-  EXPECT_EQ(Expression("ceil(ln(2)^1000000000)").approximate().toString(), "1");
-  EXPECT_EQ(Expression("ceil(-ln(2)^1000000000)").approximate().toString(), "0");
+  EXPECT_EQ(Expression("floor(ln(2)^1000000000)").toString(), "0");
+  EXPECT_EQ(Expression("floor(-ln(2)^1000000000)").toString(), "-1");
+  EXPECT_EQ(Expression("ceil(ln(2)^1000000000)").toString(), "1");
+  EXPECT_EQ(Expression("ceil(-ln(2)^1000000000)").toString(), "0");
+  EXPECT_EQ(Expression("abs(ln(2)^1000000000)").toString(), "abs(ln(2)^1000000000)");
+  EXPECT_EQ(Expression("abs(-ln(2)^1000000000)").toString(), "abs(ln(2)^1000000000)");
+  EXPECT_EQ(Expression("sign(ln(2)^1000000000)").toString(), "1");
+  EXPECT_EQ(Expression("sign(-ln(2)^1000000000)").toString(), "-1");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-sin(x) + sin(2)").toString(), "-sin(x) + sin(2)");
@@ -1227,6 +1240,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("abs(I)").toString(), "1");
   EXPECT_EQ(Expression("abs(I + 1)").toString(), "sqrt(2)");
   EXPECT_EQ(Expression("abs(3I + 2)").toString(), "sqrt(13)");
+
+  EXPECT_EQ(Expression("sign(I)").toString(), "I");
+  EXPECT_EQ(Expression("sign(I + 1)").toString(), "(1/2 + 1/2 I) sqrt(2)");
+  EXPECT_EQ(Expression("sign(3I + 2)").toString(), "(2/13 + 3/13 I) sqrt(13)");
 
   // TODO: implement
   EXPECT_EQ(Expression("sin(I + 1)").toString(), "sin(1 + I)");
