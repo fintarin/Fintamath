@@ -3,6 +3,9 @@
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
+#include "fintamath/literals/constants/ComplexInf.hpp"
+#include "fintamath/literals/constants/Inf.hpp"
+#include "fintamath/literals/constants/NegInf.hpp"
 
 namespace fintamath {
 
@@ -12,10 +15,27 @@ SignExpression::SignExpression(ArgumentPtr inChild)
 
 SignExpression::SimplifyFunctionVector SignExpression::getFunctionsForPostSimplify() const {
   static const SignExpression::SimplifyFunctionVector simplifyFunctions = {
+      &SignExpression::constSimplify,
       &SignExpression::negSimplify,
       &SignExpression::intApproximateSimplify,
   };
   return simplifyFunctions;
+}
+
+ArgumentPtr SignExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
+  if (is<Inf>(rhs)) {
+    return Integer(1).clone();
+  }
+
+  if (is<NegInf>(rhs)) {
+    return Integer(-1).clone();
+  }
+
+  if (is<ComplexInf>(rhs)) {
+    return Undefined().clone();
+  }
+
+  return {};
 }
 
 ArgumentPtr SignExpression::intApproximateSimplify(const IFunction &func, const ArgumentPtr &rhs) {
