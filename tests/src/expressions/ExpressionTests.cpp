@@ -1369,14 +1369,14 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("0^-1").toString(), "ComplexInf");
   EXPECT_EQ(Expression("2^Inf").toString(), "ComplexInf");
   EXPECT_EQ(Expression("2^-Inf").toString(), "0");
-  EXPECT_EQ(Expression("2^ComplexInf").toString(), "ComplexInf");
   EXPECT_EQ(Expression("0.2^Inf").toString(), "0");
   EXPECT_EQ(Expression("0.2^-Inf").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("0.2^ComplexInf").toString(), "0");
+  EXPECT_EQ(Expression("Inf^Inf").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("(-Inf)^Inf").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("ComplexInf^Inf").toString(), "ComplexInf");
   EXPECT_EQ(Expression("sqrt(2) * Inf").toString(), "Inf sqrt(2)");   // TODO: Inf
   EXPECT_EQ(Expression("-sqrt(2) * Inf").toString(), "-Inf sqrt(2)"); // TODO: -Inf
   EXPECT_EQ(Expression("sin(Inf)").toString(), "sin(Inf)");           // TODO: [-1, 1]
-  EXPECT_EQ(Expression("root(2, 0)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(1, 0)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(1, 10)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(10, 0)").toString(), "-Inf");
@@ -1491,9 +1491,15 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1^Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("1^-Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("1^ComplexInf").toString(), "Undefined");
+  EXPECT_EQ(Expression("x^ComplexInf").toString(), "Undefined");
   EXPECT_EQ(Expression("I^Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("I^-Inf").toString(), "Undefined");
   EXPECT_EQ(Expression("I^ComplexInf").toString(), "Undefined");
+  EXPECT_EQ(Expression("2^ComplexInf").toString(), "Undefined");
+  EXPECT_EQ(Expression("0.2^ComplexInf").toString(), "Undefined");
+  EXPECT_EQ(Expression("(x Inf)^0").toString(), "Undefined");
+  EXPECT_EQ(Expression("0^(x Inf)").toString(), "Undefined");
+  EXPECT_EQ(Expression("1^(x Inf)").toString(), "Undefined");
   EXPECT_EQ(Expression("sin(0/0)").toString(), "Undefined");
   EXPECT_EQ(Expression("1 + 0^0").toString(), "Undefined");
   EXPECT_EQ(Expression("1 + sin(asin(0^0)) + x").toString(), "Undefined");
@@ -1532,6 +1538,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(Pi) * cot(Pi)").toString(), "Undefined");
   EXPECT_EQ(Expression("tan(Inf) * cot(Inf)").toString(), "Undefined");
   EXPECT_EQ(Expression("sign(ComplexInf)").toString(), "Undefined");
+  EXPECT_EQ(Expression("root(2, 0)").toString(), "Undefined");
 
   EXPECT_EQ(Expression("Undefined").toString(), "Undefined");
   EXPECT_EQ(Expression("-Undefined").toString(), "Undefined");
