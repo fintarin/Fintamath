@@ -216,6 +216,40 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (is<ComplexInf>(rhs)) {
+    return Undefined().clone();
+  }
+
+  if (is<NegInf>(rhs)) {
+    ArgumentPtr divLhs = Integer(1).clone();
+    ArgumentPtr divRhs = powExpr(lhs, negExpr(rhs));
+    return divExpr(divLhs, divRhs);
+  }
+
+  if (is<Inf>(rhs)) {
+    if (isInfinity(lhs)) {
+      return ComplexInf().clone();
+    }
+
+    if (const auto lhsNum = cast<INumber>(lhs)) {
+      if (lhsNum->isComplex()) {
+        return Undefined().clone();
+      }
+
+      auto lhsNumAbs = cast<INumber>(Abs()(*lhsNum));
+
+      if (*lhsNumAbs == Integer(1)) {
+        return Undefined().clone();
+      }
+
+      if (*lhsNumAbs > Integer(1)) {
+        return ComplexInf().clone();
+      }
+
+      return Integer(0).clone();
+    }
+  }
+
   if (*rhs == Integer(1)) {
     return lhs;
   }
@@ -226,10 +260,7 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
     return divExpr(divLhs, divRhs);
   }
 
-  if (const auto rhsComp = cast<IComparable>(rhs);
-      is<NegInf>(rhs) ||
-      (rhsComp && *rhsComp < Integer(0))) {
-
+  if (const auto rhsNum = cast<INumber>(rhs); rhsNum && *rhsNum < Integer(0)) {
     ArgumentPtr divLhs = Integer(1).clone();
     ArgumentPtr divRhs = powExpr(lhs, negExpr(rhs));
     return divExpr(divLhs, divRhs);
@@ -257,36 +288,20 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
     return {};
   }
 
-  if (*lhs == Integer(0)) {
-    return lhs;
-  }
-
-  if (is<Inf>(rhs) || is<ComplexInf>(rhs)) {
-    if (const auto lhsNum = cast<INumber>(lhs)) {
-      if (lhsNum->isComplex()) {
-        return Undefined().clone();
-      }
-
-      auto lhsNumAbs = cast<INumber>(Abs()(*lhsNum));
-
-      if (*lhsNumAbs == Integer(1)) {
-        return Undefined().clone();
-      }
-
-      if (*lhsNumAbs > Integer(1)) {
-        return ComplexInf().clone();
-      }
-
-      return Integer(0).clone();
-    }
-  }
-
-  if (*lhs == Integer(1)) {
-    return lhs;
-  }
-
   if (*rhs == Integer(0)) {
+    if (containsInfinity(lhs)) {
+      return Undefined().clone();
+    }
+
     return Integer(1).clone();
+  }
+
+  if (*lhs == Integer(0) || *lhs == Integer(1)) {
+    if (containsInfinity(rhs)) {
+      return Undefined().clone();
+    }
+
+    return lhs;
   }
 
   return {};

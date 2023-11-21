@@ -100,8 +100,8 @@ TEST(RootTests, callTest) {
 
   EXPECT_EQ(f(Integer(0), Integer(-1))->toString(), "ComplexInf");
   EXPECT_EQ(f(Integer(0), Integer(-10))->toString(), "ComplexInf");
-  EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "0");
-  EXPECT_EQ(f(Integer(2), Integer(0))->toString(), "ComplexInf");
+  EXPECT_EQ(f(Integer(0), Integer(0))->toString(), "Undefined");
+  EXPECT_EQ(f(Integer(2), Integer(0))->toString(), "Undefined");
 
   EXPECT_EQ(f(Variable("a"), Integer(2))->toString(), "sqrt(a)");
   EXPECT_EQ(f(Variable("a"), Integer(3))->toString(), "root(a, 3)");
