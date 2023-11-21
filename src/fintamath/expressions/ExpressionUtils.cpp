@@ -54,6 +54,11 @@ bool isNegativeNumber(const ArgumentPtr &arg) {
   return argNum && *argNum < Integer(0);
 }
 
+bool isComplexNumber(const ArgumentPtr &arg) {
+  const auto num = cast<INumber>(arg);
+  return num && num->isComplex();
+}
+
 bool containsIf(const ArgumentPtr &arg, const std::function<bool(const ArgumentPtr &)> &comp) {
   if (comp(arg)) {
     return true;
@@ -103,8 +108,7 @@ bool containsInfinity(const ArgumentPtr &arg) {
 
 bool containsComplex(const ArgumentPtr &arg) {
   return containsIf(arg, [](const ArgumentPtr &compArg) {
-    const auto num = cast<INumber>(compArg);
-    return num && num->isComplex();
+    return isComplexNumber(compArg);
   });
 }
 

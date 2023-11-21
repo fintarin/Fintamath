@@ -96,7 +96,7 @@ ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if (*lhs == E()) {
-    if (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) {
+    if (containsInfinity(rhs)) {
       return Inf().clone();
     }
 

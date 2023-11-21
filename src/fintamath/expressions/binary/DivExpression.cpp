@@ -81,9 +81,7 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
     return ComplexInf().clone();
   }
 
-  if ((is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs)) &&
-      !containsInfinity(lhs)) {
-
+  if (containsInfinity(rhs) && !containsInfinity(lhs)) {
     return Integer(0).clone();
   }
 
