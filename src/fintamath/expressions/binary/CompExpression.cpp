@@ -203,16 +203,7 @@ ArgumentPtr CompExpression::rateSimplify(const IFunction &func, const ArgumentPt
   ArgumentPtr newLhs = dividendPolynom.size() > 1 ? addExpr(std::move(dividendPolynom)) : dividendPolynom.front();
   simplifyChild(newLhs);
 
-  if (const auto newLhsExpr = cast<IExpression>(newLhs); newLhsExpr && is<Add>(newLhsExpr->getFunction())) {
-    auto [newRate, newValue] = splitMulExpr(newLhsExpr->getChildren().front());
-
-    if (newRate && *newRate != Integer(1) && containsChild(newRate, rate)) {
-      return {};
-    }
-  }
-
   approximateSimplifyChild(rate);
-
   if (isNegativeNumber(rate)) {
     return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
   }
@@ -228,8 +219,9 @@ ArgumentPtr CompExpression::approxSimplify(const IFunction &func, const Argument
   ArgumentPtr approxLhs = lhs;
   approximateSimplifyChild(approxLhs);
 
-  if (auto approxLhsNum = cast<INumber>(approxLhs); approxLhsNum && !approxLhsNum->isComplex()) {
-    return func(*approxLhsNum, *rhs);
+  ArgumentPtr res = func(*approxLhs, *rhs);
+  if (is<Boolean>(res)) {
+    return res;
   }
 
   return {};

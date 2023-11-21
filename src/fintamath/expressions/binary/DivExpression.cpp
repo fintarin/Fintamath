@@ -313,12 +313,10 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
     return {};
   }
 
-  if (const auto rhsChildExpr = cast<IExpression>(rhs);
-      rhsChildExpr &&
-      is<Add>(rhsChildExpr->getFunction()) &&
-      !containsChild(lhs, rhs)) {
-
-    return {};
+  if (const auto rhsChildExpr = cast<IExpression>(rhs); rhsChildExpr && is<Add>(rhsChildExpr->getFunction())) {
+    if (!containsChild(lhs, rhs)) {
+      return {};
+    }
   }
 
   ArgumentPtrVector resultChildren;
@@ -424,15 +422,6 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
 
   if (*lhsChildValue == *rhsChildValue && !containsInfinity(lhsChildValue)) {
     return powExpr(lhsChildValue, addExpr(lhsChildRate, negExpr(rhsChildRate)));
-  }
-
-  if (lhsChildValueNum &&
-      rhsChildValueNum &&
-      *lhsChildRate == *rhsChildRate &&
-      *rhsChildRate != Integer(1)) {
-
-    ArgumentPtr valuesDiv = divExpr(lhsChildValue, rhsChildValue);
-    return powExpr(valuesDiv, lhsChildRate);
   }
 
   if (rhsChildValueNum) {
@@ -593,7 +582,7 @@ ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const Argu
 }
 
 bool DivExpression::containsDivFunction(const ArgumentPtr &arg) {
-  static const std::set<std::string> divFunctionStrings = {
+  static const std::set<std::string, std::less<>> divFunctionStrings = {
       Div().toString(),
       Tan().toString(),
       Cot().toString(),

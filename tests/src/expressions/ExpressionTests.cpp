@@ -463,14 +463,6 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("root(x^(-2), -2)").toString(), "sqrt(x^2)");
   EXPECT_EQ(Expression("root(0, x)").toString(), "0");
 
-  // TODO: implement
-  // EXPECT_EQ(Expression("abs(x)^3").toString(), "abs(x^3)");
-  // EXPECT_EQ(Expression("abs(x^3)").toString(), "abs(x^3)");
-  // EXPECT_EQ(Expression("abs(x)^I").toString(), "abs(x)^I");
-  // EXPECT_EQ(Expression("abs(x^I)").toString(), "abs(x^I)");
-  // EXPECT_EQ(Expression("abs(x)^x").toString(), "abs(x)^x");
-  // EXPECT_EQ(Expression("abs(x^x)").toString(), "abs(x^x)");
-
   EXPECT_EQ(Expression("(a+b+1-1)^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("(a+b)^1000/(a+b)^998").toString(), "a^2 + 2 a b + b^2");
   EXPECT_EQ(Expression("sin(asin(a+b+1-1))^1000/(a+b+1-1)^998").toString(), "a^2 + 2 a b + b^2");
@@ -621,6 +613,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("False|1=1").toString(), "True");
   EXPECT_EQ(Expression("1=1|False").toString(), "True");
   EXPECT_EQ(Expression("a>b|a").toString(), "a - b > 0 | a");
+  EXPECT_EQ(Expression("x = -7 | x = 7 | x = -7 | x = 7").toString(), "x - 7 = 0 | x + 7 = 0");
+  EXPECT_EQ(Expression("x = -7 & x = 7 & x = -7 & x = 7").toString(), "x - 7 = 0 & x + 7 = 0");
 
   EXPECT_EQ(Expression("~(x = 1)").toString(), "x - 1 != 0");
   EXPECT_EQ(Expression("~(x != 1)").toString(), "x - 1 = 0");
@@ -1294,6 +1288,13 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("I >= 2 I").toString(), "I >= 2 I");
   EXPECT_EQ(Expression("I >= I x").toString(), "I >= I x");
   EXPECT_EQ(Expression("I x >= I").toString(), "I x >= I");
+
+  EXPECT_EQ(Expression("2 I = E").toString(), "False");
+  EXPECT_EQ(Expression("2 I > E").toString(), "2 I > E");
+  EXPECT_EQ(Expression("E = 2 I").toString(), "False");
+  EXPECT_EQ(Expression("E > 2 I").toString(), "E > 2 I");
+  EXPECT_EQ(Expression("2 I + 3 = 0").toString(), "False");
+  EXPECT_EQ(Expression("2 I + E > 0").toString(), "E + 2 I > 0");
 
   EXPECT_EQ(Expression("x (2 + I)").toString(), "(2 + I) x");
   EXPECT_EQ(Expression("sqrt(3) (2/3 + 1/2 I)").toString(), "(2/3 + 1/2 I) sqrt(3)");
