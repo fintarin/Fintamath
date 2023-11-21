@@ -9,11 +9,11 @@ using namespace fintamath;
 TEST(RealFunctionsTests, floorTest) {
   EXPECT_EQ(floor(Real("-1000.8")).toString(), "-1001");
   EXPECT_EQ(floor(Real("-1000.1")).toString(), "-1001");
-  EXPECT_EQ(floor(Real("-1000")).toString(), "-1001");
+  EXPECT_EQ(floor(Real("-1000")).toString(), "-1000");
   EXPECT_EQ(floor(Real("-1.9")).toString(), "-2");
   EXPECT_EQ(floor(Real("-1.5")).toString(), "-2");
   EXPECT_EQ(floor(Real("-1.3")).toString(), "-2");
-  EXPECT_EQ(floor(Real("-1")).toString(), "-2");
+  EXPECT_EQ(floor(Real("-1")).toString(), "-1");
   EXPECT_EQ(floor(Real("-0.9")).toString(), "-1");
   EXPECT_EQ(floor(Real("-0.3")).toString(), "-1");
   EXPECT_EQ(floor(Real("0")).toString(), "0");
@@ -38,14 +38,14 @@ TEST(RealFunctionsTests, ceilTest) {
   EXPECT_EQ(ceil(Real("-1")).toString(), "-1");
   EXPECT_EQ(ceil(Real("-0.9")).toString(), "0");
   EXPECT_EQ(ceil(Real("-0.3")).toString(), "0");
-  EXPECT_EQ(ceil(Real("0")).toString(), "1");
+  EXPECT_EQ(ceil(Real("0")).toString(), "0");
   EXPECT_EQ(ceil(Real("0.3")).toString(), "1");
   EXPECT_EQ(ceil(Real("0.9")).toString(), "1");
-  EXPECT_EQ(ceil(Real("1")).toString(), "2");
+  EXPECT_EQ(ceil(Real("1")).toString(), "1");
   EXPECT_EQ(ceil(Real("1.9")).toString(), "2");
   EXPECT_EQ(ceil(Real("1.5")).toString(), "2");
   EXPECT_EQ(ceil(Real("1.3")).toString(), "2");
-  EXPECT_EQ(ceil(Real("1000")).toString(), "1001");
+  EXPECT_EQ(ceil(Real("1000")).toString(), "1000");
   EXPECT_EQ(ceil(Real("1000.1")).toString(), "1001");
   EXPECT_EQ(ceil(Real("1000.8")).toString(), "1001");
 }
