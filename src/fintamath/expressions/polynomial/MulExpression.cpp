@@ -92,9 +92,7 @@ bool MulExpression::isTermsOrderInversed() const {
 }
 
 ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*lhs == Integer(0) &&
-      (is<Inf>(rhs) || is<NegInf>(rhs) || is<ComplexInf>(rhs))) {
-
+  if (*lhs == Integer(0) && containsInfinity(rhs)) {
     return Undefined().clone();
   }
 
@@ -106,21 +104,36 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
     return lhs;
   }
 
-  if (const auto lhsNum = cast<INumber>(lhs)) {
-    if (!lhsNum->isComplex()) {
-      bool isNegated = *lhsNum < Integer(0);
+  if (is<NegInf>(rhs) && isComplexNumber(lhs)) {
+    return mulExpr(negExpr(lhs), Inf().clone());
+  }
 
-      if (is<Inf>(rhs)) {
-        return isNegated ? NegInf().clone() : rhs;
-      }
+  {
+    ArgumentPtr inf;
+    ArgumentPtr rate;
 
-      if (is<NegInf>(rhs)) {
-        return isNegated ? Inf().clone() : rhs;
-      }
+    if (isInfinity(lhs)) {
+      inf = lhs;
+      rate = rhs;
     }
-    else {
-      if (is<NegInf>(rhs)) {
-        return mulExpr(negExpr(lhsNum), Inf().clone());
+    else if (isInfinity(rhs)) {
+      inf = rhs;
+      rate = lhs;
+    }
+
+    if (!containsVariable(rate)) {
+      approximateSimplifyChild(rate);
+
+      if (auto rateNum = cast<INumber>(rate); rateNum && !isComplexNumber(rate)) {
+        bool isNegative = isNegativeNumber(rate);
+
+        if (is<Inf>(inf)) {
+          return isNegative ? NegInf().clone() : inf;
+        }
+
+        if (is<NegInf>(inf)) {
+          return isNegative ? Inf().clone() : inf;
+        }
       }
     }
   }

@@ -1368,15 +1368,25 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("0^Inf").toString(), "0");
   EXPECT_EQ(Expression("0^-Inf").toString(), "ComplexInf");
   EXPECT_EQ(Expression("0^-1").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("2^Inf").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("2^Inf").toString(), "Inf");
   EXPECT_EQ(Expression("2^-Inf").toString(), "0");
   EXPECT_EQ(Expression("0.2^Inf").toString(), "0");
-  EXPECT_EQ(Expression("0.2^-Inf").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("0.2^-Inf").toString(), "Inf");
   EXPECT_EQ(Expression("Inf^Inf").toString(), "ComplexInf");
   EXPECT_EQ(Expression("(-Inf)^Inf").toString(), "ComplexInf");
   EXPECT_EQ(Expression("ComplexInf^Inf").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("sqrt(2) * Inf").toString(), "Inf sqrt(2)");   // TODO: Inf
-  EXPECT_EQ(Expression("-sqrt(2) * Inf").toString(), "-Inf sqrt(2)"); // TODO: -Inf
+  EXPECT_EQ(Expression("sqrt(2) * Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("-sqrt(2) * Inf").toString(), "-Inf");
+  EXPECT_EQ(Expression("sqrt(2) ^ Inf").toString(), "Inf");
+  EXPECT_EQ(Expression("sqrt(0.5) ^ Inf").toString(), "0");
+  EXPECT_EQ(Expression("sqrt(2) ^ (-Inf)").toString(), "0");
+  EXPECT_EQ(Expression("sqrt(0.5) ^ (-Inf)").toString(), "Inf");
+  EXPECT_EQ(Expression("Inf ^ sqrt(5)").toString(), "Inf");
+  EXPECT_EQ(Expression("Inf ^ -sqrt(5)").toString(), "0");
+  EXPECT_EQ(Expression("(-Inf) ^ sqrt(5)").toString(), "Inf (-1)^sqrt(5)");
+  EXPECT_EQ(Expression("(-Inf) ^ -sqrt(5)").toString(), "0");
+  EXPECT_EQ(Expression("ComplexInf ^ sqrt(5)").toString(), "ComplexInf");
+  EXPECT_EQ(Expression("ComplexInf ^ -sqrt(5)").toString(), "0");
   EXPECT_EQ(Expression("sin(Inf)").toString(), "sin(Inf)");           // TODO: [-1, 1]
   EXPECT_EQ(Expression("log(1, 0)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(1, 10)").toString(), "ComplexInf");
@@ -1536,6 +1546,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(Inf, ComplexInf)").toString(), "Undefined");
   EXPECT_EQ(Expression("log(-Inf, ComplexInf)").toString(), "Undefined");
   EXPECT_EQ(Expression("log(0^0, 0^0)").toString(), "Undefined");
+  EXPECT_EQ(Expression("tan(Inf)").toString(), "Undefined");
   EXPECT_EQ(Expression("tan(Pi) * cot(Pi)").toString(), "Undefined");
   EXPECT_EQ(Expression("tan(Inf) * cot(Inf)").toString(), "Undefined");
   EXPECT_EQ(Expression("sign(ComplexInf)").toString(), "Undefined");

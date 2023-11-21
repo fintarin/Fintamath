@@ -42,6 +42,8 @@ bool isNegated(const ArgumentPtr &arg);
 
 bool isNegativeNumber(const ArgumentPtr &arg);
 
+bool isComplexNumber(const ArgumentPtr &arg);
+
 bool containsIf(const ArgumentPtr &arg, const std::function<bool(const ArgumentPtr &)> &comp);
 
 bool containsChild(const ArgumentPtr &arg, const ArgumentPtr &child);
