@@ -93,8 +93,14 @@ bool MulExpression::isTermsOrderInversed() const {
 }
 
 ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*lhs == Integer(0) && isInfinity(rhs)) {
-    return Undefined().clone();
+  if (*lhs == Integer(0)) {
+    if (isMulInfinity(rhs)) {
+      return Undefined().clone();
+    }
+
+    if (!containsInfinity(rhs)) {
+      return lhs;
+    }
   }
 
   if (is<ComplexInf>(lhs) || is<ComplexInf>(rhs)) {
@@ -127,10 +133,6 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
     }
 
     if (rate && inf) {
-      if (*lhs == Integer(0)) {
-        return Undefined().clone();
-      }
-
       if (*lhs == Integer(-1)) {
         return is<Inf>(rhs) ? NegInf().clone() : Inf().clone();
       }
@@ -141,10 +143,6 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
         }
       }
     }
-  }
-
-  if (*lhs == Integer(0)) {
-    return lhs;
   }
 
   return {};

@@ -89,7 +89,7 @@ ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const Argum
     return Undefined().clone();
   }
 
-  if (*rhs == Integer(1)) {
+  if (*rhs == Integer(1) && !containsInfinity(lhs)) {
     return Integer(0).clone();
   }
 
