@@ -38,6 +38,8 @@ ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<Argument
 
 bool isInfinity(const ArgumentPtr &arg);
 
+bool isMulInfinity(const ArgumentPtr &arg);
+
 bool isNegated(const ArgumentPtr &arg);
 
 bool isNegativeNumber(const ArgumentPtr &arg);

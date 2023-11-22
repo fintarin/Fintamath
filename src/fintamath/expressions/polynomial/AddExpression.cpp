@@ -114,11 +114,11 @@ ArgumentPtr AddExpression::constSimplify(const IFunction & /*func*/, const Argum
     return lhs;
   }
 
-  if (containsInfinity(lhs) && !containsInfinity(rhs)) {
+  if (isInfinity(lhs) && !containsInfinity(rhs)) {
     return lhs;
   }
 
-  if (containsInfinity(rhs) && !containsInfinity(lhs)) {
+  if (isInfinity(rhs) && !containsInfinity(lhs)) {
     return rhs;
   }
 

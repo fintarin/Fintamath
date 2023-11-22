@@ -28,6 +28,11 @@ bool isInfinity(const ArgumentPtr &arg) {
   return is<Inf>(arg) || is<NegInf>(arg) || is<ComplexInf>(arg);
 }
 
+bool isMulInfinity(const ArgumentPtr &arg) {
+  auto [rate, value] = splitMulExpr(arg);
+  return isInfinity(rate) || isInfinity(value);
+}
+
 bool isNegated(const ArgumentPtr &arg) {
   if (isNegativeNumber(arg)) {
     return true;

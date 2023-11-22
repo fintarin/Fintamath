@@ -5,6 +5,7 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
@@ -92,7 +93,7 @@ bool MulExpression::isTermsOrderInversed() const {
 }
 
 ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*lhs == Integer(0) && containsInfinity(rhs)) {
+  if (*lhs == Integer(0) && isInfinity(rhs)) {
     return Undefined().clone();
   }
 
@@ -108,31 +109,35 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
     return mulExpr(negExpr(lhs), Inf().clone());
   }
 
+  if (*lhs == Integer(1)) {
+    return rhs;
+  }
+
   {
     ArgumentPtr inf;
     ArgumentPtr rate;
 
-    if (isInfinity(lhs)) {
+    if (is<Inf>(lhs) || is<NegInf>(lhs)) {
       inf = lhs;
       rate = rhs;
     }
-    else if (isInfinity(rhs)) {
+    else if (is<Inf>(rhs) || is<NegInf>(rhs)) {
       inf = rhs;
       rate = lhs;
     }
 
-    if (!containsVariable(rate)) {
-      approximateSimplifyChild(rate);
+    if (rate && inf) {
+      if (*lhs == Integer(0)) {
+        return Undefined().clone();
+      }
 
-      if (auto rateNum = cast<INumber>(rate); rateNum && !isComplexNumber(rate)) {
-        bool isNegative = isNegativeNumber(rate);
+      if (*lhs == Integer(-1)) {
+        return is<Inf>(rhs) ? NegInf().clone() : Inf().clone();
+      }
 
-        if (is<Inf>(inf)) {
-          return isNegative ? NegInf().clone() : inf;
-        }
-
-        if (is<NegInf>(inf)) {
-          return isNegative ? Inf().clone() : inf;
+      if (!isComplexNumber(rate)) {
+        if (const auto rateExpr = cast<IExpression>(rate); !rateExpr || !is<Sign>(rateExpr->getFunction())) {
+          return mulExpr(signExpr(rate), inf);
         }
       }
     }
@@ -140,10 +145,6 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
 
   if (*lhs == Integer(0)) {
     return lhs;
-  }
-
-  if (*lhs == Integer(1)) {
-    return rhs;
   }
 
   return {};

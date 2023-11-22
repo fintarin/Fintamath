@@ -7,6 +7,7 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/hyperbolic/Coth.hpp"
@@ -67,21 +68,24 @@ DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPostSimplify
 }
 
 ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if ((*lhs == Integer(0) || containsInfinity(lhs)) &&
-      (*rhs == Integer(0) || containsInfinity(rhs))) {
+  if ((*lhs == Integer(0) || isMulInfinity(lhs)) &&
+      (*rhs == Integer(0) || isMulInfinity(rhs))) {
 
     return Undefined().clone();
   }
 
-  if (*lhs == Integer(0)) {
+  bool lhsContainsInf = containsInfinity(lhs);
+  bool rhsContainsInf = containsInfinity(rhs);
+
+  if (*lhs == Integer(0) && !rhsContainsInf) {
     return lhs;
   }
 
-  if (*rhs == Integer(0)) {
+  if (*rhs == Integer(0) && !lhsContainsInf) {
     return ComplexInf().clone();
   }
 
-  if (containsInfinity(rhs) && !containsInfinity(lhs)) {
+  if (isMulInfinity(rhs) && !lhsContainsInf) {
     return Integer(0).clone();
   }
 
