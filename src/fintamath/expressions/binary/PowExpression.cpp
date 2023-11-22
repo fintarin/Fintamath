@@ -16,6 +16,7 @@
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -251,6 +252,9 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
         return Integer(0).clone();
       }
     }
+    else {
+      return Undefined().clone();
+    }
   }
 
   if (*rhs == Integer(1)) {
@@ -280,13 +284,21 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
       ArgumentPtr approxRhs = rhs;
       approximateSimplifyChild(approxRhs);
 
-      if (const auto rhsNum = cast<INumber>(approxRhs)) {
-        if (*rhsNum == Integer(0)) {
+      if (const auto rhsComplex = cast<Complex>(approxRhs)) {
+        if (rhsComplex->real() == Integer(0)) {
           return Undefined().clone();
         }
 
-        if (rhsNum->isComplex()) {
-          return ComplexInf().clone();
+        if (rhsComplex->real() < Integer(0)) {
+          return Integer(0).clone();
+        }
+
+        return ComplexInf().clone();
+      }
+
+      if (const auto rhsNum = cast<INumber>(approxRhs)) {
+        if (*rhsNum == Integer(0)) {
+          return Undefined().clone();
         }
 
         if (*rhsNum < Integer(0)) {
@@ -296,22 +308,29 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
         return lhs;
       }
     }
+    else {
+      return Undefined().clone();
+    }
   }
 
   if (*rhs == Integer(0)) {
-    if (containsInfinity(lhs)) {
+    if (isMulInfinity(lhs)) {
       return Undefined().clone();
     }
 
-    return Integer(1).clone();
+    if (!containsInfinity(lhs)) {
+      return Integer(1).clone();
+    }
   }
 
   if (*lhs == Integer(0) || *lhs == Integer(1)) {
-    if (containsInfinity(rhs)) {
+    if (isMulInfinity(rhs)) {
       return Undefined().clone();
     }
 
-    return lhs;
+    if (!containsInfinity(rhs)) {
+      return lhs;
+    }
   }
 
   return {};

@@ -68,8 +68,6 @@ ArgumentPtr LogExpression::setPrecision(uint8_t precision, const Integer &maxInt
 
 LogExpression::SimplifyFunctionVector LogExpression::getFunctionsForPreSimplify() const {
   static const LogExpression::SimplifyFunctionVector simplifyFunctions = {
-      &LogExpression::constSimplify,
-      &LogExpression::equalSimplify,
       &LogExpression::powSimplify,
   };
   return simplifyFunctions;
@@ -85,8 +83,8 @@ LogExpression::SimplifyFunctionVector LogExpression::getFunctionsForPostSimplify
 }
 
 ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if ((*lhs == Integer(0) || containsInfinity(lhs)) &&
-      (*rhs == Integer(0) || containsInfinity(rhs))) {
+  if ((*lhs == Integer(0) || isMulInfinity(lhs)) &&
+      (*rhs == Integer(0) || isMulInfinity(rhs))) {
 
     return Undefined().clone();
   }
@@ -96,7 +94,7 @@ ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if (*lhs == E()) {
-    if (containsInfinity(rhs)) {
+    if (isInfinity(rhs)) {
       return Inf().clone();
     }
 
@@ -107,7 +105,7 @@ ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const Argum
 }
 
 ArgumentPtr LogExpression::equalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*lhs == *rhs) {
+  if (*lhs == *rhs && !containsInfinity(lhs)) {
     return Integer(1).clone();
   }
 
