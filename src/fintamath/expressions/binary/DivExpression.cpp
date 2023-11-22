@@ -99,7 +99,7 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
 ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   static const Integer one = 1;
 
-  if (Div().doArgsMatch({one, *rhs})) {
+  if (*rhs != Integer(0) && Div().doArgsMatch({one, *rhs})) {
     ArgumentPtr res = mulExpr(lhs, Div()(one, *rhs));
     return res;
   }

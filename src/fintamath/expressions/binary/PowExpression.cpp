@@ -289,10 +289,6 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
           return Undefined().clone();
         }
 
-        if (rhsComplex->real() < Integer(0)) {
-          return Integer(0).clone();
-        }
-
         return ComplexInf().clone();
       }
 
