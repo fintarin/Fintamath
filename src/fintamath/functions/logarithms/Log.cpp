@@ -42,7 +42,7 @@ std::unique_ptr<IMathObject> Log::call(const ArgumentRefVector &argsVect) const 
     return Integer(0).clone();
   }
 
-  if (lhs == rhs) {
+  if (lhs == rhs && lhs.isPrecise()) {
     return Integer(1).clone();
   }
 
