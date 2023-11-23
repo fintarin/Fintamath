@@ -510,7 +510,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(x+1)^3").toString(), "x^3 + 3 x^2 + 3 x + 1");
   EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x^2 + 3 x + 1)");
   EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x) - (3 cos(2 x))/2 + 5/2");
-  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x) - (3 cos(2 x))/2 + 5/2)"); // TODO! simplify nested
+  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "2/(2 sin(x)^3 + 6 sin(x) - 3 cos(2 x) + 5)");
   EXPECT_EQ(Expression("(sin(x)+1)^(-4)").toString(), "1/(sin(x)^4 + 4 sin(x)^3 + 4 sin(x) - 3 cos(2 x) + 4)");
   EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(4 a b^3) + b^4 + sin(a^4) + cos(6 a^2 b^2)").toString(),
@@ -787,7 +787,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-2sin(x))/cos(x)").toString(), "-2 tan(x)");
   EXPECT_EQ(Expression("(2sin(x))/(3cos(x))").toString(), "(2 tan(x))/3");
   EXPECT_EQ(Expression("sin(x)^2/cos(x)").toString(), "sec(x)/2 - (cos(2 x) sec(x))/2");
-  EXPECT_EQ(Expression("sin(x)/cos(x)^2").toString(), "sin(x)/(cos(2 x)/2 + 1/2)"); // TODO! simplify nested
+  EXPECT_EQ(Expression("sin(x)/cos(x)^2").toString(), "(2 sin(x))/(cos(2 x) + 1)");
   EXPECT_EQ(Expression("sin(x)^2/cos(x)^2").toString(), "-1 + 2/(cos(2 x) + 1)");
   EXPECT_EQ(Expression("(2sin(x))^2/cos(x)^2").toString(), "-4 + 8/(cos(2 x) + 1)");
   EXPECT_EQ(Expression("(2sin(x))^2/(3cos(x))^2").toString(), "-4/9 + 8/(9 cos(2 x) + 9)");
@@ -796,7 +796,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-2cos(x))/sin(x)").toString(), "-2 cot(x)");
   EXPECT_EQ(Expression("(2cos(x))/(3sin(x))").toString(), "(2 cot(x))/3");
   EXPECT_EQ(Expression("cos(x)^2/sin(x)").toString(), "csc(x)/2 + (cos(2 x) csc(x))/2");
-  EXPECT_EQ(Expression("cos(x)/sin(x)^2").toString(), "-cos(x)/(cos(2 x)/2 - 1/2)"); // TODO! simplify nested
+  EXPECT_EQ(Expression("cos(x)/sin(x)^2").toString(), "-(2 cos(x))/(cos(2 x) - 1)");
   EXPECT_EQ(Expression("cos(x)^2/sin(x)^2").toString(), "-1 - 2/(cos(2 x) - 1)");
   EXPECT_EQ(Expression("(2cos(x))^2/sin(x)^2").toString(), "-4 - 8/(cos(2 x) - 1)");
   EXPECT_EQ(Expression("(2cos(x))^2/(3sin(x))^2").toString(), "-4/9 - 8/(9 cos(2 x) - 9)");
@@ -1395,7 +1395,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-Inf) ^ -sqrt(5)").toString(), "0");
   EXPECT_EQ(Expression("ComplexInf ^ sqrt(5)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("ComplexInf ^ -sqrt(5)").toString(), "0");
-  EXPECT_EQ(Expression("sin(Inf)").toString(), "sin(Inf)");           // TODO: [-1, 1]
+  EXPECT_EQ(Expression("sin(Inf)").toString(), "sin(Inf)"); // TODO: [-1, 1]
   EXPECT_EQ(Expression("log(1, 0)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(1, 10)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("log(10, 0)").toString(), "-Inf");

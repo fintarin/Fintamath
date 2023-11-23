@@ -108,27 +108,33 @@ ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  ArgumentPtr preSimplLhs = lhs;
+  preSimplifyChild(preSimplLhs);
+
+  ArgumentPtr preSimplRhs = rhs;
+  preSimplifyChild(preSimplRhs);
+
   ArgumentPtrVector numeratorChildren;
   ArgumentPtrVector denominatorChildren;
 
   bool containsDivExpression = false;
 
-  if (auto lhsDivExpr = cast<DivExpression>(lhs)) {
+  if (auto lhsDivExpr = cast<DivExpression>(preSimplLhs)) {
     numeratorChildren.emplace_back(lhsDivExpr->getChildren().front());
     denominatorChildren.emplace_back(lhsDivExpr->getChildren().back());
     containsDivExpression = true;
   }
   else {
-    numeratorChildren.emplace_back(lhs);
+    numeratorChildren.emplace_back(preSimplLhs);
   }
 
-  if (auto rhsDivExpr = cast<DivExpression>(rhs)) {
+  if (auto rhsDivExpr = cast<DivExpression>(preSimplRhs)) {
     denominatorChildren.emplace_back(rhsDivExpr->getChildren().front());
     numeratorChildren.emplace_back(rhsDivExpr->getChildren().back());
     containsDivExpression = true;
   }
   else {
-    denominatorChildren.emplace_back(rhs);
+    denominatorChildren.emplace_back(preSimplRhs);
   }
 
   if (!containsDivExpression) {
@@ -439,16 +445,9 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
 
 ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentPtrVector lhsChildren = getPolynomChildren(Mul(), lhs);
-  ArgumentPtrVector rhsChildren = getPolynomChildren(Mul(), rhs);
 
   if (auto res = nestedNumeratorRationalSimplify(lhsChildren, rhs)) {
     return res;
-  }
-
-  if (auto res = nestedNumeratorRationalSimplify(rhsChildren, lhs)) {
-    auto resDiv = cast<DivExpression>(res->clone());
-    std::swap(resDiv->lhsChild, resDiv->rhsChild);
-    return resDiv;
   }
 
   return {};
