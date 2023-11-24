@@ -14,11 +14,11 @@
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
 #include "fintamath/expressions/unary/AbsExpression.hpp"
+#include "fintamath/expressions/unary/FloorCeilExpression.hpp"
 #include "fintamath/expressions/unary/HyperbExpression.hpp"
 #include "fintamath/expressions/unary/InvHyperbExpression.hpp"
 #include "fintamath/expressions/unary/InvTrigExpression.hpp"
 #include "fintamath/expressions/unary/NotExpression.hpp"
-#include "fintamath/expressions/unary/RoundExpression.hpp"
 #include "fintamath/expressions/unary/SignExpression.hpp"
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
@@ -442,11 +442,11 @@ struct ExpressionConfig {
     });
 
     Expression::registerFunctionExpressionMaker<Floor>([](ArgumentPtrVector &&args) {
-      return RoundExpression(Floor(), args.front()).clone();
+      return FloorCeilExpression(Floor(), args.front()).clone();
     });
 
     Expression::registerFunctionExpressionMaker<Ceil>([](ArgumentPtrVector &&args) {
-      return RoundExpression(Ceil(), args.front()).clone();
+      return FloorCeilExpression(Ceil(), args.front()).clone();
     });
 
     Expression::registerFunctionExpressionMaker<Abs>([](ArgumentPtrVector &&args) {

@@ -5,6 +5,6 @@
 
 using namespace fintamath;
 
-TEST(RoundExpressionTests, getTypeTest) {
-  EXPECT_EQ(floorExpr(Integer(0).clone())->getType(), MathObjectType::RoundExpression);
+TEST(FloorCeilExpressionTests, getTypeTest) {
+  EXPECT_EQ(floorExpr(Integer(0).clone())->getType(), MathObjectType::FloorCeilExpression);
 }

@@ -1,4 +1,4 @@
-#include "fintamath/expressions/unary/RoundExpression.hpp"
+#include "fintamath/expressions/unary/FloorCeilExpression.hpp"
 
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
@@ -7,19 +7,19 @@
 
 namespace fintamath {
 
-RoundExpression::RoundExpression(const IFunction &inFunc, ArgumentPtr inChild)
+FloorCeilExpression::FloorCeilExpression(const IFunction &inFunc, ArgumentPtr inChild)
     : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
 }
 
-RoundExpression::SimplifyFunctionVector RoundExpression::getFunctionsForPostSimplify() const {
-  static const RoundExpression::SimplifyFunctionVector simplifyFunctions = {
-      &RoundExpression::negSimplify,
-      &RoundExpression::intApproximateSimplify,
+FloorCeilExpression::SimplifyFunctionVector FloorCeilExpression::getFunctionsForPostSimplify() const {
+  static const FloorCeilExpression::SimplifyFunctionVector simplifyFunctions = {
+      &FloorCeilExpression::negSimplify,
+      &FloorCeilExpression::intApproximateSimplify,
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr RoundExpression::intApproximateSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+ArgumentPtr FloorCeilExpression::intApproximateSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (containsVariable(rhs)) {
     return {};
   }
@@ -30,7 +30,7 @@ ArgumentPtr RoundExpression::intApproximateSimplify(const IFunction &func, const
   return callFunction(func, {approx});
 }
 
-ArgumentPtr RoundExpression::negSimplify(const IFunction &func, const ArgumentPtr &rhs) {
+ArgumentPtr FloorCeilExpression::negSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (isNegated(rhs)) {
     return negExpr(makeExpr(*getOppositeFunction(func), negExpr(rhs)));
   }
@@ -38,7 +38,7 @@ ArgumentPtr RoundExpression::negSimplify(const IFunction &func, const ArgumentPt
   return {};
 }
 
-std::shared_ptr<IFunction> RoundExpression::getOppositeFunction(const IFunction &function) {
+std::shared_ptr<IFunction> FloorCeilExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
       {Floor().toString(), std::make_shared<Ceil>()},
       {Ceil().toString(), std::make_shared<Floor>()},
