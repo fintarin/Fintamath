@@ -6,12 +6,12 @@ namespace fintamath {
 
 class Rational;
 
-class RoundExpression : public IUnaryExpressionCRTP<RoundExpression, true> {
+class FloorCeilExpression : public IUnaryExpressionCRTP<FloorCeilExpression, true> {
 public:
-  explicit RoundExpression(const IFunction &inFunc, ArgumentPtr inChild);
+  explicit FloorCeilExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static MathObjectType getTypeStatic() {
-    return MathObjectType::RoundExpression;
+    return MathObjectType::FloorCeilExpression;
   }
 
 protected:

@@ -25,7 +25,7 @@ public:
     InvTrigExpression,
     HyperbExpression,
     InvHyperbExpression,
-    RoundExpression,
+    FloorCeilExpression,
     AbsExpression,
     SignExpression,
 
