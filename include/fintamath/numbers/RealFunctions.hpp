@@ -72,10 +72,10 @@ Real asech(const Real &rhs);
 
 Real acsch(const Real &rhs);
 
-Real getE();
-
-Real getPi();
-
 Real tgamma(const Real &rhs);
+
+const Real &getE();
+
+const Real &getPi();
 
 }
