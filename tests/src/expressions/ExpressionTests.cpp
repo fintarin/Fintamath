@@ -494,13 +494,36 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sign(-x)").toString(), "-sign(x)");
 
   EXPECT_EQ(Expression("floor(ln(2)^1000000000)").toString(), "0");
-  EXPECT_EQ(Expression("floor(-ln(2)^1000000000)").toString(), "-1");
   EXPECT_EQ(Expression("ceil(ln(2)^1000000000)").toString(), "1");
-  EXPECT_EQ(Expression("ceil(-ln(2)^1000000000)").toString(), "0");
-  EXPECT_EQ(Expression("abs(ln(2)^1000000000)").toString(), "abs(ln(2)^1000000000)");
-  EXPECT_EQ(Expression("abs(-ln(2)^1000000000)").toString(), "abs(ln(2)^1000000000)");
   EXPECT_EQ(Expression("sign(ln(2)^1000000000)").toString(), "1");
-  EXPECT_EQ(Expression("sign(-ln(2)^1000000000)").toString(), "-1");
+
+  EXPECT_EQ(Expression("floor(ln(2)^1000000000 * sin(4))").toString(), "-1");
+  EXPECT_EQ(Expression("ceil(ln(2)^1000000000 * sin(4))").toString(), "0");
+  EXPECT_EQ(Expression("sign(ln(2)^1000000000 * sin(4))").toString(), "-1");
+
+  EXPECT_EQ(Expression("floor(ln(2)^1000000000 * (sin(4) + 1 - 1))").toString(), "-1");
+  EXPECT_EQ(Expression("ceil(ln(2)^1000000000 * (sin(4) + 1 - 1))").toString(), "0");
+  EXPECT_EQ(Expression("sign(ln(2)^1000000000 * (sin(4) + 1 - 1))").toString(), "-1");
+
+  EXPECT_EQ(Expression("floor(ln(2)^1000000000 * (2sin(4) - sin(4)))").toString(), "-1");
+  EXPECT_EQ(Expression("ceil(ln(2)^1000000000 * (2sin(4) - sin(4)))").toString(), "0");
+  EXPECT_EQ(Expression("sign(ln(2)^1000000000 * (2sin(4) - sin(4)))").toString(), "-1");
+
+  EXPECT_EQ(Expression("floor(ln(2)^1000000000 / sin(4))").toString(), "-1");
+  EXPECT_EQ(Expression("ceil(ln(2)^1000000000 / sin(4))").toString(), "0");
+  EXPECT_EQ(Expression("sign(ln(2)^1000000000 / sin(4))").toString(), "-1");
+
+  EXPECT_EQ(Expression("floor(ln(2)^1000000000 / (sin(4) + 1 - 1))").toString(), "-1");
+  EXPECT_EQ(Expression("ceil(ln(2)^1000000000 / (sin(4) + 1 - 1))").toString(), "0");
+  EXPECT_EQ(Expression("sign(ln(2)^1000000000 / (sin(4) + 1 - 1))").toString(), "-1");
+
+  EXPECT_EQ(Expression("floor(ln(2)^1000000000 / (2sin(4) - sin(4)))").toString(), "-1");
+  EXPECT_EQ(Expression("ceil(ln(2)^1000000000 / (2sin(4) - sin(4)))").toString(), "0");
+  EXPECT_EQ(Expression("sign(ln(2)^1000000000 / (2sin(4) - sin(4)))").toString(), "-1");
+
+  EXPECT_EQ(Expression("floor(E^(E^(E^2)))").toString(), "floor(E^(E^(E^2)))");
+  EXPECT_EQ(Expression("ceil(E^(E^(E^2)))").toString(), "ceil(E^(E^(E^2)))");
+  EXPECT_EQ(Expression("sign(E^(E^(E^2)))").toString(), "1");
 
   EXPECT_EQ(Expression("-sin(x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("-sin(x) + sin(2)").toString(), "-sin(x) + sin(2)");

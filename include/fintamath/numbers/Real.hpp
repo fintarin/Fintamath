@@ -77,6 +77,8 @@ private:
   boost::multiprecision::cpp_dec_float_100 backend;
 
   uint8_t precision = FINTAMATH_PRECISION;
+
+  bool isNegative = false;
 };
 
 }

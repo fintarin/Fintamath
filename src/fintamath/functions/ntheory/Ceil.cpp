@@ -32,7 +32,7 @@ std::unique_ptr<IMathObject> Ceil::multiCeilSimplify(const INumber &rhs) {
     outMultiCeil.add<Real>([](const Real &inRhs) {
       Integer res = ceil(inRhs);
 
-      if (inRhs >= 0 && inRhs == res) {
+      if (inRhs >= 0 && inRhs == Real(res)) {
         res++;
       }
 

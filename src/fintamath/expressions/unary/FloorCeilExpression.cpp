@@ -27,7 +27,11 @@ ArgumentPtr FloorCeilExpression::intApproximateSimplify(const IFunction &func, c
   ArgumentPtr approx = rhs->clone();
   approximateSimplifyChild(approx);
 
-  return callFunction(func, {approx});
+  if (auto res = cast<INumber>(callFunction(func, {approx}))) {
+    return res;
+  }
+
+  return {};
 }
 
 ArgumentPtr FloorCeilExpression::negSimplify(const IFunction &func, const ArgumentPtr &rhs) {
