@@ -573,13 +573,6 @@ TEST(RealFunctionsTests, acschTest) {
   EXPECT_THROW(acsch(Real("0")), UndefinedFunctionException);
 }
 
-TEST(RealFunctionsTests, getETest) {
-  EXPECT_EQ(getE().toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
-}
-
-TEST(RealFunctionsTests, getEPiTest) {
-  EXPECT_EQ(getPi().toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
-}
 
 TEST(RealFunctionsTests, tgammaTest) {
   EXPECT_EQ(tgamma(Real("1")).toString(), "1.0");
@@ -616,4 +609,12 @@ TEST(RealFunctionsTests, tgammaTest) {
 
   EXPECT_THROW(tgamma(Real("1000000000")), UndefinedFunctionException);
   EXPECT_THROW(tgamma(Real("-1000000000")), UndefinedFunctionException);
+}
+
+TEST(RealFunctionsTests, getETest) {
+  EXPECT_EQ(getE().toString(), "2.7182818284590452353602874713526624977572470936999595749669676277240766303535476");
+}
+
+TEST(RealFunctionsTests, getPiTest) {
+  EXPECT_EQ(getPi().toString(), "3.141592653589793238462643383279502884197169399375105820974944592307816406286209");
 }

@@ -294,16 +294,6 @@ Real acsch(const Real &rhs) {
   }
 }
 
-Real getE() {
-  using boost::multiprecision::default_ops::get_constant_e;
-  return {cpp_dec_float_100(get_constant_e<cpp_dec_float_100::backend_type>())};
-}
-
-Real getPi() {
-  using boost::multiprecision::default_ops::get_constant_pi;
-  return {cpp_dec_float_100(get_constant_pi<cpp_dec_float_100::backend_type>())};
-}
-
 Real tgamma(const Real &rhs) {
   try {
     return boost::math::tgamma(rhs.getBackend());
@@ -314,6 +304,18 @@ Real tgamma(const Real &rhs) {
   catch (const std::overflow_error &) {
     throw UndefinedFunctionException("tgamma", {rhs.toString()});
   }
+}
+
+const Real &getE() {
+  using boost::multiprecision::default_ops::get_constant_e;
+  static const Real e = cpp_dec_float_100(get_constant_e<cpp_dec_float_100::backend_type>());
+  return e;
+}
+
+const Real &getPi() {
+  using boost::multiprecision::default_ops::get_constant_pi;
+  static const Real pi = cpp_dec_float_100(get_constant_pi<cpp_dec_float_100::backend_type>());
+  return pi;
 }
 
 }
