@@ -7,14 +7,25 @@ using boost::multiprecision::cpp_int;
 
 namespace fintamath {
 
-const Real maxTrigArgument = pow(10, FINTAMATH_PRECISION);
+const Real &getMaxPreciseValue() {
+  static const Real maxPreciseValue = pow(10, FINTAMATH_PRECISION) - 1;
+  return maxPreciseValue;
+}
 
 Integer floor(const Real &rhs) {
+  if (abs(rhs) > getMaxPreciseValue()) {
+    throw UndefinedFunctionException("floor", {rhs.toString()});
+  }
+
   cpp_dec_float_100 res = boost::multiprecision::floor(rhs.getBackend());
   return res.convert_to<cpp_int>();
 }
 
 Integer ceil(const Real &rhs) {
+  if (abs(rhs) > getMaxPreciseValue()) {
+    throw UndefinedFunctionException("ceil", {rhs.toString()});
+  }
+
   cpp_dec_float_100 res = boost::multiprecision::ceil(rhs.getBackend());
   return res.convert_to<cpp_int>();
 }
@@ -87,7 +98,7 @@ Real sin(const Real &rhs) {
 
   cpp_dec_float_100 res = sin(rhs.getBackend());
 
-  if (res == zeroValue && abs(rhs) >= maxTrigArgument) {
+  if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
     throw UndefinedFunctionException("sin", {rhs.toString()});
   }
 
@@ -99,7 +110,7 @@ Real cos(const Real &rhs) {
 
   cpp_dec_float_100 res = cos(rhs.getBackend());
 
-  if (res == zeroValue && abs(rhs) >= maxTrigArgument) {
+  if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
     throw UndefinedFunctionException("cos", {rhs.toString()});
   }
 
@@ -111,7 +122,7 @@ Real tan(const Real &rhs) {
 
   cpp_dec_float_100 res = tan(rhs.getBackend());
 
-  if (res == zeroValue && abs(rhs) >= maxTrigArgument) {
+  if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
     throw UndefinedFunctionException("tan", {rhs.toString()});
   }
 

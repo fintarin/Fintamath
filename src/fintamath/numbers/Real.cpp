@@ -19,7 +19,8 @@ Real &Real::operator=(Real &&rhs) noexcept = default;
 
 Real::~Real() = default;
 
-Real::Real(cpp_dec_float_100 inBackend) : backend(std::move(inBackend)) {
+Real::Real(cpp_dec_float_100 inBackend) : backend(std::move(inBackend)),
+                                          isNegative(backend.backend().isneg()) {
 }
 
 Real::Real(std::string str) : Real() {
@@ -32,6 +33,7 @@ Real::Real(std::string str) : Real() {
     size_t firstDigitPos = 0;
     if (str.front() == '-') {
       firstDigitPos++;
+      isNegative = true;
     }
 
     str.erase(firstDigitPos, str.find_first_not_of('0'));
@@ -61,14 +63,22 @@ Real::Real(const Rational &val) {
   *this = Real(val.numerator()) / Real(val.denominator());
 }
 
-Real::Real(const Integer &val) : backend(val.getBackend()) {
+Real::Real(const Integer &val) : backend(val.getBackend()),
+                                 isNegative(val < 0) {
 }
 
-Real::Real(double val) : backend(val) {
+Real::Real(double val) : backend(val),
+                         isNegative(val < 0) {
 }
 
 std::string Real::toString() const {
-  return toString(precision);
+  std::string res = toString(precision);
+
+  if (isNegative && res.front() != '-') {
+    res.insert(res.begin(), '-');
+  }
+
+  return res;
 }
 
 std::string Real::toString(uint8_t inPrecision) const {
@@ -126,6 +136,10 @@ void Real::setPrecision(uint8_t inPrecision) {
 }
 
 int Real::sign() const {
+  if (isNegative) {
+    return -1;
+  }
+
   return backend.sign();
 }
 
@@ -134,29 +148,43 @@ const cpp_dec_float_100 &Real::getBackend() const {
 }
 
 bool Real::equals(const Real &rhs) const {
-  return backend == rhs.backend;
+  return backend == rhs.backend && isNegative == rhs.isNegative;
 }
 
 std::strong_ordering Real::compare(const Real &rhs) const {
+  if (isNegative && !rhs.isNegative) {
+    return std::strong_ordering::less;
+  }
+
+  if (!isNegative && rhs.isNegative) {
+    return std::strong_ordering::greater;
+  }
+
   return backend.compare(rhs.backend) <=> 0;
 }
 
 Real &Real::add(const Real &rhs) {
+  bool isResNegZero = backend.is_zero() && rhs.backend.is_zero() && (isNegative || rhs.isNegative);
   backend += rhs.backend;
+  isNegative = isResNegZero || backend.backend().isneg();
   return *this;
 }
 
 Real &Real::substract(const Real &rhs) {
+  bool isResNegZero = backend.is_zero() && rhs.backend.is_zero() && (isNegative || !rhs.isNegative);
   backend -= rhs.backend;
+  isNegative = isResNegZero || backend.backend().isneg();
   return *this;
 }
 
 Real &Real::multiply(const Real &rhs) {
+  isNegative = isNegative != rhs.isNegative;
   backend *= rhs.backend;
   return *this;
 }
 
 Real &Real::divide(const Real &rhs) {
+  isNegative = isNegative != rhs.isNegative;
   backend /= rhs.backend;
 
   if (!backend.backend().isfinite()) {
@@ -167,7 +195,9 @@ Real &Real::divide(const Real &rhs) {
 }
 
 Real &Real::negate() {
+  isNegative = !isNegative;
   backend = -backend;
   return *this;
 }
+
 }

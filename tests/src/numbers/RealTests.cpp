@@ -12,14 +12,14 @@ TEST(RealTests, constructorTest) {
 }
 
 TEST(RealTests, stringConstructorTest) {
-  EXPECT_EQ(Real("-93"), -93);
+  EXPECT_EQ(Real("0").toString(), "0.0");
+  EXPECT_EQ(Real("-0").toString(), "-0.0");
+  EXPECT_EQ(Real("-93").toString(), "-93.0");
   EXPECT_EQ(Real("-9.3").toString(), "-9.3");
   EXPECT_EQ(Real("0989929039237832000.9302930929333").toString(), "989929039237832000.9302930929333");
   EXPECT_EQ(Real(".1").toString(), "0.1");
   EXPECT_EQ(Real("1.").toString(), "1.0");
-  EXPECT_EQ(Real("10000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000")
-                .toString(),
-            "1.00000000002*10^94");
+  EXPECT_EQ(Real("10000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000").toString(), "1.00000000002*10^94");
 
   EXPECT_THROW(Real("--10"), InvalidInputException);
   EXPECT_THROW(Real("test"), InvalidInputException);
@@ -82,6 +82,10 @@ TEST(RealTests, plusAssignmentOperatorTest) {
   EXPECT_EQ(Real("-73.85") += Real("2.55"), Real("-71.3"));
   EXPECT_EQ(Real("73.8") += Real("2.5"), Real("76.3"));
   EXPECT_EQ(Real("-73.8") += Real("-2.5"), Real("-76.3"));
+
+  EXPECT_EQ(Real("0") += Real("-0"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") += Real("0"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") += -Real("-0"), Real("-0.0"));
 }
 
 TEST(RealTests, rationalPlusAssignmentOperatorTest) {
@@ -207,6 +211,10 @@ TEST(RealTests, minusAssignmentOperatorTest) {
   EXPECT_EQ(Real("-73.85") -= Real("2.55"), Real("-76.4"));
   EXPECT_EQ(Real("73.8") -= Real("2.5"), Real("71.3"));
   EXPECT_EQ(Real("-73.8") -= Real("-2.5"), Real("-71.3"));
+
+  EXPECT_EQ(Real("0") -= Real("0"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") -= Real("-0"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") -= -Real("0"), Real("-0.0"));
 }
 
 TEST(RealTests, rationalMinusAssignmentOperatorTest) {
@@ -331,6 +339,16 @@ TEST(RealTests, multiplyAssignmentOperatorTest) {
   EXPECT_EQ(Real(5) *= Real(2), 10);
   EXPECT_EQ(Real("-2.05") *= Real("-1.1"), Real("2.255"));
   EXPECT_EQ(Real("2.5") *= Real("-1.1"), Real("-2.75"));
+
+  EXPECT_EQ(Real("0") *= Real("-2"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") *= Real("2"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") *= Real("-2"), Real("0.0"));
+  EXPECT_EQ(Real("-2") *= Real("0"), Real("-0.0"));
+  EXPECT_EQ(Real("2") *= Real("-0"), Real("-0.0"));
+  EXPECT_EQ(Real("-2") *= Real("-0"), Real("0.0"));
+  EXPECT_EQ(Real("0") *= Real("-0"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") *= Real("0"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") *= Real("-0"), Real("0.0"));
 }
 
 TEST(RealTests, rationalMultiplyAssignmentOperatorTest) {
@@ -418,6 +436,10 @@ TEST(RealTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(a.toString(), "2.05");
   a = Real("12.1") /= Real("-1.1");
   EXPECT_EQ(a.toString(), "-11.0");
+
+  EXPECT_EQ(Real("0") /= Real("-2"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") /= Real("2"), Real("-0.0"));
+  EXPECT_EQ(Real("-0") /= Real("-2"), Real("0.0"));
 }
 
 TEST(RealTests, rationalDivideAssignmentOperatorTest) {
@@ -525,11 +547,17 @@ TEST(RealTests, doubleFriendDivideOperatorTest) {
 TEST(RealTests, unaryPlusOperatorTest) {
   EXPECT_EQ(+Real(-5), -5);
   EXPECT_EQ(+Real(5), 5);
+
+  EXPECT_EQ(+Real("0"), Real("0"));
+  EXPECT_EQ(+Real("-0"), Real("-0"));
 }
 
 TEST(RealTests, unaryMinusOperatorTest) {
   EXPECT_EQ(-Real(5), -5);
   EXPECT_EQ(-Real(-5), 5);
+
+  EXPECT_EQ(-Real("0"), Real("-0"));
+  EXPECT_EQ(-Real("-0"), Real("0"));
 }
 
 TEST(RealTests, equalOperatorTest) {
@@ -539,6 +567,10 @@ TEST(RealTests, equalOperatorTest) {
 
   EXPECT_FALSE(Real("0.5") == Real("1.5"));
   EXPECT_FALSE(Real("-0.5") == Real("0.5"));
+
+  EXPECT_TRUE(Real("-0") == Real("-0"));
+  EXPECT_FALSE(Real("-0") == Real("0"));
+  EXPECT_FALSE(Real("0") == Real("-0"));
 }
 
 TEST(RealTests, rationalEqualOperatorTest) {
@@ -596,6 +628,10 @@ TEST(RealTests, notEqualOperatorTest) {
   EXPECT_FALSE(Real("0.5") != Real("0.5"));
   EXPECT_FALSE(Real(-5) != Real(-5));
   EXPECT_FALSE(Real("5.0") != Real(5));
+
+  EXPECT_FALSE(Real("-0") != Real("-0"));
+  EXPECT_TRUE(Real("-0") != Real("0"));
+  EXPECT_TRUE(Real("0") != Real("-0"));
 }
 
 TEST(RealTests, rationalNotEqualOperatorTest) {
@@ -651,6 +687,10 @@ TEST(RealTests, lessOperatorTest) {
 
   EXPECT_FALSE(Real("5.1") < Real("5.1"));
   EXPECT_FALSE(Real(5) < Real(-5));
+
+  EXPECT_FALSE(Real("-0") < Real("-0"));
+  EXPECT_TRUE(Real("-0") < Real("0"));
+  EXPECT_FALSE(Real("0") < Real("-0"));
 }
 
 TEST(RealTests, rationalLessOperatorTest) {
@@ -702,6 +742,10 @@ TEST(RealTests, moreOperatorTest) {
 
   EXPECT_FALSE(Real("5.1") > Real("5.1"));
   EXPECT_FALSE(Real(-5) > Real(5));
+
+  EXPECT_FALSE(Real("-0") > Real("-0"));
+  EXPECT_FALSE(Real("-0") > Real("0"));
+  EXPECT_TRUE(Real("0") > Real("-0"));
 }
 
 TEST(RealTests, rationalMoreOperatorTest) {
@@ -754,6 +798,10 @@ TEST(RealTests, lessEqualOperatorTest) {
 
   EXPECT_FALSE(Real("5.5") <= Real("5.1"));
   EXPECT_FALSE(Real(5) <= Real(-5));
+
+  EXPECT_TRUE(Real("-0") <= Real("-0"));
+  EXPECT_TRUE(Real("-0") <= Real("0"));
+  EXPECT_FALSE(Real("0") <= Real("-0"));
 }
 
 TEST(RealTests, rationalLessEqualOperatorTest) {
@@ -812,6 +860,10 @@ TEST(RealTests, moreEqualOperatorTest) {
 
   EXPECT_FALSE(Real("5.1") >= Real("5.2"));
   EXPECT_FALSE(Real(-5) >= Real(5));
+
+  EXPECT_TRUE(Real("-0") >= Real("-0"));
+  EXPECT_FALSE(Real("-0") >= Real("0"));
+  EXPECT_TRUE(Real("0") >= Real("-0"));
 }
 
 TEST(RealTests, rationalMoreEqualOperatorTest) {
@@ -865,9 +917,11 @@ TEST(RealTests, doubleFriendMoreEqualOperatorTest) {
 }
 
 TEST(RealTests, toStringTest) {
-  EXPECT_EQ(Real("2.334455").toString(), "2.334455");
+  EXPECT_EQ(Real(0).toString(), "0.0");
+  EXPECT_EQ((-Real(0)).toString(), "-0.0");
   EXPECT_EQ(Real(11).toString(), "11.0");
   EXPECT_EQ(Real(-11).toString(), "-11.0");
+  EXPECT_EQ(Real("2.334455").toString(), "2.334455");
   EXPECT_EQ(
       Real("118219374329847329874632874628734532864532645263452364532614523864152352353214454587245272").toString(),
       "1.1821937432984732987463287462873453286453264526345236453261452386415235235321445*10^89");
@@ -897,16 +951,16 @@ TEST(RealTests, toStringPrecisionPrecisionTests) {
 
   val = Real("10000000000000000000.37841620837012");
   EXPECT_EQ(val.toString(22), "10000000000000000000.38");
-  
+
   val = Real("10000000000000000000.375");
   EXPECT_EQ(val.toString(22), "10000000000000000000.38");
 
   val = Real("0.000000001");
   EXPECT_EQ(val.toString(1), "1.0*10^-9");
-  
+
   val = Real("1000000000.1");
   EXPECT_EQ(val.toString(1), "1.0*10^9");
-  
+
   val = Real("10.1");
   EXPECT_EQ(val.toString(1), "1.0*10");
 }
@@ -914,7 +968,7 @@ TEST(RealTests, toStringPrecisionPrecisionTests) {
 TEST(RealTests, getPrecisionTests) {
   Real val = Rational(1, 3);
   EXPECT_EQ(val.getPrecision(), FINTAMATH_PRECISION);
-  
+
   val.setPrecision(10);
   EXPECT_EQ(val.getPrecision(), 10);
 }
@@ -951,7 +1005,7 @@ TEST(RealTests, setPrecisionTests) {
   val = Real("10000000000000000000.37841620837012");
   val.setPrecision(22);
   EXPECT_EQ(val.toString(), "10000000000000000000.38");
-  
+
   val = Real("10000000000000000000.375");
   val.setPrecision(22);
   EXPECT_EQ(val.toString(), "10000000000000000000.38");
@@ -959,11 +1013,11 @@ TEST(RealTests, setPrecisionTests) {
   val = Real("0.000000001");
   val.setPrecision(1);
   EXPECT_EQ(val.toString(), "1.0*10^-9");
-  
+
   val = Real("1000000000.1");
   val.setPrecision(1);
   EXPECT_EQ(val.toString(), "1.0*10^9");
-  
+
   val = Real("10.1");
   val.setPrecision(1);
   EXPECT_EQ(val.toString(), "1.0*10");
