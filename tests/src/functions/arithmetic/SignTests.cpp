@@ -35,15 +35,15 @@ TEST(SignTests, callTest) {
   
   EXPECT_EQ(f(Complex(2, 0))->toString(), "1");
   EXPECT_EQ(f(Complex(0, 2))->toString(), "I");
-  EXPECT_EQ(f(Complex(2, 2))->toString(), "(1/2 + 1/2 I) sqrt(2)");
-  EXPECT_EQ(f(Complex(3, 2))->toString(), "(3/13 + 2/13 I) sqrt(13)");
-  EXPECT_EQ(f(Complex(2, 3))->toString(), "(2/13 + 3/13 I) sqrt(13)");
+  EXPECT_EQ(f(Complex(2, 2))->toString(), "((1 + I) sqrt(2))/2");
+  EXPECT_EQ(f(Complex(3, 2))->toString(), "((3 + 2 I) sqrt(13))/13");
+  EXPECT_EQ(f(Complex(2, 3))->toString(), "((2 + 3 I) sqrt(13))/13");
   EXPECT_EQ(f(Complex(-2, 0))->toString(), "-1");
   EXPECT_EQ(f(Complex(0, -2))->toString(), "-I");
-  EXPECT_EQ(f(Complex(2, -2))->toString(), "(1/2 - 1/2 I) sqrt(2)");
-  EXPECT_EQ(f(Complex(-3, 2))->toString(), "(-3/13 + 2/13 I) sqrt(13)");
-  EXPECT_EQ(f(Complex(2, -3))->toString(), "(2/13 - 3/13 I) sqrt(13)");
-  EXPECT_EQ(f(Complex(-2, -3))->toString(), "(-2/13 - 3/13 I) sqrt(13)");
+  EXPECT_EQ(f(Complex(2, -2))->toString(), "((1 - I) sqrt(2))/2");
+  EXPECT_EQ(f(Complex(-3, 2))->toString(), "-((3 - 2 I) sqrt(13))/13");
+  EXPECT_EQ(f(Complex(2, -3))->toString(), "((2 - 3 I) sqrt(13))/13");
+  EXPECT_EQ(f(Complex(-2, -3))->toString(), "-((2 + 3 I) sqrt(13))/13");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "sign(a)");
 

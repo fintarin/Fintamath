@@ -82,7 +82,7 @@ TEST(FintamathTests, fintamathTests) {
   EXPECT_EQ(expr.toString(), "x = -2 - I | x = -2 + I");
 
   expr = solve(Expression("3x^2 + 11x + 15 = 0"));
-  EXPECT_EQ(expr.toString(), "x = -1/6 I sqrt(59) - 11/6 | x = 1/6 I sqrt(59) - 11/6");
+  EXPECT_EQ(expr.toString(), "x = -(I sqrt(59))/6 - 11/6 | x = (I sqrt(59))/6 - 11/6");
 
   expr = solve(Expression("-3x^2 + 28x - 49 = 0")).approximate(2);
   EXPECT_EQ(expr.toString(), "x = 2.3 | x = 7");
