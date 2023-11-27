@@ -208,7 +208,7 @@ std::pair<ArgumentPtr, ArgumentPtr> splitRational(const ArgumentPtr &arg) {
   return {arg, Integer(1).clone()};
 }
 
-ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {
+ArgumentPtr makePolynom(const IFunction &func, ArgumentPtrVector &&args) {
   if (args.empty()) {
     return {};
   }
@@ -217,7 +217,11 @@ ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {
     return args.front();
   }
 
-  return makeExpr(func, args);
+  return makeExpr(func, std::move(args));
+}
+
+ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {
+  return makePolynom(func, ArgumentPtrVector(args));
 }
 
 ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &arg) {

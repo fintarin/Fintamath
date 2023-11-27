@@ -41,7 +41,7 @@ std::string MulExpression::toString() const {
       numeratorChildren.front() = childNumerator;
     }
 
-    ArgumentPtr numerator = makePolynom(Mul(), numeratorChildren);
+    ArgumentPtr numerator = makePolynom(Mul(), std::move(numeratorChildren));
     ArgumentPtr denominator = childDenominator;
     ArgumentPtr res = divExpr(numerator, denominator);
 
