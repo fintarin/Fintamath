@@ -26,6 +26,7 @@
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -504,9 +505,11 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVect
   ArgumentPtrVector denominatorChildren;
 
   for (const auto &child : lhsChildren) {
-    if (const auto &rationalChild = cast<Rational>(child)) {
-      numeratorChildren.emplace_back(rationalChild->numerator().clone());
-      denominatorChildren.emplace_back(rationalChild->denominator().clone());
+    auto [childNumerator, childDenominator] = splitRational(child);
+
+    if (*childDenominator != Integer(1)) {
+      numeratorChildren.emplace_back(childNumerator);
+      denominatorChildren.emplace_back(childDenominator);
     }
     else {
       numeratorChildren.emplace_back(child);
@@ -518,6 +521,7 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVect
 
     ArgumentPtr numerator = makePolynom(Mul(), numeratorChildren);
     ArgumentPtr denominator = makePolynom(Mul(), denominatorChildren);
+
     return divExpr(numerator, denominator);
   }
 

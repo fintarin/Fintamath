@@ -13,6 +13,7 @@
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Complex.hpp"
+#include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
@@ -165,6 +166,46 @@ std::pair<ArgumentPtr, ArgumentPtr> splitPowExpr(const ArgumentPtr &rhs) {
   }
 
   return {one, rhs};
+}
+
+std::pair<ArgumentPtr, ArgumentPtr> splitRational(const ArgumentPtr &arg) {
+  if (const auto rat = cast<Rational>(arg)) {
+    return {rat->numerator().clone(), rat->denominator().clone()};
+  }
+
+  if (const auto complex = cast<Complex>(arg)) {
+    ArgumentPtr reNumerator;
+    ArgumentPtr imNumerator;
+    Integer denominator = 1;
+
+    const auto *reRat = cast<Rational>(&complex->real());
+    const auto *imRat = cast<Rational>(&complex->imag());
+
+    if (reRat && imRat) {
+      denominator = lcm(reRat->denominator(), imRat->denominator());
+      reNumerator = (denominator / reRat->denominator() * reRat->numerator()).clone();
+      imNumerator = (denominator / imRat->denominator() * imRat->numerator()).clone();
+    }
+    else if (reRat) {
+      denominator = reRat->denominator();
+      reNumerator = reRat->numerator().clone();
+      imNumerator = complex->imag() * denominator;
+    }
+    else if (imRat) {
+      denominator = imRat->denominator();
+      reNumerator = complex->real() * denominator;
+      imNumerator = imRat->numerator().clone();
+    }
+
+    auto reNumeratorNum = cast<INumber>(reNumerator);
+    auto imNumeratorNum = cast<INumber>(imNumerator);
+
+    if (denominator != 1 && reNumeratorNum && imNumeratorNum) {
+      return {Complex(*reNumeratorNum, *imNumeratorNum).clone(), denominator.clone()};
+    }
+  }
+
+  return {arg, Integer(1).clone()};
 }
 
 ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {

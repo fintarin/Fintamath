@@ -14,6 +14,7 @@
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -25,23 +26,29 @@ MulExpression::MulExpression(ArgumentPtrVector inChildren)
 }
 
 std::string MulExpression::toString() const {
-  if (const auto firstChildRat = cast<Rational>(children.front())) {
+  auto [childNumerator, childDenominator] = splitRational(children.front());
+
+  if (*childDenominator != Integer(1)) {
+    bool isChildNumeratorPosOne = *childNumerator == Integer(1);
+    bool isChildNumeratorNegOne = *childNumerator == Integer(-1);
+
     ArgumentPtrVector numeratorChildren = children;
 
-    if (const Integer firstChildNumeratorAbs = abs(firstChildRat->numerator()); firstChildNumeratorAbs != 1) {
-      numeratorChildren.front() = firstChildNumeratorAbs.clone();
-    }
-    else {
+    if (isChildNumeratorPosOne || isChildNumeratorNegOne) {
       numeratorChildren.erase(numeratorChildren.begin());
     }
+    else {
+      numeratorChildren.front() = childNumerator;
+    }
 
-    ArgumentPtr numerator = numeratorChildren.size() > 1 ? mulExpr(std::move(numeratorChildren)) : numeratorChildren.front();
-    ArgumentPtr denominator = firstChildRat->denominator().clone();
+    ArgumentPtr numerator = makePolynom(Mul(), numeratorChildren);
+    ArgumentPtr denominator = childDenominator;
     ArgumentPtr res = divExpr(numerator, denominator);
 
     std::string resStr = res->toString();
-    if (firstChildRat->numerator() < Integer(0)) {
-      resStr.insert(0, Neg().toString());
+
+    if (isChildNumeratorNegOne) {
+      resStr.insert(resStr.begin(), '-');
     }
 
     return resStr;
