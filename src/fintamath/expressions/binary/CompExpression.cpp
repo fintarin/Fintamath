@@ -173,34 +173,34 @@ ArgumentPtr CompExpression::rateSimplify(const IFunction &func, const ArgumentPt
     return {};
   }
 
-  ArgumentPtrVector dividendPolynom;
-  std::shared_ptr<const IExpression> polynomFirstChildExpr;
+  ArgumentPtrVector children;
+  std::shared_ptr<const IExpression> firstChildMulExpr;
 
   if (is<Add>(lhsExpr->getFunction())) {
-    polynomFirstChildExpr = cast<IExpression>(lhsExpr->getChildren().front());
-    dividendPolynom = lhsExpr->getChildren();
+    children = lhsExpr->getChildren();
+    firstChildMulExpr = cast<IExpression>(lhsExpr->getChildren().front());
   }
   else {
-    polynomFirstChildExpr = lhsExpr;
-    dividendPolynom.emplace_back(lhsExpr);
+    children.emplace_back(lhsExpr);
+    firstChildMulExpr = lhsExpr;
   }
 
-  auto [rate, value] = splitMulExpr(polynomFirstChildExpr);
+  auto [rate, value] = splitMulExpr(firstChildMulExpr);
   if (*rate == Integer(1) || containsInfinity(rate)) {
     return {};
   }
 
-  for (auto &child : std::views::drop(dividendPolynom, 1)) {
+  for (auto &child : std::views::drop(children, 1)) {
     child = divExpr(child, rate);
   }
 
   {
-    ArgumentPtrVector newChildren = polynomFirstChildExpr->getChildren();
+    ArgumentPtrVector newChildren = firstChildMulExpr->getChildren();
     newChildren.erase(newChildren.begin());
-    dividendPolynom.front() = makePolynom(Mul(), newChildren);
+    children.front() = makePolynom(Mul(), std::move(newChildren));
   }
 
-  ArgumentPtr newLhs = dividendPolynom.size() > 1 ? addExpr(std::move(dividendPolynom)) : dividendPolynom.front();
+  ArgumentPtr newLhs = makePolynom(Add(), std::move(children));
   simplifyChild(newLhs);
 
   approximateSimplifyChild(rate);
