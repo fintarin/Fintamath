@@ -135,6 +135,11 @@ Parser::Map<std::unique_ptr<IConstant>> &IConstant::getParser() {
   return parser;
 }
 
+std::unordered_map<std::string, size_t> &IFunction::getFunctionOrderMutableMap() {
+  static std::unordered_map<std::string, size_t> orderMap;
+  return orderMap;
+}
+
 Parser::Map<std::unique_ptr<IFunction>> &IFunction::getParser() {
   static Parser::Map<std::unique_ptr<IFunction>> parser;
   return parser;

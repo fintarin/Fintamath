@@ -832,6 +832,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("csc(x)*tan(x)").toString(), "sec(x)");
 
   EXPECT_EQ(Expression("sin(x)cos(x)").toString(), "sin(2 x)/2");
+  EXPECT_EQ(Expression("sin(x)cos(x)sign(x)").toString(), "(sin(2 x) sign(x))/2");
   EXPECT_EQ(Expression("sin(x)^2").toString(), "-cos(2 x)/2 + 1/2");
   EXPECT_EQ(Expression("cos(x)^2").toString(), "cos(2 x)/2 + 1/2");
 
@@ -1445,10 +1446,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("tan(3/2*Pi)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("cot(0)").toString(), "ComplexInf");
   EXPECT_EQ(Expression("cot(2*Pi)").toString(), "ComplexInf");
-  EXPECT_EQ(Expression("sin(Inf)^2 + cos(Inf)^2").toString(), "cos(Inf)^2 + sin(Inf)^2");
-  EXPECT_EQ(Expression("sin(Inf) cos(Inf)").toString(), "cos(Inf) sin(Inf)");
+  EXPECT_EQ(Expression("sin(Inf)^2 + cos(Inf)^2").toString(), "sin(Inf)^2 + cos(Inf)^2");
+  EXPECT_EQ(Expression("sin(Inf) cos(Inf)").toString(), "sin(Inf) cos(Inf)");
   EXPECT_EQ(Expression("tan(Inf)").toString(), "tan(Inf)");
-  EXPECT_EQ(Expression("tan(Inf) * cot(Inf)").toString(), "cot(Inf) tan(Inf)");
+  EXPECT_EQ(Expression("tan(Inf) * cot(Inf)").toString(), "tan(Inf) cot(Inf)");
   EXPECT_EQ(Expression("sign(Inf)").toString(), "1");
   EXPECT_EQ(Expression("sign(-Inf)").toString(), "-1");
   EXPECT_EQ(Expression("abs(Inf)").toString(), "Inf");
