@@ -100,17 +100,17 @@ Ordering compareNonExpressions(const ArgumentPtr &lhs,
                                const ComparatorOptions &options) {
 
   if (is<ILiteral>(lhs) && !is<ILiteral>(rhs)) {
-    return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
   if (!is<ILiteral>(lhs) && is<ILiteral>(rhs)) {
-    return options.termsOrderInversed ? Ordering::greater : Ordering::less;
+    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (is<Variable>(lhs) && !is<Variable>(rhs)) {
-    return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
   if (!is<Variable>(lhs) && is<Variable>(rhs)) {
-    return options.termsOrderInversed ? Ordering::greater : Ordering::less;
+    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (*lhs == *rhs) {
@@ -157,16 +157,15 @@ Ordering comparePolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpress
                                      const ComparatorOptions &options) {
 
   ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), {rhs}, options);
-  Ordering res = Ordering::greater;
 
   if (childrenComp.postfix != Ordering::equal) {
-    res = childrenComp.postfix;
+    return childrenComp.postfix;
   }
-  else if (childrenComp.prefixFirst != Ordering::equal) {
-    res = childrenComp.prefixFirst;
+  if (childrenComp.prefixFirst != Ordering::equal) {
+    return childrenComp.prefixFirst;
   }
 
-  return options.termsOrderInversed ? reverse(res) : res;
+  return options.constantOrderInversed ? Ordering::greater : Ordering::less;
 }
 
 Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
@@ -174,7 +173,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
                                            const ComparatorOptions &options) {
 
   if (!is<Variable>(rhs)) {
-    return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (auto res = compareVariables(lhs, rhs, options); res != Ordering::equal) {
@@ -197,7 +196,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
       case IOperator::Priority::Multiplication: {
         ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, Integer(1).clone());
         Ordering res = compare(lhs, rhsExpr);
-        return options.termsOrderInversed ? reverse(res) : res;
+        return options.constantOrderInversed ? reverse(res) : res;
       }
       default: {
         break;
@@ -205,7 +204,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
     }
   }
 
-  return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
+  return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
 }
 
 Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
@@ -286,11 +285,11 @@ Ordering compareVariables(const ArgumentPtr &lhs,
   }
 
   if (lhsVar && !rhsVar) {
-    return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (!lhsVar && rhsVar) {
-    return options.termsOrderInversed ? Ordering::greater : Ordering::less;
+    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   while (lhsVar && rhsVar) {

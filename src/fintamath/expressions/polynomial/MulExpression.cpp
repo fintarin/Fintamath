@@ -95,7 +95,7 @@ MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPostSimplify
   return simplifyFunctions;
 }
 
-bool MulExpression::isTermsOrderInversed() const {
+bool MulExpression::isConstantOrderInversed() const {
   return true;
 }
 

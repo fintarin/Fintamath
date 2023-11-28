@@ -5,7 +5,7 @@
 namespace fintamath {
 
 struct ComparatorOptions {
-  bool termsOrderInversed = false;
+  bool constantOrderInversed = false;
   bool comparableOrderInversed = false;
 };
 

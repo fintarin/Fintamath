@@ -40,7 +40,7 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  virtual bool isTermsOrderInversed() const;
+  virtual bool isConstantOrderInversed() const;
 
   virtual bool isComparableOrderInversed() const;
 
