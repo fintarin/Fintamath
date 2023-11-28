@@ -193,13 +193,13 @@ std::string IPolynomExpression::childToString(const IOperator &oper, const Argum
 
 std::strong_ordering IPolynomExpression::compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
   ComparatorOptions options = {
-      .termsOrderInversed = isTermsOrderInversed(),
+      .constantOrderInversed = isConstantOrderInversed(),
       .comparableOrderInversed = isComparableOrderInversed(),
   };
   return fintamath::compare(lhs, rhs, options);
 }
 
-bool IPolynomExpression::isTermsOrderInversed() const {
+bool IPolynomExpression::isConstantOrderInversed() const {
   return false;
 }
 
