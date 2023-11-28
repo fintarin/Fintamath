@@ -427,6 +427,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("x Pi^4 ln(5) + x E^2 sin(1) sinh(2)").toString(), "(E^2 sinh(2) sin(1) + ln(5) Pi^4) x");
   EXPECT_EQ(Expression("(a+b) (-sqrt2 + sqrt3 - sqrt5)").toString(), "(sqrt(3) - sqrt(5) - sqrt(2)) a + (sqrt(3) - sqrt(5) - sqrt(2)) b");
   EXPECT_EQ(Expression("(sqrt(2) x + sqrt(3) x + Pi^4 x + 1) / (sqrt(2) + sqrt(3) + Pi^4)").toString(), "x + 1/(Pi^4 + sqrt(3) + sqrt(2))");
+  EXPECT_EQ(Expression("sqrt(1/(7 + x^2)) + sqrt(x)/(sqrt(x) + 1)").toString(), "(sqrt(x) sqrt(x^2 + 7) + sqrt(x) + 1)/(sqrt(x^2 + 7) + sqrt(x) sqrt(x^2 + 7))");
+  EXPECT_EQ(Expression("root(1/(7 + x^2), 3) + sqrt(x)/(sqrt(x) + 1)").toString(), "(sqrt(x) root(x^2 + 7, 3) + sqrt(x) + 1)/(root(x^2 + 7, 3) + sqrt(x) root(x^2 + 7, 3))");
 
   EXPECT_EQ(Expression("log(2, 2)").toString(), "1");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");
