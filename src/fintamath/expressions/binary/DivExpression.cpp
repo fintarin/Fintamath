@@ -2,6 +2,7 @@
 
 #include <set>
 
+#include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -386,10 +387,15 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     multiplicators.emplace_back(mulExpr(rhsChildren[i], result));
   }
 
-  ArgumentPtr remainderAdd = makePolynom(Add(), std::move(multiplicators));
-  ArgumentPtr remainderNegAdd = negExpr(remainderAdd);
-  simplifyChild(remainderNegAdd);
-  ArgumentPtr remainder = divExpr(remainderNegAdd, rhs);
+  ArgumentPtr remainderAdd = negExpr(makePolynom(Add(), std::move(multiplicators)));
+  simplifyChild(remainderAdd);
+
+  ArgumentPtr remainderAddFirstChild = getPolynomChildren(Add(), remainderAdd).front();
+  if (compare(lhs, remainderAddFirstChild) != std::strong_ordering::less) {
+    return {};
+  }
+
+  ArgumentPtr remainder = divExpr(remainderAdd, rhs);
 
   return {result, remainder};
 }
