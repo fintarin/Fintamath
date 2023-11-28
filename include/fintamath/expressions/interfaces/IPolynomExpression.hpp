@@ -28,32 +28,12 @@ protected:
 
   using SimplifyFunctionVector = std::vector<SimplifyFunction>;
 
-  using ExpressionTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
-
-  struct ChildrenComparatorResult {
-    int postfix = 0;
-    int postfixUnary = 0;
-    int prefixFirst = 0;
-    int prefixLast = 0;
-    int prefixVariables = 0;
-    int size = 0;
-  };
-
   virtual SimplifyFunctionVector getFunctionsForPreSimplify() const;
 
   virtual SimplifyFunctionVector getFunctionsForPostSimplify() const;
 
   virtual std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
   virtual int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
   ArgumentPtr preSimplify() const override;
@@ -72,88 +52,6 @@ private:
   void compress();
 
   void sort();
-
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorNonExpressions(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorPolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
-                         const std::shared_ptr<const IPolynomExpression> &rhs) const;
-
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorPolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
-                                     const ArgumentPtr &rhs) const;
-
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
-                                           const ArgumentPtr &rhs) const;
-
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  int comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
-                            const std::shared_ptr<const IExpression> &rhs) const;
-
-  ChildrenComparatorResult comparatorChildren(const ArgumentPtrVector &lhsChildren,
-                                              const ArgumentPtrVector &rhsChildren) const;
-
-  /**
-   * @brief
-   *
-   * @param lhsExpr
-   * @param rhsExpr
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
-  static int comparatorFunctions(const std::shared_ptr<const IFunction> &lhs,
-                                 const std::shared_ptr<const IFunction> &rhs);
-
-  int comparatorVariables(const ArgumentPtr &lhs, const ArgumentPtr &rhs, bool isTermsOrderInversed) const;
-
-  static std::shared_ptr<const Variable> getNextVariable(ExpressionTreePathStack &stack);
-
-  static size_t getPositionOfFirstChildWithVariable(const ArgumentPtrVector &children);
-
-  static bool unwrapUnary(ArgumentPtr &lhs);
 
 protected:
   std::shared_ptr<IFunction> func;
