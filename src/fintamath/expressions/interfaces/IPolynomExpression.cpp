@@ -217,7 +217,7 @@ void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
 
 void IPolynomExpression::sort() {
   std::ranges::stable_sort(children, [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-    return compare(lhs, rhs) == std::strong_ordering::less;
+    return compare(lhs, rhs) == std::strong_ordering::greater;
   });
 }
 
