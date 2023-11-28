@@ -53,7 +53,7 @@ std::string AddExpression::childToString(const IOperator &oper, const ArgumentPt
   return result;
 }
 
-std::strong_ordering AddExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+std::strong_ordering AddExpression::compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
   auto lhsExpr = cast<IExpression>(lhs);
   auto rhsExpr = cast<IExpression>(rhs);
 
@@ -71,7 +71,7 @@ std::strong_ordering AddExpression::comparator(const ArgumentPtr &lhs, const Arg
     return std::strong_ordering::less;
   }
 
-  return IPolynomExpression::comparator(lhs, rhs);
+  return IPolynomExpression::compare(lhs, rhs);
 }
 
 AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPreSimplify() const {

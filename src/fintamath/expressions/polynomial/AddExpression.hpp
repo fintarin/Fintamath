@@ -28,7 +28,7 @@ protected:
    * @return  1 if we should not swap the arguments
    * @return  0 if this comparator fails
    */
-  std::strong_ordering comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
+  std::strong_ordering compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
 
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
