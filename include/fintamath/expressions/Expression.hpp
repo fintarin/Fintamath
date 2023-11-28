@@ -53,7 +53,7 @@ public:
 
   void setVariable(const Variable &var, const Expression &val);
 
-  static void registerTermsMaker(Parser::Function<std::unique_ptr<Term>, const Token &> &&maker) {
+  static void registerTermMaker(Parser::Function<std::unique_ptr<Term>, const Token &> &&maker) {
     Parser::add<Token>(getTermMakers(), std::move(maker));
   }
 

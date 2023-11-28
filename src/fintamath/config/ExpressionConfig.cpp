@@ -113,7 +113,7 @@ struct ExpressionConfig {
   }
 
   static void registerTermsMakers() {
-    Expression::registerTermsMaker([](const Token &token) {
+    Expression::registerTermMaker([](const Token &token) {
       if (auto arg = IFunction::parse(token, IFunction::Type::Binary)) {
         return std::make_unique<Term>(token, std::move(arg));
       }
@@ -125,7 +125,7 @@ struct ExpressionConfig {
       return std::unique_ptr<Term>();
     });
 
-    Expression::registerTermsMaker([](const Token &token) {
+    Expression::registerTermMaker([](const Token &token) {
       if (auto arg = ILiteral::parse(token)) {
         return std::make_unique<Term>(token, std::move(arg));
       }
@@ -133,7 +133,7 @@ struct ExpressionConfig {
       return std::unique_ptr<Term>();
     });
 
-    Expression::registerTermsMaker([](const Token &token) {
+    Expression::registerTermMaker([](const Token &token) {
       if (auto arg = INumber::parse(token)) {
         return std::make_unique<Term>(token, std::move(arg));
       }
