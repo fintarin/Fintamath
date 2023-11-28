@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/expressions/Expression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 
 namespace fintamath {
 
@@ -9,6 +9,6 @@ struct ComparatorOptions {
   bool comparableOrderInversed = false;
 };
 
-std::strong_ordering compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs, ComparatorOptions options = {});
+std::strong_ordering compare(ArgumentPtr lhs, ArgumentPtr rhs, ComparatorOptions options = {});
 
 }

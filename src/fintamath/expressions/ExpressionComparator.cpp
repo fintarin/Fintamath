@@ -26,6 +26,10 @@ Ordering comparePolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
                          const std::shared_ptr<const IPolynomExpression> &rhs,
                          const ComparatorOptions &options);
 
+Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
+                            const std::shared_ptr<const IExpression> &rhs,
+                            const ComparatorOptions &options);
+
 Ordering comparePolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
                                      const ArgumentPtr &rhs,
                                      const ComparatorOptions &options);
@@ -33,10 +37,6 @@ Ordering comparePolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpress
 Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
                                            const ArgumentPtr &rhs,
                                            const ComparatorOptions &options);
-
-Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
-                            const std::shared_ptr<const IExpression> &rhs,
-                            const ComparatorOptions &options);
 
 Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
                           const std::shared_ptr<const IFunction> &rhs,
@@ -54,13 +54,18 @@ std::shared_ptr<const Variable> popNextVariable(ExpressionTreePathStack &stack);
 
 size_t getPositionOfFirstChildWithVariable(const ArgumentPtrVector &children);
 
-bool unwrapUnary(ArgumentPtr &lhs);
+bool unwrapUnaryExpression(ArgumentPtr &arg);
+
+bool unwrapEmptyExpression(ArgumentPtr &arg);
 
 Ordering reverse(Ordering ordering);
 
-Ordering compare(const ArgumentPtr &lhs,
-                 const ArgumentPtr &rhs,
+Ordering compare(ArgumentPtr lhs,
+                 ArgumentPtr rhs,
                  ComparatorOptions options) {
+
+  unwrapEmptyExpression(lhs);
+  unwrapEmptyExpression(rhs);
 
   auto lhsExpr = cast<IExpression>(lhs);
   auto rhsExpr = cast<IExpression>(rhs);
@@ -152,6 +157,39 @@ Ordering comparePolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
   return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
 }
 
+Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
+                            const std::shared_ptr<const IExpression> &rhs,
+                            const ComparatorOptions &options) {
+
+  auto lhsOper = cast<IOperator>(lhs->getFunction());
+  auto rhsOper = cast<IOperator>(rhs->getFunction());
+
+  ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), rhs->getChildren(), options);
+
+  if (childrenComp.prefixVariables != Ordering::equal) {
+    return childrenComp.prefixVariables;
+  }
+  if (childrenComp.size != Ordering::equal) {
+    return childrenComp.size;
+  }
+  if (childrenComp.postfix != Ordering::equal) {
+    return childrenComp.postfix;
+  }
+
+  if (is<IOperator>(lhs->getFunction()) && is<IOperator>(rhs->getFunction())) {
+    if (childrenComp.prefixLast != Ordering::equal) {
+      return childrenComp.prefixLast;
+    }
+  }
+  else {
+    if (childrenComp.prefixFirst != Ordering::equal) {
+      return childrenComp.prefixFirst;
+    }
+  }
+
+  return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
+}
+
 Ordering comparePolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
                                      const ArgumentPtr &rhs,
                                      const ComparatorOptions &options) {
@@ -161,11 +199,8 @@ Ordering comparePolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpress
   if (childrenComp.postfix != Ordering::equal) {
     return childrenComp.postfix;
   }
-  if (childrenComp.prefixFirst != Ordering::equal) {
-    return childrenComp.prefixFirst;
-  }
 
-  return options.constantOrderInversed ? Ordering::greater : Ordering::less;
+  return childrenComp.prefixFirst;
 }
 
 Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
@@ -205,39 +240,6 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
   }
 
   return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
-}
-
-Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
-                            const std::shared_ptr<const IExpression> &rhs,
-                            const ComparatorOptions &options) {
-
-  auto lhsOper = cast<IOperator>(lhs->getFunction());
-  auto rhsOper = cast<IOperator>(rhs->getFunction());
-
-  ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), rhs->getChildren(), options);
-
-  if (childrenComp.prefixVariables != Ordering::equal) {
-    return childrenComp.prefixVariables;
-  }
-  if (childrenComp.size != Ordering::equal) {
-    return childrenComp.size;
-  }
-  if (childrenComp.postfix != Ordering::equal) {
-    return childrenComp.postfix;
-  }
-
-  if (is<IOperator>(lhs->getFunction()) && is<IOperator>(rhs->getFunction())) {
-    if (childrenComp.prefixLast != Ordering::equal) {
-      return childrenComp.prefixLast;
-    }
-  }
-  else {
-    if (childrenComp.prefixFirst != Ordering::equal) {
-      return childrenComp.prefixFirst;
-    }
-  }
-
-  return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
 }
 
 Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
@@ -317,8 +319,8 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
     ArgumentPtr compLhs = lhsChildren[i];
     ArgumentPtr compRhs = rhsChildren[j];
 
-    bool isLhsUnary = unwrapUnary(compLhs);
-    bool isRhsUnary = unwrapUnary(compRhs);
+    bool isLhsUnary = unwrapUnaryExpression(compLhs);
+    bool isRhsUnary = unwrapUnaryExpression(compRhs);
 
     if (isLhsUnary && isRhsUnary) {
       compLhs = lhsChildren[i];
@@ -426,11 +428,24 @@ size_t getPositionOfFirstChildWithVariable(const ArgumentPtrVector &children) {
   return children.size();
 }
 
-bool unwrapUnary(ArgumentPtr &lhs) {
-  if (const auto lhsExpr = cast<IExpression>(lhs);
-      lhsExpr && lhsExpr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
+bool unwrapUnaryExpression(ArgumentPtr &arg) {
+  if (const auto expr = cast<IExpression>(arg);
+      expr &&
+      expr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
 
-    lhs = lhsExpr->getChildren().front();
+    arg = expr->getChildren().front();
+    return true;
+  }
+
+  return false;
+}
+
+bool unwrapEmptyExpression(ArgumentPtr &arg) {
+  if (const auto expr = cast<IExpression>(arg);
+      expr &&
+      !expr->getFunction()) {
+
+    arg = expr->getChildren().front();
     return true;
   }
 
