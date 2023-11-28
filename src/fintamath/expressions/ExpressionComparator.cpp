@@ -257,6 +257,10 @@ Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
     return Ordering::equal;
   }
 
+  if (lhs->getFunctionOrder() != rhs->getFunctionOrder()) {
+    return lhs->getFunctionOrder() < rhs->getFunctionOrder() ? Ordering::greater : Ordering::less;
+  }
+
   return lhs->toString() < rhs->toString() ? Ordering::greater : Ordering::less;
 }
 

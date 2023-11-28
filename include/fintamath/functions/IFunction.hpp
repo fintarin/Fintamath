@@ -35,6 +35,8 @@ public:
 
   virtual ArgumentTypeVector getArgTypes() const = 0;
 
+  virtual size_t getFunctionOrder() const = 0;
+
   virtual bool doArgsMatch(const ArgumentRefVector &argsVect) const = 0;
 
   virtual bool isEvaluatable() const = 0;
@@ -51,6 +53,9 @@ public:
   template <std::derived_from<IFunction> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
+
+    getFunctionOrderMutableMap()[T().toString()] = maxFunctionOrder;
+    maxFunctionOrder++;
   }
 
   static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
@@ -67,8 +72,16 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argsVect) const = 0;
 
+  static const std::unordered_map<std::string, size_t> &getFunctionOrderMap() {
+    return getFunctionOrderMutableMap();
+  }
+
 private:
+  static std::unordered_map<std::string, size_t> &getFunctionOrderMutableMap();
+
   static Parser::Map<std::unique_ptr<IFunction>> &getParser();
+
+  static inline size_t maxFunctionOrder = 0;
 };
 
 template <typename Return, typename Derived, typename... Args>

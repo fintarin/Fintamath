@@ -279,8 +279,8 @@ ArgumentPtr MulExpression::trigDoubleAngleSimplify(const IFunction & /*func*/, c
 
   if (!lhsExpr ||
       !rhsExpr ||
-      !is<Cos>(lhsExpr->getFunction()) ||
-      !is<Sin>(rhsExpr->getFunction())) {
+      !is<Sin>(lhsExpr->getFunction()) ||
+      !is<Cos>(rhsExpr->getFunction())) {
 
     return {};
   }

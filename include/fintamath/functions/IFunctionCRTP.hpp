@@ -28,6 +28,11 @@ public:
     return argTypes;
   }
 
+  size_t getFunctionOrder() const final {
+    static const std::string funcStr = Derived().toString();
+    return getFunctionOrderMap().at(funcStr);
+  }
+
   bool doArgsMatch(const ArgumentRefVector &argsVect) const override {
     if (argsVect.empty()) { // TODO: support None type functions
       return false;
