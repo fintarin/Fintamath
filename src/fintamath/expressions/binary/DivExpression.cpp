@@ -391,7 +391,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   simplifyChild(remainderAdd);
 
   ArgumentPtr remainderAddFirstChild = getPolynomChildren(Add(), remainderAdd).front();
-  if (compare(lhs, remainderAddFirstChild) != std::strong_ordering::less) {
+  if (compare(lhs, remainderAddFirstChild) != std::strong_ordering::greater) {
     return {};
   }
 

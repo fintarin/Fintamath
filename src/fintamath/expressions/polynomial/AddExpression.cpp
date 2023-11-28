@@ -61,14 +61,14 @@ std::strong_ordering AddExpression::compare(const ArgumentPtr &lhs, const Argume
       is<Div>(lhsExpr->getFunction()) &&
       (!rhsExpr || !is<Div>(rhsExpr->getFunction()))) {
 
-    return std::strong_ordering::greater;
+    return std::strong_ordering::less;
   }
 
   if (rhsExpr &&
       is<Div>(rhsExpr->getFunction()) &&
       (!lhsExpr || !is<Div>(lhsExpr->getFunction()))) {
 
-    return std::strong_ordering::less;
+    return std::strong_ordering::greater;
   }
 
   return IPolynomExpression::compare(lhs, rhs);

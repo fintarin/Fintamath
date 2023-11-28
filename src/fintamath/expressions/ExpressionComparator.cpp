@@ -100,17 +100,17 @@ Ordering compareNonExpressions(const ArgumentPtr &lhs,
                                const ComparatorOptions &options) {
 
   if (is<ILiteral>(lhs) && !is<ILiteral>(rhs)) {
-    return !options.termsOrderInversed ? Ordering::less : Ordering::greater;
+    return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
   }
   if (!is<ILiteral>(lhs) && is<ILiteral>(rhs)) {
-    return options.termsOrderInversed ? Ordering::less : Ordering::greater;
+    return options.termsOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (is<Variable>(lhs) && !is<Variable>(rhs)) {
-    return !options.termsOrderInversed ? Ordering::less : Ordering::greater;
+    return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
   }
   if (!is<Variable>(lhs) && is<Variable>(rhs)) {
-    return options.termsOrderInversed ? Ordering::less : Ordering::greater;
+    return options.termsOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (*lhs == *rhs) {
@@ -120,14 +120,14 @@ Ordering compareNonExpressions(const ArgumentPtr &lhs,
   if (auto lhsComp = cast<IComparable>(lhs)) {
     if (auto rhsComp = cast<IComparable>(rhs)) {
       if (options.comparableOrderInversed) {
-        return *lhsComp < *rhsComp ? Ordering::less : Ordering::greater;
+        return *lhsComp < *rhsComp ? Ordering::greater : Ordering::less;
       }
 
-      return *lhsComp > *rhsComp ? Ordering::less : Ordering::greater;
+      return *lhsComp > *rhsComp ? Ordering::greater : Ordering::less;
     }
   }
 
-  return lhs->toString() < rhs->toString() ? Ordering::less : Ordering::greater;
+  return lhs->toString() < rhs->toString() ? Ordering::greater : Ordering::less;
 }
 
 Ordering comparePolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
@@ -157,7 +157,7 @@ Ordering comparePolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpress
                                      const ComparatorOptions &options) {
 
   ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), {rhs}, options);
-  Ordering res = Ordering::less;
+  Ordering res = Ordering::greater;
 
   if (childrenComp.postfix != Ordering::equal) {
     res = childrenComp.postfix;
@@ -174,7 +174,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
                                            const ComparatorOptions &options) {
 
   if (!is<Variable>(rhs)) {
-    return !options.termsOrderInversed ? Ordering::less : Ordering::greater;
+    return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (auto res = compareVariables(lhs, rhs, options); res != Ordering::equal) {
@@ -191,7 +191,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
           return res;
         }
 
-        return Ordering::greater;
+        return Ordering::less;
       }
       case IOperator::Priority::Exponentiation:
       case IOperator::Priority::Multiplication: {
@@ -205,7 +205,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
     }
   }
 
-  return !options.termsOrderInversed ? Ordering::less : Ordering::greater;
+  return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
 }
 
 Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
@@ -246,17 +246,17 @@ Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
                           const ComparatorOptions & /*options*/) {
 
   if (is<IOperator>(lhs) && !is<IOperator>(rhs)) {
-    return Ordering::less;
+    return Ordering::greater;
   }
   if (!is<IOperator>(lhs) && is<IOperator>(rhs)) {
-    return Ordering::greater;
+    return Ordering::less;
   }
 
   if (*lhs == *rhs) {
     return Ordering::equal;
   }
 
-  return lhs->toString() < rhs->toString() ? Ordering::less : Ordering::greater;
+  return lhs->toString() < rhs->toString() ? Ordering::greater : Ordering::less;
 }
 
 Ordering compareVariables(const ArgumentPtr &lhs,
@@ -286,11 +286,11 @@ Ordering compareVariables(const ArgumentPtr &lhs,
   }
 
   if (lhsVar && !rhsVar) {
-    return !options.termsOrderInversed ? Ordering::less : Ordering::greater;
+    return !options.termsOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (!lhsVar && rhsVar) {
-    return options.termsOrderInversed ? Ordering::less : Ordering::greater;
+    return options.termsOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   while (lhsVar && rhsVar) {
@@ -327,7 +327,7 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
     }
 
     if (result.postfixUnary == Ordering::equal && isLhsUnary != isRhsUnary) {
-      result.postfixUnary = !isLhsUnary ? Ordering::less : Ordering::greater;
+      result.postfixUnary = !isLhsUnary ? Ordering::greater : Ordering::less;
     }
 
     if (result.postfix == Ordering::equal) {
@@ -344,7 +344,7 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
     size_t rhsPostfixSize = rhsChildren.size() - rhsStart;
 
     if (lhsPostfixSize != rhsPostfixSize) {
-      result.postfix = lhsPostfixSize > rhsPostfixSize ? Ordering::less : Ordering::greater;
+      result.postfix = lhsPostfixSize > rhsPostfixSize ? Ordering::greater : Ordering::less;
     }
   }
 
@@ -375,7 +375,7 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
   }
 
   if (lhsChildren.size() != rhsChildren.size()) {
-    result.size = lhsChildren.size() > rhsChildren.size() ? Ordering::less : Ordering::greater;
+    result.size = lhsChildren.size() > rhsChildren.size() ? Ordering::greater : Ordering::less;
   }
 
   return result;
