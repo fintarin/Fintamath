@@ -60,12 +60,14 @@ int AddExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) co
   if (lhsExpr &&
       is<Div>(lhsExpr->getFunction()) &&
       (!rhsExpr || !is<Div>(rhsExpr->getFunction()))) {
+
     return 1;
   }
 
   if (rhsExpr &&
       is<Div>(rhsExpr->getFunction()) &&
       (!lhsExpr || !is<Div>(lhsExpr->getFunction()))) {
+
     return -1;
   }
 
