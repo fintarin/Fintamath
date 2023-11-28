@@ -18,37 +18,37 @@ struct ChildrenComparatorResult {
   Ordering size = Ordering::equal;
 };
 
-Ordering comparatorNonExpressions(const ArgumentPtr &lhs,
-                                  const ArgumentPtr &rhs,
-                                  const ComparatorOptions &options);
-
-Ordering comparatorPolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
-                            const std::shared_ptr<const IPolynomExpression> &rhs,
-                            const ComparatorOptions &options);
-
-Ordering comparatorPolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
-                                        const ArgumentPtr &rhs,
-                                        const ComparatorOptions &options);
-
-Ordering comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
-                                              const ArgumentPtr &rhs,
-                                              const ComparatorOptions &options);
-
-Ordering comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
-                               const std::shared_ptr<const IExpression> &rhs,
+Ordering compareNonExpressions(const ArgumentPtr &lhs,
+                               const ArgumentPtr &rhs,
                                const ComparatorOptions &options);
 
-Ordering comparatorFunctions(const std::shared_ptr<const IFunction> &lhs,
-                             const std::shared_ptr<const IFunction> &rhs,
-                             const ComparatorOptions &options);
+Ordering comparePolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
+                         const std::shared_ptr<const IPolynomExpression> &rhs,
+                         const ComparatorOptions &options);
 
-Ordering comparatorVariables(const ArgumentPtr &lhs,
-                             const ArgumentPtr &rhs,
-                             const ComparatorOptions &options);
+Ordering comparePolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
+                                     const ArgumentPtr &rhs,
+                                     const ComparatorOptions &options);
 
-ChildrenComparatorResult comparatorChildren(const ArgumentPtrVector &lhsChildren,
-                                            const ArgumentPtrVector &rhsChildren,
-                                            const ComparatorOptions &options);
+Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
+                                           const ArgumentPtr &rhs,
+                                           const ComparatorOptions &options);
+
+Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
+                            const std::shared_ptr<const IExpression> &rhs,
+                            const ComparatorOptions &options);
+
+Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
+                          const std::shared_ptr<const IFunction> &rhs,
+                          const ComparatorOptions &options);
+
+Ordering compareVariables(const ArgumentPtr &lhs,
+                          const ArgumentPtr &rhs,
+                          const ComparatorOptions &options);
+
+ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
+                                         const ArgumentPtrVector &rhsChildren,
+                                         const ComparatorOptions &options);
 
 std::shared_ptr<const Variable> popNextVariable(ExpressionTreePathStack &stack);
 
@@ -58,46 +58,46 @@ bool unwrapUnary(ArgumentPtr &lhs);
 
 Ordering reverse(Ordering ordering);
 
-Ordering comparator(const ArgumentPtr &lhs,
-                    const ArgumentPtr &rhs,
-                    ComparatorOptions options) {
+Ordering compare(const ArgumentPtr &lhs,
+                 const ArgumentPtr &rhs,
+                 ComparatorOptions options) {
 
   auto lhsExpr = cast<IExpression>(lhs);
   auto rhsExpr = cast<IExpression>(rhs);
 
   if (!lhsExpr && !rhsExpr) {
-    return comparatorNonExpressions(lhs, rhs, options);
+    return compareNonExpressions(lhs, rhs, options);
   }
 
   auto lhsPolynom = cast<IPolynomExpression>(lhsExpr);
   auto rhsPolynom = cast<IPolynomExpression>(rhsExpr);
 
   if (lhsPolynom && rhsPolynom) {
-    return comparatorPolynoms(lhsPolynom, rhsPolynom, options);
+    return comparePolynoms(lhsPolynom, rhsPolynom, options);
   }
 
   if (lhsExpr && !rhsExpr) {
-    return comparatorExpressionAndNonExpression(lhsExpr, rhs, options);
+    return compareExpressionAndNonExpression(lhsExpr, rhs, options);
   }
 
   if (!lhsExpr && rhsExpr) {
-    return reverse(comparatorExpressionAndNonExpression(rhsExpr, lhs, options));
+    return reverse(compareExpressionAndNonExpression(rhsExpr, lhs, options));
   }
 
   if (lhsPolynom && !rhsPolynom) {
-    return comparatorPolynomAndNonPolynom(lhsPolynom, rhs, options);
+    return comparePolynomAndNonPolynom(lhsPolynom, rhs, options);
   }
 
   if (!lhsPolynom && rhsPolynom) {
-    return reverse(comparatorPolynomAndNonPolynom(rhsPolynom, lhs, options));
+    return reverse(comparePolynomAndNonPolynom(rhsPolynom, lhs, options));
   }
 
-  return comparatorExpressions(lhsExpr, rhsExpr, options);
+  return compareExpressions(lhsExpr, rhsExpr, options);
 }
 
-Ordering comparatorNonExpressions(const ArgumentPtr &lhs,
-                                  const ArgumentPtr &rhs,
-                                  const ComparatorOptions &options) {
+Ordering compareNonExpressions(const ArgumentPtr &lhs,
+                               const ArgumentPtr &rhs,
+                               const ComparatorOptions &options) {
 
   if (is<ILiteral>(lhs) && !is<ILiteral>(rhs)) {
     return !options.termsOrderInversed ? Ordering::less : Ordering::greater;
@@ -130,11 +130,11 @@ Ordering comparatorNonExpressions(const ArgumentPtr &lhs,
   return lhs->toString() < rhs->toString() ? Ordering::less : Ordering::greater;
 }
 
-Ordering comparatorPolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
-                            const std::shared_ptr<const IPolynomExpression> &rhs,
-                            const ComparatorOptions &options) {
+Ordering comparePolynoms(const std::shared_ptr<const IPolynomExpression> &lhs,
+                         const std::shared_ptr<const IPolynomExpression> &rhs,
+                         const ComparatorOptions &options) {
 
-  ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), rhs->getChildren(), options);
+  ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), rhs->getChildren(), options);
 
   if (childrenComp.postfix != Ordering::equal) {
     return childrenComp.postfix;
@@ -149,14 +149,14 @@ Ordering comparatorPolynoms(const std::shared_ptr<const IPolynomExpression> &lhs
     return childrenComp.prefixFirst;
   }
 
-  return comparatorFunctions(lhs->getFunction(), rhs->getFunction(), options);
+  return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
 }
 
-Ordering comparatorPolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
-                                        const ArgumentPtr &rhs,
-                                        const ComparatorOptions &options) {
+Ordering comparePolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpression> &lhs,
+                                     const ArgumentPtr &rhs,
+                                     const ComparatorOptions &options) {
 
-  ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), {rhs}, options);
+  ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), {rhs}, options);
   Ordering res = Ordering::less;
 
   if (childrenComp.postfix != Ordering::equal) {
@@ -169,15 +169,15 @@ Ordering comparatorPolynomAndNonPolynom(const std::shared_ptr<const IPolynomExpr
   return options.termsOrderInversed ? reverse(res) : res;
 }
 
-Ordering comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
-                                              const ArgumentPtr &rhs,
-                                              const ComparatorOptions &options) {
+Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpression> &lhs,
+                                           const ArgumentPtr &rhs,
+                                           const ComparatorOptions &options) {
 
   if (!is<Variable>(rhs)) {
     return !options.termsOrderInversed ? Ordering::less : Ordering::greater;
   }
 
-  if (auto res = comparatorVariables(lhs, rhs, options); res != Ordering::equal) {
+  if (auto res = compareVariables(lhs, rhs, options); res != Ordering::equal) {
     return res;
   }
 
@@ -187,7 +187,7 @@ Ordering comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpre
     switch (lhsOperPriority) {
       case IOperator::Priority::PostfixUnary:
       case IOperator::Priority::PrefixUnary: {
-        if (Ordering res = comparator(lhs->getChildren().front(), rhs); res != Ordering::equal) {
+        if (Ordering res = compare(lhs->getChildren().front(), rhs); res != Ordering::equal) {
           return res;
         }
 
@@ -196,7 +196,7 @@ Ordering comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpre
       case IOperator::Priority::Exponentiation:
       case IOperator::Priority::Multiplication: {
         ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, Integer(1).clone());
-        Ordering res = comparator(lhs, rhsExpr);
+        Ordering res = compare(lhs, rhsExpr);
         return options.termsOrderInversed ? reverse(res) : res;
       }
       default: {
@@ -208,14 +208,14 @@ Ordering comparatorExpressionAndNonExpression(const std::shared_ptr<const IExpre
   return !options.termsOrderInversed ? Ordering::less : Ordering::greater;
 }
 
-Ordering comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
-                               const std::shared_ptr<const IExpression> &rhs,
-                               const ComparatorOptions &options) {
+Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
+                            const std::shared_ptr<const IExpression> &rhs,
+                            const ComparatorOptions &options) {
 
   auto lhsOper = cast<IOperator>(lhs->getFunction());
   auto rhsOper = cast<IOperator>(rhs->getFunction());
 
-  ChildrenComparatorResult childrenComp = comparatorChildren(lhs->getChildren(), rhs->getChildren(), options);
+  ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), rhs->getChildren(), options);
 
   if (childrenComp.prefixVariables != Ordering::equal) {
     return childrenComp.prefixVariables;
@@ -238,12 +238,12 @@ Ordering comparatorExpressions(const std::shared_ptr<const IExpression> &lhs,
     }
   }
 
-  return comparatorFunctions(lhs->getFunction(), rhs->getFunction(), options);
+  return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
 }
 
-Ordering comparatorFunctions(const std::shared_ptr<const IFunction> &lhs,
-                             const std::shared_ptr<const IFunction> &rhs,
-                             const ComparatorOptions & /*options*/) {
+Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
+                          const std::shared_ptr<const IFunction> &rhs,
+                          const ComparatorOptions & /*options*/) {
 
   if (is<IOperator>(lhs) && !is<IOperator>(rhs)) {
     return Ordering::less;
@@ -259,9 +259,9 @@ Ordering comparatorFunctions(const std::shared_ptr<const IFunction> &lhs,
   return lhs->toString() < rhs->toString() ? Ordering::less : Ordering::greater;
 }
 
-Ordering comparatorVariables(const ArgumentPtr &lhs,
-                             const ArgumentPtr &rhs,
-                             const ComparatorOptions &options) {
+Ordering compareVariables(const ArgumentPtr &lhs,
+                          const ArgumentPtr &rhs,
+                          const ComparatorOptions &options) {
 
   ExpressionTreePathStack lhsPath;
   ExpressionTreePathStack rhsPath;
@@ -294,7 +294,7 @@ Ordering comparatorVariables(const ArgumentPtr &lhs,
   }
 
   while (lhsVar && rhsVar) {
-    if (Ordering res = comparatorNonExpressions(lhsVar, rhsVar, options); res != Ordering::equal) {
+    if (Ordering res = compareNonExpressions(lhsVar, rhsVar, options); res != Ordering::equal) {
       return res;
     }
 
@@ -305,9 +305,9 @@ Ordering comparatorVariables(const ArgumentPtr &lhs,
   return Ordering::equal;
 }
 
-ChildrenComparatorResult comparatorChildren(const ArgumentPtrVector &lhsChildren,
-                                            const ArgumentPtrVector &rhsChildren,
-                                            const ComparatorOptions &options) {
+ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
+                                         const ArgumentPtrVector &rhsChildren,
+                                         const ComparatorOptions &options) {
 
   ChildrenComparatorResult result = {};
 
@@ -331,7 +331,7 @@ ChildrenComparatorResult comparatorChildren(const ArgumentPtrVector &lhsChildren
     }
 
     if (result.postfix == Ordering::equal) {
-      result.postfix = comparator(compLhs, compRhs, options);
+      result.postfix = compare(compLhs, compRhs, options);
     }
 
     if (result.postfix != Ordering::equal) {
@@ -355,7 +355,7 @@ ChildrenComparatorResult comparatorChildren(const ArgumentPtrVector &lhsChildren
   for (auto end = std::min(std::max(lhsStart, rhsStart), std::min(lhsChildren.size(), rhsChildren.size()));
        auto i : std::views::iota(0U, end)) {
 
-    Ordering childrenComp = comparator(lhsChildren[i], rhsChildren[i], options);
+    Ordering childrenComp = compare(lhsChildren[i], rhsChildren[i], options);
 
     if (childrenComp != Ordering::equal) {
       result.prefixLast = childrenComp;
@@ -366,7 +366,7 @@ ChildrenComparatorResult comparatorChildren(const ArgumentPtrVector &lhsChildren
     }
 
     if (result.prefixVariables == Ordering::equal) {
-      result.prefixVariables = comparatorVariables(lhsChildren[i], rhsChildren[i], {});
+      result.prefixVariables = compareVariables(lhsChildren[i], rhsChildren[i], {});
     }
 
     if (result.prefixVariables != Ordering::equal && result.prefixLast != Ordering::equal) {
