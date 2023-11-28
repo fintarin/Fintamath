@@ -34,7 +34,7 @@ protected:
 
   virtual std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
-  virtual int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+  virtual std::strong_ordering comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
   ArgumentPtr preSimplify() const override;
 

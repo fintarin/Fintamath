@@ -9,6 +9,6 @@ struct ComparatorOptions {
   bool comparableOrderInversed = false;
 };
 
-int comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs, ComparatorOptions options = {});
+std::strong_ordering comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs, ComparatorOptions options = {});
 
 }

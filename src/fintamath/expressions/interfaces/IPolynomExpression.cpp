@@ -191,7 +191,7 @@ std::string IPolynomExpression::childToString(const IOperator &oper, const Argum
   return prevChild ? (putInSpaces(func->toString()) + childStr) : childStr;
 }
 
-int IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+std::strong_ordering IPolynomExpression::comparator(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
   ComparatorOptions options = {
       .termsOrderInversed = isTermsOrderInversed(),
       .comparableOrderInversed = isComparableOrderInversed(),
@@ -217,7 +217,7 @@ void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
 
 void IPolynomExpression::sort() {
   std::ranges::stable_sort(children, [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-    return comparator(lhs, rhs) < 0;
+    return comparator(lhs, rhs) == std::strong_ordering::less;
   });
 }
 
