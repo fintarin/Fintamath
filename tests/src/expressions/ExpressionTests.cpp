@@ -159,6 +159,7 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("E").toString(), "E");
   EXPECT_EQ(Expression("Pi").toString(), "Pi");
   EXPECT_EQ(Expression("E^101-E^101").toString(), "0");
+  // EXPECT_EQ(Expression("E E Pi E").toString(), "E^2 Pi^2"); // TODO! fix
   EXPECT_EQ(Expression("ln(E^E) / ln(E^E) - 1").toString(), "0");
   EXPECT_EQ(Expression("8E").toString(), "8 E");
   EXPECT_EQ(Expression("8Pi").toString(), "8 Pi");
