@@ -266,12 +266,13 @@ TEST(ExpressionFunctionsTests, acothTest) {
   EXPECT_EQ(acoth(Expression("0.5")).toString(), "acoth(1/2)");
 }
 
-// TODO! implement derivative
-// TEST(ExpressionFunctionsTests, derivativeTest) {
-//   EXPECT_EQ(derivative(Expression("1"), Expression("a")).toString(), "0");
-//   EXPECT_EQ(derivative(Expression("a"), Expression("a")).toString(), "1");
-//   EXPECT_EQ(derivative(Expression("(a+5)"), Expression("a")).toString(), "derivative(a + 5, a)"); // TODO: derivative
-// }
+TEST(ExpressionFunctionsTests, derivativeTest) {
+  EXPECT_EQ(derivative(Expression("1"), Expression("a")).toString(), "0");
+  EXPECT_EQ(derivative(Expression("a"), Expression("a")).toString(), "1");
+  EXPECT_EQ(derivative(Expression("(a+5)"), Expression("a")).toString(), "1");
+  EXPECT_EQ(derivative(Expression("sin(a^2)"), Expression("a")).toString(), "2 a cos(a^2)");
+  EXPECT_EQ(derivative(Expression("(ln(a)/tan(a))^(1/2)"), Expression("a")).toString(), "sqrt(ln(a))/(sqrt(cot(a)) cos(2 a) - sqrt(cot(a))) + sqrt(cot(a))/(2 a sqrt(ln(a)))");
+}
 
 TEST(ExpressionFunctionsTests, notTest) {
   EXPECT_EQ(notL(Expression("True")).toString(), "False");

@@ -196,6 +196,10 @@ Expression acoth(const Expression &rhs) {
   return Expression(acothExpr(rhs));
 }
 
+Expression derivative(const Expression &lhs, const Expression &rhs) {
+  return Expression(derivativeExpr(lhs, rhs));
+}
+
 Expression notL(const Expression &rhs) {
   return Expression(notExpr(rhs));
 }

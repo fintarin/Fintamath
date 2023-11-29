@@ -86,6 +86,8 @@ Expression atanh(const Expression &rhs);
 
 Expression acoth(const Expression &rhs);
 
+Expression derivative(const Expression &lhs, const Expression &rhs);
+
 Expression notL(const Expression &rhs);
 
 Expression andL(const Expression &lhs, const Expression &rhs);
