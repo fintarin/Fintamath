@@ -44,7 +44,7 @@ bool isNegated(const ArgumentPtr &arg) {
     return false;
   }
 
-  if (is<Add>(expr->getFunction())) {
+  if (is<Add>(expr->getFunction()) || is<Div>(expr->getFunction())) {
     return isNegated(expr->getChildren().front());
   }
 
