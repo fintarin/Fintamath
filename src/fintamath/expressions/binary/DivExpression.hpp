@@ -66,7 +66,7 @@ private:
 
   static Integer getGcd(const ArgumentPtrVector &children);
 
-  static bool containsDivFunction(const ArgumentPtr &arg);
+  static bool containsDivTrigFunction(const ArgumentPtr &arg);
 };
 
 }
