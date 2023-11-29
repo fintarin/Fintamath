@@ -6,6 +6,7 @@
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
+#include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
@@ -215,6 +216,12 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
     return {};
   }
 
+  if ((lhsExpr && is<Log>(lhsExpr->getFunction())) ||
+      (rhsExpr && is<Log>(rhsExpr->getFunction()))) {
+
+    return {};
+  }
+
   ArgumentPtrVector lhsChildren;
   ArgumentPtrVector rhsChildren;
 
@@ -297,5 +304,4 @@ ArgumentPtr MulExpression::trigDoubleAngleSimplify(const IFunction & /*func*/, c
 
   return divExpr(doubleSin, Integer(2).clone());
 }
-
 }
