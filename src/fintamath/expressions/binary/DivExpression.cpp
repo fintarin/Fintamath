@@ -110,6 +110,10 @@ ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (containsDivTrigFunction(lhs) || containsDivTrigFunction(rhs)) {
+    return {};
+  }
+
   ArgumentPtr preSimplLhs = lhs;
   preSimplifyChild(preSimplLhs);
 
@@ -377,7 +381,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
   ArgumentPtr result = divExpr(lhs, rhsChildren.front());
   simplifyChild(result);
 
-  if (containsDivFunction(result)) {
+  if (containsDivTrigFunction(result) || is<DivExpression>(result)) {
     return {};
   }
 
@@ -581,9 +585,8 @@ ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const Argu
   return {};
 }
 
-bool DivExpression::containsDivFunction(const ArgumentPtr &arg) {
-  static const std::set<std::string, std::less<>> divFunctionStrings = {
-      Div().toString(),
+bool DivExpression::containsDivTrigFunction(const ArgumentPtr &arg) {
+  static const std::set<std::string, std::less<>> functionStrings = {
       Tan().toString(),
       Cot().toString(),
       Sec().toString(),
@@ -596,7 +599,7 @@ bool DivExpression::containsDivFunction(const ArgumentPtr &arg) {
 
   return containsIf(arg, [](const ArgumentPtr &inArg) {
     const auto expr = cast<IExpression>(inArg);
-    return expr && divFunctionStrings.contains(expr->getFunction()->toString());
+    return expr && functionStrings.contains(expr->getFunction()->toString());
   });
 }
 }
