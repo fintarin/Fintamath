@@ -83,6 +83,7 @@ public:
     Lb,
     Lg,
     Exp,
+    Sqr,
     Sqrt,
     Root,
     Sin,

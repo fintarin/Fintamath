@@ -72,6 +72,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/PowFunction.hpp"
 #include "fintamath/functions/powers/Root.hpp"
+#include "fintamath/functions/powers/Sqr.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
@@ -319,6 +320,11 @@ struct ExpressionConfig {
 
     Expression::registerFunctionExpressionMaker<Max>([](ArgumentPtrVector &&args) {
       return MinMaxExpression(Max(), std::move(args)).clone();
+    });
+
+    Expression::registerFunctionExpressionMaker<Sqr>([](ArgumentPtrVector &&args) {
+      static const ArgumentPtr powRate = Integer(2).clone();
+      return powExpr(args.front(), powRate);
     });
 
     Expression::registerFunctionExpressionMaker<Sqrt>([](ArgumentPtrVector &&args) {
