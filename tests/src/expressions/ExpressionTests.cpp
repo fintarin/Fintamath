@@ -464,9 +464,11 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("log(E^Pi, E)").toString(), "1/Pi");
 
   EXPECT_EQ(Expression("sqrt(x^2)").toString(), "sqrt(x^2)");
+  EXPECT_EQ(Expression("sqrt(x)^2").toString(), "x");
   EXPECT_EQ(Expression("(x^10)^(1/10)").toString(), "root(x^10, 10)");
+  EXPECT_EQ(Expression("(x^(1/10))^10").toString(), "x");
   EXPECT_EQ(Expression("(x^3)^(1/3)").toString(), "root(x^3, 3)");
-  EXPECT_EQ(Expression("sqrt(x)^2").toString(), "sqrt(x)^2");
+  EXPECT_EQ(Expression("(x^(1/3))^3").toString(), "x");
   EXPECT_EQ(Expression("root(x^(-2), -2)").toString(), "sqrt(x^2)");
   EXPECT_EQ(Expression("root(0, x)").toString(), "0");
 

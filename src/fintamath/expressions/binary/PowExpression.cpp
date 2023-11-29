@@ -193,27 +193,26 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
 }
 
 ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentPtr res;
-
   if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     const ArgumentPtr &lhsExprLhsChild = lhsExpr->getChildren().front();
     const ArgumentPtr &lhsExprRhsChild = lhsExpr->getChildren().back();
 
-    bool canMul = is<Integer>(rhs) && is<Integer>(lhsExprRhsChild);
+    bool canMul = is<Integer>(rhs);
 
     if (auto lhsExprLhsChildNum = cast<INumber>(lhsExprLhsChild)) {
       canMul = canMul ||
-               *MoreEqv()(*lhsExprLhsChildNum, Integer(0)) == Boolean(true);
+               (!lhsExprLhsChildNum->isComplex() &&
+                *MoreEqv()(*lhsExprLhsChildNum, Integer(0)) == Boolean(true));
     }
 
     if (canMul) {
       ArgumentPtr newLhs = lhsExprLhsChild;
       ArgumentPtr newRhs = mulExpr(lhsExprRhsChild, rhs);
-      res = powExpr(newLhs, newRhs);
+      return powExpr(newLhs, newRhs);
     }
   }
 
-  return res;
+  return {};
 }
 
 ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
