@@ -40,7 +40,7 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  virtual bool isConstantOrderInversed() const;
+  virtual bool isConstantGreaterThanVariable() const;
 
   virtual bool isComparableOrderInversed() const;
 

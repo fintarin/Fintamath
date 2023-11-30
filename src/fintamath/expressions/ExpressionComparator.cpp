@@ -129,11 +129,11 @@ Ordering compareTerms(const ArgumentPtr &lhs,
   }
 
   if (lhsTerm && !rhsTerm) {
-    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
 
   if (!lhsTerm && rhsTerm) {
-    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
 
   while (lhsTerm && rhsTerm) {
@@ -193,17 +193,17 @@ Ordering compareNonExpressions(const ArgumentPtr &lhs,
                                const ComparatorOptions &options) {
 
   if (is<ILiteral>(lhs) && !is<ILiteral>(rhs)) {
-    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
   if (!is<ILiteral>(lhs) && is<ILiteral>(rhs)) {
-    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
 
   if (is<Variable>(lhs) && !is<Variable>(rhs)) {
-    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
   if (!is<Variable>(lhs) && is<Variable>(rhs)) {
-    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
 
   if (*lhs == *rhs) {
@@ -257,7 +257,7 @@ Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
   }
 
   ComparatorOptions childCompOptions = options;
-  childCompOptions.constantOrderInversed = false;
+  childCompOptions.constantGreaterThanVariable = false;
   ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), rhs->getChildren(), childCompOptions);
 
   if (childrenComp.prefixVariables != Ordering::equal) {
@@ -305,7 +305,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
                                            const ComparatorOptions &options) {
 
   if (!is<ILiteral>(rhs)) {
-    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
 
   if (auto res = compareTerms<Variable>(lhs, rhs, options); res != Ordering::equal) {
@@ -313,7 +313,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
   }
 
   if (!is<IOperator>(lhs->getFunction())) {
-    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
 
   if (auto res = compareTerms<ILiteral>(lhs, rhs, options); res != Ordering::equal) {
@@ -336,7 +336,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
       case IOperator::Priority::Multiplication: {
         ArgumentPtr rhsExpr = makeExpr(*lhsOper, rhs, Integer(1).clone());
         Ordering res = compare(lhs, rhsExpr);
-        return options.constantOrderInversed ? reverse(res) : res;
+        return options.constantGreaterThanVariable ? reverse(res) : res;
       }
       default: {
         break;
@@ -344,7 +344,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
     }
   }
 
-  return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+  return !options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
 }
 
 Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
@@ -352,10 +352,10 @@ Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
                           const ComparatorOptions &options) {
 
   if (is<IOperator>(lhs) && !is<IOperator>(rhs)) {
-    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
   if (!is<IOperator>(lhs) && is<IOperator>(rhs)) {
-    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+    return !options.constantGreaterThanVariable ? Ordering::greater : Ordering::less;
   }
 
   if (*lhs == *rhs) {

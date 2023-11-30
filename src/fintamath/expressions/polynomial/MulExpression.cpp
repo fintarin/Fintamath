@@ -96,7 +96,7 @@ MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPostSimplify
   return simplifyFunctions;
 }
 
-bool MulExpression::isConstantOrderInversed() const {
+bool MulExpression::isConstantGreaterThanVariable() const {
   return true;
 }
 

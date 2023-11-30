@@ -20,7 +20,7 @@ protected:
 
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
-  bool isConstantOrderInversed() const override;
+  bool isConstantGreaterThanVariable() const override;
 
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
