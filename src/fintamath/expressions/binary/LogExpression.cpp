@@ -47,7 +47,9 @@ ArgumentPtr LogExpression::approximateSimplify() const {
     approximateSimplifyChild(approxExpr->rhsChild);
 
     if (is<INumber>(approxExpr->rhsChild)) {
-      return approxExpr->IBinaryExpression::approximateSimplify();
+      if (const auto res = cast<INumber>(approxExpr->IBinaryExpression::approximateSimplify())) {
+        return res;
+      }
     }
 
     return approxExpr->simplify();

@@ -2290,6 +2290,7 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("sin(I)").approximate().toString(), "sin(I)");
   EXPECT_EQ(Expression("sin(5 + I)").approximate().toString(), "sin(5 + I)");
   EXPECT_EQ(Expression("sin(5/2 + 1/2 I)").approximate().toString(), "sin(2.5 + 0.5 I)");
+  EXPECT_EQ(Expression("ln(I + 1)").approximate().toString(), "ln(1 + I)");
 
   EXPECT_EQ(Expression("ln(x)").approximate().toString(), "ln(x)");
   EXPECT_EQ(Expression("lb(x)").approximate().toString(), "log(2, x)");
