@@ -12,6 +12,46 @@
 
 using namespace fintamath;
 
+namespace {
+
+class TestDerivative : public IComparableCRTP<TestDerivative> {
+public:
+  std::string toString() const override {
+    return "testderivative";
+  }
+
+  static MathObjectType getTypeStatic() {
+    return size_t(MathObjectType::IComparable) + 11;
+  }
+
+protected:
+  std::strong_ordering compare(const TestDerivative & /* rhs */) const override {
+    return 0 <=> 1;
+  }
+
+  TestDerivative &add(const TestDerivative & /* rhs */) override {
+    return *this;
+  }
+
+  TestDerivative &substract(const TestDerivative & /* rhs */) override {
+    return *this;
+  }
+
+  TestDerivative &multiply(const TestDerivative & /* rhs */) override {
+    return *this;
+  }
+
+  TestDerivative &divide(const TestDerivative & /* rhs */) override {
+    return *this;
+  }
+
+  TestDerivative &negate() override {
+    return *this;
+  }
+};
+
+}
+
 const Derivative f;
 
 TEST(DerivativeTests, toStringTest) {
@@ -27,6 +67,8 @@ TEST(DerivativeTests, callTest) {
   EXPECT_EQ(f(Variable("a"), Variable("a"))->toString(), "1");
   EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "0");
   EXPECT_EQ(f(Expression("a+a"), Variable("a"))->toString(), "2");
+
+  EXPECT_EQ(f(TestDerivative(), Variable("a"))->toString(), "derivative(testderivative, a)");
 
   EXPECT_THROW(f(Integer(5), Integer(1)), InvalidInputException);
   EXPECT_THROW(f(Variable("a"), Integer(1)), InvalidInputException);
