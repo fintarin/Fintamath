@@ -15,6 +15,7 @@ struct ChildrenComparatorResult {
   Ordering prefixFirst = Ordering::equal;
   Ordering prefixLast = Ordering::equal;
   Ordering prefixVariables = Ordering::equal;
+  Ordering prefixLiterals = Ordering::equal;
   Ordering size = Ordering::equal;
 };
 
@@ -42,23 +43,110 @@ Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
                           const std::shared_ptr<const IFunction> &rhs,
                           const ComparatorOptions &options);
 
-Ordering compareVariables(const ArgumentPtr &lhs,
-                          const ArgumentPtr &rhs,
-                          const ComparatorOptions &options);
-
 ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
                                          const ArgumentPtrVector &rhsChildren,
                                          const ComparatorOptions &options);
-
-std::shared_ptr<const Variable> popNextVariable(ExpressionTreePathStack &stack);
-
-size_t getPositionOfFirstChildWithVariable(const ArgumentPtrVector &children);
 
 bool unwrapUnaryExpression(ArgumentPtr &arg);
 
 bool unwrapEmptyExpression(ArgumentPtr &arg);
 
 Ordering reverse(Ordering ordering);
+
+template <typename T>
+size_t getPositionOfFirstChildWithTerm(const ArgumentPtrVector &children) {
+  for (auto i : std::views::iota(0U, children.size())) {
+    bool containsTerm = containsIf(children[i], [](const ArgumentPtr &child) {
+      return is<T>(child);
+    });
+
+    if (containsTerm) {
+      return i;
+    }
+  }
+
+  return children.size();
+}
+
+template <typename T>
+std::shared_ptr<const T> popNextTerm(ExpressionTreePathStack &stack) {
+  while (!stack.empty()) {
+    const ArgumentPtrVector &children = stack.top().first->getChildren();
+
+    // TODO: looks weird
+    size_t &exprIndex = stack.top().second;
+    exprIndex++;
+
+    bool hasExprChild = false;
+
+    for (; exprIndex < children.size(); exprIndex++) {
+      if (const auto &exprChild = cast<IExpression>(children[exprIndex]); exprChild && containsVariable(exprChild)) {
+        stack.emplace(exprChild, -1);
+        hasExprChild = true;
+        break;
+      }
+
+      if (const auto &varChild = cast<T>(children[exprIndex])) {
+        return varChild;
+      }
+    }
+
+    if (hasExprChild) {
+      continue;
+    }
+
+    stack.pop();
+  }
+
+  return {};
+}
+
+template <typename T>
+Ordering compareTerms(const ArgumentPtr &lhs,
+                      const ArgumentPtr &rhs,
+                      const ComparatorOptions &options) {
+
+  ExpressionTreePathStack lhsPath;
+  ExpressionTreePathStack rhsPath;
+
+  std::shared_ptr<const T> lhsTerm;
+  std::shared_ptr<const T> rhsTerm;
+
+  if (const auto &expr = cast<IExpression>(lhs)) {
+    lhsPath.emplace(expr, -1);
+    lhsTerm = popNextTerm<T>(lhsPath);
+  }
+  else if (const auto &term = cast<T>(lhs)) {
+    lhsTerm = term;
+  }
+
+  if (const auto &expr = cast<IExpression>(rhs)) {
+    rhsPath.emplace(expr, -1);
+    rhsTerm = popNextTerm<T>(rhsPath);
+  }
+  else if (const auto &term = cast<T>(rhs)) {
+    rhsTerm = term;
+  }
+
+  if (lhsTerm && !rhsTerm) {
+    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+  }
+
+  if (!lhsTerm && rhsTerm) {
+    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
+  }
+
+  while (lhsTerm && rhsTerm) {
+    if (Ordering res = compareNonExpressions(lhsTerm, rhsTerm, options); res != Ordering::equal) {
+      return res;
+    }
+
+    lhsTerm = popNextTerm<T>(lhsPath);
+    rhsTerm = popNextTerm<T>(rhsPath);
+  }
+
+  return Ordering::equal;
+}
 
 Ordering compare(ArgumentPtr lhs,
                  ArgumentPtr rhs,
@@ -164,10 +252,19 @@ Ordering compareExpressions(const std::shared_ptr<const IExpression> &lhs,
   auto lhsOper = cast<IOperator>(lhs->getFunction());
   auto rhsOper = cast<IOperator>(rhs->getFunction());
 
-  ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), rhs->getChildren(), options);
+  if ((lhsOper != nullptr) != (rhsOper != nullptr)) {
+    return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
+  }
+
+  ComparatorOptions childCompOptions = options;
+  childCompOptions.constantOrderInversed = false;
+  ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), rhs->getChildren(), childCompOptions);
 
   if (childrenComp.prefixVariables != Ordering::equal) {
     return childrenComp.prefixVariables;
+  }
+  if (childrenComp.prefixLiterals != Ordering::equal) {
+    return childrenComp.prefixLiterals;
   }
   if (childrenComp.size != Ordering::equal) {
     return childrenComp.size;
@@ -207,11 +304,19 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
                                            const ArgumentPtr &rhs,
                                            const ComparatorOptions &options) {
 
-  if (!is<Variable>(rhs)) {
+  if (!is<ILiteral>(rhs)) {
     return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
 
-  if (auto res = compareVariables(lhs, rhs, options); res != Ordering::equal) {
+  if (auto res = compareTerms<Variable>(lhs, rhs, options); res != Ordering::equal) {
+    return res;
+  }
+
+  if (!is<IOperator>(lhs->getFunction())) {
+    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
+  }
+
+  if (auto res = compareTerms<ILiteral>(lhs, rhs, options); res != Ordering::equal) {
     return res;
   }
 
@@ -244,13 +349,13 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
 
 Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
                           const std::shared_ptr<const IFunction> &rhs,
-                          const ComparatorOptions & /*options*/) {
+                          const ComparatorOptions &options) {
 
   if (is<IOperator>(lhs) && !is<IOperator>(rhs)) {
-    return Ordering::greater;
+    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
   if (!is<IOperator>(lhs) && is<IOperator>(rhs)) {
-    return Ordering::less;
+    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
   }
 
   if (*lhs == *rhs) {
@@ -264,60 +369,14 @@ Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
   return lhs->toString() < rhs->toString() ? Ordering::greater : Ordering::less;
 }
 
-Ordering compareVariables(const ArgumentPtr &lhs,
-                          const ArgumentPtr &rhs,
-                          const ComparatorOptions &options) {
-
-  ExpressionTreePathStack lhsPath;
-  ExpressionTreePathStack rhsPath;
-
-  std::shared_ptr<const Variable> lhsVar;
-  std::shared_ptr<const Variable> rhsVar;
-
-  if (const auto &expr = cast<IExpression>(lhs)) {
-    lhsPath.emplace(expr, -1);
-    lhsVar = popNextVariable(lhsPath);
-  }
-  else if (const auto &var = cast<Variable>(lhs)) {
-    lhsVar = var;
-  }
-
-  if (const auto &expr = cast<IExpression>(rhs)) {
-    rhsPath.emplace(expr, -1);
-    rhsVar = popNextVariable(rhsPath);
-  }
-  else if (const auto &var = cast<Variable>(rhs)) {
-    rhsVar = var;
-  }
-
-  if (lhsVar && !rhsVar) {
-    return !options.constantOrderInversed ? Ordering::greater : Ordering::less;
-  }
-
-  if (!lhsVar && rhsVar) {
-    return options.constantOrderInversed ? Ordering::greater : Ordering::less;
-  }
-
-  while (lhsVar && rhsVar) {
-    if (Ordering res = compareNonExpressions(lhsVar, rhsVar, options); res != Ordering::equal) {
-      return res;
-    }
-
-    lhsVar = popNextVariable(lhsPath);
-    rhsVar = popNextVariable(rhsPath);
-  }
-
-  return Ordering::equal;
-}
-
 ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
                                          const ArgumentPtrVector &rhsChildren,
                                          const ComparatorOptions &options) {
 
   ChildrenComparatorResult result = {};
 
-  size_t lhsStart = getPositionOfFirstChildWithVariable(lhsChildren);
-  size_t rhsStart = getPositionOfFirstChildWithVariable(rhsChildren);
+  size_t lhsStart = getPositionOfFirstChildWithTerm<Variable>(lhsChildren);
+  size_t rhsStart = getPositionOfFirstChildWithTerm<Variable>(rhsChildren);
 
   for (size_t i = lhsStart, j = rhsStart; i < lhsChildren.size() && j < rhsChildren.size(); i++, j++) {
     ArgumentPtr compLhs = lhsChildren[i];
@@ -371,10 +430,14 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
     }
 
     if (result.prefixVariables == Ordering::equal) {
-      result.prefixVariables = compareVariables(lhsChildren[i], rhsChildren[i], {});
+      result.prefixVariables = compareTerms<Variable>(lhsChildren[i], rhsChildren[i], {});
     }
 
-    if (result.prefixVariables != Ordering::equal && result.prefixLast != Ordering::equal) {
+    if (result.prefixLiterals == Ordering::equal) {
+      result.prefixLiterals = compareTerms<ILiteral>(lhsChildren[i], rhsChildren[i], {});
+    }
+
+    if (result.prefixLiterals != Ordering::equal && result.prefixLast != Ordering::equal) {
       break;
     }
   }
@@ -384,52 +447,6 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
   }
 
   return result;
-}
-
-std::shared_ptr<const Variable> popNextVariable(ExpressionTreePathStack &stack) {
-  while (!stack.empty()) {
-    const ArgumentPtrVector &children = stack.top().first->getChildren();
-
-    // TODO: looks weird
-    size_t &exprIndex = stack.top().second;
-    exprIndex++;
-
-    bool hasExprChild = false;
-
-    for (; exprIndex < children.size(); exprIndex++) {
-      if (const auto &exprChild = cast<IExpression>(children[exprIndex]); exprChild && containsVariable(exprChild)) {
-        stack.emplace(exprChild, -1);
-        hasExprChild = true;
-        break;
-      }
-
-      if (const auto &varChild = cast<Variable>(children[exprIndex])) {
-        return varChild;
-      }
-    }
-
-    if (hasExprChild) {
-      continue;
-    }
-
-    stack.pop();
-  }
-
-  return {};
-}
-
-size_t getPositionOfFirstChildWithVariable(const ArgumentPtrVector &children) {
-  for (auto i : std::views::iota(0U, children.size())) {
-    auto lhsChildExpr = cast<IExpression>(children[i]);
-
-    if (is<Variable>(children[i]) ||
-        (lhsChildExpr && containsVariable(lhsChildExpr))) {
-
-      return i;
-    }
-  }
-
-  return children.size();
 }
 
 bool unwrapUnaryExpression(ArgumentPtr &arg) {

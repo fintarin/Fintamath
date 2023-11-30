@@ -13,6 +13,7 @@ TEST(ExpressionComparatorTests, comparatorTest) {
   EXPECT_EQ(compare(Variable("a").clone(), Expression("a b").clone()), std::strong_ordering::less);
   EXPECT_EQ(compare(Variable("a").clone(), Expression("a + b").clone()), std::strong_ordering::less);
   EXPECT_EQ(compare(Expression("a^b").clone(), Expression("a b c").clone()), std::strong_ordering::greater);
+  EXPECT_EQ(compare(Expression("x^x ln(x)").clone(), Expression("x^x").clone()), std::strong_ordering::greater);
 
   // TODO: add more tests
 }
