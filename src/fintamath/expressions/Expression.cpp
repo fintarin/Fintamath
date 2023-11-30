@@ -113,6 +113,7 @@ void Expression::setChildren(const ArgumentPtrVector &childVect) {
 }
 
 void Expression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
+  simplifyMutable();
   IExpression::setVariables(varsToVals);
 }
 
@@ -121,6 +122,7 @@ void Expression::setVariable(const Variable &var, const Expression &val) {
 }
 
 ArgumentPtr Expression::simplify() const {
+  simplifyMutable();
   return child;
 }
 
