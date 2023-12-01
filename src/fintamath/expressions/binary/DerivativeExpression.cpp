@@ -218,13 +218,19 @@ ArgumentPtr DerivativeExpression::cotSimplify(const ArgumentPtrVector &children,
 ArgumentPtr DerivativeExpression::secSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
   const ArgumentPtr &rhs = children.front();
 
-  return mulExpr(tanExpr(rhs), secExpr(rhs), derivativeExpr(rhs, var));
+  return mulExpr(
+      sqrExpr(secExpr(rhs)),
+      sinExpr(rhs),
+      derivativeExpr(rhs, var));
 }
 
 ArgumentPtr DerivativeExpression::cscSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
   const ArgumentPtr &rhs = children.front();
 
-  return mulExpr(negExpr(cotExpr(rhs)), cscExpr(rhs), derivativeExpr(rhs, var));
+  return negExpr(mulExpr(
+      sqrExpr(cscExpr(rhs)),
+      cosExpr(rhs),
+      derivativeExpr(rhs, var)));
 }
 
 ArgumentPtr DerivativeExpression::asinSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
@@ -318,13 +324,19 @@ ArgumentPtr DerivativeExpression::cothSimplify(const ArgumentPtrVector &children
 ArgumentPtr DerivativeExpression::sechSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
   const ArgumentPtr &rhs = children.front();
 
-  return mulExpr(negExpr(tanhExpr(rhs)), sechExpr(rhs), derivativeExpr(rhs, var));
+  return negExpr(mulExpr(
+      sqrExpr(sechExpr(rhs)),
+      sinhExpr(rhs),
+      derivativeExpr(rhs, var)));
 }
 
 ArgumentPtr DerivativeExpression::cschSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
   const ArgumentPtr &rhs = children.front();
 
-  return mulExpr(negExpr(cothExpr(rhs)), cschExpr(rhs), derivativeExpr(rhs, var));
+  return negExpr(mulExpr(
+      sqrExpr(cschExpr(rhs)),
+      coshExpr(rhs),
+      derivativeExpr(rhs, var)));
 }
 
 ArgumentPtr DerivativeExpression::asinhSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
