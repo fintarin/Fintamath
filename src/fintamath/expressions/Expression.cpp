@@ -127,11 +127,20 @@ ArgumentPtr Expression::simplify() const {
 }
 
 void Expression::simplifyMutable() const {
-  if (!isSimplified) {
-    simplifyChild(child);
-    isSimplified = true;
-    updateStringMutable();
+  if (isSimplified) {
+    return;
   }
+
+  ArgumentPtr prevChild = child;
+  simplifyChild(child);
+
+  while (*child != *prevChild) {
+    prevChild = child;
+    simplifyChild(child);
+  }
+
+  isSimplified = true;
+  updateStringMutable();
 }
 
 void Expression::updateStringMutable() const {

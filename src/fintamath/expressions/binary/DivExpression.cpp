@@ -114,33 +114,27 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     return {};
   }
 
-  ArgumentPtr preSimplLhs = lhs;
-  preSimplifyChild(preSimplLhs);
-
-  ArgumentPtr preSimplRhs = rhs;
-  preSimplifyChild(preSimplRhs);
-
   ArgumentPtrVector numeratorChildren;
   ArgumentPtrVector denominatorChildren;
 
   bool containsDivExpression = false;
 
-  if (auto lhsDivExpr = cast<DivExpression>(preSimplLhs)) {
+  if (auto lhsDivExpr = cast<DivExpression>(lhs)) {
     numeratorChildren.emplace_back(lhsDivExpr->getChildren().front());
     denominatorChildren.emplace_back(lhsDivExpr->getChildren().back());
     containsDivExpression = true;
   }
   else {
-    numeratorChildren.emplace_back(preSimplLhs);
+    numeratorChildren.emplace_back(lhs);
   }
 
-  if (auto rhsDivExpr = cast<DivExpression>(preSimplRhs)) {
+  if (auto rhsDivExpr = cast<DivExpression>(rhs)) {
     denominatorChildren.emplace_back(rhsDivExpr->getChildren().front());
     numeratorChildren.emplace_back(rhsDivExpr->getChildren().back());
     containsDivExpression = true;
   }
   else {
-    denominatorChildren.emplace_back(preSimplRhs);
+    denominatorChildren.emplace_back(rhs);
   }
 
   if (!containsDivExpression) {

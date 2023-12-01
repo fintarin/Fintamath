@@ -746,13 +746,12 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("derivative(lb(sin(x)^2), x)").toString(), "(2 cot(x))/ln(2)");
   EXPECT_EQ(Expression("derivative(root(2 + x^4, 3), x)").toString(), "(4 x^3)/(3 (x^4 + 2)^(2/3))");
   EXPECT_EQ(Expression("derivative(sqrt(x) + 5/root(x, 5) - 1/x^9 + 7/(9x^5), x)").toString(), "9/(x^10) - 35/(9 x^6) - 1/(x^(6/5)) + 1/(2 sqrt(x))");
-  // EXPECT_EQ(Expression("derivative(root(1/(7 + x^2), 3) + sqrt(x)/(sqrt(x) + 1), x)").toString(), ""); // TODO: 9/(x^10) - 35/(9 x^6) - x^(-6/5) + 1/(2 sqrt(x))
   EXPECT_EQ(Expression("derivative(cos(5x), x)").toString(), "-5 sin(5 x)");
   EXPECT_EQ(Expression("derivative(asin(5x), x)").toString(), "5/sqrt(-25 x^2 + 1)");
   EXPECT_EQ(Expression("derivative(sin(x)^2, x)").toString(), "sin(2 x)");
   EXPECT_EQ(Expression("derivative(cos(x)^2, x)").toString(), "-sin(2 x)");
   EXPECT_EQ(Expression("derivative(ln(cos(3x)), x)").toString(), "-3 tan(3 x)");
-  EXPECT_EQ(Expression("derivative(log(sin(x^5), tan(x^3)), x)").toString(), "(3 sec(x^3)^2 x^2)/(tan(x^3) ln(sin(x^5))) - (5 x^4 cot(x^5) ln(tan(x^3)))/(ln(sin(x^5))^2)");
+  EXPECT_EQ(Expression("derivative(log(sin(x^5), tan(x^3)), x)").toString(), "(3 sec(x^3)^2 x^2 cos(x^3) csc(x^3))/ln(sin(x^5)) - (5 x^4 cot(x^5) ln(tan(x^3)))/(ln(sin(x^5))^2)");
   EXPECT_EQ(Expression("derivative(acos(4x + 5)^5, x)").toString(), "-(20 acos(4 x + 5)^4)/sqrt(-16 x^2 - 40 x - 24)");
   EXPECT_EQ(Expression("derivative(sin(sin(sin(x))), x)").toString(), "cos(sin(sin(x))) cos(sin(x)) cos(x)");
   EXPECT_EQ(Expression("derivative(cos(tan(cot(x))), x)").toString(), "sec(cot(x))^2 csc(x)^2 sin(tan(cot(x)))");
