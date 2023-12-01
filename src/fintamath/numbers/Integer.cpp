@@ -2,8 +2,6 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 
-using boost::multiprecision::cpp_int;
-
 namespace fintamath {
 
 Integer::Integer() = default;
@@ -18,7 +16,7 @@ Integer &Integer::operator=(Integer &&rhs) noexcept = default;
 
 Integer::~Integer() = default;
 
-Integer::Integer(cpp_int inBackend) : backend(std::move(inBackend)) {
+Integer::Integer(Backend inBackend) : backend(std::move(inBackend)) {
 }
 
 Integer::Integer(std::string str) {
@@ -58,7 +56,7 @@ int Integer::sign() const {
   return backend.sign();
 }
 
-const boost::multiprecision::cpp_int &Integer::getBackend() const {
+const Integer::Backend &Integer::getBackend() const {
   return backend;
 }
 

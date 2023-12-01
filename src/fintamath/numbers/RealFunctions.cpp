@@ -2,9 +2,6 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 
-using boost::multiprecision::cpp_dec_float_100;
-using boost::multiprecision::cpp_int;
-
 namespace fintamath {
 
 const Real &getMaxPreciseValue() {
@@ -17,8 +14,8 @@ Integer floor(const Real &rhs) {
     throw UndefinedFunctionException("floor", {rhs.toString()});
   }
 
-  cpp_dec_float_100 res = boost::multiprecision::floor(rhs.getBackend());
-  return res.convert_to<cpp_int>();
+  Real::Backend res = boost::multiprecision::floor(rhs.getBackend());
+  return res.convert_to<Integer::Backend>();
 }
 
 Integer ceil(const Real &rhs) {
@@ -26,8 +23,8 @@ Integer ceil(const Real &rhs) {
     throw UndefinedFunctionException("ceil", {rhs.toString()});
   }
 
-  cpp_dec_float_100 res = boost::multiprecision::ceil(rhs.getBackend());
-  return res.convert_to<cpp_int>();
+  Real::Backend res = boost::multiprecision::ceil(rhs.getBackend());
+  return res.convert_to<Integer::Backend>();
 }
 
 Real abs(const Real &rhs) {
@@ -47,7 +44,7 @@ Real pow(const Real &lhs, const Real &rhs) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
-  cpp_dec_float_100 res = pow(lhs.getBackend(), rhs.getBackend());
+  Real::Backend res = pow(lhs.getBackend(), rhs.getBackend());
 
   if (!res.backend().isfinite()) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
@@ -96,7 +93,7 @@ Real lg(const Real &rhs) {
 Real sin(const Real &rhs) {
   static const Real zeroValue = 0;
 
-  cpp_dec_float_100 res = sin(rhs.getBackend());
+  Real::Backend res = sin(rhs.getBackend());
 
   if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
     throw UndefinedFunctionException("sin", {rhs.toString()});
@@ -108,7 +105,7 @@ Real sin(const Real &rhs) {
 Real cos(const Real &rhs) {
   static const Real zeroValue = 1;
 
-  cpp_dec_float_100 res = cos(rhs.getBackend());
+  Real::Backend res = cos(rhs.getBackend());
 
   if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
     throw UndefinedFunctionException("cos", {rhs.toString()});
@@ -120,7 +117,7 @@ Real cos(const Real &rhs) {
 Real tan(const Real &rhs) {
   static const Real zeroValue = 0;
 
-  cpp_dec_float_100 res = tan(rhs.getBackend());
+  Real::Backend res = tan(rhs.getBackend());
 
   if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
     throw UndefinedFunctionException("tan", {rhs.toString()});
@@ -157,7 +154,7 @@ Real csc(const Real &rhs) {
 }
 
 Real asin(const Real &rhs) {
-  cpp_dec_float_100 res = asin(rhs.getBackend());
+  Real::Backend res = asin(rhs.getBackend());
 
   if (!res.backend().isfinite()) {
     throw UndefinedFunctionException("asin", {rhs.toString()});
@@ -167,7 +164,7 @@ Real asin(const Real &rhs) {
 }
 
 Real acos(const Real &rhs) {
-  cpp_dec_float_100 res = acos(rhs.getBackend());
+  Real::Backend res = acos(rhs.getBackend());
 
   if (!res.backend().isfinite()) {
     throw UndefinedFunctionException("acos", {rhs.toString()});
@@ -208,7 +205,7 @@ Real acsc(const Real &rhs) {
 }
 
 Real sinh(const Real &rhs) {
-  cpp_dec_float_100 res = sinh(rhs.getBackend());
+  Real::Backend res = sinh(rhs.getBackend());
 
   if (!res.backend().isfinite()) {
     throw UndefinedFunctionException("sinh", {rhs.toString()});
@@ -218,7 +215,7 @@ Real sinh(const Real &rhs) {
 }
 
 Real cosh(const Real &rhs) {
-  cpp_dec_float_100 res = cosh(rhs.getBackend());
+  Real::Backend res = cosh(rhs.getBackend());
 
   if (!res.backend().isfinite()) {
     throw UndefinedFunctionException("cosh", {rhs.toString()});
@@ -319,13 +316,13 @@ Real tgamma(const Real &rhs) {
 
 const Real &getE() {
   using boost::multiprecision::default_ops::get_constant_e;
-  static const Real e = cpp_dec_float_100(get_constant_e<cpp_dec_float_100::backend_type>());
+  static const Real e = Real::Backend(get_constant_e<Real::Backend::backend_type>());
   return e;
 }
 
 const Real &getPi() {
   using boost::multiprecision::default_ops::get_constant_pi;
-  static const Real pi = cpp_dec_float_100(get_constant_pi<cpp_dec_float_100::backend_type>());
+  static const Real pi = Real::Backend(get_constant_pi<Real::Backend::backend_type>());
   return pi;
 }
 

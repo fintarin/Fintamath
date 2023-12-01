@@ -3,8 +3,6 @@
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
-using namespace boost::multiprecision;
-
 namespace fintamath {
 
 Real::Real() = default;
@@ -19,8 +17,8 @@ Real &Real::operator=(Real &&rhs) noexcept = default;
 
 Real::~Real() = default;
 
-Real::Real(cpp_dec_float_100 inBackend) : backend(std::move(inBackend)),
-                                          isNegative(backend.backend().isneg()) {
+Real::Real(Backend inBackend) : backend(std::move(inBackend)),
+                                isNegative(backend.backend().isneg()) {
 }
 
 Real::Real(std::string str) : Real() {
@@ -143,7 +141,7 @@ int Real::sign() const {
   return backend.sign();
 }
 
-const cpp_dec_float_100 &Real::getBackend() const {
+const Real::Backend &Real::getBackend() const {
   return backend;
 }
 

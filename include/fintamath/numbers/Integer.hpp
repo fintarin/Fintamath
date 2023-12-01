@@ -8,6 +8,9 @@ namespace fintamath {
 
 class Integer : public IIntegerCRTP<Integer> {
 public:
+  using Backend = boost::multiprecision::cpp_int;
+
+public:
   Integer();
 
   Integer(const Integer &rhs);
@@ -20,7 +23,7 @@ public:
 
   ~Integer() override;
 
-  Integer(boost::multiprecision::cpp_int inBackend);
+  Integer(Backend inBackend);
 
   explicit Integer(std::string str);
 
@@ -33,7 +36,7 @@ public:
 
   int sign() const;
 
-  const boost::multiprecision::cpp_int &getBackend() const;
+  const Backend &getBackend() const;
 
   template <std::integral T>
   explicit operator T() const {
@@ -82,7 +85,7 @@ protected:
   Integer &decrease() override;
 
 private:
-  boost::multiprecision::cpp_int backend;
+  Backend backend;
 };
 
 }

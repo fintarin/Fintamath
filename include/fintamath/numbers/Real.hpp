@@ -10,6 +10,8 @@
 namespace fintamath {
 
 class Real : public INumberCRTP<Real> {
+public:
+  using Backend = boost::multiprecision::cpp_dec_float_100;
 
 public:
   Real();
@@ -24,7 +26,7 @@ public:
 
   ~Real() override;
 
-  Real(boost::multiprecision::cpp_dec_float_100 inBackend);
+  Real(Backend inBackend);
 
   explicit Real(std::string str);
 
@@ -46,7 +48,7 @@ public:
 
   int sign() const;
 
-  const boost::multiprecision::cpp_dec_float_100 &getBackend() const;
+  const Backend &getBackend() const;
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::Real;
@@ -74,7 +76,7 @@ protected:
   Real &negate() override;
 
 private:
-  boost::multiprecision::cpp_dec_float_100 backend;
+  Backend backend;
 
   uint8_t precision = FINTAMATH_PRECISION;
 
