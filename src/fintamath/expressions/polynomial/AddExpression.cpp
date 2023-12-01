@@ -8,6 +8,9 @@
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/Sqr.hpp"
+#include "fintamath/functions/trigonometry/Cos.hpp"
+#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
@@ -91,6 +94,7 @@ AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPostSimplify
       &AddExpression::mulSimplify,
       &AddExpression::logSimplify,
       &AddExpression::mulLogSimplify,
+      &AddExpression::trigSimplify,
   };
   return simplifyFunctions;
 }
@@ -311,6 +315,78 @@ ArgumentPtr AddExpression::divSimplify(const IFunction & /*func*/, const Argumen
   }
 
   return res;
+}
+
+ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  auto [lhsMulRate, lhsMulValue] = splitMulExpr(lhs, false);
+  auto [rhsMulRate, rhsMulValue] = splitMulExpr(rhs, false);
+
+  auto [lhsPowRate, lhsPowValue] = splitPowExpr(lhsMulValue);
+  auto [rhsPowRate, rhsPowValue] = splitPowExpr(rhsMulValue);
+
+  auto lhsPowValueExpr = cast<IExpression>(lhsPowValue);
+  auto rhsPowValueExpr = cast<IExpression>(rhsPowValue);
+
+  if (!lhsPowValueExpr || *lhsPowRate != Integer(2)) {
+    return {};
+  }
+
+  if (containsInfinity(lhsPowValue) || containsInfinity(rhsPowValue)) {
+    return {};
+  }
+
+  auto lhsPowValueChild = lhsPowValueExpr->getChildren().front();
+
+  auto lhsMulRateNum = cast<INumber>(lhsMulRate);
+
+  if (rhsPowValueExpr && *rhsPowRate == Integer(2)) {
+    if (!is<Sin>(lhsPowValueExpr->getFunction()) || !is<Cos>(rhsPowValueExpr->getFunction())) {
+      return {};
+    }
+
+    auto rhsPowValueChild = rhsPowValueExpr->getChildren().front();
+
+    if (*lhsPowValueChild != *rhsPowValueChild) {
+      return {};
+    }
+
+    if (*lhsMulRate == *rhsMulRate) {
+      return lhsMulRate;
+    }
+
+    auto rhsMulRateNum = cast<INumber>(rhsMulRate);
+
+    if (lhsMulRateNum && rhsMulRateNum && *(*lhsMulRateNum + *rhsMulRateNum) == Integer(0)) {
+      ArgumentPtr res = cosExpr(
+          mulExpr(
+              lhsPowValueExpr->getChildren().front(),
+              Integer(2).clone()));
+
+      return mulExpr(rhsMulRateNum, res);
+    }
+
+    return {};
+  }
+
+  auto rhsNum = cast<INumber>(rhs);
+
+  if (lhsMulRateNum && rhsNum && *(*lhsMulRateNum + *rhsNum) == Integer(0)) {
+    ArgumentPtr res = lhsPowValueExpr->getChildren().front();
+
+    if (is<Sin>(lhsPowValueExpr->getFunction())) {
+      res = cosExpr(res);
+    }
+    else if (is<Cos>(lhsPowValueExpr->getFunction())) {
+      res = sinExpr(res);
+    }
+    else {
+      return {};
+    }
+
+    return mulExpr(rhsNum, sqrExpr(res));
+  }
+
+  return {};
 }
 
 }

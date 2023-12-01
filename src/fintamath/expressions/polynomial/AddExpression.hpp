@@ -41,6 +41,8 @@ private:
 
   static ArgumentPtr mulSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
+  static ArgumentPtr trigSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+
   static std::vector<size_t> findLogarithms(const ArgumentPtrVector &children);
 
   static std::shared_ptr<const IExpression> mulToLogarithm(const ArgumentPtrVector &children, size_t i);

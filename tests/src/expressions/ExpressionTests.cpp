@@ -197,9 +197,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("acsch1.9").toString(), "acsch(19/10)");
   EXPECT_EQ(Expression("((2))*sqrt2").toString(), "2 sqrt(2)");
   EXPECT_EQ(Expression("sqrt2*((2))").toString(), "2 sqrt(2)");
-  EXPECT_EQ(Expression("sin(1)^2").toString(), "-cos(2)/2 + 1/2");
-  EXPECT_EQ(Expression("sin(-1)^2").toString(), "-cos(2)/2 + 1/2");
-  EXPECT_EQ(Expression("sin1^2").toString(), "-cos(2)/2 + 1/2");
+  EXPECT_EQ(Expression("sin(1)^2").toString(), "sin(1)^2");
+  EXPECT_EQ(Expression("sin(-1)^2").toString(), "sin(1)^2");
+  EXPECT_EQ(Expression("sin1^2").toString(), "sin(1)^2");
   EXPECT_EQ(Expression("sin(10^30)").toString(), "sin(1000000000000000000000000000000)");
   EXPECT_EQ(Expression("sin(1)^2 + cos(1)^2").toString(), "1");
   EXPECT_EQ(Expression("3sin(1)^2 + 3cos(1)^2").toString(), "3");
@@ -544,9 +544,9 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("1/(sin(x)+1)").toString(), "1/(sin(x) + 1)");
   EXPECT_EQ(Expression("(x+1)^3").toString(), "x^3 + 3 x^2 + 3 x + 1");
   EXPECT_EQ(Expression("(x+1)^(-3)").toString(), "1/(x^3 + 3 x^2 + 3 x + 1)");
-  EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x) - (3 cos(2 x))/2 + 5/2");
-  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "2/(2 sin(x)^3 + 6 sin(x) - 3 cos(2 x) + 5)");
-  EXPECT_EQ(Expression("(sin(x)+1)^(-4)").toString(), "1/(sin(x)^4 + 4 sin(x)^3 + 4 sin(x) - 3 cos(2 x) + 4)");
+  EXPECT_EQ(Expression("(sin(x)+1)^3").toString(), "sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1");
+  EXPECT_EQ(Expression("(sin(x)+1)^(-3)").toString(), "1/(sin(x)^3 + 3 sin(x)^2 + 3 sin(x) + 1)");
+  EXPECT_EQ(Expression("(sin(x)+1)^(-4)").toString(), "1/(sin(x)^4 + 4 sin(x)^3 + 6 sin(x)^2 + 4 sin(x) + 1)");
   EXPECT_EQ(Expression("(x)sin(a)").toString(), "sin(a) x");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(4 a b^3) + b^4 + sin(a^4) + cos(6 a^2 b^2)").toString(),
             "sin(a^4) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(4 a b^3) + b^4");
@@ -675,10 +675,10 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("derivative(sin(x^2), x)").toString(), "2 x cos(x^2)");
   EXPECT_EQ(Expression("derivative(cos(x), x)").toString(), "-sin(x)");
   EXPECT_EQ(Expression("derivative(cos(x^2), x)").toString(), "-2 x sin(x^2)");
-  EXPECT_EQ(Expression("derivative(tan(x), x)").toString(), "2/(cos(2 x) + 1)");
-  EXPECT_EQ(Expression("derivative(tan(x^2), x)").toString(), "(4 x)/(cos(2 x^2) + 1)");
-  EXPECT_EQ(Expression("derivative(cot(x), x)").toString(), "2/(cos(2 x) - 1)");
-  EXPECT_EQ(Expression("derivative(cot(x^2), x)").toString(), "(4 x)/(cos(2 x^2) - 1)");
+  EXPECT_EQ(Expression("derivative(tan(x), x)").toString(), "sec(x)^2");
+  EXPECT_EQ(Expression("derivative(tan(x^2), x)").toString(), "2 x sec(x^2)^2");
+  EXPECT_EQ(Expression("derivative(cot(x), x)").toString(), "-csc(x)^2");
+  EXPECT_EQ(Expression("derivative(cot(x^2), x)").toString(), "-2 x csc(x^2)^2");
   EXPECT_EQ(Expression("derivative(sec(x), x)").toString(), "tan(x) sec(x)");
   EXPECT_EQ(Expression("derivative(sec(x^2), x)").toString(), "2 x tan(x^2) sec(x^2)");
   EXPECT_EQ(Expression("derivative(csc(x), x)").toString(), "-cot(x) csc(x)");
@@ -752,20 +752,20 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("derivative(sin(x)^2, x)").toString(), "sin(2 x)");
   EXPECT_EQ(Expression("derivative(cos(x)^2, x)").toString(), "-sin(2 x)");
   EXPECT_EQ(Expression("derivative(ln(cos(3x)), x)").toString(), "-3 tan(3 x)");
-  EXPECT_EQ(Expression("derivative(log(sin(x^5), tan(x^3)), x)").toString(), "((6 x^2)/(cos(2 x^3) + 1))/(tan(x^3) ln(sin(x^5))) - (5 x^4 cot(x^5) ln(tan(x^3)))/(ln(sin(x^5))^2)");
+  EXPECT_EQ(Expression("derivative(log(sin(x^5), tan(x^3)), x)").toString(), "(3 sec(x^3)^2 x^2)/(tan(x^3) ln(sin(x^5))) - (5 x^4 cot(x^5) ln(tan(x^3)))/(ln(sin(x^5))^2)");
   EXPECT_EQ(Expression("derivative(acos(4x + 5)^5, x)").toString(), "-(20 acos(4 x + 5)^4)/sqrt(-16 x^2 - 40 x - 24)");
   EXPECT_EQ(Expression("derivative(sin(sin(sin(x))), x)").toString(), "cos(sin(sin(x))) cos(sin(x)) cos(x)");
-  // EXPECT_EQ(Expression("derivative(cos(tan(cot(x))), x)").toString(), ""); // TODO: csc(x)^2 sec(cot(x))^2 sin(tan(cot(x)))
+  EXPECT_EQ(Expression("derivative(cos(tan(cot(x))), x)").toString(), "sec(cot(x))^2 csc(x)^2 sin(tan(cot(x)))");
   EXPECT_EQ(Expression("derivative(a b cos(x), x)").toString(), "-a b sin(x)");
   EXPECT_EQ(Expression("derivative(a x cos(x) ln(x) sign(x), x)").toString(), "(a x derivative(sign(x), x) cos(x) - a x sin(x) sign(x) + a cos(x) sign(x)) ln(x) + a cos(x) sign(x)");
   EXPECT_EQ(Expression("derivative(a * c * cos(x)/(x^2 + 1), x)").toString(), "-(a c x^2 sin(x) + 2 a c x cos(x) + a c sin(x))/(x^4 + 2 x^2 + 1)");
-  EXPECT_EQ(Expression("derivative((2x^3)/tan(x), x)").toString(), "6 x^2 cot(x) + (4 x^3)/(cos(2 x) - 1)");
+  EXPECT_EQ(Expression("derivative((2x^3)/tan(x), x)").toString(), "-2 x^3 csc(x)^2 + 6 x^2 cot(x)");
   EXPECT_EQ(Expression("derivative(acos(x)/(x^2 + 1), x)").toString(), "-(x^2 + 2 x sqrt(-x^2 + 1) acos(x) + 1)/(sqrt(-x^2 + 1) x^4 + 2 sqrt(-x^2 + 1) x^2 + sqrt(-x^2 + 1))");
   EXPECT_EQ(Expression("derivative(sin(x)/sinh(x), x)").toString(), "-sin(x) coth(x) csch(x) + cos(x) csch(x)");
-  EXPECT_EQ(Expression("derivative(tan(x)/tanh(x), x)").toString(), "-csch(x)^2 tan(x) + (2 coth(x))/(cos(2 x) + 1)");
+  EXPECT_EQ(Expression("derivative(tan(x)/tanh(x), x)").toString(), "sec(x)^2 coth(x) - csch(x)^2 tan(x)");
   EXPECT_EQ(Expression("derivative(derivative(derivative(sin(x^3), x), x), x)").toString(), "-27 x^6 cos(x^3) - 54 x^3 sin(x^3) + 6 cos(x^3)");
   EXPECT_EQ(Expression("derivative(x^2, x) + derivative(y^2, y)").toString(), "2 x + 2 y");
-  EXPECT_EQ(Expression("derivative(sin(x^3), x) + derivative(cos(y^3), y) / derivative(tan(ln(y)), y)").toString(), "3 x^2 cos(x^3) - 3 y^3 sin(y^3) - (3 y^4 cos(4 ln(y)) sin(y^3) - 3 y^4 sin(y^3))/(4 y cos(2 ln(y)) + 4 y)");
+  EXPECT_EQ(Expression("derivative(sin(x^3), x) + derivative(cos(y^3), y) / derivative(tan(ln(y)), y)").toString(), "3 x^2 cos(x^3) - (3 y^3 sin(y^3))/(sec(ln(y))^2)");
 
   // TODO: integral
   EXPECT_EQ(Expression("integral(x, x)").toString(), "integral(x, x)");
@@ -970,20 +970,20 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("sin(x)/cos(x)").toString(), "tan(x)");
   EXPECT_EQ(Expression("(-2sin(x))/cos(x)").toString(), "-2 tan(x)");
   EXPECT_EQ(Expression("(2sin(x))/(3cos(x))").toString(), "(2 tan(x))/3");
-  EXPECT_EQ(Expression("sin(x)^2/cos(x)").toString(), "-(sec(x) cos(2 x))/2 + sec(x)/2");
-  EXPECT_EQ(Expression("sin(x)/cos(x)^2").toString(), "(2 sin(x))/(cos(2 x) + 1)");
-  EXPECT_EQ(Expression("sin(x)^2/cos(x)^2").toString(), "-1 + 2/(cos(2 x) + 1)");
-  EXPECT_EQ(Expression("(2sin(x))^2/cos(x)^2").toString(), "-4 + 8/(cos(2 x) + 1)");
-  EXPECT_EQ(Expression("(2sin(x))^2/(3cos(x))^2").toString(), "-4/9 + 8/(9 cos(2 x) + 9)");
+  EXPECT_EQ(Expression("sin(x)^2/cos(x)").toString(), "sin(x)^2 sec(x)");
+  EXPECT_EQ(Expression("sin(x)/cos(x)^2").toString(), "sec(x)^2 sin(x)");
+  EXPECT_EQ(Expression("sin(x)^2/cos(x)^2").toString(), "tan(x)^2");
+  EXPECT_EQ(Expression("(2sin(x))^2/cos(x)^2").toString(), "4 tan(x)^2");
+  EXPECT_EQ(Expression("(2sin(x))^2/(3cos(x))^2").toString(), "(4 tan(x)^2)/9");
 
   EXPECT_EQ(Expression("cos(x)/sin(x)").toString(), "cot(x)");
   EXPECT_EQ(Expression("(-2cos(x))/sin(x)").toString(), "-2 cot(x)");
   EXPECT_EQ(Expression("(2cos(x))/(3sin(x))").toString(), "(2 cot(x))/3");
-  EXPECT_EQ(Expression("cos(x)^2/sin(x)").toString(), "(csc(x) cos(2 x))/2 + csc(x)/2");
-  EXPECT_EQ(Expression("cos(x)/sin(x)^2").toString(), "-(2 cos(x))/(cos(2 x) - 1)");
-  EXPECT_EQ(Expression("cos(x)^2/sin(x)^2").toString(), "-1 - 2/(cos(2 x) - 1)");
-  EXPECT_EQ(Expression("(2cos(x))^2/sin(x)^2").toString(), "-4 - 8/(cos(2 x) - 1)");
-  EXPECT_EQ(Expression("(2cos(x))^2/(3sin(x))^2").toString(), "-4/9 - 8/(9 cos(2 x) - 9)");
+  EXPECT_EQ(Expression("cos(x)^2/sin(x)").toString(), "cos(x)^2 csc(x)");
+  EXPECT_EQ(Expression("cos(x)/sin(x)^2").toString(), "csc(x)^2 cos(x)");
+  EXPECT_EQ(Expression("cos(x)^2/sin(x)^2").toString(), "cot(x)^2");
+  EXPECT_EQ(Expression("(2cos(x))^2/sin(x)^2").toString(), "4 cot(x)^2");
+  EXPECT_EQ(Expression("(2cos(x))^2/(3sin(x))^2").toString(), "(4 cot(x)^2)/9");
 
   EXPECT_EQ(Expression("sec(x)/csc(x)").toString(), "tan(x)");
   EXPECT_EQ(Expression("csc(x)/sec(x)").toString(), "cot(x)");
@@ -992,22 +992,66 @@ TEST(ExpressionTests, stringConstructorTest) {
 
   EXPECT_EQ(Expression("sin(x)cos(x)").toString(), "sin(2 x)/2");
   EXPECT_EQ(Expression("sin(x)cos(x)sign(x)").toString(), "(sign(x) sin(2 x))/2");
-  EXPECT_EQ(Expression("sin(x)^2").toString(), "-cos(2 x)/2 + 1/2");
-  EXPECT_EQ(Expression("cos(x)^2").toString(), "cos(2 x)/2 + 1/2");
+
+  EXPECT_EQ(Expression("sin(x)^2").toString(), "sin(x)^2");
+  EXPECT_EQ(Expression("cos(x)^2").toString(), "cos(x)^2");
+  EXPECT_EQ(Expression("1 - sin(x)^2").toString(), "cos(x)^2");
+  EXPECT_EQ(Expression("-1 + sin(x)^2").toString(), "-cos(x)^2");
+  EXPECT_EQ(Expression("2 - 2sin(x)^2").toString(), "2 cos(x)^2");
+  EXPECT_EQ(Expression("-2 + 2sin(x)^2").toString(), "-2 cos(x)^2");
+  EXPECT_EQ(Expression("1 - cos(x)^2").toString(), "sin(x)^2");
+  EXPECT_EQ(Expression("-1 + cos(x)^2").toString(), "-sin(x)^2");
+  EXPECT_EQ(Expression("2 - 2cos(x)^2").toString(), "2 sin(x)^2");
+  EXPECT_EQ(Expression("-2 + 2cos(x)^2").toString(), "-2 sin(x)^2");
+  EXPECT_EQ(Expression("1 - 2sin(x)^2").toString(), "-2 sin(x)^2 + 1"); // TODO: cos of double angle
+  EXPECT_EQ(Expression("1 - 2cos(x)^2").toString(), "-2 cos(x)^2 + 1"); // TODO: cos of double angle
 
   EXPECT_EQ(Expression("sin(x)^2 + cos(x)^2").toString(), "1");
   EXPECT_EQ(Expression("sin(x)^2 - cos(x)^2").toString(), "-cos(2 x)");
   EXPECT_EQ(Expression("-sin(x)^2 + cos(x)^2").toString(), "cos(2 x)");
   EXPECT_EQ(Expression("-sin(x)^2 - cos(x)^2").toString(), "-1");
   EXPECT_EQ(Expression("2sin(x)^2 + 2cos(x)^2").toString(), "2");
-  EXPECT_EQ(Expression("sin(x)^2 + 2cos(x)^2").toString(), "cos(2 x)/2 + 3/2");
-  EXPECT_EQ(Expression("2sin(x)^2 + cos(x)^2").toString(), "-cos(2 x)/2 + 3/2");
-  EXPECT_EQ(Expression("2sin(x)^2 - 3cos(x)^2").toString(), "-(5 cos(2 x))/2 - 1/2");
-  EXPECT_EQ(Expression("-5sin(x)^2 + 10cos(x)^2").toString(), "(15 cos(2 x))/2 + 5/2");
-  EXPECT_EQ(Expression("-4sin(x)^2 - 6cos(x)^2").toString(), "-cos(2 x) - 5");
+  EXPECT_EQ(Expression("sin(x)^2 + 2cos(x)^2").toString(), "sin(x)^2 + 2 cos(x)^2");
+  EXPECT_EQ(Expression("2sin(x)^2 + cos(x)^2").toString(), "2 sin(x)^2 + cos(x)^2");
+  EXPECT_EQ(Expression("2sin(x)^2 - 3cos(x)^2").toString(), "2 sin(x)^2 - 3 cos(x)^2");
+  EXPECT_EQ(Expression("-5sin(x)^2 + 10cos(x)^2").toString(), "-5 sin(x)^2 + 10 cos(x)^2");
+  EXPECT_EQ(Expression("-4sin(x)^2 - 6cos(x)^2").toString(), "-4 sin(x)^2 - 6 cos(x)^2");
+  EXPECT_EQ(Expression("(2I + 2) sin(x)^2 + (2I + 2) cos(x)^2").toString(), "2 + 2 I");
+  EXPECT_EQ(Expression("(2I + 2) sin(x)^2 + (2I - 2) cos(x)^2").toString(), "(2 + 2 I) sin(x)^2 + (-2 + 2 I) cos(x)^2");
+  EXPECT_EQ(Expression("(2I + 2) sin(x)^2 + (-2I + 2) cos(x)^2").toString(), "(2 + 2 I) sin(x)^2 + (2 - 2 I) cos(x)^2");
+  EXPECT_EQ(Expression("(2I + 2) sin(x)^2 + (-2I - 2) cos(x)^2").toString(), "(-2 - 2 I) cos(2 x)");
+  EXPECT_EQ(Expression("(2I - 2) sin(x)^2 + (2I + 2) cos(x)^2").toString(), "(-2 + 2 I) sin(x)^2 + (2 + 2 I) cos(x)^2");
+  EXPECT_EQ(Expression("(2I - 2) sin(x)^2 + (2I - 2) cos(x)^2").toString(), "-2 + 2 I");
+  EXPECT_EQ(Expression("(2I - 2) sin(x)^2 + (-2I + 2) cos(x)^2").toString(), "(2 - 2 I) cos(2 x)");
+  EXPECT_EQ(Expression("(2I - 2) sin(x)^2 + (-2I - 2) cos(x)^2").toString(), "(-2 + 2 I) sin(x)^2 + (-2 - 2 I) cos(x)^2");
+  EXPECT_EQ(Expression("(-2I + 2) sin(x)^2 + (2I + 2) cos(x)^2").toString(), "(2 - 2 I) sin(x)^2 + (2 + 2 I) cos(x)^2");
+  EXPECT_EQ(Expression("(-2I + 2) sin(x)^2 + (2I - 2) cos(x)^2").toString(), "(-2 + 2 I) cos(2 x)");
+  EXPECT_EQ(Expression("(-2I + 2) sin(x)^2 + (-2I + 2) cos(x)^2").toString(), "2 - 2 I");
+  EXPECT_EQ(Expression("(-2I + 2) sin(x)^2 + (-2I - 2) cos(x)^2").toString(), "(2 - 2 I) sin(x)^2 + (-2 - 2 I) cos(x)^2");
+  EXPECT_EQ(Expression("(-2I - 2) sin(x)^2 + (2I + 2) cos(x)^2").toString(), "(2 + 2 I) cos(2 x)");
+  EXPECT_EQ(Expression("(-2I - 2) sin(x)^2 + (2I - 2) cos(x)^2").toString(), "(-2 - 2 I) sin(x)^2 + (-2 + 2 I) cos(x)^2");
+  EXPECT_EQ(Expression("(-2I - 2) sin(x)^2 + (-2I + 2) cos(x)^2").toString(), "(-2 - 2 I) sin(x)^2 + (2 - 2 I) cos(x)^2");
+  EXPECT_EQ(Expression("(-2I - 2) sin(x)^2 + (-2I - 2) cos(x)^2").toString(), "-2 - 2 I");
+  // TODO: simplify
+  EXPECT_EQ(Expression("E sin(x)^2 + E cos(x)^2").toString(), "E sin(x)^2 + E cos(x)^2");
+  EXPECT_EQ(Expression("E sin(x)^2 - E cos(x)^2").toString(), "E sin(x)^2 - E cos(x)^2");
+  EXPECT_EQ(Expression("-E sin(x)^2 + E cos(x)^2").toString(), "-E sin(x)^2 + E cos(x)^2");
+  EXPECT_EQ(Expression("-E sin(x)^2 - E cos(x)^2").toString(), "-E sin(x)^2 - E cos(x)^2");
+  EXPECT_EQ(Expression("E^2 sin(x)^2 + E cos(x)^2").toString(), "sin(x)^2 E^2 + E cos(x)^2");
+  EXPECT_EQ(Expression("E^2 sin(x)^2 - E cos(x)^2").toString(), "sin(x)^2 E^2 - E cos(x)^2");
+  EXPECT_EQ(Expression("-E^2 sin(x)^2 + E cos(x)^2").toString(), "-sin(x)^2 E^2 + E cos(x)^2");
+  EXPECT_EQ(Expression("-E^2 sin(x)^2 - E cos(x)^2").toString(), "-sin(x)^2 E^2 - E cos(x)^2");
   EXPECT_EQ(Expression("sin(x) * sin(x) + cos(x) * cos(x)").toString(), "1");
   EXPECT_EQ(Expression("(sin(x) + cos(x))^2").toString(), "sin(2 x) + 1");
   EXPECT_EQ(Expression("(sin(x) - cos(x))^2").toString(), "-sin(2 x) + 1");
+  EXPECT_EQ(Expression("sin(x)^2 + cos(y)^2").toString(), "sin(x)^2 + cos(y)^2");
+
+  EXPECT_EQ(Expression("sin(x)^2 + sign(x)^2").toString(), "sin(x)^2 + sign(x)^2");
+  EXPECT_EQ(Expression("sin(x)^2 - sign(x)^2").toString(), "sin(x)^2 - sign(x)^2");
+  EXPECT_EQ(Expression("cos(x)^2 + sign(x)^2").toString(), "cos(x)^2 + sign(x)^2");
+  EXPECT_EQ(Expression("cos(x)^2 - sign(x)^2").toString(), "cos(x)^2 - sign(x)^2");
+  EXPECT_EQ(Expression("sign(x)^2 + 1").toString(), "sign(x)^2 + 1");
+  EXPECT_EQ(Expression("sign(x)^2 - 1").toString(), "sign(x)^2 - 1");
 
   EXPECT_EQ(Expression("tan(x) * cot(x)").toString(), "1");
   EXPECT_EQ(Expression("cot(x) * tan(x)").toString(), "1");
