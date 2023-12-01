@@ -105,7 +105,6 @@ PowExpression::SimplifyFunctionVector PowExpression::getFunctionsForPostSimplify
       &PowExpression::constSimplify,
       &PowExpression::polynomSimplify,
       &PowExpression::powSimplify,
-      &PowExpression::trigDoubleAngleSimplify,
   };
   return simplifyFunctions;
 }
@@ -326,39 +325,6 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
     if (!containsInfinity(rhs)) {
       return lhs;
     }
-  }
-
-  return {};
-}
-
-ArgumentPtr PowExpression::trigDoubleAngleSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (*rhs != Integer(2)) {
-    return {};
-  }
-
-  const auto lhsExpr = cast<IExpression>(lhs);
-  if (!lhsExpr) {
-    return {};
-  }
-
-  auto lhsChild = lhsExpr->getChildren().front();
-  if (containsInfinity(lhsChild)) {
-    return {};
-  }
-
-  ArgumentPtr doubleCos = cosExpr(
-      mulExpr(lhsChild, Integer(2).clone()));
-
-  if (is<Cos>(lhsExpr->getFunction())) {
-    return divExpr(
-        addExpr(doubleCos, Integer(1).clone()),
-        Integer(2).clone());
-  }
-
-  if (is<Sin>(lhsExpr->getFunction())) {
-    return divExpr(
-        addExpr(doubleCos, Integer(-1).clone()),
-        Integer(-2).clone());
   }
 
   return {};

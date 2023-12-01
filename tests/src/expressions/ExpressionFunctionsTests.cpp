@@ -271,7 +271,7 @@ TEST(ExpressionFunctionsTests, derivativeTest) {
   EXPECT_EQ(derivative(Expression("a"), Expression("a")).toString(), "1");
   EXPECT_EQ(derivative(Expression("(a+5)"), Expression("a")).toString(), "1");
   EXPECT_EQ(derivative(Expression("sin(a^2)"), Expression("a")).toString(), "2 a cos(a^2)");
-  EXPECT_EQ(derivative(Expression("(ln(a)/tan(a))^(1/2)"), Expression("a")).toString(), "sqrt(ln(a))/(sqrt(cot(a)) cos(2 a) - sqrt(cot(a))) + sqrt(cot(a))/(2 sqrt(ln(a)) a)");
+  EXPECT_EQ(derivative(Expression("(ln(a)/tan(a))^(1/2)"), Expression("a")).toString(), "-(sqrt(ln(a)) csc(a)^2)/(2 sqrt(cot(a))) + sqrt(cot(a))/(2 sqrt(ln(a)) a)");
 }
 
 TEST(ExpressionFunctionsTests, notTest) {
