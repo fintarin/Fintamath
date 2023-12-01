@@ -76,6 +76,9 @@ protected:
   Real &negate() override;
 
 private:
+  bool isValid() const;
+
+private:
   Backend backend;
 
   uint8_t precision = FINTAMATH_PRECISION;

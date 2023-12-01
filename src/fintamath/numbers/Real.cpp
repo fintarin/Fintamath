@@ -18,7 +18,11 @@ Real &Real::operator=(Real &&rhs) noexcept = default;
 Real::~Real() = default;
 
 Real::Real(Backend inBackend) : backend(std::move(inBackend)),
-                                isNegative(backend.backend().isneg()) {
+                                isNegative(backend < 0) {
+
+  if (!isValid()) {
+    throw UndefinedException(backend.str());
+  }
 }
 
 Real::Real(std::string str) : Real() {
@@ -164,14 +168,14 @@ std::strong_ordering Real::compare(const Real &rhs) const {
 Real &Real::add(const Real &rhs) {
   bool isResNegZero = backend.is_zero() && rhs.backend.is_zero() && (isNegative || rhs.isNegative);
   backend += rhs.backend;
-  isNegative = isResNegZero || backend.backend().isneg();
+  isNegative = isResNegZero || backend < 0;
   return *this;
 }
 
 Real &Real::substract(const Real &rhs) {
   bool isResNegZero = backend.is_zero() && rhs.backend.is_zero() && (isNegative || !rhs.isNegative);
   backend -= rhs.backend;
-  isNegative = isResNegZero || backend.backend().isneg();
+  isNegative = isResNegZero || backend < 0;
   return *this;
 }
 
@@ -185,7 +189,7 @@ Real &Real::divide(const Real &rhs) {
   isNegative = isNegative != rhs.isNegative;
   backend /= rhs.backend;
 
-  if (!backend.backend().isfinite()) {
+  if (!isValid()) {
     throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
   }
 
@@ -196,6 +200,10 @@ Real &Real::negate() {
   isNegative = !isNegative;
   backend = -backend;
   return *this;
+}
+
+bool Real::isValid() const {
+  return backend.backend().isfinite();
 }
 
 }

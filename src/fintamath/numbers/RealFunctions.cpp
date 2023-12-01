@@ -44,13 +44,12 @@ Real pow(const Real &lhs, const Real &rhs) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
-  Real::Backend res = pow(lhs.getBackend(), rhs.getBackend());
-
-  if (!res.backend().isfinite()) {
+  try {
+    return {pow(lhs.getBackend(), rhs.getBackend())};
+  }
+  catch (const UndefinedException &) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
-
-  return {res};
 }
 
 Real exp(const Real &rhs) {
@@ -154,23 +153,21 @@ Real csc(const Real &rhs) {
 }
 
 Real asin(const Real &rhs) {
-  Real::Backend res = asin(rhs.getBackend());
-
-  if (!res.backend().isfinite()) {
+  try {
+    return {asin(rhs.getBackend())};
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("asin", {rhs.toString()});
   }
-
-  return {res};
 }
 
 Real acos(const Real &rhs) {
-  Real::Backend res = acos(rhs.getBackend());
-
-  if (!res.backend().isfinite()) {
+  try {
+    return {acos(rhs.getBackend())};
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("acos", {rhs.toString()});
   }
-
-  return {res};
 }
 
 Real atan(const Real &rhs) {
@@ -205,23 +202,21 @@ Real acsc(const Real &rhs) {
 }
 
 Real sinh(const Real &rhs) {
-  Real::Backend res = sinh(rhs.getBackend());
-
-  if (!res.backend().isfinite()) {
+  try {
+    return {sinh(rhs.getBackend())};
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("sinh", {rhs.toString()});
   }
-
-  return res;
 }
 
 Real cosh(const Real &rhs) {
-  Real::Backend res = cosh(rhs.getBackend());
-
-  if (!res.backend().isfinite()) {
+  try {
+    return {cosh(rhs.getBackend())};
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("cosh", {rhs.toString()});
   }
-
-  return res;
 }
 
 Real tanh(const Real &rhs) {
