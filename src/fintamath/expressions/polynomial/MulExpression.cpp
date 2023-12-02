@@ -268,8 +268,15 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
     return powExpr(lhsChildValue, ratesSum);
   }
 
-  if (is<INumber>(lhsChildValue) &&
-      is<INumber>(rhsChildValue) &&
+  auto lhsChildValueNum = cast<INumber>(lhsChildValue);
+  auto rhsChildValueNum = cast<INumber>(rhsChildValue);
+
+  if (lhsChildValueNum &&
+      rhsChildValueNum &&
+      !lhsChildValueNum->isComplex() &&
+      !rhsChildValueNum->isComplex() &&
+      *lhsChildValueNum >= Integer(0) &&
+      *rhsChildValueNum >= Integer(0) &&
       *lhsChildRate == *rhsChildRate &&
       *rhsChildRate != Integer(1)) {
 

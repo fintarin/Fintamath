@@ -1444,6 +1444,14 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("(-1)^(4/5)").toString(), "(-1)^(4/5)");
   EXPECT_EQ(Expression("(-1)^(5/6)").toString(), "(-1)^(5/6)");
   EXPECT_EQ(Expression("(-1)^(6/7)").toString(), "(-1)^(6/7)");
+  EXPECT_EQ(Expression("sqrt(-3) sqrt(-3)").toString(), "-3");
+  EXPECT_EQ(Expression("sqrt(-3) sqrt(-2)").toString(), "-sqrt(6)");
+  EXPECT_EQ(Expression("sqrt(i+1) sqrt(i+1)").toString(), "i + 1");
+  EXPECT_EQ(Expression("sqrt(i+1) sqrt(i)").toString(), "sqrt(i + 1) sqrt(i)");
+  EXPECT_EQ(Expression("root(-3, 3) root(-3, 3)").toString(), "(-3)^(2/3)");
+  EXPECT_EQ(Expression("root(-3, 3) root(-2, 3)").toString(), "root(-2, 3) root(-3, 3)");
+  EXPECT_EQ(Expression("root(i+1, 3) root(i+1, 3)").toString(), "(i + 1)^(2/3)");
+  EXPECT_EQ(Expression("root(i+1, 3) root(i, 3)").toString(), "root(i + 1, 3) root(i, 3)");
 
   // TODO: implement
   EXPECT_EQ(Expression("ln(-1)").toString(), "ln(-1)");
