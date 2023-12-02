@@ -126,7 +126,7 @@ TEST(ExpressionFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Expression("4")).toString(), "2");
   EXPECT_EQ(sqrt(Expression("5")).toString(), "sqrt(5)");
   EXPECT_EQ(sqrt(Expression("a^4")).toString(), "sqrt(a^4)");
-  EXPECT_EQ(sqrt(Expression("a^2*b*b")).toString(), "sqrt(a^2) sqrt(b^2)");
+  EXPECT_EQ(sqrt(Expression("a^2*b*b")).toString(), "sqrt(a^2 b^2)");
   EXPECT_EQ(sqrt(Expression("a^2+b^2+2*a*b")).toString(), "sqrt(a^2 + 2 a b + b^2)");
 }
 
@@ -134,7 +134,7 @@ TEST(ExpressionFunctionsTests, powTest) {
   EXPECT_EQ(pow(Expression("a+b"), Expression("0")).toString(), "1");
   EXPECT_EQ(pow(Expression("a^4"), Expression("a")).toString(), "(a^4)^a");
   EXPECT_EQ(pow(Expression("a^4"), Expression("2")).toString(), "a^8");
-  EXPECT_EQ(pow(Expression("a*b"), Expression("a+3")).toString(), "a^(a + 3) b^(a + 3)");
+  EXPECT_EQ(pow(Expression("a*b"), Expression("a+3")).toString(), "(a b)^(a + 3)");
   EXPECT_EQ(pow(Expression("a+2"), Expression("2")).toString(), "a^2 + 4 a + 4");
 }
 
@@ -271,7 +271,7 @@ TEST(ExpressionFunctionsTests, derivativeTest) {
   EXPECT_EQ(derivative(Expression("a"), Expression("a")).toString(), "1");
   EXPECT_EQ(derivative(Expression("(a+5)"), Expression("a")).toString(), "1");
   EXPECT_EQ(derivative(Expression("sin(a^2)"), Expression("a")).toString(), "2 a cos(a^2)");
-  EXPECT_EQ(derivative(Expression("(ln(a)/tan(a))^(1/2)"), Expression("a")).toString(), "-(sqrt(ln(a)) csc(a)^2)/(2 sqrt(cot(a))) + sqrt(cot(a))/(2 sqrt(ln(a)) a)");
+  EXPECT_EQ(derivative(Expression("(ln(a)/tan(a))^(1/2)"), Expression("a")).toString(), "-(sqrt(cot(a) ln(a)) csc(a)^2 tan(a))/2 + sqrt(cot(a) ln(a))/(2 a ln(a))");
 }
 
 TEST(ExpressionFunctionsTests, notTest) {
@@ -369,7 +369,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("2 x^a = 0")).toString(), "x^a = 0");
   EXPECT_EQ(solve(Expression("x^b a = 0")).toString(), "a x^b = 0");
   EXPECT_EQ(solve(Expression("x/y = 0")).toString(), "x = 0");
-  EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = -sqrt(sin(2)) sqrt(2) | x = sqrt(sin(2)) sqrt(2)");
+  EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = -sqrt(8 sin(2))/2 | x = sqrt(8 sin(2))/2");
   EXPECT_EQ(solve(Expression("x = x sqrt(x)")).toString(), "x^(3/2) - x = 0");
 
   EXPECT_EQ(solve(Expression("E = Ey")).toString(), "y = 1");

@@ -347,6 +347,10 @@ ArgumentPtr PowExpression::polynomSimplify(const IFunction & /*func*/, const Arg
 }
 
 ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (!is<Integer>(rhs)) {
+    return {};
+  }
+
   ArgumentPtr res;
 
   if (auto mulExprChild = cast<IExpression>(lhs); mulExprChild && is<Mul>(mulExprChild->getFunction())) {
@@ -363,6 +367,10 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 }
 
 ArgumentPtr PowExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (!is<Integer>(rhs)) {
+    return {};
+  }
+
   ArgumentPtr res;
 
   if (auto divExprChild = cast<IExpression>(lhs); divExprChild && is<Div>(divExprChild->getFunction())) {
