@@ -437,6 +437,8 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("ln(a) (2x + 2)").toString(), "ln(a) (2 x + 2)");
   EXPECT_EQ(Expression("log(a, 2) (2x + 2)").toString(), "log(a, 2) (2 x + 2)");
   EXPECT_EQ(Expression("x / (t sin(x))").toString(), "(x csc(x))/t");
+  EXPECT_EQ(Expression("root(x, x) mod 1").toString(), "root(x, x) mod 1");
+  EXPECT_EQ(Expression("root(x, y/x) mod 1").toString(), "(x^(x/y)) mod 1");
 
   EXPECT_EQ(Expression("log(2, 2)").toString(), "1");
   EXPECT_EQ(Expression("log(2, 256)").toString(), "8");

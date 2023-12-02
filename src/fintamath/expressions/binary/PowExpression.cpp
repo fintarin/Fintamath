@@ -66,10 +66,12 @@ std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
     }
   }
 
-  if (auto rhsChildExpr = cast<IExpression>(rhsChild); rhsChildExpr && is<Div>(rhsChildExpr->getFunction())) {
-    if (*rhsChildExpr->getChildren().front() == Integer(1)) {
-      return std::make_shared<Root>();
-    }
+  if (auto rhsChildExpr = cast<IExpression>(rhsChild);
+      rhsChildExpr &&
+      is<Div>(rhsChildExpr->getFunction()) &&
+      *rhsChildExpr->getChildren().front() == Integer(1)) {
+
+    return std::make_shared<Root>();
   }
 
   return IBinaryExpression::getFunction();
