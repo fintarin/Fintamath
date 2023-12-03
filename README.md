@@ -29,6 +29,7 @@ Fintamath is a C++ library for symbolic mathematics, supporting both the input o
   * Powers and logarithms
   * Trigonometric functions
   * Hyperbolic functions
+  * Derivative
   * Logic functions
   * Mathematical constants
   * Rounding functions
