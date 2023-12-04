@@ -30,7 +30,6 @@ Real::Real(std::string str) : Real() {
     throw InvalidInputException(str);
   }
 
-  // Validate input and remove leading zeros
   {
     size_t firstDigitPos = 0;
     if (str.front() == '-') {
@@ -43,22 +42,19 @@ Real::Real(std::string str) : Real() {
       str = "0";
     }
 
-    size_t dotsNum = 0;
-    for (auto i : std::views::iota(firstDigitPos, str.size())) {
-      if (str[i] == '.') {
-        dotsNum++;
-      }
-      else if (str[i] < '0' || str[i] > '9') {
-        throw InvalidInputException(str);
-      }
-
-      if (dotsNum > 1) {
-        throw InvalidInputException(str);
-      }
+    std::string expStr = "*10^";
+    size_t expPos = str.find(expStr);
+    if (expPos != std::string::npos) {
+      str.replace(expPos, expStr.length(), "e");
     }
   }
 
-  backend.assign(str);
+  try {
+    backend.assign(str);
+  }
+  catch (std::runtime_error &) {
+    throw InvalidInputException(str);
+  }
 }
 
 Real::Real(const Rational &val) {

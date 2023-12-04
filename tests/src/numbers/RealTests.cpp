@@ -20,6 +20,19 @@ TEST(RealTests, stringConstructorTest) {
   EXPECT_EQ(Real(".1").toString(), "0.1");
   EXPECT_EQ(Real("1.").toString(), "1.0");
   EXPECT_EQ(Real("10000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000").toString(), "1.00000000002*10^94");
+  EXPECT_EQ(Real("2*10^2").toString(), "200.0");
+  EXPECT_EQ(Real("-2*10^2").toString(), "-200.0");
+  EXPECT_EQ(Real("2*10^-2").toString(), "0.02");
+  EXPECT_EQ(Real("-2*10^-2").toString(), "-0.02");
+  EXPECT_EQ(Real("123.456*10^1000").toString(), "1.23456*10^1002");
+  EXPECT_EQ(Real("-123.456*10^1000").toString(), "-1.23456*10^1002");
+  EXPECT_EQ(Real("123.456*10^-1000").toString(), "1.23456*10^-998");
+  EXPECT_EQ(Real("-123.456*10^-1000").toString(), "-1.23456*10^-998");
+  EXPECT_EQ(Real("0.123456*10^1000").toString(), "1.23456*10^999");
+  EXPECT_EQ(Real("-0.123456*10^1000").toString(), "-1.23456*10^999");
+  EXPECT_EQ(Real("0.123456*10^-1000").toString(), "1.23456*10^-1001");
+  EXPECT_EQ(Real("-0.123456*10^-1000").toString(), "-1.23456*10^-1001");
+  EXPECT_EQ(Real("10*10^100000000000000000000").toString(), "1.0"); // TODO? throw exception
 
   EXPECT_THROW(Real("--10"), InvalidInputException);
   EXPECT_THROW(Real("test"), InvalidInputException);
@@ -38,6 +51,8 @@ TEST(RealTests, stringConstructorTest) {
   EXPECT_THROW(Real("10.--1"), InvalidInputException);
   EXPECT_THROW(Real("."), InvalidInputException);
   EXPECT_THROW(Real("1.2.1"), InvalidInputException);
+  EXPECT_THROW(Real("2*10^2.2"), InvalidInputException);
+  EXPECT_THROW(Real("0*10^0"), InvalidInputException);
 }
 
 TEST(RealTests, rationalConstructorTest) {
