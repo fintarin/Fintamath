@@ -199,7 +199,7 @@ Real &Real::negate() {
 }
 
 bool Real::isValid() const {
-  return backend.backend().isfinite();
+  return boost::math::isfinite(backend);
 }
 
 }
