@@ -52,7 +52,7 @@ Real::Real(std::string str) : Real() {
   try {
     backend.assign(str);
   }
-  catch (std::runtime_error &) {
+  catch (const std::runtime_error &) {
     throw InvalidInputException(str);
   }
 }
