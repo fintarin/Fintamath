@@ -277,6 +277,10 @@ ArgumentPtr AddExpression::divSimplify(const IFunction & /*func*/, const Argumen
 
   ArgumentPtr res;
 
+  if (rhsExpr && is<Div>(rhsExpr->getFunction()) && containsInfinity(rhsExpr)) {
+    return {};
+  }
+
   if (lhsExpr && rhsExpr &&
       is<Div>(lhsExpr->getFunction()) && is<Div>(rhsExpr->getFunction())) {
 

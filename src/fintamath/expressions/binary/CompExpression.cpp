@@ -114,10 +114,18 @@ ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentP
     return {};
   }
 
-  if ((is<Inf>(lhs) || is<NegInf>(lhs)) &&
-      (is<Inf>(rhs) || is<NegInf>(rhs))) {
+  if (*lhs == *rhs) {
+    Boolean res = is<Eqv>(func) || is<LessEqv>(func) || is<MoreEqv>(func);
+    return res.clone();
+  }
 
-    Boolean res = (*rhs == *lhs) == (is<Eqv>(func) || is<MoreEqv>(func) || is<LessEqv>(func));
+  if (is<Inf>(lhs) && is<NegInf>(rhs)) {
+    Boolean res = is<Neqv>(func) || is<More>(func) || is<MoreEqv>(func);
+    return res.clone();
+  }
+
+  if (is<NegInf>(lhs) && is<Inf>(rhs)) {
+    Boolean res = is<Neqv>(func) || is<Less>(func) || is<LessEqv>(func);
     return res.clone();
   }
 

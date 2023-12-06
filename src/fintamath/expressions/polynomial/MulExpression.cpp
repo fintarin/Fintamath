@@ -145,7 +145,7 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
         return is<Inf>(rhs) ? NegInf().clone() : Inf().clone();
       }
 
-      if (!isComplexNumber(rate)) {
+      if (!isComplexNumber(rate) && !containsVariable(rate)) {
         if (const auto rateExpr = cast<IExpression>(rate); !rateExpr || !is<Sign>(rateExpr->getFunction())) {
           return mulExpr(signExpr(rate), inf);
         }

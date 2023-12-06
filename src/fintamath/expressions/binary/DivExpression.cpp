@@ -70,25 +70,22 @@ DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPostSimplify
 }
 
 ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if ((*lhs == Integer(0) || isMulInfinity(lhs)) &&
-      (*rhs == Integer(0) || isMulInfinity(rhs))) {
+  if ((*lhs == Integer(0) && *rhs == Integer(0)) ||
+      (isMulInfinity(lhs) && isMulInfinity(rhs))) {
 
     return Undefined().clone();
   }
 
-  bool lhsContainsInf = containsInfinity(lhs);
-  bool rhsContainsInf = containsInfinity(rhs);
-
-  if (*lhs == Integer(0) && !rhsContainsInf) {
-    return lhs;
-  }
-
-  if (*rhs == Integer(0) && !lhsContainsInf) {
+  if (*rhs == Integer(0)) {
     return ComplexInf().clone();
   }
 
-  if (isMulInfinity(rhs) && !lhsContainsInf) {
+  if (isMulInfinity(rhs)) {
     return Integer(0).clone();
+  }
+
+  if (*lhs == Integer(0)) {
+    return lhs;
   }
 
   if (*rhs == Integer(1)) {
