@@ -47,7 +47,7 @@ protected:
 
   virtual ArgumentPtr approximateSimplify() const;
 
-  virtual ArgumentPtr setPrecision(uint8_t precision, const Integer &maxInt) const;
+  virtual ArgumentPtr setPrecision(unsigned precision, const Integer &maxInt) const;
 
   static void simplifyChild(ArgumentPtr &child);
 
@@ -57,14 +57,14 @@ protected:
 
   static void approximateSimplifyChild(ArgumentPtr &child);
 
-  static void setPrecisionChild(ArgumentPtr &child, uint8_t precision, const Integer &maxInt);
+  static void setPrecisionChild(ArgumentPtr &child, unsigned precision, const Integer &maxInt);
 
   static ArgumentPtr callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs);
 
 private:
   static std::unique_ptr<INumber> convertToApproximated(const INumber &num);
 
-  static std::unique_ptr<INumber> convertToApproximated(const INumber &num, uint8_t precision, const Integer &maxInt);
+  static std::unique_ptr<INumber> convertToApproximated(const INumber &num, unsigned precision, const Integer &maxInt);
 
   static ArgumentPtrVector convertToApproximatedNumbers(const ArgumentPtrVector &args);
 

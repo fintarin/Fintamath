@@ -36,9 +36,9 @@ TEST(FloorTests, callTest) {
 
   EXPECT_EQ(f(Real("-2.9"))->toString(), "-3");
   EXPECT_EQ(f(Real("-2.2"))->toString(), "-3");
-  EXPECT_EQ(f(Real("-2"))->toString(), "-3");
-  EXPECT_EQ(f(Real("0"))->toString(), "0");
-  EXPECT_EQ(f(Real("2"))->toString(), "2");
+  EXPECT_EQ(f(Real("-2"))->toString(), "floor(-2.0)");
+  EXPECT_EQ(f(Real("0"))->toString(), "floor(0.0)");
+  EXPECT_EQ(f(Real("2"))->toString(), "floor(2.0)");
   EXPECT_EQ(f(Real("2.2"))->toString(), "2");
   EXPECT_EQ(f(Real("2.9"))->toString(), "2");
 
@@ -54,6 +54,9 @@ TEST(FloorTests, callTest) {
   EXPECT_EQ(f(Complex(Real("1.1"), Real("-2.2")))->toString(), "1 - 3 I");
   EXPECT_EQ(f(Complex(Real("-1.1"), Real("2.2")))->toString(), "-2 + 2 I");
   EXPECT_EQ(f(Complex(Real("-1.1"), Real("-2.2")))->toString(), "-2 - 3 I");
+  EXPECT_EQ(f(Complex(Real("0"), Real("0")))->toString(), "floor(0.0 + 0.0 I)");
+  EXPECT_EQ(f(Complex(Real("0"), Real("0.5")))->toString(), "floor(0.0 + 0.5 I)");
+  EXPECT_EQ(f(Complex(Real("0.5"), Real("0")))->toString(), "floor(0.5 + 0.0 I)");
 
   EXPECT_EQ(f(Variable("a"))->toString(), "floor(a)");
 

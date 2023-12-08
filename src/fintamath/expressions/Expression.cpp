@@ -1,5 +1,6 @@
 #include "fintamath/expressions/Expression.hpp"
 
+#include "fintamath/core/Cache.hpp"
 #include "fintamath/expressions/ExpressionParser.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/FunctionExpression.hpp"
@@ -52,12 +53,17 @@ std::string Expression::toString() const {
   return stringCached;
 }
 
-Expression Expression::approximate(uint8_t precision) const {
-  const Integer maxInt = pow(Integer(10), precision);
+Expression Expression::approximate(unsigned precision) const {
+  Real::ScopedSetPrecision setPrecision(precision);
+
+  static Cache<unsigned, Integer> cache([](unsigned inPrecision) {
+    static const Integer powBase = 10;
+    return pow(powBase, inPrecision);
+  });
 
   Expression approxExpr = *this;
   approximateSimplifyChild(approxExpr.child);
-  setPrecisionChild(approxExpr.child, precision, maxInt);
+  setPrecisionChild(approxExpr.child, precision, cache[precision]);
   approxExpr.updateStringMutable();
 
   return approxExpr;

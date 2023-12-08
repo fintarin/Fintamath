@@ -32,8 +32,8 @@ std::unique_ptr<IMathObject> Floor::multiFloorSimplify(const INumber &rhs) {
     outMultiFloor.add<Real>([](const Real &inRhs) {
       Integer res = floor(inRhs);
 
-      if (inRhs < 0 && (inRhs == Real(res) || res == Real(0))) {
-        res--;
+      if (abs(inRhs) == Real(abs(res))) {
+        return std::unique_ptr<IMathObject>{};
       }
 
       return res.clone();
@@ -42,6 +42,11 @@ std::unique_ptr<IMathObject> Floor::multiFloorSimplify(const INumber &rhs) {
     outMultiFloor.add<Complex>([](const Complex &inRhs) {
       const auto re = cast<INumber>(multiFloorSimplify(inRhs.real()));
       const auto im = cast<INumber>(multiFloorSimplify(inRhs.imag()));
+
+      if (!re || !im) {
+        return std::unique_ptr<IMathObject>{};
+      }
+
       return Complex(*re, *im).toMinimalObject();
     });
 

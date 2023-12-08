@@ -109,6 +109,10 @@ namespace {
 
 struct ExpressionConfig {
   ExpressionConfig() {
+    // TODO! move to other file
+    static const unsigned defaultPrecision = 80;
+    Real::setPrecision(defaultPrecision);
+
     registerTermsMakers();
     registerFunctionExpressionMakers();
   }

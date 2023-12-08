@@ -92,7 +92,7 @@ ArgumentPtr PowExpression::approximateSimplify() const {
   return IBinaryExpression::approximateSimplify();
 }
 
-ArgumentPtr PowExpression::setPrecision(uint8_t precision, const Integer &maxInt) const {
+ArgumentPtr PowExpression::setPrecision(unsigned precision, const Integer &maxInt) const {
   if (const auto ratRhsChild = cast<Rational>(rhsChild); ratRhsChild && ratRhsChild->denominator() <= maxPreciseRoot) {
     auto approxExpr = cast<PowExpression>(clone());
     setPrecisionChild(approxExpr->lhsChild, precision, maxInt);
