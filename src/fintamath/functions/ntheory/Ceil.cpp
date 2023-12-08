@@ -32,8 +32,8 @@ std::unique_ptr<IMathObject> Ceil::multiCeilSimplify(const INumber &rhs) {
     outMultiCeil.add<Real>([](const Real &inRhs) {
       Integer res = ceil(inRhs);
 
-      if (inRhs >= 0 && inRhs == Real(res)) {
-        res++;
+      if (abs(inRhs) == Real(abs(res))) {
+        return std::unique_ptr<IMathObject>{};
       }
 
       return res.clone();
@@ -42,6 +42,11 @@ std::unique_ptr<IMathObject> Ceil::multiCeilSimplify(const INumber &rhs) {
     outMultiCeil.add<Complex>([](const Complex &inRhs) {
       const auto re = cast<INumber>(multiCeilSimplify(inRhs.real()));
       const auto im = cast<INumber>(multiCeilSimplify(inRhs.imag()));
+
+      if (!re || !im) {
+        return std::unique_ptr<IMathObject>{};
+      }
+
       return Complex(*re, *im).toMinimalObject();
     });
 

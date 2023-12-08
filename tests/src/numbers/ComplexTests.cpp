@@ -171,8 +171,8 @@ TEST(ComplexTests, rationalPlusAssignmentOperatorTest) {
 }
 
 TEST(ComplexTests, realPlusAssignmentOperatorTest) {
-  EXPECT_EQ(Complex(-10) += Real("2.2"), Real("-7.8"));
-  EXPECT_EQ(Complex(2, 3) += Real("-2.2"), Complex(Real("-0.2"), Integer(3)));
+  EXPECT_EQ((Complex(-10) += Real("2.2")).toString(), "-7.8");
+  EXPECT_EQ((Complex(2, 3) += Real("-2.2")).toString(), "-0.2 + 3 I");
 }
 
 TEST(ComplexTests, intPlusAssignmentOperatorTest) {
@@ -197,8 +197,8 @@ TEST(ComplexTests, rationalPlusOperatorTest) {
 }
 
 TEST(ComplexTests, realPlusOperatorTest) {
-  EXPECT_EQ(Complex(170) + Real("2.4"), Real("172.4"));
-  EXPECT_EQ(Complex(170, 12) + Real("2.5"), Complex(Real("172.5"), Integer(12)));
+  EXPECT_EQ((Complex(170) + Real("2.4")).toString(), "172.4");
+  EXPECT_EQ((Complex(170, 12) + Real("2.5")).toString(), "172.5 + 12 I");
 }
 
 TEST(ComplexTests, intPlusOperatorTest) {
@@ -217,8 +217,8 @@ TEST(ComplexTests, rationalFriendPlusOperatorTest) {
 }
 
 TEST(ComplexTests, realFriendPlusOperatorTest) {
-  EXPECT_EQ(Real("2.4") + Complex(170), Real("172.4"));
-  EXPECT_EQ(Real("2.5") + Complex(170, 12), Complex(Real("172.5"), Integer(12)));
+  EXPECT_EQ((Real("2.4") + Complex(170)).toString(), "172.4");
+  EXPECT_EQ((Real("2.5") + Complex(170, 12)).toString(), "172.5 + 12 I");
 }
 
 TEST(ComplexTests, intFriendPlusOperatorTest) {
@@ -244,8 +244,8 @@ TEST(ComplexTests, rationalMinusAssignmentOperatorTest) {
 }
 
 TEST(ComplexTests, realMinusAssignmentOperatorTest) {
-  EXPECT_EQ(Complex(-10) -= Real("2.2"), Real("-12.2"));
-  EXPECT_EQ(Complex(2, 3) -= Real("-2.2"), Complex(Real("4.2"), Integer(3)));
+  EXPECT_EQ((Complex(-10) -= Real("2.2")).toString(), "-12.2");
+  EXPECT_EQ((Complex(2, 3) -= Real("-2.2")).toString(), "4.2 + 3 I");
 }
 
 TEST(ComplexTests, intMinusAssignmentOperatorTest) {
@@ -270,8 +270,8 @@ TEST(ComplexTests, rationalMinusOperatorTest) {
 }
 
 TEST(ComplexTests, realMinusOperatorTest) {
-  EXPECT_EQ(Complex(170) - Real("2.4"), Real("167.6"));
-  EXPECT_EQ(Complex(170, 12) - Real("2.5"), Complex(Real("167.5"), Integer(12)));
+  EXPECT_EQ((Complex(170) - Real("2.4")).toString(), "167.6");
+  EXPECT_EQ((Complex(170, 12) - Real("2.5")).toString(), "167.5 + 12 I");
 }
 
 TEST(ComplexTests, intMinusOperatorTest) {
@@ -290,8 +290,8 @@ TEST(ComplexTests, rationalFriendMinusOperatorTest) {
 }
 
 TEST(ComplexTests, realFriendMinusOperatorTest) {
-  EXPECT_EQ(Real("2.4") - Complex(170), Real("-167.6"));
-  EXPECT_EQ(Real("2.5") - Complex(170, 12), Complex(Real("-167.5"), Integer(-12)));
+  EXPECT_EQ((Real("2.4") - Complex(170)).toString(), "-167.6");
+  EXPECT_EQ((Real("2.5") - Complex(170, 12)).toString(), "-167.5 - 12 I");
 }
 
 TEST(ComplexTests, intFriendMinusOperatorTest) {
@@ -354,8 +354,8 @@ TEST(ComplexTests, rationalMultiplyAssignmentOperatorTest) {
 }
 
 TEST(ComplexTests, realMultiplyAssignmentOperatorTest) {
-  EXPECT_EQ(Complex(-10) *= Real("2.2"), Real("-22.0"));
-  EXPECT_EQ(Complex(2, 3) *= Real("-2.2"), Complex(Real("-4.4"), Real("-6.6")));
+  EXPECT_EQ((Complex(-10) *= Real("2.2")).toString(), "-22.0");
+  EXPECT_EQ((Complex(2, 3) *= Real("-2.2")).toString(), "-4.4 - 6.6 I");
 }
 
 TEST(ComplexTests, intMultiplyAssignmentOperatorTest) {
@@ -380,8 +380,8 @@ TEST(ComplexTests, rationalMultiplyOperatorTest) {
 }
 
 TEST(ComplexTests, realMultiplyOperatorTest) {
-  EXPECT_EQ(Complex(170) * Real("2.4"), Real("408.0"));
-  EXPECT_EQ(Complex(170, 12) * Real("2.5"), Complex(Real("425.0"), Real("30.0")));
+  EXPECT_EQ((Complex(170) * Real("2.4")).toString(), "408.0");
+  EXPECT_EQ((Complex(170, 12) * Real("2.5")).toString(), "425.0 + 30.0 I");
 }
 
 TEST(ComplexTests, intMultiplyOperatorTest) {
@@ -400,8 +400,8 @@ TEST(ComplexTests, rationalFriendMultiplyOperatorTest) {
 }
 
 TEST(ComplexTests, realFriendMultiplyOperatorTest) {
-  EXPECT_EQ(Real("2.4") * Complex(170), Real("408.0"));
-  EXPECT_EQ(Real("2.5") * Complex(170, 12), Complex(Real("425.0"), Real("30.0")));
+  EXPECT_EQ((Real("2.4") * Complex(170)).toString(), "408.0");
+  EXPECT_EQ((Real("2.5") * Complex(170, 12)).toString(), "425.0 + 30.0 I");
 }
 
 TEST(ComplexTests, intFriendMultiplyOperatorTest) {
@@ -486,7 +486,7 @@ TEST(ComplexTests, rationalDivideOperatorTest) {
 
 TEST(ComplexTests, realDivideOperatorTest) {
   EXPECT_EQ((Complex(170) / Real("2.4")).toString(), "70.833333333333333333333333333333333333333333333333333333333333333333333333333333");
-  EXPECT_EQ(Complex(170, 12) / Real("2.5"), Complex(Real("68.0"), Real("4.8")));
+  EXPECT_EQ((Complex(170, 12) / Real("2.5")).toString(), "68.0 + 4.8 I");
 }
 
 TEST(ComplexTests, intDivideOperatorTest) {

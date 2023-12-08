@@ -125,7 +125,7 @@ void IExpression::approximateSimplifyChild(ArgumentPtr &child) {
   }
 }
 
-void IExpression::setPrecisionChild(ArgumentPtr &child, uint8_t precision, const Integer &maxInt) {
+void IExpression::setPrecisionChild(ArgumentPtr &child, unsigned precision, const Integer &maxInt) {
   if (const auto numChild = cast<INumber>(child)) {
     if (auto res = convertToApproximated(*numChild, precision, maxInt)) {
       child = std::move(res);
@@ -162,7 +162,7 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num) 
 }
 
 std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
-                                                            uint8_t precision,
+                                                            unsigned precision,
                                                             const Integer &maxInt) {
 
   static const auto multiSetPrecision = [] {
@@ -196,8 +196,8 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
     outMultiSetPrecision.add<Complex, Integer, Integer>([](const Complex &inRhs,
                                                            const Integer &inPrecision,
                                                            const Integer &inMaxInt) {
-      auto approxReal = convertToApproximated(inRhs.real(), uint8_t(inPrecision), inMaxInt);
-      auto approxImag = convertToApproximated(inRhs.imag(), uint8_t(inPrecision), inMaxInt);
+      auto approxReal = convertToApproximated(inRhs.real(), unsigned(inPrecision), inMaxInt);
+      auto approxImag = convertToApproximated(inRhs.imag(), unsigned(inPrecision), inMaxInt);
 
       if (!approxReal && !approxImag) {
         return std::unique_ptr<IMathObject>();
@@ -217,13 +217,7 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
     return outMultiSetPrecision;
   }();
 
-  auto res = cast<INumber>(multiSetPrecision(num, Integer(precision), maxInt));
-
-  if (is<Real>(res)) {
-    cast<Real>(*res).setPrecision(precision);
-  }
-
-  return res;
+  return cast<INumber>(multiSetPrecision(num, Integer(precision), maxInt));
 }
 
 ArgumentPtrVector fintamath::IExpression::convertToApproximatedNumbers(const ArgumentPtrVector &args) {
@@ -336,7 +330,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
   return approxSimpl;
 }
 
-ArgumentPtr IExpression::setPrecision(uint8_t precision, const Integer &maxInt) const {
+ArgumentPtr IExpression::setPrecision(unsigned precision, const Integer &maxInt) const {
   ArgumentPtrVector newChildren = getChildren();
 
   for (auto &child : newChildren) {

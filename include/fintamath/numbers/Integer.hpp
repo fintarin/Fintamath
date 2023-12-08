@@ -75,9 +75,6 @@ protected:
   Integer &decrease() override;
 
 private:
-  std::string removeLeadingZeroes(std::string str);
-
-private:
   Backend backend;
 };
 

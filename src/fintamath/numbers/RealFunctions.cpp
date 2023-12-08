@@ -1,16 +1,62 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
+#include "fintamath/core/Cache.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 
 namespace fintamath {
 
-const Real &getMaxPreciseValue() {
-  static const Real maxPreciseValue = pow(10, FINTAMATH_PRECISION) - 1;
-  return maxPreciseValue;
+bool isOverflow(const Real &rhs) {
+  static Cache<unsigned, Real::Backend> cache([](unsigned precision) {
+    static const Real::Backend powBase = 10;
+    return pow(powBase, precision);
+  });
+
+  return abs(rhs) > cache[Real::getPrecision()];
+}
+
+bool isUnderflow(const Real &rhs) {
+  static Cache<unsigned, Real::Backend> cache([](unsigned precision) {
+    static const Real::Backend powBase = 10;
+    return 1 / pow(powBase, precision);
+  });
+
+  return rhs != 0 && abs(rhs) < cache[Real::getPrecision()];
+}
+
+bool isLogUnderflow(const Real &rhs) {
+  static Cache<unsigned, Real::Backend> cache([](unsigned precision) {
+    return 1 / pow(precision, getE().getBackend());
+  });
+
+  return rhs != 0 && abs(rhs) < cache[Real::getPrecision()];
+}
+
+const Real &trigResultChecked(const Real &rhs) {
+  if (isUnderflow(rhs) || isOverflow(rhs)) {
+    throw UndefinedException("");
+  }
+
+  return rhs;
+}
+
+const Real &hyperbResultChecked(const Real &rhs) {
+  if (isUnderflow(rhs)) {
+    throw UndefinedException("");
+  }
+
+  return rhs;
+}
+
+const Real &tgammaResultChecked(const Real &rhs) {
+  if (rhs == 0) {
+    throw UndefinedException("");
+  }
+
+  return rhs;
 }
 
 Integer floor(const Real &rhs) {
-  if (abs(rhs) > getMaxPreciseValue()) {
+  if (isOverflow(rhs)) {
     throw UndefinedFunctionException("floor", {rhs.toString()});
   }
 
@@ -19,7 +65,7 @@ Integer floor(const Real &rhs) {
 }
 
 Integer ceil(const Real &rhs) {
-  if (abs(rhs) > getMaxPreciseValue()) {
+  if (isOverflow(rhs)) {
     throw UndefinedFunctionException("ceil", {rhs.toString()});
   }
 
@@ -40,11 +86,16 @@ Real sqrt(const Real &rhs) {
 }
 
 Real pow(const Real &lhs, const Real &rhs) {
-  if (lhs == 0 && rhs == 0) {
+  if (abs(lhs) == 0 && abs(rhs) == 0) {
     throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
   }
 
   try {
+    if (lhs == Real("-0")) {
+      // Use (-1)^rhs to validate (-0)^rhs
+      Real(pow(-1, rhs.getBackend()));
+    }
+
     return {pow(lhs.getBackend(), rhs.getBackend())};
   }
   catch (const UndefinedException &) {
@@ -53,7 +104,12 @@ Real pow(const Real &lhs, const Real &rhs) {
 }
 
 Real exp(const Real &rhs) {
-  return {exp(rhs.getBackend())};
+  try {
+    return {exp(rhs.getBackend())};
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("exp", {rhs.toString()});
+  }
 }
 
 Real log(const Real &lhs, const Real &rhs) {
@@ -70,59 +126,70 @@ Real ln(const Real &rhs) {
     throw UndefinedFunctionException("ln", {rhs.toString()});
   }
 
-  return {log(rhs.getBackend())};
+  Real res = {log(rhs.getBackend())};
+
+  if (isLogUnderflow(res)) {
+    throw UndefinedFunctionException("ln", {rhs.toString()});
+  }
+
+  return res;
 }
 
 Real lb(const Real &rhs) {
-  if (rhs <= 0) {
+  try {
+    return log(2, rhs);
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("lb", {rhs.toString()});
   }
-
-  return {log2(rhs.getBackend())};
 }
 
 Real lg(const Real &rhs) {
-  if (rhs <= 0) {
+  try {
+    return log(10, rhs);
+  }
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("lg", {rhs.toString()});
   }
-
-  return {log10(rhs.getBackend())};
 }
 
 Real sin(const Real &rhs) {
-  static const Real zeroValue = 0;
-
-  Real::Backend res = sin(rhs.getBackend());
-
-  if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
+  if (isOverflow(rhs)) {
     throw UndefinedFunctionException("sin", {rhs.toString()});
   }
 
-  return res;
+  try {
+    return trigResultChecked({sin(rhs.getBackend())});
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("sin", {rhs.toString()});
+  }
 }
 
 Real cos(const Real &rhs) {
-  static const Real zeroValue = 1;
-
-  Real::Backend res = cos(rhs.getBackend());
-
-  if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
+  if (isOverflow(rhs)) {
     throw UndefinedFunctionException("cos", {rhs.toString()});
   }
 
-  return res;
+  try {
+    return trigResultChecked({cos(rhs.getBackend())});
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("cos", {rhs.toString()});
+  }
 }
 
 Real tan(const Real &rhs) {
-  static const Real zeroValue = 0;
-
-  Real::Backend res = tan(rhs.getBackend());
-
-  if (res == zeroValue && abs(rhs) > getMaxPreciseValue()) {
+  if (isOverflow(rhs)) {
     throw UndefinedFunctionException("tan", {rhs.toString()});
   }
 
-  return res;
+  try {
+    return trigResultChecked({tan(rhs.getBackend())});
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("tan", {rhs.toString()});
+  }
 }
 
 Real cot(const Real &rhs) {
@@ -154,7 +221,7 @@ Real csc(const Real &rhs) {
 
 Real asin(const Real &rhs) {
   try {
-    return {asin(rhs.getBackend())};
+    return trigResultChecked({asin(rhs.getBackend())});
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("asin", {rhs.toString()});
@@ -163,7 +230,7 @@ Real asin(const Real &rhs) {
 
 Real acos(const Real &rhs) {
   try {
-    return {acos(rhs.getBackend())};
+    return trigResultChecked({acos(rhs.getBackend())});
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("acos", {rhs.toString()});
@@ -171,7 +238,12 @@ Real acos(const Real &rhs) {
 }
 
 Real atan(const Real &rhs) {
-  return {atan(rhs.getBackend())};
+  try {
+    return trigResultChecked({atan(rhs.getBackend())});
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("atan", {rhs.toString()});
+  }
 }
 
 Real acot(const Real &rhs) {
@@ -203,7 +275,7 @@ Real acsc(const Real &rhs) {
 
 Real sinh(const Real &rhs) {
   try {
-    return {sinh(rhs.getBackend())};
+    return hyperbResultChecked({sinh(rhs.getBackend())});
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("sinh", {rhs.toString()});
@@ -212,7 +284,7 @@ Real sinh(const Real &rhs) {
 
 Real cosh(const Real &rhs) {
   try {
-    return {cosh(rhs.getBackend())};
+    return hyperbResultChecked({cosh(rhs.getBackend())});
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("cosh", {rhs.toString()});
@@ -220,7 +292,12 @@ Real cosh(const Real &rhs) {
 }
 
 Real tanh(const Real &rhs) {
-  return {tanh(rhs.getBackend())};
+  try {
+    return hyperbResultChecked({tanh(rhs.getBackend())});
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("tanh", {rhs.toString()});
+  }
 }
 
 Real coth(const Real &rhs) {
@@ -233,7 +310,12 @@ Real coth(const Real &rhs) {
 }
 
 Real sech(const Real &rhs) {
-  return 1 / cosh(rhs);
+  try {
+    return 1 / cosh(rhs);
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("sech", {rhs.toString()});
+  }
 }
 
 Real csch(const Real &rhs) {
@@ -246,26 +328,34 @@ Real csch(const Real &rhs) {
 }
 
 Real asinh(const Real &rhs) {
-  return boost::math::asinh(rhs.getBackend());
+  try {
+    return hyperbResultChecked(boost::math::asinh(rhs.getBackend()));
+  }
+  catch (const UndefinedException &) {
+    throw UndefinedFunctionException("asinh", {rhs.toString()});
+  }
 }
 
 Real acosh(const Real &rhs) {
   try {
     return boost::math::acosh(rhs.getBackend());
   }
-  catch (const std::domain_error &) {
+  catch (const boost::math::evaluation_error &) {
     throw UndefinedFunctionException("acosh", {rhs.toString()});
   }
 }
 
 Real atanh(const Real &rhs) {
   try {
-    return boost::math::atanh(rhs.getBackend());
+    return hyperbResultChecked(boost::math::atanh(rhs.getBackend()));
   }
-  catch (const std::domain_error &) {
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("atanh", {rhs.toString()});
   }
   catch (const std::overflow_error &) {
+    throw UndefinedFunctionException("atanh", {rhs.toString()});
+  }
+  catch (const boost::math::evaluation_error &) {
     throw UndefinedFunctionException("atanh", {rhs.toString()});
   }
 }
@@ -299,26 +389,37 @@ Real acsch(const Real &rhs) {
 
 Real tgamma(const Real &rhs) {
   try {
-    return boost::math::tgamma(rhs.getBackend());
+    return tgammaResultChecked(boost::math::tgamma(rhs.getBackend()));
   }
-  catch (const std::domain_error &) {
+  catch (const UndefinedException &) {
     throw UndefinedFunctionException("tgamma", {rhs.toString()});
   }
   catch (const std::overflow_error &) {
     throw UndefinedFunctionException("tgamma", {rhs.toString()});
   }
+  catch (const boost::math::evaluation_error &) {
+    throw UndefinedFunctionException("tgamma", {rhs.toString()});
+  }
 }
 
 const Real &getE() {
-  using boost::multiprecision::default_ops::get_constant_e;
-  static const Real e = Real::Backend(get_constant_e<Real::Backend::backend_type>());
-  return e;
+  static Cache<unsigned, Real> cache([](unsigned precision) {
+    Real::Backend::backend_type res;
+    boost::multiprecision::default_ops::calc_e(res, precision);
+    return Real(res);
+  });
+
+  return cache[Real::getCalculationPrecision()];
 }
 
 const Real &getPi() {
-  using boost::multiprecision::default_ops::get_constant_pi;
-  static const Real pi = Real::Backend(get_constant_pi<Real::Backend::backend_type>());
-  return pi;
+  static Cache<unsigned, Real> cache([](unsigned precision) {
+    Real::Backend::backend_type res;
+    boost::multiprecision::default_ops::calc_pi(res, precision);
+    return Real(res);
+  });
+
+  return cache[Real::getCalculationPrecision()];
 }
 
 }

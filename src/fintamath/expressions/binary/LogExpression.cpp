@@ -58,7 +58,7 @@ ArgumentPtr LogExpression::approximateSimplify() const {
   return IBinaryExpression::approximateSimplify();
 }
 
-ArgumentPtr LogExpression::setPrecision(uint8_t precision, const Integer &maxInt) const {
+ArgumentPtr LogExpression::setPrecision(unsigned precision, const Integer &maxInt) const {
   if (*lhsChild == E()) {
     auto approxExpr = cast<LogExpression>(clone());
     setPrecisionChild(approxExpr->rhsChild, precision, maxInt);

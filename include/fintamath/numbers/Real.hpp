@@ -1,8 +1,7 @@
 #pragma once
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <boost/multiprecision/mpfr.hpp>
 
-#include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,7 +10,20 @@ namespace fintamath {
 
 class Real : public INumberCRTP<Real> {
 public:
-  using Backend = boost::multiprecision::cpp_dec_float_100;
+  using Backend = boost::multiprecision::mpfr_float;
+
+  struct ScopedSetPrecision {
+    unsigned currPrecision = Real::getPrecision();
+
+  public:
+    explicit ScopedSetPrecision(unsigned precision);
+
+    ~ScopedSetPrecision();
+
+    ScopedSetPrecision(const ScopedSetPrecision &rhs) = delete;
+
+    ScopedSetPrecision &operator=(const ScopedSetPrecision &rhs) = delete;
+  };
 
 public:
   Real() = default;
@@ -24,21 +36,23 @@ public:
 
   Real(const Integer &val);
 
-  Real(double val);
+  Real(int64_t val);
 
   std::string toString() const override;
 
-  std::string toString(uint8_t precision) const;
+  std::string toString(unsigned precision) const;
 
   bool isPrecise() const override;
-
-  uint8_t getPrecision() const;
-
-  void setPrecision(uint8_t precision);
 
   int sign() const;
 
   const Backend &getBackend() const;
+
+  static unsigned getCalculationPrecision();
+
+  static unsigned getPrecision();
+
+  static void setPrecision(unsigned precision);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::Real;
@@ -66,12 +80,14 @@ protected:
   Real &negate() override;
 
 private:
-  bool isValid() const;
+  bool isFinite() const;
+
+  void updatePrecision(const Real &rhs);
 
 private:
   Backend backend;
 
-  uint8_t precision = FINTAMATH_PRECISION;
+  unsigned currentPrecision = Real::getPrecision();
 
   bool isNegative = false;
 };

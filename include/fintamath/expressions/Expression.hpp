@@ -2,10 +2,10 @@
 
 #include <stack>
 
-#include "fintamath/core/CoreConstants.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -41,7 +41,7 @@ public:
   std::string toString() const override;
 
   // TODO: move this function to ExpressionFunctions
-  Expression approximate(uint8_t precision = FINTAMATH_PRECISION) const;
+  Expression approximate(unsigned precision = Real::getPrecision()) const;
 
   const std::shared_ptr<IFunction> &getFunction() const override;
 

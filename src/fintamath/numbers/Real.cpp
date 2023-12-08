@@ -2,13 +2,17 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
+#include "fintamath/numbers/NumberUtils.hpp"
 
 namespace fintamath {
+
+const unsigned precisionMultiplier = 2;
+const unsigned precisionDelta = 10;
 
 Real::Real(Backend inBackend) : backend(std::move(inBackend)),
                                 isNegative(backend < 0) {
 
-  if (!isValid()) {
+  if (!isFinite()) {
     throw UndefinedException(backend.str());
   }
 }
@@ -18,20 +22,16 @@ Real::Real(std::string str) : Real() {
     throw InvalidInputException(str);
   }
 
+  str = removeLeadingZeroes(std::move(str));
+
+  if (str.front() == '-') {
+    isNegative = true;
+  }
+
   {
-    size_t firstDigitPos = 0;
-    if (str.front() == '-') {
-      firstDigitPos++;
-      isNegative = true;
-    }
-
-    str.erase(firstDigitPos, str.find_first_not_of('0'));
-    if (str.empty()) {
-      str = "0";
-    }
-
     std::string expStr = "*10^";
     size_t expPos = str.find(expStr);
+
     if (expPos != std::string::npos) {
       str.replace(expPos, expStr.length(), "e");
     }
@@ -43,6 +43,10 @@ Real::Real(std::string str) : Real() {
   catch (const std::runtime_error &) {
     throw InvalidInputException(str);
   }
+
+  if (!isFinite()) {
+    throw UndefinedException(str);
+  }
 }
 
 Real::Real(const Rational &val) {
@@ -53,12 +57,12 @@ Real::Real(const Integer &val) : backend(val.getBackend()),
                                  isNegative(val < 0) {
 }
 
-Real::Real(double val) : backend(val),
-                         isNegative(val < 0) {
+Real::Real(int64_t val) : backend(val),
+                          isNegative(val < 0) {
 }
 
 std::string Real::toString() const {
-  std::string res = toString(precision);
+  std::string res = toString(currentPrecision);
 
   if (isNegative && res.front() != '-') {
     res.insert(res.begin(), '-');
@@ -67,58 +71,53 @@ std::string Real::toString() const {
   return res;
 }
 
-std::string Real::toString(uint8_t inPrecision) const {
-  assert(inPrecision <= FINTAMATH_PRECISION && inPrecision != 0);
+std::string Real::toString(unsigned precision) const {
+  if (precision > currentPrecision) {
+    // TODO: use std::format
+    throw InvalidInputException("Precision must be less than or equal to " +
+                                std::to_string(currentPrecision));
+  }
 
-  std::string res = backend.str(inPrecision);
+  if (precision == 0) {
+    precision++;
+  }
 
-  size_t expPos = res.find('e');
+  std::string str = backend.str(std::streamsize(precision));
+  size_t expPos = str.find('e');
 
   if (expPos != std::string::npos) {
-    {
-      size_t expNextPos = expPos + 1;
+    size_t expNextPos = expPos + 1;
 
-      if (res[expNextPos] == '+') {
-        res.erase(expNextPos, 1);
-      }
-      else {
-        expNextPos++;
-      }
-
-      if (res[expNextPos] == '0') {
-        res.erase(expNextPos, 1);
-      }
+    if (str[expNextPos] == '+') {
+      str.erase(expNextPos, 1);
+    }
+    else {
+      expNextPos++;
     }
 
-    res.replace(expPos, 1, "*10^");
+    if (str[expNextPos] == '0') {
+      str.erase(expNextPos, 1);
+    }
+
+    str.replace(expPos, 1, "*10^");
   }
   else {
-    expPos = res.size();
+    expPos = str.size();
   }
 
-  if (res.find('.') == std::string::npos) {
-    res.insert(expPos, ".0");
+  if (str.find('.') == std::string::npos) {
+    str.insert(expPos, ".0");
   }
 
-  if (res.ends_with("^1")) {
-    res.erase(res.size() - 2, 2);
+  if (str.ends_with("^1")) {
+    str.erase(str.size() - 2, 2);
   }
 
-  return res;
+  return str;
 }
 
 bool Real::isPrecise() const {
   return false;
-}
-
-uint8_t Real::getPrecision() const {
-  return precision;
-}
-
-void Real::setPrecision(uint8_t inPrecision) {
-  assert(inPrecision <= FINTAMATH_PRECISION && inPrecision != 0);
-  backend.precision(inPrecision);
-  precision = inPrecision;
 }
 
 int Real::sign() const {
@@ -131,6 +130,22 @@ int Real::sign() const {
 
 const Real::Backend &Real::getBackend() const {
   return backend;
+}
+
+unsigned Real::getCalculationPrecision() {
+  return Backend::thread_default_precision();
+}
+
+unsigned Real::getPrecision() {
+  return (getCalculationPrecision() - precisionDelta) / precisionMultiplier;
+}
+
+void Real::setPrecision(unsigned precision) {
+  if (precision == 0) {
+    precision++;
+  }
+
+  Backend::thread_default_precision(precision * precisionMultiplier + precisionDelta);
 }
 
 bool Real::equals(const Real &rhs) const {
@@ -150,30 +165,41 @@ std::strong_ordering Real::compare(const Real &rhs) const {
 }
 
 Real &Real::add(const Real &rhs) {
+  updatePrecision(rhs);
+
   bool isResNegZero = backend.is_zero() && rhs.backend.is_zero() && (isNegative || rhs.isNegative);
   backend += rhs.backend;
   isNegative = isResNegZero || backend < 0;
+
   return *this;
 }
 
 Real &Real::substract(const Real &rhs) {
+  updatePrecision(rhs);
+
   bool isResNegZero = backend.is_zero() && rhs.backend.is_zero() && (isNegative || !rhs.isNegative);
   backend -= rhs.backend;
   isNegative = isResNegZero || backend < 0;
+
   return *this;
 }
 
 Real &Real::multiply(const Real &rhs) {
+  updatePrecision(rhs);
+
   isNegative = isNegative != rhs.isNegative;
   backend *= rhs.backend;
+
   return *this;
 }
 
 Real &Real::divide(const Real &rhs) {
+  updatePrecision(rhs);
+
   isNegative = isNegative != rhs.isNegative;
   backend /= rhs.backend;
 
-  if (!isValid()) {
+  if (!isFinite()) {
     throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
   }
 
@@ -186,8 +212,20 @@ Real &Real::negate() {
   return *this;
 }
 
-bool Real::isValid() const {
+bool Real::isFinite() const {
   return boost::math::isfinite(backend);
+}
+
+void Real::updatePrecision(const Real &rhs) {
+  currentPrecision = std::min(currentPrecision, rhs.currentPrecision);
+}
+
+Real::ScopedSetPrecision::ScopedSetPrecision(unsigned precision) {
+  Real::setPrecision(precision);
+}
+
+Real::ScopedSetPrecision::~ScopedSetPrecision() {
+  Real::setPrecision(currPrecision);
 }
 
 }

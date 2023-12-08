@@ -1,6 +1,7 @@
 #include "fintamath/numbers/Integer.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/numbers/NumberUtils.hpp"
 
 namespace fintamath {
 
@@ -133,22 +134,4 @@ Integer &Integer::decrease() {
   return *this;
 }
 
-std::string Integer::removeLeadingZeroes(std::string str) {
-  size_t firstDigit = 0;
-  if (str.front() == '-') {
-    firstDigit++;
-  }
-
-  size_t firstNonZeroDigit = str.find_first_not_of('0', firstDigit);
-  if (firstNonZeroDigit == std::string::npos) {
-    return "0";
-  }
-
-  if (firstNonZeroDigit > firstDigit) {
-    str.erase(firstDigit, firstNonZeroDigit - 1);
-  }
-
-  return str;
 }
-
-} // namespace fintamath
