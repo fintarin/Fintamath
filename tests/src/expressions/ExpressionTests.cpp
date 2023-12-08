@@ -1552,6 +1552,12 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2 I + 3 = 0").toString(), "False");
   EXPECT_EQ(Expression("2 I + E > 0").toString(), "E + 2 I > 0");
 
+  EXPECT_EQ(Expression("I! > 0").toString(), "I! > 0");
+  EXPECT_EQ(Expression("Inf mod 2 > 0").toString(), "Inf mod 2 > 0");
+  EXPECT_EQ(Expression("Inf! - 1 = 0").toString(), "Inf! - 1 = 0");
+  EXPECT_EQ(Expression("Inf - 1 > 0").toString(), "Inf > 0");
+  EXPECT_EQ(Expression("Pi!! - Pi > 0").toString(), "Pi!! - Pi > 0");
+
   EXPECT_EQ(Expression("Inf").toString(), "Inf");
   EXPECT_EQ(Expression("-Inf").toString(), "-Inf");
   EXPECT_EQ(Expression("ComplexInf").toString(), "ComplexInf");

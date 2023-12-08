@@ -226,6 +226,9 @@ ArgumentPtr CompExpression::approxSimplify(const IFunction &func, const Argument
 
   ArgumentPtr approxLhs = lhs;
   approximateSimplifyChild(approxLhs);
+  if (!is<INumber>(approxLhs)) {
+    return {};
+  }
 
   ArgumentPtr res = func(*approxLhs, *rhs);
   if (is<Boolean>(res)) {
