@@ -14,17 +14,7 @@ public:
   using Backend = boost::multiprecision::cpp_dec_float_100;
 
 public:
-  Real();
-
-  Real(const Real &rhs);
-
-  Real(Real &&rhs) noexcept;
-
-  Real &operator=(const Real &rhs);
-
-  Real &operator=(Real &&rhs) noexcept;
-
-  ~Real() override;
+  Real() = default;
 
   Real(Backend inBackend);
 

@@ -4,18 +4,6 @@
 
 namespace fintamath {
 
-Integer::Integer() = default;
-
-Integer::Integer(const Integer &rhs) = default;
-
-Integer::Integer(Integer &&rhs) noexcept = default;
-
-Integer &Integer::operator=(const Integer &rhs) = default;
-
-Integer &Integer::operator=(Integer &&rhs) noexcept = default;
-
-Integer::~Integer() = default;
-
 Integer::Integer(Backend inBackend) : backend(std::move(inBackend)) {
 }
 
