@@ -12,18 +12,7 @@ Integer::Integer(std::string str) {
     throw InvalidInputException(str);
   }
 
-  // Remove leading zeros
-  {
-    size_t i = 0;
-    if (str.front() == '-') {
-      i++;
-    }
-
-    str.erase(i, str.find_first_not_of('0'));
-    if (str.empty()) {
-      str = "0";
-    }
-  }
+  str = removeLeadingZeroes(std::move(str));
 
   try {
     backend.assign(str);
@@ -142,6 +131,24 @@ Integer &Integer::increase() {
 Integer &Integer::decrease() {
   --backend;
   return *this;
+}
+
+std::string Integer::removeLeadingZeroes(std::string str) {
+  size_t firstDigit = 0;
+  if (str.front() == '-') {
+    firstDigit++;
+  }
+
+  size_t firstNonZeroDigit = str.find_first_not_of('0', firstDigit);
+  if (firstNonZeroDigit == std::string::npos) {
+    return "0";
+  }
+
+  if (firstNonZeroDigit > firstDigit) {
+    str.erase(firstDigit, firstNonZeroDigit - 1);
+  }
+
+  return str;
 }
 
 } // namespace fintamath
