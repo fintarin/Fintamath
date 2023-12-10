@@ -17,6 +17,9 @@ TEST(IntegerTests, stringConstructorTest) {
   EXPECT_EQ(Integer("2432432423432432454745").toString(), "2432432423432432454745");
   EXPECT_EQ(Integer("-10"), -10);
   EXPECT_EQ(Integer("01"), 1);
+  EXPECT_EQ(Integer("-01"), -1);
+  EXPECT_EQ(Integer("00"), 0);
+  EXPECT_EQ(Integer("-00"), 0);
 
   EXPECT_THROW(Integer("--10"), InvalidInputException);
   EXPECT_THROW(Integer("test"), InvalidInputException);
