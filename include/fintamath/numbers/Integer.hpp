@@ -11,17 +11,7 @@ public:
   using Backend = boost::multiprecision::cpp_int;
 
 public:
-  Integer();
-
-  Integer(const Integer &rhs);
-
-  Integer(Integer &&rhs) noexcept;
-
-  Integer &operator=(const Integer &rhs);
-
-  Integer &operator=(Integer &&rhs) noexcept;
-
-  ~Integer() override;
+  Integer() = default;
 
   Integer(Backend inBackend);
 
