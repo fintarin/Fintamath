@@ -21,11 +21,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: 'true'
 
-      - name: Install llvm & lcov
+      - name: Install GMP and MPFR
         run: |
           sudo sed -i 's/azure\.//' /etc/apt/sources.list
           sudo apt-get update
+          sudo apt-get install libgmp-dev libmpfr-dev
+
+      - name: Install llvm & lcov
+        run: |
           sudo apt-get install llvm lcov
 
       # TODO: remove this step after the default Clang is updated to version 16

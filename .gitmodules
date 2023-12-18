@@ -1,0 +1,3 @@
+[submodule "thirdparty/mpfr-gmp-prebuilt"]
+	path = thirdparty/mpfr-gmp-prebuilt
+	url = https://github.com/fintarin/mpfr-gmp-prebuilt
