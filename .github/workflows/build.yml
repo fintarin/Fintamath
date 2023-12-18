@@ -33,6 +33,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: 'true'
 
       # TODO: remove this step after the default Clang is updated to version 16
       - name: Install LLVM and Clang
@@ -40,6 +42,19 @@ jobs:
         uses: KyleMayes/install-llvm-action@v1
         with:
           version: "16.0"
+
+      - name: Install GMP and MPFR on Ubuntu
+        if: matrix.config.os == 'ubuntu-latest'
+        run: |
+          sudo sed -i 's/azure\.//' /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install libgmp-dev libmpfr-dev
+
+      - name: Install GMP and MPFR on macOS
+        if: matrix.config.os == 'macOS-13' # TODO: macOS-latest
+        run: |
+          brew update
+          brew install gmp mpfr
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}

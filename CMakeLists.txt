@@ -20,6 +20,8 @@ option(${PROJECT_NAME}_build_tests "Build tests" OFF)
 
 add_subdirectory(thirdparty)
 
+find_package(MPFR REQUIRED)
+
 file(
   GLOB_RECURSE
   SOURCES
@@ -43,7 +45,7 @@ target_include_directories(
   PUBLIC include
   PRIVATE src)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::multiprecision Boost::math)
+target_link_libraries(${PROJECT_NAME} PUBLIC MPFR Boost::multiprecision Boost::math)
 
 include(cmake/CompilerWarnings.cmake)
 include(cmake/Coverage.cmake)

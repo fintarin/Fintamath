@@ -27,7 +27,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
+          submodules: 'true'
           fetch-depth: 0
+
+      - name: Install GMP and MPFR
+        run: |
+          sudo sed -i 's/azure\.//' /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install libgmp-dev libmpfr-dev
 
       - name: Install sonar-scanner
         env:

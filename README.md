@@ -89,13 +89,18 @@ Fintamath is a C++ library for symbolic mathematics, supporting both the input o
   * Windows
   * macOS
   * Android
+* Libraries:
+  * [GMP](https://gmplib.org/) 6.2.0 or higher
+  * [MPFR](https://www.mpfr.org/) 4.2.0 or higher
+
+Note: Fintamath uses pre-built GMP and MPFR if you are building on Windows or Android. But if you are building on Linux or macOS, you should install these libraries using your package manager.
 
 ## Build
 
 Clone repository.
 
 ```sh
-git clone https://github.com/fintarin/Fintamath.git fintamath
+git clone --recurse-submodules https://github.com/fintarin/Fintamath.git fintamath
 ```
 
 ### Standalone Project
