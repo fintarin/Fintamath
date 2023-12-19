@@ -24,16 +24,14 @@ Integer sqrt(const Integer &rhs) {
 }
 
 Integer sqrt(const Integer &rhs, Integer &remainder) {
-  cpp_int remainderBackend;
-
-  try {
-    Integer res(sqrt(rhs.getBackend(), remainderBackend));
-    remainder = Integer(std::move(remainderBackend));
-    return res;
-  }
-  catch (const std::domain_error &) {
+  if (rhs < 0) {
     throw UndefinedFunctionException("sqrt", {rhs.toString()});
   }
+
+  Integer::Backend remainderBackend;
+  Integer res(sqrt(rhs.getBackend(), remainderBackend));
+  remainder = Integer(std::move(remainderBackend));
+  return res;
 }
 
 // Use binary splitting.
