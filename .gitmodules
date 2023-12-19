@@ -1,3 +1,9 @@
 [submodule "thirdparty/mpfr-gmp-prebuilt"]
 	path = thirdparty/mpfr-gmp-prebuilt
 	url = https://github.com/fintarin/mpfr-gmp-prebuilt
+[submodule "thirdparty/boost-multiprecision"]
+	path = thirdparty/boost-multiprecision
+	url = https://github.com/boostorg/multiprecision
+[submodule "thirdparty/boost-math"]
+	path = thirdparty/boost-math
+	url = https://github.com/boostorg/math
