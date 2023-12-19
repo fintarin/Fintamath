@@ -11,3 +11,7 @@ add_subdirectory(boost-math)
 get_target_property(BOOST_MATH_INCLUDE_DIR boost_math INTERFACE_INCLUDE_DIRECTORIES)
 target_include_directories(boost_math SYSTEM INTERFACE ${BOOST_MATH_INCLUDE_DIR})
 mark_as_advanced(BOOST_MATH_INCLUDE_DIR)
+
+if(${PROJECT_NAME}_build_tests)
+  add_subdirectory(googletest)
+endif()
