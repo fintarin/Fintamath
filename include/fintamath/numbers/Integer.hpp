@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/multiprecision/gmp.hpp>
 
 #include "fintamath/numbers/IInteger.hpp"
 
@@ -8,7 +8,7 @@ namespace fintamath {
 
 class Integer : public IIntegerCRTP<Integer> {
 public:
-  using Backend = boost::multiprecision::cpp_int;
+  using Backend = boost::multiprecision::mpz_int;
 
 public:
   Integer() = default;
