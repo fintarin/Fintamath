@@ -52,6 +52,5 @@ include(cmake/ClangFormat.cmake)
 
 if(${PROJECT_NAME}_build_tests)
   enable_testing()
-  include(cmake/FetchGtest.cmake)
   add_subdirectory(tests)
 endif()
