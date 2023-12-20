@@ -94,7 +94,7 @@ std::map<Integer, Integer> factors(Integer rhs, Integer limit) {
   std::map<Integer, Integer> factorRates;
 
   while (rhs % 2 == 0) {
-    factorRates[2]++;
+    ++factorRates[2];
     rhs /= 2;
   }
 
@@ -108,13 +108,13 @@ std::map<Integer, Integer> factors(Integer rhs, Integer limit) {
 
   for (Integer i = 3; i <= limit; i += 2) {
     while (rhs % i == 0) {
-      factorRates[i]++;
+      ++factorRates[i];
       rhs = rhs / i;
     }
   }
 
   if (rhs > 1) {
-    factorRates[rhs]++;
+    ++factorRates[rhs];
   }
 
   return factorRates;
