@@ -141,7 +141,7 @@ std::vector<Integer> PowExpression::getPartition(Integer bitNumber, const Intege
 
   while (result.size() < variableCount) {
     if (bitNumber % 2 == 1) {
-      counter++;
+      ++counter;
     }
 
     if (bitNumber % 2 == 0) {
