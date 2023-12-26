@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+namespace {
+
 std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var);
 
 std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var);
@@ -26,6 +28,8 @@ ArgumentPtrVector solveCubicEquation(const ArgumentPtrVector &coeffAtPow);
 ArgumentPtrVector solveQuadraticEquation(const ArgumentPtrVector &coeffAtPow);
 
 ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow);
+
+}
 
 Expression solve(const Expression &rhs) {
   if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
@@ -84,6 +88,8 @@ Expression solve(const Expression &rhs) {
 
   return rhs;
 }
+
+namespace {
 
 std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var) {
   if (const auto elemVar = cast<Variable>(elem); elemVar && *elemVar == var) {
@@ -195,6 +201,8 @@ ArgumentPtrVector solveQuadraticEquation(const ArgumentPtrVector &coeffAtPow) {
 
 ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow) {
   return {negExpr(divExpr(coeffAtPow[0], coeffAtPow[1]))->toMinimalObject()};
+}
+
 }
 
 }
