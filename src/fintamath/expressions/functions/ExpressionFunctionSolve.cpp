@@ -32,61 +32,64 @@ ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow);
 }
 
 Expression solve(const Expression &rhs) {
-  if (auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone())) {
-    if (compExpr->getVariables().size() != 1) {
-      return rhs;
-    }
+  auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone());
 
-    // TODO: remove this if when inequalities will be implemented
-    if (!is<Eqv>(compExpr->getFunction())) {
-      auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentPtrVector powerRate = getVariableIntPowerRates(compExpr->getChildren().front(), var);
-
-      if (powerRate.size() == 2) {
-        compExpr->markAsSolution();
-        return *compExpr;
-      }
-    }
-    if (is<Eqv>(compExpr->getFunction())) {
-      auto var = cast<Variable>(compExpr->getVariables().front());
-      ArgumentPtrVector powerRates = getVariableIntPowerRates(compExpr->getChildren().front(), var);
-      ArgumentPtrVector roots;
-
-      switch (powerRates.size()) {
-        case 2:
-          roots = solveLinearEquation(powerRates);
-          break;
-        case 3:
-          roots = solveQuadraticEquation(powerRates);
-          break;
-        case 4:
-          roots = solveCubicEquation(powerRates);
-          break;
-        default:
-          roots = {};
-      }
-
-      if (roots.empty()) {
-        return *compExpr;
-      }
-
-      ArgumentPtrVector answers;
-
-      for (auto &root : roots) {
-        auto rootAnswer = std::make_shared<CompExpression>(Eqv(), var.clone(), root);
-        rootAnswer->markAsSolution();
-        answers.emplace_back(rootAnswer);
-      }
-
-      if (answers.size() == 1) {
-        return Expression(answers.front());
-      }
-
-      return Expression(orExpr(std::move(answers)));
-    }
+  if (!compExpr) {
+    return rhs;
   }
 
-  return rhs;
+  if (compExpr->getVariables().size() != 1) {
+    return rhs;
+  }
+
+  // TODO: remove this if when inequalities will be implemented
+  if (!is<Eqv>(compExpr->getFunction())) {
+    auto var = cast<Variable>(compExpr->getVariables().front());
+    ArgumentPtrVector powerRate = getVariableIntPowerRates(compExpr->getChildren().front(), var);
+
+    if (powerRate.size() == 2) {
+      compExpr->markAsSolution();
+      return *compExpr;
+    }
+
+    return rhs;
+  }
+
+  auto var = cast<Variable>(compExpr->getVariables().front());
+  ArgumentPtrVector powerRates = getVariableIntPowerRates(compExpr->getChildren().front(), var);
+  ArgumentPtrVector roots;
+
+  switch (powerRates.size()) {
+    case 2:
+      roots = solveLinearEquation(powerRates);
+      break;
+    case 3:
+      roots = solveQuadraticEquation(powerRates);
+      break;
+    case 4:
+      roots = solveCubicEquation(powerRates);
+      break;
+    default:
+      roots = {};
+  }
+
+  if (roots.empty()) {
+    return *compExpr;
+  }
+
+  ArgumentPtrVector answers;
+
+  for (auto &root : roots) {
+    auto rootAnswer = std::make_shared<CompExpression>(Eqv(), var.clone(), root);
+    rootAnswer->markAsSolution();
+    answers.emplace_back(rootAnswer);
+  }
+
+  if (answers.size() == 1) {
+    return Expression(answers.front());
+  }
+
+  return Expression(orExpr(std::move(answers)));
 }
 
 namespace {

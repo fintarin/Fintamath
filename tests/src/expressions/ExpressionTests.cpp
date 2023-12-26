@@ -403,6 +403,8 @@ TEST(ExpressionTests, stringConstructorTest) {
             "(x^2 - 45 x + sqrt(y))/(root(3, 4) + 3)");
   EXPECT_EQ(Expression("(x^2 + sqrt(y) - 45x) / (root(3, 4) x + 3)").toString(),
             "(root(27, 4) x)/3 - sqrt(3) - 15 root(27, 4) + (sqrt(y) + 45 root(27, 4) + 3 sqrt(3))/(root(3, 4) x + 3)");
+  EXPECT_EQ(Expression("(sqrt(-4 a c + b^2) - b) / (2 a)").toString(),
+            "(sqrt(-4 a c + b^2) - b)/(2 a)");
 
   EXPECT_EQ(Expression("(x/y)^2").toString(), "(x^2)/(y^2)");
   EXPECT_EQ(Expression("(x/y)^(1/2)").toString(), "sqrt(x/y)");
