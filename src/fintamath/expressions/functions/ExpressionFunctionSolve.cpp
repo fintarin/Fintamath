@@ -13,10 +13,6 @@
 
 namespace fintamath {
 
-const Variable a("a");
-const Variable b("b");
-const Variable c("c");
-
 std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var);
 
 std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var);
@@ -184,25 +180,17 @@ ArgumentPtrVector solveCubicEquation(const ArgumentPtrVector & /*coeffAtPow*/) {
 }
 
 ArgumentPtrVector solveQuadraticEquation(const ArgumentPtrVector &coeffAtPow) {
-  static const Expression discriminant = sub(pow(b, 2), mul(4, a, c));
-  static const Expression firstRoot = div(add(neg(b), sqrt(discriminant)), mul(2, a));
-  static const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));
+  const Expression a(coeffAtPow[2]);
+  const Expression b(coeffAtPow[1]);
+  const Expression c(coeffAtPow[0]);
 
-  Expression firstRootValue = firstRoot;
-  firstRootValue.setVariables({
-      {c, coeffAtPow[0]},
-      {b, coeffAtPow[1]},
-      {a, coeffAtPow[2]},
-  });
+  const ArgumentPtr discriminantArg = sub(pow(b, 2), mul(4, a, c)).toMinimalObject();
+  const Expression discriminant(discriminantArg);
 
-  Expression secondRootValue = secondRoot;
-  secondRootValue.setVariables({
-      {c, coeffAtPow[0]},
-      {b, coeffAtPow[1]},
-      {a, coeffAtPow[2]},
-  });
+  const Expression firstRoot = div(add(neg(b), sqrt(discriminant)), mul(2, a));
+  const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));
 
-  return {firstRootValue.getChildren().front(), secondRootValue.getChildren().front()};
+  return {firstRoot.getChildren().front(), secondRoot.getChildren().front()};
 }
 
 ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow) {
