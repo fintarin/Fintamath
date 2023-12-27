@@ -48,6 +48,10 @@ public:
 
   const Backend &getBackend() const;
 
+  unsigned getOutputPrecision() const;
+
+  void setOutputPrecision(unsigned precision);
+
   static unsigned getCalculationPrecision();
 
   static unsigned getPrecision();
@@ -84,10 +88,12 @@ private:
 
   void updatePrecision(const Real &rhs);
 
+  void validateNewPrecision(unsigned precision) const;
+
 private:
   Backend backend;
 
-  unsigned currentPrecision = Real::getPrecision();
+  unsigned outputPrecision = Real::getPrecision();
 
   bool isNegative = false;
 };

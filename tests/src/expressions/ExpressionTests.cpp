@@ -2495,6 +2495,19 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("x/2^200").approximate(10).toString(), "6.223015278*10^-61 x");
   EXPECT_EQ(Expression("(sqrt(2) - a - 1)^2").approximate(5).toString(), "a^2 - 0.82843 a + 0.17157");
   EXPECT_EQ(Expression("2 sqrt2 sin3 a + 3 ln5 root(2, 3) b").approximate(5).toString(), "0.39915 a + 6.0833 b");
+
+  EXPECT_EQ(Expression("sin(5)").approximate(100).approximate(5).toString(), "-0.95892");
+
+  {
+    Expression expr = Expression("cos(5)").approximate(56);
+    EXPECT_EQ(expr.toString(), "0.28366218546322626446663917151355730833442259225221594493");
+
+    expr = expr.approximate(55);
+    EXPECT_EQ(expr.toString(), "0.2836621854632262644666391715135573083344225922522159449");
+
+    expr = expr.approximate(1);
+    EXPECT_EQ(expr.toString(), "0.3");
+  }
 }
 
 TEST(ExpressionTests, toMinimalObjectTest) {

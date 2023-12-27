@@ -867,6 +867,126 @@ TEST(RealTests, toStringPrecisionPrecisionTest) {
   EXPECT_THROW(val.toString(20), InvalidInputException);
 }
 
+TEST(RealTests, getOutputPrecisionTest) {
+  EXPECT_EQ(Real().getOutputPrecision(), Real::getPrecision());
+}
+
+TEST(RealTests, setOutputPrecisionTest) {
+  Real a;
+  EXPECT_EQ(a.getOutputPrecision(), Real::getPrecision());
+
+  a.setOutputPrecision(10);
+  EXPECT_EQ(a.getOutputPrecision(), 10);
+
+  a.setOutputPrecision(5);
+  EXPECT_EQ(a.getOutputPrecision(), 5);
+
+  a.setOutputPrecision(5);
+  EXPECT_EQ(a.getOutputPrecision(), 5);
+
+  EXPECT_THROW(a.setOutputPrecision(6), InvalidInputException);
+  EXPECT_THROW(a.setOutputPrecision(10), InvalidInputException);
+}
+
+TEST(RealTests, updatePrecisionTest) {
+  {
+    Real a = 1;
+    a.setOutputPrecision(10);
+
+    Real b = 1;
+    b.setOutputPrecision(5);
+
+    a += b;
+
+    EXPECT_EQ(a.getOutputPrecision(), 5);
+    EXPECT_EQ(b.getOutputPrecision(), 5);
+  }
+  {
+    Real a = 1;
+    a.setOutputPrecision(10);
+
+    Real b = 1;
+    b.setOutputPrecision(5);
+
+    b += a;
+
+    EXPECT_EQ(a.getOutputPrecision(), 10);
+    EXPECT_EQ(b.getOutputPrecision(), 5);
+  }
+  {
+    Real a = 1;
+    a.setOutputPrecision(10);
+
+    Real b = 1;
+    b.setOutputPrecision(5);
+
+    a -= b;
+
+    EXPECT_EQ(a.getOutputPrecision(), 5);
+    EXPECT_EQ(b.getOutputPrecision(), 5);
+  }
+  {
+    Real a = 1;
+    a.setOutputPrecision(10);
+
+    Real b = 1;
+    b.setOutputPrecision(5);
+
+    b -= a;
+
+    EXPECT_EQ(a.getOutputPrecision(), 10);
+    EXPECT_EQ(b.getOutputPrecision(), 5);
+  }
+  {
+    Real a = 1;
+    a.setOutputPrecision(10);
+
+    Real b = 1;
+    b.setOutputPrecision(5);
+
+    a *= b;
+
+    EXPECT_EQ(a.getOutputPrecision(), 5);
+    EXPECT_EQ(b.getOutputPrecision(), 5);
+  }
+  {
+    Real a = 1;
+    a.setOutputPrecision(10);
+
+    Real b = 1;
+    b.setOutputPrecision(5);
+
+    b *= a;
+
+    EXPECT_EQ(a.getOutputPrecision(), 10);
+    EXPECT_EQ(b.getOutputPrecision(), 5);
+  }
+  {
+    Real a = 1;
+    a.setOutputPrecision(10);
+
+    Real b = 1;
+    b.setOutputPrecision(5);
+
+    a /= b;
+
+    EXPECT_EQ(a.getOutputPrecision(), 5);
+    EXPECT_EQ(b.getOutputPrecision(), 5);
+  }
+  {
+    Real a = 1;
+    a.setOutputPrecision(10);
+
+    Real b = 1;
+    b.setOutputPrecision(5);
+
+    b /= a;
+
+    EXPECT_EQ(a.getOutputPrecision(), 10);
+    EXPECT_EQ(b.getOutputPrecision(), 5);
+  }
+}
+
 TEST(RealTests, getPrecisionTest) {
   EXPECT_EQ(Real::getPrecision(), 80);
 }

@@ -120,6 +120,13 @@ void IExpression::approximateSimplifyChild(ArgumentPtr &child) {
   if (const auto constChild = cast<IConstant>(child)) {
     child = (*constChild)();
   }
+  else if (const auto realChild = cast<Real>(child)) {
+    if (realChild->getOutputPrecision() > Real::getPrecision()) {
+      auto newRealChild = cast<Real>(realChild->clone());
+      newRealChild->setOutputPrecision(Real::getPrecision());
+      child = std::move(newRealChild);
+    }
+  }
   else if (const auto exprChild = cast<IExpression>(child)) {
     child = exprChild->approximateSimplify();
   }
