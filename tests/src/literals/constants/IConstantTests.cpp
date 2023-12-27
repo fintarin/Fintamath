@@ -7,7 +7,7 @@
 
 using namespace fintamath;
 
-TEST(IConstantTests, callTests) {
+TEST(IConstantTests, callTest) {
   std::unique_ptr<IConstant> c1 = std::make_unique<E>();
   std::unique_ptr<IConstant> c2 = std::make_unique<Pi>();
 

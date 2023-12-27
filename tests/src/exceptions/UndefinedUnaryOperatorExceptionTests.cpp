@@ -29,7 +29,7 @@ protected:
 
 }
 
-TEST(UndefinedUnaryOpearatorExceptionTests, whatTests) {
+TEST(UndefinedUnaryOpearatorExceptionTests, whatTest) {
   try {
     TestOperator().throwExceptionPrefix();
     EXPECT_TRUE(false);

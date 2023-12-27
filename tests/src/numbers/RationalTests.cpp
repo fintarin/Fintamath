@@ -485,7 +485,7 @@ TEST(RationalTests, simplifyTest) {
   EXPECT_EQ(Rational(-55, 5).toMinimalObject()->toString(), "-11");
 }
 
-TEST(RationalTests, signTests) {
+TEST(RationalTests, signTest) {
   EXPECT_EQ(Rational(-2).sign(), -1);
   EXPECT_EQ(Rational(-1).sign(), -1);
   EXPECT_EQ(Rational(0).sign(), 0);
@@ -493,11 +493,11 @@ TEST(RationalTests, signTests) {
   EXPECT_EQ(Rational(2).sign(), 1);
 }
 
-TEST(RationalTests, isPreciseTests) {
+TEST(RationalTests, isPreciseTest) {
   EXPECT_TRUE(Rational(1, 2).isPrecise());
 }
 
-TEST(RationalTests, isComplexTests) {
+TEST(RationalTests, isComplexTest) {
   EXPECT_FALSE(Rational(1, 2).isComplex());
 }
 

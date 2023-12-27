@@ -29,7 +29,7 @@ protected:
 
 }
 
-TEST(InvalidInputUnaryOpearatorExceptionTests, whatTests) {
+TEST(InvalidInputUnaryOpearatorExceptionTests, whatTest) {
   try {
     TestOperator().throwExceptionPrefix();
     EXPECT_TRUE(false);

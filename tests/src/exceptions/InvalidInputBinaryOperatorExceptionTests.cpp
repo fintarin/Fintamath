@@ -25,7 +25,7 @@ protected:
 
 }
 
-TEST(InvalidInputBinaryOpearatorExceptionTests, whatTests) {
+TEST(InvalidInputBinaryOpearatorExceptionTests, whatTest) {
   try {
     TestOperator().throwException();
     EXPECT_TRUE(false);

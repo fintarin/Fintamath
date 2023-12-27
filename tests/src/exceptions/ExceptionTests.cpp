@@ -17,7 +17,7 @@ public:
 
 }
 
-TEST(ExceptionTests, whatTests) {
+TEST(ExceptionTests, whatTest) {
   try {
     TestMathObject().throwException();
     EXPECT_TRUE(false);

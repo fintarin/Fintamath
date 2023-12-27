@@ -850,11 +850,11 @@ TEST(IntegerTests, intOperatorTest) {
   EXPECT_EQ(int64_t(Integer("-100000000000000000000000000000000000000000000000000")) + 1, -9223372036854775807);
 }
 
-TEST(IntegerTests, isPreciseTests) {
+TEST(IntegerTests, isPreciseTest) {
   EXPECT_TRUE(Integer(1).isPrecise());
 }
 
-TEST(IntegerTests, isComplexTests) {
+TEST(IntegerTests, isComplexTest) {
   EXPECT_FALSE(Integer(1).isComplex());
 }
 

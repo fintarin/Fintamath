@@ -22,7 +22,7 @@ protected:
 
 }
 
-TEST(InvalidInputFunctionExceptionTests, whatTests) {
+TEST(InvalidInputFunctionExceptionTests, whatTest) {
   try {
     TestFunction().throwException();
     EXPECT_TRUE(false);

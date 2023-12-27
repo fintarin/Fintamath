@@ -26,7 +26,7 @@ protected:
 
 }
 
-TEST(UndefinedFunctionExceptionTests, whatTests) {
+TEST(UndefinedFunctionExceptionTests, whatTest) {
   try {
     TestFunction().throwException1();
     EXPECT_TRUE(false);

@@ -25,7 +25,7 @@ protected:
 
 }
 
-TEST(UndefinedBinaryOpearatorExceptionTests, whatTests) {
+TEST(UndefinedBinaryOpearatorExceptionTests, whatTest) {
   try {
     TestOperator().throwException();
     EXPECT_TRUE(false);

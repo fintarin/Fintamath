@@ -18,7 +18,7 @@ public:
 
 }
 
-TEST(InvalidInputExceptionTests, whatTests) {
+TEST(InvalidInputExceptionTests, whatTest) {
   try {
     TestMathObject().throwException();
     EXPECT_TRUE(false);

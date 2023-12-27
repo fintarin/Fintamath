@@ -9,7 +9,7 @@
 
 using namespace fintamath;
 
-TEST(FintamathTests, fintamathTests) {
+TEST(FintamathTests, fintamathTest) {
   Expression expr;
   Variable x("x");
   Variable y("y");

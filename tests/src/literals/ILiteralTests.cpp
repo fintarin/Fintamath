@@ -9,7 +9,7 @@
 
 using namespace fintamath;
 
-TEST(ILiteralTests, equalsTests) {
+TEST(ILiteralTests, equalsTest) {
   std::unique_ptr<ILiteral> c1 = std::make_unique<E>();
   std::unique_ptr<ILiteral> c2 = std::make_unique<Pi>();
   std::unique_ptr<ILiteral> v1 = std::make_unique<Variable>("a");

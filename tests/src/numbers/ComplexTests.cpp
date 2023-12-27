@@ -893,7 +893,7 @@ TEST(ComplexTests, simplifyTest) {
   EXPECT_EQ(Complex(Real("5.2"), Integer(0)).toMinimalObject()->toString(), "5.2");
 }
 
-TEST(ComplexTests, isPreciseTests) {
+TEST(ComplexTests, isPreciseTest) {
   EXPECT_TRUE(Complex(1, 2).isPrecise());
   EXPECT_TRUE(Complex(Rational(1, 2), Rational(1, 2)).isPrecise());
 
@@ -902,7 +902,7 @@ TEST(ComplexTests, isPreciseTests) {
   EXPECT_FALSE(Complex(Integer(1), Real(1)).isPrecise());
 }
 
-TEST(ComplexTests, isComplexTests) {
+TEST(ComplexTests, isComplexTest) {
   EXPECT_TRUE(Complex(1, 1).isComplex());
 
   EXPECT_FALSE(Complex(1, 0).isComplex());

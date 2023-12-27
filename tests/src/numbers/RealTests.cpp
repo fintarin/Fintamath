@@ -831,7 +831,7 @@ TEST(RealTests, toStringTest) {
   EXPECT_EQ(Real("-1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000").toString(), "-1.0*10^90");
 }
 
-TEST(RealTests, toStringPrecisionPrecisionTests) {
+TEST(RealTests, toStringPrecisionPrecisionTest) {
   Real val = Rational(1, 3);
   EXPECT_EQ(val.toString(1), "0.3");
   EXPECT_EQ(val.toString(2), "0.33");
@@ -867,15 +867,15 @@ TEST(RealTests, toStringPrecisionPrecisionTests) {
   EXPECT_THROW(val.toString(20), InvalidInputException);
 }
 
-TEST(RealTests, getPrecisionTests) {
+TEST(RealTests, getPrecisionTest) {
   EXPECT_EQ(Real::getPrecision(), 80);
 }
 
-TEST(RealTests, getCalculationPrecisionTests) {
+TEST(RealTests, getCalculationPrecisionTest) {
   EXPECT_EQ(Real::getCalculationPrecision(), 170);
 }
 
-TEST(RealTests, setPrecisionTests) {
+TEST(RealTests, setPrecisionTest) {
   unsigned currPrecision = Real::getPrecision();
 
   Real::setPrecision(10);
@@ -896,7 +896,7 @@ TEST(RealTests, scopedSetPrecisionTest) {
   EXPECT_EQ(Real::getPrecision(), currPrecision);
 }
 
-TEST(RealTests, signTests) {
+TEST(RealTests, signTest) {
   EXPECT_EQ(Real(-2).sign(), -1);
   EXPECT_EQ(Real(-1).sign(), -1);
   EXPECT_EQ(Real("-0").sign(), -1);
@@ -905,11 +905,11 @@ TEST(RealTests, signTests) {
   EXPECT_EQ(Real(2).sign(), 1);
 }
 
-TEST(RealTests, isPreciseTests) {
+TEST(RealTests, isPreciseTest) {
   EXPECT_FALSE(Real(2).isPrecise());
 }
 
-TEST(RealTests, isComplexTests) {
+TEST(RealTests, isComplexTest) {
   EXPECT_FALSE(Real(2).isComplex());
 }
 
