@@ -2497,6 +2497,9 @@ TEST(ExpressionTests, approximateTest) {
   EXPECT_EQ(Expression("2 sqrt2 sin3 a + 3 ln5 root(2, 3) b").approximate(5).toString(), "0.39915 a + 6.0833 b");
 
   EXPECT_EQ(Expression("sin(5)").approximate(100).approximate(5).toString(), "-0.95892");
+  EXPECT_EQ(Expression("sin(5) I").approximate(100).approximate(5).toString(), "-0.95892 I");
+  EXPECT_EQ(Expression("I + sin(4)").approximate(100).approximate(5).toString(), "-0.7568 + I");
+  EXPECT_EQ(Expression("sin(5) I + sin(4)").approximate(100).approximate(5).toString(), "-0.7568 - 0.95892 I");
 
   {
     Expression expr = Expression("cos(5)").approximate(56);

@@ -120,13 +120,6 @@ void IExpression::approximateSimplifyChild(ArgumentPtr &child) {
   if (const auto constChild = cast<IConstant>(child)) {
     child = (*constChild)();
   }
-  else if (const auto realChild = cast<Real>(child)) {
-    if (realChild->getOutputPrecision() > Real::getPrecision()) {
-      auto newRealChild = cast<Real>(realChild->clone());
-      newRealChild->setOutputPrecision(Real::getPrecision());
-      child = std::move(newRealChild);
-    }
-  }
   else if (const auto exprChild = cast<IExpression>(child)) {
     child = exprChild->approximateSimplify();
   }
@@ -197,7 +190,9 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
     outMultiSetPrecision.add<Real, Integer, Integer>([](const Real &inRhs,
                                                         const Integer & /*inPrecision*/,
                                                         const Integer & /*inMaxInt*/) {
-      return inRhs.clone();
+      auto res = cast<Real>(inRhs.clone());
+      res->setOutputPrecision(Real::getPrecision());
+      return res;
     });
 
     outMultiSetPrecision.add<Complex, Integer, Integer>([](const Complex &inRhs,
