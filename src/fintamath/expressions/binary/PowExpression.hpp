@@ -25,7 +25,7 @@ protected:
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, const Integer &powValue);
+  static ArgumentPtr sumPolynomSimplify(const ArgumentPtr &sumExpr, const Integer &power);
 
   static Integer generateNextNumber(const Integer &n);
 

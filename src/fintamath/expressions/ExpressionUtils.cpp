@@ -162,10 +162,10 @@ std::pair<ArgumentPtr, ArgumentPtr> splitMulExpr(const ArgumentPtr &inChild, boo
 std::pair<ArgumentPtr, ArgumentPtr> splitPowExpr(const ArgumentPtr &rhs) {
   if (const auto &powExpr = cast<IExpression>(rhs); powExpr && is<Pow>(powExpr->getFunction())) {
     const ArgumentPtrVector &powExprChildren = powExpr->getChildren();
-    return {powExprChildren[1], powExprChildren[0]};
+    return {powExprChildren[0], powExprChildren[1]};
   }
 
-  return {one, rhs};
+  return {rhs, one};
 }
 
 std::pair<ArgumentPtr, ArgumentPtr> splitRational(const ArgumentPtr &arg) {

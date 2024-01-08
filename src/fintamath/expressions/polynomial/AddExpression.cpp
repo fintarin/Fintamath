@@ -325,32 +325,32 @@ ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const Argume
   auto [lhsMulRate, lhsMulValue] = splitMulExpr(lhs, false);
   auto [rhsMulRate, rhsMulValue] = splitMulExpr(rhs, false);
 
-  auto [lhsPowRate, lhsPowValue] = splitPowExpr(lhsMulValue);
-  auto [rhsPowRate, rhsPowValue] = splitPowExpr(rhsMulValue);
+  auto [lhsPowBase, lhsPowRate] = splitPowExpr(lhsMulValue);
+  auto [rhsPowBase, rhsPowRate] = splitPowExpr(rhsMulValue);
 
-  auto lhsPowValueExpr = cast<IExpression>(lhsPowValue);
-  auto rhsPowValueExpr = cast<IExpression>(rhsPowValue);
+  auto lhsPowBaseExpr = cast<IExpression>(lhsPowBase);
+  auto rhsPowBaseExpr = cast<IExpression>(rhsPowBase);
 
-  if (!lhsPowValueExpr || *lhsPowRate != Integer(2)) {
+  if (!lhsPowBaseExpr || *lhsPowRate != Integer(2)) {
     return {};
   }
 
-  if (containsInfinity(lhsPowValue) || containsInfinity(rhsPowValue)) {
+  if (containsInfinity(lhsPowBase) || containsInfinity(rhsPowBase)) {
     return {};
   }
 
-  auto lhsPowValueChild = lhsPowValueExpr->getChildren().front();
+  auto lhsPowBaseChild = lhsPowBaseExpr->getChildren().front();
 
   auto lhsMulRateNum = cast<INumber>(lhsMulRate);
 
-  if (rhsPowValueExpr && *rhsPowRate == Integer(2)) {
-    if (!is<Sin>(lhsPowValueExpr->getFunction()) || !is<Cos>(rhsPowValueExpr->getFunction())) {
+  if (rhsPowBaseExpr && *rhsPowRate == Integer(2)) {
+    if (!is<Sin>(lhsPowBaseExpr->getFunction()) || !is<Cos>(rhsPowBaseExpr->getFunction())) {
       return {};
     }
 
-    auto rhsPowValueChild = rhsPowValueExpr->getChildren().front();
+    auto rhsPowBaseChild = rhsPowBaseExpr->getChildren().front();
 
-    if (*lhsPowValueChild != *rhsPowValueChild) {
+    if (*lhsPowBaseChild != *rhsPowBaseChild) {
       return {};
     }
 
@@ -363,7 +363,7 @@ ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const Argume
     if (lhsMulRateNum && rhsMulRateNum && *(*lhsMulRateNum + *rhsMulRateNum) == Integer(0)) {
       ArgumentPtr res = cosExpr(
           mulExpr(
-              lhsPowValueExpr->getChildren().front(),
+              lhsPowBaseExpr->getChildren().front(),
               Integer(2).clone()));
 
       return mulExpr(rhsMulRateNum, res);
@@ -375,12 +375,12 @@ ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const Argume
   auto rhsNum = cast<INumber>(rhs);
 
   if (lhsMulRateNum && rhsNum && *(*lhsMulRateNum + *rhsNum) == Integer(0)) {
-    ArgumentPtr res = lhsPowValueExpr->getChildren().front();
+    ArgumentPtr res = lhsPowBaseExpr->getChildren().front();
 
-    if (is<Sin>(lhsPowValueExpr->getFunction())) {
+    if (is<Sin>(lhsPowBaseExpr->getFunction())) {
       res = cosExpr(res);
     }
-    else if (is<Cos>(lhsPowValueExpr->getFunction())) {
+    else if (is<Cos>(lhsPowBaseExpr->getFunction())) {
       res = sinExpr(res);
     }
     else {

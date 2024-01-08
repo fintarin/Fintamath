@@ -404,30 +404,30 @@ ArgumentPtr DivExpression::equalSimplify(const IFunction & /*func*/, const Argum
 }
 
 ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto [lhsChildRate, lhsChildValue] = splitPowExpr(lhs);
-  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhs);
+  auto [lhsChildBase, lhsChildRate] = splitPowExpr(lhs);
+  auto [rhsChildBase, rhsChildRate] = splitPowExpr(rhs);
 
-  auto lhsChildValueNum = cast<INumber>(lhsChildValue);
+  auto lhsChildBaseNum = cast<INumber>(rhsChildBase);
   auto lhsChildRateNum = cast<INumber>(lhsChildRate);
-  auto rhsChildValueNum = cast<INumber>(rhsChildValue);
+  auto rhsChildBaseNum = cast<INumber>(rhsChildBase);
   auto rhsChildRateNum = cast<INumber>(rhsChildRate);
 
-  if (lhsChildValueNum && rhsChildValueNum &&
+  if (lhsChildBaseNum && rhsChildBaseNum &&
       lhsChildRateNum && rhsChildRateNum &&
       *lhsChildRateNum < *rhsChildRateNum) {
 
     return {};
   }
 
-  if (*lhsChildValue == *rhsChildValue && !containsInfinity(lhsChildValue)) {
-    return powExpr(lhsChildValue, addExpr(lhsChildRate, negExpr(rhsChildRate)));
+  if (*lhsChildBase == *rhsChildBase && !containsInfinity(rhsChildBase)) {
+    return powExpr(rhsChildBase, addExpr(lhsChildRate, negExpr(rhsChildRate)));
   }
 
-  if (rhsChildValueNum) {
+  if (rhsChildBaseNum) {
     if (const auto rhsChildRateRat = cast<Rational>(rhsChildRate)) {
-      ArgumentPtr numeratorPow = Pow()(*rhsChildValue, 1 - (*rhsChildRateRat));
+      ArgumentPtr numeratorPow = Pow()(*rhsChildBase, 1 - (*rhsChildRateRat));
       ArgumentPtr numerator = mulExpr(lhs, numeratorPow);
-      return divExpr(numerator, rhsChildValue);
+      return divExpr(numerator, rhsChildBase);
     }
   }
 
@@ -519,15 +519,15 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVect
 }
 
 ArgumentPtr DivExpression::tanCotSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto [lhsChildRate, lhsChildValue] = splitPowExpr(lhs);
-  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhs);
+  auto [lhsChildBase, lhsChildRate] = splitPowExpr(lhs);
+  auto [rhsChildBase, rhsChildRate] = splitPowExpr(rhs);
 
   if (*lhsChildRate != *rhsChildRate) {
     return {};
   }
 
-  auto lhsChildValueExpr = cast<IExpression>(lhsChildValue);
-  auto rhsChildValueExpr = cast<IExpression>(rhsChildValue);
+  auto lhsChildValueExpr = cast<IExpression>(lhsChildBase);
+  auto rhsChildValueExpr = cast<IExpression>(rhsChildBase);
 
   if (lhsChildValueExpr && rhsChildValueExpr &&
       *lhsChildValueExpr->getChildren().front() == *rhsChildValueExpr->getChildren().front()) {
@@ -553,9 +553,9 @@ ArgumentPtr DivExpression::tanCotSimplify(const IFunction & /*func*/, const Argu
 }
 
 ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhs);
+  auto [rhsChildBase, rhsChildRate] = splitPowExpr(rhs);
 
-  if (auto rhsChildValueExpr = cast<IExpression>(rhsChildValue)) {
+  if (auto rhsChildValueExpr = cast<IExpression>(rhsChildBase)) {
     if (is<Sin>(rhsChildValueExpr->getFunction())) {
       return mulExpr(lhs, powExpr(cscExpr(*rhsChildValueExpr->getChildren().front()), rhsChildRate));
     }

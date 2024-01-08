@@ -157,7 +157,7 @@ std::vector<Integer> PowExpression::getPartition(Integer bitNumber, const Intege
 
 // Uses multinomial theorem for exponentiation of sum.
 // https://en.wikipedia.org/wiki/Multinomial_theorem
-ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &powValue) {
+ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &power) {
   auto sumExpr = cast<IExpression>(expr);
   ArgumentPtrVector polynom;
 
@@ -169,8 +169,8 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
   }
 
   size_t variableCount = polynom.size();
-  Integer bitNumber = generateFirstNum(powValue);
-  Integer combins = combinations(powValue + variableCount - 1, powValue);
+  Integer bitNumber = generateFirstNum(power);
+  Integer combins = combinations(power + variableCount - 1, power);
 
   ArgumentPtrVector newChildren;
 
@@ -179,7 +179,7 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentPtrVector mulExprChildren;
-    mulExprChildren.emplace_back(multinomialCoefficient(powValue, vectOfPows).clone());
+    mulExprChildren.emplace_back(multinomialCoefficient(power, vectOfPows).clone());
 
     for (auto i : std::views::iota(0U, variableCount)) {
       ArgumentPtr powExprChild = powExpr(polynom[i], vectOfPows[i].clone());

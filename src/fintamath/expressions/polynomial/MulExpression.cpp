@@ -260,16 +260,16 @@ ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const Arg
 }
 
 ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto [lhsChildRate, lhsChildValue] = splitPowExpr(lhs);
-  auto [rhsChildRate, rhsChildValue] = splitPowExpr(rhs);
+  auto [lhsChildBase, lhsChildRate] = splitPowExpr(lhs);
+  auto [rhsChildBase, rhsChildRate] = splitPowExpr(rhs);
 
-  if (*lhsChildValue == *rhsChildValue) {
+  if (*lhsChildBase == *rhsChildBase) {
     ArgumentPtr ratesSum = addExpr(lhsChildRate, rhsChildRate);
-    return powExpr(lhsChildValue, ratesSum);
+    return powExpr(lhsChildBase, ratesSum);
   }
 
-  auto lhsChildValueNum = cast<INumber>(lhsChildValue);
-  auto rhsChildValueNum = cast<INumber>(rhsChildValue);
+  auto lhsChildValueNum = cast<INumber>(lhsChildBase);
+  auto rhsChildValueNum = cast<INumber>(rhsChildBase);
 
   if (lhsChildValueNum &&
       rhsChildValueNum &&
@@ -280,7 +280,7 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
       *lhsChildRate == *rhsChildRate &&
       *rhsChildRate != Integer(1)) {
 
-    ArgumentPtr valuesMul = mulExpr(lhsChildValue, rhsChildValue);
+    ArgumentPtr valuesMul = mulExpr(lhsChildBase, rhsChildBase);
     return powExpr(valuesMul, lhsChildRate);
   }
 
