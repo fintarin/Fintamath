@@ -15,13 +15,9 @@ namespace fintamath {
 
 namespace {
 
-std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var);
+const size_t maxPower = 4;
 
-std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var);
-
-ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var);
-
-ArgumentPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variable &var);
+ArgumentPtrVector getPolynomCoefficients(const ArgumentPtr &elem, const Variable &var);
 
 ArgumentPtrVector solveCubicEquation(const ArgumentPtrVector &coeffAtPow);
 
@@ -45,7 +41,7 @@ Expression solve(const Expression &rhs) {
   // TODO: remove this if when inequalities will be implemented
   if (!is<Eqv>(compExpr->getFunction())) {
     auto var = cast<Variable>(compExpr->getVariables().front());
-    ArgumentPtrVector powerRate = getVariableIntPowerRates(compExpr->getChildren().front(), var);
+    ArgumentPtrVector powerRate = getPolynomCoefficients(compExpr->getChildren().front(), var);
 
     if (powerRate.size() == 2) {
       compExpr->markAsSolution();
@@ -56,7 +52,7 @@ Expression solve(const Expression &rhs) {
   }
 
   auto var = cast<Variable>(compExpr->getVariables().front());
-  ArgumentPtrVector powerRates = getVariableIntPowerRates(compExpr->getChildren().front(), var);
+  ArgumentPtrVector powerRates = getPolynomCoefficients(compExpr->getChildren().front(), var);
   ArgumentPtrVector roots;
 
   switch (powerRates.size()) {
@@ -71,6 +67,7 @@ Expression solve(const Expression &rhs) {
       break;
     default:
       roots = {};
+      break;
   }
 
   if (roots.empty()) {
@@ -94,66 +91,8 @@ Expression solve(const Expression &rhs) {
 
 namespace {
 
-std::shared_ptr<const INumber> getElementPower(const ArgumentPtr &elem, const Variable &var) {
-  if (const auto elemVar = cast<Variable>(elem); elemVar && *elemVar == var) {
-    return std::make_shared<Integer>(1);
-  }
-
-  if (const auto expr = cast<IExpression>(elem)) {
-    if (is<Mul>(expr->getFunction())) {
-      return getMulElementPower(expr, var);
-    }
-
-    if (is<Pow>(expr->getFunction())) {
-      if (const auto elemVar = cast<Variable>(expr->getChildren().front()); elemVar && *elemVar == var) {
-        return cast<INumber>(expr->getChildren().back());
-      }
-    }
-  }
-
-  return std::make_shared<Integer>(0);
-}
-
-std::shared_ptr<const INumber> getMulElementPower(const std::shared_ptr<const IExpression> &elem, const Variable &var) {
-  for (const auto &child : elem->getChildren()) {
-    if (auto powValue = getElementPower(child, var); *powValue != Integer(0)) {
-      return powValue;
-    }
-  }
-
-  return std::make_shared<Integer>(0);
-}
-
-ArgumentPtr getElementRate(const ArgumentPtr &elem, const Variable &var) {
-  if (const auto elemExpr = cast<IExpression>(elem)) {
-    if (is<Pow>(elemExpr->getFunction())) {
-      if (containsVariable(elemExpr, var)) {
-        return Integer(1).clone();
-      }
-
-      return elem;
-    }
-
-    if (is<Mul>(elemExpr->getFunction())) {
-      ArgumentPtrVector coeffs = {Integer(1).clone()};
-
-      for (const auto &child : elemExpr->getChildren()) {
-        coeffs.emplace_back(getElementRate(child, var));
-      }
-
-      return mulExpr(std::move(coeffs))->toMinimalObject();
-    }
-  }
-
-  if (const auto elemVar = cast<Variable>(elem); elemVar && var == *elemVar) {
-    return Integer(1).clone();
-  }
-
-  return elem;
-}
-
-ArgumentPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variable &var) {
-  ArgumentPtrVector powerRates;
+ArgumentPtrVector getPolynomCoefficients(const ArgumentPtr &elem, const Variable &var) {
+  ArgumentPtrVector powers;
   ArgumentPtrVector polynomVect;
 
   if (const auto exprVal = cast<IExpression>(elem); exprVal && is<Add>(exprVal->getFunction())) {
@@ -164,28 +103,27 @@ ArgumentPtrVector getVariableIntPowerRates(const ArgumentPtr &elem, const Variab
   }
 
   for (const auto &polynomChild : polynomVect) {
-    ArgumentPtr rate = getElementRate(polynomChild, var);
-    std::shared_ptr<const INumber> power = getElementPower(polynomChild, var);
-
-    if (auto intPow = cast<Integer>(power)) {
-      if (powerRates.size() < *intPow + 1) {
-        while (powerRates.size() != *intPow + 1) {
-          powerRates.emplace_back(Integer(0).clone());
-        }
-      }
-
-      powerRates[size_t(*intPow)] = rate;
+    if (!containsVariable(polynomChild, var)) {
+      powers[0] = polynomChild;
+      continue;
     }
-    else {
+
+    auto [mulRate, mulValue] = splitMulExpr(polynomChild);
+    auto [powBase, powValue] = splitPowExpr(mulValue);
+    auto intPower = cast<Integer>(powValue);
+
+    if (!intPower || *intPower > maxPower || *powBase != var) {
       return {};
     }
+
+    while (powers.size() < *intPower + 1) {
+      powers.emplace_back(Integer(0).clone());
+    }
+
+    powers[size_t(*intPower)] = mulRate;
   }
 
-  return powerRates;
-}
-
-ArgumentPtrVector solveCubicEquation(const ArgumentPtrVector & /*coeffAtPow*/) {
-  return {};
+  return powers;
 }
 
 ArgumentPtrVector solveQuadraticEquation(const ArgumentPtrVector &coeffAtPow) {
@@ -200,6 +138,10 @@ ArgumentPtrVector solveQuadraticEquation(const ArgumentPtrVector &coeffAtPow) {
   const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));
 
   return {firstRoot.getChildren().front(), secondRoot.getChildren().front()};
+}
+
+ArgumentPtrVector solveCubicEquation(const ArgumentPtrVector & /*coeffAtPow*/) {
+  return {};
 }
 
 ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow) {

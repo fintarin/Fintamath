@@ -371,6 +371,7 @@ TEST(ExpressionFunctionsTests, solveTest) {
   EXPECT_EQ(solve(Expression("x/y = 0")).toString(), "x = 0");
   EXPECT_EQ(solve(Expression("x^2 - 2*sin(2) = 0")).toString(), "x = -sqrt(8 sin(2))/2 | x = sqrt(8 sin(2))/2");
   EXPECT_EQ(solve(Expression("x = x sqrt(x)")).toString(), "x^(3/2) - x = 0");
+  EXPECT_EQ(solve(Expression("x = 3^x")).toString(), "x - 3^x = 0");
 
   EXPECT_EQ(solve(Expression("E = Ey")).toString(), "y = 1");
   EXPECT_EQ(solve(Expression("sin(4) = sin(4) y")).toString(), "y = 1");
