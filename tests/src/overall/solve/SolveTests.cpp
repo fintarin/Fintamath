@@ -131,7 +131,7 @@ TEST(SolveTests, solveApproximateTest) {
   expr = solve(expr);
   EXPECT_EQ(expr.toString(), "x^6 + 6 x^5 + 15 x^4 + 20 x^3 + 15 x^2 + 6 x + 1");
 
-  expr = expr.approximate(2);
+  expr = approximate(expr, 2);
   EXPECT_EQ(expr.toString(), "x^6 + 6 x^5 + 15 x^4 + 20 x^3 + 15 x^2 + 6 x + 1");
 
   expr = pow(x + 1, 7);
@@ -140,6 +140,6 @@ TEST(SolveTests, solveApproximateTest) {
   expr = solve(expr);
   EXPECT_EQ(expr.toString(), "x^7 + 7 x^6 + 21 x^5 + 35 x^4 + 35 x^3 + 21 x^2 + 7 x + 1");
 
-  expr = expr.approximate(2);
+  expr = approximate(expr, 2);
   EXPECT_EQ(expr.toString(), "x^7 + 7 x^6 + 21 x^5 + 35 x^4 + 35 x^3 + 21 x^2 + 7 x + 1");
 }
