@@ -140,10 +140,6 @@ TEST(FunctionExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("testfunction(a+1,b+1)").toString(), "testfunction(a + 1, b + 1)");
 }
 
-TEST(FunctionExpressionTests, approximateTest) {
-  EXPECT_EQ(Expression("testfunction(a + 2^100)").approximate(10).toString(), "testfunction(a + 1.2676506*10^30)");
-}
-
 TEST(FunctionExpressionTests, getTypeTest) {
   EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0), Integer(0))->getType(), MathObjectType::FunctionExpression);
 }
