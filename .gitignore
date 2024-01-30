@@ -1,5 +1,7 @@
 .cache
 .vscode
+.idea
+cmake-build*
 [Bb]uild
 CMakeCache.*
 CMakeFiles
