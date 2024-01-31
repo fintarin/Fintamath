@@ -13,9 +13,9 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Pow::call(const ArgumentRefVector &argsVect) const {
-  const auto &lhs = cast<INumber>(argsVect.front().get());
-  const auto &rhs = cast<INumber>(argsVect.back().get());
+std::unique_ptr<IMathObject> Pow::call(const ArgumentRefVector &argVect) const {
+  const auto &lhs = cast<INumber>(argVect.front().get());
+  const auto &rhs = cast<INumber>(argVect.back().get());
 
   if (lhs == Integer(0) && rhs == Integer(0)) {
     return Undefined().clone();

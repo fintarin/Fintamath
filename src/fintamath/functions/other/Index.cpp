@@ -2,9 +2,9 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Index::call(const ArgumentRefVector &argsVect) const {
-  const auto &lhs = cast<Variable>(argsVect.front().get());
-  const auto &rhs = cast<Integer>(argsVect.back().get());
+std::unique_ptr<IMathObject> Index::call(const ArgumentRefVector &argVect) const {
+  const auto &lhs = cast<Variable>(argVect.front().get());
+  const auto &rhs = cast<Integer>(argVect.back().get());
 
   return Variable(lhs.toString(), rhs).clone();
 }

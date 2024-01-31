@@ -4,9 +4,9 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Percent::call(const ArgumentRefVector &argsVect) const {
+std::unique_ptr<IMathObject> Percent::call(const ArgumentRefVector &argVect) const {
   static const Rational percentVal = 100;
-  const auto &rhs = cast<INumber>(argsVect.front().get());
+  const auto &rhs = cast<INumber>(argVect.front().get());
 
   return (rhs / percentVal)->toMinimalObject();
 }

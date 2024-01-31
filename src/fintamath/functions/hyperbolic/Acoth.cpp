@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Acoth::call(const ArgumentRefVector &argsVect) const {
-  const auto &rhs = cast<INumber>(argsVect.front().get());
+std::unique_ptr<IMathObject> Acoth::call(const ArgumentRefVector &argVect) const {
+  const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
     return NegInf().clone();

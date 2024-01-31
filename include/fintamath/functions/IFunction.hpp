@@ -37,17 +37,17 @@ public:
 
   virtual size_t getFunctionOrder() const = 0;
 
-  virtual bool doArgsMatch(const ArgumentRefVector &argsVect) const = 0;
+  virtual bool doArgsMatch(const ArgumentRefVector &argVect) const = 0;
 
   virtual bool isEvaluatable() const = 0;
 
   std::unique_ptr<IMathObject> operator()(const std::derived_from<IMathObject> auto &...args) const {
-    ArgumentRefVector argsVect = {args...};
-    return callAbstract(argsVect);
+    ArgumentRefVector argVect = {args...};
+    return callAbstract(argVect);
   }
 
-  std::unique_ptr<IMathObject> operator()(const ArgumentRefVector &argsVect) const {
-    return callAbstract(argsVect);
+  std::unique_ptr<IMathObject> operator()(const ArgumentRefVector &argVect) const {
+    return callAbstract(argVect);
   }
 
   template <std::derived_from<IFunction> T>
@@ -70,7 +70,7 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const = 0;
 
   static const std::unordered_map<std::string, size_t> &getFunctionOrderMap() {
     return getFunctionOrderMutableMap();

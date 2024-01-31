@@ -25,11 +25,11 @@ protected:
 
 class UndefinedFunctionException : public UndefinedException {
 public:
-  explicit UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
+  explicit UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argVect) {
     content += ": " + func + "(";
 
-    if (!argsVect.empty()) {
-      for (const auto &arg : argsVect) {
+    if (!argVect.empty()) {
+      for (const auto &arg : argVect) {
         content += arg + ',';
       }
 
