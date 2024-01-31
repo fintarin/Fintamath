@@ -3,7 +3,6 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
-#include "fintamath/parser/Parser.hpp"
 
 #define FINTAMATH_FUNCTION_EXPRESSION(Function, name)          \
   std::unique_ptr<IMathObject> name(auto &&...args) {          \

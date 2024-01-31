@@ -1,14 +1,14 @@
 #pragma once
 
 #include <functional>
-#include <map>
 #include <memory>
 #include <ranges>
 #include <string>
 #include <vector>
 
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
 
