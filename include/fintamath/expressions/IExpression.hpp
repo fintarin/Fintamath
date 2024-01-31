@@ -2,12 +2,13 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/functions/IFunction.hpp"
-#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 
 class IExpression : public IArithmetic {
+  using ExpressionParser = Parser<std::unique_ptr<IExpression>>;
+
 public:
   virtual const std::shared_ptr<IFunction> &getFunction() const = 0;
 
@@ -24,12 +25,12 @@ public:
   virtual std::shared_ptr<IFunction> getOutputFunction() const;
 
   template <std::derived_from<IExpression> T>
-  static void registerType() {
-    Parser::registerType<T>(getParser());
+  static void registerConstructor() {
+    getParser().registerConstructor<T>();
   }
 
   static std::unique_ptr<IExpression> parse(const std::string &str) {
-    return Parser::parse(getParser(), str);
+    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
@@ -67,7 +68,7 @@ private:
   static ArgumentPtrVector convertToApproximatedNumbers(const ArgumentPtrVector &args);
 
 private:
-  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &getParser();
+  static ExpressionParser &getParser();
 };
 
 template <typename Derived, bool isMultiFunction = false>

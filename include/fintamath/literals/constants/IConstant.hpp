@@ -5,6 +5,8 @@
 namespace fintamath {
 
 class IConstant : public ILiteral {
+  using ConstantParser = Parser<std::unique_ptr<IConstant>>;
+
 public:
   virtual MathObjectType getReturnType() const = 0;
 
@@ -14,11 +16,11 @@ public:
 
   template <std::derived_from<IConstant> T>
   static void registerType() {
-    Parser::registerType<T>(getParser());
+    getParser().registerType<T>();
   }
 
   static std::unique_ptr<IConstant> parse(const std::string &parsedStr) {
-    return Parser::parse<std::unique_ptr<IConstant>>(getParser(), parsedStr);
+    return getParser().parse(parsedStr);
   }
 
   static MathObjectType getTypeStatic() {
@@ -29,13 +31,14 @@ protected:
   virtual std::unique_ptr<IMathObject> call() const = 0;
 
 private:
-  static Parser::Map<std::unique_ptr<IConstant>> &getParser();
+  static ConstantParser &getParser();
 };
 
 template <typename Return, typename Derived>
 class IConstantCRTP : public IConstant {
 #define I_CONSTANT_CRTP IConstantCRTP<Return, Derived>
 #include "fintamath/literals/constants/IConstantCRTP.hpp"
+
 #undef I_CONSTANT_CRTP
 };
 

@@ -4,6 +4,8 @@
 
 namespace fintamath {
 
+class IOperator;
+
 class CompExpression final : public IBinaryExpressionCRTP<CompExpression, true> {
 public:
   CompExpression(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);

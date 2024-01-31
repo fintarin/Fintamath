@@ -4,14 +4,14 @@
 
 using namespace fintamath;
 
-TEST(ParserTests, addTest) {
-  // TODO: implement
-}
-
 TEST(ParserTests, parseTest) {
   // TODO: implement
 }
 
 TEST(ParserTests, registerTypeTest) {
+  // TODO: implement
+}
+
+TEST(ParserTests, registerConstructorTest) {
   // TODO: implement
 }

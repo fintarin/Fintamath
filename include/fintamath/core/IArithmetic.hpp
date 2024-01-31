@@ -6,6 +6,8 @@
 namespace fintamath {
 
 class IArithmetic : public IMathObject {
+  using ArithmeticParser = Parser<std::unique_ptr<IArithmetic>>;
+
 public:
   friend inline std::unique_ptr<IArithmetic> operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.addAbstract(rhs);
@@ -32,17 +34,16 @@ public:
   }
 
   template <std::derived_from<IArithmetic> T>
-  static void registerType() {
-    Parser::registerType<T>(getParser());
+  static void registerConstructor() {
+    getParser().registerConstructor<T>();
   }
 
-  template <std::derived_from<IArithmetic> T>
-  static void registerType(Parser::Function<std::unique_ptr<IArithmetic>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(getParser(), std::move(parserFunc));
+  static void registerConstructor(ArithmeticParser::Constructor constructor) {
+    getParser().registerConstructor(std::move(constructor));
   }
 
   static std::unique_ptr<IArithmetic> parse(const std::string &str) {
-    return Parser::parse(getParser(), str);
+    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
@@ -61,13 +62,14 @@ protected:
   virtual std::unique_ptr<IArithmetic> negateAbstract() const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> &getParser();
+  static ArithmeticParser &getParser();
 };
 
 template <typename Derived>
 class IArithmeticCRTP : public IArithmetic {
 #define I_ARITHMETIC_CRTP IArithmeticCRTP<Derived>
 #include "fintamath/core/IArithmeticCRTP.hpp"
+
 #undef I_ARITHMETIC_CRTP
 };
 

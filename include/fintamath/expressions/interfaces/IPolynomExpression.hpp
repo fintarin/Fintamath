@@ -7,6 +7,8 @@
 
 namespace fintamath {
 
+class IOperator;
+
 class IPolynomExpression : public IExpression {
 public:
   explicit IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args);

@@ -1,7 +1,7 @@
-#include "fintamath/core/Parser.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/Parser.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -91,7 +91,6 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
-#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -100,58 +99,58 @@ TokenVector &Tokenizer::getRegisteredTokens() {
   return registeredTokens;
 }
 
-Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> &IMathObject::getParser() {
-  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> parser;
+IMathObject::MathObjectParser &IMathObject::getParser() {
+  static MathObjectParser parser;
   return parser;
 }
 
-Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> &IArithmetic::getParser() {
-  static Parser::Vector<std::unique_ptr<IArithmetic>, const std::string &> parser;
+IArithmetic::ArithmeticParser &IArithmetic::getParser() {
+  static ArithmeticParser parser;
   return parser;
 }
 
-Parser::Vector<std::unique_ptr<IComparable>, const std::string &> &IComparable::getParser() {
-  static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> parser;
+IComparable::ComparableParser &IComparable::getParser() {
+  static ComparableParser parser;
   return parser;
 }
 
-Parser::Vector<std::unique_ptr<INumber>, const std::string &> &INumber::getParser() {
-  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> parser;
+INumber::NumberParser &INumber::getParser() {
+  static NumberParser parser;
   return parser;
 }
 
-Parser::Vector<std::unique_ptr<IInteger>, const std::string &> &IInteger::getParser() {
-  static Parser::Vector<std::unique_ptr<IInteger>, const std::string &> parser;
+IInteger::IntegerParser &IInteger::getParser() {
+  static IntegerParser parser;
   return parser;
 }
 
-Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> &ILiteral::getParser() {
-  static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> parser;
+ILiteral::LiteralParser &ILiteral::getParser() {
+  static LiteralParser parser;
   return parser;
 }
 
-Parser::Map<std::unique_ptr<IConstant>> &IConstant::getParser() {
-  static Parser::Map<std::unique_ptr<IConstant>> parser;
+IConstant::ConstantParser &IConstant::getParser() {
+  static ConstantParser parser;
   return parser;
 }
 
-std::unordered_map<std::string, size_t> &IFunction::getFunctionOrderMutableMap() {
-  static std::unordered_map<std::string, size_t> orderMap;
+IFunction::FunctionOrderMap &IFunction::getFunctionOrderMutableMap() {
+  static FunctionOrderMap orderMap;
   return orderMap;
 }
 
-Parser::Map<std::unique_ptr<IFunction>> &IFunction::getParser() {
-  static Parser::Map<std::unique_ptr<IFunction>> parser;
+IFunction::FunctionParser &IFunction::getParser() {
+  static FunctionParser parser;
   return parser;
 }
 
-Parser::Map<std::unique_ptr<IOperator>> &IOperator::getParser() {
-  static Parser::Map<std::unique_ptr<IOperator>> parser;
+IOperator::OperatorParser &IOperator::getParser() {
+  static OperatorParser parser;
   return parser;
 }
 
-Parser::Vector<std::unique_ptr<IExpression>, const std::string &> &IExpression::getParser() {
-  static Parser::Vector<std::unique_ptr<IExpression>, const std::string &> parser;
+IExpression::ExpressionParser &IExpression::getParser() {
+  static ExpressionParser parser;
   return parser;
 }
 
@@ -163,25 +162,23 @@ namespace {
 
 struct ParserConfig final {
   ParserConfig() {
-    IMathObject::registerType<ILiteral>(&ILiteral::parse);
-    IMathObject::registerType<IFunction>([](const std::string &str) {
-      return IFunction::parse(str);
-    });
-    IMathObject::registerType<IArithmetic>(&IArithmetic::parse);
+    IMathObject::registerConstructor(&ILiteral::parse);
+    IMathObject::registerConstructor([](const std::string &str) { return IFunction::parse(str); });
+    IMathObject::registerConstructor(&IArithmetic::parse);
 
-    IArithmetic::registerType<IComparable>(&IComparable::parse);
-    IArithmetic::registerType<Expression>();
+    IArithmetic::registerConstructor(&IComparable::parse);
+    IArithmetic::registerConstructor<Expression>();
 
-    IComparable::registerType<INumber>(&INumber::parse);
+    IComparable::registerConstructor(&INumber::parse);
 
-    INumber::registerType<IInteger>(&IInteger::parse);
-    INumber::registerType<Rational>();
+    INumber::registerConstructor(&IInteger::parse);
+    INumber::registerConstructor<Rational>();
 
-    IInteger::registerType<Integer>();
+    IInteger::registerConstructor<Integer>();
 
-    ILiteral::registerType<IConstant>(&IConstant::parse);
-    ILiteral::registerType<Variable>();
-    ILiteral::registerType<Boolean>();
+    ILiteral::registerConstructor(&IConstant::parse);
+    ILiteral::registerConstructor<Variable>();
+    ILiteral::registerConstructor<Boolean>();
 
     IConstant::registerType<E>();
     IConstant::registerType<Pi>();
@@ -263,7 +260,7 @@ struct ParserConfig final {
     IOperator::registerType<Comma>();
     IOperator::registerType<Mod>();
 
-    IExpression::registerType<Expression>();
+    IExpression::registerConstructor<Expression>();
   }
 };
 

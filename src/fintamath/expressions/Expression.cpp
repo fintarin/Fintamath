@@ -174,7 +174,7 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
   TermVector terms(tokens.size());
 
   for (const auto i : stdv::iota(0U, terms.size())) {
-    if (auto term = Parser::parse(getTermMakers(), (tokens[i]))) {
+    if (auto term = getTermParser().parse(tokens[i])) {
       terms[i] = std::move(term);
     }
     else {
@@ -435,21 +435,15 @@ ArgumentPtr Expression::compress(const ArgumentPtr &child) {
   return child;
 }
 
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector &&args) {
-  ArgumentPtrVector compressedArgs = std::move(args);
-  stdr::transform(compressedArgs, compressedArgs.begin(), &Expression::compress);
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
+  stdr::transform(args, args.begin(), &Expression::compress);
+  Expression::validateFunctionArgs(func, args);
 
-  Expression::validateFunctionArgs(func, compressedArgs);
-
-  if (auto expr = Parser::parse(Expression::getExpressionMakers(), func.toString(), std::move(compressedArgs))) {
+  if (auto expr = Expression::getExpressionParser().parse(func.toString(), std::move(args))) {
     return expr;
   }
 
-  return FunctionExpression(func, compressedArgs).clone();
-}
-
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args) {
-  return makeExpr(func, ArgumentPtrVector(args));
+  return FunctionExpression(func, std::move(args)).clone();
 }
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args) {

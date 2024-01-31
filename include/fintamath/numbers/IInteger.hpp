@@ -5,6 +5,8 @@
 namespace fintamath {
 
 class IInteger : public INumber {
+  using IntegerParser = Parser<std::unique_ptr<IInteger>>;
+
 public:
   friend inline std::unique_ptr<IInteger> operator%(const IInteger &lhs, const IInteger &rhs) {
     return lhs.modAbstract(rhs);
@@ -55,12 +57,12 @@ public:
   }
 
   template <std::derived_from<IInteger> T>
-  static void registerType() {
-    Parser::registerType<T>(getParser());
+  static void registerConstructor() {
+    getParser().registerConstructor<T>();
   }
 
   static std::unique_ptr<IInteger> parse(const std::string &str) {
-    return Parser::parse(getParser(), str);
+    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
@@ -87,7 +89,7 @@ protected:
   virtual IInteger &decreaseAbstract() = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IInteger>, const std::string &> &getParser();
+  static IntegerParser &getParser();
 };
 
 template <typename Derived>
