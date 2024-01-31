@@ -181,10 +181,10 @@ ArgumentPtr DivExpression::mulSimplify(const SimplifyFunctionVector &simplFuncs,
   size_t rhsChildrenSizeInitial = rhsChildren.size();
 
   // TODO: use more efficient algorithm
-  for (auto i : std::views::iota(0U, lhsChildren.size())) {
+  for (const auto i : stdv::iota(0U, lhsChildren.size())) {
     auto &lhsChild = lhsChildren[i];
 
-    for (auto j : std::views::iota(0U, rhsChildren.size())) {
+    for (const auto j : stdv::iota(0U, rhsChildren.size())) {
       const auto &rhsChild = rhsChildren[j];
 
       ArgumentPtr res = useSimplifyFunctions(simplFuncs,
@@ -378,8 +378,8 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
 
   ArgumentPtrVector multiplicators;
 
-  for (auto i : std::views::iota(1U, rhsChildren.size())) {
-    multiplicators.emplace_back(mulExpr(rhsChildren[i], result));
+  for (const auto &rhsChild : rhsChildren | stdv::drop(1)) {
+    multiplicators.emplace_back(mulExpr(rhsChild, result));
   }
 
   ArgumentPtr remainderAdd = negExpr(makePolynom(Add(), std::move(multiplicators)));

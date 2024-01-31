@@ -222,7 +222,7 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
 std::vector<size_t> AddExpression::findLogarithms(const ArgumentPtrVector &children) {
   std::vector<size_t> indexes;
 
-  for (auto i : std::views::iota(0U, children.size())) {
+  for (const auto i : stdv::iota(0U, children.size())) {
     if (const auto childExpr = cast<const IExpression>(children[i]);
         childExpr && is<Log>(childExpr->getFunction())) {
 

@@ -132,7 +132,7 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
 
   size_t resolutionIndex = lhsChildren.size();
 
-  for (auto i : std::views::iota(0U, lhsChildren.size())) {
+  for (const auto i : stdv::iota(0U, lhsChildren.size())) {
     ArgumentPtr lhsSubChild = lhsChildren[i];
     ArgumentPtr rhsSubChild = rhsChildren[i];
 

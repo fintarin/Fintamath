@@ -173,7 +173,7 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
 
   TermVector terms(tokens.size());
 
-  for (auto i : std::views::iota(0U, terms.size())) {
+  for (const auto i : stdv::iota(0U, terms.size())) {
     if (auto term = Parser::parse(getTermMakers(), (tokens[i]))) {
       terms[i] = std::move(term);
     }
@@ -346,7 +346,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     return;
   }
 
-  for (auto i : std::views::iota(1U, terms.size() - 1)) {
+  for (const auto i : stdv::iota(1U, terms.size() - 1)) {
     const auto &term = terms[i];
     const auto &termPrev = terms[i - 1];
 
@@ -359,7 +359,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     }
   }
 
-  for (auto i : std::views::iota(1U, terms.size() - 1) | std::views::reverse) {
+  for (const auto i : stdv::iota(1U, terms.size() - 1) | stdv::reverse) {
     const auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
@@ -437,7 +437,7 @@ ArgumentPtr Expression::compress(const ArgumentPtr &child) {
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector &&args) {
   ArgumentPtrVector compressedArgs = std::move(args);
-  std::ranges::transform(compressedArgs, compressedArgs.begin(), &Expression::compress);
+  stdr::transform(compressedArgs, compressedArgs.begin(), &Expression::compress);
 
   Expression::validateFunctionArgs(func, compressedArgs);
 
@@ -470,7 +470,7 @@ void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVe
   ArgumentTypeVector expectedArgTypes = func.getArgTypes();
   MathObjectType expectedType = expectedArgTypes.front();
 
-  for (auto i : std::views::iota(0U, args.size())) {
+  for (const auto i : stdv::iota(0U, args.size())) {
     if (doesArgSizeMatch) {
       expectedType = expectedArgTypes[i];
     }

@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <regex>
 
+#include "fintamath/core/CoreUtils.hpp"
+
 namespace fintamath {
 
 TokenVector Tokenizer::tokenize(std::string str) {
@@ -35,7 +37,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
 
 void Tokenizer::registerToken(const Token &token) {
   auto &tokens = getRegisteredTokens();
-  tokens.insert(std::ranges::upper_bound(tokens, token, [](const Token &lhs, const Token &rhs) {
+  tokens.insert(stdr::upper_bound(tokens, token, [](const Token &lhs, const Token &rhs) {
                   return lhs.size() > rhs.size();
                 }),
                 token);

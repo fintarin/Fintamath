@@ -198,7 +198,7 @@ ArgumentPtr CompExpression::rateSimplify(const IFunction &func, const ArgumentPt
     return {};
   }
 
-  for (auto &child : std::views::drop(children, 1)) {
+  for (auto &child : stdv::drop(children, 1)) {
     child = divExpr(child, rate);
   }
 

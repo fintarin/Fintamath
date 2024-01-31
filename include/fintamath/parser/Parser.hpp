@@ -72,7 +72,7 @@ public:
 
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
-    for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
+    for (const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
       if (Return value = pair->second(args...)) {
         return value;
       }
@@ -89,7 +89,7 @@ public:
 
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
-    for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
+    for (const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
       if (Return value = pair->second(std::forward<Args>(args)...)) {
         return value;
       }
@@ -106,7 +106,7 @@ public:
 
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
-    for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
+    for (const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
       if (Return value = pair->second(args...); value && comp(value)) {
         return value;
       }
@@ -124,7 +124,7 @@ public:
 
     const auto &valuePairs = parserMap.equal_range(parsedStr);
 
-    for (auto pair : std::views::iota(valuePairs.first, valuePairs.second)) {
+    for (const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
       if (Return value = pair->second(std::forward<Args>(args)...); value && comp(value)) {
         return value;
       }
