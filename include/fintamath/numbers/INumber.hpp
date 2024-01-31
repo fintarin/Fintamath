@@ -6,6 +6,8 @@
 namespace fintamath {
 
 class INumber : public IComparable {
+  using NumberParser = Parser<std::unique_ptr<INumber>>;
+
 public:
   virtual bool isPrecise() const {
     return true;
@@ -16,17 +18,16 @@ public:
   }
 
   template <std::derived_from<INumber> T>
-  static void registerType() {
-    Parser::registerType<T>(getParser());
+  static void registerConstructor() {
+    getParser().registerConstructor<T>();
   }
 
-  template <std::derived_from<INumber> T>
-  static void registerType(Parser::Function<std::unique_ptr<INumber>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(getParser(), std::move(parserFunc));
+  static void registerConstructor(NumberParser::Constructor constructor) {
+    getParser().registerConstructor(std::move(constructor));
   }
 
   static std::unique_ptr<INumber> parse(const std::string &str) {
-    return Parser::parse(getParser(), str);
+    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
@@ -34,7 +35,7 @@ public:
   }
 
 private:
-  static Parser::Vector<std::unique_ptr<INumber>, const std::string &> &getParser();
+  static NumberParser &getParser();
 };
 
 inline std::unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs) {

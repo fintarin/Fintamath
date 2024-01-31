@@ -6,18 +6,19 @@
 namespace fintamath {
 
 class IComparable : public IArithmetic {
+  using ComparableParser = Parser<std::unique_ptr<IComparable>>;
+
 public:
   friend inline std::strong_ordering operator<=>(const IComparable &lhs, const IComparable &rhs) {
     return lhs.compareAbstract(rhs);
   }
 
-  template <std::derived_from<IComparable> T>
-  static void registerType(Parser::Function<std::unique_ptr<IComparable>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(getParser(), std::move(parserFunc));
+  static void registerConstructor(ComparableParser::Constructor constructor) {
+    getParser().registerConstructor(std::move(constructor));
   }
 
   static std::unique_ptr<IComparable> parse(const std::string &str) {
-    return Parser::parse(getParser(), str);
+    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
@@ -28,7 +29,7 @@ protected:
   virtual std::strong_ordering compareAbstract(const IComparable &rhs) const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IComparable>, const std::string &> &getParser();
+  static ComparableParser &getParser();
 };
 
 template <typename Derived>

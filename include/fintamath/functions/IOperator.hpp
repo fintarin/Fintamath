@@ -5,9 +5,10 @@
 namespace fintamath {
 
 class IOperator : public IFunction {
+  using OperatorParser = Parser<std::unique_ptr<IOperator>>;
 
 public:
-  enum class Priority : uint16_t {
+  enum class Priority : uint8_t {
     Highest,
     Exponentiation, // e.g.  a ^ b
     PostfixUnary,   // e.g.  a!
@@ -32,14 +33,14 @@ public:
   template <std::derived_from<IOperator> T>
   static void registerType() {
     IFunction::registerType<T>();
-    Parser::registerType<T>(getParser());
+    getParser().registerType<T>();
   }
 
   static std::unique_ptr<IOperator> parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Lowest) {
-    Parser::Comparator<const std::unique_ptr<IOperator> &> comp = [priority](const std::unique_ptr<IOperator> &oper) {
+    const auto validator = [priority](const std::unique_ptr<IOperator> &oper) {
       return priority == IOperator::Priority::Lowest || oper->getOperatorPriority() == priority;
     };
-    return Parser::parse<std::unique_ptr<IOperator>>(getParser(), comp, parsedStr);
+    return getParser().parse(validator, parsedStr);
   }
 
   static MathObjectType getTypeStatic() {
@@ -47,7 +48,7 @@ public:
   }
 
 private:
-  static Parser::Map<std::unique_ptr<IOperator>> &getParser();
+  static OperatorParser &getParser();
 };
 
 template <typename Return, typename Derived, typename... Args>

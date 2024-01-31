@@ -10,171 +10,94 @@
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
+#include <algorithm>
+
 namespace fintamath {
 
+template <typename Return, typename... Args>
 class Parser final {
 public:
-  template <typename Return, typename... Args>
-  using Function = std::function<Return(Args...)>;
+  using Validator = std::function<bool(const Return &)>;
 
-  template <typename... Args>
-  using Comparator = std::function<bool(Args...)>;
+  using Constructor = std::function<Return(const std::string &, Args...)>;
 
-  template <typename Return, typename... Args>
-  using Map = std::unordered_multimap<std::string, Function<Return, Args...>>;
+  using TypeConstructor = std::function<Return(Args...)>;
 
-  template <typename Return, typename... Args>
-  using Vector = std::vector<Function<Return, Args...>>;
+  using ConstructorVector = std::vector<Constructor>;
 
-  template <typename Type, typename BasePtr, typename... Args>
-  static void add(Map<BasePtr, Args...> &parserMap) {
-    Function<BasePtr, Args...> constructor = [](const Args &...args) {
-      return std::make_unique<Type>(args...);
+  using ConstructorMap = std::unordered_multimap<std::string, TypeConstructor>;
+
+public:
+  template <typename... ConstructorArgs>
+    requires(SameAsUnqual<ConstructorArgs, Args> && ...)
+  Return parse(const std::string &str, ConstructorArgs &&...args) const {
+    constexpr auto trueValidator = [](const Return &) { return true; };
+    return parse(trueValidator, str, std::forward<ConstructorArgs>(args)...);
+  }
+
+  template <typename... ConstructorArgs>
+    requires(SameAsUnqual<ConstructorArgs, Args> && ...)
+  Return parse(const Validator &validator, const std::string &str, ConstructorArgs &&...args) const {
+    for (const auto &valuePairs = constructorMap.equal_range(str);
+         const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
+
+      if (Return value = pair->second(std::forward<ConstructorArgs>(args)...);
+          value && validator(value)) {
+
+        return value;
+      }
+    }
+
+    for (const auto &constructor : extraConstructors) {
+      if (Return value = constructor(str, std::forward<ConstructorArgs>(args)...);
+          value && validator(value)) {
+
+        return value;
+      }
+    }
+
+    return Return{};
+  }
+
+  template <typename Type>
+  void registerType() {
+    TypeConstructor constructor = []<typename... ConstructorArgs>(ConstructorArgs &&...args) -> Return {
+      return std::make_unique<Type>(std::forward<ConstructorArgs>(args)...);
     };
 
-    static const std::string name = Type().toString();
-    parserMap.emplace(name, constructor);
+    registerType<Type>(std::move(constructor));
+  }
+
+  template <typename Type>
+  void registerType(TypeConstructor constructor) {
+    static const std::string name = Type{}.toString();
+    constructorMap.emplace(name, std::move(constructor));
 
     Tokenizer::registerToken(name);
   }
 
-  template <typename Type, typename BasePtr, typename... Args>
-  static void add(Map<BasePtr, Args...> &parserMap, Function<BasePtr, Args...> &&parserFunc) {
-    static const std::string name = Type().toString();
-    parserMap.emplace(name, std::move(parserFunc));
-
-    Tokenizer::registerToken(name);
-  }
-
-  template <typename Type, typename BasePtr, typename... Args>
-  static void add(Vector<BasePtr, Args...> &parserVect) {
-    Function<BasePtr, Args...> constructor = [](const Args &...args) {
+  template <typename Type>
+  void registerConstructor() {
+    Constructor constructor = []<typename... ConstructorArgs>(const std::string &str, ConstructorArgs &&...args) -> Return {
       try {
-        return std::make_unique<Type>(args...);
+        return std::make_unique<Type>(str, std::forward<ConstructorArgs>(args)...);
       }
       catch (const InvalidInputException &) {
-        return std::unique_ptr<Type>();
+        return std::unique_ptr<Type>{};
       }
     };
 
-    parserVect.emplace_back(constructor);
+    registerConstructor(std::move(constructor));
   }
 
-  template <typename Type, typename BasePtr, typename... Args>
-  static void add(Vector<BasePtr, Args...> &parserVect, Function<BasePtr, Args...> &&parserFunc) {
-    parserVect.emplace_back(std::move(parserFunc));
+  void registerConstructor(Constructor constructor) {
+    extraConstructors.emplace_back(std::move(constructor));
   }
 
-  template <typename Return, typename... Args>
-  static Return parse(const Map<Return, const Args &...> &parserMap,
-                      const std::string &parsedStr,
-                      const Args &...args) {
+private:
+  ConstructorMap constructorMap;
 
-    const auto &valuePairs = parserMap.equal_range(parsedStr);
-
-    for (const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
-      if (Return value = pair->second(args...)) {
-        return value;
-      }
-    }
-
-    return nullptr;
-  }
-
-  template <typename Return, typename... Args>
-    requires(sizeof...(Args) > 0)
-  static Return parse(const Map<Return, Args &&...> &parserMap,
-                      const std::string &parsedStr,
-                      Args &&...args) {
-
-    const auto &valuePairs = parserMap.equal_range(parsedStr);
-
-    for (const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
-      if (Return value = pair->second(std::forward<Args>(args)...)) {
-        return value;
-      }
-    }
-
-    return nullptr;
-  }
-
-  template <typename Return, typename... Args>
-  static Return parse(const Map<Return, const Args &...> &parserMap,
-                      const Comparator<const Return &> &comp,
-                      const std::string &parsedStr,
-                      const Args &...args) {
-
-    const auto &valuePairs = parserMap.equal_range(parsedStr);
-
-    for (const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
-      if (Return value = pair->second(args...); value && comp(value)) {
-        return value;
-      }
-    }
-
-    return nullptr;
-  }
-
-  template <typename Return, typename... Args>
-    requires(sizeof...(Args) > 0)
-  static Return parse(const Map<Return, Args &&...> &parserMap,
-                      const Comparator<const Return &> &comp,
-                      const std::string &parsedStr,
-                      Args &&...args) {
-
-    const auto &valuePairs = parserMap.equal_range(parsedStr);
-
-    for (const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
-      if (Return value = pair->second(std::forward<Args>(args)...); value && comp(value)) {
-        return value;
-      }
-    }
-
-    return nullptr;
-  }
-
-  template <typename Return, typename... Args>
-  static Return parse(const Vector<Return, const Args &...> &parserVect, const Args &...args) {
-    for (const auto &constructor : parserVect) {
-      if (Return value = constructor(args...)) {
-        return value;
-      }
-    }
-
-    return nullptr;
-  }
-
-  template <typename Return, typename... Args>
-    requires(sizeof...(Args) > 0)
-  static Return parse(const Vector<Return, Args &&...> &parserVect, Args &&...args) {
-    for (const auto &constructor : parserVect) {
-      if (Return value = constructor(std::forward<Args>(args)...)) {
-        return value;
-      }
-    }
-
-    return nullptr;
-  }
-
-  template <typename Type, typename BasePtr, typename... Args>
-  static void registerType(Map<BasePtr, Args...> &parserMap) {
-    add<Type>(parserMap);
-  }
-
-  template <typename Type, typename BasePtr, typename... Args>
-  static void registerType(Map<BasePtr, Args...> &parserMap, const Function<BasePtr, Args...> &parserFunc) {
-    add<Type>(parserMap, parserFunc);
-  }
-
-  template <typename Type, typename BasePtr, typename... Args>
-  static void registerType(Vector<BasePtr, Args...> &parserVect) {
-    add<Type>(parserVect);
-  }
-
-  template <typename Type, typename BasePtr, typename... Args>
-  static void registerType(Vector<BasePtr, Args...> &parserVect, Function<BasePtr, Args...> &&parserFunc) {
-    add<Type>(parserVect, std::move(parserFunc));
-  }
+  ConstructorVector extraConstructors;
 };
 
 }

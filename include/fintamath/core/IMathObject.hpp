@@ -11,6 +11,8 @@
 namespace fintamath {
 
 class IMathObject {
+  using MathObjectParser = Parser<std::unique_ptr<IMathObject>>;
+
 public:
   virtual ~IMathObject() = default;
 
@@ -32,13 +34,12 @@ public:
     return lhs.equalsAbstract(rhs);
   }
 
-  template <std::derived_from<IMathObject> T>
-  static void registerType(Parser::Function<std::unique_ptr<IMathObject>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(getParser(), std::move(parserFunc));
+  static void registerConstructor(MathObjectParser::Constructor constructor) {
+    getParser().registerConstructor(std::move(constructor));
   }
 
   static std::unique_ptr<IMathObject> parse(const std::string &str) {
-    return Parser::parse(getParser(), str);
+    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
@@ -49,7 +50,7 @@ protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
 
 private:
-  static Parser::Vector<std::unique_ptr<IMathObject>, const std::string &> &getParser();
+  static MathObjectParser &getParser();
 };
 
 template <typename Derived>

@@ -15,6 +15,9 @@ namespace stdv = std::views;
 template <typename From, typename To>
 concept ConvertibleToAndNotSameAs = std::convertible_to<From, To> && !std::same_as<From, To>;
 
+template <typename FromArg, typename ToArg>
+concept SameAsUnqual = (std::same_as<std::remove_cvref_t<FromArg>, std::remove_cvref_t<ToArg>>);
+
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const From &from) {
   if constexpr (std::is_base_of_v<To, From>) {

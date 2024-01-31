@@ -2,7 +2,6 @@
 
 #include <stack>
 
-#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -27,6 +26,10 @@ using TermVector = std::vector<std::unique_ptr<Term>>;
 using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 
 class Expression final : public IExpressionCRTP<Expression> {
+  using TermParser = Parser<std::unique_ptr<Term>>;
+  using ExpressionParser = Parser<std::unique_ptr<IMathObject>, ArgumentPtrVector &&>;
+  using ExpressionMaker = std::function<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
+
 public:
   Expression();
 
@@ -50,12 +53,12 @@ public:
 
   void setVariable(const Variable &var, const Expression &val);
 
-  static void registerTermMaker(Parser::Function<std::unique_ptr<Term>, const Token &> &&maker) {
-    Parser::add<Token>(getTermMakers(), std::move(maker));
+  static void registerTermParser(TermParser::Constructor constructor) {
+    getTermParser().registerConstructor(std::move(constructor));
   }
 
   template <typename Function, bool isPolynomial = false>
-  static void registerFunctionExpressionMaker(auto &&maker);
+  static void registerFunctionExpressionMaker(ExpressionMaker maker);
 
   static MathObjectType getTypeStatic() {
     return MathObjectType::Expression;
@@ -111,17 +114,15 @@ private:
 
   static ArgumentPtr compress(const ArgumentPtr &child);
 
-  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector &&args);
-
-  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args);
+  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args);
 
   friend std::unique_ptr<IMathObject> parseFintamath(const std::string &str);
 
   friend Expression approximate(const Expression &rhs, unsigned precision);
 
-  static Parser::Vector<std::unique_ptr<Term>, const Token &> &getTermMakers();
+  static TermParser &getTermParser();
 
-  static Parser::Map<std::unique_ptr<IMathObject>, ArgumentPtrVector &&> &getExpressionMakers();
+  static ExpressionParser &getExpressionParser();
 
 private:
   mutable ArgumentPtr child;
@@ -158,30 +159,29 @@ Expression operator/(const Expression &lhs, const Variable &rhs);
 Expression operator/(const Variable &lhs, const Expression &rhs);
 
 template <typename Function, bool isPolynomial>
-inline void Expression::registerFunctionExpressionMaker(auto &&maker) {
-  Parser::Function<std::unique_ptr<IMathObject>, ArgumentPtrVector &&> constructor =
-      [maker = std::forward<decltype(maker)>(maker)](ArgumentPtrVector &&args) {
-        static const IFunction::Type type = Function().getFunctionType();
-        std::unique_ptr<IMathObject> res;
+void Expression::registerFunctionExpressionMaker(ExpressionMaker maker) {
+  ExpressionParser::TypeConstructor constructor = [maker = std::move(maker)](ArgumentPtrVector &&args) {
+    static const IFunction::Type type = Function().getFunctionType();
+    std::unique_ptr<IMathObject> res;
 
-        if constexpr (IsFunctionTypeAny<Function>::value) {
-          res = maker(std::move(args));
-        }
-        else if constexpr (isPolynomial) {
-          if (size_t(type) <= args.size()) {
-            res = maker(std::move(args));
-          }
-        }
-        else {
-          if (size_t(type) == args.size()) {
-            res = maker(std::move(args));
-          }
-        }
+    if constexpr (IsFunctionTypeAny<Function>::value) {
+      res = maker(std::move(args));
+    }
+    else if constexpr (isPolynomial) {
+      if (static_cast<size_t>(type) <= args.size()) {
+        res = maker(std::move(args));
+      }
+    }
+    else {
+      if (static_cast<size_t>(type) == args.size()) {
+        res = maker(std::move(args));
+      }
+    }
 
-        return res;
-      };
+    return res;
+  };
 
-  Parser::add<Function>(getExpressionMakers(), std::move(constructor));
+  getExpressionParser().registerType<Function>(std::move(constructor));
 }
 
 }

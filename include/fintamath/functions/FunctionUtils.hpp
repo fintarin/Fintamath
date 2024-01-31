@@ -16,9 +16,7 @@ class IFunction;
 
 extern bool isExpression(const IMathObject &arg);
 
-extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector &&args);
-
-extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args);
+extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args);
 
 extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args);
 

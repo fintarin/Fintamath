@@ -14,8 +14,11 @@ template <typename T>
 struct IsFunctionTypeAny : std::false_type {};
 
 class IFunction : public IMathObject {
+  using FunctionOrderMap = std::unordered_map<std::string, size_t>;
+  using FunctionParser = Parser<std::unique_ptr<IFunction>>;
+
 public:
-  enum class Type : uint16_t {
+  enum class Type : uint8_t {
     None,       // 0 arguments
     Unary,      // 1 argument
     Binary,     // 2 arguments
@@ -51,17 +54,17 @@ public:
 
   template <std::derived_from<IFunction> T>
   static void registerType() {
-    Parser::registerType<T>(getParser());
+    getParser().registerType<T>();
 
     getFunctionOrderMutableMap()[T().toString()] = maxFunctionOrder;
     maxFunctionOrder++;
   }
 
   static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-    Parser::Comparator<const std::unique_ptr<IFunction> &> comp = [type](const std::unique_ptr<IFunction> &func) {
-      return type == IFunction::Type::Any || func->getFunctionType() == type;
+    const auto validator = [type](const std::unique_ptr<IFunction> &func) {
+      return type == Type::Any || func->getFunctionType() == type;
     };
-    return Parser::parse<std::unique_ptr<IFunction>>(getParser(), comp, parsedStr);
+    return getParser().parse(validator, parsedStr);
   }
 
   static MathObjectType getTypeStatic() {
@@ -71,14 +74,14 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const = 0;
 
-  static const std::unordered_map<std::string, size_t> &getFunctionOrderMap() {
+  static const FunctionOrderMap &getFunctionOrderMap() {
     return getFunctionOrderMutableMap();
   }
 
 private:
-  static std::unordered_map<std::string, size_t> &getFunctionOrderMutableMap();
+  static FunctionOrderMap &getFunctionOrderMutableMap();
 
-  static Parser::Map<std::unique_ptr<IFunction>> &getParser();
+  static FunctionParser &getParser();
 
   static inline size_t maxFunctionOrder = 0;
 };

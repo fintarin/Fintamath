@@ -5,19 +5,20 @@
 namespace fintamath {
 
 class ILiteral : public IMathObject {
+  using LiteralParser = Parser<std::unique_ptr<ILiteral>>;
+
 public:
   template <std::derived_from<ILiteral> T>
-  static void registerType() {
-    Parser::registerType<T>(getParser());
+  static void registerConstructor() {
+    getParser().registerConstructor<T>();
   }
 
-  template <std::derived_from<ILiteral> T>
-  static void registerType(Parser::Function<std::unique_ptr<ILiteral>, const std::string &> &&parserFunc) {
-    Parser::registerType<T>(getParser(), std::move(parserFunc));
+  static void registerConstructor(LiteralParser::Constructor constructor) {
+    getParser().registerConstructor(std::move(constructor));
   }
 
   static std::unique_ptr<ILiteral> parse(const std::string &str) {
-    return Parser::parse(getParser(), str);
+    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
@@ -25,7 +26,7 @@ public:
   }
 
 private:
-  static Parser::Vector<std::unique_ptr<ILiteral>, const std::string &> &getParser();
+  static LiteralParser &getParser();
 };
 
 template <typename Derived>
