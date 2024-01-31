@@ -18,8 +18,6 @@ public:
 
   Complex &operator=(Complex &&rhs) noexcept = default;
 
-  ~Complex() override = default;
-
   explicit Complex(const std::string &str);
 
   explicit Complex(const INumber &inReal, const INumber &inImag);

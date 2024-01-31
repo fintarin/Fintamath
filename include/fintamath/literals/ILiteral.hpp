@@ -6,8 +6,6 @@ namespace fintamath {
 
 class ILiteral : public IMathObject {
 public:
-  ~ILiteral() override = default;
-
   template <std::derived_from<ILiteral> T>
   static void registerType() {
     Parser::registerType<T>(getParser());
