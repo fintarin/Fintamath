@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Real;
 
-class Sin : public IFunctionCRTP<INumber, Sin, INumber> {
+class Sin final : public IFunctionCRTP<INumber, Sin, INumber> {
 public:
   Sin() = default;
 

@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class Mod : public IOperatorCRTP<INumber, Mod, INumber, INumber> {
+class Mod final : public IOperatorCRTP<INumber, Mod, INumber, INumber> {
 public:
   Mod() : IOperatorCRTP(IOperator::Priority::Modulo) {
   }

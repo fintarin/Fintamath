@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Pi : public IConstantCRTP<Real, Pi> {
+class Pi final : public IConstantCRTP<Real, Pi> {
 public:
   std::string toString() const override {
     return "Pi";

@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Neg : public IOperatorCRTP<IArithmetic, Neg, IArithmetic> {
+class Neg final : public IOperatorCRTP<IArithmetic, Neg, IArithmetic> {
 public:
   Neg() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
   }

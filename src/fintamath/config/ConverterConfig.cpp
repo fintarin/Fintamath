@@ -18,7 +18,7 @@ using namespace fintamath;
 
 namespace {
 
-struct ConverterConfig {
+struct ConverterConfig final {
   ConverterConfig() {
     Converter::add<Integer, Integer>([](const Integer & /*type*/, const Integer &value) {
       return Integer(value).clone();

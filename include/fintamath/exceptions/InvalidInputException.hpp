@@ -23,7 +23,7 @@ protected:
   std::string content = "Invalid input";
 };
 
-class InvalidInputFunctionException : public InvalidInputException {
+class InvalidInputFunctionException final : public InvalidInputException {
 public:
   explicit InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argVect) {
     content += ": " + func + "(";
@@ -44,14 +44,14 @@ public:
   }
 };
 
-class InvalidInputBinaryOperatorException : public InvalidInputException {
+class InvalidInputBinaryOperatorException final : public InvalidInputException {
 public:
   explicit InvalidInputBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
     content += ": (" + lhs + ")" + oper + "(" + rhs + ")";
   }
 };
 
-class InvalidInputUnaryOperatorException : public InvalidInputException {
+class InvalidInputUnaryOperatorException final : public InvalidInputException {
 public:
   enum class Type {
     Prefix,

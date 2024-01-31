@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Frac : public IFunctionCRTP<IArithmetic, Frac, IArithmetic, IArithmetic> {
+class Frac final : public IFunctionCRTP<IArithmetic, Frac, IArithmetic, IArithmetic> {
 public:
   std::string toString() const override {
     return "frac";

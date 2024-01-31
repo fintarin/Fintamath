@@ -8,7 +8,7 @@ using namespace fintamath;
 
 namespace {
 
-class TestBinaryOperator : public IOperatorCRTP<INumber, TestBinaryOperator, INumber, INumber> {
+class TestBinaryOperator final : public IOperatorCRTP<INumber, TestBinaryOperator, INumber, INumber> {
 public:
   TestBinaryOperator() : IOperatorCRTP(IOperator::Priority::Exponentiation) {
   }
@@ -27,7 +27,7 @@ protected:
   }
 };
 
-class TestUnaryPrefixOperator : public IOperatorCRTP<INumber, TestUnaryPrefixOperator, INumber> {
+class TestUnaryPrefixOperator final : public IOperatorCRTP<INumber, TestUnaryPrefixOperator, INumber> {
 public:
   TestUnaryPrefixOperator() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
   }
@@ -46,7 +46,7 @@ protected:
   }
 };
 
-class TestUnaryPostfixOperator : public IOperatorCRTP<INumber, TestUnaryPostfixOperator, INumber> {
+class TestUnaryPostfixOperator final : public IOperatorCRTP<INumber, TestUnaryPostfixOperator, INumber> {
 public:
   TestUnaryPostfixOperator() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }
@@ -65,7 +65,7 @@ protected:
   }
 };
 
-class TestUnaryFunction : public IFunctionCRTP<INumber, TestUnaryFunction, INumber> {
+class TestUnaryFunction final : public IFunctionCRTP<INumber, TestUnaryFunction, INumber> {
 public:
   TestUnaryFunction() : IFunctionCRTP() {
   }
@@ -84,7 +84,7 @@ protected:
   }
 };
 
-class TestBinaryFunction : public IFunctionCRTP<INumber, TestBinaryFunction, INumber, INumber> {
+class TestBinaryFunction final : public IFunctionCRTP<INumber, TestBinaryFunction, INumber, INumber> {
 public:
   TestBinaryFunction() : IFunctionCRTP() {
   }
@@ -103,7 +103,7 @@ protected:
   }
 };
 
-class FunctionExpressionConfig {
+class FunctionExpressionConfig final {
 public:
   FunctionExpressionConfig() {
     IOperator::registerType<TestBinaryOperator>();

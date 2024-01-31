@@ -10,7 +10,7 @@ using namespace fintamath;
 
 namespace {
 
-class TestComparable : public IComparableCRTP<TestComparable> {
+class TestComparable final : public IComparableCRTP<TestComparable> {
 public:
   static MathObjectType getTypeStatic() {
     return size_t(MathObjectBoundTypes::get().at(IComparable::getTypeStatic())) - 3;

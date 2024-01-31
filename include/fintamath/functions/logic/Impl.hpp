@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Impl : public IOperatorCRTP<Boolean, Impl, Boolean, Boolean> {
+class Impl final : public IOperatorCRTP<Boolean, Impl, Boolean, Boolean> {
 public:
   Impl() : IOperatorCRTP(IOperator::Priority::Implication, false) {
   }

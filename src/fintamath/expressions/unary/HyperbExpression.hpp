@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class HyperbExpression : public IUnaryExpressionCRTP<HyperbExpression, true> {
+class HyperbExpression final : public IUnaryExpressionCRTP<HyperbExpression, true> {
 public:
   explicit HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild);
 

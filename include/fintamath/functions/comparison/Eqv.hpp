@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class Eqv : public IOperatorCRTP<Boolean, Eqv, IComparable, IComparable> {
+class Eqv final : public IOperatorCRTP<Boolean, Eqv, IComparable, IComparable> {
 public:
   Eqv() : IOperatorCRTP(IOperator::Priority::Comparison, true) {
   }

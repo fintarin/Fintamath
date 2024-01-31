@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class Integer : public IIntegerCRTP<Integer> {
+class Integer final : public IIntegerCRTP<Integer> {
 public:
   using Backend = boost::multiprecision::mpz_int;
 

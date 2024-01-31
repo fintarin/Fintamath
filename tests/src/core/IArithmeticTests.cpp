@@ -10,7 +10,7 @@ using namespace fintamath;
 
 namespace {
 
-class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
+class TestArithmetic final : public IArithmeticCRTP<TestArithmetic> {
 public:
   static MathObjectType getTypeStatic() {
     return size_t(MathObjectBoundTypes::get().at(MathObjectType::IArithmetic)) - 2;

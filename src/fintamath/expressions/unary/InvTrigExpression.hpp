@@ -6,7 +6,7 @@ namespace fintamath {
 
 class Rational;
 
-class InvTrigExpression : public IUnaryExpressionCRTP<InvTrigExpression, true> {
+class InvTrigExpression final : public IUnaryExpressionCRTP<InvTrigExpression, true> {
 public:
   explicit InvTrigExpression(const IFunction &inFunc, ArgumentPtr inChild);
 

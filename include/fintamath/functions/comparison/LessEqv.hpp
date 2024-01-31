@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class LessEqv : public IOperatorCRTP<Boolean, LessEqv, IComparable, IComparable> {
+class LessEqv final : public IOperatorCRTP<Boolean, LessEqv, IComparable, IComparable> {
 public:
   LessEqv() : IOperatorCRTP(IOperator::Priority::Comparison, true) {
   }

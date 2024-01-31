@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class Rational : public INumberCRTP<Rational> {
+class Rational final : public INumberCRTP<Rational> {
 public:
   Rational() = default;
 

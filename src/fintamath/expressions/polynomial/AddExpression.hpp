@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class AddExpression : public IPolynomExpressionCRTP<AddExpression> {
+class AddExpression final : public IPolynomExpressionCRTP<AddExpression> {
 public:
   explicit AddExpression(ArgumentPtrVector inChildren);
 

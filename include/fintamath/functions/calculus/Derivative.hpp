@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class Derivative : public IFunctionCRTP<IComparable, Derivative, IComparable, Variable> {
+class Derivative final : public IFunctionCRTP<IComparable, Derivative, IComparable, Variable> {
 public:
   Derivative() : IFunctionCRTP(false) {
   }

@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class And : public IOperatorCRTP<Boolean, And, Boolean, Boolean> {
+class And final : public IOperatorCRTP<Boolean, And, Boolean, Boolean> {
 public:
   And() : IOperatorCRTP(IOperator::Priority::Conjunction, true) {
   }

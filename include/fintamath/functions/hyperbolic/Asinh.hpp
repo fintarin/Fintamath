@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Asinh : public IFunctionCRTP<INumber, Asinh, INumber> {
+class Asinh final : public IFunctionCRTP<INumber, Asinh, INumber> {
 public:
   Asinh() = default;
 

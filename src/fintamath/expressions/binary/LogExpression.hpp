@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class LogExpression : public IBinaryExpressionCRTP<LogExpression> {
+class LogExpression final : public IBinaryExpressionCRTP<LogExpression> {
 public:
   explicit LogExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 

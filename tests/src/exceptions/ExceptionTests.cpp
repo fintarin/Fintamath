@@ -8,7 +8,7 @@ using namespace fintamath;
 
 namespace {
 
-class TestMathObject : public IMathObjectCRTP<TestMathObject> {
+class TestMathObject final : public IMathObjectCRTP<TestMathObject> {
 public:
   void throwException() const {
     throw Exception();

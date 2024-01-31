@@ -11,7 +11,7 @@ class Integer;
 class Rational;
 class Real;
 
-class Factorial : public IOperatorCRTP<INumber, Factorial, INumber> {
+class Factorial final : public IOperatorCRTP<INumber, Factorial, INumber> {
 public:
   Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }

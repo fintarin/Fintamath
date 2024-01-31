@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class MathObjectType {
+class MathObjectType final {
 public:
   enum class Id : size_t {
     IMathObject = 0,
@@ -204,7 +204,7 @@ struct hash<fintamath::MathObjectType> {
 
 namespace fintamath {
 
-class MathObjectBoundTypes {
+class MathObjectBoundTypes final {
   using enum MathObjectType::Id;
 
   using TypeMap = std::unordered_map<MathObjectType, MathObjectType>;

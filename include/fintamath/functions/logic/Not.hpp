@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Not : public IOperatorCRTP<Boolean, Not, Boolean> {
+class Not final : public IOperatorCRTP<Boolean, Not, Boolean> {
 public:
   Not() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
   }

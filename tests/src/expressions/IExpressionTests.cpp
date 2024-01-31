@@ -12,7 +12,7 @@ using namespace fintamath;
 
 namespace {
 
-class TestIExpression : public IExpressionCRTP<TestIExpression> {
+class TestIExpression final : public IExpressionCRTP<TestIExpression> {
 public:
   const std::shared_ptr<IFunction> &getFunction() const override {
     static const std::shared_ptr<IFunction> func = cast<IFunction>(Add().clone());

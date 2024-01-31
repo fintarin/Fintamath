@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Variable : public ILiteralCRTP<Variable> {
+class Variable final : public ILiteralCRTP<Variable> {
 public:
   explicit Variable(std::string inName);
 

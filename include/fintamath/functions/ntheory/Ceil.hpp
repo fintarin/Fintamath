@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Ceil : public IFunctionCRTP<INumber, Ceil, INumber> {
+class Ceil final : public IFunctionCRTP<INumber, Ceil, INumber> {
 public:
   Ceil() = default;
 

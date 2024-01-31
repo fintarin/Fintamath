@@ -162,7 +162,7 @@ using namespace fintamath;
 
 namespace {
 
-struct ParserConfig {
+struct ParserConfig final {
   ParserConfig() {
     IMathObject::registerType<ILiteral>(&ILiteral::parse);
     IMathObject::registerType<IFunction>([](const std::string &str) {

@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class OrExpression : public IPolynomExpressionCRTP<OrExpression> {
+class OrExpression final : public IPolynomExpressionCRTP<OrExpression> {
 public:
   explicit OrExpression(ArgumentPtrVector inChildren);
 

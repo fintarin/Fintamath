@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class PowExpression : public IBinaryExpressionCRTP<PowExpression> {
+class PowExpression final : public IBinaryExpressionCRTP<PowExpression> {
 public:
   explicit PowExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 

@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class SignExpression : public IUnaryExpressionCRTP<SignExpression> {
+class SignExpression final : public IUnaryExpressionCRTP<SignExpression> {
 public:
   explicit SignExpression(ArgumentPtr inChild);
 

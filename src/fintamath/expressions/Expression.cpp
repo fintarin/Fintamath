@@ -19,7 +19,7 @@
 
 namespace fintamath {
 
-struct TermWithPriority {
+struct TermWithPriority final {
   std::unique_ptr<Term> term;
 
   IOperator::Priority priority = IOperator::Priority::Lowest;

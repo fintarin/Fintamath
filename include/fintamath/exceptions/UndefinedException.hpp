@@ -23,7 +23,7 @@ protected:
   std::string content = "Undefined";
 };
 
-class UndefinedFunctionException : public UndefinedException {
+class UndefinedFunctionException final : public UndefinedException {
 public:
   explicit UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argVect) {
     content += ": " + func + "(";
@@ -44,14 +44,14 @@ public:
   }
 };
 
-class UndefinedBinaryOperatorException : public UndefinedException {
+class UndefinedBinaryOperatorException final : public UndefinedException {
 public:
   explicit UndefinedBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
     content += ": (" + lhs + ")" + oper + "(" + rhs + ")";
   }
 };
 
-class UndefinedUnaryOperatorException : public UndefinedException {
+class UndefinedUnaryOperatorException final : public UndefinedException {
 public:
   enum class Type {
     Prefix,

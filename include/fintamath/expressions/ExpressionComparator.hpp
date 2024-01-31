@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-struct ComparatorOptions {
+struct ComparatorOptions final {
   bool constantGreaterThanVariable = false;
   bool comparableOrderInversed = false;
 };

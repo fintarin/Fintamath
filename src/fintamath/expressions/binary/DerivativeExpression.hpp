@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class DerivativeExpression : public IBinaryExpressionCRTP<DerivativeExpression> {
+class DerivativeExpression final : public IBinaryExpressionCRTP<DerivativeExpression> {
 public:
   explicit DerivativeExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 

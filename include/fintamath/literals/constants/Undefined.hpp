@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Undefined : public IConstantCRTP<INumber, Undefined> {
+class Undefined final : public IConstantCRTP<INumber, Undefined> {
 public:
   std::string toString() const override {
     return "Undefined";

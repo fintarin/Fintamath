@@ -14,7 +14,7 @@ using namespace fintamath;
 
 namespace {
 
-class TestDerivative : public IComparableCRTP<TestDerivative> {
+class TestDerivative final : public IComparableCRTP<TestDerivative> {
 public:
   std::string toString() const override {
     return "testderivative";
