@@ -2,9 +2,9 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Eqv::call(const ArgumentRefVector &argsVect) const {
-  const auto &lhs = argsVect.front().get();
-  const auto &rhs = argsVect.back().get();
+std::unique_ptr<IMathObject> Eqv::call(const ArgumentRefVector &argVect) const {
+  const auto &lhs = argVect.front().get();
+  const auto &rhs = argVect.back().get();
 
   return Boolean(lhs == rhs).clone();
 }

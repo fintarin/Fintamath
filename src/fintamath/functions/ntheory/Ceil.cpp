@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Ceil::call(const ArgumentRefVector &argsVect) const {
-  const auto &rhs = cast<INumber>(argsVect.front().get());
+std::unique_ptr<IMathObject> Ceil::call(const ArgumentRefVector &argVect) const {
+  const auto &rhs = cast<INumber>(argVect.front().get());
 
   return multiCeilSimplify(rhs);
 }

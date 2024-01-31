@@ -20,7 +20,7 @@ public:
   }
 
 protected:
-  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const override;
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override;
 
 private:
   static std::unique_ptr<IMathObject> multiCschSimplify(const INumber &rhs);

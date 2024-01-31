@@ -5,8 +5,8 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Sqr::call(const ArgumentRefVector &argsVect) const {
-  const auto &lhs = argsVect.front().get();
+std::unique_ptr<IMathObject> Sqr::call(const ArgumentRefVector &argVect) const {
+  const auto &lhs = argVect.front().get();
   static const Integer rhs = 2;
 
   return Pow()(lhs, rhs);

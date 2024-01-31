@@ -4,9 +4,9 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Less::call(const ArgumentRefVector &argsVect) const {
-  const auto &lhs = cast<IComparable>(argsVect.front().get());
-  const auto &rhs = cast<IComparable>(argsVect.back().get());
+std::unique_ptr<IMathObject> Less::call(const ArgumentRefVector &argVect) const {
+  const auto &lhs = cast<IComparable>(argVect.front().get());
+  const auto &rhs = cast<IComparable>(argVect.back().get());
 
   if (is<Complex>(lhs) || is<Complex>(rhs)) {
     return {};

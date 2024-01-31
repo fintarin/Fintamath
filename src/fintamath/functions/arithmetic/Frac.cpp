@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> Frac::call(const ArgumentRefVector &argsVect) const {
-  return Div()(argsVect);
+std::unique_ptr<IMathObject> Frac::call(const ArgumentRefVector &argVect) const {
+  return Div()(argVect);
 }
 
 }

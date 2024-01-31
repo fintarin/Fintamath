@@ -33,20 +33,20 @@ public:
     return getFunctionOrderMap().at(funcStr);
   }
 
-  bool doArgsMatch(const ArgumentRefVector &argsVect) const override {
-    if (argsVect.empty()) { // TODO: support None type functions
+  bool doArgsMatch(const ArgumentRefVector &argVect) const override {
+    if (argVect.empty()) { // TODO: support None type functions
       return false;
     }
 
     if constexpr (IsFunctionTypeAny<Derived>::value) {
-      return doAnyArgsMatch(argsVect);
+      return doAnyArgsMatch(argVect);
     }
     else {
-      if (argsVect.size() != size_t(getFunctionType())) {
+      if (argVect.size() != size_t(getFunctionType())) {
         return false;
       }
 
-      return doArgsMatch<0, Args...>(argsVect);
+      return doArgsMatch<0, Args...>(argVect);
     }
   }
 
@@ -55,25 +55,25 @@ public:
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argsVect) const = 0;
+  virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const = 0;
 
-  std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argsVect) const override {
-    validateArgsSize(argsVect);
+  std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const override {
+    validateArgsSize(argVect);
 
-    if (doArgsMatch(argsVect)) {
+    if (doArgsMatch(argVect)) {
       try {
-        if (auto res = call(argsVect)) {
+        if (auto res = call(argVect)) {
           return res;
         }
 
-        return makeExpr(*this, argsVect);
+        return makeExpr(*this, argVect);
       }
       catch (const UndefinedException &) {
-        return makeExpr(*this, argsVect);
+        return makeExpr(*this, argVect);
       }
     }
 
-    return makeExpr(*this, argsVect)->toMinimalObject();
+    return makeExpr(*this, argVect)->toMinimalObject();
   }
 
 private:
@@ -89,12 +89,12 @@ private:
   }
 
   template <size_t i, typename Head, typename... Tail>
-  bool doArgsMatch(const ArgumentRefVector &argsVect) const {
-    if (!is<Head>(argsVect[i]) || isExpression(argsVect[i])) {
+  bool doArgsMatch(const ArgumentRefVector &argVect) const {
+    if (!is<Head>(argVect[i]) || isExpression(argVect[i])) {
       return false;
     }
 
-    return doArgsMatch<i + 1, Tail...>(argsVect);
+    return doArgsMatch<i + 1, Tail...>(argVect);
   }
 
   template <size_t>
@@ -102,32 +102,32 @@ private:
     return true;
   }
 
-  bool doAnyArgsMatch(const ArgumentRefVector &argsVect) const {
+  bool doAnyArgsMatch(const ArgumentRefVector &argVect) const {
     using AnyArgsType = typename std::tuple_element_t<0, std::tuple<Args...>>;
 
-    return std::ranges::all_of(argsVect, [](const auto &arg) {
+    return std::ranges::all_of(argVect, [](const auto &arg) {
       return is<AnyArgsType>(arg);
     });
   }
 
-  void validateArgsSize(const ArgumentRefVector &argsVect) const {
+  void validateArgsSize(const ArgumentRefVector &argVect) const {
     if constexpr (IsFunctionTypeAny<Derived>::value) {
-      if (argsVect.empty()) {
-        throwInvalidInputFunctionException(argsVect);
+      if (argVect.empty()) {
+        throwInvalidInputFunctionException(argVect);
       }
     }
     else {
-      if (argsVect.size() != sizeof...(Args)) {
-        throwInvalidInputFunctionException(argsVect);
+      if (argVect.size() != sizeof...(Args)) {
+        throwInvalidInputFunctionException(argVect);
       }
     }
   }
 
-  void throwInvalidInputFunctionException(const ArgumentRefVector &argsVect) const {
-    std::vector<std::string> argNamesVect(argsVect.size());
+  void throwInvalidInputFunctionException(const ArgumentRefVector &argVect) const {
+    std::vector<std::string> argNamesVect(argVect.size());
 
     for (auto i : std::views::iota(0U, argNamesVect.size())) {
-      argNamesVect[i] = argsVect[i].get().toString();
+      argNamesVect[i] = argVect[i].get().toString();
     }
 
     throw InvalidInputFunctionException(toString(), argNamesVect);

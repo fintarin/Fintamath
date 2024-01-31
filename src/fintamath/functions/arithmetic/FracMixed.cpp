@@ -5,10 +5,10 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> FracMixed::call(const ArgumentRefVector &argsVect) const {
-  const auto &integ = cast<IArithmetic>(argsVect[0].get());
-  const auto &numer = cast<IArithmetic>(argsVect[1].get());
-  const auto &denom = cast<IArithmetic>(argsVect[2].get());
+std::unique_ptr<IMathObject> FracMixed::call(const ArgumentRefVector &argVect) const {
+  const auto &integ = cast<IArithmetic>(argVect[0].get());
+  const auto &numer = cast<IArithmetic>(argVect[1].get());
+  const auto &denom = cast<IArithmetic>(argVect[2].get());
 
   return Add()(integ, *Div()(numer, denom));
 }

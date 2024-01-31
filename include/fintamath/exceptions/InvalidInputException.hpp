@@ -25,11 +25,11 @@ protected:
 
 class InvalidInputFunctionException : public InvalidInputException {
 public:
-  explicit InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argsVect) {
+  explicit InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argVect) {
     content += ": " + func + "(";
 
-    if (!argsVect.empty()) {
-      for (const auto &arg : argsVect) {
+    if (!argVect.empty()) {
+      for (const auto &arg : argVect) {
         content += arg + ',';
       }
 
