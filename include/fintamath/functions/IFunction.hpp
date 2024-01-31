@@ -7,7 +7,6 @@
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
-#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 

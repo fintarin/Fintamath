@@ -6,7 +6,7 @@
 
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/parser/Parser.hpp"
+#include "fintamath/core/Parser.hpp"
 
 namespace fintamath {
 
@@ -56,6 +56,7 @@ template <typename Derived>
 class IMathObjectCRTP : public IMathObject {
 #define I_MATH_OBJECT_CRTP IMathObjectCRTP
 #include "fintamath/core/IMathObjectCRTP.hpp"
+
 #undef I_MATH_OBJECT_CRTP
 };
 

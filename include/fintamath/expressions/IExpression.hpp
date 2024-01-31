@@ -4,8 +4,6 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/parser/Parser.hpp"
-#include "fintamath/parser/Tokenizer.hpp"
 
 namespace fintamath {
 

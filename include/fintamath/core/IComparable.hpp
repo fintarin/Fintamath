@@ -2,7 +2,6 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "fintamath/core/Parser.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -83,11 +84,10 @@
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
-#include "fintamath/parser/Parser.hpp"
 
 using namespace fintamath;
 
-TEST(ParserTests, parseMathObjectTest) {
+TEST(ParseTests, parseMathObjectTest) {
   EXPECT_TRUE(is<IArithmetic>(IMathObject::parse("a+1")));
   EXPECT_TRUE(is<ILiteral>(IMathObject::parse("a")));
   EXPECT_TRUE(is<IFunction>(IMathObject::parse("sin")));
@@ -101,7 +101,7 @@ TEST(ParserTests, parseMathObjectTest) {
   EXPECT_EQ(IMathObject::parse("x+"), nullptr);
 }
 
-TEST(ParserTests, parseArithmeticTest) {
+TEST(ParseTests, parseArithmeticTest) {
   EXPECT_TRUE(is<IComparable>(IArithmetic::parse("1231412736.218731623872183")));
   EXPECT_TRUE(is<IInteger>(IArithmetic::parse("1231412736218731623872183")));
   EXPECT_TRUE(is<IInteger>(IArithmetic::parse("1231412736218731623872183")));
@@ -116,25 +116,25 @@ TEST(ParserTests, parseArithmeticTest) {
   EXPECT_EQ(IArithmetic::parse("x+"), nullptr);
 }
 
-TEST(ParserTests, parseComparableTest) {
+TEST(ParseTests, parseComparableTest) {
   EXPECT_TRUE(is<INumber>(IComparable::parse("12314127362.18731623872183")));
 
   EXPECT_EQ(IComparable::parse("x"), nullptr);
 }
 
-TEST(ParserTests, parseIntegerTest) {
+TEST(ParseTests, parseIntegerTest) {
   EXPECT_TRUE(is<Integer>(IInteger::parse("1231412736218731623872183")));
 
   EXPECT_EQ(IInteger::parse("x"), nullptr);
 }
 
-TEST(ParserTests, parseModularTest) {
+TEST(ParseTests, parseModularTest) {
   EXPECT_TRUE(is<Integer>(IInteger::parse("18731623872183")));
 
   EXPECT_EQ(IInteger::parse("123.123"), nullptr);
 }
 
-TEST(ParserTests, parseNumberTest) {
+TEST(ParseTests, parseNumberTest) {
   EXPECT_EQ(INumber::parse("1231412736218731623872183")->toString(), "1231412736218731623872183");
   EXPECT_TRUE(is<Integer>(INumber::parse("1231412736218731623872183")));
 
@@ -176,7 +176,7 @@ TEST(ParserTests, parseNumberTest) {
   EXPECT_EQ(INumber::parse("10.--1"), nullptr);
 }
 
-TEST(ParserTests, parseLiteralTest) {
+TEST(ParseTests, parseLiteralTest) {
   EXPECT_TRUE(is<E>(ILiteral::parse("E")));
   EXPECT_TRUE(is<Variable>(ILiteral::parse("a")));
   EXPECT_TRUE(is<Variable>(ILiteral::parse("z")));
@@ -208,7 +208,7 @@ TEST(ParseTests, parseConstantTest) {
   EXPECT_EQ(IConstant::parse("aa"), nullptr);
 }
 
-TEST(ParserTests, parseFunctionTest) {
+TEST(ParseTests, parseFunctionTest) {
   EXPECT_TRUE(is<Sqrt>(IFunction::parse("sqrt")));
   EXPECT_TRUE(is<Root>(IFunction::parse("root")));
   EXPECT_TRUE(is<Exp>(IFunction::parse("exp")));
@@ -254,7 +254,7 @@ TEST(ParserTests, parseFunctionTest) {
   EXPECT_EQ(IFunction::parse("1224"), nullptr);
 }
 
-TEST(ParserTests, parseOperatorTest) {
+TEST(ParseTests, parseOperatorTest) {
   EXPECT_TRUE(is<Add>(IOperator::parse("+", IOperator::Priority::Addition)));
   EXPECT_TRUE(is<UnaryPlus>(IOperator::parse("+", IOperator::Priority::PrefixUnary)));
   EXPECT_TRUE(is<Sub>(IOperator::parse("-", IOperator::Priority::Addition)));
@@ -283,7 +283,7 @@ TEST(ParserTests, parseOperatorTest) {
   EXPECT_EQ(IOperator::parse("1224"), nullptr);
 }
 
-TEST(ParserTests, parseExpressionTest) {
+TEST(ParseTests, parseExpressionTest) {
   EXPECT_TRUE(is<Expression>(IExpression::parse("x+1")));
   EXPECT_TRUE(is<Expression>(IExpression::parse("x*1")));
 

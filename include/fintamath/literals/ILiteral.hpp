@@ -1,7 +1,6 @@
 #pragma once
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/parser/Parser.hpp"
 
 namespace fintamath {
 
