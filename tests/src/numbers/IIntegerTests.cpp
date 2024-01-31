@@ -82,7 +82,7 @@ protected:
   }
 };
 
-class TestIntegerConvertible : public TestInteger {
+class TestIntegerConvertible final : public TestInteger {
 public:
   TestIntegerConvertible() : TestInteger() {
   }
@@ -99,7 +99,7 @@ public:
   }
 };
 
-struct TestIntegerConvertableConfig {
+struct TestIntegerConvertableConfig final {
   TestIntegerConvertableConfig() {
     MathObjectBoundTypes::reg(
         TestInteger::getTypeStatic(),

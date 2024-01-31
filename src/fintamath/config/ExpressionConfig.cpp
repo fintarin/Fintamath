@@ -107,7 +107,7 @@ using namespace fintamath;
 
 namespace {
 
-struct ExpressionConfig {
+struct ExpressionConfig final {
   ExpressionConfig() {
     // TODO! move to other file
     static const unsigned defaultPrecision = 80;

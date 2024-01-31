@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Real;
 
-class Cosh : public IFunctionCRTP<INumber, Cosh, INumber> {
+class Cosh final : public IFunctionCRTP<INumber, Cosh, INumber> {
 public:
   Cosh() = default;
 

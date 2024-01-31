@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class AbsExpression : public IUnaryExpressionCRTP<AbsExpression> {
+class AbsExpression final : public IUnaryExpressionCRTP<AbsExpression> {
 public:
   explicit AbsExpression(ArgumentPtr inChild);
 

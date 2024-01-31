@@ -8,7 +8,7 @@ namespace fintamath {
 
 class IMathObject;
 
-class Converter {
+class Converter final {
   template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
   using ConverterFunction = std::function<std::unique_ptr<IMathObject>(const To &to, const From &from)>;
 

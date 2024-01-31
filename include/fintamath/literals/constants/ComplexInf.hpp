@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class ComplexInf : public IConstantCRTP<INumber, ComplexInf> {
+class ComplexInf final : public IConstantCRTP<INumber, ComplexInf> {
 public:
   std::string toString() const override {
     return "ComplexInf";

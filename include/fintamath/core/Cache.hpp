@@ -5,7 +5,7 @@
 namespace fintamath {
 
 template <typename Key, typename Value>
-class Cache {
+class Cache final {
 public:
   using Function = std::function<Value(const Key &)>;
 

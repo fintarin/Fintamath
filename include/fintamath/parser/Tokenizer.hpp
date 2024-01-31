@@ -8,7 +8,7 @@ namespace fintamath {
 using Token = std::string;
 using TokenVector = std::vector<Token>;
 
-class Tokenizer {
+class Tokenizer final {
 public:
   static TokenVector tokenize(std::string str);
 

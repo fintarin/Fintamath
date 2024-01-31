@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Real;
 
-class Cos : public IFunctionCRTP<INumber, Cos, INumber> {
+class Cos final : public IFunctionCRTP<INumber, Cos, INumber> {
 public:
   Cos() = default;
 

@@ -12,7 +12,7 @@ template <typename Signature>
 class MultiMethod;
 
 template <typename Res, typename... ArgsBase>
-class MultiMethod<Res(ArgsBase...)> {
+class MultiMethod<Res(ArgsBase...)> final {
   template <typename>
   using ArgId = MathObjectType;
 

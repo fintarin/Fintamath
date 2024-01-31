@@ -10,7 +10,7 @@ class Rational;
 class Real;
 class Complex;
 
-class Pow : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
+class Pow final : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
 public:
   Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
   }

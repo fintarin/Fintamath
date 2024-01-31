@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Min : public IFunctionCRTP<IComparable, Min, IComparable> {
+class Min final : public IFunctionCRTP<IComparable, Min, IComparable> {
 public:
   Min() : IFunctionCRTP(true) {
   }

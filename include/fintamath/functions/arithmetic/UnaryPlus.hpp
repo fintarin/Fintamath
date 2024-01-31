@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class UnaryPlus : public IOperatorCRTP<IArithmetic, UnaryPlus, IArithmetic> {
+class UnaryPlus final : public IOperatorCRTP<IArithmetic, UnaryPlus, IArithmetic> {
 public:
   UnaryPlus() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
   }

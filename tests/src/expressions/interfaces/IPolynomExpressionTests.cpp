@@ -12,7 +12,7 @@ const Mul f;
 
 namespace {
 
-class TestPolynomExpression : public IPolynomExpressionCRTP<TestPolynomExpression> {
+class TestPolynomExpression final : public IPolynomExpressionCRTP<TestPolynomExpression> {
 public:
   explicit TestPolynomExpression(ArgumentPtrVector args) : IPolynomExpressionCRTP(f, std::move(args)) {
   }

@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class Complex : public INumberCRTP<Complex> {
+class Complex final : public INumberCRTP<Complex> {
 public:
   Complex() = default;
 

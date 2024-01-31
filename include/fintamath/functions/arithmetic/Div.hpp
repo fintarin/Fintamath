@@ -8,7 +8,7 @@ namespace fintamath {
 class Integer;
 class INumber;
 
-class Div : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
+class Div final : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
 public:
   Div() : IOperatorCRTP(IOperator::Priority::Multiplication) {
   }

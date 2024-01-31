@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Max : public IFunctionCRTP<IComparable, Max, IComparable> {
+class Max final : public IFunctionCRTP<IComparable, Max, IComparable> {
 public:
   Max() : IFunctionCRTP(true) {
   }

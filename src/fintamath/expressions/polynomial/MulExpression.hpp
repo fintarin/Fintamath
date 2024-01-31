@@ -3,7 +3,7 @@
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
 namespace fintamath {
-class MulExpression : public IPolynomExpressionCRTP<MulExpression> {
+class MulExpression final : public IPolynomExpressionCRTP<MulExpression> {
 public:
   explicit MulExpression(ArgumentPtrVector inChildren);
 

@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class DivExpression : public IBinaryExpressionCRTP<DivExpression> {
+class DivExpression final : public IBinaryExpressionCRTP<DivExpression> {
 public:
   explicit DivExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 

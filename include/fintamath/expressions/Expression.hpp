@@ -9,7 +9,7 @@
 
 namespace fintamath {
 
-struct Term {
+struct Term final {
   Token name;
 
   std::unique_ptr<IMathObject> value;
@@ -26,7 +26,7 @@ public:
 using TermVector = std::vector<std::unique_ptr<Term>>;
 using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 
-class Expression : public IExpressionCRTP<Expression> {
+class Expression final : public IExpressionCRTP<Expression> {
 public:
   Expression();
 

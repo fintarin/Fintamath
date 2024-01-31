@@ -8,11 +8,11 @@
 
 namespace fintamath {
 
-class Real : public INumberCRTP<Real> {
+class Real final : public INumberCRTP<Real> {
 public:
   using Backend = boost::multiprecision::mpfr_float;
 
-  struct ScopedSetPrecision {
+  struct ScopedSetPrecision final {
     unsigned currPrecision = Real::getPrecision();
 
   public:

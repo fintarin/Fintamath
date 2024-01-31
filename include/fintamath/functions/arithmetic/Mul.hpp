@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Mul : public IOperatorCRTP<IArithmetic, Mul, IArithmetic, IArithmetic> {
+class Mul final : public IOperatorCRTP<IArithmetic, Mul, IArithmetic, IArithmetic> {
 public:
   Mul() : IOperatorCRTP(IOperator::Priority::Multiplication, true) {
   }

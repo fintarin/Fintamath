@@ -9,7 +9,7 @@ class Integer;
 class Rational;
 class Real;
 
-class Root : public IFunctionCRTP<INumber, Root, INumber, INumber> {
+class Root final : public IFunctionCRTP<INumber, Root, INumber, INumber> {
 public:
   Root() = default;
 

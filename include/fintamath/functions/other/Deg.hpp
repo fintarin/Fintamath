@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Deg : public IOperatorCRTP<INumber, Deg, INumber> {
+class Deg final : public IOperatorCRTP<INumber, Deg, INumber> {
 public:
   Deg() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
   }

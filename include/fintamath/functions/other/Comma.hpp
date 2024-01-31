@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class Comma : public IOperatorCRTP<IArithmetic, Comma, IMathObject, IMathObject> {
+class Comma final : public IOperatorCRTP<IArithmetic, Comma, IMathObject, IMathObject> {
 public:
   Comma() : IOperatorCRTP(IOperator::Priority::Comma, true) {
   }

@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Real;
 
-class Asin : public IFunctionCRTP<INumber, Asin, INumber> {
+class Asin final : public IFunctionCRTP<INumber, Asin, INumber> {
 public:
   Asin() = default;
 

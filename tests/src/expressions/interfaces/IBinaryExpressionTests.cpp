@@ -10,7 +10,7 @@ const Add f;
 
 namespace {
 
-class TestBinaryExpression : public IBinaryExpressionCRTP<TestBinaryExpression> {
+class TestBinaryExpression final : public IBinaryExpressionCRTP<TestBinaryExpression> {
 public:
   explicit TestBinaryExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
       : IBinaryExpressionCRTP(f, std::move(inLhsChild), std::move(inRhsChild)) {

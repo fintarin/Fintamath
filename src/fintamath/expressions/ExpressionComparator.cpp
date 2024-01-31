@@ -9,7 +9,7 @@ using ExpressionTreePathStack = std::stack<std::pair<const std::shared_ptr<const
 
 using Ordering = std::strong_ordering;
 
-struct ChildrenComparatorResult {
+struct ChildrenComparatorResult final {
   Ordering postfix = Ordering::equal;
   Ordering postfixUnary = Ordering::equal;
   Ordering prefixFirst = Ordering::equal;

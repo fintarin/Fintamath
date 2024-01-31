@@ -12,7 +12,7 @@
 
 namespace fintamath {
 
-class Parser {
+class Parser final {
 public:
   template <typename Return, typename... Args>
   using Function = std::function<Return(Args...)>;

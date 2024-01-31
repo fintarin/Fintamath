@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class NotExpression : public IUnaryExpressionCRTP<NotExpression> {
+class NotExpression final : public IUnaryExpressionCRTP<NotExpression> {
 public:
   explicit NotExpression(ArgumentPtr inChild);
 

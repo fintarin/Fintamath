@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class Boolean : public ILiteralCRTP<Boolean> {
+class Boolean final : public ILiteralCRTP<Boolean> {
 public:
   Boolean();
 

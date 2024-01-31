@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class NegInf : public IConstantCRTP<INumber, NegInf> {
+class NegInf final : public IConstantCRTP<INumber, NegInf> {
 public:
   std::string toString() const override {
     return "-Inf";

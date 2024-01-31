@@ -10,7 +10,7 @@ const Factorial f;
 
 namespace {
 
-class TestUnaryExpression : public IUnaryExpressionCRTP<TestUnaryExpression> {
+class TestUnaryExpression final : public IUnaryExpressionCRTP<TestUnaryExpression> {
 public:
   explicit TestUnaryExpression(ArgumentPtr inRhsChild)
       : IUnaryExpressionCRTP(f, std::move(inRhsChild)) {

@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class PowFunction : public IFunctionCRTP<IArithmetic, PowFunction, IArithmetic, IArithmetic> {
+class PowFunction final : public IFunctionCRTP<IArithmetic, PowFunction, IArithmetic, IArithmetic> {
 public:
   std::string toString() const override {
     return "pow";

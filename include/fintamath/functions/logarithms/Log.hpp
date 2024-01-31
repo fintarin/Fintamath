@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-class Log : public IFunctionCRTP<INumber, Log, INumber, INumber> {
+class Log final : public IFunctionCRTP<INumber, Log, INumber, INumber> {
 public:
   Log() = default;
 

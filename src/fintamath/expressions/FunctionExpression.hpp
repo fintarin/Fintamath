@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class FunctionExpression : public IExpressionCRTP<FunctionExpression, true> {
+class FunctionExpression final : public IExpressionCRTP<FunctionExpression, true> {
 public:
   explicit FunctionExpression(const IFunction &inFunc, ArgumentPtrVector inChildren);
 

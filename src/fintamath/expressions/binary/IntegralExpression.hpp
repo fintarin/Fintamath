@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class IntegralExpression : public IBinaryExpressionCRTP<IntegralExpression> {
+class IntegralExpression final : public IBinaryExpressionCRTP<IntegralExpression> {
 public:
   explicit IntegralExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
