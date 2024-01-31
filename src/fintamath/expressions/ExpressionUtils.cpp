@@ -77,7 +77,7 @@ bool containsIf(const ArgumentPtr &arg, const std::function<bool(const ArgumentP
 
   const ArgumentPtrVector &children = expr->getChildren();
 
-  return std::ranges::any_of(children, [comp](const auto &child) {
+  return stdr::any_of(children, [comp](const auto &child) {
     bool res = false;
 
     if (containsIf(child, comp)) {
@@ -235,7 +235,7 @@ ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &a
 std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args) {
   std::vector<std::string> argStrings(args.size());
 
-  for (auto i : std::views::iota(0U, argStrings.size())) {
+  for (const auto i : stdv::iota(0U, argStrings.size())) {
     argStrings[i] = args[i].get()->toString();
   }
 

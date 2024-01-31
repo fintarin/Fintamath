@@ -24,7 +24,7 @@ public:
       return false;
     }
 
-    for (auto i : std::views::iota(0U, lhsChildren.size())) {
+    for (const auto i : stdv::iota(0U, lhsChildren.size())) {
       if (lhsChildren[i] != rhsChildren[i] && *lhsChildren[i] != *rhsChildren[i]) {
         return false;
       }

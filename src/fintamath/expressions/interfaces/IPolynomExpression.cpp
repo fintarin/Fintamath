@@ -36,7 +36,7 @@ std::string IPolynomExpression::toString() const {
 
   result += childToString(*oper, children.front(), {});
 
-  for (auto i : std::views::iota(1U, children.size())) {
+  for (const auto i : stdv::iota(1U, children.size())) {
     const std::string childStr = childToString(*oper, children[i], children[i - 1]);
 
     if (childStr.size() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {
@@ -216,7 +216,7 @@ void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
 }
 
 void IPolynomExpression::sort() {
-  std::ranges::stable_sort(children, [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  stdr::stable_sort(children, [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
     return compare(lhs, rhs) == std::strong_ordering::greater;
   });
 }

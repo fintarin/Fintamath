@@ -118,7 +118,7 @@ PowExpression::SimplifyFunctionVector PowExpression::getFunctionsForPostSimplify
 Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
   Integer n = 0;
 
-  for ([[maybe_unused]] auto _ : std::views::iota(0U, countOfOne)) {
+  for ([[maybe_unused]] const auto _ : stdv::iota(0U, countOfOne)) {
     n <<= 1;
     n |= 1;
   }
@@ -174,14 +174,14 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
 
   ArgumentPtrVector newChildren;
 
-  for ([[maybe_unused]] auto _ : std::views::iota(0U, combins)) {
+  for ([[maybe_unused]] const auto _ : stdv::iota(0U, combins)) {
     std::vector<Integer> vectOfPows = getPartition(bitNumber, Integer(variableCount));
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentPtrVector mulExprChildren;
     mulExprChildren.emplace_back(multinomialCoefficient(power, vectOfPows).clone());
 
-    for (auto i : std::views::iota(0U, variableCount)) {
+    for (const auto i : stdv::iota(0U, variableCount)) {
       ArgumentPtr powExprChild = powExpr(polynom[i], vectOfPows[i].clone());
       mulExprChildren.emplace_back(powExprChild);
     }

@@ -105,7 +105,7 @@ private:
   bool doAnyArgsMatch(const ArgumentRefVector &argVect) const {
     using AnyArgsType = typename std::tuple_element_t<0, std::tuple<Args...>>;
 
-    return std::ranges::all_of(argVect, [](const auto &arg) {
+    return stdr::all_of(argVect, [](const auto &arg) {
       return is<AnyArgsType>(arg);
     });
   }
@@ -124,13 +124,13 @@ private:
   }
 
   void throwInvalidInputFunctionException(const ArgumentRefVector &argVect) const {
-    std::vector<std::string> argNamesVect(argVect.size());
+    std::vector<std::string> argNameVect(argVect.size());
 
-    for (auto i : std::views::iota(0U, argNamesVect.size())) {
-      argNamesVect[i] = argVect[i].get().toString();
+    for (const auto i : stdv::iota(0U, argNameVect.size())) {
+      argNameVect[i] = argVect[i].get().toString();
     }
 
-    throw InvalidInputFunctionException(toString(), argNamesVect);
+    throw InvalidInputFunctionException(toString(), argNameVect);
   }
 
 private:
