@@ -17,6 +17,10 @@ public:
     return false;
   }
 
+  static std::unique_ptr<INumber> parse(const std::string &str) {
+    return getParser().parse(str);
+  }
+
   template <std::derived_from<INumber> T>
   static void registerConstructor() {
     getParser().registerConstructor<T>();
@@ -24,10 +28,6 @@ public:
 
   static void registerConstructor(NumberParser::Constructor constructor) {
     getParser().registerConstructor(std::move(constructor));
-  }
-
-  static std::unique_ptr<INumber> parse(const std::string &str) {
-    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {

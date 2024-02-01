@@ -52,19 +52,19 @@ public:
     return callAbstract(argVect);
   }
 
+  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
+    const auto validator = [type](const std::unique_ptr<IFunction> &func) {
+      return type == Type::Any || func->getFunctionType() == type;
+    };
+    return getParser().parse(validator, parsedStr);
+  }
+
   template <std::derived_from<IFunction> T>
   static void registerType() {
     getParser().registerType<T>();
 
     getFunctionOrderMutableMap()[T().toString()] = maxFunctionOrder;
     maxFunctionOrder++;
-  }
-
-  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
-    const auto validator = [type](const std::unique_ptr<IFunction> &func) {
-      return type == Type::Any || func->getFunctionType() == type;
-    };
-    return getParser().parse(validator, parsedStr);
   }
 
   static MathObjectType getTypeStatic() {
@@ -74,16 +74,14 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const = 0;
 
-  static const FunctionOrderMap &getFunctionOrderMap() {
-    return getFunctionOrderMutableMap();
-  }
+  static const FunctionOrderMap &getFunctionOrderMap();
 
 private:
   static FunctionOrderMap &getFunctionOrderMutableMap();
 
   static FunctionParser &getParser();
 
-  static inline size_t maxFunctionOrder = 0;
+  inline static size_t maxFunctionOrder = 0;
 };
 
 template <typename Return, typename Derived, typename... Args>

@@ -4,6 +4,8 @@
 #include <limits>
 #include <unordered_map>
 
+#include "fintamath/config/Config.hpp"
+
 namespace fintamath {
 
 class MathObjectType final {
@@ -187,6 +189,9 @@ public:
 
 private:
   size_t id = size_t(None);
+
+private:
+  [[maybe_unused]] inline static const Config config;
 };
 
 }

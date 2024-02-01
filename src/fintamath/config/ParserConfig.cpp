@@ -1,3 +1,5 @@
+#include "fintamath/config/ParserConfig.hpp"
+
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"
@@ -94,176 +96,106 @@
 
 namespace fintamath {
 
-TokenVector &Tokenizer::getRegisteredTokens() {
-  static TokenVector registeredTokens;
-  return registeredTokens;
+ParserConfig::ParserConfig() {
+  IMathObject::registerConstructor(&ILiteral::parse);
+  IMathObject::registerConstructor([](const std::string &str) { return IFunction::parse(str); });
+  IMathObject::registerConstructor(&IArithmetic::parse);
+
+  IArithmetic::registerConstructor(&IComparable::parse);
+  IArithmetic::registerConstructor<Expression>();
+
+  IComparable::registerConstructor(&INumber::parse);
+
+  INumber::registerConstructor(&IInteger::parse);
+  INumber::registerConstructor<Rational>();
+
+  IInteger::registerConstructor<Integer>();
+
+  ILiteral::registerConstructor(&IConstant::parse);
+  ILiteral::registerConstructor<Variable>();
+  ILiteral::registerConstructor<Boolean>();
+
+  IConstant::registerType<E>();
+  IConstant::registerType<Pi>();
+  IConstant::registerType<True>();
+  IConstant::registerType<False>();
+  IConstant::registerType<I>();
+  IConstant::registerType<Inf>();
+  IConstant::registerType<NegInf>();
+  IConstant::registerType<ComplexInf>();
+  IConstant::registerType<Undefined>();
+
+  IFunction::registerType<Abs>();
+  IFunction::registerType<Log>();
+  IFunction::registerType<Ln>();
+  IFunction::registerType<Lb>();
+  IFunction::registerType<Lg>();
+  IFunction::registerType<Exp>();
+  IFunction::registerType<Sqr>();
+  IFunction::registerType<Sqrt>();
+  IFunction::registerType<Root>();
+  IFunction::registerType<Sin>();
+  IFunction::registerType<Cos>();
+  IFunction::registerType<Tan>();
+  IFunction::registerType<Cot>();
+  IFunction::registerType<Sec>();
+  IFunction::registerType<Csc>();
+  IFunction::registerType<Asin>();
+  IFunction::registerType<Acos>();
+  IFunction::registerType<Atan>();
+  IFunction::registerType<Acot>();
+  IFunction::registerType<Asec>();
+  IFunction::registerType<Acsc>();
+  IFunction::registerType<Sign>();
+  IFunction::registerType<Sinh>();
+  IFunction::registerType<Cosh>();
+  IFunction::registerType<Tanh>();
+  IFunction::registerType<Coth>();
+  IFunction::registerType<Sech>();
+  IFunction::registerType<Csch>();
+  IFunction::registerType<Asinh>();
+  IFunction::registerType<Acosh>();
+  IFunction::registerType<Atanh>();
+  IFunction::registerType<Acoth>();
+  IFunction::registerType<Asech>();
+  IFunction::registerType<Acsch>();
+  IFunction::registerType<Min>();
+  IFunction::registerType<Max>();
+  IFunction::registerType<Derivative>();
+  IFunction::registerType<Integral>();
+  IFunction::registerType<Frac>();
+  IFunction::registerType<FracMixed>();
+  IFunction::registerType<PowFunction>();
+  IFunction::registerType<Floor>();
+  IFunction::registerType<Ceil>();
+
+  IOperator::registerType<Add>();
+  IOperator::registerType<Sub>();
+  IOperator::registerType<Mul>();
+  IOperator::registerType<Div>();
+  IOperator::registerType<Neg>();
+  IOperator::registerType<UnaryPlus>();
+  IOperator::registerType<Factorial>();
+  IOperator::registerType<Percent>();
+  IOperator::registerType<Pow>();
+  IOperator::registerType<Eqv>();
+  IOperator::registerType<Neqv>();
+  IOperator::registerType<Less>();
+  IOperator::registerType<More>();
+  IOperator::registerType<LessEqv>();
+  IOperator::registerType<MoreEqv>();
+  IOperator::registerType<Not>();
+  IOperator::registerType<And>();
+  IOperator::registerType<Or>();
+  IOperator::registerType<Impl>();
+  IOperator::registerType<Equiv>();
+  IOperator::registerType<Nequiv>();
+  IOperator::registerType<Index>();
+  IOperator::registerType<Deg>();
+  IOperator::registerType<Comma>();
+  IOperator::registerType<Mod>();
+
+  IExpression::registerConstructor<Expression>();
 }
 
-IMathObject::MathObjectParser &IMathObject::getParser() {
-  static MathObjectParser parser;
-  return parser;
-}
-
-IArithmetic::ArithmeticParser &IArithmetic::getParser() {
-  static ArithmeticParser parser;
-  return parser;
-}
-
-IComparable::ComparableParser &IComparable::getParser() {
-  static ComparableParser parser;
-  return parser;
-}
-
-INumber::NumberParser &INumber::getParser() {
-  static NumberParser parser;
-  return parser;
-}
-
-IInteger::IntegerParser &IInteger::getParser() {
-  static IntegerParser parser;
-  return parser;
-}
-
-ILiteral::LiteralParser &ILiteral::getParser() {
-  static LiteralParser parser;
-  return parser;
-}
-
-IConstant::ConstantParser &IConstant::getParser() {
-  static ConstantParser parser;
-  return parser;
-}
-
-IFunction::FunctionOrderMap &IFunction::getFunctionOrderMutableMap() {
-  static FunctionOrderMap orderMap;
-  return orderMap;
-}
-
-IFunction::FunctionParser &IFunction::getParser() {
-  static FunctionParser parser;
-  return parser;
-}
-
-IOperator::OperatorParser &IOperator::getParser() {
-  static OperatorParser parser;
-  return parser;
-}
-
-IExpression::ExpressionParser &IExpression::getParser() {
-  static ExpressionParser parser;
-  return parser;
-}
-
-}
-
-using namespace fintamath;
-
-namespace {
-
-struct ParserConfig final {
-  ParserConfig() {
-    IMathObject::registerConstructor(&ILiteral::parse);
-    IMathObject::registerConstructor([](const std::string &str) { return IFunction::parse(str); });
-    IMathObject::registerConstructor(&IArithmetic::parse);
-
-    IArithmetic::registerConstructor(&IComparable::parse);
-    IArithmetic::registerConstructor<Expression>();
-
-    IComparable::registerConstructor(&INumber::parse);
-
-    INumber::registerConstructor(&IInteger::parse);
-    INumber::registerConstructor<Rational>();
-
-    IInteger::registerConstructor<Integer>();
-
-    ILiteral::registerConstructor(&IConstant::parse);
-    ILiteral::registerConstructor<Variable>();
-    ILiteral::registerConstructor<Boolean>();
-
-    IConstant::registerType<E>();
-    IConstant::registerType<Pi>();
-    IConstant::registerType<True>();
-    IConstant::registerType<False>();
-    IConstant::registerType<I>();
-    IConstant::registerType<Inf>();
-    IConstant::registerType<NegInf>();
-    IConstant::registerType<ComplexInf>();
-    IConstant::registerType<Undefined>();
-
-    IFunction::registerType<Abs>();
-    IFunction::registerType<Log>();
-    IFunction::registerType<Ln>();
-    IFunction::registerType<Lb>();
-    IFunction::registerType<Lg>();
-    IFunction::registerType<Exp>();
-    IFunction::registerType<Sqr>();
-    IFunction::registerType<Sqrt>();
-    IFunction::registerType<Root>();
-    IFunction::registerType<Sin>();
-    IFunction::registerType<Cos>();
-    IFunction::registerType<Tan>();
-    IFunction::registerType<Cot>();
-    IFunction::registerType<Sec>();
-    IFunction::registerType<Csc>();
-    IFunction::registerType<Asin>();
-    IFunction::registerType<Acos>();
-    IFunction::registerType<Atan>();
-    IFunction::registerType<Acot>();
-    IFunction::registerType<Asec>();
-    IFunction::registerType<Acsc>();
-    IFunction::registerType<Sign>();
-    IFunction::registerType<Sinh>();
-    IFunction::registerType<Cosh>();
-    IFunction::registerType<Tanh>();
-    IFunction::registerType<Coth>();
-    IFunction::registerType<Sech>();
-    IFunction::registerType<Csch>();
-    IFunction::registerType<Asinh>();
-    IFunction::registerType<Acosh>();
-    IFunction::registerType<Atanh>();
-    IFunction::registerType<Acoth>();
-    IFunction::registerType<Asech>();
-    IFunction::registerType<Acsch>();
-    IFunction::registerType<Min>();
-    IFunction::registerType<Max>();
-    IFunction::registerType<Derivative>();
-    IFunction::registerType<Integral>();
-    IFunction::registerType<Frac>();
-    IFunction::registerType<FracMixed>();
-    IFunction::registerType<PowFunction>();
-    IFunction::registerType<Floor>();
-    IFunction::registerType<Ceil>();
-
-    IOperator::registerType<Add>();
-    IOperator::registerType<Sub>();
-    IOperator::registerType<Mul>();
-    IOperator::registerType<Div>();
-    IOperator::registerType<Neg>();
-    IOperator::registerType<UnaryPlus>();
-    IOperator::registerType<Factorial>();
-    IOperator::registerType<Percent>();
-    IOperator::registerType<Pow>();
-    IOperator::registerType<Eqv>();
-    IOperator::registerType<Neqv>();
-    IOperator::registerType<Less>();
-    IOperator::registerType<More>();
-    IOperator::registerType<LessEqv>();
-    IOperator::registerType<MoreEqv>();
-    IOperator::registerType<Not>();
-    IOperator::registerType<And>();
-    IOperator::registerType<Or>();
-    IOperator::registerType<Impl>();
-    IOperator::registerType<Equiv>();
-    IOperator::registerType<Nequiv>();
-    IOperator::registerType<Index>();
-    IOperator::registerType<Deg>();
-    IOperator::registerType<Comma>();
-    IOperator::registerType<Mod>();
-
-    IExpression::registerConstructor<Expression>();
-  }
 };
-
-const ParserConfig config;
-
-}

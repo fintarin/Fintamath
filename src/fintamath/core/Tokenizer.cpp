@@ -97,4 +97,9 @@ bool Tokenizer::isSpace(char ch) {
   return ch == ' ';
 }
 
+TokenVector &Tokenizer::getRegisteredTokens() {
+  static TokenVector registeredTokens;
+  return registeredTokens;
+}
+
 }

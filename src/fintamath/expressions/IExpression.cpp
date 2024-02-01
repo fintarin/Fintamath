@@ -344,4 +344,9 @@ ArgumentPtr IExpression::setPrecision(unsigned precision, const Integer &maxInt)
   return newExprArg;
 }
 
+IExpression::ExpressionParser &IExpression::getParser() {
+  static ExpressionParser parser;
+  return parser;
+}
+
 }
