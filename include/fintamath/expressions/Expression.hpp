@@ -40,9 +40,6 @@ public:
 
   std::string toString() const override;
 
-  // TODO: move this function to ExpressionFunctions
-  Expression approximate(unsigned precision = Real::getPrecision()) const;
-
   const std::shared_ptr<IFunction> &getFunction() const override;
 
   const ArgumentPtrVector &getChildren() const override;
@@ -119,6 +116,8 @@ private:
   friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentPtrVector &args);
 
   friend std::unique_ptr<IMathObject> parseFintamath(const std::string &str);
+
+  friend Expression approximate(const Expression &rhs, unsigned precision);
 
   static Parser::Vector<std::unique_ptr<Term>, const Token &> &getTermMakers();
 

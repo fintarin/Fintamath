@@ -53,7 +53,7 @@ std::string Expression::toString() const {
   return stringCached;
 }
 
-Expression Expression::approximate(unsigned precision) const {
+Expression approximate(const Expression &rhs, unsigned precision) {
   Real::ScopedSetPrecision setPrecision(precision);
 
   static Cache<unsigned, Integer> cache([](unsigned inPrecision) {
@@ -61,9 +61,9 @@ Expression Expression::approximate(unsigned precision) const {
     return pow(powBase, inPrecision);
   });
 
-  Expression approxExpr = *this;
-  approximateSimplifyChild(approxExpr.child);
-  setPrecisionChild(approxExpr.child, precision, cache[precision]);
+  Expression approxExpr = rhs;
+  Expression::approximateSimplifyChild(approxExpr.child);
+  Expression::setPrecisionChild(approxExpr.child, precision, cache[precision]);
   approxExpr.updateStringMutable();
 
   return approxExpr;
