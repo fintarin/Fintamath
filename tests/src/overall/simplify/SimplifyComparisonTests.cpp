@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(SimplifyComparisonsTests, simplifyTest) {
+TEST(SimplifyComparisonTests, simplifyTest) {
   EXPECT_EQ(Expression("a=a").toString(),
             "True");
   EXPECT_EQ(Expression("a+a=2*a").toString(),

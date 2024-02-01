@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(SimplifyLogarithmsTests, simplifyTest) {
+TEST(SimplifyLogarithmTests, simplifyTest) {
   EXPECT_EQ(Expression("log(2, 2)").toString(),
             "1");
   EXPECT_EQ(Expression("log(2, 256)").toString(),

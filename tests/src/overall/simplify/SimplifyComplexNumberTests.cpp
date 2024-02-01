@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(SimplifyComplexNumbersTests, simplifyTest) {
+TEST(SimplifyComplexNumberTests, simplifyTest) {
   EXPECT_EQ(Expression("(1 + 2I) + (2 + 3I)").toString(),
             "3 + 5 I");
   EXPECT_EQ(Expression("(1 + 2I) - (2 + 3I)").toString(),

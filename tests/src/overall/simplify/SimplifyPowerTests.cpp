@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(SimplifyPowersTests, simplifyTest) {
+TEST(SimplifyPowerTests, simplifyTest) {
   EXPECT_EQ(Expression("sqrt0").toString(),
             "0");
   EXPECT_EQ(Expression("sqrt(25)").toString(),
