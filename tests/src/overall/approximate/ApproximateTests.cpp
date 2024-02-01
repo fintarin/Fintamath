@@ -211,11 +211,7 @@ TEST(ApproximateTests, approximateTest) {
             "a + 0.0074060245747335632557466509014062540940313639927954137165613831918681276157723614 < 0");
 }
 
-TEST(ApproximateTests, approxamateSpecialValuesTest) {
-  EXPECT_EQ(approximate(Expression("1 / (1 - tanh(11^10))")).toString(), "cosh(25937424601)/(cosh(25937424601) - sinh(25937424601))");
-  EXPECT_EQ(approximate(Expression("1 / (1 - coth(11^10))")).toString(), "sinh(25937424601)/(sinh(25937424601) - cosh(25937424601))");
-  EXPECT_EQ(approximate(Expression("1 / (ln(2)^10000000000000)")).toString(), "1/0.0");
-
+TEST(ApproximateTests, approxamateExtremumsTest) {
   EXPECT_EQ(approximate(Expression("sqr(ln(2)^10000000000000)")).toString(), "0.0");
   EXPECT_EQ(approximate(Expression("root(ln(2)^10000000000000, 3)")).toString(), "0.0");
   EXPECT_EQ(approximate(Expression("sin(ln(2)^10000000000000)")).toString(), "0.0");
@@ -356,6 +352,10 @@ TEST(ApproximateTests, approxamateSpecialValuesTest) {
   EXPECT_EQ(approximate(Expression("-ln(2)^10000000000000 > -ln(2)^100000000")).toString(), "True");
   EXPECT_EQ(approximate(Expression("-ln(2)^10000000000000 <= -ln(2)^100000000")).toString(), "False");
   EXPECT_EQ(approximate(Expression("-ln(2)^10000000000000 >= -ln(2)^100000000")).toString(), "True");
+
+  EXPECT_EQ(approximate(Expression("1 / (1 - tanh(11^10))")).toString(), "cosh(25937424601)/(cosh(25937424601) - sinh(25937424601))");
+  EXPECT_EQ(approximate(Expression("1 / (1 - coth(11^10))")).toString(), "sinh(25937424601)/(sinh(25937424601) - cosh(25937424601))");
+  EXPECT_EQ(approximate(Expression("1 / (ln(2)^10000000000000)")).toString(), "1/0.0");
 }
 
 TEST(ApproximateTests, approximateWithPrecisionTest) {

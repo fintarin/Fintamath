@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(SimplifyInfinitiesTests, simplifyTest) {
+TEST(SimplifyInfinityTests, simplifyTest) {
   EXPECT_EQ(Expression("Inf").toString(),
             "Inf");
   EXPECT_EQ(Expression("-Inf").toString(),
@@ -687,7 +687,7 @@ TEST(SimplifyInfinitiesTests, simplifyTest) {
             "Undefined");
 }
 
-TEST(SimplifyInfinitiesTests, simplifyNegativeTest) {
+TEST(SimplifyInfinityTests, simplifyNegativeTest) {
   EXPECT_THROW(Expression("Inf - Inf = 0").toString(), InvalidInputException);
   EXPECT_THROW(Expression("Inf - Inf = 0 | a").toString(), InvalidInputException);
   EXPECT_THROW(Expression("0/0 = 0/0").toString(), InvalidInputException);

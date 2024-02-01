@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(SimplifyDerivativesTests, simplifyTest) {
+TEST(SimplifyDerivativeTests, simplifyTest) {
   EXPECT_EQ(Expression("derivative(2, x)").toString(),
             "0");
   EXPECT_EQ(Expression("derivative(2 + I, x)").toString(),

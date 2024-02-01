@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(SimplifyFactorialsTests, simplifyTest) {
+TEST(SimplifyFactorialTests, simplifyTest) {
   EXPECT_EQ(Expression("9!").toString(),
             "362880");
   EXPECT_EQ(Expression("-1!").toString(),

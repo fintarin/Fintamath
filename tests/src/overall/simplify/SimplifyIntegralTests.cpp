@@ -4,7 +4,7 @@
 
 using namespace fintamath;
 
-TEST(SimplifyIntegralsTests, simplifyTest) {
+TEST(SimplifyIntegralTests, simplifyTest) {
   // TODO: integral
   EXPECT_EQ(Expression("integral(x, x)").toString(),
             "integral(x, x)");
