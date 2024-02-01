@@ -13,7 +13,7 @@ namespace {
 class TestArithmetic final : public IArithmeticCRTP<TestArithmetic> {
 public:
   static MathObjectType getTypeStatic() {
-    return size_t(MathObjectBoundTypes::get().at(MathObjectType::IArithmetic)) - 2;
+    return static_cast<size_t>(MathObjectBoundTypes::get().at(MathObjectType::IArithmetic)) - 2;
   }
 
 protected:

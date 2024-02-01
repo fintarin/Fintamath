@@ -88,6 +88,8 @@ template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : public IFunction {
 #define I_FUNCTION_CRTP IFunctionCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IFunctionCRTP.hpp"
+
+
 #undef I_FUNCTION_CRTP
 
 public:
@@ -96,7 +98,7 @@ public:
       type = Type::Any;
     }
     else {
-      type = Type(sizeof...(Args));
+      type = static_cast<Type>(sizeof...(Args));
     }
   }
 };

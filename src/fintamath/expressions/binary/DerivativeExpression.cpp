@@ -133,7 +133,7 @@ ArgumentPtr DerivativeExpression::addSimplify(const ArgumentPtrVector &children,
 }
 
 ArgumentPtr DerivativeExpression::mulSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
-  auto childrenSizeDiv2 = ptrdiff_t(children.size() / 2);
+  auto childrenSizeDiv2 = static_cast<ptrdiff_t>(children.size() / 2);
 
   ArgumentPtrVector lhsChildren = ArgumentPtrVector(children.begin(), children.begin() + childrenSizeDiv2);
   ArgumentPtrVector rhsChildren = ArgumentPtrVector(children.begin() + childrenSizeDiv2, children.end());

@@ -96,7 +96,7 @@ Integer &Integer::bitXor(const Integer &rhs) {
 
 Integer &Integer::bitLeftShift(const Integer &rhs) {
   try {
-    backend <<= int64_t(rhs.backend);
+    backend <<= static_cast<int64_t>(rhs.backend);
     return *this;
   }
   catch (...) {
@@ -106,7 +106,7 @@ Integer &Integer::bitLeftShift(const Integer &rhs) {
 
 Integer &Integer::bitRightShift(const Integer &rhs) {
   try {
-    backend >>= int64_t(rhs.backend);
+    backend >>= static_cast<int64_t>(rhs.backend);
     return *this;
   }
   catch (...) {

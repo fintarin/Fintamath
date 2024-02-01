@@ -78,7 +78,7 @@ std::string Real::toString(unsigned precision) const {
     precision++;
   }
 
-  std::string str = backend.str(std::streamsize(precision));
+  std::string str = backend.str(static_cast<std::streamsize>(precision));
   size_t expPos = str.find('e');
 
   if (expPos != std::string::npos) {

@@ -19,15 +19,15 @@ std::unique_ptr<IMathObject> Factorial::multiFactorialSimplify(const INumber &lh
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const Integer &)> outMultiAbs;
 
     outMultiAbs.add<Integer, Integer>([](const Integer &inRhs, const Integer &inOrder) {
-      return factorialSimplify(inRhs, size_t(inOrder));
+      return factorialSimplify(inRhs, static_cast<size_t>(inOrder));
     });
 
     outMultiAbs.add<Rational, Integer>([](const Rational &inRhs, const Integer &inOrder) {
-      return factorialSimplify(inRhs, size_t(inOrder));
+      return factorialSimplify(inRhs, static_cast<size_t>(inOrder));
     });
 
     outMultiAbs.add<Real, Integer>([](const Real &inRhs, const Integer &inOrder) {
-      return factorialSimplify(inRhs, size_t(inOrder));
+      return factorialSimplify(inRhs, static_cast<size_t>(inOrder));
     });
 
     return outMultiAbs;

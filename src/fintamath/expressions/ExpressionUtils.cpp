@@ -143,10 +143,12 @@ std::pair<ArgumentPtr, ArgumentPtr> splitMulExpr(const ArgumentPtr &inChild, boo
     }
   }
 
-  ArgumentPtr rate = makePolynom(Mul(), ArgumentPtrVector(mulExprChildren.begin(),
-                                                          mulExprChildren.begin() + ptrdiff_t(i)));
-  ArgumentPtr value = makePolynom(Mul(), ArgumentPtrVector(mulExprChildren.begin() + ptrdiff_t(i),
-                                                           mulExprChildren.end()));
+  ArgumentPtr rate = makePolynom(Mul(),
+                                 ArgumentPtrVector(mulExprChildren.begin(),
+                                                   mulExprChildren.begin() + static_cast<ptrdiff_t>(i)));
+  ArgumentPtr value = makePolynom(Mul(),
+                                  ArgumentPtrVector(mulExprChildren.begin() + static_cast<ptrdiff_t>(i),
+                                                    mulExprChildren.end()));
 
   if (!rate) {
     rate = one;

@@ -14,7 +14,7 @@ using namespace fintamath;
 
 TEST(MathObjectTypesTests, constructorTest) {
   EXPECT_EQ(MathObjectType(MathObjectType::Integer), Integer::getTypeStatic());
-  EXPECT_EQ(MathObjectType(size_t(MathObjectType::Integer)), Integer::getTypeStatic());
+  EXPECT_EQ(MathObjectType(static_cast<size_t>(MathObjectType::Integer)), Integer::getTypeStatic());
 }
 
 TEST(MathObjectTypesTests, equalsTest) {
@@ -24,8 +24,8 @@ TEST(MathObjectTypesTests, equalsTest) {
   EXPECT_TRUE(Integer::getTypeStatic() == MathObjectType::Integer);
   EXPECT_FALSE(Integer::getTypeStatic() == MathObjectType::Rational);
 
-  EXPECT_TRUE(Integer::getTypeStatic() == size_t(Integer::getTypeStatic()));
-  EXPECT_FALSE(Integer::getTypeStatic() == size_t(Rational::getTypeStatic()));
+  EXPECT_TRUE(Integer::getTypeStatic() == static_cast<size_t>(Integer::getTypeStatic()));
+  EXPECT_FALSE(Integer::getTypeStatic() == static_cast<size_t>(Rational::getTypeStatic()));
 }
 
 TEST(MathObjectTypesTests, compareTest) {
@@ -35,8 +35,8 @@ TEST(MathObjectTypesTests, compareTest) {
   EXPECT_EQ(Integer::getTypeStatic() <=> MathObjectType::Integer, std::strong_ordering::equal);
   EXPECT_EQ(Integer::getTypeStatic() <=> MathObjectType::Rational, std::strong_ordering::greater);
 
-  EXPECT_EQ(Integer::getTypeStatic() <=> size_t(Integer::getTypeStatic()), std::strong_ordering::equal);
-  EXPECT_EQ(Integer::getTypeStatic() <=> size_t(Rational::getTypeStatic()), std::strong_ordering::greater);
+  EXPECT_EQ(Integer::getTypeStatic() <=> static_cast<size_t>(Integer::getTypeStatic()), std::strong_ordering::equal);
+  EXPECT_EQ(Integer::getTypeStatic() <=> static_cast<size_t>(Rational::getTypeStatic()), std::strong_ordering::greater);
 }
 
 TEST(MathObjectTypesTests, isBaseOfTest) {

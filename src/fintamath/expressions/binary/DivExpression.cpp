@@ -194,7 +194,7 @@ ArgumentPtr DivExpression::mulSimplify(const SimplifyFunctionVector &simplFuncs,
 
       if (res && !is<Rational>(res) && *res != *makeExpr(func, lhsChild, rhsChild)) {
         lhsChild = res;
-        rhsChildren.erase(rhsChildren.begin() + ptrdiff_t(j));
+        rhsChildren.erase(rhsChildren.begin() + static_cast<ptrdiff_t>(j));
         break;
       }
     }

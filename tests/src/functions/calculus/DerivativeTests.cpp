@@ -21,7 +21,7 @@ public:
   }
 
   static MathObjectType getTypeStatic() {
-    return size_t(MathObjectType::IComparable) + 11;
+    return static_cast<size_t>(MathObjectType::IComparable) + 11;
   }
 
 protected:
