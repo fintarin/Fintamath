@@ -14,7 +14,7 @@ std::unique_ptr<IMathObject> Factorial::call(const ArgumentRefVector &argVect) c
   return multiFactorialSimplify(rhs, order);
 }
 
-std::unique_ptr<IMathObject> Factorial::multiFactorialSimplify(const INumber &lhs, size_t order) {
+std::unique_ptr<IMathObject> Factorial::multiFactorialSimplify(const INumber &lhs, const size_t order) {
   static const auto multiFactorial = [] {
     static MultiMethod<std::unique_ptr<IMathObject>(const INumber &, const Integer &)> outMultiAbs;
 
@@ -36,19 +36,19 @@ std::unique_ptr<IMathObject> Factorial::multiFactorialSimplify(const INumber &lh
   return multiFactorial(lhs, Integer(order));
 }
 
-std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Integer &rhs, size_t order) {
+std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Integer &rhs, const size_t order) {
   if (rhs < 0) {
     if (order != 1) {
       return {};
     }
 
-    return ComplexInf().clone();
+    return ComplexInf{}.clone();
   }
 
   return factorial(rhs, order).clone();
 }
 
-std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Rational &rhs, size_t order) {
+std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Rational &rhs, const size_t order) {
   if (rhs.denominator() == 1) {
     return factorialSimplify(rhs.numerator(), order);
   }
@@ -60,7 +60,7 @@ std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Rational &rhs, s
   return factorialSimplify(Real(rhs), order);
 }
 
-std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Real &rhs, size_t order) {
+std::unique_ptr<IMathObject> Factorial::factorialSimplify(const Real &rhs, const size_t order) {
   if (order != 1) {
     return {};
   }

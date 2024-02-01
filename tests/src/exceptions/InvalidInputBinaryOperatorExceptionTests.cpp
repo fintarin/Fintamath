@@ -10,15 +10,15 @@ namespace {
 
 class TestOperator final : public IOperatorCRTP<IMathObject, TestOperator, IMathObject, IMathObject> {
 public:
-  TestOperator() : IOperatorCRTP(IOperator::Priority::Addition) {
+  TestOperator() : IOperatorCRTP(Priority::Addition) {
   }
 
-  void throwException() const {
+  static void throwException() {
     throw InvalidInputBinaryOperatorException("^", "a", "0");
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
     return {};
   }
 };
@@ -27,7 +27,7 @@ protected:
 
 TEST(InvalidInputBinaryOpearatorExceptionTests, whatTest) {
   try {
-    TestOperator().throwException();
+    TestOperator::throwException();
     EXPECT_TRUE(false);
   }
   catch (const Exception &e) {

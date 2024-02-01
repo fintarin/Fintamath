@@ -21,8 +21,6 @@ public:
   }
 
 private:
-  void parse(const std::string &str);
-
   std::string name;
 };
 

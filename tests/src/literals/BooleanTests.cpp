@@ -45,7 +45,7 @@ TEST(BooleanTests, opearatorsTest) {
 }
 
 TEST(BooleanTest, equalsTest) {
-  Boolean a;
+  const Boolean a;
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Boolean(false));

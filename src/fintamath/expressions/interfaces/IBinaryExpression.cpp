@@ -12,7 +12,7 @@ IBinaryExpression::IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, A
 }
 
 std::string IBinaryExpression::toString() const {
-  if (auto oper = cast<IOperator>(func)) {
+  if (const auto oper = cast<IOperator>(func)) {
     return binaryOperatorToString(*oper, lhsChild, rhsChild);
   }
 
@@ -30,20 +30,20 @@ const ArgumentPtrVector &IBinaryExpression::getChildren() const {
 }
 
 ArgumentPtr IBinaryExpression::preSimplify() const {
-  auto simpl = cast<IBinaryExpression>(clone());
+  const auto simpl = cast<IBinaryExpression>(clone());
   preSimplifyChild(simpl->lhsChild);
   preSimplifyChild(simpl->rhsChild);
   return simpl->simplifyRec(false);
 }
 
 ArgumentPtr IBinaryExpression::postSimplify() const {
-  auto simpl = cast<IBinaryExpression>(clone());
+  const auto simpl = cast<IBinaryExpression>(clone());
   postSimplifyChild(simpl->lhsChild);
   postSimplifyChild(simpl->rhsChild);
   return simpl->simplifyRec(true);
 }
 
-ArgumentPtr IBinaryExpression::simplifyRec(bool isPostSimplify) const {
+ArgumentPtr IBinaryExpression::simplifyRec(const bool isPostSimplify) const {
   if (ArgumentPtr res = simplifyUndefined(*func, lhsChild, rhsChild)) {
     return res;
   }

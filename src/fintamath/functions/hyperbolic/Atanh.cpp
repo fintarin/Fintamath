@@ -11,7 +11,7 @@ std::unique_ptr<IMathObject> Atanh::call(const ArgumentRefVector &argVect) const
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
-    return NegInf().clone();
+    return NegInf{}.clone();
   }
 
   if (rhs == Integer(0)) {
@@ -19,7 +19,7 @@ std::unique_ptr<IMathObject> Atanh::call(const ArgumentRefVector &argVect) const
   }
 
   if (rhs == Integer(1)) {
-    return Inf().clone();
+    return Inf{}.clone();
   }
 
   return multiAtanhSimplify(rhs);

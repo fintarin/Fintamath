@@ -13,10 +13,10 @@ class Real;
 
 class Factorial final : public IOperatorCRTP<INumber, Factorial, INumber> {
 public:
-  Factorial() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
+  Factorial() : IOperatorCRTP(Priority::PostfixUnary) {
   }
 
-  explicit Factorial(size_t inOrder) : Factorial() {
+  explicit Factorial(const size_t inOrder) : Factorial() {
     setOrder(inOrder);
   }
 
@@ -28,7 +28,7 @@ public:
     return order;
   }
 
-  void setOrder(size_t inOrder) {
+  void setOrder(const size_t inOrder) {
     assert(inOrder > 0);
     order = inOrder;
   }

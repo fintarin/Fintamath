@@ -24,17 +24,17 @@ public:
 }
 
 TEST(IBinaryExpressionTests, toStringTest) {
-  TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
+  const TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr.toString(), "1 + 2");
 }
 
 TEST(IBinaryExpressionTests, getFunctionTest) {
-  TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
+  const TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
 TEST(IBinaryExpressionTests, getChildren) {
-  TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
+  const TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr.getChildren().size(), 2);
   EXPECT_EQ(*expr.getChildren().front(), Integer(1));
   EXPECT_EQ(*expr.getChildren().back(), Integer(2));
@@ -56,10 +56,10 @@ TEST(IBinaryExpressionTests, setChildren) {
 }
 
 TEST(IBinaryExpressionTests, toMinimalObjectTest) {
-  TestBinaryExpression expr1(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
+  const TestBinaryExpression expr1(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr1.toMinimalObject()->toString(), "3");
 
-  TestBinaryExpression expr2(std::make_shared<Integer>(1), Variable("a").clone());
+  const TestBinaryExpression expr2(std::make_shared<Integer>(1), Variable("a").clone());
   EXPECT_EQ(expr2.toMinimalObject()->toString(), "1 + a");
 }
 

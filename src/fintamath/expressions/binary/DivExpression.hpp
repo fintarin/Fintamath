@@ -60,8 +60,6 @@ private:
 
   static std::pair<ArgumentPtr, ArgumentPtr> mulSumSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static std::pair<ArgumentPtr, ArgumentPtr> mulSumSimplifyImpl(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
-
   static ArgumentPtr nestedNumeratorRationalSimplify(const ArgumentPtrVector &lhsChildren, const ArgumentPtr &rhs);
 
   static Integer getGcd(const ArgumentPtrVector &children);

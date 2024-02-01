@@ -17,8 +17,6 @@ public:
 private:
   static bool appendToken(TokenVector &tokens, Token &token, bool shouldSplit = false);
 
-  static TokenVector splitTokens(const Token &token);
-
   static void handleSpaces(std::string &str);
 
   static bool isDigitOrPoint(char ch);

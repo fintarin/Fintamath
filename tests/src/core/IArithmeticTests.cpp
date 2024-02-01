@@ -185,14 +185,14 @@ TEST(IArithmeticTests, divTest) {
 }
 
 TEST(IArithmeticTests, unaryPlusTest) {
-  std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
+  const std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((+*m1)->toString(), "1");
 
   EXPECT_EQ((+Integer(1)).toString(), "1");
 }
 
 TEST(IArithmeticTests, negateTest) {
-  std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
+  const std::unique_ptr<IArithmetic> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((-*m1)->toString(), "-1");
 
   EXPECT_EQ((-Integer(1)).toString(), "-1");

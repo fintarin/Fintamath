@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Percent final : public IOperatorCRTP<INumber, Percent, INumber> {
 public:
-  Percent() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
+  Percent() : IOperatorCRTP(Priority::PostfixUnary) {
   }
 
   std::string toString() const override {

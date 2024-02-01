@@ -15,7 +15,7 @@ namespace {
 class TestIExpression final : public IExpressionCRTP<TestIExpression> {
 public:
   const std::shared_ptr<IFunction> &getFunction() const override {
-    static const std::shared_ptr<IFunction> func = cast<IFunction>(Add().clone());
+    static const std::shared_ptr func = cast<IFunction>(Add().clone());
     return func;
   }
 
@@ -60,7 +60,7 @@ TEST(IExpressionTests, getChildrenTest) {
 }
 
 TEST(IExpressionTests, setChildrenTest) {
-  auto expr = cast<IExpression>(factorialExpr(Variable("a"))->clone());
+  const auto expr = cast<IExpression>(factorialExpr(Variable("a"))->clone());
 
   expr->setChildren({Variable("b").clone()});
   EXPECT_EQ(expr->toString(), "b!");
@@ -71,8 +71,8 @@ TEST(IExpressionTests, setChildrenTest) {
 }
 
 TEST(IExpressionTests, getVariablesTest) {
-  auto expr = cast<IExpression>(Expression("x^2+y^2+a").clone());
-  auto vars = expr->getVariables();
+  const auto expr = cast<IExpression>(Expression("x^2+y^2+a").clone());
+  const auto vars = expr->getVariables();
   EXPECT_EQ(vars[0].toString(), "a");
   EXPECT_EQ(vars[1].toString(), "x");
   EXPECT_EQ(vars[2].toString(), "y");
@@ -85,7 +85,7 @@ TEST(IExpressionTests, setVariablesTest) {
 }
 
 TEST(IExpressionTests, toMinimalObjectTest) {
-  TestIExpression a;
+  const TestIExpression a;
   EXPECT_EQ(*a.toMinimalObject(), a);
 
   // TODO: implement more tests

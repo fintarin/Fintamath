@@ -39,7 +39,7 @@ bool isNegated(const ArgumentPtr &arg) {
     return true;
   }
 
-  auto expr = cast<IExpression>(arg);
+  const auto expr = cast<IExpression>(arg);
   if (!expr) {
     return false;
   }
@@ -56,7 +56,7 @@ bool isNegated(const ArgumentPtr &arg) {
 }
 
 bool isNegativeNumber(const ArgumentPtr &arg) {
-  auto argNum = cast<INumber>(arg);
+  const auto argNum = cast<INumber>(arg);
   return argNum && *argNum < Integer(0);
 }
 
@@ -70,14 +70,14 @@ bool containsIf(const ArgumentPtr &arg, const std::function<bool(const ArgumentP
     return true;
   }
 
-  auto expr = cast<IExpression>(arg);
+  const auto expr = cast<IExpression>(arg);
   if (!expr) {
     return false;
   }
 
   const ArgumentPtrVector &children = expr->getChildren();
 
-  return stdr::any_of(children, [comp](const auto &child) {
+  return stdr::any_of(children, [&comp](const auto &child) {
     bool res = false;
 
     if (containsIf(child, comp)) {
@@ -118,8 +118,8 @@ bool containsComplex(const ArgumentPtr &arg) {
   });
 }
 
-std::pair<ArgumentPtr, ArgumentPtr> splitMulExpr(const ArgumentPtr &inChild, bool checkVariables) {
-  auto mulExprChild = cast<IExpression>(inChild);
+std::pair<ArgumentPtr, ArgumentPtr> splitMulExpr(const ArgumentPtr &inChild, const bool checkVariables) {
+  const auto mulExprChild = cast<IExpression>(inChild);
 
   if (!mulExprChild || !is<Mul>(mulExprChild->getFunction())) {
     return {one, inChild};
@@ -129,24 +129,24 @@ std::pair<ArgumentPtr, ArgumentPtr> splitMulExpr(const ArgumentPtr &inChild, boo
   size_t i = 0;
 
   if (checkVariables) {
-    for (i = 0; i < mulExprChildren.size(); i++) {
+    for (; i < mulExprChildren.size(); i++) {
       if (containsVariable(mulExprChildren[i])) {
         break;
       }
     }
   }
   else {
-    for (i = 0; i < mulExprChildren.size(); i++) {
+    for (; i < mulExprChildren.size(); i++) {
       if (!is<INumber>(mulExprChildren[i])) {
         break;
       }
     }
   }
 
-  ArgumentPtr rate = makePolynom(Mul(),
+  ArgumentPtr rate = makePolynom(Mul{},
                                  ArgumentPtrVector(mulExprChildren.begin(),
                                                    mulExprChildren.begin() + static_cast<ptrdiff_t>(i)));
-  ArgumentPtr value = makePolynom(Mul(),
+  ArgumentPtr value = makePolynom(Mul{},
                                   ArgumentPtrVector(mulExprChildren.begin() + static_cast<ptrdiff_t>(i),
                                                     mulExprChildren.end()));
 
@@ -199,8 +199,8 @@ std::pair<ArgumentPtr, ArgumentPtr> splitRational(const ArgumentPtr &arg) {
       imNumerator = imRat->numerator().clone();
     }
 
-    auto reNumeratorNum = cast<INumber>(reNumerator);
-    auto imNumeratorNum = cast<INumber>(imNumerator);
+    const auto reNumeratorNum = cast<INumber>(reNumerator);
+    const auto imNumeratorNum = cast<INumber>(imNumerator);
 
     if (denominator != 1 && reNumeratorNum && imNumeratorNum) {
       return {Complex(*reNumeratorNum, *imNumeratorNum).clone(), denominator.clone()};
@@ -296,14 +296,14 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
       }
     }
   }
-  else if (childStr.front() == Neg().toString().front()) {
+  else if (childStr.front() == Neg{}.toString().front()) {
     childOper = std::make_shared<Neg>();
   }
   else if (is<Rational>(child)) {
     childOper = std::make_shared<Div>();
   }
   else if (is<Real>(child)) {
-    if (childStr.find(Mul().toString()) != std::string::npos) {
+    if (childStr.find(Mul{}.toString()) != std::string::npos) {
       childOper = std::make_shared<Mul>();
     }
   }
@@ -336,8 +336,8 @@ std::string binaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs
     operStr = ' ' + operStr + ' ';
   }
 
-  std::string lhsStr = operatorChildToString(oper, lhs);
-  std::string rhsStr = operatorChildToString(oper, rhs);
+  const std::string lhsStr = operatorChildToString(oper, lhs);
+  const std::string rhsStr = operatorChildToString(oper, rhs);
 
   return lhsStr + operStr + rhsStr;
 }

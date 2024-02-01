@@ -45,7 +45,7 @@ Integer factorialRec(const Integer &left, const Integer &right) {
     return left * right;
   }
 
-  Integer mid((left + right) / 2);
+  const Integer mid((left + right) / 2);
   return factorialRec(left, mid) * factorialRec(mid + 1, right);
 }
 
@@ -61,7 +61,7 @@ Integer factorial(const Integer &rhs) {
   return factorialRec(2, rhs);
 }
 
-Integer factorial(const Integer &rhs, size_t order) {
+Integer factorial(const Integer &rhs, const size_t order) {
   assert(order > 0);
 
   if (rhs < 0) {
@@ -97,7 +97,7 @@ std::map<Integer, Integer> factors(Integer rhs, Integer limit) {
   }
 
   {
-    Integer rhsSqrt = sqrt(rhs);
+    const Integer rhsSqrt = sqrt(rhs);
 
     if (limit < 0 || limit > rhsSqrt) {
       limit = rhsSqrt;

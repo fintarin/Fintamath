@@ -14,7 +14,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
   Token numberToken;
   Token specialToken;
 
-  for (char ch : str) {
+  for (const char ch : str) {
     if (isDigitOrPoint(ch)) {
       appendToken(tokens, specialToken, true);
       numberToken.push_back(ch);
@@ -43,7 +43,7 @@ void Tokenizer::registerToken(const Token &token) {
                 token);
 }
 
-bool Tokenizer::appendToken(TokenVector &tokens, Token &token, bool shouldSplit) {
+bool Tokenizer::appendToken(TokenVector &tokens, Token &token, const bool shouldSplit) {
   if (token.empty()) {
     return false;
   }
@@ -89,11 +89,11 @@ void Tokenizer::handleSpaces(std::string &str) {
   str = std::regex_replace(str, std::regex(R"([\s\r\n]+)"), " ");
 }
 
-bool Tokenizer::isDigitOrPoint(char ch) {
+bool Tokenizer::isDigitOrPoint(const char ch) {
   return ch == '.' || (ch >= '0' && ch <= '9');
 }
 
-bool Tokenizer::isSpace(char ch) {
+bool Tokenizer::isSpace(const char ch) {
   return ch == ' ';
 }
 

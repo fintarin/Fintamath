@@ -12,7 +12,7 @@ class Complex;
 
 class Pow final : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
 public:
-  Pow() : IOperatorCRTP(IOperator::Priority::Exponentiation, false) {
+  Pow() : IOperatorCRTP(Priority::Exponentiation, false) {
   }
 
   std::string toString() const override {

@@ -19,13 +19,13 @@ std::vector<Variable> IExpression::getVariables() const {
     if (auto var = cast<Variable>(child)) {
       vars.emplace_back(*var);
     }
-    else if (auto childExpr = cast<IExpression>(child)) {
+    else if (const auto childExpr = cast<IExpression>(child)) {
       std::vector<Variable> childVars = childExpr->getVariables();
       vars.insert(vars.end(), childVars.begin(), childVars.end());
     }
   }
 
-  stdr::sort(vars, std::less(), &Variable::toString);
+  stdr::sort(vars, std::less{}, &Variable::toString);
   auto unique = stdr::unique(vars);
   vars.erase(unique.begin(), unique.end());
 
@@ -37,7 +37,7 @@ void IExpression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr
   ArgumentPtrVector newChildren;
 
   for (const auto &child : children) {
-    if (std::shared_ptr<IExpression> exprChild = cast<IExpression>(child->clone())) {
+    if (std::shared_ptr exprChild = cast<IExpression>(child->clone())) {
       exprChild->setVariables(varsToVals);
       newChildren.emplace_back(exprChild);
       continue;
@@ -94,7 +94,7 @@ void IExpression::preSimplifyChild(ArgumentPtr &child) {
   }
   else {
     if (const auto constChild = cast<IConstant>(child)) {
-      ArgumentPtr constVal = (*constChild)();
+      const ArgumentPtr constVal = (*constChild)();
 
       if (const auto num = cast<INumber>(constVal); num && !num->isPrecise()) {
         child = constChild;
@@ -125,7 +125,7 @@ void IExpression::approximateSimplifyChild(ArgumentPtr &child) {
   }
 }
 
-void IExpression::setPrecisionChild(ArgumentPtr &child, unsigned precision, const Integer &maxInt) {
+void IExpression::setPrecisionChild(ArgumentPtr &child, const unsigned precision, const Integer &maxInt) {
   if (const auto numChild = cast<INumber>(child)) {
     if (auto res = convertToApproximated(*numChild, precision, maxInt)) {
       child = std::move(res);
@@ -162,7 +162,7 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num) 
 }
 
 std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
-                                                            unsigned precision,
+                                                            const unsigned precision,
                                                             const Integer &maxInt) {
 
   static const auto multiSetPrecision = [] {
@@ -178,7 +178,7 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
         return Real(inRhs).clone();
       }
 
-      return std::unique_ptr<IMathObject>();
+      return std::unique_ptr<IMathObject>{};
     });
 
     outMultiSetPrecision.add<Rational, Integer, Integer>([](const Rational &inRhs,
@@ -198,11 +198,11 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
     outMultiSetPrecision.add<Complex, Integer, Integer>([](const Complex &inRhs,
                                                            const Integer &inPrecision,
                                                            const Integer &inMaxInt) {
-      auto approxReal = convertToApproximated(inRhs.real(), static_cast<unsigned>(inPrecision), inMaxInt);
-      auto approxImag = convertToApproximated(inRhs.imag(), static_cast<unsigned>(inPrecision), inMaxInt);
+      const auto approxReal = convertToApproximated(inRhs.real(), static_cast<unsigned>(inPrecision), inMaxInt);
+      const auto approxImag = convertToApproximated(inRhs.imag(), static_cast<unsigned>(inPrecision), inMaxInt);
 
       if (!approxReal && !approxImag) {
-        return std::unique_ptr<IMathObject>();
+        return std::unique_ptr<IMathObject>{};
       }
 
       if (!approxReal) {
@@ -222,7 +222,7 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
   return cast<INumber>(multiSetPrecision(num, Integer(precision), maxInt));
 }
 
-ArgumentPtrVector fintamath::IExpression::convertToApproximatedNumbers(const ArgumentPtrVector &args) {
+ArgumentPtrVector IExpression::convertToApproximatedNumbers(const ArgumentPtrVector &args) {
   ArgumentPtrVector approxArgs = args;
 
   for (auto &arg : approxArgs) {
@@ -283,7 +283,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
     return simpl;
   }
 
-  auto simplExpr = cast<IExpression>(simpl);
+  const auto simplExpr = cast<IExpression>(simpl);
   ArgumentPtrVector approxChildren = simplExpr->getChildren();
 
   bool areNumberChilrenPrecise = true;
@@ -304,7 +304,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
   auto approxExpr = cast<IExpression>(simplExpr->clone());
   approxExpr->setChildren(approxChildren);
 
-  bool containsVar = containsVariable(simplExpr);
+  const bool containsVar = containsVariable(simplExpr);
 
   if (containsVar &&
       (numberChildrenCount < 2 ||
@@ -314,7 +314,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
   }
 
   ArgumentPtr approxSimpl = approxExpr->simplify();
-  auto approxSimplExpr = cast<IExpression>(approxSimpl);
+  const auto approxSimplExpr = cast<IExpression>(approxSimpl);
 
   if (!approxSimplExpr || *approxSimplExpr != *approxExpr) {
     return approxSimpl;
@@ -332,7 +332,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
   return approxSimpl;
 }
 
-ArgumentPtr IExpression::setPrecision(unsigned precision, const Integer &maxInt) const {
+ArgumentPtr IExpression::setPrecision(const unsigned precision, const Integer &maxInt) const {
   ArgumentPtrVector newChildren = getChildren();
 
   for (auto &child : newChildren) {

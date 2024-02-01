@@ -8,7 +8,7 @@ Integer floor(const Rational &rhs) {
   Integer div = rhs.numerator() / rhs.denominator();
 
   if (rhs.numerator() < 0 && abs(rhs.numerator()) % rhs.denominator() != 0) {
-    div--;
+    --div;
   }
 
   return div;
@@ -18,7 +18,7 @@ Integer ceil(const Rational &rhs) {
   Integer div = rhs.numerator() / rhs.denominator();
 
   if (rhs.numerator() >= 0 && abs(rhs.numerator()) % rhs.denominator() != 0) {
-    div++;
+    ++div;
   }
 
   return div;

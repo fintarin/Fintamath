@@ -25,7 +25,7 @@ HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
 }
 
 HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPreSimplify() const {
-  static const HyperbExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &HyperbExpression::oppositeFunctionsSimplify,
       &HyperbExpression::expandSimplify,
   };
@@ -33,7 +33,7 @@ HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPreSim
 }
 
 HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPostSimplify() const {
-  static const HyperbExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &HyperbExpression::oppositeFunctionsSimplify,
       &HyperbExpression::negSimplify,
   };
@@ -42,7 +42,7 @@ HyperbExpression::SimplifyFunctionVector HyperbExpression::getFunctionsForPostSi
 
 ArgumentPtr HyperbExpression::oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (const auto expr = cast<IExpression>(rhs)) {
-    if (auto oppositeFunc = getOppositeFunction(func)) {
+    if (const auto oppositeFunc = getOppositeFunction(func)) {
       if (*expr->getFunction() == *oppositeFunc) {
         return expr->getChildren().front();
       }
@@ -54,19 +54,19 @@ ArgumentPtr HyperbExpression::oppositeFunctionsSimplify(const IFunction &func, c
 
 ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   static const SimplifyFunctionMap expandFunctionMap = {
-      {Tanh().toString(),
+      {Tanh{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(sinhExpr(inRhs), coshExpr(inRhs));
        }},
-      {Coth().toString(),
+      {Coth{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(coshExpr(inRhs), sinhExpr(inRhs));
        }},
-      {Sech().toString(),
+      {Sech{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(Integer(1).clone(), coshExpr(inRhs));
        }},
-      {Csch().toString(),
+      {Csch{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(Integer(1).clone(), sinhExpr(inRhs));
        }},
@@ -81,11 +81,11 @@ ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const Argume
 
 ArgumentPtr HyperbExpression::negSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   static const SimplifyFunctionMap negFunctionsMap = {
-      {Sinh().toString(),
+      {Sinh{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return negExpr(sinhExpr(negExpr(inRhs)));
        }},
-      {Cosh().toString(),
+      {Cosh{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return coshExpr(negExpr(inRhs));
        }},
@@ -102,12 +102,12 @@ ArgumentPtr HyperbExpression::negSimplify(const IFunction &func, const ArgumentP
 
 std::shared_ptr<IFunction> HyperbExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Sinh().toString(), std::make_unique<Asinh>()},
-      {Cosh().toString(), std::make_unique<Acosh>()},
-      {Tanh().toString(), std::make_unique<Atanh>()},
-      {Coth().toString(), std::make_unique<Acoth>()},
-      {Sech().toString(), std::make_shared<Asech>()},
-      {Csch().toString(), std::make_shared<Acsch>()},
+      {Sinh{}.toString(), std::make_unique<Asinh>()},
+      {Cosh{}.toString(), std::make_unique<Acosh>()},
+      {Tanh{}.toString(), std::make_unique<Atanh>()},
+      {Coth{}.toString(), std::make_unique<Acoth>()},
+      {Sech{}.toString(), std::make_shared<Asech>()},
+      {Csch{}.toString(), std::make_shared<Acsch>()},
   };
   return oppositeFunctions.at(function.toString());
 }

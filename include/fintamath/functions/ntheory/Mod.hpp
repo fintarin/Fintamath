@@ -8,7 +8,7 @@ namespace fintamath {
 
 class Mod final : public IOperatorCRTP<INumber, Mod, INumber, INumber> {
 public:
-  Mod() : IOperatorCRTP(IOperator::Priority::Modulo) {
+  Mod() : IOperatorCRTP(Priority::Modulo) {
   }
 
   std::string toString() const override {

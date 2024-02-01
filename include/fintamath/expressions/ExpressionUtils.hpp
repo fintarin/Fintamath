@@ -23,14 +23,16 @@ ArgumentPtr useSimplifyFunctions(const std::vector<SimplifyFunction> &simplFuncs
 
 ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<ArgumentPtr> auto &...args) {
   if ((is<Undefined>(args) || ...)) {
-    static const size_t undefinedReturnType = Undefined().getReturnType();
+    static const size_t undefinedReturnType = Undefined{}.getReturnType();
     const size_t funcReturnType = func.getReturnType();
 
-    if (!isBaseOf(undefinedReturnType, funcReturnType) && !isBaseOf(funcReturnType, undefinedReturnType)) {
+    if (!isBaseOf(undefinedReturnType, funcReturnType) &&
+        !isBaseOf(funcReturnType, undefinedReturnType)) {
+
       throw InvalidInputFunctionException(func.toString(), {(args->toString(), ...)});
     }
 
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   return {};

@@ -12,7 +12,7 @@ std::unique_ptr<IMathObject> Asin::call(const ArgumentRefVector &argVect) const 
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
-    return negExpr(divExpr(Pi(), Integer(2)))->toMinimalObject();
+    return negExpr(divExpr(Pi{}, Integer(2)))->toMinimalObject();
   }
 
   if (rhs == Integer(0)) {
@@ -20,7 +20,7 @@ std::unique_ptr<IMathObject> Asin::call(const ArgumentRefVector &argVect) const 
   }
 
   if (rhs == Integer(1)) {
-    return divExpr(Pi(), Integer(2))->toMinimalObject();
+    return divExpr(Pi{}, Integer(2))->toMinimalObject();
   }
 
   return multiAsinSimplify(rhs);

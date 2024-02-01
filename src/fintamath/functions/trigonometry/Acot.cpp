@@ -11,15 +11,15 @@ std::unique_ptr<IMathObject> Acot::call(const ArgumentRefVector &argVect) const 
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
-    return negExpr(divExpr(Pi(), Integer(4)))->toMinimalObject();
+    return negExpr(divExpr(Pi{}, Integer(4)))->toMinimalObject();
   }
 
   if (rhs == Integer(0)) {
-    return divExpr(Pi(), Integer(2))->toMinimalObject();
+    return divExpr(Pi{}, Integer(2))->toMinimalObject();
   }
 
   if (rhs == Integer(1)) {
-    return divExpr(Pi(), Integer(4))->toMinimalObject();
+    return divExpr(Pi{}, Integer(4))->toMinimalObject();
   }
 
   return multiAcotSimplify(rhs);

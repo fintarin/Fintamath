@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Deg final : public IOperatorCRTP<INumber, Deg, INumber> {
 public:
-  Deg() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
+  Deg() : IOperatorCRTP(Priority::PostfixUnary) {
   }
 
   std::string toString() const override {

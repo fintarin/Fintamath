@@ -13,7 +13,7 @@ std::unique_ptr<IMathObject> Sqrt::call(const ArgumentRefVector &argVect) const 
   const auto &lhs = argVect.front().get();
   static const Integer rhs = 2;
 
-  return Root()(lhs, rhs);
+  return Root{}(lhs, rhs);
 }
 
 }

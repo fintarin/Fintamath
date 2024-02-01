@@ -59,7 +59,7 @@ public:
   };
 
 public:
-  explicit UndefinedUnaryOperatorException(const std::string &oper, const std::string &rhs, Type type) {
+  explicit UndefinedUnaryOperatorException(const std::string &oper, const std::string &rhs, const Type type) {
     switch (type) {
       case Type::Prefix:
         content += ": " + oper + "(" + rhs + ")";

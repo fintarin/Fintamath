@@ -10,7 +10,7 @@ namespace {
 
 class TestBinaryOperator final : public IOperatorCRTP<INumber, TestBinaryOperator, INumber, INumber> {
 public:
-  TestBinaryOperator() : IOperatorCRTP(IOperator::Priority::Exponentiation) {
+  TestBinaryOperator() : IOperatorCRTP(Priority::Exponentiation) {
   }
 
   std::string toString() const override {
@@ -29,7 +29,7 @@ protected:
 
 class TestUnaryPrefixOperator final : public IOperatorCRTP<INumber, TestUnaryPrefixOperator, INumber> {
 public:
-  TestUnaryPrefixOperator() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
+  TestUnaryPrefixOperator() : IOperatorCRTP(Priority::PrefixUnary) {
   }
 
   std::string toString() const override {
@@ -48,7 +48,7 @@ protected:
 
 class TestUnaryPostfixOperator final : public IOperatorCRTP<INumber, TestUnaryPostfixOperator, INumber> {
 public:
-  TestUnaryPostfixOperator() : IOperatorCRTP(IOperator::Priority::PostfixUnary) {
+  TestUnaryPostfixOperator() : IOperatorCRTP(Priority::PostfixUnary) {
   }
 
   std::string toString() const override {
@@ -67,7 +67,7 @@ protected:
 
 class TestUnaryFunction final : public IFunctionCRTP<INumber, TestUnaryFunction, INumber> {
 public:
-  TestUnaryFunction() : IFunctionCRTP() {
+  TestUnaryFunction() {
   }
 
   std::string toString() const override {
@@ -86,7 +86,7 @@ protected:
 
 class TestBinaryFunction final : public IFunctionCRTP<INumber, TestBinaryFunction, INumber, INumber> {
 public:
-  TestBinaryFunction() : IFunctionCRTP() {
+  TestBinaryFunction() {
   }
 
   std::string toString() const override {
@@ -115,7 +115,7 @@ public:
   }
 };
 
-const FunctionExpressionConfig testOperatorConfig;
+[[maybe_unused]] const FunctionExpressionConfig testOperatorConfig;
 
 }
 

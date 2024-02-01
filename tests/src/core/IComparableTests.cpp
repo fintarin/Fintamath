@@ -25,19 +25,19 @@ protected:
     return *this;
   }
 
-  virtual TestComparable &substract(const TestComparable &rhs) override {
+  TestComparable &substract(const TestComparable &rhs) override {
     return *this;
   }
 
-  virtual TestComparable &multiply(const TestComparable &rhs) override {
+  TestComparable &multiply(const TestComparable &rhs) override {
     return *this;
   }
 
-  virtual TestComparable &divide(const TestComparable &rhs) override {
+  TestComparable &divide(const TestComparable &rhs) override {
     return *this;
   }
 
-  virtual TestComparable &negate() override {
+  TestComparable &negate() override {
     return *this;
   }
 };

@@ -10,10 +10,10 @@
 using namespace fintamath;
 
 TEST(ILiteralTests, equalsTest) {
-  std::unique_ptr<ILiteral> c1 = std::make_unique<E>();
-  std::unique_ptr<ILiteral> c2 = std::make_unique<Pi>();
-  std::unique_ptr<ILiteral> v1 = std::make_unique<Variable>("a");
-  std::unique_ptr<ILiteral> v2 = std::make_unique<Variable>("b");
+  const std::unique_ptr<ILiteral> c1 = std::make_unique<E>();
+  const std::unique_ptr<ILiteral> c2 = std::make_unique<Pi>();
+  const std::unique_ptr<ILiteral> v1 = std::make_unique<Variable>("a");
+  const std::unique_ptr<ILiteral> v2 = std::make_unique<Variable>("b");
 
   EXPECT_EQ(*c1, *c1);
   EXPECT_EQ(*c2, *c2);

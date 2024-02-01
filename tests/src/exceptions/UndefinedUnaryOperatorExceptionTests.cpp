@@ -10,19 +10,19 @@ namespace {
 
 class TestOperator final : public IOperatorCRTP<IMathObject, TestOperator, IMathObject> {
 public:
-  TestOperator() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
+  TestOperator() : IOperatorCRTP(Priority::PrefixUnary) {
   }
 
-  void throwExceptionPrefix() const {
+  static void throwExceptionPrefix() {
     throw UndefinedUnaryOperatorException("!", "-10", UndefinedUnaryOperatorException::Type::Prefix);
   }
 
-  void throwExceptionPostfix() const {
+  static void throwExceptionPostfix() {
     throw UndefinedUnaryOperatorException("!", "-10", UndefinedUnaryOperatorException::Type::Postfix);
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
     return {};
   }
 };
@@ -31,7 +31,7 @@ protected:
 
 TEST(UndefinedUnaryOpearatorExceptionTests, whatTest) {
   try {
-    TestOperator().throwExceptionPrefix();
+    TestOperator::throwExceptionPrefix();
     EXPECT_TRUE(false);
   }
   catch (const Exception &e) {
@@ -39,7 +39,7 @@ TEST(UndefinedUnaryOpearatorExceptionTests, whatTest) {
   }
 
   try {
-    TestOperator().throwExceptionPostfix();
+    TestOperator::throwExceptionPostfix();
     EXPECT_TRUE(false);
   }
   catch (const Exception &e) {

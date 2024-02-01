@@ -502,9 +502,9 @@ TEST(RationalTests, isComplexTest) {
 }
 
 TEST(RationalTests, equalsTest) {
-  Rational a;
-  Integer b;
-  Integer c(1);
+  const Rational a;
+  const Integer b;
+  const Integer c(1);
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Rational());

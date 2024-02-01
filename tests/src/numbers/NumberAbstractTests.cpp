@@ -39,9 +39,9 @@ TEST(NumberAbstractRationalTests, divideTest) {
 //-------------------------------------------------------------------------------------//
 
 TEST(NumberAbstractRealTests, equalsTest) {
-  Real a;
-  Integer b;
-  Rational c;
+  const Real a;
+  const Integer b;
+  const Rational c;
 
   EXPECT_NE(a, cast<IMathObject>(b));
   EXPECT_NE(cast<IMathObject>(b), a);

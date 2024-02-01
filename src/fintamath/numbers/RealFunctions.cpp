@@ -6,7 +6,7 @@
 namespace fintamath {
 
 bool isOverflow(const Real &rhs) {
-  static Cache<unsigned, Real::Backend> cache([](unsigned precision) {
+  static Cache<unsigned, Real::Backend> cache([](const unsigned precision) {
     static const Real::Backend powBase = 10;
     return pow(powBase, precision);
   });
@@ -15,7 +15,7 @@ bool isOverflow(const Real &rhs) {
 }
 
 bool isUnderflow(const Real &rhs) {
-  static Cache<unsigned, Real::Backend> cache([](unsigned precision) {
+  static Cache<unsigned, Real::Backend> cache([](const unsigned precision) {
     static const Real::Backend powBase = 10;
     return 1 / pow(powBase, precision);
   });
@@ -24,7 +24,7 @@ bool isUnderflow(const Real &rhs) {
 }
 
 bool isLogUnderflow(const Real &rhs) {
-  static Cache<unsigned, Real::Backend> cache([](unsigned precision) {
+  static Cache<unsigned, Real::Backend> cache([](const unsigned precision) {
     return 1 / pow(precision, getE().getBackend());
   });
 
@@ -60,7 +60,7 @@ Integer floor(const Real &rhs) {
     throw UndefinedFunctionException("floor", {rhs.toString()});
   }
 
-  Real::Backend res = boost::multiprecision::floor(rhs.getBackend());
+  const Real::Backend res = boost::multiprecision::floor(rhs.getBackend());
   return res.convert_to<Integer::Backend>();
 }
 
@@ -69,7 +69,7 @@ Integer ceil(const Real &rhs) {
     throw UndefinedFunctionException("ceil", {rhs.toString()});
   }
 
-  Real::Backend res = boost::multiprecision::ceil(rhs.getBackend());
+  const Real::Backend res = boost::multiprecision::ceil(rhs.getBackend());
   return res.convert_to<Integer::Backend>();
 }
 
@@ -403,7 +403,7 @@ Real tgamma(const Real &rhs) {
 }
 
 const Real &getE() {
-  static Cache<unsigned, Real> cache([](unsigned precision) {
+  static Cache<unsigned, Real> cache([](const unsigned precision) {
     Real::Backend::backend_type res;
     boost::multiprecision::default_ops::calc_e(res, precision);
     return Real(res);
@@ -413,7 +413,7 @@ const Real &getE() {
 }
 
 const Real &getPi() {
-  static Cache<unsigned, Real> cache([](unsigned precision) {
+  static Cache<unsigned, Real> cache([](const unsigned precision) {
     Real::Backend::backend_type res;
     boost::multiprecision::default_ops::calc_pi(res, precision);
     return Real(res);

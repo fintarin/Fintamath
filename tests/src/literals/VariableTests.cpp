@@ -40,7 +40,7 @@ TEST(VariableTest, stringIntegerConstructorTest) {
 }
 
 TEST(VariableTest, equalsTest) {
-  Variable a("a");
+  const Variable a("a");
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Variable("a"));

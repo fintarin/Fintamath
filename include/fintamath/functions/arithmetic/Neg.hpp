@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Neg final : public IOperatorCRTP<IArithmetic, Neg, IArithmetic> {
 public:
-  Neg() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
+  Neg() : IOperatorCRTP(Priority::PrefixUnary) {
   }
 
   std::string toString() const override {

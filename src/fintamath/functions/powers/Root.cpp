@@ -23,7 +23,7 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentRefVector &argVect) const 
       lhs == Integer(1) ||
       rhs == Integer(1)) {
 
-    return Pow()(lhs, *Div()(Rational(1), rhs));
+    return Pow{}(lhs, *Div{}(Rational(1), rhs));
   }
 
   if (const auto *rhsIntPtr = cast<Integer>(&rhs)) {
@@ -31,7 +31,7 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentRefVector &argVect) const 
 
     if (!lhs.isComplex() && lhs < Integer(0)) {
       if (rhsInt == Integer(2)) {
-        return mulExpr(multiRootSimplify(*(-lhs), rhsInt), I()())->toMinimalObject();
+        return mulExpr(multiRootSimplify(*(-lhs), rhsInt), I{}())->toMinimalObject();
       }
 
       // TODO: complex nth roots
@@ -41,7 +41,7 @@ std::unique_ptr<IMathObject> Root::call(const ArgumentRefVector &argVect) const 
     return multiRootSimplify(lhs, rhsInt);
   }
 
-  return Pow()(lhs, *(Rational(1) / rhs));
+  return Pow{}(lhs, *(Rational(1) / rhs));
 }
 
 std::unique_ptr<IMathObject> Root::multiRootSimplify(const INumber &lhs, const INumber &rhs) {
@@ -100,11 +100,10 @@ std::map<Integer, Integer> Root::roots(const Integer &lhs, const Integer &rhs) {
   static Integer factorLimit = pow(Integer(2), 15);
 
   std::map<Integer, Integer> rootFactors{{1, 1}};
-  std::map<Integer, Integer> factorRates = factors(lhs, factorLimit);
+  const std::map<Integer, Integer> factorRates = factors(lhs, factorLimit);
 
-  for (const auto &factorRate : factorRates) {
-    Rational power(factorRate.second, rhs);
-    Integer factor = factorRate.first;
+  for (const auto &[factor, rate] : factorRates) {
+    const Rational power(rate, rhs);
 
     if (power.denominator() == 1) {
       rootFactors[1] *= pow(factor, power.numerator());
@@ -115,13 +114,13 @@ std::map<Integer, Integer> Root::roots(const Integer &lhs, const Integer &rhs) {
       rootFactors[1] *= pow(factor, power.numerator() / power.denominator());
     }
 
-    factor = pow(factor, power.numerator() % power.denominator());
+    const Integer factorMultiplier = pow(factor, power.numerator() % power.denominator());
 
     if (auto rootIter = rootFactors.find(power.denominator()); rootIter != rootFactors.end()) {
-      rootIter->second *= factor;
+      rootIter->second *= factorMultiplier;
     }
     else {
-      rootFactors.try_emplace(power.denominator(), factor);
+      rootFactors.try_emplace(power.denominator(), factorMultiplier);
     }
   }
 
@@ -135,7 +134,7 @@ std::unique_ptr<IMathObject> Root::perfectRoot(const Integer &lhs, const Integer
 
   if (rhs == 2) { // TODO: perfect nth-roots
     Integer remainder;
-    Integer lhsSqrt = sqrt(lhs, remainder);
+    const Integer lhsSqrt = sqrt(lhs, remainder);
 
     if (remainder == 0) {
       return lhsSqrt.clone();
@@ -147,22 +146,22 @@ std::unique_ptr<IMathObject> Root::perfectRoot(const Integer &lhs, const Integer
 
 std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integer &rhs) {
   if (lhs.denominator() == 1) {
-    return Root()(lhs.numerator(), rhs);
+    return Root{}(lhs.numerator(), rhs);
   }
 
   if (ArgumentPtr numeratorRes = perfectRoot(lhs.numerator(), rhs)) {
-    if (ArgumentPtr denominatorRes = perfectRoot(lhs.denominator(), rhs)) {
+    if (const ArgumentPtr denominatorRes = perfectRoot(lhs.denominator(), rhs)) {
       const auto &numer = cast<Integer>(*numeratorRes);
       const auto &denom = cast<Integer>(*denominatorRes);
       return Rational(numer, denom).toMinimalObject();
     }
 
-    ArgumentPtr denominatorRes = Root()(lhs.denominator(), rhs);
+    ArgumentPtr denominatorRes = Root{}(lhs.denominator(), rhs);
     return divExpr(numeratorRes, denominatorRes);
   }
 
   if (ArgumentPtr denominatorRes = perfectRoot(lhs.denominator(), rhs)) {
-    return divExpr(Root()(lhs.numerator(), rhs), denominatorRes);
+    return divExpr(Root{}(lhs.numerator(), rhs), denominatorRes);
   }
 
   ArgumentPtrVector numeratorChildren;
@@ -231,7 +230,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
 }
 
 std::unique_ptr<IMathObject> Root::rootSimplify(const Real &lhs, const Integer &rhs) {
-  return Pow()(lhs, Rational(1, rhs));
+  return Pow{}(lhs, Rational(1, rhs));
 }
 
 }

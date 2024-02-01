@@ -49,20 +49,20 @@ using DerivativeSimplifyMap = std::unordered_map<
                               const std::shared_ptr<const Variable> &var)>>;
 
 DerivativeExpression::DerivativeExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
-    : IBinaryExpressionCRTP(Derivative(), std::move(inLhsChild), std::move(inRhsChild)) {
+    : IBinaryExpressionCRTP(Derivative{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 DerivativeExpression::SimplifyFunctionVector DerivativeExpression::getFunctionsForPostSimplify() const {
-  static const DerivativeExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &DerivativeExpression::derivativeSimplify,
   };
   return simplifyFunctions;
 }
 
 ArgumentPtr DerivativeExpression::derivativeSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto var = cast<Variable>(rhs);
+  const auto var = cast<Variable>(rhs);
 
-  if (auto lhsExpr = cast<IExpression>(lhs)) {
+  if (const auto lhsExpr = cast<IExpression>(lhs)) {
     return exprSimplify(lhsExpr, var);
   }
 
@@ -80,40 +80,40 @@ ArgumentPtr DerivativeExpression::derivativeSimplify(const IFunction & /*func*/,
 ArgumentPtr DerivativeExpression::exprSimplify(const std::shared_ptr<const IExpression> &expr, const std::shared_ptr<const Variable> &var) {
   static const DerivativeSimplifyMap derivativeSimplifyMap = [] {
     static const DerivativeSimplifyMap map = {
-        {Add().toString(), &addSimplify},
-        {Mul().toString(), &mulSimplify},
-        {Div().toString(), &divSimplify},
-        {Pow().toString(), &powSimplify},
-        {Log().toString(), &logSimplify},
-        {Sin().toString(), &sinSimplify},
-        {Cos().toString(), &cosSimplify},
-        {Tan().toString(), &tanSimplify},
-        {Cot().toString(), &cotSimplify},
-        {Sec().toString(), &secSimplify},
-        {Csc().toString(), &cscSimplify},
-        {Asin().toString(), &asinSimplify},
-        {Acos().toString(), &acosSimplify},
-        {Atan().toString(), &atanSimplify},
-        {Acot().toString(), &acotSimplify},
-        {Asec().toString(), &asecSimplify},
-        {Acsc().toString(), &acscSimplify},
-        {Sinh().toString(), &sinhSimplify},
-        {Cosh().toString(), &coshSimplify},
-        {Tanh().toString(), &tanhSimplify},
-        {Coth().toString(), &cothSimplify},
-        {Sech().toString(), &sechSimplify},
-        {Csch().toString(), &cschSimplify},
-        {Asinh().toString(), &asinhSimplify},
-        {Acosh().toString(), &acoshSimplify},
-        {Atanh().toString(), &atanhSimplify},
-        {Acoth().toString(), &atanhSimplify},
-        {Asech().toString(), &asechSimplify},
-        {Acsch().toString(), &acschSimplify},
+        {Add{}.toString(), &addSimplify},
+        {Mul{}.toString(), &mulSimplify},
+        {Div{}.toString(), &divSimplify},
+        {Pow{}.toString(), &powSimplify},
+        {Log{}.toString(), &logSimplify},
+        {Sin{}.toString(), &sinSimplify},
+        {Cos{}.toString(), &cosSimplify},
+        {Tan{}.toString(), &tanSimplify},
+        {Cot{}.toString(), &cotSimplify},
+        {Sec{}.toString(), &secSimplify},
+        {Csc{}.toString(), &cscSimplify},
+        {Asin{}.toString(), &asinSimplify},
+        {Acos{}.toString(), &acosSimplify},
+        {Atan{}.toString(), &atanSimplify},
+        {Acot{}.toString(), &acotSimplify},
+        {Asec{}.toString(), &asecSimplify},
+        {Acsc{}.toString(), &acscSimplify},
+        {Sinh{}.toString(), &sinhSimplify},
+        {Cosh{}.toString(), &coshSimplify},
+        {Tanh{}.toString(), &tanhSimplify},
+        {Coth{}.toString(), &cothSimplify},
+        {Sech{}.toString(), &sechSimplify},
+        {Csch{}.toString(), &cschSimplify},
+        {Asinh{}.toString(), &asinhSimplify},
+        {Acosh{}.toString(), &acoshSimplify},
+        {Atanh{}.toString(), &atanhSimplify},
+        {Acoth{}.toString(), &atanhSimplify},
+        {Asech{}.toString(), &asechSimplify},
+        {Acsch{}.toString(), &acschSimplify},
     };
     return map;
   }();
 
-  if (auto iter = derivativeSimplifyMap.find(expr->getFunction()->toString());
+  if (const auto iter = derivativeSimplifyMap.find(expr->getFunction()->toString());
       iter != derivativeSimplifyMap.end()) {
 
     return iter->second(expr->getChildren(), var);
@@ -133,13 +133,13 @@ ArgumentPtr DerivativeExpression::addSimplify(const ArgumentPtrVector &children,
 }
 
 ArgumentPtr DerivativeExpression::mulSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
-  auto childrenSizeDiv2 = static_cast<ptrdiff_t>(children.size() / 2);
+  const auto childrenSizeDiv2 = static_cast<ptrdiff_t>(children.size() / 2);
 
-  ArgumentPtrVector lhsChildren = ArgumentPtrVector(children.begin(), children.begin() + childrenSizeDiv2);
-  ArgumentPtrVector rhsChildren = ArgumentPtrVector(children.begin() + childrenSizeDiv2, children.end());
+  auto lhsChildren = ArgumentPtrVector(children.begin(), children.begin() + childrenSizeDiv2);
+  auto rhsChildren = ArgumentPtrVector(children.begin() + childrenSizeDiv2, children.end());
 
-  ArgumentPtr lhs = makePolynom(Mul(), std::move(lhsChildren));
-  ArgumentPtr rhs = makePolynom(Mul(), std::move(rhsChildren));
+  ArgumentPtr lhs = makePolynom(Mul{}, std::move(lhsChildren));
+  ArgumentPtr rhs = makePolynom(Mul{}, std::move(rhsChildren));
 
   return addExpr(
       mulExpr(derivativeExpr(lhs, var), rhs),

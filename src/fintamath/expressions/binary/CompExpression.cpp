@@ -28,9 +28,12 @@ CompExpression::CompExpression(const IOperator &inOper, ArgumentPtr inLhsChild, 
 
 std::string CompExpression::toString() const {
   if (isSolution) {
-    if (const auto lhsExpr = cast<IExpression>(lhsChild); lhsExpr && *lhsExpr->getFunction() == Add()) {
+    if (const auto lhsExpr = cast<IExpression>(lhsChild);
+        lhsExpr &&
+        *lhsExpr->getFunction() == Add{}) {
+
       ArgumentPtrVector sumChildren = lhsExpr->getChildren();
-      ArgumentPtr solLhs = sumChildren.front();
+      const ArgumentPtr solLhs = sumChildren.front();
 
       if (is<Variable>(solLhs)) {
         sumChildren.erase(sumChildren.begin());
@@ -51,12 +54,12 @@ std::string CompExpression::toString() const {
 ArgumentPtr CompExpression::preSimplify() const {
   auto simpl = IBinaryExpression::preSimplify();
 
-  if (auto simplExpr = cast<CompExpression>(simpl)) {
+  if (const auto simplExpr = cast<CompExpression>(simpl)) {
     if (!simplExpr->isSolution &&
         (!is<Integer>(simplExpr->rhsChild) || *simplExpr->rhsChild != Integer(0))) {
 
-      if (*func != Eqv() &&
-          *func != Neqv() &&
+      if (*func != Eqv{} &&
+          *func != Neqv{} &&
           (containsComplex(simplExpr->lhsChild) || containsComplex(simplExpr->rhsChild))) {
 
         return simpl;
@@ -74,14 +77,14 @@ ArgumentPtr CompExpression::preSimplify() const {
 }
 
 CompExpression::SimplifyFunctionVector CompExpression::getFunctionsForPreSimplify() const {
-  static const CompExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &CompExpression::constSimplify,
   };
   return simplifyFunctions;
 }
 
 CompExpression::SimplifyFunctionVector CompExpression::getFunctionsForPostSimplify() const {
-  static const CompExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &CompExpression::constSimplify,
       &CompExpression::divSimplify,
       &CompExpression::negSimplify,
@@ -97,12 +100,12 @@ void CompExpression::markAsSolution() {
 
 std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Eqv().toString(), std::make_shared<Eqv>()},
-      {Neqv().toString(), std::make_shared<Neqv>()},
-      {More().toString(), std::make_shared<Less>()},
-      {Less().toString(), std::make_shared<More>()},
-      {MoreEqv().toString(), std::make_shared<LessEqv>()},
-      {LessEqv().toString(), std::make_shared<MoreEqv>()},
+      {Eqv{}.toString(), std::make_shared<Eqv>()},
+      {Neqv{}.toString(), std::make_shared<Neqv>()},
+      {More{}.toString(), std::make_shared<Less>()},
+      {Less{}.toString(), std::make_shared<More>()},
+      {MoreEqv{}.toString(), std::make_shared<LessEqv>()},
+      {LessEqv{}.toString(), std::make_shared<MoreEqv>()},
   };
   return oppositeFunctions.at(function.toString());
 }
@@ -116,17 +119,17 @@ ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentP
 
   if (*lhs == *rhs) {
     Boolean res = is<Eqv>(func) || is<LessEqv>(func) || is<MoreEqv>(func);
-    return res.clone();
+    return std::move(res).clone();
   }
 
   if (is<Inf>(lhs) && is<NegInf>(rhs)) {
     Boolean res = is<Neqv>(func) || is<More>(func) || is<MoreEqv>(func);
-    return res.clone();
+    return std::move(res).clone();
   }
 
   if (is<NegInf>(lhs) && is<Inf>(rhs)) {
     Boolean res = is<Neqv>(func) || is<Less>(func) || is<LessEqv>(func);
-    return res.clone();
+    return std::move(res).clone();
   }
 
   if ((isInfinity(lhs) && !containsInfinity(rhs)) ||
@@ -175,7 +178,8 @@ ArgumentPtr CompExpression::rateSimplify(const IFunction &func, const ArgumentPt
     return {};
   }
 
-  if (func != Eqv() && func != Neqv() &&
+  if (func != Eqv{} &&
+      func != Neqv{} &&
       (containsComplex(lhs) || containsComplex(rhs))) {
 
     return {};
@@ -205,10 +209,10 @@ ArgumentPtr CompExpression::rateSimplify(const IFunction &func, const ArgumentPt
   {
     ArgumentPtrVector newChildren = firstChildMulExpr->getChildren();
     newChildren.erase(newChildren.begin());
-    children.front() = makePolynom(Mul(), std::move(newChildren));
+    children.front() = makePolynom(Mul{}, std::move(newChildren));
   }
 
-  ArgumentPtr newLhs = makePolynom(Add(), std::move(children));
+  ArgumentPtr newLhs = makePolynom(Add{}, std::move(children));
   simplifyChild(newLhs);
 
   approximateSimplifyChild(rate);

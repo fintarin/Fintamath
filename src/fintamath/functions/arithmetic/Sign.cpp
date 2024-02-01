@@ -40,7 +40,7 @@ std::unique_ptr<IMathObject> Sign::multiSignSimplify(const INumber &rhs) {
       }
 
       // https://en.wikipedia.org/wiki/Sign_function#Complex_signum
-      return Div()(inRhs, *Abs()(inRhs));
+      return Div{}(inRhs, *Abs{}(inRhs));
     });
 
     return outMultiSign;

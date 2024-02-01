@@ -8,7 +8,7 @@ std::string removeLeadingZeroes(std::string str) {
     firstDigit++;
   }
 
-  size_t firstNonZeroDigit = str.find_first_not_of('0', firstDigit);
+  const size_t firstNonZeroDigit = str.find_first_not_of('0', firstDigit);
 
   if (firstNonZeroDigit == std::string::npos) {
     str.insert(firstDigit, "0");

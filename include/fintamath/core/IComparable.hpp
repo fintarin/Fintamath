@@ -9,7 +9,7 @@ class IComparable : public IArithmetic {
   using ComparableParser = Parser<std::unique_ptr<IComparable>>;
 
 public:
-  friend inline std::strong_ordering operator<=>(const IComparable &lhs, const IComparable &rhs) {
+  friend std::strong_ordering operator<=>(const IComparable &lhs, const IComparable &rhs) {
     return lhs.compareAbstract(rhs);
   }
 

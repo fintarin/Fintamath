@@ -26,26 +26,28 @@ namespace fintamath {
 constexpr int64_t maxPreciseRoot = 9;
 
 PowExpression::PowExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
-    : IBinaryExpressionCRTP(Pow(), std::move(inLhsChild), std::move(inRhsChild)) {
+    : IBinaryExpressionCRTP(Pow{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 std::string PowExpression::toString() const {
-  if (auto rhsChildRat = cast<Rational>(rhsChild)) {
+  if (const auto rhsChildRat = cast<Rational>(rhsChild)) {
     const Integer &numerator = rhsChildRat->numerator();
     const Integer &denominator = rhsChildRat->denominator();
 
     if (numerator == 1) {
       if (denominator == 2) {
-        return functionToString(Sqrt(), {lhsChild});
+        return functionToString(Sqrt{}, {lhsChild});
       }
 
-      return functionToString(Root(), {lhsChild, denominator.clone()});
+      return functionToString(Root{}, {lhsChild, denominator.clone()});
     }
   }
 
-  if (auto rhsChildExpr = cast<IExpression>(rhsChild); rhsChildExpr && is<Div>(rhsChildExpr->getFunction())) {
+  if (const auto rhsChildExpr = cast<IExpression>(rhsChild);
+      rhsChildExpr && is<Div>(rhsChildExpr->getFunction())) {
+
     if (*rhsChildExpr->getChildren().front() == Integer(1)) {
-      return functionToString(Root(), {lhsChild, rhsChildExpr->getChildren().back()});
+      return functionToString(Root{}, {lhsChild, rhsChildExpr->getChildren().back()});
     }
   }
 
@@ -53,7 +55,7 @@ std::string PowExpression::toString() const {
 }
 
 std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
-  if (auto rhsChildRat = cast<Rational>(rhsChild)) {
+  if (const auto rhsChildRat = cast<Rational>(rhsChild)) {
     const Integer &numerator = rhsChildRat->numerator();
     const Integer &denominator = rhsChildRat->denominator();
 
@@ -66,7 +68,7 @@ std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
     }
   }
 
-  if (auto rhsChildExpr = cast<IExpression>(rhsChild);
+  if (const auto rhsChildExpr = cast<IExpression>(rhsChild);
       rhsChildExpr &&
       is<Div>(rhsChildExpr->getFunction()) &&
       *rhsChildExpr->getChildren().front() == Integer(1)) {
@@ -92,7 +94,7 @@ ArgumentPtr PowExpression::approximateSimplify() const {
   return IBinaryExpression::approximateSimplify();
 }
 
-ArgumentPtr PowExpression::setPrecision(unsigned precision, const Integer &maxInt) const {
+ArgumentPtr PowExpression::setPrecision(const unsigned precision, const Integer &maxInt) const {
   if (const auto ratRhsChild = cast<Rational>(rhsChild); ratRhsChild && ratRhsChild->denominator() <= maxPreciseRoot) {
     auto approxExpr = cast<PowExpression>(clone());
     setPrecisionChild(approxExpr->lhsChild, precision, maxInt);
@@ -103,7 +105,7 @@ ArgumentPtr PowExpression::setPrecision(unsigned precision, const Integer &maxIn
 }
 
 PowExpression::SimplifyFunctionVector PowExpression::getFunctionsForPostSimplify() const {
-  static const PowExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &PowExpression::constSimplify,
       &PowExpression::polynomSimplify,
       &PowExpression::powSimplify,
@@ -130,8 +132,8 @@ Integer PowExpression::generateFirstNum(const Integer &countOfOne) {
 // https://en.wikipedia.org/wiki/Partition_(number_theory)
 // https://en.wikipedia.org/wiki/Combinatorial_number_system#Applications
 Integer PowExpression::generateNextNumber(const Integer &n) {
-  Integer u = n & -n;
-  Integer v = u + n;
+  const Integer u = n & -n;
+  const Integer v = u + n;
   return v + (((v ^ n) / u) >> 2);
 }
 
@@ -158,7 +160,7 @@ std::vector<Integer> PowExpression::getPartition(Integer bitNumber, const Intege
 // Uses multinomial theorem for exponentiation of sum.
 // https://en.wikipedia.org/wiki/Multinomial_theorem
 ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &power) {
-  auto sumExpr = cast<IExpression>(expr);
+  const auto sumExpr = cast<IExpression>(expr);
   ArgumentPtrVector polynom;
 
   if (sumExpr && is<Add>(sumExpr->getFunction())) {
@@ -194,16 +196,16 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
 }
 
 ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
+  if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     const ArgumentPtr &lhsExprLhsChild = lhsExpr->getChildren().front();
     const ArgumentPtr &lhsExprRhsChild = lhsExpr->getChildren().back();
 
     bool canMul = is<Integer>(rhs);
 
-    if (auto lhsExprLhsChildNum = cast<INumber>(lhsExprLhsChild)) {
+    if (const auto lhsExprLhsChildNum = cast<INumber>(lhsExprLhsChild)) {
       canMul = canMul ||
                (!lhsExprLhsChildNum->isComplex() &&
-                *MoreEqv()(*lhsExprLhsChildNum, Integer(0)) == Boolean(true));
+                *MoreEqv{}(*lhsExprLhsChildNum, Integer(0)) == Boolean(true));
     }
 
     if (canMul) {
@@ -218,16 +220,16 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
 
 ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (is<ComplexInf>(rhs)) {
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   if (is<NegInf>(rhs)) {
-    return powExpr(divExpr(Integer(1).clone(), lhs), Inf().clone());
+    return powExpr(divExpr(Integer(1).clone(), lhs), Inf{}.clone());
   }
 
   if (is<Inf>(rhs)) {
     if (isInfinity(lhs)) {
-      return ComplexInf().clone();
+      return ComplexInf{}.clone();
     }
 
     if (!containsVariable(lhs)) {
@@ -236,24 +238,24 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
 
       if (const auto lhsNum = cast<INumber>(approxLhs)) {
         if (lhsNum->isComplex()) {
-          return Undefined().clone();
+          return Undefined{}.clone();
         }
 
-        auto lhsNumAbs = cast<INumber>(Abs()(*lhsNum));
+        const auto lhsNumAbs = cast<INumber>(Abs{}(*lhsNum));
 
         if (*lhsNumAbs == Integer(1)) {
-          return Undefined().clone();
+          return Undefined{}.clone();
         }
 
         if (*lhsNumAbs > Integer(1)) {
-          return Inf().clone();
+          return Inf{}.clone();
         }
 
         return Integer(0).clone();
       }
     }
     else {
-      return Undefined().clone();
+      return Undefined{}.clone();
     }
   }
 
@@ -275,7 +277,7 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
 
   if (is<NegInf>(lhs)) {
     ArgumentPtr mulLhs = powExpr(Integer(-1).clone(), rhs);
-    ArgumentPtr mulRhs = powExpr(Inf().clone(), rhs);
+    ArgumentPtr mulRhs = powExpr(Inf{}.clone(), rhs);
     return mulExpr(mulLhs, mulRhs);
   }
 
@@ -286,15 +288,15 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
 
       if (const auto rhsComplex = cast<Complex>(approxRhs)) {
         if (rhsComplex->real() == Integer(0)) {
-          return Undefined().clone();
+          return Undefined{}.clone();
         }
 
-        return ComplexInf().clone();
+        return ComplexInf{}.clone();
       }
 
       if (const auto rhsNum = cast<INumber>(approxRhs)) {
         if (*rhsNum == Integer(0)) {
-          return Undefined().clone();
+          return Undefined{}.clone();
         }
 
         if (*rhsNum < Integer(0)) {
@@ -305,13 +307,13 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
       }
     }
     else {
-      return Undefined().clone();
+      return Undefined{}.clone();
     }
   }
 
   if (*rhs == Integer(0)) {
     if (isMulInfinity(lhs)) {
-      return Undefined().clone();
+      return Undefined{}.clone();
     }
 
     if (!containsInfinity(lhs)) {
@@ -321,7 +323,7 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
 
   if (*lhs == Integer(0) || *lhs == Integer(1)) {
     if (isMulInfinity(rhs)) {
-      return Undefined().clone();
+      return Undefined{}.clone();
     }
 
     if (!containsInfinity(rhs)) {
@@ -355,7 +357,7 @@ ArgumentPtr PowExpression::mulSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 
   ArgumentPtr res;
 
-  if (auto mulExprChild = cast<IExpression>(lhs); mulExprChild && is<Mul>(mulExprChild->getFunction())) {
+  if (const auto mulExprChild = cast<IExpression>(lhs); mulExprChild && is<Mul>(mulExprChild->getFunction())) {
     ArgumentPtrVector args = mulExprChild->getChildren();
 
     for (auto &arg : args) {
@@ -375,7 +377,7 @@ ArgumentPtr PowExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr
 
   ArgumentPtr res;
 
-  if (auto divExprChild = cast<IExpression>(lhs); divExprChild && is<Div>(divExprChild->getFunction())) {
+  if (const auto divExprChild = cast<IExpression>(lhs); divExprChild && is<Div>(divExprChild->getFunction())) {
     ArgumentPtr numerator = powExpr(divExprChild->getChildren().front(), rhs);
     ArgumentPtr denominator = powExpr(divExprChild->getChildren().back(), rhs);
     res = divExpr(numerator, denominator);

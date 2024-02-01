@@ -9,7 +9,7 @@ std::unique_ptr<IMathObject> Coth::call(const ArgumentRefVector &argVect) const 
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(0)) {
-    return ComplexInf().clone();
+    return ComplexInf{}.clone();
   }
 
   return multiCothSimplify(rhs);

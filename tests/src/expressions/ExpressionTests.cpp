@@ -22,8 +22,8 @@ TEST(ExpressionTests, moveTest) {
 }
 
 TEST(ExpressionTests, copyTest) {
-  auto a = Expression("1+2");
-  auto b = a;
+  const auto a = Expression("1+2");
+  const auto b = a;
   EXPECT_TRUE(a == b && &a != &b);
 }
 
@@ -84,7 +84,7 @@ TEST(ExpressionTests, setVariableTest) {
 }
 
 TEST(ExpressionTests, equalsTest) {
-  Expression a;
+  const Expression a;
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Expression());

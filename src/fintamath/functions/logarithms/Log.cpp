@@ -16,15 +16,15 @@ std::unique_ptr<IMathObject> Log::call(const ArgumentRefVector &argVect) const {
 
   if (lhs == Integer(1)) {
     if (rhs == Integer(1)) {
-      return Undefined().clone();
+      return Undefined{}.clone();
     }
 
-    return ComplexInf().clone();
+    return ComplexInf{}.clone();
   }
 
   if (lhs == Integer(0)) {
     if (rhs == Integer(0)) {
-      return Undefined().clone();
+      return Undefined{}.clone();
     }
 
     return Integer(0).clone();
@@ -32,10 +32,10 @@ std::unique_ptr<IMathObject> Log::call(const ArgumentRefVector &argVect) const {
 
   if (rhs == Integer(0)) {
     if (lhs > Integer(1)) {
-      return NegInf().clone();
+      return NegInf{}.clone();
     }
 
-    return Inf().clone();
+    return Inf{}.clone();
   }
 
   if (rhs == Integer(1)) {
@@ -93,11 +93,11 @@ std::unique_ptr<IMathObject> Log::multiLogSimplify(const INumber &lhs, const INu
     return outMultiPow;
   }();
 
-  if (auto rhsConv = convert(lhs, rhs)) {
+  if (const auto rhsConv = convert(lhs, rhs)) {
     return multiLog(lhs, *rhsConv);
   }
 
-  auto lhsConv = convert(rhs, lhs);
+  const auto lhsConv = convert(rhs, lhs);
   return multiLog(*lhsConv, rhs);
 }
 

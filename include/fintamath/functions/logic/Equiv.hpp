@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Equiv final : public IOperatorCRTP<Boolean, Equiv, Boolean, Boolean> {
 public:
-  Equiv() : IOperatorCRTP(IOperator::Priority::Equivalence, true) {
+  Equiv() : IOperatorCRTP(Priority::Equivalence, true) {
   }
 
   std::string toString() const override {

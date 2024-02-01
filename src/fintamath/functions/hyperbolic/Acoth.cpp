@@ -15,16 +15,16 @@ std::unique_ptr<IMathObject> Acoth::call(const ArgumentRefVector &argVect) const
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
-    return NegInf().clone();
+    return NegInf{}.clone();
   }
 
   if (rhs == Integer(0)) {
-    static const auto res = divExpr(mulExpr(I(), Pi()), Integer(2).clone())->toMinimalObject();
+    static const auto res = divExpr(mulExpr(I{}, Pi{}), Integer(2).clone())->toMinimalObject();
     return res->clone();
   }
 
   if (rhs == Integer(1)) {
-    return Inf().clone();
+    return Inf{}.clone();
   }
 
   return multiAcothSimplify(rhs);

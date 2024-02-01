@@ -11,11 +11,11 @@ std::unique_ptr<IMathObject> Asec::call(const ArgumentRefVector &argVect) const 
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
-    return Pi().toMinimalObject();
+    return Pi{}.toMinimalObject();
   }
 
   if (rhs == Integer(0)) {
-    return ComplexInf().clone();
+    return ComplexInf{}.clone();
   }
 
   if (rhs == Integer(1)) {

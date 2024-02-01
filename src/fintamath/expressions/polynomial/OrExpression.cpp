@@ -8,7 +8,7 @@
 namespace fintamath {
 
 OrExpression::OrExpression(ArgumentPtrVector inChildren)
-    : IPolynomExpressionCRTP(Or(), std::move(inChildren)) {
+    : IPolynomExpressionCRTP(Or{}, std::move(inChildren)) {
 }
 
 std::string OrExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
@@ -32,13 +32,13 @@ ArgumentPtr OrExpression::postSimplify() const {
   }
 
   ArgumentPtrVector simplChildren = simpl->children;
-  size_t simplChildrenSizeInitial = simplChildren.size();
+  const size_t simplChildrenSizeInitial = simplChildren.size();
 
   // TODO: use more efficient algorithm
   for (size_t i = 0; i + 1 < simplChildren.size(); i++) {
     for (size_t j = i + 1; j < simplChildren.size(); j++) {
       if (auto res = absorptionSimplify(simplChildren[i], simplChildren[j])) {
-        simplChildren[i] = res;
+        simplChildren[i] = std::move(res);
         simplChildren.erase(simplChildren.begin() + static_cast<ptrdiff_t>(j));
         j--;
       }
@@ -59,7 +59,7 @@ ArgumentPtr OrExpression::postSimplify() const {
 }
 
 OrExpression::SimplifyFunctionVector OrExpression::getFunctionsForPreSimplify() const {
-  static const OrExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &OrExpression::notSimplify,
       &OrExpression::boolSimplify,
       &OrExpression::equalSimplify,
@@ -68,7 +68,7 @@ OrExpression::SimplifyFunctionVector OrExpression::getFunctionsForPreSimplify() 
 }
 
 OrExpression::SimplifyFunctionVector OrExpression::getFunctionsForPostSimplify() const {
-  static const OrExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &OrExpression::andSimplify,
       &OrExpression::notSimplify,
       &OrExpression::boolSimplify,
@@ -115,8 +115,8 @@ ArgumentPtr OrExpression::notSimplify(const IFunction & /*func*/, const Argument
 }
 
 ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  const auto rhsExpr = cast<IExpression>(rhs);
 
   if (!lhsExpr || !rhsExpr ||
       !is<And>(lhsExpr->getFunction()) || !is<And>(rhsExpr->getFunction())) {
@@ -138,8 +138,9 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
 
     bool isLhsSubChildNot = false;
 
-    if (auto lhsSubChildNotExpr = cast<IExpression>(lhsSubChild);
-        lhsSubChildNotExpr && is<Not>(lhsSubChildNotExpr->getFunction())) {
+    if (const auto lhsSubChildNotExpr = cast<IExpression>(lhsSubChild);
+        lhsSubChildNotExpr &&
+        is<Not>(lhsSubChildNotExpr->getFunction())) {
 
       isLhsSubChildNot = true;
       lhsSubChild = lhsSubChildNotExpr->getChildren().front();
@@ -147,8 +148,9 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
 
     bool isRhsSubChildNot = false;
 
-    if (auto rhsSubChildNotExpr = cast<IExpression>(rhsSubChild);
-        rhsSubChildNotExpr && is<Not>(rhsSubChildNotExpr->getFunction())) {
+    if (const auto rhsSubChildNotExpr = cast<IExpression>(rhsSubChild);
+        rhsSubChildNotExpr &&
+        is<Not>(rhsSubChildNotExpr->getFunction())) {
 
       isRhsSubChildNot = true;
       rhsSubChild = rhsSubChildNotExpr->getChildren().front();
@@ -183,8 +185,8 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
 }
 
 ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  const auto rhsExpr = cast<IExpression>(rhs);
 
   ArgumentPtrVector lhsChildren;
   ArgumentPtrVector rhsChildren;
@@ -207,7 +209,7 @@ ArgumentPtr OrExpression::absorptionSimplify(const ArgumentPtr &lhs, const Argum
     return {};
   }
 
-  ArgumentPtrVector maxChildren = lhsChildren.size() > rhsChildren.size() ? lhsChildren : rhsChildren;
+  const ArgumentPtrVector maxChildren = lhsChildren.size() > rhsChildren.size() ? lhsChildren : rhsChildren;
   ArgumentPtrVector minChildren = lhsChildren.size() < rhsChildren.size() ? lhsChildren : rhsChildren;
   size_t matchCount = 0;
 

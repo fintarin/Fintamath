@@ -35,8 +35,8 @@ std::unique_ptr<IMathObject> Abs::multiAbsSimplify(const INumber &rhs) {
 
     outMultiAbs.add<Complex>([](const Complex &inRhs) {
       // https://en.wikipedia.org/wiki/Absolute_value#Complex_numbers
-      auto sumOfSquares = *(inRhs.real() * inRhs.real()) + *(inRhs.imag() * inRhs.imag());
-      return Sqrt()(*sumOfSquares);
+      const auto sumOfSquares = *(inRhs.real() * inRhs.real()) + *(inRhs.imag() * inRhs.imag());
+      return Sqrt{}(*sumOfSquares);
     });
 
     return outMultiAbs;

@@ -1,6 +1,5 @@
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
-#include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
@@ -8,8 +7,6 @@
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/literals/constants/Undefined.hpp"
 
 namespace fintamath {
 
@@ -40,7 +37,7 @@ std::string IPolynomExpression::toString() const {
     const std::string childStr = childToString(*oper, children[i], children[i - 1]);
 
     if (childStr.size() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {
-      result += Mul().toString() + childStr.substr(1);
+      result += Mul{}.toString() + childStr.substr(1);
     }
     else {
       result += childStr;
@@ -96,7 +93,7 @@ ArgumentPtr IPolynomExpression::postSimplify() const {
   return simpl;
 }
 
-void IPolynomExpression::simplifyRec(bool isPostSimplify) {
+void IPolynomExpression::simplifyRec(const bool isPostSimplify) {
   compress();
   sort();
 
@@ -112,11 +109,8 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
       break;
     }
 
-    ArgumentPtr res;
-    bool isResSimplified = false;
-
-    res = callFunction(*func, {lhs, rhs});
-    isResSimplified = res != nullptr;
+    ArgumentPtr res = callFunction(*func, {lhs, rhs});
+    const bool isResSimplified = res != nullptr;
 
     if (!res) {
       res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(),
@@ -161,7 +155,7 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
   }
 }
 
-void IPolynomExpression::simplifyChildren(bool isPostSimplify) {
+void IPolynomExpression::simplifyChildren(const bool isPostSimplify) {
   ArgumentPtrVector oldChildren = children;
 
   children.clear();
@@ -192,7 +186,7 @@ std::string IPolynomExpression::childToString(const IOperator &oper, const Argum
 }
 
 std::strong_ordering IPolynomExpression::compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  ComparatorOptions options = {
+  const ComparatorOptions options = {
       .constantGreaterThanVariable = isConstantGreaterThanVariable(),
       .comparableOrderInversed = isComparableOrderInversed(),
   };

@@ -11,7 +11,7 @@ std::unique_ptr<IMathObject> Atan::call(const ArgumentRefVector &argVect) const 
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
-    return negExpr(divExpr(Pi(), Integer(4)))->toMinimalObject();
+    return negExpr(divExpr(Pi{}, Integer(4)))->toMinimalObject();
   }
 
   if (rhs == Integer(0)) {
@@ -19,7 +19,7 @@ std::unique_ptr<IMathObject> Atan::call(const ArgumentRefVector &argVect) const 
   }
 
   if (rhs == Integer(1)) {
-    return divExpr(Pi(), Integer(4))->toMinimalObject();
+    return divExpr(Pi{}, Integer(4))->toMinimalObject();
   }
 
   return multiAtanSimplify(rhs);
