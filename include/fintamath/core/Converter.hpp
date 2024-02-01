@@ -12,12 +12,9 @@ class Converter final {
   template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
   using ConverterFunction = std::function<std::unique_ptr<IMathObject>(const To &to, const From &from)>;
 
-public:
-  template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-  static void add(const ConverterFunction<To, From> &convertFunc) {
-    getConverter().add<To, From>(convertFunc);
-  }
+  using ConverterMultiMethod = MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)>;
 
+public:
   static std::unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) {
     return getConverter()(to, from);
   }
@@ -26,8 +23,13 @@ public:
     return getConverter().contains(to, from);
   }
 
+  template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
+  static void add(const ConverterFunction<To, From> &convertFunc) {
+    getConverter().add<To, From>(convertFunc);
+  }
+
 private:
-  static MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)> &getConverter();
+  static ConverterMultiMethod &getConverter();
 };
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>

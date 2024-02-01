@@ -13,12 +13,12 @@ public:
     return lhs.compareAbstract(rhs);
   }
 
-  static void registerConstructor(ComparableParser::Constructor constructor) {
-    getParser().registerConstructor(std::move(constructor));
-  }
-
   static std::unique_ptr<IComparable> parse(const std::string &str) {
     return getParser().parse(str);
+  }
+
+  static void registerConstructor(ComparableParser::Constructor constructor) {
+    getParser().registerConstructor(std::move(constructor));
   }
 
   static MathObjectType getTypeStatic() {

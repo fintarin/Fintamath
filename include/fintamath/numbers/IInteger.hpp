@@ -56,13 +56,13 @@ public:
     return res;
   }
 
+  static std::unique_ptr<IInteger> parse(const std::string &str) {
+    return getParser().parse(str);
+  }
+
   template <std::derived_from<IInteger> T>
   static void registerConstructor() {
     getParser().registerConstructor<T>();
-  }
-
-  static std::unique_ptr<IInteger> parse(const std::string &str) {
-    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {

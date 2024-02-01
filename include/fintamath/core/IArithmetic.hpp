@@ -33,6 +33,10 @@ public:
     return rhs.negateAbstract();
   }
 
+  static std::unique_ptr<IArithmetic> parse(const std::string &str) {
+    return getParser().parse(str);
+  }
+
   template <std::derived_from<IArithmetic> T>
   static void registerConstructor() {
     getParser().registerConstructor<T>();
@@ -40,10 +44,6 @@ public:
 
   static void registerConstructor(ArithmeticParser::Constructor constructor) {
     getParser().registerConstructor(std::move(constructor));
-  }
-
-  static std::unique_ptr<IArithmetic> parse(const std::string &str) {
-    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
@@ -69,7 +69,6 @@ template <typename Derived>
 class IArithmeticCRTP : public IArithmetic {
 #define I_ARITHMETIC_CRTP IArithmeticCRTP<Derived>
 #include "fintamath/core/IArithmeticCRTP.hpp"
-
 #undef I_ARITHMETIC_CRTP
 };
 

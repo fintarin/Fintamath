@@ -435,6 +435,16 @@ ArgumentPtr Expression::compress(const ArgumentPtr &child) {
   return child;
 }
 
+Expression::TermParser &Expression::getTermParser() {
+  static TermParser parser;
+  return parser;
+}
+
+Expression::ExpressionParser &Expression::getExpressionParser() {
+  static ExpressionParser parser;
+  return parser;
+}
+
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
   stdr::transform(args, args.begin(), &Expression::compress);
   Expression::validateFunctionArgs(func, args);

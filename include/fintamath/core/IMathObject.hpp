@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <sstream>
+#include <ostream>
 #include <string>
 
 #include "fintamath/core/Converter.hpp"
@@ -34,12 +34,12 @@ public:
     return lhs.equalsAbstract(rhs);
   }
 
-  static void registerConstructor(MathObjectParser::Constructor constructor) {
-    getParser().registerConstructor(std::move(constructor));
-  }
-
   static std::unique_ptr<IMathObject> parse(const std::string &str) {
     return getParser().parse(str);
+  }
+
+  static void registerConstructor(MathObjectParser::Constructor constructor) {
+    getParser().registerConstructor(std::move(constructor));
   }
 
   static MathObjectType getTypeStatic() {
@@ -57,7 +57,6 @@ template <typename Derived>
 class IMathObjectCRTP : public IMathObject {
 #define I_MATH_OBJECT_CRTP IMathObjectCRTP
 #include "fintamath/core/IMathObjectCRTP.hpp"
-
 #undef I_MATH_OBJECT_CRTP
 };
 

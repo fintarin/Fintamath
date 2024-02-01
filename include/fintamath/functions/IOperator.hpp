@@ -30,17 +30,17 @@ public:
 
   virtual bool isAssociative() const = 0;
 
-  template <std::derived_from<IOperator> T>
-  static void registerType() {
-    IFunction::registerType<T>();
-    getParser().registerType<T>();
-  }
-
   static std::unique_ptr<IOperator> parse(const std::string &parsedStr, IOperator::Priority priority = IOperator::Priority::Lowest) {
     const auto validator = [priority](const std::unique_ptr<IOperator> &oper) {
       return priority == IOperator::Priority::Lowest || oper->getOperatorPriority() == priority;
     };
     return getParser().parse(validator, parsedStr);
+  }
+
+  template <std::derived_from<IOperator> T>
+  static void registerType() {
+    IFunction::registerType<T>();
+    getParser().registerType<T>();
   }
 
   static MathObjectType getTypeStatic() {

@@ -14,13 +14,13 @@ public:
     return call();
   }
 
+  static std::unique_ptr<IConstant> parse(const std::string &parsedStr) {
+    return getParser().parse(parsedStr);
+  }
+
   template <std::derived_from<IConstant> T>
   static void registerType() {
     getParser().registerType<T>();
-  }
-
-  static std::unique_ptr<IConstant> parse(const std::string &parsedStr) {
-    return getParser().parse(parsedStr);
   }
 
   static MathObjectType getTypeStatic() {
@@ -38,7 +38,6 @@ template <typename Return, typename Derived>
 class IConstantCRTP : public IConstant {
 #define I_CONSTANT_CRTP IConstantCRTP<Return, Derived>
 #include "fintamath/literals/constants/IConstantCRTP.hpp"
-
 #undef I_CONSTANT_CRTP
 };
 

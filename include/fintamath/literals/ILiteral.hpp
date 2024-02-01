@@ -8,6 +8,10 @@ class ILiteral : public IMathObject {
   using LiteralParser = Parser<std::unique_ptr<ILiteral>>;
 
 public:
+  static std::unique_ptr<ILiteral> parse(const std::string &str) {
+    return getParser().parse(str);
+  }
+
   template <std::derived_from<ILiteral> T>
   static void registerConstructor() {
     getParser().registerConstructor<T>();
@@ -15,10 +19,6 @@ public:
 
   static void registerConstructor(LiteralParser::Constructor constructor) {
     getParser().registerConstructor(std::move(constructor));
-  }
-
-  static std::unique_ptr<ILiteral> parse(const std::string &str) {
-    return getParser().parse(str);
   }
 
   static MathObjectType getTypeStatic() {
