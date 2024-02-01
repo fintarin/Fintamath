@@ -157,7 +157,7 @@ public:
   using enum Id;
 
 public:
-  MathObjectType(Id rhs) : id(size_t(rhs)) {
+  MathObjectType(Id rhs) : id(static_cast<size_t>(rhs)) {
   }
 
   MathObjectType(size_t rhs) : id(rhs) {
@@ -166,7 +166,7 @@ public:
   bool operator==(const MathObjectType &rhs) const = default;
 
   bool operator==(Id rhs) const {
-    return id == size_t(rhs);
+    return id == static_cast<size_t>(rhs);
   }
 
   bool operator==(size_t rhs) const {
@@ -176,7 +176,7 @@ public:
   std::strong_ordering operator<=>(const MathObjectType &rhs) const = default;
 
   std::strong_ordering operator<=>(Id rhs) const {
-    return id <=> size_t(rhs);
+    return id <=> static_cast<size_t>(rhs);
   }
 
   std::strong_ordering operator<=>(size_t rhs) const {
@@ -188,7 +188,7 @@ public:
   }
 
 private:
-  size_t id = size_t(None);
+  size_t id = static_cast<size_t>(None);
 
 private:
   [[maybe_unused]] inline static const Config config;
@@ -201,7 +201,7 @@ namespace std {
 template <>
 struct hash<fintamath::MathObjectType> {
   size_t operator()(const fintamath::MathObjectType &rhs) const {
-    return hash<size_t>()(size_t(rhs));
+    return hash<size_t>()(static_cast<size_t>(rhs));
   }
 };
 

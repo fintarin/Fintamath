@@ -24,15 +24,17 @@ Rational::Rational(const std::string &str) {
     firstDigitNum++;
   }
 
-  std::string intPartStr = str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum));
+  std::string intPartStr = str.substr(static_cast<size_t>(firstDigitNum),
+                                      static_cast<size_t>(firstDotNum - firstDigitNum));
   Integer intPart;
 
   if (!intPartStr.empty()) {
-    intPart = Integer(str.substr(size_t(firstDigitNum), size_t(firstDotNum - firstDigitNum)));
+    intPart = Integer(str.substr(static_cast<size_t>(firstDigitNum),
+                                 static_cast<size_t>(firstDotNum - firstDigitNum)));
   }
 
   if (firstDotNum + 1 < std::ssize(str)) {
-    auto numeratorStr = str.substr(size_t(firstDotNum) + 1);
+    auto numeratorStr = str.substr(static_cast<size_t>(firstDotNum) + 1);
     std::string denominatorStr(numeratorStr.size() + 1, '0');
     denominatorStr.front() = '1';
     numer = Integer(numeratorStr);

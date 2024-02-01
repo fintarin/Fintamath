@@ -274,9 +274,9 @@ std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands
     ArgumentPtrVector children = unwrapComma(rhsChild);
 
     if (func->getFunctionType() != IFunction::Type::Any &&
-        size_t(func->getFunctionType()) != children.size()) {
+        static_cast<size_t>(func->getFunctionType()) != children.size()) {
 
-      func = IFunction::parse(func->toString(), IFunction::Type(children.size()));
+      func = IFunction::parse(func->toString(), static_cast<IFunction::Type>(children.size()));
 
       if (!func) {
         throw InvalidInputException("");
@@ -313,7 +313,7 @@ void Expression::insertMultiplications(TermVector &terms) {
         canPrevTermBeBinaryOperator(*terms[i])) {
 
       auto term = std::make_unique<Term>(mul->toString(), mul->clone());
-      terms.insert(terms.begin() + ptrdiff_t(i), std::move(term));
+      terms.insert(terms.begin() + static_cast<ptrdiff_t>(i), std::move(term));
       i++;
     }
   }
@@ -387,7 +387,7 @@ void Expression::collapseFactorials(TermVector &terms) {
       Factorial newFactorial(oldFactorial.getOrder() + 1);
       term->value = newFactorial.clone();
 
-      terms.erase(terms.begin() + ptrdiff_t(i) + 1);
+      terms.erase(terms.begin() + static_cast<ptrdiff_t>(i) + 1);
       i--;
     }
   }
@@ -464,12 +464,12 @@ void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVe
   IFunction::Type funcType = func.getFunctionType();
 
   if ((funcType != IFunction::Type::None && args.empty()) ||
-      (funcType != IFunction::Type::Any && args.size() < size_t(funcType))) {
+      (funcType != IFunction::Type::Any && args.size() < static_cast<size_t>(funcType))) {
 
     throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
   }
 
-  bool doesArgSizeMatch = funcType != IFunction::Type::Any && args.size() == size_t(funcType);
+  bool doesArgSizeMatch = funcType != IFunction::Type::Any && args.size() == static_cast<size_t>(funcType);
 
   ArgumentTypeVector expectedArgTypes = func.getArgTypes();
   MathObjectType expectedType = expectedArgTypes.front();

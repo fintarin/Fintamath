@@ -55,6 +55,9 @@ template <typename Return, typename Derived, typename... Args>
 class IOperatorCRTP : public IOperator {
 #define I_OPERATOR_CRTP IOperatorCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IOperatorCRTP.hpp"
+
+
+
 #undef I_OPERATOR_CRTP
 
 public:
@@ -69,7 +72,7 @@ public:
       type = Type::Any;
     }
     else {
-      type = Type(sizeof...(Args));
+      type = static_cast<Type>(sizeof...(Args));
     }
   }
 };

@@ -120,7 +120,7 @@ ArgumentPtrVector getPolynomCoefficients(const ArgumentPtr &elem, const Variable
       powers.emplace_back(Integer(0).clone());
     }
 
-    powers[size_t(*intPower)] = mulRate;
+    powers[static_cast<size_t>(*intPower)] = mulRate;
   }
 
   return powers;

@@ -148,8 +148,8 @@ void IPolynomExpression::simplifyRec(bool isPostSimplify) {
       }
     }
 
-    children.erase(children.begin() + ptrdiff_t(i) - 1);
-    children.erase(children.begin() + ptrdiff_t(i) - 1);
+    children.erase(children.begin() + static_cast<ptrdiff_t>(i) - 1);
+    children.erase(children.begin() + static_cast<ptrdiff_t>(i) - 1);
     children.emplace_back(res);
 
     i--;

@@ -39,7 +39,7 @@ ArgumentPtr OrExpression::postSimplify() const {
     for (size_t j = i + 1; j < simplChildren.size(); j++) {
       if (auto res = absorptionSimplify(simplChildren[i], simplChildren[j])) {
         simplChildren[i] = res;
-        simplChildren.erase(simplChildren.begin() + ptrdiff_t(j));
+        simplChildren.erase(simplChildren.begin() + static_cast<ptrdiff_t>(j));
         j--;
       }
     }
@@ -172,7 +172,7 @@ ArgumentPtr OrExpression::andSimplify(const IFunction & /*func*/, const Argument
   }
 
   ArgumentPtrVector resultChildren = lhsChildren;
-  resultChildren.erase(resultChildren.begin() + ptrdiff_t(resolutionIndex));
+  resultChildren.erase(resultChildren.begin() + static_cast<ptrdiff_t>(resolutionIndex));
 
   if (resultChildren.size() > 1) {
     ArgumentPtr res = andExpr(std::move(resultChildren));

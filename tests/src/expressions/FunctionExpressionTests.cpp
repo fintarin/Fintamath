@@ -75,7 +75,7 @@ public:
   }
 
   static MathObjectType getTypeStatic() {
-    return size_t(IOperator::getTypeStatic()) - 1;
+    return static_cast<size_t>(IOperator::getTypeStatic()) - 1;
   }
 
 protected:
@@ -94,7 +94,7 @@ public:
   }
 
   static MathObjectType getTypeStatic() {
-    return size_t(IOperator::getTypeStatic()) - 2;
+    return static_cast<size_t>(IOperator::getTypeStatic()) - 2;
   }
 
 protected:

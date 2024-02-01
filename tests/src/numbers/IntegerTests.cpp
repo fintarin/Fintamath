@@ -843,11 +843,11 @@ TEST(IntegerTests, signTest) {
 }
 
 TEST(IntegerTests, intOperatorTest) {
-  EXPECT_EQ(int64_t(Integer(-2)), -2);
-  EXPECT_EQ(int64_t(Integer(10)), 10);
-  EXPECT_EQ(int64_t(Integer(0)), 0);
-  EXPECT_EQ(int64_t(Integer("100000000000000000000000000000000000000000000000000")), 9223372036854775807);
-  EXPECT_EQ(int64_t(Integer("-100000000000000000000000000000000000000000000000000")) + 1, -9223372036854775807);
+  EXPECT_EQ(static_cast<int64_t>(Integer(-2)), -2);
+  EXPECT_EQ(static_cast<int64_t>(Integer(10)), 10);
+  EXPECT_EQ(static_cast<int64_t>(Integer(0)), 0);
+  EXPECT_EQ(static_cast<int64_t>(Integer("100000000000000000000000000000000000000000000000000")), 9223372036854775807);
+  EXPECT_EQ(static_cast<int64_t>(Integer("-100000000000000000000000000000000000000000000000000")) + 1, -9223372036854775807);
 }
 
 TEST(IntegerTests, isPreciseTest) {

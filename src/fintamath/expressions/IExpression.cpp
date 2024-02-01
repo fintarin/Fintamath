@@ -198,8 +198,8 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
     outMultiSetPrecision.add<Complex, Integer, Integer>([](const Complex &inRhs,
                                                            const Integer &inPrecision,
                                                            const Integer &inMaxInt) {
-      auto approxReal = convertToApproximated(inRhs.real(), unsigned(inPrecision), inMaxInt);
-      auto approxImag = convertToApproximated(inRhs.imag(), unsigned(inPrecision), inMaxInt);
+      auto approxReal = convertToApproximated(inRhs.real(), static_cast<unsigned>(inPrecision), inMaxInt);
+      auto approxImag = convertToApproximated(inRhs.imag(), static_cast<unsigned>(inPrecision), inMaxInt);
 
       if (!approxReal && !approxImag) {
         return std::unique_ptr<IMathObject>();
@@ -308,7 +308,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
 
   if (containsVar &&
       (numberChildrenCount < 2 ||
-       IFunction::Type(approxChildren.size()) == getFunction()->getFunctionType())) {
+       static_cast<IFunction::Type>(approxChildren.size()) == getFunction()->getFunctionType())) {
 
     return approxExpr;
   }
