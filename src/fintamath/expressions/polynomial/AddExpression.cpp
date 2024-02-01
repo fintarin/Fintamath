@@ -165,13 +165,13 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
     const ArgumentPtrVector &lhsExprChildren = lhsExpr->getChildren();
     const ArgumentPtrVector &rhsExprChildren = rhsExpr->getChildren();
 
-    std::vector<size_t> lhsLogChildrenIndexes = findLogarithms(lhsExprChildren);
-    std::vector<size_t> rhsLogChildrenIndexes = findLogarithms(rhsExprChildren);
+    std::vector<size_t> lhsLogChildrenIndices = findLogarithms(lhsExprChildren);
+    std::vector<size_t> rhsLogChildrenIndices = findLogarithms(rhsExprChildren);
 
-    for (size_t i : lhsLogChildrenIndexes) {
+    for (size_t i : lhsLogChildrenIndices) {
       auto lhsLogChild = cast<IExpression>(lhsExprChildren[i]);
 
-      for (size_t j : rhsLogChildrenIndexes) {
+      for (size_t j : rhsLogChildrenIndices) {
         auto rhsLogChild = cast<IExpression>(rhsExprChildren[j]);
 
         if (*lhsLogChild->getChildren().front() == *rhsLogChild->getChildren().front()) {
@@ -202,9 +202,9 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
   }
 
   const ArgumentPtrVector &mulExprChildren = mulExprChild->getChildren();
-  std::vector<size_t> logChildrenIndexes = findLogarithms(mulExprChildren);
+  std::vector<size_t> logChildrenIndices = findLogarithms(mulExprChildren);
 
-  for (size_t i : logChildrenIndexes) {
+  for (size_t i : logChildrenIndices) {
     auto logChild = cast<IExpression>(mulExprChildren[i]);
 
     if (*logChild->getChildren().front() == *logExprChild->getChildren().front()) {
@@ -220,17 +220,17 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
 }
 
 std::vector<size_t> AddExpression::findLogarithms(const ArgumentPtrVector &children) {
-  std::vector<size_t> indexes;
+  std::vector<size_t> indices;
 
   for (const auto i : stdv::iota(0U, children.size())) {
     if (const auto childExpr = cast<const IExpression>(children[i]);
         childExpr && is<Log>(childExpr->getFunction())) {
 
-      indexes.emplace_back(i);
+      indices.emplace_back(i);
     }
   }
 
-  return indexes;
+  return indices;
 }
 
 std::shared_ptr<const IExpression> AddExpression::mulToLogarithm(const ArgumentPtrVector &children, size_t i) {
