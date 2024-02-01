@@ -9,27 +9,27 @@ class IArithmetic : public IMathObject {
   using ArithmeticParser = Parser<std::unique_ptr<IArithmetic>>;
 
 public:
-  friend inline std::unique_ptr<IArithmetic> operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
+  friend std::unique_ptr<IArithmetic> operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.addAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IArithmetic> operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
+  friend std::unique_ptr<IArithmetic> operator-(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.substractAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IArithmetic> operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
+  friend std::unique_ptr<IArithmetic> operator*(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.multiplyAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IArithmetic> operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
+  friend std::unique_ptr<IArithmetic> operator/(const IArithmetic &lhs, const IArithmetic &rhs) {
     return lhs.divideAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IArithmetic> operator+(const IArithmetic &rhs) {
+  friend std::unique_ptr<IArithmetic> operator+(const IArithmetic &rhs) {
     return cast<IArithmetic>(rhs.clone());
   }
 
-  friend inline std::unique_ptr<IArithmetic> operator-(const IArithmetic &rhs) {
+  friend std::unique_ptr<IArithmetic> operator-(const IArithmetic &rhs) {
     return rhs.negateAbstract();
   }
 

@@ -36,7 +36,7 @@ std::unique_ptr<IMathObject> Floor::multiFloorSimplify(const INumber &rhs) {
         return std::unique_ptr<IMathObject>{};
       }
 
-      return res.clone();
+      return std::move(res).clone();
     });
 
     outMultiFloor.add<Complex>([](const Complex &inRhs) {

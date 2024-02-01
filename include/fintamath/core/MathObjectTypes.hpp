@@ -160,7 +160,7 @@ public:
   MathObjectType(Id rhs) : id(static_cast<size_t>(rhs)) {
   }
 
-  MathObjectType(size_t rhs) : id(rhs) {
+  MathObjectType(const size_t rhs) : id(rhs) {
   }
 
   bool operator==(const MathObjectType &rhs) const = default;
@@ -169,7 +169,7 @@ public:
     return id == static_cast<size_t>(rhs);
   }
 
-  bool operator==(size_t rhs) const {
+  bool operator==(const size_t rhs) const {
     return id == rhs;
   }
 
@@ -179,7 +179,7 @@ public:
     return id <=> static_cast<size_t>(rhs);
   }
 
-  std::strong_ordering operator<=>(size_t rhs) const {
+  std::strong_ordering operator<=>(const size_t rhs) const {
     return id <=> rhs;
   }
 
@@ -196,16 +196,12 @@ private:
 
 }
 
-namespace std {
-
 template <>
-struct hash<fintamath::MathObjectType> {
-  size_t operator()(const fintamath::MathObjectType &rhs) const {
+struct std::hash<fintamath::MathObjectType> {
+  size_t operator()(const fintamath::MathObjectType &rhs) const noexcept {
     return hash<size_t>()(static_cast<size_t>(rhs));
   }
 };
-
-}
 
 namespace fintamath {
 
@@ -247,7 +243,7 @@ public:
 inline bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType) {
   const auto &ids = MathObjectBoundTypes::get();
 
-  if (auto toTypeBoundaries = ids.find(toType); toTypeBoundaries != ids.end()) {
+  if (const auto toTypeBoundaries = ids.find(toType); toTypeBoundaries != ids.end()) {
     return fromType >= toTypeBoundaries->first && fromType < toTypeBoundaries->second;
   }
 

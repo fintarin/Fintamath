@@ -39,7 +39,6 @@
 #include "fintamath/functions/trigonometry/Cot.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
-#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
@@ -213,23 +212,23 @@ Expression orL(const Expression &lhs, const Expression &rhs) {
 }
 
 Expression e() {
-  return E();
+  return E{};
 }
 
 Expression pi() {
-  return Pi();
+  return Pi{};
 }
 
 Expression inf() {
-  return Inf();
+  return Inf{};
 }
 
 Expression negInf() {
-  return NegInf();
+  return NegInf{};
 }
 
 Expression complexInf() {
-  return ComplexInf();
+  return ComplexInf{};
 }
 
 }

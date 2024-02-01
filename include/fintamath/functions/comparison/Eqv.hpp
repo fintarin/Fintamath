@@ -8,7 +8,7 @@ namespace fintamath {
 
 class Eqv final : public IOperatorCRTP<Boolean, Eqv, IComparable, IComparable> {
 public:
-  Eqv() : IOperatorCRTP(IOperator::Priority::Comparison, true) {
+  Eqv() : IOperatorCRTP(Priority::Comparison, true) {
   }
 
   std::string toString() const override {

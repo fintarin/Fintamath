@@ -69,7 +69,7 @@ template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From
 const To &cast(const From &from) {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
-      throw std::bad_cast();
+      throw std::bad_cast{};
     }
   }
 
@@ -80,7 +80,7 @@ template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From
 To &cast(From &from) {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
-      throw std::bad_cast();
+      throw std::bad_cast{};
     }
   }
 

@@ -22,11 +22,11 @@ TEST(CoreUtilsTests, isTest) {
   EXPECT_TRUE(is<IArithmetic>(INT.clone()));
   EXPECT_FALSE(is<IArithmetic>(E().clone()));
 
-  EXPECT_TRUE(is<IArithmetic>(std::shared_ptr<IMathObject>(INT.clone())));
-  EXPECT_FALSE(is<IArithmetic>(std::shared_ptr<IMathObject>(E().clone())));
+  EXPECT_TRUE(is<IArithmetic>(std::shared_ptr(INT.clone())));
+  EXPECT_FALSE(is<IArithmetic>(std::shared_ptr(E().clone())));
 
-  EXPECT_TRUE(is<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr<IMathObject>(INT.clone()))));
-  EXPECT_FALSE(is<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr<IMathObject>(E().clone()))));
+  EXPECT_TRUE(is<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr(INT.clone()))));
+  EXPECT_FALSE(is<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr(E().clone()))));
 
   EXPECT_TRUE(is<IArithmetic>(std::reference_wrapper<IMathObject>(INT)));
   EXPECT_FALSE(is<IArithmetic>(std::reference_wrapper<IMathObject>(CONST)));
@@ -51,10 +51,9 @@ TEST(CoreUtilsTests, castTest) {
   EXPECT_TRUE(cast<IArithmetic>(INT.clone()));
   EXPECT_FALSE(cast<IArithmetic>(E().clone()));
 
-  EXPECT_TRUE(cast<IArithmetic>(std::shared_ptr<IMathObject>(INT.clone())));
-  EXPECT_FALSE(cast<IArithmetic>(std::shared_ptr<IMathObject>(E().clone())));
+  EXPECT_TRUE(cast<IArithmetic>(std::shared_ptr(INT.clone())));
+  EXPECT_FALSE(cast<IArithmetic>(std::shared_ptr(E().clone())));
 
-  EXPECT_TRUE(cast<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr<IMathObject>(INT.clone()))));
-  EXPECT_FALSE(
-      cast<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr<IMathObject>(E().clone()))));
+  EXPECT_TRUE(cast<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr(INT.clone()))));
+  EXPECT_FALSE(cast<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr(E().clone()))));
 }

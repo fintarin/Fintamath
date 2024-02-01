@@ -13,7 +13,7 @@ public:
   using Backend = boost::multiprecision::mpfr_float;
 
   struct ScopedSetPrecision final {
-    unsigned currPrecision = Real::getPrecision();
+    unsigned currPrecision = getPrecision();
 
   public:
     explicit ScopedSetPrecision(unsigned precision);
@@ -93,7 +93,7 @@ private:
 private:
   Backend backend;
 
-  unsigned outputPrecision = Real::getPrecision();
+  unsigned outputPrecision = getPrecision();
 
   bool isNegative = false;
 };

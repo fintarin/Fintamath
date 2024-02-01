@@ -10,16 +10,16 @@ namespace {
 
 class TestFunction final : public IFunctionCRTP<IMathObject, TestFunction, IMathObject> {
 public:
-  void throwException1() const {
+  static void throwException1() {
     throw UndefinedFunctionException("sqrt", {"-10", "a", "b"});
   }
 
-  void throwException2() const {
+  static void throwException2() {
     throw UndefinedFunctionException("sqrt", {});
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
     return {};
   }
 };
@@ -28,7 +28,7 @@ protected:
 
 TEST(UndefinedFunctionExceptionTests, whatTest) {
   try {
-    TestFunction().throwException1();
+    TestFunction::throwException1();
     EXPECT_TRUE(false);
   }
   catch (const Exception &e) {
@@ -36,7 +36,7 @@ TEST(UndefinedFunctionExceptionTests, whatTest) {
   }
 
   try {
-    TestFunction().throwException2();
+    TestFunction::throwException2();
     EXPECT_TRUE(false);
   }
   catch (const Exception &e) {

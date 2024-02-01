@@ -10,12 +10,12 @@ namespace {
 
 class TestFunction final : public IFunctionCRTP<IMathObject, TestFunction, IMathObject> {
 public:
-  void throwException() const {
+  static void throwException() {
     throw InvalidInputFunctionException("sqrt", {"-10", "a", "b"});
   }
 
 protected:
-  virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
     return {};
   }
 };
@@ -24,7 +24,7 @@ protected:
 
 TEST(InvalidInputFunctionExceptionTests, whatTest) {
   try {
-    TestFunction().throwException();
+    TestFunction::throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Invalid input: sqrt(-10,a,b)");

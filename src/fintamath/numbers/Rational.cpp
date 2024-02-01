@@ -16,7 +16,7 @@ Rational::Rational(const std::string &str) {
   }
 
   int64_t firstDigitNum = 0;
-  int64_t firstDotNum = stdr::distance(str.begin(), stdr::find(str, '.'));
+  const int64_t firstDotNum = stdr::distance(str.begin(), stdr::find(str, '.'));
 
   bool isNegative = false;
   if (str.front() == '-') {
@@ -24,8 +24,8 @@ Rational::Rational(const std::string &str) {
     firstDigitNum++;
   }
 
-  std::string intPartStr = str.substr(static_cast<size_t>(firstDigitNum),
-                                      static_cast<size_t>(firstDotNum - firstDigitNum));
+  const std::string intPartStr = str.substr(static_cast<size_t>(firstDigitNum),
+                                            static_cast<size_t>(firstDotNum - firstDigitNum));
   Integer intPart;
 
   if (!intPartStr.empty()) {
@@ -34,7 +34,7 @@ Rational::Rational(const std::string &str) {
   }
 
   if (firstDotNum + 1 < std::ssize(str)) {
-    auto numeratorStr = str.substr(static_cast<size_t>(firstDotNum) + 1);
+    const std::string numeratorStr = str.substr(static_cast<size_t>(firstDotNum) + 1);
     std::string denominatorStr(numeratorStr.size() + 1, '0');
     denominatorStr.front() = '1';
     numer = Integer(numeratorStr);
@@ -63,7 +63,7 @@ Rational::Rational(Integer inNumer, Integer inDenom)
 Rational::Rational(Integer rhs) : numer(std::move(rhs)) {
 }
 
-Rational::Rational(int64_t rhs) : numer(rhs) {
+Rational::Rational(const int64_t rhs) : numer(rhs) {
 }
 
 const Integer &Rational::numerator() const {
@@ -151,13 +151,13 @@ void Rational::toIrreducibleRational() {
     denom *= -1;
   }
 
-  Integer gcdVal = gcd(numer, denom);
+  const Integer gcdVal = gcd(numer, denom);
   numer /= gcdVal;
   denom /= gcdVal;
 }
 
 void Rational::toCommonDenominators(Rational &lhs, Rational &rhs) {
-  Integer lcmVal = lcm(lhs.denom, rhs.denom);
+  const Integer lcmVal = lcm(lhs.denom, rhs.denom);
 
   lhs.numer *= (lcmVal / lhs.denom);
   lhs.denom = lcmVal;

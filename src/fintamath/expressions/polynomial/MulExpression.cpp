@@ -15,23 +15,21 @@
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
-#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 
 MulExpression::MulExpression(ArgumentPtrVector inChildren)
-    : IPolynomExpressionCRTP(Mul(), std::move(inChildren)) {
+    : IPolynomExpressionCRTP(Mul{}, std::move(inChildren)) {
 }
 
 std::string MulExpression::toString() const {
   auto [childNumerator, childDenominator] = splitRational(children.front());
 
   if (*childDenominator != Integer(1)) {
-    bool isChildNumeratorPosOne = *childNumerator == Integer(1);
-    bool isChildNumeratorNegOne = *childNumerator == Integer(-1);
+    const bool isChildNumeratorPosOne = *childNumerator == Integer(1);
+    const bool isChildNumeratorNegOne = *childNumerator == Integer(-1);
 
     ArgumentPtrVector numeratorChildren = children;
 
@@ -42,9 +40,9 @@ std::string MulExpression::toString() const {
       numeratorChildren.front() = childNumerator;
     }
 
-    ArgumentPtr numerator = makePolynom(Mul(), std::move(numeratorChildren));
+    ArgumentPtr numerator = makePolynom(Mul{}, std::move(numeratorChildren));
     ArgumentPtr denominator = childDenominator;
-    ArgumentPtr res = divExpr(numerator, denominator);
+    const ArgumentPtr res = divExpr(numerator, denominator);
 
     std::string resStr = res->toString();
 
@@ -60,7 +58,7 @@ std::string MulExpression::toString() const {
 
 std::string MulExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   if (!prevChild && *inChild == Integer(-1)) {
-    return Neg().toString();
+    return Neg{}.toString();
   }
 
   std::string operStr;
@@ -77,7 +75,7 @@ std::string MulExpression::childToString(const IOperator &oper, const ArgumentPt
 }
 
 MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPreSimplify() const {
-  static const MulExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &MulExpression::rationalSimplify,
       &MulExpression::divSimplify,
       &MulExpression::powSimplify,
@@ -86,7 +84,7 @@ MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPreSimplify(
 }
 
 MulExpression::SimplifyFunctionVector MulExpression::getFunctionsForPostSimplify() const {
-  static const MulExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &MulExpression::constSimplify,
       &MulExpression::polynomSimplify,
       &MulExpression::divSimplify,
@@ -103,7 +101,7 @@ bool MulExpression::isConstantGreaterThanVariable() const {
 ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if (*lhs == Integer(0)) {
     if (isMulInfinity(rhs)) {
-      return Undefined().clone();
+      return Undefined{}.clone();
     }
 
     if (!containsInfinity(rhs)) {
@@ -112,7 +110,7 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if (is<ComplexInf>(lhs) || is<ComplexInf>(rhs)) {
-    return ComplexInf().clone();
+    return ComplexInf{}.clone();
   }
 
   if (is<NegInf>(lhs) && is<Inf>(rhs)) {
@@ -120,7 +118,7 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if (is<NegInf>(rhs) && isComplexNumber(lhs)) {
-    return mulExpr(negExpr(lhs), Inf().clone());
+    return mulExpr(negExpr(lhs), Inf{}.clone());
   }
 
   if (*lhs == Integer(1)) {
@@ -142,7 +140,7 @@ ArgumentPtr MulExpression::constSimplify(const IFunction & /*func*/, const Argum
 
     if (rate && inf) {
       if (*lhs == Integer(-1)) {
-        return is<Inf>(rhs) ? NegInf().clone() : Inf().clone();
+        return is<Inf>(rhs) ? NegInf{}.clone() : Inf{}.clone();
       }
 
       if (!isComplexNumber(rate) && !containsVariable(rate)) {
@@ -205,8 +203,8 @@ ArgumentPtr MulExpression::divSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr MulExpression::polynomSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  const auto rhsExpr = cast<IExpression>(rhs);
 
   if (lhsExpr &&
       rhsExpr &&
@@ -268,8 +266,8 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
     return powExpr(lhsChildBase, ratesSum);
   }
 
-  auto lhsChildValueNum = cast<INumber>(lhsChildBase);
-  auto rhsChildValueNum = cast<INumber>(rhsChildBase);
+  const auto lhsChildValueNum = cast<INumber>(lhsChildBase);
+  const auto rhsChildValueNum = cast<INumber>(rhsChildBase);
 
   if (lhsChildValueNum &&
       rhsChildValueNum &&
@@ -288,8 +286,8 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr MulExpression::trigDoubleAngleSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto lhsExpr = cast<IExpression>(lhs);
-  auto rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  const auto rhsExpr = cast<IExpression>(rhs);
 
   if (!lhsExpr ||
       !rhsExpr ||
@@ -300,7 +298,7 @@ ArgumentPtr MulExpression::trigDoubleAngleSimplify(const IFunction & /*func*/, c
   }
 
   auto lhsChild = lhsExpr->getChildren().front();
-  auto rhsChild = rhsExpr->getChildren().front();
+  const auto rhsChild = rhsExpr->getChildren().front();
 
   if (*lhsChild != *rhsChild || containsInfinity(lhsChild)) {
     return {};

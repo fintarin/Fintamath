@@ -13,36 +13,19 @@
 namespace fintamath {
 
 IntegralExpression::IntegralExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
-    : IBinaryExpressionCRTP(Integral(), std::move(inLhsChild), std::move(inRhsChild)) {
+    : IBinaryExpressionCRTP(Integral{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 IntegralExpression::SimplifyFunctionVector IntegralExpression::getFunctionsForPostSimplify() const {
-  static const IntegralExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &IntegralExpression::integralSimplify,
   };
   return simplifyFunctions;
 }
 
 ArgumentPtr IntegralExpression::integralSimplify(const IFunction & /*func*/, const ArgumentPtr & /*lhs*/, const ArgumentPtr & /*rhs*/) {
+  // TODO: implement integral simplify
   return {};
-
-  // // TODO: remove this and implement derivative with rhs !is Variable
-  // if (!is<Variable>(rhs)) {
-  //   throw InvalidInputFunctionException(Integral().toString(), {lhs->toString(), rhs->toString()});
-  // }
-
-  // ArgumentPtr res;
-
-  // if (is<INumber>(lhs) || is<IConstant>(lhs)) {
-  //   res = mulExpr(lhs, rhs);
-  // }
-  // else if (is<Variable>(lhs) && is<Variable>(rhs) && *lhs == *rhs) {
-  //   res = divExpr(powExpr(lhs, Integer(2).clone()), Integer(2).clone());
-  // }
-
-  // // TODO: res + integral constant
-
-  // return res;
 }
 
 }

@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Not final : public IOperatorCRTP<Boolean, Not, Boolean> {
 public:
-  Not() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
+  Not() : IOperatorCRTP(Priority::PrefixUnary) {
   }
 
   std::string toString() const override {

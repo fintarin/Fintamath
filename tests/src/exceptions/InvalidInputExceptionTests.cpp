@@ -11,7 +11,7 @@ namespace {
 
 class TestMathObject final : public IMathObjectCRTP<TestMathObject> {
 public:
-  void throwException() const {
+  static void throwException() {
     throw InvalidInputException("123");
   }
 };
@@ -20,7 +20,7 @@ public:
 
 TEST(InvalidInputExceptionTests, whatTest) {
   try {
-    TestMathObject().throwException();
+    TestMathObject::throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Invalid input: 123");

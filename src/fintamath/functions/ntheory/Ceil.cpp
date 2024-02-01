@@ -36,7 +36,7 @@ std::unique_ptr<IMathObject> Ceil::multiCeilSimplify(const INumber &rhs) {
         return std::unique_ptr<IMathObject>{};
       }
 
-      return res.clone();
+      return std::move(res).clone();
     });
 
     outMultiCeil.add<Complex>([](const Complex &inRhs) {

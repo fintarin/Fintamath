@@ -161,7 +161,7 @@ Expression operator/(const Variable &lhs, const Expression &rhs);
 template <typename Function, bool isPolynomial>
 void Expression::registerFunctionExpressionMaker(ExpressionMaker maker) {
   ExpressionParser::TypeConstructor constructor = [maker = std::move(maker)](ArgumentPtrVector &&args) {
-    static const IFunction::Type type = Function().getFunctionType();
+    static const IFunction::Type type = Function{}.getFunctionType();
     std::unique_ptr<IMathObject> res;
 
     if constexpr (IsFunctionTypeAny<Function>::value) {

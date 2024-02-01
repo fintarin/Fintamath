@@ -7,7 +7,7 @@ namespace fintamath {
 
 class UnaryPlus final : public IOperatorCRTP<IArithmetic, UnaryPlus, IArithmetic> {
 public:
-  UnaryPlus() : IOperatorCRTP(IOperator::Priority::PrefixUnary) {
+  UnaryPlus() : IOperatorCRTP(Priority::PrefixUnary) {
   }
 
   std::string toString() const override {

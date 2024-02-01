@@ -22,7 +22,7 @@
 namespace fintamath {
 
 AddExpression::AddExpression(ArgumentPtrVector inChildren)
-    : IPolynomExpressionCRTP(Add(), std::move(inChildren)) {
+    : IPolynomExpressionCRTP(Add{}, std::move(inChildren)) {
 }
 
 std::string AddExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
@@ -30,7 +30,7 @@ std::string AddExpression::childToString(const IOperator &oper, const ArgumentPt
   bool isChildNegated = false;
 
   if (result.size() > 1 &&
-      result.front() == Neg().toString().front()) {
+      result.front() == Neg{}.toString().front()) {
 
     isChildNegated = true;
     result = result.substr(1, result.size() - 1);
@@ -39,7 +39,7 @@ std::string AddExpression::childToString(const IOperator &oper, const ArgumentPt
   std::string funcStr;
 
   if (isChildNegated) {
-    funcStr = Sub().toString();
+    funcStr = Sub{}.toString();
   }
   else if (prevChild) {
     funcStr = oper.toString();
@@ -57,8 +57,8 @@ std::string AddExpression::childToString(const IOperator &oper, const ArgumentPt
 }
 
 std::strong_ordering AddExpression::compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  auto lhsExpr = cast<IExpression>(lhs);
-  auto rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  const auto rhsExpr = cast<IExpression>(rhs);
 
   if (lhsExpr &&
       is<Div>(lhsExpr->getFunction()) &&
@@ -78,7 +78,7 @@ std::strong_ordering AddExpression::compare(const ArgumentPtr &lhs, const Argume
 }
 
 AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPreSimplify() const {
-  static const AddExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &AddExpression::divSimplify,
       &AddExpression::constSimplify,
       &AddExpression::mulSimplify,
@@ -89,7 +89,7 @@ AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPreSimplify(
 }
 
 AddExpression::SimplifyFunctionVector AddExpression::getFunctionsForPostSimplify() const {
-  static const AddExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &AddExpression::constSimplify,
       &AddExpression::mulSimplify,
       &AddExpression::logSimplify,
@@ -111,7 +111,7 @@ ArgumentPtr AddExpression::constSimplify(const IFunction & /*func*/, const Argum
   if ((is<NegInf>(lhs) || is<ComplexInf>(lhs)) &&
       (is<Inf>(rhs) || is<ComplexInf>(rhs))) {
 
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   if ((is<Inf>(lhs) && is<Inf>(rhs)) ||
@@ -132,8 +132,8 @@ ArgumentPtr AddExpression::constSimplify(const IFunction & /*func*/, const Argum
 }
 
 ArgumentPtr AddExpression::logSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto lhsExpr = cast<IExpression>(lhs);
-  auto rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  const auto rhsExpr = cast<IExpression>(rhs);
 
   if (!lhsExpr || !rhsExpr ||
       !is<Log>(lhsExpr->getFunction()) || !is<Log>(rhsExpr->getFunction())) {
@@ -154,8 +154,8 @@ ArgumentPtr AddExpression::logSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  auto lhsExpr = cast<IExpression>(lhs);
-  auto rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  const auto rhsExpr = cast<IExpression>(rhs);
 
   if (!lhsExpr || !rhsExpr) {
     return {};
@@ -165,13 +165,13 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
     const ArgumentPtrVector &lhsExprChildren = lhsExpr->getChildren();
     const ArgumentPtrVector &rhsExprChildren = rhsExpr->getChildren();
 
-    std::vector<size_t> lhsLogChildrenIndices = findLogarithms(lhsExprChildren);
-    std::vector<size_t> rhsLogChildrenIndices = findLogarithms(rhsExprChildren);
+    const std::vector<size_t> lhsLogChildrenIndices = findLogarithms(lhsExprChildren);
+    const std::vector<size_t> rhsLogChildrenIndices = findLogarithms(rhsExprChildren);
 
-    for (size_t i : lhsLogChildrenIndices) {
+    for (const size_t i : lhsLogChildrenIndices) {
       auto lhsLogChild = cast<IExpression>(lhsExprChildren[i]);
 
-      for (size_t j : rhsLogChildrenIndices) {
+      for (const size_t j : rhsLogChildrenIndices) {
         auto rhsLogChild = cast<IExpression>(rhsExprChildren[j]);
 
         if (*lhsLogChild->getChildren().front() == *rhsLogChild->getChildren().front()) {
@@ -202,9 +202,9 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
   }
 
   const ArgumentPtrVector &mulExprChildren = mulExprChild->getChildren();
-  std::vector<size_t> logChildrenIndices = findLogarithms(mulExprChildren);
+  const std::vector<size_t> logChildrenIndices = findLogarithms(mulExprChildren);
 
-  for (size_t i : logChildrenIndices) {
+  for (const size_t i : logChildrenIndices) {
     auto logChild = cast<IExpression>(mulExprChildren[i]);
 
     if (*logChild->getChildren().front() == *logExprChild->getChildren().front()) {
@@ -233,9 +233,9 @@ std::vector<size_t> AddExpression::findLogarithms(const ArgumentPtrVector &child
   return indices;
 }
 
-std::shared_ptr<const IExpression> AddExpression::mulToLogarithm(const ArgumentPtrVector &children, size_t i) {
+std::shared_ptr<const IExpression> AddExpression::mulToLogarithm(const ArgumentPtrVector &children, const size_t i) {
   ArgumentPtrVector mulChildren = children;
-  auto logExprChild = cast<const IExpression>(mulChildren[i]);
+  const auto logExprChild = cast<const IExpression>(mulChildren[i]);
 
   mulChildren.erase(mulChildren.begin() + static_cast<ptrdiff_t>(i));
 
@@ -268,8 +268,8 @@ ArgumentPtr AddExpression::mulSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr AddExpression::divSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  auto rhsExpr = cast<IExpression>(rhs);
 
   if (const auto rhsRat = cast<Rational>(rhs)) {
     rhsExpr = cast<IExpression>(divExpr(rhsRat->numerator(), rhsRat->denominator()));
@@ -328,8 +328,8 @@ ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const Argume
   auto [lhsPowBase, lhsPowRate] = splitPowExpr(lhsMulValue);
   auto [rhsPowBase, rhsPowRate] = splitPowExpr(rhsMulValue);
 
-  auto lhsPowBaseExpr = cast<IExpression>(lhsPowBase);
-  auto rhsPowBaseExpr = cast<IExpression>(rhsPowBase);
+  const auto lhsPowBaseExpr = cast<IExpression>(lhsPowBase);
+  const auto rhsPowBaseExpr = cast<IExpression>(rhsPowBase);
 
   if (!lhsPowBaseExpr || *lhsPowRate != Integer(2)) {
     return {};
@@ -339,16 +339,15 @@ ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const Argume
     return {};
   }
 
-  auto lhsPowBaseChild = lhsPowBaseExpr->getChildren().front();
-
-  auto lhsMulRateNum = cast<INumber>(lhsMulRate);
+  const auto lhsPowBaseChild = lhsPowBaseExpr->getChildren().front();
+  const auto lhsMulRateNum = cast<INumber>(lhsMulRate);
 
   if (rhsPowBaseExpr && *rhsPowRate == Integer(2)) {
     if (!is<Sin>(lhsPowBaseExpr->getFunction()) || !is<Cos>(rhsPowBaseExpr->getFunction())) {
       return {};
     }
 
-    auto rhsPowBaseChild = rhsPowBaseExpr->getChildren().front();
+    const auto rhsPowBaseChild = rhsPowBaseExpr->getChildren().front();
 
     if (*lhsPowBaseChild != *rhsPowBaseChild) {
       return {};

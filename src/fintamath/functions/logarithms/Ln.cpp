@@ -12,7 +12,7 @@ std::unique_ptr<IMathObject> Ln::call(const ArgumentRefVector &argVect) const {
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(0)) {
-    return NegInf().clone();
+    return NegInf{}.clone();
   }
 
   if (rhs == Integer(1)) {

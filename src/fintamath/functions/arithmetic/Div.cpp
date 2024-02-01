@@ -13,11 +13,11 @@ std::unique_ptr<IMathObject> Div::call(const ArgumentRefVector &argVect) const {
   const auto &rhs = cast<IArithmetic>(argVect.back().get());
 
   if (lhs == Integer(0) && rhs == Integer(0)) {
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   if (rhs == Integer(0)) {
-    return ComplexInf().clone();
+    return ComplexInf{}.clone();
   }
 
   return lhs / rhs;

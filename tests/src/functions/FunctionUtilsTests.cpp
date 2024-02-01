@@ -55,26 +55,26 @@ TEST(FunctionUtilsTests, makeExpressionRefsTest) {
 }
 
 TEST(FunctionUtilsTests, makeExpressionAnyArgsRefTest) {
-  auto expr1 = makeExpr(Add(), Integer(1), Integer(2));
+  const auto expr1 = makeExpr(Add(), Integer(1), Integer(2));
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));
   EXPECT_FALSE(is<Expression>(expr1));
 
-  auto var = Variable("a");
-  auto expr2 = makeExpr(Cos(), var);
+  const auto var = Variable("a");
+  const auto expr2 = makeExpr(Cos(), var);
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
   EXPECT_FALSE(is<Expression>(expr2));
 }
 
 TEST(FunctionUtilsTests, makeExpressionAnyArgsPtrTest) {
-  auto expr1 = makeExpr(Add(), std::make_shared<Integer>(1), std::make_shared<Integer>(2));
+  const auto expr1 = makeExpr(Add(), std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr1->toString(), "1 + 2");
   EXPECT_TRUE(is<IExpression>(expr1));
   EXPECT_FALSE(is<Expression>(expr1));
 
   auto var = std::make_shared<Variable>("a");
-  auto expr2 = makeExpr(Cos(), var);
+  const auto expr2 = makeExpr(Cos(), var);
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
   EXPECT_FALSE(is<Expression>(expr2));

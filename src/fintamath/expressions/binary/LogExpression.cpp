@@ -22,19 +22,19 @@
 namespace fintamath {
 
 LogExpression::LogExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
-    : IBinaryExpressionCRTP(Log(), std::move(inLhsChild), std::move(inRhsChild)) {
+    : IBinaryExpressionCRTP(Log{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 std::string LogExpression::toString() const {
-  if (*lhsChild == E()) {
-    return functionToString(Ln(), {rhsChild});
+  if (*lhsChild == E{}) {
+    return functionToString(Ln{}, {rhsChild});
   }
 
   return IBinaryExpression::toString();
 }
 
 std::shared_ptr<IFunction> LogExpression::getOutputFunction() const {
-  if (*lhsChild == E()) {
+  if (*lhsChild == E{}) {
     return std::make_shared<Ln>();
   }
 
@@ -42,8 +42,8 @@ std::shared_ptr<IFunction> LogExpression::getOutputFunction() const {
 }
 
 ArgumentPtr LogExpression::approximateSimplify() const {
-  if (*lhsChild == E()) {
-    auto approxExpr = cast<LogExpression>(clone());
+  if (*lhsChild == E{}) {
+    const auto approxExpr = cast<LogExpression>(clone());
     approximateSimplifyChild(approxExpr->rhsChild);
 
     if (is<INumber>(approxExpr->rhsChild)) {
@@ -58,9 +58,9 @@ ArgumentPtr LogExpression::approximateSimplify() const {
   return IBinaryExpression::approximateSimplify();
 }
 
-ArgumentPtr LogExpression::setPrecision(unsigned precision, const Integer &maxInt) const {
-  if (*lhsChild == E()) {
-    auto approxExpr = cast<LogExpression>(clone());
+ArgumentPtr LogExpression::setPrecision(const unsigned precision, const Integer &maxInt) const {
+  if (*lhsChild == E{}) {
+    const auto approxExpr = cast<LogExpression>(clone());
     setPrecisionChild(approxExpr->rhsChild, precision, maxInt);
     return approxExpr->simplify();
   }
@@ -69,14 +69,14 @@ ArgumentPtr LogExpression::setPrecision(unsigned precision, const Integer &maxIn
 }
 
 LogExpression::SimplifyFunctionVector LogExpression::getFunctionsForPreSimplify() const {
-  static const LogExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &LogExpression::powSimplify,
   };
   return simplifyFunctions;
 }
 
 LogExpression::SimplifyFunctionVector LogExpression::getFunctionsForPostSimplify() const {
-  static const LogExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &LogExpression::constSimplify,
       &LogExpression::powSimplify,
       &LogExpression::equalSimplify,
@@ -88,19 +88,19 @@ ArgumentPtr LogExpression::constSimplify(const IFunction & /*func*/, const Argum
   if ((*lhs == Integer(0) || isMulInfinity(lhs)) &&
       (*rhs == Integer(0) || isMulInfinity(rhs))) {
 
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   if (*rhs == Integer(1) && !containsInfinity(lhs)) {
     return Integer(0).clone();
   }
 
-  if (*lhs == E()) {
+  if (*lhs == E{}) {
     if (isInfinity(rhs)) {
-      return Inf().clone();
+      return Inf{}.clone();
     }
 
-    return callFunction(Ln(), {rhs});
+    return callFunction(Ln{}, {rhs});
   }
 
   return {};
@@ -117,12 +117,12 @@ ArgumentPtr LogExpression::equalSimplify(const IFunction & /*func*/, const Argum
 ArgumentPtr LogExpression::powSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   ArgumentPtr res;
 
-  if (auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
+  if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
     ArgumentPtr multiplier = rhsExpr->getChildren().back();
     ArgumentPtr logExprChild = logExpr(lhs, rhsExpr->getChildren().front());
     res = mulExpr(multiplier, logExprChild);
   }
-  else if (auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
+  else if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     ArgumentPtr multiplier = divExpr(Integer(1).clone(), lhsExpr->getChildren().back());
     ArgumentPtr logExprChild = logExpr(lhsExpr->getChildren().front(), rhs);
     res = mulExpr(multiplier, logExprChild);

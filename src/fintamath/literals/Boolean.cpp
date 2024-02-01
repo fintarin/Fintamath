@@ -18,7 +18,7 @@ Boolean::Boolean(const std::string &str) {
   name = str;
 }
 
-Boolean::Boolean(bool val) : name(val ? TRUE : FALSE) {
+Boolean::Boolean(const bool val) : name(val ? TRUE : FALSE) {
 }
 
 std::string Boolean::toString() const {

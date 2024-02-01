@@ -6,8 +6,8 @@
 
 namespace fintamath {
 
-const unsigned precisionMultiplier = 2;
-const unsigned precisionDelta = 10;
+constexpr unsigned precisionMultiplier = 2;
+constexpr unsigned precisionDelta = 10;
 
 Real::Real(Backend inBackend) : backend(std::move(inBackend)),
                                 isNegative(backend < 0) {
@@ -29,8 +29,8 @@ Real::Real(std::string str) : Real() {
   }
 
   {
-    std::string expStr = "*10^";
-    size_t expPos = str.find(expStr);
+    const std::string expStr = "*10^";
+    const size_t expPos = str.find(expStr);
 
     if (expPos != std::string::npos) {
       str.replace(expPos, expStr.length(), "e");
@@ -57,8 +57,8 @@ Real::Real(const Integer &val) : backend(val.getBackend()),
                                  isNegative(val < 0) {
 }
 
-Real::Real(int64_t val) : backend(val),
-                          isNegative(val < 0) {
+Real::Real(const int64_t val) : backend(val),
+                                isNegative(val < 0) {
 }
 
 std::string Real::toString() const {
@@ -132,7 +132,7 @@ unsigned Real::getOutputPrecision() const {
   return outputPrecision;
 }
 
-void Real::setOutputPrecision(unsigned precision) {
+void Real::setOutputPrecision(const unsigned precision) {
   validateNewPrecision(precision);
   outputPrecision = precision;
 }
@@ -172,7 +172,9 @@ std::strong_ordering Real::compare(const Real &rhs) const {
 Real &Real::add(const Real &rhs) {
   updatePrecision(rhs);
 
-  bool isResNegZero = backend.is_zero() && rhs.backend.is_zero() && (isNegative || rhs.isNegative);
+  const bool isResNegZero = backend.is_zero() &&
+                            rhs.backend.is_zero() &&
+                            (isNegative || rhs.isNegative);
   backend += rhs.backend;
   isNegative = isResNegZero || backend < 0;
 
@@ -182,7 +184,9 @@ Real &Real::add(const Real &rhs) {
 Real &Real::substract(const Real &rhs) {
   updatePrecision(rhs);
 
-  bool isResNegZero = backend.is_zero() && rhs.backend.is_zero() && (isNegative || !rhs.isNegative);
+  const bool isResNegZero = backend.is_zero() &&
+                            rhs.backend.is_zero() &&
+                            (isNegative || !rhs.isNegative);
   backend -= rhs.backend;
   isNegative = isResNegZero || backend < 0;
 
@@ -225,7 +229,7 @@ void Real::updatePrecision(const Real &rhs) {
   outputPrecision = std::min(outputPrecision, rhs.outputPrecision);
 }
 
-void Real::validateNewPrecision(unsigned precision) const {
+void Real::validateNewPrecision(const unsigned precision) const {
   if (precision > outputPrecision) {
     // TODO: use std::format
     throw InvalidInputException("Precision must be less than or equal to " +
@@ -233,12 +237,12 @@ void Real::validateNewPrecision(unsigned precision) const {
   }
 }
 
-Real::ScopedSetPrecision::ScopedSetPrecision(unsigned precision) {
-  Real::setPrecision(precision);
+Real::ScopedSetPrecision::ScopedSetPrecision(const unsigned precision) {
+  setPrecision(precision);
 }
 
 Real::ScopedSetPrecision::~ScopedSetPrecision() {
-  Real::setPrecision(currPrecision);
+  setPrecision(currPrecision);
 }
 
 }

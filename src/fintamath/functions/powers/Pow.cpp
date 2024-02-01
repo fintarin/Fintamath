@@ -18,7 +18,7 @@ std::unique_ptr<IMathObject> Pow::call(const ArgumentRefVector &argVect) const {
   const auto &rhs = cast<INumber>(argVect.back().get());
 
   if (lhs == Integer(0) && rhs == Integer(0)) {
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   if (rhs == Integer(0)) {
@@ -27,7 +27,7 @@ std::unique_ptr<IMathObject> Pow::call(const ArgumentRefVector &argVect) const {
 
   if (rhs < Integer(0)) {
     if (lhs == Integer(0)) {
-      return ComplexInf().clone();
+      return ComplexInf{}.clone();
     }
 
     return multiPowSimplify(*(Rational(1) / lhs), *(-rhs));
@@ -63,11 +63,11 @@ std::unique_ptr<IMathObject> Pow::multiPowSimplify(const INumber &lhs, const INu
     return outMultiPow;
   }();
 
-  if (auto rhsConv = convert(lhs, rhs)) {
+  if (const auto rhsConv = convert(lhs, rhs)) {
     return multiPow(lhs, *rhsConv);
   }
 
-  auto lhsConv = convert(rhs, lhs);
+  const auto lhsConv = convert(rhs, lhs);
   return multiPow(*lhsConv, rhs);
 }
 
@@ -98,10 +98,10 @@ std::unique_ptr<IMathObject> Pow::powSimplify(const Rational &lhs, const Rationa
   }
 
   if (lhsDenominator == 1) {
-    return Root()(*multiPowSimplify(lhsNumerator, rhsNumerator), rhsDenominator);
+    return Root{}(*multiPowSimplify(lhsNumerator, rhsNumerator), rhsDenominator);
   }
 
-  return Root()(*multiPowSimplify(lhs, rhsNumerator), rhsDenominator);
+  return Root{}(*multiPowSimplify(lhs, rhsNumerator), rhsDenominator);
 }
 
 std::unique_ptr<IMathObject> Pow::powSimplify(const Real &lhs, const Real &rhs) {

@@ -13,15 +13,15 @@ std::unique_ptr<IMathObject> Acsc::call(const ArgumentRefVector &argVect) const 
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
-    return negExpr(divExpr(Pi(), Integer(2)))->toMinimalObject();
+    return negExpr(divExpr(Pi{}, Integer(2)))->toMinimalObject();
   }
 
   if (rhs == Integer(0)) {
-    return ComplexInf().clone();
+    return ComplexInf{}.clone();
   }
 
   if (rhs == Integer(1)) {
-    return divExpr(Pi(), Integer(2))->toMinimalObject();
+    return divExpr(Pi{}, Integer(2))->toMinimalObject();
   }
 
   return multiAcscSimplify(rhs);

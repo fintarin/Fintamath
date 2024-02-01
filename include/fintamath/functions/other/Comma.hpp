@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Comma final : public IOperatorCRTP<IArithmetic, Comma, IMathObject, IMathObject> {
 public:
-  Comma() : IOperatorCRTP(IOperator::Priority::Comma, true) {
+  Comma() : IOperatorCRTP(Priority::Comma, true) {
   }
 
   std::string toString() const override {

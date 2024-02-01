@@ -28,14 +28,11 @@ TEST(ComplexTests, copyTest) {
   auto a = Complex("3");
   EXPECT_EQ(a.toString(), "3");
 
-  auto b = a;
+  const auto b = a;
   EXPECT_TRUE(a == b && &a != &b);
 
   a = b;
   EXPECT_TRUE(a == b && &a != &b);
-
-  a = a;
-  EXPECT_TRUE(a == a && &a == &a);
 }
 
 TEST(ComplexTests, stringConstructorTest) {
@@ -909,9 +906,9 @@ TEST(ComplexTests, isComplexTest) {
 }
 
 TEST(ComplexTests, equalsTest) {
-  Complex a;
-  Integer b;
-  Integer c(1);
+  const Complex a;
+  const Integer b;
+  const Integer c(1);
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Complex());

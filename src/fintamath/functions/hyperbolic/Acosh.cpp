@@ -13,12 +13,12 @@ std::unique_ptr<IMathObject> Acosh::call(const ArgumentRefVector &argVect) const
   const auto &rhs = cast<INumber>(argVect.front().get());
 
   if (rhs == Integer(-1)) {
-    static const auto res = mulExpr(I(), Pi())->toMinimalObject();
+    static const auto res = mulExpr(I{}, Pi{})->toMinimalObject();
     return res->clone();
   }
 
   if (rhs == Integer(0)) {
-    static const auto res = divExpr(mulExpr(I(), Pi()), Integer(2).clone())->toMinimalObject();
+    static const auto res = divExpr(mulExpr(I{}, Pi{}), Integer(2).clone())->toMinimalObject();
     return res->clone();
   }
 

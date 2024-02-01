@@ -44,7 +44,7 @@ public:
   virtual bool isEvaluatable() const = 0;
 
   std::unique_ptr<IMathObject> operator()(const std::derived_from<IMathObject> auto &...args) const {
-    ArgumentRefVector argVect = {args...};
+    const ArgumentRefVector argVect = {args...};
     return callAbstract(argVect);
   }
 
@@ -52,7 +52,7 @@ public:
     return callAbstract(argVect);
   }
 
-  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, IFunction::Type type = IFunction::Type::Any) {
+  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, Type type = Type::Any) {
     const auto validator = [type](const std::unique_ptr<IFunction> &func) {
       return type == Type::Any || func->getFunctionType() == type;
     };
@@ -63,7 +63,7 @@ public:
   static void registerType() {
     getParser().registerType<T>();
 
-    getFunctionOrderMutableMap()[T().toString()] = maxFunctionOrder;
+    getFunctionOrderMutableMap()[T{}.toString()] = maxFunctionOrder;
     maxFunctionOrder++;
   }
 
@@ -88,12 +88,10 @@ template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : public IFunction {
 #define I_FUNCTION_CRTP IFunctionCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IFunctionCRTP.hpp"
-
-
 #undef I_FUNCTION_CRTP
 
 public:
-  explicit IFunctionCRTP(bool isEvaluatable = true) : isEvaluatableFunc(isEvaluatable) {
+  explicit IFunctionCRTP(const bool isEvaluatable = true) : isEvaluatableFunc(isEvaluatable) {
     if constexpr (IsFunctionTypeAny<Derived>::value) {
       type = Type::Any;
     }

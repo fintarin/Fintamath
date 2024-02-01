@@ -10,7 +10,7 @@ std::unique_ptr<IMathObject> Mod::call(const ArgumentRefVector &argVect) const {
   const auto &rhs = cast<INumber>(argVect.back().get());
 
   if (rhs == Integer(0)) {
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   return multiModSimplify(lhs, rhs);

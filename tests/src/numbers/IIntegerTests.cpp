@@ -87,7 +87,7 @@ public:
   TestIntegerConvertible() : TestInteger() {
   }
 
-  TestIntegerConvertible(const Integer &rhs) : TestIntegerConvertible() {
+  TestIntegerConvertible(const Integer &) : TestIntegerConvertible() {
   }
 
   static MathObjectType getTypeStatic() {
@@ -117,7 +117,7 @@ struct TestIntegerConvertableConfig final {
   }
 };
 
-const TestIntegerConvertableConfig config;
+[[maybe_unused]] const TestIntegerConvertableConfig config;
 
 }
 
@@ -266,14 +266,14 @@ TEST(IIntegerTests, bitRightShiftTest) {
 }
 
 TEST(IIntegerTests, bitNotTest) {
-  std::unique_ptr<IInteger> m1 = std::make_unique<Integer>(44);
+  const std::unique_ptr<IInteger> m1 = std::make_unique<Integer>(44);
   EXPECT_EQ((~*m1)->toString(), "-45");
 
   EXPECT_EQ((~Integer(1)).toString(), "-2");
 }
 
 TEST(IIntegerTests, incTest) {
-  std::unique_ptr<IInteger> m1 = std::make_unique<Integer>(1);
+  const std::unique_ptr<IInteger> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((++*m1).toString(), "2");
   EXPECT_EQ(((*m1)++)->toString(), "2");
   EXPECT_EQ(m1->toString(), "3");
@@ -283,7 +283,7 @@ TEST(IIntegerTests, incTest) {
 }
 
 TEST(IIntegerTests, decTest) {
-  std::unique_ptr<IInteger> m1 = std::make_unique<Integer>(1);
+  const std::unique_ptr<IInteger> m1 = std::make_unique<Integer>(1);
   EXPECT_EQ((--*m1).toString(), "0");
   EXPECT_EQ(((*m1)--)->toString(), "0");
   EXPECT_EQ(m1->toString(), "-1");

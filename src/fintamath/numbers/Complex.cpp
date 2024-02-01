@@ -19,10 +19,10 @@ Complex &Complex::operator=(const Complex &rhs) {
 
 Complex::Complex(const std::string &str) {
   if (!str.empty() && str.back() == 'I') {
-    im = INumber::parse(str.substr(0, str.size() - 1));
+    im = parse(str.substr(0, str.size() - 1));
   }
   else {
-    re = INumber::parse(str);
+    re = parse(str);
   }
 
   if (!re || !im) {
@@ -147,7 +147,7 @@ Complex &Complex::substract(const Complex &rhs) {
 
 // https://en.wikipedia.org/wiki/Complex_number#Multiplication_and_square
 Complex &Complex::multiply(const Complex &rhs) {
-  Complex lhs = *this;
+  const Complex lhs = *this;
 
   const auto &x = *lhs.re;
   const auto &y = *lhs.im;
@@ -162,7 +162,7 @@ Complex &Complex::multiply(const Complex &rhs) {
 
 // https://en.wikipedia.org/wiki/Complex_number#Reciprocal_and_division
 Complex &Complex::divide(const Complex &rhs) {
-  Complex lhs = *this;
+  const Complex lhs = *this;
 
   const auto &x = *lhs.re;
   const auto &y = *lhs.im;

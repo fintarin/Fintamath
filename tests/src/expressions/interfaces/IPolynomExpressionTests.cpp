@@ -33,12 +33,12 @@ TEST(IPolynomExpressionTests, toStringTest) {
 }
 
 TEST(IPolynomExpressionTests, getFunctionTest) {
-  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
+  const TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
 TEST(IPolynomExpressionTests, getChildren) {
-  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
+  const TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
   EXPECT_EQ(expr.getChildren().size(), 3);
   EXPECT_EQ(*expr.getChildren()[0], Integer(1));
   EXPECT_EQ(*expr.getChildren()[1], Integer(2));
@@ -67,7 +67,7 @@ TEST(IPolynomExpressionTests, setChildren) {
 }
 
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {
-  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Variable("a").clone()});
+  const TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Variable("a").clone()});
   EXPECT_EQ(expr.toMinimalObject()->toString(), "a * 2");
 }
 

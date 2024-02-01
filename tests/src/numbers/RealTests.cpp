@@ -996,7 +996,7 @@ TEST(RealTests, getCalculationPrecisionTest) {
 }
 
 TEST(RealTests, setPrecisionTest) {
-  unsigned currPrecision = Real::getPrecision();
+  const unsigned currPrecision = Real::getPrecision();
 
   Real::setPrecision(10);
   EXPECT_EQ(Real::getPrecision(), 10);
@@ -1006,7 +1006,7 @@ TEST(RealTests, setPrecisionTest) {
 }
 
 TEST(RealTests, scopedSetPrecisionTest) {
-  unsigned currPrecision = Real::getPrecision();
+  const unsigned currPrecision = Real::getPrecision();
 
   {
     Real::ScopedSetPrecision setPrecision(123);
@@ -1034,9 +1034,9 @@ TEST(RealTests, isComplexTest) {
 }
 
 TEST(RealTests, equalsTest) {
-  Real a;
-  Integer b;
-  Integer c(1);
+  const Real a;
+  const Integer b;
+  const Integer c(1);
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Real());

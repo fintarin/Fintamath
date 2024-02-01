@@ -34,7 +34,7 @@
 namespace fintamath {
 
 DivExpression::DivExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
-    : IBinaryExpressionCRTP(Div(), std::move(inLhsChild), std::move(inRhsChild)) {
+    : IBinaryExpressionCRTP(Div{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
 std::string DivExpression::toString() const {
@@ -47,7 +47,7 @@ std::string DivExpression::toString() const {
 }
 
 DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPreSimplify() const {
-  static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &DivExpression::divSimplify,
       &DivExpression::mulPreSimplify,
   };
@@ -55,7 +55,7 @@ DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPreSimplify(
 }
 
 DivExpression::SimplifyFunctionVector DivExpression::getFunctionsForPostSimplify() const {
-  static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &DivExpression::constSimplify,
       &DivExpression::negSimplify,
       &DivExpression::numSimplify,
@@ -73,11 +73,11 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
   if ((*lhs == Integer(0) && *rhs == Integer(0)) ||
       (isMulInfinity(lhs) && isMulInfinity(rhs))) {
 
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   if (*rhs == Integer(0)) {
-    return ComplexInf().clone();
+    return ComplexInf{}.clone();
   }
 
   if (isMulInfinity(rhs)) {
@@ -98,8 +98,8 @@ ArgumentPtr DivExpression::constSimplify(const IFunction & /*func*/, const Argum
 ArgumentPtr DivExpression::numSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   static const Integer one = 1;
 
-  if (*rhs != Integer(0) && Div().doArgsMatch({one, *rhs})) {
-    ArgumentPtr res = mulExpr(lhs, Div()(one, *rhs));
+  if (*rhs != Integer(0) && Div{}.doArgsMatch({one, *rhs})) {
+    ArgumentPtr res = mulExpr(lhs, Div{}(one, *rhs));
     return res;
   }
 
@@ -116,7 +116,7 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
 
   bool containsDivExpression = false;
 
-  if (auto lhsDivExpr = cast<DivExpression>(lhs)) {
+  if (const auto lhsDivExpr = cast<DivExpression>(lhs)) {
     numeratorChildren.emplace_back(lhsDivExpr->getChildren().front());
     denominatorChildren.emplace_back(lhsDivExpr->getChildren().back());
     containsDivExpression = true;
@@ -125,7 +125,7 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     numeratorChildren.emplace_back(lhs);
   }
 
-  if (auto rhsDivExpr = cast<DivExpression>(rhs)) {
+  if (const auto rhsDivExpr = cast<DivExpression>(rhs)) {
     denominatorChildren.emplace_back(rhsDivExpr->getChildren().front());
     numeratorChildren.emplace_back(rhsDivExpr->getChildren().back());
     containsDivExpression = true;
@@ -138,22 +138,22 @@ ArgumentPtr DivExpression::divSimplify(const IFunction & /*func*/, const Argumen
     return {};
   }
 
-  ArgumentPtr numerator = makePolynom(Mul(), std::move(numeratorChildren));
-  ArgumentPtr denominator = makePolynom(Mul(), std::move(denominatorChildren));
+  ArgumentPtr numerator = makePolynom(Mul{}, std::move(numeratorChildren));
+  ArgumentPtr denominator = makePolynom(Mul{}, std::move(denominatorChildren));
   ArgumentPtr res = divExpr(numerator, denominator);
 
   return res;
 }
 
 ArgumentPtr DivExpression::mulPreSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &DivExpression::powSimplify,
   };
   return mulSimplify(simplifyFunctions, func, lhs, rhs);
 }
 
 ArgumentPtr DivExpression::mulPostSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &DivExpression::constSimplify,
       &DivExpression::equalSimplify,
       &DivExpression::powSimplify,
@@ -163,7 +163,7 @@ ArgumentPtr DivExpression::mulPostSimplify(const IFunction &func, const Argument
 }
 
 ArgumentPtr DivExpression::mulSecCscSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  static const DivExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &DivExpression::secCscSimplify,
   };
   return mulSimplify(simplifyFunctions, func, lhs, rhs);
@@ -174,11 +174,11 @@ ArgumentPtr DivExpression::mulSimplify(const SimplifyFunctionVector &simplFuncs,
                                        const ArgumentPtr &lhs,
                                        const ArgumentPtr &rhs) {
 
-  ArgumentPtrVector lhsChildren = getPolynomChildren(Mul(), lhs);
-  ArgumentPtrVector rhsChildren = getPolynomChildren(Mul(), rhs);
+  ArgumentPtrVector lhsChildren = getPolynomChildren(Mul{}, lhs);
+  ArgumentPtrVector rhsChildren = getPolynomChildren(Mul{}, rhs);
 
-  size_t lhsChildrenSizeInitial = lhsChildren.size();
-  size_t rhsChildrenSizeInitial = rhsChildren.size();
+  const size_t lhsChildrenSizeInitial = lhsChildren.size();
+  const size_t rhsChildrenSizeInitial = rhsChildren.size();
 
   // TODO: use more efficient algorithm
   for (const auto i : stdv::iota(0U, lhsChildren.size())) {
@@ -204,13 +204,13 @@ ArgumentPtr DivExpression::mulSimplify(const SimplifyFunctionVector &simplFuncs,
     }
   }
 
-  ArgumentPtr numerator = makePolynom(Mul(), lhsChildren);
+  ArgumentPtr numerator = makePolynom(Mul{}, lhsChildren);
 
   if (rhsChildren.empty()) {
     return numerator;
   }
 
-  ArgumentPtr denominator = makePolynom(Mul(), rhsChildren);
+  ArgumentPtr denominator = makePolynom(Mul{}, rhsChildren);
 
   if (lhsChildren.size() != lhsChildrenSizeInitial || rhsChildren.size() != rhsChildrenSizeInitial) {
     ArgumentPtr res = divExpr(numerator, denominator);
@@ -270,13 +270,11 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumSumSimplify(const Argument
   ArgumentPtrVector remainderVect;
 
   for (const auto &child : lhsChildren) {
-    auto [result, remainder] = mulSumSimplify(child, rhs);
-
-    if (result) {
+    if (auto [result, remainder] = mulSumSimplify(child, rhs); result) {
       resultVect.emplace_back(result);
 
       if (remainder) {
-        auto remainderDiv = cast<DivExpression>(remainder);
+        const auto remainderDiv = cast<DivExpression>(remainder);
         remainderVect.emplace_back(remainderDiv->getChildren().front());
       }
     }
@@ -289,7 +287,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumSumSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr result = makePolynom(Add(), std::move(resultVect));
+  ArgumentPtr result = makePolynom(Add{}, std::move(resultVect));
   ArgumentPtr remainderAdd = addExpr(std::move(remainderVect));
   ArgumentPtr remainder = divExpr(remainderAdd, rhs);
   simplifyChild(remainder);
@@ -307,10 +305,12 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
     return {};
   }
 
-  if (const auto rhsChildExpr = cast<IExpression>(rhs); rhsChildExpr && is<Add>(rhsChildExpr->getFunction())) {
-    if (!containsChild(lhs, rhs)) {
-      return {};
-    }
+  if (const auto rhsChildExpr = cast<IExpression>(rhs);
+      rhsChildExpr &&
+      is<Add>(rhsChildExpr->getFunction()) &&
+      !containsChild(lhs, rhs)) {
+
+    return {};
   }
 
   ArgumentPtrVector resultChildren;
@@ -336,11 +336,11 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::sumMulSimplify(const Argument
     return {};
   }
 
-  ArgumentPtr result = makePolynom(Add(), std::move(resultChildren));
+  ArgumentPtr result = makePolynom(Add{}, std::move(resultChildren));
 
   ArgumentPtr remainder;
   if (!remainderChildren.empty()) {
-    ArgumentPtr remainderAdd = makePolynom(Add(), std::move(remainderChildren));
+    ArgumentPtr remainderAdd = makePolynom(Add{}, std::move(remainderChildren));
     remainder = divExpr(remainderAdd, rhs);
     simplifyChild(remainder);
   }
@@ -382,11 +382,12 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpression::mulSumSimplify(const Argument
     multiplicators.emplace_back(mulExpr(rhsChild, result));
   }
 
-  ArgumentPtr remainderAdd = negExpr(makePolynom(Add(), std::move(multiplicators)));
+  ArgumentPtr remainderAdd = negExpr(makePolynom(Add{}, std::move(multiplicators)));
   simplifyChild(remainderAdd);
 
-  ArgumentPtr remainderAddFirstChild = getPolynomChildren(Add(), remainderAdd).front();
-  if (compare(lhs, remainderAddFirstChild) != std::strong_ordering::greater) {
+  if (const ArgumentPtr remainderAddFirstChild = getPolynomChildren(Add{}, remainderAdd).front();
+      compare(lhs, remainderAddFirstChild) != std::strong_ordering::greater) {
+
     return {};
   }
 
@@ -407,10 +408,10 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
   auto [lhsChildBase, lhsChildRate] = splitPowExpr(lhs);
   auto [rhsChildBase, rhsChildRate] = splitPowExpr(rhs);
 
-  auto lhsChildBaseNum = cast<INumber>(rhsChildBase);
-  auto lhsChildRateNum = cast<INumber>(lhsChildRate);
-  auto rhsChildBaseNum = cast<INumber>(rhsChildBase);
-  auto rhsChildRateNum = cast<INumber>(rhsChildRate);
+  const auto lhsChildBaseNum = cast<INumber>(rhsChildBase);
+  const auto lhsChildRateNum = cast<INumber>(lhsChildRate);
+  const auto rhsChildBaseNum = cast<INumber>(rhsChildBase);
+  const auto rhsChildRateNum = cast<INumber>(rhsChildRate);
 
   if (lhsChildBaseNum && rhsChildBaseNum &&
       lhsChildRateNum && rhsChildRateNum &&
@@ -425,7 +426,7 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
 
   if (rhsChildBaseNum) {
     if (const auto rhsChildRateRat = cast<Rational>(rhsChildRate)) {
-      ArgumentPtr numeratorPow = Pow()(*rhsChildBase, 1 - (*rhsChildRateRat));
+      ArgumentPtr numeratorPow = Pow{}(*rhsChildBase, 1 - (*rhsChildRateRat));
       ArgumentPtr numerator = mulExpr(lhs, numeratorPow);
       return divExpr(numerator, rhsChildBase);
     }
@@ -435,7 +436,7 @@ ArgumentPtr DivExpression::powSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentPtrVector lhsChildren = getPolynomChildren(Mul(), lhs);
+  const ArgumentPtrVector lhsChildren = getPolynomChildren(Mul{}, lhs);
 
   if (auto res = nestedNumeratorRationalSimplify(lhsChildren, rhs)) {
     return res;
@@ -445,17 +446,17 @@ ArgumentPtr DivExpression::nestedRationalSimplify(const IFunction & /*func*/, co
 }
 
 ArgumentPtr DivExpression::gcdSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  ArgumentPtrVector lhsChildren = getPolynomChildren(Add(), lhs);
-  ArgumentPtrVector rhsChildren = getPolynomChildren(Add(), rhs);
+  const ArgumentPtrVector lhsChildren = getPolynomChildren(Add{}, lhs);
+  const ArgumentPtrVector rhsChildren = getPolynomChildren(Add{}, rhs);
 
-  Integer lhsGcdNum = getGcd(lhsChildren);
-  Integer rhsGcdNum = getGcd(rhsChildren);
+  const Integer lhsGcdNum = getGcd(lhsChildren);
+  const Integer rhsGcdNum = getGcd(rhsChildren);
 
   if (lhsGcdNum <= 1 || rhsGcdNum <= 1) {
     return {};
   }
 
-  Integer gcdNum = gcd(lhsGcdNum, rhsGcdNum);
+  const Integer gcdNum = gcd(lhsGcdNum, rhsGcdNum);
 
   if (gcdNum <= 1) {
     return {};
@@ -470,16 +471,16 @@ ArgumentPtr DivExpression::gcdSimplify(const IFunction & /*func*/, const Argumen
   return divExpr(numerator, denominator);
 }
 
-Integer DivExpression::getGcd(const ArgumentPtrVector &lhsChildren) {
+Integer DivExpression::getGcd(const ArgumentPtrVector &children) {
   Integer gcdNum;
 
-  for (auto child : lhsChildren) {
+  for (auto child : children) {
     if (const auto childExpr = cast<IExpression>(child); childExpr && is<Mul>(childExpr->getFunction())) {
       child = childExpr->getChildren().front();
     }
 
     if (const auto childInt = cast<Integer>(child)) {
-      Integer childIntAbs = abs(*childInt);
+      const Integer childIntAbs = abs(*childInt);
       gcdNum = gcdNum != 0 ? gcd(gcdNum, childIntAbs) : childIntAbs;
     }
     else {
@@ -495,9 +496,9 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVect
   ArgumentPtrVector denominatorChildren;
 
   for (const auto &child : lhsChildren) {
-    auto [childNumerator, childDenominator] = splitRational(child);
+    if (auto [childNumerator, childDenominator] = splitRational(child);
+        *childDenominator != Integer(1)) {
 
-    if (*childDenominator != Integer(1)) {
       numeratorChildren.emplace_back(childNumerator);
       denominatorChildren.emplace_back(childDenominator);
     }
@@ -509,8 +510,8 @@ ArgumentPtr DivExpression::nestedNumeratorRationalSimplify(const ArgumentPtrVect
   if (!denominatorChildren.empty()) {
     denominatorChildren.emplace_back(rhs);
 
-    ArgumentPtr numerator = makePolynom(Mul(), std::move(numeratorChildren));
-    ArgumentPtr denominator = makePolynom(Mul(), std::move(denominatorChildren));
+    ArgumentPtr numerator = makePolynom(Mul{}, std::move(numeratorChildren));
+    ArgumentPtr denominator = makePolynom(Mul{}, std::move(denominatorChildren));
 
     return divExpr(numerator, denominator);
   }
@@ -526,8 +527,8 @@ ArgumentPtr DivExpression::tanCotSimplify(const IFunction & /*func*/, const Argu
     return {};
   }
 
-  auto lhsChildValueExpr = cast<IExpression>(lhsChildBase);
-  auto rhsChildValueExpr = cast<IExpression>(rhsChildBase);
+  const auto lhsChildValueExpr = cast<IExpression>(lhsChildBase);
+  const auto rhsChildValueExpr = cast<IExpression>(rhsChildBase);
 
   if (lhsChildValueExpr && rhsChildValueExpr &&
       *lhsChildValueExpr->getChildren().front() == *rhsChildValueExpr->getChildren().front()) {
@@ -555,7 +556,7 @@ ArgumentPtr DivExpression::tanCotSimplify(const IFunction & /*func*/, const Argu
 ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   auto [rhsChildBase, rhsChildRate] = splitPowExpr(rhs);
 
-  if (auto rhsChildValueExpr = cast<IExpression>(rhsChildBase)) {
+  if (const auto rhsChildValueExpr = cast<IExpression>(rhsChildBase)) {
     if (is<Sin>(rhsChildValueExpr->getFunction())) {
       return mulExpr(lhs, powExpr(cscExpr(*rhsChildValueExpr->getChildren().front()), rhsChildRate));
     }
@@ -578,14 +579,14 @@ ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const Argu
 
 bool DivExpression::containsDivTrigFunction(const ArgumentPtr &arg) {
   static const std::set<std::string, std::less<>> functionStrings = {
-      Tan().toString(),
-      Cot().toString(),
-      Sec().toString(),
-      Csc().toString(),
-      Tanh().toString(),
-      Coth().toString(),
-      Sech().toString(),
-      Csch().toString(),
+      Tan{}.toString(),
+      Cot{}.toString(),
+      Sec{}.toString(),
+      Csc{}.toString(),
+      Tanh{}.toString(),
+      Coth{}.toString(),
+      Sech{}.toString(),
+      Csch{}.toString(),
   };
 
   return containsIf(arg, [](const ArgumentPtr &inArg) {

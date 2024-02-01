@@ -37,7 +37,7 @@ TEST(IntegerTests, templateConstructorTest) {
 TEST(IntegerTests, intConstructorTest) {
   EXPECT_EQ(Integer(10), 10);
 
-  Integer a = 10;
+  const Integer a = 10;
   EXPECT_EQ(a, 10);
 }
 
@@ -859,9 +859,9 @@ TEST(IntegerTests, isComplexTest) {
 }
 
 TEST(IntegerTests, equalsTest) {
-  Integer a;
-  Rational b;
-  Rational c(1);
+  const Integer a;
+  const Rational b;
+  const Rational c(1);
 
   EXPECT_EQ(a, a);
   EXPECT_EQ(a, Integer());

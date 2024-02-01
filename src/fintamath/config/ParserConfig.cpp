@@ -198,4 +198,4 @@ ParserConfig::ParserConfig() {
   IExpression::registerConstructor<Expression>();
 }
 
-};
+}

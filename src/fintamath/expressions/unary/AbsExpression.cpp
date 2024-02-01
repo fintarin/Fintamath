@@ -14,11 +14,11 @@
 namespace fintamath {
 
 AbsExpression::AbsExpression(ArgumentPtr inChild)
-    : IUnaryExpressionCRTP(Abs(), std::move(inChild)) {
+    : IUnaryExpressionCRTP(Abs{}, std::move(inChild)) {
 }
 
 AbsExpression::SimplifyFunctionVector AbsExpression::getFunctionsForPostSimplify() const {
-  static const AbsExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &AbsExpression::constSimplify,
       &AbsExpression::negSimplify,
   };
@@ -27,7 +27,7 @@ AbsExpression::SimplifyFunctionVector AbsExpression::getFunctionsForPostSimplify
 
 ArgumentPtr AbsExpression::constSimplify(const IFunction & /*func*/, const ArgumentPtr &rhs) {
   if (isInfinity(rhs)) {
-    return Inf().clone();
+    return Inf{}.clone();
   }
 
   return {};

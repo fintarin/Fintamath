@@ -14,18 +14,18 @@
 namespace fintamath {
 
 NotExpression::NotExpression(ArgumentPtr inChild)
-    : IUnaryExpressionCRTP(Not(), std::move(inChild)) {
+    : IUnaryExpressionCRTP(Not{}, std::move(inChild)) {
 }
 
 NotExpression::SimplifyFunctionVector NotExpression::getFunctionsForPreSimplify() const {
-  static const NotExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &NotExpression::nestedNotSimplify,
   };
   return simplifyFunctions;
 }
 
 NotExpression::SimplifyFunctionVector NotExpression::getFunctionsForPostSimplify() const {
-  static const NotExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &NotExpression::logicNegatableSimplify,
       &NotExpression::nestedNotSimplify,
   };
@@ -78,12 +78,12 @@ ArgumentPtr NotExpression::nestedNotSimplify(const IFunction & /*func*/, const A
 
 std::shared_ptr<IFunction> NotExpression::getLogicOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Eqv().toString(), std::make_shared<Neqv>()},
-      {Neqv().toString(), std::make_shared<Eqv>()},
-      {More().toString(), std::make_shared<LessEqv>()},
-      {Less().toString(), std::make_shared<MoreEqv>()},
-      {MoreEqv().toString(), std::make_shared<Less>()},
-      {LessEqv().toString(), std::make_shared<More>()},
+      {Eqv{}.toString(), std::make_shared<Neqv>()},
+      {Neqv{}.toString(), std::make_shared<Eqv>()},
+      {More{}.toString(), std::make_shared<LessEqv>()},
+      {Less{}.toString(), std::make_shared<MoreEqv>()},
+      {MoreEqv{}.toString(), std::make_shared<Less>()},
+      {LessEqv{}.toString(), std::make_shared<More>()},
   };
   return oppositeFunctions.at(function.toString());
 }

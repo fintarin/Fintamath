@@ -15,7 +15,7 @@ namespace fintamath {
 
 namespace {
 
-const size_t maxPower = 4;
+constexpr size_t maxPower = 4;
 
 ArgumentPtrVector getPolynomCoefficients(const ArgumentPtr &elem, const Variable &var);
 
@@ -28,20 +28,16 @@ ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow);
 }
 
 Expression solve(const Expression &rhs) {
-  auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone());
+  const auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone());
 
-  if (!compExpr) {
-    return rhs;
-  }
-
-  if (compExpr->getVariables().size() != 1) {
+  if (!compExpr || compExpr->getVariables().size() != 1) {
     return rhs;
   }
 
   // TODO: remove this if when inequalities will be implemented
   if (!is<Eqv>(compExpr->getFunction())) {
-    auto var = cast<Variable>(compExpr->getVariables().front());
-    ArgumentPtrVector powerRate = getPolynomCoefficients(compExpr->getChildren().front(), var);
+    const auto var = cast<Variable>(compExpr->getVariables().front());
+    const ArgumentPtrVector powerRate = getPolynomCoefficients(compExpr->getChildren().front(), var);
 
     if (powerRate.size() == 2) {
       compExpr->markAsSolution();
@@ -51,8 +47,8 @@ Expression solve(const Expression &rhs) {
     return rhs;
   }
 
-  auto var = cast<Variable>(compExpr->getVariables().front());
-  ArgumentPtrVector powerRates = getPolynomCoefficients(compExpr->getChildren().front(), var);
+  const auto var = cast<Variable>(compExpr->getVariables().front());
+  const ArgumentPtrVector powerRates = getPolynomCoefficients(compExpr->getChildren().front(), var);
   ArgumentPtrVector roots;
 
   switch (powerRates.size()) {
@@ -77,7 +73,7 @@ Expression solve(const Expression &rhs) {
   ArgumentPtrVector answers;
 
   for (auto &root : roots) {
-    auto rootAnswer = std::make_shared<CompExpression>(Eqv(), var.clone(), root);
+    auto rootAnswer = std::make_shared<CompExpression>(Eqv{}, var.clone(), root);
     rootAnswer->markAsSolution();
     answers.emplace_back(rootAnswer);
   }

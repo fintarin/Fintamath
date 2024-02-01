@@ -10,7 +10,7 @@ std::unique_ptr<IArithmetic> Integer::multiplyAbstract(const IArithmetic &rhs) c
     return cast<IArithmetic>(Integer(0).clone());
   }
 
-  return IIntegerCRTP<Integer>::multiplyAbstract(rhs);
+  return IIntegerCRTP::multiplyAbstract(rhs);
 }
 
 std::unique_ptr<IArithmetic> Integer::divideAbstract(const IArithmetic &rhs) const {
@@ -24,7 +24,7 @@ std::unique_ptr<IArithmetic> Integer::divideAbstract(const IArithmetic &rhs) con
     }
   }
 
-  return IIntegerCRTP<Integer>::divideAbstract(rhs);
+  return IIntegerCRTP::divideAbstract(rhs);
 }
 
 //-------------------------------------------------------------------------------------//
@@ -34,7 +34,7 @@ std::unique_ptr<IArithmetic> Rational::multiplyAbstract(const IArithmetic &rhs) 
     return cast<IArithmetic>(Integer(0).clone());
   }
 
-  return INumberCRTP<Rational>::multiplyAbstract(rhs);
+  return INumberCRTP::multiplyAbstract(rhs);
 }
 
 std::unique_ptr<IArithmetic> Rational::divideAbstract(const IArithmetic &rhs) const {
@@ -42,7 +42,7 @@ std::unique_ptr<IArithmetic> Rational::divideAbstract(const IArithmetic &rhs) co
     return cast<IArithmetic>(Integer(0).clone());
   }
 
-  return INumberCRTP<Rational>::divideAbstract(rhs);
+  return INumberCRTP::divideAbstract(rhs);
 }
 
 //-------------------------------------------------------------------------------------//
@@ -52,11 +52,11 @@ bool Real::equalsAbstract(const IMathObject &rhs) const {
     return false;
   }
 
-  return INumberCRTP<Real>::equalsAbstract(rhs);
+  return INumberCRTP::equalsAbstract(rhs);
 }
 
 std::strong_ordering Real::compareAbstract(const IComparable &rhs) const {
-  auto res = INumberCRTP<Real>::compareAbstract(rhs);
+  const auto res = INumberCRTP::compareAbstract(rhs);
 
   if (res == std::strong_ordering::equal) {
     if (const auto *rhsNum = cast<INumber>(&rhs); rhsNum && rhsNum->isPrecise()) {
@@ -72,7 +72,7 @@ std::unique_ptr<IArithmetic> Real::multiplyAbstract(const IArithmetic &rhs) cons
     return cast<IArithmetic>(Integer(0).clone());
   }
 
-  return INumberCRTP<Real>::multiplyAbstract(rhs);
+  return INumberCRTP::multiplyAbstract(rhs);
 }
 
 }

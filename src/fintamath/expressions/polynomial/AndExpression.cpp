@@ -8,11 +8,11 @@
 namespace fintamath {
 
 AndExpression::AndExpression(ArgumentPtrVector inChildren)
-    : IPolynomExpressionCRTP(And(), std::move(inChildren)) {
+    : IPolynomExpressionCRTP(And{}, std::move(inChildren)) {
 }
 
 AndExpression::SimplifyFunctionVector AndExpression::getFunctionsForPreSimplify() const {
-  static const AndExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &AndExpression::boolSimplify,
       &AndExpression::equalSimplify,
       &AndExpression::notSimplify,
@@ -21,7 +21,7 @@ AndExpression::SimplifyFunctionVector AndExpression::getFunctionsForPreSimplify(
 }
 
 AndExpression::SimplifyFunctionVector AndExpression::getFunctionsForPostSimplify() const {
-  static const AndExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &AndExpression::orSimplify,
       &AndExpression::boolSimplify,
       &AndExpression::equalSimplify,
@@ -67,8 +67,8 @@ ArgumentPtr AndExpression::notSimplify(const IFunction & /*func*/, const Argumen
 }
 
 ArgumentPtr AndExpression::orSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  std::shared_ptr<const IExpression> lhsExpr = cast<IExpression>(lhs);
-  std::shared_ptr<const IExpression> rhsExpr = cast<IExpression>(rhs);
+  const auto lhsExpr = cast<IExpression>(lhs);
+  const auto rhsExpr = cast<IExpression>(rhs);
 
   ArgumentPtrVector lhsChildren;
   ArgumentPtrVector rhsChildren;

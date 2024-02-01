@@ -10,11 +10,11 @@
 namespace fintamath {
 
 SignExpression::SignExpression(ArgumentPtr inChild)
-    : IUnaryExpressionCRTP(Sign(), std::move(inChild)) {
+    : IUnaryExpressionCRTP(Sign{}, std::move(inChild)) {
 }
 
 SignExpression::SimplifyFunctionVector SignExpression::getFunctionsForPostSimplify() const {
-  static const SignExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &SignExpression::constSimplify,
       &SignExpression::negSimplify,
       &SignExpression::intApproximateSimplify,
@@ -32,7 +32,7 @@ ArgumentPtr SignExpression::constSimplify(const IFunction & /*func*/, const Argu
   }
 
   if (is<ComplexInf>(rhs)) {
-    return Undefined().clone();
+    return Undefined{}.clone();
   }
 
   return {};

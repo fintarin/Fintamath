@@ -10,7 +10,7 @@ class INumber;
 
 class Div final : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
 public:
-  Div() : IOperatorCRTP(IOperator::Priority::Multiplication) {
+  Div() : IOperatorCRTP(Priority::Multiplication) {
   }
 
   std::string toString() const override {

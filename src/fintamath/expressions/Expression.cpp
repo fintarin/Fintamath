@@ -27,7 +27,7 @@ struct TermWithPriority final {
 public:
   TermWithPriority() = default;
 
-  TermWithPriority(std::unique_ptr<Term> inTerm, IOperator::Priority inPriority)
+  TermWithPriority(std::unique_ptr<Term> inTerm, const IOperator::Priority inPriority)
       : term(std::move(inTerm)),
         priority(inPriority) {
   }
@@ -45,7 +45,7 @@ Expression::Expression(const ArgumentPtr &obj) : child(compress(obj)) {
 Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 }
 
-Expression::Expression(int64_t val) : child(Integer(val).clone()) {
+Expression::Expression(const int64_t val) : child(Integer(val).clone()) {
 }
 
 std::string Expression::toString() const {
@@ -53,10 +53,10 @@ std::string Expression::toString() const {
   return stringCached;
 }
 
-Expression approximate(const Expression &rhs, unsigned precision) {
+Expression approximate(const Expression &rhs, const unsigned precision) {
   Real::ScopedSetPrecision setPrecision(precision);
 
-  static Cache<unsigned, Integer> cache([](unsigned inPrecision) {
+  static Cache<unsigned, Integer> cache([](const unsigned inPrecision) {
     static const Integer powBase = 10;
     return pow(powBase, inPrecision);
   });
@@ -75,31 +75,31 @@ const std::shared_ptr<IFunction> &Expression::getFunction() const {
 }
 
 Expression &Expression::add(const Expression &rhs) {
-  child = makeExpr(Add(), *child, *rhs.child);
+  child = makeExpr(Add{}, *child, *rhs.child);
   isSimplified = false;
   return *this;
 }
 
 Expression &Expression::substract(const Expression &rhs) {
-  child = makeExpr(Sub(), *child, *rhs.child);
+  child = makeExpr(Sub{}, *child, *rhs.child);
   isSimplified = false;
   return *this;
 }
 
 Expression &Expression::multiply(const Expression &rhs) {
-  child = makeExpr(Mul(), *child, *rhs.child);
+  child = makeExpr(Mul{}, *child, *rhs.child);
   isSimplified = false;
   return *this;
 }
 
 Expression &Expression::divide(const Expression &rhs) {
-  child = makeExpr(Div(), *child, *rhs.child);
+  child = makeExpr(Div{}, *child, *rhs.child);
   isSimplified = false;
   return *this;
 }
 
 Expression &Expression::negate() {
-  child = makeExpr(Neg(), *child);
+  child = makeExpr(Neg{}, *child);
   isSimplified = false;
   return *this;
 }
@@ -155,7 +155,7 @@ void Expression::updateStringMutable() const {
 
 std::unique_ptr<IMathObject> parseFintamath(const std::string &str) {
   try {
-    auto tokens = Tokenizer::tokenize(str);
+    const auto tokens = Tokenizer::tokenize(str);
     auto terms = Expression::tokensToTerms(tokens);
     auto stack = Expression::termsToOperands(terms);
     auto obj = Expression::operandsToObject(stack);
@@ -178,7 +178,7 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
       terms[i] = std::move(term);
     }
     else {
-      terms[i] = std::make_unique<Term>(tokens[i], std::unique_ptr<IMathObject>());
+      terms[i] = std::make_unique<Term>(tokens[i], std::unique_ptr<IMathObject>{});
     }
   }
 
@@ -195,7 +195,7 @@ OperandStack Expression::termsToOperands(TermVector &terms) {
   OperandStack outStack;
   std::stack<TermWithPriority> operStack;
 
-  for (auto &&term : terms) {
+  for (auto &term : terms) {
     if (!term->value) {
       if (term->name == "(") {
         operStack.emplace(std::move(term), IOperator::Priority::Lowest);
@@ -306,7 +306,7 @@ ArgumentPtrVector Expression::unwrapComma(const ArgumentPtr &child) {
 }
 
 void Expression::insertMultiplications(TermVector &terms) {
-  static const ArgumentPtr mul = Mul().clone();
+  static const ArgumentPtr mul = Mul{}.clone();
 
   for (size_t i = 1; i < terms.size(); i++) {
     if (canNextTermBeBinaryOperator(*terms[i - 1]) &&
@@ -327,7 +327,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
       !isPrefixOperator(term->value.get())) {
 
     term->value = IOperator::parse(term->name, IOperator::Priority::PrefixUnary);
-    isFixed = isFixed && term->value;
+    isFixed = static_cast<bool>(term->value);
   }
 
   if (const auto &term = terms.back();
@@ -335,7 +335,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
       !isPostfixOperator(term->value.get())) {
 
     term->value = IOperator::parse(term->name, IOperator::Priority::PostfixUnary);
-    isFixed = isFixed && term->value;
+    isFixed = isFixed && static_cast<bool>(term->value);
   }
 
   if (!isFixed) {
@@ -469,9 +469,10 @@ void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVe
     throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
   }
 
-  bool doesArgSizeMatch = funcType != IFunction::Type::Any && args.size() == static_cast<size_t>(funcType);
+  const bool doesArgSizeMatch = funcType != IFunction::Type::Any &&
+                                args.size() == static_cast<size_t>(funcType);
 
-  ArgumentTypeVector expectedArgTypes = func.getArgTypes();
+  const ArgumentTypeVector expectedArgTypes = func.getArgTypes();
   MathObjectType expectedType = expectedArgTypes.front();
 
   for (const auto i : stdv::iota(0U, args.size())) {
@@ -479,9 +480,7 @@ void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVe
       expectedType = expectedArgTypes[i];
     }
 
-    const ArgumentPtr &arg = args[i];
-
-    if (!doesArgMatch(expectedType, arg)) {
+    if (const ArgumentPtr &arg = args[i]; !doesArgMatch(expectedType, arg)) {
       throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
     }
   }
@@ -500,16 +499,18 @@ bool Expression::doesArgMatch(const MathObjectType &expectedType, const Argument
     }
   }
   else if (const auto childConst = cast<IConstant>(arg)) {
-    const MathObjectType childType = childConst->getReturnType();
+    if (const MathObjectType childType = childConst->getReturnType();
+        !isBaseOf(expectedType, childType) &&
+        !isBaseOf(childType, expectedType)) {
 
-    if (!isBaseOf(expectedType, childType) && !isBaseOf(childType, expectedType)) {
       return false;
     }
   }
   else {
-    MathObjectType childType = arg->getType();
+    if (const MathObjectType childType = arg->getType();
+        childType != Variable::getTypeStatic() &&
+        !isBaseOf(expectedType, childType)) {
 
-    if (childType != Variable::getTypeStatic() && !isBaseOf(expectedType, childType)) {
       return false;
     }
   }

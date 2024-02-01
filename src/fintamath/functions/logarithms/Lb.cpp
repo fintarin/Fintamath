@@ -8,7 +8,7 @@ std::unique_ptr<IMathObject> Lb::call(const ArgumentRefVector &argVect) const {
   static const Integer lhs = 2;
   const auto &rhs = argVect.front().get();
 
-  return Log()(lhs, rhs);
+  return Log{}(lhs, rhs);
 }
 
 }

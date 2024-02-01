@@ -10,7 +10,7 @@ namespace {
 
 class TestMathObject final : public IMathObjectCRTP<TestMathObject> {
 public:
-  void throwException() const {
+  static void throwException() {
     throw Exception();
   }
 };
@@ -19,7 +19,7 @@ public:
 
 TEST(ExceptionTests, whatTest) {
   try {
-    TestMathObject().throwException();
+    TestMathObject::throwException();
     EXPECT_TRUE(false);
   } catch (const Exception &e) {
     EXPECT_EQ(std::string(e.what()), "Something went wrong...");

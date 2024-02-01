@@ -7,7 +7,7 @@ namespace fintamath {
 
 class Impl final : public IOperatorCRTP<Boolean, Impl, Boolean, Boolean> {
 public:
-  Impl() : IOperatorCRTP(IOperator::Priority::Implication, false) {
+  Impl() : IOperatorCRTP(Priority::Implication, false) {
   }
 
   std::string toString() const override {

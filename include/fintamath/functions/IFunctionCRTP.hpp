@@ -29,7 +29,7 @@ public:
   }
 
   size_t getFunctionOrder() const final {
-    static const std::string funcStr = Derived().toString();
+    static const std::string funcStr = Derived{}.toString();
     return getFunctionOrderMap().at(funcStr);
   }
 

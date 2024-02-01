@@ -35,7 +35,7 @@ TrigExpression::TrigExpression(const IFunction &inFunc, ArgumentPtr inChild)
 }
 
 TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPreSimplify() const {
-  static const TrigExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &TrigExpression::oppositeFunctionsSimplify,
       &TrigExpression::expandSimplify,
   };
@@ -43,7 +43,7 @@ TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPreSimplif
 }
 
 TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPostSimplify() const {
-  static const TrigExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &TrigExpression::constSimplify,
       &TrigExpression::oppositeFunctionsSimplify,
       &TrigExpression::negSimplify,
@@ -53,7 +53,7 @@ TrigExpression::SimplifyFunctionVector TrigExpression::getFunctionsForPostSimpli
 
 ArgumentPtr TrigExpression::oppositeFunctionsSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (const auto expr = cast<IExpression>(rhs)) {
-    if (auto oppositeFunc = getOppositeFunction(func)) {
+    if (const auto oppositeFunc = getOppositeFunction(func)) {
       if (*expr->getFunction() == *oppositeFunc) {
         return expr->getChildren().front();
       }
@@ -65,19 +65,19 @@ ArgumentPtr TrigExpression::oppositeFunctionsSimplify(const IFunction &func, con
 
 ArgumentPtr TrigExpression::expandSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   static const SimplifyFunctionMap expandFunctionMap = {
-      {Tan().toString(),
+      {Tan{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(sinExpr(inRhs), cosExpr(inRhs));
        }},
-      {Cot().toString(),
+      {Cot{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(cosExpr(inRhs), sinExpr(inRhs));
        }},
-      {Sec().toString(),
+      {Sec{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(Integer(1).clone(), cosExpr(inRhs));
        }},
-      {Csc().toString(),
+      {Csc{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(Integer(1).clone(), sinExpr(inRhs));
        }},
@@ -92,11 +92,11 @@ ArgumentPtr TrigExpression::expandSimplify(const IFunction &func, const Argument
 
 ArgumentPtr TrigExpression::negSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   static const SimplifyFunctionMap negFunctionsMap = {
-      {Sin().toString(),
+      {Sin{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return negExpr(sinExpr(negExpr(inRhs)));
        }},
-      {Cos().toString(),
+      {Cos{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return cosExpr(negExpr(inRhs));
        }},
@@ -112,11 +112,11 @@ ArgumentPtr TrigExpression::negSimplify(const IFunction &func, const ArgumentPtr
 }
 
 ArgumentPtr TrigExpression::constSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  if (*rhs == Pi()) {
+  if (*rhs == Pi{}) {
     return trigTableSimplify(func, 1);
   }
 
-  if (*rhs == *negExpr(Pi())) {
+  if (*rhs == *negExpr(Pi{})) {
     return trigTableSimplify(func, -1);
   }
 
@@ -140,12 +140,12 @@ ArgumentPtr TrigExpression::constSimplify(const IFunction &func, const ArgumentP
 
 ArgumentPtr TrigExpression::trigTableSimplify(const IFunction &func, const Rational &rhs) {
   static const TrigonometryFunctionMap trigTable = {
-      {Sin().toString(), &trigTableSinSimplify},
-      {Cos().toString(), &trigTableCosSimplify},
+      {Sin{}.toString(), &trigTableSinSimplify},
+      {Cos{}.toString(), &trigTableCosSimplify},
   };
 
-  if (auto iter = trigTable.find(func.toString()); iter != trigTable.end()) {
-    Rational rhsShifted = phaseShiftPeriod(rhs);
+  if (const auto iter = trigTable.find(func.toString()); iter != trigTable.end()) {
+    const Rational rhsShifted = phaseShiftPeriod(rhs);
     return iter->second(rhsShifted);
   }
 
@@ -223,18 +223,18 @@ Rational TrigExpression::phaseShiftPeriod(const Rational &rhs) {
 
 std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Sin().toString(), std::make_shared<Asin>()},
-      {Cos().toString(), std::make_shared<Acos>()},
-      {Tan().toString(), std::make_shared<Atan>()},
-      {Cot().toString(), std::make_shared<Acot>()},
-      {Sec().toString(), std::make_shared<Asec>()},
-      {Csc().toString(), std::make_shared<Acsc>()},
+      {Sin{}.toString(), std::make_shared<Asin>()},
+      {Cos{}.toString(), std::make_shared<Acos>()},
+      {Tan{}.toString(), std::make_shared<Atan>()},
+      {Cot{}.toString(), std::make_shared<Acot>()},
+      {Sec{}.toString(), std::make_shared<Asec>()},
+      {Csc{}.toString(), std::make_shared<Acsc>()},
   };
   return oppositeFunctions.at(function.toString());
 }
 
-ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, bool isNegated) {
-  if (auto res = trigTable.find(key); res != trigTable.end()) {
+ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, const bool isNegated) {
+  if (const auto res = trigTable.find(key); res != trigTable.end()) {
     return isNegated ? negExpr(res->second) : res->second;
   }
 

@@ -1,8 +1,6 @@
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 
-#include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/literals/constants/Undefined.hpp"
 
 namespace fintamath {
 
@@ -41,18 +39,18 @@ IUnaryExpression::SimplifyFunctionVector IUnaryExpression::getFunctionsForPostSi
 }
 
 ArgumentPtr IUnaryExpression::preSimplify() const {
-  auto simpl = cast<IUnaryExpression>(clone());
+  const auto simpl = cast<IUnaryExpression>(clone());
   preSimplifyChild(simpl->child);
   return simpl->simplifyRec(false);
 }
 
 ArgumentPtr IUnaryExpression::postSimplify() const {
-  auto simpl = cast<IUnaryExpression>(clone());
+  const auto simpl = cast<IUnaryExpression>(clone());
   postSimplifyChild(simpl->child);
   return simpl->simplifyRec(true);
 }
 
-ArgumentPtr IUnaryExpression::simplifyRec(bool isPostSimplify) const {
+ArgumentPtr IUnaryExpression::simplifyRec(const bool isPostSimplify) const {
   if (ArgumentPtr res = simplifyUndefined(*func, child)) {
     return res;
   }

@@ -8,49 +8,49 @@ class IInteger : public INumber {
   using IntegerParser = Parser<std::unique_ptr<IInteger>>;
 
 public:
-  friend inline std::unique_ptr<IInteger> operator%(const IInteger &lhs, const IInteger &rhs) {
+  friend std::unique_ptr<IInteger> operator%(const IInteger &lhs, const IInteger &rhs) {
     return lhs.modAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IInteger> operator&(const IInteger &lhs, const IInteger &rhs) {
+  friend std::unique_ptr<IInteger> operator&(const IInteger &lhs, const IInteger &rhs) {
     return lhs.bitAndAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IInteger> operator|(const IInteger &lhs, const IInteger &rhs) {
+  friend std::unique_ptr<IInteger> operator|(const IInteger &lhs, const IInteger &rhs) {
     return lhs.bitOrAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IInteger> operator^(const IInteger &lhs, const IInteger &rhs) {
+  friend std::unique_ptr<IInteger> operator^(const IInteger &lhs, const IInteger &rhs) {
     return lhs.bitXorAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IInteger> operator<<(const IInteger &lhs, const IInteger &rhs) {
+  friend std::unique_ptr<IInteger> operator<<(const IInteger &lhs, const IInteger &rhs) {
     return lhs.bitLeftShiftAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IInteger> operator>>(const IInteger &lhs, const IInteger &rhs) {
+  friend std::unique_ptr<IInteger> operator>>(const IInteger &lhs, const IInteger &rhs) {
     return lhs.bitRightShiftAbstract(rhs);
   }
 
-  friend inline std::unique_ptr<IInteger> operator~(const IInteger &rhs) {
+  friend std::unique_ptr<IInteger> operator~(const IInteger &rhs) {
     return rhs.bitNotAbstract();
   }
 
-  friend inline IInteger &operator++(IInteger &rhs) {
+  friend IInteger &operator++(IInteger &rhs) {
     return rhs.increaseAbstract();
   }
 
-  friend inline IInteger &operator--(IInteger &rhs) {
+  friend IInteger &operator--(IInteger &rhs) {
     return rhs.decreaseAbstract();
   }
 
-  friend inline std::unique_ptr<IInteger> operator++(IInteger &lhs, int) {
+  friend std::unique_ptr<IInteger> operator++(IInteger &lhs, int) {
     auto res = cast<IInteger>(lhs.clone());
     lhs.increaseAbstract();
     return res;
   }
 
-  friend inline std::unique_ptr<IInteger> operator--(IInteger &lhs, int) {
+  friend std::unique_ptr<IInteger> operator--(IInteger &lhs, int) {
     auto res = cast<IInteger>(lhs.clone());
     lhs.decreaseAbstract();
     return res;

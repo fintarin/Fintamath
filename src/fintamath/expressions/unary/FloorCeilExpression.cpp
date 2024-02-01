@@ -12,7 +12,7 @@ FloorCeilExpression::FloorCeilExpression(const IFunction &inFunc, ArgumentPtr in
 }
 
 FloorCeilExpression::SimplifyFunctionVector FloorCeilExpression::getFunctionsForPostSimplify() const {
-  static const FloorCeilExpression::SimplifyFunctionVector simplifyFunctions = {
+  static const SimplifyFunctionVector simplifyFunctions = {
       &FloorCeilExpression::negSimplify,
       &FloorCeilExpression::intApproximateSimplify,
   };
@@ -44,8 +44,8 @@ ArgumentPtr FloorCeilExpression::negSimplify(const IFunction &func, const Argume
 
 std::shared_ptr<IFunction> FloorCeilExpression::getOppositeFunction(const IFunction &function) {
   static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
-      {Floor().toString(), std::make_shared<Ceil>()},
-      {Ceil().toString(), std::make_shared<Floor>()},
+      {Floor{}.toString(), std::make_shared<Ceil>()},
+      {Ceil{}.toString(), std::make_shared<Floor>()},
   };
   return oppositeFunctions.at(function.toString());
 }

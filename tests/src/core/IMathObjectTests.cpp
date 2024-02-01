@@ -19,10 +19,10 @@ TEST(IMathObjectTests, toStringTest) {
 }
 
 TEST(IMathObjectTests, cloneTest) {
-  std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>();
-  std::unique_ptr<IMathObject> m2 = std::make_unique<Integer>(1);
-  std::unique_ptr<IMathObject> m3 = m1->clone();
-  std::unique_ptr<IMathObject> m4 = Integer(1).clone();
+  const std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>();
+  const std::unique_ptr<IMathObject> m2 = std::make_unique<Integer>(1);
+  const std::unique_ptr<IMathObject> m3 = m1->clone();
+  const std::unique_ptr<IMathObject> m4 = Integer(1).clone();
 
   EXPECT_EQ(*m3, *m1);
   EXPECT_EQ(*m4, *m2);
@@ -91,7 +91,7 @@ TEST(IMathObjectTests, nequalsTest) {
 }
 
 TEST(IMathObjectTests, outputTest) {
-  std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>(123);
+  const std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>(123);
   std::stringstream out;
   out << *m1;
   EXPECT_EQ(out.str(), "123");
