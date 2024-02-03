@@ -24,6 +24,12 @@ jobs:
         with:
           submodules: 'true'
 
+      # TODO: remove this step after the default Clang is updated to version 16
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "16.0"
+
       - name: Install GMP and MPFR
         run: |
           sudo sed -i 's/azure\.//' /etc/apt/sources.list
