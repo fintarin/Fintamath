@@ -1,7 +1,15 @@
 #include "fintamath/functions/ntheory/Mod.hpp"
 
+#include <memory>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MultiMethod.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
-#include "fintamath/numbers/IntegerFunctions.hpp"
+#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 

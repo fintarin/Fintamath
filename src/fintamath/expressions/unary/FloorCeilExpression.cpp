@@ -1,9 +1,21 @@
 #include "fintamath/expressions/unary/FloorCeilExpression.hpp"
 
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/ntheory/Ceil.hpp"
 #include "fintamath/functions/ntheory/Floor.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 

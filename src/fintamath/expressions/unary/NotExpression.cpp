@@ -1,6 +1,18 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 
-#include "fintamath/expressions/ExpressionUtils.hpp"
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
 #include "fintamath/functions/comparison/LessEqv.hpp"

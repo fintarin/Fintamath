@@ -1,5 +1,10 @@
 #pragma once
 
+#include <memory>
+#include <string>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Complex.hpp"
 

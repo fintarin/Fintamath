@@ -1,6 +1,12 @@
 #pragma once
 
-#include "fintamath/core/IComparable.hpp"
+#include <memory>
+#include <string>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"

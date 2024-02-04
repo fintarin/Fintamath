@@ -1,14 +1,20 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
+#include <cstddef>
+#include <memory>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/logic/Or.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {

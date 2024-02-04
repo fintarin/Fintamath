@@ -1,6 +1,15 @@
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
+#include <cassert>
+#include <cstddef>
+#include <map>
+#include <utility>
+#include <vector>
+
+#include <boost/multiprecision/detail/default_ops.hpp>
+
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 using namespace boost::multiprecision;
 

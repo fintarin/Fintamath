@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 
 namespace fintamath {

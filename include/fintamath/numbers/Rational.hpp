@@ -1,5 +1,14 @@
 #pragma once
 
+#include <compare>
+#include <cstdint>
+#include <memory>
+#include <string>
+
+#include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {

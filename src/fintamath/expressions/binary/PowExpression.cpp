@@ -1,6 +1,19 @@
 #include "fintamath/expressions/binary/PowExpression.hpp"
 
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <ranges>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -10,8 +23,7 @@
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
-#include "fintamath/functions/trigonometry/Cos.hpp"
-#include "fintamath/functions/trigonometry/Sin.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"

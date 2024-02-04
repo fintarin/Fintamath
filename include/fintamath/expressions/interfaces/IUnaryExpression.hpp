@@ -1,6 +1,15 @@
 #pragma once
 
+#include <functional>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
 

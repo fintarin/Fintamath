@@ -1,12 +1,23 @@
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 
+#include <algorithm>
+#include <cctype>
+#include <compare>
+#include <cstddef>
+#include <memory>
+#include <ranges>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 

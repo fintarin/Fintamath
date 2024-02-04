@@ -1,6 +1,6 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
-#include "fintamath/expressions/binary/CompExpression.hpp"
+#include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"

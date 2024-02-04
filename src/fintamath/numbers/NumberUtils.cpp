@@ -1,5 +1,8 @@
 #include "fintamath/numbers/NumberUtils.hpp"
 
+#include <cstddef>
+#include <string>
+
 namespace fintamath {
 
 std::string removeLeadingZeroes(std::string str) {

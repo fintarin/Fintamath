@@ -3,11 +3,6 @@
 #include "fintamath/expressions/ExpressionUtils.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/functions/other/Percent.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/functions/trigonometry/Cos.hpp"
 
 using namespace fintamath;
 

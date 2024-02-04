@@ -1,7 +1,14 @@
 #include "fintamath/functions/arithmetic/Abs.hpp"
 
+#include <memory>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MultiMethod.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/numbers/Complex.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"

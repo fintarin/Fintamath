@@ -1,17 +1,30 @@
 #include "fintamath/expressions/ExpressionUtils.hpp"
 
-#include "fintamath/core/IComparable.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <functional>
+#include <memory>
+#include <ranges>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
-#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"

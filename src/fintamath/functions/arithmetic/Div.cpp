@@ -1,10 +1,14 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 
+#include <memory>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
-#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 

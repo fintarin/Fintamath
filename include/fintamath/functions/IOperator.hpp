@@ -1,5 +1,12 @@
 #pragma once
 
+#include <concepts>
+#include <cstdint>
+#include <memory>
+#include <string>
+
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/Parser.hpp"
 #include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {

@@ -1,8 +1,11 @@
 #include "fintamath/config/ExpressionConfig.hpp"
 
+#include <memory>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/FunctionExpression.hpp"
 #include "fintamath/expressions/binary/CompExpression.hpp"
 #include "fintamath/expressions/binary/DerivativeExpression.hpp"
 #include "fintamath/expressions/binary/DivExpression.hpp"
@@ -22,6 +25,8 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 #include "fintamath/expressions/unary/SignExpression.hpp"
 #include "fintamath/expressions/unary/TrigExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -87,6 +92,7 @@
 #include "fintamath/functions/trigonometry/Sec.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/E.hpp"
 
 namespace fintamath {

@@ -4,7 +4,6 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/E.hpp"
-#include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 using namespace fintamath;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <concepts>
+#include <functional>
 #include <memory>
 
 #include "fintamath/core/MultiMethod.hpp"

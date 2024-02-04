@@ -3,9 +3,11 @@
 #include <memory>
 #include <ostream>
 #include <string>
+#include <utility>
 
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/core/Parser.hpp"
 
 namespace fintamath {

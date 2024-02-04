@@ -1,10 +1,16 @@
 #include "fintamath/functions/trigonometry/Acsc.hpp"
 
-#include "fintamath/exceptions/UndefinedException.hpp"
+#include <memory>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MultiMethod.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
+#include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {

@@ -1,7 +1,23 @@
 #include "fintamath/expressions/ExpressionComparator.hpp"
 
+#include <algorithm>
+#include <compare>
+#include <cstddef>
+#include <memory>
+#include <ranges>
+#include <stack>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IComparable.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 

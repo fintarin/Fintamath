@@ -1,7 +1,19 @@
 #include "fintamath/numbers/Complex.hpp"
 
+#include <compare>
+#include <cstdint>
+#include <memory>
+#include <string>
+
+#include "fintamath/core/Converter.hpp"
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 

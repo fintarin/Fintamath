@@ -1,4 +1,13 @@
 #include "fintamath/functions/calculus/Min.hpp"
+
+#include <functional>
+#include <memory>
+#include <ranges>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IComparable.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/numbers/Complex.hpp"
 
 namespace fintamath {

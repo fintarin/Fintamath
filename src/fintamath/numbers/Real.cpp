@@ -1,8 +1,21 @@
 #include "fintamath/numbers/Real.hpp"
 
+#include <algorithm>
+#include <compare>
+#include <cstddef>
+#include <cstdint>
+#include <ios>
+#include <stdexcept>
+#include <string>
+#include <utility>
+
+#include <boost/multiprecision/detail/default_ops.hpp>
+
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
-#include "fintamath/numbers/IntegerFunctions.hpp"
+#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/NumberUtils.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <regex>
+#include <string>
 
 #include "fintamath/core/CoreUtils.hpp"
 

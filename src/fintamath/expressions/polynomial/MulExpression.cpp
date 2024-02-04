@@ -1,6 +1,16 @@
 #include "fintamath/expressions/polynomial/MulExpression.hpp"
 
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
@@ -11,7 +21,6 @@
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"

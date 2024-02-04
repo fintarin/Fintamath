@@ -1,15 +1,24 @@
 #include "fintamath/expressions/binary/DivExpression.hpp"
 
+#include <cstddef>
+#include <functional>
+#include <ranges>
 #include <set>
+#include <string>
+#include <utility>
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/arithmetic/Sign.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 #include "fintamath/functions/hyperbolic/Coth.hpp"
 #include "fintamath/functions/hyperbolic/Csch.hpp"
@@ -24,10 +33,7 @@
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
-#include "fintamath/literals/constants/Inf.hpp"
-#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
-#include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 #include "fintamath/numbers/Rational.hpp"
 

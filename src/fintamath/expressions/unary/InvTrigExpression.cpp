@@ -1,8 +1,17 @@
 #include "fintamath/expressions/unary/InvTrigExpression.hpp"
 
-#include "fintamath/expressions/ExpressionUtils.hpp"
+#include <functional>
+#include <map>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/Converter.hpp"
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"

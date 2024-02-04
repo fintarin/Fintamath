@@ -1,13 +1,25 @@
 #include "fintamath/expressions/IExpression.hpp"
 
-#include "fintamath/exceptions/UndefinedException.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <functional>
+#include <memory>
+#include <utility>
+#include <vector>
+
+#include "fintamath/core/Converter.hpp"
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MultiMethod.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/functions/other/Index.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {

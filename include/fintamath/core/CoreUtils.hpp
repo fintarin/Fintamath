@@ -1,7 +1,10 @@
 #pragma once
 
+#include <concepts>
+#include <functional>
 #include <memory>
 #include <ranges>
+#include <type_traits>
 
 #include "fintamath/core/MathObjectTypes.hpp"
 

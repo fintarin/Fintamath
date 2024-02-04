@@ -1,7 +1,15 @@
 #include "fintamath/expressions/FunctionExpression.hpp"
 
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
 

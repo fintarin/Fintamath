@@ -4,7 +4,6 @@
 
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 

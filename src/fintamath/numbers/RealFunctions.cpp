@@ -1,7 +1,15 @@
 #include "fintamath/numbers/RealFunctions.hpp"
 
+#include <stdexcept>
+
+#include <boost/math/policies/error_handling.hpp>
+#include <boost/multiprecision/detail/default_ops.hpp>
+#include <boost/multiprecision/mpfr.hpp>
+
 #include "fintamath/core/Cache.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 

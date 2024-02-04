@@ -1,5 +1,7 @@
 #pragma once
 
+#include <compare>
+
 #include "fintamath/functions/FunctionArguments.hpp"
 
 namespace fintamath {

@@ -1,6 +1,12 @@
 #pragma once
 
+#include <memory>
+#include <tuple>
+
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
 

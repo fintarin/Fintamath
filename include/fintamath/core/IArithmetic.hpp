@@ -1,7 +1,14 @@
 #pragma once
 
+#include <concepts>
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/Parser.hpp"
 
 namespace fintamath {
 

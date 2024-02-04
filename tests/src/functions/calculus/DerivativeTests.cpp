@@ -2,7 +2,6 @@
 
 #include "fintamath/functions/calculus/Derivative.hpp"
 
-#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"

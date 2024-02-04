@@ -1,9 +1,16 @@
 #pragma once
 
-#include <algorithm>
+#include <concepts>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <unordered_map>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/Parser.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"

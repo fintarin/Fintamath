@@ -1,11 +1,11 @@
 #include "fintamath/functions/powers/Sqrt.hpp"
 
+#include <memory>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/IntegerFunctions.hpp"
-#include "fintamath/numbers/Rational.hpp"
-#include "fintamath/numbers/Real.hpp"
-#include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
 

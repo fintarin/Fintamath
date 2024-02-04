@@ -1,5 +1,12 @@
 #include "fintamath/numbers/Integer.hpp"
 
+#include <compare>
+#include <cstdint>
+#include <stdexcept>
+#include <string>
+#include <utility>
+
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/NumberUtils.hpp"
 
