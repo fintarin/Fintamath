@@ -5,6 +5,7 @@
 #include <tuple>
 
 #include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
 
 namespace fintamath {
 

@@ -1,9 +1,20 @@
 #include "fintamath/expressions/polynomial/OrExpression.hpp"
 
+#include <cstddef>
+#include <ranges>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/literals/Boolean.hpp"
 
 namespace fintamath {
 

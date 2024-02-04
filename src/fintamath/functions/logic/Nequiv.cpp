@@ -1,5 +1,12 @@
 #include "fintamath/functions/logic/Nequiv.hpp"
 
+#include <memory>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/literals/Boolean.hpp"
+
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Nequiv::call(const ArgumentRefVector &argVect) const {

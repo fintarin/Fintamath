@@ -1,6 +1,12 @@
 #pragma once
 
+#include <concepts>
+#include <cstddef>
+#include <map>
+#include <vector>
+
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {

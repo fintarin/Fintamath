@@ -1,5 +1,13 @@
 #pragma once
 
+#include <map>
+#include <memory>
+#include <string>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/numbers/INumber.hpp"
 

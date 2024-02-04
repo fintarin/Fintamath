@@ -1,7 +1,17 @@
 #include "fintamath/numbers/Rational.hpp"
 
+#include <algorithm>
+#include <compare>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
+#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
 
 namespace fintamath {

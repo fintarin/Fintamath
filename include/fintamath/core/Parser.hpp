@@ -1,16 +1,16 @@
 #pragma once
 
+#include <algorithm>
 #include <functional>
 #include <memory>
 #include <ranges>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
-
-#include <algorithm>
 
 namespace fintamath {
 

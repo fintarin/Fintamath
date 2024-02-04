@@ -1,8 +1,20 @@
 #pragma once
 
+#include <concepts>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/Parser.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 

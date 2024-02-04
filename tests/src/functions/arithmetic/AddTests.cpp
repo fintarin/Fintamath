@@ -5,7 +5,6 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 

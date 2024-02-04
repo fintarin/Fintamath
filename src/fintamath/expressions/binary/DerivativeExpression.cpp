@@ -1,7 +1,19 @@
 #include "fintamath/expressions/binary/DerivativeExpression.hpp"
 
-#include "fintamath/exceptions/InvalidInputException.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <functional>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"

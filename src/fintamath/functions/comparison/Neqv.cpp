@@ -1,5 +1,10 @@
 #include "fintamath/functions/comparison/Neqv.hpp"
 
+#include <memory>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Neqv::call(const ArgumentRefVector &argVect) const {

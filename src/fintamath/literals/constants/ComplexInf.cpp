@@ -1,6 +1,8 @@
 #include "fintamath/literals/constants/ComplexInf.hpp"
 
-#include "fintamath/numbers/RealFunctions.hpp"
+#include <memory>
+
+#include "fintamath/core/IMathObject.hpp"
 
 namespace fintamath {
 

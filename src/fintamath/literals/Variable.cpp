@@ -1,8 +1,10 @@
 #include "fintamath/literals/Variable.hpp"
 
-#include <regex>
+#include <string>
+#include <utility>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 

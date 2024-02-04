@@ -2,7 +2,6 @@
 
 #include "fintamath/functions/logarithms/Log.hpp"
 
-#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"

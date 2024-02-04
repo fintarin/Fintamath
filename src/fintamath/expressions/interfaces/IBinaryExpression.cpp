@@ -1,7 +1,14 @@
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/literals/constants/Undefined.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
 

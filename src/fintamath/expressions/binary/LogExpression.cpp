@@ -1,21 +1,22 @@
 #include "fintamath/expressions/binary/LogExpression.hpp"
 
-#include "fintamath/exceptions/InvalidInputException.hpp"
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/functions/calculus/Derivative.hpp"
-#include "fintamath/functions/logarithms/Lb.hpp"
-#include "fintamath/functions/logarithms/Lg.hpp"
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/E.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
-#include "fintamath/literals/constants/NegInf.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/INumber.hpp"
 

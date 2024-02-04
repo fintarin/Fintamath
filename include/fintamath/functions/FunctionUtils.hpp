@@ -1,7 +1,9 @@
 #pragma once
 
+#include <concepts>
+#include <memory>
+
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 
 #define FINTAMATH_FUNCTION_EXPRESSION(Function, name)          \

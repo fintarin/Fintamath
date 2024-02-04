@@ -8,7 +8,6 @@
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
-#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 

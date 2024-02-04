@@ -2,14 +2,12 @@
 
 #include "fintamath/functions/trigonometry/Acos.hpp"
 
-#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
-#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 

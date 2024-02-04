@@ -1,10 +1,22 @@
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
+#include <functional>
+#include <memory>
 #include <stack>
+#include <string>
+#include <utility>
+#include <vector>
 
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/Parser.hpp"
+#include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/literals/Variable.hpp"
-#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 

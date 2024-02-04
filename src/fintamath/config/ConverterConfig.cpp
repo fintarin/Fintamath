@@ -1,5 +1,7 @@
 #include "fintamath/config/ConverterConfig.hpp"
 
+#include <memory>
+
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Integer.hpp"

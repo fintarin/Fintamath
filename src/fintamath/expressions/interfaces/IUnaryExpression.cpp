@@ -1,6 +1,14 @@
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
 

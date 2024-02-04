@@ -1,7 +1,16 @@
 #pragma once
 
+#include <compare>
+#include <concepts>
+#include <cstdint>
+#include <memory>
+#include <string>
+
+#include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/gmp.hpp>
 
+#include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/numbers/IInteger.hpp"
 
 namespace fintamath {

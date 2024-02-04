@@ -1,5 +1,9 @@
 #include "fintamath/functions/other/Deg.hpp"
 
+#include <memory>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/literals/constants/Pi.hpp"

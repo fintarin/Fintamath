@@ -1,5 +1,12 @@
 #pragma once
 
+#include <concepts>
+#include <memory>
+#include <string>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/Parser.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 
 namespace fintamath {

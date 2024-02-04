@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {

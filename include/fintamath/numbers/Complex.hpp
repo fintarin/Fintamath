@@ -1,5 +1,13 @@
 #pragma once
 
+#include <compare>
+#include <cstdint>
+#include <memory>
+#include <string>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"

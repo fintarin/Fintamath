@@ -1,6 +1,8 @@
 #include "fintamath/literals/constants/NegInf.hpp"
 
-#include "fintamath/numbers/RealFunctions.hpp"
+#include <memory>
+
+#include "fintamath/core/IMathObject.hpp"
 
 namespace fintamath {
 

@@ -1,6 +1,13 @@
 #pragma once
 
+#include <memory>
+#include <string>
+
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 

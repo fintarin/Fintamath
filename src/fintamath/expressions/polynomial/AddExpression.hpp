@@ -1,6 +1,16 @@
 #pragma once
 
+#include <compare>
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
 

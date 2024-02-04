@@ -1,6 +1,19 @@
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
+#include <tuple>
+#include <utility>
+
+#include "fintamath/core/Converter.hpp"
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
@@ -17,7 +30,6 @@
 #include "fintamath/functions/trigonometry/Sec.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/functions/trigonometry/Tan.hpp"
-#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Pi.hpp"
 
 namespace fintamath {

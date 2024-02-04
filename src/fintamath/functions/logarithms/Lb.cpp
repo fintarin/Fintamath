@@ -1,6 +1,11 @@
 #include "fintamath/functions/logarithms/Lb.hpp"
 
+#include <memory>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 

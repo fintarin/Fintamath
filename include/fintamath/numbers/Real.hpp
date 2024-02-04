@@ -1,7 +1,16 @@
 #pragma once
 
+#include <compare>
+#include <cstdint>
+#include <memory>
+#include <string>
+
+#include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
+#include "fintamath/core/IArithmetic.hpp"
+#include "fintamath/core/IComparable.hpp"
+#include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"

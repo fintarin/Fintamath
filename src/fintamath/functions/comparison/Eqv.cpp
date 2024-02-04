@@ -1,5 +1,10 @@
 #include "fintamath/functions/comparison/Eqv.hpp"
 
+#include <memory>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Eqv::call(const ArgumentRefVector &argVect) const {

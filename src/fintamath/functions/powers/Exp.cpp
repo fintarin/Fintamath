@@ -1,5 +1,9 @@
 #include "fintamath/functions/powers/Exp.hpp"
 
+#include <memory>
+
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/constants/E.hpp"
 

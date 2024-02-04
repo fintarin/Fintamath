@@ -1,6 +1,8 @@
 #include "fintamath/numbers/RationalFunctions.hpp"
 
+#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/IntegerFunctions.hpp"
+#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 

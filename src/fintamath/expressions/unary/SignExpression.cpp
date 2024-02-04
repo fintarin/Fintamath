@@ -1,11 +1,18 @@
 #include "fintamath/expressions/unary/SignExpression.hpp"
 
+#include <utility>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 

@@ -1,15 +1,14 @@
 #include "fintamath/expressions/unary/AbsExpression.hpp"
 
+#include <utility>
+
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
-#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/functions/powers/Sqrt.hpp"
-#include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
-#include "fintamath/literals/constants/NegInf.hpp"
-#include "fintamath/numbers/Complex.hpp"
 
 namespace fintamath {
 

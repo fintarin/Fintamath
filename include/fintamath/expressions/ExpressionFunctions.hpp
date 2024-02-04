@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 

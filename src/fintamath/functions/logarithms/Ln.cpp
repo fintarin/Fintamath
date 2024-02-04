@@ -1,9 +1,16 @@
 #include "fintamath/functions/logarithms/Ln.hpp"
 
-#include "fintamath/exceptions/UndefinedException.hpp"
-#include "fintamath/functions/logarithms/Log.hpp"
-#include "fintamath/literals/constants/E.hpp"
+#include <memory>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MultiMethod.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
+#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Rational.hpp"
+#include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
