@@ -53,7 +53,7 @@ public:
 
 class InvalidInputUnaryOperatorException final : public InvalidInputException {
 public:
-  enum class Type {
+  enum class Type : uint8_t {
     Prefix,
     Postfix,
   };
