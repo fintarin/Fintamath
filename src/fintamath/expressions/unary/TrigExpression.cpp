@@ -1,6 +1,7 @@
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 
 #include <functional>
+#include <map>
 #include <memory>
 #include <string>
 #include <tuple>

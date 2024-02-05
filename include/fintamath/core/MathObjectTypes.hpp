@@ -1,8 +1,11 @@
 #pragma once
 
+#include <compare>
 #include <cstddef>
 #include <limits>
 #include <unordered_map>
+
+#include <boost/container_hash/hash.hpp>
 
 #include "fintamath/config/Config.hpp"
 
@@ -194,21 +197,14 @@ private:
   [[maybe_unused]] inline static const Config config;
 };
 
+inline size_t hash_value(const MathObjectType &rhs) noexcept {
+  return boost::hash<size_t>{}(rhs);
 }
-
-template <>
-struct std::hash<fintamath::MathObjectType> {
-  size_t operator()(const fintamath::MathObjectType &rhs) const noexcept {
-    return hash<size_t>()(static_cast<size_t>(rhs));
-  }
-};
-
-namespace fintamath {
 
 class MathObjectBoundTypes final {
   using enum MathObjectType::Id;
 
-  using TypeMap = std::unordered_map<MathObjectType, MathObjectType>;
+  using TypeMap = std::unordered_map<MathObjectType, MathObjectType, boost::hash<MathObjectType>>;
 
   static TypeMap &getMutable() {
     static TypeMap ids{
