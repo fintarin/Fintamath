@@ -1,9 +1,12 @@
 #pragma once
 
 #include <compare>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <string>
+
+#include <boost/container_hash/hash.hpp>
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
@@ -66,5 +69,12 @@ private:
   Integer numer = 0;
   Integer denom = 1;
 };
+
+inline size_t hash_value(const Rational &rhs) noexcept {
+  size_t seed = 0;
+  boost::hash_combine(seed, boost::hash<Integer>{}(rhs.numerator()));
+  boost::hash_combine(seed, boost::hash<Integer>{}(rhs.denominator()));
+  return seed;
+}
 
 }
