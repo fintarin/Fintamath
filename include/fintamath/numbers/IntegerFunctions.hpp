@@ -2,14 +2,18 @@
 
 #include <concepts>
 #include <cstddef>
-#include <map>
+#include <unordered_map>
 #include <vector>
+
+#include <boost/container_hash/hash.hpp>
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
+
+using FactorToCountMap = std::unordered_map<Integer, Integer, boost::hash<Integer>>;
 
 // Use exponentiation by squaring with constant auxiliary memory (iterative version).
 // https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.
@@ -27,7 +31,7 @@ Lhs pow(const Lhs &lhs, Integer rhs) {
   Lhs sqr = lhs;
 
   while (rhs != 0) {
-    if ((rhs.toString().back() - '0') % 2 == 0) {
+    if (rhs % 2 == 0) {
       rhs /= 2;
       sqr = sqr * sqr;
     }
@@ -54,7 +58,7 @@ Integer factorial(const Integer &rhs);
 
 Integer factorial(const Integer &rhs, size_t order);
 
-std::map<Integer, Integer> factors(Integer rhs, Integer limit = -1);
+FactorToCountMap factors(Integer rhs, Integer limit = -1);
 
 Integer combinations(const Integer &totalNumber, const Integer &choosedNumber);
 

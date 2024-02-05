@@ -1,6 +1,7 @@
 #include "fintamath/expressions/unary/InvTrigExpression.hpp"
 
 #include <functional>
+#include <map>
 #include <string>
 #include <unordered_map>
 #include <utility>

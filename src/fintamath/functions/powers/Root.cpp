@@ -1,6 +1,5 @@
 #include "fintamath/functions/powers/Root.hpp"
 
-#include <map>
 #include <memory>
 
 #include "fintamath/core/CoreUtils.hpp"
@@ -77,17 +76,12 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Integer &lhs, const Intege
 
   ArgumentPtrVector mulChildren;
 
-  std::map<Integer, Integer> rootFactors = roots(lhs, rhs);
-
-  if (rootFactors.begin()->first == 1) {
-    if (rootFactors.begin()->second != 1) {
-      mulChildren.emplace_back(rootFactors.begin()->second.clone());
-    }
-
-    rootFactors.erase(rootFactors.begin());
+  RootToFactorMap rootToFactorMap = roots(lhs, rhs);
+  if (const Integer firstFactor = extractFirstFactor(rootToFactorMap); firstFactor != 1) {
+    mulChildren.emplace_back(firstFactor.clone());
   }
 
-  for (const auto &[root, factor] : rootFactors) {
+  for (const auto &[root, factor] : rootToFactorMap) {
     if (factor != 1) {
       mulChildren.emplace_back(rootExpr(factor, root));
     }
@@ -100,35 +94,35 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Integer &lhs, const Intege
   return mulExpr(mulChildren);
 }
 
-std::map<Integer, Integer> Root::roots(const Integer &lhs, const Integer &rhs) {
-  static Integer factorLimit = pow(Integer(2), 15);
+Root::RootToFactorMap Root::roots(const Integer &lhs, const Integer &rhs) {
+  static const Integer factorLimit = pow(Integer(2), 15);
 
-  std::map<Integer, Integer> rootFactors{{1, 1}};
-  const std::map<Integer, Integer> factorRates = factors(lhs, factorLimit);
+  const FactorToCountMap factorToCountMap = factors(lhs, factorLimit);
+  RootToFactorMap rootToFactorMap{{1, 1}};
 
-  for (const auto &[factor, rate] : factorRates) {
+  for (const auto &[factor, rate] : factorToCountMap) {
     const Rational power(rate, rhs);
 
     if (power.denominator() == 1) {
-      rootFactors[1] *= pow(factor, power.numerator());
+      rootToFactorMap[1] *= pow(factor, power.numerator());
       continue;
     }
 
     if (power.numerator() > power.denominator()) {
-      rootFactors[1] *= pow(factor, power.numerator() / power.denominator());
+      rootToFactorMap[1] *= pow(factor, power.numerator() / power.denominator());
     }
 
     const Integer factorMultiplier = pow(factor, power.numerator() % power.denominator());
 
-    if (auto rootIter = rootFactors.find(power.denominator()); rootIter != rootFactors.end()) {
+    if (auto rootIter = rootToFactorMap.find(power.denominator()); rootIter != rootToFactorMap.end()) {
       rootIter->second *= factorMultiplier;
     }
     else {
-      rootFactors.try_emplace(power.denominator(), factorMultiplier);
+      rootToFactorMap.try_emplace(power.denominator(), factorMultiplier);
     }
   }
 
-  return rootFactors;
+  return rootToFactorMap;
 }
 
 std::unique_ptr<IMathObject> Root::perfectRoot(const Integer &lhs, const Integer &rhs) {
@@ -171,32 +165,23 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
   ArgumentPtrVector numeratorChildren;
   Rational denominator = 1;
 
-  std::map<Integer, Integer> numeratorRootFactors = roots(lhs.numerator(), rhs);
-  std::map<Integer, Integer> denominatorRootFactors = roots(lhs.denominator(), rhs);
-
-  if (numeratorRootFactors.begin()->first == 1) {
-    if (numeratorRootFactors.begin()->second != 1) {
-      numeratorChildren.emplace_back(numeratorRootFactors.begin()->second.clone());
-    }
-
-    numeratorRootFactors.erase(numeratorRootFactors.begin());
+  RootToFactorMap numeratorRootToFactorMap = roots(lhs.numerator(), rhs);
+  if (const Integer firstFactor = extractFirstFactor(numeratorRootToFactorMap); firstFactor != 1) {
+    numeratorChildren.emplace_back(firstFactor.clone());
   }
 
-  if (denominatorRootFactors.begin()->first == 1) {
-    if (denominatorRootFactors.begin()->second != 1) {
-      denominator *= denominatorRootFactors.begin()->second;
-    }
-
-    denominatorRootFactors.erase(denominatorRootFactors.begin());
+  RootToFactorMap denominatorRootToFactorMap = roots(lhs.denominator(), rhs);
+  if (const Integer firstFactor = extractFirstFactor(denominatorRootToFactorMap); firstFactor != 1) {
+    denominator *= firstFactor;
   }
 
-  for (const auto &[root, numeratorFactor] : numeratorRootFactors) {
-    if (const auto denominatorFactorIter = denominatorRootFactors.find(root);
-        denominatorFactorIter != denominatorRootFactors.end()) {
+  for (const auto &[root, numeratorFactor] : numeratorRootToFactorMap) {
+    if (const auto denominatorFactorIter = denominatorRootToFactorMap.find(root);
+        denominatorFactorIter != denominatorRootToFactorMap.end()) {
 
       Integer denominatorFactor = denominatorFactorIter->second;
 
-      denominatorRootFactors.erase(denominatorFactorIter);
+      denominatorRootToFactorMap.erase(denominatorFactorIter);
 
       if (denominatorFactor != 1) {
         denominator *= denominatorFactor;
@@ -213,7 +198,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     }
   }
 
-  for (const auto &[root, denominatorFactor] : denominatorRootFactors) {
+  for (const auto &[root, denominatorFactor] : denominatorRootToFactorMap) {
     if (denominatorFactor != 1) {
       denominator *= denominatorFactor;
 
@@ -235,6 +220,13 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
 
 std::unique_ptr<IMathObject> Root::rootSimplify(const Real &lhs, const Integer &rhs) {
   return Pow{}(lhs, Rational(1, rhs));
+}
+
+Integer Root::extractFirstFactor(RootToFactorMap &rootToFactorMap) {
+  const auto iter = rootToFactorMap.find(1);
+  Integer res = iter->second;
+  rootToFactorMap.erase(iter);
+  return res;
 }
 
 }

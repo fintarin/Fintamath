@@ -93,15 +93,15 @@ Integer factorial(const Integer &rhs, const size_t order) {
   return res;
 }
 
-std::map<Integer, Integer> factors(Integer rhs, Integer limit) {
+FactorToCountMap factors(Integer rhs, Integer limit) {
   if (rhs < 2) {
     throw UndefinedFunctionException("factors", {rhs.toString()});
   }
 
-  std::map<Integer, Integer> factorRates;
+  FactorToCountMap factorToCountMap;
 
   while (rhs % 2 == 0) {
-    ++factorRates[2];
+    ++factorToCountMap[2];
     rhs /= 2;
   }
 
@@ -115,16 +115,16 @@ std::map<Integer, Integer> factors(Integer rhs, Integer limit) {
 
   for (Integer i = 3; i <= limit; i += 2) {
     while (rhs % i == 0) {
-      ++factorRates[i];
+      ++factorToCountMap[i];
       rhs = rhs / i;
     }
   }
 
   if (rhs > 1) {
-    ++factorRates[rhs];
+    ++factorToCountMap[rhs];
   }
 
-  return factorRates;
+  return factorToCountMap;
 }
 
 // Use number of combinations formula.

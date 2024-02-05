@@ -2,10 +2,12 @@
 
 #include <compare>
 #include <concepts>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <string>
 
+#include <boost/container_hash/hash.hpp>
 #include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/gmp.hpp>
 
@@ -86,5 +88,9 @@ protected:
 private:
   Backend backend;
 };
+
+inline size_t hash_value(const Integer &rhs) noexcept {
+  return boost::hash<Integer::Backend>{}(rhs.getBackend());
+}
 
 }
