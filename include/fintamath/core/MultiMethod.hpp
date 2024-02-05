@@ -1,8 +1,10 @@
 #pragma once
 
 #include <functional>
-#include <map>
 #include <tuple>
+#include <unordered_map>
+
+#include <boost/container_hash/hash.hpp>
 
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
@@ -21,7 +23,7 @@ class MultiMethod<Res(ArgsBase...)> final {
 
   using Callback = std::function<Res(ArgsBase...)>;
 
-  using Callbacks = std::map<CallbackId, Callback>;
+  using Callbacks = std::unordered_map<CallbackId, Callback, boost::hash<CallbackId>>;
 
 public:
   template <typename... Args>
