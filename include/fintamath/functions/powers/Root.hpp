@@ -18,6 +18,8 @@ class Rational;
 class Real;
 
 class Root final : public IFunctionCRTP<INumber, Root, INumber, INumber> {
+  using RootToFactorMap = std::map<Integer, Integer>;
+
 public:
   Root() = default;
 
@@ -41,9 +43,11 @@ private:
 
   static std::unique_ptr<IMathObject> rootSimplify(const Real &lhs, const Integer &rhs);
 
-  static std::map<Integer, Integer> roots(const Integer &lhs, const Integer &rhs);
+  static RootToFactorMap roots(const Integer &lhs, const Integer &rhs);
 
   static std::unique_ptr<IMathObject> perfectRoot(const Integer &lhs, const Integer &rhs);
+
+  static Integer extractFirstFactor(RootToFactorMap &rootToFactorMap);
 };
 
 FINTAMATH_FUNCTION_EXPRESSION(Root, rootExpr);
