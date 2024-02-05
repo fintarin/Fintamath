@@ -7,6 +7,18 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/mpfr-gmp-prebuilt
     PARENT_SCOPE)
 
+add_subdirectory(boost-config)
+mark_include_directories_as_system(boost_config)
+    
+add_subdirectory(boost-mp11)
+mark_include_directories_as_system(boost_mp11)
+
+add_subdirectory(boost-describe)
+mark_include_directories_as_system(boost_describe)
+
+add_subdirectory(boost-container-hash)
+mark_include_directories_as_system(boost_container_hash)
+
 add_subdirectory(boost-multiprecision)
 mark_include_directories_as_system(boost_multiprecision)
 

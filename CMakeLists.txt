@@ -43,7 +43,12 @@ target_include_directories(
   PUBLIC include
   PRIVATE src)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC MPFR Boost::multiprecision Boost::math)
+target_link_libraries(
+  ${PROJECT_NAME}
+  PUBLIC MPFR
+         Boost::multiprecision
+         Boost::math
+         Boost::container_hash)
 
 include(cmake/CompilerWarnings.cmake)
 include(cmake/Coverage.cmake)
