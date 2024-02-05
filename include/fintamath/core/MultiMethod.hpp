@@ -19,27 +19,32 @@ class MultiMethod<Res(ArgsBase...)> final {
 
   using CallbackId = std::tuple<ArgId<ArgsBase>...>;
 
-  using Callback = std::function<Res(const ArgsBase &...)>;
+  using Callback = std::function<Res(ArgsBase...)>;
 
   using Callbacks = std::map<CallbackId, Callback>;
 
 public:
   template <typename... Args>
+    requires(sizeof...(Args) == sizeof...(ArgsBase))
   void add(const auto &func) {
     callbacks[CallbackId(Args::getTypeStatic()...)] = [func](const ArgsBase &...args) {
       return func(cast<Args>(args)...);
     };
   }
 
-  Res operator()(const auto &...args) const {
+  template <typename... Args>
+    requires(sizeof...(Args) == sizeof...(ArgsBase))
+  Res operator()(Args &&...args) const {
     if (auto iter = callbacks.find(CallbackId(args.getType()...)); iter != callbacks.end()) {
-      return iter->second(args...);
+      return iter->second(std::forward<Args>(args)...);
     }
 
     return {};
   }
 
-  bool contains(const auto &...args) const {
+  template <typename... Args>
+    requires(sizeof...(Args) == sizeof...(ArgsBase))
+  bool contains(const Args &...args) const {
     return callbacks.contains(CallbackId(args.getType()...));
   }
 
