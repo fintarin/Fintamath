@@ -1,7 +1,6 @@
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 
 #include <functional>
-#include <map>
 #include <memory>
 #include <string>
 #include <tuple>
@@ -39,7 +38,7 @@ using SimplifyFunctionMap = std::unordered_map<std::string, std::function<Argume
 
 using TrigonometryFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const Rational &)>>;
 
-using TrigonometryTable = std::map<Rational, ArgumentPtr>;
+using TrigonometryTable = std::unordered_map<Rational, ArgumentPtr, boost::hash<Rational>>;
 
 ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key, bool isNegated);
 

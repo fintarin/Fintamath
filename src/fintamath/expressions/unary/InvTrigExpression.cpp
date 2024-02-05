@@ -1,7 +1,6 @@
 #include "fintamath/expressions/unary/InvTrigExpression.hpp"
 
 #include <functional>
-#include <map>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -29,7 +28,7 @@ namespace fintamath {
 
 using TrigonometryFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const Rational &)>>;
 
-using TrigonometryTable = std::map<Rational, ArgumentPtr>;
+using TrigonometryTable = std::unordered_map<Rational, ArgumentPtr, boost::hash<Rational>>;
 
 ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key);
 
