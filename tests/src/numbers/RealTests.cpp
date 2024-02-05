@@ -2,6 +2,8 @@
 
 #include "fintamath/numbers/Real.hpp"
 
+#include <unordered_set>
+
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 
@@ -1025,6 +1027,14 @@ TEST(RealTests, signTest) {
   EXPECT_EQ(Real(2).sign(), 1);
 }
 
+TEST(RealTests, isZeroTest) {
+  EXPECT_TRUE(Real("0").isZero());
+  EXPECT_TRUE(Real("-0").isZero());
+
+  EXPECT_FALSE(Real("1").isZero());
+  EXPECT_FALSE(Real("-1").isZero());
+}
+
 TEST(RealTests, isPreciseTest) {
   EXPECT_FALSE(Real(2).isPrecise());
 }
@@ -1052,4 +1062,38 @@ TEST(RealTests, equalsTest) {
 TEST(RealTests, getTypeTest) {
   EXPECT_EQ(Real::getTypeStatic(), MathObjectType::Real);
   EXPECT_EQ(Real().getType(), MathObjectType::Real);
+}
+
+TEST(RealTests, hashTest) {
+  constexpr auto hash = boost::hash<Real>{};
+
+  EXPECT_EQ(hash(Real("0")), hash(Real("0")));
+  EXPECT_EQ(hash(Real("-0")), hash(Real("-0")));
+  EXPECT_EQ(hash(Real("12")), hash(Real("12")));
+  EXPECT_EQ(hash(Real("-12")), hash(Real("-12")));
+  EXPECT_EQ(hash(Real("452734865298734659873246238756987435")), hash(Real("452734865298734659873246238756987435")));
+  EXPECT_EQ(hash(Real("-452734865298734659873246238756987435")), hash(Real("-452734865298734659873246238756987435")));
+  EXPECT_EQ(hash(Real("1.4357")), hash(Real("1.4357")));
+  EXPECT_EQ(hash(Real("-1.4357")), hash(Real("-1.4357")));
+  EXPECT_EQ(hash(Real("3.3333")), hash(Real("3.3333")));
+  EXPECT_EQ(hash(Real("-3.3333")), hash(Real("-3.3333")));
+  EXPECT_EQ(hash(Real("123.00001")), hash(Real("123.00001")));
+  EXPECT_EQ(hash(Real("-123.00001")), hash(Real("-123.00001")));
+  EXPECT_EQ(hash(Real("897259832648723648327648273463287.48732648273652873")), hash(Real("897259832648723648327648273463287.48732648273652873")));
+  EXPECT_EQ(hash(Real("-897259832648723648327648273463287.48732648273652873")), hash(Real("-897259832648723648327648273463287.48732648273652873")));
+
+  EXPECT_NE(hash(Real("0")), hash(Real("-0")));
+  EXPECT_NE(hash(Real("0")), hash(Real("1")));
+  EXPECT_NE(hash(Real("12")), hash(Real("13")));
+  EXPECT_NE(hash(Real("-12")), hash(Real("-13")));
+  EXPECT_NE(hash(Real("452734865298734659873246238756987435")), hash(Real("452734865298734659873246238756987436")));
+  EXPECT_NE(hash(Real("-452734865298734659873246238756987435")), hash(Real("-452734865298734659873246238756987436")));
+  EXPECT_NE(hash(Real("1.4357")), hash(Real("1.4358")));
+  EXPECT_NE(hash(Real("-1.4357")), hash(Real("-1.4358")));
+  EXPECT_NE(hash(Real("3.3333")), hash(Real("3.33333")));
+  EXPECT_NE(hash(Real("-3.3333")), hash(Real("-3.33333")));
+  EXPECT_NE(hash(Real("123.00001")), hash(Real("123.000001")));
+  EXPECT_NE(hash(Real("-123.00001")), hash(Real("-123.000001")));
+  EXPECT_NE(hash(Real("897259832648723648327648273463287.48732648273652873")), hash(Real("897259832648723648327648273463287.48732648273652874")));
+  EXPECT_NE(hash(Real("-897259832648723648327648273463287.48732648273652873")), hash(Real("-897259832648723648327648273463287.48732648273652874")));
 }

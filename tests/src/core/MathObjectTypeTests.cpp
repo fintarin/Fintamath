@@ -72,3 +72,13 @@ TEST(MathObjectTypesTests, isBaseOfTest) {
   EXPECT_FALSE(isBaseOf(IConstant::getTypeStatic(), INumber::getTypeStatic()));
   EXPECT_FALSE(isBaseOf(Boolean::getTypeStatic(), INumber::getTypeStatic()));
 }
+
+TEST(MathObjectTypesTests, hashTest) {
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::IMathObject), static_cast<size_t>(MathObjectType::IMathObject));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::INumber), static_cast<size_t>(MathObjectType::INumber));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::Integer), static_cast<size_t>(MathObjectType::Integer));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::ILiteral), static_cast<size_t>(MathObjectType::ILiteral));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::IConstant), static_cast<size_t>(MathObjectType::IConstant));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::Boolean), static_cast<size_t>(MathObjectType::Boolean));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::None), static_cast<size_t>(MathObjectType::None));
+}

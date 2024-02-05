@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <unordered_set>
+
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -520,4 +522,24 @@ TEST(RationalTests, equalsTest) {
 TEST(RationalTests, getTypeTest) {
   EXPECT_EQ(Rational::getTypeStatic(), MathObjectType::Rational);
   EXPECT_EQ(Rational().getType(), MathObjectType::Rational);
+}
+
+TEST(RationalTests, hashTest) {
+  constexpr auto hash = boost::hash<Rational>{};
+
+  EXPECT_EQ(hash(Rational(0)), hash(Rational(0)));
+  EXPECT_EQ(hash(Rational(12)), hash(Rational(12)));
+  EXPECT_EQ(hash(Rational(-12)), hash(Rational(-12)));
+  EXPECT_EQ(hash(Rational(3, 2)), hash(Rational(3, 2)));
+  EXPECT_EQ(hash(Rational(-3, 2)), hash(Rational(-3, 2)));
+  EXPECT_EQ(hash(Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))), hash(Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))));
+  EXPECT_EQ(hash(Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))), hash(Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))));
+
+  EXPECT_NE(hash(Rational(0)), hash(Rational(1)));
+  EXPECT_NE(hash(Rational(12)), hash(Rational(13)));
+  EXPECT_NE(hash(Rational(-12)), hash(Rational(-13)));
+  EXPECT_NE(hash(Rational(3, 2)), hash(Rational(2, 3)));
+  EXPECT_NE(hash(Rational(-3, 2)), hash(Rational(-2, 3)));
+  EXPECT_NE(hash(Rational(Integer("39842732658275642342352642634234234"), Integer("452734865298734659873246238756987435"))), Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234")));
+  EXPECT_NE(hash(Rational(-Integer("39842732658275642342352642634234234"), Integer("452734865298734659873246238756987435"))), Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234")));
 }
