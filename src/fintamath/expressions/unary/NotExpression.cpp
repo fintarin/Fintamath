@@ -1,9 +1,9 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 
 #include <functional>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <utility>
 
 #include "fintamath/core/CoreUtils.hpp"
@@ -89,7 +89,7 @@ ArgumentPtr NotExpression::nestedNotSimplify(const IFunction & /*func*/, const A
 }
 
 std::shared_ptr<IFunction> NotExpression::getLogicOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
       {Eqv{}.toString(), std::make_shared<Neqv>()},
       {Neqv{}.toString(), std::make_shared<Eqv>()},
       {More{}.toString(), std::make_shared<LessEqv>()},

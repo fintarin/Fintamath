@@ -3,8 +3,8 @@
 #include <cstddef>
 #include <functional>
 #include <ranges>
-#include <set>
 #include <string>
+#include <unordered_set>
 #include <utility>
 
 #include "fintamath/core/CoreUtils.hpp"
@@ -584,7 +584,7 @@ ArgumentPtr DivExpression::secCscSimplify(const IFunction & /*func*/, const Argu
 }
 
 bool DivExpression::containsDivTrigFunction(const ArgumentPtr &arg) {
-  static const std::set<std::string, std::less<>> functionStrings = {
+  static const std::unordered_set<std::string> functionStrings = {
       Tan{}.toString(),
       Cot{}.toString(),
       Sec{}.toString(),

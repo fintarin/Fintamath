@@ -1,10 +1,10 @@
 #include "fintamath/expressions/binary/CompExpression.hpp"
 
 #include <functional>
-#include <map>
 #include <memory>
 #include <ranges>
 #include <string>
+#include <unordered_map>
 #include <utility>
 
 #include "fintamath/core/CoreUtils.hpp"
@@ -111,7 +111,7 @@ void CompExpression::markAsSolution() {
 }
 
 std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
       {Eqv{}.toString(), std::make_shared<Eqv>()},
       {Neqv{}.toString(), std::make_shared<Neqv>()},
       {More{}.toString(), std::make_shared<Less>()},

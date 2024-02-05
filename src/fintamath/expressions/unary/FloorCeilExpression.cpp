@@ -1,9 +1,9 @@
 #include "fintamath/expressions/unary/FloorCeilExpression.hpp"
 
 #include <functional>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <utility>
 
 #include "fintamath/core/CoreUtils.hpp"
@@ -55,7 +55,7 @@ ArgumentPtr FloorCeilExpression::negSimplify(const IFunction &func, const Argume
 }
 
 std::shared_ptr<IFunction> FloorCeilExpression::getOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
       {Floor{}.toString(), std::make_shared<Ceil>()},
       {Ceil{}.toString(), std::make_shared<Floor>()},
   };

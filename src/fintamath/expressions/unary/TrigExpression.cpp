@@ -1,10 +1,10 @@
 #include "fintamath/expressions/unary/TrigExpression.hpp"
 
 #include <functional>
-#include <map>
 #include <memory>
 #include <string>
 #include <tuple>
+#include <unordered_map>
 #include <utility>
 
 #include "fintamath/core/Converter.hpp"
@@ -34,9 +34,9 @@
 
 namespace fintamath {
 
-using SimplifyFunctionMap = std::map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>, std::less<>>;
+using SimplifyFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>>;
 
-using TrigonometryFunctionMap = std::map<std::string, std::function<ArgumentPtr(const Rational &)>, std::less<>>;
+using TrigonometryFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const Rational &)>>;
 
 using TrigonometryTable = std::map<Rational, ArgumentPtr>;
 
@@ -234,7 +234,7 @@ Rational TrigExpression::phaseShiftPeriod(const Rational &rhs) {
 }
 
 std::shared_ptr<IFunction> TrigExpression::getOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
       {Sin{}.toString(), std::make_shared<Asin>()},
       {Cos{}.toString(), std::make_shared<Acos>()},
       {Tan{}.toString(), std::make_shared<Atan>()},

@@ -1,9 +1,9 @@
 #include "fintamath/expressions/unary/HyperbExpression.hpp"
 
 #include <functional>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <utility>
 
 #include "fintamath/core/CoreUtils.hpp"
@@ -29,7 +29,7 @@
 
 namespace fintamath {
 
-using SimplifyFunctionMap = std::map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>, std::less<>>;
+using SimplifyFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>>;
 
 HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
     : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
@@ -112,7 +112,7 @@ ArgumentPtr HyperbExpression::negSimplify(const IFunction &func, const ArgumentP
 }
 
 std::shared_ptr<IFunction> HyperbExpression::getOppositeFunction(const IFunction &function) {
-  static const std::map<std::string, std::shared_ptr<IFunction>, std::less<>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
       {Sinh{}.toString(), std::make_unique<Asinh>()},
       {Cosh{}.toString(), std::make_unique<Acosh>()},
       {Tanh{}.toString(), std::make_unique<Atanh>()},
