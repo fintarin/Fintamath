@@ -1,10 +1,12 @@
 #pragma once
 
 #include <compare>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <string>
 
+#include <boost/container_hash/hash.hpp>
 #include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
@@ -54,6 +56,8 @@ public:
   bool isPrecise() const override;
 
   int sign() const;
+
+  bool isZero() const;
 
   const Backend &getBackend() const;
 
@@ -106,5 +110,15 @@ private:
 
   bool isNegative = false;
 };
+
+inline size_t hash_value(const Real &rhs) noexcept {
+  if (rhs.isZero()) {
+    size_t seed = 0;
+    boost::hash_combine(seed, boost::hash<int>{}(rhs.sign()));
+    return seed;
+  }
+
+  return boost::hash<Real::Backend>{}(rhs.getBackend());
+}
 
 }

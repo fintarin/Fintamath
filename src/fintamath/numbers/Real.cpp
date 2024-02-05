@@ -137,6 +137,10 @@ int Real::sign() const {
   return backend.sign();
 }
 
+bool Real::isZero() const {
+  return backend.is_zero();
+}
+
 const Real::Backend &Real::getBackend() const {
   return backend;
 }
