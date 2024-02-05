@@ -14,8 +14,11 @@
 
 namespace fintamath {
 
+template <typename Signature>
+class Parser;
+
 template <typename Return, typename... Args>
-class Parser final {
+class Parser<Return(Args...)> final {
 public:
   using Validator = std::function<bool(const Return &)>;
 

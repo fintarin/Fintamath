@@ -12,7 +12,7 @@
 namespace fintamath {
 
 class IOperator : public IFunction {
-  using OperatorParser = Parser<std::unique_ptr<IOperator>>;
+  using OperatorParser = Parser<std::unique_ptr<IOperator>()>;
 
 public:
   enum class Priority : uint8_t {

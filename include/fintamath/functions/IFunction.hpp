@@ -22,7 +22,7 @@ struct IsFunctionTypeAny : std::false_type {};
 
 class IFunction : public IMathObject {
   using FunctionOrderMap = std::unordered_map<std::string, size_t>;
-  using FunctionParser = Parser<std::unique_ptr<IFunction>>;
+  using FunctionParser = Parser<std::unique_ptr<IFunction>()>;
 
 public:
   enum class Type : uint8_t {

@@ -38,8 +38,8 @@ using TermVector = std::vector<std::unique_ptr<Term>>;
 using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 
 class Expression final : public IExpressionCRTP<Expression> {
-  using TermParser = Parser<std::unique_ptr<Term>>;
-  using ExpressionParser = Parser<std::unique_ptr<IMathObject>, ArgumentPtrVector &&>;
+  using TermParser = Parser<std::unique_ptr<Term>()>;
+  using ExpressionParser = Parser<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
   using ExpressionMaker = std::function<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
 
 public:

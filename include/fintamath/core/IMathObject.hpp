@@ -13,7 +13,7 @@
 namespace fintamath {
 
 class IMathObject {
-  using MathObjectParser = Parser<std::unique_ptr<IMathObject>>;
+  using MathObjectParser = Parser<std::unique_ptr<IMathObject>()>;
 
 public:
   virtual ~IMathObject() = default;

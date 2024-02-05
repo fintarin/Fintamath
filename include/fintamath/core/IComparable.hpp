@@ -14,7 +14,7 @@
 namespace fintamath {
 
 class IComparable : public IArithmetic {
-  using ComparableParser = Parser<std::unique_ptr<IComparable>>;
+  using ComparableParser = Parser<std::unique_ptr<IComparable>()>;
 
 public:
   friend std::strong_ordering operator<=>(const IComparable &lhs, const IComparable &rhs) {

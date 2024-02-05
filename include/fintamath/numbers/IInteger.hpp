@@ -12,7 +12,7 @@
 namespace fintamath {
 
 class IInteger : public INumber {
-  using IntegerParser = Parser<std::unique_ptr<IInteger>>;
+  using IntegerParser = Parser<std::unique_ptr<IInteger>()>;
 
 public:
   friend std::unique_ptr<IInteger> operator%(const IInteger &lhs, const IInteger &rhs) {

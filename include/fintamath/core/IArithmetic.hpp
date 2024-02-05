@@ -13,7 +13,7 @@
 namespace fintamath {
 
 class IArithmetic : public IMathObject {
-  using ArithmeticParser = Parser<std::unique_ptr<IArithmetic>>;
+  using ArithmeticParser = Parser<std::unique_ptr<IArithmetic>()>;
 
 public:
   friend std::unique_ptr<IArithmetic> operator+(const IArithmetic &lhs, const IArithmetic &rhs) {
