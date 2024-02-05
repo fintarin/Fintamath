@@ -2,6 +2,8 @@
 
 #include "fintamath/numbers/Integer.hpp"
 
+#include <unordered_set>
+
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -877,4 +879,20 @@ TEST(IntegerTests, equalsTest) {
 TEST(IntegerTests, getTypeTest) {
   EXPECT_EQ(Integer::getTypeStatic(), MathObjectType::Integer);
   EXPECT_EQ(Integer().getType(), MathObjectType::Integer);
+}
+
+TEST(IntegerTests, hashTest) {
+  constexpr auto hash = boost::hash<Integer>{};
+
+  EXPECT_EQ(hash(Integer(0)), hash(Integer(0)));
+  EXPECT_EQ(hash(Integer(12)), hash(Integer(12)));
+  EXPECT_EQ(hash(Integer(-12)), hash(Integer(-12)));
+  EXPECT_EQ(hash(Integer("452734865298734659873246238756987435")), hash(Integer("452734865298734659873246238756987435")));
+  EXPECT_EQ(hash(Integer("-452734865298734659873246238756987435")), hash(Integer("-452734865298734659873246238756987435")));
+
+  EXPECT_NE(hash(Integer(0)), hash(Integer(1)));
+  EXPECT_NE(hash(Integer(12)), hash(Integer(13)));
+  EXPECT_NE(hash(Integer(-12)), hash(Integer(-13)));
+  EXPECT_NE(hash(Integer("452734865298734659873246238756987435")), hash(Integer("452734865298734659873246238756987436")));
+  EXPECT_NE(hash(Integer("-452734865298734659873246238756987435")), hash(Integer("-452734865298734659873246238756987436")));
 }
