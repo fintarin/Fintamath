@@ -19,7 +19,6 @@ Fintamath is a C++ library for symbolic mathematics, supporting both the input o
 * [Expression](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/expressions/Expression.hpp) — the main class representing mathematical expressions
   * Parsing from string
   * Getting string representation
-  * Approximating
   * Setting variables
   * Arithmetic operators
 
@@ -35,6 +34,7 @@ Fintamath is a C++ library for symbolic mathematics, supporting both the input o
   * Rounding functions
   * Percent, degrees, factorial, index
   * Solving equations
+  * Approximating
 
 * [Integer](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/Integer.hpp) — a class representing integers of arbitrary precision
   * Arithmetic operators
