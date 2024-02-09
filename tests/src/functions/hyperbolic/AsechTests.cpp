@@ -31,8 +31,7 @@ TEST(AsechTests, callTest) {
   EXPECT_EQ(f(Rational(11, 10))->toString(), "asech(11/10)");
   EXPECT_EQ(f(Rational(23, 13))->toString(), "asech(23/13)");
 
-  EXPECT_EQ(f(Real("0.5"))->toString(),
-            "1.316957896924816708625046347307968444026981971467516479768472256920460185416444");
+  EXPECT_EQ(f(Real("0.5"))->toString(), "1.3169578969248167086");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "asech(1 + I)");
 

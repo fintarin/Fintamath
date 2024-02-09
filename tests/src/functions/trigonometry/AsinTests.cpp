@@ -28,13 +28,10 @@ TEST(AsinTests, callTest) {
   EXPECT_EQ(f(Integer(-2))->toString(), "asin(-2)");
   EXPECT_EQ(f(Integer(2))->toString(), "asin(2)");
 
-  EXPECT_EQ(f(Rational(1, 10))->toString(),
-            "0.10016742116155979634552317945269331856867597222962954139102385503640267365086255");
-  EXPECT_EQ(f(Rational(-1, 5))->toString(),
-            "-0.20135792079033079145512555221762341024003808140222838625725124345560937462885185");
+  EXPECT_EQ(f(Rational(1, 10))->toString(), "0.10016742116155979635");
+  EXPECT_EQ(f(Rational(-1, 5))->toString(), "-0.20135792079033079146");
 
-  EXPECT_EQ(f(Real("0.5"))->toString(),
-            "0.52359877559829887307710723054658381403286156656251763682915743205130273438103483");
+  EXPECT_EQ(f(Real("0.5"))->toString(), "0.52359877559829887308");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "asin(1 + I)");
 

@@ -16,43 +16,59 @@ TEST(IntegerFunctionsTests, absTest) {
 }
 
 TEST(IntegerFunctionsTests, gcdTest) {
-  EXPECT_EQ(gcd(Integer(12), Integer(18)), Integer(6));
-  EXPECT_EQ(gcd(Integer(30), Integer(45)), Integer(15));
-  EXPECT_EQ(gcd(Integer(25), Integer(35)), Integer(5));
+  EXPECT_EQ(gcd(Integer(12), Integer(18)),
+            Integer(6));
+  EXPECT_EQ(gcd(Integer(30), Integer(45)),
+            Integer(15));
+  EXPECT_EQ(gcd(Integer(25), Integer(35)),
+            Integer(5));
 
-  EXPECT_EQ(gcd(Integer(-12), Integer(-18)), Integer(6));
-  EXPECT_EQ(gcd(Integer(-30), Integer(-45)), Integer(15));
-  EXPECT_EQ(gcd(Integer(-25), Integer(-35)), Integer(5));
+  EXPECT_EQ(gcd(Integer(-12), Integer(-18)),
+            Integer(6));
+  EXPECT_EQ(gcd(Integer(-30), Integer(-45)),
+            Integer(15));
+  EXPECT_EQ(gcd(Integer(-25), Integer(-35)),
+            Integer(5));
 
-  EXPECT_EQ(gcd(Integer(0), Integer(10)), Integer(10));
-  EXPECT_EQ(gcd(Integer(0), Integer(-15)), Integer(15));
+  EXPECT_EQ(gcd(Integer(0), Integer(10)),
+            Integer(10));
+  EXPECT_EQ(gcd(Integer(0), Integer(-15)),
+            Integer(15));
 
-  EXPECT_EQ(gcd(Integer(0), Integer(0)), Integer(0));
+  EXPECT_EQ(gcd(Integer(0), Integer(0)),
+            Integer(0));
 
-  EXPECT_EQ(gcd(Integer("1234567890123456789012345678901234567890123456789012345678901234567890"),
-                Integer("9876543210987654321098765432109876543210987654321098765432109876543210"))
-                .toString(),
+  EXPECT_EQ(gcd(Integer("1234567890123456789012345678901234567890123456789012345678901234567890"), Integer("9876543210987654321098765432109876543210987654321098765432109876543210")).toString(),
             "90000000009000000000900000000090000000009000000000900000000090");
 }
 
 TEST(IntegerFunctionsTests, lcmTest) {
-  EXPECT_EQ(lcm(Integer(12), Integer(18)), Integer(36));
-  EXPECT_EQ(lcm(Integer(5), Integer(7)), Integer(35));
-  EXPECT_EQ(lcm(Integer(8), Integer(12)), Integer(24));
-  EXPECT_EQ(lcm(Integer(15), Integer(25)), Integer(75));
-  EXPECT_EQ(lcm(Integer(4), Integer(9)), Integer(36));
+  EXPECT_EQ(lcm(Integer(12), Integer(18)),
+            Integer(36));
+  EXPECT_EQ(lcm(Integer(5), Integer(7)),
+            Integer(35));
+  EXPECT_EQ(lcm(Integer(8), Integer(12)),
+            Integer(24));
+  EXPECT_EQ(lcm(Integer(15), Integer(25)),
+            Integer(75));
+  EXPECT_EQ(lcm(Integer(4), Integer(9)),
+            Integer(36));
 
-  EXPECT_EQ(lcm(Integer(0), Integer(5)), Integer(0));
-  EXPECT_EQ(lcm(Integer(5), Integer(0)), Integer(0));
-  EXPECT_EQ(lcm(Integer(0), Integer(0)), Integer(0));
+  EXPECT_EQ(lcm(Integer(0), Integer(5)),
+            Integer(0));
+  EXPECT_EQ(lcm(Integer(5), Integer(0)),
+            Integer(0));
+  EXPECT_EQ(lcm(Integer(0), Integer(0)),
+            Integer(0));
 
-  EXPECT_GE(lcm(Integer(-4), Integer(7)), Integer(0));
-  EXPECT_GE(lcm(Integer(3), Integer(-6)), Integer(0));
-  EXPECT_EQ(lcm(Integer(-2), Integer(0)), Integer(0));
+  EXPECT_GE(lcm(Integer(-4), Integer(7)),
+            Integer(0));
+  EXPECT_GE(lcm(Integer(3), Integer(-6)),
+            Integer(0));
+  EXPECT_EQ(lcm(Integer(-2), Integer(0)),
+            Integer(0));
 
-  EXPECT_EQ(lcm(Integer("1234567890123456789012345678901234567890123456789012345678901234567890"),
-                Integer("9876543210987654321098765432109876543210987654321098765432109876543210"))
-                .toString(),
+  EXPECT_EQ(lcm(Integer("1234567890123456789012345678901234567890123456789012345678901234567890"), Integer("9876543210987654321098765432109876543210987654321098765432109876543210")).toString(),
             "135480701249809480124980948012498094801249809480124980948012498094801236261410");
 }
 
@@ -60,8 +76,7 @@ TEST(IntegerFunctionsTests, sqrtTest) {
   EXPECT_EQ(sqrt(Integer(25)), 5);
   EXPECT_EQ(sqrt(Integer(100)), 10);
   EXPECT_EQ(sqrt(Integer(144)), 12);
-  EXPECT_EQ(sqrt(Integer("10000000000000000000000000000000000000000000000000000")),
-            Integer("100000000000000000000000000"));
+  EXPECT_EQ(sqrt(Integer("10000000000000000000000000000000000000000000000000000")), Integer("100000000000000000000000000"));
 
   EXPECT_EQ(sqrt(Integer(35)), 5);
   EXPECT_EQ(sqrt(Integer(4212)), Integer(64));
@@ -83,8 +98,7 @@ TEST(IntegerFunctionsTests, sqrtWithRemainderTest) {
   EXPECT_EQ(sqrt(Integer(144), remainder), 12);
   EXPECT_EQ(remainder, 0);
 
-  EXPECT_EQ(sqrt(Integer("10000000000000000000000000000000000000000000000000000"), remainder),
-            Integer("100000000000000000000000000"));
+  EXPECT_EQ(sqrt(Integer("10000000000000000000000000000000000000000000000000000"), remainder), Integer("100000000000000000000000000"));
   EXPECT_EQ(remainder, 0);
 
   EXPECT_EQ(sqrt(Integer(35), remainder), 5);
@@ -103,37 +117,49 @@ TEST(IntegerFunctionsTests, sqrtWithRemainderTest) {
 }
 
 TEST(IntegerFunctionsTests, powTest) {
-  EXPECT_EQ(pow(Integer(5), Integer(2)), 25);
-  EXPECT_EQ(pow(Integer(-5), Integer(5)), -3125);
-  EXPECT_EQ(pow(Integer(6789), Integer(4)).toString(), "2124336126051441");
-  EXPECT_EQ(pow(Integer(1), Integer("429837493286275623874628734628734")), 1);
-  EXPECT_EQ(
-      pow(Integer("135253468973498327423987498324729384"), Integer(3)).toString(),
-      "2474259452251333810348988009462181048257185161014872437371075550103119323428971486869861741659206806895104");
-  EXPECT_EQ(pow(Integer(6789), Integer(-4)), 0);
+  EXPECT_EQ(pow(Integer(5), Integer(2)),
+            25);
+  EXPECT_EQ(pow(Integer(-5), Integer(5)),
+            -3125);
+  EXPECT_EQ(pow(Integer(6789), Integer(4)).toString(),
+            "2124336126051441");
+  EXPECT_EQ(pow(Integer(1), Integer("429837493286275623874628734628734")),
+            1);
+  EXPECT_EQ(pow(Integer("135253468973498327423987498324729384"), Integer(3)).toString(),
+            "2474259452251333810348988009462181048257185161014872437371075550103119323428971486869861741659206806895104");
+  EXPECT_EQ(pow(Integer(6789), Integer(-4)),
+            0);
 
-  EXPECT_EQ(pow(Rational(5, 2), Integer(2)).toString(), "25/4");
-  EXPECT_EQ(pow(Rational(-5, 2), Integer(5)).toString(), "-3125/32");
-  EXPECT_EQ(pow(Rational(6789), Integer(4)).toString(), "2124336126051441");
+  EXPECT_EQ(pow(Rational(5, 2), Integer(2)).toString(),
+            "25/4");
+  EXPECT_EQ(pow(Rational(-5, 2), Integer(5)).toString(),
+            "-3125/32");
+  EXPECT_EQ(pow(Rational(6789), Integer(4)).toString(),
+            "2124336126051441");
   EXPECT_EQ(pow(Rational("135253468973498327423987498324729384.12987349823749832"), Integer(3)).toString(),
-            "4832537992678386348337867205980822373798257851094432575433371642956047093945525418683507600681355491343220"
-            "122262032882136893556623485326120689398001084489/1953125000000000000000000000000000000000000000000");
-  EXPECT_EQ(pow(Rational(6789), Integer(-4)).toString(), "1/2124336126051441");
+            "4832537992678386348337867205980822373798257851094432575433371642956047093945525418683507600681355491343220122262032882136893556623485326120689398001084489/1953125000000000000000000000000000000000000000000");
+  EXPECT_EQ(pow(Rational(6789), Integer(-4)).toString(),
+            "1/2124336126051441");
 
-  EXPECT_EQ(pow(Real(5), Integer(2)).toString(), "25.0");
-  EXPECT_EQ(pow(Real(-5), Integer(5)).toString(), "-3125.0");
-  EXPECT_EQ(pow(Real(6789), Integer(4)).toString(), "2124336126051441.0");
+  EXPECT_EQ(pow(Real(5), Integer(2)).toString(),
+            "25.0");
+  EXPECT_EQ(pow(Real(-5), Integer(5)).toString(),
+            "-3125.0");
+  EXPECT_EQ(pow(Real(6789), Integer(4)).toString(),
+            "2124336126051441.0");
   EXPECT_EQ(pow(Real("135253468973498327423987498324729384.12987349823749832"), Integer(3)).toString(),
-            "2.474259452251333810348988009462181055384708019760349478621886281193496112100109*10^105");
+            "2.4742594522513338103*10^105");
   EXPECT_EQ(pow(Real(6789), Integer(-4)).toString(),
-            "4.7073529830645308411980456378106763573183149819028161454972767500068746591107477*10^-16");
+            "4.7073529830645308412*10^-16");
 
-  EXPECT_EQ(pow(Complex(5, 2), Integer(2)).toString(), "21 + 20 I");
-  EXPECT_EQ(pow(Complex(Rational(1, 2), Rational(2, 3)), Integer(5)).toString(), "-79/2592 - 779/1944 I");
-  EXPECT_EQ(pow(Complex(6789, 2345), Integer(4)).toString(), "633857838549916 + 2584899750306720 I");
+  EXPECT_EQ(pow(Complex(5, 2), Integer(2)).toString(),
+            "21 + 20 I");
+  EXPECT_EQ(pow(Complex(Rational(1, 2), Rational(2, 3)), Integer(5)).toString(),
+            "-79/2592 - 779/1944 I");
+  EXPECT_EQ(pow(Complex(6789, 2345), Integer(4)).toString(),
+            "633857838549916 + 2584899750306720 I");
   EXPECT_EQ(pow(Complex("135253468973498327423987498324729384.12987349823749832"), Integer(3)).toString(),
-            "4832537992678386348337867205980822373798257851094432575433371642956047093945525418683507600681355491343220"
-            "122262032882136893556623485326120689398001084489/1953125000000000000000000000000000000000000000000");
+            "4832537992678386348337867205980822373798257851094432575433371642956047093945525418683507600681355491343220122262032882136893556623485326120689398001084489/1953125000000000000000000000000000000000000000000");
   EXPECT_EQ(pow(Complex(6789, 11), Integer(-4)).toString(),
             "531075666086959/1128212841481282934557153710724 - 860496245400/282053210370320733639288427681 I");
 

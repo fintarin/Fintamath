@@ -28,13 +28,10 @@ TEST(AcosTests, callTest) {
   EXPECT_EQ(f(Integer(-2))->toString(), "acos(-2)");
   EXPECT_EQ(f(Integer(2))->toString(), "acos(2)");
 
-  EXPECT_EQ(f(Rational(1, 10))->toString(),
-            "1.4706289056333368228857985121870581235299087274579233690964484411175055294922419");
-  EXPECT_EQ(f(Rational(-1, 5))->toString(),
-            "1.7721542475852274106864472438573748523386227810897812967447235396095175777719563");
+  EXPECT_EQ(f(Rational(1, 10))->toString(), "1.4706289056333368229");
+  EXPECT_EQ(f(Rational(-1, 5))->toString(), "1.7721542475852274107");
 
-  EXPECT_EQ(f(Real("0.5"))->toString(),
-            "1.0471975511965977461542144610931676280657231331250352736583148641026054687620697");
+  EXPECT_EQ(f(Real("0.5"))->toString(), "1.0471975511965977462");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "acos(1 + I)");
 

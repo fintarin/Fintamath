@@ -25,17 +25,13 @@ TEST(AcoshTests, callTest) {
   EXPECT_EQ(f(Integer(-1))->toString(), "I Pi");
   EXPECT_EQ(f(Integer(0))->toString(), "(I Pi)/2");
   EXPECT_EQ(f(Integer(1))->toString(), "0");
-  EXPECT_EQ(f(Integer(2))->toString(),
-            "1.316957896924816708625046347307968444026981971467516479768472256920460185416444");
+  EXPECT_EQ(f(Integer(2))->toString(), "1.3169578969248167086");
   EXPECT_EQ(f(Integer(-2))->toString(), "acosh(-2)");
 
-  EXPECT_EQ(f(Rational(11, 10))->toString(),
-            "0.44356825438511518913291106635249808664900116609997546389342095580766881611303472");
-  EXPECT_EQ(f(Rational(23, 13))->toString(),
-            "1.1720930632462197632831227513306924192738346732428024686924646851189700836483782");
+  EXPECT_EQ(f(Rational(11, 10))->toString(), "0.44356825438511518913");
+  EXPECT_EQ(f(Rational(23, 13))->toString(), "1.1720930632462197633");
 
-  EXPECT_EQ(f(Real("1.5"))->toString(),
-            "0.96242365011920689499551782684873684627036866877132103932203633768032773521644355");
+  EXPECT_EQ(f(Real("1.5"))->toString(), "0.962423650119206895");
 
   EXPECT_EQ(f(Complex(1, 1))->toString(), "acosh(1 + I)");
 

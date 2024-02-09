@@ -33,7 +33,7 @@ TEST(AbsTests, callTest) {
   EXPECT_EQ(f(Rational(10, 1000))->toString(), "1/100");
 
   EXPECT_EQ(f(Real("8465132.321651651"))->toString(), "8465132.321651651");
-  EXPECT_EQ(f(Real("-98465136846516354684651.351"))->toString(), "98465136846516354684651.351");
+  EXPECT_EQ(f(Real("-98465136846516354684651.351"))->toString(), "9.8465136846516354685*10^22");
 
   EXPECT_EQ(f(Complex(2, 0))->toString(), "2");
   EXPECT_EQ(f(Complex(0, 2))->toString(), "2");

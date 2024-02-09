@@ -5,7 +5,7 @@
 namespace fintamath {
 
 PrecisionConfig::PrecisionConfig() {
-  constexpr unsigned defaultPrecision = 80;
+  constexpr unsigned defaultPrecision = 20;
   Real::setPrecision(defaultPrecision);
 }
 

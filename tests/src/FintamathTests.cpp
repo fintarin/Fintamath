@@ -61,10 +61,10 @@ TEST(FintamathTests, fintamathTest) {
   EXPECT_EQ(expr.toString(), "sqrt(2)/2 + 1");
 
   expr = approximate(sin(Expression("123")));
-  EXPECT_EQ(expr.toString(), "-0.45990349068959125129243571529323181080858060738104258092774286802995864335938568");
+  EXPECT_EQ(expr.toString(), "-0.45990349068959125129");
 
   expr = approximate(cos(Expression("-256")));
-  EXPECT_EQ(expr.toString(), "-0.03979075993115770952448155799687436467725547418710853642067732094296726801190103");
+  EXPECT_EQ(expr.toString(), "-0.039790759931157709524");
 
   expr = Expression("~a & b | ~c -> a <-> b !<-> c");
   EXPECT_EQ(expr.toString(), "(a & b & ~c) | (~a & ~b & ~c) | (~a & c) | (~b & c)");

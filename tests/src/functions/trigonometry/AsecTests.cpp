@@ -25,10 +25,8 @@ TEST(AsecTests, callTest) {
   EXPECT_EQ(f(Integer(-1))->toString(), "Pi");
   EXPECT_EQ(f(Integer(0))->toString(), "ComplexInf");
   EXPECT_EQ(f(Integer(1))->toString(), "0");
-  EXPECT_EQ(f(Integer(-2))->toString(),
-            "2.0943951023931954923084289221863352561314462662500705473166297282052109375241393");
-  EXPECT_EQ(f(Integer(2))->toString(),
-            "1.0471975511965977461542144610931676280657231331250352736583148641026054687620697");
+  EXPECT_EQ(f(Integer(-2))->toString(), "2.0943951023931954923");
+  EXPECT_EQ(f(Integer(2))->toString(), "1.0471975511965977462");
 
   EXPECT_EQ(f(Rational(1, 10))->toString(), "asec(1/10)");
   EXPECT_EQ(f(Rational(-1, 5))->toString(), "asec(-1/5)");

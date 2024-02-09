@@ -25,10 +25,8 @@ TEST(AcscTests, callTest) {
   EXPECT_EQ(f(Integer(-1))->toString(), "-Pi/2");
   EXPECT_EQ(f(Integer(0))->toString(), "ComplexInf");
   EXPECT_EQ(f(Integer(1))->toString(), "Pi/2");
-  EXPECT_EQ(f(Integer(-2))->toString(),
-            "-0.52359877559829887307710723054658381403286156656251763682915743205130273438103483");
-  EXPECT_EQ(f(Integer(2))->toString(),
-            "0.52359877559829887307710723054658381403286156656251763682915743205130273438103483");
+  EXPECT_EQ(f(Integer(-2))->toString(), "-0.52359877559829887308");
+  EXPECT_EQ(f(Integer(2))->toString(), "0.52359877559829887308");
 
   EXPECT_EQ(f(Rational(1, 10))->toString(), "acsc(1/10)");
   EXPECT_EQ(f(Rational(-1, 5))->toString(), "acsc(-1/5)");
