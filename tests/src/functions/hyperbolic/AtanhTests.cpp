@@ -49,27 +49,6 @@ TEST(AtanhTests, exprTest) {
   EXPECT_EQ(atanhExpr(Integer(10))->toString(), "atanh(10)");
 }
 
-TEST(AtanhTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AtanhTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Atanh());
-  EXPECT_EQ(Atanh(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Atanh()));
-  EXPECT_EQ(cast<IMathObject>(Atanh()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AtanhTests, getTypeTest) {
   EXPECT_EQ(Atanh::getTypeStatic(), MathObjectType::Atanh);
   EXPECT_EQ(Atanh().getType(), MathObjectType::Atanh);

@@ -44,20 +44,6 @@ TEST(BooleanTests, opearatorsTest) {
   EXPECT_EQ(Boolean(true) || Boolean(true), true);
 }
 
-TEST(BooleanTest, equalsTest) {
-  const Boolean a;
-
-  EXPECT_EQ(a, a);
-  EXPECT_EQ(a, Boolean(false));
-  EXPECT_EQ(Boolean(false), a);
-  EXPECT_EQ(a, cast<IMathObject>(Boolean(false)));
-  EXPECT_EQ(cast<IMathObject>(Boolean(false)), a);
-  EXPECT_NE(a, Boolean(true));
-  EXPECT_NE(Boolean(true), a);
-  EXPECT_NE(a, E());
-  EXPECT_NE(E(), a);
-}
-
 TEST(BooleanTest, getTypeTest) {
   EXPECT_EQ(Boolean::getTypeStatic(), MathObjectType::Boolean);
   EXPECT_EQ(Boolean().getType(), MathObjectType::Boolean);

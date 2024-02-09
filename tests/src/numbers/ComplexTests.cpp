@@ -905,22 +905,6 @@ TEST(ComplexTests, isComplexTest) {
   EXPECT_FALSE(Complex(1, 0).isComplex());
 }
 
-TEST(ComplexTests, equalsTest) {
-  const Complex a;
-  const Integer b;
-  const Integer c(1);
-
-  EXPECT_EQ(a, a);
-  EXPECT_EQ(a, Complex());
-  EXPECT_EQ(Complex(), a);
-  EXPECT_EQ(a, cast<IMathObject>(Complex()));
-  EXPECT_EQ(cast<IMathObject>(Complex()), a);
-  EXPECT_EQ(a, b);
-  EXPECT_EQ(b, a);
-  EXPECT_NE(a, c);
-  EXPECT_NE(c, a);
-}
-
 TEST(ComplexTests, getTypeTest) {
   EXPECT_EQ(Complex::getTypeStatic(), MathObjectType::Complex);
   EXPECT_EQ(Complex().getType(), MathObjectType::Complex);

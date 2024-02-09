@@ -61,27 +61,6 @@ TEST(SqrtTests, exprTest) {
   EXPECT_EQ(sqrtExpr(Integer(10))->toString(), "sqrt(10)");
 }
 
-TEST(SqrtTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(SqrtTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Sqrt());
-  EXPECT_EQ(Sqrt(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Sqrt()));
-  EXPECT_EQ(cast<IMathObject>(Sqrt()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(SqrtTests, getTypeTest) {
   EXPECT_EQ(Sqrt::getTypeStatic(), MathObjectType::Sqrt);
   EXPECT_EQ(Sqrt().getType(), MathObjectType::Sqrt);

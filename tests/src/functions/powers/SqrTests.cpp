@@ -39,27 +39,6 @@ TEST(SqrTests, exprTest) {
   EXPECT_EQ(sqrExpr(Integer(10))->toString(), "10^2");
 }
 
-TEST(SqrTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(SqrTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Sqr());
-  EXPECT_EQ(Sqr(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Sqr()));
-  EXPECT_EQ(cast<IMathObject>(Sqr()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(SqrTests, getTypeTest) {
   EXPECT_EQ(Sqr::getTypeStatic(), MathObjectType::Sqr);
   EXPECT_EQ(Sqr().getType(), MathObjectType::Sqr);

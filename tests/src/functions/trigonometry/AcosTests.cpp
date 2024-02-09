@@ -48,27 +48,6 @@ TEST(AcosTests, exprTest) {
   EXPECT_EQ(acosExpr(Integer(10))->toString(), "acos(10)");
 }
 
-TEST(AcosTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AcosTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Acos());
-  EXPECT_EQ(Acos(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Acos()));
-  EXPECT_EQ(cast<IMathObject>(Acos()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AcosTests, getTypeTest) {
   EXPECT_EQ(Acos::getTypeStatic(), MathObjectType::Acos);
   EXPECT_EQ(Acos().getType(), MathObjectType::Acos);

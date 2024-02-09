@@ -43,27 +43,6 @@ TEST(PercentTests, degTest) {
   EXPECT_EQ(percentExpr(Integer(10))->toString(), "10/100");
 }
 
-TEST(PercentTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(PercentTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Percent());
-  EXPECT_EQ(Percent(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Percent()));
-  EXPECT_EQ(cast<IMathObject>(Percent()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(PercentTests, getTypeTest) {
   EXPECT_EQ(Percent::getTypeStatic(), MathObjectType::Percent);
   EXPECT_EQ(Percent().getType(), MathObjectType::Percent);

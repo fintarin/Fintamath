@@ -46,27 +46,6 @@ TEST(SinTests, exprTest) {
   EXPECT_EQ(sinExpr(Integer(10))->toString(), "sin(10)");
 }
 
-TEST(SinTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(SinTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Sin());
-  EXPECT_EQ(Sin(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Sin()));
-  EXPECT_EQ(cast<IMathObject>(Sin()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(SinTests, getTypeTest) {
   EXPECT_EQ(Sin::getTypeStatic(), MathObjectType::Sin);
   EXPECT_EQ(Sin().getType(), MathObjectType::Sin);

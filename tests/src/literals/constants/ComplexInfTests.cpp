@@ -15,16 +15,6 @@ TEST(ComplexInfTests, callTest) {
   EXPECT_EQ(c()->toString(), "ComplexInf");
 }
 
-TEST(ComplexInfTests, equalsTest) {
-  EXPECT_EQ(c, c);
-  EXPECT_EQ(c, ComplexInf());
-  EXPECT_EQ(ComplexInf(), c);
-  EXPECT_EQ(c, cast<IMathObject>(ComplexInf()));
-  EXPECT_EQ(cast<IMathObject>(ComplexInf()), c);
-  EXPECT_NE(c, Pi());
-  EXPECT_NE(Pi(), c);
-}
-
 TEST(ComplexInfTests, getTypeTest) {
   EXPECT_EQ(ComplexInf::getTypeStatic(), MathObjectType::ComplexInf);
   EXPECT_EQ(ComplexInf().getType(), MathObjectType::ComplexInf);

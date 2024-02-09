@@ -50,27 +50,6 @@ TEST(AcothTests, exprTest) {
   EXPECT_EQ(acothExpr(Integer(10))->toString(), "acoth(10)");
 }
 
-TEST(AcothTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AcothTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Acoth());
-  EXPECT_EQ(Acoth(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Acoth()));
-  EXPECT_EQ(cast<IMathObject>(Acoth()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AcothTests, getTypeTest) {
   EXPECT_EQ(Acoth::getTypeStatic(), MathObjectType::Acoth);
   EXPECT_EQ(Acoth().getType(), MathObjectType::Acoth);

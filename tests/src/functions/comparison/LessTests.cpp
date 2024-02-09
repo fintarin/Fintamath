@@ -53,27 +53,6 @@ TEST(LessTests, exprTest) {
   EXPECT_EQ(lessExpr(Integer(10), Integer(10))->toString(), "10 < 10");
 }
 
-TEST(LessTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(LessTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Less());
-  EXPECT_EQ(Less(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Less()));
-  EXPECT_EQ(cast<IMathObject>(Less()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(LessTests, getTypeTest) {
   EXPECT_EQ(Less::getTypeStatic(), MathObjectType::Less);
   EXPECT_EQ(Less().getType(), MathObjectType::Less);

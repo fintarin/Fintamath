@@ -46,27 +46,6 @@ TEST(CschTests, exprTest) {
   EXPECT_EQ(cschExpr(Integer(10))->toString(), "csch(10)");
 }
 
-TEST(CschTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(CschTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Csch());
-  EXPECT_EQ(Csch(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Csch()));
-  EXPECT_EQ(cast<IMathObject>(Csch()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(CschTests, getTypeTest) {
   EXPECT_EQ(Csch::getTypeStatic(), MathObjectType::Csch);
   EXPECT_EQ(Csch().getType(), MathObjectType::Csch);

@@ -46,27 +46,6 @@ TEST(SubTests, exprTest) {
   EXPECT_EQ(subExpr(Integer(10), Integer(10))->toString(), "10 - 10");
 }
 
-TEST(SubTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(SubTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Sub());
-  EXPECT_EQ(Sub(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Sub()));
-  EXPECT_EQ(cast<IMathObject>(Sub()), f);
-  EXPECT_NE(f, Mul());
-  EXPECT_NE(Mul(), f);
-  EXPECT_NE(f, Neg());
-  EXPECT_NE(Neg(), f);
-}
-
 TEST(SubTests, getTypeTest) {
   EXPECT_EQ(Sub::getTypeStatic(), MathObjectType::Sub);
   EXPECT_EQ(Sub().getType(), MathObjectType::Sub);

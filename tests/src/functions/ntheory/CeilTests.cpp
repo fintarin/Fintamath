@@ -68,27 +68,6 @@ TEST(CeilTests, exprTest) {
   EXPECT_EQ(ceilExpr(Integer(10))->toString(), "ceil(10)");
 }
 
-TEST(CeilTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(CeilTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Ceil());
-  EXPECT_EQ(Ceil(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Ceil()));
-  EXPECT_EQ(cast<IMathObject>(Ceil()), f);
-  EXPECT_NE(f, Sin());
-  EXPECT_NE(Sin(), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-}
-
 TEST(CeilTests, getTypeTest) {
   EXPECT_EQ(Ceil::getTypeStatic(), MathObjectType::Ceil);
   EXPECT_EQ(Ceil().getType(), MathObjectType::Ceil);

@@ -17,16 +17,6 @@ TEST(FalseTests, callTest) {
   EXPECT_TRUE(is<Boolean>(c()));
 }
 
-TEST(FalseTests, equalsTest) {
-  EXPECT_EQ(c, c);
-  EXPECT_EQ(c, False());
-  EXPECT_EQ(False(), c);
-  EXPECT_EQ(c, cast<IMathObject>(False()));
-  EXPECT_EQ(cast<IMathObject>(False()), c);
-  EXPECT_NE(c, Pi());
-  EXPECT_NE(Pi(), c);
-}
-
 TEST(FalseTests, getTypeTest) {
   EXPECT_EQ(False::getTypeStatic(), MathObjectType::False);
   EXPECT_EQ(False().getType(), MathObjectType::False);

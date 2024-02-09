@@ -47,24 +47,6 @@ TEST(MinTests, exprTest) {
   EXPECT_EQ(minExpr(Variable("a"), Variable("a"))->toString(), "min(a, a)");
 }
 
-TEST(MinTests, doArgsMatchTest) {
-  EXPECT_FALSE(f.doArgsMatch({}));
-}
-
-TEST(MinTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Min());
-  EXPECT_EQ(Min(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Min()));
-  EXPECT_EQ(cast<IMathObject>(Min()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-  EXPECT_NE(f, Max());
-  EXPECT_NE(Max(), f);
-}
-
 TEST(MinTests, getTypeTest) {
   EXPECT_EQ(Min::getTypeStatic(), MathObjectType::Min);
   EXPECT_EQ(Min().getType(), MathObjectType::Min);

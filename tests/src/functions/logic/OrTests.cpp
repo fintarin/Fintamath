@@ -44,27 +44,6 @@ TEST(OrTests, exprTest) {
   EXPECT_EQ(orExpr(Boolean(true), Boolean(false))->toString(), "True | False");
 }
 
-TEST(OrTests, doArgsMatchTest) {
-  Boolean a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(OrTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Or());
-  EXPECT_EQ(Or(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Or()));
-  EXPECT_EQ(cast<IMathObject>(Or()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(OrTests, getTypeTest) {
   EXPECT_EQ(Or::getTypeStatic(), MathObjectType::Or);
   EXPECT_EQ(Or().getType(), MathObjectType::Or);

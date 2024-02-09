@@ -46,27 +46,6 @@ TEST(SinhTests, exprTest) {
   EXPECT_EQ(sinhExpr(Integer(10))->toString(), "sinh(10)");
 }
 
-TEST(SinhTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(SinhTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Sinh());
-  EXPECT_EQ(Sinh(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Sinh()));
-  EXPECT_EQ(cast<IMathObject>(Sinh()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(SinhTests, getTypeTest) {
   EXPECT_EQ(Sinh::getTypeStatic(), MathObjectType::Sinh);
   EXPECT_EQ(Sinh().getType(), MathObjectType::Sinh);

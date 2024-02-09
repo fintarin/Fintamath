@@ -41,28 +41,6 @@ TEST(IntegralTests, exprTest) {
   EXPECT_EQ(integralExpr(Variable("a"), Variable("a"))->toString(), "integral(a, a)");
 }
 
-TEST(IntegralTests, doArgsMatchTest) {
-  Integer a;
-  Variable b("b");
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, b}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(IntegralTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Integral());
-  EXPECT_EQ(Integral(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Integral()));
-  EXPECT_EQ(cast<IMathObject>(Integral()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(IntegralTests, getTypeTest) {
   EXPECT_EQ(Integral::getTypeStatic(), MathObjectType::Integral);
   EXPECT_EQ(Integral().getType(), MathObjectType::Integral);

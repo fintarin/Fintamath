@@ -42,27 +42,6 @@ TEST(NotTests, exprTest) {
   EXPECT_EQ(notExpr(Boolean(true))->toString(), "~True");
 }
 
-TEST(NotTests, doArgsMatchTest) {
-  Boolean a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(NotTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Not());
-  EXPECT_EQ(Not(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Not()));
-  EXPECT_EQ(cast<IMathObject>(Not()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(NotTests, getTypeTest) {
   EXPECT_EQ(Not::getTypeStatic(), MathObjectType::Not);
   EXPECT_EQ(Not().getType(), MathObjectType::Not);

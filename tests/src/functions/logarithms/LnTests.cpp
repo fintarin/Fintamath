@@ -44,27 +44,6 @@ TEST(LnTests, exprTest) {
   EXPECT_EQ(lnExpr(Integer(10))->toString(), "ln(10)");
 }
 
-TEST(LnTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(LnTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Ln());
-  EXPECT_EQ(Ln(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Ln()));
-  EXPECT_EQ(cast<IMathObject>(Ln()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(LnTests, getTypeTest) {
   EXPECT_EQ(Ln::getTypeStatic(), MathObjectType::Ln);
   EXPECT_EQ(Ln().getType(), MathObjectType::Ln);

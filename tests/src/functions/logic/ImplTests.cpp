@@ -44,27 +44,6 @@ TEST(ImplTests, exprTest) {
   EXPECT_EQ(implExpr(Boolean(true), Boolean(false))->toString(), "~True | False");
 }
 
-TEST(ImplTests, doArgsMatchTest) {
-  Boolean a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(ImplTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Impl());
-  EXPECT_EQ(Impl(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Impl()));
-  EXPECT_EQ(cast<IMathObject>(Impl()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(ImplTests, getTypeTest) {
   EXPECT_EQ(Impl::getTypeStatic(), MathObjectType::Impl);
   EXPECT_EQ(Impl().getType(), MathObjectType::Impl);

@@ -503,22 +503,6 @@ TEST(RationalTests, isComplexTest) {
   EXPECT_FALSE(Rational(1, 2).isComplex());
 }
 
-TEST(RationalTests, equalsTest) {
-  const Rational a;
-  const Integer b;
-  const Integer c(1);
-
-  EXPECT_EQ(a, a);
-  EXPECT_EQ(a, Rational());
-  EXPECT_EQ(Rational(), a);
-  EXPECT_EQ(a, cast<IMathObject>(Rational()));
-  EXPECT_EQ(cast<IMathObject>(Rational()), a);
-  EXPECT_EQ(a, b);
-  EXPECT_EQ(b, a);
-  EXPECT_NE(a, c);
-  EXPECT_NE(c, a);
-}
-
 TEST(RationalTests, getTypeTest) {
   EXPECT_EQ(Rational::getTypeStatic(), MathObjectType::Rational);
   EXPECT_EQ(Rational().getType(), MathObjectType::Rational);

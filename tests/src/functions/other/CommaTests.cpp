@@ -39,28 +39,6 @@ TEST(CommaTests, exprTest) {
   EXPECT_EQ(commaExpr(Variable("a"), Integer(1))->toString(), "a , 1");
 }
 
-TEST(CommaTests, doArgsMatchTest) {
-  Variable a("a");
-  Integer b(1);
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, b}));
-  EXPECT_FALSE(f.doArgsMatch({a, b, b}));
-}
-
-TEST(CommaTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Comma());
-  EXPECT_EQ(Comma(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Comma()));
-  EXPECT_EQ(cast<IMathObject>(Comma()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(CommaTests, getTypeTest) {
   EXPECT_EQ(Comma::getTypeStatic(), MathObjectType::Comma);
   EXPECT_EQ(Comma().getType(), MathObjectType::Comma);

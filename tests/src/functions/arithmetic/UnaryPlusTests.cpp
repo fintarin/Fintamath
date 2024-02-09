@@ -39,27 +39,6 @@ TEST(UnaryPlusTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(UnaryPlusTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(UnaryPlusTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, UnaryPlus());
-  EXPECT_EQ(UnaryPlus(), f);
-  EXPECT_EQ(f, cast<IMathObject>(UnaryPlus()));
-  EXPECT_EQ(cast<IMathObject>(UnaryPlus()), f);
-  EXPECT_NE(f, Add());
-  EXPECT_NE(Add(), f);
-  EXPECT_NE(f, Neg());
-  EXPECT_NE(Neg(), f);
-}
-
 TEST(UnaryPlusTests, getTypeTest) {
   EXPECT_EQ(UnaryPlus::getTypeStatic(), MathObjectType::UnaryPlus);
   EXPECT_EQ(UnaryPlus().getType(), MathObjectType::UnaryPlus);

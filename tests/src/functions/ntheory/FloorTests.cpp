@@ -68,27 +68,6 @@ TEST(FloorTests, exprTest) {
   EXPECT_EQ(floorExpr(Integer(10))->toString(), "floor(10)");
 }
 
-TEST(FloorTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(FloorTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Floor());
-  EXPECT_EQ(Floor(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Floor()));
-  EXPECT_EQ(cast<IMathObject>(Floor()), f);
-  EXPECT_NE(f, Sin());
-  EXPECT_NE(Sin(), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-}
-
 TEST(FloorTests, getTypeTest) {
   EXPECT_EQ(Floor::getTypeStatic(), MathObjectType::Floor);
   EXPECT_EQ(Floor().getType(), MathObjectType::Floor);

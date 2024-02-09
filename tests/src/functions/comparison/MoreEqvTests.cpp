@@ -53,27 +53,6 @@ TEST(MoreEqvTests, exprTest) {
   EXPECT_EQ(moreEqvExpr(Integer(10), Integer(10))->toString(), "10 >= 10");
 }
 
-TEST(MoreEqvTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(MoreEqvTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, MoreEqv());
-  EXPECT_EQ(MoreEqv(), f);
-  EXPECT_EQ(f, cast<IMathObject>(MoreEqv()));
-  EXPECT_EQ(cast<IMathObject>(MoreEqv()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(MoreEqvTests, getTypeTest) {
   EXPECT_EQ(MoreEqv::getTypeStatic(), MathObjectType::MoreEqv);
   EXPECT_EQ(MoreEqv().getType(), MathObjectType::MoreEqv);

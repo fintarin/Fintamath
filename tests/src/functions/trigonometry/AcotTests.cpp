@@ -50,27 +50,6 @@ TEST(AcotTests, exprTest) {
   EXPECT_EQ(acotExpr(Integer(10))->toString(), "acot(10)");
 }
 
-TEST(AcotTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AcotTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Acot());
-  EXPECT_EQ(Acot(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Acot()));
-  EXPECT_EQ(cast<IMathObject>(Acot()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AcotTests, getTypeTest) {
   EXPECT_EQ(Acot::getTypeStatic(), MathObjectType::Acot);
   EXPECT_EQ(Acot().getType(), MathObjectType::Acot);

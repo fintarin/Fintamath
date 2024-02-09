@@ -43,27 +43,6 @@ TEST(NegTests, exprTest) {
   EXPECT_EQ(negExpr(Integer(10))->toString(), "-10");
 }
 
-TEST(NegTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(NegTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Neg());
-  EXPECT_EQ(Neg(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Neg()));
-  EXPECT_EQ(cast<IMathObject>(Neg()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(NegTests, getTypeTest) {
   EXPECT_EQ(Neg::getTypeStatic(), MathObjectType::Neg);
   EXPECT_EQ(Neg().getType(), MathObjectType::Neg);

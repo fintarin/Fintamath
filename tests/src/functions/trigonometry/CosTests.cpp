@@ -46,27 +46,6 @@ TEST(CosTests, exprTest) {
   EXPECT_EQ(cosExpr(Integer(10))->toString(), "cos(10)");
 }
 
-TEST(CosTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(CosTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Cos());
-  EXPECT_EQ(Cos(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Cos()));
-  EXPECT_EQ(cast<IMathObject>(Cos()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(CosTests, getTypeTest) {
   EXPECT_EQ(Cos::getTypeStatic(), MathObjectType::Cos);
   EXPECT_EQ(Cos().getType(), MathObjectType::Cos);

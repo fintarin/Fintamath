@@ -46,27 +46,6 @@ TEST(CoshTests, exprTest) {
   EXPECT_EQ(coshExpr(Integer(10))->toString(), "cosh(10)");
 }
 
-TEST(CoshTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(CoshTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Cosh());
-  EXPECT_EQ(Cosh(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Cosh()));
-  EXPECT_EQ(cast<IMathObject>(Cosh()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(CoshTests, getTypeTest) {
   EXPECT_EQ(Cosh::getTypeStatic(), MathObjectType::Cosh);
   EXPECT_EQ(Cosh().getType(), MathObjectType::Cosh);

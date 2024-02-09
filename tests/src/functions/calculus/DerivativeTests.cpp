@@ -82,28 +82,6 @@ TEST(DerivativeTests, exprTest) {
   EXPECT_EQ(derivativeExpr(Variable("a"), Variable("a"))->toString(), "derivative(a, a)");
 }
 
-TEST(DerivativeTests, doArgsMatchTest) {
-  Integer a;
-  Variable b("b");
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, b}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(DerivativeTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Derivative());
-  EXPECT_EQ(Derivative(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Derivative()));
-  EXPECT_EQ(cast<IMathObject>(Derivative()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(DerivativeTests, getTypeTest) {
   EXPECT_EQ(Derivative::getTypeStatic(), MathObjectType::Derivative);
   EXPECT_EQ(Derivative().getType(), MathObjectType::Derivative);

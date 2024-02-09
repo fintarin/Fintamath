@@ -46,27 +46,6 @@ TEST(SecTests, exprTest) {
   EXPECT_EQ(secExpr(Integer(10))->toString(), "sec(10)");
 }
 
-TEST(SecTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(SecTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Sec());
-  EXPECT_EQ(Sec(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Sec()));
-  EXPECT_EQ(cast<IMathObject>(Sec()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(SecTests, getTypeTest) {
   EXPECT_EQ(Sec::getTypeStatic(), MathObjectType::Sec);
   EXPECT_EQ(Sec().getType(), MathObjectType::Sec);

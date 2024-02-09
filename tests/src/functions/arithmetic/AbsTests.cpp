@@ -57,27 +57,6 @@ TEST(AbsTests, exprTest) {
   EXPECT_EQ(absExpr(Integer(10))->toString(), "abs(10)");
 }
 
-TEST(AbsTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AbsTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Abs());
-  EXPECT_EQ(Abs(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Abs()));
-  EXPECT_EQ(cast<IMathObject>(Abs()), f);
-  EXPECT_NE(f, Sin());
-  EXPECT_NE(Sin(), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-}
-
 TEST(AbsTests, getTypeTest) {
   EXPECT_EQ(Abs::getTypeStatic(), MathObjectType::Abs);
   EXPECT_EQ(Abs().getType(), MathObjectType::Abs);

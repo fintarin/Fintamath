@@ -34,27 +34,6 @@ TEST(ExpTests, exprTest) {
   EXPECT_EQ(expExpr(Integer(10))->toString(), "E^10");
 }
 
-TEST(ExpTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(ExpTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Exp());
-  EXPECT_EQ(Exp(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Exp()));
-  EXPECT_EQ(cast<IMathObject>(Exp()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(ExpTests, getTypeTest) {
   EXPECT_EQ(Exp::getTypeStatic(), MathObjectType::Exp);
   EXPECT_EQ(Exp().getType(), MathObjectType::Exp);

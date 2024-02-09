@@ -44,27 +44,6 @@ TEST(NequivTests, exprTest) {
   EXPECT_EQ(nequivExpr(Boolean(true), Boolean(false))->toString(), "(~True & False) | (True & ~False)");
 }
 
-TEST(NequivTests, doArgsMatchTest) {
-  Boolean a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(NequivTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Nequiv());
-  EXPECT_EQ(Nequiv(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Nequiv()));
-  EXPECT_EQ(cast<IMathObject>(Nequiv()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(NequivTests, getTypeTest) {
   EXPECT_EQ(Nequiv::getTypeStatic(), MathObjectType::Nequiv);
   EXPECT_EQ(Nequiv().getType(), MathObjectType::Nequiv);

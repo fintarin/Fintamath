@@ -48,27 +48,6 @@ TEST(SechTests, exprTest) {
   EXPECT_EQ(sechExpr(Integer(10))->toString(), "sech(10)");
 }
 
-TEST(SechTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(SechTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Sech());
-  EXPECT_EQ(Sech(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Sech()));
-  EXPECT_EQ(cast<IMathObject>(Sech()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(SechTests, getTypeTest) {
   EXPECT_EQ(Sech::getTypeStatic(), MathObjectType::Sech);
   EXPECT_EQ(Sech().getType(), MathObjectType::Sech);

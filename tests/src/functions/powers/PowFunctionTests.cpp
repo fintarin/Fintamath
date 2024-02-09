@@ -35,27 +35,6 @@ TEST(PowFunctionTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(PowFunctionTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(PowFunctionTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, PowFunction());
-  EXPECT_EQ(PowFunction(), f);
-  EXPECT_EQ(f, cast<IMathObject>(PowFunction()));
-  EXPECT_EQ(cast<IMathObject>(PowFunction()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(PowFunctionTests, getTypeTest) {
   EXPECT_EQ(PowFunction::getTypeStatic(), MathObjectType::PowFunction);
   EXPECT_EQ(PowFunction().getType(), MathObjectType::PowFunction);

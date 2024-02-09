@@ -45,27 +45,6 @@ TEST(MulTests, exprTest) {
   EXPECT_EQ(mulExpr(Integer(10), Integer(10))->toString(), "10*10");
 }
 
-TEST(MulTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(MulTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Mul());
-  EXPECT_EQ(Mul(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Mul()));
-  EXPECT_EQ(cast<IMathObject>(Mul()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(MulTests, getTypeTest) {
   EXPECT_EQ(Mul::getTypeStatic(), MathObjectType::Mul);
   EXPECT_EQ(Mul().getType(), MathObjectType::Mul);

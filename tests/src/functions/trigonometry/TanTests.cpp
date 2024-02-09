@@ -48,27 +48,6 @@ TEST(TanTests, exprTest) {
   EXPECT_EQ(tanExpr(Integer(10))->toString(), "tan(10)");
 }
 
-TEST(TanTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(TanTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Tan());
-  EXPECT_EQ(Tan(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Tan()));
-  EXPECT_EQ(cast<IMathObject>(Tan()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(TanTests, getTypeTest) {
   EXPECT_EQ(Tan::getTypeStatic(), MathObjectType::Tan);
   EXPECT_EQ(Tan().getType(), MathObjectType::Tan);

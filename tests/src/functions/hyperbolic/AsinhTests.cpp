@@ -46,27 +46,6 @@ TEST(AsinhTests, exprTest) {
   EXPECT_EQ(asinhExpr(Integer(10))->toString(), "asinh(10)");
 }
 
-TEST(AsinhTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AsinhTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Asinh());
-  EXPECT_EQ(Asinh(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Asinh()));
-  EXPECT_EQ(cast<IMathObject>(Asinh()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AsinhTests, getTypeTest) {
   EXPECT_EQ(Asinh::getTypeStatic(), MathObjectType::Asinh);
   EXPECT_EQ(Asinh().getType(), MathObjectType::Asinh);

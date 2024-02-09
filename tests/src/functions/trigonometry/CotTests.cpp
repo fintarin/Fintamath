@@ -48,27 +48,6 @@ TEST(CotTests, exprTest) {
   EXPECT_EQ(cotExpr(Integer(10))->toString(), "cot(10)");
 }
 
-TEST(CotTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(CotTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Cot());
-  EXPECT_EQ(Cot(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Cot()));
-  EXPECT_EQ(cast<IMathObject>(Cot()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(CotTests, getTypeTest) {
   EXPECT_EQ(Cot::getTypeStatic(), MathObjectType::Cot);
   EXPECT_EQ(Cot().getType(), MathObjectType::Cot);

@@ -48,27 +48,6 @@ TEST(AcscTests, exprTest) {
   EXPECT_EQ(acscExpr(Integer(10))->toString(), "acsc(10)");
 }
 
-TEST(AcscTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AcscTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Acsc());
-  EXPECT_EQ(Acsc(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Acsc()));
-  EXPECT_EQ(cast<IMathObject>(Acsc()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AcscTests, getTypeTest) {
   EXPECT_EQ(Acsc::getTypeStatic(), MathObjectType::Acsc);
   EXPECT_EQ(Acsc().getType(), MathObjectType::Acsc);

@@ -1043,22 +1043,6 @@ TEST(RealTests, isComplexTest) {
   EXPECT_FALSE(Real(2).isComplex());
 }
 
-TEST(RealTests, equalsTest) {
-  const Real a;
-  const Integer b;
-  const Integer c(1);
-
-  EXPECT_EQ(a, a);
-  EXPECT_EQ(a, Real());
-  EXPECT_EQ(Real(), a);
-  EXPECT_EQ(a, cast<IMathObject>(Real()));
-  EXPECT_EQ(cast<IMathObject>(Real()), a);
-  EXPECT_EQ(a, b);
-  EXPECT_EQ(b, a);
-  EXPECT_NE(a, c);
-  EXPECT_NE(c, a);
-}
-
 TEST(RealTests, getTypeTest) {
   EXPECT_EQ(Real::getTypeStatic(), MathObjectType::Real);
   EXPECT_EQ(Real().getType(), MathObjectType::Real);

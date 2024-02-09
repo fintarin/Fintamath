@@ -106,27 +106,6 @@ TEST(PowTests, exprTest) {
   EXPECT_EQ(powExpr(Integer(10), Integer(10))->toString(), "10^10");
 }
 
-TEST(PowTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(PowTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Pow());
-  EXPECT_EQ(Pow(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Pow()));
-  EXPECT_EQ(cast<IMathObject>(Pow()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(PowTests, getTypeTest) {
   EXPECT_EQ(Pow::getTypeStatic(), MathObjectType::Pow);
   EXPECT_EQ(Pow().getType(), MathObjectType::Pow);

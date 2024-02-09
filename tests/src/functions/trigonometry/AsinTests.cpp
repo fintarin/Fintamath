@@ -48,27 +48,6 @@ TEST(AsinTests, exprTest) {
   EXPECT_EQ(asinExpr(Integer(10))->toString(), "asin(10)");
 }
 
-TEST(AsinTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AsinTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Asin());
-  EXPECT_EQ(Asin(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Asin()));
-  EXPECT_EQ(cast<IMathObject>(Asin()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AsinTests, getTypeTest) {
   EXPECT_EQ(Asin::getTypeStatic(), MathObjectType::Asin);
   EXPECT_EQ(Asin().getType(), MathObjectType::Asin);

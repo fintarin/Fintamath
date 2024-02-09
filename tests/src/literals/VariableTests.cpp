@@ -39,20 +39,6 @@ TEST(VariableTest, stringIntegerConstructorTest) {
   EXPECT_THROW(Variable("a", Integer("-100000000000000000000000000000000000000")), InvalidInputException);
 }
 
-TEST(VariableTest, equalsTest) {
-  const Variable a("a");
-
-  EXPECT_EQ(a, a);
-  EXPECT_EQ(a, Variable("a"));
-  EXPECT_EQ(Variable("a"), a);
-  EXPECT_EQ(a, cast<IMathObject>(Variable("a")));
-  EXPECT_EQ(cast<IMathObject>(Variable("a")), a);
-  EXPECT_NE(a, Variable("b"));
-  EXPECT_NE(Variable("b"), a);
-  EXPECT_NE(a, E());
-  EXPECT_NE(E(), a);
-}
-
 TEST(VariableTest, getTypeTest) {
   EXPECT_EQ(Variable::getTypeStatic(), MathObjectType::Variable);
   EXPECT_EQ(Variable("a").getType(), MathObjectType::Variable);

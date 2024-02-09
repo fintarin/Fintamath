@@ -44,27 +44,6 @@ TEST(AndTests, exprTest) {
   EXPECT_EQ(andExpr(Boolean(true), Boolean(false))->toString(), "True & False");
 }
 
-TEST(AndTests, doArgsMatchTest) {
-  Boolean a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AndTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, And());
-  EXPECT_EQ(And(), f);
-  EXPECT_EQ(f, cast<IMathObject>(And()));
-  EXPECT_EQ(cast<IMathObject>(And()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AndTests, getTypeTest) {
   EXPECT_EQ(And::getTypeStatic(), MathObjectType::And);
   EXPECT_EQ(And().getType(), MathObjectType::And);

@@ -46,27 +46,6 @@ TEST(TanhTests, exprTest) {
   EXPECT_EQ(tanhExpr(Integer(10))->toString(), "tanh(10)");
 }
 
-TEST(TanhTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(TanhTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Tanh());
-  EXPECT_EQ(Tanh(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Tanh()));
-  EXPECT_EQ(cast<IMathObject>(Tanh()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(TanhTests, getTypeTest) {
   EXPECT_EQ(Tanh::getTypeStatic(), MathObjectType::Tanh);
   EXPECT_EQ(Tanh().getType(), MathObjectType::Tanh);

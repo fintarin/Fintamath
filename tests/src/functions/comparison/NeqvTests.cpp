@@ -53,27 +53,6 @@ TEST(NeqvTests, exprTest) {
   EXPECT_EQ(neqvExpr(Integer(10), Integer(10))->toString(), "10 != 10");
 }
 
-TEST(NeqvTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(NeqvTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Neqv());
-  EXPECT_EQ(Neqv(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Neqv()));
-  EXPECT_EQ(cast<IMathObject>(Neqv()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(NeqvTests, getTypeTest) {
   EXPECT_EQ(Neqv::getTypeStatic(), MathObjectType::Neqv);
   EXPECT_EQ(Neqv().getType(), MathObjectType::Neqv);

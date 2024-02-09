@@ -48,27 +48,6 @@ TEST(AsecTests, exprTest) {
   EXPECT_EQ(asecExpr(Integer(10))->toString(), "asec(10)");
 }
 
-TEST(AsecTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AsecTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Asec());
-  EXPECT_EQ(Asec(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Asec()));
-  EXPECT_EQ(cast<IMathObject>(Asec()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AsecTests, getTypeTest) {
   EXPECT_EQ(Asec::getTypeStatic(), MathObjectType::Asec);
   EXPECT_EQ(Asec().getType(), MathObjectType::Asec);

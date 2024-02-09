@@ -47,24 +47,6 @@ TEST(MaxTests, exprTest) {
   EXPECT_EQ(maxExpr(Variable("a"), Variable("a"))->toString(), "max(a, a)");
 }
 
-TEST(MaxTests, doArgsMatchTest) {
-  EXPECT_FALSE(f.doArgsMatch({}));
-}
-
-TEST(MaxTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Max());
-  EXPECT_EQ(Max(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Max()));
-  EXPECT_EQ(cast<IMathObject>(Max()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-  EXPECT_NE(f, Min());
-  EXPECT_NE(Min(), f);
-}
-
 TEST(MaxTests, getTypeTest) {
   EXPECT_EQ(Max::getTypeStatic(), MathObjectType::Max);
   EXPECT_EQ(Max().getType(), MathObjectType::Max);

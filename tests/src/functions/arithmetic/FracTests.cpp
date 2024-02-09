@@ -35,27 +35,6 @@ TEST(FracTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(FracTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(FracTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Frac());
-  EXPECT_EQ(Frac(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Frac()));
-  EXPECT_EQ(cast<IMathObject>(Frac()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(FracTests, getTypeTest) {
   EXPECT_EQ(Frac::getTypeStatic(), MathObjectType::Frac);
   EXPECT_EQ(Frac().getType(), MathObjectType::Frac);

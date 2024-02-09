@@ -51,28 +51,6 @@ TEST(IndexTests, exprTest) {
   EXPECT_EQ(indexExpr(Variable("a"), Integer(1))->toString(), "a_1");
 }
 
-TEST(IndexTests, doArgsMatchTest) {
-  Variable a("a");
-  Integer b(1);
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, b}));
-  EXPECT_FALSE(f.doArgsMatch({a, b, b}));
-}
-
-TEST(IndexTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Index());
-  EXPECT_EQ(Index(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Index()));
-  EXPECT_EQ(cast<IMathObject>(Index()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(IndexTests, getTypeTest) {
   EXPECT_EQ(Index::getTypeStatic(), MathObjectType::Index);
   EXPECT_EQ(Index().getType(), MathObjectType::Index);

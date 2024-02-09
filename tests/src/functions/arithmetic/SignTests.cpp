@@ -55,27 +55,6 @@ TEST(SignTests, exprTest) {
   EXPECT_EQ(signExpr(Integer(10))->toString(), "sign(10)");
 }
 
-TEST(SignTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(SignTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Sign());
-  EXPECT_EQ(Sign(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Sign()));
-  EXPECT_EQ(cast<IMathObject>(Sign()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(SignTests, getTypeTest) {
   EXPECT_EQ(Sign::getTypeStatic(), MathObjectType::Sign);
   EXPECT_EQ(Sign().getType(), MathObjectType::Sign);

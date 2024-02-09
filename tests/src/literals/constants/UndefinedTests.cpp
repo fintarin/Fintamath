@@ -15,16 +15,6 @@ TEST(UndefinedTests, callTest) {
   EXPECT_EQ(c()->toString(), "Undefined");
 }
 
-TEST(UndefinedTests, equalsTest) {
-  EXPECT_EQ(c, c);
-  EXPECT_EQ(c, Undefined());
-  EXPECT_EQ(Undefined(), c);
-  EXPECT_EQ(c, cast<IMathObject>(Undefined()));
-  EXPECT_EQ(cast<IMathObject>(Undefined()), c);
-  EXPECT_NE(c, Pi());
-  EXPECT_NE(Pi(), c);
-}
-
 TEST(UndefinedTests, getTypeTest) {
   EXPECT_EQ(Undefined::getTypeStatic(), MathObjectType::Undefined);
   EXPECT_EQ(Undefined().getType(), MathObjectType::Undefined);

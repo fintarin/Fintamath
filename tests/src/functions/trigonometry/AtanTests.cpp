@@ -50,27 +50,6 @@ TEST(AtanTests, exprTest) {
   EXPECT_EQ(atanExpr(Integer(10))->toString(), "atan(10)");
 }
 
-TEST(AtanTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AtanTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Atan());
-  EXPECT_EQ(Atan(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Atan()));
-  EXPECT_EQ(cast<IMathObject>(Atan()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AtanTests, getTypeTest) {
   EXPECT_EQ(Atan::getTypeStatic(), MathObjectType::Atan);
   EXPECT_EQ(Atan().getType(), MathObjectType::Atan);

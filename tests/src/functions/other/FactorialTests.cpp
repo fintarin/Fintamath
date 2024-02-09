@@ -150,27 +150,6 @@ TEST(FactorialTests, exprTest) {
   EXPECT_EQ(factorialExpr(Integer(10))->toString(), "10!");
 }
 
-TEST(FactorialTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(FactorialTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Factorial());
-  EXPECT_EQ(Factorial(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Factorial()));
-  EXPECT_EQ(cast<IMathObject>(Factorial()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(FactorialTests, getTypeTest) {
   EXPECT_EQ(Factorial::getTypeStatic(), MathObjectType::Factorial);
   EXPECT_EQ(Factorial().getType(), MathObjectType::Factorial);

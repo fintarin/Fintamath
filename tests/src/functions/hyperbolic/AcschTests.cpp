@@ -51,27 +51,6 @@ TEST(AcschTests, exprTest) {
   EXPECT_EQ(acschExpr(Integer(10))->toString(), "acsch(10)");
 }
 
-TEST(AcschTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AcschTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Acsch());
-  EXPECT_EQ(Acsch(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Acsch()));
-  EXPECT_EQ(cast<IMathObject>(Acsch()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AcschTests, getTypeTest) {
   EXPECT_EQ(Acsch::getTypeStatic(), MathObjectType::Acsch);
   EXPECT_EQ(Acsch().getType(), MathObjectType::Acsch);

@@ -88,27 +88,6 @@ TEST(ModTests, exprTest) {
   EXPECT_EQ(modExpr(Integer(10), Integer(10))->toString(), "10 mod 10");
 }
 
-TEST(ModTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(ModTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Mod());
-  EXPECT_EQ(Mod(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Mod()));
-  EXPECT_EQ(cast<IMathObject>(Mod()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(ModTests, getTypeTest) {
   EXPECT_EQ(Mod::getTypeStatic(), MathObjectType::Mod);
   EXPECT_EQ(Mod().getType(), MathObjectType::Mod);

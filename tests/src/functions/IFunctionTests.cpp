@@ -89,6 +89,7 @@ TEST(IFunctionTests, doArgsMatchTest) {
   EXPECT_FALSE(Add().doArgsMatch({c, c}));
   EXPECT_FALSE(Add().doArgsMatch({a, c}));
   EXPECT_FALSE(Add().doArgsMatch({c, a}));
+  EXPECT_FALSE(Add().doArgsMatch({}));
   EXPECT_FALSE(Add().doArgsMatch({a}));
   EXPECT_FALSE(Add().doArgsMatch({a, a, a}));
   EXPECT_FALSE(Add().doArgsMatch({a, b, a, b}));

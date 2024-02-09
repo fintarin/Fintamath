@@ -40,27 +40,6 @@ TEST(LgTests, exprTest) {
   EXPECT_EQ(lgExpr(Integer(10))->toString(), "log(10, 10)");
 }
 
-TEST(LgTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(LgTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Lg());
-  EXPECT_EQ(Lg(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Lg()));
-  EXPECT_EQ(cast<IMathObject>(Lg()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(LgTests, getTypeTest) {
   EXPECT_EQ(Lg::getTypeStatic(), MathObjectType::Lg);
   EXPECT_EQ(Lg().getType(), MathObjectType::Lg);

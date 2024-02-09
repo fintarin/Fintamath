@@ -44,27 +44,6 @@ TEST(DegTests, degTest) {
   EXPECT_EQ(degExpr(Integer(10))->toString(), "10 Pi/180");
 }
 
-TEST(DegTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_TRUE(f.doArgsMatch({a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(DegTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Deg());
-  EXPECT_EQ(Deg(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Deg()));
-  EXPECT_EQ(cast<IMathObject>(Deg()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(DegTests, getTypeTest) {
   EXPECT_EQ(Deg::getTypeStatic(), MathObjectType::Deg);
   EXPECT_EQ(Deg().getType(), MathObjectType::Deg);

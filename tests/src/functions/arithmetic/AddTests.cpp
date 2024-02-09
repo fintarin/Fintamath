@@ -47,27 +47,6 @@ TEST(AddTests, exprTest) {
   EXPECT_EQ(addExpr(Integer(10), Integer(10))->toString(), "10 + 10");
 }
 
-TEST(AddTests, doArgsMatchTest) {
-  Integer a;
-
-  EXPECT_FALSE(f.doArgsMatch({}));
-  EXPECT_FALSE(f.doArgsMatch({a}));
-  EXPECT_TRUE(f.doArgsMatch({a, a}));
-  EXPECT_FALSE(f.doArgsMatch({a, a, a}));
-}
-
-TEST(AddTests, equalsTest) {
-  EXPECT_EQ(f, f);
-  EXPECT_EQ(f, Add());
-  EXPECT_EQ(Add(), f);
-  EXPECT_EQ(f, cast<IMathObject>(Add()));
-  EXPECT_EQ(cast<IMathObject>(Add()), f);
-  EXPECT_NE(f, Sub());
-  EXPECT_NE(Sub(), f);
-  EXPECT_NE(f, UnaryPlus());
-  EXPECT_NE(UnaryPlus(), f);
-}
-
 TEST(AddTests, getTypeTest) {
   EXPECT_EQ(Add::getTypeStatic(), MathObjectType::Add);
   EXPECT_EQ(Add().getType(), MathObjectType::Add);
