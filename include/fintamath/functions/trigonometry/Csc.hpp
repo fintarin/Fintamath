@@ -16,8 +16,6 @@ class Real;
 
 class Csc final : public IFunctionCRTP<INumber, Csc, INumber> {
 public:
-  Csc() = default;
-
   std::string toString() const override {
     return "csc";
   }

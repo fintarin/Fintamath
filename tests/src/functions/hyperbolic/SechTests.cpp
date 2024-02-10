@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/hyperbolic/Sech.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Sech f;
+using F = Sech;
+const F f;
 
 TEST(SechTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sech");
 }
 
-TEST(SechTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(SechTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(SechTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(SechTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(SechTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(SechTests, callTest) {
@@ -44,6 +58,6 @@ TEST(SechTests, exprTest) {
 }
 
 TEST(SechTests, getTypeTest) {
-  EXPECT_EQ(Sech::getTypeStatic(), MathObjectType::Sech);
-  EXPECT_EQ(Sech().getType(), MathObjectType::Sech);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sech);
+  EXPECT_EQ(f.getType(), MathObjectType::Sech);
 }

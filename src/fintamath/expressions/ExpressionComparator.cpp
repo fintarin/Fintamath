@@ -337,7 +337,7 @@ Ordering compareExpressionAndNonExpression(const std::shared_ptr<const IExpressi
   }
 
   if (const auto lhsOper = cast<IOperator>(lhs->getFunction())) {
-    switch (lhsOper->getOperatorPriority()) {
+    switch (lhsOper->getPriority()) {
       case IOperator::Priority::PostfixUnary:
       case IOperator::Priority::PrefixUnary: {
         if (const Ordering res = compare(lhs->getChildren().front(), rhs); res != Ordering::equal) {
@@ -467,7 +467,7 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
 bool unwrapUnaryExpression(ArgumentPtr &arg) {
   if (const auto expr = cast<IExpression>(arg);
       expr &&
-      expr->getFunction()->getFunctionType() == IFunction::Type::Unary) {
+      expr->getFunction()->getArgumentTypes().size() == 1) {
 
     arg = expr->getChildren().front();
     return true;

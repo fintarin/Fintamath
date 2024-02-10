@@ -1,26 +1,40 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/logic/Not.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
-const Not f;
+using F = Not;
+const F f;
 
 TEST(NotTests, toStringTest) {
   EXPECT_EQ(f.toString(), "~");
 }
 
-TEST(NotTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(NotTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic()));
 }
 
-TEST(NotTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PrefixUnary);
+TEST(NotTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+}
+
+TEST(NotTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(NotTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(NotTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::PrefixUnary);
 }
 
 TEST(NotTests, isAssociativeTest) {
@@ -43,6 +57,6 @@ TEST(NotTests, exprTest) {
 }
 
 TEST(NotTests, getTypeTest) {
-  EXPECT_EQ(Not::getTypeStatic(), MathObjectType::Not);
-  EXPECT_EQ(Not().getType(), MathObjectType::Not);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Not);
+  EXPECT_EQ(f.getType(), MathObjectType::Not);
 }

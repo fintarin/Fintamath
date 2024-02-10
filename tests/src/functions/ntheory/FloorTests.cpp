@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/ntheory/Floor.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Floor f;
+using F = Floor;
+const F f;
 
 TEST(FloorTests, toStringTest) {
   EXPECT_EQ(f.toString(), "floor");
 }
 
-TEST(FloorTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(FloorTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(FloorTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(FloorTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(FloorTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(FloorTests, callTest) {
@@ -69,6 +83,6 @@ TEST(FloorTests, exprTest) {
 }
 
 TEST(FloorTests, getTypeTest) {
-  EXPECT_EQ(Floor::getTypeStatic(), MathObjectType::Floor);
-  EXPECT_EQ(Floor().getType(), MathObjectType::Floor);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Floor);
+  EXPECT_EQ(f.getType(), MathObjectType::Floor);
 }

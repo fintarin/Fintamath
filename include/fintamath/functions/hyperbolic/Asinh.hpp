@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Asinh final : public IFunctionCRTP<INumber, Asinh, INumber> {
 public:
-  Asinh() = default;
-
   std::string toString() const override {
     return "asinh";
   }

@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/trigonometry/Acsc.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Acsc f;
+using F = Acsc;
+const F f;
 
 TEST(AcscTests, toStringTest) {
   EXPECT_EQ(f.toString(), "acsc");
 }
 
-TEST(AcscTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(AcscTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(AcscTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(AcscTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(AcscTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(AcscTests, callTest) {
@@ -47,6 +61,6 @@ TEST(AcscTests, exprTest) {
 }
 
 TEST(AcscTests, getTypeTest) {
-  EXPECT_EQ(Acsc::getTypeStatic(), MathObjectType::Acsc);
-  EXPECT_EQ(Acsc().getType(), MathObjectType::Acsc);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Acsc);
+  EXPECT_EQ(f.getType(), MathObjectType::Acsc);
 }

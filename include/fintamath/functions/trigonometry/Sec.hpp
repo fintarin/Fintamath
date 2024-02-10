@@ -16,8 +16,6 @@ class Real;
 
 class Sec final : public IFunctionCRTP<INumber, Sec, INumber> {
 public:
-  Sec() = default;
-
   std::string toString() const override {
     return "sec";
   }

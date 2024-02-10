@@ -1,28 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/ntheory/Mod.hpp"
 
-#include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Mod f;
+using F = Mod;
+const F f;
 
 TEST(ModTests, toStringTest) {
   EXPECT_EQ(f.toString(), "mod");
 }
 
-TEST(ModTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(ModTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic(), INumber::getTypeStatic()));
 }
 
-TEST(ModTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Modulo);
+TEST(ModTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(ModTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(ModTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(ModTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Modulo);
 }
 
 TEST(ModTests, isAssociativeTest) {
@@ -89,6 +102,6 @@ TEST(ModTests, exprTest) {
 }
 
 TEST(ModTests, getTypeTest) {
-  EXPECT_EQ(Mod::getTypeStatic(), MathObjectType::Mod);
-  EXPECT_EQ(Mod().getType(), MathObjectType::Mod);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Mod);
+  EXPECT_EQ(f.getType(), MathObjectType::Mod);
 }

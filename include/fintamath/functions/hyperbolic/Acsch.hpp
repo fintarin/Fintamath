@@ -16,8 +16,6 @@ class Real;
 
 class Acsch final : public IFunctionCRTP<INumber, Acsch, INumber> {
 public:
-  Acsch() = default;
-
   std::string toString() const override {
     return "acsch";
   }

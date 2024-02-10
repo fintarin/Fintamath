@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Sqr final : public IFunctionCRTP<INumber, Sqr, INumber> {
 public:
-  Sqr() = default;
-
   std::string toString() const override {
     return "sqr";
   }

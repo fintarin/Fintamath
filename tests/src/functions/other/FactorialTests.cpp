@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/other/Factorial.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,20 +10,35 @@
 
 using namespace fintamath;
 
-const Factorial f;
-const Factorial f2(2);
-const Factorial f3(3);
+using F = Factorial;
+const F f;
+const F f2(2);
+const F f3(3);
 
 TEST(FactorialTests, toStringTest) {
   EXPECT_EQ(f.toString(), "!");
 }
 
-TEST(FactorialTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(FactorialTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
 }
 
-TEST(FactorialTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PostfixUnary);
+TEST(FactorialTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(FactorialTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(FactorialTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(FactorialTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(FactorialTests, isAssociativeTest) {
@@ -127,6 +141,6 @@ TEST(FactorialTests, exprTest) {
 }
 
 TEST(FactorialTests, getTypeTest) {
-  EXPECT_EQ(Factorial::getTypeStatic(), MathObjectType::Factorial);
-  EXPECT_EQ(Factorial().getType(), MathObjectType::Factorial);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Factorial);
+  EXPECT_EQ(f.getType(), MathObjectType::Factorial);
 }

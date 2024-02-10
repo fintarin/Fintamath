@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/arithmetic/Sign.hpp"
 
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Sign f;
+using F = Sign;
+const F f;
 
 TEST(SignTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sign");
 }
 
-TEST(SignTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(SignTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(SignTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(SignTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(SignTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(SignTests, callTest) {
@@ -28,11 +42,11 @@ TEST(SignTests, callTest) {
 
   EXPECT_EQ(f(Rational(-10, 3))->toString(), "-1");
   EXPECT_EQ(f(Rational(10, 3))->toString(), "1");
-  
+
   EXPECT_EQ(f(Real("-1.23"))->toString(), "-1");
   EXPECT_EQ(f(Real(0))->toString(), "1");
   EXPECT_EQ(f(Real("1.23"))->toString(), "1");
-  
+
   EXPECT_EQ(f(Complex(2, 0))->toString(), "1");
   EXPECT_EQ(f(Complex(0, 2))->toString(), "I");
   EXPECT_EQ(f(Complex(2, 2))->toString(), "((1 + I) sqrt(2))/2");
@@ -56,6 +70,6 @@ TEST(SignTests, exprTest) {
 }
 
 TEST(SignTests, getTypeTest) {
-  EXPECT_EQ(Sign::getTypeStatic(), MathObjectType::Sign);
-  EXPECT_EQ(Sign().getType(), MathObjectType::Sign);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sign);
+  EXPECT_EQ(f.getType(), MathObjectType::Sign);
 }

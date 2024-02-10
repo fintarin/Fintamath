@@ -1,27 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/comparison/Neqv.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Neqv f;
+using F = Neqv;
+const F f;
 
 TEST(NeqvTests, toStringTest) {
   EXPECT_EQ(f.toString(), "!=");
 }
 
-TEST(NeqvTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(NeqvTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic(), IComparable::getTypeStatic()));
 }
 
-TEST(NeqvTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Comparison);
+TEST(NeqvTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+}
+
+TEST(NeqvTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(NeqvTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(NeqvTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Comparison);
 }
 
 TEST(NeqvTests, isAssociativeTest) {
@@ -54,6 +68,6 @@ TEST(NeqvTests, exprTest) {
 }
 
 TEST(NeqvTests, getTypeTest) {
-  EXPECT_EQ(Neqv::getTypeStatic(), MathObjectType::Neqv);
-  EXPECT_EQ(Neqv().getType(), MathObjectType::Neqv);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Neqv);
+  EXPECT_EQ(f.getType(), MathObjectType::Neqv);
 }

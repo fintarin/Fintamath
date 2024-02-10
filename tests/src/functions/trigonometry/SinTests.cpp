@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/trigonometry/Sin.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Sin f;
+using F = Sin;
+const F f;
 
 TEST(SinTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sin");
 }
 
-TEST(SinTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(SinTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(SinTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(SinTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(SinTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(SinTests, callTest) {
@@ -43,6 +57,6 @@ TEST(SinTests, exprTest) {
 }
 
 TEST(SinTests, getTypeTest) {
-  EXPECT_EQ(Sin::getTypeStatic(), MathObjectType::Sin);
-  EXPECT_EQ(Sin().getType(), MathObjectType::Sin);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sin);
+  EXPECT_EQ(f.getType(), MathObjectType::Sin);
 }

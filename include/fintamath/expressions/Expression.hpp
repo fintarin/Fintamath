@@ -173,19 +173,19 @@ Expression operator/(const Variable &lhs, const Expression &rhs);
 template <typename Function, bool isPolynomial>
 void Expression::registerFunctionExpressionMaker(ExpressionMaker maker) {
   ExpressionParser::TypeConstructor constructor = [maker = std::move(maker)](ArgumentPtrVector &&args) {
-    static const IFunction::Type type = Function{}.getFunctionType();
+    static const size_t argSize = Function{}.getArgumentTypes().size();
     std::unique_ptr<IMathObject> res;
 
-    if constexpr (IsFunctionTypeAny<Function>::value) {
+    if constexpr (Function::isVariadicStatic()) {
       res = maker(std::move(args));
     }
     else if constexpr (isPolynomial) {
-      if (static_cast<size_t>(type) <= args.size()) {
+      if (argSize <= args.size()) {
         res = maker(std::move(args));
       }
     }
     else {
-      if (static_cast<size_t>(type) == args.size()) {
+      if (argSize == args.size()) {
         res = maker(std::move(args));
       }
     }

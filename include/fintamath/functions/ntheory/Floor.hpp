@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Floor final : public IFunctionCRTP<INumber, Floor, INumber> {
 public:
-  Floor() = default;
-
   std::string toString() const override {
     return "floor";
   }

@@ -33,13 +33,13 @@ public:
   };
 
 public:
-  virtual Priority getOperatorPriority() const = 0;
+  virtual Priority getPriority() const = 0;
 
   virtual bool isAssociative() const = 0;
 
   static std::unique_ptr<IOperator> parse(const std::string &parsedStr, Priority priority = Priority::Lowest) {
     const auto validator = [priority](const std::unique_ptr<IOperator> &oper) {
-      return priority == Priority::Lowest || oper->getOperatorPriority() == priority;
+      return priority == Priority::Lowest || oper->getPriority() == priority;
     };
     return getParser().parse(validator, parsedStr);
   }
@@ -59,6 +59,7 @@ private:
 };
 
 template <typename Return, typename Derived, typename... Args>
+  requires(sizeof...(Args) > 0 && sizeof...(Args) < 3)
 class IOperatorCRTP : public IOperator {
 #define I_OPERATOR_CRTP IOperatorCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IOperatorCRTP.hpp"
@@ -66,18 +67,9 @@ class IOperatorCRTP : public IOperator {
 
 public:
   explicit IOperatorCRTP(const Priority inPriority = Priority::Lowest,
-                         const bool isAssociative = false,
-                         const bool isEvaluatable = true)
-      : isEvaluatableFunc(isEvaluatable),
-        priority(inPriority),
+                         const bool isAssociative = false)
+      : priority(inPriority),
         isAssociativeOper(isAssociative) {
-
-    if constexpr (IsFunctionTypeAny<Derived>::value) {
-      type = Type::Any;
-    }
-    else {
-      type = static_cast<Type>(sizeof...(Args));
-    }
   }
 };
 

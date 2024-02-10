@@ -17,8 +17,6 @@ namespace fintamath {
 
 class Log final : public IFunctionCRTP<INumber, Log, INumber, INumber> {
 public:
-  Log() = default;
-
   std::string toString() const override {
     return "log";
   }

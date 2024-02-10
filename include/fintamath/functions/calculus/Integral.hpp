@@ -15,11 +15,12 @@ namespace fintamath {
 
 class Integral final : public IFunctionCRTP<IComparable, Integral, IComparable, Variable> {
 public:
-  Integral() : IFunctionCRTP(false) {
-  }
-
   std::string toString() const override {
     return "integral";
+  }
+
+  static constexpr bool isEvaluatableStatic() {
+    return false;
   }
 
   static constexpr MathObjectType getTypeStatic() {

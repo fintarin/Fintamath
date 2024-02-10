@@ -1,24 +1,37 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/FracMixed.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/functions/arithmetic/FracMixed.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const FracMixed f;
+using F = FracMixed;
+const F f;
 
 TEST(FracMixedTests, toStringTest) {
   EXPECT_EQ(f.toString(), "frac");
 }
 
-TEST(FracMixedTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Ternary);
+TEST(FracMixedTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+}
+
+TEST(FracMixedTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+}
+
+TEST(FracMixedTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(FracMixedTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(FracMixedTests, callTest) {
@@ -43,6 +56,6 @@ TEST(FracMixedTests, callTest) {
 }
 
 TEST(FracMixedTests, getTypeTest) {
-  EXPECT_EQ(FracMixed::getTypeStatic(), MathObjectType::FracMixed);
-  EXPECT_EQ(FracMixed().getType(), MathObjectType::FracMixed);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::FracMixed);
+  EXPECT_EQ(f.getType(), MathObjectType::FracMixed);
 }

@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/arithmetic/Abs.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Abs f;
+using F = Abs;
+const F f;
 
 TEST(AbsTests, toStringTest) {
   EXPECT_EQ(f.toString(), "abs");
 }
 
-TEST(AbsTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(AbsTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(AbsTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(AbsTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(AbsTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(AbsTests, callTest) {
@@ -58,6 +72,6 @@ TEST(AbsTests, exprTest) {
 }
 
 TEST(AbsTests, getTypeTest) {
-  EXPECT_EQ(Abs::getTypeStatic(), MathObjectType::Abs);
-  EXPECT_EQ(Abs().getType(), MathObjectType::Abs);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Abs);
+  EXPECT_EQ(f.getType(), MathObjectType::Abs);
 }

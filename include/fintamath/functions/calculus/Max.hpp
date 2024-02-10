@@ -15,11 +15,12 @@ namespace fintamath {
 
 class Max final : public IFunctionCRTP<IComparable, Max, IComparable> {
 public:
-  Max() : IFunctionCRTP(true) {
-  }
-
   std::string toString() const override {
     return "max";
+  }
+
+  static constexpr bool isVariadicStatic() {
+    return true;
   }
 
   static constexpr MathObjectType getTypeStatic() {
@@ -29,9 +30,6 @@ public:
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override;
 };
-
-template <>
-struct IsFunctionTypeAny<Max> : std::true_type {};
 
 FINTAMATH_FUNCTION_EXPRESSION(Max, maxExpr);
 

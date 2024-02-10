@@ -19,7 +19,7 @@ IUnaryExpression::IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs)
 
 std::string IUnaryExpression::toString() const {
   if (const auto oper = cast<IOperator>(func)) {
-    if (oper->getOperatorPriority() == IOperator::Priority::PostfixUnary) {
+    if (oper->getPriority() == IOperator::Priority::PostfixUnary) {
       return postfixUnaryOperatorToString(*oper, child);
     }
 

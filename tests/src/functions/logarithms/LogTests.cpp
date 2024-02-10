@@ -1,23 +1,37 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/logarithms/Log.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Log f;
+using F = Log;
+const F f;
 
 TEST(LogTests, toStringTest) {
   EXPECT_EQ(f.toString(), "log");
 }
 
-TEST(LogTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(LogTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic(), INumber::getTypeStatic()));
+}
+
+TEST(LogTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(LogTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(LogTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(LogTests, callTest) {
@@ -121,6 +135,6 @@ TEST(LogTests, exprTest) {
 }
 
 TEST(LogTests, getTypeTest) {
-  EXPECT_EQ(Log::getTypeStatic(), MathObjectType::Log);
-  EXPECT_EQ(Log().getType(), MathObjectType::Log);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Log);
+  EXPECT_EQ(f.getType(), MathObjectType::Log);
 }

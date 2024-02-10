@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 
 #include "fintamath/literals/Variable.hpp"
@@ -9,14 +9,29 @@
 
 using namespace fintamath;
 
-const Root f;
+using F = Root;
+const F f;
 
 TEST(RootTests, toStringTest) {
   EXPECT_EQ(f.toString(), "root");
 }
 
-TEST(RootTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(RootTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic(), INumber::getTypeStatic()));
+}
+
+TEST(RootTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(RootTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(RootTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(RootTests, callTest) {
@@ -170,6 +185,6 @@ TEST(RootTests, exprTest) {
 }
 
 TEST(RootTests, getTypeTest) {
-  EXPECT_EQ(Root::getTypeStatic(), MathObjectType::Root);
-  EXPECT_EQ(Root().getType(), MathObjectType::Root);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Root);
+  EXPECT_EQ(f.getType(), MathObjectType::Root);
 }

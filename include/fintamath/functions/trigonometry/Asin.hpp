@@ -16,8 +16,6 @@ class Real;
 
 class Asin final : public IFunctionCRTP<INumber, Asin, INumber> {
 public:
-  Asin() = default;
-
   std::string toString() const override {
     return "asin";
   }

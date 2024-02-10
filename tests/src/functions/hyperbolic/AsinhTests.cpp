@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/hyperbolic/Asinh.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Asinh f;
+using F = Asinh;
+const F f;
 
 TEST(AsinhTests, toStringTest) {
   EXPECT_EQ(f.toString(), "asinh");
 }
 
-TEST(AsinhTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(AsinhTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(AsinhTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(AsinhTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(AsinhTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(AsinhTests, callTest) {
@@ -43,6 +57,6 @@ TEST(AsinhTests, exprTest) {
 }
 
 TEST(AsinhTests, getTypeTest) {
-  EXPECT_EQ(Asinh::getTypeStatic(), MathObjectType::Asinh);
-  EXPECT_EQ(Asinh().getType(), MathObjectType::Asinh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Asinh);
+  EXPECT_EQ(f.getType(), MathObjectType::Asinh);
 }

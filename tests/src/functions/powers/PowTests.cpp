@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/powers/Pow.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,18 +10,33 @@
 
 using namespace fintamath;
 
-const Pow f;
+using F = Pow;
+const F f;
 
 TEST(PowTests, toStringTest) {
   EXPECT_EQ(f.toString(), "^");
 }
 
-TEST(PowTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(PowTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic(), INumber::getTypeStatic()));
 }
 
-TEST(PowTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Exponentiation);
+TEST(PowTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(PowTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(PowTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(PowTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Exponentiation);
 }
 
 TEST(PowTests, isAssociativeTest) {
@@ -158,6 +172,6 @@ TEST(PowTests, exprTest) {
 }
 
 TEST(PowTests, getTypeTest) {
-  EXPECT_EQ(Pow::getTypeStatic(), MathObjectType::Pow);
-  EXPECT_EQ(Pow().getType(), MathObjectType::Pow);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Pow);
+  EXPECT_EQ(f.getType(), MathObjectType::Pow);
 }

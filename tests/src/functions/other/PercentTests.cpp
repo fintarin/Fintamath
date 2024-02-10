@@ -1,26 +1,40 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/other/Percent.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Percent f;
+using F = Percent;
+const F f;
 
 TEST(PercentTests, toStringTest) {
   EXPECT_EQ(f.toString(), "%");
 }
 
-TEST(PercentTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(PercentTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
 }
 
-TEST(PercentTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PostfixUnary);
+TEST(PercentTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(PercentTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(PercentTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(PercentTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(PercentTests, isAssociativeTest) {
@@ -44,6 +58,6 @@ TEST(PercentTests, degTest) {
 }
 
 TEST(PercentTests, getTypeTest) {
-  EXPECT_EQ(Percent::getTypeStatic(), MathObjectType::Percent);
-  EXPECT_EQ(Percent().getType(), MathObjectType::Percent);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Percent);
+  EXPECT_EQ(f.getType(), MathObjectType::Percent);
 }

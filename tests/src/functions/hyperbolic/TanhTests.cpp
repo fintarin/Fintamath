@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/hyperbolic/Tanh.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Tanh f;
+using F = Tanh;
+const F f;
 
 TEST(TanhTests, toStringTest) {
   EXPECT_EQ(f.toString(), "tanh");
 }
 
-TEST(TanhTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(TanhTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(TanhTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(TanhTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(TanhTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(TanhTests, callTest) {
@@ -43,6 +57,6 @@ TEST(TanhTests, exprTest) {
 }
 
 TEST(TanhTests, getTypeTest) {
-  EXPECT_EQ(Tanh::getTypeStatic(), MathObjectType::Tanh);
-  EXPECT_EQ(Tanh().getType(), MathObjectType::Tanh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Tanh);
+  EXPECT_EQ(f.getType(), MathObjectType::Tanh);
 }

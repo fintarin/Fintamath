@@ -1,26 +1,40 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/logic/Or.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
-const Or f;
+using F = Or;
+const F f;
 
 TEST(OrTests, toStringTest) {
   EXPECT_EQ(f.toString(), "|");
 }
 
-TEST(OrTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(OrTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic(), Boolean::getTypeStatic()));
 }
 
-TEST(OrTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Disjunction);
+TEST(OrTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+}
+
+TEST(OrTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(OrTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(OrTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Disjunction);
 }
 
 TEST(OrTests, isAssociativeTest) {
@@ -45,6 +59,6 @@ TEST(OrTests, exprTest) {
 }
 
 TEST(OrTests, getTypeTest) {
-  EXPECT_EQ(Or::getTypeStatic(), MathObjectType::Or);
-  EXPECT_EQ(Or().getType(), MathObjectType::Or);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Or);
+  EXPECT_EQ(f.getType(), MathObjectType::Or);
 }

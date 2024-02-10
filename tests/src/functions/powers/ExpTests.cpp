@@ -1,22 +1,36 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/powers/Exp.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Exp f;
+using F = Exp;
+const F f;
 
 TEST(ExpTests, toStringTest) {
   EXPECT_EQ(f.toString(), "exp");
 }
 
-TEST(ExpTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(ExpTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(ExpTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(ExpTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(ExpTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(ExpTests, callTest) {
@@ -35,6 +49,6 @@ TEST(ExpTests, exprTest) {
 }
 
 TEST(ExpTests, getTypeTest) {
-  EXPECT_EQ(Exp::getTypeStatic(), MathObjectType::Exp);
-  EXPECT_EQ(Exp().getType(), MathObjectType::Exp);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Exp);
+  EXPECT_EQ(f.getType(), MathObjectType::Exp);
 }

@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/hyperbolic/Csch.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Csch f;
+using F = Csch;
+const F f;
 
 TEST(CschTests, toStringTest) {
   EXPECT_EQ(f.toString(), "csch");
 }
 
-TEST(CschTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(CschTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(CschTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(CschTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(CschTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(CschTests, callTest) {
@@ -43,6 +57,6 @@ TEST(CschTests, exprTest) {
 }
 
 TEST(CschTests, getTypeTest) {
-  EXPECT_EQ(Csch::getTypeStatic(), MathObjectType::Csch);
-  EXPECT_EQ(Csch().getType(), MathObjectType::Csch);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Csch);
+  EXPECT_EQ(f.getType(), MathObjectType::Csch);
 }

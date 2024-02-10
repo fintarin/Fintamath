@@ -15,11 +15,12 @@ namespace fintamath {
 
 class Derivative final : public IFunctionCRTP<IComparable, Derivative, IComparable, Variable> {
 public:
-  Derivative() : IFunctionCRTP(false) {
-  }
-
   std::string toString() const override {
     return "derivative";
+  }
+
+  static constexpr bool isEvaluatableStatic() {
+    return false;
   }
 
   static constexpr MathObjectType getTypeStatic() {

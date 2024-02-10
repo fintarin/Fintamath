@@ -2,10 +2,8 @@
 
 #include <concepts>
 #include <cstddef>
-#include <cstdint>
 #include <memory>
 #include <string>
-#include <type_traits>
 #include <unordered_map>
 
 #include "fintamath/core/IMathObject.hpp"
@@ -17,36 +15,21 @@
 
 namespace fintamath {
 
-template <typename T>
-struct IsFunctionTypeAny : std::false_type {};
-
 class IFunction : public IMathObject {
   using FunctionOrderMap = std::unordered_map<std::string, size_t>;
+
   using FunctionParser = Parser<std::unique_ptr<IFunction>()>;
 
 public:
-  enum class Type : uint8_t {
-    None,       // 0 arguments
-    Unary,      // 1 argument
-    Binary,     // 2 arguments
-    Ternary,    // 3 arguments
-    Quaternary, // 4 arguments
-    Quinary,    // 5 arguments
-    Senary,     // 6 arguments
-    Septenary,  // 7 arguments
-    Any,        // undefined number of arguments, but non 0
-  };
-
-public:
-  virtual IFunction::Type getFunctionType() const = 0;
+  virtual const ArgumentTypeVector &getArgumentTypes() const = 0;
 
   virtual MathObjectType getReturnType() const = 0;
-
-  virtual ArgumentTypeVector getArgTypes() const = 0;
 
   virtual size_t getFunctionOrder() const = 0;
 
   virtual bool doArgsMatch(const ArgumentRefVector &argVect) const = 0;
+
+  virtual bool isVariadic() const = 0;
 
   virtual bool isEvaluatable() const = 0;
 
@@ -59,9 +42,13 @@ public:
     return callAbstract(argVect);
   }
 
-  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, Type type = Type::Any) {
-    const auto validator = [type](const std::unique_ptr<IFunction> &func) {
-      return type == Type::Any || func->getFunctionType() == type;
+  static std::unique_ptr<IFunction> parse(const std::string &parsedStr) {
+    return getParser().parse(parsedStr);
+  }
+
+  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, size_t argSize) {
+    const auto validator = [argSize](const std::unique_ptr<IFunction> &func) {
+      return argSize == func->getArgumentTypes().size();
     };
     return getParser().parse(validator, parsedStr);
   }
@@ -81,6 +68,8 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const = 0;
 
+  virtual void validateArgsSize(const ArgumentRefVector &argVect) const;
+
   static const FunctionOrderMap &getFunctionOrderMap();
 
 private:
@@ -92,20 +81,11 @@ private:
 };
 
 template <typename Return, typename Derived, typename... Args>
+  requires(sizeof...(Args) > 0)
 class IFunctionCRTP : public IFunction {
 #define I_FUNCTION_CRTP IFunctionCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IFunctionCRTP.hpp"
 #undef I_FUNCTION_CRTP
-
-public:
-  explicit IFunctionCRTP(const bool isEvaluatable = true) : isEvaluatableFunc(isEvaluatable) {
-    if constexpr (IsFunctionTypeAny<Derived>::value) {
-      type = Type::Any;
-    }
-    else {
-      type = static_cast<Type>(sizeof...(Args));
-    }
-  }
 };
 
 }

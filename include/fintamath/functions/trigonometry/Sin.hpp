@@ -16,8 +16,6 @@ class Real;
 
 class Sin final : public IFunctionCRTP<INumber, Sin, INumber> {
 public:
-  Sin() = default;
-
   std::string toString() const override {
     return "sin";
   }

@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Ln final : public IFunctionCRTP<INumber, Ln, INumber> {
 public:
-  Ln() = default;
-
   std::string toString() const override {
     return "ln";
   }

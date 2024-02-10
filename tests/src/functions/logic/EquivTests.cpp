@@ -1,26 +1,40 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/logic/Equiv.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
-const Equiv f;
+using F = Equiv;
+const F f;
 
 TEST(EquivTests, toStringTest) {
   EXPECT_EQ(f.toString(), "<->");
 }
 
-TEST(EquivTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(EquivTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic(), Boolean::getTypeStatic()));
 }
 
-TEST(EquivTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Equivalence);
+TEST(EquivTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+}
+
+TEST(EquivTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(EquivTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(EquivTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Equivalence);
 }
 
 TEST(EquivTests, isAssociativeTest) {
@@ -45,6 +59,6 @@ TEST(EquivTests, exprTest) {
 }
 
 TEST(EquivTests, getTypeTest) {
-  EXPECT_EQ(Equiv::getTypeStatic(), MathObjectType::Equiv);
-  EXPECT_EQ(Equiv().getType(), MathObjectType::Equiv);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Equiv);
+  EXPECT_EQ(f.getType(), MathObjectType::Equiv);
 }

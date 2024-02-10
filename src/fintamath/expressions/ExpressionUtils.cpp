@@ -324,14 +324,14 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
   bool shouldPutInBrackets = false;
 
   if (childOper) {
-    if (oper.getOperatorPriority() == IOperator::Priority::PostfixUnary) {
+    if (oper.getPriority() == IOperator::Priority::PostfixUnary) {
       shouldPutInBrackets = true;
     }
-    else if (childOper->getFunctionType() == IFunction::Type::Unary) {
-      shouldPutInBrackets = childOper->getOperatorPriority() >= oper.getOperatorPriority();
+    else if (childOper->getArgumentTypes().size() == 1) {
+      shouldPutInBrackets = childOper->getPriority() >= oper.getPriority();
     }
     else {
-      shouldPutInBrackets = childOper->getOperatorPriority() > oper.getOperatorPriority() ||
+      shouldPutInBrackets = childOper->getPriority() > oper.getPriority() ||
                             !oper.isAssociative();
     }
   }
@@ -343,7 +343,7 @@ std::string binaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs
   std::string result;
 
   std::string operStr = oper.toString();
-  const IOperator::Priority operPriority = oper.getOperatorPriority();
+  const IOperator::Priority operPriority = oper.getPriority();
 
   if (operPriority != IOperator::Priority::Multiplication && operPriority != IOperator::Priority::Exponentiation) {
     operStr = ' ' + operStr + ' ';

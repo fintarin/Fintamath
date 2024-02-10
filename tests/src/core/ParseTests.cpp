@@ -243,8 +243,8 @@ TEST(ParseTests, parseFunctionTest) {
   EXPECT_TRUE(is<Acsch>(IFunction::parse("acsch")));
   EXPECT_TRUE(is<Derivative>(IFunction::parse("derivative")));
   EXPECT_TRUE(is<Integral>(IFunction::parse("integral")));
-  EXPECT_TRUE(is<Frac>(IFunction::parse("frac", IFunction::Type::Binary)));
-  EXPECT_TRUE(is<FracMixed>(IFunction::parse("frac", IFunction::Type::Ternary)));
+  EXPECT_TRUE(is<Frac>(IFunction::parse("frac", 2)));
+  EXPECT_TRUE(is<FracMixed>(IFunction::parse("frac", 3)));
   EXPECT_TRUE(is<PowFunction>(IFunction::parse("pow")));
   EXPECT_TRUE(is<Floor>(IFunction::parse("floor")));
   EXPECT_TRUE(is<Ceil>(IFunction::parse("ceil")));

@@ -1,26 +1,40 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/other/Deg.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Deg f;
+using F = Deg;
+const F f;
 
 TEST(DegTests, toStringTest) {
   EXPECT_EQ(f.toString(), "deg");
 }
 
-TEST(DegTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(DegTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
 }
 
-TEST(DegTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PostfixUnary);
+TEST(DegTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(DegTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(DegTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(DegTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(DegTests, isAssociativeTest) {
@@ -45,6 +59,6 @@ TEST(DegTests, degTest) {
 }
 
 TEST(DegTests, getTypeTest) {
-  EXPECT_EQ(Deg::getTypeStatic(), MathObjectType::Deg);
-  EXPECT_EQ(Deg().getType(), MathObjectType::Deg);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Deg);
+  EXPECT_EQ(f.getType(), MathObjectType::Deg);
 }

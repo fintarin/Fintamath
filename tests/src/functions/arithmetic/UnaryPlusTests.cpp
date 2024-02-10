@@ -1,26 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 
-#include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const UnaryPlus f;
+using F = UnaryPlus;
+const F f;
 
 TEST(UnaryPlusTests, toStringTest) {
   EXPECT_EQ(f.toString(), "+");
 }
 
-TEST(UnaryPlusTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(UnaryPlusTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic()));
 }
 
-TEST(UnaryPlusTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PrefixUnary);
+TEST(UnaryPlusTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+}
+
+TEST(UnaryPlusTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(UnaryPlusTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(UnaryPlusTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::PrefixUnary);
 }
 
 TEST(UnaryPlusTests, isAssociativeTest) {
@@ -40,6 +55,6 @@ TEST(UnaryPlusTests, callTest) {
 }
 
 TEST(UnaryPlusTests, getTypeTest) {
-  EXPECT_EQ(UnaryPlus::getTypeStatic(), MathObjectType::UnaryPlus);
-  EXPECT_EQ(UnaryPlus().getType(), MathObjectType::UnaryPlus);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::UnaryPlus);
+  EXPECT_EQ(f.getType(), MathObjectType::UnaryPlus);
 }

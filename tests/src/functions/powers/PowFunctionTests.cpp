@@ -1,24 +1,37 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/powers/PowFunction.hpp"
 
-#include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 using namespace fintamath;
 
-const PowFunction f;
+using F = PowFunction;
+const F f;
 
 TEST(PowFunctionTests, toStringTest) {
   EXPECT_EQ(f.toString(), "pow");
 }
 
-TEST(PowFunctionTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(PowFunctionTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+}
+
+TEST(PowFunctionTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+}
+
+TEST(PowFunctionTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(PowFunctionTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(PowFunctionTests, callTest) {
@@ -36,6 +49,6 @@ TEST(PowFunctionTests, callTest) {
 }
 
 TEST(PowFunctionTests, getTypeTest) {
-  EXPECT_EQ(PowFunction::getTypeStatic(), MathObjectType::PowFunction);
-  EXPECT_EQ(PowFunction().getType(), MathObjectType::PowFunction);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::PowFunction);
+  EXPECT_EQ(f.getType(), MathObjectType::PowFunction);
 }

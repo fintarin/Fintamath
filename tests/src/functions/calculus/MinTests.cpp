@@ -1,11 +1,9 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/calculus/Min.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/calculus/Max.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
@@ -13,14 +11,29 @@
 
 using namespace fintamath;
 
-const Min f;
+using F = Min;
+const F f;
 
 TEST(MinTests, toStringTest) {
   EXPECT_EQ(f.toString(), "min");
 }
 
-TEST(MinTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Any);
+TEST(MinTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic()));
+}
+
+TEST(MinTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IComparable::getTypeStatic());
+}
+
+TEST(MinTests, isVariadicTest) {
+  EXPECT_TRUE(F::isVariadicStatic());
+  EXPECT_TRUE(f.isVariadic());
+}
+
+TEST(MinTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(MinTests, callTest) {
@@ -48,6 +61,6 @@ TEST(MinTests, exprTest) {
 }
 
 TEST(MinTests, getTypeTest) {
-  EXPECT_EQ(Min::getTypeStatic(), MathObjectType::Min);
-  EXPECT_EQ(Min().getType(), MathObjectType::Min);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Min);
+  EXPECT_EQ(f.getType(), MathObjectType::Min);
 }

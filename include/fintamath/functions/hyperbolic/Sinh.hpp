@@ -16,8 +16,6 @@ class Real;
 
 class Sinh final : public IFunctionCRTP<INumber, Sinh, INumber> {
 public:
-  Sinh() = default;
-
   std::string toString() const override {
     return "sinh";
   }

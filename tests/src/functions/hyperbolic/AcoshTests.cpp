@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/hyperbolic/Acosh.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Acosh f;
+using F = Acosh;
+const F f;
 
 TEST(AcoshTests, toStringTest) {
   EXPECT_EQ(f.toString(), "acosh");
 }
 
-TEST(AcoshTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(AcoshTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(AcoshTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(AcoshTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(AcoshTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(AcoshTests, callTest) {
@@ -46,6 +60,6 @@ TEST(AcoshTests, exprTest) {
 }
 
 TEST(AcoshTests, getTypeTest) {
-  EXPECT_EQ(Acosh::getTypeStatic(), MathObjectType::Acosh);
-  EXPECT_EQ(Acosh().getType(), MathObjectType::Acosh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Acosh);
+  EXPECT_EQ(f.getType(), MathObjectType::Acosh);
 }

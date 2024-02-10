@@ -10,11 +10,11 @@
 
 using namespace fintamath;
 
-TEST(IOperatorTests, getOperatorPriorityTest) {
-  EXPECT_EQ(Add().getOperatorPriority(), IOperator::Priority::Addition);
-  EXPECT_EQ(Neg().getOperatorPriority(), IOperator::Priority::PrefixUnary);
-  EXPECT_EQ(Factorial().getOperatorPriority(), IOperator::Priority::PostfixUnary);
-  EXPECT_EQ(Or().getOperatorPriority(), IOperator::Priority::Disjunction);
+TEST(IOperatorTests, getPriorityTest) {
+  EXPECT_EQ(Add().getPriority(), IOperator::Priority::Addition);
+  EXPECT_EQ(Neg().getPriority(), IOperator::Priority::PrefixUnary);
+  EXPECT_EQ(Factorial().getPriority(), IOperator::Priority::PostfixUnary);
+  EXPECT_EQ(Or().getPriority(), IOperator::Priority::Disjunction);
 }
 
 TEST(IOperatorTests, isAssociativeTest) {
