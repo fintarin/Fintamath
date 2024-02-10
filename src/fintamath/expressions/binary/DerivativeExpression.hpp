@@ -15,7 +15,7 @@ class DerivativeExpression final : public IBinaryExpressionCRTP<DerivativeExpres
 public:
   explicit DerivativeExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::DerivativeExpression;
   }
 

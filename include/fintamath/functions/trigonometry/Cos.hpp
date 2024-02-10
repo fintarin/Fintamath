@@ -22,7 +22,7 @@ public:
     return "cos";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Cos;
   }
 

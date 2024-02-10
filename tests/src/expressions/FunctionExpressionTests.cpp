@@ -17,8 +17,8 @@ public:
     return "$";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectBoundTypes::get().at(IOperator::getTypeStatic()) - 1;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IOperator) + 999;
   }
 
 protected:
@@ -36,8 +36,8 @@ public:
     return "$";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectBoundTypes::get().at(IOperator::getTypeStatic()) - 2;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IOperator) + 998;
   }
 
 protected:
@@ -55,8 +55,8 @@ public:
     return "$";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectBoundTypes::get().at(IOperator::getTypeStatic()) - 3;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IOperator) + 997;
   }
 
 protected:
@@ -74,8 +74,8 @@ public:
     return "testfunction";
   }
 
-  static MathObjectType getTypeStatic() {
-    return static_cast<size_t>(IOperator::getTypeStatic()) - 1;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IFunction) + 996;
   }
 
 protected:
@@ -93,8 +93,8 @@ public:
     return "testfunction";
   }
 
-  static MathObjectType getTypeStatic() {
-    return static_cast<size_t>(IOperator::getTypeStatic()) - 2;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IFunction) + 995;
   }
 
 protected:

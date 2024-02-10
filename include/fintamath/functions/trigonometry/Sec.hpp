@@ -22,7 +22,7 @@ public:
     return "sec";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Sec;
   }
 

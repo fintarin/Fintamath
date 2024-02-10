@@ -22,7 +22,7 @@ public:
     return "asech";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Asech;
   }
 

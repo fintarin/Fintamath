@@ -22,7 +22,7 @@ public:
     return "csch";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Csch;
   }
 

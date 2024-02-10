@@ -40,7 +40,7 @@ public:
     order = inOrder;
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Factorial;
   }
 

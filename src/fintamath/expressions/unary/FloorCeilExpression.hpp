@@ -15,7 +15,7 @@ class FloorCeilExpression final : public IUnaryExpressionCRTP<FloorCeilExpressio
 public:
   explicit FloorCeilExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::FloorCeilExpression;
   }
 

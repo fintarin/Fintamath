@@ -17,7 +17,7 @@ public:
     return "pow";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::PowFunction;
   }
 

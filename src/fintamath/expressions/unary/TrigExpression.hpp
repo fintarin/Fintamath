@@ -16,7 +16,7 @@ class TrigExpression final : public IUnaryExpressionCRTP<TrigExpression, true> {
 public:
   explicit TrigExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::TrigExpression;
   }
 

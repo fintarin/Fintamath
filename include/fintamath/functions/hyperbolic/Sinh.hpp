@@ -22,7 +22,7 @@ public:
     return "sinh";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Sinh;
   }
 

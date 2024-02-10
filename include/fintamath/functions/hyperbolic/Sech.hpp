@@ -22,7 +22,7 @@ public:
     return "sech";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Sech;
   }
 

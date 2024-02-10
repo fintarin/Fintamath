@@ -20,7 +20,7 @@ public:
     return "asinh";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Asinh;
   }
 

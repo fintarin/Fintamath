@@ -16,8 +16,8 @@ public:
       : IUnaryExpressionCRTP(f, std::move(inRhsChild)) {
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectBoundTypes::get().at(IUnaryExpression::getTypeStatic()) - 1;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IUnaryExpression) + 999;
   }
 };
 

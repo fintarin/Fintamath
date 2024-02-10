@@ -22,7 +22,7 @@ public:
     return ">";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::More;
   }
 

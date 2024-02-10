@@ -12,8 +12,8 @@ namespace {
 
 class TestComparable final : public IComparableCRTP<TestComparable> {
 public:
-  static MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectBoundTypes::get().at(IComparable::getTypeStatic())) - 3;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IComparable) + 998;
   }
 
 protected:

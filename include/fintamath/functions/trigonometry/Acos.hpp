@@ -22,7 +22,7 @@ public:
     return "acos";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Acos;
   }
 

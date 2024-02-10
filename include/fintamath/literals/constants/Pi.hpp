@@ -16,7 +16,7 @@ public:
     return "Pi";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Pi;
   }
 

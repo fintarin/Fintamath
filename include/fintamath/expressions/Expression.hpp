@@ -72,7 +72,7 @@ public:
   template <typename Function, bool isPolynomial = false>
   static void registerFunctionExpressionMaker(ExpressionMaker maker);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Expression;
   }
 

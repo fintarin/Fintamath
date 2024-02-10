@@ -16,8 +16,8 @@ public:
       : IBinaryExpressionCRTP(f, std::move(inLhsChild), std::move(inRhsChild)) {
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectBoundTypes::get().at(IBinaryExpression::getTypeStatic()) - 1;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IBinaryExpression) + 999;
   }
 };
 

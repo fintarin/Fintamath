@@ -16,7 +16,7 @@ public:
     return Boolean(false).toString();
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::False;
   }
 

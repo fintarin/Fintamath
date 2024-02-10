@@ -45,7 +45,7 @@ public:
     return getParser().parse(str);
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::IExpression;
   }
 

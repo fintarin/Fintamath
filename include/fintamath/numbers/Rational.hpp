@@ -38,7 +38,7 @@ public:
 
   const Integer &denominator() const;
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Rational;
   }
 

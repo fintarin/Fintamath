@@ -160,38 +160,38 @@ public:
   using enum Id;
 
 public:
-  MathObjectType(Id rhs) : id(static_cast<size_t>(rhs)) {
+  constexpr MathObjectType(Id rhs) : id(static_cast<size_t>(rhs)) {
   }
 
-  MathObjectType(const size_t rhs) : id(rhs) {
+  constexpr MathObjectType(const size_t rhs) : id(rhs) {
   }
 
-  bool operator==(const MathObjectType &rhs) const = default;
+  constexpr bool operator==(const MathObjectType &rhs) const = default;
 
-  bool operator==(Id rhs) const {
+  constexpr bool operator==(Id rhs) const {
     return id == static_cast<size_t>(rhs);
   }
 
-  bool operator==(const size_t rhs) const {
+  constexpr bool operator==(const size_t rhs) const {
     return id == rhs;
   }
 
-  std::strong_ordering operator<=>(const MathObjectType &rhs) const = default;
+  constexpr std::strong_ordering operator<=>(const MathObjectType &rhs) const = default;
 
-  std::strong_ordering operator<=>(Id rhs) const {
+  constexpr std::strong_ordering operator<=>(Id rhs) const {
     return id <=> static_cast<size_t>(rhs);
   }
 
-  std::strong_ordering operator<=>(const size_t rhs) const {
+  constexpr std::strong_ordering operator<=>(const size_t rhs) const {
     return id <=> rhs;
   }
 
-  operator size_t() const {
+  constexpr operator size_t() const {
     return id;
   }
 
 private:
-  size_t id = static_cast<size_t>(None);
+  size_t id;
 
 private:
   [[maybe_unused]] inline static const Config config;
@@ -204,10 +204,10 @@ inline size_t hash_value(const MathObjectType &rhs) noexcept {
 class MathObjectBoundTypes final {
   using enum MathObjectType::Id;
 
-  using TypeMap = std::unordered_map<MathObjectType, MathObjectType, boost::hash<MathObjectType>>;
+  using TypeToTypeMap = std::unordered_map<MathObjectType, MathObjectType, boost::hash<MathObjectType>>;
 
-  static TypeMap &getMutable() {
-    static TypeMap ids{
+  static TypeToTypeMap &getMutable() {
+    static TypeToTypeMap ids{
         {IMathObject, None},
         {IArithmetic, ILiteral},
         {IExpression, IComparable},
@@ -227,7 +227,7 @@ class MathObjectBoundTypes final {
   }
 
 public:
-  static const TypeMap &get() {
+  static const TypeToTypeMap &get() {
     return getMutable();
   }
 
@@ -237,9 +237,9 @@ public:
 };
 
 inline bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType) {
-  const auto &ids = MathObjectBoundTypes::get();
+  const auto &typeToTypeMap = MathObjectBoundTypes::get();
 
-  if (const auto toTypeBoundaries = ids.find(toType); toTypeBoundaries != ids.end()) {
+  if (const auto toTypeBoundaries = typeToTypeMap.find(toType); toTypeBoundaries != typeToTypeMap.end()) {
     return fromType >= toTypeBoundaries->first && fromType < toTypeBoundaries->second;
   }
 

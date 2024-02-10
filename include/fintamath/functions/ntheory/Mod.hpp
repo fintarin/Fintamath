@@ -21,7 +21,7 @@ public:
     return "mod";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Mod;
   }
 

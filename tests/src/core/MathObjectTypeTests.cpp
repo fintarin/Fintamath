@@ -12,12 +12,12 @@
 
 using namespace fintamath;
 
-TEST(MathObjectTypesTests, constructorTest) {
+TEST(MathObjectTypeTests, constructorTest) {
   EXPECT_EQ(MathObjectType(MathObjectType::Integer), Integer::getTypeStatic());
   EXPECT_EQ(MathObjectType(static_cast<size_t>(MathObjectType::Integer)), Integer::getTypeStatic());
 }
 
-TEST(MathObjectTypesTests, equalsTest) {
+TEST(MathObjectTypeTests, equalsTest) {
   EXPECT_TRUE(Integer::getTypeStatic() == Integer::getTypeStatic());
   EXPECT_FALSE(Integer::getTypeStatic() == Rational::getTypeStatic());
 
@@ -28,7 +28,7 @@ TEST(MathObjectTypesTests, equalsTest) {
   EXPECT_FALSE(Integer::getTypeStatic() == static_cast<size_t>(Rational::getTypeStatic()));
 }
 
-TEST(MathObjectTypesTests, compareTest) {
+TEST(MathObjectTypeTests, compareTest) {
   EXPECT_EQ(Integer::getTypeStatic() <=> Integer::getTypeStatic(), std::strong_ordering::equal);
   EXPECT_EQ(Integer::getTypeStatic() <=> Rational::getTypeStatic(), std::strong_ordering::greater);
 
@@ -39,7 +39,25 @@ TEST(MathObjectTypesTests, compareTest) {
   EXPECT_EQ(Integer::getTypeStatic() <=> static_cast<size_t>(Rational::getTypeStatic()), std::strong_ordering::greater);
 }
 
-TEST(MathObjectTypesTests, isBaseOfTest) {
+TEST(MathObjectTypeTests, hashTest) {
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::IMathObject), static_cast<size_t>(MathObjectType::IMathObject));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::INumber), static_cast<size_t>(MathObjectType::INumber));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::Integer), static_cast<size_t>(MathObjectType::Integer));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::ILiteral), static_cast<size_t>(MathObjectType::ILiteral));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::IConstant), static_cast<size_t>(MathObjectType::IConstant));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::Boolean), static_cast<size_t>(MathObjectType::Boolean));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::None), static_cast<size_t>(MathObjectType::None));
+}
+
+TEST(MathObjectBoundTypes, getTest) {
+  // TODO: implement
+}
+
+TEST(MathObjectBoundTypes, regTest) {
+  // TODO: implement
+}
+
+TEST(MathObjectBoundTypes, isBaseOfTest) {
   EXPECT_TRUE(isBaseOf(INumber::getTypeStatic(), Integer::getTypeStatic()));
   EXPECT_TRUE(isBaseOf(INumber::getTypeStatic(), Rational::getTypeStatic()));
   EXPECT_TRUE(isBaseOf(IArithmetic::getTypeStatic(), Integer::getTypeStatic()));
@@ -71,14 +89,4 @@ TEST(MathObjectTypesTests, isBaseOfTest) {
   EXPECT_FALSE(isBaseOf(ILiteral::getTypeStatic(), INumber::getTypeStatic()));
   EXPECT_FALSE(isBaseOf(IConstant::getTypeStatic(), INumber::getTypeStatic()));
   EXPECT_FALSE(isBaseOf(Boolean::getTypeStatic(), INumber::getTypeStatic()));
-}
-
-TEST(MathObjectTypesTests, hashTest) {
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::IMathObject), static_cast<size_t>(MathObjectType::IMathObject));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::INumber), static_cast<size_t>(MathObjectType::INumber));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::Integer), static_cast<size_t>(MathObjectType::Integer));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::ILiteral), static_cast<size_t>(MathObjectType::ILiteral));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::IConstant), static_cast<size_t>(MathObjectType::IConstant));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::Boolean), static_cast<size_t>(MathObjectType::Boolean));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::None), static_cast<size_t>(MathObjectType::None));
 }

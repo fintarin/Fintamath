@@ -22,7 +22,7 @@ public:
     return "sin";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Sin;
   }
 

@@ -27,7 +27,7 @@ public:
     return "root";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Root;
   }
 

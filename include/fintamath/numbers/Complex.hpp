@@ -52,7 +52,7 @@ public:
 
   const INumber &imag() const;
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Complex;
   }
 
