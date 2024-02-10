@@ -13,7 +13,7 @@ class InvTrigExpression final : public IUnaryExpressionCRTP<InvTrigExpression, t
 public:
   explicit InvTrigExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::InvTrigExpression;
   }
 

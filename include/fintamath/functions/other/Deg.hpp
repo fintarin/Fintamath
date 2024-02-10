@@ -21,7 +21,7 @@ public:
     return "deg";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Deg;
   }
 

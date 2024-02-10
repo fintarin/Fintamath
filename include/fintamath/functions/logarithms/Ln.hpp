@@ -20,7 +20,7 @@ public:
     return "ln";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Ln;
   }
 

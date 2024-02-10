@@ -8,10 +8,10 @@
 namespace fintamath {
 
 Config::Config() {
-  [[maybe_unused]] const PrecisionConfig precisionConfig;
-  [[maybe_unused]] const ParserConfig parserConfig;
-  [[maybe_unused]] const ConverterConfig converterConfig;
-  [[maybe_unused]] const ExpressionConfig expressionConfig;
+  [[maybe_unused]] static const PrecisionConfig precisionConfig;
+  [[maybe_unused]] static const ParserConfig parserConfig;
+  [[maybe_unused]] static const ConverterConfig converterConfig;
+  [[maybe_unused]] static const ExpressionConfig expressionConfig;
 }
 
 }

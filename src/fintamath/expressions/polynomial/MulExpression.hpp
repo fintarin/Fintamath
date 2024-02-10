@@ -14,7 +14,7 @@ public:
 
   std::string toString() const override;
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::MulExpression;
   }
 

@@ -20,7 +20,7 @@ public:
     return "abs";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Abs;
   }
 

@@ -18,7 +18,7 @@ class AddExpression final : public IPolynomExpressionCRTP<AddExpression> {
 public:
   explicit AddExpression(ArgumentPtrVector inChildren);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::AddExpression;
   }
 

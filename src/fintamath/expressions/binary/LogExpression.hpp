@@ -19,7 +19,7 @@ public:
 
   std::shared_ptr<IFunction> getOutputFunction() const override;
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::LogExpression;
   }
 

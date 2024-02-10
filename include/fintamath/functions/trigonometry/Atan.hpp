@@ -20,7 +20,7 @@ public:
     return "atan";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Atan;
   }
 

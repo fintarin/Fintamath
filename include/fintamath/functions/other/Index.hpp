@@ -22,7 +22,7 @@ public:
     return "_";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Index;
   }
 

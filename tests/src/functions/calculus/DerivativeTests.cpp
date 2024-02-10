@@ -3,8 +3,6 @@
 #include "fintamath/functions/calculus/Derivative.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -19,8 +17,8 @@ public:
     return "testderivative";
   }
 
-  static MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IComparable) + 11;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IComparable) + 997;
   }
 
 protected:

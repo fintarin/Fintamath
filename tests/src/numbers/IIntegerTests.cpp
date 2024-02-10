@@ -16,8 +16,8 @@ public:
     return "test";
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectBoundTypes::get().at(IInteger::getTypeStatic()) - 2;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(IInteger::getTypeStatic()) + 998;
   }
 
 protected:
@@ -90,8 +90,8 @@ public:
   TestIntegerConvertible(const Integer &) : TestIntegerConvertible() {
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectBoundTypes::get().at(IInteger::getTypeStatic()) - 1;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(IInteger::getTypeStatic()) + 999;
   }
 
   MathObjectType getType() const override {

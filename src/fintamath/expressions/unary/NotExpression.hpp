@@ -13,7 +13,7 @@ class NotExpression final : public IUnaryExpressionCRTP<NotExpression> {
 public:
   explicit NotExpression(ArgumentPtr inChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::NotExpression;
   }
 

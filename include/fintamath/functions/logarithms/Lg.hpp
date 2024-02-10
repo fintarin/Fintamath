@@ -20,7 +20,7 @@ public:
     return "lg";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Lg;
   }
 

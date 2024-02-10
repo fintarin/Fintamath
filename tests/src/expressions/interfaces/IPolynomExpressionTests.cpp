@@ -17,8 +17,8 @@ public:
   explicit TestPolynomExpression(ArgumentPtrVector args) : IPolynomExpressionCRTP(f, std::move(args)) {
   }
 
-  static MathObjectType getTypeStatic() {
-    return MathObjectBoundTypes::get().at(IPolynomExpression::getTypeStatic()) - 1;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IPolynomExpression) + 999;
   }
 };
 

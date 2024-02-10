@@ -20,7 +20,7 @@ public:
     return "floor";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Floor;
   }
 

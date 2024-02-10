@@ -22,7 +22,7 @@ public:
     return "acoth";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Acoth;
   }
 

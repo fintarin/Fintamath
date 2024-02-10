@@ -17,7 +17,7 @@ public:
     return "frac";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::FracMixed;
   }
 

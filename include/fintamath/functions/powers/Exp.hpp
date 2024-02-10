@@ -20,7 +20,7 @@ public:
     return "exp";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Exp;
   }
 

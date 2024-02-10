@@ -72,7 +72,7 @@ public:
     getParser().registerConstructor<T>();
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::IInteger;
   }
 

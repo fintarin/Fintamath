@@ -11,7 +11,7 @@ class AndExpression final : public IPolynomExpressionCRTP<AndExpression> {
 public:
   explicit AndExpression(ArgumentPtrVector inChildren);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::AndExpression;
   }
 

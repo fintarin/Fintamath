@@ -50,7 +50,7 @@ public:
     getParser().registerType<T>();
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::IOperator;
   }
 

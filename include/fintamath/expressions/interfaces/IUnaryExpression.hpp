@@ -25,7 +25,7 @@ public:
 
   void setChildren(const ArgumentPtrVector &childVect) override;
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::IUnaryExpression;
   }
 

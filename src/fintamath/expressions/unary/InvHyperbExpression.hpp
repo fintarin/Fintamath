@@ -11,7 +11,7 @@ class InvHyperbExpression final : public IUnaryExpressionCRTP<InvHyperbExpressio
 public:
   explicit InvHyperbExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::InvHyperbExpression;
   }
 };

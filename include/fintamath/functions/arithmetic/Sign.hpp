@@ -20,7 +20,7 @@ public:
     return "sign";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Sign;
   }
 

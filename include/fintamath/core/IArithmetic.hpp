@@ -53,7 +53,7 @@ public:
     getParser().registerConstructor(std::move(constructor));
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::IArithmetic;
   }
 

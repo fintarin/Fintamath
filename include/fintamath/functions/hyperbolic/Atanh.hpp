@@ -22,7 +22,7 @@ public:
     return "atanh";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Atanh;
   }
 

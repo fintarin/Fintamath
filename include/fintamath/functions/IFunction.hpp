@@ -74,7 +74,7 @@ public:
     maxFunctionOrder++;
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::IFunction;
   }
 

@@ -20,7 +20,7 @@ public:
     return "tanh";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Tanh;
   }
 

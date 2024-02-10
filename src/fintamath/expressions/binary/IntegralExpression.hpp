@@ -11,7 +11,7 @@ class IntegralExpression final : public IBinaryExpressionCRTP<IntegralExpression
 public:
   explicit IntegralExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::IntegralExpression;
   }
 

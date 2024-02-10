@@ -13,7 +13,7 @@ class OrExpression final : public IPolynomExpressionCRTP<OrExpression> {
 public:
   explicit OrExpression(ArgumentPtrVector inChildren);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::OrExpression;
   }
 

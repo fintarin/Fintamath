@@ -20,7 +20,7 @@ public:
     return "sqr";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Sqr;
   }
 

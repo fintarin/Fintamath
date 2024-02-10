@@ -22,7 +22,7 @@ public:
     return "tan";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Tan;
   }
 

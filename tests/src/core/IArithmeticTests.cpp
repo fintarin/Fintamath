@@ -12,8 +12,8 @@ namespace {
 
 class TestArithmetic final : public IArithmeticCRTP<TestArithmetic> {
 public:
-  static MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectBoundTypes::get().at(MathObjectType::IArithmetic)) - 2;
+  static constexpr MathObjectType getTypeStatic() {
+    return static_cast<size_t>(MathObjectType::IArithmetic) + 999;
   }
 
 protected:

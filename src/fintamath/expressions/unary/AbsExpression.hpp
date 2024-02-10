@@ -11,7 +11,7 @@ class AbsExpression final : public IUnaryExpressionCRTP<AbsExpression> {
 public:
   explicit AbsExpression(ArgumentPtr inChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::AbsExpression;
   }
 

@@ -22,7 +22,7 @@ public:
     return "integral";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Integral;
   }
 

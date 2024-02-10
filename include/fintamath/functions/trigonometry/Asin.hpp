@@ -22,7 +22,7 @@ public:
     return "asin";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Asin;
   }
 

@@ -11,7 +11,7 @@ class MinMaxExpression final : public IPolynomExpressionCRTP<MinMaxExpression, t
 public:
   explicit MinMaxExpression(const IFunction &inFunc, ArgumentPtrVector inChildren);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::MinMaxExpression;
   }
 };

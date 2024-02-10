@@ -22,7 +22,7 @@ public:
     return "cosh";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Cosh;
   }
 

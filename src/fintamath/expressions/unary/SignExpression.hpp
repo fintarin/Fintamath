@@ -11,7 +11,7 @@ class SignExpression final : public IUnaryExpressionCRTP<SignExpression> {
 public:
   explicit SignExpression(ArgumentPtr inChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::SignExpression;
   }
 

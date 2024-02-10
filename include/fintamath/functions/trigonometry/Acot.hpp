@@ -20,7 +20,7 @@ public:
     return "acot";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Acot;
   }
 

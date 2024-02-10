@@ -19,7 +19,7 @@ public:
 
   operator bool() const;
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Boolean;
   }
 

@@ -13,7 +13,7 @@ class HyperbExpression final : public IUnaryExpressionCRTP<HyperbExpression, tru
 public:
   explicit HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::HyperbExpression;
   }
 

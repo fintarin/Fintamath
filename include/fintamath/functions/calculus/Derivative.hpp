@@ -22,7 +22,7 @@ public:
     return "derivative";
   }
 
-  static MathObjectType getTypeStatic() {
+  static constexpr MathObjectType getTypeStatic() {
     return MathObjectType::Derivative;
   }
 
