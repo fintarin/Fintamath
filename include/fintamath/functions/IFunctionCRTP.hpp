@@ -14,18 +14,12 @@ class IFunctionCRTP_ : public IFunction {
 #undef I_MATH_OBJECT_CRTP
 
 public:
-  IFunction::Type getFunctionType() const final {
-    return type;
+  const std::vector<MathObjectType> &getArgumentTypes() const final {
+    return argTypes;
   }
 
   MathObjectType getReturnType() const final {
     return Return::getTypeStatic();
-  }
-
-  ArgumentTypeVector getArgTypes() const final {
-    ArgumentTypeVector argTypes;
-    getArgTypes<0, Args...>(argTypes);
-    return argTypes;
   }
 
   size_t getFunctionOrder() const final {
@@ -34,15 +28,11 @@ public:
   }
 
   bool doArgsMatch(const ArgumentRefVector &argVect) const override {
-    if (argVect.empty()) { // TODO: support None type functions
-      return false;
-    }
-
-    if constexpr (IsFunctionTypeAny<Derived>::value) {
+    if constexpr (Derived::isVariadicStatic()) {
       return doAnyArgsMatch(argVect);
     }
     else {
-      if (argVect.size() != size_t(getFunctionType())) {
+      if (argVect.size() != argTypes.size()) {
         return false;
       }
 
@@ -50,8 +40,20 @@ public:
     }
   }
 
+  bool isVariadic() const final {
+    return Derived::isVariadicStatic();
+  }
+
+  static constexpr bool isVariadicStatic() {
+    return false;
+  }
+
   bool isEvaluatable() const final {
-    return isEvaluatableFunc;
+    return Derived::isEvaluatableStatic();
+  }
+
+  static constexpr bool isEvaluatableStatic() {
+    return true;
   }
 
 protected:
@@ -78,17 +80,6 @@ protected:
 
 private:
   template <size_t i, typename Head, typename... Tail>
-  void getArgTypes(ArgumentTypeVector &outArgsTypes) const {
-    outArgsTypes.emplace_back(Head::getTypeStatic());
-    getArgTypes<i + 1, Tail...>(outArgsTypes);
-  }
-
-  template <size_t>
-  void getArgTypes(ArgumentTypeVector & /*outArgTypes*/) const {
-    // The end of unpacking.
-  }
-
-  template <size_t i, typename Head, typename... Tail>
   bool doArgsMatch(const ArgumentRefVector &argVect) const {
     if (!is<Head>(argVect[i]) || isExpression(argVect[i])) {
       return false;
@@ -110,33 +101,8 @@ private:
     });
   }
 
-  void validateArgsSize(const ArgumentRefVector &argVect) const {
-    if constexpr (IsFunctionTypeAny<Derived>::value) {
-      if (argVect.empty()) {
-        throwInvalidInputFunctionException(argVect);
-      }
-    }
-    else {
-      if (argVect.size() != sizeof...(Args)) {
-        throwInvalidInputFunctionException(argVect);
-      }
-    }
-  }
-
-  void throwInvalidInputFunctionException(const ArgumentRefVector &argVect) const {
-    std::vector<std::string> argNameVect(argVect.size());
-
-    for (const auto i : stdv::iota(0U, argNameVect.size())) {
-      argNameVect[i] = argVect[i].get().toString();
-    }
-
-    throw InvalidInputFunctionException(toString(), argNameVect);
-  }
-
 private:
-  IFunction::Type type;
-
-  bool isEvaluatableFunc;
+  inline static const ArgumentTypeVector argTypes = {Args::getTypeStatic()...};
 
 private:
 #if !defined(I_FUNCTION_CRTP) && !defined(NDEBUG)

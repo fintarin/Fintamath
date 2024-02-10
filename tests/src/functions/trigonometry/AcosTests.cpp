@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/trigonometry/Acos.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Acos f;
+using F = Acos;
+const F f;
 
 TEST(AcosTests, toStringTest) {
   EXPECT_EQ(f.toString(), "acos");
 }
 
-TEST(AcosTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(AcosTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(AcosTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(AcosTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(AcosTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(AcosTests, callTest) {
@@ -46,6 +60,6 @@ TEST(AcosTests, exprTest) {
 }
 
 TEST(AcosTests, getTypeTest) {
-  EXPECT_EQ(Acos::getTypeStatic(), MathObjectType::Acos);
-  EXPECT_EQ(Acos().getType(), MathObjectType::Acos);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Acos);
+  EXPECT_EQ(f.getType(), MathObjectType::Acos);
 }

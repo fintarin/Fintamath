@@ -21,8 +21,6 @@ class Root final : public IFunctionCRTP<INumber, Root, INumber, INumber> {
   using RootToFactorMap = std::map<Integer, Integer>;
 
 public:
-  Root() = default;
-
   std::string toString() const override {
     return "root";
   }

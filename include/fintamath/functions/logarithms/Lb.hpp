@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Lb final : public IFunctionCRTP<INumber, Lb, INumber> {
 public:
-  Lb() = default;
-
   std::string toString() const override {
     return "lb";
   }

@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/ntheory/Ceil.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Ceil f;
+using F = Ceil;
+const F f;
 
 TEST(CeilTests, toStringTest) {
   EXPECT_EQ(f.toString(), "ceil");
 }
 
-TEST(CeilTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(CeilTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(CeilTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(CeilTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(CeilTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(CeilTests, callTest) {
@@ -69,6 +83,6 @@ TEST(CeilTests, exprTest) {
 }
 
 TEST(CeilTests, getTypeTest) {
-  EXPECT_EQ(Ceil::getTypeStatic(), MathObjectType::Ceil);
-  EXPECT_EQ(Ceil().getType(), MathObjectType::Ceil);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Ceil);
+  EXPECT_EQ(f.getType(), MathObjectType::Ceil);
 }

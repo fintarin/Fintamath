@@ -1,26 +1,40 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/arithmetic/Neg.hpp"
 
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Neg f;
+using F = Neg;
+const F f;
 
 TEST(NegTests, toStringTest) {
   EXPECT_EQ(f.toString(), "-");
 }
 
-TEST(NegTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(NegTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic()));
 }
 
-TEST(NegTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::PrefixUnary);
+TEST(NegTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+}
+
+TEST(NegTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(NegTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(NegTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::PrefixUnary);
 }
 
 TEST(NegTests, isAssociativeTest) {
@@ -44,6 +58,6 @@ TEST(NegTests, exprTest) {
 }
 
 TEST(NegTests, getTypeTest) {
-  EXPECT_EQ(Neg::getTypeStatic(), MathObjectType::Neg);
-  EXPECT_EQ(Neg().getType(), MathObjectType::Neg);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Neg);
+  EXPECT_EQ(f.getType(), MathObjectType::Neg);
 }

@@ -16,8 +16,6 @@ class Real;
 
 class Cot final : public IFunctionCRTP<INumber, Cot, INumber> {
 public:
-  Cot() = default;
-
   std::string toString() const override {
     return "cot";
   }

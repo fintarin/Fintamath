@@ -23,11 +23,11 @@ FunctionExpression::FunctionExpression(const IFunction &inFunc, ArgumentPtrVecto
 
 std::string FunctionExpression::toString() const {
   if (const auto oper = cast<IOperator>(func)) {
-    if (oper->getOperatorPriority() == IOperator::Priority::PostfixUnary) {
+    if (oper->getPriority() == IOperator::Priority::PostfixUnary) {
       return postfixUnaryOperatorToString(*oper, children.front());
     }
 
-    if (oper->getOperatorPriority() == IOperator::Priority::PrefixUnary) {
+    if (oper->getPriority() == IOperator::Priority::PrefixUnary) {
       return prefixUnaryOperatorToString(*oper, children.front());
     }
 
@@ -72,7 +72,7 @@ ArgumentPtr FunctionExpression::postSimplify() const {
 }
 
 void FunctionExpression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.size() != static_cast<size_t>(func->getFunctionType())) {
+  if (childVect.size() != func->getArgumentTypes().size()) {
     throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(childVect));
   }
 

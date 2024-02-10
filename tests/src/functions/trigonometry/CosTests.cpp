@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/trigonometry/Cos.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Cos f;
+using F = Cos;
+const F f;
 
 TEST(CosTests, toStringTest) {
   EXPECT_EQ(f.toString(), "cos");
 }
 
-TEST(CosTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(CosTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(CosTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(CosTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(CosTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(CosTests, callTest) {
@@ -43,6 +57,6 @@ TEST(CosTests, exprTest) {
 }
 
 TEST(CosTests, getTypeTest) {
-  EXPECT_EQ(Cos::getTypeStatic(), MathObjectType::Cos);
-  EXPECT_EQ(Cos().getType(), MathObjectType::Cos);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Cos);
+  EXPECT_EQ(f.getType(), MathObjectType::Cos);
 }

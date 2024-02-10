@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Exp final : public IFunctionCRTP<INumber, Exp, INumber> {
 public:
-  Exp() = default;
-
   std::string toString() const override {
     return "exp";
   }

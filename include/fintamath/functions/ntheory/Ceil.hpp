@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Ceil final : public IFunctionCRTP<INumber, Ceil, INumber> {
 public:
-  Ceil() = default;
-
   std::string toString() const override {
     return "ceil";
   }

@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/hyperbolic/Sinh.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Sinh f;
+using F = Sinh;
+const F f;
 
 TEST(SinhTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sinh");
 }
 
-TEST(SinhTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(SinhTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(SinhTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(SinhTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(SinhTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(SinhTests, callTest) {
@@ -43,6 +57,6 @@ TEST(SinhTests, exprTest) {
 }
 
 TEST(SinhTests, getTypeTest) {
-  EXPECT_EQ(Sinh::getTypeStatic(), MathObjectType::Sinh);
-  EXPECT_EQ(Sinh().getType(), MathObjectType::Sinh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sinh);
+  EXPECT_EQ(f.getType(), MathObjectType::Sinh);
 }

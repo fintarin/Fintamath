@@ -1,26 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/arithmetic/Sub.hpp"
 
-#include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Sub f;
+using F = Sub;
+const F f;
 
 TEST(SubTests, toStringTest) {
   EXPECT_EQ(f.toString(), "-");
 }
 
-TEST(SubTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(SubTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
 }
 
-TEST(SubTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Addition);
+TEST(SubTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+}
+
+TEST(SubTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(SubTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(SubTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Addition);
 }
 
 TEST(SubTests, isAssociativeTest) {
@@ -47,6 +62,6 @@ TEST(SubTests, exprTest) {
 }
 
 TEST(SubTests, getTypeTest) {
-  EXPECT_EQ(Sub::getTypeStatic(), MathObjectType::Sub);
-  EXPECT_EQ(Sub().getType(), MathObjectType::Sub);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sub);
+  EXPECT_EQ(f.getType(), MathObjectType::Sub);
 }

@@ -16,8 +16,6 @@ class Real;
 
 class Cos final : public IFunctionCRTP<INumber, Cos, INumber> {
 public:
-  Cos() = default;
-
   std::string toString() const override {
     return "cos";
   }

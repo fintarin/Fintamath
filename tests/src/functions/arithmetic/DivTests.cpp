@@ -1,28 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Div f;
+using F = Div;
+const F f;
 
 TEST(DivTests, toStringTest) {
   EXPECT_EQ(f.toString(), "/");
 }
 
-TEST(DivTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(DivTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
 }
 
-TEST(DivTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Multiplication);
+TEST(DivTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+}
+
+TEST(DivTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(DivTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(DivTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Multiplication);
 }
 
 TEST(DivTests, isAssociativeTest) {
@@ -51,6 +64,6 @@ TEST(DivTests, exprTest) {
 }
 
 TEST(DivTests, getTypeTest) {
-  EXPECT_EQ(Div::getTypeStatic(), MathObjectType::Div);
-  EXPECT_EQ(Div().getType(), MathObjectType::Div);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Div);
+  EXPECT_EQ(f.getType(), MathObjectType::Div);
 }

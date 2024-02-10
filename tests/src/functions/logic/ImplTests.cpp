@@ -1,26 +1,40 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/logic/Impl.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
-const Impl f;
+using F = Impl;
+const F f;
 
 TEST(ImplTests, toStringTest) {
   EXPECT_EQ(f.toString(), "->");
 }
 
-TEST(ImplTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(ImplTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic(), Boolean::getTypeStatic()));
 }
 
-TEST(ImplTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Implication);
+TEST(ImplTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+}
+
+TEST(ImplTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(ImplTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(ImplTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Implication);
 }
 
 TEST(ImplTests, isAssociativeTest) {
@@ -45,6 +59,6 @@ TEST(ImplTests, exprTest) {
 }
 
 TEST(ImplTests, getTypeTest) {
-  EXPECT_EQ(Impl::getTypeStatic(), MathObjectType::Impl);
-  EXPECT_EQ(Impl().getType(), MathObjectType::Impl);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Impl);
+  EXPECT_EQ(f.getType(), MathObjectType::Impl);
 }

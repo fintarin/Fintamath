@@ -1,27 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/other/Comma.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;
 
-const Comma f;
+using F = Comma;
+const F f;
 
 TEST(CommaTests, toStringTest) {
   EXPECT_EQ(f.toString(), ",");
 }
 
-TEST(CommaTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(CommaTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IMathObject::getTypeStatic(), IMathObject::getTypeStatic()));
 }
 
-TEST(CommaTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Comma);
+TEST(CommaTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IMathObject::getTypeStatic());
+}
+
+TEST(CommaTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(CommaTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(CommaTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Comma);
 }
 
 TEST(CommaTests, isAssociativeTest) {
@@ -40,6 +54,6 @@ TEST(CommaTests, exprTest) {
 }
 
 TEST(CommaTests, getTypeTest) {
-  EXPECT_EQ(Comma::getTypeStatic(), MathObjectType::Comma);
-  EXPECT_EQ(Comma().getType(), MathObjectType::Comma);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Comma);
+  EXPECT_EQ(f.getType(), MathObjectType::Comma);
 }

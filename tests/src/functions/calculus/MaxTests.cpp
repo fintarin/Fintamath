@@ -1,11 +1,9 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/calculus/Max.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/calculus/Min.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
@@ -13,14 +11,29 @@
 
 using namespace fintamath;
 
-const Max f;
+using F = Max;
+const F f;
 
 TEST(MaxTests, toStringTest) {
   EXPECT_EQ(f.toString(), "max");
 }
 
-TEST(MaxTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Any);
+TEST(MaxTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic()));
+}
+
+TEST(MaxTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IComparable::getTypeStatic());
+}
+
+TEST(MaxTests, isVariadicTest) {
+  EXPECT_TRUE(F::isVariadicStatic());
+  EXPECT_TRUE(f.isVariadic());
+}
+
+TEST(MaxTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(MaxTests, callTest) {
@@ -48,6 +61,6 @@ TEST(MaxTests, exprTest) {
 }
 
 TEST(MaxTests, getTypeTest) {
-  EXPECT_EQ(Max::getTypeStatic(), MathObjectType::Max);
-  EXPECT_EQ(Max().getType(), MathObjectType::Max);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Max);
+  EXPECT_EQ(f.getType(), MathObjectType::Max);
 }

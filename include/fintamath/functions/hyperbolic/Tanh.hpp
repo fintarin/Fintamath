@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Tanh final : public IFunctionCRTP<INumber, Tanh, INumber> {
 public:
-  Tanh() = default;
-
   std::string toString() const override {
     return "tanh";
   }

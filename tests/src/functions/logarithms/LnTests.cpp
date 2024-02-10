@@ -1,25 +1,38 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/logarithms/Ln.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
-#include "fintamath/numbers/RealFunctions.hpp"
 
 using namespace fintamath;
 
-const Ln f;
+using F = Ln;
+const F f;
 
 TEST(LnTests, toStringTest) {
   EXPECT_EQ(f.toString(), "ln");
 }
 
-TEST(LnTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(LnTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(LnTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(LnTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(LnTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(LnTests, callTest) {
@@ -27,7 +40,7 @@ TEST(LnTests, callTest) {
   EXPECT_EQ(f(Integer(10))->toString(), "2.302585092994045684");
   EXPECT_EQ(f(Integer(5))->toString(), "1.6094379124341003746");
   EXPECT_EQ(f(Rational(1, 10))->toString(), "-2.302585092994045684");
-  EXPECT_EQ(f(getE())->toString(), "1.0");
+  EXPECT_EQ(f(Real("2.71828"))->toString(), "0.99999932734728200316");
 
   EXPECT_EQ(f(Integer(-10))->toString(), "ln(-10)");
 
@@ -42,6 +55,6 @@ TEST(LnTests, exprTest) {
 }
 
 TEST(LnTests, getTypeTest) {
-  EXPECT_EQ(Ln::getTypeStatic(), MathObjectType::Ln);
-  EXPECT_EQ(Ln().getType(), MathObjectType::Ln);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Ln);
+  EXPECT_EQ(f.getType(), MathObjectType::Ln);
 }

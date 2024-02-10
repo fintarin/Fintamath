@@ -1,27 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/comparison/Less.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Less f;
+using F = Less;
+const F f;
 
 TEST(LessTests, toStringTest) {
   EXPECT_EQ(f.toString(), "<");
 }
 
-TEST(LessTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(LessTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic(), IComparable::getTypeStatic()));
 }
 
-TEST(LessTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Comparison);
+TEST(LessTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+}
+
+TEST(LessTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(LessTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(LessTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Comparison);
 }
 
 TEST(LessTests, isAssociativeTest) {
@@ -54,6 +68,6 @@ TEST(LessTests, exprTest) {
 }
 
 TEST(LessTests, getTypeTest) {
-  EXPECT_EQ(Less::getTypeStatic(), MathObjectType::Less);
-  EXPECT_EQ(Less().getType(), MathObjectType::Less);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Less);
+  EXPECT_EQ(f.getType(), MathObjectType::Less);
 }

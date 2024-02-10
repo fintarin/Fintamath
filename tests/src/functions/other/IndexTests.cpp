@@ -1,27 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/other/Index.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;
 
-const Index f;
+using F = Index;
+const F f;
 
 TEST(IndexTests, toStringTest) {
   EXPECT_EQ(f.toString(), "_");
 }
 
-TEST(IndexTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(IndexTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Variable::getTypeStatic(), Integer::getTypeStatic()));
 }
 
-TEST(IndexTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Exponentiation);
+TEST(IndexTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), Variable::getTypeStatic());
+}
+
+TEST(IndexTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(IndexTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(IndexTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Exponentiation);
 }
 
 TEST(IndexTests, isAssociativeTest) {
@@ -52,6 +66,6 @@ TEST(IndexTests, exprTest) {
 }
 
 TEST(IndexTests, getTypeTest) {
-  EXPECT_EQ(Index::getTypeStatic(), MathObjectType::Index);
-  EXPECT_EQ(Index().getType(), MathObjectType::Index);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Index);
+  EXPECT_EQ(f.getType(), MathObjectType::Index);
 }

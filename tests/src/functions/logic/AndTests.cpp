@@ -1,26 +1,40 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/logic/And.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 using namespace fintamath;
 
-const And f;
+using F = And;
+const F f;
 
 TEST(AndTests, toStringTest) {
   EXPECT_EQ(f.toString(), "&");
 }
 
-TEST(AndTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(AndTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic(), Boolean::getTypeStatic()));
 }
 
-TEST(AndTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Conjunction);
+TEST(AndTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+}
+
+TEST(AndTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(AndTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(AndTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Conjunction);
 }
 
 TEST(AndTests, isAssociativeTest) {
@@ -45,6 +59,6 @@ TEST(AndTests, exprTest) {
 }
 
 TEST(AndTests, getTypeTest) {
-  EXPECT_EQ(And::getTypeStatic(), MathObjectType::And);
-  EXPECT_EQ(And().getType(), MathObjectType::And);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::And);
+  EXPECT_EQ(f.getType(), MathObjectType::And);
 }

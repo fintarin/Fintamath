@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/functions/IFunction.hpp"
@@ -61,23 +62,16 @@ TEST(IFunctionTests, equalsTest) {
   EXPECT_NE(Sin(), Add());
 }
 
-TEST(IFunctionTests, getFunctionTypeTest) {
-  EXPECT_EQ(Add().getFunctionType(), IFunction::Type::Binary);
-  EXPECT_EQ(Neg().getFunctionType(), IFunction::Type::Unary);
-  EXPECT_EQ(Sin().getFunctionType(), IFunction::Type::Unary);
+TEST(IFunctionTests, getArgumentTypesTest) {
+  EXPECT_THAT(Add().getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+  EXPECT_THAT(Neg().getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic()));
+  EXPECT_THAT(Sin().getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
 }
 
 TEST(IFunctionTests, getReturnTypeTest) {
   EXPECT_EQ(Add().getReturnType(), IArithmetic::getTypeStatic());
   EXPECT_EQ(Neg().getReturnType(), IArithmetic::getTypeStatic());
   EXPECT_EQ(Sin().getReturnType(), INumber::getTypeStatic());
-}
-
-TEST(IFunctionTests, getArgTypesTest) {
-  EXPECT_EQ(Add().getArgTypes()[0], IArithmetic::getTypeStatic());
-  EXPECT_EQ(Add().getArgTypes()[1], IArithmetic::getTypeStatic());
-  EXPECT_EQ(Neg().getArgTypes()[0], IArithmetic::getTypeStatic());
-  EXPECT_EQ(Sin().getArgTypes()[0], INumber::getTypeStatic());
 }
 
 TEST(IFunctionTests, doArgsMatchTest) {

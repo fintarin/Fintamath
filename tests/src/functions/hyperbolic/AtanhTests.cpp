@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/hyperbolic/Atanh.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Atanh f;
+using F = Atanh;
+const F f;
 
 TEST(AtanhTests, toStringTest) {
   EXPECT_EQ(f.toString(), "atanh");
 }
 
-TEST(AtanhTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(AtanhTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(AtanhTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(AtanhTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(AtanhTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(AtanhTests, callTest) {
@@ -46,6 +60,6 @@ TEST(AtanhTests, exprTest) {
 }
 
 TEST(AtanhTests, getTypeTest) {
-  EXPECT_EQ(Atanh::getTypeStatic(), MathObjectType::Atanh);
-  EXPECT_EQ(Atanh().getType(), MathObjectType::Atanh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Atanh);
+  EXPECT_EQ(f.getType(), MathObjectType::Atanh);
 }

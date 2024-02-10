@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Sign final : public IFunctionCRTP<INumber, Sign, INumber> {
 public:
-  Sign() = default;
-
   std::string toString() const override {
     return "sign";
   }

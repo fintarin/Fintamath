@@ -1,23 +1,37 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/powers/Sqr.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 using namespace fintamath;
 
-const Sqr f;
+using F = Sqr;
+const F f;
 
 TEST(SqrTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sqr");
 }
 
-TEST(SqrTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(SqrTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(SqrTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(SqrTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(SqrTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(SqrTests, callTest) {
@@ -40,6 +54,6 @@ TEST(SqrTests, exprTest) {
 }
 
 TEST(SqrTests, getTypeTest) {
-  EXPECT_EQ(Sqr::getTypeStatic(), MathObjectType::Sqr);
-  EXPECT_EQ(Sqr().getType(), MathObjectType::Sqr);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sqr);
+  EXPECT_EQ(f.getType(), MathObjectType::Sqr);
 }

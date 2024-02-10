@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Coth final : public IFunctionCRTP<INumber, Coth, INumber> {
 public:
-  Coth() = default;
-
   std::string toString() const override {
     return "coth";
   }

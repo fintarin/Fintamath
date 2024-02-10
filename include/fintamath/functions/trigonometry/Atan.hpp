@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Atan final : public IFunctionCRTP<INumber, Atan, INumber> {
 public:
-  Atan() = default;
-
   std::string toString() const override {
     return "atan";
   }

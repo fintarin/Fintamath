@@ -14,7 +14,7 @@ class IOperatorCRTP_ : public IOperator {
 #undef I_FUNCTION_CRTP
 
 public:
-  IOperator::Priority getOperatorPriority() const final {
+  IOperator::Priority getPriority() const final {
     return priority;
   }
 

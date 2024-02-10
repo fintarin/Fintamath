@@ -320,7 +320,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
 
   if (containsVar &&
       (numberChildrenCount < 2 ||
-       static_cast<IFunction::Type>(approxChildren.size()) == getFunction()->getFunctionType())) {
+       approxChildren.size() == getFunction()->getArgumentTypes().size())) {
 
     return approxExpr;
   }

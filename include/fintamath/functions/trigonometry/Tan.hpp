@@ -16,8 +16,6 @@ class Real;
 
 class Tan final : public IFunctionCRTP<INumber, Tan, INumber> {
 public:
-  Tan() = default;
-
   std::string toString() const override {
     return "tan";
   }

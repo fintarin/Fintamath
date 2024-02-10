@@ -54,7 +54,7 @@ ArgumentPtr NotExpression::logicNegatableSimplify(const IFunction & /*func*/, co
   ArgumentPtr res;
 
   if (const auto op = cast<IOperator>(rhsExpr->getFunction());
-      op && op->getOperatorPriority() == IOperator::Priority::Comparison) {
+      op && op->getPriority() == IOperator::Priority::Comparison) {
 
     res = makeExpr(*cast<IFunction>(getLogicOppositeFunction(*op)), rhsExpr->getChildren());
   }

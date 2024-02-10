@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/trigonometry/Tan.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Tan f;
+using F = Tan;
+const F f;
 
 TEST(TanTests, toStringTest) {
   EXPECT_EQ(f.toString(), "tan");
 }
 
-TEST(TanTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(TanTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(TanTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(TanTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(TanTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(TanTests, callTest) {
@@ -44,6 +58,6 @@ TEST(TanTests, exprTest) {
 }
 
 TEST(TanTests, getTypeTest) {
-  EXPECT_EQ(Tan::getTypeStatic(), MathObjectType::Tan);
-  EXPECT_EQ(Tan().getType(), MathObjectType::Tan);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Tan);
+  EXPECT_EQ(f.getType(), MathObjectType::Tan);
 }

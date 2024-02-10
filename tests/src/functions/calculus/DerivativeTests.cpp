@@ -1,4 +1,5 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/calculus/Derivative.hpp"
 
@@ -8,6 +9,9 @@
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
+
+using F = Derivative;
+const F f;
 
 namespace {
 
@@ -49,14 +53,26 @@ protected:
 
 }
 
-const Derivative f;
-
 TEST(DerivativeTests, toStringTest) {
   EXPECT_EQ(f.toString(), "derivative");
 }
 
-TEST(DerivativeTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(DerivativeTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic(), Variable::getTypeStatic()));
+}
+
+TEST(DerivativeTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IComparable::getTypeStatic());
+}
+
+TEST(DerivativeTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(DerivativeTests, isEvaluatableTest) {
+  EXPECT_FALSE(F::isEvaluatableStatic());
+  EXPECT_FALSE(f.isEvaluatable());
 }
 
 TEST(DerivativeTests, callTest) {
@@ -81,6 +97,6 @@ TEST(DerivativeTests, exprTest) {
 }
 
 TEST(DerivativeTests, getTypeTest) {
-  EXPECT_EQ(Derivative::getTypeStatic(), MathObjectType::Derivative);
-  EXPECT_EQ(Derivative().getType(), MathObjectType::Derivative);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Derivative);
+  EXPECT_EQ(f.getType(), MathObjectType::Derivative);
 }

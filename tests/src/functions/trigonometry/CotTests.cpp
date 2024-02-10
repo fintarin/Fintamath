@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/trigonometry/Cot.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Cot f;
+using F = Cot;
+const F f;
 
 TEST(CotTests, toStringTest) {
   EXPECT_EQ(f.toString(), "cot");
 }
 
-TEST(CotTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(CotTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(CotTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(CotTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(CotTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(CotTests, callTest) {
@@ -44,6 +58,6 @@ TEST(CotTests, exprTest) {
 }
 
 TEST(CotTests, getTypeTest) {
-  EXPECT_EQ(Cot::getTypeStatic(), MathObjectType::Cot);
-  EXPECT_EQ(Cot().getType(), MathObjectType::Cot);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Cot);
+  EXPECT_EQ(f.getType(), MathObjectType::Cot);
 }

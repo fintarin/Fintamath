@@ -14,8 +14,6 @@ namespace fintamath {
 
 class Abs final : public IFunctionCRTP<INumber, Abs, INumber> {
 public:
-  Abs() = default;
-
   std::string toString() const override {
     return "abs";
   }

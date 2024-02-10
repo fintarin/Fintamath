@@ -1,9 +1,8 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/hyperbolic/Cosh.hpp"
 
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,14 +10,29 @@
 
 using namespace fintamath;
 
-const Cosh f;
+using F = Cosh;
+const F f;
 
 TEST(CoshTests, toStringTest) {
   EXPECT_EQ(f.toString(), "cosh");
 }
 
-TEST(CoshTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Unary);
+TEST(CoshTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+}
+
+TEST(CoshTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+}
+
+TEST(CoshTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(CoshTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(CoshTests, callTest) {
@@ -43,6 +57,6 @@ TEST(CoshTests, exprTest) {
 }
 
 TEST(CoshTests, getTypeTest) {
-  EXPECT_EQ(Cosh::getTypeStatic(), MathObjectType::Cosh);
-  EXPECT_EQ(Cosh().getType(), MathObjectType::Cosh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Cosh);
+  EXPECT_EQ(f.getType(), MathObjectType::Cosh);
 }

@@ -1,27 +1,41 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include "fintamath/functions/arithmetic/Add.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Add f;
+using F = Add;
+const F f;
 
 TEST(AddTests, toStringTest) {
   EXPECT_EQ(f.toString(), "+");
 }
 
-TEST(AddTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(AddTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
 }
 
-TEST(AddTests, getOperatorPriorityTest) {
-  EXPECT_EQ(f.getOperatorPriority(), IOperator::Priority::Addition);
+TEST(AddTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+}
+
+TEST(AddTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(AddTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
+}
+
+TEST(AddTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Addition);
 }
 
 TEST(AddTests, isAssociativeTest) {
@@ -48,6 +62,6 @@ TEST(AddTests, exprTest) {
 }
 
 TEST(AddTests, getTypeTest) {
-  EXPECT_EQ(Add::getTypeStatic(), MathObjectType::Add);
-  EXPECT_EQ(Add().getType(), MathObjectType::Add);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Add);
+  EXPECT_EQ(f.getType(), MathObjectType::Add);
 }

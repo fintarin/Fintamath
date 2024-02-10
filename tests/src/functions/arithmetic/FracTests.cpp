@@ -1,24 +1,37 @@
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Frac.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/functions/arithmetic/Frac.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
-#include "fintamath/functions/arithmetic/UnaryPlus.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Frac f;
+using F = Frac;
+const F f;
 
 TEST(FracTests, toStringTest) {
   EXPECT_EQ(f.toString(), "frac");
 }
 
-TEST(FracTests, getFunctionTypeTest) {
-  EXPECT_EQ(f.getFunctionType(), IFunction::Type::Binary);
+TEST(FracTests, getArgumentTypesTest) {
+  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+}
+
+TEST(FracTests, getReturnTypeTest) {
+  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+}
+
+TEST(FracTests, isVariadicTest) {
+  EXPECT_FALSE(F::isVariadicStatic());
+  EXPECT_FALSE(f.isVariadic());
+}
+
+TEST(FracTests, isEvaluatableTest) {
+  EXPECT_TRUE(F::isEvaluatableStatic());
+  EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(FracTests, callTest) {
@@ -36,6 +49,6 @@ TEST(FracTests, callTest) {
 }
 
 TEST(FracTests, getTypeTest) {
-  EXPECT_EQ(Frac::getTypeStatic(), MathObjectType::Frac);
-  EXPECT_EQ(Frac().getType(), MathObjectType::Frac);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Frac);
+  EXPECT_EQ(f.getType(), MathObjectType::Frac);
 }

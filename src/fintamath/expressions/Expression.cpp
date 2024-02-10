@@ -234,14 +234,14 @@ OperandStack Expression::termsToOperands(TermVector &terms) {
         if (const auto *oper = cast<IOperator>(term->value.get())) {
           while (!operStack.empty() &&
                  operStack.top().term->name != "(" &&
-                 operStack.top().priority <= oper->getOperatorPriority() &&
+                 operStack.top().priority <= oper->getPriority() &&
                  !isPrefixOperator(oper)) {
 
             outStack.emplace(std::move(operStack.top().term->value));
             operStack.pop();
           }
 
-          operStack.emplace(std::move(term), oper->getOperatorPriority());
+          operStack.emplace(std::move(term), oper->getPriority());
         }
         else {
           operStack.emplace(std::move(term), IOperator::Priority::Highest);
@@ -284,10 +284,8 @@ std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands
 
     ArgumentPtrVector children = unwrapComma(rhsChild);
 
-    if (func->getFunctionType() != IFunction::Type::Any &&
-        static_cast<size_t>(func->getFunctionType()) != children.size()) {
-
-      func = IFunction::parse(func->toString(), static_cast<IFunction::Type>(children.size()));
+    if (!func->isVariadic() && func->getArgumentTypes().size() != children.size()) {
+      func = IFunction::parse(func->toString(), children.size());
 
       if (!func) {
         throw InvalidInputException("");
@@ -421,17 +419,17 @@ bool Expression::canPrevTermBeBinaryOperator(const Term &term) {
 
 bool Expression::isBinaryOperator(const IMathObject *val) {
   const auto *oper = cast<IOperator>(val);
-  return oper && oper->getFunctionType() == IFunction::Type::Binary;
+  return oper && oper->getArgumentTypes().size() == 2;
 }
 
 bool Expression::isPrefixOperator(const IMathObject *val) {
   const auto *oper = cast<IOperator>(val);
-  return oper && oper->getOperatorPriority() == IOperator::Priority::PrefixUnary;
+  return oper && oper->getPriority() == IOperator::Priority::PrefixUnary;
 }
 
 bool Expression::isPostfixOperator(const IMathObject *val) {
   const auto *oper = cast<IOperator>(val);
-  return oper && oper->getOperatorPriority() == IOperator::Priority::PostfixUnary;
+  return oper && oper->getPriority() == IOperator::Priority::PostfixUnary;
 }
 
 bool Expression::isNonOperatorFunction(const IMathObject *val) {
@@ -472,18 +470,13 @@ std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVe
 }
 
 void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args) {
-  IFunction::Type funcType = func.getFunctionType();
+  const ArgumentTypeVector &expectedArgTypes = func.getArgumentTypes();
 
-  if ((funcType != IFunction::Type::None && args.empty()) ||
-      (funcType != IFunction::Type::Any && args.size() < static_cast<size_t>(funcType))) {
-
+  if (args.empty() || (!func.isVariadic() && args.size() < expectedArgTypes.size())) {
     throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
   }
 
-  const bool doesArgSizeMatch = funcType != IFunction::Type::Any &&
-                                args.size() == static_cast<size_t>(funcType);
-
-  const ArgumentTypeVector expectedArgTypes = func.getArgTypes();
+  const bool doesArgSizeMatch = !func.isVariadic() && args.size() == expectedArgTypes.size();
   MathObjectType expectedType = expectedArgTypes.front();
 
   for (const auto i : stdv::iota(0U, args.size())) {

@@ -101,7 +101,8 @@ namespace {
 
 void registerTermParsers() {
   Expression::registerTermParser([](const Token &token) {
-    if (auto arg = IFunction::parse(token, IFunction::Type::Binary)) {
+    // TODO? remove
+    if (auto arg = IFunction::parse(token, 2)) {
       return std::make_unique<Term>(token, std::move(arg));
     }
 
