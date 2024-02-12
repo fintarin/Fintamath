@@ -30,6 +30,7 @@
 #include "fintamath/literals/constants/ComplexInf.hpp"
 #include "fintamath/literals/constants/Inf.hpp"
 #include "fintamath/literals/constants/NegInf.hpp"
+#include "fintamath/literals/constants/Undefined.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
@@ -124,7 +125,9 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
 
 ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   if ((is<ComplexInf>(lhs) && containsInfinity(rhs)) ||
-      (is<ComplexInf>(rhs) && containsInfinity(lhs))) {
+      (is<ComplexInf>(rhs) && containsInfinity(lhs)) ||
+      is<Undefined>(lhs) ||
+      is<Undefined>(rhs)) {
 
     return {};
   }
