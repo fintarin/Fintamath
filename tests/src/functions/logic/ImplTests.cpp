@@ -34,10 +34,12 @@ TEST(ImplTests, isEvaluatableTest) {
 }
 
 TEST(ImplTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Implication);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Implication);
 }
 
 TEST(ImplTests, isAssociativeTest) {
+  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 

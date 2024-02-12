@@ -34,10 +34,12 @@ TEST(EquivTests, isEvaluatableTest) {
 }
 
 TEST(EquivTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Equivalence);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Equivalence);
 }
 
 TEST(EquivTests, isAssociativeTest) {
+  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 

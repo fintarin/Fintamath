@@ -14,11 +14,16 @@ namespace fintamath {
 
 class Nequiv final : public IOperatorCRTP<Boolean, Nequiv, Boolean, Boolean> {
 public:
-  Nequiv() : IOperatorCRTP(Priority::Equivalence, true) {
-  }
-
   std::string toString() const override {
     return "!<->";
+  }
+
+  static constexpr bool isAssociativeStatic() {
+    return true;
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Equivalence;
   }
 
   static constexpr MathObjectType getTypeStatic() {

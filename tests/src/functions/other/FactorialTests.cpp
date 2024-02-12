@@ -38,10 +38,12 @@ TEST(FactorialTests, isEvaluatableTest) {
 }
 
 TEST(FactorialTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::PostfixUnary);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(FactorialTests, isAssociativeTest) {
+  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 

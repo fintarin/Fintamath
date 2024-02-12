@@ -14,11 +14,12 @@ namespace fintamath {
 
 class Impl final : public IOperatorCRTP<Boolean, Impl, Boolean, Boolean> {
 public:
-  Impl() : IOperatorCRTP(Priority::Implication, false) {
-  }
-
   std::string toString() const override {
     return "->";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Implication;
   }
 
   static constexpr MathObjectType getTypeStatic() {

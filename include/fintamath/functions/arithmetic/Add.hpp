@@ -14,11 +14,16 @@ namespace fintamath {
 
 class Add final : public IOperatorCRTP<IArithmetic, Add, IArithmetic, IArithmetic> {
 public:
-  Add() : IOperatorCRTP(Priority::Addition, true) {
-  }
-
   std::string toString() const override {
     return "+";
+  }
+
+  static constexpr bool isAssociativeStatic() {
+    return true;
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Addition;
   }
 
   static constexpr MathObjectType getTypeStatic() {

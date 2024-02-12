@@ -13,11 +13,12 @@ namespace fintamath {
 
 class UnaryPlus final : public IOperatorCRTP<IArithmetic, UnaryPlus, IArithmetic> {
 public:
-  UnaryPlus() : IOperatorCRTP(Priority::PrefixUnary) {
-  }
-
   std::string toString() const override {
     return "+";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::PrefixUnary;
   }
 
   static constexpr MathObjectType getTypeStatic() {

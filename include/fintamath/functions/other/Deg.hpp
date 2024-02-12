@@ -14,11 +14,12 @@ namespace fintamath {
 
 class Deg final : public IOperatorCRTP<INumber, Deg, INumber> {
 public:
-  Deg() : IOperatorCRTP(Priority::PostfixUnary) {
-  }
-
   std::string toString() const override {
     return "deg";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::PostfixUnary;
   }
 
   static constexpr MathObjectType getTypeStatic() {

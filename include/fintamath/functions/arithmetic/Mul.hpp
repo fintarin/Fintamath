@@ -14,11 +14,16 @@ namespace fintamath {
 
 class Mul final : public IOperatorCRTP<IArithmetic, Mul, IArithmetic, IArithmetic> {
 public:
-  Mul() : IOperatorCRTP(Priority::Multiplication, true) {
-  }
-
   std::string toString() const override {
     return "*";
+  }
+
+  static constexpr bool isAssociativeStatic() {
+    return true;
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Multiplication;
   }
 
   static constexpr MathObjectType getTypeStatic() {

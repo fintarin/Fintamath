@@ -34,10 +34,12 @@ TEST(DegTests, isEvaluatableTest) {
 }
 
 TEST(DegTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::PostfixUnary);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(DegTests, isAssociativeTest) {
+  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 

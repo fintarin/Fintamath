@@ -35,10 +35,12 @@ TEST(ModTests, isEvaluatableTest) {
 }
 
 TEST(ModTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Modulo);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Modulo);
 }
 
 TEST(ModTests, isAssociativeTest) {
+  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 

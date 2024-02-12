@@ -36,10 +36,12 @@ TEST(PowTests, isEvaluatableTest) {
 }
 
 TEST(PowTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Exponentiation);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Exponentiation);
 }
 
 TEST(PowTests, isAssociativeTest) {
+  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 

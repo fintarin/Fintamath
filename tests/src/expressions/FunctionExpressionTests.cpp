@@ -10,11 +10,12 @@ namespace {
 
 class TestBinaryOperator final : public IOperatorCRTP<INumber, TestBinaryOperator, INumber, INumber> {
 public:
-  TestBinaryOperator() : IOperatorCRTP(Priority::Exponentiation) {
-  }
-
   std::string toString() const override {
     return "$";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Exponentiation;
   }
 
   static constexpr MathObjectType getTypeStatic() {
@@ -29,11 +30,12 @@ protected:
 
 class TestUnaryPrefixOperator final : public IOperatorCRTP<INumber, TestUnaryPrefixOperator, INumber> {
 public:
-  TestUnaryPrefixOperator() : IOperatorCRTP(Priority::PrefixUnary) {
-  }
-
   std::string toString() const override {
     return "$";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::PrefixUnary;
   }
 
   static constexpr MathObjectType getTypeStatic() {
@@ -48,11 +50,12 @@ protected:
 
 class TestUnaryPostfixOperator final : public IOperatorCRTP<INumber, TestUnaryPostfixOperator, INumber> {
 public:
-  TestUnaryPostfixOperator() : IOperatorCRTP(Priority::PostfixUnary) {
-  }
-
   std::string toString() const override {
     return "$";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::PostfixUnary;
   }
 
   static constexpr MathObjectType getTypeStatic() {
@@ -67,9 +70,6 @@ protected:
 
 class TestUnaryFunction final : public IFunctionCRTP<INumber, TestUnaryFunction, INumber> {
 public:
-  TestUnaryFunction() {
-  }
-
   std::string toString() const override {
     return "testfunction";
   }
@@ -86,9 +86,6 @@ protected:
 
 class TestBinaryFunction final : public IFunctionCRTP<INumber, TestBinaryFunction, INumber, INumber> {
 public:
-  TestBinaryFunction() {
-  }
-
   std::string toString() const override {
     return "testfunction";
   }

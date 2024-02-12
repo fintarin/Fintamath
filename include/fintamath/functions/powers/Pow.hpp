@@ -19,11 +19,12 @@ class Complex;
 
 class Pow final : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
 public:
-  Pow() : IOperatorCRTP(Priority::Exponentiation, false) {
-  }
-
   std::string toString() const override {
     return "^";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Exponentiation;
   }
 
   static constexpr MathObjectType getTypeStatic() {

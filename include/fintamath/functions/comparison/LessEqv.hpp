@@ -15,11 +15,16 @@ namespace fintamath {
 
 class LessEqv final : public IOperatorCRTP<Boolean, LessEqv, IComparable, IComparable> {
 public:
-  LessEqv() : IOperatorCRTP(Priority::Comparison, true) {
-  }
-
   std::string toString() const override {
     return "<=";
+  }
+
+  static constexpr bool isAssociativeStatic() {
+    return true;
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Comparison;
   }
 
   static constexpr MathObjectType getTypeStatic() {

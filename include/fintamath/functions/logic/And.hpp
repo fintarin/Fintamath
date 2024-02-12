@@ -14,11 +14,16 @@ namespace fintamath {
 
 class And final : public IOperatorCRTP<Boolean, And, Boolean, Boolean> {
 public:
-  And() : IOperatorCRTP(Priority::Conjunction, true) {
-  }
-
   std::string toString() const override {
     return "&";
+  }
+
+  static constexpr bool isAssociativeStatic() {
+    return true;
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Conjunction;
   }
 
   static constexpr MathObjectType getTypeStatic() {
