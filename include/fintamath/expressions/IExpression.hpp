@@ -37,8 +37,8 @@ public:
   virtual std::shared_ptr<IFunction> getOutputFunction() const;
 
   template <std::derived_from<IExpression> T>
-  static void registerConstructor() {
-    getParser().registerConstructor<T>();
+  static void registerType() {
+    getParser().registerType<T>();
   }
 
   static std::unique_ptr<IExpression> parse(const std::string &str) {

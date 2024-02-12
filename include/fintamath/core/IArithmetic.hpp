@@ -45,12 +45,12 @@ public:
   }
 
   template <std::derived_from<IArithmetic> T>
-  static void registerConstructor() {
-    getParser().registerConstructor<T>();
+  static void registerType() {
+    getParser().registerType<T>();
   }
 
-  static void registerConstructor(ArithmeticParser::Constructor constructor) {
-    getParser().registerConstructor(std::move(constructor));
+  static void registerType(ArithmeticParser::StringConstructor constructor) {
+    getParser().registerType(std::move(constructor));
   }
 
   static constexpr MathObjectType getTypeStatic() {

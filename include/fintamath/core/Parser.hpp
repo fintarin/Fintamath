@@ -14,6 +14,11 @@
 
 namespace fintamath {
 
+template <typename T, typename... Args>
+concept StringConstructable = requires(const std::string &str, Args &&...args) {
+  T(str, args...);
+};
+
 template <typename Signature>
 class Parser;
 
@@ -22,13 +27,13 @@ class Parser<Return(Args...)> final {
 public:
   using Validator = std::function<bool(const Return &)>;
 
-  using Constructor = std::function<Return(const std::string &, Args...)>;
+  using StringConstructor = std::function<Return(const std::string &, Args...)>;
 
-  using TypeConstructor = std::function<Return(Args...)>;
+  using Constructor = std::function<Return(Args...)>;
 
-  using ConstructorVector = std::vector<Constructor>;
+  using ConstructorVector = std::vector<StringConstructor>;
 
-  using ConstructorMap = std::unordered_multimap<std::string, TypeConstructor>;
+  using ConstructorMap = std::unordered_multimap<std::string, Constructor>;
 
 public:
   template <typename... ConstructorArgs>
@@ -63,8 +68,9 @@ public:
   }
 
   template <typename Type>
+    requires(!StringConstructable<Type, Args...>)
   void registerType() {
-    TypeConstructor constructor = []<typename... ConstructorArgs>(ConstructorArgs &&...args) -> Return {
+    Constructor constructor = []<typename... ConstructorArgs>(ConstructorArgs &&...args) -> Return {
       return std::make_unique<Type>(std::forward<ConstructorArgs>(args)...);
     };
 
@@ -72,7 +78,8 @@ public:
   }
 
   template <typename Type>
-  void registerType(TypeConstructor constructor) {
+    requires(!StringConstructable<Type, Args...>)
+  void registerType(Constructor constructor) {
     static const std::string name = Type{}.toString();
     constructorMap.emplace(name, std::move(constructor));
 
@@ -80,8 +87,9 @@ public:
   }
 
   template <typename Type>
-  void registerConstructor() {
-    Constructor constructor = []<typename... ConstructorArgs>(const std::string &str, ConstructorArgs &&...args) -> Return {
+    requires(StringConstructable<Type, Args...>)
+  void registerType() {
+    StringConstructor constructor = []<typename... ConstructorArgs>(const std::string &str, ConstructorArgs &&...args) -> Return {
       try {
         return std::make_unique<Type>(str, std::forward<ConstructorArgs>(args)...);
       }
@@ -90,10 +98,10 @@ public:
       }
     };
 
-    registerConstructor(std::move(constructor));
+    registerType(std::move(constructor));
   }
 
-  void registerConstructor(Constructor constructor) {
+  void registerType(StringConstructor constructor) {
     extraConstructors.emplace_back(std::move(constructor));
   }
 

@@ -98,23 +98,23 @@
 namespace fintamath {
 
 ParserConfig::ParserConfig() {
-  IMathObject::registerConstructor(&ILiteral::parse);
-  IMathObject::registerConstructor([](const std::string &str) { return IFunction::parse(str); });
-  IMathObject::registerConstructor(&IArithmetic::parse);
+  IMathObject::registerType(&ILiteral::parse);
+  IMathObject::registerType([](const std::string &str) { return IFunction::parse(str); });
+  IMathObject::registerType(&IArithmetic::parse);
 
-  IArithmetic::registerConstructor(&IComparable::parse);
-  IArithmetic::registerConstructor<Expression>();
+  IArithmetic::registerType(&IComparable::parse);
+  IArithmetic::registerType<Expression>();
 
-  IComparable::registerConstructor(&INumber::parse);
+  IComparable::registerType(&INumber::parse);
 
-  INumber::registerConstructor(&IInteger::parse);
-  INumber::registerConstructor<Rational>();
+  INumber::registerType(&IInteger::parse);
+  INumber::registerType<Rational>();
 
-  IInteger::registerConstructor<Integer>();
+  IInteger::registerType<Integer>();
 
-  ILiteral::registerConstructor(&IConstant::parse);
-  ILiteral::registerConstructor<Variable>();
-  ILiteral::registerConstructor<Boolean>();
+  ILiteral::registerType(&IConstant::parse);
+  ILiteral::registerType<Variable>();
+  ILiteral::registerType<Boolean>();
 
   IConstant::registerType<E>();
   IConstant::registerType<Pi>();
@@ -196,7 +196,7 @@ ParserConfig::ParserConfig() {
   IOperator::registerType<Comma>();
   IOperator::registerType<Mod>();
 
-  IExpression::registerConstructor<Expression>();
+  IExpression::registerType<Expression>();
 }
 
 }

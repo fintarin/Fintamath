@@ -65,8 +65,8 @@ public:
 
   void setVariable(const Variable &var, const Expression &val);
 
-  static void registerTermParser(TermParser::Constructor constructor) {
-    getTermParser().registerConstructor(std::move(constructor));
+  static void registerTermParser(TermParser::StringConstructor constructor) {
+    getTermParser().registerType(std::move(constructor));
   }
 
   template <typename Function, bool isPolynomial = false>
@@ -172,7 +172,7 @@ Expression operator/(const Variable &lhs, const Expression &rhs);
 
 template <typename Function, bool isPolynomial>
 void Expression::registerFunctionExpressionMaker(ExpressionMaker maker) {
-  ExpressionParser::TypeConstructor constructor = [maker = std::move(maker)](ArgumentPtrVector &&args) {
+  ExpressionParser::Constructor constructor = [maker = std::move(maker)](ArgumentPtrVector &&args) {
     static const size_t argSize = Function{}.getArgumentTypes().size();
     std::unique_ptr<IMathObject> res;
 

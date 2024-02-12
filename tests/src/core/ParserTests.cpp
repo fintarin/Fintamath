@@ -11,7 +11,3 @@ TEST(ParserTests, parseTest) {
 TEST(ParserTests, registerTypeTest) {
   // TODO: implement
 }
-
-TEST(ParserTests, registerConstructorTest) {
-  // TODO: implement
-}

@@ -68,8 +68,8 @@ public:
   }
 
   template <std::derived_from<IInteger> T>
-  static void registerConstructor() {
-    getParser().registerConstructor<T>();
+  static void registerType() {
+    getParser().registerType<T>();
   }
 
   static constexpr MathObjectType getTypeStatic() {

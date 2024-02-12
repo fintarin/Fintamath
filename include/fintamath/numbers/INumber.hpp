@@ -30,12 +30,12 @@ public:
   }
 
   template <std::derived_from<INumber> T>
-  static void registerConstructor() {
-    getParser().registerConstructor<T>();
+  static void registerType() {
+    getParser().registerType<T>();
   }
 
-  static void registerConstructor(NumberParser::Constructor constructor) {
-    getParser().registerConstructor(std::move(constructor));
+  static void registerType(NumberParser::StringConstructor constructor) {
+    getParser().registerType(std::move(constructor));
   }
 
   static constexpr MathObjectType getTypeStatic() {

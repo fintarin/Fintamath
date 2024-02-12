@@ -25,8 +25,8 @@ public:
     return getParser().parse(str);
   }
 
-  static void registerConstructor(ComparableParser::Constructor constructor) {
-    getParser().registerConstructor(std::move(constructor));
+  static void registerType(ComparableParser::StringConstructor constructor) {
+    getParser().registerType(std::move(constructor));
   }
 
   static constexpr MathObjectType getTypeStatic() {

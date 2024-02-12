@@ -40,8 +40,8 @@ public:
     return getParser().parse(str);
   }
 
-  static void registerConstructor(MathObjectParser::Constructor constructor) {
-    getParser().registerConstructor(std::move(constructor));
+  static void registerType(MathObjectParser::StringConstructor constructor) {
+    getParser().registerType(std::move(constructor));
   }
 
   static constexpr MathObjectType getTypeStatic() {
