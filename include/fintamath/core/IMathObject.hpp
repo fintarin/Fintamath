@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <memory>
 #include <ostream>
 #include <string>
@@ -59,6 +60,7 @@ template <typename Derived>
 class IMathObjectCRTP : public IMathObject {
 #define I_MATH_OBJECT_CRTP IMathObjectCRTP
 #include "fintamath/core/IMathObjectCRTP.hpp"
+
 #undef I_MATH_OBJECT_CRTP
 };
 

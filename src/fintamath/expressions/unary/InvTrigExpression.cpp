@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <utility>
 
+#include <boost/container_hash/hash.hpp>
+
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"

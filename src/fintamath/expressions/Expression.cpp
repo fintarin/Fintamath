@@ -4,17 +4,25 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <ranges>
 #include <stack>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "fintamath/core/Cache.hpp"
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/Tokenizer.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/ExpressionParser.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/FunctionExpression.hpp"
+#include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -65,7 +73,7 @@ std::string Expression::toString() const {
 }
 
 Expression approximate(const Expression &rhs, const unsigned precision) {
-  Real::ScopedSetPrecision setPrecision(precision);
+  const Real::ScopedSetPrecision setPrecision(precision);
 
   static Cache<unsigned, Integer> cache([](const unsigned inPrecision) {
     static const Integer powBase = 10;
@@ -275,10 +283,10 @@ std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands
 
   if (is<IFunction>(arg)) {
     auto func = cast<IFunction>(std::move(arg));
-    ArgumentPtr rhsChild = operandsToObject(operands);
+    const ArgumentPtr rhsChild = operandsToObject(operands);
 
     if (isBinaryOperator(func.get())) {
-      ArgumentPtr lhsChild = operandsToObject(operands);
+      const ArgumentPtr lhsChild = operandsToObject(operands);
       return makeExpr(*func, {lhsChild, rhsChild});
     }
 
@@ -328,7 +336,7 @@ void Expression::insertMultiplications(TermVector &terms) {
   }
 }
 
-void Expression::fixOperatorTypes(TermVector &terms) {
+void Expression::fixOperatorTypes(const TermVector &terms) {
   bool isFixed = true;
 
   if (const auto &term = terms.front();
@@ -393,8 +401,7 @@ void Expression::collapseFactorials(TermVector &terms) {
 
     if (is<Factorial>(term->value) && is<Factorial>(termNext->value)) {
       const auto &oldFactorial = cast<Factorial>(*term->value);
-      Factorial newFactorial(oldFactorial.getOrder() + 1);
-      term->value = newFactorial.clone();
+      term->value = Factorial(oldFactorial.getOrder() + 1).clone();
 
       terms.erase(terms.begin() + static_cast<ptrdiff_t>(i) + 1);
       i--;

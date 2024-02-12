@@ -7,6 +7,8 @@
 #include "fintamath/core/MultiMethod.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/literals/constants/ComplexInf.hpp"
+#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 

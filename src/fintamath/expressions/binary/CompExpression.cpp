@@ -1,6 +1,5 @@
 #include "fintamath/expressions/binary/CompExpression.hpp"
 
-#include <functional>
 #include <memory>
 #include <ranges>
 #include <string>
@@ -177,7 +176,7 @@ ArgumentPtr CompExpression::negSimplify(const IFunction &func, const ArgumentPtr
 
   if (isNegated(lhs)) {
     ArgumentPtr newLhs = negExpr(lhs);
-    return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
+    return makeExpr(*cast<IFunction>(getOppositeFunction(func)), std::move(newLhs), rhs);
   }
 
   return {};

@@ -1,6 +1,5 @@
 #include "fintamath/functions/IFunction.hpp"
 
-#include <cstddef>
 #include <ranges>
 #include <string>
 #include <vector>

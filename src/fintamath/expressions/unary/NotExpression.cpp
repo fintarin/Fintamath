@@ -1,6 +1,5 @@
 #include "fintamath/expressions/unary/NotExpression.hpp"
 
-#include <functional>
 #include <memory>
 #include <string>
 #include <unordered_map>

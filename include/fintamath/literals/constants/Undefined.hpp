@@ -3,10 +3,10 @@
 #include <memory>
 #include <string>
 
+#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 

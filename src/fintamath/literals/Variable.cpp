@@ -22,7 +22,7 @@ Variable::Variable(std::string inName) {
 
 Variable::Variable(std::string inName, Integer inIndex) : Variable(std::move(inName)) {
   if (inIndex < 0) {
-    throw InvalidInputException(inName + "_" + inIndex.toString());
+    throw InvalidInputException(name + "_" + inIndex.toString());
   }
 
   index = std::move(inIndex);

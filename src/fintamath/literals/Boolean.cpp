@@ -4,21 +4,21 @@
 
 namespace fintamath {
 
-constexpr char TRUE[] = "True";
-constexpr char FALSE[] = "False";
+constexpr char trueStr[] = "True";
+constexpr char falseStr[] = "False";
 
-Boolean::Boolean() : name(FALSE) {
+Boolean::Boolean() : name(falseStr) {
 }
 
 Boolean::Boolean(const std::string &str) {
-  if (str != TRUE && str != FALSE) {
+  if (str != trueStr && str != falseStr) {
     throw InvalidInputException(str);
   }
 
   name = str;
 }
 
-Boolean::Boolean(const bool val) : name(val ? TRUE : FALSE) {
+Boolean::Boolean(const bool val) : name(val ? trueStr : falseStr) {
 }
 
 std::string Boolean::toString() const {
@@ -26,7 +26,7 @@ std::string Boolean::toString() const {
 }
 
 Boolean::operator bool() const {
-  return name == TRUE;
+  return name == trueStr;
 }
 
 }

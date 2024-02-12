@@ -155,11 +155,11 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     }
 
     ArgumentPtr denominatorRes = Root{}(lhs.denominator(), rhs);
-    return divExpr(numeratorRes, denominatorRes);
+    return divExpr(std::move(numeratorRes), std::move(denominatorRes));
   }
 
   if (ArgumentPtr denominatorRes = perfectRoot(lhs.denominator(), rhs)) {
-    return divExpr(Root{}(lhs.numerator(), rhs), denominatorRes);
+    return divExpr(Root{}(lhs.numerator(), rhs), std::move(denominatorRes));
   }
 
   ArgumentPtrVector numeratorChildren;
@@ -179,7 +179,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     if (const auto denominatorFactorIter = denominatorRootToFactorMap.find(root);
         denominatorFactorIter != denominatorRootToFactorMap.end()) {
 
-      Integer denominatorFactor = denominatorFactorIter->second;
+      const Integer denominatorFactor = denominatorFactorIter->second;
 
       denominatorRootToFactorMap.erase(denominatorFactorIter);
 
@@ -187,7 +187,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
         denominator *= denominatorFactor;
 
         Integer numeratorChild = numeratorFactor * pow(denominatorFactor, root - 1);
-        numeratorChildren.emplace_back(rootExpr(numeratorChild, root));
+        numeratorChildren.emplace_back(rootExpr(std::move(numeratorChild), root));
 
         continue;
       }
@@ -203,7 +203,7 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
       denominator *= denominatorFactor;
 
       Integer numeratorChild = pow(denominatorFactor, root - 1);
-      numeratorChildren.emplace_back(rootExpr(numeratorChild, root));
+      numeratorChildren.emplace_back(rootExpr(std::move(numeratorChild), root));
     }
   }
 
@@ -212,10 +212,10 @@ std::unique_ptr<IMathObject> Root::rootSimplify(const Rational &lhs, const Integ
     numerator = numeratorChildren.front();
   }
   else {
-    numerator = mulExpr(numeratorChildren);
+    numerator = mulExpr(std::move(numeratorChildren));
   }
 
-  return divExpr(numerator, denominator.toMinimalObject());
+  return divExpr(std::move(numerator), denominator.toMinimalObject());
 }
 
 std::unique_ptr<IMathObject> Root::rootSimplify(const Real &lhs, const Integer &rhs) {

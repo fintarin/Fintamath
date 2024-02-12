@@ -182,9 +182,9 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
     return {};
   }
 
-  size_t variableCount = polynom.size();
+  const size_t variableCount = polynom.size();
   Integer bitNumber = generateFirstNum(power);
-  Integer combins = combinations(power + variableCount - 1, power);
+  const Integer combins = combinations(power + variableCount - 1, power);
 
   ArgumentPtrVector newChildren;
 
@@ -197,11 +197,11 @@ ArgumentPtr PowExpression::sumPolynomSimplify(const ArgumentPtr &expr, const Int
 
     for (const auto i : stdv::iota(0U, variableCount)) {
       ArgumentPtr powExprChild = powExpr(polynom[i], vectOfPows[i].clone());
-      mulExprChildren.emplace_back(powExprChild);
+      mulExprChildren.emplace_back(std::move(powExprChild));
     }
 
     ArgumentPtr mulExprChild = mulExpr(std::move(mulExprChildren));
-    newChildren.emplace_back(mulExprChild);
+    newChildren.emplace_back(std::move(mulExprChild));
   }
 
   return addExpr(std::move(newChildren));
@@ -223,7 +223,7 @@ ArgumentPtr PowExpression::powSimplify(const IFunction & /*func*/, const Argumen
     if (canMul) {
       ArgumentPtr newLhs = lhsExprLhsChild;
       ArgumentPtr newRhs = mulExpr(lhsExprRhsChild, rhs);
-      return powExpr(newLhs, newRhs);
+      return powExpr(std::move(newLhs), std::move(newRhs));
     }
   }
 
@@ -276,21 +276,20 @@ ArgumentPtr PowExpression::constSimplify(const IFunction & /*func*/, const Argum
   }
 
   if (*rhs == Integer(-1)) {
-    ArgumentPtr divLhs = Integer(1).clone();
-    ArgumentPtr divRhs = lhs;
-    return divExpr(divLhs, divRhs);
+    static const ArgumentPtr one = Integer(1).clone();
+    return divExpr(one, lhs);
   }
 
   if (const auto rhsNum = cast<INumber>(rhs); rhsNum && *rhsNum < Integer(0)) {
-    ArgumentPtr divLhs = Integer(1).clone();
+    static const ArgumentPtr one = Integer(1).clone();
     ArgumentPtr divRhs = powExpr(lhs, negExpr(rhs));
-    return divExpr(divLhs, divRhs);
+    return divExpr(one, std::move(divRhs));
   }
 
   if (is<NegInf>(lhs)) {
     ArgumentPtr mulLhs = powExpr(Integer(-1).clone(), rhs);
     ArgumentPtr mulRhs = powExpr(Inf{}.clone(), rhs);
-    return mulExpr(mulLhs, mulRhs);
+    return mulExpr(std::move(mulLhs), std::move(mulRhs));
   }
 
   if (is<Inf>(lhs) || is<ComplexInf>(lhs)) {
@@ -392,7 +391,7 @@ ArgumentPtr PowExpression::divSimplify(const ArgumentPtr &lhs, const ArgumentPtr
   if (const auto divExprChild = cast<IExpression>(lhs); divExprChild && is<Div>(divExprChild->getFunction())) {
     ArgumentPtr numerator = powExpr(divExprChild->getChildren().front(), rhs);
     ArgumentPtr denominator = powExpr(divExprChild->getChildren().back(), rhs);
-    res = divExpr(numerator, denominator);
+    res = divExpr(std::move(numerator), std::move(denominator));
   }
 
   return res;

@@ -104,7 +104,7 @@ private:
 
   static void insertMultiplications(TermVector &terms);
 
-  static void fixOperatorTypes(TermVector &terms);
+  static void fixOperatorTypes(const TermVector &terms);
 
   static void collapseFactorials(TermVector &terms);
 

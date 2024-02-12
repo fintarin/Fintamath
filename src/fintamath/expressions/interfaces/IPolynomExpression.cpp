@@ -139,7 +139,7 @@ void IPolynomExpression::simplifyRec(const bool isPostSimplify) {
     }
 
     if (!isResSimplified) {
-      ArgumentPtr prevExpr = makeExpr(*getFunction(), lhs, rhs);
+      const ArgumentPtr prevExpr = makeExpr(*getFunction(), lhs, rhs);
 
       if (isPostSimplify) {
         postSimplifyChild(res);
@@ -192,7 +192,7 @@ IPolynomExpression::SimplifyFunctionVector IPolynomExpression::getFunctionsForPo
 }
 
 std::string IPolynomExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
-  std::string childStr = operatorChildToString(oper, inChild);
+  const std::string childStr = operatorChildToString(oper, inChild);
   return prevChild ? (putInSpaces(func->toString()) + childStr) : childStr;
 }
 

@@ -1,6 +1,5 @@
 #include "fintamath/expressions/FunctionExpression.hpp"
 
-#include <cstddef>
 #include <memory>
 #include <string>
 #include <utility>
