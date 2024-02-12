@@ -283,6 +283,7 @@ TEST(SimplifyInfinityTests, simplifyTest) {
             "log(Inf!, 1)");
   EXPECT_EQ(Expression("log(1, (Inf!))").toString(),
             "log(1, Inf!)");
+
   EXPECT_EQ(Expression("Inf = Inf").toString(),
             "True");
   EXPECT_EQ(Expression("Inf = -Inf").toString(),
@@ -685,11 +686,26 @@ TEST(SimplifyInfinityTests, simplifyTest) {
             "Undefined");
   EXPECT_EQ(Expression("sin(Undefined)").toString(),
             "Undefined");
-}
 
-TEST(SimplifyInfinityTests, simplifyNegativeTest) {
-  EXPECT_THROW(Expression("Inf - Inf = 0").toString(), InvalidInputException);
-  EXPECT_THROW(Expression("Inf - Inf = 0 | a").toString(), InvalidInputException);
-  EXPECT_THROW(Expression("0/0 = 0/0").toString(), InvalidInputException);
-  EXPECT_THROW(Expression("Undefined = Undefined").toString(), InvalidInputException);
+  // TODO: support LogicUndefined
+  EXPECT_EQ(Expression("Undefined = Undefined").toString(),
+            "Undefined = 0");
+  EXPECT_EQ(Expression("0/0 = 0/0").toString(),
+            "Undefined = 0");
+  EXPECT_EQ(Expression("(sin(x)^2 + cos(x)^2 - 1)/0 = 0/(sin(x)^2 + cos(x)^2 - 1)").toString(),
+            "Undefined = 0");
+  EXPECT_EQ(Expression("Inf - Inf = 0").toString(),
+            "Undefined = 0");
+  EXPECT_EQ(Expression("Inf - Inf = 0 | a").toString(),
+            "a | Undefined = 0");
+  EXPECT_EQ(Expression("Undefined < Undefined").toString(),
+            "Undefined < 0");
+  EXPECT_EQ(Expression("0/0 < 0/0").toString(),
+            "Undefined < 0");
+  EXPECT_EQ(Expression("(sin(x)^2 + cos(x)^2 - 1)/0 < 0/(sin(x)^2 + cos(x)^2 - 1)").toString(),
+            "Undefined < 0");
+  EXPECT_EQ(Expression("Inf - Inf < 0").toString(),
+            "Undefined < 0");
+  EXPECT_EQ(Expression("Inf - Inf < 0 | a").toString(),
+            "a | Undefined < 0");
 }

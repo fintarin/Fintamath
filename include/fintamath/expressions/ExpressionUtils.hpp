@@ -32,20 +32,20 @@ ArgumentPtr useSimplifyFunctions(const std::vector<SimplifyFunction> &simplFuncs
 }
 
 ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<ArgumentPtr> auto &...args) {
+  ArgumentPtr res;
+
   if ((is<Undefined>(args) || ...)) {
-    static const size_t undefinedReturnType = Undefined{}.getReturnType();
-    const size_t funcReturnType = func.getReturnType();
+    static const MathObjectType undefinedReturnType = Undefined{}.getReturnType();
+    const MathObjectType funcReturnType = func.getReturnType();
 
-    if (!isBaseOf(undefinedReturnType, funcReturnType) &&
-        !isBaseOf(funcReturnType, undefinedReturnType)) {
+    if (isBaseOf(undefinedReturnType, funcReturnType) ||
+        isBaseOf(funcReturnType, undefinedReturnType)) {
 
-      throw InvalidInputFunctionException(func.toString(), {(args->toString(), ...)});
+      res = Undefined{}.clone();
     }
-
-    return Undefined{}.clone();
   }
 
-  return {};
+  return res;
 }
 
 bool isInfinity(const ArgumentPtr &arg);
