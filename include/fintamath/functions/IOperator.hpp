@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -36,6 +37,13 @@ public:
   virtual Priority getPriority() const = 0;
 
   virtual bool isAssociative() const = 0;
+
+  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, size_t argSize) {
+    const auto validator = [argSize](const std::unique_ptr<IOperator> &oper) {
+      return argSize == oper->getArgumentTypes().size();
+    };
+    return getParser().parse(validator, parsedStr);
+  }
 
   static std::unique_ptr<IOperator> parse(const std::string &parsedStr, Priority priority = Priority::Lowest) {
     const auto validator = [priority](const std::unique_ptr<IOperator> &oper) {

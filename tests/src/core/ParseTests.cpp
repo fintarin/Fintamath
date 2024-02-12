@@ -256,8 +256,12 @@ TEST(ParseTests, parseFunctionTest) {
 TEST(ParseTests, parseOperatorTest) {
   EXPECT_TRUE(is<Add>(IOperator::parse("+", IOperator::Priority::Addition)));
   EXPECT_TRUE(is<UnaryPlus>(IOperator::parse("+", IOperator::Priority::PrefixUnary)));
+  EXPECT_TRUE(is<Add>(IOperator::parse("+", 2)));
+  EXPECT_TRUE(is<UnaryPlus>(IOperator::parse("+", 1)));
   EXPECT_TRUE(is<Sub>(IOperator::parse("-", IOperator::Priority::Addition)));
   EXPECT_TRUE(is<Neg>(IOperator::parse("-", IOperator::Priority::PrefixUnary)));
+  EXPECT_TRUE(is<Sub>(IOperator::parse("-", 2)));
+  EXPECT_TRUE(is<Neg>(IOperator::parse("-", 1)));
   EXPECT_TRUE(is<Mul>(IOperator::parse("*")));
   EXPECT_TRUE(is<Div>(IOperator::parse("/")));
   EXPECT_TRUE(is<Pow>(IOperator::parse("^")));
@@ -269,7 +273,7 @@ TEST(ParseTests, parseOperatorTest) {
   EXPECT_TRUE(is<More>(IOperator::parse(">")));
   EXPECT_TRUE(is<LessEqv>(IOperator::parse("<=")));
   EXPECT_TRUE(is<MoreEqv>(IOperator::parse(">=")));
-  EXPECT_TRUE(is<Not>(IOperator::parse("~", IOperator::Priority::PrefixUnary)));
+  EXPECT_TRUE(is<Not>(IOperator::parse("~")));
   EXPECT_TRUE(is<And>(IOperator::parse("&")));
   EXPECT_TRUE(is<Or>(IOperator::parse("|")));
   EXPECT_TRUE(is<Impl>(IOperator::parse("->")));
