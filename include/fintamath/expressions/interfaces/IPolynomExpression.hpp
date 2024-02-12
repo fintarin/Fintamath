@@ -68,9 +68,9 @@ protected:
   ArgumentPtrVector children;
 };
 
-template <typename Derived, bool isMultiFunction = false>
+template <typename Derived>
 class IPolynomExpressionBaseCRTP : public IPolynomExpression {
-#define I_EXPRESSION_BASE_CRTP IPolynomExpressionBaseCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_BASE_CRTP IPolynomExpressionBaseCRTP<Derived>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
 #undef I_EXPRESSION_BASE_CRTP
 
@@ -79,15 +79,15 @@ public:
       : IPolynomExpression(inFunc, std::move(args)) {}
 };
 
-template <typename Derived, bool isMultiFunction = false>
-class IPolynomExpressionCRTP : public IPolynomExpressionBaseCRTP<Derived, isMultiFunction> {
-#define I_EXPRESSION_CRTP IPolynomExpressionCRTP<Derived, isMultiFunction>
+template <typename Derived>
+class IPolynomExpressionCRTP : public IPolynomExpressionBaseCRTP<Derived> {
+#define I_EXPRESSION_CRTP IPolynomExpressionCRTP<Derived>
 #include "fintamath/expressions/IExpressionCRTP.hpp"
 #undef I_EXPRESSION_CRTP
 
 public:
   explicit IPolynomExpressionCRTP(const IFunction &inFunc, ArgumentPtrVector args)
-      : IPolynomExpressionBaseCRTP<Derived, isMultiFunction>(inFunc, std::move(args)) {}
+      : IPolynomExpressionBaseCRTP<Derived>(inFunc, std::move(args)) {}
 };
 
 }

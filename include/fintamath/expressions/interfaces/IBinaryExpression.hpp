@@ -56,9 +56,9 @@ private:
   mutable ArgumentPtrVector childrenCached = {{}, {}};
 };
 
-template <typename Derived, bool isMultiFunction = false>
+template <typename Derived>
 class IBinaryExpressionBaseCRTP : public IBinaryExpression {
-#define I_EXPRESSION_BASE_CRTP IBinaryExpressionBaseCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_BASE_CRTP IBinaryExpressionBaseCRTP<Derived>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
 #undef I_EXPRESSION_BASE_CRTP
 
@@ -67,15 +67,15 @@ public:
       : IBinaryExpression(inFunc, std::move(lhs), std::move(rhs)) {}
 };
 
-template <typename Derived, bool isMultiFunction = false>
-class IBinaryExpressionCRTP : public IBinaryExpressionBaseCRTP<Derived, isMultiFunction> {
-#define I_EXPRESSION_CRTP IBinaryExpressionCRTP<Derived, isMultiFunction>
+template <typename Derived>
+class IBinaryExpressionCRTP : public IBinaryExpressionBaseCRTP<Derived> {
+#define I_EXPRESSION_CRTP IBinaryExpressionCRTP<Derived>
 #include "fintamath/expressions/IExpressionCRTP.hpp"
 #undef I_EXPRESSION_CRTP
 
 public:
   explicit IBinaryExpressionCRTP(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs)
-      : IBinaryExpressionBaseCRTP<Derived, isMultiFunction>(inFunc, std::move(lhs), std::move(rhs)) {}
+      : IBinaryExpressionBaseCRTP<Derived>(inFunc, std::move(lhs), std::move(rhs)) {}
 };
 
 }

@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-template <typename Derived, bool isMultiFunction = false>
+template <typename Derived>
 class IExpressionBaseCRTP_ : public IExpression {
 
 #endif // I_EXPRESSION_BASE_CRTP

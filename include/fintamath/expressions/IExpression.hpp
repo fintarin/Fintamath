@@ -83,16 +83,16 @@ private:
   static ExpressionParser &getParser();
 };
 
-template <typename Derived, bool isMultiFunction = false>
+template <typename Derived>
 class IExpressionBaseCRTP : public IExpression {
-#define I_EXPRESSION_BASE_CRTP IExpressionBaseCRTP<Derived, isMultiFunction>
+#define I_EXPRESSION_BASE_CRTP IExpressionBaseCRTP<Derived>
 #include "fintamath/expressions/IExpressionBaseCRTP.hpp"
 #undef I_EXPRESSION_BASE_CRTP
 };
 
-template <typename Derived, bool isMultiFunction = false>
-class IExpressionCRTP : public IExpressionBaseCRTP<Derived, isMultiFunction> {
-#define I_EXPRESSION_CRTP IExpressionCRTP<Derived, isMultiFunction>
+template <typename Derived>
+class IExpressionCRTP : public IExpressionBaseCRTP<Derived> {
+#define I_EXPRESSION_CRTP IExpressionCRTP<Derived>
 #include "fintamath/expressions/IExpressionCRTP.hpp"
 #undef I_EXPRESSION_CRTP
 };

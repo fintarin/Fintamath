@@ -12,7 +12,7 @@ namespace fintamath {
 
 class Rational;
 
-class TrigExpression final : public IUnaryExpressionCRTP<TrigExpression, true> {
+class TrigExpression final : public IUnaryExpressionCRTP<TrigExpression> {
 public:
   explicit TrigExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
