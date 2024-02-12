@@ -12,7 +12,7 @@ namespace fintamath {
 
 class IOperator;
 
-class CompExpression final : public IBinaryExpressionCRTP<CompExpression, true> {
+class CompExpression final : public IBinaryExpressionCRTP<CompExpression> {
 public:
   CompExpression(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 

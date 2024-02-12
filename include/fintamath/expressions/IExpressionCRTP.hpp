@@ -4,17 +4,17 @@
 
 namespace fintamath {
 
-template <typename Derived, bool isMultiFunction = false>
-class IExpressionCRTP_ : public IExpressionBaseCRTP<Derived, isMultiFunction> {
+template <typename Derived>
+class IExpressionCRTP_ : public IExpressionBaseCRTP<Derived> {
 
 #endif // I_EXPRESSION_CRTP
 
 public:
   bool equals(const Derived &rhs) const override {
-    if constexpr (isMultiFunction) {
-      if (*this->getFunction() != *rhs.getFunction()) {
-        return false;
-      }
+    if (static_cast<bool>(this->getFunction()) != static_cast<bool>(rhs.getFunction()) ||
+        (this->getFunction() && rhs.getFunction() && *this->getFunction() != *rhs.getFunction())) {
+
+      return false;
     }
 
     const ArgumentPtrVector &lhsChildren = this->getChildren();

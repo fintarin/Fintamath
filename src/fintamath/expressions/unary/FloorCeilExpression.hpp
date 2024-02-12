@@ -11,7 +11,7 @@ namespace fintamath {
 
 class Rational;
 
-class FloorCeilExpression final : public IUnaryExpressionCRTP<FloorCeilExpression, true> {
+class FloorCeilExpression final : public IUnaryExpressionCRTP<FloorCeilExpression> {
 public:
   explicit FloorCeilExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
