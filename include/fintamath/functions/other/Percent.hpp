@@ -14,11 +14,12 @@ namespace fintamath {
 
 class Percent final : public IOperatorCRTP<INumber, Percent, INumber> {
 public:
-  Percent() : IOperatorCRTP(Priority::PostfixUnary) {
-  }
-
   std::string toString() const override {
     return "%";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::PostfixUnary;
   }
 
   static constexpr MathObjectType getTypeStatic() {

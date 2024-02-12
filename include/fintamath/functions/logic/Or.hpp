@@ -14,11 +14,16 @@ namespace fintamath {
 
 class Or final : public IOperatorCRTP<Boolean, Or, Boolean, Boolean> {
 public:
-  Or() : IOperatorCRTP(Priority::Disjunction, true) {
-  }
-
   std::string toString() const override {
     return "|";
+  }
+
+  static constexpr bool isAssociativeStatic() {
+    return true;
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Disjunction;
   }
 
   static constexpr MathObjectType getTypeStatic() {

@@ -64,13 +64,6 @@ class IOperatorCRTP : public IOperator {
 #define I_OPERATOR_CRTP IOperatorCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IOperatorCRTP.hpp"
 #undef I_OPERATOR_CRTP
-
-public:
-  explicit IOperatorCRTP(const Priority inPriority = Priority::Lowest,
-                         const bool isAssociative = false)
-      : priority(inPriority),
-        isAssociativeOper(isAssociative) {
-  }
 };
 
 }

@@ -35,10 +35,12 @@ TEST(IndexTests, isEvaluatableTest) {
 }
 
 TEST(IndexTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Exponentiation);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Exponentiation);
 }
 
 TEST(IndexTests, isAssociativeTest) {
+  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 

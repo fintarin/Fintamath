@@ -14,11 +14,12 @@ namespace fintamath {
 
 class Mod final : public IOperatorCRTP<INumber, Mod, INumber, INumber> {
 public:
-  Mod() : IOperatorCRTP(Priority::Modulo) {
-  }
-
   std::string toString() const override {
     return "mod";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Modulo;
   }
 
   static constexpr MathObjectType getTypeStatic() {

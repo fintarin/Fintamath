@@ -17,11 +17,12 @@ class INumber;
 
 class Div final : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
 public:
-  Div() : IOperatorCRTP(Priority::Multiplication) {
-  }
-
   std::string toString() const override {
     return "/";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Multiplication;
   }
 
   static constexpr MathObjectType getTypeStatic() {

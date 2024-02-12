@@ -14,11 +14,12 @@ namespace fintamath {
 
 class Sub final : public IOperatorCRTP<IArithmetic, Sub, IArithmetic, IArithmetic> {
 public:
-  Sub() : IOperatorCRTP(Priority::Addition) {
-  }
-
   std::string toString() const override {
     return "-";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Addition;
   }
 
   static constexpr MathObjectType getTypeStatic() {

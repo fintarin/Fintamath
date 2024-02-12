@@ -15,17 +15,16 @@ class IOperatorCRTP_ : public IOperator {
 
 public:
   IOperator::Priority getPriority() const final {
-    return priority;
+    return Derived::getPriorityStatic();
+  }
+
+  static constexpr bool isAssociativeStatic() {
+    return false;
   }
 
   bool isAssociative() const final {
-    return isAssociativeOper;
+    return Derived::isAssociativeStatic();
   }
-
-private:
-  IOperator::Priority priority;
-
-  bool isAssociativeOper;
 
 private:
 #if !defined(I_OPERATOR_CRTP) && !defined(NDEBUG)

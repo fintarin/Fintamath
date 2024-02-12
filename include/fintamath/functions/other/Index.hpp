@@ -15,11 +15,12 @@ namespace fintamath {
 
 class Index final : public IOperatorCRTP<Variable, Index, Variable, Integer> {
 public:
-  Index() : IOperatorCRTP(Priority::Exponentiation, false) {
-  }
-
   std::string toString() const override {
     return "_";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Exponentiation;
   }
 
   static constexpr MathObjectType getTypeStatic() {

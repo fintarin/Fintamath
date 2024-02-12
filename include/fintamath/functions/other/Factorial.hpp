@@ -20,8 +20,7 @@ class Real;
 
 class Factorial final : public IOperatorCRTP<INumber, Factorial, INumber> {
 public:
-  Factorial() : IOperatorCRTP(Priority::PostfixUnary) {
-  }
+  Factorial() = default;
 
   explicit Factorial(const size_t inOrder) : Factorial() {
     setOrder(inOrder);
@@ -29,6 +28,10 @@ public:
 
   std::string toString() const override {
     return std::string(order, '!');
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::PostfixUnary;
   }
 
   size_t getOrder() const {

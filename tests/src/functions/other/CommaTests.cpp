@@ -35,10 +35,12 @@ TEST(CommaTests, isEvaluatableTest) {
 }
 
 TEST(CommaTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Comma);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Comma);
 }
 
 TEST(CommaTests, isAssociativeTest) {
+  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 

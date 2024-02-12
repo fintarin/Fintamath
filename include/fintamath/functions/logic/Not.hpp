@@ -14,11 +14,12 @@ namespace fintamath {
 
 class Not final : public IOperatorCRTP<Boolean, Not, Boolean> {
 public:
-  Not() : IOperatorCRTP(Priority::PrefixUnary) {
-  }
-
   std::string toString() const override {
     return "~";
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::PrefixUnary;
   }
 
   static constexpr MathObjectType getTypeStatic() {

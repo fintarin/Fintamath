@@ -35,10 +35,12 @@ TEST(LessEqvTests, isEvaluatableTest) {
 }
 
 TEST(LessEqvTests, getPriorityTest) {
+  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Comparison);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Comparison);
 }
 
 TEST(LessEqvTests, isAssociativeTest) {
+  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 

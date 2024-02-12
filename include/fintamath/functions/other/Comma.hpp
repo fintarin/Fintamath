@@ -14,11 +14,16 @@ namespace fintamath {
 
 class Comma final : public IOperatorCRTP<IMathObject, Comma, IMathObject, IMathObject> {
 public:
-  Comma() : IOperatorCRTP(Priority::Comma, true) {
-  }
-
   std::string toString() const override {
     return ",";
+  }
+
+  static constexpr bool isAssociativeStatic() {
+    return true;
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Comma;
   }
 
   static constexpr MathObjectType getTypeStatic() {
