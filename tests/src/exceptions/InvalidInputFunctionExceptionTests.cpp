@@ -1,32 +1,17 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
-#include "fintamath/functions/IFunction.hpp"
-
 using namespace fintamath;
 
-namespace {
-
-class TestFunction final : public IFunctionCRTP<IMathObject, TestFunction, IMathObject> {
-public:
-  static void throwException() {
-    throw InvalidInputFunctionException("sqrt", {"-10", "a", "b"});
-  }
-
-protected:
-  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
-    return {};
-  }
-};
-
-}
-
 TEST(InvalidInputFunctionExceptionTests, whatTest) {
-  try {
-    TestFunction::throwException();
-    EXPECT_TRUE(false);
-  } catch (const Exception &e) {
-    EXPECT_EQ(std::string(e.what()), "Invalid input: sqrt(-10,a,b)");
-  }
+  EXPECT_THAT(
+      [] { throw InvalidInputFunctionException("f", {}); },
+      testing::ThrowsMessage<InvalidInputFunctionException>(
+          testing::StrEq("Invalid input: f()")));
+  EXPECT_THAT(
+      [] { throw InvalidInputFunctionException("sqrt", {"-10", "a", "b"}); },
+      testing::ThrowsMessage<InvalidInputFunctionException>(
+          testing::StrEq("Invalid input: sqrt(-10,a,b)")));
 }
