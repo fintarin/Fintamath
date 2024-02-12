@@ -72,11 +72,7 @@ Ordering reverse(Ordering ordering);
 template <typename T>
 size_t getPositionOfFirstChildWithTerm(const ArgumentPtrVector &children) {
   for (const auto i : stdv::iota(0U, children.size())) {
-    bool containsTerm = containsIf(children[i], [](const ArgumentPtr &child) {
-      return is<T>(child);
-    });
-
-    if (containsTerm) {
+    if (containsIf(children[i], [](const ArgumentPtr &child) { return is<T>(child); })) {
       return i;
     }
   }

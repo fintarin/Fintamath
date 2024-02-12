@@ -1,14 +1,12 @@
 #pragma once
 
 #include <concepts>
-#include <cstddef>
 #include <functional>
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "fintamath/core/MathObjectTypes.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"

@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <string>
-#include <type_traits>
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"

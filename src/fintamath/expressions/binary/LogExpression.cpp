@@ -121,12 +121,12 @@ ArgumentPtr LogExpression::powSimplify(const IFunction & /*func*/, const Argumen
   if (const auto rhsExpr = cast<IExpression>(rhs); rhsExpr && is<Pow>(rhsExpr->getFunction())) {
     ArgumentPtr multiplier = rhsExpr->getChildren().back();
     ArgumentPtr logExprChild = logExpr(lhs, rhsExpr->getChildren().front());
-    res = mulExpr(multiplier, logExprChild);
+    res = mulExpr(std::move(multiplier), std::move(logExprChild));
   }
   else if (const auto lhsExpr = cast<IExpression>(lhs); lhsExpr && is<Pow>(lhsExpr->getFunction())) {
     ArgumentPtr multiplier = divExpr(Integer(1).clone(), lhsExpr->getChildren().back());
     ArgumentPtr logExprChild = logExpr(lhsExpr->getChildren().front(), rhs);
-    res = mulExpr(multiplier, logExprChild);
+    res = mulExpr(std::move(multiplier), std::move(logExprChild));
   }
 
   return res;

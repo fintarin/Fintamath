@@ -158,7 +158,7 @@ ArgumentPtr AddExpression::logSimplify(const IFunction & /*func*/, const Argumen
   if (*lhsChildren.front() == *rhsChildren.front()) {
     ArgumentPtr logLhs = lhsChildren.front();
     ArgumentPtr logRhs = mulExpr(lhsChildren.back(), rhsChildren.back());
-    ArgumentPtr res = logExpr(logLhs, logRhs);
+    ArgumentPtr res = logExpr(std::move(logLhs), std::move(logRhs));
     return res;
   }
 
@@ -192,7 +192,7 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
 
           ArgumentPtr logLhs = lhsLogChild->getChildren().front();
           ArgumentPtr logRhs = mulExpr(lhsLogChild->getChildren().back(), rhsLogChild->getChildren().back());
-          return logExpr(logLhs, logRhs);
+          return logExpr(std::move(logLhs), std::move(logRhs));
         }
       }
     }
@@ -224,7 +224,7 @@ ArgumentPtr AddExpression::mulLogSimplify(const IFunction & /*func*/, const Argu
 
       ArgumentPtr logLhs = logExprChild->getChildren().front();
       ArgumentPtr logRhs = mulExpr(logExprChild->getChildren().back(), logChild->getChildren().back());
-      return logExpr(logLhs, logRhs);
+      return logExpr(std::move(logLhs), std::move(logRhs));
     }
   }
 
@@ -303,7 +303,7 @@ ArgumentPtr AddExpression::divSimplify(const IFunction & /*func*/, const Argumen
 
       ArgumentPtr numerator = addExpr(lhsNumerator, rhsNumerator);
       ArgumentPtr denominator = rhsDenominator;
-      res = divExpr(numerator, denominator);
+      res = divExpr(std::move(numerator), std::move(denominator));
     }
     else {
       const ArgumentPtr &lhsNumerator = lhsExpr->getChildren().front();
@@ -314,9 +314,9 @@ ArgumentPtr AddExpression::divSimplify(const IFunction & /*func*/, const Argumen
       ArgumentPtr lhsNumeratorMulRhsDenominator = mulExpr(lhsNumerator, rhsDenominator);
       ArgumentPtr rhsNumeratorMulLhsDenominator = mulExpr(rhsNumerator, lhsDenominator);
 
-      ArgumentPtr numerator = addExpr(lhsNumeratorMulRhsDenominator, rhsNumeratorMulLhsDenominator);
+      ArgumentPtr numerator = addExpr(std::move(lhsNumeratorMulRhsDenominator), std::move(rhsNumeratorMulLhsDenominator));
       ArgumentPtr denominator = mulExpr(lhsDenominator, rhsDenominator);
-      res = divExpr(numerator, denominator);
+      res = divExpr(std::move(numerator), std::move(denominator));
     }
   }
   else if (rhsExpr && is<Div>(rhsExpr->getFunction())) {
@@ -325,9 +325,9 @@ ArgumentPtr AddExpression::divSimplify(const IFunction & /*func*/, const Argumen
 
     ArgumentPtr lhsMulRhsDenominator = mulExpr(lhs, rhsDenominator);
 
-    ArgumentPtr numerator = addExpr(lhsMulRhsDenominator, rhsNumerator);
+    ArgumentPtr numerator = addExpr(std::move(lhsMulRhsDenominator), rhsNumerator);
     ArgumentPtr denominator = rhsDenominator;
-    res = divExpr(numerator, denominator);
+    res = divExpr(std::move(numerator), std::move(denominator));
   }
 
   return res;
@@ -372,12 +372,12 @@ ArgumentPtr AddExpression::trigSimplify(const IFunction & /*func*/, const Argume
     auto rhsMulRateNum = cast<INumber>(rhsMulRate);
 
     if (lhsMulRateNum && rhsMulRateNum && *(*lhsMulRateNum + *rhsMulRateNum) == Integer(0)) {
-      ArgumentPtr res = cosExpr(
-          mulExpr(
-              lhsPowBaseExpr->getChildren().front(),
-              Integer(2).clone()));
+      static const ArgumentPtr two = Integer(2).clone();
 
-      return mulExpr(rhsMulRateNum, res);
+      ArgumentPtr res = cosExpr(
+          mulExpr(lhsPowBaseExpr->getChildren().front(), two));
+
+      return mulExpr(std::move(rhsMulRateNum), std::move(res));
     }
 
     return {};

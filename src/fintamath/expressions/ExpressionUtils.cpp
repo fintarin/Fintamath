@@ -340,8 +340,6 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
 }
 
 std::string binaryOperatorToString(const IOperator &oper, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  std::string result;
-
   std::string operStr = oper.toString();
   const IOperator::Priority operPriority = oper.getPriority();
 

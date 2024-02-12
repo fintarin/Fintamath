@@ -145,7 +145,8 @@ Real ln(const Real &rhs) {
 
 Real lb(const Real &rhs) {
   try {
-    return log(2, rhs);
+    static const Real logBase = 2;
+    return log(logBase, rhs);
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("lb", {rhs.toString()});
@@ -154,7 +155,8 @@ Real lb(const Real &rhs) {
 
 Real lg(const Real &rhs) {
   try {
-    return log(10, rhs);
+    static const Real logBase = 10;
+    return log(logBase, rhs);
   }
   catch (const UndefinedException &) {
     throw UndefinedFunctionException("lg", {rhs.toString()});

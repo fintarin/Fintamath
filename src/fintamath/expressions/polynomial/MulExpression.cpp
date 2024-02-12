@@ -51,7 +51,7 @@ std::string MulExpression::toString() const {
 
     ArgumentPtr numerator = makePolynom(Mul{}, std::move(numeratorChildren));
     ArgumentPtr denominator = childDenominator;
-    const ArgumentPtr res = divExpr(numerator, denominator);
+    const ArgumentPtr res = divExpr(std::move(numerator), std::move(denominator));
 
     std::string resStr = res->toString();
 
@@ -167,7 +167,7 @@ ArgumentPtr MulExpression::rationalSimplify(const IFunction & /*func*/, const Ar
   if (const auto lhsRat = cast<Rational>(lhs)) {
     ArgumentPtr numerator = mulExpr(lhsRat->numerator().clone(), rhs);
     ArgumentPtr denominator = lhsRat->denominator().clone();
-    return divExpr(numerator, denominator);
+    return divExpr(std::move(numerator), std::move(denominator));
   }
 
   return {};
@@ -271,8 +271,8 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
   auto [rhsChildBase, rhsChildRate] = splitPowExpr(rhs);
 
   if (*lhsChildBase == *rhsChildBase) {
-    ArgumentPtr ratesSum = addExpr(lhsChildRate, rhsChildRate);
-    return powExpr(lhsChildBase, ratesSum);
+    ArgumentPtr ratesSum = addExpr(std::move(lhsChildRate), std::move(rhsChildRate));
+    return powExpr(std::move(lhsChildBase), std::move(ratesSum));
   }
 
   const auto lhsChildValueNum = cast<INumber>(lhsChildBase);
@@ -287,8 +287,8 @@ ArgumentPtr MulExpression::powSimplify(const IFunction & /*func*/, const Argumen
       *lhsChildRate == *rhsChildRate &&
       *rhsChildRate != Integer(1)) {
 
-    ArgumentPtr valuesMul = mulExpr(lhsChildBase, rhsChildBase);
-    return powExpr(valuesMul, lhsChildRate);
+    ArgumentPtr valuesMul = mulExpr(std::move(lhsChildBase), std::move(rhsChildBase));
+    return powExpr(std::move(valuesMul), std::move(lhsChildRate));
   }
 
   return {};
@@ -314,7 +314,7 @@ ArgumentPtr MulExpression::trigDoubleAngleSimplify(const IFunction & /*func*/, c
   }
 
   ArgumentPtr doubleSin = sinExpr(
-      mulExpr(lhsChild, Integer(2).clone()));
+      mulExpr(std::move(lhsChild), Integer(2).clone()));
 
   return divExpr(doubleSin, Integer(2).clone());
 }
