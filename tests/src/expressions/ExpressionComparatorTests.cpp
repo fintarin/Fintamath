@@ -4,6 +4,7 @@
 #include "fintamath/expressions/ExpressionComparator.hpp"
 
 using namespace fintamath;
+using namespace detail;
 
 TEST(ExpressionComparatorTests, comparatorTest) {
   EXPECT_EQ(compare(Variable("a").clone(), Expression("a").clone()), std::strong_ordering::equal);

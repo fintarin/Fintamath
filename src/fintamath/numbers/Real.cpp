@@ -19,6 +19,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 constexpr unsigned precisionMultiplier = 2;
 constexpr unsigned precisionDelta = 10;
 

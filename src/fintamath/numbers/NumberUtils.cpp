@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <string>
 
-namespace fintamath {
+namespace fintamath::detail {
 
 std::string removeLeadingZeroes(std::string str) {
   size_t firstDigit = 0;

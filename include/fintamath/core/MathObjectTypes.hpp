@@ -194,12 +194,14 @@ private:
   size_t id;
 
 private:
-  [[maybe_unused]] inline static const Config config;
+  [[maybe_unused]] inline static const detail::Config config;
 };
 
 inline size_t hash_value(const MathObjectType &rhs) noexcept {
   return boost::hash<size_t>{}(rhs);
 }
+
+namespace detail {
 
 class MathObjectBoundTypes final {
   using enum MathObjectType::Id;
@@ -236,8 +238,10 @@ public:
   }
 };
 
+}
+
 inline bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType) {
-  const auto &typeToTypeMap = MathObjectBoundTypes::get();
+  const auto &typeToTypeMap = detail::MathObjectBoundTypes::get();
 
   if (const auto toTypeBoundaries = typeToTypeMap.find(toType); toTypeBoundaries != typeToTypeMap.end()) {
     return fromType >= toTypeBoundaries->first && fromType < toTypeBoundaries->second;

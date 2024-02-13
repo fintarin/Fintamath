@@ -5,6 +5,7 @@
 #include "fintamath/expressions/Expression.hpp"
 
 using namespace fintamath;
+using namespace detail;
 
 TEST(ExpressionUtilsTests, putInBracketsTest) {
   EXPECT_EQ(putInBrackets(""), "()");

@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 bool isOverflow(const Real &rhs) {
   static Cache<unsigned, Real::Backend> cache([](const unsigned precision) {
     static const Real::Backend powBase = 10;

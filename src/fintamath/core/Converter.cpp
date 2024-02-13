@@ -2,7 +2,7 @@
 
 #include "fintamath/core/IMathObject.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 Converter::ConverterMultiMethod &Converter::getConverter() {
   static ConverterMultiMethod converter;

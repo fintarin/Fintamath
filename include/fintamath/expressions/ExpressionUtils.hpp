@@ -13,7 +13,7 @@
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 template <std::same_as<ArgumentPtr>... Args, std::invocable<IFunction, Args...> SimplifyFunction>
 ArgumentPtr useSimplifyFunctions(const std::vector<SimplifyFunction> &simplFuncs,

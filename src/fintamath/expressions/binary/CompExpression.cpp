@@ -34,6 +34,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 CompExpression::CompExpression(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
     : IBinaryExpressionCRTP(inOper, std::move(inLhsChild), std::move(inRhsChild)) {
 }

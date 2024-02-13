@@ -8,7 +8,7 @@
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 ConverterConfig::ConverterConfig() {
   Converter::add<Integer, Integer>([](const Integer & /*type*/, const Integer &value) {

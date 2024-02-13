@@ -29,6 +29,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 using SimplifyFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>>;
 
 HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)

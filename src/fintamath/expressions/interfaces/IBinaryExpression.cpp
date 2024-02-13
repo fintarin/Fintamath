@@ -12,6 +12,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 IBinaryExpression::IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs)
     : func(cast<IFunction>(inFunc.clone())),
       lhsChild(std::move(lhs)),

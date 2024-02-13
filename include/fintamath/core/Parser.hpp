@@ -12,7 +12,7 @@
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 template <typename T, typename... Args>
 concept StringConstructable = requires(const std::string &str, Args &&...args) {

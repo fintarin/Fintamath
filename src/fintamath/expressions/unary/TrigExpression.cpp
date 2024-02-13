@@ -36,6 +36,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 using SimplifyFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>>;
 
 using TrigonometryFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const Rational &)>>;

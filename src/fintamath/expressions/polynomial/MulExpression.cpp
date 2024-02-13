@@ -29,6 +29,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 MulExpression::MulExpression(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(Mul{}, std::move(inChildren)) {
 }

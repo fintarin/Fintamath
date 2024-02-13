@@ -20,6 +20,8 @@
 
 namespace fintamath {
 
+namespace detail {
+
 struct Term final {
   Token name;
 
@@ -34,12 +36,14 @@ public:
   }
 };
 
-using TermVector = std::vector<std::unique_ptr<Term>>;
+using TermVector = std::vector<std::unique_ptr<detail::Term>>;
 using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 
+}
+
 class Expression final : public IExpressionCRTP<Expression> {
-  using TermParser = Parser<std::unique_ptr<Term>()>;
-  using ExpressionParser = Parser<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
+  using TermParser = detail::Parser<std::unique_ptr<detail::Term>()>;
+  using ExpressionParser = detail::Parser<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
   using ExpressionMaker = std::function<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
 
 public:
@@ -94,23 +98,23 @@ private:
 
   void updateStringMutable() const;
 
-  static TermVector tokensToTerms(const TokenVector &tokens);
+  static detail::TermVector tokensToTerms(const detail::TokenVector &tokens);
 
-  static OperandStack termsToOperands(TermVector &terms);
+  static detail::OperandStack termsToOperands(detail::TermVector &terms);
 
-  static std::unique_ptr<IMathObject> operandsToObject(OperandStack &operands);
+  static std::unique_ptr<IMathObject> operandsToObject(detail::OperandStack &operands);
 
   static ArgumentPtrVector unwrapComma(const ArgumentPtr &child);
 
-  static void insertMultiplications(TermVector &terms);
+  static void insertMultiplications(detail::TermVector &terms);
 
-  static void fixOperatorTypes(const TermVector &terms);
+  static void fixOperatorTypes(const detail::TermVector &terms);
 
-  static void collapseFactorials(TermVector &terms);
+  static void collapseFactorials(detail::TermVector &terms);
 
-  static bool canNextTermBeBinaryOperator(const Term &term);
+  static bool canNextTermBeBinaryOperator(const detail::Term &term);
 
-  static bool canPrevTermBeBinaryOperator(const Term &term);
+  static bool canPrevTermBeBinaryOperator(const detail::Term &term);
 
   static bool isBinaryOperator(const IMathObject *val);
 
@@ -126,7 +130,7 @@ private:
 
   static ArgumentPtr compress(const ArgumentPtr &child);
 
-  friend std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args);
+  friend std::unique_ptr<IMathObject> detail::makeExpr(const IFunction &func, ArgumentPtrVector args);
 
   friend std::unique_ptr<IMathObject> parseFintamath(const std::string &str);
 

@@ -16,6 +16,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 SignExpression::SignExpression(ArgumentPtr inChild)
     : IUnaryExpressionCRTP(Sign{}, std::move(inChild)) {
 }

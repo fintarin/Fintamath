@@ -12,6 +12,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 AbsExpression::AbsExpression(ArgumentPtr inChild)
     : IUnaryExpressionCRTP(Abs{}, std::move(inChild)) {
 }

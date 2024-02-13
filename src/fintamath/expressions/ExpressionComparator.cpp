@@ -19,7 +19,7 @@
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 using ExpressionTreePathStack = std::stack<std::pair<const std::shared_ptr<const IExpression>, size_t>>;
 

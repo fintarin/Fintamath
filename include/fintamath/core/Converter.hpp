@@ -10,6 +10,8 @@ namespace fintamath {
 
 class IMathObject;
 
+namespace detail {
+
 class Converter final {
   template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
   using ConverterFunction = std::function<std::unique_ptr<IMathObject>(const To &to, const From &from)>;
@@ -34,9 +36,11 @@ private:
   static ConverterMultiMethod &getConverter();
 };
 
+}
+
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 std::unique_ptr<To> convert(const To &to, const From &from) {
-  return cast<To>(Converter::convert(to, from));
+  return cast<To>(detail::Converter::convert(to, from));
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
@@ -47,13 +51,13 @@ std::unique_ptr<To> convert(const From &from) {
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool isConvertible(const To &to, const From &from) {
-  return Converter::isConvertible(to, from);
+  return detail::Converter::isConvertible(to, from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool isConvertible(const From &from) {
   static const To to;
-  return Converter::isConvertible(to, from);
+  return detail::Converter::isConvertible(to, from);
 }
 
 }

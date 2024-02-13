@@ -7,6 +7,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
+using namespace detail;
 
 namespace {
 

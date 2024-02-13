@@ -9,7 +9,7 @@
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 template <typename Signature>
 class MultiMethod;

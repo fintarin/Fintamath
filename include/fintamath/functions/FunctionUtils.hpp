@@ -6,15 +6,16 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 
-#define FINTAMATH_FUNCTION_EXPRESSION(Function, name)          \
-  std::unique_ptr<IMathObject> name(auto &&...args) {          \
-    static const Function f;                                   \
-    return makeExpr(f, std::forward<decltype(args)>(args)...); \
+#define FINTAMATH_FUNCTION_EXPRESSION(Function, name)                  \
+  std::unique_ptr<IMathObject> name(auto &&...args) {                  \
+    static const Function f;                                           \
+    return detail::makeExpr(f, std::forward<decltype(args)>(args)...); \
   }
 
 namespace fintamath {
-
 class IFunction;
+
+namespace detail {
 
 extern bool isExpression(const IMathObject &arg);
 
@@ -28,6 +29,8 @@ std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const std::derived_
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, std::convertible_to<ArgumentPtr> auto &&...args) {
   return makeExpr(func, ArgumentPtrVector{ArgumentPtr(std::forward<decltype(args)>(args))...});
+}
+
 }
 
 }

@@ -5,6 +5,7 @@
 #include "fintamath/functions/arithmetic/Abs.hpp"
 
 using namespace fintamath;
+using namespace detail;
 
 namespace {
 

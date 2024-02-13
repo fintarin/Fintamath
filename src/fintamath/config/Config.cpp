@@ -5,7 +5,7 @@
 #include "fintamath/config/ParserConfig.hpp"
 #include "fintamath/config/PrecisionConfig.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 Config::Config() {
   [[maybe_unused]] static const PrecisionConfig precisionConfig;

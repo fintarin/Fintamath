@@ -21,6 +21,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 IPolynomExpression::IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args)
     : func(cast<IFunction>(inFunc.clone())),
       children(std::move(args)) {
