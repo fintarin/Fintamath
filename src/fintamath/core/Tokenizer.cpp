@@ -6,7 +6,7 @@
 
 #include "fintamath/core/CoreUtils.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 TokenVector Tokenizer::tokenize(std::string str) {
   handleSpaces(str);

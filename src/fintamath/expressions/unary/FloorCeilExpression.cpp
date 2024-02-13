@@ -18,6 +18,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 FloorCeilExpression::FloorCeilExpression(const IFunction &inFunc, ArgumentPtr inChild)
     : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
 }

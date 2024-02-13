@@ -4,7 +4,7 @@
 
 #include "fintamath/functions/FunctionArguments.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 struct ComparatorOptions final {
   bool constantGreaterThanVariable = false;

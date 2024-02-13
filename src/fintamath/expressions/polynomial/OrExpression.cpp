@@ -18,6 +18,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 OrExpression::OrExpression(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(Or{}, std::move(inChildren)) {
 }

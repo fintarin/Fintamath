@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 std::unique_ptr<IMathObject> Sign::call(const ArgumentRefVector &argVect) const {
   const auto &rhs = cast<INumber>(argVect.front().get());
 

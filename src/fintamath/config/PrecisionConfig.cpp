@@ -2,7 +2,7 @@
 
 #include "fintamath/numbers/Real.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 PrecisionConfig::PrecisionConfig() {
   constexpr unsigned defaultPrecision = 20;

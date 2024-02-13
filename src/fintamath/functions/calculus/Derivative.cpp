@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 std::unique_ptr<IMathObject> Derivative::call(const ArgumentRefVector &argVect) const {
   return makeExpr(*this, argVect)->toMinimalObject();
 }

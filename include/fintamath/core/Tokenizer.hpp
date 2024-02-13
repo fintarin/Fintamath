@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace fintamath {
+namespace fintamath::detail {
 
 using Token = std::string;
 using TokenVector = std::vector<Token>;

@@ -19,7 +19,7 @@
 namespace fintamath {
 
 class IExpression : public IArithmetic {
-  using ExpressionParser = Parser<std::unique_ptr<IExpression>()>;
+  using ExpressionParser = detail::Parser<std::unique_ptr<IExpression>()>;
 
 public:
   virtual const std::shared_ptr<IFunction> &getFunction() const = 0;

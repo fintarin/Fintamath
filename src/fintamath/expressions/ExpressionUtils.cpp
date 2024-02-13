@@ -30,7 +30,7 @@
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 const ArgumentPtr one = Integer(1).clone();
 

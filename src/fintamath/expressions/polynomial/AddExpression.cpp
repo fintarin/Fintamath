@@ -33,6 +33,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 AddExpression::AddExpression(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(Add{}, std::move(inChildren)) {
 }

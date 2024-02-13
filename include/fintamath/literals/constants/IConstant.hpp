@@ -12,7 +12,7 @@
 namespace fintamath {
 
 class IConstant : public ILiteral {
-  using ConstantParser = Parser<std::unique_ptr<IConstant>()>;
+  using ConstantParser = detail::Parser<std::unique_ptr<IConstant>()>;
 
 public:
   virtual MathObjectType getReturnType() const = 0;

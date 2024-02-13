@@ -24,6 +24,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 NotExpression::NotExpression(ArgumentPtr inChild)
     : IUnaryExpressionCRTP(Not{}, std::move(inChild)) {
 }

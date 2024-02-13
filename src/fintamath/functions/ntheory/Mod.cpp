@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 std::unique_ptr<IMathObject> Mod::call(const ArgumentRefVector &argVect) const {
   const auto &lhs = cast<INumber>(argVect.front().get());
   const auto &rhs = cast<INumber>(argVect.back().get());

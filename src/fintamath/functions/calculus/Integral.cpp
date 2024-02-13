@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 std::unique_ptr<IMathObject> Integral::call(const ArgumentRefVector &argVect) const {
   return makeExpr(*this, argVect)->toMinimalObject();
 }

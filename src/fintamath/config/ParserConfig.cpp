@@ -95,7 +95,7 @@
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 ParserConfig::ParserConfig() {
   IMathObject::registerType(&ILiteral::parse);

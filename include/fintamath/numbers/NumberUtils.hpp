@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace fintamath {
+namespace fintamath::detail {
 
 std::string removeLeadingZeroes(std::string str);
 

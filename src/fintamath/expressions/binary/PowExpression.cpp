@@ -35,6 +35,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 constexpr int64_t maxPreciseRoot = 9;
 
 PowExpression::PowExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)

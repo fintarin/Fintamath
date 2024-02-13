@@ -3,7 +3,7 @@
 #include <functional>
 #include <unordered_map>
 
-namespace fintamath {
+namespace fintamath::detail {
 
 template <typename Key, typename Value>
 class Cache final {

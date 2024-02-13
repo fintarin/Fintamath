@@ -38,6 +38,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 struct TermWithPriority final {
   std::unique_ptr<Term> term;
 
@@ -461,21 +463,6 @@ Expression::ExpressionParser &Expression::getExpressionParser() {
   return parser;
 }
 
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
-  stdr::transform(args, args.begin(), &Expression::compress);
-  Expression::validateFunctionArgs(func, args);
-
-  if (auto expr = Expression::getExpressionParser().parse(func.toString(), std::move(args))) {
-    return expr;
-  }
-
-  return FunctionExpression(func, std::move(args)).clone();
-}
-
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args) {
-  return makeExpr(func, argumentRefVectorToArgumentPtrVector(args));
-}
-
 void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args) {
   const ArgumentTypeVector &expectedArgTypes = func.getArgumentTypes();
 
@@ -575,6 +562,25 @@ Expression operator/(const Expression &lhs, const Variable &rhs) {
 
 Expression operator/(const Variable &lhs, const Expression &rhs) {
   return Expression(divExpr(lhs, rhs));
+}
+
+namespace detail {
+
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
+  stdr::transform(args, args.begin(), &Expression::compress);
+  Expression::validateFunctionArgs(func, args);
+
+  if (auto expr = Expression::getExpressionParser().parse(func.toString(), std::move(args))) {
+    return expr;
+  }
+
+  return FunctionExpression(func, std::move(args)).clone();
+}
+
+std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args) {
+  return makeExpr(func, argumentRefVectorToArgumentPtrVector(args));
+}
+
 }
 
 }

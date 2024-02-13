@@ -95,7 +95,7 @@
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/constants/E.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 namespace {
 

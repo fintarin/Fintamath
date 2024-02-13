@@ -24,6 +24,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 std::vector<Variable> IExpression::getVariables() const {
   std::vector<Variable> vars;
 

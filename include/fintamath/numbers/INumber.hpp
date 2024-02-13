@@ -14,7 +14,7 @@
 namespace fintamath {
 
 class INumber : public IComparable {
-  using NumberParser = Parser<std::unique_ptr<INumber>()>;
+  using NumberParser = detail::Parser<std::unique_ptr<INumber>()>;
 
 public:
   virtual bool isPrecise() const {

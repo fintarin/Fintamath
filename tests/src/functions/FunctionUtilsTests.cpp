@@ -13,6 +13,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
+using namespace detail;
 
 TEST(FunctionUtilsTests, makeExpressionPtrsTest) {
   ArgumentPtr one = std::make_unique<Integer>(1);

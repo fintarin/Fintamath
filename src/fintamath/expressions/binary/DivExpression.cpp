@@ -39,6 +39,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 DivExpression::DivExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
     : IBinaryExpressionCRTP(Div{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }

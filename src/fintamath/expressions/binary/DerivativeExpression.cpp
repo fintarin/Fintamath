@@ -55,6 +55,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 using DerivativeSimplifyMap = std::unordered_map<
     std::string,
     std::function<ArgumentPtr(const ArgumentPtrVector &children,

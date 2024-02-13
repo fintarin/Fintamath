@@ -12,7 +12,7 @@
 namespace fintamath {
 
 class ILiteral : public IMathObject {
-  using LiteralParser = Parser<std::unique_ptr<ILiteral>()>;
+  using LiteralParser = detail::Parser<std::unique_ptr<ILiteral>()>;
 
 public:
   static std::unique_ptr<ILiteral> parse(const std::string &str) {

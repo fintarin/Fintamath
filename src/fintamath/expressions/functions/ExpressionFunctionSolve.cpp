@@ -19,6 +19,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 namespace {
 
 constexpr size_t maxPower = 4;

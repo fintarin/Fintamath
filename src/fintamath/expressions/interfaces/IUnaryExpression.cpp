@@ -12,6 +12,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 IUnaryExpression::IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs)
     : func(cast<IFunction>(inFunc.clone())),
       child(std::move(rhs)) {
@@ -20,13 +22,13 @@ IUnaryExpression::IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs)
 std::string IUnaryExpression::toString() const {
   if (const auto oper = cast<IOperator>(func)) {
     if (oper->getPriority() == IOperator::Priority::PostfixUnary) {
-      return postfixUnaryOperatorToString(*oper, child);
+      return detail::postfixUnaryOperatorToString(*oper, child);
     }
 
-    return prefixUnaryOperatorToString(*oper, child);
+    return detail::prefixUnaryOperatorToString(*oper, child);
   }
 
-  return functionToString(*func, {child});
+  return detail::functionToString(*func, {child});
 }
 
 const std::shared_ptr<IFunction> &IUnaryExpression::getFunction() const {

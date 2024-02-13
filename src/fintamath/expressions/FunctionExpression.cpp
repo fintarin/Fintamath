@@ -12,6 +12,8 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 FunctionExpression::FunctionExpression(const IFunction &inFunc, ArgumentPtrVector inChildren)
     : func(cast<IFunction>(inFunc.clone())) {
 

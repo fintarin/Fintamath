@@ -18,7 +18,7 @@ namespace fintamath {
 class IFunction : public IMathObject {
   using FunctionOrderMap = std::unordered_map<std::string, size_t>;
 
-  using FunctionParser = Parser<std::unique_ptr<IFunction>()>;
+  using FunctionParser = detail::Parser<std::unique_ptr<IFunction>()>;
 
 public:
   virtual const ArgumentTypeVector &getArgumentTypes() const = 0;

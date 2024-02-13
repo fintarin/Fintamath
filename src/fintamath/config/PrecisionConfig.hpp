@@ -1,6 +1,6 @@
 #pragma once
 
-namespace fintamath {
+namespace fintamath::detail {
 
 struct PrecisionConfig final {
   PrecisionConfig();

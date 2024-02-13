@@ -68,20 +68,20 @@ protected:
           return res;
         }
 
-        return makeExpr(*this, argVect);
+        return detail::makeExpr(*this, argVect);
       }
       catch (const UndefinedException &) {
-        return makeExpr(*this, argVect);
+        return detail::makeExpr(*this, argVect);
       }
     }
 
-    return makeExpr(*this, argVect)->toMinimalObject();
+    return detail::makeExpr(*this, argVect)->toMinimalObject();
   }
 
 private:
   template <size_t i, typename Head, typename... Tail>
   bool doArgsMatch(const ArgumentRefVector &argVect) const {
-    if (!is<Head>(argVect[i]) || isExpression(argVect[i])) {
+    if (!is<Head>(argVect[i]) || detail::isExpression(argVect[i])) {
       return false;
     }
 
