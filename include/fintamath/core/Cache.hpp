@@ -11,20 +11,20 @@ public:
   using Function = std::function<Value(const Key &)>;
 
 public:
-  explicit Cache(const Function &keyToValueFunction) : func(keyToValueFunction) {}
+  explicit Cache(const Function &inKeyToValueFunction) : keyToValueFunction(inKeyToValueFunction) {}
 
   const Value &operator[](const Key &key) {
-    if (!map.contains(key)) {
-      map[key] = func(key);
+    if (!keyToValueMap.contains(key)) {
+      keyToValueMap[key] = keyToValueFunction(key);
     }
 
-    return map.at(key);
+    return keyToValueMap.at(key);
   }
 
 private:
-  std::unordered_map<Key, Value> map;
+  std::unordered_map<Key, Value> keyToValueMap;
 
-  Function func;
+  Function keyToValueFunction;
 };
 
 }

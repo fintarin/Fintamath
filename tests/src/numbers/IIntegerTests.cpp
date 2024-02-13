@@ -102,9 +102,9 @@ public:
 
 struct TestIntegerConvertableConfig final {
   TestIntegerConvertableConfig() {
-    MathObjectBoundTypes::reg(
+    MathObjectBoundTypes::bindTypes(
         TestInteger::getTypeStatic(),
-        MathObjectBoundTypes::get().at(IInteger::getTypeStatic()));
+        MathObjectBoundTypes::getMap().at(IInteger::getTypeStatic()));
 
     Converter::add<TestIntegerConvertible, TestIntegerConvertible>(
         [](const TestIntegerConvertible & /*type*/, const TestIntegerConvertible &value) {

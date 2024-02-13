@@ -33,7 +33,7 @@ public:
 
   using ConstructorVector = std::vector<StringConstructor>;
 
-  using ConstructorMap = std::unordered_multimap<std::string, Constructor>;
+  using StringToConstructorMap = std::unordered_multimap<std::string, Constructor>;
 
 public:
   template <typename... ConstructorArgs>
@@ -46,8 +46,8 @@ public:
   template <typename... ConstructorArgs>
     requires(SameAsUnqual<ConstructorArgs, Args> && ...)
   Return parse(const Validator &validator, const std::string &str, ConstructorArgs &&...args) const {
-    for (const auto &valuePairs = constructorMap.equal_range(str);
-         const auto &pair : stdv::iota(valuePairs.first, valuePairs.second)) {
+    for (const auto &pairs = stringToConstructorMap.equal_range(str);
+         const auto &pair : stdv::iota(pairs.first, pairs.second)) {
 
       if (Return value = pair->second(std::forward<ConstructorArgs>(args)...);
           value && validator(value)) {
@@ -81,7 +81,7 @@ public:
     requires(!StringConstructable<Type, Args...>)
   void registerType(Constructor constructor) {
     static const std::string name = Type{}.toString();
-    constructorMap.emplace(name, std::move(constructor));
+    stringToConstructorMap.emplace(name, std::move(constructor));
 
     Tokenizer::registerToken(name);
   }
@@ -106,7 +106,7 @@ public:
   }
 
 private:
-  ConstructorMap constructorMap;
+  StringToConstructorMap stringToConstructorMap;
 
   ConstructorVector extraConstructors;
 };

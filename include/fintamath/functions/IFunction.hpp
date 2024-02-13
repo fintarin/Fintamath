@@ -16,7 +16,7 @@
 namespace fintamath {
 
 class IFunction : public IMathObject {
-  using FunctionOrderMap = std::unordered_map<std::string, size_t>;
+  using FunctionNameToOrderMap = std::unordered_map<std::string, size_t>;
 
   using FunctionParser = detail::Parser<std::unique_ptr<IFunction>()>;
 
@@ -57,7 +57,7 @@ public:
   static void registerType() {
     getParser().registerType<T>();
 
-    getFunctionOrderMutableMap()[T{}.toString()] = maxFunctionOrder;
+    getFunctionNameToOrderMutableMap()[T{}.toString()] = maxFunctionOrder;
     maxFunctionOrder++;
   }
 
@@ -70,10 +70,10 @@ protected:
 
   virtual void validateArgsSize(const ArgumentRefVector &argVect) const;
 
-  static const FunctionOrderMap &getFunctionOrderMap();
+  static const FunctionNameToOrderMap &getFunctionNameToOrderMap();
 
 private:
-  static FunctionOrderMap &getFunctionOrderMutableMap();
+  static FunctionNameToOrderMap &getFunctionNameToOrderMutableMap();
 
   static FunctionParser &getParser();
 

@@ -113,7 +113,7 @@ void CompExpression::markAsSolution() {
 }
 
 std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &function) {
-  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> nameToOppositeFuncMap = {
       {Eqv{}.toString(), std::make_shared<Eqv>()},
       {Neqv{}.toString(), std::make_shared<Neqv>()},
       {More{}.toString(), std::make_shared<Less>()},
@@ -121,7 +121,7 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
       {MoreEqv{}.toString(), std::make_shared<LessEqv>()},
       {LessEqv{}.toString(), std::make_shared<MoreEqv>()},
   };
-  return oppositeFunctions.at(function.toString());
+  return nameToOppositeFuncMap.at(function.toString());
 }
 
 ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

@@ -57,7 +57,7 @@ namespace fintamath {
 
 using namespace detail;
 
-using DerivativeSimplifyMap = std::unordered_map<
+using NameToSimplifyFunctionMap = std::unordered_map<
     std::string,
     std::function<ArgumentPtr(const ArgumentPtrVector &children,
                               const std::shared_ptr<const Variable> &var)>>;
@@ -92,8 +92,8 @@ ArgumentPtr DerivativeExpression::derivativeSimplify(const IFunction & /*func*/,
 }
 
 ArgumentPtr DerivativeExpression::exprSimplify(const std::shared_ptr<const IExpression> &expr, const std::shared_ptr<const Variable> &var) {
-  static const DerivativeSimplifyMap derivativeSimplifyMap = [] {
-    static const DerivativeSimplifyMap map = {
+  static const NameToSimplifyFunctionMap nameToSimplifyFunctionMap = [] {
+    static const NameToSimplifyFunctionMap map = {
         {Add{}.toString(), &addSimplify},
         {Mul{}.toString(), &mulSimplify},
         {Div{}.toString(), &divSimplify},
@@ -127,8 +127,8 @@ ArgumentPtr DerivativeExpression::exprSimplify(const std::shared_ptr<const IExpr
     return map;
   }();
 
-  if (const auto iter = derivativeSimplifyMap.find(expr->getFunction()->toString());
-      iter != derivativeSimplifyMap.end()) {
+  if (const auto iter = nameToSimplifyFunctionMap.find(expr->getFunction()->toString());
+      iter != nameToSimplifyFunctionMap.end()) {
 
     return iter->second(expr->getChildren(), var);
   }

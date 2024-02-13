@@ -11,6 +11,7 @@
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
+using namespace detail;
 
 TEST(MathObjectTypeTests, constructorTest) {
   EXPECT_EQ(MathObjectType(MathObjectType::Integer), Integer::getTypeStatic());
@@ -49,15 +50,11 @@ TEST(MathObjectTypeTests, hashTest) {
   EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::None), static_cast<size_t>(MathObjectType::None));
 }
 
-TEST(MathObjectBoundTypes, getTest) {
+TEST(MathObjectbindTypes, bindTypesTest) {
   // TODO: implement
 }
 
-TEST(MathObjectBoundTypes, regTest) {
-  // TODO: implement
-}
-
-TEST(MathObjectBoundTypes, isBaseOfTest) {
+TEST(MathObjectbindTypes, isBaseOfTest) {
   EXPECT_TRUE(isBaseOf(INumber::getTypeStatic(), Integer::getTypeStatic()));
   EXPECT_TRUE(isBaseOf(INumber::getTypeStatic(), Rational::getTypeStatic()));
   EXPECT_TRUE(isBaseOf(IArithmetic::getTypeStatic(), Integer::getTypeStatic()));

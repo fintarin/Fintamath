@@ -206,10 +206,10 @@ namespace detail {
 class MathObjectBoundTypes final {
   using enum MathObjectType::Id;
 
-  using TypeToTypeMap = std::unordered_map<MathObjectType, MathObjectType, boost::hash<MathObjectType>>;
+  using TypeToBoundTypeMap = std::unordered_map<MathObjectType, MathObjectType, boost::hash<MathObjectType>>;
 
-  static TypeToTypeMap &getMutable() {
-    static TypeToTypeMap ids{
+  static TypeToBoundTypeMap &getMapMutable() {
+    static TypeToBoundTypeMap typeToBoundTypeMap{
         {IMathObject, None},
         {IArithmetic, ILiteral},
         {IExpression, IComparable},
@@ -224,24 +224,23 @@ class MathObjectBoundTypes final {
         {IFunction, None},
         {IOperator, None},
     };
-
-    return ids;
+    return typeToBoundTypeMap;
   }
 
 public:
-  static const TypeToTypeMap &get() {
-    return getMutable();
+  static const TypeToBoundTypeMap &getMap() {
+    return getMapMutable();
   }
 
-  static void reg(const MathObjectType &type, const MathObjectType &boundType) {
-    getMutable().emplace(type, boundType);
+  static void bindTypes(const MathObjectType &type, const MathObjectType &boundType) {
+    getMapMutable().emplace(type, boundType);
   }
 };
 
 }
 
 inline bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType) {
-  const auto &typeToTypeMap = detail::MathObjectBoundTypes::get();
+  const auto &typeToTypeMap = detail::MathObjectBoundTypes::getMap();
 
   if (const auto toTypeBoundaries = typeToTypeMap.find(toType); toTypeBoundaries != typeToTypeMap.end()) {
     return fromType >= toTypeBoundaries->first && fromType < toTypeBoundaries->second;
