@@ -28,11 +28,11 @@
 
 namespace fintamath {
 
-using TrigonometryFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const Rational &)>>;
+using NameToSimplifyFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const Rational &)>>;
 
-using TrigonometryTable = std::unordered_map<Rational, ArgumentPtr, boost::hash<Rational>>;
+using TrigTable = std::unordered_map<Rational, ArgumentPtr, boost::hash<Rational>>;
 
-ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key);
+ArgumentPtr findValue(const TrigTable &trigTable, const Rational &key);
 
 InvTrigExpression::InvTrigExpression(const IFunction &inFunc, ArgumentPtr inChild)
     : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
@@ -48,14 +48,14 @@ InvTrigExpression::SimplifyFunctionVector InvTrigExpression::getFunctionsForPost
 ArgumentPtr InvTrigExpression::constSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (const auto rat = convert<Rational>(*rhs)) {
     const Rational sqr = pow(*rat, 2) * rat->sign();
-    return trigTableSimplify(func, sqr);
+    return TrigTableSimplify(func, sqr);
   }
 
   if (const auto expr = cast<IExpression>(rhs)) {
     if (is<Sqrt>(expr->getOutputFunction())) {
       if (const auto sqrtChildInt = cast<Integer>(expr->getChildren().front())) {
         const Rational sqr = (*sqrtChildInt);
-        return trigTableSimplify(func, sqr);
+        return TrigTableSimplify(func, sqr);
       }
     }
 
@@ -68,7 +68,7 @@ ArgumentPtr InvTrigExpression::constSimplify(const IFunction &func, const Argume
 
         if (const auto sqrtChildInt = cast<Integer>(childExpr->getChildren().front())) {
           const Rational sqr = pow(*childRat, 2) * (*sqrtChildInt) * childRat->sign();
-          return trigTableSimplify(func, sqr);
+          return TrigTableSimplify(func, sqr);
         }
       }
     }
@@ -77,20 +77,20 @@ ArgumentPtr InvTrigExpression::constSimplify(const IFunction &func, const Argume
   return {};
 }
 
-ArgumentPtr InvTrigExpression::trigTableSimplify(const IFunction &func, const Rational &rhs) {
-  static const TrigonometryFunctionMap trigTable = {
-      {Asin{}.toString(), &trigTableAsinSimplify},
-      {Acos{}.toString(), &trigTableAcosSimplify},
-      {Atan{}.toString(), &trigTableAtanSimplify},
-      {Acot{}.toString(), &trigTableAcotSimplify},
-      {Asec{}.toString(), &trigTableAsecSimplify},
-      {Acsc{}.toString(), &trigTableAcscSimplify},
+ArgumentPtr InvTrigExpression::TrigTableSimplify(const IFunction &func, const Rational &rhs) {
+  static const NameToSimplifyFunctionMap nameToSimplifyFunctionMap = {
+      {Asin{}.toString(), &TrigTableAsinSimplify},
+      {Acos{}.toString(), &TrigTableAcosSimplify},
+      {Atan{}.toString(), &TrigTableAtanSimplify},
+      {Acot{}.toString(), &TrigTableAcotSimplify},
+      {Asec{}.toString(), &TrigTableAsecSimplify},
+      {Acsc{}.toString(), &TrigTableAcscSimplify},
   };
-  return trigTable.at(func.toString())(rhs);
+  return nameToSimplifyFunctionMap.at(func.toString())(rhs);
 }
 
-ArgumentPtr InvTrigExpression::trigTableAsinSimplify(const Rational &rhs) {
-  static const TrigonometryTable trigTable = {
+ArgumentPtr InvTrigExpression::TrigTableAsinSimplify(const Rational &rhs) {
+  static const TrigTable trigTable = {
       {Rational(-1), mulExpr(Rational(-1, 2), Pi{})},    // -1    | -π/2
       {Rational(-3, 4), mulExpr(Rational(-1, 3), Pi{})}, // -√3/2 | -π/3
       {Rational(-1, 2), mulExpr(Rational(-1, 4), Pi{})}, // -√2/2 | -π/4
@@ -104,8 +104,8 @@ ArgumentPtr InvTrigExpression::trigTableAsinSimplify(const Rational &rhs) {
   return findValue(trigTable, rhs);
 }
 
-ArgumentPtr InvTrigExpression::trigTableAcosSimplify(const Rational &rhs) {
-  static const TrigonometryTable trigTable = {
+ArgumentPtr InvTrigExpression::TrigTableAcosSimplify(const Rational &rhs) {
+  static const TrigTable trigTable = {
       {Rational(-1), Pi{}.clone()},                     // -1    | π
       {Rational(-3, 4), mulExpr(Rational(5, 6), Pi{})}, // -√3/2 | 5π/6
       {Rational(-1, 2), mulExpr(Rational(3, 4), Pi{})}, // -√2/2 | 3π/4
@@ -119,8 +119,8 @@ ArgumentPtr InvTrigExpression::trigTableAcosSimplify(const Rational &rhs) {
   return findValue(trigTable, rhs);
 }
 
-ArgumentPtr InvTrigExpression::trigTableAtanSimplify(const Rational &rhs) {
-  static const TrigonometryTable trigTable = {
+ArgumentPtr InvTrigExpression::TrigTableAtanSimplify(const Rational &rhs) {
+  static const TrigTable trigTable = {
       {Rational(-3), mulExpr(Rational(-1, 3), Pi{})},    // -√3   | -π/3
       {Rational(-1), mulExpr(Rational(-1, 4), Pi{})},    // -1    | -π/4
       {Rational(-1, 3), mulExpr(Rational(-1, 6), Pi{})}, // -√3/3 | -π/6
@@ -132,8 +132,8 @@ ArgumentPtr InvTrigExpression::trigTableAtanSimplify(const Rational &rhs) {
   return findValue(trigTable, rhs);
 }
 
-ArgumentPtr InvTrigExpression::trigTableAcotSimplify(const Rational &rhs) {
-  static const TrigonometryTable trigTable = {
+ArgumentPtr InvTrigExpression::TrigTableAcotSimplify(const Rational &rhs) {
+  static const TrigTable trigTable = {
       {Rational(-3), mulExpr(Rational(-1, 6), Pi{})},    // -√3   | -π/6
       {Rational(-1), mulExpr(Rational(-1, 4), Pi{})},    // -1    | -π/4
       {Rational(-1, 3), mulExpr(Rational(-1, 3), Pi{})}, // -√3/3 | -π/3
@@ -145,8 +145,8 @@ ArgumentPtr InvTrigExpression::trigTableAcotSimplify(const Rational &rhs) {
   return findValue(trigTable, rhs);
 }
 
-ArgumentPtr InvTrigExpression::trigTableAsecSimplify(const Rational &rhs) {
-  static const TrigonometryTable trigTable = {
+ArgumentPtr InvTrigExpression::TrigTableAsecSimplify(const Rational &rhs) {
+  static const TrigTable trigTable = {
       {Rational(-1), Pi{}.clone()},                     // -1    | π
       {Rational(-4, 3), mulExpr(Rational(5, 6), Pi{})}, // -2/√3 | 5π/6
       {Rational(-2), mulExpr(Rational(3, 4), Pi{})},    // -2/√2 | 3π/4
@@ -160,8 +160,8 @@ ArgumentPtr InvTrigExpression::trigTableAsecSimplify(const Rational &rhs) {
   return findValue(trigTable, rhs);
 }
 
-ArgumentPtr InvTrigExpression::trigTableAcscSimplify(const Rational &rhs) {
-  static const TrigonometryTable trigTable = {
+ArgumentPtr InvTrigExpression::TrigTableAcscSimplify(const Rational &rhs) {
+  static const TrigTable trigTable = {
       {Rational(-1), mulExpr(Rational(-1, 2), Pi{})},    // -1    | -π/2
       {Rational(-4, 3), mulExpr(Rational(-1, 3), Pi{})}, // -2/√3 | -π/3
       {Rational(-2), mulExpr(Rational(-1, 4), Pi{})},    // -2/√2 | -π/4
@@ -175,7 +175,7 @@ ArgumentPtr InvTrigExpression::trigTableAcscSimplify(const Rational &rhs) {
   return findValue(trigTable, rhs);
 }
 
-ArgumentPtr findValue(const TrigonometryTable &trigTable, const Rational &key) {
+ArgumentPtr findValue(const TrigTable &trigTable, const Rational &key) {
   if (const auto res = trigTable.find(key); res != trigTable.end()) {
     return res->second;
   }

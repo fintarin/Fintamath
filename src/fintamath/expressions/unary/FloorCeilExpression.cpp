@@ -56,11 +56,11 @@ ArgumentPtr FloorCeilExpression::negSimplify(const IFunction &func, const Argume
 }
 
 std::shared_ptr<IFunction> FloorCeilExpression::getOppositeFunction(const IFunction &function) {
-  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> nameToOppositeFuncMap = {
       {Floor{}.toString(), std::make_shared<Ceil>()},
       {Ceil{}.toString(), std::make_shared<Floor>()},
   };
-  return oppositeFunctions.at(function.toString());
+  return nameToOppositeFuncMap.at(function.toString());
 }
 
 }

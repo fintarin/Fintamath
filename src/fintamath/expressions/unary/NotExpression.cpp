@@ -90,7 +90,7 @@ ArgumentPtr NotExpression::nestedNotSimplify(const IFunction & /*func*/, const A
 }
 
 std::shared_ptr<IFunction> NotExpression::getLogicOppositeFunction(const IFunction &function) {
-  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> nameToOppositeFunctionMap = {
       {Eqv{}.toString(), std::make_shared<Neqv>()},
       {Neqv{}.toString(), std::make_shared<Eqv>()},
       {More{}.toString(), std::make_shared<LessEqv>()},
@@ -98,7 +98,7 @@ std::shared_ptr<IFunction> NotExpression::getLogicOppositeFunction(const IFuncti
       {MoreEqv{}.toString(), std::make_shared<Less>()},
       {LessEqv{}.toString(), std::make_shared<More>()},
   };
-  return oppositeFunctions.at(function.toString());
+  return nameToOppositeFunctionMap.at(function.toString());
 }
 
 }

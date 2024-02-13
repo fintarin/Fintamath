@@ -23,13 +23,13 @@ class MultiMethod<Res(ArgsBase...)> final {
 
   using Callback = std::function<Res(ArgsBase...)>;
 
-  using Callbacks = std::unordered_map<CallbackId, Callback, boost::hash<CallbackId>>;
+  using IdToCallbackMap = std::unordered_map<CallbackId, Callback, boost::hash<CallbackId>>;
 
 public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   void add(const auto &func) {
-    callbacks[CallbackId(Args::getTypeStatic()...)] = [func](const ArgsBase &...args) {
+    idToCallbackMap[CallbackId(Args::getTypeStatic()...)] = [func](const ArgsBase &...args) {
       return func(cast<Args>(args)...);
     };
   }
@@ -37,7 +37,7 @@ public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   Res operator()(Args &&...args) const {
-    if (auto iter = callbacks.find(CallbackId(args.getType()...)); iter != callbacks.end()) {
+    if (auto iter = idToCallbackMap.find(CallbackId(args.getType()...)); iter != idToCallbackMap.end()) {
       return iter->second(std::forward<Args>(args)...);
     }
 
@@ -47,11 +47,11 @@ public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   bool contains(const Args &...args) const {
-    return callbacks.contains(CallbackId(args.getType()...));
+    return idToCallbackMap.contains(CallbackId(args.getType()...));
   }
 
 private:
-  Callbacks callbacks;
+  IdToCallbackMap idToCallbackMap;
 };
 
 }

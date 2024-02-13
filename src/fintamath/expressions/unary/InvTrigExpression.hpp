@@ -23,19 +23,19 @@ protected:
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr trigTableSimplify(const IFunction &func, const Rational &rhs);
+  static ArgumentPtr TrigTableSimplify(const IFunction &func, const Rational &rhs);
 
-  static ArgumentPtr trigTableAsinSimplify(const Rational &rhs);
+  static ArgumentPtr TrigTableAsinSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableAcosSimplify(const Rational &rhs);
+  static ArgumentPtr TrigTableAcosSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableAtanSimplify(const Rational &rhs);
+  static ArgumentPtr TrigTableAtanSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableAcotSimplify(const Rational &rhs);
+  static ArgumentPtr TrigTableAcotSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableAsecSimplify(const Rational &rhs);
+  static ArgumentPtr TrigTableAsecSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableAcscSimplify(const Rational &rhs);
+  static ArgumentPtr TrigTableAcscSimplify(const Rational &rhs);
 };
 
 }

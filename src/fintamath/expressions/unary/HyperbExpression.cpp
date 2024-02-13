@@ -31,7 +31,7 @@ namespace fintamath {
 
 using namespace detail;
 
-using SimplifyFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>>;
+using NameToSimplifyFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const ArgumentPtr &)>>;
 
 HyperbExpression::HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild)
     : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
@@ -66,7 +66,7 @@ ArgumentPtr HyperbExpression::oppositeFunctionsSimplify(const IFunction &func, c
 }
 
 ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  static const SimplifyFunctionMap expandFunctionMap = {
+  static const NameToSimplifyFunctionMap nameToExpandFunctionMap = {
       {Tanh{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return divExpr(sinhExpr(inRhs), coshExpr(inRhs));
@@ -85,7 +85,7 @@ ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const Argume
        }},
   };
 
-  if (const auto iter = expandFunctionMap.find(func.toString()); iter != expandFunctionMap.end()) {
+  if (const auto iter = nameToExpandFunctionMap.find(func.toString()); iter != nameToExpandFunctionMap.end()) {
     return iter->second(rhs);
   }
 
@@ -93,7 +93,7 @@ ArgumentPtr HyperbExpression::expandSimplify(const IFunction &func, const Argume
 }
 
 ArgumentPtr HyperbExpression::negSimplify(const IFunction &func, const ArgumentPtr &rhs) {
-  static const SimplifyFunctionMap negFunctionsMap = {
+  static const NameToSimplifyFunctionMap nameToNegFunctionsMap = {
       {Sinh{}.toString(),
        [](const ArgumentPtr &inRhs) {
          return negExpr(sinhExpr(negExpr(inRhs)));
@@ -105,7 +105,7 @@ ArgumentPtr HyperbExpression::negSimplify(const IFunction &func, const ArgumentP
   };
 
   if (isNegated(rhs)) {
-    if (const auto iter = negFunctionsMap.find(func.toString()); iter != negFunctionsMap.end()) {
+    if (const auto iter = nameToNegFunctionsMap.find(func.toString()); iter != nameToNegFunctionsMap.end()) {
       return iter->second(rhs);
     }
   }
@@ -114,7 +114,7 @@ ArgumentPtr HyperbExpression::negSimplify(const IFunction &func, const ArgumentP
 }
 
 std::shared_ptr<IFunction> HyperbExpression::getOppositeFunction(const IFunction &function) {
-  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> oppositeFunctions = {
+  static const std::unordered_map<std::string, std::shared_ptr<IFunction>> nameToOppositeFunctionMap = {
       {Sinh{}.toString(), std::make_unique<Asinh>()},
       {Cosh{}.toString(), std::make_unique<Acosh>()},
       {Tanh{}.toString(), std::make_unique<Atanh>()},
@@ -122,7 +122,7 @@ std::shared_ptr<IFunction> HyperbExpression::getOppositeFunction(const IFunction
       {Sech{}.toString(), std::make_shared<Asech>()},
       {Csch{}.toString(), std::make_shared<Acsch>()},
   };
-  return oppositeFunctions.at(function.toString());
+  return nameToOppositeFunctionMap.at(function.toString());
 }
 
 }

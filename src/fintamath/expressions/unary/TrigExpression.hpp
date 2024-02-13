@@ -34,11 +34,11 @@ private:
 
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr trigTableSimplify(const IFunction &func, const Rational &rhs);
+  static ArgumentPtr TrigTableSimplify(const IFunction &func, const Rational &rhs);
 
-  static ArgumentPtr trigTableSinSimplify(const Rational &rhs);
+  static ArgumentPtr TrigTableSinSimplify(const Rational &rhs);
 
-  static ArgumentPtr trigTableCosSimplify(const Rational &rhs);
+  static ArgumentPtr TrigTableCosSimplify(const Rational &rhs);
 
   static std::tuple<Rational, bool> phaseShiftSin(const Rational &rhs);
 

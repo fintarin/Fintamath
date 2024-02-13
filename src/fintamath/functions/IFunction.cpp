@@ -22,13 +22,13 @@ void IFunction::validateArgsSize(const ArgumentRefVector &argVect) const {
   throw InvalidInputFunctionException(toString(), argNameVect);
 }
 
-const IFunction::FunctionOrderMap &IFunction::getFunctionOrderMap() {
-  return getFunctionOrderMutableMap();
+const IFunction::FunctionNameToOrderMap &IFunction::getFunctionNameToOrderMap() {
+  return getFunctionNameToOrderMutableMap();
 }
 
-IFunction::FunctionOrderMap &IFunction::getFunctionOrderMutableMap() {
-  static FunctionOrderMap orderMap;
-  return orderMap;
+IFunction::FunctionNameToOrderMap &IFunction::getFunctionNameToOrderMutableMap() {
+  static FunctionNameToOrderMap map;
+  return map;
 }
 
 IFunction::FunctionParser &IFunction::getParser() {

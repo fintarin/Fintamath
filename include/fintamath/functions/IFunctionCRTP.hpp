@@ -24,7 +24,7 @@ public:
 
   size_t getFunctionOrder() const final {
     static const std::string funcStr = Derived{}.toString();
-    return getFunctionOrderMap().at(funcStr);
+    return getFunctionNameToOrderMap().at(funcStr);
   }
 
   bool doArgsMatch(const ArgumentRefVector &argVect) const override {
