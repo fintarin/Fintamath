@@ -223,6 +223,37 @@ std::pair<ArgumentPtr, ArgumentPtr> splitRational(const ArgumentPtr &arg) {
   return {arg, Integer(1).clone()};
 }
 
+ArgumentPtr negate(const ArgumentPtr &arg) {
+  if (const auto expr = cast<IExpression>(arg)) {
+    if (is<Add>(expr->getFunction())) {
+      auto negChildrenView =
+          expr->getChildren() |
+          stdv::transform([](const ArgumentPtr &child) {
+            return negate(child);
+          });
+      return makePolynom(Add{}, ArgumentPtrVector(negChildrenView.begin(), negChildrenView.end())); // TODO: use C++23 stdv::to
+    }
+
+    if (is<Mul>(expr->getFunction())) {
+      if (const auto firstChildNum = cast<INumber>(expr->getChildren().front())) {
+        if (*firstChildNum == Integer(-1)) {
+          ArgumentPtrVector negChildren(expr->getChildren().begin() + 1, expr->getChildren().end());
+          return makePolynom(Mul(), std::move(negChildren));
+        }
+
+        ArgumentPtrVector negChildren = expr->getChildren();
+        negChildren.front() = (*firstChildNum) * Integer(-1);
+        return makePolynom(Mul(), std::move(negChildren));
+      }
+    }
+  }
+  else if (const auto arithm = cast<IArithmetic>(arg)) {
+    return (*arithm) * Integer(-1);
+  }
+
+  return mulExpr(Integer(-1).clone(), arg);
+}
+
 ArgumentPtr makePolynom(const IFunction &func, ArgumentPtrVector &&args) {
   if (args.empty()) {
     return {};

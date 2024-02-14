@@ -74,6 +74,8 @@ std::pair<ArgumentPtr, ArgumentPtr> splitPowExpr(const ArgumentPtr &rhs);
 
 std::pair<ArgumentPtr, ArgumentPtr> splitRational(const ArgumentPtr &arg);
 
+ArgumentPtr negate(const ArgumentPtr &arg);
+
 ArgumentPtr makePolynom(const IFunction &func, ArgumentPtrVector &&args);
 
 ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args);

@@ -46,9 +46,8 @@ DivExpression::DivExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
 }
 
 std::string DivExpression::toString() const {
-  if (isNegated(lhsChild)) { // TODO! find more efficient solution
-    ArgumentPtr innerDiv = divExpr(negExpr(lhsChild)->toMinimalObject(), rhsChild);
-    return negExpr(std::move(innerDiv))->toString();
+  if (isNegated(lhsChild)) {
+    return negExpr(divExpr(detail::negate(lhsChild), rhsChild))->toString();
   }
 
   return IBinaryExpression::toString();
