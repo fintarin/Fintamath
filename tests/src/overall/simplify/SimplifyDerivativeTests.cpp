@@ -282,7 +282,7 @@ TEST(SimplifyDerivativeTests, simplifyTest) {
   EXPECT_EQ(Expression("derivative(ln(cos(3x)), x)").toString(),
             "-3 tan(3 x)");
   EXPECT_EQ(Expression("derivative(log(sin(x^5), tan(x^3)), x)").toString(),
-            "(3 sec(x^3)^2 x^2 cos(x^3) csc(x^3))/ln(sin(x^5)) - (5 x^4 cot(x^5) ln(tan(x^3)))/(ln(sin(x^5))^2)");
+            "(3 sec(x^3)^2 x^2 cos(x^3) csc(x^3))/ln(sin(x^5)) - (5 x^4 cos(x^5) csc(x^5) ln(tan(x^3)))/(ln(sin(x^5))^2)");
   EXPECT_EQ(Expression("derivative(acos(4x + 5)^5, x)").toString(),
             "-(20 acos(4 x + 5)^4)/sqrt(-16 x^2 - 40 x - 24)");
   EXPECT_EQ(Expression("derivative(sin(sin(sin(x))), x)").toString(),

@@ -47,17 +47,12 @@ std::string CompExpression::toString() const {
         *lhsExpr->getFunction() == Add{}) {
 
       ArgumentPtrVector sumChildren = lhsExpr->getChildren();
-      const ArgumentPtr solLhs = sumChildren.front();
+      ArgumentPtr solLhs = sumChildren.front();
 
       if (is<Variable>(solLhs)) {
         sumChildren.erase(sumChildren.begin());
-
-        ArgumentPtr solRhs = negExpr(std::move(sumChildren));
-        simplifyChild(solRhs);
-
-        if (!is<IExpression>(solRhs)) {
-          return CompExpression(cast<IOperator>(*func), solLhs, solRhs).toString();
-        }
+        ArgumentPtr solRhs = detail::negate(makePolynom(Add{}, std::move(sumChildren)));
+        return CompExpression(cast<IOperator>(*func), std::move(solLhs), std::move(solRhs)).toString();
       }
     }
   }
