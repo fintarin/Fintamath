@@ -163,7 +163,7 @@ void Expression::updateStringMutable() const {
 
 std::unique_ptr<IMathObject> parseFintamath(const std::string &str) {
   try {
-    const auto tokens = Tokenizer::tokenize(str);
+    auto tokens = Tokenizer::tokenize(str);
     auto terms = Expression::tokensToTerms(tokens);
     auto stack = Expression::termsToOperands(terms);
     auto obj = Expression::operandsToObject(stack);
@@ -174,7 +174,7 @@ std::unique_ptr<IMathObject> parseFintamath(const std::string &str) {
   }
 }
 
-TermVector Expression::tokensToTerms(const TokenVector &tokens) {
+TermVector Expression::tokensToTerms(TokenVector &tokens) {
   if (tokens.empty()) {
     throw InvalidInputException("");
   }
@@ -186,7 +186,7 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
       terms[i] = std::move(*term);
     }
     else {
-      terms[i] = Term(tokens[i], std::unique_ptr<IMathObject>{});
+      terms[i] = Term(std::move(tokens[i]), std::unique_ptr<IMathObject>{});
     }
   }
 

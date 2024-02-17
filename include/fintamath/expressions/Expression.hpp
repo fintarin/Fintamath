@@ -117,7 +117,7 @@ private:
 
   void updateStringMutable() const;
 
-  static detail::TermVector tokensToTerms(const detail::TokenVector &tokens);
+  static detail::TermVector tokensToTerms(detail::TokenVector &tokens);
 
   static detail::OperandStack termsToOperands(detail::TermVector &terms);
 
