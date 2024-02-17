@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <ranges>
 #include <stack>
 #include <string>
@@ -39,20 +40,6 @@
 namespace fintamath {
 
 using namespace detail;
-
-struct TermWithPriority final {
-  std::unique_ptr<Term> term;
-
-  IOperator::Priority priority = IOperator::Priority::Lowest;
-
-public:
-  TermWithPriority() = default;
-
-  TermWithPriority(std::unique_ptr<Term> inTerm, const IOperator::Priority inPriority)
-      : term(std::move(inTerm)),
-        priority(inPriority) {
-  }
-};
 
 Expression::Expression() : child(Integer(0).clone()) {
 }
@@ -196,10 +183,10 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
 
   for (const auto i : stdv::iota(0U, terms.size())) {
     if (auto term = getTermParser().parse(tokens[i])) {
-      terms[i] = std::move(term);
+      terms[i] = std::move(*term);
     }
     else {
-      terms[i] = std::make_unique<Term>(tokens[i], std::unique_ptr<IMathObject>{});
+      terms[i] = Term(tokens[i], std::unique_ptr<IMathObject>{});
     }
   }
 
@@ -213,66 +200,49 @@ TermVector Expression::tokensToTerms(const TokenVector &tokens) {
 // Use the shunting yard algorithm
 // https://en.m.wikipedia.org/wiki/Shunting_yard_algorithm
 OperandStack Expression::termsToOperands(TermVector &terms) {
-  OperandStack outStack;
-  std::stack<TermWithPriority> operStack;
+  OperandStack operands;
+  FunctionTermStack functions;
 
   for (auto &term : terms) {
-    if (!term->value) {
-      if (term->name == "(") {
-        operStack.emplace(std::move(term), IOperator::Priority::Lowest);
+    if (!term.value) {
+      if (term.name == "(") {
+        functions.emplace(std::move(term), std::optional<IOperator::Priority>{});
       }
-      else if (term->name == ")") {
-        while (!operStack.empty() &&
-               operStack.top().term->name != "(") {
+      else if (term.name == ")") {
+        moveFunctionsToOperands(operands, functions, {});
 
-          outStack.emplace(std::move(operStack.top().term->value));
-          operStack.pop();
-        }
-
-        if (operStack.empty()) {
+        if (functions.empty()) {
           throw InvalidInputException("");
         }
 
-        operStack.pop();
+        functions.pop();
       }
       else {
         throw InvalidInputException("");
       }
     }
+    else if (is<IFunction>(term.value)) {
+      std::optional<IOperator::Priority> priority;
+
+      if (const auto *oper = cast<IOperator>(term.value.get())) {
+        moveFunctionsToOperands(operands, functions, oper);
+        priority = oper->getPriority();
+      }
+
+      functions.emplace(std::move(term), priority);
+    }
     else {
-      if (is<IFunction>(term->value)) {
-        if (const auto *oper = cast<IOperator>(term->value.get())) {
-          while (!operStack.empty() &&
-                 operStack.top().term->name != "(" &&
-                 operStack.top().priority <= oper->getPriority() &&
-                 !isPrefixOperator(oper)) {
-
-            outStack.emplace(std::move(operStack.top().term->value));
-            operStack.pop();
-          }
-
-          operStack.emplace(std::move(term), oper->getPriority());
-        }
-        else {
-          operStack.emplace(std::move(term), IOperator::Priority::Highest);
-        }
-      }
-      else {
-        outStack.emplace(std::move(term->value));
-      }
+      operands.emplace(std::move(term.value));
     }
   }
 
-  while (!operStack.empty()) {
-    if (operStack.top().term->name == "(") {
-      throw InvalidInputException("");
-    }
+  moveFunctionsToOperands(operands, functions, {});
 
-    outStack.emplace(std::move(operStack.top().term->value));
-    operStack.pop();
+  if (!functions.empty()) {
+    throw InvalidInputException("");
   }
 
-  return outStack;
+  return operands;
 }
 
 std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands) {
@@ -308,53 +278,53 @@ std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands
   return arg;
 }
 
-ArgumentPtrVector Expression::unwrapComma(const ArgumentPtr &child) {
-  if (const auto childExpr = cast<IExpression>(child);
-      childExpr &&
-      is<Comma>(childExpr->getFunction())) {
-
-    const ArgumentPtr &lhs = childExpr->getChildren().front();
-    const ArgumentPtr &rhs = childExpr->getChildren().back();
-
-    ArgumentPtrVector children = unwrapComma(lhs);
-    children.push_back(rhs);
-    return children;
+void Expression::moveFunctionsToOperands(OperandStack &operands, std::stack<FunctionTerm> &functions, const IOperator *nextOper) {
+  if (isPrefixOperator(nextOper)) {
+    return;
   }
 
-  return {child};
+  while (!functions.empty() &&
+         functions.top().term.name != "(" &&
+         (!nextOper ||
+          !functions.top().priority ||
+          *functions.top().priority <= nextOper->getPriority())) {
+
+    operands.emplace(std::move(functions.top().term.value));
+    functions.pop();
+  }
 }
 
 void Expression::insertMultiplications(TermVector &terms) {
   static const ArgumentPtr mul = Mul{}.clone();
 
   for (size_t i = 1; i < terms.size(); i++) {
-    if (canNextTermBeBinaryOperator(*terms[i - 1]) &&
-        canPrevTermBeBinaryOperator(*terms[i])) {
+    if (canNextTermBeBinaryOperator(terms[i - 1]) &&
+        canPrevTermBeBinaryOperator(terms[i])) {
 
-      auto term = std::make_unique<Term>(mul->toString(), mul->clone());
+      Term term(mul->toString(), mul->clone());
       terms.insert(terms.begin() + static_cast<ptrdiff_t>(i), std::move(term));
       i++;
     }
   }
 }
 
-void Expression::fixOperatorTypes(const TermVector &terms) {
+void Expression::fixOperatorTypes(TermVector &terms) {
   bool isFixed = true;
 
-  if (const auto &term = terms.front();
-      is<IOperator>(term->value) &&
-      !isPrefixOperator(term->value.get())) {
+  if (auto &term = terms.front();
+      is<IOperator>(term.value) &&
+      !isPrefixOperator(term.value.get())) {
 
-    term->value = IOperator::parse(term->name, IOperator::Priority::PrefixUnary);
-    isFixed = static_cast<bool>(term->value);
+    term.value = IOperator::parse(term.name, IOperator::Priority::PrefixUnary);
+    isFixed = static_cast<bool>(term.value);
   }
 
-  if (const auto &term = terms.back();
-      is<IOperator>(term->value) &&
-      !isPostfixOperator(term->value.get())) {
+  if (auto &term = terms.back();
+      is<IOperator>(term.value) &&
+      !isPostfixOperator(term.value.get())) {
 
-    term->value = IOperator::parse(term->name, IOperator::Priority::PostfixUnary);
-    isFixed = isFixed && static_cast<bool>(term->value);
+    term.value = IOperator::parse(term.name, IOperator::Priority::PostfixUnary);
+    isFixed = isFixed && static_cast<bool>(term.value);
   }
 
   if (!isFixed) {
@@ -366,28 +336,28 @@ void Expression::fixOperatorTypes(const TermVector &terms) {
   }
 
   for (const auto i : stdv::iota(1U, terms.size() - 1)) {
-    const auto &term = terms[i];
+    auto &term = terms[i];
     const auto &termPrev = terms[i - 1];
 
-    if (is<IOperator>(term->value) &&
-        !isPrefixOperator(term->value.get()) &&
-        !canNextTermBeBinaryOperator(*termPrev)) {
+    if (is<IOperator>(term.value) &&
+        !isPrefixOperator(term.value.get()) &&
+        !canNextTermBeBinaryOperator(termPrev)) {
 
-      term->value = IOperator::parse(term->name, IOperator::Priority::PrefixUnary);
-      isFixed = isFixed && term->value;
+      term.value = IOperator::parse(term.name, IOperator::Priority::PrefixUnary);
+      isFixed = isFixed && term.value;
     }
   }
 
   for (const auto i : stdv::iota(1U, terms.size() - 1) | stdv::reverse) {
-    const auto &term = terms[i];
+    auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
-    if (is<IOperator>(term->value) &&
-        !isPostfixOperator(term->value.get()) &&
-        !canPrevTermBeBinaryOperator(*termNext)) {
+    if (is<IOperator>(term.value) &&
+        !isPostfixOperator(term.value.get()) &&
+        !canPrevTermBeBinaryOperator(termNext)) {
 
-      term->value = IOperator::parse(term->name, IOperator::Priority::PostfixUnary);
-      isFixed = isFixed && term->value;
+      term.value = IOperator::parse(term.name, IOperator::Priority::PostfixUnary);
+      isFixed = isFixed && term.value;
     }
   }
 
@@ -398,12 +368,12 @@ void Expression::fixOperatorTypes(const TermVector &terms) {
 
 void Expression::collapseFactorials(TermVector &terms) {
   for (size_t i = 1; i + 1 < terms.size(); i++) {
-    const auto &term = terms[i];
+    auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
-    if (is<Factorial>(term->value) && is<Factorial>(termNext->value)) {
-      const auto &oldFactorial = cast<Factorial>(*term->value);
-      term->value = Factorial(oldFactorial.getOrder() + 1).clone();
+    if (is<Factorial>(term.value) && is<Factorial>(termNext.value)) {
+      const auto &oldFactorial = cast<Factorial>(*term.value);
+      term.value = Factorial(oldFactorial.getOrder() + 1).clone();
 
       terms.erase(terms.begin() + static_cast<ptrdiff_t>(i) + 1);
       i--;
@@ -443,6 +413,22 @@ bool Expression::isPostfixOperator(const IMathObject *val) {
 
 bool Expression::isNonOperatorFunction(const IMathObject *val) {
   return is<IFunction>(val) && !is<IOperator>(val);
+}
+
+ArgumentPtrVector Expression::unwrapComma(const ArgumentPtr &child) {
+  if (const auto childExpr = cast<IExpression>(child);
+      childExpr &&
+      is<Comma>(childExpr->getFunction())) {
+
+    const ArgumentPtr &lhs = childExpr->getChildren().front();
+    const ArgumentPtr &rhs = childExpr->getChildren().back();
+
+    ArgumentPtrVector children = unwrapComma(lhs);
+    children.push_back(rhs);
+    return children;
+  }
+
+  return {child};
 }
 
 ArgumentPtr Expression::compress(const ArgumentPtr &child) {

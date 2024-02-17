@@ -17,7 +17,6 @@ class IOperator : public IFunction {
 
 public:
   enum class Priority : uint8_t {
-    Highest,
     Exponentiation, // e.g.  a ^ b
     PostfixUnary,   // e.g.  a!
     PrefixUnary,    // e.g.  -a
@@ -30,7 +29,6 @@ public:
     Implication,    // e.g.  a -> b
     Equivalence,    // e.g.  a <-> b
     Comma,          // e.g.  a , b
-    Lowest,
   };
 
 public:
@@ -45,9 +43,13 @@ public:
     return getParser().parse(validator, parsedStr);
   }
 
-  static std::unique_ptr<IOperator> parse(const std::string &parsedStr, Priority priority = Priority::Lowest) {
+  static std::unique_ptr<IOperator> parse(const std::string &parsedStr) {
+    return getParser().parse(parsedStr);
+  }
+
+  static std::unique_ptr<IOperator> parse(const std::string &parsedStr, Priority priority) {
     const auto validator = [priority](const std::unique_ptr<IOperator> &oper) {
-      return priority == Priority::Lowest || oper->getPriority() == priority;
+      return oper->getPriority() == priority;
     };
     return getParser().parse(validator, parsedStr);
   }
