@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <stack>
 #include <string>
 #include <utility>
@@ -16,6 +17,7 @@
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
@@ -36,7 +38,24 @@ public:
   }
 };
 
-using TermVector = std::vector<std::unique_ptr<detail::Term>>;
+struct FunctionTerm final {
+  Term term;
+
+  std::optional<IOperator::Priority> priority;
+
+public:
+  FunctionTerm() = default;
+
+  FunctionTerm(Term inTerm, const std::optional<IOperator::Priority> inPriority)
+      : term(std::move(inTerm)),
+        priority(inPriority) {
+  }
+};
+
+using TermVector = std::vector<Term>;
+
+using FunctionTermStack = std::stack<FunctionTerm>;
+
 using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 
 }
@@ -104,11 +123,11 @@ private:
 
   static std::unique_ptr<IMathObject> operandsToObject(detail::OperandStack &operands);
 
-  static ArgumentPtrVector unwrapComma(const ArgumentPtr &child);
+  static void moveFunctionsToOperands(detail::OperandStack &operands, detail::FunctionTermStack &functions, const IOperator *nextOper);
 
   static void insertMultiplications(detail::TermVector &terms);
 
-  static void fixOperatorTypes(const detail::TermVector &terms);
+  static void fixOperatorTypes(detail::TermVector &terms);
 
   static void collapseFactorials(detail::TermVector &terms);
 
@@ -127,6 +146,8 @@ private:
   static void validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args);
 
   static bool doesArgMatch(const MathObjectType &expectedType, const ArgumentPtr &arg);
+
+  static ArgumentPtrVector unwrapComma(const ArgumentPtr &child);
 
   static ArgumentPtr compress(const ArgumentPtr &child);
 
