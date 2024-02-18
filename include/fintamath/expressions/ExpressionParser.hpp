@@ -7,6 +7,6 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> parseFintamath(const std::string &str);
+std::unique_ptr<IMathObject> parseExpr(const std::string &str);
 
 }

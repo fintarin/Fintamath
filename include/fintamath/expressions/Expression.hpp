@@ -153,7 +153,7 @@ private:
 
   friend std::unique_ptr<IMathObject> detail::makeExpr(const IFunction &func, ArgumentPtrVector args);
 
-  friend std::unique_ptr<IMathObject> parseFintamath(const std::string &str);
+  friend std::unique_ptr<IMathObject> parseExpr(const std::string &str);
 
   friend Expression approximate(const Expression &rhs, unsigned precision);
 

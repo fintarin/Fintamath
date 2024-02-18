@@ -44,7 +44,7 @@ using namespace detail;
 Expression::Expression() : child(Integer(0).clone()) {
 }
 
-Expression::Expression(const std::string &str) : child(parseFintamath(str)) {
+Expression::Expression(const std::string &str) : child(parseExpr(str)) {
 }
 
 Expression::Expression(const ArgumentPtr &obj) : child(compress(obj)) {
@@ -161,7 +161,7 @@ void Expression::updateStringMutable() const {
   stringCached = child->toString();
 }
 
-std::unique_ptr<IMathObject> parseFintamath(const std::string &str) {
+std::unique_ptr<IMathObject> parseExpr(const std::string &str) {
   try {
     auto tokens = Tokenizer::tokenize(str);
     auto terms = Expression::tokensToTerms(tokens);
