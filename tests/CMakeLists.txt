@@ -6,7 +6,7 @@ file(
 
 add_executable(${PROJECT_NAME}_tests ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${PROJECT_NAME} gtest_main gmock_main)
+target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${PROJECT_NAME}::${PROJECT_NAME} gtest_main gmock_main)
 
 set_target_properties(${PROJECT_NAME}_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
