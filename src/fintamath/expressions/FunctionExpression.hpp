@@ -23,7 +23,7 @@ public:
   void setChildren(const ArgumentPtrVector &childVect) override;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::FunctionExpression;
+    return {MathObjectType::FunctionExpression, "FunctionExpression"};
   }
 
 protected:

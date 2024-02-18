@@ -98,8 +98,8 @@ TEST(ExpressionTests, equalsTest) {
 }
 
 TEST(ExpressionTests, getTypeTest) {
-  EXPECT_EQ(Expression::getTypeStatic(), MathObjectType::Expression);
-  EXPECT_EQ(Expression().getType(), MathObjectType::Expression);
+  EXPECT_EQ(Expression::getTypeStatic(), MathObjectType(MathObjectType::Expression, "Expression"));
+  EXPECT_EQ(Expression().getType(), MathObjectType(MathObjectType::Expression, "Expression"));
 }
 
 TEST(ExpressionTests, variableVariablePlusOperatorTest) {

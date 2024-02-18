@@ -57,6 +57,6 @@ TEST(CoshTests, exprTest) {
 }
 
 TEST(CoshTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Cosh);
-  EXPECT_EQ(f.getType(), MathObjectType::Cosh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Cosh, "Cosh"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Cosh, "Cosh"));
 }

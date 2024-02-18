@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Acot;
+    return {MathObjectType::Acot, "Acot"};
   }
 
 protected:

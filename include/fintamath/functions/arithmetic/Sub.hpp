@@ -23,7 +23,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Sub;
+    return {MathObjectType::Sub, "Sub"};
   }
 
 protected:

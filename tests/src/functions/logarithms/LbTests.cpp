@@ -53,6 +53,6 @@ TEST(LbTests, exprTest) {
 }
 
 TEST(LbTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Lb);
-  EXPECT_EQ(f.getType(), MathObjectType::Lb);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Lb, "Lb"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Lb, "Lb"));
 }

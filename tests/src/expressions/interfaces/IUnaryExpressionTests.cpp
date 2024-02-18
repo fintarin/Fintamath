@@ -17,7 +17,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IUnaryExpression) + 999;
+    return {static_cast<size_t>(MathObjectType::IUnaryExpression) + 999, "TestUnaryExpression"};
   }
 };
 
@@ -63,5 +63,5 @@ TEST(IUnaryExpressionTests, toMinimalObjectTest) {
 }
 
 TEST(IUnaryExpressionTests, getTypeTest) {
-  EXPECT_EQ(IUnaryExpression::getTypeStatic(), MathObjectType::IUnaryExpression);
+  EXPECT_EQ(IUnaryExpression::getTypeStatic(), MathObjectType(MathObjectType::IUnaryExpression, "IUnaryExpression"));
 }

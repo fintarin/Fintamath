@@ -28,7 +28,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Neqv;
+    return {MathObjectType::Neqv, "Neqv"};
   }
 
 protected:

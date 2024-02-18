@@ -21,7 +21,7 @@ public:
   void markAsSolution();
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::CompExpression;
+    return {MathObjectType::CompExpression, "CompExpression"};
   }
 
 protected:

@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Coth;
+    return {MathObjectType::Coth, "Coth"};
   }
 
 protected:

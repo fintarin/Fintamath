@@ -58,6 +58,6 @@ TEST(CotTests, exprTest) {
 }
 
 TEST(CotTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Cot);
-  EXPECT_EQ(f.getType(), MathObjectType::Cot);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Cot, "Cot"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Cot, "Cot"));
 }

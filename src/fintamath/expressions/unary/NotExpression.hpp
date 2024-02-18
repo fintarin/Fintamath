@@ -14,7 +14,7 @@ public:
   explicit NotExpression(ArgumentPtr inChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::NotExpression;
+    return {MathObjectType::NotExpression, "NotExpression"};
   }
 
 protected:

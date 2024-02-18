@@ -27,7 +27,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Mul;
+    return {MathObjectType::Mul, "Mul"};
   }
 
 protected:

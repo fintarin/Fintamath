@@ -12,7 +12,7 @@ public:
   explicit AbsExpression(ArgumentPtr inChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::AbsExpression;
+    return {MathObjectType::AbsExpression, "AbsExpression"};
   }
 
 protected:

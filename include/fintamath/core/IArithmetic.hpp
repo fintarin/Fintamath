@@ -54,7 +54,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IArithmetic;
+    return {MathObjectType::IArithmetic, "IArithmetic"};
   }
 
 protected:

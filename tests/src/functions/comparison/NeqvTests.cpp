@@ -70,6 +70,6 @@ TEST(NeqvTests, exprTest) {
 }
 
 TEST(NeqvTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Neqv);
-  EXPECT_EQ(f.getType(), MathObjectType::Neqv);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Neqv, "Neqv"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Neqv, "Neqv"));
 }

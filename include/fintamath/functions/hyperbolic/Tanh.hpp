@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Tanh;
+    return {MathObjectType::Tanh, "Tanh"};
   }
 
 protected:

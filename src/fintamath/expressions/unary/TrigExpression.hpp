@@ -17,7 +17,7 @@ public:
   explicit TrigExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::TrigExpression;
+    return {MathObjectType::TrigExpression, "TrigExpression"};
   }
 
 protected:

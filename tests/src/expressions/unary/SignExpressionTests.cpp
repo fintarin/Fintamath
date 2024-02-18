@@ -6,5 +6,5 @@
 using namespace fintamath;
 
 TEST(SignExpressionTests, getTypeTest) {
-  EXPECT_EQ(signExpr(Integer(0).clone())->getType(), MathObjectType::SignExpression);
+  EXPECT_EQ(signExpr(Integer(0).clone())->getType(), MathObjectType(MathObjectType::SignExpression, "SignExpression"));
 }

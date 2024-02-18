@@ -16,6 +16,6 @@ TEST(PiTests, callTest) {
 }
 
 TEST(PiTests, getTypeTest) {
-  EXPECT_EQ(Pi::getTypeStatic(), MathObjectType::Pi);
-  EXPECT_EQ(Pi().getType(), MathObjectType::Pi);
+  EXPECT_EQ(Pi::getTypeStatic(), MathObjectType(MathObjectType::Pi, "Pi"));
+  EXPECT_EQ(Pi().getType(), MathObjectType(MathObjectType::Pi, "Pi"));
 }

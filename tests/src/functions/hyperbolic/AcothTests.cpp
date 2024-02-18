@@ -60,6 +60,6 @@ TEST(AcothTests, exprTest) {
 }
 
 TEST(AcothTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Acoth);
-  EXPECT_EQ(f.getType(), MathObjectType::Acoth);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Acoth, "Acoth"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Acoth, "Acoth"));
 }

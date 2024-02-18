@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(DerivativeExpressionTests, getTypeTest) {
-  EXPECT_EQ(derivativeExpr(Integer(0), Variable("x"))->getType(), MathObjectType::DerivativeExpression);
+  EXPECT_EQ(derivativeExpr(Integer(0), Variable("x"))->getType(), MathObjectType(MathObjectType::DerivativeExpression, "DerivativeExpression"));
 }

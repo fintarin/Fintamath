@@ -23,7 +23,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Neg;
+    return {MathObjectType::Neg, "Neg"};
   }
 
 protected:

@@ -21,7 +21,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Sec;
+    return {MathObjectType::Sec, "Sec"};
   }
 
 protected:

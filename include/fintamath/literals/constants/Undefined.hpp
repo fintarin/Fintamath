@@ -17,7 +17,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Undefined;
+    return {MathObjectType::Undefined, "Undefined"};
   }
 
 protected:

@@ -185,6 +185,6 @@ TEST(RootTests, exprTest) {
 }
 
 TEST(RootTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Root);
-  EXPECT_EQ(f.getType(), MathObjectType::Root);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Root, "Root"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Root, "Root"));
 }

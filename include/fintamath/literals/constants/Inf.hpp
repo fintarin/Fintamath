@@ -17,7 +17,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Inf;
+    return {MathObjectType::Inf, "Inf"};
   }
 
 protected:

@@ -26,7 +26,7 @@ public:
   void setChildren(const ArgumentPtrVector &childVect) override;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IUnaryExpression;
+    return {MathObjectType::IUnaryExpression, "IUnaryExpression"};
   }
 
 protected:

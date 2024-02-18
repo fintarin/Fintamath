@@ -26,7 +26,7 @@ public:
   void setChildren(const ArgumentPtrVector &childVect) final;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IBinaryExpression;
+    return {MathObjectType::IBinaryExpression, "IBinaryExpression"};
   }
 
 protected:

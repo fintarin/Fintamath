@@ -1044,8 +1044,8 @@ TEST(RealTests, isComplexTest) {
 }
 
 TEST(RealTests, getTypeTest) {
-  EXPECT_EQ(Real::getTypeStatic(), MathObjectType::Real);
-  EXPECT_EQ(Real().getType(), MathObjectType::Real);
+  EXPECT_EQ(Real::getTypeStatic(), MathObjectType(MathObjectType::Real, "Real"));
+  EXPECT_EQ(Real().getType(), MathObjectType(MathObjectType::Real, "Real"));
 }
 
 TEST(RealTests, hashTest) {

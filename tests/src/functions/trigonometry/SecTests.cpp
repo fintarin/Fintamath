@@ -57,6 +57,6 @@ TEST(SecTests, exprTest) {
 }
 
 TEST(SecTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sec);
-  EXPECT_EQ(f.getType(), MathObjectType::Sec);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sec, "Sec"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sec, "Sec"));
 }

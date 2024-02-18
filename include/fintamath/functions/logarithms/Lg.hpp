@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Lg;
+    return {MathObjectType::Lg, "Lg"};
   }
 
 protected:

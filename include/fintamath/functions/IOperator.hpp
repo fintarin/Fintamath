@@ -61,7 +61,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IOperator;
+    return {MathObjectType::IOperator, "IOperator"};
   }
 
 private:

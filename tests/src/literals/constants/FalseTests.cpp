@@ -18,6 +18,6 @@ TEST(FalseTests, callTest) {
 }
 
 TEST(FalseTests, getTypeTest) {
-  EXPECT_EQ(False::getTypeStatic(), MathObjectType::False);
-  EXPECT_EQ(False().getType(), MathObjectType::False);
+  EXPECT_EQ(False::getTypeStatic(), MathObjectType(MathObjectType::False, "False"));
+  EXPECT_EQ(False().getType(), MathObjectType(MathObjectType::False, "False"));
 }

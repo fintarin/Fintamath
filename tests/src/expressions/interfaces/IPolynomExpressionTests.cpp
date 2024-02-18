@@ -18,7 +18,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IPolynomExpression) + 999;
+    return {static_cast<size_t>(MathObjectType::IPolynomExpression) + 999, "TestPolynomExpression"};
   }
 };
 
@@ -72,5 +72,5 @@ TEST(IPolynomExpressionTests, toMinimalObjectTest) {
 }
 
 TEST(IPolynomExpressionTests, getTypeTest) {
-  EXPECT_EQ(IPolynomExpression::getTypeStatic(), MathObjectType::IPolynomExpression);
+  EXPECT_EQ(IPolynomExpression::getTypeStatic(), MathObjectType(MathObjectType::IPolynomExpression, "IPolynomExpression"));
 }

@@ -26,7 +26,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Div;
+    return {MathObjectType::Div, "Div"};
   }
 
 protected:

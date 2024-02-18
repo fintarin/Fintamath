@@ -23,7 +23,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Percent;
+    return {MathObjectType::Percent, "Percent"};
   }
 
 protected:

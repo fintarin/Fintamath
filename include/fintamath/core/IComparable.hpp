@@ -30,7 +30,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IComparable;
+    return {MathObjectType::IComparable, "IComparable"};
   }
 
 protected:

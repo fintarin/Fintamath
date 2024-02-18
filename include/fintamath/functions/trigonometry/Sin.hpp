@@ -21,7 +21,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Sin;
+    return {MathObjectType::Sin, "Sin"};
   }
 
 protected:

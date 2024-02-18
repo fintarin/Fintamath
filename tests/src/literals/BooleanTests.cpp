@@ -45,6 +45,6 @@ TEST(BooleanTests, opearatorsTest) {
 }
 
 TEST(BooleanTest, getTypeTest) {
-  EXPECT_EQ(Boolean::getTypeStatic(), MathObjectType::Boolean);
-  EXPECT_EQ(Boolean().getType(), MathObjectType::Boolean);
+  EXPECT_EQ(Boolean::getTypeStatic(), MathObjectType(MathObjectType::Boolean, "Boolean"));
+  EXPECT_EQ(Boolean().getType(), MathObjectType(MathObjectType::Boolean, "Boolean"));
 }

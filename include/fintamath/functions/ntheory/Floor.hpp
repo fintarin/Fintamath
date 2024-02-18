@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Floor;
+    return {MathObjectType::Floor, "Floor"};
   }
 
 protected:

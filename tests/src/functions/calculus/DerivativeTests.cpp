@@ -22,7 +22,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IComparable) + 997;
+    return {static_cast<size_t>(MathObjectType::IComparable) + 997, "TestDerivative"};
   }
 
 protected:
@@ -97,6 +97,6 @@ TEST(DerivativeTests, exprTest) {
 }
 
 TEST(DerivativeTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Derivative);
-  EXPECT_EQ(f.getType(), MathObjectType::Derivative);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Derivative, "Derivative"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Derivative, "Derivative"));
 }

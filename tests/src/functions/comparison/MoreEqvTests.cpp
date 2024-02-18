@@ -70,6 +70,6 @@ TEST(MoreEqvTests, exprTest) {
 }
 
 TEST(MoreEqvTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::MoreEqv);
-  EXPECT_EQ(f.getType(), MathObjectType::MoreEqv);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::MoreEqv, "MoreEqv"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::MoreEqv, "MoreEqv"));
 }

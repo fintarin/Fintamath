@@ -14,7 +14,7 @@ public:
   explicit HyperbExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::HyperbExpression;
+    return {MathObjectType::HyperbExpression, "HyperbExpression"};
   }
 
 protected:

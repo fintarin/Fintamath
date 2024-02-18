@@ -57,6 +57,6 @@ TEST(TanhTests, exprTest) {
 }
 
 TEST(TanhTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Tanh);
-  EXPECT_EQ(f.getType(), MathObjectType::Tanh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Tanh, "Tanh"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Tanh, "Tanh"));
 }

@@ -135,6 +135,6 @@ TEST(LogTests, exprTest) {
 }
 
 TEST(LogTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Log);
-  EXPECT_EQ(f.getType(), MathObjectType::Log);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Log, "Log"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Log, "Log"));
 }

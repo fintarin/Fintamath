@@ -29,5 +29,5 @@ TEST(ILiteralTests, equalsTest) {
 }
 
 TEST(ILiteralTests, getTypeTest) {
-  EXPECT_EQ(ILiteral::getTypeStatic(), MathObjectType::ILiteral);
+  EXPECT_EQ(ILiteral::getTypeStatic(), MathObjectType(MathObjectType::ILiteral, "ILiteral"));
 }

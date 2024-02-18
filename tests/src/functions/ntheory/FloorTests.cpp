@@ -83,6 +83,6 @@ TEST(FloorTests, exprTest) {
 }
 
 TEST(FloorTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Floor);
-  EXPECT_EQ(f.getType(), MathObjectType::Floor);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Floor, "Floor"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Floor, "Floor"));
 }

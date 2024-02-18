@@ -15,7 +15,7 @@ public:
   std::string toString() const override;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::MulExpression;
+    return {MathObjectType::MulExpression, "MulExpression"};
   }
 
 protected:

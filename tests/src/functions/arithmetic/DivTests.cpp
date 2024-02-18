@@ -66,6 +66,6 @@ TEST(DivTests, exprTest) {
 }
 
 TEST(DivTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Div);
-  EXPECT_EQ(f.getType(), MathObjectType::Div);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Div, "Div"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Div, "Div"));
 }

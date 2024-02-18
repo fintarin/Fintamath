@@ -96,7 +96,7 @@ public:
   static void registerFunctionExpressionMaker(ExpressionMaker maker);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Expression;
+    return {MathObjectType::Expression, "Expression"};
   }
 
 protected:

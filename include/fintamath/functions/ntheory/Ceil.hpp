@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Ceil;
+    return {MathObjectType::Ceil, "Ceil"};
   }
 
 protected:

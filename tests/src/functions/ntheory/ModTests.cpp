@@ -104,6 +104,6 @@ TEST(ModTests, exprTest) {
 }
 
 TEST(ModTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Mod);
-  EXPECT_EQ(f.getType(), MathObjectType::Mod);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Mod, "Mod"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Mod, "Mod"));
 }

@@ -27,7 +27,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Or;
+    return {MathObjectType::Or, "Or"};
   }
 
 protected:

@@ -62,7 +62,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IFunction;
+    return {MathObjectType::IFunction, "IFunction"};
   }
 
 protected:

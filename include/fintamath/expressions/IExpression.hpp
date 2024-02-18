@@ -46,7 +46,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IExpression;
+    return {MathObjectType::IExpression, "IExpression"};
   }
 
 protected:

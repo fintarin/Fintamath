@@ -31,7 +31,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IConstant;
+    return {MathObjectType::IConstant, "IConstant"};
   }
 
 protected:

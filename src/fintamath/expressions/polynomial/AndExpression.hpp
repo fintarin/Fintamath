@@ -12,7 +12,7 @@ public:
   explicit AndExpression(ArgumentPtrVector inChildren);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::AndExpression;
+    return {MathObjectType::AndExpression, "AndExpression"};
   }
 
 protected:

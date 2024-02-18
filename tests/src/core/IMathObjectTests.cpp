@@ -15,7 +15,7 @@ class TestMathObject final : public IMathObjectCRTP<TestMathObject> {};
 }
 
 TEST(IMathObjectTests, toStringTest) {
-  EXPECT_EQ(TestMathObject().toString(), typeid(TestMathObject).name());
+  EXPECT_EQ(TestMathObject().toString(), "IMathObject");
 }
 
 TEST(IMathObjectTests, cloneTest) {
@@ -98,5 +98,5 @@ TEST(IMathObjectTests, outputTest) {
 }
 
 TEST(IMathObjectTests, getTypeTest) {
-  EXPECT_EQ(IMathObject::getTypeStatic(), MathObjectType::IMathObject);
+  EXPECT_EQ(IMathObject::getTypeStatic(), MathObjectType(MathObjectType::IMathObject, "IMathObject"));
 }

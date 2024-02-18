@@ -73,7 +73,7 @@ public:
   static void setPrecision(unsigned precision);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Real;
+    return {MathObjectType::Real, "Real"};
   }
 
 protected:

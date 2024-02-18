@@ -25,5 +25,5 @@ TEST(IOperatorTests, isAssociativeTest) {
 }
 
 TEST(IOperatorTests, getTypeTest) {
-  EXPECT_EQ(IOperator::getTypeStatic(), MathObjectType::IOperator);
+  EXPECT_EQ(IOperator::getTypeStatic(), MathObjectType(MathObjectType::IOperator, "IOperator"));
 }

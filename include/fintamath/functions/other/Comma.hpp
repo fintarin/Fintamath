@@ -26,7 +26,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Comma;
+    return {MathObjectType::Comma, "Comma"};
   }
 
 protected:

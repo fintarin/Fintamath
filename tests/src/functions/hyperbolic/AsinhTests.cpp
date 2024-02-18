@@ -57,6 +57,6 @@ TEST(AsinhTests, exprTest) {
 }
 
 TEST(AsinhTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Asinh);
-  EXPECT_EQ(f.getType(), MathObjectType::Asinh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Asinh, "Asinh"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Asinh, "Asinh"));
 }

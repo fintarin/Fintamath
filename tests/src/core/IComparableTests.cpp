@@ -13,7 +13,7 @@ namespace {
 class TestComparable final : public IComparableCRTP<TestComparable> {
 public:
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IComparable) + 998;
+    return {static_cast<size_t>(MathObjectType::IComparable) + 998, "TestComparable"};
   }
 
 protected:
@@ -145,5 +145,5 @@ TEST(IComparableTests, moreEqualsTest) {
 }
 
 TEST(IComparableTests, getTypeTest) {
-  EXPECT_EQ(IComparable::getTypeStatic(), MathObjectType::IComparable);
+  EXPECT_EQ(IComparable::getTypeStatic(), MathObjectType(MathObjectType::IComparable, "IComparable"));
 }

@@ -57,6 +57,6 @@ TEST(CosTests, exprTest) {
 }
 
 TEST(CosTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Cos);
-  EXPECT_EQ(f.getType(), MathObjectType::Cos);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Cos, "Cos"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Cos, "Cos"));
 }

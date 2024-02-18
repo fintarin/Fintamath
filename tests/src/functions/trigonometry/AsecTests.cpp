@@ -61,6 +61,6 @@ TEST(AsecTests, exprTest) {
 }
 
 TEST(AsecTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Asec);
-  EXPECT_EQ(f.getType(), MathObjectType::Asec);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Asec, "Asec"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Asec, "Asec"));
 }

@@ -70,6 +70,6 @@ TEST(SignTests, exprTest) {
 }
 
 TEST(SignTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sign);
-  EXPECT_EQ(f.getType(), MathObjectType::Sign);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sign, "Sign"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sign, "Sign"));
 }

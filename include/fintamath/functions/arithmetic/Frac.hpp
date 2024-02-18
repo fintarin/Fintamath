@@ -18,7 +18,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Frac;
+    return {MathObjectType::Frac, "Frac"};
   }
 
 protected:

@@ -24,7 +24,7 @@ public:
   virtual std::unique_ptr<IMathObject> clone() && = 0;
 
   virtual std::string toString() const {
-    return typeid(*this).name();
+    return std::string(getTypeStatic().getName());
   }
 
   virtual std::unique_ptr<IMathObject> toMinimalObject() const {
@@ -46,7 +46,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IMathObject;
+    return {MathObjectType::IMathObject, "IMathObject"};
   }
 
 protected:
@@ -60,7 +60,6 @@ template <typename Derived>
 class IMathObjectCRTP : public IMathObject {
 #define I_MATH_OBJECT_CRTP IMathObjectCRTP
 #include "fintamath/core/IMathObjectCRTP.hpp"
-
 #undef I_MATH_OBJECT_CRTP
 };
 

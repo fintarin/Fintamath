@@ -17,7 +17,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IBinaryExpression) + 999;
+    return {static_cast<size_t>(MathObjectType::IBinaryExpression) + 999, "TestBinaryExpression"};
   }
 };
 
@@ -64,5 +64,5 @@ TEST(IBinaryExpressionTests, toMinimalObjectTest) {
 }
 
 TEST(IBinaryExpressionTests, getTypeTest) {
-  EXPECT_EQ(IBinaryExpression::getTypeStatic(), MathObjectType::IBinaryExpression);
+  EXPECT_EQ(IBinaryExpression::getTypeStatic(), MathObjectType(MathObjectType::IBinaryExpression, "IBinaryExpression"));
 }

@@ -57,6 +57,6 @@ TEST(CscTests, exprTest) {
 }
 
 TEST(CscTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Csc);
-  EXPECT_EQ(f.getType(), MathObjectType::Csc);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Csc, "Csc"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Csc, "Csc"));
 }

@@ -14,7 +14,7 @@ public:
   explicit InvTrigExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::InvTrigExpression;
+    return {MathObjectType::InvTrigExpression, "InvTrigExpression"};
   }
 
 protected:

@@ -57,6 +57,6 @@ TEST(SinTests, exprTest) {
 }
 
 TEST(SinTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sin);
-  EXPECT_EQ(f.getType(), MathObjectType::Sin);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sin, "Sin"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sin, "Sin"));
 }

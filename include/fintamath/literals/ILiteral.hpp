@@ -29,7 +29,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::ILiteral;
+    return {MathObjectType::ILiteral, "ILiteral"};
   }
 
 private:

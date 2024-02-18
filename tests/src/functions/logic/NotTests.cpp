@@ -59,6 +59,6 @@ TEST(NotTests, exprTest) {
 }
 
 TEST(NotTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Not);
-  EXPECT_EQ(f.getType(), MathObjectType::Not);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Not, "Not"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Not, "Not"));
 }

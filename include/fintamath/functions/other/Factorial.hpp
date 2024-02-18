@@ -44,7 +44,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Factorial;
+    return {MathObjectType::Factorial, "Factorial"};
   }
 
 protected:

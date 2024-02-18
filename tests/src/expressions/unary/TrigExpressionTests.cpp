@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(TrigExpressionTests, getTypeTest) {
-  EXPECT_EQ(sinExpr(Integer(0).clone())->getType(), MathObjectType::TrigExpression);
+  EXPECT_EQ(sinExpr(Integer(0).clone())->getType(), MathObjectType(MathObjectType::TrigExpression, "TrigExpression"));
 }

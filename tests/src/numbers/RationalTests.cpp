@@ -504,8 +504,8 @@ TEST(RationalTests, isComplexTest) {
 }
 
 TEST(RationalTests, getTypeTest) {
-  EXPECT_EQ(Rational::getTypeStatic(), MathObjectType::Rational);
-  EXPECT_EQ(Rational().getType(), MathObjectType::Rational);
+  EXPECT_EQ(Rational::getTypeStatic(), MathObjectType(MathObjectType::Rational, "Rational"));
+  EXPECT_EQ(Rational().getType(), MathObjectType(MathObjectType::Rational, "Rational"));
 }
 
 TEST(RationalTests, hashTest) {

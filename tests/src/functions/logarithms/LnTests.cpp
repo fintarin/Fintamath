@@ -55,6 +55,6 @@ TEST(LnTests, exprTest) {
 }
 
 TEST(LnTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Ln);
-  EXPECT_EQ(f.getType(), MathObjectType::Ln);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Ln, "Ln"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Ln, "Ln"));
 }

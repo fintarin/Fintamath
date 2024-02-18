@@ -16,5 +16,5 @@ TEST(IConstantTests, callTest) {
 }
 
 TEST(IConstantTests, getTypeTest) {
-  EXPECT_EQ(IConstant::getTypeStatic(), MathObjectType::IConstant);
+  EXPECT_EQ(IConstant::getTypeStatic(), MathObjectType(MathObjectType::IConstant, "IConstant"));
 }

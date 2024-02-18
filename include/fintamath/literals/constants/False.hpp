@@ -17,7 +17,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::False;
+    return {MathObjectType::False, "False"};
   }
 
 protected:

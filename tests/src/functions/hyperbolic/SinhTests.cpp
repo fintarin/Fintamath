@@ -57,6 +57,6 @@ TEST(SinhTests, exprTest) {
 }
 
 TEST(SinhTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sinh);
-  EXPECT_EQ(f.getType(), MathObjectType::Sinh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sinh, "Sinh"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sinh, "Sinh"));
 }

@@ -59,6 +59,6 @@ TEST(AcschTests, exprTest) {
 }
 
 TEST(AcschTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Acsch);
-  EXPECT_EQ(f.getType(), MathObjectType::Acsch);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Acsch, "Acsch"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Acsch, "Acsch"));
 }

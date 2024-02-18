@@ -12,7 +12,7 @@ public:
   explicit SignExpression(ArgumentPtr inChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::SignExpression;
+    return {MathObjectType::SignExpression, "SignExpression"};
   }
 
 protected:
