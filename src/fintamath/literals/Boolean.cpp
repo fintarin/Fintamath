@@ -4,8 +4,8 @@
 
 namespace fintamath {
 
-constexpr char trueStr[] = "True";
-constexpr char falseStr[] = "False";
+constexpr std::string_view trueStr = "True";
+constexpr std::string_view falseStr = "False";
 
 Boolean::Boolean() : name(falseStr) {
 }
