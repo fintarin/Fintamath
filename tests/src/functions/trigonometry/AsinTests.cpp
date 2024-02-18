@@ -60,6 +60,6 @@ TEST(AsinTests, exprTest) {
 }
 
 TEST(AsinTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Asin);
-  EXPECT_EQ(f.getType(), MathObjectType::Asin);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Asin, "Asin"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Asin, "Asin"));
 }

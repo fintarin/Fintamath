@@ -21,7 +21,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Acos;
+    return {MathObjectType::Acos, "Acos"};
   }
 
 protected:

@@ -87,5 +87,5 @@ TEST(INumberTests, negateTest) {
 }
 
 TEST(INumberTests, getTypeTest) {
-  EXPECT_EQ(INumber::getTypeStatic(), MathObjectType::INumber);
+  EXPECT_EQ(INumber::getTypeStatic(), MathObjectType(MathObjectType::INumber, "INumber"));
 }

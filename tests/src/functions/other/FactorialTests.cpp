@@ -143,6 +143,6 @@ TEST(FactorialTests, exprTest) {
 }
 
 TEST(FactorialTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Factorial);
-  EXPECT_EQ(f.getType(), MathObjectType::Factorial);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Factorial, "Factorial"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Factorial, "Factorial"));
 }

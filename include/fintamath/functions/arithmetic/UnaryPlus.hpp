@@ -22,7 +22,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::UnaryPlus;
+    return {MathObjectType::UnaryPlus, "UnaryPlus"};
   }
 
 protected:

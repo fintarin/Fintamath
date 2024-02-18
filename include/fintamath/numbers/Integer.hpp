@@ -45,7 +45,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Integer;
+    return {MathObjectType::Integer, "Integer"};
   }
 
 protected:

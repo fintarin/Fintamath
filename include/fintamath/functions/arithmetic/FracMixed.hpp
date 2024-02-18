@@ -18,7 +18,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::FracMixed;
+    return {MathObjectType::FracMixed, "FracMixed"};
   }
 
 protected:

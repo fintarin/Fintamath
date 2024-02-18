@@ -61,6 +61,6 @@ TEST(MaxTests, exprTest) {
 }
 
 TEST(MaxTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Max);
-  EXPECT_EQ(f.getType(), MathObjectType::Max);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Max, "Max"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Max, "Max"));
 }

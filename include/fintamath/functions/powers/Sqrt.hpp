@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Sqrt;
+    return {MathObjectType::Sqrt, "Sqrt"};
   }
 
 protected:

@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(NotExpressionTests, getTypeTest) {
-  EXPECT_EQ(notExpr(Boolean())->getType(), MathObjectType::NotExpression);
+  EXPECT_EQ(notExpr(Boolean())->getType(), MathObjectType(MathObjectType::NotExpression, "NotExpression"));
 }

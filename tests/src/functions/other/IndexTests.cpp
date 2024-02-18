@@ -68,6 +68,6 @@ TEST(IndexTests, exprTest) {
 }
 
 TEST(IndexTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Index);
-  EXPECT_EQ(f.getType(), MathObjectType::Index);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Index, "Index"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Index, "Index"));
 }

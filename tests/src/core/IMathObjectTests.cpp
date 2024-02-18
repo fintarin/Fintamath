@@ -10,12 +10,17 @@ using namespace fintamath;
 
 namespace {
 
-class TestMathObject final : public IMathObjectCRTP<TestMathObject> {};
+class TestMathObject final : public IMathObjectCRTP<TestMathObject> {
+public:
+  static constexpr MathObjectType getTypeStatic() {
+    return {MathObjectType::IArithmetic, "TestMathObject"};
+  }
+};
 
 }
 
 TEST(IMathObjectTests, toStringTest) {
-  EXPECT_EQ(TestMathObject().toString(), typeid(TestMathObject).name());
+  EXPECT_EQ(TestMathObject().toString(), "TestMathObject");
 }
 
 TEST(IMathObjectTests, cloneTest) {
@@ -98,5 +103,5 @@ TEST(IMathObjectTests, outputTest) {
 }
 
 TEST(IMathObjectTests, getTypeTest) {
-  EXPECT_EQ(IMathObject::getTypeStatic(), MathObjectType::IMathObject);
+  EXPECT_EQ(IMathObject::getTypeStatic(), MathObjectType(MathObjectType::IMathObject, "IMathObject"));
 }

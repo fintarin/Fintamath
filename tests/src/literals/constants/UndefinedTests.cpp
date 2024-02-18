@@ -16,6 +16,6 @@ TEST(UndefinedTests, callTest) {
 }
 
 TEST(UndefinedTests, getTypeTest) {
-  EXPECT_EQ(Undefined::getTypeStatic(), MathObjectType::Undefined);
-  EXPECT_EQ(Undefined().getType(), MathObjectType::Undefined);
+  EXPECT_EQ(Undefined::getTypeStatic(), MathObjectType(MathObjectType::Undefined, "Undefined"));
+  EXPECT_EQ(Undefined().getType(), MathObjectType(MathObjectType::Undefined, "Undefined"));
 }

@@ -21,7 +21,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Sinh;
+    return {MathObjectType::Sinh, "Sinh"};
   }
 
 protected:

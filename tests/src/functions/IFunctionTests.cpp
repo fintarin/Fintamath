@@ -90,5 +90,5 @@ TEST(IFunctionTests, doArgsMatchTest) {
 }
 
 TEST(IFunctionTests, getTypeTest) {
-  EXPECT_EQ(IFunction::getTypeStatic(), MathObjectType::IFunction);
+  EXPECT_EQ(IFunction::getTypeStatic(), MathObjectType(MathObjectType::IFunction, "IFunction"));
 }

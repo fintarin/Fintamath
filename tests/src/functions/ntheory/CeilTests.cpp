@@ -83,6 +83,6 @@ TEST(CeilTests, exprTest) {
 }
 
 TEST(CeilTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Ceil);
-  EXPECT_EQ(f.getType(), MathObjectType::Ceil);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Ceil, "Ceil"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Ceil, "Ceil"));
 }

@@ -56,6 +56,6 @@ TEST(CommaTests, exprTest) {
 }
 
 TEST(CommaTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Comma);
-  EXPECT_EQ(f.getType(), MathObjectType::Comma);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Comma, "Comma"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Comma, "Comma"));
 }

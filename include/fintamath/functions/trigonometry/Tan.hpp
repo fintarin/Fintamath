@@ -21,7 +21,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Tan;
+    return {MathObjectType::Tan, "Tan"};
   }
 
 protected:

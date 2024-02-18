@@ -28,7 +28,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Less;
+    return {MathObjectType::Less, "Less"};
   }
 
 protected:

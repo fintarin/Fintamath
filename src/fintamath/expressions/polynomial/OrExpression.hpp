@@ -14,7 +14,7 @@ public:
   explicit OrExpression(ArgumentPtrVector inChildren);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::OrExpression;
+    return {MathObjectType::OrExpression, "OrExpression"};
   }
 
 protected:

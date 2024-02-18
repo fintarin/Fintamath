@@ -16,7 +16,7 @@ public:
   explicit DerivativeExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::DerivativeExpression;
+    return {MathObjectType::DerivativeExpression, "DerivativeExpression"};
   }
 
 protected:

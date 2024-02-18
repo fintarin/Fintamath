@@ -53,7 +53,7 @@ public:
   const INumber &imag() const;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Complex;
+    return {MathObjectType::Complex, "Complex"};
   }
 
 protected:

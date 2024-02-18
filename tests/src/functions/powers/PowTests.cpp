@@ -174,6 +174,6 @@ TEST(PowTests, exprTest) {
 }
 
 TEST(PowTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Pow);
-  EXPECT_EQ(f.getType(), MathObjectType::Pow);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Pow, "Pow"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Pow, "Pow"));
 }

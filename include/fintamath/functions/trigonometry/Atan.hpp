@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Atan;
+    return {MathObjectType::Atan, "Atan"};
   }
 
 protected:

@@ -39,7 +39,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::INumber;
+    return {MathObjectType::INumber, "INumber"};
   }
 
 private:

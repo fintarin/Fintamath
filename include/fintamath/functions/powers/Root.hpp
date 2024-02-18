@@ -26,7 +26,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Root;
+    return {MathObjectType::Root, "Root"};
   }
 
 protected:

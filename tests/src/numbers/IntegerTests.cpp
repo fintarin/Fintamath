@@ -859,8 +859,8 @@ TEST(IntegerTests, equalsTest) {
 }
 
 TEST(IntegerTests, getTypeTest) {
-  EXPECT_EQ(Integer::getTypeStatic(), MathObjectType::Integer);
-  EXPECT_EQ(Integer().getType(), MathObjectType::Integer);
+  EXPECT_EQ(Integer::getTypeStatic(), MathObjectType(MathObjectType::Integer, "Integer"));
+  EXPECT_EQ(Integer().getType(), MathObjectType(MathObjectType::Integer, "Integer"));
 }
 
 TEST(IntegerTests, hashTest) {

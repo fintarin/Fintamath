@@ -3,16 +3,17 @@
 #include <compare>
 #include <cstddef>
 #include <limits>
+#include <string_view>
 #include <unordered_map>
 
 #include <boost/container_hash/hash.hpp>
+#include <utility>
 
 #include "fintamath/config/Config.hpp"
 
 namespace fintamath {
 
-class MathObjectType final {
-public:
+struct MathObjectType final {
   enum class Id : size_t {
     IMathObject = 0,
 
@@ -160,37 +161,33 @@ public:
   using enum Id;
 
 public:
-  constexpr MathObjectType(Id rhs) : id(static_cast<size_t>(rhs)) {
+  constexpr MathObjectType(const size_t rhs, const std::string_view inName)
+      : name(inName),
+        id(rhs) {
   }
 
-  constexpr MathObjectType(const size_t rhs) : id(rhs) {
+  constexpr MathObjectType(const Id inId, const std::string_view inName)
+      : MathObjectType(static_cast<size_t>(inId), inName) {
   }
 
-  constexpr bool operator==(const MathObjectType &rhs) const = default;
-
-  constexpr bool operator==(Id rhs) const {
-    return id == static_cast<size_t>(rhs);
+  constexpr bool operator==(const MathObjectType &rhs) const {
+    return id == rhs.id && name == rhs.name;
   }
 
-  constexpr bool operator==(const size_t rhs) const {
-    return id == rhs;
+  constexpr std::strong_ordering operator<=>(const MathObjectType &rhs) const {
+    return id <=> rhs.id;
   }
 
-  constexpr std::strong_ordering operator<=>(const MathObjectType &rhs) const = default;
-
-  constexpr std::strong_ordering operator<=>(Id rhs) const {
-    return id <=> static_cast<size_t>(rhs);
-  }
-
-  constexpr std::strong_ordering operator<=>(const size_t rhs) const {
-    return id <=> rhs;
-  }
-
-  constexpr operator size_t() const {
+  constexpr size_t getId() const {
     return id;
   }
 
+  constexpr std::string_view getName() const {
+    return name;
+  }
+
 private:
+  std::string_view name;
   size_t id;
 
 private:
@@ -198,52 +195,58 @@ private:
 };
 
 inline size_t hash_value(const MathObjectType &rhs) noexcept {
-  return boost::hash<size_t>{}(rhs);
+  return boost::hash<size_t>{}(rhs.getId());
 }
+
+bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType);
 
 namespace detail {
 
 class MathObjectBoundTypes final {
   using enum MathObjectType::Id;
 
-  using TypeToBoundTypeMap = std::unordered_map<MathObjectType, MathObjectType, boost::hash<MathObjectType>>;
+  using TypeIdToBoundTypeIdMap = std::unordered_map<size_t, size_t>;
 
-  static TypeToBoundTypeMap &getMapMutable() {
-    static TypeToBoundTypeMap typeToBoundTypeMap{
-        {IMathObject, None},
-        {IArithmetic, ILiteral},
-        {IExpression, IComparable},
-        {IUnaryExpression, IBinaryExpression},
-        {IBinaryExpression, IPolynomExpression},
-        {IPolynomExpression, IComparable},
-        {IComparable, ILiteral},
-        {INumber, ILiteral},
-        {IInteger, ILiteral},
-        {ILiteral, IFunction},
-        {IConstant, IFunction},
-        {IFunction, None},
-        {IOperator, None},
+  static TypeIdToBoundTypeIdMap &getMap() {
+    static TypeIdToBoundTypeIdMap typeIdToBoundTypeIdMap{
+        makeTypeIdPair(IMathObject, None),
+        makeTypeIdPair(IArithmetic, ILiteral),
+        makeTypeIdPair(IArithmetic, ILiteral),
+        makeTypeIdPair(IExpression, IComparable),
+        makeTypeIdPair(IUnaryExpression, IBinaryExpression),
+        makeTypeIdPair(IBinaryExpression, IPolynomExpression),
+        makeTypeIdPair(IPolynomExpression, IComparable),
+        makeTypeIdPair(IComparable, ILiteral),
+        makeTypeIdPair(INumber, ILiteral),
+        makeTypeIdPair(IInteger, ILiteral),
+        makeTypeIdPair(ILiteral, IFunction),
+        makeTypeIdPair(IConstant, IFunction),
+        makeTypeIdPair(IFunction, None),
+        makeTypeIdPair(IOperator, None),
     };
-    return typeToBoundTypeMap;
+    return typeIdToBoundTypeIdMap;
   }
 
 public:
-  static const TypeToBoundTypeMap &getMap() {
-    return getMapMutable();
+  static void bindTypes(const MathObjectType &type, const MathObjectType &boundType) {
+    getMap().emplace(type.getId(), boundType.getId());
   }
 
-  static void bindTypes(const MathObjectType &type, const MathObjectType &boundType) {
-    getMapMutable().emplace(type, boundType);
+  friend bool fintamath::isBaseOf(const MathObjectType &toType, const MathObjectType &fromType);
+
+private:
+  static std::pair<size_t, size_t> makeTypeIdPair(const MathObjectType::Id lhs, const MathObjectType::Id rhs) {
+    return {static_cast<size_t>(lhs), static_cast<size_t>(rhs)};
   }
 };
 
 }
 
 inline bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType) {
-  const auto &typeToTypeMap = detail::MathObjectBoundTypes::getMap();
+  const auto &map = detail::MathObjectBoundTypes::getMap();
 
-  if (const auto toTypeBoundaries = typeToTypeMap.find(toType); toTypeBoundaries != typeToTypeMap.end()) {
-    return fromType >= toTypeBoundaries->first && fromType < toTypeBoundaries->second;
+  if (const auto boundaries = map.find(toType.getId()); boundaries != map.end()) {
+    return fromType.getId() >= boundaries->first && fromType.getId() < boundaries->second;
   }
 
   return toType == fromType;

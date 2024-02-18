@@ -60,6 +60,6 @@ TEST(PercentTests, degTest) {
 }
 
 TEST(PercentTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Percent);
-  EXPECT_EQ(f.getType(), MathObjectType::Percent);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Percent, "Percent"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Percent, "Percent"));
 }

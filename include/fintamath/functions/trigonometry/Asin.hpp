@@ -21,7 +21,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Asin;
+    return {MathObjectType::Asin, "Asin"};
   }
 
 protected:

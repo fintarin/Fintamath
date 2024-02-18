@@ -56,6 +56,6 @@ TEST(FracMixedTests, callTest) {
 }
 
 TEST(FracMixedTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::FracMixed);
-  EXPECT_EQ(f.getType(), MathObjectType::FracMixed);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::FracMixed, "FracMixed"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::FracMixed, "FracMixed"));
 }

@@ -29,7 +29,7 @@ public:
   void setChildren(const ArgumentPtrVector &childVect) final;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IPolynomExpression;
+    return {MathObjectType::IPolynomExpression, "IPolynomExpression"};
   }
 
 protected:

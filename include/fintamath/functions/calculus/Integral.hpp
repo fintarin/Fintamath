@@ -24,7 +24,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Integral;
+    return {MathObjectType::Integral, "Integral"};
   }
 
 protected:

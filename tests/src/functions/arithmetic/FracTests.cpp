@@ -49,6 +49,6 @@ TEST(FracTests, callTest) {
 }
 
 TEST(FracTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Frac);
-  EXPECT_EQ(f.getType(), MathObjectType::Frac);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Frac, "Frac"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Frac, "Frac"));
 }

@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(IntegralExpressionTests, getTypeTest) {
-  EXPECT_EQ(integralExpr(Integer(0), Variable("x"))->getType(), MathObjectType::IntegralExpression);
+  EXPECT_EQ(integralExpr(Integer(0), Variable("x"))->getType(), MathObjectType(MathObjectType::IntegralExpression, "IntegralExpression"));
 }

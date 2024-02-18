@@ -12,7 +12,7 @@ public:
   explicit MinMaxExpression(const IFunction &inFunc, ArgumentPtrVector inChildren);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::MinMaxExpression;
+    return {MathObjectType::MinMaxExpression, "MinMaxExpression"};
   }
 };
 

@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Sign;
+    return {MathObjectType::Sign, "Sign"};
   }
 
 protected:

@@ -13,7 +13,7 @@ namespace {
 class TestArithmetic final : public IArithmeticCRTP<TestArithmetic> {
 public:
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IArithmetic) + 999;
+    return {static_cast<size_t>(MathObjectType::IArithmetic) + 999, "TestArithmetic"};
   }
 
 protected:
@@ -199,5 +199,5 @@ TEST(IArithmeticTests, negateTest) {
 }
 
 TEST(IArithmeticTests, getTypeTest) {
-  EXPECT_EQ(IArithmetic::getTypeStatic(), MathObjectType::IArithmetic);
+  EXPECT_EQ(IArithmetic::getTypeStatic(), MathObjectType(MathObjectType::IArithmetic, "IArithmetic"));
 }

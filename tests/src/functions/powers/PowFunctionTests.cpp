@@ -49,6 +49,6 @@ TEST(PowFunctionTests, callTest) {
 }
 
 TEST(PowFunctionTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::PowFunction);
-  EXPECT_EQ(f.getType(), MathObjectType::PowFunction);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::PowFunction, "PowFunction"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::PowFunction, "PowFunction"));
 }

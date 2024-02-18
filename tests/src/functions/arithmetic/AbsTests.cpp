@@ -72,6 +72,6 @@ TEST(AbsTests, exprTest) {
 }
 
 TEST(AbsTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Abs);
-  EXPECT_EQ(f.getType(), MathObjectType::Abs);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Abs, "Abs"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Abs, "Abs"));
 }

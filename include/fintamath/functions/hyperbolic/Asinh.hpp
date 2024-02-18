@@ -19,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Asinh;
+    return {MathObjectType::Asinh, "Asinh"};
   }
 
 protected:

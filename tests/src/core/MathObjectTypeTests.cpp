@@ -14,40 +14,44 @@ using namespace fintamath;
 using namespace detail;
 
 TEST(MathObjectTypeTests, constructorTest) {
-  EXPECT_EQ(MathObjectType(MathObjectType::Integer), Integer::getTypeStatic());
-  EXPECT_EQ(MathObjectType(static_cast<size_t>(MathObjectType::Integer)), Integer::getTypeStatic());
+  {
+    constexpr MathObjectType t(MathObjectType::Integer, "Int");
+    EXPECT_EQ(t.getId(), static_cast<size_t>(MathObjectType::Integer));
+    EXPECT_EQ(t.getName(), "Int");
+  }
+  {
+    constexpr MathObjectType t(123, "NotInt");
+    EXPECT_EQ(t.getId(), 123);
+    EXPECT_EQ(t.getName(), "NotInt");
+  }
 }
 
 TEST(MathObjectTypeTests, equalsTest) {
   EXPECT_TRUE(Integer::getTypeStatic() == Integer::getTypeStatic());
   EXPECT_FALSE(Integer::getTypeStatic() == Rational::getTypeStatic());
-
-  EXPECT_TRUE(Integer::getTypeStatic() == MathObjectType::Integer);
-  EXPECT_FALSE(Integer::getTypeStatic() == MathObjectType::Rational);
-
-  EXPECT_TRUE(Integer::getTypeStatic() == static_cast<size_t>(Integer::getTypeStatic()));
-  EXPECT_FALSE(Integer::getTypeStatic() == static_cast<size_t>(Rational::getTypeStatic()));
 }
 
 TEST(MathObjectTypeTests, compareTest) {
   EXPECT_EQ(Integer::getTypeStatic() <=> Integer::getTypeStatic(), std::strong_ordering::equal);
+  EXPECT_EQ(Rational::getTypeStatic() <=> Integer::getTypeStatic(), std::strong_ordering::less);
   EXPECT_EQ(Integer::getTypeStatic() <=> Rational::getTypeStatic(), std::strong_ordering::greater);
+}
 
-  EXPECT_EQ(Integer::getTypeStatic() <=> MathObjectType::Integer, std::strong_ordering::equal);
-  EXPECT_EQ(Integer::getTypeStatic() <=> MathObjectType::Rational, std::strong_ordering::greater);
+TEST(MathObjectTypeTests, getIdTest) {
+  EXPECT_EQ(Integer::getTypeStatic().getId(), static_cast<size_t>(MathObjectType::Integer));
+}
 
-  EXPECT_EQ(Integer::getTypeStatic() <=> static_cast<size_t>(Integer::getTypeStatic()), std::strong_ordering::equal);
-  EXPECT_EQ(Integer::getTypeStatic() <=> static_cast<size_t>(Rational::getTypeStatic()), std::strong_ordering::greater);
+TEST(MathObjectTypeTests, getNameTest) {
+  EXPECT_EQ(Integer::getTypeStatic().getName(), "Integer");
 }
 
 TEST(MathObjectTypeTests, hashTest) {
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::IMathObject), static_cast<size_t>(MathObjectType::IMathObject));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::INumber), static_cast<size_t>(MathObjectType::INumber));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::Integer), static_cast<size_t>(MathObjectType::Integer));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::ILiteral), static_cast<size_t>(MathObjectType::ILiteral));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::IConstant), static_cast<size_t>(MathObjectType::IConstant));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::Boolean), static_cast<size_t>(MathObjectType::Boolean));
-  EXPECT_EQ(boost::hash<MathObjectType>{}(MathObjectType::None), static_cast<size_t>(MathObjectType::None));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(IMathObject::getTypeStatic()), static_cast<size_t>(MathObjectType::IMathObject));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(INumber::getTypeStatic()), static_cast<size_t>(MathObjectType::INumber));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(Integer::getTypeStatic()), static_cast<size_t>(MathObjectType::Integer));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(ILiteral::getTypeStatic()), static_cast<size_t>(MathObjectType::ILiteral));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(IConstant::getTypeStatic()), static_cast<size_t>(MathObjectType::IConstant));
+  EXPECT_EQ(boost::hash<MathObjectType>{}(Boolean::getTypeStatic()), static_cast<size_t>(MathObjectType::Boolean));
 }
 
 TEST(MathObjectbindTypes, bindTypesTest) {

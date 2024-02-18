@@ -17,7 +17,7 @@ public:
   std::string toString() const override;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Variable;
+    return {MathObjectType::Variable, "Variable"};
   }
 
 private:

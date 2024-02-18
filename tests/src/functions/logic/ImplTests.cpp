@@ -61,6 +61,6 @@ TEST(ImplTests, exprTest) {
 }
 
 TEST(ImplTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Impl);
-  EXPECT_EQ(f.getType(), MathObjectType::Impl);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Impl, "Impl"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Impl, "Impl"));
 }

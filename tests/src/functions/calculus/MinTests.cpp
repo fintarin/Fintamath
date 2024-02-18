@@ -61,6 +61,6 @@ TEST(MinTests, exprTest) {
 }
 
 TEST(MinTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Min);
-  EXPECT_EQ(f.getType(), MathObjectType::Min);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Min, "Min"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Min, "Min"));
 }

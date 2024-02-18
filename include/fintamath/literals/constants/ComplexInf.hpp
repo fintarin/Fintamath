@@ -17,7 +17,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::ComplexInf;
+    return {MathObjectType::ComplexInf, "ComplexInf"};
   }
 
 protected:

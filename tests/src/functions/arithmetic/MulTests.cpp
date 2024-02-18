@@ -62,6 +62,6 @@ TEST(MulTests, exprTest) {
 }
 
 TEST(MulTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Mul);
-  EXPECT_EQ(f.getType(), MathObjectType::Mul);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Mul, "Mul"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Mul, "Mul"));
 }

@@ -92,7 +92,7 @@ TEST(IExpressionTests, toMinimalObjectTest) {
 }
 
 TEST(IExpressionTests, getTypeTest) {
-  EXPECT_EQ(IExpression::getTypeStatic(), MathObjectType::IExpression);
+  EXPECT_EQ(IExpression::getTypeStatic(), MathObjectType(MathObjectType::IExpression, "IExpression"));
 }
 
 TEST(IExpressionTests, arithmeticTest) {

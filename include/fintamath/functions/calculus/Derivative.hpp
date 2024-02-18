@@ -24,7 +24,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Derivative;
+    return {MathObjectType::Derivative, "Derivative"};
   }
 
 protected:

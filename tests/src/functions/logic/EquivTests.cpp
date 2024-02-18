@@ -61,6 +61,6 @@ TEST(EquivTests, exprTest) {
 }
 
 TEST(EquivTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Equiv);
-  EXPECT_EQ(f.getType(), MathObjectType::Equiv);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Equiv, "Equiv"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Equiv, "Equiv"));
 }

@@ -6,5 +6,5 @@
 using namespace fintamath;
 
 TEST(AbsExpressionTests, getTypeTest) {
-  EXPECT_EQ(absExpr(Integer(0).clone())->getType(), MathObjectType::AbsExpression);
+  EXPECT_EQ(absExpr(Integer(0).clone())->getType(), MathObjectType(MathObjectType::AbsExpression, "AbsExpression"));
 }

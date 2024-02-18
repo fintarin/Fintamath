@@ -61,6 +61,6 @@ TEST(OrTests, exprTest) {
 }
 
 TEST(OrTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Or);
-  EXPECT_EQ(f.getType(), MathObjectType::Or);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Or, "Or"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Or, "Or"));
 }

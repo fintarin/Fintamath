@@ -21,7 +21,7 @@ public:
   std::shared_ptr<IFunction> getOutputFunction() const override;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::PowExpression;
+    return {MathObjectType::PowExpression, "PowExpression"};
   }
 
 protected:

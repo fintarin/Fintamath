@@ -57,6 +57,6 @@ TEST(UnaryPlusTests, callTest) {
 }
 
 TEST(UnaryPlusTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::UnaryPlus);
-  EXPECT_EQ(f.getType(), MathObjectType::UnaryPlus);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::UnaryPlus, "UnaryPlus"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::UnaryPlus, "UnaryPlus"));
 }

@@ -64,6 +64,6 @@ TEST(SubTests, exprTest) {
 }
 
 TEST(SubTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sub);
-  EXPECT_EQ(f.getType(), MathObjectType::Sub);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sub, "Sub"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sub, "Sub"));
 }

@@ -3,6 +3,7 @@
 #include "fintamath/numbers/IInteger.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -18,7 +19,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(IInteger::getTypeStatic()) + 998;
+    return {static_cast<size_t>(IInteger::getTypeStatic().getId()) + 998, "TestInteger"};
   }
 
 protected:
@@ -92,7 +93,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(IInteger::getTypeStatic()) + 999;
+    return {static_cast<size_t>(IInteger::getTypeStatic().getId()) + 999, "TestIntegerConvertible"};
   }
 
   MathObjectType getType() const override {
@@ -104,7 +105,7 @@ struct TestIntegerConvertableConfig final {
   TestIntegerConvertableConfig() {
     MathObjectBoundTypes::bindTypes(
         TestInteger::getTypeStatic(),
-        MathObjectBoundTypes::getMap().at(IInteger::getTypeStatic()));
+        ILiteral::getTypeStatic());
 
     Converter::add<TestIntegerConvertible, TestIntegerConvertible>(
         [](const TestIntegerConvertible & /*type*/, const TestIntegerConvertible &value) {
@@ -294,5 +295,5 @@ TEST(IIntegerTests, decTest) {
 }
 
 TEST(IIntegerTests, getTypeTest) {
-  EXPECT_EQ(IInteger::getTypeStatic(), MathObjectType::IInteger);
+  EXPECT_EQ(IInteger::getTypeStatic(), MathObjectType(MathObjectType::IInteger, "IInteger"));
 }

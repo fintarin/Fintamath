@@ -6,5 +6,5 @@
 using namespace fintamath;
 
 TEST(FloorCeilExpressionTests, getTypeTest) {
-  EXPECT_EQ(floorExpr(Integer(0).clone())->getType(), MathObjectType::FloorCeilExpression);
+  EXPECT_EQ(floorExpr(Integer(0).clone())->getType(), MathObjectType(MathObjectType::FloorCeilExpression, "FloorCeilExpression"));
 }

@@ -27,7 +27,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::And;
+    return {MathObjectType::And, "And"};
   }
 
 protected:

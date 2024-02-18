@@ -23,7 +23,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Min;
+    return {MathObjectType::Min, "Min"};
   }
 
 protected:

@@ -23,7 +23,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Impl;
+    return {MathObjectType::Impl, "Impl"};
   }
 
 protected:

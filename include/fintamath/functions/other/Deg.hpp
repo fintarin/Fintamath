@@ -23,7 +23,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Deg;
+    return {MathObjectType::Deg, "Deg"};
   }
 
 protected:

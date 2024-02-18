@@ -18,7 +18,7 @@ public:
   std::string toString() const override;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::DivExpression;
+    return {MathObjectType::DivExpression, "DivExpression"};
   }
 
 protected:

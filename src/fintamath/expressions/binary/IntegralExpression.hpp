@@ -12,7 +12,7 @@ public:
   explicit IntegralExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IntegralExpression;
+    return {MathObjectType::IntegralExpression, "IntegralExpression"};
   }
 
 protected:

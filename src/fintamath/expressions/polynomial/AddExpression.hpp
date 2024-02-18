@@ -19,7 +19,7 @@ public:
   explicit AddExpression(ArgumentPtrVector inChildren);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::AddExpression;
+    return {MathObjectType::AddExpression, "AddExpression"};
   }
 
 protected:

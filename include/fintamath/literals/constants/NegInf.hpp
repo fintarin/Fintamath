@@ -17,7 +17,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::NegInf;
+    return {MathObjectType::NegInf, "NegInf"};
   }
 
 protected:

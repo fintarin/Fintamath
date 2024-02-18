@@ -22,7 +22,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Log;
+    return {MathObjectType::Log, "Log"};
   }
 
 protected:

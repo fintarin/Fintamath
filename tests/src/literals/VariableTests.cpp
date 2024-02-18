@@ -39,6 +39,6 @@ TEST(VariableTest, stringIntegerConstructorTest) {
 }
 
 TEST(VariableTest, getTypeTest) {
-  EXPECT_EQ(Variable::getTypeStatic(), MathObjectType::Variable);
-  EXPECT_EQ(Variable("a").getType(), MathObjectType::Variable);
+  EXPECT_EQ(Variable::getTypeStatic(), MathObjectType(MathObjectType::Variable, "Variable"));
+  EXPECT_EQ(Variable("a").getType(), MathObjectType(MathObjectType::Variable, "Variable"));
 }

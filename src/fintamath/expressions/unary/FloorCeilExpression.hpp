@@ -16,7 +16,7 @@ public:
   explicit FloorCeilExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::FloorCeilExpression;
+    return {MathObjectType::FloorCeilExpression, "FloorCeilExpression"};
   }
 
 protected:

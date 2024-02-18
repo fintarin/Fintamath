@@ -60,6 +60,6 @@ TEST(AcotTests, exprTest) {
 }
 
 TEST(AcotTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Acot);
-  EXPECT_EQ(f.getType(), MathObjectType::Acot);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Acot, "Acot"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Acot, "Acot"));
 }

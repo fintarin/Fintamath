@@ -28,7 +28,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::MoreEqv;
+    return {MathObjectType::MoreEqv, "MoreEqv"};
   }
 
 protected:

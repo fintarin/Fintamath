@@ -20,7 +20,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IOperator) + 999;
+    return {static_cast<size_t>(MathObjectType::IOperator) + 999, "TestBinaryOperator"};
   }
 
 protected:
@@ -40,7 +40,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IOperator) + 998;
+    return {static_cast<size_t>(MathObjectType::IOperator) + 998, "TestUnaryPrefixOperator"};
   }
 
 protected:
@@ -60,7 +60,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IOperator) + 997;
+    return {static_cast<size_t>(MathObjectType::IOperator) + 997, "TestUnaryPostfixOperator"};
   }
 
 protected:
@@ -76,7 +76,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IFunction) + 996;
+    return {static_cast<size_t>(MathObjectType::IFunction) + 996, "TestUnaryFunction"};
   }
 
 protected:
@@ -92,7 +92,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return static_cast<size_t>(MathObjectType::IFunction) + 995;
+    return {static_cast<size_t>(MathObjectType::IFunction) + 995, "TestBinaryFunction"};
   }
 
 protected:
@@ -139,5 +139,5 @@ TEST(FunctionExpressionTests, stringConstructorTest) {
 }
 
 TEST(FunctionExpressionTests, getTypeTest) {
-  EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0), Integer(0))->getType(), MathObjectType::FunctionExpression);
+  EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0), Integer(0))->getType(), MathObjectType(MathObjectType::FunctionExpression, "FunctionExpression"));
 }

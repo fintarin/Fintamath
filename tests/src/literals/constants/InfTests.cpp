@@ -16,6 +16,6 @@ TEST(InfTests, callTest) {
 }
 
 TEST(InfTests, getTypeTest) {
-  EXPECT_EQ(Inf::getTypeStatic(), MathObjectType::Inf);
-  EXPECT_EQ(Inf().getType(), MathObjectType::Inf);
+  EXPECT_EQ(Inf::getTypeStatic(), MathObjectType(MathObjectType::Inf, "Inf"));
+  EXPECT_EQ(Inf().getType(), MathObjectType(MathObjectType::Inf, "Inf"));
 }

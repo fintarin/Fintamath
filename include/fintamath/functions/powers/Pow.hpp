@@ -28,7 +28,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Pow;
+    return {MathObjectType::Pow, "Pow"};
   }
 
 protected:

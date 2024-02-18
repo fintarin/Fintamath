@@ -58,6 +58,6 @@ TEST(TanTests, exprTest) {
 }
 
 TEST(TanTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Tan);
-  EXPECT_EQ(f.getType(), MathObjectType::Tan);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Tan, "Tan"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Tan, "Tan"));
 }

@@ -16,6 +16,6 @@ TEST(ITests, callTest) {
 }
 
 TEST(ITests, getTypeTest) {
-  EXPECT_EQ(I::getTypeStatic(), MathObjectType::I);
-  EXPECT_EQ(I().getType(), MathObjectType::I);
+  EXPECT_EQ(I::getTypeStatic(), MathObjectType(MathObjectType::I, "I"));
+  EXPECT_EQ(I().getType(), MathObjectType(MathObjectType::I, "I"));
 }

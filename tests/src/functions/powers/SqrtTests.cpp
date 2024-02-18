@@ -73,6 +73,6 @@ TEST(SqrtTests, exprTest) {
 }
 
 TEST(SqrtTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Sqrt);
-  EXPECT_EQ(f.getType(), MathObjectType::Sqrt);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sqrt, "Sqrt"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sqrt, "Sqrt"));
 }

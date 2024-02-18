@@ -23,7 +23,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Not;
+    return {MathObjectType::Not, "Not"};
   }
 
 protected:

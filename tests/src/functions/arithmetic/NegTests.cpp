@@ -60,6 +60,6 @@ TEST(NegTests, exprTest) {
 }
 
 TEST(NegTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Neg);
-  EXPECT_EQ(f.getType(), MathObjectType::Neg);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Neg, "Neg"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Neg, "Neg"));
 }

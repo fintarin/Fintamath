@@ -56,6 +56,6 @@ TEST(IntegralTests, exprTest) {
 }
 
 TEST(IntegralTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Integral);
-  EXPECT_EQ(f.getType(), MathObjectType::Integral);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Integral, "Integral"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Integral, "Integral"));
 }

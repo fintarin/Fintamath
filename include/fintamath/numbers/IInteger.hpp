@@ -73,7 +73,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::IInteger;
+    return {MathObjectType::IInteger, "IInteger"};
   }
 
 protected:

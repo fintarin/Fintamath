@@ -7,5 +7,5 @@
 using namespace fintamath;
 
 TEST(DivExpressionTests, getTypeTest) {
-  EXPECT_EQ(divExpr(Integer(0), Integer(0))->getType(), MathObjectType::DivExpression);
+  EXPECT_EQ(divExpr(Integer(0), Integer(0))->getType(), MathObjectType(MathObjectType::DivExpression, "DivExpression"));
 }

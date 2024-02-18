@@ -70,6 +70,6 @@ TEST(LessTests, exprTest) {
 }
 
 TEST(LessTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Less);
-  EXPECT_EQ(f.getType(), MathObjectType::Less);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Less, "Less"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Less, "Less"));
 }

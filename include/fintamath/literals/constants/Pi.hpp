@@ -17,7 +17,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Pi;
+    return {MathObjectType::Pi, "Pi"};
   }
 
 protected:

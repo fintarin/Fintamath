@@ -57,6 +57,6 @@ TEST(CschTests, exprTest) {
 }
 
 TEST(CschTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Csch);
-  EXPECT_EQ(f.getType(), MathObjectType::Csch);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Csch, "Csch"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Csch, "Csch"));
 }

@@ -24,7 +24,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Index;
+    return {MathObjectType::Index, "Index"};
   }
 
 protected:

@@ -12,7 +12,7 @@ public:
   explicit InvHyperbExpression(const IFunction &inFunc, ArgumentPtr inChild);
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::InvHyperbExpression;
+    return {MathObjectType::InvHyperbExpression, "InvHyperbExpression"};
   }
 };
 

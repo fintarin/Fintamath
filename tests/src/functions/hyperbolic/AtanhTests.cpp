@@ -60,6 +60,6 @@ TEST(AtanhTests, exprTest) {
 }
 
 TEST(AtanhTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Atanh);
-  EXPECT_EQ(f.getType(), MathObjectType::Atanh);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Atanh, "Atanh"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Atanh, "Atanh"));
 }

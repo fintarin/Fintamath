@@ -23,7 +23,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Max;
+    return {MathObjectType::Max, "Max"};
   }
 
 protected:

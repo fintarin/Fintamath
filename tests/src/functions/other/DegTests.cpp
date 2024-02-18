@@ -61,6 +61,6 @@ TEST(DegTests, degTest) {
 }
 
 TEST(DegTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Deg);
-  EXPECT_EQ(f.getType(), MathObjectType::Deg);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Deg, "Deg"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Deg, "Deg"));
 }

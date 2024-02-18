@@ -39,7 +39,7 @@ public:
   const Integer &denominator() const;
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Rational;
+    return {MathObjectType::Rational, "Rational"};
   }
 
 protected:

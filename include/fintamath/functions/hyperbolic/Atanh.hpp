@@ -21,7 +21,7 @@ public:
   }
 
   static constexpr MathObjectType getTypeStatic() {
-    return MathObjectType::Atanh;
+    return {MathObjectType::Atanh, "Atanh"};
   }
 
 protected:

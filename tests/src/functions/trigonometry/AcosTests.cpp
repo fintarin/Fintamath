@@ -60,6 +60,6 @@ TEST(AcosTests, exprTest) {
 }
 
 TEST(AcosTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType::Acos);
-  EXPECT_EQ(f.getType(), MathObjectType::Acos);
+  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Acos, "Acos"));
+  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Acos, "Acos"));
 }
