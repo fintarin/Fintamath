@@ -25,6 +25,9 @@ mark_include_directories_as_system(boost_multiprecision)
 add_subdirectory(boost-math)
 mark_include_directories_as_system(boost_math)
 
+add_subdirectory(fmt)
+mark_include_directories_as_system(fmt)
+
 if(${PROJECT_NAME}_build_tests)
   add_subdirectory(googletest)
 endif()
