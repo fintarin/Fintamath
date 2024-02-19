@@ -120,10 +120,13 @@ std::shared_ptr<IFunction> CompExpression::getOppositeFunction(const IFunction &
 }
 
 ArgumentPtr CompExpression::constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+  if (is<Undefined>(lhs) || is<Undefined>(rhs)) {
+    // TODO: return LogicUndefined
+    return makeExpr(func, Undefined(), Undefined());
+  }
+
   if ((is<ComplexInf>(lhs) && containsInfinity(rhs)) ||
-      (is<ComplexInf>(rhs) && containsInfinity(lhs)) ||
-      is<Undefined>(lhs) ||
-      is<Undefined>(rhs)) {
+      (is<ComplexInf>(rhs) && containsInfinity(lhs))) {
 
     return {};
   }

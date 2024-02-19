@@ -687,25 +687,24 @@ TEST(SimplifyInfinityTests, simplifyTest) {
   EXPECT_EQ(Expression("sin(Undefined)").toString(),
             "Undefined");
 
-  // TODO: support LogicUndefined
   EXPECT_EQ(Expression("Undefined = Undefined").toString(),
-            "Undefined = 0");
+            "Undefined = Undefined");
   EXPECT_EQ(Expression("0/0 = 0/0").toString(),
-            "Undefined = 0");
+            "Undefined = Undefined");
   EXPECT_EQ(Expression("(sin(x)^2 + cos(x)^2 - 1)/0 = 0/(sin(x)^2 + cos(x)^2 - 1)").toString(),
-            "Undefined = 0");
+            "Undefined = Undefined");
   EXPECT_EQ(Expression("Inf - Inf = 0").toString(),
-            "Undefined = 0");
+            "Undefined = Undefined");
   EXPECT_EQ(Expression("Inf - Inf = 0 | a").toString(),
-            "a | Undefined = 0");
+            "a | Undefined = Undefined");
   EXPECT_EQ(Expression("Undefined < Undefined").toString(),
-            "Undefined < 0");
+            "Undefined < Undefined");
   EXPECT_EQ(Expression("0/0 < 0/0").toString(),
-            "Undefined < 0");
+            "Undefined < Undefined");
   EXPECT_EQ(Expression("(sin(x)^2 + cos(x)^2 - 1)/0 < 0/(sin(x)^2 + cos(x)^2 - 1)").toString(),
-            "Undefined < 0");
+            "Undefined < Undefined");
   EXPECT_EQ(Expression("Inf - Inf < 0").toString(),
-            "Undefined < 0");
+            "Undefined < Undefined");
   EXPECT_EQ(Expression("Inf - Inf < 0 | a").toString(),
-            "a | Undefined < 0");
+            "a | Undefined < Undefined");
 }
