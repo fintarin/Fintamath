@@ -50,7 +50,8 @@ target_link_libraries(
   PUBLIC MPFR
          Boost::multiprecision
          Boost::math
-         Boost::container_hash)
+         Boost::container_hash
+         fmt::fmt)
 
 include(cmake/CompilerWarnings.cmake)
 include(cmake/Coverage.cmake)
