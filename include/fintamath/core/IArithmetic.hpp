@@ -7,7 +7,7 @@
 
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/core/Parser.hpp"
 
 namespace fintamath {

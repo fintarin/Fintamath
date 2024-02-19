@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 
 namespace fintamath {
 

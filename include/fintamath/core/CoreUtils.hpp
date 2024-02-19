@@ -6,7 +6,7 @@
 #include <ranges>
 #include <type_traits>
 
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectBoundTypes.hpp"
 
 namespace fintamath {
 
