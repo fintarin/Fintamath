@@ -161,12 +161,12 @@ struct MathObjectType final {
   using enum Id;
 
 public:
-  constexpr MathObjectType(const size_t rhs, const std::string_view inName)
+  consteval MathObjectType(const size_t inId, const std::string_view inName)
       : name(inName),
-        id(rhs) {
+        id(inId) {
   }
 
-  constexpr MathObjectType(const Id inId, const std::string_view inName)
+  consteval MathObjectType(const Id inId, const std::string_view inName)
       : MathObjectType(static_cast<size_t>(inId), inName) {
   }
 
