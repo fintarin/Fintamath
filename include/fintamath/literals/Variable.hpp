@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/numbers/Integer.hpp"
 

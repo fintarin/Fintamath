@@ -12,7 +12,7 @@
 #include <boost/multiprecision/gmp.hpp>
 
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/numbers/IInteger.hpp"
 
 namespace fintamath {

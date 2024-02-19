@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/functions/IFunction.hpp"
 

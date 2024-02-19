@@ -7,7 +7,7 @@
 #include <boost/container_hash/hash.hpp>
 
 #include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 
 namespace fintamath::detail {
 

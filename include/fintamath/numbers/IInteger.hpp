@@ -5,7 +5,7 @@
 #include <string>
 
 #include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/numbers/INumber.hpp"
 

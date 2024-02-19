@@ -4,10 +4,6 @@
 #include <cstddef>
 #include <limits>
 #include <string_view>
-#include <unordered_map>
-
-#include <boost/container_hash/hash.hpp>
-#include <utility>
 
 #include "fintamath/config/Config.hpp"
 
@@ -161,12 +157,12 @@ struct MathObjectType final {
   using enum Id;
 
 public:
-  constexpr MathObjectType(const size_t rhs, const std::string_view inName)
+  consteval MathObjectType(const size_t inId, const std::string_view inName)
       : name(inName),
-        id(rhs) {
+        id(inId) {
   }
 
-  constexpr MathObjectType(const Id inId, const std::string_view inName)
+  consteval MathObjectType(const Id inId, const std::string_view inName)
       : MathObjectType(static_cast<size_t>(inId), inName) {
   }
 
@@ -194,62 +190,8 @@ private:
   [[maybe_unused]] inline static const detail::Config config;
 };
 
-inline size_t hash_value(const MathObjectType &rhs) noexcept {
-  return boost::hash<size_t>{}(rhs.getId());
-}
-
-bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType);
-
-namespace detail {
-
-class MathObjectBoundTypes final {
-  using enum MathObjectType::Id;
-
-  using TypeIdToBoundTypeIdMap = std::unordered_map<size_t, size_t>;
-
-  static TypeIdToBoundTypeIdMap &getMap() {
-    static TypeIdToBoundTypeIdMap typeIdToBoundTypeIdMap{
-        makeTypeIdPair(IMathObject, None),
-        makeTypeIdPair(IArithmetic, ILiteral),
-        makeTypeIdPair(IArithmetic, ILiteral),
-        makeTypeIdPair(IExpression, IComparable),
-        makeTypeIdPair(IUnaryExpression, IBinaryExpression),
-        makeTypeIdPair(IBinaryExpression, IPolynomExpression),
-        makeTypeIdPair(IPolynomExpression, IComparable),
-        makeTypeIdPair(IComparable, ILiteral),
-        makeTypeIdPair(INumber, ILiteral),
-        makeTypeIdPair(IInteger, ILiteral),
-        makeTypeIdPair(ILiteral, IFunction),
-        makeTypeIdPair(IConstant, IFunction),
-        makeTypeIdPair(IFunction, None),
-        makeTypeIdPair(IOperator, None),
-    };
-    return typeIdToBoundTypeIdMap;
-  }
-
-public:
-  static void bindTypes(const MathObjectType &type, const MathObjectType &boundType) {
-    getMap().emplace(type.getId(), boundType.getId());
-  }
-
-  friend bool fintamath::isBaseOf(const MathObjectType &toType, const MathObjectType &fromType);
-
-private:
-  static std::pair<size_t, size_t> makeTypeIdPair(const MathObjectType::Id lhs, const MathObjectType::Id rhs) {
-    return {static_cast<size_t>(lhs), static_cast<size_t>(rhs)};
-  }
-};
-
-}
-
-inline bool isBaseOf(const MathObjectType &toType, const MathObjectType &fromType) {
-  const auto &map = detail::MathObjectBoundTypes::getMap();
-
-  if (const auto boundaries = map.find(toType.getId()); boundaries != map.end()) {
-    return fromType.getId() >= boundaries->first && fromType.getId() < boundaries->second;
-  }
-
-  return toType == fromType;
+constexpr size_t hash_value(const MathObjectType &rhs) noexcept {
+  return rhs.getId();
 }
 
 }
