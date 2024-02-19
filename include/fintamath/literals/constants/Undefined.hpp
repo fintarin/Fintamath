@@ -5,7 +5,7 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 
 namespace fintamath {

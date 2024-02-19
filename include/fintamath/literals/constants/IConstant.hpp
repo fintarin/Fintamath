@@ -5,7 +5,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectTypes.hpp"
+#include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 
