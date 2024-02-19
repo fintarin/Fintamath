@@ -27,10 +27,22 @@ TEST(IFunctionTests, callTest) {
 
   EXPECT_EQ((*f)(a, c)->toString(), "c + 3");
 
-  EXPECT_THROW((*f)(), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(a), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(a, a, a), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(a, a, a, a, a, a, a), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { (*f)(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { (*f)(a); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { (*f)(a, a, a); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { (*f)(a, a, a, a, a, a, a); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 }
 
 TEST(IFunctionTests, calVectTest) {
@@ -46,10 +58,22 @@ TEST(IFunctionTests, calVectTest) {
 
   EXPECT_EQ((*f)({a, c})->toString(), "c + 3");
 
-  EXPECT_THROW((*f)({}), InvalidInputFunctionException);
-  EXPECT_THROW((*f)({a}), InvalidInputFunctionException);
-  EXPECT_THROW((*f)({a, a, a}), InvalidInputFunctionException);
-  EXPECT_THROW((*f)({a, a, a, a, a, a, a}), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { (*f)({}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { (*f)({a}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { (*f)({a, a, a}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { (*f)({a, a, a, a, a, a, a}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 }
 
 TEST(IFunctionTests, equalsTest) {

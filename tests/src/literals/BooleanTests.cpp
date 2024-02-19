@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
@@ -14,12 +15,26 @@ TEST(BooleanTests, stringConstructorTest) {
   EXPECT_EQ(Boolean(std::string("True")), true);
   EXPECT_EQ(Boolean(std::string("False")), false);
 
-  EXPECT_THROW(Boolean(std::string("true")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("false")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("10")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("i")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("")), InvalidInputException);
+  EXPECT_THAT(
+      [] { Boolean(std::string("")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Boolean "" (expected "True" or "False"))")));
+  EXPECT_THAT(
+      [] { Boolean(std::string("true")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Boolean "true" (expected "True" or "False"))")));
+  EXPECT_THAT(
+      [] { Boolean(std::string("false")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Boolean "false" (expected "True" or "False"))")));
+  EXPECT_THAT(
+      [] { Boolean(std::string("10")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Boolean "10" (expected "True" or "False"))")));
+  EXPECT_THAT(
+      [] { Boolean(std::string("i")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Boolean "i" (expected "True" or "False"))")));
 }
 
 TEST(BooleanTests, boolConstructorTest) {

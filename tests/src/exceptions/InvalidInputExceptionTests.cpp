@@ -7,11 +7,7 @@ using namespace fintamath;
 
 TEST(InvalidInputExceptionTests, whatTest) {
   EXPECT_THAT(
-      [] { throw InvalidInputException(); },
+      [] { throw InvalidInputException(R"(Integer("abc"))"); },
       testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Invalid input")));
-  EXPECT_THAT(
-      [] { throw InvalidInputException("123"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Invalid input: 123")));
+          testing::StrEq(R"(Integer("abc"))")));
 }

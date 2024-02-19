@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
@@ -46,9 +47,14 @@ TEST(IUnaryExpressionTests, setChildren) {
   EXPECT_EQ(expr.getChildren().size(), 1);
   EXPECT_EQ(*expr.getChildren().front(), Integer(0));
 
-  EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
-  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1)}),
-               InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { expr.setChildren({}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1)}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 }
 
 TEST(IUnaryExpressionTests, toMinimalObjectTest) {

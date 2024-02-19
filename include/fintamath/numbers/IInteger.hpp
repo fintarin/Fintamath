@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 
+#include <fmt/core.h>
+
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/core/Parser.hpp"

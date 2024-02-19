@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <string_view>
 
 #include <boost/container_hash/hash.hpp>
 #include <boost/multiprecision/fwd.hpp>
@@ -12,7 +13,6 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
-#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectTypes.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -42,7 +42,7 @@ public:
 
   Real(Backend inBackend);
 
-  explicit Real(std::string str);
+  explicit Real(std::string_view str);
 
   Real(const Rational &val);
 

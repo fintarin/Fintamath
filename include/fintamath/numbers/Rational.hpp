@@ -20,7 +20,7 @@ class Rational final : public INumberCRTP<Rational> {
 public:
   Rational() = default;
 
-  explicit Rational(const std::string &str);
+  explicit Rational(std::string_view str);
 
   explicit Rational(Integer inNumer, Integer inDenom);
 
