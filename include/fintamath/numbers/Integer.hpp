@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <string_view>
 
 #include <boost/container_hash/hash.hpp>
 #include <boost/multiprecision/fwd.hpp>
@@ -26,7 +27,7 @@ public:
 
   Integer(Backend inBackend);
 
-  explicit Integer(std::string str);
+  explicit Integer(std::string_view str);
 
   explicit Integer(std::integral auto val) : backend(val) {
   }

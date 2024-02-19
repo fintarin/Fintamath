@@ -215,9 +215,7 @@ bool IPolynomExpression::isComparableOrderInversed() const {
 }
 
 void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.empty()) {
-    throw InvalidInputFunctionException(toString(), {});
-  }
+  makeExpr(*func, childVect);
 
   children = childVect;
 }

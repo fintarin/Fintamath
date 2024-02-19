@@ -4,7 +4,10 @@
 #include <cstdint>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
+
+#include <fmt/core.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
@@ -17,19 +20,20 @@ using namespace detail;
 Integer::Integer(Backend inBackend) : backend(std::move(inBackend)) {
 }
 
-Integer::Integer(std::string str) {
+Integer::Integer(const std::string_view str) try {
   if (str.empty()) {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
-
-  str = removeLeadingZeroes(std::move(str));
 
   try {
-    backend.assign(str);
+    backend.assign(removeLeadingZeroes(std::string(str)));
   }
   catch (const std::runtime_error &) {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
+}
+catch (const InvalidInputException &) {
+  throw InvalidInputException(fmt::format(R"(Unable to parse an {} from "{}")", getTypeStatic().getName(), str));
 }
 
 Integer::Integer(const int64_t val) : backend(val) {
@@ -72,7 +76,7 @@ Integer &Integer::multiply(const Integer &rhs) {
 
 Integer &Integer::divide(const Integer &rhs) {
   if (rhs == 0) {
-    throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
+    throw UndefinedException(fmt::format(R"(Undefined "{}" / "{}" (division by zero))", toString(), rhs.toString()));
   }
 
   backend /= rhs.backend;
@@ -81,7 +85,7 @@ Integer &Integer::divide(const Integer &rhs) {
 
 Integer &Integer::mod(const Integer &rhs) {
   if (rhs == 0) {
-    throw UndefinedBinaryOperatorException("mod", toString(), rhs.toString());
+    throw UndefinedException(fmt::format(R"(Undefined "{}" % "{}" (modulo by zero))", toString(), rhs.toString()));
   }
 
   backend %= rhs.backend;
@@ -109,7 +113,7 @@ Integer &Integer::bitLeftShift(const Integer &rhs) {
     return *this;
   }
   catch (...) {
-    throw UndefinedBinaryOperatorException("<<", toString(), rhs.toString());
+    throw UndefinedException(fmt::format(R"(Undefined "{}" / "{}" (negative shift))", toString(), rhs.toString()));
   }
 }
 
@@ -119,7 +123,7 @@ Integer &Integer::bitRightShift(const Integer &rhs) {
     return *this;
   }
   catch (...) {
-    throw UndefinedBinaryOperatorException(">>", toString(), rhs.toString());
+    throw UndefinedException(fmt::format(R"(Undefined "{}" >> "{}" (negative shift))", toString(), rhs.toString()));
   }
 }
 

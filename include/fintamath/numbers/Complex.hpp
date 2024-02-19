@@ -28,9 +28,9 @@ public:
 
   explicit Complex(const std::string &str);
 
-  explicit Complex(const INumber &inReal, const INumber &inImag);
+  explicit Complex(const INumber &inRe, const INumber &inIm);
 
-  explicit Complex(int64_t inReal, int64_t inImag);
+  explicit Complex(int64_t inRe, int64_t inIm);
 
   Complex(const Integer &rhs);
 

@@ -6,9 +6,12 @@
 #include <string>
 #include <unordered_map>
 
+#include <fmt/core.h>
+
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/core/Parser.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
@@ -68,8 +71,6 @@ public:
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const = 0;
 
-  virtual void validateArgsSize(const ArgumentRefVector &argVect) const;
-
   static const FunctionNameToOrderMap &getFunctionNameToOrderMap();
 
 private:
@@ -77,6 +78,7 @@ private:
 
   static FunctionParser &getParser();
 
+private:
   inline static size_t maxFunctionOrder = 0;
 };
 
@@ -85,6 +87,7 @@ template <typename Return, typename Derived, typename... Args>
 class IFunctionCRTP : public IFunction {
 #define I_FUNCTION_CRTP IFunctionCRTP<Return, Derived, Args...>
 #include "fintamath/functions/IFunctionCRTP.hpp"
+
 #undef I_FUNCTION_CRTP
 };
 

@@ -8,6 +8,7 @@
 #include <ranges>
 #include <stack>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -165,9 +166,9 @@ std::unique_ptr<IMathObject> parseExpr(const std::string &str) {
   try {
     auto tokens = Tokenizer::tokenize(str);
     auto terms = Expression::tokensToTerms(tokens);
-    auto stack = Expression::termsToOperands(terms);
-    auto obj = Expression::operandsToObject(stack);
-    return obj;
+    auto operands = Expression::termsToOperands(terms);
+    auto object = Expression::operandsToObject(operands);
+    return object;
   }
   catch (const InvalidInputException &) {
     throw InvalidInputException(str);

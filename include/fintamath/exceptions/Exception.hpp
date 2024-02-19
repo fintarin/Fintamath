@@ -1,14 +1,22 @@
 #pragma once
 
 #include <exception>
+#include <string>
+#include <utility>
 
 namespace fintamath {
 
 class Exception : public std::exception {
 public:
-  const char *what() const noexcept override {
-    return "Something went wrong...";
+  explicit Exception(std::string inMessage) : message(std::move(inMessage)) {
   }
+
+  const char *what() const noexcept override {
+    return message.data();
+  }
+
+private:
+  std::string message;
 };
 
 }

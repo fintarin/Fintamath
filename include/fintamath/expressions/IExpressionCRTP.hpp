@@ -34,24 +34,24 @@ public:
   }
 
 protected:
-  Derived &add(const Derived &rhs) override {
-    throw InvalidInputBinaryOperatorException("+", this->toString(), rhs.toString());
+  Derived &add(const Derived &) override {
+    throw InvalidInputException(fmt::format("Arithmetic operations are not allowed for {}", this->getType().getName()));
   }
 
-  Derived &substract(const Derived &rhs) override {
-    throw InvalidInputBinaryOperatorException("-", this->toString(), rhs.toString());
+  Derived &substract(const Derived &) override {
+    throw InvalidInputException(fmt::format("Arithmetic operations are not allowed for {}", this->getType().getName()));
   }
 
-  Derived &multiply(const Derived &rhs) override {
-    throw InvalidInputBinaryOperatorException("*", this->toString(), rhs.toString());
+  Derived &multiply(const Derived &) override {
+    throw InvalidInputException(fmt::format("Arithmetic operations are not allowed for {}", this->getType().getName()));
   }
 
-  Derived &divide(const Derived &rhs) override {
-    throw InvalidInputBinaryOperatorException("/", this->toString(), rhs.toString());
+  Derived &divide(const Derived &) override {
+    throw InvalidInputException(fmt::format("Arithmetic operations are not allowed for {}", this->getType().getName()));
   }
 
   Derived &negate() override {
-    throw InvalidInputUnaryOperatorException("-", this->toString(), InvalidInputUnaryOperatorException::Type::Prefix);
+    throw InvalidInputException(fmt::format("Arithmetic operations are not allowed for {}", this->getType().getName()));
   }
 
 private:

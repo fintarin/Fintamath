@@ -1,6 +1,8 @@
 #pragma once
 
+#include <cstddef>
 #include <unordered_map>
+#include <utility>
 
 #include "fintamath/core/MathObjectType.hpp"
 

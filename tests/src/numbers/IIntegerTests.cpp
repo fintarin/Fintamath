@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/numbers/IInteger.hpp"
@@ -140,8 +141,14 @@ TEST(IIntegerTests, modTest) {
   EXPECT_TRUE(is<TestInteger>(*m1 % TestIntegerConvertible()));
   EXPECT_TRUE(is<TestInteger>(TestIntegerConvertible() % *m1));
 
-  EXPECT_THROW(*m1 % TestInteger(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestInteger() % *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 % TestInteger(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the % operator (Integer "10" and TestInteger "test" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestInteger() % *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the % operator (TestInteger "test" and Integer "10" are unconvertible to each other))")));
 
   Integer a;
   EXPECT_EQ((a %= 3).toString(), "0");
@@ -164,8 +171,14 @@ TEST(IIntegerTests, bitAndTest) {
   EXPECT_TRUE(is<TestInteger>(*m1 & TestIntegerConvertible()));
   EXPECT_TRUE(is<TestInteger>(TestIntegerConvertible() & *m1));
 
-  EXPECT_THROW(*m1 & TestInteger(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestInteger() & *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 & TestInteger(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the & operator (Integer "10" and TestInteger "test" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestInteger() & *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the & operator (TestInteger "test" and Integer "10" are unconvertible to each other))")));
 
   Integer a;
   EXPECT_EQ((a &= 3).toString(), "0");
@@ -188,8 +201,14 @@ TEST(IIntegerTests, bitOrTest) {
   EXPECT_TRUE(is<TestInteger>(*m1 | TestIntegerConvertible()));
   EXPECT_TRUE(is<TestInteger>(TestIntegerConvertible() | *m1));
 
-  EXPECT_THROW(*m1 | TestInteger(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestInteger() | *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 | TestInteger(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the | operator (Integer "10" and TestInteger "test" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestInteger() | *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the | operator (TestInteger "test" and Integer "10" are unconvertible to each other))")));
 
   Integer a;
   EXPECT_EQ((a |= 3).toString(), "3");
@@ -212,8 +231,14 @@ TEST(IIntegerTests, bitXorTest) {
   EXPECT_TRUE(is<TestInteger>(*m1 ^ TestIntegerConvertible()));
   EXPECT_TRUE(is<TestInteger>(TestIntegerConvertible() ^ *m1));
 
-  EXPECT_THROW(*m1 ^ TestInteger(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestInteger() ^ *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 ^ TestInteger(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the ^ operator (Integer "10" and TestInteger "test" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestInteger() ^ *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the ^ operator (TestInteger "test" and Integer "10" are unconvertible to each other))")));
 
   Integer a;
   EXPECT_EQ((a ^= 3).toString(), "3");
@@ -236,8 +261,14 @@ TEST(IIntegerTests, bitLeftShiftTest) {
   EXPECT_TRUE(is<TestInteger>(*m1 << TestIntegerConvertible()));
   EXPECT_TRUE(is<TestInteger>(TestIntegerConvertible() << *m1));
 
-  EXPECT_THROW(*m1 << TestInteger(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestInteger() << *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 << TestInteger(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the << operator (Integer "10" and TestInteger "test" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestInteger() << *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the << operator (TestInteger "test" and Integer "10" are unconvertible to each other))")));
 
   Integer a;
   EXPECT_EQ((a <<= 3).toString(), "0");
@@ -260,8 +291,14 @@ TEST(IIntegerTests, bitRightShiftTest) {
   EXPECT_TRUE(is<TestInteger>(*m1 >> TestIntegerConvertible()));
   EXPECT_TRUE(is<TestInteger>(TestIntegerConvertible() >> *m1));
 
-  EXPECT_THROW(*m1 >> TestInteger(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestInteger() >> *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 >> TestInteger(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the >> operator (Integer "10" and TestInteger "test" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestInteger() >> *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the >> operator (TestInteger "test" and Integer "10" are unconvertible to each other))")));
 
   Integer a;
   EXPECT_EQ((a >>= 3).toString(), "0");

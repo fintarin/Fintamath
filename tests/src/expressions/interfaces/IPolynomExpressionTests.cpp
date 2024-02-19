@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
@@ -63,7 +64,10 @@ TEST(IPolynomExpressionTests, setChildren) {
   EXPECT_EQ(*expr.getChildren()[1], Integer(0));
   EXPECT_EQ(*expr.getChildren()[2], Integer(0));
 
-  EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { expr.setChildren({}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 }
 
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {

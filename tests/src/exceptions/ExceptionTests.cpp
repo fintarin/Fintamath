@@ -7,7 +7,7 @@ using namespace fintamath;
 
 TEST(ExceptionTests, whatTest) {
   EXPECT_THAT(
-      [] { throw Exception(); },
+      [] { throw Exception("Unknown exception"); },
       testing::ThrowsMessage<Exception>(
-          testing::StrEq("Something went wrong...")));
+          testing::StrEq("Unknown exception")));
 }

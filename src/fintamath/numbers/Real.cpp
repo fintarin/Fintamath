@@ -7,9 +7,12 @@
 #include <ios>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 
 #include <boost/multiprecision/detail/default_ops.hpp>
+
+#include <fmt/core.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
@@ -28,40 +31,43 @@ Real::Real(Backend inBackend) : backend(std::move(inBackend)),
                                 isNegative(backend < 0) {
 
   if (!isFinite()) {
-    throw UndefinedException(backend.str());
+    throw UndefinedException(fmt::format(R"(Undefined {})", toString()));
   }
 }
 
-Real::Real(std::string str) : Real() {
+Real::Real(const std::string_view str) try : Real() {
   if (str.empty() || str == ".") {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
 
-  str = removeLeadingZeroes(std::move(str));
+  std::string mutableStr = removeLeadingZeroes(std::string(str));
 
-  if (str.front() == '-') {
+  if (mutableStr.front() == '-') {
     isNegative = true;
   }
 
   {
     const std::string expStr = "*10^";
-    const size_t expPos = str.find(expStr);
+    const size_t expPos = mutableStr.find(expStr);
 
     if (expPos != std::string::npos) {
-      str.replace(expPos, expStr.length(), "e");
+      mutableStr.replace(expPos, expStr.length(), "e");
     }
   }
 
   try {
-    backend.assign(str);
+    backend.assign(mutableStr);
   }
   catch (const std::runtime_error &) {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
 
   if (!isFinite()) {
-    throw UndefinedException(str);
+    throw UndefinedException(fmt::format(R"(Undefined "{}" (overflow))", str));
   }
+}
+catch (const InvalidInputException &) {
+  throw InvalidInputException(fmt::format(R"(Unable to parse a {} from "{}")", getTypeStatic().getName(), str));
 }
 
 Real::Real(const Rational &val) {
@@ -222,14 +228,14 @@ Real &Real::multiply(const Real &rhs) {
 }
 
 Real &Real::divide(const Real &rhs) {
+  if (rhs == 0) {
+    throw UndefinedException(fmt::format(R"(Undefined "{}" / "{}" (division by zero))", toString(), rhs.toString()));
+  }
+
   updatePrecision(rhs);
 
   isNegative = isNegative != rhs.isNegative;
   backend /= rhs.backend;
-
-  if (!isFinite()) {
-    throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
-  }
 
   return *this;
 }
@@ -250,9 +256,7 @@ void Real::updatePrecision(const Real &rhs) {
 
 void Real::validateNewPrecision(const unsigned precision) const {
   if (precision > outputPrecision) {
-    // TODO: use std::format
-    throw InvalidInputException("Precision must be less than or equal to " +
-                                std::to_string(outputPrecision));
+    throw InvalidInputException(fmt::format("The given precision {} is greater than the current precision {}", precision, outputPrecision));
   }
 }
 

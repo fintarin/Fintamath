@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 
+#include <fmt/core.h>
+
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
@@ -29,7 +31,7 @@ Complex &Complex::operator=(const Complex &rhs) {
   return *this;
 }
 
-Complex::Complex(const std::string &str) {
+Complex::Complex(const std::string &str) try {
   if (!str.empty() && str.back() == 'I') {
     im = parse(str.substr(0, str.size() - 1));
   }
@@ -38,21 +40,24 @@ Complex::Complex(const std::string &str) {
   }
 
   if (!re || !im) {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
 }
-
-Complex::Complex(const INumber &inReal, const INumber &inImag) {
-  if (is<Complex>(inReal) || is<Complex>(inImag)) {
-    throw InvalidInputException("Nested complex numbers are not allowed");
-  }
-
-  re = cast<INumber>(inReal.toMinimalObject());
-  im = cast<INumber>(inImag.toMinimalObject());
+catch (const InvalidInputException &) {
+  throw InvalidInputException(fmt::format(R"(Unable to parse a {} from "{}")", getTypeStatic().getName(), str));
 }
 
-Complex::Complex(int64_t inReal, int64_t inImag) : re(std::make_unique<Integer>(inReal)),
-                                                   im(std::make_unique<Integer>(inImag)) {
+Complex::Complex(const INumber &inRe, const INumber &inIm) {
+  if (is<Complex>(inRe) || is<Complex>(inIm)) {
+    throw InvalidInputException(fmt::format(R"(Nested {} numbers are not allowed)", getTypeStatic().getName()));
+  }
+
+  re = cast<INumber>(inRe.toMinimalObject());
+  im = cast<INumber>(inIm.toMinimalObject());
+}
+
+Complex::Complex(int64_t inRe, int64_t inIm) : re(std::make_unique<Integer>(inRe)),
+                                               im(std::make_unique<Integer>(inIm)) {
 }
 
 Complex::Complex(const Integer &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
@@ -192,7 +197,7 @@ Complex &Complex::divide(const Complex &rhs) {
     im = *(*(y * u) - *(x * v)) / *divisor;
   }
   catch (const UndefinedException &) {
-    throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
+    throw UndefinedException(fmt::format(R"(Undefined "{}" / "{}" (division by zero))", toString(), rhs.toString()));
   }
 
   return *this;

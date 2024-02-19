@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/IExpression.hpp"
@@ -65,7 +66,10 @@ TEST(IExpressionTests, setChildrenTest) {
   expr->setChildren({Variable("b").clone()});
   EXPECT_EQ(expr->toString(), "b!");
 
-  EXPECT_THROW(expr->setChildren({Variable("b").clone(), Variable("c").clone()}), InvalidInputException);
+  EXPECT_THAT(
+      [&] { expr->setChildren({Variable("b").clone(), Variable("c").clone()}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 
   // TODO: implement more tests
 }
@@ -96,9 +100,24 @@ TEST(IExpressionTests, getTypeTest) {
 }
 
 TEST(IExpressionTests, arithmeticTest) {
-  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) + cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) - cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) * cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) / cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
-  EXPECT_THROW(-cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
+  EXPECT_THAT(
+      [] { cast<IExpression>(*sinExpr(Integer(1).clone())) + cast<IExpression>(*sinExpr(Integer(1).clone())); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Arithmetic operations are not allowed for TrigExpression")));
+  EXPECT_THAT(
+      [] { cast<IExpression>(*sinExpr(Integer(1).clone())) - cast<IExpression>(*sinExpr(Integer(1).clone())); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Arithmetic operations are not allowed for TrigExpression")));
+  EXPECT_THAT(
+      [] { cast<IExpression>(*sinExpr(Integer(1).clone())) * cast<IExpression>(*sinExpr(Integer(1).clone())); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Arithmetic operations are not allowed for TrigExpression")));
+  EXPECT_THAT(
+      [] { cast<IExpression>(*sinExpr(Integer(1).clone())) / cast<IExpression>(*sinExpr(Integer(1).clone())); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Arithmetic operations are not allowed for TrigExpression")));
+  EXPECT_THAT(
+      [] { -cast<IExpression>(*sinExpr(Integer(1).clone())); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Arithmetic operations are not allowed for TrigExpression")));
 }

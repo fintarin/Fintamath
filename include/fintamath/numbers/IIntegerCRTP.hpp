@@ -209,7 +209,13 @@ private:
       return cast<IInteger>(res->toMinimalObject());
     }
 
-    throw InvalidInputBinaryOperatorException(operStr, toString(), rhs.toString());
+    throw InvalidInputException(fmt::format(
+        R"(Invalid arguments of the {} operator ({} "{}" and {} "{}" are unconvertible to each other))",
+        operStr,
+        this->getType().getName(),
+        this->toString(),
+        rhs.getType().getName(),
+        rhs.toString()));
   }
 
 private:

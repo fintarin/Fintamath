@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/ExpressionParser.hpp"
@@ -37,120 +38,450 @@ TEST(ExpressionParserTests, parseExprTest) {
 }
 
 TEST(ExpressionParserTests, parseExprNegativeTest) {
-  EXPECT_THROW(parseExpr(""), InvalidInputException);
-  EXPECT_THROW(parseExpr("1+"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1-"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1*"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1/"), InvalidInputException);
-  EXPECT_THROW(parseExpr("*1"), InvalidInputException);
-  EXPECT_THROW(parseExpr("/1"), InvalidInputException);
-  EXPECT_THROW(parseExpr(" +   "), InvalidInputException);
-  EXPECT_THROW(parseExpr("(1+2))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("5-*3"), InvalidInputException);
-  EXPECT_THROW(parseExpr("5 3 +"), InvalidInputException);
-  EXPECT_THROW(parseExpr("2.2.2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("--"), InvalidInputException);
-  EXPECT_THROW(parseExpr("."), InvalidInputException);
-  EXPECT_THROW(parseExpr(","), InvalidInputException);
-  EXPECT_THROW(parseExpr("/"), InvalidInputException);
-  EXPECT_THROW(parseExpr(";"), InvalidInputException);
-  EXPECT_THROW(parseExpr("\'"), InvalidInputException);
-  EXPECT_THROW(parseExpr("["), InvalidInputException);
-  EXPECT_THROW(parseExpr("]"), InvalidInputException);
-  EXPECT_THROW(parseExpr("!"), InvalidInputException);
-  EXPECT_THROW(parseExpr("@"), InvalidInputException);
-  EXPECT_THROW(parseExpr("\""), InvalidInputException);
-  EXPECT_THROW(parseExpr("#"), InvalidInputException);
-  EXPECT_THROW(parseExpr("№"), InvalidInputException);
-  EXPECT_THROW(parseExpr("%"), InvalidInputException);
-  EXPECT_THROW(parseExpr(":"), InvalidInputException);
-  EXPECT_THROW(parseExpr("?"), InvalidInputException);
-  EXPECT_THROW(parseExpr("*"), InvalidInputException);
-  EXPECT_THROW(parseExpr("("), InvalidInputException);
-  EXPECT_THROW(parseExpr(")"), InvalidInputException);
-  EXPECT_THROW(parseExpr("-"), InvalidInputException);
-  EXPECT_THROW(parseExpr("+"), InvalidInputException);
-  EXPECT_THROW(parseExpr("$"), InvalidInputException);
-  EXPECT_THROW(parseExpr("^"), InvalidInputException);
-  EXPECT_THROW(parseExpr("&"), InvalidInputException);
-  EXPECT_THROW(parseExpr("_"), InvalidInputException);
-  EXPECT_THROW(parseExpr("[1+1]"), InvalidInputException);
-  EXPECT_THROW(parseExpr("{1}"), InvalidInputException);
-  EXPECT_THROW(parseExpr(",2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("2,"), InvalidInputException);
+  EXPECT_THAT(
+      [] { parseExpr(""); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1+"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1-"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1*"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1/"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("*1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("/1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr(" +   "); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(1+2))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("5-*3"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("5 3 +"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("2.2.2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("--"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("."); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr(","); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("/"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr(";"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("\'"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("["); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("]"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("!"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("@"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("\""); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("#"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("№"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("%"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr(":"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("?"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("*"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("("); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr(")"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("-"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("+"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("$"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("^"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("&"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("_"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("[1+1]"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("{1}"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr(",2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("2,"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 
-  EXPECT_THROW(parseExpr("(1"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(((2)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(((2))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((2)))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(2)))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((2)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((((2)((2))))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(()())"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((()()))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((((()))))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(,) + (,)"), InvalidInputException);
+  EXPECT_THAT(
+      [] { parseExpr("(1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(((2)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(((2))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((2)))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(2)))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((2)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((((2)((2))))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(()())"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((()()))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((((()))))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(,) + (,)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 
-  EXPECT_THROW(parseExpr("!2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("!!2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("!2!!"), InvalidInputException);
-  EXPECT_THROW(parseExpr("!(2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("!(2)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("2)!"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin(2))!"), InvalidInputException);
-  EXPECT_THROW(parseExpr("!!!!!!"), InvalidInputException);
+  EXPECT_THAT(
+      [] { parseExpr("!2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("!!2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("!2!!"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("!(2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("!(2)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("2)!"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin(2))!"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("!!!!!!"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 
-  EXPECT_THROW(parseExpr("esin()"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(a+b)*()"), InvalidInputException);
+  EXPECT_THAT(
+      [] { parseExpr("esin()"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(a+b)*()"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 
-  EXPECT_THROW(parseExpr("sin(2,3)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin(2,3) + 2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("cos(sin(2,3))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin(,)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin(,2)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin(2,)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin()"), InvalidInputException);
-  EXPECT_THROW(parseExpr("log(1)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("log()"), InvalidInputException);
+  EXPECT_THAT(
+      [] { parseExpr("sin(2,3)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin(2,3) + 2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("cos(sin(2,3))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin(,)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin(,2)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin(2,)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin()"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("log(1)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("log()"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 
-  EXPECT_THROW(parseExpr("(1 = 1) / 2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("2 + (1 = 2)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin(1 = 1)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin(sin(1 = 1))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("sin(sin(sin(1 = 1)))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("True/True"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((1 == 1)) + ((1 == 2))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((1 == 1)) - ((1 == 1))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("((1 == 1)) / ((1 == 1))"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(5+5)=(2=5)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1+(sin(x)<2)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1/(sin(x)<2)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1+False"), InvalidInputException);
-  EXPECT_THROW(parseExpr("False+1"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1=False"), InvalidInputException);
-  EXPECT_THROW(parseExpr("False=1"), InvalidInputException);
-  EXPECT_THROW(parseExpr("1&2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("x+1&x+2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("x+1&x"), InvalidInputException);
-  EXPECT_THROW(parseExpr("x&x+2"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(x&y)=(y&z)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("derivative(x=y, x)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("derivative(x&y,x)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("derivative(True,a)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(a+1)_(a>2)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(x+1)_1"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(x*2)_1"), InvalidInputException);
-  EXPECT_THROW(parseExpr("(x*2)_((x+2)_x)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("x^x_1"), InvalidInputException);
-  EXPECT_THROW(parseExpr("E&a"), InvalidInputException);
-  EXPECT_THROW(parseExpr("~Inf"), InvalidInputException);
-  EXPECT_THROW(parseExpr("~Undefined"), InvalidInputException);
-  EXPECT_THROW(parseExpr("a | Undefined"), InvalidInputException);
+  EXPECT_THAT(
+      [] { parseExpr("(1 = 1) / 2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("2 + (1 = 2)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin(1 = 1)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin(sin(1 = 1))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("sin(sin(sin(1 = 1)))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("True/True"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((1 == 1)) + ((1 == 2))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((1 == 1)) - ((1 == 1))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("((1 == 1)) / ((1 == 1))"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(5+5)=(2=5)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1+(sin(x)<2)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1/(sin(x)<2)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1+False"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("False+1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1=False"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("False=1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("1&2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("x+1&x+2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("x+1&x"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("x&x+2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(x&y)=(y&z)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("derivative(x=y, x)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("derivative(x&y,x)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("derivative(True,a)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(a+1)_(a>2)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(x+1)_1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(x*2)_1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("(x*2)_((x+2)_x)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("x^x_1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("E&a"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("~Inf"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("~Undefined"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("a | Undefined"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 
-  EXPECT_THROW(parseExpr("min()"), InvalidInputException);
-  EXPECT_THROW(parseExpr("min(True, False)"), InvalidInputException);
-  EXPECT_THROW(parseExpr("max()"), InvalidInputException);
-  EXPECT_THROW(parseExpr("max(True, False)"), InvalidInputException);
+  EXPECT_THAT(
+      [] { parseExpr("min()"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("min(True, False)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("max()"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { parseExpr("max(True, False)"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 }

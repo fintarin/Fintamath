@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 
 #include "fintamath/core/MathObjectType.hpp"
 #include "fintamath/literals/ILiteral.hpp"
@@ -10,9 +11,9 @@ namespace fintamath {
 
 class Variable final : public ILiteralCRTP<Variable> {
 public:
-  explicit Variable(std::string inName);
+  explicit Variable(std::string_view inName);
 
-  explicit Variable(std::string inName, Integer inIndex);
+  explicit Variable(std::string_view inName, Integer inIndex);
 
   std::string toString() const override;
 

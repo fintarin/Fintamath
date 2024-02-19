@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/numbers/Integer.hpp"
@@ -23,10 +24,22 @@ TEST(IntegerTests, stringConstructorTest) {
   EXPECT_EQ(Integer("00"), 0);
   EXPECT_EQ(Integer("-00"), 0);
 
-  EXPECT_THROW(Integer("--10"), InvalidInputException);
-  EXPECT_THROW(Integer("test"), InvalidInputException);
-  EXPECT_THROW(Integer(""), InvalidInputException);
-  EXPECT_THROW(Integer("+"), InvalidInputException);
+  EXPECT_THAT(
+      [] { Integer(""); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse an Integer from "")")));
+  EXPECT_THAT(
+      [] { Integer("--10"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse an Integer from "--10")")));
+  EXPECT_THAT(
+      [] { Integer("test"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse an Integer from "test")")));
+  EXPECT_THAT(
+      [] { Integer("+"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse an Integer from "+")")));
 }
 
 TEST(IntegerTests, templateConstructorTest) {
@@ -439,7 +452,10 @@ TEST(IntegerTests, divideAssignmentOperatorTest) {
                     "89266820855771268403147576567095701074005469808857005026436237359557162582162903447744543426516804"
                     "1405756975664327860057312868835959178663661834688407715795207372052181069795781487373087361"));
 
-  EXPECT_THROW(Integer(-25) /= Integer(0), UndefinedBinaryOperatorException);
+  EXPECT_THAT(
+      [] { Integer(-25) /= Integer(0); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(Undefined "-25" / "0" (division by zero))")));
 }
 
 TEST(IntegerTests, intDivideAssignmentOperatorTest) {
@@ -502,7 +518,10 @@ TEST(IntegerTests, moduloAssignmentOperatorTest) {
                     "83893847267328724673874") %= Integer("1738383928837528673287446238746237943"),
             Integer("1186817955126284001426922341829394317"));
 
-  EXPECT_THROW(Integer(-25) %= Integer(0), UndefinedBinaryOperatorException);
+  EXPECT_THAT(
+      [] { Integer(-25) %= Integer(0); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(Undefined "-25" % "0" (modulo by zero))")));
 }
 
 TEST(IntegerTests, intModuloAssignmentOperatorTest) {
@@ -612,8 +631,14 @@ TEST(IntegerTests, bitLeftShiftAssignmentOperatorTest) {
   EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") <<= 5,
             Integer("386924570874476799999999999999999999775479354813708569600022752"));
 
-  EXPECT_THROW(Integer(192) <<= Integer(-5), UndefinedBinaryOperatorException);
-  EXPECT_THROW(Integer(-192) <<= Integer(-5), UndefinedBinaryOperatorException);
+  EXPECT_THAT(
+      [] { Integer(192) <<= Integer(-5); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(Undefined "192" / "-5" (negative shift))")));
+  EXPECT_THAT(
+      [] { Integer(-192) <<= Integer(-5); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(Undefined "-192" / "-5" (negative shift))")));
 }
 
 TEST(IntegerTests, intBitLeftShiftAssignmentOperatorTest) {
@@ -639,8 +664,14 @@ TEST(IntegerTests, bitRightShiftAssignmentOperatorTest) {
   EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") >>= 5,
             Integer("377856026244606249999999999999999999780741557435262275000022"));
 
-  EXPECT_THROW(Integer(192) >>= Integer(-5), UndefinedBinaryOperatorException);
-  EXPECT_THROW(Integer(-192) >>= Integer(-5), UndefinedBinaryOperatorException);
+  EXPECT_THAT(
+      [] { Integer(192) >>= Integer(-5); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(Undefined "192" >> "-5" (negative shift))")));
+  EXPECT_THAT(
+      [] { Integer(-192) >>= Integer(-5); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(Undefined "-192" >> "-5" (negative shift))")));
 }
 
 TEST(IntegerTests, intBitRightShiftAssignmentOperatorTest) {

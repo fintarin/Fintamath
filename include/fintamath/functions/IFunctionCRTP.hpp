@@ -101,6 +101,16 @@ private:
     });
   }
 
+  void validateArgsSize(const ArgumentRefVector &argVect) const {
+    if (argVect.empty() && isVariadic()) {
+      throw InvalidInputException(fmt::format("")); // TODO!
+    }
+
+    if (getArgumentTypes().size() != argVect.size() && !isVariadic()) {
+      throw InvalidInputException(fmt::format("")); // TODO!
+    }
+  }
+
 private:
   inline static const ArgumentTypeVector argTypes = {Args::getTypeStatic()...};
 

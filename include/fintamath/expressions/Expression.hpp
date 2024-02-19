@@ -26,7 +26,6 @@ namespace detail {
 
 struct Term final {
   Token name;
-
   std::unique_ptr<IMathObject> value;
 
 public:
@@ -40,7 +39,6 @@ public:
 
 struct FunctionTerm final {
   Term term;
-
   std::optional<IOperator::Priority> priority;
 
 public:
@@ -53,9 +51,7 @@ public:
 };
 
 using TermVector = std::vector<Term>;
-
 using FunctionTermStack = std::stack<FunctionTerm>;
-
 using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 
 }
