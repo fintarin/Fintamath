@@ -11,9 +11,9 @@ class Boolean final : public ILiteralCRTP<Boolean> {
 public:
   Boolean();
 
-  explicit Boolean(const std::string &str);
+  explicit Boolean(std::string_view inVal);
 
-  Boolean(bool val);
+  Boolean(bool inVal);
 
   std::string toString() const override;
 
@@ -24,7 +24,7 @@ public:
   }
 
 private:
-  std::string name;
+  std::string_view val;
 };
 
 }

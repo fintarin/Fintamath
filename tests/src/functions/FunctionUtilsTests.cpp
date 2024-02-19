@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/Expression.hpp"
@@ -27,10 +28,22 @@ TEST(FunctionUtilsTests, makeExpressionPtrsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExpr(Mul(), ArgumentPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Mul(), ArgumentPtrVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THAT(
+      [&] { makeExpr(Mul(), ArgumentPtrVector{var})->toString(); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { makeExpr(Mul(), ArgumentPtrVector{})->toString(); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { makeExpr(Pow(), ArgumentPtrVector{var})->toString(); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { makeExpr(Pow(), ArgumentPtrVector{})->toString(); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq("")));
 }
 
 TEST(FunctionUtilsTests, makeExpressionRefsTest) {
@@ -45,10 +58,22 @@ TEST(FunctionUtilsTests, makeExpressionRefsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExpr(Mul(), ArgumentRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Mul(), ArgumentRefVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentRefVector{})->toString(), InvalidInputException);
+  EXPECT_THAT(
+      [&] { makeExpr(Mul(), ArgumentRefVector{var})->toString(); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { makeExpr(Mul(), ArgumentRefVector{})->toString(); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { makeExpr(Pow(), ArgumentRefVector{var})->toString(); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [] { makeExpr(Pow(), ArgumentRefVector{})->toString(); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq("")));
 }
 
 TEST(FunctionUtilsTests, makeExpressionAnyArgsRefTest) {

@@ -4,6 +4,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -53,10 +54,31 @@ TEST(AddTests, callTest) {
 
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "a + 3");
 
-  EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
-  EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(1), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(1), Integer(3), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 }
 
 TEST(AddTests, exprTest) {

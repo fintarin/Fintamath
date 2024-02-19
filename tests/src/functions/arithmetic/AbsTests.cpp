@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "fintamath/functions/arithmetic/Abs.hpp"
+#include "fintamath/literals/Boolean.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
@@ -63,8 +64,31 @@ TEST(AbsTests, callTest) {
 
   EXPECT_EQ(f(Variable("a"))->toString(), "abs(a)");
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(1), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(1), Integer(3), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("")));
 }
 
 TEST(AbsTests, exprTest) {

@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/numbers/Real.hpp"
@@ -22,43 +23,117 @@ TEST(RealTests, stringConstructorTest) {
   EXPECT_EQ(Real(".1").toString(), "0.1");
   EXPECT_EQ(Real("1.").toString(), "1.0");
   EXPECT_EQ(Real("10000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000").toString(), "1.00000000002*10^94");
+
   EXPECT_EQ(Real("2*10^2").toString(), "200.0");
   EXPECT_EQ(Real("-2*10^2").toString(), "-200.0");
   EXPECT_EQ(Real("2*10^-2").toString(), "0.02");
   EXPECT_EQ(Real("-2*10^-2").toString(), "-0.02");
+  EXPECT_EQ(Real("2*10^0").toString(), "2.0");
+  EXPECT_EQ(Real("-2*10^0").toString(), "-2.0");
+
+  EXPECT_EQ(Real("0*10^2").toString(), "0.0");
+  EXPECT_EQ(Real("0*10^-2").toString(), "0.0");
+  EXPECT_EQ(Real("0*10^0").toString(), "0.0");
+
   EXPECT_EQ(Real("123.456*10^1000").toString(), "1.23456*10^1002");
   EXPECT_EQ(Real("-123.456*10^1000").toString(), "-1.23456*10^1002");
   EXPECT_EQ(Real("123.456*10^-1000").toString(), "1.23456*10^-998");
   EXPECT_EQ(Real("-123.456*10^-1000").toString(), "-1.23456*10^-998");
+  EXPECT_EQ(Real("123.456*10^0").toString(), "123.456");
+  EXPECT_EQ(Real("-123.456*10^0").toString(), "-123.456");
+
   EXPECT_EQ(Real("0.123456*10^1000").toString(), "1.23456*10^999");
   EXPECT_EQ(Real("-0.123456*10^1000").toString(), "-1.23456*10^999");
   EXPECT_EQ(Real("0.123456*10^-1000").toString(), "1.23456*10^-1001");
   EXPECT_EQ(Real("-0.123456*10^-1000").toString(), "-1.23456*10^-1001");
+  EXPECT_EQ(Real("0.123456*10^0").toString(), "0.123456");
+  EXPECT_EQ(Real("-0.123456*10^0").toString(), "-0.123456");
 
-  EXPECT_THROW(Real("--10"), InvalidInputException);
-  EXPECT_THROW(Real("test"), InvalidInputException);
-  EXPECT_THROW(Real(""), InvalidInputException);
-  EXPECT_THROW(Real("+"), InvalidInputException);
-  EXPECT_THROW(Real("939849.0-0023"), InvalidInputException);
-  EXPECT_THROW(Real("a"), InvalidInputException);
-  EXPECT_THROW(Real("a.1"), InvalidInputException);
-  EXPECT_THROW(Real("1.a"), InvalidInputException);
-  EXPECT_THROW(Real("1a.1"), InvalidInputException);
-  EXPECT_THROW(Real("1.1a"), InvalidInputException);
-  EXPECT_THROW(Real("--10.-1"), InvalidInputException);
-  EXPECT_THROW(Real("10.-1"), InvalidInputException);
-  EXPECT_THROW(Real("1-0.1"), InvalidInputException);
-  EXPECT_THROW(Real("10-.1"), InvalidInputException);
-  EXPECT_THROW(Real("10.--1"), InvalidInputException);
-  EXPECT_THROW(Real("."), InvalidInputException);
-  EXPECT_THROW(Real("1.2.1"), InvalidInputException);
-  EXPECT_THROW(Real("2*10^2.2"), InvalidInputException);
-  EXPECT_THROW(Real("0*10^0"), InvalidInputException);
+  EXPECT_THAT(
+      [] { Real(""); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "")")));
+  EXPECT_THAT(
+      [] { Real("--10"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "--10")")));
+  EXPECT_THAT(
+      [] { Real("test"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "test")")));
+  EXPECT_THAT(
+      [] { Real("+"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "+")")));
+  EXPECT_THAT(
+      [] { Real("939849.0-0023"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "939849.0-0023")")));
+  EXPECT_THAT(
+      [] { Real("a"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "a")")));
+  EXPECT_THAT(
+      [] { Real("a.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "a.1")")));
+  EXPECT_THAT(
+      [] { Real("1.a"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "1.a")")));
+  EXPECT_THAT(
+      [] { Real("1a.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "1a.1")")));
+  EXPECT_THAT(
+      [] { Real("1.1a"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "1.1a")")));
+  EXPECT_THAT(
+      [] { Real("--10.-1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "--10.-1")")));
+  EXPECT_THAT(
+      [] { Real("10.-1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "10.-1")")));
+  EXPECT_THAT(
+      [] { Real("1-0.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "1-0.1")")));
+  EXPECT_THAT(
+      [] { Real("10-.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "10-.1")")));
+  EXPECT_THAT(
+      [] { Real("10.--1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "10.--1")")));
+  EXPECT_THAT(
+      [] { Real("."); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real ".")")));
+  EXPECT_THAT(
+      [] { Real("1.2.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "1.2.1")")));
+  EXPECT_THAT(
+      [] { Real("2*10^2.2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "2*10^2.2")")));
+  EXPECT_THAT(
+      [] { Real("2*10^-2.2"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid Real "2*10^-2.2")")));
 
-  EXPECT_THROW(Real("10*10^100000000000000000000"), UndefinedException);
+  EXPECT_THAT(
+      [] { Real("10*10^100000000000000000000"); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(Undefined "10*10^100000000000000000000" (overflow))")));
 }
 
 TEST(RealTests, rationalConstructorTest) {
+  EXPECT_EQ(Real(Rational(0)).toString(), "0.0");
   EXPECT_EQ(Real(Rational(2, 5)).toString(), "0.4");
   EXPECT_EQ(Real(Rational(-2, 5)).toString(), "-0.4");
   EXPECT_EQ(Real(Rational(30, 10)).toString(), "3.0");
@@ -73,8 +148,11 @@ TEST(RealTests, rationalAssignmentOperatorConstructorTest) {
 }
 
 TEST(RealTests, integerConstructorTest) {
+  EXPECT_EQ(Real(Integer(0)).toString(), "0.0");
   EXPECT_EQ(Real(Integer(2)).toString(), "2.0");
+  EXPECT_EQ(Real(Integer(-2)).toString(), "-2.0");
   EXPECT_EQ(Real(Integer(10)).toString(), "10.0");
+  EXPECT_EQ(Real(Integer(-10)).toString(), "-10.0");
 }
 
 TEST(RealTests, integerAssignmentOperatorTest) {
@@ -866,7 +944,10 @@ TEST(RealTests, toStringPrecisionPrecisionTest) {
 
   Real::ScopedSetPrecision setPrecision(10);
   val = Real("1.3");
-  EXPECT_THROW(val.toString(20), InvalidInputException);
+  EXPECT_THAT(
+      [&] { val.toString(20); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid precision 20 (expected precision <= 10))")));
 }
 
 TEST(RealTests, getOutputPrecisionTest) {
@@ -886,8 +967,14 @@ TEST(RealTests, setOutputPrecisionTest) {
   a.setOutputPrecision(5);
   EXPECT_EQ(a.getOutputPrecision(), 5);
 
-  EXPECT_THROW(a.setOutputPrecision(6), InvalidInputException);
-  EXPECT_THROW(a.setOutputPrecision(10), InvalidInputException);
+  EXPECT_THAT(
+      [&] { a.setOutputPrecision(6); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Invalid precision 6 (expected precision <= 5)")));
+  EXPECT_THAT(
+      [&] { a.setOutputPrecision(10); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Invalid precision 10 (expected precision <= 5)")));
 }
 
 TEST(RealTests, updatePrecisionTest) {

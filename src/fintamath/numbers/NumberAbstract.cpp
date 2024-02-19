@@ -28,9 +28,7 @@ std::unique_ptr<IArithmetic> Integer::divideAbstract(const IArithmetic &rhs) con
   }
 
   if (const auto *intRhs = cast<Integer>(&rhs)) {
-    if (*this % *intRhs != 0) {
-      return cast<IArithmetic>(Rational(*this, *intRhs).clone());
-    }
+    return cast<IArithmetic>(Rational(*this, *intRhs).toMinimalObject());
   }
 
   return IIntegerCRTP::divideAbstract(rhs);
