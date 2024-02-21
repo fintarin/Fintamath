@@ -68,17 +68,20 @@ std::string PowExpression::toString() const {
   return IBinaryExpression::toString();
 }
 
-std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
+const std::shared_ptr<IFunction> &PowExpression::getOutputFunction() const {
+  static const std::shared_ptr<IFunction> sqrt = std::make_shared<Sqrt>();
+  static const std::shared_ptr<IFunction> root = std::make_shared<Root>();
+
   if (const auto rhsChildRat = cast<Rational>(rhsChild)) {
     const Integer &numerator = rhsChildRat->numerator();
     const Integer &denominator = rhsChildRat->denominator();
 
     if (numerator == 1) {
       if (denominator == 2) {
-        return std::make_shared<Sqrt>();
+        return sqrt;
       }
 
-      return std::make_shared<Root>();
+      return root;
     }
   }
 
@@ -87,7 +90,7 @@ std::shared_ptr<IFunction> PowExpression::getOutputFunction() const {
       is<Div>(rhsChildExpr->getFunction()) &&
       *rhsChildExpr->getChildren().front() == Integer(1)) {
 
-    return std::make_shared<Root>();
+    return root;
   }
 
   return IBinaryExpression::getFunction();

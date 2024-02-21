@@ -18,7 +18,7 @@ public:
 
   std::string toString() const override;
 
-  std::shared_ptr<IFunction> getOutputFunction() const override;
+  const std::shared_ptr<IFunction> &getOutputFunction() const override;
 
   static constexpr MathObjectType getTypeStatic() {
     return {MathObjectType::PowExpression, "PowExpression"};

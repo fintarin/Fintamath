@@ -34,7 +34,7 @@ public:
 
   std::unique_ptr<IMathObject> toMinimalObject() const final;
 
-  virtual std::shared_ptr<IFunction> getOutputFunction() const;
+  virtual const std::shared_ptr<IFunction> &getOutputFunction() const;
 
   template <std::derived_from<IExpression> T>
   static void registerType() {

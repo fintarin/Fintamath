@@ -82,7 +82,7 @@ std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
   return simplify()->clone();
 }
 
-std::shared_ptr<IFunction> IExpression::getOutputFunction() const {
+const std::shared_ptr<IFunction> &IExpression::getOutputFunction() const {
   return getFunction();
 }
 

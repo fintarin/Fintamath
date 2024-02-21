@@ -36,9 +36,11 @@ std::string LogExpression::toString() const {
   return IBinaryExpression::toString();
 }
 
-std::shared_ptr<IFunction> LogExpression::getOutputFunction() const {
+const std::shared_ptr<IFunction> &LogExpression::getOutputFunction() const {
+  static const std::shared_ptr<IFunction> ln = std::make_shared<Ln>();
+
   if (*lhsChild == E{}) {
-    return std::make_shared<Ln>();
+    return ln;
   }
 
   return IBinaryExpression::getFunction();
