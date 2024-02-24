@@ -12,7 +12,7 @@
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/binary/CompExpression.hpp"
+#include "fintamath/expressions/binary/CompExpr.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"

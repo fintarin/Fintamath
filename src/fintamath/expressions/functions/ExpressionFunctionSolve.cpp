@@ -8,7 +8,7 @@
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/expressions/binary/CompExpression.hpp"
+#include "fintamath/expressions/binary/CompExpr.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
@@ -36,7 +36,7 @@ ArgumentPtrVector solveLinearEquation(const ArgumentPtrVector &coeffAtPow);
 }
 
 Expression solve(const Expression &rhs) {
-  const auto compExpr = cast<CompExpression>(rhs.getChildren().front()->clone());
+  const auto compExpr = cast<CompExpr>(rhs.getChildren().front()->clone());
 
   if (!compExpr || compExpr->getVariables().size() != 1) {
     return rhs;
@@ -81,7 +81,7 @@ Expression solve(const Expression &rhs) {
   ArgumentPtrVector answers;
 
   for (auto &root : roots) {
-    auto rootAnswer = std::make_shared<CompExpression>(Eqv{}, var.clone(), root);
+    auto rootAnswer = std::make_shared<CompExpr>(Eqv{}, var.clone(), root);
     rootAnswer->markAsSolution();
     answers.emplace_back(rootAnswer);
   }

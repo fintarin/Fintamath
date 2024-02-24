@@ -6,25 +6,25 @@
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/binary/CompExpression.hpp"
-#include "fintamath/expressions/binary/DerivativeExpression.hpp"
-#include "fintamath/expressions/binary/DivExpression.hpp"
-#include "fintamath/expressions/binary/IntegralExpression.hpp"
-#include "fintamath/expressions/binary/LogExpression.hpp"
-#include "fintamath/expressions/binary/PowExpression.hpp"
-#include "fintamath/expressions/polynomial/AddExpression.hpp"
-#include "fintamath/expressions/polynomial/AndExpression.hpp"
-#include "fintamath/expressions/polynomial/MinMaxExpression.hpp"
-#include "fintamath/expressions/polynomial/MulExpression.hpp"
-#include "fintamath/expressions/polynomial/OrExpression.hpp"
-#include "fintamath/expressions/unary/AbsExpression.hpp"
-#include "fintamath/expressions/unary/FloorCeilExpression.hpp"
-#include "fintamath/expressions/unary/HyperbExpression.hpp"
-#include "fintamath/expressions/unary/InvHyperbExpression.hpp"
-#include "fintamath/expressions/unary/InvTrigExpression.hpp"
-#include "fintamath/expressions/unary/NotExpression.hpp"
-#include "fintamath/expressions/unary/SignExpression.hpp"
-#include "fintamath/expressions/unary/TrigExpression.hpp"
+#include "fintamath/expressions/binary/CompExpr.hpp"
+#include "fintamath/expressions/binary/DerivativeExpr.hpp"
+#include "fintamath/expressions/binary/DivExpr.hpp"
+#include "fintamath/expressions/binary/IntegralExpr.hpp"
+#include "fintamath/expressions/binary/LogExpr.hpp"
+#include "fintamath/expressions/binary/PowExpr.hpp"
+#include "fintamath/expressions/polynomial/AddExpr.hpp"
+#include "fintamath/expressions/polynomial/AndExpr.hpp"
+#include "fintamath/expressions/polynomial/MinMaxExpr.hpp"
+#include "fintamath/expressions/polynomial/MulExpr.hpp"
+#include "fintamath/expressions/polynomial/OrExpr.hpp"
+#include "fintamath/expressions/unary/AbsExpr.hpp"
+#include "fintamath/expressions/unary/FloorCeilExpr.hpp"
+#include "fintamath/expressions/unary/HyperbExpr.hpp"
+#include "fintamath/expressions/unary/InvHyperbExpr.hpp"
+#include "fintamath/expressions/unary/InvTrigExpr.hpp"
+#include "fintamath/expressions/unary/NotExpr.hpp"
+#include "fintamath/expressions/unary/SignExpr.hpp"
+#include "fintamath/expressions/unary/TrigExpr.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
@@ -135,7 +135,7 @@ void registerTermParsers() {
 
 void registerFunctionExpressionMakers() {
   Expression::registerFunctionExpressionMaker<Add, true>([](ArgumentPtrVector &&args) {
-    return AddExpression(std::move(args)).clone();
+    return AddExpr(std::move(args)).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Sub>([](ArgumentPtrVector args) {
@@ -144,15 +144,15 @@ void registerFunctionExpressionMakers() {
 
     ArgumentPtr negRhs = negExpr(std::move(rhs));
 
-    return AddExpression({std::move(lhs), std::move(negRhs)}).clone();
+    return AddExpr({std::move(lhs), std::move(negRhs)}).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Mul, true>([](ArgumentPtrVector &&args) {
-    return MulExpression(std::move(args)).clone();
+    return MulExpr(std::move(args)).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Div>([](ArgumentPtrVector args) {
-    return DivExpression(std::move(args.front()), std::move(args.back())).clone();
+    return DivExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Frac>([](ArgumentPtrVector &&args) {
@@ -168,15 +168,15 @@ void registerFunctionExpressionMakers() {
   });
 
   Expression::registerFunctionExpressionMaker<And, true>([](ArgumentPtrVector &&args) {
-    return AndExpression(std::move(args)).clone();
+    return AndExpr(std::move(args)).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Or, true>([](ArgumentPtrVector &&args) {
-    return OrExpression(std::move(args)).clone();
+    return OrExpr(std::move(args)).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Pow>([](ArgumentPtrVector args) {
-    return PowExpression(std::move(args.front()), std::move(args.back())).clone();
+    return PowExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<PowFunction>([](ArgumentPtrVector &&args) {
@@ -184,27 +184,27 @@ void registerFunctionExpressionMakers() {
   });
 
   Expression::registerFunctionExpressionMaker<Eqv>([](ArgumentPtrVector args) {
-    return CompExpression(Eqv{}, std::move(args.front()), std::move(args.back())).clone();
+    return CompExpr(Eqv{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Neqv>([](ArgumentPtrVector args) {
-    return CompExpression(Neqv{}, std::move(args.front()), std::move(args.back())).clone();
+    return CompExpr(Neqv{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Less>([](ArgumentPtrVector args) {
-    return CompExpression(Less{}, std::move(args.front()), std::move(args.back())).clone();
+    return CompExpr(Less{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<More>([](ArgumentPtrVector args) {
-    return CompExpression(More{}, std::move(args.front()), std::move(args.back())).clone();
+    return CompExpr(More{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<LessEqv>([](ArgumentPtrVector args) {
-    return CompExpression(LessEqv{}, std::move(args.front()), std::move(args.back())).clone();
+    return CompExpr(LessEqv{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<MoreEqv>([](ArgumentPtrVector args) {
-    return CompExpression(MoreEqv{}, std::move(args.front()), std::move(args.back())).clone();
+    return CompExpr(MoreEqv{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Index>([](const ArgumentPtrVector &args) {
@@ -265,19 +265,19 @@ void registerFunctionExpressionMakers() {
   });
 
   Expression::registerFunctionExpressionMaker<Not>([](ArgumentPtrVector args) {
-    return NotExpression(std::move(args.front())).clone();
+    return NotExpr(std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Derivative>([](ArgumentPtrVector args) {
-    return DerivativeExpression(std::move(args.front()), std::move(args.back())).clone();
+    return DerivativeExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Integral>([](ArgumentPtrVector args) {
-    return IntegralExpression(std::move(args.front()), std::move(args.back())).clone();
+    return IntegralExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Log>([](ArgumentPtrVector args) {
-    return LogExpression(std::move(args.front()), std::move(args.back())).clone();
+    return LogExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Ln>([](ArgumentPtrVector args) {
@@ -306,11 +306,11 @@ void registerFunctionExpressionMakers() {
   });
 
   Expression::registerFunctionExpressionMaker<Min>([](ArgumentPtrVector &&args) {
-    return MinMaxExpression(Min{}, std::move(args)).clone();
+    return MinMaxExpr(Min{}, std::move(args)).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Max>([](ArgumentPtrVector &&args) {
-    return MinMaxExpression(Max{}, std::move(args)).clone();
+    return MinMaxExpr(Max{}, std::move(args)).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Sqr>([](ArgumentPtrVector args) {
@@ -338,99 +338,99 @@ void registerFunctionExpressionMakers() {
   });
 
   Expression::registerFunctionExpressionMaker<Sin>([](ArgumentPtrVector args) {
-    return TrigExpression(Sin{}, std::move(args.front())).clone();
+    return TrigExpr(Sin{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Cos>([](ArgumentPtrVector args) {
-    return TrigExpression(Cos{}, std::move(args.front())).clone();
+    return TrigExpr(Cos{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Tan>([](ArgumentPtrVector args) {
-    return TrigExpression(Tan{}, std::move(args.front())).clone();
+    return TrigExpr(Tan{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Cot>([](ArgumentPtrVector args) {
-    return TrigExpression(Cot{}, std::move(args.front())).clone();
+    return TrigExpr(Cot{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Sec>([](ArgumentPtrVector args) {
-    return TrigExpression(Sec{}, std::move(args.front())).clone();
+    return TrigExpr(Sec{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Csc>([](ArgumentPtrVector args) {
-    return TrigExpression(Csc{}, std::move(args.front())).clone();
+    return TrigExpr(Csc{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Asin>([](ArgumentPtrVector args) {
-    return InvTrigExpression(Asin{}, std::move(args.front())).clone();
+    return InvTrigExpr(Asin{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Acos>([](ArgumentPtrVector args) {
-    return InvTrigExpression(Acos{}, std::move(args.front())).clone();
+    return InvTrigExpr(Acos{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Atan>([](ArgumentPtrVector args) {
-    return InvTrigExpression(Atan{}, std::move(args.front())).clone();
+    return InvTrigExpr(Atan{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Acot>([](ArgumentPtrVector args) {
-    return InvTrigExpression(Acot{}, std::move(args.front())).clone();
+    return InvTrigExpr(Acot{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Asec>([](ArgumentPtrVector args) {
-    return InvTrigExpression(Asec{}, std::move(args.front())).clone();
+    return InvTrigExpr(Asec{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Acsc>([](ArgumentPtrVector args) {
-    return InvTrigExpression(Acsc{}, std::move(args.front())).clone();
+    return InvTrigExpr(Acsc{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Sinh>([](ArgumentPtrVector args) {
-    return HyperbExpression(Sinh{}, std::move(args.front())).clone();
+    return HyperbExpr(Sinh{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Cosh>([](ArgumentPtrVector args) {
-    return HyperbExpression(Cosh{}, std::move(args.front())).clone();
+    return HyperbExpr(Cosh{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Tanh>([](ArgumentPtrVector args) {
-    return HyperbExpression(Tanh{}, std::move(args.front())).clone();
+    return HyperbExpr(Tanh{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Coth>([](ArgumentPtrVector args) {
-    return HyperbExpression(Coth{}, std::move(args.front())).clone();
+    return HyperbExpr(Coth{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Sech>([](ArgumentPtrVector args) {
-    return HyperbExpression(Sech{}, std::move(args.front())).clone();
+    return HyperbExpr(Sech{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Csch>([](ArgumentPtrVector args) {
-    return HyperbExpression(Csch{}, std::move(args.front())).clone();
+    return HyperbExpr(Csch{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Asinh>([](ArgumentPtrVector args) {
-    return InvHyperbExpression(Asinh{}, std::move(args.front())).clone();
+    return InvHyperbExpr(Asinh{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Acosh>([](ArgumentPtrVector args) {
-    return InvHyperbExpression(Acosh{}, std::move(args.front())).clone();
+    return InvHyperbExpr(Acosh{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Atanh>([](ArgumentPtrVector args) {
-    return InvHyperbExpression(Atanh{}, std::move(args.front())).clone();
+    return InvHyperbExpr(Atanh{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Acoth>([](ArgumentPtrVector args) {
-    return InvHyperbExpression(Acoth{}, std::move(args.front())).clone();
+    return InvHyperbExpr(Acoth{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Asech>([](ArgumentPtrVector args) {
-    return InvHyperbExpression(Asech{}, std::move(args.front())).clone();
+    return InvHyperbExpr(Asech{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Acsch>([](ArgumentPtrVector args) {
-    return InvHyperbExpression(Acsch{}, std::move(args.front())).clone();
+    return InvHyperbExpr(Acsch{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Deg>([](ArgumentPtrVector args) {
@@ -439,19 +439,19 @@ void registerFunctionExpressionMakers() {
   });
 
   Expression::registerFunctionExpressionMaker<Floor>([](ArgumentPtrVector args) {
-    return FloorCeilExpression(Floor{}, std::move(args.front())).clone();
+    return FloorCeilExpr(Floor{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Ceil>([](ArgumentPtrVector args) {
-    return FloorCeilExpression(Ceil{}, std::move(args.front())).clone();
+    return FloorCeilExpr(Ceil{}, std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Abs>([](ArgumentPtrVector args) {
-    return AbsExpression(std::move(args.front())).clone();
+    return AbsExpr(std::move(args.front())).clone();
   });
 
   Expression::registerFunctionExpressionMaker<Sign>([](ArgumentPtrVector args) {
-    return SignExpression(std::move(args.front())).clone();
+    return SignExpr(std::move(args.front())).clone();
   });
 }
 

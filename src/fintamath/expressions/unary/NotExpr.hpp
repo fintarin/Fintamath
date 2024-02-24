@@ -1,0 +1,33 @@
+#pragma once
+
+#include <memory>
+
+#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
+
+namespace fintamath {
+
+class NotExpr final : public IUnaryExpressionCRTP<NotExpr> {
+public:
+  explicit NotExpr(ArgumentPtr inChild);
+
+  static constexpr MathObjectType getTypeStatic() {
+    return {MathObjectType::NotExpr, "NotExpr"};
+  }
+
+protected:
+  SimplifyFunctionVector getFunctionsForPreSimplify() const override;
+
+  SimplifyFunctionVector getFunctionsForPostSimplify() const override;
+
+private:
+  static ArgumentPtr logicNegatableSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
+  static ArgumentPtr nestedNotSimplify(const IFunction &func, const ArgumentPtr &rhs);
+
+  static std::shared_ptr<IFunction> getLogicOppositeFunction(const IFunction &function);
+};
+
+}
