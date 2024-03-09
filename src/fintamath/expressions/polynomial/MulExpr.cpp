@@ -105,7 +105,7 @@ MulExpr::SimplifyFunctionVector MulExpr::getFunctionsForPostSimplify() const {
   return simplifyFunctions;
 }
 
-bool MulExpr::isConstantGreaterThanVariable() const {
+bool MulExpr::isTermOrderInversed() const {
   return true;
 }
 

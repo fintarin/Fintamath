@@ -7,7 +7,7 @@
 namespace fintamath::detail {
 
 struct ComparatorOptions final {
-  bool constantGreaterThanVariable = false;
+  bool termOrderInversed = false;
   bool comparableOrderInversed = false;
 };
 

@@ -605,7 +605,7 @@ TEST(SimplifyTests, simplifyTest) {
   EXPECT_EQ(Expression("cos(b) log(b, a)").toString(),
             "log(b, a) cos(b)");
   EXPECT_EQ(Expression("cos(a) log(b, c)").toString(),
-            "log(b, c) cos(a)");
+            "cos(a) log(b, c)");
   EXPECT_EQ(Expression("cos(b^2) log(b, c)").toString(),
             "log(b, c) cos(b^2)");
   EXPECT_EQ(Expression("(x + y^3)^2 * sin(x)/ln(2)/x^2 - (2 sin(x) y^3)/(x ln(2))").toString(),
