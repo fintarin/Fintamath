@@ -402,7 +402,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpr::mulSumSimplify(const ArgumentPtr &l
   simplifyChild(remainderAdd);
 
   if (const ArgumentPtr remainderAddFirstChild = getPolynomChildren(Add{}, remainderAdd).front();
-      compare(lhs, remainderAddFirstChild) != std::strong_ordering::greater) {
+      fintamath::compare(lhs, remainderAddFirstChild) != std::strong_ordering::greater) {
 
     return {};
   }

@@ -1,36 +1,44 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 
-const Mul f;
+const MulOper f;
 
-TEST(MulTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "mul");
+TEST(MulOperTests, toStringTest) {
+  EXPECT_EQ(f.toString(), "*");
 }
 
-TEST(MulTests, getArgumentClassesTest) {
+TEST(MulOperTests, getArgumentClassesTest) {
   EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
 }
 
-TEST(MulTests, getReturnClassTest) {
+TEST(MulOperTests, getReturnClassTest) {
   EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
-TEST(MulTests, isVariadicTest) {
+TEST(MulOperTests, isVariadicTest) {
   EXPECT_FALSE(f.isVariadic());
 }
 
-TEST(MulTests, isEvaluatableTest) {
+TEST(MulOperTests, isEvaluatableTest) {
   EXPECT_TRUE(f.isEvaluatable());
 }
 
-TEST(MulTests, callTest) {
+TEST(MulOperTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Multiplication);
+}
+
+TEST(MulOperTests, isAssociativeTest) {
+  EXPECT_TRUE(f.isAssociative());
+}
+
+TEST(MulOperTests, callTest) {
   EXPECT_EQ(f(Integer(3), Integer(5))->toString(), "15");
   EXPECT_EQ(f(Integer(3), Rational(5, 2))->toString(), "15/2");
   EXPECT_EQ(f(Rational(5, 2), Integer(3))->toString(), "15/2");
@@ -44,11 +52,7 @@ TEST(MulTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(MulTests, exprTest) {
-  EXPECT_EQ(mulExpr(Integer(10), Integer(10))->toString(), "10*10");
-}
-
-TEST(MulTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Mul"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+TEST(MulOperTests, getClassTest) {
+  EXPECT_EQ(f.getClass(), MathObjectClass("MulOper"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

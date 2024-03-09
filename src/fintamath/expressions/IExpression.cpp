@@ -11,6 +11,7 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/MultiMethod.hpp"
+#include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -86,6 +87,22 @@ std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
 
 const std::shared_ptr<IFunction> &IExpression::getOutputFunction() const {
   return getFunction();
+}
+
+bool IExpression::isTermOrderInversed() const {
+  return false;
+}
+
+bool IExpression::isComparableOrderInversed() const {
+  return false;
+}
+
+std::strong_ordering IExpression::compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  const ComparatorOptions options = {
+      .termOrderInversed = isTermOrderInversed(),
+      .comparableOrderInversed = isComparableOrderInversed(),
+  };
+  return fintamath::compare(lhs, rhs, options);
 }
 
 ArgumentPtr IExpression::simplify() const {
@@ -167,8 +184,8 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num) 
 
     outMultiApproximate.add<Complex>([](const Complex &inRhs) {
       return Complex(
-                 *convert<Real>(inRhs.real()),
-                 *convert<Real>(inRhs.imag()))
+              *convert<Real>(inRhs.real()),
+              *convert<Real>(inRhs.imag()))
           .clone();
     });
 
@@ -340,7 +357,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
   if (!containsVar && areNumberChilrenPrecise) {
     if (auto res = callFunction(*approxSimplExpr->getFunction(),
                                 convertToApproximatedNumbers(approxSimplExpr->getChildren()));
-        is<INumber>(res)) {
+      is<INumber>(res)) {
 
       return res;
     }

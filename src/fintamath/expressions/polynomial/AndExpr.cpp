@@ -8,6 +8,7 @@
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/logic/And.hpp"
+#include "fintamath/functions/logic/AndOper.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
 #include "fintamath/literals/Boolean.hpp"
@@ -16,6 +17,11 @@ namespace fintamath {
 
 AndExpr::AndExpr(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(And{}, std::move(inChildren)) {
+}
+
+const std::shared_ptr<IFunction> &AndExpr::getOutputFunction() const {
+  static const std::shared_ptr<IFunction> oper = std::make_shared<AndOper>();
+  return oper;
 }
 
 AndExpr::SimplifyFunctionVector AndExpr::getFunctionsForPreSimplify() const {
@@ -62,10 +68,10 @@ ArgumentPtr AndExpr::equalSimplify(const IFunction & /*func*/, const ArgumentPtr
 }
 
 ArgumentPtr AndExpr::notSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (const auto rhsExpr = cast<IExpression>(rhs);
-      rhsExpr &&
-      is<Not>(rhsExpr->getFunction()) &&
-      *rhsExpr->getChildren().front() == *lhs) {
+  if (const auto lhsExpr = cast<IExpression>(lhs);
+      lhsExpr &&
+      is<Not>(lhsExpr->getFunction()) &&
+      *lhsExpr->getChildren().front() == *rhs) {
 
     return Boolean(false).clone();
   }

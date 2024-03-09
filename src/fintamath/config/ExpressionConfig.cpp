@@ -28,10 +28,12 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Frac.hpp"
 #include "fintamath/functions/arithmetic/FracMixed.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -63,11 +65,13 @@
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/logic/And.hpp"
+#include "fintamath/functions/logic/AndOper.hpp"
 #include "fintamath/functions/logic/Equiv.hpp"
 #include "fintamath/functions/logic/Impl.hpp"
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/logic/OrOper.hpp"
 #include "fintamath/functions/ntheory/Ceil.hpp"
 #include "fintamath/functions/ntheory/Floor.hpp"
 #include "fintamath/functions/other/Deg.hpp"
@@ -75,7 +79,7 @@
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/functions/powers/PowFunction.hpp"
+#include "fintamath/functions/powers/PowOper.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqr.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -97,8 +101,12 @@
 namespace fintamath::detail {
 
 ExpressionConfig::ExpressionConfig() {
-  Expression::registerExpressionConstructor<Add, true>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<Add>([](ArgumentPtrVector &&args) {
     return AddExpr(std::move(args)).clone();
+  });
+
+  Expression::registerExpressionConstructor<AddOper>([](ArgumentPtrVector &&args) {
+    return addExpr(std::move(args));
   });
 
   Expression::registerExpressionConstructor<Sub>([](ArgumentPtrVector args) {
@@ -107,11 +115,15 @@ ExpressionConfig::ExpressionConfig() {
 
     ArgumentPtr negRhs = negExpr(std::move(rhs));
 
-    return AddExpr({std::move(lhs), std::move(negRhs)}).clone();
+    return addExpr(std::move(lhs), std::move(negRhs));
   });
 
-  Expression::registerExpressionConstructor<Mul, true>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<Mul>([](ArgumentPtrVector &&args) {
     return MulExpr(std::move(args)).clone();
+  });
+
+  Expression::registerExpressionConstructor<MulOper>([](ArgumentPtrVector &&args) {
+    return mulExpr(std::move(args));
   });
 
   Expression::registerExpressionConstructor<Div>([](ArgumentPtrVector args) {
@@ -130,19 +142,27 @@ ExpressionConfig::ExpressionConfig() {
     return addExpr(std::move(integ), divExpr(std::move(numer), std::move(denom)));
   });
 
-  Expression::registerExpressionConstructor<And, true>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<And>([](ArgumentPtrVector &&args) {
     return AndExpr(std::move(args)).clone();
   });
 
-  Expression::registerExpressionConstructor<Or, true>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<AndOper>([](ArgumentPtrVector &&args) {
+    return andExpr(std::move(args));
+  });
+
+  Expression::registerExpressionConstructor<Or>([](ArgumentPtrVector &&args) {
     return OrExpr(std::move(args)).clone();
+  });
+
+  Expression::registerExpressionConstructor<OrOper>([](ArgumentPtrVector &&args) {
+    return orExpr(std::move(args));
   });
 
   Expression::registerExpressionConstructor<Pow>([](ArgumentPtrVector args) {
     return PowExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerExpressionConstructor<PowFunction>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<PowOper>([](ArgumentPtrVector &&args) {
     return powExpr(std::move(args));
   });
 

@@ -17,10 +17,11 @@
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/literals/Variable.hpp"
+
+#include <any>
 
 namespace fintamath::detail {
 
@@ -36,28 +37,24 @@ using ExpressionTreePathStack = std::stack<std::pair<ExpressionPtr, size_t>>;
 
 struct ChildrenComparatorResult final {
   Ordering postfix = Ordering::equal;
-  Ordering prefixFirst = Ordering::equal;
-  Ordering prefixLast = Ordering::equal;
-  Ordering unary = Ordering::equal;
+  Ordering prefix = Ordering::equal;
   Ordering literals = Ordering::equal;
   Ordering size = Ordering::equal;
 };
 
-Ordering compareNonExpressions(const ArgumentPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions &options);
+Ordering compareNonExpressions(const ArgumentPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions options);
 
-Ordering comparePolynoms(const PolynomPtr &lhs, const PolynomPtr &rhs, const ComparatorOptions &options);
+Ordering comparePolynoms(const PolynomPtr &lhs, const PolynomPtr &rhs, const ComparatorOptions options);
 
-Ordering compareExpressions(const ExpressionPtr &lhs, const ExpressionPtr &rhs, const ComparatorOptions &options);
+Ordering compareExpressions(const ExpressionPtr &lhs, const ExpressionPtr &rhs, const ComparatorOptions options);
 
-Ordering comparePolynomAndNonPolynom(const PolynomPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions &options);
+Ordering comparePolynomAndNonPolynom(const PolynomPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions options);
 
-Ordering compareExpressionAndNonExpression(const ExpressionPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions &options);
+Ordering compareExpressionAndNonExpression(const ExpressionPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions options);
 
-Ordering compareFunctions(const FunctionPtr &lhs, const FunctionPtr &rhs, const ComparatorOptions &options);
+Ordering compareFunctions(const FunctionPtr &lhs, const FunctionPtr &rhs);
 
-ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren, const ArgumentPtrVector &rhsChildren, const ComparatorOptions &options);
-
-bool unwrapUnaryExpression(ArgumentPtr &arg);
+ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren, const ArgumentPtrVector &rhsChildren, const ComparatorOptions options);
 
 bool unwrapEmptyExpression(ArgumentPtr &arg);
 
@@ -108,7 +105,7 @@ std::shared_ptr<const Term> popNextTerm(ExpressionTreePathStack &stack) {
 }
 
 template <typename Term>
-Ordering compareTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions &options) {
+Ordering compareTerms(const ArgumentPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions options) {
   ExpressionTreePathStack lhsPath;
   ExpressionTreePathStack rhsPath;
 
@@ -188,39 +185,58 @@ Ordering compare(ArgumentPtr lhs, ArgumentPtr rhs, const ComparatorOptions optio
   return compareExpressions(lhsExpr, rhsExpr, options);
 }
 
-Ordering compareNonExpressions(const ArgumentPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions &options) {
-  if (is<ILiteral>(lhs) && !is<ILiteral>(rhs)) {
-    return !options.termOrderInversed ? Ordering::greater : Ordering::less;
-  }
-  if (!is<ILiteral>(lhs) && is<ILiteral>(rhs)) {
-    return options.termOrderInversed ? Ordering::greater : Ordering::less;
+Ordering compareNonExpressions(const ArgumentPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions options) {
+  Ordering ordering = Ordering::equal;
+
+  if (!lhs && !rhs) {
+    return ordering;
   }
 
-  if (is<Variable>(lhs) && !is<Variable>(rhs)) {
-    return !options.termOrderInversed ? Ordering::greater : Ordering::less;
+  if (lhs && !rhs) {
+    ordering = Ordering::greater;
   }
-  if (!is<Variable>(lhs) && is<Variable>(rhs)) {
-    return options.termOrderInversed ? Ordering::greater : Ordering::less;
+  else if (!lhs && rhs) {
+    ordering = Ordering::less;
+  }
+  else if (is<ILiteral>(lhs) && !is<ILiteral>(rhs)) {
+    ordering = Ordering::greater;
+  }
+  else if (!is<ILiteral>(lhs) && is<ILiteral>(rhs)) {
+    ordering = Ordering::less;
+  }
+  else if (is<Variable>(lhs) && !is<Variable>(rhs)) {
+    ordering = Ordering::greater;
+  }
+  else if (!is<Variable>(lhs) && is<Variable>(rhs)) {
+    ordering = Ordering::less;
   }
 
-  if (*lhs == *rhs) {
-    return Ordering::equal;
+  if (ordering != Ordering::equal || *lhs == *rhs) {
+    return options.termOrderInversed ? reverse(ordering) : ordering;
   }
 
-  if (const auto lhsComp = cast<IComparable>(lhs)) {
-    if (const auto rhsComp = cast<IComparable>(rhs)) {
-      if (options.comparableOrderInversed) {
-        return *lhsComp < *rhsComp ? Ordering::greater : Ordering::less;
-      }
+  const auto lhsComp = cast<IComparable>(lhs);
+  const auto rhsComp = cast<IComparable>(rhs);
 
-      return *lhsComp > *rhsComp ? Ordering::greater : Ordering::less;
+  if (lhsComp && rhsComp) {
+    ordering = *lhsComp < *rhsComp ? Ordering::less : Ordering::greater;
+
+    if (options.comparableOrderInversed) {
+      ordering = reverse(ordering);
     }
   }
+  else {
+    ordering = lhs->toString() < rhs->toString() ? Ordering::greater : Ordering::less;
+  }
 
-  return lhs->toString() < rhs->toString() ? Ordering::greater : Ordering::less;
+  return ordering;
 }
 
-Ordering comparePolynoms(const PolynomPtr &lhs, const PolynomPtr &rhs, const ComparatorOptions &options) {
+Ordering comparePolynoms(const PolynomPtr &lhs, const PolynomPtr &rhs, const ComparatorOptions options) {
+  if (*lhs->getFunction() != *rhs->getFunction()) {
+    return compareFunctions(lhs->getFunction(), rhs->getFunction());
+  }
+
   const ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), rhs->getChildren(), options);
 
   if (childrenComp.postfix != Ordering::equal) {
@@ -229,22 +245,16 @@ Ordering comparePolynoms(const PolynomPtr &lhs, const PolynomPtr &rhs, const Com
   if (childrenComp.size != Ordering::equal) {
     return childrenComp.size;
   }
-  if (childrenComp.unary != Ordering::equal) {
-    return childrenComp.unary;
-  }
-  if (childrenComp.prefixFirst != Ordering::equal) {
-    return childrenComp.prefixFirst;
+  if (childrenComp.prefix != Ordering::equal) {
+    return childrenComp.prefix;
   }
 
-  return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
+  return Ordering::equal;
 }
 
-Ordering compareExpressions(const ExpressionPtr &lhs, const ExpressionPtr &rhs, const ComparatorOptions &options) {
-  const auto lhsOper = cast<IOperator>(lhs->getFunction());
-  const auto rhsOper = cast<IOperator>(rhs->getFunction());
-
-  if ((lhsOper != nullptr) != (rhsOper != nullptr)) {
-    return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
+Ordering compareExpressions(const ExpressionPtr &lhs, const ExpressionPtr &rhs, const ComparatorOptions options) {
+  if (*lhs->getFunction() != *rhs->getFunction()) {
+    return compareFunctions(lhs->getFunction(), rhs->getFunction());
   }
 
   ComparatorOptions childCompOptions = options;
@@ -260,32 +270,24 @@ Ordering compareExpressions(const ExpressionPtr &lhs, const ExpressionPtr &rhs, 
   if (childrenComp.postfix != Ordering::equal) {
     return childrenComp.postfix;
   }
-
-  if (is<IOperator>(lhs->getFunction()) && is<IOperator>(rhs->getFunction())) {
-    if (childrenComp.prefixLast != Ordering::equal) {
-      return childrenComp.prefixLast;
-    }
-  }
-  else {
-    if (childrenComp.prefixFirst != Ordering::equal) {
-      return childrenComp.prefixFirst;
-    }
+  if (childrenComp.prefix != Ordering::equal) {
+    return childrenComp.prefix;
   }
 
-  return compareFunctions(lhs->getFunction(), rhs->getFunction(), options);
+  return Ordering::equal;
 }
 
-Ordering comparePolynomAndNonPolynom(const PolynomPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions &options) {
+Ordering comparePolynomAndNonPolynom(const PolynomPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions options) {
   const ChildrenComparatorResult childrenComp = compareChildren(lhs->getChildren(), {rhs}, options);
 
   if (childrenComp.postfix != Ordering::equal) {
     return childrenComp.postfix;
   }
 
-  return childrenComp.prefixFirst;
+  return childrenComp.prefix;
 }
 
-Ordering compareExpressionAndNonExpression(const ExpressionPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions &options) {
+Ordering compareExpressionAndNonExpression(const ExpressionPtr &lhs, const ArgumentPtr &rhs, const ComparatorOptions options) {
   if (!is<ILiteral>(rhs)) {
     return !options.termOrderInversed ? Ordering::greater : Ordering::less;
   }
@@ -294,20 +296,8 @@ Ordering compareExpressionAndNonExpression(const ExpressionPtr &lhs, const Argum
     return res;
   }
 
-  if (!is<IOperator>(lhs->getFunction())) {
-    return !options.termOrderInversed ? Ordering::greater : Ordering::less;
-  }
-
   if (const auto res = compareTerms<ILiteral>(lhs, rhs, options); res != Ordering::equal) {
     return res;
-  }
-
-  if (is<Not>(lhs->getFunction())) {
-    if (const Ordering res = compare(lhs->getChildren().front(), rhs); res != Ordering::equal) {
-      return res;
-    }
-
-    return Ordering::less;
   }
 
   if (is<Mul>(lhs->getFunction()) || is<Pow>(lhs->getFunction())) {
@@ -319,14 +309,7 @@ Ordering compareExpressionAndNonExpression(const ExpressionPtr &lhs, const Argum
   return !options.termOrderInversed ? Ordering::greater : Ordering::less;
 }
 
-Ordering compareFunctions(const FunctionPtr &lhs, const FunctionPtr &rhs, const ComparatorOptions &options) {
-  if (is<IOperator>(lhs) && !is<IOperator>(rhs)) {
-    return options.termOrderInversed ? Ordering::greater : Ordering::less;
-  }
-  if (!is<IOperator>(lhs) && is<IOperator>(rhs)) {
-    return !options.termOrderInversed ? Ordering::greater : Ordering::less;
-  }
-
+Ordering compareFunctions(const FunctionPtr &lhs, const FunctionPtr &rhs) {
   if (*lhs == *rhs) {
     return Ordering::equal;
   }
@@ -338,7 +321,7 @@ Ordering compareFunctions(const FunctionPtr &lhs, const FunctionPtr &rhs, const 
   return lhs->toString() < rhs->toString() ? Ordering::greater : Ordering::less;
 }
 
-ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren, const ArgumentPtrVector &rhsChildren, const ComparatorOptions &options) {
+ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren, const ArgumentPtrVector &rhsChildren, const ComparatorOptions options) {
   ChildrenComparatorResult result = {};
 
   if (lhsChildren.size() != rhsChildren.size()) {
@@ -351,50 +334,29 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren, c
                                      std::min(lhsChildren.size(), rhsChildren.size()));
 
   for (const auto i : stdv::iota(0U, prefixSize)) {
-    const Ordering childrenComp = compare(lhsChildren[i], rhsChildren[i], options);
-
-    if (childrenComp != Ordering::equal) {
-      result.prefixLast = childrenComp;
-    }
-
-    if (result.prefixFirst == Ordering::equal) {
-      result.prefixFirst = childrenComp;
+    if (result.prefix == Ordering::equal) {
+      result.prefix = compare(lhsChildren[i], rhsChildren[i], options);
     }
 
     if (result.literals == Ordering::equal) {
       result.literals = compareTerms<ILiteral>(lhsChildren[i], rhsChildren[i], {});
     }
 
-    if (result.literals != Ordering::equal && result.prefixLast != Ordering::equal) {
+    if (result.prefix != Ordering::equal && result.literals != Ordering::equal) {
       break;
     }
   }
 
   for (size_t i = lhsPostfixStart, j = rhsPostfixStart; i < lhsChildren.size() && j < rhsChildren.size(); i++, j++) {
-    ArgumentPtr compLhs = lhsChildren[i];
-    ArgumentPtr compRhs = rhsChildren[j];
-
-    const bool isLhsUnary = unwrapUnaryExpression(compLhs);
-    const bool isRhsUnary = unwrapUnaryExpression(compRhs);
-
-    if (isLhsUnary && isRhsUnary) {
-      compLhs = lhsChildren[i];
-      compRhs = rhsChildren[j];
+    if (result.postfix == Ordering::equal) {
+      result.postfix = compare(lhsChildren[i], rhsChildren[j], options);
     }
 
     if (result.literals == Ordering::equal) {
-      result.literals = compareTerms<ILiteral>(compLhs, compRhs, options);
+      result.literals = compareTerms<ILiteral>(lhsChildren[i], rhsChildren[j], options);
     }
 
-    if (result.unary == Ordering::equal && isLhsUnary != isRhsUnary) {
-      result.unary = !isLhsUnary ? Ordering::greater : Ordering::less;
-    }
-
-    if (result.postfix == Ordering::equal) {
-      result.postfix = compare(compLhs, compRhs, options);
-    }
-
-    if (result.postfix != Ordering::equal) {
+    if (result.postfix != Ordering::equal && result.literals != Ordering::equal) {
       break;
     }
   }
@@ -409,18 +371,6 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren, c
   }
 
   return result;
-}
-
-bool unwrapUnaryExpression(ArgumentPtr &arg) {
-  if (const auto expr = cast<IExpression>(arg);
-      expr &&
-      expr->getFunction()->getArgumentClasses().size() == 1) {
-
-    arg = expr->getChildren().front();
-    return true;
-  }
-
-  return false;
 }
 
 bool unwrapEmptyExpression(ArgumentPtr &arg) {

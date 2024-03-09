@@ -7,25 +7,21 @@
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
-#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/IFunction.hpp"
 #include "fintamath/literals/Boolean.hpp"
 
 namespace fintamath {
 
-class Or final : public IOperatorCRTP<Boolean, Or, Boolean, Boolean> {
+class Or final : public IFunctionCRTP<Boolean, Or, Boolean, Boolean> {
   FINTAMATH_CLASS_BODY(Or)
 
 public:
   std::string toString() const override {
-    return "|";
+    return "or";
   }
 
-  static constexpr bool isAssociativeStatic() {
+  static constexpr bool isVariadicStatic() {
     return true;
-  }
-
-  static constexpr Priority getPriorityStatic() {
-    return Priority::Disjunction;
   }
 
 protected:

@@ -72,7 +72,7 @@ TEST(SimplifyLogicTests, simplifyTest) {
   EXPECT_EQ(Expression("~(x <= 1)").toString(),
             "x - 1 > 0");
   EXPECT_EQ(Expression("~(x <= 1 | y >= 1)").toString(),
-            "x - 1 > 0 & y - 1 < 0");
+            "y - 1 < 0 & x - 1 > 0");
 
   EXPECT_EQ(Expression("~a").toString(),
             "~a");
@@ -92,9 +92,9 @@ TEST(SimplifyLogicTests, simplifyTest) {
   EXPECT_EQ(Expression("a -> b").toString(),
             "~a | b");
   EXPECT_EQ(Expression("a <-> b").toString(),
-            "(a & b) | (~a & ~b)");
+            "(~a & ~b) | (a & b)");
   EXPECT_EQ(Expression("a !<-> b").toString(),
-            "(a & ~b) | (~a & b)");
+            "(~a & b) | (a & ~b)");
 
   EXPECT_EQ(Expression("a & a").toString(),
             "a");
@@ -177,7 +177,7 @@ TEST(SimplifyLogicTests, simplifyTest) {
   EXPECT_EQ(Expression("a<->a<->a<->a<->a<->a<->a").toString(),
             "a");
   EXPECT_EQ(Expression("a&b->b&c").toString(),
-            "~a | (b & c) | ~b");
+            "~a | ~b | (b & c)");
   EXPECT_EQ(Expression("a&b&c").toString(),
             "a & b & c");
   EXPECT_EQ(Expression("a&(b&c)").toString(),
@@ -223,11 +223,11 @@ TEST(SimplifyLogicTests, simplifyTest) {
   EXPECT_EQ(Expression("(x | ~y | (x | ~y | z) & (y | z)) & (y | (x & ~y & z) | (y & z))").toString(),
             "(x & ~y & z) | (x & y) | (y & z)");
   EXPECT_EQ(Expression("~a & b | ~c -> a <-> b !<-> c").toString(),
-            "(a & b & ~c) | (~a & ~b & ~c) | (~a & c) | (~b & c)");
+            "(~a & ~b & ~c) | (~a & c) | (a & b & ~c) | (~b & c)");
   EXPECT_EQ(Expression("~~~a & ~~b | ~~~c -> ~~a <-> ~~b !<-> ~~c").toString(),
-            "(a & b & ~c) | (~a & ~b & ~c) | (~a & c) | (~b & c)");
+            "(~a & ~b & ~c) | (~a & c) | (a & b & ~c) | (~b & c)");
   EXPECT_EQ(Expression("((a | b) & (a -> c)) <-> (~a -> b)").toString(),
-            "(a & c) | ~a | (b & c)");
+            "~a | (a & c) | (b & c)");
 
   EXPECT_EQ(Expression("x=1&a").toString(),
             "a & x - 1 = 0");
@@ -246,22 +246,22 @@ TEST(SimplifyLogicTests, simplifyLargeTest) {
   // EXPECT_EQ(Expression("a<->b<->c<->d<->e<->f").toString(),
 
   EXPECT_EQ(Expression("a<->b<->c<->d<->e").toString(),
-            "(a & b & c & d & e) | "
-            "(a & b & c & ~d & ~e) | "
-            "(a & b & ~c & d & ~e) | "
-            "(a & b & ~c & ~d & e) | "
-            "(a & ~b & c & d & ~e) | "
-            "(a & ~b & c & ~d & e) | "
-            "(a & ~b & ~c & d & e) | "
-            "(a & ~b & ~c & ~d & ~e) | "
-            "(~a & b & c & d & ~e) | "
-            "(~a & b & c & ~d & e) | "
-            "(~a & b & ~c & d & e) | "
-            "(~a & b & ~c & ~d & ~e) | "
-            "(~a & ~b & c & d & e) | "
-            "(~a & ~b & c & ~d & ~e) | "
+            "(~a & ~b & ~c & ~d & e) | "
             "(~a & ~b & ~c & d & ~e) | "
-            "(~a & ~b & ~c & ~d & e)");
+            "(~a & ~b & c & ~d & ~e) | "
+            "(~a & ~b & c & d & e) | "
+            "(~a & b & ~c & ~d & ~e) | "
+            "(~a & b & ~c & d & e) | "
+            "(~a & b & c & ~d & e) | "
+            "(~a & b & c & d & ~e) | "
+            "(a & ~b & ~c & ~d & ~e) | "
+            "(a & ~b & ~c & d & e) | "
+            "(a & ~b & c & ~d & e) | "
+            "(a & ~b & c & d & ~e) | "
+            "(a & b & ~c & ~d & e) | "
+            "(a & b & ~c & d & ~e) | "
+            "(a & b & c & ~d & ~e) | "
+            "(a & b & c & d & e)");
 
   EXPECT_EQ(Expression("a & b & c & d & e & f & g & h & i & j & k & l & m & n & o & p & q & r & s & t & u & v & w & x & y & z & x_1 & x_2 & x_3 | x_4").toString(),
             "(a & b & c & d & e & f & g & h & i & j & k & l & m & n & o & p & q & r & s & t & u & v & w & x & x_1 & x_2 & x_3 & y & z) | x_4");

@@ -23,11 +23,14 @@ IBinaryExpression::IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, A
 }
 
 std::string IBinaryExpression::toString() const {
-  if (const auto oper = cast<IOperator>(func)) {
-    return binaryOperatorToString(*oper, lhsChild, rhsChild);
+  const auto &outFunc = getOutputFunction();
+  const auto outOper = cast<IOperator>(outFunc);
+
+  if (!outOper) {
+    return functionToString(*outFunc, {lhsChild, rhsChild});
   }
 
-  return functionToString(*func, {lhsChild, rhsChild});
+  return binaryOperatorToString(*outOper, lhsChild, rhsChild);
 }
 
 const std::shared_ptr<IFunction> &IBinaryExpression::getFunction() const {

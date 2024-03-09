@@ -67,7 +67,7 @@ TEST(FintamathTests, fintamathTest) {
   EXPECT_EQ(expr.toString(), "-0.039790759931157709524");
 
   expr = Expression("~a & b | ~c -> a <-> b !<-> c");
-  EXPECT_EQ(expr.toString(), "(a & b & ~c) | (~a & ~b & ~c) | (~a & c) | (~b & c)");
+  EXPECT_EQ(expr.toString(), "(~a & ~b & ~c) | (~a & c) | (a & b & ~c) | (~b & c)");
 
   //-------------------------------------------------------------------------------------//
 

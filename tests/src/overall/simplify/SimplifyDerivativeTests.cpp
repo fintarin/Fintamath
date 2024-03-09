@@ -60,15 +60,15 @@ TEST(SimplifyDerivativeTests, simplifyTest) {
   EXPECT_EQ(Expression("derivative(2 mod x, x)").toString(),
             "derivative(2 mod x, x)");
   EXPECT_EQ(Expression("derivative(x ^ x, x)").toString(),
-            "x^x ln(x) + x^x");
+            "ln(x) x^x + x^x");
   EXPECT_EQ(Expression("derivative(x ^ y, x)").toString(),
             "x^(y - 1) y");
   EXPECT_EQ(Expression("derivative(y ^ x, x)").toString(),
-            "y^x ln(y)");
+            "ln(y) y^x");
   EXPECT_EQ(Expression("derivative(x ^ 2, x)").toString(),
             "2 x");
   EXPECT_EQ(Expression("derivative(2 ^ x, x)").toString(),
-            "2^x ln(2)");
+            "2 ln(2) 2^(x - 1)");
   EXPECT_EQ(Expression("derivative(x ^ (3/5), x)").toString(),
             "3/(5 x^(2/5))");
   EXPECT_EQ(Expression("derivative((3/5) ^ x, x)").toString(),

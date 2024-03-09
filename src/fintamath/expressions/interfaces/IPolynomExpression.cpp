@@ -18,6 +18,7 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 
 namespace fintamath {
 
@@ -39,20 +40,20 @@ const ArgumentPtrVector &IPolynomExpression::getChildren() const {
 }
 
 std::string IPolynomExpression::toString() const {
-  const auto oper = cast<IOperator>(func);
-  if (!oper) {
-    return functionToString(*func, children);
+  const auto &outFunc = getOutputFunction();
+  const auto outOper = cast<IOperator>(outFunc);
+
+  if (!outOper) {
+    return functionToString(*outFunc, children);
   }
 
-  std::string result;
-
-  result += childToString(*oper, children.front(), {});
+  std::string result = childToString(*outOper, children.front(), {});
 
   for (const auto i : stdv::iota(1U, children.size())) {
-    const std::string childStr = childToString(*oper, children[i], children[i - 1]);
+    const std::string childStr = childToString(*outOper, children[i], children[i - 1]);
 
     if (childStr.size() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {
-      result += Mul{}.toString() + childStr.substr(1);
+      result += MulOper{}.toString() + childStr.substr(1);
     }
     else {
       result += childStr;
@@ -197,23 +198,8 @@ IPolynomExpression::SimplifyFunctionVector IPolynomExpression::getFunctionsForPo
 
 std::string IPolynomExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   const std::string childStr = operatorChildToString(oper, inChild);
-  return prevChild ? (putInSpaces(func->toString()) + childStr) : childStr;
-}
-
-std::strong_ordering IPolynomExpression::compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  const ComparatorOptions options = {
-      .termOrderInversed = isTermOrderInversed(),
-      .comparableOrderInversed = isComparableOrderInversed(),
-  };
-  return fintamath::compare(lhs, rhs, options);
-}
-
-bool IPolynomExpression::isTermOrderInversed() const {
-  return false;
-}
-
-bool IPolynomExpression::isComparableOrderInversed() const {
-  return false;
+  const std::string operStr = prevChild ? putInSpaces(oper.toString()) : "";
+  return operStr + childStr;
 }
 
 void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
