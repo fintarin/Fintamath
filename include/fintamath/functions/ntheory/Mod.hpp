@@ -4,7 +4,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -13,6 +13,8 @@
 namespace fintamath {
 
 class Mod final : public IOperatorCRTP<INumber, Mod, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(Mod)
+
 public:
   std::string toString() const override {
     return "mod";
@@ -20,10 +22,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::Modulo;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Mod, "Mod"};
   }
 
 protected:

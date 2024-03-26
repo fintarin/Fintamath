@@ -17,12 +17,12 @@ TEST(AbsTests, toStringTest) {
   EXPECT_EQ(f.toString(), "abs");
 }
 
-TEST(AbsTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(AbsTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(AbsTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(AbsTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(AbsTests, isVariadicTest) {
@@ -71,7 +71,7 @@ TEST(AbsTests, exprTest) {
   EXPECT_EQ(absExpr(Integer(10))->toString(), "abs(10)");
 }
 
-TEST(AbsTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Abs, "Abs"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Abs, "Abs"));
+TEST(AbsTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Abs"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

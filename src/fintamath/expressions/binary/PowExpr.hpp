@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -13,16 +13,14 @@
 namespace fintamath {
 
 class PowExpr final : public IBinaryExpressionCRTP<PowExpr> {
+  FINTAMATH_CLASS_BODY(PowExpr)
+
 public:
   explicit PowExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   std::string toString() const override;
 
   const std::shared_ptr<IFunction> &getOutputFunction() const override;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::PowExpr, "PowExpr"};
-  }
 
 protected:
   ArgumentPtr approximateSimplify() const override;

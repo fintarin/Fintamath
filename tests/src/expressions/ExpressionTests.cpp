@@ -97,9 +97,9 @@ TEST(ExpressionTests, equalsTest) {
   // TODO: implement more tests
 }
 
-TEST(ExpressionTests, getTypeTest) {
-  EXPECT_EQ(Expression::getTypeStatic(), MathObjectType(MathObjectType::Expression, "Expression"));
-  EXPECT_EQ(Expression().getType(), MathObjectType(MathObjectType::Expression, "Expression"));
+TEST(ExpressionTests, getClassTest) {
+  EXPECT_EQ(Expression::getClassStatic(), MathObjectClass("Expression"));
+  EXPECT_EQ(Expression::getClassStatic().getParent(), IExpression::getClassStatic());
 }
 
 TEST(ExpressionTests, variableVariablePlusOperatorTest) {

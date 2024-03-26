@@ -17,12 +17,12 @@ TEST(SignTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sign");
 }
 
-TEST(SignTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(SignTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(SignTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(SignTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(SignTests, isVariadicTest) {
@@ -69,7 +69,7 @@ TEST(SignTests, exprTest) {
   EXPECT_EQ(signExpr(Integer(10))->toString(), "sign(10)");
 }
 
-TEST(SignTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sign, "Sign"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sign, "Sign"));
+TEST(SignTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sign"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

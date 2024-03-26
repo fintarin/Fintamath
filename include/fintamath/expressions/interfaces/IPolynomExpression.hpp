@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -17,6 +17,8 @@ namespace fintamath {
 class IOperator;
 
 class IPolynomExpression : public IExpression {
+  FINTAMATH_PARENT_CLASS_BODY(IPolynomExpression)
+
 public:
   explicit IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args);
 
@@ -27,10 +29,6 @@ public:
   const ArgumentPtrVector &getChildren() const final;
 
   void setChildren(const ArgumentPtrVector &childVect) final;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IPolynomExpression, "IPolynomExpression"};
-  }
 
 protected:
   using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &, const ArgumentPtr &)>;

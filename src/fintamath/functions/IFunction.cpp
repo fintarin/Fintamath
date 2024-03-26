@@ -8,8 +8,10 @@
 
 namespace fintamath {
 
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IFunction)
+
 void IFunction::validateArgsSize(const ArgumentRefVector &argVect) const {
-  if (!argVect.empty() && (getArgumentTypes().size() == argVect.size() || isVariadic())) {
+  if (!argVect.empty() && (getArgumentClasses().size() == argVect.size() || isVariadic())) {
     return;
   }
 
@@ -20,20 +22,6 @@ void IFunction::validateArgsSize(const ArgumentRefVector &argVect) const {
   }
 
   throw InvalidInputFunctionException(toString(), argNameVect);
-}
-
-const IFunction::FunctionNameToOrderMap &IFunction::getFunctionNameToOrderMap() {
-  return getFunctionNameToOrderMutableMap();
-}
-
-IFunction::FunctionNameToOrderMap &IFunction::getFunctionNameToOrderMutableMap() {
-  static FunctionNameToOrderMap map;
-  return map;
-}
-
-IFunction::FunctionParser &IFunction::getParser() {
-  static FunctionParser parser;
-  return parser;
 }
 
 }

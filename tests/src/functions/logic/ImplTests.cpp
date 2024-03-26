@@ -15,12 +15,12 @@ TEST(ImplTests, toStringTest) {
   EXPECT_EQ(f.toString(), "->");
 }
 
-TEST(ImplTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic(), Boolean::getTypeStatic()));
+TEST(ImplTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(Boolean::getClassStatic(), Boolean::getClassStatic()));
 }
 
-TEST(ImplTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+TEST(ImplTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), Boolean::getClassStatic());
 }
 
 TEST(ImplTests, isVariadicTest) {
@@ -60,7 +60,7 @@ TEST(ImplTests, exprTest) {
   EXPECT_EQ(implExpr(Boolean(true), Boolean(false))->toString(), "~True | False");
 }
 
-TEST(ImplTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Impl, "Impl"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Impl, "Impl"));
+TEST(ImplTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Impl"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

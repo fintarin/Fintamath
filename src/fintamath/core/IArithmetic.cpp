@@ -2,9 +2,6 @@
 
 namespace fintamath {
 
-IArithmetic::ArithmeticParser &IArithmetic::getParser() {
-  static ArithmeticParser parser;
-  return parser;
-}
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IArithmetic)
 
 }

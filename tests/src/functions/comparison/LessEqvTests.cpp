@@ -16,12 +16,12 @@ TEST(LessEqvTests, toStringTest) {
   EXPECT_EQ(f.toString(), "<=");
 }
 
-TEST(LessEqvTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic(), IComparable::getTypeStatic()));
+TEST(LessEqvTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IComparable::getClassStatic(), IComparable::getClassStatic()));
 }
 
-TEST(LessEqvTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+TEST(LessEqvTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), Boolean::getClassStatic());
 }
 
 TEST(LessEqvTests, isVariadicTest) {
@@ -69,7 +69,7 @@ TEST(LessEqvTests, exprTest) {
   EXPECT_EQ(lessEqvExpr(Integer(10), Integer(10))->toString(), "10 <= 10");
 }
 
-TEST(LessEqvTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::LessEqv, "LessEqv"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::LessEqv, "LessEqv"));
+TEST(LessEqvTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("LessEqv"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

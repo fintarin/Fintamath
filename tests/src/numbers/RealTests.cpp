@@ -1043,9 +1043,9 @@ TEST(RealTests, isComplexTest) {
   EXPECT_FALSE(Real(2).isComplex());
 }
 
-TEST(RealTests, getTypeTest) {
-  EXPECT_EQ(Real::getTypeStatic(), MathObjectType(MathObjectType::Real, "Real"));
-  EXPECT_EQ(Real().getType(), MathObjectType(MathObjectType::Real, "Real"));
+TEST(RealTests, getClassTest) {
+  EXPECT_EQ(Real::getClassStatic(), MathObjectClass("Real"));
+  EXPECT_EQ(Real::getClassStatic().getParent(), INumber::getClassStatic());
 }
 
 TEST(RealTests, hashTest) {

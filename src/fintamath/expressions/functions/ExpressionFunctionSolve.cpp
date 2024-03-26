@@ -4,7 +4,7 @@
 #include <memory>
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"

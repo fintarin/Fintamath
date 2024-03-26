@@ -5,20 +5,18 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
 
 class Frac final : public IFunctionCRTP<IArithmetic, Frac, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Frac)
+
 public:
   std::string toString() const override {
     return "frac";
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Frac, "Frac"};
   }
 
 protected:

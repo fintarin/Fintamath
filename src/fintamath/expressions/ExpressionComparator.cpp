@@ -8,8 +8,8 @@
 #include <stack>
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IComparable.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
@@ -372,8 +372,8 @@ Ordering compareFunctions(const std::shared_ptr<const IFunction> &lhs,
     return Ordering::equal;
   }
 
-  if (lhs->getFunctionOrder() != rhs->getFunctionOrder()) {
-    return lhs->getFunctionOrder() < rhs->getFunctionOrder() ? Ordering::greater : Ordering::less;
+  if (lhs->getClass() != rhs->getClass()) {
+    return lhs->getClass() < rhs->getClass() ? Ordering::greater : Ordering::less;
   }
 
   return lhs->toString() < rhs->toString() ? Ordering::greater : Ordering::less;
@@ -463,7 +463,7 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
 bool unwrapUnaryExpression(ArgumentPtr &arg) {
   if (const auto expr = cast<IExpression>(arg);
       expr &&
-      expr->getFunction()->getArgumentTypes().size() == 1) {
+      expr->getFunction()->getArgumentClasses().size() == 1) {
 
     arg = expr->getChildren().front();
     return true;

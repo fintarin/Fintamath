@@ -2,9 +2,6 @@
 
 namespace fintamath {
 
-IMathObject::MathObjectParser &IMathObject::getParser() {
-  static MathObjectParser parser;
-  return parser;
-}
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IMathObject)
 
 }

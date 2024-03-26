@@ -7,14 +7,15 @@
 #include <utility>
 
 #include "fintamath/core/Converter.hpp"
-#include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectBody.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Parser.hpp"
 
 namespace fintamath {
 
 class IMathObject {
-  using MathObjectParser = detail::Parser<std::unique_ptr<IMathObject>()>;
+  FINTAMATH_PARENT_CLASS_BODY(IMathObject)
 
 public:
   virtual ~IMathObject() = default;
@@ -24,36 +25,21 @@ public:
   virtual std::unique_ptr<IMathObject> clone() && = 0;
 
   virtual std::string toString() const {
-    return std::string(getType().getName());
+    return std::string(getClass().getName());
   }
 
   virtual std::unique_ptr<IMathObject> toMinimalObject() const {
     return clone();
   }
 
-  virtual MathObjectType getType() const = 0;
+  virtual MathObjectClass getClass() const = 0;
 
   friend bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
     return lhs.equalsAbstract(rhs);
   }
 
-  static std::unique_ptr<IMathObject> parse(const std::string &str) {
-    return getParser().parse(str);
-  }
-
-  static void registerType(MathObjectParser::StringConstructor constructor) {
-    getParser().registerType(std::move(constructor));
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IMathObject, "IMathObject"};
-  }
-
 protected:
   virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
-
-private:
-  static MathObjectParser &getParser();
 };
 
 template <typename Derived>

@@ -17,12 +17,12 @@ TEST(SinTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sin");
 }
 
-TEST(SinTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(SinTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(SinTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(SinTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(SinTests, isVariadicTest) {
@@ -56,7 +56,7 @@ TEST(SinTests, exprTest) {
   EXPECT_EQ(sinExpr(Integer(10))->toString(), "sin(10)");
 }
 
-TEST(SinTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sin, "Sin"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sin, "Sin"));
+TEST(SinTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sin"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

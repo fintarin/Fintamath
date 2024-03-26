@@ -4,7 +4,7 @@
 #include <regex>
 #include <string>
 
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 
 namespace fintamath::detail {
 

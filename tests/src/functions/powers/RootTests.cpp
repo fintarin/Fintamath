@@ -16,12 +16,12 @@ TEST(RootTests, toStringTest) {
   EXPECT_EQ(f.toString(), "root");
 }
 
-TEST(RootTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic(), INumber::getTypeStatic()));
+TEST(RootTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic(), INumber::getClassStatic()));
 }
 
-TEST(RootTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(RootTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(RootTests, isVariadicTest) {
@@ -184,7 +184,7 @@ TEST(RootTests, exprTest) {
   EXPECT_EQ(rootExpr(Integer(10), Integer(10))->toString(), "root(10, 10)");
 }
 
-TEST(RootTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Root, "Root"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Root, "Root"));
+TEST(RootTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Root"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

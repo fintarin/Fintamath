@@ -16,12 +16,12 @@ TEST(ModTests, toStringTest) {
   EXPECT_EQ(f.toString(), "mod");
 }
 
-TEST(ModTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic(), INumber::getTypeStatic()));
+TEST(ModTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic(), INumber::getClassStatic()));
 }
 
-TEST(ModTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(ModTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(ModTests, isVariadicTest) {
@@ -103,7 +103,7 @@ TEST(ModTests, exprTest) {
   EXPECT_EQ(modExpr(Integer(10), Integer(10))->toString(), "10 mod 10");
 }
 
-TEST(ModTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Mod, "Mod"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Mod, "Mod"));
+TEST(ModTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Mod"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

@@ -5,7 +5,7 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -13,6 +13,8 @@
 namespace fintamath {
 
 class Add final : public IOperatorCRTP<IArithmetic, Add, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Add)
+
 public:
   std::string toString() const override {
     return "+";
@@ -24,10 +26,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::Addition;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Add, "Add"};
   }
 
 protected:

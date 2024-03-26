@@ -14,6 +14,28 @@
 
 using namespace fintamath;
 
+namespace {
+
+class TestFunction final : public IFunctionCRTP<INumber, TestFunction, INumber> {
+  FINTAMATH_CLASS_BODY(TestFunction)
+
+protected:
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
+    return {};
+  }
+};
+
+[[maybe_unused]] const auto config = [] {
+  IFunction::registerType<TestFunction>();
+  return 0;
+}();
+
+}
+
+TEST(IFunctionTests, parseTest) {
+  EXPECT_TRUE(is<TestFunction>(*IFunction::parseFirst("TestFunction")));
+}
+
 TEST(IFunctionTests, callTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Add>();
   Integer a = 3;
@@ -33,7 +55,7 @@ TEST(IFunctionTests, callTest) {
   EXPECT_THROW((*f)(a, a, a, a, a, a, a), InvalidInputFunctionException);
 }
 
-TEST(IFunctionTests, calVectTest) {
+TEST(IFunctionTests, callVectTest) {
   std::unique_ptr<IFunction> f = std::make_unique<Add>();
   Integer a = 3;
   Rational b(1, 2);
@@ -62,16 +84,16 @@ TEST(IFunctionTests, equalsTest) {
   EXPECT_NE(Sin(), Add());
 }
 
-TEST(IFunctionTests, getArgumentTypesTest) {
-  EXPECT_THAT(Add().getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
-  EXPECT_THAT(Neg().getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic()));
-  EXPECT_THAT(Sin().getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(IFunctionTests, getArgumentClassesTest) {
+  EXPECT_THAT(Add().getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
+  EXPECT_THAT(Neg().getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic()));
+  EXPECT_THAT(Sin().getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(IFunctionTests, getReturnTypeTest) {
-  EXPECT_EQ(Add().getReturnType(), IArithmetic::getTypeStatic());
-  EXPECT_EQ(Neg().getReturnType(), IArithmetic::getTypeStatic());
-  EXPECT_EQ(Sin().getReturnType(), INumber::getTypeStatic());
+TEST(IFunctionTests, getReturnClassTest) {
+  EXPECT_EQ(Add().getReturnClass(), IArithmetic::getClassStatic());
+  EXPECT_EQ(Neg().getReturnClass(), IArithmetic::getClassStatic());
+  EXPECT_EQ(Sin().getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(IFunctionTests, doArgsMatchTest) {
@@ -89,6 +111,7 @@ TEST(IFunctionTests, doArgsMatchTest) {
   EXPECT_FALSE(Add().doArgsMatch({a, b, a, b}));
 }
 
-TEST(IFunctionTests, getTypeTest) {
-  EXPECT_EQ(IFunction::getTypeStatic(), MathObjectType(MathObjectType::IFunction, "IFunction"));
+TEST(IFunctionTests, getClassTest) {
+  EXPECT_EQ(IFunction::getClassStatic(), MathObjectClass("IFunction"));
+  EXPECT_EQ(IFunction::getClassStatic().getParent(), IMathObject::getClassStatic());
 }

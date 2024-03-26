@@ -17,12 +17,12 @@ TEST(CotTests, toStringTest) {
   EXPECT_EQ(f.toString(), "cot");
 }
 
-TEST(CotTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(CotTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(CotTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(CotTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(CotTests, isVariadicTest) {
@@ -57,7 +57,7 @@ TEST(CotTests, exprTest) {
   EXPECT_EQ(cotExpr(Integer(10))->toString(), "cot(10)");
 }
 
-TEST(CotTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Cot, "Cot"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Cot, "Cot"));
+TEST(CotTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Cot"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

@@ -17,12 +17,12 @@ TEST(FloorTests, toStringTest) {
   EXPECT_EQ(f.toString(), "floor");
 }
 
-TEST(FloorTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(FloorTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(FloorTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(FloorTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(FloorTests, isVariadicTest) {
@@ -82,7 +82,7 @@ TEST(FloorTests, exprTest) {
   EXPECT_EQ(floorExpr(Integer(10))->toString(), "floor(10)");
 }
 
-TEST(FloorTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Floor, "Floor"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Floor, "Floor"));
+TEST(FloorTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Floor"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

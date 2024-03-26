@@ -8,8 +8,8 @@
 #include <vector>
 
 #include "fintamath/core/Converter.hpp"
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/MultiMethod.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
@@ -25,6 +25,8 @@
 namespace fintamath {
 
 using namespace detail;
+
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IExpression)
 
 std::vector<Variable> IExpression::getVariables() const {
   std::vector<Variable> vars;
@@ -323,7 +325,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
 
   if (containsVar &&
       (numberChildrenCount < 2 ||
-       approxChildren.size() == getFunction()->getArgumentTypes().size())) {
+       approxChildren.size() == getFunction()->getArgumentClasses().size())) {
 
     return approxExpr;
   }
@@ -357,11 +359,6 @@ ArgumentPtr IExpression::setPrecision(const unsigned precision, const Integer &m
   auto newExprArg = cast<IExpression>(clone());
   newExprArg->setChildren(newChildren);
   return newExprArg;
-}
-
-IExpression::ExpressionParser &IExpression::getParser() {
-  static ExpressionParser parser;
-  return parser;
 }
 
 }

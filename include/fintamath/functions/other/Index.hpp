@@ -4,7 +4,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -14,6 +14,8 @@
 namespace fintamath {
 
 class Index final : public IOperatorCRTP<Variable, Index, Variable, Integer> {
+  FINTAMATH_CLASS_BODY(Index)
+
 public:
   std::string toString() const override {
     return "_";
@@ -21,10 +23,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::Exponentiation;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Index, "Index"};
   }
 
 protected:

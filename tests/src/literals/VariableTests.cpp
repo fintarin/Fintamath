@@ -38,7 +38,7 @@ TEST(VariableTest, stringIntegerConstructorTest) {
   EXPECT_THROW(Variable("a", Integer("-100000000000000000000000000000000000000")), InvalidInputException);
 }
 
-TEST(VariableTest, getTypeTest) {
-  EXPECT_EQ(Variable::getTypeStatic(), MathObjectType(MathObjectType::Variable, "Variable"));
-  EXPECT_EQ(Variable("a").getType(), MathObjectType(MathObjectType::Variable, "Variable"));
+TEST(VariableTest, getClassTest) {
+  EXPECT_EQ(Variable::getClassStatic(), MathObjectClass("Variable"));
+  EXPECT_EQ(Variable::getClassStatic().getParent(), ILiteral::getClassStatic());
 }

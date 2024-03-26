@@ -3,112 +3,121 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
-#include <ranges>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "fintamath/core/CoreUtils.hpp"
+#include <cppcoro/generator.hpp>
+
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath::detail {
 
-template <typename T, typename... Args>
-concept StringConstructable = requires(const std::string &str, Args &&...args) {
-  T(str, args...);
+template <typename T>
+concept EmptyConstructable = requires {
+  T().toString();
+};
+
+template <typename T>
+concept StringConstructable = requires(std::string str) {
+  T(str).toString();
 };
 
 template <typename Signature>
 class Parser;
 
-template <typename Return, typename... Args>
-class Parser<Return(Args...)> final {
+template <typename Return>
+class Parser final {
 public:
-  using Validator = std::function<bool(const Return &)>;
+  using Generator = cppcoro::generator<Return>;
 
-  using StringConstructor = std::function<Return(const std::string &, Args...)>;
+private:
+  using Constructor = std::function<Return()>;
 
-  using Constructor = std::function<Return(Args...)>;
+  using StringToConstructorsMap = std::unordered_map<std::string, std::vector<Constructor>>;
 
-  using ConstructorVector = std::vector<StringConstructor>;
+  using GeneratorConstructor = std::function<Generator(const std::string &)>;
 
-  using StringToConstructorMap = std::unordered_multimap<std::string, Constructor>;
+  using GeneratorConstructorVector = std::vector<GeneratorConstructor>;
 
 public:
-  template <typename... ConstructorArgs>
-    requires(SameAsUnqual<ConstructorArgs, Args> && ...)
-  Return parse(const std::string &str, ConstructorArgs &&...args) const {
-    constexpr auto trueValidator = [](const Return &) { return true; };
-    return parse(trueValidator, str, std::forward<ConstructorArgs>(args)...);
+  Generator parse(const std::string &str) const {
+    if (const auto stringToConstructors = stringToConstructorsMap.find(str); stringToConstructors != stringToConstructorsMap.end()) {
+      for (const auto &constructor : stringToConstructors->second) {
+        co_yield constructor();
+      }
+    }
+
+    for (const auto &generatorConstructor : generatorConstructors) {
+      for (auto &value : generatorConstructor(str)) {
+        co_yield std::move(value);
+      }
+    }
   }
 
-  template <typename... ConstructorArgs>
-    requires(SameAsUnqual<ConstructorArgs, Args> && ...)
-  Return parse(const Validator &validator, const std::string &str, ConstructorArgs &&...args) const {
-    for (const auto &pairs = stringToConstructorMap.equal_range(str);
-         const auto &pair : stdv::iota(pairs.first, pairs.second)) {
-
-      if (Return value = pair->second(std::forward<ConstructorArgs>(args)...);
-          value && validator(value)) {
-
-        return value;
+  Generator parse(std::string &&str) const {
+    return [](const Parser &parser, const std::string localStr) -> Generator {
+      for (auto &value : parser.parse(localStr)) {
+        co_yield std::move(value);
       }
+    }(*this, std::move(str));
+  }
+
+  std::optional<Return> parseFirst(const std::string &str) const {
+    auto gener = parse(str);
+
+    if (auto iter = gener.begin(); iter != gener.end()) {
+      return std::move(*iter);
     }
 
-    for (const auto &constructor : extraConstructors) {
-      if (Return value = constructor(str, std::forward<ConstructorArgs>(args)...);
-          value && validator(value)) {
-
-        return value;
-      }
-    }
-
-    return Return{};
+    return {};
   }
 
   template <typename Type>
-    requires(!StringConstructable<Type, Args...>)
+    requires(!std::is_abstract_v<Type> && !StringConstructable<Type> && EmptyConstructable<Type>)
   void registerType() {
-    Constructor constructor = []<typename... ConstructorArgs>(ConstructorArgs &&...args) -> Return {
-      return std::make_unique<Type>(std::forward<ConstructorArgs>(args)...);
-    };
-
-    registerType<Type>(std::move(constructor));
-  }
-
-  template <typename Type>
-    requires(!StringConstructable<Type, Args...>)
-  void registerType(Constructor constructor) {
     static const std::string name = Type{}.toString();
-    stringToConstructorMap.emplace(name, std::move(constructor));
+
+    stringToConstructorsMap[name].emplace_back([]() -> Return {
+      return std::make_unique<Type>();
+    });
 
     Tokenizer::registerToken(name);
   }
 
   template <typename Type>
-    requires(StringConstructable<Type, Args...>)
+    requires(!std::is_abstract_v<Type> && StringConstructable<Type>)
   void registerType() {
-    StringConstructor constructor = []<typename... ConstructorArgs>(const std::string &str, ConstructorArgs &&...args) -> Return {
+    generatorConstructors.emplace_back([](const std::string &str) -> Generator {
       try {
-        return std::make_unique<Type>(str, std::forward<ConstructorArgs>(args)...);
+        co_yield std::make_unique<Type>(str);
       }
       catch (const InvalidInputException &) {
-        return std::unique_ptr<Type>{};
+        // Go to the next constructor
       }
-    };
-
-    registerType(std::move(constructor));
+    });
   }
 
-  void registerType(StringConstructor constructor) {
-    extraConstructors.emplace_back(std::move(constructor));
+  template <typename Type>
+    requires(std::is_abstract_v<Type>)
+  void registerType() {
+    generatorConstructors.emplace_back([](const std::string &str) -> Generator {
+      for (auto &value : Type::parse(str)) {
+        co_yield std::move(value);
+      }
+    });
+  }
+
+  template <typename Type>
+  void registerType() const {
+    // No object of this type can be constructed
   }
 
 private:
-  StringToConstructorMap stringToConstructorMap;
+  StringToConstructorsMap stringToConstructorsMap;
 
-  ConstructorVector extraConstructors;
+  GeneratorConstructorVector generatorConstructors;
 };
 
 }

@@ -10,13 +10,15 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 
 class Rational final : public INumberCRTP<Rational> {
+  FINTAMATH_CLASS_BODY(Rational)
+
 public:
   Rational() = default;
 
@@ -37,10 +39,6 @@ public:
   const Integer &numerator() const;
 
   const Integer &denominator() const;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Rational, "Rational"};
-  }
 
 protected:
   bool equals(const Rational &rhs) const override;

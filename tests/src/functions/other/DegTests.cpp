@@ -15,12 +15,12 @@ TEST(DegTests, toStringTest) {
   EXPECT_EQ(f.toString(), "deg");
 }
 
-TEST(DegTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(DegTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(DegTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(DegTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(DegTests, isVariadicTest) {
@@ -60,7 +60,7 @@ TEST(DegTests, degTest) {
   EXPECT_EQ(degExpr(Integer(10))->toString(), "10 Pi/180");
 }
 
-TEST(DegTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Deg, "Deg"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Deg, "Deg"));
+TEST(DegTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Deg"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

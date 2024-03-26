@@ -14,17 +14,12 @@ class IFunctionCRTP_ : public IFunction {
 #undef I_MATH_OBJECT_CRTP
 
 public:
-  const std::vector<MathObjectType> &getArgumentTypes() const final {
+  const std::vector<MathObjectClass> &getArgumentClasses() const final {
     return argTypes;
   }
 
-  MathObjectType getReturnType() const final {
-    return Return::getTypeStatic();
-  }
-
-  size_t getFunctionOrder() const final {
-    static const std::string funcStr = Derived{}.toString();
-    return getFunctionNameToOrderMap().at(funcStr);
+  MathObjectClass getReturnClass() const final {
+    return Return::getClassStatic();
   }
 
   bool doArgsMatch(const ArgumentRefVector &argVect) const override {
@@ -102,7 +97,7 @@ private:
   }
 
 private:
-  inline static const ArgumentTypeVector argTypes = {Args::getTypeStatic()...};
+  inline static const ArgumentTypeVector argTypes = {Args::getClassStatic()...};
 
 private:
 #if !defined(I_FUNCTION_CRTP) && !defined(NDEBUG)

@@ -2,9 +2,6 @@
 
 namespace fintamath {
 
-INumber::NumberParser &INumber::getParser() {
-  static NumberParser parser;
-  return parser;
-}
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(INumber)
 
 }

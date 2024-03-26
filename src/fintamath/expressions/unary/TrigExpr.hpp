@@ -3,7 +3,7 @@
 #include <memory>
 #include <tuple>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -13,12 +13,10 @@ namespace fintamath {
 class Rational;
 
 class TrigExpr final : public IUnaryExpressionCRTP<TrigExpr> {
+  FINTAMATH_CLASS_BODY(TrigExpr)
+
 public:
   explicit TrigExpr(const IFunction &inFunc, ArgumentPtr inChild);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::TrigExpr, "TrigExpr"};
-  }
 
 protected:
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;

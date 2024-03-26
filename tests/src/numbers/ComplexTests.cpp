@@ -905,7 +905,7 @@ TEST(ComplexTests, isComplexTest) {
   EXPECT_FALSE(Complex(1, 0).isComplex());
 }
 
-TEST(ComplexTests, getTypeTest) {
-  EXPECT_EQ(Complex::getTypeStatic(), MathObjectType(MathObjectType::Complex, "Complex"));
-  EXPECT_EQ(Complex().getType(), MathObjectType(MathObjectType::Complex, "Complex"));
+TEST(ComplexTests, getClassTest) {
+  EXPECT_EQ(Complex::getClassStatic(), MathObjectClass("Complex"));
+  EXPECT_EQ(Complex::getClassStatic().getParent(), INumber::getClassStatic());
 }

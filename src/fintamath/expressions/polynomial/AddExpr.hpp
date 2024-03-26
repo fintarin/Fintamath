@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
@@ -15,12 +15,10 @@
 namespace fintamath {
 
 class AddExpr final : public IPolynomExpressionCRTP<AddExpr> {
+  FINTAMATH_CLASS_BODY(AddExpr)
+
 public:
   explicit AddExpr(ArgumentPtrVector inChildren);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::AddExpr, "AddExpr"};
-  }
 
 protected:
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;

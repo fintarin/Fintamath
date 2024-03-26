@@ -5,7 +5,7 @@
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -14,6 +14,8 @@
 namespace fintamath {
 
 class Derivative final : public IFunctionCRTP<IComparable, Derivative, IComparable, Variable> {
+  FINTAMATH_CLASS_BODY(Derivative)
+
 public:
   std::string toString() const override {
     return "derivative";
@@ -21,10 +23,6 @@ public:
 
   static constexpr bool isEvaluatableStatic() {
     return false;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Derivative, "Derivative"};
   }
 
 protected:

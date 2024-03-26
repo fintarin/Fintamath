@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
@@ -12,12 +12,10 @@
 namespace fintamath {
 
 class DerivativeExpr final : public IBinaryExpressionCRTP<DerivativeExpr> {
+  FINTAMATH_CLASS_BODY(DerivativeExpr)
+
 public:
   explicit DerivativeExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::DerivativeExpr, "DerivativeExpr"};
-  }
 
 protected:
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;

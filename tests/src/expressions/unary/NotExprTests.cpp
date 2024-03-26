@@ -2,10 +2,14 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 
 using namespace fintamath;
 
-TEST(NotExprTests, getTypeTest) {
-  EXPECT_EQ(notExpr(Boolean())->getType(), MathObjectType(MathObjectType::NotExpr, "NotExpr"));
+TEST(NotExprTests, getClassTest) {
+  const auto expr = notExpr(Boolean());
+
+  EXPECT_EQ(expr->getClass(), MathObjectClass("NotExpr"));
+  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
 }

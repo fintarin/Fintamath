@@ -16,12 +16,12 @@ TEST(IndexTests, toStringTest) {
   EXPECT_EQ(f.toString(), "_");
 }
 
-TEST(IndexTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Variable::getTypeStatic(), Integer::getTypeStatic()));
+TEST(IndexTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(Variable::getClassStatic(), Integer::getClassStatic()));
 }
 
-TEST(IndexTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), Variable::getTypeStatic());
+TEST(IndexTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), Variable::getClassStatic());
 }
 
 TEST(IndexTests, isVariadicTest) {
@@ -67,7 +67,7 @@ TEST(IndexTests, exprTest) {
   EXPECT_EQ(indexExpr(Variable("a"), Integer(1))->toString(), "a_1");
 }
 
-TEST(IndexTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Index, "Index"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Index, "Index"));
+TEST(IndexTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Index"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

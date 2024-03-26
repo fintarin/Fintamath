@@ -16,12 +16,12 @@ TEST(PowFunctionTests, toStringTest) {
   EXPECT_EQ(f.toString(), "pow");
 }
 
-TEST(PowFunctionTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+TEST(PowFunctionTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
 }
 
-TEST(PowFunctionTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+TEST(PowFunctionTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
 TEST(PowFunctionTests, isVariadicTest) {
@@ -48,7 +48,7 @@ TEST(PowFunctionTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(PowFunctionTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::PowFunction, "PowFunction"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::PowFunction, "PowFunction"));
+TEST(PowFunctionTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("PowFunction"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

@@ -15,7 +15,7 @@ TEST(PiTests, callTest) {
   EXPECT_EQ(c()->toString(), "3.1415926535897932385");
 }
 
-TEST(PiTests, getTypeTest) {
-  EXPECT_EQ(Pi::getTypeStatic(), MathObjectType(MathObjectType::Pi, "Pi"));
-  EXPECT_EQ(Pi().getType(), MathObjectType(MathObjectType::Pi, "Pi"));
+TEST(PiTests, getClassTest) {
+  EXPECT_EQ(Pi::getClassStatic(), MathObjectClass("Pi"));
+  EXPECT_EQ(Pi::getClassStatic().getParent(), IConstant::getClassStatic());
 }

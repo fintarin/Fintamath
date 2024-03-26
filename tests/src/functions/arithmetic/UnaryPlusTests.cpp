@@ -16,12 +16,12 @@ TEST(UnaryPlusTests, toStringTest) {
   EXPECT_EQ(f.toString(), "+");
 }
 
-TEST(UnaryPlusTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic()));
+TEST(UnaryPlusTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic()));
 }
 
-TEST(UnaryPlusTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+TEST(UnaryPlusTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
 TEST(UnaryPlusTests, isVariadicTest) {
@@ -56,7 +56,7 @@ TEST(UnaryPlusTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(UnaryPlusTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::UnaryPlus, "UnaryPlus"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::UnaryPlus, "UnaryPlus"));
+TEST(UnaryPlusTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("UnaryPlus"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

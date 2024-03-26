@@ -503,9 +503,9 @@ TEST(RationalTests, isComplexTest) {
   EXPECT_FALSE(Rational(1, 2).isComplex());
 }
 
-TEST(RationalTests, getTypeTest) {
-  EXPECT_EQ(Rational::getTypeStatic(), MathObjectType(MathObjectType::Rational, "Rational"));
-  EXPECT_EQ(Rational().getType(), MathObjectType(MathObjectType::Rational, "Rational"));
+TEST(RationalTests, getClassTest) {
+  EXPECT_EQ(Rational::getClassStatic(), MathObjectClass("Rational"));
+  EXPECT_EQ(Rational::getClassStatic().getParent(), INumber::getClassStatic());
 }
 
 TEST(RationalTests, hashTest) {

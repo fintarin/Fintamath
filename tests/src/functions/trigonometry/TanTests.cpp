@@ -17,12 +17,12 @@ TEST(TanTests, toStringTest) {
   EXPECT_EQ(f.toString(), "tan");
 }
 
-TEST(TanTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(TanTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(TanTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(TanTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(TanTests, isVariadicTest) {
@@ -57,7 +57,7 @@ TEST(TanTests, exprTest) {
   EXPECT_EQ(tanExpr(Integer(10))->toString(), "tan(10)");
 }
 
-TEST(TanTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Tan, "Tan"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Tan, "Tan"));
+TEST(TanTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Tan"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

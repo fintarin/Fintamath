@@ -13,7 +13,7 @@
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -21,6 +21,8 @@
 namespace fintamath {
 
 class Real final : public INumberCRTP<Real> {
+  FINTAMATH_CLASS_BODY(Real)
+
 public:
   using Backend = boost::multiprecision::mpfr_float;
 
@@ -71,10 +73,6 @@ public:
   static unsigned getPrecision();
 
   static void setPrecision(unsigned precision);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Real, "Real"};
-  }
 
 protected:
   bool equals(const Real &rhs) const override;

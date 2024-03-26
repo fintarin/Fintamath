@@ -16,12 +16,12 @@ TEST(FracTests, toStringTest) {
   EXPECT_EQ(f.toString(), "frac");
 }
 
-TEST(FracTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+TEST(FracTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
 }
 
-TEST(FracTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+TEST(FracTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
 TEST(FracTests, isVariadicTest) {
@@ -48,7 +48,7 @@ TEST(FracTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(FracTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Frac, "Frac"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Frac, "Frac"));
+TEST(FracTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Frac"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

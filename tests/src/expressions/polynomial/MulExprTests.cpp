@@ -2,10 +2,14 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
+#include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 
 using namespace fintamath;
 
-TEST(MulExprTests, getTypeTest) {
-  EXPECT_EQ(mulExpr(Integer(0), Integer(0))->getType(), MathObjectType(MathObjectType::MulExpr, "MulExpr"));
+TEST(MulExprTests, getClassTest) {
+  const auto expr = mulExpr(Integer(0), Integer(0));
+
+  EXPECT_EQ(expr->getClass(), MathObjectClass("MulExpr"));
+  EXPECT_EQ(expr->getClass().getParent(), IPolynomExpression::getClassStatic());
 }

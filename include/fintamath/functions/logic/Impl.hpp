@@ -4,7 +4,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -13,6 +13,8 @@
 namespace fintamath {
 
 class Impl final : public IOperatorCRTP<Boolean, Impl, Boolean, Boolean> {
+  FINTAMATH_CLASS_BODY(Impl)
+
 public:
   std::string toString() const override {
     return "->";
@@ -20,10 +22,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::Implication;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Impl, "Impl"};
   }
 
 protected:

@@ -11,16 +11,23 @@ const Factorial f;
 namespace {
 
 class TestUnaryExpression final : public IUnaryExpressionCRTP<TestUnaryExpression> {
+  FINTAMATH_CLASS_BODY(TestUnaryExpression)
+
 public:
   explicit TestUnaryExpression(ArgumentPtr inRhsChild)
       : IUnaryExpressionCRTP(f, std::move(inRhsChild)) {
   }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {static_cast<size_t>(MathObjectType::IUnaryExpression) + 999, "TestUnaryExpression"};
-  }
 };
 
+[[maybe_unused]] const auto config = [] {
+  IUnaryExpression::registerType<TestUnaryExpression>();
+  return 0;
+}();
+
+}
+
+TEST(IUnaryExpressionTests, parseTest) {
+  EXPECT_FALSE(IUnaryExpression::parseFirst("1*)"));
 }
 
 TEST(IUnaryExpressionTests, toStringTest) {
@@ -62,6 +69,7 @@ TEST(IUnaryExpressionTests, toMinimalObjectTest) {
   EXPECT_EQ(expr3.toMinimalObject()->toString(), "(a!)!");
 }
 
-TEST(IUnaryExpressionTests, getTypeTest) {
-  EXPECT_EQ(IUnaryExpression::getTypeStatic(), MathObjectType(MathObjectType::IUnaryExpression, "IUnaryExpression"));
+TEST(IUnaryExpressionTests, getClassTest) {
+  EXPECT_EQ(IUnaryExpression::getClassStatic(), MathObjectClass("IUnaryExpression"));
+  EXPECT_EQ(IUnaryExpression::getClassStatic().getParent(), IExpression::getClassStatic());
 }

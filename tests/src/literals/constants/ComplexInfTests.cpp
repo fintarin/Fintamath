@@ -15,7 +15,7 @@ TEST(ComplexInfTests, callTest) {
   EXPECT_EQ(c()->toString(), "ComplexInf");
 }
 
-TEST(ComplexInfTests, getTypeTest) {
-  EXPECT_EQ(ComplexInf::getTypeStatic(), MathObjectType(MathObjectType::ComplexInf, "ComplexInf"));
-  EXPECT_EQ(ComplexInf().getType(), MathObjectType(MathObjectType::ComplexInf, "ComplexInf"));
+TEST(ComplexInfTests, getClassTest) {
+  EXPECT_EQ(ComplexInf::getClassStatic(), MathObjectClass("ComplexInf"));
+  EXPECT_EQ(ComplexInf::getClassStatic().getParent(), IConstant::getClassStatic());
 }

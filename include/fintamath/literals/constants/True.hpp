@@ -4,20 +4,18 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 
 namespace fintamath {
 
 class True final : public IConstantCRTP<Boolean, True> {
+  FINTAMATH_CLASS_BODY(True)
+
 public:
   std::string toString() const override {
     return Boolean(true).toString();
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::True, "True"};
   }
 
 protected:

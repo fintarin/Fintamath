@@ -2,12 +2,14 @@
 
 #include <string>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 
 namespace fintamath {
 
 class Boolean final : public ILiteralCRTP<Boolean> {
+  FINTAMATH_CLASS_BODY(Boolean)
+
 public:
   Boolean();
 
@@ -18,10 +20,6 @@ public:
   std::string toString() const override;
 
   operator bool() const;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Boolean, "Boolean"};
-  }
 
 private:
   std::string name;

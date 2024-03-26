@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 
 namespace fintamath {
 
@@ -16,6 +16,6 @@ using ArgumentPtr = std::shared_ptr<const IMathObject>;
 using ArgumentRefVector = std::vector<ArgumentRef>;
 using ArgumentPtrVector = std::vector<ArgumentPtr>;
 
-using ArgumentTypeVector = std::vector<MathObjectType>;
+using ArgumentTypeVector = std::vector<MathObjectClass>;
 
 }

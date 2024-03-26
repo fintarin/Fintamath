@@ -17,12 +17,12 @@ TEST(SecTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sec");
 }
 
-TEST(SecTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(SecTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(SecTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(SecTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(SecTests, isVariadicTest) {
@@ -56,7 +56,7 @@ TEST(SecTests, exprTest) {
   EXPECT_EQ(secExpr(Integer(10))->toString(), "sec(10)");
 }
 
-TEST(SecTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sec, "Sec"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sec, "Sec"));
+TEST(SecTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sec"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

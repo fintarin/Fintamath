@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -8,12 +8,10 @@
 namespace fintamath {
 
 class IntegralExpr final : public IBinaryExpressionCRTP<IntegralExpr> {
+  FINTAMATH_CLASS_BODY(IntegralExpr)
+
 public:
   explicit IntegralExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IntegralExpr, "IntegralExpr"};
-  }
 
 protected:
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;

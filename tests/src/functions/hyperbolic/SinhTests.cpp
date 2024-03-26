@@ -17,12 +17,12 @@ TEST(SinhTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sinh");
 }
 
-TEST(SinhTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(SinhTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(SinhTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(SinhTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(SinhTests, isVariadicTest) {
@@ -56,7 +56,7 @@ TEST(SinhTests, exprTest) {
   EXPECT_EQ(sinhExpr(Integer(10))->toString(), "sinh(10)");
 }
 
-TEST(SinhTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sinh, "Sinh"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sinh, "Sinh"));
+TEST(SinhTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sinh"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

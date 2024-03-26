@@ -15,12 +15,12 @@ TEST(OrTests, toStringTest) {
   EXPECT_EQ(f.toString(), "|");
 }
 
-TEST(OrTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic(), Boolean::getTypeStatic()));
+TEST(OrTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(Boolean::getClassStatic(), Boolean::getClassStatic()));
 }
 
-TEST(OrTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+TEST(OrTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), Boolean::getClassStatic());
 }
 
 TEST(OrTests, isVariadicTest) {
@@ -60,7 +60,7 @@ TEST(OrTests, exprTest) {
   EXPECT_EQ(orExpr(Boolean(true), Boolean(false))->toString(), "True | False");
 }
 
-TEST(OrTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Or, "Or"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Or, "Or"));
+TEST(OrTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Or"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

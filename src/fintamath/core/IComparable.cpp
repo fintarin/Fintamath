@@ -2,9 +2,6 @@
 
 namespace fintamath {
 
-IComparable::ComparableParser &IComparable::getParser() {
-  static ComparableParser parser;
-  return parser;
-}
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IComparable)
 
 }

@@ -17,12 +17,12 @@ TEST(AcosTests, toStringTest) {
   EXPECT_EQ(f.toString(), "acos");
 }
 
-TEST(AcosTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(AcosTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(AcosTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(AcosTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(AcosTests, isVariadicTest) {
@@ -59,7 +59,7 @@ TEST(AcosTests, exprTest) {
   EXPECT_EQ(acosExpr(Integer(10))->toString(), "acos(10)");
 }
 
-TEST(AcosTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Acos, "Acos"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Acos, "Acos"));
+TEST(AcosTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Acos"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

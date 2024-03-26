@@ -4,7 +4,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -15,13 +15,11 @@ namespace fintamath {
 class Real;
 
 class Cot final : public IFunctionCRTP<INumber, Cot, INumber> {
+  FINTAMATH_CLASS_BODY(Cot)
+
 public:
   std::string toString() const override {
     return "cot";
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Cot, "Cot"};
   }
 
 protected:

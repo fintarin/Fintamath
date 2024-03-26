@@ -2,21 +2,19 @@
 
 #include <string>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
 class MulExpr final : public IPolynomExpressionCRTP<MulExpr> {
+  FINTAMATH_CLASS_BODY(MulExpr)
+
 public:
   explicit MulExpr(ArgumentPtrVector inChildren);
 
   std::string toString() const override;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::MulExpr, "MulExpr"};
-  }
 
 protected:
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;

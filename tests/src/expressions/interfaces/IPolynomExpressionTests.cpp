@@ -13,15 +13,22 @@ const Mul f;
 namespace {
 
 class TestPolynomExpression final : public IPolynomExpressionCRTP<TestPolynomExpression> {
+  FINTAMATH_CLASS_BODY(TestPolynomExpression)
+
 public:
   explicit TestPolynomExpression(ArgumentPtrVector args) : IPolynomExpressionCRTP(f, std::move(args)) {
   }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {static_cast<size_t>(MathObjectType::IPolynomExpression) + 999, "TestPolynomExpression"};
-  }
 };
 
+[[maybe_unused]] const auto config = [] {
+  IPolynomExpression::registerType<TestPolynomExpression>();
+  return 0;
+}();
+
+}
+
+TEST(IPolynomExpressionTests, parseTest) {
+  EXPECT_FALSE(IPolynomExpression::parseFirst("1*)"));
 }
 
 TEST(IPolynomExpressionTests, toStringTest) {
@@ -71,6 +78,7 @@ TEST(IPolynomExpressionTests, toMinimalObjectTest) {
   EXPECT_EQ(expr.toMinimalObject()->toString(), "a * 2");
 }
 
-TEST(IPolynomExpressionTests, getTypeTest) {
-  EXPECT_EQ(IPolynomExpression::getTypeStatic(), MathObjectType(MathObjectType::IPolynomExpression, "IPolynomExpression"));
+TEST(IPolynomExpressionTests, getClassTest) {
+  EXPECT_EQ(IPolynomExpression::getClassStatic(), MathObjectClass("IPolynomExpression"));
+  EXPECT_EQ(IPolynomExpression::getClassStatic().getParent(), IExpression::getClassStatic());
 }

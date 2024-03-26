@@ -8,6 +8,23 @@
 
 using namespace fintamath;
 
+namespace {
+
+class TestLiteral final : public ILiteralCRTP<TestLiteral> {
+  FINTAMATH_CLASS_BODY(TestLiteral)
+};
+
+[[maybe_unused]] const auto config = [] {
+  ILiteral::registerType<TestLiteral>();
+  return 0;
+}();
+
+}
+
+TEST(ILiteralTests, parseTest) {
+  EXPECT_TRUE(is<TestLiteral>(*ILiteral::parseFirst("TestLiteral")));
+}
+
 TEST(ILiteralTests, equalsTest) {
   const std::unique_ptr<ILiteral> c1 = std::make_unique<E>();
   const std::unique_ptr<ILiteral> c2 = std::make_unique<Pi>();
@@ -28,6 +45,6 @@ TEST(ILiteralTests, equalsTest) {
   EXPECT_NE(*c1, *v1);
 }
 
-TEST(ILiteralTests, getTypeTest) {
-  EXPECT_EQ(ILiteral::getTypeStatic(), MathObjectType(MathObjectType::ILiteral, "ILiteral"));
+TEST(ILiteralTests, getClassTest) {
+  EXPECT_EQ(ILiteral::getClassStatic(), MathObjectClass("ILiteral"));
 }

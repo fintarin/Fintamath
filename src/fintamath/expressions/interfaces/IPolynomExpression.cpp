@@ -9,7 +9,7 @@
 #include <string>
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/binary/CompExpr.hpp"
@@ -22,6 +22,8 @@
 namespace fintamath {
 
 using namespace detail;
+
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IPolynomExpression)
 
 IPolynomExpression::IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args)
     : func(cast<IFunction>(inFunc.clone())),

@@ -4,7 +4,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -18,6 +18,8 @@ class Real;
 class Complex;
 
 class Pow final : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(Pow)
+
 public:
   std::string toString() const override {
     return "^";
@@ -25,10 +27,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::Exponentiation;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Pow, "Pow"};
   }
 
 protected:

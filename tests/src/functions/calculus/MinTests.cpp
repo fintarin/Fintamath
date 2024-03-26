@@ -18,12 +18,12 @@ TEST(MinTests, toStringTest) {
   EXPECT_EQ(f.toString(), "min");
 }
 
-TEST(MinTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic()));
+TEST(MinTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IComparable::getClassStatic()));
 }
 
-TEST(MinTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IComparable::getTypeStatic());
+TEST(MinTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IComparable::getClassStatic());
 }
 
 TEST(MinTests, isVariadicTest) {
@@ -60,7 +60,7 @@ TEST(MinTests, exprTest) {
   EXPECT_EQ(minExpr(Variable("a"), Variable("a"))->toString(), "min(a, a)");
 }
 
-TEST(MinTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Min, "Min"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Min, "Min"));
+TEST(MinTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Min"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

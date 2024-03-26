@@ -17,12 +17,12 @@ TEST(IntegralTests, toStringTest) {
   EXPECT_EQ(f.toString(), "integral");
 }
 
-TEST(IntegralTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic(), Variable::getTypeStatic()));
+TEST(IntegralTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IComparable::getClassStatic(), Variable::getClassStatic()));
 }
 
-TEST(IntegralTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IComparable::getTypeStatic());
+TEST(IntegralTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IComparable::getClassStatic());
 }
 
 TEST(IntegralTests, isVariadicTest) {
@@ -55,7 +55,7 @@ TEST(IntegralTests, exprTest) {
   EXPECT_EQ(integralExpr(Variable("a"), Variable("a"))->toString(), "integral(a, a)");
 }
 
-TEST(IntegralTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Integral, "Integral"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Integral, "Integral"));
+TEST(IntegralTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Integral"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

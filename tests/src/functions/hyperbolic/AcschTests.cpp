@@ -17,12 +17,12 @@ TEST(AcschTests, toStringTest) {
   EXPECT_EQ(f.toString(), "acsch");
 }
 
-TEST(AcschTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(AcschTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(AcschTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(AcschTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(AcschTests, isVariadicTest) {
@@ -58,7 +58,7 @@ TEST(AcschTests, exprTest) {
   EXPECT_EQ(acschExpr(Integer(10))->toString(), "acsch(10)");
 }
 
-TEST(AcschTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Acsch, "Acsch"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Acsch, "Acsch"));
+TEST(AcschTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Acsch"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

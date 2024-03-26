@@ -22,8 +22,8 @@ public:
     return equals(cast<Derived>(rhs));
   }
 
-  MathObjectType getType() const override {
-    return Derived::getTypeStatic();
+  MathObjectClass getClass() const override {
+    return Derived::getClassStatic();
   }
 
 protected:

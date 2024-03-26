@@ -6,8 +6,8 @@
 #include <string>
 
 #include "fintamath/core/Converter.hpp"
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/INumber.hpp"
@@ -31,10 +31,10 @@ Complex &Complex::operator=(const Complex &rhs) {
 
 Complex::Complex(const std::string &str) {
   if (!str.empty() && str.back() == 'I') {
-    im = parse(str.substr(0, str.size() - 1));
+    im = parseNonComplexNumber(str.substr(0, str.size() - 1));
   }
   else {
-    re = parse(str);
+    re = parseNonComplexNumber(str);
   }
 
   if (!re || !im) {
@@ -202,6 +202,20 @@ Complex &Complex::negate() {
   re = -(*re);
   im = -(*im);
   return *this;
+}
+
+std::unique_ptr<INumber> Complex::parseNonComplexNumber(const std::string &str) {
+  static auto numberParser = [] {
+    detail::Parser<std::unique_ptr<INumber>> parser;
+    parser.registerType<Integer>();
+    parser.registerType<Rational>();
+    parser.registerType<Real>();
+    return parser;
+  }();
+
+  return numberParser
+      .parseFirst(str)
+      .value_or(std::unique_ptr<INumber>{});
 }
 
 }

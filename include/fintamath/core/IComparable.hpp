@@ -6,38 +6,23 @@
 #include <string>
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Parser.hpp"
 
 namespace fintamath {
 
 class IComparable : public IArithmetic {
-  using ComparableParser = detail::Parser<std::unique_ptr<IComparable>()>;
+  FINTAMATH_PARENT_CLASS_BODY(IComparable)
 
 public:
   friend std::strong_ordering operator<=>(const IComparable &lhs, const IComparable &rhs) {
     return lhs.compareAbstract(rhs);
   }
 
-  static std::unique_ptr<IComparable> parse(const std::string &str) {
-    return getParser().parse(str);
-  }
-
-  static void registerType(ComparableParser::StringConstructor constructor) {
-    getParser().registerType(std::move(constructor));
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IComparable, "IComparable"};
-  }
-
 protected:
   virtual std::strong_ordering compareAbstract(const IComparable &rhs) const = 0;
-
-private:
-  static ComparableParser &getParser();
 };
 
 template <typename Derived>

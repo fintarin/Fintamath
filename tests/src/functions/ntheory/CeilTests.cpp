@@ -17,12 +17,12 @@ TEST(CeilTests, toStringTest) {
   EXPECT_EQ(f.toString(), "ceil");
 }
 
-TEST(CeilTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(CeilTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(CeilTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(CeilTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(CeilTests, isVariadicTest) {
@@ -82,7 +82,7 @@ TEST(CeilTests, exprTest) {
   EXPECT_EQ(ceilExpr(Integer(10))->toString(), "ceil(10)");
 }
 
-TEST(CeilTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Ceil, "Ceil"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Ceil, "Ceil"));
+TEST(CeilTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Ceil"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

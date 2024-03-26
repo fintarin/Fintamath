@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -13,16 +13,14 @@ namespace fintamath {
 class IOperator;
 
 class CompExpr final : public IBinaryExpressionCRTP<CompExpr> {
+  FINTAMATH_CLASS_BODY(CompExpr)
+
 public:
   CompExpr(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   std::string toString() const override;
 
   void markAsSolution();
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::CompExpr, "CompExpr"};
-  }
 
 protected:
   ArgumentPtr preSimplify() const override;

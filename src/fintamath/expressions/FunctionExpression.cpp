@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -73,7 +73,7 @@ ArgumentPtr FunctionExpression::postSimplify() const {
 }
 
 void FunctionExpression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.size() != func->getArgumentTypes().size()) {
+  if (childVect.size() != func->getArgumentClasses().size()) {
     throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(childVect));
   }
 

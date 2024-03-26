@@ -5,19 +5,17 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 
 namespace fintamath {
 
 class Undefined final : public IConstantCRTP<IArithmetic, Undefined> {
+  FINTAMATH_CLASS_BODY(Undefined)
+
 public:
   std::string toString() const override {
     return "Undefined";
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Undefined, "Undefined"};
   }
 
 protected:
