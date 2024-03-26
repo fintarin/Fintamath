@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -14,6 +14,8 @@
 namespace fintamath {
 
 class IBinaryExpression : public IExpression {
+  FINTAMATH_PARENT_CLASS_BODY(IBinaryExpression)
+
 public:
   explicit IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs);
 
@@ -24,10 +26,6 @@ public:
   const ArgumentPtrVector &getChildren() const final;
 
   void setChildren(const ArgumentPtrVector &childVect) final;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IBinaryExpression, "IBinaryExpression"};
-  }
 
 protected:
   using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &, const ArgumentPtr &)>;

@@ -11,16 +11,23 @@ const Add f;
 namespace {
 
 class TestBinaryExpression final : public IBinaryExpressionCRTP<TestBinaryExpression> {
+  FINTAMATH_CLASS_BODY(TestBinaryExpression)
+
 public:
   explicit TestBinaryExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
       : IBinaryExpressionCRTP(f, std::move(inLhsChild), std::move(inRhsChild)) {
   }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {static_cast<size_t>(MathObjectType::IBinaryExpression) + 999, "TestBinaryExpression"};
-  }
 };
 
+[[maybe_unused]] const auto config = [] {
+  IBinaryExpression::registerType<TestBinaryExpression>();
+  return 0;
+}();
+
+}
+
+TEST(IBinaryExpressionTests, parseTest) {
+  EXPECT_FALSE(IBinaryExpression::parseFirst("1*)"));
 }
 
 TEST(IBinaryExpressionTests, toStringTest) {
@@ -63,6 +70,7 @@ TEST(IBinaryExpressionTests, toMinimalObjectTest) {
   EXPECT_EQ(expr2.toMinimalObject()->toString(), "1 + a");
 }
 
-TEST(IBinaryExpressionTests, getTypeTest) {
-  EXPECT_EQ(IBinaryExpression::getTypeStatic(), MathObjectType(MathObjectType::IBinaryExpression, "IBinaryExpression"));
+TEST(IBinaryExpressionTests, getClassTest) {
+  EXPECT_EQ(IBinaryExpression::getClassStatic(), MathObjectClass("IBinaryExpression"));
+  EXPECT_EQ(IBinaryExpression::getClassStatic().getParent(), IExpression::getClassStatic());
 }

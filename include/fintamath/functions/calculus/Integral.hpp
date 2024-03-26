@@ -5,7 +5,7 @@
 
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -14,6 +14,8 @@
 namespace fintamath {
 
 class Integral final : public IFunctionCRTP<IComparable, Integral, IComparable, Variable> {
+  FINTAMATH_CLASS_BODY(Integral)
+
 public:
   std::string toString() const override {
     return "integral";
@@ -21,10 +23,6 @@ public:
 
   static constexpr bool isEvaluatableStatic() {
     return false;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Integral, "Integral"};
   }
 
 protected:

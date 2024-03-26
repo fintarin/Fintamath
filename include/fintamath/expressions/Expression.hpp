@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/expressions/IExpression.hpp"
@@ -61,9 +61,11 @@ using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 }
 
 class Expression final : public IExpressionCRTP<Expression> {
-  using TermParser = detail::Parser<std::unique_ptr<detail::Term>()>;
-  using ExpressionParser = detail::Parser<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
-  using ExpressionMaker = std::function<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
+  FINTAMATH_CLASS_BODY(Expression)
+
+  using ExpressionConstructor = std::function<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
+
+  using ExpressionMaker = std::unordered_map<MathObjectClass, ExpressionConstructor>;
 
 public:
   Expression();
@@ -88,16 +90,8 @@ public:
 
   void setVariable(const Variable &var, const Expression &val);
 
-  static void registerTermParser(TermParser::StringConstructor constructor) {
-    getTermParser().registerType(std::move(constructor));
-  }
-
   template <typename Function, bool isPolynomial = false>
-  static void registerFunctionExpressionMaker(ExpressionMaker maker);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Expression, "Expression"};
-  }
+  static void registerExpressionConstructor(ExpressionConstructor constructor);
 
 protected:
   Expression &add(const Expression &rhs) override;
@@ -123,7 +117,13 @@ private:
 
   static std::unique_ptr<IMathObject> operandsToObject(detail::OperandStack &operands);
 
-  static void moveFunctionsToOperands(detail::OperandStack &operands, detail::FunctionTermStack &functions, const IOperator *nextOper);
+  static std::unique_ptr<IFunction> parseFunction(const std::string &str, size_t argNum);
+
+  static std::unique_ptr<IOperator> parseOperator(const std::string &str, IOperator::Priority priority);
+
+  static detail::Term parseTerm(const std::string &str);
+
+  static void moveFunctionTermsToOperands(detail::OperandStack &operands, detail::FunctionTermStack &functions, const IOperator *nextOper);
 
   static void insertMultiplications(detail::TermVector &terms);
 
@@ -145,7 +145,7 @@ private:
 
   static void validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args);
 
-  static bool doesArgMatch(const MathObjectType &expectedType, const ArgumentPtr &arg);
+  static bool doesArgMatch(const MathObjectClass &expectedType, const ArgumentPtr &arg);
 
   static ArgumentPtrVector unwrapComma(const ArgumentPtr &child);
 
@@ -157,9 +157,7 @@ private:
 
   friend Expression approximate(const Expression &rhs, unsigned precision);
 
-  static TermParser &getTermParser();
-
-  static ExpressionParser &getExpressionParser();
+  static ExpressionMaker &getExpressionMaker();
 
 private:
   mutable ArgumentPtr child;
@@ -196,29 +194,28 @@ Expression operator/(const Expression &lhs, const Variable &rhs);
 Expression operator/(const Variable &lhs, const Expression &rhs);
 
 template <typename Function, bool isPolynomial>
-void Expression::registerFunctionExpressionMaker(ExpressionMaker maker) {
-  ExpressionParser::Constructor constructor = [maker = std::move(maker)](ArgumentPtrVector &&args) {
-    static const size_t argSize = Function{}.getArgumentTypes().size();
+void Expression::registerExpressionConstructor(ExpressionConstructor constructor) {
+  getExpressionMaker()[Function::getClassStatic()] = [maker = std::move(constructor)](ArgumentPtrVector &&args) {
+    static const size_t funcArgSize = Function{}.getArgumentClasses().size();
+
     std::unique_ptr<IMathObject> res;
 
     if constexpr (Function::isVariadicStatic()) {
       res = maker(std::move(args));
     }
     else if constexpr (isPolynomial) {
-      if (argSize <= args.size()) {
+      if (funcArgSize <= args.size()) {
         res = maker(std::move(args));
       }
     }
     else {
-      if (argSize == args.size()) {
+      if (funcArgSize == args.size()) {
         res = maker(std::move(args));
       }
     }
 
     return res;
   };
-
-  getExpressionParser().registerType<Function>(std::move(constructor));
 }
 
 }

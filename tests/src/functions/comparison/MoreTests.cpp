@@ -16,12 +16,12 @@ TEST(MoreTests, toStringTest) {
   EXPECT_EQ(f.toString(), ">");
 }
 
-TEST(MoreTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic(), IComparable::getTypeStatic()));
+TEST(MoreTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IComparable::getClassStatic(), IComparable::getClassStatic()));
 }
 
-TEST(MoreTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+TEST(MoreTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), Boolean::getClassStatic());
 }
 
 TEST(MoreTests, isVariadicTest) {
@@ -69,7 +69,7 @@ TEST(MoreTests, exprTest) {
   EXPECT_EQ(moreExpr(Integer(10), Integer(10))->toString(), "10 > 10");
 }
 
-TEST(MoreTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::More, "More"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::More, "More"));
+TEST(MoreTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("More"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

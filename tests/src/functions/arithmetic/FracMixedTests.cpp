@@ -16,12 +16,12 @@ TEST(FracMixedTests, toStringTest) {
   EXPECT_EQ(f.toString(), "frac");
 }
 
-TEST(FracMixedTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+TEST(FracMixedTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
 }
 
-TEST(FracMixedTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+TEST(FracMixedTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
 TEST(FracMixedTests, isVariadicTest) {
@@ -55,7 +55,7 @@ TEST(FracMixedTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(FracMixedTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::FracMixed, "FracMixed"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::FracMixed, "FracMixed"));
+TEST(FracMixedTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("FracMixed"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

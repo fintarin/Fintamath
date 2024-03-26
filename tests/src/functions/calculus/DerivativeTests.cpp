@@ -15,41 +15,44 @@ const F f;
 
 namespace {
 
-class TestDerivative final : public IComparableCRTP<TestDerivative> {
+class TestComparable final : public IComparableCRTP<TestComparable> {
+  FINTAMATH_CLASS_BODY(TestComparable)
+
 public:
   std::string toString() const override {
     return "testderivative";
   }
 
-  static constexpr MathObjectType getTypeStatic() {
-    return {static_cast<size_t>(MathObjectType::IComparable) + 997, "TestDerivative"};
-  }
-
 protected:
-  std::strong_ordering compare(const TestDerivative & /* rhs */) const override {
-    return 0 <=> 1;
+  std::strong_ordering compare(const TestComparable & /* rhs */) const override {
+    return std::strong_ordering::less;
   }
 
-  TestDerivative &add(const TestDerivative & /* rhs */) override {
+  TestComparable &add(const TestComparable & /* rhs */) override {
     return *this;
   }
 
-  TestDerivative &substract(const TestDerivative & /* rhs */) override {
+  TestComparable &substract(const TestComparable & /* rhs */) override {
     return *this;
   }
 
-  TestDerivative &multiply(const TestDerivative & /* rhs */) override {
+  TestComparable &multiply(const TestComparable & /* rhs */) override {
     return *this;
   }
 
-  TestDerivative &divide(const TestDerivative & /* rhs */) override {
+  TestComparable &divide(const TestComparable & /* rhs */) override {
     return *this;
   }
 
-  TestDerivative &negate() override {
+  TestComparable &negate() override {
     return *this;
   }
 };
+
+[[maybe_unused]] const auto config = [] {
+  IComparable::registerType<TestComparable>();
+  return 0;
+}();
 
 }
 
@@ -57,12 +60,12 @@ TEST(DerivativeTests, toStringTest) {
   EXPECT_EQ(f.toString(), "derivative");
 }
 
-TEST(DerivativeTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic(), Variable::getTypeStatic()));
+TEST(DerivativeTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IComparable::getClassStatic(), Variable::getClassStatic()));
 }
 
-TEST(DerivativeTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IComparable::getTypeStatic());
+TEST(DerivativeTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IComparable::getClassStatic());
 }
 
 TEST(DerivativeTests, isVariadicTest) {
@@ -81,7 +84,7 @@ TEST(DerivativeTests, callTest) {
   EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "0");
   EXPECT_EQ(f(Expression("a+a"), Variable("a"))->toString(), "2");
 
-  EXPECT_EQ(f(TestDerivative(), Variable("a"))->toString(), "derivative(testderivative, a)");
+  EXPECT_EQ(f(TestComparable(), Variable("a"))->toString(), "derivative(testderivative, a)");
 
   EXPECT_THROW(f(Integer(5), Integer(1)), InvalidInputException);
   EXPECT_THROW(f(Variable("a"), Integer(1)), InvalidInputException);
@@ -96,7 +99,7 @@ TEST(DerivativeTests, exprTest) {
   EXPECT_EQ(derivativeExpr(Variable("a"), Variable("a"))->toString(), "derivative(a, a)");
 }
 
-TEST(DerivativeTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Derivative, "Derivative"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Derivative, "Derivative"));
+TEST(DerivativeTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Derivative"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

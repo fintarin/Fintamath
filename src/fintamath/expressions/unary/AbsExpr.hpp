@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -8,12 +8,10 @@
 namespace fintamath {
 
 class AbsExpr final : public IUnaryExpressionCRTP<AbsExpr> {
+  FINTAMATH_CLASS_BODY(AbsExpr)
+
 public:
   explicit AbsExpr(ArgumentPtr inChild);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::AbsExpr, "AbsExpr"};
-  }
 
 protected:
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;

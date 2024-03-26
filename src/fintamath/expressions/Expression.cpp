@@ -12,9 +12,9 @@
 #include <vector>
 
 #include "fintamath/core/Cache.hpp"
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/ExpressionParser.hpp"
@@ -182,12 +182,7 @@ TermVector Expression::tokensToTerms(TokenVector &tokens) {
   TermVector terms(tokens.size());
 
   for (const auto i : stdv::iota(0U, terms.size())) {
-    if (auto term = getTermParser().parse(tokens[i])) {
-      terms[i] = std::move(*term);
-    }
-    else {
-      terms[i] = Term(std::move(tokens[i]), std::unique_ptr<IMathObject>{});
-    }
+    terms[i] = parseTerm(tokens[i]);
   }
 
   fixOperatorTypes(terms);
@@ -209,7 +204,7 @@ OperandStack Expression::termsToOperands(TermVector &terms) {
         functions.emplace(std::move(term), std::optional<IOperator::Priority>{});
       }
       else if (term.name == ")") {
-        moveFunctionsToOperands(operands, functions, {});
+        moveFunctionTermsToOperands(operands, functions, {});
 
         if (functions.empty()) {
           throw InvalidInputException("");
@@ -225,7 +220,7 @@ OperandStack Expression::termsToOperands(TermVector &terms) {
       std::optional<IOperator::Priority> priority;
 
       if (const auto *oper = cast<IOperator>(term.value.get())) {
-        moveFunctionsToOperands(operands, functions, oper);
+        moveFunctionTermsToOperands(operands, functions, oper);
         priority = oper->getPriority();
       }
 
@@ -236,7 +231,7 @@ OperandStack Expression::termsToOperands(TermVector &terms) {
     }
   }
 
-  moveFunctionsToOperands(operands, functions, {});
+  moveFunctionTermsToOperands(operands, functions, {});
 
   if (!functions.empty()) {
     throw InvalidInputException("");
@@ -264,8 +259,8 @@ std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands
 
     ArgumentPtrVector children = unwrapComma(rhsChild);
 
-    if (!func->isVariadic() && func->getArgumentTypes().size() != children.size()) {
-      func = IFunction::parse(func->toString(), children.size());
+    if (!func->isVariadic() && func->getArgumentClasses().size() != children.size()) {
+      func = parseFunction(func->toString(), children.size());
 
       if (!func) {
         throw InvalidInputException("");
@@ -278,7 +273,45 @@ std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands
   return arg;
 }
 
-void Expression::moveFunctionsToOperands(OperandStack &operands, std::stack<FunctionTerm> &functions, const IOperator *nextOper) {
+std::unique_ptr<IFunction> Expression::parseFunction(const std::string &str, const size_t argNum) {
+  for (auto &func : IFunction::parse(str)) {
+    if (func->getArgumentClasses().size() == argNum) {
+      return std::move(func);
+    }
+  }
+
+  return {};
+}
+
+auto Expression::parseOperator(const std::string &str, const IOperator::Priority priority) -> std::unique_ptr<IOperator> {
+  for (auto &oper : IOperator::parse(str)) {
+    if (oper->getPriority() == priority) {
+      return std::move(oper);
+    }
+  }
+
+  return {};
+}
+
+Term Expression::parseTerm(const std::string &str) {
+  static auto termValueParser = [] {
+    Parser<std::unique_ptr<IMathObject>> parser;
+    parser.registerType<IFunction>();
+    parser.registerType<ILiteral>();
+    parser.registerType<INumber>();
+    return parser;
+  }();
+
+  Term term = {str, {}};
+
+  if (auto termValue = termValueParser.parseFirst(str)) {
+    term.value = std::move(*termValue);
+  }
+
+  return term;
+}
+
+void Expression::moveFunctionTermsToOperands(OperandStack &operands, std::stack<FunctionTerm> &functions, const IOperator *nextOper) {
   if (isPrefixOperator(nextOper)) {
     return;
   }
@@ -315,7 +348,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
       is<IOperator>(term.value) &&
       !isPrefixOperator(term.value.get())) {
 
-    term.value = IOperator::parse(term.name, IOperator::Priority::PrefixUnary);
+    term.value = parseOperator(term.name, IOperator::Priority::PrefixUnary);
     isFixed = static_cast<bool>(term.value);
   }
 
@@ -323,7 +356,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
       is<IOperator>(term.value) &&
       !isPostfixOperator(term.value.get())) {
 
-    term.value = IOperator::parse(term.name, IOperator::Priority::PostfixUnary);
+    term.value = parseOperator(term.name, IOperator::Priority::PostfixUnary);
     isFixed = isFixed && static_cast<bool>(term.value);
   }
 
@@ -343,7 +376,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
         !isPrefixOperator(term.value.get()) &&
         !canNextTermBeBinaryOperator(termPrev)) {
 
-      term.value = IOperator::parse(term.name, IOperator::Priority::PrefixUnary);
+      term.value = parseOperator(term.name, IOperator::Priority::PrefixUnary);
       isFixed = isFixed && term.value;
     }
   }
@@ -356,7 +389,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
         !isPostfixOperator(term.value.get()) &&
         !canPrevTermBeBinaryOperator(termNext)) {
 
-      term.value = IOperator::parse(term.name, IOperator::Priority::PostfixUnary);
+      term.value = parseOperator(term.name, IOperator::Priority::PostfixUnary);
       isFixed = isFixed && term.value;
     }
   }
@@ -398,7 +431,7 @@ bool Expression::canPrevTermBeBinaryOperator(const Term &term) {
 
 bool Expression::isBinaryOperator(const IMathObject *val) {
   const auto *oper = cast<IOperator>(val);
-  return oper && oper->getArgumentTypes().size() == 2;
+  return oper && oper->getArgumentClasses().size() == 2;
 }
 
 bool Expression::isPrefixOperator(const IMathObject *val) {
@@ -439,25 +472,20 @@ ArgumentPtr Expression::compress(const ArgumentPtr &child) {
   return child;
 }
 
-Expression::TermParser &Expression::getTermParser() {
-  static TermParser parser;
-  return parser;
-}
-
-Expression::ExpressionParser &Expression::getExpressionParser() {
-  static ExpressionParser parser;
-  return parser;
+Expression::ExpressionMaker &Expression::getExpressionMaker() {
+  static ExpressionMaker map;
+  return map;
 }
 
 void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args) {
-  const ArgumentTypeVector &expectedArgTypes = func.getArgumentTypes();
+  const ArgumentTypeVector &expectedArgTypes = func.getArgumentClasses();
 
   if (args.empty() || (!func.isVariadic() && args.size() < expectedArgTypes.size())) {
     throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
   }
 
   const bool doesArgSizeMatch = !func.isVariadic() && args.size() == expectedArgTypes.size();
-  MathObjectType expectedType = expectedArgTypes.front();
+  MathObjectClass expectedType = expectedArgTypes.front();
 
   for (const auto i : stdv::iota(0U, args.size())) {
     if (doesArgSizeMatch) {
@@ -470,30 +498,30 @@ void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVe
   }
 }
 
-bool Expression::doesArgMatch(const MathObjectType &expectedType, const ArgumentPtr &arg) {
+bool Expression::doesArgMatch(const MathObjectClass &expectedType, const ArgumentPtr &arg) {
   if (const auto childExpr = cast<IExpression>(arg)) {
     const std::shared_ptr<IFunction> &childFunc = childExpr->getFunction();
-    const MathObjectType childType = childFunc->getReturnType();
+    const MathObjectClass childType = childFunc->getReturnClass();
 
-    if (childType != Variable::getTypeStatic() &&
-        !isBaseOf(expectedType, childType) &&
-        !isBaseOf(childType, expectedType)) {
+    if (childType != Variable::getClassStatic() &&
+        !is(expectedType, childType) &&
+        !is(childType, expectedType)) {
 
       return false;
     }
   }
   else if (const auto childConst = cast<IConstant>(arg)) {
-    if (const MathObjectType childType = childConst->getReturnType();
-        !isBaseOf(expectedType, childType) &&
-        !isBaseOf(childType, expectedType)) {
+    if (const MathObjectClass childType = childConst->getReturnClass();
+        !is(expectedType, childType) &&
+        !is(childType, expectedType)) {
 
       return false;
     }
   }
   else {
-    if (const MathObjectType childType = arg->getType();
-        childType != Variable::getTypeStatic() &&
-        !isBaseOf(expectedType, childType)) {
+    if (const MathObjectClass childType = arg->getClass();
+        childType != Variable::getClassStatic() &&
+        !is(expectedType, childType)) {
 
       return false;
     }
@@ -556,8 +584,12 @@ std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector a
   stdr::transform(args, args.begin(), &Expression::compress);
   Expression::validateFunctionArgs(func, args);
 
-  if (auto expr = Expression::getExpressionParser().parse(func.toString(), std::move(args))) {
-    return expr;
+  if (const auto strToConstr = Expression::getExpressionMaker().find(func.getClass());
+      strToConstr != Expression::getExpressionMaker().end()) {
+
+    if (auto expr = strToConstr->second(std::move(args))) {
+      return expr;
+    }
   }
 
   return FunctionExpression(func, std::move(args)).clone();

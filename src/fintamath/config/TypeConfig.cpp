@@ -1,12 +1,33 @@
-#include "fintamath/config/ParserConfig.hpp"
-
-#include <string>
+#include "fintamath/config/TypeConfig.hpp"
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/FunctionExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
+#include "fintamath/expressions/binary/CompExpr.hpp"
+#include "fintamath/expressions/binary/DerivativeExpr.hpp"
+#include "fintamath/expressions/binary/DivExpr.hpp"
+#include "fintamath/expressions/binary/IntegralExpr.hpp"
+#include "fintamath/expressions/binary/LogExpr.hpp"
+#include "fintamath/expressions/binary/PowExpr.hpp"
+#include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
+#include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
+#include "fintamath/expressions/polynomial/AddExpr.hpp"
+#include "fintamath/expressions/polynomial/AndExpr.hpp"
+#include "fintamath/expressions/polynomial/MinMaxExpr.hpp"
+#include "fintamath/expressions/polynomial/MulExpr.hpp"
+#include "fintamath/expressions/polynomial/OrExpr.hpp"
+#include "fintamath/expressions/unary/AbsExpr.hpp"
+#include "fintamath/expressions/unary/FloorCeilExpr.hpp"
+#include "fintamath/expressions/unary/HyperbExpr.hpp"
+#include "fintamath/expressions/unary/InvHyperbExpr.hpp"
+#include "fintamath/expressions/unary/InvTrigExpr.hpp"
+#include "fintamath/expressions/unary/NotExpr.hpp"
+#include "fintamath/expressions/unary/SignExpr.hpp"
+#include "fintamath/expressions/unary/TrigExpr.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
@@ -97,22 +118,24 @@
 
 namespace fintamath::detail {
 
-ParserConfig::ParserConfig() {
-  IMathObject::registerType(&ILiteral::parse);
-  IMathObject::registerType([](const std::string &str) { return IFunction::parse(str); });
-  IMathObject::registerType(&IArithmetic::parse);
+TypeConfig::TypeConfig() {
+  IMathObject::registerType<ILiteral>();
+  IMathObject::registerType<IFunction>();
+  IMathObject::registerType<IArithmetic>();
 
-  IArithmetic::registerType(&IComparable::parse);
-  IArithmetic::registerType<Expression>();
+  IArithmetic::registerType<IComparable>();
+  IArithmetic::registerType<IExpression>();
 
-  IComparable::registerType(&INumber::parse);
+  IComparable::registerType<INumber>();
 
-  INumber::registerType(&IInteger::parse);
+  INumber::registerType<IInteger>();
   INumber::registerType<Rational>();
+  INumber::registerType<Real>();
+  INumber::registerType<Complex>();
 
   IInteger::registerType<Integer>();
 
-  ILiteral::registerType(&IConstant::parse);
+  ILiteral::registerType<IConstant>();
   ILiteral::registerType<Variable>();
   ILiteral::registerType<Boolean>();
 
@@ -126,6 +149,7 @@ ParserConfig::ParserConfig() {
   IConstant::registerType<ComplexInf>();
   IConstant::registerType<Undefined>();
 
+  IFunction::registerType<IOperator>();
   IFunction::registerType<Abs>();
   IFunction::registerType<Log>();
   IFunction::registerType<Ln>();
@@ -196,7 +220,33 @@ ParserConfig::ParserConfig() {
   IOperator::registerType<Comma>();
   IOperator::registerType<Mod>();
 
+  IExpression::registerType<IPolynomExpression>();
+  IExpression::registerType<IBinaryExpression>();
+  IExpression::registerType<IUnaryExpression>();
+  IExpression::registerType<FunctionExpression>();
   IExpression::registerType<Expression>();
+
+  IPolynomExpression::registerType<AddExpr>();
+  IPolynomExpression::registerType<MulExpr>();
+  IPolynomExpression::registerType<MinMaxExpr>();
+  IPolynomExpression::registerType<AndExpr>();
+  IPolynomExpression::registerType<OrExpr>();
+
+  IBinaryExpression::registerType<DivExpr>();
+  IBinaryExpression::registerType<PowExpr>();
+  IBinaryExpression::registerType<LogExpr>();
+  IBinaryExpression::registerType<DerivativeExpr>();
+  IBinaryExpression::registerType<IntegralExpr>();
+  IBinaryExpression::registerType<CompExpr>();
+
+  IUnaryExpression::registerType<AbsExpr>();
+  IUnaryExpression::registerType<SignExpr>();
+  IUnaryExpression::registerType<FloorCeilExpr>();
+  IUnaryExpression::registerType<TrigExpr>();
+  IUnaryExpression::registerType<InvTrigExpr>();
+  IUnaryExpression::registerType<HyperbExpr>();
+  IUnaryExpression::registerType<InvHyperbExpr>();
+  IUnaryExpression::registerType<NotExpr>();
 }
 
 }

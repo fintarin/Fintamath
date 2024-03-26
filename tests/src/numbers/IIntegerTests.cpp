@@ -3,9 +3,7 @@
 #include "fintamath/numbers/IInteger.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/literals/ILiteral.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 using namespace detail;
@@ -13,14 +11,7 @@ using namespace detail;
 namespace {
 
 class TestInteger : public IIntegerCRTP<TestInteger> {
-public:
-  std::string toString() const override {
-    return "test";
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {static_cast<size_t>(IInteger::getTypeStatic().getId()) + 998, "TestInteger"};
-  }
+  FINTAMATH_PARENT_CLASS_BODY(TestInteger)
 
 protected:
   TestInteger &mod(const TestInteger & /* rhs */) override {
@@ -72,7 +63,7 @@ protected:
   }
 
   std::strong_ordering compare(const TestInteger &rhs) const override {
-    return 0 <=> 1;
+    return std::strong_ordering::less;
   }
 
   TestInteger &increase() override {
@@ -84,7 +75,11 @@ protected:
   }
 };
 
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(TestInteger)
+
 class TestIntegerConvertible final : public TestInteger {
+  FINTAMATH_CLASS_BODY(TestIntegerConvertible)
+
 public:
   TestIntegerConvertible() : TestInteger() {
   }
@@ -92,35 +87,31 @@ public:
   TestIntegerConvertible(const Integer &) : TestIntegerConvertible() {
   }
 
-  static constexpr MathObjectType getTypeStatic() {
-    return {static_cast<size_t>(IInteger::getTypeStatic().getId()) + 999, "TestIntegerConvertible"};
-  }
-
-  MathObjectType getType() const override {
-    return getTypeStatic();
+  MathObjectClass getClass() const override {
+    return getClassStatic();
   }
 };
 
-struct TestIntegerConvertableConfig final {
-  TestIntegerConvertableConfig() {
-    MathObjectBoundTypes::bindTypes(
-        TestInteger::getTypeStatic(),
-        ILiteral::getTypeStatic());
+[[maybe_unused]] const auto config = [] {
+  IInteger::registerType<TestInteger>();
+  TestInteger::registerType<TestIntegerConvertible>();
 
-    Converter::add<TestIntegerConvertible, TestIntegerConvertible>(
-        [](const TestIntegerConvertible & /*type*/, const TestIntegerConvertible &value) {
-          return std::make_unique<TestIntegerConvertible>(value);
-        });
+  Converter::add<TestIntegerConvertible, TestIntegerConvertible>(
+      [](const TestIntegerConvertible & /*type*/, const TestIntegerConvertible &value) {
+        return std::make_unique<TestIntegerConvertible>(value);
+      });
+  Converter::add<TestIntegerConvertible, Integer>(
+      [](const TestIntegerConvertible & /*type*/, const Integer &value) {
+        return std::make_unique<TestIntegerConvertible>(value);
+      });
 
-    Converter::add<TestIntegerConvertible, Integer>(
-        [](const TestIntegerConvertible & /*type*/, const Integer &value) {
-          return std::make_unique<TestIntegerConvertible>(value);
-        });
-  }
-};
+  return 0;
+}();
 
-[[maybe_unused]] const TestIntegerConvertableConfig config;
+}
 
+TEST(IIntegerTests, parseTest) {
+  EXPECT_TRUE(is<TestInteger>(*IInteger::parseFirst("TestInteger")));
 }
 
 TEST(IIntegerTests, modTest) {
@@ -294,6 +285,7 @@ TEST(IIntegerTests, decTest) {
   EXPECT_EQ((Integer(1)--).toString(), "1");
 }
 
-TEST(IIntegerTests, getTypeTest) {
-  EXPECT_EQ(IInteger::getTypeStatic(), MathObjectType(MathObjectType::IInteger, "IInteger"));
+TEST(IIntegerTests, getClassTest) {
+  EXPECT_EQ(IInteger::getClassStatic(), MathObjectClass("IInteger"));
+  EXPECT_EQ(IInteger::getClassStatic().getParent(), INumber::getClassStatic());
 }

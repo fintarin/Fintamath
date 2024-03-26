@@ -2,9 +2,6 @@
 
 namespace fintamath {
 
-IConstant::ConstantParser &IConstant::getParser() {
-  static ConstantParser parser;
-  return parser;
-}
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IConstant)
 
 }

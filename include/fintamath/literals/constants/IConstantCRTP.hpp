@@ -14,8 +14,8 @@ class IConstantCRTP_ : public IConstant {
 #undef I_LITERAL_CRTP
 
 public:
-  MathObjectType getReturnType() const final {
-    return Return::getTypeStatic();
+  MathObjectClass getReturnClass() const final {
+    return Return::getClassStatic();
   }
 
 private:

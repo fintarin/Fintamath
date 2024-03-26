@@ -10,6 +10,33 @@
 
 using namespace fintamath;
 
+namespace {
+
+class TestOperator final : public IOperatorCRTP<INumber, TestOperator, INumber> {
+  FINTAMATH_CLASS_BODY(TestOperator)
+
+public:
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Addition;
+  }
+
+protected:
+  std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
+    return {};
+  }
+};
+
+[[maybe_unused]] const auto config = [] {
+  IOperator::registerType<TestOperator>();
+  return 0;
+}();
+
+}
+
+TEST(IOperatorTests, parseTest) {
+  EXPECT_TRUE(is<TestOperator>(*IOperator::parseFirst("TestOperator")));
+}
+
 TEST(IOperatorTests, getPriorityTest) {
   EXPECT_EQ(Add().getPriority(), IOperator::Priority::Addition);
   EXPECT_EQ(Neg().getPriority(), IOperator::Priority::PrefixUnary);
@@ -24,6 +51,7 @@ TEST(IOperatorTests, isAssociativeTest) {
   EXPECT_FALSE(Pow().isAssociative());
 }
 
-TEST(IOperatorTests, getTypeTest) {
-  EXPECT_EQ(IOperator::getTypeStatic(), MathObjectType(MathObjectType::IOperator, "IOperator"));
+TEST(IOperatorTests, getClassTest) {
+  EXPECT_EQ(IOperator::getClassStatic(), MathObjectClass("IOperator"));
+  EXPECT_EQ(IOperator::getClassStatic().getParent(), IFunction::getClassStatic());
 }

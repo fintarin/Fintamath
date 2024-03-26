@@ -5,40 +5,24 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 
 namespace fintamath {
 
 class IConstant : public ILiteral {
-  using ConstantParser = detail::Parser<std::unique_ptr<IConstant>()>;
+  FINTAMATH_PARENT_CLASS_BODY(IConstant)
 
 public:
-  virtual MathObjectType getReturnType() const = 0;
+  virtual MathObjectClass getReturnClass() const = 0;
 
   std::unique_ptr<IMathObject> operator()() const {
     return call();
   }
 
-  static std::unique_ptr<IConstant> parse(const std::string &parsedStr) {
-    return getParser().parse(parsedStr);
-  }
-
-  template <std::derived_from<IConstant> T>
-  static void registerType() {
-    getParser().registerType<T>();
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IConstant, "IConstant"};
-  }
-
 protected:
   virtual std::unique_ptr<IMathObject> call() const = 0;
-
-private:
-  static ConstantParser &getParser();
 };
 
 template <typename Return, typename Derived>

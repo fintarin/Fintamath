@@ -2,9 +2,6 @@
 
 namespace fintamath {
 
-IOperator::OperatorParser &IOperator::getParser() {
-  static OperatorParser parser;
-  return parser;
-}
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IOperator)
 
 }

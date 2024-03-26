@@ -12,7 +12,9 @@ using namespace fintamath;
 
 namespace {
 
-class TestIExpression final : public IExpressionCRTP<TestIExpression> {
+class TestExpression final : public IExpressionCRTP<TestExpression> {
+  FINTAMATH_CLASS_BODY(TestExpression)
+
 public:
   const std::shared_ptr<IFunction> &getFunction() const override {
     static const std::shared_ptr func = cast<IFunction>(Add().clone());
@@ -45,6 +47,15 @@ protected:
   }
 };
 
+[[maybe_unused]] const auto config = [] {
+  IExpression::registerType<TestExpression>();
+  return 0;
+}();
+
+}
+
+TEST(IExpressionTests, parseTest) {
+  EXPECT_TRUE(is<TestExpression>(*IExpression::parseFirst("TestExpression")));
 }
 
 TEST(IExpressionTests, getFunctionTest) {
@@ -85,14 +96,15 @@ TEST(IExpressionTests, setVariablesTest) {
 }
 
 TEST(IExpressionTests, toMinimalObjectTest) {
-  const TestIExpression a;
+  const TestExpression a;
   EXPECT_EQ(*a.toMinimalObject(), a);
 
   // TODO: implement more tests
 }
 
-TEST(IExpressionTests, getTypeTest) {
-  EXPECT_EQ(IExpression::getTypeStatic(), MathObjectType(MathObjectType::IExpression, "IExpression"));
+TEST(IExpressionTests, getClassTest) {
+  EXPECT_EQ(IExpression::getClassStatic(), MathObjectClass("IExpression"));
+  EXPECT_EQ(IExpression::getClassStatic().getParent(), IArithmetic::getClassStatic());
 }
 
 TEST(IExpressionTests, arithmeticTest) {

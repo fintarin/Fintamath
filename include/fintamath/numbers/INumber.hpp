@@ -5,16 +5,16 @@
 #include <string>
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IComparable.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Parser.hpp"
 
 namespace fintamath {
 
 class INumber : public IComparable {
-  using NumberParser = detail::Parser<std::unique_ptr<INumber>()>;
+  FINTAMATH_PARENT_CLASS_BODY(INumber)
 
 public:
   virtual bool isPrecise() const {
@@ -24,26 +24,6 @@ public:
   virtual bool isComplex() const {
     return false;
   }
-
-  static std::unique_ptr<INumber> parse(const std::string &str) {
-    return getParser().parse(str);
-  }
-
-  template <std::derived_from<INumber> T>
-  static void registerType() {
-    getParser().registerType<T>();
-  }
-
-  static void registerType(NumberParser::StringConstructor constructor) {
-    getParser().registerType(std::move(constructor));
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::INumber, "INumber"};
-  }
-
-private:
-  static NumberParser &getParser();
 };
 
 inline std::unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs) {

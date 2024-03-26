@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"

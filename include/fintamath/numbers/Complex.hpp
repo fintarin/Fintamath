@@ -6,7 +6,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -15,6 +15,8 @@
 namespace fintamath {
 
 class Complex final : public INumberCRTP<Complex> {
+  FINTAMATH_CLASS_BODY(Complex)
+
 public:
   Complex() = default;
 
@@ -52,10 +54,6 @@ public:
 
   const INumber &imag() const;
 
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Complex, "Complex"};
-  }
-
 protected:
   bool equals(const Complex &rhs) const override;
 
@@ -72,7 +70,11 @@ protected:
   Complex &negate() override;
 
 private:
+  static std::unique_ptr<INumber> parseNonComplexNumber(const std::string &str);
+
+private:
   std::unique_ptr<INumber> re = std::make_unique<Integer>(0);
+
   std::unique_ptr<INumber> im = std::make_unique<Integer>(0);
 };
 

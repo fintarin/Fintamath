@@ -15,12 +15,12 @@ TEST(NequivTests, toStringTest) {
   EXPECT_EQ(f.toString(), "!<->");
 }
 
-TEST(NequivTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic(), Boolean::getTypeStatic()));
+TEST(NequivTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(Boolean::getClassStatic(), Boolean::getClassStatic()));
 }
 
-TEST(NequivTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+TEST(NequivTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), Boolean::getClassStatic());
 }
 
 TEST(NequivTests, isVariadicTest) {
@@ -60,7 +60,7 @@ TEST(NequivTests, exprTest) {
   EXPECT_EQ(nequivExpr(Boolean(true), Boolean(false))->toString(), "(~True & False) | (True & ~False)");
 }
 
-TEST(NequivTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Nequiv, "Nequiv"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Nequiv, "Nequiv"));
+TEST(NequivTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Nequiv"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

@@ -2,6 +2,7 @@
 
 #include "fintamath/core/IMathObject.hpp"
 
+#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -11,12 +12,18 @@ using namespace fintamath;
 namespace {
 
 class TestMathObject final : public IMathObjectCRTP<TestMathObject> {
-public:
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IArithmetic, "TestMathObject"};
-  }
+  FINTAMATH_CLASS_BODY(TestMathObject)
 };
 
+[[maybe_unused]] const auto config = [] {
+  IMathObject::registerType<TestMathObject>();
+  return 0;
+}();
+
+}
+
+TEST(IMathObjectTests, parseTest) {
+  EXPECT_TRUE(is<TestMathObject>(*IMathObject::parseFirst("TestMathObject")));
 }
 
 TEST(IMathObjectTests, toStringTest) {
@@ -102,6 +109,10 @@ TEST(IMathObjectTests, outputTest) {
   EXPECT_EQ(out.str(), "123");
 }
 
-TEST(IMathObjectTests, getTypeTest) {
-  EXPECT_EQ(IMathObject::getTypeStatic(), MathObjectType(MathObjectType::IMathObject, "IMathObject"));
+TEST(IMathObjectTests, getClassTest) {
+  EXPECT_EQ(IMathObject::getClassStatic(), MathObjectClass("IMathObject"));
+  EXPECT_FALSE(IMathObject::getClassStatic().getParent());
+
+  EXPECT_EQ(TestMathObject().getClass(), MathObjectClass("TestMathObject"));
+  EXPECT_EQ(TestMathObject().getClass().getParent(), IMathObject::getClassStatic());
 }

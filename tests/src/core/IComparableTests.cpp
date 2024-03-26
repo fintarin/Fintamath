@@ -11,14 +11,11 @@ using namespace fintamath;
 namespace {
 
 class TestComparable final : public IComparableCRTP<TestComparable> {
-public:
-  static constexpr MathObjectType getTypeStatic() {
-    return {static_cast<size_t>(MathObjectType::IComparable) + 998, "TestComparable"};
-  }
+  FINTAMATH_CLASS_BODY(TestComparable)
 
 protected:
   std::strong_ordering compare(const TestComparable & /* rhs */) const override {
-    return 0 <=> 1;
+    return std::strong_ordering::less;
   }
 
   TestComparable &add(const TestComparable &rhs) override {
@@ -42,6 +39,15 @@ protected:
   }
 };
 
+[[maybe_unused]] const auto config = [] {
+  IComparable::registerType<TestComparable>();
+  return 0;
+}();
+
+}
+
+TEST(IComparableTests, parseTest) {
+  EXPECT_TRUE(is<TestComparable>(*IComparable::parseFirst("TestComparable")));
 }
 
 TEST(IComparableTests, lessTest) {
@@ -144,6 +150,7 @@ TEST(IComparableTests, moreEqualsTest) {
   EXPECT_TRUE(1 >= Integer());
 }
 
-TEST(IComparableTests, getTypeTest) {
-  EXPECT_EQ(IComparable::getTypeStatic(), MathObjectType(MathObjectType::IComparable, "IComparable"));
+TEST(IComparableTests, getClassTest) {
+  EXPECT_EQ(IComparable::getClassStatic(), MathObjectClass("IComparable"));
+  EXPECT_EQ(IComparable::getClassStatic().getParent(), IArithmetic::getClassStatic());
 }

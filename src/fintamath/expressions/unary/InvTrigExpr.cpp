@@ -8,7 +8,7 @@
 #include <boost/container_hash/hash.hpp>
 
 #include "fintamath/core/Converter.hpp"
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"

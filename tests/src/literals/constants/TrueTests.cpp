@@ -17,7 +17,7 @@ TEST(TrueTests, callTest) {
   EXPECT_TRUE(is<Boolean>(c()));
 }
 
-TEST(TrueTests, getTypeTest) {
-  EXPECT_EQ(True::getTypeStatic(), MathObjectType(MathObjectType::True, "True"));
-  EXPECT_EQ(True().getType(), MathObjectType(MathObjectType::True, "True"));
+TEST(TrueTests, getClassTest) {
+  EXPECT_EQ(True::getClassStatic(), MathObjectClass("True"));
+  EXPECT_EQ(True::getClassStatic().getParent(), IConstant::getClassStatic());
 }

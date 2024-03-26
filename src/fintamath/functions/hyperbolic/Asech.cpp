@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/MultiMethod.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"

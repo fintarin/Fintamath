@@ -4,20 +4,18 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
 class Inf final : public IConstantCRTP<INumber, Inf> {
+  FINTAMATH_CLASS_BODY(Inf)
+
 public:
   std::string toString() const override {
     return "Inf";
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Inf, "Inf"};
   }
 
 protected:

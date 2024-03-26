@@ -4,7 +4,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -13,6 +13,8 @@
 namespace fintamath {
 
 class Or final : public IOperatorCRTP<Boolean, Or, Boolean, Boolean> {
+  FINTAMATH_CLASS_BODY(Or)
+
 public:
   std::string toString() const override {
     return "|";
@@ -24,10 +26,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::Disjunction;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Or, "Or"};
   }
 
 protected:

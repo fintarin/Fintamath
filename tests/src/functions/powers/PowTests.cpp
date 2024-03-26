@@ -17,12 +17,12 @@ TEST(PowTests, toStringTest) {
   EXPECT_EQ(f.toString(), "^");
 }
 
-TEST(PowTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic(), INumber::getTypeStatic()));
+TEST(PowTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic(), INumber::getClassStatic()));
 }
 
-TEST(PowTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(PowTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(PowTests, isVariadicTest) {
@@ -173,7 +173,7 @@ TEST(PowTests, exprTest) {
             "10^10");
 }
 
-TEST(PowTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Pow, "Pow"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Pow, "Pow"));
+TEST(PowTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Pow"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

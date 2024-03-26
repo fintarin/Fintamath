@@ -15,12 +15,12 @@ TEST(MulTests, toStringTest) {
   EXPECT_EQ(f.toString(), "*");
 }
 
-TEST(MulTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+TEST(MulTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
 }
 
-TEST(MulTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+TEST(MulTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
 TEST(MulTests, isVariadicTest) {
@@ -61,7 +61,7 @@ TEST(MulTests, exprTest) {
   EXPECT_EQ(mulExpr(Integer(10), Integer(10))->toString(), "10*10");
 }
 
-TEST(MulTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Mul, "Mul"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Mul, "Mul"));
+TEST(MulTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Mul"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

@@ -4,7 +4,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -13,6 +13,8 @@
 namespace fintamath {
 
 class Deg final : public IOperatorCRTP<INumber, Deg, INumber> {
+  FINTAMATH_CLASS_BODY(Deg)
+
 public:
   std::string toString() const override {
     return "deg";
@@ -20,10 +22,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::PostfixUnary;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Deg, "Deg"};
   }
 
 protected:

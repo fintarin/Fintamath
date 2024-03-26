@@ -2,8 +2,8 @@
 
 namespace fintamath::detail {
 
-struct ParserConfig final {
-  ParserConfig();
+struct TypeConfig final {
+  TypeConfig();
 };
 
 }

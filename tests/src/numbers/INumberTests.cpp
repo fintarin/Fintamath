@@ -7,6 +7,48 @@
 
 using namespace fintamath;
 
+namespace {
+
+class TestNumber final : public INumberCRTP<TestNumber> {
+  FINTAMATH_CLASS_BODY(TestNumber)
+
+protected:
+  TestNumber &add(const TestNumber &rhs) override {
+    return *this;
+  }
+
+  TestNumber &substract(const TestNumber &rhs) override {
+    return *this;
+  }
+
+  TestNumber &multiply(const TestNumber &rhs) override {
+    return *this;
+  }
+
+  TestNumber &divide(const TestNumber &rhs) override {
+    return *this;
+  }
+
+  TestNumber &negate() override {
+    return *this;
+  }
+
+  std::strong_ordering compare(const TestNumber &rhs) const override {
+    return std::strong_ordering::less;
+  }
+};
+
+[[maybe_unused]] const auto config = [] {
+  INumber::registerType<TestNumber>();
+  return 0;
+}();
+
+}
+
+TEST(INumberTests, parseTest) {
+  EXPECT_TRUE(is<TestNumber>(*INumber::parseFirst("TestNumber")));
+}
+
 TEST(INumberTests, addTest) {
   const std::unique_ptr<INumber> m1 = std::make_unique<Integer>(1);
   const std::unique_ptr<INumber> m2 = std::make_unique<Rational>(2);
@@ -86,6 +128,7 @@ TEST(INumberTests, negateTest) {
   EXPECT_TRUE(is<INumber>(+*m1));
 }
 
-TEST(INumberTests, getTypeTest) {
-  EXPECT_EQ(INumber::getTypeStatic(), MathObjectType(MathObjectType::INumber, "INumber"));
+TEST(INumberTests, getClassTest) {
+  EXPECT_EQ(INumber::getClassStatic(), MathObjectClass("INumber"));
+  EXPECT_EQ(INumber::getClassStatic().getParent(), IComparable::getClassStatic());
 }

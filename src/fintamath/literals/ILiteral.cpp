@@ -2,9 +2,6 @@
 
 namespace fintamath {
 
-ILiteral::LiteralParser &ILiteral::getParser() {
-  static LiteralParser parser;
-  return parser;
-}
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(ILiteral)
 
 }

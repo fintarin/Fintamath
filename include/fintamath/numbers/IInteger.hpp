@@ -4,15 +4,15 @@
 #include <memory>
 #include <string>
 
-#include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
 class IInteger : public INumber {
-  using IntegerParser = detail::Parser<std::unique_ptr<IInteger>()>;
+  FINTAMATH_PARENT_CLASS_BODY(IInteger)
 
 public:
   friend std::unique_ptr<IInteger> operator%(const IInteger &lhs, const IInteger &rhs) {
@@ -63,19 +63,6 @@ public:
     return res;
   }
 
-  static std::unique_ptr<IInteger> parse(const std::string &str) {
-    return getParser().parse(str);
-  }
-
-  template <std::derived_from<IInteger> T>
-  static void registerType() {
-    getParser().registerType<T>();
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IInteger, "IInteger"};
-  }
-
 protected:
   virtual std::unique_ptr<IInteger> modAbstract(const IInteger &rhs) const = 0;
 
@@ -94,9 +81,6 @@ protected:
   virtual IInteger &increaseAbstract() = 0;
 
   virtual IInteger &decreaseAbstract() = 0;
-
-private:
-  static IntegerParser &getParser();
 };
 
 template <typename Derived>

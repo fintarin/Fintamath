@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -10,12 +10,10 @@
 namespace fintamath {
 
 class OrExpr final : public IPolynomExpressionCRTP<OrExpr> {
+  FINTAMATH_CLASS_BODY(OrExpr)
+
 public:
   explicit OrExpr(ArgumentPtrVector inChildren);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::OrExpr, "OrExpr"};
-  }
 
 protected:
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;

@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -12,16 +12,14 @@
 namespace fintamath {
 
 class LogExpr final : public IBinaryExpressionCRTP<LogExpr> {
+  FINTAMATH_CLASS_BODY(LogExpr)
+
 public:
   explicit LogExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   std::string toString() const override;
 
   const std::shared_ptr<IFunction> &getOutputFunction() const override;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::LogExpr, "LogExpr"};
-  }
 
 protected:
   ArgumentPtr approximateSimplify() const override;

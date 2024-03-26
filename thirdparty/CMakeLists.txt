@@ -1,6 +1,16 @@
-function(mark_include_directories_as_system lib)
-  get_target_property(lib_include_dir ${lib} INTERFACE_INCLUDE_DIRECTORIES)
-  target_include_directories(${lib} SYSTEM INTERFACE ${lib_include_dir})
+function(suppress_warnings lib)
+  get_target_property(lib_type ${lib} TYPE)
+
+  if(${lib_type} STREQUAL "INTERFACE_LIBRARY")
+    get_target_property(lib_include_dir ${lib} INTERFACE_INCLUDE_DIRECTORIES)
+    target_include_directories(${lib} SYSTEM INTERFACE ${lib_include_dir})
+  else()
+    if(MSVC)
+      target_compile_options(${lib} PRIVATE "/w")
+    else()
+      target_compile_options(${lib} PRIVATE "-w")
+    endif()
+  endif()
 endfunction()
 
 set(CMAKE_MODULE_PATH
@@ -8,25 +18,28 @@ set(CMAKE_MODULE_PATH
     PARENT_SCOPE)
 
 add_subdirectory(boost-config)
-mark_include_directories_as_system(boost_config)
-    
+suppress_warnings(boost_config)
+
 add_subdirectory(boost-mp11)
-mark_include_directories_as_system(boost_mp11)
+suppress_warnings(boost_mp11)
 
 add_subdirectory(boost-describe)
-mark_include_directories_as_system(boost_describe)
+suppress_warnings(boost_describe)
 
 add_subdirectory(boost-container-hash)
-mark_include_directories_as_system(boost_container_hash)
+suppress_warnings(boost_container_hash)
 
 add_subdirectory(boost-multiprecision)
-mark_include_directories_as_system(boost_multiprecision)
+suppress_warnings(boost_multiprecision)
 
 add_subdirectory(boost-math)
-mark_include_directories_as_system(boost_math)
+suppress_warnings(boost_math)
 
 add_subdirectory(fmt)
-mark_include_directories_as_system(fmt)
+suppress_warnings(fmt)
+
+add_subdirectory(cppcoro)
+suppress_warnings(cppcoro)
 
 if(${PROJECT_NAME}_build_tests)
   add_subdirectory(googletest)

@@ -6,7 +6,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -19,6 +19,8 @@ class Rational;
 class Real;
 
 class Factorial final : public IOperatorCRTP<INumber, Factorial, INumber> {
+  FINTAMATH_CLASS_BODY(Factorial)
+
 public:
   Factorial() = default;
 
@@ -41,10 +43,6 @@ public:
   void setOrder(const size_t inOrder) {
     assert(inOrder > 0);
     order = inOrder;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Factorial, "Factorial"};
   }
 
 protected:

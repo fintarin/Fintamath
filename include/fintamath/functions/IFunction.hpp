@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
@@ -16,16 +16,14 @@
 namespace fintamath {
 
 class IFunction : public IMathObject {
-  using FunctionNameToOrderMap = std::unordered_map<std::string, size_t>;
+  FINTAMATH_PARENT_CLASS_BODY(IFunction)
 
-  using FunctionParser = detail::Parser<std::unique_ptr<IFunction>()>;
+  using ClassToOrderMap = std::unordered_map<MathObjectClass, size_t>;
 
 public:
-  virtual const ArgumentTypeVector &getArgumentTypes() const = 0;
+  virtual const ArgumentTypeVector &getArgumentClasses() const = 0;
 
-  virtual MathObjectType getReturnType() const = 0;
-
-  virtual size_t getFunctionOrder() const = 0;
+  virtual MathObjectClass getReturnClass() const = 0;
 
   virtual bool doArgsMatch(const ArgumentRefVector &argVect) const = 0;
 
@@ -42,42 +40,10 @@ public:
     return callAbstract(argVect);
   }
 
-  static std::unique_ptr<IFunction> parse(const std::string &parsedStr) {
-    return getParser().parse(parsedStr);
-  }
-
-  static std::unique_ptr<IFunction> parse(const std::string &parsedStr, size_t argSize) {
-    const auto validator = [argSize](const std::unique_ptr<IFunction> &func) {
-      return argSize == func->getArgumentTypes().size();
-    };
-    return getParser().parse(validator, parsedStr);
-  }
-
-  template <std::derived_from<IFunction> T>
-  static void registerType() {
-    getParser().registerType<T>();
-
-    getFunctionNameToOrderMutableMap()[T{}.toString()] = maxFunctionOrder;
-    maxFunctionOrder++;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IFunction, "IFunction"};
-  }
-
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const = 0;
 
   virtual void validateArgsSize(const ArgumentRefVector &argVect) const;
-
-  static const FunctionNameToOrderMap &getFunctionNameToOrderMap();
-
-private:
-  static FunctionNameToOrderMap &getFunctionNameToOrderMutableMap();
-
-  static FunctionParser &getParser();
-
-  inline static size_t maxFunctionOrder = 0;
 };
 
 template <typename Return, typename Derived, typename... Args>

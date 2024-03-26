@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -11,7 +11,7 @@ using namespace fintamath;
 E c;
 Integer i;
 
-TEST(CoreUtilsTests, isTest) {
+TEST(MathObjectUtilsTests, isTest) {
   EXPECT_TRUE(is<IArithmetic>(i));
   EXPECT_FALSE(is<IArithmetic>(c));
 
@@ -35,7 +35,7 @@ TEST(CoreUtilsTests, isTest) {
   EXPECT_FALSE(is<IArithmetic>(std::reference_wrapper<const IMathObject>(c)));
 }
 
-TEST(CoreUtilsTests, castTest) {
+TEST(MathObjectUtilsTests, castTest) {
   EXPECT_NO_THROW(cast<IArithmetic>(i));
   EXPECT_THROW(cast<IArithmetic>(cast<IMathObject>(c)), std::bad_cast);
 

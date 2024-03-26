@@ -51,7 +51,8 @@ target_link_libraries(
          Boost::multiprecision
          Boost::math
          Boost::container_hash
-         fmt::fmt)
+         fmt::fmt
+         cppcoro)
 
 include(cmake/CompilerWarnings.cmake)
 include(cmake/Coverage.cmake)

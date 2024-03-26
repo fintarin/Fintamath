@@ -17,12 +17,12 @@ TEST(CosTests, toStringTest) {
   EXPECT_EQ(f.toString(), "cos");
 }
 
-TEST(CosTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(CosTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(CosTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(CosTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(CosTests, isVariadicTest) {
@@ -56,7 +56,7 @@ TEST(CosTests, exprTest) {
   EXPECT_EQ(cosExpr(Integer(10))->toString(), "cos(10)");
 }
 
-TEST(CosTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Cos, "Cos"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Cos, "Cos"));
+TEST(CosTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Cos"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

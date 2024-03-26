@@ -5,7 +5,7 @@
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -18,15 +18,13 @@ class Rational;
 class Real;
 
 class Root final : public IFunctionCRTP<INumber, Root, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(Root)
+
   using RootToFactorMap = std::map<Integer, Integer>;
 
 public:
   std::string toString() const override {
     return "root";
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Root, "Root"};
   }
 
 protected:

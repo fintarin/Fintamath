@@ -5,13 +5,15 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
 
 class UnaryPlus final : public IOperatorCRTP<IArithmetic, UnaryPlus, IArithmetic> {
+  FINTAMATH_CLASS_BODY(UnaryPlus)
+
 public:
   std::string toString() const override {
     return "+";
@@ -19,10 +21,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::PrefixUnary;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::UnaryPlus, "UnaryPlus"};
   }
 
 protected:

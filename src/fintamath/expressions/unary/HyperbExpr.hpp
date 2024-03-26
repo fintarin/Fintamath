@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -10,12 +10,10 @@
 namespace fintamath {
 
 class HyperbExpr final : public IUnaryExpressionCRTP<HyperbExpr> {
+  FINTAMATH_CLASS_BODY(HyperbExpr)
+
 public:
   explicit HyperbExpr(const IFunction &inFunc, ArgumentPtr inChild);
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::HyperbExpr, "HyperbExpr"};
-  }
 
 protected:
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;

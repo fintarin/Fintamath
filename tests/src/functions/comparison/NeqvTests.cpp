@@ -16,12 +16,12 @@ TEST(NeqvTests, toStringTest) {
   EXPECT_EQ(f.toString(), "!=");
 }
 
-TEST(NeqvTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic(), IComparable::getTypeStatic()));
+TEST(NeqvTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IComparable::getClassStatic(), IComparable::getClassStatic()));
 }
 
-TEST(NeqvTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+TEST(NeqvTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), Boolean::getClassStatic());
 }
 
 TEST(NeqvTests, isVariadicTest) {
@@ -69,7 +69,7 @@ TEST(NeqvTests, exprTest) {
   EXPECT_EQ(neqvExpr(Integer(10), Integer(10))->toString(), "10 != 10");
 }
 
-TEST(NeqvTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Neqv, "Neqv"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Neqv, "Neqv"));
+TEST(NeqvTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Neqv"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

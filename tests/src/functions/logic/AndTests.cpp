@@ -15,12 +15,12 @@ TEST(AndTests, toStringTest) {
   EXPECT_EQ(f.toString(), "&");
 }
 
-TEST(AndTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(Boolean::getTypeStatic(), Boolean::getTypeStatic()));
+TEST(AndTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(Boolean::getClassStatic(), Boolean::getClassStatic()));
 }
 
-TEST(AndTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), Boolean::getTypeStatic());
+TEST(AndTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), Boolean::getClassStatic());
 }
 
 TEST(AndTests, isVariadicTest) {
@@ -60,7 +60,7 @@ TEST(AndTests, exprTest) {
   EXPECT_EQ(andExpr(Boolean(true), Boolean(false))->toString(), "True & False");
 }
 
-TEST(AndTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::And, "And"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::And, "And"));
+TEST(AndTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("And"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

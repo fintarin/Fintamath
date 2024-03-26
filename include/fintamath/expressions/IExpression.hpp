@@ -8,7 +8,7 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -19,7 +19,7 @@
 namespace fintamath {
 
 class IExpression : public IArithmetic {
-  using ExpressionParser = detail::Parser<std::unique_ptr<IExpression>()>;
+  FINTAMATH_PARENT_CLASS_BODY(IExpression)
 
 public:
   virtual const std::shared_ptr<IFunction> &getFunction() const = 0;
@@ -35,19 +35,6 @@ public:
   std::unique_ptr<IMathObject> toMinimalObject() const final;
 
   virtual const std::shared_ptr<IFunction> &getOutputFunction() const;
-
-  template <std::derived_from<IExpression> T>
-  static void registerType() {
-    getParser().registerType<T>();
-  }
-
-  static std::unique_ptr<IExpression> parse(const std::string &str) {
-    return getParser().parse(str);
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::IExpression, "IExpression"};
-  }
 
 protected:
   virtual ArgumentPtr simplify() const;
@@ -78,9 +65,6 @@ private:
   static std::unique_ptr<INumber> convertToApproximated(const INumber &num, unsigned precision, const Integer &maxInt);
 
   static ArgumentPtrVector convertToApproximatedNumbers(const ArgumentPtrVector &args);
-
-private:
-  static ExpressionParser &getParser();
 };
 
 template <typename Derived>

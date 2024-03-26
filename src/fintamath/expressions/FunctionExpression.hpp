@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -11,6 +11,8 @@
 namespace fintamath {
 
 class FunctionExpression final : public IExpressionCRTP<FunctionExpression> {
+  FINTAMATH_CLASS_BODY(FunctionExpression)
+
 public:
   explicit FunctionExpression(const IFunction &inFunc, ArgumentPtrVector inChildren);
 
@@ -21,10 +23,6 @@ public:
   const ArgumentPtrVector &getChildren() const override;
 
   void setChildren(const ArgumentPtrVector &childVect) override;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::FunctionExpression, "FunctionExpression"};
-  }
 
 protected:
   ArgumentPtr preSimplify() const override;

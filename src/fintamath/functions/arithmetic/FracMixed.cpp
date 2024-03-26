@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"

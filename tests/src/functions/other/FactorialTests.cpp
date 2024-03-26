@@ -19,12 +19,12 @@ TEST(FactorialTests, toStringTest) {
   EXPECT_EQ(f.toString(), "!");
 }
 
-TEST(FactorialTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(FactorialTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(FactorialTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(FactorialTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(FactorialTests, isVariadicTest) {
@@ -142,7 +142,7 @@ TEST(FactorialTests, exprTest) {
   EXPECT_EQ(factorialExpr(Integer(10))->toString(), "10!");
 }
 
-TEST(FactorialTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Factorial, "Factorial"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Factorial, "Factorial"));
+TEST(FactorialTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Factorial"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

@@ -18,12 +18,12 @@ TEST(MaxTests, toStringTest) {
   EXPECT_EQ(f.toString(), "max");
 }
 
-TEST(MaxTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IComparable::getTypeStatic()));
+TEST(MaxTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IComparable::getClassStatic()));
 }
 
-TEST(MaxTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IComparable::getTypeStatic());
+TEST(MaxTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IComparable::getClassStatic());
 }
 
 TEST(MaxTests, isVariadicTest) {
@@ -60,7 +60,7 @@ TEST(MaxTests, exprTest) {
   EXPECT_EQ(maxExpr(Variable("a"), Variable("a"))->toString(), "max(a, a)");
 }
 
-TEST(MaxTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Max, "Max"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Max, "Max"));
+TEST(MaxTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Max"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

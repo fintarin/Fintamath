@@ -6,7 +6,7 @@
 #include <ranges>
 #include <type_traits>
 
-#include "fintamath/core/MathObjectBoundTypes.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 
 namespace fintamath {
 
@@ -18,8 +18,9 @@ namespace stdv = std::views;
 template <typename From, typename To>
 concept ConvertibleToAndNotSameAs = std::convertible_to<From, To> && !std::same_as<From, To>;
 
-template <typename FromArg, typename ToArg>
-concept SameAsUnqual = (std::same_as<std::remove_cvref_t<FromArg>, std::remove_cvref_t<ToArg>>);
+inline bool is(const MathObjectClass to, const MathObjectClass from) {
+  return to == from || to.getChildren(true).contains(from);
+}
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 bool is(const From &from) {
@@ -30,7 +31,7 @@ bool is(const From &from) {
     return false;
   }
   else {
-    return isBaseOf(To::getTypeStatic(), from.getType());
+    return is(To::getClassStatic(), from.getClass());
   }
 }
 

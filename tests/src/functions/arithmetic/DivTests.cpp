@@ -16,12 +16,12 @@ TEST(DivTests, toStringTest) {
   EXPECT_EQ(f.toString(), "/");
 }
 
-TEST(DivTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+TEST(DivTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
 }
 
-TEST(DivTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+TEST(DivTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
 TEST(DivTests, isVariadicTest) {
@@ -65,7 +65,7 @@ TEST(DivTests, exprTest) {
   EXPECT_EQ(divExpr(Integer(10), Integer(10))->toString(), "10/10");
 }
 
-TEST(DivTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Div, "Div"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Div, "Div"));
+TEST(DivTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Div"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

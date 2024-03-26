@@ -16,12 +16,12 @@ TEST(SqrtTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sqrt");
 }
 
-TEST(SqrtTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(SqrtTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(SqrtTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(SqrtTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(SqrtTests, isVariadicTest) {
@@ -72,7 +72,7 @@ TEST(SqrtTests, exprTest) {
   EXPECT_EQ(sqrtExpr(Integer(10))->toString(), "sqrt(10)");
 }
 
-TEST(SqrtTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sqrt, "Sqrt"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sqrt, "Sqrt"));
+TEST(SqrtTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sqrt"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

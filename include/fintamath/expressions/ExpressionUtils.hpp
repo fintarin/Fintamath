@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -33,11 +33,11 @@ ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<Argument
   ArgumentPtr res;
 
   if ((is<Undefined>(args) || ...)) {
-    static const MathObjectType undefinedReturnType = Undefined{}.getReturnType();
-    const MathObjectType funcReturnType = func.getReturnType();
+    static const MathObjectClass undefinedReturnType = Undefined{}.getReturnClass();
+    const MathObjectClass funcReturnType = func.getReturnClass();
 
-    if (isBaseOf(undefinedReturnType, funcReturnType) ||
-        isBaseOf(funcReturnType, undefinedReturnType)) {
+    if (is(undefinedReturnType, funcReturnType) ||
+        is(funcReturnType, undefinedReturnType)) {
 
       res = Undefined{}.clone();
     }

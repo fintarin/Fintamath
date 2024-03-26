@@ -15,7 +15,7 @@ TEST(NegInfTests, callTest) {
   EXPECT_EQ(c()->toString(), "-Inf");
 }
 
-TEST(NegInfTests, getTypeTest) {
-  EXPECT_EQ(NegInf::getTypeStatic(), MathObjectType(MathObjectType::NegInf, "NegInf"));
-  EXPECT_EQ(NegInf().getType(), MathObjectType(MathObjectType::NegInf, "NegInf"));
+TEST(NegInfTests, getClassTest) {
+  EXPECT_EQ(NegInf::getClassStatic(), MathObjectClass("NegInf"));
+  EXPECT_EQ(NegInf::getClassStatic().getParent(), IConstant::getClassStatic());
 }

@@ -6,8 +6,8 @@
 
 #include <boost/container_hash/hash.hpp>
 
-#include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 
 namespace fintamath::detail {
 
@@ -17,7 +17,7 @@ class MultiMethod;
 template <typename Res, typename... ArgsBase>
 class MultiMethod<Res(ArgsBase...)> final {
   template <typename>
-  using ArgId = MathObjectType;
+  using ArgId = MathObjectClass;
 
   using CallbackId = std::tuple<ArgId<ArgsBase>...>;
 
@@ -29,7 +29,7 @@ public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   void add(const auto &func) {
-    idToCallbackMap[CallbackId(Args::getTypeStatic()...)] = [func](const ArgsBase &...args) {
+    idToCallbackMap[CallbackId(Args::getClassStatic()...)] = [func](const ArgsBase &...args) {
       return func(cast<Args>(args)...);
     };
   }
@@ -37,7 +37,7 @@ public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   Res operator()(Args &&...args) const {
-    if (auto iter = idToCallbackMap.find(CallbackId(args.getType()...)); iter != idToCallbackMap.end()) {
+    if (auto iter = idToCallbackMap.find(CallbackId(args.getClass()...)); iter != idToCallbackMap.end()) {
       return iter->second(std::forward<Args>(args)...);
     }
 
@@ -47,7 +47,7 @@ public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   bool contains(const Args &...args) const {
-    return idToCallbackMap.contains(CallbackId(args.getType()...));
+    return idToCallbackMap.contains(CallbackId(args.getClass()...));
   }
 
 private:

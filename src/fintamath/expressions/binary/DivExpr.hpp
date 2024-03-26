@@ -3,7 +3,7 @@
 #include <string>
 #include <utility>
 
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -12,14 +12,12 @@
 namespace fintamath {
 
 class DivExpr final : public IBinaryExpressionCRTP<DivExpr> {
+  FINTAMATH_CLASS_BODY(DivExpr)
+
 public:
   explicit DivExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
   std::string toString() const override;
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::DivExpr, "DivExpr"};
-  }
 
 protected:
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;

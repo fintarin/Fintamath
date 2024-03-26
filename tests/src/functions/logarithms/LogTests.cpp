@@ -16,12 +16,12 @@ TEST(LogTests, toStringTest) {
   EXPECT_EQ(f.toString(), "log");
 }
 
-TEST(LogTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic(), INumber::getTypeStatic()));
+TEST(LogTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic(), INumber::getClassStatic()));
 }
 
-TEST(LogTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(LogTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(LogTests, isVariadicTest) {
@@ -134,7 +134,7 @@ TEST(LogTests, exprTest) {
             "log(10, 10)");
 }
 
-TEST(LogTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Log, "Log"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Log, "Log"));
+TEST(LogTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Log"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

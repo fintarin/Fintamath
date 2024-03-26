@@ -9,8 +9,8 @@
 #include <utility>
 #include <vector>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
@@ -358,7 +358,7 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
     if (oper.getPriority() == IOperator::Priority::PostfixUnary) {
       shouldPutInBrackets = true;
     }
-    else if (childOper->getArgumentTypes().size() == 1) {
+    else if (childOper->getArgumentClasses().size() == 1) {
       shouldPutInBrackets = childOper->getPriority() >= oper.getPriority();
     }
     else {

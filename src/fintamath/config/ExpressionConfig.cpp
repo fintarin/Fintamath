@@ -3,8 +3,7 @@
 #include <memory>
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
-#include "fintamath/core/Tokenizer.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/binary/CompExpr.hpp"
 #include "fintamath/expressions/binary/DerivativeExpr.hpp"
@@ -97,48 +96,12 @@
 
 namespace fintamath::detail {
 
-namespace {
-
-void registerTermParsers() {
-  Expression::registerTermParser([](const Token &token) {
-    if (auto arg = IOperator::parse(token, 2)) {
-      return std::make_unique<Term>(token, std::move(arg));
-    }
-
-    if (auto arg = IOperator::parse(token, 1)) {
-      return std::make_unique<Term>(token, std::move(arg));
-    }
-
-    if (auto arg = IFunction::parse(token)) {
-      return std::make_unique<Term>(token, std::move(arg));
-    }
-
-    return std::unique_ptr<Term>{};
-  });
-
-  Expression::registerTermParser([](const Token &token) {
-    if (auto arg = ILiteral::parse(token)) {
-      return std::make_unique<Term>(token, std::move(arg));
-    }
-
-    return std::unique_ptr<Term>{};
-  });
-
-  Expression::registerTermParser([](const Token &token) {
-    if (auto arg = INumber::parse(token)) {
-      return std::make_unique<Term>(token, std::move(arg));
-    }
-
-    return std::unique_ptr<Term>{};
-  });
-}
-
-void registerFunctionExpressionMakers() {
-  Expression::registerFunctionExpressionMaker<Add, true>([](ArgumentPtrVector &&args) {
+ExpressionConfig::ExpressionConfig() {
+  Expression::registerExpressionConstructor<Add, true>([](ArgumentPtrVector &&args) {
     return AddExpr(std::move(args)).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Sub>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Sub>([](ArgumentPtrVector args) {
     ArgumentPtr lhs = std::move(args.front());
     ArgumentPtr rhs = std::move(args.back());
 
@@ -147,19 +110,19 @@ void registerFunctionExpressionMakers() {
     return AddExpr({std::move(lhs), std::move(negRhs)}).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Mul, true>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<Mul, true>([](ArgumentPtrVector &&args) {
     return MulExpr(std::move(args)).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Div>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Div>([](ArgumentPtrVector args) {
     return DivExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Frac>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<Frac>([](ArgumentPtrVector &&args) {
     return divExpr(std::move(args));
   });
 
-  Expression::registerFunctionExpressionMaker<FracMixed>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<FracMixed>([](ArgumentPtrVector args) {
     ArgumentPtr integ = std::move(args[0]);
     ArgumentPtr numer = std::move(args[1]);
     ArgumentPtr denom = std::move(args[2]);
@@ -167,47 +130,47 @@ void registerFunctionExpressionMakers() {
     return addExpr(std::move(integ), divExpr(std::move(numer), std::move(denom)));
   });
 
-  Expression::registerFunctionExpressionMaker<And, true>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<And, true>([](ArgumentPtrVector &&args) {
     return AndExpr(std::move(args)).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Or, true>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<Or, true>([](ArgumentPtrVector &&args) {
     return OrExpr(std::move(args)).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Pow>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Pow>([](ArgumentPtrVector args) {
     return PowExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<PowFunction>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<PowFunction>([](ArgumentPtrVector &&args) {
     return powExpr(std::move(args));
   });
 
-  Expression::registerFunctionExpressionMaker<Eqv>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Eqv>([](ArgumentPtrVector args) {
     return CompExpr(Eqv{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Neqv>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Neqv>([](ArgumentPtrVector args) {
     return CompExpr(Neqv{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Less>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Less>([](ArgumentPtrVector args) {
     return CompExpr(Less{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<More>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<More>([](ArgumentPtrVector args) {
     return CompExpr(More{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<LessEqv>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<LessEqv>([](ArgumentPtrVector args) {
     return CompExpr(LessEqv{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<MoreEqv>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<MoreEqv>([](ArgumentPtrVector args) {
     return CompExpr(MoreEqv{}, std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Index>([](const ArgumentPtrVector &args) {
+  Expression::registerExpressionConstructor<Index>([](const ArgumentPtrVector &args) {
     static const Index indexFunc;
 
     const ArgumentPtr &lhs = args.front();
@@ -220,7 +183,7 @@ void registerFunctionExpressionMakers() {
     return Expression(indexFunc(*lhs, *rhs)).clone(); // TODO: looks weird
   });
 
-  Expression::registerFunctionExpressionMaker<Impl>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Impl>([](ArgumentPtrVector args) {
     ArgumentPtr lhs = std::move(args.front());
     ArgumentPtr rhs = std::move(args.back());
 
@@ -229,7 +192,7 @@ void registerFunctionExpressionMakers() {
     return orExpr(std::move(notLhs), std::move(rhs));
   });
 
-  Expression::registerFunctionExpressionMaker<Equiv>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Equiv>([](ArgumentPtrVector args) {
     ArgumentPtr lhs = std::move(args.front());
     ArgumentPtr rhs = std::move(args.back());
 
@@ -242,7 +205,7 @@ void registerFunctionExpressionMakers() {
     return orExpr(std::move(lhsAndRhs), std::move(notLhsAndNotRhs));
   });
 
-  Expression::registerFunctionExpressionMaker<Nequiv>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Nequiv>([](ArgumentPtrVector args) {
     ArgumentPtr lhs = std::move(args.front());
     ArgumentPtr rhs = std::move(args.back());
 
@@ -255,75 +218,75 @@ void registerFunctionExpressionMakers() {
     return orExpr(std::move(notLhsAndRhs), std::move(lhsAndNotRhs));
   });
 
-  Expression::registerFunctionExpressionMaker<Neg>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Neg>([](ArgumentPtrVector args) {
     static const ArgumentPtr negOne = Integer(-1).clone();
     return mulExpr(negOne, std::move(args.front()));
   });
 
-  Expression::registerFunctionExpressionMaker<UnaryPlus>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<UnaryPlus>([](ArgumentPtrVector args) {
     return std::move(args.front())->clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Not>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Not>([](ArgumentPtrVector args) {
     return NotExpr(std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Derivative>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Derivative>([](ArgumentPtrVector args) {
     return DerivativeExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Integral>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Integral>([](ArgumentPtrVector args) {
     return IntegralExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Log>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Log>([](ArgumentPtrVector args) {
     return LogExpr(std::move(args.front()), std::move(args.back())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Ln>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Ln>([](ArgumentPtrVector args) {
     static const ArgumentPtr logBase = E{}.clone();
     return logExpr(logBase, std::move(args.front()));
   });
 
-  Expression::registerFunctionExpressionMaker<Lb>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Lb>([](ArgumentPtrVector args) {
     static const ArgumentPtr logBase = Integer(2).clone();
     return logExpr(logBase, std::move(args.front()));
   });
 
-  Expression::registerFunctionExpressionMaker<Lg>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Lg>([](ArgumentPtrVector args) {
     static const ArgumentPtr logBase = Integer(10).clone();
     return logExpr(logBase, std::move(args.front()));
   });
 
-  Expression::registerFunctionExpressionMaker<Exp>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Exp>([](ArgumentPtrVector args) {
     static const ArgumentPtr powBase = E{}.clone();
     return powExpr(powBase, std::move(args.front()));
   });
 
-  Expression::registerFunctionExpressionMaker<Percent>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Percent>([](ArgumentPtrVector args) {
     static const ArgumentPtr percentValue = Integer(100).clone();
     return divExpr(std::move(args.front()), percentValue);
   });
 
-  Expression::registerFunctionExpressionMaker<Min>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<Min>([](ArgumentPtrVector &&args) {
     return MinMaxExpr(Min{}, std::move(args)).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Max>([](ArgumentPtrVector &&args) {
+  Expression::registerExpressionConstructor<Max>([](ArgumentPtrVector &&args) {
     return MinMaxExpr(Max{}, std::move(args)).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Sqr>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Sqr>([](ArgumentPtrVector args) {
     static const ArgumentPtr powRate = Integer(2).clone();
     return powExpr(std::move(args.front()), powRate);
   });
 
-  Expression::registerFunctionExpressionMaker<Sqrt>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Sqrt>([](ArgumentPtrVector args) {
     static const ArgumentPtr powRate = Rational(1, 2).clone();
     return powExpr(std::move(args.front()), powRate);
   });
 
-  Expression::registerFunctionExpressionMaker<Root>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Root>([](ArgumentPtrVector args) {
     ArgumentPtr lhs = std::move(args.front());
     ArgumentPtr rhs = std::move(args.back());
 
@@ -337,129 +300,122 @@ void registerFunctionExpressionMakers() {
     return powExpr(std::move(lhs), std::move(invRhs));
   });
 
-  Expression::registerFunctionExpressionMaker<Sin>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Sin>([](ArgumentPtrVector args) {
     return TrigExpr(Sin{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Cos>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Cos>([](ArgumentPtrVector args) {
     return TrigExpr(Cos{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Tan>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Tan>([](ArgumentPtrVector args) {
     return TrigExpr(Tan{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Cot>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Cot>([](ArgumentPtrVector args) {
     return TrigExpr(Cot{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Sec>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Sec>([](ArgumentPtrVector args) {
     return TrigExpr(Sec{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Csc>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Csc>([](ArgumentPtrVector args) {
     return TrigExpr(Csc{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Asin>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Asin>([](ArgumentPtrVector args) {
     return InvTrigExpr(Asin{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Acos>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Acos>([](ArgumentPtrVector args) {
     return InvTrigExpr(Acos{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Atan>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Atan>([](ArgumentPtrVector args) {
     return InvTrigExpr(Atan{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Acot>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Acot>([](ArgumentPtrVector args) {
     return InvTrigExpr(Acot{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Asec>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Asec>([](ArgumentPtrVector args) {
     return InvTrigExpr(Asec{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Acsc>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Acsc>([](ArgumentPtrVector args) {
     return InvTrigExpr(Acsc{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Sinh>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Sinh>([](ArgumentPtrVector args) {
     return HyperbExpr(Sinh{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Cosh>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Cosh>([](ArgumentPtrVector args) {
     return HyperbExpr(Cosh{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Tanh>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Tanh>([](ArgumentPtrVector args) {
     return HyperbExpr(Tanh{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Coth>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Coth>([](ArgumentPtrVector args) {
     return HyperbExpr(Coth{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Sech>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Sech>([](ArgumentPtrVector args) {
     return HyperbExpr(Sech{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Csch>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Csch>([](ArgumentPtrVector args) {
     return HyperbExpr(Csch{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Asinh>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Asinh>([](ArgumentPtrVector args) {
     return InvHyperbExpr(Asinh{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Acosh>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Acosh>([](ArgumentPtrVector args) {
     return InvHyperbExpr(Acosh{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Atanh>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Atanh>([](ArgumentPtrVector args) {
     return InvHyperbExpr(Atanh{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Acoth>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Acoth>([](ArgumentPtrVector args) {
     return InvHyperbExpr(Acoth{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Asech>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Asech>([](ArgumentPtrVector args) {
     return InvHyperbExpr(Asech{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Acsch>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Acsch>([](ArgumentPtrVector args) {
     return InvHyperbExpr(Acsch{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Deg>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Deg>([](ArgumentPtrVector args) {
     static const ArgumentPtr deg1 = Deg{}(Integer(1));
     return mulExpr(std::move(args.front()), deg1);
   });
 
-  Expression::registerFunctionExpressionMaker<Floor>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Floor>([](ArgumentPtrVector args) {
     return FloorCeilExpr(Floor{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Ceil>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Ceil>([](ArgumentPtrVector args) {
     return FloorCeilExpr(Ceil{}, std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Abs>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Abs>([](ArgumentPtrVector args) {
     return AbsExpr(std::move(args.front())).clone();
   });
 
-  Expression::registerFunctionExpressionMaker<Sign>([](ArgumentPtrVector args) {
+  Expression::registerExpressionConstructor<Sign>([](ArgumentPtrVector args) {
     return SignExpr(std::move(args.front())).clone();
   });
-}
-
-}
-
-ExpressionConfig::ExpressionConfig() {
-  registerTermParsers();
-  registerFunctionExpressionMakers();
 }
 
 }

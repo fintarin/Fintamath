@@ -3,6 +3,7 @@
 #include "fintamath/core/IArithmetic.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -11,10 +12,7 @@ using namespace fintamath;
 namespace {
 
 class TestArithmetic final : public IArithmeticCRTP<TestArithmetic> {
-public:
-  static constexpr MathObjectType getTypeStatic() {
-    return {static_cast<size_t>(MathObjectType::IArithmetic) + 999, "TestArithmetic"};
-  }
+  FINTAMATH_CLASS_BODY(TestArithmetic)
 
 protected:
   TestArithmetic &add(const TestArithmetic & /* rhs */) override {
@@ -38,6 +36,15 @@ protected:
   }
 };
 
+[[maybe_unused]] const auto config = [] {
+  IArithmetic::registerType<TestArithmetic>();
+  return 0;
+}();
+
+}
+
+TEST(IArithmeticTests, parseTest) {
+  EXPECT_TRUE(is<TestArithmetic>(*IArithmetic::parseFirst("TestArithmetic")));
 }
 
 TEST(IArithmeticTests, addTest) {
@@ -198,6 +205,7 @@ TEST(IArithmeticTests, negateTest) {
   EXPECT_EQ((-Integer(1)).toString(), "-1");
 }
 
-TEST(IArithmeticTests, getTypeTest) {
-  EXPECT_EQ(IArithmetic::getTypeStatic(), MathObjectType(MathObjectType::IArithmetic, "IArithmetic"));
+TEST(IArithmeticTests, getClassTest) {
+  EXPECT_EQ(IArithmetic::getClassStatic(), MathObjectClass("IArithmetic"));
+  EXPECT_EQ(IArithmetic::getClassStatic().getParent(), IMathObject::getClassStatic());
 }

@@ -16,12 +16,12 @@ TEST(SubTests, toStringTest) {
   EXPECT_EQ(f.toString(), "-");
 }
 
-TEST(SubTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(IArithmetic::getTypeStatic(), IArithmetic::getTypeStatic()));
+TEST(SubTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
 }
 
-TEST(SubTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), IArithmetic::getTypeStatic());
+TEST(SubTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
 TEST(SubTests, isVariadicTest) {
@@ -63,7 +63,7 @@ TEST(SubTests, exprTest) {
   EXPECT_EQ(subExpr(Integer(10), Integer(10))->toString(), "10 - 10");
 }
 
-TEST(SubTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Sub, "Sub"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Sub, "Sub"));
+TEST(SubTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sub"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
 }

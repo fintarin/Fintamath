@@ -12,12 +12,14 @@
 #include <boost/multiprecision/gmp.hpp>
 
 #include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/numbers/IInteger.hpp"
 
 namespace fintamath {
 
 class Integer final : public IIntegerCRTP<Integer> {
+  FINTAMATH_CLASS_BODY(Integer)
+
 public:
   using Backend = boost::multiprecision::mpz_int;
 
@@ -42,10 +44,6 @@ public:
   template <std::integral T>
   explicit operator T() const {
     return backend.convert_to<T>();
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Integer, "Integer"};
   }
 
 protected:

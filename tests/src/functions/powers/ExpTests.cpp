@@ -15,12 +15,12 @@ TEST(ExpTests, toStringTest) {
   EXPECT_EQ(f.toString(), "exp");
 }
 
-TEST(ExpTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(ExpTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(ExpTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(ExpTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(ExpTests, isVariadicTest) {
@@ -48,7 +48,7 @@ TEST(ExpTests, exprTest) {
   EXPECT_EQ(expExpr(Integer(10))->toString(), "E^10");
 }
 
-TEST(ExpTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Exp, "Exp"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Exp, "Exp"));
+TEST(ExpTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Exp"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

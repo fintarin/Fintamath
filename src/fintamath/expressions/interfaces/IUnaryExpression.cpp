@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -13,6 +13,8 @@
 namespace fintamath {
 
 using namespace detail;
+
+FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IUnaryExpression)
 
 IUnaryExpression::IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs)
     : func(cast<IFunction>(inFunc.clone())),

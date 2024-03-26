@@ -1,10 +1,14 @@
 #include <gtest/gtest.h>
 
+#include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
 #include "fintamath/functions/ntheory/Floor.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;
 
-TEST(FloorCeilExprTests, getTypeTest) {
-  EXPECT_EQ(floorExpr(Integer(0).clone())->getType(), MathObjectType(MathObjectType::FloorCeilExpr, "FloorCeilExpr"));
+TEST(FloorCeilExprTests, getClassTest) {
+  const auto expr = floorExpr(Integer(0).clone());
+
+  EXPECT_EQ(expr->getClass(), MathObjectClass("FloorCeilExpr"));
+  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
 }

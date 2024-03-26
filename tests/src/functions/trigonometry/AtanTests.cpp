@@ -17,12 +17,12 @@ TEST(AtanTests, toStringTest) {
   EXPECT_EQ(f.toString(), "atan");
 }
 
-TEST(AtanTests, getArgumentTypesTest) {
-  EXPECT_THAT(f.getArgumentTypes(), testing::ElementsAre(INumber::getTypeStatic()));
+TEST(AtanTests, getArgumentClassesTest) {
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
-TEST(AtanTests, getReturnTypeTest) {
-  EXPECT_EQ(f.getReturnType(), INumber::getTypeStatic());
+TEST(AtanTests, getReturnClassTest) {
+  EXPECT_EQ(f.getReturnClass(), INumber::getClassStatic());
 }
 
 TEST(AtanTests, isVariadicTest) {
@@ -59,7 +59,7 @@ TEST(AtanTests, exprTest) {
   EXPECT_EQ(atanExpr(Integer(10))->toString(), "atan(10)");
 }
 
-TEST(AtanTests, getTypeTest) {
-  EXPECT_EQ(F::getTypeStatic(), MathObjectType(MathObjectType::Atan, "Atan"));
-  EXPECT_EQ(f.getType(), MathObjectType(MathObjectType::Atan, "Atan"));
+TEST(AtanTests, getClassTest) {
+  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Atan"));
+  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
 }

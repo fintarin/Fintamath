@@ -5,7 +5,7 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectType.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IOperator.hpp"
@@ -16,6 +16,8 @@ class Integer;
 class INumber;
 
 class Div final : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Div)
+
 public:
   std::string toString() const override {
     return "/";
@@ -23,10 +25,6 @@ public:
 
   static constexpr Priority getPriorityStatic() {
     return Priority::Multiplication;
-  }
-
-  static constexpr MathObjectType getTypeStatic() {
-    return {MathObjectType::Div, "Div"};
   }
 
 protected:
