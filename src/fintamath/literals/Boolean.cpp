@@ -4,9 +4,6 @@
 
 namespace fintamath {
 
-constexpr std::string_view trueStr = "True";
-constexpr std::string_view falseStr = "False";
-
 Boolean::Boolean() : name(falseStr) {
 }
 
@@ -16,9 +13,6 @@ Boolean::Boolean(const std::string &str) {
   }
 
   name = str;
-}
-
-Boolean::Boolean(const bool val) : name(val ? trueStr : falseStr) {
 }
 
 std::string Boolean::toString() const {

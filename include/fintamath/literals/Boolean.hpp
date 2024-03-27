@@ -15,7 +15,9 @@ public:
 
   explicit Boolean(const std::string &str);
 
-  Boolean(bool val);
+  template <std::same_as<bool> Bool>
+  Boolean(const Bool val) : name(val ? trueStr : falseStr) {
+  }
 
   std::string toString() const override;
 
@@ -23,6 +25,10 @@ public:
 
 private:
   std::string name;
+
+  static constexpr std::string_view trueStr = "True";
+
+  static constexpr std::string_view falseStr = "False";
 };
 
 }

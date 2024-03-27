@@ -11,15 +11,15 @@ TEST(BooleanTests, constructorTest) {
 }
 
 TEST(BooleanTests, stringConstructorTest) {
-  EXPECT_EQ(Boolean(std::string("True")), true);
-  EXPECT_EQ(Boolean(std::string("False")), false);
+  EXPECT_EQ(Boolean("True"), true);
+  EXPECT_EQ(Boolean("False"), false);
 
-  EXPECT_THROW(Boolean(std::string("true")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("false")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("10")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("i")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("")), InvalidInputException);
-  EXPECT_THROW(Boolean(std::string("")), InvalidInputException);
+  EXPECT_THROW(Boolean("true"), InvalidInputException);
+  EXPECT_THROW(Boolean("false"), InvalidInputException);
+  EXPECT_THROW(Boolean("10"), InvalidInputException);
+  EXPECT_THROW(Boolean("i"), InvalidInputException);
+  EXPECT_THROW(Boolean(""), InvalidInputException);
+  EXPECT_THROW(Boolean(""), InvalidInputException);
 }
 
 TEST(BooleanTests, boolConstructorTest) {
@@ -45,6 +45,6 @@ TEST(BooleanTests, opearatorsTest) {
 }
 
 TEST(BooleanTest, getClassTest) {
-  EXPECT_EQ(Boolean::getClassStatic(), MathObjectClass("Boolean"));
-  EXPECT_EQ(Boolean::getClassStatic().getParent(), ILiteral::getClassStatic());
+  EXPECT_EQ(Boolean().getClass(), MathObjectClass("Boolean"));
+  EXPECT_EQ(Boolean().getClass().getParent(), ILiteral::getClassStatic());
 }
