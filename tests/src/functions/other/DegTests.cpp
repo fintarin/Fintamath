@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = Deg;
-const F f;
+const Deg f;
 
 TEST(DegTests, toStringTest) {
   EXPECT_EQ(f.toString(), "deg");
@@ -24,22 +23,18 @@ TEST(DegTests, getReturnClassTest) {
 }
 
 TEST(DegTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(DegTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(DegTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::PostfixUnary);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(DegTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -61,6 +56,6 @@ TEST(DegTests, degTest) {
 }
 
 TEST(DegTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Deg"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Deg"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

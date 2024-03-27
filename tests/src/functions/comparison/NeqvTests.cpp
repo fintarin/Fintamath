@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Neqv;
-const F f;
+const Neqv f;
 
 TEST(NeqvTests, toStringTest) {
   EXPECT_EQ(f.toString(), "!=");
@@ -25,22 +24,18 @@ TEST(NeqvTests, getReturnClassTest) {
 }
 
 TEST(NeqvTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(NeqvTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(NeqvTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Comparison);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Comparison);
 }
 
 TEST(NeqvTests, isAssociativeTest) {
-  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 
@@ -70,6 +65,6 @@ TEST(NeqvTests, exprTest) {
 }
 
 TEST(NeqvTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Neqv"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Neqv"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

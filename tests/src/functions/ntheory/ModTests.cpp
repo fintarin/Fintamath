@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Mod;
-const F f;
+const Mod f;
 
 TEST(ModTests, toStringTest) {
   EXPECT_EQ(f.toString(), "mod");
@@ -25,22 +24,18 @@ TEST(ModTests, getReturnClassTest) {
 }
 
 TEST(ModTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(ModTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(ModTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Modulo);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Modulo);
 }
 
 TEST(ModTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -104,6 +99,6 @@ TEST(ModTests, exprTest) {
 }
 
 TEST(ModTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Mod"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Mod"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Coth;
-const F f;
+const Coth f;
 
 TEST(CothTests, toStringTest) {
   EXPECT_EQ(f.toString(), "coth");
@@ -26,12 +25,10 @@ TEST(CothTests, getReturnClassTest) {
 }
 
 TEST(CothTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(CothTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -58,6 +55,6 @@ TEST(CothTests, exprTest) {
 }
 
 TEST(CothTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Coth"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Coth"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

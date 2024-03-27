@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Log;
-const F f;
+const Log f;
 
 TEST(LogTests, toStringTest) {
   EXPECT_EQ(f.toString(), "log");
@@ -25,12 +24,10 @@ TEST(LogTests, getReturnClassTest) {
 }
 
 TEST(LogTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(LogTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -135,6 +132,6 @@ TEST(LogTests, exprTest) {
 }
 
 TEST(LogTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Log"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Log"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Asin;
-const F f;
+const Asin f;
 
 TEST(AsinTests, toStringTest) {
   EXPECT_EQ(f.toString(), "asin");
@@ -26,12 +25,10 @@ TEST(AsinTests, getReturnClassTest) {
 }
 
 TEST(AsinTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(AsinTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -60,6 +57,6 @@ TEST(AsinTests, exprTest) {
 }
 
 TEST(AsinTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Asin"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Asin"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

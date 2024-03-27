@@ -39,6 +39,6 @@ TEST(VariableTest, stringIntegerConstructorTest) {
 }
 
 TEST(VariableTest, getClassTest) {
-  EXPECT_EQ(Variable::getClassStatic(), MathObjectClass("Variable"));
-  EXPECT_EQ(Variable::getClassStatic().getParent(), ILiteral::getClassStatic());
+  EXPECT_EQ(Variable("a").getClass(), MathObjectClass("Variable"));
+  EXPECT_EQ(Variable("a").getClass().getParent(), ILiteral::getClassStatic());
 }

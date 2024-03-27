@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Sub;
-const F f;
+const Sub f;
 
 TEST(SubTests, toStringTest) {
   EXPECT_EQ(f.toString(), "-");
@@ -25,22 +24,18 @@ TEST(SubTests, getReturnClassTest) {
 }
 
 TEST(SubTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(SubTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(SubTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Addition);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Addition);
 }
 
 TEST(SubTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -64,6 +59,6 @@ TEST(SubTests, exprTest) {
 }
 
 TEST(SubTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sub"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Sub"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

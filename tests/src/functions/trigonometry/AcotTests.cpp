@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Acot;
-const F f;
+const Acot f;
 
 TEST(AcotTests, toStringTest) {
   EXPECT_EQ(f.toString(), "acot");
@@ -26,12 +25,10 @@ TEST(AcotTests, getReturnClassTest) {
 }
 
 TEST(AcotTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(AcotTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -60,6 +57,6 @@ TEST(AcotTests, exprTest) {
 }
 
 TEST(AcotTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Acot"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Acot"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

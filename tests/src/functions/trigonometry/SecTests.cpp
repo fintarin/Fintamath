@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Sec;
-const F f;
+const Sec f;
 
 TEST(SecTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sec");
@@ -26,12 +25,10 @@ TEST(SecTests, getReturnClassTest) {
 }
 
 TEST(SecTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(SecTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -57,6 +54,6 @@ TEST(SecTests, exprTest) {
 }
 
 TEST(SecTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sec"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Sec"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

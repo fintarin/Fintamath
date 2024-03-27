@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Root;
-const F f;
+const Root f;
 
 TEST(RootTests, toStringTest) {
   EXPECT_EQ(f.toString(), "root");
@@ -25,12 +24,10 @@ TEST(RootTests, getReturnClassTest) {
 }
 
 TEST(RootTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(RootTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -185,6 +182,6 @@ TEST(RootTests, exprTest) {
 }
 
 TEST(RootTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Root"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Root"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = Mul;
-const F f;
+const Mul f;
 
 TEST(MulTests, toStringTest) {
   EXPECT_EQ(f.toString(), "*");
@@ -24,22 +23,18 @@ TEST(MulTests, getReturnClassTest) {
 }
 
 TEST(MulTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(MulTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(MulTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Multiplication);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Multiplication);
 }
 
 TEST(MulTests, isAssociativeTest) {
-  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 
@@ -62,6 +57,6 @@ TEST(MulTests, exprTest) {
 }
 
 TEST(MulTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Mul"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Mul"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

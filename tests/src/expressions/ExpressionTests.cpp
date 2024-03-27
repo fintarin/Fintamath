@@ -97,11 +97,6 @@ TEST(ExpressionTests, equalsTest) {
   // TODO: implement more tests
 }
 
-TEST(ExpressionTests, getClassTest) {
-  EXPECT_EQ(Expression::getClassStatic(), MathObjectClass("Expression"));
-  EXPECT_EQ(Expression::getClassStatic().getParent(), IExpression::getClassStatic());
-}
-
 TEST(ExpressionTests, variableVariablePlusOperatorTest) {
   EXPECT_EQ(Variable("a") + Variable("a"), Expression("2a"));
   EXPECT_EQ(Variable("a") + Variable("b"), Expression("a+b"));
@@ -160,4 +155,9 @@ TEST(ExpressionTests, variableExpressionDivideOperatorTest) {
 TEST(ExpressionTests, expressionVariableDivideOperatorTest) {
   EXPECT_EQ(Expression("a/b") / Variable("a"), Expression("1/b"));
   EXPECT_EQ(Expression("b/c") / Variable("a"), Expression("b/c/a"));
+}
+
+TEST(ExpressionTests, getClassTest) {
+  EXPECT_EQ(Expression().getClass(), MathObjectClass("Expression"));
+  EXPECT_EQ(Expression().getClassStatic().getParent(), IExpression::getClassStatic());
 }

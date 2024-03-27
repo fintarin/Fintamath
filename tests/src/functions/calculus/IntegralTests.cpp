@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Integral;
-const F f;
+const Integral f;
 
 TEST(IntegralTests, toStringTest) {
   EXPECT_EQ(f.toString(), "integral");
@@ -26,12 +25,10 @@ TEST(IntegralTests, getReturnClassTest) {
 }
 
 TEST(IntegralTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(IntegralTests, isEvaluatableTest) {
-  EXPECT_FALSE(F::isEvaluatableStatic());
   EXPECT_FALSE(f.isEvaluatable());
 }
 
@@ -56,6 +53,6 @@ TEST(IntegralTests, exprTest) {
 }
 
 TEST(IntegralTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Integral"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Integral"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

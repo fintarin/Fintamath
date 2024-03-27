@@ -16,6 +16,6 @@ TEST(ComplexInfTests, callTest) {
 }
 
 TEST(ComplexInfTests, getClassTest) {
-  EXPECT_EQ(ComplexInf::getClassStatic(), MathObjectClass("ComplexInf"));
-  EXPECT_EQ(ComplexInf::getClassStatic().getParent(), IConstant::getClassStatic());
+  EXPECT_EQ(c.getClass(), MathObjectClass("ComplexInf"));
+  EXPECT_EQ(c.getClass().getParent(), IConstant::getClassStatic());
 }

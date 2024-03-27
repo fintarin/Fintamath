@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = Or;
-const F f;
+const Or f;
 
 TEST(OrTests, toStringTest) {
   EXPECT_EQ(f.toString(), "|");
@@ -24,22 +23,18 @@ TEST(OrTests, getReturnClassTest) {
 }
 
 TEST(OrTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(OrTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(OrTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Disjunction);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Disjunction);
 }
 
 TEST(OrTests, isAssociativeTest) {
-  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 
@@ -61,6 +56,6 @@ TEST(OrTests, exprTest) {
 }
 
 TEST(OrTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Or"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Or"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

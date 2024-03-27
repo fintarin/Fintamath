@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Acos;
-const F f;
+const Acos f;
 
 TEST(AcosTests, toStringTest) {
   EXPECT_EQ(f.toString(), "acos");
@@ -26,12 +25,10 @@ TEST(AcosTests, getReturnClassTest) {
 }
 
 TEST(AcosTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(AcosTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -60,6 +57,6 @@ TEST(AcosTests, exprTest) {
 }
 
 TEST(AcosTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Acos"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Acos"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

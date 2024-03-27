@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Sign;
-const F f;
+const Sign f;
 
 TEST(SignTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sign");
@@ -26,12 +25,10 @@ TEST(SignTests, getReturnClassTest) {
 }
 
 TEST(SignTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(SignTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -70,6 +67,6 @@ TEST(SignTests, exprTest) {
 }
 
 TEST(SignTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sign"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Sign"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

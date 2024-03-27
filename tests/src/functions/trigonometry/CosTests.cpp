@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Cos;
-const F f;
+const Cos f;
 
 TEST(CosTests, toStringTest) {
   EXPECT_EQ(f.toString(), "cos");
@@ -26,12 +25,10 @@ TEST(CosTests, getReturnClassTest) {
 }
 
 TEST(CosTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(CosTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -57,6 +54,6 @@ TEST(CosTests, exprTest) {
 }
 
 TEST(CosTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Cos"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Cos"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

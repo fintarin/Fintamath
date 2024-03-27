@@ -126,5 +126,7 @@ TEST(FunctionExpressionTests, stringConstructorTest) {
 }
 
 TEST(FunctionExpressionTests, getClassTest) {
-  EXPECT_EQ(makeExpr(TestBinaryOperator(), Integer(0), Integer(0))->getClass(), MathObjectClass("FunctionExpression"));
+  auto expr = makeExpr(TestBinaryOperator(), Integer(0), Integer(0));
+  EXPECT_EQ(expr->getClass(), MathObjectClass("FunctionExpression"));
+  EXPECT_EQ(expr->getClass().getParent(), IExpression::getClassStatic());
 }

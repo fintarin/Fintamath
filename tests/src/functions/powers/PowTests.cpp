@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Pow;
-const F f;
+const Pow f;
 
 TEST(PowTests, toStringTest) {
   EXPECT_EQ(f.toString(), "^");
@@ -26,22 +25,18 @@ TEST(PowTests, getReturnClassTest) {
 }
 
 TEST(PowTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(PowTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(PowTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Exponentiation);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Exponentiation);
 }
 
 TEST(PowTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -174,6 +169,6 @@ TEST(PowTests, exprTest) {
 }
 
 TEST(PowTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Pow"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Pow"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = And;
-const F f;
+const And f;
 
 TEST(AndTests, toStringTest) {
   EXPECT_EQ(f.toString(), "&");
@@ -24,22 +23,18 @@ TEST(AndTests, getReturnClassTest) {
 }
 
 TEST(AndTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(AndTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(AndTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Conjunction);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Conjunction);
 }
 
 TEST(AndTests, isAssociativeTest) {
-  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 
@@ -61,6 +56,6 @@ TEST(AndTests, exprTest) {
 }
 
 TEST(AndTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("And"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("And"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Atanh;
-const F f;
+const Atanh f;
 
 TEST(AtanhTests, toStringTest) {
   EXPECT_EQ(f.toString(), "atanh");
@@ -26,12 +25,10 @@ TEST(AtanhTests, getReturnClassTest) {
 }
 
 TEST(AtanhTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(AtanhTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -60,6 +57,6 @@ TEST(AtanhTests, exprTest) {
 }
 
 TEST(AtanhTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Atanh"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Atanh"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

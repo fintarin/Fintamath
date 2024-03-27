@@ -16,6 +16,6 @@ TEST(UndefinedTests, callTest) {
 }
 
 TEST(UndefinedTests, getClassTest) {
-  EXPECT_EQ(Undefined::getClassStatic(), MathObjectClass("Undefined"));
-  EXPECT_EQ(Undefined::getClassStatic().getParent(), IConstant::getClassStatic());
+  EXPECT_EQ(c.getClass(), MathObjectClass("Undefined"));
+  EXPECT_EQ(c.getClass().getParent(), IConstant::getClassStatic());
 }

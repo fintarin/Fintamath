@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Sqrt;
-const F f;
+const Sqrt f;
 
 TEST(SqrtTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sqrt");
@@ -25,12 +24,10 @@ TEST(SqrtTests, getReturnClassTest) {
 }
 
 TEST(SqrtTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(SqrtTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -73,6 +70,6 @@ TEST(SqrtTests, exprTest) {
 }
 
 TEST(SqrtTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sqrt"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Sqrt"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

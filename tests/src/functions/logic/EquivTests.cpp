@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = Equiv;
-const F f;
+const Equiv f;
 
 TEST(EquivTests, toStringTest) {
   EXPECT_EQ(f.toString(), "<->");
@@ -24,22 +23,18 @@ TEST(EquivTests, getReturnClassTest) {
 }
 
 TEST(EquivTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(EquivTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(EquivTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Equivalence);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Equivalence);
 }
 
 TEST(EquivTests, isAssociativeTest) {
-  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 
@@ -61,6 +56,6 @@ TEST(EquivTests, exprTest) {
 }
 
 TEST(EquivTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Equiv"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Equiv"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

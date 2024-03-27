@@ -609,8 +609,8 @@ TEST(IntegerTests, equalsTest) {
 }
 
 TEST(IntegerTests, getClassTest) {
-  EXPECT_EQ(Integer::getClassStatic(), MathObjectClass("Integer"));
-  EXPECT_EQ(Integer::getClassStatic().getParent(), IInteger::getClassStatic());
+  EXPECT_EQ(Integer().getClass(), MathObjectClass("Integer"));
+  EXPECT_EQ(Integer().getClass().getParent(), IInteger::getClassStatic());
 }
 
 TEST(IntegerTests, hashTest) {

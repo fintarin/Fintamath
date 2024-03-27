@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = Impl;
-const F f;
+const Impl f;
 
 TEST(ImplTests, toStringTest) {
   EXPECT_EQ(f.toString(), "->");
@@ -24,22 +23,18 @@ TEST(ImplTests, getReturnClassTest) {
 }
 
 TEST(ImplTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(ImplTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(ImplTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Implication);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Implication);
 }
 
 TEST(ImplTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -61,6 +56,6 @@ TEST(ImplTests, exprTest) {
 }
 
 TEST(ImplTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Impl"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Impl"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

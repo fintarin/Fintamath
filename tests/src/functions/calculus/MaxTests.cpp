@@ -11,8 +11,7 @@
 
 using namespace fintamath;
 
-using F = Max;
-const F f;
+const Max f;
 
 TEST(MaxTests, toStringTest) {
   EXPECT_EQ(f.toString(), "max");
@@ -27,12 +26,10 @@ TEST(MaxTests, getReturnClassTest) {
 }
 
 TEST(MaxTests, isVariadicTest) {
-  EXPECT_TRUE(F::isVariadicStatic());
   EXPECT_TRUE(f.isVariadic());
 }
 
 TEST(MaxTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -61,6 +58,6 @@ TEST(MaxTests, exprTest) {
 }
 
 TEST(MaxTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Max"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Max"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

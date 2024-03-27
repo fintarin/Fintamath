@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = Lg;
-const F f;
+const Lg f;
 
 TEST(LgTests, toStringTest) {
   EXPECT_EQ(f.toString(), "lg");
@@ -24,12 +23,10 @@ TEST(LgTests, getReturnClassTest) {
 }
 
 TEST(LgTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(LgTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -53,6 +50,6 @@ TEST(LgTests, exprTest) {
 }
 
 TEST(LgTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Lg"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Lg"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

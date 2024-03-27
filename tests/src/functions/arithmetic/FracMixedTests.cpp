@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = FracMixed;
-const F f;
+const FracMixed f;
 
 TEST(FracMixedTests, toStringTest) {
   EXPECT_EQ(f.toString(), "frac");
@@ -25,12 +24,10 @@ TEST(FracMixedTests, getReturnClassTest) {
 }
 
 TEST(FracMixedTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(FracMixedTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -56,6 +53,6 @@ TEST(FracMixedTests, callTest) {
 }
 
 TEST(FracMixedTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("FracMixed"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("FracMixed"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

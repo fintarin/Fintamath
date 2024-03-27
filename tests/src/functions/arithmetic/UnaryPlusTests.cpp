@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = UnaryPlus;
-const F f;
+const UnaryPlus f;
 
 TEST(UnaryPlusTests, toStringTest) {
   EXPECT_EQ(f.toString(), "+");
@@ -25,22 +24,18 @@ TEST(UnaryPlusTests, getReturnClassTest) {
 }
 
 TEST(UnaryPlusTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(UnaryPlusTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(UnaryPlusTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::PrefixUnary);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::PrefixUnary);
 }
 
 TEST(UnaryPlusTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -57,6 +52,6 @@ TEST(UnaryPlusTests, callTest) {
 }
 
 TEST(UnaryPlusTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("UnaryPlus"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("UnaryPlus"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

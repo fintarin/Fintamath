@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Sin;
-const F f;
+const Sin f;
 
 TEST(SinTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sin");
@@ -26,12 +25,10 @@ TEST(SinTests, getReturnClassTest) {
 }
 
 TEST(SinTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(SinTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -57,6 +54,6 @@ TEST(SinTests, exprTest) {
 }
 
 TEST(SinTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sin"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Sin"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

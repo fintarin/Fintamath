@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Index;
-const F f;
+const Index f;
 
 TEST(IndexTests, toStringTest) {
   EXPECT_EQ(f.toString(), "_");
@@ -25,22 +24,18 @@ TEST(IndexTests, getReturnClassTest) {
 }
 
 TEST(IndexTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(IndexTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(IndexTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Exponentiation);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Exponentiation);
 }
 
 TEST(IndexTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -68,6 +63,6 @@ TEST(IndexTests, exprTest) {
 }
 
 TEST(IndexTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Index"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Index"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

@@ -39,4 +39,5 @@ TEST(IConstantTests, callTest) {
 
 TEST(IConstantTests, getClassTest) {
   EXPECT_EQ(IConstant::getClassStatic(), MathObjectClass("IConstant"));
+  EXPECT_EQ(IConstant::getClassStatic().getParent(), ILiteral::getClassStatic());
 }

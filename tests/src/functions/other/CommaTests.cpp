@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Comma;
-const F f;
+const Comma f;
 
 TEST(CommaTests, toStringTest) {
   EXPECT_EQ(f.toString(), ",");
@@ -25,22 +24,18 @@ TEST(CommaTests, getReturnClassTest) {
 }
 
 TEST(CommaTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(CommaTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(CommaTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Comma);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Comma);
 }
 
 TEST(CommaTests, isAssociativeTest) {
-  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 
@@ -56,6 +51,6 @@ TEST(CommaTests, exprTest) {
 }
 
 TEST(CommaTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Comma"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Comma"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

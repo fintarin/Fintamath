@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Less;
-const F f;
+const Less f;
 
 TEST(LessTests, toStringTest) {
   EXPECT_EQ(f.toString(), "<");
@@ -25,22 +24,18 @@ TEST(LessTests, getReturnClassTest) {
 }
 
 TEST(LessTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(LessTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(LessTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Comparison);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Comparison);
 }
 
 TEST(LessTests, isAssociativeTest) {
-  EXPECT_TRUE(F::isAssociativeStatic());
   EXPECT_TRUE(f.isAssociative());
 }
 
@@ -70,6 +65,6 @@ TEST(LessTests, exprTest) {
 }
 
 TEST(LessTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Less"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Less"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

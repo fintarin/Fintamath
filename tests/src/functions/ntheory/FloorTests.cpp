@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Floor;
-const F f;
+const Floor f;
 
 TEST(FloorTests, toStringTest) {
   EXPECT_EQ(f.toString(), "floor");
@@ -26,12 +25,10 @@ TEST(FloorTests, getReturnClassTest) {
 }
 
 TEST(FloorTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(FloorTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -83,6 +80,6 @@ TEST(FloorTests, exprTest) {
 }
 
 TEST(FloorTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Floor"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Floor"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

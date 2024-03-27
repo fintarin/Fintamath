@@ -10,10 +10,9 @@
 
 using namespace fintamath;
 
-using F = Factorial;
-const F f;
-const F f2(2);
-const F f3(3);
+const Factorial f;
+const Factorial f2(2);
+const Factorial f3(3);
 
 TEST(FactorialTests, toStringTest) {
   EXPECT_EQ(f.toString(), "!");
@@ -28,22 +27,18 @@ TEST(FactorialTests, getReturnClassTest) {
 }
 
 TEST(FactorialTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(FactorialTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(FactorialTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::PostfixUnary);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(FactorialTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -143,6 +138,6 @@ TEST(FactorialTests, exprTest) {
 }
 
 TEST(FactorialTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Factorial"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Factorial"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

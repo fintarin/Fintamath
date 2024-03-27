@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = Neg;
-const F f;
+const Neg f;
 
 TEST(NegTests, toStringTest) {
   EXPECT_EQ(f.toString(), "-");
@@ -24,22 +23,18 @@ TEST(NegTests, getReturnClassTest) {
 }
 
 TEST(NegTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(NegTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(NegTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::PrefixUnary);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::PrefixUnary);
 }
 
 TEST(NegTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -60,6 +55,6 @@ TEST(NegTests, exprTest) {
 }
 
 TEST(NegTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Neg"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Neg"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

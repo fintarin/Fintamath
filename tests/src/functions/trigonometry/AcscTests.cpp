@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Acsc;
-const F f;
+const Acsc f;
 
 TEST(AcscTests, toStringTest) {
   EXPECT_EQ(f.toString(), "acsc");
@@ -26,12 +25,10 @@ TEST(AcscTests, getReturnClassTest) {
 }
 
 TEST(AcscTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(AcscTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -61,6 +58,6 @@ TEST(AcscTests, exprTest) {
 }
 
 TEST(AcscTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Acsc"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Acsc"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

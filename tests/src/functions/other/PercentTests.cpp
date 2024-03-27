@@ -8,8 +8,7 @@
 
 using namespace fintamath;
 
-using F = Percent;
-const F f;
+const Percent f;
 
 TEST(PercentTests, toStringTest) {
   EXPECT_EQ(f.toString(), "%");
@@ -24,22 +23,18 @@ TEST(PercentTests, getReturnClassTest) {
 }
 
 TEST(PercentTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(PercentTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(PercentTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::PostfixUnary);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::PostfixUnary);
 }
 
 TEST(PercentTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -60,6 +55,6 @@ TEST(PercentTests, degTest) {
 }
 
 TEST(PercentTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Percent"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Percent"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

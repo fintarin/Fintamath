@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Asech;
-const F f;
+const Asech f;
 
 TEST(AsechTests, toStringTest) {
   EXPECT_EQ(f.toString(), "asech");
@@ -26,12 +25,10 @@ TEST(AsechTests, getReturnClassTest) {
 }
 
 TEST(AsechTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(AsechTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -60,6 +57,6 @@ TEST(AsechTests, exprTest) {
 }
 
 TEST(AsechTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Asech"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Asech"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

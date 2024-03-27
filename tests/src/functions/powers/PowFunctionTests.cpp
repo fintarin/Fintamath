@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = PowFunction;
-const F f;
+const PowFunction f;
 
 TEST(PowFunctionTests, toStringTest) {
   EXPECT_EQ(f.toString(), "pow");
@@ -25,12 +24,10 @@ TEST(PowFunctionTests, getReturnClassTest) {
 }
 
 TEST(PowFunctionTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(PowFunctionTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -49,6 +46,6 @@ TEST(PowFunctionTests, callTest) {
 }
 
 TEST(PowFunctionTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("PowFunction"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("PowFunction"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

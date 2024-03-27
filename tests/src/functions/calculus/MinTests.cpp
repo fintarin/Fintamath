@@ -11,8 +11,7 @@
 
 using namespace fintamath;
 
-using F = Min;
-const F f;
+const Min f;
 
 TEST(MinTests, toStringTest) {
   EXPECT_EQ(f.toString(), "min");
@@ -27,12 +26,10 @@ TEST(MinTests, getReturnClassTest) {
 }
 
 TEST(MinTests, isVariadicTest) {
-  EXPECT_TRUE(F::isVariadicStatic());
   EXPECT_TRUE(f.isVariadic());
 }
 
 TEST(MinTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -61,6 +58,6 @@ TEST(MinTests, exprTest) {
 }
 
 TEST(MinTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Min"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Min"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Abs;
-const F f;
+const Abs f;
 
 TEST(AbsTests, toStringTest) {
   EXPECT_EQ(f.toString(), "abs");
@@ -26,12 +25,10 @@ TEST(AbsTests, getReturnClassTest) {
 }
 
 TEST(AbsTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(AbsTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -72,6 +69,6 @@ TEST(AbsTests, exprTest) {
 }
 
 TEST(AbsTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Abs"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Abs"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

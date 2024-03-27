@@ -47,4 +47,5 @@ TEST(ILiteralTests, equalsTest) {
 
 TEST(ILiteralTests, getClassTest) {
   EXPECT_EQ(ILiteral::getClassStatic(), MathObjectClass("ILiteral"));
+  EXPECT_EQ(ILiteral::getClassStatic().getParent(), IMathObject::getClassStatic());
 }

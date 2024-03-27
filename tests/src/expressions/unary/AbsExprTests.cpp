@@ -7,5 +7,8 @@
 using namespace fintamath;
 
 TEST(AbsExprTests, getClassTest) {
-  EXPECT_EQ(absExpr(Integer(0).clone())->getClass(), MathObjectClass("AbsExpr"));
+  const auto expr = absExpr(Integer(0).clone());
+
+  EXPECT_EQ(expr->getClass(), MathObjectClass("AbsExpr"));
+  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
 }

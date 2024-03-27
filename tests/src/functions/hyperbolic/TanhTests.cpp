@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Tanh;
-const F f;
+const Tanh f;
 
 TEST(TanhTests, toStringTest) {
   EXPECT_EQ(f.toString(), "tanh");
@@ -26,12 +25,10 @@ TEST(TanhTests, getReturnClassTest) {
 }
 
 TEST(TanhTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(TanhTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -57,6 +54,6 @@ TEST(TanhTests, exprTest) {
 }
 
 TEST(TanhTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Tanh"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Tanh"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

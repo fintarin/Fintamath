@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Derivative;
-const F f;
+const Derivative f;
 
 namespace {
 
@@ -69,12 +68,10 @@ TEST(DerivativeTests, getReturnClassTest) {
 }
 
 TEST(DerivativeTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(DerivativeTests, isEvaluatableTest) {
-  EXPECT_FALSE(F::isEvaluatableStatic());
   EXPECT_FALSE(f.isEvaluatable());
 }
 
@@ -100,6 +97,6 @@ TEST(DerivativeTests, exprTest) {
 }
 
 TEST(DerivativeTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Derivative"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Derivative"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

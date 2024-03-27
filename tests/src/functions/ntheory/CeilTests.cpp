@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Ceil;
-const F f;
+const Ceil f;
 
 TEST(CeilTests, toStringTest) {
   EXPECT_EQ(f.toString(), "ceil");
@@ -26,12 +25,10 @@ TEST(CeilTests, getReturnClassTest) {
 }
 
 TEST(CeilTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(CeilTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -83,6 +80,6 @@ TEST(CeilTests, exprTest) {
 }
 
 TEST(CeilTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Ceil"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Ceil"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

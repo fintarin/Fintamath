@@ -10,8 +10,7 @@
 
 using namespace fintamath;
 
-using F = Sinh;
-const F f;
+const Sinh f;
 
 TEST(SinhTests, toStringTest) {
   EXPECT_EQ(f.toString(), "sinh");
@@ -26,12 +25,10 @@ TEST(SinhTests, getReturnClassTest) {
 }
 
 TEST(SinhTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(SinhTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -57,6 +54,6 @@ TEST(SinhTests, exprTest) {
 }
 
 TEST(SinhTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Sinh"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Sinh"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

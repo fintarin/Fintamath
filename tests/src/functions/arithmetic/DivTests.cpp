@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Div;
-const F f;
+const Div f;
 
 TEST(DivTests, toStringTest) {
   EXPECT_EQ(f.toString(), "/");
@@ -25,22 +24,18 @@ TEST(DivTests, getReturnClassTest) {
 }
 
 TEST(DivTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(DivTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
 TEST(DivTests, getPriorityTest) {
-  EXPECT_EQ(F::getPriorityStatic(), IOperator::Priority::Multiplication);
   EXPECT_EQ(f.getPriority(), IOperator::Priority::Multiplication);
 }
 
 TEST(DivTests, isAssociativeTest) {
-  EXPECT_FALSE(F::isAssociativeStatic());
   EXPECT_FALSE(f.isAssociative());
 }
 
@@ -66,6 +61,6 @@ TEST(DivTests, exprTest) {
 }
 
 TEST(DivTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Div"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Div"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

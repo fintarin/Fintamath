@@ -16,6 +16,6 @@ TEST(NegInfTests, callTest) {
 }
 
 TEST(NegInfTests, getClassTest) {
-  EXPECT_EQ(NegInf::getClassStatic(), MathObjectClass("NegInf"));
-  EXPECT_EQ(NegInf::getClassStatic().getParent(), IConstant::getClassStatic());
+  EXPECT_EQ(c.getClass(), MathObjectClass("NegInf"));
+  EXPECT_EQ(c.getClass().getParent(), IConstant::getClassStatic());
 }

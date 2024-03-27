@@ -9,8 +9,7 @@
 
 using namespace fintamath;
 
-using F = Frac;
-const F f;
+const Frac f;
 
 TEST(FracTests, toStringTest) {
   EXPECT_EQ(f.toString(), "frac");
@@ -25,12 +24,10 @@ TEST(FracTests, getReturnClassTest) {
 }
 
 TEST(FracTests, isVariadicTest) {
-  EXPECT_FALSE(F::isVariadicStatic());
   EXPECT_FALSE(f.isVariadic());
 }
 
 TEST(FracTests, isEvaluatableTest) {
-  EXPECT_TRUE(F::isEvaluatableStatic());
   EXPECT_TRUE(f.isEvaluatable());
 }
 
@@ -49,6 +46,6 @@ TEST(FracTests, callTest) {
 }
 
 TEST(FracTests, getClassTest) {
-  EXPECT_EQ(F::getClassStatic(), MathObjectClass("Frac"));
-  EXPECT_EQ(F::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass(), MathObjectClass("Frac"));
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }
