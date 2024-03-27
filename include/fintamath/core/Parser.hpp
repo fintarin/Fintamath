@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -37,12 +38,12 @@ private:
 
   using StringToConstructorsMap = std::unordered_map<std::string, std::vector<Constructor>>;
 
-  using GeneratorConstructor = std::function<Generator(const std::string &)>;
+  using GeneratorConstructor = std::function<Generator(std::string)>;
 
   using GeneratorConstructorVector = std::vector<GeneratorConstructor>;
 
 public:
-  Generator parse(const std::string &str) const {
+  Generator parse(std::string str) const {
     if (const auto stringToConstructors = stringToConstructorsMap.find(str); stringToConstructors != stringToConstructorsMap.end()) {
       for (const auto &constructor : stringToConstructors->second) {
         co_yield constructor();
@@ -56,16 +57,8 @@ public:
     }
   }
 
-  Generator parse(std::string &&str) const {
-    return [](const Parser &parser, const std::string localStr) -> Generator {
-      for (auto &value : parser.parse(localStr)) {
-        co_yield std::move(value);
-      }
-    }(*this, std::move(str));
-  }
-
-  std::optional<Return> parseFirst(const std::string &str) const {
-    auto gener = parse(str);
+  std::optional<Return> parseFirst(std::string str) const {
+    auto gener = parse(std::move(str));
 
     if (auto iter = gener.begin(); iter != gener.end()) {
       return std::move(*iter);
@@ -89,9 +82,9 @@ public:
   template <typename Type>
     requires(!std::is_abstract_v<Type> && StringConstructable<Type>)
   void registerType() {
-    generatorConstructors.emplace_back([](const std::string &str) -> Generator {
+    generatorConstructors.emplace_back([](std::string str) -> Generator {
       try {
-        co_yield std::make_unique<Type>(str);
+        co_yield std::make_unique<Type>(std::move(str));
       }
       catch (const InvalidInputException &) {
         // Go to the next constructor
@@ -102,8 +95,8 @@ public:
   template <typename Type>
     requires(std::is_abstract_v<Type>)
   void registerType() {
-    generatorConstructors.emplace_back([](const std::string &str) -> Generator {
-      for (auto &value : Type::parse(str)) {
+    generatorConstructors.emplace_back([](std::string str) -> Generator {
+      for (auto &value : Type::parse(std::move(str))) {
         co_yield std::move(value);
       }
     });

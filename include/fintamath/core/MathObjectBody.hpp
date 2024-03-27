@@ -22,13 +22,12 @@ private:                                                        \
   static Class##Parser &getParser();                            \
                                                                 \
 public:                                                         \
-  template <std::convertible_to<std::string> String>            \
-  static auto parse(String &&str) {                             \
-    return getParser().parse(std::forward<String>(str));        \
+  static auto parse(std::string str) {                          \
+    return getParser().parse(std::move(str));                   \
   }                                                             \
                                                                 \
-  static auto parseFirst(const std::string &str) {              \
-    return getParser().parseFirst(str);                         \
+  static auto parseFirst(std::string str) {                     \
+    return getParser().parseFirst(std::move(str));              \
   }                                                             \
                                                                 \
   template <std::derived_from<Class> T>                         \
