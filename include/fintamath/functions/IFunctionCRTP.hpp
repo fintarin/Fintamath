@@ -14,12 +14,22 @@ class IFunctionCRTP_ : public IFunction {
 #undef I_MATH_OBJECT_CRTP
 
 public:
+  static constexpr auto getArgumentClassesStatic() {
+    return std::array{Args::getClassStatic()...};
+  }
+
   const std::vector<MathObjectClass> &getArgumentClasses() const final {
-    return argTypes;
+    constexpr auto argClassesArr = getArgumentClassesStatic();
+    static const std::vector<MathObjectClass> argClassesVect(argClassesArr.begin(), argClassesArr.end());
+    return argClassesVect;
+  }
+
+  static constexpr MathObjectClass getReturnClassStatic() {
+    return Return::getClassStatic();
   }
 
   MathObjectClass getReturnClass() const final {
-    return Return::getClassStatic();
+    return getReturnClassStatic();
   }
 
   bool doArgsMatch(const ArgumentRefVector &argVect) const override {
@@ -27,7 +37,7 @@ public:
       return doAnyArgsMatch(argVect);
     }
     else {
-      if (argVect.size() != argTypes.size()) {
+      if (argVect.size() != getArgumentClassesStatic().size()) {
         return false;
       }
 
@@ -95,9 +105,6 @@ private:
       return is<AnyArgsType>(arg);
     });
   }
-
-private:
-  inline static const ArgumentTypeVector argTypes = {Args::getClassStatic()...};
 
 private:
 #if !defined(I_FUNCTION_CRTP) && !defined(NDEBUG)
