@@ -6,8 +6,6 @@
 #include <memory>
 #include <string>
 
-#include <boost/container_hash/hash.hpp>
-
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
@@ -68,11 +66,17 @@ private:
   Integer denom = 1;
 };
 
-inline size_t hash_value(const Rational &rhs) noexcept {
-  size_t seed = 0;
-  boost::hash_combine(seed, boost::hash<Integer>{}(rhs.numerator()));
-  boost::hash_combine(seed, boost::hash<Integer>{}(rhs.denominator()));
-  return seed;
 }
 
-}
+template <>
+struct std::hash<fintamath::Rational> {
+  size_t operator()(const fintamath::Rational &rhs) const noexcept {
+    using fintamath::detail::Hash;
+    using fintamath::detail::hashCombine;
+
+    size_t seed = 0;
+    hashCombine(seed, Hash<fintamath::Integer>{}(rhs.numerator()));
+    hashCombine(seed, Hash<fintamath::Integer>{}(rhs.denominator()));
+    return seed;
+  }
+};

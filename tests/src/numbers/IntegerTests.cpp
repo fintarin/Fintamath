@@ -614,17 +614,17 @@ TEST(IntegerTests, getClassTest) {
 }
 
 TEST(IntegerTests, hashTest) {
-  constexpr auto hash = boost::hash<Integer>{};
+  constexpr std::hash<Integer> hasher;
 
-  EXPECT_EQ(hash(Integer(0)), hash(Integer(0)));
-  EXPECT_EQ(hash(Integer(12)), hash(Integer(12)));
-  EXPECT_EQ(hash(Integer(-12)), hash(Integer(-12)));
-  EXPECT_EQ(hash(Integer("452734865298734659873246238756987435")), hash(Integer("452734865298734659873246238756987435")));
-  EXPECT_EQ(hash(Integer("-452734865298734659873246238756987435")), hash(Integer("-452734865298734659873246238756987435")));
+  EXPECT_EQ(hasher(Integer(0)), hasher(Integer(0)));
+  EXPECT_EQ(hasher(Integer(12)), hasher(Integer(12)));
+  EXPECT_EQ(hasher(Integer(-12)), hasher(Integer(-12)));
+  EXPECT_EQ(hasher(Integer("452734865298734659873246238756987435")), hasher(Integer("452734865298734659873246238756987435")));
+  EXPECT_EQ(hasher(Integer("-452734865298734659873246238756987435")), hasher(Integer("-452734865298734659873246238756987435")));
 
-  EXPECT_NE(hash(Integer(0)), hash(Integer(1)));
-  EXPECT_NE(hash(Integer(12)), hash(Integer(13)));
-  EXPECT_NE(hash(Integer(-12)), hash(Integer(-13)));
-  EXPECT_NE(hash(Integer("452734865298734659873246238756987435")), hash(Integer("452734865298734659873246238756987436")));
-  EXPECT_NE(hash(Integer("-452734865298734659873246238756987435")), hash(Integer("-452734865298734659873246238756987436")));
+  EXPECT_NE(hasher(Integer(0)), hasher(Integer(1)));
+  EXPECT_NE(hasher(Integer(12)), hasher(Integer(13)));
+  EXPECT_NE(hasher(Integer(-12)), hasher(Integer(-13)));
+  EXPECT_NE(hasher(Integer("452734865298734659873246238756987435")), hasher(Integer("452734865298734659873246238756987436")));
+  EXPECT_NE(hasher(Integer("-452734865298734659873246238756987435")), hasher(Integer("-452734865298734659873246238756987436")));
 }

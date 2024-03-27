@@ -7,8 +7,6 @@
 #include <unordered_map>
 #include <utility>
 
-#include <boost/container_hash/hash.hpp>
-
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
@@ -42,7 +40,7 @@ using NameToSimplifyFunctionMap = std::unordered_map<std::string, std::function<
 
 using NameToTrigFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const Rational &)>>;
 
-using TrigTable = std::unordered_map<Rational, ArgumentPtr, boost::hash<Rational>>;
+using TrigTable = std::unordered_map<Rational, ArgumentPtr>;
 
 ArgumentPtr findValue(const TrigTable &trigTable, const Rational &key, bool isNegated);
 

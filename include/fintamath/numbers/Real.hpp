@@ -6,7 +6,6 @@
 #include <memory>
 #include <string>
 
-#include <boost/container_hash/hash.hpp>
 #include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
@@ -110,14 +109,20 @@ private:
   bool isNegative = false;
 };
 
-inline size_t hash_value(const Real &rhs) noexcept {
-  if (rhs.isZero()) {
-    size_t seed = 0;
-    boost::hash_combine(seed, boost::hash<int>{}(rhs.sign()));
-    return seed;
+}
+
+template <>
+struct std::hash<fintamath::Real> {
+  size_t operator()(const fintamath::Real &rhs) const noexcept {
+    using fintamath::detail::Hash;
+    using fintamath::detail::hashCombine;
+
+    if (rhs.isZero()) {
+      size_t seed = 0;
+      hashCombine(seed, Hash<int>{}(rhs.sign()));
+      return seed;
+    }
+
+    return Hash<fintamath::Real::Backend>{}(rhs.getBackend());
   }
-
-  return boost::hash<Real::Backend>{}(rhs.getBackend());
-}
-
-}
+};

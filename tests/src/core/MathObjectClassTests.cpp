@@ -127,6 +127,6 @@ TEST(MathObjectClassTests, bindTypesTest) {
 }
 
 TEST(MathObjectClassTests, hashTest) {
-  EXPECT_EQ(boost::hash<MathObjectClass>{}(MathObjectClass("Test")),
-            boost::hash<MathObjectClass::Name>{}("Test"));
+  EXPECT_EQ(std::hash<MathObjectClass>{}(MathObjectClass("Test")),
+            std::hash<MathObjectClass::Name>{}("Test"));
 }

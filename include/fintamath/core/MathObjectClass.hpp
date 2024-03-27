@@ -2,11 +2,10 @@
 
 #include <compare>
 #include <cstddef>
+#include <optional>
 #include <string_view>
 #include <unordered_map>
 #include <unordered_set>
-
-#include <boost/container_hash/hash.hpp>
 
 #include "fintamath/config/Config.hpp"
 
@@ -14,15 +13,11 @@ namespace fintamath {
 
 class MathObjectClass;
 
-size_t hash_value(MathObjectClass rhs) noexcept;
-
 }
 
 template <>
 struct std::hash<fintamath::MathObjectClass> {
-  size_t operator()(const fintamath::MathObjectClass &rhs) const noexcept {
-    return boost::hash<fintamath::MathObjectClass>{}(rhs);
-  }
+  size_t operator()(const fintamath::MathObjectClass &rhs) const noexcept;
 };
 
 namespace fintamath {
@@ -100,8 +95,8 @@ void MathObjectClass::bindTypes() {
   }
 }
 
-inline size_t hash_value(const MathObjectClass rhs) noexcept {
-  return boost::hash<MathObjectClass::Name>{}(rhs.getName());
 }
 
+inline size_t std::hash<fintamath::MathObjectClass>::operator()(const fintamath::MathObjectClass &rhs) const noexcept {
+  return std::hash<fintamath::MathObjectClass::Name>{}(rhs.getName());
 }

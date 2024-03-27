@@ -3,7 +3,6 @@
 #include <concepts>
 #include <functional>
 #include <memory>
-#include <ranges>
 #include <type_traits>
 
 #include "fintamath/core/MathObjectClass.hpp"
@@ -11,12 +10,6 @@
 namespace fintamath {
 
 class IMathObject;
-
-namespace stdr = std::ranges;
-namespace stdv = std::views;
-
-template <typename From, typename To>
-concept ConvertibleToAndNotSameAs = std::convertible_to<From, To> && !std::same_as<From, To>;
 
 inline bool is(const MathObjectClass to, const MathObjectClass from) {
   return to == from || to.getChildren(true).contains(from);

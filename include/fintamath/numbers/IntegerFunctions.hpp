@@ -5,15 +5,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include <boost/container_hash/hash.hpp>
-
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 
-using FactorToCountMap = std::unordered_map<Integer, Integer, boost::hash<Integer>>;
+using FactorToCountMap = std::unordered_map<Integer, Integer>;
 
 // Use exponentiation by squaring with constant auxiliary memory (iterative version).
 // https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.

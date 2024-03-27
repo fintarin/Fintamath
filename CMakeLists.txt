@@ -47,12 +47,11 @@ target_include_directories(
 
 target_link_libraries(
   ${PROJECT_NAME}
-  PUBLIC MPFR
+  PUBLIC fmt::fmt
+         cppcoro
+         MPFR
          Boost::multiprecision
-         Boost::math
-         Boost::container_hash
-         fmt::fmt
-         cppcoro)
+         Boost::math)
 
 include(cmake/CompilerWarnings.cmake)
 include(cmake/Coverage.cmake)

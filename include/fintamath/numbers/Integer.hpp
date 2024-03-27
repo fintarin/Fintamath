@@ -7,7 +7,6 @@
 #include <memory>
 #include <string>
 
-#include <boost/container_hash/hash.hpp>
 #include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/gmp.hpp>
 
@@ -87,8 +86,13 @@ private:
   Backend backend;
 };
 
-inline size_t hash_value(const Integer &rhs) noexcept {
-  return boost::hash<Integer::Backend>{}(rhs.getBackend());
 }
 
-}
+template <>
+struct std::hash<fintamath::Integer> {
+  size_t operator()(const fintamath::Integer &rhs) const noexcept {
+    using fintamath::detail::Hash;
+
+    return Hash<fintamath::Integer::Backend>{}(rhs.getBackend());
+  }
+};

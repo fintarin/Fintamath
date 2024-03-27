@@ -509,21 +509,21 @@ TEST(RationalTests, getClassTest) {
 }
 
 TEST(RationalTests, hashTest) {
-  constexpr auto hash = boost::hash<Rational>{};
+  constexpr std::hash<Rational> hasher;
 
-  EXPECT_EQ(hash(Rational(0)), hash(Rational(0)));
-  EXPECT_EQ(hash(Rational(12)), hash(Rational(12)));
-  EXPECT_EQ(hash(Rational(-12)), hash(Rational(-12)));
-  EXPECT_EQ(hash(Rational(3, 2)), hash(Rational(3, 2)));
-  EXPECT_EQ(hash(Rational(-3, 2)), hash(Rational(-3, 2)));
-  EXPECT_EQ(hash(Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))), hash(Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))));
-  EXPECT_EQ(hash(Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))), hash(Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))));
+  EXPECT_EQ(hasher(Rational(0)), hasher(Rational(0)));
+  EXPECT_EQ(hasher(Rational(12)), hasher(Rational(12)));
+  EXPECT_EQ(hasher(Rational(-12)), hasher(Rational(-12)));
+  EXPECT_EQ(hasher(Rational(3, 2)), hasher(Rational(3, 2)));
+  EXPECT_EQ(hasher(Rational(-3, 2)), hasher(Rational(-3, 2)));
+  EXPECT_EQ(hasher(Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))), hasher(Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))));
+  EXPECT_EQ(hasher(Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))), hasher(Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234"))));
 
-  EXPECT_NE(hash(Rational(0)), hash(Rational(1)));
-  EXPECT_NE(hash(Rational(12)), hash(Rational(13)));
-  EXPECT_NE(hash(Rational(-12)), hash(Rational(-13)));
-  EXPECT_NE(hash(Rational(3, 2)), hash(Rational(2, 3)));
-  EXPECT_NE(hash(Rational(-3, 2)), hash(Rational(-2, 3)));
-  EXPECT_NE(hash(Rational(Integer("39842732658275642342352642634234234"), Integer("452734865298734659873246238756987435"))), Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234")));
-  EXPECT_NE(hash(Rational(-Integer("39842732658275642342352642634234234"), Integer("452734865298734659873246238756987435"))), Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234")));
+  EXPECT_NE(hasher(Rational(0)), hasher(Rational(1)));
+  EXPECT_NE(hasher(Rational(12)), hasher(Rational(13)));
+  EXPECT_NE(hasher(Rational(-12)), hasher(Rational(-13)));
+  EXPECT_NE(hasher(Rational(3, 2)), hasher(Rational(2, 3)));
+  EXPECT_NE(hasher(Rational(-3, 2)), hasher(Rational(-2, 3)));
+  EXPECT_NE(hasher(Rational(Integer("39842732658275642342352642634234234"), Integer("452734865298734659873246238756987435"))), Rational(Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234")));
+  EXPECT_NE(hasher(Rational(-Integer("39842732658275642342352642634234234"), Integer("452734865298734659873246238756987435"))), Rational(-Integer("452734865298734659873246238756987435"), Integer("39842732658275642342352642634234234")));
 }

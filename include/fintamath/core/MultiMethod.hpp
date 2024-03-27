@@ -4,8 +4,7 @@
 #include <tuple>
 #include <unordered_map>
 
-#include <boost/container_hash/hash.hpp>
-
+#include "fintamath/core/Hash.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
 
@@ -23,7 +22,7 @@ class MultiMethod<Res(ArgsBase...)> final {
 
   using Callback = std::function<Res(ArgsBase...)>;
 
-  using IdToCallbackMap = std::unordered_map<CallbackId, Callback, boost::hash<CallbackId>>;
+  using IdToCallbackMap = std::unordered_map<CallbackId, Callback, Hash<CallbackId>>;
 
 public:
   template <typename... Args>

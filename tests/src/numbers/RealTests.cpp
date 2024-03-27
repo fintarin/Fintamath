@@ -1049,35 +1049,35 @@ TEST(RealTests, getClassTest) {
 }
 
 TEST(RealTests, hashTest) {
-  constexpr auto hash = boost::hash<Real>{};
+  constexpr std::hash<Real> hasher;
 
-  EXPECT_EQ(hash(Real("0")), hash(Real("0")));
-  EXPECT_EQ(hash(Real("-0")), hash(Real("-0")));
-  EXPECT_EQ(hash(Real("12")), hash(Real("12")));
-  EXPECT_EQ(hash(Real("-12")), hash(Real("-12")));
-  EXPECT_EQ(hash(Real("452734865298734659873246238756987435")), hash(Real("452734865298734659873246238756987435")));
-  EXPECT_EQ(hash(Real("-452734865298734659873246238756987435")), hash(Real("-452734865298734659873246238756987435")));
-  EXPECT_EQ(hash(Real("1.4357")), hash(Real("1.4357")));
-  EXPECT_EQ(hash(Real("-1.4357")), hash(Real("-1.4357")));
-  EXPECT_EQ(hash(Real("3.3333")), hash(Real("3.3333")));
-  EXPECT_EQ(hash(Real("-3.3333")), hash(Real("-3.3333")));
-  EXPECT_EQ(hash(Real("123.00001")), hash(Real("123.00001")));
-  EXPECT_EQ(hash(Real("-123.00001")), hash(Real("-123.00001")));
-  EXPECT_EQ(hash(Real("897259832648723648327648273463287.48732648273652873")), hash(Real("897259832648723648327648273463287.48732648273652873")));
-  EXPECT_EQ(hash(Real("-897259832648723648327648273463287.48732648273652873")), hash(Real("-897259832648723648327648273463287.48732648273652873")));
+  EXPECT_EQ(hasher(Real("0")), hasher(Real("0")));
+  EXPECT_EQ(hasher(Real("-0")), hasher(Real("-0")));
+  EXPECT_EQ(hasher(Real("12")), hasher(Real("12")));
+  EXPECT_EQ(hasher(Real("-12")), hasher(Real("-12")));
+  EXPECT_EQ(hasher(Real("452734865298734659873246238756987435")), hasher(Real("452734865298734659873246238756987435")));
+  EXPECT_EQ(hasher(Real("-452734865298734659873246238756987435")), hasher(Real("-452734865298734659873246238756987435")));
+  EXPECT_EQ(hasher(Real("1.4357")), hasher(Real("1.4357")));
+  EXPECT_EQ(hasher(Real("-1.4357")), hasher(Real("-1.4357")));
+  EXPECT_EQ(hasher(Real("3.3333")), hasher(Real("3.3333")));
+  EXPECT_EQ(hasher(Real("-3.3333")), hasher(Real("-3.3333")));
+  EXPECT_EQ(hasher(Real("123.00001")), hasher(Real("123.00001")));
+  EXPECT_EQ(hasher(Real("-123.00001")), hasher(Real("-123.00001")));
+  EXPECT_EQ(hasher(Real("897259832648723648327648273463287.48732648273652873")), hasher(Real("897259832648723648327648273463287.48732648273652873")));
+  EXPECT_EQ(hasher(Real("-897259832648723648327648273463287.48732648273652873")), hasher(Real("-897259832648723648327648273463287.48732648273652873")));
 
-  EXPECT_NE(hash(Real("0")), hash(Real("-0")));
-  EXPECT_NE(hash(Real("0")), hash(Real("1")));
-  EXPECT_NE(hash(Real("12")), hash(Real("13")));
-  EXPECT_NE(hash(Real("-12")), hash(Real("-13")));
-  EXPECT_NE(hash(Real("452734865298734659873246238756987435")), hash(Real("452734865298734659873246238756987436")));
-  EXPECT_NE(hash(Real("-452734865298734659873246238756987435")), hash(Real("-452734865298734659873246238756987436")));
-  EXPECT_NE(hash(Real("1.4357")), hash(Real("1.4358")));
-  EXPECT_NE(hash(Real("-1.4357")), hash(Real("-1.4358")));
-  EXPECT_NE(hash(Real("3.3333")), hash(Real("3.33333")));
-  EXPECT_NE(hash(Real("-3.3333")), hash(Real("-3.33333")));
-  EXPECT_NE(hash(Real("123.00001")), hash(Real("123.000001")));
-  EXPECT_NE(hash(Real("-123.00001")), hash(Real("-123.000001")));
-  EXPECT_NE(hash(Real("897259832648723648327648273463287.48732648273652873")), hash(Real("897259832648723648327648273463287.48732648273652874")));
-  EXPECT_NE(hash(Real("-897259832648723648327648273463287.48732648273652873")), hash(Real("-897259832648723648327648273463287.48732648273652874")));
+  EXPECT_NE(hasher(Real("0")), hasher(Real("-0")));
+  EXPECT_NE(hasher(Real("0")), hasher(Real("1")));
+  EXPECT_NE(hasher(Real("12")), hasher(Real("13")));
+  EXPECT_NE(hasher(Real("-12")), hasher(Real("-13")));
+  EXPECT_NE(hasher(Real("452734865298734659873246238756987435")), hasher(Real("452734865298734659873246238756987436")));
+  EXPECT_NE(hasher(Real("-452734865298734659873246238756987435")), hasher(Real("-452734865298734659873246238756987436")));
+  EXPECT_NE(hasher(Real("1.4357")), hasher(Real("1.4358")));
+  EXPECT_NE(hasher(Real("-1.4357")), hasher(Real("-1.4358")));
+  EXPECT_NE(hasher(Real("3.3333")), hasher(Real("3.33333")));
+  EXPECT_NE(hasher(Real("-3.3333")), hasher(Real("-3.33333")));
+  EXPECT_NE(hasher(Real("123.00001")), hasher(Real("123.000001")));
+  EXPECT_NE(hasher(Real("-123.00001")), hasher(Real("-123.000001")));
+  EXPECT_NE(hasher(Real("897259832648723648327648273463287.48732648273652873")), hasher(Real("897259832648723648327648273463287.48732648273652874")));
+  EXPECT_NE(hasher(Real("-897259832648723648327648273463287.48732648273652873")), hasher(Real("-897259832648723648327648273463287.48732648273652874")));
 }
