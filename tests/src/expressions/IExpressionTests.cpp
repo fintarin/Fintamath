@@ -104,13 +104,5 @@ TEST(IExpressionTests, toMinimalObjectTest) {
 
 TEST(IExpressionTests, getClassTest) {
   EXPECT_EQ(IExpression::getClassStatic(), MathObjectClass("IExpression"));
-  EXPECT_EQ(IExpression::getClassStatic().getParent(), IArithmetic::getClassStatic());
-}
-
-TEST(IExpressionTests, arithmeticTest) {
-  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) + cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) - cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) * cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
-  EXPECT_THROW(cast<IExpression>(*sinExpr(Integer(1).clone())) / cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
-  EXPECT_THROW(-cast<IExpression>(*sinExpr(Integer(1).clone())), InvalidInputException);
+  EXPECT_EQ(IExpression::getClassStatic().getParent(), IMathObject::getClassStatic());
 }

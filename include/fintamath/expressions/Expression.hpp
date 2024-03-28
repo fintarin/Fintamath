@@ -94,16 +94,6 @@ public:
   static void registerExpressionConstructor(ExpressionConstructor constructor);
 
 protected:
-  Expression &add(const Expression &rhs) override;
-
-  Expression &substract(const Expression &rhs) override;
-
-  Expression &multiply(const Expression &rhs) override;
-
-  Expression &divide(const Expression &rhs) override;
-
-  Expression &negate() override;
-
   ArgumentPtr simplify() const override;
 
 private:
@@ -168,30 +158,6 @@ private:
 
   mutable bool isSimplified = false;
 };
-
-Expression operator+(const Variable &lhs, const Variable &rhs);
-
-Expression operator+(const Expression &lhs, const Variable &rhs);
-
-Expression operator+(const Variable &lhs, const Expression &rhs);
-
-Expression operator-(const Variable &lhs, const Variable &rhs);
-
-Expression operator-(const Expression &lhs, const Variable &rhs);
-
-Expression operator-(const Variable &lhs, const Expression &rhs);
-
-Expression operator*(const Variable &lhs, const Variable &rhs);
-
-Expression operator*(const Expression &lhs, const Variable &rhs);
-
-Expression operator*(const Variable &lhs, const Expression &rhs);
-
-Expression operator/(const Variable &lhs, const Variable &rhs);
-
-Expression operator/(const Expression &lhs, const Variable &rhs);
-
-Expression operator/(const Variable &lhs, const Expression &rhs);
 
 template <typename Function, bool isPolynomial>
 void Expression::registerExpressionConstructor(ExpressionConstructor constructor) {

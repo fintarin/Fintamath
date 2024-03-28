@@ -135,11 +135,11 @@ ArgumentPtrVector solveQuadraticEquation(const ArgumentPtrVector &coeffAtPow) {
   const Expression b(coeffAtPow[1]);
   const Expression c(coeffAtPow[0]);
 
-  const ArgumentPtr discriminantArg = sub(pow(b, 2), mul(4, a, c)).toMinimalObject();
+  const ArgumentPtr discriminantArg = (pow(b, 2) - (4 * a * c)).toMinimalObject();
   const Expression discriminant(discriminantArg);
 
-  const Expression firstRoot = div(add(neg(b), sqrt(discriminant)), mul(2, a));
-  const Expression secondRoot = div(sub(neg(b), sqrt(discriminant)), mul(2, a));
+  const Expression firstRoot = (-b + sqrt(discriminant)) / 2 * a;
+  const Expression secondRoot = (-b - sqrt(discriminant)) / (2 * a);
 
   return {firstRoot.getChildren().front(), secondRoot.getChildren().front()};
 }

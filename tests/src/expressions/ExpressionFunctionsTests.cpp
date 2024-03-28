@@ -1,53 +1,71 @@
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/ExpressionFunctions.hpp"
-
-#include "fintamath/literals/Variable.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/literals/Boolean.hpp"
+#include "fintamath/literals/constants/E.hpp"
 
 using namespace fintamath;
 
 TEST(ExpressionFunctionsTests, addTest) {
-  EXPECT_EQ(add(Variable("a"), -1, Expression("b^2")).toString(), "a + b^2 - 1");
-  EXPECT_EQ(add(10, Expression("a+2")).toString(), "a + 12");
-  EXPECT_EQ(add(Variable("a"), Expression("a+2")).toString(), "2 a + 2");
-  EXPECT_EQ(add(Expression("b+2"), Expression("a+2")).toString(), "a + b + 4");
-  EXPECT_EQ(add(Expression("10+a^3"), Expression("a^2")).toString(), "a^3 + a^2 + 10");
-  EXPECT_EQ(add(Expression("a*b"), Expression("b*a")).toString(), "2 a b");
-  EXPECT_EQ(add(Expression("a+b"), Expression("a+b")).toString(), "2 a + 2 b");
+  EXPECT_EQ((Variable("a") + Variable("a")).toString(), "2 a");
+  EXPECT_EQ((Variable("a") + Variable("b")).toString(), "a + b");
+  EXPECT_EQ((Variable("a") + -1 + Expression("b^2")).toString(), "a + b^2 - 1");
+  EXPECT_EQ((10 + Expression("a+2")).toString(), "a + 12");
+  EXPECT_EQ((Variable("a") + Expression("a+2")).toString(), "2 a + 2");
+  EXPECT_EQ((Expression("b+2") + Expression("a+2")).toString(), "a + b + 4");
+  EXPECT_EQ((Expression("10+a^3") + Expression("a^2")).toString(), "a^3 + a^2 + 10");
+  EXPECT_EQ((Expression("a*b") + Expression("b*a")).toString(), "2 a b");
+  EXPECT_EQ((Expression("a+b") + Expression("a+b")).toString(), "2 a + 2 b");
 }
 
-TEST(ExpressionFunctionsTests, mulTest) {
-  EXPECT_EQ(mul(Variable("a"), -1, Expression("a*2")).toString(), "-2 a^2");
-  EXPECT_EQ(mul(10, Expression("a+2")).toString(), "10 a + 20");
-  EXPECT_EQ(mul(Variable("a"), Expression("a^3+a^2")).toString(), "a^4 + a^3");
-  EXPECT_EQ(mul(5, Expression("a+3"), Expression("a+2")).toString(), "5 a^2 + 25 a + 30");
-  EXPECT_EQ(mul(Expression("a+b"), Expression("3 b + c")).toString(), "3 a b + a c + 3 b^2 + b c");
+TEST(ExpressionFunctionsTests, unaryPlusTest) {
+  EXPECT_EQ((+Variable("a")).toString(), "a");
+  EXPECT_EQ((+Expression("a")).toString(), "a");
+  EXPECT_EQ((+Expression("a+3")).toString(), "a + 3");
+  EXPECT_EQ((+Expression("(a+b)^2")).toString(), "a^2 + 2 a b + b^2");
 }
 
 TEST(ExpressionFunctionsTests, subTest) {
-  EXPECT_EQ(sub(Variable("a"), Expression("b^2")).toString(), "a - b^2");
-  EXPECT_EQ(sub(10, Expression("a+2")).toString(), "-a + 8");
-  EXPECT_EQ(sub(Variable("a"), Expression("a+2")).toString(), "-2");
-  EXPECT_EQ(sub(Expression("b+2"), Expression("a+2")).toString(), "-a + b");
-  EXPECT_EQ(sub(Expression("10+a^3"), Expression("a^2")).toString(), "a^3 - a^2 + 10");
-  EXPECT_EQ(sub(Expression("a*b"), Expression("b*a")).toString(), "0");
-  EXPECT_EQ(sub(Expression("a+b"), Expression("a+b")).toString(), "0");
-}
-
-TEST(ExpressionFunctionsTests, divTest) {
-  EXPECT_EQ(div(Variable("a"), Expression("b^2")).toString(), "a/(b^2)");
-  EXPECT_EQ(div(10, Expression("a+2")).toString(), "10/(a + 2)");
-  EXPECT_EQ(div(Variable("a"), Expression("a+2")).toString(), "1 - 2/(a + 2)");
-  EXPECT_EQ(div(Expression("b+2"), Expression("a+2")).toString(), "(b + 2)/(a + 2)");
-  EXPECT_EQ(div(Expression("10+a^3"), Expression("a^2")).toString(), "a + 10/(a^2)");
-  EXPECT_EQ(div(Expression("a*b"), Expression("b*a")).toString(), "1");
-  EXPECT_EQ(div(Expression("a+b"), Expression("a+b")).toString(), "1");
+  EXPECT_EQ((Variable("a") - Variable("a")).toString(), "0");
+  EXPECT_EQ((Variable("a") - Variable("b")).toString(), "a - b");
+  EXPECT_EQ((Variable("a") - Expression("b^2")).toString(), "a - b^2");
+  EXPECT_EQ((10 - Expression("a+2")).toString(), "-a + 8");
+  EXPECT_EQ((Variable("a") - Expression("a+2")).toString(), "-2");
+  EXPECT_EQ((Expression("b+2") - Expression("a+2")).toString(), "-a + b");
+  EXPECT_EQ((Expression("10+a^3") - Expression("a^2")).toString(), "a^3 - a^2 + 10");
+  EXPECT_EQ((Expression("a*b") - Expression("b*a")).toString(), "0");
+  EXPECT_EQ((Expression("a+b") - Expression("a+b")).toString(), "0");
 }
 
 TEST(ExpressionFunctionsTests, negTest) {
-  EXPECT_EQ(neg(Expression("a")).toString(), "-a");
-  EXPECT_EQ(neg(Expression("a+3")).toString(), "-a - 3");
-  EXPECT_EQ(neg(Expression("(a+b)^2")).toString(), "-a^2 - 2 a b - b^2");
+  EXPECT_EQ((-Variable("a")).toString(), "-a");
+  EXPECT_EQ((-Expression("a")).toString(), "-a");
+  EXPECT_EQ((-Expression("a+3")).toString(), "-a - 3");
+  EXPECT_EQ((-Expression("(a+b)^2")).toString(), "-a^2 - 2 a b - b^2");
+}
+
+TEST(ExpressionFunctionsTests, mulTest) {
+  EXPECT_EQ((Variable("a") * Variable("a")).toString(), "a^2");
+  EXPECT_EQ((Variable("a") * Variable("b")).toString(), "a b");
+  EXPECT_EQ((Variable("a") * -1 * Expression("a*2")).toString(), "-2 a^2");
+  EXPECT_EQ((10 * Expression("a+2")).toString(), "10 a + 20");
+  EXPECT_EQ((Variable("a") * Expression("a^3+a^2")).toString(), "a^4 + a^3");
+  EXPECT_EQ((5 * Expression("a+3") * Expression("a+2")).toString(), "5 a^2 + 25 a + 30");
+  EXPECT_EQ((Expression("a+b") * Expression("3 b + c")).toString(), "3 a b + a c + 3 b^2 + b c");
+}
+
+TEST(ExpressionFunctionsTests, divTest) {
+  EXPECT_EQ((Variable("a") / Variable("a")).toString(), "1");
+  EXPECT_EQ((Variable("a") / Variable("b")).toString(), "a/b");
+  EXPECT_EQ((Variable("a") / Expression("b^2")).toString(), "a/(b^2)");
+  EXPECT_EQ((10 / Expression("a+2")).toString(), "10/(a + 2)");
+  EXPECT_EQ((Variable("a") / Expression("a+2")).toString(), "1 - 2/(a + 2)");
+  EXPECT_EQ((Expression("b+2") / Expression("a+2")).toString(), "(b + 2)/(a + 2)");
+  EXPECT_EQ((Expression("10+a^3") / Expression("a^2")).toString(), "a + 10/(a^2)");
+  EXPECT_EQ((Expression("a*b") / Expression("b*a")).toString(), "1");
+  EXPECT_EQ((Expression("a+b") / Expression("a+b")).toString(), "1");
 }
 
 TEST(ExpressionFunctionsTests, eqvTest) {
@@ -312,4 +330,12 @@ TEST(ExpressionFunctionsTests, negInfTest) {
 
 TEST(ExpressionFunctionsTests, complexInfTest) {
   EXPECT_EQ(complexInf().toString(), "ComplexInf");
+}
+
+TEST(ExpressionFunctionsTests, negativeTest) {
+  EXPECT_THROW(Boolean(true) + Boolean(false), InvalidInputException);
+  EXPECT_THROW(Add() / Mul(), InvalidInputException);
+  EXPECT_THROW(sin(Boolean(true)), InvalidInputException);
+  EXPECT_THROW(eqv(Boolean(true), Boolean(false)), InvalidInputException);
+  EXPECT_THROW(orL(Integer(1), Integer(2)), InvalidInputException);
 }

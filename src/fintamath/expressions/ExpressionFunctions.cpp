@@ -2,6 +2,11 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Div.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/Neg.hpp"
+#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/calculus/Derivative.hpp"
 #include "fintamath/functions/comparison/Eqv.hpp"
 #include "fintamath/functions/comparison/Less.hpp"
@@ -47,20 +52,32 @@
 
 namespace fintamath {
 
-Expression sub(const Expression &lhs, const Expression &rhs) {
-  return lhs - rhs;
+Expression operator+(const Expression &lhs, const Expression &rhs) {
+  return Expression(addExpr(lhs, rhs));
 }
 
-Expression div(const Expression &lhs, const Expression &rhs) {
-  return lhs / rhs;
+Expression operator+(const Expression &rhs) {
+  return rhs;
+}
+
+Expression operator-(const Expression &lhs, const Expression &rhs) {
+  return Expression(subExpr(lhs, rhs));
+}
+
+Expression operator-(const Expression &rhs) {
+  return Expression(negExpr(rhs));
+}
+
+Expression operator*(const Expression &lhs, const Expression &rhs) {
+  return Expression(mulExpr(lhs, rhs));
+}
+
+Expression operator/(const Expression &lhs, const Expression &rhs) {
+  return Expression(divExpr(lhs, rhs));
 }
 
 Expression mod(const Expression &lhs, const Expression &rhs) {
   return Expression(modExpr(lhs, rhs));
-}
-
-Expression neg(const Expression &rhs) {
-  return -rhs;
 }
 
 Expression eqv(const Expression &lhs, const Expression &rhs) {

@@ -33,27 +33,6 @@ public:
     return true;
   }
 
-protected:
-  Derived &add(const Derived &rhs) override {
-    throw InvalidInputBinaryOperatorException("+", this->toString(), rhs.toString());
-  }
-
-  Derived &substract(const Derived &rhs) override {
-    throw InvalidInputBinaryOperatorException("-", this->toString(), rhs.toString());
-  }
-
-  Derived &multiply(const Derived &rhs) override {
-    throw InvalidInputBinaryOperatorException("*", this->toString(), rhs.toString());
-  }
-
-  Derived &divide(const Derived &rhs) override {
-    throw InvalidInputBinaryOperatorException("/", this->toString(), rhs.toString());
-  }
-
-  Derived &negate() override {
-    throw InvalidInputUnaryOperatorException("-", this->toString(), InvalidInputUnaryOperatorException::Type::Prefix);
-  }
-
 private:
 #if !defined(I_EXPRESSION_CRTP) && !defined(NDEBUG)
 };

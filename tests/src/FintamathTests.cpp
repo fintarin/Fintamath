@@ -15,10 +15,10 @@ TEST(FintamathTests, fintamathTest) {
 
   //-------------------------------------------------------------------------------------//
 
-  expr = add(e(), pi(), Variable("a"), Variable("b"));
+  expr = e() + pi() + Variable("a") + Variable("b");
   EXPECT_EQ(expr.toString(), "a + b + E + Pi");
 
-  expr = mul(e(), pi(), Variable("a"), Variable("b"));
+  expr = e() * pi() * Variable("a") * Variable("b");
   EXPECT_EQ(expr.toString(), "E Pi a b");
 
   expr = pow(Variable("a"), Variable("b")) * Variable("c");

@@ -82,36 +82,6 @@ const std::shared_ptr<IFunction> &Expression::getFunction() const {
   return func;
 }
 
-Expression &Expression::add(const Expression &rhs) {
-  child = makeExpr(Add{}, *child, *rhs.child);
-  isSimplified = false;
-  return *this;
-}
-
-Expression &Expression::substract(const Expression &rhs) {
-  child = makeExpr(Sub{}, *child, *rhs.child);
-  isSimplified = false;
-  return *this;
-}
-
-Expression &Expression::multiply(const Expression &rhs) {
-  child = makeExpr(Mul{}, *child, *rhs.child);
-  isSimplified = false;
-  return *this;
-}
-
-Expression &Expression::divide(const Expression &rhs) {
-  child = makeExpr(Div{}, *child, *rhs.child);
-  isSimplified = false;
-  return *this;
-}
-
-Expression &Expression::negate() {
-  child = makeExpr(Neg{}, *child);
-  isSimplified = false;
-  return *this;
-}
-
 const ArgumentPtrVector &Expression::getChildren() const {
   simplifyMutable();
   childrenCached.front() = child;
@@ -528,54 +498,6 @@ bool Expression::doesArgMatch(const MathObjectClass &expectedType, const Argumen
   }
 
   return true;
-}
-
-Expression operator+(const Variable &lhs, const Variable &rhs) {
-  return Expression(addExpr(lhs, rhs));
-}
-
-Expression operator+(const Expression &lhs, const Variable &rhs) {
-  return Expression(addExpr(lhs, rhs));
-}
-
-Expression operator+(const Variable &lhs, const Expression &rhs) {
-  return Expression(addExpr(lhs, rhs));
-}
-
-Expression operator-(const Variable &lhs, const Variable &rhs) {
-  return Expression(subExpr(lhs, rhs));
-}
-
-Expression operator-(const Expression &lhs, const Variable &rhs) {
-  return Expression(subExpr(lhs, rhs));
-}
-
-Expression operator-(const Variable &lhs, const Expression &rhs) {
-  return Expression(subExpr(lhs, rhs));
-}
-
-Expression operator*(const Variable &lhs, const Variable &rhs) {
-  return Expression(mulExpr(lhs, rhs));
-}
-
-Expression operator*(const Expression &lhs, const Variable &rhs) {
-  return Expression(mulExpr(lhs, rhs));
-}
-
-Expression operator*(const Variable &lhs, const Expression &rhs) {
-  return Expression(mulExpr(lhs, rhs));
-}
-
-Expression operator/(const Variable &lhs, const Variable &rhs) {
-  return Expression(divExpr(lhs, rhs));
-}
-
-Expression operator/(const Expression &lhs, const Variable &rhs) {
-  return Expression(divExpr(lhs, rhs));
-}
-
-Expression operator/(const Variable &lhs, const Expression &rhs) {
-  return Expression(divExpr(lhs, rhs));
 }
 
 namespace detail {

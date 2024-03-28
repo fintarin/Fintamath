@@ -6,7 +6,6 @@
 #include <utility>
 #include <vector>
 
-#include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/Parser.hpp"
@@ -18,7 +17,7 @@
 
 namespace fintamath {
 
-class IExpression : public IArithmetic {
+class IExpression : public IMathObject {
   FINTAMATH_PARENT_CLASS_BODY(IExpression)
 
 public:
