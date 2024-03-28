@@ -18,7 +18,7 @@
 
 namespace fintamath {
 
-class IExpression : public IArithmetic {
+class IExpression : public IMathObject {
   FINTAMATH_PARENT_CLASS_BODY(IExpression)
 
 public:

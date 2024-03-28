@@ -119,12 +119,12 @@
 namespace fintamath::detail {
 
 TypeConfig::TypeConfig() {
-  IMathObject::registerType<ILiteral>();
-  IMathObject::registerType<IFunction>();
   IMathObject::registerType<IArithmetic>();
+  IMathObject::registerType<IFunction>();
+  IMathObject::registerType<ILiteral>();
+  IMathObject::registerType<IExpression>();
 
   IArithmetic::registerType<IComparable>();
-  IArithmetic::registerType<IExpression>();
 
   IComparable::registerType<INumber>();
 

@@ -97,66 +97,6 @@ TEST(ExpressionTests, equalsTest) {
   // TODO: implement more tests
 }
 
-TEST(ExpressionTests, variableVariablePlusOperatorTest) {
-  EXPECT_EQ(Variable("a") + Variable("a"), Expression("2a"));
-  EXPECT_EQ(Variable("a") + Variable("b"), Expression("a+b"));
-}
-
-TEST(ExpressionTests, variableExpressionPlusOperatorTest) {
-  EXPECT_EQ(Variable("a") + Expression("a+b"), Expression("2a+b"));
-  EXPECT_EQ(Variable("a") + Expression("b+c"), Expression("a+b+c"));
-}
-
-TEST(ExpressionTests, expressionVariablePlusOperatorTest) {
-  EXPECT_EQ(Expression("a+b") + Variable("a"), Expression("2a+b"));
-  EXPECT_EQ(Expression("b+c") + Variable("a"), Expression("a+b+c"));
-}
-
-TEST(ExpressionTests, variableVariableMinusOperatorTest) {
-  EXPECT_EQ(Variable("a") - Variable("a"), Expression("0"));
-  EXPECT_EQ(Variable("a") - Variable("b"), Expression("a-b"));
-}
-
-TEST(ExpressionTests, variableExpressionMinusOperatorTest) {
-  EXPECT_EQ(Variable("a") - Expression("a-b"), Expression("b"));
-  EXPECT_EQ(Variable("a") - Expression("b-c"), Expression("a-b+c"));
-}
-
-TEST(ExpressionTests, expressionVariableMinusOperatorTest) {
-  EXPECT_EQ(Expression("a-b") - Variable("a"), Expression("-b"));
-  EXPECT_EQ(Expression("b-c") - Variable("a"), Expression("-a+b-c"));
-}
-
-TEST(ExpressionTests, variableVariableMultiplyOperatorTest) {
-  EXPECT_EQ(Variable("a") * Variable("a"), Expression("a^2"));
-  EXPECT_EQ(Variable("a") * Variable("b"), Expression("ab"));
-}
-
-TEST(ExpressionTests, variableExpressionMultiplyOperatorTest) {
-  EXPECT_EQ(Variable("a") * Expression("a*b"), Expression("a^2 b"));
-  EXPECT_EQ(Variable("a") * Expression("b*c"), Expression("abc"));
-}
-
-TEST(ExpressionTests, expressionVariableMultiplyOperatorTest) {
-  EXPECT_EQ(Expression("a*b") * Variable("a"), Expression("a^2 b"));
-  EXPECT_EQ(Expression("b*c") * Variable("a"), Expression("abc"));
-}
-
-TEST(ExpressionTests, variableVariableDivideOperatorTest) {
-  EXPECT_EQ(Variable("a") / Variable("a"), Expression("1"));
-  EXPECT_EQ(Variable("a") / Variable("b"), Expression("a/b"));
-}
-
-TEST(ExpressionTests, variableExpressionDivideOperatorTest) {
-  EXPECT_EQ(Variable("a") / Expression("a/b"), Expression("b"));
-  EXPECT_EQ(Variable("a") / Expression("b/c"), Expression("(ac)/b"));
-}
-
-TEST(ExpressionTests, expressionVariableDivideOperatorTest) {
-  EXPECT_EQ(Expression("a/b") / Variable("a"), Expression("1/b"));
-  EXPECT_EQ(Expression("b/c") / Variable("a"), Expression("b/c/a"));
-}
-
 TEST(ExpressionTests, getClassTest) {
   EXPECT_EQ(Expression().getClass(), MathObjectClass("Expression"));
   EXPECT_EQ(Expression().getClassStatic().getParent(), IExpression::getClassStatic());

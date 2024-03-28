@@ -21,7 +21,7 @@ public:
 
   std::string toString() const override;
 
-  operator bool() const;
+  explicit operator bool() const;
 
 private:
   std::string name;

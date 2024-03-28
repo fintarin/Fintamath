@@ -5,21 +5,19 @@
 
 namespace fintamath {
 
-Expression add(const auto &...args) {
-  return (Expression(args) + ...);
-}
+Expression operator+(const Expression &lhs, const Expression &rhs);
 
-Expression mul(const auto &...args) {
-  return (Expression(args) * ...);
-}
+Expression operator+(const Expression &rhs);
 
-Expression sub(const Expression &lhs, const Expression &rhs);
+Expression operator-(const Expression &lhs, const Expression &rhs);
 
-Expression div(const Expression &lhs, const Expression &rhs);
+Expression operator-(const Expression &rhs);
+
+Expression operator*(const Expression &lhs, const Expression &rhs);
+
+Expression operator/(const Expression &lhs, const Expression &rhs);
 
 Expression mod(const Expression &lhs, const Expression &rhs);
-
-Expression neg(const Expression &rhs);
 
 Expression eqv(const Expression &lhs, const Expression &rhs);
 
