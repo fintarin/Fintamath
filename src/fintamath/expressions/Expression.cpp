@@ -28,6 +28,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/other/Comma.hpp"
@@ -298,7 +299,7 @@ void Expression::moveFunctionTermsToOperands(OperandStack &operands, std::stack<
 }
 
 void Expression::insertMultiplications(TermVector &terms) {
-  static const ArgumentPtr mul = Mul{}.clone();
+  static const ArgumentPtr mul = MulOper{}.clone();
 
   for (size_t i = 1; i < terms.size(); i++) {
     if (canNextTermBeBinaryOperator(terms[i - 1]) &&
@@ -504,6 +505,11 @@ namespace detail {
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
   stdr::transform(args, args.begin(), &Expression::compress);
+
+  if (func.isVariadic() && args.size() == 1) {
+    return std::move(args.front())->clone();
+  }
+
   Expression::validateFunctionArgs(func, args);
 
   if (const auto strToConstr = Expression::getExpressionMaker().find(func.getClass());

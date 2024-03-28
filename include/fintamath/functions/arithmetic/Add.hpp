@@ -8,24 +8,20 @@
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
-#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
 
-class Add final : public IOperatorCRTP<IArithmetic, Add, IArithmetic, IArithmetic> {
+class Add final : public IFunctionCRTP<IArithmetic, Add, IArithmetic> {
   FINTAMATH_CLASS_BODY(Add)
 
 public:
   std::string toString() const override {
-    return "+";
+    return "add";
   }
 
-  static constexpr bool isAssociativeStatic() {
+  static constexpr bool isVariadicStatic() {
     return true;
-  }
-
-  static constexpr Priority getPriorityStatic() {
-    return Priority::Addition;
   }
 
 protected:

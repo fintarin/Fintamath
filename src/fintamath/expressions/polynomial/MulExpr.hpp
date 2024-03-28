@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "fintamath/core/MathObjectClass.hpp"
@@ -16,6 +17,8 @@ public:
 
   std::string toString() const override;
 
+  const std::shared_ptr<IFunction> &getOutputFunction() const override;
+
 protected:
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
@@ -23,7 +26,7 @@ protected:
 
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
-  bool isConstantGreaterThanVariable() const override;
+  bool isTermOrderInversed() const override;
 
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);

@@ -3,10 +3,11 @@
 #include "fintamath/functions/IOperator.hpp"
 
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/logic/OrOper.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
-#include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/PowOper.hpp"
 
 using namespace fintamath;
 
@@ -38,17 +39,17 @@ TEST(IOperatorTests, parseTest) {
 }
 
 TEST(IOperatorTests, getPriorityTest) {
-  EXPECT_EQ(Add().getPriority(), IOperator::Priority::Addition);
+  EXPECT_EQ(AddOper().getPriority(), IOperator::Priority::Addition);
   EXPECT_EQ(Neg().getPriority(), IOperator::Priority::PrefixUnary);
   EXPECT_EQ(Factorial().getPriority(), IOperator::Priority::PostfixUnary);
-  EXPECT_EQ(Or().getPriority(), IOperator::Priority::Disjunction);
+  EXPECT_EQ(OrOper().getPriority(), IOperator::Priority::Disjunction);
 }
 
 TEST(IOperatorTests, isAssociativeTest) {
-  EXPECT_TRUE(Add().isAssociative());
+  EXPECT_TRUE(AddOper().isAssociative());
   EXPECT_FALSE(Neg().isAssociative());
-  EXPECT_TRUE(Or().isAssociative());
-  EXPECT_FALSE(Pow().isAssociative());
+  EXPECT_TRUE(OrOper().isAssociative());
+  EXPECT_FALSE(PowOper().isAssociative());
 }
 
 TEST(IOperatorTests, getClassTest) {

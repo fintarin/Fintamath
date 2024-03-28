@@ -14,6 +14,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
@@ -33,6 +34,11 @@ using namespace detail;
 
 MulExpr::MulExpr(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(Mul{}, std::move(inChildren)) {
+}
+
+const std::shared_ptr<IFunction> &MulExpr::getOutputFunction() const {
+  static const std::shared_ptr<IFunction> oper = std::make_shared<MulOper>();
+  return oper;
 }
 
 std::string MulExpr::toString() const {
@@ -105,7 +111,7 @@ MulExpr::SimplifyFunctionVector MulExpr::getFunctionsForPostSimplify() const {
   return simplifyFunctions;
 }
 
-bool MulExpr::isConstantGreaterThanVariable() const {
+bool MulExpr::isTermOrderInversed() const {
   return true;
 }
 

@@ -33,10 +33,10 @@ TEST(IPolynomExpressionTests, parseTest) {
 
 TEST(IPolynomExpressionTests, toStringTest) {
   TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
-  EXPECT_EQ(expr.toString(), "1 * 2 * 3");
+  EXPECT_EQ(expr.toString(), "mul(1, 2, 3)");
 
   expr = TestPolynomExpression({addExpr(Variable("x"), Variable("y")), Variable("a").clone()});
-  EXPECT_EQ(expr.toString(), "(x + y) * a");
+  EXPECT_EQ(expr.toString(), "mul(x + y, a)");
 }
 
 TEST(IPolynomExpressionTests, getFunctionTest) {
@@ -75,7 +75,7 @@ TEST(IPolynomExpressionTests, setChildren) {
 
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {
   const TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Variable("a").clone()});
-  EXPECT_EQ(expr.toMinimalObject()->toString(), "a * 2");
+  EXPECT_EQ(expr.toMinimalObject()->toString(), "mul(a, 2)");
 }
 
 TEST(IPolynomExpressionTests, getClassTest) {

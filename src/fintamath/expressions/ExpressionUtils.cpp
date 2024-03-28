@@ -17,8 +17,10 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -254,6 +256,22 @@ ArgumentPtr negate(const ArgumentPtr &arg) {
   return mulExpr(Integer(-1).clone(), arg);
 }
 
+ArgumentPtr invert(const ArgumentPtr &arg) {
+  if (const auto num = cast<INumber>(arg)) {
+    return Integer(1) / (*num);
+  }
+
+  if (const auto expr = cast<IExpression>(arg); expr && is<Div>(expr->getFunction())) {
+    if (*expr->getChildren().front() == Integer(1)) {
+      return expr->getChildren().back();
+    }
+
+    return divExpr(expr->getChildren().back(), expr->getChildren().front());
+  }
+
+  return divExpr(Integer(1).clone(), arg);
+}
+
 ArgumentPtr makePolynom(const IFunction &func, ArgumentPtrVector &&args) {
   if (args.empty()) {
     return {};
@@ -329,14 +347,14 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
   }
   else if (const auto childComplex = cast<Complex>(child)) {
     if (childComplex->real() != Integer(0)) {
-      childOper = std::make_shared<Add>();
+      childOper = std::make_shared<AddOper>();
     }
     else if (childComplex->imag() != Integer(1)) {
       if (childComplex->imag() == Integer(-1)) {
         childOper = std::make_shared<Neg>();
       }
       else {
-        childOper = std::make_shared<Mul>();
+        childOper = std::make_shared<MulOper>();
       }
     }
   }
@@ -347,8 +365,8 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
     childOper = std::make_shared<Div>();
   }
   else if (is<Real>(child)) {
-    if (childStr.find(Mul{}.toString()) != std::string::npos) {
-      childOper = std::make_shared<Mul>();
+    if (childStr.find(MulOper{}.toString()) != std::string::npos) {
+      childOper = std::make_shared<MulOper>();
     }
   }
 

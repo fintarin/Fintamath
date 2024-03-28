@@ -531,7 +531,7 @@ TEST(SimplifyTests, simplifyTest) {
   EXPECT_EQ(Expression("a - sqrt(2) x - sqrt(3) x - Pi^4 x + 1").toString(),
             "a + (-Pi^4 - sqrt(3) - sqrt(2)) x + 1");
   EXPECT_EQ(Expression("x Pi^4 ln(5) + x E^2 sin(1) sinh(2)").toString(),
-            "(E^2 sinh(2) sin(1) + Pi^4 ln(5)) x");
+            "(sin(1) sinh(2) E^2 + ln(5) Pi^4) x");
   EXPECT_EQ(Expression("(a+b) (-sqrt2 + sqrt3 - sqrt5)").toString(),
             "(sqrt(3) - sqrt(5) - sqrt(2)) a + (sqrt(3) - sqrt(5) - sqrt(2)) b");
   EXPECT_EQ(Expression("(sqrt(2) x + sqrt(3) x + Pi^4 x + 1) / (sqrt(2) + sqrt(3) + Pi^4)").toString(),
@@ -593,9 +593,9 @@ TEST(SimplifyTests, simplifyTest) {
   EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(),
             "(a a! a!! a!!!)/100");
   EXPECT_EQ(Expression("a! sin(a)").toString(),
-            "a! sin(a)");
+            "sin(a) a!");
   EXPECT_EQ(Expression("sin(a) a!").toString(),
-            "a! sin(a)");
+            "sin(a) a!");
   EXPECT_EQ(Expression("sin(a) a").toString(),
             "a sin(a)");
   EXPECT_EQ(Expression("a sin(a)").toString(),

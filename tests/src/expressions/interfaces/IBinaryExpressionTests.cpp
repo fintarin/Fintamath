@@ -2,11 +2,11 @@
 
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
 
-#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 
 using namespace fintamath;
 
-const Add f;
+const AddOper f;
 
 namespace {
 

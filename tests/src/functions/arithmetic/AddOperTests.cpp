@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -9,29 +9,37 @@
 
 using namespace fintamath;
 
-const Add f;
+const AddOper f;
 
-TEST(AddTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "add");
+TEST(AddOperTests, toStringTest) {
+  EXPECT_EQ(f.toString(), "+");
 }
 
-TEST(AddTests, getArgumentClassesTest) {
+TEST(AddOperTests, getArgumentClassesTest) {
   EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
 }
 
-TEST(AddTests, getReturnClassTest) {
+TEST(AddOperTests, getReturnClassTest) {
   EXPECT_EQ(f.getReturnClass(), IArithmetic::getClassStatic());
 }
 
-TEST(AddTests, isVariadicTest) {
+TEST(AddOperTests, isVariadicTest) {
   EXPECT_FALSE(f.isVariadic());
 }
 
-TEST(AddTests, isEvaluatableTest) {
+TEST(AddOperTests, isEvaluatableTest) {
   EXPECT_TRUE(f.isEvaluatable());
 }
 
-TEST(AddTests, callTest) {
+TEST(AddOperTests, getPriorityTest) {
+  EXPECT_EQ(f.getPriority(), IOperator::Priority::Addition);
+}
+
+TEST(AddOperTests, isAssociativeTest) {
+  EXPECT_TRUE(f.isAssociative());
+}
+
+TEST(AddOperTests, callTest) {
   EXPECT_EQ(f(Integer(3), Integer(5))->toString(), "8");
   EXPECT_EQ(f(Integer(3), Rational(5, 2))->toString(), "11/2");
   EXPECT_EQ(f(Rational(5, 2), Integer(3))->toString(), "11/2");
@@ -46,11 +54,7 @@ TEST(AddTests, callTest) {
   EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
 }
 
-TEST(AddTests, exprTest) {
-  EXPECT_EQ(addExpr(Integer(10), Integer(10))->toString(), "10 + 10");
-}
-
-TEST(AddTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Add"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+TEST(AddOperTests, getClassTest) {
+  EXPECT_EQ(f.getClass(), MathObjectClass("AddOper"));
+  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
 }

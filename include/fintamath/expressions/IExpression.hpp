@@ -36,6 +36,12 @@ public:
   virtual const std::shared_ptr<IFunction> &getOutputFunction() const;
 
 protected:
+  virtual bool isTermOrderInversed() const;
+
+  virtual bool isComparableOrderInversed() const;
+
+  virtual std::strong_ordering compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
+
   virtual ArgumentPtr simplify() const;
 
   virtual ArgumentPtr preSimplify() const;

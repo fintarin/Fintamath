@@ -30,6 +30,9 @@ protected:
   ArgumentPtr postSimplify() const override;
 
 private:
+  ArgumentPtr simplifyRec(bool isPostSimplify) const;
+
+private:
   std::shared_ptr<IFunction> func;
 
   ArgumentPtrVector children;
