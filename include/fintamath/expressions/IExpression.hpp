@@ -42,7 +42,7 @@ protected:
 
   virtual ArgumentPtr postSimplify() const;
 
-  virtual ArgumentPtr approximateSimplify() const;
+  virtual ArgumentPtr approximate() const;
 
   virtual ArgumentPtr setPrecision(unsigned precision, const Integer &maxInt) const;
 
@@ -52,7 +52,7 @@ protected:
 
   static void postSimplifyChild(ArgumentPtr &child);
 
-  static void approximateSimplifyChild(ArgumentPtr &child);
+  static void approximateChild(ArgumentPtr &child);
 
   static void setPrecisionChild(ArgumentPtr &child, unsigned precision, const Integer &maxInt);
 

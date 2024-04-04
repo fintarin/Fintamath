@@ -70,7 +70,7 @@ Expression approximate(const Expression &rhs, const unsigned precision) {
   });
 
   Expression approxExpr = rhs;
-  Expression::approximateSimplifyChild(approxExpr.child);
+  Expression::approximateChild(approxExpr.child);
   Expression::setPrecisionChild(approxExpr.child, precision, cache[precision]);
   approxExpr.updateStringMutable();
 

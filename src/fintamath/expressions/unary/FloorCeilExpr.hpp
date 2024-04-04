@@ -21,7 +21,7 @@ protected:
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
 private:
-  static ArgumentPtr intApproximateSimplify(const IFunction &func, const ArgumentPtr &rhs);
+  static ArgumentPtr intapproximate(const IFunction &func, const ArgumentPtr &rhs);
 
   static ArgumentPtr negSimplify(const IFunction &func, const ArgumentPtr &rhs);
 

@@ -133,12 +133,12 @@ void IExpression::postSimplifyChild(ArgumentPtr &child) {
   }
 }
 
-void IExpression::approximateSimplifyChild(ArgumentPtr &child) {
+void IExpression::approximateChild(ArgumentPtr &child) {
   if (const auto constChild = cast<IConstant>(child)) {
     child = (*constChild)();
   }
   else if (const auto exprChild = cast<IExpression>(child)) {
-    child = exprChild->approximateSimplify();
+    child = exprChild->approximate();
   }
 }
 
@@ -292,11 +292,11 @@ ArgumentPtr IExpression::postSimplify() const {
   return {};
 }
 
-ArgumentPtr IExpression::approximateSimplify() const {
+ArgumentPtr IExpression::approximate() const {
   ArgumentPtr simpl = simplify();
 
   if (!is<IExpression>(simpl)) {
-    approximateSimplifyChild(simpl);
+    approximateChild(simpl);
     return simpl;
   }
 
@@ -307,7 +307,7 @@ ArgumentPtr IExpression::approximateSimplify() const {
   size_t numberChildrenCount = 0;
 
   for (auto &child : approxChildren) {
-    approximateSimplifyChild(child);
+    approximateChild(child);
 
     if (const auto childNum = cast<INumber>(child)) {
       numberChildrenCount++;

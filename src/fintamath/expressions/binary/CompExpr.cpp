@@ -229,7 +229,7 @@ ArgumentPtr CompExpr::rateSimplify(const IFunction &func, const ArgumentPtr &lhs
   ArgumentPtr newLhs = makePolynom(Add{}, std::move(children));
   simplifyChild(newLhs);
 
-  approximateSimplifyChild(rate);
+  approximateChild(rate);
   if (isNegativeNumber(rate)) {
     return makeExpr(*cast<IFunction>(getOppositeFunction(func)), newLhs, rhs);
   }
@@ -243,7 +243,7 @@ ArgumentPtr CompExpr::approxSimplify(const IFunction &func, const ArgumentPtr &l
   }
 
   ArgumentPtr approxLhs = lhs;
-  approximateSimplifyChild(approxLhs);
+  approximateChild(approxLhs);
   if (!is<INumber>(approxLhs)) {
     return {};
   }

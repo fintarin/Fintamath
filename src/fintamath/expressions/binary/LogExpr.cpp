@@ -46,13 +46,13 @@ const std::shared_ptr<IFunction> &LogExpr::getOutputFunction() const {
   return IBinaryExpression::getFunction();
 }
 
-ArgumentPtr LogExpr::approximateSimplify() const {
+ArgumentPtr LogExpr::approximate() const {
   if (*lhsChild == E{}) {
     const auto approxExpr = cast<LogExpr>(clone());
-    approximateSimplifyChild(approxExpr->rhsChild);
+    approximateChild(approxExpr->rhsChild);
 
     if (is<INumber>(approxExpr->rhsChild)) {
-      if (const auto res = cast<INumber>(approxExpr->IBinaryExpression::approximateSimplify())) {
+      if (const auto res = cast<INumber>(approxExpr->IBinaryExpression::approximate())) {
         return res;
       }
     }
@@ -60,7 +60,7 @@ ArgumentPtr LogExpr::approximateSimplify() const {
     return approxExpr->simplify();
   }
 
-  return IBinaryExpression::approximateSimplify();
+  return IBinaryExpression::approximate();
 }
 
 ArgumentPtr LogExpr::setPrecision(const unsigned precision, const Integer &maxInt) const {

@@ -96,19 +96,19 @@ const std::shared_ptr<IFunction> &PowExpr::getOutputFunction() const {
   return IBinaryExpression::getFunction();
 }
 
-ArgumentPtr PowExpr::approximateSimplify() const {
+ArgumentPtr PowExpr::approximate() const {
   if (const auto ratRhsChild = cast<Rational>(rhsChild); ratRhsChild && ratRhsChild->denominator() <= maxPreciseRoot) {
     auto approxExpr = cast<PowExpr>(clone());
-    approximateSimplifyChild(approxExpr->lhsChild);
+    approximateChild(approxExpr->lhsChild);
 
     if (is<INumber>(approxExpr->lhsChild)) {
-      return approxExpr->IBinaryExpression::approximateSimplify();
+      return approxExpr->IBinaryExpression::approximate();
     }
 
     return approxExpr;
   }
 
-  return IBinaryExpression::approximateSimplify();
+  return IBinaryExpression::approximate();
 }
 
 ArgumentPtr PowExpr::setPrecision(const unsigned precision, const Integer &maxInt) const {
@@ -251,7 +251,7 @@ ArgumentPtr PowExpr::constSimplify(const IFunction & /*func*/, const ArgumentPtr
 
     if (!containsVariable(lhs)) {
       ArgumentPtr approxLhs = lhs;
-      approximateSimplifyChild(approxLhs);
+      approximateChild(approxLhs);
 
       if (const auto lhsNum = cast<INumber>(approxLhs)) {
         if (lhsNum->isComplex()) {
@@ -300,7 +300,7 @@ ArgumentPtr PowExpr::constSimplify(const IFunction & /*func*/, const ArgumentPtr
   if (is<Inf>(lhs) || is<ComplexInf>(lhs)) {
     if (!containsVariable(rhs)) {
       ArgumentPtr approxRhs = rhs;
-      approximateSimplifyChild(approxRhs);
+      approximateChild(approxRhs);
 
       if (const auto rhsComplex = cast<Complex>(approxRhs)) {
         if (rhsComplex->real() == Integer(0)) {
