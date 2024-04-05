@@ -22,7 +22,7 @@ IBinaryExpression::IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, A
       rhsChild(std::move(rhs)) {
 }
 
-std::string IBinaryExpression::toString() const {
+std::string IBinaryExpression::toString() const noexcept {
   if (const auto oper = cast<IOperator>(func)) {
     return binaryOperatorToString(*oper, lhsChild, rhsChild);
   }
@@ -30,11 +30,11 @@ std::string IBinaryExpression::toString() const {
   return functionToString(*func, {lhsChild, rhsChild});
 }
 
-const std::shared_ptr<IFunction> &IBinaryExpression::getFunction() const {
+const std::shared_ptr<IFunction> &IBinaryExpression::getFunction() const noexcept {
   return func;
 }
 
-const ArgumentPtrVector &IBinaryExpression::getChildren() const {
+const ArgumentPtrVector &IBinaryExpression::getChildren() const noexcept {
   childrenCached.front() = lhsChild;
   childrenCached.back() = rhsChild;
   return childrenCached;

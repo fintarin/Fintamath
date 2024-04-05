@@ -45,7 +45,7 @@ DivExpr::DivExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
     : IBinaryExpressionCRTP(Div{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
-std::string DivExpr::toString() const {
+std::string DivExpr::toString() const noexcept {
   if (isNegated(lhsChild)) {
     return negExpr(divExpr(detail::negate(lhsChild), rhsChild))->toString();
   }

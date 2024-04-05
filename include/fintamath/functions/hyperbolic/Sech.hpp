@@ -18,7 +18,7 @@ class Sech final : public IFunctionCRTP<INumber, Sech, INumber> {
   FINTAMATH_CLASS_BODY(Sech)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "sech";
   }
 

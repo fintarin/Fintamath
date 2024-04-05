@@ -16,7 +16,7 @@ class Sign final : public IFunctionCRTP<INumber, Sign, INumber> {
   FINTAMATH_CLASS_BODY(Sign)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "sign";
   }
 

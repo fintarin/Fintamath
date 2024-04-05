@@ -18,7 +18,7 @@ class Asec final : public IFunctionCRTP<INumber, Asec, INumber> {
   FINTAMATH_CLASS_BODY(Asec)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "asec";
   }
 

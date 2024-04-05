@@ -18,7 +18,7 @@ class Asin final : public IFunctionCRTP<INumber, Asin, INumber> {
   FINTAMATH_CLASS_BODY(Asin)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "asin";
   }
 

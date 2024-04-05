@@ -5,12 +5,12 @@
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/Parser.hpp"
 
-#define FINTAMATH_CLASS_BODY(Class)                   \
-public:                                               \
-  static constexpr MathObjectClass getClassStatic() { \
-    return {#Class};                                  \
-  }                                                   \
-                                                      \
+#define FINTAMATH_CLASS_BODY(Class)                            \
+public:                                                        \
+  static constexpr MathObjectClass getClassStatic() noexcept { \
+    return {#Class};                                           \
+  }                                                            \
+                                                               \
 private:
 
 #define FINTAMATH_PARENT_CLASS_BODY(Class)                      \
@@ -19,7 +19,7 @@ private:
 private:                                                        \
   using Class##Parser = detail::Parser<std::unique_ptr<Class>>; \
                                                                 \
-  static Class##Parser &getParser();                            \
+  static Class##Parser &getParser() noexcept;                   \
                                                                 \
 public:                                                         \
   static auto parse(std::string str) {                          \
@@ -31,15 +31,15 @@ public:                                                         \
   }                                                             \
                                                                 \
   template <std::derived_from<Class> T>                         \
-  static void registerType() {                                  \
+  static void registerType() noexcept {                         \
     MathObjectClass::bindTypes<Class, T>();                     \
-    getParser().registerType<T>();                              \
+    getParser().template registerType<T>();                     \
   }                                                             \
                                                                 \
 private:
 
-#define FINTAMATH_PARENT_CLASS_IMPLEMENTATION(Class) \
-  Class::Class##Parser &Class::getParser() {         \
-    static Class##Parser parser;                     \
-    return parser;                                   \
+#define FINTAMATH_PARENT_CLASS_IMPLEMENTATION(Class)  \
+  Class::Class##Parser &Class::getParser() noexcept { \
+    static Class##Parser parser;                      \
+    return parser;                                    \
   }

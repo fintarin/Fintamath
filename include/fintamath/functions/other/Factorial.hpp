@@ -28,7 +28,7 @@ public:
     setOrder(inOrder);
   }
 
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return std::string(order, '!');
   }
 

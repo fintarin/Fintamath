@@ -85,7 +85,7 @@ const Integer &Rational::denominator() const {
   return denom;
 }
 
-std::string Rational::toString() const {
+std::string Rational::toString() const noexcept {
   std::string res = numer.toString();
 
   if (denom != 1) {
@@ -95,7 +95,7 @@ std::string Rational::toString() const {
   return res;
 }
 
-std::unique_ptr<IMathObject> Rational::toMinimalObject() const {
+std::unique_ptr<IMathObject> Rational::toMinimalObject() const noexcept {
   if (denom == 1) {
     return numer.clone();
   }
@@ -106,7 +106,7 @@ int Rational::sign() const {
   return numer.sign();
 }
 
-bool Rational::equals(const Rational &rhs) const {
+bool Rational::equals(const Rational &rhs) const noexcept {
   return numer == rhs.numer && denom == rhs.denom;
 }
 

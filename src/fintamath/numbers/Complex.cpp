@@ -67,7 +67,7 @@ Complex::Complex(const Real &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
 Complex::Complex(int64_t rhs) : re(std::make_unique<Integer>(rhs)) {
 }
 
-std::string Complex::toString() const {
+std::string Complex::toString() const noexcept {
   std::string res;
 
   if (*re != Integer(0)) {
@@ -107,7 +107,7 @@ std::string Complex::toString() const {
   return res;
 }
 
-std::unique_ptr<IMathObject> Complex::toMinimalObject() const {
+std::unique_ptr<IMathObject> Complex::toMinimalObject() const noexcept {
   if (*im == Integer(0)) {
     return re->toMinimalObject();
   }
@@ -131,7 +131,7 @@ const INumber &Complex::imag() const {
   return *im;
 }
 
-bool Complex::equals(const Complex &rhs) const {
+bool Complex::equals(const Complex &rhs) const noexcept {
   return *re == *rhs.re && *im == *rhs.im;
 }
 

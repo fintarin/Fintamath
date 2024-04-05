@@ -17,7 +17,7 @@ class Integral final : public IFunctionCRTP<IComparable, Integral, IComparable, 
   FINTAMATH_CLASS_BODY(Integral)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "integral";
   }
 

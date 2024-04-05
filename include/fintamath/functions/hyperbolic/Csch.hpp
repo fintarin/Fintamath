@@ -18,7 +18,7 @@ class Csch final : public IFunctionCRTP<INumber, Csch, INumber> {
   FINTAMATH_CLASS_BODY(Csch)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "csch";
   }
 

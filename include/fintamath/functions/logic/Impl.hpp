@@ -16,7 +16,7 @@ class Impl final : public IOperatorCRTP<Boolean, Impl, Boolean, Boolean> {
   FINTAMATH_CLASS_BODY(Impl)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "->";
   }
 

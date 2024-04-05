@@ -19,7 +19,7 @@ public:
   Boolean(const Bool val) : name(val ? trueStr : falseStr) {
   }
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
   explicit operator bool() const;
 

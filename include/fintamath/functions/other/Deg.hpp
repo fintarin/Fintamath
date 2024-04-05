@@ -16,7 +16,7 @@ class Deg final : public IOperatorCRTP<INumber, Deg, INumber> {
   FINTAMATH_CLASS_BODY(Deg)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "deg";
   }
 

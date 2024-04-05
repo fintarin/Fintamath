@@ -15,7 +15,7 @@ class FracMixed final : public IFunctionCRTP<IArithmetic, FracMixed, IArithmetic
   FINTAMATH_CLASS_BODY(FracMixed)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "frac";
   }
 

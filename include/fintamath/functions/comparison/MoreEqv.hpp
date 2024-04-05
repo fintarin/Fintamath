@@ -17,7 +17,7 @@ class MoreEqv final : public IOperatorCRTP<Boolean, MoreEqv, IComparable, ICompa
   FINTAMATH_CLASS_BODY(MoreEqv)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return ">=";
   }
 

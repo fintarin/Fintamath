@@ -80,11 +80,11 @@ void IExpression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr
   setChildren(newChildren);
 }
 
-std::unique_ptr<IMathObject> IExpression::toMinimalObject() const {
+std::unique_ptr<IMathObject> IExpression::toMinimalObject() const noexcept {
   return simplify()->clone();
 }
 
-const std::shared_ptr<IFunction> &IExpression::getOutputFunction() const {
+const std::shared_ptr<IFunction> &IExpression::getOutputFunction() const noexcept {
   return getFunction();
 }
 

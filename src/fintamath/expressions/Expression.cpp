@@ -56,7 +56,7 @@ Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 Expression::Expression(const int64_t val) : child(Integer(val).clone()) {
 }
 
-std::string Expression::toString() const {
+std::string Expression::toString() const noexcept {
   simplifyMutable();
   return stringCached;
 }
@@ -77,12 +77,12 @@ Expression approximate(const Expression &rhs, const unsigned precision) {
   return approxExpr;
 }
 
-const std::shared_ptr<IFunction> &Expression::getFunction() const {
+const std::shared_ptr<IFunction> &Expression::getFunction() const noexcept {
   static const std::shared_ptr<IFunction> func;
   return func;
 }
 
-const ArgumentPtrVector &Expression::getChildren() const {
+const ArgumentPtrVector &Expression::getChildren() const noexcept {
   simplifyMutable();
   childrenCached.front() = child;
   return childrenCached;

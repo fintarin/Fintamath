@@ -15,7 +15,7 @@ class Comma final : public IOperatorCRTP<IMathObject, Comma, IMathObject, IMathO
   FINTAMATH_CLASS_BODY(Comma)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return ",";
   }
 

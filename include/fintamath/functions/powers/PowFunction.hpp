@@ -15,7 +15,7 @@ class PowFunction final : public IFunctionCRTP<IArithmetic, PowFunction, IArithm
   FINTAMATH_CLASS_BODY(PowFunction)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "pow";
   }
 

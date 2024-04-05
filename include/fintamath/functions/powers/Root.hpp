@@ -23,7 +23,7 @@ class Root final : public IFunctionCRTP<INumber, Root, INumber, INumber> {
   using RootToFactorMap = std::map<Integer, Integer>;
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "root";
   }
 

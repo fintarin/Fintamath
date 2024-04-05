@@ -21,7 +21,7 @@ IUnaryExpression::IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs)
       child(std::move(rhs)) {
 }
 
-std::string IUnaryExpression::toString() const {
+std::string IUnaryExpression::toString() const noexcept {
   if (const auto oper = cast<IOperator>(func)) {
     if (oper->getPriority() == IOperator::Priority::PostfixUnary) {
       return detail::postfixUnaryOperatorToString(*oper, child);
@@ -33,11 +33,11 @@ std::string IUnaryExpression::toString() const {
   return detail::functionToString(*func, {child});
 }
 
-const std::shared_ptr<IFunction> &IUnaryExpression::getFunction() const {
+const std::shared_ptr<IFunction> &IUnaryExpression::getFunction() const noexcept {
   return func;
 }
 
-const ArgumentPtrVector &IUnaryExpression::getChildren() const {
+const ArgumentPtrVector &IUnaryExpression::getChildren() const noexcept {
   childrenCached.front() = child;
   return childrenCached;
 }

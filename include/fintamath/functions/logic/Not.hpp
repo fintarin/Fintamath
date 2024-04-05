@@ -16,7 +16,7 @@ class Not final : public IOperatorCRTP<Boolean, Not, Boolean> {
   FINTAMATH_CLASS_BODY(Not)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "~";
   }
 

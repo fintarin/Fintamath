@@ -51,9 +51,9 @@ public:
 
   Real(int64_t val);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  std::string toString(unsigned precision) const;
+  std::string toString(unsigned precision) const noexcept;
 
   bool isPrecise() const override;
 
@@ -74,9 +74,9 @@ public:
   static void setPrecision(unsigned precision);
 
 protected:
-  bool equals(const Real &rhs) const override;
+  bool equals(const Real &rhs) const noexcept override;
 
-  bool equalsAbstract(const IMathObject &rhs) const override;
+  bool equalsAbstract(const IMathObject &rhs) const noexcept override;
 
   std::strong_ordering compare(const Real &rhs) const override;
 
@@ -98,8 +98,6 @@ private:
   bool isFinite() const;
 
   void updatePrecision(const Real &rhs);
-
-  void validateNewPrecision(unsigned precision) const;
 
 private:
   Backend backend;

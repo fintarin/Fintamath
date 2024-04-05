@@ -16,7 +16,7 @@ class Lb final : public IFunctionCRTP<INumber, Lb, INumber> {
   FINTAMATH_CLASS_BODY(Lb)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "lb";
   }
 

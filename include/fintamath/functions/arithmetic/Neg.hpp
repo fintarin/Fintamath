@@ -16,7 +16,7 @@ class Neg final : public IOperatorCRTP<IArithmetic, Neg, IArithmetic> {
   FINTAMATH_CLASS_BODY(Neg)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "-";
   }
 

@@ -19,7 +19,7 @@ class Div final : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmeti
   FINTAMATH_CLASS_BODY(Div)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "/";
   }
 

@@ -42,9 +42,9 @@ public:
 
   Complex(int64_t rhs);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
+  std::unique_ptr<IMathObject> toMinimalObject() const noexcept override;
 
   bool isPrecise() const override;
 
@@ -55,7 +55,7 @@ public:
   const INumber &imag() const;
 
 protected:
-  bool equals(const Complex &rhs) const override;
+  bool equals(const Complex &rhs) const noexcept override;
 
   std::strong_ordering compare(const Complex &rhs) const override;
 

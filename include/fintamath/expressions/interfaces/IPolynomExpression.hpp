@@ -22,11 +22,11 @@ class IPolynomExpression : public IExpression {
 public:
   explicit IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  const std::shared_ptr<IFunction> &getFunction() const final;
+  const std::shared_ptr<IFunction> &getFunction() const noexcept final;
 
-  const ArgumentPtrVector &getChildren() const final;
+  const ArgumentPtrVector &getChildren() const noexcept final;
 
   void setChildren(const ArgumentPtrVector &childVect) final;
 

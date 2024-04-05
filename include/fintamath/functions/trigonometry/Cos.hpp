@@ -18,7 +18,7 @@ class Cos final : public IFunctionCRTP<INumber, Cos, INumber> {
   FINTAMATH_CLASS_BODY(Cos)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "cos";
   }
 

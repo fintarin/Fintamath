@@ -18,7 +18,7 @@ class Tan final : public IFunctionCRTP<INumber, Tan, INumber> {
   FINTAMATH_CLASS_BODY(Tan)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "tan";
   }
 

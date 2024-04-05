@@ -16,7 +16,7 @@ class And final : public IOperatorCRTP<Boolean, And, Boolean, Boolean> {
   FINTAMATH_CLASS_BODY(And)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "&";
   }
 

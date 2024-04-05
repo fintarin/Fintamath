@@ -38,36 +38,36 @@ private:
   using ParentToChildrenMap = std::unordered_map<MathObjectClass, Children>;
 
 public:
-  constexpr MathObjectClass(const Name inName) : name(inName) {
+  constexpr MathObjectClass(const Name inName) noexcept : name(inName) {
   }
 
-  constexpr Name getName() const {
+  constexpr Name getName() const noexcept {
     return name;
   }
 
-  constexpr bool operator==(const MathObjectClass rhs) const {
+  constexpr bool operator==(const MathObjectClass rhs) const noexcept {
     return name == rhs.name;
   }
 
-  std::strong_ordering operator<=>(MathObjectClass rhs) const;
+  std::strong_ordering operator<=>(MathObjectClass rhs) const noexcept;
 
-  std::optional<MathObjectClass> getParent() const;
+  std::optional<MathObjectClass> getParent() const noexcept;
 
-  const Children &getChildren(bool recursive = false) const;
+  const Children &getChildren(bool recursive = false) const noexcept;
 
   template <typename Parent, std::derived_from<Parent> Child>
-  static void bindTypes();
+  static void bindTypes() noexcept;
 
 private:
-  Id getId() const;
+  Id getId() const noexcept;
 
-  static ClassToIdMap &getClassToIdMap();
+  static ClassToIdMap &getClassToIdMap() noexcept;
 
-  static ChildToParentMap &getChildToParentMap();
+  static ChildToParentMap &getChildToParentMap() noexcept;
 
-  static ParentToChildrenMap &getParentToChildrenMap();
+  static ParentToChildrenMap &getParentToChildrenMap() noexcept;
 
-  static ParentToChildrenMap &getParentToRecursiveChildrenMap();
+  static ParentToChildrenMap &getParentToRecursiveChildrenMap() noexcept;
 
 private:
   Name name;
@@ -78,7 +78,7 @@ private:
 };
 
 template <typename Parent, std::derived_from<Parent> Child>
-void MathObjectClass::bindTypes() {
+void MathObjectClass::bindTypes() noexcept {
   MathObjectClass parent = Parent::getClassStatic();
   MathObjectClass child = Child::getClassStatic();
 

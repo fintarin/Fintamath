@@ -16,7 +16,7 @@ class Sqr final : public IFunctionCRTP<INumber, Sqr, INumber> {
   FINTAMATH_CLASS_BODY(Sqr)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "sqr";
   }
 

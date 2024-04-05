@@ -17,7 +17,7 @@ class Eqv final : public IOperatorCRTP<Boolean, Eqv, IComparable, IComparable> {
   FINTAMATH_CLASS_BODY(Eqv)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "=";
   }
 

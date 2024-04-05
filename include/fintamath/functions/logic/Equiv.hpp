@@ -16,7 +16,7 @@ class Equiv final : public IOperatorCRTP<Boolean, Equiv, Boolean, Boolean> {
   FINTAMATH_CLASS_BODY(Equiv)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "<->";
   }
 

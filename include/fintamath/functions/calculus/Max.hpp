@@ -16,7 +16,7 @@ class Max final : public IFunctionCRTP<IComparable, Max, IComparable> {
   FINTAMATH_CLASS_BODY(Max)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "max";
   }
 

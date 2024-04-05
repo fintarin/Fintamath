@@ -16,7 +16,7 @@ class Abs final : public IFunctionCRTP<INumber, Abs, INumber> {
   FINTAMATH_CLASS_BODY(Abs)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "abs";
   }
 

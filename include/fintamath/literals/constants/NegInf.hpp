@@ -14,7 +14,7 @@ class NegInf final : public IConstantCRTP<INumber, NegInf> {
   FINTAMATH_CLASS_BODY(NegInf)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "-Inf";
   }
 

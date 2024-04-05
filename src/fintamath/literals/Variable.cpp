@@ -28,7 +28,7 @@ Variable::Variable(std::string inName, Integer inIndex) : Variable(std::move(inN
   index = std::move(inIndex);
 }
 
-std::string Variable::toString() const {
+std::string Variable::toString() const noexcept {
   return name + (index != -1 ? "_" + index.toString() : "");
 }
 

@@ -22,7 +22,7 @@ FunctionExpression::FunctionExpression(const IFunction &inFunc, ArgumentPtrVecto
   }
 }
 
-std::string FunctionExpression::toString() const {
+std::string FunctionExpression::toString() const noexcept {
   if (const auto oper = cast<IOperator>(func)) {
     if (oper->getPriority() == IOperator::Priority::PostfixUnary) {
       return postfixUnaryOperatorToString(*oper, children.front());
@@ -38,11 +38,11 @@ std::string FunctionExpression::toString() const {
   return functionToString(*func, children);
 }
 
-const std::shared_ptr<IFunction> &FunctionExpression::getFunction() const {
+const std::shared_ptr<IFunction> &FunctionExpression::getFunction() const noexcept {
   return func;
 }
 
-const ArgumentPtrVector &FunctionExpression::getChildren() const {
+const ArgumentPtrVector &FunctionExpression::getChildren() const noexcept {
   return children;
 }
 

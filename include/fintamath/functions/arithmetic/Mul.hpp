@@ -16,7 +16,7 @@ class Mul final : public IOperatorCRTP<IArithmetic, Mul, IArithmetic, IArithmeti
   FINTAMATH_CLASS_BODY(Mul)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "*";
   }
 

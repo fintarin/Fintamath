@@ -16,11 +16,11 @@ class FunctionExpression final : public IExpressionCRTP<FunctionExpression> {
 public:
   explicit FunctionExpression(const IFunction &inFunc, ArgumentPtrVector inChildren);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  const std::shared_ptr<IFunction> &getFunction() const override;
+  const std::shared_ptr<IFunction> &getFunction() const noexcept override;
 
-  const ArgumentPtrVector &getChildren() const override;
+  const ArgumentPtrVector &getChildren() const noexcept override;
 
   void setChildren(const ArgumentPtrVector &childVect) override;
 

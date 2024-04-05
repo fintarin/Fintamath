@@ -14,7 +14,7 @@ class False final : public IConstantCRTP<Boolean, False> {
   FINTAMATH_CLASS_BODY(False)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return Boolean(false).toString();
   }
 

@@ -17,7 +17,7 @@ class DivExpr final : public IBinaryExpressionCRTP<DivExpr> {
 public:
   explicit DivExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
 protected:
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;

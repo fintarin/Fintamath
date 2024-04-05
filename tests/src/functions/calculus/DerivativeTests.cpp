@@ -18,7 +18,7 @@ class TestComparable final : public IComparableCRTP<TestComparable> {
   FINTAMATH_CLASS_BODY(TestComparable)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "testderivative";
   }
 

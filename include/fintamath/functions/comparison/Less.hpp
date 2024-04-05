@@ -17,7 +17,7 @@ class Less final : public IOperatorCRTP<Boolean, Less, IComparable, IComparable>
   FINTAMATH_CLASS_BODY(Less)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "<";
   }
 

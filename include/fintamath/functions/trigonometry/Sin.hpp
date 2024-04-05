@@ -18,7 +18,7 @@ class Sin final : public IFunctionCRTP<INumber, Sin, INumber> {
   FINTAMATH_CLASS_BODY(Sin)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "sin";
   }
 

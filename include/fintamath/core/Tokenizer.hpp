@@ -12,7 +12,7 @@ class Tokenizer final {
 public:
   static TokenVector tokenize(std::string str);
 
-  static void registerToken(const Token &token);
+  static void registerToken(const Token &token) noexcept;
 
 private:
   static bool appendToken(TokenVector &tokens, Token &token, bool shouldSplit = false);
@@ -23,7 +23,7 @@ private:
 
   static bool isSpace(char ch);
 
-  static TokenVector &getRegisteredTokens();
+  static TokenVector &getRegisteredTokens() noexcept;
 };
 
 }

@@ -17,9 +17,9 @@ class LogExpr final : public IBinaryExpressionCRTP<LogExpr> {
 public:
   explicit LogExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  const std::shared_ptr<IFunction> &getOutputFunction() const override;
+  const std::shared_ptr<IFunction> &getOutputFunction() const noexcept override;
 
 protected:
   ArgumentPtr approximate() const override;

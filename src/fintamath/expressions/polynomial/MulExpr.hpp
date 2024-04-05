@@ -14,7 +14,7 @@ class MulExpr final : public IPolynomExpressionCRTP<MulExpr> {
 public:
   explicit MulExpr(ArgumentPtrVector inChildren);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
 protected:
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;

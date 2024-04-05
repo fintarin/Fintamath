@@ -36,7 +36,7 @@ TokenVector Tokenizer::tokenize(std::string str) {
   return tokens;
 }
 
-void Tokenizer::registerToken(const Token &token) {
+void Tokenizer::registerToken(const Token &token) noexcept {
   auto &tokens = getRegisteredTokens();
   tokens.insert(std::ranges::upper_bound(tokens, token, [](const Token &lhs, const Token &rhs) {
                   return lhs.size() > rhs.size();
@@ -98,7 +98,7 @@ bool Tokenizer::isSpace(const char ch) {
   return ch == ' ';
 }
 
-TokenVector &Tokenizer::getRegisteredTokens() {
+TokenVector &Tokenizer::getRegisteredTokens() noexcept {
   static TokenVector registeredTokens;
   return registeredTokens;
 }

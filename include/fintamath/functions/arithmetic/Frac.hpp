@@ -15,7 +15,7 @@ class Frac final : public IFunctionCRTP<IArithmetic, Frac, IArithmetic, IArithme
   FINTAMATH_CLASS_BODY(Frac)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "frac";
   }
 

@@ -19,11 +19,11 @@ class IUnaryExpression : public IExpression {
 public:
   explicit IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  const std::shared_ptr<IFunction> &getFunction() const final;
+  const std::shared_ptr<IFunction> &getFunction() const noexcept final;
 
-  const ArgumentPtrVector &getChildren() const override;
+  const ArgumentPtrVector &getChildren() const noexcept final;
 
   void setChildren(const ArgumentPtrVector &childVect) override;
 

@@ -10,9 +10,9 @@ namespace fintamath {
 
 class UndefinedException : public Exception {
 public:
-  UndefinedException() = default;
+  UndefinedException() noexcept = default;
 
-  explicit UndefinedException(const std::string &input) {
+  explicit UndefinedException(const std::string &input) noexcept {
     content += ": " + input;
   }
 
@@ -26,7 +26,7 @@ protected:
 
 class UndefinedFunctionException final : public UndefinedException {
 public:
-  explicit UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argVect) {
+  explicit UndefinedFunctionException(const std::string &func, const std::vector<std::string> &argVect) noexcept {
     content += ": " + func + "(";
 
     if (!argVect.empty()) {
@@ -47,7 +47,7 @@ public:
 
 class UndefinedBinaryOperatorException final : public UndefinedException {
 public:
-  explicit UndefinedBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
+  explicit UndefinedBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) noexcept {
     content += ": (" + lhs + ")" + oper + "(" + rhs + ")";
   }
 };
@@ -60,7 +60,7 @@ public:
   };
 
 public:
-  explicit UndefinedUnaryOperatorException(const std::string &oper, const std::string &rhs, const Type type) {
+  explicit UndefinedUnaryOperatorException(const std::string &oper, const std::string &rhs, const Type type) noexcept {
     switch (type) {
       case Type::Prefix:
         content += ": " + oper + "(" + rhs + ")";

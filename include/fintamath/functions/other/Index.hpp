@@ -17,7 +17,7 @@ class Index final : public IOperatorCRTP<Variable, Index, Variable, Integer> {
   FINTAMATH_CLASS_BODY(Index)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "_";
   }
 

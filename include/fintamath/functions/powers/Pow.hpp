@@ -21,7 +21,7 @@ class Pow final : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
   FINTAMATH_CLASS_BODY(Pow)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "^";
   }
 

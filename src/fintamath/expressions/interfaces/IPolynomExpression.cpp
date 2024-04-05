@@ -30,15 +30,15 @@ IPolynomExpression::IPolynomExpression(const IFunction &inFunc, ArgumentPtrVecto
       children(std::move(args)) {
 }
 
-const std::shared_ptr<IFunction> &IPolynomExpression::getFunction() const {
+const std::shared_ptr<IFunction> &IPolynomExpression::getFunction() const noexcept {
   return func;
 }
 
-const ArgumentPtrVector &IPolynomExpression::getChildren() const {
+const ArgumentPtrVector &IPolynomExpression::getChildren() const noexcept {
   return children;
 }
 
-std::string IPolynomExpression::toString() const {
+std::string IPolynomExpression::toString() const noexcept {
   const auto oper = cast<IOperator>(func);
   if (!oper) {
     return functionToString(*func, children);

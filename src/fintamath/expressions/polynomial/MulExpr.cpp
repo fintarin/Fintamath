@@ -35,7 +35,7 @@ MulExpr::MulExpr(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(Mul{}, std::move(inChildren)) {
 }
 
-std::string MulExpr::toString() const {
+std::string MulExpr::toString() const noexcept {
   auto [childNumerator, childDenominator] = splitRational(children.front());
 
   if (*childDenominator != Integer(1)) {

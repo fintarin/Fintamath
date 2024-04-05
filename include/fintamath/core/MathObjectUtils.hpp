@@ -11,12 +11,12 @@ namespace fintamath {
 
 class IMathObject;
 
-inline bool is(const MathObjectClass to, const MathObjectClass from) {
+inline bool is(const MathObjectClass to, const MathObjectClass from) noexcept {
   return to == from || to.getChildren(true).contains(from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const From &from) {
+bool is(const From &from) noexcept {
   if constexpr (std::is_base_of_v<To, From>) {
     return true;
   }
@@ -29,7 +29,7 @@ bool is(const From &from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const From *from) {
+bool is(const From *from) noexcept {
   if (!from) {
     return false;
   }
@@ -38,27 +38,27 @@ bool is(const From *from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::unique_ptr<From> &from) {
+bool is(const std::unique_ptr<From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::shared_ptr<From> &from) {
+bool is(const std::shared_ptr<From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::shared_ptr<const From> &from) {
+bool is(const std::shared_ptr<const From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::reference_wrapper<From> &from) {
+bool is(const std::reference_wrapper<From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::reference_wrapper<const From> &from) {
+bool is(const std::reference_wrapper<const From> &from) noexcept {
   return is<To>(from.get());
 }
 
@@ -85,7 +85,7 @@ To &cast(From &from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-const To *cast(const From *from) {
+const To *cast(const From *from) noexcept {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
       return {};
@@ -96,7 +96,7 @@ const To *cast(const From *from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-To *cast(From *from) {
+To *cast(From *from) noexcept {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
       return {};
@@ -107,7 +107,7 @@ To *cast(From *from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
+std::unique_ptr<To> cast(std::unique_ptr<From> &&from) noexcept {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
       from.reset();
@@ -121,7 +121,7 @@ std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) {
+std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) noexcept {
   if constexpr (!std::is_base_of_v<To, From>) {
     if (!is<To>(from)) {
       return {};

@@ -40,7 +40,7 @@ CompExpr::CompExpr(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr 
     : IBinaryExpressionCRTP(inOper, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
-std::string CompExpr::toString() const {
+std::string CompExpr::toString() const noexcept {
   if (isSolution) {
     if (const auto lhsExpr = cast<IExpression>(lhsChild);
         lhsExpr &&

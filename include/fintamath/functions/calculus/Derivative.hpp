@@ -17,7 +17,7 @@ class Derivative final : public IFunctionCRTP<IComparable, Derivative, IComparab
   FINTAMATH_CLASS_BODY(Derivative)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "derivative";
   }
 

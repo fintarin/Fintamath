@@ -14,7 +14,7 @@ class Inf final : public IConstantCRTP<INumber, Inf> {
   FINTAMATH_CLASS_BODY(Inf)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "Inf";
   }
 

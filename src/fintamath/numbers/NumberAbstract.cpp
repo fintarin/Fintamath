@@ -55,7 +55,7 @@ std::unique_ptr<IArithmetic> Rational::divideAbstract(const IArithmetic &rhs) co
 
 //-------------------------------------------------------------------------------------//
 
-bool Real::equalsAbstract(const IMathObject &rhs) const {
+bool Real::equalsAbstract(const IMathObject &rhs) const noexcept {
   if (const auto *rhsNum = cast<INumber>(&rhs); rhsNum && rhsNum->isPrecise()) {
     return false;
   }

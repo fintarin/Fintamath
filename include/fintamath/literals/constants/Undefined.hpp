@@ -14,7 +14,7 @@ class Undefined final : public IConstantCRTP<IArithmetic, Undefined> {
   FINTAMATH_CLASS_BODY(Undefined)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "Undefined";
   }
 

@@ -43,7 +43,7 @@ PowExpr::PowExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
     : IBinaryExpressionCRTP(Pow{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
-std::string PowExpr::toString() const {
+std::string PowExpr::toString() const noexcept {
   if (const auto rhsChildRat = cast<Rational>(rhsChild)) {
     const Integer &numerator = rhsChildRat->numerator();
     const Integer &denominator = rhsChildRat->denominator();
@@ -68,7 +68,7 @@ std::string PowExpr::toString() const {
   return IBinaryExpression::toString();
 }
 
-const std::shared_ptr<IFunction> &PowExpr::getOutputFunction() const {
+const std::shared_ptr<IFunction> &PowExpr::getOutputFunction() const noexcept {
   static const std::shared_ptr<IFunction> sqrt = std::make_shared<Sqrt>();
   static const std::shared_ptr<IFunction> root = std::make_shared<Root>();
 
@@ -137,7 +137,7 @@ PowExpr::SimplifyFunctionVector PowExpr::getFunctionsForPostSimplify() const {
 Integer PowExpr::generateFirstNum(const Integer &countOfOne) {
   Integer n = 0;
 
-  repeat(countOfOne, [&]() {
+  repeat(countOfOne, [&] {
     n <<= 1;
     n |= 1;
   });
@@ -193,7 +193,7 @@ ArgumentPtr PowExpr::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &
 
   ArgumentPtrVector newChildren;
 
-  repeat(combins, [&]() {
+  repeat(combins, [&] {
     std::vector<Integer> vectOfPows = getPartition(bitNumber, Integer(variableCount));
     bitNumber = generateNextNumber(bitNumber);
 

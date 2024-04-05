@@ -17,7 +17,7 @@ class More final : public IOperatorCRTP<Boolean, More, IComparable, IComparable>
   FINTAMATH_CLASS_BODY(More)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return ">";
   }
 

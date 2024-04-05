@@ -15,7 +15,7 @@ Boolean::Boolean(const std::string &str) {
   name = str;
 }
 
-std::string Boolean::toString() const {
+std::string Boolean::toString() const noexcept {
   return name;
 }
 

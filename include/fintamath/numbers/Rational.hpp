@@ -28,9 +28,9 @@ public:
 
   Rational(int64_t rhs);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
+  std::unique_ptr<IMathObject> toMinimalObject() const noexcept override;
 
   int sign() const;
 
@@ -39,7 +39,7 @@ public:
   const Integer &denominator() const;
 
 protected:
-  bool equals(const Rational &rhs) const override;
+  bool equals(const Rational &rhs) const noexcept override;
 
   std::strong_ordering compare(const Rational &rhs) const override;
 

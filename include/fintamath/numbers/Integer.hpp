@@ -34,7 +34,7 @@ public:
 
   Integer(int64_t val);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
   int sign() const;
 
@@ -80,7 +80,7 @@ public:
   Integer operator--(int);
 
 protected:
-  bool equals(const Integer &rhs) const override;
+  bool equals(const Integer &rhs) const noexcept override;
 
   std::strong_ordering compare(const Integer &rhs) const override;
 

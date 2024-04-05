@@ -76,7 +76,7 @@ Real::Real(const int64_t val) : backend(val),
                                 isNegative(val < 0) {
 }
 
-std::string Real::toString() const {
+std::string Real::toString() const noexcept {
   std::string res = toString(outputPrecision);
 
   if (isNegative && res.front() != '-') {
@@ -86,8 +86,8 @@ std::string Real::toString() const {
   return res;
 }
 
-std::string Real::toString(unsigned precision) const {
-  validateNewPrecision(precision);
+std::string Real::toString(unsigned precision) const noexcept {
+  assert(precision <= outputPrecision);
 
   if (precision == 0) {
     precision++;
@@ -152,7 +152,7 @@ unsigned Real::getOutputPrecision() const {
 }
 
 void Real::setOutputPrecision(const unsigned precision) {
-  validateNewPrecision(precision);
+  assert(precision <= outputPrecision);
   outputPrecision = precision;
 }
 
@@ -172,7 +172,7 @@ void Real::setPrecision(unsigned precision) {
   Backend::thread_default_precision(precision * precisionMultiplier + precisionDelta);
 }
 
-bool Real::equals(const Real &rhs) const {
+bool Real::equals(const Real &rhs) const noexcept {
   return backend == rhs.backend && isNegative == rhs.isNegative;
 }
 
@@ -246,14 +246,6 @@ bool Real::isFinite() const {
 
 void Real::updatePrecision(const Real &rhs) {
   outputPrecision = std::min(outputPrecision, rhs.outputPrecision);
-}
-
-void Real::validateNewPrecision(const unsigned precision) const {
-  if (precision > outputPrecision) {
-    // TODO: use std::format
-    throw InvalidInputException("Precision must be less than or equal to " +
-                                std::to_string(outputPrecision));
-  }
 }
 
 Real::ScopedSetPrecision::ScopedSetPrecision(const unsigned precision) {

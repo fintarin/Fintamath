@@ -18,7 +18,7 @@ class Csc final : public IFunctionCRTP<INumber, Csc, INumber> {
   FINTAMATH_CLASS_BODY(Csc)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "csc";
   }
 

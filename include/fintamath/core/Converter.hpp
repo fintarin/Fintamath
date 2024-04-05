@@ -19,16 +19,16 @@ class Converter final {
   using ConverterMultiMethod = MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)>;
 
 public:
-  static std::unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) {
+  static std::unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) noexcept {
     return getConverter()(to, from);
   }
 
-  static bool isConvertible(const IMathObject &to, const IMathObject &from) {
+  static bool isConvertible(const IMathObject &to, const IMathObject &from) noexcept {
     return getConverter().contains(to, from);
   }
 
   template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-  static void add(const ConverterFunction<To, From> &convertFunc) {
+  static void add(const ConverterFunction<To, From> &convertFunc) noexcept {
     getConverter().add<To, From>(convertFunc);
   }
 

@@ -21,9 +21,9 @@ class IExpression : public IMathObject {
   FINTAMATH_PARENT_CLASS_BODY(IExpression)
 
 public:
-  virtual const std::shared_ptr<IFunction> &getFunction() const = 0;
+  virtual const std::shared_ptr<IFunction> &getFunction() const noexcept = 0;
 
-  virtual const ArgumentPtrVector &getChildren() const = 0;
+  virtual const ArgumentPtrVector &getChildren() const noexcept = 0;
 
   virtual void setChildren(const ArgumentPtrVector &childVect) = 0;
 
@@ -31,9 +31,9 @@ public:
 
   virtual void setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals);
 
-  std::unique_ptr<IMathObject> toMinimalObject() const final;
+  std::unique_ptr<IMathObject> toMinimalObject() const noexcept final;
 
-  virtual const std::shared_ptr<IFunction> &getOutputFunction() const;
+  virtual const std::shared_ptr<IFunction> &getOutputFunction() const noexcept;
 
 protected:
   virtual ArgumentPtr simplify() const;

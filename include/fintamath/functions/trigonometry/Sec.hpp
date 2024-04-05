@@ -18,7 +18,7 @@ class Sec final : public IFunctionCRTP<INumber, Sec, INumber> {
   FINTAMATH_CLASS_BODY(Sec)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "sec";
   }
 

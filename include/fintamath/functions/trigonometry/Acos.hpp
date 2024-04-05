@@ -18,7 +18,7 @@ class Acos final : public IFunctionCRTP<INumber, Acos, INumber> {
   FINTAMATH_CLASS_BODY(Acos)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "acos";
   }
 

@@ -16,7 +16,7 @@ class Ceil final : public IFunctionCRTP<INumber, Ceil, INumber> {
   FINTAMATH_CLASS_BODY(Ceil)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "ceil";
   }
 

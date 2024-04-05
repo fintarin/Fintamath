@@ -16,7 +16,7 @@ class Add final : public IOperatorCRTP<IArithmetic, Add, IArithmetic, IArithmeti
   FINTAMATH_CLASS_BODY(Add)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "+";
   }
 

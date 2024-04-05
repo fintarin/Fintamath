@@ -14,7 +14,7 @@ class True final : public IConstantCRTP<Boolean, True> {
   FINTAMATH_CLASS_BODY(True)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return Boolean(true).toString();
   }
 

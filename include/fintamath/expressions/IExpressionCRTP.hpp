@@ -10,7 +10,7 @@ class IExpressionCRTP_ : public IExpressionBaseCRTP<Derived> {
 #endif // I_EXPRESSION_CRTP
 
 public:
-  bool equals(const Derived &rhs) const override {
+  bool equals(const Derived &rhs) const noexcept override {
     if (static_cast<bool>(this->getFunction()) != static_cast<bool>(rhs.getFunction()) ||
         (this->getFunction() && rhs.getFunction() && *this->getFunction() != *rhs.getFunction())) {
 

@@ -69,7 +69,7 @@ public:
 
   template <typename Type>
     requires(!std::is_abstract_v<Type> && !StringConstructable<Type> && EmptyConstructable<Type>)
-  void registerType() {
+  void registerType() noexcept {
     static const std::string name = Type{}.toString();
 
     stringToConstructorsMap[name].emplace_back([]() -> Return {
@@ -81,7 +81,7 @@ public:
 
   template <typename Type>
     requires(!std::is_abstract_v<Type> && StringConstructable<Type>)
-  void registerType() {
+  void registerType() noexcept {
     generatorConstructors.emplace_back([](std::string str) -> Generator {
       try {
         co_yield std::make_unique<Type>(std::move(str));
@@ -94,7 +94,7 @@ public:
 
   template <typename Type>
     requires(std::is_abstract_v<Type>)
-  void registerType() {
+  void registerType() noexcept {
     generatorConstructors.emplace_back([](std::string str) -> Generator {
       for (auto &value : Type::parse(std::move(str))) {
         co_yield std::move(value);
@@ -103,7 +103,7 @@ public:
   }
 
   template <typename Type>
-  void registerType() const {
+  void registerType() const noexcept {
     // No object of this type can be constructed
   }
 

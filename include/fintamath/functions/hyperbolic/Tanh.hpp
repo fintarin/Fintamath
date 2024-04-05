@@ -16,7 +16,7 @@ class Tanh final : public IFunctionCRTP<INumber, Tanh, INumber> {
   FINTAMATH_CLASS_BODY(Tanh)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "tanh";
   }
 

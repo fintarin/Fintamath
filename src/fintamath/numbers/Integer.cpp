@@ -35,7 +35,7 @@ Integer::Integer(std::string str) {
 Integer::Integer(const int64_t val) : backend(val) {
 }
 
-std::string Integer::toString() const {
+std::string Integer::toString() const noexcept {
   return backend.str();
 }
 
@@ -47,7 +47,7 @@ const Integer::Backend &Integer::getBackend() const {
   return backend;
 }
 
-bool Integer::equals(const Integer &rhs) const {
+bool Integer::equals(const Integer &rhs) const noexcept {
   return backend == rhs.backend;
 }
 

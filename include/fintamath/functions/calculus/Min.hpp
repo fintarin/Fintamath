@@ -16,7 +16,7 @@ class Min final : public IFunctionCRTP<IComparable, Min, IComparable> {
   FINTAMATH_CLASS_BODY(Min)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "min";
   }
 

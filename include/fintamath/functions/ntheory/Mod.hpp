@@ -16,7 +16,7 @@ class Mod final : public IOperatorCRTP<INumber, Mod, INumber, INumber> {
   FINTAMATH_CLASS_BODY(Mod)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "mod";
   }
 

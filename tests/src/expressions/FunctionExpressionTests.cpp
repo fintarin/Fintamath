@@ -13,7 +13,7 @@ class TestUnaryFunction final : public IFunctionCRTP<INumber, TestUnaryFunction,
   FINTAMATH_CLASS_BODY(TestUnaryFunction)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "testfunction";
   }
 
@@ -27,7 +27,7 @@ class TestBinaryFunction final : public IFunctionCRTP<INumber, TestBinaryFunctio
   FINTAMATH_CLASS_BODY(TestBinaryFunction)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "testfunction";
   }
 
@@ -41,7 +41,7 @@ class TestBinaryOperator final : public IOperatorCRTP<INumber, TestBinaryOperato
   FINTAMATH_CLASS_BODY(TestBinaryOperator)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "$";
   }
 
@@ -59,7 +59,7 @@ class TestUnaryPrefixOperator final : public IOperatorCRTP<INumber, TestUnaryPre
   FINTAMATH_CLASS_BODY(TestUnaryPrefixOperator)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "$";
   }
 
@@ -77,7 +77,7 @@ class TestUnaryPostfixOperator final : public IOperatorCRTP<INumber, TestUnaryPo
   FINTAMATH_CLASS_BODY(TestUnaryPostfixOperator)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "$";
   }
 

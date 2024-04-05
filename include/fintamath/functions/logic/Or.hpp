@@ -16,7 +16,7 @@ class Or final : public IOperatorCRTP<Boolean, Or, Boolean, Boolean> {
   FINTAMATH_CLASS_BODY(Or)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "|";
   }
 

@@ -17,7 +17,7 @@ class LessEqv final : public IOperatorCRTP<Boolean, LessEqv, IComparable, ICompa
   FINTAMATH_CLASS_BODY(LessEqv)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "<=";
   }
 

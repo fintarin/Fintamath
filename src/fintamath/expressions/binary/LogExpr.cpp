@@ -28,7 +28,7 @@ LogExpr::LogExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
     : IBinaryExpressionCRTP(Log{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
-std::string LogExpr::toString() const {
+std::string LogExpr::toString() const noexcept {
   if (*lhsChild == E{}) {
     return functionToString(Ln{}, {rhsChild});
   }
@@ -36,7 +36,7 @@ std::string LogExpr::toString() const {
   return IBinaryExpression::toString();
 }
 
-const std::shared_ptr<IFunction> &LogExpr::getOutputFunction() const {
+const std::shared_ptr<IFunction> &LogExpr::getOutputFunction() const noexcept {
   static const std::shared_ptr<IFunction> ln = std::make_shared<Ln>();
 
   if (*lhsChild == E{}) {

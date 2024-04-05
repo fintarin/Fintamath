@@ -17,7 +17,7 @@ class Neqv final : public IOperatorCRTP<Boolean, Neqv, IComparable, IComparable>
   FINTAMATH_CLASS_BODY(Neqv)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "!=";
   }
 

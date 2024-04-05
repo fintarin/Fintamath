@@ -18,7 +18,7 @@ class CompExpr final : public IBinaryExpressionCRTP<CompExpr> {
 public:
   CompExpr(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
   void markAsSolution();
 

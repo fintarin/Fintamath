@@ -16,7 +16,7 @@ public:
 
   explicit Variable(std::string inName, Integer inIndex);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
 private:
   std::string name;

@@ -15,7 +15,7 @@ class UnaryPlus final : public IOperatorCRTP<IArithmetic, UnaryPlus, IArithmetic
   FINTAMATH_CLASS_BODY(UnaryPlus)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "+";
   }
 

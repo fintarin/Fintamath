@@ -14,7 +14,7 @@ class Pi final : public IConstantCRTP<Real, Pi> {
   FINTAMATH_CLASS_BODY(Pi)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "Pi";
   }
 

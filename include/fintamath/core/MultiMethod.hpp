@@ -27,10 +27,16 @@ class MultiMethod<Res(ArgsBase...)> final {
 public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
-  void add(const auto &func) {
+  void add(const auto &func) noexcept {
     idToCallbackMap[CallbackId(Args::getClassStatic()...)] = [func](const ArgsBase &...args) {
       return func(cast<Args>(args)...);
     };
+  }
+
+  template <typename... Args>
+    requires(sizeof...(Args) == sizeof...(ArgsBase))
+  bool contains(const Args &...args) const noexcept {
+    return idToCallbackMap.contains(CallbackId(args.getClass()...));
   }
 
   template <typename... Args>
@@ -41,12 +47,6 @@ public:
     }
 
     return {};
-  }
-
-  template <typename... Args>
-    requires(sizeof...(Args) == sizeof...(ArgsBase))
-  bool contains(const Args &...args) const {
-    return idToCallbackMap.contains(CallbackId(args.getClass()...));
   }
 
 private:

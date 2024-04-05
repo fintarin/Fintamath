@@ -14,7 +14,7 @@ class I final : public IConstantCRTP<Complex, I> {
   FINTAMATH_CLASS_BODY(I)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "I";
   }
 

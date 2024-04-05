@@ -16,12 +16,12 @@ class TestExpression final : public IExpressionCRTP<TestExpression> {
   FINTAMATH_CLASS_BODY(TestExpression)
 
 public:
-  const std::shared_ptr<IFunction> &getFunction() const override {
+  const std::shared_ptr<IFunction> &getFunction() const noexcept override {
     static const std::shared_ptr func = cast<IFunction>(Add().clone());
     return func;
   }
 
-  const ArgumentPtrVector &getChildren() const override {
+  const ArgumentPtrVector &getChildren() const noexcept override {
     static const ArgumentPtrVector children;
     return children;
   }

@@ -19,7 +19,7 @@ class Log final : public IFunctionCRTP<INumber, Log, INumber, INumber> {
   FINTAMATH_CLASS_BODY(Log)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "log";
   }
 

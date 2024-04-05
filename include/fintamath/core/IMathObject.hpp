@@ -18,28 +18,28 @@ class IMathObject {
   FINTAMATH_PARENT_CLASS_BODY(IMathObject)
 
 public:
-  virtual ~IMathObject() = default;
+  virtual ~IMathObject() noexcept = default;
 
-  virtual std::unique_ptr<IMathObject> clone() const & = 0;
+  virtual std::unique_ptr<IMathObject> clone() const & noexcept = 0;
 
-  virtual std::unique_ptr<IMathObject> clone() && = 0;
+  virtual std::unique_ptr<IMathObject> clone() && noexcept = 0;
 
-  virtual std::string toString() const {
+  virtual std::string toString() const noexcept {
     return std::string(getClass().getName());
   }
 
-  virtual std::unique_ptr<IMathObject> toMinimalObject() const {
+  virtual std::unique_ptr<IMathObject> toMinimalObject() const noexcept {
     return clone();
   }
 
-  virtual MathObjectClass getClass() const = 0;
+  virtual MathObjectClass getClass() const noexcept = 0;
 
-  friend bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
+  friend bool operator==(const IMathObject &lhs, const IMathObject &rhs) noexcept {
     return lhs.equalsAbstract(rhs);
   }
 
 protected:
-  virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
+  virtual bool equalsAbstract(const IMathObject &rhs) const noexcept = 0;
 };
 
 template <typename Derived>
@@ -50,11 +50,11 @@ class IMathObjectCRTP : public IMathObject {
 };
 
 template <std::derived_from<IMathObject> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
-bool operator==(const Lhs &lhs, const Rhs &rhs) {
+bool operator==(const Lhs &lhs, const Rhs &rhs) noexcept {
   return lhs == Lhs(rhs);
 }
 
-inline std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {
+inline std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) noexcept {
   return out << rhs.toString();
 }
 

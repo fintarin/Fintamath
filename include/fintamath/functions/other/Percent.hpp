@@ -16,7 +16,7 @@ class Percent final : public IOperatorCRTP<INumber, Percent, INumber> {
   FINTAMATH_CLASS_BODY(Percent)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "%";
   }
 

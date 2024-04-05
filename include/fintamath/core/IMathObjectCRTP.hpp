@@ -10,28 +10,28 @@ class IMathObjectCRTP_ : public IMathObject {
 #endif // I_MATH_OBJECT_CRTP
 
 public:
-  std::unique_ptr<IMathObject> clone() const & final {
+  std::unique_ptr<IMathObject> clone() const & noexcept final {
     return std::make_unique<Derived>(cast<Derived>(*this));
   }
 
-  std::unique_ptr<IMathObject> clone() && final {
+  std::unique_ptr<IMathObject> clone() && noexcept final {
     return std::make_unique<Derived>(std::move(cast<Derived>(*this)));
   }
 
-  bool operator==(const I_MATH_OBJECT_CRTP &rhs) const {
-    return equals(cast<Derived>(rhs));
-  }
-
-  MathObjectClass getClass() const override {
+  MathObjectClass getClass() const noexcept final {
     return Derived::getClassStatic();
   }
 
+  bool operator==(const I_MATH_OBJECT_CRTP &rhs) const noexcept {
+    return equals(cast<Derived>(rhs));
+  }
+
 protected:
-  virtual bool equals(const Derived &rhs) const {
+  virtual bool equals(const Derived &rhs) const noexcept {
     return toString() == rhs.toString();
   }
 
-  bool equalsAbstract(const IMathObject &rhs) const override {
+  bool equalsAbstract(const IMathObject &rhs) const noexcept override {
     if (const auto *rhsPtr = cast<Derived>(&rhs)) {
       return equals(*rhsPtr);
     }

@@ -18,7 +18,7 @@ class Acoth final : public IFunctionCRTP<INumber, Acoth, INumber> {
   FINTAMATH_CLASS_BODY(Acoth)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "acoth";
   }
 

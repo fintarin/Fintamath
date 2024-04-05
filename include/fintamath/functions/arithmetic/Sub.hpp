@@ -16,7 +16,7 @@ class Sub final : public IOperatorCRTP<IArithmetic, Sub, IArithmetic, IArithmeti
   FINTAMATH_CLASS_BODY(Sub)
 
 public:
-  std::string toString() const override {
+  std::string toString() const noexcept override {
     return "-";
   }
 

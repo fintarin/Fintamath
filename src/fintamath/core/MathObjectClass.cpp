@@ -2,7 +2,7 @@
 
 namespace fintamath {
 
-std::strong_ordering MathObjectClass::operator<=>(const MathObjectClass rhs) const {
+std::strong_ordering MathObjectClass::operator<=>(const MathObjectClass rhs) const noexcept {
   const Id lhsId = getId();
   const Id rhsId = rhs.getId();
 
@@ -11,12 +11,12 @@ std::strong_ordering MathObjectClass::operator<=>(const MathObjectClass rhs) con
              : name <=> rhs.name;
 }
 
-std::optional<MathObjectClass> MathObjectClass::getParent() const {
+std::optional<MathObjectClass> MathObjectClass::getParent() const noexcept {
   const auto iter = getChildToParentMap().find(name);
   return iter != getChildToParentMap().end() ? iter->second : std::optional<MathObjectClass>{};
 }
 
-const MathObjectClass::Children &MathObjectClass::getChildren(const bool recursive) const {
+const MathObjectClass::Children &MathObjectClass::getChildren(const bool recursive) const noexcept {
   if (recursive) {
     return getParentToRecursiveChildrenMap()[name];
   }
@@ -24,27 +24,27 @@ const MathObjectClass::Children &MathObjectClass::getChildren(const bool recursi
   return getParentToChildrenMap()[name];
 }
 
-MathObjectClass::Id MathObjectClass::getId() const {
+MathObjectClass::Id MathObjectClass::getId() const noexcept {
   const auto classToId = getClassToIdMap().find(*this);
   return classToId != getClassToIdMap().end() ? classToId->second : 0;
 }
 
-MathObjectClass::ClassToIdMap &MathObjectClass::getClassToIdMap() {
+MathObjectClass::ClassToIdMap &MathObjectClass::getClassToIdMap() noexcept {
   static ClassToIdMap map;
   return map;
 }
 
-MathObjectClass::ChildToParentMap &MathObjectClass::getChildToParentMap() {
+MathObjectClass::ChildToParentMap &MathObjectClass::getChildToParentMap() noexcept {
   static ChildToParentMap map;
   return map;
 }
 
-MathObjectClass::ParentToChildrenMap &MathObjectClass::getParentToChildrenMap() {
+MathObjectClass::ParentToChildrenMap &MathObjectClass::getParentToChildrenMap() noexcept {
   static ParentToChildrenMap map;
   return map;
 }
 
-MathObjectClass::ParentToChildrenMap &MathObjectClass::getParentToRecursiveChildrenMap() {
+MathObjectClass::ParentToChildrenMap &MathObjectClass::getParentToRecursiveChildrenMap() noexcept {
   static ParentToChildrenMap map;
   return map;
 }
