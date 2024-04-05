@@ -71,7 +71,7 @@ Ordering reverse(Ordering ordering);
 
 template <typename T>
 size_t getPositionOfFirstChildWithTerm(const ArgumentPtrVector &children) {
-  for (const auto i : stdv::iota(0U, children.size())) {
+  for (size_t i = 0; i < children.size(); i++) {
     if (containsIf(children[i], [](const ArgumentPtr &child) { return is<T>(child); })) {
       return i;
     }
@@ -429,7 +429,7 @@ ChildrenComparatorResult compareChildren(const ArgumentPtrVector &lhsChildren,
   auto size = std::min(std::max(lhsStart, rhsStart),
                        std::min(lhsChildren.size(), rhsChildren.size()));
 
-  for (const auto i : stdv::iota(0U, size)) {
+  for (size_t i = 0; i < size; i++) {
     const Ordering childrenComp = compare(lhsChildren[i], rhsChildren[i], options);
 
     if (childrenComp != Ordering::equal) {

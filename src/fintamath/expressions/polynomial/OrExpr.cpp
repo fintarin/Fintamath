@@ -145,7 +145,7 @@ ArgumentPtr OrExpr::andSimplify(const IFunction & /*func*/, const ArgumentPtr &l
 
   size_t resolutionIndex = lhsChildren.size();
 
-  for (const auto i : stdv::iota(0U, lhsChildren.size())) {
+  for (size_t i = 0; i < lhsChildren.size(); i++) {
     ArgumentPtr lhsSubChild = lhsChildren[i];
     ArgumentPtr rhsSubChild = rhsChildren[i];
 

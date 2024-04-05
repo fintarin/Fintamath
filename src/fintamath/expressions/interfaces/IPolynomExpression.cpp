@@ -48,7 +48,7 @@ std::string IPolynomExpression::toString() const {
 
   result += childToString(*oper, children.front(), {});
 
-  for (const auto i : stdv::iota(1U, children.size())) {
+  for (size_t i = 1; i < children.size(); i++) {
     const std::string childStr = childToString(*oper, children[i], children[i - 1]);
 
     if (childStr.size() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {

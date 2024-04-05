@@ -17,7 +17,7 @@ void IFunction::validateArgsSize(const ArgumentRefVector &argVect) const {
 
   std::vector<std::string> argNameVect(argVect.size());
 
-  for (const auto i : stdv::iota(0U, argNameVect.size())) {
+  for (size_t i = 0; i < argNameVect.size(); i++) {
     argNameVect[i] = argVect[i].get().toString();
   }
 

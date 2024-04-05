@@ -236,7 +236,7 @@ ArgumentPtr AddExpr::mulLogSimplify(const IFunction & /*func*/, const ArgumentPt
 std::vector<size_t> AddExpr::findLogarithms(const ArgumentPtrVector &children) {
   std::vector<size_t> indices;
 
-  for (const auto i : stdv::iota(0U, children.size())) {
+  for (size_t i = 0; i < children.size(); i++) {
     if (const auto childExpr = cast<const IExpression>(children[i]);
         childExpr && is<Log>(childExpr->getFunction())) {
 
