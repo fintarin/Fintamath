@@ -139,7 +139,7 @@ ArgumentPtr DerivativeExpr::exprSimplify(const std::shared_ptr<const IExpression
 ArgumentPtr DerivativeExpr::addSimplify(const ArgumentPtrVector &children, const std::shared_ptr<const Variable> &var) {
   ArgumentPtrVector newChildren = children;
 
-  stdr::transform(newChildren, newChildren.begin(), [&var](const ArgumentPtr &child) {
+  std::ranges::transform(newChildren, newChildren.begin(), [&var](const ArgumentPtr &child) {
     return derivativeExpr(child, var);
   });
 

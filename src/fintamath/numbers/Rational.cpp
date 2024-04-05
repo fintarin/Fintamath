@@ -27,7 +27,7 @@ Rational::Rational(const std::string &str) {
   }
 
   int64_t firstDigitNum = 0;
-  const int64_t firstDotNum = stdr::distance(str.begin(), stdr::find(str, '.'));
+  const int64_t firstDotNum = std::ranges::distance(str.begin(), std::ranges::find(str, '.'));
 
   bool isNegative = false;
   if (str.front() == '-') {

@@ -392,7 +392,7 @@ std::pair<ArgumentPtr, ArgumentPtr> DivExpr::mulSumSimplify(const ArgumentPtr &l
 
   ArgumentPtrVector multiplicators;
 
-  for (const auto &rhsChild : rhsChildren | stdv::drop(1)) {
+  for (const auto &rhsChild : rhsChildren | std::views::drop(1)) {
     multiplicators.emplace_back(mulExpr(rhsChild, result));
   }
 

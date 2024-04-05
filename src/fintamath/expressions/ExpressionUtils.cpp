@@ -90,7 +90,7 @@ bool containsIf(const ArgumentPtr &arg, const std::function<bool(const ArgumentP
 
   const ArgumentPtrVector &children = expr->getChildren();
 
-  return stdr::any_of(children, [&comp](const auto &child) {
+  return std::ranges::any_of(children, [&comp](const auto &child) {
     bool res = false;
 
     if (containsIf(child, comp)) {
@@ -226,12 +226,9 @@ std::pair<ArgumentPtr, ArgumentPtr> splitRational(const ArgumentPtr &arg) {
 ArgumentPtr negate(const ArgumentPtr &arg) {
   if (const auto expr = cast<IExpression>(arg)) {
     if (is<Add>(expr->getFunction())) {
-      auto negChildrenView =
-          expr->getChildren() |
-          stdv::transform([](const ArgumentPtr &child) {
-            return negate(child);
-          });
-      return makePolynom(Add{}, ArgumentPtrVector(negChildrenView.begin(), negChildrenView.end())); // TODO: use C++23 stdv::to
+      ArgumentPtrVector negChildren = expr->getChildren();
+      std::ranges::transform(negChildren, negChildren.begin(), &negate);
+      return makePolynom(Add{}, std::move(negChildren));
     }
 
     if (is<Mul>(expr->getFunction())) {
