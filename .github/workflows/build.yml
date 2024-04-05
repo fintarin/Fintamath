@@ -39,7 +39,7 @@ jobs:
       # TODO: remove this step after the default Clang is updated to version 16
       - name: Install LLVM and Clang
         if: matrix.config.os == 'ubuntu-latest'
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "16.0"
 
