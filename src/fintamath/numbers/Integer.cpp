@@ -79,6 +79,11 @@ Integer &Integer::divide(const Integer &rhs) {
   return *this;
 }
 
+Integer &Integer::negate() {
+  backend = -backend;
+  return *this;
+}
+
 Integer &Integer::mod(const Integer &rhs) {
   if (rhs == 0) {
     throw UndefinedBinaryOperatorException("mod", toString(), rhs.toString());
@@ -128,11 +133,6 @@ Integer &Integer::bitNot() {
   return *this;
 }
 
-Integer &Integer::negate() {
-  backend = -backend;
-  return *this;
-}
-
 Integer &Integer::increase() {
   ++backend;
   return *this;
@@ -141,6 +141,79 @@ Integer &Integer::increase() {
 Integer &Integer::decrease() {
   --backend;
   return *this;
+}
+
+Integer &Integer::operator%=(const Integer &rhs) {
+  return mod(rhs);
+}
+
+Integer &Integer::operator&=(const Integer &rhs) {
+  return bitAnd(rhs);
+}
+
+Integer &Integer::operator|=(const Integer &rhs) {
+  return bitOr(rhs);
+}
+
+Integer &Integer::operator^=(const Integer &rhs) {
+  return bitXor(rhs);
+}
+
+Integer &Integer::operator<<=(const Integer &rhs) {
+  return bitLeftShift(rhs);
+}
+
+Integer &Integer::operator>>=(const Integer &rhs) {
+  return bitRightShift(rhs);
+}
+
+Integer Integer::operator%(const Integer &rhs) const {
+  return Integer(*this) %= rhs;
+}
+
+Integer Integer::operator&(const Integer &rhs) const {
+  return Integer(*this) &= rhs;
+}
+
+Integer Integer::operator|(const Integer &rhs) const {
+  return Integer(*this) |= rhs;
+}
+
+Integer Integer::operator^(const Integer &rhs) const {
+  return Integer(*this) ^= rhs;
+}
+
+Integer Integer::operator<<(const Integer &rhs) const {
+  return Integer(*this) <<= rhs;
+}
+
+Integer Integer::operator>>(const Integer &rhs) const {
+  return Integer(*this) >>= rhs;
+}
+
+Integer Integer::operator~() const {
+  Integer tmp = Integer(*this);
+  return tmp.bitNot();
+}
+
+Integer &Integer::operator++() {
+  return increase();
+}
+
+Integer &Integer::operator--() {
+  return decrease();
+}
+
+Integer Integer::operator++(int) {
+  Integer res = *this;
+  increase();
+  return res;
+}
+
+Integer Integer::operator--(int) {
+  Integer res = *this;
+  decrease();
+  return res;
 }
 
 }

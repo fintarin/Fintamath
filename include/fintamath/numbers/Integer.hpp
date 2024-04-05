@@ -12,11 +12,11 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/numbers/IInteger.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-class Integer final : public IIntegerCRTP<Integer> {
+class Integer final : public INumberCRTP<Integer> {
   FINTAMATH_CLASS_BODY(Integer)
 
 public:
@@ -45,6 +45,40 @@ public:
     return backend.convert_to<T>();
   }
 
+  Integer &operator%=(const Integer &rhs);
+
+  Integer &operator&=(const Integer &rhs);
+
+  Integer &operator|=(const Integer &rhs);
+
+  Integer &operator^=(const Integer &rhs);
+
+  Integer &operator<<=(const Integer &rhs);
+
+  Integer &operator>>=(const Integer &rhs);
+
+  Integer operator%(const Integer &rhs) const;
+
+  Integer operator&(const Integer &rhs) const;
+
+  Integer operator|(const Integer &rhs) const;
+
+  Integer operator^(const Integer &rhs) const;
+
+  Integer operator<<(const Integer &rhs) const;
+
+  Integer operator>>(const Integer &rhs) const;
+
+  Integer operator~() const;
+
+  Integer &operator++();
+
+  Integer &operator--();
+
+  Integer operator++(int);
+
+  Integer operator--(int);
+
 protected:
   bool equals(const Integer &rhs) const override;
 
@@ -62,29 +96,119 @@ protected:
 
   std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &rhs) const override;
 
-  Integer &mod(const Integer &rhs) override;
-
-  Integer &bitAnd(const Integer &rhs) override;
-
-  Integer &bitOr(const Integer &rhs) override;
-
-  Integer &bitXor(const Integer &rhs) override;
-
-  Integer &bitLeftShift(const Integer &rhs) override;
-
-  Integer &bitRightShift(const Integer &rhs) override;
-
-  Integer &bitNot() override;
-
   Integer &negate() override;
 
-  Integer &increase() override;
+  Integer &mod(const Integer &rhs);
 
-  Integer &decrease() override;
+  Integer &bitAnd(const Integer &rhs);
+
+  Integer &bitOr(const Integer &rhs);
+
+  Integer &bitXor(const Integer &rhs);
+
+  Integer &bitLeftShift(const Integer &rhs);
+
+  Integer &bitRightShift(const Integer &rhs);
+
+  Integer &bitNot();
+
+  Integer &increase();
+
+  Integer &decrease();
 
 private:
   Backend backend;
 };
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer &operator%=(Integer &lhs, const Rhs &rhs) {
+  return lhs %= Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer &operator&=(Integer &lhs, const Rhs &rhs) {
+  return lhs &= Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer &operator|=(Integer &lhs, const Rhs &rhs) {
+  return lhs |= Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer &operator^=(Integer &lhs, const Rhs &rhs) {
+  return lhs ^= Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer &operator<<=(Integer &lhs, const Rhs &rhs) {
+  return lhs <<= Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer &operator>>=(Integer &lhs, const Rhs &rhs) {
+  return lhs >>= Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer operator%(const Integer &lhs, const Rhs &rhs) {
+  return lhs % Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Lhs>
+Integer operator%(const Lhs &lhs, const Integer &rhs) {
+  return Integer(lhs) % rhs;
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer operator&(const Integer &lhs, const Rhs &rhs) {
+  return lhs & Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Lhs>
+Integer operator&(const Lhs &lhs, const Integer &rhs) {
+  return Integer(lhs) & rhs;
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer operator|(const Integer &lhs, const Rhs &rhs) {
+  return lhs | Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Lhs>
+Integer operator|(const Lhs &lhs, const Integer &rhs) {
+  return Integer(lhs) | rhs;
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer operator^(const Integer &lhs, const Rhs &rhs) {
+  return lhs ^ Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Lhs>
+Integer operator^(const Lhs &lhs, const Integer &rhs) {
+  return Integer(lhs) ^ rhs;
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer operator<<(const Integer &lhs, const Rhs &rhs) {
+  return lhs << Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Lhs>
+Integer operator<<(const Lhs &lhs, const Integer &rhs) {
+  return Integer(lhs) << rhs;
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Rhs>
+Integer operator>>(const Integer &lhs, const Rhs &rhs) {
+  return lhs >> Integer(rhs);
+}
+
+template <ConvertibleToAndNotSameAs<Integer> Lhs>
+Integer operator>>(const Lhs &lhs, const Integer &rhs) {
+  return Integer(lhs) >> rhs;
+}
 
 }
 

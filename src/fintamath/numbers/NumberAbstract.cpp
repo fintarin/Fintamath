@@ -7,7 +7,6 @@
 #include "fintamath/core/IComparable.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
-#include "fintamath/numbers/IInteger.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -19,7 +18,7 @@ std::unique_ptr<IArithmetic> Integer::multiplyAbstract(const IArithmetic &rhs) c
     return cast<IArithmetic>(Integer(0).clone());
   }
 
-  return IIntegerCRTP::multiplyAbstract(rhs);
+  return INumberCRTP::multiplyAbstract(rhs);
 }
 
 std::unique_ptr<IArithmetic> Integer::divideAbstract(const IArithmetic &rhs) const {
@@ -33,7 +32,7 @@ std::unique_ptr<IArithmetic> Integer::divideAbstract(const IArithmetic &rhs) con
     }
   }
 
-  return IIntegerCRTP::divideAbstract(rhs);
+  return INumberCRTP::divideAbstract(rhs);
 }
 
 //-------------------------------------------------------------------------------------//

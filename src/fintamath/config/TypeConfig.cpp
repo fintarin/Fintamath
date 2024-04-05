@@ -111,7 +111,6 @@
 #include "fintamath/literals/constants/Pi.hpp"
 #include "fintamath/literals/constants/True.hpp"
 #include "fintamath/literals/constants/Undefined.hpp"
-#include "fintamath/numbers/IInteger.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -128,12 +127,10 @@ TypeConfig::TypeConfig() {
 
   IComparable::registerType<INumber>();
 
-  INumber::registerType<IInteger>();
+  INumber::registerType<Integer>();
   INumber::registerType<Rational>();
   INumber::registerType<Real>();
   INumber::registerType<Complex>();
-
-  IInteger::registerType<Integer>();
 
   ILiteral::registerType<IConstant>();
   ILiteral::registerType<Variable>();
