@@ -137,10 +137,10 @@ PowExpr::SimplifyFunctionVector PowExpr::getFunctionsForPostSimplify() const {
 Integer PowExpr::generateFirstNum(const Integer &countOfOne) {
   Integer n = 0;
 
-  for ([[maybe_unused]] const auto _ : stdv::iota(0U, countOfOne)) {
+  repeat(countOfOne, [&]() {
     n <<= 1;
     n |= 1;
-  }
+  });
 
   return n;
 }
@@ -193,7 +193,7 @@ ArgumentPtr PowExpr::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &
 
   ArgumentPtrVector newChildren;
 
-  for ([[maybe_unused]] const auto _ : stdv::iota(0U, combins)) {
+  repeat(combins, [&]() {
     std::vector<Integer> vectOfPows = getPartition(bitNumber, Integer(variableCount));
     bitNumber = generateNextNumber(bitNumber);
 
@@ -207,7 +207,7 @@ ArgumentPtr PowExpr::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &
 
     ArgumentPtr mulExprChild = mulExpr(std::move(mulExprChildren));
     newChildren.emplace_back(std::move(mulExprChild));
-  }
+  });
 
   return addExpr(std::move(newChildren));
 }

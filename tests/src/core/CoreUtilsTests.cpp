@@ -2,4 +2,6 @@
 
 #include "fintamath/core/CoreUtils.hpp"
 
-// Nothing to test yet
+TEST(CoreUtilsTests, repeatTest) {
+  // TODO: implement
+}

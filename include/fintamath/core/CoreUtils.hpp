@@ -22,4 +22,11 @@ concept Hashable = requires(const T &v) {
   std::hash<T>{}(v);
 };
 
+template <typename Number, typename Function>
+void repeat(const Number &num, Function &&func) {
+  for (Number i = 0; i < num; ++i) {
+    func();
+  }
+}
+
 }

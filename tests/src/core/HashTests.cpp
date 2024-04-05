@@ -60,38 +60,38 @@ TEST(HashTests, hashCombineTest) {
 
 TEST(HashTests, hashTupleTest) {
   {
-    std::tuple tuple1 = {123, 1.23, "abc"};
-    std::tuple tuple2 = {123, 1.23, "abc"};
+    std::tuple tuple1 = {123, 1.23, std::string("abc")};
+    std::tuple tuple2 = {123, 1.23, std::string("abc")};
 
     EXPECT_EQ(Hash<decltype(tuple1)>{}(tuple1), Hash<decltype(tuple2)>{}(tuple2));
   }
   {
-    std::tuple tuple1 = {124, 1.23, "abc"};
-    std::tuple tuple2 = {123, 1.23, "abc"};
+    std::tuple tuple1 = {124, 1.23, std::string("abc")};
+    std::tuple tuple2 = {123, 1.23, std::string("abc")};
 
     EXPECT_NE(Hash<decltype(tuple1)>{}(tuple1), Hash<decltype(tuple2)>{}(tuple2));
   }
   {
-    std::tuple tuple1 = {123, 1.23, "abc"};
-    std::tuple tuple2 = {123, 2.23, "abc"};
+    std::tuple tuple1 = {123, 1.23, std::string("abc")};
+    std::tuple tuple2 = {123, 2.23, std::string("abc")};
 
     EXPECT_NE(Hash<decltype(tuple1)>{}(tuple1), Hash<decltype(tuple2)>{}(tuple2));
   }
   {
     std::tuple tuple1 = {123, 1.23, "abd"};
-    std::tuple tuple2 = {123, 1.23, "abc"};
+    std::tuple tuple2 = {123, 1.23, std::string("abc")};
 
     EXPECT_NE(Hash<decltype(tuple1)>{}(tuple1), Hash<decltype(tuple2)>{}(tuple2));
   }
   {
     std::tuple tuple1 = {123, "abd", 1.23};
-    std::tuple tuple2 = {123, 1.23, "abc"};
+    std::tuple tuple2 = {123, 1.23, std::string("abc")};
 
     EXPECT_NE(Hash<decltype(tuple1)>{}(tuple1), Hash<decltype(tuple2)>{}(tuple2));
   }
   {
     std::tuple tuple1 = {123, 1.23, "abd"};
-    std::tuple tuple2 = {1.23, "abc", 123};
+    std::tuple tuple2 = {1.23, std::string("abc"), 123};
 
     EXPECT_NE(Hash<decltype(tuple1)>{}(tuple1), Hash<decltype(tuple2)>{}(tuple2));
   }
