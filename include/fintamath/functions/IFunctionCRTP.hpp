@@ -101,7 +101,7 @@ private:
   bool doAnyArgsMatch(const ArgumentRefVector &argVect) const {
     using AnyArgsType = typename std::tuple_element_t<0, std::tuple<Args...>>;
 
-    return stdr::all_of(argVect, [](const auto &arg) {
+    return std::ranges::all_of(argVect, [](const auto &arg) {
       return is<AnyArgsType>(arg);
     });
   }

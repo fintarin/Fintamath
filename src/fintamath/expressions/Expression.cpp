@@ -503,7 +503,7 @@ bool Expression::doesArgMatch(const MathObjectClass &expectedType, const Argumen
 namespace detail {
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
-  stdr::transform(args, args.begin(), &Expression::compress);
+  std::ranges::transform(args, args.begin(), &Expression::compress);
   Expression::validateFunctionArgs(func, args);
 
   if (const auto strToConstr = Expression::getExpressionMaker().find(func.getClass());
