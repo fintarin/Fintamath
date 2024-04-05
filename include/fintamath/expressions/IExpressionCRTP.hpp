@@ -24,7 +24,7 @@ public:
       return false;
     }
 
-    for (const auto i : stdv::iota(0U, lhsChildren.size())) {
+    for (size_t i = 0U; i < lhsChildren.size(); i++) {
       if (lhsChildren[i] != rhsChildren[i] && *lhsChildren[i] != *rhsChildren[i]) {
         return false;
       }

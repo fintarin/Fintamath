@@ -281,7 +281,7 @@ ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &a
 std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args) {
   std::vector<std::string> argStrings(args.size());
 
-  for (const auto i : stdv::iota(0U, argStrings.size())) {
+  for (size_t i = 0; i < argStrings.size(); i++) {
     argStrings[i] = args[i].get()->toString();
   }
 

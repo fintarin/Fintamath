@@ -200,7 +200,7 @@ ArgumentPtr PowExpr::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &
     ArgumentPtrVector mulExprChildren;
     mulExprChildren.emplace_back(multinomialCoefficient(power, vectOfPows).clone());
 
-    for (const auto i : stdv::iota(0U, variableCount)) {
+    for (size_t i = 0; i < variableCount; i++) {
       ArgumentPtr powExprChild = powExpr(polynom[i], vectOfPows[i].clone());
       mulExprChildren.emplace_back(std::move(powExprChild));
     }

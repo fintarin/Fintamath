@@ -151,7 +151,7 @@ TermVector Expression::tokensToTerms(TokenVector &tokens) {
 
   TermVector terms(tokens.size());
 
-  for (const auto i : stdv::iota(0U, terms.size())) {
+  for (size_t i = 0U; i < terms.size(); i++) {
     terms[i] = parseTerm(tokens[i]);
   }
 
@@ -338,7 +338,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     return;
   }
 
-  for (const auto i : stdv::iota(1U, terms.size() - 1)) {
+  for (size_t i = 1; i + 1 < terms.size(); i++) {
     auto &term = terms[i];
     const auto &termPrev = terms[i - 1];
 
@@ -351,7 +351,7 @@ void Expression::fixOperatorTypes(TermVector &terms) {
     }
   }
 
-  for (const auto i : stdv::iota(1U, terms.size() - 1) | stdv::reverse) {
+  for (size_t i = terms.size() - 2; i > 0; i--) {
     auto &term = terms[i];
     const auto &termNext = terms[i + 1];
 
@@ -457,7 +457,7 @@ void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVe
   const bool doesArgSizeMatch = !func.isVariadic() && args.size() == expectedArgTypes.size();
   MathObjectClass expectedType = expectedArgTypes.front();
 
-  for (const auto i : stdv::iota(0U, args.size())) {
+  for (size_t i = 0; i < args.size(); i++) {
     if (doesArgSizeMatch) {
       expectedType = expectedArgTypes[i];
     }

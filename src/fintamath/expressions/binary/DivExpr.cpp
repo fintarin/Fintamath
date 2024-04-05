@@ -188,11 +188,9 @@ ArgumentPtr DivExpr::mulSimplify(const SimplifyFunctionVector &simplFuncs,
   const size_t rhsChildrenSizeInitial = rhsChildren.size();
 
   // TODO: use more efficient algorithm
-  for (const auto i : stdv::iota(0U, lhsChildren.size())) {
-    auto &lhsChild = lhsChildren[i];
-
-    for (const auto j : stdv::iota(0U, rhsChildren.size())) {
-      const auto &rhsChild = rhsChildren[j];
+  for (auto &lhsChild : lhsChildren) {
+    for (size_t i = 0; i < rhsChildren.size(); i++) {
+      const auto &rhsChild = rhsChildren[i];
 
       ArgumentPtr res = useSimplifyFunctions(simplFuncs,
                                              func,
@@ -201,7 +199,7 @@ ArgumentPtr DivExpr::mulSimplify(const SimplifyFunctionVector &simplFuncs,
 
       if (res && !is<Rational>(res) && *res != *makeExpr(func, lhsChild, rhsChild)) {
         lhsChild = std::move(res);
-        rhsChildren.erase(rhsChildren.begin() + j);
+        rhsChildren.erase(rhsChildren.begin() + static_cast<ptrdiff_t>(i));
         break;
       }
     }
