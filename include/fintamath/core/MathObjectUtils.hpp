@@ -136,4 +136,12 @@ std::shared_ptr<To> cast(const std::shared_ptr<From> &from) {
   return std::const_pointer_cast<To>(cast<To>(std::const_pointer_cast<const From>(from)));
 }
 
+template <typename Comparator>
+struct ToStringComparator {
+  template <typename T>
+  bool operator()(const T &lhs, const T &rhs) const noexcept {
+    return Comparator{}(lhs.toString(), rhs.toString());
+  }
+};
+
 }

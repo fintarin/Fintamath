@@ -28,22 +28,18 @@ using namespace detail;
 
 FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IExpression)
 
-std::vector<Variable> IExpression::getVariables() const {
-  std::vector<Variable> vars;
+IExpression::VariableSet IExpression::getVariables() const noexcept {
+  VariableSet vars;
 
   for (const auto &child : getChildren()) {
     if (auto var = cast<Variable>(child)) {
-      vars.emplace_back(*var);
+      vars.emplace(*var);
     }
     else if (const auto childExpr = cast<IExpression>(child)) {
-      std::vector<Variable> childVars = childExpr->getVariables();
-      vars.insert(vars.end(), childVars.begin(), childVars.end());
+      VariableSet childVars = childExpr->getVariables();
+      vars.insert(childVars.begin(), childVars.end());
     }
   }
-
-  std::ranges::sort(vars, std::less{}, &Variable::toString);
-  auto unique = std::ranges::unique(vars);
-  vars.erase(unique.begin(), unique.end());
 
   return vars;
 }

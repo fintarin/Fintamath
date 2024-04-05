@@ -1,8 +1,10 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/IExpression.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/ExpressionParser.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
@@ -82,11 +84,8 @@ TEST(IExpressionTests, setChildrenTest) {
 }
 
 TEST(IExpressionTests, getVariablesTest) {
-  const auto expr = cast<IExpression>(Expression("x^2+y^2+a").clone());
-  const auto vars = expr->getVariables();
-  EXPECT_EQ(vars[0].toString(), "a");
-  EXPECT_EQ(vars[1].toString(), "x");
-  EXPECT_EQ(vars[2].toString(), "y");
+  const auto expr = cast<IExpression>(parseExpr("x^2+y^2+a"));
+  EXPECT_THAT(expr->getVariables(), testing::ElementsAre(Variable("a"), Variable("x"), Variable("y")));
 
   // TODO: implement more tests
 }
