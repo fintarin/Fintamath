@@ -10,9 +10,6 @@ defaults:
   run:
     shell: bash
 
-env:
-  BUILD_TYPE: Release
-
 jobs:
   build:
     name: Build
@@ -21,52 +18,157 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: Ubuntu GCC, os: ubuntu-latest, cc: gcc, cxx: g++ }
-          - { name: Ubuntu Clang, os: ubuntu-latest, cc: clang, cxx: clang++ }
-          # TODO: remove version specifiers after macOS-latest upgrades to version 13
-          - { name: macOS GCC, os: macOS-13, cc: gcc, cxx: g++ }
-          - { name: macOS Clang, os: macOS-13, cc: clang, cxx: clang++ }
-          - { name: Windows GCC, os: windows-latest, cc: gcc, cxx: g++ }
-          - { name: Windows Clang, os: windows-latest, cc: clang, cxx: clang++ }
-          - { name: Windows MSVC, os: windows-latest, cc: msvc, cxx: msvc }
+          - {
+              name: Ubuntu GCC Release Shared,
+              os: ubuntu-latest,
+              cc: gcc,
+              cxx: g++,
+              build-type: Release,
+              shared: ON,
+            }
+          - {
+              name: Ubuntu GCC Debug Static,
+              os: ubuntu-latest,
+              cc: gcc,
+              cxx: g++,
+              build-type: Debug,
+              shared: OFF,
+            }
+          - {
+              name: Ubuntu Clang Release Shared,
+              os: ubuntu-latest,
+              cc: clang,
+              cxx: clang++,
+              build-type: Release,
+              shared: ON,
+            }
+          - {
+              name: Ubuntu Clang Debug Static,
+              os: ubuntu-latest,
+              cc: clang,
+              cxx: clang++,
+              build-type: Debug,
+              shared: OFF,
+            }
+            # TODO: remove version specifiers after macos-latest upgrades to version 13
+          - {
+              name: macOS GCC Release Shared,
+              os: macos-13,
+              cc: gcc,
+              cxx: g++,
+              build-type: Release,
+              shared: ON,
+            }
+          - {
+              name: macOS GCC Debug Static,
+              os: macos-13,
+              cc: gcc,
+              cxx: g++,
+              build-type: Debug,
+              shared: OFF,
+            }
+          - {
+              name: macOS Clang Release Shared,
+              os: macos-13,
+              cc: clang,
+              cxx: clang++,
+              build-type: Release,
+              shared: ON,
+            }
+          - {
+              name: macOS Clang Debug Static,
+              os: macos-13,
+              cc: clang,
+              cxx: clang++,
+              build-type: Debug,
+              shared: OFF,
+            }
+          - {
+              name: Windows GCC Release Shared,
+              os: windows-latest,
+              cc: gcc,
+              cxx: g++,
+              build-type: Release,
+              shared: ON,
+            }
+          - {
+              name: Windows GCC Debug Static,
+              os: windows-latest,
+              cc: gcc,
+              cxx: g++,
+              build-type: Debug,
+              shared: OFF,
+            }
+          - {
+              name: Windows Clang Release Shared,
+              os: windows-latest,
+              cc: clang,
+              cxx: clang++,
+              build-type: Release,
+              shared: ON,
+            }
+          - {
+              name: Windows Clang Debug Static,
+              os: windows-latest,
+              cc: clang,
+              cxx: clang++,
+              build-type: Debug,
+              shared: OFF,
+            }
+          - {
+              name: Windows MSVC Release Shared,
+              os: windows-latest,
+              cc: msvc,
+              cxx: msvc,
+              build-type: Release,
+              shared: ON,
+            }
+          - {
+              name: Windows MSVC Debug Static,
+              os: windows-latest,
+              cc: msvc,
+              cxx: msvc,
+              build-type: Debug,
+              shared: OFF,
+            }
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: 'true'
+          submodules: "true"
 
       # TODO: remove this step after the default Clang is updated to version 16
-      - name: Install LLVM and Clang
-        if: matrix.config.os == 'ubuntu-latest'
+      - name: Install LLVM and Clang on Ubuntu
+        if: startsWith(matrix.config.os, 'ubuntu')
         uses: KyleMayes/install-llvm-action@v2
         with:
           version: "16.0"
 
       - name: Install GMP and MPFR on Ubuntu
-        if: matrix.config.os == 'ubuntu-latest'
+        if: startsWith(matrix.config.os, 'ubuntu')
         run: |
           sudo sed -i 's/azure\.//' /etc/apt/sources.list
           sudo apt-get update
           sudo apt-get install libgmp-dev libmpfr-dev
 
       - name: Install GMP and MPFR on macOS
-        if: matrix.config.os == 'macOS-13' # TODO: macOS-latest
+        if: startsWith(matrix.config.os, 'macos')
         run: |
           brew update
           brew install gmp mpfr
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON -Dfintamath_build_shared=ON -Dfintamath_warnings_as_errors=ON
+        run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -Dfintamath_build_shared=${{matrix.config.shared}} -Dfintamath_build_tests=ON -Dfintamath_warnings_as_errors=ON
         env:
           CC: ${{matrix.config.cc}}
           CXX: ${{matrix.config.cxx}}
 
       - name: Build
         working-directory: ${{github.workspace}}
-        run: cmake --build build --config ${{env.BUILD_TYPE}}
+        run: cmake --build build --config ${{matrix.config.build-type}}
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C${{env.BUILD_TYPE}} --output-on-failure
+        run: ctest -C${{matrix.config.build-type}} --output-on-failure
