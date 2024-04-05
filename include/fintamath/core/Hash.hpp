@@ -7,10 +7,10 @@
 
 namespace fintamath::detail {
 
-template <class T>
+template <typename T>
 struct Hash;
 
-template <class T>
+template <typename T>
 void hashCombine(size_t &seed, const T &v) noexcept {
   Hash<T> hasher;
   seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
