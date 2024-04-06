@@ -5,7 +5,7 @@
 
 #include "fintamath/expressions/IExpression.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -27,10 +27,10 @@ TEST(FunctionUtilsTests, makeExpressionPtrsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExpr(Mul(), ArgumentPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Mul(), ArgumentPtrVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(MulOper(), ArgumentPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(MulOper(), ArgumentPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(MulOper(), ArgumentPtrVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(MulOper(), ArgumentPtrVector{})->toString(), InvalidInputException);
 }
 
 TEST(FunctionUtilsTests, makeExpressionRefsTest) {
@@ -45,10 +45,10 @@ TEST(FunctionUtilsTests, makeExpressionRefsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExpr(Mul(), ArgumentRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Mul(), ArgumentRefVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(Pow(), ArgumentRefVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(MulOper(), ArgumentRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(MulOper(), ArgumentRefVector{})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(MulOper(), ArgumentRefVector{var})->toString(), InvalidInputException);
+  EXPECT_THROW(makeExpr(MulOper(), ArgumentRefVector{})->toString(), InvalidInputException);
 }
 
 TEST(FunctionUtilsTests, makeExpressionAnyArgsRefTest) {

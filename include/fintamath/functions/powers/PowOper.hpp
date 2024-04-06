@@ -7,27 +7,25 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
-#include "fintamath/functions/FunctionUtils.hpp"
-#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-class Mul final : public IFunctionCRTP<IArithmetic, Mul, IArithmetic> {
-  FINTAMATH_CLASS_BODY(Mul)
+class PowOper final : public IOperatorCRTP<INumber, PowOper, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(PowOper)
 
 public:
   std::string toString() const override {
-    return "mul";
+    return "^";
   }
 
-  static constexpr bool isVariadicStatic() {
-    return true;
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Exponentiation;
   }
 
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override;
 };
-
-FINTAMATH_FUNCTION_EXPRESSION(Mul, mulExpr);
 
 }

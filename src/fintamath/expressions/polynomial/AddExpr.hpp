@@ -20,6 +20,8 @@ class AddExpr final : public IPolynomExpressionCRTP<AddExpr> {
 public:
   explicit AddExpr(ArgumentPtrVector inChildren);
 
+  const std::shared_ptr<IFunction> &getOutputFunction() const override;
+
 protected:
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
@@ -27,15 +29,6 @@ protected:
 
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
 
-  /**
-   * @brief
-   *
-   * @param lhs
-   * @param rhs
-   * @return -1 if we should swap the arguments
-   * @return  1 if we should not swap the arguments
-   * @return  0 if this comparator fails
-   */
   std::strong_ordering compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const override;
 
 private:

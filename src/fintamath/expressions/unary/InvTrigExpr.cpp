@@ -12,6 +12,7 @@
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/functions/trigonometry/Acos.hpp"
 #include "fintamath/functions/trigonometry/Acot.hpp"
@@ -46,18 +47,18 @@ InvTrigExpr::SimplifyFunctionVector InvTrigExpr::getFunctionsForPostSimplify() c
 ArgumentPtr InvTrigExpr::constSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (const auto rat = convert<Rational>(*rhs)) {
     const Rational sqr = pow(*rat, 2) * rat->sign();
-    return TrigTableSimplify(func, sqr);
+    return trigTableSimplify(func, sqr);
   }
 
   if (const auto expr = cast<IExpression>(rhs)) {
-    if (is<Sqrt>(expr->getOutputFunction())) {
+    if (is<Pow>(expr->getFunction()) && *expr->getChildren().back() == Rational(1, 2)) {
       if (const auto sqrtChildInt = cast<Integer>(expr->getChildren().front())) {
         const Rational sqr = (*sqrtChildInt);
-        return TrigTableSimplify(func, sqr);
+        return trigTableSimplify(func, sqr);
       }
     }
 
-    if (is<Mul>(expr->getOutputFunction())) {
+    if (is<Mul>(expr->getFunction())) {
       const auto childRat = convert<Rational>(*expr->getChildren().front());
       const auto childExpr = cast<IExpression>(expr->getChildren().back());
 
@@ -66,7 +67,7 @@ ArgumentPtr InvTrigExpr::constSimplify(const IFunction &func, const ArgumentPtr 
 
         if (const auto sqrtChildInt = cast<Integer>(childExpr->getChildren().front())) {
           const Rational sqr = pow(*childRat, 2) * (*sqrtChildInt) * childRat->sign();
-          return TrigTableSimplify(func, sqr);
+          return trigTableSimplify(func, sqr);
         }
       }
     }
@@ -75,7 +76,7 @@ ArgumentPtr InvTrigExpr::constSimplify(const IFunction &func, const ArgumentPtr 
   return {};
 }
 
-ArgumentPtr InvTrigExpr::TrigTableSimplify(const IFunction &func, const Rational &rhs) {
+ArgumentPtr InvTrigExpr::trigTableSimplify(const IFunction &func, const Rational &rhs) {
   static const NameToSimplifyFunctionMap nameToSimplifyFunctionMap = {
       {Asin{}.toString(), &TrigTableAsinSimplify},
       {Acos{}.toString(), &TrigTableAcosSimplify},

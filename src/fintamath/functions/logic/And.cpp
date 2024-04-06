@@ -1,6 +1,7 @@
 #include "fintamath/functions/logic/And.hpp"
 
 #include <memory>
+#include <ranges>
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
@@ -10,10 +11,13 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> And::call(const ArgumentRefVector &argVect) const {
-  const auto &lhs = cast<Boolean>(argVect.front().get());
-  const auto &rhs = cast<Boolean>(argVect.back().get());
+  auto res = cast<Boolean>(argVect.front().get());
 
-  return Boolean(lhs && rhs).clone();
+  for (const auto &arg : argVect | std::views::drop(1)) {
+    res = res && cast<Boolean>(arg.get());
+  }
+
+  return res.clone();
 }
 
 }

@@ -5,29 +5,29 @@
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
-#include "fintamath/functions/FunctionUtils.hpp"
-#include "fintamath/functions/IFunction.hpp"
+#include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
 
-class Mul final : public IFunctionCRTP<IArithmetic, Mul, IArithmetic> {
-  FINTAMATH_CLASS_BODY(Mul)
+class AddOper final : public IOperatorCRTP<IArithmetic, AddOper, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(AddOper)
 
 public:
   std::string toString() const override {
-    return "mul";
+    return "+";
   }
 
-  static constexpr bool isVariadicStatic() {
+  static constexpr bool isAssociativeStatic() {
     return true;
+  }
+
+  static constexpr Priority getPriorityStatic() {
+    return Priority::Addition;
   }
 
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override;
 };
-
-FINTAMATH_FUNCTION_EXPRESSION(Mul, mulExpr);
 
 }

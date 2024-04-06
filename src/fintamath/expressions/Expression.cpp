@@ -28,6 +28,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/other/Comma.hpp"
@@ -298,7 +299,7 @@ void Expression::moveFunctionTermsToOperands(OperandStack &operands, std::stack<
 }
 
 void Expression::insertMultiplications(TermVector &terms) {
-  static const ArgumentPtr mul = Mul{}.clone();
+  static const ArgumentPtr mul = MulOper{}.clone();
 
   for (size_t i = 1; i < terms.size(); i++) {
     if (canNextTermBeBinaryOperator(terms[i - 1]) &&
@@ -450,7 +451,7 @@ Expression::ExpressionMaker &Expression::getExpressionMaker() {
 void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args) {
   const ArgumentTypeVector &expectedArgTypes = func.getArgumentClasses();
 
-  if (args.empty() || (!func.isVariadic() && args.size() < expectedArgTypes.size())) {
+  if (args.empty() || (!func.isVariadic() && args.size() != expectedArgTypes.size())) {
     throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
   }
 
@@ -505,6 +506,10 @@ namespace detail {
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
   std::ranges::transform(args, args.begin(), &Expression::compress);
   Expression::validateFunctionArgs(func, args);
+
+  if (func.isVariadic() && args.size() == 1) {
+    return std::move(args.front())->clone();
+  }
 
   if (const auto strToConstr = Expression::getExpressionMaker().find(func.getClass());
       strToConstr != Expression::getExpressionMaker().end()) {

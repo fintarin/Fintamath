@@ -127,11 +127,11 @@ ArgumentPtr TrigExpr::negSimplify(const IFunction &func, const ArgumentPtr &rhs)
 
 ArgumentPtr TrigExpr::constSimplify(const IFunction &func, const ArgumentPtr &rhs) {
   if (*rhs == Pi{}) {
-    return TrigTableSimplify(func, 1);
+    return trigTableSimplify(func, 1);
   }
 
   if (*rhs == *negExpr(Pi{})) {
-    return TrigTableSimplify(func, -1);
+    return trigTableSimplify(func, -1);
   }
 
   const auto rhsExpr = cast<IExpression>(rhs);
@@ -149,13 +149,13 @@ ArgumentPtr TrigExpr::constSimplify(const IFunction &func, const ArgumentPtr &rh
     return {};
   }
 
-  return TrigTableSimplify(func, *rhsChildRat);
+  return trigTableSimplify(func, *rhsChildRat);
 }
 
-ArgumentPtr TrigExpr::TrigTableSimplify(const IFunction &func, const Rational &rhs) {
+ArgumentPtr TrigExpr::trigTableSimplify(const IFunction &func, const Rational &rhs) {
   static const NameToTrigFunctionMap nameToTrigFunctionMap = {
-      {Sin{}.toString(), &TrigTableSinSimplify},
-      {Cos{}.toString(), &TrigTableCosSimplify},
+      {Sin{}.toString(), &trigTableSinSimplify},
+      {Cos{}.toString(), &trigTableCosSimplify},
   };
 
   if (const auto iter = nameToTrigFunctionMap.find(func.toString()); iter != nameToTrigFunctionMap.end()) {
@@ -166,7 +166,7 @@ ArgumentPtr TrigExpr::TrigTableSimplify(const IFunction &func, const Rational &r
   return {};
 }
 
-ArgumentPtr TrigExpr::TrigTableSinSimplify(const Rational &rhs) {
+ArgumentPtr TrigExpr::trigTableSinSimplify(const Rational &rhs) {
   static const TrigTable trigTable = {
       {Rational(0), Integer(0).clone()},                                       // 0    | 0
       {Rational(1, 6), Rational(1, 2).clone()},                                // π/6  | 1/2
@@ -182,7 +182,7 @@ ArgumentPtr TrigExpr::TrigTableSinSimplify(const Rational &rhs) {
   return findValue(trigTable, rhsShifted, isNegated);
 }
 
-ArgumentPtr TrigExpr::TrigTableCosSimplify(const Rational &rhs) {
+ArgumentPtr TrigExpr::trigTableCosSimplify(const Rational &rhs) {
   static const TrigTable trigTable = {
       {Rational(0), Integer(1).clone()},                                        // 0    | 1
       {Rational(1, 6), mulExpr(Rational(1, 2).clone(), sqrtExpr(Integer(3)))},  // π/6  | √3/2

@@ -90,7 +90,7 @@ public:
 
   void setVariable(const Variable &var, const Expression &val);
 
-  template <typename Function, bool isPolynomial = false>
+  template <typename Function>
   static void registerExpressionConstructor(ExpressionConstructor constructor);
 
 protected:
@@ -159,7 +159,7 @@ private:
   mutable bool isSimplified = false;
 };
 
-template <typename Function, bool isPolynomial>
+template <typename Function>
 void Expression::registerExpressionConstructor(ExpressionConstructor constructor) {
   getExpressionMaker()[Function::getClassStatic()] = [maker = std::move(constructor)](ArgumentPtrVector &&args) {
     static const size_t funcArgSize = Function{}.getArgumentClasses().size();
@@ -168,11 +168,6 @@ void Expression::registerExpressionConstructor(ExpressionConstructor constructor
 
     if constexpr (Function::isVariadicStatic()) {
       res = maker(std::move(args));
-    }
-    else if constexpr (isPolynomial) {
-      if (funcArgSize <= args.size()) {
-        res = maker(std::move(args));
-      }
     }
     else {
       if (funcArgSize == args.size()) {

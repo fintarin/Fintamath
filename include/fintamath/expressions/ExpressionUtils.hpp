@@ -76,9 +76,7 @@ std::pair<ArgumentPtr, ArgumentPtr> splitRational(const ArgumentPtr &arg);
 
 ArgumentPtr negate(const ArgumentPtr &arg);
 
-ArgumentPtr makePolynom(const IFunction &func, ArgumentPtrVector &&args);
-
-ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args);
+ArgumentPtr invert(const ArgumentPtr &arg);
 
 ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &arg);
 

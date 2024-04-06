@@ -18,9 +18,9 @@ class PowExpr final : public IBinaryExpressionCRTP<PowExpr> {
 public:
   explicit PowExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);
 
-  std::string toString() const override;
-
   const std::shared_ptr<IFunction> &getOutputFunction() const override;
+
+  std::string toString() const override;
 
 protected:
   ArgumentPtr approximate() const override;

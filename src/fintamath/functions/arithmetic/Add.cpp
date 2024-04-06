@@ -1,6 +1,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 
 #include <memory>
+#include <ranges>
 
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/IMathObject.hpp"
@@ -10,10 +11,13 @@
 namespace fintamath {
 
 std::unique_ptr<IMathObject> Add::call(const ArgumentRefVector &argVect) const {
-  const auto &lhs = cast<IArithmetic>(argVect.front().get());
-  const auto &rhs = cast<IArithmetic>(argVect.back().get());
+  auto res = cast<IArithmetic>(argVect.front().get().clone());
 
-  return lhs + rhs;
+  for (const auto &arg : argVect | std::views::drop(1)) {
+    res = *res + cast<IArithmetic>(arg.get());
+  }
+
+  return res;
 }
 
 }

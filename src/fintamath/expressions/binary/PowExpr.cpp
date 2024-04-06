@@ -21,6 +21,7 @@
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/comparison/MoreEqv.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/PowOper.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
 #include "fintamath/literals/Boolean.hpp"
@@ -43,32 +44,8 @@ PowExpr::PowExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
     : IBinaryExpressionCRTP(Pow{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }
 
-std::string PowExpr::toString() const {
-  if (const auto rhsChildRat = cast<Rational>(rhsChild)) {
-    const Integer &numerator = rhsChildRat->numerator();
-    const Integer &denominator = rhsChildRat->denominator();
-
-    if (numerator == 1) {
-      if (denominator == 2) {
-        return functionToString(Sqrt{}, {lhsChild});
-      }
-
-      return functionToString(Root{}, {lhsChild, denominator.clone()});
-    }
-  }
-
-  if (const auto rhsChildExpr = cast<IExpression>(rhsChild);
-      rhsChildExpr && is<Div>(rhsChildExpr->getFunction())) {
-
-    if (*rhsChildExpr->getChildren().front() == Integer(1)) {
-      return functionToString(Root{}, {lhsChild, rhsChildExpr->getChildren().back()});
-    }
-  }
-
-  return IBinaryExpression::toString();
-}
-
 const std::shared_ptr<IFunction> &PowExpr::getOutputFunction() const {
+  static const std::shared_ptr<IFunction> pow = std::make_shared<PowOper>();
   static const std::shared_ptr<IFunction> sqrt = std::make_shared<Sqrt>();
   static const std::shared_ptr<IFunction> root = std::make_shared<Root>();
 
@@ -93,7 +70,21 @@ const std::shared_ptr<IFunction> &PowExpr::getOutputFunction() const {
     return root;
   }
 
-  return IBinaryExpression::getFunction();
+  return pow;
+}
+
+std::string PowExpr::toString() const {
+  const auto outFunc = getOutputFunction();
+
+  if (is<Sqrt>(outFunc)) {
+    return functionToString(Sqrt{}, {lhsChild});
+  }
+
+  if (is<Root>(outFunc)) {
+    return functionToString(Root{}, {lhsChild, invert(rhsChild)});
+  }
+
+  return IBinaryExpression::toString();
 }
 
 ArgumentPtr PowExpr::approximate() const {

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <compare>
 #include <functional>
 #include <memory>
 #include <string>
@@ -41,8 +40,6 @@ protected:
 
   virtual std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
-  virtual std::strong_ordering compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
-
   ArgumentPtr preSimplify() const override;
 
   ArgumentPtr postSimplify() const override;
@@ -50,6 +47,8 @@ protected:
   virtual bool isTermOrderInversed() const;
 
   virtual bool isComparableOrderInversed() const;
+
+  virtual std::strong_ordering compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
 private:
   void simplifyRec(bool isPostSimplify);

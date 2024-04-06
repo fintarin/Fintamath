@@ -390,9 +390,9 @@ TEST(SimplifyTests, simplifyTest) {
   EXPECT_EQ(Expression("a 5^x").toString(),
             "a 5^x");
   EXPECT_EQ(Expression("a 5^x a").toString(),
-            "a^2*5^x");
+            "5^x a^2");
   EXPECT_EQ(Expression("2 5^x 6^y 7^z x^2 y^3").toString(),
-            "2 x^2 y^3*5^x 6^y 7^z");
+            "2*5^x 6^y 7^z x^2 y^3");
   EXPECT_EQ(Expression("1*(a+b)*1").toString(),
             "a + b");
   EXPECT_EQ(Expression("-1*(a+b)*1").toString(),
@@ -531,7 +531,7 @@ TEST(SimplifyTests, simplifyTest) {
   EXPECT_EQ(Expression("a - sqrt(2) x - sqrt(3) x - Pi^4 x + 1").toString(),
             "a + (-Pi^4 - sqrt(3) - sqrt(2)) x + 1");
   EXPECT_EQ(Expression("x Pi^4 ln(5) + x E^2 sin(1) sinh(2)").toString(),
-            "(E^2 sinh(2) sin(1) + Pi^4 ln(5)) x");
+            "(E^2 sin(1) sinh(2) + Pi^4 ln(5)) x");
   EXPECT_EQ(Expression("(a+b) (-sqrt2 + sqrt3 - sqrt5)").toString(),
             "(sqrt(3) - sqrt(5) - sqrt(2)) a + (sqrt(3) - sqrt(5) - sqrt(2)) b");
   EXPECT_EQ(Expression("(sqrt(2) x + sqrt(3) x + Pi^4 x + 1) / (sqrt(2) + sqrt(3) + Pi^4)").toString(),
@@ -583,11 +583,11 @@ TEST(SimplifyTests, simplifyTest) {
   EXPECT_EQ(Expression("(x)sin(a)").toString(),
             "sin(a) x");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(4 a b^3) + b^4 + sin(a^4) + cos(6 a^2 b^2)").toString(),
-            "sin(a^4) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(4 a b^3) + b^4");
+            "b^4 + sin(a^4) + cos(6 a^2 b^2) + tan(4 a^3 b) + cot(4 a b^3)");
   EXPECT_EQ(Expression("tan(4 a^3 b) + cot(sin(4 a b^3)) + b^4 + asin(sin(a^4)) + cos(6 a^2 b^2)").toString(),
-            "asin(sin(a^4)) + tan(4 a^3 b) + cos(6 a^2 b^2) + cot(sin(4 a b^3)) + b^4");
+            "b^4 + cos(6 a^2 b^2) + tan(4 a^3 b) + cot(sin(4 a b^3)) + asin(sin(a^4))");
   EXPECT_EQ(Expression("tan(4 a_1^3 b) + cot(sin(4 a_1 b^3)) + b^4 + asin(sin(a_1^4)) + cos(6 a_1^2 b^2)").toString(),
-            "asin(sin(a_1^4)) + tan(4 a_1^3 b) + cos(6 a_1^2 b^2) + cot(sin(4 a_1 b^3)) + b^4");
+            "b^4 + cos(6 a_1^2 b^2) + tan(4 a_1^3 b) + cot(sin(4 a_1 b^3)) + asin(sin(a_1^4))");
   EXPECT_EQ(Expression("a!!!!!!!!!!").toString(),
             "a!!!!!!!!!!");
   EXPECT_EQ(Expression("a% * a!!! * a! * a!!").toString(),
@@ -605,7 +605,7 @@ TEST(SimplifyTests, simplifyTest) {
   EXPECT_EQ(Expression("cos(b) log(b, a)").toString(),
             "log(b, a) cos(b)");
   EXPECT_EQ(Expression("cos(a) log(b, c)").toString(),
-            "cos(a) log(b, c)");
+            "log(b, c) cos(a)");
   EXPECT_EQ(Expression("cos(b^2) log(b, c)").toString(),
             "log(b, c) cos(b^2)");
   EXPECT_EQ(Expression("(x + y^3)^2 * sin(x)/ln(2)/x^2 - (2 sin(x) y^3)/(x ln(2))").toString(),

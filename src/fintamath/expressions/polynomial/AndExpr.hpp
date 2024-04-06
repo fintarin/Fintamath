@@ -13,6 +13,8 @@ class AndExpr final : public IPolynomExpressionCRTP<AndExpr> {
 public:
   explicit AndExpr(ArgumentPtrVector inChildren);
 
+  const std::shared_ptr<IFunction> &getOutputFunction() const override;
+
 protected:
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 

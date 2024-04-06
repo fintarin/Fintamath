@@ -11,11 +11,11 @@ using namespace fintamath;
 const And f;
 
 TEST(AndTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "&");
+  EXPECT_EQ(f.toString(), "and");
 }
 
 TEST(AndTests, getArgumentClassesTest) {
-  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(Boolean::getClassStatic(), Boolean::getClassStatic()));
+  EXPECT_THAT(f.getArgumentClasses(), testing::ElementsAre(Boolean::getClassStatic()));
 }
 
 TEST(AndTests, getReturnClassTest) {
@@ -23,32 +23,39 @@ TEST(AndTests, getReturnClassTest) {
 }
 
 TEST(AndTests, isVariadicTest) {
-  EXPECT_FALSE(f.isVariadic());
+  EXPECT_TRUE(f.isVariadic());
 }
 
 TEST(AndTests, isEvaluatableTest) {
   EXPECT_TRUE(f.isEvaluatable());
 }
 
-TEST(AndTests, getPriorityTest) {
-  EXPECT_EQ(f.getPriority(), IOperator::Priority::Conjunction);
-}
-
-TEST(AndTests, isAssociativeTest) {
-  EXPECT_TRUE(f.isAssociative());
-}
-
 TEST(AndTests, callTest) {
+  EXPECT_EQ(f(Boolean(true))->toString(), "True");
+  EXPECT_EQ(f(Boolean(false))->toString(), "False");
   EXPECT_EQ(f(Boolean(false), Boolean(false))->toString(), "False");
   EXPECT_EQ(f(Boolean(false), Boolean(true))->toString(), "False");
   EXPECT_EQ(f(Boolean(true), Boolean(false))->toString(), "False");
   EXPECT_EQ(f(Boolean(true), Boolean(true))->toString(), "True");
+  EXPECT_EQ(f(Boolean(false), Boolean(false), Boolean(false))->toString(), "False");
+  EXPECT_EQ(f(Boolean(false), Boolean(false), Boolean(true))->toString(), "False");
+  EXPECT_EQ(f(Boolean(false), Boolean(true), Boolean(false))->toString(), "False");
+  EXPECT_EQ(f(Boolean(true), Boolean(false), Boolean(false))->toString(), "False");
+  EXPECT_EQ(f(Boolean(true), Boolean(true), Boolean(true))->toString(), "True");
+  EXPECT_EQ(f(Boolean(false), Boolean(false), Boolean(false), Boolean(false))->toString(), "False");
+  EXPECT_EQ(f(Boolean(false), Boolean(true), Boolean(true), Boolean(false))->toString(), "False");
+  EXPECT_EQ(f(Boolean(true), Boolean(false), Boolean(false), Boolean(true))->toString(), "False");
+  EXPECT_EQ(f(Boolean(true), Boolean(true), Boolean(true), Boolean(true))->toString(), "True");
 
+  EXPECT_EQ(f(Variable("a"))->toString(), "a");
   EXPECT_EQ(f(Variable("a"), Variable("b"))->toString(), "a & b");
+  EXPECT_EQ(f(Variable("a"), Variable("b"), Variable("c"))->toString(), "a & b & c");
+  EXPECT_EQ(f(Variable("a"), Variable("b"), Variable("a"), Variable("c"))->toString(), "a & b & c");
+  EXPECT_EQ(f(Variable("a"), Variable("b"), Variable("b"), Variable("a"))->toString(), "a & b");
+  EXPECT_EQ(f(Variable("a"), Variable("b"), Boolean("True"), Variable("c"))->toString(), "a & b & c");
+  EXPECT_EQ(f(Boolean("False"), Variable("a"), Variable("b"), Variable("c"))->toString(), "False");
 
   EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Boolean(true)), InvalidInputFunctionException);
-  EXPECT_THROW(f(Boolean(true), Boolean(true), Boolean(true)), InvalidInputFunctionException);
 }
 
 TEST(AndTests, exprTest) {
@@ -57,5 +64,5 @@ TEST(AndTests, exprTest) {
 
 TEST(AndTests, getClassTest) {
   EXPECT_EQ(f.getClass(), MathObjectClass("And"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

@@ -152,8 +152,8 @@ ArgumentPtr DerivativeExpr::mulSimplify(const ArgumentPtrVector &children, const
   auto lhsChildren = ArgumentPtrVector(children.begin(), children.begin() + childrenSizeDiv2);
   auto rhsChildren = ArgumentPtrVector(children.begin() + childrenSizeDiv2, children.end());
 
-  const ArgumentPtr lhs = makePolynom(Mul{}, std::move(lhsChildren));
-  const ArgumentPtr rhs = makePolynom(Mul{}, std::move(rhsChildren));
+  const ArgumentPtr lhs = mulExpr(std::move(lhsChildren));
+  const ArgumentPtr rhs = mulExpr(std::move(rhsChildren));
 
   return addExpr(
       mulExpr(derivativeExpr(lhs, var), rhs),

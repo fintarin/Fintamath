@@ -1,4 +1,4 @@
-#include "fintamath/functions/powers/PowFunction.hpp"
+#include "fintamath/functions/powers/PowOper.hpp"
 
 #include <memory>
 
@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-std::unique_ptr<IMathObject> PowFunction::call(const ArgumentRefVector &argVect) const {
+std::unique_ptr<IMathObject> PowOper::call(const ArgumentRefVector &argVect) const {
   return Pow{}(argVect);
 }
 
