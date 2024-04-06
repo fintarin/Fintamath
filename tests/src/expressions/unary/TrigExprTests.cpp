@@ -9,6 +9,6 @@ using namespace fintamath;
 TEST(TrigExprTests, getClassTest) {
   const auto expr = sinExpr(Integer(0).clone());
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("TrigExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "TrigExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IUnaryExpression::getClassStatic());
 }

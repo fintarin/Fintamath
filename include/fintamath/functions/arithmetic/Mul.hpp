@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Mul final : public IFunctionCRTP<IArithmetic, Mul, IArithmetic> {
-  FINTAMATH_CLASS_BODY(Mul)
+class Mul : public IFunctionCRTP<IArithmetic, Mul, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Mul, IFunction)
 
 public:
   std::string toString() const override {

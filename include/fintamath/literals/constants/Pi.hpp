@@ -10,8 +10,8 @@
 
 namespace fintamath {
 
-class Pi final : public IConstantCRTP<Real, Pi> {
-  FINTAMATH_CLASS_BODY(Pi)
+class Pi : public IConstantCRTP<Real, Pi> {
+  FINTAMATH_CLASS_BODY(Pi, IConstant)
 
 public:
   std::string toString() const override {

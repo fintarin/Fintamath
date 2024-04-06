@@ -57,6 +57,6 @@ TEST(AsinTests, exprTest) {
 }
 
 TEST(AsinTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Asin"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Asin");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

@@ -16,7 +16,7 @@ namespace fintamath {
 class IOperator;
 
 class IPolynomExpression : public IExpression {
-  FINTAMATH_PARENT_CLASS_BODY(IPolynomExpression)
+  FINTAMATH_PARENT_CLASS_BODY(IPolynomExpression, IExpression)
 
 public:
   explicit IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args);

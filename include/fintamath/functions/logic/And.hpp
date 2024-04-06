@@ -13,8 +13,8 @@
 
 namespace fintamath {
 
-class And final : public IFunctionCRTP<Boolean, And, Boolean> {
-  FINTAMATH_CLASS_BODY(And)
+class And : public IFunctionCRTP<Boolean, And, Boolean> {
+  FINTAMATH_CLASS_BODY(And, IFunction)
 
 public:
   std::string toString() const override {

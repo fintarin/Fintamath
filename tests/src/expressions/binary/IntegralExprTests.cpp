@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(IntegralExprTests, getClassTest) {
   const auto expr = integralExpr(Integer(0), Variable("x"));
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("IntegralExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IBinaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "IntegralExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IBinaryExpression::getClassStatic());
 }

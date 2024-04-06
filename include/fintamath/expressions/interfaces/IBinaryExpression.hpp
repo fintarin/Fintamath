@@ -14,7 +14,7 @@
 namespace fintamath {
 
 class IBinaryExpression : public IExpression {
-  FINTAMATH_PARENT_CLASS_BODY(IBinaryExpression)
+  FINTAMATH_PARENT_CLASS_BODY(IBinaryExpression, IExpression)
 
 public:
   explicit IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs);

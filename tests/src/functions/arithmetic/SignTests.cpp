@@ -67,6 +67,6 @@ TEST(SignTests, exprTest) {
 }
 
 TEST(SignTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Sign"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Sign");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

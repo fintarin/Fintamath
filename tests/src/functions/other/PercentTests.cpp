@@ -55,6 +55,6 @@ TEST(PercentTests, degTest) {
 }
 
 TEST(PercentTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Percent"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Percent");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

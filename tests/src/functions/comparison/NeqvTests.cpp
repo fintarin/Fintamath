@@ -65,6 +65,6 @@ TEST(NeqvTests, exprTest) {
 }
 
 TEST(NeqvTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Neqv"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Neqv");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

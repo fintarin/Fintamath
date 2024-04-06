@@ -70,6 +70,6 @@ TEST(SqrtTests, exprTest) {
 }
 
 TEST(SqrtTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Sqrt"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Sqrt");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

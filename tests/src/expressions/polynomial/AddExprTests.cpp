@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(AddExprTests, getClassTest) {
   const auto expr = addExpr(Integer(0), Integer(0));
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("AddExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IPolynomExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "AddExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IPolynomExpression::getClassStatic());
 }

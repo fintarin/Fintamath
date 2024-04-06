@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(PowExprTests, getClassTest) {
   const auto expr = powExpr(Integer(0), Integer(0));
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("PowExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IBinaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "PowExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IBinaryExpression::getClassStatic());
 }

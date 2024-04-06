@@ -59,6 +59,6 @@ TEST(MulTests, exprTest) {
 }
 
 TEST(MulTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Mul"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Mul");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Neg final : public IOperatorCRTP<IArithmetic, Neg, IArithmetic> {
-  FINTAMATH_CLASS_BODY(Neg)
+class Neg : public IOperatorCRTP<IArithmetic, Neg, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Neg, IOperator)
 
 public:
   std::string toString() const override {

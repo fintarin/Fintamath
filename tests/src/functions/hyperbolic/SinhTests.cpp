@@ -54,6 +54,6 @@ TEST(SinhTests, exprTest) {
 }
 
 TEST(SinhTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Sinh"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Sinh");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

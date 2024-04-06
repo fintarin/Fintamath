@@ -9,8 +9,8 @@
 #include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
-class MulExpr final : public IPolynomExpressionCRTP<MulExpr> {
-  FINTAMATH_CLASS_BODY(MulExpr)
+class MulExpr : public IPolynomExpressionCRTP<MulExpr> {
+  FINTAMATH_CLASS_BODY(MulExpr, IPolynomExpression)
 
 public:
   explicit MulExpr(ArgumentPtrVector inChildren);

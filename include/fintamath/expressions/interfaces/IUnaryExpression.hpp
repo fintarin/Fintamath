@@ -14,7 +14,7 @@
 namespace fintamath {
 
 class IUnaryExpression : public IExpression {
-  FINTAMATH_PARENT_CLASS_BODY(IUnaryExpression)
+  FINTAMATH_PARENT_CLASS_BODY(IUnaryExpression, IExpression)
 
 public:
   explicit IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs);

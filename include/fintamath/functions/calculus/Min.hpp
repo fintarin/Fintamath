@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Min final : public IFunctionCRTP<IComparable, Min, IComparable> {
-  FINTAMATH_CLASS_BODY(Min)
+class Min : public IFunctionCRTP<IComparable, Min, IComparable> {
+  FINTAMATH_CLASS_BODY(Min, IFunction)
 
 public:
   std::string toString() const override {

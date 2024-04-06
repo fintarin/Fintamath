@@ -11,92 +11,46 @@
 
 namespace fintamath {
 
-class MathObjectClass;
+namespace detail {
 
-}
-
-template <>
-struct std::hash<fintamath::MathObjectClass> {
-  size_t operator()(const fintamath::MathObjectClass &rhs) const noexcept;
-};
-
-namespace fintamath {
-
-class MathObjectClass final {
+class MathObjectClassImpl final {
 public:
   using Name = std::string_view;
 
-  using Id = size_t;
-
-  using Children = std::unordered_set<MathObjectClass>;
-
-private:
-  using ClassToIdMap = std::unordered_map<MathObjectClass, Id>;
-
-  using ChildToParentMap = std::unordered_map<MathObjectClass, MathObjectClass>;
-
-  using ParentToChildrenMap = std::unordered_map<MathObjectClass, Children>;
+  using Ptr = const MathObjectClassImpl *;
 
 public:
-  constexpr MathObjectClass(const Name inName) : name(inName) {
+  constexpr MathObjectClassImpl(const Name inName, const Ptr inParent = nullptr) noexcept
+      : name(inName),
+        parent(inParent) {
   }
 
-  constexpr Name getName() const {
+  constexpr MathObjectClassImpl(const MathObjectClassImpl &) noexcept = delete;
+
+  constexpr MathObjectClassImpl(MathObjectClassImpl &&) noexcept = delete;
+
+  constexpr MathObjectClassImpl &operator=(const MathObjectClassImpl &) noexcept = delete;
+
+  constexpr MathObjectClassImpl &operator=(MathObjectClassImpl &&) noexcept = delete;
+
+  constexpr Name getName() const noexcept {
     return name;
   }
 
-  constexpr bool operator==(const MathObjectClass rhs) const {
-    return name == rhs.name;
+  constexpr Ptr getParent() const noexcept {
+    return parent;
   }
-
-  std::strong_ordering operator<=>(MathObjectClass rhs) const;
-
-  std::optional<MathObjectClass> getParent() const;
-
-  const Children &getChildren(bool recursive = false) const;
-
-  template <typename Parent, std::derived_from<Parent> Child>
-  static void bindTypes();
-
-private:
-  Id getId() const;
-
-  static ClassToIdMap &getClassToIdMap();
-
-  static ChildToParentMap &getChildToParentMap();
-
-  static ParentToChildrenMap &getParentToChildrenMap();
-
-  static ParentToChildrenMap &getParentToRecursiveChildrenMap();
 
 private:
   Name name;
 
-  inline static Id maxId = 0;
+  Ptr parent;
 
-  [[maybe_unused]] inline static const detail::Config config;
+  [[maybe_unused]] inline static const Config config;
 };
 
-template <typename Parent, std::derived_from<Parent> Child>
-void MathObjectClass::bindTypes() {
-  MathObjectClass parent = Parent::getClassStatic();
-  MathObjectClass child = Child::getClassStatic();
-
-  getClassToIdMap()[parent] = ++maxId;
-  getClassToIdMap()[child] = ++maxId;
-
-  getChildToParentMap().insert_or_assign(child, parent);
-  getParentToChildrenMap()[parent].emplace(child);
-
-  for (std::optional superParent = child.getParent(); superParent; superParent = superParent->getParent()) {
-    Children &superParentChildren = getParentToRecursiveChildrenMap()[*superParent];
-    superParentChildren.emplace(child);
-    superParentChildren.insert(child.getChildren().begin(), child.getChildren().end());
-  }
 }
 
-}
+using MathObjectClass = detail::MathObjectClassImpl::Ptr;
 
-inline size_t std::hash<fintamath::MathObjectClass>::operator()(const fintamath::MathObjectClass &rhs) const noexcept {
-  return std::hash<fintamath::MathObjectClass::Name>{}(rhs.getName());
 }

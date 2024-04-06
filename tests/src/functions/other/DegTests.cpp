@@ -56,6 +56,6 @@ TEST(DegTests, degTest) {
 }
 
 TEST(DegTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Deg"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Deg");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

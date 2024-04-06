@@ -55,6 +55,6 @@ TEST(PowOperTests, callTest) {
 }
 
 TEST(PowOperTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("PowOper"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "PowOper");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

@@ -12,7 +12,7 @@
 namespace fintamath {
 
 class ILiteral : public IMathObject {
-  FINTAMATH_PARENT_CLASS_BODY(ILiteral)
+  FINTAMATH_PARENT_CLASS_BODY(ILiteral, IMathObject)
 };
 
 template <typename Derived>

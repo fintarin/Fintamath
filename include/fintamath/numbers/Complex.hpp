@@ -14,8 +14,8 @@
 
 namespace fintamath {
 
-class Complex final : public INumberCRTP<Complex> {
-  FINTAMATH_CLASS_BODY(Complex)
+class Complex : public INumberCRTP<Complex> {
+  FINTAMATH_CLASS_BODY(Complex, INumber)
 
 public:
   Complex() = default;

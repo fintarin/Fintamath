@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(MulExprTests, getClassTest) {
   const auto expr = mulExpr(Integer(0), Integer(0));
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("MulExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IPolynomExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "MulExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IPolynomExpression::getClassStatic());
 }

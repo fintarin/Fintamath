@@ -52,6 +52,6 @@ TEST(OrOperTests, callTest) {
 }
 
 TEST(OrOperTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("OrOper"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "OrOper");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

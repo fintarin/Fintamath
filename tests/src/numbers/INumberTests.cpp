@@ -9,8 +9,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestNumber final : public INumberCRTP<TestNumber> {
-  FINTAMATH_CLASS_BODY(TestNumber)
+class TestNumber : public INumberCRTP<TestNumber> {
+  FINTAMATH_CLASS_BODY(TestNumber, INumber)
 
 protected:
   TestNumber &add(const TestNumber &rhs) override {
@@ -129,6 +129,6 @@ TEST(INumberTests, negateTest) {
 }
 
 TEST(INumberTests, getClassTest) {
-  EXPECT_EQ(INumber::getClassStatic(), MathObjectClass("INumber"));
-  EXPECT_EQ(INumber::getClassStatic().getParent(), IComparable::getClassStatic());
+  EXPECT_EQ(INumber::getClassStatic()->getName(), "INumber");
+  EXPECT_EQ(INumber::getClassStatic()->getParent(), IComparable::getClassStatic());
 }

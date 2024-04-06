@@ -14,8 +14,8 @@ namespace fintamath {
 
 class Real;
 
-class Sech final : public IFunctionCRTP<INumber, Sech, INumber> {
-  FINTAMATH_CLASS_BODY(Sech)
+class Sech : public IFunctionCRTP<INumber, Sech, INumber> {
+  FINTAMATH_CLASS_BODY(Sech, IFunction)
 
 public:
   std::string toString() const override {

@@ -22,7 +22,7 @@ public:
     return equals(cast<Derived>(rhs));
   }
 
-  MathObjectClass getClass() const override {
+  MathObjectClass getClass() const noexcept override {
     return Derived::getClassStatic();
   }
 

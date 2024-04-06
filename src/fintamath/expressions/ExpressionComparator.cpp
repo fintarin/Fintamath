@@ -309,7 +309,7 @@ Ordering compareExpressionAndNonExpression(const ExpressionPtr &lhs, const Argum
 
 Ordering compareFunctions(const FunctionPtr &lhs, const FunctionPtr &rhs) {
   if (lhs->getClass() != rhs->getClass()) {
-    return rhs->getClass() <=> lhs->getClass();
+    return MathObjectIdStorage::get(rhs->getClass()) <=> MathObjectIdStorage::get(lhs->getClass());
   }
 
   return rhs->toString() <=> lhs->toString();

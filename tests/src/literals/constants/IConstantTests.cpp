@@ -9,8 +9,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestConstant final : public IConstantCRTP<Integer, TestConstant> {
-  FINTAMATH_CLASS_BODY(TestConstant)
+class TestConstant : public IConstantCRTP<Integer, TestConstant> {
+  FINTAMATH_CLASS_BODY(TestConstant, IConstant)
 
 protected:
   std::unique_ptr<IMathObject> call() const override {
@@ -38,6 +38,6 @@ TEST(IConstantTests, callTest) {
 }
 
 TEST(IConstantTests, getClassTest) {
-  EXPECT_EQ(IConstant::getClassStatic(), MathObjectClass("IConstant"));
-  EXPECT_EQ(IConstant::getClassStatic().getParent(), ILiteral::getClassStatic());
+  EXPECT_EQ(IConstant::getClassStatic()->getName(), "IConstant");
+  EXPECT_EQ(IConstant::getClassStatic()->getParent(), ILiteral::getClassStatic());
 }

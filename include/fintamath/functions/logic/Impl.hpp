@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Impl final : public IOperatorCRTP<Boolean, Impl, Boolean, Boolean> {
-  FINTAMATH_CLASS_BODY(Impl)
+class Impl : public IOperatorCRTP<Boolean, Impl, Boolean, Boolean> {
+  FINTAMATH_CLASS_BODY(Impl, IOperator)
 
 public:
   std::string toString() const override {

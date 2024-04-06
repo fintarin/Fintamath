@@ -57,6 +57,6 @@ TEST(AtanhTests, exprTest) {
 }
 
 TEST(AtanhTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Atanh"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Atanh");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

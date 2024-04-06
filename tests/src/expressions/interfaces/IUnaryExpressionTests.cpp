@@ -10,8 +10,8 @@ const Factorial f;
 
 namespace {
 
-class TestUnaryExpression final : public IUnaryExpressionCRTP<TestUnaryExpression> {
-  FINTAMATH_CLASS_BODY(TestUnaryExpression)
+class TestUnaryExpression : public IUnaryExpressionCRTP<TestUnaryExpression> {
+  FINTAMATH_CLASS_BODY(TestUnaryExpression, IUnaryExpression)
 
 public:
   explicit TestUnaryExpression(ArgumentPtr inRhsChild)
@@ -70,6 +70,6 @@ TEST(IUnaryExpressionTests, toMinimalObjectTest) {
 }
 
 TEST(IUnaryExpressionTests, getClassTest) {
-  EXPECT_EQ(IUnaryExpression::getClassStatic(), MathObjectClass("IUnaryExpression"));
-  EXPECT_EQ(IUnaryExpression::getClassStatic().getParent(), IExpression::getClassStatic());
+  EXPECT_EQ(IUnaryExpression::getClassStatic()->getName(), "IUnaryExpression");
+  EXPECT_EQ(IUnaryExpression::getClassStatic()->getParent(), IExpression::getClassStatic());
 }

@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Atan final : public IFunctionCRTP<INumber, Atan, INumber> {
-  FINTAMATH_CLASS_BODY(Atan)
+class Atan : public IFunctionCRTP<INumber, Atan, INumber> {
+  FINTAMATH_CLASS_BODY(Atan, IFunction)
 
 public:
   std::string toString() const override {

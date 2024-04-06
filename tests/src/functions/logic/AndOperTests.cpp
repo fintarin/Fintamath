@@ -52,6 +52,6 @@ TEST(AndOperTests, callTest) {
 }
 
 TEST(AndOperTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("AndOper"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "AndOper");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

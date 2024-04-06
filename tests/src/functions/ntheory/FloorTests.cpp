@@ -80,6 +80,6 @@ TEST(FloorTests, exprTest) {
 }
 
 TEST(FloorTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Floor"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Floor");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

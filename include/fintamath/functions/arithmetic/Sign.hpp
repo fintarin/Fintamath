@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Sign final : public IFunctionCRTP<INumber, Sign, INumber> {
-  FINTAMATH_CLASS_BODY(Sign)
+class Sign : public IFunctionCRTP<INumber, Sign, INumber> {
+  FINTAMATH_CLASS_BODY(Sign, IFunction)
 
 public:
   std::string toString() const override {

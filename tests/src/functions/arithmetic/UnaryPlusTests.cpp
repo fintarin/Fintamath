@@ -52,6 +52,6 @@ TEST(UnaryPlusTests, callTest) {
 }
 
 TEST(UnaryPlusTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("UnaryPlus"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "UnaryPlus");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

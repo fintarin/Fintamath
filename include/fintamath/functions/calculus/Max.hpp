@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Max final : public IFunctionCRTP<IComparable, Max, IComparable> {
-  FINTAMATH_CLASS_BODY(Max)
+class Max : public IFunctionCRTP<IComparable, Max, IComparable> {
+  FINTAMATH_CLASS_BODY(Max, IFunction)
 
 public:
   std::string toString() const override {

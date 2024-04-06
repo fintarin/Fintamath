@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-class UnaryPlus final : public IOperatorCRTP<IArithmetic, UnaryPlus, IArithmetic> {
-  FINTAMATH_CLASS_BODY(UnaryPlus)
+class UnaryPlus : public IOperatorCRTP<IArithmetic, UnaryPlus, IArithmetic> {
+  FINTAMATH_CLASS_BODY(UnaryPlus, IOperator)
 
 public:
   std::string toString() const override {

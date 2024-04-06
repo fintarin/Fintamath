@@ -10,8 +10,8 @@
 
 namespace fintamath {
 
-class E final : public IConstantCRTP<Real, E> {
-  FINTAMATH_CLASS_BODY(E)
+class E : public IConstantCRTP<Real, E> {
+  FINTAMATH_CLASS_BODY(E, IConstant)
 
 public:
   std::string toString() const override {

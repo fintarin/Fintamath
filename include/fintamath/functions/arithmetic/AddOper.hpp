@@ -10,8 +10,8 @@
 
 namespace fintamath {
 
-class AddOper final : public IOperatorCRTP<IArithmetic, AddOper, IArithmetic, IArithmetic> {
-  FINTAMATH_CLASS_BODY(AddOper)
+class AddOper : public IOperatorCRTP<IArithmetic, AddOper, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(AddOper, IOperator)
 
 public:
   std::string toString() const override {

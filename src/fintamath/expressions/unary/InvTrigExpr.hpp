@@ -9,8 +9,8 @@ namespace fintamath {
 
 class Rational;
 
-class InvTrigExpr final : public IUnaryExpressionCRTP<InvTrigExpr> {
-  FINTAMATH_CLASS_BODY(InvTrigExpr)
+class InvTrigExpr : public IUnaryExpressionCRTP<InvTrigExpr> {
+  FINTAMATH_CLASS_BODY(InvTrigExpr, IUnaryExpression)
 
 public:
   explicit InvTrigExpr(const IFunction &inFunc, ArgumentPtr inChild);

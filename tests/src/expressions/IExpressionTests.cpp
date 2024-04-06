@@ -12,8 +12,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestExpression final : public IExpressionCRTP<TestExpression> {
-  FINTAMATH_CLASS_BODY(TestExpression)
+class TestExpression : public IExpressionCRTP<TestExpression> {
+  FINTAMATH_CLASS_BODY(TestExpression, IExpression)
 
 public:
   const std::shared_ptr<IFunction> &getFunction() const override {
@@ -103,6 +103,6 @@ TEST(IExpressionTests, toMinimalObjectTest) {
 }
 
 TEST(IExpressionTests, getClassTest) {
-  EXPECT_EQ(IExpression::getClassStatic(), MathObjectClass("IExpression"));
-  EXPECT_EQ(IExpression::getClassStatic().getParent(), IMathObject::getClassStatic());
+  EXPECT_EQ(IExpression::getClassStatic()->getName(), "IExpression");
+  EXPECT_EQ(IExpression::getClassStatic()->getParent(), IMathObject::getClassStatic());
 }

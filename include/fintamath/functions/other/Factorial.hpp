@@ -18,8 +18,8 @@ class Integer;
 class Rational;
 class Real;
 
-class Factorial final : public IOperatorCRTP<INumber, Factorial, INumber> {
-  FINTAMATH_CLASS_BODY(Factorial)
+class Factorial : public IOperatorCRTP<INumber, Factorial, INumber> {
+  FINTAMATH_CLASS_BODY(Factorial, IOperator)
 
 public:
   Factorial() = default;

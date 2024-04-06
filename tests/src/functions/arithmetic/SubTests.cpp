@@ -59,6 +59,6 @@ TEST(SubTests, exprTest) {
 }
 
 TEST(SubTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Sub"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Sub");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

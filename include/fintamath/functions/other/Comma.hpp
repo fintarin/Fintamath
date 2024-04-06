@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-class Comma final : public IOperatorCRTP<IMathObject, Comma, IMathObject, IMathObject> {
-  FINTAMATH_CLASS_BODY(Comma)
+class Comma : public IOperatorCRTP<IMathObject, Comma, IMathObject, IMathObject> {
+  FINTAMATH_CLASS_BODY(Comma, IOperator)
 
 public:
   std::string toString() const override {

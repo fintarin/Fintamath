@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(NotExprTests, getClassTest) {
   const auto expr = notExpr(Boolean());
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("NotExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "NotExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IUnaryExpression::getClassStatic());
 }

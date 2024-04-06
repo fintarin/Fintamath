@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Ceil final : public IFunctionCRTP<INumber, Ceil, INumber> {
-  FINTAMATH_CLASS_BODY(Ceil)
+class Ceil : public IFunctionCRTP<INumber, Ceil, INumber> {
+  FINTAMATH_CLASS_BODY(Ceil, IFunction)
 
 public:
   std::string toString() const override {

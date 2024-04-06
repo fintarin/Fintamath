@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(HyperbExprTests, getClassTest) {
   const auto expr = sinhExpr(Integer(0).clone());
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("HyperbExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "HyperbExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IUnaryExpression::getClassStatic());
 }

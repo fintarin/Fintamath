@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(CompExprTests, getClassTest) {
   const auto expr = eqvExpr(Integer(0), Integer(0));
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("CompExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IBinaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "CompExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IBinaryExpression::getClassStatic());
 }

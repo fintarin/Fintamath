@@ -60,8 +60,8 @@ using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
 
 }
 
-class Expression final : public IExpressionCRTP<Expression> {
-  FINTAMATH_CLASS_BODY(Expression)
+class Expression : public IExpressionCRTP<Expression> {
+  FINTAMATH_CLASS_BODY(Expression, IExpression)
 
   using ExpressionConstructor = std::function<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
 

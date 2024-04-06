@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <concepts>
 #include <functional>
 #include <memory>
@@ -11,12 +12,18 @@ namespace fintamath {
 
 class IMathObject;
 
-inline bool is(const MathObjectClass to, const MathObjectClass from) {
-  return to == from || to.getChildren(true).contains(from);
+constexpr bool is(const MathObjectClass to, const MathObjectClass from) noexcept {
+  for (MathObjectClass parent = from; parent; parent = parent->getParent()) {
+    if (parent == to) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const From &from) {
+inline bool is(const From &from) noexcept {
   if constexpr (std::is_base_of_v<To, From>) {
     return true;
   }
@@ -29,7 +36,7 @@ bool is(const From &from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const From *from) {
+inline bool is(const From *from) noexcept {
   if (!from) {
     return false;
   }
@@ -38,81 +45,65 @@ bool is(const From *from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::unique_ptr<From> &from) {
+inline bool is(const std::unique_ptr<From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::shared_ptr<From> &from) {
+inline bool is(const std::shared_ptr<From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::shared_ptr<const From> &from) {
+inline bool is(const std::shared_ptr<const From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::reference_wrapper<From> &from) {
+inline bool is(const std::reference_wrapper<From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool is(const std::reference_wrapper<const From> &from) {
+inline bool is(const std::reference_wrapper<const From> &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-const To &cast(const From &from) {
-  if constexpr (!std::is_base_of_v<To, From>) {
-    if (!is<To>(from)) {
-      throw std::bad_cast{};
-    }
-  }
-
+inline const To &cast(const From &from) noexcept {
+  assert(is<To>(from));
   return static_cast<const To &>(from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-To &cast(From &from) {
-  if constexpr (!std::is_base_of_v<To, From>) {
-    if (!is<To>(from)) {
-      throw std::bad_cast{};
-    }
-  }
-
+inline To &cast(From &from) noexcept {
+  assert(is<To>(from));
   return static_cast<To &>(from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-const To *cast(const From *from) {
-  if constexpr (!std::is_base_of_v<To, From>) {
-    if (!is<To>(from)) {
-      return {};
-    }
+inline const To *cast(const From *from) noexcept {
+  if (!is<To>(from)) {
+    return {};
   }
 
   return static_cast<const To *>(from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-To *cast(From *from) {
-  if constexpr (!std::is_base_of_v<To, From>) {
-    if (!is<To>(from)) {
-      return {};
-    }
+inline To *cast(From *from) noexcept {
+  if (!is<To>(from)) {
+    return {};
   }
 
   return static_cast<To *>(from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
-  if constexpr (!std::is_base_of_v<To, From>) {
-    if (!is<To>(from)) {
-      from.reset();
-      return {};
-    }
+inline std::unique_ptr<To> cast(std::unique_ptr<From> &&from) noexcept {
+  if (!is<To>(from)) {
+    from.reset();
+    return {};
   }
 
   From *fromRawPtr = from.release();
@@ -121,19 +112,21 @@ std::unique_ptr<To> cast(std::unique_ptr<From> &&from) {
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) {
-  if constexpr (!std::is_base_of_v<To, From>) {
-    if (!is<To>(from)) {
-      return {};
-    }
+inline std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) noexcept {
+  if (!is<To>(from)) {
+    return {};
   }
 
   return std::static_pointer_cast<const To>(from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-std::shared_ptr<To> cast(const std::shared_ptr<From> &from) {
-  return std::const_pointer_cast<To>(cast<To>(std::const_pointer_cast<const From>(from)));
+inline std::shared_ptr<To> cast(const std::shared_ptr<From> &from) noexcept {
+  if (!is<To>(from)) {
+    return {};
+  }
+
+  return std::static_pointer_cast<To>(from);
 }
 
 }

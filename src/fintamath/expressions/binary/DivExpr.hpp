@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-class DivExpr final : public IBinaryExpressionCRTP<DivExpr> {
-  FINTAMATH_CLASS_BODY(DivExpr)
+class DivExpr : public IBinaryExpressionCRTP<DivExpr> {
+  FINTAMATH_CLASS_BODY(DivExpr, IBinaryExpression)
 
 public:
   explicit DivExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);

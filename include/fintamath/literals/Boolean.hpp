@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-class Boolean final : public ILiteralCRTP<Boolean> {
-  FINTAMATH_CLASS_BODY(Boolean)
+class Boolean : public ILiteralCRTP<Boolean> {
+  FINTAMATH_CLASS_BODY(Boolean, ILiteral)
 
 public:
   Boolean();

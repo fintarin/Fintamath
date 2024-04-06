@@ -11,8 +11,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestArithmetic final : public IArithmeticCRTP<TestArithmetic> {
-  FINTAMATH_CLASS_BODY(TestArithmetic)
+class TestArithmetic : public IArithmeticCRTP<TestArithmetic> {
+  FINTAMATH_CLASS_BODY(TestArithmetic, IArithmetic)
 
 protected:
   TestArithmetic &add(const TestArithmetic & /* rhs */) override {
@@ -206,6 +206,6 @@ TEST(IArithmeticTests, negateTest) {
 }
 
 TEST(IArithmeticTests, getClassTest) {
-  EXPECT_EQ(IArithmetic::getClassStatic(), MathObjectClass("IArithmetic"));
-  EXPECT_EQ(IArithmetic::getClassStatic().getParent(), IMathObject::getClassStatic());
+  EXPECT_EQ(IArithmetic::getClassStatic()->getName(), "IArithmetic");
+  EXPECT_EQ(IArithmetic::getClassStatic()->getParent(), IMathObject::getClassStatic());
 }

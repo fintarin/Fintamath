@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Percent final : public IOperatorCRTP<INumber, Percent, INumber> {
-  FINTAMATH_CLASS_BODY(Percent)
+class Percent : public IOperatorCRTP<INumber, Percent, INumber> {
+  FINTAMATH_CLASS_BODY(Percent, IOperator)
 
 public:
   std::string toString() const override {

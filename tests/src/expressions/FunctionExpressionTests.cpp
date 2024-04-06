@@ -9,8 +9,8 @@ using namespace detail;
 
 namespace {
 
-class TestUnaryFunction final : public IFunctionCRTP<INumber, TestUnaryFunction, INumber> {
-  FINTAMATH_CLASS_BODY(TestUnaryFunction)
+class TestUnaryFunction : public IFunctionCRTP<INumber, TestUnaryFunction, INumber> {
+  FINTAMATH_CLASS_BODY(TestUnaryFunction, IFunction)
 
 public:
   std::string toString() const override {
@@ -23,8 +23,8 @@ protected:
   }
 };
 
-class TestBinaryFunction final : public IFunctionCRTP<INumber, TestBinaryFunction, INumber, INumber> {
-  FINTAMATH_CLASS_BODY(TestBinaryFunction)
+class TestBinaryFunction : public IFunctionCRTP<INumber, TestBinaryFunction, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(TestBinaryFunction, IFunction)
 
 public:
   std::string toString() const override {
@@ -37,8 +37,8 @@ protected:
   }
 };
 
-class TestBinaryOperator final : public IOperatorCRTP<INumber, TestBinaryOperator, INumber, INumber> {
-  FINTAMATH_CLASS_BODY(TestBinaryOperator)
+class TestBinaryOperator : public IOperatorCRTP<INumber, TestBinaryOperator, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(TestBinaryOperator, IOperator)
 
 public:
   std::string toString() const override {
@@ -55,8 +55,8 @@ protected:
   }
 };
 
-class TestUnaryPrefixOperator final : public IOperatorCRTP<INumber, TestUnaryPrefixOperator, INumber> {
-  FINTAMATH_CLASS_BODY(TestUnaryPrefixOperator)
+class TestUnaryPrefixOperator : public IOperatorCRTP<INumber, TestUnaryPrefixOperator, INumber> {
+  FINTAMATH_CLASS_BODY(TestUnaryPrefixOperator, IOperator)
 
 public:
   std::string toString() const override {
@@ -73,8 +73,8 @@ protected:
   }
 };
 
-class TestUnaryPostfixOperator final : public IOperatorCRTP<INumber, TestUnaryPostfixOperator, INumber> {
-  FINTAMATH_CLASS_BODY(TestUnaryPostfixOperator)
+class TestUnaryPostfixOperator : public IOperatorCRTP<INumber, TestUnaryPostfixOperator, INumber> {
+  FINTAMATH_CLASS_BODY(TestUnaryPostfixOperator, IOperator)
 
 public:
   std::string toString() const override {
@@ -127,6 +127,6 @@ TEST(FunctionExpressionTests, stringConstructorTest) {
 
 TEST(FunctionExpressionTests, getClassTest) {
   auto expr = makeExpr(TestBinaryOperator(), Integer(0), Integer(0));
-  EXPECT_EQ(expr->getClass(), MathObjectClass("FunctionExpression"));
-  EXPECT_EQ(expr->getClass().getParent(), IExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "FunctionExpression");
+  EXPECT_EQ(expr->getClass()->getParent(), IExpression::getClassStatic());
 }

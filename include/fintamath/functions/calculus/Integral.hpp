@@ -13,8 +13,8 @@
 
 namespace fintamath {
 
-class Integral final : public IFunctionCRTP<IComparable, Integral, IComparable, Variable> {
-  FINTAMATH_CLASS_BODY(Integral)
+class Integral : public IFunctionCRTP<IComparable, Integral, IComparable, Variable> {
+  FINTAMATH_CLASS_BODY(Integral, IFunction)
 
 public:
   std::string toString() const override {

@@ -50,6 +50,6 @@ TEST(LbTests, exprTest) {
 }
 
 TEST(LbTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Lb"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Lb");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

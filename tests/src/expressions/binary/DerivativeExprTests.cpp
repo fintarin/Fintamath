@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(DerivativeExprTests, getClassTest) {
   const auto expr = derivativeExpr(Integer(0), Variable("x"));
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("DerivativeExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IBinaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "DerivativeExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IBinaryExpression::getClassStatic());
 }

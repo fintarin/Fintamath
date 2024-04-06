@@ -9,6 +9,6 @@ using namespace fintamath;
 TEST(AbsExprTests, getClassTest) {
   const auto expr = absExpr(Integer(0).clone());
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("AbsExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "AbsExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IUnaryExpression::getClassStatic());
 }

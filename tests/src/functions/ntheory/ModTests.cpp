@@ -99,6 +99,6 @@ TEST(ModTests, exprTest) {
 }
 
 TEST(ModTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Mod"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Mod");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }
