@@ -44,8 +44,6 @@ public:
 
 protected:
   virtual std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const = 0;
-
-  virtual void validateArgsSize(const ArgumentRefVector &argVect) const;
 };
 
 template <typename Return, typename Derived, typename... Args>

@@ -14,6 +14,7 @@
 #include "fintamath/functions/logic/And.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/logic/OrOper.hpp"
 #include "fintamath/literals/Boolean.hpp"
 
 namespace fintamath {
@@ -22,6 +23,11 @@ using namespace detail;
 
 OrExpr::OrExpr(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(Or{}, std::move(inChildren)) {
+}
+
+const std::shared_ptr<IFunction> &OrExpr::getOutputFunction() const {
+  static const std::shared_ptr<IFunction> oper = std::make_shared<OrOper>();
+  return oper;
 }
 
 std::string OrExpr::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
@@ -33,42 +39,7 @@ std::string OrExpr::childToString(const IOperator &oper, const ArgumentPtr &inCh
     result = putInBrackets(result);
   }
 
-  return prevChild ? (putInSpaces(func->toString()) + result) : result;
-}
-
-ArgumentPtr OrExpr::postSimplify() const {
-  ArgumentPtr simplObj = IPolynomExpression::postSimplify();
-  auto simpl = cast<OrExpr>(simplObj);
-
-  if (!simpl) {
-    return simplObj;
-  }
-
-  ArgumentPtrVector simplChildren = simpl->children;
-  const size_t simplChildrenSizeInitial = simplChildren.size();
-
-  // TODO: use more efficient algorithm
-  for (size_t i = 0; i + 1 < simplChildren.size(); i++) {
-    for (size_t j = i + 1; j < simplChildren.size(); j++) {
-      if (auto res = absorptionSimplify(simplChildren[i], simplChildren[j])) {
-        simplChildren[i] = std::move(res);
-        simplChildren.erase(simplChildren.begin() + static_cast<ptrdiff_t>(j));
-        j--;
-      }
-    }
-  }
-
-  if (simplChildren.size() != simplChildrenSizeInitial) {
-    if (simplChildren.size() > 1) {
-      ArgumentPtr res = orExpr(std::move(simplChildren));
-      postSimplifyChild(res);
-      return res;
-    }
-
-    return simplChildren.front();
-  }
-
-  return simpl;
+  return (prevChild ? putInSpaces(getOutputFunction()->toString()) : "") + result;
 }
 
 OrExpr::SimplifyFunctionVector OrExpr::getFunctionsForPreSimplify() const {
@@ -86,6 +57,7 @@ OrExpr::SimplifyFunctionVector OrExpr::getFunctionsForPostSimplify() const {
       &OrExpr::notSimplify,
       &OrExpr::boolSimplify,
       &OrExpr::equalSimplify,
+      &OrExpr::absorptionSimplify,
   };
   return simplifyFunctions;
 }
@@ -116,10 +88,10 @@ ArgumentPtr OrExpr::equalSimplify(const IFunction & /*func*/, const ArgumentPtr 
 }
 
 ArgumentPtr OrExpr::notSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-  if (const auto rhsExpr = cast<IExpression>(rhs);
-      rhsExpr &&
-      is<Not>(rhsExpr->getFunction()) &&
-      *rhsExpr->getChildren().front() == *lhs) {
+  if (const auto lhsExpr = cast<IExpression>(lhs);
+      lhsExpr &&
+      is<Not>(lhsExpr->getFunction()) &&
+      *lhsExpr->getChildren().front() == *rhs) {
 
     return Boolean(true).clone();
   }
@@ -197,7 +169,7 @@ ArgumentPtr OrExpr::andSimplify(const IFunction & /*func*/, const ArgumentPtr &l
   return resultChildren.front();
 }
 
-ArgumentPtr OrExpr::absorptionSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+ArgumentPtr OrExpr::absorptionSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
   const auto lhsExpr = cast<IExpression>(lhs);
   const auto rhsExpr = cast<IExpression>(rhs);
 

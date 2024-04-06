@@ -34,7 +34,7 @@ public:
 
   bool doArgsMatch(const ArgumentRefVector &argVect) const override {
     if constexpr (Derived::isVariadicStatic()) {
-      return doAnyArgsMatch(argVect);
+      return doVariadicArgsMatch(argVect);
     }
     else {
       if (argVect.size() != getArgumentClassesStatic().size()) {
@@ -65,8 +65,6 @@ protected:
   virtual std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const = 0;
 
   std::unique_ptr<IMathObject> callAbstract(const ArgumentRefVector &argVect) const override {
-    validateArgsSize(argVect);
-
     if (doArgsMatch(argVect)) {
       try {
         if (auto res = call(argVect)) {
@@ -85,8 +83,8 @@ protected:
 
 private:
   template <size_t i, typename Head, typename... Tail>
-  bool doArgsMatch(const ArgumentRefVector &argVect) const {
-    if (!is<Head>(argVect[i]) || detail::isExpression(argVect[i])) {
+  static bool doArgsMatch(const ArgumentRefVector &argVect) {
+    if (!doArgMatch<Head>(argVect[i])) {
       return false;
     }
 
@@ -94,16 +92,25 @@ private:
   }
 
   template <size_t>
-  bool doArgsMatch(const ArgumentRefVector & /*unused*/) const {
+  static bool doArgsMatch(const ArgumentRefVector &) {
     return true;
   }
 
-  bool doAnyArgsMatch(const ArgumentRefVector &argVect) const {
-    using AnyArgsType = typename std::tuple_element_t<0, std::tuple<Args...>>;
+  static bool doVariadicArgsMatch(const ArgumentRefVector &argVect) {
+    if (argVect.empty()) {
+      return false;
+    }
+
+    using ExpectedArg = typename std::tuple_element_t<0, std::tuple<Args...>>;
 
     return std::ranges::all_of(argVect, [](const auto &arg) {
-      return is<AnyArgsType>(arg);
+      return doArgMatch<ExpectedArg>(arg);
     });
+  }
+
+  template <typename Expected>
+  static bool doArgMatch(const ArgumentRef &arg) {
+    return is<Expected>(arg);
   }
 
 private:

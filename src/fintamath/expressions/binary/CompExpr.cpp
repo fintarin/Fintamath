@@ -51,7 +51,7 @@ std::string CompExpr::toString() const {
 
       if (is<Variable>(solLhs)) {
         sumChildren.erase(sumChildren.begin());
-        ArgumentPtr solRhs = detail::negate(makePolynom(Add{}, std::move(sumChildren)));
+        ArgumentPtr solRhs = negate(mulExpr(std::move(sumChildren)));
         return CompExpr(cast<IOperator>(*func), std::move(solLhs), std::move(solRhs)).toString();
       }
     }
@@ -223,10 +223,10 @@ ArgumentPtr CompExpr::rateSimplify(const IFunction &func, const ArgumentPtr &lhs
   {
     ArgumentPtrVector newChildren = firstChildMulExpr->getChildren();
     newChildren.erase(newChildren.begin());
-    children.front() = makePolynom(Mul{}, std::move(newChildren));
+    children.front() = mulExpr(std::move(newChildren));
   }
 
-  ArgumentPtr newLhs = makePolynom(Add{}, std::move(children));
+  ArgumentPtr newLhs = addExpr(std::move(children));
   simplifyChild(newLhs);
 
   approximateChild(rate);

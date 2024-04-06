@@ -16,6 +16,7 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
@@ -39,6 +40,11 @@ AddExpr::AddExpr(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(Add{}, std::move(inChildren)) {
 }
 
+const std::shared_ptr<IFunction> &AddExpr::getOutputFunction() const {
+  static const std::shared_ptr<IFunction> oper = std::make_shared<AddOper>();
+  return oper;
+}
+
 std::string AddExpr::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   std::string result = operatorChildToString(oper, inChild);
   bool isChildNegated = false;
@@ -53,7 +59,7 @@ std::string AddExpr::childToString(const IOperator &oper, const ArgumentPtr &inC
   std::string funcStr;
 
   if (isChildNegated) {
-    funcStr = Sub{}.toString();
+    funcStr = Neg{}.toString();
   }
   else if (prevChild) {
     funcStr = oper.toString();

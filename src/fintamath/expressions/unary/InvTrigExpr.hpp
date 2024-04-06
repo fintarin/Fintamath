@@ -21,7 +21,7 @@ protected:
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &rhs);
 
-  static ArgumentPtr TrigTableSimplify(const IFunction &func, const Rational &rhs);
+  static ArgumentPtr trigTableSimplify(const IFunction &func, const Rational &rhs);
 
   static ArgumentPtr TrigTableAsinSimplify(const Rational &rhs);
 

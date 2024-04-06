@@ -32,10 +32,12 @@
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Abs.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Frac.hpp"
 #include "fintamath/functions/arithmetic/FracMixed.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
@@ -67,11 +69,13 @@
 #include "fintamath/functions/logarithms/Ln.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/logic/And.hpp"
+#include "fintamath/functions/logic/AndOper.hpp"
 #include "fintamath/functions/logic/Equiv.hpp"
 #include "fintamath/functions/logic/Impl.hpp"
 #include "fintamath/functions/logic/Nequiv.hpp"
 #include "fintamath/functions/logic/Not.hpp"
 #include "fintamath/functions/logic/Or.hpp"
+#include "fintamath/functions/logic/OrOper.hpp"
 #include "fintamath/functions/ntheory/Ceil.hpp"
 #include "fintamath/functions/ntheory/Floor.hpp"
 #include "fintamath/functions/ntheory/Mod.hpp"
@@ -82,7 +86,7 @@
 #include "fintamath/functions/other/Percent.hpp"
 #include "fintamath/functions/powers/Exp.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
-#include "fintamath/functions/powers/PowFunction.hpp"
+#include "fintamath/functions/powers/PowOper.hpp"
 #include "fintamath/functions/powers/Root.hpp"
 #include "fintamath/functions/powers/Sqr.hpp"
 #include "fintamath/functions/powers/Sqrt.hpp"
@@ -147,6 +151,36 @@ TypeConfig::TypeConfig() {
   IConstant::registerType<Undefined>();
 
   IFunction::registerType<IOperator>();
+
+  IOperator::registerType<AddOper>();
+  IOperator::registerType<UnaryPlus>();
+  IOperator::registerType<Sub>();
+  IOperator::registerType<Neg>();
+  IOperator::registerType<MulOper>();
+  IOperator::registerType<Div>();
+  IOperator::registerType<Mod>();
+  IOperator::registerType<PowOper>();
+  IOperator::registerType<Factorial>();
+  IOperator::registerType<Percent>();
+  IOperator::registerType<Deg>();
+  IOperator::registerType<Index>();
+  IOperator::registerType<Comma>();
+  IOperator::registerType<Eqv>();
+  IOperator::registerType<Neqv>();
+  IOperator::registerType<Less>();
+  IOperator::registerType<More>();
+  IOperator::registerType<LessEqv>();
+  IOperator::registerType<MoreEqv>();
+  IOperator::registerType<Not>();
+  IOperator::registerType<AndOper>();
+  IOperator::registerType<OrOper>();
+  IOperator::registerType<Impl>();
+  IOperator::registerType<Equiv>();
+  IOperator::registerType<Nequiv>();
+
+  IFunction::registerType<Pow>();
+  IFunction::registerType<Add>();
+  IFunction::registerType<Mul>();
   IFunction::registerType<Abs>();
   IFunction::registerType<Log>();
   IFunction::registerType<Ln>();
@@ -187,35 +221,10 @@ TypeConfig::TypeConfig() {
   IFunction::registerType<Integral>();
   IFunction::registerType<Frac>();
   IFunction::registerType<FracMixed>();
-  IFunction::registerType<PowFunction>();
   IFunction::registerType<Floor>();
   IFunction::registerType<Ceil>();
-
-  IOperator::registerType<Add>();
-  IOperator::registerType<Sub>();
-  IOperator::registerType<Mul>();
-  IOperator::registerType<Div>();
-  IOperator::registerType<Neg>();
-  IOperator::registerType<UnaryPlus>();
-  IOperator::registerType<Factorial>();
-  IOperator::registerType<Percent>();
-  IOperator::registerType<Pow>();
-  IOperator::registerType<Eqv>();
-  IOperator::registerType<Neqv>();
-  IOperator::registerType<Less>();
-  IOperator::registerType<More>();
-  IOperator::registerType<LessEqv>();
-  IOperator::registerType<MoreEqv>();
-  IOperator::registerType<Not>();
-  IOperator::registerType<And>();
-  IOperator::registerType<Or>();
-  IOperator::registerType<Impl>();
-  IOperator::registerType<Equiv>();
-  IOperator::registerType<Nequiv>();
-  IOperator::registerType<Index>();
-  IOperator::registerType<Deg>();
-  IOperator::registerType<Comma>();
-  IOperator::registerType<Mod>();
+  IFunction::registerType<And>();
+  IFunction::registerType<Or>();
 
   IExpression::registerType<IPolynomExpression>();
   IExpression::registerType<IBinaryExpression>();

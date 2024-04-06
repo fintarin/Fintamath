@@ -14,6 +14,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sign.hpp"
 #include "fintamath/functions/logarithms/Log.hpp"
@@ -35,6 +36,15 @@ MulExpr::MulExpr(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(Mul{}, std::move(inChildren)) {
 }
 
+const std::shared_ptr<IFunction> &MulExpr::getOutputFunction() const {
+  static const std::shared_ptr<IFunction> oper = std::make_shared<MulOper>();
+  return oper;
+}
+
+bool MulExpr::isTermOrderInversed() const {
+  return true;
+}
+
 std::string MulExpr::toString() const {
   auto [childNumerator, childDenominator] = splitRational(children.front());
 
@@ -51,7 +61,7 @@ std::string MulExpr::toString() const {
       numeratorChildren.front() = childNumerator;
     }
 
-    ArgumentPtr numerator = makePolynom(Mul{}, std::move(numeratorChildren));
+    ArgumentPtr numerator = mulExpr(std::move(numeratorChildren));
     ArgumentPtr denominator = childDenominator;
     const ArgumentPtr res = divExpr(std::move(numerator), std::move(denominator));
 
@@ -103,10 +113,6 @@ MulExpr::SimplifyFunctionVector MulExpr::getFunctionsForPostSimplify() const {
       &MulExpr::trigDoubleAngleSimplify,
   };
   return simplifyFunctions;
-}
-
-bool MulExpr::isTermOrderInversed() const {
-  return true;
 }
 
 ArgumentPtr MulExpr::constSimplify(const IFunction & /*func*/, const ArgumentPtr &lhs, const ArgumentPtr &rhs) {

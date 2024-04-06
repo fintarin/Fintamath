@@ -11,6 +11,7 @@
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/MultiMethod.hpp"
+#include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"

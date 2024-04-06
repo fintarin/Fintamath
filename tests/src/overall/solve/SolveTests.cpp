@@ -105,7 +105,7 @@ TEST(SolveTests, solveTest) {
   EXPECT_EQ(solve(Expression("x = x sqrt(x)")).toString(),
             "x^(3/2) - x = 0");
   EXPECT_EQ(solve(Expression("x = 3^x")).toString(),
-            "x - 3^x = 0");
+            "3^x - x = 0");
 
   EXPECT_EQ(solve(Expression("E = Ey")).toString(),
             "y = 1");

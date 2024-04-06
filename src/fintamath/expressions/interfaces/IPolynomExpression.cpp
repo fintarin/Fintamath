@@ -18,6 +18,7 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 
 namespace fintamath {
 
@@ -38,21 +39,29 @@ const ArgumentPtrVector &IPolynomExpression::getChildren() const {
   return children;
 }
 
-std::string IPolynomExpression::toString() const {
-  const auto oper = cast<IOperator>(func);
-  if (!oper) {
-    return functionToString(*func, children);
+void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
+  if (childVect.empty()) {
+    throw InvalidInputFunctionException(toString(), {});
   }
 
-  std::string result;
+  children = childVect;
+}
 
-  result += childToString(*oper, children.front(), {});
+std::string IPolynomExpression::toString() const {
+  const auto &outFunc = getOutputFunction();
+  const auto outOper = cast<IOperator>(outFunc);
+
+  if (!outOper) {
+    return functionToString(*outFunc, children);
+  }
+
+  std::string result = childToString(*outOper, children.front(), {});
 
   for (size_t i = 1; i < children.size(); i++) {
-    const std::string childStr = childToString(*oper, children[i], children[i - 1]);
+    const std::string childStr = childToString(*outOper, children[i], children[i - 1]);
 
     if (childStr.size() > 2 && childStr[0] == ' ' && std::isdigit(childStr[1]) && std::isdigit(result.back())) {
-      result += Mul{}.toString() + childStr.substr(1);
+      result += MulOper{}.toString() + childStr.substr(1);
     }
     else {
       result += childStr;
@@ -197,15 +206,8 @@ IPolynomExpression::SimplifyFunctionVector IPolynomExpression::getFunctionsForPo
 
 std::string IPolynomExpression::childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const {
   const std::string childStr = operatorChildToString(oper, inChild);
-  return prevChild ? (putInSpaces(func->toString()) + childStr) : childStr;
-}
-
-std::strong_ordering IPolynomExpression::compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
-  const ComparatorOptions options = {
-      .termOrderInversed = isTermOrderInversed(),
-      .comparableOrderInversed = isComparableOrderInversed(),
-  };
-  return fintamath::compare(lhs, rhs, options);
+  const std::string operStr = prevChild ? putInSpaces(oper.toString()) : "";
+  return operStr + childStr;
 }
 
 bool IPolynomExpression::isTermOrderInversed() const {
@@ -216,12 +218,12 @@ bool IPolynomExpression::isComparableOrderInversed() const {
   return false;
 }
 
-void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.empty()) {
-    throw InvalidInputFunctionException(toString(), {});
-  }
-
-  children = childVect;
+std::strong_ordering IPolynomExpression::compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const {
+  const ComparatorOptions options = {
+      .termOrderInversed = isTermOrderInversed(),
+      .comparableOrderInversed = isComparableOrderInversed(),
+  };
+  return fintamath::compare(lhs, rhs, options);
 }
 
 void IPolynomExpression::sort() {

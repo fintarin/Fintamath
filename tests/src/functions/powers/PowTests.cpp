@@ -13,7 +13,7 @@ using namespace fintamath;
 const Pow f;
 
 TEST(PowTests, toStringTest) {
-  EXPECT_EQ(f.toString(), "^");
+  EXPECT_EQ(f.toString(), "pow");
 }
 
 TEST(PowTests, getArgumentClassesTest) {
@@ -30,14 +30,6 @@ TEST(PowTests, isVariadicTest) {
 
 TEST(PowTests, isEvaluatableTest) {
   EXPECT_TRUE(f.isEvaluatable());
-}
-
-TEST(PowTests, getPriorityTest) {
-  EXPECT_EQ(f.getPriority(), IOperator::Priority::Exponentiation);
-}
-
-TEST(PowTests, isAssociativeTest) {
-  EXPECT_FALSE(f.isAssociative());
 }
 
 TEST(PowTests, callTest) {
@@ -170,5 +162,5 @@ TEST(PowTests, exprTest) {
 
 TEST(PowTests, getClassTest) {
   EXPECT_EQ(f.getClass(), MathObjectClass("Pow"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
 }

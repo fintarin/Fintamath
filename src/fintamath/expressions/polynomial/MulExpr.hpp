@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "fintamath/core/MathObjectClass.hpp"
@@ -15,6 +16,8 @@ public:
   explicit MulExpr(ArgumentPtrVector inChildren);
 
   std::string toString() const override;
+
+  const std::shared_ptr<IFunction> &getOutputFunction() const override;
 
 protected:
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;

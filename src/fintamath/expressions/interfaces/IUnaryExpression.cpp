@@ -22,15 +22,18 @@ IUnaryExpression::IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs)
 }
 
 std::string IUnaryExpression::toString() const {
-  if (const auto oper = cast<IOperator>(func)) {
-    if (oper->getPriority() == IOperator::Priority::PostfixUnary) {
-      return detail::postfixUnaryOperatorToString(*oper, child);
-    }
+  const auto &outFunc = getOutputFunction();
+  const auto outOper = cast<IOperator>(outFunc);
 
-    return detail::prefixUnaryOperatorToString(*oper, child);
+  if (!outOper) {
+    return functionToString(*outFunc, {child});
   }
 
-  return detail::functionToString(*func, {child});
+  if (outOper->getPriority() == IOperator::Priority::PostfixUnary) {
+    return postfixUnaryOperatorToString(*outOper, child);
+  }
+
+  return prefixUnaryOperatorToString(*outOper, child);
 }
 
 const std::shared_ptr<IFunction> &IUnaryExpression::getFunction() const {

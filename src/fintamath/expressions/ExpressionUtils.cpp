@@ -17,8 +17,10 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 #include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
 #include "fintamath/literals/Variable.hpp"
@@ -33,10 +35,6 @@
 namespace fintamath::detail {
 
 const ArgumentPtr one = Integer(1).clone();
-
-bool isExpression(const IMathObject &arg) {
-  return is<IExpression>(arg);
-}
 
 bool isInfinity(const ArgumentPtr &arg) {
   return is<Inf>(arg) || is<NegInf>(arg) || is<ComplexInf>(arg);
@@ -156,21 +154,18 @@ std::pair<ArgumentPtr, ArgumentPtr> splitMulExpr(const ArgumentPtr &inChild, con
     }
   }
 
-  ArgumentPtr rate = makePolynom(Mul{},
-                                 ArgumentPtrVector(mulExprChildren.begin(),
-                                                   mulExprChildren.begin() + static_cast<ptrdiff_t>(i)));
-  ArgumentPtr value = makePolynom(Mul{},
-                                  ArgumentPtrVector(mulExprChildren.begin() + static_cast<ptrdiff_t>(i),
-                                                    mulExprChildren.end()));
-
-  if (!rate) {
-    rate = one;
+  if (i == 0) {
+    return {one, inChild};
   }
 
-  if (!value) {
-    value = checkVariables ? one : inChild;
+  if (i >= mulExprChildren.size()) {
+    return {inChild, one};
   }
 
+  ArgumentPtr rate = mulExpr(ArgumentPtrVector(mulExprChildren.begin(),
+                                               mulExprChildren.begin() + static_cast<ptrdiff_t>(i)));
+  ArgumentPtr value = mulExpr(ArgumentPtrVector(mulExprChildren.begin() + static_cast<ptrdiff_t>(i),
+                                                mulExprChildren.end()));
   return {rate, value};
 }
 
@@ -228,19 +223,19 @@ ArgumentPtr negate(const ArgumentPtr &arg) {
     if (is<Add>(expr->getFunction())) {
       ArgumentPtrVector negChildren = expr->getChildren();
       std::ranges::transform(negChildren, negChildren.begin(), &negate);
-      return makePolynom(Add{}, std::move(negChildren));
+      return addExpr(std::move(negChildren));
     }
 
     if (is<Mul>(expr->getFunction())) {
       if (const auto firstChildNum = cast<INumber>(expr->getChildren().front())) {
         if (*firstChildNum == Integer(-1)) {
           ArgumentPtrVector negChildren(expr->getChildren().begin() + 1, expr->getChildren().end());
-          return makePolynom(Mul(), std::move(negChildren));
+          return mulExpr(std::move(negChildren));
         }
 
         ArgumentPtrVector negChildren = expr->getChildren();
         negChildren.front() = (*firstChildNum) * Integer(-1);
-        return makePolynom(Mul(), std::move(negChildren));
+        return mulExpr(std::move(negChildren));
       }
     }
   }
@@ -251,20 +246,20 @@ ArgumentPtr negate(const ArgumentPtr &arg) {
   return mulExpr(Integer(-1).clone(), arg);
 }
 
-ArgumentPtr makePolynom(const IFunction &func, ArgumentPtrVector &&args) {
-  if (args.empty()) {
-    return {};
+ArgumentPtr invert(const ArgumentPtr &arg) {
+  if (const auto num = cast<INumber>(arg)) {
+    return Integer(1) / (*num);
   }
 
-  if (args.size() == 1) {
-    return args.front();
+  if (const auto expr = cast<IExpression>(arg); expr && is<Div>(expr->getFunction())) {
+    if (*expr->getChildren().front() == Integer(1)) {
+      return expr->getChildren().back();
+    }
+
+    return divExpr(expr->getChildren().back(), expr->getChildren().front());
   }
 
-  return makeExpr(func, std::move(args));
-}
-
-ArgumentPtr makePolynom(const IFunction &func, const ArgumentPtrVector &args) {
-  return makePolynom(func, ArgumentPtrVector(args));
+  return divExpr(Integer(1).clone(), arg);
 }
 
 ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &arg) {
@@ -326,14 +321,14 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
   }
   else if (const auto childComplex = cast<Complex>(child)) {
     if (childComplex->real() != Integer(0)) {
-      childOper = std::make_shared<Add>();
+      childOper = std::make_shared<AddOper>();
     }
     else if (childComplex->imag() != Integer(1)) {
       if (childComplex->imag() == Integer(-1)) {
         childOper = std::make_shared<Neg>();
       }
       else {
-        childOper = std::make_shared<Mul>();
+        childOper = std::make_shared<MulOper>();
       }
     }
   }
@@ -344,8 +339,8 @@ std::string operatorChildToString(const IOperator &oper, const ArgumentPtr &chil
     childOper = std::make_shared<Div>();
   }
   else if (is<Real>(child)) {
-    if (childStr.find(Mul{}.toString()) != std::string::npos) {
-      childOper = std::make_shared<Mul>();
+    if (childStr.find(MulOper{}.toString()) != std::string::npos) {
+      childOper = std::make_shared<MulOper>();
     }
   }
 

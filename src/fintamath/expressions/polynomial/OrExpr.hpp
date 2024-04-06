@@ -15,10 +15,10 @@ class OrExpr final : public IPolynomExpressionCRTP<OrExpr> {
 public:
   explicit OrExpr(ArgumentPtrVector inChildren);
 
+  const std::shared_ptr<IFunction> &getOutputFunction() const override;
+
 protected:
   std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const override;
-
-  ArgumentPtr postSimplify() const override;
 
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 
@@ -35,7 +35,7 @@ private:
 
   static ArgumentPtr andSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 
-  static ArgumentPtr absorptionSimplify(const ArgumentPtr &lhs, const ArgumentPtr &rhs);
+  static ArgumentPtr absorptionSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);
 };
 
 }

@@ -89,7 +89,7 @@ TEST(SimplifyTrigonometryTests, simplifyTest) {
   EXPECT_EQ(Expression("sin(x)cos(x)").toString(),
             "sin(2 x)/2");
   EXPECT_EQ(Expression("sin(x)cos(x)sign(x)").toString(),
-            "(sign(x) sin(2 x))/2");
+            "(sin(2 x) sign(x))/2");
 
   EXPECT_EQ(Expression("sin(x)^2").toString(),
             "sin(x)^2");

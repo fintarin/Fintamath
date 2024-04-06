@@ -4,7 +4,7 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/functions/IFunction.hpp"
-#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/AddOper.hpp"
 #include "fintamath/literals/constants/E.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -51,7 +51,7 @@ TEST(ParserTests, parseRvalueTest) {
 
 TEST(ParserTests, parseFirstTest) {
   EXPECT_EQ(IMathObject::parseFirst("123").value()->getClass(), Integer::getClassStatic());
-  EXPECT_EQ(IMathObject::parseFirst("+").value()->getClass(), Add::getClassStatic());
+  EXPECT_EQ(IMathObject::parseFirst("+").value()->getClass(), AddOper::getClassStatic());
   EXPECT_EQ(IMathObject::parseFirst("E").value()->getClass(), E::getClassStatic());
   EXPECT_EQ(IMathObject::parseFirst("1+1").value()->getClass(), Expression::getClassStatic());
   EXPECT_FALSE(IMathObject::parseFirst("1*)"));

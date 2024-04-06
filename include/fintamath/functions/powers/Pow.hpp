@@ -17,16 +17,12 @@ class Rational;
 class Real;
 class Complex;
 
-class Pow final : public IOperatorCRTP<INumber, Pow, INumber, INumber> {
+class Pow final : public IFunctionCRTP<INumber, Pow, INumber, INumber> {
   FINTAMATH_CLASS_BODY(Pow)
 
 public:
   std::string toString() const override {
-    return "^";
-  }
-
-  static constexpr Priority getPriorityStatic() {
-    return Priority::Exponentiation;
+    return "pow";
   }
 
 protected:

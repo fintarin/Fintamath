@@ -3,6 +3,7 @@
 #include "fintamath/expressions/ExpressionUtils.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/ExpressionParser.hpp"
 
 using namespace fintamath;
 using namespace detail;
@@ -121,10 +122,18 @@ TEST(ExpressionUtilsTests, isNegativeNumberTest) {
   // TODO: implement
 }
 
-TEST(ExpressionUtilsTests, makePolynomTest) {
+TEST(ExpressionUtilsTests, negateTest) {
   // TODO: implement
 }
 
-TEST(ExpressionUtilsTests, negateTest) {
-  // TODO: implement
+TEST(ExpressionUtilsTests, invertTest) {
+  EXPECT_EQ(invert(parseExpr("2"))->toString(), "1/2");
+  EXPECT_EQ(invert(parseExpr("1/2"))->toString(), "2");
+  EXPECT_EQ(invert(parseExpr("3/2"))->toString(), "2/3");
+  EXPECT_EQ(invert(parseExpr("sqrt(2)"))->toString(), "1/sqrt(2)");
+  EXPECT_EQ(invert(parseExpr("sqrt(2)/1"))->toString(), "1/sqrt(2)");
+  EXPECT_EQ(invert(parseExpr("1/sqrt(2)"))->toString(), "sqrt(2)");
+  EXPECT_EQ(invert(parseExpr("sqrt(2)/2"))->toString(), "2/sqrt(2)");
+  EXPECT_EQ(invert(parseExpr("2/sqrt(2)"))->toString(), "sqrt(2)/2");
+  EXPECT_EQ(invert(parseExpr("sqrt(2)/sqrt(3)"))->toString(), "sqrt(3)/sqrt(2)");
 }
