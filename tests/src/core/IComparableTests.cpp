@@ -10,8 +10,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestComparable final : public IComparableCRTP<TestComparable> {
-  FINTAMATH_CLASS_BODY(TestComparable)
+class TestComparable : public IComparableCRTP<TestComparable> {
+  FINTAMATH_CLASS_BODY(TestComparable, IComparable)
 
 protected:
   std::strong_ordering compare(const TestComparable & /* rhs */) const override {
@@ -151,6 +151,6 @@ TEST(IComparableTests, moreEqualsTest) {
 }
 
 TEST(IComparableTests, getClassTest) {
-  EXPECT_EQ(IComparable::getClassStatic(), MathObjectClass("IComparable"));
-  EXPECT_EQ(IComparable::getClassStatic().getParent(), IArithmetic::getClassStatic());
+  EXPECT_EQ(IComparable::getClassStatic()->getName(), "IComparable");
+  EXPECT_EQ(IComparable::getClassStatic()->getParent(), IArithmetic::getClassStatic());
 }

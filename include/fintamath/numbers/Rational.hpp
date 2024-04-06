@@ -14,8 +14,8 @@
 
 namespace fintamath {
 
-class Rational final : public INumberCRTP<Rational> {
-  FINTAMATH_CLASS_BODY(Rational)
+class Rational : public INumberCRTP<Rational> {
+  FINTAMATH_CLASS_BODY(Rational, INumber)
 
 public:
   Rational() = default;

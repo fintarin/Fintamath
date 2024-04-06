@@ -13,8 +13,8 @@
 
 namespace fintamath {
 
-class More final : public IOperatorCRTP<Boolean, More, IComparable, IComparable> {
-  FINTAMATH_CLASS_BODY(More)
+class More : public IOperatorCRTP<Boolean, More, IComparable, IComparable> {
+  FINTAMATH_CLASS_BODY(More, IOperator)
 
 public:
   std::string toString() const override {

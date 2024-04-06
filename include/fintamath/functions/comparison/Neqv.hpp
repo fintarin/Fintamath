@@ -13,8 +13,8 @@
 
 namespace fintamath {
 
-class Neqv final : public IOperatorCRTP<Boolean, Neqv, IComparable, IComparable> {
-  FINTAMATH_CLASS_BODY(Neqv)
+class Neqv : public IOperatorCRTP<Boolean, Neqv, IComparable, IComparable> {
+  FINTAMATH_CLASS_BODY(Neqv, IOperator)
 
 public:
   std::string toString() const override {

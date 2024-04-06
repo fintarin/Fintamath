@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Asinh final : public IFunctionCRTP<INumber, Asinh, INumber> {
-  FINTAMATH_CLASS_BODY(Asinh)
+class Asinh : public IFunctionCRTP<INumber, Asinh, INumber> {
+  FINTAMATH_CLASS_BODY(Asinh, IFunction)
 
 public:
   std::string toString() const override {

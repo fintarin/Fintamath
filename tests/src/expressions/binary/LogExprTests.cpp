@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(LogExprTests, getClassTest) {
   const auto expr = logExpr(Integer(0), Integer(0));
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("LogExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IBinaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "LogExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IBinaryExpression::getClassStatic());
 }

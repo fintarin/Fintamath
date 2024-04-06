@@ -10,8 +10,8 @@ const AddOper f;
 
 namespace {
 
-class TestBinaryExpression final : public IBinaryExpressionCRTP<TestBinaryExpression> {
-  FINTAMATH_CLASS_BODY(TestBinaryExpression)
+class TestBinaryExpression : public IBinaryExpressionCRTP<TestBinaryExpression> {
+  FINTAMATH_CLASS_BODY(TestBinaryExpression, IBinaryExpression)
 
 public:
   explicit TestBinaryExpression(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
@@ -71,6 +71,6 @@ TEST(IBinaryExpressionTests, toMinimalObjectTest) {
 }
 
 TEST(IBinaryExpressionTests, getClassTest) {
-  EXPECT_EQ(IBinaryExpression::getClassStatic(), MathObjectClass("IBinaryExpression"));
-  EXPECT_EQ(IBinaryExpression::getClassStatic().getParent(), IExpression::getClassStatic());
+  EXPECT_EQ(IBinaryExpression::getClassStatic()->getName(), "IBinaryExpression");
+  EXPECT_EQ(IBinaryExpression::getClassStatic()->getParent(), IExpression::getClassStatic());
 }

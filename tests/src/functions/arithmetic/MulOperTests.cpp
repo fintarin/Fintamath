@@ -53,6 +53,6 @@ TEST(MulOperTests, callTest) {
 }
 
 TEST(MulOperTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("MulOper"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "MulOper");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

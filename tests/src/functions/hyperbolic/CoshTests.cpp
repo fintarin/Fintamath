@@ -54,6 +54,6 @@ TEST(CoshTests, exprTest) {
 }
 
 TEST(CoshTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Cosh"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Cosh");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

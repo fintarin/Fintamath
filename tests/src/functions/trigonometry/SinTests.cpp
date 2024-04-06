@@ -54,6 +54,6 @@ TEST(SinTests, exprTest) {
 }
 
 TEST(SinTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Sin"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Sin");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

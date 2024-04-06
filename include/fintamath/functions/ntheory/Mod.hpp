@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Mod final : public IOperatorCRTP<INumber, Mod, INumber, INumber> {
-  FINTAMATH_CLASS_BODY(Mod)
+class Mod : public IOperatorCRTP<INumber, Mod, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(Mod, IOperator)
 
 public:
   std::string toString() const override {

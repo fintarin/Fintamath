@@ -12,8 +12,8 @@ namespace fintamath {
 
 class IOperator;
 
-class CompExpr final : public IBinaryExpressionCRTP<CompExpr> {
-  FINTAMATH_CLASS_BODY(CompExpr)
+class CompExpr : public IBinaryExpressionCRTP<CompExpr> {
+  FINTAMATH_CLASS_BODY(CompExpr, IBinaryExpression)
 
 public:
   CompExpr(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);

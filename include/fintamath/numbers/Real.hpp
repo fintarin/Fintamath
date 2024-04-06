@@ -19,8 +19,8 @@
 
 namespace fintamath {
 
-class Real final : public INumberCRTP<Real> {
-  FINTAMATH_CLASS_BODY(Real)
+class Real : public INumberCRTP<Real> {
+  FINTAMATH_CLASS_BODY(Real, INumber)
 
 public:
   using Backend = boost::multiprecision::mpfr_float;

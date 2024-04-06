@@ -132,6 +132,6 @@ TEST(LogTests, exprTest) {
 }
 
 TEST(LogTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Log"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Log");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

@@ -12,7 +12,7 @@
 namespace fintamath {
 
 class IConstant : public ILiteral {
-  FINTAMATH_PARENT_CLASS_BODY(IConstant)
+  FINTAMATH_PARENT_CLASS_BODY(IConstant, ILiteral)
 
 public:
   virtual MathObjectClass getReturnClass() const = 0;

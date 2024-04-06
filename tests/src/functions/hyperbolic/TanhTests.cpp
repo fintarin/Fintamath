@@ -54,6 +54,6 @@ TEST(TanhTests, exprTest) {
 }
 
 TEST(TanhTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Tanh"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Tanh");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

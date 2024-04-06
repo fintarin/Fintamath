@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-class DerivativeExpr final : public IBinaryExpressionCRTP<DerivativeExpr> {
-  FINTAMATH_CLASS_BODY(DerivativeExpr)
+class DerivativeExpr : public IBinaryExpressionCRTP<DerivativeExpr> {
+  FINTAMATH_CLASS_BODY(DerivativeExpr, IBinaryExpression)
 
 public:
   explicit DerivativeExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);

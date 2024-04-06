@@ -58,6 +58,6 @@ TEST(MinTests, exprTest) {
 }
 
 TEST(MinTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Min"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Min");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

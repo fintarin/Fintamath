@@ -54,6 +54,6 @@ TEST(NotTests, exprTest) {
 }
 
 TEST(NotTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Not"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Not");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

@@ -14,8 +14,8 @@ namespace fintamath {
 
 class Real;
 
-class Sin final : public IFunctionCRTP<INumber, Sin, INumber> {
-  FINTAMATH_CLASS_BODY(Sin)
+class Sin : public IFunctionCRTP<INumber, Sin, INumber> {
+  FINTAMATH_CLASS_BODY(Sin, IFunction)
 
 public:
   std::string toString() const override {

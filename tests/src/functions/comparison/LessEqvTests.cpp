@@ -65,6 +65,6 @@ TEST(LessEqvTests, exprTest) {
 }
 
 TEST(LessEqvTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("LessEqv"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "LessEqv");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

@@ -53,6 +53,6 @@ TEST(FracMixedTests, callTest) {
 }
 
 TEST(FracMixedTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("FracMixed"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "FracMixed");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

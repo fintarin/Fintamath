@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-class Frac final : public IFunctionCRTP<IArithmetic, Frac, IArithmetic, IArithmetic> {
-  FINTAMATH_CLASS_BODY(Frac)
+class Frac : public IFunctionCRTP<IArithmetic, Frac, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Frac, IFunction)
 
 public:
   std::string toString() const override {

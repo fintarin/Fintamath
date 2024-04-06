@@ -17,8 +17,8 @@ class Integer;
 class Rational;
 class Real;
 
-class Root final : public IFunctionCRTP<INumber, Root, INumber, INumber> {
-  FINTAMATH_CLASS_BODY(Root)
+class Root : public IFunctionCRTP<INumber, Root, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(Root, IFunction)
 
   using RootToFactorMap = std::map<Integer, Integer>;
 

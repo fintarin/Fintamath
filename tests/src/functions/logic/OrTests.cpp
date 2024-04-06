@@ -63,6 +63,6 @@ TEST(OrTests, exprTest) {
 }
 
 TEST(OrTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Or"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Or");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

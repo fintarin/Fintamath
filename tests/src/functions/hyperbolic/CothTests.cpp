@@ -55,6 +55,6 @@ TEST(CothTests, exprTest) {
 }
 
 TEST(CothTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Coth"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Coth");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

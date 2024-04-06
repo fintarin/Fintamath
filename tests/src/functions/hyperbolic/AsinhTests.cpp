@@ -54,6 +54,6 @@ TEST(AsinhTests, exprTest) {
 }
 
 TEST(AsinhTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Asinh"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Asinh");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

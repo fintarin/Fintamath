@@ -37,10 +37,10 @@ TEST(MathObjectUtilsTests, isTest) {
 
 TEST(MathObjectUtilsTests, castTest) {
   EXPECT_NO_THROW(cast<IArithmetic>(i));
-  EXPECT_THROW(cast<IArithmetic>(cast<IMathObject>(c)), std::bad_cast);
+  EXPECT_DEBUG_DEATH(cast<IArithmetic>(cast<IMathObject>(c)), "");
 
   EXPECT_NO_THROW(cast<IArithmetic>(Integer(1)));
-  EXPECT_THROW(cast<IArithmetic>(cast<IMathObject>(E())), std::bad_cast);
+  EXPECT_DEBUG_DEATH(cast<IArithmetic>(cast<IMathObject>(E())), "");
 
   EXPECT_TRUE(cast<IArithmetic>(i.clone().get()));
   EXPECT_FALSE(cast<IArithmetic>(E().clone().get()));

@@ -65,6 +65,6 @@ TEST(LessTests, exprTest) {
 }
 
 TEST(LessTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Less"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Less");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

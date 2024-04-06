@@ -18,14 +18,14 @@
 namespace fintamath {
 
 class IFunction : public IMathObject {
-  FINTAMATH_PARENT_CLASS_BODY(IFunction)
+  FINTAMATH_PARENT_CLASS_BODY(IFunction, IMathObject)
 
   using ClassToOrderMap = std::unordered_map<MathObjectClass, size_t>;
 
 public:
-  virtual const ArgumentTypeVector &getArgumentClasses() const = 0;
+  virtual const ArgumentTypeVector &getArgumentClasses() const noexcept = 0;
 
-  virtual MathObjectClass getReturnClass() const = 0;
+  virtual MathObjectClass getReturnClass() const noexcept = 0;
 
   virtual bool doArgsMatch(const ArgumentRefVector &argVect) const = 0;
 

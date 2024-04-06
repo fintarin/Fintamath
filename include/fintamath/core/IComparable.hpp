@@ -14,7 +14,7 @@
 namespace fintamath {
 
 class IComparable : public IArithmetic {
-  FINTAMATH_PARENT_CLASS_BODY(IComparable)
+  FINTAMATH_PARENT_CLASS_BODY(IComparable, IArithmetic)
 
 public:
   friend std::strong_ordering operator<=>(const IComparable &lhs, const IComparable &rhs) {

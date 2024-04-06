@@ -63,6 +63,6 @@ TEST(IndexTests, exprTest) {
 }
 
 TEST(IndexTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Index"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Index");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

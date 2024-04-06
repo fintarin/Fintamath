@@ -80,6 +80,6 @@ TEST(CeilTests, exprTest) {
 }
 
 TEST(CeilTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Ceil"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Ceil");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

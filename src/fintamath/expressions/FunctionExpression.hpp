@@ -10,8 +10,8 @@
 
 namespace fintamath {
 
-class FunctionExpression final : public IExpressionCRTP<FunctionExpression> {
-  FINTAMATH_CLASS_BODY(FunctionExpression)
+class FunctionExpression : public IExpressionCRTP<FunctionExpression> {
+  FINTAMATH_CLASS_BODY(FunctionExpression, IExpression)
 
 public:
   explicit FunctionExpression(const IFunction &inFunc, ArgumentPtrVector inChildren);

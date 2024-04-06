@@ -9,8 +9,8 @@
 
 namespace fintamath {
 
-class NotExpr final : public IUnaryExpressionCRTP<NotExpr> {
-  FINTAMATH_CLASS_BODY(NotExpr)
+class NotExpr : public IUnaryExpressionCRTP<NotExpr> {
+  FINTAMATH_CLASS_BODY(NotExpr, IUnaryExpression)
 
 public:
   explicit NotExpr(ArgumentPtr inChild);

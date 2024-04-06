@@ -182,6 +182,6 @@ TEST(RootTests, exprTest) {
 }
 
 TEST(RootTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Root"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Root");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-class SignExpr final : public IUnaryExpressionCRTP<SignExpr> {
-  FINTAMATH_CLASS_BODY(SignExpr)
+class SignExpr : public IUnaryExpressionCRTP<SignExpr> {
+  FINTAMATH_CLASS_BODY(SignExpr, IUnaryExpression)
 
 public:
   explicit SignExpr(ArgumentPtr inChild);

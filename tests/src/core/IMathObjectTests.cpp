@@ -11,8 +11,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestMathObject final : public IMathObjectCRTP<TestMathObject> {
-  FINTAMATH_CLASS_BODY(TestMathObject)
+class TestMathObject : public IMathObjectCRTP<TestMathObject> {
+  FINTAMATH_CLASS_BODY(TestMathObject, IMathObject)
 };
 
 [[maybe_unused]] const auto config = [] {
@@ -110,9 +110,9 @@ TEST(IMathObjectTests, outputTest) {
 }
 
 TEST(IMathObjectTests, getClassTest) {
-  EXPECT_EQ(IMathObject::getClassStatic(), MathObjectClass("IMathObject"));
-  EXPECT_FALSE(IMathObject::getClassStatic().getParent());
+  EXPECT_EQ(IMathObject::getClassStatic()->getName(), "IMathObject");
+  EXPECT_FALSE(IMathObject::getClassStatic()->getParent());
 
-  EXPECT_EQ(TestMathObject().getClass(), MathObjectClass("TestMathObject"));
-  EXPECT_EQ(TestMathObject().getClass().getParent(), IMathObject::getClassStatic());
+  EXPECT_EQ(TestMathObject().getClass()->getName(), "TestMathObject");
+  EXPECT_EQ(TestMathObject().getClass()->getParent(), IMathObject::getClassStatic());
 }

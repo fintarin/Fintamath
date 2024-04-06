@@ -10,8 +10,8 @@
 
 namespace fintamath {
 
-class True final : public IConstantCRTP<Boolean, True> {
-  FINTAMATH_CLASS_BODY(True)
+class True : public IConstantCRTP<Boolean, True> {
+  FINTAMATH_CLASS_BODY(True, IConstant)
 
 public:
   std::string toString() const override {

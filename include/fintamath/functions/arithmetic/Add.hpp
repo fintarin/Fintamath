@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Add final : public IFunctionCRTP<IArithmetic, Add, IArithmetic> {
-  FINTAMATH_CLASS_BODY(Add)
+class Add : public IFunctionCRTP<IArithmetic, Add, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Add, IFunction)
 
 public:
   std::string toString() const override {

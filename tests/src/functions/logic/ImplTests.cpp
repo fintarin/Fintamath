@@ -56,6 +56,6 @@ TEST(ImplTests, exprTest) {
 }
 
 TEST(ImplTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Impl"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Impl");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

@@ -58,6 +58,6 @@ TEST(MaxTests, exprTest) {
 }
 
 TEST(MaxTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Max"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Max");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

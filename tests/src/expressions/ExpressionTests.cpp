@@ -98,6 +98,6 @@ TEST(ExpressionTests, equalsTest) {
 }
 
 TEST(ExpressionTests, getClassTest) {
-  EXPECT_EQ(Expression().getClass(), MathObjectClass("Expression"));
-  EXPECT_EQ(Expression().getClassStatic().getParent(), IExpression::getClassStatic());
+  EXPECT_EQ(Expression().getClass()->getName(), "Expression");
+  EXPECT_EQ(Expression().getClassStatic()->getParent(), IExpression::getClassStatic());
 }

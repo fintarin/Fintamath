@@ -16,8 +16,8 @@
 
 namespace fintamath {
 
-class Integer final : public INumberCRTP<Integer> {
-  FINTAMATH_CLASS_BODY(Integer)
+class Integer : public INumberCRTP<Integer> {
+  FINTAMATH_CLASS_BODY(Integer, INumber)
 
 public:
   using Backend = boost::multiprecision::mpz_int;

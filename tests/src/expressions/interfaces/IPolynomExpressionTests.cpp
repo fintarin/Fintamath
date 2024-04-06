@@ -12,8 +12,8 @@ const Mul f;
 
 namespace {
 
-class TestPolynomExpression final : public IPolynomExpressionCRTP<TestPolynomExpression> {
-  FINTAMATH_CLASS_BODY(TestPolynomExpression)
+class TestPolynomExpression : public IPolynomExpressionCRTP<TestPolynomExpression> {
+  FINTAMATH_CLASS_BODY(TestPolynomExpression, IPolynomExpression)
 
 public:
   explicit TestPolynomExpression(ArgumentPtrVector args) : IPolynomExpressionCRTP(f, std::move(args)) {
@@ -79,6 +79,6 @@ TEST(IPolynomExpressionTests, toMinimalObjectTest) {
 }
 
 TEST(IPolynomExpressionTests, getClassTest) {
-  EXPECT_EQ(IPolynomExpression::getClassStatic(), MathObjectClass("IPolynomExpression"));
-  EXPECT_EQ(IPolynomExpression::getClassStatic().getParent(), IExpression::getClassStatic());
+  EXPECT_EQ(IPolynomExpression::getClassStatic()->getName(), "IPolynomExpression");
+  EXPECT_EQ(IPolynomExpression::getClassStatic()->getParent(), IExpression::getClassStatic());
 }

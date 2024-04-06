@@ -13,8 +13,8 @@
 
 namespace fintamath {
 
-class Index final : public IOperatorCRTP<Variable, Index, Variable, Integer> {
-  FINTAMATH_CLASS_BODY(Index)
+class Index : public IOperatorCRTP<Variable, Index, Variable, Integer> {
+  FINTAMATH_CLASS_BODY(Index, IOperator)
 
 public:
   std::string toString() const override {

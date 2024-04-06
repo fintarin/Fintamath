@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-class AndExpr final : public IPolynomExpressionCRTP<AndExpr> {
-  FINTAMATH_CLASS_BODY(AndExpr)
+class AndExpr : public IPolynomExpressionCRTP<AndExpr> {
+  FINTAMATH_CLASS_BODY(AndExpr, IPolynomExpression)
 
 public:
   explicit AndExpr(ArgumentPtrVector inChildren);

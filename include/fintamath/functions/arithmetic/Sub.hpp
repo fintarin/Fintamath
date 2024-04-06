@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Sub final : public IOperatorCRTP<IArithmetic, Sub, IArithmetic, IArithmetic> {
-  FINTAMATH_CLASS_BODY(Sub)
+class Sub : public IOperatorCRTP<IArithmetic, Sub, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Sub, IOperator)
 
 public:
   std::string toString() const override {

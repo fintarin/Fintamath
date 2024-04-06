@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-class IntegralExpr final : public IBinaryExpressionCRTP<IntegralExpr> {
-  FINTAMATH_CLASS_BODY(IntegralExpr)
+class IntegralExpr : public IBinaryExpressionCRTP<IntegralExpr> {
+  FINTAMATH_CLASS_BODY(IntegralExpr, IBinaryExpression)
 
 public:
   explicit IntegralExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);

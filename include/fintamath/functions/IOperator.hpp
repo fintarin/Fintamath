@@ -13,7 +13,7 @@
 namespace fintamath {
 
 class IOperator : public IFunction {
-  FINTAMATH_PARENT_CLASS_BODY(IOperator)
+  FINTAMATH_PARENT_CLASS_BODY(IOperator, IFunction)
 
 public:
   enum class Priority : uint8_t {

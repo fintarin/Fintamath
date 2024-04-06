@@ -14,7 +14,7 @@
 namespace fintamath {
 
 class INumber : public IComparable {
-  FINTAMATH_PARENT_CLASS_BODY(INumber)
+  FINTAMATH_PARENT_CLASS_BODY(INumber, IComparable)
 
 public:
   virtual bool isPrecise() const {

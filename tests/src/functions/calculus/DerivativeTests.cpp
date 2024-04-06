@@ -14,8 +14,8 @@ const Derivative f;
 
 namespace {
 
-class TestComparable final : public IComparableCRTP<TestComparable> {
-  FINTAMATH_CLASS_BODY(TestComparable)
+class TestComparable : public IComparableCRTP<TestComparable> {
+  FINTAMATH_CLASS_BODY(TestComparable, IComparable)
 
 public:
   std::string toString() const override {
@@ -97,6 +97,6 @@ TEST(DerivativeTests, exprTest) {
 }
 
 TEST(DerivativeTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Derivative"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Derivative");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

@@ -12,8 +12,8 @@ namespace fintamath {
 
 class Rational;
 
-class TrigExpr final : public IUnaryExpressionCRTP<TrigExpr> {
-  FINTAMATH_CLASS_BODY(TrigExpr)
+class TrigExpr : public IUnaryExpressionCRTP<TrigExpr> {
+  FINTAMATH_CLASS_BODY(TrigExpr, IUnaryExpression)
 
 public:
   explicit TrigExpr(const IFunction &inFunc, ArgumentPtr inChild);

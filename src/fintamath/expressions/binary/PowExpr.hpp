@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class PowExpr final : public IBinaryExpressionCRTP<PowExpr> {
-  FINTAMATH_CLASS_BODY(PowExpr)
+class PowExpr : public IBinaryExpressionCRTP<PowExpr> {
+  FINTAMATH_CLASS_BODY(PowExpr, IBinaryExpression)
 
 public:
   explicit PowExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);

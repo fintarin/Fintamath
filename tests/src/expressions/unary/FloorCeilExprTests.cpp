@@ -9,6 +9,6 @@ using namespace fintamath;
 TEST(FloorCeilExprTests, getClassTest) {
   const auto expr = floorExpr(Integer(0).clone());
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("FloorCeilExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "FloorCeilExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IUnaryExpression::getClassStatic());
 }

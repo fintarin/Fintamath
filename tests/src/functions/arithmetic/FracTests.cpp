@@ -46,6 +46,6 @@ TEST(FracTests, callTest) {
 }
 
 TEST(FracTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Frac"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Frac");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

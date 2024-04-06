@@ -69,6 +69,6 @@ TEST(AbsTests, exprTest) {
 }
 
 TEST(AbsTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Abs"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Abs");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

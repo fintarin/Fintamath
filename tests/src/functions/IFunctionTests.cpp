@@ -17,8 +17,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestFunction final : public IFunctionCRTP<INumber, TestFunction, INumber> {
-  FINTAMATH_CLASS_BODY(TestFunction)
+class TestFunction : public IFunctionCRTP<INumber, TestFunction, INumber> {
+  FINTAMATH_CLASS_BODY(TestFunction, IFunction)
 
 protected:
   std::unique_ptr<IMathObject> call(const ArgumentRefVector &argVect) const override {
@@ -128,6 +128,6 @@ TEST(IFunctionTests, doArgsMatchTest) {
 }
 
 TEST(IFunctionTests, getClassTest) {
-  EXPECT_EQ(IFunction::getClassStatic(), MathObjectClass("IFunction"));
-  EXPECT_EQ(IFunction::getClassStatic().getParent(), IMathObject::getClassStatic());
+  EXPECT_EQ(IFunction::getClassStatic()->getName(), "IFunction");
+  EXPECT_EQ(IFunction::getClassStatic()->getParent(), IMathObject::getClassStatic());
 }

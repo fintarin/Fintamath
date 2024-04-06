@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-class LogExpr final : public IBinaryExpressionCRTP<LogExpr> {
-  FINTAMATH_CLASS_BODY(LogExpr)
+class LogExpr : public IBinaryExpressionCRTP<LogExpr> {
+  FINTAMATH_CLASS_BODY(LogExpr, IBinaryExpression)
 
 public:
   explicit LogExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild);

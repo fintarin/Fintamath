@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(InvTrigExprTests, getClassTest) {
   const auto expr = asinExpr(Integer(0).clone());
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("InvTrigExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "InvTrigExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IUnaryExpression::getClassStatic());
 }

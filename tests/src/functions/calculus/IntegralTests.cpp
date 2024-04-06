@@ -53,6 +53,6 @@ TEST(IntegralTests, exprTest) {
 }
 
 TEST(IntegralTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Integral"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Integral");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Sqrt final : public IFunctionCRTP<INumber, Sqrt, INumber> {
-  FINTAMATH_CLASS_BODY(Sqrt)
+class Sqrt : public IFunctionCRTP<INumber, Sqrt, INumber> {
+  FINTAMATH_CLASS_BODY(Sqrt, IFunction)
 
 public:
   std::string toString() const override {

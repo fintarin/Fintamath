@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Not final : public IOperatorCRTP<Boolean, Not, Boolean> {
-  FINTAMATH_CLASS_BODY(Not)
+class Not : public IOperatorCRTP<Boolean, Not, Boolean> {
+  FINTAMATH_CLASS_BODY(Not, IOperator)
 
 public:
   std::string toString() const override {

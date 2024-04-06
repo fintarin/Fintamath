@@ -9,8 +9,8 @@
 
 namespace fintamath {
 
-class OrExpr final : public IPolynomExpressionCRTP<OrExpr> {
-  FINTAMATH_CLASS_BODY(OrExpr)
+class OrExpr : public IPolynomExpressionCRTP<OrExpr> {
+  FINTAMATH_CLASS_BODY(OrExpr, IPolynomExpression)
 
 public:
   explicit OrExpr(ArgumentPtrVector inChildren);

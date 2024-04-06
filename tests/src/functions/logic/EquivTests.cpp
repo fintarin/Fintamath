@@ -56,6 +56,6 @@ TEST(EquivTests, exprTest) {
 }
 
 TEST(EquivTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Equiv"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Equiv");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

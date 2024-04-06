@@ -15,8 +15,8 @@ namespace fintamath {
 class Integer;
 class INumber;
 
-class Div final : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
-  FINTAMATH_CLASS_BODY(Div)
+class Div : public IOperatorCRTP<IArithmetic, Div, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(Div, IOperator)
 
 public:
   std::string toString() const override {

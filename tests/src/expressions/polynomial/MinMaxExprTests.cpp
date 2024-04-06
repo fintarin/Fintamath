@@ -10,6 +10,6 @@ using namespace fintamath;
 TEST(MinMaxExprTests, getClassTest) {
   const auto expr = minExpr(Integer(0), Integer(0));
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("MinMaxExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IPolynomExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "MinMaxExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IPolynomExpression::getClassStatic());
 }

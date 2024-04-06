@@ -11,8 +11,8 @@
 
 namespace fintamath {
 
-class FracMixed final : public IFunctionCRTP<IArithmetic, FracMixed, IArithmetic, IArithmetic, IArithmetic> {
-  FINTAMATH_CLASS_BODY(FracMixed)
+class FracMixed : public IFunctionCRTP<IArithmetic, FracMixed, IArithmetic, IArithmetic, IArithmetic> {
+  FINTAMATH_CLASS_BODY(FracMixed, IFunction)
 
 public:
   std::string toString() const override {

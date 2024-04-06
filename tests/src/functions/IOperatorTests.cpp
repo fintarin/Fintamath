@@ -13,8 +13,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestOperator final : public IOperatorCRTP<INumber, TestOperator, INumber> {
-  FINTAMATH_CLASS_BODY(TestOperator)
+class TestOperator : public IOperatorCRTP<INumber, TestOperator, INumber> {
+  FINTAMATH_CLASS_BODY(TestOperator, IOperator)
 
 public:
   static constexpr Priority getPriorityStatic() {
@@ -53,6 +53,6 @@ TEST(IOperatorTests, isAssociativeTest) {
 }
 
 TEST(IOperatorTests, getClassTest) {
-  EXPECT_EQ(IOperator::getClassStatic(), MathObjectClass("IOperator"));
-  EXPECT_EQ(IOperator::getClassStatic().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(IOperator::getClassStatic()->getName(), "IOperator");
+  EXPECT_EQ(IOperator::getClassStatic()->getParent(), IFunction::getClassStatic());
 }

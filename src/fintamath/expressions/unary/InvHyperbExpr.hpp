@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-class InvHyperbExpr final : public IUnaryExpressionCRTP<InvHyperbExpr> {
-  FINTAMATH_CLASS_BODY(InvHyperbExpr)
+class InvHyperbExpr : public IUnaryExpressionCRTP<InvHyperbExpr> {
+  FINTAMATH_CLASS_BODY(InvHyperbExpr, IUnaryExpression)
 
 public:
   explicit InvHyperbExpr(const IFunction &inFunc, ArgumentPtr inChild);

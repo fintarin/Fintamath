@@ -57,6 +57,6 @@ TEST(AcothTests, exprTest) {
 }
 
 TEST(AcothTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Acoth"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Acoth");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

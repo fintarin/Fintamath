@@ -9,6 +9,6 @@ using namespace fintamath;
 TEST(SignExprTests, getClassTest) {
   const auto expr = signExpr(Integer(0).clone());
 
-  EXPECT_EQ(expr->getClass(), MathObjectClass("SignExpr"));
-  EXPECT_EQ(expr->getClass().getParent(), IUnaryExpression::getClassStatic());
+  EXPECT_EQ(expr->getClass()->getName(), "SignExpr");
+  EXPECT_EQ(expr->getClass()->getParent(), IUnaryExpression::getClassStatic());
 }

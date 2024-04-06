@@ -54,6 +54,6 @@ TEST(CscTests, exprTest) {
 }
 
 TEST(CscTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Csc"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Csc");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

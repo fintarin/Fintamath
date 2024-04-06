@@ -10,8 +10,8 @@ using namespace fintamath;
 
 namespace {
 
-class TestLiteral final : public ILiteralCRTP<TestLiteral> {
-  FINTAMATH_CLASS_BODY(TestLiteral)
+class TestLiteral : public ILiteralCRTP<TestLiteral> {
+  FINTAMATH_CLASS_BODY(TestLiteral, ILiteral)
 };
 
 [[maybe_unused]] const auto config = [] {
@@ -46,6 +46,6 @@ TEST(ILiteralTests, equalsTest) {
 }
 
 TEST(ILiteralTests, getClassTest) {
-  EXPECT_EQ(ILiteral::getClassStatic(), MathObjectClass("ILiteral"));
-  EXPECT_EQ(ILiteral::getClassStatic().getParent(), IMathObject::getClassStatic());
+  EXPECT_EQ(ILiteral::getClassStatic()->getName(), "ILiteral");
+  EXPECT_EQ(ILiteral::getClassStatic()->getParent(), IMathObject::getClassStatic());
 }

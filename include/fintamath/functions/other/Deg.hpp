@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Deg final : public IOperatorCRTP<INumber, Deg, INumber> {
-  FINTAMATH_CLASS_BODY(Deg)
+class Deg : public IOperatorCRTP<INumber, Deg, INumber> {
+  FINTAMATH_CLASS_BODY(Deg, IOperator)
 
 public:
   std::string toString() const override {

@@ -51,6 +51,6 @@ TEST(CommaTests, exprTest) {
 }
 
 TEST(CommaTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Comma"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Comma");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

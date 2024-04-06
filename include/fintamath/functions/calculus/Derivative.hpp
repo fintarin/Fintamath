@@ -13,8 +13,8 @@
 
 namespace fintamath {
 
-class Derivative final : public IFunctionCRTP<IComparable, Derivative, IComparable, Variable> {
-  FINTAMATH_CLASS_BODY(Derivative)
+class Derivative : public IFunctionCRTP<IComparable, Derivative, IComparable, Variable> {
+  FINTAMATH_CLASS_BODY(Derivative, IFunction)
 
 public:
   std::string toString() const override {

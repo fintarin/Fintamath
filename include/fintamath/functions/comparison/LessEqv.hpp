@@ -13,8 +13,8 @@
 
 namespace fintamath {
 
-class LessEqv final : public IOperatorCRTP<Boolean, LessEqv, IComparable, IComparable> {
-  FINTAMATH_CLASS_BODY(LessEqv)
+class LessEqv : public IOperatorCRTP<Boolean, LessEqv, IComparable, IComparable> {
+  FINTAMATH_CLASS_BODY(LessEqv, IOperator)
 
 public:
   std::string toString() const override {

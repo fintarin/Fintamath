@@ -10,8 +10,8 @@
 
 namespace fintamath {
 
-class NegInf final : public IConstantCRTP<INumber, NegInf> {
-  FINTAMATH_CLASS_BODY(NegInf)
+class NegInf : public IConstantCRTP<INumber, NegInf> {
+  FINTAMATH_CLASS_BODY(NegInf, IConstant)
 
 public:
   std::string toString() const override {

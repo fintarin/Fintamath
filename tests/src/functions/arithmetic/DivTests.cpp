@@ -61,6 +61,6 @@ TEST(DivTests, exprTest) {
 }
 
 TEST(DivTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Div"));
-  EXPECT_EQ(f.getClass().getParent(), IOperator::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Div");
+  EXPECT_EQ(f.getClass()->getParent(), IOperator::getClassStatic());
 }

@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class PowOper final : public IOperatorCRTP<INumber, PowOper, INumber, INumber> {
-  FINTAMATH_CLASS_BODY(PowOper)
+class PowOper : public IOperatorCRTP<INumber, PowOper, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(PowOper, IOperator)
 
 public:
   std::string toString() const override {

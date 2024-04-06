@@ -12,8 +12,8 @@
 
 namespace fintamath {
 
-class Or final : public IFunctionCRTP<Boolean, Or, Boolean> {
-  FINTAMATH_CLASS_BODY(Or)
+class Or : public IFunctionCRTP<Boolean, Or, Boolean> {
+  FINTAMATH_CLASS_BODY(Or, IFunction)
 
 public:
   std::string toString() const override {

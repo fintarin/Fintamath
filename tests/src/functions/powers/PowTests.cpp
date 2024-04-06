@@ -161,6 +161,6 @@ TEST(PowTests, exprTest) {
 }
 
 TEST(PowTests, getClassTest) {
-  EXPECT_EQ(f.getClass(), MathObjectClass("Pow"));
-  EXPECT_EQ(f.getClass().getParent(), IFunction::getClassStatic());
+  EXPECT_EQ(f.getClass()->getName(), "Pow");
+  EXPECT_EQ(f.getClass()->getParent(), IFunction::getClassStatic());
 }

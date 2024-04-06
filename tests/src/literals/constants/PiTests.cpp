@@ -16,6 +16,6 @@ TEST(PiTests, callTest) {
 }
 
 TEST(PiTests, getClassTest) {
-  EXPECT_EQ(c.getClass(), MathObjectClass("Pi"));
-  EXPECT_EQ(c.getClass().getParent(), IConstant::getClassStatic());
+  EXPECT_EQ(c.getClass()->getName(), "Pi");
+  EXPECT_EQ(c.getClass()->getParent(), IConstant::getClassStatic());
 }

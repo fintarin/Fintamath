@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-class MinMaxExpr final : public IPolynomExpressionCRTP<MinMaxExpr> {
-  FINTAMATH_CLASS_BODY(MinMaxExpr)
+class MinMaxExpr : public IPolynomExpressionCRTP<MinMaxExpr> {
+  FINTAMATH_CLASS_BODY(MinMaxExpr, IPolynomExpression)
 
 public:
   explicit MinMaxExpr(const IFunction &inFunc, ArgumentPtrVector inChildren);

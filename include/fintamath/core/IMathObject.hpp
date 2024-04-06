@@ -10,29 +10,30 @@
 #include "fintamath/core/MathObjectBody.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
+#include "fintamath/core/None.hpp"
 #include "fintamath/core/Parser.hpp"
 
 namespace fintamath {
 
 class IMathObject {
-  FINTAMATH_PARENT_CLASS_BODY(IMathObject)
+  FINTAMATH_PARENT_CLASS_BODY(IMathObject, None)
 
 public:
-  virtual ~IMathObject() = default;
+  virtual ~IMathObject() noexcept = default;
 
   virtual std::unique_ptr<IMathObject> clone() const & = 0;
 
   virtual std::unique_ptr<IMathObject> clone() && = 0;
 
   virtual std::string toString() const {
-    return std::string(getClass().getName());
+    return std::string(getClass()->getName());
   }
 
   virtual std::unique_ptr<IMathObject> toMinimalObject() const {
     return clone();
   }
 
-  virtual MathObjectClass getClass() const = 0;
+  virtual MathObjectClass getClass() const noexcept = 0;
 
   friend bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
     return lhs.equalsAbstract(rhs);

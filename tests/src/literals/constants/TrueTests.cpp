@@ -18,6 +18,6 @@ TEST(TrueTests, callTest) {
 }
 
 TEST(TrueTests, getClassTest) {
-  EXPECT_EQ(c.getClass(), MathObjectClass("True"));
-  EXPECT_EQ(c.getClass().getParent(), IConstant::getClassStatic());
+  EXPECT_EQ(c.getClass()->getName(), "True");
+  EXPECT_EQ(c.getClass()->getParent(), IConstant::getClassStatic());
 }

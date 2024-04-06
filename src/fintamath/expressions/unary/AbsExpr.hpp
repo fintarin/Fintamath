@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-class AbsExpr final : public IUnaryExpressionCRTP<AbsExpr> {
-  FINTAMATH_CLASS_BODY(AbsExpr)
+class AbsExpr : public IUnaryExpressionCRTP<AbsExpr> {
+  FINTAMATH_CLASS_BODY(AbsExpr, IUnaryExpression)
 
 public:
   explicit AbsExpr(ArgumentPtr inChild);

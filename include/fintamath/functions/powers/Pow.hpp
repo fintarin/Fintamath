@@ -17,8 +17,8 @@ class Rational;
 class Real;
 class Complex;
 
-class Pow final : public IFunctionCRTP<INumber, Pow, INumber, INumber> {
-  FINTAMATH_CLASS_BODY(Pow)
+class Pow : public IFunctionCRTP<INumber, Pow, INumber, INumber> {
+  FINTAMATH_CLASS_BODY(Pow, IFunction)
 
 public:
   std::string toString() const override {

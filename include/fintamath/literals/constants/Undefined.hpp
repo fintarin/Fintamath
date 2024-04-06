@@ -10,8 +10,8 @@
 
 namespace fintamath {
 
-class Undefined final : public IConstantCRTP<IArithmetic, Undefined> {
-  FINTAMATH_CLASS_BODY(Undefined)
+class Undefined : public IConstantCRTP<IArithmetic, Undefined> {
+  FINTAMATH_CLASS_BODY(Undefined, IConstant)
 
 public:
   std::string toString() const override {

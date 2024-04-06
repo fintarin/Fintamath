@@ -8,8 +8,8 @@
 
 namespace fintamath {
 
-class Variable final : public ILiteralCRTP<Variable> {
-  FINTAMATH_CLASS_BODY(Variable)
+class Variable : public ILiteralCRTP<Variable> {
+  FINTAMATH_CLASS_BODY(Variable, ILiteral)
 
 public:
   explicit Variable(std::string inName);

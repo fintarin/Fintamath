@@ -14,8 +14,8 @@
 
 namespace fintamath {
 
-class AddExpr final : public IPolynomExpressionCRTP<AddExpr> {
-  FINTAMATH_CLASS_BODY(AddExpr)
+class AddExpr : public IPolynomExpressionCRTP<AddExpr> {
+  FINTAMATH_CLASS_BODY(AddExpr, IPolynomExpression)
 
 public:
   explicit AddExpr(ArgumentPtrVector inChildren);
