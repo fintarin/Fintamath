@@ -10,6 +10,7 @@
 
 #include <cppcoro/generator.hpp>
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
@@ -26,10 +27,10 @@ concept StringConstructable = requires(std::string str) {
 };
 
 template <typename Signature>
-class Parser;
+FINTAMATH_API class Parser;
 
 template <typename Return>
-class Parser final {
+FINTAMATH_API class Parser final {
 public:
   using Generator = cppcoro::generator<Return>;
 
