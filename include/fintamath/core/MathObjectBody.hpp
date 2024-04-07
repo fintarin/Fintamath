@@ -21,7 +21,7 @@ private:                                                        \
   using Class##Parser = detail::Parser<std::unique_ptr<Class>>; \
                                                                 \
   FINTAMATH_API static Class##Parser &getParser() {             \
-    FINTAMATH_API static Class##Parser parser;                  \
+    static Class##Parser parser;                                \
     return parser;                                              \
   }                                                             \
                                                                 \
