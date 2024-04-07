@@ -27,10 +27,10 @@ concept StringConstructable = requires(std::string str) {
 };
 
 template <typename Signature>
-FINTAMATH_API class Parser;
+class FINTAMATH_API Parser;
 
 template <typename Return>
-FINTAMATH_API class Parser final {
+class FINTAMATH_API Parser final {
 public:
   using Generator = cppcoro::generator<Return>;
 
