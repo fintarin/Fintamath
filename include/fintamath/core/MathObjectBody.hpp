@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/Parser.hpp"
 
@@ -19,7 +20,10 @@ private:
 private:                                                        \
   using Class##Parser = detail::Parser<std::unique_ptr<Class>>; \
                                                                 \
-  static Class##Parser &getParser();                            \
+  FINTAMATH_API static Class##Parser &getParser() {             \
+    FINTAMATH_API static Class##Parser parser;                  \
+    return parser;                                              \
+  }                                                             \
                                                                 \
 public:                                                         \
   static auto parse(std::string str) {                          \
@@ -38,8 +42,4 @@ public:                                                         \
                                                                 \
 private:
 
-#define FINTAMATH_PARENT_CLASS_IMPLEMENTATION(Class) \
-  Class::Class##Parser &Class::getParser() {         \
-    static Class##Parser parser;                     \
-    return parser;                                   \
-  }
+#define FINTAMATH_PARENT_CLASS_IMPLEMENTATION(Class)

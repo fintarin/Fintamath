@@ -3,6 +3,12 @@
 #include <concepts>
 #include <functional>
 
+#ifdef WIN32
+#define FINTAMATH_API __declspec(dllexport)
+#else
+#define FINTAMATH_API
+#endif
+
 namespace fintamath {
 
 template <typename From, typename To>
