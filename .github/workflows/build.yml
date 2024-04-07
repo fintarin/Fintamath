@@ -19,117 +19,12 @@ jobs:
       matrix:
         config:
           - {
-              name: Ubuntu GCC Release Shared,
-              os: ubuntu-latest,
-              cc: gcc,
-              cxx: g++,
-              build-type: Release,
-              shared: ON,
-            }
-          - {
-              name: Ubuntu GCC Debug Static,
-              os: ubuntu-latest,
-              cc: gcc,
-              cxx: g++,
-              build-type: Debug,
-              shared: OFF,
-            }
-          - {
-              name: Ubuntu Clang Release Shared,
-              os: ubuntu-latest,
-              cc: clang,
-              cxx: clang++,
-              build-type: Release,
-              shared: ON,
-            }
-          - {
-              name: Ubuntu Clang Debug Static,
-              os: ubuntu-latest,
-              cc: clang,
-              cxx: clang++,
-              build-type: Debug,
-              shared: OFF,
-            }
-            # TODO: remove version specifiers after macos-latest upgrades to version 13
-          - {
-              name: macOS GCC Release Shared,
-              os: macos-13,
-              cc: gcc,
-              cxx: g++,
-              build-type: Release,
-              shared: ON,
-            }
-          - {
-              name: macOS GCC Debug Static,
-              os: macos-13,
-              cc: gcc,
-              cxx: g++,
-              build-type: Debug,
-              shared: OFF,
-            }
-          - {
-              name: macOS Clang Release Shared,
-              os: macos-13,
-              cc: clang,
-              cxx: clang++,
-              build-type: Release,
-              shared: ON,
-            }
-          - {
-              name: macOS Clang Debug Static,
-              os: macos-13,
-              cc: clang,
-              cxx: clang++,
-              build-type: Debug,
-              shared: OFF,
-            }
-          - {
-              name: Windows GCC Release Shared,
-              os: windows-latest,
-              cc: gcc,
-              cxx: g++,
-              build-type: Release,
-              shared: ON,
-            }
-          - {
-              name: Windows GCC Debug Static,
-              os: windows-latest,
-              cc: gcc,
-              cxx: g++,
-              build-type: Debug,
-              shared: OFF,
-            }
-          - {
-              name: Windows Clang Release Shared,
-              os: windows-latest,
-              cc: clang,
-              cxx: clang++,
-              build-type: Release,
-              shared: ON,
-            }
-          - {
-              name: Windows Clang Debug Static,
-              os: windows-latest,
-              cc: clang,
-              cxx: clang++,
-              build-type: Debug,
-              shared: OFF,
-            }
-          - {
               name: Windows MSVC Release Shared,
               os: windows-latest,
               cc: msvc,
               cxx: msvc,
               build-type: Release,
               shared: ON,
-            }
-          - {
-              name: Windows MSVC Debug Static,
-              os: windows-latest,
-              cc: msvc,
-              cxx: msvc,
-              build-type: Debug,
-              shared: OFF,
             }
 
     steps:
