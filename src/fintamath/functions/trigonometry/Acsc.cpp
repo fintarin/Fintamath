@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Acsc)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Acsc::call(const ArgumentRefVector &argVect) const {

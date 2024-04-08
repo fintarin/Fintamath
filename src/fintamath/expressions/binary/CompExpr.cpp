@@ -34,6 +34,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(CompExpr)
+
 using namespace detail;
 
 CompExpr::CompExpr(const IOperator &inOper, ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)

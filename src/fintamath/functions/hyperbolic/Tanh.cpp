@@ -14,6 +14,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Tanh)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Tanh::call(const ArgumentRefVector &argVect) const {

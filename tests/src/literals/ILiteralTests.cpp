@@ -14,6 +14,8 @@ class TestLiteral : public ILiteralCRTP<TestLiteral> {
   FINTAMATH_CLASS_BODY(TestLiteral, ILiteral)
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestLiteral)
+
 [[maybe_unused]] const auto config = [] {
   ILiteral::registerType<TestLiteral>();
   return 0;

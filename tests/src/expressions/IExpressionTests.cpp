@@ -47,6 +47,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestExpression)
+
 [[maybe_unused]] const auto config = [] {
   IExpression::registerType<TestExpression>();
   return 0;

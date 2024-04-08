@@ -16,6 +16,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(SignExpr)
+
 using namespace detail;
 
 SignExpr::SignExpr(ArgumentPtr inChild)

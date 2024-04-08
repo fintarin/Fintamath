@@ -39,6 +39,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(DivExpr)
+
 using namespace detail;
 
 DivExpr::DivExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)

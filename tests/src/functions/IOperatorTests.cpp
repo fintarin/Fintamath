@@ -27,6 +27,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestOperator)
+
 [[maybe_unused]] const auto config = [] {
   IOperator::registerType<TestOperator>();
   return 0;

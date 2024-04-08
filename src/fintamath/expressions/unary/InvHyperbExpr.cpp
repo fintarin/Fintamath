@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(InvHyperbExpr)
+
 InvHyperbExpr::InvHyperbExpr(const IFunction &inFunc, ArgumentPtr inChild)
     : IUnaryExpressionCRTP(inFunc, std::move(inChild)) {
 }

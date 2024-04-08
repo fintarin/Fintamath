@@ -12,6 +12,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(AbsExpr)
+
 using namespace detail;
 
 AbsExpr::AbsExpr(ArgumentPtr inChild)

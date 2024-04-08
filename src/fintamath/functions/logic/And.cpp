@@ -10,6 +10,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(And)
+
 std::unique_ptr<IMathObject> And::call(const ArgumentRefVector &argVect) const {
   auto res = cast<Boolean>(argVect.front().get());
 

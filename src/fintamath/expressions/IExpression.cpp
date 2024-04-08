@@ -25,9 +25,9 @@
 
 namespace fintamath {
 
-using namespace detail;
-
 FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IExpression)
+
+using namespace detail;
 
 std::vector<Variable> IExpression::getVariables() const {
   std::vector<Variable> vars;

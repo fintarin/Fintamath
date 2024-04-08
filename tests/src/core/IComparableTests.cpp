@@ -39,6 +39,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestComparable)
+
 [[maybe_unused]] const auto config = [] {
   IComparable::registerType<TestComparable>();
   return 0;

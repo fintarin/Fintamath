@@ -12,9 +12,9 @@
 
 namespace fintamath {
 
-using namespace detail;
-
 FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IBinaryExpression)
+
+using namespace detail;
 
 IBinaryExpression::IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs)
     : func(cast<IFunction>(inFunc.clone())),

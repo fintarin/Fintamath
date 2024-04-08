@@ -10,6 +10,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(LessEqv)
+
 std::unique_ptr<IMathObject> LessEqv::call(const ArgumentRefVector &argVect) const {
   const auto &lhs = cast<IComparable>(argVect.front().get());
   const auto &rhs = cast<IComparable>(argVect.back().get());

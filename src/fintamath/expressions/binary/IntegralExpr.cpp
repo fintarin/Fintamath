@@ -9,6 +9,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(IntegralExpr)
+
 IntegralExpr::IntegralExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)
     : IBinaryExpressionCRTP(Integral{}, std::move(inLhsChild), std::move(inRhsChild)) {
 }

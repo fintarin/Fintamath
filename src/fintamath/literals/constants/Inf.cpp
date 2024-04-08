@@ -6,6 +6,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Inf)
+
 std::unique_ptr<IMathObject> Inf::call() const {
   return clone();
 }

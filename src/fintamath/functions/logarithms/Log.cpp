@@ -21,6 +21,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Log)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Log::call(const ArgumentRefVector &argVect) const {

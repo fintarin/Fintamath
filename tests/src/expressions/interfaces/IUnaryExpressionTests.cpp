@@ -19,6 +19,8 @@ public:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestUnaryExpression)
+
 [[maybe_unused]] const auto config = [] {
   IUnaryExpression::registerType<TestUnaryExpression>();
   return 0;

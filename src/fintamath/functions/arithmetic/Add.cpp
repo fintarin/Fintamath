@@ -10,6 +10,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Add)
+
 std::unique_ptr<IMathObject> Add::call(const ArgumentRefVector &argVect) const {
   auto res = cast<IArithmetic>(argVect.front().get().clone());
 

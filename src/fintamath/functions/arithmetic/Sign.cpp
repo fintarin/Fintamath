@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Sign)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Sign::call(const ArgumentRefVector &argVect) const {

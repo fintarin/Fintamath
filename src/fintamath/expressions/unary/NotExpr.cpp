@@ -24,6 +24,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(NotExpr)
+
 using namespace detail;
 
 NotExpr::NotExpr(ArgumentPtr inChild)

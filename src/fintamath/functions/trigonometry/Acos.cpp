@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Acos)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Acos::call(const ArgumentRefVector &argVect) const {

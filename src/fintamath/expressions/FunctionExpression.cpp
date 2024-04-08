@@ -12,6 +12,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(FunctionExpression)
+
 using namespace detail;
 
 FunctionExpression::FunctionExpression(const IFunction &inFunc, ArgumentPtrVector inChildren)

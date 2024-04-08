@@ -12,6 +12,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Integer)
+
 using namespace detail;
 
 Integer::Integer(Backend inBackend) : backend(std::move(inBackend)) {

@@ -17,6 +17,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Rational)
+
 Rational::Rational(const std::string &str) {
   if (str.empty()) {
     throw InvalidInputException(str);

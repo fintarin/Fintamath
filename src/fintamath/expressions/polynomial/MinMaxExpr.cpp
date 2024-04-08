@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(MinMaxExpr)
+
 MinMaxExpr::MinMaxExpr(const IFunction &inFunc, ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(inFunc, std::move(inChildren)) {
 }

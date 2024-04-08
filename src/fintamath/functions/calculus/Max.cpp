@@ -12,6 +12,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Max)
+
 std::unique_ptr<IMathObject> Max::call(const ArgumentRefVector &argVect) const {
   std::reference_wrapper res = cast<IComparable>(argVect.front().get());
 

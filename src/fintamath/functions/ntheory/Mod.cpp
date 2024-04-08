@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Mod)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Mod::call(const ArgumentRefVector &argVect) const {

@@ -7,6 +7,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Comma)
+
 std::unique_ptr<IMathObject> Comma::call(const ArgumentRefVector &argVect) const {
   const auto &lhs = argVect.front().get();
   const auto &rhs = argVect.back().get();

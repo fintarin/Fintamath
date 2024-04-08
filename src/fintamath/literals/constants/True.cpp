@@ -6,6 +6,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(True)
+
 std::unique_ptr<IMathObject> True::call() const {
   return Boolean(true).clone();
 }

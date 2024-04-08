@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Sech)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Sech::call(const ArgumentRefVector &argVect) const {

@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Atan)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Atan::call(const ArgumentRefVector &argVect) const {

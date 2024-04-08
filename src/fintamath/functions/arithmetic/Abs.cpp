@@ -18,6 +18,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Abs)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Abs::call(const ArgumentRefVector &argVect) const {

@@ -9,6 +9,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Not)
+
 std::unique_ptr<IMathObject> Not::call(const ArgumentRefVector &argVect) const {
   const auto &rhs = cast<Boolean>(argVect.front().get());
 

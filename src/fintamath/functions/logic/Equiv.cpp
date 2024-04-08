@@ -9,6 +9,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Equiv)
+
 std::unique_ptr<IMathObject> Equiv::call(const ArgumentRefVector &argVect) const {
   const auto &lhs = cast<Boolean>(argVect.front().get());
   const auto &rhs = cast<Boolean>(argVect.back().get());

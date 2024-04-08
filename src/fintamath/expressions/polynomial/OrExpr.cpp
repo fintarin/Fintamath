@@ -19,6 +19,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(OrExpr)
+
 using namespace detail;
 
 OrExpr::OrExpr(ArgumentPtrVector inChildren)

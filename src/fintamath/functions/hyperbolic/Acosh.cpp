@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Acosh)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Acosh::call(const ArgumentRefVector &argVect) const {

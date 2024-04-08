@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Acot)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Acot::call(const ArgumentRefVector &argVect) const {

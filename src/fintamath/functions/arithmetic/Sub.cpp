@@ -9,6 +9,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Sub)
+
 std::unique_ptr<IMathObject> Sub::call(const ArgumentRefVector &argVect) const {
   const auto &lhs = cast<IArithmetic>(argVect.front().get());
   const auto &rhs = cast<IArithmetic>(argVect.back().get());
