@@ -44,19 +44,6 @@ Complex::Complex(const std::string &str) {
   }
 }
 
-Complex::Complex(const INumber &inReal, const INumber &inImag) {
-  if (is<Complex>(inReal) || is<Complex>(inImag)) {
-    throw InvalidInputException("Nested complex numbers are not allowed");
-  }
-
-  re = cast<INumber>(inReal.toMinimalObject());
-  im = cast<INumber>(inImag.toMinimalObject());
-}
-
-Complex::Complex(int64_t inReal, int64_t inImag) : re(std::make_unique<Integer>(inReal)),
-                                                   im(std::make_unique<Integer>(inImag)) {
-}
-
 Complex::Complex(const Integer &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
 }
 
@@ -66,7 +53,13 @@ Complex::Complex(const Rational &rhs) : re(cast<INumber>(rhs.toMinimalObject()))
 Complex::Complex(const Real &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
 }
 
-Complex::Complex(int64_t rhs) : re(std::make_unique<Integer>(rhs)) {
+Complex::Complex(const INumber &inReal, const INumber &inImag) {
+  if (is<Complex>(inReal) || is<Complex>(inImag)) {
+    throw InvalidInputException("Nested complex numbers are not allowed");
+  }
+
+  re = cast<INumber>(inReal.toMinimalObject());
+  im = cast<INumber>(inImag.toMinimalObject());
 }
 
 std::string Complex::toString() const {

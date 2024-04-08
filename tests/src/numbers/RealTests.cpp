@@ -866,7 +866,7 @@ TEST(RealTests, toStringPrecisionPrecisionTest) {
 
   Real::ScopedSetPrecision setPrecision(10);
   val = Real("1.3");
-  EXPECT_THROW(val.toString(20), InvalidInputException);
+  EXPECT_DEBUG_DEATH(val.toString(20), "");
 }
 
 TEST(RealTests, getOutputPrecisionTest) {
@@ -886,8 +886,8 @@ TEST(RealTests, setOutputPrecisionTest) {
   a.setOutputPrecision(5);
   EXPECT_EQ(a.getOutputPrecision(), 5);
 
-  EXPECT_THROW(a.setOutputPrecision(6), InvalidInputException);
-  EXPECT_THROW(a.setOutputPrecision(10), InvalidInputException);
+  EXPECT_DEBUG_DEATH(a.setOutputPrecision(6), "");
+  EXPECT_DEBUG_DEATH(a.setOutputPrecision(10), "");
 }
 
 TEST(RealTests, updatePrecisionTest) {

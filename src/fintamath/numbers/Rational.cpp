@@ -19,6 +19,16 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Rational)
 
+Rational::Rational(Integer rhs) : numer(std::move(rhs)) {
+}
+
+Rational::Rational(Integer inNumer, Integer inDenom)
+    : numer(std::move(inNumer)),
+      denom(std::move(inDenom)) {
+
+  toIrreducibleRational();
+}
+
 Rational::Rational(const std::string &str) {
   if (str.empty()) {
     throw InvalidInputException(str);
@@ -64,19 +74,6 @@ Rational::Rational(const std::string &str) {
   if (isNegative) {
     numer *= -1;
   }
-}
-
-Rational::Rational(Integer inNumer, Integer inDenom)
-    : numer(std::move(inNumer)),
-      denom(std::move(inDenom)) {
-
-  toIrreducibleRational();
-}
-
-Rational::Rational(Integer rhs) : numer(std::move(rhs)) {
-}
-
-Rational::Rational(const int64_t rhs) : numer(rhs) {
 }
 
 const Integer &Rational::numerator() const {
