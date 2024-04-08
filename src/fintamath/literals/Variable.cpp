@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Variable)
+
 Variable::Variable(std::string inName) {
   if (inName.size() != 1) {
     throw InvalidInputException(inName);

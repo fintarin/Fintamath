@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Sinh)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Sinh::call(const ArgumentRefVector &argVect) const {

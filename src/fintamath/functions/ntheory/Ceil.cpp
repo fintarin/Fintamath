@@ -18,6 +18,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Ceil)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Ceil::call(const ArgumentRefVector &argVect) const {

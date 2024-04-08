@@ -11,6 +11,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(FracMixed)
+
 std::unique_ptr<IMathObject> FracMixed::call(const ArgumentRefVector &argVect) const {
   const auto &integ = cast<IArithmetic>(argVect[0].get());
   const auto &numer = cast<IArithmetic>(argVect[1].get());

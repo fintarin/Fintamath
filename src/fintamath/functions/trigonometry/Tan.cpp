@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Tan)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Tan::call(const ArgumentRefVector &argVect) const {

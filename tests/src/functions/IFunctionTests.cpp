@@ -26,6 +26,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestFunction)
+
 [[maybe_unused]] const auto config = [] {
   IFunction::registerType<TestFunction>();
   return 0;

@@ -40,6 +40,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Expression)
+
 using namespace detail;
 
 Expression::Expression() : child(Integer(0).clone()) {

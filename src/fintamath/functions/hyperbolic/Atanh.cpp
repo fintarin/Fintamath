@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Atanh)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Atanh::call(const ArgumentRefVector &argVect) const {

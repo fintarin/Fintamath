@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(MulOper)
+
 std::unique_ptr<IMathObject> MulOper::call(const ArgumentRefVector &argVect) const {
   return Mul{}(argVect);
 }

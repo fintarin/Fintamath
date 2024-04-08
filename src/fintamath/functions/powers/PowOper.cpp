@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(PowOper)
+
 std::unique_ptr<IMathObject> PowOper::call(const ArgumentRefVector &argVect) const {
   return Pow{}(argVect);
 }

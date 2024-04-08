@@ -55,6 +55,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(DerivativeExpr)
+
 using namespace detail;
 
 using NameToSimplifyFunctionMap = std::unordered_map<

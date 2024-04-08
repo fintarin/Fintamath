@@ -30,17 +30,25 @@ class ChildTest1 : public IParentTest1 {
   FINTAMATH_CLASS_BODY(ChildTest1, IParentTest1)
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(ChildTest1)
+
 class ChildTest2 : public IParentTest1 {
   FINTAMATH_CLASS_BODY(ChildTest2, IParentTest1)
 };
+
+FINTAMATH_CLASS_IMPLEMENTATION(ChildTest2)
 
 class ChildTest3 : public IParentTest2 {
   FINTAMATH_CLASS_BODY(ChildTest3, IParentTest2)
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(ChildTest3)
+
 class OtherChildTest : public IParentTest2 {
   FINTAMATH_CLASS_BODY(OtherChildTest, IParentTest2)
 };
+
+FINTAMATH_CLASS_IMPLEMENTATION(OtherChildTest)
 
 [[maybe_unused]] const auto config = [] {
   ISuperParentTest::registerType<IParentTest1>();
@@ -55,13 +63,9 @@ class OtherChildTest : public IParentTest2 {
 
 TEST(MathObjectClassTests, constructorTest) {
   {
-    constexpr MathObjectClassImpl t1("Test");
-    EXPECT_EQ(t1.getName(), "Test");
-    EXPECT_FALSE(t1.getParent());
-
-    constexpr MathObjectClassImpl t2("Test", ISuperParentTest::getClassStatic());
-    EXPECT_EQ(t2.getName(), "Test");
-    EXPECT_EQ(t2.getParent(), ISuperParentTest::getClassStatic());
+    constexpr MathObjectClassImpl t("Test");
+    EXPECT_EQ(t.getName(), "Test");
+    EXPECT_FALSE(t.getParent());
   }
   {
     MathObjectClassImpl t1("Test");

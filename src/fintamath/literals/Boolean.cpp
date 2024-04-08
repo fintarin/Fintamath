@@ -4,6 +4,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Boolean)
+
 Boolean::Boolean() : name(falseStr) {
 }
 

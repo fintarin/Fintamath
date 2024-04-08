@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Cos)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Cos::call(const ArgumentRefVector &argVect) const {

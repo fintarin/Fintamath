@@ -36,6 +36,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(PowExpr)
+
 using namespace detail;
 
 constexpr int64_t maxPreciseRoot = 9;

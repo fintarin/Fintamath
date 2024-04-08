@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(OrOper)
+
 std::unique_ptr<IMathObject> OrOper::call(const ArgumentRefVector &argVect) const {
   return Or{}(argVect);
 }

@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Asec)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Asec::call(const ArgumentRefVector &argVect) const {

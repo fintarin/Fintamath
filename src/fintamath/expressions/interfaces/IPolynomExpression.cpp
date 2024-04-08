@@ -22,9 +22,9 @@
 
 namespace fintamath {
 
-using namespace detail;
-
 FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IPolynomExpression)
+
+using namespace detail;
 
 IPolynomExpression::IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args)
     : func(cast<IFunction>(inFunc.clone())),

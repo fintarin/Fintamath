@@ -20,6 +20,8 @@ public:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestPolynomExpression)
+
 [[maybe_unused]] const auto config = [] {
   IPolynomExpression::registerType<TestPolynomExpression>();
   return 0;

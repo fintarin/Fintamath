@@ -23,6 +23,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestUnaryFunction)
+
 class TestBinaryFunction : public IFunctionCRTP<INumber, TestBinaryFunction, INumber, INumber> {
   FINTAMATH_CLASS_BODY(TestBinaryFunction, IFunction)
 
@@ -36,6 +38,8 @@ protected:
     return std::make_unique<Integer>(1);
   }
 };
+
+FINTAMATH_CLASS_IMPLEMENTATION(TestBinaryFunction)
 
 class TestBinaryOperator : public IOperatorCRTP<INumber, TestBinaryOperator, INumber, INumber> {
   FINTAMATH_CLASS_BODY(TestBinaryOperator, IOperator)
@@ -55,6 +59,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestBinaryOperator)
+
 class TestUnaryPrefixOperator : public IOperatorCRTP<INumber, TestUnaryPrefixOperator, INumber> {
   FINTAMATH_CLASS_BODY(TestUnaryPrefixOperator, IOperator)
 
@@ -73,6 +79,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestUnaryPrefixOperator)
+
 class TestUnaryPostfixOperator : public IOperatorCRTP<INumber, TestUnaryPostfixOperator, INumber> {
   FINTAMATH_CLASS_BODY(TestUnaryPostfixOperator, IOperator)
 
@@ -90,6 +98,8 @@ protected:
     return std::make_unique<Integer>(1);
   }
 };
+
+FINTAMATH_CLASS_IMPLEMENTATION(TestUnaryPostfixOperator)
 
 [[maybe_unused]] const auto config = [] {
   IFunction::registerType<TestUnaryFunction>();

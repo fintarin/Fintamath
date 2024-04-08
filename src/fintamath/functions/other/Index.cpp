@@ -10,6 +10,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Index)
+
 std::unique_ptr<IMathObject> Index::call(const ArgumentRefVector &argVect) const {
   const auto &lhs = cast<Variable>(argVect.front().get());
   const auto &rhs = cast<Integer>(argVect.back().get());

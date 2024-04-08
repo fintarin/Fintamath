@@ -18,6 +18,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(FloorCeilExpr)
+
 using namespace detail;
 
 FloorCeilExpr::FloorCeilExpr(const IFunction &inFunc, ArgumentPtr inChild)

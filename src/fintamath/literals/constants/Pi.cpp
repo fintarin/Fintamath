@@ -7,6 +7,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Pi)
+
 std::unique_ptr<IMathObject> Pi::call() const {
   return getPi().clone();
 }

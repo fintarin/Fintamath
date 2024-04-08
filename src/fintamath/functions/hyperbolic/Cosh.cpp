@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Cosh)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Cosh::call(const ArgumentRefVector &argVect) const {

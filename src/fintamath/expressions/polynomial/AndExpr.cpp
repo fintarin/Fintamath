@@ -15,6 +15,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(AndExpr)
+
 AndExpr::AndExpr(ArgumentPtrVector inChildren)
     : IPolynomExpressionCRTP(And{}, std::move(inChildren)) {
 }

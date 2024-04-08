@@ -27,6 +27,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(InvTrigExpr)
+
 using NameToSimplifyFunctionMap = std::unordered_map<std::string, std::function<ArgumentPtr(const Rational &)>>;
 
 using TrigTable = std::unordered_map<Rational, ArgumentPtr>;

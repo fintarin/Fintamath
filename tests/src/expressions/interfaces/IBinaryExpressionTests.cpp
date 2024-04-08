@@ -19,6 +19,8 @@ public:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestBinaryExpression)
+
 [[maybe_unused]] const auto config = [] {
   IBinaryExpression::registerType<TestBinaryExpression>();
   return 0;

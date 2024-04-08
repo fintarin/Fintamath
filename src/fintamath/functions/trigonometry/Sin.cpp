@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Sin)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Sin::call(const ArgumentRefVector &argVect) const {

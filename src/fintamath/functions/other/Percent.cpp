@@ -10,6 +10,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Percent)
+
 std::unique_ptr<IMathObject> Percent::call(const ArgumentRefVector &argVect) const {
   static const Rational percentVal = 100;
   const auto &rhs = cast<INumber>(argVect.front().get());

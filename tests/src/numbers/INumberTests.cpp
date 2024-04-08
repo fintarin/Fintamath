@@ -38,6 +38,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestNumber)
+
 [[maybe_unused]] const auto config = [] {
   INumber::registerType<TestNumber>();
   return 0;

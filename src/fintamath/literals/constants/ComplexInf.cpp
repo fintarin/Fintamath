@@ -6,6 +6,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(ComplexInf)
+
 std::unique_ptr<IMathObject> ComplexInf::call() const {
   return clone();
 }

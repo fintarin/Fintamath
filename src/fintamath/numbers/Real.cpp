@@ -19,6 +19,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Real)
+
 using namespace detail;
 
 constexpr unsigned precisionMultiplier = 2;

@@ -9,6 +9,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Lb)
+
 std::unique_ptr<IMathObject> Lb::call(const ArgumentRefVector &argVect) const {
   static const Integer lhs = 2;
   const auto &rhs = argVect.front().get();

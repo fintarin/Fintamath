@@ -36,6 +36,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestArithmetic)
+
 [[maybe_unused]] const auto config = [] {
   IArithmetic::registerType<TestArithmetic>();
   return 0;

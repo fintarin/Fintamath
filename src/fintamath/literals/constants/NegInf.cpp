@@ -6,6 +6,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(NegInf)
+
 std::unique_ptr<IMathObject> NegInf::call() const {
   return clone();
 }

@@ -34,6 +34,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(AddExpr)
+
 using namespace detail;
 
 AddExpr::AddExpr(ArgumentPtrVector inChildren)

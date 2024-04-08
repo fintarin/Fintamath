@@ -18,6 +18,8 @@ protected:
   }
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestConstant)
+
 [[maybe_unused]] const auto config = [] {
   IConstant::registerType<TestConstant>();
   return 0;

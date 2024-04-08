@@ -22,6 +22,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(LogExpr)
+
 using namespace detail;
 
 LogExpr::LogExpr(ArgumentPtr inLhsChild, ArgumentPtr inRhsChild)

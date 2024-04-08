@@ -10,6 +10,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Deg)
+
 std::unique_ptr<IMathObject> Deg::call(const ArgumentRefVector &argVect) const {
   static const ArgumentPtr degVal = divExpr(Pi{}, Integer(180));
   const auto &rhs = argVect.front().get();

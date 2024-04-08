@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(AddOper)
+
 std::unique_ptr<IMathObject> AddOper::call(const ArgumentRefVector &argVect) const {
   return Add{}(argVect);
 }

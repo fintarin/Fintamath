@@ -16,6 +16,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Factorial)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Factorial::call(const ArgumentRefVector &argVect) const {

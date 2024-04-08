@@ -10,6 +10,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(MoreEqv)
+
 std::unique_ptr<IMathObject> MoreEqv::call(const ArgumentRefVector &argVect) const {
   const auto &lhs = cast<IComparable>(argVect.front().get());
   const auto &rhs = cast<IComparable>(argVect.back().get());

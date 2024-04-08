@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Frac)
+
 std::unique_ptr<IMathObject> Frac::call(const ArgumentRefVector &argVect) const {
   return Div{}(argVect);
 }

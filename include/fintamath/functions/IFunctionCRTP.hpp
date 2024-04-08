@@ -14,13 +14,14 @@ class IFunctionCRTP_ : public IFunction {
 #undef I_MATH_OBJECT_CRTP
 
 public:
-  static constexpr auto getArgumentClassesStatic() noexcept {
-    return std::array{Args::getClassStatic()...};
+  static const auto &getArgumentClassesStatic() noexcept {
+    static const std::array argClasses{Args::getClassStatic()...};
+    return argClasses;
   }
 
   const std::vector<MathObjectClass> &getArgumentClasses() const noexcept final {
-    constexpr auto argClassesArr = getArgumentClassesStatic();
-    static const std::vector<MathObjectClass> argClassesVect(argClassesArr.begin(), argClassesArr.end());
+    static const auto &argClasses = getArgumentClassesStatic();
+    static const std::vector<MathObjectClass> argClassesVect(argClasses.begin(), argClasses.end());
     return argClassesVect;
   }
 

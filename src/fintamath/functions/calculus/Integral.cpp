@@ -8,6 +8,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Integral)
+
 using namespace detail;
 
 std::unique_ptr<IMathObject> Integral::call(const ArgumentRefVector &argVect) const {

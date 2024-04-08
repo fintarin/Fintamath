@@ -6,18 +6,23 @@
 #include "fintamath/core/MathObjectIdStorage.hpp"
 #include "fintamath/core/Parser.hpp"
 
-#define FINTAMATH_CLASS_BODY(Class, Parent)                    \
-public:                                                        \
-  static constexpr MathObjectClass getClassStatic() noexcept { \
-    return &objClass;                                          \
-  }                                                            \
-                                                               \
-private:                                                       \
-  static constexpr detail::MathObjectClassImpl                 \
-      objClass{#Class, Parent::getClassStatic()};
+#define FINTAMATH_CLASS_BODY(Class, ParentClass)    \
+public:                                             \
+  using Parent = ParentClass;                       \
+                                                    \
+  static MathObjectClass getClassStatic() noexcept; \
+                                                    \
+private:
 
-#define FINTAMATH_PARENT_CLASS_BODY(Class, Parent)              \
-  FINTAMATH_CLASS_BODY(Class, Parent)                           \
+#define FINTAMATH_CLASS_IMPLEMENTATION(Class)        \
+  MathObjectClass Class::getClassStatic() noexcept { \
+    static const detail::MathObjectClassImpl         \
+        classImpl{#Class, Parent::getClassStatic()}; \
+    return &classImpl;                               \
+  }
+
+#define FINTAMATH_PARENT_CLASS_BODY(Class, ParentClass)         \
+  FINTAMATH_CLASS_BODY(Class, ParentClass)                      \
                                                                 \
 private:                                                        \
   using Class##Parser = detail::Parser<std::unique_ptr<Class>>; \
@@ -42,6 +47,8 @@ public:                                                         \
 private:
 
 #define FINTAMATH_PARENT_CLASS_IMPLEMENTATION(Class)  \
+  FINTAMATH_CLASS_IMPLEMENTATION(Class)               \
+                                                      \
   Class::Class##Parser &Class::getParser() noexcept { \
     static Class##Parser parser;                      \
     return parser;                                    \

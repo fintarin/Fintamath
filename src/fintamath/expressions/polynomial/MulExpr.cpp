@@ -30,6 +30,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(MulExpr)
+
 using namespace detail;
 
 MulExpr::MulExpr(ArgumentPtrVector inChildren)

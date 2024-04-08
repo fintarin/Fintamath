@@ -15,6 +15,8 @@ class TestMathObject : public IMathObjectCRTP<TestMathObject> {
   FINTAMATH_CLASS_BODY(TestMathObject, IMathObject)
 };
 
+FINTAMATH_CLASS_IMPLEMENTATION(TestMathObject)
+
 [[maybe_unused]] const auto config = [] {
   IMathObject::registerType<TestMathObject>();
   return 0;
