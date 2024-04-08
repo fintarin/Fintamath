@@ -64,7 +64,7 @@ OrExpr::SimplifyFunctionVector OrExpr::getFunctionsForPostSimplify() const {
   return simplifyFunctions;
 }
 
-bool OrExpr::isComparableOrderInversed() const {
+bool OrExpr::isComparableOrderInversed() const noexcept {
   return true;
 }
 

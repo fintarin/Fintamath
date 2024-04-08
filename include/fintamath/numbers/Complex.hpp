@@ -48,13 +48,13 @@ public:
 
   std::unique_ptr<IMathObject> toMinimalObject() const override;
 
-  bool isPrecise() const override;
+  bool isPrecise() const noexcept override;
 
-  bool isComplex() const override;
+  bool isComplex() const noexcept override;
 
-  const INumber &real() const;
+  const INumber &real() const noexcept;
 
-  const INumber &imag() const;
+  const INumber &imag() const noexcept;
 
 protected:
   bool equals(const Complex &rhs) const override;

@@ -21,11 +21,11 @@ public:
     return "<=";
   }
 
-  static constexpr bool isAssociativeStatic() {
+  static constexpr bool isAssociativeStatic() noexcept {
     return true;
   }
 
-  static constexpr Priority getPriorityStatic() {
+  static constexpr Priority getPriorityStatic() noexcept {
     return Priority::Comparison;
   }
 

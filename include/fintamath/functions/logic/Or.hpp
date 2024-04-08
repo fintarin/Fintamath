@@ -20,7 +20,7 @@ public:
     return "or";
   }
 
-  static constexpr bool isVariadicStatic() {
+  static constexpr bool isVariadicStatic() noexcept {
     return true;
   }
 

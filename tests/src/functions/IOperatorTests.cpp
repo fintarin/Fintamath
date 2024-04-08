@@ -17,7 +17,7 @@ class TestOperator : public IOperatorCRTP<INumber, TestOperator, INumber> {
   FINTAMATH_CLASS_BODY(TestOperator, IOperator)
 
 public:
-  static constexpr Priority getPriorityStatic() {
+  static constexpr Priority getPriorityStatic() noexcept {
     return Priority::Addition;
   }
 

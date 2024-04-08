@@ -14,15 +14,15 @@ class IOperatorCRTP_ : public IOperator {
 #undef I_FUNCTION_CRTP
 
 public:
-  IOperator::Priority getPriority() const final {
+  IOperator::Priority getPriority() const noexcept final {
     return Derived::getPriorityStatic();
   }
 
-  static constexpr bool isAssociativeStatic() {
+  static constexpr bool isAssociativeStatic() noexcept {
     return false;
   }
 
-  bool isAssociative() const final {
+  bool isAssociative() const noexcept final {
     return Derived::isAssociativeStatic();
   }
 

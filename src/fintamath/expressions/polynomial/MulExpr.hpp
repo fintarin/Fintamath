@@ -26,7 +26,7 @@ protected:
 
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
-  bool isTermOrderInversed() const override;
+  bool isTermOrderInversed() const noexcept override;
 
 private:
   static ArgumentPtr constSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);

@@ -210,11 +210,11 @@ std::string IPolynomExpression::childToString(const IOperator &oper, const Argum
   return operStr + childStr;
 }
 
-bool IPolynomExpression::isTermOrderInversed() const {
+bool IPolynomExpression::isTermOrderInversed() const noexcept {
   return false;
 }
 
-bool IPolynomExpression::isComparableOrderInversed() const {
+bool IPolynomExpression::isComparableOrderInversed() const noexcept {
   return false;
 }
 

@@ -76,11 +76,11 @@ Rational::Rational(const std::string &str) {
   }
 }
 
-const Integer &Rational::numerator() const {
+const Integer &Rational::numerator() const noexcept {
   return numer;
 }
 
-const Integer &Rational::denominator() const {
+const Integer &Rational::denominator() const noexcept {
   return denom;
 }
 

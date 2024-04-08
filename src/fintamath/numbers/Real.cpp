@@ -125,7 +125,7 @@ std::string Real::toString(unsigned precision) const {
   return str;
 }
 
-bool Real::isPrecise() const {
+bool Real::isPrecise() const noexcept {
   return false;
 }
 
@@ -141,11 +141,11 @@ bool Real::isZero() const {
   return backend.is_zero();
 }
 
-const Real::Backend &Real::getBackend() const {
+const Real::Backend &Real::getBackend() const noexcept {
   return backend;
 }
 
-unsigned Real::getOutputPrecision() const {
+unsigned Real::getOutputPrecision() const noexcept {
   return outputPrecision;
 }
 
@@ -154,11 +154,11 @@ void Real::setOutputPrecision(const unsigned precision) {
   outputPrecision = precision;
 }
 
-unsigned Real::getCalculationPrecision() {
+unsigned Real::getCalculationPrecision() noexcept {
   return Backend::thread_default_precision();
 }
 
-unsigned Real::getPrecision() {
+unsigned Real::getPrecision() noexcept {
   return (getCalculationPrecision() - precisionDelta) / precisionMultiplier;
 }
 

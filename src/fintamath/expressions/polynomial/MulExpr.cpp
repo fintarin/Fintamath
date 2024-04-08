@@ -43,7 +43,7 @@ const std::shared_ptr<IFunction> &MulExpr::getOutputFunction() const {
   return oper;
 }
 
-bool MulExpr::isTermOrderInversed() const {
+bool MulExpr::isTermOrderInversed() const noexcept {
   return true;
 }
 

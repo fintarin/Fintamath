@@ -110,19 +110,19 @@ std::unique_ptr<IMathObject> Complex::toMinimalObject() const {
   return clone();
 }
 
-bool Complex::isPrecise() const {
+bool Complex::isPrecise() const noexcept {
   return !is<Real>(re) && !is<Real>(im);
 }
 
-bool Complex::isComplex() const {
+bool Complex::isComplex() const noexcept {
   return *im != Integer(0);
 }
 
-const INumber &Complex::real() const {
+const INumber &Complex::real() const noexcept {
   return *re;
 }
 
-const INumber &Complex::imag() const {
+const INumber &Complex::imag() const noexcept {
   return *im;
 }
 

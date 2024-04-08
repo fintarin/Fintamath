@@ -32,9 +32,9 @@ public:
   };
 
 public:
-  virtual Priority getPriority() const = 0;
+  virtual Priority getPriority() const noexcept = 0;
 
-  virtual bool isAssociative() const = 0;
+  virtual bool isAssociative() const noexcept = 0;
 };
 
 template <typename Return, typename Derived, typename... Args>
