@@ -57,3 +57,7 @@ TEST(MathObjectUtilsTests, castTest) {
   EXPECT_TRUE(cast<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr(i.clone()))));
   EXPECT_FALSE(cast<IArithmetic>(std::const_pointer_cast<const IMathObject>(std::shared_ptr(E().clone()))));
 }
+
+TEST(MathObjectUtilsTests, compareByToStringTest) {
+  // TODO: implement
+}

@@ -44,7 +44,7 @@ Expression solve(const Expression &rhs) {
 
   // TODO: remove this if when inequalities will be implemented
   if (!is<Eqv>(compExpr->getFunction())) {
-    const auto var = cast<Variable>(compExpr->getVariables().front());
+    const auto var = cast<Variable>(*compExpr->getVariables().begin());
     const ArgumentPtrVector powerRate = getPolynomCoefficients(compExpr->getChildren().front(), var);
 
     if (powerRate.size() == 2) {
@@ -55,7 +55,7 @@ Expression solve(const Expression &rhs) {
     return rhs;
   }
 
-  const auto var = cast<Variable>(compExpr->getVariables().front());
+  const auto var = cast<Variable>(*compExpr->getVariables().begin());
   const ArgumentPtrVector powerRates = getPolynomCoefficients(compExpr->getChildren().front(), var);
   ArgumentPtrVector roots;
 
