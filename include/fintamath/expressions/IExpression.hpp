@@ -2,12 +2,14 @@
 
 #include <concepts>
 #include <memory>
+#include <set>
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Parser.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -21,13 +23,16 @@ class IExpression : public IMathObject {
   FINTAMATH_PARENT_CLASS_BODY(IExpression, IMathObject)
 
 public:
+  using VariableSet = std::set<Variable, ToStringComparator<std::less<>>>;
+
+public:
   virtual const std::shared_ptr<IFunction> &getFunction() const = 0;
 
   virtual const ArgumentPtrVector &getChildren() const = 0;
 
   virtual void setChildren(const ArgumentPtrVector &childVect) = 0;
 
-  std::vector<Variable> getVariables() const;
+  VariableSet getVariables() const;
 
   virtual void setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals);
 
