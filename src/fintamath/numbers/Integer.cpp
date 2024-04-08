@@ -34,9 +34,6 @@ Integer::Integer(std::string str) {
   }
 }
 
-Integer::Integer(const int64_t val) : backend(val) {
-}
-
 std::string Integer::toString() const {
   return backend.str();
 }

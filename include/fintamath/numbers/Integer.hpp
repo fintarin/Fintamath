@@ -25,14 +25,11 @@ public:
 public:
   Integer() = default;
 
+  Integer(std::integral auto rhs) : backend(rhs) {}
+
   Integer(Backend inBackend);
 
   explicit Integer(std::string str);
-
-  explicit Integer(std::integral auto val) : backend(val) {
-  }
-
-  Integer(int64_t val);
 
   std::string toString() const override;
 

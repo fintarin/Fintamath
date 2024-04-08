@@ -43,13 +43,15 @@ public:
 
   Real(Backend inBackend);
 
+  Real(std::integral auto rhs)
+      : backend(rhs),
+        isNegative(rhs < 0) {}
+
+  Real(const Rational &rhs);
+
+  Real(const Integer &rhs);
+
   explicit Real(std::string str);
-
-  Real(const Rational &val);
-
-  Real(const Integer &val);
-
-  Real(int64_t val);
 
   std::string toString() const override;
 
@@ -98,8 +100,6 @@ private:
   bool isFinite() const;
 
   void updatePrecision(const Real &rhs);
-
-  void validateNewPrecision(unsigned precision) const;
 
 private:
   Backend backend;

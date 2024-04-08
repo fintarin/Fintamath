@@ -28,19 +28,21 @@ public:
 
   Complex &operator=(Complex &&rhs) noexcept = default;
 
-  explicit Complex(const std::string &str);
-
-  explicit Complex(const INumber &inReal, const INumber &inImag);
-
-  explicit Complex(int64_t inReal, int64_t inImag);
-
   Complex(const Integer &rhs);
 
   Complex(const Rational &rhs);
 
   Complex(const Real &rhs);
 
-  Complex(int64_t rhs);
+  Complex(std::integral auto rhs) : re(std::make_unique<Integer>(rhs)) {}
+
+  explicit Complex(std::integral auto inReal, std::integral auto inImag)
+      : re(std::make_unique<Integer>(inReal)),
+        im(std::make_unique<Integer>(inImag)) {}
+
+  explicit Complex(const INumber &inReal, const INumber &inImag);
+
+  explicit Complex(const std::string &str);
 
   std::string toString() const override;
 

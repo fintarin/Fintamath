@@ -1,6 +1,7 @@
 #include "fintamath/numbers/Real.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <compare>
 #include <cstddef>
 #include <cstdint>
@@ -66,17 +67,12 @@ Real::Real(std::string str) : Real() {
   }
 }
 
-Real::Real(const Rational &val) {
-  *this = Real(val.numerator()) / Real(val.denominator());
-}
+Real::Real(const Rational &rhs)
+    : Real(Real(rhs.numerator()) / Real(rhs.denominator())) {}
 
-Real::Real(const Integer &val) : backend(val.getBackend()),
-                                 isNegative(val < 0) {
-}
-
-Real::Real(const int64_t val) : backend(val),
-                                isNegative(val < 0) {
-}
+Real::Real(const Integer &rhs)
+    : backend(rhs.getBackend()),
+      isNegative(rhs < 0) {}
 
 std::string Real::toString() const {
   std::string res = toString(outputPrecision);
@@ -89,7 +85,7 @@ std::string Real::toString() const {
 }
 
 std::string Real::toString(unsigned precision) const {
-  validateNewPrecision(precision);
+  assert(precision <= outputPrecision);
 
   if (precision == 0) {
     precision++;
@@ -154,7 +150,7 @@ unsigned Real::getOutputPrecision() const {
 }
 
 void Real::setOutputPrecision(const unsigned precision) {
-  validateNewPrecision(precision);
+  assert(precision <= outputPrecision);
   outputPrecision = precision;
 }
 
@@ -248,14 +244,6 @@ bool Real::isFinite() const {
 
 void Real::updatePrecision(const Real &rhs) {
   outputPrecision = std::min(outputPrecision, rhs.outputPrecision);
-}
-
-void Real::validateNewPrecision(const unsigned precision) const {
-  if (precision > outputPrecision) {
-    // TODO: use std::format
-    throw InvalidInputException("Precision must be less than or equal to " +
-                                std::to_string(outputPrecision));
-  }
 }
 
 Real::ScopedSetPrecision::ScopedSetPrecision(const unsigned precision) {

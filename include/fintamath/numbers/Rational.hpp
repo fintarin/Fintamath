@@ -20,13 +20,13 @@ class Rational : public INumberCRTP<Rational> {
 public:
   Rational() = default;
 
-  explicit Rational(const std::string &str);
-
-  explicit Rational(Integer inNumer, Integer inDenom);
+  Rational(std::integral auto rhs) : numer(rhs) {}
 
   Rational(Integer rhs);
 
-  Rational(int64_t rhs);
+  explicit Rational(Integer inNumer, Integer inDenom);
+
+  explicit Rational(const std::string &str);
 
   std::string toString() const override;
 
@@ -62,7 +62,9 @@ private:
 
   static void toCommonDenominators(Rational &lhs, Rational &rhs);
 
+private:
   Integer numer = 0;
+
   Integer denom = 1;
 };
 
