@@ -17,11 +17,11 @@ class INumber : public IComparable {
   FINTAMATH_PARENT_CLASS_BODY(INumber, IComparable)
 
 public:
-  virtual bool isPrecise() const {
+  virtual bool isPrecise() const noexcept {
     return true;
   }
 
-  virtual bool isComplex() const {
+  virtual bool isComplex() const noexcept {
     return false;
   }
 };

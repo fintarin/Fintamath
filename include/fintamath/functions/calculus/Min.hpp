@@ -20,7 +20,7 @@ public:
     return "min";
   }
 
-  static constexpr bool isVariadicStatic() {
+  static constexpr bool isVariadicStatic() noexcept {
     return true;
   }
 

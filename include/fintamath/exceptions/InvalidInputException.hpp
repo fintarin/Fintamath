@@ -10,9 +10,9 @@ namespace fintamath {
 
 class InvalidInputException : public Exception {
 public:
-  InvalidInputException() = default;
+  InvalidInputException() noexcept = default;
 
-  explicit InvalidInputException(const std::string &input) {
+  explicit InvalidInputException(const std::string &input) noexcept {
     content += ": " + input;
   }
 
@@ -26,7 +26,7 @@ protected:
 
 class InvalidInputFunctionException final : public InvalidInputException {
 public:
-  explicit InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argVect) {
+  explicit InvalidInputFunctionException(const std::string &func, const std::vector<std::string> &argVect) noexcept {
     content += ": " + func + "(";
 
     if (!argVect.empty()) {
@@ -47,7 +47,7 @@ public:
 
 class InvalidInputBinaryOperatorException final : public InvalidInputException {
 public:
-  explicit InvalidInputBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) {
+  explicit InvalidInputBinaryOperatorException(const std::string &oper, const std::string &lhs, const std::string &rhs) noexcept {
     content += ": (" + lhs + ")" + oper + "(" + rhs + ")";
   }
 };
@@ -60,7 +60,7 @@ public:
   };
 
 public:
-  explicit InvalidInputUnaryOperatorException(const std::string &oper, const std::string &rhs, const Type type) {
+  explicit InvalidInputUnaryOperatorException(const std::string &oper, const std::string &rhs, const Type type) noexcept {
     switch (type) {
       case Type::Prefix:
         content += ": " + oper + "(" + rhs + ")";

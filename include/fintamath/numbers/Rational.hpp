@@ -34,9 +34,9 @@ public:
 
   int sign() const;
 
-  const Integer &numerator() const;
+  const Integer &numerator() const noexcept;
 
-  const Integer &denominator() const;
+  const Integer &denominator() const noexcept;
 
 protected:
   bool equals(const Rational &rhs) const override;

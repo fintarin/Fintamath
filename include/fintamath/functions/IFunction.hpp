@@ -23,15 +23,15 @@ class IFunction : public IMathObject {
   using ClassToOrderMap = std::unordered_map<MathObjectClass, size_t>;
 
 public:
-  virtual const ArgumentTypeVector &getArgumentClasses() const noexcept = 0;
+  virtual const ArgumentTypeVector &getArgumentClasses() const = 0;
 
   virtual MathObjectClass getReturnClass() const noexcept = 0;
 
   virtual bool doArgsMatch(const ArgumentRefVector &argVect) const = 0;
 
-  virtual bool isVariadic() const = 0;
+  virtual bool isVariadic() const noexcept = 0;
 
-  virtual bool isEvaluatable() const = 0;
+  virtual bool isEvaluatable() const noexcept = 0;
 
   std::unique_ptr<IMathObject> operator()(const std::derived_from<IMathObject> auto &...args) const {
     const ArgumentRefVector argVect = {args...};

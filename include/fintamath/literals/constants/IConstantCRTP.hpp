@@ -14,11 +14,11 @@ class IConstantCRTP_ : public IConstant {
 #undef I_LITERAL_CRTP
 
 public:
-  static constexpr MathObjectClass getReturnClassStatic() {
+  static constexpr MathObjectClass getReturnClassStatic() noexcept {
     return Return::getClassStatic();
   }
 
-  MathObjectClass getReturnClass() const final {
+  MathObjectClass getReturnClass() const noexcept final {
     return getReturnClassStatic();
   }
 

@@ -5,7 +5,7 @@
 namespace fintamath {
 
 struct None {
-  static constexpr MathObjectClass getClassStatic() {
+  static constexpr MathObjectClass getClassStatic() noexcept {
     return nullptr;
   }
 };

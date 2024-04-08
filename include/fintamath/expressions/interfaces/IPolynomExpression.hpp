@@ -44,9 +44,9 @@ protected:
 
   ArgumentPtr postSimplify() const override;
 
-  virtual bool isTermOrderInversed() const;
+  virtual bool isTermOrderInversed() const noexcept;
 
-  virtual bool isComparableOrderInversed() const;
+  virtual bool isComparableOrderInversed() const noexcept;
 
   virtual std::strong_ordering compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 

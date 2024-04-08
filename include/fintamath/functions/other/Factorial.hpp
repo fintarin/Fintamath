@@ -32,7 +32,7 @@ public:
     return std::string(order, '!');
   }
 
-  static constexpr Priority getPriorityStatic() {
+  static constexpr Priority getPriorityStatic() noexcept {
     return Priority::PostfixUnary;
   }
 

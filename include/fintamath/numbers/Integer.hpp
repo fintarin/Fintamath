@@ -35,7 +35,7 @@ public:
 
   int sign() const;
 
-  const Backend &getBackend() const;
+  const Backend &getBackend() const noexcept;
 
   template <std::integral T>
   explicit operator T() const {

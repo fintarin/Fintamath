@@ -42,7 +42,7 @@ int Integer::sign() const {
   return backend.sign();
 }
 
-const Integer::Backend &Integer::getBackend() const {
+const Integer::Backend &Integer::getBackend() const noexcept {
   return backend;
 }
 

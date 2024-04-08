@@ -24,7 +24,7 @@ protected:
 
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 
-  bool isComparableOrderInversed() const override;
+  bool isComparableOrderInversed() const noexcept override;
 
 private:
   static ArgumentPtr boolSimplify(const IFunction &func, const ArgumentPtr &lhs, const ArgumentPtr &rhs);

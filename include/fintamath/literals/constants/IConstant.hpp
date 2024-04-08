@@ -15,7 +15,7 @@ class IConstant : public ILiteral {
   FINTAMATH_PARENT_CLASS_BODY(IConstant, ILiteral)
 
 public:
-  virtual MathObjectClass getReturnClass() const = 0;
+  virtual MathObjectClass getReturnClass() const noexcept = 0;
 
   std::unique_ptr<IMathObject> operator()() const {
     return call();

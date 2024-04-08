@@ -45,7 +45,7 @@ AndExpr::SimplifyFunctionVector AndExpr::getFunctionsForPostSimplify() const {
   return simplifyFunctions;
 }
 
-bool AndExpr::isComparableOrderInversed() const {
+bool AndExpr::isComparableOrderInversed() const noexcept {
   return true;
 }
 

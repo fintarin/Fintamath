@@ -20,7 +20,7 @@ public:
     return "-";
   }
 
-  static constexpr Priority getPriorityStatic() {
+  static constexpr Priority getPriorityStatic() noexcept {
     return Priority::Addition;
   }
 

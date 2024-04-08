@@ -14,12 +14,12 @@ class IFunctionCRTP_ : public IFunction {
 #undef I_MATH_OBJECT_CRTP
 
 public:
-  static const auto &getArgumentClassesStatic() noexcept {
+  static const auto &getArgumentClassesStatic() {
     static const std::array argClasses{Args::getClassStatic()...};
     return argClasses;
   }
 
-  const std::vector<MathObjectClass> &getArgumentClasses() const noexcept final {
+  const std::vector<MathObjectClass> &getArgumentClasses() const final {
     static const auto &argClasses = getArgumentClassesStatic();
     static const std::vector<MathObjectClass> argClassesVect(argClasses.begin(), argClasses.end());
     return argClassesVect;
@@ -46,19 +46,19 @@ public:
     }
   }
 
-  bool isVariadic() const final {
+  bool isVariadic() const noexcept final {
     return Derived::isVariadicStatic();
   }
 
-  static constexpr bool isVariadicStatic() {
+  static constexpr bool isVariadicStatic() noexcept {
     return false;
   }
 
-  bool isEvaluatable() const final {
+  bool isEvaluatable() const noexcept final {
     return Derived::isEvaluatableStatic();
   }
 
-  static constexpr bool isEvaluatableStatic() {
+  static constexpr bool isEvaluatableStatic() noexcept {
     return true;
   }
 

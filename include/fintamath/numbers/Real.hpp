@@ -57,21 +57,21 @@ public:
 
   std::string toString(unsigned precision) const;
 
-  bool isPrecise() const override;
+  bool isPrecise() const noexcept override;
 
   int sign() const;
 
   bool isZero() const;
 
-  const Backend &getBackend() const;
+  const Backend &getBackend() const noexcept;
 
-  unsigned getOutputPrecision() const;
+  unsigned getOutputPrecision() const noexcept;
 
   void setOutputPrecision(unsigned precision);
 
-  static unsigned getCalculationPrecision();
+  static unsigned getCalculationPrecision() noexcept;
 
-  static unsigned getPrecision();
+  static unsigned getPrecision() noexcept;
 
   static void setPrecision(unsigned precision);
 
