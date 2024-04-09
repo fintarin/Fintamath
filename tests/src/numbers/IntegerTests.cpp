@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/numbers/Integer.hpp"
@@ -23,10 +24,22 @@ TEST(IntegerTests, stringConstructorTest) {
   EXPECT_EQ(Integer("00"), 0);
   EXPECT_EQ(Integer("-00"), 0);
 
-  EXPECT_THROW(Integer("--10"), InvalidInputException);
-  EXPECT_THROW(Integer("test"), InvalidInputException);
-  EXPECT_THROW(Integer(""), InvalidInputException);
-  EXPECT_THROW(Integer("+"), InvalidInputException);
+  EXPECT_THAT(
+      [] { Integer(""); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Integer from "")")));
+  EXPECT_THAT(
+      [] { Integer("--10"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Integer from "--10")")));
+  EXPECT_THAT(
+      [] { Integer("test"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Integer from "test")")));
+  EXPECT_THAT(
+      [] { Integer("+"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Integer from "+")")));
 }
 
 TEST(IntegerTests, templateConstructorTest) {
@@ -190,7 +203,10 @@ TEST(IntegerTests, divideAssignmentOperatorTest) {
             Integer("3507630615696849555869044818661735064986392883263011691538871248141434862220387449579227548346015035603501276296494442204769872208628882685816583149015034150490829747567986311156822048603845157334656209386816063095043939468216080230001796494390400252142375053346581510773088042280290835395905258970276127578670424725237113115641881479792031434427596080908227551489188776476145554883257759405245297150541759841671819727944845899493678892840111830112509529920517471699237861267263602427655073892668208557712684031475765670957010740054698088570050264362373595571625821629034477445434265168041405756975664327860057312868835959178663661834688407715795207372052181069795781487373087361"),
             Integer("3507630615696849555869044818661735064986392883263011691538871248141434862220387449579227548346015035603501276296494442204769872208628882685816583149015034150490829747567986311156822048603845157334656209386816063095043939468216080230001796494390400252142375053346581510773088042280290835395905258970276127578670424725237113115641881479792031434427596080908227551489188776476145554883257759405245297150541759841671819727944845899493678892840111830112509529920517471699237861267263602427655073892668208557712684031475765670957010740054698088570050264362373595571625821629034477445434265168041405756975664327860057312868835959178663661834688407715795207372052181069795781487373087361"));
 
-  EXPECT_THROW(Integer(-25) /= Integer(0), UndefinedBinaryOperatorException);
+  EXPECT_THAT(
+      [] { Integer(-25) /= Integer(0); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(div(-25, 0) is undefined (division by zero))")));
 }
 
 TEST(IntegerTests, intDivideAssignmentOperatorTest) {
@@ -252,7 +268,10 @@ TEST(IntegerTests, moduloAssignmentOperatorTest) {
   EXPECT_EQ(Integer("5473289765787324752874728729473876573874654738747632794676328746738849389483948938493848394839849383893847267328724673874") %= Integer("1738383928837528673287446238746237943"),
             Integer("1186817955126284001426922341829394317"));
 
-  EXPECT_THROW(Integer(-25) %= Integer(0), UndefinedBinaryOperatorException);
+  EXPECT_THAT(
+      [] { Integer(-25) %= Integer(0); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(mod(-25, 0) is undefined (modulo by zero))")));
 }
 
 TEST(IntegerTests, intModuloAssignmentOperatorTest) {
@@ -362,8 +381,14 @@ TEST(IntegerTests, bitLeftShiftAssignmentOperatorTest) {
   EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") <<= 5,
             Integer("386924570874476799999999999999999999775479354813708569600022752"));
 
-  EXPECT_THROW(Integer(192) <<= Integer(-5), UndefinedBinaryOperatorException);
-  EXPECT_THROW(Integer(-192) <<= Integer(-5), UndefinedBinaryOperatorException);
+  EXPECT_THAT(
+      [] { Integer(192) <<= Integer(-5); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(bitLeftShift(192, -5) is undefined (negative shift))")));
+  EXPECT_THAT(
+      [] { Integer(-192) <<= Integer(-5); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(bitLeftShift(-192, -5) is undefined (negative shift))")));
 }
 
 TEST(IntegerTests, intBitLeftShiftAssignmentOperatorTest) {
@@ -389,8 +414,14 @@ TEST(IntegerTests, bitRightShiftAssignmentOperatorTest) {
   EXPECT_EQ(Integer("12091392839827399999999999999999999992983729837928392800000711") >>= 5,
             Integer("377856026244606249999999999999999999780741557435262275000022"));
 
-  EXPECT_THROW(Integer(192) >>= Integer(-5), UndefinedBinaryOperatorException);
-  EXPECT_THROW(Integer(-192) >>= Integer(-5), UndefinedBinaryOperatorException);
+  EXPECT_THAT(
+      [] { Integer(192) >>= Integer(-5); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(bitRightShift(192, -5) is undefined (negative shift))")));
+  EXPECT_THAT(
+      [] { Integer(-192) >>= Integer(-5); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(bitRightShift(-192, -5) is undefined (negative shift))")));
 }
 
 TEST(IntegerTests, intBitRightShiftAssignmentOperatorTest) {

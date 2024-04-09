@@ -191,7 +191,7 @@ ArgumentPtr PowExpr::sumPolynomSimplify(const ArgumentPtr &expr, const Integer &
     bitNumber = generateNextNumber(bitNumber);
 
     ArgumentPtrVector mulExprChildren;
-    mulExprChildren.emplace_back(multinomialCoefficient(power, vectOfPows).clone());
+    mulExprChildren.emplace_back(multinomialCoefficient(vectOfPows).clone());
 
     for (size_t i = 0; i < variableCount; i++) {
       ArgumentPtr powExprChild = powExpr(polynom[i], vectOfPows[i].clone());

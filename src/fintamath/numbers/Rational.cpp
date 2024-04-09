@@ -7,7 +7,10 @@
 #include <iterator>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <utility>
+
+#include <fmt/core.h>
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
@@ -26,16 +29,23 @@ Rational::Rational(Integer inNumer, Integer inDenom)
     : numer(std::move(inNumer)),
       denom(std::move(inDenom)) {
 
+  if (denom == 0) {
+    throw UndefinedException(fmt::format(
+        R"(div({}, {}) is undefined (division by zero))",
+        numer.toString(),
+        denom.toString()));
+  }
+
   toIrreducibleRational();
 }
 
-Rational::Rational(const std::string &str) {
+Rational::Rational(const std::string_view str) try {
   if (str.empty()) {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
 
   if (str.empty() || str == ".") {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
 
   int64_t firstDigitNum = 0;
@@ -47,8 +57,8 @@ Rational::Rational(const std::string &str) {
     firstDigitNum++;
   }
 
-  const std::string intPartStr = str.substr(static_cast<size_t>(firstDigitNum),
-                                            static_cast<size_t>(firstDotNum - firstDigitNum));
+  const std::string intPartStr(str.substr(static_cast<size_t>(firstDigitNum),
+                                          static_cast<size_t>(firstDotNum - firstDigitNum)));
   Integer intPart;
 
   if (!intPartStr.empty()) {
@@ -57,7 +67,7 @@ Rational::Rational(const std::string &str) {
   }
 
   if (firstDotNum + 1 < std::ssize(str)) {
-    const std::string numeratorStr = str.substr(static_cast<size_t>(firstDotNum) + 1);
+    const std::string numeratorStr(str.substr(static_cast<size_t>(firstDotNum) + 1));
     std::string denominatorStr(numeratorStr.size() + 1, '0');
     denominatorStr.front() = '1';
     numer = Integer(numeratorStr);
@@ -65,7 +75,7 @@ Rational::Rational(const std::string &str) {
   }
 
   if (intPart < 0 || numer < 0) {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
 
   toIrreducibleRational();
@@ -75,13 +85,11 @@ Rational::Rational(const std::string &str) {
     numer *= -1;
   }
 }
-
-const Integer &Rational::numerator() const noexcept {
-  return numer;
-}
-
-const Integer &Rational::denominator() const noexcept {
-  return denom;
+catch (const InvalidInputException &) {
+  throw InvalidInputException(fmt::format(
+      R"(Unable to parse {} from "{}")",
+      getClassStatic()->getName(),
+      str));
 }
 
 std::string Rational::toString() const {
@@ -103,6 +111,14 @@ std::unique_ptr<IMathObject> Rational::toMinimalObject() const {
 
 int Rational::sign() const {
   return numer.sign();
+}
+
+const Integer &Rational::numerator() const noexcept {
+  return numer;
+}
+
+const Integer &Rational::denominator() const noexcept {
+  return denom;
 }
 
 bool Rational::equals(const Rational &rhs) const {
@@ -140,6 +156,13 @@ Rational &Rational::multiply(const Rational &rhs) {
 }
 
 Rational &Rational::divide(const Rational &rhs) {
+  if (rhs == 0) {
+    throw UndefinedException(fmt::format(
+        R"(div({}, {}) is undefined (division by zero))",
+        toString(),
+        rhs.toString()));
+  }
+
   numer *= rhs.denom;
   denom *= rhs.numer;
   toIrreducibleRational();
@@ -152,10 +175,6 @@ Rational &Rational::negate() {
 }
 
 void Rational::toIrreducibleRational() {
-  if (denom == 0) {
-    throw UndefinedBinaryOperatorException("/", numer.toString(), denom.toString());
-  }
-
   if (denom < 0) {
     numer *= -1;
     denom *= -1;

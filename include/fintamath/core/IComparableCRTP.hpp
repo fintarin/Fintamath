@@ -34,7 +34,12 @@ protected:
       return 0 <=> (rhs <=> *this);
     }
 
-    throw InvalidInputBinaryOperatorException("<=>", toString(), rhs.toString());
+    throw InvalidInputException(fmt::format(
+        R"(Invalid arguments of the comparison operator ({} "{}" and {} "{}" are unconvertible to each other))",
+        this->getClass()->getName(),
+        this->toString(),
+        rhs.getClass()->getName(),
+        rhs.toString()));
   }
 
 private:

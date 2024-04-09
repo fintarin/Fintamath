@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/UndefinedException.hpp"
@@ -17,8 +18,14 @@ TEST(NumberAbstractIntegerTests, divideTest) {
   EXPECT_EQ((Integer(0) / cast<IComparable>(Real(2)))->toString(), "0");
   EXPECT_EQ((Integer(1) / cast<IComparable>(Real(2)))->toString(), "0.5");
 
-  EXPECT_THROW((Integer(0) / cast<IComparable>(Integer(0)))->toString(), UndefinedException);
-  EXPECT_THROW((Integer(0) / cast<IComparable>(Real(0)))->toString(), UndefinedException);
+  EXPECT_THAT(
+      [] { Integer(0) / cast<IComparable>(Integer(0)); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(div(0, 0) is undefined (division by zero))")));
+  EXPECT_THAT(
+      [] { Integer(0) / cast<IComparable>(Real(0)); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(div(0.0, 0.0) is undefined (division by zero))")));
 }
 
 //-------------------------------------------------------------------------------------//
@@ -32,8 +39,14 @@ TEST(NumberAbstractRationalTests, divideTest) {
   EXPECT_EQ((Rational(0) / cast<IComparable>(Real(2)))->toString(), "0");
   EXPECT_EQ((Rational(1) / cast<IComparable>(Real(2)))->toString(), "0.5");
 
-  EXPECT_THROW((Rational(0) / cast<IComparable>(Integer(0)))->toString(), UndefinedException);
-  EXPECT_THROW((Rational(0) / cast<IComparable>(Real(0)))->toString(), UndefinedException);
+  EXPECT_THAT(
+      [] { Rational(0) / cast<IComparable>(Integer(0)); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(div(0, 0) is undefined (division by zero))")));
+  EXPECT_THAT(
+      [] { Rational(0) / cast<IComparable>(Real(0)); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(div(0.0, 0.0) is undefined (division by zero))")));
 }
 
 //-------------------------------------------------------------------------------------//

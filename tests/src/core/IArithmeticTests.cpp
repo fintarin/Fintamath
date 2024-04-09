@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/core/IArithmetic.hpp"
@@ -76,8 +77,14 @@ TEST(IArithmeticTests, addTest) {
   EXPECT_TRUE(is<Rational>(*m3 + *m2));
   EXPECT_TRUE(is<Integer>(*m3 + *m3));
 
-  EXPECT_THROW(*m1 + TestArithmetic(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestArithmetic() + *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 + TestArithmetic(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the + operator (Integer "1" and TestArithmetic "TestArithmetic" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestArithmetic() + *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the + operator (TestArithmetic "TestArithmetic" and Integer "1" are unconvertible to each other))")));
 
   Integer a;
   EXPECT_EQ((a += 3).toString(), "3");
@@ -112,8 +119,14 @@ TEST(IArithmeticTests, subTest) {
   EXPECT_TRUE(is<Rational>(*m3 - *m2));
   EXPECT_TRUE(is<Integer>(*m3 - *m3));
 
-  EXPECT_THROW(*m1 - TestArithmetic(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestArithmetic() - *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 - TestArithmetic(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the - operator (Integer "1" and TestArithmetic "TestArithmetic" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestArithmetic() - *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the - operator (TestArithmetic "TestArithmetic" and Integer "1" are unconvertible to each other))")));
 
   Integer a;
   EXPECT_EQ((a -= 3).toString(), "-3");
@@ -148,8 +161,14 @@ TEST(IArithmeticTests, mulTest) {
   EXPECT_TRUE(is<Integer>(*m3 * *m2));
   EXPECT_TRUE(is<Rational>(*m3 * *m3));
 
-  EXPECT_THROW(*m1 * TestArithmetic(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestArithmetic() * *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 * TestArithmetic(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the * operator (Integer "1" and TestArithmetic "TestArithmetic" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestArithmetic() * *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the * operator (TestArithmetic "TestArithmetic" and Integer "1" are unconvertible to each other))")));
 
   Integer a = 2;
   EXPECT_EQ((a *= 3).toString(), "6");
@@ -184,8 +203,14 @@ TEST(IArithmeticTests, divTest) {
   EXPECT_TRUE(is<Rational>(*m3 / *m2));
   EXPECT_TRUE(is<Integer>(*m3 / *m3));
 
-  EXPECT_THROW(*m1 / TestArithmetic(), InvalidInputBinaryOperatorException);
-  EXPECT_THROW(TestArithmetic() / *m1, InvalidInputBinaryOperatorException);
+  EXPECT_THAT(
+      [&] { *m1 / TestArithmetic(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the / operator (Integer "1" and TestArithmetic "TestArithmetic" are unconvertible to each other))")));
+  EXPECT_THAT(
+      [&] { TestArithmetic() / *m1; },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Invalid arguments of the / operator (TestArithmetic "TestArithmetic" and Integer "1" are unconvertible to each other))")));
 
   Integer a = 4;
   EXPECT_EQ((a /= 2).toString(), "2");

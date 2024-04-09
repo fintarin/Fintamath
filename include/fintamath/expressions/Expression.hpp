@@ -56,7 +56,7 @@ using TermVector = std::vector<Term>;
 
 using FunctionTermStack = std::stack<FunctionTerm>;
 
-using OperandStack = std::stack<std::unique_ptr<IMathObject>>;
+using ObjectStack = std::stack<std::unique_ptr<IMathObject>>;
 
 }
 
@@ -103,17 +103,17 @@ private:
 
   static detail::TermVector tokensToTerms(detail::TokenVector &tokens);
 
-  static detail::OperandStack termsToOperands(detail::TermVector &terms);
+  static detail::ObjectStack termsToObjects(detail::TermVector &terms);
 
-  static std::unique_ptr<IMathObject> operandsToObject(detail::OperandStack &operands);
+  static std::unique_ptr<IMathObject> objectsToExpr(detail::ObjectStack &objects);
 
-  static std::unique_ptr<IFunction> parseFunction(const std::string &str, size_t argNum);
+  static std::unique_ptr<IFunction> findFunction(const std::string &str, size_t argNum);
 
-  static std::unique_ptr<IOperator> parseOperator(const std::string &str, IOperator::Priority priority);
+  static std::unique_ptr<IOperator> findOperator(const std::string &str, IOperator::Priority priority);
 
   static detail::Term parseTerm(const std::string &str);
 
-  static void moveFunctionTermsToOperands(detail::OperandStack &operands, detail::FunctionTermStack &functions, const IOperator *nextOper);
+  static void moveFunctionTermsToObjects(detail::ObjectStack &objects, detail::FunctionTermStack &functions, const IOperator *nextOper);
 
   static void insertMultiplications(detail::TermVector &terms);
 
@@ -135,7 +135,7 @@ private:
 
   static void validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args);
 
-  static bool doesArgMatch(const MathObjectClass &expectedType, const ArgumentPtr &arg);
+  static std::pair<MathObjectClass, bool> doesArgMatch(const MathObjectClass &expectedClass, const ArgumentPtr &arg);
 
   static ArgumentPtrVector unwrapComma(const ArgumentPtr &child);
 
@@ -143,7 +143,7 @@ private:
 
   friend std::unique_ptr<IMathObject> detail::makeExpr(const IFunction &func, ArgumentPtrVector args);
 
-  friend std::unique_ptr<IMathObject> parseExpr(const std::string &str);
+  friend std::unique_ptr<IMathObject> parseRawExpr(const std::string &str);
 
   friend Expression approximate(const Expression &rhs, unsigned precision);
 
@@ -158,6 +158,8 @@ private:
 
   mutable bool isSimplified = false;
 };
+
+std::unique_ptr<IMathObject> parseRawExpr(const std::string &str);
 
 template <typename Function>
 void Expression::registerExpressionConstructor(ExpressionConstructor constructor) {

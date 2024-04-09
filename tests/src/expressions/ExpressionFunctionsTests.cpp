@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/ExpressionFunctions.hpp"
@@ -333,9 +334,24 @@ TEST(ExpressionFunctionsTests, complexInfTest) {
 }
 
 TEST(ExpressionFunctionsTests, negativeTest) {
-  EXPECT_THROW(Boolean(true) + Boolean(false), InvalidInputException);
-  EXPECT_THROW(Add() / Mul(), InvalidInputException);
-  EXPECT_THROW(sin(Boolean(true)), InvalidInputException);
-  EXPECT_THROW(eqv(Boolean(true), Boolean(false)), InvalidInputException);
-  EXPECT_THROW(orL(Integer(1), Integer(2)), InvalidInputException);
+  EXPECT_THAT(
+      [&] { Boolean(true) + Boolean(false); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Add "add" with argument #0 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { Add() / Mul(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Div "/" with argument #0 Add "add" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { sin(Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Sin "sin" with argument #0 Boolean "True" (expected INumber))")));
+  EXPECT_THAT(
+      [&] { eqv(Boolean(true), Boolean(false)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Eqv "=" with argument #0 Boolean "True" (expected IComparable))")));
+  EXPECT_THAT(
+      [&] { orL(Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with argument #0 Integer "1" (expected Boolean))")));
 }

@@ -7,11 +7,7 @@ using namespace fintamath;
 
 TEST(UndefinedExceptionTests, whatTest) {
   EXPECT_THAT(
-      [] { throw UndefinedException(); },
+      [] { throw UndefinedException("Undefined"); },
       testing::ThrowsMessage<UndefinedException>(
           testing::StrEq("Undefined")));
-  EXPECT_THAT(
-      [] { throw UndefinedException("123"); },
-      testing::ThrowsMessage<UndefinedException>(
-          testing::StrEq("Undefined: 123")));
 }

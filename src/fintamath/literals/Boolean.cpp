@@ -1,28 +1,35 @@
 #include "fintamath/literals/Boolean.hpp"
 
+#include <string_view>
+
+#include <fmt/core.h>
+
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Boolean)
 
-Boolean::Boolean() : name(falseStr) {
+Boolean::Boolean() : val(false) {
 }
 
-Boolean::Boolean(const std::string &str) {
+Boolean::Boolean(const std::string_view str) {
   if (str != trueStr && str != falseStr) {
-    throw InvalidInputException(str);
+    throw InvalidInputException(fmt::format(
+        R"(Unable to parse {} from "{}" (expected "True" or "False"))",
+        getClassStatic()->getName(),
+        str));
   }
 
-  name = str;
+  val = str == trueStr;
 }
 
 std::string Boolean::toString() const {
-  return name;
+  return val ? std::string(trueStr) : std::string(falseStr);
 }
 
 Boolean::operator bool() const {
-  return name == trueStr;
+  return val;
 }
 
 }

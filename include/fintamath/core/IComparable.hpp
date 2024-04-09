@@ -6,6 +6,8 @@
 #include <string>
 #include <utility>
 
+#include <fmt/core.h>
+
 #include "fintamath/core/IArithmetic.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"

@@ -1,9 +1,8 @@
 #include "fintamath/functions/IFunction.hpp"
 
-#include <ranges>
-#include <string>
-#include <vector>
+#include <fmt/core.h>
 
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 
 namespace fintamath {

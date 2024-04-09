@@ -4,6 +4,7 @@
 #include "fintamath/functions/other/Comma.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
@@ -40,10 +41,27 @@ TEST(CommaTests, isAssociativeTest) {
 }
 
 TEST(CommaTests, callTest) {
-  EXPECT_THROW(f(Variable("a"), Variable("a"))->toString(), InvalidInputException);
+  EXPECT_THAT(
+      [&] { f(Variable("a"), Variable("a")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Calling Comma directly is not allowed)")));
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Comma "," with 0 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Comma "," with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Comma "," with 3 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Comma "," with 4 arguments (expected 2))")));
 }
 
 TEST(CommaTests, exprTest) {

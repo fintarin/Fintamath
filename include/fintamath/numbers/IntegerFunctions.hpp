@@ -13,17 +13,18 @@ namespace fintamath {
 
 using FactorToCountMap = std::unordered_map<Integer, Integer>;
 
-// Use exponentiation by squaring with constant auxiliary memory (iterative version).
-// https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.
 template <std::derived_from<INumber> Lhs>
 Lhs pow(const Lhs &lhs, Integer rhs) {
   if (lhs == 0 && rhs == 0) {
-    throw UndefinedBinaryOperatorException("^", lhs.toString(), rhs.toString());
+    throw UndefinedException("pow({}, {}) is undefined (zero to the power of zero)");
   }
 
   if (rhs < 0) {
     return pow(1 / lhs, -rhs);
   }
+
+  // Use exponentiation by squaring with constant auxiliary memory (iterative version).
+  // https://en.wikipedia.org/wiki/Exponentiation_by_squaring#With_constant_auxiliary_memory.
 
   Lhs res(1);
   Lhs sqr = lhs;
@@ -60,6 +61,6 @@ FactorToCountMap factors(Integer rhs, Integer limit = -1);
 
 Integer combinations(const Integer &totalNumber, const Integer &choosedNumber);
 
-Integer multinomialCoefficient(const Integer &totalNumber, const std::vector<Integer> &groupNumbers);
+Integer multinomialCoefficient(const std::vector<Integer> &groupNumbers);
 
 }

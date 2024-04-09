@@ -44,13 +44,39 @@ TEST(MinTests, callTest) {
 
   EXPECT_EQ(f(Rational(-1), Variable("x"), Variable("y"), Integer(1))->toString(), "min(x, y, -1)");
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Boolean()), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(), Boolean()), InvalidInputFunctionException);
-  EXPECT_THROW(f(Boolean(), Integer()), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(), Integer(), Boolean()), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(), Boolean(), Integer()), InvalidInputFunctionException);
-  EXPECT_THROW(f(Boolean(), Integer(), Integer()), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Min "min" with argument #0 Boolean "True" (expected IComparable))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Min "min" with argument #1 Boolean "True" (expected IComparable))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Min "min" with argument #2 Boolean "True" (expected IComparable))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Min "min" with argument #3 Boolean "True" (expected IComparable))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Boolean(true), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Min "min" with argument #2 Boolean "True" (expected IComparable))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Boolean(true), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Min "min" with argument #1 Boolean "True" (expected IComparable))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Min "min" with argument #0 Boolean "True" (expected IComparable))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Min "min" with 0 arguments (expected > 0))")));
 }
 
 TEST(MinTests, exprTest) {

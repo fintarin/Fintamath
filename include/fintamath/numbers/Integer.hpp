@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <string_view>
 
 #include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/gmp.hpp>
@@ -29,7 +30,7 @@ public:
 
   Integer(Backend inBackend);
 
-  explicit Integer(std::string str);
+  explicit Integer(std::string_view str);
 
   std::string toString() const override;
 

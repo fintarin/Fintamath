@@ -1,7 +1,10 @@
 #include "fintamath/literals/Variable.hpp"
 
 #include <string>
+#include <string_view>
 #include <utility>
+
+#include <fmt/core.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -10,28 +13,31 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Variable)
 
-Variable::Variable(std::string inName) {
-  if (inName.size() != 1) {
-    throw InvalidInputException(inName);
+Variable::Variable(std::string_view inName) {
+  if (inName.size() != 1 || inName.front() < 'a' || inName.front() > 'z') {
+    throw InvalidInputException(fmt::format(
+        R"(Unable to parse {} name from "{}" (expected single English lowercase letter))",
+        getClassStatic()->getName(),
+        inName));
   }
 
-  if (const char ch = inName.front(); ch < 'a' || ch > 'z') {
-    throw InvalidInputException(inName);
-  }
-
-  name = std::move(inName);
+  name = std::string(inName);
 }
 
-Variable::Variable(std::string inName, Integer inIndex) : Variable(std::move(inName)) {
+Variable::Variable(std::string_view inName, Integer inIndex) : Variable(inName) {
   if (inIndex < 0) {
-    throw InvalidInputException(name + "_" + inIndex.toString());
+    throw InvalidInputException(fmt::format(
+        R"(Negative {} index {} is not allowed)",
+        getClassStatic()->getName(),
+        inIndex.toString()));
   }
 
   index = std::move(inIndex);
 }
 
 std::string Variable::toString() const {
-  return name + (index != -1 ? "_" + index.toString() : "");
+  std::string indexStr = index != -1 ? fmt::format("_{}", index.toString()) : "";
+  return fmt::format("{}{}", name, indexStr);
 }
 
 }

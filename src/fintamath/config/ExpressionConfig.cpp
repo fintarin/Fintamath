@@ -196,10 +196,6 @@ ExpressionConfig::ExpressionConfig() {
     const ArgumentPtr &lhs = args.front();
     const ArgumentPtr &rhs = args.back();
 
-    if (!indexFunc.doArgsMatch({*lhs, *rhs})) {
-      throw InvalidInputBinaryOperatorException(indexFunc.toString(), lhs->toString(), rhs->toString());
-    }
-
     return Expression(indexFunc(*lhs, *rhs)).clone(); // TODO: looks weird
   });
 

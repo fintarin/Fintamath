@@ -41,9 +41,13 @@ std::unique_ptr<IMathObject> Ceil::multiCeilSimplify(const INumber &rhs) {
     });
 
     outMultiCeil.add<Real>([](const Real &inRhs) {
+      if (inRhs.isZero()) {
+        return std::unique_ptr<IMathObject>{};
+      }
+
       Integer res = ceil(inRhs);
 
-      if (abs(inRhs) == Real(abs(res))) {
+      if (inRhs == res) {
         return std::unique_ptr<IMathObject>{};
       }
 

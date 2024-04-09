@@ -4,6 +4,7 @@
 #include "fintamath/functions/arithmetic/FracMixed.hpp"
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -46,10 +47,35 @@ TEST(FracMixedTests, callTest) {
 
   EXPECT_EQ(f(Integer(0), Integer(3), Variable("a"))->toString(), "3/a");
 
-  EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
-  EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call FracMixed "frac" with argument #2 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Boolean(true), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call FracMixed "frac" with argument #1 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call FracMixed "frac" with argument #0 Boolean "True" (expected IArithmetic))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call FracMixed "frac" with 0 arguments (expected 3))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call FracMixed "frac" with 1 argument (expected 3))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call FracMixed "frac" with 2 arguments (expected 3))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call FracMixed "frac" with 4 arguments (expected 3))")));
 }
 
 TEST(FracMixedTests, getClassTest) {

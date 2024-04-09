@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <string_view>
 
 #include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/mpfr.hpp>
@@ -43,15 +44,13 @@ public:
 
   Real(Backend inBackend);
 
-  Real(std::integral auto rhs)
-      : backend(rhs),
-        isNegative(rhs < 0) {}
+  Real(std::integral auto rhs) : backend(rhs) {}
 
   Real(const Rational &rhs);
 
   Real(const Integer &rhs);
 
-  explicit Real(std::string str);
+  explicit Real(std::string_view str);
 
   std::string toString() const override;
 
@@ -62,6 +61,10 @@ public:
   int sign() const;
 
   bool isZero() const;
+
+  bool isPosZero() const;
+
+  bool isNegZero() const;
 
   const Backend &getBackend() const noexcept;
 
@@ -105,8 +108,6 @@ private:
   Backend backend;
 
   unsigned outputPrecision = getPrecision();
-
-  bool isNegative = false;
 };
 
 }

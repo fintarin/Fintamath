@@ -55,7 +55,39 @@ TEST(OrTests, callTest) {
   EXPECT_EQ(f(Variable("a"), Variable("b"), Boolean("True"), Variable("c"))->toString(), "True");
   EXPECT_EQ(f(Boolean("False"), Variable("a"), Variable("b"), Variable("c"))->toString(), "a | b | c");
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with argument #0 Integer "1" (expected Boolean))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with argument #1 Integer "1" (expected Boolean))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Boolean(false), Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with argument #2 Integer "1" (expected Boolean))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Boolean(false), Boolean(true), Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with argument #3 Integer "1" (expected Boolean))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Boolean(false), Integer(1), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with argument #2 Integer "1" (expected Boolean))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Integer(1), Boolean(false), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with argument #1 Integer "1" (expected Boolean))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Boolean(true), Boolean(false), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with argument #0 Integer "1" (expected Boolean))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Or "or" with 0 arguments (expected > 0))")));
 }
 
 TEST(OrTests, exprTest) {

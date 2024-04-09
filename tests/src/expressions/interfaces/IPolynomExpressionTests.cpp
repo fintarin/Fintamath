@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/interfaces/IPolynomExpression.hpp"
@@ -46,7 +47,7 @@ TEST(IPolynomExpressionTests, getFunctionTest) {
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
-TEST(IPolynomExpressionTests, getChildren) {
+TEST(IPolynomExpressionTests, getChildrenTest) {
   const TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
   EXPECT_EQ(expr.getChildren().size(), 3);
   EXPECT_EQ(*expr.getChildren()[0], Integer(1));
@@ -54,7 +55,7 @@ TEST(IPolynomExpressionTests, getChildren) {
   EXPECT_EQ(*expr.getChildren()[2], Integer(3));
 }
 
-TEST(IPolynomExpressionTests, setChildren) {
+TEST(IPolynomExpressionTests, setChildrenTest) {
   TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
 
   expr.setChildren({Integer(0).clone()});
@@ -72,7 +73,10 @@ TEST(IPolynomExpressionTests, setChildren) {
   EXPECT_EQ(*expr.getChildren()[1], Integer(0));
   EXPECT_EQ(*expr.getChildren()[2], Integer(0));
 
-  EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { expr.setChildren({}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with 0 arguments (expected > 0))")));
 }
 
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {

@@ -3,6 +3,7 @@
 
 #include "fintamath/functions/arithmetic/Sub.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -48,10 +49,31 @@ TEST(SubTests, callTest) {
 
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "-a + 3");
 
-  EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
-  EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Sub "-" with argument #0 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Sub "-" with argument #1 Boolean "True" (expected IArithmetic))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Sub "-" with 0 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Sub "-" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Sub "-" with 3 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Sub "-" with 4 arguments (expected 2))")));
 }
 
 TEST(SubTests, exprTest) {

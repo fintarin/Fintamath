@@ -1,5 +1,6 @@
 #include "fintamath/numbers/NumberUtils.hpp"
 
+#include <cctype>
 #include <cstddef>
 #include <string>
 
@@ -13,7 +14,7 @@ std::string removeLeadingZeroes(std::string str) {
 
   const size_t firstNonZeroDigit = str.find_first_not_of('0', firstDigit);
 
-  if (firstNonZeroDigit == std::string::npos) {
+  if (firstNonZeroDigit == std::string::npos || !std::isdigit(str[firstNonZeroDigit])) {
     str.insert(firstDigit, "0");
   }
   else if (firstNonZeroDigit > firstDigit) {

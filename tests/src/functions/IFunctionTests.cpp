@@ -3,11 +3,11 @@
 
 #include "fintamath/functions/IFunction.hpp"
 
+#include "fintamath/functions/arithmetic/Div.hpp"
 #include "fintamath/functions/arithmetic/Mul.hpp"
 #include "fintamath/functions/arithmetic/Neg.hpp"
 #include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/arithmetic/UnaryPlus.hpp"
-#include "fintamath/functions/logarithms/Log.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -40,61 +40,51 @@ TEST(IFunctionTests, parseTest) {
 }
 
 TEST(IFunctionTests, callTest) {
-  std::unique_ptr<IFunction> f = std::make_unique<Log>();
+  std::unique_ptr<IFunction> f = std::make_unique<Div>();
   Integer a = 3;
   Rational b(1, 2);
   Variable c("c");
 
   EXPECT_EQ((*f)(a, a)->toString(), "1");
   EXPECT_EQ((*f)(b, b)->toString(), "1");
-  EXPECT_EQ((*f)(a, b)->toString(), "-0.6309297535714574371");
-  EXPECT_EQ((*f)(b, a)->toString(), "-1.5849625007211561815");
+  EXPECT_EQ((*f)(a, b)->toString(), "6");
+  EXPECT_EQ((*f)(b, a)->toString(), "1/6");
 
-  EXPECT_EQ((*f)(a, c)->toString(), "log(3, c)");
-
-  EXPECT_THROW((*f)(), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(a), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(a, a, a), InvalidInputFunctionException);
-  EXPECT_THROW((*f)(a, a, a, a, a, a, a), InvalidInputFunctionException);
+  EXPECT_EQ((*f)(a, c)->toString(), "3/c");
 }
 
 TEST(IFunctionTests, callVectTest) {
-  std::unique_ptr<IFunction> f = std::make_unique<Log>();
+  std::unique_ptr<IFunction> f = std::make_unique<Div>();
   Integer a = 3;
   Rational b(1, 2);
   Variable c("c");
 
   EXPECT_EQ((*f)({a, a})->toString(), "1");
   EXPECT_EQ((*f)({b, b})->toString(), "1");
-  EXPECT_EQ((*f)({a, b})->toString(), "-0.6309297535714574371");
-  EXPECT_EQ((*f)({b, a})->toString(), "-1.5849625007211561815");
+  EXPECT_EQ((*f)({a, b})->toString(), "6");
+  EXPECT_EQ((*f)({b, a})->toString(), "1/6");
 
-  EXPECT_EQ((*f)({a, c})->toString(), "log(3, c)");
-
-  EXPECT_THROW((*f)({}), InvalidInputFunctionException);
-  EXPECT_THROW((*f)({a}), InvalidInputFunctionException);
-  EXPECT_THROW((*f)({a, a, a}), InvalidInputFunctionException);
-  EXPECT_THROW((*f)({a, a, a, a, a, a, a}), InvalidInputFunctionException);
+  EXPECT_EQ((*f)({a, c})->toString(), "3/c");
 }
 
 TEST(IFunctionTests, equalsTest) {
-  EXPECT_EQ(Log(), Log());
-  EXPECT_NE(Log(), Sub());
-  EXPECT_NE(Sub(), Log());
-  EXPECT_NE(Log(), UnaryPlus());
-  EXPECT_NE(UnaryPlus(), Log());
-  EXPECT_NE(Log(), Sin());
-  EXPECT_NE(Sin(), Log());
+  EXPECT_EQ(Div(), Div());
+  EXPECT_NE(Div(), Sub());
+  EXPECT_NE(Sub(), Div());
+  EXPECT_NE(Div(), UnaryPlus());
+  EXPECT_NE(UnaryPlus(), Div());
+  EXPECT_NE(Div(), Sin());
+  EXPECT_NE(Sin(), Div());
 }
 
 TEST(IFunctionTests, getArgumentClassesTest) {
-  EXPECT_THAT(Log().getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic(), INumber::getClassStatic()));
+  EXPECT_THAT(Div().getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic(), IArithmetic::getClassStatic()));
   EXPECT_THAT(Neg().getArgumentClasses(), testing::ElementsAre(IArithmetic::getClassStatic()));
   EXPECT_THAT(Sin().getArgumentClasses(), testing::ElementsAre(INumber::getClassStatic()));
 }
 
 TEST(IFunctionTests, getReturnClassTest) {
-  EXPECT_EQ(Log().getReturnClass(), INumber::getClassStatic());
+  EXPECT_EQ(Div().getReturnClass(), IArithmetic::getClassStatic());
   EXPECT_EQ(Neg().getReturnClass(), IArithmetic::getClassStatic());
   EXPECT_EQ(Sin().getReturnClass(), INumber::getClassStatic());
 }
@@ -105,15 +95,15 @@ TEST(IFunctionTests, doArgsMatchTest) {
   Variable c("c");
 
   {
-    EXPECT_TRUE(Log().doArgsMatch({a, b}));
-    EXPECT_FALSE(Log().doArgsMatch({c, c}));
-    EXPECT_FALSE(Log().doArgsMatch({a, c}));
-    EXPECT_FALSE(Log().doArgsMatch({c, a}));
+    EXPECT_TRUE(Div().doArgsMatch({a, b}));
+    EXPECT_FALSE(Div().doArgsMatch({c, c}));
+    EXPECT_FALSE(Div().doArgsMatch({a, c}));
+    EXPECT_FALSE(Div().doArgsMatch({c, a}));
 
-    EXPECT_FALSE(Log().doArgsMatch({}));
-    EXPECT_FALSE(Log().doArgsMatch({a}));
-    EXPECT_FALSE(Log().doArgsMatch({a, a, a}));
-    EXPECT_FALSE(Log().doArgsMatch({a, b, a, b}));
+    EXPECT_FALSE(Div().doArgsMatch({}));
+    EXPECT_FALSE(Div().doArgsMatch({a}));
+    EXPECT_FALSE(Div().doArgsMatch({a, a, a}));
+    EXPECT_FALSE(Div().doArgsMatch({a, b, a, b}));
   }
   {
     EXPECT_TRUE(Mul().doArgsMatch({a, b, a}));

@@ -4,6 +4,7 @@
 #include "fintamath/functions/other/Index.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
@@ -46,16 +47,31 @@ TEST(IndexTests, callTest) {
   EXPECT_EQ(f(Variable("a"), Integer("100000000000000000000000000000000"))->toString(),
             "a_100000000000000000000000000000000");
 
-  EXPECT_THROW(f(Variable("a"), Variable("a"))->toString(), InvalidInputException);
-  EXPECT_THROW(f(Variable("a"), Expression("a+1"))->toString(), InvalidInputException);
-  EXPECT_THROW(f(Expression("a"), Integer(-1))->toString(), InvalidInputException);
-  EXPECT_THROW(f(Expression("1"), Integer(2))->toString(), InvalidInputException);
-  EXPECT_THROW(f(Expression("a+1"), Integer(2))->toString(), InvalidInputException);
-  EXPECT_THROW(f(Expression("a+1"), Expression("a+1"))->toString(), InvalidInputException);
-  EXPECT_THROW(f(Expression("a"), Expression("a>1"))->toString(), InvalidInputException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Index "_" with argument #0 Boolean "True" (expected Variable))")));
+  EXPECT_THAT(
+      [&] { f(Variable("a"), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Index "_" with argument #1 Boolean "True" (expected Integer))")));
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Index "_" with 0 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Index "_" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Index "_" with 3 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Index "_" with 4 arguments (expected 2))")));
 }
 
 TEST(IndexTests, exprTest) {
