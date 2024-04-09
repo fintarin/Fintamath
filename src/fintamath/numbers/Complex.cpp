@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 
+#include <fmt/core.h>
+
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
@@ -31,17 +33,15 @@ Complex &Complex::operator=(const Complex &rhs) {
   return *this;
 }
 
-Complex::Complex(const std::string &str) {
-  if (!str.empty() && str.back() == 'I') {
-    im = parseNonComplexNumber(str.substr(0, str.size() - 1));
-  }
-  else {
-    re = parseNonComplexNumber(str);
+Complex::Complex(const INumber &inRe, const INumber &inIm) {
+  if (is<Complex>(inRe) || is<Complex>(inIm)) {
+    throw InvalidInputException(fmt::format(
+        R"(Nested {} numbers are not allowed)",
+        getClassStatic()->getName()));
   }
 
-  if (!re || !im) {
-    throw InvalidInputException(str);
-  }
+  re = cast<INumber>(inRe.toMinimalObject());
+  im = cast<INumber>(inIm.toMinimalObject());
 }
 
 Complex::Complex(const Integer &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
@@ -53,13 +53,23 @@ Complex::Complex(const Rational &rhs) : re(cast<INumber>(rhs.toMinimalObject()))
 Complex::Complex(const Real &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
 }
 
-Complex::Complex(const INumber &inReal, const INumber &inImag) {
-  if (is<Complex>(inReal) || is<Complex>(inImag)) {
-    throw InvalidInputException("Nested complex numbers are not allowed");
+Complex::Complex(const std::string &str) try {
+  if (!str.empty() && str.back() == 'I') {
+    im = parseNonComplexNumber(str.substr(0, str.size() - 1));
+  }
+  else {
+    re = parseNonComplexNumber(str);
   }
 
-  re = cast<INumber>(inReal.toMinimalObject());
-  im = cast<INumber>(inImag.toMinimalObject());
+  if (!re || !im) {
+    throw InvalidInputException("");
+  }
+}
+catch (const InvalidInputException &) {
+  throw InvalidInputException(fmt::format(
+      R"(Unable to parse {} from "{}")",
+      getClassStatic()->getName(),
+      str));
 }
 
 std::string Complex::toString() const {
@@ -187,7 +197,10 @@ Complex &Complex::divide(const Complex &rhs) {
     im = *(*(y * u) - *(x * v)) / *divisor;
   }
   catch (const UndefinedException &) {
-    throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
+    throw UndefinedException(fmt::format(
+        R"(div({}, {}) is undefined (division by zero))",
+        toString(),
+        rhs.toString()));
   }
 
   return *this;

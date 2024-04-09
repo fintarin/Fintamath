@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/Expression.hpp"
@@ -36,8 +37,14 @@ TEST(ExpressionTests, stringConstructorTest) {
 }
 
 TEST(ExpressionTests, stringConstructorNegativeTest) {
-  EXPECT_THROW(Expression(""), InvalidInputException);
-  EXPECT_THROW(Expression("1+"), InvalidInputException);
+  EXPECT_THAT(
+      [] { Expression(""); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse an expression from "" (empty input))")));
+  EXPECT_THAT(
+      [] { Expression("1+"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse an expression from "1+" (incomplite expression with operator "+"))")));
 }
 
 TEST(ExpressionTests, setChildrenTest) {
@@ -49,7 +56,10 @@ TEST(ExpressionTests, setChildrenTest) {
   expr.setChildren({Expression("a-a").clone()});
   EXPECT_EQ(expr.toString(), "0");
 
-  EXPECT_THROW(expr.setChildren({Variable("a").clone(), Variable("b").clone()}), InvalidInputException);
+  EXPECT_THAT(
+      [&] { expr.setChildren({Variable("a").clone(), Variable("b").clone()}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Unable to set 2 Expression children (expected 1)")));
 }
 
 TEST(ExpressionTests, getFunctionTest) {

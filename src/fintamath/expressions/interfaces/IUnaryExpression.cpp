@@ -96,9 +96,7 @@ ArgumentPtr IUnaryExpression::simplifyRec(const bool isPostSimplify) const {
 }
 
 void IUnaryExpression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.size() != 1) {
-    throw InvalidInputFunctionException(toString(), argumentVectorToStringVector(childVect));
-  }
+  (void)makeExpr(*func, childVect);
 
   child = childVect.front();
 }

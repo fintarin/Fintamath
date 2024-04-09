@@ -5,10 +5,13 @@
 #include <string>
 #include <utility>
 
+#include <fmt/core.h>
+
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Parser.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
 

@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
@@ -54,25 +55,82 @@ TEST(ComplexTests, stringConstructorTest) {
   EXPECT_EQ(Complex(".1I").toString(), "1/10 I");
   EXPECT_EQ(Complex("1.I").toString(), "I");
 
-  EXPECT_THROW(Complex("--10"), InvalidInputException);
-  EXPECT_THROW(Complex("test"), InvalidInputException);
-  EXPECT_THROW(Complex(""), InvalidInputException);
-  EXPECT_THROW(Complex("+"), InvalidInputException);
-  EXPECT_THROW(Complex("939849.0-0023"), InvalidInputException);
-  EXPECT_THROW(Complex("a"), InvalidInputException);
-  EXPECT_THROW(Complex("a.1"), InvalidInputException);
-  EXPECT_THROW(Complex("1.a"), InvalidInputException);
-  EXPECT_THROW(Complex("1a.1"), InvalidInputException);
-  EXPECT_THROW(Complex("1.1a"), InvalidInputException);
-  EXPECT_THROW(Complex(".1."), InvalidInputException);
-  EXPECT_THROW(Complex("."), InvalidInputException);
-  EXPECT_THROW(Complex("--10.-1"), InvalidInputException);
-  EXPECT_THROW(Complex("10.-1"), InvalidInputException);
-  EXPECT_THROW(Complex("1-0.1"), InvalidInputException);
-  EXPECT_THROW(Complex("10-.1"), InvalidInputException);
-  EXPECT_THROW(Complex("10.--1"), InvalidInputException);
-  EXPECT_THROW(Complex("1.10.1"), InvalidInputException);
-  EXPECT_THROW(Complex("0II"), InvalidInputException);
+  EXPECT_THAT(
+      [] { Complex(""); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "")")));
+  EXPECT_THAT(
+      [] { Complex("--10"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "--10")")));
+  EXPECT_THAT(
+      [] { Complex("test"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "test")")));
+  EXPECT_THAT(
+      [] { Complex("+"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "+")")));
+  EXPECT_THAT(
+      [] { Complex("939849.0-0023"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "939849.0-0023")")));
+  EXPECT_THAT(
+      [] { Complex("a"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "a")")));
+  EXPECT_THAT(
+      [] { Complex("a.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "a.1")")));
+  EXPECT_THAT(
+      [] { Complex("1.a"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "1.a")")));
+  EXPECT_THAT(
+      [] { Complex("1a.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "1a.1")")));
+  EXPECT_THAT(
+      [] { Complex("1.1a"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "1.1a")")));
+  EXPECT_THAT(
+      [] { Complex(".1."); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from ".1.")")));
+  EXPECT_THAT(
+      [] { Complex("."); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from ".")")));
+  EXPECT_THAT(
+      [] { Complex("--10.-1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "--10.-1")")));
+  EXPECT_THAT(
+      [] { Complex("10.-1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "10.-1")")));
+  EXPECT_THAT(
+      [] { Complex("1-0.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "1-0.1")")));
+  EXPECT_THAT(
+      [] { Complex("10-.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "10-.1")")));
+  EXPECT_THAT(
+      [] { Complex("10.--1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "10.--1")")));
+  EXPECT_THAT(
+      [] { Complex("1.10.1"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "1.10.1")")));
+  EXPECT_THAT(
+      [] { Complex("0II"); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Complex from "0II")")));
 }
 
 TEST(ComplexTests, intIntConstructorTest) {
@@ -105,13 +163,34 @@ TEST(ComplexTests, numberNumberConstructorTest) {
   EXPECT_EQ(Complex(Real("2.2"), Rational(2, 3)).toString(), "2.2 + 2/3 I");
   EXPECT_EQ(Complex(Rational(3, 2), Real("2.2")).toString(), "3/2 + 2.2 I");
 
-  EXPECT_THROW(Complex(Complex(), Complex()), InvalidInputException);
-  EXPECT_THROW(Complex(Complex(), Integer()), InvalidInputException);
-  EXPECT_THROW(Complex(Integer(), Complex()), InvalidInputException);
-  EXPECT_THROW(Complex(Complex(), Rational()), InvalidInputException);
-  EXPECT_THROW(Complex(Rational(), Complex()), InvalidInputException);
-  EXPECT_THROW(Complex(Complex(), Real()), InvalidInputException);
-  EXPECT_THROW(Complex(Real(), Complex()), InvalidInputException);
+  EXPECT_THAT(
+      [] { Complex(Complex(), Complex()); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Nested Complex numbers are not allowed")));
+  EXPECT_THAT(
+      [] { Complex(Complex(), Integer()); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Nested Complex numbers are not allowed")));
+  EXPECT_THAT(
+      [] { Complex(Integer(), Complex()); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Nested Complex numbers are not allowed")));
+  EXPECT_THAT(
+      [] { Complex(Complex(), Rational()); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Nested Complex numbers are not allowed")));
+  EXPECT_THAT(
+      [] { Complex(Rational(), Complex()); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Nested Complex numbers are not allowed")));
+  EXPECT_THAT(
+      [] { Complex(Complex(), Real()); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Nested Complex numbers are not allowed")));
+  EXPECT_THAT(
+      [] { Complex(Real(), Complex()); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq("Nested Complex numbers are not allowed")));
 }
 
 TEST(ComplexTests, integerConstructorTest) {
@@ -441,8 +520,14 @@ TEST(ComplexTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(Complex(-738, 10) /= Complex(5, 2), Complex(Rational(-3670, 29), Rational(1526, 29)));
   EXPECT_EQ(Complex(-738, 10) /= Complex(-5, 2), Complex(Rational(3710, 29), Rational(1426, 29)));
 
-  EXPECT_THROW(Complex(0, 0) /= Complex(0, 0), UndefinedException);
-  EXPECT_THROW(Complex(2, 3) /= Complex(0, 0), UndefinedException);
+  EXPECT_THAT(
+      [] { Complex(0, 0) /= Complex(0, 0); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(div(0, 0) is undefined (division by zero))")));
+  EXPECT_THAT(
+      [] { Complex(2, 3) /= Complex(0, 0); },
+      testing::ThrowsMessage<UndefinedException>(
+          testing::StrEq(R"(div(2 + 3 I, 0) is undefined (division by zero))")));
 }
 
 TEST(ComplexTests, integerDivideAssignmentOperatorTest) {

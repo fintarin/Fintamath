@@ -3,6 +3,7 @@
 
 #include "fintamath/functions/arithmetic/Mul.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -50,8 +51,39 @@ TEST(MulTests, callTest) {
   EXPECT_EQ(f(Integer(5), Variable("a"))->toString(), "5 a");
   EXPECT_EQ(f(Variable("a"), Variable("a"), Variable("b"))->toString(), "a^2 b");
 
+  EXPECT_THAT(
+      [&] { f(Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with argument #0 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with argument #1 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with argument #2 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with argument #3 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Boolean(true), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with argument #2 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Boolean(true), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with argument #1 Boolean "True" (expected IArithmetic))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with argument #0 Boolean "True" (expected IArithmetic))")));
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mul "mul" with 0 arguments (expected > 0))")));
 }
 
 TEST(MulTests, exprTest) {

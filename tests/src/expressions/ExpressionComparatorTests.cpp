@@ -3,7 +3,6 @@
 #include "fintamath/expressions/ExpressionComparator.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/ExpressionParser.hpp"
 
 using namespace fintamath;
 using namespace detail;
@@ -26,10 +25,10 @@ TEST(ExpressionComparatorTests, comparatorTest) {
   EXPECT_EQ(compare(Expression("a^b").clone(), Expression("a b c").clone()), std::strong_ordering::greater);
   EXPECT_EQ(compare(Expression("x^x").clone(), Expression("x^y").clone()), std::strong_ordering::greater);
 
-  EXPECT_EQ(compare(parseExpr("sqrt(11)"), parseExpr("root(2022369065670411386760301914510907000742418, 4)")), std::strong_ordering::greater);
-  EXPECT_EQ(compare(parseExpr("x^x ln(x)"), parseExpr("x^x")), std::strong_ordering::greater);
-  EXPECT_EQ(compare(parseExpr("~a & c"), parseExpr("a & b & ~c")), std::strong_ordering::greater);
+  EXPECT_EQ(compare(parseRawExpr("sqrt(11)"), parseRawExpr("root(2022369065670411386760301914510907000742418, 4)")), std::strong_ordering::greater);
+  EXPECT_EQ(compare(parseRawExpr("x^x ln(x)"), parseRawExpr("x^x")), std::strong_ordering::greater);
+  EXPECT_EQ(compare(parseRawExpr("~a & c"), parseRawExpr("a & b & ~c")), std::strong_ordering::greater);
 
-  EXPECT_EQ(compare(parseExpr("x"), parseExpr("ln(x)"), {.termOrderInversed = false}), std::strong_ordering::less);
-  EXPECT_EQ(compare(parseExpr("x"), parseExpr("ln(x)"), {.termOrderInversed = true}), std::strong_ordering::greater);
+  EXPECT_EQ(compare(parseRawExpr("x"), parseRawExpr("ln(x)"), {.termOrderInversed = false}), std::strong_ordering::less);
+  EXPECT_EQ(compare(parseRawExpr("x"), parseRawExpr("ln(x)"), {.termOrderInversed = true}), std::strong_ordering::greater);
 }

@@ -3,6 +3,7 @@
 
 #include "fintamath/functions/logarithms/Lg.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -41,8 +42,27 @@ TEST(LgTests, callTest) {
 
   EXPECT_EQ(f(Variable("a"))->toString(), "log(10, a)");
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(10), Integer(10), Integer(10)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Lg "lg" with argument #0 Boolean "True" (expected INumber))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Lg "lg" with 0 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Lg "lg" with 2 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Lg "lg" with 3 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Lg "lg" with 4 arguments (expected 1))")));
 }
 
 TEST(LgTests, exprTest) {

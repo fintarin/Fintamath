@@ -13,18 +13,17 @@ class Boolean : public ILiteralCRTP<Boolean> {
 public:
   Boolean();
 
-  explicit Boolean(const std::string &str);
-
   template <std::same_as<bool> Bool>
-  Boolean(const Bool val) : name(val ? trueStr : falseStr) {
-  }
+  Boolean(const Bool rhs) : val(rhs) {}
+
+  explicit Boolean(std::string_view str);
 
   std::string toString() const override;
 
   explicit operator bool() const;
 
 private:
-  std::string name;
+  bool val;
 
   static constexpr std::string_view trueStr = "True";
 

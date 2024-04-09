@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/Expression.hpp"
@@ -7,6 +8,7 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/arithmetic/MulOper.hpp"
 #include "fintamath/functions/powers/Pow.hpp"
+#include "fintamath/functions/powers/PowOper.hpp"
 #include "fintamath/functions/trigonometry/Cos.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -27,10 +29,22 @@ TEST(FunctionUtilsTests, makeExpressionPtrsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExpr(MulOper(), ArgumentPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(MulOper(), ArgumentPtrVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(MulOper(), ArgumentPtrVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(MulOper(), ArgumentPtrVector{})->toString(), InvalidInputException);
+  EXPECT_THAT(
+      [&] { makeExpr(MulOper(), ArgumentPtrVector{var}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call MulOper "*" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [] { makeExpr(MulOper(), ArgumentPtrVector{}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call MulOper "*" with 0 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { makeExpr(PowOper(), ArgumentPtrVector{var}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call PowOper "^" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [] { makeExpr(PowOper(), ArgumentPtrVector{}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call PowOper "^" with 0 arguments (expected 2))")));
 }
 
 TEST(FunctionUtilsTests, makeExpressionRefsTest) {
@@ -45,10 +59,22 @@ TEST(FunctionUtilsTests, makeExpressionRefsTest) {
   EXPECT_EQ(expr2->toString(), "cos(a)");
   EXPECT_TRUE(is<IExpression>(expr2));
 
-  EXPECT_THROW(makeExpr(MulOper(), ArgumentRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(MulOper(), ArgumentRefVector{})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(MulOper(), ArgumentRefVector{var})->toString(), InvalidInputException);
-  EXPECT_THROW(makeExpr(MulOper(), ArgumentRefVector{})->toString(), InvalidInputException);
+  EXPECT_THAT(
+      [&] { makeExpr(MulOper(), ArgumentRefVector{var}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call MulOper "*" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [] { makeExpr(MulOper(), ArgumentRefVector{}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call MulOper "*" with 0 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { makeExpr(PowOper(), ArgumentRefVector{var}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call PowOper "^" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [] { makeExpr(PowOper(), ArgumentRefVector{}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call PowOper "^" with 0 arguments (expected 2))")));
 }
 
 TEST(FunctionUtilsTests, makeExpressionAnyArgsRefTest) {

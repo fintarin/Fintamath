@@ -4,7 +4,6 @@
 #include "fintamath/expressions/IExpression.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/ExpressionParser.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/functions/other/Factorial.hpp"
@@ -80,13 +79,11 @@ TEST(IExpressionTests, setChildrenTest) {
   expr->setChildren({Variable("b").clone()});
   EXPECT_EQ(expr->toString(), "b!");
 
-  EXPECT_THROW(expr->setChildren({Variable("b").clone(), Variable("c").clone()}), InvalidInputException);
-
   // TODO: implement more tests
 }
 
 TEST(IExpressionTests, getVariablesTest) {
-  const auto expr = cast<IExpression>(parseExpr("x^2+y^2+a"));
+  const auto expr = cast<IExpression>(parseRawExpr("x^2+y^2+a"));
   EXPECT_THAT(expr->getVariables(), testing::ElementsAre(Variable("a"), Variable("x"), Variable("y")));
 
   // TODO: implement more tests

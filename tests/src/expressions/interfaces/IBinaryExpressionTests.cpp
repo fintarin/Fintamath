@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/interfaces/IBinaryExpression.hpp"
@@ -42,14 +43,14 @@ TEST(IBinaryExpressionTests, getFunctionTest) {
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
-TEST(IBinaryExpressionTests, getChildren) {
+TEST(IBinaryExpressionTests, getChildrenTest) {
   const TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr.getChildren().size(), 2);
   EXPECT_EQ(*expr.getChildren().front(), Integer(1));
   EXPECT_EQ(*expr.getChildren().back(), Integer(2));
 }
 
-TEST(IBinaryExpressionTests, setChildren) {
+TEST(IBinaryExpressionTests, setChildrenTest) {
   TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
 
   expr.setChildren({std::make_shared<Integer>(0), std::make_shared<Integer>(0)});
@@ -57,11 +58,18 @@ TEST(IBinaryExpressionTests, setChildren) {
   EXPECT_EQ(*expr.getChildren().front(), Integer(0));
   EXPECT_EQ(*expr.getChildren().back(), Integer(0));
 
-  EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
-  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1)}), InvalidInputFunctionException);
-  EXPECT_THROW(
-      expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1), std::make_shared<Integer>(1)}),
-      InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { expr.setChildren({}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call AddOper "+" with 0 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { expr.setChildren({std::make_shared<Integer>(1)}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call AddOper "+" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [&] { expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1), std::make_shared<Integer>(1)}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call AddOper "+" with 3 arguments (expected 2))")));
 }
 
 TEST(IBinaryExpressionTests, toMinimalObjectTest) {

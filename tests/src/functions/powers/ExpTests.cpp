@@ -3,6 +3,7 @@
 
 #include "fintamath/functions/powers/Exp.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Rational.hpp"
 
@@ -37,8 +38,27 @@ TEST(ExpTests, callTest) {
 
   EXPECT_EQ(f(Variable("a"))->toString(), "E^a");
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Exp "exp" with argument #0 Boolean "True" (expected INumber))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Exp "exp" with 0 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Exp "exp" with 2 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Exp "exp" with 3 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Exp "exp" with 4 arguments (expected 1))")));
 }
 
 TEST(ExpTests, exprTest) {

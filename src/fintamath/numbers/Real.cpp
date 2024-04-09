@@ -8,9 +8,12 @@
 #include <ios>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 
 #include <boost/multiprecision/detail/default_ops.hpp>
+
+#include <fmt/core.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
@@ -27,61 +30,57 @@ using namespace detail;
 constexpr unsigned precisionMultiplier = 2;
 constexpr unsigned precisionDelta = 10;
 
-Real::Real(Backend inBackend) : backend(std::move(inBackend)),
-                                isNegative(backend < 0) {
+Real::Real(Backend inBackend) : backend(std::move(inBackend)) {
 
   if (!isFinite()) {
-    throw UndefinedException(backend.str());
+    throw UndefinedException(fmt::format(
+        R"(Undefined backend {})",
+        backend.str()));
   }
 }
 
-Real::Real(std::string str) : Real() {
+Real::Real(const Rational &rhs) : Real(Real(rhs.numerator()) / Real(rhs.denominator())) {}
+
+Real::Real(const Integer &rhs) : backend(rhs.getBackend()) {}
+
+Real::Real(const std::string_view str) try : Real() {
   if (str.empty() || str == ".") {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
 
-  str = removeLeadingZeroes(std::move(str));
-
-  if (str.front() == '-') {
-    isNegative = true;
-  }
+  std::string mutableStr = removeLeadingZeroes(std::string(str));
 
   {
     const std::string expStr = "*10^";
-    const size_t expPos = str.find(expStr);
+    const size_t expPos = mutableStr.find(expStr);
 
     if (expPos != std::string::npos) {
-      str.replace(expPos, expStr.length(), "e");
+      mutableStr.replace(expPos, expStr.length(), "e");
     }
   }
 
   try {
-    backend.assign(str);
+    backend.assign(mutableStr);
   }
   catch (const std::runtime_error &) {
-    throw InvalidInputException(str);
+    throw InvalidInputException("");
   }
 
   if (!isFinite()) {
-    throw UndefinedException(str);
+    throw UndefinedException(fmt::format(
+        R"(Undefined "{}" (overflow))",
+        str));
   }
 }
-
-Real::Real(const Rational &rhs)
-    : Real(Real(rhs.numerator()) / Real(rhs.denominator())) {}
-
-Real::Real(const Integer &rhs)
-    : backend(rhs.getBackend()),
-      isNegative(rhs < 0) {}
+catch (const InvalidInputException &) {
+  throw InvalidInputException(fmt::format(
+      R"(Unable to parse {} from "{}")",
+      getClassStatic()->getName(),
+      str));
+}
 
 std::string Real::toString() const {
-  std::string res = toString(outputPrecision);
-
-  if (isNegative && res.front() != '-') {
-    res.insert(res.begin(), '-');
-  }
-
-  return res;
+  return toString(outputPrecision);
 }
 
 std::string Real::toString(unsigned precision) const {
@@ -130,7 +129,7 @@ bool Real::isPrecise() const noexcept {
 }
 
 int Real::sign() const {
-  if (isNegative) {
+  if (mpfr_signbit(backend.backend().data())) {
     return -1;
   }
 
@@ -139,6 +138,14 @@ int Real::sign() const {
 
 bool Real::isZero() const {
   return backend.is_zero();
+}
+
+bool Real::isPosZero() const {
+  return isZero() && sign() >= 0;
+}
+
+bool Real::isNegZero() const {
+  return isZero() && sign() < 0;
 }
 
 const Real::Backend &Real::getBackend() const noexcept {
@@ -171,16 +178,12 @@ void Real::setPrecision(unsigned precision) {
 }
 
 bool Real::equals(const Real &rhs) const {
-  return backend == rhs.backend && isNegative == rhs.isNegative;
+  return backend == rhs.backend && sign() == rhs.sign();
 }
 
 std::strong_ordering Real::compare(const Real &rhs) const {
-  if (isNegative && !rhs.isNegative) {
-    return std::strong_ordering::less;
-  }
-
-  if (!isNegative && rhs.isNegative) {
-    return std::strong_ordering::greater;
+  if (sign() != rhs.sign()) {
+    return sign() <=> rhs.sign();
   }
 
   return backend.compare(rhs.backend) <=> 0;
@@ -189,11 +192,17 @@ std::strong_ordering Real::compare(const Real &rhs) const {
 Real &Real::add(const Real &rhs) {
   updatePrecision(rhs);
 
-  const bool isResNegZero = backend.is_zero() &&
-                            rhs.backend.is_zero() &&
-                            (isNegative || rhs.isNegative);
-  backend += rhs.backend;
-  isNegative = isResNegZero || backend < 0;
+  bool isResultNegZero = isZero() &&
+                         rhs.isZero() &&
+                         (sign() < 0 || rhs.sign() < 0);
+
+  if (!isResultNegZero) {
+    backend += rhs.backend;
+  }
+  else {
+    backend = 0;
+    backend = -backend;
+  }
 
   return *this;
 }
@@ -201,39 +210,41 @@ Real &Real::add(const Real &rhs) {
 Real &Real::substract(const Real &rhs) {
   updatePrecision(rhs);
 
-  const bool isResNegZero = backend.is_zero() &&
-                            rhs.backend.is_zero() &&
-                            (isNegative || !rhs.isNegative);
-  backend -= rhs.backend;
-  isNegative = isResNegZero || backend < 0;
+  bool isResultNegZero = isZero() &&
+                         rhs.isZero() &&
+                         (sign() < 0 || rhs.sign() >= 0);
+
+  if (!isResultNegZero) {
+    backend -= rhs.backend;
+  }
+  else {
+    backend = 0;
+    backend = -backend;
+  }
 
   return *this;
 }
 
 Real &Real::multiply(const Real &rhs) {
   updatePrecision(rhs);
-
-  isNegative = isNegative != rhs.isNegative;
   backend *= rhs.backend;
-
   return *this;
 }
 
 Real &Real::divide(const Real &rhs) {
-  updatePrecision(rhs);
-
-  isNegative = isNegative != rhs.isNegative;
-  backend /= rhs.backend;
-
-  if (!isFinite()) {
-    throw UndefinedBinaryOperatorException("/", toString(), rhs.toString());
+  if (rhs.isZero()) {
+    throw UndefinedException(fmt::format(
+        R"(div({}, {}) is undefined (division by zero))",
+        toString(),
+        rhs.toString()));
   }
 
+  updatePrecision(rhs);
+  backend /= rhs.backend;
   return *this;
 }
 
 Real &Real::negate() {
-  isNegative = !isNegative;
   backend = -backend;
   return *this;
 }

@@ -44,9 +44,27 @@ TEST(NotTests, callTest) {
 
   EXPECT_EQ(f(Variable("a"))->toString(), "~a");
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Boolean(true), Boolean(true)), InvalidInputFunctionException);
-  EXPECT_THROW(f(Boolean(true), Boolean(true), Boolean(true)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Not "~" with argument #0 Integer "1" (expected Boolean))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Not "~" with 0 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Boolean(false)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Not "~" with 2 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Boolean(false), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Not "~" with 3 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Boolean(false), Boolean(true), Boolean(false)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Not "~" with 4 arguments (expected 1))")));
 }
 
 TEST(NotTests, exprTest) {

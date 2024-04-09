@@ -3,6 +3,7 @@
 
 #include "fintamath/functions/ntheory/Mod.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -88,10 +89,31 @@ TEST(ModTests, callTest) {
 
   EXPECT_EQ(f(Integer(3), Variable("a"))->toString(), "3 mod a");
 
-  EXPECT_THROW(f(Integer(1)), InvalidInputFunctionException);
-  EXPECT_THROW(f(Rational(2, 3)), InvalidInputFunctionException);
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mod "mod" with argument #0 Boolean "True" (expected INumber))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mod "mod" with argument #1 Boolean "True" (expected INumber))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mod "mod" with 0 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mod "mod" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mod "mod" with 3 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Mod "mod" with 4 arguments (expected 2))")));
 }
 
 TEST(ModTests, exprTest) {

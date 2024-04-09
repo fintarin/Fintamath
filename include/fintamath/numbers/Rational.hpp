@@ -26,7 +26,7 @@ public:
 
   explicit Rational(Integer inNumer, Integer inDenom);
 
-  explicit Rational(const std::string &str);
+  explicit Rational(std::string_view str);
 
   std::string toString() const override;
 

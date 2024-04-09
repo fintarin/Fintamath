@@ -8,8 +8,11 @@
 #include <ranges>
 #include <stack>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
+
+#include <fmt/core.h>
 
 #include "fintamath/core/Cache.hpp"
 #include "fintamath/core/IMathObject.hpp"
@@ -17,7 +20,6 @@
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/expressions/ExpressionParser.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
 #include "fintamath/expressions/FunctionExpression.hpp"
 #include "fintamath/expressions/IExpression.hpp"
@@ -47,7 +49,7 @@ using namespace detail;
 Expression::Expression() : child(Integer(0).clone()) {
 }
 
-Expression::Expression(const std::string &str) : child(parseExpr(str)) {
+Expression::Expression(const std::string &str) : child(parseRawExpr(str)) {
 }
 
 Expression::Expression(const ArgumentPtr &obj) : child(compress(obj)) {
@@ -93,7 +95,10 @@ const ArgumentPtrVector &Expression::getChildren() const {
 
 void Expression::setChildren(const ArgumentPtrVector &childVect) {
   if (childVect.size() != 1) {
-    throw InvalidInputFunctionException("", argumentVectorToStringVector(childVect));
+    throw InvalidInputException(fmt::format(
+        R"(Unable to set {} {} children (expected 1))",
+        childVect.size(),
+        getClassStatic()->getName()));
   }
 
   *this = Expression(childVect.front());
@@ -134,22 +139,26 @@ void Expression::updateStringMutable() const {
   stringCached = child->toString();
 }
 
-std::unique_ptr<IMathObject> parseExpr(const std::string &str) {
-  try {
-    auto tokens = Tokenizer::tokenize(str);
-    auto terms = Expression::tokensToTerms(tokens);
-    auto stack = Expression::termsToOperands(terms);
-    auto obj = Expression::operandsToObject(stack);
-    return obj;
-  }
-  catch (const InvalidInputException &) {
-    throw InvalidInputException(str);
-  }
+std::unique_ptr<IMathObject> parseRawExpr(const std::string &str) try {
+  auto tokens = Tokenizer::tokenize(str);
+  auto terms = Expression::tokensToTerms(tokens);
+  auto objects = Expression::termsToObjects(terms);
+  auto expr = Expression::objectsToExpr(objects);
+  return expr;
+}
+catch (const InvalidInputException &exc) {
+  std::string message = exc.what();
+  message[0] = static_cast<char>(std::tolower(message[0]));
+
+  throw InvalidInputException(fmt::format(
+      R"(Unable to parse an expression from "{}" ({}))",
+      str,
+      message));
 }
 
 TermVector Expression::tokensToTerms(TokenVector &tokens) {
   if (tokens.empty()) {
-    throw InvalidInputException("");
+    throw InvalidInputException("empty input");
   }
 
   TermVector terms(tokens.size());
@@ -167,8 +176,8 @@ TermVector Expression::tokensToTerms(TokenVector &tokens) {
 
 // Use the shunting yard algorithm
 // https://en.m.wikipedia.org/wiki/Shunting_yard_algorithm
-OperandStack Expression::termsToOperands(TermVector &terms) {
-  OperandStack operands;
+ObjectStack Expression::termsToObjects(TermVector &terms) {
+  ObjectStack objects;
   FunctionTermStack functions;
 
   for (auto &term : terms) {
@@ -177,66 +186,72 @@ OperandStack Expression::termsToOperands(TermVector &terms) {
         functions.emplace(std::move(term), std::optional<IOperator::Priority>{});
       }
       else if (term.name == ")") {
-        moveFunctionTermsToOperands(operands, functions, {});
+        moveFunctionTermsToObjects(objects, functions, {});
 
         if (functions.empty()) {
-          throw InvalidInputException("");
+          throw InvalidInputException("bracket mismatch");
         }
 
         functions.pop();
       }
       else {
-        throw InvalidInputException("");
+        throw InvalidInputException(
+            fmt::format(R"(invalid term "{}")",
+                        term.name));
       }
     }
     else if (is<IFunction>(term.value)) {
       std::optional<IOperator::Priority> priority;
 
       if (const auto *oper = cast<IOperator>(term.value.get())) {
-        moveFunctionTermsToOperands(operands, functions, oper);
+        moveFunctionTermsToObjects(objects, functions, oper);
         priority = oper->getPriority();
       }
 
       functions.emplace(std::move(term), priority);
     }
     else {
-      operands.emplace(std::move(term.value));
+      objects.emplace(std::move(term.value));
     }
   }
 
-  moveFunctionTermsToOperands(operands, functions, {});
+  moveFunctionTermsToObjects(objects, functions, {});
 
   if (!functions.empty()) {
-    throw InvalidInputException("");
+    throw InvalidInputException("bracket mismatch");
   }
 
-  return operands;
+  return objects;
 }
 
-std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands) {
-  if (operands.empty()) {
-    throw InvalidInputException("");
+std::unique_ptr<IMathObject> Expression::objectsToExpr(ObjectStack &objects) {
+  if (objects.empty()) {
+    throw InvalidInputException("incomplete expression inside brackets");
   }
 
-  std::unique_ptr<IMathObject> arg = std::move(operands.top());
-  operands.pop();
+  std::unique_ptr<IMathObject> arg = std::move(objects.top());
+  objects.pop();
 
   if (is<IFunction>(arg)) {
     auto func = cast<IFunction>(std::move(arg));
-    const ArgumentPtr rhsChild = operandsToObject(operands);
+    const ArgumentPtr rhsChild = objectsToExpr(objects);
 
     if (isBinaryOperator(func.get())) {
-      const ArgumentPtr lhsChild = operandsToObject(operands);
+      const ArgumentPtr lhsChild = objectsToExpr(objects);
       return makeExpr(*func, {lhsChild, rhsChild});
     }
 
     ArgumentPtrVector children = unwrapComma(rhsChild);
 
     if (!func->isVariadic() && func->getArgumentClasses().size() != children.size()) {
-      func = parseFunction(func->toString(), children.size());
+      std::string funcStr = func->toString();
+      func = findFunction(funcStr, children.size());
 
       if (!func) {
-        throw InvalidInputException("");
+        throw InvalidInputException(fmt::format(
+            R"(function "{}" with {} arguments not found)",
+            funcStr,
+            children.size()));
       }
     }
 
@@ -246,7 +261,7 @@ std::unique_ptr<IMathObject> Expression::operandsToObject(OperandStack &operands
   return arg;
 }
 
-std::unique_ptr<IFunction> Expression::parseFunction(const std::string &str, const size_t argNum) {
+std::unique_ptr<IFunction> Expression::findFunction(const std::string &str, const size_t argNum) {
   for (auto &func : IFunction::parse(str)) {
     if (func->getArgumentClasses().size() == argNum) {
       return std::move(func);
@@ -256,7 +271,7 @@ std::unique_ptr<IFunction> Expression::parseFunction(const std::string &str, con
   return {};
 }
 
-auto Expression::parseOperator(const std::string &str, const IOperator::Priority priority) -> std::unique_ptr<IOperator> {
+auto Expression::findOperator(const std::string &str, const IOperator::Priority priority) -> std::unique_ptr<IOperator> {
   for (auto &oper : IOperator::parse(str)) {
     if (oper->getPriority() == priority) {
       return std::move(oper);
@@ -284,7 +299,7 @@ Term Expression::parseTerm(const std::string &str) {
   return term;
 }
 
-void Expression::moveFunctionTermsToOperands(OperandStack &operands, std::stack<FunctionTerm> &functions, const IOperator *nextOper) {
+void Expression::moveFunctionTermsToObjects(ObjectStack &objects, std::stack<FunctionTerm> &functions, const IOperator *nextOper) {
   if (isPrefixOperator(nextOper)) {
     return;
   }
@@ -295,7 +310,7 @@ void Expression::moveFunctionTermsToOperands(OperandStack &operands, std::stack<
           !functions.top().priority ||
           *functions.top().priority <= nextOper->getPriority())) {
 
-    operands.emplace(std::move(functions.top().term.value));
+    objects.emplace(std::move(functions.top().term.value));
     functions.pop();
   }
 }
@@ -315,26 +330,30 @@ void Expression::insertMultiplications(TermVector &terms) {
 }
 
 void Expression::fixOperatorTypes(TermVector &terms) {
-  bool isFixed = true;
-
   if (auto &term = terms.front();
       is<IOperator>(term.value) &&
       !isPrefixOperator(term.value.get())) {
 
-    term.value = parseOperator(term.name, IOperator::Priority::PrefixUnary);
-    isFixed = static_cast<bool>(term.value);
+    term.value = findOperator(term.name, IOperator::Priority::PrefixUnary);
+
+    if (!term.value) {
+      throw InvalidInputException(fmt::format(
+          R"(incomplite expression with operator "{}")",
+          term.name));
+    }
   }
 
   if (auto &term = terms.back();
       is<IOperator>(term.value) &&
       !isPostfixOperator(term.value.get())) {
 
-    term.value = parseOperator(term.name, IOperator::Priority::PostfixUnary);
-    isFixed = isFixed && static_cast<bool>(term.value);
-  }
+    term.value = findOperator(term.name, IOperator::Priority::PostfixUnary);
 
-  if (!isFixed) {
-    throw InvalidInputException("");
+    if (!term.value) {
+      throw InvalidInputException(fmt::format(
+          R"(incomplite expression with operator "{}")",
+          term.name));
+    }
   }
 
   if (terms.size() < 3) {
@@ -349,8 +368,13 @@ void Expression::fixOperatorTypes(TermVector &terms) {
         !isPrefixOperator(term.value.get()) &&
         !canNextTermBeBinaryOperator(termPrev)) {
 
-      term.value = parseOperator(term.name, IOperator::Priority::PrefixUnary);
-      isFixed = isFixed && term.value;
+      term.value = findOperator(term.name, IOperator::Priority::PrefixUnary);
+
+      if (!term.value) {
+        throw InvalidInputException(fmt::format(
+            R"(incomplite expression with operator "{}")",
+            term.name));
+      }
     }
   }
 
@@ -362,13 +386,14 @@ void Expression::fixOperatorTypes(TermVector &terms) {
         !isPostfixOperator(term.value.get()) &&
         !canPrevTermBeBinaryOperator(termNext)) {
 
-      term.value = parseOperator(term.name, IOperator::Priority::PostfixUnary);
-      isFixed = isFixed && term.value;
-    }
-  }
+      term.value = findOperator(term.name, IOperator::Priority::PostfixUnary);
 
-  if (!isFixed) {
-    throw InvalidInputException("");
+      if (!term.value) {
+        throw InvalidInputException(fmt::format(
+            R"(incomplite expression with operator "{}")",
+            term.name));
+      }
+    }
   }
 }
 
@@ -453,54 +478,77 @@ Expression::ExpressionMaker &Expression::getExpressionMaker() {
 void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args) {
   const ArgumentTypeVector &expectedArgTypes = func.getArgumentClasses();
 
-  if (args.empty() || (!func.isVariadic() && args.size() != expectedArgTypes.size())) {
-    throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
+  if (args.size() != expectedArgTypes.size()) {
+    if (!func.isVariadic()) {
+      throw InvalidInputException(fmt::format(
+          R"(Unable to call {} "{}" with {} argument{} (expected {}))",
+          func.getClass()->getName(),
+          func.toString(),
+          args.size(),
+          args.size() != 1 ? "s" : "",
+          func.getArgumentClasses().size()));
+    }
+
+    if (args.empty()) {
+      throw InvalidInputException(fmt::format(
+          R"(Unable to call {} "{}" with 0 arguments (expected > 0))",
+          func.getClass()->getName(),
+          func.toString()));
+    }
   }
 
   const bool doesArgSizeMatch = !func.isVariadic() && args.size() == expectedArgTypes.size();
-  MathObjectClass expectedType = expectedArgTypes.front();
+  MathObjectClass expectedClass = expectedArgTypes.front();
 
   for (size_t i = 0; i < args.size(); i++) {
+    const ArgumentPtr &arg = args[i];
+
     if (doesArgSizeMatch) {
-      expectedType = expectedArgTypes[i];
+      expectedClass = expectedArgTypes[i];
     }
 
-    if (const ArgumentPtr &arg = args[i]; !doesArgMatch(expectedType, arg)) {
-      throw InvalidInputFunctionException(func.toString(), argumentVectorToStringVector(args));
+    if (auto [argClass, doesMatch] = doesArgMatch(expectedClass, arg); !doesMatch) {
+      throw InvalidInputException(fmt::format(
+          R"(Unable to call {} "{}" with argument #{} {} "{}" (expected {}))",
+          func.getClass()->getName(),
+          func.toString(),
+          i,
+          argClass->getName(),
+          arg->toString(),
+          expectedClass->getName()));
     }
   }
 }
 
-bool Expression::doesArgMatch(const MathObjectClass &expectedType, const ArgumentPtr &arg) {
+std::pair<MathObjectClass, bool> Expression::doesArgMatch(const MathObjectClass &expectedClass, const ArgumentPtr &arg) {
   if (const auto childExpr = cast<IExpression>(arg)) {
-    const std::shared_ptr<IFunction> &childFunc = childExpr->getFunction();
-    const MathObjectClass childType = childFunc->getReturnClass();
+    const MathObjectClass argReturnClass = childExpr->getFunction()->getReturnClass();
 
-    if (childType != Variable::getClassStatic() &&
-        !is(expectedType, childType) &&
-        !is(childType, expectedType)) {
+    if (argReturnClass != Variable::getClassStatic() &&
+        !is(expectedClass, argReturnClass) &&
+        !is(argReturnClass, expectedClass)) {
 
-      return false;
+      return {argReturnClass, false};
     }
   }
-  else if (const auto childConst = cast<IConstant>(arg)) {
-    if (const MathObjectClass childType = childConst->getReturnClass();
-        !is(expectedType, childType) &&
-        !is(childType, expectedType)) {
+  else if (const auto argConst = cast<IConstant>(arg)) {
+    if (const MathObjectClass argReturnClass = argConst->getReturnClass();
+        !is(expectedClass, argReturnClass) &&
+        !is(argReturnClass, expectedClass)) {
 
-      return false;
+      return {argReturnClass, false};
     }
   }
   else {
-    if (const MathObjectClass childType = arg->getClass();
-        childType != Variable::getClassStatic() &&
-        !is(expectedType, childType)) {
+    if (const MathObjectClass argClass = arg->getClass();
+        argClass != Variable::getClassStatic() &&
+        !is(expectedClass, argClass)) {
 
-      return false;
+      return {argClass, false};
     }
   }
 
-  return true;
+  return {arg->getClass(), true};
 }
 
 namespace detail {

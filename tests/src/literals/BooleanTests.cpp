@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
@@ -14,12 +15,26 @@ TEST(BooleanTests, stringConstructorTest) {
   EXPECT_EQ(Boolean("True"), true);
   EXPECT_EQ(Boolean("False"), false);
 
-  EXPECT_THROW(Boolean("true"), InvalidInputException);
-  EXPECT_THROW(Boolean("false"), InvalidInputException);
-  EXPECT_THROW(Boolean("10"), InvalidInputException);
-  EXPECT_THROW(Boolean("i"), InvalidInputException);
-  EXPECT_THROW(Boolean(""), InvalidInputException);
-  EXPECT_THROW(Boolean(""), InvalidInputException);
+  EXPECT_THAT(
+      [] { Boolean(std::string("")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Boolean from "" (expected "True" or "False"))")));
+  EXPECT_THAT(
+      [] { Boolean(std::string("true")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Boolean from "true" (expected "True" or "False"))")));
+  EXPECT_THAT(
+      [] { Boolean(std::string("false")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Boolean from "false" (expected "True" or "False"))")));
+  EXPECT_THAT(
+      [] { Boolean(std::string("10")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Boolean from "10" (expected "True" or "False"))")));
+  EXPECT_THAT(
+      [] { Boolean(std::string("i")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to parse Boolean from "i" (expected "True" or "False"))")));
 }
 
 TEST(BooleanTests, boolConstructorTest) {

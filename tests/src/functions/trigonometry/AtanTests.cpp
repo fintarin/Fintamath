@@ -3,6 +3,7 @@
 
 #include "fintamath/functions/trigonometry/Atan.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -48,8 +49,27 @@ TEST(AtanTests, callTest) {
 
   EXPECT_EQ(f(Variable("a"))->toString(), "atan(a)");
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Atan "atan" with argument #0 Boolean "True" (expected INumber))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Atan "atan" with 0 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Atan "atan" with 2 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Atan "atan" with 3 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Atan "atan" with 4 arguments (expected 1))")));
 }
 
 TEST(AtanTests, exprTest) {

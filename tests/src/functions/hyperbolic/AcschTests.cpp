@@ -3,6 +3,7 @@
 
 #include "fintamath/functions/hyperbolic/Acsch.hpp"
 
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Complex.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -47,8 +48,27 @@ TEST(AcschTests, callTest) {
 
   EXPECT_EQ(f(Variable("a"))->toString(), "acsch(a)");
 
-  EXPECT_THROW(f(), InvalidInputFunctionException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Acsch "acsch" with argument #0 Boolean "True" (expected INumber))")));
+
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Acsch "acsch" with 0 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Acsch "acsch" with 2 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Acsch "acsch" with 3 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Acsch "acsch" with 4 arguments (expected 1))")));
 }
 
 TEST(AcschTests, exprTest) {

@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "fintamath/expressions/interfaces/IUnaryExpression.hpp"
@@ -42,22 +43,27 @@ TEST(IUnaryExpressionTests, getFunctionTest) {
   EXPECT_EQ(*expr.getFunction(), f);
 }
 
-TEST(IUnaryExpressionTests, getChildren) {
+TEST(IUnaryExpressionTests, getChildrenTest) {
   const TestUnaryExpression expr(std::make_shared<Integer>(1));
   EXPECT_EQ(expr.getChildren().size(), 1);
   EXPECT_EQ(*expr.getChildren().front(), Integer(1));
 }
 
-TEST(IUnaryExpressionTests, setChildren) {
+TEST(IUnaryExpressionTests, setChildrenTest) {
   TestUnaryExpression expr(std::make_shared<Integer>(1));
 
   expr.setChildren({std::make_shared<Integer>(0)});
   EXPECT_EQ(expr.getChildren().size(), 1);
   EXPECT_EQ(*expr.getChildren().front(), Integer(0));
 
-  EXPECT_THROW(expr.setChildren({}), InvalidInputFunctionException);
-  EXPECT_THROW(expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1)}),
-               InvalidInputFunctionException);
+  EXPECT_THAT(
+      [&] { expr.setChildren({}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Factorial "!" with 0 arguments (expected 1))")));
+  EXPECT_THAT(
+      [&] { expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1)}); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Factorial "!" with 2 arguments (expected 1))")));
 }
 
 TEST(IUnaryExpressionTests, toMinimalObjectTest) {

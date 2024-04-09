@@ -4,6 +4,7 @@
 #include "fintamath/functions/calculus/Derivative.hpp"
 
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/literals/Boolean.hpp"
 #include "fintamath/literals/Variable.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -85,13 +86,31 @@ TEST(DerivativeTests, callTest) {
 
   EXPECT_EQ(f(TestComparable(), Variable("a"))->toString(), "derivative(testderivative, a)");
 
-  EXPECT_THROW(f(Integer(5), Integer(1)), InvalidInputException);
-  EXPECT_THROW(f(Variable("a"), Integer(1)), InvalidInputException);
-  EXPECT_THROW(f(Variable("a"), Expression("a+a")), InvalidInputException);
+  EXPECT_THAT(
+      [&] { f(Boolean(true), Variable("a")); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Derivative "derivative" with argument #0 Boolean "True" (expected IComparable))")));
+  EXPECT_THAT(
+      [&] { f(Variable("a"), Boolean(true)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Derivative "derivative" with argument #1 Boolean "True" (expected Variable))")));
 
-  EXPECT_THROW(f(), InvalidInputException);
-  EXPECT_THROW(f(Integer(1)), InvalidInputException);
-  EXPECT_THROW(f(Integer(1), Integer(1), Integer(1)), InvalidInputException);
+  EXPECT_THAT(
+      [&] { f(); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Derivative "derivative" with 0 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Derivative "derivative" with 1 argument (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Derivative "derivative" with 3 arguments (expected 2))")));
+  EXPECT_THAT(
+      [&] { f(Integer(1), Integer(2), Integer(3), Integer(4)); },
+      testing::ThrowsMessage<InvalidInputException>(
+          testing::StrEq(R"(Unable to call Derivative "derivative" with 4 arguments (expected 2))")));
 }
 
 TEST(DerivativeTests, exprTest) {

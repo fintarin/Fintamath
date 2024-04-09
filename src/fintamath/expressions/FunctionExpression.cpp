@@ -79,9 +79,7 @@ ArgumentPtr FunctionExpression::simplifyRec(bool isPostSimplify) const {
 }
 
 void FunctionExpression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.size() != func->getArgumentClasses().size()) {
-    throw InvalidInputFunctionException(func->toString(), argumentVectorToStringVector(childVect));
-  }
+  (void)makeExpr(*func, childVect);
 
   children = childVect;
 }

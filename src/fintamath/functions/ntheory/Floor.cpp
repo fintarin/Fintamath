@@ -41,9 +41,13 @@ std::unique_ptr<IMathObject> Floor::multiFloorSimplify(const INumber &rhs) {
     });
 
     outMultiFloor.add<Real>([](const Real &inRhs) {
+      if (inRhs.isZero()) {
+        return std::unique_ptr<IMathObject>{};
+      }
+
       Integer res = floor(inRhs);
 
-      if (abs(inRhs) == Real(abs(res))) {
+      if (inRhs == res) {
         return std::unique_ptr<IMathObject>{};
       }
 
