@@ -18,7 +18,7 @@ set(CMAKE_MODULE_PATH
     PARENT_SCOPE)
 
 add_subdirectory(fmt)
-suppress_warnings(fmt)
+suppress_warnings(fmt-header-only)
 
 add_subdirectory(cppcoro)
 suppress_warnings(cppcoro)

@@ -47,7 +47,7 @@ target_include_directories(
 
 target_link_libraries(
   ${PROJECT_NAME}
-  PUBLIC fmt::fmt
+  PUBLIC fmt::fmt-header-only
          cppcoro
          MPFR
          Boost::multiprecision
