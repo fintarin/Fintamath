@@ -17,11 +17,11 @@ namespace fintamath {
 
 using namespace detail;
 
+namespace {
+
 constexpr std::string_view backendIsInfException = "Undefined backend inf";
 constexpr std::string_view backendIsNegInfException = "Undefined backend -inf";
 constexpr std::string_view backendIsNanException = "Undefined backend nan";
-
-namespace {
 
 bool isOverflow(const Real &rhs) {
   static Cache<unsigned, Real::Backend> cache([](const unsigned precision) {
@@ -173,7 +173,9 @@ catch (const UndefinedException &exc) {
 }
 
 Real log(const Real &lhs, const Real &rhs) try {
-  return ln(rhs) / ln(lhs);
+  Real divLhs = ln(rhs);
+  Real divRhs = ln(lhs);
+  return divLhs / divRhs;
 }
 catch (const UndefinedException &exc) {
   throw UndefinedException(fmt::format(
@@ -527,4 +529,5 @@ const Real &getPi() {
 
   return cache[Real::getCalculationPrecision()];
 }
+
 }

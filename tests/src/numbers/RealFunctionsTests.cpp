@@ -579,11 +579,11 @@ TEST(RealFunctionsTests, logTest) {
   EXPECT_THAT(
       [] { log(Real("0"), Real("-0")); },
       testing::ThrowsMessage<UndefinedException>(
-          testing::StrEq("log(0.0, -0.0) is undefined (ln(0.0) is undefined (expected argument > 0))")));
+          testing::StrEq("log(0.0, -0.0) is undefined (ln(-0.0) is undefined (expected argument > 0))")));
   EXPECT_THAT(
       [] { log(Real("-0"), Real("0")); },
       testing::ThrowsMessage<UndefinedException>(
-          testing::StrEq("log(-0.0, 0.0) is undefined (ln(-0.0) is undefined (expected argument > 0))")));
+          testing::StrEq("log(-0.0, 0.0) is undefined (ln(0.0) is undefined (expected argument > 0))")));
   EXPECT_THAT(
       [] { log(Real("-0"), Real("-0")); },
       testing::ThrowsMessage<UndefinedException>(

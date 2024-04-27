@@ -80,8 +80,6 @@ ArgumentPtr invert(const ArgumentPtr &arg);
 
 ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &arg);
 
-std::vector<std::string> argumentVectorToStringVector(const ArgumentPtrVector &args);
-
 ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args);
 
 std::string putInBrackets(const std::string &str);
