@@ -238,7 +238,7 @@ std::unique_ptr<IMathObject> Expression::objectsToExpr(ObjectStack &objects) {
 
     if (isBinaryOperator(func.get())) {
       const ArgumentPtr lhsChild = objectsToExpr(objects);
-      return makeExpr(*func, {lhsChild, rhsChild});
+      return makeExprWithValidation(*func, {lhsChild, rhsChild});
     }
 
     ArgumentPtrVector children = unwrapComma(rhsChild);
@@ -255,7 +255,7 @@ std::unique_ptr<IMathObject> Expression::objectsToExpr(ObjectStack &objects) {
       }
     }
 
-    return makeExpr(*func, std::move(children));
+    return makeExprWithValidation(*func, std::move(children));
   }
 
   return arg;
@@ -554,9 +554,6 @@ std::pair<MathObjectClass, bool> Expression::doesArgMatch(const MathObjectClass 
 namespace detail {
 
 std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
-  std::ranges::transform(args, args.begin(), &Expression::compress);
-  Expression::validateFunctionArgs(func, args);
-
   if (func.isVariadic() && args.size() == 1) {
     return std::move(args.front())->clone();
   }
@@ -572,8 +569,10 @@ std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector a
   return FunctionExpression(func, std::move(args)).clone();
 }
 
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args) {
-  return makeExpr(func, argumentRefVectorToArgumentPtrVector(args));
+std::unique_ptr<IMathObject> makeExprWithValidation(const IFunction &func, ArgumentPtrVector args) {
+  std::ranges::transform(args, args.begin(), &Expression::compress);
+  Expression::validateFunctionArgs(func, args);
+  return makeExpr(func, std::move(args));
 }
 
 }

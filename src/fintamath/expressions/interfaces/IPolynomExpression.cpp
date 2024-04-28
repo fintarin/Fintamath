@@ -40,7 +40,7 @@ const ArgumentPtrVector &IPolynomExpression::getChildren() const {
 }
 
 void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
-  (void)makeExpr(*func, childVect);
+  (void)makeExprWithValidation(*func, childVect);
 
   children = childVect;
 }
