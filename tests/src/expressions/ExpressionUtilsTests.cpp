@@ -35,14 +35,6 @@ TEST(ExpressionUtilsTests, postfixUnaryOperatorToStringTest) {
   // TODO: implement
 }
 
-TEST(ExpressionUtilsTests, argumentVectorToStringVectorTest) {
-  // TODO: implement
-}
-
-TEST(ExpressionUtilsTests, argumentRefVectorToArgumentPtrVector) {
-  // TODO: implement
-}
-
 TEST(ExpressionUtilsTests, containsIfTest) {
   // TODO: implement
 }

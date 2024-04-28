@@ -98,7 +98,7 @@ IBinaryExpression::SimplifyFunctionVector IBinaryExpression::getFunctionsForPost
 }
 
 void IBinaryExpression::setChildren(const ArgumentPtrVector &childVect) {
-  (void)makeExpr(*func, childVect);
+  (void)makeExprWithValidation(*func, childVect);
 
   lhsChild = childVect[0];
   rhsChild = childVect[1];

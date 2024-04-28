@@ -52,8 +52,10 @@
 
 namespace fintamath {
 
+using namespace detail;
+
 Expression operator+(const Expression &lhs, const Expression &rhs) {
-  return Expression(addExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Add{}, lhs, rhs));
 }
 
 Expression operator+(const Expression &rhs) {
@@ -61,171 +63,171 @@ Expression operator+(const Expression &rhs) {
 }
 
 Expression operator-(const Expression &lhs, const Expression &rhs) {
-  return Expression(subExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Sub{}, lhs, rhs));
 }
 
 Expression operator-(const Expression &rhs) {
-  return Expression(negExpr(rhs));
+  return Expression(makeExprWithValidation(Neg{}, rhs));
 }
 
 Expression operator*(const Expression &lhs, const Expression &rhs) {
-  return Expression(mulExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Mul{}, lhs, rhs));
 }
 
 Expression operator/(const Expression &lhs, const Expression &rhs) {
-  return Expression(divExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Div{}, lhs, rhs));
 }
 
 Expression mod(const Expression &lhs, const Expression &rhs) {
-  return Expression(modExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Mod{}, lhs, rhs));
 }
 
 Expression eqv(const Expression &lhs, const Expression &rhs) {
-  return Expression(eqvExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Eqv{}, lhs, rhs));
 }
 
 Expression neqv(const Expression &lhs, const Expression &rhs) {
-  return Expression(neqvExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Neqv{}, lhs, rhs));
 }
 
 Expression less(const Expression &lhs, const Expression &rhs) {
-  return Expression(lessExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Less{}, lhs, rhs));
 }
 
 Expression more(const Expression &lhs, const Expression &rhs) {
-  return Expression(moreExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(More{}, lhs, rhs));
 }
 
 Expression lessEqv(const Expression &lhs, const Expression &rhs) {
-  return Expression(lessEqvExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(LessEqv{}, lhs, rhs));
 }
 
 Expression moreEqv(const Expression &lhs, const Expression &rhs) {
-  return Expression(moreEqvExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(MoreEqv{}, lhs, rhs));
 }
 
 Expression floor(const Expression &rhs) {
-  return Expression(floorExpr(rhs));
+  return Expression(makeExprWithValidation(Floor{}, rhs));
 }
 
 Expression ceil(const Expression &rhs) {
-  return Expression(ceilExpr(rhs));
+  return Expression(makeExprWithValidation(Ceil{}, rhs));
 }
 
 Expression abs(const Expression &rhs) {
-  return Expression(absExpr(rhs));
+  return Expression(makeExprWithValidation(Abs{}, rhs));
 }
 
 Expression factorial(const Expression &rhs) {
-  return Expression(factorialExpr(rhs));
+  return Expression(makeExprWithValidation(Factorial{}, rhs));
 }
 
 Expression sqrt(const Expression &rhs) {
-  return Expression(sqrtExpr(rhs));
+  return Expression(makeExprWithValidation(Sqrt{}, rhs));
 }
 
 Expression pow(const Expression &lhs, const Expression &rhs) {
-  return Expression(powExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Pow{}, lhs, rhs));
 }
 
 Expression exp(const Expression &rhs) {
-  return Expression(expExpr(rhs));
+  return Expression(makeExprWithValidation(Exp{}, rhs));
 }
 
 Expression log(const Expression &lhs, const Expression &rhs) {
-  return Expression(logExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Log{}, lhs, rhs));
 }
 
 Expression ln(const Expression &rhs) {
-  return Expression(lnExpr(rhs));
+  return Expression(makeExprWithValidation(Ln{}, rhs));
 }
 
 Expression lb(const Expression &rhs) {
-  return Expression(lbExpr(rhs));
+  return Expression(makeExprWithValidation(Lb{}, rhs));
 }
 
 Expression lg(const Expression &rhs) {
-  return Expression(lgExpr(rhs));
+  return Expression(makeExprWithValidation(Lg{}, rhs));
 }
 
 Expression sin(const Expression &rhs) {
-  return Expression(sinExpr(rhs));
+  return Expression(makeExprWithValidation(Sin{}, rhs));
 }
 
 Expression cos(const Expression &rhs) {
-  return Expression(cosExpr(rhs));
+  return Expression(makeExprWithValidation(Cos{}, rhs));
 }
 
 Expression tan(const Expression &rhs) {
-  return Expression(tanExpr(rhs));
+  return Expression(makeExprWithValidation(Tan{}, rhs));
 }
 
 Expression cot(const Expression &rhs) {
-  return Expression(cotExpr(rhs));
+  return Expression(makeExprWithValidation(Cot{}, rhs));
 }
 
 Expression asin(const Expression &rhs) {
-  return Expression(asinExpr(rhs));
+  return Expression(makeExprWithValidation(Asin{}, rhs));
 }
 
 Expression acos(const Expression &rhs) {
-  return Expression(acosExpr(rhs));
+  return Expression(makeExprWithValidation(Acos{}, rhs));
 }
 
 Expression atan(const Expression &rhs) {
-  return Expression(atanExpr(rhs));
+  return Expression(makeExprWithValidation(Atan{}, rhs));
 }
 
 Expression acot(const Expression &rhs) {
-  return Expression(acotExpr(rhs));
+  return Expression(makeExprWithValidation(Acot{}, rhs));
 }
 
 Expression sinh(const Expression &rhs) {
-  return Expression(sinhExpr(rhs));
+  return Expression(makeExprWithValidation(Sinh{}, rhs));
 }
 
 Expression cosh(const Expression &rhs) {
-  return Expression(coshExpr(rhs));
+  return Expression(makeExprWithValidation(Cosh{}, rhs));
 }
 
 Expression tanh(const Expression &rhs) {
-  return Expression(tanhExpr(rhs));
+  return Expression(makeExprWithValidation(Tanh{}, rhs));
 }
 
 Expression coth(const Expression &rhs) {
-  return Expression(cothExpr(rhs));
+  return Expression(makeExprWithValidation(Coth{}, rhs));
 }
 
 Expression asinh(const Expression &rhs) {
-  return Expression(asinhExpr(rhs));
+  return Expression(makeExprWithValidation(Asinh{}, rhs));
 }
 
 Expression acosh(const Expression &rhs) {
-  return Expression(acoshExpr(rhs));
+  return Expression(makeExprWithValidation(Acosh{}, rhs));
 }
 
 Expression atanh(const Expression &rhs) {
-  return Expression(atanhExpr(rhs));
+  return Expression(makeExprWithValidation(Atanh{}, rhs));
 }
 
 Expression acoth(const Expression &rhs) {
-  return Expression(acothExpr(rhs));
+  return Expression(makeExprWithValidation(Acoth{}, rhs));
 }
 
 Expression derivative(const Expression &lhs, const Expression &rhs) {
-  return Expression(derivativeExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Derivative{}, lhs, rhs));
 }
 
 Expression notL(const Expression &rhs) {
-  return Expression(notExpr(rhs));
+  return Expression(makeExprWithValidation(Not{}, rhs));
 }
 
 Expression andL(const Expression &lhs, const Expression &rhs) {
-  return Expression(andExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(And{}, lhs, rhs));
 }
 
 Expression orL(const Expression &lhs, const Expression &rhs) {
-  return Expression(orExpr(lhs, rhs));
+  return Expression(makeExprWithValidation(Or{}, lhs, rhs));
 }
 
 Expression e() {

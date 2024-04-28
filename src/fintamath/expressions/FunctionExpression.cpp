@@ -79,7 +79,7 @@ ArgumentPtr FunctionExpression::simplifyRec(bool isPostSimplify) const {
 }
 
 void FunctionExpression::setChildren(const ArgumentPtrVector &childVect) {
-  (void)makeExpr(*func, childVect);
+  (void)makeExprWithValidation(*func, childVect);
 
   children = childVect;
 }

@@ -270,16 +270,6 @@ ArgumentPtrVector getPolynomChildren(const IFunction &func, const ArgumentPtr &a
   return {arg};
 }
 
-ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args) {
-  ArgumentPtrVector argsPtrVect;
-
-  for (const auto &arg : args) {
-    argsPtrVect.emplace_back(arg.get().clone());
-  }
-
-  return argsPtrVect;
-}
-
 std::string putInBrackets(const std::string &str) {
   return '(' + str + ')';
 }

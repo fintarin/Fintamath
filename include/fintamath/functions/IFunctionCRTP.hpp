@@ -79,7 +79,7 @@ protected:
       }
     }
 
-    return detail::makeExpr(*this, argVect)->toMinimalObject();
+    return detail::makeExprWithValidation(*this, argVect)->toMinimalObject();
   }
 
 private:

@@ -143,6 +143,8 @@ private:
 
   friend std::unique_ptr<IMathObject> detail::makeExpr(const IFunction &func, ArgumentPtrVector args);
 
+  friend std::unique_ptr<IMathObject> detail::makeExprWithValidation(const IFunction &func, ArgumentPtrVector args);
+
   friend std::unique_ptr<IMathObject> parseRawExpr(const std::string &str);
 
   friend Expression approximate(const Expression &rhs, unsigned precision);
