@@ -36,6 +36,10 @@ public:
   virtual MathObjectClass getClass() const noexcept = 0;
 
   friend bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
+    if (&lhs == &rhs) {
+      return true;
+    }
+
     return lhs.equalsAbstract(rhs);
   }
 
