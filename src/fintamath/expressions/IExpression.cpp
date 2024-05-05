@@ -110,7 +110,7 @@ void IExpression::preSimplifyChild(ArgumentPtr &child) {
     if (const auto constChild = cast<IConstant>(child)) {
       const ArgumentPtr constVal = (*constChild)();
 
-      if (const auto num = cast<INumber>(constVal); num && !num->isPrecise()) {
+      if (const auto num = cast<INumber>(constVal); num && num->getPrecision()) {
         child = constChild;
       }
       else {
@@ -205,7 +205,7 @@ std::unique_ptr<INumber> IExpression::convertToApproximated(const INumber &num,
                                                         const Integer & /*inPrecision*/,
                                                         const Integer & /*inMaxInt*/) {
       auto res = cast<Real>(inRhs.clone());
-      res->setOutputPrecision(Real::getPrecision());
+      res->setPrecision(Real::getPrecisionStatic());
       return res;
     });
 
@@ -261,7 +261,7 @@ ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentPtrVe
   for (const auto &argPtr : argPtrs) {
     args.emplace_back(*argPtr);
 
-    if (const auto num = cast<INumber>(argPtr); num && !num->isPrecise()) {
+    if (const auto num = cast<INumber>(argPtr); num && num->getPrecision()) {
       areArgumentsPrecise = false;
     }
   }
@@ -273,7 +273,7 @@ ArgumentPtr IExpression::callFunction(const IFunction &func, const ArgumentPtrVe
   ArgumentPtr res = func(args);
 
   if (areArgumentsPrecise) {
-    if (const auto num = cast<INumber>(res); num && !num->isPrecise()) {
+    if (const auto num = cast<INumber>(res); num && num->getPrecision()) {
       return {};
     }
   }
@@ -309,7 +309,7 @@ ArgumentPtr IExpression::approximate() const {
     if (const auto childNum = cast<INumber>(child)) {
       numberChildrenCount++;
 
-      if (!childNum->isPrecise()) {
+      if (childNum->getPrecision()) {
         areNumberChilrenPrecise = false;
       }
     }

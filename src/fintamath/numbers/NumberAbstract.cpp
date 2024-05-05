@@ -54,7 +54,7 @@ std::unique_ptr<IArithmetic> Rational::divideAbstract(const IArithmetic &rhs) co
 //-------------------------------------------------------------------------------------//
 
 bool Real::equalsAbstract(const IMathObject &rhs) const {
-  if (const auto *rhsNum = cast<INumber>(&rhs); rhsNum && rhsNum->isPrecise()) {
+  if (const auto *rhsNum = cast<INumber>(&rhs); rhsNum && !rhsNum->getPrecision()) {
     return false;
   }
 
@@ -65,7 +65,7 @@ std::strong_ordering Real::compareAbstract(const IComparable &rhs) const {
   const auto res = INumberCRTP::compareAbstract(rhs);
 
   if (res == std::strong_ordering::equal) {
-    if (const auto *rhsNum = cast<INumber>(&rhs); rhsNum && rhsNum->isPrecise()) {
+    if (const auto *rhsNum = cast<INumber>(&rhs); rhsNum && !rhsNum->getPrecision()) {
       return sign() != 0 ? sign() <=> 0 : std::strong_ordering::greater;
     }
   }

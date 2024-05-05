@@ -2,6 +2,7 @@
 
 #include <concepts>
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 
@@ -17,8 +18,8 @@ class INumber : public IComparable {
   FINTAMATH_PARENT_CLASS_BODY(INumber, IComparable)
 
 public:
-  virtual bool isPrecise() const noexcept {
-    return true;
+  virtual std::optional<unsigned> getPrecision() const noexcept {
+    return {};
   }
 
   virtual bool isComplex() const noexcept {

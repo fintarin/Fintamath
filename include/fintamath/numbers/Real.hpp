@@ -27,7 +27,7 @@ public:
   using Backend = boost::multiprecision::mpfr_float;
 
   struct ScopedSetPrecision final {
-    unsigned currPrecision = getPrecision();
+    unsigned currPrecision = getPrecisionStatic();
 
   public:
     explicit ScopedSetPrecision(unsigned precision);
@@ -56,8 +56,6 @@ public:
 
   std::string toString(unsigned precision) const;
 
-  bool isPrecise() const noexcept override;
-
   int sign() const;
 
   bool isZero() const;
@@ -68,15 +66,15 @@ public:
 
   const Backend &getBackend() const noexcept;
 
-  unsigned getOutputPrecision() const noexcept;
+  std::optional<unsigned> getPrecision() const noexcept override;
 
-  void setOutputPrecision(unsigned precision);
+  void setPrecision(unsigned precision);
 
-  static unsigned getCalculationPrecision() noexcept;
+  static unsigned getCalculationPrecisionStatic() noexcept;
 
-  static unsigned getPrecision() noexcept;
+  static unsigned getPrecisionStatic() noexcept;
 
-  static void setPrecision(unsigned precision);
+  static void setPrecisionStatic(unsigned precision);
 
 protected:
   bool equals(const Real &rhs) const override;
@@ -107,7 +105,7 @@ private:
 private:
   Backend backend;
 
-  unsigned outputPrecision = getPrecision();
+  unsigned outputPrecision = getPrecisionStatic();
 };
 
 }

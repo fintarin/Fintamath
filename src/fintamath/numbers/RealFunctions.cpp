@@ -29,7 +29,7 @@ bool isOverflow(const Real &rhs) {
     return pow(powBase, precision);
   });
 
-  return abs(rhs) > cache[Real::getPrecision()];
+  return abs(rhs) > cache[Real::getPrecisionStatic()];
 }
 
 bool isUnderflow(const Real &rhs) {
@@ -38,7 +38,7 @@ bool isUnderflow(const Real &rhs) {
     return 1 / pow(powBase, precision);
   });
 
-  return !rhs.isZero() && abs(rhs) < cache[Real::getPrecision()];
+  return !rhs.isZero() && abs(rhs) < cache[Real::getPrecisionStatic()];
 }
 
 bool isLogUnderflow(const Real &rhs) {
@@ -46,7 +46,7 @@ bool isLogUnderflow(const Real &rhs) {
     return 1 / pow(precision, getE().getBackend());
   });
 
-  return !rhs.isZero() && abs(rhs) < cache[Real::getPrecision()];
+  return !rhs.isZero() && abs(rhs) < cache[Real::getPrecisionStatic()];
 }
 
 std::string getExceptionMessage(const std::string_view message) {
@@ -517,7 +517,7 @@ const Real &getE() {
     return Real(res);
   });
 
-  return cache[Real::getCalculationPrecision()];
+  return cache[Real::getCalculationPrecisionStatic()];
 }
 
 const Real &getPi() {
@@ -527,7 +527,7 @@ const Real &getPi() {
     return Real(res);
   });
 
-  return cache[Real::getCalculationPrecision()];
+  return cache[Real::getCalculationPrecisionStatic()];
 }
 
 }
