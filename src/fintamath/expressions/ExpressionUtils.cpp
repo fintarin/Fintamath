@@ -106,15 +106,27 @@ bool containsChild(const ArgumentPtr &arg, const ArgumentPtr &child) {
 }
 
 bool containsVariable(const ArgumentPtr &arg) {
-  return containsIf(arg, [](const ArgumentPtr &compArg) {
-    return is<Variable>(compArg);
-  });
+  if (is<Variable>(arg)) {
+    return true;
+  }
+
+  if (const auto argExpr = cast<IExpression>(arg)) {
+    return !argExpr->getVariables().empty();
+  }
+
+  return false;
 }
 
 bool containsVariable(const ArgumentPtr &arg, const Variable &var) {
-  return containsIf(arg, [&var](const ArgumentPtr &compArg) {
-    return *compArg == var;
-  });
+  if (*arg == var) {
+    return true;
+  }
+
+  if (const auto argExpr = cast<IExpression>(arg)) {
+    return argExpr->getVariables().contains(var);
+  }
+
+  return false;
 }
 
 bool containsInfinity(const ArgumentPtr &arg) {

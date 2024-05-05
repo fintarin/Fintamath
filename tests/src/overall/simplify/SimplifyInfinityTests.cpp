@@ -672,6 +672,8 @@ TEST(SimplifyInfinityTests, simplifyTest) {
             "Undefined");
   EXPECT_EQ(Expression("-Undefined").toString(),
             "Undefined");
+  EXPECT_EQ(Expression("Undefined!").toString(),
+            "Undefined");
   EXPECT_EQ(Expression("Undefined + 10").toString(),
             "Undefined");
   EXPECT_EQ(Expression("Undefined - 10").toString(),

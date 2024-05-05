@@ -89,7 +89,7 @@ std::string PowExpr::toString() const {
   return IBinaryExpression::toString();
 }
 
-ArgumentPtr PowExpr::approximate() const {
+ArgumentPtr PowExpr::approximate(const bool isTranformOverriden) const {
   if (const auto ratRhsChild = cast<Rational>(rhsChild); ratRhsChild && ratRhsChild->denominator() <= maxPreciseRoot) {
     auto approxExpr = cast<PowExpr>(clone());
     approximateChild(approxExpr->lhsChild);
@@ -101,17 +101,7 @@ ArgumentPtr PowExpr::approximate() const {
     return approxExpr;
   }
 
-  return IBinaryExpression::approximate();
-}
-
-ArgumentPtr PowExpr::setPrecision(const unsigned precision, const Integer &maxInt) const {
-  if (const auto ratRhsChild = cast<Rational>(rhsChild); ratRhsChild && ratRhsChild->denominator() <= maxPreciseRoot) {
-    auto approxExpr = cast<PowExpr>(clone());
-    setPrecisionChild(approxExpr->lhsChild, precision, maxInt);
-    return approxExpr;
-  }
-
-  return IBinaryExpression::setPrecision(precision, maxInt);
+  return IBinaryExpression::approximate(isTranformOverriden);
 }
 
 PowExpr::SimplifyFunctionVector PowExpr::getFunctionsForPostSimplify() const {

@@ -120,8 +120,23 @@ std::unique_ptr<IMathObject> Complex::toMinimalObject() const {
   return clone();
 }
 
-bool Complex::isPrecise() const noexcept {
-  return !is<Real>(re) && !is<Real>(im);
+std::optional<unsigned> Complex::getPrecision() const noexcept {
+  std::optional<unsigned> rePrecision = re->getPrecision();
+  std::optional<unsigned> imPrecision = im->getPrecision();
+
+  if (rePrecision && imPrecision) {
+    return std::min(*rePrecision, *imPrecision);
+  }
+
+  if (rePrecision) {
+    return *rePrecision;
+  }
+
+  if (imPrecision) {
+    return *imPrecision;
+  }
+
+  return {};
 }
 
 bool Complex::isComplex() const noexcept {

@@ -22,9 +22,7 @@ public:
   const std::shared_ptr<IFunction> &getOutputFunction() const override;
 
 protected:
-  ArgumentPtr approximate() const override;
-
-  ArgumentPtr setPrecision(unsigned precision, const Integer &maxInt) const override;
+  ArgumentPtr approximate(bool isTranformOverriden = true) const override;
 
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 

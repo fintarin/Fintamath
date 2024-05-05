@@ -19,6 +19,7 @@
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/functions/IOperator.hpp"
 #include "fintamath/literals/Variable.hpp"
+#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
@@ -78,29 +79,20 @@ public:
 
   Expression(int64_t val);
 
-  std::string toString() const override;
-
   const std::shared_ptr<IFunction> &getFunction() const override;
 
   const ArgumentPtrVector &getChildren() const override;
 
-  void setChildren(const ArgumentPtrVector &childVect) override;
+  std::string toString() const override;
 
-  void setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) override;
+  std::unique_ptr<IMathObject> toMinimalObject() const override;
 
-  void setVariable(const Variable &var, const Expression &val);
+  friend Expression approximate(const Expression &rhs, unsigned precision);
 
   template <typename Function>
   static void registerExpressionConstructor(ExpressionConstructor constructor);
 
-protected:
-  ArgumentPtr simplify() const override;
-
 private:
-  void simplifyMutable() const;
-
-  void updateStringMutable() const;
-
   static detail::TermVector tokensToTerms(detail::TokenVector &tokens);
 
   static detail::ObjectStack termsToObjects(detail::TermVector &terms);
@@ -147,19 +139,17 @@ private:
 
   friend std::unique_ptr<IMathObject> parseRawExpr(const std::string &str);
 
-  friend Expression approximate(const Expression &rhs, unsigned precision);
-
   static ExpressionMaker &getExpressionMaker();
 
 private:
-  mutable ArgumentPtr child;
+  ArgumentPtr child;
 
-  mutable ArgumentPtrVector childrenCached = {{}};
-
-  mutable std::string stringCached;
-
-  mutable bool isSimplified = false;
+  mutable ArgumentPtrVector childrenCached;
 };
+
+Expression solve(const Expression &rhs);
+
+Expression approximate(const Expression &rhs, unsigned precision = Real::getPrecisionStatic());
 
 std::unique_ptr<IMathObject> parseRawExpr(const std::string &str);
 

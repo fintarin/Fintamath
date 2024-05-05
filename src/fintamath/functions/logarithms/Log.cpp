@@ -57,7 +57,7 @@ std::unique_ptr<IMathObject> Log::call(const ArgumentRefVector &argVect) const {
     return Integer(0).clone();
   }
 
-  if (lhs == rhs && lhs.isPrecise()) {
+  if (lhs == rhs && !lhs.getPrecision()) {
     return Integer(1).clone();
   }
 

@@ -55,30 +55,6 @@ TEST(IPolynomExpressionTests, getChildrenTest) {
   EXPECT_EQ(*expr.getChildren()[2], Integer(3));
 }
 
-TEST(IPolynomExpressionTests, setChildrenTest) {
-  TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Integer(3).clone()});
-
-  expr.setChildren({Integer(0).clone()});
-  EXPECT_EQ(expr.getChildren().size(), 1);
-  EXPECT_EQ(*expr.getChildren().back(), Integer(0));
-
-  expr.setChildren({Integer(0).clone(), Integer(0).clone()});
-  EXPECT_EQ(expr.getChildren().size(), 2);
-  EXPECT_EQ(*expr.getChildren().front(), Integer(0));
-  EXPECT_EQ(*expr.getChildren().back(), Integer(0));
-
-  expr.setChildren({Integer(0).clone(), Integer(0).clone(), Integer(0).clone()});
-  EXPECT_EQ(expr.getChildren().size(), 3);
-  EXPECT_EQ(*expr.getChildren()[0], Integer(0));
-  EXPECT_EQ(*expr.getChildren()[1], Integer(0));
-  EXPECT_EQ(*expr.getChildren()[2], Integer(0));
-
-  EXPECT_THAT(
-      [&] { expr.setChildren({}); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to call Mul "mul" with 0 arguments (expected > 0))")));
-}
-
 TEST(IPolynomExpressionTests, toMinimalObjectTest) {
   const TestPolynomExpression expr({Integer(1).clone(), Integer(2).clone(), Variable("a").clone()});
   EXPECT_EQ(expr.toMinimalObject()->toString(), "mul(a, 2)");

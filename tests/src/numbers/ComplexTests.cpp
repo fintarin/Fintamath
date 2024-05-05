@@ -975,13 +975,27 @@ TEST(ComplexTests, simplifyTest) {
   EXPECT_EQ(Complex(Real("5.2"), Integer(0)).toMinimalObject()->toString(), "5.2");
 }
 
-TEST(ComplexTests, isPreciseTest) {
-  EXPECT_TRUE(Complex(1, 2).isPrecise());
-  EXPECT_TRUE(Complex(Rational(1, 2), Rational(1, 2)).isPrecise());
+TEST(ComplexTests, getPrecisionTest) {
+  EXPECT_FALSE(Complex(1, 2).getPrecision());
+  EXPECT_FALSE(Complex(Rational(1, 2), Rational(1, 2)).getPrecision());
 
-  EXPECT_FALSE(Complex(Real(1), Real(1)).isPrecise());
-  EXPECT_FALSE(Complex(Real(1), Integer(1)).isPrecise());
-  EXPECT_FALSE(Complex(Integer(1), Real(1)).isPrecise());
+  EXPECT_EQ(*Complex(Real(1), Real(1)).getPrecision(), Real::getPrecisionStatic());
+  EXPECT_EQ(*Complex(Real(1), Integer(1)).getPrecision(), Real::getPrecisionStatic());
+  EXPECT_EQ(*Complex(Integer(1), Real(1)).getPrecision(), Real::getPrecisionStatic());
+
+  {
+    Real a = 1;
+    Real b = 2;
+    a.setPrecision(5);
+    EXPECT_EQ(*Complex(a, b).getPrecision(), 5);
+  }
+
+  {
+    Real a = 1;
+    Real b = 2;
+    b.setPrecision(5);
+    EXPECT_EQ(*Complex(a, b).getPrecision(), 5);
+  }
 }
 
 TEST(ComplexTests, isComplexTest) {

@@ -41,7 +41,7 @@ const std::shared_ptr<IFunction> &IUnaryExpression::getFunction() const {
 }
 
 const ArgumentPtrVector &IUnaryExpression::getChildren() const {
-  childrenCached.front() = child;
+  childrenCached = {child};
   return childrenCached;
 }
 
@@ -53,52 +53,28 @@ IUnaryExpression::SimplifyFunctionVector IUnaryExpression::getFunctionsForPostSi
   return {};
 }
 
-ArgumentPtr IUnaryExpression::preSimplify() const {
-  const auto simpl = cast<IUnaryExpression>(clone());
-  preSimplifyChild(simpl->child);
-  return simpl->simplifyRec(false);
-}
+ArgumentPtr IUnaryExpression::tranform(const State newState) const {
+  ArgumentPtr res;
 
-ArgumentPtr IUnaryExpression::postSimplify() const {
-  const auto simpl = cast<IUnaryExpression>(clone());
-  postSimplifyChild(simpl->child);
-  return simpl->simplifyRec(true);
-}
-
-ArgumentPtr IUnaryExpression::simplifyRec(const bool isPostSimplify) const {
-  if (ArgumentPtr res = simplifyUndefined(*func, child)) {
-    return res;
-  }
-
-  if (ArgumentPtr res = callFunction(*func, {child})) {
-    return res;
-  }
-
-  ArgumentPtr res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(),
-                                                          *func,
-                                                          child)
-                                   : useSimplifyFunctions(getFunctionsForPreSimplify(),
-                                                          *func,
-                                                          child);
-
-  if (res && *res != *this) {
-    if (isPostSimplify) {
-      postSimplifyChild(res);
+  switch (newState) {
+    case State::PreSimplify: {
+      res = useSimplifyFunctions(getFunctionsForPreSimplify(), *func, child);
+      break;
     }
-    else {
-      preSimplifyChild(res);
+    case State::Simplify: {
+      res = useSimplifyFunctions(getFunctionsForPostSimplify(), *func, child);
+      break;
     }
+    default: {
+      break;
+    }
+  }
 
+  if (res) {
     return res;
   }
 
-  return clone();
-}
-
-void IUnaryExpression::setChildren(const ArgumentPtrVector &childVect) {
-  (void)makeExprWithValidation(*func, childVect);
-
-  child = childVect.front();
+  return IExpression::tranform(newState);
 }
 
 }

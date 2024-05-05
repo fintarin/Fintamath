@@ -48,31 +48,22 @@ const std::shared_ptr<IFunction> &LogExpr::getOutputFunction() const {
   return IBinaryExpression::getFunction();
 }
 
-ArgumentPtr LogExpr::approximate() const {
-  if (*lhsChild == E{}) {
-    const auto approxExpr = cast<LogExpr>(clone());
-    approximateChild(approxExpr->rhsChild);
+ArgumentPtr LogExpr::approximate(const bool isTranformOverriden) const {
+  // TODO!!!
+  // if (*lhsChild == E{}) {
+  //   const auto approxExpr = cast<LogExpr>(clone());
+  //   approximateChild(approxExpr->rhsChild);
 
-    if (is<INumber>(approxExpr->rhsChild)) {
-      if (const auto res = cast<INumber>(approxExpr->IBinaryExpression::approximate())) {
-        return res;
-      }
-    }
+  //   if (const auto res = cast<INumber>(approxExpr->IBinaryExpression::approximate())) {
+  //     return res;
+  //   }
 
-    return approxExpr->simplify();
-  }
+  //   simplifyChild(approxExpr); // TODO! solveChild()
+  //   approxExpr->changeState(State::Approximate);
+  //   return approxExpr;
+  // }
 
-  return IBinaryExpression::approximate();
-}
-
-ArgumentPtr LogExpr::setPrecision(const unsigned precision, const Integer &maxInt) const {
-  if (*lhsChild == E{}) {
-    const auto approxExpr = cast<LogExpr>(clone());
-    setPrecisionChild(approxExpr->rhsChild, precision, maxInt);
-    return approxExpr->simplify();
-  }
-
-  return IBinaryExpression::setPrecision(precision, maxInt);
+  return IBinaryExpression::approximate(isTranformOverriden);
 }
 
 LogExpr::SimplifyFunctionVector LogExpr::getFunctionsForPreSimplify() const {
@@ -106,8 +97,6 @@ ArgumentPtr LogExpr::constSimplify(const IFunction & /*func*/, const ArgumentPtr
     if (isInfinity(rhs)) {
       return Inf{}.clone();
     }
-
-    return callFunction(Ln{}, {rhs});
   }
 
   return {};

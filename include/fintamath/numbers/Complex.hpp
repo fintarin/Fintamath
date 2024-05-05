@@ -3,6 +3,7 @@
 #include <compare>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 
 #include "fintamath/core/IMathObject.hpp"
@@ -48,7 +49,7 @@ public:
 
   std::unique_ptr<IMathObject> toMinimalObject() const override;
 
-  bool isPrecise() const noexcept override;
+  std::optional<unsigned> getPrecision() const noexcept override;
 
   bool isComplex() const noexcept override;
 

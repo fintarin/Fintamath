@@ -28,7 +28,7 @@ SignExpr::SimplifyFunctionVector SignExpr::getFunctionsForPostSimplify() const {
   static const SimplifyFunctionVector simplifyFunctions = {
       &SignExpr::constSimplify,
       &SignExpr::negSimplify,
-      &SignExpr::intapproximate,
+      &SignExpr::intApproximate,
   };
   return simplifyFunctions;
 }
@@ -49,16 +49,17 @@ ArgumentPtr SignExpr::constSimplify(const IFunction & /*func*/, const ArgumentPt
   return {};
 }
 
-ArgumentPtr SignExpr::intapproximate(const IFunction &func, const ArgumentPtr &rhs) {
+ArgumentPtr SignExpr::intApproximate(const IFunction &func, const ArgumentPtr &rhs) {
   if (containsVariable(rhs)) {
     return {};
   }
 
   ArgumentPtr approx = rhs->clone();
   approximateChild(approx);
+  approx = cast<SignExpr>(makeExpr(func, rhs))->callFunction();
 
-  if (const auto approxNum = cast<INumber>(approx); approxNum && !approxNum->isComplex()) {
-    return callFunction(func, {approx});
+  if (auto res = cast<INumber>(approx)) {
+    return res;
   }
 
   return {};

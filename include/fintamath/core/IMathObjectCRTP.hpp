@@ -19,6 +19,10 @@ public:
   }
 
   bool operator==(const I_MATH_OBJECT_CRTP &rhs) const {
+    if (this == &rhs) {
+      return true;
+    }
+
     return equals(cast<Derived>(rhs));
   }
 

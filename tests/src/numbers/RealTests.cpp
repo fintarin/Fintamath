@@ -947,153 +947,153 @@ TEST(RealTests, toStringPrecisionPrecisionTest) {
   EXPECT_DEBUG_DEATH(val.toString(20), "");
 }
 
-TEST(RealTests, getOutputPrecisionTest) {
-  EXPECT_EQ(Real().getOutputPrecision(), Real::getPrecision());
+TEST(RealTests, getPrecisionTest) {
+  EXPECT_EQ(Real().getPrecision(), Real::getPrecisionStatic());
 }
 
-TEST(RealTests, setOutputPrecisionTest) {
+TEST(RealTests, setPrecisionTest) {
   Real a;
-  EXPECT_EQ(a.getOutputPrecision(), Real::getPrecision());
+  EXPECT_EQ(a.getPrecision(), Real::getPrecisionStatic());
 
-  a.setOutputPrecision(10);
-  EXPECT_EQ(a.getOutputPrecision(), 10);
+  a.setPrecision(10);
+  EXPECT_EQ(a.getPrecision(), 10);
 
-  a.setOutputPrecision(5);
-  EXPECT_EQ(a.getOutputPrecision(), 5);
+  a.setPrecision(5);
+  EXPECT_EQ(a.getPrecision(), 5);
 
-  a.setOutputPrecision(5);
-  EXPECT_EQ(a.getOutputPrecision(), 5);
+  a.setPrecision(5);
+  EXPECT_EQ(a.getPrecision(), 5);
 
-  EXPECT_DEBUG_DEATH(a.setOutputPrecision(6), "");
-  EXPECT_DEBUG_DEATH(a.setOutputPrecision(10), "");
+  EXPECT_DEBUG_DEATH(a.setPrecision(6), "");
+  EXPECT_DEBUG_DEATH(a.setPrecision(10), "");
 }
 
 TEST(RealTests, updatePrecisionTest) {
   {
     Real a = 1;
-    a.setOutputPrecision(10);
+    a.setPrecision(10);
 
     Real b = 1;
-    b.setOutputPrecision(5);
+    b.setPrecision(5);
 
     a += b;
 
-    EXPECT_EQ(a.getOutputPrecision(), 5);
-    EXPECT_EQ(b.getOutputPrecision(), 5);
+    EXPECT_EQ(*a.getPrecision(), 5);
+    EXPECT_EQ(*b.getPrecision(), 5);
   }
   {
     Real a = 1;
-    a.setOutputPrecision(10);
+    a.setPrecision(10);
 
     Real b = 1;
-    b.setOutputPrecision(5);
+    b.setPrecision(5);
 
     b += a;
 
-    EXPECT_EQ(a.getOutputPrecision(), 10);
-    EXPECT_EQ(b.getOutputPrecision(), 5);
+    EXPECT_EQ(*a.getPrecision(), 10);
+    EXPECT_EQ(*b.getPrecision(), 5);
   }
   {
     Real a = 1;
-    a.setOutputPrecision(10);
+    a.setPrecision(10);
 
     Real b = 1;
-    b.setOutputPrecision(5);
+    b.setPrecision(5);
 
     a -= b;
 
-    EXPECT_EQ(a.getOutputPrecision(), 5);
-    EXPECT_EQ(b.getOutputPrecision(), 5);
+    EXPECT_EQ(*a.getPrecision(), 5);
+    EXPECT_EQ(*b.getPrecision(), 5);
   }
   {
     Real a = 1;
-    a.setOutputPrecision(10);
+    a.setPrecision(10);
 
     Real b = 1;
-    b.setOutputPrecision(5);
+    b.setPrecision(5);
 
     b -= a;
 
-    EXPECT_EQ(a.getOutputPrecision(), 10);
-    EXPECT_EQ(b.getOutputPrecision(), 5);
+    EXPECT_EQ(*a.getPrecision(), 10);
+    EXPECT_EQ(*b.getPrecision(), 5);
   }
   {
     Real a = 1;
-    a.setOutputPrecision(10);
+    a.setPrecision(10);
 
     Real b = 1;
-    b.setOutputPrecision(5);
+    b.setPrecision(5);
 
     a *= b;
 
-    EXPECT_EQ(a.getOutputPrecision(), 5);
-    EXPECT_EQ(b.getOutputPrecision(), 5);
+    EXPECT_EQ(*a.getPrecision(), 5);
+    EXPECT_EQ(*b.getPrecision(), 5);
   }
   {
     Real a = 1;
-    a.setOutputPrecision(10);
+    a.setPrecision(10);
 
     Real b = 1;
-    b.setOutputPrecision(5);
+    b.setPrecision(5);
 
     b *= a;
 
-    EXPECT_EQ(a.getOutputPrecision(), 10);
-    EXPECT_EQ(b.getOutputPrecision(), 5);
+    EXPECT_EQ(*a.getPrecision(), 10);
+    EXPECT_EQ(*b.getPrecision(), 5);
   }
   {
     Real a = 1;
-    a.setOutputPrecision(10);
+    a.setPrecision(10);
 
     Real b = 1;
-    b.setOutputPrecision(5);
+    b.setPrecision(5);
 
     a /= b;
 
-    EXPECT_EQ(a.getOutputPrecision(), 5);
-    EXPECT_EQ(b.getOutputPrecision(), 5);
+    EXPECT_EQ(*a.getPrecision(), 5);
+    EXPECT_EQ(*b.getPrecision(), 5);
   }
   {
     Real a = 1;
-    a.setOutputPrecision(10);
+    a.setPrecision(10);
 
     Real b = 1;
-    b.setOutputPrecision(5);
+    b.setPrecision(5);
 
     b /= a;
 
-    EXPECT_EQ(a.getOutputPrecision(), 10);
-    EXPECT_EQ(b.getOutputPrecision(), 5);
+    EXPECT_EQ(*a.getPrecision(), 10);
+    EXPECT_EQ(*b.getPrecision(), 5);
   }
 }
 
-TEST(RealTests, getPrecisionTest) {
-  EXPECT_EQ(Real::getPrecision(), 20);
+TEST(RealTests, getPrecisionStaticTest) {
+  EXPECT_EQ(Real::getPrecisionStatic(), 20);
 }
 
-TEST(RealTests, getCalculationPrecisionTest) {
-  EXPECT_EQ(Real::getCalculationPrecision(), 50);
+TEST(RealTests, getCalculationPrecisionStaticTest) {
+  EXPECT_EQ(Real::getCalculationPrecisionStatic(), 50);
 }
 
-TEST(RealTests, setPrecisionTest) {
-  const unsigned currPrecision = Real::getPrecision();
+TEST(RealTests, setPrecisionStaticTest) {
+  const unsigned currPrecision = Real::getPrecisionStatic();
 
-  Real::setPrecision(10);
-  EXPECT_EQ(Real::getPrecision(), 10);
+  Real::setPrecisionStatic(10);
+  EXPECT_EQ(Real::getPrecisionStatic(), 10);
 
-  Real::setPrecision(currPrecision);
-  EXPECT_EQ(Real::getPrecision(), 20);
+  Real::setPrecisionStatic(currPrecision);
+  EXPECT_EQ(Real::getPrecisionStatic(), 20);
 }
 
 TEST(RealTests, scopedSetPrecisionTest) {
-  const unsigned currPrecision = Real::getPrecision();
+  const unsigned currPrecision = Real::getPrecisionStatic();
 
   {
     Real::ScopedSetPrecision setPrecision(123);
-    EXPECT_EQ(Real::getPrecision(), 123);
+    EXPECT_EQ(Real::getPrecisionStatic(), 123);
   }
 
-  EXPECT_EQ(Real::getPrecision(), currPrecision);
+  EXPECT_EQ(Real::getPrecisionStatic(), currPrecision);
 }
 
 TEST(RealTests, signTest) {
@@ -1124,10 +1124,6 @@ TEST(RealTests, isNegZeroTest) {
   EXPECT_TRUE(Real("-0").isNegZero());
   EXPECT_FALSE(Real("1").isNegZero());
   EXPECT_FALSE(Real("-1").isNegZero());
-}
-
-TEST(RealTests, isPreciseTest) {
-  EXPECT_FALSE(Real(2).isPrecise());
 }
 
 TEST(RealTests, isComplexTest) {

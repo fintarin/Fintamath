@@ -49,23 +49,6 @@ TEST(IUnaryExpressionTests, getChildrenTest) {
   EXPECT_EQ(*expr.getChildren().front(), Integer(1));
 }
 
-TEST(IUnaryExpressionTests, setChildrenTest) {
-  TestUnaryExpression expr(std::make_shared<Integer>(1));
-
-  expr.setChildren({std::make_shared<Integer>(0)});
-  EXPECT_EQ(expr.getChildren().size(), 1);
-  EXPECT_EQ(*expr.getChildren().front(), Integer(0));
-
-  EXPECT_THAT(
-      [&] { expr.setChildren({}); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to call Factorial "!" with 0 arguments (expected 1))")));
-  EXPECT_THAT(
-      [&] { expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1)}); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to call Factorial "!" with 2 arguments (expected 1))")));
-}
-
 TEST(IUnaryExpressionTests, toMinimalObjectTest) {
   const TestUnaryExpression expr1(Integer(4).clone());
   EXPECT_EQ(expr1.toMinimalObject()->toString(), "24");

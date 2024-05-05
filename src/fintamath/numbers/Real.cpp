@@ -124,10 +124,6 @@ std::string Real::toString(unsigned precision) const {
   return str;
 }
 
-bool Real::isPrecise() const noexcept {
-  return false;
-}
-
 int Real::sign() const {
   if (mpfr_signbit(backend.backend().data())) {
     return -1;
@@ -152,24 +148,24 @@ const Real::Backend &Real::getBackend() const noexcept {
   return backend;
 }
 
-unsigned Real::getOutputPrecision() const noexcept {
+std::optional<unsigned> Real::getPrecision() const noexcept {
   return outputPrecision;
 }
 
-void Real::setOutputPrecision(const unsigned precision) {
+void Real::setPrecision(const unsigned precision) {
   assert(precision <= outputPrecision);
   outputPrecision = precision;
 }
 
-unsigned Real::getCalculationPrecision() noexcept {
+unsigned Real::getCalculationPrecisionStatic() noexcept {
   return Backend::thread_default_precision();
 }
 
-unsigned Real::getPrecision() noexcept {
-  return (getCalculationPrecision() - precisionDelta) / precisionMultiplier;
+unsigned Real::getPrecisionStatic() noexcept {
+  return (getCalculationPrecisionStatic() - precisionDelta) / precisionMultiplier;
 }
 
-void Real::setPrecision(unsigned precision) {
+void Real::setPrecisionStatic(unsigned precision) {
   if (precision == 0) {
     precision++;
   }
@@ -258,11 +254,11 @@ void Real::updatePrecision(const Real &rhs) {
 }
 
 Real::ScopedSetPrecision::ScopedSetPrecision(const unsigned precision) {
-  setPrecision(precision);
+  setPrecisionStatic(precision);
 }
 
 Real::ScopedSetPrecision::~ScopedSetPrecision() {
-  setPrecision(currPrecision);
+  setPrecisionStatic(currPrecision);
 }
 
 }

@@ -29,20 +29,21 @@ FloorCeilExpr::FloorCeilExpr(const IFunction &inFunc, ArgumentPtr inChild)
 FloorCeilExpr::SimplifyFunctionVector FloorCeilExpr::getFunctionsForPostSimplify() const {
   static const SimplifyFunctionVector simplifyFunctions = {
       &FloorCeilExpr::negSimplify,
-      &FloorCeilExpr::intapproximate,
+      &FloorCeilExpr::intApproximate,
   };
   return simplifyFunctions;
 }
 
-ArgumentPtr FloorCeilExpr::intapproximate(const IFunction &func, const ArgumentPtr &rhs) {
+ArgumentPtr FloorCeilExpr::intApproximate(const IFunction &func, const ArgumentPtr &rhs) {
   if (containsVariable(rhs)) {
     return {};
   }
 
   ArgumentPtr approx = rhs->clone();
   approximateChild(approx);
+  approx = cast<FloorCeilExpr>(makeExpr(func, rhs))->callFunction();
 
-  if (auto res = cast<INumber>(callFunction(func, {approx}))) {
+  if (auto res = cast<INumber>(approx)) {
     return res;
   }
 

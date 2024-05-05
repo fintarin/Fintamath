@@ -62,8 +62,8 @@ std::string CompExpr::toString() const {
   return IBinaryExpression::toString();
 }
 
-ArgumentPtr CompExpr::preSimplify() const {
-  auto simpl = IBinaryExpression::preSimplify();
+ArgumentPtr CompExpr::preSimplify(const bool isTranformOverriden) const {
+  auto simpl = IBinaryExpression::preSimplify(isTranformOverriden);
 
   if (const auto simplExpr = cast<CompExpr>(simpl)) {
     if (!simplExpr->isSolution &&
@@ -79,7 +79,7 @@ ArgumentPtr CompExpr::preSimplify() const {
       if (!containsInfinity(simplExpr->lhsChild) && !containsInfinity(simplExpr->rhsChild)) {
         ArgumentPtr resLhs = subExpr(simplExpr->lhsChild, simplExpr->rhsChild);
         preSimplifyChild(resLhs);
-        return CompExpr(cast<IOperator>(*func), resLhs, Integer(0).clone()).clone();
+        return makeExpr(*func, resLhs, Integer(0).clone());
       }
     }
   }
