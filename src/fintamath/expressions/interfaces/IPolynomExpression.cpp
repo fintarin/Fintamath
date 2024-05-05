@@ -4,6 +4,7 @@
 #include <cctype>
 #include <compare>
 #include <cstddef>
+#include <list>
 #include <memory>
 #include <ranges>
 #include <string>
@@ -12,7 +13,6 @@
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/ExpressionComparator.hpp"
 #include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/binary/CompExpr.hpp"
 #include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
@@ -39,12 +39,6 @@ const ArgumentPtrVector &IPolynomExpression::getChildren() const {
   return children;
 }
 
-void IPolynomExpression::setChildren(const ArgumentPtrVector &childVect) {
-  (void)makeExprWithValidation(*func, childVect);
-
-  children = childVect;
-}
-
 std::string IPolynomExpression::toString() const {
   const auto &outFunc = getOutputFunction();
   const auto outOper = cast<IOperator>(outFunc);
@@ -69,19 +63,81 @@ std::string IPolynomExpression::toString() const {
   return result;
 }
 
-void IPolynomExpression::compress() {
+ArgumentPtr IPolynomExpression::preSimplify(const bool isTranformOverriden) const {
+  if (getState() >= State::PreSimplify) {
+    return {};
+  }
+
+  ArgumentPtrVector newChildren = children;
+  compress(newChildren);
+  sort(newChildren);
+
+  auto newExpr = cast<IPolynomExpression>(makeExpr(*getFunction(), newChildren));
+  return newExpr->IExpression::preSimplify(isTranformOverriden);
+}
+
+ArgumentPtr IPolynomExpression::tranform(const State newState) const {
+  std::list<ArgumentPtr> newChildren(children.begin(), children.end());
+
+  auto rhsIter = newChildren.begin();
+  rhsIter++;
+
+  for (; rhsIter != newChildren.end(); ++rhsIter) {
+    auto lhsIter = rhsIter;
+    lhsIter--;
+
+    const ArgumentPtr &lhs = *lhsIter;
+    const ArgumentPtr &rhs = *rhsIter;
+
+    ArgumentPtr res = cast<IPolynomExpression>(makeExpr(*func, lhs, rhs))->callFunction();
+
+    if (!res) {
+      switch (newState) {
+        case State::PreSimplify: {
+          res = useSimplifyFunctions(getFunctionsForPreSimplify(), *func, lhs, rhs);
+          break;
+        }
+        case State::Simplify: {
+          res = useSimplifyFunctions(getFunctionsForPostSimplify(), *func, lhs, rhs);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    }
+
+    if (res) {
+      newChildren.erase(rhsIter);
+      *lhsIter = res;
+      rhsIter = lhsIter;
+    }
+  }
+
+  if (newChildren.size() == 1) {
+    return newChildren.front();
+  }
+
+  if (newChildren.size() != children.size()) {
+    ArgumentPtrVector newChildrenVect(newChildren.begin(), newChildren.end());
+    return makeExpr(*func, newChildrenVect);
+  }
+
+  return IExpression::tranform(newState);
+}
+
+void IPolynomExpression::compress(ArgumentPtrVector &newChildren) const {
   size_t i = 0;
 
-  while (i < children.size()) {
-    auto &child = children[i];
+  while (i < newChildren.size()) {
+    auto &child = newChildren[i];
 
     if (const auto childPolynom = cast<IPolynomExpression>(child); childPolynom && *childPolynom->func == *func) {
-      std::swap(child, children.back());
-      children.pop_back();
-
-      children.insert(children.end(),
-                      childPolynom->children.begin(),
-                      childPolynom->children.end());
+      std::swap(child, newChildren.back());
+      newChildren.pop_back();
+      newChildren.insert(newChildren.end(),
+                         childPolynom->children.begin(),
+                         childPolynom->children.end());
     }
     else {
       i++;
@@ -89,109 +145,10 @@ void IPolynomExpression::compress() {
   }
 }
 
-ArgumentPtr IPolynomExpression::preSimplify() const {
-  auto simpl = cast<IPolynomExpression>(clone());
-
-  simpl->simplifyChildren(false);
-  simpl->simplifyRec(false);
-
-  if (simpl->children.size() == 1) {
-    return simpl->children.front();
-  }
-
-  return simpl;
-}
-
-ArgumentPtr IPolynomExpression::postSimplify() const {
-  auto simpl = cast<IPolynomExpression>(clone());
-
-  simpl->simplifyChildren(true);
-  simpl->simplifyRec(true);
-
-  if (simpl->children.size() == 1) {
-    return simpl->children.front();
-  }
-
-  return simpl;
-}
-
-void IPolynomExpression::simplifyRec(const bool isPostSimplify) {
-  compress();
-  sort();
-
-  bool isExprSimplified = true;
-
-  // TODO: refactor this loop
-  for (size_t i = 1; i < children.size(); i++) {
-    const ArgumentPtr &lhs = children[i - 1];
-    const ArgumentPtr &rhs = children[i];
-
-    if (auto res = simplifyUndefined(*func, lhs, rhs)) {
-      children = {res};
-      break;
-    }
-
-    ArgumentPtr res = callFunction(*func, {lhs, rhs});
-    const bool isResSimplified = res != nullptr;
-
-    if (!res) {
-      res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(),
-                                                  *func,
-                                                  children[i - 1],
-                                                  children[i])
-                           : useSimplifyFunctions(getFunctionsForPreSimplify(),
-                                                  *func,
-                                                  children[i - 1],
-                                                  children[i]);
-    }
-
-    if (!res) {
-      continue;
-    }
-
-    if (!isResSimplified) {
-      const ArgumentPtr prevExpr = makeExpr(*getFunction(), lhs, rhs);
-
-      if (isPostSimplify) {
-        postSimplifyChild(res);
-      }
-      else {
-        preSimplifyChild(res);
-      }
-
-      if (*prevExpr == *res) {
-        continue;
-      }
-    }
-
-    children.erase(children.begin() + static_cast<ptrdiff_t>(i) - 1);
-    children.erase(children.begin() + static_cast<ptrdiff_t>(i) - 1);
-    children.emplace_back(res);
-
-    i--;
-    isExprSimplified = false;
-  }
-
-  if (!isExprSimplified) {
-    simplifyRec(isPostSimplify);
-  }
-}
-
-void IPolynomExpression::simplifyChildren(const bool isPostSimplify) {
-  ArgumentPtrVector oldChildren = children;
-
-  children.clear();
-
-  for (auto &child : oldChildren) {
-    if (isPostSimplify) {
-      postSimplifyChild(child);
-    }
-    else {
-      preSimplifyChild(child);
-    }
-
-    children.emplace_back(child);
-  }
+void IPolynomExpression::sort(ArgumentPtrVector &newChildren) const {
+  std::ranges::stable_sort(newChildren, [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
+    return compare(lhs, rhs) == std::strong_ordering::greater;
+  });
 }
 
 IPolynomExpression::SimplifyFunctionVector IPolynomExpression::getFunctionsForPreSimplify() const {
@@ -222,12 +179,6 @@ std::strong_ordering IPolynomExpression::compare(const ArgumentPtr &lhs, const A
       .comparableOrderInversed = isComparableOrderInversed(),
   };
   return fintamath::compare(lhs, rhs, options);
-}
-
-void IPolynomExpression::sort() {
-  std::ranges::stable_sort(children, [this](const ArgumentPtr &lhs, const ArgumentPtr &rhs) {
-    return compare(lhs, rhs) == std::strong_ordering::greater;
-  });
 }
 
 }

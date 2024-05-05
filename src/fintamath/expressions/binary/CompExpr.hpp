@@ -23,7 +23,7 @@ public:
   void markAsSolution();
 
 protected:
-  ArgumentPtr preSimplify() const override;
+  ArgumentPtr preSimplify(bool isTranformOverriden = true) const override;
 
   SimplifyFunctionVector getFunctionsForPreSimplify() const override;
 

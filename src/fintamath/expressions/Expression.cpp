@@ -46,40 +46,28 @@ FINTAMATH_CLASS_IMPLEMENTATION(Expression)
 
 using namespace detail;
 
-Expression::Expression() : child(Integer(0).clone()) {
+Expression::Expression() : Expression(0) {
 }
 
-Expression::Expression(const std::string &str) : child(parseRawExpr(str)) {
+Expression::Expression(const std::string &str) : Expression(parseRawExpr(str)) {
 }
 
 Expression::Expression(const ArgumentPtr &obj) : child(compress(obj)) {
+  simplifyChild(child);
 }
 
 Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
 }
 
-Expression::Expression(const int64_t val) : child(Integer(val).clone()) {
+Expression::Expression(const int64_t val) : Expression(Integer(val).clone()) {
 }
 
 std::string Expression::toString() const {
-  simplifyMutable();
-  return stringCached;
+  return child->toString();
 }
 
-Expression approximate(const Expression &rhs, const unsigned precision) {
-  const Real::ScopedSetPrecision setPrecision(precision);
-
-  static Cache<unsigned, Integer> cache([](const unsigned inPrecision) {
-    static const Integer powBase = 10;
-    return pow(powBase, inPrecision);
-  });
-
-  Expression approxExpr = rhs;
-  Expression::approximateChild(approxExpr.child);
-  Expression::setPrecisionChild(approxExpr.child, precision, cache[precision]);
-  approxExpr.updateStringMutable();
-
-  return approxExpr;
+std::unique_ptr<IMathObject> Expression::toMinimalObject() const {
+  return child->clone();
 }
 
 const std::shared_ptr<IFunction> &Expression::getFunction() const {
@@ -88,55 +76,15 @@ const std::shared_ptr<IFunction> &Expression::getFunction() const {
 }
 
 const ArgumentPtrVector &Expression::getChildren() const {
-  simplifyMutable();
-  childrenCached.front() = child;
+  childrenCached = {child};
   return childrenCached;
 }
 
-void Expression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.size() != 1) {
-    throw InvalidInputException(fmt::format(
-        R"(Unable to set {} {} children (expected 1))",
-        childVect.size(),
-        getClassStatic()->getName()));
-  }
-
-  *this = Expression(childVect.front());
-}
-
-void Expression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
-  simplifyMutable();
-  IExpression::setVariables(varsToVals);
-}
-
-void Expression::setVariable(const Variable &var, const Expression &val) {
-  setVariables({{var, val.child}});
-}
-
-ArgumentPtr Expression::simplify() const {
-  simplifyMutable();
-  return child;
-}
-
-void Expression::simplifyMutable() const {
-  if (isSimplified) {
-    return;
-  }
-
-  ArgumentPtr prevChild = child;
-  simplifyChild(child);
-
-  while (*child != *prevChild) {
-    prevChild = child;
-    simplifyChild(child);
-  }
-
-  isSimplified = true;
-  updateStringMutable();
-}
-
-void Expression::updateStringMutable() const {
-  stringCached = child->toString();
+Expression approximate(const Expression &rhs, unsigned precision) {
+  Real::ScopedSetPrecision setPrecision(precision);
+  ArgumentPtr newChild = rhs.child;
+  Expression::approximateChild(newChild);
+  return Expression(newChild);
 }
 
 std::unique_ptr<IMathObject> parseRawExpr(const std::string &str) try {

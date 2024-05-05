@@ -38,55 +38,32 @@ const std::shared_ptr<IFunction> &IBinaryExpression::getFunction() const {
 }
 
 const ArgumentPtrVector &IBinaryExpression::getChildren() const {
-  childrenCached.front() = lhsChild;
-  childrenCached.back() = rhsChild;
+  childrenCached = {lhsChild, rhsChild};
   return childrenCached;
 }
 
-ArgumentPtr IBinaryExpression::preSimplify() const {
-  const auto simpl = cast<IBinaryExpression>(clone());
-  preSimplifyChild(simpl->lhsChild);
-  preSimplifyChild(simpl->rhsChild);
-  return simpl->simplifyRec(false);
-}
+ArgumentPtr IBinaryExpression::tranform(const State newState) const {
+  ArgumentPtr res;
 
-ArgumentPtr IBinaryExpression::postSimplify() const {
-  const auto simpl = cast<IBinaryExpression>(clone());
-  postSimplifyChild(simpl->lhsChild);
-  postSimplifyChild(simpl->rhsChild);
-  return simpl->simplifyRec(true);
-}
-
-ArgumentPtr IBinaryExpression::simplifyRec(const bool isPostSimplify) const {
-  if (ArgumentPtr res = simplifyUndefined(*func, lhsChild, rhsChild)) {
-    return res;
-  }
-
-  if (ArgumentPtr res = callFunction(*func, {lhsChild, rhsChild})) {
-    return res;
-  }
-
-  ArgumentPtr res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(),
-                                                          *func,
-                                                          lhsChild,
-                                                          rhsChild)
-                                   : useSimplifyFunctions(getFunctionsForPreSimplify(),
-                                                          *func,
-                                                          lhsChild,
-                                                          rhsChild);
-
-  if (res && *res != *this) {
-    if (isPostSimplify) {
-      postSimplifyChild(res);
+  switch (newState) {
+    case State::PreSimplify: {
+      res = useSimplifyFunctions(getFunctionsForPreSimplify(), *func, lhsChild, rhsChild);
+      break;
     }
-    else {
-      preSimplifyChild(res);
+    case State::Simplify: {
+      res = useSimplifyFunctions(getFunctionsForPostSimplify(), *func, lhsChild, rhsChild);
+      break;
     }
+    default: {
+      break;
+    }
+  }
 
+  if (res) {
     return res;
   }
 
-  return clone();
+  return IExpression::tranform(newState);
 }
 
 IBinaryExpression::SimplifyFunctionVector IBinaryExpression::getFunctionsForPreSimplify() const {
@@ -95,13 +72,6 @@ IBinaryExpression::SimplifyFunctionVector IBinaryExpression::getFunctionsForPreS
 
 IBinaryExpression::SimplifyFunctionVector IBinaryExpression::getFunctionsForPostSimplify() const {
   return {};
-}
-
-void IBinaryExpression::setChildren(const ArgumentPtrVector &childVect) {
-  (void)makeExprWithValidation(*func, childVect);
-
-  lhsChild = childVect[0];
-  rhsChild = childVect[1];
 }
 
 }

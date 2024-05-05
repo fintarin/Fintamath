@@ -29,23 +29,6 @@ ArgumentPtr useSimplifyFunctions(const std::vector<SimplifyFunction> &simplFuncs
   return {};
 }
 
-ArgumentPtr simplifyUndefined(const IFunction &func, const std::same_as<ArgumentPtr> auto &...args) {
-  ArgumentPtr res;
-
-  if ((is<Undefined>(args) || ...)) {
-    static const MathObjectClass undefinedReturnType = Undefined{}.getReturnClass();
-    const MathObjectClass funcReturnType = func.getReturnClass();
-
-    if (is(undefinedReturnType, funcReturnType) ||
-        is(funcReturnType, undefinedReturnType)) {
-
-      res = Undefined{}.clone();
-    }
-  }
-
-  return res;
-}
-
 bool isInfinity(const ArgumentPtr &arg);
 
 bool isMulInfinity(const ArgumentPtr &arg);

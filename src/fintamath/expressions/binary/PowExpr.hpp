@@ -23,9 +23,7 @@ public:
   std::string toString() const override;
 
 protected:
-  ArgumentPtr approximate() const override;
-
-  ArgumentPtr setPrecision(unsigned precision, const Integer &maxInt) const override;
+  ArgumentPtr approximate(bool isTranformOverriden = true) const override;
 
   SimplifyFunctionVector getFunctionsForPostSimplify() const override;
 

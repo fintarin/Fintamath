@@ -103,8 +103,4 @@ Expression negInf();
 
 Expression complexInf();
 
-Expression solve(const Expression &rhs);
-
-extern Expression approximate(const Expression &rhs, unsigned precision = Real::getPrecisionStatic());
-
 }

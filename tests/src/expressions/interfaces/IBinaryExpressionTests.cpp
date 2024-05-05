@@ -50,28 +50,6 @@ TEST(IBinaryExpressionTests, getChildrenTest) {
   EXPECT_EQ(*expr.getChildren().back(), Integer(2));
 }
 
-TEST(IBinaryExpressionTests, setChildrenTest) {
-  TestBinaryExpression expr(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
-
-  expr.setChildren({std::make_shared<Integer>(0), std::make_shared<Integer>(0)});
-  EXPECT_EQ(expr.getChildren().size(), 2);
-  EXPECT_EQ(*expr.getChildren().front(), Integer(0));
-  EXPECT_EQ(*expr.getChildren().back(), Integer(0));
-
-  EXPECT_THAT(
-      [&] { expr.setChildren({}); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to call AddOper "+" with 0 arguments (expected 2))")));
-  EXPECT_THAT(
-      [&] { expr.setChildren({std::make_shared<Integer>(1)}); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to call AddOper "+" with 1 argument (expected 2))")));
-  EXPECT_THAT(
-      [&] { expr.setChildren({std::make_shared<Integer>(1), std::make_shared<Integer>(1), std::make_shared<Integer>(1)}); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to call AddOper "+" with 3 arguments (expected 2))")));
-}
-
 TEST(IBinaryExpressionTests, toMinimalObjectTest) {
   const TestBinaryExpression expr1(std::make_shared<Integer>(1), std::make_shared<Integer>(2));
   EXPECT_EQ(expr1.toMinimalObject()->toString(), "3");

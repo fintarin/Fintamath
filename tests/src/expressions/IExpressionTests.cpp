@@ -26,26 +26,6 @@ public:
     static const ArgumentPtrVector children;
     return children;
   }
-
-  void setChildren(const ArgumentPtrVector &childVect) override {
-  }
-
-protected:
-  ArgumentPtr simplify() const override {
-    if (auto res = preSimplify()) {
-      return res;
-    }
-
-    if (auto res = postSimplify()) {
-      return res;
-    }
-
-    return clone();
-  }
-
-  ArgumentPtr approximate() const override {
-    return clone();
-  }
 };
 
 FINTAMATH_CLASS_IMPLEMENTATION(TestExpression)
@@ -71,15 +51,6 @@ TEST(IExpressionTests, getFunctionToStringNotationTest) {
 
 TEST(IExpressionTests, getChildrenTest) {
   // TODO: implement
-}
-
-TEST(IExpressionTests, setChildrenTest) {
-  const auto expr = cast<IExpression>(factorialExpr(Variable("a"))->clone());
-
-  expr->setChildren({Variable("b").clone()});
-  EXPECT_EQ(expr->toString(), "b!");
-
-  // TODO: implement more tests
 }
 
 TEST(IExpressionTests, getVariablesTest) {

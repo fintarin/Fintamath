@@ -19,13 +19,11 @@ class IBinaryExpression : public IExpression {
 public:
   explicit IBinaryExpression(const IFunction &inFunc, ArgumentPtr lhs, ArgumentPtr rhs);
 
-  std::string toString() const override;
-
   const std::shared_ptr<IFunction> &getFunction() const final;
 
   const ArgumentPtrVector &getChildren() const final;
 
-  void setChildren(const ArgumentPtrVector &childVect) final;
+  std::string toString() const override;
 
 protected:
   using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &, const ArgumentPtr &)>;
@@ -36,12 +34,7 @@ protected:
 
   virtual SimplifyFunctionVector getFunctionsForPostSimplify() const;
 
-  ArgumentPtr preSimplify() const override;
-
-  ArgumentPtr postSimplify() const override;
-
-private:
-  ArgumentPtr simplifyRec(bool isPostSimplify) const;
+  ArgumentPtr tranform(State newState) const override;
 
 protected:
   std::shared_ptr<IFunction> func;
@@ -51,7 +44,7 @@ protected:
   ArgumentPtr rhsChild;
 
 private:
-  mutable ArgumentPtrVector childrenCached = {{}, {}};
+  mutable ArgumentPtrVector childrenCached;
 };
 
 template <typename Derived>

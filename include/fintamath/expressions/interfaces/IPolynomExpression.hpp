@@ -21,13 +21,11 @@ class IPolynomExpression : public IExpression {
 public:
   explicit IPolynomExpression(const IFunction &inFunc, ArgumentPtrVector args);
 
-  std::string toString() const override;
-
   const std::shared_ptr<IFunction> &getFunction() const final;
 
   const ArgumentPtrVector &getChildren() const final;
 
-  void setChildren(const ArgumentPtrVector &childVect) final;
+  std::string toString() const override;
 
 protected:
   using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &, const ArgumentPtr &)>;
@@ -40,9 +38,7 @@ protected:
 
   virtual std::string childToString(const IOperator &oper, const ArgumentPtr &inChild, const ArgumentPtr &prevChild) const;
 
-  ArgumentPtr preSimplify() const override;
-
-  ArgumentPtr postSimplify() const override;
+  ArgumentPtr preSimplify(bool isTranformOverriden = true) const override;
 
   virtual bool isTermOrderInversed() const noexcept;
 
@@ -51,13 +47,11 @@ protected:
   virtual std::strong_ordering compare(const ArgumentPtr &lhs, const ArgumentPtr &rhs) const;
 
 private:
-  void simplifyRec(bool isPostSimplify);
+  ArgumentPtr tranform(State newState) const override;
 
-  void simplifyChildren(bool isPostSimplify);
+  void compress(ArgumentPtrVector &newChildren) const;
 
-  void compress();
-
-  void sort();
+  void sort(ArgumentPtrVector &newChildren) const;
 
 protected:
   std::shared_ptr<IFunction> func;

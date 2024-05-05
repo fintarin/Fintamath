@@ -48,40 +48,4 @@ const ArgumentPtrVector &FunctionExpression::getChildren() const {
   return children;
 }
 
-ArgumentPtr FunctionExpression::preSimplify() const {
-  return simplifyRec(false);
-}
-
-ArgumentPtr FunctionExpression::postSimplify() const {
-  return simplifyRec(true);
-}
-
-ArgumentPtr FunctionExpression::simplifyRec(bool isPostSimplify) const {
-  auto simpl = cast<FunctionExpression>(clone());
-  ArgumentRefVector args;
-
-  for (auto &child : simpl->children) {
-    if (isPostSimplify) {
-      postSimplifyChild(child);
-    }
-    else {
-      preSimplifyChild(child);
-    }
-
-    args.emplace_back(*child);
-  }
-
-  if (!func->doArgsMatch(args)) {
-    return simpl;
-  }
-
-  return callFunction(*simpl->func, argumentRefVectorToArgumentPtrVector(args));
-}
-
-void FunctionExpression::setChildren(const ArgumentPtrVector &childVect) {
-  (void)makeExprWithValidation(*func, childVect);
-
-  children = childVect;
-}
-
 }

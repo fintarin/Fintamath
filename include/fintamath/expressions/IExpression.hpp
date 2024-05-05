@@ -22,6 +22,22 @@ namespace fintamath {
 class IExpression : public IMathObject {
   FINTAMATH_PARENT_CLASS_BODY(IExpression, IMathObject)
 
+protected:
+  enum class State : uint8_t {
+    Unknown,
+    PreSimplify,
+    Simplify,
+    Solve,
+    Approximate,
+  };
+
+private:
+  struct CallFunctionCached {
+    ArgumentPtr value;
+    std::optional<unsigned> precision;
+    bool areArgsPrecise = true;
+  };
+
 public:
   using VariableSet = std::set<Variable, ToStringComparator<std::less<>>>;
 
@@ -30,45 +46,48 @@ public:
 
   virtual const ArgumentPtrVector &getChildren() const = 0;
 
-  virtual void setChildren(const ArgumentPtrVector &childVect) = 0;
+  const VariableSet &getVariables() const;
 
-  VariableSet getVariables() const;
-
-  virtual void setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals);
-
-  std::unique_ptr<IMathObject> toMinimalObject() const final;
+  std::unique_ptr<IMathObject> toMinimalObject() const override;
 
   virtual const std::shared_ptr<IFunction> &getOutputFunction() const;
 
+  std::string toString() const override;
+
 protected:
-  virtual ArgumentPtr simplify() const;
+  virtual ArgumentPtr preSimplify(bool isTranformOverriden = true) const;
 
-  virtual ArgumentPtr preSimplify() const;
+  virtual ArgumentPtr simplify(bool isTranformOverriden = true) const;
 
-  virtual ArgumentPtr postSimplify() const;
+  virtual ArgumentPtr approximate(bool isTranformOverriden = true) const;
 
-  virtual ArgumentPtr approximate() const;
+  virtual ArgumentPtr tranform(State newState) const;
 
-  virtual ArgumentPtr setPrecision(unsigned precision, const Integer &maxInt) const;
+  State getState() const;
 
-  static void simplifyChild(ArgumentPtr &child);
+  ArgumentPtr callFunction() const;
 
-  static void preSimplifyChild(ArgumentPtr &child);
+  static void preSimplifyChild(ArgumentPtr &child, bool isTranformOverriden = true);
 
-  static void postSimplifyChild(ArgumentPtr &child);
+  static void simplifyChild(ArgumentPtr &child, bool isTranformOverriden = true);
 
-  static void approximateChild(ArgumentPtr &child);
+  static void approximateChild(ArgumentPtr &child, bool isTranformOverriden = true);
 
-  static void setPrecisionChild(ArgumentPtr &child, unsigned precision, const Integer &maxInt);
+  static void callFunctionChild(ArgumentPtr &child);
 
-  static ArgumentPtr callFunction(const IFunction &func, const ArgumentPtrVector &argPtrs);
+  static void tranformChild(ArgumentPtr &child, State newState, bool isOverriden);
 
 private:
+  ArgumentPtr simplifyUndefined() const;
+
   static std::unique_ptr<INumber> convertToApproximated(const INumber &num);
 
-  static std::unique_ptr<INumber> convertToApproximated(const INumber &num, unsigned precision, const Integer &maxInt);
+private:
+  mutable std::optional<VariableSet> variablesCached;
 
-  static ArgumentPtrVector convertToApproximatedNumbers(const ArgumentPtrVector &args);
+  mutable std::optional<CallFunctionCached> callFunctionCached;
+
+  mutable State state = State::Unknown;
 };
 
 template <typename Derived>

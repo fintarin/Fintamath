@@ -19,13 +19,11 @@ class IUnaryExpression : public IExpression {
 public:
   explicit IUnaryExpression(const IFunction &inFunc, ArgumentPtr rhs);
 
-  std::string toString() const override;
-
   const std::shared_ptr<IFunction> &getFunction() const final;
 
   const ArgumentPtrVector &getChildren() const override;
 
-  void setChildren(const ArgumentPtrVector &childVect) override;
+  std::string toString() const override;
 
 protected:
   using SimplifyFunction = std::function<ArgumentPtr(const IFunction &, const ArgumentPtr &)>;
@@ -36,20 +34,16 @@ protected:
 
   virtual SimplifyFunctionVector getFunctionsForPostSimplify() const;
 
-  ArgumentPtr preSimplify() const override;
-
-  ArgumentPtr postSimplify() const override;
-
 protected:
   std::shared_ptr<IFunction> func;
 
   ArgumentPtr child;
 
 private:
-  ArgumentPtr simplifyRec(bool isPostSimplify) const;
+  ArgumentPtr tranform(State newState) const override;
 
 private:
-  mutable ArgumentPtrVector childrenCached = {{}};
+  mutable ArgumentPtrVector childrenCached;
 };
 
 template <typename Derived>
