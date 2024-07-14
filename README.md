@@ -136,7 +136,7 @@ Run tests.
 
 ```sh
 cd build
-ctest -CDEBUG --verbose
+ctest --verbose
 cd ..
 ```
 
