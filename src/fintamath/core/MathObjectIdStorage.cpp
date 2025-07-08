@@ -1,6 +1,6 @@
 #include "fintamath/core/MathObjectIdStorage.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 size_t MathObjectIdStorage::get(const MathObjectClass objClass) {
   auto iter = getMap().find(objClass);

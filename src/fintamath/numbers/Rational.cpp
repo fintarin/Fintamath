@@ -20,7 +20,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(Rational)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Rational)
 
 Rational::Rational(Integer rhs) : numer(std::move(rhs)) {
 }
@@ -92,7 +92,7 @@ catch (const InvalidInputException &) {
       str));
 }
 
-std::string Rational::toString() const {
+std::string Rational::toString() const noexcept {
   std::string res = numer.toString();
 
   if (denom != 1) {
@@ -100,13 +100,6 @@ std::string Rational::toString() const {
   }
 
   return res;
-}
-
-std::unique_ptr<IMathObject> Rational::toMinimalObject() const {
-  if (denom == 1) {
-    return numer.clone();
-  }
-  return clone();
 }
 
 int Rational::sign() const {
