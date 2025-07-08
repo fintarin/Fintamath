@@ -7,7 +7,7 @@
 namespace fintamath {
 
 class Boolean : public ILiteral {
-  FINTAMATH_CHILD_CLASS_BODY(Boolean, ILiteral)
+  FINTAMATH_CLASS_BODY(Boolean, ILiteral)
 
 public:
   Boolean();

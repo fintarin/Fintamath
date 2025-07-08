@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Boolean)
+FINTAMATH_CLASS_IMPLEMENTATION(Boolean)
 
 Boolean::Boolean() : val(false) {
 }

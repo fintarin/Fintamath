@@ -15,7 +15,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Integer)
+FINTAMATH_CLASS_IMPLEMENTATION(Integer)
 
 using namespace detail;
 

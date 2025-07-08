@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(ComplexInf)
+FINTAMATH_CLASS_IMPLEMENTATION(ComplexInf)
 
 MathObjectClass ComplexInf::getValueClass() const noexcept {
   return INumber::getClassStatic();
