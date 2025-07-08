@@ -2,13 +2,13 @@
 
 #include <string>
 
-#include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/Literal.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 
-class Variable : public ILiteral {
-  FINTAMATH_CLASS_BODY(Variable, ILiteral)
+class Variable : public Literal {
+  FINTAMATH_CLASS_BODY(Variable, Literal)
 
 public:
   explicit Variable(std::string_view inName);

@@ -12,12 +12,12 @@
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IWithArithmeticOperators.hpp"
 #include "fintamath/core/IWithCompareOperators.hpp"
-#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
 
-class Integer : public INumber, public IWithArithmeticOperators<Integer>, public IWithCompareOperators<Integer> {
-  FINTAMATH_CLASS_BODY(Integer, INumber)
+class Integer : public Number, public IWithArithmeticOperators<Integer>, public IWithCompareOperators<Integer> {
+  FINTAMATH_CLASS_BODY(Integer, Number)
 
 public:
   using Backend = boost::multiprecision::mpz_int;

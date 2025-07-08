@@ -14,7 +14,7 @@ public:
       return true;
     }
 
-    const auto& lhsParent = static_cast<const IWithArithmeticOperators<Derived> &>(lhs);
+    const auto &lhsParent = static_cast<const IWithArithmeticOperators<Derived> &>(lhs);
     return lhsParent.equals(rhs);
   }
 
@@ -60,7 +60,7 @@ public:
 
   Derived operator-() const {
     auto rhs = static_cast<const Derived &>(*this);
-    auto& rhsParent = static_cast<IWithArithmeticOperators<Derived> &>(rhs);
+    auto &rhsParent = static_cast<IWithArithmeticOperators<Derived> &>(rhs);
     return rhsParent.negate();
   }
 
