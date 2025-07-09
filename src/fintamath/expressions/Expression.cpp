@@ -62,6 +62,8 @@ Expression::Expression(const int64_t val) : child(Integer(val).clone()) {
 }
 
 std::string Expression::toString() const {
+  int a = 0;
+  a++;
   simplifyMutable();
   return stringCached;
 }
