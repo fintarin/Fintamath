@@ -52,4 +52,4 @@ jobs:
       - name: Upload coverage report to Coveralls
         uses: coverallsapp/github-action@v2
         with:
-          path-to-lcov: ${{github.workspace}}/build/lcov.info
+          path-to-lcov: ${{github.workspace}}/build/lcov_total.info
