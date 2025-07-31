@@ -25,7 +25,7 @@ public:
 
   struct OperatorDeclaration {
     FunctionDeclaration functionDeclarion;
-    Priority operatorPriority;
+    Priority operatorPriority = Priority::Addition;
   };
 
 protected:
