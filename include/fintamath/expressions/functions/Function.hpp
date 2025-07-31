@@ -8,8 +8,9 @@ class Function : public ExpressionBase {
   FINTAMATH_INTERFACE_BODY(Function, ExpressionBase)
 
 public:
-  struct FunctionDeclaration : ExpressionBaseDeclaration {
-    std::string functionName;
+  struct FunctionDeclaration {
+    ExpressionDeclaration expressionDeclarion;
+    std::string_view functionName;
   };
 
 protected:
@@ -18,7 +19,11 @@ protected:
   explicit Function(Children inChildren);
 
 public:
-  const FunctionDeclaration &getDeclaration() const noexcept override = 0;
+  constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept final {
+    return getFunctionDeclaration().expressionDeclarion;
+  }
+
+  virtual constexpr FunctionDeclaration getFunctionDeclaration() const noexcept = 0;
 
   std::string toString() const noexcept override;
 

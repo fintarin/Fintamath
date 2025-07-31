@@ -5,13 +5,8 @@ namespace fintamath {
 Function::Function(Children inChildren) : Super(std::move(inChildren)) {
 }
 
-const Function::FunctionDeclaration &Function::getDeclaration() const noexcept {
-  static const FunctionDeclaration declaration = {};
-  return declaration;
-}
-
 std::string Function::toString() const noexcept {
-  std::string outStr = getDeclaration().functionName;
+  std::string outStr(getFunctionDeclaration().functionName);
   for (const auto &child : getChildren()) {
     outStr += " " + child->toString();
   }

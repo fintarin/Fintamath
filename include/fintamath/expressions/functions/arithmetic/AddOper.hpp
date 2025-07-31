@@ -3,6 +3,7 @@
 #include "fintamath/core/MathObjectClassBody.hpp"
 #include "fintamath/expressions/ExpressionBase.hpp"
 #include "fintamath/expressions/functions/Function.hpp"
+#include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
 
@@ -13,7 +14,18 @@ protected:
   AddOper() = default;
 
 public:
-  const FunctionDeclaration &getDeclaration() const noexcept override;
+  constexpr FunctionDeclaration getFunctionDeclaration() const noexcept override {
+    constexpr MathObjectClass numberClass = Number::getClassStatic();
+    return {
+      .expressionDeclarion = {
+        .domainAndRangeVariants = {{
+          .returnClass = numberClass,
+          .childClasses = {numberClass, numberClass},
+        }}
+      },
+      .functionName = "+",
+    };
+  }
 
   std::unique_ptr<Function> makeFunction(Children children) const override;
 };
