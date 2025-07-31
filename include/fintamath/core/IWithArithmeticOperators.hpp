@@ -78,79 +78,79 @@ protected:
   virtual Derived &negate() = 0;
 };
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 bool operator==(const Lhs &lhs, const Rhs &rhs) {
   return lhs == Lhs(rhs);
 }
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 Lhs &operator+=(Lhs &lhs, const Rhs &rhs) {
   return lhs += Lhs(rhs);
 }
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 Lhs &operator-=(Lhs &lhs, const Rhs &rhs) {
   return lhs -= Lhs(rhs);
 }
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 Lhs &operator*=(Lhs &lhs, const Rhs &rhs) {
   return lhs *= Lhs(rhs);
 }
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 Lhs &operator/=(Lhs &lhs, const Rhs &rhs) {
   return lhs /= Lhs(rhs);
 }
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 Lhs operator+(const Lhs &lhs, const Rhs &rhs) {
   return lhs + Lhs(rhs);
 }
 
-template <typename Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+template <typename Rhs, detail::ConvertibleToAndNotSameAs<Rhs> Lhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Rhs>, Rhs>)
 Rhs operator+(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) + rhs;
 }
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 Lhs operator-(const Lhs &lhs, const Rhs &rhs) {
   return lhs - Lhs(rhs);
 }
 
-template <typename Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+template <typename Rhs, detail::ConvertibleToAndNotSameAs<Rhs> Lhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Rhs>, Rhs>)
 Rhs operator-(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) - rhs;
 }
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 Lhs operator*(const Lhs &lhs, const Rhs &rhs) {
   return lhs * Lhs(rhs);
 }
 
-template <typename Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+template <typename Rhs, detail::ConvertibleToAndNotSameAs<Rhs> Lhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Rhs>, Rhs>)
 Rhs operator*(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) * rhs;
 }
 
-template <typename Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
 Lhs operator/(const Lhs &lhs, const Rhs &rhs) {
   return lhs / Lhs(rhs);
 }
 
-template <typename Rhs, ConvertibleToAndNotSameAs<Rhs> Lhs>
+template <typename Rhs, detail::ConvertibleToAndNotSameAs<Rhs> Lhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Rhs>, Rhs>)
 Rhs operator/(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) / rhs;

@@ -114,92 +114,92 @@ private:
   Backend backend;
 };
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer &operator%=(Integer &lhs, const Rhs &rhs) {
   return lhs %= Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer &operator&=(Integer &lhs, const Rhs &rhs) {
   return lhs &= Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer &operator|=(Integer &lhs, const Rhs &rhs) {
   return lhs |= Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer &operator^=(Integer &lhs, const Rhs &rhs) {
   return lhs ^= Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer &operator<<=(Integer &lhs, const Rhs &rhs) {
   return lhs <<= Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer &operator>>=(Integer &lhs, const Rhs &rhs) {
   return lhs >>= Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer operator%(const Integer &lhs, const Rhs &rhs) {
   return lhs % Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Lhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Lhs>
 Integer operator%(const Lhs &lhs, const Integer &rhs) {
   return Integer(lhs) % rhs;
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer operator&(const Integer &lhs, const Rhs &rhs) {
   return lhs & Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Lhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Lhs>
 Integer operator&(const Lhs &lhs, const Integer &rhs) {
   return Integer(lhs) & rhs;
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer operator|(const Integer &lhs, const Rhs &rhs) {
   return lhs | Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Lhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Lhs>
 Integer operator|(const Lhs &lhs, const Integer &rhs) {
   return Integer(lhs) | rhs;
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer operator^(const Integer &lhs, const Rhs &rhs) {
   return lhs ^ Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Lhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Lhs>
 Integer operator^(const Lhs &lhs, const Integer &rhs) {
   return Integer(lhs) ^ rhs;
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer operator<<(const Integer &lhs, const Rhs &rhs) {
   return lhs << Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Lhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Lhs>
 Integer operator<<(const Lhs &lhs, const Integer &rhs) {
   return Integer(lhs) << rhs;
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Rhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Rhs>
 Integer operator>>(const Integer &lhs, const Rhs &rhs) {
   return lhs >> Integer(rhs);
 }
 
-template <ConvertibleToAndNotSameAs<Integer> Lhs>
+template <detail::ConvertibleToAndNotSameAs<Integer> Lhs>
 Integer operator>>(const Lhs &lhs, const Integer &rhs) {
   return Integer(lhs) >> rhs;
 }
