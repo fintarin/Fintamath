@@ -8,7 +8,7 @@
 namespace fintamath {
 
 class True : public IConstant {
-  FINTAMATH_CHILD_CLASS_BODY(True, IConstant)
+  FINTAMATH_CLASS_BODY(True, IConstant)
 
 public:
   MathObjectClass getValueClass() const noexcept override;
