@@ -7,7 +7,7 @@
 
 namespace fintamath {
 
-class Boolean : public IMathObject {
+class FINTAMATH_EXPORT Boolean : public IMathObject {
   FINTAMATH_CLASS_BODY(Boolean, IMathObject)
 
 public:

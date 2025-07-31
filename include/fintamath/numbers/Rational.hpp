@@ -13,7 +13,7 @@
 
 namespace fintamath {
 
-class Rational : public INumber, public IWithArithmeticOperators<Rational>, public IWithCompareOperators<Rational> {
+class FINTAMATH_EXPORT Rational : public INumber, public IWithArithmeticOperators<Rational>, public IWithCompareOperators<Rational> {
   FINTAMATH_CLASS_BODY(Rational, INumber)
 
 public:
