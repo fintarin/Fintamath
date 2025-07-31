@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/core/MathObjectIdStorage.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 
 #define FINTAMATH_CLASS_BODY(Class, SuperClass)               \
 public:                                                       \
@@ -9,6 +9,8 @@ public:                                                       \
   static MathObjectClass getClassStatic() noexcept;           \
                                                               \
   virtual MathObjectClass getClass() const noexcept override; \
+                                                              \
+  const Class &getDefaultObjectStatic() const noexcept;       \
                                                               \
 private:                                                      \
   static const Class defaultObject##Class;
@@ -27,4 +29,8 @@ private:                                                      \
                                                                                     \
   MathObjectClass Class::getClass() const noexcept {                                \
     return getClassStatic();                                                        \
+  }                                                                                 \
+                                                                                    \
+  const Class &Class::getDefaultObjectStatic() const noexcept {                     \
+    return defaultObject##Class;                                                    \
   }
