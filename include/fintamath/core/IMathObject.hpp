@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <ostream>
 #include <string>
 
@@ -15,6 +16,10 @@ public:
   virtual ~IMathObject() = default;
 
   virtual constexpr MathObjectClass getClass() const noexcept = 0;
+
+  virtual const IMathObject &getDefaultObject() const noexcept = 0;
+
+  virtual std::unique_ptr<IMathObject> clone() const = 0;
 
   virtual std::string toString() const noexcept;
 
