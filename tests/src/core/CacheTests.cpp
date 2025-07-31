@@ -5,6 +5,5 @@
 using namespace fintamath;
 
 TEST(CacheTests, atTest) {
-  Add b(Add::getDefaultObjectStatic());
   // TODO: implement
 }

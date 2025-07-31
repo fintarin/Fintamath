@@ -1,9 +1,5 @@
 #include "fintamath/constants/Undefined.hpp"
 
-#include <memory>
-
-#include "fintamath/core/IMathObject.hpp"
-
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Undefined)
