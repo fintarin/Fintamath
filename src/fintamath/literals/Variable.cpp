@@ -11,7 +11,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(Variable)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Variable)
 
 Variable::Variable(std::string_view inName) {
   if (inName.size() != 1 || inName.front() < 'a' || inName.front() > 'z') {
@@ -35,7 +35,7 @@ Variable::Variable(std::string_view inName, Integer inIndex) : Variable(inName) 
   index = std::move(inIndex);
 }
 
-std::string Variable::toString() const {
+std::string Variable::toString() const noexcept {
   std::string indexStr = index != -1 ? fmt::format("_{}", index.toString()) : "";
   return fmt::format("{}{}", name, indexStr);
 }

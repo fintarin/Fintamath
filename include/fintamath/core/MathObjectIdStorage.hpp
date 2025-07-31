@@ -4,7 +4,7 @@
 
 #include "fintamath/core/MathObjectClass.hpp"
 
-namespace fintamath {
+namespace fintamath::detail {
 
 class MathObjectIdStorage {
   using MathObjectClassToIdMap = std::unordered_map<MathObjectClass, size_t>;

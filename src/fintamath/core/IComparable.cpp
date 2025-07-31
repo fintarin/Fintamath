@@ -2,6 +2,6 @@
 
 namespace fintamath {
 
-FINTAMATH_PARENT_CLASS_IMPLEMENTATION(IComparable)
+FINTAMATH_CLASS_IMPLEMENTATION(IComparable)
 
 }

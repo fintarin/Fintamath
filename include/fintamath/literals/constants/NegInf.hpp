@@ -1,25 +1,20 @@
 #pragma once
 
 #include <memory>
-#include <string>
 
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-class NegInf : public IConstantCRTP<INumber, NegInf> {
-  FINTAMATH_CLASS_BODY(NegInf, IConstant)
+class NegInf : public IConstant {
+  FINTAMATH_CHILD_CLASS_BODY(NegInf, IConstant)
 
 public:
-  std::string toString() const override {
-    return "-Inf";
-  }
+  MathObjectClass getValueClass() const noexcept override;
 
-protected:
-  std::unique_ptr<IMathObject> call() const override;
+  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
 
 }

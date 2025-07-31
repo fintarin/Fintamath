@@ -15,7 +15,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(Integer)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Integer)
 
 using namespace detail;
 
@@ -41,7 +41,7 @@ catch (const InvalidInputException &) {
       str));
 }
 
-std::string Integer::toString() const {
+std::string Integer::toString() const noexcept {
   return backend.str();
 }
 
