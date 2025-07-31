@@ -9,7 +9,7 @@
 namespace fintamath {
 
 class IMathObject {
-  FINTAMATH_INTERFACE_BODY(MathObject, None)
+  FINTAMATH_INTERFACE_BODY(IMathObject, None)
 
 public:
   virtual ~IMathObject() = default;

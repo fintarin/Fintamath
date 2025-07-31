@@ -5,7 +5,7 @@
 namespace fintamath {
 
 class IFunction : public IExpression {
-  FINTAMATH_INTERFACE_BODY(Function, IExpression)
+  FINTAMATH_INTERFACE_BODY(IFunction, IExpression)
 
 public:
   struct FunctionDeclaration {

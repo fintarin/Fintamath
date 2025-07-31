@@ -2,4 +2,6 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Expression)
+
 }

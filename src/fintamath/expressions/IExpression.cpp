@@ -4,6 +4,8 @@
 
 namespace fintamath {
 
+FINTAMATH_INTERFACE_IMPLEMENTATION(IExpression)
+
 IExpression::IExpression(Children inChildren) : children(std::move(inChildren)) {
 }
 

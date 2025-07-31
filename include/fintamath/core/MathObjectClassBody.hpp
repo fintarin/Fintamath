@@ -18,6 +18,8 @@ private:                                                         \
   static const Class defaultObject##Class;
 
 #define FINTAMATH_CLASS_IMPLEMENTATION(Class)    \
+  FINTAMATH_INTERFACE_IMPLEMENTATION(Class)      \
+                                                 \
   const Class Class::defaultObject##Class = [] { \
     Class object;                                \
     object.registerDefaultObject();              \
