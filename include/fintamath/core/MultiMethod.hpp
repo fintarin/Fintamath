@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 #include <tuple>
 #include <unordered_map>
 
@@ -27,26 +28,24 @@ class MultiMethod<Res(ArgsBase...)> final {
 public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
-  void add(const auto &func) {
-    idToCallbackMap[CallbackId(Args::getClassStatic()...)] = [func](const ArgsBase &...args) {
-      return func(cast<Args>(args)...);
+  void add(auto callback) {
+    constexpr CallbackId callbackId = {Args::getClassStatic()...};
+
+    idToCallbackMap[callbackId] = [callback = std::move(callback)](ArgsBase... args) {
+      return callback(cast<Args>(std::forward<ArgsBase>(args))...);
     };
   }
 
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
-  Res operator()(Args &&...args) const {
-    if (auto iter = idToCallbackMap.find(CallbackId(args.getClass()...)); iter != idToCallbackMap.end()) {
+  std::optional<Res> operator()(Args &&...args) const {
+    constexpr CallbackId callbackId = {Args::getClassStatic()...};
+
+    if (auto iter = idToCallbackMap.find(callbackId); iter != idToCallbackMap.end()) {
       return iter->second(std::forward<Args>(args)...);
     }
 
     return {};
-  }
-
-  template <typename... Args>
-    requires(sizeof...(Args) == sizeof...(ArgsBase))
-  bool contains(const Args &...args) const {
-    return idToCallbackMap.contains(CallbackId(args.getClass()...));
   }
 
 private:
