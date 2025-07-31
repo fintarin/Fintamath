@@ -6,11 +6,11 @@
 public:                                                       \
   using Super = SuperClass;                                   \
                                                               \
+  const Class &getDefaultObjectStatic() const noexcept;       \
+                                                              \
   static MathObjectClass getClassStatic() noexcept;           \
                                                               \
   virtual MathObjectClass getClass() const noexcept override; \
-                                                              \
-  const Class &getDefaultObjectStatic() const noexcept;       \
                                                               \
 private:                                                      \
   static const Class defaultObject##Class;
@@ -22,6 +22,10 @@ private:                                                      \
     return object;                                                                  \
   }();                                                                              \
                                                                                     \
+  const Class &Class::getDefaultObjectStatic() const noexcept {                     \
+    return defaultObject##Class;                                                    \
+  }                                                                                 \
+                                                                                    \
   MathObjectClass Class::getClassStatic() noexcept {                                \
     static const detail::MathObjectClassData data{#Class, Super::getClassStatic()}; \
     return &data;                                                                   \
@@ -29,8 +33,4 @@ private:                                                      \
                                                                                     \
   MathObjectClass Class::getClass() const noexcept {                                \
     return getClassStatic();                                                        \
-  }                                                                                 \
-                                                                                    \
-  const Class &Class::getDefaultObjectStatic() const noexcept {                     \
-    return defaultObject##Class;                                                    \
   }
