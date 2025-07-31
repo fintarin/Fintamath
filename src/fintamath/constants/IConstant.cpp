@@ -7,14 +7,22 @@ namespace fintamath {
 
 FINTAMATH_INTERFACE_IMPLEMENTATION(IConstant)
 
-std::unique_ptr<IMathObject> IConstant::approximate() const noexcept {
+std::shared_ptr<const IMathObject> IConstant::getValue() const noexcept {
   return nullptr;
 }
 
+std::shared_ptr<const IMathObject> IConstant::approximateValue() const noexcept {
+  return nullptr;
+}
+
+std::shared_ptr<const IMathObject> IConstant::unwrapp() const noexcept {
+  return getValue();
+}
+
 std::shared_ptr<const IConstant> IConstant::parseConstant(const std::string &str) {
-  const NameToConstantMap &nameToConstantMap = getNameToConstantMap();
-  const auto parsedConstantIter = nameToConstantMap.find(str);
-  return parsedConstantIter != nameToConstantMap.end() ? parsedConstantIter->second : nullptr;
+  const NameToConstantMap &nameToConstMap = getNameToConstantMap();
+  const auto iter = nameToConstMap.find(str);
+  return iter != nameToConstMap.end() ? iter->second : nullptr;
 }
 
 void IConstant::registerDefaultObject() const {

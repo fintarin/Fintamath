@@ -1,4 +1,4 @@
-#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/functions/arithmetic/Mul.hpp"
 
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/numbers/INumber.hpp"
@@ -6,9 +6,9 @@
 namespace fintamath {
 
 FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
-  Add,
+  Mul,
   {
-    .name = "add",
+    .name = "mul",
     .argumentClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
     .operatorPriority = {},
@@ -17,23 +17,23 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
 )
 
 FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
-  AddOper,
+  MulOper,
   {
-    .name = "+",
+    .name = "*",
     .argumentClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
-    .operatorPriority = IFunction::OperatorPriority::Addition,
+    .operatorPriority = IFunction::OperatorPriority::Multiplication,
   }
 )
 
-std::unique_ptr<Add> Add::make(Arguments inArgs) {
-  Add self;
+std::unique_ptr<Mul> Mul::make(Arguments inArgs) {
+  Mul self;
   self.initSelf(std::move(inArgs));
-  return makeObject<Add>(self);
+  return makeObject<Mul>(self);
 }
 
-std::unique_ptr<Add> AddOper::make(Arguments inArgs) {
-  return Add::make(std::move(inArgs));
+std::unique_ptr<Mul> MulOper::make(Arguments inArgs) {
+  return Mul::make(std::move(inArgs));
 }
 
 }

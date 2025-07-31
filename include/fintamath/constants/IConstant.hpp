@@ -16,7 +16,11 @@ private:
 public:
   virtual constexpr MathObjectClass getValueClass() const noexcept = 0;
 
-  virtual std::unique_ptr<IMathObject> approximate() const noexcept;
+  virtual std::shared_ptr<const IMathObject> getValue() const noexcept;
+
+  virtual std::shared_ptr<const IMathObject> approximateValue() const noexcept;
+
+  std::shared_ptr<const IMathObject> unwrapp() const noexcept final;
 
   static std::shared_ptr<const IConstant> parseConstant(const std::string &str);
 
