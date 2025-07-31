@@ -33,8 +33,9 @@ Real::Real(Backend inBackend) : backend(std::move(inBackend)) {
 
   if (!isFinite()) {
     throw UndefinedException(fmt::format(
-        R"(Undefined backend {})",
-        backend.str()));
+      R"(Undefined backend {})",
+      backend.str()
+    ));
   }
 }
 
@@ -45,9 +46,10 @@ Real::Real(const Integer &rhs) : backend(rhs.getBackend()) {}
 Real::Real(const std::string_view str) {
   constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
     throw InvalidInputException(fmt::format(
-        R"(Unable to parse {} from "{}")",
-        getClassStatic()->getName(),
-        invalidStr));
+      R"(Unable to parse {} from "{}")",
+      getClassStatic()->getName(),
+      invalidStr
+    ));
   };
 
   if (str.empty() || str == ".") {
@@ -75,8 +77,9 @@ Real::Real(const std::string_view str) {
 
   if (!isFinite()) {
     throw UndefinedException(fmt::format(
-        R"(Undefined "{}" (overflow))",
-        str));
+      R"(Undefined "{}" (overflow))",
+      str
+    ));
   }
 }
 
@@ -239,9 +242,10 @@ Real &Real::multiply(const Real &rhs) {
 Real &Real::divide(const Real &rhs) {
   if (rhs.isZero()) {
     throw UndefinedException(fmt::format(
-        R"(div({}, {}) is undefined (division by zero))",
-        toString(),
-        rhs.toString()));
+      R"(div({}, {}) is undefined (division by zero))",
+      toString(),
+      rhs.toString()
+    ));
   }
 
   updatePrecision(rhs);

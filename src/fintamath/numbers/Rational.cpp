@@ -31,9 +31,10 @@ Rational::Rational(Integer inNumer, Integer inDenom)
 
   if (denom == 0) {
     throw UndefinedException(fmt::format(
-        R"(div({}, {}) is undefined (division by zero))",
-        numer.toString(),
-        denom.toString()));
+      R"(div({}, {}) is undefined (division by zero))",
+      numer.toString(),
+      denom.toString()
+    ));
   }
 
   toIrreducibleRational();
@@ -42,9 +43,10 @@ Rational::Rational(Integer inNumer, Integer inDenom)
 Rational::Rational(const std::string_view str) {
   constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
     throw InvalidInputException(fmt::format(
-        R"(Unable to parse {} from "{}")",
-        getClassStatic()->getName(),
-        invalidStr));
+      R"(Unable to parse {} from "{}")",
+      getClassStatic()->getName(),
+      invalidStr
+    ));
   };
 
   if (str.empty()) {
@@ -64,14 +66,18 @@ Rational::Rational(const std::string_view str) {
     firstDigitNum++;
   }
 
-  const std::string intPartStr(str.substr(static_cast<size_t>(firstDigitNum),
-                                          static_cast<size_t>(firstDotNum - firstDigitNum)));
+  const std::string intPartStr(str.substr(
+    static_cast<size_t>(firstDigitNum),
+    static_cast<size_t>(firstDotNum - firstDigitNum)
+  ));
   Integer intPart;
 
   try {
     if (!intPartStr.empty()) {
-      intPart = Integer(str.substr(static_cast<size_t>(firstDigitNum),
-                                   static_cast<size_t>(firstDotNum - firstDigitNum)));
+      intPart = Integer(str.substr(
+        static_cast<size_t>(firstDigitNum),
+        static_cast<size_t>(firstDotNum - firstDigitNum)
+      ));
     }
 
     if (firstDotNum + 1 < std::ssize(str)) {
@@ -157,9 +163,10 @@ Rational &Rational::multiply(const Rational &rhs) {
 Rational &Rational::divide(const Rational &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
-        R"(div({}, {}) is undefined (division by zero))",
-        toString(),
-        rhs.toString()));
+      R"(div({}, {}) is undefined (division by zero))",
+      toString(),
+      rhs.toString()
+    ));
   }
 
   numer *= rhs.denom;
