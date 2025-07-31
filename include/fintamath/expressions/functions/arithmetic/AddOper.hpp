@@ -13,20 +13,22 @@ protected:
   AddOper() = default;
 
 public:
-  constexpr FunctionDeclaration getFunctionDeclaration() const noexcept override {
-    constexpr MathObjectClass numberClass = INumber::getClassStatic();
-    return {
-      .expressionDeclarion = {
-        .domainAndRangeVariants = {{
-          .returnClass = numberClass,
-          .childClasses = {numberClass, numberClass},
-        }}
-      },
-      .functionName = "+",
-    };
-  }
+  constexpr FunctionDeclaration getFunctionDeclaration() const noexcept override;
 
   std::unique_ptr<IFunction> makeFunction(Children children) const override;
 };
+
+constexpr AddOper::FunctionDeclaration AddOper::getFunctionDeclaration() const noexcept {
+  constexpr MathObjectClass numberClass = INumber::getClassStatic();
+  return {
+    .expressionDeclarion = {
+      .domainAndRangeVariants = {{
+        .returnClass = numberClass,
+        .childClasses = {numberClass, numberClass},
+      }}
+    },
+    .functionName = "+",
+  };
+}
 
 }
