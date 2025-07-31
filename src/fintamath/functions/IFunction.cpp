@@ -1,4 +1,4 @@
-#include "fintamath/expressions/functions/IFunction.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
 #include "fintamath/core/Tokenizer.hpp"
 
@@ -6,19 +6,19 @@ namespace fintamath {
 
 FINTAMATH_INTERFACE_IMPLEMENTATION(IFunction)
 
-IFunction::IFunction(Children inChildren) : Super(std::move(inChildren)) {
-}
-
-const IExpression::ExpressionDeclaration &IFunction::getExpressionDeclaration() const noexcept {
-  return getFunctionDeclaration().expressionDeclarion;
+IFunction::IFunction(Arguments inArgs) : args(std::move(inArgs)) {
 }
 
 std::string IFunction::toString() const noexcept {
-  std::string outStr(getFunctionDeclaration().functionName);
-  for (const auto &child : getChildren()) {
-    outStr += " " + child->toString();
+  std::string outStr(getFunctionDeclaration().name);
+  for (const auto &arg : getArguments()) {
+    outStr += " " + arg->toString();
   }
   return outStr;
+}
+
+const IFunction::Arguments &IFunction::getArguments() const noexcept {
+  return args;
 }
 
 const IFunction::FunctionMakers *IFunction::parseFunctionMakers(const std::string &str) {
@@ -29,12 +29,12 @@ const IFunction::FunctionMakers *IFunction::parseFunctionMakers(const std::strin
 
 void IFunction::registerDefaultObject() const {
   const FunctionDeclaration &declaration = getFunctionDeclaration();
-  detail::Tokenizer::registerToken(declaration.functionName);
+  detail::Tokenizer::registerToken(declaration.name);
 
-  const auto selfMaker = [this](Children inChildren) {
-    return makeFunctionSelf(std::move(inChildren));
+  const auto selfMaker = [this](Arguments inArgs) {
+    return makeFunctionSelf(std::move(inArgs));
   };
-  FunctionMakers &functionMakers = getNameToFunctionMakersMap()[declaration.functionName];
+  FunctionMakers &functionMakers = getNameToFunctionMakersMap()[declaration.name];
   functionMakers.emplace_back(FunctionMaker{
     .maker = std::move(selfMaker),
     .defaultObject = *this,
