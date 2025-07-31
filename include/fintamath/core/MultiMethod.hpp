@@ -14,34 +14,34 @@ namespace fintamath::detail {
 template <typename Signature>
 class MultiMethod;
 
-template <typename Res, typename... ArgsBase>
-class MultiMethod<Res(ArgsBase...)> final {
+template <typename ResBase, typename... ArgsBase>
+class MultiMethod<ResBase(ArgsBase...)> final {
   template <typename>
   using ArgId = MathObjectClass;
 
-  using CallbackId = std::tuple<ArgId<ArgsBase>...>;
+  using FunctionId = std::tuple<ArgId<ArgsBase>...>;
 
-  using Callback = std::function<Res(ArgsBase...)>;
+  using FunctionBase = std::function<ResBase(ArgsBase...)>;
 
-  using IdToCallbackMap = std::unordered_map<CallbackId, Callback, Hash<CallbackId>>;
+  using IdToFunctionMap = std::unordered_map<FunctionId, FunctionBase, Hash<FunctionId>>;
 
 public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
-  void add(auto callback) {
-    constexpr CallbackId callbackId = {Args::getClassStatic()...};
+  void add(auto func) {
+    constexpr auto funcId = FunctionId(RemoveQualifiers<Args>::getClassStatic()...);
 
-    idToCallbackMap[callbackId] = [callback = std::move(callback)](ArgsBase... args) {
-      return callback(cast<Args>(std::forward<ArgsBase>(args))...);
+    idToFunctionMap[funcId] = [func = std::move(func)](ArgsBase... args) -> ResBase {
+      return func(cast<Args>(std::forward<ArgsBase>(args))...);
     };
   }
 
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
-  std::optional<Res> operator()(Args &&...args) const {
-    constexpr CallbackId callbackId = {Args::getClassStatic()...};
+  ResBase operator()(Args &&...args) const {
+    const auto funcId = FunctionId(args.getClass()...);
 
-    if (auto iter = idToCallbackMap.find(callbackId); iter != idToCallbackMap.end()) {
+    if (auto iter = idToFunctionMap.find(funcId); iter != idToFunctionMap.end()) {
       return iter->second(std::forward<Args>(args)...);
     }
 
@@ -49,7 +49,7 @@ public:
   }
 
 private:
-  IdToCallbackMap idToCallbackMap;
+  IdToFunctionMap idToFunctionMap;
 };
 
 }
