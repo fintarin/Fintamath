@@ -39,6 +39,7 @@ private:
 
   Ptr parent;
 };
+
 }
 
 using MathObjectClass = detail::MathObjectClassData::Ptr;
