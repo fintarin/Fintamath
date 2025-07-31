@@ -17,7 +17,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT Integer : public INumber, public IWithArithmeticOperators<Integer>, public IWithCompareOperators<Integer> {
+class Integer : public INumber, public IWithArithmeticOperators<Integer>, public IWithCompareOperators<Integer> {
   FINTAMATH_CLASS_BODY(Integer, INumber)
 
 public:

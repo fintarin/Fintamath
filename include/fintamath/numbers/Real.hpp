@@ -19,7 +19,7 @@ namespace fintamath {
 class Integer;
 class Rational;
 
-class FINTAMATH_EXPORT Real : public INumber, public IWithArithmeticOperators<Real>, public IWithCompareOperators<Real> {
+class Real : public INumber, public IWithArithmeticOperators<Real>, public IWithCompareOperators<Real> {
   FINTAMATH_CLASS_BODY(Real, INumber)
 
 public:

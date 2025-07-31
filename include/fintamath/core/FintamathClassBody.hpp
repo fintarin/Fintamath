@@ -15,7 +15,7 @@ public:                                                          \
   }                                                              \
                                                                  \
 private:                                                         \
-  static const Class defaultObject##Class;
+  FINTAMATH_EXPORT static const Class defaultObject##Class;
 
 #define FINTAMATH_CLASS_IMPLEMENTATION(Class)    \
   FINTAMATH_INTERFACE_IMPLEMENTATION(Class)      \

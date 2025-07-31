@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT IFunction : public IExpression {
+class IFunction : public IExpression {
   FINTAMATH_INTERFACE_BODY(IFunction, IExpression)
 
 public:

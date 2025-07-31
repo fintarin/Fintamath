@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT INumber : public IMathObject {
+class INumber : public IMathObject {
   FINTAMATH_INTERFACE_BODY(INumber, IMathObject)
 
 public:
