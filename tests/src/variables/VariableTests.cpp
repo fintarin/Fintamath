@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/core/Variable.hpp"
+#include "fintamath/variables/Variable.hpp"
 
 using namespace fintamath;
 
