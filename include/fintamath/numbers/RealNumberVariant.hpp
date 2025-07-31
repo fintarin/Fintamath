@@ -26,12 +26,12 @@
 //     }
 //   }
 
-//   const INumber &getNumber() const {
-//     return std::visit([](const auto &rhs) -> const INumber & { return rhs; }, *this);
+//   const Number &getNumber() const {
+//     return std::visit([](const auto &rhs) -> const Number & { return rhs; }, *this);
 //   }
 
-//   std::unique_ptr<INumber> convertToNumber() {
-//     return std::visit([]<typename T>(T &rhs) -> std::unique_ptr<INumber> { return std::make_unique<T>(std::move(rhs)); }, *this);
+//   std::unique_ptr<Number> convertToNumber() {
+//     return std::visit([]<typename T>(T &rhs) -> std::unique_ptr<Number> { return std::make_unique<T>(std::move(rhs)); }, *this);
 //   }
 
 // protected:

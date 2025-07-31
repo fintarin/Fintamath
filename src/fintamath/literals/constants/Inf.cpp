@@ -2,17 +2,17 @@
 
 #include <memory>
 
-#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Inf)
 
 MathObjectClass Inf::getValueClass() const noexcept {
-  return INumber::getClassStatic();
+  return Number::getClassStatic();
 }
 
-std::unique_ptr<IMathObject> Inf::getValue(bool /*shouldApproximate*/) const noexcept {
+std::unique_ptr<MathObject> Inf::getValue(bool /*shouldApproximate*/) const noexcept {
   return nullptr;
 }
 
