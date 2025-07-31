@@ -1,5 +1,7 @@
 #include "fintamath/expressions/functions/IFunction.hpp"
 
+#include "fintamath/core/Tokenizer.hpp"
+
 namespace fintamath {
 
 FINTAMATH_INTERFACE_IMPLEMENTATION(IFunction)
@@ -19,8 +21,23 @@ std::string IFunction::toString() const noexcept {
   return outStr;
 }
 
-std::unique_ptr<IFunction> IFunction::makeFunction(Children /*children*/) const {
-  return nullptr;
+void IFunction::registerDefaultObject() const {
+  const FunctionDeclaration &declaration = getFunctionDeclaration();
+  detail::Tokenizer::registerToken(declaration.functionName);
+
+  const auto selfMaker = [this](Children inChildren) {
+    return makeFunctionSelf(std::move(inChildren));
+  };
+  FunctionMakers &functionMakers = getNameToFunctionMakersMap()[declaration.functionName];
+  functionMakers.emplace_back(FunctionMaker{
+    .maker = std::move(selfMaker),
+    .defaultObject = *this,
+  });
+}
+
+IFunction::NameToFunctionMakersMap &IFunction::getNameToFunctionMakersMap() {
+  static NameToFunctionMakersMap parseInputToFunctionMakerMap;
+  return parseInputToFunctionMakerMap;
 }
 
 }

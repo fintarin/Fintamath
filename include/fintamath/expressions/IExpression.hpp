@@ -22,7 +22,7 @@ public:
     bool isVariadic = false;
   };
 
-  using Child = std::shared_ptr<IMathObject>;
+  using Child = std::shared_ptr<const IMathObject>;
   using Children = std::vector<Child>;
 
 protected:
