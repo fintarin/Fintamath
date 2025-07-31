@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "fintamath/core/MathObjectClassBody.hpp"
+#include "fintamath/core/FintamathClassBody.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
