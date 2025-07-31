@@ -10,18 +10,6 @@
 [submodule "thirdparty/googletest"]
 	path = thirdparty/googletest
 	url = https://github.com/google/googletest
-[submodule "thirdparty/boost-container-hash"]
-	path = thirdparty/boost-container-hash
-	url = https://github.com/boostorg/container_hash
-[submodule "thirdparty/boost-config"]
-	path = thirdparty/boost-config
-	url = https://github.com/boostorg/config
-[submodule "thirdparty/boost-describe"]
-	path = thirdparty/boost-describe
-	url = https://github.com/boostorg/describe
-[submodule "thirdparty/boost-mp11"]
-	path = thirdparty/boost-mp11
-	url = https://github.com/boostorg/mp11
 [submodule "thirdparty/fmt"]
 	path = thirdparty/fmt
 	url = https://github.com/fmtlib/fmt
