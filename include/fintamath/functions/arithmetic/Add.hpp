@@ -1,12 +1,12 @@
 #pragma once
 
-#include "fintamath/core/FintamathClassBody.hpp"
+#include "fintamath/functions/FintamathFunctionClassBody.hpp"
 #include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
 
 class Add : public IFunction {
-  FINTAMATH_CLASS_BODY(Add, IFunction)
+  FINTAMATH_FUNCTION_CLASS_BODY(Add, IFunction)
 
 protected:
   Add() = default;
@@ -16,7 +16,7 @@ protected:
 public:
   const FunctionDeclaration &getFunctionDeclaration() const noexcept override;
 
-  std::unique_ptr<IFunction> makeFunctionSelf(Arguments inArgs) const override;
+  static std::unique_ptr<Add> make(Arguments inArgs);
 
 private:
   static const FunctionDeclaration addDeclaration;
