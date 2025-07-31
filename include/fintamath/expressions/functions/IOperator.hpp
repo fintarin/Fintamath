@@ -34,11 +34,9 @@ protected:
   explicit IOperator(Children inChildren);
 
 public:
-  constexpr const FunctionDeclaration &getFunctionDeclaration() const noexcept final {
-    return getOperatorDeclaration().functionDeclarion;
-  }
+  const FunctionDeclaration &getFunctionDeclaration() const noexcept final;
 
-  virtual constexpr const OperatorDeclaration &getOperatorDeclaration() const noexcept = 0;
+  virtual const OperatorDeclaration &getOperatorDeclaration() const noexcept = 0;
 };
 
 }

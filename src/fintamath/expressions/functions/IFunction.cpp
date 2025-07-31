@@ -7,6 +7,10 @@ FINTAMATH_INTERFACE_IMPLEMENTATION(IFunction)
 IFunction::IFunction(Children inChildren) : Super(std::move(inChildren)) {
 }
 
+const IExpression::ExpressionDeclaration &IFunction::getExpressionDeclaration() const noexcept {
+  return getFunctionDeclaration().expressionDeclarion;
+}
+
 std::string IFunction::toString() const noexcept {
   std::string outStr(getFunctionDeclaration().functionName);
   for (const auto &child : getChildren()) {

@@ -7,4 +7,8 @@ FINTAMATH_INTERFACE_IMPLEMENTATION(IOperator)
 IOperator::IOperator(Children inChildren) : Super(std::move(inChildren)) {
 }
 
+const IFunction::FunctionDeclaration &IOperator::getFunctionDeclaration() const noexcept {
+  return getOperatorDeclaration().functionDeclarion;
+}
+
 }

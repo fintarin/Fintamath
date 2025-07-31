@@ -15,9 +15,7 @@ public:
   explicit Add(Children inChildren);
 
 public:
-  constexpr const FunctionDeclaration &getFunctionDeclaration() const noexcept override {
-    return addDeclaration;
-  }
+  const FunctionDeclaration &getFunctionDeclaration() const noexcept override;
 
   std::unique_ptr<IFunction> makeFunction(Children children) const override;
 

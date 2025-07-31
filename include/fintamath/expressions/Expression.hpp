@@ -9,12 +9,10 @@ class Expression : public IExpression {
   FINTAMATH_CLASS_BODY(Expression, IExpression)
 
 public:
-  constexpr const ExpressionDeclaration &getExpressionDeclaration() const noexcept override {
-    return expressionDeclaration;
-  }
+  const ExpressionDeclaration &getExpressionDeclaration() const noexcept override;
 
 private:
-  FINTAMATH_EXPORT static const ExpressionDeclaration expressionDeclaration;
+  static const ExpressionDeclaration expressionDeclaration;
 };
 
 }
