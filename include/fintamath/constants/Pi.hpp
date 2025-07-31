@@ -12,13 +12,11 @@ class Pi : public IConstant {
   FINTAMATH_CLASS_BODY(Pi, IConstant)
 
 public:
-  constexpr MathObjectClass getValueClass() const noexcept override;
+  constexpr MathObjectClass getValueClass() const noexcept override {
+    return INumber::getClassStatic();
+  }
 
   std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
-
-constexpr MathObjectClass Pi::getValueClass() const noexcept {
-  return INumber::getClassStatic();
-}
 
 }
