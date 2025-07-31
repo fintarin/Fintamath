@@ -29,14 +29,6 @@ using namespace detail;
 constexpr unsigned precisionMultiplier = 2;
 constexpr unsigned precisionDelta = 10;
 
-Real::Real() {
-  static const unsigned defaultPrecision = [] {
-    constexpr unsigned precision = 20;
-    Real::setPrecisionStatic(precision);
-    return precision;
-  }();
-}
-
 Real::Real(Backend inBackend) : backend(std::move(inBackend)) {
 
   if (!isFinite()) {
@@ -180,6 +172,14 @@ void Real::setPrecisionStatic(unsigned precision) {
   }
 
   Backend::thread_default_precision(precision * precisionMultiplier + precisionDelta);
+}
+
+void Real::registerDefaultObject() const {
+  [[maybe_unused]] static const unsigned defaultPrecision = [] {
+    constexpr unsigned precision = 20;
+    Real::setPrecisionStatic(precision);
+    return precision;
+  }();
 }
 
 bool Real::equals(const Real &rhs) const {
