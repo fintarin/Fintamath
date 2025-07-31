@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fintamath/constants/IConstant.hpp"
-#include "fintamath/core/FintamathClassBody.hpp"
+#include "fintamath/core/ClassBody.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
