@@ -50,10 +50,9 @@ jobs:
               build-type: Debug,
               shared: OFF,
             }
-            # TODO: remove version specifiers after macos-latest upgrades to version 13
           - {
               name: macOS GCC Release Shared,
-              os: macos-13,
+              os: macos-latest,
               cc: gcc,
               cxx: g++,
               build-type: Release,
@@ -61,7 +60,7 @@ jobs:
             }
           - {
               name: macOS GCC Debug Static,
-              os: macos-13,
+              os: macos-latest,
               cc: gcc,
               cxx: g++,
               build-type: Debug,
@@ -69,7 +68,7 @@ jobs:
             }
           - {
               name: macOS Clang Release Shared,
-              os: macos-13,
+              os: macos-latest,
               cc: clang,
               cxx: clang++,
               build-type: Release,
@@ -77,7 +76,7 @@ jobs:
             }
           - {
               name: macOS Clang Debug Static,
-              os: macos-13,
+              os: macos-latest,
               cc: clang,
               cxx: clang++,
               build-type: Debug,
@@ -137,13 +136,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: "true"
-
-      # TODO: remove this step after the default Clang is updated to version 16
-      - name: Install LLVM and Clang on Ubuntu
-        if: startsWith(matrix.config.os, 'ubuntu')
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "16.0"
 
       - name: Install GMP and MPFR on Ubuntu
         if: startsWith(matrix.config.os, 'ubuntu')

@@ -34,12 +34,6 @@ jobs:
         run: |
           sudo apt-get install llvm lcov
 
-      # TODO: remove this step after the default Clang is updated to version 16
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "16.0"
-
       - name: Configure CMake
         working-directory: ${{github.workspace}}
         run: cmake -Bbuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dfintamath_build_tests=ON -Dfintamath_enable_coverage=ON
