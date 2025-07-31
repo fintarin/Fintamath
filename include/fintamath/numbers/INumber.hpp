@@ -2,12 +2,12 @@
 
 #include <optional>
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/IMathObject.hpp"
 
 namespace fintamath {
 
-class Number : public MathObject {
-  FINTAMATH_INTERFACE_BODY(Number, MathObject)
+class INumber : public IMathObject {
+  FINTAMATH_INTERFACE_BODY(Number, IMathObject)
 
 public:
   virtual std::optional<unsigned> getPrecision() const noexcept {

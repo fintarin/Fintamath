@@ -9,12 +9,12 @@
 #include "fintamath/core/IWithCompareOperators.hpp"
 #include "fintamath/core/MathObjectClassBody.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/Number.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-class Rational : public Number, public IWithArithmeticOperators<Rational>, public IWithCompareOperators<Rational> {
-  FINTAMATH_CLASS_BODY(Rational, Number)
+class Rational : public INumber, public IWithArithmeticOperators<Rational>, public IWithCompareOperators<Rational> {
+  FINTAMATH_CLASS_BODY(Rational, INumber)
 
 public:
   Rational() = default;

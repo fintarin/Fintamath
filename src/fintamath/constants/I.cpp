@@ -2,7 +2,7 @@
 
 // #include <memory>
 
-// #include "fintamath/core/MathObject.hpp"
+// #include "fintamath/core/IMathObject.hpp"
 // #include "fintamath/numbers/Complex.hpp"
 // #include "fintamath/numbers/Integer.hpp"
 

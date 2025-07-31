@@ -1,6 +1,6 @@
 // #include <gtest/gtest.h>
 
-// #include "fintamath/core/MathObjectBody.hpp"
+// #include "fintamath/core/IMathObjectBody.hpp"
 // #include "fintamath/core/None.hpp"
 
 // using namespace fintamath;

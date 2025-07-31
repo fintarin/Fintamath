@@ -2,21 +2,21 @@
 
 #include <memory>
 
-#include "fintamath/constants/Constant.hpp"
+#include "fintamath/constants/IConstant.hpp"
 #include "fintamath/core/MathObjectClassBody.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
-class E : public Constant {
-  FINTAMATH_CLASS_BODY(E, Constant)
+class E : public IConstant {
+  FINTAMATH_CLASS_BODY(E, IConstant)
 
 public:
   constexpr MathObjectClass getValueClass() const noexcept override {
     return Real::getClassStatic();
   }
 
-  std::unique_ptr<MathObject> getValue(bool shouldApproximate) const noexcept override;
+  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
 
 }
