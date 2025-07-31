@@ -16,7 +16,7 @@ public:
     return INumber::getClassStatic();
   }
 
-  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
+  std::unique_ptr<IMathObject> approximate() const noexcept override;
 };
 
 }

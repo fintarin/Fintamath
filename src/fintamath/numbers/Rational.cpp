@@ -113,6 +113,14 @@ std::string Rational::toString() const noexcept {
   return res;
 }
 
+std::unique_ptr<IMathObject> Rational::toMinimalObject() const noexcept {
+  if (denom == 1) {
+    return numer.clone();
+  }
+
+  return nullptr;
+}
+
 int Rational::sign() const {
   return numer.sign();
 }
