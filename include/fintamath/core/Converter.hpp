@@ -3,8 +3,8 @@
 #include <concepts>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MultiMethod.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
+#include "fintamath/core/MultiMethod.hpp"
 
 namespace fintamath {
 
