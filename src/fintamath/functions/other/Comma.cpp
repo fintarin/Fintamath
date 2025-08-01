@@ -1,10 +1,8 @@
 #include "fintamath/functions/other/Comma.hpp"
 
-#include "fintamath/core/MathObjectUtils.hpp"
-
 namespace fintamath {
 
-FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
+FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION_WITH_MAKE(
   Comma,
   {
     .name = "",
@@ -25,13 +23,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   }
 )
 
-std::unique_ptr<Comma> Comma::make(Arguments inArgs) {
-  Comma self;
-  self.initSelf(std::move(inArgs));
-  return makeObject<Comma>(self);
-}
-
-std::unique_ptr<Comma> CommaOper::make(Arguments inArgs) {
+Shared<Comma> CommaOper::make(Arguments inArgs) {
   return Comma::make(std::move(inArgs));
 }
 

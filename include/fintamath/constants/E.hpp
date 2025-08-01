@@ -16,7 +16,7 @@ public:
     return Real::getClassStatic();
   }
 
-  std::shared_ptr<const IMathObject> approximateValue() const noexcept override;
+  Shared<IMathObject> approximateValue() const noexcept override;
 };
 
 }

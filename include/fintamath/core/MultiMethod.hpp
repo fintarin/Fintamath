@@ -6,7 +6,6 @@
 
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/core/MathObjectUtils.hpp"
 
 namespace fintamath::detail {
 
@@ -38,13 +37,24 @@ public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   ResBase operator()(Args &&...args) const {
-    const auto funcId = FunctionId(args.getClass()...);
+    const FunctionId funcId = getFunctionId(args...);
 
     if (auto iter = idToFunctionMap.find(funcId); iter != idToFunctionMap.end()) {
       return iter->second(std::forward<Args>(args)...);
     }
 
     return nullptr;
+  }
+
+private:
+  template <typename... Args>
+  static FunctionId getFunctionId(const Args &...args) {
+    if constexpr (requires { FunctionId(args->getClass()...); }) {
+      return FunctionId(args->getClass()...);
+    }
+    else {
+      return FunctionId(args.getClass()...);
+    }
   }
 
 private:
