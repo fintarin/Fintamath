@@ -17,17 +17,17 @@ class MultiMethod<ResBase(ArgsBase...)> final {
   template <typename>
   using ArgId = MathObjectClass;
 
-  using FunctionId = std::tuple<ArgId<ArgsBase>...>;
+  using CallbackId = std::tuple<ArgId<ArgsBase>...>;
 
-  using FunctionBase = std::function<ResBase(ArgsBase...)>;
+  using CallbackBase = std::function<ResBase(ArgsBase...)>;
 
-  using IdToFunctionMap = std::unordered_map<FunctionId, FunctionBase, Hash<FunctionId>>;
+  using IdToCallbackMap = std::unordered_map<CallbackId, CallbackBase, Hash<CallbackId>>;
 
 public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   void add(auto func) {
-    constexpr auto funcId = FunctionId(Args::getClassStatic()...);
+    constexpr auto funcId = CallbackId(Args::getClassStatic()...);
 
     idToFunctionMap[funcId] = [func = std::move(func)](ArgsBase... args) -> ResBase {
       return func(cast<Args>(args)...);
@@ -37,7 +37,7 @@ public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   ResBase operator()(Args &&...args) const {
-    const FunctionId funcId = getFunctionId(args...);
+    const CallbackId funcId = getFunctionId(args...);
 
     if (auto iter = idToFunctionMap.find(funcId); iter != idToFunctionMap.end()) {
       return iter->second(std::forward<Args>(args)...);
@@ -48,17 +48,17 @@ public:
 
 private:
   template <typename... Args>
-  static FunctionId getFunctionId(const Args &...args) {
-    if constexpr (requires { FunctionId(args->getClass()...); }) {
-      return FunctionId(args->getClass()...);
+  static CallbackId getFunctionId(const Args &...args) {
+    if constexpr (requires { CallbackId(args->getClass()...); }) {
+      return CallbackId(args->getClass()...);
     }
     else {
-      return FunctionId(args.getClass()...);
+      return CallbackId(args.getClass()...);
     }
   }
 
 private:
-  IdToFunctionMap idToFunctionMap;
+  IdToCallbackMap idToFunctionMap;
 };
 
 }
