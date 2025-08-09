@@ -12,7 +12,7 @@ Shared<IMathObject> Converter::convert(MathObjectClass toClass, const Shared<IMa
     return from;
   }
 
-  const auto& map = getClassPairToCallbackMap();
+  const auto &map = getClassPairToCallbackMap();
   auto iter = map.find(ClassPair{toClass, fromClass});
   return iter != map.end() ? iter->second(from) : nullptr;
 }
