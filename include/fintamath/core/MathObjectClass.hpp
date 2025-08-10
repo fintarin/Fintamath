@@ -19,15 +19,15 @@ public:
   using Parents = std::array<Ptr, parentsMaxSize>;
 
 public:
-  constexpr MathObjectClassData(Name inName, std::nullptr_t inParent) noexcept
+  constexpr MathObjectClassData(Name inName) noexcept
       : name(inName),
-        parent(inParent),
+        parent(nullptr),
         parentsSize(0) {}
 
-  constexpr MathObjectClassData(Name inName, Ptr inParent) noexcept
+  constexpr MathObjectClassData(Name inName, const MathObjectClassData &inParent) noexcept
       : name(inName),
-        parent(inParent), 
-        parentsSize(parent->parentsSize) {
+        parent(&inParent),
+        parentsSize(inParent.parentsSize) {
 
     assert(parentsSize < parentsMaxSize);
 
@@ -76,6 +76,16 @@ private:
 
   size_t parentsSize;
 };
+
+template <typename Parent>
+constexpr MathObjectClassData getClassData(std::string_view name) noexcept {
+  if constexpr (!std::is_null_pointer_v<Parent>) {
+    return {name, *Parent::getClassStatic()};
+  }
+  else {
+    return {name};
+  }
+}
 
 }
 
