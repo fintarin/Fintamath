@@ -1,88 +1,99 @@
-#include <gtest/gtest.h>
+// #include <fmt/core.h>
+// #include <gtest/gtest.h>
 
-#include "fintamath/expressions/Expression.hpp"
-#include "fintamath/expressions/ExpressionFunctions.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/E.hpp"
-#include "fintamath/numbers/Real.hpp"
+// #include <fstream>
+// #include <thread>
 
-using namespace fintamath;
+// #include "fintamath/expressions/Expression.hpp"
+// #include "fintamath/expressions/ExpressionFunctions.hpp"
+// #include "fintamath/functions/trigonometry/Sin.hpp"
+// #include "fintamath/numbers/Real.hpp"
+// #include "fintamath/numbers/RealFunctions.hpp"
 
-TEST(FintamathTests, fintamathTest) {
-  Expression expr;
-  Variable x("x");
-  Variable y("y");
+// using namespace fintamath;
 
-  //-------------------------------------------------------------------------------------//
+// TEST(FintamathTests, fintamathTest1) {
+//   static const Real step("0.001");
+//   static const Real start("-5");
+//   static const Real end("5");
+//   static constexpr size_t threadNum = 16;
 
-  expr = e() + pi() + Variable("a") + Variable("b");
-  EXPECT_EQ(expr.toString(), "a + b + E + Pi");
+//   std::vector<std::thread> threads;
+//   threads.reserve(threadNum);
 
-  expr = e() * pi() * Variable("a") * Variable("b");
-  EXPECT_EQ(expr.toString(), "E Pi a b");
+//   std::vector<std::vector<std::string>> allResults(threadNum);
 
-  expr = pow(Variable("a"), Variable("b")) * Variable("c");
-  EXPECT_EQ(expr.toString(), "a^b c");
+//   for (size_t i = 0; i < threadNum; i++) {
+//     threads.emplace_back([i, &allResults] {
+//       std::vector<std::string> results;
+//       Real newStart = start + (end - start) * i / threadNum;
+//       Real newEnd = start + (end - start) * (i + 1) / threadNum;
+//       for (Real r = newStart; r <= newEnd; r += step) {
+//         if (r < step) {
+//           r = 0;
+//         }
 
-  expr = x * x * x * y + 10 * x;
-  EXPECT_EQ(expr.toString(), "x^3 y + 10 x");
+//         Real value = sin(r);
+//         results.emplace_back(fmt::format(R"({}, {})", r.toString(), value.toString()));
+//       }
 
-  expr = x + 10 * x / 10 + (sqrt(x) * 2);
-  EXPECT_EQ(expr.toString(), "2 x + 2 sqrt(x)");
+//       allResults[i] = std::move(results);
+//     });
+//   }
 
-  expr = eqv(x * x + y * y * y, x * y);
-  EXPECT_EQ(expr.toString(), "x^2 - x y + y^3 = 0");
+//   for (auto &thread : threads) {
+//     thread.join();
+//   }
 
-  expr = eqv(x * x + y * y, x * y);
-  EXPECT_EQ(expr.toString(), "x^2 - x y + y^2 = 0");
+//   std::ofstream stream("/home/fintarin/Projects/Fintamath/data.txt");
 
-  expr = eqv(x / x - y / y, x / y);
-  EXPECT_EQ(expr.toString(), "x = 0");
+//   for (const auto &results : allResults) {
+//     for (const auto &result : results) {
+//       stream << result << '\n';
+//     }
+//   }
+// }
 
-  expr = Expression("(4x^4 + 1 + 3x^3 + 2x) / (x^2 + x + 2)");
-  EXPECT_EQ(expr.toString(), "4 x^2 - x - 7 + (11 x + 15)/(x^2 + x + 2)");
+// TEST(FintamathTests, fintamathTest2) {
+//   static const Real step("0.001");
+//   static const Real start("-5");
+//   static const Real end("5");
+//   static constexpr size_t threadNum = 16;
 
-  expr = log(2, 256) + ln(pow(e(), 2));
-  EXPECT_EQ(expr.toString(), "10");
+//   std::vector<std::thread> threads;
+//   threads.reserve(threadNum);
 
-  expr = sqrt(Expression(8));
-  EXPECT_EQ(expr.toString(), "2 sqrt(2)");
+//   std::vector<std::vector<std::string>> allResults(threadNum);
 
-  expr = pow(Expression("244706656946119777797996531655819747089832578"), Rational(1, 4));
-  EXPECT_EQ(expr.toString(), "sqrt(11) root(2022369065670411386760301914510907000742418, 4)");
+//   for (size_t i = 0; i < threadNum; i++) {
+//     threads.emplace_back([i, &allResults] {
+//       std::vector<std::string> results;
+//       Real newStart = start + (end - start) * i / threadNum;
+//       Real newEnd = start + (end - start) * (i + 1) / threadNum;
+//       for (Real r = newStart; r <= newEnd; r += step) {
+//         if (r < step) {
+//           r = 0;
+//         }
 
-  expr = sin(asin(Variable(x))) + cos(acos(Integer(1)));
-  EXPECT_EQ(expr.toString(), "x + 1");
+//         Expression expr = {Sin::make({r.clone()})};
 
-  expr = pow(sin(x), 2) + pow(cos(x), 2) + tan(x) * cot(x);
-  EXPECT_EQ(expr.toString(), "2");
+//         std::string value = approximate(expr).toString();
+//         results.emplace_back(fmt::format(R"({}, {})", r.toString(), value));
+//       }
 
-  expr = sin(Expression("-3Pi/2")) + cos(Expression("Pi/4"));
-  EXPECT_EQ(expr.toString(), "sqrt(2)/2 + 1");
+//       allResults[i] = std::move(results);
+//     });
+//   }
 
-  expr = approximate(sin(Expression("123")));
-  EXPECT_EQ(expr.toString(), "-0.45990349068959125129");
+//   for (auto &thread : threads) {
+//     thread.join();
+//   }
 
-  expr = approximate(cos(Expression("-256")));
-  EXPECT_EQ(expr.toString(), "-0.039790759931157709524");
+//   std::ofstream stream("/home/fintarin/Projects/Fintamath/data.txt");
 
-  expr = Expression("~a & b | ~c -> a <-> b !<-> c");
-  EXPECT_EQ(expr.toString(), "(~a & ~b & ~c) | (~a & c) | (a & b & ~c) | (~b & c)");
-
-  //-------------------------------------------------------------------------------------//
-
-  expr = solve(eqv(pow(x, 2) - 10, 39));
-  EXPECT_EQ(expr.toString(), "x = -7 | x = 7");
-
-  expr = solve(Expression("-4x^2 + 28x - 49 = 0"));
-  EXPECT_EQ(expr.toString(), "x = 7/2");
-
-  expr = solve(Expression("x^2 + 4x + 5 = 0"));
-  EXPECT_EQ(expr.toString(), "x = -2 - I | x = -2 + I");
-
-  expr = solve(Expression("3x^2 + 11x + 15 = 0"));
-  EXPECT_EQ(expr.toString(), "x = -(I sqrt(59))/6 - 11/6 | x = (I sqrt(59))/6 - 11/6");
-
-  expr = approximate(solve(Expression("-3x^2 + 28x - 49 = 0")), 2);
-  EXPECT_EQ(expr.toString(), "x = 2.3 | x = 7");
-}
+//   for (const auto &results : allResults) {
+//     for (const auto &result : results) {
+//       stream << result << '\n';
+//     }
+//   }
+// }

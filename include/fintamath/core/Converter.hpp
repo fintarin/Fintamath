@@ -2,9 +2,11 @@
 
 #include <concepts>
 #include <functional>
-#include <memory>
+#include <unordered_map>
 
-#include "fintamath/core/MultiMethod.hpp"
+#include "fintamath/core/Hash.hpp"
+#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 
 namespace fintamath {
 
@@ -13,51 +15,48 @@ class IMathObject;
 namespace detail {
 
 class Converter final {
-  template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-  using ConverterFunction = std::function<std::unique_ptr<IMathObject>(const To &to, const From &from)>;
+  using ClassPair = std::pair<MathObjectClass, MathObjectClass>;
 
-  using ConverterMultiMethod = MultiMethod<std::unique_ptr<IMathObject>(const IMathObject &, const IMathObject &)>;
+  using ConvertCallback = std::function<Shared<IMathObject>(const Shared<IMathObject> &)>;
+
+  using ClassPairToCallbackMap = std::unordered_map<ClassPair, ConvertCallback, Hash<ClassPair>>;
 
 public:
-  static std::unique_ptr<IMathObject> convert(const IMathObject &to, const IMathObject &from) {
-    return getConverter()(to, from);
-  }
+  static Shared<IMathObject> convert(MathObjectClass toClass, const Shared<IMathObject> &from);
 
-  static bool isConvertible(const IMathObject &to, const IMathObject &from) {
-    return getConverter().contains(to, from);
-  }
-
-  template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-  static void add(const ConverterFunction<To, From> &convertFunc) {
-    getConverter().add<To, From>(convertFunc);
-  }
+  template <typename To, typename From>
+  static void add();
 
 private:
-  static ConverterMultiMethod &getConverter();
+  static ClassPairToCallbackMap &getClassPairToCallbackMap();
 };
 
+template <typename To, typename From>
+inline void Converter::add() {
+  getClassPairToCallbackMap().emplace(
+    ClassPair{To::getClassStatic(), From::getClassStatic()},
+    [](const Shared<IMathObject> &from) {
+      return makeShared<To>(cast<From>(*from));
+    }
+  );
+}
+
+}
+
+template <std::derived_from<IMathObject> From>
+Shared<IMathObject> convert(MathObjectClass toClass, const Shared<From> &from) {
+  return detail::Converter::convert(toClass, from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-std::unique_ptr<To> convert(const To &to, const From &from) {
-  return cast<To>(detail::Converter::convert(to, from));
+Shared<To> convert(const Shared<To> &to, const Shared<From> &from) {
+  assert(from);
+  return cast<To>(detail::Converter::convert(to->getClass(), from));
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-std::unique_ptr<To> convert(const From &from) {
-  static const To to;
-  return convert(to, from);
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool isConvertible(const To &to, const From &from) {
-  return detail::Converter::isConvertible(to, from);
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-bool isConvertible(const From &from) {
-  static const To to;
-  return detail::Converter::isConvertible(to, from);
+Shared<To> convert(const Shared<From> &from) {
+  return cast<To>(convert(To::getClassStatic(), from));
 }
 
 }

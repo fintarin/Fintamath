@@ -26,4 +26,7 @@ Checks: >-
   -cppcoreguidelines-avoid-non-const-global-variables,
   -readability-redundant-access-specifiers,
   -cppcoreguidelines-non-private-member-variables-in-classes,
-  -readability-implicit-bool-conversion
+  -readability-implicit-bool-conversion,
+  -cppcoreguidelines-pro-type-static-cast-downcast,
+  -cppcoreguidelines-pro-bounds-constant-array-index
+

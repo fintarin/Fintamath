@@ -1,186 +1,84 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
-#include <functional>
-#include <memory>
 #include <optional>
 #include <stack>
-#include <string>
-#include <utility>
-#include <vector>
+#include <variant>
 
+#include "fintamath/core/ClassBody.hpp"
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/core/Parser.hpp"
 #include "fintamath/core/Tokenizer.hpp"
-#include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
 #include "fintamath/functions/IFunction.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/literals/Variable.hpp"
 
 namespace fintamath {
 
-namespace detail {
-
-struct Term final {
-  Token name;
-
-  std::unique_ptr<IMathObject> value;
+class Expression : public IMathObject {
+  FINTAMATH_CLASS_BODY(Expression, IMathObject)
 
 public:
-  Term() = default;
-
-  Term(std::string inName, std::unique_ptr<IMathObject> inValue)
-      : name(std::move(inName)),
-        value(std::move(inValue)) {
-  }
-};
-
-struct FunctionTerm final {
-  Term term;
-
-  std::optional<IOperator::Priority> priority;
-
-public:
-  FunctionTerm() = default;
-
-  FunctionTerm(Term inTerm, const std::optional<IOperator::Priority> inPriority)
-      : term(std::move(inTerm)),
-        priority(inPriority) {
-  }
-};
-
-using TermVector = std::vector<Term>;
-
-using FunctionTermStack = std::stack<FunctionTerm>;
-
-using ObjectStack = std::stack<std::unique_ptr<IMathObject>>;
-
-}
-
-class Expression : public IExpressionCRTP<Expression> {
-  FINTAMATH_CLASS_BODY(Expression, IExpression)
-
-  using ExpressionConstructor = std::function<std::unique_ptr<IMathObject>(ArgumentPtrVector &&)>;
-
-  using ExpressionMaker = std::unordered_map<MathObjectClass, ExpressionConstructor>;
+  using Argument = IFunction::Argument;
 
 public:
   Expression();
 
-  explicit Expression(const std::string &str);
+  Expression(Argument inArg);
 
-  explicit Expression(const ArgumentPtr &obj);
+  Expression(const std::string &str);
 
   Expression(const IMathObject &obj);
 
+  Expression(IMathObject &&obj);
+
   Expression(int64_t val);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  const std::shared_ptr<IFunction> &getFunction() const override;
-
-  const ArgumentPtrVector &getChildren() const override;
-
-  void setChildren(const ArgumentPtrVector &childVect) override;
-
-  void setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) override;
-
-  void setVariable(const Variable &var, const Expression &val);
-
-  template <typename Function>
-  static void registerExpressionConstructor(ExpressionConstructor constructor);
-
-protected:
-  ArgumentPtr simplify() const override;
+  Shared<IMathObject> unwrapp() const noexcept override;
 
 private:
-  void simplifyMutable() const;
+  using Arguments = IFunction::Arguments;
 
-  void updateStringMutable() const;
-
-  static detail::TermVector tokensToTerms(detail::TokenVector &tokens);
-
-  static detail::ObjectStack termsToObjects(detail::TermVector &terms);
-
-  static std::unique_ptr<IMathObject> objectsToExpr(detail::ObjectStack &objects);
-
-  static std::unique_ptr<IFunction> findFunction(const std::string &str, size_t argNum);
-
-  static std::unique_ptr<IOperator> findOperator(const std::string &str, IOperator::Priority priority);
-
-  static detail::Term parseTerm(const std::string &str);
-
-  static void moveFunctionTermsToObjects(detail::ObjectStack &objects, detail::FunctionTermStack &functions, const IOperator *nextOper);
-
-  static void insertMultiplications(detail::TermVector &terms);
-
-  static void fixOperatorTypes(detail::TermVector &terms);
-
-  static void collapseFactorials(detail::TermVector &terms);
-
-  static bool canNextTermBeBinaryOperator(const detail::Term &term);
-
-  static bool canPrevTermBeBinaryOperator(const detail::Term &term);
-
-  static bool isBinaryOperator(const IMathObject *val);
-
-  static bool isPrefixOperator(const IMathObject *val);
-
-  static bool isPostfixOperator(const IMathObject *val);
-
-  static bool isNonOperatorFunction(const IMathObject *val);
-
-  static void validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args);
-
-  static std::pair<MathObjectClass, bool> doesArgMatch(const MathObjectClass &expectedClass, const ArgumentPtr &arg);
-
-  static ArgumentPtrVector unwrapComma(const ArgumentPtr &child);
-
-  static ArgumentPtr compress(const ArgumentPtr &child);
-
-  friend std::unique_ptr<IMathObject> detail::makeExpr(const IFunction &func, ArgumentPtrVector args);
-
-  friend std::unique_ptr<IMathObject> detail::makeExprWithValidation(const IFunction &func, ArgumentPtrVector args);
-
-  friend std::unique_ptr<IMathObject> parseRawExpr(const std::string &str);
-
-  friend Expression approximate(const Expression &rhs, unsigned precision);
-
-  static ExpressionMaker &getExpressionMaker();
-
-private:
-  mutable ArgumentPtr child;
-
-  mutable ArgumentPtrVector childrenCached = {{}};
-
-  mutable std::string stringCached;
-
-  mutable bool isSimplified = false;
-};
-
-std::unique_ptr<IMathObject> parseRawExpr(const std::string &str);
-
-template <typename Function>
-void Expression::registerExpressionConstructor(ExpressionConstructor constructor) {
-  getExpressionMaker()[Function::getClassStatic()] = [maker = std::move(constructor)](ArgumentPtrVector &&args) {
-    static const size_t funcArgSize = Function{}.getArgumentClasses().size();
-
-    std::unique_ptr<IMathObject> res;
-
-    if constexpr (Function::isVariadicStatic()) {
-      res = maker(std::move(args));
-    }
-    else {
-      if (funcArgSize == args.size()) {
-        res = maker(std::move(args));
-      }
-    }
-
-    return res;
+  struct FunctionTerm {
+    std::reference_wrapper<const IFunction::FunctionMakers> functionMakers;
+    std::optional<OperatorPriority> operatorPriority;
   };
-}
+
+  using Term = std::variant<Argument, FunctionTerm>;
+
+  struct TokenToFunctionTerm {
+    detail::Token token;
+    std::optional<FunctionTerm> term;
+  };
+
+  struct TokenToTerm {
+    detail::Token token;
+    std::optional<Term> term;
+  };
+
+  using TokenToTermVector = std::vector<TokenToTerm>;
+  using FunctionTermStack = std::stack<std::optional<FunctionTerm>>;
+  using TermStack = std::stack<Term>;
+
+private:
+  static TokenToTermVector parseTokensToTerms(detail::Tokens &tokens);
+
+  static TermStack parseTermsRPN(TokenToTermVector &tokensToTerms);
+
+  static Argument parseExpression(TermStack &termsRPN);
+
+  static std::optional<Term> parseTerm(const detail::Token &token);
+
+  static std::optional<OperatorPriority> getOperatorPriority(const IFunction::FunctionMakers &functionMakers);
+
+  static void moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &functionTermStack, const FunctionTerm *nextFunctionTerm);
+
+  static Argument parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm);
+
+  static Argument parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm);
+
+  static Arguments unwrappComma(Argument arg);
+
+private:
+  Argument arg;
+};
 
 }

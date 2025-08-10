@@ -4,7 +4,6 @@
 #include <cassert>
 #include <compare>
 #include <cstddef>
-#include <cstdint>
 #include <ios>
 #include <stdexcept>
 #include <string>
@@ -15,6 +14,7 @@
 
 #include <fmt/core.h>
 
+#include "fintamath/core/Converter.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -27,15 +27,30 @@ FINTAMATH_CLASS_IMPLEMENTATION(Real)
 
 using namespace detail;
 
-constexpr unsigned precisionMultiplier = 2;
-constexpr unsigned precisionDelta = 10;
+constexpr unsigned calcPrecisionIncrement = 10;
+constexpr unsigned calcPrecisionMultiplier = 2;
+
+namespace {
+
+unsigned toResultPrecision(const unsigned calcPrecision) {
+  const unsigned resPrecision = (calcPrecision - calcPrecisionIncrement) / calcPrecisionMultiplier;
+  return std::max(resPrecision, 1U);
+}
+
+constexpr unsigned toCalculationPrecision(const unsigned resPrecision) {
+  const unsigned placeholder = resPrecision * calcPrecisionMultiplier + calcPrecisionIncrement;
+  return std::max(placeholder, calcPrecisionIncrement);
+}
+
+}
 
 Real::Real(Backend inBackend) : backend(std::move(inBackend)) {
 
   if (!isFinite()) {
     throw UndefinedException(fmt::format(
-        R"(Undefined backend {})",
-        backend.str()));
+      R"(Undefined backend {})",
+      backend.str()
+    ));
   }
 }
 
@@ -43,43 +58,47 @@ Real::Real(const Rational &rhs) : Real(Real(rhs.numerator()) / Real(rhs.denomina
 
 Real::Real(const Integer &rhs) : backend(rhs.getBackend()) {}
 
-Real::Real(const std::string_view str) try : Real() {
+Real::Real(const std::string_view str) {
+  constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
+    throw InvalidInputException(fmt::format(
+      R"(Unable to parse {} from "{}")",
+      getClassStatic()->getName(),
+      invalidStr
+    ));
+  };
+
   if (str.empty() || str == ".") {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
-  std::string mutableStr = removeLeadingZeroes(std::string(str));
-
-  {
+  const std::string processedStr = [&str] {
+    std::string outProcessedStr = removeLeadingZeroes(std::string(str));
     const std::string expStr = "*10^";
-    const size_t expPos = mutableStr.find(expStr);
+    const size_t expPos = outProcessedStr.find(expStr);
 
     if (expPos != std::string::npos) {
-      mutableStr.replace(expPos, expStr.length(), "e");
+      outProcessedStr.replace(expPos, expStr.length(), "e");
     }
-  }
+
+    return outProcessedStr;
+  }();
 
   try {
-    backend.assign(mutableStr);
+    backend.assign(processedStr);
   }
   catch (const std::runtime_error &) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   if (!isFinite()) {
     throw UndefinedException(fmt::format(
-        R"(Undefined "{}" (overflow))",
-        str));
+      R"(Undefined "{}" (overflow))",
+      str
+    ));
   }
 }
-catch (const InvalidInputException &) {
-  throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
-      getClassStatic()->getName(),
-      str));
-}
 
-std::string Real::toString() const {
+std::string Real::toString() const noexcept {
   return toString(outputPrecision);
 }
 
@@ -162,15 +181,29 @@ unsigned Real::getCalculationPrecisionStatic() noexcept {
 }
 
 unsigned Real::getPrecisionStatic() noexcept {
-  return (getCalculationPrecisionStatic() - precisionDelta) / precisionMultiplier;
+  const unsigned calcPrecision = getCalculationPrecisionStatic();
+  return toResultPrecision(calcPrecision);
 }
 
 void Real::setPrecisionStatic(unsigned precision) {
-  if (precision == 0) {
-    precision++;
-  }
+  Backend::thread_default_precision(toCalculationPrecision(precision));
+}
 
-  Backend::thread_default_precision(precision * precisionMultiplier + precisionDelta);
+void Real::setPrecisionStaticForAllThreads(const unsigned precision) {
+  Backend::default_precision(toCalculationPrecision(precision));
+}
+
+void Real::registerDefaultObject() const {
+  using detail::Converter;
+
+  Converter::add<Real, Integer>();
+  Converter::add<Real, Rational>();
+
+  [[maybe_unused]] static const unsigned defaultPrecision = [] {
+    constexpr unsigned precision = 20;
+    Real::setPrecisionStaticForAllThreads(precision);
+    return precision;
+  }();
 }
 
 bool Real::equals(const Real &rhs) const {
@@ -230,9 +263,10 @@ Real &Real::multiply(const Real &rhs) {
 Real &Real::divide(const Real &rhs) {
   if (rhs.isZero()) {
     throw UndefinedException(fmt::format(
-        R"(div({}, {}) is undefined (division by zero))",
-        toString(),
-        rhs.toString()));
+      R"(div({}, {}) is undefined (division by zero))",
+      toString(),
+      rhs.toString()
+    ));
   }
 
   updatePrecision(rhs);

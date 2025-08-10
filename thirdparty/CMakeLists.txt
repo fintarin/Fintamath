@@ -20,9 +20,6 @@ set(CMAKE_MODULE_PATH
 add_subdirectory(fmt)
 suppress_warnings(fmt-header-only)
 
-add_subdirectory(cppcoro)
-suppress_warnings(cppcoro)
-
 add_subdirectory(boost-multiprecision)
 suppress_warnings(boost_multiprecision)
 

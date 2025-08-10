@@ -1,37 +1,51 @@
 #pragma once
 
-#include <compare>
-#include <cstddef>
-#include <optional>
+#include <array>
+#include <cassert>
 #include <string_view>
-#include <unordered_map>
-#include <unordered_set>
-
-#include "fintamath/config/Config.hpp"
 
 namespace fintamath {
 
 namespace detail {
 
-class MathObjectClassImpl final {
+class MathObjectClassData final {
+  static constexpr size_t parentsMaxSize = 5;
+
 public:
   using Name = std::string_view;
 
-  using Ptr = const MathObjectClassImpl *;
+  using Ptr = const MathObjectClassData *;
+
+  using Parents = std::array<Ptr, parentsMaxSize>;
 
 public:
-  constexpr MathObjectClassImpl(const Name inName, const Ptr inParent = nullptr) noexcept
+  constexpr MathObjectClassData(Name inName) noexcept
       : name(inName),
-        parent(inParent) {
+        parent(nullptr),
+        parentsSize(0) {}
+
+  constexpr MathObjectClassData(Name inName, const MathObjectClassData &inParent) noexcept
+      : name(inName),
+        parent(&inParent),
+        parentsSize(inParent.parentsSize) {
+
+    assert(parentsSize < parentsMaxSize);
+
+    for (size_t i = 0; i < parentsSize; i++) {
+      parents[i] = parent->parents[i];
+    }
+
+    parents[parentsSize] = parent;
+    parentsSize++;
   }
 
-  constexpr MathObjectClassImpl(const MathObjectClassImpl &) noexcept = delete;
+  MathObjectClassData(const MathObjectClassData &) noexcept = delete;
 
-  constexpr MathObjectClassImpl(MathObjectClassImpl &&) noexcept = delete;
+  MathObjectClassData(MathObjectClassData &&) noexcept = delete;
 
-  constexpr MathObjectClassImpl &operator=(const MathObjectClassImpl &) noexcept = delete;
+  MathObjectClassData &operator=(const MathObjectClassData &) noexcept = delete;
 
-  constexpr MathObjectClassImpl &operator=(MathObjectClassImpl &&) noexcept = delete;
+  MathObjectClassData &operator=(MathObjectClassData &&) noexcept = delete;
 
   constexpr Name getName() const noexcept {
     return name;
@@ -41,16 +55,40 @@ public:
     return parent;
   }
 
+  constexpr bool is(const Ptr to) const noexcept {
+    assert(to);
+    return this == to || (parentsSize > to->parentsSize && parents[to->parentsSize] == to);
+  }
+
 private:
+  static constexpr Parents getEmptyParents() {
+    Parents emptyParents;
+    emptyParents.fill(nullptr);
+    return emptyParents;
+  }
+
+private:
+  Parents parents = getEmptyParents();
+
   Name name;
 
   Ptr parent;
 
-  [[maybe_unused]] inline static const Config config;
+  size_t parentsSize;
 };
+
+template <typename Parent>
+constexpr MathObjectClassData getClassData(std::string_view name) noexcept {
+  if constexpr (!std::is_null_pointer_v<Parent>) {
+    return {name, *Parent::getClassStatic()};
+  }
+  else {
+    return {name};
+  }
+}
 
 }
 
-using MathObjectClass = detail::MathObjectClassImpl::Ptr;
+using MathObjectClass = detail::MathObjectClassData::Ptr;
 
 }
