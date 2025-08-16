@@ -4,4 +4,7 @@ namespace fintamath {
 
 FINTAMATH_INTERFACE_IMPLEMENTATION(IOperator)
 
+IOperator::IOperator(Children inChildren) : Super(std::move(inChildren)) {
+}
+
 }

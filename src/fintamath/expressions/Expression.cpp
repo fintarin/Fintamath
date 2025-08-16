@@ -8,7 +8,8 @@ const Expression::ExpressionDeclaration Expression::expressionDeclaration = {
   .domainAndRangeVariants = {{
     .returnClass = nullptr,
     .childClasses = {IMathObject::getClassStatic()},
-  }}
+  }},
+  .isVariadic = false,
 };
 
 }
