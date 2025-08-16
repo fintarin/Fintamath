@@ -12,11 +12,13 @@ class True : public IConstant {
   FINTAMATH_CLASS_BODY(True, IConstant)
 
 public:
-  constexpr MathObjectClass getValueClass() const noexcept override {
-    return Boolean::getClassStatic();
-  }
+  constexpr MathObjectClass getValueClass() const noexcept override;
 
   std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
+
+constexpr MathObjectClass True::getValueClass() const noexcept {
+  return Boolean::getClassStatic();
+}
 
 }
