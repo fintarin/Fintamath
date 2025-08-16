@@ -31,14 +31,6 @@ protected:
   explicit IFunction(Children inChildren);
 
 public:
-  IFunction(const IFunction &rhs) = delete;
-
-  IFunction(IFunction &&rhs) = default;
-
-  IFunction &operator=(const IFunction &rhs) = delete;
-
-  IFunction &operator=(IFunction &&rhs) = default;
-
   const ExpressionDeclaration &getExpressionDeclaration() const noexcept final;
 
   virtual const FunctionDeclaration &getFunctionDeclaration() const noexcept = 0;
