@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 
-#include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/constants/IConstant.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;

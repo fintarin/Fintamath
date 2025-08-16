@@ -1,5 +1,7 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
+#include "fintamath/functions/trigonometry/Sin.hpp"
+
 namespace fintamath {
 
 namespace {
@@ -23,6 +25,10 @@ Expression solve(const Expression &rhs) {
 
 Expression approximate(const Expression &rhs) {
   return modify(rhs, &IFunction::approximate);
+}
+
+Expression sin(const Expression &rhs) {
+  return {Sin::make({rhs.unwrapp()})};
 }
 
 }
