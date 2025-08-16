@@ -9,7 +9,7 @@
 namespace fintamath {
 
 class IExpression : public IMathObject {
-  FINTAMATH_INTERFACE_BODY(ExpressionBase, IMathObject)
+  FINTAMATH_INTERFACE_BODY(IExpression, IMathObject)
 
 public:
   struct ExpressionDeclaration {

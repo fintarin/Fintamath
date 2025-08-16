@@ -7,7 +7,7 @@
 namespace fintamath {
 
 class INumber : public IMathObject {
-  FINTAMATH_INTERFACE_BODY(Number, IMathObject)
+  FINTAMATH_INTERFACE_BODY(INumber, IMathObject)
 
 public:
   virtual std::optional<unsigned> getPrecision() const noexcept {

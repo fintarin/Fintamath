@@ -2,6 +2,8 @@
 
 namespace fintamath {
 
+FINTAMATH_INTERFACE_IMPLEMENTATION(IFunction)
+
 IFunction::IFunction(Children inChildren) : Super(std::move(inChildren)) {
 }
 
