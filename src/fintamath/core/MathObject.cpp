@@ -9,7 +9,6 @@ std::string MathObject::toString() const noexcept {
 }
 
 void MathObject::registerDefaultObject() const {
-  detail::MathObjectIdStorage::add(getClass());
 }
 
 std::ostream &operator<<(std::ostream &out, const MathObject &rhs) {

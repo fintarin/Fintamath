@@ -16,8 +16,6 @@ public:
 
 protected:
   virtual void registerDefaultObject() const;
-
-  MathObject() = default;
 };
 
 std::ostream &operator<<(std::ostream &out, const MathObject &rhs);
