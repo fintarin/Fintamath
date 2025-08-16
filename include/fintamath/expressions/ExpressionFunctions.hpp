@@ -4,10 +4,10 @@
 
 namespace fintamath {
 
-Expression simplify(const Expression& rhs);
+Expression simplify(const Expression &rhs);
 
-Expression solve(const Expression& rhs);
+Expression solve(const Expression &rhs);
 
-Expression approximate(const Expression& rhs);
+Expression approximate(const Expression &rhs);
 
 }
