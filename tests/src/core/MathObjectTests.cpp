@@ -33,10 +33,10 @@
 // }
 
 // TEST(IMathObjectTests, cloneTest) {
-//   const std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>();
-//   const std::unique_ptr<IMathObject> m2 = std::make_unique<Integer>(1);
-//   const std::unique_ptr<IMathObject> m3 = m1->clone();
-//   const std::unique_ptr<IMathObject> m4 = Integer(1).clone();
+//   const Unique<IMathObject> m1 = std::make_unique<Integer>();
+//   const Unique<IMathObject> m2 = std::make_unique<Integer>(1);
+//   const Unique<IMathObject> m3 = m1->clone();
+//   const Unique<IMathObject> m4 = Integer(1).clone();
 
 //   EXPECT_EQ(*m3, *m1);
 //   EXPECT_EQ(*m4, *m2);
@@ -49,9 +49,9 @@
 // }
 
 // TEST(IMathObjectTests, equalsTest) {
-//   std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>(1);
-//   std::unique_ptr<IMathObject> m2 = std::make_unique<Rational>(1);
-//   std::unique_ptr<IMathObject> m3 = std::make_unique<Rational>(1, 2);
+//   Unique<IMathObject> m1 = std::make_unique<Integer>(1);
+//   Unique<IMathObject> m2 = std::make_unique<Rational>(1);
+//   Unique<IMathObject> m3 = std::make_unique<Rational>(1, 2);
 
 //   EXPECT_TRUE(*m1 == *m1);
 //   EXPECT_TRUE(*m2 == *m2);
@@ -77,9 +77,9 @@
 // }
 
 // TEST(IMathObjectTests, nequalsTest) {
-//   std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>(1);
-//   std::unique_ptr<IMathObject> m2 = std::make_unique<Rational>(1);
-//   std::unique_ptr<IMathObject> m3 = std::make_unique<Rational>(1, 2);
+//   Unique<IMathObject> m1 = std::make_unique<Integer>(1);
+//   Unique<IMathObject> m2 = std::make_unique<Rational>(1);
+//   Unique<IMathObject> m3 = std::make_unique<Rational>(1, 2);
 
 //   EXPECT_FALSE(*m1 != *m1);
 //   EXPECT_FALSE(*m2 != *m2);
@@ -105,7 +105,7 @@
 // }
 
 // TEST(IMathObjectTests, outputTest) {
-//   const std::unique_ptr<IMathObject> m1 = std::make_unique<Integer>(123);
+//   const Unique<IMathObject> m1 = std::make_unique<Integer>(123);
 //   std::stringstream out;
 //   out << *m1;
 //   EXPECT_EQ(out.str(), "123");

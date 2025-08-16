@@ -6,13 +6,10 @@
 namespace fintamath {
 
 class Comma : public IFunction {
-  FINTAMATH_FUNCTION_CLASS_BODY(Comma, IFunction)
+  FINTAMATH_FUNCTION_CLASS_BODY_WITH_MAKE(Comma, IFunction)
 
 protected:
   Comma() = default;
-
-public:
-  static std::unique_ptr<Comma> make(Arguments inArgs);
 };
 
 class CommaOper : public IFunction {
@@ -22,7 +19,7 @@ protected:
   CommaOper() = default;
 
 public:
-  static std::unique_ptr<Comma> make(Arguments inArgs);
+  static Shared<Comma> make(Arguments inArgs);
 };
 
 }

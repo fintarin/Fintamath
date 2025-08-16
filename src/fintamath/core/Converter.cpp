@@ -4,7 +4,7 @@
 
 namespace fintamath::detail {
 
-std::unique_ptr<IMathObject> Converter::convert(const IMathObject &to, const IMathObject &from) {
+Shared<IMathObject> Converter::convert(const IMathObject &to, const IMathObject &from) {
   return getConverter()(to, from);
 }
 
