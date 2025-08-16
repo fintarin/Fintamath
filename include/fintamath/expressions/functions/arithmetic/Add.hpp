@@ -11,7 +11,6 @@ class Add : public IFunction {
 protected:
   Add() = default;
 
-public:
   explicit Add(Children inChildren);
 
 public:
