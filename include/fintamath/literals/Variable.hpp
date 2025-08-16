@@ -8,7 +8,7 @@
 namespace fintamath {
 
 class Variable : public ILiteral {
-  FINTAMATH_CHILD_CLASS_BODY(Variable, ILiteral)
+  FINTAMATH_CLASS_BODY(Variable, ILiteral)
 
 public:
   explicit Variable(std::string_view inName);
@@ -16,6 +16,9 @@ public:
   explicit Variable(std::string_view inName, Integer inIndex);
 
   std::string toString() const noexcept override;
+
+protected:
+  Variable() = default;
 
 private:
   std::string name;

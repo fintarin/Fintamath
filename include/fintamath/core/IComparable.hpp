@@ -5,7 +5,7 @@
 namespace fintamath {
 
 class IComparable : public IArithmetic {
-  FINTAMATH_PARENT_CLASS_BODY(IComparable, IArithmetic)
+  FINTAMATH_CLASS_BODY(IComparable, IArithmetic)
 };
 
 }

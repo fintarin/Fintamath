@@ -9,7 +9,7 @@
 namespace fintamath {
 
 class Undefined : public IConstant {
-  FINTAMATH_CHILD_CLASS_BODY(Undefined, IConstant)
+  FINTAMATH_CLASS_BODY(Undefined, IConstant)
 
 public:
   MathObjectClass getValueClass() const noexcept override;

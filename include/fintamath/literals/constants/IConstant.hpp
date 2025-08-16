@@ -12,9 +12,9 @@ class IConstant : public ILiteral {
   FINTAMATH_CLASS_BODY(IConstant, ILiteral)
 
 public:
-  virtual MathObjectClass getValueClass() const noexcept = 0;
+  virtual MathObjectClass getValueClass() const noexcept;
 
-  virtual std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept = 0;
+  virtual std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept;
 
   virtual std::string getName() const noexcept;
 

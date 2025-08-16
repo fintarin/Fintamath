@@ -22,12 +22,20 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Real)
+FINTAMATH_CLASS_IMPLEMENTATION(Real)
 
 using namespace detail;
 
 constexpr unsigned precisionMultiplier = 2;
 constexpr unsigned precisionDelta = 10;
+
+Real::Real() {
+  static const unsigned defaultPrecision = [] {
+    constexpr unsigned precision = 20;
+    Real::setPrecisionStatic(precision);
+    return precision;
+  }();
+}
 
 Real::Real(Backend inBackend) : backend(std::move(inBackend)) {
 
@@ -54,8 +62,7 @@ Real::Real(const std::string_view str) {
     throwInvalidInputException(str);
   }
 
-  const std::string processedStr = [&str]
-  {
+  const std::string processedStr = [&str] {
     std::string outProcessedStr = removeLeadingZeroes(std::string(str));
     const std::string expStr = "*10^";
     const size_t expPos = outProcessedStr.find(expStr);

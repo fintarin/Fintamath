@@ -11,7 +11,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Variable)
+FINTAMATH_CLASS_IMPLEMENTATION(Variable)
 
 Variable::Variable(std::string_view inName) {
   if (inName.size() != 1 || inName.front() < 'a' || inName.front() > 'z') {
