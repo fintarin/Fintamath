@@ -1,5 +1,6 @@
 #include <benchmark/benchmark.h>
 
+#include "fintamath/literals/constants/IConstant.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;
@@ -11,7 +12,7 @@ static void BM_FintamathCast(benchmark::State &state) {
   for (auto _ : state) {
     benchmark::DoNotOptimize(cast<Integer>(obj));
     benchmark::DoNotOptimize(cast<INumber>(obj));
-    benchmark::DoNotOptimize(cast<IArithmetic>(obj));
+    benchmark::DoNotOptimize(cast<IConstant>(obj));
   }
 }
 
@@ -22,7 +23,7 @@ static void BM_DynamicCast(benchmark::State &state) {
   for (auto _ : state) {
     benchmark::DoNotOptimize(dynamic_cast<Integer*>(obj));
     benchmark::DoNotOptimize(dynamic_cast<INumber*>(obj));
-    benchmark::DoNotOptimize(dynamic_cast<IArithmetic*>(obj));
+    benchmark::DoNotOptimize(dynamic_cast<IConstant*>(obj));
   }
 }
 
