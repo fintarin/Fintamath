@@ -9,10 +9,8 @@ FINTAMATH_CLASS_IMPLEMENTATION(Add)
 
 const Add::FunctionDeclaration Add::addDeclaration = {
   .expressionDeclarion = {
-    .domainAndRangeVariants = {{
-      .returnClass = INumber::getClassStatic(),
-      .childClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
-    }},
+    .returnClass = INumber::getClassStatic(),
+    .childClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
     .isVariadic = true,
   },
   .functionName = "add",

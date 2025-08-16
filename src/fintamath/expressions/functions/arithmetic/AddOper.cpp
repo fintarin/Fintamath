@@ -10,10 +10,8 @@ FINTAMATH_CLASS_IMPLEMENTATION(AddOper)
 const AddOper::OperatorDeclaration AddOper::addOperDeclaration = {
   .functionDeclarion = {
     .expressionDeclarion = {
-      .domainAndRangeVariants = {{
-        .returnClass = INumber::getClassStatic(),
-        .childClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
-      }},
+      .returnClass = INumber::getClassStatic(),
+      .childClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
     },
     .functionName = "+",
   },
