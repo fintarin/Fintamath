@@ -967,6 +967,10 @@ TEST(RealTests, setPrecisionTest) {
   EXPECT_DEBUG_DEATH(a.setPrecision(10), "");
 }
 
+TEST(RealTests, setPrecisionForAllThreadTest) {
+  // TODO: implement
+}
+
 TEST(RealTests, updatePrecisionTest) {
   {
     Real a = 1;

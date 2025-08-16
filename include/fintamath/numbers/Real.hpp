@@ -75,6 +75,8 @@ public:
 
   static void setPrecisionStatic(unsigned precision);
 
+  static void setPrecisionStaticForAllThreads(unsigned precision);
+
 protected:
   void registerDefaultObject() const override;
 
