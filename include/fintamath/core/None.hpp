@@ -6,7 +6,7 @@ namespace fintamath {
 
 class None {
 public:
-  static constexpr MathObjectClass getClassStatic() noexcept {
+  static constexpr std::nullptr_t getClassStatic() noexcept {
     return nullptr;
   }
 };
