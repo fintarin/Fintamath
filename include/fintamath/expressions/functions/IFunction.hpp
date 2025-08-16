@@ -1,11 +1,11 @@
 #pragma once
 
-#include "fintamath/expressions/ExpressionBase.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
 
-class Function : public ExpressionBase {
-  FINTAMATH_INTERFACE_BODY(Function, ExpressionBase)
+class IFunction : public IExpression {
+  FINTAMATH_INTERFACE_BODY(Function, IExpression)
 
 public:
   struct FunctionDeclaration {
@@ -14,9 +14,9 @@ public:
   };
 
 protected:
-  Function() = default;
+  IFunction() = default;
 
-  explicit Function(Children inChildren);
+  explicit IFunction(Children inChildren);
 
 public:
   constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept final {
@@ -28,14 +28,14 @@ public:
   std::string toString() const noexcept override;
 
   template <typename T>
-  friend std::unique_ptr<Function> makeFunction(Function::Children children);
+  friend std::unique_ptr<IFunction> makeFunction(IFunction::Children children);
 
 protected:
-  virtual std::unique_ptr<Function> makeFunction(Children children) const = 0;
+  virtual std::unique_ptr<IFunction> makeFunction(Children children) const = 0;
 };
 
 template <typename T>
-std::unique_ptr<Function> makeFunction(Function::Children children) {
+std::unique_ptr<IFunction> makeFunction(IFunction::Children children) {
   return T::getDefaultObject().makeFunction(std::move(children));
 }
 

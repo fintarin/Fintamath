@@ -1,19 +1,19 @@
 #pragma once
 
 #include "fintamath/core/MathObjectClassBody.hpp"
-#include "fintamath/expressions/ExpressionBase.hpp"
+#include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
 
-class Expression : public ExpressionBase {
-  FINTAMATH_CLASS_BODY(Expression, ExpressionBase)
+class Expression : public IExpression {
+  FINTAMATH_CLASS_BODY(Expression, IExpression)
 
 public:
   constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept override {
     return {
       .domainAndRangeVariants = {{
         .returnClass = nullptr,
-        .childClasses = {MathObject::getClassStatic()},
+        .childClasses = {IMathObject::getClassStatic()},
       }}
     };
   }
