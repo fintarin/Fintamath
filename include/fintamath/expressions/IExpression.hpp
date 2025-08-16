@@ -31,7 +31,7 @@ protected:
   explicit IExpression(Children inChildren);
 
 public:
-  virtual constexpr const ExpressionDeclaration &getExpressionDeclaration() const noexcept = 0;
+  virtual const ExpressionDeclaration &getExpressionDeclaration() const noexcept = 0;
 
   const Children &getChildren() const noexcept;
 

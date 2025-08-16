@@ -9,9 +9,7 @@ class AddOper : public IOperator {
   FINTAMATH_CLASS_BODY(AddOper, IOperator)
 
 public:
-  constexpr const OperatorDeclaration &getOperatorDeclaration() const noexcept override {
-    return addOperDeclaration;
-  }
+  const OperatorDeclaration &getOperatorDeclaration() const noexcept override;
 
   std::unique_ptr<IFunction> makeFunction(Children children) const override;
 
