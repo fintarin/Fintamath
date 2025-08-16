@@ -1,10 +1,13 @@
 #pragma once
 
 #include <concepts>
+#include <functional>
+#include <unordered_map>
 
+#include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
-#include "fintamath/core/MultiMethod.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
 
@@ -13,33 +16,50 @@ class IMathObject;
 namespace detail {
 
 class Converter final {
-  using ConverterMultiMethod = MultiMethod<Shared<IMathObject>(const IMathObject &, const IMathObject &)>;
+  using ClassPair = std::pair<MathObjectClass, MathObjectClass>;
+
+  using ConvertCallback = std::function<Shared<IMathObject>(const Shared<IMathObject> &)>;
+
+  using ClassPairToCallbackMap = std::unordered_map<ClassPair, ConvertCallback, Hash<ClassPair>>;
 
 public:
-  static Shared<IMathObject> convert(const IMathObject &to, const IMathObject &from);
+  static Shared<IMathObject> convert(MathObjectClass toClass, const Shared<IMathObject> &from);
 
   template <typename To, typename From>
-  static void add() {
-    getConverter().add<To, From>([](const To & /*to*/, const From &from) {
-      return makeShared<To>(from);
-    });
-  }
+  static void add();
 
 private:
-  static ConverterMultiMethod &getConverter();
+  static ClassPairToCallbackMap &getClassPairToCallbackMap();
 };
 
+template <typename To, typename From>
+inline void Converter::add() {
+  getClassPairToCallbackMap().emplace(
+    ClassPair{To::getClassStatic(), From::getClassStatic()},
+    [](const Shared<IMathObject> &from) {
+      return makeShared<To>(cast<From>(*from));
+    }
+  );
+}
+
+}
+
+template <std::derived_from<IMathObject> From>
+Shared<IMathObject> convert(MathObjectClass toClass, const Shared<From> &from) {
+  return detail::Converter::convert(toClass, from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-Shared<To> convert(const To &to, const From &from) {
-  return cast<To>(detail::Converter::convert(to, from));
+Shared<To> convert(const Shared<To> &to, const Shared<From> &from) {
+  if (!to) {
+    throw InvalidInputException("Argument 'to' is null");
+  }
+  return cast<To>(detail::Converter::convert(to->getClass(), from));
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-Shared<To> convert(const From &from) {
-  static const To to;
-  return convert(to, from);
+Shared<To> convert(const Shared<From> &from) {
+  return cast<To>(convert(To::getClassStatic(), from));
 }
 
 }
