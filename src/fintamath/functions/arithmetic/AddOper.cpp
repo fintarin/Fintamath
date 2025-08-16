@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(AddOper)
+FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(AddOper)
 
 const AddOper::OperatorDeclaration AddOper::addOperDeclaration = {
   .functionDeclarion = {
@@ -20,8 +20,8 @@ const AddOper::OperatorDeclaration &AddOper::getOperatorDeclaration() const noex
   return addOperDeclaration;
 }
 
-std::unique_ptr<IFunction> AddOper::makeFunctionSelf(Arguments inArgs) const {
-  return makeFunction<Add>(std::move(inArgs));
+std::unique_ptr<Add> AddOper::make(Arguments inArgs) {
+  return Add::make(std::move(inArgs));
 }
 
 }
