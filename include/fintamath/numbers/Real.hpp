@@ -38,7 +38,7 @@ public:
   };
 
 public:
-  Real();
+  Real() = default;
 
   Real(Backend inBackend);
 
@@ -75,6 +75,8 @@ public:
   static void setPrecisionStatic(unsigned precision);
 
 protected:
+  void registerDefaultObject() const override;
+
   bool equals(const Real &rhs) const override;
 
   std::strong_ordering compare(const Real &rhs) const override;
