@@ -27,7 +27,7 @@ jobs:
               shared: ON,
             }
           - {
-              name: Ubuntu GCC Debug Static,
+              name: Ubuntu GCC Debug Object,
               os: ubuntu-latest,
               cc: gcc,
               cxx: g++,
@@ -43,7 +43,7 @@ jobs:
               shared: ON,
             }
           - {
-              name: Ubuntu Clang Debug Static,
+              name: Ubuntu Clang Debug Object,
               os: ubuntu-latest,
               cc: clang,
               cxx: clang++,
@@ -59,7 +59,7 @@ jobs:
               shared: ON,
             }
           - {
-              name: macOS GCC Debug Static,
+              name: macOS GCC Debug Object,
               os: macos-latest,
               cc: gcc,
               cxx: g++,
@@ -75,7 +75,7 @@ jobs:
               shared: ON,
             }
           - {
-              name: macOS Clang Debug Static,
+              name: macOS Clang Debug Object,
               os: macos-latest,
               cc: clang,
               cxx: clang++,
@@ -91,7 +91,7 @@ jobs:
               shared: ON,
             }
           - {
-              name: Windows GCC Debug Static,
+              name: Windows GCC Debug Object,
               os: windows-latest,
               cc: gcc,
               cxx: g++,
@@ -107,7 +107,7 @@ jobs:
               shared: ON,
             }
           - {
-              name: Windows Clang Debug Static,
+              name: Windows Clang Debug Object,
               os: windows-latest,
               cc: clang,
               cxx: clang++,
@@ -123,7 +123,7 @@ jobs:
               shared: ON,
             }
           - {
-              name: Windows MSVC Debug Static,
+              name: Windows MSVC Debug Object,
               os: windows-latest,
               cc: msvc,
               cxx: msvc,
