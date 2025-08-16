@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT Undefined : public IConstant {
+class Undefined : public IConstant {
   FINTAMATH_CLASS_BODY(Undefined, IConstant)
 
 public:
