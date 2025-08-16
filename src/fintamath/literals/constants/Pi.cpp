@@ -7,10 +7,18 @@
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(Pi)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Pi)
 
-std::unique_ptr<IMathObject> Pi::call() const {
-  return getPi().clone();
+MathObjectClass Pi::getValueClass() const noexcept {
+  return Real::getClassStatic();
+}
+
+std::unique_ptr<IMathObject> Pi::getValue(bool shouldApproximate) const noexcept {
+  if (!shouldApproximate) {
+    return nullptr;
+  }
+
+  return std::make_unique<Real>(getPi());
 }
 
 }

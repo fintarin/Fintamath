@@ -3,13 +3,18 @@
 #include <memory>
 
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/literals/Boolean.hpp"
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(False)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(False)
 
-std::unique_ptr<IMathObject> False::call() const {
-  return Boolean(false).clone();
+MathObjectClass False::getValueClass() const noexcept {
+  return Boolean::getClassStatic();
+}
+
+std::unique_ptr<IMathObject> False::getValue(const bool /*shouldApproximate*/) const noexcept {
+  return std::make_unique<Boolean>(false);
 }
 
 }

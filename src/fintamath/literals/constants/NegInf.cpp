@@ -2,14 +2,18 @@
 
 #include <memory>
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(NegInf)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(NegInf)
 
-std::unique_ptr<IMathObject> NegInf::call() const {
-  return clone();
+MathObjectClass NegInf::getValueClass() const noexcept {
+  return INumber::getClassStatic();
+}
+
+std::unique_ptr<IMathObject> NegInf::getValue(bool /*shouldApproximate*/) const noexcept {
+  return nullptr;
 }
 
 }

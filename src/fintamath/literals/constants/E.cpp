@@ -7,10 +7,18 @@
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(E)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(E)
 
-std::unique_ptr<IMathObject> E::call() const {
-  return getE().clone();
+MathObjectClass E::getValueClass() const noexcept {
+  return Real::getClassStatic();
+}
+
+std::unique_ptr<IMathObject> E::getValue(bool shouldApproximate) const noexcept {
+  if (!shouldApproximate) {
+    return nullptr;
+  }
+
+  return std::make_unique<Real>(getE());
 }
 
 }
