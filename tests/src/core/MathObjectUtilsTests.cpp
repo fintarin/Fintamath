@@ -2,7 +2,7 @@
 
 // #include "fintamath/core/MathObjectUtils.hpp"
 
-// #include "fintamath/literals/constants/E.hpp"
+// #include "fintamath/constants/E.hpp"
 // #include "fintamath/numbers/Integer.hpp"
 // #include "fintamath/numbers/Rational.hpp"
 
