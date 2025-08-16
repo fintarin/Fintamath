@@ -9,11 +9,10 @@
 // using namespace fintamath;
 
 // TEST(FintamathTests, fintamathTest) {
-//   Real::setPrecisionStatic(20);
-//   static const Real step("0.000001");
+//   static const Real step("0.001");
 //   static const Real start("-5");
 //   static const Real end("5");
-//   static const size_t threadNum = 1;
+//   static const size_t threadNum = 12;
 
 //   static std::mutex mtx;
 
@@ -27,13 +26,12 @@
 //       Real newStart = start + (end - start) * i / threadNum;
 //       Real newEnd = start + (end - start) * (i + 1) / threadNum;
 //       for (Real r = newStart; r <= newEnd; r += step) {
-//         try {
-//           Real value = sin(r);
-//           results.emplace_back(fmt::format(R"({}, {})", r.toString(), value.toString()));
+//         if (r < step) {
+//           r = 0;
 //         }
-//         catch (...) {
-//           results.emplace_back(fmt::format(R"({}, {})", r.toString(), "---"));
-//         }
+
+//         Real value = sin(r);
+//         results.emplace_back(fmt::format(R"({}, {})", r.toString(), value.toString()));
 //       }
 
 //       std::lock_guard<std::mutex> lock(mtx);

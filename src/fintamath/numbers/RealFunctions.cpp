@@ -24,29 +24,35 @@ constexpr std::string_view backendIsNegInfException = "Undefined backend -inf";
 constexpr std::string_view backendIsNanException = "Undefined backend nan";
 
 bool isOverflow(const Real &rhs) {
-  static Cache<unsigned, Real::Backend> cache([](const unsigned precision) {
+  static Cache<unsigned, Real::Backend> precisionToMaxValueCache([](const unsigned precision) {
     static const Real::Backend powBase = 10;
     return pow(powBase, precision);
   });
 
-  return abs(rhs) > cache[Real::getPrecisionStatic()];
+  const unsigned precision = Real::getPrecisionStatic();
+  const auto &maxValue = precisionToMaxValueCache[precision];
+  return abs(rhs) > maxValue;
 }
 
 bool isUnderflow(const Real &rhs) {
-  static Cache<unsigned, Real::Backend> cache([](const unsigned precision) {
+  static Cache<unsigned, Real::Backend> precisionToMinValueCache([](const unsigned precision) {
     static const Real::Backend powBase = 10;
     return 1 / pow(powBase, precision);
   });
 
-  return !rhs.isZero() && abs(rhs) < cache[Real::getPrecisionStatic()];
+  const unsigned precision = Real::getPrecisionStatic();
+  const auto &minValue = precisionToMinValueCache[precision];
+  return !rhs.isZero() && abs(rhs) < minValue;
 }
 
 bool isLogUnderflow(const Real &rhs) {
-  static Cache<unsigned, Real::Backend> cache([](const unsigned precision) {
+  static Cache<unsigned, Real::Backend> precisionToLogMinValueCache([](const unsigned precision) {
     return 1 / pow(precision, getE().getBackend());
   });
 
-  return !rhs.isZero() && abs(rhs) < cache[Real::getPrecisionStatic()];
+  const unsigned precision = Real::getPrecisionStatic();
+  const auto &logMinValue = precisionToLogMinValueCache[precision];
+  return !rhs.isZero() && abs(rhs) < logMinValue;
 }
 
 std::string getExceptionMessage(const std::string_view message) {
@@ -61,7 +67,7 @@ std::string getExceptionMessage(const std::string_view message) {
   return std::string(message);
 }
 
-const Real &trigResultChecked(const Real &rhs) {
+Real trigResultChecked(Real &&rhs) {
   if (isUnderflow(rhs)) {
     throw UndefinedException("result underflow");
   }
@@ -70,23 +76,23 @@ const Real &trigResultChecked(const Real &rhs) {
     throw UndefinedException("result overflow");
   }
 
-  return rhs;
+  return std::move(rhs);
 }
 
-const Real &hyperbResultChecked(const Real &rhs) {
+Real hyperbResultChecked(Real &&rhs) {
   if (isUnderflow(rhs)) {
     throw UndefinedException("result underflow");
   }
 
-  return rhs;
+  return std::move(rhs);
 }
 
-const Real &tgammaResultChecked(const Real &rhs) {
+Real tgammaResultChecked(Real &&rhs) {
   if (rhs.isZero()) {
     throw UndefinedException("result overflow");
   }
 
-  return rhs;
+  return std::move(rhs);
 }
 
 }
