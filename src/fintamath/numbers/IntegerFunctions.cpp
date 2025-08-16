@@ -36,8 +36,9 @@ Integer sqrt(const Integer &rhs) {
 Integer sqrt(const Integer &rhs, Integer &remainder) {
   if (rhs < 0) {
     throw UndefinedException(fmt::format(
-        R"(sqrt({}) is undefined (expected argument >= 0))",
-        rhs.toString()));
+      R"(sqrt({}) is undefined (expected argument >= 0))",
+      rhs.toString()
+    ));
   }
 
   Integer::Backend remainderBackend;
@@ -64,8 +65,9 @@ Integer factorialRec(const Integer &left, const Integer &right) {
 Integer factorial(const Integer &rhs) {
   if (rhs < 0) {
     throw UndefinedException(fmt::format(
-        R"(factorial({}) is undefined (expected argument >= 0))",
-        rhs.toString()));
+      R"(factorial({}) is undefined (expected argument >= 0))",
+      rhs.toString()
+    ));
   }
 
   if (rhs < 2) {
@@ -80,9 +82,10 @@ Integer factorial(const Integer &rhs, const size_t order) {
 
   if (rhs < 0) {
     throw UndefinedException(fmt::format(
-        R"(factorial({}, {}) is undefined (expected first argument >= 0))",
-        rhs.toString(),
-        order));
+      R"(factorial({}, {}) is undefined (expected first argument >= 0))",
+      rhs.toString(),
+      order
+    ));
   }
 
   if (order == 1) {
@@ -103,8 +106,9 @@ Integer factorial(const Integer &rhs, const size_t order) {
 FactorToCountMap factors(Integer rhs, Integer limit) {
   if (rhs < 2) {
     throw UndefinedException(fmt::format(
-        R"(factors({}) is undefined (expected argument >= 2))",
-        rhs.toString()));
+      R"(factors({}) is undefined (expected argument >= 2))",
+      rhs.toString()
+    ));
   }
 
   FactorToCountMap factorToCountMap;
@@ -141,9 +145,10 @@ FactorToCountMap factors(Integer rhs, Integer limit) {
 Integer combinations(const Integer &totalNumber, const Integer &choosedNumber) {
   if (totalNumber <= choosedNumber) {
     throw UndefinedException(fmt::format(
-        R"(combinations({}, {}) is undefined (expected totalNumber > choosedNumber))",
-        totalNumber.toString(),
-        choosedNumber.toString()));
+      R"(combinations({}, {}) is undefined (expected totalNumber > choosedNumber))",
+      totalNumber.toString(),
+      choosedNumber.toString()
+    ));
   }
 
   try {
@@ -151,9 +156,10 @@ Integer combinations(const Integer &totalNumber, const Integer &choosedNumber) {
   }
   catch (const UndefinedException &) {
     throw UndefinedException(fmt::format(
-        R"(combinations({}, {}) is undefined (expected totalNumber >= 0 and choosedNumber >= 0))",
-        totalNumber.toString(),
-        choosedNumber.toString()));
+      R"(combinations({}, {}) is undefined (expected totalNumber >= 0 and choosedNumber >= 0))",
+      totalNumber.toString(),
+      choosedNumber.toString()
+    ));
   }
 }
 
