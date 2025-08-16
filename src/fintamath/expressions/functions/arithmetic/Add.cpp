@@ -25,7 +25,7 @@ const Add::FunctionDeclaration &Add::getFunctionDeclaration() const noexcept {
   return addDeclaration;
 }
 
-std::unique_ptr<IFunction> Add::makeFunction(Children inChildren) const {
+std::unique_ptr<IFunction> Add::makeFunctionSelf(Children inChildren) const {
   return makeObject<Add>(std::move(inChildren));
 }
 
