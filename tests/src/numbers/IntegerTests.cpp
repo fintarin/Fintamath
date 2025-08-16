@@ -3,11 +3,8 @@
 
 #include "fintamath/numbers/Integer.hpp"
 
-#include <unordered_set>
-
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
-#include "fintamath/numbers/Rational.hpp"
 
 using namespace fintamath;
 

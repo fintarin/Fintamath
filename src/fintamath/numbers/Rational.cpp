@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <iterator>
-#include <memory>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -114,12 +113,12 @@ std::string Rational::toString() const noexcept {
   return res;
 }
 
-std::unique_ptr<IMathObject> Rational::toMinimalObject() const noexcept {
+std::shared_ptr<const IMathObject> Rational::unwrapp() const noexcept {
   if (denom == 1) {
     return numer.clone();
   }
 
-  return nullptr;
+  return {};
 }
 
 int Rational::sign() const {

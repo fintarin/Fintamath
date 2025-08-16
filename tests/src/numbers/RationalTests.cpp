@@ -1,8 +1,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <unordered_set>
-
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
@@ -537,15 +535,15 @@ TEST(RationalTests, toStringTest) {
   EXPECT_EQ(Rational(55, -10).toString(), "-11/2");
 }
 
-TEST(RationalTests, toMinimalObjectTest) {
-  EXPECT_TRUE(is<Integer>(Rational(55, 5).toMinimalObject()));
-  EXPECT_TRUE(is<Integer>(Rational(-55, 5).toMinimalObject()));
+TEST(RationalTests, unwrappTest) {
+  EXPECT_TRUE(is<Integer>(Rational(55, 5).unwrapp()));
+  EXPECT_TRUE(is<Integer>(Rational(-55, 5).unwrapp()));
 
-  EXPECT_EQ(Rational(55, 5).toMinimalObject()->toString(), "11");
-  EXPECT_EQ(Rational(-55, 5).toMinimalObject()->toString(), "-11");
+  EXPECT_EQ(Rational(55, 5).unwrapp()->toString(), "11");
+  EXPECT_EQ(Rational(-55, 5).unwrapp()->toString(), "-11");
 
-  EXPECT_FALSE(Rational(5, 2).toMinimalObject());
-  EXPECT_FALSE(Rational(-5, 2).toMinimalObject());
+  EXPECT_FALSE(Rational(5, 2).unwrapp());
+  EXPECT_FALSE(Rational(-5, 2).unwrapp());
 }
 
 TEST(RationalTests, signTest) {
