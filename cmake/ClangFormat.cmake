@@ -52,10 +52,10 @@ function(prefix_clangformat_setup prefix)
 
   if(TARGET clangformat)
     add_dependencies(clangformat ${prefix}_clangformat)
-	add_dependencies(clangformat_check ${prefix}_clangformat_check)
+	  add_dependencies(clangformat_check ${prefix}_clangformat_check)
   else()
     add_custom_target(clangformat DEPENDS ${prefix}_clangformat)
-	add_custom_target(clangformat_check DEPENDS ${prefix}_clangformat_check)
+	  add_custom_target(clangformat_check DEPENDS ${prefix}_clangformat_check)
   endif()
 endfunction()
 

@@ -8,7 +8,7 @@ using namespace fintamath;
 
 static void BM_FintamathCast(benchmark::State &state) {
   Integer integ = 1;
-  IMathObject* obj = &integ;
+  IMathObject *obj = &integ;
 
   for (auto _ : state) {
     benchmark::DoNotOptimize(cast<Integer>(obj));
@@ -19,12 +19,12 @@ static void BM_FintamathCast(benchmark::State &state) {
 
 static void BM_DynamicCast(benchmark::State &state) {
   Integer integ = 1;
-  IMathObject* obj = &integ;
+  IMathObject *obj = &integ;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(dynamic_cast<Integer*>(obj));
-    benchmark::DoNotOptimize(dynamic_cast<INumber*>(obj));
-    benchmark::DoNotOptimize(dynamic_cast<IConstant*>(obj));
+    benchmark::DoNotOptimize(dynamic_cast<Integer *>(obj));
+    benchmark::DoNotOptimize(dynamic_cast<INumber *>(obj));
+    benchmark::DoNotOptimize(dynamic_cast<IConstant *>(obj));
   }
 }
 
