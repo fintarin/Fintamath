@@ -7,7 +7,7 @@
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IWithArithmeticOperators.hpp"
 #include "fintamath/core/IWithCompareOperators.hpp"
-#include "fintamath/core/MathObjectClassBody.hpp"
+#include "fintamath/core/FintamathClassBody.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
