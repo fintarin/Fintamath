@@ -9,12 +9,8 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(E)
 
-std::unique_ptr<IMathObject> E::getValue(bool shouldApproximate) const noexcept {
-  if (!shouldApproximate) {
-    return nullptr;
-  }
-
-  return std::make_unique<Real>(getE());
+std::unique_ptr<IMathObject> E::approximate() const noexcept {
+  return getE().clone();
 }
 
 }
