@@ -5,7 +5,7 @@
 namespace fintamath {
 
 class Comparable : public Arithmetic {
-  FINTAMATH_CLASS_BODY(Comparable, Arithmetic)
+  FINTAMATH_INTERFACE_BODY(Comparable, Arithmetic)
 };
 
 }

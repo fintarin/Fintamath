@@ -5,7 +5,7 @@
 namespace fintamath {
 
 class Operator : public Function {
-  FINTAMATH_CLASS_BODY(Operator, Function)
+  FINTAMATH_INTERFACE_BODY(Operator, Function)
 };
 
 }
