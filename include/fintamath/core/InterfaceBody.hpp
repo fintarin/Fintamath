@@ -1,7 +1,6 @@
 #pragma once
 
 #include "fintamath/core/FintamathExport.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
 
 #define FINTAMATH_INTERFACE_BODY(Class, SuperClass)            \
   static_assert(std::is_object_v<Class>);                      \
