@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObject.hpp"
 #include "fintamath/literals/Boolean.hpp"
 
 namespace fintamath {
@@ -13,7 +13,7 @@ MathObjectClass True::getValueClass() const noexcept {
   return Boolean::getClassStatic();
 }
 
-std::unique_ptr<IMathObject> True::getValue(const bool /*shouldApproximate*/) const noexcept {
+std::unique_ptr<MathObject> True::getValue(const bool /*shouldApproximate*/) const noexcept {
   return std::make_unique<Boolean>(false);
 }
 

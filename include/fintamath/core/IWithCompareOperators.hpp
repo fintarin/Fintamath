@@ -13,7 +13,7 @@ public:
   virtual ~IWithCompareOperators() = default;
 
   friend std::strong_ordering operator<=>(const Derived &lhs, const Derived &rhs) {
-    const auto& lhsParent = static_cast<const IWithCompareOperators<Derived> &>(lhs);
+    const auto &lhsParent = static_cast<const IWithCompareOperators<Derived> &>(lhs);
     return lhsParent.compare(rhs);
   }
 

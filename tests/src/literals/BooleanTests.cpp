@@ -60,5 +60,5 @@ TEST(BooleanTests, opearatorsTest) {
 
 TEST(BooleanTest, getClassTest) {
   EXPECT_EQ(Boolean().getClass()->getName(), "Boolean");
-  EXPECT_EQ(Boolean().getClass()->getParent(), ILiteral::getClassStatic());
+  EXPECT_EQ(Boolean().getClass()->getParent(), Literal::getClassStatic());
 }
