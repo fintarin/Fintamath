@@ -17,6 +17,10 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 option(${PROJECT_NAME}_build_shared "Build shared" OFF)
 option(${PROJECT_NAME}_build_tests "Build tests" OFF)
 
+if(${PROJECT_NAME}_build_shared)
+  option(${PROJECT_NAME}_build_benchmarks "Build benchmarks" OFF)
+endif()
+
 add_subdirectory(thirdparty)
 
 find_package(MPFR REQUIRED)
@@ -62,4 +66,8 @@ include(cmake/ClangFormat.cmake)
 if(${PROJECT_NAME}_build_tests)
   enable_testing()
   add_subdirectory(tests)
+endif()
+
+if(${PROJECT_NAME}_build_benchmarks)
+  add_subdirectory(benchmarks)
 endif()
