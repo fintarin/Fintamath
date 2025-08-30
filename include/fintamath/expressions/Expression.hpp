@@ -73,7 +73,7 @@ private:
 
   static Arguments unwrappComma(Argument arg);
 
-  private:
+private:
   Argument arg;
 };
 

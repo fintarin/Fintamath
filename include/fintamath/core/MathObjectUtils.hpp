@@ -5,8 +5,8 @@
 #include <memory>
 #include <type_traits>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/Qualifiers.hpp"
 
 namespace fintamath {
 
