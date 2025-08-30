@@ -1,4 +1,4 @@
-#include "fintamath/core/Variable.hpp"
+#include "fintamath/variables/Variable.hpp"
 
 #include <string>
 #include <string_view>
