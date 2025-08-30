@@ -1,5 +1,7 @@
 #include "fintamath/functions/IFunction.hpp"
 
+#include <cassert>
+
 #include <fmt/core.h>
 
 #include "fintamath/core/MathObjectUtils.hpp"
@@ -14,7 +16,7 @@ IFunction::FunctionMaker::FunctionMaker(const IFunction &inDefaultFunc)
     : defaultFunc(inDefaultFunc) {
 }
 
-std::unique_ptr<IFunction> IFunction::FunctionMaker::make(Arguments inArgs) const {
+Shared<IFunction> IFunction::FunctionMaker::make(Arguments inArgs) const {
   return defaultFunc.get().makeSelf(std::move(inArgs));
 }
 
@@ -45,7 +47,7 @@ std::string IFunction::toString() const noexcept {
   return "(" + outStr + ")";
 }
 
-std::shared_ptr<const IMathObject> IFunction::unwrapp() const noexcept {
+Shared<IMathObject> IFunction::unwrapp() const noexcept {
   if (getDeclaration().isVariadic && args.size() == 1) {
     return args.front();
   }

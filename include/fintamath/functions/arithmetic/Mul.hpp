@@ -6,13 +6,10 @@
 namespace fintamath {
 
 class Mul : public IFunction {
-  FINTAMATH_FUNCTION_CLASS_BODY(Mul, IFunction)
+  FINTAMATH_FUNCTION_CLASS_BODY_WITH_MAKE(Mul, IFunction)
 
 protected:
   Mul() = default;
-
-public:
-  static std::unique_ptr<Mul> make(Arguments inArgs);
 };
 
 class MulOper : public IFunction {
@@ -22,7 +19,7 @@ protected:
   MulOper() = default;
 
 public:
-  static std::unique_ptr<Mul> make(Arguments inArgs);
+  static Shared<Mul> make(Arguments inArgs);
 };
 
 }

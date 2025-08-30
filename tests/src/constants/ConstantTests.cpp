@@ -13,7 +13,7 @@
 //   FINTAMATH_CHILD_CLASS_BODY(TestConstant, IConstant)
 
 // protected:
-//   std::unique_ptr<IMathObject> call() const override {
+//   Unique<IMathObject> call() const override {
 //     return {};
 //   }
 // };

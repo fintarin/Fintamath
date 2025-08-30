@@ -1,11 +1,10 @@
 #pragma once
 
-#include <memory>
-#include <optional>
 #include <ostream>
 #include <string>
 
 #include "fintamath/core/InterfaceBody.hpp"
+#include "fintamath/core/MathObjectPointers.hpp"
 #include "fintamath/core/None.hpp"
 
 namespace fintamath {
@@ -20,11 +19,11 @@ public:
 
   virtual std::string toString() const noexcept;
 
-  virtual std::unique_ptr<IMathObject> clone() const & noexcept = 0;
+  virtual Unique<IMathObject> clone() const & noexcept = 0;
 
-  virtual std::unique_ptr<IMathObject> clone() && noexcept = 0;
+  virtual Unique<IMathObject> clone() && noexcept = 0;
 
-  virtual std::shared_ptr<const IMathObject> unwrapp() const noexcept;
+  virtual Shared<IMathObject> unwrapp() const noexcept;
 
 protected:
   virtual const IMathObject &getDefaultObject() const noexcept = 0;
