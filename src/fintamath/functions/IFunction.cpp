@@ -7,6 +7,7 @@
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
+#include "fintamath/variables/Variable.hpp"
 
 namespace fintamath {
 
@@ -143,15 +144,16 @@ bool IFunction::doArgumentsMatchVariadic(const Declaration &decl, const Argument
   return true;
 }
 
-bool fintamath::IFunction::doesArgumentMatch(MathObjectClass expectedClass, const Argument &inArg) noexcept {
-  const MathObjectClass inArgClass = inArg->getClass();
+bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const Argument &inArg) noexcept {
+  const MathObjectClass argClass = inArg->getClass();
   
-  if (is(expectedClass, inArgClass)) {
+  if (is(expectedClass, argClass) || is<Variable>(argClass)) {
     return true;
   }
 
-  if (const auto inArgFunc = cast<IFunction>(inArg)) {
-    return is(expectedClass, inArgFunc->getDeclaration().returnClass);
+  if (is<IFunction>(argClass)) {
+    const auto &func = cast<IFunction>(*inArg);
+    return is(expectedClass, func.getDeclaration().returnClass);
   }
 
   return false;
