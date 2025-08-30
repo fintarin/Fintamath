@@ -8,7 +8,7 @@
 namespace fintamath {
 
 class ComplexInf : public IConstant {
-  FINTAMATH_CHILD_CLASS_BODY(ComplexInf, IConstant)
+  FINTAMATH_CLASS_BODY(ComplexInf, IConstant)
 
 public:
   MathObjectClass getValueClass() const noexcept override;

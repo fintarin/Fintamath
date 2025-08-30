@@ -19,7 +19,7 @@ class Integer;
 class Rational;
 
 class Real : public INumber, public IWithArithmeticOperators<Real>, public IWithCompareOperators<Real> {
-  FINTAMATH_CHILD_CLASS_BODY(Real, INumber)
+  FINTAMATH_CLASS_BODY(Real, INumber)
 
 public:
   using Backend = boost::multiprecision::mpfr_float;
@@ -38,7 +38,7 @@ public:
   };
 
 public:
-  Real() = default;
+  Real();
 
   Real(Backend inBackend);
 

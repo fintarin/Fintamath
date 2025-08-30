@@ -20,7 +20,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Rational)
+FINTAMATH_CLASS_IMPLEMENTATION(Rational)
 
 Rational::Rational(Integer rhs) : numer(std::move(rhs)) {
 }

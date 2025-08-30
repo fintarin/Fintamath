@@ -2,45 +2,29 @@
 
 #include "fintamath/core/MathObjectIdStorage.hpp"
 
-#define FINTAMATH_CLASS_BODY(Class, ParentClass)    \
-public:                                             \
-  using Parent = ParentClass;                       \
-                                                    \
-  static MathObjectClass getClassStatic() noexcept; \
-                                                    \
-private:
-
-#define FINTAMATH_CLASS_IMPLEMENTATION(Class)                                        \
-  MathObjectClass Class::getClassStatic() noexcept {                                 \
-    static const detail::MathObjectClassData data{#Class, Parent::getClassStatic()}; \
-    return &data;                                                                    \
-  }
-
-#define FINTAMATH_PARENT_CLASS_BODY(Class, ParentClass)    \
-  FINTAMATH_CLASS_BODY(Class, ParentClass)                 \
-                                                           \
-public:                                                    \
-  template <std::derived_from<Class> T>                    \
-  static void registerType() {                             \
-    detail::MathObjectIdStorage::add(T::getClassStatic()); \
-  }                                                        \
-                                                           \
-private:
-
-#define FINTAMATH_PARENT_CLASS_IMPLEMENTATION(Class) \
-  FINTAMATH_CLASS_IMPLEMENTATION(Class)
-
-#define FINTAMATH_CHILD_CLASS_BODY(Class, ParentClass) \
-  FINTAMATH_CLASS_BODY(Class, ParentClass)             \
-                                                       \
-public:                                                \
-  MathObjectClass getClass() const noexcept override;  \
-                                                       \
-private:
-
-#define FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Class)  \
-  FINTAMATH_CLASS_IMPLEMENTATION(Class)              \
+#define FINTAMATH_CLASS_BODY(Class, SuperClass)      \
+public:                                              \
+  using Super = SuperClass;                          \
                                                      \
-  MathObjectClass Class::getClass() const noexcept { \
-    return getClassStatic();                         \
+  static MathObjectClass getClassStatic() noexcept;  \
+                                                     \
+  virtual MathObjectClass getClass() const noexcept; \
+                                                     \
+private:                                             \
+  static const Class defaultObject##Class;
+
+#define FINTAMATH_CLASS_IMPLEMENTATION(Class)                                       \
+  const Class Class::defaultObject##Class = [] {                                    \
+    Class object;                                                                   \
+    object.registerDefaultObject();                                                 \
+    return object;                                                                  \
+  }();                                                                              \
+                                                                                    \
+  MathObjectClass Class::getClassStatic() noexcept {                                \
+    static const detail::MathObjectClassData data{#Class, Super::getClassStatic()}; \
+    return &data;                                                                   \
+  }                                                                                 \
+                                                                                    \
+  MathObjectClass Class::getClass() const noexcept {                                \
+    return getClassStatic();                                                        \
   }

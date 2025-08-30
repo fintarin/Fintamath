@@ -17,7 +17,7 @@
 namespace fintamath {
 
 class Integer : public INumber, public IWithArithmeticOperators<Integer>, public IWithCompareOperators<Integer> {
-  FINTAMATH_CHILD_CLASS_BODY(Integer, INumber)
+  FINTAMATH_CLASS_BODY(Integer, INumber)
 
 public:
   using Backend = boost::multiprecision::mpz_int;

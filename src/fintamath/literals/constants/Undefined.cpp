@@ -7,7 +7,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Undefined)
+FINTAMATH_CLASS_IMPLEMENTATION(Undefined)
 
 MathObjectClass Undefined::getValueClass() const noexcept {
   return INumber::getClassStatic();
