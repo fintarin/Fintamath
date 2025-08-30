@@ -9,10 +9,10 @@
 #include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/gmp.hpp>
 
+#include "fintamath/core/FintamathClassBody.hpp"
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IWithArithmeticOperators.hpp"
 #include "fintamath/core/IWithCompareOperators.hpp"
-#include "fintamath/core/FintamathClassBody.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
