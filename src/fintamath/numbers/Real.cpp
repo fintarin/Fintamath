@@ -14,6 +14,7 @@
 
 #include <fmt/core.h>
 
+#include "fintamath/core/Converter.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -178,6 +179,15 @@ void Real::setPrecisionStatic(unsigned precision) {
 }
 
 void Real::registerDefaultObject() const {
+  using detail::Converter;
+
+  Converter::add<Real, Integer>([](const Integer &from) {
+    return makeObject<Real>(from);
+  });
+  Converter::add<Real, Rational>([](const Rational &from) {
+    return makeObject<Real>(from);
+  });
+
   [[maybe_unused]] static const unsigned defaultPrecision = [] {
     constexpr unsigned precision = 20;
     Real::setPrecisionStatic(precision);

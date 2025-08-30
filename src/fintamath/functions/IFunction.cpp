@@ -47,7 +47,7 @@ void IFunction::registerDefaultObject() const {
   functionMakers.emplace_back(cast<IFunction>(getDefaultObject()));
 }
 
-bool IFunction::doArgumentsMatch(Arguments inArgs) const {
+bool IFunction::doArgumentsMatch(Arguments /*inArgs*/) const {
   return true;
 }
 

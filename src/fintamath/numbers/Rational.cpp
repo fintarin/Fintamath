@@ -12,6 +12,7 @@
 
 #include <fmt/core.h>
 
+#include "fintamath/core/Converter.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -131,6 +132,14 @@ const Integer &Rational::numerator() const noexcept {
 
 const Integer &Rational::denominator() const noexcept {
   return denom;
+}
+
+void Rational::registerDefaultObject() const noexcept {
+  using detail::Converter;
+
+  Converter::add<Rational, Integer>([](const Integer &from) {
+    return makeObject<Rational>(from);
+  });
 }
 
 bool Rational::equals(const Rational &rhs) const {

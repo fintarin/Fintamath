@@ -38,6 +38,8 @@ public:
   const Integer &denominator() const noexcept;
 
 protected:
+  void registerDefaultObject() const noexcept override;
+
   bool equals(const Rational &rhs) const override;
 
   std::strong_ordering compare(const Rational &rhs) const override;
