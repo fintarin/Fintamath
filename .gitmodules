@@ -13,9 +13,6 @@
 [submodule "thirdparty/fmt"]
 	path = thirdparty/fmt
 	url = https://github.com/fmtlib/fmt
-[submodule "thirdparty/cppcoro"]
-	path = thirdparty/cppcoro
-	url = https://github.com/andreasbuhr/cppcoro
 [submodule "thirdparty/benchmark"]
 	path = thirdparty/benchmark
 	url = https://github.com/google/benchmark
