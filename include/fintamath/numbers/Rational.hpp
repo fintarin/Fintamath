@@ -7,13 +7,13 @@
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IWithArithmeticOperators.hpp"
 #include "fintamath/core/IWithCompareOperators.hpp"
-#include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
 
-class Rational : public INumber, public IWithArithmeticOperators<Rational>, public IWithCompareOperators<Rational> {
-  FINTAMATH_CLASS_BODY(Rational, INumber)
+class Rational : public Number, public IWithArithmeticOperators<Rational>, public IWithCompareOperators<Rational> {
+  FINTAMATH_CLASS_BODY(Rational, Number)
 
 public:
   Rational() = default;

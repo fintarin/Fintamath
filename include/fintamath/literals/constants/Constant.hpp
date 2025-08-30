@@ -2,19 +2,19 @@
 
 #include <memory>
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObject.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/Literal.hpp"
 
 namespace fintamath {
 
-class IConstant : public ILiteral {
-  FINTAMATH_CLASS_BODY(IConstant, ILiteral)
+class Constant : public Literal {
+  FINTAMATH_CLASS_BODY(Constant, Literal)
 
 public:
   virtual MathObjectClass getValueClass() const noexcept;
 
-  virtual std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept;
+  virtual std::unique_ptr<MathObject> getValue(bool shouldApproximate) const noexcept;
 
   virtual std::string getName() const noexcept;
 

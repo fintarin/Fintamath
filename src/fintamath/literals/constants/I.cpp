@@ -2,7 +2,7 @@
 
 // #include <memory>
 
-// #include "fintamath/core/IMathObject.hpp"
+// #include "fintamath/core/MathObject.hpp"
 // #include "fintamath/numbers/Complex.hpp"
 // #include "fintamath/numbers/Integer.hpp"
 
@@ -14,7 +14,7 @@
 //   return Real::getClassStatic();
 // }
 
-// std::unique_ptr<IMathObject> I::getValue(bool /*shouldApproximate*/) const noexcept {
+// std::unique_ptr<MathObject> I::getValue(bool /*shouldApproximate*/) const noexcept {
 //   return std::make_unique<Complex>(Integer(0), Integer(1));
 // }
 

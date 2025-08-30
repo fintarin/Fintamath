@@ -11,15 +11,15 @@
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IWithArithmeticOperators.hpp"
 #include "fintamath/core/IWithCompareOperators.hpp"
-#include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {
 
 class Integer;
 class Rational;
 
-class Real : public INumber, public IWithArithmeticOperators<Real>, public IWithCompareOperators<Real> {
-  FINTAMATH_CLASS_BODY(Real, INumber)
+class Real : public Number, public IWithArithmeticOperators<Real>, public IWithCompareOperators<Real> {
+  FINTAMATH_CLASS_BODY(Real, Number)
 
 public:
   using Backend = boost::multiprecision::mpfr_float;
