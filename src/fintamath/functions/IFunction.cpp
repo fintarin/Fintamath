@@ -116,7 +116,7 @@ void IFunction::approximate(Argument &arg) {
     [](const IFunction &func) { return func.approximateSelf(); },
     &approximate,
     &solve,
-    FunctionState::Solve
+    FunctionState::Approximate
   );
 }
 
