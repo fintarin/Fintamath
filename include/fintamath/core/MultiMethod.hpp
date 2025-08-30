@@ -6,7 +6,6 @@
 
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath::detail {
 
