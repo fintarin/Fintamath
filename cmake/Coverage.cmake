@@ -5,7 +5,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
   if(${PROJECT_NAME}_enable_coverage)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping -O0")
 
-    set(ignored_files_regex 'tests|build|thirdparty|MathObjectClass.hpp')
+    set(ignored_files_regex 'tests|build|thirdparty')
 
     add_custom_target(
       ${PROJECT_NAME}_coverage
