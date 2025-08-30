@@ -13,9 +13,7 @@ namespace fintamath {
 class IMathObject;
 
 constexpr bool is(const MathObjectClass to, const MathObjectClass from) noexcept {
-  if (!to) {
-    return false;
-  }
+  assert(to);
 
   for (MathObjectClass parent = from; parent; parent = parent->getParent()) {
     if (parent == to) {

@@ -8,7 +8,6 @@
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/variables/Variable.hpp"
 
@@ -227,21 +226,45 @@ IFunction::Arguments IFunction::compressArguments(const Declaration &decl, const
     return args;
   }
 
-  Arguments outArgs;
-  outArgs.reserve(args.size());
+  std::optional<Arguments> outArgs;
+  size_t argIndex = 0;
 
-  for (auto &arg : args) {
-    if (arg->getClass() == funcClass) {
-      const auto &argFunc = cast<IFunction>(*arg);
-      const Arguments &innerArgs = argFunc.getArguments();
-      outArgs.insert(outArgs.end(), innerArgs.begin(), innerArgs.end());
-    }
-    else {
-      outArgs.emplace_back(std::move(arg));
+  for (; argIndex < args.size(); argIndex++) {
+    const auto &arg = args[argIndex];
+
+    if (is(funcClass, arg->getClass())) {
+      outArgs = std::vector(
+        std::make_move_iterator(args.begin()),
+        std::make_move_iterator(args.begin() + static_cast<ptrdiff_t>(argIndex))
+      );
+      appendFunctionArguments(cast<IFunction>(*arg), *outArgs);
+      break;
     }
   }
 
-  return outArgs;
+  if (!outArgs) {
+    return args;
+  }
+
+  argIndex++;
+
+  for (; argIndex < args.size(); argIndex++) {
+    auto &arg = args[argIndex];
+
+    if (is(funcClass, arg->getClass())) {
+      appendFunctionArguments(cast<IFunction>(*arg), *outArgs);
+    }
+    else {
+      outArgs->emplace_back(std::move(arg));
+    }
+  }
+
+  return std::move(*outArgs);
+}
+
+void IFunction::appendFunctionArguments(const IFunction &func, Arguments &args) noexcept {
+  const Arguments &funcArgs = func.getArguments();
+  args.insert(args.end(), funcArgs.begin(), funcArgs.end());
 }
 
 void IFunction::modify(Argument &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const ModifyCallback &prevModify, FunctionState stateAfterModify) {
@@ -260,7 +283,7 @@ void IFunction::modify(Argument &arg, const ModifySelfCallback &modifySelf, cons
     return;
   }
 
-  modifyArguments(func, modify);
+  modifyFunctionArguments(func, modify);
   arg = func;
 
   if (auto res = modifySelf(*func)) {
@@ -272,11 +295,10 @@ void IFunction::modify(Argument &arg, const ModifySelfCallback &modifySelf, cons
   }
 }
 
-void IFunction::modifyArguments(Shared<IFunction> &func, const ModifyCallback &modify) {
+void IFunction::modifyFunctionArguments(Shared<IFunction> &func, const ModifyCallback &modify) {
   const Arguments &oldArgs = func->getArguments();
-  Arguments newArgs;
+  std::optional<Arguments> newArgs;
   size_t argIndex = 0;
-  bool wasModify = false;
 
   for (; argIndex < oldArgs.size(); argIndex++) {
     const Argument &oldArg = oldArgs[argIndex];
@@ -285,23 +307,22 @@ void IFunction::modifyArguments(Shared<IFunction> &func, const ModifyCallback &m
 
     if (newArg != oldArg) {
       newArgs = oldArgs;
-      newArgs[argIndex] = oldArg;
-      wasModify = true;
+      (*newArgs)[argIndex] = oldArg;
       break;
     }
   }
 
-  if (!wasModify) {
+  if (!newArgs) {
     return;
   }
 
   argIndex++;
 
-  for (; argIndex < newArgs.size(); argIndex++) {
-    modify(newArgs[argIndex]);
+  for (; argIndex < newArgs->size(); argIndex++) {
+    modify((*newArgs)[argIndex]);
   }
 
-  func = func->makeSelf(std::move(newArgs));
+  func = func->makeSelf(std::move(*newArgs));
 }
 
 IFunction::NameToFunctionMakersMap &IFunction::getNameToFunctionMakersMap() {
