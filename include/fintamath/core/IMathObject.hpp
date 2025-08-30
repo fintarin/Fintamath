@@ -21,9 +21,11 @@ public:
 
   virtual const IMathObject &getDefaultObject() const noexcept = 0;
 
-protected:
-  virtual std::unique_ptr<IMathObject> clone() const = 0;
+  virtual std::unique_ptr<IMathObject> clone() const & = 0;
 
+  virtual std::unique_ptr<IMathObject> clone() && = 0;
+
+protected:
   virtual void registerDefaultObject() const;
 };
 
