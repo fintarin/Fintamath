@@ -36,12 +36,8 @@ TokenVector Tokenizer::tokenize(std::string str) {
   return tokens;
 }
 
-void Tokenizer::registerToken(const Token &token) {
-  auto &tokens = getRegisteredTokens();
-  tokens.insert(std::ranges::upper_bound(tokens, token, [](const Token &lhs, const Token &rhs) {
-                  return lhs.size() > rhs.size();
-                }),
-                token);
+void Tokenizer::registerToken(const std::string_view tokenName) {
+  getRegisteredTokens().add(tokenName);
 }
 
 bool Tokenizer::appendToken(TokenVector &tokens, Token &token, const bool shouldSplit) {
@@ -55,31 +51,11 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, const bool should
     return true;
   }
 
-  while (!token.empty()) {
-    std::string nestedToken = token.substr(0, getRegisteredTokens().front().size());
-    bool isNestedTokenFind = false;
-
-    for (const auto &registeredToken : getRegisteredTokens()) {
-      if (nestedToken.size() < registeredToken.size()) {
-        continue;
-      }
-
-      if (nestedToken.size() > registeredToken.size()) {
-        nestedToken = token.substr(0, registeredToken.size());
-      }
-
-      if (nestedToken == registeredToken) {
-        isNestedTokenFind = true;
-        break;
-      }
-    }
-
-    if (!isNestedTokenFind) {
-      nestedToken = token.substr(0, 1);
-    }
-
-    tokens.emplace_back(nestedToken);
-    token = token.substr(nestedToken.size());
+  size_t i = 0;
+  while (i < token.size()) {
+    const size_t tokenSize = std::max(getRegisteredTokens().getPrefixSize(token, i), 1LU);
+    tokens.emplace_back(token.substr(i, tokenSize));
+    i += tokenSize;
   }
 
   token.clear();
@@ -98,8 +74,8 @@ bool Tokenizer::isSpace(const char ch) {
   return ch == ' ';
 }
 
-TokenVector &Tokenizer::getRegisteredTokens() {
-  static TokenVector registeredTokens;
+PrefixTrie &Tokenizer::getRegisteredTokens() {
+  static PrefixTrie registeredTokens;
   return registeredTokens;
 }
 
