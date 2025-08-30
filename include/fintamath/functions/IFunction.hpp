@@ -2,6 +2,7 @@
 
 #include "fintamath/core/IMathObject.hpp"
 #include <functional>
+#include <optional>
 #include <unordered_map>
 
 namespace fintamath {
@@ -10,23 +11,43 @@ class IFunction : public IMathObject {
   FINTAMATH_INTERFACE_BODY(IFunction, IMathObject)
 
 public:
+  enum class OperatorPriority : uint8_t {
+    Exponentiation, // e.g.  a ^ b
+    PostfixUnary,   // e.g.  a!
+    PrefixUnary,    // e.g.  -a
+    Multiplication, // e.g.  a * b
+    Addition,       // e.g.  a + b
+    Modulo,         // e.g.  a mod b
+    Comparison,     // e.g.  a = b
+    Conjunction,    // e.g.  a & b
+    Disjunction,    // e.g.  a | b
+    Implication,    // e.g.  a -> b
+    Equivalence,    // e.g.  a <-> b
+    Comma,          // e.g.  a , b
+  };
+
+  struct Declaration {
+    std::string name;
+    std::vector<MathObjectClass> argumentClasses;
+    MathObjectClass returnClass = {};
+    std::optional<OperatorPriority> operatorPriority;
+    bool isVariadic = false;
+  };
+
   using Argument = std::shared_ptr<const IMathObject>;
   using Arguments = std::vector<Argument>;
-
-  struct FunctionDeclaration {
-    MathObjectClass returnClass = {};
-    std::vector<MathObjectClass> argumentClasses;
-    bool isVariadic = false;
-    std::string name;
-  };
 
   class FunctionMaker {
   public:
     FunctionMaker(const IFunction &inDefaultFunc);
 
-    std::unique_ptr<IFunction> makeFunction(Arguments inArgs);
+    std::unique_ptr<IFunction> make(Arguments inArgs) const;
 
-    std::unique_ptr<IFunction> doArgumentsMatch(Arguments inArgs);
+    bool doArgumentsMatch(const Arguments &inArgs) const noexcept;
+
+    const Declaration &getDeclaration() const noexcept;
+
+    MathObjectClass getClass() const noexcept;
 
   private:
     std::reference_wrapper<const IFunction> defaultFunc;
@@ -35,15 +56,12 @@ public:
   using FunctionMakers = std::vector<FunctionMaker>;
   using NameToFunctionMakersMap = std::unordered_map<std::string, FunctionMakers>;
 
-protected:
-  IFunction() = default;
-
-  explicit IFunction(Arguments inArgs);
-
 public:
-  virtual const FunctionDeclaration &getFunctionDeclaration() const noexcept = 0;
+  virtual const Declaration &getDeclaration() const noexcept = 0;
 
   std::string toString() const noexcept override;
+
+  std::shared_ptr<const IMathObject> unwrapp() const noexcept override;
 
   const Arguments &getArguments() const noexcept;
 
@@ -54,8 +72,18 @@ protected:
 
   void registerDefaultObject() const override;
 
+  void initSelf(Arguments inArgs);
+
 private:
-  bool doArgumentsMatch(Arguments inArgs) const;
+  Arguments validateArguments(Arguments inArgs) const;
+
+  Arguments unwrappArguments(Arguments inArgs) const;
+
+  bool doArgumentsMatch(const Arguments &inArgs) const noexcept;
+
+  static bool doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &inArgs);
+
+  static bool doArgumentsMatchVariadic(const Declaration &decl, const Arguments &inArgs);
 
   static NameToFunctionMakersMap &getNameToFunctionMakersMap();
 

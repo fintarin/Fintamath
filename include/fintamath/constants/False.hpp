@@ -16,7 +16,7 @@ public:
     return Boolean::getClassStatic();
   }
 
-  std::unique_ptr<IMathObject> toMinimalObject() const noexcept override;
+  std::shared_ptr<const IMathObject> getValue() const noexcept override;
 };
 
 }
