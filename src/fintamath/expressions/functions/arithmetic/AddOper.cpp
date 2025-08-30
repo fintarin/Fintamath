@@ -1,6 +1,5 @@
 #include "fintamath/expressions/functions/arithmetic/AddOper.hpp"
 
-#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/expressions/functions/arithmetic/Add.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
@@ -25,8 +24,8 @@ const AddOper::OperatorDeclaration &AddOper::getOperatorDeclaration() const noex
   return addOperDeclaration;
 }
 
-std::unique_ptr<IFunction> AddOper::makeFunction(Children inChildren) const {
-  return makeObject<Add>(std::move(inChildren));
+std::unique_ptr<IFunction> AddOper::makeFunctionSelf(Children inChildren) const {
+  return makeFunction<Add>(std::move(inChildren));
 }
 
 }

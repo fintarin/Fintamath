@@ -17,13 +17,13 @@ public:
 
   virtual constexpr MathObjectClass getClass() const noexcept = 0;
 
-  virtual const IMathObject &getDefaultObject() const noexcept = 0;
-
-  virtual std::unique_ptr<IMathObject> clone() const = 0;
-
   virtual std::string toString() const noexcept;
 
+  virtual const IMathObject &getDefaultObject() const noexcept = 0;
+
 protected:
+  virtual std::unique_ptr<IMathObject> clone() const = 0;
+
   virtual void registerDefaultObject() const;
 };
 

@@ -11,7 +11,7 @@ class AddOper : public IOperator {
 public:
   const OperatorDeclaration &getOperatorDeclaration() const noexcept override;
 
-  std::unique_ptr<IFunction> makeFunction(Children children) const override;
+  std::unique_ptr<IFunction> makeFunctionSelf(Children children) const override;
 
 private:
   static const OperatorDeclaration addOperDeclaration;
