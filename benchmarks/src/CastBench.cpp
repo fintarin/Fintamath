@@ -28,7 +28,7 @@ static void BM_DynamicCast(benchmark::State &state) {
   }
 }
 
-BENCHMARK(BM_FintamathCast);
-BENCHMARK(BM_DynamicCast);
+BENCHMARK(BM_FintamathCast)->Unit(benchmark::TimeUnit::kNanosecond);
+BENCHMARK(BM_DynamicCast)->Unit(benchmark::TimeUnit::kNanosecond);
 
 BENCHMARK_MAIN();

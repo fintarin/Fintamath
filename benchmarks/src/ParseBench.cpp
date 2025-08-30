@@ -48,7 +48,7 @@ static void BM_ParseSimplifyAddExpression(benchmark::State &state) {
   const std::string str = getAddExprStr();
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(Expression(str).toMinimalObject());
+    benchmark::DoNotOptimize(simplify(Expression(str)));
   }
 }
 
@@ -64,7 +64,7 @@ static void BM_ParseSimplifyAddVariadicExpression(benchmark::State &state) {
   const std::string str = getAddVariadicStr();
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(Expression(str).toMinimalObject());
+    benchmark::DoNotOptimize(simplify(Expression(str)));
   }
 }
 
@@ -80,7 +80,7 @@ static void BM_ParseSimplifySinExpression(benchmark::State &state) {
   const std::string str = getSinExprStr();
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(Expression(str).toMinimalObject());
+    benchmark::DoNotOptimize(simplify(Expression(str)));
   }
 }
 
