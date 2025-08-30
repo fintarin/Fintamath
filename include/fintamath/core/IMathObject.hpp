@@ -3,7 +3,7 @@
 #include <ostream>
 #include <string>
 
-#include "fintamath/core/MathObjectInterfaceBody.hpp"
+#include "fintamath/core/FintamathInterfaceBody.hpp"
 #include "fintamath/core/None.hpp"
 
 namespace fintamath {

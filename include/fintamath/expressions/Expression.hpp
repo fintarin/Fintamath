@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/core/MathObjectClassBody.hpp"
+#include "fintamath/core/FintamathClassBody.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
