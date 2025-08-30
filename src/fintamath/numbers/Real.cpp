@@ -27,8 +27,22 @@ FINTAMATH_CLASS_IMPLEMENTATION(Real)
 
 using namespace detail;
 
-constexpr unsigned precisionMultiplier = 2;
-constexpr unsigned precisionDelta = 10;
+constexpr unsigned calcPrecisionIncrement = 10;
+constexpr unsigned calcPrecisionMultiplier = 2;
+
+namespace {
+
+unsigned toResultPrecision(const unsigned calcPrecision) {
+  const unsigned resPrecision = (calcPrecision - calcPrecisionIncrement) / calcPrecisionMultiplier;
+  return std::max(resPrecision, 1U);
+}
+
+constexpr unsigned toCalculationPrecision(const unsigned resPrecision) {
+  const unsigned placeholder = resPrecision * calcPrecisionMultiplier + calcPrecisionIncrement;
+  return std::max(placeholder, calcPrecisionIncrement);
+}
+
+}
 
 Real::Real(Backend inBackend) : backend(std::move(inBackend)) {
 
@@ -167,15 +181,16 @@ unsigned Real::getCalculationPrecisionStatic() noexcept {
 }
 
 unsigned Real::getPrecisionStatic() noexcept {
-  return (getCalculationPrecisionStatic() - precisionDelta) / precisionMultiplier;
+  const unsigned calcPrecision = getCalculationPrecisionStatic();
+  return toResultPrecision(calcPrecision);
 }
 
 void Real::setPrecisionStatic(unsigned precision) {
-  if (precision == 0) {
-    precision++;
-  }
+  Backend::thread_default_precision(toCalculationPrecision(precision));
+}
 
-  Backend::thread_default_precision(precision * precisionMultiplier + precisionDelta);
+void Real::setPrecisionStaticForAllThreads(const unsigned precision) {
+  Backend::default_precision(toCalculationPrecision(precision));
 }
 
 void Real::registerDefaultObject() const {
@@ -186,7 +201,7 @@ void Real::registerDefaultObject() const {
 
   [[maybe_unused]] static const unsigned defaultPrecision = [] {
     constexpr unsigned precision = 20;
-    Real::setPrecisionStatic(precision);
+    Real::setPrecisionStaticForAllThreads(precision);
     return precision;
   }();
 }
