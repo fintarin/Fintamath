@@ -47,6 +47,8 @@ Integer sqrt(const Integer &rhs, Integer &remainder) {
   return res;
 }
 
+namespace {
+
 // Use binary splitting.
 // http://numbers.computation.free.fr/Constants/Algorithms/splitting.html.
 Integer factorialRec(const Integer &left, const Integer &right) {
@@ -60,6 +62,8 @@ Integer factorialRec(const Integer &left, const Integer &right) {
 
   const Integer mid((left + right) / 2);
   return factorialRec(left, mid) * factorialRec(mid + 1, right);
+}
+
 }
 
 Integer factorial(const Integer &rhs) {
