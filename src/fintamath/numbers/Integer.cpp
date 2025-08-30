@@ -22,23 +22,24 @@ using namespace detail;
 Integer::Integer(Backend inBackend) : backend(std::move(inBackend)) {
 }
 
-Integer::Integer(const std::string_view str) try {
+Integer::Integer(const std::string_view str) {
+  constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
+    throw InvalidInputException(fmt::format(
+        R"(Unable to parse {} from "{}")",
+        getClassStatic()->getName(),
+        invalidStr));
+  };
+
   if (str.empty()) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   try {
     backend.assign(removeLeadingZeroes(std::string(str)));
   }
   catch (const std::runtime_error &) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
-}
-catch (const InvalidInputException &) {
-  throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
-      getClassStatic()->getName(),
-      str));
 }
 
 std::string Integer::toString() const noexcept {
