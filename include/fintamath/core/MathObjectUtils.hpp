@@ -100,18 +100,6 @@ inline To *cast(From *from) noexcept {
 }
 
 template <std::derived_from<MathObject> To, std::derived_from<MathObject> From>
-inline std::unique_ptr<To> cast(std::unique_ptr<From> &&from) noexcept {
-  if (!is<To>(from)) {
-    from.reset();
-    return {};
-  }
-
-  From *fromRawPtr = from.release();
-  auto *toRawPtr = static_cast<To *>(fromRawPtr);
-  return std::unique_ptr<To>(toRawPtr);
-}
-
-template <std::derived_from<MathObject> To, std::derived_from<MathObject> From>
 inline std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) noexcept {
   if (!is<To>(from)) {
     return {};
