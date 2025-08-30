@@ -14,11 +14,12 @@ public:
   explicit Cache(const Function &inKeyToValueFunction) : keyToValueFunction(inKeyToValueFunction) {}
 
   const Value &operator[](const Key &key) {
-    if (!keyToValueMap.contains(key)) {
-      keyToValueMap[key] = keyToValueFunction(key);
+    if (auto iter = keyToValueMap.find(key); iter != keyToValueMap.end()) {
+      return iter->second;
     }
 
-    return keyToValueMap.at(key);
+    const auto iter = keyToValueMap.emplace(key, keyToValueFunction(key)).first;
+    return iter->second;
   }
 
 private:
