@@ -7,7 +7,7 @@
 
 namespace fintamath {
 
-class Variable : public IMathObject {
+class FINTAMATH_EXPORT Variable : public IMathObject {
   FINTAMATH_CLASS_BODY(Variable, IMathObject)
 
 protected:

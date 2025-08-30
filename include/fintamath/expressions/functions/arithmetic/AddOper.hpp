@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class AddOper : public IFunction {
+class FINTAMATH_EXPORT AddOper : public IFunction {
   FINTAMATH_CLASS_BODY(AddOper, IFunction)
 
 protected:
