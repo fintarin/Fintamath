@@ -13,8 +13,6 @@ public:
   constexpr MathObjectClass getValueClass() const noexcept override {
     return INumber::getClassStatic();
   }
-
-  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
 
 }
