@@ -9,7 +9,7 @@ FINTAMATH_INTERFACE_IMPLEMENTATION(IExpression)
 IExpression::IExpression(Children inChildren) : children(std::move(inChildren)) {
 }
 
-const std::vector<std::shared_ptr<IMathObject>> &IExpression::getChildren() const noexcept {
+const IExpression::Children &IExpression::getChildren() const noexcept {
   return children;
 }
 
