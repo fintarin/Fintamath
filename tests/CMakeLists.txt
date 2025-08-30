@@ -1,4 +1,5 @@
 include(../cmake/SuppressCompilerWarnings.cmake)
+include(../cmake/ClangFormat.cmake)
 
 file(
   GLOB_RECURSE
@@ -17,6 +18,8 @@ include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}_tests)
 
 suppress_compiler_warnings(${PROJECT_NAME}_tests)
+
+target_clangformat_setup(${PROJECT_NAME}_tests)
 
 if(MSVC)
   target_compile_options(${PROJECT_NAME}_tests PRIVATE /bigobj)

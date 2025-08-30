@@ -49,86 +49,126 @@ TEST(RealTests, stringConstructorTest) {
   EXPECT_EQ(Real("-0.123456*10^0").toString(), "-0.123456");
 
   EXPECT_THAT(
-      [] { Real(""); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "")")));
+    [] { Real(""); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("--10"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "--10")")));
+    [] { Real("--10"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "--10")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("test"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "test")")));
+    [] { Real("test"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "test")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("+"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "+")")));
+    [] { Real("+"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "+")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("939849.0-0023"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "939849.0-0023")")));
+    [] { Real("939849.0-0023"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "939849.0-0023")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "a")")));
+    [] { Real("a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("a.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "a.1")")));
+    [] { Real("a.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "a.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("1.a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "1.a")")));
+    [] { Real("1.a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "1.a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("1a.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "1a.1")")));
+    [] { Real("1a.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "1a.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("1.1a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "1.1a")")));
+    [] { Real("1.1a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "1.1a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("--10.-1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "--10.-1")")));
+    [] { Real("--10.-1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "--10.-1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("10.-1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "10.-1")")));
+    [] { Real("10.-1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "10.-1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("1-0.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "1-0.1")")));
+    [] { Real("1-0.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "1-0.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("10-.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "10-.1")")));
+    [] { Real("10-.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "10-.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("10.--1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "10.--1")")));
+    [] { Real("10.--1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "10.--1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("."); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from ".")")));
+    [] { Real("."); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from ".")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("1.2.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "1.2.1")")));
+    [] { Real("1.2.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "1.2.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("2*10^2.2"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "2*10^2.2")")));
+    [] { Real("2*10^2.2"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "2*10^2.2")")
+    )
+  );
   EXPECT_THAT(
-      [] { Real("2*10^-2.2"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Real from "2*10^-2.2")")));
+    [] { Real("2*10^-2.2"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Real from "2*10^-2.2")")
+    )
+  );
 
   EXPECT_THAT(
-      [] { Real("10*10^100000000000000000000"); },
-      testing::ThrowsMessage<UndefinedException>(
-          testing::StrEq(R"(Undefined "10*10^100000000000000000000" (overflow))")));
+    [] { Real("10*10^100000000000000000000"); },
+    testing::ThrowsMessage<UndefinedException>(
+      testing::StrEq(R"(Undefined "10*10^100000000000000000000" (overflow))")
+    )
+  );
 }
 
 TEST(RealTests, rationalConstructorTest) {
