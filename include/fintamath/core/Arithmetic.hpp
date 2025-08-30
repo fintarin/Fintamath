@@ -5,7 +5,7 @@
 namespace fintamath {
 
 class Arithmetic : public MathObject {
-  FINTAMATH_CLASS_BODY(Arithmetic, MathObject)
+  FINTAMATH_INTERFACE_BODY(Arithmetic, MathObject)
 };
 
 }

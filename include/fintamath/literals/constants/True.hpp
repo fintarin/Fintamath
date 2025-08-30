@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/MathObjectClassBody.hpp"
 #include "fintamath/literals/constants/Constant.hpp"
 
 namespace fintamath {

@@ -2,8 +2,6 @@
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(MathObject)
-
 std::string MathObject::toString() const noexcept {
   return std::string(getClass()->getName());
 }
