@@ -20,7 +20,7 @@ public:
   std::unique_ptr<IFunction> makeFunction(Children children) const override;
 
 private:
-  FINTAMATH_EXPORT static const FunctionDeclaration addDeclaration;
+  static const FunctionDeclaration addDeclaration;
 };
 
 }
