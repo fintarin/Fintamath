@@ -5,7 +5,7 @@
 namespace fintamath {
 
 class Literal : public MathObject {
-  FINTAMATH_CLASS_BODY(Literal, MathObject)
+  FINTAMATH_INTERFACE_BODY(Literal, MathObject)
 };
 
 }
