@@ -5,6 +5,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(AddOper)
+
 std::unique_ptr<IFunction> AddOper::makeFunction(Children inChildren) const {
   return makeObject<Add>(std::move(inChildren));
 }
