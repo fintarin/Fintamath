@@ -5,7 +5,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT Expression : public IExpression {
+class Expression : public IExpression {
   FINTAMATH_CLASS_BODY(Expression, IExpression)
 
 public:

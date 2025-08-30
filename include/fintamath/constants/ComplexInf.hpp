@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT ComplexInf : public IConstant {
+class ComplexInf : public IConstant {
   FINTAMATH_CLASS_BODY(ComplexInf, IConstant)
 
 public:

@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT Pi : public IConstant {
+class Pi : public IConstant {
   FINTAMATH_CLASS_BODY(Pi, IConstant)
 
 public:

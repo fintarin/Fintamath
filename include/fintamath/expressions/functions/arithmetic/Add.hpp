@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT Add : public IFunction {
+class Add : public IFunction {
   FINTAMATH_CLASS_BODY(Add, IFunction)
 
 protected:
