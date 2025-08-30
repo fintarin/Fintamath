@@ -8,14 +8,18 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(AddOper)
 
-const AddOper::FunctionDeclaration addOperDeclaration = {
-  .expressionDeclarion = {
-    .domainAndRangeVariants = {{
-      .returnClass = INumber::getClassStatic(),
-      .childClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
-    }}
+const AddOper::OperatorDeclaration addOperDeclaration = {
+  .functionDeclarion = {
+    .expressionDeclarion = {
+      .domainAndRangeVariants = {{
+        .returnClass = INumber::getClassStatic(),
+        .childClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
+      }},
+      .isVariadic = false,
+    },
+    .functionName = "+",
   },
-  .functionName = "+",
+  .operatorPriority = AddOper::Priority::Addition,
 };
 
 std::unique_ptr<IFunction> AddOper::makeFunction(Children inChildren) const {

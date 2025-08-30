@@ -12,7 +12,8 @@ const Add::FunctionDeclaration Add::addDeclaration = {
     .domainAndRangeVariants = {{
       .returnClass = INumber::getClassStatic(),
       .childClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
-    }}
+    }},
+    .isVariadic = true,
   },
   .functionName = "add",
 };
