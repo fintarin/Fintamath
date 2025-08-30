@@ -7,8 +7,8 @@
 
 namespace fintamath {
 
-class Variable : public MathObject {
-  FINTAMATH_CLASS_BODY(Variable, MathObject)
+class Variable : public IMathObject {
+  FINTAMATH_CLASS_BODY(Variable, IMathObject)
 
 protected:
   Variable() = default;

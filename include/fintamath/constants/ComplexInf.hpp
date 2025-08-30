@@ -1,20 +1,20 @@
 #pragma once
 
-#include "fintamath/constants/Constant.hpp"
+#include "fintamath/constants/IConstant.hpp"
 #include "fintamath/core/MathObjectClassBody.hpp"
-#include "fintamath/numbers/Number.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-class ComplexInf : public Constant {
-  FINTAMATH_CLASS_BODY(ComplexInf, Constant)
+class ComplexInf : public IConstant {
+  FINTAMATH_CLASS_BODY(ComplexInf, IConstant)
 
 public:
   constexpr MathObjectClass getValueClass() const noexcept override {
-    return Number::getClassStatic();
+    return INumber::getClassStatic();
   }
 
-  std::unique_ptr<MathObject> getValue(bool shouldApproximate) const noexcept override;
+  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
 
 }

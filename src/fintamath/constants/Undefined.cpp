@@ -2,13 +2,13 @@
 
 #include <memory>
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/IMathObject.hpp"
 
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Undefined)
 
-std::unique_ptr<MathObject> Undefined::getValue(bool /*shouldApproximate*/) const noexcept {
+std::unique_ptr<IMathObject> Undefined::getValue(bool /*shouldApproximate*/) const noexcept {
   return nullptr;
 }
 

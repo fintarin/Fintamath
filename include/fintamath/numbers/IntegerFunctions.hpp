@@ -7,13 +7,13 @@
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/Number.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
 using FactorToCountMap = std::unordered_map<Integer, Integer>;
 
-template <std::derived_from<Number> Lhs>
+template <std::derived_from<INumber> Lhs>
 Lhs pow(const Lhs &lhs, Integer rhs) {
   if (lhs == 0 && rhs == 0) {
     throw UndefinedException("pow({}, {}) is undefined (zero to the power of zero)");
