@@ -2,18 +2,23 @@
 
 #include "fintamath/core/MathObjectClass.hpp"
 
-#define FINTAMATH_INTERFACE_BODY(Class, SuperClass)              \
-public:                                                          \
-  using Super = SuperClass;                                      \
-                                                                 \
-  static constexpr MathObjectClass getClassStatic() noexcept {   \
-    return &classData##Class;                                    \
-  }                                                              \
-                                                                 \
-private:                                                         \
-  static constexpr detail::MathObjectClassData classData##Class{ \
-    #Class,                                                      \
-    SuperClass::getClassStatic()                                 \
-  };                                                             \
-                                                                 \
-private:
+#define FINTAMATH_INTERFACE_BODY(Class, SuperClass)            \
+  static_assert(std::is_same_v<Class, Class>);                 \
+                                                               \
+public:                                                        \
+  using Super = SuperClass;                                    \
+                                                               \
+  static constexpr MathObjectClass getClassStatic() noexcept { \
+    return &classData##Class;                                  \
+  }                                                            \
+                                                               \
+private:                                                       \
+  static const detail::MathObjectClassData classData##Class;
+
+#define FINTAMATH_INTERFACE_IMPLEMENTATION(Class)            \
+  static_assert(std::is_same_v<Class, Class>);               \
+                                                             \
+  const detail::MathObjectClassData Class::classData##Class{ \
+    #Class,                                                  \
+    Super::getClassStatic(),                                 \
+  };

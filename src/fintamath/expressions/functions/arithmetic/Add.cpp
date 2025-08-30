@@ -4,6 +4,8 @@
 
 namespace fintamath {
 
+FINTAMATH_CLASS_IMPLEMENTATION(Add)
+
 Add::Add(Children inChildren) : Super(std::move(inChildren)) {
 }
 
