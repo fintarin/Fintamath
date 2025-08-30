@@ -154,24 +154,16 @@ void IFunction::registerDefaultObject() const {
 
 void IFunction::initSelf(Arguments inArgs) {
   const Declaration &decl = getDeclaration();
-  validateArgumentsNonNull(inArgs);
+  assert(areArgumentsNonNull(inArgs));
   args = unwrappArguments(std::move(inArgs));
-  validateArgumentsMatch(decl, args);
+  assert(doArgumentsMatch(decl, args));
   args = compressArguments(decl, getClass(), std::move(args));
 }
 
-void IFunction::validateArgumentsNonNull(const Arguments &args) {
-  for (size_t i = 0; i < args.size(); i++) {
-    if (!args[i]) {
-      throw InvalidInputException(fmt::format(R"(Argument #{} is a null)", i));
-    }
-  }
-}
-
-void IFunction::validateArgumentsMatch(const Declaration &decl, const Arguments &args) {
-  if (!doArgumentsMatch(decl, args)) {
-    throw InvalidInputException("Invalid args"); // TODO
-  }
+bool IFunction::areArgumentsNonNull(const Arguments &args) {
+  return std::ranges::all_of(args, [](const Argument &arg) {
+    return static_cast<bool>(arg);
+  });
 }
 
 bool IFunction::doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept {
@@ -198,21 +190,11 @@ bool IFunction::doArgumentsMatchVariadic(const Declaration &decl, const Argument
     return false;
   }
 
-  for (const auto &inArg : args) {
-    bool matchAny = false;
-    for (const auto &declArgClass : decl.argumentClasses) {
-      if (doesArgumentMatch(declArgClass, inArg)) {
-        matchAny = true;
-        break;
-      }
-    }
-
-    if (!matchAny) {
-      return false;
-    }
-  }
-
-  return true;
+  return std::ranges::all_of(args, [&decl](const Argument &arg) {
+    return std::ranges::all_of(decl.argumentClasses, [&arg](MathObjectClass expectedClass) {
+      return doesArgumentMatch(expectedClass, arg);
+    });
+  });
 }
 
 bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const Argument &arg) noexcept {

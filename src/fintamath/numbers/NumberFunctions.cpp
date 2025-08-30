@@ -2,7 +2,6 @@
 
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/MultiMethod.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -29,22 +28,20 @@ auto makeBinaryMultimethod(auto func) {
 }
 
 Shared<INumber> callBinaryMultimethod(const auto &multi, const Shared<INumber> &lhs, const Shared<INumber> &rhs) {
-  if (!lhs) {
-    throw InvalidInputException("Lhs is null");
-  }
-  if (!rhs) {
-    throw InvalidInputException("Rhs is null");
-  }
+  assert(lhs && rhs);
 
   if (lhs->getClass() == rhs->getClass()) {
     return multi(lhs, rhs);
   }
+
   if (auto convRhs = convert(lhs, rhs)) {
     return multi(lhs, convRhs);
   }
+
   if (auto convLhs = convert(rhs, lhs)) {
     return multi(convLhs, rhs);
   }
+
   return nullptr;
 }
 
