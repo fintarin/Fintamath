@@ -2,8 +2,10 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
+#include "fintamath/variables/Variable.hpp"
 
 using namespace fintamath;
 
@@ -22,8 +24,10 @@ static auto func(const auto &arg) {
 static void BM_ApproximateExpression(benchmark::State &state) {
   Real::ScopedSetPrecision(10);
 
+  // TODO!!! use setVariables
+
   const Variable var("x");
-  const Expression expr = func(var);
+  // const Expression expr = func(var);
 
   for (auto _ : state) {
     for (Real i = start; i <= end; i += step) {
@@ -31,8 +35,9 @@ static void BM_ApproximateExpression(benchmark::State &state) {
         i = 0;
       }
 
-      Expression res = expr;
-      res.setVariable(var, i);
+      // Expression res = expr;
+      // res.setVariable(var, i);
+      Expression res = func(Expression(i));
       res = approximate(res);
       benchmark::DoNotOptimize(res.toString());
     }
