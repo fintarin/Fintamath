@@ -42,7 +42,7 @@ Expression::Expression(const int64_t val) : Expression(Integer(val)) {
 
 Expression::Expression(const std::string &str) {
   try {
-    detail::TokenVector tokens = detail::Tokenizer::tokenize(str);
+    detail::Tokens tokens = detail::Tokenizer::tokenize(str);
     TokenToTermVector tokensToTerms = Expression::parseTokensToTerms(tokens);
     TermStack termsRPN = Expression::parseTermsRPN(tokensToTerms);
     *this = parseExpression(termsRPN);
@@ -63,7 +63,7 @@ std::string Expression::toString() const noexcept {
   return arg->toString();
 }
 
-Expression::TokenToTermVector Expression::parseTokensToTerms(detail::TokenVector &tokens) {
+Expression::TokenToTermVector Expression::parseTokensToTerms(detail::Tokens &tokens) {
   if (tokens.empty()) {
     throw InvalidInputException("empty input");
   }
