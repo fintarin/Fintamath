@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-class NegInf : public IConstant {
+class FINTAMATH_EXPORT NegInf : public IConstant {
   FINTAMATH_CLASS_BODY(NegInf, IConstant)
 
 public:

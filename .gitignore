@@ -6,6 +6,7 @@ cmake-build*
 CMakeCache.*
 CMakeFiles
 [Tt]esting
+FintamathExport.hpp
 
 # Prerequisites
 *.d

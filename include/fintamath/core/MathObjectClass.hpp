@@ -2,11 +2,13 @@
 
 #include <string_view>
 
+#include "fintamath/core/FintamathExport.hpp"
+
 namespace fintamath {
 
 namespace detail {
 
-class MathObjectClassData final {
+class FINTAMATH_EXPORT MathObjectClassData final {
 public:
   using Name = std::string_view;
 
