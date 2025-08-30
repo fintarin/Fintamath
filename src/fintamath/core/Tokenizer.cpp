@@ -53,7 +53,8 @@ bool Tokenizer::appendToken(TokenVector &tokens, Token &token, const bool should
 
   size_t i = 0;
   while (i < token.size()) {
-    const size_t tokenSize = std::max(getRegisteredTokens().getPrefixSize(token, i), 1LU);
+    constexpr size_t minTokenSize = 1;
+    const size_t tokenSize = std::max(getRegisteredTokens().getPrefixSize(token, i), minTokenSize);
     tokens.emplace_back(token.substr(i, tokenSize));
     i += tokenSize;
   }
