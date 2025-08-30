@@ -4,6 +4,7 @@
 #include <string>
 
 #include "fintamath/core/InterfaceBody.hpp"
+#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/MathObjectPointers.hpp"
 #include "fintamath/core/None.hpp"
 

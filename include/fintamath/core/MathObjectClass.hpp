@@ -18,13 +18,13 @@ public:
         parent(inParent) {
   }
 
-  constexpr MathObjectClassData(const MathObjectClassData &) noexcept = delete;
+  MathObjectClassData(const MathObjectClassData &) noexcept = delete;
 
-  constexpr MathObjectClassData(MathObjectClassData &&) noexcept = delete;
+  MathObjectClassData(MathObjectClassData &&) noexcept = delete;
 
-  constexpr MathObjectClassData &operator=(const MathObjectClassData &) noexcept = delete;
+  MathObjectClassData &operator=(const MathObjectClassData &) noexcept = delete;
 
-  constexpr MathObjectClassData &operator=(MathObjectClassData &&) noexcept = delete;
+  MathObjectClassData &operator=(MathObjectClassData &&) noexcept = delete;
 
   constexpr Name getName() const noexcept {
     return name;

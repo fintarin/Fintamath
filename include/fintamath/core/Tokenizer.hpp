@@ -24,16 +24,16 @@ public:
   void clear();
 };
 
-using TokenVector = std::vector<Token>;
+using Tokens = std::vector<Token>;
 
 class Tokenizer final {
 public:
-  static TokenVector tokenize(std::string str);
+  static Tokens tokenize(std::string str);
 
   static void registerToken(const std::string &token);
 
 private:
-  static bool appendToken(TokenVector &tokens, Token &token);
+  static bool appendToken(Tokens &tokens, Token &token);
 
   static void handleSpaces(std::string &str);
 

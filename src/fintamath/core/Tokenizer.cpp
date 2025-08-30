@@ -11,10 +11,10 @@ void Token::clear() {
   type = TokenType::Unknown;
 }
 
-TokenVector Tokenizer::tokenize(std::string str) {
+Tokens Tokenizer::tokenize(std::string str) {
   handleSpaces(str);
 
-  TokenVector tokens;
+  Tokens tokens;
   Token unknownToken;
   Token numberToken;
 
@@ -60,7 +60,7 @@ void Tokenizer::registerToken(const std::string &tokenName) {
   registeredTokenNames.insert(upperBound, tokenName);
 }
 
-bool Tokenizer::appendToken(TokenVector &tokens, Token &token) {
+bool Tokenizer::appendToken(Tokens &tokens, Token &token) {
   if (token.name.empty()) {
     return false;
   }

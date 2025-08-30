@@ -59,7 +59,7 @@ private:
   using TermStack = std::stack<Term>;
 
 private:
-  static TokenToTermVector parseTokensToTerms(detail::TokenVector &tokens);
+  static TokenToTermVector parseTokensToTerms(detail::Tokens &tokens);
 
   static TermStack parseTermsRPN(TokenToTermVector &tokensToTerms);
 
