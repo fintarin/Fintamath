@@ -30,7 +30,6 @@ function(set_project_warnings)
       # Ignored warnings
       /wd4250 # inherits via dominance warn
       /wd4251 # type1 needs to have dll-interface to be used by clients of type2
-      /wd4127 # conditional expression is constant, consider using 'if constexpr' statement instead
   )
 
   set(CLANG_WARNINGS
