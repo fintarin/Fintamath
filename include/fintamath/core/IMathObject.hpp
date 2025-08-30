@@ -4,7 +4,7 @@
 #include <ostream>
 #include <string>
 
-#include "fintamath/core/FintamathInterfaceBody.hpp"
+#include "fintamath/core/InterfaceBody.hpp"
 #include "fintamath/core/None.hpp"
 
 namespace fintamath {
