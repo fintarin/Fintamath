@@ -19,7 +19,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
     .name = ",",
     .argumentClasses = {IMathObject::getClassStatic(), IMathObject::getClassStatic()},
     .returnClass = IMathObject::getClassStatic(),
-    .operatorPriority = IFunction::OperatorPriority::Comma,
+    .operatorPriority = OperatorPriority::Comma,
   }
 )
 

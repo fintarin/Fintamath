@@ -7,25 +7,33 @@
 
 namespace fintamath {
 
+enum class OperatorPriority : uint8_t {
+  Exponentiation, // e.g.  a ^ b
+  PostfixUnary,   // e.g.  a!
+  PrefixUnary,    // e.g.  -a
+  Multiplication, // e.g.  a * b
+  Addition,       // e.g.  a + b
+  Modulo,         // e.g.  a mod b
+  Comparison,     // e.g.  a = b
+  Conjunction,    // e.g.  a & b
+  Disjunction,    // e.g.  a | b
+  Implication,    // e.g.  a -> b
+  Equivalence,    // e.g.  a <-> b
+  Comma,          // e.g.  a , b
+};
+
+enum class FunctionState : uint8_t {
+  None,
+  PreSimplify,
+  Simplify,
+  Solve,
+  Approximate,
+};
+
 class IFunction : public IMathObject {
   FINTAMATH_INTERFACE_BODY(IFunction, IMathObject)
 
 public:
-  enum class OperatorPriority : uint8_t {
-    Exponentiation, // e.g.  a ^ b
-    PostfixUnary,   // e.g.  a!
-    PrefixUnary,    // e.g.  -a
-    Multiplication, // e.g.  a * b
-    Addition,       // e.g.  a + b
-    Modulo,         // e.g.  a mod b
-    Comparison,     // e.g.  a = b
-    Conjunction,    // e.g.  a & b
-    Disjunction,    // e.g.  a | b
-    Implication,    // e.g.  a -> b
-    Equivalence,    // e.g.  a <-> b
-    Comma,          // e.g.  a , b
-  };
-
   struct Declaration {
     std::string name;
     std::vector<MathObjectClass> argumentClasses;
@@ -54,7 +62,13 @@ public:
   };
 
   using FunctionMakers = std::vector<FunctionMaker>;
+
+private:
   using NameToFunctionMakersMap = std::unordered_map<std::string, FunctionMakers>;
+
+  using ModifySelfCallback = std::function<Shared<IMathObject>(const IFunction &)>;
+
+  using ModifyCallback = std::function<void(Argument &)>;
 
 public:
   virtual const Declaration &getDeclaration() const noexcept = 0;
@@ -67,34 +81,56 @@ public:
 
   static const FunctionMakers *parseFunctionMakers(const std::string &str);
 
+  static void preSimplify(Argument &arg);
+
+  static void simplify(Argument &arg);
+
+  static void solve(Argument &arg);
+
+  static void approximate(Argument &arg);
+
 protected:
   virtual Shared<IFunction> makeSelf(Arguments inArgs) const = 0;
+
+  virtual Shared<IMathObject> preSimplifySelf() const;
+
+  virtual Shared<IMathObject> simplifySelf() const;
+
+  virtual Shared<IMathObject> solveSelf() const;
+
+  virtual Shared<IMathObject> approximateSelf() const;
 
   void registerDefaultObject() const override;
 
   void initSelf(Arguments inArgs);
 
 private:
-  static void validateArgumentsNonNull(const Arguments &inArgs);
+  static void validateArgumentsNonNull(const Arguments &args);
 
-  static void validateArgumentsMatch(const Declaration &decl, const Arguments &inArgs);
+  static void validateArgumentsMatch(const Declaration &decl, const Arguments &args);
 
-  static bool doArgumentsMatch(const Declaration &decl, const Arguments &inArgs) noexcept;
+  static bool doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept;
 
-  static bool doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &inArgs) noexcept;
+  static bool doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &args) noexcept;
 
-  static bool doArgumentsMatchVariadic(const Declaration &decl, const Arguments &inArgs) noexcept;
+  static bool doArgumentsMatchVariadic(const Declaration &decl, const Arguments &args) noexcept;
 
-  static bool doesArgumentMatch(MathObjectClass expectedClass, const Argument &inArgs) noexcept;
+  static bool doesArgumentMatch(MathObjectClass expectedClass, const Argument &args) noexcept;
 
-  static Arguments unwrappArguments(Arguments inArgs) noexcept;
+  static Arguments unwrappArguments(Arguments args) noexcept;
 
-  static Arguments compressArguments(const Declaration &decl, MathObjectClass funcClass, Arguments inArgs) noexcept;
+  static Arguments compressArguments(const Declaration &decl, MathObjectClass funcClass, Arguments args) noexcept;
+
+  static void modify(Argument &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const ModifyCallback &prevModify, FunctionState stateAfterModify);
+
+  static void modifyArguments(Shared<IFunction> &func, const ModifyCallback &modify);
 
   static NameToFunctionMakersMap &getNameToFunctionMakersMap();
 
 private:
   Arguments args;
+
+  mutable FunctionState state = FunctionState::None;
 };
 
 }
