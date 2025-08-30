@@ -119,7 +119,7 @@ private:
 
   static Arguments compressArguments(const Declaration &decl, MathObjectClass funcClass, Arguments args) noexcept;
 
-  static void appendFunctionArguments(const IFunction &func, Arguments& args) noexcept;
+  static void appendFunctionArguments(const IFunction &func, Arguments &args) noexcept;
 
   static void modify(Argument &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const ModifyCallback &prevModify, FunctionState stateAfterModify);
 
