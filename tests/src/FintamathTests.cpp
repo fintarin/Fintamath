@@ -9,19 +9,18 @@
 // using namespace fintamath;
 
 // TEST(FintamathTests, fintamathTest) {
-//   static const Real step("0.001");
+//   static const Real step("0.00001");
 //   static const Real start("-5");
 //   static const Real end("5");
-//   static const size_t threadNum = 12;
-
-//   static std::mutex mtx;
-
-//   static std::ofstream stream("/home/fintarin/Projects/Fintamath/data.txt");
+//   static const size_t threadNum = 16;
 
 //   std::vector<std::thread> threads;
+//   threads.reserve(threadNum);
+
+//   std::vector<std::vector<std::string>> allResults(threadNum);
 
 //   for (size_t i = 0; i < threadNum; i++) {
-//     threads.emplace_back([i] {
+//     threads.emplace_back([i, &allResults] {
 //       std::vector<std::string> results;
 //       Real newStart = start + (end - start) * i / threadNum;
 //       Real newEnd = start + (end - start) * (i + 1) / threadNum;
@@ -34,15 +33,19 @@
 //         results.emplace_back(fmt::format(R"({}, {})", r.toString(), value.toString()));
 //       }
 
-//       std::lock_guard<std::mutex> lock(mtx);
-
-//       for (const auto &result : results) {
-//         stream << result << std::endl;
-//       }
+//       allResults[i] = std::move(results);
 //     });
 //   }
 
 //   for (auto &thread : threads) {
 //     thread.join();
+//   }
+
+//   std::ofstream stream("/home/fintarin/Projects/Fintamath/data.txt");
+
+//   for (const auto& results : allResults) {
+//     for (const auto& result : results) {
+//       stream << result << '\n';
+//     }
 //   }
 // }
