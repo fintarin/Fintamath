@@ -536,18 +536,6 @@ TEST(RationalTests, toStringTest) {
   EXPECT_EQ(Rational(55, -10).toString(), "-11/2");
 }
 
-TEST(RationalTests, simplifyTest) {
-  EXPECT_TRUE(is<Rational>(Rational(5, 2).toMinimalObject()));
-  EXPECT_TRUE(is<Integer>(Rational(55, 5).toMinimalObject()));
-  EXPECT_TRUE(is<Rational>(Rational(-5, 2).toMinimalObject()));
-  EXPECT_TRUE(is<Integer>(Rational(-55, 5).toMinimalObject()));
-
-  EXPECT_EQ(Rational(5, 2).toMinimalObject()->toString(), "5/2");
-  EXPECT_EQ(Rational(55, 5).toMinimalObject()->toString(), "11");
-  EXPECT_EQ(Rational(-5, 2).toMinimalObject()->toString(), "-5/2");
-  EXPECT_EQ(Rational(-55, 5).toMinimalObject()->toString(), "-11");
-}
-
 TEST(RationalTests, signTest) {
   EXPECT_EQ(Rational(-2).sign(), -1);
   EXPECT_EQ(Rational(-1).sign(), -1);

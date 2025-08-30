@@ -1,25 +1,19 @@
 #pragma once
 
 #include <memory>
-#include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/Real.hpp"
 
 namespace fintamath {
 
-class Pi : public IConstantCRTP<Real, Pi> {
-  FINTAMATH_CLASS_BODY(Pi, IConstant)
+class Pi : public IConstant {
+  FINTAMATH_CHILD_CLASS_BODY(Pi, IConstant)
 
 public:
-  std::string toString() const override {
-    return "Pi";
-  }
+  MathObjectClass getValueClass() const noexcept override;
 
-protected:
-  std::unique_ptr<IMathObject> call() const override;
+  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
 
 }

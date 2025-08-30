@@ -4,8 +4,6 @@
 #include <regex>
 #include <string>
 
-#include "fintamath/core/CoreUtils.hpp"
-
 namespace fintamath::detail {
 
 TokenVector Tokenizer::tokenize(std::string str) {

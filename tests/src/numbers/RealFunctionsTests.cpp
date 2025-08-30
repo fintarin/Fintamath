@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "fintamath/core/Cache.hpp"
+#include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 #include "fintamath/exceptions/UndefinedException.hpp"
