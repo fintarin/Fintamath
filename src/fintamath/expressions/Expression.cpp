@@ -24,9 +24,7 @@ Expression::Expression() {
 }
 
 Expression::Expression(Argument inArg) : arg(std::move(inArg)) {
-  if (!arg) {
-    throw InvalidInputException("In argument is null");
-  }
+  assert(arg);
 
   if (Argument minimalArg = arg->unwrapp()) {
     arg = minimalArg;
