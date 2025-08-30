@@ -1,5 +1,7 @@
 #include "fintamath/functions/IFunction.hpp"
 
+#include <fmt/core.h>
+
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
@@ -17,7 +19,7 @@ std::unique_ptr<IFunction> IFunction::FunctionMaker::make(Arguments inArgs) cons
 }
 
 bool IFunction::FunctionMaker::doArgumentsMatch(const Arguments &inArgs) const noexcept {
-  return defaultFunc.get().doArgumentsMatch(inArgs);
+  return IFunction::doArgumentsMatch(getDeclaration(), inArgs);
 }
 
 const IFunction::Declaration &IFunction::FunctionMaker::getDeclaration() const noexcept {
@@ -63,6 +65,9 @@ const IFunction::FunctionMakers *IFunction::parseFunctionMakers(const std::strin
 
 void IFunction::registerDefaultObject() const {
   const Declaration &decl = getDeclaration();
+
+  assert(!decl.argumentClasses.empty());
+
   if (decl.name.empty()) {
     return;
   }
@@ -74,35 +79,102 @@ void IFunction::registerDefaultObject() const {
 }
 
 void IFunction::initSelf(Arguments inArgs) {
-  args = unwrappArguments(validateArguments(std::move(inArgs)));
+  const Declaration &decl = getDeclaration();
+  validateArgumentsNonNull(inArgs);
+  args = unwrappArguments(std::move(inArgs));
+  validateArgumentsMatch(decl, args);
+  args = compressArguments(decl, getClass(), std::move(args));
 }
 
-IFunction::Arguments IFunction::validateArguments(Arguments inArgs) const {
-  if (!doArgumentsMatch(inArgs)) {
+void IFunction::validateArgumentsNonNull(const Arguments &inArgs) {
+  for (size_t i = 0; i < inArgs.size(); i++) {
+    if (!inArgs[i]) {
+      throw InvalidInputException(fmt::format(R"(Argument #{} is a null)", i));
+    }
+  }
+}
+
+void IFunction::validateArgumentsMatch(const Declaration &decl, const Arguments &inArgs) {
+  if (!doArgumentsMatch(decl, inArgs)) {
     throw InvalidInputException("Invalid args"); // TODO
   }
-
-  return inArgs;
 }
 
-IFunction::Arguments IFunction::unwrappArguments(Arguments inArgs) const {
+bool IFunction::doArgumentsMatch(const Declaration &decl, const Arguments &inArgs) noexcept {
+  return decl.isVariadic ? doArgumentsMatchVariadic(decl, inArgs)
+                         : doArgumentsMatchNonVariadic(decl, inArgs);
+}
+
+bool IFunction::doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &inArgs) noexcept {
+  if (decl.argumentClasses.size() != inArgs.size()) {
+    return false;
+  }
+
+  for (size_t i = 0; i < inArgs.size(); i++) {
+    if (!doesArgumentMatch(decl.argumentClasses[i], inArgs[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool IFunction::doArgumentsMatchVariadic(const Declaration &decl, const Arguments &inArgs) noexcept {
+  if (inArgs.empty()) {
+    return false;
+  }
+
+  for (const auto &inArg : inArgs) {
+    bool matchAny = false;
+    for (const auto &declArgClass : decl.argumentClasses) {
+      if (doesArgumentMatch(declArgClass, inArg)) {
+        matchAny = true;
+        break;
+      }
+    }
+
+    if (!matchAny) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool fintamath::IFunction::doesArgumentMatch(MathObjectClass expectedClass, const Argument &inArg) noexcept {
+  const MathObjectClass inArgClass = inArg->getClass();
+  
+  if (is(expectedClass, inArgClass)) {
+    return true;
+  }
+
+  if (const auto inArgFunc = cast<IFunction>(inArg)) {
+    return is(expectedClass, inArgFunc->getDeclaration().returnClass);
+  }
+
+  return false;
+}
+
+IFunction::Arguments IFunction::unwrappArguments(Arguments inArgs) noexcept {
   for (auto &arg : inArgs) {
     if (auto unwrappedArg = arg->unwrapp()) {
       arg = std::move(unwrappedArg);
     }
   }
 
-  if (!getDeclaration().isVariadic) {
+  return inArgs;
+}
+
+IFunction::Arguments IFunction::compressArguments(const Declaration &decl, const MathObjectClass funcClass, Arguments inArgs) noexcept {
+  if (!decl.isVariadic) {
     return inArgs;
   }
-
-  const MathObjectClass selfClass = getClass();
 
   Arguments outArgs;
   outArgs.reserve(inArgs.size());
 
   for (auto &arg : inArgs) {
-    if (arg->getClass() == selfClass) {
+    if (arg->getClass() == funcClass) {
       const auto &argFunc = cast<IFunction>(*arg);
       const Arguments &innerArgs = argFunc.getArguments();
       outArgs.insert(outArgs.end(), innerArgs.begin(), innerArgs.end());
@@ -113,22 +185,6 @@ IFunction::Arguments IFunction::unwrappArguments(Arguments inArgs) const {
   }
 
   return outArgs;
-}
-
-bool IFunction::doArgumentsMatch(const Arguments &inArgs) const noexcept {
-  const auto &decl = getDeclaration();
-  return decl.isVariadic ? doArgumentsMatchVariadic(decl, inArgs)
-                         : doArgumentsMatchNonVariadic(decl, inArgs);
-}
-
-bool IFunction::doArgumentsMatchNonVariadic(const Declaration & /*decl*/, const Arguments & /*inArgs*/) {
-  // TODO
-  return true;
-}
-
-bool IFunction::doArgumentsMatchVariadic(const Declaration & /*decl*/, const Arguments & /*inArgs*/) {
-  // TODO
-  return true;
 }
 
 IFunction::NameToFunctionMakersMap &IFunction::getNameToFunctionMakersMap() {

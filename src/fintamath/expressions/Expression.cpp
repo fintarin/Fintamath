@@ -25,11 +25,7 @@ Expression::Expression() {
 
 Expression::Expression(Argument inArg) : arg(std::move(inArg)) {
   if (!arg) {
-    throw InvalidInputException("In argument is a null");
-  }
-
-  if (is<Comma>(arg)) {
-    throw InvalidInputException("In argument is a comma function");
+    throw InvalidInputException("In argument is null");
   }
 
   if (Argument minimalArg = arg->unwrapp()) {
@@ -413,6 +409,7 @@ Expression::Argument Expression::parseOperator(TermStack &argTermsRPN, const Fun
   while (!argTermsRPN.empty() && args.size() != expectedArgsSize) {
     args.emplace_back(parseExpression(argTermsRPN));
   }
+  std::ranges::reverse(args);
 
   std::shared_ptr<const IFunction> outOper;
   for (const auto &maker : funcTerm.functionMakers.get()) {
@@ -428,7 +425,7 @@ Expression::Argument Expression::parseOperator(TermStack &argTermsRPN, const Fun
   }
 
   if (!outOper) {
-    throw InvalidInputException("Operator not found"); // TODO
+    throw InvalidInputException("Operator args are invalid"); // TODO
   }
 
   return outOper;
@@ -451,7 +448,7 @@ Expression::Argument Expression::parseFunction(TermStack &argTermsRPN, const Fun
   }
 
   if (!outFunc) {
-    throw InvalidInputException("Function not found"); // TODO
+    throw InvalidInputException("Function args are invalid"); // TODO
   }
 
   return outFunc;

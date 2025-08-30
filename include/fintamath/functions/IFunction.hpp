@@ -75,15 +75,21 @@ protected:
   void initSelf(Arguments inArgs);
 
 private:
-  Arguments validateArguments(Arguments inArgs) const;
+  static void validateArgumentsNonNull(const Arguments &inArgs);
 
-  Arguments unwrappArguments(Arguments inArgs) const;
+  static void validateArgumentsMatch(const Declaration &decl, const Arguments& inArgs);
 
-  bool doArgumentsMatch(const Arguments &inArgs) const noexcept;
+  static bool doArgumentsMatch(const Declaration &decl, const Arguments &inArgs) noexcept;
 
-  static bool doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &inArgs);
+  static bool doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &inArgs) noexcept;
 
-  static bool doArgumentsMatchVariadic(const Declaration &decl, const Arguments &inArgs);
+  static bool doArgumentsMatchVariadic(const Declaration &decl, const Arguments &inArgs) noexcept;
+
+  static bool doesArgumentMatch(MathObjectClass expectedClass, const Argument &inArgs) noexcept;
+
+  static Arguments unwrappArguments(Arguments inArgs) noexcept;
+
+  static Arguments compressArguments(const Declaration &decl, MathObjectClass funcClass, Arguments inArgs) noexcept;
 
   static NameToFunctionMakersMap &getNameToFunctionMakersMap();
 
