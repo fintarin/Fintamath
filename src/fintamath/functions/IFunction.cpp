@@ -297,7 +297,7 @@ void IFunction::modify(Argument &arg, const ModifySelfCallback &modifySelf, cons
 
 void IFunction::modifyFunctionArguments(Shared<IFunction> &func, const ModifyCallback &modify) {
   const Arguments &oldArgs = func->getArguments();
-  std::optional<Arguments> newArgs;
+  std::optional<Arguments> newArgsFound;
   size_t argIndex = 0;
 
   for (; argIndex < oldArgs.size(); argIndex++) {
@@ -306,23 +306,25 @@ void IFunction::modifyFunctionArguments(Shared<IFunction> &func, const ModifyCal
     modify(newArg);
 
     if (newArg != oldArg) {
-      newArgs = oldArgs;
-      (*newArgs)[argIndex] = oldArg;
+      newArgsFound = oldArgs;
+      (*newArgsFound)[argIndex] = newArg;
       break;
     }
   }
 
-  if (!newArgs) {
+  if (!newArgsFound) {
     return;
   }
 
+  Arguments &newArgs = *newArgsFound;
+
   argIndex++;
 
-  for (; argIndex < newArgs->size(); argIndex++) {
-    modify((*newArgs)[argIndex]);
+  for (; argIndex < newArgs.size(); argIndex++) {
+    modify(newArgs[argIndex]);
   }
 
-  func = func->makeSelf(std::move(*newArgs));
+  func = func->makeSelf(std::move(newArgs));
 }
 
 IFunction::NameToFunctionMakersMap &IFunction::getNameToFunctionMakersMap() {

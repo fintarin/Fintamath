@@ -1,5 +1,4 @@
 include(../cmake/SuppressCompilerWarnings.cmake)
-include(../cmake/ClangFormat.cmake)
 
 file(
   GLOB_RECURSE
