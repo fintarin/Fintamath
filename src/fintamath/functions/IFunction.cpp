@@ -146,7 +146,7 @@ bool IFunction::doArgumentsMatchVariadic(const Declaration &decl, const Argument
 
 bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const Argument &inArg) noexcept {
   const MathObjectClass argClass = inArg->getClass();
-  
+
   if (is(expectedClass, argClass) || is<Variable>(argClass)) {
     return true;
   }
