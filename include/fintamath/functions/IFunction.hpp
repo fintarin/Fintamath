@@ -30,18 +30,18 @@ public:
     std::string name;
     std::vector<MathObjectClass> argumentClasses;
     MathObjectClass returnClass = {};
-    std::optional<OperatorPriority> operatorPriority;
+    std::optional<OperatorPriority> operatorPriority = std::nullopt;
     bool isVariadic = false;
   };
 
-  using Argument = std::shared_ptr<const IMathObject>;
+  using Argument = Shared<IMathObject>;
   using Arguments = std::vector<Argument>;
 
   class FunctionMaker {
   public:
     FunctionMaker(const IFunction &inDefaultFunc);
 
-    std::unique_ptr<IFunction> make(Arguments inArgs) const;
+    Shared<IFunction> make(Arguments inArgs) const;
 
     bool doArgumentsMatch(const Arguments &inArgs) const noexcept;
 
@@ -61,14 +61,14 @@ public:
 
   std::string toString() const noexcept override;
 
-  std::shared_ptr<const IMathObject> unwrapp() const noexcept override;
+  Shared<IMathObject> unwrapp() const noexcept override;
 
   const Arguments &getArguments() const noexcept;
 
   static const FunctionMakers *parseFunctionMakers(const std::string &str);
 
 protected:
-  virtual std::unique_ptr<IFunction> makeSelf(Arguments inArgs) const = 0;
+  virtual Shared<IFunction> makeSelf(Arguments inArgs) const = 0;
 
   void registerDefaultObject() const override;
 
@@ -77,7 +77,7 @@ protected:
 private:
   static void validateArgumentsNonNull(const Arguments &inArgs);
 
-  static void validateArgumentsMatch(const Declaration &decl, const Arguments& inArgs);
+  static void validateArgumentsMatch(const Declaration &decl, const Arguments &inArgs);
 
   static bool doArgumentsMatch(const Declaration &decl, const Arguments &inArgs) noexcept;
 

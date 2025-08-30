@@ -14,7 +14,7 @@ public:
     return Boolean::getClassStatic();
   }
 
-  std::shared_ptr<const IMathObject> getValue() const noexcept override;
+  Shared<IMathObject> getValue() const noexcept override;
 };
 
 }
