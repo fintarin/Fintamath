@@ -1,6 +1,10 @@
 #pragma once
 
-#include "fintamath/core/MathObjectClass.hpp"
+#include <fmt/format.h>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/FintamathInterfaceBody.hpp"
+#include "fintamath/exceptions/Exception.hpp"
 
 #define FINTAMATH_CLASS_BODY(Class, SuperClass)                  \
   FINTAMATH_INTERFACE_BODY(Class, SuperClass)                    \
@@ -18,9 +22,30 @@ public:                                                          \
     return getDefaultObjectStatic();                             \
   }                                                              \
                                                                  \
-protected:                                                       \
-  std::unique_ptr<IMathObject> clone() const noexcept override { \
-    return std::make_unique<Class>(*this);                       \
+  std::unique_ptr<IMathObject> clone() const &override {         \
+    if constexpr (std::is_copy_constructible_v<Class>) {         \
+      return std::make_unique<Class>(*this);                     \
+    }                                                            \
+    else {                                                       \
+      throwUnableToCloneException();                             \
+    }                                                            \
+  }                                                              \
+                                                                 \
+  std::unique_ptr<IMathObject> clone() && override {             \
+    if constexpr (std::is_copy_constructible_v<Class>) {         \
+      return std::make_unique<Class>(std::move(*this));          \
+    }                                                            \
+    else {                                                       \
+      throwUnableToCloneException();                             \
+    }                                                            \
+  }                                                              \
+                                                                 \
+private:                                                         \
+  [[noreturn]] void throwUnableToCloneException() const {        \
+    throw Exception(fmt::format(                                 \
+      R"(Unable to clone {} as it is not copy constructible)",   \
+      getClass()->getName()                                      \
+    ));                                                          \
   }                                                              \
                                                                  \
 private:                                                         \
