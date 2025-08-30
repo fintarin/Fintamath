@@ -10,7 +10,7 @@ public:                                                          \
     return getClassStatic();                                     \
   }                                                              \
                                                                  \
-  const Class &getDefaultObject() const noexcept {               \
+  static const Class &getDefaultObject() noexcept {              \
     return defaultObject##Class;                                 \
   }                                                              \
                                                                  \
