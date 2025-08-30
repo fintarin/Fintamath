@@ -9,15 +9,6 @@ class IWithArithmeticOperators {
 public:
   virtual ~IWithArithmeticOperators() = default;
 
-  friend bool operator==(const Derived &lhs, const Derived &rhs) {
-    if (&lhs == &rhs) {
-      return true;
-    }
-
-    const auto &lhsParent = static_cast<const IWithArithmeticOperators<Derived> &>(lhs);
-    return lhsParent.equals(rhs);
-  }
-
   Derived &operator+=(const Derived &rhs) {
     return add(rhs);
   }
@@ -77,12 +68,6 @@ protected:
 
   virtual Derived &negate() = 0;
 };
-
-template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
-bool operator==(const Lhs &lhs, const Rhs &rhs) {
-  return lhs == Lhs(rhs);
-}
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
   requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)

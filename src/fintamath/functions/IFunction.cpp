@@ -233,7 +233,7 @@ IFunction::Arguments IFunction::compressArguments(const Declaration &decl, const
     const auto &arg = args[argIndex];
 
     if (is(funcClass, arg->getClass())) {
-      outArgs = std::vector(
+      outArgs = Arguments(
         std::make_move_iterator(args.begin()),
         std::make_move_iterator(args.begin() + static_cast<ptrdiff_t>(argIndex))
       );
