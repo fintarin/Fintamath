@@ -12,11 +12,12 @@ TEST(ExpressionTests, stringConstructorTest) {
   EXPECT_EQ(Expression("2 + 3 * 4 + 2").toString(), "(add 2 (mul 3 4) 2)");
   EXPECT_EQ(Expression("add(2, 3, 4, 5)").toString(), "(add 2 3 4 5)");
   EXPECT_EQ(Expression("mul(2, 3, 4, 5)").toString(), "(mul 2 3 4 5)");
+  EXPECT_EQ(Expression("sin(sin(x + x))").toString(), "(sin (sin (add x x)))");
 
   EXPECT_THAT(
-    [] { Expression("true + false"); },
+    [] { Expression("True + False"); },
     testing::ThrowsMessage<InvalidInputException>(
-      testing::StrEq(R"(Unable to parse an expression from "true + false" (operator args are invalid))")
+      testing::StrEq(R"(Unable to parse an expression from "True + False" (operator args are invalid))")
     )
   );
 }

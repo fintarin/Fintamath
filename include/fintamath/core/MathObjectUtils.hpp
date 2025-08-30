@@ -22,6 +22,17 @@ constexpr bool is(const MathObjectClass to, const MathObjectClass from) noexcept
   return false;
 }
 
+template <std::derived_from<IMathObject> To>
+constexpr bool is(const MathObjectClass from) noexcept {
+  for (MathObjectClass parent = from; parent; parent = parent->getParent()) {
+    if (parent == To::getClassStatic()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 inline bool is(const From &from) noexcept {
   if constexpr (std::is_base_of_v<To, From>) {
