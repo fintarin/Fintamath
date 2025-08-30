@@ -2,10 +2,10 @@
 
 #include <cassert>
 #include <concepts>
-#include <functional>
 #include <memory>
 #include <type_traits>
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 
 namespace fintamath {
@@ -42,84 +42,42 @@ inline bool is(const From &from) noexcept {
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 inline bool is(const From *from) noexcept {
-  if (!from) {
-    return false;
-  }
-
-  return is<To>(*from);
+  return from && is<To>(*from);
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::unique_ptr<From> &from) noexcept {
+template <std::derived_from<IMathObject> To, typename From>
+  requires std::derived_from<IMathObject, typename detail::RemoveQualifiers<From>::element_type>
+inline bool is(const From &from) noexcept {
   return is<To>(from.get());
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::shared_ptr<From> &from) noexcept {
-  return is<To>(from.get());
-}
+template <std::derived_from<IMathObject> To, typename From>
+  requires std::derived_from<IMathObject, typename detail::RemoveQualifiers<From>>
+inline decltype(auto) cast(From &&from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<From, To>;
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::shared_ptr<const From> &from) noexcept {
-  return is<To>(from.get());
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::reference_wrapper<From> &from) noexcept {
-  return is<To>(from.get());
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::reference_wrapper<const From> &from) noexcept {
-  return is<To>(from.get());
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline const To &cast(const From &from) noexcept {
-  assert(is<To>(from));
-  return static_cast<const To &>(from);
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline To &cast(From &from) noexcept {
-  assert(is<To>(from));
-  return static_cast<To &>(from);
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline const To *cast(const From *from) noexcept {
   if (!is<To>(from)) {
-    return {};
+    if constexpr (std::is_pointer<From>()) {
+      return ResultType{};
+    }
+    else {
+      assert(false);
+    }
   }
 
-  return static_cast<const To *>(from);
+  return static_cast<ResultType>(std::forward<From>(from));
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline To *cast(From *from) noexcept {
+template <std::derived_from<IMathObject> To, typename From>
+  requires std::derived_from<IMathObject, typename detail::RemoveQualifiers<From>::element_type>
+inline decltype(auto) cast(From &&from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::element_type, To>;
+
   if (!is<To>(from)) {
-    return {};
+    return std::shared_ptr<ResultType>();
   }
 
-  return static_cast<To *>(from);
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) noexcept {
-  if (!is<To>(from)) {
-    return {};
-  }
-
-  return std::static_pointer_cast<const To>(from);
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline std::shared_ptr<To> cast(const std::shared_ptr<From> &from) noexcept {
-  if (!is<To>(from)) {
-    return {};
-  }
-
-  return std::static_pointer_cast<To>(from);
+  return std::static_pointer_cast<ResultType>(std::forward<From>(from));
 }
 
 }
