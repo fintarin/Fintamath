@@ -29,6 +29,8 @@ public:
 
   std::string toString() const noexcept override;
 
+  std::unique_ptr<IMathObject> toMinimalObject() const noexcept override;
+
   int sign() const;
 
   const Integer &numerator() const noexcept;

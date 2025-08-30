@@ -14,7 +14,7 @@ public:
     return Boolean::getClassStatic();
   }
 
-  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
+  std::unique_ptr<IMathObject> toMinimalObject() const noexcept override;
 };
 
 }
