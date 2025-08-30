@@ -2,8 +2,6 @@
 
 #include <string_view>
 
-#include "fintamath/core/FintamathExport.hpp"
-
 namespace fintamath {
 
 namespace detail {

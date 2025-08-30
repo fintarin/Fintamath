@@ -16,11 +16,30 @@ class Expression : public IMathObject {
 
 public:
   using Argument = IFunction::Argument;
+
+public:
+  Expression();
+
+  Expression(Argument inArg);
+
+  Expression(const std::string &str);
+
+  Expression(const IMathObject &obj);
+
+  Expression(IMathObject &&obj);
+
+  Expression(int64_t val);
+
+  std::string toString() const noexcept override;
+
+  Shared<IMathObject> unwrapp() const noexcept override;
+
+private:
   using Arguments = IFunction::Arguments;
 
   struct FunctionTerm {
     std::reference_wrapper<const IFunction::FunctionMakers> functionMakers;
-    std::optional<IFunction::OperatorPriority> operatorPriority;
+    std::optional<OperatorPriority> operatorPriority;
   };
 
   using Term = std::variant<Argument, FunctionTerm>;
@@ -39,21 +58,6 @@ public:
   using FunctionTermStack = std::stack<std::optional<FunctionTerm>>;
   using TermStack = std::stack<Term>;
 
-public:
-  Expression();
-
-  Expression(Argument inArg);
-
-  Expression(const std::string &str);
-
-  Expression(const IMathObject &obj);
-
-  Expression(IMathObject &&obj);
-
-  Expression(int64_t val);
-
-  std::string toString() const noexcept override;
-
 private:
   static TokenToTermVector parseTokensToTerms(detail::TokenVector &tokens);
 
@@ -63,7 +67,7 @@ private:
 
   static std::optional<Term> parseTerm(const detail::Token &token);
 
-  static std::optional<IFunction::OperatorPriority> getOperatorPriority(const IFunction::FunctionMakers &functionMakers);
+  static std::optional<OperatorPriority> getOperatorPriority(const IFunction::FunctionMakers &functionMakers);
 
   static void moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &functionTermStack, const FunctionTerm *nextFunctionTerm);
 
