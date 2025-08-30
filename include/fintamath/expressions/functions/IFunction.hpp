@@ -19,11 +19,9 @@ protected:
   explicit IFunction(Children inChildren);
 
 public:
-  constexpr const ExpressionDeclaration &getExpressionDeclaration() const noexcept final {
-    return getFunctionDeclaration().expressionDeclarion;
-  }
+  const ExpressionDeclaration &getExpressionDeclaration() const noexcept final ;
 
-  virtual constexpr const FunctionDeclaration &getFunctionDeclaration() const noexcept = 0;
+  virtual const FunctionDeclaration &getFunctionDeclaration() const noexcept = 0;
 
   std::string toString() const noexcept override;
 

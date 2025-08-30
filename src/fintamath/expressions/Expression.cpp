@@ -12,4 +12,8 @@ const Expression::ExpressionDeclaration Expression::expressionDeclaration = {
   .isVariadic = false,
 };
 
+const Expression::ExpressionDeclaration &Expression::getExpressionDeclaration() const noexcept {
+  return expressionDeclaration;
+}
+
 }

@@ -18,7 +18,7 @@ public:
   consteval MathObjectClassData(Name inName, Ptr inParent = nullptr) noexcept
       : name(inName),
         parent(inParent) {
-}
+  }
 
   constexpr MathObjectClassData(const MathObjectClassData &) noexcept = delete;
 
