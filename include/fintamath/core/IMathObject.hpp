@@ -6,12 +6,11 @@
 #include "fintamath/core/InterfaceBody.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/MathObjectPointers.hpp"
-#include "fintamath/core/None.hpp"
 
 namespace fintamath {
 
 class IMathObject {
-  FINTAMATH_INTERFACE_BODY(IMathObject, None)
+  FINTAMATH_INTERFACE_BODY(IMathObject, std::nullptr_t)
 
 public:
   virtual ~IMathObject() = default;
