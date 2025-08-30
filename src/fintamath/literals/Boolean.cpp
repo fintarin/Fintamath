@@ -16,9 +16,10 @@ Boolean::Boolean() : val(false) {
 Boolean::Boolean(const std::string_view str) {
   if (str != trueStr && str != falseStr) {
     throw InvalidInputException(fmt::format(
-        R"(Unable to parse {} from "{}" (expected "True" or "False"))",
-        getClassStatic()->getName(),
-        str));
+      R"(Unable to parse {} from "{}" (expected "True" or "False"))",
+      getClassStatic()->getName(),
+      str
+    ));
   }
 
   val = str == trueStr;
