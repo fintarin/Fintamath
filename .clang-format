@@ -4,8 +4,8 @@ AlwaysBreakTemplateDeclarations: true
 AllowShortLambdasOnASingleLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
 NamespaceIndentation: None
-IndentCaseLabels: True
-IndentRequires: True
+IndentCaseLabels: true
+IndentRequires: true
 FixNamespaceComments: false
 BreakBeforeBraces: Custom
 BraceWrapping:
