@@ -15,7 +15,6 @@ const AddOper::OperatorDeclaration addOperDeclaration = {
         .returnClass = INumber::getClassStatic(),
         .childClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
       }},
-      .isVariadic = false,
     },
     .functionName = "+",
   },
