@@ -19,7 +19,7 @@ public:
     };
 
     std::vector<DomainAndRange> domainAndRangeVariants;
-    bool isVariadic = false;
+    bool isVariadic;
   };
 
   using Child = std::shared_ptr<IMathObject>;
