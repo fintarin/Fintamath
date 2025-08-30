@@ -2,7 +2,6 @@
 
 #include "fintamath/core/FintamathClassBody.hpp"
 #include "fintamath/expressions/functions/IFunction.hpp"
-#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
@@ -16,22 +15,14 @@ public:
   explicit Add(Children inChildren);
 
 public:
-  constexpr FunctionDeclaration getFunctionDeclaration() const noexcept override;
+  constexpr const FunctionDeclaration &getFunctionDeclaration() const noexcept override {
+    return addDeclaration;
+  }
 
   std::unique_ptr<IFunction> makeFunction(Children children) const override;
-};
 
-constexpr Add::FunctionDeclaration Add::getFunctionDeclaration() const noexcept {
-  constexpr MathObjectClass numberClass = INumber::getClassStatic();
-  return {
-    .expressionDeclarion = {
-      .domainAndRangeVariants = {{
-        .returnClass = numberClass,
-        .childClasses = {numberClass, numberClass},
-      }}
-    },
-    .functionName = "add",
-  };
-}
+private:
+  FINTAMATH_EXPORT static const FunctionDeclaration addDeclaration;
+};
 
 }

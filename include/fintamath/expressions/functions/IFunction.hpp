@@ -19,26 +19,21 @@ protected:
   explicit IFunction(Children inChildren);
 
 public:
-  constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept final;
+  constexpr const ExpressionDeclaration &getExpressionDeclaration() const noexcept final {
+    return getFunctionDeclaration().expressionDeclarion;
+  }
 
-  virtual constexpr FunctionDeclaration getFunctionDeclaration() const noexcept = 0;
+  virtual constexpr const FunctionDeclaration &getFunctionDeclaration() const noexcept = 0;
 
   std::string toString() const noexcept override;
 
   template <typename T>
-  friend std::unique_ptr<IFunction> makeFunction(IFunction::Children children);
+  friend std::unique_ptr<IFunction> makeFunction(IFunction::Children children) {
+    return T::getDefaultObject().makeFunction(std::move(children));
+  }
 
 protected:
   virtual std::unique_ptr<IFunction> makeFunction(Children children) const = 0;
 };
-
-constexpr IExpression::ExpressionDeclaration IFunction::getExpressionDeclaration() const noexcept {
-  return getFunctionDeclaration().expressionDeclarion;
-}
-
-template <typename T>
-std::unique_ptr<IFunction> makeFunction(IFunction::Children children) {
-  return T::getDefaultObject().makeFunction(std::move(children));
-}
 
 }
