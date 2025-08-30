@@ -69,9 +69,9 @@ Fintamath is a C++ library for symbolic mathematics, supporting both the input o
 * [Complex](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/numbers/Complex.hpp) — a class representing complex numbers
   * Arithmetic operators
 
-* [Variable](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/literals/Variable.hpp) — a class representing a letter of the English alphabet with or without unsigned integer index
+* [Variable](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/Variable.hpp) — a class representing a letter of the English alphabet with or without unsigned integer index
 
-* [Boolean](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/literals/Boolean.hpp) — a bool wrapper class
+* [Boolean](https://github.com/fintarin/Fintamath/blob/master/include/fintamath/Boolean.hpp) — a bool wrapper class
 
 * [Functions](https://github.com/fintarin/Fintamath/tree/master/include/fintamath/functions) — classes of mathematical functions supported in expressions
 

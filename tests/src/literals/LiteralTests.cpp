@@ -1,10 +1,10 @@
 // #include <gtest/gtest.h>
 
-// #include "fintamath/literals/ILiteral.hpp"
+// #include "fintamath/ILiteral.hpp"
 
-// #include "fintamath/literals/Variable.hpp"
-// #include "fintamath/literals/constants/E.hpp"
-// #include "fintamath/literals/constants/Pi.hpp"
+// #include "fintamath/Variable.hpp"
+// #include "fintamath/constants/E.hpp"
+// #include "fintamath/constants/Pi.hpp"
 
 // using namespace fintamath;
 

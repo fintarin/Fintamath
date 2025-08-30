@@ -3,7 +3,7 @@
 // #include "fintamath/core/IMathObject.hpp"
 
 // #include "fintamath/expressions/IExpression.hpp"
-// #include "fintamath/literals/Variable.hpp"
+// #include "fintamath/Variable.hpp"
 // #include "fintamath/numbers/Integer.hpp"
 // #include "fintamath/numbers/Rational.hpp"
 
